@@ -25,7 +25,15 @@ class mi_googleanalytics
 	function Settings()
 	{
 		$settings = array();
-		$settings['account_id']		= array( 'inputB' );
+		$settings['account_id']			= array( 'inputB' );
+		$settings['method'] 			= array( 'list' );
+
+		$listsValues[] = mosHTML::makeOption ( "3", "Asynchronous Tracking" );
+		$listsValues[] = mosHTML::makeOption ( "2", "Standard Trackingg" );
+		$listsValues[] = mosHTML::makeOption ( "1", "Old Urchin Tracking" );
+
+		$settings['lists']['method']	= mosHTML::selectList( $listsValues, 'method', 'size="1"', 'value', 'text', empty( $this->settings['method'] ) ? '2' : $this->settings['method'] );
+
 		return $settings;
 	}
 
@@ -35,33 +43,99 @@ class mi_googleanalytics
 
 		global $mainframe;
 
-		$text = '<script type="text/javascript">'
-				. 'var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");'
-				. 'document.write(unescape("%3Cscript src=\'" + gaJsHost + "google-analytics.com/ga.js\' type=\'text/javascript\'%3E%3C/script%3E"));'
-				. '</script>'
-				. '<script type="text/javascript">'
-				. 'try {'
-				. 'var pageTracker = _gat._getTracker("' . $this->settings['account_id'] . '");'
-				. 'pageTracker._addTrans('
-				. '"' . $request->invoice->invoice_number . '",	// Order ID'
-				. '"' . $mainframe->getCfg( 'sitename' ) . '",	// Affiliation'
-				. '"' . $request->invoice->amount . '",			// Total'
-				. '"",				// Tax'
-				. '"",				// Shipping'
-				. '"",				// City'
-				. '"",				// State'
-				. '""				// Country'
-				. ');'
-				. 'pageTracker._addItem('
-				. '"' . $request->invoice->invoice_number . '",	// Order ID'
-				. '"' . $request->plan->id . '",				// SKU'
-				. '"' . $request->plan->name . '",				// Product Name'
-				. '"' . $request->invoice->amount . '",			// Price'
-				. '"1"		// Quantity'
-				. ');'
-				. 'pageTracker._trackTrans();'
-				. '} catch(err) {}</script>'
-				;
+		switch ( $this->settings['ga_method'] ) {
+			case 1:					
+				// Old Urchin Tracking Method
+				$text = '<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">'
+							. '</script>'
+							. '<script type="text/javascript">'
+							. '  _uacct="' . $this->settings['account_id'] . '";'
+							. '  urchinTracker();'
+							. '</script>'
+							. '<form style="display:none;" name="utmform">'
+							. '<textarea id="utmtrans">UTM:T|' . $request->invoice->invoice_number . '|' . $mainframe->getCfg( 'sitename' ) . '|' . $request->invoice->amount . '|0.00|0.00|||'
+							. 'UTM:I|' . $request->invoice->invoice_number . '|' . $request->plan->id . '|' . $request->plan->name . '|subscription|' . $request->invoice->amount . '|1</textarea>'
+							. '</form>'
+							. '<script type="text/javascript">'
+							. '__utmSetTrans();'
+							. '</script>';
+				break;
+			case 2:
+				// New Standard Tracking Method
+				$text = '<script type="text/javascript">' . "\n"
+						. '	/* <![CDATA[ */' . "\n"
+						. 'var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");' . "\n"
+						. 'document.write(unescape("%3Cscript src=\'" + gaJsHost + "google-analytics.com/ga.js\' type=\'text/javascript\'%3E%3C/script%3E"));' . "\n"
+						. '	/* ]]> */' . "\n"
+						. '</script>' . "\n"
+						. '<script type="text/javascript">' . "\n"
+						. '	/* <![CDATA[ */' . "\n"
+						. 'try {' . "\n"
+						. 'var pageTracker = _gat._getTracker("' . $this->settings['account_id'] . '");' . "\n"
+						. 'pageTracker._addTrans('
+						// Order ID, Affiliation, Total, Tax, Shipping, City, State, Country
+						. '"' . $request->invoice->invoice_number . '",'
+						. '"' . $mainframe->getCfg( 'sitename' ) . '",'
+						. '"' . $request->invoice->amount . '",'
+						. '"0",'
+						. '"0",'
+						. '"",'
+						. '"",'
+						. '""'
+						. ');' . "\n"
+						. 'pageTracker._addItem('
+						// Order ID, SKU, Product Name, Price, Quantity
+						. '"' . $request->invoice->invoice_number . '",'
+						. '"' . $request->plan->id . '",'
+						. '"' . $request->plan->name . '",'
+						. '"' . $request->invoice->amount . '",'
+						. '"1"'
+						. ');' . "\n"
+						. 'pageTracker._trackTrans();' . "\n"
+						. '} catch(err) {}' . "\n"
+						. '	/* ]]> */' . "\n"
+						. '</script>' . "\n"
+						;
+				break;
+			case 3:
+			default:
+				// New Asynchronous Tracking Method
+				$text =  '<script type="text/javascript">' . "\n"
+						. '	/* <![CDATA[ */' . "\n"
+						. 'var _gaq = _gaq || [];' . "\n"
+						. '_gaq.push(["_setAccount", ' . $this->settings['account_id'] . '"]);' . "\n"
+						. '_gaq.push(["_trackPageview"]);' . "\n"
+						. '_gaq.push(["_addTrans",'
+						// Order ID, Affiliation, Total, Tax, Shipping, City, State, Country
+						. '"' . $request->invoice->invoice_number . '",'
+						. '"' . $mainframe->getCfg( 'sitename' ) . '",'
+						. '"' . $request->invoice->amount . '",'
+						. '"0",'
+						. '"0",'
+						. '"",'
+						. '"",'
+						. '""'
+						. ']);' . "\n"
+						. '_gaq.push(["_addItem",'
+						// Order ID, SKU, Product Name, Category, Price, Quantity
+						. '"' . $request->invoice->invoice_number . '",'
+						. '"' . $request->plan->id . '",'
+						. '"' . $request->plan->name . '",'
+						. '"Membership",'
+						. '"' . $request->invoice->amount . '",'
+						. '"1"'
+						. ']);' . "\n"
+						. '_gaq.push(["_trackTrans"]);' . "\n"
+						. '(function() {' . "\n"
+						. 'var ga = document.createElement("script"); ga.type = "text/javascript"; ga.async = true;' . "\n"
+						. 'ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";' . "\n"
+						. '(document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(ga);' . "\n"
+						. '})();' . "\n"
+						. '	/* ]]> */' . "\n"
+						. '</script>' . "\n"
+						;
+				break;
+		}
 
 		$displaypipeline = new displayPipeline($database);
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
