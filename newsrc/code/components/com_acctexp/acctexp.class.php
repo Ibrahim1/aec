@@ -1980,10 +1980,12 @@ class aecHeartbeat extends JTable
 						}
 
 						// Carry out validation if possible
+						$validation = false;
+
 						if ( !empty( $pps[$subscription->type] ) ) {
-							$validation = $pps[$subscription->type]->validateSubscription( $sub_id, $subscription_list );
-						} else {
-							$validation = false;
+							if ( $subscription->recurring ) {
+								$validation = $pps[$subscription->type]->validateSubscription( $sub_id, $subscription_list );
+							}
 						}
 
 						// Validation failed or was not possible for this processor - expire
