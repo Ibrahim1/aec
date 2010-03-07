@@ -178,7 +178,13 @@ class mi_docman
 		$hacks[$n]['name']				=	'download.php';
 		$hacks[$n]['desc']				=	_AEC_MI_HACK1_DOCMAN;
 		$hacks[$n]['type']				=	'file';
-		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_docman/includes_frontend/download.php';
+
+		if ( file_exists( JPATH_SITE . '/components/com_docman/includes_frontend/download.php' ) ) {
+			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_docman/includes_frontend/download.php';
+		} else {
+			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_docman/includes/download.php';
+		}
+
 		$hacks[$n]['read']				=	'// If the remote host is not allowed';
 		$hacks[$n]['insert']			=	$downloadhack . "\n"  . $hacks[$n]['read'];
 
