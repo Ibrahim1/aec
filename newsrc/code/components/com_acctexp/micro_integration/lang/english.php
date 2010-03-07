@@ -1128,4 +1128,24 @@ define( '_MI_MI_KUNENA_REBUILD_DESC','This option will rebuild your whole Kunena
 define( '_MI_MI_KUNENA_REMOVE_NAME','Remove' );
 define( '_MI_MI_KUNENA_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
+// FLEXIaccess
+define( '_AEC_MI_NAME_FLEXIACCESS','FLEXIaccess' );
+define( '_AEC_MI_DESC_FLEXIACCESS','Set FLEXIaccess groups on application or expiration of a plan' );
+define( '_MI_MI_FLEXIACCESS_SET_ENROLL_GROUP_NAME','Add to Group' );
+define( '_MI_MI_FLEXIACCESS_SET_ENROLL_GROUP_DESC','Set to yes, and pick groups below to enroll the user in on application of plan? (Multiple select allowed)' );
+define( '_MI_MI_FLEXIACCESS_ENROLL_GROUP_NAME','FLEXIaccess Group' );
+define( '_MI_MI_FLEXIACCESS_ENROLL_GROUP_DESC','Select a plan to enroll the user in on application of plan:' );
+define( '_MI_MI_FLEXIACCESS_SET_REMOVE_GROUP_NAME','Remove Groups' );
+define( '_MI_MI_FLEXIACCESS_SET_REMOVE_GROUP_DESC','Set to yes, to delete all groups for this user before the groups below are applied, otherwise these groups will be added to existing groups.' );
+define( '_MI_MI_FLEXIACCESS_SET_ENROLL_GROUP_EXP_NAME','Add to Group Exp' );
+define( '_MI_MI_FLEXIACCESS_SET_ENROLL_GROUP_EXP_DESC','Set to yes, and pick groups below to enroll the user in on expiration of plan? (Multiple select allowed)' );
+define( '_MI_MI_FLEXIACCESS_ENROLL_GROUP_EXP_NAME','FLEXIaccess Group Exp' );
+define( '_MI_MI_FLEXIACCESS_ENROLL_GROUP_EXP_DESC','Select a plan to enroll the user in on expiration of plan:' );
+define( '_MI_MI_FLEXIACCESS_SET_REMOVE_GROUP_EXP_NAME','Remove Groups Exp' );
+define( '_MI_MI_FLEXIACCESS_SET_REMOVE_GROUP_EXP_DESC','Set to yes, to delete all groups for this user before the groups below are applied, otherwise these groups will be added to existing groups.' );
+define( '_MI_MI_FLEXIACCESS_REBUILD_NAME','Rebuild' );
+define( '_MI_MI_FLEXIACCESS_REBUILD_DESC','Select YES to rebuild the groups relations after saving this' );
+define( '_MI_MI_FLEXIACCESS_REMOVE_NAME','Remove: ' );
+define( '_MI_MI_FLEXIACCESS_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+
 ?>
