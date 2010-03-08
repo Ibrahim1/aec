@@ -47,9 +47,9 @@ class mi_aectax
 				$settings['exp'] = array( 'p', "", _MI_MI_AECTAX_DEFAULT_NOTICE );
 			}
 
-			$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
-
 			if ( count( $locations ) < 5 ) {
+				$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
+
 				foreach ( $locations as $id => $choice ) {
 					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_location', $choice['id'], true, $choice['text'] );
 				}

@@ -30,7 +30,7 @@ class mi_aecuserdetails
 		$settings['lists']		= array();
 		$settings['settings']	= array( 'inputB' );
 
-		$types = array( "inputA", "inputB", "inputC", "inputD", "list_language", "checkbox" );
+		$types = array( "inputA", "inputB", "inputC", "inputD", "list", "list_language", "checkbox" );
 
  		$typelist = array();
  		foreach ( $types as $type ) {
@@ -129,6 +129,37 @@ class mi_aecuserdetails
 				}
 
 				if ( !empty( $this->settings[$p.'short'] ) ) {
+					if ( $this->settings[$p.'type'] == 'list' ) {
+						$extra = explode( "\n", $this->settings[$p.'extra'] );
+
+						if ( !count( $extra ) ) {
+							continue;
+						}
+
+						$fields = array();
+						foreach ( $extra as $ex ) {
+							$fields[] = explode( "|", $ex );
+						}
+
+						$options = array();
+						if ( count( $extra ) < 5 ) {
+							$settings[$this->settings[$p.'short']] = array( 'hidden', null, 'mi_'.$this->id.'_'.$this->settings[$p.'short'] );
+
+							foreach ( $fields as $id => $field ) {
+								$options[] = mosHTML::makeOption( $field[0], $field[1] );
+								$settings['mi_'.$this->id.'_'.$this->settings[$p.'short'].$id] = array( 'radio', 'mi_'.$this->id.'_'.$this->settings[$p.'short'], $field[0], true, $field[1] );
+							}
+
+							$lists[$this->settings[$p.'short']]	= mosHTML::selectList( $options, $this->settings[$p.'short'], 'size="1"', 'value', 'text', 0 );
+						} else {
+							foreach ( $fields as $field ) {
+								$options[] = mosHTML::makeOption( $field[0], $field[1] );
+							}
+
+							$lists[$this->settings[$p.'short']]	= mosHTML::selectList( $options, $this->settings[$p.'short'], 'size="1"', 'value', 'text', 0 );
+						}
+					}
+
 					if ( $this->settings[$p.'type'] == 'list_language' ) {
 						$lists[$this->settings[$p.'short']] = mosHTML::selectList( $language_code_list, $this->settings[$p.'short'], 'size="10"', 'value', 'text', $content );
 
