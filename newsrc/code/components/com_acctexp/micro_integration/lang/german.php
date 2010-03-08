@@ -1123,4 +1123,36 @@ define( '_MI_MI_FLEXIACCESS_REBUILD_DESC','Select YES to rebuild the groups rela
 define( '_MI_MI_FLEXIACCESS_REMOVE_NAME','Remove: ' );
 define( '_MI_MI_FLEXIACCESS_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
+// Agora MI
+define( '_AEC_MI_NAME_AGORA','Agora Forum' );
+define( '_AEC_MI_DESC_AGORA','Change the Users Roles and Roles in Agora' );
+define( '_MI_MI_AGORA_GROUP_NAME','Apply Group' );
+define( '_MI_MI_AGORA_GROUP_DESC','Select the group you want to apply to the user on membership activation' );
+define( '_MI_MI_AGORA_ROLE_NAME','Role' );
+define( '_MI_MI_AGORA_ROLE_DESC','Select the role that you want to apply to the user with the group selected above on membership activation' );
+define( '_MI_MI_AGORA_UNGROUP_NAME','Remove Group' );
+define( '_MI_MI_AGORA_UNGROUP_DESC','Select the group you want to remove from to the user on membership activation' );
+define( '_MI_MI_AGORA_UNROLE_NAME','Remove Role' );
+define( '_MI_MI_AGORA_UNROLE_DESC','Specify the role related to the group that you want to remove on membership activation. If you dont\'t select a role, any group assignment regardless of the role will be removed' );
+define( '_MI_MI_AGORA_GROUP_EXP_NAME','Apply Group (Expiration)' );
+define( '_MI_MI_AGORA_GROUP_EXP_DESC','Select the group you want to apply to the user on membership expiration' );
+define( '_MI_MI_AGORA_ROLE_EXP_NAME','Role' );
+define( '_MI_MI_AGORA_ROLE_EXP_DESC','Select the role that you want to apply to the user with the group selected above on membership expiration' );
+define( '_MI_MI_AGORA_UNGROUP_EXP_NAME','Remove Group (Expiration)' );
+define( '_MI_MI_AGORA_UNGROUP_EXP_DESC','Select the group you want to remove from to the user on membership expiration' );
+define( '_MI_MI_AGORA_UNROLE_EXP_NAME','Remove Role' );
+define( '_MI_MI_AGORA_UNROLE_EXP_DESC','Specify the role related to the group that you want to remove on expiration. If you dont\'t select a role, any group assignment regardless of the role will be removed' );
+define( '_MI_MI_AGORA_GROUP_PRE_EXP_NAME','Apply Group (Pre-Expiration)' );
+define( '_MI_MI_AGORA_GROUP_PRE_EXP_DESC','Select the group you want to apply to the user before membership expiration' );
+define( '_MI_MI_AGORA_ROLE_PRE_EXP_NAME','Role (Pre-Expiration)' );
+define( '_MI_MI_AGORA_ROLE_PRE_EXP_DESC','Select the role that you want to apply to the user with the group selected above before membership expiration' );
+define( '_MI_MI_AGORA_UNGROUP_PRE_EXP_NAME','Remove Group (Pre-Expiration)' );
+define( '_MI_MI_AGORA_UNGROUP_PRE_EXP_DESC','Select the group you want to remove from to the user before membership expiration' );
+define( '_MI_MI_AGORA_UNROLE_PRE_EXP_NAME','Remove Role (Pre-Expiration)' );
+define( '_MI_MI_AGORA_UNROLE_PRE_EXP_DESC','Specify the role related to the group that you want to remove before expiration. If you dont\'t select a role, any group assignment regardless of the role will be removed' );
+define( '_MI_MI_AGORA_REBUILD_NAME','Rebuild' );
+define( '_MI_MI_AGORA_REBUILD_DESC','This option will rebuild your whole Agora group assignment by looking for each plan that has this MI applied and then add each user that uses one of these plans to the file.' );
+define( '_MI_MI_AGORA_REMOVE_NAME','Remove' );
+define( '_MI_MI_AGORA_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+
 ?>

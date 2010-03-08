@@ -1,140 +1,194 @@
 <?php
-/*
- * <name>mi_agora</name>
- * <creationDate>January 2010</creationDate>
- * <version>1.5.0</version>
- * <author>Joel Bassett</author>
- * <authorEmail>joel@aqsg.com.au</authorEmail>
- * <authorUrl>http://www.aqsg.com.au</authorUrl>
- * <copyright>(C) 2005-2010 Australian Quality Solutions Group. All rights reserved.</copyright>
- * <license>AGPLv3 - http://www.aqsg.com.au/products/simple-meta-management-suite/licence.html</license>
+/**
+ * @version $Id: mi_agora.php
+ * @package AEC - Account Control Expiration - Membership Manager
+ * @subpackage Micro Integrations - Agora
+ * @copyright Copyright (C) 2010 David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
+
 // Dont allow direct linking
 defined('_JEXEC') OR defined( '_VALID_MOS' ) OR die( 'Direct Access to this location is not allowed.' );
 
-class mi_agora {
-	function Info() {
+class mi_agora extends MI
+{
+	function Info()
+	{
 		$info = array();
-		$info['name'] = 'Agora Forum';
-		$info['desc'] = 'Assign a Group and Role to an Agora user';
+		$info['name'] = _AEC_MI_NAME_AGORA;
+		$info['desc'] = _AEC_MI_DESC_AGORA;
 
 		return $info;
 	}
 
-	function Settings() {
-		$db = &JFactory::getDBO();
-		$settings = array();
+	function Settings()
+	{
+		$database = &JFactory::getDBO();
+		$database->setQuery( 'SELECT `id`, `name` FROM #__agora_group' );
 
-		$db->setQuery('SELECT id, name FROM ' . $db->nameQuote('#__agora_group'));
-		$groups = $db->loadObjectList();
-		$grouplistsValues[] = JHTML::_('select.option', 1, '--- Global ---' );		
-		foreach ($groups as $id => $row) {	
-			if ($row->id > 1)
-				$grouplistsValues[] = JHTML::_('select.option', $row->id, $row->name);		
-		}
-		
-		$db->setQuery('SELECT id, name FROM ' . $db->nameQuote('#__agora_roles'));
-		$roles = $db->loadObjectList();
-		foreach ($roles as $id => $row) {	
-			$roleslistsValues[] = JHTML::_('select.option', $row->id, ucfirst($row->name));		
+		$groups = $database->loadObjectList();
+
+		$grouplist = array();
+		$grouplist[] = mosHTML::makeOption ( 0, "--- --- ---" );
+
+		foreach ( $groups as $id => $row ) {
+			$grouplist[] = mosHTML::makeOption ( $row->id, $row->id . ': ' . $row->name );
 		}
 
-		$settings['sub_group'] 		= array( 'list','[Activation] Change the users group to the selected group', 'Select the group you want to apply to the user on plan activation' );
-		$settings['sub_role'] 		= array( 'list','[Activation] Change the users role to the following role', 'Select the role you want to apply to the user from on plan activation' );
-		$settings['exp_group'] 		= array( 'list','[Expiration] Remove the user from the selected group', 'Select the group you want to remove the user from on plan expiration');
-		$settings['exp_role'] 		= array( 'list','[Expiration] Remove the user from the selected role', 'Select the group you want to remove the user from on plan expiration');
-		
-		$settings['lists']['sub_group']		= JHTML::_('select.genericlist',   $grouplistsValues, 'sub_group', 	'class="inputbox"', 'value', 'text', empty($this->settings['sub_group']) ? '' : $this->settings['sub_group']);
-		$settings['lists']['sub_role']		= JHTML::_('select.genericlist',   $roleslistsValues, 'sub_role', 	'class="inputbox"', 'value', 'text', empty($this->settings['sub_role']) ? '' : $this->settings['sub_role']);
-		$settings['lists']['exp_group']		= JHTML::_('select.genericlist',   $grouplistsValues, 'exp_group', 	'class="inputbox"', 'value', 'text', empty($this->settings['exp_group']) ? '' : $this->settings['exp_group']);
-		$settings['lists']['exp_role']		= JHTML::_('select.genericlist',   $roleslistsValues, 'exp_role', 	'class="inputbox"', 'value', 'text', empty($this->settings['exp_role']) ? '' : $this->settings['exp_role']);
+		$database = &JFactory::getDBO();
+		$database->setQuery( 'SELECT `id`, `name` FROM #__agora_roles' );
+
+		$roles = $database->loadObjectList();
+
+		$rolelist = array();
+		$rolelist[] = mosHTML::makeOption ( 0, "--- --- ---" );
+
+		foreach ( $roles as $id => $row ) {
+			$rolelist[] = mosHTML::makeOption ( $row->id, $row->id . ': ' . $row->name );
+		}
+
+		$settings['group']		= array( 'list' );
+		$settings['role']		= array( 'list' );
+		$settings['ungroup']	= array( 'list' );
+		$settings['unrole']		= array( 'list' );
+
+		$settings = $this->autoduplicatesettings( $settings );
+
+		foreach ( $settings as $k => $v ) {
+			if ( isset( $this->settings[$k] ) ) {
+				$value = $this->settings[$k];
+			} else {
+				$value = '';
+			}
+
+			if ( strpos( $k, "role" ) !== false ) {
+				$settings['lists'][$k]	= mosHTML::selectList( $rolelist, $k, 'size="1"', 'value', 'text', $value );
+			} else {
+				$settings['lists'][$k]	= mosHTML::selectList( $grouplist, $k, 'size="1"', 'value', 'text', $value );
+			}
+		}
+
+		$settings['rebuild']	= array( 'list_yesno' );
+		$settings['remove']		= array( 'list_yesno' );
 
 		return $settings;
 	}
 
-	function expiration_action( $request ) {
-		$this->changeRank($request->metaUser->userid, $this->settings['exp_group'], $this->settings['exp_role']);
-	}
+	function relayAction( $request )
+	{
+		$agora_userid = $this->AgoraUserId( $request->metaUser->userid );
 
-	function action( $request ){
-		$this->changeRank($request->metaUser->userid, $this->settings['sub_group'], $this->settings['sub_role']);
-	}
+		if ( !$agora_userid ) {
+			$this->createUser( $request->metaUser );
 
-	function checkAgoraUser($userid) {
-		$db = &JFactory::getDBO();
-		$db->setQuery('SELECT COUNT(*) FROM ' . $db->nameQuote('#__agora_users') . ' WHERE ' . $db->nameQuote('jos_id') . ' = ' . $db->Quote($userid));
-		$count = $db->loadResult();
-		if ($count < 1)
-			$answer = false;
-		else
-			$answer = true;
-		return $answer;
-	}
-	
-	function checkRank($userid, $groupid) {
-		$db = &JFactory::getDBO();
-		$db->setQuery('SELECT COUNT(*) FROM ' . $db->nameQuote('#__agora_user_group') . ' WHERE ' . $db->nameQuote('user_id') . ' = ' . $db->Quote($userid) . ' AND ' . $db->nameQuote('group_id') . ' = ' . $db->Quote($groupid));
-		$count = $db->loadResult();
-		if ($count < 1)
-			$answer = false;
-		else
-			$answer = true;
-		return $answer;
-	}
-
-	function createUser($userid, $groupid) {
-		$db = &JFactory::getDBO();
-		$db->setQuery('SELECT username, email, registerDate, lastvisitDate FROM ' . $db->nameQuote('#__users') . ' WHERE ' . $db->nameQuote('id') . ' = ' . $db->Quote($userid));
-		$user = $db->loadRow();
-		$query = 'INSERT INTO ' . $db->nameQuote('#__agora_users') . ' (' . $db->nameQuote('jos_id') . ', ' . $db->nameQuote('username') . ', ' . $db->nameQuote('email') . ', ' . $db->nameQuote('registered') . ', ' . $db->nameQuote('last_visit') . ') VALUES (' . $userid . ', ' . $db->Quote($user[0]) . ', ' . $db->Quote($user[1]) . ', ' . $db->Quote(intval(strtotime($user[2]))) . ', ' . $db->Quote(intval(strtotime($user[3]))) . ')';
-		$db->setQuery($query);
-		if (!$db->query()) {
-			JError::raiseError( 500, $db->stderr() );
-			return false;
+			$agora_userid = $this->AgoraUserId( $request->metaUser->userid );
 		}
+
+		if ( !empty( $this->settings['group' . $request->area] ) && !empty( $this->settings['role' . $request->area] ) ) {
+			$role = $this->getUserGroupRole( $agora_userid, $this->settings['group' . $request->area] );
+
+			if ( empty( $role ) ) {
+				$this->addGroup( $agora_userid, $this->settings['group' . $request->area], $this->settings['role' . $request->area] );
+			} else {
+				$this->updateRole( $agora_userid, $this->settings['group' . $request->area], $this->settings['role' . $request->area] );
+			}
+		}
+
+		if ( !empty( $this->settings['ungroup' . $request->area] ) ) {
+			$role = $this->getUserGroupRole( $agora_userid, $this->settings['ungroup' . $request->area] );
+
+			if ( !empty( $role ) ) {
+				$this->removeGroup( $agora_userid, $this->settings['ungroup' . $request->area], $this->settings['unrole' . $request->area] );
+			}
+		}
+
 		return true;
 	}
 
-	function removeRank($userid, $groupid, $roleid) {
-		$db = &JFactory::getDBO();
-		$query = 'DELETE FROM ' . $db->nameQuote('#__agora_user_group') . ' WHERE ' . $db->nameQuote('user_id') . ' = ' . $db->Quote($userid) . ' AND ' . $db->nameQuote('group_id') . ' = ' . $db->Quote($groupid) . ' AND ' . $db->nameQuote('role_id') . ' = ' . $db->Quote($roleid);
-		$db->setQuery($query);
-		if (!$db->query()) {
-			JError::raiseError( 500, $db->stderr() );
-			return false;
-		}
-		return true;
+	function AgoraUserId( $userid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT id FROM #__agora_users'
+				. ' WHERE `jos_id` = \'' . $userid . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->loadResult();
 	}
-	
-	function createRank($userid, $groupid, $roleid) {
-		$db = &JFactory::getDBO();
-		$db->setQuery('SELECT id FROM #__agora_users WHERE jos_id = ' . intval($userid));
-		$agoraid = $db->loadResult();
-		$query = 'INSERT INTO ' . $db->nameQuote('#__agora_user_group') . ' (' . $db->nameQuote('user_id') . ', ' . $db->nameQuote('group_id') . ', ' . $db->nameQuote('role_id') . ') VALUES (' . $agoraid . ', ' . $groupid . ', ' . $roleid . ')';
-		$db->setQuery($query);
-		if (!$db->query()) {
-			JError::raiseError( 500, $db->stderr() );
-			return false;
-		}
-		return true;
+
+	function getUserGroupRole( $userid, $groupid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `role` FROM #__agora_user_group'
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				. ' AND `group_id` = \'' . $groupid . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->loadResult();
 	}
-	
-	function changeRank($userid, $groupid, $roleid) {
-		$db = &JFactory::getDBO();
-		$isUser 	= $this->checkAgoraUser($userid);
-		$hasRank 	= $this->checkRank($userid, $groupid);
-		if (!$isUser) {
-			$this->createUser($userid, $groupid);
-			if (!$hasRank)
-				$this->createRank($userid, $groupid, $roleid);
-			else
-				$this->updateRank($userid, $groupid, $roleid);
-		} else {
-			if (!$hasRank)
-				$this->createRank($userid, $groupid, $roleid);
-			else
-				$this->updateRank($userid, $groupid, $roleid);		
-		}
+
+	function createUser( $metaUser )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'INSERT INTO #__agora_users'
+				. ' (`jos_id`,  `username`, `email`, `registered`, `last_visit` )'
+				. ' VALUES (\'' . $metaUser->userid . '\', \'' . $metaUser->cmsUser->username . '\', \''
+				. $metaUser->cmsUser->email . '\', \'' . intval( strtotime( $metaUser->cmsUser->registerDate )) . '\', \''
+				. intval( strtotime( $metaUser->cmsUser->lastvisitDate )) . '\', )'
+				;
+		$database->setQuery( $query );
+
+		return $database->query();
 	}
-	
+
+	function removeGroup( $userid, $groupid, $roleid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'DELETE FROM #__agora_user_group'
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				. ' AND `group_id` = \'' . $groupid . '\''
+				;
+
+		if ( !empty( $roleid ) ) {
+			$query .= ' AND `role_id` = \'' . $roleid . '\'';
+		}
+
+		$database->setQuery( $query );
+
+		return $database->query();
+	}
+
+	function addGroup( $userid, $groupid, $roleid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'INSERT INTO #__agora_user_group'
+				. ' (`user_id`,  `group_id`, `role_id` )'
+				. ' VALUES (\'' . $userid . '\', \'' . $groupid . '\', \'' . $roleid . '\' )'
+				;
+		$database->setQuery( $query );
+
+		return $database->query();
+	}
+
+	function updateRole( $userid, $groupid, $roleid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'UPDATE #__agora_user_group'
+				. ' SET `role_id` = \'' . $roleid . '\''
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				. ' AND `group_id` = \'' . $groupid . '\''
+				;
+		$database->setQuery( $query );
+
+		return $database->loadResult();
+	}
+
 }
