@@ -30,7 +30,7 @@ class mi_aecuserdetails
 		$settings['lists']		= array();
 		$settings['settings']	= array( 'inputB' );
 
-		$types = array( "inputA", "inputB", "inputC", "inputD", "list", "list_language", "checkbox" );
+		$types = array( "p", "inputA", "inputB", "inputC", "inputD", "list", "list_language", "checkbox" );
 
  		$typelist = array();
  		foreach ( $types as $type ) {
@@ -48,6 +48,12 @@ class mi_aecuserdetails
 				$settings[$p.'name']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_NAME_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_NAME_DESC );
 				$settings[$p.'desc']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DESC_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DESC_DESC );
 				$settings[$p.'type']		= array( 'list', sprintf( _MI_MI_AECUSERDETAILS_SET_TYPE_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_TYPE_DESC );
+
+				if ( $this->settings[$p.'type'] == "list" ) {
+					$settings[$p.'list']	= array( 'inputD', "List Items", "Provide a newline separated list with items like: item1|Description of first item" );
+					$settings[$p.'ltype']	= array( 'list_yesno', "Radio List", "Select Yes to display a radio button list instead of a dropdown box." );
+				}
+
 				$settings[$p.'default']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC );
 			}
 		}
@@ -108,7 +114,7 @@ class mi_aecuserdetails
 
 	function getMIform( $request )
 	{
-		$language_array = AECToolbox::getISO4271_codes();
+		$language_array = AECToolbox::getISO3166_1a2_codes();
 
 		$language_code_list = array();
 		foreach ( $language_array as $language ) {
@@ -130,7 +136,7 @@ class mi_aecuserdetails
 
 				if ( !empty( $this->settings[$p.'short'] ) ) {
 					if ( $this->settings[$p.'type'] == 'list' ) {
-						$extra = explode( "\n", $this->settings[$p.'extra'] );
+						$extra = explode( "\n", $this->settings[$p.'list'] );
 
 						if ( !count( $extra ) ) {
 							continue;
@@ -141,19 +147,24 @@ class mi_aecuserdetails
 							$fields[] = explode( "|", $ex );
 						}
 
-						$options = array();
-						if ( count( $extra ) < 5 ) {
+						if ( $this->settings[$p.'ltype'] ) {
+							$settings[$this->settings[$p.'short'].'_desc'] = array( 'p', "", $this->settings[$p.'name'] );
+
 							$settings[$this->settings[$p.'short']] = array( 'hidden', null, 'mi_'.$this->id.'_'.$this->settings[$p.'short'] );
 
 							foreach ( $fields as $id => $field ) {
-								$options[] = mosHTML::makeOption( $field[0], $field[1] );
-								$settings['mi_'.$this->id.'_'.$this->settings[$p.'short'].$id] = array( 'radio', 'mi_'.$this->id.'_'.$this->settings[$p.'short'], $field[0], true, $field[1] );
+								if ( !empty( $field[1] ) ) {
+									$settings['mi_'.$this->id.'_'.$this->settings[$p.'short'].$id] = array( 'radio', 'mi_'.$this->id.'_'.$this->settings[$p.'short'], trim( $field[0] ), true, trim( $field[1] ) );
+								}
 							}
 
-							$lists[$this->settings[$p.'short']]	= mosHTML::selectList( $options, $this->settings[$p.'short'], 'size="1"', 'value', 'text', 0 );
+							continue;
 						} else {
+							$options = array();
 							foreach ( $fields as $field ) {
-								$options[] = mosHTML::makeOption( $field[0], $field[1] );
+								if ( !empty( $field[1] ) ) {
+									$options[] = mosHTML::makeOption( trim( $field[0] ), trim( $field[1] ) );
+								}
 							}
 
 							$lists[$this->settings[$p.'short']]	= mosHTML::selectList( $options, $this->settings[$p.'short'], 'size="1"', 'value', 'text', 0 );
@@ -167,9 +178,11 @@ class mi_aecuserdetails
 					}
 
 					if ( ( $this->settings[$p.'type'] == 'radio' ) || ( $this->settings[$p.'type'] == 'checkbox' ) ) {
-						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], null, $this->settings[$p.'desc'], $content );
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], null, $this->settings[$p.'name'], $content );
+					} elseif ( ( $this->settings[$p.'type'] == 'list' ) ) {
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'name'], 'mi_'.$this->id.'_'.$this->settings[$p.'short'] );
 					} else {
-						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'desc'], $content );
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'name'], $content );
 					}
 				}
 			}

@@ -28,9 +28,6 @@ class mi_aectax
 		$settings['locations']	= array( 'inputD' );
 		$settings['custominfo']	= array( 'inputD' );
 
-		// Tax Modes
-		// Multi-Select offer tax modes
-
 		return $settings;
 	}
 
