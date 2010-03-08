@@ -46,13 +46,13 @@ class mi_kunena extends MI
 		$settings['rank']	= array( 'list' );
 		$settings['unrank']	= array( 'list' );
 
-		$setting = $this->autoduplicatesettings( $settings );
+		$settings = $this->autoduplicatesettings( $settings );
 
 		foreach ( $settings as $k => $v ) {
 			if ( isset( $this->settings[$k] ) ) {
-				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="4"', 'value', 'text', '' );
+				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="1"', 'value', 'text', $this->settings[$k] );
 			} else {
-				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="4"', 'value', 'text', $this->settings[$k] );
+				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="1"', 'value', 'text', '' );
 			}
 		}
 
