@@ -3171,7 +3171,7 @@ class PaymentProcessor
 
 	function getParamsHTML( $params, $values )
 	{
-		$return = false;
+		$return = null;
 		if ( !empty( $values['params'] ) ) {
 			if ( is_array( $values['params'] ) ) {
 				if ( isset( $values['params']['lists'] ) ) {
@@ -3195,8 +3195,6 @@ class PaymentProcessor
 				}
 
 				$return .= $table ? '</table>' : '';
-
-				unset( $values['params'] );
 			}
 		}
 
@@ -3787,7 +3785,7 @@ class XMLprocessor extends processor
 
 	function getParamsHTML( $params )
 	{
-		$return = '';
+		$return = null;
 		if ( !empty( $params['params'] ) ) {
 			if ( is_array( $params['params'] ) ) {
 				if ( isset( $params['params']['lists'] ) ) {
@@ -3811,8 +3809,6 @@ class XMLprocessor extends processor
 				}
 
 				$return .= $table ? '</table>' : '';
-
-				unset( $params['params'] );
 			}
 		}
 
@@ -8869,10 +8865,6 @@ class InvoiceFactory
 			}
 
 			$int_var['params']	= $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
-
-			if ( empty( $int_var['params'] ) ) {
-				$int_var['params'] = null;
-			}
 
 			$this->invoice->formatInvoiceNumber();
 
