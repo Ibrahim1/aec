@@ -149,6 +149,13 @@ class processor_authorize_arb extends XMLprocessor
 					. '</creditCard>'
 					. '</payment>'
 					;
+
+		$content .=	'<order>'
+					. '<invoiceNumber>' . $request->invoice->invoice_number . '</invoiceNumber>'
+					. '<description>' . AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) . '</description>'
+					. '</order>'
+					;
+
 		$content .=	 '<billTo>'
 					. '<firstName>'. trim( $request->int_var['params']['billFirstName'] ) . '</firstName>'
 					. '<lastName>' . trim( $request->int_var['params']['billLastName'] ) . '</lastName>'

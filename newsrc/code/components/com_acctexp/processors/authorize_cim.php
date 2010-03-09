@@ -467,6 +467,8 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		$basicdata = array(	'refId'					=> $request->invoice->invoice_number,
+							'order_invoiceNumber'	=> $request->invoice->invoice_number,
+							'order_description'		=> AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ),
 							'merchantCustomerId'	=> $request->metaUser->cmsUser->id,
 							'description'			=> $request->metaUser->cmsUser->name,
 							'email'					=> $request->metaUser->cmsUser->email,
