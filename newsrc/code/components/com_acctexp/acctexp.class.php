@@ -8138,20 +8138,24 @@ class InvoiceFactory
 				$plan = new SubscriptionPlan( $database );
 				$plan->load( $id );
 
-				$restrictions = $plan->getRestrictionsArray();
+				if ( !empty( $plan->params['fixed_redirect'] ) ) {
+					$auth_problem = $plan->params['fixed_redirect'];
+				} else {
+					$restrictions = $plan->getRestrictionsArray();
 
-				if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
-					if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
-						$list[] = ItemGroupHandler::getItemListItem( $plan );
+					if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
+						if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
+							$list[] = ItemGroupHandler::getItemListItem( $plan );
+						} else {
+							$auth_problem = true;
+						}
 					} else {
 						$auth_problem = true;
 					}
-				} else {
-					$auth_problem = true;
-				}
 
-				if ( $auth_problem && !empty( $plan->params['notauth_redirect'] ) ) {
-					$auth_problem = $plan->params['notauth_redirect'];
+					if ( $auth_problem && !empty( $plan->params['notauth_redirect'] ) ) {
+						$auth_problem = $plan->params['notauth_redirect'];
+					}
 				}
 			}
 		} elseif ( !empty( $group ) ) {

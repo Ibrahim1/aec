@@ -1176,6 +1176,8 @@ define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC', 'Dit is de duur van de trail period
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_NAME', 'Trial Periode Unit:');
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_DESC', 'Dit zijn de eenheden van de trail periode. Als er leden zijn van dit abonnement kan dit veld niet veranderd worden. Als u dit plan wilt aanpassen on-publiceer het dan en maak een nieuwe plan aan.');
 
+define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_NAME', 'Always Redirect');
+define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item.');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');
 

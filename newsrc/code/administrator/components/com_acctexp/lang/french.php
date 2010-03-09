@@ -1174,6 +1174,8 @@ define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC', 'C&amp;acute;est la dur&eacute;e de
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_NAME', 'Unit&eacute;:');
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_DESC', 'Il s&amp;acute;agit d&amp;acute;unit&eacute;s de la p&eacute;riode d&amp;acute;essai (au-dessus). S&amp;acute;il y a des abonn&eacute;s &agrave; ce plan ce champ ne peut pas &ecirc;tre chang&eacute;. Si vous souhaitez remplacer ce plan, d&eacute;publiez-le et cr&eacute;ez un nouveau.');
 
+define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_NAME', 'Always Redirect');
+define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item.');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');
 

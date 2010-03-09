@@ -1338,6 +1338,8 @@ define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC',			'L&auml;nge der Testperiode.  Die
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_NAME',		'Testperiodenzyklus:' );
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_DESC',		'Anzahl der Zykluseinheiten. Sind daf&uuml;r bereits Abonnenten eingetragen, kann dieses Feld nicht ge&auml;ndert werden. Soll dennoch eine &Auml;nderung durchgef&uuml;hrt werden, dann Ver&ouml;ffentlichung zur&uuml;ckziehen und ein neues Abo erstellen' );
 
+define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_NAME', 'Always Redirect');
+define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item.');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');
 

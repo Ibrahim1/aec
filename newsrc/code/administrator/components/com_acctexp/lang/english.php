@@ -1167,6 +1167,8 @@ define( '_PAYPLAN_PARAMS_TRIAL_PERIOD_DESC', 'This is the length of the trial pe
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_NAME', 'Trial Period Unit:');
 define( '_PAYPLAN_PARAMS_TRIAL_PERIODUNIT_DESC', 'This is the units of the trial period (above). If there are subscribers to this plan this field can not be changed. If you want to replace this plan, unpublish it and create a new one.');
 
+define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_NAME', 'Always Redirect');
+define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item.');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');
 

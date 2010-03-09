@@ -3279,6 +3279,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['equalplans']			= array( 'list', '' );
 
 	$params['notauth_redirect']		= array( 'inputC', '' );
+	$params['fixed_redirect']		= array( 'inputC', '' );
 
 	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
 

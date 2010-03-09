@@ -1936,7 +1936,7 @@ class HTML_AcctExp
 											</div>
 											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'fixed_redirect' ); ?>
 										</div>
 										<div class="userinfobox">
 											<h2 style="clear:both;"><?php echo _ITEMGROUPS_TITLE; ?></h2>
@@ -2044,17 +2044,22 @@ class HTML_AcctExp
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo _PAYPLAN_RESTRICTIONS_TITLE; ?></h2></div>
 						<table class="aecadminform">
-							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-						<tr><td>
+							<tr><td>
 								<div class="userinfobox">
-									<div style="position:relative;float:left;">
-										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-										<br />
-										<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-									</div>
+									<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 								</div>
-						</td></tr>
+							</td></tr>
+							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+							<tr><td>
+									<div class="userinfobox">
+										<div style="position:relative;float:left;">
+											<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
+											<br />
+											<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
+										</div>
+									</div>
+							</td></tr>
 						</table>
 						<?php
 		                echo $tabs->endPanel();
