@@ -953,4 +953,14 @@ define( '_CFG_HSBC_PAS_URL_DESC', 'The Url that your customers will be sent to f
 define( '_CFG_HSBC_PROMPTADDRESS_NAME', 'Prompt for Address');
 define( '_CFG_HSBC_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
 
+// Mpay24
+define( '_CFG_MPAY24_LONGNAME', 'Mpay24');
+define( '_CFG_MPAY24_STATEMENT', 'mPAY24 - Die Zahlungsplattform für E- und M-Commerce');
+define( '_CFG_MPAY24_DESCRIPTION', 'Bietet &ouml;sterreichischen elektronischen Zahlungsverkehr für E-Commerce und M-Commerce');
+
+// Siam Commercial Bank
+define( '_CFG_SCB_NSIPS_LONGNAME', 'Siam Commercial Bank');
+define( '_CFG_SCB_NSIPS_STATEMENT', 'Siam Commercial Bank');
+define( '_CFG_SCB_NSIPS_DESCRIPTION', 'Siam Commercial Bank - New SCB Internet Payment System');
+
 ?>
