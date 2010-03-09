@@ -3640,7 +3640,7 @@ class processor extends serialParamDBTable
 
 			if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 				if ( !empty( $aecConfig->cfg['proxy_username'] ) && !empty( $aecConfig->cfg['proxy_password'] ) ) {
-					$header .= "Proxy-Authorization: Basic ". base64_encode( $aecConfig->cfg['proxy_username'] . ":" . $aecConfig->cfg['proxy_password'] )."\r\n\r\n") ;
+					$header .= "Proxy-Authorization: Basic ". base64_encode( $aecConfig->cfg['proxy_username'] . ":" . $aecConfig->cfg['proxy_password'] )."\r\n\r\n";
 				}
 			}
 
