@@ -6,6 +6,6 @@
 	</projects>
 	<buildSpec>
 	</buildSpec>
-	<natures>
+	<natures>org.eclipse.php.core.PHPNature
 	</natures>
 </projectDescription>
