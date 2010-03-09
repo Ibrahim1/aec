@@ -2917,7 +2917,7 @@ class PaymentProcessor
 						// Exception for NULL case
 						$this->settings[$key] = null;
 					} else {
-						if ( !empty( $value ) ) {
+						if ( !is_null( $value ) || ( $value === "" ) ) {
 							$this->settings[$key] = $value;
 						}
 					}
@@ -5080,7 +5080,7 @@ class aecHTML
 				$row[1] = substr( $row[1], 0, -1 );
 			}
 
-			$return .= '<strong>' . $row[1] . ':</strong>';
+			$return .= '<strong>' . $row[1] . ( ( strpos( $row[1], '?' ) == ( strlen( $row[1] ) ) - 1 ) ? '' : ':' ) . '</strong>';
 		}
 
 		$return .= $table ? '</td><td class="cright">' : ' ';
@@ -8273,9 +8273,10 @@ class InvoiceFactory
 
 							$pp->init();
 							$pp->getInfo();
+
 							$pp->exchangeSettingsByPlan( $plan['plan'] );
 
-							$recurring = $pp->is_recurring( $this->recurring );
+							$recurring = $pp->is_recurring( $this->recurring, true );
 
 							if ( $recurring > 1 ) {
 								$pp->recurring = 0;

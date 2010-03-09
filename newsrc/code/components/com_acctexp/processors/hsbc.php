@@ -138,7 +138,7 @@ class processor_hsbc extends XMLprocessor
 		$var = $this->getCCform( $var, $values );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$values = array( 'firstname*', 'lastname*', 'company', 'address*', 'address2', 'city*', 'zip*', 'state_usca', 'country3_list*' );
+			$values = array( 'firstname*', 'lastname*', 'company', 'address*', 'address2', 'phone', 'city*', 'zip*', 'state_usca', 'country3_list*' );
 		} else {
 			$values = array( 'firstname', 'lastname' );
 		}
@@ -215,7 +215,14 @@ class processor_hsbc extends XMLprocessor
 		// Customer Address Details
 		$content .=	'<BillTo>'
 					. '<Location>'
-					. '<Address>'
+					;
+
+
+		if ( !empty( $request->int_var['params']['billPhone'] ) ) {
+			$content .= '<TelVoice DataType="String">' . trim( $request->int_var['params']['billPhone'] ) . '</TelVoice>';
+		}
+
+		$content .=	'<Address>'
 					;
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
