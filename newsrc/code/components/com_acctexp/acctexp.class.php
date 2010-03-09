@@ -3603,10 +3603,12 @@ class processor extends serialParamDBTable
 
 		if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 			if ( !empty( $aecConfig->cfg['proxy_port'] ) ) {
-				$port = $aecConfig->cfg['proxy_port'];
+				$proxyport = $aecConfig->cfg['proxy_port'];
+			} else {
+				$proxyport = $port;
 			}
 
-			$connection = fsockopen( $aecConfig->cfg['proxy'], $port, $errno, $errstr, 30 );
+			$connection = fsockopen( $aecConfig->cfg['proxy'], $proxyport, $errno, $errstr, 30 );
 		} else {
 			$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
 		}
@@ -3628,8 +3630,21 @@ class processor extends serialParamDBTable
 
 			return false;
 		} else {
-			$header  =	"Host: " . $url  . "\r\n"
-						. "User-Agent: PHP Script\r\n"
+		    if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+				$hosturl = $aecConfig->cfg['proxy'];
+		    } else {
+		    	$hosturl = $url;
+		    }
+
+			$header  =	"Host: " . $hosturl  . "\r\n";
+
+			if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+				if ( !empty( $aecConfig->cfg['proxy_username'] ) && !empty( $aecConfig->cfg['proxy_password'] ) ) {
+					$header .= "Proxy-Authorization: Basic ". base64_encode( $aecConfig->cfg['proxy_username'] . ":" . $aecConfig->cfg['proxy_password'] )."\r\n\r\n") ;
+				}
+			}
+
+			$header .=	"User-Agent: PHP Script\r\n"
 						. "Content-Type: text/xml\r\n"
 						. "Content-Length: " . strlen( $content ) . "\r\n\r\n"
 						. "Connection: close\r\n\r\n";
