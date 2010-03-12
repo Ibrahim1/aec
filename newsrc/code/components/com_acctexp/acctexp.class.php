@@ -12656,8 +12656,11 @@ class reWriteEngine
 		$rqitems = get_object_vars( $request );
 
 		$data = array();
+
 		foreach ( $rqitems as $rqitem => $content ) {
-			$data[$rqitem] = $request->$rqitem;
+			if ( is_object( $content ) || is_array( $content ) ) {
+				$data[$rqitem] = $content;
+			}
 		}
 
 		$this->feedData( $data );
@@ -12668,7 +12671,9 @@ class reWriteEngine
 	function feedData( $data )
 	{
 		if ( !isset( $this->data ) ) {
-			$this->data = array();
+			$this->data = $data;
+
+			return true;
 		}
 
 		foreach ( $data as $name => $content ) {

@@ -93,6 +93,10 @@ class processor_hsbc extends XMLprocessor
 				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 
 				if ( !is_null( $check ) ) {
+					global $aecConfig;
+
+					$aecConfig->cfg['enable_coupons'] = false;
+
 					return parent::checkoutProcess( $request );
 				} else {
 					$var = $this->createGatewayLink( $request );
