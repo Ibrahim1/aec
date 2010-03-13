@@ -8208,7 +8208,7 @@ class InvoiceFactory
 			}
 		} else {
 			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
-				$x = AECToolbox::rewriteEngine( $this->metaUser, $this->metaUser );
+				$x = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
 			} else {
 				$x = array( $aecConfig->cfg['root_group'] );
 			}
@@ -8618,7 +8618,7 @@ class InvoiceFactory
 				$this->userdetails .= '<p>' . _CONFIRM_ROW_USERNAME . $this->metaUser->cmsUser->username . '</p>';
 				$this->userdetails .= '<p>' . _CONFIRM_ROW_EMAIL . $this->metaUser->cmsUser->email . '</p>';
 			} else {
-				$this->userdetails = AECToolbox::rewriteEngine( $aecConfig->cfg['custom_confirm_userdetails'], $this );
+				$this->userdetails = AECToolbox::rewriteEngineRQ( $aecConfig->cfg['custom_confirm_userdetails'], $this );
 			}
 
 			Payment_HTML::confirmForm( $option, $this, $this->metaUser->cmsUser, $this->getPassthrough() );

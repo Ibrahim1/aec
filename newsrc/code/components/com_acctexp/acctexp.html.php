@@ -823,44 +823,56 @@ class Payment_HTML
 						<td><p><?php echo $InvoiceFactory->plan->name; ?></p></td>
 						<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
 					</tr>
-					<?php if ( $aecConfig->cfg['confirmation_changeusername'] || $aecConfig->cfg['confirmation_changeusage'] ) { ?>
+					<?php if ( empty( $user->id ) && $aecConfig->cfg['confirmation_changeusername'] && $aecConfig->cfg['confirmation_changeusage'] ) { ?>
 					<tr>
 						<td>
-							<?php if ( empty( $user->id ) && $aecConfig->cfg['confirmation_changeusername'] ) { ?>
-								<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-									<input type="hidden" name="option" value="<?php echo $option; ?>" />
-									<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
-									<input type="hidden" name="task" value="subscribe" />
-									<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
-									<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
-									<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
-									<input type="hidden" name="forget" value="userdetails" />
-									<?php if ( $passthrough != false ) { ?>
-										<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'userdetails' ); ?>" />
-									<?php } ?>
-									<button class="aeclink" type="submit"><span>Want to change the user details?</span></button>
-								</form>
-							<?php } ?>
+							<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+								<input type="hidden" name="option" value="<?php echo $option; ?>" />
+								<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+								<input type="hidden" name="task" value="subscribe" />
+								<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
+								<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
+								<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
+								<input type="hidden" name="forget" value="userdetails" />
+								<?php if ( $passthrough != false ) { ?>
+									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'userdetails' ); ?>" />
+								<?php } ?>
+								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_USER_DETAILS; ?></span></button>
+							</form>
 						</td>
 						<td colspan="2">
-							<?php if ( $aecConfig->cfg['confirmation_changeusage'] ) { ?>
-								<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-									<input type="hidden" name="option" value="<?php echo $option; ?>" />
-									<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
-									<input type="hidden" name="task" value="subscribe" />
-									<input type="hidden" name="forget" value="usage" />
-									<?php if ( $passthrough != false ) { ?>
-										<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
-									<?php } ?>
-									<button class="aeclink" type="submit"><span>Wanted to select a different item?</span></button>
-								</form>
-							<?php } ?>
+							<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+								<input type="hidden" name="option" value="<?php echo $option; ?>" />
+								<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+								<input type="hidden" name="task" value="subscribe" />
+								<input type="hidden" name="forget" value="usage" />
+								<?php if ( $passthrough != false ) { ?>
+									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
+								<?php } ?>
+								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_ITEM; ?></span></button>
+							</form>
 						</td>
 					</tr>
 					<?php } ?>
 					<tr>
-						<td colspan="4" class="confirmation_description"><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
+						<td colspan="3" class="aec_left"><strong><?php echo _CONFIRM_YOU_HAVE_SELECTED; ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
 					</tr>
+					<?php if ( $aecConfig->cfg['confirmation_changeusage'] ) { ?>
+					<tr>
+						<td colspan="3" class="aec_left">
+							<form name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+								<input type="hidden" name="option" value="<?php echo $option; ?>" />
+								<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+								<input type="hidden" name="task" value="subscribe" />
+								<input type="hidden" name="forget" value="usage" />
+								<?php if ( $passthrough != false ) { ?>
+									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
+								<?php } ?>
+								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_ITEM; ?></span></button>
+							</form>
+						</td>
+					</tr>
+					<?php } ?>
 				</table>
 			</div>
 			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
