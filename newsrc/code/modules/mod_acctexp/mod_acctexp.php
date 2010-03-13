@@ -41,7 +41,7 @@ if ( $user->id ) {
 		}
 
 		if ( !$extended ) {
-			echo AECMenuHelper::getExpirationSimple();
+			echo AECModuleHelper::getExpirationSimple();
 		} else {
 			$metaUser = new metaUser( $user->id );
 
@@ -52,7 +52,7 @@ if ( $user->id ) {
 
 				echo "<h4>" . $subscription->name . "</h4>";
 
-				echo AECMenuHelper::textExpiration( $subscription->expiration, $subscription->recurring );
+				echo AECModuleHelper::textExpiration( $subscription->expiration, $subscription->recurring );
 
 				echo '</div>';
 			}
@@ -72,7 +72,7 @@ if ( $user->id ) {
 	echo '</div>';
 }
 
-class AECMenuHelper
+class AECModuleHelper
 {
 	function getExpirationSimple()
 	{
@@ -97,9 +97,9 @@ class AECMenuHelper
 		                . ' AND `status` != \'Excluded\'';
 				$database->setQuery($query);
 
-				return AECMenuHelper::textExpiration( $database->loadResult() );
+				return AECModuleHelper::textExpiration( $database->loadResult() );
 			} else {
-				return AECMenuHelper::textExpiration( $entry->expiration );
+				return AECModuleHelper::textExpiration( $entry->expiration );
 			}
 		}
 
@@ -109,9 +109,9 @@ class AECMenuHelper
 	function textExpiration( $expiration, $recurring=false )
 	{
 		if ( empty( $expiration ) ) {
-			return AECMenuHelper::textUnlimited();
+			return AECModuleHelper::textUnlimited();
 		} else {
-			return AECMenuHelper::textExpirationDate( $expiration, $recurring );
+			return AECModuleHelper::textExpirationDate( $expiration, $recurring );
 		}
 	}
 
