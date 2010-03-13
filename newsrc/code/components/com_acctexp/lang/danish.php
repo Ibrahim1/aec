@@ -148,6 +148,10 @@ define( '_CONFIRM_TOS_ERROR', 'Jeg har l&aelig;st og accepterer Terms of Service
 define( '_CONFIRM_COUPON_INFO', 'Hvis du har en kupon kode, kan du indtaste den p&aring; tjek ud síden for at f&aring; rabat p&aring; din betaling');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'Hvis du har en kupon kode, kan ud indtaste den her, eller p&aring; tjek ud siden for at f&aring; rabat p&aring; din betaling');
 define( '_CONFIRM_FREETRIAL', 'Gratis pr&oslash;veperiode');
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'You have selected');
+
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Want to change the user details?');
+define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
 
 // --== SHOPPING CART FORM ==--
 define( '_CART_TITLE', 'Shopping Cart');

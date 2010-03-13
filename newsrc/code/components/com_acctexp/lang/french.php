@@ -153,6 +153,10 @@ define( '_CONFIRM_TOS_ERROR', 'Veuillez lire et accepter nos conditions d\'utili
 define( '_CONFIRM_COUPON_INFO', 'Si vous avez un code de bon de r&eacute;duction, vous pourrez le saisir sur la page du r&egrave;glement pour qu\'il soit pris en compte.');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'Si vous avez un bon de r&eacute;duction, vous pouvez le saisir ici ou sur la page de confirmation pour b&eacute;n&eacute;ficier de la remise');
 define( '_CONFIRM_FREETRIAL', 'P&eacute;riode d\'essai gratuite');
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'You have selected');
+
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Want to change the user details?');
+define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
 
 // --== SHOPPING CART FORM ==--
 define( '_CART_TITLE', 'Panier');

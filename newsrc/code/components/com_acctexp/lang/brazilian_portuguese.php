@@ -144,6 +144,10 @@ define( '_CONFIRM_TOS_ERROR', 'Por favor leia e concorde com os nossos Termos do
 define( '_CONFIRM_COUPON_INFO', 'Se tiver um cup&atilde;o promocional, pode inserir o seu codigo na Pagina de Verifica&ccedil;&atilde;o para obter um desconto sobre o seu pagamento');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'Se tiver um cup&atilde;o promocional, pode inserir o seu c&oacute;digo aqui, ou na Pagina de Verifica&ccedil;&atilde;o para obter um desconto sobre o seu pagamento');
 define( '_CONFIRM_FREETRIAL', 'Demonstra&ccedil;&atilde;o Gr&aacute;tis');
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'You have selected');
+
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Want to change the user details?');
+define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
 
 // --== SHOPPING CART FORM ==--
 define( '_CART_TITLE', 'Shopping Cart');

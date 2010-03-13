@@ -264,6 +264,10 @@ define( '_CONFIRM_COUPON_INFO_BOTH', 'Если у Вас есть купон в�
 
 define( '_CONFIRM_FREETRIAL', 'Бесплатный тестовый период');
 
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'You have selected');
+
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Want to change the user details?');
+define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
 
 
 // --== SHOPPING CART FORM ==--

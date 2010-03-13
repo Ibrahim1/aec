@@ -148,6 +148,10 @@ define( '_CONFIRM_TOS_ERROR',				'Sie m&uuml;ssen unsere AGBs lesen und akzeptie
 define( '_CONFIRM_COUPON_INFO',				'Falls Sie einen Gutscheincode haben geben Sie ihn bitte auf den nachfolgenden Seiten an, um einen allf&auml;lligen Abzug zu ber&uuml;cksichtigen');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
 define( '_CONFIRM_FREETRIAL', 'Kostenlose Testphase');
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'Sie haben gewählt');
+
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'M&ouml;chten sie die Benutzerdetails &auml;ndern?');
+define( '_CONFIRM_DIFFERENT_ITEM', 'M&ouml;chten sie sich f&uuml;r eine andere Option entscheiden?');
 
 // --== SHOPPING CART FORM ==--
 define( '_CART_TITLE', 'Shopping Cart');

@@ -150,6 +150,10 @@ define( '_CONFIRM_TOS_ERROR', 'Du måste först läsa och godkänna våra villko
 define( '_CONFIRM_COUPON_INFO', 'Om du har en kupongkod kan du ange den i kassan, och då dras din rabatt av automatiskt.'); //If you have a coupon code, you can enter it on the Checkout Page to get a discount on your payment.
 define( '_CONFIRM_COUPON_INFO_BOTH', 'Om du har en kupongkod kan du ange den här, eller i kassan, så dras din rabatt av automatiskt.'); //If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment.
 define( '_CONFIRM_FREETRIAL', 'Gratis prova-på-period'); //Free Trial
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'You have selected');
+
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Want to change the user details?');
+define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
 
 // --== SHOPPING CART FORM ==--
 define( '_CART_TITLE', 'Varukorg'); //Shopping Cart
