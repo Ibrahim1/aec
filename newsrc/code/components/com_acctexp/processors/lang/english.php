@@ -953,6 +953,8 @@ define( '_CFG_HSBC_PAS_URL_DESC', 'The Url that your customers will be sent to f
 define( '_CFG_HSBC_PROMPTADDRESS_NAME', 'Prompt for Address');
 define( '_CFG_HSBC_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
 
+define( '_CFG_HSBC_2ND_CHECKOUT_INFO', 'This page should forward you to your own visa card issuer for identification. After you successfully identify yourself you will be sent back to this site where the subscription process will be completed. <br /><br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your username and password - Our System will give you an option to try your payment again.');
+
 // Mpay24
 define( '_CFG_MPAY24_LONGNAME', 'Mpay24');
 define( '_CFG_MPAY24_STATEMENT', 'mPAY24 - Die Zahlungsplattform für E- und M-Commerce');

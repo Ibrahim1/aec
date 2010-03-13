@@ -85,27 +85,53 @@ class processor_hsbc extends XMLprocessor
 	{
 		if ( $this->settings['pas'] ) {
 			if ( !empty( $request->int_var['params']['cardNumber'] ) && !isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
+				$mod = array(	'enable_coupons' => false,
+								'checkout_title' => 'Checkout - Security Check',
+								'customtext_checkout_keeporiginal' => 'false',
+								'introtext' => '',
+								'customtext_checkout' => _CFG_HSBC_2ND_CHECKOUT_INFO
+							);
+				$this->simpleCheckoutMod( $mod );
 
-			$var = $this->createGatewayLink( $request );
+				$var = $this->createGatewayLink( $request );
 
 				return POSTprocessor::checkoutAction( $request, $var );
 			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {
-				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
+				if ( !empty( $request->int_var['params']['CcpaResultsCode'] ) ) {
+					$check = $request->int_var['params']['CcpaResultsCode'];
+				} else {
+					// Double check for CcpaResultsCode
+					$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
+				}
 
 				if ( !is_null( $check ) ) {
-					global $aecConfig;
+					$mod = array(	'enable_coupons' => false,
+									'checkout_title' => 'Checkout - Final Stage'
+								);
+					$this->simpleCheckoutMod( $mod );
 
-					$aecConfig->cfg['enable_coupons'] = false;
-
+					// Display final checkout
 					return parent::checkoutProcess( $request );
 				} else {
 					$var = $this->createGatewayLink( $request );
 
+					$mod = array(	'enable_coupons' => false,
+									'checkout_title' => 'Checkout - Security Check',
+									'customtext_checkout_keeporiginal' => 'false',
+									'customtext_checkout' => _CFG_HSBC_2ND_CHECKOUT_INFO
+								);
+					$this->simpleCheckoutMod( $mod );
+
+					// Display PAC Form
 					return POSTprocessor::checkoutAction( $request, $var );
 				}
 			}
 		}
 
+		$mod = array( 'checkout_title' => 'Checkout - First Stage' );
+		$this->simpleCheckoutMod( $mod );
+
+		// Display standard CC collection Form
 		return parent::checkoutAction( $request );
 	}
 
@@ -457,4 +483,5 @@ class processor_hsbc extends XMLprocessor
 	}
 
 }
+
 ?>

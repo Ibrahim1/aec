@@ -942,4 +942,27 @@ define( '_CFG_NETPAY_CUSTID_DESC', 'Your NetPay Customer ID');
 define( '_CFG_NETPAY_PASSWORD_NAME', 'Password');
 define( '_CFG_NETPAY_PASSWORD_DESC', 'Your NetPay Password');
 
+// HSBC
+define( '_CFG_HSBC_LONGNAME', 'HSBC');
+define( '_CFG_HSBC_STATEMENT', 'The world\'s local bank');
+define( '_CFG_HSBC_DESCRIPTION', 'Products and services including current accounts, savings, investments, credit cards, mortgages, loans, and insurance.');
+define( '_CFG_HSBC_CLIENTID_NAME', 'Client ID');
+define( '_CFG_HSBC_CLIENTID_DESC', 'Your HSBC Client ID');
+define( '_CFG_HSBC_NAME_NAME', 'Client Name');
+define( '_CFG_HSBC_NAME_DESC', 'Your HSBC Client Name');
+define( '_CFG_HSBC_PASSWORD_NAME', 'Password');
+define( '_CFG_HSBC_PASSWORD_DESC', 'Your HSBC Password');
+
+define( '_CFG_HSBC_PAS_NAME', 'Payer Authentication Service');
+define( '_CFG_HSBC_PAS_DESC', 'Use the HSBC Payer Authentication Service');
+define( '_CFG_HSBC_PAS_ID_NAME', 'PAS ID');
+define( '_CFG_HSBC_PAS_ID_DESC', 'Your HSBC PAS ID');
+define( '_CFG_HSBC_PAS_URL_NAME', 'PAS Url');
+define( '_CFG_HSBC_PAS_URL_DESC', 'The Url that your customers will be sent to for PAS');
+
+define( '_CFG_HSBC_PROMPTADDRESS_NAME', 'Prompt for Address');
+define( '_CFG_HSBC_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with the Billing Name.');
+
+define( '_CFG_HSBC_2ND_CHECKOUT_INFO', 'This page should forward you to your own visa card issuer for identification. After you successfully identify yourself you will be sent back to this site where the subscription process will be completed. <br /><br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your username and password - Our System will give you an option to try your payment again.');
+
 ?>

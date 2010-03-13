@@ -1162,7 +1162,7 @@ class Payment_HTML
 		<?php
 	}
 
-	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $error = null, $repeat = 0 )
+	function checkoutForm( $option, $var, $params = null, $InvoiceFactory, $error = null )
 	{
 		global $aecConfig;
 
@@ -1172,21 +1172,19 @@ class Payment_HTML
 
 		HTML_frontend::aec_styling( $option );
 
-		$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
-
 		?>
-		<div class="componentheading"><?php echo _CHECKOUT_TITLE; ?></div>
+		<div class="componentheading"><?php echo $InvoiceFactory->checkout['checkout_title']; ?></div>
 		<div id="checkout">
 			<?php
-			if ( $aecConfig->cfg['customtext_checkout_keeporiginal'] ) { ?>
-				<p><?php echo sprintf( constant( $introtext ), $InvoiceFactory->invoice->invoice_number ); ?></p>
+			if ( $InvoiceFactory->checkout['customtext_checkout_keeporiginal'] && !empty( $InvoiceFactory->checkout['introtext'] ) ) { ?>
+				<p><?php echo $InvoiceFactory->checkout['introtext']; ?></p>
 				<?php
 			}
 
 			$InvoiceFactory->invoice->deformatInvoiceNumber();
 
-			if ( $aecConfig->cfg['customtext_checkout'] ) { ?>
-				<p><?php echo $aecConfig->cfg['customtext_checkout']; ?></p>
+			if ( $InvoiceFactory->checkout['customtext_checkout'] ) { ?>
+				<p><?php echo $InvoiceFactory->checkout['customtext_checkout']; ?></p>
 				<?php
 			} ?>
 			<table id="aec_checkout">
@@ -1227,7 +1225,7 @@ class Payment_HTML
 							echo '<tr><td><h4>' . $item['name'] . $add . '</h4></td></tr>';
 						}
 
-						if ( isset( $item['desc'] ) && $aecConfig->cfg['checkout_display_descriptions'] ) {
+						if ( isset( $item['desc'] ) && $InvoiceFactory->checkout['checkout_display_descriptions'] ) {
 							// This is an item, show its name (skip for total)
 							echo '<tr><td>' . $item['desc'] . '</td></tr>';
 						}
@@ -1303,7 +1301,7 @@ class Payment_HTML
 			</table>
 
 			<?php
-			if ( !empty( $aecConfig->cfg['enable_coupons'] ) ) { ?>
+			if ( !empty( $InvoiceFactory->checkout['enable_coupons'] ) ) { ?>
 				<table width="100%" id="couponsbox">
 					<tr>
 						<td class="couponinfo">
@@ -1407,12 +1405,14 @@ class Payment_HTML
 
 		if ( !empty( $var ) ) { ?>
 		<table width="100%" id="checkoutbox">
-			<tr><th><?php echo _CHECKOUT_TITLE; ?></th></tr>
-		<?php if ( is_string( $error ) ) { ?>
+			<?php if ( strpos( $var, '<tr class="aec_formrow">' ) !== false ) { ?>
+				<tr><th class="checkout_head"><?php echo $InvoiceFactory->checkout['customtext_checkout_table']; ?></th></tr>
+			<?php } ?>
+		<?php if ( is_string( $InvoiceFactory->display_error ) ) { ?>
 			<tr>
 				<td class="checkout_error">
 					<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ":"; ?></p>
-					<p><strong><?php echo $error; ?></strong></p>
+					<p><strong><?php echo $InvoiceFactory->display_error; ?></strong></p>
 					<p><?php echo _CHECKOUT_ERROR_FURTHEREXPLANATION; ?></p>
 				</td>
 			</tr>

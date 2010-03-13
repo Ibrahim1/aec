@@ -3372,6 +3372,13 @@ class PaymentProcessor
 		return $response;
 	}
 
+	function modifyCheckout( &$int_var, &$InvoiceFactory )
+	{
+		if ( method_exists( $this->processor, 'modifyCheckout' ) ) {
+			$this->processor->modifyCheckout( $int_var, $InvoiceFactory );
+		}
+	}
+
 	function getProfileTabs()
 	{
 		$addtabs = $this->registerProfileTabs();
@@ -4239,6 +4246,26 @@ class XMLprocessor extends processor
 			return $request->invoice->processorResponse( $request->parent, $response, $resp, true );
 		} else {
 			return false;
+		}
+	}
+
+	function simpleCheckoutMod( $array )
+	{
+		if ( empty( $this->aec_checkout_mod ) ) {
+			$this->aec_checkout_mod = array();
+		}
+
+		foreach ( $array as $k => $v ) {
+			$this->aec_checkout_mod[$k] = $v;
+		}
+	}
+
+	function modifyCheckout( &$int_var, &$InvoiceFactory )
+	{
+		if ( !empty( $this->aec_checkout_mod ) ) {
+			foreach ( $this->aec_checkout_mod as $k => $v ) {
+				$InvoiceFactory->checkout[$k] = $v;
+			}
 		}
 	}
 
@@ -8863,7 +8890,7 @@ class InvoiceFactory
 
 	function InvoiceToCheckout( $option, $repeat=0, $error=null, $data=null )
 	{
-		global $mainframe;
+		global $mainframe, $aecConfig;
 
 		if ( $this->hasExceptions() ) {
 			$this->addressExceptions( $option );
@@ -8887,9 +8914,26 @@ class InvoiceFactory
 
 			$this->invoice->formatInvoiceNumber();
 
-			$mainframe->SetPageTitle( _CHECKOUT_TITLE );
+			$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
 
-			Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this, $error, $repeat );
+			$this->checkout = array();
+			$this->checkout['checkout_title']					= _CHECKOUT_TITLE;
+			$this->checkout['customtext_checkout_keeporiginal']	= $aecConfig->cfg['customtext_checkout_keeporiginal'];
+			$this->checkout['customtext_checkout']				= $aecConfig->cfg['customtext_checkout'];
+			$this->checkout['introtext']						= sprintf( constant( $introtext ), $InvoiceFactory->invoice->invoice_number );
+			$this->checkout['checkout_display_descriptions']	= $aecConfig->cfg['checkout_display_descriptions'];
+			$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];
+			$this->checkout['customtext_checkout_table']		= _CHECKOUT_TITLE;
+
+			$this->display_error = $error;
+
+			if ( is_object( $this->pp ) ) {
+				$this->pp->modifyCheckout( $int_var, $this );
+			}
+
+			$mainframe->SetPageTitle( $this->checkout['checkout_title'] );
+
+			Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this );
 		}
 	}
 
