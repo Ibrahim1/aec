@@ -128,7 +128,7 @@ class processor_hsbc extends XMLprocessor
 			}
 		}
 
-		$mod = array( 'checkout_title' => 'Checkout - First Stage' );
+		$mod = array( 'checkout_title' => 'Checkout - First Stage', 'customtext_checkout_table' => 'Credit Card Details' );
 		$this->simpleCheckoutMod( $mod );
 
 		// Display standard CC collection Form
