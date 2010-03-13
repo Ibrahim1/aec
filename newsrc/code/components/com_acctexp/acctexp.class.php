@@ -6859,7 +6859,7 @@ class SubscriptionPlan extends serialParamDBTable
 						'fallback', 'similarplans', 'equalplans', 'make_active',
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
 						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
-						'notauth_redirect'
+						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout'
 						);
 
 		$params = array();
@@ -7718,11 +7718,19 @@ class InvoiceFactory
 				}
 			}
 
+			$params = array();
+			if ( !empty( $this->plan->params['hide_duration_checkout'] ) ) {
+				$params['hide_duration_checkout'] = true;
+			} else {
+				$params['hide_duration_checkout'] = false;
+			}
+
 			$this->items[] = array(	'obj'		=> $this->plan,
 									'name'		=> $this->plan->getProperty( 'name' ),
 									'desc'		=> $this->plan->getProperty( 'desc' ),
 									'quantity'	=> 1,
-									'terms'		=> $terms
+									'terms'		=> $terms,
+									'params'	=> $params
 								);
 
 			$this->cartobject = new aecCart( $database );
@@ -7746,6 +7754,15 @@ class InvoiceFactory
 					}
 
 					$this->items[$cid]['terms'] = $terms;
+
+					$params = array();
+					if ( !empty( $citem['obj']->params['hide_duration_checkout'] ) ) {
+						$params['hide_duration_checkout'] = true;
+					} else {
+						$params['hide_duration_checkout'] = false;
+					}
+
+					$this->items[$cid]['params'] = $params;
 				} else {
 					$terms = new mammonTerms();
 					$term = new mammonTerm();

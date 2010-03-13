@@ -1180,6 +1180,8 @@ define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_NAME', 'Always Redirect');
 define( '_PAYPLAN_PARAMS_FIXED_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item.');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
 define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');
+define( '_PAYPLAN_PARAMS_HIDE_DURATION_CHECKOUT_NAME', 'Hide Duration');
+define( '_PAYPLAN_PARAMS_HIDE_DURATION_CHECKOUT_DESC', 'Switch this to Yes to hide the automatic display of the plan duration on checkout.');
 
 // Betaalplan relaties
 

@@ -3280,6 +3280,7 @@ function editSubscriptionPlan( $id, $option )
 
 	$params['notauth_redirect']		= array( 'inputC', '' );
 	$params['fixed_redirect']		= array( 'inputC', '' );
+	$params['hide_duration_checkout']	= array( 'list_yesno', 0 );
 
 	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
 
