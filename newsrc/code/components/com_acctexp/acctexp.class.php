@@ -7883,6 +7883,15 @@ class InvoiceFactory
 		$this->cartobject->action( 'clearCart' );
 	}
 
+	function clearCartItem( $option, $item )
+	{
+		if ( empty( $this->cartobject ) ) {
+			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
+		}
+
+		$this->cartobject->action( 'updateItems', array( $item => 0 ) );
+	}
+
 	function touchInvoice( $option, $invoice_number=false, $storenew=false, $coupon=false )
 	{
 		// Checking whether we are trying to repeat an invoice

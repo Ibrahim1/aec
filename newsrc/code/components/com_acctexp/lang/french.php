@@ -162,6 +162,8 @@ define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
 define( '_CART_TITLE', 'Panier');
 define( '_CART_ROW_TOTAL', 'Total');
 define( '_CART_INFO', 'Veuillez cliquer sur le bouton Continuer ci-dessous pour finaliser votre achat.');
+define( '_CART_CLEAR_ALL', 'clear the whole cart');
+define( '_CART_DELETE_ITEM', 'delete');
 
 // --== EXCEPTION FORM ==--
 define( '_EXCEPTION_TITLE', 'Informations compl&eacute;mentaires requises');

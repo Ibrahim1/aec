@@ -1020,7 +1020,7 @@ class Payment_HTML
 				<p>Your Shopping Cart is empty!</p>
 				<?php } else { ?>
 				<p>&nbsp;</p>
-				<div id="update_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart', $aecConfig->cfg['ssl_signup'] ); ?>">clear the whole cart</a></div>
+				<div id="update_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_CLEAR_ALL; ?></a></div>
 				<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
@@ -1028,6 +1028,7 @@ class Payment_HTML
 						<th>Cost</th>
 						<th>Amount</th>
 						<th>Total</th>
+						<th>&nbsp;</th>
 					</tr>
 					<?php
 					foreach ( $InvoiceFactory->cart as $bid => $bitem ) {
@@ -1037,6 +1038,7 @@ class Payment_HTML
 								<td><?php echo $bitem['cost']; ?></td>
 								<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid; ?>" value="<?php echo $bitem['quantity']; ?>" /></td>
 								<td><?php echo $bitem['cost_total']; ?></td>
+								<td><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid, $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_DELETE_ITEM; ?></a></td>
 							</tr><?php
 						} else {
 							?><tr>
@@ -1044,6 +1046,7 @@ class Payment_HTML
 								<td></td>
 								<td></td>
 								<td><strong><?php echo $bitem['cost']; ?></strong></td>
+								<td></td>
 							</tr><?php
 						}
 					}

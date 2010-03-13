@@ -154,9 +154,11 @@ define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'M&ouml;chten sie die Benutzerdetails
 define( '_CONFIRM_DIFFERENT_ITEM', 'M&ouml;chten sie sich f&uuml;r eine andere Option entscheiden?');
 
 // --== SHOPPING CART FORM ==--
-define( '_CART_TITLE', 'Shopping Cart');
-define( '_CART_ROW_TOTAL', 'Total');
+define( '_CART_TITLE', 'Einkaufswagen');
+define( '_CART_ROW_TOTAL', 'Summe');
 define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
+define( '_CART_CLEAR_ALL', 'alles aus dem Einkaufswagen entfernen');
+define( '_CART_DELETE_ITEM', 'l&ouml;schen');
 
 // --== EXCEPTION FORM ==--
 define( '_EXCEPTION_TITLE', 'Additional Information Required');
