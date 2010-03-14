@@ -300,7 +300,7 @@ class metaUser
 
 	function getCMSparams( $name )
 	{
-		$userParams =& new JParameter( $this->cmsUser->params );
+		$userParams = new JParameter( $this->cmsUser->params );
 
 		if ( is_array( $name ) ) {
 			$array = array();
