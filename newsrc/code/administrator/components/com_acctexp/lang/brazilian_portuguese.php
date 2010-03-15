@@ -1203,6 +1203,9 @@ define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSERNAME_DESC', 'Give new users the pos
 define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_NAME', 'Option: Change Item');
 define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_DESC', 'Give new users the possibility to go back to the plan selection screen from confirmation (in case they made an error)');
 
+define( '_CFG_GENERAL_CHECKOUTFORM_JSVALIDATION_NAME', 'Checkout - JS Validation');
+define( '_CFG_GENERAL_CHECKOUTFORM_JSVALIDATION_DESC', 'Use basic Javascript validation on the checkout CreditCard Form');
+
 define( '_CFG_GENERAL_MANAGERACCESS_NAME', 'Manager Access:');
 define( '_CFG_GENERAL_MANAGERACCESS_DESC', 'Grant Access to the AEC not only to Administrators, but to Managers as well.');
 define( '_CFG_GENERAL_PER_PLAN_MIS_NAME', 'Per Plan MIs:');

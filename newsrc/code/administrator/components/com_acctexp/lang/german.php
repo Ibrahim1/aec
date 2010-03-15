@@ -1199,6 +1199,9 @@ define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSERNAME_DESC', 'Dem Benutzer auf der B
 define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_NAME', 'Option: Abo-Auswahl &auml;ndern');
 define( '_CFG_GENERAL_CONFIRMATION_CHANGEUSAGE_DESC', 'Dem Benutzer auf der Best&auml;tigungs-Seite anbieten, die Abo-Auswahl noch einmal zu &auml;ndern (falls dem Benutzer ein Fehler unterlaufen ist)');
 
+define( '_CFG_GENERAL_CHECKOUTFORM_JSVALIDATION_NAME', 'Checkout - JS Validation');
+define( '_CFG_GENERAL_CHECKOUTFORM_JSVALIDATION_DESC', 'Use basic Javascript validation on the checkout CreditCard Form');
+
 define( '_CFG_GENERAL_MANAGERACCESS_NAME', 'Manager Zugriff:');
 define( '_CFG_GENERAL_MANAGERACCESS_DESC', 'Hiermit d&uuml;rfen nicht nur Administratoren, sondern auch Manager auf das AEC Backend zugreifen.');
 define( '_CFG_GENERAL_PER_PLAN_MIS_NAME', 'Pro Plan MIs:');
