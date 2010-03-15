@@ -2416,6 +2416,9 @@ function editSettings( $option )
 	$params['confirmation_changeusername']	= array( 'list_yesno', '' );
 	$params['confirmation_changeusage']		= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CHECKOUT );
+	$params['checkoutform_jsvalidation']	= array( 'list_yesno', '' );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );
 	$params['root_group_rw']				= array( 'inputD', 0 );
 	$params['entry_plan']					= array( 'list', 0 );

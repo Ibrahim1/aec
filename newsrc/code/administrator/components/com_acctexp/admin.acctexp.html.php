@@ -1021,51 +1021,63 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::addBackendCSS();
 		?>
-		<table class="aecadminform">
-			<tr>
-				<td width="55%" valign="top" style="background-color: #eee;">
-					<div style="background-color: #949494; margin: 2px; padding: 6px;">
-						<div style="width: 100%; background-color: #000;">
-							<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx.png" border="0" alt="" /></center>
-						</div>
-					</div>
-					<div style="margin: 12px;">
-					<h1>Leading Programmers</h1>
-					<p>David 'skOre' Deutsch</p>
-					<h1>Contributing Programmers</h1>
-					<p>Mati 'mtk' Kochen, Calum 'polc1410' Polwart, Ethan 'ethanchai' Chai Voon Chong, Jake Jacobs</p>
-					<h1>Past Contributing Programmers</h1>
-					<p>Helder 'hlblog' Garcia, Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams</p>
-					<h1>Graphics</h1>
-					<p>All layout and graphics design is CC-BY-NC-SA 2006-2009 David 'skOre' Deutsch. Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).
-					<h1>Eternal Gratitude</h1>
-					<p>These are the people without whom I could not have kept up the pace:</p>
-					<p>William 'Jake' Jacobs, Calum 'polc1410' Polwart</p>
-					<h1>Beta-Testers</h1>
-					<p>People who have helped to check releases before they went out:</p>
-					<p>Calum 'polc1410' Polwart, Aleksey Pikulik</p>
-					<h1>Contributors</h1>
-					<p>People who have helped on our code at one place or another:</p>
-					<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen</p>
-					<h1>Translators</h1>
-					<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on dutch translation)</p>
-					<p>Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky</p>
-					</div>
-				</td>
-				<td width="45%" valign="top">
-					<br />
-					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
-					<br />
-					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?></p>
-						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
-					<div style="margin: 0 auto;text-align:center;">
-						<a href="http://www.valanx.org"> <img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx" /></a>
-						<p><?php echo _AEC_FOOT_TX_GPL; ?></a></p>
-						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
-					</div>
-				</td>
-			</tr>
-		</table>
+		<style type="text/css">
+			.installnote {
+				width: 92%;
+				margin: 6px 24px;
+				color: #ddd;
+			}
+			.installnote h1 {
+				color: #ddd;
+				padding: 0;
+			}
+			.installnote p {
+				color: #ddd;
+				padding: 0 12px;
+			}</style>
+		<div style="width: 1024px; margin: 0 auto;">
+		<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx.png) no-repeat top right; margin: 0 6px;">
+			<div style="width: 100%; height: 290px;"></div>
+			<div class="installnote">
+				<h1>Leading Programmer</h1>
+				<p>David 'skOre' Deutsch</p>
+				<h1>Contributing Programmers</h1>
+				<p>Calum 'polc1410' Polwart, William 'Jake' Jacobs</p>
+				<h1>Past Contributing Programmers</h1>
+				<p>Helder 'hlblog' Garcia, Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
+				<h1>Graphics</h1>
+				<p>All layout and graphics design is <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2010 David 'skOre' Deutsch.</p>
+				<p>Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).</p>
+				<h1>Eternal Gratitude</h1>
+				<p>These are the people without whom I could not have kept up the pace:</p>
+				<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>
+				<h1>Beta-Testers</h1>
+				<p>People who have helped to check releases before they went out:</p>
+				<p>Calum 'polc1410' Polwart, Aleksey Pikulik</p>
+				<h1>Contributors</h1>
+				<p>People who have helped on our code by submitting additions and patches at one place or another:</p>
+				<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design</p>
+				<h1>Translators</h1>
+				<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on dutch translation)</p>
+				<p>Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky</p>
+			</div>
+			<div style="width: 100%; height: 60px;"></div>
+		</div>
+		<div style="float: left; width: 400px; margin: 0 6px;">
+			<div style="margin-left:auto;margin-right:auto;text-align:center;">
+				<br />
+				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
+				<br /><br />
+				<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
+				<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
+				<div style="margin: 0 auto;text-align:center;">
+					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
+					<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
+					<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
+				</div>
+			</div>
+		</div>
+		</div>
 		<?php
 	}
 
@@ -1986,6 +1998,7 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'hide_duration_checkout' ); ?>
 											<div class="usernote" style="width:200px;">
 												<?php echo _PAYPLAN_AMOUNT_NOTICE_TEXT; ?>
 											</div>

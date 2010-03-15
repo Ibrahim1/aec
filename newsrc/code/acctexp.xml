@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install type="component" version="1.5.0">
 	<name>AcctExp</name>
-	<creationDate>2009.11.19</creationDate>
+	<creationDate>2010.03.15</creationDate>
 	<author>David Deutsch, Team AEC, Helder Garcia</author>
 	<authorEmail>skore@valanx.org</authorEmail>
 	<copyright>@Copyright (C) 2004-2009 David Deutsch</copyright>
 	<authorUrl>http://valanx.org</authorUrl>
-	<version>0.12.6.2</version>
+	<version>0.14</version>
 	<description>A complete subscription management system. By David Deutsch (skOre) and the team of AEC at valanx.org (started by Helder Garcia (hlbog))</description>
 	<files folder="components/com_acctexp">
 		<file>acctexp.class.php</file>

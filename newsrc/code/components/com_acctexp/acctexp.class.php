@@ -1677,6 +1677,7 @@ class Config_General extends serialParamDBTable
 		$def['email_extra_admins']				= "";
 		$def['countries_available']				= "";
 		$def['countries_top']					= "";
+		$def['checkoutform_jsvalidation']		= 0;
 
 		return $def;
 	}
@@ -8958,6 +8959,13 @@ class InvoiceFactory
 			}
 
 			$mainframe->SetPageTitle( $this->checkout['checkout_title'] );
+
+			if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
+				JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
+
+				$document = &JFactory::getDocument();
+				$document->addScriptDeclaration( "" );
+			}
 
 			Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this );
 		}

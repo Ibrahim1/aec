@@ -263,72 +263,66 @@ function com_install()
 	?>
 
 	<style type="text/css">
-		.usernote {
-			position: relative;
-			float: left;
-			width: 98%;
-			background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/note_lowerright.png) no-repeat bottom right;
-			padding: 6px 18px;
-			color: #000;
+		.installnote {
+			width: 92%;
+			margin: 6px 24px;
+			color: #ddd;
 		}
-	</style>
-	<table border="0">
-		<tr>
-			<td width="60%" valign="top" style="background-color: #eee;">
-				<div style="background-color: #949494; margin: 2px; padding: 6px;">
-					<div style="width: 100%; background-color: #000;">
-						<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx.png" border="0" alt="" /></center>
-					</div>
-				</div>
-				<?php
-				if ( $errors ) {
-					echo '<div style="color: #FF0000; text-align: left; border: 1px solid #FF0000;">' . "\n"
-					. _AEC_INST_ERRORS
-					. '<ul>' . "\n";
-					foreach ( $errors AS $error ) {
-						if ( is_array( $error ) ) {
-							echo '<li>' . $error[0] . ' - ' . $error[1] . '</li>';
-						} else {
-							echo '<li>' . $error . '</li>';
-						}
+		.installnote h1 {
+			color: #ddd;
+			padding: 0;
+		}
+		.installnote p {
+			color: #ddd;
+			padding: 0 12px;
+		}</style>
+	<div style="width: 1024px; margin: 0 auto;">
+	<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx.png) no-repeat top right; margin: 0 6px;">
+		<div style="width: 100%; height: 290px;"></div>
+		<?php
+		if ( $errors ) {
+			echo '<div style="color: #FF0000; text-align: left; border: 1px solid #FF0000; background-color: #fff; margin: 12px; padding: 8px;">' . "\n"
+			. _AEC_INST_ERRORS
+			. '<ul>' . "\n";
+			foreach ( $errors AS $error ) {
+				if ( is_array( $error ) ) {
+					echo '<li>' . $error[0] . ' - ' . $error[1] . '</li>';
+				} else {
+					echo '<li>' . $error . '</li>';
+				}
 
-					}
-					echo '</ul>' . "\n"
-					. '</div>' . "\n";
-				} ?>
-				<div class="usernote" style="width:350px;margin:8px;">
-					<h1><?php echo _AEC_INST_HINTS; ?></h1>
-					<p><?php echo sprintf( _AEC_INST_HINT1, 'http://valanx.org' ); ?></p>
-					<p><?php echo _AEC_INST_HINT2; ?></p>
-				</div>
-				<div class="usernote" style="width:350px;margin:8px;">
-					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/help_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
-					<p><?php printf( _AEC_INST_NOTE_HELP, AECToolbox::backendTaskLink( 'help', _AEC_INST_NOTE_HELP_LTEXT ) ); ?></p>
-				</div>
-				<div class="usernote" style="width:350px;margin:8px;">
-					<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-					<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/hacks_scribble.png" border="0" alt="" style="position:relative;float:left;padding:4px;" />
-					<p><?php echo _AEC_INST_NOTE_SECURITY; ?></p>
-					<p><?php printf( _AEC_INST_APPLY_HACKS, AECToolbox::backendTaskLink( 'hacks', _AEC_INST_APPLY_HACKS_LTEXT ) ); ?></p>
-					<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
-				</div>
-			</td>
-			<td width="30%" valign="top">
-				<br />
-				<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></center>
-				<br />
-				<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;">
-					<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
-					<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
-					<div style="margin: 0 auto;text-align:center;">
-						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
-						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
-						<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
-						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
-				</div>
-			</td>
-		</tr>
-	</table>
+			}
+			echo '</ul>' . "\n"
+			. '</div>' . "\n";
+		} ?>
+		<div class="installnote">
+			<h1><?php echo _AEC_INST_HINTS; ?></h1>
+			<p><?php echo sprintf( _AEC_INST_HINT1, 'http://valanx.org' ); ?></p>
+			<p><?php echo _AEC_INST_HINT2; ?></p>
+		</div>
+		<div class="installnote">
+			<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
+			<p><?php echo _AEC_INST_NOTE_SECURITY; ?></p>
+			<p><?php printf( _AEC_INST_APPLY_HACKS, AECToolbox::backendTaskLink( 'hacks', _AEC_INST_APPLY_HACKS_LTEXT ) ); ?></p>
+			<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
+		</div>
+		<div style="width: 100%; height: 60px;"></div>
+	</div>
+	<div style="float: left; width: 400px; margin: 0 6px;">
+		<div style="margin-left:auto;margin-right:auto;text-align:center;">
+			<br />
+			<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
+			<br /><br />
+			<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
+			<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
+			<div style="margin: 0 auto;text-align:center;">
+				<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
+				<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
+				<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
+				<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
+			</div>
+		</div>
+	</div>
+	</div>
 	<?php
 } ?>
