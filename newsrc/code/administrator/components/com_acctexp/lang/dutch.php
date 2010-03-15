@@ -1694,6 +1694,11 @@ define( '_MI_E_FUNCTION_NAME', 'Functie naam');
 define( '_MI_E_FUNCTION_DESC', 'Kies s.v.p. welke integraties gebruikt moeten worden');
 define( '_MI_E_FUNCTION_EXPLANATION', 'Voordat u Mico Integraties kunt gaan installeren moet u aangeven welke installatiebestanden we hiervoor moeten gebruiken. Maak een selectie en sla de instellingen op. Bewerk Micro Integraties daarna opnieuw en u bent in de gelegenheid om parameters in te stellen. LET OP: Een funcite naam kan niet aangepast worden zodra deze is ingesteld.');
 
+define( '_MI_E__AEC_ACTION_NAME', 'Regular Action');
+define( '_MI_E__AEC_ACTION_DESC', 'Carry out the standard action for this MI when the payment plan it is attached to is applied.');
+define( '_MI_E__AEC_ONLY_FIRST_BILL_NAME', 'Only first payment');
+define( '_MI_E__AEC_ONLY_FIRST_BILL_DESC', 'Only carry out the action for the first payment, not subsequent payments on the same invoice (recurring billing).');
+
 // --== REWRITE EXPLANATION ==--
 define( '_REWRITE_AREA_USER', 'Gebruikers Account Items');
 define( '_REWRITE_KEY_USER_ID', 'Gebruikers Account ID');

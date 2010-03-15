@@ -1837,6 +1837,11 @@ define( '_MI_E_FUNCTION_NAME',				'Funktionsname' );
 define( '_MI_E_FUNCTION_DESC',				'Welche der Systeme sollen verwendet werden' );
 define( '_MI_E_FUNCTION_EXPLANATION',		'Bevor die MicroIntegration definiert wird, muss bestimmt werden, welche der MicroIntegrationen g&uuml;ltig/aktiv sind. Wahl treffen und speichern. Dann nochmals bearbeiten, die Einstellungen sind erst dann sichtbar. HINWEIS: einmal definiert lassen sich die Einstellungen nicht r&uuml;ckg&auml;ngig machen' );
 
+define( '_MI_E__AEC_ACTION_NAME', 'Regular Action');
+define( '_MI_E__AEC_ACTION_DESC', 'Carry out the standard action for this MI when the payment plan it is attached to is applied.');
+define( '_MI_E__AEC_ONLY_FIRST_BILL_NAME', 'Only first payment');
+define( '_MI_E__AEC_ONLY_FIRST_BILL_DESC', 'Only carry out the action for the first payment, not subsequent payments on the same invoice (recurring billing).');
+
 // --== REWRITE EXPLANATION ==--
 define( '_REWRITE_AREA_USER',				'Benutzeraccount bezogen' );
 define( '_REWRITE_KEY_USER_ID',				'Benutzer ID' );

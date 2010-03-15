@@ -1866,6 +1866,11 @@ define( '_MI_E_FUNCTION_NAME', 'Function Name');
 define( '_MI_E_FUNCTION_DESC', 'Please choose which of these integrations should be used');
 define( '_MI_E_FUNCTION_EXPLANATION', 'Before you can setup the Micro Integration, you have to select which of the integration files we should use for this. Make a selection and save the Micro Integration. When you edit it again, you will be able to set the parameters. Note also, that the function name cannot be changed once its set.');
 
+define( '_MI_E__AEC_ACTION_NAME', 'Regular Action');
+define( '_MI_E__AEC_ACTION_DESC', 'Carry out the standard action for this MI when the payment plan it is attached to is applied.');
+define( '_MI_E__AEC_ONLY_FIRST_BILL_NAME', 'Only first payment');
+define( '_MI_E__AEC_ONLY_FIRST_BILL_DESC', 'Only carry out the action for the first payment, not subsequent payments on the same invoice (recurring billing).');
+
 // --== REWRITE EXPLANATION ==--
 define( '_REWRITE_AREA_USER', 'User Account Related');
 define( '_REWRITE_KEY_USER_ID', 'User Account ID');

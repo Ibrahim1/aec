@@ -15073,6 +15073,18 @@ class microIntegration extends serialParamDBTable
 
 	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
+		if ( isset( $this->settings['_aec_action'] ) ) {
+			if ( !$this->settings['_aec_action'] ) {
+				return null;
+			}
+		}
+
+		if ( isset( $this->settings['_aec_only_first_bill'] ) && !empty( $invoice ) ) {
+			if ( $this->settings['_aec_only_first_bill'] && ( $invoice->counter > 1 ) ) {
+				return null;
+			}
+		}
+
 		$add = false;
 
 		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', $add );
@@ -15463,13 +15475,15 @@ class microIntegration extends serialParamDBTable
 
 	function getGeneralSettings()
 	{
-		$settings['name']			= array( 'inputC', '' );
-		$settings['desc']			= array( 'inputD', '' );
-		$settings['active']			= array( 'list_yesno', 1 );
-		$settings['auto_check']		= array( 'list_yesno', '' );
-		$settings['_aec_global_exp_all']		= array( 'list_yesno', 0 );
-		$settings['on_userchange']	= array( 'list_yesno', '' );
-		$settings['pre_exp_check']	= array( 'inputB', '' );
+		$settings['name']					= array( 'inputC', '' );
+		$settings['desc']					= array( 'inputD', '' );
+		$settings['active']					= array( 'list_yesno', 1 );
+		$settings['_aec_action']			= array( 'list_yesno', 1 );
+		$settings['_aec_only_first_bill']	= array( 'list_yesno', 0 );
+		$settings['auto_check']				= array( 'list_yesno', '' );
+		$settings['_aec_global_exp_all']	= array( 'list_yesno', 0 );
+		$settings['on_userchange']			= array( 'list_yesno', '' );
+		$settings['pre_exp_check']			= array( 'inputB', '' );
 
 		return $settings;
 	}

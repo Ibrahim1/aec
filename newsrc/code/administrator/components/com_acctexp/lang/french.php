@@ -1693,6 +1693,11 @@ define( '_MI_E_FUNCTION_NAME', 'Nom de la fonction');
 define( '_MI_E_FUNCTION_DESC', 'S&amp;acute;il vous pla&#238;t d&eacute;finissez laquelle de ces int&eacute;grations doit &ecirc;tre utilis&eacute;e');
 define( '_MI_E_FUNCTION_EXPLANATION', 'Avant de pouvoir configurer la Micro int&eacute;gration, vous devez s&eacute;lectionner la MI de fichier qui sera utilis&eacute;. Faites une s&eacute;lection et enregistr&eacute; la micro int&eacute;gration. Lorsque vous modifiez &agrave; nouveau, vous serez en mesure d&amp;acute;&eacute;tablir les param&egrave;tres. Notez &eacute;galement que le nom de la fonction ne peut pas &ecirc;tre chang&eacute; une fois int&eacute;gr&eacute;.');
 
+define( '_MI_E__AEC_ACTION_NAME', 'Regular Action');
+define( '_MI_E__AEC_ACTION_DESC', 'Carry out the standard action for this MI when the payment plan it is attached to is applied.');
+define( '_MI_E__AEC_ONLY_FIRST_BILL_NAME', 'Only first payment');
+define( '_MI_E__AEC_ONLY_FIRST_BILL_DESC', 'Only carry out the action for the first payment, not subsequent payments on the same invoice (recurring billing).');
+
 // --== REWRITE EXPLANATION ==--
 define( '_REWRITE_AREA_USER', 'User Account Related');
 define( '_REWRITE_KEY_USER_ID', 'User Account ID');
