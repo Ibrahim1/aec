@@ -8941,13 +8941,13 @@ class InvoiceFactory
 
 			$this->invoice->formatInvoiceNumber();
 
-			$introtext = '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' );
+			$introtext = constant( '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' ) );
 
 			$this->checkout = array();
 			$this->checkout['checkout_title']					= _CHECKOUT_TITLE;
 			$this->checkout['customtext_checkout_keeporiginal']	= $aecConfig->cfg['customtext_checkout_keeporiginal'];
 			$this->checkout['customtext_checkout']				= $aecConfig->cfg['customtext_checkout'];
-			$this->checkout['introtext']						= sprintf( constant( $introtext ), $InvoiceFactory->invoice->invoice_number );
+			$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
 			$this->checkout['checkout_display_descriptions']	= $aecConfig->cfg['checkout_display_descriptions'];
 			$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];
 			$this->checkout['customtext_checkout_table']		= _CHECKOUT_TITLE;
@@ -10879,9 +10879,9 @@ class aecCart extends serialParamDBTable
 
 	function save()
 	{
-			global $mainframe;
+		global $mainframe;
 
-		if ( !$this->id ) {
+		if ( !$this->id || ( strcmp( $user_subscription->created_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' ) *3600 );
 		}
 

@@ -1196,12 +1196,14 @@ class Payment_HTML
 				<?php
 			}
 
-			$InvoiceFactory->invoice->deformatInvoiceNumber();
-
 			if ( $InvoiceFactory->checkout['customtext_checkout'] ) { ?>
 				<p><?php echo $InvoiceFactory->checkout['customtext_checkout']; ?></p>
 				<?php
-			} ?>
+			}
+
+			$InvoiceFactory->invoice->deformatInvoiceNumber();
+
+			?>
 			<table id="aec_checkout">
 			<?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
 				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
