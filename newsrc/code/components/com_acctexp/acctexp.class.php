@@ -2611,25 +2611,6 @@ class PaymentProcessorHandler
 		return $database->loadResult();
 	}
 
-	function getProcessorNameListbyId( $idlist )
-	{
-		$database = &JFactory::getDBO();
-
-		$query = 'SELECT `id`, `name`'
-				. ' FROM #__acctexp_config_processors';
-		$database->setQuery( $query );
-		$res = $database->loadObjectList();
-
-		$return = array();
-		foreach ( $res as $pobj ) {
-			if ( in_array( $pobj->id, $idlist ) || in_array( $pobj->id.'_recurring', $idlist ) ) {
-				$return[$pobj->id] = $pobj->name;
-			}
-		}
-
-		return $return;
-	}
-
 	/**
 	 * gets installed and active processors
 	 *
@@ -7313,7 +7294,7 @@ class InvoiceFactory
 			if ( !is_object( $this->plan ) ) {
 				return aecNotAuth();
 			}
-		} else {
+		} elseif ( !isset( $this->cartprocexceptions ) ) {
 			if ( empty( $this->metaUser ) ) {
 				return aecNotAuth();
 			}
@@ -7326,8 +7307,6 @@ class InvoiceFactory
 
 			if ( count( $procs ) > 1 ) {
 				$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
-
-				$procnames = PaymentProcessorHandler::getProcessorNameListbyId( $procs );
 
 				$c	= false;
 				$s	= array();
@@ -7369,6 +7348,8 @@ class InvoiceFactory
 							if ( !in_array( $selection, $s ) ) {
 								$se = false;
 							}
+						} elseif( count( $pgroups ) < 2 ) {
+							$se = false;
 						}
 
 						$pgroups[$pgid]['processor'] = $selection;
@@ -7394,7 +7375,7 @@ class InvoiceFactory
 								$recurring = false;
 							}
 
-							$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $procnames[$pgex].( $recurring ? ' (recurring billing)' : '') );
+							$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $pgroup['processor_names'][$pid].( $recurring ? ' (recurring billing)' : '') );
 						}
 					}
 
@@ -7528,6 +7509,8 @@ class InvoiceFactory
 					}
 				}
 			}
+
+			$this->cartprocexceptions = true;
 		}
 
 		if ( !empty( $this->processor ) ) {
@@ -10745,7 +10728,8 @@ class aecCartHelper
 		foreach ( $cart->content as $cid => $c ) {
 			$cartitem = aecCartHelper::getCartItemObject( $cart, $cid );
 
-			$pplist = array();
+			$pplist			= array();
+			$pplist_names	= array();
 			if ( !empty( $cartitem->params['processors'] ) ) {
 				foreach ( $cartitem->params['processors'] as $n ) {
 					$pp = new PaymentProcessor();
@@ -10765,23 +10749,28 @@ class aecCartHelper
 					}
 
 					if ( $recurring > 1 ) {
-						$pplist[] = $pp->id;
+						$pplist[]		= $pp->id;
+						$pplist_names[]	= $pp->info['longname'];
 
 						if ( !$cartitem->params['lifetime'] ) {
-							$pplist[] = $pp->id.'_recurring';
+							$pplist[]		= $pp->id . '_recurring';
+							$pplist_names[]	= $pp->info['longname'];
 						}
-					} elseif ( !( $cartitem->params['lifetime'] && $recurring ) ) {
-						$pplist[] = $pp->id . '_recurring';
+					} elseif ( !$cartitem->params['lifetime'] && $recurring ) {
+						$pplist[]		= $pp->id . '_recurring';
+						$pplist_names[]	= $pp->info['longname'];
 					} else {
-						$pplist[] = $pp->id;
+						$pplist[]		= $pp->id;
+						$pplist_names[]	= $pp->info['longname'];
 					}
 				}
 			}
 
 			if ( empty( $pgroups ) ) {
 				$pg = array();
-				$pg['members']		= array( $cid );
-				$pg['processors']	= $pplist;
+				$pg['members']			= array( $cid );
+				$pg['processors']		= $pplist;
+				$pg['processor_names']	= $pplist_names;
 
 				$pgroups[] = $pg;
 			} else {
@@ -10806,8 +10795,9 @@ class aecCartHelper
 				}
 
 				if ( $create ) {
-					$pg['members']		= array( $cid );
-					$pg['processors']	= $pplist;
+					$pg['members']			= array( $cid );
+					$pg['processors']		= $pplist;
+					$pg['processor_names']	= $pplist_names;
 
 					$pgroups[] = $pg;
 				}
