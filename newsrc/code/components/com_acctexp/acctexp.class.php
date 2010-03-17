@@ -7309,7 +7309,9 @@ class InvoiceFactory
 				$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
 
 				$c	= false;
-				$s	= array();
+				$e	= false;
+				$s	= false;
+				$sx	= array();
 				$se	= true;
 
 				foreach ( $pgroups as $pgid => $pgroup ) {
@@ -7348,15 +7350,17 @@ class InvoiceFactory
 							if ( !in_array( $selection, $s ) ) {
 								$se = false;
 							}
-						} elseif( count( $pgroups ) < 2 ) {
-							$se = false;
 						}
 
 						$pgroups[$pgid]['processor'] = $selection;
 						$s[] = $selection;
 
+						$sx[] = array( 'hidden', $pgsel, $fname, $pgsel );
+
 						continue;
 					} else {
+						$c = true;
+
 						$ex['desc'] .= "<ul>";
 
 						foreach ( $pgroup['members'] as $pgmember ) {
@@ -7379,11 +7383,24 @@ class InvoiceFactory
 						}
 					}
 
-					if ( !empty( $ex['rows'] ) ) {
-						$c = true;
-
+					if ( !empty( $ex['rows'] ) && $c ) {
 						$this->raiseException( $ex );
+
+						$e = true;
 					}
+				}
+
+				if ( $e && !empty( $sx ) ) {
+					$ex = array();
+					$ex['head'] = null;
+					$ex['desc'] = null;
+					$ex['rows'] = array();
+
+					foreach ( $sx as $silent ) {
+						$ex['rows'][] = $silent;
+					}
+
+					$this->raiseException( $ex );
 				}
 
 				if ( !$se ) {
