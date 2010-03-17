@@ -28,30 +28,72 @@ var JFormValidator = new Class({
 		this.custom		= Object();
 
 		// Default handlers
-		this.setHandler('username',
+		this.setHandler('cardNumber',
 			function (value) {
-				regex=/^[a-zA-Z](([\.\-a-zA-Z0-9@])?[a-zA-Z0-9]*)*$/;
+				regex=/\S/;
 				return regex.test(value);
 			}
 		);
 
-		this.setHandler('password',
+		this.setHandler('expirationMonth',
 			function (value) {
-				regex=/^\S[\S ]{2,98}\S$/;
+				regex=/\S/;
 				return regex.test(value);
 			}
 		);
 
-		this.setHandler('numeric',
+		this.setHandler('expirationYear',
 			function (value) {
-				regex=/^(\d|-)?(\d|,)*\.?\d*$/;
+				regex=/\S/;
 				return regex.test(value);
 			}
 		);
 
-		this.setHandler('email',
+		this.setHandler('cardVV2',
 			function (value) {
-				regex=/^[a-zA-Z0-9._-]+@([a-zA-Z0-9.-]+\.)+[a-zA-Z0-9.-]{2,4}$/;
+				regex=/\S/;
+				return regex.test(value);
+			}
+		);
+
+		this.setHandler('billFirstName',
+			function (value) {
+				regex=/\S/;
+				return regex.test(value);
+			}
+		);
+
+		this.setHandler('billLastName',
+			function (value) {
+				regex=/\S/;
+				return regex.test(value);
+			}
+		);
+
+		this.setHandler('billAddress',
+			function (value) {
+				regex=/\S/;
+				return regex.test(value);
+			}
+		);
+
+		this.setHandler('billCity',
+			function (value) {
+				regex=/\S/;
+				return regex.test(value);
+			}
+		);
+
+		this.setHandler('billZip',
+			function (value) {
+				regex=/\S/;
+				return regex.test(value);
+			}
+		);
+
+		this.setHandler('billCountry',
+			function (value) {
+				regex=/\S/;
 				return regex.test(value);
 			}
 		);

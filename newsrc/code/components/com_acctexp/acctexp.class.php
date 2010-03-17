@@ -3752,6 +3752,8 @@ class XMLprocessor extends processor
 {
 	function checkoutAction( $request )
 	{
+		global $aecConfig;
+		
 		$var = $this->checkoutform( $request );
 
 		if ( isset( $var['aec_alternate_checkout'] ) ) {
@@ -3772,7 +3774,7 @@ class XMLprocessor extends processor
 
 		// TODO:  onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"
 
-		$return = '<form action="' . $url . '" method="post">' . "\n";
+		$return = '<form action="' . $url . '" method="post"' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' class="form-validate"' : '' ) . '>' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 
 		if ( $stdvars ) {
@@ -3781,7 +3783,7 @@ class XMLprocessor extends processor
 			$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5079,6 +5081,8 @@ class aecHTML
 			}
 		}
 
+		global $aecConfig;
+
 		$return = '';
 		if ( isset( $row[3] ) ) {
 			$value = $row[3];
@@ -5108,28 +5112,28 @@ class aecHTML
 		$noappend = false;
 		switch ( $row[0] ) {
 			case 'submit':
-				$return .= '<input type="submit" class="button aec_formfield" name="' . $name . '" value="' . $value . '" title="' . $row[2] . '" />' . "\n";
+				$return .= '<input type="submit" class="button aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '" name="' . $name . '" value="' . $value . '" title="' . $row[2] . '" />' . "\n";
 				break;
 			case "inputA":
-				$return .= '<input type="text" class="inputbox aec_formfield" name="' . $name . '" size="4" maxlength="5" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '" name="' . $name . '" size="4" maxlength="5" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
 				break;
 			case "inputB":
-				$return .= '<input type="text" class="inputbox aec_formfield" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
 				break;
 			case "inputC":
-				$return .= '<input type="text" class="inputbox aec_formfield" name="' . $name . '" size="20" value="' . $value . '" title="' . $row[2] . '" class=""/>' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '" name="' . $name . '" size="20" value="' . $value . '" title="' . $row[2] . '" class=""/>' . $sx;
 				break;
 			case "inputD":
-				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" title="' . $row[2] . '" class="aec_formfield"/>' . $value . '</textarea>' . $sx;
+				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' form-validate' : '' ) . '"/>' . $value . '</textarea>' . $sx;
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield"/>';
+				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '"/>';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case 'checkbox':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield"/>' . $sx;
+				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '"/>' . $sx;
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
@@ -8963,8 +8967,8 @@ class InvoiceFactory
 			if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
 				JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
 
-				$document = &JFactory::getDocument();
-				$document->addScriptDeclaration( "" );
+				//$document = &JFactory::getDocument();
+				//$document->addScriptDeclaration( "" );
 			}
 
 			Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this );
