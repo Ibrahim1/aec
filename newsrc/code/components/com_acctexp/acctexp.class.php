@@ -3753,7 +3753,7 @@ class XMLprocessor extends processor
 	function checkoutAction( $request )
 	{
 		global $aecConfig;
-		
+
 		$var = $this->checkoutform( $request );
 
 		if ( isset( $var['aec_alternate_checkout'] ) ) {
@@ -5096,10 +5096,14 @@ class aecHTML
 			$return .= $table ? '<tr class="aec_formrow"><td class="cleft">' : '<p>';
 		}
 
+		$return .= '<label id="' . $name . 'msg" for="' . $name . '">';
+
 		$sx = "";
+		$sxx = false;
 		if ( !empty( $row[1] ) ) {
 			if ( strpos( $row[1], '*' ) ) {
 				$sx = '<span class="aec_required">*</span>';
+				$sxx = true;
 
 				$row[1] = substr( $row[1], 0, -1 );
 			}
@@ -5107,37 +5111,46 @@ class aecHTML
 			$return .= '<strong>' . $row[1] . ( ( strpos( $row[1], '?' ) == ( strlen( $row[1] ) ) - 1 ) ? '' : ':' ) . '</strong>';
 		}
 
+		$return .= '</label>';
+
 		$return .= $table ? '</td><td class="cright">' : ' ';
 
 		$noappend = false;
 		switch ( $row[0] ) {
 			case 'submit':
-				$return .= '<input type="submit" class="button aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '" name="' . $name . '" value="' . $value . '" title="' . $row[2] . '" />' . "\n";
+				$return .= '<input type="submit" class="button aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" value="' . $value . '" title="' . $row[2] . '" />' . "\n";
 				break;
 			case "inputA":
-				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '" name="' . $name . '" size="4" maxlength="5" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="4" maxlength="5" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
 				break;
 			case "inputB":
-				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
 				break;
 			case "inputC":
-				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '" name="' . $name . '" size="20" value="' . $value . '" title="' . $row[2] . '" class=""/>' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="20" value="' . $value . '" title="' . $row[2] . '" class=""/>' . $sx;
 				break;
 			case "inputD":
-				$return .= '<textarea align="left" cols="60" rows="5" name="' . $name . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' form-validate' : '' ) . '"/>' . $value . '</textarea>' . $sx;
+				$return .= '<textarea align="left" cols="60" rows="5" id="' . $name . '" name="' . $name . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' form-validate' : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $value . '</textarea>' . $sx;
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="radio" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '"/>';
+				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case 'checkbox':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="checkbox" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '"/>' . $sx;
+				$return .= '<input type="checkbox" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $sx;
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
-				$return .= $lists[$value ? $value : $name] . $sx;
+				if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
+					$search = 'class="';
+					$replace = 'title="' . $row[2] . '" class="' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? 'validate-'.$name.' ' : '' ) . ( $sxx ? 'required ' : '' );
+
+					$return .= str_replace( $search, $replace, $lists[$value ? $value : $name] ) . $sx;
+				} else {
+					$return .= $lists[$value ? $value : $name] . $sx;
+				}
 				break;
 			case 'tabberstart':
 				$return = '<tr><td colspan="2"><div id="myTabs">';
@@ -5178,10 +5191,10 @@ class aecHTML
 				$return = '';
 				if ( is_array( $value ) ) {
 					foreach ( $value as $v ) {
-						$return .= '<input type="hidden" name="' . $name . '[]" value="' . $v . '" />';
+						$return .= '<input type="hidden" id="' . $name . '" name="' . $name . '[]" value="' . $v . '" />';
 					}
 				} else {
-					$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
+					$return .= '<input type="hidden" id="' . $name . '" name="' . $name . '" value="' . $value . '" />';
 				}
 				break;
 			default:

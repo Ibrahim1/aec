@@ -279,7 +279,7 @@ define( '_CART_ROW_TOTAL', 'Total');
 define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
 
 define( '_CART_CLEAR_ALL', 'clear the whole cart');
-define( '_CART_DELETE_ITEM', 'delete');
+define( '_CART_DELETE_ITEM', 'remove');
 
 
 // --== EXCEPTION FORM ==--

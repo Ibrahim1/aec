@@ -160,7 +160,7 @@ define( '_CART_TITLE', 'Varukorg'); //Shopping Cart
 define( '_CART_ROW_TOTAL', 'Summa'); //Total
 define( '_CART_INFO', 'Använd knappen Fortsätt nedan för att fullfölja ditt köp.'); //Please use the continue button below to complete your purchase.
 define( '_CART_CLEAR_ALL', 'clear the whole cart');
-define( '_CART_DELETE_ITEM', 'delete');
+define( '_CART_DELETE_ITEM', 'remove');
 
 // --== EXCEPTION FORM ==--
 define( '_EXCEPTION_TITLE', 'Ytterligare information behövs'); //Additional Information Required

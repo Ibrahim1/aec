@@ -722,10 +722,7 @@ background-color: #ddd;
 }
 
 #checkoutbox label {
-	display:block;
-	float:left;
 	width:48%;
-	clear:left;
 	text-align:right;
 	padding-right:2%;
 }
@@ -737,6 +734,10 @@ background-color: #ddd;
 	display:block;
 	float:right;
 	margin: 6px;
+}
+
+.cright .invalid {
+border: 1px solid #a44;
 }
 
 table#aec_checkout {

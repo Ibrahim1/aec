@@ -158,7 +158,7 @@ define( '_CART_TITLE', 'Einkaufswagen');
 define( '_CART_ROW_TOTAL', 'Summe');
 define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
 define( '_CART_CLEAR_ALL', 'alles aus dem Einkaufswagen entfernen');
-define( '_CART_DELETE_ITEM', 'l&ouml;schen');
+define( '_CART_DELETE_ITEM', 'entfernen');
 
 // --== EXCEPTION FORM ==--
 define( '_EXCEPTION_TITLE', 'Additional Information Required');
