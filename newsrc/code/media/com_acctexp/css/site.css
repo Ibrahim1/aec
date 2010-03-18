@@ -726,9 +726,11 @@ background-color: #ddd;
 	text-align:right;
 	padding-right:2%;
 }
+
 #checkoutbox .inputbox, #checkoutbox select{
 	clear:right;
 }
+
 #checkoutbox .button{
 	clear: both;
 	display:block;
@@ -738,6 +740,11 @@ background-color: #ddd;
 
 .cright .invalid {
 border: 1px solid #a44;
+}
+
+#aec_checkout_params p.invalid {
+color: #9a411a;
+font-weight: bold;
 }
 
 table#aec_checkout {

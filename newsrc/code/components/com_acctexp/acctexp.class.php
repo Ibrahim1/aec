@@ -4164,7 +4164,7 @@ class XMLprocessor extends processor
 		foreach ( $values as $value ) {
 			switch ( strtolower( $value ) ) {
 				case 'asterisk':
-					$var['params']['asteriskInfo'] = array( 'p', 0, _AEC_FORMINFO_ASTERISK );
+					$var['params']['asteriskInfo'] = array( 'p', 0, _AEC_FORMINFO_ASTERISK, null, ' class="asterisk-info"' );
 					break;
 			}
 		}
@@ -5200,9 +5200,17 @@ class aecHTML
 			default:
 				if ( !empty( $row[0] ) ) {
 					if ( empty( $row[1] ) ) {
-						$return = '<tr><td class="cboth" colspan="2"><' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '></td></tr>';
+						if ( isset( $row[4] ) ) {
+							$return = '<tr><td class="cboth" colspan="2"><' . $row[0] . $row[4] . '>' . $row[2] . $value . '</' . $row[0] . '></td></tr>';
+						} else {
+							$return = '<tr><td class="cboth" colspan="2"><' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '></td></tr>';
+						}
 					} else {
-						$return = '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
+						if ( isset( $row[4] ) ) {
+							$return = '<' . $row[0] . $row[4] . '>' . $row[2] . $value . '</' . $row[0] . '>';
+						} else {
+							$return = '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
+						}
 					}
 				} elseif ( empty( $row[0] ) && empty( $row[2] ) ) {
 					$return .= '<' . $row[1] . $value . ' />';

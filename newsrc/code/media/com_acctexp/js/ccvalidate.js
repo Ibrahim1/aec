@@ -27,77 +27,6 @@ var JFormValidator = new Class({
 		this.handlers	= Object();
 		this.custom		= Object();
 
-		// Default handlers
-		this.setHandler('cardNumber',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('expirationMonth',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('expirationYear',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('cardVV2',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('billFirstName',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('billLastName',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('billAddress',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('billCity',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('billZip',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
-		this.setHandler('billCountry',
-			function (value) {
-				regex=/\S/;
-				return regex.test(value);
-			}
-		);
-
 		// Attach to forms with class 'form-validate'
 		var forms = $$('form.form-validate');
 		forms.each(function(form){ this.attachToForm(form); }, this);
@@ -172,6 +101,10 @@ var JFormValidator = new Class({
 				valid = false;
 			}
 		});
+
+		if (valid != true) {
+			$$('.asterisk-info').addClass('invalid');
+		}
 
 		return valid;
 	},
