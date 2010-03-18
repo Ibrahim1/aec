@@ -1045,8 +1045,6 @@ define( '_CFG_GENERAL_COUNTRIES_AVAILABLE_DESC', 'With this setting, you can cho
 define( '_CFG_GENERAL_COUNTRIES_TOP_NAME', 'Top Countries');
 define( '_CFG_GENERAL_COUNTRIES_TOP_DESC', 'This will sort the selected countries on the top of the list, when showing a standard country list (which is used, for instance, on some processor checkout pages to let customers choose their location)');
 
-define( '_CFG_GENERAL_EMAIL_DEFAULT_ADMINS_NAME', 'Usual Suspects Admin Email Alerts');
-define( '_CFG_GENERAL_EMAIL_DEFAULT_ADMINS_DESC', 'With this setting enabled, all Administrators who have chosen to receive Joomla System Emails will also receive AEC System Email Notifications');
 define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_NAME', 'Additional Email Recipients');
 define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_DESC', 'If you want AEC to send System Alerts to additional recipients, you can enter them here - you can add more than one by separating them by comma');
 
