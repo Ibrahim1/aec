@@ -12175,18 +12175,39 @@ class AECfetchfromDB
 		return $database->loadResult();
 	}
 
-	function lastUnclearedInvoiceIDbyUserID( $userid )
+	function lastUnclearedInvoiceIDbyUserID( $userid, $excludedusage=null )
 	{
+		if ( empty( $excludedusage ) ) {
+			$excludedusage = array();
+		}
+
 		$database = &JFactory::getDBO();
 
-		$query = 'SELECT `invoice_number`'
+		$query = 'SELECT `id`, `invoice_number`, `usage`'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = \'' . (int) $userid . '\''
 				. ' AND `transaction_date` = \'0000-00-00 00:00:00\''
 				. ' AND `active` = \'1\''
 				;
 		$database->setQuery( $query );
-		return $database->loadResult();
+		$invoice = $database->loadResult();
+
+		if ( empty( $invoice->id ) ) {
+			return false;
+		}
+
+		if ( strpos( $invoice->usage, '.' ) ) {
+			return $invoice->invoice_number;
+		} else {
+			if ( SubscriptionPlanHandler::PlanStatus( $invoice->usage ) ) {
+				return $invoice->invoice_number;
+			} else {
+				// Plan is not active anymore, try the next invoice.
+				$excludedusage[] = $invoice->usage;
+
+				return AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
+			}
+		}
 	}
 
 	function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
