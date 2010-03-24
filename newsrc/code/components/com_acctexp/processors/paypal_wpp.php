@@ -242,13 +242,14 @@ class processor_paypal_wpp extends XMLprocessor
 		if ( !empty( $request->int_var['params']['express'] ) && $this->settings['allow_express_checkout'] ) {
 			if ( !empty( $request->int_var['params']['token'] ) ) {
 				// The user has already returned from Paypal - finish the deal
-				$var['Method']		= 'DoExpressCheckoutPayment';
-				$var['token']		= $request->int_var['params']['token'];
-				$var['PayerID']		= $request->int_var['params']['PayerID'];
+				$var = $this->getPayPalVars( $request, false );
+
+				$var['Method']			= 'DoExpressCheckoutPayment';
+				$var['Version']			= '52.0';
+				$var['token']			= $request->int_var['params']['token'];
+				$var['PayerID']			= $request->int_var['params']['PayerID'];
 
 				$var = $this->getPaymentVars( $var, $request );
-
-				$var['paymentAction']		= 'Sale';
 
 				$xml = $this->getPayPalNVPstring( $var );
 
