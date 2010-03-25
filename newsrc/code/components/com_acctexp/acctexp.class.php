@@ -3098,7 +3098,7 @@ class PaymentProcessor
 		return $this->processor->checkoutProcess( $request );
 	}
 
-	function customAction( $action, $invoice, $metaUser )
+	function customAction( $action, $invoice, $metaUser, $int_var=null )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -3112,6 +3112,7 @@ class PaymentProcessor
 			$request->metaUser			=& $metaUser;
 			$request->invoice			=& $invoice;
 			$request->plan				=& $invoice->getObjUsage();
+			$request->int_var			=& $int_var;
 
 			return $this->processor->$method( $request );
 		} else {
@@ -9163,12 +9164,16 @@ class InvoiceFactory
 			$pp->fullInit();
 		}
 
-		$response = $pp->customAction( $action, $invoice, $this->metaUser );
+		$var = $invoice->getWorkingData( $this );
+
+		$response = $pp->customAction( $action, $invoice, $this->metaUser, $var );
 
 		$response = $invoice->processorResponse( $pp, $response, '', true );
 
 		if ( isset( $response['cancel'] ) ) {
 			HTML_Results::cancel( 'com_acctexp' );
+		} elseif ( isset( $response['InvoiceToCheckout'] ) ) {
+			$this->InvoiceToCheckout( 'com_acctexp', true, false );
 		}
 	}
 

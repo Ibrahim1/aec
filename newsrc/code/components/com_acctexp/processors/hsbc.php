@@ -103,6 +103,14 @@ class processor_hsbc extends XMLprocessor
 					// Double check for CcpaResultsCode
 					$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 				}
+aecDebug('CcpaResultsCode');aecDebug($check);
+				$redourl = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=invoiceAction&amp;action=clearccdetails&amp;invoice='.$request->invoice->invoice_number );
+
+				$addin = '<p>Please review the Credit Card details you have supplied:</p>';
+				$addin .= '<p><strong>Cardholder Name:</strong>&nbsp;' . $request->int_var['params']['billFirstName'] . "&nbsp;" . $request->int_var['params']['billLastName'];
+				$addin .= '<p><strong>Credit Card:</strong>&nbsp;' . $request->int_var['params']['cardNumber'];
+				$addin .= '<p><strong>Expiration:</strong>&nbsp;' . $request->int_var['params']['expirationMonth'] . '&nbsp;/&nbsp;' . $request->int_var['params']['expirationYear'];
+				$addin .= 'If you would like to correct these details, please <a href="' . $redourl . '">click here</a>';
 
 				if ( !is_null( $check ) ) {
 					$mod = array(	'enable_coupons' => false,
@@ -128,7 +136,12 @@ class processor_hsbc extends XMLprocessor
 			}
 		}
 
-		$mod = array( 'checkout_title' => 'Checkout - First Stage', 'customtext_checkout_table' => 'Credit Card Details' );
+		if ( !empty( $request->int_var['params']['expirationMonth'] ) ) {
+			$mod = array( 'checkout_title' => 'Checkout - Correct Details', 'customtext_checkout_table' => 'Credit Card Details' );
+		} else {
+			$mod = array( 'checkout_title' => 'Checkout - First Stage', 'customtext_checkout_table' => 'Credit Card Details' );
+		}
+
 		$this->simpleCheckoutMod( $mod );
 
 		// Display standard CC collection Form
@@ -480,6 +493,21 @@ class processor_hsbc extends XMLprocessor
 		$return['cancel']	= true;
 
 		return $return;
+	}
+
+	function customaction_clearccdetails( $request )
+	{
+		$remove = array( 'CcpaResultsCode', 'cardNumber' );
+
+		foreach ( $remove as $k ) {
+			if ( isset( $request->invoice->params[$k] ) ) {
+				unset( $request->invoice->params[$k] );
+			}
+		}
+
+		$request->invoice->storeload();
+
+		return array( 'InvoiceToCheckout' => true );
 	}
 
 }
