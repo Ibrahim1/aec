@@ -3875,18 +3875,18 @@ class XMLprocessor extends processor
 		}
 
 		foreach ( $values as $value ) {
-			if ( isset( $content[$value] ) ) {
-				$vcontent = $content[$value];
-			} else {
-				$vcontent = '';
-			}
-
 			if ( strpos( $value, '*' ) ) {
 				$pf = '*';
 
 				$value = substr( $value, 0, -1 );
 			} else {
 				$pf = '';
+			}
+
+			if ( isset( $content[$value] ) ) {
+				$vcontent = $content[$value];
+			} else {
+				$vcontent = '';
 			}
 
 			switch ( strtolower( $value ) ) {
