@@ -120,7 +120,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		if ( $action && ( strpos( $post['cardNumber'], 'X' ) === false ) ) {
-			$cim = $this->loadCIM( $ppParams );
+			$cim = $this->loadCIMpay( $ppParams );
 
 			$udata = array( 'billTo_firstName' => 'billFirstName',
 							'billTo_lastName' => 'billLastName',
@@ -218,7 +218,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			}
 
 			$cim = null;
-			$cim = $this->loadCIM( $ppParams );
+			$cim = $this->loadCIMpay( $ppParams );
 		} elseif ( $action && ( strpos( $post['cardNumber'], 'X' ) !== false ) ) {
 			$strong = true;
 		}
@@ -253,7 +253,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		if ( isset( $post['billFirstName'] ) && empty( $post['edit_shipprofile'] ) ) {
-			$cim = $this->loadCIM( $ppParams );
+			$cim = $this->loadCIMship( $ppParams );
 
 			$udata = array( 'shipTo_firstName' => 'billFirstName',
 							'shipTo_lastName' => 'billLastName',
@@ -295,7 +295,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			}
 
 			$cim = null;
-			$cim = $this->loadCIM( $ppParams );
+			$cim = $this->loadCIMship( $ppParams );
 		} else {
 			$cim = null;
 		}
@@ -329,7 +329,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			if ( $nobill ) {
 				$cim = $this->loadCIMship( $ppParams );
 			} else {
-				$cim = $this->loadCIM( $ppParams );
+				$cim = $this->loadCIMpay( $ppParams );
 			}
 
 			if ( $cim->isSuccessful() ) {
@@ -420,7 +420,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', true ) . '" method="post">' . "\n";
 
 		if ( !empty( $ppParams ) ) {
-			$cim = $this->loadCIM( $ppParams );
+			$cim = $this->loadCIMpay( $ppParams );
 
 			$var = array();
 			$var = $this->payProfileSelect( $var, $ppParams, false, false );
@@ -452,6 +452,8 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
+		$cim = $this->loadCIMpay( $ppParams );
+
 		if ( !empty( $ppParams ) ) {
 			if ( $request->int_var['params']['payprofileselect'] != "new" ) {
 				$ppParams->paymentprofileid = $request->int_var['params']['payprofileselect'];
@@ -461,9 +463,8 @@ class processor_authorize_cim extends PROFILEprocessor
 				$ppParams->shippingprofileid = $request->int_var['params']['shipprofileselect'];
 			}
 
-			$cim = $this->loadCIM( $ppParams );
-		} else {
-			$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
+
+			$cim = $this->getCIMprofile( $cim, $ppParams );
 		}
 
 		$basicdata = array(	'refId'					=> $request->invoice->invoice_number,
@@ -594,7 +595,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			if ( $cim->isSuccessful() ) {
 				$ppParams = $this->ProfileAdd( $request, $cim->customerProfileId );
 
-				$cim = $this->loadCIM( $ppParams );
+				$cim = $this->loadCIMpay( $ppParams );
 
 				$profileid = $cim->substring_between( $cim->response,'<customerPaymentProfileId>','</customerPaymentProfileId>' );
 				if ( !empty( $profileid ) ) {
@@ -677,9 +678,16 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $ppParams;
 	}
 
-	function loadCIM( $ppParams )
+	function loadCIM()
 	{
 		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
+
+		return $cim;
+	}
+
+	function loadCIMpay( $ppParams )
+	{
+		$cim = $this->loadCIM();
 
 		if ( empty( $ppParams->profileid ) ) {
 			return $cim;
@@ -698,7 +706,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 	function loadCIMship( $ppParams )
 	{
-		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
+		$cim = $this->loadCIM();
 
 		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
 		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles[$ppParams->shippingprofileid]->profileid );
@@ -739,10 +747,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$ppParams = $metaUser->meta->getProcessorParams( $this->id );
 
 		if ( !empty( $ppParams->profileid ) ) {
-			$cim = $this->loadCIM( $ppParams );
-
-			$cim->setParameter( 'customerProfileId',		$ppParams->profileid );
-			$cim->getCustomerProfileRequest( $this );
+			$cim = $this->loadCIMpay( $ppParams );
 
 			$cim->setParameter( 'customerProfileId',		$cim->customerProfileId );
 			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
