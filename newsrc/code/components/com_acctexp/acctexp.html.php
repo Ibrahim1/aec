@@ -1414,15 +1414,17 @@ class Payment_HTML
 				<?php
 			}
 
-		$var = trim ( $var );
+		if ( is_string( $var ) ) {
+			$var = trim ( $var );
 
-		if ( $var == "<p></p>" ) {
-			$var = null;
+			if ( $var == "<p></p>" ) {
+				$var = null;
+			}
 		}
 
 		if ( !empty( $var ) ) { ?>
 		<table width="100%" id="checkoutbox">
-			<?php if ( strpos( $var, '<tr class="aec_formrow">' ) !== false ) { ?>
+			<?php if ( ( strpos( $var, '<tr class="aec_formrow">' ) !== false ) || is_string( $InvoiceFactory->display_error ) ) { ?>
 				<tr><th class="checkout_head"><?php echo $InvoiceFactory->checkout['customtext_checkout_table']; ?></th></tr>
 			<?php } ?>
 		<?php if ( is_string( $InvoiceFactory->display_error ) ) { ?>
@@ -1434,6 +1436,14 @@ class Payment_HTML
 				</td>
 			</tr>
 		<?php } ?>
+		<?php if ( !empty( $InvoiceFactory->checkout['processor_addin'] ) ) { ?>
+			<tr>
+				<td class="checkout_processor_addin">
+					<?php echo $InvoiceFactory->checkout['processor_addin']; ?>
+				</td>
+			</tr>
+		<?php } ?>
+		<?php if ( is_string( $var ) ) { ?>
 			<tr>
 				<td class="checkout_action">
 					<?php
@@ -1441,6 +1451,7 @@ class Payment_HTML
 					?>
 				</td>
 			</tr>
+		<?php } ?>
 		<?php } ?>
 		</table>
 		<table width="100%">

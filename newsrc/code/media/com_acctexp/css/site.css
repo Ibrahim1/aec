@@ -697,6 +697,14 @@ border-bottom: 2px solid #aaa;
 padding: 8px 4px 2px 8px !important;
 }
 
+td.checkout_processor_addin {
+clear: both;
+width: 100%;
+margin-bottom: 10px;
+border-bottom: 2px solid #aaa;
+padding: 8px 4px 2px 8px !important;
+}
+
 #checkoutbox a.linkbutton {
 display: block;
 padding: 4px;
@@ -709,7 +717,7 @@ border-left: 2px solid #fff;
 background-color: #ddd;
 }
 
-#checkoutbox a:active {
+#checkoutbox a.linkbutton:active {
 display: block;
 padding: 4px;
 width: 10em;

@@ -84,11 +84,29 @@ class processor_hsbc extends XMLprocessor
 	function checkoutAction( $request )
 	{
 		if ( $this->settings['pas'] ) {
-			if ( !empty( $request->int_var['params']['cardNumber'] ) && !isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
+			if ( isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
+				$check = $request->int_var['params']['CcpaResultsCode'];
+			} else {
+				// Double check for CcpaResultsCode
+				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
+			}
+
+			if ( !empty( $request->int_var['params']['billFirstName'] ) && !empty( $request->int_var['params']['cardNumber'] ) ) {
+				$redourl = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=invoiceAction&amp;action=clearccdetails&amp;invoice='.$request->invoice->invoice_number, true );
+
+				$addin = '<p>Please review the Credit Card details you have supplied:</p>';
+				$addin .= '<p><strong>Cardholder Name:</strong>&nbsp;' . $request->int_var['params']['billFirstName'] . "&nbsp;" . $request->int_var['params']['billLastName'];
+				$addin .= '<p><strong>Credit Card:</strong>&nbsp;' . $request->int_var['params']['cardNumber'];
+				$addin .= '<p><strong>Expiration:</strong>&nbsp;' . $request->int_var['params']['expirationMonth'] . '&nbsp;/&nbsp;' . $request->int_var['params']['expirationYear'];
+				$addin .= '<p>If you would like to correct these details, please <a href="' . $redourl . '">click here</a></p>';
+			}
+
+			if ( !empty( $request->int_var['params']['cardNumber'] ) && is_null( $check ) ) {
 				$mod = array(	'enable_coupons' => false,
 								'checkout_title' => 'Checkout - Security Check',
 								'customtext_checkout_keeporiginal' => 'false',
 								'introtext' => '',
+								'processor_addin' => $addin,
 								'customtext_checkout' => _CFG_HSBC_2ND_CHECKOUT_INFO
 							);
 				$this->simpleCheckoutMod( $mod );
@@ -97,23 +115,11 @@ class processor_hsbc extends XMLprocessor
 
 				return POSTprocessor::checkoutAction( $request, $var );
 			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {
-				if ( !empty( $request->int_var['params']['CcpaResultsCode'] ) ) {
-					$check = $request->int_var['params']['CcpaResultsCode'];
-				} else {
-					// Double check for CcpaResultsCode
-					$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
-				}
 aecDebug('CcpaResultsCode');aecDebug($check);
-				$redourl = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=invoiceAction&amp;action=clearccdetails&amp;invoice='.$request->invoice->invoice_number );
-
-				$addin = '<p>Please review the Credit Card details you have supplied:</p>';
-				$addin .= '<p><strong>Cardholder Name:</strong>&nbsp;' . $request->int_var['params']['billFirstName'] . "&nbsp;" . $request->int_var['params']['billLastName'];
-				$addin .= '<p><strong>Credit Card:</strong>&nbsp;' . $request->int_var['params']['cardNumber'];
-				$addin .= '<p><strong>Expiration:</strong>&nbsp;' . $request->int_var['params']['expirationMonth'] . '&nbsp;/&nbsp;' . $request->int_var['params']['expirationYear'];
-				$addin .= 'If you would like to correct these details, please <a href="' . $redourl . '">click here</a>';
-
+aecDebug($addin);
 				if ( !is_null( $check ) ) {
 					$mod = array(	'enable_coupons' => false,
+									'processor_addin' => $addin,
 									'checkout_title' => 'Checkout - Final Stage'
 								);
 					$this->simpleCheckoutMod( $mod );
@@ -125,6 +131,7 @@ aecDebug('CcpaResultsCode');aecDebug($check);
 
 					$mod = array(	'enable_coupons' => false,
 									'checkout_title' => 'Checkout - Security Check',
+									'processor_addin' => $addin,
 									'customtext_checkout_keeporiginal' => 'false',
 									'customtext_checkout' => _CFG_HSBC_2ND_CHECKOUT_INFO
 								);
@@ -137,7 +144,7 @@ aecDebug('CcpaResultsCode');aecDebug($check);
 		}
 
 		if ( !empty( $request->int_var['params']['expirationMonth'] ) ) {
-			$mod = array( 'checkout_title' => 'Checkout - Correct Details', 'customtext_checkout_table' => 'Credit Card Details' );
+			$mod = array( 'checkout_title' => 'Checkout - Correct Details', 'customtext_checkout_table' => 'Credit Card Details', 'processor_addin' => $addin );
 		} else {
 			$mod = array( 'checkout_title' => 'Checkout - First Stage', 'customtext_checkout_table' => 'Credit Card Details' );
 		}

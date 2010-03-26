@@ -5128,7 +5128,7 @@ class aecHTML
 				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
 				break;
 			case "inputC":
-				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="20" value="' . $value . '" title="' . $row[2] . '" class=""/>' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="30" value="' . $value . '" title="' . $row[2] . '" class=""/>' . $sx;
 				break;
 			case "inputD":
 				$return .= '<textarea align="left" cols="60" rows="5" id="' . $name . '" name="' . $name . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' form-validate' : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $value . '</textarea>' . $sx;
@@ -9156,19 +9156,19 @@ class InvoiceFactory
 
 		$this->loadMetaUser();
 
-		$invoice = new Invoice( $database );
-		$invoice->loadInvoiceNumber( $invoiceNum );
+		$this->invoice = new Invoice( $database );
+		$this->invoice->loadInvoiceNumber( $invoiceNum );
 
-		$pp = new PaymentProcessor( $database );
-		if ( $pp->loadName( $invoice->method ) ) {
-			$pp->fullInit();
+		$this->pp = new PaymentProcessor( $database );
+		if ( $this->pp->loadName( $this->invoice->method ) ) {
+			$this->pp->fullInit();
 		}
 
-		$var = $invoice->getWorkingData( $this );
+		$var = $this->invoice->getWorkingData( $this );
 
-		$response = $pp->customAction( $action, $invoice, $this->metaUser, $var );
+		$response = $this->pp->customAction( $action, $this->invoice, $this->metaUser, $var );
 
-		$response = $invoice->processorResponse( $pp, $response, '', true );
+		$response = $this->invoice->processorResponse( $this->pp, $response, '', true );
 
 		if ( isset( $response['cancel'] ) ) {
 			HTML_Results::cancel( 'com_acctexp' );
