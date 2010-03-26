@@ -103,25 +103,10 @@ class processor_offline_payment extends processor
         }
         $recipients = $recipients2;
 
-		$bccipients = AECToolbox::rewriteEngineRQ( $this->settings['bcc'], $request );
-		$bccips = explode( ',', $bccipients );
-
-        $bccipients2 = array();
-        foreach ( $bccips as $k => $email ) {
-            $bccipients2[$k] = trim( $email );
-        }
-        $bccipients = $bccipients2;
-
-		if ( !empty( $bccipients2 ) ) {
-			$bcc = $bccipients;
-		} else {
-			$bcc = null;
-		}
-
 		if ( aecJoomla15check() ) {
-			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc  );
+			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 		} else {
-			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
+			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 		}
 
 		return true;
@@ -153,10 +138,25 @@ class processor_offline_payment extends processor
 	        }
 	        $recipients = $recipients2;
 
-			if ( aecJoomla15check() ) {
-				JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+			$bccipients = AECToolbox::rewriteEngineRQ( $this->settings['bcc'], $request );
+			$bccips = explode( ',', $bccipients );
+
+	        $bccipients2 = array();
+	        foreach ( $bccips as $k => $email ) {
+	            $bccipients2[$k] = trim( $email );
+	        }
+	        $bccipients = $bccipients2;
+
+			if ( !empty( $bccipients2 ) ) {
+				$bcc = $bccipients;
 			} else {
-				mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+				$bcc = null;
+			}
+
+			if ( aecJoomla15check() ) {
+				JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
+			} else {
+				mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
 			}
 		}
 
