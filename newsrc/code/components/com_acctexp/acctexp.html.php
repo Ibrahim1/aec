@@ -857,7 +857,7 @@ class Payment_HTML
 					<tr>
 						<td colspan="3" class="aec_left"><strong><?php echo _CONFIRM_YOU_HAVE_SELECTED; ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
 					</tr>
-					<?php if ( $aecConfig->cfg['confirmation_changeusage'] ) { ?>
+					<?php if ( $aecConfig->cfg['confirmation_changeusage'] && !( empty( $user->id ) && $aecConfig->cfg['confirmation_changeusername'] ) ) { ?>
 					<tr>
 						<td colspan="3" class="aec_left">
 							<form name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
