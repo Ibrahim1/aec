@@ -1113,8 +1113,6 @@ define( '_CFG_GENERAL_DEBUGMODE_NAME', 'Modo de Analide de Erros');
 define( '_CFG_GENERAL_DEBUGMODE_DESC', 'Activar a visualiza&ccedil;&atilde;o de informa&ccedil;&atilde;o de analise de erros.');
 define( '_CFG_GENERAL_EMAIL_DEFAULT_ADMINS_NAME', 'Email Administrators');
 define( '_CFG_GENERAL_EMAIL_DEFAULT_ADMINS_DESC', 'All Administrators on your CMS, who have chosen to receive system emails, will receive AEC system notices with this option enabled.');
-define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_NAME', 'Further Email Recipients');
-define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_DESC', 'Either in addition to, or instead of, your regular System Administrators, you can enter a comma-separated list of email addresses to receive AEC system notices.');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_NAME', 'Sobrepor Requirimento SSL');
 define( '_CFG_GENERAL_OVERRIDE_REQSSL_DESC', 'Alguns processos de pagamentos requerem uma conex&atilde;o segura SSL para o utilizador - por examplo quando informa&ccedil;&atilde;o sens&iacute;vel ( informa&ccedil;&atilde;o de Cart&atilde;o de Cr&eacute;dito) &eacute; solicitada na Pagia Principal');
 define( '_CFG_GENERAL_ALTSSLURL_NAME', 'Alternative SSL Url');
