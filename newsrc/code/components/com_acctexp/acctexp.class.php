@@ -3883,8 +3883,17 @@ class XMLprocessor extends processor
 				$pf = '';
 			}
 
+			$translatelist = array( 'card_type' => 'cardType',
+									'card_number' => 'cardNumber',
+									'card_exp_month' => 'expirationMonth',
+									'card_exp_year' => 'expirationYear',
+									'card_cvv2' => 'cardVV2'
+									);
+
 			if ( isset( $content[$value] ) ) {
 				$vcontent = $content[$value];
+			} elseif ( isset( $content[$translatelist[$value]] ) ) {
+				$vcontent = $content[$translatelist[$value]];
 			} else {
 				$vcontent = '';
 			}
@@ -3903,7 +3912,7 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:120px;" class="aec_formfield" title="'._AEC_CCFORM_CARDNUMBER_DESC.'" ', 'value', 'text', $vcontent );
-					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME.$pf, $vcontent );
+					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME.$pf );
 					break;
 				case 'card_number':
 					// Request the Card number
@@ -3918,7 +3927,7 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" class="aec_formfield" style="width:50px;" title="'._AEC_CCFORM_EXPIRATIONMONTH_DESC.'"', 'value', 'text', $vcontent );
-					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME.$pf, _AEC_CCFORM_EXPIRATIONMONTH_DESC, $vcontent );
+					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME.$pf, _AEC_CCFORM_EXPIRATIONMONTH_DESC );
 					break;
 				case 'card_exp_year':
 					// Create a selection box with the next 10 years
@@ -3930,10 +3939,10 @@ class XMLprocessor extends processor
 					}
 
 					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" class="aec_formfield" style="width:70px;" title="'._AEC_CCFORM_EXPIRATIONYEAR_DESC.'"', 'value', 'text', $vcontent );
-					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME.$pf, _AEC_CCFORM_EXPIRATIONYEAR_DESC, $vcontent );
+					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME.$pf, _AEC_CCFORM_EXPIRATIONYEAR_DESC );
 					break;
 				case 'card_cvv2':
-					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME.$pf, _AEC_CCFORM_CARDVV2_DESC, $vcontent );
+					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME.$pf, _AEC_CCFORM_CARDVV2_DESC, null );
 					break;
 			}
 		}
@@ -3948,18 +3957,18 @@ class XMLprocessor extends processor
 		}
 
 		foreach ( $values as $value ) {
-			if ( isset( $content[$value] ) ) {
-				$vcontent = $content[$value];
-			} else {
-				$vcontent = '';
-			}
-
 			if ( strpos( $value, '*' ) ) {
 				$pf = '*';
 
 				$value = substr( $value, 0, -1 );
 			} else {
 				$pf = '';
+			}
+
+			if ( isset( $content[$value] ) ) {
+				$vcontent = $content[$value];
+			} else {
+				$vcontent = '';
 			}
 
 			switch ( strtolower( $value ) ) {
@@ -4004,18 +4013,38 @@ class XMLprocessor extends processor
 		}
 
 		foreach ( $values as $value ) {
-			if ( isset( $content[$value] ) ) {
-				$vcontent = $content[$value];
-			} else {
-				$vcontent = '';
-			}
-
 			if ( strpos( $value, '*' ) ) {
 				$pf = '*';
 
 				$value = substr( $value, 0, -1 );
 			} else {
 				$pf = '';
+			}
+
+			$translatelist = array( 'firstname' => 'billFirstName',
+									'lastname' => 'billLastName',
+									'address' => 'billAddress',
+									'address2' => 'billAddress2',
+									'city' => 'billCity',
+									'nonus' => 'billNonUs',
+									'state' => 'billState',
+									'state_us' => 'billState',
+									'state_usca' => 'billState',
+									'zip' => 'billZip',
+									'country_list' => 'billCountry',
+									'country3_list' => 'billCountry',
+									'country' => 'billCountry',
+									'phone' => 'billPhone',
+									'fax' => 'billFax',
+									'company' => 'billCompany'
+									);
+
+			if ( isset( $content[$value] ) ) {
+				$vcontent = $content[$value];
+			} elseif ( isset( $content[$translatelist[$value]] ) ) {
+				$vcontent = $content[$translatelist[$value]];
+			} else {
+				$vcontent = '';
 			}
 
 			switch ( strtolower( $value ) ) {

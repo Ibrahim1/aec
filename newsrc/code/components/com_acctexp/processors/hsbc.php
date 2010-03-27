@@ -185,7 +185,7 @@ aecDebug($addin);
 
 		$values = array( 'card_number*', 'card_exp_month*', 'card_exp_year*', 'card_cvv2*' );
 
-		$var = $this->getCCform( $var, $values );
+		$var = $this->getCCform( $var, $values, $request->int_var['params'] );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
 			$values = array( 'firstname*', 'lastname*', 'company', 'address*', 'address2', 'phone', 'city*', 'zip*', 'state_usca', 'country3_list*' );
@@ -193,7 +193,7 @@ aecDebug($addin);
 			$values = array( 'firstname', 'lastname' );
 		}
 
-		$var = $this->getUserform( $var, $values, $request->metaUser );
+		$var = $this->getUserform( $var, $values, $request->metaUser, $request->int_var['params'] );
 
 		$var = $this->getFormInfo( $var, array( 'asterisk' ) );
 
