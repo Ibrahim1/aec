@@ -81,7 +81,7 @@ class mi_aecuserdetails
 				$p = $i . '_';
 
 				if ( !empty( $this->settings[$p.'mandatory'] ) ) {
-					if ( empty( $request->params[$p.'name'] ) ) {
+					if ( empty( $request->params[$this->settings[$p.'name']] ) ) {
 						$return['error'] = "Please fill in the required fields";
 					}
 				}
