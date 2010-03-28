@@ -3461,7 +3461,11 @@ function editSubscriptionPlan( $id, $option )
 
 				case 'list_language':
 					// Get language list
-					$language_array	= explode( ',', $pp->info['languages'] );
+					if ( !is_array( $pp->info['languages'] ) ) {
+						$language_array	= explode( ',', $pp->info['languages'] );
+					} else {
+						$language_array	= $pp->info['languages'];
+					}
 
 					// Transform languages into OptionArray
 					$language_code_list = array();
