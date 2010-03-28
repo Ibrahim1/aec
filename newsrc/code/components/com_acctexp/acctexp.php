@@ -39,7 +39,8 @@ if ( !empty( $task ) ) {
 			// Manual Heartbeat
 			$hash = aecGetParam( 'hash', 0, true, array( 'word', 'string' ) );
 
-			aecHeartbeat::frontendping( true, $hash );
+			$heartbeat = new aecHeartbeat( $database );
+			$heartbeat->frontendping( true, $hash );
 			break;
 
 		case 'register':
