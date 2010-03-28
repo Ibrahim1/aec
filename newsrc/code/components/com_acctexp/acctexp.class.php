@@ -9775,6 +9775,10 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
+		if ( !is_array( $response ) ) {
+			$response = array( 'original_response' => $response );
+		}
+
 		$database = &JFactory::getDBO();
 
 		$this->computeAmount();

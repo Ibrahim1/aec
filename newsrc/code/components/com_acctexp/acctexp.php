@@ -1159,6 +1159,8 @@ function planaction( $option, $action, $subscr )
 
 		$invoicefact = new InvoiceFactory( $userid );
 		$invoicefact->planprocessoraction( $action, $subscr );
+
+		subscriptionDetails( $option, 'invoices' );
 	} else {
 		aecNotAuth();
 		return;
@@ -1174,6 +1176,8 @@ function invoiceAction( $option, $action, $invoice )
 	} else {
 		$invoicefact = new InvoiceFactory( $user->id );
 		$invoicefact->invoiceprocessoraction( $action, $invoice );
+
+		subscriptionDetails( $option, 'invoices' );
 	}
 }
 
