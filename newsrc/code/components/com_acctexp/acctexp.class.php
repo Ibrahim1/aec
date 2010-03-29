@@ -9981,8 +9981,19 @@ class Invoice extends serialParamDBTable
 						$metaUser->moveFocus( $this->subscr_id );
 					}
 
-					$metaUser->focusSubscription->expire();
-					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
+					$usage = $this->getObjUsage();
+
+					if ( is_a( $usage, 'SubscriptionPlan' ) ) {
+						// Check whether we're really expiring the right membership,
+						// Maybe the user was already switched to a different plan
+						if ( $metaUser->focusSubscription->plan == $usage->id ) {
+							$metaUser->focusSubscription->expire();
+							$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
+						}
+					} else {
+						$metaUser->focusSubscription->expire();
+						$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
+					}
 				}
 			} elseif ( isset( $response['eot'] ) ) {
 				$mi_event = '_payment_eot';
