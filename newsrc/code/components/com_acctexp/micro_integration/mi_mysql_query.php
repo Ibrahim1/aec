@@ -25,6 +25,14 @@ class mi_mysql_query
 	function Settings()
 	{
         $settings = array();
+		$settings['use_altdb']		= array( 'list_yesno' );
+		$settings['dbms']			= array( 'inputC' );
+		$settings['dbhost']			= array( 'inputC' );
+		$settings['dbuser']			= array( 'inputC' );
+		$settings['dbpasswd']		= array( 'inputC' );
+		$settings['dbname']			= array( 'inputC' );
+		$settings['table_prefix']	= array( 'inputC' );
+
         $settings['query']			= array( 'inputD' );
         $settings['query_exp']		= array( 'inputD' );
         $settings['query_pre_exp']	= array( 'inputD' );
@@ -38,7 +46,19 @@ class mi_mysql_query
 	function relayAction( $request )
 	{
 		if ( isset( $this->settings['query'.$request->area] ) ) {
-			$database = &JFactory::getDBO();
+	        if ( $this->settings['use_altdb'] ) {
+		        $options = array(	'driver'	=> $this->settings['dbms'],
+									'host'		=> $this->settings['dbhost'],
+									'user'		=> $this->settings['dbuser'],
+									'password'	=> $this->settings['dbpasswd'],
+									'database'	=> $this->settings['dbname'],
+									'prefix'	=> $this->settings['table_prefix']
+									);
+
+		        $database =& JDatabase::getInstance($options);
+	        } else {
+	        	$database = &JFactory::getDBO();
+	        }
 
 			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 

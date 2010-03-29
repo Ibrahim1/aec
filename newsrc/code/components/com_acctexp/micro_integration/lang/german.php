@@ -157,6 +157,22 @@ define( '_MI_MI_MYSQL_QUERY_QUERY_EXP_NAME',		'Abfrage Ablauf' );
 define( '_MI_MI_MYSQL_QUERY_QUERY_EXP_DESC',		'MySQL-Abfrage welche ausgef&uuml;hrt wird, wenn das Abo abl&auml;ft' );
 define( '_MI_MI_MYSQL_QUERY_QUERY_PRE_EXP_NAME',	'Abfrage vor Ablauf' );
 define( '_MI_MI_MYSQL_QUERY_QUERY_PRE_EXP_DESC',	'MySQL-Abfrage welche ausgef&uuml;hrt wird, bevor das Abo abl&auml;ft (Datum siehe ersten Reiter)' );
+
+define( '_MI_MI_MYSQL_USE_ALTDB_NAME','Different Database' );
+define( '_MI_MI_MYSQL_USE_ALTDB_DESC','If you want to act on a different database than the one your joomla uses, you can set this option to Yes and provide details below.' );
+define( '_MI_MI_MYSQL_DBMS_NAME','Database Type' );
+define( '_MI_MI_MYSQL_DBMS_DESC','Typically mysql or mysqli' );
+define( '_MI_MI_MYSQL_DBHOST_NAME','Database Host' );
+define( '_MI_MI_MYSQL_DBHOST_DESC','Typically localhost - or the IP an external DB' );
+define( '_MI_MI_MYSQL_DBUSER_NAME','Database Username' );
+define( '_MI_MI_MYSQL_DBUSER_DESC','Your Database Access Username' );
+define( '_MI_MI_MYSQL_DBPASSWD_NAME','Database Password' );
+define( '_MI_MI_MYSQL_DBPASSWD_DESC','Your Database Access Password' );
+define( '_MI_MI_MYSQL_DBNAME_NAME','Database Name' );
+define( '_MI_MI_MYSQL_DBNAME_DESC','The Name of the database' );
+define( '_MI_MI_MYSQL_TABLE_PREFIX_NAME','Table Prefix' );
+define( '_MI_MI_MYSQL_TABLE_PREFIX_DESC','Typically jos_ or mos_' );
+
 define( '_AEC_MI_SET4_MYSQL',		'Weitere Infos' );
 
 // reMOSitory
