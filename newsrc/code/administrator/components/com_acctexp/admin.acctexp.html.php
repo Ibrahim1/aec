@@ -3103,6 +3103,17 @@ class HTML_AcctExp
  		exit;
 	}
 
+	function import( $option, $aecHTML )
+	{
+		// 1st Stage - Select or upload a csv
+		// Auto-Select last uploaded (checkbox for automatically moving into it)
+		// 2nd Stage - Act on data
+		//  1- Create Joomla User <-accepts data from csv
+		//  2- Assign before plan(s) verbatim
+		//  3- Assign main plan <-accepts data from csv
+		//  4- Assign after plan(s) verbatim
+	}
+
 	function export( $option, $aecHTML )
 	{
 		loadOverlib();
