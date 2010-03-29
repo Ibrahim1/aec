@@ -1139,6 +1139,8 @@ define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME', 'E-mail Omschrijving:');
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC', 'Tekst doe teogevoegd moet worden aan de e-mail die verstuurd wordt naar de gebruiker wanneer een plan geactiveerd is voor de gebruiker.');
 define( '_PAYPLAN_GENERAL_FALLBACK_NAME', 'Terugval plan:');
 define( '_PAYPLAN_GENERAL_FALLBACK_DESC', 'Wanneer een gebruikersaccount vervalt - maak deze dan lid van dit plan');
+define( '_PAYPLAN_GENERAL_FALLBACK_REQ_PARENT_NAME', 'Require active parent:');
+define( '_PAYPLAN_GENERAL_FALLBACK_REQ_PARENT_DESC', 'Only grant the fallback plan if this is a secondary membership and the primary membership of this user is still active.');
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_NAME', 'Standard Parent Plan');
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_DESC', 'Currently assigns this plan as the users root membership in case he or she signs up only for a secondary plan.');
 

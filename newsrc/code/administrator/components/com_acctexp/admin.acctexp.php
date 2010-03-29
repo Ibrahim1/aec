@@ -3274,6 +3274,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['processors']			= array( 'list', '' );
 	$params['standard_parent']		= array( 'list', '' );
 	$params['fallback']				= array( 'list', '' );
+	$params['fallback_req_parent']	= array( 'list_yesno', 0 );
 	$params['make_active']			= array( 'list_yesno', 1 );
 	$params['make_primary']			= array( 'list_yesno', 1 );
 	$params['update_existing']		= array( 'list_yesno', 1 );

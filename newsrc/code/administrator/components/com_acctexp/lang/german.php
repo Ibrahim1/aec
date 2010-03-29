@@ -1301,6 +1301,8 @@ define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME',				'Emailtext:' );
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC',				'Text welcher im Email an den Benutzer angezeigt wird wenn das Abo best&auml;tigt wurde' );
 define( '_PAYPLAN_GENERAL_FALLBACK_NAME',				'Abo Ersatz:' );
 define( '_PAYPLAN_GENERAL_FALLBACK_DESC',				'Wenn ein Abo endet, aktiviere dieses Abo f&uuml;r diesen Benutzer' );
+define( '_PAYPLAN_GENERAL_FALLBACK_REQ_PARENT_NAME', 'Require active parent:');
+define( '_PAYPLAN_GENERAL_FALLBACK_REQ_PARENT_DESC', 'Only grant the fallback plan if this is a secondary membership and the primary membership of this user is still active.');
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_NAME', '&Uuml;bergeordnetes Abo');
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_DESC', 'Falls dieses Abo nicht prim&auml;r ist und der Benutzer noch kein prim&auml;res Abo besitzt, wird das ausgew&auml;hlte angewendet.');
 

@@ -1313,6 +1313,8 @@ define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME', 'Descri&ccedil;&atilde;o Email:');
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC', 'Texto que ser&aacute; adicionado ao email que o utilizador receber&aacute; quando um plano for activado para ele');
 define( '_PAYPLAN_GENERAL_FALLBACK_NAME', 'Plano Fallback:');
 define( '_PAYPLAN_GENERAL_FALLBACK_DESC', 'Quando a subscri&ccedil;&atilde;o de um utilizadore expira - torna o membro do seguinte plano');
+define( '_PAYPLAN_GENERAL_FALLBACK_REQ_PARENT_NAME', 'Require active parent:');
+define( '_PAYPLAN_GENERAL_FALLBACK_REQ_PARENT_DESC', 'Only grant the fallback plan if this is a secondary membership and the primary membership of this user is still active.');
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_NAME', 'Plano Principal Standard');
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_DESC', 'Atualmente atribui este plano como plano principal no caso do utilizador se increver apenas para um plano secund&aacute;rio.');
 

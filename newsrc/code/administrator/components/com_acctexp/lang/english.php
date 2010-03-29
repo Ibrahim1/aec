@@ -1130,6 +1130,8 @@ define( '_PAYPLAN_GENERAL_EMAIL_DESC_NAME', 'Email Description:');
 define( '_PAYPLAN_GENERAL_EMAIL_DESC_DESC', 'Text that should be added into the email that the user receives when a plan is activated for him');
 define( '_PAYPLAN_GENERAL_FALLBACK_NAME', 'Plan Fallback:');
 define( '_PAYPLAN_GENERAL_FALLBACK_DESC', 'When a user subscription expires - make them a member of the following plan');
+define( '_PAYPLAN_GENERAL_FALLBACK_REQ_PARENT_NAME', 'Require active parent:');
+define( '_PAYPLAN_GENERAL_FALLBACK_REQ_PARENT_DESC', 'Only grant the fallback plan if this is a secondary membership and the primary membership of this user is still active.');
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_NAME', 'Standard Parent Plan');
 define( '_PAYPLAN_GENERAL_STANDARD_PARENT_DESC', 'Currently assigns this plan as the users root membership in case he or she signs up only for a secondary plan.');
 

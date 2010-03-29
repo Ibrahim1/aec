@@ -6893,7 +6893,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit',
 						'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit',
 						'gid_enabled', 'gid', 'lifetime', 'standard_parent',
-						'fallback', 'similarplans', 'equalplans', 'make_active',
+						'fallback', 'fallback_req_parent', 'similarplans', 'equalplans', 'make_active',
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
 						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
 						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout'
@@ -11705,14 +11705,24 @@ class Subscription extends serialParamDBTable
 
 		// Recognize the fallback plan, if not overridden
 		if ( !empty( $subscription_plan->params['fallback'] ) && !$overridefallback ) {
-			if ( $subscription_plan !== false ) {
-				$mih = new microIntegrationHandler();
-				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
+			if ( !$subscription_plan->params['make_primary'] && !empty( $subscription_plan->params['fallback_req_parent'] ) ) {
+				if ( $metaUser->focusSubscription->id != $metaUser->objSubscription->id ) {
+					if ( $metaUser->objSubscription->is_expired() ) {
+						$overridefallback = true;
+					}
+				}
 			}
 
-			$this->applyUsage( $subscription_plan->params['fallback'], 'none', 1 );
-			$this->load( $this->id );
-			return false;
+			if ( !$overridefallback ) {
+				if ( $subscription_plan !== false ) {
+					$mih = new microIntegrationHandler();
+					$mih->userPlanExpireActions( $metaUser, $subscription_plan );
+				}
+
+				$this->applyUsage( $subscription_plan->params['fallback'], 'none', 1 );
+				$this->load( $this->id );
+				return false;
+			}
 		} else {
 			// Set a Trial flag if this is an expired Trial for further reference
 			if ( strcmp( $this->status, 'Trial' ) === 0 ) {

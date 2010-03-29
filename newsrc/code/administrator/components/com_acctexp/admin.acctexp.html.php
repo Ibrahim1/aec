@@ -1989,7 +1989,10 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
-											<div style="width:180px;float:left;"><?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?></div>
+											<div style="width:180px;float:left;">
+												<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'fallback_req_parent' ); ?>
+											</div>
 											<div style="width:180px;float:left;"><?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?></div>
 										</div>
 									</div>
