@@ -9197,12 +9197,14 @@ class InvoiceFactory
 
 		$response = $this->pp->customAction( $action, $this->invoice, $this->metaUser, $var );
 
-		$response = $this->invoice->processorResponse( $this->pp, $response, '', true );
-
-		if ( isset( $response['cancel'] ) ) {
-			HTML_Results::cancel( 'com_acctexp' );
-		} elseif ( isset( $response['InvoiceToCheckout'] ) ) {
+		if ( isset( $response['InvoiceToCheckout'] ) ) {
 			$this->InvoiceToCheckout( 'com_acctexp', true, false );
+		} else {
+			$response = $this->invoice->processorResponse( $this->pp, $response, '', true );
+
+			if ( isset( $response['cancel'] ) ) {
+				HTML_Results::cancel( 'com_acctexp' );
+			}
 		}
 	}
 
