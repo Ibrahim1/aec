@@ -213,7 +213,7 @@ function aecPostParamClear( $array, $safe=false, $safe_params=array( 'string', '
 	return $cleararray;
 }
 
-function aecRedirect( $url, $msg, $class=null )
+function aecRedirect( $url, $msg=null, $class=null )
 {
 	if ( aecJoomla15check() ) {
 		global $mainframe;
