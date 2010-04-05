@@ -452,8 +452,6 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
-		$cim = $this->loadCIMpay( $ppParams );
-
 		if ( !empty( $ppParams ) ) {
 			if ( $request->int_var['params']['payprofileselect'] != "new" ) {
 				$ppParams->paymentprofileid = $request->int_var['params']['payprofileselect'];
@@ -464,7 +462,10 @@ class processor_authorize_cim extends PROFILEprocessor
 			}
 
 
-			$cim = $this->getCIMprofile( $cim, $ppParams );
+			$cim = $this->loadCIMpay( $ppParams, $cim );
+			$cim = $this->loadCIMship( $ppParams, $cim );
+		} else {
+			$cim = $this->loadCIMpay( $ppParams );
 		}
 
 		$basicdata = array(	'refId'					=> $request->invoice->invoice_number,
@@ -685,9 +686,11 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $cim;
 	}
 
-	function loadCIMpay( $ppParams )
+	function loadCIMpay( $ppParams, $cim=null )
 	{
-		$cim = $this->loadCIM();
+		if ( is_null( $cim ) ) {
+			$cim = $this->loadCIM();
+		}
 
 		if ( empty( $ppParams->profileid ) ) {
 			return $cim;
@@ -696,7 +699,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
 
 		if ( !empty( $ppParams->paymentprofileid ) ) {
-			$cim->setParameter( 'customerPaymentProfileId', $ppParams->paymentprofileid );
+			$cim->setParameter( 'customerPaymentProfileId', $ppParams->paymentProfiles[$ppParams->paymentprofileid]->profileid );
 		}
 
 		$cim->getCustomerProfileRequest( $this );
@@ -704,12 +707,18 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $cim;
 	}
 
-	function loadCIMship( $ppParams )
+	function loadCIMship( $ppParams, $cim=null )
 	{
-		$cim = $this->loadCIM();
+		if ( is_null( $cim ) ) {
+			$cim = $this->loadCIM();
+		}
 
 		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
-		$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles[$ppParams->shippingprofileid]->profileid );
+
+		if ( !empty( $ppParams->shippingprofileid ) ) {
+			$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles[$ppParams->shippingprofileid]->profileid );
+		}
+
 		$cim->getCustomerShippingAddressRequest( $this );
 
 		return $cim;
