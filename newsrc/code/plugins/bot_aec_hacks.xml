@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<mosinstall version="1.0.0" type="mambot" group="system">
+<mosinstall version="1.0.0" type="mambot" group="system" method="upgrade">
 	<name>AEC Hacks bot</name>
 	<author>David Deutsch, Mati Kochen, Team AEC</author>
 	<creationDate>Aug 2007</creationDate>

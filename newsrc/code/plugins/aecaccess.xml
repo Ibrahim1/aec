@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install version="1.5" type="plugin" group="user">
+<install version="1.5" type="plugin" group="user" method="upgrade">
 	<name>Authorization - AEC Access</name>
 	<author>David Deutsch</author>
 	<creationDate>24.02.2008</creationDate>
