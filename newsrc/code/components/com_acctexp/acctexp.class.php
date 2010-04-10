@@ -9777,7 +9777,7 @@ class Invoice extends serialParamDBTable
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
 			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > time() ) {
 				// The last notification has not been too long ago - skipping this one
-				return null;
+				return $response;
 			}
 		}
 
