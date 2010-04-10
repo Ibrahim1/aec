@@ -231,8 +231,8 @@ define( '_CANCEL_TITLE', 'Resultado da Inscri&ccedil;&atilde;o: Cancelada!');
 define( '_CANCEL_MSG', 'O nosso Sistema recebeu a informa&ccedil;&atilde;o, que voc&ecirc; escolheu cancelar o seu pagamento. Se isto aconteceu devido a um problema encontrado no nosso site, por favor n&atilde;o hesite em nos contactar!');
 
 // --== PENDING PAGE ==--
+define( '_PENDING_TITLE', 'Account Pending');
 define( '_WARN_PENDING', 'A sua conta encontra-se pendente. Se continuar neste estado durante algumas horas e o sue pagamento for confirmado, por favor contacte o administrador do Site.');
-define( '_WARN_PENDING', 'A sua Conta continua pendente. Se continuar neste estado durante algumas horas e o sue pagamento for confirmado, por favor contacte o administrador do Site.');
 define( '_PENDING_OPENINVOICE', 'Aparentemente voc&ecirc; tem um factura por liquidar nos nossos registos - Se existe algo de errado com esta situa&ccedil;&atilde;o, voc&ecirc; pode ir a Pagina de Verifica&ccedil;&atilde;o novamente para repetir o processo:');
 define( '_GOTO_CHECKOUT', 'Ir para a Pagina de Verifica&ccedil;&atilde;o');
 define( '_GOTO_CHECKOUT_CANCEL', 'voc&ecirc; tamb&eacute;m pode cancelar o pagamento (voc&ecirc; ter&aacute; a possibilidade de ir a p&aacute;gina Selec&ccedil;&atilde;o de Plano uma vez mais):');

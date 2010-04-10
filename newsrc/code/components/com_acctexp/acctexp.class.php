@@ -806,14 +806,18 @@ class metaUser
 
 					$key = array_pop( $keys );
 
+					if ( !empty( $sessionextra ) ) {
+						foreach ( $sessionextra as $sk => $sv ) {
+							$se[$key][$sk] = $sv;
+						}
+					}
+
 					if ( isset( $se[$key]['user'] ) ) {
 						$se[$key]['user']->gid		= $gid;
 						$se[$key]['user']->usertype	= $gid_name;
-
-						$sdata = $this->joomserializesession( $se );
-					} else {
-						$sdata = $data;
 					}
+
+					$sdata = $this->joomserializesession( $se );
 
 					$query = 'UPDATE #__session'
 							. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''

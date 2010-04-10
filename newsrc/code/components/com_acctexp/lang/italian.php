@@ -239,8 +239,8 @@ define( '_CANCEL_TITLE', 'Risultato iscrizione: Cancellata!');
 define( '_CANCEL_MSG', 'Il nostro sistema ha ricevuto il messaggio, che lei ha deciso di cancellare il suo pagamento. Se questo è causato da problemi che ha riscontrato nel il nostro sito, la preghiamo di contattarci!');
 
 // --== PENDING PAGE ==--
+define( '_PENDING_TITLE', 'Account Pending');
 define( '_WARN_PENDING', 'Il suo account &egrave; ancora in sospeso. Se vi trovate in questo stato da pi&ugrave; di qualche ora e il suo pagamento è stato confermato, vi preghiamo di contattare l\'amministratore del sito.');
-define( '_WARN_PENDING', 'Your account is still pending. If you are in this state for more than some hours and your payment is confirmed, please contact the administrator of this web site.');
 define( '_PENDING_OPENINVOICE', 'It seems that you have an uncleared invoice in our database - If something went wrong along the way, you can go to the checkout page once again to try again:');
 define( '_GOTO_CHECKOUT', 'Go to the checkout page again');
 define( '_GOTO_CHECKOUT_CANCEL', 'you may also cancel the payment (you will have the possibility to go to the Plan Selection screen once again):');

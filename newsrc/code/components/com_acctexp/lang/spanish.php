@@ -239,7 +239,7 @@ define( '_CANCEL_TITLE', 'Subscription Result: Cancelled!');
 define( '_CANCEL_MSG', 'Our System has received the message, that you have chosen to cancel your payment. If this is due to problems that you encountered with our site, please don\'t hesitate to contact us!');
 
 // --== PENDING PAGE ==--
-define( '_WARN_PENDING', 'Your account is still pending. If you are in this state for more than some hours and your payment is confirmed, please contact the administrator of this web site.');
+define( '_PENDING_TITLE', 'Account Pending');
 define( '_WARN_PENDING', 'Your account is still pending. If you are in this state for more than some hours and your payment is confirmed, please contact the administrator of this web site.');
 define( '_PENDING_OPENINVOICE', 'It seems that you have an uncleared invoice in our database - If something went wrong along the way, you can go to the checkout page once again to try again:');
 define( '_GOTO_CHECKOUT', 'Go to the checkout page again');

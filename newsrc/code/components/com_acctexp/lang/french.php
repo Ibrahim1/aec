@@ -238,6 +238,7 @@ define( '_CANCEL_TITLE', 'R&eacute;sultat d\'abonnement: Annul&eacute;!');
 define( '_CANCEL_MSG', 'Notre syst&egrave;me &agrave; re&ccedil;u un message indiquant que vous avez choisi d\'annuler votre paiement. Si cela est du &agrave; un probl&egrave;me rencontr&eacute; sur notre site, n\'h&eacute;sitez pas &agrave; nous contacter !');
 
 // --== PAGE EN ATTENTE ==--
+define( '_PENDING_TITLE', 'Account Pending');
 define( '_WARN_PENDING', 'Votre compte est toujours en attente. Si vous avez ce statut depuis plusieurs heures et que votre paiement a &eacute;t&eacute; confirm&eacute;, veuillez contacter l\'administrateur du site Internet.');
 define( '_PENDING_OPENINVOICE', 'Il semble que vous ayez une facture non pay&eacute;e dans notre syst&egrave;me - Si jamais vous rencontrez un probl&egrave;me lors de la proc&eacute;dure, vous pourrez revenir &agrave; la page de paiement et r&eacute;essayer :');
 define( '_GOTO_CHECKOUT', 'Retourner &agrave; la page de paiement &agrave; nouveau');

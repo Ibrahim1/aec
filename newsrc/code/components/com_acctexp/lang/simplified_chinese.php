@@ -239,8 +239,8 @@ define( '_CANCEL_TITLE', '预订结果: �?�消!');
 define( '_CANCEL_MSG', '系统已�?接收到这个信�?�,你�?�以选择�?�消你的支付.如果在我们的站点�?�到问题,请一定�?�?�系我们!');
 
 // --== PENDING PAGE ==--
+define( '_PENDING_TITLE', 'Account Pending');
 define( '_WARN_PENDING', '你的�?�?��?然没有处�?�.如果在你支付�?��?然处于这个状�?,请�?�系这个站点的管�?�员.');
-define( '_WARN_PENDING', 'Your account is still pending. If you are in this state for more than some hours and your payment is confirmed, please contact the administrator of this web site.');
 define( '_PENDING_OPENINVOICE', 'It seems that you have an uncleared invoice in our database - If something went wrong along the way, you can go to the checkout page once again to try again:');
 define( '_GOTO_CHECKOUT', 'Go to the checkout page again');
 define( '_GOTO_CHECKOUT_CANCEL', 'you may also cancel the payment (you will have the possibility to go to the Plan Selection screen once again):');
