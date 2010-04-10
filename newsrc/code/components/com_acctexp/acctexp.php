@@ -39,6 +39,8 @@ if ( !empty( $task ) ) {
 			// Manual Heartbeat
 			$hash = aecGetParam( 'hash', 0, true, array( 'word', 'string' ) );
 
+			$database = &JFactory::getDBO();
+
 			$heartbeat = new aecHeartbeat( $database );
 			$heartbeat->frontendping( true, $hash );
 			break;
