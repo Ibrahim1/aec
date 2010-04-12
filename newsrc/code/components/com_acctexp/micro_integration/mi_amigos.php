@@ -50,8 +50,8 @@ class mi_amigos
 		$amigos_orderamount	= $request->invoice->amount;
 		$amigos_ipaddress	= $_SERVER['REMOTE_ADDR'];
 
-		$tmpl = "%s/index.php?option=com_amigos&task=sale&amigos_id=%s&amigos_ordertype=com_acctexp&amigos_orderid=%s&amigos_orderamount=%s&amigos_ipaddress=%s";
-		$url = sprintf( $tmpl, $domain, $amigos_id, $amigos_ordertype, $amigos_orderamount, $amigos_ipaddress );
+		$tmpl = "%s/index.php?option=com_amigos&task=sale&amigos_id=%s&amigos_ordertype=%s&amigos_orderid=%s&amigos_orderamount=%s&amigos_ipaddress=%s";
+		$url = sprintf( $tmpl, $domain, $amigos_id, $amigos_ordertype, $amigos_orderid, $amigos_orderamount, $amigos_ipaddress );
 
 		if ( !empty( $this->settings['amigos_curl'] ) )
 		{
