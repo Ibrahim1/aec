@@ -7990,7 +7990,7 @@ class InvoiceFactory
 
 			if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
 				$this->create( $option, 0, 0, $this->invoice_number );
-			} elseif ( empty( $this->processor ) && ( strpos( 'c', $this->usage ) !== false ) ) {
+			} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) !== false ) ) {
 				$this->create( $option, 0, $this->usage, $this->invoice_number );
 			}
 		} else {
@@ -8814,7 +8814,7 @@ class InvoiceFactory
 				if ( !empty( $mi_form ) ) {
 					$params = array();
 					foreach ( $mi_form as $key => $value ) {
-						if ( strpos( $key,'[]' ) ) {
+						if ( strpos( $key, '[]' ) ) {
 							$key = str_replace( '[]', '', $key );
 						}
 
@@ -14476,7 +14476,7 @@ class AECToolbox
 
 	function getObjectProperty( $object, $key )
 	{
-		if ( strpos( '.', $key ) !== false ) {
+		if ( strpos( $key, '.' ) !== false ) {
 			$key = explode( '.', $key );
 		}
 
@@ -16656,7 +16656,7 @@ class couponHandler
 		$cpl = array( 'bad_combinations', 'good_combinations', 'bad_combinations_cart', 'good_combinations_cart' );
 
 		foreach ( $cpl as $cpn ) {
-			if ( strpos( 'bad', $cpn ) !== false ) {
+			if ( strpos( $cpn, 'bad' ) !== false ) {
 				$cmd = str_replace( "bad", "restrict", $cpn );
 			} else {
 				$cmd = str_replace( "good", "allow", $cpn );
