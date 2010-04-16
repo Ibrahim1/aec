@@ -8630,7 +8630,7 @@ class InvoiceFactory
 			}
 		}
 
-		if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_privatekey'] ) ) {
+		if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_privatekey'] ) && empty( $this->userid ) ) {
 			// require the recaptcha library
 			require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
