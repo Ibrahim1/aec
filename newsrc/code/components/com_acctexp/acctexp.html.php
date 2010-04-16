@@ -235,34 +235,36 @@ class HTML_frontEnd
 					}
 
 					if ( $metaUser->hasSubscription ) {
-						foreach ( $subscriptions as $sid => $subscription ) {
-							switch ( $sid ) {
-								case 0:
-									echo '<h2>' . _YOUR_SUBSCRIPTION . '</h2>';
-									break;
-								case 1:
-									echo '<div style="clear:both"></div><h2>' . _YOUR_FURTHER_SUBSCRIPTIONS . '</h2>';
-									break;
-							}
-
-							?><div class="subscription_info"><?php
-
-							echo '<p><strong>' . $subscription->objPlan->getProperty( 'name' ) . '</strong></p>';
-							echo '<p>' . $subscription->objPlan->getProperty( 'desc' ) . '</p>';
-							if ( !empty( $subscription->objPlan->proc_actions ) ) {
-								echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->objPlan->proc_actions ) . '</p>';
-							}
-							if ( $subscription->lifetime ) {
-								echo '<p>' . _AEC_ISLIFETIME . '</p>';
-							} else {
-								if ( $subscription->recurring ) {
-									echo '<p>' . _AEC_WILLRENEW . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
-								} else {
-									echo '<p>' . _AEC_WILLEXPIRE . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+						if ( !empty( $subscriptions ) ) {
+							foreach ( $subscriptions as $sid => $subscription ) {
+								switch ( $sid ) {
+									case 0:
+										echo '<h2>' . _YOUR_SUBSCRIPTION . '</h2>';
+										break;
+									case 1:
+										echo '<div style="clear:both"></div><h2>' . _YOUR_FURTHER_SUBSCRIPTIONS . '</h2>';
+										break;
 								}
-							}
 
-							?></div><?php
+								?><div class="subscription_info"><?php
+
+								echo '<p><strong>' . $subscription->objPlan->getProperty( 'name' ) . '</strong></p>';
+								echo '<p>' . $subscription->objPlan->getProperty( 'desc' ) . '</p>';
+								if ( !empty( $subscription->objPlan->proc_actions ) ) {
+									echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->objPlan->proc_actions ) . '</p>';
+								}
+								if ( $subscription->lifetime ) {
+									echo '<p>' . _AEC_ISLIFETIME . '</p>';
+								} else {
+									if ( $subscription->recurring ) {
+										echo '<p>' . _AEC_WILLRENEW . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+									} else {
+										echo '<p>' . _AEC_WILLEXPIRE . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+									}
+								}
+
+								?></div><?php
+							}
 						}
 						?>
 						<div id="box_expired">
