@@ -5,7 +5,7 @@
 		<mkdir dir="${dir.tmp}" />
 
 		<copy todir="${dir.tmp}">
-			<fileset dir="${dir.local}/modules">
+			<fileset dir="${dir.local}/modules/mod_acctexp">
 				<include name="**" />
 			</fileset>
 		</copy>
