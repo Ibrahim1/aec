@@ -14476,8 +14476,10 @@ class AECToolbox
 
 	function getObjectProperty( $object, $key )
 	{
-		if ( strpos( $key, '.' ) !== false ) {
-			$key = explode( '.', $key );
+		if ( !is_array( $key ) ) {
+			if ( strpos( $key, '.' ) !== false ) {
+				$key = explode( '.', $key );
+			}
 		}
 
 		if ( !is_array( $key ) ) {
