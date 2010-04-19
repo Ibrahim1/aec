@@ -6690,6 +6690,8 @@ class SubscriptionPlan extends serialParamDBTable
 				unset( $mi );
 			}
 		}
+
+		return true;
 	}
 
 	function getProcessorParameters( $processorid )

@@ -1329,19 +1329,21 @@ function saveUser( $option, $apply=0 )
 		exit();
 	}
 
-	if ( strcmp( $ck_lifetime, 'on' ) == 0 ) {
-		$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
-		$metaUser->focusSubscription->status		= 'Active';
-		$metaUser->focusSubscription->lifetime	= 1;
-	} elseif ( !empty( $_POST['expiration'] ) ) {
-		if ( $_POST['expiration'] != $_POST['expiration_check'] ) {
-			if ( strpos( $_POST, ':' ) === false ) {
-				$metaUser->focusSubscription->expiration = $_POST['expiration'] . ' 00:00:00';
-			} else {
-				$metaUser->focusSubscription->expiration = $_POST['expiration'];
+	if ( empty( $_POST['assignto_plan'] ) ) {
+		if ( strcmp( $ck_lifetime, 'on' ) == 0 ) {
+			$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
+			$metaUser->focusSubscription->status		= 'Active';
+			$metaUser->focusSubscription->lifetime	= 1;
+		} elseif ( !empty( $_POST['expiration'] ) ) {
+			if ( $_POST['expiration'] != $_POST['expiration_check'] ) {
+				if ( strpos( $_POST, ':' ) === false ) {
+					$metaUser->focusSubscription->expiration = $_POST['expiration'] . ' 00:00:00';
+				} else {
+					$metaUser->focusSubscription->expiration = $_POST['expiration'];
+				}
+				$metaUser->focusSubscription->status = 'Active';
+				$metaUser->focusSubscription->lifetime = 0;
 			}
-			$metaUser->focusSubscription->status = 'Active';
-			$metaUser->focusSubscription->lifetime = 0;
 		}
 	}
 
