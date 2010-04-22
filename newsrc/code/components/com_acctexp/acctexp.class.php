@@ -17928,42 +17928,42 @@ class aecRestrictionHelper
 		// Check for a directly previously used group
 		if ( !empty( $restrictions['previousgroup_req_enabled'] ) ) {
 			if ( !empty( $restrictions['previousgroup_req'] ) ) {
-				$restrictions = $this->addGroupPlans( $restrictions, 'previousgroup_req', 'previousplan_req' );
+				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'previousgroup_req', 'previousplan_req' );
 			}
 		}
 
 		// Check for a directly previously used group
 		if ( !empty( $restrictions['previousgroup_req_enabled_excluded'] ) ) {
 			if ( !empty( $restrictions['previousgroup_req_excluded'] ) ) {
-				$restrictions = $this->addGroupPlans( $restrictions, 'previousgroup_req_excluded', 'previousplan_req_excluded' );
+				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'previousgroup_req_excluded', 'previousplan_req_excluded' );
 			}
 		}
 
 		// Check for a currently used group
 		if ( !empty( $restrictions['currentgroup_req_enabled'] ) ) {
 			if ( !empty( $restrictions['currentgroup_req'] ) ) {
-				$restrictions = $this->addGroupPlans( $restrictions, 'currentgroup_req', 'currentplan_req' );
+				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'currentgroup_req', 'currentplan_req' );
 			}
 		}
 
 		// Check for a currently used group
 		if ( !empty( $restrictions['currentgroup_req_enabled_excluded'] ) ) {
 			if ( !empty( $restrictions['currentgroup_req_excluded'] ) ) {
-				$restrictions = $this->addGroupPlans( $restrictions, 'currentgroup_req_excluded', 'currentplan_req_excluded' );
+				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'currentgroup_req_excluded', 'currentplan_req_excluded' );
 			}
 		}
 
 		// Check for a overall used group
 		if ( !empty( $restrictions['overallgroup_req_enabled'] ) ) {
 			if ( !empty( $restrictions['overallgroup_req'] ) ) {
-				$restrictions = $this->addGroupPlans( $restrictions, 'overallplan_req', 'overallgroup_req' );
+				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'overallplan_req', 'overallgroup_req' );
 			}
 		}
 
 		// Check for a overall used group
 		if ( !empty( $restrictions['overallgroup_req_enabled_excluded'] ) ) {
 			if ( !empty( $restrictions['overallgroup_req_excluded'] ) ) {
-				$restrictions = $this->addGroupPlans( $restrictions, 'overallgroup_req_excluded', 'overallplan_req_excluded' );
+				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'overallgroup_req_excluded', 'overallplan_req_excluded' );
 			}
 		}
 
@@ -18030,7 +18030,7 @@ class aecRestrictionHelper
 		// Check for a overall used group with amount minimum
 		if ( !empty( $restrictions['used_group_min_enabled'] ) ) {
 			if ( !empty( $restrictions['used_group_min_amount'] ) && isset( $restrictions['used_group_min'] ) ) {
-				$temp = $this->addGroupPlans( $restrictions, 'used_group_min', 'used_plan_min', array() );
+				$temp = aecRestrictionHelper::addGroupPlans( $restrictions, 'used_group_min', 'used_plan_min', array() );
 
 				$ps = array();
 				foreach ( $temp['used_plan_min'] as $planid ) {
