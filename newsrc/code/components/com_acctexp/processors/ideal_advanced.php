@@ -54,7 +54,7 @@ class processor_ideal_advanced extends XMLprocessor
 	function checkoutform( $request )
 	{
 		//  See if a the cached file is still of today
-		if ($this->settings['testmode'] == 0) {
+		if ( $this->settings['testmode'] == 0 ) {
 			$cachefile = $this->settings['cache_path'].'/ideal_issuerlist.txt';
 		} else {
 			$cachefile = $this->settings['cache_path'].'/ideal_issuertestlist.txt';
@@ -66,42 +66,45 @@ class processor_ideal_advanced extends XMLprocessor
 		if ( $currentdatetime - $datetime > 86400 ) {
 			define( "SECURE_PATH", $this->settings['secure_path'] );
 			require_once( dirname(__FILE__) . "/ideal_advanced/iDEALConnector.php" );
-			// Initialiseren van de MPI schil.
-			$iDEALConnector = new iDEALConnector();
-			// Acties uitvoeren voor een directory request
-			$response = $iDEALConnector->GetIssuerList();
+
+			$ideal = new iDEALConnector();
+
+			$response = $ideal->GetIssuerList();
+
 			if ( $response->IsResponseError() )  {
-			// Een fout is opgetreden.
-			$errorCode = $response->getErrorCode();
-			$errorMsg = $response->getErrorMessage();
-			$consumerMessage = $response->getConsumerMessage();
-		 } else {
-			// De response is valide en bevat de directory entries.
-			// Deze uitpakken en in de HTML plaatsen.
-			$IssuerList =& $response->getIssuerFullList();
+				$errorCode = $response->getErrorCode();
+				$errorMsg = $response->getErrorMessage();
+				$consumerMessage = $response->getConsumerMessage();
+			} else {
+				$IssuerList =& $response->getIssuerFullList();
 				$options = array();
-					 $handle = fopen($cachefile, "w");
-				foreach ($IssuerList as $issuerName => $entry)   {
-			$data = '&issuer[]='.$entry->getIssuerID(). '#'. $entry->getIssuerName();
-				 fwrite ($handle, $data);
-					}
+				$handle = fopen($cachefile, "w");
+				foreach ( $IssuerList as $issuerName => $entry ) {
+					$data = '&issuer[]='.$entry->getIssuerID(). '#'. $entry->getIssuerName();
+					fwrite ($handle, $data);
+				}
 				fclose($handle);
 			}
-			}
-			$vcontent = '';
+		}
+
+		$vcontent = '';
+
 		$handle = fopen($cachefile, "r");
-			$vcontent = fread($handle, 8192);
-			parse_str($vcontent);
-			foreach ($issuer as $issuer ) {
-							$pos = strpos ($issuer,'#');
-							if ($pos > 0) {
-							$issuerId = substr($issuer,0,$pos);
-							$issuerName =  substr($issuer,$pos+1,20);
-						$options[] = mosHTML::makeOption( $issuerId, $issuerName );
-						}
+		$vcontent = fread($handle, 8192);
+
+		parse_str($vcontent);
+
+		foreach ($issuer as $issuer ) {
+			$pos = strpos ($issuer,'#');
+			if ($pos > 0) {
+				$issuerId = substr($issuer,0,$pos);
+				$issuerName =  substr($issuer,$pos+1,20);
+				$options[] = mosHTML::makeOption( $issuerId, $issuerName );
 			}
-			$var['params']['lists']['issuerId'] = mosHTML::selectList( $options, 'issuerId', 'size="1" style="width:120px;"', 'value', 'text', $vcontent );
-			$var['params']['issuerId'] = array( 'list', 'Selecteer je bank', $vcontent );
+		}
+
+		$var['params']['lists']['issuerId'] = mosHTML::selectList( $options, 'issuerId', 'size="1" style="width:120px;"', 'value', 'text', $vcontent );
+		$var['params']['issuerId'] = array( 'list', 'Selecteer je bank', $vcontent );
 
 	return $var;
 }

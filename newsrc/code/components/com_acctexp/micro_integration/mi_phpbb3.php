@@ -26,19 +26,7 @@ class mi_phpbb3
 
 	function Settings()
 	{
-        if ( !empty( $this->settings['use_altdb'] ) ) {
-	        $options = array(	'driver'	=> $this->settings['dbms'],
-								'host'		=> $this->settings['dbhost'],
-								'user'		=> $this->settings['dbuser'],
-								'password'	=> $this->settings['dbpasswd'],
-								'database'	=> $this->settings['dbname'],
-								'prefix'	=> $this->settings['table_prefix']
-								);
-
-	        $database = &JDatabase::getInstance($options);
-        } else {
-        	$database = &JFactory::getDBO();
-        }
+		$database = $this->getDB();
 
 		if ( !empty( $this->settings['table_prefix'] ) ) {
 			$prefix = $this->settings['table_prefix'];
@@ -133,19 +121,7 @@ class mi_phpbb3
 
 	function expiration_action( $request )
 	{
-        if ( $this->settings['use_altdb'] ) {
-	        $options = array(	'driver'	=> $this->settings['dbms'],
-								'host'		=> $this->settings['dbhost'],
-								'user'		=> $this->settings['dbuser'],
-								'password'	=> $this->settings['dbpasswd'],
-								'database'	=> $this->settings['dbname'],
-								'prefix'	=> $this->settings['table_prefix']
-								);
-
-	        $database =& JDatabase::getInstance($options);
-        } else {
-        	$database = &JFactory::getDBO();
-        }
+		$database = $this->getDB();
 
 		if ( !empty( $this->settings['table_prefix'] ) ) {
 			$prefix = $this->settings['table_prefix'];
@@ -240,19 +216,7 @@ class mi_phpbb3
 
 	function action( $request )
 	{
-        if ( $this->settings['use_altdb'] ) {
-	        $options = array(	'driver'	=> $this->settings['dbms'],
-								'host'		=> $this->settings['dbhost'],
-								'user'		=> $this->settings['dbuser'],
-								'password'	=> $this->settings['dbpasswd'],
-								'database'	=> $this->settings['dbname'],
-								'prefix'	=> $this->settings['table_prefix']
-								);
-
-	        $database =& JDatabase::getInstance($options);
-        } else {
-        	$database = &JFactory::getDBO();
-        }
+		$database = $this->getDB();
 
 		if ( !empty( $this->settings['table_prefix'] ) ) {
 			$prefix = $this->settings['table_prefix'];
@@ -332,6 +296,26 @@ class mi_phpbb3
 
 		return true;
 	}
+
+	function getDB()
+	{
+        if ( !empty( $this->settings['use_altdb'] ) ) {
+	        $options = array(	'driver'	=> $this->settings['dbms'],
+								'host'		=> $this->settings['dbhost'],
+								'user'		=> $this->settings['dbuser'],
+								'password'	=> $this->settings['dbpasswd'],
+								'database'	=> $this->settings['dbname'],
+								'prefix'	=> $this->settings['table_prefix']
+								);
+
+	        $database = &JDatabase::getInstance($options);
+        } else {
+        	$database = &JFactory::getDBO();
+        }
+
+		return $database;
+	}
+
 }
 
 ?>
