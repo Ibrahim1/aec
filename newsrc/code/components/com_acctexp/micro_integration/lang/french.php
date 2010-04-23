@@ -1175,4 +1175,20 @@ define( '_MI_MI_AGORA_REBUILD_DESC','This option will rebuild your whole Agora g
 define( '_MI_MI_AGORA_REMOVE_NAME','Remove' );
 define( '_MI_MI_AGORA_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
+// Unpack
+define( '_AEC_MI_UNPACK_NAME',		'File Unpack' );
+define( '_AEC_MI_UNPACK_DESC',		'Unpack packed files on your server' );
+define( '_MI_MI_UNPACK_SOURCE_NAME',		'Source Path' );
+define( '_MI_MI_UNPACK_SOURCE_DESC',		'Full System path to the file you want to unpack.' );
+define( '_MI_MI_UNPACK_TARGET_NAME',		'Target Path' );
+define( '_MI_MI_UNPACK_TARGET_DESC',		'Target path to where the source file will be unpacked.' );
+define( '_MI_MI_UNPACK_SOURCE_EXP_NAME',		'Source Path (expiration)' );
+define( '_MI_MI_UNPACK_SOURCE_EXP_DESC',		'Full System path to the file you want to unpack.' );
+define( '_MI_MI_UNPACK_TARGET_EXP_NAME',		'Target Path (expiration)' );
+define( '_MI_MI_UNPACK_TARGET_EXP_DESC',		'Target path to where the source file will be unpacked on expiration.' );
+define( '_MI_MI_UNPACK_SOURCE_PRE_EXP_NAME',		'Source Path (pre-expiration)' );
+define( '_MI_MI_UNPACK_SOURCE_PRE_EXP_DESC',		'Full System path to the file you want to unpack.' );
+define( '_MI_MI_UNPACK_TARGET_PRE_EXP_NAME',		'Target Path (pre-expiration)' );
+define( '_MI_MI_UNPACK_TARGET_PRE_EXP_DESC',		'Target path to where the source file will be unpacked before expiration.' );
+
 ?>
