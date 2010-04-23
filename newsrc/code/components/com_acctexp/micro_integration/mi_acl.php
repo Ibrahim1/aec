@@ -112,11 +112,11 @@ class mi_acl
 		$database = &JFactory::getDBO();
 
 		$acl = &JFactory::getACL();
-		
+
+		$sessionextra = array();
+
 		if ( $this->settings['jaclpluspro'] ) {
 			$gid_name = $acl->get_group_name( $gid, 'ARO' );
-
-			$sessionextra = array();
 
 			// Check for main entry
 			$query = 'SELECT `group_id`'
@@ -125,9 +125,8 @@ class mi_acl
 					. ' AND `group_type` = \'main\''
 					;
 			$database->setQuery( $query );
-			$groupid = $database->loadResult();
 
-			if ( !empty( $groupid ) ) {
+			if ( $database->loadResult() ) {
 				$query = 'UPDATE #__jaclplus_user_group'
 						. ' SET `group_id` = \'' . (int) $gid . '\''
 						. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
@@ -158,7 +157,7 @@ class mi_acl
 					$database->loadObject($session);
 				}
 
-				if ( $session->userid ) {
+				if ( !empty( $session->userid ) ) {
 					$query = 'SELECT `value`'
 							. ' FROM #__core_acl_aro_groups'
 							. ' WHERE `id` = \'' . (int) $gid . '\''
@@ -166,15 +165,13 @@ class mi_acl
 					$database->setQuery( $query );
 					$sessiongroups = $database->loadResult();
 
-					$sessionextra = array();
 					$sessionextra['jaclplus'] = $sessiongroups;
 				}
 			}
 
-			$metaUser->instantGIDchange( $gid, $this->settings['change_session'], $sessionextra );
-		} else {
-			$metaUser->instantGIDchange( $gid, $this->settings['change_session'] );
 		}
+
+		$metaUser->instantGIDchange( $gid, $this->settings['change_session'], $sessionextra );
 
 		return true;
 	}
@@ -205,7 +202,7 @@ class mi_acl
 			$database->setQuery( $query );
 			$groups = $database->loadResultArray();
 		}
-
+print_r($groups);exit;
 		if ( !empty( $this->settings[$section.'_del'] ) ) {
 			foreach ( $this->settings[$section.'_del'] as $gid ) {
 				if ( in_array( $gid, $groups ) ) {
