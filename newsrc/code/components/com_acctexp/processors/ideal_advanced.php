@@ -31,8 +31,8 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings = array();
 		$settings['testmode']		= 0;
 		$settings['testmodestage']  = 0;
-		$settings['secure_path']    = "components/com_acctexp/processors/ideal_advanced/includes/security";
-		$settings['cache_path']     = "cache";
+		$settings['secure_path']    = 'components/com_acctexp/processors/ideal_advanced/includes/security';
+		$settings['cache_path']     = 'cache';
 		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		return $settings;
 	}
@@ -63,51 +63,54 @@ class processor_ideal_advanced extends XMLprocessor
 		$datetime = filemtime ($cachefile);
 		$currentdatetime = time();
 
-		if ( $currentdatetime - $datetime > 86400 ) {
-			define( "SECURE_PATH", $this->settings['secure_path'] );
-			require_once( dirname(__FILE__) . "/ideal_advanced/iDEALConnector.php" );
-
-			$ideal = new iDEALConnector();
+		if ( time() - $datetime > 86400 ) {
+			$ideal = $this->loadConnector();
 
 			$response = $ideal->GetIssuerList();
 
 			if ( $response->IsResponseError() )  {
-				$errorCode = $response->getErrorCode();
-				$errorMsg = $response->getErrorMessage();
-				$consumerMessage = $response->getConsumerMessage();
+				aecQuickLog( "ideal_advanced", 'processor,error,issuerlist', $response->getErrorCode() . ': ' . $response->getErrorMessage() . ' | ' . $response->getConsumerMessage() );
 			} else {
 				$IssuerList =& $response->getIssuerFullList();
+
 				$options = array();
+
 				$handle = fopen($cachefile, "w");
+
 				foreach ( $IssuerList as $issuerName => $entry ) {
 					$data = '&issuer[]='.$entry->getIssuerID(). '#'. $entry->getIssuerName();
-					fwrite ($handle, $data);
+					fwrite ( $handle, $data );
 				}
-				fclose($handle);
+
+				fclose( $handle );
 			}
 		}
 
-		$vcontent = '';
+		$vcontent	= '';
 
-		$handle = fopen($cachefile, "r");
-		$vcontent = fread($handle, 8192);
+		$handle		= fopen( $cachefile, "r" );
+		$vcontent	= fread( $handle, 8192 );
+
+		$issuer		= array();
 
 		parse_str($vcontent);
 
-		foreach ($issuer as $issuer ) {
-			$pos = strpos ($issuer,'#');
-			if ($pos > 0) {
-				$issuerId = substr($issuer,0,$pos);
-				$issuerName =  substr($issuer,$pos+1,20);
-				$options[] = mosHTML::makeOption( $issuerId, $issuerName );
+		foreach ( $issuer as $issuer ) {
+			$pos = strpos( $issuer, '#' );
+
+			if ( $pos > 0 ) {
+				$issuerId	= substr( $issuer, 0, $pos );
+				$issuerName	= substr( $issuer, $pos+1, 20 );
+
+				$options[]	= mosHTML::makeOption( $issuerId, $issuerName );
 			}
 		}
 
 		$var['params']['lists']['issuerId'] = mosHTML::selectList( $options, 'issuerId', 'size="1" style="width:120px;"', 'value', 'text', $vcontent );
 		$var['params']['issuerId'] = array( 'list', 'Selecteer je bank', $vcontent );
 
-	return $var;
-}
+		return $var;
+	}
 
 	function createRequestXML( $request )
 	{
@@ -116,105 +119,97 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		require_once( dirname(__FILE__) . "/ideal_advanced/iDEALConnector.php" );
-		define( "SECURE_PATH", $this->settings['secure_path'] );
-		// Initialiseren van de MPI schil.
-		$iDEALConnector = new iDEALConnector();
+		$return = array();
+
+		$ideal = $this->loadConnector();
 
 		$issuerId = $request->int_var['params']['issuerId'];
+
 		if ( empty( $issuerId ) ) {
 			$return['error'] = 'Missing ISSUERID';
-					return $response;
+			return $return;
 		}
 
-		// Behandelen van een Transactie request
-		$entranceCode = $request->invoice->invoice_number;
-		$purchaseId = substr($request->invoice->invoice_number,0,16);
-			if ( $this->settings['testmode'] == true && $this->settings['testmodestage'] > 0) {
-				$amount		= $this->settings['testmodestage'] * 100;
-			} else {
-				$amount		= $request->int_var['amount'] * 100;
+		// Create Variables
+		$entranceCode	= $request->invoice->invoice_number;
+		$purchaseId		= substr( $request->invoice->invoice_number,1,16 );
+
+		if ( $this->settings['testmode'] == true && $this->settings['testmodestage'] > 0) {
+			$amount	= $this->settings['testmodestage'] * 100;
+		} else {
+			$amount	= $request->int_var['amount'] * 100;
 		}
 
 		$description = substr(AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ),0,32);
 		$expirationPeriod = 'PT1H';
-		$merchantReturnURL= AECToolbox::deadsureURL("ideal_advancednotification") ;
+		$merchantReturnURL= AECToolbox::deadsureURL("index.php?option=com_acctexp&task=ideal_advancednotification") ;
 
 		// Opsturen van de request. De response staat in $response.
-		$iDEALresponse = $iDEALConnector->RequestTransaction( $issuerId, $purchaseId, $amount, $description, $entranceCode, $expirationPeriod, $merchantReturnURL );
+		$iDEALresponse = $ideal->RequestTransaction( $issuerId, $purchaseId, $amount, $description, $entranceCode, $expirationPeriod, $merchantReturnURL );
 
 		if ( $iDEALresponse->IsResponseError() ) {
-			$errorCode = $iDEALresponse->getErrorCode();
-			$errorMsg = $iDEALresponse->getErrorMessage();
-			$consumerMessage = $iDEALresponse->getConsumerMessage();
-			$return['error'] = $errorCode.':'.$errorMsg.'<br>'.$consumerMessage;
+			$return['error'] = $iDEALresponse->getConsumerMessage();
 		} else {
-			// De response bevat geen foutmelding.
-			$acquirerID = $iDEALresponse->getAcquirerID();
-			$issuerAuthenticationURL = $iDEALresponse->getIssuerAuthenticationURL();
-			$transactionID = $iDEALresponse->getTransactionID();
-			aecRedirect ($issuerAuthenticationURL);
+			aecRedirect( $iDEALresponse->getIssuerAuthenticationURL() );
 		}
 
-		return $response;
+		return $return;
 	}
 
 	function parseNotification( $post )
 	{
 		$response = array();
-				$entrancecode = trim( aecGetParam( 'ec' ) );
-				$transactionID = trim( aecGetParam( 'trxid' ) );
-			$response['invoice'] = $entrancecode;
+		$response['valid'] = false;
 
-				require_once( dirname(__FILE__) . "/ideal_advanced/iDEALConnector.php" );
-				define( "SECURE_PATH", $this->settings['secure_path'] );
-				print SECURE_PATH;
-				// Initialiseren van de MPI schil.
-				$iDEALConnector = new iDEALConnector();
-				// Opsturen van het request. De MPI layer zorgt voor alle
-				// validatie. Indien een validatie niet is gelukt is de
-				// response altijd een "ErrorResponse" object.
-				$iDEALresponse = $iDEALConnector->RequestTransactionStatus( $transactionID );
+		$entrancecode = trim( aecGetParam( 'ec' ) );
+		$transactionID = trim( aecGetParam( 'trxid' ) );
 
-				if ($iDEALresponse->IsResponseError())                      {
-			 // Een fout is opgetreden.
-			 $errorCode = $iDEALresponse->getErrorCode();
-			 $errorMsg = $iDEALresponse->getErrorMessage();
-					 $response['valid'] = false;
-					 $response['error'] = true;
-					 $response['errormsg'] = $iDEALresponse->getConsumerMessage();
-			} else {
-			// Geldige response.
-			$acquirerID = $iDEALresponse->getAcquirerID();
-			$consumerName = $iDEALresponse->getConsumerName();
-				$consumerAccountNumber = $iDEALresponse->getConsumerAccountNumber();
-				$consumerCity = $iDEALresponse->getConsumerCity();
-				$transactionID = $iDEALresponse->getTransactionID();
-				// De status is een integer en kan middels een aantal
-				// constanten geinitialiseerd zijn:
-			// IDEAL_TX_STATUS_INVALID	Status code van iDEAL server niet herkend
-			// IDEAL_TX_STATUS_SUCCESS	Transactie succcess
-			// IDEAL_TX_STATUS_CANCELLED	Transactie geannuleerd door bezoeker
-			// IDEAL_TX_STATUS_EXPIRED	Transactie verlopen
-			// IDEAL_TX_STATUS_FAILURE	Transactie fout
-			// IDEAL_TX_STATUS_OPEN  		Transactie staat nog open
-					$status = $iDEALresponse->getStatus();
-				switch ( $status ) {
-						case IDEAL_TX_STATUS_SUCCESS:
-												$response['valid'] = true;
-												break;
-										default:
-												$response['valid'] = false;
-												$redirect = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=cancel");
-												aecRedirect ($redirect);
-									}
-				}
-			return $response;
-		 }
+		$response['invoice'] = $entrancecode;
 
-		 function notificationError( $response, $notificationerror ) {
+		$ideal = $this->loadConnector();
+
+		$iDEALresponse = $ideal->RequestTransactionStatus( $transactionID );
+
+		if ( $iDEALresponse->IsResponseError() ) {
+			$response['error']		= true;
+			$response['errormsg']	= $iDEALresponse->getConsumerMessage();
+		} else {
+			$transactionID = $iDEALresponse->getTransactionID();
+
+			switch ( $iDEALresponse->getStatus() ) {
+				case IDEAL_TX_STATUS_SUCCESS:
+					$response['valid'] = true;
+					break;
+				case IDEAL_TX_STATUS_INVALID:
+				case IDEAL_TX_STATUS_CANCELLED:
+				case IDEAL_TX_STATUS_EXPIRED:
+				case IDEAL_TX_STATUS_FAILURE:
+				case IDEAL_TX_STATUS_OPEN:
+				default:
+					$response['valid'] = false;
 					$redirect = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=cancel");
 					aecRedirect ($redirect);
-		 }
+			}
+		}
+
+		return $response;
+	}
+
+	function notificationError( $response, $notificationerror )
+	{
+		$redirect = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=cancel");
+		aecRedirect($redirect);
+	}
+
+	function loadConnector()
+	{
+		require_once( dirname(__FILE__) . "/ideal_advanced/iDEALConnector.php" );
+		define( "SECURE_PATH", $this->settings['secure_path'] );
+
+		// Initialising MPI
+		$iDEAL = new iDEALConnector();
+
+		return $iDEAL;
+	}
 }
 ?>

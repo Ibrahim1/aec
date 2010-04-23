@@ -55,16 +55,20 @@ if ( !class_exists( 'paramDBTable' ) ) {
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/mammontini/mammontini.php' );
 
-// Catch all debug function
 function aecDebug( $text, $level = 128 )
+{
+	aecQuickLog( 'debug', 'debug', $text, $level );
+}
+
+function aecQuickLog( $short, $tags, $text, $level = 128 )
 {
 	$database = &JFactory::getDBO();
 
 	$eventlog = new eventLog( $database );
 	if ( !is_string( $text ) ) {
-		$eventlog->issue( 'debug', 'debug', json_encode( $text ), $level );
+		$eventlog->issue( $short, $tags, json_encode( $text ), $level );
 	} else {
-		$eventlog->issue( 'debug', 'debug', $text, $level );
+		$eventlog->issue( $short, $tags, $text, $level );
 	}
 }
 
