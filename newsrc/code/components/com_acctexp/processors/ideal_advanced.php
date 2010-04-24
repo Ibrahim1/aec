@@ -132,6 +132,7 @@ class processor_ideal_advanced extends XMLprocessor
 
 		// Create Variables
 		$entranceCode	= $request->invoice->invoice_number;
+
 		$purchaseId		= substr( $request->invoice->invoice_number,1,16 );
 
 		if ( $this->settings['testmode'] == true && $this->settings['testmodestage'] > 0) {
@@ -141,7 +142,9 @@ class processor_ideal_advanced extends XMLprocessor
 		}
 
 		$description = substr(AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ),0,32);
+
 		$expirationPeriod = 'PT1H';
+
 		$merchantReturnURL= AECToolbox::deadsureURL("index.php?option=com_acctexp&task=ideal_advancednotification") ;
 
 		// Opsturen van de request. De response staat in $response.
