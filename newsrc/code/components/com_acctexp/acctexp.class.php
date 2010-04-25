@@ -13079,19 +13079,29 @@ class reWriteEngine
 		}
 
 		if ( strpos( $subject, '{aecjson}' ) !== false ) {
+			if ( ( strpos( $subject, '[[' ) !== false ) && ( strpos( $subject, ']]' ) !== false ) ) {
+				// also found classic tags, doing that rewrite first
+				$subject = $this->classicRewrite( $subject );
+			}
+
 			// We have at least one JSON object, switching to JSON mode
 			return $this->decodeTags( $subject );
 		} else {
 			// No JSON found, do traditional parsing
-			$search = array();
-			$replace = array();
-			foreach ( $this->rewrite as $name => $replacement ) {
-				$search[]	= '[[' . $name . ']]';
-				$replace[]	= $replacement;
-			}
-
-			return str_replace( $search, $replace, $subject );
+			return $this->classicRewrite( $subject );
 		}
+	}
+
+	function classicRewrite( $subject )
+	{
+		$search = array();
+		$replace = array();
+		foreach ( $this->rewrite as $name => $replacement ) {
+			$search[]	= '[[' . $name . ']]';
+			$replace[]	= $replacement;
+		}
+
+		return str_replace( $search, $replace, $subject );
 	}
 
 	function decodeTags( $subject )
