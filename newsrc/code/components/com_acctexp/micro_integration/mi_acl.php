@@ -101,7 +101,7 @@ class mi_acl
 		}
 
 		if ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
-			$this->jaclplusGIDchange( $request->metaUser, $this->settings['sub_gid' . $request->area] );
+			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
 		}
 
 		return true;
@@ -202,7 +202,7 @@ class mi_acl
 			$database->setQuery( $query );
 			$groups = $database->loadResultArray();
 		}
-print_r($groups);exit;
+
 		if ( !empty( $this->settings[$section.'_del'] ) ) {
 			foreach ( $this->settings[$section.'_del'] as $gid ) {
 				if ( in_array( $gid, $groups ) ) {
