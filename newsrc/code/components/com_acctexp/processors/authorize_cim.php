@@ -626,6 +626,13 @@ class processor_authorize_cim extends PROFILEprocessor
 				$amount = $request->int_var['amount'];
 			}
 
+			if ( empty( $amount ) ) {
+				// Free, so no billing neccessary yet
+				$return['valid']	= true;
+
+				return $return;
+			}
+
 			$cim->setParameter( 'transaction_amount',	AECToolbox::correctAmount( $amount ) );
 
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
