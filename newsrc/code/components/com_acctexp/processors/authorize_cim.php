@@ -626,7 +626,7 @@ class processor_authorize_cim extends PROFILEprocessor
 				$amount = $request->int_var['amount'];
 			}
 
-			if ( empty( $amount ) ) {
+			if ( empty( $amount ) || ( $amount == '0.00' ) ) {
 				// Free, so no billing neccessary yet
 				$return['valid']	= true;
 
