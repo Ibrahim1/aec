@@ -812,7 +812,7 @@ class metaUser
 
 					if ( !empty( $sessionextra ) ) {
 						foreach ( $sessionextra as $sk => $sv ) {
-							$se[$key][$sk] = $sv;
+							$se[$key]['user']->$sk = $sv;
 						}
 					}
 

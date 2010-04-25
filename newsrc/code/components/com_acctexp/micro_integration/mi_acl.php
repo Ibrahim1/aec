@@ -96,12 +96,12 @@ class mi_acl
 
 	function relayAction( $request )
 	{
-		if ( !empty( $this->settings['set_gid' . $request->area] ) ) {
-			$this->instantGIDchange( $request->metaUser, $this->settings['gid' . $request->area] );
-		}
-
 		if ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
 			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
+		}
+
+		if ( !empty( $this->settings['set_gid' . $request->area] ) ) {
+			$this->instantGIDchange( $request->metaUser, $this->settings['gid' . $request->area] );
 		}
 
 		return true;
@@ -158,14 +158,32 @@ class mi_acl
 				}
 
 				if ( !empty( $session->userid ) ) {
-					$query = 'SELECT `value`'
-							. ' FROM #__core_acl_aro_groups'
-							. ' WHERE `id` = \'' . (int) $gid . '\''
+					$query = 'SELECT `group_id`'
+							. ' FROM #__jaclplus_user_group'
+							. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 							;
 					$database->setQuery( $query );
-					$sessiongroups = $database->loadResult();
+					$groups = $database->loadResultArray();
 
-					$sessionextra['jaclplus'] = $sessiongroups;
+					$query = 'SELECT `value`'
+							. ' FROM #__core_acl_aro_groups'
+							. ' WHERE `id` IN (' . implode( ',', $groups ) . ')'
+							;
+					$database->setQuery( $query );
+					$valuelist = $database->loadResultArray();
+
+					$sessiongroups = array();
+					foreach ( $valuelist as $vlist ) {
+						$values = explode( ',', $vlist );
+
+						$sessiongroups = array_merge( $sessiongroups, $values );
+					}
+
+					$sessiongroups = array_unique( $sessiongroups );
+
+					asort( $sessiongroups );
+
+					$sessionextra['jaclplus'] = implode( ',', $sessiongroups );
 				}
 			}
 
