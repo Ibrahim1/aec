@@ -890,7 +890,7 @@ class HTML_AcctExp
 			<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
 			<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
 			<form action="<?php echo JURI::base(); ?>index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
-			<textarea cols="80" rows="1" name="search" /><?php echo $searchcontent; ?></textarea>
+			<input type="text" size="80" name="search" class="inputbox" value="" />
 			<input type="submit" />
 			</form>
 			<?php
