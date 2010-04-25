@@ -53,7 +53,6 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		//  See if a the cached file is still of today
 		if ( $this->settings['testmode'] == 0 ) {
 			$cachefile = $this->settings['cache_path'].'/ideal_issuerlist.txt';
 		} else {
