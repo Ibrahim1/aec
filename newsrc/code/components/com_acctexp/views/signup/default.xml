@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="AEC Signup">
+		<message>Link to individual pages during the AEC Signup Process</message>
+	</layout>
+	<state>
+		<name>AEC Signup - First Page</name>
+		<description>AEC Signup - First Page</description>
+		<params>
+		</params>
+	</state>
+</metadata>
