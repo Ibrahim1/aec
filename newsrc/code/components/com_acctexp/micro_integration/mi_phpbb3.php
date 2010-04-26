@@ -101,6 +101,17 @@ class mi_phpbb3
 		$settings['rebuild']				= array( 'list_yesno' );
 		$settings['remove']					= array( 'list_yesno' );
 
+		$userdetails = array(	'user_type', 'username', 'user_email', 'user_email_hash',
+								'user_birthday', 'user_lang', 'user_timezone', 'user_dst',
+								'user_dateformat', 'user_style', 'user_rank', 'user_colour',
+								'user_from', 'user_website' );
+
+		$settings['create_user']			= array( 'list_yesno' );
+
+		foreach ( $userdetails as $key ) {
+			$settings['groups_exclude']			= array( 'inputC' );
+		}
+
 		return $settings;
 	}
 
@@ -123,19 +134,13 @@ class mi_phpbb3
 	{
 		$database = $this->getDB();
 
-		if ( !empty( $this->settings['table_prefix'] ) ) {
-			$prefix = $this->settings['table_prefix'];
-		} else {
-			$prefix = 'phpbb_';
-		}
-
 		if ( $this->settings['set_group_exp'] ) {
 			$userid = $request->metaUser->userid;
 
 			$bbuser = null;
 			// Get user info from PHPBB3 User Record
 			$query = 'SELECT `user_id`, `group_id`'
-					. ' FROM ' . $prefix . 'users'
+					. ' FROM ' . $this->settings['table_prefix'] . 'users'
 					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
 					;
 			$database->setQuery( $query );
@@ -156,7 +161,7 @@ class mi_phpbb3
 			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) ) {
 				$secGroups = null;
 				$query = 'SELECT `group_id`'
-						. ' FROM ' . $prefix . 'user_group'
+						. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
 						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 						;
 				$database->setQuery( $query );
@@ -179,7 +184,7 @@ class mi_phpbb3
 			// If Not On Exclude List, apply expiration group & clear secondary groups (if set)
 			if ( !$onExcludeList ) {
 				// update PHPBB3 groups list
-				$queries[] = 'UPDATE ' . $prefix . 'user_group'
+				$queries[] = 'UPDATE ' . $this->settings['table_prefix'] . 'user_group'
 						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
 						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
 						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
@@ -191,14 +196,14 @@ class mi_phpbb3
 					$color = '';
 				}
 
-				$queries[] = 'UPDATE ' . $prefix . 'users'
+				$queries[] = 'UPDATE ' . $this->settings['table_prefix'] . 'users'
 							. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\'' . $color
 							. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 							;
 
 				// Clear Secondary Groups (if flag set)
 				if ( $this->settings['set_clear_groups'] ) {
-					$queries[] = 'DELETE FROM ' . $prefix . 'user_group'
+					$queries[] = 'DELETE FROM ' . $this->settings['table_prefix'] . 'user_group'
 							. ' WHERE `group_id` != \'' . $this->settings['group_exp'] . '\''
 							. ' AND `user_id` = \'' . $bbuser->user_id . '\''
 							;
@@ -218,17 +223,11 @@ class mi_phpbb3
 	{
 		$database = $this->getDB();
 
-		if ( !empty( $this->settings['table_prefix'] ) ) {
-			$prefix = $this->settings['table_prefix'];
-		} else {
-			$prefix = 'phpbb_';
-		}
-
 		if ( $this->settings['set_group'] ) {
 			$bbuser = null;
 			// get the user phpbb user id
 			$query = 'SELECT `user_id`, `group_id`'
-					. ' FROM ' . $prefix . 'users'
+					. ' FROM ' . $this->settings['table_prefix'] . 'users'
 					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
 					;
 			$database->setQuery( $query );
@@ -249,7 +248,7 @@ class mi_phpbb3
 			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) && !empty( $this->settings['groups_exclude'] ) ) {
 				$secGroups = null;
 				$query = 'SELECT `group_id`'
-						. ' FROM ' . $prefix . 'user_group'
+						. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
 						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 						;
 				$database->setQuery( $query );
@@ -270,7 +269,7 @@ class mi_phpbb3
 			// If Not On Exclude List, apply expiration group & clear secondary groups (if set)
 			if ( !$onExcludeList ) {
 				// update PHPBB3 groups list
-				$queries[] = 'UPDATE ' . $prefix . 'user_group'
+				$queries[] = 'UPDATE ' . $this->settings['table_prefix'] . 'user_group'
 						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
 						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
 						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
@@ -282,7 +281,7 @@ class mi_phpbb3
 					$color = '';
 				}
 
-				$queries[] = 'UPDATE ' . $prefix . 'users'
+				$queries[] = 'UPDATE ' . $this->settings['table_prefix'] . 'users'
 							. ' SET `group_id` = \'' . $this->settings['group'] . '\'' . $color
 							. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
 							;
