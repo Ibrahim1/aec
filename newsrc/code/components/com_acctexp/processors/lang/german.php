@@ -511,16 +511,10 @@ define( '_CFG_IDEAL_BASIC_DESCRIPTION_DESC', 'The Item description that is shown
 define( '_CFG_IDEAL_ADVANCED_LONGNAME', 'iDeal');
 define( '_CFG_IDEAL_ADVANCED_STATEMENT', 'Make payments with iDeal');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION', 'De veilige manier van betalen op internet.');
-define( '_CFG_IDEAL_ADVANCED_MERCHANTID_NAME', 'Merchant ID');
-define( '_CFG_IDEAL_ADVANCED_MERCHANTID_DESC', 'Your Merchant ID');
-define( '_CFG_IDEAL_ADVANCED_BANK_NAME', 'Bank');
-define( '_CFG_IDEAL_ADVANCED_BANK_DESC', 'The Bank Name');
+define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_NAME', 'Secure Details Path');
+define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_DESC', 'The filesystem path to where you have saved your secure details config file on your server - should NOT be in or below your publicly accessible webserver directory');
 define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_NAME', 'Testmode Stage');
 define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
-define( '_CFG_IDEAL_ADVANCED_SUBID_NAME', 'Testmode Stage');
-define( '_CFG_IDEAL_ADVANCED_SUBID_DESC', 'Set to 0 unless you have specific reasons not to');
-define( '_CFG_IDEAL_ADVANCED_KEY_NAME', 'Key');
-define( '_CFG_IDEAL_ADVANCED_KEY_DESC', 'Your secret key');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_NAME', 'Item Description');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
 

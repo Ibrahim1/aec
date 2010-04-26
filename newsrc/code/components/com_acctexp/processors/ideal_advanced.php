@@ -32,7 +32,6 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings['testmode']		= 0;
 		$settings['testmodestage']  = 0;
 		$settings['secure_path']    = 'components/com_acctexp/processors/ideal_advanced/includes/security';
-		$settings['cache_path']     = 'cache';
 		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		return $settings;
 	}
@@ -43,7 +42,6 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['testmodestage']  = array( 'inputA') ;
 		$settings['secure_path']    = array( 'inputD') ;
-		$settings['cache_path']     = array( 'inputD') ;
 		$settings['description']	= array( 'inputE' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
@@ -53,60 +51,16 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		if ( $this->settings['testmode'] == 0 ) {
-			$cachefile = $this->settings['cache_path'].'/ideal_issuerlist.txt';
-		} else {
-			$cachefile = $this->settings['cache_path'].'/ideal_issuertestlist.txt';
-		}
+		$issuerlist = $this->getIssuerList();
 
-		$datetime = filemtime ($cachefile);
-		$currentdatetime = time();
-
-		if ( time() - $datetime > 86400 ) {
-			$ideal = $this->loadConnector();
-
-			$response = $ideal->GetIssuerList();
-
-			if ( $response->IsResponseError() )  {
-				aecQuickLog( "ideal_advanced", 'processor,error,issuerlist', $response->getErrorCode() . ': ' . $response->getErrorMessage() . ' | ' . $response->getConsumerMessage() );
-			} else {
-				$IssuerList =& $response->getIssuerFullList();
-
-				$options = array();
-
-				$handle = fopen($cachefile, "w");
-
-				foreach ( $IssuerList as $issuerName => $entry ) {
-					$data = '&issuer[]='.$entry->getIssuerID(). '#'. $entry->getIssuerName();
-					fwrite ( $handle, $data );
-				}
-
-				fclose( $handle );
+		foreach ( $issuerlist as $IssuerEntry ) {
+			if ( is_a( $IssuerEntry, 'IssuerEntry' ) ) {
+				$options[]	= mosHTML::makeOption( $IssuerEntry->getIssuerID(), $IssuerEntry->getIssuerName() );
 			}
 		}
 
-		$vcontent	= '';
-
-		$handle		= fopen( $cachefile, "r" );
-		$vcontent	= fread( $handle, 8192 );
-
-		$issuer		= array();
-
-		parse_str($vcontent);
-
-		foreach ( $issuer as $issuer ) {
-			$pos = strpos( $issuer, '#' );
-
-			if ( $pos > 0 ) {
-				$issuerId	= substr( $issuer, 0, $pos );
-				$issuerName	= substr( $issuer, $pos+1, 20 );
-
-				$options[]	= mosHTML::makeOption( $issuerId, $issuerName );
-			}
-		}
-
-		$var['params']['lists']['issuerId'] = mosHTML::selectList( $options, 'issuerId', 'size="1" style="width:120px;"', 'value', 'text', $vcontent );
-		$var['params']['issuerId'] = array( 'list', 'Selecteer je bank', $vcontent );
+		$var['params']['lists']['issuerId'] = mosHTML::selectList( $options, 'issuerId', 'size="1"', 'value', 'text', null );
+		$var['params']['issuerId'] = array( 'list', 'Selecteer je bank', null );
 
 		return $var;
 	}
@@ -125,13 +79,14 @@ class processor_ideal_advanced extends XMLprocessor
 		$issuerId = $request->int_var['params']['issuerId'];
 
 		if ( empty( $issuerId ) ) {
-			$return['error'] = 'Missing ISSUERID';
+			$return['error'] = 'Selecteer je bank!';
 			return $return;
 		}
 
 		// Create Variables
 		$entranceCode	= $request->invoice->invoice_number;
 
+		// Use the unique part of the Invoice Number as purchase ID
 		$purchaseId		= substr( $request->invoice->invoice_number,1,16 );
 
 		if ( $this->settings['testmode'] == true && $this->settings['testmodestage'] > 0) {
@@ -144,7 +99,7 @@ class processor_ideal_advanced extends XMLprocessor
 
 		$expirationPeriod = 'PT1H';
 
-		$merchantReturnURL= AECToolbox::deadsureURL("index.php?option=com_acctexp&task=ideal_advancednotification") ;
+		$merchantReturnURL = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=ideal_advancednotification") ;
 
 		// Opsturen van de request. De response staat in $response.
 		$iDEALresponse = $ideal->RequestTransaction( $issuerId, $purchaseId, $amount, $description, $entranceCode, $expirationPeriod, $merchantReturnURL );
@@ -203,15 +158,53 @@ class processor_ideal_advanced extends XMLprocessor
 		aecRedirect($redirect);
 	}
 
+	function getIssuerList()
+	{
+		if ( $this->settings['testmode'] == 0 ) {
+			$type = 'issuerlist_test';
+		} else {
+			$type = 'issuerlist';
+		}
+
+		$getissuerlist = false;
+		if ( !isset( $this->params[$type.'_tstamp'] ) ) {
+			$getissuerlist = true;
+		} else {
+			if ( time() - $this->params[$type.'_tstamp'] > 86400 ) {
+				$getissuerlist = true;
+			}
+		}
+
+		if ( $getissuerlist ) {
+			$ideal = $this->loadConnector();
+
+			$response = $ideal->GetIssuerList();
+
+			if ( $response->IsResponseError() )  {
+				aecQuickLog( "ideal_advanced", 'processor,error,issuerlist', $response->getErrorCode() . ': ' . $response->getErrorMessage() . ' | ' . $response->getConsumerMessage() );
+			} else {
+				// Store the Issuer List into the params
+				$this->params[$type] =& $response->getIssuerList();
+
+				// Take note of the time
+				$this->params[$type.'_tstamp'] = time();
+
+				$this->storeload();
+			}
+		}
+
+		return $this->params[$type];
+	}
+
 	function loadConnector()
 	{
 		require_once( dirname(__FILE__) . "/ideal_advanced/iDEALConnector.php" );
 		define( "SECURE_PATH", $this->settings['secure_path'] );
 
 		// Initialising MPI
-		$iDEAL = new iDEALConnector();
+		$ideal = new iDEALConnector();
 
-		return $iDEAL;
+		return $ideal;
 	}
 }
 ?>
