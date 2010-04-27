@@ -15624,6 +15624,40 @@ class microIntegration extends serialParamDBTable
 		return $settings;
 	}
 
+	function getCommonData()
+	{
+		$common = array();
+		if ( method_exists( $this->mi_class, 'CommonData' ) && empty( $this->settings ) ) {
+			$common_data = $this->mi_class->CommonData();
+
+			if ( !empty( $common_data ) ) {
+					$database = &JFactory::getDBO();
+
+					$query = 'SELECT id'
+						 	. ' FROM #__acctexp_microintegrations'
+						 	. ' WHERE `class_name` = \'' . $this->class_name . '\''
+						 	. ' ORDER BY `id` DESC'
+						 	;
+					$database->setQuery( $query );
+					$last_id = $database->loadResult();
+
+					if ( $last_id ) {
+						$last_mi = new microIntegration( $database );
+						$last_mi->load( $last_id );
+
+						foreach ( $common_data as $key ) {
+							// Give the defaults a chance if this instance has empty fields
+							if ( !empty( $last_mi->settings[$key] ) ) {
+								$common[$key] = $last_mi->settings[$key];
+							}
+						}
+					}
+			}
+		}
+
+		return $common;
+	}
+
 	function getSettings()
 	{
 		// See whether an install is neccessary (and possible)
@@ -15634,6 +15668,12 @@ class microIntegration extends serialParamDBTable
 		}
 
 		if ( method_exists( $this->mi_class, 'Settings' ) ) {
+			if ( empty( $this->settings ) ) {
+				$common = $this->getCommonData();
+			} else {
+				$common = array();
+			}
+
 			if ( method_exists( $this->mi_class, 'Defaults' ) && empty( $this->settings ) ) {
 				$defaults = $this->mi_class->Defaults();
 			} else {
@@ -15648,12 +15688,16 @@ class microIntegration extends serialParamDBTable
 				if ( isset( $setting[1] ) && !isset( $setting[3] ) ) {
 					if ( isset( $this->settings[$name] ) ) {
 						$settings[$name][3] = $this->settings[$name];
+					} elseif( isset( $common[$name] ) ) {
+						$settings[$name][3] = $common[$name];
 					} elseif( isset( $defaults[$name] ) ) {
 						$settings[$name][3] = $defaults[$name];
 					}
 				} else {
 					if ( isset( $this->settings[$name] ) ) {
 						$settings[$name][1] = $this->settings[$name];
+					} elseif( isset( $common[$name] ) ) {
+						$settings[$name][1] = $common[$name];
 					} elseif( isset( $defaults[$name] ) ) {
 						$settings[$name][1] = $defaults[$name];
 					}

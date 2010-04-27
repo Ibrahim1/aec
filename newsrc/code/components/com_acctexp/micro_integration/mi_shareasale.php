@@ -34,6 +34,11 @@ class mi_shareasale
 		return $settings;
 	}
 
+	function CommonData()
+	{
+		return array( 'merchantID' );
+	}
+
 	function action( $request )
 	{
 		$database = &JFactory::getDBO();

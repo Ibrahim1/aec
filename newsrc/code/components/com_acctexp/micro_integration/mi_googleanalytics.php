@@ -37,6 +37,11 @@ class mi_googleanalytics
 		return $settings;
 	}
 
+	function CommonData()
+	{
+		return array( 'account_id', 'method' );
+	}
+
 	function action( $request )
 	{
 		$database = &JFactory::getDBO();
@@ -44,7 +49,7 @@ class mi_googleanalytics
 		global $mainframe;
 
 		switch ( $this->settings['ga_method'] ) {
-			case 1:					
+			case 1:
 				// Old Urchin Tracking Method
 				$text = '<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">'
 							. '</script>'

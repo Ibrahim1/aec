@@ -30,6 +30,11 @@ class mi_affiliatepro
 		return $settings;
 	}
 
+	function CommonData()
+	{
+		return array( 'url' );
+	}
+
 	function action( $request )
 	{
 		$database = &JFactory::getDBO();

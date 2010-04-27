@@ -31,6 +31,11 @@ class mi_amigos
 		return $settings;
 	}
 
+	function CommonData()
+	{
+		return array( 'amigos_domain', 'amigos_curl' );
+	}
+
 	function action( $request )
 	{
 		$domain = $this->settings['amigos_domain'];

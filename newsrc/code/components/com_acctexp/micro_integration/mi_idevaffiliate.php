@@ -37,6 +37,11 @@ class mi_idevaffiliate
 		return $settings;
 	}
 
+	function CommonData()
+	{
+		return array( 'profile', 'directory', 'use_curl' );
+	}
+
 	function action( $request )
 	{
 		$database = &JFactory::getDBO();

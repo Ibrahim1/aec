@@ -46,6 +46,11 @@ class mi_googleadsenseconversion
 		return $settings;
 	}
 
+	function CommonData()
+	{
+		return array( 'conversion_id' );
+	}
+
 	function action( $request )
 	{
 		$database = &JFactory::getDBO();
