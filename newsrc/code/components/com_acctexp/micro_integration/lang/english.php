@@ -234,6 +234,8 @@ define( '_MI_MI_JOOMLAUSER_USERNAME_RAND_NAME',		'Random Username' );
 define( '_MI_MI_JOOMLAUSER_USERNAME_RAND_DESC',		'Automatically set a random username - please provide a number of characters (ReWrite-Engine does not apply)' );
 define( '_MI_MI_JOOMLAUSER_PASSWORD_NAME',			'Password' );
 define( '_MI_MI_JOOMLAUSER_PASSWORD_DESC',			'Automatically set a password (ReWrite-Engine applies)' );
+define( '_MI_MI_JOOMLAUSER_BLOCK_NAME',				'Block Expired' );
+define( '_MI_MI_JOOMLAUSER_BLOCK_DESC',				'Block the user after the assigned payment plan sunrs out - does not interfere with the customer purchasing a new membership. Users can be automatically unblocked with the "Activate" option above');
 
 // CommunityBuilder
 define( '_AEC_MI_NAME_COMMUNITYBUILDER',				'Community Builder' );

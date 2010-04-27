@@ -26,6 +26,7 @@ class mi_joomlauser
 	{
 		$settings = array();
 		$settings['activate']		= array( 'list_yesno' );
+		$settings['block']			= array( 'list_yesno' );
 		$settings['username']		= array( 'inputD' );
 		$settings['username_rand']	= array( 'inputC' );
 		$settings['password']		= array( 'inputD' );
@@ -47,23 +48,7 @@ class mi_joomlauser
 			$set[] = '`activation` = \'\'';
 		}
 
-		if ( !empty( $this->settings['username_rand'] ) ) {
-			$numberofrows	= 1;
-			while ( $numberofrows ) {
-				$uname =	strtolower( substr( base64_encode( md5( rand() ) ), 0, $this->settings['username_rand'] ) );
-				// Check if already exists
-				$query = 'SELECT count(*)'
-						. ' FROM #__users'
-						. ' WHERE `username` = \'' . $uname . '\''
-						;
-				$database->setQuery( $query );
-				$numberofrows = $database->loadResult();
-			}
-
-			$set[] = '`username` = \'' . $uname . '\'';
-		} elseif ( !empty( $this->settings['username'] ) ) {
-			$set[] = '`username` = \'' . AECToolbox::rewriteEngineRQ( $this->settings['username'], $request ) . '\'';
-		}
+		$set[] = '`username` = \'' . $this->getUsername( $request ) . '\'';
 
 		if ( !empty( $this->settings['password'] ) ) {
 			$pw = AECToolbox::rewriteEngineRQ( $this->settings['password'], $request );
@@ -94,6 +79,45 @@ class mi_joomlauser
 			// Reloading metaUser object for other MIs
 			$request->metaUser = new metaUser( $userid );
 		}
+	}
+
+	function getUsername( $request )
+	{
+		if ( !empty( $this->settings['username_rand'] ) ) {
+			$database = &JFactory::getDBO();
+
+			$numberofrows	= 1;
+			while ( $numberofrows ) {
+				$uname =	strtolower( substr( base64_encode( md5( rand() ) ), 0, $this->settings['username_rand'] ) );
+				// Check if already exists
+				$query = 'SELECT count(*)'
+						. ' FROM #__users'
+						. ' WHERE `username` = \'' . $uname . '\''
+						;
+				$database->setQuery( $query );
+				$numberofrows = $database->loadResult();
+			}
+
+			return $uname;
+		} elseif ( !empty( $this->settings['username'] ) ) {
+			return AECToolbox::rewriteEngineRQ( $this->settings['username'], $request );
+		}
+	}
+
+	function expiration_action( $request )
+	{
+		if ( $this->settings['block'] ) {
+			$database = &JFactory::getDBO();
+
+			$query = 'UPDATE #__users'
+				. ' SET `block` = \'1\''
+				. ' WHERE `id` = \'' . (int) $request->metaUser->userid . '\''
+				;
+
+			$database->setQuery( $query );
+			$database->query() or die( $database->stderr() );
+		}
+
 	}
 }
 
