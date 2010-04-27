@@ -104,7 +104,7 @@ class mi_aectax
 
 		$total = $m['terms']->terms[0]->renderTotal();
 
-		$tax = AECToolbox::correctAmount( $total * ( $tt/100 ) );
+		$tax = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $tt/100 ) ) );
 
 		$newtotal = AECToolbox::correctAmount( $total - $tax );
 

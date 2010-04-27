@@ -500,7 +500,7 @@ define( '_CFG_IDEAL_ADVANCED_LONGNAME', 'iDeal');
 define( '_CFG_IDEAL_ADVANCED_STATEMENT', 'Make payments with iDeal');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION', 'De veilige manier van betalen op internet.');
 define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_NAME', 'Secure Details Path');
-define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_DESC', 'The filesystem path to where you have saved your secure details config file on your server - should NOT be in or below your publicly accessible webserver directory');
+define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_DESC', 'The filesystem path to where you have saved your secure details config file on your server - should NOT be in or below your publicly accessible webserver directory. There is a sample config file located at components/com_acctexp/processors/ideal_advanced/includes/security');
 define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_NAME', 'Testmode Stage');
 define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_NAME', 'Item Description');

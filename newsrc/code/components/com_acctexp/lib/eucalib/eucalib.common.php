@@ -445,7 +445,8 @@ class serialParamDBTable extends paramDBTable
 				$input[$pname] = serialParamDBTable::multistripslashes( $pvalue );
 			}
 		} else {
-			if ( !is_bool( $input ) && !is_int( $input ) ) {
+			// Don't ask - life is horrible.
+			if ( !is_bool( $input ) && !is_int( $input ) && is_a( $input, "__PHP_Incomplete_Class" ) ) {
 				$input = stripslashes( $input );
 			}
 		}

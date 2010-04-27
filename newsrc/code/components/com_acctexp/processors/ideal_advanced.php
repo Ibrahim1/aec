@@ -31,7 +31,7 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings = array();
 		$settings['testmode']		= 0;
 		$settings['testmodestage']  = 0;
-		$settings['secure_path']    = 'components/com_acctexp/processors/ideal_advanced/includes/security';
+		$settings['secure_path']    = 'components/com_acctexp/processors/includes/security';
 		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		return $settings;
 	}
@@ -180,7 +180,7 @@ class processor_ideal_advanced extends XMLprocessor
 
 			$response = $ideal->GetIssuerList();
 
-			if ( $response->IsResponseError() )  {
+			if ( empty( $response->issuerList ) )  {
 				aecQuickLog( "ideal_advanced", 'processor,error,issuerlist', $response->getErrorCode() . ': ' . $response->getErrorMessage() . ' | ' . $response->getConsumerMessage() );
 			} else {
 				// Store the Issuer List into the params
@@ -192,13 +192,14 @@ class processor_ideal_advanced extends XMLprocessor
 				$this->storeload();
 			}
 		}
-
+var_dump($this->params[$type]);exit;
 		return $this->params[$type];
 	}
 
 	function loadConnector()
 	{
 		require_once( dirname(__FILE__) . "/ideal_advanced/iDEALConnector.php" );
+		require_once( dirname(__FILE__) . "/ideal_advanced/IssuerEntry.php" );
 		define( "SECURE_PATH", $this->settings['secure_path'] );
 
 		// Initialising MPI
