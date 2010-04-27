@@ -1938,80 +1938,95 @@ class HTML_AcctExp
 								<td style="padding:10px;" valign="top">
 									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
+											<div class="aec_userinfobox_sub">
+												<h4>General</h4>
+												<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+											</div>
+											<div class="aec_userinfobox_sub">
+												<h4>Details</h4>
+												<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'fixed_redirect' ); ?>
+											</div>
 											<div style="position:relative;float:left;width:100%;">
 												<?php
 												if ( $row->id ) { ?>
-													<p style="float:right;padding:2px;clear:right;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
-													<p style="float:right;padding:2px;clear:right;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=addtocart&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_CART_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_CART_FRONTEND; ?></a></p>
+													<p style="float:right;padding:2px;padding-left:40px;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
+													<p style="float:right;padding:2px;padding-left:40px;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=addtocart&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_CART_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_CART_FRONTEND; ?></a></p>
 													<?php
 												}
-												echo $aecHTML->createSettingsParticle( 'name' );
+
 												?>
 											</div>
-											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'fixed_redirect' ); ?>
 										</div>
 										<div class="userinfobox">
-											<h2 style="clear:both;"><?php echo _ITEMGROUPS_TITLE; ?></h2>
-											<table style="width:100%;">
-												<tr>
-													<th>ID</td>
-													<th>Name</td>
-													<th>delete</td>
-												</tr>
-												<?php
-												if ( !empty( $aecHTML->customparams->groups ) ) {
-													foreach ( $aecHTML->customparams->groups as $id => $group ) {
-														?>
-														<tr>
-															<td align="right" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
-															<td><?php echo $group['name']; ?></td>
-															<td><?php echo $aecHTML->createSettingsParticle( 'group_delete_'.$id ); ?></td>
-														</tr>
-														<?php
+											<div class="aec_userinfobox_sub">
+												<h4><?php echo _ITEMGROUPS_TITLE; ?></h4>
+												<table style="width:100%;">
+													<tr>
+														<th>ID</td>
+														<th>Name</td>
+														<th>delete</td>
+													</tr>
+													<?php
+													if ( !empty( $aecHTML->customparams->groups ) ) {
+														foreach ( $aecHTML->customparams->groups as $id => $group ) {
+															?>
+															<tr>
+																<td align="right" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
+																<td><?php echo $group['name']; ?></td>
+																<td><?php echo $aecHTML->createSettingsParticle( 'group_delete_'.$id ); ?></td>
+															</tr>
+															<?php
+														}
 													}
-												}
-												?>
-												<tr>
-													<td><?php echo _NEW_ITEMGROUP; ?>:</td>
-													<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-												</tr>
-											</table>
+													?>
+													<tr>
+														<td><?php echo _NEW_ITEMGROUP; ?>:</td>
+														<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+													</tr>
+												</table>
+											</div>
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
-											<div style="width:180px;float:left;">
+											<div class="aec_userinfobox_sub">
+												<h4>Cost&amp;Details</h4>
+												<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'hide_duration_checkout' ); ?>
+												<?php if ( $hasrecusers ) { ?>
+													<div class="usernote" style="width:200px;">
+														<strong><?php echo _PAYPLAN_AMOUNT_EDITABLE_NOTICE; ?></strong>
+													</div>
+												<?php } ?>
+											</div>
+										</div>
+										<div class="userinfobox">
+											<div class="aec_userinfobox_sub">
+												<h4>Joomla User</h4>
+												<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
+											</div>
+										</div>
+									</div>
+									<div style="position:relative;float:left;width:32%;padding:4px;">
+										<div class="userinfobox">
+											<div class="aec_userinfobox_sub">
+												<h4>Plan Relation</h4>
 												<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'fallback_req_parent' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
 											</div>
-											<div style="width:180px;float:left;"><?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?></div>
-										</div>
-									</div>
-									<div style="position:relative;float:left;width:32%;padding:4px;">
-										<div class="userinfobox">
-											<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'hide_duration_checkout' ); ?>
-											<div class="usernote" style="width:200px;">
-												<?php echo _PAYPLAN_AMOUNT_NOTICE_TEXT; ?>
-											</div>
-											<?php if ( $hasrecusers ) { ?>
-												<div class="usernote" style="width:200px;">
-													<strong><?php echo _PAYPLAN_AMOUNT_EDITABLE_NOTICE; ?></strong>
-												</div>
-											<?php } ?>
 										</div>
 									</div>
 								</td>
