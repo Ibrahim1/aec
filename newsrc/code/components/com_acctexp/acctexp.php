@@ -943,7 +943,7 @@ function subscriptionDetails( $option, $sub='overview' )
 		}
 
 		$found = false;
-		if ( !in_array( $invoice->subscr_id, $handledsubs ) ) {
+		if ( !in_array( $invoice->subscr_id, $handledsubs ) && !empty( $subList ) ) {
 			foreach ( $subList as $ssub ) {
 				if ( $ssub->id == $invoice->subscr_id ) {
 					$tempsubscription = $ssub;

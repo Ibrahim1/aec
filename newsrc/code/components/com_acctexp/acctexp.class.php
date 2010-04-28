@@ -924,21 +924,23 @@ class metaUser
 	{
 		$s = array();
 		$n = 0;
-		foreach ( $restrictions as $restriction ) {
-			$check1 = AECToolbox::rewriteEngine( $restriction[0], $this );
-			$check2 = AECToolbox::rewriteEngine( $restriction[2], $this );
-			$eval = $restriction[1];
+		if ( is_array( $restrictions ) && !empty( $restrictions ) ) {
+			foreach ( $restrictions as $restriction ) {
+				$check1 = AECToolbox::rewriteEngine( $restriction[0], $this );
+				$check2 = AECToolbox::rewriteEngine( $restriction[2], $this );
+				$eval = $restriction[1];
 
-			if ( ( $check1 === $restriction[0] ) && ( reWriteEngine::isRWEstring( $restriction[0] ) ) ) {
-				$check1 = null;
+				if ( ( $check1 === $restriction[0] ) && ( reWriteEngine::isRWEstring( $restriction[0] ) ) ) {
+					$check1 = null;
+				}
+
+				if ( ( $check2 === $restriction[2] ) && ( reWriteEngine::isRWEstring( $restriction[2] ) ) ) {
+					$check2 = null;
+				}
+
+				$s['customchecker'.$n] = AECToolbox::compare( $eval, $check1, $check2 );
+				$n++;
 			}
-
-			if ( ( $check2 === $restriction[2] ) && ( reWriteEngine::isRWEstring( $restriction[2] ) ) ) {
-				$check2 = null;
-			}
-
-			$s['customchecker'.$n] = AECToolbox::compare( $eval, $check1, $check2 );
-			$n++;
 		}
 
 		return $s;
@@ -946,7 +948,7 @@ class metaUser
 
 	function permissionResponse( $restrictions )
 	{
-		if ( is_array( $restrictions ) ) {
+		if ( is_array( $restrictions ) && !empty( $restrictions ) ) {
 			$return = array();
 			foreach ( $restrictions as $name => $value ) {
 				// Might be zero, so do an expensive check
