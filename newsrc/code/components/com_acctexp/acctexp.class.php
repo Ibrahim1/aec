@@ -2005,8 +2005,6 @@ class aecHeartbeat extends JTable
 								$e++;
 							}
 						}
-					} elseif( $subscription->is_lifetime() ) {
-						$found_expired = 1;
 					}
 				}
 
@@ -2130,6 +2128,7 @@ class aecHeartbeat extends JTable
 				$event .= ', ';
 			}
 		}
+
 		if ( $exp_actions ) {
 			$event .= $exp_actions . ' Pre-expiration action';
 			$event .= ( $exp_actions > 1 ) ? 's' : '';
