@@ -129,6 +129,14 @@ define( '_MI_MI_IDEVAFFILIATE_CUSTOMPARAMS_DESC',		'If you want to transmit cust
 // MosetsTree
 define( '_AEC_MI_NAME_MOSETS',		'MosetsTree' );
 define( '_AEC_MI_DESC_MOSETS',		'Anzahl der maximalen Eintr&auml;ge, die ein Abonnent ver&ouml;ffentlichen darf' );
+define( '_MI_MI_MOSETS_TREE_ALLOW_NAME',	'Allow Listings' );
+define( '_MI_MI_MOSETS_TREE_ALLOW_DESC',	'Give or remove the basic right to add listings' );
+define( '_MI_MI_MOSETS_TREE_ALLOW_EXP_NAME',	'Allow Listings (expiration)' );
+define( '_MI_MI_MOSETS_TREE_ALLOW_EXP_DESC',	'Give or remove the right to add listings on expiration' );
+define( '_MI_MI_MOSETS_TREE_UNLIMITED_NAME',		'Unlimited listings' );
+define( '_MI_MI_MOSETS_TREE_UNLIMITED_DESC',		'Allow the user to add unlimited listings' );
+define( '_MI_MI_MOSETS_TREE_UNLIMITED_EXP_NAME',		'Unlimited listings (expiration)' );
+define( '_MI_MI_MOSETS_TREE_UNLIMITED_EXP_DESC',		'Limit the amount of listings a user can enter (specify below)' );
 define( '_MI_MI_MOSETS_TREE_SET_LISTINGS_NAME',		'Eintr&auml;ge setzen' );
 define( '_MI_MI_MOSETS_TREE_SET_LISTINGS_DESC',		'Die Anzahl der Eintr&auml;ge, die der Benutzer einstellen darf wird auf diesen Wert (zur&uuml;ck)gesetzt' );
 define( '_MI_MI_MOSETS_TREE_ADD_LISTINGS_NAME',		'Eintr&auml;ge hinzuf&uuml;gen' );

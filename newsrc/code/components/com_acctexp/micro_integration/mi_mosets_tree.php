@@ -58,12 +58,16 @@ class mi_mosets_tree extends MI
 		// field type; name; variable value, description, extra (variable name)
 
 		$settings = array();
-		$settings['add_listings']	= array( 'inputA' );
-		$settings['set_listings']	= array( 'inputA' );
-		$settings['publish_all']	= array( 'list_yesno' );
-		$settings['unpublish_all']	= array( 'list_yesno' );
-		$settings['feature_all']	= array( 'list_yesno' );
-		$settings['unfeature_all']	= array( 'list_yesno' );
+		$settings['allow']				= array( 'list_yesno' );
+		$settings['allow_exp']			= array( 'list_yesno' );
+		$settings['unlimited']			= array( 'list_yesno' );
+		$settings['unlimited_exp']		= array( 'list_yesno' );
+		$settings['add_listings']		= array( 'inputA' );
+		$settings['set_listings']		= array( 'inputA' );
+		$settings['publish_all']		= array( 'list_yesno' );
+		$settings['unpublish_all']		= array( 'list_yesno' );
+		$settings['feature_all']		= array( 'list_yesno' );
+		$settings['unfeature_all']		= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -77,6 +81,18 @@ class mi_mosets_tree extends MI
 
 		$mi_mosetshandler->load( $id );
 		$mi_mosetshandler->active = 0;
+
+		if ( !empty( $this->settings['allow_exp'] ) ) {
+			$mi_mosetshandler->params['deny'] = false;
+		} else {
+			$mi_mosetshandler->params['deny'] = true;
+		}
+
+		if ( !empty( $this->settings['unlimited_exp'] ) ) {
+			$mi_mosetshandler->params['unlimited'] = true;
+		} else {
+			$mi_mosetshandler->params['unlimited'] = false;
+		}
 
 		$mi_mosetshandler->check();
 		$mi_mosetshandler->store();
@@ -110,6 +126,18 @@ class mi_mosets_tree extends MI
 			$mi_mosetshandler->setListings( $this->settings['set_listings'] );
 		} elseif ( $this->settings['add_listings'] ) {
 			$mi_mosetshandler->addListings( $this->settings['add_listings'] );
+		}
+
+		if ( !empty( $this->settings['unlimited'] ) ) {
+			$mi_mosetshandler->params['unlimited'] = true;
+		} else {
+			$mi_mosetshandler->params['unlimited'] = false;
+		}
+
+		if ( !empty( $this->settings['allow'] ) ) {
+			$mi_mosetshandler->params['deny'] = false;
+		} else {
+			$mi_mosetshandler->params['deny'] = true;
 		}
 
 		$mi_mosetshandler->check();
@@ -365,15 +393,24 @@ class mosetstree extends JTable
 
 	function getListingsLeft()
 	{
-		$listings_left = $this->granted_listings - $this->used_listings;
-		return $listings_left;
+		if ( !empty( $this->params['deny'] ) ) {
+			return 0;
+		} elseif ( !empty( $this->params['unlimited'] ) ) {
+			return 'unlimited';
+		} else {
+			$listings_left = $this->granted_listings - $this->used_listings;
+			return $listings_left;
+		}
 	}
 
 	function hasListingsLeft()
 	{
-		if( $this->getListingsLeft() > 0 ) {
+		$listings = $this->getListingsLeft();
+		if ( $listings == 'unlimited' ) {
 			return true;
-		}else{
+		} elseif ( $listings > 0 ) {
+			return true;
+		} else {
 			return false;
 		}
 	}
