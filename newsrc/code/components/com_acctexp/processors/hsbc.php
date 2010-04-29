@@ -98,7 +98,7 @@ class processor_hsbc extends XMLprocessor
 				$addin .= '<p><strong>Cardholder Name:</strong>&nbsp;' . $request->int_var['params']['billFirstName'] . "&nbsp;" . $request->int_var['params']['billLastName'];
 				$addin .= '<p><strong>Credit Card:</strong>&nbsp;' . $request->int_var['params']['cardNumber'];
 				$addin .= '<p><strong>Expiration:</strong>&nbsp;' . $request->int_var['params']['expirationMonth'] . '&nbsp;/&nbsp;' . $request->int_var['params']['expirationYear'];
-				$addin .= '<p><a href="' . $redourl . '">change Credit Card Details</a></p>';
+				$addin .= '<p><a href="' . $redourl . '" class="linkbutton" style="width:13em;">change Credit Card Details</a></p>';
 			}
 
 			if ( !empty( $request->int_var['params']['cardNumber'] ) && is_null( $check ) ) {
