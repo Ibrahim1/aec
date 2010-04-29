@@ -1147,7 +1147,7 @@ class metaUser
 			}
 			return $return;
 		} else {
-			return false;
+			return array();
 		}
 	}
 
@@ -17981,9 +17981,11 @@ class aecRestrictionHelper
 
 			$status = array_merge( $status, $metaUser->permissionResponse( $restrictions ) );
 
-			foreach ( $status as $stname => $ststatus ) {
-				if ( !$ststatus ) {
-					return false;
+			if ( !empty( $status ) ) {
+				foreach ( $status as $stname => $ststatus ) {
+					if ( !$ststatus ) {
+						return false;
+					}
 				}
 			}
 		}
