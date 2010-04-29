@@ -34,9 +34,11 @@ class mi_aecplan
 
 		$settings['plan_apply_first']				= array( 'list' );
 		$settings['lists']['plan_apply_first']		= mosHTML::selectList( $payment_plans, 'plan_apply_first', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_first'] );
+		$settings['first_plan_copy_expiration']		= array( 'list_yesno' );
 
 		$settings['plan_apply']						= array( 'list' );
 		$settings['lists']['plan_apply']			= mosHTML::selectList( $payment_plans, 'plan_apply', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply'] );
+		$settings['plan_copy_expiration']			= array( 'list_yesno' );
 
 		$settings['plan_apply_pre_exp']				= array( 'list' );
 		$settings['lists']['plan_apply_pre_exp']	= mosHTML::selectList( $payment_plans, 'plan_apply_pre_exp', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_pre_exp'] );
@@ -94,6 +96,8 @@ class mi_aecplan
 			}
 		}
 
+		$expiration = $request->metaUser->focusSubscription->expiration;
+
 		$database = &JFactory::getDBO();
 
 		$new_plan = new SubscriptionPlan( $database );
@@ -102,6 +106,13 @@ class mi_aecplan
 		$request->metaUser->establishFocus( $new_plan, 'none', false );
 
 		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$request->area] );
+
+		if ( ( ( $request->area == '_first' ) && !empty( $this->settings['first_plan_copy_expiration'] ) )
+			|| ( empty( $request->area ) && !empty( $this->settings['plan_copy_expiration'] ) ) ) {
+			$request->metaUser->focusSubscription->expiration = $expiration;
+
+			$request->metaUser->focusSubscription->storeload();
+		}
 
 		return true;
 	}

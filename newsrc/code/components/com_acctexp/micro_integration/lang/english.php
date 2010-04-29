@@ -690,6 +690,11 @@ define( '_MI_MI_AECPLAN_PLAN_APPLY_FIRST_NAME',		'Apply Plan (First Subscription
 define( '_MI_MI_AECPLAN_PLAN_APPLY_FIRST_DESC',		'Apply this payment plan (for free) when the MI is carried out. Only apply if it is the first membership of the user.' );
 define( '_MI_MI_AECPLAN_FIRST_PLAN_NOT_MEMBERSHIP_NAME',		'First Plan of type' );
 define( '_MI_MI_AECPLAN_FIRST_PLAN_NOT_MEMBERSHIP_DESC',		'If a plan is selected for the "First Subscription", this option will extend the scope - from only being applied on the first ever plan for a membership, to the first plan ever of the type that the MI is attached to.' );
+define( '_MI_MI_AECPLAN_PLAN_APPLY_NAME',		'Apply Plan' );
+define( '_MI_MI_AECPLAN_FIRST_PLAN_COPY_EXPIRATION_NAME',		'Copy Expiration (First Subscription)' );
+define( '_MI_MI_AECPLAN_FIRST_PLAN_COPY_EXPIRATION_DESC',		'Copy the Expiration directly from the parent plan applying the MI - in order to sync up both subscriptions (only for first plan applications)' );
+define( '_MI_MI_AECPLAN_PLAN_COPY_EXPIRATION_NAME',		'Copy Expiration' );
+define( '_MI_MI_AECPLAN_PLAN_COPY_EXPIRATION_DESC',		'Copy the Expiration directly from the parent plan applying the MI - in order to sync up both subscriptions' );
 
 // Raffle MI
 define( '_AEC_MI_RAFFLE_NAME', 'Raffle' );
