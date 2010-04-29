@@ -774,6 +774,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			$cim->setParameter( 'transaction_amount',		$invoice->amount );
 
 			$cim->setParameter( 'refId',					$invoice->invoice_number );
+			$cim->setParameter( 'order_invoiceNumber',		$invoice->invoice_number);
 			$cim->setParameter( 'merchantCustomerId',		$invoice->userid );
 
 			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
