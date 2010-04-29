@@ -3113,6 +3113,16 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
+		if ( ( $action == 'cancel' ) && !empty( $this->settings['minOccurrences'] ) ) {
+			if ( ( $this->settings['minOccurrences'] > 1 ) && ( $invoice->counter < $this->settings['minOccurrences'] ) ) {
+				$return['valid'] = 0;
+				$return['error'] = 'Could not cancel your membership - a minimum of ' . $this->settings['minOccurrences'] . ' periods have to be paid.'
+									. ' You have now paid for ' . $invoice->counter . ' cycles.';
+
+				return $return;
+			}
+		}
+
 		$method = 'customaction_' . $action;
 
 		if ( method_exists( $this->processor, $method ) ) {
@@ -9179,14 +9189,31 @@ class InvoiceFactory
 		$pp = new PaymentProcessor( $database );
 		if ( $pp->loadName( $invoice->method ) ) {
 			$pp->fullInit();
-		}
 
-		$response = $pp->customAction( $action, $invoice, $this->metaUser );
+			$usage = $this->getObjUsage();
 
-		$response = $invoice->processorResponse( $pp, $response, '', true );
+			if ( is_a( $usage, 'aecCart' ) ) {
+				foreach ( $usage->content as $c ) {
+					$new_plan = new SubscriptionPlan( $database );
+					$new_plan->load( $c['id'] );
 
-		if ( isset( $response['cancel'] ) ) {
-			HTML_Results::cancel( 'com_acctexp' );
+					$pp->exchangeSettingsByPlan( $new_plan );
+				}
+			} elseif ( is_a( $usage, 'SubscriptionPlan' ) ) {
+				$pp->exchangeSettingsByPlan( $usage );
+			} else {
+				return aecNotAuth();
+			}
+
+			$response = $pp->customAction( $action, $invoice, $this->metaUser );
+
+			$response = $invoice->processorResponse( $pp, $response, '', true );
+
+			if ( isset( $response['cancel'] ) ) {
+				HTML_Results::cancel( 'com_acctexp' );
+			}
+		} else {
+			return aecNotAuth();
 		}
 	}
 
