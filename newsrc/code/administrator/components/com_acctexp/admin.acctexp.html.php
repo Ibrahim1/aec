@@ -1954,8 +1954,8 @@ class HTML_AcctExp
 											<div style="position:relative;float:left;width:100%;">
 												<?php
 												if ( $row->id ) { ?>
-													<p style="float:right;padding:2px;padding-left:40px;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
-													<p style="float:right;padding:2px;padding-left:40px;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=addtocart&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_CART_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_CART_FRONTEND; ?></a></p>
+													<p style="float:left;padding:2px;padding-left:40px;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=subscribe&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_ABO_FRONTEND; ?></a></p>
+													<p style="float:left;padding:2px;padding-left:40px;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=addtocart&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_CART_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_CART_FRONTEND; ?></a></p>
 													<?php
 												}
 
@@ -2025,6 +2025,12 @@ class HTML_AcctExp
 												<h4>Plan Relation</h4>
 												<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'fallback_req_parent' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
+											</div>
+											<div class="aec_userinfobox_sub">
+												<h4>Shopping Card</h4>
+												<?php echo $aecHTML->createSettingsParticle( 'force_cart' ); ?>
+												<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
 											</div>
 										</div>
