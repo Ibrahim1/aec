@@ -7921,6 +7921,8 @@ class InvoiceFactory
 
 	function addtoCart( $option, $usage )
 	{
+		$database = &JFactory::getDBO();
+
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
@@ -7928,9 +7930,22 @@ class InvoiceFactory
 		if ( is_array( $usage ) ) {
 			foreach ( $usage as $us ) {
 				$this->cartobject->action( 'addItem', $us );
+
+				$usageid = $us;
 			}
 		} else {
 			$this->cartobject->action( 'addItem', $usage );
+
+			$usageid = $usage;
+		}
+
+		$plan = new SubscriptionPlan( $database );
+		$plan->load( $usageid );
+
+		if ( !empty( $plan->params['addtocart_redirect'] ) ) {
+			return aecRedirect( $plan->params['addtocart_redirect'] );
+		} else {
+			return true;
 		}
 	}
 
