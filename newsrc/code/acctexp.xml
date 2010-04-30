@@ -18,6 +18,7 @@
 		<folder>lib</folder>
 		<folder>micro_integration</folder>
 		<folder>processors</folder>
+		<folder>views</folder>
 	</files>
 	<administration>
 		<files folder="administrator/components/com_acctexp">
