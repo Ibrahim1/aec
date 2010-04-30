@@ -30,8 +30,12 @@ if ( _EUCA_DEBUGMODE ) {
 
 $user = &JFactory::getUser();
 
-$task = trim( aecGetParam( 'task' ) );
-//aecDebug( $task );
+$task = trim( aecGetParam( 'view' ) );
+
+if ( empty( $task ) ) {
+	$task = trim( aecGetParam( 'task' ) );
+}
+
 if ( !empty( $task ) ) {
 	switch ( strtolower( $task ) ) {
 		case 'heartbeat':

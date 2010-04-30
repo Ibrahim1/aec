@@ -7386,7 +7386,7 @@ class InvoiceFactory
 
 				$c	= false;
 				$e	= false;
-				$s	= false;
+				$s	= array();
 				$sx	= array();
 				$se	= true;
 
@@ -8234,7 +8234,7 @@ class InvoiceFactory
 
 		$register = $this->loadMetaUser( true );
 
-		if ( empty( $this->usage ) ) {
+		if ( empty( $this->usage ) && empty( $group ) ) {
 			// Check if the user has already subscribed once, if not - link to intro
 			if ( $this->metaUser->hasSubscription && !$aecConfig->cfg['customintro_always'] ) {
 				$intro = false;
@@ -8384,7 +8384,7 @@ class InvoiceFactory
 		}
 
 		foreach ( $plans as $pid => $plan ) {
-			if ( $this->userid && $aecConfig->cfg['enable_shoppingcart'] ) {
+		if ( $this->userid && ( $aecConfig->cfg['enable_shoppingcart'] || !empty( $plan['plan']->params['force_cart'] ) ) ) {
 				// We have a shopping cart situation, care about processors later
 
 				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
