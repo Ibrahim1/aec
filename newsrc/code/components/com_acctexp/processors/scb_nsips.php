@@ -20,7 +20,7 @@ class processor_scb_nsips extends URLprocessor
 		$info['longname']			= _CFG_SCB_NSIPS_LONGNAME;
 		$info['statement']			= _CFG_SCB_NSIPS_LONGNAME;
 		$info['description'] 		= _CFG_SCB_NSIPS_DESCRIPTION;
-		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
+		$info['currencies']			= 'THB,USD,GBP,EUR,JPY,AUD,CAD,DKK,HKD,NZD,SGD,CHF,SEK';
 		$info['languages']			= 'GB,DE,FR,IT,ES,US,NL';
 		$info['cc_list']			= 'visa,mastercard,eurocard';
 		$info['recurring']			= 2;
@@ -32,8 +32,8 @@ class processor_scb_nsips extends URLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['webmaster_id']	= 'webmaster';
-		$settings['content_id']		= 'content_id';
+		$settings['merchant_id']	= 'webmaster';
+		$settings['terminal_id']	= 'content_id';
 		$settings['secret']			= 'secret';
 		$settings['type']			= 1;
 
@@ -72,14 +72,11 @@ class processor_scb_nsips extends URLprocessor
 			$cust = '';
 		}
 
-		$var['WMID']		= $this->settings['webmaster_id'];
-		$var['CON']			= $this->settings['content_id'];
-		$var['VAR1']		= $request->invoice->invoice_number;
-		$var['VAR2']		= "";//implode( "|", array() );
-		$var['PAY_type']	= $this->settings['type']; //1 = Lastschrift, 2 = Kreditkarte
-		$var['Customer']	= $cust;
-		$var['_language']	= 'de';
-		$var['Country']		= 'DE';
+		$var['mid']			= $this->settings['merchant_id'];
+		$var['terminal']	= $this->settings['terminal_id'];
+		$var['version']		= "1.0";
+		$var['command']		= "CRAUTH";
+		$var['ref_no']		= $this->settings['type']; //1 = Lastschrift, 2 = Kreditkarte
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 
@@ -114,8 +111,9 @@ class processor_scb_nsips extends URLprocessor
 		$database = &JFactory::getDBO();
 
 		$response = array();
-		$response['invoice']		= $post['VAR1'];
-		$response['amount_paid']	= str_replace( ",", ".", $post['pay_amount'] );
+		$response['invoice']			= $post['Ref_no'];
+		$response['amount_paid']		= $post['amount'];
+		$response['amount_currency']	= $post['Cur_abbr'];
 
 		return $response;
 	}
@@ -124,66 +122,27 @@ class processor_scb_nsips extends URLprocessor
 	{
 		$response['valid'] = 0;
 
-		$allowedips = array( "213.69.111.70", "213.69.111.71", "213.69.234.76", "213.69.234.74", "195.126.100.14", "213.69.111.78" );
-
-		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowedips ) ) {
-			$response['error'] = 1;
-			$response['errormsg'] = "Wrong IP tried to send notification: " . $_SERVER["REMOTE_ADDR"];
-			return $response;
+		switch ( $post['payment_status'] ) {
+			case '002':
+				$response['valid'] = 1;
+				break;
+			case '003':
+				$response['error'] = "Host Reject";
+				break;
+			case '006':
+				$response['error'] = "General Error";
+				break;
+			case '007':
+			case '008':
+				$response['error'] = "SIPs is down";
+				break;
 		}
 
-		$metaUser = new metaUser( $response['userid'] );
-
-		$ppParams = $metaUser->meta->getProcessorParams( $this->id );
-
-		// Check whether we have already recorded a profile
-		if ( empty( $ppParams->customerid ) ) {
-			// None found - create it
-			$ppParams = new stdClass();
-			$ppParams->customerid = $post['customer_id'];
-
-			$metaUser->meta->setProcessorParams( $this->id, $ppParams );
-		} elseif ( $ppParams->customerid != $post['customer_id'] ) {
-			// Profile found, but does not match, create new relation
-			$ppParams->customerid = $post['customer_id'];
-
-			$metaUser->meta->setProcessorParams( $this->id, $ppParams );
-		}
-
-		if ( $this->settings['secret'] == $post['password'] ) {
-			switch ( $post['method'] ) {
-				case 'AnnouncePayment':
-					$response['null'] = 1;
-					break;
-				case 'CommitPayment':
-					$response['valid'] = 1;
-					break;
-				case 'Settlement':
-					$response['chargeback_settle'] = 1;
-					break;
-				case 'EndOfTerm':
-					$response['eot'] = 1;
-					break;
-				case 'ChargeBack':
-					$response['chargeback'] = 1;
-					break;
-			}
-		} else {
-			$response['error'] = 1;
-			$response['errormsg'] = 'Password mismatch';
+		if ( $post['payment_status'] == "003" ) {
+			$response['valid'] = 1;
 		}
 
 		return $response;
-	}
-
-	function notificationError( $response, $error )
-	{
-		echo 'OK=0 ERROR: ' . $error;
-	}
-
-	function notificationSuccess( $response )
-	{
-		echo 'OK=100';
 	}
 
 }
