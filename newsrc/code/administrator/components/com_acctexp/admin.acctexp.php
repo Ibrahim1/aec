@@ -3647,6 +3647,13 @@ function editSubscriptionPlan( $id, $option )
 		$hidden_mi = array();
 	}
 
+	// make the select list for first trial period units
+	$cartmode[] = mosHTML::makeOption( '0', "Inherit" );
+	$cartmode[] = mosHTML::makeOption( '1', "Force Cart" );
+	$cartmode[] = mosHTML::makeOption( '2', "Force Direct Checkout" );
+
+	$lists['cart_behavior'] = mosHTML::selectList( $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
+
 	$customparamsarray->hasperplanmi = false;
 
 	if ( !empty( $aecConfig->cfg['per_plan_mis'] ) || !empty( $hidden_mi ) ) {
