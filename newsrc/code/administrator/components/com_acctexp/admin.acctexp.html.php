@@ -1975,10 +1975,9 @@ class HTML_AcctExp
 												<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
 											</div>
 											<div class="aec_userinfobox_sub">
-												<h4>Shopping Card</h4>
-												<?php echo $aecHTML->createSettingsParticle( 'force_cart' ); ?>
+												<h4>Shopping Cart</h4>
+												<?php echo $aecHTML->createSettingsParticle( 'cart_behavior' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
-												<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
 											</div>
 										</div>
 									</div>

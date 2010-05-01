@@ -3289,6 +3289,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['fixed_redirect']		= array( 'inputC', '' );
 	$params['hide_duration_checkout']	= array( 'list_yesno', 0 );
 	$params['addtocart_redirect']	= array( 'list_yesno', 0 );
+	$params['cart_behavior']		= array( 'list', 0 );
 
 	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
 
