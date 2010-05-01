@@ -1688,6 +1688,7 @@ class Config_General extends serialParamDBTable
 		$def['countries_available']				= "";
 		$def['countries_top']					= "";
 		$def['checkoutform_jsvalidation']		= 0;
+		$def['allow_invoice_unpublished_item']	= 0;
 
 		return $def;
 	}
@@ -12291,6 +12292,8 @@ class AECfetchfromDB
 
 	function lastUnclearedInvoiceIDbyUserID( $userid, $excludedusage=null )
 	{
+		global $aecConfig;
+
 		if ( empty( $excludedusage ) ) {
 			$excludedusage = array();
 		}
@@ -12302,26 +12305,32 @@ class AECfetchfromDB
 				. ' WHERE `userid` = \'' . (int) $userid . '\''
 				. ' AND `transaction_date` = \'0000-00-00 00:00:00\''
 				. ' AND `active` = \'1\''
+				. ' ORDER BY `id` DESC'
 				;
 		$database->setQuery( $query );
-		$invoice = $database->loadResult();
+		$invoice_list = $database->loadResultArray();
 
-		if ( empty( $invoice->id ) ) {
+		if ( empty( $invoice_list ) ) {
 			return false;
 		}
 
-		if ( strpos( $invoice->usage, '.' ) ) {
-			return $invoice->invoice_number;
-		} else {
-			if ( SubscriptionPlanHandler::PlanStatus( $invoice->usage ) ) {
+		foreach ( $invoice_list as $invoice ) {
+			if ( strpos( $invoice->usage, '.' ) ) {
 				return $invoice->invoice_number;
-			} else {
-				// Plan is not active anymore, try the next invoice.
-				$excludedusage[] = $invoice->usage;
+			} elseif ( !in_array( $invoice->usage, $excludedusage ) ) {
+				$status = SubscriptionPlanHandler::PlanStatus( $invoice->usage );
+				if ( $status || ( !$status && $aecConfig->cfg['allow_invoice_unpublished_item'] ) ) {
+					return $invoice->invoice_number;
+				} else {
+					// Plan is not active anymore, try the next invoice.
+					$excludedusage[] = $invoice->usage;
 
-				return AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
+					return AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
+				}
 			}
 		}
+
+		return false;
 	}
 
 	function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )

@@ -2438,6 +2438,7 @@ function editSettings( $option )
 	$params['ssl_verifyhost']				= array( 'inputC', '' );
 	$params['ssl_cainfo']					= array( 'inputC', '' );
 	$params['ssl_capath']					= array( 'inputC', '' );
+	$params['allow_invoice_unpublished_item']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_UNINSTALL );
 	$params['delete_tables']				= array( 'list_yesno', 0 );

@@ -54,8 +54,8 @@ if ( !empty( $task ) ) {
 			$usage = aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$group = aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 
-			$invoicefact = new InvoiceFactory();
-			$invoicefact->create( $option, $intro, $usage, $group );
+			$iFactory = new InvoiceFactory();
+			$iFactory->create( $option, $intro, $usage, $group );
 			break;
 
 		// Catch hybrid CB registration
@@ -90,8 +90,8 @@ if ( !empty( $task ) ) {
 			$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-			$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
-			$invoicefact->save( $option, $coupon );
+			$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
+			$iFactory->save( $option, $coupon );
 			break;
 
 		case 'addtocart':
@@ -105,9 +105,9 @@ if ( !empty( $task ) ) {
 			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
-				$invoicefact = new InvoiceFactory( $userid );
-				$invoicefact->addtoCart( $option, $usage );
-				$invoicefact->cart( $option );
+				$iFactory = new InvoiceFactory( $userid );
+				$iFactory->addtoCart( $option, $usage );
+				$iFactory->cart( $option );
 			}
 			break;
 
@@ -123,8 +123,8 @@ if ( !empty( $task ) ) {
 					$userid = $user->id;
 				}
 
-				$invoicefact = new InvoiceFactory( $userid );
-				$invoicefact->cart( $option );
+				$iFactory = new InvoiceFactory( $userid );
+				$iFactory->cart( $option );
 			}
 			break;
 
@@ -138,9 +138,9 @@ if ( !empty( $task ) ) {
 			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
-				$invoicefact = new InvoiceFactory( $userid );
-				$invoicefact->updateCart( $option, $_POST );
-				$invoicefact->cart( $option );
+				$iFactory = new InvoiceFactory( $userid );
+				$iFactory->updateCart( $option, $_POST );
+				$iFactory->cart( $option );
 			}
 			break;
 
@@ -154,11 +154,11 @@ if ( !empty( $task ) ) {
 			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
-				$invoicefact = new InvoiceFactory( $userid );
-				$invoicefact->clearCart( $option );
+				$iFactory = new InvoiceFactory( $userid );
+				$iFactory->clearCart( $option );
 
-				$invoicefact = new InvoiceFactory( $userid );
-				$invoicefact->cart( $option );
+				$iFactory = new InvoiceFactory( $userid );
+				$iFactory->cart( $option );
 			}
 			break;
 
@@ -172,11 +172,11 @@ if ( !empty( $task ) ) {
 			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
-				$invoicefact = new InvoiceFactory( $userid );
-				$invoicefact->clearCartItem( $option, $item );
+				$iFactory = new InvoiceFactory( $userid );
+				$iFactory->clearCartItem( $option, $item );
 
-				$invoicefact = new InvoiceFactory( $userid );
-				$invoicefact->cart( $option );
+				$iFactory = new InvoiceFactory( $userid );
+				$iFactory->cart( $option );
 			}
 			break;
 
@@ -191,8 +191,8 @@ if ( !empty( $task ) ) {
 			if ( !$user->id ) {
 				notAllowed( $option );
 			} else {
-				$invoicefact = new InvoiceFactory( $userid );
-				$invoicefact->confirmcart( $option, $coupon );
+				$iFactory = new InvoiceFactory( $userid );
+				$iFactory->confirmcart( $option, $coupon );
 			}
 			break;
 
@@ -217,16 +217,16 @@ if ( !empty( $task ) ) {
 				$usage = aecGetParam( 'u', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			}
 
-			$invoicefact = new InvoiceFactory();
+			$iFactory = new InvoiceFactory();
 
 			if ( !empty( $usage ) ) {
 				$database = &JFactory::getDBO();
 
-				$invoicefact->plan = new SubscriptionPlan( $database );
-				$invoicefact->plan->load( $usage );
+				$iFactory->plan = new SubscriptionPlan( $database );
+				$iFactory->plan->load( $usage );
 			}
 
-			$invoicefact->thanks( $option, $renew, $free );
+			$iFactory->thanks( $option, $renew, $free );
 			break;
 
 		case 'cancel':
@@ -254,8 +254,8 @@ if ( !empty( $task ) ) {
 			$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
 			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'int' ) );
 
-			$invoicefact = new InvoiceFactory( $userid );
-			$invoicefact->create( $option, $intro, $usage );
+			$iFactory = new InvoiceFactory( $userid );
+			$iFactory->create( $option, $intro, $usage );
 			break;
 
 		case 'expired':
@@ -604,8 +604,8 @@ function subscribe( $option )
 			}
 		}
 
-		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
-		$invoicefact->confirm( $option );
+		$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
+		$iFactory->confirm( $option );
 	} else {
 		if ( $user->id ) {
 			$userid			= $user->id;
@@ -632,8 +632,8 @@ function subscribe( $option )
 			}
 		}
 
-		$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor, null, $passthrough );
-		$invoicefact->create( $option, $intro, $usage, $group, $processor, 0 );
+		$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor, null, $passthrough );
+		$iFactory->create( $option, $intro, $usage, $group, $processor, 0 );
 	}
 }
 
@@ -717,8 +717,8 @@ function confirmSubscription( $option )
 		}
 	} else {
 		if ( !empty( $usage ) ) {
-			$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor );
-			$invoicefact->confirm( $option );
+			$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
+			$iFactory->confirm( $option );
 		} else {
 			subscribe( $option );
 		}
@@ -1029,9 +1029,9 @@ function internalCheckout( $option, $invoice_number, $userid )
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
-		$invoicefact = new InvoiceFactory( $userid );
-		$invoicefact->touchInvoice( $option, $invoice_number );
-		$invoicefact->internalcheckout( $option );
+		$iFactory = new InvoiceFactory( $userid );
+		$iFactory->touchInvoice( $option, $invoice_number );
+		$iFactory->internalcheckout( $option );
 	} else {
 		aecNotAuth();
 		return;
@@ -1063,6 +1063,8 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
+		global $aecConfig;
+
 		if ( !isset( $_POST['invoice'] ) ) {
 			$_POST['option']	= $option;
 			$_POST['task']		= 'repeatPayment';
@@ -1070,18 +1072,24 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 			$_POST['userid']	= $userid;
 		}
 
-		$invoicefact = new InvoiceFactory( $userid );
-		$invoicefact->touchInvoice( $option, $invoice_number );
-		$invoicefact->checkout( $option, !$first );
+		$iFactory = new InvoiceFactory( $userid );
+		$iFactory->touchInvoice( $option, $invoice_number );
+
+		$status = SubscriptionPlanHandler::PlanStatus( $iFactory->invoice->usage );
+		if ( $status || ( !$status && $aecConfig->cfg['allow_invoice_unpublished_item'] ) ) {
+			$iFactory->checkout( $option, !$first );
+		} else {
+			aecNotAuth();
+		}
 	} elseif ( $cartid ) {
-		$invoicefact = new InvoiceFactory( $userid );
+		$iFactory = new InvoiceFactory( $userid );
 
-		$invoicefact->usage = $invoice_number;
+		$iFactory->usage = $invoice_number;
 
-		$invoicefact->loadMetaUser();
+		$iFactory->loadMetaUser();
 
-		$invoicefact->puffer( $option );
-		$invoicefact->checkout( $option, !$first );
+		$iFactory->puffer( $option );
+		$iFactory->checkout( $option, !$first );
 
 		return;
 	} else {
@@ -1163,8 +1171,8 @@ function planaction( $option, $action, $subscr )
 	if ( !empty( $user->id ) ) {
 		$userid = $user->id;
 
-		$invoicefact = new InvoiceFactory( $userid );
-		$invoicefact->planprocessoraction( $action, $subscr );
+		$iFactory = new InvoiceFactory( $userid );
+		$iFactory->planprocessoraction( $action, $subscr );
 
 		subscriptionDetails( $option, 'invoices' );
 	} else {
@@ -1180,8 +1188,8 @@ function invoiceAction( $option, $action, $invoice )
 	if ( empty( $user->id ) ) {
 		return aecNotAuth();
 	} else {
-		$invoicefact = new InvoiceFactory( $user->id );
-		$invoicefact->invoiceprocessoraction( $action, $invoice );
+		$iFactory = new InvoiceFactory( $user->id );
+		$iFactory->invoiceprocessoraction( $action, $invoice );
 
 		subscriptionDetails( $option, 'invoices' );
 	}
@@ -1194,8 +1202,8 @@ function InvoicePrintout( $option, $invoice )
 	if ( empty( $user->id ) ) {
 		return aecNotAuth();
 	} else {
-		$invoicefact = new InvoiceFactory( $user->id );
-		$invoicefact->invoiceprint( $option, $invoice );
+		$iFactory = new InvoiceFactory( $user->id );
+		$iFactory->invoiceprint( $option, $invoice );
 	}
 }
 
@@ -1265,8 +1273,8 @@ function InvoiceRemoveGiftConfirm( $option )
 		$objinvoice->storeload();
 	}
 
-	$invoicefact = new InvoiceFactory( $userid, $usage, $group, $processor, $invoice );
-	$invoicefact->confirm( $option, $_POST );
+	$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor, $invoice );
+	$iFactory->confirm( $option, $_POST );
 }
 
 function InvoiceRemoveGiftCart( $option )
@@ -1283,8 +1291,8 @@ function InvoiceRemoveGiftCart( $option )
 		$objinvoice->storeload();
 	}
 
-	$invoicefact = new InvoiceFactory( $userid );
-	$invoicefact->cart( $option );
+	$iFactory = new InvoiceFactory( $userid );
+	$iFactory->cart( $option );
 }
 
 function InvoiceAddCoupon( $option )
@@ -1498,8 +1506,8 @@ function processNotification( $option, $processor )
 
 		return;
 	} else {
-		$invoiceFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
-		$invoiceFactory->processorResponse( $option, $response );
+		$iFactoryory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
+		$iFactoryory->processorResponse( $option, $response );
 	}
 }
 

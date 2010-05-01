@@ -1048,6 +1048,9 @@ define( '_CFG_GENERAL_COUNTRIES_TOP_DESC', 'This will sort the selected countrie
 define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_NAME', 'Additional Email Recipients');
 define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_DESC', 'If you want AEC to send System Alerts to additional recipients, you can enter them here - you can add more than one by separating them by comma');
 
+define( '_CFG_GENERAL_ALLOW_INVOICE_UNPUBLISHED_ITEM_NAME', 'Allow Checkout of unpublished Items');
+define( '_CFG_GENERAL_ALLOW_INVOICE_UNPUBLISHED_ITEM_DESC', 'When a user creates an invoice with an item and keeps that invoice unpaid while the item is unpublished, the default behavior is to deny access to the item if the user tries to do a late checkout. If you want to, you can explicitly allow the opposite with this setting.');
+
 // Global Authentication Settins
 define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');
 define( '_CFG_TAB_AUTHENTICATION_SUBTITLE', 'Authentication Plugins');
