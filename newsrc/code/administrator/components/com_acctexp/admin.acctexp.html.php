@@ -32,59 +32,6 @@ class HTML_myCommon
 		<?php
 	}
 
-	/**
-	* Generates an HTML radio list formatted as a table
-	* @param array An array of objects
-	* @param string The value of the HTML name attribute
-	* @param string Additional HTML attributes for the <select> tag
-	* @param mixed The key that is selected
-	* @param string The name of the object variable for the option value
-	* @param string The name of the object variable for the option text
-	* @returns string HTML for the select list
-	*/
-	function radioListTable( &$arr, $tag_name, $tag_attribs, $selected=null, $key='value', $text='text' )
-	{
-		reset( $arr );
-		$html = '<table>';
-		$flop = 1;
-		for( $i=0, $n=count( $arr ); $i < $n; $i++ ) {
-			$k = $arr[$i]->$key;
-			$t = $arr[$i]->$text;
-			$id = @$arr[$i]->id;
-
-			$extra = '';
-			$extra .= $id ? ' id="' . $arr[$i]->id . '"' : '';
-			if ( is_array( $selected ) ) {
-				foreach ( $selected as $obj ) {
-					$k2 = $obj->$key;
-					if ($k == $k2) {
-					$extra .= ' selected="selected"';
-					break;
-					}
-				}
-			} else {
-				$extra .= ( $k == $selected ? ' checked="checked"' : '');
-			}
-			if ( $flop ) {
-				$html .= "\n\t" . '<tr><td height="50" valign="center">' . "\n"
-				. '<input type="radio" name="' . $tag_name . '" value="' . $k . '"'
-				. $extra . $tag_attribs . ' />' . $t . '</td>';
-				if ( ( $i + 1 ) == $n ) {
-					// Last interaction, odd number of itens, we have to tr
-					$html .= '<td></td></tr>' . "\n";
-				}
-				$flop = 0;
-				} else {
-					$html .= "\n\t" . '<td height="50" valign="center">'
-					. '<input type="radio" name="' . $tag_name . '" value="' . $k . '"'
-					. $extra . $tag_attribs . ' />' . $t . '</td></tr>' . "\n";
-					$flop = 1;
-				}
-		}
-		$html .= '</table>' . "\n";
-		return $html;
-	}
-
 	function Valanx()
 	{
 		?>
@@ -96,7 +43,7 @@ class HTML_myCommon
 				</td>
 				<td align="center">
 					<div align="center" class="smallgrey">
-						<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?><br />
+						<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION ?>, Revision <?php echo _AEC_REVISION ?><br />
 					</div>
 					<div align="center">
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
@@ -1002,7 +949,7 @@ class HTML_AcctExp
 					<br />
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
-					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
+					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?>, Revision <?php echo _AEC_REVISION ?></p>
 						<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 						<div style="margin: 0 auto;text-align:center;">
 							<a href="http://www.valanx.org"> <img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx" /></a>
