@@ -7928,20 +7928,20 @@ class InvoiceFactory
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
 
-		if ( is_array( $usage ) ) {
-			foreach ( $usage as $us ) {
-				$this->cartobject->action( 'addItem', $us );
-
-				$usageid = $us;
-			}
-		} else {
-			$this->cartobject->action( 'addItem', $usage );
-
-			$usageid = $usage;
+		if ( !is_array( $usage ) ) {
+			$id = $usage;
+			$usage = array( $id );
 		}
 
-		$plan = new SubscriptionPlan( $database );
-		$plan->load( $usageid );
+		$redirect = "";
+		foreach ( $usage as $us ) {
+			$this->cartobject->action( 'addItem', $us );
+
+			$plan = new SubscriptionPlan( $database );
+			$plan->load( $us );
+
+			$usageid = $us;
+		}
 
 		if ( !empty( $plan->params['addtocart_redirect'] ) ) {
 			return aecRedirect( $plan->params['addtocart_redirect'] );

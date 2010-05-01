@@ -1185,6 +1185,15 @@ define( '_PAYPLAN_PARAMS_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL sh
 define( '_PAYPLAN_PARAMS_HIDE_DURATION_CHECKOUT_NAME', 'Hide Duration');
 define( '_PAYPLAN_PARAMS_HIDE_DURATION_CHECKOUT_DESC', 'Switch this to Yes to hide the automatic display of the plan duration on checkout.');
 
+define( '_PAYPLAN_PARAMS_CART_BEHAVIOR_NAME', 'Cart Behavior');
+define( '_PAYPLAN_PARAMS_CART_BEHAVIOR_DESC', 'Select the Shopping Cart Behavior. You can let the system decide what to do ("Inherit"), force the system into creating a shopping cart ("Force Cart") - even if that is disabled (the user must still be logged in, though), or you can set it to always do a direct checkout ("Force Direct Checkout") and it will not create a shopping cart even though that might be the system setting.');
+define( '_PAYPLAN_PARAMS_ADDTOCART_REDIRECT_NAME', 'Redirect on Add to Cart');
+define( '_PAYPLAN_PARAMS_ADDTOCART_REDIRECT_DESC', 'Redirect to a fixed URL (instead of to the cart or plans page) when the user places the item into the shopping cart.');
+
+define( '_PAYPLAN_CARTMODE_INHERIT', 'Inherit');
+define( '_PAYPLAN_CARTMODE_FORCE_CART', 'Force Cart');
+define( '_PAYPLAN_CARTMODE_FORCE_DIRECT', 'Force Direct Checkout');
+
 // Payplan Relations
 
 define( '_PAYPLAN_RELATIONS_TITLE', 'Relations');

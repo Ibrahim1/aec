@@ -1183,6 +1183,10 @@ define( '_PAYPLAN_PARAMS_CART_BEHAVIOR_DESC', 'Select the Shopping Cart Behavior
 define( '_PAYPLAN_PARAMS_ADDTOCART_REDIRECT_NAME', 'Redirect on Add to Cart');
 define( '_PAYPLAN_PARAMS_ADDTOCART_REDIRECT_DESC', 'Redirect to a fixed URL (instead of to the cart or plans page) when the user places the item into the shopping cart.');
 
+define( '_PAYPLAN_CARTMODE_INHERIT', 'Inherit');
+define( '_PAYPLAN_CARTMODE_FORCE_CART', 'Force Cart');
+define( '_PAYPLAN_CARTMODE_FORCE_DIRECT', 'Force Direct Checkout');
+
 // Payplan Relations
 
 define( '_PAYPLAN_RELATIONS_TITLE', 'Relations');

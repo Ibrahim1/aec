@@ -3648,9 +3648,9 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	// make the select list for first trial period units
-	$cartmode[] = mosHTML::makeOption( '0', "Inherit" );
-	$cartmode[] = mosHTML::makeOption( '1', "Force Cart" );
-	$cartmode[] = mosHTML::makeOption( '2', "Force Direct Checkout" );
+	$cartmode[] = mosHTML::makeOption( '0', _PAYPLAN_CARTMODE_INHERIT );
+	$cartmode[] = mosHTML::makeOption( '1', _PAYPLAN_CARTMODE_FORCE_CART );
+	$cartmode[] = mosHTML::makeOption( '2', _PAYPLAN_CARTMODE_FORCE_DIRECT );
 
 	$lists['cart_behavior'] = mosHTML::selectList( $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
 
