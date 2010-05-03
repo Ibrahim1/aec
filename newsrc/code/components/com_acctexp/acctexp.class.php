@@ -6918,7 +6918,8 @@ class SubscriptionPlan extends serialParamDBTable
 						'fallback', 'fallback_req_parent', 'similarplans', 'equalplans', 'make_active',
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
 						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
-						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout'
+						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout', 'addtocart_redirect',
+						'cart_behavior'
 						);
 
 		$params = array();
@@ -8385,7 +8386,11 @@ class InvoiceFactory
 		}
 
 		foreach ( $plans as $pid => $plan ) {
-		if ( $this->userid && ( $aecConfig->cfg['enable_shoppingcart'] || !empty( $plan['plan']->params['force_cart'] ) ) ) {
+			if ( !isset( $plan['plan']->params['cart_behavior'] ) ) {
+				$plan['plan']->params['cart_behavior'] = 0;
+			}
+
+			if ( $this->userid && ( $aecConfig->cfg['enable_shoppingcart'] || ( $plan['plan']->params['cart_behavior'] == 1 ) ) && ( $plan['plan']->params['cart_behavior'] != 2 ) ) {
 				// We have a shopping cart situation, care about processors later
 
 				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
