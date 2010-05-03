@@ -448,6 +448,13 @@ background-color: #eaa;
 padding: 12px;
 }
 
+.aec_backend_page_heading {
+color: #586c79;
+height: 70px;
+padding-left: 70px;
+font-size: 24px;
+}
+
 div.aec_processor_experimentalnote h1 {
 color: #000;
 }

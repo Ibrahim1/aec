@@ -107,6 +107,7 @@ define( '_AEC_USER_NO_INVOICES',				'No invoices till yet' );
 define( '_AEC_USER_INVOICE_FACTORY',			'Invoice Factory' );
 define( '_AEC_USER_ALL_SUBSCRIPTIONS',			'All Subscriptions by this User' );
 define( '_AEC_USER_ALL_SUBSCRIPTIONS_NOPE',	'This is the only subscription this user currently holds.' );
+define( '_AEC_USER_ALL_SUBSCRIPTIONS_NONE',	'This is user does not have any subscription entries yet.' );
 define( '_AEC_USER_SUBSCRIPTIONS_ID',			'ID' );
 define( '_AEC_USER_SUBSCRIPTIONS_STATUS',		'Status' );
 define( '_AEC_USER_SUBSCRIPTIONS_PROCESSOR',	'Processor' );

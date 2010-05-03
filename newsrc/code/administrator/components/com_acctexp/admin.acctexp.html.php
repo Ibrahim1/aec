@@ -401,7 +401,7 @@ class HTML_AcctExp
 
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_edit.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_edit.png) no-repeat left;">
 					<?php echo _AEC_HEAD_SUBCRIBER; ?>:
 					&nbsp;
 					<small><?php echo !empty( $metaUser->userid ) ? $metaUser->cmsUser->username . ' (' . _AEC_CMN_ID . ': ' . $metaUser->userid . ')' : _AEC_CMN_NEW; ?></small>
@@ -619,8 +619,12 @@ class HTML_AcctExp
 											<?php
 										} ?>
 									</table>
-								<?php } else { ?>
+								<?php } elseif ( $metaUser->hasSubscription ) { ?>
 									<p><?php echo _AEC_USER_ALL_SUBSCRIPTIONS_NOPE;?></p>
+								<?php } else { ?>
+									<div class="usernote" style="width:200px;">
+										<p><?php echo _AEC_USER_ALL_SUBSCRIPTIONS_NONE;?></p>
+									</div>
 								<?php } ?>
 						</div>
 					</td>
@@ -687,7 +691,7 @@ class HTML_AcctExp
 											}
 										} else {
 											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
-											. _AEC_USER_NO_INVOICES
+											. _AEC_USER_NO_COUPONS
 											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
 										} ?>
 								</table>
@@ -1042,7 +1046,7 @@ class HTML_AcctExp
 		</form>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_hacks.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_hacks.png) no-repeat left;">
 				<?php echo _AEC_HEAD_HACKS; ?>
 				</th>
 			</tr>
@@ -1149,7 +1153,7 @@ class HTML_AcctExp
 		</form>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_help.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_help.png) no-repeat left;">
 				<?php echo _AEC_CMN_HELP; ?>
 				</th>
 			</tr>
@@ -1233,7 +1237,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
-				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
 					<?php echo _AEC_HEAD_SETTINGS; ?>
 				</th>
 			</tr>
@@ -1293,7 +1297,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
 						<?php echo _PROCESSORS_TITLE; ?>
 					</th>
 				</tr>
@@ -1362,7 +1366,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
-				<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
 					<?php echo _AEC_HEAD_SETTINGS . ': ' . ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ); ?>
 				</th>
 			</tr>
@@ -1421,7 +1425,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading" cellpadding="2" cellspacing="2">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo $action[1]; ?></th>
+					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left;"><?php echo $action[1]; ?></th>
 					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
 					<td style="text-align:center;">
 						<?php echo _PLAN_FILTER . '<br />' . $lists['filterplanid'] . _ORDER_BY . '<br />' . $lists['orderNav']; ?>
@@ -1448,10 +1452,17 @@ class HTML_AcctExp
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _USERLOGIN; ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo _AEC_CMN_STATUS; ?></th>
 					<th width="15%" align="left" nowrap="nowrap"><?php echo _SUBSCR_DATE; ?></th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo _LASTPAY_DATE; ?></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo _METHOD; ?></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo _USERPLAN; ?></th>
-					<th width="27%" align="left" nowrap="nowrap"><?php echo _EXPIRATION; ?></th>
+					<?php if ( $action[0] != 'manual' ) { ?>
+						<th width="15%" align="left" nowrap="nowrap"><?php echo _LASTPAY_DATE; ?></th>
+						<th width="10%" align="left" nowrap="nowrap"><?php echo _METHOD; ?></th>
+						<th width="10%" align="left" nowrap="nowrap"><?php echo _USERPLAN; ?></th>
+						<th width="27%" align="left" nowrap="nowrap"><?php echo _EXPIRATION; ?></th>
+					<?php } else { ?>
+						<th width="15%" align="left" nowrap="nowrap"></th>
+						<th width="10%" align="left" nowrap="nowrap"></th>
+						<th width="10%" align="left" nowrap="nowrap"></th>
+						<th width="27%" align="left" nowrap="nowrap"></th>
+					<?php } ?>
 				</tr></thead>
 				<?php
 				$k = 0;
@@ -1481,10 +1492,17 @@ class HTML_AcctExp
 							<td width="10%" align="left"><?php echo $row->username; ?></td>
 							<td width="10%" align="left"><?php echo $row->status; ?></td>
 							<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
-							<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
-							<td width="10%" align="left"><?php echo $row->type; ?></td>
-							<td width="10%" align="left"><?php echo $row->plan_name; ?> </td>
-							<td width="27%" align="left"><?php echo $row->lifetime ? _AEC_CMN_LIFETIME : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
+							<?php if ( $action[0] != 'manual' ) { ?>
+								<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
+								<td width="10%" align="left"><?php echo $row->type; ?></td>
+								<td width="10%" align="left"><?php echo $row->plan_name; ?></td>
+								<td width="27%" align="left"><?php echo $row->lifetime ? _AEC_CMN_LIFETIME : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
+							<?php } else { ?>
+								<td width="15%" align="left"></td>
+								<td width="10%" align="left"></td>
+								<td width="10%" align="left"></td>
+								<td width="27%" align="left"></td>
+							<?php } ?>
 						</tr>
 					<?php
 					$k = 1 - $k;
@@ -1517,7 +1535,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _MI_TITLE; ?></th>
+					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_microintegrations.png) no-repeat left;"><?php echo _MI_TITLE; ?></th>
 					<td style="text-align:center;">
 						<?php echo _PLAN_FILTER; ?>
 						&nbsp;
@@ -1632,7 +1650,7 @@ class HTML_AcctExp
 		</script>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_microintegrations.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_microintegrations.png) no-repeat left;">
 					<?php echo _AEC_HEAD_MICRO_INTEGRATION; ?>:&nbsp;
 					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
 	        	</th>
@@ -1722,7 +1740,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;"><?php echo _PAYPLANS_TITLE; ?></th>
+					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_plans.png) no-repeat left;"><?php echo _PAYPLANS_TITLE; ?></th>
 					<td nowrap="nowrap">
 						<?php echo $lists['filter_group'];?>
 						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;" />
@@ -1863,7 +1881,7 @@ class HTML_AcctExp
 		</script>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_plans.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_plans.png) no-repeat left;">
 					<?php echo _AEC_HEAD_PLAN_INFO; ?>:
 					&nbsp;
 					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
@@ -2134,7 +2152,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_itemgroups.png) no-repeat left;">
 						<?php echo _ITEMGROUPS_TITLE; ?>
 					</th>
 				</tr>
@@ -2253,7 +2271,7 @@ class HTML_AcctExp
 
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_itemgroups.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_itemgroups.png) no-repeat left;">
 					<?php echo _AEC_HEAD_ITEMGROUP_INFO; ?>:
 					&nbsp;
 					<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
@@ -2396,7 +2414,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left;">
 						<?php echo constant( '_COUPON_TITLE' . ( $type ? '_STATIC' : '' ) ); ?>
 					</th>
 				</tr>
@@ -2479,7 +2497,7 @@ class HTML_AcctExp
 		?>
 		<table class="adminheading">
 			<tr>
-				<th width="100%" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;">
+				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left;">
 				<?php echo _AEC_COUPON; ?>:&nbsp;<small><?php echo $row->id ? $row->name : _AEC_CMN_NEW; ?></small>
 	        	</th>
 			</tr>
@@ -2638,7 +2656,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_invoices.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_invoices.png) no-repeat left;" rowspan="2" nowrap="nowrap">
 			<?php echo _INVOICE_TITLE; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
@@ -2715,7 +2733,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_history.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_history.png) no-repeat left;" rowspan="2" nowrap="nowrap">
 			<?php echo _HISTORY_TITLE2; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
@@ -2781,7 +2799,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_eventlog.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_eventlog.png) no-repeat left;" rowspan="2" nowrap="nowrap">
 				<?php echo _AEC_HEAD_LOG; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
@@ -2848,7 +2866,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">
 				<?php echo _AEC_READOUT; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
@@ -3092,7 +3110,7 @@ class HTML_AcctExp
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="sectionname" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left; color: #586c79; height: 70px; padding-left: 70px;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">
 				<?php echo _AEC_HEAD_EXPORT; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
