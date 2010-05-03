@@ -139,7 +139,7 @@ define( '_AEC_HEAD_PENDING_SUBS',				'Pending Subscriber' );
 define( '_AEC_HEAD_CANCELLED_SUBS',				'Cancelled Subscriber' );
 define( '_AEC_HEAD_HOLD_SUBS',					'Subscriber on Hold' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
-define( '_AEC_HEAD_MANUAL_SUBS',				'Manual Subscriber' );
+define( '_AEC_HEAD_MANUAL_SUBS',				'Non Subscriber' );
 define( '_AEC_HEAD_SUBCRIBER',					'Subscriber' );
 
 // hacks (special)
@@ -305,7 +305,7 @@ define( '_AEC_CENTR_HACKS',						'Hacks' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
 define( '_AEC_CENTR_HELP',						'Help' );
 define( '_AEC_CENTR_LOG',						'EventLog' );
-define( '_AEC_CENTR_MANUAL',					'Manual' );
+define( '_AEC_CENTR_MANUAL',					'Non Members' );
 define( '_AEC_CENTR_EXPORT',						'Export' );
 define( '_AEC_CENTR_IMPORT',						'Import' );
 define( '_AEC_CENTR_GROUPS',					'Groups' );
@@ -339,7 +339,7 @@ define( '_AEC_SEL_EXPIRED',						'Expired' );
 define( '_AEC_SEL_CLOSED',						'Closed' );
 define( '_AEC_SEL_CANCELLED',					'Cancelled' );
 define( '_AEC_SEL_HOLD',						'Hold' );
-define( '_AEC_SEL_NOT_CONFIGURED',				'Not Configured' );
+define( '_AEC_SEL_NOT_CONFIGURED',				'Not Subscribed' );
 
 // footer
 define( '_AEC_FOOT_TX_CHOOSING',				'Thank you for choosing the Account Expiration Control Component!' );

@@ -139,7 +139,7 @@ define( '_AEC_HEAD_PENDING_SUBS',				'Subscritor Pendente' );
 define( '_AEC_HEAD_CANCELLED_SUBS',				'Subscritor Cancelado' );
 define( '_AEC_HEAD_HOLD_SUBS',					'Subscritor em Espera' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Subscritor Fechado' );
-define( '_AEC_HEAD_MANUAL_SUBS',				'Subscritor Manual' );
+define( '_AEC_HEAD_MANUAL_SUBS',				'Non Subscritor' );
 define( '_AEC_HEAD_SUBCRIBER',					'Subscritor' );
 
 // hacks (special)
