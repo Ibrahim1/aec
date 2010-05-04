@@ -1709,18 +1709,6 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		$filter_planid	= $planid;
 	}
 
-	if ( !empty( $orderby ) ) {
-		$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-							'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
-							'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-							'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC', 'type ASC', 'type DESC'
-							);
-
-		if ( !in_array( $orderby, $forder ) ) {
-			$orderby = 'name ASC';
-		}
-	}
-
 	if ( !empty( $_REQUEST['groups'] ) ) {
 		if ( is_array($_REQUEST['groups'] ) ) {
 			$groups 	= $_REQUEST['groups'];
@@ -1733,6 +1721,24 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		} else {
 			$groups		= array();
 			$groups[]	= $set_group;
+		}
+	}
+
+	if ( !empty( $orderby ) ) {
+		if ( $set_group == "manual" ) {
+			$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
+								'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+								);
+		} else {
+			$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+								'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
+								'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+								'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC', 'type ASC', 'type DESC'
+								);
+		}
+
+		if ( !in_array( $orderby, $forder ) ) {
+			$orderby = 'name ASC';
 		}
 	}
 
@@ -2054,8 +2060,11 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$database->query();
 
 	$sel = array();
-	$sel[] = mosHTML::makeOption( 'expiration ASC',		_EXP_ASC );
-	$sel[] = mosHTML::makeOption( 'expiration DESC',	_EXP_DESC );
+	if ( $set_group != "manual" ) {
+		$sel[] = mosHTML::makeOption( 'expiration ASC',		_EXP_ASC );
+		$sel[] = mosHTML::makeOption( 'expiration DESC',	_EXP_DESC );
+	}
+
 	$sel[] = mosHTML::makeOption( 'name ASC',			_NAME_ASC );
 	$sel[] = mosHTML::makeOption( 'name DESC',			_NAME_DESC );
 	$sel[] = mosHTML::makeOption( 'lastname ASC',		_LASTNAME_ASC );
@@ -2064,14 +2073,17 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$sel[] = mosHTML::makeOption( 'username DESC',		_LOGIN_DESC );
 	$sel[] = mosHTML::makeOption( 'signup_date ASC',	_SIGNUP_ASC );
 	$sel[] = mosHTML::makeOption( 'signup_date DESC',	_SIGNUP_DESC );
-	$sel[] = mosHTML::makeOption( 'lastpay_date ASC',	_LASTPAY_ASC );
-	$sel[] = mosHTML::makeOption( 'lastpay_date DESC',	_LASTPAY_DESC );
-	$sel[] = mosHTML::makeOption( 'plan_name ASC',		_PLAN_ASC );
-	$sel[] = mosHTML::makeOption( 'plan_name DESC',		_PLAN_DESC );
-	$sel[] = mosHTML::makeOption( 'status ASC',			_STATUS_ASC );
-	$sel[] = mosHTML::makeOption( 'status DESC',		_STATUS_DESC );
-	$sel[] = mosHTML::makeOption( 'type ASC',			_TYPE_ASC );
-	$sel[] = mosHTML::makeOption( 'type DESC',			_TYPE_DESC );
+
+	if ( $set_group != "manual" ) {
+		$sel[] = mosHTML::makeOption( 'lastpay_date ASC',	_LASTPAY_ASC );
+		$sel[] = mosHTML::makeOption( 'lastpay_date DESC',	_LASTPAY_DESC );
+		$sel[] = mosHTML::makeOption( 'plan_name ASC',		_PLAN_ASC );
+		$sel[] = mosHTML::makeOption( 'plan_name DESC',		_PLAN_DESC );
+		$sel[] = mosHTML::makeOption( 'status ASC',			_STATUS_ASC );
+		$sel[] = mosHTML::makeOption( 'status DESC',		_STATUS_DESC );
+		$sel[] = mosHTML::makeOption( 'type ASC',			_TYPE_ASC );
+		$sel[] = mosHTML::makeOption( 'type DESC',			_TYPE_DESC );
+	}
 
 	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby_subscr', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 

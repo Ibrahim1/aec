@@ -1428,14 +1428,19 @@ class HTML_AcctExp
 					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left;"><?php echo $action[1]; ?></th>
 					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
 					<td style="text-align:center;">
-						<?php echo _PLAN_FILTER . '<br />' . $lists['filterplanid'] . _ORDER_BY . '<br />' . $lists['orderNav']; ?>
+						<?php if ( $action[0] != 'manual' ) { ?>
+							<?php echo _PLAN_FILTER . '<br />' . $lists['filterplanid'] ?>
+						<?php } ?>
+						<?php echo _ORDER_BY . '<br />' . $lists['orderNav']; ?>
 						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo _AEC_CMN_APPLY; ?>" style="margin:2px;text-align:center;" />
 					</td>
 					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
 						<?php echo $lists['planid']; ?>
 						<br />
+						<?php if ( $action[0] != 'manual' ) { ?>
 						<?php echo $lists['set_expiration']; ?>
 						<br />
+						<?php } ?>
 						<?php echo _AEC_CMN_SEARCH; ?>
 						<br />
 						<input type="text" name="search" value="<?php echo $search; ?>" class="inputbox" onChange="document.adminForm.submit();" />
