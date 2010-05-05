@@ -49,6 +49,8 @@ define( '_CFG_PROCESSOR_DESC_DESC', 'Change la description du processeur qui est
 define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Description de l\'article');
 define( '_CFG_PROCESSOR_ITEM_NAME_DESC', 'Description de l\'article transmise au processeur.');
 define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',    'Abonnement &agrave; %s - Utilisateur: %s (%s)' );
+define( '_CFG_PROCESSOR_ITEM_NUMBER_NAME', 'Item Number');
+define( '_CFG_PROCESSOR_ITEM_NUMBER_DESC', 'The Item Number transmitted to the processor.');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Param&egrave;tres de personnalisation');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Param&egrave;tres de personnelisation qu\'AEC devra transmettre au Processeur de paiement au Checkout. S&eacute;par&eacute;s par un saut de ligne de la forme &quot;parameter_name=parameter_value&quot;. Le RewriteEngine travaille comme sp&eacute;cifi&eacute; ci-dessous.');
 define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_NAME', ' Paiement r&eacute;current');

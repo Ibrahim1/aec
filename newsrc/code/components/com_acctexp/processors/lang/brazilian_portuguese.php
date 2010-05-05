@@ -48,6 +48,8 @@ define( '_CFG_PROCESSOR_DESC_DESC', 'Altere a descrição deste gateway, a qual 
 define( '_CFG_PROCESSOR_ITEM_NAME_NAME', 'Descrição do Item');
 define( '_CFG_PROCESSOR_ITEM_NAME_DESC', 'A descrição do Item enviada ao gateway.');
 define( '_CFG_PROCESSOR_ITEM_NAME_DEFAULT',	'Assinatura em %s - Usuario: %s (%s)' );
+define( '_CFG_PROCESSOR_ITEM_NUMBER_NAME', 'Item Number');
+define( '_CFG_PROCESSOR_ITEM_NUMBER_DESC', 'The Item Number transmitted to the processor.');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_NAME', 'Parâmetros customizados');
 define( '_CFG_PROCESSOR_CUSTOMPARAMS_DESC', 'Custom Parameters that the AEC should transmit to the Payment Processor on Checkout. Separated by linebreaks in the form of "parameter_name=parameter_value". The RewriteEngine works as specified below.');
 define( '_CFG_PROCESSOR_PLAN_PARAMS_RECURRING_NAME', 'Recurring Payment');

@@ -42,6 +42,7 @@ class processor_paypal extends POSTprocessor
 		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_number']	= '[[user_id]]';
 		$settings['customparams']	= "";
 
 		// Customization Options
@@ -73,6 +74,7 @@ class processor_paypal extends POSTprocessor
 		$settings['no_shipping']			= array( 'list_yesno' );
 		$settings['altipnurl']				= array( 'inputC' );
 		$settings['item_name']				= array( 'inputE' );
+		$settings['item_number']			= array( 'inputE' );
 		$settings['customparams']			= array( 'inputD' );
 
 		// Customization Options
@@ -119,7 +121,7 @@ class processor_paypal extends POSTprocessor
 			$var['notify_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=paypalnotification' );
 		}
 
-		$var['item_number']		= $request->metaUser->userid;
+		$var['item_number']		= AECToolbox::rewriteEngineRQ( $this->settings['item_number'], $request );
 		$var['item_name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		$var['no_shipping']		= $this->settings['no_shipping'];
