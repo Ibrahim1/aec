@@ -89,8 +89,6 @@ class mi_phpbb3
 
 		$settings['set_group']				= array( 'list_yesno' );
 		$settings['group']					= array( 'list' );
-		$settings['apply_colour']			= array( 'list_yesno' );
-		$settings['group_colour']			= array( 'list' );
 		$settings['set_group_exp']			= array( 'list_yesno' );
 		$settings['group_exp']				= array( 'list' );
 		$settings['apply_colour_exp']		= array( 'list_yesno' );
@@ -294,6 +292,94 @@ class mi_phpbb3
 		}
 
 		return true;
+	}
+
+	function phpbbUserid( $db, $email )
+	{
+		$query = 'SELECT `user_id`'
+				. ' FROM ' . $this->settings['table_prefix'] . 'users'
+				. ' WHERE LOWER( `user_email` ) = \'' . $email . '\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function createUser( $db )
+	{
+
+	}
+
+	function updateUser( $db, $userid, $fields )
+	{
+
+	}
+
+	function getUserFields( $db )
+	{
+		$excluded = array(	"user_id",
+							"user_permissions", "user_perm_from", "user_ip", "user_regdate", "username_clean",
+							"user_password", "user_passchg", "user_pass_convert", "user_email", "user_email_hash",
+							"user_lastvisit", "user_lastmark", "user_lastpost_time", "user_lastpage", "user_last_confirm_key",
+							"user_last_search", "user_warnings", "user_last_warning", "user_login_attempts", "user_inactive_reason",
+							"user_inactive_time", "user_posts", "user_dateformat", "user_style", "user_new_privmsg",
+							"user_unread_privmsg", "user_last_privmsg", "user_message_rules", "user_full_folder", "user_emailtime",
+							"user_topic_show_days", "user_topic_sortby_type", "user_topic_sortby_dir", "user_post_show_days", "user_post_sortby_type",
+							"user_post_sortby_dir", "user_notify", "user_notify_pm", "user_notify_type", "user_allow_pm",
+							"user_allow_viewonline", "user_allow_viewemail", "user_allow_massemail", "user_options", "user_avatar",
+							"user_avatar_type", "user_avatar_width", "user_avatar_height", "user_sig", "user_sig_bbcode_uid",
+							"user_sig_bbcode_bitfield", "user_from", "user_icq", "user_aim", "user_yim",
+							"user_msnm", "user_jabber", "user_website", "user_occ", "user_interests",
+							"user_actkey", "user_newpasswd", "user_form_salt"
+							);
+
+		$query = 'SHOW COLUMNS FROM #__users';
+		$db->setQuery( $query );
+
+		$fields = $db->loadResultArray();
+
+		$return = array();
+		foreach ( $fields as $key ) {
+			if ( !in_array( $key, $excluded ) ) {
+				$return[] = $key;
+			}
+		}
+
+		return $return;
+	}
+
+	function userGroups( $db, $userid )
+	{
+		$query = 'SELECT `group_id`'
+				. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResultArray();
+	}
+
+	function assignGroup( $db, $userid, $groupid )
+	{
+		$query = 'INSERT INTO ' . $this->settings['table_prefix'] . 'user_group'
+				. ' (`user_id`, `group_id` )'
+				. ' VALUES ( \'' . $userid . '\', \'' . $groupid . '\' )'
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function removeGroup( $db, $userid, $groupid )
+	{
+		$query = 'DELETE'
+				. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				. ' AND `group_id` = \'' . $groupid . '\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
 	}
 
 	function getDB()
