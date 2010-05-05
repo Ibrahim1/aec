@@ -53,6 +53,8 @@ class processor_ideal_advanced extends XMLprocessor
 	{
 		$issuerlist = $this->getIssuerList();
 
+		require_once( dirname(__FILE__) . "/ideal_advanced/IssuerEntry.php" );
+
 		foreach ( $issuerlist as $IssuerEntry ) {
 			if ( is_a( $IssuerEntry, 'IssuerEntry' ) ) {
 				$options[]	= mosHTML::makeOption( $IssuerEntry->getIssuerID(), $IssuerEntry->getIssuerName() );
@@ -72,6 +74,8 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
+		global $aecprocessor;
+
 		$return = array();
 
 		$ideal = $this->loadConnector();
@@ -100,6 +104,8 @@ class processor_ideal_advanced extends XMLprocessor
 		$expirationPeriod = 'PT1H';
 
 		$merchantReturnURL = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=ideal_advancednotification") ;
+
+		$aecprocessor = $this;
 
 		// Opsturen van de request. De response staat in $response.
 		$iDEALresponse = $ideal->RequestTransaction( $issuerId, $purchaseId, $amount, $description, $entranceCode, $expirationPeriod, $merchantReturnURL );
@@ -192,7 +198,7 @@ class processor_ideal_advanced extends XMLprocessor
 				$this->storeload();
 			}
 		}
-var_dump($this->params[$type]);exit;
+
 		return $this->params[$type];
 	}
 

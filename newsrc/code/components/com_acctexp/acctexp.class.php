@@ -1487,6 +1487,7 @@ class metaUserDB extends serialParamDBTable
 
 		return true;
 	}
+
 	function is_renewing()
 	{
 		if ( isset( $this->plan_history->used_plans ) ) {
@@ -1495,6 +1496,7 @@ class metaUserDB extends serialParamDBTable
 			return false;
 		}
 	}
+
 	function getUsedPlans()
 	{
 		if ( isset( $this->plan_history->used_plans ) ) {
