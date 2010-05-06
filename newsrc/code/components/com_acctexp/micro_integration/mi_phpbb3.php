@@ -305,14 +305,33 @@ class mi_phpbb3
 		return $db->loadResult();
 	}
 
-	function createUser( $db )
+	function createUser( $db, $fields )
 	{
+		$query = 'INSERT INTO ' . $this->settings['table_prefix'] . 'users'
+				. ' (`' . implode( '`, `', array_values( $fields ) ) . '`)'
+				. ' VALUES ( \'' . implode( '\', \'', array_keys( $fields ) ) . '\' )'
+				;
+		$db->setQuery( $query );
 
+		return $db->loadResult();
 	}
 
 	function updateUser( $db, $userid, $fields )
 	{
+		$set = array();
+		foreach ( $fields as $key => $value ) {
+			if ( !empty( $value ) ) {
+				$set[] = '`' . $key . '` = \'' . $value . '\'';
+			}
+		}
+		
+		$query = 'UPDATE ' . $this->settings['table_prefix'] . 'users'
+				. ' SET ' . implode( ', ', $set )
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				;
+		$db->setQuery( $query );
 
+		return $db->loadResult();
 	}
 
 	function getUserFields( $db )
@@ -400,6 +419,276 @@ class mi_phpbb3
 
 		return $database;
 	}
+
+	function on_userchange_action( $request )
+	{
+		$database = &JFactory::getDBO();
+
+		$phpbb3pw = new phpbb3pw( $database );
+		$apwid = $phpbb3pw->getIDbyUserID( $request->row->id );
+
+		if ( $apwid ) {
+			$phpbb3pw->load( $apwid );
+		} else {
+			$phpbb3pw->load(0);
+			$phpbb3pw->userid = $request->row->id;
+		}
+
+		if ( isset( $request->post['password_clear'] ) ) {
+			$password = crypt( $request->post['password_clear'] );
+
+		} elseif ( !empty( $request->post['password'] ) ) {
+			$password = $request->post['password'];
+		} elseif ( !empty( $request->post['password2'] ) ) {
+			$password = $request->post['password2'];
+		} elseif ( !$apwid ) {
+			// No new password and no existing password - nothing to be done here
+			return;
+		}
+
+		$phpbb3pw->phpbb3pw = $phpbb3pw->phpbb_hash( $password );
+
+		$phpbb3pw->check();
+		$phpbb3pw->store();
+
+		return true;
+	}
+
+}
+
+class phpbb3pw extends JTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $userid 			= null;
+	/** @var string */
+	var $phpbb3pw			= null;
+
+	function phpbb3pw( &$db )
+	{
+		parent::__construct( '#__acctexp_mi_phpbb3pw', 'id', $db );
+	}
+
+	function getIDbyUserID( $userid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_mi_phpbb3pw'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
+// Code copied over from phpBB3:
+
+/**
+*
+* @version Version 0.1 / slightly modified for phpBB 3.0.x (using $H$ as hash type identifier)
+*
+* Portable PHP password hashing framework.
+*
+* Written by Solar Designer <solar at openwall.com> in 2004-2006 and placed in
+* the public domain.
+*
+* There's absolutely no warranty.
+*
+* The homepage URL for this framework is:
+*
+*	http://www.openwall.com/phpass/
+*
+* Please be sure to update the Version line if you edit this file in any way.
+* It is suggested that you leave the main version number intact, but indicate
+* your project name (after the slash) and add your own revision information.
+*
+* Please do not change the "private" password hashing method implemented in
+* here, thereby making your hashes incompatible.  However, if you must, please
+* change the hash type identifier (the "$P$") to something different.
+*
+* Obviously, since this code is in the public domain, the above are not
+* requirements (there can be none), but merely suggestions.
+*
+*
+* Hash the password
+*/
+function phpbb_hash($password)
+{
+	$itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+	$random_state = unique_id();
+	$random = '';
+	$count = 6;
+
+	if (($fh = @fopen('/dev/urandom', 'rb')))
+	{
+		$random = fread($fh, $count);
+		fclose($fh);
+	}
+
+	if (strlen($random) < $count)
+	{
+		$random = '';
+
+		for ($i = 0; $i < $count; $i += 16)
+		{
+			$random_state = md5(unique_id() . $random_state);
+			$random .= pack('H*', md5($random_state));
+		}
+		$random = substr($random, 0, $count);
+	}
+
+	$hash = phpbb3pw::_hash_crypt_private($password, phpbb3pw::_hash_gensalt_private($random, $itoa64), $itoa64);
+
+	if (strlen($hash) == 34)
+	{
+		return $hash;
+	}
+
+	return md5($password);
+}
+
+/**
+* Check for correct password
+*
+* @param string $password The password in plain text
+* @param string $hash The stored password hash
+*
+* @return bool Returns true if the password is correct, false if not.
+*/
+function phpbb_check_hash($password, $hash)
+{
+	$itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+	if (strlen($hash) == 34)
+	{
+		return (phpbb3pw::_hash_crypt_private($password, $hash, $itoa64) === $hash) ? true : false;
+	}
+
+	return (md5($password) === $hash) ? true : false;
+}
+
+/**
+* Generate salt for hash generation
+*/
+function _hash_gensalt_private($input, &$itoa64, $iteration_count_log2 = 6)
+{
+	if ($iteration_count_log2 < 4 || $iteration_count_log2 > 31)
+	{
+		$iteration_count_log2 = 8;
+	}
+
+	$output = '$H$';
+	$output .= $itoa64[min($iteration_count_log2 + ((PHP_VERSION >= 5) ? 5 : 3), 30)];
+	$output .= phpbb3pw::_hash_encode64($input, 6, $itoa64);
+
+	return $output;
+}
+
+/**
+* Encode hash
+*/
+function _hash_encode64($input, $count, &$itoa64)
+{
+	$output = '';
+	$i = 0;
+
+	do
+	{
+		$value = ord($input[$i++]);
+		$output .= $itoa64[$value & 0x3f];
+
+		if ($i < $count)
+		{
+			$value |= ord($input[$i]) << 8;
+		}
+
+		$output .= $itoa64[($value >> 6) & 0x3f];
+
+		if ($i++ >= $count)
+		{
+			break;
+		}
+
+		if ($i < $count)
+		{
+			$value |= ord($input[$i]) << 16;
+		}
+
+		$output .= $itoa64[($value >> 12) & 0x3f];
+
+		if ($i++ >= $count)
+		{
+			break;
+		}
+
+		$output .= $itoa64[($value >> 18) & 0x3f];
+	}
+	while ($i < $count);
+
+	return $output;
+}
+
+/**
+* The crypt function/replacement
+*/
+function _hash_crypt_private($password, $setting, &$itoa64)
+{
+	$output = '*';
+
+	// Check for correct hash
+	if (substr($setting, 0, 3) != '$H$')
+	{
+		return $output;
+	}
+
+	$count_log2 = strpos($itoa64, $setting[3]);
+
+	if ($count_log2 < 7 || $count_log2 > 30)
+	{
+		return $output;
+	}
+
+	$count = 1 << $count_log2;
+	$salt = substr($setting, 4, 8);
+
+	if (strlen($salt) != 8)
+	{
+		return $output;
+	}
+
+	/**
+	* We're kind of forced to use MD5 here since it's the only
+	* cryptographic primitive available in all versions of PHP
+	* currently in use.  To implement our own low-level crypto
+	* in PHP would result in much worse performance and
+	* consequently in lower iteration counts and hashes that are
+	* quicker to crack (by non-PHP code).
+	*/
+	if (PHP_VERSION >= 5)
+	{
+		$hash = md5($salt . $password, true);
+		do
+		{
+			$hash = md5($hash . $password, true);
+		}
+		while (--$count);
+	}
+	else
+	{
+		$hash = pack('H*', md5($salt . $password));
+		do
+		{
+			$hash = pack('H*', md5($hash . $password));
+		}
+		while (--$count);
+	}
+
+	$output = substr($setting, 0, 12);
+	$output .= phpbb3pw::_hash_encode64($hash, 16, $itoa64);
+
+	return $output;
+}
 
 }
 
