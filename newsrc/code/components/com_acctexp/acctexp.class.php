@@ -9314,6 +9314,12 @@ class InvoiceFactory
 	{
 		global $mainframe, $aecConfig, $mainframe;
 
+		if ( $this->userid ) {
+			$this->loadMetaUser();
+
+			$renew = $this->metaUser->is_renewing();
+		}
+
 		if ( isset( $this->plan ) ) {
 			if ( is_object( $this->plan ) ) {
 				if ( !empty( $this->plan->params['customthanks'] ) ) {
