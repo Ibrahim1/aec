@@ -4880,9 +4880,9 @@ class aecSettings
 		$this->lists[$name] = mosHTML::yesnoSelectList( $name, '', $value );
 
 		$arr = array(
-		mosHTML::makeOption( '0', _AEC_CMN_NO ),
-		mosHTML::makeOption( '1', _AEC_CMN_YES ),
-		mosHTML::makeOption( '1', _AEC_CMN_INHERIT ),
+			mosHTML::makeOption( '0', _AEC_CMN_NO ),
+			mosHTML::makeOption( '1', _AEC_CMN_YES ),
+			mosHTML::makeOption( '1', _AEC_CMN_INHERIT ),
 		);
 
 		$this->lists[$name] = mosHTML::selectList( $arr, $name, '', 'value', 'text', $value );

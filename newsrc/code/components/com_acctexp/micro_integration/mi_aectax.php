@@ -25,8 +25,22 @@ class mi_aectax
 	function Settings()
 	{
 		$settings = array();
-		$settings['locations']	= array( 'inputD' );
-		$settings['custominfo']	= array( 'inputD' );
+		$settings['custominfo']			= array( 'inputD' );
+		$settings['vat_no_request']		= array( 'list_yesno' );
+		$settings['locations_amount']	= array( 'inputB' );
+
+		if ( !empty( $this->settings['locations_amount'] ) ) {
+			for ( $i=0; $i<$this->settings['locations_amount']; $i++ ) {
+				$p = $i . '_';
+
+				$settings[$p.'id']			= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_ID_NAME, $i+1 ), _MI_MI_AECTAX_SET_ID_DESC );
+				$settings[$p.'text']		= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_TEXT_NAME, $i+1 ), _MI_MI_AECTAX_SET_TEXT_DESC );
+				$settings[$p.'percentage']	= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_PERCENTAGE_NAME, $i+1 ), _MI_MI_AECTAX_SET_PERCENTAGE_DESC );
+				$settings[$p.'mode']		= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_MODE_NAME, $i+1 ), _MI_MI_AECTAX_SET_MODE_DESC );
+				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_EXTRA_NAME, $i+1 ), _MI_MI_AECTAX_SET_EXTRA_DESC );
+				$settings[$p.'mi']			= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_MI_NAME, $i+1 ), _MI_MI_AECTAX_SET_MI_DESC );
+			}
+		}
 
 		return $settings;
 	}
@@ -66,6 +80,8 @@ class mi_aectax
 		} else {
 			return false;
 		}
+
+		$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
 
 		return $settings;
 	}
@@ -138,10 +154,6 @@ class mi_aectax
 			return true;
 		}
 
-		if ( empty( $location['percentage'] ) ) {
-			return true;
-		}
-
 		// Append Tax Data to content
 		$m = array_pop( $request->add );
 
@@ -149,7 +161,7 @@ class mi_aectax
 
 		$total = $m['terms']->terms[0]->renderTotal();
 
-		$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
+		$tax = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $location['percentage']/100 ) ) );
 
 		$newtotal = AECToolbox::correctAmount( $total - $tax );
 
@@ -177,6 +189,11 @@ class mi_aectax
 		$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
 
 		return true;
+	}
+
+	function addTax()
+	{
+
 	}
 
 	function action( $request )
@@ -226,6 +243,49 @@ class mi_aectax
 	}
 
 	function getLocationList()
+	{
+		$locations = array();
+
+		if ( !empty( $this->settings['locations_amount'] ) ) {
+			for ( $i=0; $this->settings['locations_amount']>$i; $i++ ) {
+				$location = explode( "|", $loc );
+
+				if ( empty( $location[3] ) ) {
+					$location[3] = null;
+				}
+
+				if ( empty( $location[4] ) ) {
+					$location[4] = null;
+				}
+
+				$locations[] = array( 'id' => $location[0], 'text' => $location[1], 'percentage' => $location[2], 'extra' => $location[3], 'mi' => $location[4] );
+			}
+		}
+
+		return $locations;
+	}
+
+	function upgradeSettings()
+	{
+		$llist = $this->oldLocationList();
+
+		$this->settings['locations_amount'] = count( $llist );
+
+		$i = 0;
+		foreach ( $llist as $location ) {
+			$p = $i . '_';
+
+			foreach ( $location as $key => $value ) {
+				$this->settings[$p.$key] = $value;
+			}
+
+			$i++;
+		}
+
+		return $this->storeload();
+	}
+
+	function oldLocationList()
 	{
 		$locations = array();
 
