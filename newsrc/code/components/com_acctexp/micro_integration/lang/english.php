@@ -1080,8 +1080,8 @@ define( '_MI_MI_JOMSOCIAL_EXPMARKER',			'(expiration)' );
 // Tax Helper
 define( '_AEC_MI_NAME_AECTAX',		'Tax Helper' );
 define( '_AEC_MI_DESC_AECTAX',		'Specify tax for this item - affects Confirmation&amp;Checkout screen, Item cost and Invoice printout' );
-define( '_MI_MI_AECTAX_LOCATIONS_NAME',		'Locations' );
-define( '_MI_MI_AECTAX_LOCATIONS_DESC',		'Enter a list of Tax Options. It should look like this:<br /><br />1|European Union|19|19% VAT<br />2|Rest of the World|0<br /><br />The syntax is ID|Display Name|Tax Percentage|Tax Description - always separate by newlines!' );
+define( '_MI_MI_VAT_NO_REQUEST_NAME',		'Request VAT Number' );
+define( '_MI_MI_VAT_NO_REQUEST_DESC',		'Select Yes to prompt the user for a VAT Number. What happens with the information can be decided per location - see below' );
 define( '_MI_MI_AECTAX_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_AECTAX_CUSTOMINFO_DESC',		'AEC normally displays the text "Please select your location:" on confirmation above the location selector. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_AECTAX_DEFAULT_NOTICE',		'Please select your location:' );

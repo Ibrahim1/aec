@@ -81,7 +81,9 @@ class mi_aectax
 			return false;
 		}
 
-		$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
+		if ( !empty( $this->settings['custominfo'] ) ) {
+			$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
+		}
 
 		return $settings;
 	}
@@ -102,46 +104,11 @@ class mi_aectax
 	{
 		$locations = $this->getLocationList();
 
-		$tt = 0;
 		foreach ( $locations as $location ) {
 			if ( $location['id'] == $request->params['location'] ) {
-				$tt = $location['percentage'];
+				$request = $this->addTax( $request, $location, true );
 			}
 		}
-
-		if ( empty( $tt ) ) {
-			return true;
-		}
-
-		// Append Tax Data to content
-		$m = array_pop( $request->add );
-
-		$x = $m;
-
-		$total = $m['terms']->terms[0]->renderTotal();
-
-		$tax = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $tt/100 ) ) );
-
-		$newtotal = AECToolbox::correctAmount( $total - $tax );
-
-		$m['terms']->terms[0]->setCost( $newtotal );
-		$m['cost'] = $newtotal;
-
-		$request->add[] = $m;
-
-		// Create tax
-		$terms = new mammonTerms();
-		$term = new mammonTerm();
-
-		$term->set( 'duration', array( 'none' => true ) );
-		$term->set( 'type', 'tax' );
-		$term->addCost( $tax );
-
-		$terms->addTerm( $term );
-
-		$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
-
-		$request->add[] = $x;
 
 		return true;
 	}
@@ -153,6 +120,8 @@ class mi_aectax
 		if ( empty( $location ) ) {
 			return true;
 		}
+
+		$request = $this->addTax( $request, $location, true );
 
 		// Append Tax Data to content
 		$m = array_pop( $request->add );
@@ -191,9 +160,43 @@ class mi_aectax
 		return true;
 	}
 
-	function addTax()
+	function addTax( $request, $location, $double=false )
 	{
+		// Append Tax Data to content
+		$m = array_pop( $request->add );
 
+		if ( $double ) {
+			$x = $m;
+		}
+
+		$total = $m['terms']->terms[0]->renderTotal();
+
+		$tax = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $location['percentage']/100 ) ) );
+
+		$newtotal = AECToolbox::correctAmount( $total - $tax );
+
+		$m['terms']->terms[0]->setCost( $newtotal );
+		$m['cost'] = $newtotal;
+
+		$request->add[] = $m;
+
+		// Create tax
+		$terms = new mammonTerms();
+		$term = new mammonTerm();
+
+		$term->set( 'duration', array( 'none' => true ) );
+		$term->set( 'type', 'tax' );
+		$term->addCost( $tax );
+
+		$terms->addTerm( $term );
+
+		$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
+
+		if ( $double ) {
+			$request->add[] = $x;
+		}
+
+		return $request;
 	}
 
 	function action( $request )
@@ -258,7 +261,12 @@ class mi_aectax
 					$location[4] = null;
 				}
 
-				$locations[] = array( 'id' => $location[0], 'text' => $location[1], 'percentage' => $location[2], 'extra' => $location[3], 'mi' => $location[4] );
+				$locations[] = array(	'id' => $this->settings['id'],
+										'text' => $location[1],
+										'percentage' => $location[2],
+										'extra' => $location[3],
+										'mi' => $location[4]
+									);
 			}
 		}
 
@@ -281,6 +289,8 @@ class mi_aectax
 
 			$i++;
 		}
+
+		unset( $this->settings['locations'] );
 
 		return $this->storeload();
 	}
