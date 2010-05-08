@@ -3658,9 +3658,13 @@ class processor extends serialParamDBTable
 
 			$header .=	"User-Agent: PHP Script\r\n"
 						. "Content-Type: text/xml\r\n"
-						. "Content-Length: " . strlen( $content ) . "\r\n\r\n"
-						. "Connection: close\r\n\r\n";
 						;
+
+			if ( !is_null( $content ) ) {
+				$header .=	"Content-Length: " . strlen( $content ) . "\r\n\r\n";
+			}
+
+			$header .=	"Connection: close\r\n\r\n";;
 
 			fwrite( $connection, "POST " . $path . " HTTP/1.1\r\n" );
 			fwrite( $connection, $header . $content );
@@ -3703,8 +3707,11 @@ class processor extends serialParamDBTable
 		$curl_calls[CURLOPT_RETURNTRANSFER]	= true;
 		$curl_calls[CURLOPT_HTTPHEADER]		= array( 'Content-Type: text/xml' );
 		$curl_calls[CURLOPT_HEADER]			= false;
-		$curl_calls[CURLOPT_POST]			= true;
-		$curl_calls[CURLOPT_POSTFIELDS]		= $content;
+
+		if ( !is_null( $content ) ) {
+			$curl_calls[CURLOPT_POST]			= true;
+			$curl_calls[CURLOPT_POSTFIELDS]		= $content;
+		}
 
 		if ( !empty( $aecConfig->cfg['ssl_verifypeer'] ) ) {
 			$curl_calls[CURLOPT_SSL_VERIFYPEER]	= $aecConfig->cfg['ssl_verifypeer'];
@@ -13605,27 +13612,30 @@ class AECToolbox
 
 	function getISO3166_1a2_codes()
 	{
-		return array( 'AF', 'AX', 'AL', 'DZ', 'AS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ',
-						'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA', 'BW', 'BV', 'BR', 'IO',
-						'BN', 'BG', 'BF', 'BI', 'KH', 'CM', 'CA', 'CV', 'KY', 'CF', 'TD', 'CL', 'CN', 'CX', 'CC', 'CO',
-						'KM', 'CG', 'CD', 'CK', 'CR', 'CI', 'HR', 'CU', 'CY', 'CZ', 'DK', 'DJ', 'DM', 'DO', 'EC', 'EG',
-						'SV', 'GQ', 'ER', 'EE', 'ET', 'FK', 'FO', 'FJ', 'FI', 'FR', 'GF', 'PF', 'TF', 'GA', 'GM', 'GE',
-						'DE', 'GH', 'GI', 'GR', 'GL', 'GD', 'GP', 'GU', 'GT', 'GG', 'GN', 'GW', 'GY', 'HT', 'HM', 'VA',
-						'HN', 'HK', 'HU', 'IS', 'IN', 'ID', 'IR', 'IQ', 'IE', 'IM', 'IL', 'IT', 'JM', 'JP', 'JE', 'JO',
-						'KZ', 'KE', 'KI', 'KP', 'KR', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU',
-						'MO', 'MK', 'MG', 'MW', 'MY', 'MV', 'ML', 'MT', 'MH', 'MQ', 'MR', 'MU', 'YT', 'MX', 'FM', 'MD',
-						'MC', 'MN', 'ME', 'MS', 'MA', 'MZ', 'MM', 'NA', 'NR', 'NP', 'NL', 'AN', 'NC', 'NZ', 'NI', 'NE',
-						'NG', 'NU', 'NF', 'MP', 'NO', 'OM', 'PK', 'PW', 'PS', 'PA', 'PG', 'PY', 'PE', 'PH', 'PN', 'PL',
-						'PT', 'PR', 'QA', 'RE', 'RO', 'RU', 'RW', 'BL', 'SH', 'KN', 'LC', 'MF', 'PM', 'VC', 'WS', 'SM',
-						'ST', 'SA', 'SN', 'RS', 'SC', 'SL', 'SG', 'SK', 'SI', 'SB', 'SO', 'ZA', 'GS', 'ES', 'LK', 'SD',
-						'SR', 'SJ', 'SZ', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TL', 'TG', 'TK', 'TO', 'TT', 'TN',
-						'TR', 'TM', 'TC', 'TV', 'UG', 'UA', 'AE', 'GB', 'US', 'UM', 'UY', 'UZ', 'VU', 'VE', 'VN', 'VG',
-						'VI', 'WF', 'EH', 'YE', 'ZM', 'ZW' );
+		return array(	'AF', 'AX', 'AL', 'DZ', 'AS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AU',
+						'AT', 'AZ', 'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA',
+						'BW', 'BV', 'BR', 'IO', 'BN', 'BG', 'BF', 'BI', 'KH', 'CM', 'CA', 'CV', 'KY', 'CF',
+						'TD', 'CL', 'CN', 'CX', 'CC', 'CO', 'KM', 'CG', 'CD', 'CK', 'CR', 'CI', 'HR', 'CU',
+						'CY', 'CZ', 'DK', 'DJ', 'DM', 'DO', 'EC', 'EG', 'SV', 'GQ', 'ER', 'EE', 'ET', 'FK',
+						'FO', 'FJ', 'FI', 'FR', 'GF', 'PF', 'TF', 'GA', 'GM', 'GE', 'DE', 'GH', 'GI', 'GR',
+						'GL', 'GD', 'GP', 'GU', 'GT', 'GG', 'GN', 'GW', 'GY', 'HT', 'HM', 'VA', 'HN', 'HK',
+						'HU', 'IS', 'IN', 'ID', 'IR', 'IQ', 'IE', 'IM', 'IL', 'IT', 'JM', 'JP', 'JE', 'JO',
+						'KZ', 'KE', 'KI', 'KP', 'KR', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI',
+						'LT', 'LU', 'MO', 'MK', 'MG', 'MW', 'MY', 'MV', 'ML', 'MT', 'MH', 'MQ', 'MR', 'MU',
+						'YT', 'MX', 'FM', 'MD', 'MC', 'MN', 'ME', 'MS', 'MA', 'MZ', 'MM', 'NA', 'NR', 'NP',
+						'NL', 'AN', 'NC', 'NZ', 'NI', 'NE', 'NG', 'NU', 'NF', 'MP', 'NO', 'OM', 'PK', 'PW',
+						'PS', 'PA', 'PG', 'PY', 'PE', 'PH', 'PN', 'PL', 'PT', 'PR', 'QA', 'RE', 'RO', 'RU',
+						'RW', 'BL', 'SH', 'KN', 'LC', 'MF', 'PM', 'VC', 'WS', 'SM', 'ST', 'SA', 'SN', 'RS',
+						'SC', 'SL', 'SG', 'SK', 'SI', 'SB', 'SO', 'ZA', 'GS', 'ES', 'LK', 'SD', 'SR', 'SJ',
+						'SZ', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TL', 'TG', 'TK', 'TO', 'TT', 'TN',
+						'TR', 'TM', 'TC', 'TV', 'UG', 'UA', 'AE', 'GB', 'US', 'UM', 'UY', 'UZ', 'VU', 'VE',
+						'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'ZM', 'ZW'
+					);
 	}
 
 	function getISO3166_1a3_codes()
 	{
-		return array( 'AFG', 'ALA', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATA', 'ATG', 'ARG', 'ARM', 'ABW', 'AUS',
+		return array(	'AFG', 'ALA', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATA', 'ATG', 'ARG', 'ARM', 'ABW', 'AUS',
 						'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 'BTN', 'BOL', 'BIH',
 						'BWA', 'BVT', 'BRA', 'IOT', 'BRN', 'BGR', 'BFA', 'BDI', 'KHM', 'CMR', 'CAN', 'CPV', 'CYM', 'CAF',
 						'TCD', 'CHL', 'CHN', 'CXR', 'CCK', 'COL', 'COM', 'COG', 'COD', 'COK', 'CRI', 'CIV', 'HRV', 'CUB',
@@ -13642,24 +13652,31 @@ class AECToolbox
 						'SYC', 'SLE', 'SGP', 'SVK', 'SVN', 'SLB', 'SOM', 'ZAF', 'SGS', 'ESP', 'LKA', 'SDN', 'SUR', 'SJM',
 						'SWZ', 'SWE', 'CHE', 'SYR', 'TWN', 'TJK', 'TZA', 'THA', 'TLS', 'TGO', 'TKL', 'TON', 'TTO', 'TUN',
 						'TUR', 'TKM', 'TCA', 'TUV', 'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'UMI', 'URY', 'UZB', 'VUT', 'VEN',
-						'VNM', 'VGB', 'VIR', 'WLF', 'ESH', 'YEM', 'ZMB', 'ZWE' );
+						'VNM', 'VGB', 'VIR', 'WLF', 'ESH', 'YEM', 'ZMB', 'ZWE'
+					);
 	}
 
 	function getISO3166_1num_codes()
 	{
-		return array( '004', '248', '008', '012', '016', '020', '024', '660', '010', '028', '032', '051', '533', '036', '040', '031', '044', '048', '050', '052',
-						'112', '056', '084', '204', '060', '064', '068', '070', '072', '074', '076', '086', '096', '100', '854', '108', '116', '120', '124', '132',
-						'136', '140', '148', '152', '156', '162', '166', '170', '174', '178', '180', '184', '188', '384', '191', '192', '196', '203', '208', '262',
-						'212', '214', '218', '818', '222', '226', '232', '233', '231', '238', '234', '242', '246', '250', '254', '258', '260', '266', '270', '268',
-						'276', '288', '292', '300', '304', '308', '312', '316', '320', '831', '324', '624', '328', '332', '334', '336', '340', '344', '348', '352',
-						'356', '360', '364', '368', '372', '833', '376', '380', '388', '392', '832', '400', '398', '404', '296', '408', '410', '414', '417', '418',
-						'428', '422', '426', '430', '434', '438', '440', '442', '446', '807', '450', '454', '458', '462', '466', '470', '584', '474', '478', '480',
-						'175', '484', '583', '498', '492', '496', '499', '500', '504', '508', '104', '516', '520', '524', '528', '530', '540', '554', '558', '562',
-						'566', '570', '574', '580', '578', '512', '586', '585', '275', '591', '598', '600', '604', '608', '612', '616', '620', '630', '634', '638',
-						'642', '643', '646', '652', '654', '659', '662', '663', '666', '670', '882', '674', '678', '682', '686', '688', '690', '694', '702', '703',
-						'705', '090', '706', '710', '239', '724', '144', '736', '740', '744', '748', '752', '756', '760', '158', '762', '834', '764', '626', '768',
-						'772', '776', '780', '788', '792', '795', '796', '798', '800', '804', '784', '826', '840', '581', '858', '860', '548', '862', '704', '092',
-						'850', '876', '732', '887', '894', '716' );
+		return array(	'004', '248', '008', '012', '016', '020', '024', '660', '010', '028', '032', '051', '533', '036',
+						'040', '031', '044', '048', '050', '052', '112', '056', '084', '204', '060', '064', '068', '070',
+						'072', '074', '076', '086', '096', '100', '854', '108', '116', '120', '124', '132', '136', '140',
+						'148', '152', '156', '162', '166', '170', '174', '178', '180', '184', '188', '384', '191', '192',
+						'196', '203', '208', '262', '212', '214', '218', '818', '222', '226', '232', '233', '231', '238',
+						'234', '242', '246', '250', '254', '258', '260', '266', '270', '268', '276', '288', '292', '300',
+						'304', '308', '312', '316', '320', '831', '324', '624', '328', '332', '334', '336', '340', '344',
+						'348', '352', '356', '360', '364', '368', '372', '833', '376', '380', '388', '392', '832', '400',
+						'398', '404', '296', '408', '410', '414', '417', '418', '428', '422', '426', '430', '434', '438',
+						'440', '442', '446', '807', '450', '454', '458', '462', '466', '470', '584', '474', '478', '480',
+						'175', '484', '583', '498', '492', '496', '499', '500', '504', '508', '104', '516', '520', '524',
+						'528', '530', '540', '554', '558', '562', '566', '570', '574', '580', '578', '512', '586', '585',
+						'275', '591', '598', '600', '604', '608', '612', '616', '620', '630', '634', '638', '642', '643',
+						'646', '652', '654', '659', '662', '663', '666', '670', '882', '674', '678', '682', '686', '688',
+						'690', '694', '702', '703', '705', '090', '706', '710', '239', '724', '144', '736', '740', '744',
+						'748', '752', '756', '760', '158', '762', '834', '764', '626', '768', '772', '776', '780', '788',
+						'792', '795', '796', '798', '800', '804', '784', '826', '840', '581', '858', '860', '548', '862',
+						'704', '092', '850', '876', '732', '887', '894', '716'
+					);
 	}
 
 	/**
@@ -15744,6 +15761,8 @@ class microIntegration extends serialParamDBTable
 			} else {
 				$defaults = array();
 			}
+
+			$this->mi_class->_parent =& $this;
 
 			$settings = $this->mi_class->Settings();
 

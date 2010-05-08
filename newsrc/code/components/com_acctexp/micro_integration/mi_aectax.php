@@ -24,10 +24,33 @@ class mi_aectax
 
 	function Settings()
 	{
+		if ( isset( $this->settings['locations'] ) ) {
+			$this->upgradeSettings();
+		}
+
 		$settings = array();
 		$settings['custominfo']			= array( 'inputD' );
 		$settings['vat_no_request']		= array( 'list_yesno' );
+		$settings['vat_validation']		= array( 'list' );
 		$settings['locations_amount']	= array( 'inputB' );
+
+		$vatval = array();
+		$vatval[] = mosHTML::makeOption( '0', _MI_MI_AECTAX_SET_VATVAL_NONE );
+		$vatval[] = mosHTML::makeOption( '1', _MI_MI_AECTAX_SET_VATVAL_BASIC );
+		$vatval[] = mosHTML::makeOption( '2', _MI_MI_AECTAX_SET_VATVAL_EXTENDED );
+
+		if ( isset( $this->settings['vat_validation'] ) ) {
+			$vval = $this->settings['vat_validation'];
+		} else {
+			$vval = '2';
+		}
+
+		$settings['lists']['vat_validation'] = mosHTML::selectList( $vatval, 'vat_validation', 'size="1"', 'value', 'text', $vval );
+
+		$modes = array();
+		$modes[] = mosHTML::makeOption( 'pseudo_subtract', _MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT );
+		$modes[] = mosHTML::makeOption( 'subtract', _MI_MI_AECTAX_SET_MODE_SUBTRACT );
+		$modes[] = mosHTML::makeOption( 'add', _MI_MI_AECTAX_SET_MODE_ADD );
 
 		if ( !empty( $this->settings['locations_amount'] ) ) {
 			for ( $i=0; $i<$this->settings['locations_amount']; $i++ ) {
@@ -36,9 +59,17 @@ class mi_aectax
 				$settings[$p.'id']			= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_ID_NAME, $i+1 ), _MI_MI_AECTAX_SET_ID_DESC );
 				$settings[$p.'text']		= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_TEXT_NAME, $i+1 ), _MI_MI_AECTAX_SET_TEXT_DESC );
 				$settings[$p.'percentage']	= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_PERCENTAGE_NAME, $i+1 ), _MI_MI_AECTAX_SET_PERCENTAGE_DESC );
-				$settings[$p.'mode']		= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_MODE_NAME, $i+1 ), _MI_MI_AECTAX_SET_MODE_DESC );
+				$settings[$p.'mode']		= array( 'list', sprintf( _MI_MI_AECTAX_SET_MODE_NAME, $i+1 ), _MI_MI_AECTAX_SET_MODE_DESC );
 				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_EXTRA_NAME, $i+1 ), _MI_MI_AECTAX_SET_EXTRA_DESC );
 				$settings[$p.'mi']			= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_MI_NAME, $i+1 ), _MI_MI_AECTAX_SET_MI_DESC );
+
+				if ( isset( $this->settings[$p.'mode'] ) ) {
+					$val = $this->settings[$p.'mode'];
+				} else {
+					$val = 'pseudo_subtract';
+				}
+
+				$settings['lists'][$p.'mode']			= mosHTML::selectList( $modes, $p.'mode', 'size="1"', 'value', 'text', $val );
 			}
 		}
 
@@ -82,6 +113,7 @@ class mi_aectax
 		}
 
 		if ( !empty( $this->settings['custominfo'] ) ) {
+			$settings['vat_desc'] = array( 'p', "", _MI_MI_AECTAX_VAT_DESC_NAME );
 			$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
 		}
 
@@ -121,8 +153,6 @@ class mi_aectax
 			return true;
 		}
 
-		$request = $this->addTax( $request, $location, true );
-
 		// Append Tax Data to content
 		$m = array_pop( $request->add );
 
@@ -130,9 +160,15 @@ class mi_aectax
 
 		$total = $m['terms']->terms[0]->renderTotal();
 
-		$tax = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $location['percentage']/100 ) ) );
+		switch ( $location['percentage'] ) {
+			default:
+			case '':
+				break;
+		}
 
-		$newtotal = AECToolbox::correctAmount( $total - $tax );
+		$newtotal = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $location['percentage']/100 ) ) );
+
+		$tax = AECToolbox::correctAmount( $total - $newtotal );
 
 		$m['terms']->terms[0]->setCost( $newtotal );
 		$m['cost'] = $newtotal;
@@ -247,30 +283,85 @@ class mi_aectax
 
 	function getLocationList()
 	{
-		$locations = array();
+		if ( isset( $this->settings['locations'] ) ) {
+			$this->upgradeSettings();
+		}
 
+		$locations = array();
 		if ( !empty( $this->settings['locations_amount'] ) ) {
 			for ( $i=0; $this->settings['locations_amount']>$i; $i++ ) {
-				$location = explode( "|", $loc );
-
-				if ( empty( $location[3] ) ) {
-					$location[3] = null;
-				}
-
-				if ( empty( $location[4] ) ) {
-					$location[4] = null;
-				}
-
-				$locations[] = array(	'id' => $this->settings['id'],
-										'text' => $location[1],
-										'percentage' => $location[2],
-										'extra' => $location[3],
-										'mi' => $location[4]
+				$locations[] = array(	'id'			=> $this->settings[$i.'_id'],
+										'text'			=> $this->settings[$i.'_text'],
+										'percentage'	=> $this->settings[$i.'_percentage'],
+										'extra'			=> $this->settings[$i.'_extra'],
+										'mi'			=> $this->settings[$i.'_mi']
 									);
 			}
 		}
 
 		return $locations;
+	}
+
+	function viesValidation( $number )
+	{
+		$db = &JFactory::getDBO();
+
+		$path = '/comm/taxation_customs/vies/cgi-bin/viesquer/?VAT=' . $number . '&MS=$ViesMS&Lang=EN';
+
+		$url = 'http://www.europa.eu.int' . $path;
+
+		$tempprocessor = new processor( $db );
+
+		$result = strtoupper( $tempprocessor->transmitRequest( $url, $path, null ) );
+
+		if ( strpos( $result, 'REQUEST TIME-OUT' ) != 0 ) {
+			return null;
+		} elseif ( strpos( $result, 'YES, VALID VAT NUMBER' ) != 0 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function checkVatNumber( $number, $country, $vatlist )
+	{
+		if ( in_array( $country, $number ) ) {
+			return preg_match( $vatlist[$country]["regex"], $number );
+		} else {
+			return null;
+		}
+	}
+
+	function vatList()
+	{
+		return array(	"AUT" => array( "tax" => "20",		"regex" => array( '/^(AT){0,1}U[0-9]{8}$/i' ) ),
+						"BEL" => array( "tax" => "21",		"regex" => array( '/^(BE){0,1}[0]{0,1}[0-9]{9}$/i' ) ),
+						"BGR" => array( "tax" => "20",		"regex" => array( '/^(BG){0,1}[0-9]{9,10}$/i' ) ),
+						"CYP" => array( "tax" => "15",		"regex" => array( '/^(CY){0,1}[0-9]{8}[A-Z]$/i' ) ),
+						"CZE" => array( "tax" => "20",		"regex" => array( '/^(CZ){0,1}[0-9]{8,10}$/i' ) ),
+						"DEU" => array( "tax" => "19",		"regex" => array( '/^(DE){0,1}[0-9]{9}$/i' ) ),
+						"DNK" => array( "tax" => "25",		"regex" => array( '/^(DK){0,1}[0-9]{8}$/i' ) ),
+						"EST" => array( "tax" => "20",		"regex" => array( '/^(EE){0,1}[0-9]{9}$/i' ) ),
+						"ESP" => array( "tax" => "16",		"regex" => array( '/^(ES){0,1}([0-9A-Z][0-9]{7}[A-Z])|([A-Z][0-9]{7}[0-9A-Z])$/i' ) ),
+						"FIN" => array( "tax" => "22",		"regex" => array( '/^(FI){0,1}[0-9]{8}$/i' ) ),
+						"FRA" => array( "tax" => "19.6",	"regex" => array( '/^(FR){0,1}[0-9A-Z]{2}[\ ]{0,1}[0-9]{9}$/i' ) ),
+						"GBR" => array( "tax" => "17.5",	"regex" => array( '/^(GB){0,1}([1-9][0-9]{2}[\ ]{0,1}[0-9]{4}[\ ]{0,1}[0-9]{2})|([1-9][0-9]{2}[\ ]{0,1}[0-9]{4}[\ ]{0,1}[0-9]{2}[\ ]{0,1}[0-9]{3})|((GD|HA)[0-9]{3})$/i' ) ),
+						"GRC" => array( "tax" => "19",		"regex" => array( '/^(GR){0,1}[0-9]{9}$/i' ) ),
+						"HUN" => array( "tax" => "25",		"regex" => array( '/^(HU){0,1}[0-9]{8}$/i' ) ),
+						"IRL" => array( "tax" => "21",		"regex" => array( '/^(IE){0,1}[0-9][0-9A-Z\+\*][0-9]{5}[A-Z]$/i' ) ),
+						"ITA" => array( "tax" => "20",		"regex" => array( '/^(IT){0,1}[0-9]{11}$/i' ) ),
+						"LTU" => array( "tax" => "21",		"regex" => array( '/^(LT){0,1}([0-9]{9}|[0-9]{12})$/i' ) ),
+						"LUX" => array( "tax" => "15",		"regex" => array( '/^(LU){0,1}[0-9]{8}$/i' ) ),
+						"LVA" => array( "tax" => "21",		"regex" => array( '/^(LV){0,1}[0-9]{11}$/i' ) ),
+						"MLT" => array( "tax" => "18",		"regex" => array( '/^(MT){0,1}[0-9]{8}$/i' ) ),
+						"NLD" => array( "tax" => "19",		"regex" => array( '/^(NL){0,1}[0-9]{9}B[0-9]{2}$/i' ) ),
+						"POL" => array( "tax" => "22",		"regex" => array( '/^(PL){0,1}[0-9]{10}$/i' ) ),
+						"PRT" => array( "tax" => "20",		"regex" => array( '/^(PT){0,1}[0-9]{9}$/i' ) ),
+						"ROU" => array( "tax" => "19",		"regex" => array( '/^(RO){0,1}[0-9]{2,10}$/i' ) ),
+						"SWE" => array( "tax" => "25",		"regex" => array( '/^(SE){0,1}[0-9]{12}$/i' ) ),
+						"SVN" => array( "tax" => "20",		"regex" => array( '/^(SI){0,1}[0-9]{8}$/i' ) ),
+						"SVK" => array( "tax" => "19",		"regex" => array( '/^(SK){0,1}[0-9]{10}$/i' ) )
+					);
 	}
 
 	function upgradeSettings()
@@ -292,7 +383,7 @@ class mi_aectax
 
 		unset( $this->settings['locations'] );
 
-		return $this->storeload();
+		return $this->_parent->storeload();
 	}
 
 	function oldLocationList()
