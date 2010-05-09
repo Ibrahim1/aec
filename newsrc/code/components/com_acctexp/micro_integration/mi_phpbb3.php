@@ -77,10 +77,8 @@ class mi_phpbb3
 				$v = $this->settings[$si];
 			}
 
-			$settings['lists'][$si]	= mosHTML::selectList( $sg, $si, 'size="4"', 'value', 'text', $v );
+			$settings['lists'][$si]	= mosHTML::selectList( $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
 		}
-
-		$settings['lists']['groups_exclude']	= mosHTML::selectList( $sg, 'groups_exclude[]', 'size="10" multiple="true"', 'value', 'text', $selected_groups_exclude );
 
 		$settings['set_group']				= array( 'list_yesno' );
 		$settings['group']					= array( 'list' );
@@ -94,8 +92,22 @@ class mi_phpbb3
 
 		$settings['create_user']			= array( 'list_yesno' );
 
-		foreach ( $userdetails as $key ) {
-			$settings['groups_exclude']			= array( 'inputC' );
+		$userfields = $this->getUserFields();
+
+		foreach ( $userfields as $key ) {
+			$settings['create_'.$key]		= array( 'inputC' );
+		}
+
+		$settings['update_user']			= array( 'list_yesno' );
+
+		foreach ( $userfields as $key ) {
+			$settings['update_'.$key]		= array( 'inputC' );
+		}
+
+		$settings['update_user_exp']		= array( 'list_yesno' );
+
+		foreach ( $userfields as $key ) {
+			$settings['update_exp_'.$key]	= array( 'inputC' );
 		}
 
 		return $settings;
@@ -208,6 +220,22 @@ class mi_phpbb3
 	function action( $request )
 	{
 		$database = $this->getDB();
+
+		$phpbbUserId = $this->phpbbUserid( $request->metaUser->cmsUser->email );
+
+		if ( empty( $phpbbUserId ) && empty( $this->settings['create_user'] ) ) {
+			return null;
+		} elseif ( empty( $phpbbUserId ) ) {
+			$phpbb3pw = new phpbb3pw( $database );
+			
+			$password = ;
+
+			$fields = $this->getUserFields();
+
+			foreach ( $fields as $key ) {
+				
+			}
+		}
 
 		if ( $this->settings['set_group'] ) {
 			$bbuser = null;
