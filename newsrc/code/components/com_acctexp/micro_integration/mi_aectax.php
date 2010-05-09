@@ -383,6 +383,10 @@ class mi_aectax
 
 		unset( $this->settings['locations'] );
 
+		foreach ( $this->settings as $k => $v ) {
+			$this->_parent->params[$k] = $v;
+		}
+
 		return $this->_parent->storeload();
 	}
 
