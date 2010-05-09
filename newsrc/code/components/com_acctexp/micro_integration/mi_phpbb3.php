@@ -44,8 +44,7 @@ class mi_phpbb3
 		$sg2	= array();
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
-				$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name );
-				$sg2[] = mosHTML::makeOption( $group->group_colour, $group->group_name );
+				$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name . " #" . $group->group_colour );
 			}
 		}
 
@@ -70,7 +69,7 @@ class mi_phpbb3
 		$settings['dbname']			= array( 'inputC' );
 		$settings['table_prefix']	= array( 'inputC' );
 
-		$s = array( 'group', 'group_exp', 'group_colour', 'group_colour_exp' );
+		$s = array( 'group', 'group_exp', 'groups_exclude' );
 
 		foreach ( $s as $si ) {
 			$v = null;
@@ -78,11 +77,7 @@ class mi_phpbb3
 				$v = $this->settings[$si];
 			}
 
-			if ( strpos( $si, 'color' ) !== false ) {
-				$settings['lists'][$si]	= mosHTML::selectList( $sg2, $si, 'size="4"', 'value', 'text', $v );
-			} else {
-				$settings['lists'][$si]	= mosHTML::selectList( $sg, $si, 'size="4"', 'value', 'text', $v );
-			}
+			$settings['lists'][$si]	= mosHTML::selectList( $sg, $si, 'size="4"', 'value', 'text', $v );
 		}
 
 		$settings['lists']['groups_exclude']	= mosHTML::selectList( $sg, 'groups_exclude[]', 'size="10" multiple="true"', 'value', 'text', $selected_groups_exclude );
@@ -91,18 +86,11 @@ class mi_phpbb3
 		$settings['group']					= array( 'list' );
 		$settings['set_group_exp']			= array( 'list_yesno' );
 		$settings['group_exp']				= array( 'list' );
-		$settings['apply_colour_exp']		= array( 'list_yesno' );
-		$settings['group_colour_exp']		= array( 'list' );
-		$settings['groups_exclude']			= array( 'list' );
 		$settings['set_groups_exclude']		= array( 'list_yesno' );
+		$settings['groups_exclude']			= array( 'list' );
 		$settings['set_clear_groups']		= array( 'list_yesno' );
 		$settings['rebuild']				= array( 'list_yesno' );
 		$settings['remove']					= array( 'list_yesno' );
-
-		$userdetails = array(	'user_type', 'username', 'user_email', 'user_email_hash',
-								'user_birthday', 'user_lang', 'user_timezone', 'user_dst',
-								'user_dateformat', 'user_style', 'user_rank', 'user_colour',
-								'user_from', 'user_website' );
 
 		$settings['create_user']			= array( 'list_yesno' );
 
@@ -133,7 +121,7 @@ class mi_phpbb3
 		$database = $this->getDB();
 
 		if ( $this->settings['set_group_exp'] ) {
-			$userid = $request->metaUser->userid;
+			$userid = $this->phpbbUserid( $request->metaUser->cmsUser->email );
 
 			$bbuser = null;
 			// Get user info from PHPBB3 User Record
@@ -313,7 +301,7 @@ class mi_phpbb3
 				;
 		$db->setQuery( $query );
 
-		return $db->loadResult();
+		return $db->query();
 	}
 
 	function updateUser( $db, $userid, $fields )
@@ -324,14 +312,14 @@ class mi_phpbb3
 				$set[] = '`' . $key . '` = \'' . $value . '\'';
 			}
 		}
-		
+
 		$query = 'UPDATE ' . $this->settings['table_prefix'] . 'users'
 				. ' SET ' . implode( ', ', $set )
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				;
 		$db->setQuery( $query );
 
-		return $db->loadResult();
+		return $db->query();
 	}
 
 	function getUserFields( $db )
@@ -386,7 +374,7 @@ class mi_phpbb3
 				;
 		$db->setQuery( $query );
 
-		return $db->loadResult();
+		return $db->query();
 	}
 
 	function removeGroup( $db, $userid, $groupid )
@@ -398,7 +386,7 @@ class mi_phpbb3
 				;
 		$db->setQuery( $query );
 
-		return $db->loadResult();
+		return $db->query ();
 	}
 
 	function getDB()
