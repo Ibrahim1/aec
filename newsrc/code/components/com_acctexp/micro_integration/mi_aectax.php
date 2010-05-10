@@ -160,15 +160,24 @@ class mi_aectax
 
 		$total = $m['terms']->terms[0]->renderTotal();
 
-		switch ( $location['percentage'] ) {
+		switch ( $location['mode'] ) {
 			default:
-			case '':
+			case 'pseudo_subtract':
+				$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
+
+				$tax = AECToolbox::correctAmount( $total - $newtotal );
+				break;
+			case 'subtract':
+				$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
+
+				$newtotal = AECToolbox::correctAmount( $total - $tax );
+				break;
+			case 'add':
+				$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
+
+				$newtotal = AECToolbox::correctAmount( $total + $tax );
 				break;
 		}
-
-		$newtotal = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $location['percentage']/100 ) ) );
-
-		$tax = AECToolbox::correctAmount( $total - $newtotal );
 
 		$m['terms']->terms[0]->setCost( $newtotal );
 		$m['cost'] = $newtotal;
