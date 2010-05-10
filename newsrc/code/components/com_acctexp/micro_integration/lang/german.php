@@ -734,14 +734,9 @@ define( '_MI_MI_PHPBB3_REBUILD_DESC',				'Choose yes and then save the MI to rec
 define( '_MI_MI_PHPBB3_REMOVE_NAME',				'Remove: ' );
 define( '_MI_MI_PHPBB3_REMOVE_DESC',				'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
 
-define( '_MI_MI_PHPBB3_APPLY_COLOUR_NAME','Apply Group Color' );
-define( '_MI_MI_PHPBB3_APPLY_COLOUR_DESC','Choose yes to apply a group color (only check if possible).' );
-define( '_MI_MI_PHPBB3_GROUP_COLOUR_NAME','Group Color' );
-define( '_MI_MI_PHPBB3_GROUP_COLOUR_DESC','The group color you wish applied - if you chose yes.' );
-define( '_MI_MI_PHPBB3_APPLY_COLOUR_EXP_NAME','Apply Group Color (Expiration)' );
-define( '_MI_MI_PHPBB3_APPLY_COLOUR_EXP_DESC','Choose yes to apply a group color on expiration (only check if possible).' );
-define( '_MI_MI_PHPBB3_GROUP_COLOUR_EXP_NAME','Group Color (Expiration)' );
-define( '_MI_MI_PHPBB3_GROUP_COLOUR_EXP_DESC','The group color you wish applied on expiration- if you chose yes.' );
+define( '_MI_MI_PHPBB3_CREATE_FIELD',				'Create - Field' );
+define( '_MI_MI_PHPBB3_UPDATE_FIELD',				'Update - Field' );
+define( '_MI_MI_PHPBB3_UPDATE_FIELD_EXP',				'Update (Expired) - Field' );
 
 define( '_MI_MI_PHPBB3_USE_ALTDB_NAME','Different Database' );
 define( '_MI_MI_PHPBB3_USE_ALTDB_DESC','If your phpbb3 forum uses a different database than joomla, you can set this option to Yes and provide details below.' );

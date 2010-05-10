@@ -761,6 +761,10 @@ define( '_MI_MI_PHPBB3_REBUILD_DESC',				'Choose yes and then save the MI to rec
 define( '_MI_MI_PHPBB3_REMOVE_NAME',				'Remove: ' );
 define( '_MI_MI_PHPBB3_REMOVE_DESC',				'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
 
+define( '_MI_MI_PHPBB3_CREATE_FIELD',				'Create - Field' );
+define( '_MI_MI_PHPBB3_UPDATE_FIELD',				'Update - Field' );
+define( '_MI_MI_PHPBB3_UPDATE_FIELD_EXP',			'Update (Expired) - Field' );
+
 define( '_MI_MI_PHPBB3_USE_ALTDB_NAME','Different Database' );
 define( '_MI_MI_PHPBB3_USE_ALTDB_DESC','If your phpbb3 forum uses a different database than joomla, you can set this option to Yes and provide details below.' );
 define( '_MI_MI_PHPBB3_DBMS_NAME','Database Type' );
