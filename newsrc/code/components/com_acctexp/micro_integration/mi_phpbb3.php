@@ -24,6 +24,34 @@ class mi_phpbb3
 		return $info;
 	}
 
+	function checkInstallation()
+	{
+		$database = &JFactory::getDBO();
+
+		global $mainframe;
+
+		$tables	= array();
+		$tables	= $database->getTableList();
+
+		return in_array( $mainframe->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw', $tables );
+	}
+
+	function install()
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_phpbb3pw`'
+		. ' (`id` int(11) NOT NULL auto_increment,'
+		. '`userid` int(11) NOT NULL,'
+		. '`vbulletinpw` varchar(255) NOT NULL default \'1\','
+		. ' PRIMARY KEY (`id`)'
+		. ')'
+		;
+		$database->setQuery( $query );
+		$database->query();
+		return;
+	}
+
 	function Settings()
 	{
 		$database = $this->getDB();
@@ -99,19 +127,25 @@ class mi_phpbb3
 		$userfields = $this->getUserFields();
 
 		foreach ( $userfields as $key ) {
-			$settings['create_user_'.$key]	= array( 'inputC' );
+			$ndesc = _MI_MI_PHPBB3_CREATE_FIELD . ": " . $key;
+			
+			$settings['create_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
 
 		$settings['update_user']			= array( 'list_yesno' );
 
 		foreach ( $userfields as $key ) {
-			$settings['update_user_'.$key]	= array( 'inputC' );
+			$ndesc = _MI_MI_PHPBB3_UPDATE_FIELD . ": " . $key;
+			
+			$settings['update_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
 
 		$settings['update_user_exp']		= array( 'list_yesno' );
 
 		foreach ( $userfields as $key ) {
-			$settings['update_user_exp_'.$key]	= array( 'inputC' );
+			$ndesc = _MI_MI_PHPBB3_UPDATE_FIELD_EXP . ": " . $key;
+			
+			$settings['update_user_exp_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
 
 		return $settings;
