@@ -82,8 +82,12 @@ class mi_phpbb3
 
 		$settings['set_group']				= array( 'list_yesno' );
 		$settings['group']					= array( 'list' );
+		$settings['set_remove_group']		= array( 'list_yesno' );
+		$settings['remove_group']			= array( 'list' );
 		$settings['set_group_exp']			= array( 'list_yesno' );
 		$settings['group_exp']				= array( 'list' );
+		$settings['set_remove_group_exp']	= array( 'list_yesno' );
+		$settings['remove_group_exp']		= array( 'list' );
 		$settings['set_groups_exclude']		= array( 'list_yesno' );
 		$settings['groups_exclude']			= array( 'list' );
 		$settings['set_clear_groups']		= array( 'list_yesno' );
@@ -95,19 +99,19 @@ class mi_phpbb3
 		$userfields = $this->getUserFields();
 
 		foreach ( $userfields as $key ) {
-			$settings['create_'.$key]		= array( 'inputC' );
+			$settings['create_user_'.$key]	= array( 'inputC' );
 		}
 
 		$settings['update_user']			= array( 'list_yesno' );
 
 		foreach ( $userfields as $key ) {
-			$settings['update_'.$key]		= array( 'inputC' );
+			$settings['update_user_'.$key]	= array( 'inputC' );
 		}
 
 		$settings['update_user_exp']		= array( 'list_yesno' );
 
 		foreach ( $userfields as $key ) {
-			$settings['update_exp_'.$key]	= array( 'inputC' );
+			$settings['update_user_exp_'.$key]	= array( 'inputC' );
 		}
 
 		return $settings;
@@ -128,98 +132,11 @@ class mi_phpbb3
 		return $settings;
 	}
 
-	function expiration_action( $request )
-	{
-		$database = $this->getDB();
-
-		if ( $this->settings['set_group_exp'] ) {
-			$userid = $this->phpbbUserid( $request->metaUser->cmsUser->email );
-
-			$bbuser = null;
-			// Get user info from PHPBB3 User Record
-			$query = 'SELECT `user_id`, `group_id`'
-					. ' FROM ' . $this->settings['table_prefix'] . 'users'
-					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
-					;
-			$database->setQuery( $query );
-			if ( aecJoomla15check() ) {
-				$bbuser = $database->loadObject();
-			} else {
-				$database->loadObject($bbuser);
-			}
-
-			// check PHPBB3 primary group not on excluded list
-			if ( in_array( $bbuser->group_id, $this->settings['groups_exclude'] ) ) {
-				$onExcludeList = true;
-			} else {
-				$onExcludeList = false;
-			}
-
-			// check PHPBB3 secondary groups not on excluded list as long as primary group isn't already
-			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) ) {
-				$secGroups = null;
-				$query = 'SELECT `group_id`'
-						. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
-						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
-						;
-				$database->setQuery( $query );
-				if ( aecJoomla15check() ) {
-					$secGroups = $database->loadObject();
-				} else {
-					$database->loadObject($secGroups);
-				}
-
-			 	foreach ( $secGroups as $secGroup ) {
-					if ( in_array( $secGroup, $this->settings['groups_exclude'] ) ) {
-						$onExcludeList = true;
-						break;
-					}
-				}
-			}
-
-			$queries = array();
-
-			// If Not On Exclude List, apply expiration group & clear secondary groups (if set)
-			if ( !$onExcludeList ) {
-				// update PHPBB3 groups list
-				$queries[] = 'UPDATE ' . $this->settings['table_prefix'] . 'user_group'
-						. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
-						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
-						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
-						;
-
-				if ( $this->settings['apply_colour_exp'] ) {
-					$color = ', `user_colour` = \'' . $this->settings['group_colour_exp'] . '\'';
-				} else {
-					$color = '';
-				}
-
-				$queries[] = 'UPDATE ' . $this->settings['table_prefix'] . 'users'
-							. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\'' . $color
-							. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
-							;
-
-				// Clear Secondary Groups (if flag set)
-				if ( $this->settings['set_clear_groups'] ) {
-					$queries[] = 'DELETE FROM ' . $this->settings['table_prefix'] . 'user_group'
-							. ' WHERE `group_id` != \'' . $this->settings['group_exp'] . '\''
-							. ' AND `user_id` = \'' . $bbuser->user_id . '\''
-							;
-				}
-			}
-
-			foreach ( $queries as $query ) {
-				$database->setQuery( $query );
-				$database->query();
-			}
-		}
-
-		return true;
-	}
-
 	function action( $request )
 	{
-		$database = $this->getDB();
+		$database = &JFactory::getDBO();
+
+		$phpbbdb = $this->getDB();
 
 		$phpbbUserId = $this->phpbbUserid( $request->metaUser->cmsUser->email );
 
@@ -227,85 +144,120 @@ class mi_phpbb3
 			return null;
 		} elseif ( empty( $phpbbUserId ) ) {
 			$phpbb3pw = new phpbb3pw( $database );
-			
-			$password = ;
+			$phpbb3pw->loadUserID( $request->metaUser->userid );
 
-			$fields = $this->getUserFields();
+			$password = $phpbb3pw->phpbb3pw;
 
+			$fields = $this->getUserFields( $phpbbdb );
+
+			$content = array();
 			foreach ( $fields as $key ) {
-				
+				if ( !empty( $this->settings['create_user_'.$key] ) ) {
+					$content[$key] = $this->settings['create_user_'.$key];
+				}
 			}
+
+			$content['user_regdate']	= strtotime( "now" );
+
+			if ( empty( $content['username'] ) ) {
+				$content['username']	= $request->metaUser->cmsUser->username;
+			}
+
+			$content['username_clean']	= strtolower( $content['username'] );
+			$content['user_password']	= $phpbb3pw->phpbb3pw;
+			$content['user_email']		= $request->metaUser->cmsUser->email;
+
+			$this->createUser( $phpbbdb, $content );
+
+			$phpbbUserId = $this->phpbbUserid( $request->metaUser->cmsUser->email );
+		} elseif ( $this->settings['update_user'] ) {
+			$fields = $this->getUserFields( $phpbbdb );
+
+			$content = array();
+			foreach ( $fields as $key ) {
+				if ( !empty( $this->settings['update_user_'.$key] ) ) {
+					$content[$key] = $this->settings['update_user_'.$key];
+				}
+			}
+
+			$this->updateUser( $phpbbdb, $content );
 		}
 
-		if ( $this->settings['set_group'] ) {
-			$bbuser = null;
-			// get the user phpbb user id
-			$query = 'SELECT `user_id`, `group_id`'
-					. ' FROM ' . $this->settings['table_prefix'] . 'users'
-					. ' WHERE LOWER(user_email) = \'' . strtolower( $request->metaUser->cmsUser->email ) . '\''
-					;
-			$database->setQuery( $query );
-			if ( aecJoomla15check() ) {
-				$bbuser = $database->loadObject();
-			} else {
-				$database->loadObject($bbuser);
-			}
+		if ( $phpbbUserId ) {
+			$groups = $this->UserGroups( $phpbbdb );
 
-			// check PHPBB3 primary group not on excluded list
-			if ( in_array( $bbuser->group_id, $this->settings['groups_exclude'] ) ) {
-				$onExcludeList = true;
-			} else {
-				$onExcludeList = false;
-			}
-
-			// check PHPBB3 secondary groups not on excluded list as long as primary group isn't already
-			if ( ( $this->settings['set_groups_exclude'] ) && ( !$onExcludeList ) && !empty( $this->settings['groups_exclude'] ) ) {
-				$secGroups = null;
-				$query = 'SELECT `group_id`'
-						. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
-						. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
-						;
-				$database->setQuery( $query );
-				if ( aecJoomla15check() ) {
-					$secGroups = $database->loadObject();
-				} else {
-					$database->loadObject($secGroups);
-				}
-
-			 	foreach ( $secGroups as $secGroup ) {
-					if ( in_array( $secGroup, $this->settings['groups_exclude'] ) ) {
-						$onExcludeList = true;
-						break;
+			if ( $this->settings['set_remove_group'] ) {
+				foreach ( $this->settings['remove_group'] as $groupid ) {
+					if ( in_array( $groupid, $groups ) ) {
+						$this->removeGroup( $phpbbdb, $phpbbUserId, $groupid );
 					}
 				}
 			}
 
-			// If Not On Exclude List, apply expiration group & clear secondary groups (if set)
-			if ( !$onExcludeList ) {
-				// update PHPBB3 groups list
-				$queries[] = 'UPDATE ' . $this->settings['table_prefix'] . 'user_group'
-						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
-						. ' WHERE `group_id` = \'' . $bbuser->group_id . '\''
-						. ' AND `user_id` = \'' . $bbuser->user_id . '\''
-						;
-				// update PHPBB3 primary group
-				if ( $this->settings['apply_colour'] ) {
-					$color = ', `user_colour` = \'' . $this->settings['group_colour'] . '\'';
-				} else {
-					$color = '';
+			if ( $this->settings['set_group'] ) {
+				foreach ( $this->settings['group'] as $groupid ) {
+					if ( in_array( $groupid, $groups ) ) {
+						$this->assignGroup( $phpbbdb, $phpbbUserId, $groupid );
+					}
 				}
-
-				$queries[] = 'UPDATE ' . $this->settings['table_prefix'] . 'users'
-							. ' SET `group_id` = \'' . $this->settings['group'] . '\'' . $color
-							. ' WHERE `user_id` = \'' . $bbuser->user_id . '\''
-							;
 			}
 
-			foreach ( $queries as $query ) {
-				$database->setQuery( $query );
-				$database->query();
+			$this->fixPrimaryGroup( $phpbbdb, $phpbbUserId );
+		}
+
+		return true;
+	}
+
+	function expiration_action( $request )
+	{
+		$phpbbUserId = $this->phpbbUserid( $request->metaUser->cmsUser->email );
+
+		if ( empty( $phpbbUserId ) && empty( $this->settings['create_user'] ) ) {
+			return null;
+		}
+
+		$phpbbdb = $this->getDB();
+
+		if ( $this->settings['update_user_exp'] ) {
+			$fields = $this->getUserFields( $phpbbdb );
+
+			$content = array();
+			foreach ( $fields as $key ) {
+				if ( !empty( $this->settings['update_user_exp_'.$key] ) ) {
+					$content[$key] = $this->settings['update_user_exp_'.$key];
+				}
+			}
+
+			$this->updateUser( $phpbbdb, $content );
+		}
+
+		$groups = $this->UserGroups( $phpbbdb );
+
+		if ( $this->settings['set_clear_groups'] ) {
+			if ( $this->settings['set_groups_exclude'] && !empty( $this->settings['groups_exclude'] ) ) {
+				$groups = array_diff( $groups, $this->settings['groups_exclude'] );
+			}
+
+			$this->clearGroups( $phpbbdb, $phpbbUserId, $groups );
+		} else {
+			if ( $this->settings['set_remove_group_exp'] ) {
+				foreach ( $this->settings['remove_group_exp'] as $groupid ) {
+					if ( in_array( $groupid, $groups ) ) {
+						$this->removeGroup( $phpbbdb, $phpbbUserId, $groupid );
+					}
+				}
+			}
+
+			if ( $this->settings['set_group_exp'] ) {
+				foreach ( $this->settings['group_exp'] as $groupid ) {
+					if ( in_array( $groupid, $groups ) ) {
+						$this->assignGroup( $phpbbdb, $phpbbUserId, $groupid );
+					}
+				}
 			}
 		}
+
+		$this->fixPrimaryGroup( $phpbbdb, $phpbbUserId );
 
 		return true;
 	}
@@ -417,6 +369,42 @@ class mi_phpbb3
 		return $db->query ();
 	}
 
+	function clearGroups( $db, $userid, $groups )
+	{
+		$query = 'DELETE'
+				. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				. ' AND `group_id` IN (' . implode( ',', $groups ) . ')'
+				;
+		$db->setQuery( $query );
+
+		return $db->query ();
+	}
+
+	function fixPrimaryGroup( $db, $userid )
+	{
+		$query = 'SELECT `group_id`'
+				. ' FROM ' . $this->settings['table_prefix'] . 'users'
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				;
+		$db->setQuery( $query );
+
+		$primary = $db->loadResult();
+
+		$groups = $this->userGroups( $db, $userid );
+
+		if ( !empty( $groups ) && !in_array( $primary, $groups ) ) {
+			$query = 'UPDATE ' . $this->settings['table_prefix'] . 'users'
+				. ' SET `group_id` = \'' . $groups[0] . '\''
+				. ' WHERE `user_id` = \'' . $userid . '\''
+				;
+			$db->setQuery( $query );
+			return $db->query();
+		}
+
+		return null;
+	}
+
 	function getDB()
 	{
         if ( !empty( $this->settings['use_altdb'] ) ) {
@@ -484,6 +472,13 @@ class phpbb3pw extends JTable
 	function phpbb3pw( &$db )
 	{
 		parent::__construct( '#__acctexp_mi_phpbb3pw', 'id', $db );
+	}
+
+	function loadUserID( $userid )
+	{
+		$uid = $this->getIDbyUserID( $userid );
+
+		return $this->load( $uid );
 	}
 
 	function getIDbyUserID( $userid )
