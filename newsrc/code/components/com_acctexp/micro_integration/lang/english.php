@@ -734,33 +734,32 @@ define( '_MI_MI_SOBI_REMOVE_DESC',			'Choose yes and then save the MI to carry o
 // phpbb3
 define( '_AEC_MI_NAME_PHPBB3','PHPBB3 Integration' );
 define( '_AEC_MI_DESC_PHPBB3','will set the users group in phpbb on subscription/expiration' );
-define( '_MI_MI_PHPBB3_SET_GROUP_NAME','Set Group' );
-define( '_MI_MI_PHPBB3_SET_GROUP_DESC','Choose Yes if you wish a phpBB3 group to be applied when the plan is applied' );
-define( '_MI_MI_PHPBB3_GROUP_NAME','Group' );
-define( '_MI_MI_PHPBB3_GROUP_DESC','The group you wish applied - if you chose yes.' );
+define( '_MI_MI_PHPBB3_SET_GROUP_NAME','Set Groups' );
+define( '_MI_MI_PHPBB3_SET_GROUP_DESC','Choose Yes if you wish one or more phpBB3 groups to be applied when the plan is applied' );
+define( '_MI_MI_PHPBB3_GROUP_NAME','Groups' );
+define( '_MI_MI_PHPBB3_GROUP_DESC','The groups you wish to be applied - if you chose yes above.' );
+define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_NAME','Remove Groups' );
+define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_DESC','Choose Yes if you wish a phpBB3 group to be applied when the plan is applied' );
+define( '_MI_MI_PHPBB3_REMOVE_GROUP_NAME','Groups' );
+define( '_MI_MI_PHPBB3_REMOVE_GROUP_DESC','The groups you wish to be removed - if you chose yes above.' );
 define( '_MI_MI_PHPBB3_SET_GROUP_EXP_NAME','Set Group (Expiration)' );
 define( '_MI_MI_PHPBB3_SET_GROUP_EXP_DESC','Choose Yes if you wish the phpBB3 group to be changed when the plan expires' );
 define( '_MI_MI_PHPBB3_GROUP_EXP_NAME','Group (Expiration)' );
-define( '_MI_MI_PHPBB3_GROUP_EXP_DESC','The group you wish to use if the plan expires.' );
+define( '_MI_MI_PHPBB3_GROUP_EXP_DESC','The group you wish to apply when the plan expires.' );
+define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_NAME','Remove Groups (Expiration)' );
+define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_DESC','Choose Yes if you wish a phpBB3 group to be applied when the plan expires' );
+define( '_MI_MI_PHPBB3_REMOVE_GROUP_NAME','Groups (Expiration)' );
+define( '_MI_MI_PHPBB3_REMOVE_GROUP_DESC','The groups you wish to be removed when the plan expires - if you chose yes above.' );
 define( '_MI_MI_PHPBB3_SET_GROUPS_EXCLUDE_NAME',	'Exclude Groups?' );
 define( '_MI_MI_PHPBB3_SET_GROUPS_EXCLUDE_DESC',	'If set to Yes, all groups that a user belongs to will be checked for exclusion (primary and secondary groups).  Set to No and only primary groups will be checked against the exclude list' );
 define( '_MI_MI_PHPBB3_SET_CLEAR_GROUPS_NAME',		'Clear Groups' );
 define( '_MI_MI_PHPBB3_SET_CLEAR_GROUPS_DESC',		'If set to Yes, all secondary groups will be cleared from the user record as expiration group is applied as primary.  NOTE: You must have expiration groups set for this to function and exclusions will be checked BEFORE this function is executed' );
-define( '_MI_MI_PHPBB3_GROUPS_EXCLUDE_NAME',		'Exclude Exclude' );
+define( '_MI_MI_PHPBB3_GROUPS_EXCLUDE_NAME',		'Exclude Groups' );
 define( '_MI_MI_PHPBB3_GROUPS_EXCLUDE_DESC',		'Select all groups that will NOT be changed upon apply or expire (whether this is checked against primary or all user\'s groups will depend upon settings below' );
 define( '_MI_MI_PHPBB3_REBUILD_NAME',				'Rebuild: ' );
 define( '_MI_MI_PHPBB3_REBUILD_DESC',				'Choose yes and then save the MI to recreate the actions fo all users with this MI on a currently active plan.' );
 define( '_MI_MI_PHPBB3_REMOVE_NAME',				'Remove: ' );
 define( '_MI_MI_PHPBB3_REMOVE_DESC',				'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
-
-define( '_MI_MI_PHPBB3_APPLY_COLOUR_NAME','Apply Group Color' );
-define( '_MI_MI_PHPBB3_APPLY_COLOUR_DESC','Choose yes to apply a group color (only check if possible).' );
-define( '_MI_MI_PHPBB3_GROUP_COLOUR_NAME','Group Color' );
-define( '_MI_MI_PHPBB3_GROUP_COLOUR_DESC','The group color you wish applied - if you chose yes.' );
-define( '_MI_MI_PHPBB3_APPLY_COLOUR_EXP_NAME','Apply Group Color (Expiration)' );
-define( '_MI_MI_PHPBB3_APPLY_COLOUR_EXP_DESC','Choose yes to apply a group color on expiration (only check if possible).' );
-define( '_MI_MI_PHPBB3_GROUP_COLOUR_EXP_NAME','Group Color (Expiration)' );
-define( '_MI_MI_PHPBB3_GROUP_COLOUR_EXP_DESC','The group color you wish applied on expiration- if you chose yes.' );
 
 define( '_MI_MI_PHPBB3_USE_ALTDB_NAME','Different Database' );
 define( '_MI_MI_PHPBB3_USE_ALTDB_DESC','If your phpbb3 forum uses a different database than joomla, you can set this option to Yes and provide details below.' );
