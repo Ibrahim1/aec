@@ -17335,7 +17335,10 @@ class aecExport extends serialParamDBTable
 		if ( !empty( $userlist ) ) {
 			foreach ( $userlist as $entry ) {
 				$metaUser = new metaUser( $entry->userid );
-				$metaUser->moveFocus( $entry->id );
+
+				if ( !empty( $entry->id ) ) {
+					$metaUser->moveFocus( $entry->id );
+				}
 
 				$planid = $metaUser->focusSubscription->plan;
 
