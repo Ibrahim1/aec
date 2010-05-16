@@ -11827,13 +11827,10 @@ class Subscription extends serialParamDBTable
 			}
 
 			if ( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
-				$this->status = 'Expired';
-				$this->storeload();
+				return $this->setStatus( 'Expired' );
 			} else {
 				return false;
 			}
-
-			return true;
 		}
 	}
 
