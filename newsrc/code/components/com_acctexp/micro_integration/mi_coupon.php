@@ -129,7 +129,15 @@ class mi_coupon
 
 	function mailOut( $request, $newcodes )
 	{
-		$message	= sprintf( $this->settings['text'], implode( "\n", $newcodes ) );
+		if ( $this->settings['text_html'] ) {
+			foreach ( $newcodes as $code ) {
+				$codelist = "<p>" . $code . "</p>";
+			}
+		} else {
+			$codelist = implode( "\n", $newcodes );
+		}
+
+		$message	= sprintf( $this->settings['text'], $codelist );
 
 		$message	= AECToolbox::rewriteEngineRQ( $message, $request );
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
