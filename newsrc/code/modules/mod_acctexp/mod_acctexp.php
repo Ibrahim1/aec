@@ -41,7 +41,7 @@ if ( $user->id ) {
 		}
 
 		if ( !$extended ) {
-			echo AECModuleHelper::getExpirationSimple();
+			echo AECModuleHelper::getExpirationSimple( $user );
 		} else {
 			$metaUser = new metaUser( $user->id );
 
@@ -52,7 +52,7 @@ if ( $user->id ) {
 
 				echo "<h4>" . $subscription->name . "</h4>";
 
-				echo AECModuleHelper::textExpiration( $subscription->expiration, $subscription->recurring );
+				echo AECModuleHelper::textExpiration( $user, $subscription->expiration, $subscription->recurring );
 
 				echo '</div>';
 			}
@@ -74,39 +74,40 @@ if ( $user->id ) {
 
 class AECModuleHelper
 {
-	function getExpirationSimple()
+	function getExpirationSimple( $user )
 	{
 		$database = &JFactory::getDBO();
 
 		$expiration = null;
-		$query = 'SELECT `expiration`, `lifetime`'
+		$query = 'SELECT `id`, `expiration`, `lifetime`, `recurring`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . $user->id . '\''
 				. ' AND `primary` = \'1\''
-				. ' AND `recurring` != \'1\''
 				. ' AND `status` != \'Excluded\'';
 		$database->setQuery($query);
 		$entry = $database->loadObject();
 
-		if ( !$entry->lifetime ) {
-			if ( !empty( $entry->expiration ) ) {
-				$query = 'SELECT `expiration`'
-						. ' FROM #__acctexp_subscr'
-						. ' WHERE `userid` = \'' . $user->id . '\''
-						. ' AND `recurring` != \'1\''
-		                . ' AND `status` != \'Excluded\'';
-				$database->setQuery($query);
-
-				return AECModuleHelper::textExpiration( $database->loadResult() );
-			} else {
-				return AECModuleHelper::textExpiration( $entry->expiration );
-			}
+		if ( !empty( $entry->lifetime ) ) {
+			return AECModuleHelper::textExpiration( $user, $entry->expiration, $entry->recurring );
 		}
 
-		return null;
+		if ( empty( $entry->expiration ) ) {
+			$query = 'SELECT `id`, `expiration`, `recurring`'
+					. ' FROM #__acctexp_subscr'
+					. ' WHERE `userid` = \'' . $user->id . '\''
+	                . ' AND `status` != \'Excluded\'';
+			$database->setQuery($query);
+			$entry = $database->loadObject();
+		}
+
+		if ( empty( $entry->id ) ) {
+			return null;
+		} else {
+			return AECModuleHelper::textExpiration( $user, $entry->expiration, $entry->recurring );
+		}
 	}
 
-	function textExpiration( $expiration, $recurring=false )
+	function textExpiration( $user, $expiration, $recurring=false )
 	{
 		if ( empty( $expiration ) ) {
 			return AECModuleHelper::textUnlimited();
