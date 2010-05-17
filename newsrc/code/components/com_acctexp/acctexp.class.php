@@ -2095,10 +2095,12 @@ class aecHeartbeat extends JTable
 
 									if ( $mi->callIntegration() ) {
 										// Do the actual pre expiration check on this MI
-										if ( $metaUser->focusSubscription->is_expired( $mi->pre_exp_check ) ) {
-											$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
-											if ( $result ) {
-												$exp_actions++;
+										if ( $metaUser->focusSubscription->status != 'Trial' ) {
+											if ( $metaUser->focusSubscription->is_expired( $mi->pre_exp_check ) ) {
+												$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
+												if ( $result ) {
+													$exp_actions++;
+												}
 											}
 										}
 									}
