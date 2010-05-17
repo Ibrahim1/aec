@@ -1167,7 +1167,6 @@ function planaction( $option, $action, $subscr )
 
 	$user = &JFactory::getUser();
 
-	// Always rewrite to session userid
 	if ( !empty( $user->id ) ) {
 		$userid = $user->id;
 

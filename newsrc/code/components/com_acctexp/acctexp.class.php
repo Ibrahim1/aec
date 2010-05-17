@@ -9200,24 +9200,24 @@ class InvoiceFactory
 
 		$this->loadMetaUser();
 
-		$invoice = new Invoice( $database );
+		$this->invoice = new Invoice( $database );
 
 		if ( !empty( $subscr ) ) {
 			if ( $this->metaUser->moveFocus( $subscr ) ) {
-				$invoice->loadbySubscriptionId( $this->metaUser->focusSubscription->id, $this->metaUser->userid );
+				$this->invoice->loadbySubscriptionId( $this->metaUser->focusSubscription->id, $this->metaUser->userid );
 			}
 		}
 
-		if ( empty( $invoice->id ) ) {
-			$invoice->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
+		if ( empty( $this->invoice->id ) ) {
+			$this->invoice->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
 		}
 
-		if ( empty( $invoice->id ) ) {
-			$invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
+		if ( empty( $this->invoice->id ) ) {
+			$this->invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
 		}
 
 		$pp = new PaymentProcessor( $database );
-		if ( $pp->loadName( $invoice->method ) ) {
+		if ( $pp->loadName( $this->invoice->method ) ) {
 			$pp->fullInit();
 
 			$usage = $this->getObjUsage();
@@ -9235,9 +9235,9 @@ class InvoiceFactory
 				return aecNotAuth();
 			}
 
-			$response = $pp->customAction( $action, $invoice, $this->metaUser );
+			$response = $pp->customAction( $action, $this->invoice, $this->metaUser );
 
-			$response = $invoice->processorResponse( $pp, $response, '', true );
+			$response = $this->invoice->processorResponse( $pp, $response, '', true );
 
 			if ( isset( $response['cancel'] ) ) {
 				HTML_Results::cancel( 'com_acctexp' );
