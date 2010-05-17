@@ -446,7 +446,7 @@ class serialParamDBTable extends paramDBTable
 			}
 		} else {
 			// Don't ask - life is horrible.
-			if ( !is_bool( $input ) && !is_int( $input ) && is_a( $input, "__PHP_Incomplete_Class" ) ) {
+			if ( !is_bool( $input ) && !is_int( $input ) ) {
 				$input = stripslashes( $input );
 			}
 		}
