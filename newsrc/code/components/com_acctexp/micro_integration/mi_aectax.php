@@ -302,6 +302,7 @@ class mi_aectax
 				$locations[] = array(	'id'			=> $this->settings[$i.'_id'],
 										'text'			=> $this->settings[$i.'_text'],
 										'percentage'	=> $this->settings[$i.'_percentage'],
+										'mode'			=> $this->settings[$i.'_mode'],
 										'extra'			=> $this->settings[$i.'_extra'],
 										'mi'			=> $this->settings[$i.'_mi']
 									);

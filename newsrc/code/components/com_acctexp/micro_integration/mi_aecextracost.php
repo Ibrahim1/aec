@@ -33,17 +33,16 @@ class mi_aecextracost
 		$settings['options']		= array( 'inputB' );
 
 		$modes = array();
-		$modes[] = mosHTML::makeOption( 'pseudo_subtract', _MI_MI_AECEXTRACOST_SET_MODE_PSEUDO_SUBTRACT );
-		$modes[] = mosHTML::makeOption( 'subtract', _MI_MI_AECEXTRACOST_SET_MODE_SUBTRACT );
-		$modes[] = mosHTML::makeOption( 'add', _MI_MI_AECEXTRACOST_SET_MODE_ADD );
+		$modes[] = mosHTML::makeOption( 'basic', _MI_MI_AECEXTRACOST_SET_MODE_BASIC );
+		$modes[] = mosHTML::makeOption( 'percentage', _MI_MI_AECEXTRACOST_SET_MODE_PERCENTAGE );
 
-		if ( !empty( $this->settings['locations_amount'] ) ) {
-			for ( $i=0; $i<$this->settings['locations_amount']; $i++ ) {
+		if ( !empty( $this->settings['options'] ) ) {
+			for ( $i=0; $i<$this->settings['options']; $i++ ) {
 				$p = $i . '_';
 
 				$settings[$p.'id']			= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_ID_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_ID_DESC );
 				$settings[$p.'text']		= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_TEXT_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_TEXT_DESC );
-				$settings[$p.'percentage']	= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_PERCENTAGE_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_PERCENTAGE_DESC );
+				$settings[$p.'amount']		= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_PERCENTAGE_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_PERCENTAGE_DESC );
 				$settings[$p.'mode']		= array( 'list', sprintf( _MI_MI_AECEXTRACOST_SET_MODE_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_MODE_DESC );
 				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_EXTRA_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_EXTRA_DESC );
 				$settings[$p.'mi']			= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_MI_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_MI_DESC );
@@ -51,7 +50,7 @@ class mi_aecextracost
 				if ( isset( $this->settings[$p.'mode'] ) ) {
 					$val = $this->settings[$p.'mode'];
 				} else {
-					$val = 'pseudo_subtract';
+					$val = 'basic';
 				}
 
 				$settings['lists'][$p.'mode']			= mosHTML::selectList( $modes, $p.'mode', 'size="1"', 'value', 'text', $val );
@@ -65,7 +64,7 @@ class mi_aecextracost
 	{
 		$settings = array();
 
-		$locations = $this->getLocationList();
+		$locations = $this->getExtraList();
 
 		if ( !empty( $locations ) ) {
 			if ( !empty( $this->settings['custominfo'] ) ) {
@@ -275,18 +274,15 @@ class mi_aecextracost
 		return null;
 	}
 
-	function getLocationList()
+	function getExtraList()
 	{
-		if ( isset( $this->settings['locations'] ) ) {
-			$this->upgradeSettings();
-		}
-
 		$locations = array();
-		if ( !empty( $this->settings['locations_amount'] ) ) {
-			for ( $i=0; $this->settings['locations_amount']>$i; $i++ ) {
+		if ( !empty( $this->settings['options'] ) ) {
+			for ( $i=0; $this->settings['options']>$i; $i++ ) {
 				$locations[] = array(	'id'			=> $this->settings[$i.'_id'],
 										'text'			=> $this->settings[$i.'_text'],
-										'percentage'	=> $this->settings[$i.'_percentage'],
+										'percentage'	=> $this->settings[$i.'_amount'],
+										'mode'			=> $this->settings[$i.'_mode'],
 										'extra'			=> $this->settings[$i.'_extra'],
 										'mi'			=> $this->settings[$i.'_mi']
 									);
