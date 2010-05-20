@@ -1279,12 +1279,15 @@ class Payment_HTML
 									if ( !empty( $citem->cost['details'] ) ) {
 										$ta .= '&nbsp;(' . $citem->cost['details'] . ')';
 									}
-									$ta .= '&nbsp;[<a href="'
-										. AECToolbox::deadsureURL( 'index.php?option=' . $option
-										. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice->invoice_number
-										. '&amp;coupon_code=' . $citem->cost['coupon'] )
-										. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
-										. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
+
+									if ( !empty( $citem->cost['coupon'] ) ) {
+										$ta .= '&nbsp;[<a href="'
+											. AECToolbox::deadsureURL( 'index.php?option=' . $option
+											. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice->invoice_number
+											. '&amp;coupon_code=' . $citem->cost['coupon'] )
+											. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
+											. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
+									}
 
 									$t = $ta;
 

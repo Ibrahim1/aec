@@ -1104,9 +1104,9 @@ define( '_MI_MI_AECTAX_SET_EXTRA_DESC',	'Line Item Text as it will show up ' );
 define( '_MI_MI_AECTAX_SET_MI_NAME',	'#%s: MI' );
 define( '_MI_MI_AECTAX_SET_MI_DESC',	'Chain an MI to this location' );
 
-define( '_MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT',	'Display tax as if the price was lower and tax was added on top of that' );
-define( '_MI_MI_AECTAX_SET_MODE_SUBTRACT',	'Subtract tax from the price' );
-define( '_MI_MI_AECTAX_SET_MODE_ADD',	'Add tax to the price' );
+define( '_MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT',	'Tax is already included in the price - just display it' );
+define( '_MI_MI_AECTAX_SET_MODE_SUBTRACT',	'Subtract tax from the price ("Discount")' );
+define( '_MI_MI_AECTAX_SET_MODE_ADD',	'Tax is not included in the price - add it' );
 
 define( '_MI_MI_AECTAX_SET_VATVAL_NONE',	'No Validation' );
 define( '_MI_MI_AECTAX_SET_VATVAL_BASIC',	'Basic Numerical Validation' );

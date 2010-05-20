@@ -49,8 +49,8 @@ class mi_aectax
 
 		$modes = array();
 		$modes[] = mosHTML::makeOption( 'pseudo_subtract', _MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT );
-		$modes[] = mosHTML::makeOption( 'subtract', _MI_MI_AECTAX_SET_MODE_SUBTRACT );
 		$modes[] = mosHTML::makeOption( 'add', _MI_MI_AECTAX_SET_MODE_ADD );
+		$modes[] = mosHTML::makeOption( 'subtract', _MI_MI_AECTAX_SET_MODE_SUBTRACT );
 
 		if ( !empty( $this->settings['locations_amount'] ) ) {
 			for ( $i=0; $i<$this->settings['locations_amount']; $i++ ) {
@@ -134,12 +134,10 @@ class mi_aectax
 
 	function invoice_items( $request )
 	{
-		$locations = $this->getLocationList();
+		$location = $this->getLocation( $request );
 
-		foreach ( $locations as $location ) {
-			if ( $location['id'] == $request->params['location'] ) {
-				$request = $this->addTax( $request, $location, true );
-			}
+		if ( $location['id'] == $request->params['location'] ) {
+			$request = $this->addTax( $request, $location, true );
 		}
 
 		return true;
@@ -149,99 +147,11 @@ class mi_aectax
 	{
 		$location = $this->getLocation( $request );
 
-		if ( empty( $location ) ) {
-			return true;
+		if ( $location['id'] == $request->params['location'] ) {
+			$request = $this->addTax( $request, $location );
 		}
-
-		// Append Tax Data to content
-		$m = array_pop( $request->add );
-
-		$x = $m;
-
-		$total = $m['terms']->terms[0]->renderTotal();
-
-		switch ( $location['mode'] ) {
-			default:
-			case 'pseudo_subtract':
-				$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
-
-				$tax = AECToolbox::correctAmount( $total - $newtotal );
-				break;
-			case 'subtract':
-				$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
-
-				$newtotal = AECToolbox::correctAmount( $total - $tax );
-				break;
-			case 'add':
-				$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
-
-				$newtotal = AECToolbox::correctAmount( $total + $tax );
-				break;
-		}
-
-		$m['terms']->terms[0]->setCost( $newtotal );
-		$m['cost'] = $newtotal;
-
-		$request->add[] = $m;
-
-		// Create tax
-		$terms = new mammonTerms();
-
-		$term = new mammonTerm();
-		$term->set( 'duration', array( 'none' => true ) );
-		$term->set( 'type', 'tax' );
-		$term->addCost( $newtotal );
-
-		if ( !empty( $location['extra'] ) ) {
-			$term->addCost( $tax, array( 'details' => $location['extra'] ), true );
-		} else {
-			$term->addCost( $tax, null, true );
-		}
-
-		$terms->addTerm( $term );
-
-		$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
 
 		return true;
-	}
-
-	function addTax( $request, $location, $double=false )
-	{
-		// Append Tax Data to content
-		$m = array_pop( $request->add );
-
-		if ( $double ) {
-			$x = $m;
-		}
-
-		$total = $m['terms']->terms[0]->renderTotal();
-
-		$tax = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $location['percentage']/100 ) ) );
-
-		$newtotal = AECToolbox::correctAmount( $total - $tax );
-
-		$m['terms']->terms[0]->setCost( $newtotal );
-		$m['cost'] = $newtotal;
-
-		$request->add[] = $m;
-
-		// Create tax
-		$terms = new mammonTerms();
-		$term = new mammonTerm();
-
-		$term->set( 'duration', array( 'none' => true ) );
-		$term->set( 'type', 'tax' );
-		$term->addCost( $tax );
-
-		$terms->addTerm( $term );
-
-		$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
-
-		if ( $double ) {
-			$request->add[] = $x;
-		}
-
-		return $request;
 	}
 
 	function action( $request )
@@ -275,6 +185,79 @@ class mi_aectax
 				return false;
 			}
 		}
+	}
+
+	function addTax( $request, $location, $double=false )
+	{
+		// Get Terms
+		$m = array_pop( $request->add );
+
+		if ( $double ) {
+			$x = $m;
+		}
+
+		$total = $m['terms']->terms[0]->renderTotal();
+
+		switch ( $location['mode'] ) {
+			default:
+			case 'pseudo_subtract':
+				$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
+
+				$tax = AECToolbox::correctAmount( $total - $newtotal );
+				break;
+			case 'subtract':
+				$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
+
+				$newtotal = $total;
+
+				$total = AECToolbox::correctAmount( $newtotal - $tax );
+
+				$tax = -$tax;
+				break;
+			case 'add':
+				$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
+
+				$newtotal = $total;
+
+				$total = AECToolbox::correctAmount( $newtotal + $tax );
+				break;
+		}
+
+		if ( $double ) {
+			$m['terms']->terms[0]->setCost( $newtotal );
+			$m['cost'] = $newtotal;
+
+			$request->add[] = $m;
+
+			// Create tax
+			$terms = new mammonTerms();
+			$term = new mammonTerm();
+
+			$term->set( 'duration', array( 'none' => true ) );
+			$term->set( 'type', 'tax' );
+			$term->addCost( $newtotal );
+
+			if ( !empty( $location['extra'] ) ) {
+				$term->addCost( $tax, array( 'details' => $location['extra'] ), true );
+			} else {
+				$term->addCost( $tax, null, true );
+			}
+
+			$terms->addTerm( $term );
+
+			$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
+
+			$request->add[] = $x;
+		} else {
+			$m['terms']->terms[0]->setCost( $newtotal );
+
+			$m['terms']->terms[0]->addCost( $tax, array( 'details' => $location['extra'] ), true );
+			$m['cost'] = $total;
+
+			$request->add[] = $m;
+		}
+
+		return $request;
 	}
 
 	function getLocation( $request )
