@@ -26,8 +26,6 @@ class HTML_frontEnd
 		. JURI::root() . 'media/' . $option . '/css/site.css" />';
 
 		$mainframe->addCustomHeadTag( $html );
- 		$mainframe->appendMetaTag( 'description', 'AEC Account Expiration Control' );
-			$mainframe->appendMetaTag( 'keywords', 'AEC Account Expiration Control' );
 	}
 
 	function expired( $option, $metaUser, $expiration, $invoice, $trial, $continue=0 )
@@ -491,8 +489,6 @@ class HTML_Results
 {
 	function thanks( $option, $msg )
 	{
-		global $aecConfig;
-
 		HTML_frontend::aec_styling( $option );
 
 		echo $msg;

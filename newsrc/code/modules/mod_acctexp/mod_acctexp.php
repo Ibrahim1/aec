@@ -26,7 +26,7 @@ $user = &JFactory::getUser();
 
 if ( $user->id ) {
 
-	echo '<div class="aec_module_inner">';
+	echo '<div class="aec_module_inner' . $class_sfx . '">';
 
 	if ( !empty( $pretext ) ) {
 		echo $pretext;

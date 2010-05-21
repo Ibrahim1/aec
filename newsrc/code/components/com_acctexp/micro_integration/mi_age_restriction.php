@@ -15,8 +15,6 @@ class mi_age_restriction extends MI
 {
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
-
         $settings = array();
 		$settings['min_age']			= array( 'inputA' );
 		$settings['max_age']			= array( 'inputA' );
@@ -27,8 +25,6 @@ class mi_age_restriction extends MI
 
 	function getMIform( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		$settings = array();
 
 		$settings['birthday'] = array( 'inputC', _MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_NAME, _MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_DESC );
@@ -38,8 +34,6 @@ class mi_age_restriction extends MI
 
 	function verifyMIform( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		$return = array();
 
 		if ( empty( $request->params['birthday'] ) ) {

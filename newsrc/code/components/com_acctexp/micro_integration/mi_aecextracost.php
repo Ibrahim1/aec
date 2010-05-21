@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this option is not allowed.' );
 
 class mi_aecextracost
 {
@@ -24,7 +24,7 @@ class mi_aecextracost
 
 	function Settings()
 	{
-		if ( isset( $this->settings['locations'] ) ) {
+		if ( isset( $this->settings['options'] ) ) {
 			$this->upgradeSettings();
 		}
 
@@ -64,32 +64,32 @@ class mi_aecextracost
 	{
 		$settings = array();
 
-		$locations = $this->getExtraList();
+		$options = $this->getOptionList();
 
-		if ( !empty( $locations ) ) {
+		if ( !empty( $options ) ) {
 			if ( !empty( $this->settings['custominfo'] ) ) {
 				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
 			} else {
 				$settings['exp'] = array( 'p', "", _MI_MI_AECEXTRACOST_DEFAULT_NOTICE );
 			}
 
-			if ( count( $locations ) < 5 ) {
-				$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
+			if ( count( $options ) < 5 ) {
+				$settings['option'] = array( 'hidden', null, 'mi_'.$this->id.'_option' );
 
-				foreach ( $locations as $id => $choice ) {
-					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_location', $choice['id'], true, $choice['text'] );
+				foreach ( $options as $id => $choice ) {
+					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_option', $choice['id'], true, $choice['text'] );
 				}
 			} else {
-				$settings['location'] = array( 'list', "", "" );
+				$settings['option'] = array( 'list', "", "" );
 
 				$loc = array();
 				$loc[] = mosHTML::makeOption( 0, "- - - - - - - -" );
 
-				foreach ( $locations as $id => $choice ) {
+				foreach ( $options as $id => $choice ) {
 					$loc[] = mosHTML::makeOption( $choice['id'], $choice['text'] );
 				}
 
-				$settings['lists']['location']	= mosHTML::selectList( $loc, 'location', 'size="1"', 'value', 'text', 0 );
+				$settings['lists']['option']	= mosHTML::selectList( $loc, 'option', 'size="1"', 'value', 'text', 0 );
 			}
 
 		} else {
@@ -108,7 +108,7 @@ class mi_aecextracost
 	{
 		$return = array();
 
-		if ( empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
+		if ( empty( $request->params['option'] ) || ( $request->params['option'] == "" ) ) {
 			$return['error'] = "Please make a selection";
 			return $return;
 		}
@@ -118,12 +118,10 @@ class mi_aecextracost
 
 	function invoice_items( $request )
 	{
-		$locations = $this->getLocationList();
+		$option = $this->getOption( $request );
 
-		foreach ( $locations as $location ) {
-			if ( $location['id'] == $request->params['location'] ) {
-				$request = $this->addTax( $request, $location, true );
-			}
+		if ( $option['id'] == $request->params['option'] ) {
+			$request = $this->addCost( $request, $option, true );
 		}
 
 		return true;
@@ -131,67 +129,18 @@ class mi_aecextracost
 
 	function invoice_items_checkout( $request )
 	{
-		$location = $this->getLocation( $request );
+		$option = $this->getOption( $request );
 
-		if ( empty( $location ) ) {
-			return true;
+		if ( $option['id'] == $request->params['option'] ) {
+			$request = $this->addCost( $request, $option );
 		}
-
-		// Append Tax Data to content
-		$m = array_pop( $request->add );
-
-		$x = $m;
-
-		$total = $m['terms']->terms[0]->renderTotal();
-
-		switch ( $location['mode'] ) {
-			default:
-			case 'pseudo_subtract':
-				$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
-
-				$extracost = AECToolbox::correctAmount( $total - $newtotal );
-				break;
-			case 'subtract':
-				$extracost = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
-
-				$newtotal = AECToolbox::correctAmount( $total - $extracost );
-				break;
-			case 'add':
-				$extracost = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
-
-				$newtotal = AECToolbox::correctAmount( $total + $extracost );
-				break;
-		}
-
-		$m['terms']->terms[0]->setCost( $newtotal );
-		$m['cost'] = $newtotal;
-
-		$request->add[] = $m;
-
-		// Create extracost
-		$terms = new mammonTerms();
-
-		$term = new mammonTerm();
-		$term->set( 'duration', array( 'none' => true ) );
-		$term->set( 'type', 'extracost' );
-		$term->addCost( $newtotal );
-
-		if ( !empty( $location['extra'] ) ) {
-			$term->addCost( $extracost, array( 'details' => $location['extra'] ), true );
-		} else {
-			$term->addCost( $extracost, null, true );
-		}
-
-		$terms->addTerm( $term );
-
-		$request->add[] = array( 'cost' => $extracost, 'terms' => $terms );
 
 		return true;
 	}
 
-	function addTax( $request, $location, $double=false )
+	function addCost( $request, $option, $double=false )
 	{
-		// Append Tax Data to content
+		// Get Terms
 		$m = array_pop( $request->add );
 
 		if ( $double ) {
@@ -200,29 +149,54 @@ class mi_aecextracost
 
 		$total = $m['terms']->terms[0]->renderTotal();
 
-		$extracost = AECToolbox::correctAmount( 100 * ( $total / ( 100 + $location['percentage']/100 ) ) );
+		switch ( $option['mode'] ) {
+			default:
+			case 'basic':
+				$newtotal = $total + $option['amount'];
 
-		$newtotal = AECToolbox::correctAmount( $total - $extracost );
+				$tax = $option['amount'];
+				break;
+			case 'percentage':
+				$tax = AECToolbox::correctAmount( $total * ( $option['amount']/100 ) );
 
-		$m['terms']->terms[0]->setCost( $newtotal );
-		$m['cost'] = $newtotal;
+				$newtotal = $total;
 
-		$request->add[] = $m;
-
-		// Create extracost
-		$terms = new mammonTerms();
-		$term = new mammonTerm();
-
-		$term->set( 'duration', array( 'none' => true ) );
-		$term->set( 'type', 'extracost' );
-		$term->addCost( $extracost );
-
-		$terms->addTerm( $term );
-
-		$request->add[] = array( 'cost' => $extracost, 'terms' => $terms );
+				$total = AECToolbox::correctAmount( $newtotal + $tax );
+				break;
+		}
 
 		if ( $double ) {
+			$m['terms']->terms[0]->setCost( $newtotal );
+			$m['cost'] = $newtotal;
+
+			$request->add[] = $m;
+
+			// Create tax
+			$terms = new mammonTerms();
+			$term = new mammonTerm();
+
+			$term->set( 'duration', array( 'none' => true ) );
+			$term->set( 'type', 'tax' );
+			$term->addCost( $newtotal );
+
+			if ( !empty( $option['extra'] ) ) {
+				$term->addCost( $tax, array( 'details' => $option['extra'] ), true );
+			} else {
+				$term->addCost( $tax, null, true );
+			}
+
+			$terms->addTerm( $term );
+
+			$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
+
 			$request->add[] = $x;
+		} else {
+			$m['terms']->terms[0]->setCost( $newtotal );
+
+			$m['terms']->terms[0]->addCost( $tax, array( 'details' => $option['extra'] ), true );
+			$m['cost'] = $total;
+
+			$request->add[] = $m;
 		}
 
 		return $request;
@@ -230,9 +204,9 @@ class mi_aecextracost
 
 	function action( $request )
 	{
-		$location = $this->getLocation( $request );
+		$option = $this->getOption( $request );
 
-		if ( empty( $location['mi'] ) ) {
+		if ( empty( $option['mi'] ) ) {
 			return true;
 		}
 
@@ -240,11 +214,11 @@ class mi_aecextracost
 
 		$mi = new microIntegration( $database );
 
-		if ( !$mi->mi_exists( $location['mi'] ) ) {
+		if ( !$mi->mi_exists( $option['mi'] ) ) {
 			return true;
 		}
 
-		$mi->load( $location['mi'] );
+		$mi->load( $option['mi'] );
 
 		if ( !$mi->callIntegration() ) {
 			continue;
@@ -261,87 +235,36 @@ class mi_aecextracost
 		}
 	}
 
-	function getLocation( $request )
+	function getOption( $request )
 	{
-		$locations = $this->getLocationList();
+		$options = $this->getOptionList();
 
-		foreach ( $locations as $location ) {
-			if ( $location['id'] == $request->params['location'] ) {
-				return $location;
+		foreach ( $options as $option ) {
+			if ( $option['id'] == $request->params['option'] ) {
+				return $option;
 			}
 		}
 
 		return null;
 	}
 
-	function getExtraList()
+	function getOptionList()
 	{
-		$locations = array();
+		$options = array();
 		if ( !empty( $this->settings['options'] ) ) {
 			for ( $i=0; $this->settings['options']>$i; $i++ ) {
-				$locations[] = array(	'id'			=> $this->settings[$i.'_id'],
-										'text'			=> $this->settings[$i.'_text'],
-										'percentage'	=> $this->settings[$i.'_amount'],
-										'mode'			=> $this->settings[$i.'_mode'],
-										'extra'			=> $this->settings[$i.'_extra'],
-										'mi'			=> $this->settings[$i.'_mi']
-									);
+				$options[] = array(	'id'			=> $this->settings[$i.'_id'],
+									'text'			=> $this->settings[$i.'_text'],
+									'percentage'	=> $this->settings[$i.'_amount'],
+									'mode'			=> $this->settings[$i.'_mode'],
+									'extra'			=> $this->settings[$i.'_extra'],
+									'mi'			=> $this->settings[$i.'_mi']
+								);
 			}
 		}
 
-		return $locations;
+		return $options;
 	}
 
-
-	function upgradeSettings()
-	{
-		$llist = $this->oldLocationList();
-
-		$this->settings['locations_amount'] = count( $llist );
-
-		$i = 0;
-		foreach ( $llist as $location ) {
-			$p = $i . '_';
-
-			foreach ( $location as $key => $value ) {
-				$this->settings[$p.$key] = $value;
-			}
-
-			$i++;
-		}
-
-		unset( $this->settings['locations'] );
-
-		foreach ( $this->settings as $k => $v ) {
-			$this->_parent->params[$k] = $v;
-		}
-
-		return $this->_parent->storeload();
-	}
-
-	function oldLocationList()
-	{
-		$locations = array();
-
-		$l = explode( "\n", $this->settings['locations'] );
-
-		if ( !empty( $l ) ) {
-			foreach ( $l as $loc ) {
-				$location = explode( "|", $loc );
-
-				if ( empty( $location[3] ) ) {
-					$location[3] = null;
-				}
-
-				if ( empty( $location[4] ) ) {
-					$location[4] = null;
-				}
-
-				$locations[] = array( 'id' => $location[0], 'text' => $location[1], 'percentage' => $location[2], 'extra' => $location[3], 'mi' => $location[4] );
-			}
-		}
-
-		return $locations;
-	}
 }
 ?>
