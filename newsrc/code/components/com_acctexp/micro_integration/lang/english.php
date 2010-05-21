@@ -1108,6 +1108,8 @@ define( '_MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT',	'Tax is already included in th
 define( '_MI_MI_AECTAX_SET_MODE_SUBTRACT',	'Subtract tax from the price ("Discount")' );
 define( '_MI_MI_AECTAX_SET_MODE_ADD',	'Tax is not included in the price - add it' );
 
+define( '_MI_MI_AECTAX_VAT_VALIDATION_NAME',		'VAT Validation' );
+define( '_MI_MI_AECTAX_VAT_VALIDATION_DESC',		'Select the type of VAT Validation that you want AEC to do.' );
 define( '_MI_MI_AECTAX_SET_VATVAL_NONE',	'No Validation' );
 define( '_MI_MI_AECTAX_SET_VATVAL_BASIC',	'Basic Numerical Validation' );
 define( '_MI_MI_AECTAX_SET_VATVAL_EXTENDED',	'Numerical & VIES Server Validation' );
