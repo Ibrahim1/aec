@@ -31,6 +31,7 @@ class mi_aectax
 		$settings = array();
 		$settings['custominfo']			= array( 'inputD' );
 		$settings['vat_no_request']		= array( 'list_yesno' );
+		$settings['vat_countrylist']	= array( 'list_yesno' );
 		$settings['vat_validation']		= array( 'list' );
 		$settings['locations_amount']	= array( 'inputB' );
 
@@ -112,9 +113,11 @@ class mi_aectax
 			return false;
 		}
 
-		if ( !empty( $this->settings['custominfo'] ) ) {
-			$settings['vat_desc'] = array( 'p', "", _MI_MI_AECTAX_VAT_DESC_NAME );
-			$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
+		if ( !empty( $this->settings['vat_no_request'] ) ) {
+			if ( !empty( $this->settings['custominfo'] ) ) {
+				$settings['vat_desc'] = array( 'p', "", _MI_MI_AECTAX_VAT_DESC_NAME );
+				$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
+			}
 		}
 
 		return $settings;
@@ -127,6 +130,13 @@ class mi_aectax
 		if ( empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
 			$return['error'] = "Please make a selection";
 			return $return;
+		}
+
+		if ( !empty( $this->settings['vat_no_request'] ) ) {
+			if ( !empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
+				$return['error'] = "Please make a selection";
+				return $return;
+			}
 		}
 
 		return $return;
@@ -246,6 +256,11 @@ class mi_aectax
 			$terms->addTerm( $term );
 
 			$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
+
+			if ( $location['mode'] != 'pseudo_subtract' ) {
+				$x['terms']->terms[0]->setCost( $total );
+				$x['cost'] = $total;
+			}
 
 			$request->add[] = $x;
 		} else {

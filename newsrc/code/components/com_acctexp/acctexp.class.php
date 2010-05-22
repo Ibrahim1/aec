@@ -10719,8 +10719,15 @@ class Invoice extends serialParamDBTable
 
 				switch ( $item['terms']->terms[0]->type ){
 					case 'tax':
+						$details = null;
+						foreach ( $item['terms']->terms[0]->cost as $citem ) {
+							if ( $citem->type == 'tax' ) {
+								$details = $citem->cost['details'];
+							}
+						}
+
 						$data['totallist'][] = '<tr id="invoice_content_item_tax">'
-							. '<td>Tax' . null . '</td>'
+							. '<td>Tax' . '&nbsp;( ' . $details . ' )' . '</td>'
 							. '<td></td>'
 							. '<td></td>'
 							. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
