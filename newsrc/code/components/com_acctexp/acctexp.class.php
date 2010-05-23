@@ -12401,7 +12401,7 @@ class AECfetchfromDB
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				. ' AND `active` = \'1\''
-				. ' ORDER BY ' . $sort . ', `id` ASC'
+				. ' ORDER BY ' . $sort . ', `id` DESC'
 				. ' LIMIT ' . $min_limit . ',' . $max
 				;
 		$database->setQuery( $query );
