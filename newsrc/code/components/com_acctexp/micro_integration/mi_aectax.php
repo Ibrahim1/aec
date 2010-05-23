@@ -32,6 +32,9 @@ class mi_aectax
 		$settings['custominfo']			= array( 'inputD' );
 		$settings['vat_no_request']		= array( 'list_yesno' );
 		$settings['vat_countrylist']	= array( 'list_yesno' );
+		$settings['vat_localtax']		= array( 'list_yesno' );
+		$settings['vat_percentage']		= array( 'inputC' );
+		$settings['vat_mode']			= array( 'list' );
 		$settings['vat_validation']		= array( 'list' );
 		$settings['locations_amount']	= array( 'inputB' );
 
@@ -70,9 +73,11 @@ class mi_aectax
 					$val = 'pseudo_subtract';
 				}
 
-				$settings['lists'][$p.'mode']			= mosHTML::selectList( $modes, $p.'mode', 'size="1"', 'value', 'text', $val );
+				$settings['lists'][$p.'mode']	= mosHTML::selectList( $modes, $p.'mode', 'size="1"', 'value', 'text', $val );
 			}
 		}
+
+		$settings['lists']['vat_mode']			= mosHTML::selectList( $modes, $p.'mode', 'size="1"', 'value', 'text', $this->settings['vat_mode'] );
 
 		return $settings;
 	}
@@ -295,6 +300,30 @@ class mi_aectax
 		}
 
 		$locations = array();
+		if ( !empty( $this->settings['vat_countrylist'] ) ) {
+			$list = $this->vatList();
+
+			$conversion = AECToolbox::ISO3166_conversiontable( 'a2', 'a3' );
+
+			foreach ( $list as $ccode => $litem ) {
+				$text = constant( 'COUNTRYCODE_' . $conversion[$ccode] );
+
+				if ( $this->settings['vat_localtax'] ) {
+					$tax = $this->settings['vat_localtax_tax'];
+				} else {
+					$tax = $litem['tax'];
+				}
+
+				$locations[] = array(	'id'			=> $ccode,
+										'text'			=> $text,
+										'percentage'	=> $tax,
+										'mode'			=> $this->settings['vat_mode'],
+										'extra'			=> $tax . '%',
+										'mi'			=> null
+									);
+			}
+		}
+
 		if ( !empty( $this->settings['locations_amount'] ) ) {
 			for ( $i=0; $this->settings['locations_amount']>$i; $i++ ) {
 				$locations[] = array(	'id'			=> $this->settings[$i.'_id'],
