@@ -138,7 +138,10 @@ class mi_aectax
 		}
 
 		if ( !empty( $this->settings['vat_no_request'] ) ) {
-			if ( !empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
+			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
+				$vatlist = $this->vatList();
+
+				$check = $this->checkVatNumber( $request->params['vat_number'], $request->params['location'], $vatlist );
 				$return['error'] = "Please make a selection";
 				return $return;
 			}
@@ -303,7 +306,7 @@ class mi_aectax
 		if ( !empty( $this->settings['vat_countrylist'] ) ) {
 			$list = $this->vatList();
 
-			$conversion = AECToolbox::ISO3166_conversiontable( 'a2', 'a3' );
+			$conversion = AECToolbox::ISO3166_conversiontable( 'a3', 'a2' );
 
 			foreach ( $list as $ccode => $litem ) {
 				$text = constant( 'COUNTRYCODE_' . $conversion[$ccode] );
