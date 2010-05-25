@@ -88,6 +88,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['tsregs']		= $vars['task'] == 'saveRegistration';
 		$vars['tsue']		= $vars['task'] == 'saveUserEdit';
 		$vars['tsu']		= $vars['task'] == 'save';
+		$vars['lostpw']		= $vars['task'] == 'lostPassword';
 
 		$vars['joms_any']	= ( $vars['joms_regsv'] || $vars['joms_regs'] || $vars['joms_regp'] || $vars['joms_reg'] );
 
@@ -264,7 +265,7 @@ class plgSystemAECrouting extends JPlugin
 			return;
 		}
 
-		if ( !( $vars['j_reg'] || $vars['ccb'] ) ) {
+		if ( !( $vars['j_reg'] || $vars['ccb'] ) || $vars['lostpw'] ) {
 			return;
 		}
 
