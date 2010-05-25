@@ -9694,9 +9694,11 @@ class Invoice extends serialParamDBTable
 					$cart = $this->getObjUsage();
 
 					if ( $cart->id ) {
-						foreach ( $this->coupons as $coupon ) {
-							if ( !$cart->hasCoupon( $coupon ) ) {
-								$cart->addCoupon( $coupon );
+						if ( !empty( $this->coupons ) ) {
+							foreach ( $this->coupons as $coupon ) {
+								if ( !$cart->hasCoupon( $coupon ) ) {
+									$cart->addCoupon( $coupon );
+								}
 							}
 						}
 
