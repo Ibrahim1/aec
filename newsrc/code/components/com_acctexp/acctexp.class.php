@@ -4157,13 +4157,15 @@ class XMLprocessor extends processor
 
 					$countrylist = array();
 					foreach ( $countries as $country ) {
-						$cname = constant( 'COUNTRYCODE_' . $country );
+						if ( !empty( $country ) ) {
+							$cname = constant( 'COUNTRYCODE_' . $country );
 
-						if ( $vcontent == $cname ) {
-							$vcontent = $country;
+							if ( $vcontent == $cname ) {
+								$vcontent = $country;
+							}
+
+							$countrylist[] = mosHTML::makeOption( $country, $cname );
 						}
-
-						$countrylist[] = mosHTML::makeOption( $country, $cname );
 					}
 
 					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
