@@ -4467,9 +4467,14 @@ function editMicroIntegration ( $id, $option )
 				$mi_item = new microIntegration( $database );
 				$mi_item->class_name = $name;
 				if ( $mi_item->callIntegration() ) {
-					$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
-					$fullname = str_replace( '#', '&nbsp;', str_pad( $mi_item->name, $len, '#' ) )
-					. ' - ' . $mi_item->desc;
+					if ( strpos( $name, "mi_aec" ) === 0 ) {
+						$nname = "[AEC] " . $mi_item->name;
+					} else {
+						$nname = $mi_item->name;
+					}
+					
+					$len = 60 - AECToolbox::visualstrlen( trim( $nname ) );
+					$fullname = str_replace( '#', '&nbsp;', str_pad( $nname, $len, '#' ) ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
 					$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
 				}
 			}

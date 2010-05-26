@@ -14473,10 +14473,12 @@ class AECToolbox
 
 	function visualstrlen( $string )
 	{
-		// Visually Short Chars
-		$srt = array( 'i', 'j', 'l', ',', '.' );
-		// Visually Long Chars
-		$lng = array( 'm', 'w', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Y', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' );
+		// Narrow Chars
+		$srt = array( 'I', 'J', 'i', 'j', 'l', 'r', 't', '(', ')', '[', ']', ',', '.', '-' );
+		// Thick Chars
+		$lng = array( 'w', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'L', 'N', 'O', 'P', 'Y', 'R', 'S', 'T', 'U', 'V', 'X', 'Y', 'Z' );
+		// Very Thick Chars
+		$llng = array( 'm', 'M', 'Q', 'W' );
 
 		// Break String into individual characters
 		$char_array = preg_split( '#(?<=.)(?=.)#s', $string );
@@ -14485,9 +14487,11 @@ class AECToolbox
 		// Iterate through array counting the visual length of the string
 		foreach ( $char_array as $char ) {
 			if ( in_array( $char, $srt ) ) {
-				$vlen += 0.5;
-			} elseif ( in_array( $char, $srt ) ) {
-				$vlen += 2;
+				$vlen += 0.4;
+			} elseif ( in_array( $char, $lng ) ) {
+				$vlen += 1.5;
+			} elseif ( in_array( $char, $llng ) ) {
+				$vlen += 1.8;
 			} else {
 				$vlen += 1;
 			}
