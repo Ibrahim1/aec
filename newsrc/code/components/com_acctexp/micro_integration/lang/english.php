@@ -1269,4 +1269,26 @@ define( '_MI_MI_UNPACK_SOURCE_PRE_EXP_DESC',		'Full System path to the file you 
 define( '_MI_MI_UNPACK_TARGET_PRE_EXP_NAME',		'Target Path (pre-expiration)' );
 define( '_MI_MI_UNPACK_TARGET_PRE_EXP_DESC',		'Target path to where the source file will be unpacked before expiration.' );
 
+// Adsmanager
+define( '_AEC_MI_ADSMANAGER_NAME',		'Adsmanager' );
+define( '_AEC_MI_ADSMANAGER_DESC',		'Publish or unpublish listings in Adsmanager component' );
+define( '_MI_MI_ADSMANAGER_PUBLISH_ALL_NAME',			'Publish All: ' );
+define( '_MI_MI_ADSMANAGER_PUBLISH_ALL_DESC',			'Choose yes to publish all Adsmanager listings for this user on activation of the MI' );
+define( '_MI_MI_ADSMANAGER_PUBLISH_ALL_EXP_NAME',			'Publish All on Expiration: ' );
+define( '_MI_MI_ADSMANAGER_PUBLISH_ALL_EXP_DESC',			'Choose yes to publish all Adsmanager listings for this user on activation of the MI' );
+define( '_MI_MI_ADSMANAGER_PUBLISH_ALL_PRE_EXP_NAME',			'Publish All on Pre-Expiration:' );
+define( '_MI_MI_ADSMANAGER_PUBLISH_ALL_PRE_EXP_DESC',			'Choose yes to publish all Adsmanager listings for this user when a pre-expiration action occurs for this MI' );
+
+define( '_MI_MI_ADSMANAGER_UNPUBLISH_ALL_NAME',			'Unpublish All: ' );
+define( '_MI_MI_ADSMANAGER_UNPUBLISH_ALL_DESC',			'Choose yes to unpublish all Adsmanager listings for this user on activation of the MI' );
+define( '_MI_MI_ADSMANAGER_UNPUBLISH_ALL_EXP_NAME',			'Unpublish All on Expiration: ' );
+define( '_MI_MI_ADSMANAGER_UNPUBLISH_ALL_EXP_DESC',			'Choose yes to unpublish all Adsmanager listings for this user on activation of the MI' );
+define( '_MI_MI_ADSMANAGER_UNPUBLISH_ALL_PRE_EXP_NAME',			'Unpublish All on Pre-Expiration:' );
+define( '_MI_MI_ADSMANAGER_UNPUBLISH_ALL_PRE_EXP_DESC',			'Choose yes to unpublish all Adsmanager listings for this user when a pre-expiration action occurs for this MI' );
+
+define( '_MI_MI_ADSMANAGER_REBUILD_NAME',			'Rebuild: ' );
+define( '_MI_MI_ADSMANAGER_REBUILD_DESC',			'Choose yes and then save the MI to recreate the actions fo all users with this MI on a currently active plan.' );
+define( '_MI_MI_ADSMANAGER_REMOVE_NAME',			'Remove: ' );
+define( '_MI_MI_ADSMANAGER_REMOVE_DESC',			'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
+
 ?>
