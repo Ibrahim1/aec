@@ -4070,12 +4070,13 @@ class XMLprocessor extends processor
 									'company' => 'billCompany'
 									);
 
+			$vcontent = '';
 			if ( isset( $content[$value] ) ) {
 				$vcontent = $content[$value];
-			} elseif ( isset( $content[$translatelist[$value]] ) ) {
-				$vcontent = $content[$translatelist[$value]];
-			} else {
-				$vcontent = '';
+			} elseif( isset( $translatelist[$value] ) ) {
+				if ( isset( $content[$translatelist[$value]] ) ) {
+					$vcontent = $content[$translatelist[$value]];
+				}
 			}
 
 			switch ( strtolower( $value ) ) {
@@ -4520,7 +4521,7 @@ class PROFILEprocessor extends XMLprocessor
 
 	function shipProfileSelect( $var, $ppParams, $select=false, $btn=true, $new=true )
 	{
-		$var['params'][] = array( 'p', _AEC_USERFORM_SHIPPING_DETAILS_NAME, '' );
+		$var['params'][] = array( 'p', _AEC_USERFORM_SHIPPING_DETAILS_DESC, '' );
 
 		if ( !empty( $ppParams->shippingProfiles ) ) {
 			// Single-Select Shipment Data
