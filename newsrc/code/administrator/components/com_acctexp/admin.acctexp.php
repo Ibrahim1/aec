@@ -6760,8 +6760,10 @@ function exportData( $option, $cmd=null )
 		$autorow->load(0);
 		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
 
-		if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
-			$use_original = 1;
+		if ( isset( $row ) ) {
+			if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
+				$use_original = 1;
+			}
 		}
 	}
 
@@ -6861,6 +6863,7 @@ function exportData( $option, $cmd=null )
 	$group_selection[] = mosHTML::makeOption( 'expired',	_AEC_SEL_EXPIRED );
 	$group_selection[] = mosHTML::makeOption( 'closed',		_AEC_SEL_CLOSED );
 	$group_selection[] = mosHTML::makeOption( 'cancelled',	_AEC_SEL_CANCELLED );
+	$group_selection[] = mosHTML::makeOption( 'manual',		_AEC_SEL_NOT_CONFIGURED );
 
 	$selected_status = array();
 	if ( !empty( $filter_values->status ) ) {

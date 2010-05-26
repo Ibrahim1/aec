@@ -17304,34 +17304,43 @@ class aecExport extends serialParamDBTable
 		header('Content-Disposition: inline; filename="' . $fname . '.csv"');
 
 		// Assemble Database call
-		$where = array();
-		if ( !empty( $this->filter->planid ) ) {
-			$where[] = '`plan` IN (' . implode( ',', $this->filter->planid ) . ')';
-		}
-
-		$query = 'SELECT a.id, a.userid'
-				. ' FROM #__acctexp_subscr AS a'
-				. ' INNER JOIN #__users AS b ON a.userid = b.id';
-
-		if ( !empty( $where ) ) {
-			$query .= ' WHERE ( ' . implode( ' OR ', $where ) . ' )';
-		}
-
-		if ( !empty( $this->filter->status ) ) {
-			$stati = array();
-			foreach ( $this->filter->status as $status ) {
-				$stati[] = 'LOWER( `status` ) = \'' . strtolower( $status ) . '\'';
+		if ( !in_array( 'manual', $this->filter->status ) ) {
+			$where = array();
+			if ( !empty( $this->filter->planid ) ) {
+				$where[] = '`plan` IN (' . implode( ',', $this->filter->planid ) . ')';
 			}
+
+			$query = 'SELECT a.id, a.userid'
+					. ' FROM #__acctexp_subscr AS a'
+					. ' INNER JOIN #__users AS b ON a.userid = b.id';
 
 			if ( !empty( $where ) ) {
-				$query .= ' AND (' . implode( ' OR ', $stati ) . ')';
-			} else {
-				$query .= ' WHERE (' . implode( ' OR ', $stati ) . ')';
+				$query .= ' WHERE ( ' . implode( ' OR ', $where ) . ' )';
 			}
-		}
 
-		if ( !empty( $this->filter->orderby ) ) {
-			$query .= ' ORDER BY ' . $this->filter->orderby . '';
+			if ( !empty( $this->filter->status ) ) {
+				$stati = array();
+				foreach ( $this->filter->status as $status ) {
+					$stati[] = 'LOWER( `status` ) = \'' . strtolower( $status ) . '\'';
+				}
+
+				if ( !empty( $where ) ) {
+					$query .= ' AND (' . implode( ' OR ', $stati ) . ')';
+				} else {
+					$query .= ' WHERE (' . implode( ' OR ', $stati ) . ')';
+				}
+			}
+
+			if ( !empty( $this->filter->orderby ) ) {
+				$query .= ' ORDER BY ' . $this->filter->orderby . '';
+			}
+		} else {
+			$query = 'SELECT DISTINCT b.id AS `userid`'
+					. ' FROM #__users as b'
+					. ' WHERE b.id NOT IN ('
+					. ' SELECT a.userid'
+					. ' FROM #__acctexp_subscr as a);'
+					;
 		}
 
 		$this->_db->setQuery( $query );
@@ -17351,14 +17360,20 @@ class aecExport extends serialParamDBTable
 					$metaUser->moveFocus( $entry->id );
 				}
 
-				$planid = $metaUser->focusSubscription->plan;
+				if ( $metaUser->hasSubscription ) {
+					$planid = $metaUser->focusSubscription->plan;
 
-				if ( !isset( $plans[$planid] ) ) {
-					$plans[$planid] = new SubscriptionPlan( $this->_db );
-					$plans[$planid]->load( $planid );
+					if ( !isset( $plans[$planid] ) ) {
+						$plans[$planid] = new SubscriptionPlan( $this->_db );
+						$plans[$planid]->load( $planid );
+					}
+
+					$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser, $plans[$planid] );
+				} else {
+					$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser );
 				}
 
-				$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser, $plans[$planid] );
+				
 				$larray = explode( ';', $line );
 
 				// Remove whitespaces and newlines
