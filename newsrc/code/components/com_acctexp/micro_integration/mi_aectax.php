@@ -251,9 +251,7 @@ class mi_aectax
 			$terms = new mammonTerms();
 			$term = new mammonTerm();
 
-			$term->set( 'duration', array( 'none' => true ) );
-			$term->set( 'type', 'tax' );
-			$term->addCost( $newtotal );
+			$term->addCost( $newtotal, null, true );
 
 			if ( !empty( $location['extra'] ) ) {
 				$term->addCost( $tax, array( 'details' => $location['extra'] ), true );

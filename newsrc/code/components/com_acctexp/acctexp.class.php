@@ -17253,6 +17253,83 @@ class couponXuser extends serialParamDBTable
 	}
 }
 
+class aecImport extends serialParamDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $system				= null;
+	/** @var string */
+	var $name				= null;
+	/** @var datetime */
+	var $created_date 		= null;
+	/** @var datetime */
+	var $lastused_date 		= null;
+	/** @var text */
+	var $raw				= null;
+	/** @var text */
+	var $parsed				= null;
+	/** @var text */
+	var $conversion			= null;
+	/** @var text */
+	var $options			= null;
+	/** @var text */
+	var $params				= null;
+
+	function aecImport( &$db )
+	{
+		parent::__construct( '#__acctexp_import', 'id', $db );
+	}
+
+	function read( $content )
+	{
+		$this->raw = $content;
+
+		$this->storeload();
+	}
+
+	function parse( $content )
+	{
+		$linearray = explode( "\n", $this->raw );
+
+		foreach ( $linearray as $lineitem ) {
+			if ( $this->options['mode'] == 'semicolon' ) {
+				$itemfields = explode( ";", $lineitem );
+
+				foreach ( $itemfields as $itemfield ) {
+
+				}
+			}
+		}
+	}
+
+	function import( $content )
+	{
+		$database = &JFactory::getDBO();
+
+		// Do a full check for existing usernames
+		if ( $this->options['override_duplicated_usernames'] ){
+			foreach ( $this->parsed as $pitem ) {
+				$username = $pitem[$this->conversion['username']];
+
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE `username` = \'' . $username . '\''
+						;
+				$database->setQuery( $query );
+
+				if ( $database->loadResult() ) {
+					return false;
+				}
+			}
+		}
+	}
+
+	function undo()
+	{
+	}
+}
+
 class aecExport extends serialParamDBTable
 {
 	/** @var int Primary key */
@@ -17377,7 +17454,7 @@ class aecExport extends serialParamDBTable
 					$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser );
 				}
 
-				
+
 				$larray = explode( ';', $line );
 
 				// Remove whitespaces and newlines

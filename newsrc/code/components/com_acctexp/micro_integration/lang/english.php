@@ -1291,4 +1291,23 @@ define( '_MI_MI_ADSMANAGER_REBUILD_DESC',			'Choose yes and then save the MI to 
 define( '_MI_MI_ADSMANAGER_REMOVE_NAME',			'Remove: ' );
 define( '_MI_MI_ADSMANAGER_REMOVE_DESC',			'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
 
+// AEC Extra Cost
+define( '_AEC_MI_AECMODIFYCOST_NAME',		'Modify Cost' );
+define( '_AEC_MI_AECMODIFYCOST_DESC',		'Give the user several customized options which will modify the checkout cost' );
+define( '_MI_MI_AECMODIFYCOST_OPTIONS_NAME',		'Options' );
+define( '_MI_MI_AECMODIFYCOST_OPTIONS_DESC',		'How many different options should the user choose from?' );
+
+define( '_MI_MI_AECMODIFYCOST_SET_ID_NAME',		'#%s: Short ID' );
+define( '_MI_MI_AECMODIFYCOST_SET_ID_DESC',		'A technical/internal handle for the setting. i.e.: "telephone_number" or "pool_size" - no spaces or funny characters' );
+define( '_MI_MI_AECMODIFYCOST_SET_TEXT_NAME',	'#%s: Text' );
+define( '_MI_MI_AECMODIFYCOST_SET_TEXT_DESC',	'The selection field text.' );
+define( '_MI_MI_AECMODIFYCOST_SET_AMOUNT_NAME',	'#%s: Amount' );
+define( '_MI_MI_AECMODIFYCOST_SET_AMOUNT_DESC',	'The price change amount for this field' );
+define( '_MI_MI_AECMODIFYCOST_SET_MODE_NAME',		'#%s: Mode' );
+define( '_MI_MI_AECMODIFYCOST_SET_MODE_DESC',		'Select how the percentage is supposed to be applied' );
+define( '_MI_MI_AECMODIFYCOST_SET_EXTRA_NAME',	'#%s: Extra Text' );
+define( '_MI_MI_AECMODIFYCOST_SET_EXTRA_DESC',	'Line Item Text as it will show up ' );
+define( '_MI_MI_AECMODIFYCOST_SET_MI_NAME',	'#%s: MI' );
+define( '_MI_MI_AECMODIFYCOST_SET_MI_DESC',	'Chain an MI to this option - the MI will be carried out when the plan is paid for' );
+
 ?>

@@ -311,6 +311,11 @@ class mammonTerm extends eucaObject
 	 */
 	var $free			= false;
 
+	function mammonTerm()
+	{
+		$this->set( 'duration', array( 'none' => true ) );
+	}
+
 	/**
 	 * Digestible form of term duration
 	 *
@@ -383,12 +388,13 @@ class mammonTerm extends eucaObject
 			}
 		}
 
-		// Switch this to discount if its negative
-		if ( $amount < 0 ) {
-			$type = 'discount';
+		// Tax is Tax, whether positive or negative
+		if ( $tax ) {
+			$type = 'tax';
 		} else {
-			if ( $tax ) {
-				$type = 'tax';
+			// Switch this to discount if its negative
+			if ( $amount < 0 ) {
+				$type = 'discount';
 			} else {
 				$type = 'cost';
 			}

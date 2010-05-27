@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: mi_aecextracost.php
+ * @version $Id: mi_aecmodifycost.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Micro Integrations - Extra Cost MI
+ * @subpackage Micro Integrations - Modify Cost MI
  * @copyright 2010 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
@@ -11,13 +11,13 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this option is not allowed.' );
 
-class mi_aecextracost
+class mi_aecmodifycost
 {
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_AECEXTRACOST;
-		$info['desc'] = _AEC_MI_DESC_AECEXTRACOST;
+		$info['name'] = _AEC_MI_AECMODIFYCOST_NAME;
+		$info['desc'] = _AEC_MI_AECMODIFYCOST_DESC;
 
 		return $info;
 	}
@@ -33,19 +33,19 @@ class mi_aecextracost
 		$settings['options']		= array( 'inputB' );
 
 		$modes = array();
-		$modes[] = mosHTML::makeOption( 'basic', _MI_MI_AECEXTRACOST_SET_MODE_BASIC );
-		$modes[] = mosHTML::makeOption( 'percentage', _MI_MI_AECEXTRACOST_SET_MODE_PERCENTAGE );
+		$modes[] = mosHTML::makeOption( 'basic', _MI_MI_AECMODIFYCOST_SET_MODE_BASIC );
+		$modes[] = mosHTML::makeOption( 'percentage', _MI_MI_AECMODIFYCOST_SET_MODE_PERCENTAGE );
 
 		if ( !empty( $this->settings['options'] ) ) {
 			for ( $i=0; $i<$this->settings['options']; $i++ ) {
 				$p = $i . '_';
 
-				$settings[$p.'id']			= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_ID_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_ID_DESC );
-				$settings[$p.'text']		= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_TEXT_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_TEXT_DESC );
-				$settings[$p.'amount']		= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_PERCENTAGE_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_PERCENTAGE_DESC );
-				$settings[$p.'mode']		= array( 'list', sprintf( _MI_MI_AECEXTRACOST_SET_MODE_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_MODE_DESC );
-				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_EXTRA_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_EXTRA_DESC );
-				$settings[$p.'mi']			= array( 'inputC', sprintf( _MI_MI_AECEXTRACOST_SET_MI_NAME, $i+1 ), _MI_MI_AECEXTRACOST_SET_MI_DESC );
+				$settings[$p.'id']			= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_ID_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_ID_DESC );
+				$settings[$p.'text']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_TEXT_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_TEXT_DESC );
+				$settings[$p.'amount']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_PERCENTAGE_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_PERCENTAGE_DESC );
+				$settings[$p.'mode']		= array( 'list', sprintf( _MI_MI_AECMODIFYCOST_SET_MODE_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_MODE_DESC );
+				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_MODIFY_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_MODIFY_DESC );
+				$settings[$p.'mi']			= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_MI_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_MI_DESC );
 
 				if ( isset( $this->settings[$p.'mode'] ) ) {
 					$val = $this->settings[$p.'mode'];
@@ -70,7 +70,7 @@ class mi_aecextracost
 			if ( !empty( $this->settings['custominfo'] ) ) {
 				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
 			} else {
-				$settings['exp'] = array( 'p', "", _MI_MI_AECEXTRACOST_DEFAULT_NOTICE );
+				$settings['exp'] = array( 'p', "", _MI_MI_AECMODIFYCOST_DEFAULT_NOTICE );
 			}
 
 			if ( count( $options ) < 5 ) {
@@ -97,8 +97,8 @@ class mi_aecextracost
 		}
 
 		if ( !empty( $this->settings['custominfo'] ) ) {
-			$settings['vat_desc'] = array( 'p', "", _MI_MI_AECEXTRACOST_VAT_DESC_NAME );
-			$settings['vat_number'] = array( 'inputC', _MI_MI_AECEXTRACOST_VAT_NUMBER_NAME, _MI_MI_AECEXTRACOST_VAT_NUMBER_DESC, '' );
+			$settings['vat_desc'] = array( 'p', "", _MI_MI_AECMODIFYCOST_VAT_DESC_NAME );
+			$settings['vat_number'] = array( 'inputC', _MI_MI_AECMODIFYCOST_VAT_NUMBER_NAME, _MI_MI_AECMODIFYCOST_VAT_NUMBER_DESC, '' );
 		}
 
 		return $settings;
@@ -149,21 +149,13 @@ class mi_aecextracost
 
 		$total = $m['terms']->terms[0]->renderTotal();
 
-		switch ( $option['mode'] ) {
-			default:
-			case 'basic':
-				$newtotal = $total + $option['amount'];
-
-				$tax = $option['amount'];
-				break;
-			case 'percentage':
-				$tax = AECToolbox::correctAmount( $total * ( $option['amount']/100 ) );
-
-				$newtotal = $total;
-
-				$total = AECToolbox::correctAmount( $newtotal + $tax );
-				break;
+		if ( $option['mode'] == 'basic' ) {
+			$extracost = $option['amount'];
+		} else {
+			$extracost = AECToolbox::correctAmount( $total * ( $option['amount']/100 ) );
 		}
+
+		$newtotal = AECToolbox::correctAmount( $total + $option['amount'] );
 
 		if ( $double ) {
 			$m['terms']->terms[0]->setCost( $newtotal );
@@ -175,25 +167,23 @@ class mi_aecextracost
 			$terms = new mammonTerms();
 			$term = new mammonTerm();
 
-			$term->set( 'duration', array( 'none' => true ) );
-			$term->set( 'type', 'tax' );
 			$term->addCost( $newtotal );
 
 			if ( !empty( $option['extra'] ) ) {
-				$term->addCost( $tax, array( 'details' => $option['extra'] ), true );
+				$term->addCost( $extracost, array( 'details' => $option['extra'] ) );
 			} else {
-				$term->addCost( $tax, null, true );
+				$term->addCost( $extracost );
 			}
 
 			$terms->addTerm( $term );
 
-			$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
+			$request->add[] = array( 'cost' => $extracost, 'terms' => $terms );
 
 			$request->add[] = $x;
 		} else {
 			$m['terms']->terms[0]->setCost( $newtotal );
 
-			$m['terms']->terms[0]->addCost( $tax, array( 'details' => $option['extra'] ), true );
+			$m['terms']->terms[0]->addCost( $extracost, array( 'details' => $option['extra'] ) );
 			$m['cost'] = $total;
 
 			$request->add[] = $m;
