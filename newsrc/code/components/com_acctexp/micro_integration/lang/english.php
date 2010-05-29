@@ -1110,6 +1110,8 @@ define( '_MI_MI_AECTAX_SET_MODE_ADD',	'Tax is not included in the price - add it
 
 define( '_MI_MI_AECTAX_VAT_VALIDATION_NAME',		'VAT Validation' );
 define( '_MI_MI_AECTAX_VAT_VALIDATION_DESC',		'Select the type of VAT Validation that you want AEC to do.' );
+define( '_MI_MI_AECTAX_VAT_REMOVEONVALID_NAME',		'Reimburse VAT' );
+define( '_MI_MI_AECTAX_VAT_REMOVEONVALID_DESC',		'If a user successfully qualifies to be reimbursed (or VAT Number checking is disabled), either take away the tax or don\'t add it in the first place' );
 define( '_MI_MI_AECTAX_SET_VATVAL_NONE',	'No Validation' );
 define( '_MI_MI_AECTAX_SET_VATVAL_BASIC',	'Basic Numerical Validation' );
 define( '_MI_MI_AECTAX_SET_VATVAL_EXTENDED',	'Numerical & VIES Server Validation' );

@@ -33,6 +33,7 @@ class mi_aectax
 		$settings['vat_no_request']		= array( 'list_yesno' );
 		$settings['vat_countrylist']	= array( 'list_yesno' );
 		$settings['vat_localtax']		= array( 'list_yesno' );
+		$settings['vat_removeonvalid']	= array( 'list_yesno' );
 		$settings['vat_percentage']		= array( 'inputC' );
 		$settings['vat_mode']			= array( 'list' );
 		$settings['vat_validation']		= array( 'list' );
@@ -141,9 +142,14 @@ class mi_aectax
 			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
 				$vatlist = $this->vatList();
 
-				$check = $this->checkVatNumber( $request->params['vat_number'], $request->params['location'], $vatlist );
-				$return['error'] = "Please make a selection";
-				return $return;
+				$country = $this->settings[$request->params['location'].'_id'];
+
+				$check = $this->checkVatNumber( $request->params['vat_number'], $country, $vatlist );
+
+				if ( !$check ) {
+					$return['error'] = "Invalid VAT Number";
+					return $return;
+				}
 			}
 		}
 
@@ -154,7 +160,7 @@ class mi_aectax
 	{
 		$location = $this->getLocation( $request );
 
-		if ( $location['id'] == $request->params['location'] ) {
+		if ( !empty( $location ) ) {
 			$request = $this->addTax( $request, $location, true );
 		}
 
@@ -165,7 +171,7 @@ class mi_aectax
 	{
 		$location = $this->getLocation( $request );
 
-		if ( $location['id'] == $request->params['location'] ) {
+		if ( !empty( $location ) ) {
 			$request = $this->addTax( $request, $location );
 		}
 
@@ -340,17 +346,15 @@ class mi_aectax
 		return $locations;
 	}
 
-	function viesValidation( $number )
+	function viesValidation( $number, $country )
 	{
 		$db = &JFactory::getDBO();
 
-		$path = '/comm/taxation_customs/vies/cgi-bin/viesquer/?VAT=' . $number . '&MS=$ViesMS&Lang=EN';
+		$path = '/taxation_customs/vies/viesquer.do?vat=' . $number . '&ms=' . $country . '&iso=' . $country . '&lang=EN';
 
-		$url = 'http://www.europa.eu.int' . $path;
+		$url = 'http://ec.europa.eu' . $path;
 
-		$tempprocessor = new processor( $db );
-
-		$result = strtoupper( $tempprocessor->transmitRequest( $url, $path, null ) );
+		$result = $tempprocessor->transmitRequest( $url, $path );
 
 		if ( strpos( $result, 'REQUEST TIME-OUT' ) != 0 ) {
 			return null;
@@ -363,42 +367,66 @@ class mi_aectax
 
 	function checkVatNumber( $number, $country, $vatlist )
 	{
-		if ( in_array( $country, $number ) ) {
-			return preg_match( $vatlist[$country]["regex"], $number );
+		if ( !$this->settings['vat_validation'] ) {
+			return true;
+		}
+
+		$check = false;
+		if ( in_array( $country, $vatlist ) ) {
+			$check = preg_match( $vatlist[$country]["regex"], $number );
+
+			$countrycode = substr( $vatlist[$country]["regex"], 3, 2 );
 		} else {
-			return null;
+			$match = false;
+			foreach ( $vatlist as $ccode => $cc ) {
+				if ( !$match ) {
+					$match = preg_match( $cc["regex"], $number );
+
+					if ( $match ) {
+						$check = true;
+
+						$countrycode = substr( $cc["regex"], 3, 2 );
+					}
+				}
+			}
+		}
+
+		if ( ( $this->settings['vat_validation'] == 2 ) && $check ) {
+			return $this->viesValidation( $number, $countrycode );
+		} else {
+			return $check;
 		}
 	}
 
 	function vatList()
 	{
-		return array(	"AUT" => array( "tax" => "20",		"regex" => array( '/^(AT){0,1}U[0-9]{8}$/i' ) ),
-						"BEL" => array( "tax" => "21",		"regex" => array( '/^(BE){0,1}[0]{0,1}[0-9]{9}$/i' ) ),
-						"BGR" => array( "tax" => "20",		"regex" => array( '/^(BG){0,1}[0-9]{9,10}$/i' ) ),
-						"CYP" => array( "tax" => "15",		"regex" => array( '/^(CY){0,1}[0-9]{8}[A-Z]$/i' ) ),
-						"CZE" => array( "tax" => "20",		"regex" => array( '/^(CZ){0,1}[0-9]{8,10}$/i' ) ),
-						"DEU" => array( "tax" => "19",		"regex" => array( '/^(DE){0,1}[0-9]{9}$/i' ) ),
-						"DNK" => array( "tax" => "25",		"regex" => array( '/^(DK){0,1}[0-9]{8}$/i' ) ),
-						"EST" => array( "tax" => "20",		"regex" => array( '/^(EE){0,1}[0-9]{9}$/i' ) ),
-						"ESP" => array( "tax" => "16",		"regex" => array( '/^(ES){0,1}([0-9A-Z][0-9]{7}[A-Z])|([A-Z][0-9]{7}[0-9A-Z])$/i' ) ),
-						"FIN" => array( "tax" => "22",		"regex" => array( '/^(FI){0,1}[0-9]{8}$/i' ) ),
-						"FRA" => array( "tax" => "19.6",	"regex" => array( '/^(FR){0,1}[0-9A-Z]{2}[\ ]{0,1}[0-9]{9}$/i' ) ),
-						"GBR" => array( "tax" => "17.5",	"regex" => array( '/^(GB){0,1}([1-9][0-9]{2}[\ ]{0,1}[0-9]{4}[\ ]{0,1}[0-9]{2})|([1-9][0-9]{2}[\ ]{0,1}[0-9]{4}[\ ]{0,1}[0-9]{2}[\ ]{0,1}[0-9]{3})|((GD|HA)[0-9]{3})$/i' ) ),
-						"GRC" => array( "tax" => "19",		"regex" => array( '/^(GR){0,1}[0-9]{9}$/i' ) ),
-						"HUN" => array( "tax" => "25",		"regex" => array( '/^(HU){0,1}[0-9]{8}$/i' ) ),
-						"IRL" => array( "tax" => "21",		"regex" => array( '/^(IE){0,1}[0-9][0-9A-Z\+\*][0-9]{5}[A-Z]$/i' ) ),
-						"ITA" => array( "tax" => "20",		"regex" => array( '/^(IT){0,1}[0-9]{11}$/i' ) ),
-						"LTU" => array( "tax" => "21",		"regex" => array( '/^(LT){0,1}([0-9]{9}|[0-9]{12})$/i' ) ),
-						"LUX" => array( "tax" => "15",		"regex" => array( '/^(LU){0,1}[0-9]{8}$/i' ) ),
-						"LVA" => array( "tax" => "21",		"regex" => array( '/^(LV){0,1}[0-9]{11}$/i' ) ),
-						"MLT" => array( "tax" => "18",		"regex" => array( '/^(MT){0,1}[0-9]{8}$/i' ) ),
-						"NLD" => array( "tax" => "19",		"regex" => array( '/^(NL){0,1}[0-9]{9}B[0-9]{2}$/i' ) ),
-						"POL" => array( "tax" => "22",		"regex" => array( '/^(PL){0,1}[0-9]{10}$/i' ) ),
-						"PRT" => array( "tax" => "20",		"regex" => array( '/^(PT){0,1}[0-9]{9}$/i' ) ),
-						"ROU" => array( "tax" => "19",		"regex" => array( '/^(RO){0,1}[0-9]{2,10}$/i' ) ),
-						"SWE" => array( "tax" => "25",		"regex" => array( '/^(SE){0,1}[0-9]{12}$/i' ) ),
-						"SVN" => array( "tax" => "20",		"regex" => array( '/^(SI){0,1}[0-9]{8}$/i' ) ),
-						"SVK" => array( "tax" => "19",		"regex" => array( '/^(SK){0,1}[0-9]{10}$/i' ) )
+		return array(	"AUT" => array( "tax" => "20",		"regex" => '/^(AT){0,1}U[0-9]{8}$/i' ),
+						"BEL" => array( "tax" => "21",		"regex" => '/^(BE){0,1}[0]{0,1}[0-9]{9}$/i' ),
+						"BGR" => array( "tax" => "20",		"regex" => '/^(BG){0,1}[0-9]{9,10}$/i' ),
+						"CYP" => array( "tax" => "15",		"regex" => '/^(CY){0,1}[0-9]{8}[A-Z]$/i' ),
+						"CZE" => array( "tax" => "20",		"regex" => '/^(CZ){0,1}[0-9]{8,10}$/i' ),
+						"DEU" => array( "tax" => "19",		"regex" => '/^(DE){0,1}[0-9]{9}$/i' ),
+						"DNK" => array( "tax" => "25",		"regex" => '/^(DK){0,1}[0-9]{8}$/i' ),
+						"EST" => array( "tax" => "20",		"regex" => '/^(EE){0,1}[0-9]{9}$/i' ),
+						"ESP" => array( "tax" => "16",		"regex" => '/^(ES){0,1}([0-9A-Z][0-9]{7}[A-Z])|([A-Z][0-9]{7}[0-9A-Z])$/i' ),
+						"FIN" => array( "tax" => "22",		"regex" => '/^(FI){0,1}[0-9]{8}$/i' ),
+						"FRA" => array( "tax" => "19.6",	"regex" => '/^(FR){0,1}[0-9A-Z]{2}[\ ]{0,1}[0-9]{9}$/i' ),
+						"GBR" => array( "tax" => "17.5",	"regex" => '/^(GB){0,1}([1-9][0-9]{2}[\ ]{0,1}[0-9]{4}[\ ]{0,1}[0-9]{2})|([1-9][0-9]{2}[\ ]{0,1}[0-9]{4}[\ ]{0,1}[0-9]{2}[\ ]{0,1}[0-9]{3})|((GD|HA)[0-9]{3})$/i' ),
+						"GRC" => array( "tax" => "19",		"regex" => '/^(GR){0,1}[0-9]{9}$/i' ),
+						"HUN" => array( "tax" => "25",		"regex" => '/^(HU){0,1}[0-9]{8}$/i' ),
+						"IRL" => array( "tax" => "21",		"regex" => '/^(IE){0,1}[0-9][0-9A-Z\+\*][0-9]{5}[A-Z]$/i' ),
+						"ITA" => array( "tax" => "20",		"regex" => '/^(IT){0,1}[0-9]{11}$/i' ),
+						"LTU" => array( "tax" => "21",		"regex" => '/^(LT){0,1}([0-9]{9}|[0-9]{12})$/i' ),
+						"LUX" => array( "tax" => "15",		"regex" => '/^(LU){0,1}[0-9]{8}$/i' ),
+						"LVA" => array( "tax" => "21",		"regex" => '/^(LV){0,1}[0-9]{11}$/i' ),
+						"MLT" => array( "tax" => "18",		"regex" => '/^(MT){0,1}[0-9]{8}$/i' ),
+						"NLD" => array( "tax" => "19",		"regex" => '/^(NL){0,1}[0-9]{9}B[0-9]{2}$/i' ),
+						"POL" => array( "tax" => "22",		"regex" => '/^(PL){0,1}[0-9]{10}$/i' ),
+						"PRT" => array( "tax" => "20",		"regex" => '/^(PT){0,1}[0-9]{9}$/i' ),
+						"ROU" => array( "tax" => "19",		"regex" => '/^(RO){0,1}[0-9]{2,10}$/i' ),
+						"SWE" => array( "tax" => "25",		"regex" => '/^(SE){0,1}[0-9]{12}$/i' ),
+						"SVN" => array( "tax" => "20",		"regex" => '/^(SI){0,1}[0-9]{8}$/i' ),
+						"SVK" => array( "tax" => "19",		"regex" => '/^(SK){0,1}[0-9]{10}$/i' )
 					);
 	}
 

@@ -3597,21 +3597,21 @@ class processor extends serialParamDBTable
 
 		$url_info = parse_url( $purl );
 
-				if ( empty( $url_info ) ) {
-						return false;
-				}
+		if ( empty( $url_info ) ) {
+				return false;
+		}
 
-				switch ( $url_info['scheme'] ) {
-						case 'https':
-								$scheme = 'ssl://';
-								$port = 443;
-								break;
-						case 'http':
-						default:
-								$scheme = '';
-								$port = 80;
-								break;
-				}
+		switch ( $url_info['scheme'] ) {
+				case 'https':
+						$scheme = 'ssl://';
+						$port = 443;
+						break;
+				case 'http':
+				default:
+						$scheme = '';
+						$port = 80;
+						break;
+		}
 
 		$url = $scheme . $url_info['host'];
 
@@ -3644,13 +3644,19 @@ class processor extends serialParamDBTable
 
 			return false;
 		} else {
+			if ( !is_null( $content ) ) {
+				$header = "POST " . $path . " HTTP/1.1\r\n";
+			} else {
+				$header = "GET " . $path . " HTTP/1.1\r\n";
+			}
+
 		    if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 				$hosturl = $aecConfig->cfg['proxy'];
 		    } else {
 		    	$hosturl = $url;
 		    }
 
-			$header  =	"Host: " . $hosturl  . "\r\n";
+			$header  .=	"Host: " . $hosturl  . "\r\n";
 
 			if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 				if ( !empty( $aecConfig->cfg['proxy_username'] ) && !empty( $aecConfig->cfg['proxy_password'] ) ) {
@@ -3668,8 +3674,11 @@ class processor extends serialParamDBTable
 
 			$header .=	"Connection: close\r\n\r\n";;
 
-			fwrite( $connection, "POST " . $path . " HTTP/1.1\r\n" );
-			fwrite( $connection, $header . $content );
+			if ( !is_null( $content ) ) {
+				$header .= $content;
+			}
+
+			fwrite( $connection, $header );
 
 			while ( !feof( $connection ) ) {
 				$res = fgets( $connection, 1024 );
