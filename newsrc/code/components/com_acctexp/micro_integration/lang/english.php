@@ -1123,7 +1123,7 @@ define( '_MI_MI_AECTAX_VAT_DESC_NAME',	'Customers in the EU must provide a VAT r
 define( '_MI_MI_AECTAX_VAT_COUNTRYLIST_NAME',	'VAT Country List' );
 define( '_MI_MI_AECTAX_VAT_COUNTRYLIST_DESC',	'For the locations list, automatically add a full list of EU countries' );
 define( '_MI_MI_AECTAX_VAT_LOCALTAX_NAME',	'Use local tax' );
-define( '_MI_MI_AECTAX_VAT_LOCALTAX_NAME',	'For the automatically added EU countries, use the local VAT tax instead of the one supplied below' );
+define( '_MI_MI_AECTAX_VAT_LOCALTAX_DESC',	'For the automatically added EU countries, use the local VAT tax instead of the one supplied below' );
 define( '_MI_MI_AECTAX_VAT_PERCENTAGE_NAME',	'VAT Tax Percentage' );
 define( '_MI_MI_AECTAX_VAT_PERCENTAGE_NAME',	'A global tax rate - in case you don\'t want to use the individual tax rates' );
 define( '_MI_MI_AECTAX_VAT_MODE_NAME',	'VAT Mode' );

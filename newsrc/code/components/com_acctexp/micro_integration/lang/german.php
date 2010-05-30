@@ -1056,11 +1056,51 @@ define( '_MI_MI_JOMSOCIAL_EXPMARKER',			'(expiration)' );
 // Tax Helper
 define( '_AEC_MI_NAME_AECTAX',		'Tax Helper' );
 define( '_AEC_MI_DESC_AECTAX',		'Specify tax for this item - affects Confirmation&amp;Checkout screen, Item cost and Invoice printout' );
-define( '_MI_MI_AECTAX_LOCATIONS_NAME',		'Locations' );
-define( '_MI_MI_AECTAX_LOCATIONS_DESC',		'Enter a list of Tax Options. It should look like this:<br /><br />1|European Union|19|19% VAT<br />2|Rest of the World|0<br /><br />The syntax is ID|Display Name|Tax Percentage|Tax Description - always separate by newlines!' );
+define( '_MI_MI_AECTAX_VAT_NO_REQUEST_NAME',		'Request VAT Number' );
+define( '_MI_MI_AECTAX_VAT_NO_REQUEST_DESC',		'Select Yes to prompt the user for a VAT Number. What happens with the information can be decided per location - see below' );
+define( '_MI_MI_AECTAX_LOCATIONS_AMOUNT_NAME',		'Locations' );
+define( '_MI_MI_AECTAX_LOCATIONS_AMOUNT_DESC',		'How many different options should the user choose from to determine which tax rate applies?' );
 define( '_MI_MI_AECTAX_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_AECTAX_CUSTOMINFO_DESC',		'AEC normally displays the text "Please select your location:" on confirmation above the location selector. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_AECTAX_DEFAULT_NOTICE',		'Please select your location:' );
+
+define( '_MI_MI_AECTAX_SET_ID_NAME',		'#%s: Short ID' );
+define( '_MI_MI_AECTAX_SET_ID_DESC',		'A technical/internal handle for the setting. i.e.: "telephone_number" or "pool_size" - no spaces or funny characters' );
+define( '_MI_MI_AECTAX_SET_TEXT_NAME',	'#%s: Text' );
+define( '_MI_MI_AECTAX_SET_TEXT_DESC',	'The selection field text.' );
+define( '_MI_MI_AECTAX_SET_PERCENTAGE_NAME',	'#%s: Percentage' );
+define( '_MI_MI_AECTAX_SET_PERCENTAGE_DESC',	'The tax percentage for this field' );
+define( '_MI_MI_AECTAX_SET_MODE_NAME',		'#%s: Percentage Mode' );
+define( '_MI_MI_AECTAX_SET_MODE_DESC',		'Select how the percentage is supposed to be applied' );
+define( '_MI_MI_AECTAX_SET_EXTRA_NAME',	'#%s: Extra Text' );
+define( '_MI_MI_AECTAX_SET_EXTRA_DESC',	'Line Item Text as it will show up ' );
+define( '_MI_MI_AECTAX_SET_MI_NAME',	'#%s: MI' );
+define( '_MI_MI_AECTAX_SET_MI_DESC',	'Chain an MI to this location' );
+
+define( '_MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT',	'Tax is already included in the price - just display it' );
+define( '_MI_MI_AECTAX_SET_MODE_SUBTRACT',	'Subtract tax from the price ("Discount")' );
+define( '_MI_MI_AECTAX_SET_MODE_ADD',	'Tax is not included in the price - add it' );
+
+define( '_MI_MI_AECTAX_VAT_VALIDATION_NAME',		'VAT Validation' );
+define( '_MI_MI_AECTAX_VAT_VALIDATION_DESC',		'Select the type of VAT Validation that you want AEC to do.' );
+define( '_MI_MI_AECTAX_VAT_REMOVEONVALID_NAME',		'Reimburse VAT' );
+define( '_MI_MI_AECTAX_VAT_REMOVEONVALID_DESC',		'If a user successfully qualifies to be reimbursed (or VAT Number checking is disabled), either take away the tax or don\'t add it in the first place' );
+define( '_MI_MI_AECTAX_SET_VATVAL_NONE',	'No Validation' );
+define( '_MI_MI_AECTAX_SET_VATVAL_BASIC',	'Basic Numerical Validation' );
+define( '_MI_MI_AECTAX_SET_VATVAL_EXTENDED',	'Numerical & VIES Server Validation' );
+
+define( '_MI_MI_AECTAX_VAT_NUMBER_NAME',	'VAT Number' );
+define( '_MI_MI_AECTAX_VAT_NUMBER_DESC',	'Your Business VAT Number' );
+define( '_MI_MI_AECTAX_VAT_DESC_NAME',	'Customers in the EU must provide a VAT registration number if they are registered for one. Customers who are not registered or exempt will be charged VAT as per usual. Leave this field empty if you don\'t know what VAT is.' );
+
+define( '_MI_MI_AECTAX_VAT_COUNTRYLIST_NAME',	'VAT Country List' );
+define( '_MI_MI_AECTAX_VAT_COUNTRYLIST_DESC',	'For the locations list, automatically add a full list of EU countries' );
+define( '_MI_MI_AECTAX_VAT_LOCALTAX_NAME',	'Use local tax' );
+define( '_MI_MI_AECTAX_VAT_LOCALTAX_DESC',	'For the automatically added EU countries, use the local VAT tax instead of the one supplied below' );
+define( '_MI_MI_AECTAX_VAT_PERCENTAGE_NAME',	'VAT Tax Percentage' );
+define( '_MI_MI_AECTAX_VAT_PERCENTAGE_NAME',	'A global tax rate - in case you don\'t want to use the individual tax rates' );
+define( '_MI_MI_AECTAX_VAT_MODE_NAME',	'VAT Mode' );
+define( '_MI_MI_AECTAX_VAT_MODE_NAME',	'Select how the percentage is supposed to be applied' );
 
 // File
 define( '_AEC_MI_FILE_NAME',		'File' );

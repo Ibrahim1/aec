@@ -3558,7 +3558,7 @@ class processor extends serialParamDBTable
 		return $var;
 	}
 
-	function transmitRequest( $url, $path, $content, $port=443, $curlextra=null )
+	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null )
 	{
 		global $aecConfig;
 

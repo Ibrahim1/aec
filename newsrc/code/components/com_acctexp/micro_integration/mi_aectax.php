@@ -142,9 +142,7 @@ class mi_aectax
 			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
 				$vatlist = $this->vatList();
 
-				$country = $this->settings[$request->params['location'].'_id'];
-
-				$check = $this->checkVatNumber( $request->params['vat_number'], $country, $vatlist );
+				$check = $this->checkVatNumber( $request->params['vat_number'], $request->params['location'], $vatlist );
 
 				if ( !$check ) {
 					$return['error'] = "Invalid VAT Number";
@@ -222,8 +220,28 @@ class mi_aectax
 
 		$total = $m['terms']->terms[0]->renderTotal();
 
+		if ( !empty( $this->settings['vat_no_request'] ) ) {
+			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
+				$vatlist = $this->vatList();
+
+				$check = $this->checkVatNumber( $request->params['vat_number'], $request->params['location'], $vatlist );
+
+				if ( $check ) {
+					if ( ( $location['mode'] == 'pseudo_subtract' ) && ( $this->settings['vat_removeonvalid'] ) && !empty( $this->validatedvat ) ) {
+						$location['mode'] = 'subtract';
+					} else {
+						$location['mode'] = '';
+					}
+				}
+			}
+		}
+
 		switch ( $location['mode'] ) {
 			default:
+				$newtotal = $total;
+
+				$tax = "0.00";
+				break;
 			case 'pseudo_subtract':
 				$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
 
@@ -354,11 +372,13 @@ class mi_aectax
 
 		$url = 'http://ec.europa.eu' . $path;
 
+		$tempprocessor = new processor();
+
 		$result = $tempprocessor->transmitRequest( $url, $path );
 
-		if ( strpos( $result, 'REQUEST TIME-OUT' ) != 0 ) {
+		if ( strpos( $result, 'Request time-out' ) != 0 ) {
 			return null;
-		} elseif ( strpos( $result, 'YES, VALID VAT NUMBER' ) != 0 ) {
+		} elseif ( strpos( $result, 'Yes, valid VAT number' ) != 0 ) {
 			return true;
 		} else {
 			return false;
@@ -371,8 +391,14 @@ class mi_aectax
 			return true;
 		}
 
+		if ( strlen( $country ) == 2 ) {
+			$conversion = AECToolbox::ISO3166_conversiontable( 'a2', 'a3' );
+
+			$country = $conversion[$country];
+		}
+
 		$check = false;
-		if ( in_array( $country, $vatlist ) ) {
+		if ( array_key_exists( $country, $vatlist ) ) {
 			$check = preg_match( $vatlist[$country]["regex"], $number );
 
 			$countrycode = substr( $vatlist[$country]["regex"], 3, 2 );
@@ -392,7 +418,7 @@ class mi_aectax
 		}
 
 		if ( ( $this->settings['vat_validation'] == 2 ) && $check ) {
-			return $this->viesValidation( $number, $countrycode );
+			return $this->viesValidation( substr( $number, 2 ), $countrycode );
 		} else {
 			return $check;
 		}
