@@ -1298,6 +1298,12 @@ define( '_AEC_MI_AECMODIFYCOST_NAME',		'Modify Cost' );
 define( '_AEC_MI_AECMODIFYCOST_DESC',		'Give the user several customized options which will modify the checkout cost' );
 define( '_MI_MI_AECMODIFYCOST_OPTIONS_NAME',		'Options' );
 define( '_MI_MI_AECMODIFYCOST_OPTIONS_DESC',		'How many different options should the user choose from?' );
+define( '_MI_MI_AECMODIFYCOST_CUSTOMINFO_NAME',		'Custom Info' );
+define( '_MI_MI_AECMODIFYCOST_CUSTOMINFO_DESC',		'AEC normally displays the text "Please select:" on confirmation above the options. If you want it to say something else, enter your text here.' );
+
+define( '_MI_MI_AECMODIFYCOST_SET_MODE_BASIC',	'Add Amount' );
+define( '_MI_MI_AECMODIFYCOST_SET_MODE_PERCENTAGE',	'Add Amount as Percentage' );
+define( '_MI_MI_AECTAX_DEFAULT_NOTICE',		'Please select:' );
 
 define( '_MI_MI_AECMODIFYCOST_SET_ID_NAME',		'#%s: Short ID' );
 define( '_MI_MI_AECMODIFYCOST_SET_ID_DESC',		'A technical/internal handle for the setting. i.e.: "telephone_number" or "pool_size" - no spaces or funny characters' );

@@ -176,6 +176,17 @@ class mi_aectax
 		return true;
 	}
 
+	function modifyPrice( $request )
+	{
+		$location = $this->getLocation( $request );
+
+		if ( !empty( $location ) ) {
+			$request = $this->addTax( $request, $location );
+		}
+
+		return true;
+	}
+
 	function action( $request )
 	{
 		$location = $this->getLocation( $request );
@@ -266,16 +277,15 @@ class mi_aectax
 		}
 
 		if ( $double ) {
+			// Modify "Total" to fit possible changes by the tax
 			$m['terms']->terms[0]->setCost( $newtotal );
 			$m['cost'] = $newtotal;
 
+			// Add the "Total" row
 			$request->add[] = $m;
 
 			// Create tax
-			$terms = new mammonTerms();
 			$term = new mammonTerm();
-
-			$term->addCost( $newtotal, null, true );
 
 			if ( !empty( $location['extra'] ) ) {
 				$term->addCost( $tax, array( 'details' => $location['extra'] ), true );
@@ -283,16 +293,20 @@ class mi_aectax
 				$term->addCost( $tax, null, true );
 			}
 
+			$terms = new mammonTerms();
 			$terms->addTerm( $term );
 
+			// Add the "Tax" row
 			$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
 
 			if ( $location['mode'] != 'pseudo_subtract' ) {
 				$x['terms']->terms[0]->setCost( $total );
-				$x['cost'] = $total;
 			}
 
-			$request->add[] = $x;
+			$x['cost'] = $total;
+
+			// Add the "Grand Total" row
+			$request->add[] = $x;//print_r($request->add);exit;
 		} else {
 			$m['terms']->terms[0]->setCost( $newtotal );
 

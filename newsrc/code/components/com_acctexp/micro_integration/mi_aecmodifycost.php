@@ -24,10 +24,6 @@ class mi_aecmodifycost
 
 	function Settings()
 	{
-		if ( isset( $this->settings['options'] ) ) {
-			$this->upgradeSettings();
-		}
-
 		$settings = array();
 		$settings['custominfo']		= array( 'inputD' );
 		$settings['options']		= array( 'inputB' );
@@ -42,9 +38,9 @@ class mi_aecmodifycost
 
 				$settings[$p.'id']			= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_ID_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_ID_DESC );
 				$settings[$p.'text']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_TEXT_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_TEXT_DESC );
-				$settings[$p.'amount']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_PERCENTAGE_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_PERCENTAGE_DESC );
+				$settings[$p.'amount']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_AMOUNT_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_AMOUNT_DESC );
 				$settings[$p.'mode']		= array( 'list', sprintf( _MI_MI_AECMODIFYCOST_SET_MODE_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_MODE_DESC );
-				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_MODIFY_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_MODIFY_DESC );
+				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_EXTRA_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_EXTRA_DESC );
 				$settings[$p.'mi']			= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_MI_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_MI_DESC );
 
 				if ( isset( $this->settings[$p.'mode'] ) ) {
@@ -96,11 +92,6 @@ class mi_aecmodifycost
 			return false;
 		}
 
-		if ( !empty( $this->settings['custominfo'] ) ) {
-			$settings['vat_desc'] = array( 'p', "", _MI_MI_AECMODIFYCOST_VAT_DESC_NAME );
-			$settings['vat_number'] = array( 'inputC', _MI_MI_AECMODIFYCOST_VAT_NUMBER_NAME, _MI_MI_AECMODIFYCOST_VAT_NUMBER_DESC, '' );
-		}
-
 		return $settings;
 	}
 
@@ -120,7 +111,7 @@ class mi_aecmodifycost
 	{
 		$option = $this->getOption( $request );
 
-		if ( $option['id'] == $request->params['option'] ) {
+		if ( !empty( $option ) ) {
 			$request = $this->addCost( $request, $option, true );
 		}
 
@@ -131,8 +122,19 @@ class mi_aecmodifycost
 	{
 		$option = $this->getOption( $request );
 
-		if ( $option['id'] == $request->params['option'] ) {
+		if ( !empty( $option ) ) {
 			$request = $this->addCost( $request, $option );
+		}
+
+		return true;
+	}
+
+	function modifyPrice( $request )
+	{
+		$option = $this->getOption( $request );
+
+		if ( !empty( $option ) ) {
+			//$request = $this->addCost( $request, $option );
 		}
 
 		return true;
@@ -181,10 +183,15 @@ class mi_aecmodifycost
 
 			$request->add[] = $x;
 		} else {
-			$m['terms']->terms[0]->setCost( $newtotal );
+			//$m['terms']->terms[0]->setCost( $newtotal );)
 
-			$m['terms']->terms[0]->addCost( $extracost, array( 'details' => $option['extra'] ) );
-			$m['cost'] = $total;
+			if ( !empty( $option['extra'] ) ) {
+				$m['terms']->terms[0]->addCost( $extracost, array( 'details' => $option['extra'] ) );
+			} else {
+				$m['terms']->terms[0]->addCost( $extracost );
+			}
+
+			$m['cost'] = $newtotal;
 
 			$request->add[] = $m;
 		}
@@ -245,7 +252,7 @@ class mi_aecmodifycost
 			for ( $i=0; $this->settings['options']>$i; $i++ ) {
 				$options[] = array(	'id'			=> $this->settings[$i.'_id'],
 									'text'			=> $this->settings[$i.'_text'],
-									'percentage'	=> $this->settings[$i.'_amount'],
+									'amount'		=> $this->settings[$i.'_amount'],
 									'mode'			=> $this->settings[$i.'_mode'],
 									'extra'			=> $this->settings[$i.'_extra'],
 									'mi'			=> $this->settings[$i.'_mi']

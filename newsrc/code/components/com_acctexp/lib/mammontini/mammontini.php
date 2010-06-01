@@ -400,6 +400,10 @@ class mammonTerm extends eucaObject
 			}
 		}
 
+		if ( empty( $this->type ) ) {
+			$this->type = $type;
+		}
+
 		$cost = new mammonCost();
 		$cost->set( 'type', $type );
 

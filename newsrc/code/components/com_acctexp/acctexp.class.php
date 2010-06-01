@@ -1171,9 +1171,9 @@ class metaUser
 		}
 	}
 
-	function getProperty( $key )
+	function getProperty( $key, $test=false )
 	{
-		return AECToolbox::getObjectProperty( $this, $key );
+		return AECToolbox::getObjectProperty( $this, $key , $test);
 	}
 
 	function getPreviousPlan()
@@ -5207,7 +5207,7 @@ class aecHTML
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>';
+				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . /*$row[2] .*/ '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case 'checkbox':
@@ -10436,7 +10436,13 @@ class Invoice extends serialParamDBTable
 					$int_var['recurring'] = $InvoiceFactory->pp->is_recurring();
 				}
 
-				$terms = $int_var['objUsage']->getTermsForUser( $int_var['recurring'], $InvoiceFactory->metaUser );
+				if ( !empty( $InvoiceFactory->items ) ) {
+					$max = array_pop( array_keys( $InvoiceFactory->items ) );
+
+					$terms = $InvoiceFactory->items[$max]['terms'];
+				} else {
+					$terms = $int_var['objUsage']->getTermsForUser( $int_var['recurring'], $InvoiceFactory->metaUser );
+				}
 
 				$int_var['amount']		= $terms->getOldAmount( $int_var['recurring'] );
 
@@ -13257,16 +13263,23 @@ class reWriteEngine
 					return false;
 				}
 
-				// We also support dot notation for the vars,
-				// so explode if that is what the admin wants here
-				if ( !is_array( $vars ) && ( strpos( $vars, '.' ) !== false ) ) {
-					$temp = explode( '.', $vars );
-					$vars = $temp;
-				} elseif ( !is_array( $vars ) ) {
+				$result = AECToolbox::getObjectProperty( $this->data, $vars );
+				break;
+			case 'safedata':
+				if ( empty( $this->data ) ) {
 					return false;
 				}
 
-				$result = AECToolbox::getObjectProperty( $this->data, $vars );
+				if ( AECToolbox::getObjectProperty( $this->data, $vars, true ) ) {
+					$result = AECToolbox::getObjectProperty( $this->data, $vars );
+				}
+				break;
+			case 'checkdata':
+				if ( empty( $this->data ) ) {
+					return false;
+				}
+
+				$result = AECToolbox::getObjectProperty( $this->data, $vars, true );
 				break;
 			case 'metaUser':
 				if ( !is_object( $this->data['metaUser'] ) ) {
@@ -14596,7 +14609,7 @@ class AECToolbox
 		return $result;
 	}
 
-	function getObjectProperty( $object, $key )
+	function getObjectProperty( $object, $key, $test=false )
 	{
 		if ( !is_array( $key ) ) {
 			if ( strpos( $key, '.' ) !== false ) {
@@ -14606,7 +14619,13 @@ class AECToolbox
 
 		if ( !is_array( $key ) ) {
 			if ( isset( $object->$key ) ) {
-				return $object->$key;
+				if ( $test ) {
+					return true;
+				} else {
+					return $object->$key;
+				}
+			} elseif ( $test ) {
+				return false;
 			} else {
 				return null;
 			}
@@ -14623,7 +14642,13 @@ class AECToolbox
 
 				if ( is_object( $subject ) ) {
 					if ( property_exists( $subject, $k ) ) {
-						$return =& $subject->$k;
+						if ( $test ) {
+							return true;
+						} else {
+							$return =& $subject->$k;
+						}
+					} elseif ( $test ) {
+						return false;
 					} else {
 						$database = &JFactory::getDBO();
 
@@ -14636,7 +14661,13 @@ class AECToolbox
 					}
 				} elseif ( is_array( $subject ) ) {
 					if ( isset( $subject[$k] ) ) {
-						$return =& $subject[$k];
+						if ( $test ) {
+							return true;
+						} else {
+							$return =& $subject[$k];
+						}
+					} elseif ( $test ) {
+						return false;
 					} else {
 						$database = &JFactory::getDBO();
 
@@ -14648,6 +14679,8 @@ class AECToolbox
 						$eventlog->issue( $err, $erp, $event, 128, array() );
 					}
 
+				} elseif ( $test ) {
+					return false;
 				} else {
 					$database = &JFactory::getDBO();
 
@@ -14947,11 +14980,13 @@ class microIntegrationHandler
 	{
 		$database = &JFactory::getDBO();
 
-		$add = new stdClass();
-		$add->terms =& $terms;
+		$add = array();
+		$add[] = array( 'terms' => $terms );
 
-		if ( !empty( $subscription->micro_integrations ) ) {
-			foreach ( $subscription->micro_integrations as $mi_id ) {
+		$micro_integrations = $subscription->getMicroIntegrations();
+
+		if ( !empty( $micro_integrations ) ) {
+			foreach ( $micro_integrations as $mi_id ) {
 				$mi = new microIntegration( $database );
 
 				if ( !$mi->mi_exists( $mi_id ) ) {
@@ -14965,7 +15000,7 @@ class microIntegrationHandler
 				}
 
 				if ( method_exists( $mi->mi_class, 'modifyPrice' )  ) {
-					$mi->relayAction( $metaUser, null, null, $subscription, 'modifyPrice', $add );
+					//$mi->relayAction( $metaUser, null, null, $subscription, 'modifyPrice', $add );
 				}
 
 				unset( $mi );
