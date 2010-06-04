@@ -12354,7 +12354,7 @@ class AECfetchfromDB
 				. ' ORDER BY `id` DESC'
 				;
 		$database->setQuery( $query );
-		$invoice_list = $database->loadResultArray();
+		$invoice_list = $database->loadObjectList();
 
 		if ( empty( $invoice_list ) ) {
 			return false;

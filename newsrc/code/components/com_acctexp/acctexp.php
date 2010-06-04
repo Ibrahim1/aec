@@ -388,9 +388,9 @@ function hold( $option, $userid )
 
 function expired( $option, $userid, $expiration )
 {
-	$database = &JFactory::getDBO();
-
 	global $mainframe, $aecConfig;
+
+	$database = &JFactory::getDBO();
 
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );
@@ -438,9 +438,9 @@ function expired( $option, $userid, $expiration )
 
 function pending( $option, $userid )
 {
-	$database = &JFactory::getDBO();
+	global $mainframe;
 
-		global $mainframe;
+	$database = &JFactory::getDBO();
 
 	$reason = "";
 
@@ -482,11 +482,11 @@ function pending( $option, $userid )
 
 function subscribe( $option )
 {
+	global $aecConfig;
+
 	$database = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
-
-	global $aecConfig;
 
 	$task		= aecGetParam( 'task', 0, true, array( 'word', 'string' ) );
 	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
