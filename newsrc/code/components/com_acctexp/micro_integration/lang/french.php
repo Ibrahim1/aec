@@ -1270,4 +1270,17 @@ define( '_MI_MI_ADSMANAGER_REBUILD_DESC',			'Choose yes and then save the MI to 
 define( '_MI_MI_ADSMANAGER_REMOVE_NAME',			'Remove: ' );
 define( '_MI_MI_ADSMANAGER_REMOVE_DESC',			'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
 
+// JNews
+define( '_AEC_MI_NAME_JNEWS',		'JNews' );
+define( '_AEC_MI_DESC_JNEWS',		'Includes the newsletter JNews' );
+define( '_MI_MI_JNEWS_LIST_NAME',		'Set List' );
+define( '_MI_MI_JNEWS_LIST_DESC',		'Which Mailing list do you want to assign this user to?' );
+define( '_MI_MI_JNEWS_LIST_EXP_NAME',		'Set Expiration List' );
+define( '_MI_MI_JNEWS_LIST_EXP_DESC',		'Which Mailing list do you want to assign this user to after expiration?' );
+define( '_MI_MI_JNEWS_CUSTOMINFO_NAME',		'Custom Info' );
+define( '_MI_MI_JNEWS_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
+define( '_MI_MI_JNEWS_USER_CHECKBOX_NAME',		'User Checkbox' );
+define( '_MI_MI_JNEWS_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter.' );
+define( '_MI_MI_JNEWS_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
+
 ?>

@@ -1318,4 +1318,17 @@ define( '_MI_MI_AECMODIFYCOST_SET_EXTRA_DESC',	'Line Item Text as it will show u
 define( '_MI_MI_AECMODIFYCOST_SET_MI_NAME',	'#%s: MI' );
 define( '_MI_MI_AECMODIFYCOST_SET_MI_DESC',	'Chain an MI to this option - the MI will be carried out when the plan is paid for' );
 
+// JNews
+define( '_AEC_MI_NAME_JNEWS',		'JNews' );
+define( '_AEC_MI_DESC_JNEWS',		'Includes the newsletter JNews' );
+define( '_MI_MI_JNEWS_LIST_NAME',		'Set List' );
+define( '_MI_MI_JNEWS_LIST_DESC',		'Which Mailing list do you want to assign this user to?' );
+define( '_MI_MI_JNEWS_LIST_EXP_NAME',		'Set Expiration List' );
+define( '_MI_MI_JNEWS_LIST_EXP_DESC',		'Which Mailing list do you want to assign this user to after expiration?' );
+define( '_MI_MI_JNEWS_CUSTOMINFO_NAME',		'Custom Info' );
+define( '_MI_MI_JNEWS_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
+define( '_MI_MI_JNEWS_USER_CHECKBOX_NAME',		'User Checkbox' );
+define( '_MI_MI_JNEWS_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter.' );
+define( '_MI_MI_JNEWS_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
+
 ?>
