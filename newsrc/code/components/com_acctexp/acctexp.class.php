@@ -9635,6 +9635,27 @@ class Invoice extends serialParamDBTable
 		return $database->loadResult();
 	}
 
+	function isRecurring()
+	{
+		if ( !empty( $this->subscr_id ) ) {
+			$database = &JFactory::getDBO();
+
+			$query = 'SELECT `recurring`'
+					. ' FROM #__acctexp_subscr'
+					. ' WHERE `id` = \'' . $this->subscr_id . '\''
+					;
+
+			$database->setQuery( $query );
+			return $database->loadResult();
+		}
+
+		if ( isset( $this->params['userselect_recurring'] ) ) {
+			
+		}
+
+		return false;
+	}
+
 	function computeAmount( $InvoiceFactory=null, $save=true, $recurring_choice=null )
 	{
 		$database = &JFactory::getDBO();
@@ -10771,6 +10792,12 @@ class Invoice extends serialParamDBTable
 			$date = strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->transaction_date ) );
 
 			$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, $date );
+		}
+
+		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
+			$data['recurringstatus'] = "";
+		} else {
+			$data['recurringstatus'] = sprintf( _INVOICEPRINT_RECURRINGSTATUS_ONCE, $this->counter );
 		}
 
 		$otherfields = array( "page_title", "before_header", "header", "after_header", "address", "before_content", "after_content", "before_footer", "footer", "after_footer" );
