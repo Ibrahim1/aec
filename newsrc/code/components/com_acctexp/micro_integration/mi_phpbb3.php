@@ -56,6 +56,8 @@ class mi_phpbb3
 	{
 		$database = $this->getDB();
 
+		$phpbbdb = $this->getDB();
+
 		if ( !empty( $this->settings['table_prefix'] ) ) {
 			$prefix = $this->settings['table_prefix'];
 		} else {
@@ -124,7 +126,7 @@ class mi_phpbb3
 
 		$settings['create_user']			= array( 'list_yesno' );
 
-		$userfields = $this->getUserFields();
+		$userfields = $this->getUserFields( $phpbbdb );
 
 		foreach ( $userfields as $key ) {
 			$ndesc = _MI_MI_PHPBB3_CREATE_FIELD . ": " . $key;
@@ -172,7 +174,7 @@ class mi_phpbb3
 
 		$phpbbdb = $this->getDB();
 
-		$phpbbUserId = $this->phpbbUserid( $request->metaUser->cmsUser->email );
+		$phpbbUserId = $this->phpbbUserid( $phpbbdb, $request->metaUser->cmsUser->email );
 
 		if ( empty( $phpbbUserId ) && empty( $this->settings['create_user'] ) ) {
 			return null;
@@ -203,7 +205,7 @@ class mi_phpbb3
 
 			$this->createUser( $phpbbdb, $content );
 
-			$phpbbUserId = $this->phpbbUserid( $request->metaUser->cmsUser->email );
+			$phpbbUserId = $this->phpbbUserid( $phpbbdb, $request->metaUser->cmsUser->email );
 		} elseif ( $this->settings['update_user'] ) {
 			$fields = $this->getUserFields( $phpbbdb );
 
@@ -244,13 +246,13 @@ class mi_phpbb3
 
 	function expiration_action( $request )
 	{
-		$phpbbUserId = $this->phpbbUserid( $request->metaUser->cmsUser->email );
+		$phpbbdb = $this->getDB();
+
+		$phpbbUserId = $this->phpbbUserid( $phpbbdb, $request->metaUser->cmsUser->email );
 
 		if ( empty( $phpbbUserId ) && empty( $this->settings['create_user'] ) ) {
 			return null;
 		}
-
-		$phpbbdb = $this->getDB();
 
 		if ( $this->settings['update_user_exp'] ) {
 			$fields = $this->getUserFields( $phpbbdb );
