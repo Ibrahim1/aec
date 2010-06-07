@@ -277,7 +277,7 @@ function com_install()
 			padding: 0 12px;
 		}</style>
 	<div style="width: 1024px; margin: 0 auto;">
-	<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx.png) no-repeat top right; margin: 0 6px;">
+	<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx_0_14.png) no-repeat top right; margin: 0 6px;">
 		<div style="width: 100%; height: 290px;"></div>
 		<?php
 		if ( $errors ) {
@@ -308,7 +308,7 @@ function com_install()
 		</div>
 		<div style="width: 100%; height: 60px;"></div>
 	</div>
-	<div style="float: left; width: 400px; margin: 0 6px;">
+	<div style="float: left; width: 300px; margin: 0 50px;">
 		<div style="margin-left:auto;margin-right:auto;text-align:center;">
 			<br />
 			<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
