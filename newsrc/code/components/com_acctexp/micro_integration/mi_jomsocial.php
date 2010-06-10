@@ -27,6 +27,10 @@ class mi_jomsocial
 
 		$settings = array();
 		$settings['overwrite_existing']	= array( 'list_yesno' );
+		$settings['assign_group']		= array( 'inputC' );
+		$settings['remove_group']		= array( 'inputC' );
+		$settings['assign_group_exp']	= array( 'inputC' );
+		$settings['remove_group_exp']	= array( 'inputC' );
 		$settings['set_fields']			= array( 'list_yesno' );
 		$settings['set_fields_exp']		= array( 'list_yesno' );
 
@@ -72,6 +76,30 @@ class mi_jomsocial
 
 				if ( !empty( $changes ) ) {
 					$this->setFields( $changes, $request->metaUser->userid );
+				}
+
+				if ( !empty( $this->settings['assign_group'.$request->area] ) ) {
+					if ( strpos( ',', $this->settings['assign_group'.$request->area] ) !== false ) {
+						$grouplist = explode( ',', $this->settings['assign_group'.$request->area] );
+					} else {
+						$grouplist = array( $this->settings['assign_group'.$request->area] );
+					}
+
+					foreach ( $grouplist as $groupid ) {
+						$this->addToGroup( $request->metaUser->userid, $groupid );
+					}
+				}
+
+				if ( !empty( $this->settings['remove_group'.$request->area] ) ) {
+					if ( strpos( ',', $this->settings['remove_group'.$request->area] ) !== false ) {
+						$grouplist = explode( ',', $this->settings['remove_group'.$request->area] );
+					} else {
+						$grouplist = array( $this->settings['remove_group'.$request->area] );
+					}
+
+					foreach ( $grouplist as $groupid ) {
+						$this->removeFromGroup( $request->metaUser->userid, $groupid );
+					}
 				}
 			}
 		}
@@ -125,7 +153,61 @@ class mi_jomsocial
 				$database->query();
 			}
 		}
+	}
 
+	function addToGroup( $userid, $groupid )
+	{
+		$database = &JFactory::getDBO();
+
+		// Check whether group exists
+		$query = 'SELECT `id`'
+				. ' FROM #__community_groups'
+					. ' WHERE `id` = \'' . (int) $groupid . '\''
+				;
+		$database->setQuery( $query );
+
+		if( $database->loadResult() ) {
+			// Check whether user already has the group
+			$query = 'SELECT `groupid`'
+					. ' FROM #__community_groups_members'
+						. ' WHERE `groupid` = \'' . (int) $groupid . '\''
+						. ' AND `memberid` = \'' . (int) $userid . '\''
+					;
+			$database->setQuery( $query );
+
+			if( !$database->loadResult() ) {
+				$query	= 'INSERT INTO #__community_groups_members'
+						. ' (`groupid`, `memberid`, `approved` )'
+						. ' VALUES ( \'' . (int) $groupid . '\', \'' . (int) $userid . '\', \'1\' )'
+						;
+
+				$database->setQuery( $query );
+				$database->query();
+			}
+		}
+	}
+
+	function removeFromGroup( $userid, $groupid )
+	{
+		$database = &JFactory::getDBO();
+
+		// Check whether group exists
+		$query = 'SELECT `id`'
+				. ' FROM #__community_groups'
+					. ' WHERE `id` = \'' . (int) $groupid . '\''
+				;
+		$database->setQuery( $query );
+
+		if( $database->loadResult() ) {
+			$query	= 'DELETE'
+					. ' FROM #__community_groups_members'
+					. ' WHERE `groupid` = \'' . (int) $groupid . '\''
+					. ' AND `memberid` = \'' . (int) $userid . '\''
+					;
+
+			$database->setQuery( $query );
+			$database->query();
+		}
 	}
 }
 ?>

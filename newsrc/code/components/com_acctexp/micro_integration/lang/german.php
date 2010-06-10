@@ -1053,6 +1053,15 @@ define( '_MI_MI_JOMSOCIAL_SET_FIELDS_EXP_NAME',	'Set Fields Expiration' );
 define( '_MI_MI_JOMSOCIAL_SET_FIELDS_EXP_DESC',	'Automatically set the fields (which are marked with "(expiration)" when the plan is paid for.' );
 define( '_MI_MI_JOMSOCIAL_EXPMARKER',			'(expiration)' );
 
+define( '_MI_MI_JOMSOCIAL_ASSIGN_GROUP_NAME',		'Assign Group(s)' );
+define( '_MI_MI_JOMSOCIAL_ASSIGN_GROUP_DESC',		'List one or more groups (by their ID) that will be applied to the user - separate by comma if you want to assign more than one' );
+define( '_MI_MI_JOMSOCIAL_REMOVE_GROUP_NAME',		'Remove Group(s)' );
+define( '_MI_MI_JOMSOCIAL_REMOVE_GROUP_DESC',		'List one or more groups (by their ID) that the user will be expelled from - separate by comma if you want to remove more than one' );
+define( '_MI_MI_JOMSOCIAL_ASSIGN_GROUP_EXP_NAME',		'Assign Group(s) (expiration)' );
+define( '_MI_MI_JOMSOCIAL_ASSIGN_GROUP_EXP_DESC',		'List one or more groups (by their ID) that will be applied to the user on expiration - separate by comma if you want to assign more than one' );
+define( '_MI_MI_JOMSOCIAL_REMOVE_GROUP_EXP_NAME',		'Remove Group(s) (expiration)' );
+define( '_MI_MI_JOMSOCIAL_REMOVE_GROUP_EXP_DESC',		'List one or more groups (by their ID) that the user will be expelled from on expiration - separate by comma if you want to remove more than one' );
+
 // Tax Helper
 define( '_AEC_MI_NAME_AECTAX',		'Tax Helper' );
 define( '_AEC_MI_DESC_AECTAX',		'Specify tax for this item - affects Confirmation&amp;Checkout screen, Item cost and Invoice printout' );
