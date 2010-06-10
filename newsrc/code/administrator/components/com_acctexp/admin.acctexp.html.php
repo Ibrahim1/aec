@@ -1675,7 +1675,7 @@ class HTML_AcctExp
 							<td>
 								<h2><?php echo _MI_E_TITLE_LONG; ?></h2>
 								<div class="userinfobox">
-									<div style="position:relative;float:left;">
+									<div style="position:relative;">
 										<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>

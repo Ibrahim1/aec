@@ -9650,7 +9650,7 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( isset( $this->params['userselect_recurring'] ) ) {
-			
+
 		}
 
 		return false;
@@ -13455,6 +13455,12 @@ class reWriteEngine
 					$result = 0;
 				}
 				break;
+			case 'randomstring':
+				$result = AECToolbox::randomstring( (int) $vars[0] );
+				break;
+			case 'randomstring_alphanum':
+				$result = AECToolbox::randomstring( (int) $vars[0], true );
+				break;
 			case 'php_function':
 				if ( isset( $vars[1] ) ) {
 					$result = call_user_func_array( $vars[0], $vars[1] );
@@ -14266,6 +14272,25 @@ class AECToolbox
 				;
 		$database->setQuery( $query );
 		return $database->loadResult();
+	}
+
+	function randomstring( $length=16, $alphanum_only=false )
+	{
+		$random = "";
+		for ( $i=0; $i<$length; $i++ ) {
+
+			if ( $alphanum_only ) {
+				// Only get alpha-numeric characters
+				$rarray = array( rand( 0, 9 ), chr( rand( 65, 90 ) ), chr( rand( 97, 122 ) ) );
+
+				$random .= $rarray[rand( 0, 2 )];
+			} else {
+				// Only get non-crazy characters
+				$random .= chr( rand( 33, 126 ) );
+			}
+		}
+
+		return $random;
 	}
 
 	function quickVerifyUserID( $userid )
