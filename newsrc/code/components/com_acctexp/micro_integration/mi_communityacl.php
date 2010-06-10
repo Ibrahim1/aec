@@ -126,18 +126,21 @@ class mi_communityacl
 
 	function action( $request )
 	{
-		require_once(JPATH_ADMINISTRATOR . '/components/com_community_acl/community_acl.class.php');
-		$db = &JFactory::getDBO();
+		if ( is_dir( JPATH_SITE . '/components/com_community_acl' ) ) {
+			require_once( JPATH_ADMINISTRATOR . '/components/com_community_acl/community_acl.class.php' );
 
-		$settings = array();
+			$db = &JFactory::getDBO();
 
-		if (!empty( $this->settings['cacl_group_list'] ) && !empty( $this->settings['cacl_role_list'] ) ) {
-				$cacl_usr = new CACL_user($db);
-				$cacl_usr->user_id       = $request->metaUser->userid;
-				$cacl_usr->group_id  	 = (isset($this->settings['cacl_group_list'])? $this->settings['cacl_group_list']: 0);
-				$cacl_usr->role_id       = (isset($this->settings['cacl_role_list'])? $this->settings['cacl_role_list']: 0);
-				$cacl_usr->function_id   = (isset($this->settings['cacl_func_list'])? $this->settings['cacl_func_list']: 0);
-				$cacl_usr->store();
+			$settings = array();
+
+			if ( !empty( $this->settings['cacl_group_list'] ) && !empty( $this->settings['cacl_role_list'] ) ) {
+					$cacl_usr = new CACL_user($db);
+					$cacl_usr->user_id       = $request->metaUser->userid;
+					$cacl_usr->group_id  	 = (isset($this->settings['cacl_group_list'])? $this->settings['cacl_group_list']: 0);
+					$cacl_usr->role_id       = (isset($this->settings['cacl_role_list'])? $this->settings['cacl_role_list']: 0);
+					$cacl_usr->function_id   = (isset($this->settings['cacl_func_list'])? $this->settings['cacl_func_list']: 0);
+					$cacl_usr->store();
+			}
 		}
 
 		return true;

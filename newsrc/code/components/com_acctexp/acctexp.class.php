@@ -13456,10 +13456,10 @@ class reWriteEngine
 				}
 				break;
 			case 'randomstring':
-				$result = AECToolbox::randomstring( (int) $vars[0] );
+				$result = AECToolbox::randomstring( (int) $vars );
 				break;
 			case 'randomstring_alphanum':
-				$result = AECToolbox::randomstring( (int) $vars[0], true );
+				$result = AECToolbox::randomstring( (int) $vars, true );
 				break;
 			case 'php_function':
 				if ( isset( $vars[1] ) ) {
@@ -14088,11 +14088,13 @@ class AECToolbox
 				global $mainframe;
 
 				// Check for request forgeries
-				JRequest::checkToken() or die( 'Invalid Token' );
+				if ( !$internal ) {
+					JRequest::checkToken() or die( 'Invalid Token' );
+				}
 
 				// Get required system objects
 				$user 		= clone(JFactory::getUser());
-				$pathway 	=& $mainframe->getPathway();
+				//$pathway 	=& $mainframe->getPathway();
 				$config		=& JFactory::getConfig();
 				$authorize	=& JFactory::getACL();
 				$document   =& JFactory::getDocument();
