@@ -13461,6 +13461,9 @@ class reWriteEngine
 			case 'randomstring_alphanum':
 				$result = AECToolbox::randomstring( (int) $vars, true );
 				break;
+			case 'randomstring_alphanum_large':
+				$result = AECToolbox::randomstring( (int) $vars, true, true );
+				break;
 			case 'php_function':
 				if ( isset( $vars[1] ) ) {
 					$result = call_user_func_array( $vars[0], $vars[1] );
@@ -14276,16 +14279,22 @@ class AECToolbox
 		return $database->loadResult();
 	}
 
-	function randomstring( $length=16, $alphanum_only=false )
+	function randomstring( $length=16, $alphanum_only=false, $uppercase=false )
 	{
 		$random = "";
 		for ( $i=0; $i<$length; $i++ ) {
 
 			if ( $alphanum_only ) {
 				// Only get alpha-numeric characters
-				$rarray = array( rand( 0, 9 ), chr( rand( 65, 90 ) ), chr( rand( 97, 122 ) ) );
+				if ( $uppercase ) {
+					$rarray = array( rand( 0, 9 ), chr( rand( 65, 90 ) ) );
 
-				$random .= $rarray[rand( 0, 2 )];
+					$random .= $rarray[rand( 0, 1 )];
+				} else {
+					$rarray = array( rand( 0, 9 ), chr( rand( 65, 90 ) ), chr( rand( 97, 122 ) ) );
+					
+					$random .= $rarray[rand( 0, 2 )];
+				}
 			} else {
 				// Only get non-crazy characters
 				$random .= chr( rand( 33, 126 ) );
