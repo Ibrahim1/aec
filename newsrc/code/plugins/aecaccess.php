@@ -110,8 +110,6 @@ class plgUserAECaccess extends JPlugin
 			$savetask = $_REQUEST['task'];
 		}
 
-		include_once( JPATH_ROOT .DS.'components'.DS.'com_acctexp'.DS.'acctexp.php' );
-
 		$_REQUEST['task'] = $savetask;
 
 		$verification = AECToolbox::VerifyUser( $credentials['username'] );
