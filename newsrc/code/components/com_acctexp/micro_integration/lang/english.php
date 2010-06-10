@@ -746,10 +746,10 @@ define( '_MI_MI_PHPBB3_SET_GROUP_EXP_NAME','Set Group (Expiration)' );
 define( '_MI_MI_PHPBB3_SET_GROUP_EXP_DESC','Choose Yes if you wish the phpBB3 group to be changed when the plan expires' );
 define( '_MI_MI_PHPBB3_GROUP_EXP_NAME','Group (Expiration)' );
 define( '_MI_MI_PHPBB3_GROUP_EXP_DESC','The group you wish to apply when the plan expires.' );
-define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_NAME','Remove Groups (Expiration)' );
-define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_DESC','Choose Yes if you wish a phpBB3 group to be applied when the plan expires' );
-define( '_MI_MI_PHPBB3_REMOVE_GROUP_NAME','Groups (Expiration)' );
-define( '_MI_MI_PHPBB3_REMOVE_GROUP_DESC','The groups you wish to be removed when the plan expires - if you chose yes above.' );
+define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_EXP_NAME','Remove Groups (Expiration)' );
+define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_EXP_DESC','Choose Yes if you wish a phpBB3 group to be applied when the plan expires' );
+define( '_MI_MI_PHPBB3_REMOVE_GROUP_EXP_NAME','Groups (Expiration)' );
+define( '_MI_MI_PHPBB3_REMOVE_GROUP_EXP_DESC','The groups you wish to be removed when the plan expires - if you chose yes above.' );
 define( '_MI_MI_PHPBB3_SET_GROUPS_EXCLUDE_NAME',	'Exclude Groups?' );
 define( '_MI_MI_PHPBB3_SET_GROUPS_EXCLUDE_DESC',	'If set to Yes, all groups that a user belongs to will be checked for exclusion (primary and secondary groups).  Set to No and only primary groups will be checked against the exclude list' );
 define( '_MI_MI_PHPBB3_SET_CLEAR_GROUPS_NAME',		'Clear Groups' );
@@ -1125,9 +1125,9 @@ define( '_MI_MI_AECTAX_VAT_COUNTRYLIST_DESC',	'For the locations list, automatic
 define( '_MI_MI_AECTAX_VAT_LOCALTAX_NAME',	'Use local tax' );
 define( '_MI_MI_AECTAX_VAT_LOCALTAX_DESC',	'For the automatically added EU countries, use the local VAT tax instead of the one supplied below' );
 define( '_MI_MI_AECTAX_VAT_PERCENTAGE_NAME',	'VAT Tax Percentage' );
-define( '_MI_MI_AECTAX_VAT_PERCENTAGE_NAME',	'A global tax rate - in case you don\'t want to use the individual tax rates' );
+define( '_MI_MI_AECTAX_VAT_PERCENTAGE_DESC',	'A global tax rate - in case you don\'t want to use the individual tax rates' );
 define( '_MI_MI_AECTAX_VAT_MODE_NAME',	'VAT Mode' );
-define( '_MI_MI_AECTAX_VAT_MODE_NAME',	'Select how the percentage is supposed to be applied' );
+define( '_MI_MI_AECTAX_VAT_MODE_DESC',	'Select how the percentage is supposed to be applied' );
 
 // File
 define( '_AEC_MI_FILE_NAME',		'File' );
@@ -1303,7 +1303,7 @@ define( '_MI_MI_AECMODIFYCOST_CUSTOMINFO_DESC',		'AEC normally displays the text
 
 define( '_MI_MI_AECMODIFYCOST_SET_MODE_BASIC',	'Add Amount' );
 define( '_MI_MI_AECMODIFYCOST_SET_MODE_PERCENTAGE',	'Add Amount as Percentage' );
-define( '_MI_MI_AECTAX_DEFAULT_NOTICE',		'Please select:' );
+define( '_MI_MI_AECMODIFYCOST_DEFAULT_NOTICE',		'Please select:' );
 
 define( '_MI_MI_AECMODIFYCOST_SET_ID_NAME',		'#%s: Short ID' );
 define( '_MI_MI_AECMODIFYCOST_SET_ID_DESC',		'A technical/internal handle for the setting. i.e.: "telephone_number" or "pool_size" - no spaces or funny characters' );

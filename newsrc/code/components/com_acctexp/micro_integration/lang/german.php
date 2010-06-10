@@ -1098,9 +1098,9 @@ define( '_MI_MI_AECTAX_VAT_COUNTRYLIST_DESC',	'For the locations list, automatic
 define( '_MI_MI_AECTAX_VAT_LOCALTAX_NAME',	'Use local tax' );
 define( '_MI_MI_AECTAX_VAT_LOCALTAX_DESC',	'For the automatically added EU countries, use the local VAT tax instead of the one supplied below' );
 define( '_MI_MI_AECTAX_VAT_PERCENTAGE_NAME',	'VAT Tax Percentage' );
-define( '_MI_MI_AECTAX_VAT_PERCENTAGE_NAME',	'A global tax rate - in case you don\'t want to use the individual tax rates' );
+define( '_MI_MI_AECTAX_VAT_PERCENTAGE_DESC',	'A global tax rate - in case you don\'t want to use the individual tax rates' );
 define( '_MI_MI_AECTAX_VAT_MODE_NAME',	'VAT Mode' );
-define( '_MI_MI_AECTAX_VAT_MODE_NAME',	'Select how the percentage is supposed to be applied' );
+define( '_MI_MI_AECTAX_VAT_MODE_DESC',	'Select how the percentage is supposed to be applied' );
 
 // File
 define( '_AEC_MI_FILE_NAME',		'File' );
