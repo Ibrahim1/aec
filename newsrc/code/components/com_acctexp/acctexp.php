@@ -789,9 +789,9 @@ function subscriptionDetails( $option, $sub='overview' )
 		$properties['upgrade_button'] = false;
 	} elseif ( $aecConfig->cfg['renew_button_nolifetimerecurring'] ) {
 		if ( !empty( $metaUser->objSubscription->lifetime ) ) {
-			if ( $metaUser->isRecurring() || $metaUser->objSubscription->lifetime ) {
-				$properties['upgrade_button'] = false;
-			}
+			$properties['upgrade_button'] = false;
+		} elseif ( $metaUser->isRecurring() ) {
+			$properties['upgrade_button'] = false;
 		}
 	}
 

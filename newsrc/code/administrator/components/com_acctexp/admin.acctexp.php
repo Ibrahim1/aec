@@ -2169,9 +2169,11 @@ function editSettings( $option )
 
 	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
-	$selected_plan = isset($aecConfig->cfg['entry_plan']) ? $aecConfig->cfg['entry_plan'] : '0';
+	if ( !isset( $aecConfig->cfg['entry_plan'] ) ) {
+		$aecConfig->cfg['entry_plan'] = 0;
+	}
 
-	$lists['entry_plan'] = mosHTML::selectList($available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $selected_plan);
+	$lists['entry_plan'] = mosHTML::selectList( $available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $aecConfig->cfg['entry_plan'] );
 
 	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
@@ -4472,7 +4474,7 @@ function editMicroIntegration ( $id, $option )
 					} else {
 						$nname = $mi_item->name;
 					}
-					
+
 					$len = 60 - AECToolbox::visualstrlen( trim( $nname ) );
 					$fullname = str_replace( '#', '&nbsp;', str_pad( $nname, $len, '#' ) ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
 					$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
