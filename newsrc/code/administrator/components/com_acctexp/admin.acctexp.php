@@ -1294,11 +1294,13 @@ function saveUser( $option, $apply=0 )
 
 	global $mainframe;
 
-	$metaUser = new metaUser( $_POST['userid'] );
+	$post = $_POST;
+
+	$metaUser = new metaUser( $post['userid'] );
 	$established = false;
 
-	if ( $metaUser->hasSubscription && !empty( $_POST['id'] ) ) {
-		$metaUser->moveFocus( $_POST['id'] );
+	if ( $metaUser->hasSubscription && !empty( $post['id'] ) ) {
+		$metaUser->moveFocus( $post['id'] );
 	}
 
 	$ck_primary = aecGetParam( 'ck_primary', 'off' );
@@ -1307,16 +1309,16 @@ function saveUser( $option, $apply=0 )
 		$metaUser->focusSubscription->makePrimary();
 	}
 
-	if ( !empty( $_POST['assignto_plan'] ) ) {
+	if ( !empty( $post['assignto_plan'] ) ) {
 		$plan = new SubscriptionPlan( $database );
-		$plan->load( $_POST['assignto_plan'] );
+		$plan->load( $post['assignto_plan'] );
 
 		$metaUser->establishFocus( $plan );
 
-		$metaUser->focusSubscription->applyUsage( $_POST['assignto_plan'], 'none', 1 );
+		$metaUser->focusSubscription->applyUsage( $post['assignto_plan'], 'none', 1 );
 
 		// We have to reload the metaUser object because of the changes
-		$metaUser = new metaUser( $_POST['userid'] );
+		$metaUser = new metaUser( $post['userid'] );
 
 		$established = true;
 	}
@@ -1329,17 +1331,17 @@ function saveUser( $option, $apply=0 )
 		exit();
 	}
 
-	if ( empty( $_POST['assignto_plan'] ) ) {
+	if ( empty( $post['assignto_plan'] ) ) {
 		if ( strcmp( $ck_lifetime, 'on' ) == 0 ) {
 			$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
 			$metaUser->focusSubscription->status		= 'Active';
 			$metaUser->focusSubscription->lifetime	= 1;
-		} elseif ( !empty( $_POST['expiration'] ) ) {
-			if ( $_POST['expiration'] != $_POST['expiration_check'] ) {
-				if ( strpos( $_POST, ':' ) === false ) {
-					$metaUser->focusSubscription->expiration = $_POST['expiration'] . ' 00:00:00';
+		} elseif ( !empty( $post['expiration'] ) ) {
+			if ( $post['expiration'] != $post['expiration_check'] ) {
+				if ( strpos( $post, ':' ) === false ) {
+					$metaUser->focusSubscription->expiration = $post['expiration'] . ' 00:00:00';
 				} else {
-					$metaUser->focusSubscription->expiration = $_POST['expiration'];
+					$metaUser->focusSubscription->expiration = $post['expiration'];
 				}
 				$metaUser->focusSubscription->status = 'Active';
 				$metaUser->focusSubscription->lifetime = 0;
@@ -1361,8 +1363,8 @@ function saveUser( $option, $apply=0 )
 		}
 	}
 
-	if ( !empty( $_POST['notes'] ) ) {
-		$metaUser->focusSubscription->customparams['notes'] = $_POST['notes'];
+	if ( !empty( $post['notes'] ) ) {
+		$metaUser->focusSubscription->customparams['notes'] = $post['notes'];
 	}
 
 	$userMIs = $metaUser->getUserMIs();
@@ -1376,8 +1378,8 @@ function saveUser( $option, $apply=0 )
 			$uf = $m->profile_form( $metaUser );
 			if ( !empty( $uf ) ) {
 				foreach ( $uf as $k => $v ) {
-					if ( isset( $_POST[$pref.$k] ) ) {
-						$params[$k] = $_POST[$pref.$k];
+					if ( isset( $post[$pref.$k] ) ) {
+						$params[$k] = $post[$pref.$k];
 					}
 				}
 
@@ -1387,8 +1389,8 @@ function saveUser( $option, $apply=0 )
 			$af = $m->admin_form( $metaUser );
 			if ( !empty( $af ) ) {
 				foreach ( $af as $k => $v ) {
-					if ( isset( $_POST[$pref.$k] ) ) {
-						$params[$k] = $_POST[$pref.$k];
+					if ( isset( $post[$pref.$k] ) ) {
+						$params[$k] = $post[$pref.$k];
 					}
 				}
 
@@ -1414,7 +1416,7 @@ function saveUser( $option, $apply=0 )
 
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 	if ( $apply ) {
-		$subID = !empty($_POST['id']) ? $_POST['id'] : $metaUser->focusSubscription->id;
+		$subID = !empty($post['id']) ? $post['id'] : $metaUser->focusSubscription->id;
 		aecRedirect( 'index2.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, _AEC_MSG_SUCESSFULLY_SAVED );
 	} else {
 		aecRedirect( 'index2.php?option=' . $option . '&task=' . $nexttask, _SAVED );
