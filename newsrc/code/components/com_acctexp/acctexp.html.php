@@ -519,7 +519,7 @@ class HTML_Results
 
 class Payment_HTML
 {
-	function selectSubscriptionPlanForm( $option, $userid, $list, $expired, $passthrough=false, $register=false, $cart=false )
+	function selectSubscriptionPlanForm( $option, $userid, $list, $passthrough=false, $register=false, $cart=false )
 	{
 		global $aecConfig;
 

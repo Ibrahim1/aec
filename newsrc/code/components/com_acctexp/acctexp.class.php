@@ -7257,18 +7257,29 @@ class InvoiceFactory
 
 	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null )
 	{
-		$database = &JFactory::getDBO();
-		$user = &JFactory::getUser();
+		// If we have some kind of internal call, we need to load the HTML class
+		if ( !class_exists( 'Payment_HTML' ) ) {		
+			global $mainframe;
 
-		global $mainframe;
+			require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
+		}
+
+		$this->initVars( $userid, $usage, $group, $processor, $invoice );
+
+		$this->initPassthrough( $passthrough );
+
+		$this->verifyUsage();
+	}
+
+	function initVars( $userid, $usage, $group, $processor, $invoice )
+	{
+		$user = &JFactory::getUser();
 
 		$this->userid = $userid;
 		$this->authed = false;
 
-		require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
-
 		// Check whether this call is legitimate
-		if ( !$user->id ) {
+		if ( !empty( $user->id ) ) {
 			if ( !$this->userid ) {
 				// Its ok, this is a registration/subscription hybrid call
 				$this->authed = true;
@@ -7277,7 +7288,21 @@ class InvoiceFactory
 					// This user is not expired, so he could log in...
 					return aecNotAuth();
 				} else {
+					$database = &JFactory::getDBO();
+
 					$this->userid = $database->getEscaped( $userid );
+
+					// Delete set userid if it doesn't exist
+					if ( !is_null( $this->userid ) ) {
+						$query = 'SELECT `id`'
+								. ' FROM #__users'
+								. ' WHERE `id` = \'' . $this->userid . '\'';
+						$database->setQuery( $query );
+			
+						if ( !$database->loadResult() ) {
+							$this->userid = null;
+						}
+					}
 				}
 			}
 		} else {
@@ -7291,7 +7316,10 @@ class InvoiceFactory
 		$this->group			= $group;
 		$this->processor		= $processor;
 		$this->invoice_number	= $invoice;
+	}
 
+	function initPassthrough( $passthrough )
+	{
 		if ( empty( $passthrough ) ) {
 			$passthrough = aecPostParamClear( $_POST );
 		}
@@ -7313,26 +7341,14 @@ class InvoiceFactory
 		} else {
 			$this->passthrough = $passthrough;
 		}
-
-		// Delete set userid if it doesn't exist
-		if ( !is_null( $this->userid ) ) {
-			$query = 'SELECT `id`'
-					. ' FROM #__users'
-					. ' WHERE `id` = \'' . $this->userid . '\'';
-			$database->setQuery( $query );
-
-			if ( !$database->loadResult() ) {
-				$this->userid = null;
-			}
-		}
-
-		if ( $this->usage ) {
-			$this->verifyUsage();
-		}
 	}
 
 	function verifyUsage()
 	{
+		if ( empty( $this->usage ) ) {
+			return null;
+		}
+
 		$database = &JFactory::getDBO();
 
 		$this->loadMetaUser( false, true );
@@ -7360,16 +7376,10 @@ class InvoiceFactory
 
 			switch ( $unset ) {
 				case 'userdetails':
-					$unsets[] = 'name';
-					$unsets[] = 'username';
-					$unsets[] = 'password';
-					$unsets[] = 'password2';
-					$unsets[] = 'email';
+					$unset = array_merge( $unset, array( 'name', 'username', 'password', 'password2', 'email' ) );
 					break;
 				case 'usage':
-					$unsets[] = 'usage';
-					$unsets[] = 'processor';
-					$unsets[] = 'recurring';
+					$unset = array_merge( $unset, array( 'usage', 'processor', 'recurring' ) );
 					break;
 				default:
 					break;
@@ -7411,197 +7421,7 @@ class InvoiceFactory
 			$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
 
 			if ( count( $procs ) > 1 ) {
-				$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
-
-				$c	= false;
-				$e	= false;
-				$s	= array();
-				$sx	= array();
-				$se	= true;
-
-				foreach ( $pgroups as $pgid => $pgroup ) {
-					if ( count( $pgroup['processors'] ) < 2 ) {
-						if ( !empty( $pgroup['processors'][0] ) ) {
-							$pgroups[$pgid]['processor'] = $pgroup['processors'][0];
-						}
-
-						continue;
-					}
-
-					$ex = array();
-					if ( $c ) {
-						$ex['head'] = null;
-						$ex['desc'] = null;
-					} else {
-						$ex['head'] = "Select Payment Processor";
-						$ex['desc'] = "There are a number of possible payment processors for one or more of your items, please select one below:<br />";
-					}
-
-					$ex['rows'] = array();
-
-					$fname = 'cartgroup_'.$pgid.'_processor';
-
-					$pgsel = aecGetParam( $fname, null, true, array( 'word', 'string' ) );
-
-					$selection = false;
-					if ( !is_null( $pgsel ) ) {
-						if ( in_array( $pgsel, $pgroup['processors'] ) ) {
-							$selection = $pgsel;
-						}
-					}
-
-					if ( !empty( $selection ) ) {
-						if ( count( $s ) > 0 ) {
-							if ( !in_array( $selection, $s ) ) {
-								$se = false;
-							}
-						}
-
-						$pgroups[$pgid]['processor'] = $selection;
-						$s[] = $selection;
-
-						$sx[] = array( 'hidden', $pgsel, $fname, $pgsel );
-
-						continue;
-					} else {
-						$c = true;
-
-						$ex['desc'] .= "<ul>";
-
-						foreach ( $pgroup['members'] as $pgmember ) {
-							$ex['desc'] .= "<li><strong>" . $this->cart[$pgmember]['name'] . "</strong><br /></li>";
-						}
-
-						$ex['desc'] .= "</ul>";
-
-						foreach ( $pgroup['processors'] as $pid => $pgproc ) {
-							$pgex = $pgproc;
-
-							if ( strpos( $pgproc, '_recurring' ) ) {
-								$pgex = str_replace( '_recurring', '', $pgproc );
-								$recurring = true;
-							} else {
-								$recurring = false;
-							}
-
-							$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $pgroup['processor_names'][$pid].( $recurring ? ' (recurring billing)' : '') );
-						}
-					}
-
-					if ( !empty( $ex['rows'] ) && $c ) {
-						$this->raiseException( $ex );
-
-						$e = true;
-					}
-				}
-
-				if ( $e && !empty( $sx ) ) {
-					$ex = array();
-					$ex['head'] = null;
-					$ex['desc'] = null;
-					$ex['rows'] = array();
-
-					foreach ( $sx as $silent ) {
-						$ex['rows'][] = $silent;
-					}
-
-					$this->raiseException( $ex );
-				}
-
-				if ( !$se ) {
-					// We have different processors selected for this cart
-					$prelg = array();
-					foreach ( $pgroups as $pgid => $pgroup ) {
-						$prelg[$pgroup['processor']][] = $pgroup;
-					}
-
-					$invoice_highest = 0;
-					foreach ( $prelg as $processor => $pgroups ) {
-						if ( strpos( $processor, '_recurring' ) ) {
-							$processor_name = PaymentProcessor::getNameById( str_replace( '_recurring', '', $processor ) );
-
-							$procrecurring = true;
-						} else {
-							$processor_name = PaymentProcessor::getNameById( $processor );
-
-							if ( isset( $_POST['recurring'] ) ) {
-								$procrecurring = $_POST['recurring'];
-							} else {
-								$procrecurring = false;
-							}
-						}
-
-						$mpg = array_pop( array_keys( $pgroups ) );
-						if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
-							// We have more than one item for this processor, create temporary cart
-							$tempcart = new aecCart( $database );
-							$tempcart->userid = $this->userid;
-
-							foreach ( $pgroups as $pgr ) {
-								foreach ( $pgr['members'] as $member ) {
-									$r = $tempcart->addItem( array(), $this->cartobject->content[$member]['id'] );
-								}
-							}
-
-							$tempcart->storeload();
-
-							$carthash = 'c.' . $tempcart->id;
-
-							// Create a cart invoice
-							$invoice = new Invoice( $database );
-							$invoice->create( $this->userid, $carthash, $processor_name, null, true, $this, $procrecurring );
-						} else {
-							// Only one item in this, create a simple invoice
-							$member = $pgroups[$mpg]['members'][0];
-
-							$invoice = new Invoice( $database );
-							$invoice->create( $this->userid, $this->cartobject->content[$member]['id'], $processor_name, null, true, $this, $procrecurring );
-						}
-
-						if ( $invoice->amount == "0.00" ) {
-							$invoice->pay();
-						} elseif ( $invoice->amount > $invoice_highest ) {
-							$finalinvoice = $invoice;
-						}
-					}
-
-					$ex['head'] = "Invoice split up";
-					$ex['desc'] = "The contents of your shopping cart cannot be processed in one go. This is why we have split up the invoice - you can pay for the first part right now and access the other parts as separate invoices later from your membership page.";
-					$ex['rows'] = array();
-
-					$this->raiseException( $ex );
-
-					$this->invoice_number = $finalinvoice->invoice_number;
-					$this->invoice = $finalinvoice;
-
-					$this->touchInvoice( $option );
-
-					$objUsage = $this->invoice->getObjUsage();
-
-					if ( is_a( $objUsage, 'aecCart' ) ) {
-						$this->cartobject = $objUsage;
-
-						$this->getCart();
-					} else {
-						$this->plan = $objUsage;
-					}
-				} else {
-					$mpg = array_pop( array_keys( $pgroups ) );
-
-					if ( strpos( $pgroups[$mpg]['processor'], '_recurring' ) ) {
-						$processor = str_replace( '_recurring', '', $pgroups[$mpg]['processor'] );
-						$this->recurring = true;
-					} else {
-						$processor = $pgroups[$mpg]['processor'];
-						$this->recurring = false;
-					}
-
-					$procname = PaymentProcessorHandler::getProcessorNamefromId( $processor );
-
-					if ( !empty( $procname ) ) {
-						$this->processor = $procname;
-					}
-				}
+				$this->cartItemsPPselectForm( $option );
 			} else {
 				if ( isset( $procs[0] ) ) {
 					$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
@@ -7635,6 +7455,214 @@ class InvoiceFactory
 			$this->cartprocexceptions = true;
 		}
 
+		$this->loadProcessorObject();
+
+		$this->loadRenewStatus();
+
+		$this->loadPaymentInfo();
+
+		return;
+	}
+
+	function cartItemsPPselectForm( $option )
+	{
+		$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
+
+		$c	= false;
+		$e	= false;
+		$s	= array();
+		$sx	= array();
+		$se	= true;
+
+		foreach ( $pgroups as $pgid => $pgroup ) {
+			if ( count( $pgroup['processors'] ) < 2 ) {
+				if ( !empty( $pgroup['processors'][0] ) ) {
+					$pgroups[$pgid]['processor'] = $pgroup['processors'][0];
+				}
+
+				continue;
+			}
+
+			$ex = array();
+			if ( $c ) {
+				$ex['head'] = null;
+				$ex['desc'] = null;
+			} else {
+				$ex['head'] = "Select Payment Processor";
+				$ex['desc'] = "There are a number of possible payment processors for one or more of your items, please select one below:<br />";
+			}
+
+			$ex['rows'] = array();
+
+			$fname = 'cartgroup_'.$pgid.'_processor';
+
+			$pgsel = aecGetParam( $fname, null, true, array( 'word', 'string' ) );
+
+			$selection = false;
+			if ( !is_null( $pgsel ) ) {
+				if ( in_array( $pgsel, $pgroup['processors'] ) ) {
+					$selection = $pgsel;
+				}
+			}
+
+			if ( !empty( $selection ) ) {
+				if ( count( $s ) > 0 ) {
+					if ( !in_array( $selection, $s ) ) {
+						$se = false;
+					}
+				}
+
+				$pgroups[$pgid]['processor'] = $selection;
+				$s[] = $selection;
+
+				$sx[] = array( 'hidden', $pgsel, $fname, $pgsel );
+
+				continue;
+			} else {
+				$c = true;
+
+				$ex['desc'] .= "<ul>";
+
+				foreach ( $pgroup['members'] as $pgmember ) {
+					$ex['desc'] .= "<li><strong>" . $this->cart[$pgmember]['name'] . "</strong><br /></li>";
+				}
+
+				$ex['desc'] .= "</ul>";
+
+				foreach ( $pgroup['processors'] as $pid => $pgproc ) {
+					$pgex = $pgproc;
+
+					if ( strpos( $pgproc, '_recurring' ) ) {
+						$pgex = str_replace( '_recurring', '', $pgproc );
+						$recurring = true;
+					} else {
+						$recurring = false;
+					}
+
+					$ex['rows'][] = array( 'radio', $fname, $pgproc, true, $pgroup['processor_names'][$pid].( $recurring ? ' (recurring billing)' : '') );
+				}
+			}
+
+			if ( !empty( $ex['rows'] ) && $c ) {
+				$this->raiseException( $ex );
+
+				$e = true;
+			}
+		}
+
+		if ( $e && !empty( $sx ) ) {
+			$ex = array();
+			$ex['head'] = null;
+			$ex['desc'] = null;
+			$ex['rows'] = array();
+
+			foreach ( $sx as $silent ) {
+				$ex['rows'][] = $silent;
+			}
+
+			$this->raiseException( $ex );
+		}
+
+		if ( !$se ) {
+			$database = &JFactory::getDBO();
+
+			// We have different processors selected for this cart
+			$prelg = array();
+			foreach ( $pgroups as $pgid => $pgroup ) {
+				$prelg[$pgroup['processor']][] = $pgroup;
+			}
+
+			$invoice_highest = 0;
+			foreach ( $prelg as $processor => $pgroups ) {
+				if ( strpos( $processor, '_recurring' ) ) {
+					$processor_name = PaymentProcessor::getNameById( str_replace( '_recurring', '', $processor ) );
+
+					$procrecurring = true;
+				} else {
+					$processor_name = PaymentProcessor::getNameById( $processor );
+
+					if ( isset( $_POST['recurring'] ) ) {
+						$procrecurring = $_POST['recurring'];
+					} else {
+						$procrecurring = false;
+					}
+				}
+
+				$mpg = array_pop( array_keys( $pgroups ) );
+				if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
+					// We have more than one item for this processor, create temporary cart
+					$tempcart = new aecCart( $database );
+					$tempcart->userid = $this->userid;
+
+					foreach ( $pgroups as $pgr ) {
+						foreach ( $pgr['members'] as $member ) {
+							$r = $tempcart->addItem( array(), $this->cartobject->content[$member]['id'] );
+						}
+					}
+
+					$tempcart->storeload();
+
+					$carthash = 'c.' . $tempcart->id;
+
+					// Create a cart invoice
+					$invoice = new Invoice( $database );
+					$invoice->create( $this->userid, $carthash, $processor_name, null, true, $this, $procrecurring );
+				} else {
+					// Only one item in this, create a simple invoice
+					$member = $pgroups[$mpg]['members'][0];
+
+					$invoice = new Invoice( $database );
+					$invoice->create( $this->userid, $this->cartobject->content[$member]['id'], $processor_name, null, true, $this, $procrecurring );
+				}
+
+				if ( $invoice->amount == "0.00" ) {
+					$invoice->pay();
+				} elseif ( $invoice->amount > $invoice_highest ) {
+					$finalinvoice = $invoice;
+				}
+			}
+
+			$ex['head'] = "Invoice split up";
+			$ex['desc'] = "The contents of your shopping cart cannot be processed in one go. This is why we have split up the invoice - you can pay for the first part right now and access the other parts as separate invoices later from your membership page.";
+			$ex['rows'] = array();
+
+			$this->raiseException( $ex );
+
+			$this->invoice_number = $finalinvoice->invoice_number;
+			$this->invoice = $finalinvoice;
+
+			$this->touchInvoice( $option );
+
+			$objUsage = $this->invoice->getObjUsage();
+
+			if ( is_a( $objUsage, 'aecCart' ) ) {
+				$this->cartobject = $objUsage;
+
+				$this->getCart();
+			} else {
+				$this->plan = $objUsage;
+			}
+		} else {
+			$mpg = array_pop( array_keys( $pgroups ) );
+
+			if ( strpos( $pgroups[$mpg]['processor'], '_recurring' ) ) {
+				$processor = str_replace( '_recurring', '', $pgroups[$mpg]['processor'] );
+				$this->recurring = true;
+			} else {
+				$processor = $pgroups[$mpg]['processor'];
+				$this->recurring = false;
+			}
+
+			$procname = PaymentProcessorHandler::getProcessorNamefromId( $processor );
+
+			if ( !empty( $procname ) ) {
+				$this->processor = $procname;
+			}
+		}
+	}
+
+	function loadProcessorObject()
+	{
 		if ( !empty( $this->processor ) ) {
 			$this->pp					= false;
 			$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
@@ -7667,6 +7695,8 @@ class InvoiceFactory
 
 						$this->payment->currency	= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
 					} else {
+						$database = &JFactory::getDBO();
+
 						$short	= 'processor loading failure';
 						$event	= 'Tried to load processor: ' . $this->processor;
 						$tags	= 'processor,loading,error';
@@ -7678,7 +7708,10 @@ class InvoiceFactory
 					break;
 			}
 		}
+	}
 
+	function loadRenewStatus()
+	{
 		$user_subscription = false;
 		$this->renew = 0;
 
@@ -7686,6 +7719,8 @@ class InvoiceFactory
 			if ( !empty( $this->metaUser ) ) {
 				$this->renew = count( $this->metaUser->meta->plan_history ) > 1;
 			} elseif ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
+				$database = &JFactory::getDBO();
+
 				$user_subscription = new Subscription( $database );
 				$user_subscription->loadUserID( $this->userid );
 
@@ -7694,7 +7729,10 @@ class InvoiceFactory
 				}
 			}
 		}
+	}
 
+	function loadPaymentInfo()
+	{
 		$this->payment->freetrial = 0;
 		$this->payment->amount = null;
 
@@ -7739,7 +7777,6 @@ class InvoiceFactory
 			$this->payment->amount_format = $this->payment->amount;
 		}
 
-		return;
 	}
 
 	function raiseException( $exception )
@@ -7958,17 +7995,15 @@ class InvoiceFactory
 
 		if ( !is_array( $usage ) ) {
 			$id = $usage;
+
 			$usage = array( $id );
 		}
 
-		$redirect = "";
 		foreach ( $usage as $us ) {
 			$this->cartobject->action( 'addItem', $us );
 
 			$plan = new SubscriptionPlan( $database );
 			$plan->load( $us );
-
-			$usageid = $us;
 		}
 
 		if ( !empty( $plan->params['addtocart_redirect'] ) ) {
@@ -8013,12 +8048,12 @@ class InvoiceFactory
 		$this->cartobject->action( 'updateItems', array( $item => 0 ) );
 	}
 
-	function touchInvoice( $option, $invoice_number=false, $storenew=false, $coupon=false )
+	function touchInvoice( $option, $invoice_number=false, $storenew=false )
 	{
 		// Checking whether we are trying to repeat an invoice
 		if ( !empty( $invoice_number ) ) {
 			// Make sure the invoice really exists and that its the correct user carrying out this action
-			$invoiceid = AECfetchfromDB::InvoiceIDfromNumber($invoice_number, $this->userid);
+			$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $this->userid );
 
 			if ( $invoiceid ) {
 				$this->invoice_number = $invoice_number;
@@ -8027,77 +8062,9 @@ class InvoiceFactory
 
 		$recurring = null;
 		if ( !empty( $this->invoice_number ) ) {
-			if ( !isset( $this->invoice ) ) {
-				$this->invoice = null;
-			}
-
-			if ( !is_object( $this->invoice ) ) {
-				$database = &JFactory::getDBO();
-				$this->invoice = new Invoice( $database );
-			}
-
-			if ( $this->invoice->invoice_number != $this->invoice_number ) {
-				$this->invoice->loadInvoiceNumber( $this->invoice_number );
-			}
-
-			if ( !empty( $coupon ) ) {
-				$this->invoice->addCoupon( $coupon );
-			}
-
-			$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
-
-			$this->processor = $this->invoice->method;
-			$this->usage = $this->invoice->usage;
-
-			if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
-				$this->create( $option, 0, 0, $this->invoice_number );
-			} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) !== false ) ) {
-				$this->create( $option, 0, $this->usage, $this->invoice_number );
-			}
+			$this->loadInvoice( $option );
 		} else {
-			$database = &JFactory::getDBO();
-
-			$this->invoice = new Invoice( $database );
-
-			$id = 0;
-			if ( strpos( $this->usage, 'c' ) !== false ) {
-				$id = aecCartHelper::getInvoiceIdByCart( $this->cartobject );
-			}
-
-			if ( $id ) {
-				$this->invoice->load( $id );
-
-				if ( !empty( $coupon ) ) {
-					$this->invoice->addCoupon( $coupon );
-				}
-			} else {
-				if ( strpos( $this->processor, '_recurring' ) !== false ) {
-					$processor = str_replace( '_recurring', '', $this->processor );
-					$recurring = true;
-				} else {
-					$processor = $this->processor;
-					$recurring = null;
-				}
-
-				$this->invoice->create( $this->userid, $this->usage, $processor, null, $storenew, null, $recurring );
-
-				if ( !empty( $coupon ) ) {
-					$this->invoice->addCoupon( $coupon );
-				}
-
-				if ( $storenew ) {
-					$this->storeInvoice();
-				}
-			}
-
-			// Reset parameters
-			if ( !empty( $this->invoice->method ) ) {
-				$this->processor			= $this->invoice->method;
-			}
-
-			if ( !empty( $this->invoice->usage ) ) {
-				$this->usage				= $this->invoice->usage;
-			}
+			$recurring = $this->createInvoice( $storenew );
 		}
 
 		if ( is_null( $recurring ) ) {
@@ -8111,7 +8078,82 @@ class InvoiceFactory
 			$this->invoice->storeload();
 		}
 
-		return;
+		return true;
+	}
+
+	function loadInvoice( $option )
+	{
+		if ( !isset( $this->invoice ) ) {
+			$this->invoice = null;
+		}
+
+		if ( !is_object( $this->invoice ) ) {
+			$database = &JFactory::getDBO();
+			$this->invoice = new Invoice( $database );
+		}
+
+		if ( $this->invoice->invoice_number != $this->invoice_number ) {
+			$this->invoice->loadInvoiceNumber( $this->invoice_number );
+		}
+
+		$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
+
+		$this->processor = $this->invoice->method;
+		$this->usage = $this->invoice->usage;
+
+		if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
+			$this->create( $option, 0, 0, $this->invoice_number );
+		} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) !== false ) ) {
+			$this->create( $option, 0, $this->usage, $this->invoice_number );
+		}
+	}
+
+	function createInvoice( $storenew=false )
+	{
+		$database = &JFactory::getDBO();
+
+		$this->invoice = new Invoice( $database );
+
+		$id = 0;
+		if ( strpos( $this->usage, 'c' ) !== false ) {
+			$id = aecCartHelper::getInvoiceIdByCart( $this->cartobject );
+		}
+
+		if ( $id ) {
+			$this->invoice->load( $id );
+		} else {
+			if ( strpos( $this->processor, '_recurring' ) !== false ) {
+				$processor = str_replace( '_recurring', '', $this->processor );
+				$recurring = true;
+			} else {
+				$processor = $this->processor;
+				$recurring = null;
+			}
+
+			$this->invoice->create( $this->userid, $this->usage, $processor, null, $storenew, null, $recurring );
+
+			if ( $storenew ) {
+				$this->storeInvoice();
+			}
+		}
+
+		// Reset parameters
+		if ( !empty( $this->invoice->method ) ) {
+			$this->processor			= $this->invoice->method;
+		}
+
+		if ( !empty( $this->invoice->usage ) ) {
+			$this->usage				= $this->invoice->usage;
+		}
+
+		return $recurring;
+	}
+
+	function InvoiceAddCoupon( $coupon )
+	{
+		if ( !empty( $coupon ) ) {
+			$this->invoice->addCoupon( $coupon );
+		}
 	}
 
 	function storeInvoice()
@@ -8128,6 +8170,7 @@ class InvoiceFactory
 
 		$this->triggerMIs( '_invoice_creation', $exchange, $add, $silent );
 
+		// Delete TempToken - the data is now safe with the invoice
 		$temptoken = new aecTempToken( $database );
 		$temptoken->getComposite();
 
@@ -8278,11 +8321,6 @@ class InvoiceFactory
 			}
 		}
 
-		$subscriptionClosed = false;
-		if ( $this->metaUser->hasSubscription ) {
-			$subscriptionClosed = ( strcmp( $this->metaUser->objSubscription->status, 'Closed' ) === 0 );
-		}
-
 		$recurring = aecGetParam( 'recurring', null );
 
 		if ( !is_null( $recurring ) ) {
@@ -8291,102 +8329,19 @@ class InvoiceFactory
 			$this->recurring = null;
 		}
 
-		$list = array();
+		$list = $this->getPlanList();
 
-		$auth_problem = false;
-
-		if ( !empty( $usage ) ) {
-			$query = 'SELECT `id`'
-					. ' FROM #__acctexp_plans'
-					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
-					;
-			$database->setQuery( $query );
-			$id = $database->loadResult();
-
-			if ( $database->getErrorNum() ) {
-				echo $database->stderr();
-				return false;
-			}
-
-			if ( $id ) {
-				$plan = new SubscriptionPlan( $database );
-				$plan->load( $id );
-
-				if ( !empty( $plan->params['fixed_redirect'] ) ) {
-					$auth_problem = $plan->params['fixed_redirect'];
+		// If we run into an Authorization problem, or no plans are available, redirect.
+		if ( !is_array( $list ) ) {
+			if ( $list ) {
+				if ( is_bool( $list ) ) {
+					return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
 				} else {
-					$restrictions = $plan->getRestrictionsArray();
-
-					if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
-						if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
-							$list[] = ItemGroupHandler::getItemListItem( $plan );
-						} else {
-							$auth_problem = true;
-						}
-					} else {
-						$auth_problem = true;
-					}
-
-					if ( $auth_problem && !empty( $plan->params['notauth_redirect'] ) ) {
-						$auth_problem = $plan->params['notauth_redirect'];
-					}
-				}
-			}
-		} elseif ( !empty( $group ) ) {
-			$g = new ItemGroup( $database );
-			$g->load( $group );
-
-			if ( $g->checkVisibility( $this->metaUser ) ) {
-				if ( !empty( $g->params['symlink'] ) ) {
-					aecRedirect( $g->params['symlink'] );
-				}
-
-				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
-
-				if ( count( $list ) == 0 ) {
-					$auth_problem = true;
+					return aecRedirect( $list );
 				}
 			} else {
-				$auth_problem = true;
+				return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
 			}
-
-			if ( $auth_problem && !empty( $g->params['notauth_redirect'] ) ) {
-				$auth_problem = $g->params['notauth_redirect'];
-			}
-		} else {
-			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
-				$x = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
-			} else {
-				$x = array( $aecConfig->cfg['root_group'] );
-			}
-
-			if ( !is_array( $x ) && !empty( $x ) ) {
-				$x = array( $x );
-			} else {
-				$x = array( $aecConfig->cfg['root_group'] );
-			}
-
-			$list = ItemGroupHandler::getTotalAllowedChildItems( $x, $this->metaUser );
-
-			// Retry in case a RWengine call didn't work out
-			if ( empty( $list ) && !empty( $aecConfig->cfg['root_group_rw'] ) ) {
-				$list = ItemGroupHandler::getTotalAllowedChildItems( $aecConfig->cfg['root_group'], $this->metaUser );
-			}
-		}
-
-		// There are no plans to begin with, so we need to punch out an error here
-		if ( count( $list ) == 0 ) {
-			if ( $auth_problem ) {
-				if ( is_bool( $auth_problem ) ) {
-					aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
-				} else {
-					aecRedirect( $auth_problem );
-				}
-			} else {
-				aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
-			}
-
-			return;
 		}
 
 		$groups	= array();
@@ -8679,7 +8634,99 @@ class InvoiceFactory
 			}
 
 			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $subscriptionClosed, $this->getPassthrough(), $register, $cart );
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart );
+		}
+	}
+
+	function getPlanList( $usage, $group )
+	{
+		$database = &JFactory::getDBO();
+
+		$auth_problem = null;
+
+		if ( !empty( $usage ) ) {
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_plans'
+					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
+					;
+			$database->setQuery( $query );
+			$id = $database->loadResult();
+
+			if ( $database->getErrorNum() ) {
+				echo $database->stderr();
+				return false;
+			}
+
+			if ( $id ) {
+				$plan = new SubscriptionPlan( $database );
+				$plan->load( $id );
+
+				if ( !empty( $plan->params['fixed_redirect'] ) ) {
+					$auth_problem = $plan->params['fixed_redirect'];
+				} else {
+					$restrictions = $plan->getRestrictionsArray();
+
+					if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
+						if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
+							$list[] = ItemGroupHandler::getItemListItem( $plan );
+						} else {
+							$auth_problem = true;
+						}
+					} else {
+						$auth_problem = true;
+					}
+
+					if ( $auth_problem && !empty( $plan->params['notauth_redirect'] ) ) {
+						$auth_problem = $plan->params['notauth_redirect'];
+					}
+				}
+			}
+		} elseif ( !empty( $group ) ) {
+			$g = new ItemGroup( $database );
+			$g->load( $group );
+
+			if ( $g->checkVisibility( $this->metaUser ) ) {
+				if ( !empty( $g->params['symlink'] ) ) {
+					aecRedirect( $g->params['symlink'] );
+				}
+
+				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
+
+				if ( count( $list ) == 0 ) {
+					$auth_problem = true;
+				}
+			} else {
+				$auth_problem = true;
+			}
+
+			if ( $auth_problem && !empty( $g->params['notauth_redirect'] ) ) {
+				$auth_problem = $g->params['notauth_redirect'];
+			}
+		} else {
+			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
+				$x = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
+			} else {
+				$x = array( $aecConfig->cfg['root_group'] );
+			}
+
+			if ( !is_array( $x ) && !empty( $x ) ) {
+				$x = array( $x );
+			} else {
+				$x = array( $aecConfig->cfg['root_group'] );
+			}
+
+			$list = ItemGroupHandler::getTotalAllowedChildItems( $x, $this->metaUser );
+
+			// Retry in case a RWengine call didn't work out
+			if ( empty( $list ) && !empty( $aecConfig->cfg['root_group_rw'] ) ) {
+				$list = ItemGroupHandler::getTotalAllowedChildItems( $aecConfig->cfg['root_group'], $this->metaUser );
+			}
+		}
+
+		if ( !is_null( $auth_problem ) ) {
+			return $auth_problem;
+		} else {
+			return $list;
 		}
 	}
 
@@ -8731,6 +8778,7 @@ class InvoiceFactory
 
 		if ( !empty( $this->mi_form ) ) {
 			$params = $this->plan->getMIformParams( $this->metaUser );
+
 			foreach ( $params as $mik => $miv ) {
 				if ( $mik == 'lists' ) {
 					continue;
@@ -8816,6 +8864,7 @@ class InvoiceFactory
 		$this->confirmed = 1;
 
 		$this->loadMetaUser( false, true );
+
 		$this->metaUser->setTempAuth();
 
 		$this->puffer( $option );
@@ -8942,7 +8991,11 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$this->touchInvoice( $option, false, true, $coupon );
+		$this->touchInvoice( $option, false, true );
+
+		if ( !empty( $coupon ) ) {
+			$this->InvoiceAddCoupon( $coupon );
+		}
 
 		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
@@ -9097,17 +9150,12 @@ class InvoiceFactory
 
 	function getObjUsage()
 	{
-		$database = &JFactory::getDBO();
-
-		$usage = null;
 		if ( isset( $this->invoice->usage ) ) {
 			return $this->invoice->getObjUsage();
-		} elseif ( isset( $this->usage ) ) {
-			$usage = $this->usage;
-		}
+		} elseif ( !empty( $this->usage ) ) {
+			$database = &JFactory::getDBO();
 
-		if ( !empty( $usage ) ) {
-			$u = explode( '.', $usage );
+			$u = explode( '.', $this->usage );
 
 			switch ( strtolower( $u[0] ) ) {
 				case 'c':
