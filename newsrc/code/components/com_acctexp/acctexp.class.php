@@ -6659,7 +6659,7 @@ class SubscriptionPlan extends serialParamDBTable
 			}
 		}
 
-		// Find parent ItemGroups to attache their MIs
+		// Find parent ItemGroups to attach their MIs
 		$parents = ItemGroupHandler::getParents( $this->id );
 
 		foreach ( $parents as $parent ) {
@@ -6685,6 +6685,10 @@ class SubscriptionPlan extends serialParamDBTable
 				;
 		$this->_db->setQuery( $query );
 		$list = $this->_db->loadResultArray();
+
+		if ( empty( $list ) ) {
+			return false;
+		}
 
 		return $list;
 	}
@@ -14292,7 +14296,7 @@ class AECToolbox
 					$random .= $rarray[rand( 0, 1 )];
 				} else {
 					$rarray = array( rand( 0, 9 ), chr( rand( 65, 90 ) ), chr( rand( 97, 122 ) ) );
-					
+
 					$random .= $rarray[rand( 0, 2 )];
 				}
 			} else {
@@ -15063,7 +15067,7 @@ class microIntegrationHandler
 				}
 
 				if ( method_exists( $mi->mi_class, 'modifyPrice' )  ) {
-					//$mi->relayAction( $metaUser, null, null, $subscription, 'modifyPrice', $add );
+					$mi->relayAction( $metaUser, null, null, $subscription, 'modifyPrice', $add );
 				}
 
 				unset( $mi );
