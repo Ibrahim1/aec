@@ -1493,7 +1493,7 @@ class metaUserDB extends serialParamDBTable
 	function is_renewing()
 	{
 		if ( isset( $this->plan_history->used_plans ) ) {
-			return count( $this->plan_history->used_plans );
+			return count( $this->plan_history->used_plans ) ? true : false;
 		} else {
 			return false;
 		}
@@ -7266,14 +7266,20 @@ class InvoiceFactory
 			require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
 		}
 
-		$this->initVars( $userid, $usage, $group, $processor, $invoice );
+		$this->initUser( $userid );
+
+		// Init variables
+		$this->usage			= $usage;
+		$this->group			= $group;
+		$this->processor		= $processor;
+		$this->invoice_number	= $invoice;
 
 		$this->initPassthrough( $passthrough );
 
 		$this->verifyUsage();
 	}
 
-	function initVars( $userid, $usage, $group, $processor, $invoice )
+	function initUser( $userid )
 	{
 		$user = &JFactory::getUser();
 
@@ -7287,7 +7293,7 @@ class InvoiceFactory
 				$this->authed = true;
 			} elseif ( $this->userid ) {
 				if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
-					// This user is not expired, so he could log in...
+					// This user is not expired, so she could log in...
 					return aecNotAuth();
 				} else {
 					$database = &JFactory::getDBO();
@@ -7312,12 +7318,6 @@ class InvoiceFactory
 			$this->userid = $user->id;
 			$this->authed = true;
 		}
-
-		// Init variables
-		$this->usage			= $usage;
-		$this->group			= $group;
-		$this->processor		= $processor;
-		$this->invoice_number	= $invoice;
 	}
 
 	function initPassthrough( $passthrough )
@@ -7719,7 +7719,7 @@ class InvoiceFactory
 
 		if ( !empty( $this->userid ) ) {
 			if ( !empty( $this->metaUser ) ) {
-				$this->renew = count( $this->metaUser->meta->plan_history ) > 1;
+				$this->renew = $this->metaUser->meta->is_renewing();
 			} elseif ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
 				$database = &JFactory::getDBO();
 
@@ -7778,7 +7778,6 @@ class InvoiceFactory
 		} else {
 			$this->payment->amount_format = $this->payment->amount;
 		}
-
 	}
 
 	function raiseException( $exception )
@@ -8302,8 +8301,6 @@ class InvoiceFactory
 	{
 		$database = &JFactory::getDBO();
 
-		$user = &JFactory::getUser();
-
 		global $mainframe, $aecConfig;
 
 		$register = $this->loadMetaUser( true );
@@ -8333,24 +8330,7 @@ class InvoiceFactory
 
 		$list = $this->getPlanList( $usage, $group );
 
-		// If we run into an Authorization problem, or no plans are available, redirect.
-		if ( !is_array( $list ) ) {
-			if ( $list ) {
-				if ( is_bool( $list ) ) {
-					return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
-				} else {
-					return aecRedirect( $list );
-				}
-			} else {
-				return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
-			}
-		}
-
-		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
-		 if ( count( $list ) == 0 ) {
-			aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR, false, true ), false, true );
-			return;
-		}
+		$this->checkListProblems( $list );
 
 		$list = $this->explodePlanList( $list );
 
@@ -8374,8 +8354,7 @@ class InvoiceFactory
 			if ( $register ) {
 				$this->registerRedirect( $option, $intro, $list[0] );
 			} else {
-				// The user is already existing, so we need to move on to the confirmation page with the details
-
+				// Existing user account - so we need to move on to the confirmation page with the details
 				$this->usage		= $list[0]['id'];
 
 				if ( isset( $list[0]['gw'][0]->recurring ) ) {
@@ -8390,14 +8369,7 @@ class InvoiceFactory
 					$this->invoice_number	= $invoice;
 				}
 
-				$password = aecGetParam( 'password', null );
-
-				$var = array();
-				if ( !is_null( $password ) ) {
-					$var['password'] = $password;
-				}
-
-				$this->confirm( $option, $var );
+				$this->confirm( $option );
 			}
 		} else {
 			// Reset $register if we seem to have all data
@@ -8464,6 +8436,9 @@ class InvoiceFactory
 						$auth_problem = $plan->params['notauth_redirect'];
 					}
 				}
+			} else {
+				// Plan does not exist
+				$auth_problem = true;
 			}
 		} elseif ( !empty( $group ) ) {
 			$g = new ItemGroup( $database );
@@ -8511,6 +8486,27 @@ class InvoiceFactory
 			return $auth_problem;
 		} else {
 			return $list;
+		}
+	}
+
+	function checkListProblems( $list )
+	{
+		// If we run into an Authorization problem, or no plans are available, redirect.
+		if ( !is_array( $list ) ) {
+			if ( $list ) {
+				if ( is_bool( $list ) ) {
+					return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
+				} else {
+					return aecRedirect( $list );
+				}
+			} else {
+				return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
+			}
+		}
+
+		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
+		 if ( count( $list ) == 0 ) {
+			return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR, false, true ), false, true );
 		}
 	}
 
@@ -8646,100 +8642,113 @@ class InvoiceFactory
 			}
 		}
 
-		// Send to CB or joomla!
+		// Send to registration handler
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-			// This is a CB registration, borrowing their code to register the user
-
-			if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
-				$database = &JFactory::getDBO();
-
-				$content = array();
-				$content['usage']		= $plan['id'];
-				$content['processor']	= $plan['gw'][0]->processor_name;
-				if ( isset( $plan['gw'][0]->recurring ) ) {
-					$content['recurring']	= $plan['gw'][0]->recurring;
-				}
-
-				$temptoken = new aecTempToken( $database );
-				$temptoken->create( $content );
-
-				$myparams = "";
-
-				if ( $_GET['fname'] ) {
-					setcookie( "fname", $_GET['fname'], time()+60*10 );
-				}
-
-				if ( $_GET['femail'] ) {
-					setcookie( "femail", $_GET['femail'], time()+60*10 );
-				}
-
-				aecRedirect( 'index.php?option=com_comprofiler&task=registers' );
-			} else {
-				global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
-
-				$savetask	= $task;
-				$_REQUEST['task'] = 'done';
-
-				include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
-				include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
-
-				$task = $savetask;
-
-				registerForm( $option, $mainframe->getCfg( 'emailpass' ), null );
-			}
+			$this->registerRedirectCB( $option, $plan );
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
-			// This is a JUSER registration, borrowing their code to register the user
+			$this->registerRedirectJUser( $option );
+		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+			$this->registerRedirectJomSocial( $option, $plan );
+		} else {
+			$this->registerRedirectJoomla( $option, $intro, $plan );
+		}
+	}
 
-			global $task;
+	function registerRedirectJoomla( $option, $intro, $plan )
+	{
+		global $mainframe;
+
+		if ( !isset( $_POST['usage'] ) ) {
+			$_POST['intro'] = $intro;
+			$_POST['usage'] = $plan['id'];
+		}
+
+		if ( aecJoomla15check() ) {
+			$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
+		} else {
+			$activation = $mainframe->getCfg( 'useractivation' );
+
+			joomlaregisterForm( $option, $activation );
+		}
+	}
+
+	function registerRedirectCB( $option, $plan )
+	{
+		if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+			$this->TempTokenFromPlan( $plan );
+
+			$myparams = "";
+
+			if ( $_GET['fname'] ) {
+				setcookie( "fname", $_GET['fname'], time()+60*10 );
+			}
+
+			if ( $_GET['femail'] ) {
+				setcookie( "femail", $_GET['femail'], time()+60*10 );
+			}
+
+			aecRedirect( 'index.php?option=com_comprofiler&task=registers' );
+		} else {
+			global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
 
 			$savetask	= $task;
-			$task = 'blind';
+			$_REQUEST['task'] = 'done';
 
-			include_once( JPATH_SITE . '/components/com_juser/juser.html.php' );
-			include_once( JPATH_SITE . '/components/com_juser/juser.php' );
+			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
+			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
 
 			$task = $savetask;
 
-			userRegistration( $option, null );
-		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
-			$database = &JFactory::getDBO();
+			registerForm( $option, $mainframe->getCfg( 'emailpass' ), null );
+		}
+	}
 
-			$temptoken = new aecTempToken( $database );
-			$temptoken->getComposite();
+	function registerRedirectJUser( $option )
+	{
+		global $task;
 
-			if ( empty( $temptoken->content ) ) {
-				$content = array();
-				$content['usage']		= $plan['id'];
-				$content['processor']	= $plan['gw'][0]->processor_name;
-				if ( isset( $plan['gw'][0]->recurring ) ) {
-					$content['recurring']	= $plan['gw'][0]->recurring;
-				}
+		$savetask	= $task;
+		$task		= 'blind';
 
-				$temptoken->create( $content );
-			} elseif ( empty( $temptoken->content['usage'] ) ) {
-				$temptoken->content['usage']		= $plan['id'];
-				$temptoken->content['processor']	= $plan['gw'][0]->processor_name;
-				if ( isset( $plan['gw'][0]->recurring ) ) {
-					$temptoken->content['recurring']	= $plan['gw'][0]->recurring;
-				}
+		include_once( JPATH_SITE . '/components/com_juser/juser.html.php' );
+		include_once( JPATH_SITE . '/components/com_juser/juser.php' );
 
-				$temptoken->storeload();
+		$task = $savetask;
+
+		userRegistration( $option, null );
+	}
+
+	function registerRedirectJomSocial( $option, $plan )
+	{
+		$this->TempTokenFromPlan( $plan );
+
+		aecRedirect( 'index.php?option=com_community&view=register' );
+	}
+
+	function TempTokenFromPlan( $plan )
+	{
+		$database = &JFactory::getDBO();
+
+		$temptoken = new aecTempToken( $database );
+		$temptoken->getComposite();
+
+		if ( empty( $temptoken->content ) ) {
+			$content = array();
+			$content['usage']		= $plan['id'];
+			$content['processor']	= $plan['gw'][0]->processor_name;
+			if ( isset( $plan['gw'][0]->recurring ) ) {
+				$content['recurring']	= $plan['gw'][0]->recurring;
 			}
 
-			aecRedirect( 'index.php?option=com_community&view=register' );
-		} else {
-			if ( !isset( $_POST['usage'] ) ) {
-				$_POST['intro'] = $intro;
-				$_POST['usage'] = $plan['id'];
+			$temptoken->create( $content );
+		} elseif ( empty( $temptoken->content['usage'] ) ) {
+			$temptoken->content['usage']		= $plan['id'];
+			$temptoken->content['processor']	= $plan['gw'][0]->processor_name;
+			if ( isset( $plan['gw'][0]->recurring ) ) {
+				$temptoken->content['recurring']	= $plan['gw'][0]->recurring;
 			}
 
-			if ( aecJoomla15check() ) {
-				$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
-			} else {
-				$activation = $mainframe->getCfg( 'useractivation' );
-
-				joomlaregisterForm( $option, $activation );
-			}
+			$temptoken->storeload();
 		}
 	}
 
@@ -8889,23 +8898,7 @@ class InvoiceFactory
 		}
 
 		if ( empty( $this->userid ) ) {
-			if ( !empty( $this->plan ) ) {
-				if ( isset( $this->plan->params['override_activation'] ) ) {
-					$overrideActivation = $this->plan->params['override_activation'];
-				} else {
-					$overrideActivation = false;
-				}
-
-				if ( isset( $this->plan->params['override_regmail'] ) ) {
-					$overrideEmail = $this->plan->params['override_regmail'];
-				} else {
-					$overrideEmail = false;
-				}
-
-				$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough, false, $overrideActivation, $overrideEmail );
-			} else {
-				$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough );
-			}
+			$this->saveUserRegistration( $option );
 		}
 
 		$this->loadMetaUser( true );
@@ -8913,60 +8906,91 @@ class InvoiceFactory
 
 		if ( !empty( $this->plan ) ) {
 			if ( is_object( $this->plan ) ) {
-				$mi_form = $this->plan->getMIformParams( $this->metaUser );
-
-				if ( !empty( $mi_form ) ) {
-					$params = array();
-					foreach ( $mi_form as $key => $value ) {
-						if ( strpos( $key, '[]' ) ) {
-							$key = str_replace( '[]', '', $key );
-						}
-
-						$value = aecGetParam( $key, '__DEL' );
-
-						if ( $value !== '__DEL' ) {
-							$k = explode( '_', $key, 3 );
-
-							if ( !isset( $params[$k[1]] ) ) {
-								$params[$k[1]] = array();
-							}
-
-							$params[$k[1]][$k[2]] = $value;
-						}
-					}
-
-					if ( !empty( $params ) ) {
-						foreach ( $params as $mi_id => $content ) {
-							$this->metaUser->meta->setMIParams( $mi_id, $this->plan->id, $content, true );
-						}
-
-						$this->metaUser->meta->storeload();
-					}
-
-					$verifymi = $this->plan->verifyMIformParams( $this->metaUser );
-
-					$this->mi_error = array();
-					if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
-						foreach ( $verifymi as $vmi ) {
-							if ( !is_array( $vmi ) ) {
-								continue;
-							}
-
-							if ( !empty( $vmi['error'] ) ) {
-								$this->mi_error[$vmi['id']] = $vmi['error'];
-							}
-						}
-					}
-
-					if ( !empty( $this->mi_error ) ) {
-						$this->confirmed = 0;
-						return $this->confirm( $option );
-					}
+				if ( !$this->verifyMIForms() ) {
+					$this->confirmed = 0;
+					return $this->confirm( $option );
 				}
 			}
 		}
 
 		$this->checkout( $option, 0, null, $coupon );
+	}
+
+	function saveUserRegistration( $option )
+	{
+		if ( !empty( $this->plan ) ) {
+			if ( isset( $this->plan->params['override_activation'] ) ) {
+				$overrideActivation = $this->plan->params['override_activation'];
+			} else {
+				$overrideActivation = false;
+			}
+
+			if ( isset( $this->plan->params['override_regmail'] ) ) {
+				$overrideEmail = $this->plan->params['override_regmail'];
+			} else {
+				$overrideEmail = false;
+			}
+
+			$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough, false, $overrideActivation, $overrideEmail );
+		} else {
+			$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough );
+		}
+	}
+
+	function verifyMIForms()
+	{
+		$mi_form = $this->plan->getMIformParams( $this->metaUser );
+
+		if ( !empty( $mi_form ) ) {
+			$params = array();
+			foreach ( $mi_form as $key => $value ) {
+				if ( strpos( $key, '[]' ) ) {
+					$key = str_replace( '[]', '', $key );
+				}
+
+				$value = aecGetParam( $key, '__DEL' );
+
+				if ( $value !== '__DEL' ) {
+					$k = explode( '_', $key, 3 );
+
+					if ( !isset( $params[$k[1]] ) ) {
+						$params[$k[1]] = array();
+					}
+
+					$params[$k[1]][$k[2]] = $value;
+				}
+			}
+
+			if ( !empty( $params ) ) {
+				foreach ( $params as $mi_id => $content ) {
+					$this->metaUser->meta->setMIParams( $mi_id, $this->plan->id, $content, true );
+				}
+
+				$this->metaUser->meta->storeload();
+			}
+
+			$verifymi = $this->plan->verifyMIformParams( $this->metaUser );
+
+			$this->mi_error = array();
+			if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
+				foreach ( $verifymi as $vmi ) {
+					if ( !is_array( $vmi ) ) {
+						continue;
+					}
+
+					if ( !empty( $vmi['error'] ) ) {
+						$this->mi_error[$vmi['id']] = $vmi['error'];
+					}
+				}
+			}
+
+			if ( !empty( $this->mi_error ) ) {
+				$this->confirmed = 0;
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	function checkout( $option, $repeat=0, $error=null, $coupon=null )
