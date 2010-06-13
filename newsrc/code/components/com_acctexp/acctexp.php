@@ -45,15 +45,15 @@ if ( empty( $task ) ) {
 	$translate = array( 'usage', 'group', 'processor', 'intro', 'sub' );
 
 	foreach ( $translate as $k ) {
-		if ( isset( $params[$k] ) ) {
-			$_POST[$k] = $params->get( $k );
-		}
+		$_POST[$k] = $params->get( $k );
 	}
 
 	$layout = trim( aecGetParam( 'layout' ) );
 
 	if ( !empty( $layout ) ) {
-		$task = $layout;
+		if ( $layout != 'default' ) {
+			$task = $layout;
+		}
 	}
 }
 

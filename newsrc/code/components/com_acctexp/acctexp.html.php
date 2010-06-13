@@ -1661,12 +1661,13 @@ class Payment_HTML
 		<?php
 	}
 
-		function errorAP( $option, $planid, $userid, $username, $name, $recurring )
-		{
-		HTML_frontend::aec_styling($option);?>
-				 <table class="single_subscription">
-					 <th class="heading"><?php echo _REGTITLE ?> <?php echo _ERRORCODE ?></th>
-					 <tr><td class="description"><?php echo _FTEXTA ?><br /><?php echo _RECODE ?></td></tr>
+	function errorAP( $option, $planid, $userid, $username, $name, $recurring )
+	{
+		HTML_frontend::aec_styling($option);
+		?>
+		<table class="single_subscription">
+			 <th class="heading"><?php echo _REGTITLE ?> <?php echo _ERRORCODE ?></th>
+			 <tr><td class="description"><?php echo _FTEXTA ?><br /><?php echo _RECODE ?></td></tr>
 			<tr><td class="buttons">
 				<div class="gateway_button">
 					<?php
@@ -1677,13 +1678,14 @@ class Payment_HTML
 				</td>
 			</tr>
 		</table>
-		<?php
+	<?php
 	}
 
-		function generalError( $option )
-		{
+	function generalError( $option )
+	{
 		HTML_frontend::aec_styling( $option );
-			 echo _AEC_GEN_ERROR;
+
+		echo _AEC_GEN_ERROR;
 	}
 }
 
