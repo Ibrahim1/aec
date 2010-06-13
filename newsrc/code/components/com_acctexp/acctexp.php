@@ -33,7 +33,29 @@ $user = &JFactory::getUser();
 $task = trim( aecGetParam( 'view' ) );
 
 if ( empty( $task ) ) {
+	// Regular mode - try to get the task
 	$task = trim( aecGetParam( 'task' ) );
+} else {
+	// 1.5 menu mode, translate menu parameters:
+	global $Itemid;
+
+	$database = &JFactory::getDBO();
+
+	$query = 'SELECT `params`'
+			. ' FROM #__menu'
+			. ' WHERE `id` = \'' . ( (int) $Itemid ) . '\''
+			;
+
+	$database->setQuery( $query );
+	$params = parameterHandler::decode( $database->loadResult() );
+
+	$translate = array( 'usage', 'group', 'processor', 'intro' );
+
+	foreach ( $translate as $k ) {
+		if ( isset( $params[$k] ) ) {
+			$_POST[$k] = $params[$k];
+		}
+	}
 }
 
 if ( !empty( $task ) ) {
@@ -65,6 +87,7 @@ if ( !empty( $task ) ) {
 		// Catch hybrid CMS registration
 		case 'saveregistration':
 		case 'subscribe':
+		case 'signup':
 			subscribe( $option );
 			break;
 
