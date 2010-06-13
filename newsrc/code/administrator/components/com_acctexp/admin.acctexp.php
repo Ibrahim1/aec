@@ -5960,11 +5960,13 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 					. $aec_condition_end
 					. $aec_hack_end;
 
-	// menu entry
-	$n = 'menuentry';
-	$hacks[$n]['name'] =	_AEC_HACKS_MENU_ENTRY;
-	$hacks[$n]['desc'] =	_AEC_HACKS_MENU_ENTRY_DESC;
-	$hacks[$n]['type'] =	'menuentry';
+	if ( !$v15 ) {
+		// menu entry
+		$n = 'menuentry';
+		$hacks[$n]['name'] =	_AEC_HACKS_MENU_ENTRY;
+		$hacks[$n]['desc'] =	_AEC_HACKS_MENU_ENTRY_DESC;
+		$hacks[$n]['type'] =	'menuentry';
+	}
 
 	if ( !$v15 ) {
 		// general section - checks core files

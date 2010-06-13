@@ -36,25 +36,24 @@ if ( empty( $task ) ) {
 	// Regular mode - try to get the task
 	$task = trim( aecGetParam( 'task' ) );
 } else {
-	// 1.5 menu mode, translate menu parameters:
-	global $Itemid;
+	if ( !aecJoomla15check() ) {
+		aecNotAuth();
+	}
 
-	$database = &JFactory::getDBO();
+	$params = &JComponentHelper::getParams( 'com_acctexp' );
 
-	$query = 'SELECT `params`'
-			. ' FROM #__menu'
-			. ' WHERE `id` = \'' . ( (int) $Itemid ) . '\''
-			;
-
-	$database->setQuery( $query );
-	$params = parameterHandler::decode( $database->loadResult() );
-
-	$translate = array( 'usage', 'group', 'processor', 'intro' );
+	$translate = array( 'usage', 'group', 'processor', 'intro', 'sub' );
 
 	foreach ( $translate as $k ) {
 		if ( isset( $params[$k] ) ) {
-			$_POST[$k] = $params[$k];
+			$_POST[$k] = $params->get( $k );
 		}
+	}
+
+	$layout = trim( aecGetParam( 'layout' ) );
+
+	if ( !empty( $layout ) ) {
+		$task = $layout;
 	}
 }
 
@@ -369,8 +368,9 @@ if ( !empty( $task ) ) {
 			break;
 
 		// Legacy - to be deprecated after thorough check
-		case 'ipn': processNotification($option, "paypal"); break;
-		case 'activateft': activateFT( $option ); break;
+		case 'ipn':
+			processNotification( $option, "paypal" );
+			break;
 
 		default:
 			if ( strpos( $task, 'notification' ) > 0 ) {

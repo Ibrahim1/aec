@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Exception Page">
+		<message>Link to individual pages during the AEC Signup Process</message>
+	</layout>
+	<state>
+		<name>Exception Page</name>
+		<description>AEC Signup - Exception Page - which always comes up when there is a problem during signup, like choosing multiple processors in one shopping cart.</description>
+		<params>
+		</params>
+	</state>
+</metadata>
