@@ -120,7 +120,12 @@ class plgSystemAECrouting extends JPlugin
 				$vars['has_usage']	= true;
 				$vars['usage']		= $temptoken->content['usage'];
 				$vars['processor']	= $temptoken->content['processor'];
-				$vars['recurring']	= $temptoken->content['recurring'];
+
+				if ( isset( $temptoken->content['recurring'] ) ) {
+					$vars['recurring']	= $temptoken->content['recurring'];
+				} else {
+					$vars['recurring']	= 0;
+				}
 
 				if ( isset( $temptoken->content['username'] ) ) {
 					$vars['username']	= $temptoken->content['username'];
