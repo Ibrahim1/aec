@@ -2336,7 +2336,7 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_CUSTOMINVOICE_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMINVOICE_SUBTITLE . '</h2>' );
 
-	$params[] = array( 'userinfobox', 100 );
+	$params[] = array( 'userinfobox', 48 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
 	$params['customintro']						= array( 'inputC', '' );
 	$params['customintro_userid']				= array( 'list_yesno', '' );
@@ -2345,7 +2345,23 @@ function editSettings( $option )
 	$params['customcancel']						= array( 'inputC', '' );
 	$params['customnotallowed']					= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
+	$params[] = array( 'userinfobox', 48 );
+	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_ITEMID );
+	$params['itemid_cart']						= array( 'inputB', '' );
+	$params['itemid_checkout']					= array( 'inputB', '' );
+	$params['itemid_confirmation']				= array( 'inputB', '' );
+	$params['itemid_subscribe']					= array( 'inputB', '' );
+	$params['itemid_exception']					= array( 'inputB', '' );
+	$params['itemid_thanks']					= array( 'inputB', '' );
+	$params['itemid_expired']					= array( 'inputB', '' );
+	$params['itemid_hold']						= array( 'inputB', '' );
+	$params['itemid_notallowed']				= array( 'inputB', '' );
+	$params['itemid_pending']					= array( 'inputB', '' );
+	$params['itemid_subscriptiondetails']		= array( 'inputB', '' );
 	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
 
 	$rewriteswitches							= array( 'cms', 'invoice' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
@@ -2533,6 +2549,36 @@ function editSettings( $option )
 		foreach ( $tab as $st_content ) {
 			if ( strcmp( $st_content[0], 'editor' ) === 0 ) {
 				$editors[] = $st_content[4];
+			}
+		}
+	}
+
+	$params['itemid_cart']						= array( 'inputB', '' );
+	$params['itemid_checkout']					= array( 'inputB', '' );
+	$params['itemid_confirmation']				= array( 'inputB', '' );
+	$params['itemid_subscribe']					= array( 'inputB', '' );
+	$params['itemid_exception']					= array( 'inputB', '' );
+	$params['itemid_thanks']					= array( 'inputB', '' );
+	$params['itemid_expired']					= array( 'inputB', '' );
+	$params['itemid_hold']						= array( 'inputB', '' );
+	$params['itemid_notallowed']				= array( 'inputB', '' );
+	$params['itemid_pending']					= array( 'inputB', '' );
+	$params['itemid_subscriptiondetails']		= array( 'inputB', '' );
+
+	$itemidlist = array( 'cart', 'checkout', 'confirmation', 'subscribe', 'exception', 'thanks', 'expired', 'hold', 'notallowed', 'pending', 'subscriptiondetails' );
+
+	foreach ( $itemidlist as $idk ) {
+		if ( empty( $aecConfig->cfg['itemid_' . $idk] ) ) {
+			$query = 'SELECT `id`'
+					. ' FROM #__menu'
+					. ' WHERE LOWER( `link` ) LIKE \'%' . 'view='. $idk . '%\''
+					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idk . '%\''
+					;
+			$database->setQuery( $query );
+			$mid = $database->loadResult();
+
+			if ( $mid ) {
+				$aecConfig->cfg['itemid_' . $idk] = $mid;
 			}
 		}
 	}

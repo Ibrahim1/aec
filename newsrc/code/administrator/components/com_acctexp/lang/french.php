@@ -1050,13 +1050,29 @@ define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_DESC', 'If you want AEC to send System 
 define( '_CFG_GENERAL_ALLOW_INVOICE_UNPUBLISHED_ITEM_NAME', 'Allow Checkout of unpublished Items');
 define( '_CFG_GENERAL_ALLOW_INVOICE_UNPUBLISHED_ITEM_DESC', 'When a user creates an invoice with an item and keeps that invoice unpaid while the item is unpublished, the default behavior is to deny access to the item if the user tries to do a late checkout. If you want to, you can explicitly allow the opposite with this setting.');
 
-// Global Authentication Settins
-define( '_CFG_TAB_AUTHENTICATION_TITLE', 'Authentication');
-define( '_CFG_TAB_AUTHENTICATION_SUBTITLE', 'Authentication Plugins');
-define( '_CFG_AUTH_AUTHLIST_NAME', 'Active Authentication Plugins');
-define( '_CFG_AUTH_AUTHLIST_DESC', 'Select which Authentication (as in: at least one of them has to be successful for the login to pass) Plugins will be used. AECaeccss Plugin must be the only Authentication Plugin enabled in the Joomla Plugin Manager.');
-define( '_CFG_AUTH_AUTHORIZATION_LIST_NAME', 'Active Authorization Plugins');
-define( '_CFG_AUTH_AUTHORIZATION_LIST_DESC', 'Select which Authorization (as in: all of them have to be successful for the login to pass) Plugins will be used. AECaeccss Plugin must be the only Authentication Plugin enabled in the Joomla Plugin Manager.');
+define( '_CFG_CUSTOMIZATION_SUB_ITEMID', 'AEC Page ItemIDs');
+define( '_CFG_GENERAL_ITEMID_CART_NAME', 'Itemid Cart Page');
+define( '_CFG_GENERAL_ITEMID_CART_DESC', 'The Itemid for the cart page.');
+define( '_CFG_GENERAL_ITEMID_CHECKOUT_NAME', 'Itemid Checkout Page');
+define( '_CFG_GENERAL_ITEMID_CHECKOUT_DESC', 'The Itemid for the checkout page.');
+define( '_CFG_GENERAL_ITEMID_CONFIRMATION_NAME', 'Itemid Confirmation Page');
+define( '_CFG_GENERAL_ITEMID_CONFIRMATION_DESC', 'The Itemid for the confirmation page.');
+define( '_CFG_GENERAL_ITEMID_SUBSCRIBE_NAME', 'Itemid Plans Page');
+define( '_CFG_GENERAL_ITEMID_SUBSCRIBE_DESC', 'The Itemid for the plans page.');
+define( '_CFG_GENERAL_ITEMID_EXCEPTION_NAME', 'Itemid Exception Page');
+define( '_CFG_GENERAL_ITEMID_EXCEPTION_DESC', 'The Itemid for the exception page.');
+define( '_CFG_GENERAL_ITEMID_THANKS_NAME', 'Itemid Thanks Page');
+define( '_CFG_GENERAL_ITEMID_THANKS_DESC', 'The Itemid for the thanks page.');
+define( '_CFG_GENERAL_ITEMID_EXPIRED_NAME', 'Itemid Expired Page');
+define( '_CFG_GENERAL_ITEMID_EXPIRED_DESC', 'The Itemid for the expired page.');
+define( '_CFG_GENERAL_ITEMID_HOLD_NAME', 'Itemid Hold Page');
+define( '_CFG_GENERAL_ITEMID_HOLD_DESC', 'The Itemid for the hold page.');
+define( '_CFG_GENERAL_ITEMID_NOTALLOWED_NAME', 'Itemid Not Allowed Page');
+define( '_CFG_GENERAL_ITEMID_NOTALLOWED_DESC', 'The Itemid for the "access not allowed" page.');
+define( '_CFG_GENERAL_ITEMID_PENDING_NAME', 'Itemid Pending Page');
+define( '_CFG_GENERAL_ITEMID_PENDING_DESC', 'The Itemid for the pending page.');
+define( '_CFG_GENERAL_ITEMID_SUBSCRIPTIONDETAILS_NAME', 'Itemid Subscription Details Page');
+define( '_CFG_GENERAL_ITEMID_SUBSCRIPTIONDETAILS_DESC', 'The Itemid for the subscription details page.');
 
 //Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'Send an invoice email');
