@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Cart Page Page">
+	<layout title="Cart Page">
 		<message>Link to individual pages during the AEC Signup Process</message>
 	</layout>
 	<state>
