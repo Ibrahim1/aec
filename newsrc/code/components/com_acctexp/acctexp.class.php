@@ -97,7 +97,7 @@ function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 		$return = mosGetParam( $_REQUEST, $name, $default, 0x0002 );
 	}
 
-	if ( !isset( $_REQUEST[$name] ) ) {
+	if ( !isset( $_REQUEST[$name] ) && !isset( $_POST[$name] ) ) {
 		return $default;
 	}
 
@@ -107,6 +107,8 @@ function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 
 	if ( !empty( $_POST[$name] ) ) {
 		if ( is_array( $_POST[$name] ) && !is_array( $return ) ) {
+			$return = $_POST[$name];
+		} elseif ( empty( $return ) ) {
 			$return = $_POST[$name];
 		}
 	}
@@ -7258,7 +7260,7 @@ class InvoiceFactory
 	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null )
 	{
 		// If we have some kind of internal call, we need to load the HTML class
-		if ( !class_exists( 'Payment_HTML' ) ) {		
+		if ( !class_exists( 'Payment_HTML' ) ) {
 			global $mainframe;
 
 			require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
@@ -7298,7 +7300,7 @@ class InvoiceFactory
 								. ' FROM #__users'
 								. ' WHERE `id` = \'' . $this->userid . '\'';
 						$database->setQuery( $query );
-			
+
 						if ( !$database->loadResult() ) {
 							$this->userid = null;
 						}
@@ -7321,7 +7323,7 @@ class InvoiceFactory
 	function initPassthrough( $passthrough )
 	{
 		if ( empty( $passthrough ) ) {
-			$passthrough = aecPostParamClear( $_POST );
+			$passthrough = aecPostParamClear( $_POST, '', true );
 		}
 
 		if ( isset( $passthrough['aec_passthrough'] ) ) {
@@ -8139,11 +8141,11 @@ class InvoiceFactory
 
 		// Reset parameters
 		if ( !empty( $this->invoice->method ) ) {
-			$this->processor			= $this->invoice->method;
+			$this->processor = $this->invoice->method;
 		}
 
 		if ( !empty( $this->invoice->usage ) ) {
-			$this->usage				= $this->invoice->usage;
+			$this->usage = $this->invoice->usage;
 		}
 
 		return $recurring;
@@ -8329,7 +8331,7 @@ class InvoiceFactory
 			$this->recurring = null;
 		}
 
-		$list = $this->getPlanList();
+		$list = $this->getPlanList( $usage, $group );
 
 		// If we run into an Authorization problem, or no plans are available, redirect.
 		if ( !is_array( $list ) ) {
@@ -8344,6 +8346,176 @@ class InvoiceFactory
 			}
 		}
 
+		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
+		 if ( count( $list ) == 0 ) {
+			aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR, false, true ), false, true );
+			return;
+		}
+
+		$list = $this->explodePlanList( $list );
+
+		$nochoice = false;
+
+		// There is no choice if we have only one group or only one item with one payment option
+		if ( count( $list ) === 1 ) {
+			if ( $list[0]['type'] == 'item' ) {
+				if ( count( $list[0]['gw'] ) === 1 ) {
+					$nochoice = true;
+				}
+			} else {
+				// Jump back and use the only group we found
+				return $this->create( $option, $intro, 0, $list[0]['id'] );
+			}
+		}
+
+		// If we have only one processor on one plan, there is no need for a decision
+		if ( $nochoice && !( $aecConfig->cfg['show_fixeddecision'] && empty( $processor ) ) ) {
+			// If the user also needs to register, we need to guide him there after the selection has now been made
+			if ( $register ) {
+				$this->registerRedirect( $option, $intro, $list[0] );
+			} else {
+				// The user is already existing, so we need to move on to the confirmation page with the details
+
+				$this->usage		= $list[0]['id'];
+
+				if ( isset( $list[0]['gw'][0]->recurring ) ) {
+					$this->recurring	= $list[0]['gw'][0]->recurring;
+				} else {
+					$this->recurring	= 0;
+				}
+
+				$this->processor	= $list[0]['gw'][0]->processor_name;
+
+				if ( ( $invoice != 0 ) && !is_null( $invoice ) ) {
+					$this->invoice_number	= $invoice;
+				}
+
+				$password = aecGetParam( 'password', null );
+
+				$var = array();
+				if ( !is_null( $password ) ) {
+					$var['password'] = $password;
+				}
+
+				$this->confirm( $option, $var );
+			}
+		} else {
+			// Reset $register if we seem to have all data
+			if ( $register && !empty( $this->passthrough['username'] ) ) {
+				$register = 0;
+			}
+
+			$mainframe->SetPageTitle( _PAYPLANS_HEADER );
+
+			if ( $group ) {
+				$g = new ItemGroup( $database );
+				$g->load( $group );
+
+				$list['group'] = ItemGroupHandler::getGroupListItem( $g );
+			}
+
+			if ( $this->userid ) {
+				$cart = aecCartHelper::getCartidbyUserid( $this->userid );
+			} else {
+				$cart = false;
+			}
+
+			// Of to the Subscription Plan Selection Page!
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart );
+		}
+	}
+
+	function getPlanList( $usage, $group )
+	{
+		global $aecConfig;
+
+		$database = &JFactory::getDBO();
+
+		$auth_problem = null;
+
+		if ( !empty( $usage ) ) {
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_plans'
+					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
+					;
+			$database->setQuery( $query );
+			$id = $database->loadResult();
+
+			if ( $id ) {
+				$plan = new SubscriptionPlan( $database );
+				$plan->load( $id );
+
+				if ( !empty( $plan->params['fixed_redirect'] ) ) {
+					$auth_problem = $plan->params['fixed_redirect'];
+				} else {
+					$restrictions = $plan->getRestrictionsArray();
+
+					if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
+						if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
+							$list[] = ItemGroupHandler::getItemListItem( $plan );
+						} else {
+							$auth_problem = true;
+						}
+					} else {
+						$auth_problem = true;
+					}
+
+					if ( $auth_problem && !empty( $plan->params['notauth_redirect'] ) ) {
+						$auth_problem = $plan->params['notauth_redirect'];
+					}
+				}
+			}
+		} elseif ( !empty( $group ) ) {
+			$g = new ItemGroup( $database );
+			$g->load( $group );
+
+			if ( $g->checkVisibility( $this->metaUser ) ) {
+				if ( !empty( $g->params['symlink'] ) ) {
+					aecRedirect( $g->params['symlink'] );
+				}
+
+				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
+
+				if ( count( $list ) == 0 ) {
+					$auth_problem = true;
+				}
+			} else {
+				$auth_problem = true;
+			}
+
+			if ( $auth_problem && !empty( $g->params['notauth_redirect'] ) ) {
+				$auth_problem = $g->params['notauth_redirect'];
+			}
+		} else {
+			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
+				$x = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
+			} else {
+				$x = array( $aecConfig->cfg['root_group'] );
+			}
+
+			if ( !is_array( $x ) && !empty( $x ) ) {
+				$x = array( $x );
+			} else {
+				$x = array( $aecConfig->cfg['root_group'] );
+			}
+
+			$list = ItemGroupHandler::getTotalAllowedChildItems( $x, $this->metaUser );
+
+			// Retry in case a RWengine call didn't work out
+			if ( empty( $list ) && !empty( $aecConfig->cfg['root_group_rw'] ) ) {
+				$list = ItemGroupHandler::getTotalAllowedChildItems( $aecConfig->cfg['root_group'], $this->metaUser );
+			}
+		}
+
+		if ( !is_null( $auth_problem ) ) {
+			return $auth_problem;
+		} else {
+			return $list;
+		}
+	}
+
+	function explodePlanList( $list )
+	{
 		$groups	= array();
 		$plans	= array();
 
@@ -8459,281 +8631,120 @@ class InvoiceFactory
 			}
 		}
 
-		$list = array_merge( $groups, $plans );
-
-		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
-		 if ( count( $list ) == 0 ) {
-			aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR, false, true ), false, true );
-			return;
-		}
-
-		$nochoice = false;
-
-		// There is no choice if we have only one group or only one item with one payment option
-		if ( count( $list ) === 1 ) {
-			if ( $list[0]['type'] == 'item' ) {
-				if ( count( $plans[0]['gw'] ) === 1 ) {
-					$nochoice = true;
-				}
-			} else {
-				// Jump back and use the only group we found
-				return $this->create( $option, $intro, 0, $list[0]['id'] );
-			}
-		}
-
-		// If we have only one processor on one plan, there is no need for a decision
-		if ( $nochoice && !( $aecConfig->cfg['show_fixeddecision'] && empty( $processor ) ) ) {
-			// If the user also needs to register, we need to guide him there after the selection has now been made
-			if ( $register ) {
-				// The plans are supposed to be first, so the details form should hold the values
-				if ( !empty( $plans[0]['id'] ) ) {
-					$_POST['usage']		= $plans[0]['id'];
-					$_POST['processor']	= $plans[0]['gw'][0]->processor_name;
-
-					if ( isset( $plans[0]['gw'][0]->recurring ) ) {
-						$_POST['recurring']	= $plans[0]['gw'][0]->recurring;
-					}
-				}
-
-				// Send to CB or joomla!
-				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-					// This is a CB registration, borrowing their code to register the user
-
-					if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
-						$content = array();
-						$content['usage']		= $plans[0]['id'];
-						$content['processor']	= $plans[0]['gw'][0]->processor_name;
-						if ( isset( $plans[0]['gw'][0]->recurring ) ) {
-							$content['recurring']	= $plans[0]['gw'][0]->recurring;
-						}
-
-						$temptoken = new aecTempToken( $database );
-						$temptoken->create( $content );
-
-						$myparams = "";
-
-						if ( $_GET['fname'] ) {
-							setcookie( "fname", $_GET['fname'], time()+60*10 );
-						}
-
-						if ( $_GET['femail'] ) {
-							setcookie( "femail", $_GET['femail'], time()+60*10 );
-						}
-
-						aecRedirect( 'index.php?option=com_comprofiler&task=registers' );
-					} else {
-						global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
-
-						$savetask	= $task;
-						$_REQUEST['task'] = 'done';
-
-						include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
-						include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
-
-						$task = $savetask;
-
-						registerForm($option, $mainframe->getCfg( 'emailpass' ), null);
-					}
-				} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
-					// This is a JUSER registration, borrowing their code to register the user
-
-					global $task;
-
-					$savetask	= $task;
-					$task = 'blind';
-
-					include_once( JPATH_SITE . '/components/com_juser/juser.html.php' );
-					include_once( JPATH_SITE . '/components/com_juser/juser.php' );
-
-					$task = $savetask;
-
-					userRegistration( $option, null );
-				} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
-					$temptoken = new aecTempToken( $database );
-					$temptoken->getComposite();
-
-					if ( empty( $temptoken->content ) ) {
-						$content = array();
-						$content['usage']		= $plans[0]['id'];
-						$content['processor']	= $plans[0]['gw'][0]->processor_name;
-						if ( isset( $plans[0]['gw'][0]->recurring ) ) {
-							$content['recurring']	= $plans[0]['gw'][0]->recurring;
-						}
-
-						$temptoken->create( $content );
-					} elseif ( empty( $temptoken->content['usage'] ) ) {
-						$temptoken->content['usage']		= $plans[0]['id'];
-						$temptoken->content['processor']	= $plans[0]['gw'][0]->processor_name;
-						if ( isset( $plans[0]['gw'][0]->recurring ) ) {
-							$temptoken->content['recurring']	= $plans[0]['gw'][0]->recurring;
-						}
-
-						$temptoken->storeload();
-					}
-
-					aecRedirect( 'index.php?option=com_community&view=register' );
-				} else {
-					if ( !isset( $_POST['usage'] ) ) {
-						$_POST['intro'] = $intro;
-						$_POST['usage'] = $plans[0]['id'];
-					}
-
-					if ( aecJoomla15check() ) {
-						$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plans[0]['id'] . '&processor=' . $plans[0]['gw'][0]->processor_name . '&recurring=' . $plans[0]['gw'][0]->recurring );
-					} else {
-						$activation = $mainframe->getCfg( 'useractivation' );
-
-						joomlaregisterForm( $option, $activation );
-					}
-				}
-			} else {
-				// The user is already existing, so we need to move on to the confirmation page with the details
-
-				$this->usage		= $plans[0]['id'];
-
-				if ( isset( $plans[0]['gw'][0]->recurring ) ) {
-					$this->recurring	= $plans[0]['gw'][0]->recurring;
-				} else {
-					$this->recurring	= 0;
-				}
-
-				$this->processor	= $plans[0]['gw'][0]->processor_name;
-
-				if ( ( $invoice != 0 ) && !is_null( $invoice ) ) {
-					$this->invoice_number	= $invoice;
-				}
-
-				$password = aecGetParam( 'password', null );
-
-				$var = array();
-				if ( !is_null( $password ) ) {
-					$var['password'] = $password;
-				}
-
-				$this->confirm( $option, $var );
-			}
-		} else {
-			// Reset $register if we seem to have all data
-			if ( $register && !empty( $this->passthrough['username'] ) ) {
-				$register = 0;
-			}
-
-			$mainframe->SetPageTitle( _PAYPLANS_HEADER );
-
-			if ( $group ) {
-				$g = new ItemGroup( $database );
-				$g->load( $group );
-
-				$list['group'] = ItemGroupHandler::getGroupListItem( $g );
-			}
-
-			if ( $this->userid ) {
-				$cart = aecCartHelper::getCartidbyUserid( $this->userid );
-			} else {
-				$cart = false;
-			}
-
-			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart );
-		}
+		return array_merge( $groups, $plans );
 	}
 
-	function getPlanList( $usage, $group )
+	function registerRedirect( $option, $intro, $plan )
 	{
-		$database = &JFactory::getDBO();
+		// The plans are supposed to be first, so the details form should hold the values
+		if ( !empty( $plan['id'] ) ) {
+			$_POST['usage']		= $plan['id'];
+			$_POST['processor']	= $plan['gw'][0]->processor_name;
 
-		$auth_problem = null;
-
-		if ( !empty( $usage ) ) {
-			$query = 'SELECT `id`'
-					. ' FROM #__acctexp_plans'
-					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
-					;
-			$database->setQuery( $query );
-			$id = $database->loadResult();
-
-			if ( $database->getErrorNum() ) {
-				echo $database->stderr();
-				return false;
-			}
-
-			if ( $id ) {
-				$plan = new SubscriptionPlan( $database );
-				$plan->load( $id );
-
-				if ( !empty( $plan->params['fixed_redirect'] ) ) {
-					$auth_problem = $plan->params['fixed_redirect'];
-				} else {
-					$restrictions = $plan->getRestrictionsArray();
-
-					if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
-						if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
-							$list[] = ItemGroupHandler::getItemListItem( $plan );
-						} else {
-							$auth_problem = true;
-						}
-					} else {
-						$auth_problem = true;
-					}
-
-					if ( $auth_problem && !empty( $plan->params['notauth_redirect'] ) ) {
-						$auth_problem = $plan->params['notauth_redirect'];
-					}
-				}
-			}
-		} elseif ( !empty( $group ) ) {
-			$g = new ItemGroup( $database );
-			$g->load( $group );
-
-			if ( $g->checkVisibility( $this->metaUser ) ) {
-				if ( !empty( $g->params['symlink'] ) ) {
-					aecRedirect( $g->params['symlink'] );
-				}
-
-				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
-
-				if ( count( $list ) == 0 ) {
-					$auth_problem = true;
-				}
-			} else {
-				$auth_problem = true;
-			}
-
-			if ( $auth_problem && !empty( $g->params['notauth_redirect'] ) ) {
-				$auth_problem = $g->params['notauth_redirect'];
-			}
-		} else {
-			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
-				$x = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
-			} else {
-				$x = array( $aecConfig->cfg['root_group'] );
-			}
-
-			if ( !is_array( $x ) && !empty( $x ) ) {
-				$x = array( $x );
-			} else {
-				$x = array( $aecConfig->cfg['root_group'] );
-			}
-
-			$list = ItemGroupHandler::getTotalAllowedChildItems( $x, $this->metaUser );
-
-			// Retry in case a RWengine call didn't work out
-			if ( empty( $list ) && !empty( $aecConfig->cfg['root_group_rw'] ) ) {
-				$list = ItemGroupHandler::getTotalAllowedChildItems( $aecConfig->cfg['root_group'], $this->metaUser );
+			if ( isset( $plan['gw'][0]->recurring ) ) {
+				$_POST['recurring']	= $plan['gw'][0]->recurring;
 			}
 		}
 
-		if ( !is_null( $auth_problem ) ) {
-			return $auth_problem;
+		// Send to CB or joomla!
+		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+			// This is a CB registration, borrowing their code to register the user
+
+			if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+				$database = &JFactory::getDBO();
+
+				$content = array();
+				$content['usage']		= $plan['id'];
+				$content['processor']	= $plan['gw'][0]->processor_name;
+				if ( isset( $plan['gw'][0]->recurring ) ) {
+					$content['recurring']	= $plan['gw'][0]->recurring;
+				}
+
+				$temptoken = new aecTempToken( $database );
+				$temptoken->create( $content );
+
+				$myparams = "";
+
+				if ( $_GET['fname'] ) {
+					setcookie( "fname", $_GET['fname'], time()+60*10 );
+				}
+
+				if ( $_GET['femail'] ) {
+					setcookie( "femail", $_GET['femail'], time()+60*10 );
+				}
+
+				aecRedirect( 'index.php?option=com_comprofiler&task=registers' );
+			} else {
+				global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
+
+				$savetask	= $task;
+				$_REQUEST['task'] = 'done';
+
+				include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
+				include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
+
+				$task = $savetask;
+
+				registerForm( $option, $mainframe->getCfg( 'emailpass' ), null );
+			}
+		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+			// This is a JUSER registration, borrowing their code to register the user
+
+			global $task;
+
+			$savetask	= $task;
+			$task = 'blind';
+
+			include_once( JPATH_SITE . '/components/com_juser/juser.html.php' );
+			include_once( JPATH_SITE . '/components/com_juser/juser.php' );
+
+			$task = $savetask;
+
+			userRegistration( $option, null );
+		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+			$database = &JFactory::getDBO();
+
+			$temptoken = new aecTempToken( $database );
+			$temptoken->getComposite();
+
+			if ( empty( $temptoken->content ) ) {
+				$content = array();
+				$content['usage']		= $plan['id'];
+				$content['processor']	= $plan['gw'][0]->processor_name;
+				if ( isset( $plan['gw'][0]->recurring ) ) {
+					$content['recurring']	= $plan['gw'][0]->recurring;
+				}
+
+				$temptoken->create( $content );
+			} elseif ( empty( $temptoken->content['usage'] ) ) {
+				$temptoken->content['usage']		= $plan['id'];
+				$temptoken->content['processor']	= $plan['gw'][0]->processor_name;
+				if ( isset( $plan['gw'][0]->recurring ) ) {
+					$temptoken->content['recurring']	= $plan['gw'][0]->recurring;
+				}
+
+				$temptoken->storeload();
+			}
+
+			aecRedirect( 'index.php?option=com_community&view=register' );
 		} else {
-			return $list;
+			if ( !isset( $_POST['usage'] ) ) {
+				$_POST['intro'] = $intro;
+				$_POST['usage'] = $plan['id'];
+			}
+
+			if ( aecJoomla15check() ) {
+				$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
+			} else {
+				$activation = $mainframe->getCfg( 'useractivation' );
+
+				joomlaregisterForm( $option, $activation );
+			}
 		}
 	}
 
 	function confirm( $option )
 	{
-		$database = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		if ( empty( $this->passthrough ) ) {
@@ -8742,26 +8753,7 @@ class InvoiceFactory
 			}
 		}
 
-		if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_privatekey'] ) && empty( $this->userid ) ) {
-			// require the recaptcha library
-			require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
-
-			if ( !isset( $_POST["recaptcha_challenge_field"] ) || !isset( $_POST["recaptcha_response_field"] ) ) {
-				echo "<script> alert('The reCAPTCHA was not correct. Please try again.'); window.history.go(-1);</script>\n";
-
-				return;
-			}
-
-			// finally chack with reCAPTCHA if the entry was correct
-			$resp = recaptcha_check_answer ( $aecConfig->cfg['recaptcha_privatekey'], $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
-
-			// if the response is INvalid, then go back one page, and try again. Give a nice message
-			if (!$resp->is_valid) {
-				echo "<script> alert('The reCAPTCHA was not correct. Please try again.'); window.history.go(-1);</script>\n";
-
-				return;
-			}
-		}
+		$this->reCaptchaCheck();
 
 		$this->puffer( $option );
 
@@ -8857,8 +8849,6 @@ class InvoiceFactory
 
 	function confirmcart( $option, $coupon=null )
 	{
-		$database = &JFactory::getDBO();
-
 		global $mainframe, $task;
 
 		$this->confirmed = 1;
@@ -8981,8 +8971,6 @@ class InvoiceFactory
 
 	function checkout( $option, $repeat=0, $error=null, $coupon=null )
 	{
-		$database = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		if ( !$this->checkAuth( $option ) ) {
@@ -9183,8 +9171,6 @@ class InvoiceFactory
 
 	function internalcheckout( $option )
 	{
-		$database = &JFactory::getDBO();
-
 		$this->metaUser = new metaUser( $this->userid );
 
 		$this->puffer( $option );
@@ -9237,8 +9223,6 @@ class InvoiceFactory
 
 	function processorResponse( $option, $response )
 	{
-		$database = &JFactory::getDBO();
-
 		$this->touchInvoice( $option );
 
 		$this->userid = $this->invoice->userid;
@@ -9344,8 +9328,6 @@ class InvoiceFactory
 
 	function invoiceprint( $option, $invoice_number )
 	{
-		$database = &JFactory::getDBO();
-
 		$this->loadMetaUser();
 
 		$this->touchInvoice( $option, $invoice_number );
@@ -9514,6 +9496,32 @@ class InvoiceFactory
 		$mainframe->SetPageTitle( _CHECKOUT_ERROR_TITLE );
 
 		Payment_HTML::error( $option, $objUser, $invoice, $error );
+	}
+
+	function reCaptchaCheck()
+	{
+		global $aecConfig;
+
+		if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_privatekey'] ) && empty( $this->userid ) ) {
+			// require the recaptcha library
+			require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+
+			if ( !isset( $_POST["recaptcha_challenge_field"] ) || !isset( $_POST["recaptcha_response_field"] ) ) {
+				echo "<script> alert('The reCAPTCHA was not correct. Please try again.'); window.history.go(-1);</script>\n";
+
+				return;
+			}
+
+			// finally chack with reCAPTCHA if the entry was correct
+			$resp = recaptcha_check_answer ( $aecConfig->cfg['recaptcha_privatekey'], $_SERVER["REMOTE_ADDR"], $_POST["recaptcha_challenge_field"], $_POST["recaptcha_response_field"] );
+
+			// if the response is INvalid, then go back one page, and try again. Give a nice message
+			if (!$resp->is_valid) {
+				echo "<script> alert('The reCAPTCHA was not correct. Please try again.'); window.history.go(-1);</script>\n";
+
+				return;
+			}
+		}
 	}
 }
 
@@ -13113,7 +13121,13 @@ class reWriteEngine
 				}
 
 				$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
-				$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
+
+				if ( !empty( $this->data['metaUser']->cmsUser->name ) ) {
+					$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
+				} else {
+					$this->rewrite['user_name']				= "";
+				}
+
 				$this->rewrite['user_first_name']		= $name['first'];
 				$this->rewrite['user_first_first_name']	= $name['first_first'];
 				$this->rewrite['user_last_name']		= $name['first'];
@@ -14087,11 +14101,7 @@ class AECToolbox
 			include_once( JPATH_SITE .'/administrator/components/com_juser/juser.class.php' );
 			$task		= $savetask;
 		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
-			$savetask	= $task;
-			$task		= 'blind';
-			include_once( JPATH_SITE . '/components/com_juser/juser.php' );
-			include_once( JPATH_SITE .'/administrator/components/com_juser/juser.class.php' );
-			$task		= $savetask;
+
 		}
 
 		// For joomla and CB, we must filter out some internal variables before handing over the POST data
@@ -14135,6 +14145,8 @@ class AECToolbox
 					$synchronize->synchronizeFrom( $uid );
 				}
 			}
+		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+
 		} else {
 			// This is a joomla registration, borrowing their code to save the user
 			global $mainframe;
