@@ -1292,4 +1292,46 @@ define( '_MI_MI_JNEWS_USER_CHECKBOX_NAME',		'User Checkbox' );
 define( '_MI_MI_JNEWS_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter.' );
 define( '_MI_MI_JNEWS_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
 
+// vBulletin
+define( '_AEC_MI_NAME_VBULLETIN','vBulletin Integration' );
+define( '_AEC_MI_DESC_VBULLETIN','will set the users group in vBulletin on subscription/expiration' );
+define( '_MI_MI_VBULLETIN_SET_GROUP_NAME','Set Groups' );
+define( '_MI_MI_VBULLETIN_SET_GROUP_DESC','Choose Yes if you wish one or more vBulletin groups to be applied when the plan is applied' );
+define( '_MI_MI_VBULLETIN_GROUP_NAME','Group' );
+define( '_MI_MI_VBULLETIN_GROUP_DESC','The groups you wish to be applied - if you chose yes above.' );
+define( '_MI_MI_VBULLETIN_SET_GROUP_EXP_NAME','Set Group (Expiration)' );
+define( '_MI_MI_VBULLETIN_SET_GROUP_EXP_DESC','Choose Yes if you wish the vBulletin group to be changed when the plan expires' );
+define( '_MI_MI_VBULLETIN_GROUP_EXP_NAME','Group (Expiration)' );
+define( '_MI_MI_VBULLETIN_GROUP_EXP_DESC','The group you wish to apply when the plan expires.' );
+define( '_MI_MI_VBULLETIN_REBUILD_NAME','Rebuild: ' );
+define( '_MI_MI_VBULLETIN_REBUILD_DESC','Choose yes and then save the MI to recreate the actions fo all users with this MI on a currently active plan.' );
+define( '_MI_MI_VBULLETIN_REMOVE_NAME','Remove: ' );
+define( '_MI_MI_VBULLETIN_REMOVE_DESC','Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
+
+define( '_MI_MI_VBULLETIN_CREATE_USER_NAME','Create User' );
+define( '_MI_MI_VBULLETIN_CREATE_USER_DESC','Choose yes and then save the MI to enable additional fields (if any) to create user accounts from the Joomla user account (if the user has no equivalent account in vBulletin). If there are no additional fields in your vBulletin, AEC will just use the standard fields - no further configuration necessary.' );
+define( '_MI_MI_VBULLETIN_UPDATE_USER_NAME','Update User' );
+define( '_MI_MI_VBULLETIN_UPDATE_USER_DESC','Choose yes to modify the user forum account with the fields below.' );
+define( '_MI_MI_VBULLETIN_UPDATE_USER_EXP_NAME','Update User (Expiration)' );
+define( '_MI_MI_VBULLETIN_UPDATE_USER_EXP_DESC','Choose yes to modify the user forum account with the fields below (on expiration).' );
+
+define( '_MI_MI_VBULLETIN_CREATE_FIELD','Create - Field' );
+define( '_MI_MI_VBULLETIN_UPDATE_FIELD','Update - Field' );
+define( '_MI_MI_VBULLETIN_UPDATE_FIELD_EXP','Update (Expired) - Field' );
+
+define( '_MI_MI_VBULLETIN_USE_ALTDB_NAME','Different Database' );
+define( '_MI_MI_VBULLETIN_USE_ALTDB_DESC','If your vBulletin3 forum uses a different database than joomla, you can set this option to Yes and provide details below.' );
+define( '_MI_MI_VBULLETIN_DBMS_NAME','Database Type' );
+define( '_MI_MI_VBULLETIN_DBMS_DESC','Typically mysql or mysqli' );
+define( '_MI_MI_VBULLETIN_DBHOST_NAME','Database Host' );
+define( '_MI_MI_VBULLETIN_DBHOST_DESC','Typically localhost - or the IP an external DB' );
+define( '_MI_MI_VBULLETIN_DBUSER_NAME','Database Username' );
+define( '_MI_MI_VBULLETIN_DBUSER_DESC','Your Database Access Username' );
+define( '_MI_MI_VBULLETIN_DBPASSWD_NAME','Database Password' );
+define( '_MI_MI_VBULLETIN_DBPASSWD_DESC','Your Database Access Password' );
+define( '_MI_MI_VBULLETIN_DBNAME_NAME','Database Name' );
+define( '_MI_MI_VBULLETIN_DBNAME_DESC','The Name of the database' );
+define( '_MI_MI_VBULLETIN_TABLE_PREFIX_NAME','Table Prefix' );
+define( '_MI_MI_VBULLETIN_TABLE_PREFIX_DESC','Typically vb_' );
+
 ?>
