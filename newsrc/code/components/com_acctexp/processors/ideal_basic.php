@@ -22,8 +22,8 @@ class processor_ideal_basic extends URLprocessor
 		$i['description']	= _CFG_IDEAL_BASIC_DESCRIPTION;
 		$i['currencies']	= 'EUR';
 		$i['languages']		= 'NL';
-		$i['cc_list']		= 'rabobank,abnamro,ing,postbank,fortis';
-		$info['recurring']	= 0;
+		$i['cc_list']		= 'rabobank,ing';
+		$i['recurring']	= 0;
 
 		return $i;
 	}
@@ -34,11 +34,12 @@ class processor_ideal_basic extends URLprocessor
 		$s['merchantid']	= "merchantid";
 		$s['testmode']		= 0;
 		$s['testmodestage']	= 1;
+		$s['bank']			= "ing";
 		$s['subid']			= "0";
 		$s['language']		= "NL";
 		$s['key']			= "key";
 		$s['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$s['customparams']		= "";
+		$s['customparams']	= "";
 
 		return $s;
 	}
@@ -47,14 +48,15 @@ class processor_ideal_basic extends URLprocessor
 	{
 		$s = array();
 		$s['aec_experimental']	= array( "p" );
-		$s['merchantid']	= array( 'inputC' );
-		$s['testmode']		= array( 'list_yesno' );
-		$s['testmodestage']	= array( 'inputC' );
-		$s['subid']			= array( 'inputC' );
-		$s['language']		= array( 'list_language' );
-		$s['key']			= array( 'inputC' );
-		$s['description']	= array( 'inputE' );
-		$s['customparams']	= array( 'inputD' );
+		$s['aec_insecure']		= array( "p" );
+		$s['merchantid']		= array( 'inputC' );
+		$s['testmode']			= array( 'list_yesno' );
+		$s['testmodestage']		= array( 'inputC' );
+		$s['subid']				= array( 'inputC' );
+		$s['language']			= array( 'list_language' );
+		$s['key']				= array( 'inputC' );
+		$s['description']		= array( 'inputE' );
+		$s['customparams']		= array( 'inputD' );
 
 		return $s;
 	}
@@ -62,9 +64,15 @@ class processor_ideal_basic extends URLprocessor
 	function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
-			$var['post_url']		= "https://idealtest.secure-ing.com/ideal/mpiPayInitIng.do";
+			$sub = 'idealtest';
 		} else {
-			$var['post_url']		= "https://ideal.secure-ing.com/ideal/mpiPayInitIng.do";
+			$sub = 'ideal';
+		}
+
+		if ( $this->settings['bank'] == 'ing' ) {
+			$var['post_url']		= "https://" . $sub . ".secure-ing.com/ideal/mpiPayInitIng.do";
+		} else {
+			$var['post_url']		= "https://" . $sub . ".rabobank.nl/ideal/mpiPayInitRabo.do";
 		}
 
 		$var['merchantID']			= $this->settings['merchantid'];
