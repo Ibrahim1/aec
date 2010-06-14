@@ -65,7 +65,7 @@ class HTML_frontEnd
 					?>
 					<p>
 						<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-						<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice . '&amp;userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+						<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $invoice . '&userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
 					</p>
 					<?php
 				} ?>
@@ -125,13 +125,13 @@ class HTML_frontEnd
 
 		$actions =	_PENDING_OPENINVOICE
 		. ' <a href="'
-		.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
+		.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice='
 		. $invoice . '&amp;userid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
 		. _GOTO_CHECKOUT
 		. '</a>'
 		. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
 		. '<a href="'
-		. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
+		. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cancelPayment&invoice='
 		. $invoice . '&amp;userid=' . $objUser->id . '&amp;pending=1' )
 		. '" title="' . _HISTORY_ACTION_CANCEL . '">'
 		. _HISTORY_ACTION_CANCEL
@@ -203,7 +203,7 @@ class HTML_frontEnd
 					} else {
 						$id = '';
 					}
-					echo '<li><a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=subscriptiondetails&amp;sub=' . $fieldlink, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"'.$id.'>' . $fieldname . '</a></li>';
+					echo '<li><a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=' . $fieldlink, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"'.$id.'>' . $fieldname . '</a></li>';
 				}
 				?>
 				</ul>
@@ -226,7 +226,7 @@ class HTML_frontEnd
 						<br /><br />
 						<p>
 							<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $properties['showcheckout'] . '&amp;userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $properties['showcheckout'] . '&userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
 						</p>
 						<br /><br />
 						<?php
@@ -307,7 +307,7 @@ class HTML_frontEnd
 							<?php
 							if ( !empty( $properties['upgrade_button'] ) ) { ?>
 								<div id="upgrade_button">
-									<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=renewsubscription', !empty( $aecConfig->cfg['ssl_signup'] ) ); ?>" method="post">
+									<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription', !empty( $aecConfig->cfg['ssl_signup'] ) ); ?>" method="post">
 										<input type="hidden" name="option" value="<?php echo $option; ?>" />
 										<input type="hidden" name="task" value="renewsubscription" />
 										<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />

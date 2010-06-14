@@ -45,7 +45,10 @@ if ( empty( $task ) ) {
 	$translate = array( 'usage', 'group', 'processor', 'intro', 'sub' );
 
 	foreach ( $translate as $k ) {
-		$_POST[$k] = $params->get( $k );
+		// Do not overwrite stuff that our forms supplied
+		if ( !isset( $_POST[$k] ) ) {
+			$_POST[$k] = $params->get( $k );
+		}
 	}
 
 	$layout = trim( aecGetParam( 'layout' ) );
@@ -91,6 +94,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'confirm':
+		case 'confirmation':
 			confirmSubscription($option);
 			break;
 
@@ -415,7 +419,7 @@ function expired( $option, $userid, $expiration )
 
 	$database = &JFactory::getDBO();
 
-	if ( $userid > 0 ) {
+	if ( !empty( $userid ) ) {
 		$metaUser = new metaUser( $userid );
 
 		$expired = strtotime( $metaUser->objSubscription->expiration );
@@ -1389,17 +1393,17 @@ function notAllowed( $option )
 	$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
 
 	if ( $user->id ) {
-		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=renewsubscription' );
+		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription' );
 		$loggedin = 1;
 	} else {
 		$loggedin = 0;
 		if ( $CB ) {
-			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&amp;task=registers' );
+			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&task=registers' );
 		} else {
 			if ( aecJoomla15check() ) {
-				$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&amp;view=register' );
+				$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&view=register' );
 			} else {
-				$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_registration&amp;task=register' );
+				$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_registration&task=register' );
 			}
 		}
 	}

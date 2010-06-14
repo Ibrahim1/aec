@@ -3804,7 +3804,7 @@ class XMLprocessor extends processor
 
 			unset( $var['aec_alternate_checkout'] );
 		} else {
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] );
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=checkout', $this->info['secure'] );
 		}
 
 		if ( isset( $var['aec_remove_std_vars'] ) ) {
@@ -10579,7 +10579,7 @@ class Invoice extends serialParamDBTable
 			$renew = 0;
 		}
 
-		$int_var['return_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks&amp;renew=' . $renew . $urladd );
+		$int_var['return_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=thanks&amp;renew=' . $renew . $urladd );
 
 		return $int_var;
 	}
@@ -13913,11 +13913,34 @@ class AECToolbox
 			$new_url = $base . $url;
 		} else {
 			if ( !strpos( strtolower( $url ), 'itemid' ) ) {
-				global $Itemid;
-				if ( $Itemid ) {
-					$url .= '&amp;Itemid=' . $Itemid;
+				$parts = explode( '&', $url );
+
+				$task= "";
+				foreach ( $parts as $part ) {
+					if ( strpos( $part, '&task=' ) ) {
+						$task = str_replace( '&task=', '', $part );
+					}
+				}
+
+				if ( !empty( $task ) ) {
+					$translate = array(	'saveregistration' => 'confirm',
+										'savesubscription' => 'checkout'
+										);
+
+					if ( array_key_exists( $task, $translate ) ) {
+						$task = $translate[$task];
+					}
+				}
+
+				if ( isset( $aecConfig->cfg['itemid_' . $task] ) ) {
+					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task];
 				} else {
-					$url .= '&amp;Itemid=';
+					global $Itemid;
+					if ( $Itemid ) {
+						$url .= '&Itemid=' . $Itemid;
+					} else {
+						$url .= '&Itemid=';
+					}
 				}
 			}
 
@@ -13956,6 +13979,12 @@ class AECToolbox
 
 		if ( $internal ) {
 			$new_url = str_replace( '&amp;', '&', $new_url );
+		} else {
+			if ( strpos( $new_url, '&amp;' ) ) {
+				$new_url = str_replace( '&amp;', '&', $new_url );
+			}
+
+			$new_url = str_replace( '&', '&amp;', $new_url );
 		}
 
 		return $new_url;

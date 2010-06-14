@@ -191,16 +191,16 @@ class plgSystemAECrouting extends JPlugin
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
 				// Plans first and not yet selected -> select!
 				global $mainframe;
-				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe' );
+				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe' ) );
 			} elseif ( !$vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] && !$vars['pfirst'] ) {
 				global $mainframe;
-				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
+				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' ) );
 			} elseif ( $vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] ) {
 				global $mainframe;
-				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
+				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' ) );
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
 				global $mainframe;
-				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
+				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' ) );
 			} elseif ( $vars['has_usage'] && ( $vars['joms_reg'] || $vars['cb_reg'] ) ) {
 				$database = &JFactory::getDBO();
 
@@ -293,7 +293,7 @@ class plgSystemAECrouting extends JPlugin
 			$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
 		} elseif ( $vars['ccb'] && $vars['ccb12'] && $vars['tcregs'] ) {
 			if ( strpos( $body, '<script type="text/javascript">alert(' ) === false ) {
-				$mainframe->redirect( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' );
+				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1' ) );
 			}
 		} elseif ( $vars['j_reg'] ) {
 			$addinmarker = '<input type="hidden" name="task" value="register_save" />';

@@ -77,11 +77,6 @@ function com_install()
 
 	include_once( $pathLang . 'general.php' );
 
-	// in any case, delete an already existing menu entry
-	$query = 'DELETE FROM #__menu WHERE `link` LIKE \'index.php?option=com_acctexp%\'';
-	$database->setQuery( $query );
-	$database->query();
-
 	// Slot in DB tables that do not exist yet
 	$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';
 

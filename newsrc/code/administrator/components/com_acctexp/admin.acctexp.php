@@ -2571,7 +2571,7 @@ function editSettings( $option )
 		if ( empty( $aecConfig->cfg['itemid_' . $idk] ) ) {
 			$query = 'SELECT `id`'
 					. ' FROM #__menu'
-					. ' WHERE LOWER( `link` ) LIKE \'%' . 'view='. $idk . '%\''
+					. ' WHERE LOWER( `link` ) = \'index.php?option=com_acctexp&view=' . $idk . '\''
 					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idk . '%\''
 					;
 			$database->setQuery( $query );

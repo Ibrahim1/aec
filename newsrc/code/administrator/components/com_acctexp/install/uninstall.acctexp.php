@@ -39,6 +39,8 @@ function com_uninstall()
 
 	$database = &JFactory::getDBO();
 
+	$user = &JFactory::getUser();
+
 	if ( !aecJoomla15check() ) {
 		global $mosConfig_absolute_path;
 
@@ -75,9 +77,11 @@ function com_uninstall()
 		$eventlog = new eventLog($database);
 		$params = array("userid" => $user->id);
 		$eventlog->issue( $short, $tags, $event, 2, $params );
-
+print_r($eventlog);
 		echo "Component successfully uninstalled. The component tables are still in the database and will be preserved for the next install or upgrade of the component.";
 	}
+
+	return true;
 }
 
 ?>
