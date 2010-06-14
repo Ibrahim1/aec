@@ -43,6 +43,8 @@ class processor_virtualmerchant extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['aec_experimental']	= array( "p" );
+		$settings['aec_insecure']		= array( "p" );
 		$settings['testmode']		= array( "list_yesno" );
 		$settings['accountid']		= array( "inputC" );
 		$settings['userid']			= array( "inputC" );

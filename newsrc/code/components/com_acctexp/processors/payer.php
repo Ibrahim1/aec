@@ -200,10 +200,6 @@ class processor_payer extends POSTprocessor
 		$allowed = array( '83.241.130.100', '83.241.130.101', '10.4.49.11', '192.168.100.222', '127.0.0.1', '217.151.207.84', '83.241.130.102' );
 
 		if ( in_array( $_SERVER["REMOTE_ADDR"], $allowed ) ) {
-			require_once( JPATH_SITE . "/components/com_acctexp/processors/payer/payread_post_api.php" );
-
-			$postAPI = new payread_post_api( $this->settings );
-
 			$requesturl = ( ( $_SERVER["SERVER_PORT"] == "80" ) ? "http://" : "https://" ) . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
 			$strippedUrl = substr( $requesturl, 0, strpos( $requesturl, "&md5sum" ) );

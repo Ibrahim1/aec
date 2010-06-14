@@ -52,6 +52,7 @@ class processor_netcash extends POSTprocessor
 	{
 		$settings = array();
 
+		$settings['aec_insecure']			= array( "p" );
 		$settings['user_name']			    = array( 'inputC');
 		$settings['password']			    = array( 'inputC');
 		$settings['pin']		        	= array( 'inputC');
