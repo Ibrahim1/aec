@@ -1334,4 +1334,22 @@ define( '_MI_MI_VBULLETIN_DBNAME_DESC','The Name of the database' );
 define( '_MI_MI_VBULLETIN_TABLE_PREFIX_NAME','Table Prefix' );
 define( '_MI_MI_VBULLETIN_TABLE_PREFIX_DESC','Typically vb_' );
 
+// Jobs Plugin MI (by Daniel Lowhorn, http://www.ltwproductions.com)
+define( '_AEC_MI_NAME_JOBS','Instant PHP Jobs! Integration' );
+define( '_AEC_MI_DESC_JOBS','Create default resume or company for the Jobs! Component, publish and unpublish resumes or companies' );
+define( '_MI_MI_JOBS_SUBSCRIPTION_TYPE_NAME','Subscription Type' );
+define( '_MI_MI_JOBS_SUBSCRIPTION_TYPE_DESC','Select which type of default Jobs account should be setup for users who select this description.');
+define( '_MI_MI_JOBS_DEFAULT_RESUME_TITLE_NAME','Default Resume Title');
+define( '_MI_MI_JOBS_DEFAULT_RESUME_TITLE_DESC','The default title that will be assigned to the initial resume');
+define( '_MI_MI_JOBS_DEFAULT_RESUME_STATUS_NAME','Default Resume Status');
+define( '_MI_MI_JOBS_DEFAULT_RESUME_STATUS_DESC','The default status of the initial resume.');
+define( '_MI_MI_JOBS_DEFAULT_RESUME_LANGUAGE_NAME','Default Resume Language');
+define( '_MI_MI_JOBS_DEFAULT_RESUME_LANGUAGE_DESC','The language for the initial resume. This must be provided (will default to English).');
+define( '_MI_MI_JOBS_DEFAULT_COMPANY_TITLE_NAME','Default Company Name');
+define( '_MI_MI_JOBS_DEFAULT_COMPANY_TITLE_DESC','The default name that will be assigned to the company');
+define( '_MI_MI_JOBS_DEFAULT_COMPANY_COUNTRY_NAME','Default Company Country');
+define( '_MI_MI_JOBS_DEFAULT_COMPANY_COUNTRY_DESC','The default country that will be assigned to the company');
+define( '_MI_MI_JOBS_DEFAULT_COMPANY_STATUS_NAME','Default Company Statu');
+define( '_MI_MI_JOBS_DEFAULT_COMPANY_STATUS_DESC','The default status of the initial company');
+
 ?>
