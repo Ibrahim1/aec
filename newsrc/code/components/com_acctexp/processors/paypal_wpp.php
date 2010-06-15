@@ -645,10 +645,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$req .= "&$key=$value";
 		}
 
-		$fp = null;
-		$fp = $this->transmitRequest( $ppurl, $path, $req, $port=443, $curlextra=null );
-
-		$res = $fp;
+		$res = $this->transmitRequest( $ppurl, $path, $req, $port=443, $curlextra=null );
 
 		$response['fullresponse']['paypal_verification'] = $res;
 

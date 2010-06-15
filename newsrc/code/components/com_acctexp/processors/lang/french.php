@@ -489,6 +489,8 @@ define( '_CFG_IDEAL_BASIC_MERCHANTID_NAME', 'Merchant ID');
 define( '_CFG_IDEAL_BASIC_MERCHANTID_DESC', 'Your Merchant ID');
 define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_NAME', 'Testmode Stage');
 define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
+define( '_CFG_IDEAL_BASIC_BANK_NAME', 'Bank');
+define( '_CFG_IDEAL_BASIC_BANK_DESC', 'Select which Bank to use');
 define( '_CFG_IDEAL_BASIC_SUBID_NAME', 'Testmode Stage');
 define( '_CFG_IDEAL_BASIC_SUBID_DESC', 'Set to 0 unless you have specific reasons not to');
 define( '_CFG_IDEAL_BASIC_KEY_NAME', 'Key');

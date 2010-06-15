@@ -200,11 +200,7 @@ class processor_paypal extends POSTprocessor
 			$req .= "&$key=$value";
 		}
 
-		$fp = null;
-		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
-		$fp = $this->transmitRequest( $ppurl, $path, $req );
-
-		$res = $fp;
+		$res = $this->transmitRequest( $ppurl, $path, $req );
 
 		$response['fullresponse']['paypal_verification'] = $res;
 

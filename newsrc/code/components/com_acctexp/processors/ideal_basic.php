@@ -11,19 +11,20 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_ideal_basic extends URLprocessor
+class processor_ideal_basic extends HTMLprocessor
 {
 	function info()
 	{
 		$i = array();
-		$i['name']			= 'ideal_basic';
-		$i['longname']		= _CFG_IDEAL_BASIC_LONGNAME;
-		$i['statement']		= _CFG_IDEAL_BASIC_STATEMENT;
-		$i['description']	= _CFG_IDEAL_BASIC_DESCRIPTION;
-		$i['currencies']	= 'EUR';
-		$i['languages']		= 'NL';
-		$i['cc_list']		= 'rabobank,ing';
-		$i['recurring']	= 0;
+		$i['name']					= 'ideal_basic';
+		$i['longname']				= _CFG_IDEAL_BASIC_LONGNAME;
+		$i['statement']				= _CFG_IDEAL_BASIC_STATEMENT;
+		$i['description']			= _CFG_IDEAL_BASIC_DESCRIPTION;
+		$i['currencies']			= 'EUR';
+		$i['languages']				= 'NL';
+		$i['cc_list']				= 'rabobank,ing';
+		$i['recurring']				= 0;
+		$i['notify_trail_thanks']	= 1;
 
 		return $i;
 	}
@@ -52,11 +53,24 @@ class processor_ideal_basic extends URLprocessor
 		$s['merchantid']		= array( 'inputC' );
 		$s['testmode']			= array( 'list_yesno' );
 		$s['testmodestage']		= array( 'inputC' );
+		$s['bank']				= array( 'list' );
 		$s['subid']				= array( 'inputC' );
 		$s['language']			= array( 'list_language' );
 		$s['key']				= array( 'inputC' );
 		$s['description']		= array( 'inputE' );
 		$s['customparams']		= array( 'inputD' );
+
+ 		$banks = array();
+		$banks[] = mosHTML::makeOption ( "ing", "ING" );
+		$banks[] = mosHTML::makeOption ( "rabo", "Rabobank" );
+
+		if ( !empty( $this->settings['bank'] ) ) {
+			$ba = $this->settings['bank'];
+		} else {
+			$ba = "ing";
+		}
+
+		$s['lists']['bank']	= mosHTML::selectList( $banks, 'bank', 'size="2"', 'value', 'text', $ba );
 
 		return $s;
 	}
@@ -94,7 +108,7 @@ class processor_ideal_basic extends URLprocessor
 		$var['itemQuantity1']		= 1;
 		$var['itemPrice1']			= $request->int_var['amount'];
 		$var['paymentType']			= 'ideal';
-		$var['validUntil']			= $this->settings['merchantid'];
+		$var['validUntil']			= date('Y-m-d\TG:i:s\Z', strtotime('+1 hour'));
 
 		$shastring = $this->settings['key']
 					.$var['merchantID']
@@ -108,18 +122,12 @@ class processor_ideal_basic extends URLprocessor
 					.$var['itemQuantity1']
 					.$var['itemPrice1'];
 
-		$shastring = str_replace( " ", "", $shastring );
-		$shastring = str_replace( "\t", "", $shastring );
-		$shastring = str_replace( "\n", "", $shastring );
-		$shastring = str_replace( "&amp;", "&", $shastring );
-		$shastring = str_replace( "&lt;", "<", $shastring );
-		$shastring = str_replace( "&gt;", ">", $shastring );
-		$shastring = str_replace( "&quot;", "\"", $shastring );
+		$shastring = html_entity_decode( $shastring );
 
-		$shasign = sha1($shastring);
+		$shastring = str_replace( array("\t", "\n", "\r", " "), '', $shastring );
 
-		$var['hash']				= $shasign;
-		$var['urlSuccess']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks' );
+		$var['hash']				= sha1( $shastring );
+		$var['urlSuccess']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=ideal_basicnotification' );
 		$var['urlCancel']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
 		$var['urlError']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
 		$var['urlService']			= AECToolbox::deadsureURL( 'index.php' );
@@ -129,15 +137,28 @@ class processor_ideal_basic extends URLprocessor
 
 	function parseNotification( $post )
 	{
-aecDebug($post);
 		$response = array();
-		$response['invoice'] = '';
+		$response['invoice'] = 'I'.$_GET['ideal']['order'];
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
+		$response['valid'] = 0;
+		if ( !isset( $_GET['ideal']['status'] ) ) {
+			return $response;
+		}
+
+		switch ( strtolower( $_GET['ideal']['status'] ) ) {
+			case 'success':
+				$response['valid'] = 1;
+				break;
+			case 'error':
+				$response['error'] = $_GET['ideal'];
+				break;
+		}
+
 		return $response;
 	}
 
