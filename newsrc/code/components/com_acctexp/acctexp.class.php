@@ -288,6 +288,53 @@ class metaUser
 		}
 	}
 
+	function dummyUser( $passthrough )
+	{
+		$this->hasSubscription = false;
+
+		$this->cmsUser = new stdClass();
+		$this->cmsUser->gid = 29;
+
+		if ( is_array( $passthrough ) && !empty( $passthrough ) && !empty( $passthrough['username'] ) ) {
+			$cpass = $passthrough;
+			unset( $cpass['id'] );
+
+			$cmsfields = array( 'name', 'username', 'email', 'password' );
+
+			// Create dummy CMS user
+			foreach( $cmsfields as $cmsfield ) {
+				foreach ( $cpass as $k => $v ) {
+					if ( $k == $cmsfield ) {
+						$this->cmsUser->$cmsfield = $v;
+						unset( $cpass[$k] );
+					}
+				}
+			}
+
+			// Create dummy CB/CBE user
+			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+				$this->hasCBprofile = 1;
+				$this->cbUser = new stdClass();
+
+				foreach ( $cpass as $cbfield => $cbvalue ) {
+					if ( is_array( $cbvalue ) ) {
+						$this->cbUser->$cbfield = implode( ';', $cbvalue );
+					} else {
+						$this->cbUser->$cbfield = $cbvalue;
+					}
+				}
+			}
+
+			if ( isset( $this->_incomplete ) ) {
+				unset( $this->_incomplete );
+			}
+		} else {
+			$this->_incomplete = true;
+
+			return true;
+		}
+	}
+
 	function temporaryRFIX()
 	{
 		if ( !empty( $this->meta->plan_history->used_plans ) ) {
@@ -7294,7 +7341,7 @@ class InvoiceFactory
 		// Check whether this call is legitimate
 		if ( !empty( $user->id ) ) {
 			if ( !$this->userid ) {
-				// Its ok, this is a registration/subscription hybrid call
+				// It's ok, this is a registration/subscription hybrid call
 				$this->authed = true;
 			} elseif ( $this->userid ) {
 				if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
@@ -7356,20 +7403,20 @@ class InvoiceFactory
 			return null;
 		}
 
-		$database = &JFactory::getDBO();
-
 		$this->loadMetaUser( false, true );
 
-		$row = new SubscriptionPlan( $database );
-		$row->load( $this->usage );
+		$database = &JFactory::getDBO();
 
-		$restrictions = $row->getRestrictionsArray();
+		$plan = new SubscriptionPlan( $database );
+		$plan->load( $this->usage );
+
+		$restrictions = $plan->getRestrictionsArray();
 
 		if ( !aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) ) {
 			return aecNotAuth();
 		}
 
-		if ( !ItemGroupHandler::checkParentRestrictions( $row, 'item', $this->metaUser ) ) {
+		if ( !ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
 			return aecNotAuth();
 		}
 	}
@@ -7415,6 +7462,65 @@ class InvoiceFactory
 		$this->loadPaymentInfo();
 
 		return;
+	}
+
+	function loadPlanObject( $option )
+	{
+		$database = &JFactory::getDBO();
+
+		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
+			// get the payment plan
+			$this->plan = new SubscriptionPlan( $database );
+			$this->plan->load( $this->usage );
+
+			if ( !is_object( $this->plan ) ) {
+				return aecNotAuth();
+			}
+		} elseif ( !isset( $this->cartprocexceptions ) ) {
+			if ( empty( $this->metaUser ) ) {
+				return aecNotAuth();
+			}
+
+			$this->getCart();
+
+			$this->usage = 'c.' . $this->cartobject->id;
+
+			$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
+
+			if ( count( $procs ) > 1 ) {
+				$this->cartItemsPPselectForm( $option );
+			} else {
+				if ( isset( $procs[0] ) ) {
+					$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
+
+					$proc = $pgroups[0]['processors'][0];
+
+					if ( strpos( $proc, '_recurring' ) ) {
+						$this->recurring = 1;
+
+						$proc = str_replace( '_recurring', '', $proc );
+					}
+
+					$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
+
+					if ( !empty( $procname ) ) {
+						$this->processor = $procname;
+					}
+
+					$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
+				} else {
+					$am = $this->cartobject->getAmount( $this->metaUser );
+
+					if ( $am['amount'] == "0.00" ) {
+						$this->processor = 'free';
+					} else {
+						$this->processor = 'none';
+					}
+				}
+			}
+
+			$this->cartprocexceptions = true;
+		}
 	}
 
 	function cartItemsPPselectForm( $option )
@@ -7611,65 +7717,6 @@ class InvoiceFactory
 			if ( !empty( $procname ) ) {
 				$this->processor = $procname;
 			}
-		}
-	}
-
-	function loadPlanObject( $option )
-	{
-		$database = &JFactory::getDBO();
-
-		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
-			// get the payment plan
-			$this->plan = new SubscriptionPlan( $database );
-			$this->plan->load( $this->usage );
-
-			if ( !is_object( $this->plan ) ) {
-				return aecNotAuth();
-			}
-		} elseif ( !isset( $this->cartprocexceptions ) ) {
-			if ( empty( $this->metaUser ) ) {
-				return aecNotAuth();
-			}
-
-			$this->getCart();
-
-			$this->usage = 'c.' . $this->cartobject->id;
-
-			$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
-
-			if ( count( $procs ) > 1 ) {
-				$this->cartItemsPPselectForm( $option );
-			} else {
-				if ( isset( $procs[0] ) ) {
-					$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
-
-					$proc = $pgroups[0]['processors'][0];
-
-					if ( strpos( $proc, '_recurring' ) ) {
-						$this->recurring = 1;
-
-						$proc = str_replace( '_recurring', '', $proc );
-					}
-
-					$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
-
-					if ( !empty( $procname ) ) {
-						$this->processor = $procname;
-					}
-
-					$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
-				} else {
-					$am = $this->cartobject->getAmount( $this->metaUser );
-
-					if ( $am['amount'] == "0.00" ) {
-						$this->processor = 'free';
-					} else {
-						$this->processor = 'none';
-					}
-				}
-			}
-
-			$this->cartprocexceptions = true;
 		}
 	}
 
@@ -8212,51 +8259,9 @@ class InvoiceFactory
 		if ( empty( $this->userid ) ) {
 			// Creating a dummy user object
 			$this->metaUser = new metaUser( 0 );
-			$this->metaUser->hasSubscription = false;
+			$this->dummyUser( $this->passthrough );
 
-			$this->metaUser->cmsUser = new stdClass();
-			$this->metaUser->cmsUser->gid = 29;
-
-			if ( is_array( $this->passthrough ) && !empty( $this->passthrough ) && !empty( $this->passthrough['username'] ) ) {
-				$cpass = $this->passthrough;
-				unset( $cpass['id'] );
-
-				$cmsfields = array( 'name', 'username', 'email', 'password' );
-
-				// Create dummy CMS user
-				foreach( $cmsfields as $cmsfield ) {
-					foreach ( $cpass as $k => $v ) {
-						if ( $k == $cmsfield ) {
-							$this->metaUser->cmsUser->$cmsfield = $v;
-							unset( $cpass[$k] );
-						}
-					}
-				}
-
-				// Create dummy CB/CBE user
-				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-					$this->metaUser->hasCBprofile = 1;
-					$this->metaUser->cbUser = new stdClass();
-
-					foreach ( $cpass as $cbfield => $cbvalue ) {
-						if ( is_array( $cbvalue ) ) {
-							$this->metaUser->cbUser->$cbfield = implode( ';', $cbvalue );
-						} else {
-							$this->metaUser->cbUser->$cbfield = $cbvalue;
-						}
-					}
-				}
-
-				if ( isset( $this->metaUser->_incomplete ) ) {
-					unset( $this->metaUser->_incomplete );
-				}
-
-				return false;
-			} else {
-				$this->metaUser->_incomplete = true;
-
-				return true;
-			}
+			return false;
 		} else {
 			// Loading the actual user
 			$this->metaUser = new metaUser( $this->userid );
@@ -8642,6 +8647,8 @@ class InvoiceFactory
 
 	function registerRedirect( $option, $intro, $plan )
 	{
+		$_POST['intro'] = $intro;
+
 		// The plans are supposed to be first, so the details form should hold the values
 		if ( !empty( $plan['id'] ) ) {
 			$_POST['usage']		= $plan['id'];
@@ -8667,11 +8674,6 @@ class InvoiceFactory
 	function registerRedirectJoomla( $option, $intro, $plan )
 	{
 		global $mainframe;
-
-		if ( !isset( $_POST['usage'] ) ) {
-			$_POST['intro'] = $intro;
-			$_POST['usage'] = $plan['id'];
-		}
 
 		if ( aecJoomla15check() ) {
 			$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
@@ -8787,7 +8789,7 @@ class InvoiceFactory
 			$this->mi_form = $this->plan->getMIforms( $this->metaUser, $this->mi_error );
 		}
 
-		if ( !empty( $this->mi_form ) ) {
+		if ( !empty( $this->mi_form ) && is_array( $this->passthrough ) ) {
 			$params = $this->plan->getMIformParams( $this->metaUser );
 
 			foreach ( $params as $mik => $miv ) {
@@ -8795,25 +8797,19 @@ class InvoiceFactory
 					continue;
 				}
 
-				if ( is_array( $this->passthrough ) ) {
-					foreach ( $this->passthrough as $pid => $pk ) {
-						if ( is_array( $pk ) ) {
-							if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
-								unset($this->passthrough[$pid]);
-							}
-						}
+				foreach ( $this->passthrough as $pid => $pk ) {
+					if ( !is_array( $pk ) ) {
+						continue;
+					}
+
+					if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
+						unset($this->passthrough[$pid]);
 					}
 				}
 			}
 		}
 
-		if ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) {
-			$confirm = false;
-		} else {
-			$confirm = true;
-		}
-
-		if ( $confirm ) {
+		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
 			global $mainframe;
 
 			$mainframe->SetPageTitle( _CONFIRM_TITLE );
@@ -9135,9 +9131,6 @@ class InvoiceFactory
 
 		if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
 			JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
-
-			//$document = &JFactory::getDocument();
-			//$document->addScriptDeclaration( "" );
 		}
 
 		Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this );
@@ -9377,121 +9370,14 @@ class InvoiceFactory
 		if ( $this->userid ) {
 			$this->loadMetaUser();
 
-			$renew = $this->metaUser->is_renewing();
-		}
-
-		if ( isset( $this->plan ) ) {
-			if ( is_object( $this->plan ) ) {
-				if ( !empty( $this->plan->params['customthanks'] ) ) {
-					aecRedirect( $this->plan->params['customthanks'] );
-				} elseif ( $aecConfig->cfg['customthanks'] ) {
-					aecRedirect( $aecConfig->cfg['customthanks'] );
-				}
+			if ( isset( $this->renew ) ) {
+				$renew = $this->renew;
 			} else {
-				return $this->simplethanks( $option, $renew, $free );
+				$renew = $this->metaUser->is_renewing();
 			}
-		} else {
-			return $this->simplethanks( $option, $renew, $free );
 		}
 
-		if ( isset( $this->renew ) ) {
-			$renew = $this->renew;
-		}
-
-		if ( $renew ) {
-			$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
-			if ( $free ) {
-				$msg .= _SUB_FEPARTICLE_LOGIN;
-			} else {
-				$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
-			}
-		} else {
-			$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
-
-			$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
-
-			$msg .= $mainframe->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
-		}
-
-		$b = '';
-		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-			$b .= '<div class="componentheading">' . _THANKYOU_TITLE . '</div>';
-		}
-
-		if ( $aecConfig->cfg['customtext_thanks'] ) {
-			$b .= $aecConfig->cfg['customtext_thanks'];
-		}
-
-		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-			$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
-		}
-
-		$up =& $this->plan->params;
-
-		$msg = "";
-		if ( !empty( $up['customtext_thanks'] ) ) {
-			if ( isset( $up['customtext_thanks_keeporiginal'] ) ) {
-				if ( empty( $up['customtext_thanks_keeporiginal'] ) ) {
-					$msg = $up['customtext_thanks'];
-				} else {
-					$msg = $b . $up['customtext_thanks'];
-				}
-			} else {
-				$msg = $up['customtext_thanks'];
-			}
-		} else {
-			$msg = $b;
-		}
-
-		$mainframe->SetPageTitle( _THANKYOU_TITLE );
-
-		HTML_Results::thanks( $option, $msg );
-	}
-
-	function simplethanks( $option, $renew, $free )
-	{
-		global $mainframe, $aecConfig, $mainframe;
-
-		// Look whether we have a custom ThankYou page
-		if ( $aecConfig->cfg['customthanks'] ) {
-			aecRedirect( $aecConfig->cfg['customthanks'] );
-		}
-
-		if ( isset( $this->renew ) ) {
-			$renew = $this->renew;
-		}
-
-		if ( $renew ) {
-			$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
-			if ( $free ) {
-				$msg .= _SUB_FEPARTICLE_LOGIN;
-			} else {
-				$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
-			}
-		} else {
-			$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
-
-			$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
-
-			$msg .= $mainframe->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
-		}
-
-		$b = '';
-		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-			$b .= '<div class="componentheading">' . _THANKYOU_TITLE . '</div>';
-		}
-
-		if ( $aecConfig->cfg['customtext_thanks'] ) {
-			$b .= $aecConfig->cfg['customtext_thanks'];
-		}
-
-		if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-			$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
-		}
-
-		$mainframe->SetPageTitle( _THANKYOU_TITLE );
-
-		HTML_Results::thanks( $option, $b );
+		aecThanks( $option, $renew, $free, $this->plan );
 	}
 
 	function error( $option, $objUser, $invoice, $error )

@@ -95,6 +95,8 @@ class mi_jobs
 
 	function getCompanyList( $userid )
 	{
+		$database = &JFactory::getDBO();
+
 		$query = 'SELECT `id`'
 				. ' FROM `#__jobs_companies`'
 				. ' WHERE `memberid` = \'' . $userid . '\'';
@@ -190,6 +192,8 @@ class mi_jobs
 
 	function getResumeList( $userid )
 	{
+		$database = &JFactory::getDBO();
+
 		$query = 'SELECT `id`'
 				. ' FROM `#__jobs_resumes`'
 				. ' WHERE `memberid` = \'' . $userid . '\'';

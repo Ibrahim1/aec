@@ -1572,6 +1572,120 @@ function cancelPayment( $option )
 	}
 }
 
+function aecThanks( $option, $renew, $free, $plan )
+{
+	global $mainframe, $aecConfig, $mainframe;
+
+	if ( isset( $plan ) ) {
+		if ( is_object( $plan ) ) {
+			if ( !empty( $plan->params['customthanks'] ) ) {
+				aecRedirect( $plan->params['customthanks'] );
+			} elseif ( $aecConfig->cfg['customthanks'] ) {
+				aecRedirect( $aecConfig->cfg['customthanks'] );
+			}
+		} else {
+			return aecSimpleThanks( $option, $renew, $free );
+		}
+	} else {
+		return aecSimpleThanks( $option, $renew, $free );
+	}
+
+	if ( isset( $this->renew ) ) {
+		$renew = $this->renew;
+	}
+
+	if ( $renew ) {
+		$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
+		if ( $free ) {
+			$msg .= _SUB_FEPARTICLE_LOGIN;
+		} else {
+			$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
+		}
+	} else {
+		$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
+
+		$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
+
+		$msg .= $mainframe->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
+	}
+
+	$b = '';
+	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+		$b .= '<div class="componentheading">' . _THANKYOU_TITLE . '</div>';
+	}
+
+	if ( $aecConfig->cfg['customtext_thanks'] ) {
+		$b .= $aecConfig->cfg['customtext_thanks'];
+	}
+
+	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+		$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
+	}
+
+	$up =& $plan->params;
+
+	$msg = "";
+	if ( !empty( $up['customtext_thanks'] ) ) {
+		if ( isset( $up['customtext_thanks_keeporiginal'] ) ) {
+			if ( empty( $up['customtext_thanks_keeporiginal'] ) ) {
+				$msg = $up['customtext_thanks'];
+			} else {
+				$msg = $b . $up['customtext_thanks'];
+			}
+		} else {
+			$msg = $up['customtext_thanks'];
+		}
+	} else {
+		$msg = $b;
+	}
+
+	$mainframe->SetPageTitle( _THANKYOU_TITLE );
+
+	HTML_Results::thanks( $option, $msg );
+}
+
+function aecSimpleThanks( $option, $renew, $free )
+{
+	global $mainframe, $aecConfig, $mainframe;
+
+	// Look whether we have a custom ThankYou page
+	if ( $aecConfig->cfg['customthanks'] ) {
+		aecRedirect( $aecConfig->cfg['customthanks'] );
+	}
+
+	if ( $renew ) {
+		$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
+		if ( $free ) {
+			$msg .= _SUB_FEPARTICLE_LOGIN;
+		} else {
+			$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
+		}
+	} else {
+		$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
+
+		$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
+
+		$msg .= $mainframe->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
+	}
+
+	$b = '';
+	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+		$b .= '<div class="componentheading">' . _THANKYOU_TITLE . '</div>';
+	}
+
+	if ( $aecConfig->cfg['customtext_thanks'] ) {
+		$b .= $aecConfig->cfg['customtext_thanks'];
+	}
+
+	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+		$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
+	}
+
+	$mainframe->SetPageTitle( _THANKYOU_TITLE );
+
+	HTML_Results::thanks( $option, $b );
+}
+
 function aecNotAuth()
 {
 	if ( aecJoomla15check() ) {
