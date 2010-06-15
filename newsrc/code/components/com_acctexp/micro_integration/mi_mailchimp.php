@@ -81,8 +81,7 @@ class mi_jnews
 		$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsuser->email);
 
 		if ( empty( $mcuser['id'] ) && $is_allowed ) {
-			$MCAPI->listSubscribe( $this->settings['list'], $email_address, $merge_vars);
-			( $this->settings['list'], $request->metaUser->cmsuser->email);
+			$MCAPI->listSubscribe( $this->settings['list'], $request->metaUser->cmsuser->email, $merge_vars);
 
 			$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsuser->email);
 		}

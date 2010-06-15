@@ -7406,61 +7406,7 @@ class InvoiceFactory
 
 	function puffer( $option )
 	{
-		$database = &JFactory::getDBO();
-
-		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
-			// get the payment plan
-			$this->plan = new SubscriptionPlan( $database );
-			$this->plan->load( $this->usage );
-
-			if ( !is_object( $this->plan ) ) {
-				return aecNotAuth();
-			}
-		} elseif ( !isset( $this->cartprocexceptions ) ) {
-			if ( empty( $this->metaUser ) ) {
-				return aecNotAuth();
-			}
-
-			$this->getCart();
-
-			$this->usage = 'c.' . $this->cartobject->id;
-
-			$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
-
-			if ( count( $procs ) > 1 ) {
-				$this->cartItemsPPselectForm( $option );
-			} else {
-				if ( isset( $procs[0] ) ) {
-					$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
-
-					$proc = $pgroups[0]['processors'][0];
-
-					if ( strpos( $proc, '_recurring' ) ) {
-						$this->recurring = 1;
-
-						$proc = str_replace( '_recurring', '', $proc );
-					}
-
-					$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
-
-					if ( !empty( $procname ) ) {
-						$this->processor = $procname;
-					}
-
-					$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
-				} else {
-					$am = $this->cartobject->getAmount( $this->metaUser );
-
-					if ( $am['amount'] == "0.00" ) {
-						$this->processor = 'free';
-					} else {
-						$this->processor = 'none';
-					}
-				}
-			}
-
-			$this->cartprocexceptions = true;
-		}
+		$this->loadPlanObject( $option );
 
 		$this->loadProcessorObject();
 
@@ -7665,6 +7611,65 @@ class InvoiceFactory
 			if ( !empty( $procname ) ) {
 				$this->processor = $procname;
 			}
+		}
+	}
+
+	function loadPlanObject( $option )
+	{
+		$database = &JFactory::getDBO();
+
+		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
+			// get the payment plan
+			$this->plan = new SubscriptionPlan( $database );
+			$this->plan->load( $this->usage );
+
+			if ( !is_object( $this->plan ) ) {
+				return aecNotAuth();
+			}
+		} elseif ( !isset( $this->cartprocexceptions ) ) {
+			if ( empty( $this->metaUser ) ) {
+				return aecNotAuth();
+			}
+
+			$this->getCart();
+
+			$this->usage = 'c.' . $this->cartobject->id;
+
+			$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
+
+			if ( count( $procs ) > 1 ) {
+				$this->cartItemsPPselectForm( $option );
+			} else {
+				if ( isset( $procs[0] ) ) {
+					$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
+
+					$proc = $pgroups[0]['processors'][0];
+
+					if ( strpos( $proc, '_recurring' ) ) {
+						$this->recurring = 1;
+
+						$proc = str_replace( '_recurring', '', $proc );
+					}
+
+					$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
+
+					if ( !empty( $procname ) ) {
+						$this->processor = $procname;
+					}
+
+					$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
+				} else {
+					$am = $this->cartobject->getAmount( $this->metaUser );
+
+					if ( $am['amount'] == "0.00" ) {
+						$this->processor = 'free';
+					} else {
+						$this->processor = 'none';
+					}
+				}
+			}
+
+			$this->cartprocexceptions = true;
 		}
 	}
 
@@ -8834,23 +8839,13 @@ class InvoiceFactory
 
 	function cart( $option )
 	{
-		$database = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		$this->getCart();
 
-		$this->coupons = array();
-		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
+		$this->coupons = array( 'active' => $aecConfig->cfg['enable_coupons'] );
 
-		$query = 'SELECT `invoice_number`'
-				. ' FROM #__acctexp_invoices'
-				. ' WHERE `userid` = \'' . $this->userid . '\''
-				. ' AND `usage` = \'c.' . $this->cartobject->id . '\''
-				;
-
-		$database->setQuery( $query );
-		$in = $database->loadResult();
+		$in = AECfetchfromDB::InvoiceNumberbyCartId( $this->userid, $this->cartobject->id );
 
 		if ( !empty( $in ) ) {
 			$this->invoice_number = $in;
@@ -8890,17 +8885,9 @@ class InvoiceFactory
 
 	function save( $option, $coupon=null )
 	{
-		$database = &JFactory::getDBO();
-
-		global $mainframe, $task;
-
 		$this->confirmed = 1;
 
-		if ( !empty( $this->usage ) ) {
-			// get the payment plan
-			$this->plan = new SubscriptionPlan( $database );
-			$this->plan->load( $this->usage );
-		}
+		$this->loadPlanObject( $option );
 
 		if ( empty( $this->userid ) ) {
 			$this->saveUserRegistration( $option );
@@ -8909,13 +8896,9 @@ class InvoiceFactory
 		$this->loadMetaUser( true );
 		$this->metaUser->setTempAuth();
 
-		if ( !empty( $this->plan ) ) {
-			if ( is_object( $this->plan ) ) {
-				if ( !$this->verifyMIForms() ) {
-					$this->confirmed = 0;
-					return $this->confirm( $option );
-				}
-			}
+		if ( $this->verifyMIForms() === false ) {
+			$this->confirmed = 0;
+			return $this->confirm( $option );
 		}
 
 		$this->checkout( $option, 0, null, $coupon );
@@ -8924,19 +8907,15 @@ class InvoiceFactory
 	function saveUserRegistration( $option )
 	{
 		if ( !empty( $this->plan ) ) {
-			if ( isset( $this->plan->params['override_activation'] ) ) {
-				$overrideActivation = $this->plan->params['override_activation'];
-			} else {
-				$overrideActivation = false;
+			if ( !isset( $this->plan->params['override_activation'] ) ) {
+				$this->plan->params['override_activation'] = false;
 			}
 
-			if ( isset( $this->plan->params['override_regmail'] ) ) {
-				$overrideEmail = $this->plan->params['override_regmail'];
-			} else {
-				$overrideEmail = false;
+			if ( !isset( $this->plan->params['override_regmail'] ) ) {
+				$this->plan->params['override_regmail'] = false;
 			}
 
-			$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough, false, $overrideActivation, $overrideEmail );
+			$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough, false, $this->plan->params['override_activation'], $this->plan->params['override_regmail'] );
 		} else {
 			$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough );
 		}
@@ -8944,6 +8923,12 @@ class InvoiceFactory
 
 	function verifyMIForms()
 	{
+		if ( empty( $this->plan ) ) {
+			return null;
+		} elseif ( is_object( $this->plan ) ) {
+			return null;
+		}
+
 		$mi_form = $this->plan->getMIformParams( $this->metaUser );
 
 		if ( !empty( $mi_form ) ) {
@@ -9095,13 +9080,6 @@ class InvoiceFactory
 			}
 		}
 
-		// Argh, this is bad :-(
-		if ( $this->invoice->amount != $amt ) {
-			$this->invoice->amount = $amt;
-
-			$this->invoice->storeload();
-		}
-
 		$exchange = $silent = null;
 
 		$this->triggerMIs( 'invoice_items_checkout', $exchange, $this->items, $silent );
@@ -9114,55 +9092,55 @@ class InvoiceFactory
 		global $mainframe, $aecConfig;
 
 		if ( $this->hasExceptions() ) {
-			$this->addressExceptions( $option );
-		} else {
-			if ( !empty( $data ) ) {
-				$int_var = $data;
-			} else {
-				$int_var = $this->invoice->getWorkingData( $this );
-			}
-
-			// Assemble Checkout Response
-			if ( !empty( $int_var['objUsage'] ) ) {
-				if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
-					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this->invoice );
-				} else {
-					$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this->invoice, $int_var['objUsage'] );
-				}
-			}
-
-			$int_var['params']	= $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
-
-			$this->invoice->formatInvoiceNumber();
-
-			$introtext = constant( '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' ) );
-
-			$this->checkout = array();
-			$this->checkout['checkout_title']					= _CHECKOUT_TITLE;
-			$this->checkout['customtext_checkout_keeporiginal']	= $aecConfig->cfg['customtext_checkout_keeporiginal'];
-			$this->checkout['customtext_checkout']				= $aecConfig->cfg['customtext_checkout'];
-			$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
-			$this->checkout['checkout_display_descriptions']	= $aecConfig->cfg['checkout_display_descriptions'];
-			$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];
-			$this->checkout['customtext_checkout_table']		= _CHECKOUT_TITLE;
-
-			$this->display_error = $error;
-
-			if ( is_object( $this->pp ) ) {
-				$this->pp->modifyCheckout( $int_var, $this );
-			}
-
-			$mainframe->SetPageTitle( $this->checkout['checkout_title'] );
-
-			if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
-				JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
-
-				//$document = &JFactory::getDocument();
-				//$document->addScriptDeclaration( "" );
-			}
-
-			Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this );
+			return $this->addressExceptions( $option );
 		}
+
+		if ( !empty( $data ) ) {
+			$int_var = $data;
+		} else {
+			$int_var = $this->invoice->getWorkingData( $this );
+		}
+
+		// Assemble Checkout Response
+		if ( !empty( $int_var['objUsage'] ) ) {
+			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
+				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this->invoice );
+			} else {
+				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this->invoice, $int_var['objUsage'] );
+			}
+		}
+
+		$int_var['params']	= $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
+
+		$this->invoice->formatInvoiceNumber();
+
+		$introtext = constant( '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' ) );
+
+		$this->checkout = array();
+		$this->checkout['checkout_title']					= _CHECKOUT_TITLE;
+		$this->checkout['customtext_checkout_keeporiginal']	= $aecConfig->cfg['customtext_checkout_keeporiginal'];
+		$this->checkout['customtext_checkout']				= $aecConfig->cfg['customtext_checkout'];
+		$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
+		$this->checkout['checkout_display_descriptions']	= $aecConfig->cfg['checkout_display_descriptions'];
+		$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];
+		$this->checkout['customtext_checkout_table']		= _CHECKOUT_TITLE;
+
+		$this->display_error = $error;
+
+		if ( is_object( $this->pp ) ) {
+			$this->pp->modifyCheckout( $int_var, $this );
+		}
+
+		$mainframe->SetPageTitle( $this->checkout['checkout_title'] );
+
+		if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
+			JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
+
+			//$document = &JFactory::getDocument();
+			//$document->addScriptDeclaration( "" );
+		}
+
+		Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this );
 	}
 
 	function getObjUsage()
@@ -9283,16 +9261,14 @@ class InvoiceFactory
 
 		if ( !empty( $subscr ) ) {
 			if ( $this->metaUser->moveFocus( $subscr ) ) {
-				$this->invoice->loadbySubscriptionId( $this->metaUser->focusSubscription->id, $this->metaUser->userid );
+				$this->invoice->loadLatest( $this->metaUser->userid, $this->metaUser->focusSubscription->plan, $this->metaUser->focusSubscription->id );
 			}
+		} else {
+			$this->invoice->loadLatest( $this->metaUser->userid, $this->metaUser->focusSubscription->plan );
 		}
 
-		if ( empty( $this->invoice->id ) ) {
-			$this->invoice->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
-		}
-
-		if ( empty( $this->invoice->id ) ) {
-			$this->invoice->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $this->userid, $this->metaUser->focusSubscription->plan ) );
+		if ( empty( $this->processor ) ) {
+			$this->processor = $this->invoice->method;
 		}
 
 		$pp = new PaymentProcessor( $database );
@@ -9606,6 +9582,21 @@ class Invoice extends serialParamDBTable
 
 		if ( empty( $this->counter ) && ( $this->transaction_date != '0000-00-00 00:00:00' ) && !is_null( $this->transaction_date ) ) {
 			$this->counter = 1;
+		}
+	}
+
+	function loadLatest( $userid, $plan, $subscr=null )
+	{
+		if ( !empty( $subscr ) ) {
+			$this->loadbySubscriptionId( $subscr, $userid );
+		}
+
+		if ( empty( $this->id ) ) {
+			$this->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid, $plan ) );
+		}
+
+		if ( empty( $this->id ) ) {
+			$this->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid, $plan ) );
 		}
 	}
 
@@ -12523,6 +12514,20 @@ class AECfetchfromDB
 				. ' WHERE `userid` = \'' . (int) $userid . '\''
 				. ' AND `active` = \'1\''
 				;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
+	function InvoiceNumberbyCartId( $userid, $cartid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `invoice_number`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				. ' AND `usage` = \'c.' . $cartid . '\''
+				;
+
 		$database->setQuery( $query );
 		return $database->loadResult();
 	}
