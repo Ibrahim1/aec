@@ -262,6 +262,24 @@ class mammonTerms extends eucaObject
 
 		return $this->free;
 	}
+
+	/**
+	 * Simple total return
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function renderTotal()
+	{
+		$cost = 0;
+		foreach ( $this->terms as $term ) {
+			$cost = $cost + $term->renderTotal();
+		}
+
+		return $cost;
+	}
+
 }
 
 /**
@@ -419,8 +437,17 @@ class mammonTerm extends eucaObject
 
 		// Compute value of total cost
 		$total = 0;
+		$tax = 0;
 		foreach ( $this->cost as $citem ) {
 			$total += $citem->renderCost();
+			
+			if ( $citem->type == 'tax' ) {
+				$tax++;
+			}
+		}
+
+		if ( $tax == count( $this->cost ) ) {
+			return;
 		}
 
 		// Set total cost object
