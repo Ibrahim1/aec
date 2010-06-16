@@ -7810,7 +7810,7 @@ class InvoiceFactory
 				$this->payment->amount = null;
 			}
 
-			$this->items[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
+			$this->items->itemlist[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
 		} elseif( !empty( $this->cart ) ) {
 			$this->getCart();
 
@@ -7903,7 +7903,8 @@ class InvoiceFactory
 
 	function loadItems( $force=false )
 	{
-		$this->items = array();
+		$this->items = new stdClass();
+		$this->items->itemlist = array();
 
 		if ( empty( $this->cartobject ) ) {
 			$database = &JFactory::getDBO();
@@ -7926,24 +7927,22 @@ class InvoiceFactory
 				$params['hide_duration_checkout'] = false;
 			}
 
-			$this->items[] = array(	'obj'		=> $this->plan,
-									'name'		=> $this->plan->getProperty( 'name' ),
-									'desc'		=> $this->plan->getProperty( 'desc' ),
-									'quantity'	=> 1,
-									'terms'		=> $terms,
-									'params'	=> $params
-								);
+			$this->items->itemlist[] = array(	'obj'		=> $this->plan,
+												'name'		=> $this->plan->getProperty( 'name' ),
+												'desc'		=> $this->plan->getProperty( 'desc' ),
+												'quantity'	=> 1,
+												'terms'		=> $terms,
+												'params'	=> $params
+											);
 
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
 		} else {
 			$this->getCart();
 
-			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser );
-
 			foreach ( $this->cart as $cid => $citem ) {
 				if ( $citem['obj'] !== false ) {
-					$this->items[$cid] = $citem;
+					$this->items->itemlist[$cid] = $citem;
 
 					$terms = $citem['obj']->getTermsForUser( $this->recurring, $this->metaUser );
 
@@ -7954,7 +7953,7 @@ class InvoiceFactory
 						$terms->incrementPointer();
 					}
 
-					$this->items[$cid]['terms'] = $terms;
+					$this->items->itemlist[$cid]['terms'] = $terms;
 
 					$params = array();
 					if ( !empty( $citem['obj']->params['hide_duration_checkout'] ) ) {
@@ -7963,8 +7962,21 @@ class InvoiceFactory
 						$params['hide_duration_checkout'] = false;
 					}
 
-					$this->items[$cid]['params'] = $params;
-				} else {
+					$this->items->itemlist[$cid]['params'] = $params;
+				}
+			}
+		}
+	}
+
+	function loadItemTotal()
+	{
+		if ( empty( $this->cartobject ) ) {
+			$this->items->total = array( 'terms' => $this->items->itemlist[0]->terms );
+		} else {
+			$this->getCart();
+
+			foreach ( $this->cart as $cid => $citem ) {
+				if ( $citem['obj'] == false ) {
 					$terms = new mammonTerms();
 					$term = new mammonTerm();
 
@@ -7974,10 +7986,12 @@ class InvoiceFactory
 
 					$terms->addTerm( $term );
 
-					$this->items[] = array( 'cost' => $citem['cost'], 'terms' => $terms );
+					$this->items->total = array( 'cost' => $citem['cost'], 'terms' => $terms );
 				}
 			}
 		}
+
+		$this->items->grand_total = $this->items->total;
 	}
 
 	function applyCoupons()
@@ -7990,7 +8004,7 @@ class InvoiceFactory
 			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 
 			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
-				$this->items = $cpsh->applyToCart( $this->items, $this->cartobject, $this->cart );
+				$this->items->itemlist = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
 
 				if ( count( $cpsh->delete_list ) ) {
 					foreach ( $cpsh->delete_list as $couponcode ) {
@@ -8006,11 +8020,12 @@ class InvoiceFactory
 					$this->getCart();
 
 					$this->loadItems();
+
 					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-					$this->items = $cpsh->applyToCart( $this->items, $this->cartobject, $this->cart );
+					$this->items->itemlist = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
 				}
 			} else {
-				$this->items = $cpsh->applyToItemList( $this->items );
+				$this->items->itemlist = $cpsh->applyToItemList( $this->items->itemlist );
 
 				if ( count( $cpsh->delete_list ) ) {
 					foreach ( $cpsh->delete_list as $couponcode ) {
@@ -9058,27 +9073,20 @@ class InvoiceFactory
 
 		$this->applyCoupons();
 
-		if ( is_array( $this->payment->amount ) ) {
-			$amt = $this->payment->amount['amount'];
-		} else {
-			$amt = $this->payment->amount;
-		}
-
-		// Either this is fully free, or the next term is free and this is non recurring
-		if ( !empty( $this->items ) && !$this->recurring ) {
-			if ( ( count( $this->items ) == 1 ) || ( $this->payment->amount['amount'] == "0.00" ) ) {
-				$min = array_shift( array_keys( $this->items ) );
-
-				if ( $this->items[$min]['terms']->checkFree() || ( $this->items[$min]['terms']->nextterm->free && !$this->recurring ) || ( $amt == "0.00" ) ) {
-					$this->invoice->pay();
-					return $this->thanks( $option, false, true );
-				}
-			}
-		}
+		$this->loadItemTotal();
 
 		$exchange = $silent = null;
 
 		$this->triggerMIs( 'invoice_items_checkout', $exchange, $this->items, $silent );
+
+		// Either this is fully free, or the next term is free and this is non recurring
+		if ( !empty( $this->items->grand_total ) && !$this->recurring ) {
+			if ( $this->items->grand_total['terms']->checkFree() || $this->items->grand_total->nextterm->free ) {
+				$this->invoice->pay();
+
+				return $this->thanks( $option, false, true );
+			}
+		}
 
 		$this->InvoiceToCheckout( $option, $repeat, $error );
 	}
@@ -9336,23 +9344,23 @@ class InvoiceFactory
 
 		$this->applyCoupons();
 
-		if ( count( $this->items ) == 1 ) {
+		if ( count( $this->items->itemlist ) == 1 ) {
 			// Create a fake total here.
 			$terms = new mammonTerms();
 			$term = new mammonTerm();
 
 			$term->set( 'duration', array( 'none' => true ) );
 			$term->set( 'type', 'total' );
-			$term->addCost( $this->items[0]['terms']->nextterm->renderTotal() );
+			$term->addCost( $this->items->itemlist[0]['terms']->nextterm->renderTotal() );
 
 			$terms->addTerm( $term );
 
-			$this->items[] = array( 'cost' => $this->items[0]['terms']->nextterm->renderTotal(), 'terms' => $terms );
+			$this->items->itemlist[] = array( 'cost' => $this->items->itemlist[0]['terms']->nextterm->renderTotal(), 'terms' => $terms );
 		}
 
 		$exchange = $silent = null;
 
-		$this->triggerMIs( 'invoice_items', $exchange, $this->items, $silent );
+		$this->triggerMIs( 'invoice_items', $exchange, $this->items->itemlist, $silent );
 
 		$this->invoice->formatInvoiceNumber();
 
@@ -10423,10 +10431,10 @@ class Invoice extends serialParamDBTable
 					$int_var['recurring'] = $InvoiceFactory->pp->is_recurring();
 				}
 
-				if ( !empty( $InvoiceFactory->items ) ) {
-					$max = array_pop( array_keys( $InvoiceFactory->items ) );
+				if ( !empty( $InvoiceFactory->items->itemlist ) ) {
+					$max = array_pop( array_keys( $InvoiceFactory->items->itemlist ) );
 
-					$terms = $InvoiceFactory->items[$max]['terms'];
+					$terms = $InvoiceFactory->items->itemlist[$max]['terms'];
 				} else {
 					$terms = $int_var['objUsage']->getTermsForUser( $int_var['recurring'], $InvoiceFactory->metaUser );
 				}
@@ -10705,7 +10713,7 @@ class Invoice extends serialParamDBTable
 		$data['itemlist'] = array();
 		$total = 0;
 		$break = 0;
-		foreach ( $InvoiceFactory->items as $iid => $item ) {
+		foreach ( $InvoiceFactory->items->itemlist as $iid => $item ) {
 			if ( isset( $item['obj'] ) ) {
 				$amt =  $item['terms']->nextterm->renderTotal();
 
@@ -10715,41 +10723,47 @@ class Invoice extends serialParamDBTable
 					. '<td>' . $item['quantity'] . '</td>'
 					. '<td>' . AECToolbox::formatAmount( $amt * $item['quantity'], $InvoiceFactory->invoice->currency ) . '</td>'
 					. '</tr>';
-			} else {
-				if ( !$break ) {
-					$data['totallist'][] = '<tr id="invoice_content_item_separator">'
-					. '<td colspan="4"></td>'
-					. '</tr>';
-
-					$break = 1;
-				}
-
-				switch ( $item['terms']->terms[0]->type ){
-					case 'tax':
-						$details = null;
-						foreach ( $item['terms']->terms[0]->cost as $citem ) {
-							if ( $citem->type == 'tax' ) {
-								$details = $citem->cost['details'];
-							}
-						}
-
-						$data['totallist'][] = '<tr id="invoice_content_item_tax">'
-							. '<td>Tax' . '&nbsp;( ' . $details . ' )' . '</td>'
-							. '<td></td>'
-							. '<td></td>'
-							. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
-							. '</tr>';
-						break;
-					case 'total':
-						$data['totallist'][] = '<tr id="invoice_content_item_total">'
-							. '<td>' . ( ( $iid == count( $InvoiceFactory->items )-1 ) ? _INVOICEPRINT_GRAND_TOTAL : _INVOICEPRINT_TOTAL ) . '</td>'
-							. '<td></td>'
-							. '<td></td>'
-							. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
-							. '</tr>';
-						break;
-				}
 			}
+		}
+
+		$data['totallist'][] = '<tr id="invoice_content_item_separator">'
+			. '<td colspan="4"></td>'
+			. '</tr>';
+
+		if ( !empty( $InvoiceFactory->items->total ) ) {
+			$data['totallist'][] = '<tr id="invoice_content_item_total">'
+				. '<td>' . _INVOICEPRINT_TOTAL . '</td>'
+				. '<td></td>'
+				. '<td></td>'
+				. '<td>' . AECToolbox::formatAmount( $InvoiceFactory->items->total['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
+				. '</tr>';
+		}
+
+		if ( !empty( $InvoiceFactory->items->taxes ) ) {
+			foreach ( $InvoiceFactory->items->taxes as $item ) {
+				$details = null;
+				foreach ( $item['terms']->terms[0]->cost as $citem ) {
+					if ( $citem->type == 'tax' ) {
+						$details = $citem->cost['details'];
+					}
+				}
+
+				$data['totallist'][] = '<tr id="invoice_content_item_tax">'
+					. '<td>Tax' . '&nbsp;( ' . $details . ' )' . '</td>'
+					. '<td></td>'
+					. '<td></td>'
+					. '<td>' . AECToolbox::formatAmount( $item['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
+					. '</tr>';
+			}
+		}
+
+		if ( !empty( $InvoiceFactory->items->grand_total ) ) {
+			$data['totallist'][] = '<tr id="invoice_content_item_total">'
+				. '<td>' . _INVOICEPRINT_TOTAL . '</td>'
+				. '<td></td>'
+				. '<td></td>'
+				. '<td>' . AECToolbox::formatAmount( $InvoiceFactory->items->grand_total['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
+				. '</tr>';
 		}
 
 		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
