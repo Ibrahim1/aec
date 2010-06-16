@@ -749,7 +749,7 @@ class Payment_HTML
 
 	function promptpassword( $option, $passthrough, $wrong )
 	{
-		$database = &JFactory::getDBO();
+		HTML_frontend::aec_styling( $option );
 
 		global $aecConfig;
 		?>
@@ -761,7 +761,7 @@ class Payment_HTML
 				}
 			?>
 			<div id="upgrade_button">
-				<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+				<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="password" size="20" class="inputbox" id="password" name="password"/>
 					<?php if ( $passthrough != false ) {
 						$pt = unserialize( base64_decode( $passthrough ) );
@@ -785,8 +785,6 @@ class Payment_HTML
 
 	function confirmForm( $option, $InvoiceFactory, $user, $passthrough = false)
 	{
-		$database = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
@@ -991,8 +989,6 @@ class Payment_HTML
 	{
 		global $aecConfig;
 
-		$database = &JFactory::getDBO();
-
 		HTML_frontend::aec_styling( $option );
 		?>
 
@@ -1179,8 +1175,6 @@ class Payment_HTML
 	{
 		global $aecConfig;
 
-		$database = &JFactory::getDBO();
-
 		$user = &JFactory::getUser();
 
 		HTML_frontend::aec_styling( $option );
@@ -1209,11 +1203,11 @@ class Payment_HTML
 				</form><br /><br />
 			<?php } ?>
 			<?php
-				foreach ( $InvoiceFactory->items as $item ) {
+				foreach ( $InvoiceFactory->items->itemlist as $item ) {
 					if ( !empty( $item['terms'] ) ) {
 						$terms = $item['terms']->getTerms();
 					} else {
-						$terms = false;
+						continue;
 					}
 
 					foreach ( $terms as $tid => $term ) {
@@ -1245,12 +1239,8 @@ class Payment_HTML
 							echo '<tr><td>' . $item['desc'] . '</td></tr>';
 						}
 
-						if ( defined( strtoupper( '_' . $ttype ) ) ) {
-							// Headline - What type is this term
-							echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
-						} else {
-							echo '<tr class="aec_term_totalhead' . $current . '"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
-						}
+						// Headline - What type is this term
+						echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
 
 						if ( !isset( $term->duration['none'] ) && empty( $item['params']['hide_duration_checkout'] ) ) {
 							// Subheadline - specify the details of this term
@@ -1314,6 +1304,33 @@ class Payment_HTML
 						// Draw Separator Line
 						echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 					}
+				}
+
+				if ( !empty( $InvoiceFactory->items->total ) ) {
+					echo '<tr class="aec_term_totalhead' . $current . '"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
+
+					// Iterate through costs
+					foreach ( $term->renderCost() as $citem ) {
+						$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
+
+						$amount = AECToolbox::correctAmount( $citem->cost['amount'] );
+
+						$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
+
+						switch ( $citem->type ) {
+							case 'tax':
+								$t .= '&nbsp;( ' . $citem->cost['details'] . ' )';
+								break;
+							case 'cost': break;
+							case 'total': break;
+							default: break;
+						}
+
+						echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
+					}
+
+					// Draw Separator Line
+					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 				}
 			?>
 			</table>
@@ -1473,8 +1490,6 @@ class Payment_HTML
 
 	function exceptionForm( $option, $InvoiceFactory, $aecHTML, $hasform )
 	{
-		$database = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		HTML_frontend::aec_styling( $option );
@@ -1628,9 +1643,9 @@ class Payment_HTML
 
 	function error( $option, $objUser, $invoice, $error=false, $suppressactions=false )
 	{
-		$database = &JFactory::getDBO();
-
 		global $aecConfig;
+
+		HTML_frontend::aec_styling($option);
 
 		if ( !$suppressactions ) {
 			$actions =	_CHECKOUT_ERROR_OPENINVOICE

@@ -78,7 +78,11 @@ class mi_aectax
 			}
 		}
 
-		$settings['lists']['vat_mode']			= mosHTML::selectList( $modes, $p.'mode', 'size="1"', 'value', 'text', $this->settings['vat_mode'] );
+		if ( !isset( $this->settings['vat_mode'] ) ) {
+			$this->settings['vat_mode'] = 'pseudo_subtract';
+		}
+
+		$settings['lists']['vat_mode']			= mosHTML::selectList( $modes, 'vat_mode', 'size="1"', 'value', 'text', $this->settings['vat_mode'] );
 
 		return $settings;
 	}
@@ -159,30 +163,80 @@ class mi_aectax
 		$location = $this->getLocation( $request );
 
 		if ( !empty( $location ) ) {
-			$request = $this->addTax( $request, $location, true );
+			$item = array_pop( $request->add->itemlist );
+
+			$request = $this->addTax( $request, $item, $location );
 		}
 
 		return true;
 	}
 
-	function invoice_items_checkout( $request )
+	function invoice_items_total( $request )
 	{
 		$location = $this->getLocation( $request );
 
-		if ( !empty( $location ) ) {
-			$request = $this->addTax( $request, $location );
+		$taxtypes	= array();
+		$taxcoll	= array();
+
+		// Collect all the taxes from the individual item costs
+		foreach ( $request->add->itemlist as $item ) {
+			foreach ( $item['terms']->terms as $term ) {
+				foreach ( $term->cost as $cost ) {
+					if ( $cost->type == 'tax' ) {
+						if ( in_array( $cost->cost['details'], $taxtypes ) ) {
+							$typeid = array_search( $cost->cost['details'], $taxtypes );
+						} else {
+							$taxtypes[] = $cost->cost['details'];
+
+							$typeid = count( $taxtypes ) - 1;
+						}
+
+						if ( !isset( $taxcollections[$typeid] ) ) {
+							$taxcollections[$typeid] = 0;
+						}
+
+						$taxcollections[$typeid] += $cost->renderCost();
+					}
+				}
+			}
 		}
 
-		return true;
-	}
-
-	function modifyPrice( $request )
-	{
-		$location = $this->getLocation( $request );
-
-		if ( !empty( $location ) ) {
-			$request = $this->addTax( $request, $location );
+		if ( count( $taxcollections ) == 0 ) {
+			return null;
 		}
+
+		$total = json_encode( $request->add->total );
+
+		$taxamount = 0;
+
+		if ( !isset( $request->add->tax ) ) {
+			$request->add->tax = array();
+		}
+print_r($request->add);
+		// Add tax items to total
+		foreach ( $taxcollections as $tid => $amount ) {
+			// Create tax
+			$term = new mammonTerm();
+
+			if ( !empty( $taxtypes[$tid] ) ) {
+				$term->addCost( $amount, array( 'details' => $taxtypes[$tid] ), true );
+			} else {
+				$term->addCost( $amount, null, true );
+			}
+
+			$terms = new mammonTerms();
+			$terms->addTerm( $term );
+
+			// Add the "Tax" row
+			$request->add->tax[] = array( 'cost' => $amount, 'terms' => $terms );
+
+			$taxamount += $amount;
+		}
+print_r($request->add);exit;
+		// Modify grand total according to tax
+		$request->add->grand_total['terms']->terms[0]->addCost( $taxamount, null, true );
+
+		$request->add->total = json_decode( $total );
 
 		return true;
 	}
@@ -220,16 +274,9 @@ class mi_aectax
 		}
 	}
 
-	function addTax( $request, $location, $double=false )
+	function addTax( $request, $item, $location )
 	{
-		// Get Terms
-		$m = array_pop( $request->add );
-
-		if ( $double ) {
-			$x = $m;
-		}
-
-		$total = $m['terms']->terms[0]->renderTotal();
+		$total = $item['terms']->terms[0]->renderTotal();
 
 		if ( !empty( $this->settings['vat_no_request'] ) ) {
 			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
@@ -238,9 +285,11 @@ class mi_aectax
 				$check = $this->checkVatNumber( $request->params['vat_number'], $request->params['location'], $vatlist );
 
 				if ( $check ) {
-					if ( ( $location['mode'] == 'pseudo_subtract' ) && ( $this->settings['vat_removeonvalid'] ) && !empty( $this->validatedvat ) ) {
+					if ( ( $location['mode'] == 'pseudo_subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
 						$location['mode'] = 'subtract';
-					} else {
+					} elseif ( ( $location['mode'] == 'add' ) && ( $this->settings['vat_removeonvalid'] ) ) {
+						$location['mode'] = '';
+					} elseif ( ( $location['mode'] == 'subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
 						$location['mode'] = '';
 					}
 				}
@@ -276,45 +325,10 @@ class mi_aectax
 				break;
 		}
 
-		if ( $double ) {
-			// Modify "Total" to fit possible changes by the tax
-			$m['terms']->terms[0]->setCost( $newtotal );
-			$m['cost'] = $newtotal;
+		$item['terms']->terms[0]->addCost( $tax, array( 'details' => $location['extra'] ), true );
+		$item['cost'] = $item['terms']->renderTotal();
 
-			// Add the "Total" row
-			$request->add[] = $m;
-
-			// Create tax
-			$term = new mammonTerm();
-
-			if ( !empty( $location['extra'] ) ) {
-				$term->addCost( $tax, array( 'details' => $location['extra'] ), true );
-			} else {
-				$term->addCost( $tax, null, true );
-			}
-
-			$terms = new mammonTerms();
-			$terms->addTerm( $term );
-
-			// Add the "Tax" row
-			$request->add[] = array( 'cost' => $tax, 'terms' => $terms );
-
-			if ( $location['mode'] != 'pseudo_subtract' ) {
-				$x['terms']->terms[0]->setCost( $total );
-			}
-
-			$x['cost'] = $total;
-
-			// Add the "Grand Total" row
-			$request->add[] = $x;//print_r($request->add);exit;
-		} else {
-			$m['terms']->terms[0]->setCost( $newtotal );
-
-			$m['terms']->terms[0]->addCost( $tax, array( 'details' => $location['extra'] ), true );
-			$m['cost'] = $total;
-
-			$request->add[] = $m;
-		}
+		$request->add->itemlist[] = $item;
 
 		return $request;
 	}
@@ -378,27 +392,6 @@ class mi_aectax
 		return $locations;
 	}
 
-	function viesValidation( $number, $country )
-	{
-		$db = &JFactory::getDBO();
-
-		$path = '/taxation_customs/vies/viesquer.do?vat=' . $number . '&ms=' . $country . '&iso=' . $country . '&lang=EN';
-
-		$url = 'http://ec.europa.eu' . $path;
-
-		$tempprocessor = new processor();
-
-		$result = $tempprocessor->transmitRequest( $url, $path );
-
-		if ( strpos( $result, 'Request time-out' ) != 0 ) {
-			return null;
-		} elseif ( strpos( $result, 'Yes, valid VAT number' ) != 0 ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	function checkVatNumber( $number, $country, $vatlist )
 	{
 		if ( !$this->settings['vat_validation'] ) {
@@ -435,6 +428,27 @@ class mi_aectax
 			return $this->viesValidation( substr( $number, 2 ), $countrycode );
 		} else {
 			return $check;
+		}
+	}
+
+	function viesValidation( $number, $country )
+	{
+		$db = &JFactory::getDBO();
+
+		$path = '/taxation_customs/vies/viesquer.do?vat=' . $number . '&ms=' . $country . '&iso=' . $country . '&lang=EN';
+
+		$url = 'http://ec.europa.eu' . $path;
+
+		$tempprocessor = new processor($db);
+
+		$result = $tempprocessor->transmitRequest( $url, $path );
+
+		if ( strpos( $result, 'Request time-out' ) != 0 ) {
+			return null;
+		} elseif ( strpos( $result, 'Yes, valid VAT number' ) != 0 ) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 

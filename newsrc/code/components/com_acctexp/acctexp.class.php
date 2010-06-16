@@ -7339,7 +7339,7 @@ class InvoiceFactory
 		$this->authed = false;
 
 		// Check whether this call is legitimate
-		if ( !empty( $user->id ) ) {
+		if ( empty( $user->id ) ) {
 			if ( !$this->userid ) {
 				// It's ok, this is a registration/subscription hybrid call
 				$this->authed = true;
@@ -7966,12 +7966,16 @@ class InvoiceFactory
 				}
 			}
 		}
+
+		$exchange = $silent = null;
+
+		$this->triggerMIs( 'invoice_items', $exchange, $this->items, $silent );
 	}
 
 	function loadItemTotal()
 	{
-		if ( empty( $this->cartobject ) ) {
-			$this->items->total = array( 'terms' => $this->items->itemlist[0]->terms );
+		if ( empty( $this->cart ) ) {
+			$this->items->total = array( 'terms' => $this->items->itemlist[0]['terms'] );
 		} else {
 			$this->getCart();
 
@@ -7987,11 +7991,16 @@ class InvoiceFactory
 					$terms->addTerm( $term );
 
 					$this->items->total = array( 'cost' => $citem['cost'], 'terms' => $terms );
+					$this->items->grand_total = array( 'cost' => $citem['cost'], 'terms' => $terms );
 				}
 			}
 		}
 
 		$this->items->grand_total = $this->items->total;
+
+		$exchange = $silent = null;
+
+		$this->triggerMIs( 'invoice_items_total', $exchange, $this->items, $silent );
 	}
 
 	function applyCoupons()
@@ -8274,7 +8283,7 @@ class InvoiceFactory
 		if ( empty( $this->userid ) ) {
 			// Creating a dummy user object
 			$this->metaUser = new metaUser( 0 );
-			$this->dummyUser( $this->passthrough );
+			$this->metaUser->dummyUser( $this->passthrough );
 
 			return false;
 		} else {
@@ -8542,6 +8551,8 @@ class InvoiceFactory
 
 	function explodePlanList( $list )
 	{
+		global $aecConfig;
+
 		$groups	= array();
 		$plans	= array();
 
@@ -8936,7 +8947,7 @@ class InvoiceFactory
 	{
 		if ( empty( $this->plan ) ) {
 			return null;
-		} elseif ( is_object( $this->plan ) ) {
+		} elseif ( !is_object( $this->plan ) ) {
 			return null;
 		}
 
@@ -9081,7 +9092,7 @@ class InvoiceFactory
 
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( !empty( $this->items->grand_total ) && !$this->recurring ) {
-			if ( $this->items->grand_total['terms']->checkFree() || $this->items->grand_total->nextterm->free ) {
+			if ( $this->items->grand_total['terms']->checkFree() || $this->items->grand_total['terms']->nextterm->free ) {
 				$this->invoice->pay();
 
 				return $this->thanks( $option, false, true );
@@ -9185,8 +9196,6 @@ class InvoiceFactory
 
 		$this->touchInvoice( $option );
 
-		$var = $this->invoice->getWorkingData( $this );
-
 		$objUsage = $this->getObjUsage();
 
 		if ( is_a( $objUsage, 'SubscriptionPlan' ) ) {
@@ -9201,6 +9210,8 @@ class InvoiceFactory
 				unset( $_POST[$badvar] );
 			}
 		}
+
+		$var = $this->invoice->getWorkingData( $this );
 
 		$post = aecPostParamClear( $_POST );
 
@@ -9344,27 +9355,13 @@ class InvoiceFactory
 
 		$this->applyCoupons();
 
-		if ( count( $this->items->itemlist ) == 1 ) {
-			// Create a fake total here.
-			$terms = new mammonTerms();
-			$term = new mammonTerm();
-
-			$term->set( 'duration', array( 'none' => true ) );
-			$term->set( 'type', 'total' );
-			$term->addCost( $this->items->itemlist[0]['terms']->nextterm->renderTotal() );
-
-			$terms->addTerm( $term );
-
-			$this->items->itemlist[] = array( 'cost' => $this->items->itemlist[0]['terms']->nextterm->renderTotal(), 'terms' => $terms );
-		}
-
-		$exchange = $silent = null;
-
-		$this->triggerMIs( 'invoice_items', $exchange, $this->items->itemlist, $silent );
-
 		$this->invoice->formatInvoiceNumber();
 
+		$this->loadItemTotal();
+
 		$data = $this->invoice->getPrintout( $this );
+
+		$exchange = $silent = null;
 
 		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
 
