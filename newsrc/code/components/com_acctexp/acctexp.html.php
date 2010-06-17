@@ -871,7 +871,7 @@ class Payment_HTML
 					<?php } ?>
 				</table>
 			</div>
-			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=saveSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<table>
 				<tr>
 					<td id="confirmation_extra">

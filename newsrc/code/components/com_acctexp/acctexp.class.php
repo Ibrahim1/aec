@@ -7975,28 +7975,19 @@ class InvoiceFactory
 	function loadItemTotal()
 	{
 		if ( empty( $this->cart ) ) {
-			$this->items->total = array( 'terms' => $this->items->itemlist[0]['terms'] );
+			$this->items->total = $this->items->itemlist[0]['terms']->terms[0]->cost[0];
+
+			$this->items->grand_total = $this->items->total;
 		} else {
 			$this->getCart();
 
 			foreach ( $this->cart as $cid => $citem ) {
 				if ( $citem['obj'] == false ) {
-					$terms = new mammonTerms();
-					$term = new mammonTerm();
-
-					$term->set( 'duration', array( 'none' => true ) );
-					$term->set( 'type', 'total' );
-					$term->addCost( $citem['cost'] );
-
-					$terms->addTerm( $term );
-
-					$this->items->total = array( 'cost' => $citem['cost'], 'terms' => $terms );
-					$this->items->grand_total = array( 'cost' => $citem['cost'], 'terms' => $terms );
+					$this->items->total = $citem['cost'];
+					$this->items->grand_total = $citem['cost'];
 				}
 			}
 		}
-
-		$this->items->grand_total = $this->items->total;
 
 		$exchange = $silent = null;
 
@@ -9092,7 +9083,7 @@ class InvoiceFactory
 
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( !empty( $this->items->grand_total ) && !$this->recurring ) {
-			if ( $this->items->grand_total['terms']->checkFree() || $this->items->grand_total['terms']->nextterm->free ) {
+			if ( $this->items->grand_total->isFree() ) {
 				$this->invoice->pay();
 
 				return $this->thanks( $option, false, true );
@@ -9355,9 +9346,9 @@ class InvoiceFactory
 
 		$this->applyCoupons();
 
-		$this->invoice->formatInvoiceNumber();
-
 		$this->loadItemTotal();
+
+		$this->invoice->formatInvoiceNumber();
 
 		$data = $this->invoice->getPrintout( $this );
 
@@ -10727,17 +10718,17 @@ class Invoice extends serialParamDBTable
 			. '<td colspan="4"></td>'
 			. '</tr>';
 
-		if ( !empty( $InvoiceFactory->items->total ) ) {
-			$data['totallist'][] = '<tr id="invoice_content_item_total">'
-				. '<td>' . _INVOICEPRINT_TOTAL . '</td>'
-				. '<td></td>'
-				. '<td></td>'
-				. '<td>' . AECToolbox::formatAmount( $InvoiceFactory->items->total['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
-				. '</tr>';
-		}
+		if ( isset( $InvoiceFactory->items->tax ) ) {
+			if ( isset( $InvoiceFactory->items->total ) ) {
+				$data['totallist'][] = '<tr id="invoice_content_item_total">'
+					. '<td>' . _INVOICEPRINT_TOTAL . '</td>'
+					. '<td></td>'
+					. '<td></td>'
+					. '<td>' . AECToolbox::formatAmount( $InvoiceFactory->items->total->cost['amount'], $InvoiceFactory->invoice->currency ) . '</td>'
+					. '</tr>';
+			}
 
-		if ( !empty( $InvoiceFactory->items->taxes ) ) {
-			foreach ( $InvoiceFactory->items->taxes as $item ) {
+			foreach ( $InvoiceFactory->items->tax as $item ) {
 				$details = null;
 				foreach ( $item['terms']->terms[0]->cost as $citem ) {
 					if ( $citem->type == 'tax' ) {
@@ -10754,12 +10745,12 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		if ( !empty( $InvoiceFactory->items->grand_total ) ) {
+		if ( isset( $InvoiceFactory->items->grand_total ) ) {
 			$data['totallist'][] = '<tr id="invoice_content_item_total">'
-				. '<td>' . _INVOICEPRINT_TOTAL . '</td>'
+				. '<td>' . _INVOICEPRINT_GRAND_TOTAL . '</td>'
 				. '<td></td>'
 				. '<td></td>'
-				. '<td>' . AECToolbox::formatAmount( $InvoiceFactory->items->grand_total['cost'], $InvoiceFactory->invoice->currency ) . '</td>'
+				. '<td>' . AECToolbox::formatAmount( $InvoiceFactory->items->grand_total->cost['amount'], $InvoiceFactory->invoice->currency ) . '</td>'
 				. '</tr>';
 		}
 

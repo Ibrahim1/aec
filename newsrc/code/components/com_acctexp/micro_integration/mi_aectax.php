@@ -205,14 +205,14 @@ class mi_aectax
 			return null;
 		}
 
-		$total = json_encode( $request->add->total );
+		$total = serialize( $request->add->total );
 
 		$taxamount = 0;
 
 		if ( !isset( $request->add->tax ) ) {
 			$request->add->tax = array();
 		}
-print_r($request->add);
+
 		// Add tax items to total
 		foreach ( $taxcollections as $tid => $amount ) {
 			// Create tax
@@ -232,11 +232,13 @@ print_r($request->add);
 
 			$taxamount += $amount;
 		}
-print_r($request->add);exit;
-		// Modify grand total according to tax
-		$request->add->grand_total['terms']->terms[0]->addCost( $taxamount, null, true );
 
-		$request->add->total = json_decode( $total );
+		$grand_total = AECToolbox::correctAmount( $request->add->total->cost['amount'] + $taxamount );
+
+		// Modify grand total according to tax
+		$request->add->grand_total->set( 'cost', array( 'amount' => $grand_total ) );
+
+		$request->add->total = unserialize( $total );
 
 		return true;
 	}
