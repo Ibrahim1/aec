@@ -72,7 +72,7 @@ class mi_aecdonate
 
 		$price = AECToolbox::correctAmount( $price );
 
-		$request->add->terms->nextterm->setCost( $price );
+		$request->add->nextterm->setCost( $price );
 
 		return null;
 	}

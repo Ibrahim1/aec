@@ -1593,10 +1593,6 @@ function aecThanks( $option, $renew, $free, $plan )
 		return aecSimpleThanks( $option, $renew, $free );
 	}
 
-	if ( isset( $this->renew ) ) {
-		$renew = $this->renew;
-	}
-
 	if ( $renew ) {
 		$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
 		if ( $free ) {

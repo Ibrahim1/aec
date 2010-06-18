@@ -7806,6 +7806,8 @@ class InvoiceFactory
 		// Amend ->payment
 		if ( !empty( $this->payment->currency ) ) {
 			$this->payment->currency_symbol = AECToolbox::getCurrencySymbol( $this->payment->currency );
+		} else {
+			$this->payment->currency_symbol = '';
 		}
 
 		$amount_array = explode( '.', $this->payment->amount );
@@ -8268,7 +8270,7 @@ class InvoiceFactory
 		} else {
 			// Loading the actual user
 			$this->metaUser = new metaUser( $this->userid );
-			return false;
+			return true;
 		}
 	}
 
@@ -8321,7 +8323,7 @@ class InvoiceFactory
 
 		global $mainframe, $aecConfig;
 
-		$register = $this->loadMetaUser( true );
+		$register = !$this->loadMetaUser( true );
 
 		if ( empty( $this->usage ) && empty( $group ) ) {
 			// Check if the user has already subscribed once, if not - link to intro
@@ -13030,7 +13032,11 @@ class reWriteEngine
 					$this->rewrite['user_id']				= 0;
 				}
 
-				$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
+				if ( !empty( $this->data['metaUser']->cmsUser->username ) ) {
+					$this->rewrite['user_username']			= $this->data['metaUser']->cmsUser->username;
+				} else {
+					$this->rewrite['user_username']				= "";
+				}
 
 				if ( !empty( $this->data['metaUser']->cmsUser->name ) ) {
 					$this->rewrite['user_name']				= $this->data['metaUser']->cmsUser->name;
@@ -13041,7 +13047,12 @@ class reWriteEngine
 				$this->rewrite['user_first_name']		= $name['first'];
 				$this->rewrite['user_first_first_name']	= $name['first_first'];
 				$this->rewrite['user_last_name']		= $name['first'];
-				$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;
+
+				if ( !empty( $this->data['metaUser']->cmsUser->email ) ) {
+					$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;
+				} else {
+					$this->rewrite['user_name']				= "";
+				}
 
 				if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
 					if ( !$this->data['metaUser']->hasJSprofile ) {
@@ -15050,8 +15061,7 @@ class microIntegrationHandler
 	{
 		$database = &JFactory::getDBO();
 
-		$add = array();
-		$add[] = array( 'terms' => $terms );
+		$add = $terms;
 
 		$micro_integrations = $subscription->getMicroIntegrations();
 

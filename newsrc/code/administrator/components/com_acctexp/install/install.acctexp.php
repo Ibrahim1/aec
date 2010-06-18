@@ -31,7 +31,9 @@ if ( !defined( '_JEXEC' ) && !defined( 'JPATH_SITE' ) ) {
 }
 
 // Make sure we are compatible with php4
-include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
+if (version_compare(phpversion(), '5.0') < 0) {
+	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
+}
 
 // Make sure we are compatible with joomla1.0
 include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );

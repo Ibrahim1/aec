@@ -105,9 +105,4 @@ if (version_compare(phpversion(), '5.0') < 0) {
 	');
 }
 
-if ( !function_exists( 'clone' ) ) {
-	function clone ( $object ) {
-		return $object;
-	}
-}
 ?>
