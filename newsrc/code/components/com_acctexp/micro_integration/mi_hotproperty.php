@@ -245,7 +245,14 @@ class mi_hotproperty extends MI
 
 	function hacks()
 	{
-		$v10 = is_dir( JPATH_SITE . '/components/com_hotproperty/helpers' );
+		$v10x = false;
+
+		if ( is_dir( JPATH_SITE . '/components/com_hotproperty/helpers' ) ) {
+			$v10x = true;
+			$v10 = false;
+		} else {
+			$v10 = is_dir( JPATH_SITE . '/components/com_hotproperty/helpers' );
+		}
 
 		$hacks = array();
 

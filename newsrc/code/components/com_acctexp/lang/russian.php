@@ -349,6 +349,7 @@ define( '_AEC_CHECKOUT_TAX', 'Tax');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Скидка');
 
 define( '_AEC_CHECKOUT_TOTAL', 'Всего');
+define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Grand Total');
 
 define( '_AEC_CHECKOUT_DURATION', 'Продолжительность');
 

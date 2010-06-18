@@ -989,6 +989,8 @@ class Payment_HTML
 	{
 		global $aecConfig;
 
+		$user = &JFactory::getUser();
+
 		HTML_frontend::aec_styling( $option );
 		?>
 
@@ -1015,7 +1017,7 @@ class Payment_HTML
 				<?php } else { ?>
 				<p>&nbsp;</p>
 				<div id="update_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_CLEAR_ALL; ?></a></div>
-				<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+				<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
 						<th>Item</th>
@@ -1053,7 +1055,7 @@ class Payment_HTML
 				</form>
 				<?php } ?>
 				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
-				<p>Save Registration to Continue Shopping functionlink:confirm_savereg</p>
+				<p>Save Registration to Continue Shopping:</p>
 				<?php } else {
 					if ( !empty( $aecConfig->cfg['customlink_continueshopping'] ) ) {
 						$continueurl = $aecConfig->cfg['customlink_continueshopping'];
@@ -1306,32 +1308,45 @@ class Payment_HTML
 					}
 				}
 
+				echo '<tr class="aec_term_totalhead' . $current . '"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
+
 				if ( !empty( $InvoiceFactory->items->total ) ) {
-					echo '<tr class="aec_term_totalhead' . $current . '"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
+					$c = AECToolbox::formatAmount( $InvoiceFactory->items->total->renderCost(), $InvoiceFactory->payment->currency );
 
+					echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_TOTAL . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
+				}
+
+				if ( !empty( $InvoiceFactory->items->tax ) ) {
 					// Iterate through costs
-					foreach ( $term->renderCost() as $citem ) {
-						$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
+					foreach ( $InvoiceFactory->items->tax as $titems ) {
+						foreach ( $titems['terms']->terms as $titem ) {
+							$citem = $titem->renderCost();
 
-						$amount = AECToolbox::correctAmount( $citem->cost['amount'] );
+							foreach ( $citem as $cost ) {
+								if ( $cost->type == 'tax' ) {
+									$t = constant( strtoupper( '_aec_checkout_' . $cost->type ) );
 
-						$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
+									$amount = AECToolbox::correctAmount( $cost->cost['amount'] );
 
-						switch ( $citem->type ) {
-							case 'tax':
-								$t .= '&nbsp;( ' . $citem->cost['details'] . ' )';
-								break;
-							case 'cost': break;
-							case 'total': break;
-							default: break;
+									$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
+
+									$t .= '&nbsp;( ' . $cost->cost['details'] . ' )';
+
+									echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
+								}
+							}
 						}
-
-						echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
 					}
 
-					// Draw Separator Line
-					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 				}
+
+				if ( !empty( $InvoiceFactory->items->grand_total ) ) {
+					$c = AECToolbox::formatAmount( $InvoiceFactory->items->grand_total->renderCost(), $InvoiceFactory->payment->currency );
+
+					echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_GRAND_TOTAL . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
+				}
+
+
 			?>
 			</table>
 

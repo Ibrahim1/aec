@@ -199,6 +199,7 @@ define( '_AEC_CHECKOUT_COST', 'Pris'); //Cost
 define( '_AEC_CHECKOUT_TAX', 'Moms'); //Tax
 define( '_AEC_CHECKOUT_DISCOUNT', 'Rabatt'); //Discount
 define( '_AEC_CHECKOUT_TOTAL', 'Summa'); //Total
+define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Summa');
 define( '_AEC_CHECKOUT_DURATION', 'Längd'); //Duration
 
 define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Livslångt medlemskap'); //Lifetime

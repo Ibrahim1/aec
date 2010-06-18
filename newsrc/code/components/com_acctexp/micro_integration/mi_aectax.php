@@ -175,8 +175,8 @@ class mi_aectax
 	{
 		$location = $this->getLocation( $request );
 
-		$taxtypes	= array();
-		$taxcoll	= array();
+		$taxtypes		= array();
+		$taxcollections	= array();
 
 		// Collect all the taxes from the individual item costs
 		foreach ( $request->add->itemlist as $item ) {

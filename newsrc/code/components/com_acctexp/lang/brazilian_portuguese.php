@@ -193,6 +193,7 @@ define( '_AEC_CHECKOUT_COST', 'Custo');
 define( '_AEC_CHECKOUT_TAX', 'Tax');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Desconto');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
+define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Grand Total');
 define( '_AEC_CHECKOUT_DURATION', 'Dura&ccedil;&atilde;o');
 
 define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Dura&ccedil;&atilde;o');

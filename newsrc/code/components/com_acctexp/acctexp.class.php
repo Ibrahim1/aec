@@ -22,7 +22,9 @@ if ( !defined( 'JPATH_SITE' ) ) {
 }
 
 // Make sure we are compatible with php4
-include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
+if (version_compare(phpversion(), '5.0') < 0) {
+	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
+}
 
 // Make sure we are compatible with joomla1.0
 include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
@@ -7527,11 +7529,11 @@ class InvoiceFactory
 	{
 		$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
 
-		$c	= false;
-		$e	= false;
-		$s	= array();
-		$sx	= array();
-		$se	= true;
+		$c				= false;
+		$exception		= false;
+		$selected		= array();
+		$selected_form	= array();
+		$single_select	= true;
 
 		foreach ( $pgroups as $pgid => $pgroup ) {
 			if ( count( $pgroup['processors'] ) < 2 ) {
@@ -7565,16 +7567,16 @@ class InvoiceFactory
 			}
 
 			if ( !empty( $selection ) ) {
-				if ( count( $s ) > 0 ) {
-					if ( !in_array( $selection, $s ) ) {
-						$se = false;
+				if ( count( $selected ) > 0 ) {
+					if ( !in_array( $selection, $selected ) ) {
+						$single_select = false;
 					}
 				}
 
 				$pgroups[$pgid]['processor'] = $selection;
-				$s[] = $selection;
+				$selected[] = $selection;
 
-				$sx[] = array( 'hidden', $pgsel, $fname, $pgsel );
+				$selected_form[] = array( 'hidden', $pgsel, $fname, $pgsel );
 
 				continue;
 			} else {
@@ -7605,24 +7607,24 @@ class InvoiceFactory
 			if ( !empty( $ex['rows'] ) && $c ) {
 				$this->raiseException( $ex );
 
-				$e = true;
+				$exception = true;
 			}
 		}
 
-		if ( $e && !empty( $sx ) ) {
+		if ( $exception && !empty( $selected_form ) ) {
 			$ex = array();
 			$ex['head'] = null;
 			$ex['desc'] = null;
 			$ex['rows'] = array();
 
-			foreach ( $sx as $silent ) {
+			foreach ( $selected_form as $silent ) {
 				$ex['rows'][] = $silent;
 			}
 
 			$this->raiseException( $ex );
 		}
 
-		if ( !$se ) {
+		if ( !$single_select ) {
 			$database = &JFactory::getDBO();
 
 			// We have different processors selected for this cart
@@ -7700,22 +7702,6 @@ class InvoiceFactory
 				$this->getCart();
 			} else {
 				$this->plan = $objUsage;
-			}
-		} else {
-			$mpg = array_pop( array_keys( $pgroups ) );
-
-			if ( strpos( $pgroups[$mpg]['processor'], '_recurring' ) ) {
-				$processor = str_replace( '_recurring', '', $pgroups[$mpg]['processor'] );
-				$this->recurring = true;
-			} else {
-				$processor = $pgroups[$mpg]['processor'];
-				$this->recurring = false;
-			}
-
-			$procname = PaymentProcessorHandler::getProcessorNamefromId( $processor );
-
-			if ( !empty( $procname ) ) {
-				$this->processor = $procname;
 			}
 		}
 	}
@@ -7818,7 +7804,9 @@ class InvoiceFactory
 		}
 
 		// Amend ->payment
-		$this->payment->currency_symbol = AECToolbox::getCurrencySymbol( $this->payment->currency );
+		if ( !empty( $this->payment->currency ) ) {
+			$this->payment->currency_symbol = AECToolbox::getCurrencySymbol( $this->payment->currency );
+		}
 
 		$amount_array = explode( '.', $this->payment->amount );
 
@@ -7975,9 +7963,9 @@ class InvoiceFactory
 	function loadItemTotal()
 	{
 		if ( empty( $this->cart ) ) {
-			$this->items->total = $this->items->itemlist[0]['terms']->terms[0]->cost[0];
+			$this->items->total = clone( $this->items->itemlist[0]['terms']->terms[0]->cost[0] );
 
-			$this->items->grand_total = $this->items->total;
+			$this->items->grand_total = clone( $this->items->itemlist[0]['terms']->terms[0]->cost[0] );
 		} else {
 			$this->getCart();
 
@@ -14321,6 +14309,10 @@ class AECToolbox
 
 	function quickVerifyUserID( $userid )
 	{
+		if ( empty( $userid ) ) {
+			return null;
+		}
+
 		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `status`'

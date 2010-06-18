@@ -197,6 +197,7 @@ define( '_AEC_CHECKOUT_COST', 'Pris');
 define( '_AEC_CHECKOUT_TAX', 'Tax');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Rabat');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
+define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Grand Total');
 define( '_AEC_CHECKOUT_DURATION', 'Varighed');
 
 define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Livstid');

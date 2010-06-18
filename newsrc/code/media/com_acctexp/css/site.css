@@ -852,10 +852,16 @@ text-align: right;
 td.aec_term_totalamount {
 padding-right: 4px !important;
 text-align: right;
+}
+
+tr.aec_term_totalrow td.aec_term_totalamount {
 font-weight: bold;
 text-decoration: underline;
 }
 
+tr.aec_term_totalrow td.aec_term_totaltitle {
+font-weight: bold;
+}
 
 table#aec_checkout_params {
 width: 90%;

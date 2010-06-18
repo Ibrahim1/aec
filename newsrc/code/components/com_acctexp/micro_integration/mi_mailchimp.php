@@ -78,24 +78,12 @@ class mi_mailchimp
 			$is_allowed = true;
 		}
 
-		$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsuser->email);
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsuser->email);
 
 		if ( empty( $mcuser['id'] ) && $is_allowed ) {
-			$MCAPI->listSubscribe( $this->settings['list'], $request->metaUser->cmsuser->email, $merge_vars);
+			$MCAPI->listSubscribe( $this->settings['list_exp'], $request->metaUser->cmsuser->email, array() );
 
-			$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsuser->email);
-		}
-
-		if ( !$acauser ) {
-			return null;
-		}
-
-		if ( $this->hasList( $acauser, $this->settings['list'] ) ) {
-			$this->deleteFromList( $acauser, $this->settings['list'] );
-		}
-
-		if ( !$this->hasList( $acauser, $this->settings['list_exp'] ) && $is_allowed ) {
-			$this->addToList( $acauser, $this->settings['list_exp'] );
+			$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsuser->email);
 		}
 	}
 
@@ -109,30 +97,19 @@ class mi_mailchimp
 			$is_allowed = true;
 		}
 
-		$acauser = $this->getSubscriberID( $request->metaUser->userid );
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsuser->email);
 
-		if ( !$acauser ) {
-			$this->createSubscriber( $request->metaUser->userid );
-			$acauser = $this->getSubscriberID( $request->metaUser->userid );
-		}
+		if ( empty( $mcuser['id'] ) && $is_allowed ) {
+			$MCAPI->listSubscribe( $this->settings['list_exp'], $request->metaUser->cmsuser->email, array() );
 
-		if ( !$acauser ) {
-			return null;
-		}
-
-		if ( $this->hasList( $acauser, $this->settings['list_exp'] ) ) {
-			$this->deleteFromList( $acauser, $this->settings['list_exp'] );
-		}
-
-		if ( !$this->hasList( $acauser, $this->settings['list'] ) && $is_allowed ) {
-			$this->addToList( $acauser, $this->settings['list'] );
+			$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsuser->email);
 		}
 	}
 
 }
 
 // Official Mailchimp API from http://www.mailchimp.com/api/downloads/
-// All code below is Public Domain
+// All code below is Public Domain, apparently
 
 class MCAPI {
     var $version = "1.2";
@@ -368,23 +345,6 @@ class MCAPI {
         $params["type"] = $type;
         $params["content"] = $content;
         return $this->callServer("generateText", $params);
-    }
-
-    /**
-     * Send your HTML content to have the CSS inlined and optionally remove the original styles.
-     *
-     * @section Helper
-     * @example xml-rpc_inlineCss.php
-     *
-     * @param string $html Your HTML content
-     * @param bool $strip_css optional Whether you want the CSS &lt;style&gt; tags stripped from the returned document. Defaults to false.
-     * @return string Your HTML content with all CSS inlined, just like if we sent it.
-     */
-    function inlineCss($html, $strip_css=false) {
-        $params = array();
-        $params["html"] = $html;
-        $params["strip_css"] = $strip_css;
-        return $this->callServer("inlineCss", $params);
     }
 
     /**

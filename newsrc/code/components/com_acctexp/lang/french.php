@@ -200,6 +200,7 @@ define( '_AEC_CHECKOUT_COST', 'Co&ucirc;t');
 define( '_AEC_CHECKOUT_TAX', 'Tax');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Remise');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
+define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Grand Total');
 define( '_AEC_CHECKOUT_DURATION', 'Dur&eacute;e');
 
 define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Illimit&eacute;');

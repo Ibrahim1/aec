@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_ideal_basic extends HTMLprocessor
+class processor_ideal_basic extends POSTprocessor
 {
 	function info()
 	{

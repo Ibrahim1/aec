@@ -1075,9 +1075,10 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 	if ( !empty( $user->id ) ) {
 		$userid = $user->id;
 	} elseif ( AECToolbox::quickVerifyUserID( $userid ) === true ) {
-		// This user is not expired, so he could log in...
-		aecNotAuth();
-		return;
+			// This user is not expired, so he could log in...
+			return aecNotAuth();
+	} else {
+		$userid = AECfetchfromDB::UserIDfromInvoiceNumber( $invoice_number );
 	}
 
 	$cartid = $invoiceid = null;
@@ -1104,9 +1105,11 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 
 		$status = SubscriptionPlanHandler::PlanStatus( $iFactory->invoice->usage );
 		if ( $status || ( !$status && $aecConfig->cfg['allow_invoice_unpublished_item'] ) ) {
-			$iFactory->checkout( $option, !$first );
+			if ( !$iFactory->checkout( $option, !$first ) ) {
+				return aecNotAuth();
+			}
 		} else {
-			aecNotAuth();
+			return aecNotAuth();
 		}
 	} elseif ( $cartid ) {
 		$iFactory = new InvoiceFactory( $userid );
