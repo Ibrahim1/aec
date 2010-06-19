@@ -6064,16 +6064,6 @@ class itemXgroup extends JTable
 
 }
 
-class ItemRelationHandler
-{
-	/**
-	 * Well well, we have lots of similar stuff going on
-	 * maybe we need a root relation handler that others can bind to
-	 * in any case, the ItemRelationHandler should do stuff like
-	 * keeping track of similar or equal plans or groups
-	 */
-}
-
 class SubscriptionPlanHandler
 {
 	function getPlanList( $limitstart=false, $limit=false, $use_order=false )
@@ -6701,18 +6691,14 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMicroIntegrations( $inherited=false )
+	function getMicroIntegrations( $separate=false )
 	{
 		$database = &JFactory::getDBO();
 
-		if ( $inherited ) {
+		if ( empty( $this->micro_integrations ) ) {
 			$milist = array();
 		} else {
-			if ( empty( $this->micro_integrations ) ) {
-				$milist = array();
-			} else {
-				$milist = $this->micro_integrations;
-			}
+			$milist = $this->micro_integrations;
 		}
 
 		// Find parent ItemGroups to attach their MIs
@@ -6723,7 +6709,7 @@ class SubscriptionPlan extends serialParamDBTable
 			$g->load( $parent );
 
 			if ( !empty( $g->params['micro_integrations'] ) ) {
-				$milist = array_merge( $milist, $g->params['micro_integrations'] );
+				$pmilist = array_merge( $milist, $g->params['micro_integrations'] );
 			}
 		}
 
@@ -6731,22 +6717,62 @@ class SubscriptionPlan extends serialParamDBTable
 			return false;
 		}
 
-		array_unique($milist);
+		$milist = microIntegrationHandler::getActiveListbyList( $milist );
 
-		$query = 'SELECT `id`'
-				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $milist ) ) . ')'
-	 			. ' AND `active` = \'1\''
-				. ' ORDER BY `ordering` ASC'
-				;
-		$this->_db->setQuery( $query );
-		$list = $this->_db->loadResultArray();
-
-		if ( empty( $list ) ) {
+		if ( empty( $milist ) ) {
 			return false;
 		}
 
-		return $list;
+		return $milist;
+	}
+
+	function getMicroIntegrationsSeparate()
+	{
+		$database = &JFactory::getDBO();
+
+		if ( empty( $this->micro_integrations ) ) {
+			$milist = array();
+		} else {
+			$milist = $this->micro_integrations;
+		}
+
+		// Find parent ItemGroups to attach their MIs
+		$parents = ItemGroupHandler::getParents( $this->id );
+
+		$pmilist = array();
+		foreach ( $parents as $parent ) {
+			$g = new ItemGroup( $database );
+			$g->load( $parent );
+
+			if ( !empty( $g->params['micro_integrations'] ) ) {
+				$pmilist = array_merge( $pmilist, $g->params['micro_integrations'] );
+			}
+		}
+
+		if ( empty( $milist ) && empty( $pmilist ) ) {
+			return false;
+		}
+
+		$milist = microIntegrationHandler::getActiveListbyList( $milist );
+		$pmilist = microIntegrationHandler::getActiveListbyList( $pmilist );
+
+		if ( empty( $list ) && empty( $pmilist ) ) {
+			return false;
+		}
+
+		// Remove entries from the plan MIs that are already inherited
+		if ( !empty( $pmilist ) ) {
+			$theintersect = array_intersect( $pmilist, $milist );
+
+			if ( !empty( $theintersect ) ) {
+				foreach ( $theintersect as $value ) {
+					// STAY IN THE CAR
+					unset( $milist[array_search( $value, $milist )] );
+				}
+			}
+		}
+
+		return array( 'plan' => $milist, 'inherited' => $pmilist );
 	}
 
 	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
@@ -7965,9 +7991,17 @@ class InvoiceFactory
 	function loadItemTotal()
 	{
 		if ( empty( $this->cart ) ) {
-			$this->items->total = clone( $this->items->itemlist[0]['terms']->terms[0]->cost[0] );
+			$cost = clone( $this->items->itemlist[0]['terms']->terms[0]->cost[0] );
 
-			$this->items->grand_total = clone( $this->items->itemlist[0]['terms']->terms[0]->cost[0] );
+			foreach ( $this->items->itemlist[0]['terms']->terms[0]->cost as $k => $v ) {
+				if ( ( $k > 0 ) && ( $v->type == 'cost' ) ) {
+					$cost->cost['amount'] = $cost->cost['amount'] + $v->cost['amount'];
+				}
+			}
+
+			$this->items->total = $cost;
+
+			$this->items->grand_total = clone( $this->items->total );
 		} else {
 			$this->getCart();
 
@@ -15086,6 +15120,22 @@ class microIntegrationHandler
 				unset( $mi );
 			}
 		}
+	}
+
+	function getActiveListbyList( $milist )
+	{
+		$database = &JFactory::getDBO();
+
+		array_unique($milist);
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $milist ) ) . ')'
+	 			. ' AND `active` = \'1\''
+				. ' ORDER BY `ordering` ASC'
+				;
+		$database->setQuery( $query );
+		return $database->loadResultArray();
 	}
 }
 

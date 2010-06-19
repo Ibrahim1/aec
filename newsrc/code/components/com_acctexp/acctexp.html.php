@@ -837,7 +837,7 @@ class Payment_HTML
 							</form>
 						</td>
 						<td colspan="2">
-							<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+							<form class="aectextright" name="backFormUserPlan" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
 								<input type="hidden" name="task" value="subscribe" />
@@ -850,9 +850,11 @@ class Payment_HTML
 						</td>
 					</tr>
 					<?php } ?>
+					<?php if ( !empty( $InvoiceFactory->plan->desc ) ) { ?>
 					<tr>
 						<td colspan="3" class="aec_left"><strong><?php echo _CONFIRM_YOU_HAVE_SELECTED; ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
 					</tr>
+					<?php } ?>
 					<?php if ( $aecConfig->cfg['confirmation_changeusage'] && !( empty( $user->id ) && $aecConfig->cfg['confirmation_changeusername'] ) ) { ?>
 					<tr>
 						<td colspan="3" class="aec_left">
@@ -1212,6 +1214,24 @@ class Payment_HTML
 						continue;
 					}
 
+					$add = "";
+
+					if ( isset( $item['quantity'] ) ) {
+						if ( $item['quantity'] > 1 ) {
+							$add = " (x" . $item['quantity'] . ")";
+						}
+					}
+
+					if ( isset( $item['name'] ) ) {
+						// This is an item, show its name
+						echo '<tr><td><h4>' . $item['name'] . $add . '</h4></td></tr>';
+					}
+
+					if ( isset( $item['desc'] ) && $InvoiceFactory->checkout['checkout_display_descriptions'] ) {
+						// This is an item, show its description
+						echo '<tr><td>' . $item['desc'] . '</td></tr>';
+					}
+
 					foreach ( $terms as $tid => $term ) {
 						if ( !is_object( $term ) ) {
 							continue;
@@ -1222,24 +1242,6 @@ class Payment_HTML
 						$applicable = ( $tid >= $item['terms']->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
 
 						$current = ( $tid == $item['terms']->pointer ) ? ' current_period' : '';
-
-						$add = "";
-
-						if ( isset( $item['quantity'] ) ) {
-							if ( $item['quantity'] > 1 ) {
-								$add = " (x" . $item['quantity'] . ")";
-							}
-						}
-
-						if ( isset( $item['name'] ) ) {
-							// This is an item, show its name (skip for total)
-							echo '<tr><td><h4>' . $item['name'] . $add . '</h4></td></tr>';
-						}
-
-						if ( isset( $item['desc'] ) && $InvoiceFactory->checkout['checkout_display_descriptions'] ) {
-							// This is an item, show its name (skip for total)
-							echo '<tr><td>' . $item['desc'] . '</td></tr>';
-						}
 
 						// Headline - What type is this term
 						echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
@@ -1293,9 +1295,15 @@ class Payment_HTML
 									}
 									break;
 								case 'tax':
-									$t .= '&nbsp;( ' . $citem->cost['details'] . ' )';
+									if ( !empty( $citem->cost['details'] ) ) {
+										$t .= '&nbsp;( ' . $citem->cost['details'] . ' )';
+									}
 									break;
-								case 'cost': break;
+								case 'cost':
+									if ( !empty( $citem->cost['details'] ) ) {
+										$t = $citem->cost['details'];
+									}
+								break;
 								case 'total': break;
 								default: break;
 							}
@@ -1308,7 +1316,8 @@ class Payment_HTML
 					}
 				}
 
-				echo '<tr class="aec_term_totalhead' . $current . '"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
+				echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+				echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
 
 				if ( !empty( $InvoiceFactory->items->total ) ) {
 					$c = AECToolbox::formatAmount( $InvoiceFactory->items->total->renderCost(), $InvoiceFactory->payment->currency );
@@ -1346,7 +1355,7 @@ class Payment_HTML
 					echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_GRAND_TOTAL . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
 				}
 
-
+				echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 			?>
 			</table>
 
@@ -1363,11 +1372,7 @@ class Payment_HTML
 						foreach ( $InvoiceFactory->errors as $err ) { ?>
 						<tr>
 							<td class="couponerror">
-								<p>
-									<strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>
-									&nbsp;
-									<?php echo $err; ?>
-								</p>
+								<p><strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>&nbsp;<?php echo $err; ?></p>
 							</td>
 						</tr>
 						<?php

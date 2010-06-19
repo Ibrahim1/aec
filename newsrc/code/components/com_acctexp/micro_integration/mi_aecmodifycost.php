@@ -112,44 +112,17 @@ class mi_aecmodifycost
 		$option = $this->getOption( $request );
 
 		if ( !empty( $option ) ) {
-			$request = $this->addCost( $request, $option, true );
+			$item = array_pop( $request->add->itemlist );
+
+			$request = $this->addCost( $request, $item, $option );
 		}
 
 		return true;
 	}
 
-	function invoice_items_checkout( $request )
+	function addCost( $request, $item, $option )
 	{
-		$option = $this->getOption( $request );
-
-		if ( !empty( $option ) ) {
-			$request = $this->addCost( $request, $option );
-		}
-
-		return true;
-	}
-
-	function modifyPrice( $request )
-	{
-		$option = $this->getOption( $request );
-
-		if ( !empty( $option ) ) {
-			//$request = $this->addCost( $request, $option );
-		}
-
-		return true;
-	}
-
-	function addCost( $request, $option, $double=false )
-	{
-		// Get Terms
-		$m = array_pop( $request->add );
-
-		if ( $double ) {
-			$x = $m;
-		}
-
-		$total = $m['terms']->terms[0]->renderTotal();
+		$total = $item['terms']->terms[0]->renderTotal();
 
 		if ( $option['mode'] == 'basic' ) {
 			$extracost = $option['amount'];
@@ -159,42 +132,10 @@ class mi_aecmodifycost
 
 		$newtotal = AECToolbox::correctAmount( $total + $option['amount'] );
 
-		if ( $double ) {
-			$m['terms']->terms[0]->setCost( $newtotal );
-			$m['cost'] = $newtotal;
+		$item['terms']->terms[0]->addCost( $extracost, array( 'details' => $option['extra'] ) );
+		$item['cost'] = $item['terms']->renderTotal();
 
-			$request->add[] = $m;
-
-			// Create tax
-			$terms = new mammonTerms();
-			$term = new mammonTerm();
-
-			$term->addCost( $newtotal );
-
-			if ( !empty( $option['extra'] ) ) {
-				$term->addCost( $extracost, array( 'details' => $option['extra'] ) );
-			} else {
-				$term->addCost( $extracost );
-			}
-
-			$terms->addTerm( $term );
-
-			$request->add[] = array( 'cost' => $extracost, 'terms' => $terms );
-
-			$request->add[] = $x;
-		} else {
-			//$m['terms']->terms[0]->setCost( $newtotal );)
-
-			if ( !empty( $option['extra'] ) ) {
-				$m['terms']->terms[0]->addCost( $extracost, array( 'details' => $option['extra'] ) );
-			} else {
-				$m['terms']->terms[0]->addCost( $extracost );
-			}
-
-			$m['cost'] = $newtotal;
-
-			$request->add[] = $m;
-		}
+		$request->add->itemlist[] = $item;
 
 		return $request;
 	}
