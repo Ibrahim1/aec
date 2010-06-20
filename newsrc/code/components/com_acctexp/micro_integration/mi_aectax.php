@@ -146,6 +146,8 @@ class mi_aectax
 			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
 				$vatlist = $this->vatList();
 
+				$vat_number = $this->clearVatNumber( $request->params['vat_number'] );
+
 				$check = $this->checkVatNumber( $request->params['vat_number'], $request->params['location'], $vatlist );
 
 				if ( !$check ) {
@@ -284,7 +286,9 @@ class mi_aectax
 			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
 				$vatlist = $this->vatList();
 
-				$check = $this->checkVatNumber( $request->params['vat_number'], $request->params['location'], $vatlist );
+				$vat_number = $this->clearVatNumber( $request->params['vat_number'] );
+
+				$check = $this->checkVatNumber( $vat_number, $request->params['location'], $vatlist );
 
 				if ( $check ) {
 					if ( ( $location['mode'] == 'pseudo_subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
@@ -392,6 +396,17 @@ class mi_aectax
 		}
 
 		return $locations;
+	}
+
+	function clearVatNumber( $vat_number )
+	{
+		// Remove whitespace
+		$vat_number = preg_replace('/\s\s+/', '', $vat_number);
+
+		// Only allow alphanumeric characters
+		$vat_number = preg_replace( "/[^a-z \d]/i", '', $vat_number );
+
+		return $vat_number;
 	}
 
 	function checkVatNumber( $number, $country, $vatlist )
