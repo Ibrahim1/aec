@@ -10789,7 +10789,7 @@ class Invoice extends serialParamDBTable
 		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
 			$data['recurringstatus'] = "";
 		} else {
-			$data['recurringstatus'] = sprintf( _INVOICEPRINT_RECURRINGSTATUS_ONCE, $this->counter );
+			$data['recurringstatus'] = _INVOICEPRINT_RECURRINGSTATUS_ONCE;
 		}
 
 		$otherfields = array( "page_title", "before_header", "header", "after_header", "address", "before_content", "after_content", "before_footer", "footer", "after_footer" );

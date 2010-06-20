@@ -202,6 +202,7 @@ define( '_INVOICEPRINT_BLOCKNOTICE', 'This block (including the text field and p
 define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Please type your address into the field above.');
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>This invoice has not been paid yet.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'This invoice has been paid on: %s');
+define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis.');
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 

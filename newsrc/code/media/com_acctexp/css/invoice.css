@@ -111,6 +111,14 @@ margin: 24px;
 padding: 12px;
 }
 
+div#invoice_recurringstatus {
+width: 90%;
+border: 2px solid #000;
+background: #ddd;
+margin: 24px;
+padding: 12px;
+}
+
 div#after_header {
 height: 12px;
 }
