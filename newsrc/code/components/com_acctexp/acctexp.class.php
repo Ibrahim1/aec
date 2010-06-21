@@ -10737,7 +10737,7 @@ class Invoice extends serialParamDBTable
 		$break = 0;
 		foreach ( $InvoiceFactory->items->itemlist as $iid => $item ) {
 			if ( isset( $item['obj'] ) ) {
-				$amt =  $item['terms']->nextterm->renderTotal();
+				$amt =  $item['terms']->nextterm->cost[0]->cost['amount'];
 
 				$data['itemlist'][] = '<tr id="invoice_content_item">'
 					. '<td>' . $item['name'] . '</td>'
@@ -13338,6 +13338,19 @@ class reWriteEngine
 				}
 
 				$result = AECToolbox::getObjectProperty( $this->data, $vars, true );
+				break;
+			case 'checkdata_notempty':
+				if ( empty( $this->data ) ) {
+					return false;
+				}
+
+				$check = AECToolbox::getObjectProperty( $this->data, $vars, true );
+
+				if ( AECToolbox::getObjectProperty( $this->data, $vars, true ) ) {
+					$check = AECToolbox::getObjectProperty( $this->data, $vars );
+
+					$result = !empty( $check );
+				}
 				break;
 			case 'metaUser':
 				if ( !is_object( $this->data['metaUser'] ) ) {
