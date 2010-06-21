@@ -368,9 +368,9 @@ class mi_aectax
 				$text = constant( 'COUNTRYCODE_' . $conversion[$ccode] );
 
 				if ( $this->settings['vat_localtax'] ) {
-					$tax = $this->settings['vat_localtax_tax'];
-				} else {
 					$tax = $litem['tax'];
+				} else {
+					$tax = $this->settings['vat_percentage'];
 				}
 
 				$locations[] = array(	'id'			=> $ccode,
@@ -452,13 +452,14 @@ class mi_aectax
 	{
 		$db = &JFactory::getDBO();
 
-		$path = '/taxation_customs/vies/viesquer.do?vat=' . $number . '&ms=' . $country . '&iso=' . $country . '&lang=EN';
+		$path = '/taxation_customs/vies/viesquer.do';
+		$post = 'vat=' . $number . /*'&ms=' . $country .*/ '&iso=' . $country;// . '&lang=EN';
 
 		$url = 'http://ec.europa.eu' . $path;
 
 		$tempprocessor = new processor($db);
 
-		$result = $tempprocessor->transmitRequest( $url, $path );
+		$result = $tempprocessor->transmitRequest( $url, $path, $post );
 
 		if ( strpos( $result, 'Request time-out' ) != 0 ) {
 			return null;
@@ -483,7 +484,7 @@ class mi_aectax
 						"FIN" => array( "tax" => "22",		"regex" => '/^(FI){0,1}[0-9]{8}$/i' ),
 						"FRA" => array( "tax" => "19.6",	"regex" => '/^(FR){0,1}[0-9A-Z]{2}[\ ]{0,1}[0-9]{9}$/i' ),
 						"GBR" => array( "tax" => "17.5",	"regex" => '/^(GB|UK){0,1}([1-9][0-9]{2}[\ ]{0,1}[0-9]{4}[\ ]{0,1}[0-9]{2})|([1-9][0-9]{2}[\ ]{0,1}[0-9]{4}[\ ]{0,1}[0-9]{2}[\ ]{0,1}[0-9]{3})|((GD|HA)[0-9]{3})$/i' ),
-						"GRC" => array( "tax" => "19",		"regex" => '/^(GR|EL){0,1}[0-9]{9}$/i' ),
+						"GRC" => array( "tax" => "19",		"regex" => '/^(EL|GR){0,1}[0-9]{9}$/i' ),
 						"HUN" => array( "tax" => "25",		"regex" => '/^(HU){0,1}[0-9]{8}$/i' ),
 						"IRL" => array( "tax" => "21",		"regex" => '/^(IE){0,1}[0-9][0-9A-Z\+\*][0-9]{5}[A-Z]$/i' ),
 						"ITA" => array( "tax" => "20",		"regex" => '/^(IT){0,1}[0-9]{11}$/i' ),
