@@ -1316,46 +1316,48 @@ class Payment_HTML
 					}
 				}
 
-				echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
-				echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
+				if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
+					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+					echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
 
-				if ( !empty( $InvoiceFactory->items->total ) ) {
-					$c = AECToolbox::formatAmount( $InvoiceFactory->items->total->renderCost(), $InvoiceFactory->payment->currency );
+					if ( !empty( $InvoiceFactory->items->total ) ) {
+						$c = AECToolbox::formatAmount( $InvoiceFactory->items->total->renderCost(), $InvoiceFactory->payment->currency );
 
-					echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_TOTAL . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
-				}
+						echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_TOTAL . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
+					}
 
-				if ( !empty( $InvoiceFactory->items->tax ) ) {
-					// Iterate through costs
-					foreach ( $InvoiceFactory->items->tax as $titems ) {
-						foreach ( $titems['terms']->terms as $titem ) {
-							$citem = $titem->renderCost();
+					if ( !empty( $InvoiceFactory->items->tax ) ) {
+						// Iterate through costs
+						foreach ( $InvoiceFactory->items->tax as $titems ) {
+							foreach ( $titems['terms']->terms as $titem ) {
+								$citem = $titem->renderCost();
 
-							foreach ( $citem as $cost ) {
-								if ( $cost->type == 'tax' ) {
-									$t = constant( strtoupper( '_aec_checkout_' . $cost->type ) );
+								foreach ( $citem as $cost ) {
+									if ( $cost->type == 'tax' ) {
+										$t = constant( strtoupper( '_aec_checkout_' . $cost->type ) );
 
-									$amount = AECToolbox::correctAmount( $cost->cost['amount'] );
+										$amount = AECToolbox::correctAmount( $cost->cost['amount'] );
 
-									$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
+										$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
 
-									$t .= '&nbsp;( ' . $cost->cost['details'] . ' )';
+										$t .= '&nbsp;( ' . $cost->cost['details'] . ' )';
 
-									echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
+										echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
+									}
 								}
 							}
 						}
+
 					}
 
+					if ( !empty( $InvoiceFactory->items->grand_total ) ) {
+						$c = AECToolbox::formatAmount( $InvoiceFactory->items->grand_total->renderCost(), $InvoiceFactory->payment->currency );
+
+						echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_GRAND_TOTAL . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
+					}
+
+					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 				}
-
-				if ( !empty( $InvoiceFactory->items->grand_total ) ) {
-					$c = AECToolbox::formatAmount( $InvoiceFactory->items->grand_total->renderCost(), $InvoiceFactory->payment->currency );
-
-					echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_GRAND_TOTAL . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
-				}
-
-				echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 			?>
 			</table>
 
