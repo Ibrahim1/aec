@@ -1119,9 +1119,7 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 		$iFactory->loadMetaUser();
 
 		$iFactory->puffer( $option );
-		$iFactory->checkout( $option, !$first );
-
-		return;
+		return $iFactory->checkout( $option, !$first );
 	} else {
 		return aecNotAuth();
 	}

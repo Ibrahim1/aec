@@ -9249,6 +9249,16 @@ class InvoiceFactory
 		if ( isset( $response['error'] ) ) {
 			$this->checkout( $option, true, $response['error'] );
 		} elseif ( isset( $response['doublecheckout'] ) ) {
+			$this->loadItems();
+
+			$this->applyCoupons();
+
+			$this->loadItemTotal();
+
+			$exchange = $silent = null;
+
+			$this->triggerMIs( 'invoice_items_checkout', $exchange, $this->items, $silent );
+
 			$this->InvoiceToCheckout( $option, true, null, $var );
 		} else {
 			$this->thanks( $option );
