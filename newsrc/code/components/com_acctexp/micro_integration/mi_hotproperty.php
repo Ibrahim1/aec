@@ -260,12 +260,12 @@ class mi_hotproperty extends MI
 			$edithack = '// AEC HACK hotproperty1 START' . "\n"
 			. '$task = JRequest::getCmd(\'task\');' . "\n"
 			. '$view = JRequest::getCmd(\'view\');' . "\n"
-			. '$layout = JRequest::getCmd(\'layout\');' . "\n"
-			. 'if ( ( $view == "properties" ) && ( ( $layout == "form" ) || ( $task == "save" ) ) ) {' . "\n"
+			. 'if ( ( $view == "properties" ) && ( ( $task == "add" ) || ( $task == "save" ) ) ) {' . "\n"
 			. '$user = &JFactory::getUser();' . "\n"
 			. 'if ( !empty( $user->id ) ) {' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+			. '$database = &JFactory::getDBO();'
 			. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
 			. '$mi_hphandler->loadUserID( $user->id );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
@@ -291,6 +291,32 @@ class mi_hotproperty extends MI
 			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/hotproperty.php';
 			$hacks[$n]['read']				=	'$hotproperty =& MosetsFactory::getApplication(\'hotproperty\');';
 			$hacks[$n]['insert']			=	$edithack . "\n"  . $hacks[$n]['read'];
+
+			$edithack2 = '// AEC HACK adminhotproperty1 START' . "\n"
+			. '$task = JRequest::getCmd(\'task\');' . "\n"
+			. '$controller = JRequest::getCmd(\'controller\');' . "\n"
+			. 'if ( ( $controller == "properties" ) && ( $task == "remove" ) ) {' . "\n"
+			. 'if ( !empty( $_REQUEST[\'id\'][0] ) ) {' . "\n"
+			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
+			. '$database = &JFactory::getDBO();'
+			. '$mi_hphandler = new aec_hotproperty( $database );' . "\n"
+			. '$mi_hphandler->loadLinkID( $_REQUEST[\'id\'][0] );' . "\n"
+			. 'if( $mi_hphandler->id ) {' . "\n"
+			. '$mi_hphandler->removeListing();' . "\n"
+			. '}' . "\n"
+			. '}' . "\n"
+			. '}' . "\n"
+			. '// AEC HACK adminhotproperty1 END' . "\n"
+			;
+
+			$n = 'adminhotproperty1';
+			$hacks[$n]['name']				=	'admin.hotproperty.php #1';
+			$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
+			$hacks[$n]['type']				=	'file';
+			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.hotproperty.php';
+			$hacks[$n]['read']				=	'/* ===END OF TESTS=== */';
+			$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n"  . $edithack2;
 		} else {
 			$edithack = '// AEC HACK hotproperty1 START' . "\n"
 			. ( defined( '_JEXEC' ) ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
@@ -447,7 +473,7 @@ class mi_hotproperty extends MI
 			return null;
 		}
 
-		if ( $this->settings['create_agent'.$request->area] ){
+		if ( $this->settings['create_agent'.$request->area] ) {
 			if ( !empty( $this->settings['agent_fields'.$request->area] ) ) {
 				$agent = $this->createAgent( $this->settings['agent_fields'.$request->area], $request );
 			}
@@ -458,7 +484,7 @@ class mi_hotproperty extends MI
 			return false;
 		}
 
-		if ( $this->settings['update_agent'.$request->area] ){
+		if ( $this->settings['update_agent'.$request->area] ) {
 			if ( !empty( $this->settings['update_afields'.$request->area] ) ) {
 				if ( !empty( $agent ) ) {
 					$agent = $this->update( 'agents', 'user', $this->settings['update_afields'.$request->area], $request );
@@ -467,11 +493,11 @@ class mi_hotproperty extends MI
 		}
 
 		if ( $agent === false ) {
-			$this->setError( 'Agent was not found and could not be updated' );
+			$this->setError( 'Agent was not found or could not be updated' );
 			return false;
 		}
 
-		if ( $this->settings['create_company'.$request->area] ){
+		if ( $this->settings['create_company'.$request->area] ) {
 			if ( !empty( $this->settings['company_fields'.$request->area] ) ) {
 				$company = $this->createCompany( $this->settings['company_fields'.$request->area], $this->settings['assoc_company'], $request );
 			}
@@ -482,7 +508,7 @@ class mi_hotproperty extends MI
 			}
 		}
 
-		if ( $this->settings['update_company'.$request->area] ){
+		if ( $this->settings['update_company'.$request->area] ) {
 			if ( !empty( $this->settings['update_cfields'.$request->area] ) ) {
 				if ( empty( $company ) ) {
 					$company = $this->companyExists( $request->metaUser->userid );
@@ -507,7 +533,7 @@ class mi_hotproperty extends MI
 			$this->publishProperties( $agent );
 		}
 
-		if ( !empty( $this->settings['set_listings'.$request->area] ) || !empty( $this->settings['set_listings'.$request->area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
+		if ( !empty( $this->settings['set_listings'.$request->area] ) || !empty( $this->settings['add_listings'.$request->area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
 			$database = &JFactory::getDBO();
 
 			$mi_hphandler = new aec_hotproperty( $database );
@@ -793,6 +819,20 @@ class aec_hotproperty extends serialParamDBTable
 	{
 		$id = $this->getIDbyUserID( $userid );
 		$this->load( $id );
+	}
+
+	function loadAgentID( $agent )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `user`'
+				. ' FROM #__hp_agents'
+				. ' WHERE `id` = \'' . $agent . '\''
+				;
+		$database->setQuery( $query );
+		$userid = $database->loadResult();
+
+		$this->loadUserID( $userid );
 	}
 
 	function getIDbyLinkID( $linkid )

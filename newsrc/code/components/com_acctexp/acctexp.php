@@ -959,7 +959,11 @@ function subscriptionDetails( $option, $sub='overview' )
 
 		$actionsarray = $invoices[$invoiceid]['actions'];
 
-		$pp = $pps[$invoice->method];
+		if ( $invoice->method != 'free' ) {
+			$pp = $pps[$invoice->method];
+		} else {
+			$pp = null;
+		}
 
 		if ( !empty( $pp->info['longname'] ) ) {
 			$invoices[$invoiceid]['processor'] = $pp->info['longname'];
