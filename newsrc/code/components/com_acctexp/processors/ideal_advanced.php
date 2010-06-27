@@ -204,9 +204,10 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function loadConnector()
 	{
+		define( "SECURE_PATH", $this->settings['secure_path'] );
+
 		require_once( dirname(__FILE__) . "/ideal_advanced/iDEALConnector.php" );
 		require_once( dirname(__FILE__) . "/ideal_advanced/IssuerEntry.php" );
-		define( "SECURE_PATH", $this->settings['secure_path'] );
 
 		// Initialising MPI
 		$ideal = new iDEALConnector();

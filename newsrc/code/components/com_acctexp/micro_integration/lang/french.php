@@ -58,6 +58,8 @@ define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_NAME',            'Add Downloads' );
 define( '_MI_MI_DOCMAN_ADD_DOWNLOADS_DESC',            'Ajoute ce nombre de t&eacute;l&eacute;chargements au total d&eacute;j&agrave; attribu&eacute; &agrave; l\'utilisateur. Sera annul&eacute; par la config SET si une valeur y est d&eacute;finie. ' );
 define( '_MI_MI_DOCMAN_SET_UNLIMITED_NAME',            'Set Unlimited' );
 define( '_MI_MI_DOCMAN_SET_DOWNLOADS_DESC',            'Attribuer un nombre de t&eacute;l&eacute;chargement illimit&eacute; pour l\'utilisateur.' );
+define( '_MI_MI_DOCMAN_DELETE_ON_SET_NAME',			'Action for existing groups when plan is set:' );
+define( '_MI_MI_DOCMAN_DELETE_ON_SET_DESC',			'Choose what action you want to happen to already defined DocMan groups when a plan is set.' );
 define( '_MI_MI_DOCMAN_SET_GROUP_NAME',                'Set DocMan Group' );
 define( '_MI_MI_DOCMAN_SET_GROUP_DESC',                'Choisir Oui si vous souhaitez que cette MI attribue un groupe DocMan quand elle est appliqu&eacute;e.' );
 define( '_MI_MI_DOCMAN_GROUP_NAME',                    'DocMan Group' );

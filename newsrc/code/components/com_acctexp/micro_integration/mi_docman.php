@@ -68,6 +68,7 @@ class mi_docman
 		$settings['set_downloads']		= array( 'inputA' );
 		$settings['set_unlimited']		= array( 'list_yesno' );
 
+		$settings['delete_on_set']		= array( 'list' );
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
 		$settings['delete_on_exp'] 		= array( 'list' );
@@ -110,6 +111,12 @@ class mi_docman
 		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
 		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
 
+		if ( !empty( $this->settings['delete_on_set'] ) ) {
+			$des = $this->settings['delete_on_set'];
+		} else {
+			$des = array();
+		}
+
 		if ( !empty( $this->settings['delete_on_exp'] ) ) {
 			$dee = $this->settings['delete_on_exp'];
 		} else {
@@ -117,8 +124,11 @@ class mi_docman
 		}
 
  		$del_opts = array();
-		$del_opts[] = mosHTML::makeOption ( "No", "Just apply group(s) below." ); // Should probably be langauge file defined?
+		$del_opts[] = mosHTML::makeOption ( "No", "Just apply group(s) below." );
 		$del_opts[] = mosHTML::makeOption ( "All", "Delete ALL, then apply group(s) below." );
+
+		$settings['lists']['delete_on_set']	= mosHTML::selectList( $del_opts, 'delete_on_set', 'size="3"', 'value', 'text', $des );
+
 		$del_opts[] = mosHTML::makeOption ( "Set", "Delete group(s) selected above, then apply group(s) below." );
 
 		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $dee );
@@ -234,6 +244,14 @@ class mi_docman
 	function action( $request )
 	{
 		$database = &JFactory::getDBO();
+
+ 		if ( $this->settings['delete_on_set'] == "All" ) {
+			$groups = $this->GetUserGroups( $request->metaUser->userid );
+
+			foreach ( $groups as $group ) {
+				$this->DeleteUserFromGroup( $request->metaUser->userid, $group );
+			}
+		}
 
 		if ( $this->settings['set_group'] && !empty( $this->settings['group'] ) ) {
 			foreach ( $this->settings['group'] as $group ) {
