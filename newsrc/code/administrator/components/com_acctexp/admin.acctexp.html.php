@@ -2880,7 +2880,7 @@ class HTML_AcctExp
 		</table>
 
 		<div class="aec_readout">
-			<table style="text-align:right;width:250px;">
+			<table style="width:320px;">
 				<tr>
 					<td valign="top">
 						<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
