@@ -477,7 +477,7 @@ class metaUser
 	{
 		$database = &JFactory::getDBO();
 
-		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `a`.`recurring`, `b`.`name`'
+		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `a`.`recurring`, `a`.`lifetime`, `b`.`name`'
 				. ' FROM #__acctexp_subscr AS a'
 				. ' INNER JOIN #__acctexp_plans AS b ON a.plan = b.id'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''

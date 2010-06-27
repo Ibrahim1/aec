@@ -52,7 +52,7 @@ if ( $user->id ) {
 
 				echo "<h4>" . $subscription->name . "</h4>";
 
-				echo AECModuleHelper::textExpiration( $user, $subscription->expiration, $subscription->recurring );
+				echo AECModuleHelper::textExpiration( $user, $subscription->expiration, $subscription->lifetime, $subscription->recurring );
 
 				echo '</div>';
 			}
@@ -88,7 +88,7 @@ class AECModuleHelper
 		$entry = $database->loadObject();
 
 		if ( !empty( $entry->lifetime ) ) {
-			return AECModuleHelper::textExpiration( $user, $entry->expiration, $entry->recurring );
+			return AECModuleHelper::textExpiration( $user, $entry->expiration, $entry->lifetime, $entry->recurring );
 		}
 
 		if ( empty( $entry->expiration ) ) {
@@ -103,13 +103,13 @@ class AECModuleHelper
 		if ( empty( $entry->id ) ) {
 			return null;
 		} else {
-			return AECModuleHelper::textExpiration( $user, $entry->expiration, $entry->recurring );
+			return AECModuleHelper::textExpiration( $user, $entry->expiration, $entry->lifetime, $entry->recurring );
 		}
 	}
 
-	function textExpiration( $user, $expiration, $recurring=false )
+	function textExpiration( $user, $expiration, $lifetime=null, $recurring=false )
 	{
-		if ( empty( $expiration ) ) {
+		if ( empty( $expiration ) || $lifetime ) {
 			return AECModuleHelper::textUnlimited();
 		} else {
 			return AECModuleHelper::textExpirationDate( $expiration, $recurring );
