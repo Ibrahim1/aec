@@ -194,20 +194,22 @@ class HTML_frontEnd
 		</script>
 		<div class="componentheading"><?php echo _MYSUBSCRIPTION_TITLE;?></div>
 		<div id="subscription_details">
-			<div id="aec_navlist_profile">
-				<ul id="aec_navlist_profile">
-				<?php
-				foreach ( $tabs as $fieldlink => $fieldname ) {
-					if ( $fieldlink == $sub ) {
-						$id = ' id="current"';
-					} else {
-						$id = '';
+			<?php if ( $aecConfig->cfg['subscriptiondetails_menu'] ) { ?>
+				<div id="aec_navlist_profile">
+					<ul id="aec_navlist_profile">
+					<?php
+					foreach ( $tabs as $fieldlink => $fieldname ) {
+						if ( $fieldlink == $sub ) {
+							$id = ' id="current"';
+						} else {
+							$id = '';
+						}
+						echo '<li><a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=' . $fieldlink, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"'.$id.'>' . $fieldname . '</a></li>';
 					}
-					echo '<li><a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=' . $fieldlink, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"'.$id.'>' . $fieldname . '</a></li>';
-				}
-				?>
-				</ul>
-			</div>
+					?>
+					</ul>
+				</div>
+			<?php } ?>
 			<?php
 			switch ( $sub ) {
 				case 'overview':
@@ -369,8 +371,7 @@ class HTML_frontEnd
 		if ( !is_object( $this ) ) {
 			HTML_frontEnd::aec_styling();
 		} ?>
-		<?php
-		if ( $aecConfig->cfg['customtext_notallowed_keeporiginal'] ) {?>
+		<?php if ( $aecConfig->cfg['customtext_notallowed_keeporiginal'] ) { ?>
 			<div class="componentheading"><?php echo _NOT_ALLOWED_HEADLINE; ?></div>
 			<p>
 				<?php

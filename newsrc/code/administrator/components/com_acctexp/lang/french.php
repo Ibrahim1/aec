@@ -1050,6 +1050,10 @@ define( '_CFG_GENERAL_EMAIL_EXTRA_ADMINS_DESC', 'If you want AEC to send System 
 define( '_CFG_GENERAL_ALLOW_INVOICE_UNPUBLISHED_ITEM_NAME', 'Allow Checkout of unpublished Items');
 define( '_CFG_GENERAL_ALLOW_INVOICE_UNPUBLISHED_ITEM_DESC', 'When a user creates an invoice with an item and keeps that invoice unpaid while the item is unpublished, the default behavior is to deny access to the item if the user tries to do a late checkout. If you want to, you can explicitly allow the opposite with this setting.');
 
+define( '_CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS', 'MySubscription Page');
+define( '_CFG_GENERAL_SUBSCRIPTIONDETAILS_MENU_NAME', 'Show Menu');
+define( '_CFG_GENERAL_SUBSCRIPTIONDETAILS_MENU_DESC', 'Display the Menu to switch between the general details page, invoices and (if existing) MI details');
+
 define( '_CFG_CUSTOMIZATION_SUB_ITEMID', 'AEC Page ItemIDs');
 define( '_CFG_GENERAL_ITEMID_DEFAULT_NAME', 'Default Itemid');
 define( '_CFG_GENERAL_ITEMID_DEFAULT_DESC', 'The Itemid if no other relation can be made from the selections below.');

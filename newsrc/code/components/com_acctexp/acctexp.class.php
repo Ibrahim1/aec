@@ -1742,6 +1742,19 @@ class Config_General extends serialParamDBTable
 		$def['countries_top']					= "";
 		$def['checkoutform_jsvalidation']		= 0;
 		$def['allow_invoice_unpublished_item']	= 0;
+		$def['itemid_default']					= "";
+		$def['itemid_cart']						= "";
+		$def['itemid_checkout']					= "";
+		$def['itemid_confirmation']				= "";
+		$def['itemid_subscribe']				= "";
+		$def['itemid_exception']				= "";
+		$def['itemid_thanks']					= "";
+		$def['itemid_expired']					= "";
+		$def['itemid_hold']						= "";
+		$def['itemid_notallowed']				= "";
+		$def['itemid_pending']					= "";
+		$def['itemid_subscriptiondetails']		= "";
+		$def['subscriptiondetails_menu']		= 1;
 
 		return $def;
 	}
