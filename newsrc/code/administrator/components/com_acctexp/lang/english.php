@@ -626,7 +626,7 @@ define( '_AEC_LANG_ZW', 'Zimbabwe' );
 define( '_EXPIRE_SET','Set Expiration:');
 define( '_EXPIRE_NOW','Expire');
 define( '_EXPIRE_EXCLUDE','Exclude');
-define( '_EXPIRE_INCLUDE','Include');
+define( '_EXPIRE_INCLUDE','Active/Include');
 define( '_EXPIRE_CLOSE','Close');
 define( '_EXPIRE_HOLD','Hold');
 define( '_EXPIRE_01MONTH','set 1 Month');
