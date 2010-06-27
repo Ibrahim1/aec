@@ -269,26 +269,18 @@ class processor_paypal_subscription extends POSTprocessor
 						}
 
 						$response['valid']			= 1;
-						$response['pending_reason'] = 'echeck';
 					} else {
 						$response['pending']		= 1;
 						$response['pending_reason'] = 'echeck';
 					}
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					if ( $this->settings['acceptpendingecheck'] ) {
-						if ( is_object( $invoice ) ) {
-							if ( isset( $invoice->params['acceptedpendingecheck'] ) ) {
-								$response['valid']		= 0;
-								$response['duplicate']	= 1;
+					$response['valid']		= 1;
 
-								$invoice->delParams( array( 'acceptedpendingecheck' ) );
-								$invoice->storeload();
-							}
-						} else {
-							$response['valid']			= 1;
+					if ( is_object( $invoice ) ) {
+						if ( isset( $invoice->params['acceptedpendingecheck'] ) ) {
+							$response['valid']		= 0;
+							$response['duplicate']	= 1;
 						}
-					} else {
-						$response['valid']			= 1;
 					}
 				}
 			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
