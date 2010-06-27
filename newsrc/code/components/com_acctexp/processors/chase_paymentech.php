@@ -229,7 +229,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
 			if ( isset( $profile ) ) {
-				$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'address2', 'city', 'state', 'zip', 'country', 'phone', 'fax' );
+				$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'address2', 'city', 'state_usca', 'zip', 'country', 'phone', 'fax' );
 
 				$content = array();
 				foreach ( $uservalues as $uv ) {

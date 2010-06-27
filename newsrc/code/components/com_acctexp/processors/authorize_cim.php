@@ -380,12 +380,12 @@ class processor_authorize_cim extends PROFILEprocessor
 		if ( !empty( $this->settings['promptAddress'] ) ) {
 			if ( empty( $this->settings['extendedAddress'] ) ) {
 				if ( empty( $this->settings['minimalAddress'] ) ) {
-					$uservalues = array( 'firstName', 'lastName', 'address', 'city', 'nonus', 'state', 'zip' );
+					$uservalues = array( 'firstName', 'lastName', 'address', 'city', 'nonus', 'state_usca', 'zip' );
 				} else {
 					$uservalues = array( 'firstName', 'lastName', 'address', 'city' );
 				}
 			} else {
-				$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'city', 'nonus', 'state', 'zip', 'country', 'phone', 'fax' );
+				$uservalues = array( 'firstName', 'lastName', 'company', 'address', 'city', 'nonus', 'state_usca', 'zip', 'country', 'phone', 'fax' );
 			}
 
 			$content = array();
