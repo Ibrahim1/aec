@@ -17744,11 +17744,21 @@ class aecReadout
 		if ( aecJoomla15check() ) {
 			$acl =& JFactory::getACL();
 
-			$this->acllist = $acl->get_group_children( 28 );
+			$acllist = $acl->get_group_children( 28, 'ARO', 'RECURSE' );
+
+			$this->acllist = array();
+			foreach ( $acllist as $aclli ) {
+				$acldata = $acl->get_group_data( $aclli );
+
+				$this->acllist[$aclli] = new stdClass();
+
+				$this->acllist[$aclli]->group_id	= $acldata[0];
+				$this->acllist[$aclli]->name		= $acldata[3];
+			}
 		} else {
 			global $acl;
 
-			$this->acllist = $acl->_getBelow( '#__core_acl_aro_groups', 'g1.group_id, g1.name, COUNT(g2.name) AS level', 'g1.name', null, 'USERS', true );
+			$this->acllist = $acl->_getBelow( '#__core_acl_aro_groups', 'g1.group_id, g1.name', 'g1.name', null, 'USERS', true );
 
 		}
 
@@ -18174,6 +18184,10 @@ class aecReadout
 
 		if ( !empty( $type ) ) {
 			$types = explode( ' ', $type );
+
+			if ( is_array( $dvalue ) ) {
+				$dvalue = implode( ',', $dvalue );
+			}
 
 			foreach ( $types as $tt ) {
 				switch ( $tt ) {

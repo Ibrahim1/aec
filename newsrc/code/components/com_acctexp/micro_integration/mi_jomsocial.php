@@ -41,10 +41,12 @@ class mi_jomsocial
 		$database->setQuery( $query );
 		$objects = $database->loadObjectList();
 
-		foreach ( $objects as $object ) {
-			$settings['jsfield_' . $object->id] = array( 'inputE', $object->name, $object->name );
-			$expname = $object->name . " " . _MI_MI_JOMSOCIAL_EXPMARKER;
-			$settings['jsfield_' . $object->id . '_exp' ] = array( 'inputE', $expname, $expname );
+		if ( !empty( $objects ) ) {
+			foreach ( $objects as $object ) {
+				$settings['jsfield_' . $object->id] = array( 'inputE', $object->name, $object->name );
+				$expname = $object->name . " " . _MI_MI_JOMSOCIAL_EXPMARKER;
+				$settings['jsfield_' . $object->id . '_exp' ] = array( 'inputE', $expname, $expname );
+			}
 		}
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

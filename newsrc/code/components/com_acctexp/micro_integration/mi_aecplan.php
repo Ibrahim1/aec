@@ -28,6 +28,22 @@ class mi_aecplan
 
 		$total_plans = min( max( (count( $payment_plans ) + 1 ), 4 ), 20 );
 
+		if ( !isset( $this->settings['plan_apply_first'] ) ) {
+			$this->settings['plan_apply_first'] = 0;
+		}
+
+		if ( !isset( $this->settings['plan_apply'] ) ) {
+			$this->settings['plan_apply'] = 0;
+		}
+
+		if ( !isset( $this->settings['plan_apply_pre_exp'] ) ) {
+			$this->settings['plan_apply_pre_exp'] = 0;
+		}
+
+		if ( !isset( $this->settings['plan_apply_exp'] ) ) {
+			$this->settings['plan_apply_exp'] = 0;
+		}
+
 		$settings = array();
 
 		$settings['first_plan_not_membership']		= array( 'list_yesno' );

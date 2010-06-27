@@ -38,11 +38,21 @@ class mi_frontenduseraccess
 		$fuagroups = array();
 		$fuagroups[] = mosHTML::makeOption(0, 'no group');
 
-		foreach ( $groups as $group ) {
-			$fuagroups[] = mosHTML::makeOption( $group->id, $group->name );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				$fuagroups[] = mosHTML::makeOption( $group->id, $group->name );
+			}
 		}
 
 		$settings = array();
+
+		if ( !isset( $this->settings['group'] ) ) {
+			$this->settings['group'] = 0;
+		}
+
+		if ( !isset( $this->settings['group_exp'] ) ) {
+			$this->settings['group_exp'] = 0;
+		}
 
 		$settings['lists']['group']		= mosHTML::selectList($fuagroups, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
 		$settings['lists']['group_exp'] = mosHTML::selectList($fuagroups, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
