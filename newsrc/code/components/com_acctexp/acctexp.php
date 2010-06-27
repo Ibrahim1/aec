@@ -1109,7 +1109,7 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 
 		$status = SubscriptionPlanHandler::PlanStatus( $iFactory->invoice->usage );
 		if ( $status || ( !$status && $aecConfig->cfg['allow_invoice_unpublished_item'] ) ) {
-			if ( !$iFactory->checkout( $option, !$first ) ) {
+			if ( $iFactory->checkout( $option, !$first ) === false ) {
 				return aecNotAuth();
 			}
 		} else {

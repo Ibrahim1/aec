@@ -3713,6 +3713,7 @@ class processor extends serialParamDBTable
 
 			return false;
 		} else {
+
 			if ( !is_null( $content ) ) {
 				$header = "POST " . $path . " HTTP/1.1\r\n";
 			} else {
@@ -3755,7 +3756,13 @@ class processor extends serialParamDBTable
 
 			fclose( $connection );
 
-			return $res;
+			$tres = trim( $res );
+
+			if ( empty( $tres ) ) {
+				return false;
+			} else {
+				return $res;
+			}
 		}
 	}
 

@@ -283,7 +283,9 @@ class processor_paypal_wpp extends XMLprocessor
 					} else {
 						return aecRedirect( 'https://www.paypal.com/webscr?' . $get );
 					}
-				} elseif ( empty( $response['error'] ) ) {
+				} elseif ( !empty( $response['error'] ) ) {
+					$response['error'] .= " - Could not retrieve token";
+				} else {
 					$response['error'] = "Could not retrieve token";
 				}
 			}
@@ -459,7 +461,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		$response = $this->transmitToPayPal( $xml, $request );
+		$response = trim( $this->transmitToPayPal( $xml, $request ) );
 
 		$return = array();
 		$return['valid'] = false;
@@ -468,7 +470,7 @@ class processor_paypal_wpp extends XMLprocessor
 		// converting NVPResponse to an Associative Array
 		$nvpResArray = $this->deformatNVP( $response );
 
-		if ( $response ) {
+		if ( !empty( $response ) ) {
 			if ( isset( $nvpResArray['PROFILEID'] ) ) {
 				$return['invoiceparams'] = array( "paypal_wpp_customerProfileId" => $nvpResArray['PROFILEID'] );
 			}
@@ -494,12 +496,16 @@ class processor_paypal_wpp extends XMLprocessor
 					$return['token'] = $nvpResArray['TOKEN'];
 				}
 			} else {
+				$return['error'] = '';
+
 				$count = 0;
 				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
 						$return['error'] .= 'Error ' . $nvpResArray["L_ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
 						$count++;
 				}
 			}
+		} else {
+			$return['error'] = 'No Response from the PayPal Server';
 		}
 
 		return $return;
