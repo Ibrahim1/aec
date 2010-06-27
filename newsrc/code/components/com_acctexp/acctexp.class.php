@@ -13886,9 +13886,12 @@ class AECToolbox
 					}
 				}
 
-				if ( isset( $aecConfig->cfg['itemid_' . $task] ) ) {
+				if ( !empty( $aecConfig->cfg['itemid_' . $task] ) ) {
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task];
+				} elseif ( !empty( $aecConfig->cfg['itemid_default'] ) ) {
+					$url .= '&Itemid=' . $aecConfig->cfg['itemid_default'];
 				} else {
+					// No Itemid found - try to get something else
 					global $Itemid;
 					if ( $Itemid ) {
 						$url .= '&Itemid=' . $Itemid;

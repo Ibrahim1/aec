@@ -1223,6 +1223,8 @@ define( '_CFG_GENERAL_ALLOW_INVOICE_UNPUBLISHED_ITEM_NAME', 'Allow Checkout of u
 define( '_CFG_GENERAL_ALLOW_INVOICE_UNPUBLISHED_ITEM_DESC', 'When a user creates an invoice with an item and keeps that invoice unpaid while the item is unpublished, the default behavior is to deny access to the item if the user tries to do a late checkout. If you want to, you can explicitly allow the opposite with this setting.');
 
 define( '_CFG_CUSTOMIZATION_SUB_ITEMID', 'AEC Page ItemIDs');
+define( '_CFG_GENERAL_ITEMID_DEFAULT_NAME', 'Default Itemid');
+define( '_CFG_GENERAL_ITEMID_DEFAULT_DESC', 'The Itemid if no other relation can be made from the selections below.');
 define( '_CFG_GENERAL_ITEMID_CART_NAME', 'Itemid Cart Page');
 define( '_CFG_GENERAL_ITEMID_CART_DESC', 'The Itemid for the cart page.');
 define( '_CFG_GENERAL_ITEMID_CHECKOUT_NAME', 'Itemid Checkout Page');

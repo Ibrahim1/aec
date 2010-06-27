@@ -2349,6 +2349,7 @@ function editSettings( $option )
 
 	$params[] = array( 'userinfobox', 48 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_ITEMID );
+	$params['itemid_default']					= array( 'inputB', '' );
 	$params['itemid_cart']						= array( 'inputB', '' );
 	$params['itemid_checkout']					= array( 'inputB', '' );
 	$params['itemid_confirmation']				= array( 'inputB', '' );
