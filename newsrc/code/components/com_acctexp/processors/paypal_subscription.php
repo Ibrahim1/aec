@@ -24,6 +24,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$info['languages'] 		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 1;
+		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
 		$info['cancel_info']	= _PAYPAL_SUBSCRIPTION_CANCEL_INFO;
 
 		return $info;
@@ -35,13 +36,13 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['business']		= 'your@paypal@account.com';
 		$settings['testmode']		= 0;
 		$settings['brokenipnmode']	= 0;
-		$settings['tax']			= ''; // PaypalSubscriptions doesn't support tax but leaving in blank for future.
+		$settings['tax']			= ''; // PayPal Subscriptions doesn't support tax but leaving in blank for future.
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
 		$settings['acceptpendingecheck'] = 0;
 		$settings['srt']			= '';
 		$settings['lc']				= 'US';
-		$settings['no_shipping']	= 1;  //PayPalSubs doesn't support Shipping does this matter?
+		$settings['no_shipping']	= 1;  // PayPal Subscriptions doesn't support Shipping does this matter?
 		$settings['altipnurl']		= '';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['item_number']	= '[[user_id]]';
@@ -311,6 +312,12 @@ class processor_paypal_subscription extends POSTprocessor
 		}
 
 		return $response;
+	}
+
+	function customaction_cancel( $request )
+	{
+		// Redirect to PayPal
+		aecRedirect( 'https://www.paypal.com/cgi-bin/webscr?cmd=_subscr-find&alias=' . $this->settings['business'] );
 	}
 
 }
