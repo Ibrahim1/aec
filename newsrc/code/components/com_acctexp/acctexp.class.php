@@ -4810,7 +4810,7 @@ class aecSettings
 		$this->subarea			= $subarea;
 	}
 
-	function fullSettingsArray( $params, $params_values, $lists = array(), $settings = array() ) {
+	function fullSettingsArray( $params, $params_values, $lists = array(), $settings = array(), $showmissing=true ) {
 		$this->params			= $params;
 		$this->params_values	= $params_values;
 		$this->lists			= $lists;
@@ -4881,7 +4881,11 @@ class aecSettings
 					if ( defined( $genericname ) ) {
 						$info_name = constant( $genericname );
 					} else {
-						$info_name = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+						if ( $showmissing ) {
+							$info_name = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+						} else {
+							$info_name = '';
+						}
 					}
 				}
 
@@ -4893,7 +4897,11 @@ class aecSettings
 					if ( defined( $genericname ) ) {
 						$info_desc = constant( $genericdesc );
 					} else {
-						$info_desc = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+						if ( $showmissing ) {
+							$info_desc = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+						} else {
+							$info_desc = '';
+						}
 					}
 				}
 			} else {
@@ -5288,7 +5296,7 @@ class aecHTML
 				break;
 			case 'checkbox':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="checkbox" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $sx;
+				$return .= '<input type="checkbox" id="' . $name . '" name="' . $name . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $sx;
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
@@ -6701,7 +6709,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 			if ( !empty( $params ) ) {
 			$settings = new aecSettings ( 'mi', 'frontend_forms' );
-			$settings->fullSettingsArray( $params, array(), $lists ) ;
+			$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
 
 			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 			return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";

@@ -283,6 +283,9 @@ class processor_paypal_wpp extends XMLprocessor
 					} else {
 						return aecRedirect( 'https://www.paypal.com/webscr?' . $get );
 					}
+
+					unset( $response['correlationid'] );
+					unset( $response['token'] );
 				} elseif ( !empty( $response['error'] ) ) {
 					$response['error'] .= " - Could not retrieve token";
 				} else {
@@ -305,6 +308,10 @@ class processor_paypal_wpp extends XMLprocessor
 			if ( $request->invoice->invoice_number != $response['invoice'] ) {
 				$request->invoice = new Invoice( $database );
 				$request->invoice->loadInvoiceNumber( $response['invoice'] );
+			}
+
+			if ( isset( $response['correlationid'] ) ) {
+				unset( $response['correlationid'] );
 			}
 		}
 

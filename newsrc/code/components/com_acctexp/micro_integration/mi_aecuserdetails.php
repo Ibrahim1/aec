@@ -41,11 +41,20 @@ class mi_aecuserdetails
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
+				if ( !isset( $this->settings[$p.'type'] ) ) {
+					$this->settings[$p.'type'] = null;
+				}
+
 				$settings['lists'][$p.'type']	= mosHTML::selectList( $typelist, $p.'type', 'size="' . max( 10, min( 20, count( $types ) ) ) . '"', 'value', 'text', $this->settings[$p.'type'] );
 
 				$settings[$p.'short']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_SHORT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_SHORT_DESC );
-				$settings[$p.'mandatory']	= array( 'list_yesno', sprintf( _MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC );
+
+				if ( $this->settings[$p.'type'] != "checkbox" ) {
+					$settings[$p.'mandatory']	= array( 'list_yesno', sprintf( _MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC );
+				}
+
 				$settings[$p.'name']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_NAME_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_NAME_DESC );
+
 				$settings[$p.'desc']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DESC_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DESC_DESC );
 				$settings[$p.'type']		= array( 'list', sprintf( _MI_MI_AECUSERDETAILS_SET_TYPE_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_TYPE_DESC );
 
@@ -65,7 +74,7 @@ class mi_aecuserdetails
 	{
 		foreach ( $params as $n => $v ) {
 			if ( !empty( $v ) && ( strpos( $n, '_short' ) ) ) {
-				$params[$n] = preg_replace( '/[^a-z0-9._+-]+/i', '', trim( $v ) );
+				$params[$n] = preg_replace( '/[^a-z0-9._+-]+/i', '', trim( strtolower( $v ) ) );
 			}
 		}
 
@@ -81,8 +90,10 @@ class mi_aecuserdetails
 				$p = $i . '_';
 
 				if ( !empty( $this->settings[$p.'mandatory'] ) ) {
-					if ( empty( $request->params[$this->settings[$p.'name']] ) ) {
+					if ( empty( $request->params[$this->settings[$p.'name']] ) && ( $this->settings[$p.'type'] != 'checkbox' ) ) {
 						$return['error'] = "Please fill in the required fields";
+					} else {
+						$request->params[$this->settings[$p.'name']] = 0;
 					}
 				}
 
@@ -101,7 +112,11 @@ class mi_aecuserdetails
 				$p = $i . '_';
 
 				if ( !empty( $this->settings[$p.'short'] ) ) {
-					$params[$this->settings[$p.'short']] = $request->params[$this->settings[$p.'short']];
+					if ( empty( $request->params[$this->settings[$p.'short']] ) && ( $this->settings[$p.'type'] == 'checkbox' ) ) {
+						$params[$this->settings[$p.'short']] = 'null';
+					} else {
+						$params[$this->settings[$p.'short']] = $request->params[$this->settings[$p.'short']];
+					}
 				}
 			}
 		}
@@ -154,7 +169,7 @@ class mi_aecuserdetails
 
 							foreach ( $fields as $id => $field ) {
 								if ( !empty( $field[1] ) ) {
-									$settings['mi_'.$this->id.'_'.$this->settings[$p.'short'].$id] = array( 'radio', 'mi_'.$this->id.'_'.$this->settings[$p.'short'], trim( $field[0] ), true, trim( $field[1] ) );
+									$settings[$this->settings[$p.'short'].$id] = array( 'radio', 'mi_'.$this->id.'_'.$this->settings[$p.'short'], trim( $field[0] ), true, trim( $field[1] ) );
 								}
 							}
 
@@ -177,8 +192,8 @@ class mi_aecuserdetails
 						$this->settings[$p.'type'] = 'list';
 					}
 
-					if ( ( $this->settings[$p.'type'] == 'radio' ) || ( $this->settings[$p.'type'] == 'checkbox' ) ) {
-						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], null, $this->settings[$p.'name'], $content );
+					if ( $this->settings[$p.'type'] == 'checkbox' ) {
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], 'mi_'.$this->id.$this->settings[$p.'short'], 1, $content, $this->settings[$p.'name'] );
 					} elseif ( ( $this->settings[$p.'type'] == 'list' ) ) {
 						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'name'], 'mi_'.$this->id.'_'.$this->settings[$p.'short'] );
 					} else {
