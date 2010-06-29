@@ -46,7 +46,10 @@ class mi_mailchimp
 		}
 
 		$settings = array();
+		$settings['explanation']	= array( 'fieldset', _MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_NAME, _MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_DESC );
 		$settings['api_key']		= array( 'inputC' );
+		$settings['account_name']	= array( 'inputC' );
+		$settings['account_id']		= array( 'inputC' );
 
 		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $this->settings['list']);
 		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp']);
@@ -68,6 +71,33 @@ class mi_mailchimp
 		return $settings;
 	}
 
+
+	function profile_info( $request )
+	{
+		if ( !empty( $this->settings['api_key'] ) && !empty( $this->settings['account_id'] ) && !empty( $this->settings['account_name'] ) )  {
+			$MCAPI = new MCAPI( $this->settings['api_key'] );
+
+			$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsUser->email);
+
+			if ( empty( $mcuser['id'] ) ) {
+				$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsUser->email);
+
+				$listid = $this->settings['list_exp'];
+			} else {
+				$listid = $this->settings['list'];
+			}
+
+			$server = explode( '-', $this->settings['api_key'] );
+
+			if ( !empty( $mcuser['id'] ) ) {
+				$message = '<p><a href="http://valanx.' . $server[1] . '.list-manage.com/unsubscribe?u=' . $this->settings['account_id'] . '&id=' . $listid . '">Unsubscribe from our newsletter</a></p>';
+				return $message;
+			}
+		}
+
+		return '';
+	}
+
 	function getMIform( $request )
 	{
 		$settings = array();
@@ -76,19 +106,56 @@ class mi_mailchimp
 			return $settings;
 		}
 
-		if ( !empty( $this->settings['custominfo'] ) ) {
-			$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
-		} else {
-			$settings['exp'] = array( 'p', "", _MI_MI_MAILCHIMP_DEFAULT_NOTICE );
-		}
+		$MCAPI = new MCAPI( $this->settings['api_key'] );
 
-		$settings['get_newsletter'] = array( 'checkbox', 'mi_'.$this->id.'_get_newsletter', 1, 0, "Sign up to our Newsletter" );
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsUser->email);
+
+		if ( empty( $mcuser['id'] ) ) {
+			if ( empty( $this->settings['user_checkbox'] ) ) {
+				return $settings;
+			}
+
+			if ( !empty( $this->settings['custominfo'] ) ) {
+				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+			} else {
+				$settings['exp'] = array( 'p', "", _MI_MI_MAILCHIMP_DEFAULT_NOTICE );
+			}
+
+			$settings['get_newsletter'] = array( 'checkbox', 'mi_'.$this->id.'_get_newsletter', 1, 0, "Sign up to our Newsletter" );
+		}
 
 		return $settings;
 	}
 
 	function expiration_action( $request )
 	{
+		if ( empty( $this->settings['list'] ) ) {
+			return null;
+		}
+
+		$MCAPI = new MCAPI( $this->settings['api_key'] );
+
+		$is_allowed = false;
+
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsUser->email);
+
+		if ( empty( $mcuser['id'] ) && $is_allowed ) {
+			$name = $request->metaUser->explodeName();
+
+			$merge_vars = array( 'FNAME' => $name['first'], 'LNAME' => $name['last'] );
+
+			$result = $MCAPI->listSubscribe( $this->settings['list_exp'], $request->metaUser->cmsUser->email, $merge_vars );
+
+			$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsUser->email);
+		}
+	}
+
+	function action( $request )
+	{
+		if ( empty( $this->settings['list'] ) ) {
+			return null;
+		}
+
 		$MCAPI = new MCAPI( $this->settings['api_key'] );
 
 		$is_allowed = false;
@@ -99,31 +166,16 @@ class mi_mailchimp
 			$is_allowed = true;
 		}
 
-		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsuser->email);
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsUser->email);
 
 		if ( empty( $mcuser['id'] ) && $is_allowed ) {
-			$MCAPI->listSubscribe( $this->settings['list_exp'], $request->metaUser->cmsuser->email, array() );
+			$name = $request->metaUser->explodeName();
 
-			$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsuser->email);
-		}
-	}
+			$merge_vars = array( 'FNAME' => $name['first'], 'LNAME' => $name['last'] );
 
-	function action( $request )
-	{
-		$is_allowed = false;
+			$result = $MCAPI->listSubscribe( $this->settings['list'], $request->metaUser->cmsUser->email, $merge_vars );
 
-		if ( empty( $this->settings['user_checkbox'] ) ) {
-			$is_allowed = true;
-		} elseif ( !empty( $this->settings['user_checkbox'] ) && !empty( $request->params['get_newsletter'] ) ) {
-			$is_allowed = true;
-		}
-
-		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsuser->email);
-
-		if ( empty( $mcuser['id'] ) && $is_allowed ) {
-			$MCAPI->listSubscribe( $this->settings['list_exp'], $request->metaUser->cmsuser->email, array() );
-
-			$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsuser->email);
+			$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsUser->email);
 		}
 	}
 
@@ -444,7 +496,7 @@ class MCAPI {
         $payload .= "Content-length: " . strlen($post_vars) . "\r\n";
         $payload .= "Connection: close \r\n\r\n";
         $payload .= $post_vars;
-aecDebug($payload);
+
         ob_start();
         if ($this->secure){
             $sock = fsockopen("ssl://".$host, 443, $errno, $errstr, 30);

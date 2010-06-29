@@ -971,6 +971,33 @@ class metaUser
 		}
 	}
 
+	function explodeName()
+	{
+		$name = array();
+		$name['first_first']	= "";
+		$name['first']			= "";
+		$name['last']			= "";
+
+		// Explode Name
+		if ( isset( $this->name ) ) {
+			if ( is_array( $this->name ) ) {
+				$namearray	= $this->name;
+			} else {
+				$namearray	= explode( " ", $this->name );
+			}
+
+			$name['first_first']	= $namearray[0];
+			$maxname				= count($namearray) - 1;
+			$name['last']			= $namearray[$maxname];
+
+			unset( $namearray[$maxname] );
+
+			$name['first']			= implode( ' ', $namearray );
+		}
+
+		return $name;
+	}
+
 	function CustomRestrictionResponse( $restrictions )
 	{
 		$s = array();
@@ -13103,27 +13130,7 @@ class reWriteEngine
 
 		if ( !empty( $this->data['metaUser'] ) ) {
 			if ( is_object( $this->data['metaUser'] ) ) {
-				$name = array();
-				$name['first_first']	= "";
-				$name['first']			= "";
-				$name['last']			= "";
-
-				// Explode Name
-				if ( isset( $this->data['metaUser']->cmsUser->name ) ) {
-					if ( is_array( $this->data['metaUser']->cmsUser->name ) ) {
-						$namearray	= $this->data['metaUser']->cmsUser->name;
-					} else {
-						$namearray	= explode( " ", $this->data['metaUser']->cmsUser->name );
-					}
-
-					$name['first_first']	= $namearray[0];
-					$maxname				= count($namearray) - 1;
-					$name['last']			= $namearray[$maxname];
-
-					unset( $namearray[$maxname] );
-
-					$name['first']			= implode( ' ', $namearray );
-				}
+				$name = $this->data['metaUser']->explodeName();
 
 				if ( isset( $this->data['metaUser']->cmsUser->id ) ) {
 					$this->rewrite['user_id']				= $this->data['metaUser']->cmsUser->id;

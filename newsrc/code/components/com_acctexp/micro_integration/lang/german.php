@@ -1350,4 +1350,25 @@ define( '_MI_MI_JOBS_DEFAULT_COMPANY_COUNTRY_DESC','The default country that wil
 define( '_MI_MI_JOBS_DEFAULT_COMPANY_STATUS_NAME','Default Company Statu');
 define( '_MI_MI_JOBS_DEFAULT_COMPANY_STATUS_DESC','The default status of the initial company');
 
+// Mailchimp
+define( '_AEC_MI_NAME_MAILCHIMP',		'Mailchimp' );
+define( '_AEC_MI_DESC_MAILCHIMP',		'Let users sign up to your Mailchimp lists' );
+define( '_MI_MI_MAILCHIMP_API_KEY_NAME','API Key');
+define( '_MI_MI_MAILCHIMP_API_KEY_DESC','Your Mailchimp API key for this site. To get an API Key, log into your Mailchimp account and select "API Keys And Info" from your account menu.');
+define( '_MI_MI_MAILCHIMP_ACCOUNT_NAME_NAME','Account Name');
+define( '_MI_MI_MAILCHIMP_ACCOUNT_NAME_DESC','See above for an explanation on how to figure out your account name and id');
+define( '_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME','Account Id');
+define( '_MI_MI_MAILCHIMP_ACCOUNT_ID_DESC','See above for an explanation on how to figure out your account name and id');
+define( '_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_NAME','Info');
+define( '_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_DESC','To figure out your Account Name and Id with Mailchimp is a bit tricky, but here goes:</p><p> in your Mailchimp dashboard:</p><p><strong>click Lists -&gt; click "forms" for any of the lists -&gt; near the top, click "for your website" and finally -&gt; "Unsubscribe Link Code"</strong>.</p><p>Here, you will find a link that reads:</p><p><strong>http://YOUR_ACCOUNT_NAME.***.list-manage.com/unsubscribe?u=YOUR_ACCOUNT_ID&amp;id=***</strong></p><p>copy the part between the ?u= and the &amp;id= of that url (signalled here as YOUR_ACCOUNT_ID) and you have your account id, your account name is at the start of the url, sinalled here as YOUR_ACCOUNT_NUMBER.');
+define( '_MI_MI_MAILCHIMP_LIST_NAME','Assign to List');
+define( '_MI_MI_MAILCHIMP_LIST_DESC','Assign the user to this list (lists will be loaded once you provide your API key above)');
+define( '_MI_MI_MAILCHIMP_LIST_EXP_NAME','Assign to List (expiration)');
+define( '_MI_MI_MAILCHIMP_LIST_EXP_DESC','Assign the user to this list on expiration (lists will be loaded once you provide your API key above)');
+define( '_MI_MI_MAILCHIMP_USER_CHECKBOX_NAME',		'User Checkbox' );
+define( '_MI_MI_MAILCHIMP_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter (strongly recommended as it\'s required by law in most countries).' );
+define( '_MI_MI_MAILCHIMP_CUSTOMINFO_NAME',		'Custom Info' );
+define( '_MI_MI_MAILCHIMP_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
+define( '_MI_MI_MAILCHIMP_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
+
 ?>

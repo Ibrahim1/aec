@@ -920,7 +920,7 @@ function subscriptionDetails( $option, $sub='overview' )
 
 					$info = $mi->profile_info( $metaUser );
 					if ( $info !== false ) {
-						$mi_info .= $info;
+						$mi_info .= '<div class="' . $mi->class_name . ' mi_' . $mi->id . '">' . $info . '</div>';
 					}
 				}
 
