@@ -1402,4 +1402,22 @@ define( '_MI_MI_JOBS_DEFAULT_COMPANY_COUNTRY_DESC','The default country that wil
 define( '_MI_MI_JOBS_DEFAULT_COMPANY_STATUS_NAME','Default Company Statu');
 define( '_MI_MI_JOBS_DEFAULT_COMPANY_STATUS_DESC','The default status of the initial company');
 
+// Mailchimp
+define( '_AEC_MI_NAME_MAILCHIMP',		'Mailchimp' );
+define( '_AEC_MI_DESC_MAILCHIMP',		'Let users sign up to your Mailchimp lists' );
+define( '_MI_MI_MAILCHIMP_API_KEY_NAME','API Key');
+define( '_MI_MI_MAILCHIMP_API_KEY_DESC','Your Mailchimp API key for this site. To get an API Key, log into your Mailchimp account and select "API Keys And Info" from your account menu.');
+define( '_MI_MI_MAILCHIMP_LIST_NAME','Assign to List');
+define( '_MI_MI_MAILCHIMP_LIST_DESC','Assign the user to this list (lists will be loaded once you provide your API key above)');
+define( '_MI_MI_MAILCHIMP_LIST_EXP_NAME','Assign to List (expiration)');
+define( '_MI_MI_MAILCHIMP_LIST_EXP_DESC','Assign the user to this list on expiration (lists will be loaded once you provide your API key above)');
+define( '_MI_MI_MAILCHIMP_USER_CHECKBOX_NAME',		'User Checkbox' );
+define( '_MI_MI_MAILCHIMP_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter (strongly recommended as it\'s required by law in most countries).' );
+define( '_MI_MI_MAILCHIMP_CUSTOMINFO_NAME',		'Custom Info' );
+define( '_MI_MI_MAILCHIMP_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
+
+// Support Time Tracker
+define( '_AEC_MI_NAME_SUPPORTTIMETRACKER',		'Support Time Tracker' );
+define( '_AEC_MI_DESC_SUPPORTTIMETRACKER',		'Simple time tracker that can be used to keep track of support hours' );
+
 ?>

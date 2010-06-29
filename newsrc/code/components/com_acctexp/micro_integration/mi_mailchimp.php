@@ -24,17 +24,29 @@ class mi_mailchimp
 
 	function Settings()
 	{
-		$MCAPI = new MCAPI();
-
-		$lists = $MCAPI->lists();
-
 		$li = array();
-		foreach( $lists as $list ) {
-			$li[] = mosHTML::makeOption( $list['id'], $list['name'] );
+		$li[] = mosHTML::makeOption( 0, "--- --- ---" );
+
+		if ( !empty( $this->settings['api_key'] ) ) {
+			$MCAPI = new MCAPI( $this->settings['api_key'] );
+
+			$lists = $MCAPI->lists();
+
+			foreach( $lists as $list ) {
+				$li[] = mosHTML::makeOption( $list['id'], $list['name'] );
+			}
+		}
+
+		if ( !isset( $this->settings['list'] ) ) {
+			$this->settings['list'] = 0;
+		}
+
+		if ( !isset( $this->settings['list_exp'] ) ) {
+			$this->settings['list_exp'] = 0;
 		}
 
 		$settings = array();
-		$settings['api_key']		= array( 'inputD' );
+		$settings['api_key']		= array( 'inputC' );
 
 		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $this->settings['list']);
 		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp']);
@@ -43,6 +55,15 @@ class mi_mailchimp
 		$settings['list_exp']		= array( 'list' );
 		$settings['user_checkbox']	= array( 'list_yesno' );
 		$settings['custominfo']		= array( 'inputD' );
+
+		return $settings;
+	}
+
+	function Defaults()
+	{
+		$settings = array();
+
+		$settings['user_checkbox']		= 1;
 
 		return $settings;
 	}
@@ -147,7 +168,7 @@ class MCAPI {
      * @param string $apikey Your MailChimp apikey
      * @param string $secure Whether or not this should use a secure connection
      */
-    function MCAPI($apikey, $secure=false) {
+    function MCAPI($apikey, $secure=true) {
         $this->secure = $secure;
         $this->apiUrl = parse_url("http://api.mailchimp.com/" . $this->version . "/?output=php");
         $this->api_key = $apikey;
@@ -372,11 +393,38 @@ class MCAPI {
         return $this->callServer("callMethod", $params);
     }
 
+	function callServer( $method, $params )
+	{
+		$db = &JFactory::getDBO();
+
+		$tempprocessor = new processor($db);
+
+		$dc = "us1";
+	    if (strstr($this->api_key,"-")){
+        	list($key, $dc) = explode("-",$this->api_key,2);
+            if (!$dc) $dc = "us1";
+        }
+        $host = $dc.".".$this->apiUrl["host"];
+		$params["apikey"] = $this->api_key;
+
+		$post_vars = $this->httpBuildQuery($params);
+
+		$path = $this->apiUrl["path"] . "?" . $this->apiUrl["query"] . "&method=" . $method;
+
+		$response = $tempprocessor->transmitRequest( $host, $path, $post_vars );
+
+        if(ini_get("magic_quotes_runtime")) $response = stripslashes($response);
+
+        $serial = unserialize($response);
+
+        return $serial;
+	}
+
     /**
      * Actually connect to the server and call the requested methods, parsing the result
      * You should never have to call this function manually
      */
-    function callServer($method, $params) {
+    function callServerOriginal($method, $params) {
 	    $dc = "us1";
 	    if (strstr($this->api_key,"-")){
         	list($key, $dc) = explode("-",$this->api_key,2);
@@ -396,7 +444,7 @@ class MCAPI {
         $payload .= "Content-length: " . strlen($post_vars) . "\r\n";
         $payload .= "Connection: close \r\n\r\n";
         $payload .= $post_vars;
-
+aecDebug($payload);
         ob_start();
         if ($this->secure){
             $sock = fsockopen("ssl://".$host, 443, $errno, $errstr, 30);
