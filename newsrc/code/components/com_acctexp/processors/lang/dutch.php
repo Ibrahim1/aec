@@ -368,13 +368,13 @@ define( '_CFG_MONEYPROXY_PAYMENT_ID_NAME', 'Payment ID');
 define( '_CFG_MONEYPROXY_PAYMENT_ID_DESC', 'The merchant can use this field to track the payment when the status URL is called. It can be up to 10 digits with only letters and numbers (0-9a-zA-Z). You can use Rewrite tags here.');
 
 // Offline Payment
-define( '_CFG_OFFLINE_PAYMENT_LONGNAME', 'Offline Payment');
-define( '_CFG_OFFLINE_PAYMENT_STATEMENT', 'You can use this option to not pay through the Internet');
-define( '_CFG_OFFLINE_PAYMENT_DESCRIPTION', 'You can use this option to not pay through the Internet');
-define( '_CFG_OFFLINE_PAYMENT_INFO_NAME', 'Info');
-define( '_CFG_OFFLINE_PAYMENT_INFO_DESC', 'The Info that will be displayed to the user on checkout');
-define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_NAME', 'Waiting Plan');
-define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_DESC', 'You can assign a user to this plan while he or she waits for the payment to arrive');
+define( '_CFG_OFFLINE_PAYMENT_LONGNAME', 'Overboeking');
+define( '_CFG_OFFLINE_PAYMENT_STATEMENT', 'U kunt deze optie gebruiken als u niet via het internet kan betalen');
+define( '_CFG_OFFLINE_PAYMENT_DESCRIPTION', 'U kunt deze optie gebruiken als u niet via het internet kan betalen');
+define( '_CFG_OFFLINE_PAYMENT_INFO_NAME', 'Informatie');
+define( '_CFG_OFFLINE_PAYMENT_INFO_DESC', 'De informatie is zichtbaar tijdens het betalen');
+define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_NAME', 'Terugval plan');
+define( '_CFG_OFFLINE_PAYMENT_WAITINGPLAN_DESC', 'U kunt een plan kiezen als een gebruiker wacht tot zijn betalen is voltooid');
 
 define( '_CFG_OFFLINE_PAYMENT_EMAIL_INFO_NAME',		'E-Mail Info' );
 define( '_CFG_OFFLINE_PAYMENT_EMAIL_INFO_DESC',		'Do you want to mail out any information similar to the one displayed on the checkout page to the user when the Invoice is created?' );
@@ -481,32 +481,32 @@ define( '_CFG_CCBILL_DATALINK_USERNAME_NAME', 'Datalink Username');
 define( '_CFG_CCBILL_DATALINK_USERNAME_DESC', 'If you want to use Recurring Billing, you need to supply a Datalink Username here. Also remember to set the "recurring" switch in the payment plans that are supposed to have this functionality.');
 
 // iDeal Basic
-define( '_CFG_IDEAL_BASIC_LONGNAME', 'iDeal');
-define( '_CFG_IDEAL_BASIC_STATEMENT', 'Make payments with iDeal');
+define( '_CFG_IDEAL_BASIC_LONGNAME', 'iDeal Basic');
+define( '_CFG_IDEAL_BASIC_STATEMENT', 'Veilig betalen met iDeal Basic');
 define( '_CFG_IDEAL_BASIC_DESCRIPTION', 'De veilige manier van betalen op internet.');
-define( '_CFG_IDEAL_BASIC_MERCHANTID_NAME', 'Merchant ID');
-define( '_CFG_IDEAL_BASIC_MERCHANTID_DESC', 'Your Merchant ID');
-define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_NAME', 'Testmode Stage');
-define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
+define( '_CFG_IDEAL_BASIC_MERCHANTID_NAME', 'Acceptant ID');
+define( '_CFG_IDEAL_BASIC_MERCHANTID_DESC', 'Uw acceptant ID');
+define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_NAME', 'Test case');
+define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_DESC', 'Welke test moet er worden gedaan? (1-7)');
 define( '_CFG_IDEAL_BASIC_BANK_NAME', 'Bank');
-define( '_CFG_IDEAL_BASIC_BANK_DESC', 'Select which Bank to use');
-define( '_CFG_IDEAL_BASIC_SUBID_NAME', 'Testmode Stage');
-define( '_CFG_IDEAL_BASIC_SUBID_DESC', 'Set to 0 unless you have specific reasons not to');
-define( '_CFG_IDEAL_BASIC_KEY_NAME', 'Key');
-define( '_CFG_IDEAL_BASIC_KEY_DESC', 'Your secret key');
-define( '_CFG_IDEAL_BASIC_DESCRIPTION_NAME', 'Item Description');
-define( '_CFG_IDEAL_BASIC_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
+define( '_CFG_IDEAL_BASIC_BANK_DESC', 'Selecteer een bank die u wil gebruiken');
+define( '_CFG_IDEAL_BASIC_SUBID_NAME', 'Test mode');
+define( '_CFG_IDEAL_BASIC_SUBID_DESC', 'Verander hier niets aan tenzij het moet');
+define( '_CFG_IDEAL_BASIC_KEY_NAME', 'Geheime sleutel');
+define( '_CFG_IDEAL_BASIC_KEY_DESC', 'Uw geheime sleutel');
+define( '_CFG_IDEAL_BASIC_DESCRIPTION_NAME', 'Omschrijving');
+define( '_CFG_IDEAL_BASIC_DESCRIPTION_DESC', 'De omschrijving die te zien zal zijn op de factuur - maximaal 32 karakters!');
 
 // iDeal Advanced
-define( '_CFG_IDEAL_ADVANCED_LONGNAME', 'iDeal');
-define( '_CFG_IDEAL_ADVANCED_STATEMENT', 'Make payments with iDeal');
+define( '_CFG_IDEAL_ADVANCED_LONGNAME', 'iDeal Advanced');
+define( '_CFG_IDEAL_ADVANCED_STATEMENT', 'Veilig betalen met iDeal Advanced');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION', 'De veilige manier van betalen op internet.');
-define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_NAME', 'Secure Details Path');
-define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_DESC', 'The filesystem path to where you have saved your secure details config file on your server - should NOT be in or below your publicly accessible webserver directory. There is a sample config file located at components/com_acctexp/processors/ideal_advanced/includes/security');
-define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_NAME', 'Testmode Stage');
-define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
-define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_NAME', 'Item Description');
-define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
+define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_NAME', 'Pad naar bestanden');
+define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_DESC', 'Het pad naar bestanden en de config. Zorg dat deze bestanden niet direct te benaderen zijn! Er staat een voorbeeld config in components/com_acctexp/processors/ideal_advanced/includes/security');
+define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_NAME', 'Test case');
+define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_DESC', 'Welke test moet er worden gedaan? (1-7)');
+define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_NAME', 'Omschrijving');
+define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_DESC', 'De omschrijving die te zien zal zijn op de factuur - maximaal 32 karakters!');
 
 // Authorize.net AIM
 define( '_CFG_AUTHORIZE_AIM_LONGNAME', 'Authorize.net AIM');
