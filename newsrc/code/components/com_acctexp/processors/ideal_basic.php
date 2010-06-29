@@ -34,6 +34,7 @@ class processor_ideal_basic extends POSTprocessor
 		$s = array();
 		$s['merchantid']	= "merchantid";
 		$s['testmode']		= 0;
+		$s['currency']		= 'EUR';
 		$s['testmodestage']	= 1;
 		$s['bank']			= "ing";
 		$s['subid']			= "0";
@@ -52,6 +53,7 @@ class processor_ideal_basic extends POSTprocessor
 		$s['aec_insecure']		= array( "p" );
 		$s['merchantid']		= array( 'inputC' );
 		$s['testmode']			= array( 'list_yesno' );
+		$s['currency']			= array( 'list_currency' );
 		$s['testmodestage']		= array( 'inputC' );
 		$s['bank']				= array( 'list' );
 		$s['subid']				= array( 'inputC' );
@@ -94,11 +96,10 @@ class processor_ideal_basic extends POSTprocessor
 		$var['purchaseID']			= substr( $request->invoice->invoice_number, 1 );
 
 		if ( $this->settings['testmode'] ) {
-			$var['amount']			= max( 1, min( 7, (int) $this->settings['testmodestage'] ) ) . '.00';
+			$var['amount']			= max( 1, min( 7, (int) $this->settings['testmodestage'] ) ) . '00';
 		} else {
-			$var['amount']			= $request->int_var['amount'];
+			$var['amount']			= (int) $request->int_var['amount'] * 100;
 		}
-
 
 		$var['currency']			= $this->settings['currency'];
 		$var['language']			= strtolower( $this->settings['language'] );
@@ -106,7 +107,7 @@ class processor_ideal_basic extends POSTprocessor
 		$var['itemNumber1']			= $request->metaUser->userid;
 		$var['itemDescription1']	= substr( $this->settings['description'], 0, 32);
 		$var['itemQuantity1']		= 1;
-		$var['itemPrice1']			= $request->int_var['amount'];
+		$var['itemPrice1']			= $var['amount'];
 		$var['paymentType']			= 'ideal';
 		$var['validUntil']			= date('Y-m-d\TG:i:s\Z', strtotime('+1 hour'));
 
