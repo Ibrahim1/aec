@@ -253,7 +253,7 @@ class HTML_frontEnd
 								if ( !empty( $subscription->objPlan->proc_actions ) ) {
 									echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->objPlan->proc_actions ) . '</p>';
 								}
-								if ( $subscription->lifetime ) {
+								if ( !empty( $subscription->lifetime ) ) {
 									echo '<p>' . _AEC_ISLIFETIME . '</p>';
 								} else {
 									if ( $subscription->recurring ) {

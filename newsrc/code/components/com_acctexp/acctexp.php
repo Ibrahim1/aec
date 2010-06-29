@@ -1577,11 +1577,11 @@ function cancelPayment( $option )
 	}
 }
 
-function aecThanks( $option, $renew, $free, $plan )
+function aecThanks( $option, $renew, $free, $plan=null )
 {
 	global $mainframe, $aecConfig, $mainframe;
 
-	if ( isset( $plan ) ) {
+	if ( !empty( $plan ) ) {
 		if ( is_object( $plan ) ) {
 			if ( !empty( $plan->params['customthanks'] ) ) {
 				aecRedirect( $plan->params['customthanks'] );

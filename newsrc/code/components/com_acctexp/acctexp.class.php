@@ -526,7 +526,7 @@ class metaUser
 	{
 		$database = &JFactory::getDBO();
 
-		$query = 'SELECT `id`' . ( $simple ? '' : ', `status`, `plan`, `type`, `expiration`, `recurring`' )
+		$query = 'SELECT `id`' . ( $simple ? '' : ', `status`, `plan`, `type`, `expiration`, `recurring`, `lifetime`' )
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				. ' AND `primary` = \'0\''
@@ -3713,17 +3713,16 @@ class processor extends serialParamDBTable
 
 			return false;
 		} else {
-
 			if ( !is_null( $content ) ) {
-				$header = "POST " . $path . " HTTP/1.1\r\n";
+				$header = "POST " . $path . " HTTP/1.0\r\n";
 			} else {
-				$header = "GET " . $path . " HTTP/1.1\r\n";
+				$header = "GET " . $path . " HTTP/1.0\r\n";
 			}
 
 		    if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 				$hosturl = $aecConfig->cfg['proxy'];
 		    } else {
-		    	$hosturl = $url;
+		    	$hosturl = $url_info['host'];
 		    }
 
 			$header  .=	"Host: " . $hosturl  . "\r\n";
@@ -3735,11 +3734,11 @@ class processor extends serialParamDBTable
 			}
 
 			$header .=	"User-Agent: PHP Script\r\n"
-						. "Content-Type: text/xml\r\n"
+						. "Content-Type: application/x-www-form-urlencoded\r\n"
 						;
 
 			if ( !is_null( $content ) ) {
-				$header .=	"Content-Length: " . strlen( $content ) . "\r\n\r\n";
+				$header .=	"Content-Length: " . strlen( $content ) . "\r\n";
 			}
 
 			$header .=	"Connection: close\r\n\r\n";;
@@ -3750,8 +3749,32 @@ class processor extends serialParamDBTable
 
 			fwrite( $connection, $header );
 
-			while ( !feof( $connection ) ) {
-				$res = fgets( $connection, 1024 );
+			if ( function_exists( 'stream_set_timeout' ) ) {
+				stream_set_timeout( $connection, 300 );
+
+				$info = stream_get_meta_data( $connection );
+
+				$res = "";
+				while ( !feof( $connection ) && ( !$info["timed_out"] ) ) {
+					$res = fgets( $connection, 8192 );
+				}
+
+		        if ( $info["timed_out"] ) {
+					$database = &JFactory::getDBO();
+
+					$short	= 'fsockopen failure';
+					$event	= 'Trying to establish connection with ' . $url . ' timed out - will try cURL instead. If Error persists and cURL works, please permanently switch to using that!';
+					$tags	= 'processor,payment,phperror';
+					$params = array();
+
+					$eventlog = new eventLog( $database );
+					$eventlog->issue( $short, $tags, $event, 128, $params );
+		        }
+			} else {
+				$res = "";
+				while ( !feof( $connection ) ) {
+					$res = fgets( $connection, 1024 );
+				}
 			}
 
 			fclose( $connection );
@@ -9435,7 +9458,11 @@ class InvoiceFactory
 			}
 		}
 
-		aecThanks( $option, $renew, $free, $this->plan );
+		if ( !empty( $this->plan ) ) {
+			aecThanks( $option, $renew, $free, $this->plan );
+		} else {
+			aecThanks( $option, $renew, $free );
+		}
 	}
 
 	function error( $option, $objUser, $invoice, $error )
