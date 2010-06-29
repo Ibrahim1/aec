@@ -86,6 +86,10 @@ class processor_paypal_payflow_link extends POSTprocessor
 
 		$req = 'cmd=_notify-validate';
 
+		if ( isset( $post['planparams'] ) ) {
+			unset( $post['planparams'] );
+		}
+
 		foreach ( $post as $key => $value ) {
 			$value = urlencode( stripslashes( $value ) );
 			$req .= "&$key=$value";
