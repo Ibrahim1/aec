@@ -280,59 +280,62 @@ class mi_aectax
 
 	function addTax( $request, $item, $location )
 	{
-		$total = $item['terms']->terms[0]->renderTotal();
+		foreach ( $item['terms']->terms as $tid => $term ) {
+		$total = $term->renderTotal();
 
-		if ( !empty( $this->settings['vat_no_request'] ) ) {
-			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
-				$vatlist = $this->vatList();
+			if ( !empty( $this->settings['vat_no_request'] ) ) {
+				if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
+					$vatlist = $this->vatList();
 
-				$vat_number = $this->clearVatNumber( $request->params['vat_number'] );
+					$vat_number = $this->clearVatNumber( $request->params['vat_number'] );
 
-				$check = $this->checkVatNumber( $vat_number, $request->params['location'], $vatlist );
+					$check = $this->checkVatNumber( $vat_number, $request->params['location'], $vatlist );
 
-				if ( $check ) {
-					if ( ( $location['mode'] == 'pseudo_subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
-						$location['mode'] = 'subtract';
-					} elseif ( ( $location['mode'] == 'add' ) && ( $this->settings['vat_removeonvalid'] ) ) {
-						$location['mode'] = '';
-					} elseif ( ( $location['mode'] == 'subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
-						$location['mode'] = '';
+					if ( $check ) {
+						if ( ( $location['mode'] == 'pseudo_subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
+							$location['mode'] = 'subtract';
+						} elseif ( ( $location['mode'] == 'add' ) && ( $this->settings['vat_removeonvalid'] ) ) {
+							$location['mode'] = '';
+						} elseif ( ( $location['mode'] == 'subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
+							$location['mode'] = '';
+						}
 					}
 				}
 			}
+
+			switch ( $location['mode'] ) {
+				default:
+					$newtotal = $total;
+
+					$tax = "0.00";
+					break;
+				case 'pseudo_subtract':
+					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
+
+					$tax = AECToolbox::correctAmount( $total - $newtotal );
+					break;
+				case 'subtract':
+					$tax = AECToolbox::correctAmount( $total * ( $location['percentage'] / 100 ) );
+
+					$newtotal = $total;
+
+					$total = AECToolbox::correctAmount( $newtotal - $tax );
+
+					$tax = -$tax;
+					break;
+				case 'add':
+					$tax = AECToolbox::correctAmount( $total * ( $location['percentage'] / 100 ) );
+
+					$newtotal = $total;
+
+					$total = AECToolbox::correctAmount( $newtotal + $tax );
+					break;
+			}
+
+			$item['terms']->terms[$tid]->addCost( $tax, array( 'details' => $location['extra'] ), true );
 		}
 
-		switch ( $location['mode'] ) {
-			default:
-				$newtotal = $total;
-
-				$tax = "0.00";
-				break;
-			case 'pseudo_subtract':
-				$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
-
-				$tax = AECToolbox::correctAmount( $total - $newtotal );
-				break;
-			case 'subtract':
-				$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
-
-				$newtotal = $total;
-
-				$total = AECToolbox::correctAmount( $newtotal - $tax );
-
-				$tax = -$tax;
-				break;
-			case 'add':
-				$tax = AECToolbox::correctAmount( $total * ( $location['percentage']/100 ) );
-
-				$newtotal = $total;
-
-				$total = AECToolbox::correctAmount( $newtotal + $tax );
-				break;
-		}
-
-		$item['terms']->terms[0]->addCost( $tax, array( 'details' => $location['extra'] ), true );
-		$item['cost'] = $item['terms']->renderTotal();
+		$item['cost'] = $item['terms']->nextterm->renderTotal();
 
 		$request->add->itemlist[] = $item;
 

@@ -546,6 +546,7 @@ class mammonTerm extends eucaObject
 	function renderTotal()
 	{
 		$k = array_pop( array_keys( $this->cost ) );
+
 		return $this->cost[$k]->renderCost();
 	}
 
