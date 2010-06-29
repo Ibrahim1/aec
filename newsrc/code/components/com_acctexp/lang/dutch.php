@@ -21,11 +21,11 @@ define( '_AEC_EXPIRE_TODAY',				'Dit account is actief tot: vandaag' );
 define( '_AEC_EXPIRE_FUTURE',				'Dit account is actief tot' );
 define( '_AEC_EXPIRE_PAST',					'Dit account was actief tot' );
 define( '_AEC_DAYS_ELAPSED',				'dag(en) verlopen');
-define( '_AEC_EXPIRE_TRIAL_TODAY',			'This trial is active until today' );
-define( '_AEC_EXPIRE_TRIAL_FUTURE',			'This trial is active until' );
-define( '_AEC_EXPIRE_TRIAL_PAST',			'This trial was valid until' );
+define( '_AEC_EXPIRE_TRIAL_TODAY',			'De proef periode is geldig tot vandaag' );
+define( '_AEC_EXPIRE_TRIAL_FUTURE',			'De proef periode is geldig tot' );
+define( '_AEC_EXPIRE_TRIAL_PAST',			'De proef periode was geldig tot' );
 
-define( '_AEC_EXPIRE_NOT_SET',				'Not Set' );
+define( '_AEC_EXPIRE_NOT_SET',				'Niet ingesteld' );
 define( '_AEC_GEN_ERROR',					'<h1>Algemene foutmelding</h1><p>Er zijn problemen om uw aanvraag te verwerken. Contact de website administrator.</p>' );
 
 // betalingen
@@ -69,7 +69,7 @@ define( '_COUPON_INFO_CHECKOUT',			'Voer hier je couponcode in en selecteer de b
 define( '_PAYPLANS_HEADER', 'Betalingsplannen');
 define( '_NOPLANS_ERROR', 'Geen betalingsplan beschikbaar. Neem contact op met de administrator.');
 define( '_NOPLANS_AUTHERROR', 'You are not authorized to access this option. Please contact administrator if you have any further questions.');
-define( '_PLANGROUP_BACK', '&lt; Go back');
+define( '_PLANGROUP_BACK', '&lt; ga terug');
 
 // --== ACCOUNT DETAILS PAGINA ==--
 define( '_CHK_USERNAME_AVAIL', "Gebruikersnaam %s is nog beschikbaar");
@@ -88,7 +88,7 @@ define( '_HISTORY_ACTION_REPEAT', 'betalen');
 define( '_HISTORY_ACTION_CANCEL', 'annuleren');
 define( '_RENEW_LIFETIME', 'Uw account verloopt nooit.');
 define( '_RENEW_DAYSLEFT', 'Resterende dagen');
-define( '_RENEW_DAYSLEFT_TRIAL', 'Days left in Trial');
+define( '_RENEW_DAYSLEFT_TRIAL', 'dagen over van testperiode');
 define( '_RENEW_DAYSLEFT_EXCLUDED', 'Uw account zal niet verlopen');
 define( '_RENEW_DAYSLEFT_INFINITE', '&#8734');
 define( '_RENEW_INFO', 'U betaald d.m.v. terugkerende betalingen.');
@@ -96,44 +96,44 @@ define( '_RENEW_OFFLINE', 'Vernieuwen');
 define( '_RENEW_BUTTON_UPGRADE', 'Upgraden/Vernieuwen');
 define( '_PAYMENT_PENDING_REASON_ECHECK', 'Echeck nog niet ontvangen (1-4 werkdagen)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'In afwachting van betaling');
-define( '_YOUR_SUBSCRIPTION', 'Your Subscription');
-define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Further Subscriptions');
-define( '_PLAN_PROCESSOR_ACTIONS', 'For this, you have the following options:');
+define( '_YOUR_SUBSCRIPTION', 'Uw Abonnement');
+define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Andere Abonnementen');
+define( '_PLAN_PROCESSOR_ACTIONS', 'Voor dit heeft u de volgende opties:');
 define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Overview');
-define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Invoices');
+define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Facturen');
 define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Details');
 
 define( '_HISTORY_ACTION_PRINT', 'print');
-define( '_INVOICEPRINT_DATE', 'Date');
+define( '_INVOICEPRINT_DATE', 'Datum');
 define( '_INVOICEPRINT_ID', 'ID');
-define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Reference Number');
-define( '_INVOICEPRINT_ITEM_NAME', 'Item Name');
-define( '_INVOICEPRINT_UNIT_PRICE', 'Unit Price');
-define( '_INVOICEPRINT_QUANTITY', 'Quantity');
-define( '_INVOICEPRINT_TOTAL', 'Total');
-define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
+define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Referentie nummer');
+define( '_INVOICEPRINT_ITEM_NAME', 'Product naam');
+define( '_INVOICEPRINT_UNIT_PRICE', 'Prijs');
+define( '_INVOICEPRINT_QUANTITY', 'Hoeveelheid');
+define( '_INVOICEPRINT_TOTAL', 'Subotaal');
+define( '_INVOICEPRINT_GRAND_TOTAL', 'Totaal');
 
-define( '_INVOICEPRINT_ADDRESSFIELD', 'Enter your Address here - it will then show on the printout.');
-define( '_INVOICEPRINT_PRINT', 'Print');
-define( '_INVOICEPRINT_BLOCKNOTICE', 'This block (including the text field and print button) will not show on your printout.');
-define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Please type your address into the field above.');
-define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>This invoice has not been paid yet.</strong>');
-define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'This invoice has been paid on: %s');
-define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis.');
+define( '_INVOICEPRINT_ADDRESSFIELD', 'Voer uw adres hier in - dit zal te zien zijn bij het afdrukken');
+define( '_INVOICEPRINT_PRINT', 'Printen');
+define( '_INVOICEPRINT_BLOCKNOTICE', 'Dit blok zal niet te zien zijn bij het afdrukken');
+define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Typ uw adres in het bovenstaande vak');
+define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>Deze factuur is nog niet betaald.</strong>');
+define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Deze factuur is betaald op: %s');
+define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'Deze factuur wordt gefactureerd op recurrente basis.');
 
-define( '_AEC_YOUSURE', 'Are you sure?');
+define( '_AEC_YOUSURE', 'Weet u het zeker?');
 
-define( '_AEC_WILLEXPIRE', 'This membership will expire');
-define( '_AEC_WILLRENEW', 'This membership will renew');
-define( '_AEC_ISLIFETIME', 'Lifetime Membership');
+define( '_AEC_WILLEXPIRE', 'Dit lidmaatschap zal vervallen');
+define( '_AEC_WILLRENEW', 'Dit lidmaatschap zal vernieuwen');
+define( '_AEC_ISLIFETIME', 'Levenslange lidmaatschap');
 
 // --== VERVAL PAGINA ==--
 define( '_EXPIRE_INFO', 'Uw account is actief tot');
 define( '_RENEW_BUTTON', 'Nu vernieuwen');
-define( '_RENEW_BUTTON_CONTINUE', 'Extend Previous Membership');
+define( '_RENEW_BUTTON_CONTINUE', 'Vernieuw bestaand lidmaatschap');
 define( '_ACCT_DATE_FORMAT', '%d-%m-%Y');
 define( '_EXPIRED', 'Uw account is beeindigd op: ');
-define( '_EXPIRED_TRIAL', 'Uw trail periode is geeindigd op: ');
+define( '_EXPIRED_TRIAL', 'Uw proef periode is geeindigd op: ');
 define( '_ERRTIMESTAMP', 'Kan de datum niet converteren.');
 define( '_EXPIRED_TITLE', 'Account is beeindigd!');
 define( '_DEAR', 'Geachte %s');
@@ -146,18 +146,18 @@ define( '_CONFIRM_COL3_TITLE', 'Bedrag');
 define( '_CONFIRM_ROW_NAME', 'Naam: ');
 define( '_CONFIRM_ROW_USERNAME', 'Gebruikersnaam: ');
 define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
-define( '_CONFIRM_INFO', 'Gebruik s.v.p. de Continue knop om de registratie af te ronden.');
-define( '_BUTTON_CONFIRM', 'Continue');
-define( '_CONFIRM_TOS', "Ik heb de <a href=\"%s\" target=\"_BLANK\">Terms of Service</a> gelezen en ben accoord");
-define( '_CONFIRM_TOS_IFRAME', "I have read and agree to the Terms of Service (above)");
-define( '_CONFIRM_TOS_ERROR', 'Lees en ga akkord met de algemene voorwaarden');
-define( '_CONFIRM_COUPON_INFO', 'Als u een speciale coupon heeft, dan kunt u die invullen op de Checkout Page voor een betalings korting');
-define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
-define( '_CONFIRM_FREETRIAL', 'Gratis Trial');
-define( '_CONFIRM_YOU_HAVE_SELECTED', 'You have selected');
+define( '_CONFIRM_INFO', 'Gebruik s.v.p. de afrekenen knop om de registratie af te ronden.');
+define( '_BUTTON_CONFIRM', 'Afrekenen');
+define( '_CONFIRM_TOS', "Ik heb de <a href=\"%s\" target=\"_BLANK\">Algemene Voorwaarden</a> gelezen en ga akkoord");
+define( '_CONFIRM_TOS_IFRAME', "ik heb de algemene voorwaarden gelezen en ga hiermee akkoord");
+define( '_CONFIRM_TOS_ERROR', 'Ga akkoord met de algemene voorwaarden');
+define( '_CONFIRM_COUPON_INFO', 'Als u een speciale coupon heeft, dan kunt u die invullen op de afreken pagina voor een betalings korting');
+define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the afreken pagina to get a discount on your payment');
+define( '_CONFIRM_FREETRIAL', 'Gratis proef periode');
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'U heeft geselecteerd');
 
-define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Want to change the user details?');
-define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Gegevens aanpassen');
+define( '_CONFIRM_DIFFERENT_ITEM', 'Abonnement aanpassen');
 
 // --== SHOPPING CART FORM ==--
 define( '_CART_TITLE', 'Shopping Cart');
@@ -180,16 +180,16 @@ define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continue');
 define( '_CHECKOUT_TITLE', 'Afrekenen');
 define( '_CHECKOUT_INFO', 'Uw registratie is nu opgeslagen. Op deze page kunt u uw betaling voltooien - %s. <br /> Als er iets mis gaat kunt u altijd terug keren naar deze pagina door in te loggen op de site. Het systeem geeft u een melding om de betaling opnieuw te proberen.');
 define( '_CHECKOUT_INFO_REPEAT', 'Dank u voor uw bezoek. Op deze pagina kunt u uw betaling voltooien - %s. <br /> Als er iets mis gaat kunt u altijd terug keren naar deze pagina door in te loggen op de site. Het systeem geeft u een melding om de betaling opnieuw te proberen.');
-define( '_BUTTON_CHECKOUT', 'Checkout');
+define( '_BUTTON_CHECKOUT', 'Afrekenen');
 define( '_BUTTON_APPEND', 'Toepassen');
-define( '_BUTTON_APPLY', 'Apply');
-define( '_BUTTON_EDIT', 'Edit');
-define( '_BUTTON_SELECT', 'Select');
-define( '_CHECKOUT_COUPON_CODE', 'Coupon Code');
+define( '_BUTTON_APPLY', 'Verder');
+define( '_BUTTON_EDIT', 'Aanpassen');
+define( '_BUTTON_SELECT', 'Selecteren');
+define( '_CHECKOUT_COUPON_CODE', 'Coupon code');
 define( '_CHECKOUT_INVOICE_AMOUNT', 'Factuur bedrag');
 define( '_CHECKOUT_INVOICE_COUPON', 'Coupon');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'verwijderen');
-define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Totaal Bedrag');
+define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Totaal bedrag');
 define( '_CHECKOUT_COUPON_INFO', 'Als u een coupon code heeft kunt u die hier invullen om een korting op het bedrag te betalen.');
 define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
 define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
@@ -198,24 +198,24 @@ define( '_AEC_TERMTYPE_TRIAL', 'Initial Billing');
 define( '_AEC_TERMTYPE_TERM', 'Regular Billing Term');
 define( '_AEC_CHECKOUT_TERM', 'Billing Term');
 define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'not applicable');
-define( '_AEC_CHECKOUT_FUTURETERM', 'future term');
-define( '_AEC_CHECKOUT_COST', 'Cost');
-define( '_AEC_CHECKOUT_TAX', 'Tax');
-define( '_AEC_CHECKOUT_DISCOUNT', 'Discount');
-define( '_AEC_CHECKOUT_TOTAL', 'Total');
-define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Grand Total');
-define( '_AEC_CHECKOUT_DURATION', 'Duration');
+define( '_AEC_CHECKOUT_FUTURETERM', 'betaal termijn');
+define( '_AEC_CHECKOUT_COST', 'Kosten');
+define( '_AEC_CHECKOUT_TAX', 'BTW');
+define( '_AEC_CHECKOUT_DISCOUNT', 'Korting');
+define( '_AEC_CHECKOUT_TOTAL', 'Subtotaal');
+define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Totaal');
+define( '_AEC_CHECKOUT_DURATION', 'Duur');
 
-define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Lifetime');
+define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Levenslang');
 
-define( '_AEC_CHECKOUT_DUR_DAY', 'Day');
-define( '_AEC_CHECKOUT_DUR_DAYS', 'Days');
+define( '_AEC_CHECKOUT_DUR_DAY', 'Dag');
+define( '_AEC_CHECKOUT_DUR_DAYS', 'Dagen');
 define( '_AEC_CHECKOUT_DUR_WEEK', 'Week');
-define( '_AEC_CHECKOUT_DUR_WEEKS', 'Weeks');
-define( '_AEC_CHECKOUT_DUR_MONTH', 'Month');
-define( '_AEC_CHECKOUT_DUR_MONTHS', 'Months');
-define( '_AEC_CHECKOUT_DUR_YEAR', 'Year');
-define( '_AEC_CHECKOUT_DUR_YEARS', 'Years');
+define( '_AEC_CHECKOUT_DUR_WEEKS', 'Weken');
+define( '_AEC_CHECKOUT_DUR_MONTH', 'Maand');
+define( '_AEC_CHECKOUT_DUR_MONTHS', 'Maanden');
+define( '_AEC_CHECKOUT_DUR_YEAR', 'Jaar');
+define( '_AEC_CHECKOUT_DUR_YEARS', 'Jaren');
 
 // --== ALLOPASS SPECIFIC ==--
 define( '_REGTITLE','INSCRIPTION');
@@ -226,7 +226,7 @@ define( '_RECODE','Saisir de nouveau le code Allopass');
 // --== REGISTRATIESTAPPEN ==--
 define( '_STEP_DATA', 'Uw Data');
 define( '_STEP_CONFIRM', 'Bevestigen');
-define( '_STEP_PLAN', 'Selecteer Plan');
+define( '_STEP_PLAN', 'Selecteer abonnement');
 define( '_STEP_EXPIRED', 'Verlopen!');
 
 // --== NIET TOEGESTAAN PAGINA ==--
@@ -238,8 +238,8 @@ define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Registratiepagina');
 define( '_NOT_ALLOWED_SECONDPAR', 'Aanmelden kost u minder dan een minuut - Wij gebruiken de aanmelding voor:');
 
 // --== GEANNULEERDE PAGINA ==--
-define( '_CANCEL_TITLE', 'Registratie resultaat: Mislukt!');
-define( '_CANCEL_MSG', 'Ons systeem heeft uw aanvraag ontvangen dat u besloten heeft om uw registratie op te zeggen. Als dit komt door problemen die u ondervonden heeft op onze website neem dan s.v.p. contact met ons op!');
+define( '_CANCEL_TITLE', 'Registratie mislukt');
+define( '_CANCEL_MSG', 'Ons systeem heeft uw aanvraag ontvangen dat u besloten heeft om uw registratie te stoppen. Als dit komt door problemen die u ondervonden heeft op onze website neem dan s.v.p. contact met ons op!');
 
 // --== IN WACHTRIJ PAGINA ==--
 define( '_PENDING_TITLE', 'Registratie nog in afwachting');
@@ -254,11 +254,11 @@ define( '_PENDING_REASON_WAITING_RESPONSE', '(According to our information howev
 define( '_PENDING_REASON_TRANSFER', '(Volgens onze informatie heeft u besloten om te betalen d.m.v. een offline betaalmethode. Dit houdt in dat u moet wachten tot deze betaling voltooid is. Dit duurt meestal 3 tot 6 dagen.)');
 
 // --== HOLD PAGE ==--
-define( '_HOLD_TITLE', 'Account on Hold');
-define( '_HOLD_EXPLANATION', 'Your account is currently on hold. The most likely cause for this is that there was a problem with a payment you recently made. If you don\'t receive an email within the next 24 hours, please contact the site administrator.');
+define( '_HOLD_TITLE', 'Account inactief');
+define( '_HOLD_EXPLANATION', 'Uw account is nog inactief, mogelijk omdat er een probleem is opgetreden met de betaling. als uw geen mail ontvangt van de betaling binnen 24 uur, neem dan even contact op met de beheerder van de website.');
 
 // --== DANK U PAGINA ==--
-define( '_THANKYOU_TITLE', 'Dankuwel!');
+define( '_THANKYOU_TITLE', 'Bedankt voor het registreren!');
 define( '_SUB_FEPARTICLE_HEAD', 'Registratie compleet!');
 define( '_SUB_FEPARTICLE_HEAD_RENEW', 'Registratie vernieuwing compleet');
 define( '_SUB_FEPARTICLE_LOGIN', 'U kunt nu inloggen.');
@@ -270,8 +270,8 @@ define( '_SUB_FEPARTICLE_ACTMAIL', 'U ontvangt een email met een bevestigings li
 define( '_SUB_FEPARTICLE_MAIL', 'U ontvangt een email wanneer uw betaling ontvangen is. ');
 
 // --== CHECKOUT ERROR PAGE ==--
-define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
-define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occurred while processing your payment');
+define( '_CHECKOUT_ERROR_TITLE', 'Er is een fout opgetreden');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'Er is een fout opgetreden tijdens het betalen.');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
 define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
 
@@ -298,16 +298,16 @@ define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Sponsorship for this Coupon has ende
 
 // ----======== EMAIL TEKSTEN ========----
 
-define( '_AEC_SEND_SUB',				"Account details for %s at %s" );
-define( '_AEC_USEND_MSG',				"Hello %s,\n\nThank you for registering at %s.\n\nYou may now login to %s using the username and password you registered with." );
-define( '_AEC_USEND_MSG_ACTIVATE',				"Hello %s,\n\nThank you for registering at %s. Your account is created and must be activated before you can use it.\nTo activate the account click on the following link or copy-paste it in your browser:\n%s\n\nAfter activation you may login to %s using the following username and password:\n\nUsername - %s\nPassword - %s" );
+define( '_AEC_SEND_SUB',				"Account informatie voor %s op %s" );
+define( '_AEC_USEND_MSG',				"Hallo %s,\n\nBedankt voor het registreren op %s.\n\nU kunt nu inloggen met uw gebruikersnaam en wachtwoord." );
+define( '_AEC_USEND_MSG_ACTIVATE',				"Hallo %s,\n\nBedankt voor het registreren op %s. Uw account is aangemaakt en moet nog worden geactiveerd.\nOm uw account te activeren klik op onderstaande link of plak deze in uw browser:\n%s\n\nNadat uw account is geactiveerd kunt u inloggen met de volgende gegevens:\n\nGebruikersnaam - %s\nWachtwoord - %s" );
 define( '_ACCTEXP_SEND_MSG','Registratie voor %s op %s');
 define( '_ACCTEXP_SEND_MSG_RENEW','Registratie vernieuwing voor %s op %s');
 define( '_ACCTEXP_MAILPARTICLE_GREETING', "Hallo %s, \n\n");
-define( '_ACCTEXP_MAILPARTICLE_THANKSREG', 'Bedankt voor uw registratie bij %s.');
-define( '_ACCTEXP_MAILPARTICLE_THANKSREN', 'Bedankt voor het vernieuwen van uw registratie bij %s.');
+define( '_ACCTEXP_MAILPARTICLE_THANKSREG', 'Bedankt voor uw registratie op %s.');
+define( '_ACCTEXP_MAILPARTICLE_THANKSREN', 'Bedankt voor het vernieuwen van uw registratie op %s.');
 define( '_ACCTEXP_MAILPARTICLE_PAYREC', 'De betaling voor uw registratie is voltooid.');
-define( '_ACCTEXP_MAILPARTICLE_LOGIN', 'U mag nu inloggen op %s met uw gebruikersnaam en wachtwoord.');
+define( '_ACCTEXP_MAILPARTICLE_LOGIN', 'U kunt nu inloggen op %s met uw gebruikersnaam en wachtwoord.');
 define( '_ACCTEXP_MAILPARTICLE_FOOTER',"\n\nReageer s.v.p. niet op dit bericht. Dit bericht is automatisch gegenereerd.");
 define( '_ACCTEXP_ASEND_MSG',				"Hallo %s,\n\na nieuwe gebruikersaccount gemaakt op [ %s ].\n\nMeer details worden hier vermeldt:\n\nNaam.........: %s\nEmail........: %s\nGebruikersnaam.....: %s\nRegistratie-ID...: %s\Registratie.: %s\nIP...........: %s\nISP..........: %s\n\nReageer s.v.p. niet op dit bericht. Dit bericht is automatisch gegenereerd, en dient alleen ter informatieve doeleinden." );
 define( '_ACCTEXP_ASEND_MSG_RENEW',			"Hallo %s,\n\na Gebruiker heeft zijn account vernieuwd op [ %s ].\n\nMeer details worden hier vermeldt:\n\nNaam.........: %s\nEmail........: %s\nGebruikersnaam.....: %s\nRegistratie-ID...: %s\nRegisatratie.: %s\nIP...........: %s\nISP..........: %s\n\nReageer s.v.p. niet op dit bericht. Dit bericht is automatisch gegenereerd, en dient alleen ter informatieve doeleinden." );
@@ -316,11 +316,11 @@ define( '_ACCTEXP_ASEND_MSG',				"Beste %s,\n\neen nieuwe gebruiker heeft een ab
 define( '_ACCTEXP_ASEND_MSG_RENEW',			"Beste %s,\n\na user has renewed his subscription at [ %s ].\n\nDe details voor deze abonnee zijn als volgt:\n\nNaam..........: %s\nEmail.........: %s\nGebruikersnaam: %s\nSubscr.-ID....: %s\nSubscription..: %s\nIP............: %s\nISP...........: %s\n\nStuur alsjeblieft geen antwoord naar aanleiding van dit bericht. Dit is een informatieve tekst die automatisch gegenereerd is door het systeem. Antwoorden worden niet door echte personen gelezen..." );
 define( '_AEC_ASEND_MSG_NEW_REG',			"Hallo %s,\n\nEr is een nieuwe registrant aangemeld op [ %s ].\n\nMeer details worden hier vermeldt:\n\nNaam.....: %s\nEmail.: %s\nGebruikersnaam....: %s\nIP.......: %s\nISP......: %s\n\nReageer s.v.p. niet op dit bericht. Dit bericht is automatisch gegenereerd, en dient alleen ter informatieve doeleinden." );
 define( '_AEC_ASEND_NOTICE',				"AEC %s: %s at %s" );
-define( '_AEC_ASEND_NOTICE_MSG',		"According to the E-Mail reporting level you have selected, this is an automatic notification about an EventLog entry.\n\nThe details of this message are:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only. You can change the level of reported entries in your AEC Settings." );
+define( '_AEC_ASEND_NOTICE_MSG',		"Afhankelijk van de instellingen is dit een notificatiemail.\n\nDe details zijn als volgt:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nReageer niet op deze mail, want deze is automatisch gegenereerd. U kunt het instellen binnen de AEC centrale." );
 
 // ----======== COUNTRY CODES ========----
 
-define( 'COUNTRYCODE_SELECT', 'Select Country' );
+define( 'COUNTRYCODE_SELECT', 'Selecteer Land' );
 
 define( 'COUNTRYCODE_AD', 'Andorra' );
 define( 'COUNTRYCODE_AE', 'United Arab Emirates' );
