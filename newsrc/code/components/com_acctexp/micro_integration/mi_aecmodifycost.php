@@ -107,6 +107,11 @@ class mi_aecmodifycost
 		return $return;
 	}
 
+	function admin_info( $request )
+	{
+		return "";
+	}
+
 	function invoice_items( $request )
 	{
 		$option = $this->getOption( $request );

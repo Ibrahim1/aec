@@ -241,7 +241,7 @@ function com_install()
 
 	// log installation
 	$short		= _AEC_LOG_SH_INST;
-	$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION );
+	$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION." Revision "._AEC_REVISION );
 	$tags		= 'install,system';
 
 	$eventlog	= new eventLog( $database );
@@ -310,7 +310,7 @@ function com_install()
 			<br />
 			<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
 			<br /><br />
-			<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
+			<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?> - Revision <?php echo _AEC_REVISION; ?></p>
 			<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
 			<div style="margin: 0 auto;text-align:center;">
 				<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
