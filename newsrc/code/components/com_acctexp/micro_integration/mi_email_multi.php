@@ -50,6 +50,8 @@ class mi_email_multi extends MI
 
 	function relayAction( $request )
 	{
+		global $mainframe;
+
 		if ( !isset( $this->settings['sender'.$request->area] ) ) {
 			return null;
 		}
@@ -66,7 +68,7 @@ class mi_email_multi extends MI
 						$tstamp = strtotime( $request->metaUser->focusSubscription->expiration );
 					} else {
 						// Go from current timestamp
-						$tstamp = time();
+						$tstamp = ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
 					}
 
 					if ( strpos( $timing, '++' ) === 0 ) {

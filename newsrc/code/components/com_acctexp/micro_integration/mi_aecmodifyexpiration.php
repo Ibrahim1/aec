@@ -44,7 +44,9 @@ class mi_aecmodifyexpiration
 		}
 
 		if ( empty( $this->settings['timestamp'] ) ) {
-			$tstamp = time();
+			global $mainframe;
+
+			$tstamp = ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
 		} else {
 			$tstamp = strtotime( AECToolbox::rewriteEngineRQ( $this->settings['timestamp'], $request ) );
 		}

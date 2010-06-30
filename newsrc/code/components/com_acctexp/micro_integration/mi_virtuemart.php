@@ -112,6 +112,8 @@ class mi_virtuemart
 
 	function createVMuser( $metaUser, $shoppergroup )
 	{
+		global $mainframe;
+
 		$database = &JFactory::getDBO();
 
 		// TODO: Replace with RWEngine call
@@ -152,7 +154,7 @@ class mi_virtuemart
 		// Create Useraccount
 		$query  = 'INSERT INTO #__vm_user_info'
 				. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
-				. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . time() . '\', \'' . time() . '\', \'shopper\', \'Checking\')'
+				. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) . '\', \'' . ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) . '\', \'shopper\', \'Checking\')'
 				;
 		$database->setQuery( $query );
 		$database->query();

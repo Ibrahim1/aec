@@ -460,7 +460,7 @@ class HTML_frontEnd
 	 */
 	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false, $trial = false )
 	{
-		global $aecConfig;
+		global $aecConfig, $mainframe;
 
 		if ( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
@@ -470,7 +470,7 @@ class HTML_frontEnd
 			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $SQLDate ) );
 
 			if ( $check ) {
-				$timeDif = strtotime( $SQLDate ) - time();
+				$timeDif = strtotime( $SQLDate ) - ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
 				if ( $timeDif < 0 ) {
 					$retVal = ( $trial ? _AEC_EXPIRE_TRIAL_PAST : _AEC_EXPIRE_PAST ) . ':&nbsp;<strong>' . $retVal . '</strong>';
 				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {

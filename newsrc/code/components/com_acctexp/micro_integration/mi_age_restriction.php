@@ -107,7 +107,9 @@ class mi_age_restriction extends MI
 
 	function getAge( $bd )
 	{
-		return ( time() - strtotime( $bd ) ) / 31536000;
+		global $mainframe;
+
+		return ( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) - strtotime( $bd ) ) / 31536000;
 	}
 }
 ?>

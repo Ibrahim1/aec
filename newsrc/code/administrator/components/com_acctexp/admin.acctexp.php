@@ -4850,9 +4850,9 @@ function editCoupon( $id, $option, $new, $type )
 	$params['useon_full_all']				= array( 'list_yesno',		'' );
 
 	$params['has_start_date']				= array( 'list_yesno',		1 );
-	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', time() + $mainframe->getCfg( 'offset' ) *3600 ) );
+	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) )) );
 	$params['has_expiration']				= array( 'list_yesno',		0);
-	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', time() + $mainframe->getCfg( 'offset' ) *3600 ) );
+	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) );
 	$params['has_max_reuse']				= array( 'list_yesno',		1 );
 	$params['max_reuse']					= array( 'inputB',			1 );
 	$params['has_max_peruser_reuse']		= array( 'list_yesno',		1 );

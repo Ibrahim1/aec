@@ -182,6 +182,8 @@ class mi_rsgallery2 extends MI
 
 	function createAlbum( $userid, $parentid, $name, $desc )
 	{
+		global $mainframe;
+
 		$database = &JFactory::getDBO();
 
 		// Check that we don't create a duplicate
@@ -212,7 +214,7 @@ class mi_rsgallery2 extends MI
 
 		$query = 'INSERT INTO #__rsgallery2_galleries'
 				. ' ( `parent`, `name`, `description`, `published`, `date`, `uid` )'
-				. ' VALUES ( \'' . $parentid . '\', \'' . $database->getEscaped( $name ) . '\', \'' . $database->getEscaped( $desc ) . '\', \'1\', \'' . date( 'Y-m-d H:i:s', time() ) . '\', \'' . $userid . '\' )'
+				. ' VALUES ( \'' . $parentid . '\', \'' . $database->getEscaped( $name ) . '\', \'' . $database->getEscaped( $desc ) . '\', \'1\', \'' . date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) . '\', \'' . $userid . '\' )'
 				;
 		$database->setQuery( $query );
 

@@ -165,6 +165,8 @@ class mi_vbulletin
 
 	function action( $request )
 	{
+		global $mainframe;
+
 		$database = &JFactory::getDBO();
 
 		$vbdb = $this->getDB();
@@ -190,8 +192,8 @@ class mi_vbulletin
 				}
 			}
 
-			$content['joindate']		= time();
-			$content['passworddate']	= date( 'Y-m-d', time() );
+			$content['joindate']		= ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
+			$content['passworddate']	= date( 'Y-m-d', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
 			$content['usertitle']		= 'Junior Member';
 
 			if ( empty( $content['username'] ) ) {
