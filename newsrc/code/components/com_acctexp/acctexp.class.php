@@ -7584,50 +7584,99 @@ class InvoiceFactory
 			if ( !is_object( $this->plan ) ) {
 				return aecNotAuth();
 			}
-		} elseif ( !isset( $this->cartprocexceptions ) ) {
+		} else {
 			if ( empty( $this->metaUser ) ) {
 				return aecNotAuth();
 			}
 
-			$this->getCart();
+			if ( !isset( $this->cartprocexceptions ) ) {
+				$this->getCart();
 
-			$this->usage = 'c.' . $this->cartobject->id;
+				$this->usage = 'c.' . $this->cartobject->id;
 
-			$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
+				$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
 
-			if ( count( $procs ) > 1 ) {
-				$this->cartItemsPPselectForm( $option );
-			} else {
-				if ( isset( $procs[0] ) ) {
-					$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
-
-					$proc = $pgroups[0]['processors'][0];
-
-					if ( strpos( $proc, '_recurring' ) ) {
-						$this->recurring = 1;
-
-						$proc = str_replace( '_recurring', '', $proc );
-					}
-
-					$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
-
-					if ( !empty( $procname ) ) {
-						$this->processor = $procname;
-					}
-
-					$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
+				if ( count( $procs ) > 1 ) {
+					$this->cartItemsPPselectForm( $option );
 				} else {
-					$am = $this->cartobject->getAmount( $this->metaUser );
+					if ( isset( $procs[0] ) ) {
+						$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
 
-					if ( $am['amount'] == "0.00" ) {
-						$this->processor = 'free';
+						$proc = $pgroups[0]['processors'][0];
+
+						if ( strpos( $proc, '_recurring' ) ) {
+							$this->recurring = 1;
+
+							$proc = str_replace( '_recurring', '', $proc );
+						}
+
+						$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
+
+						if ( !empty( $procname ) ) {
+							$this->processor = $procname;
+						}
+
+						$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
 					} else {
-						$this->processor = 'none';
+						$am = $this->cartobject->getAmount( $this->metaUser );
+
+						if ( $am['amount'] == "0.00" ) {
+							$this->processor = 'free';
+						} else {
+							$this->processor = 'none';
+						}
+					}
+				}
+
+				$this->cartprocexceptions = true;
+			}
+
+			if ( empty( $this->mi_error ) ) {
+				$this->mi_error = array();
+			}
+
+			foreach ( $this->cart as $cartitem ) {
+				$mi_form = null;
+				if ( empty( $cartitem['obj'] ) ) {
+					continue;
+				}
+
+				$mi_form = $cartitem['obj']->getMIformParams( $this->metaUser, $this->mi_error );
+
+				if ( isset( $mi_form['lists'] ) && empty( $mi_form['lists'] ) ) {
+					unset( $mi_form['lists'] );
+				}
+
+				if ( empty( $mi_form ) ) {
+					continue;
+				}
+
+				$ex = array();
+				$ex['head'] = "";
+				$ex['desc'] = "";
+				$ex['rows'] = $mi_form;
+
+				$this->raiseException( $ex );
+
+				if ( is_array( $this->passthrough ) ) {
+					foreach ( $mi_form as $mik => $miv ) {
+						if ( $mik == 'lists' ) {
+							continue;
+						}
+
+						foreach ( $this->passthrough as $pid => $pk ) {
+							if ( !is_array( $pk ) ) {
+								continue;
+							}
+
+							if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
+								unset($this->passthrough[$pid]);
+							}
+						}
 					}
 				}
 			}
 
-			$this->cartprocexceptions = true;
 		}
 	}
 
