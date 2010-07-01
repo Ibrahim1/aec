@@ -13937,13 +13937,16 @@ class AECToolbox
 
 				$task= "";
 				foreach ( $parts as $part ) {
-					if ( strpos( $part, '&task=' ) ) {
-						$task = str_replace( '&task=', '', $part );
+					if ( strpos( $part, 'task=' ) === 0 ) {
+						$task = strtolower( str_replace( 'task=', '', $part ) );
 					}
 				}
 
 				if ( !empty( $task ) ) {
 					$translate = array(	'saveregistration' => 'confirm',
+										'renewsubscription' => 'plans',
+										'clearcart' => 'cart',
+										'clearcartitem' => 'cart',
 										'savesubscription' => 'checkout'
 										);
 

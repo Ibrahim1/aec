@@ -1019,7 +1019,7 @@ class Payment_HTML
 				<p>Your Shopping Cart is empty!</p>
 				<?php } else { ?>
 				<p>&nbsp;</p>
-				<div id="update_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_CLEAR_ALL; ?></a></div>
+				<div id="clear_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_CLEAR_ALL; ?></a></div>
 				<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
@@ -1074,7 +1074,7 @@ class Payment_HTML
 				<?php } ?>
 			</div>
 			<?php if ( !empty( $InvoiceFactory->cart ) ) { ?>
-			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=confirmCart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<table>
 				<tr>
 					<td id="confirmation_extra">
