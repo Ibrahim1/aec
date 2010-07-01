@@ -281,7 +281,7 @@ class mi_aectax
 	function addTax( $request, $item, $location )
 	{
 		foreach ( $item['terms']->terms as $tid => $term ) {
-		$total = $term->renderTotal();
+			$total = $term->renderTotal();
 
 			if ( !empty( $this->settings['vat_no_request'] ) ) {
 				if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
@@ -291,12 +291,12 @@ class mi_aectax
 
 					$check = $this->checkVatNumber( $vat_number, $request->params['location'], $vatlist );
 
-					if ( $check ) {
-						if ( ( $location['mode'] == 'pseudo_subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
-							$location['mode'] = 'subtract';
-						} elseif ( ( $location['mode'] == 'add' ) && ( $this->settings['vat_removeonvalid'] ) ) {
+					if ( $check && $this->settings['vat_removeonvalid'] ) {
+						if ( $location['mode'] == 'pseudo_subtract') {
+							$location['mode'] = 'reverse_pseudo_subtract';
+						} elseif ( $location['mode'] == 'add' ) {
 							$location['mode'] = '';
-						} elseif ( ( $location['mode'] == 'subtract' ) && ( $this->settings['vat_removeonvalid'] ) ) {
+						} elseif ( $location['mode'] == 'subtract' ) {
 							$location['mode'] = '';
 						}
 					}
@@ -309,8 +309,17 @@ class mi_aectax
 
 					$tax = "0.00";
 					break;
+				case 'reverse_pseudo_subtract':
+					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
+
+					$item['terms']->nextterm->modifyCost( 0, $newtotal );
+
+					$tax = "0.00";
+					break;
 				case 'pseudo_subtract':
 					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
+
+					$item['terms']->nextterm->modifyCost( 0, $newtotal );
 
 					$tax = AECToolbox::correctAmount( $total - $newtotal );
 					break;
@@ -455,14 +464,15 @@ class mi_aectax
 	{
 		$db = &JFactory::getDBO();
 
-		$path = '/taxation_customs/vies/viesquer.do';
-		$post = 'vat=' . $number . /*'&ms=' . $country .*/ '&iso=' . $country;// . '&lang=EN';
+		$get = 'vat=' . $number . '&ms=' . $country . '&iso=' . $country . '&lang=EN';
+
+		$path = '/taxation_customs/vies/viesquer.do?'.$get;
 
 		$url = 'http://ec.europa.eu' . $path;
 
 		$tempprocessor = new processor($db);
 
-		$result = $tempprocessor->transmitRequest( $url, $path, $post );
+		$result = $tempprocessor->transmitRequest( $url, $path );
 
 		if ( strpos( $result, 'Request time-out' ) != 0 ) {
 			return null;

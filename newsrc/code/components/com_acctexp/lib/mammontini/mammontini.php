@@ -489,22 +489,24 @@ class mammonTerm extends eucaObject
 
 		$this->cost[] = $cost;
 
-		// Compute value of total cost
-		$total = 0;
-		foreach ( $this->cost as $citem ) {
-			$total += $citem->renderCost();
-		}
+		$this->computeTotal();
+	}
 
-		// Set total cost object
-		$cost = new mammonCost();
-		$cost->set( 'type', 'total' );
-		$cost->set( 'cost', array( 'amount' => $total ) );
+	/**
+	 * Modify the cost of an item in a cost list directly
+	 * Will automatically compute the total.
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function modifyCost( $id, $amount )
+	{
+		$amount = AECToolbox::correctAmount( $amount );
 
-		if ( $cost->isFree() ) {
-			$this->free = true;
-		}
+		$this->cost[$id]->cost['amount'] = $amount;
 
-		$this->cost[] = $cost;
+		$this->computeTotal();
 	}
 
 	/**
@@ -534,6 +536,42 @@ class mammonTerm extends eucaObject
 				$this->addCost( $am, $info );
 			}
 		}
+	}
+
+	/**
+	 * Compute the total and set it
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function computeTotal()
+	{
+		// Unset old total, if present
+		$k = array_pop( array_keys( $this->cost ) );
+
+		if ( $this->cost[$k]->type == 'total' ) {
+			unset( $this->cost[$k] );
+		}
+
+		// Compute value of total cost
+		$total = 0;
+		foreach ( $this->cost as $citem ) {
+			$total += $citem->renderCost();
+		}
+
+		// Set total cost object
+		$cost = new mammonCost();
+		$cost->set( 'type', 'total' );
+		$cost->set( 'cost', array( 'amount' => $total ) );
+
+		if ( $cost->isFree() ) {
+			$this->free = true;
+		}
+
+		$this->cost[] = $cost;
+
+		return true;
 	}
 
 	/**
