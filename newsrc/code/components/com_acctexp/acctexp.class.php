@@ -4870,6 +4870,9 @@ class aecSettings
 		$this->prefix			= '';
 
 		foreach ( $this->params as $name => $content ) {
+			if ( !isset( $content[0] ) ) {
+				continue;
+			}
 
 			// $content[0] = type
 			// $content[1] = value
@@ -8324,12 +8327,17 @@ class InvoiceFactory
 
 		$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
 
-		$this->processor = $this->invoice->method;
-		$this->usage = $this->invoice->usage;
+		if ( !empty( $this->invoice->method ) ) {
+			$this->processor = $this->invoice->method;
+		}
+
+		if ( !empty( $this->invoice->usage ) ) {
+			$this->usage = $this->invoice->usage;
+		}
 
 		if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
 			$this->create( $option, 0, 0, $this->invoice_number );
-		} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) !== false ) ) {
+		} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) === false ) ) {
 			$this->create( $option, 0, $this->usage, $this->invoice_number );
 		}
 	}
@@ -8344,6 +8352,8 @@ class InvoiceFactory
 		if ( strpos( $this->usage, 'c' ) !== false ) {
 			$id = aecCartHelper::getInvoiceIdByCart( $this->cartobject );
 		}
+
+		$recurring = false;
 
 		if ( $id ) {
 			$this->invoice->load( $id );
@@ -9062,7 +9072,7 @@ class InvoiceFactory
 		$this->loadMetaUser( true );
 		$this->metaUser->setTempAuth();
 
-		if ( $this->verifyMIForms() === false ) {
+		if ( $this->verifyMIForms( $this->plan ) === false ) {
 			$this->confirmed = 0;
 			return $this->confirm( $option );
 		}
@@ -9087,15 +9097,15 @@ class InvoiceFactory
 		}
 	}
 
-	function verifyMIForms()
+	function verifyMIForms( $plan )
 	{
-		if ( empty( $this->plan ) ) {
+		if ( empty( $plan ) ) {
 			return null;
-		} elseif ( !is_object( $this->plan ) ) {
+		} elseif ( !is_object( $plan ) ) {
 			return null;
 		}
 
-		$mi_form = $this->plan->getMIformParams( $this->metaUser );
+		$mi_form = $plan->getMIformParams( $this->metaUser );
 
 		if ( !empty( $mi_form ) ) {
 			$params = array();
@@ -9119,13 +9129,13 @@ class InvoiceFactory
 
 			if ( !empty( $params ) ) {
 				foreach ( $params as $mi_id => $content ) {
-					$this->metaUser->meta->setMIParams( $mi_id, $this->plan->id, $content, true );
+					$this->metaUser->meta->setMIParams( $mi_id, $plan->id, $content, true );
 				}
 
 				$this->metaUser->meta->storeload();
 			}
 
-			$verifymi = $this->plan->verifyMIformParams( $this->metaUser );
+			$verifymi = $plan->verifyMIformParams( $this->metaUser );
 
 			$this->mi_error = array();
 			if ( is_array( $verifymi ) && !empty( $verifymi ) ) {

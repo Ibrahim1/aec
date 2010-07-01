@@ -959,7 +959,7 @@ function subscriptionDetails( $option, $sub='overview' )
 
 		$actionsarray = $invoices[$invoiceid]['actions'];
 
-		if ( $invoice->method != 'free' ) {
+		if ( ( $invoice->method != 'free' ) && isset( $pps[$invoice->method] ) ) {
 			$pp = $pps[$invoice->method];
 		} else {
 			$pp = null;
