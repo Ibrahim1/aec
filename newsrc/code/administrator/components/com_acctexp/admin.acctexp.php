@@ -3671,13 +3671,13 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
 
-	$inherited = $row->getMicroIntegrations( true );
+	$inherited = $row->getMicroIntegrationsSeparate();
 
 	$inherited_list = array();
 
 	if ( !empty( $inherited ) ) {
 		foreach ( $mi_list as $miobj ) {
-			if ( in_array( $miobj->value, $inherited ) ) {
+			if ( in_array( $miobj->value, $inherited['inherited'] ) ) {
 				$inherited_list[] = $miobj;
 			}
 		}

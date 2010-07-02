@@ -440,7 +440,7 @@ class mammonTerm extends eucaObject
 		$tax = 0;
 		foreach ( $this->cost as $citem ) {
 			$total += $citem->renderCost();
-			
+
 			if ( $citem->type == 'tax' ) {
 				$tax++;
 			}
@@ -586,6 +586,33 @@ class mammonTerm extends eucaObject
 		$k = array_pop( array_keys( $this->cost ) );
 
 		return $this->cost[$k]->renderCost();
+	}
+
+	/**
+	 * Simple base Cost Object return
+	 *
+	 * @access	public
+	 * @return	string
+	 * @since	1.0
+	 */
+	function getBaseCostObject()
+	{
+		$return = null;
+		foreach ( $this->cost as $id => $cost ) {
+			if ( $cost->type == 'tax' ) {
+				return $return;
+			}
+
+			if ( empty( $return ) ) {
+				$return = $cost;
+			} else {
+				$return->cost['amount'] = $return->cost['amount'] + $cost->cost['amount'];
+			}
+		}
+
+		$k = array_pop( array_keys( $this->cost ) );
+
+		return $return;
 	}
 
 }

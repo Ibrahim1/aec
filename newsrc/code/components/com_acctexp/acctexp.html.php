@@ -1560,7 +1560,14 @@ class Payment_HTML
 					<td class="checkout_action">
 							<input type="hidden" name="option" value="<?php echo $option; ?>" />
 							<input type="hidden" name="task" value="addressException" />
-							<input type="hidden" name="invoice" value="<?php echo !empty( $InvoiceFactory->invoice->invoice_number ) ? $InvoiceFactory->invoice->invoice_number : "c." . $InvoiceFactory->cartobject->id; ?>" />
+							<?php
+							if ( !empty( $InvoiceFactory->invoice->invoice_number ) ) {
+								?><input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" /><?php
+							}
+							if ( !empty( $InvoiceFactory->cartobject->id ) ) {
+								?><input type="hidden" name="cart" value="<?php echo $InvoiceFactory->cartobject->id; ?>" /><?php
+							}
+							?>
 							<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid; ?>" />
 							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 					</td>

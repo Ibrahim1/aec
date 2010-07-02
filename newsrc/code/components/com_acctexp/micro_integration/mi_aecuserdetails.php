@@ -90,7 +90,7 @@ class mi_aecuserdetails
 				$p = $i . '_';
 
 				if ( !empty( $this->settings[$p.'mandatory'] ) ) {
-					if ( empty( $request->params[$this->settings[$p.'name']] ) && ( $this->settings[$p.'type'] != 'checkbox' ) ) {
+					if ( empty( $request->params[$this->settings[$p.'short']] ) && ( $this->settings[$p.'type'] != 'checkbox' ) ) {
 						$return['error'] = "Please fill in the required fields";
 					} else {
 						$request->params[$this->settings[$p.'name']] = 0;
@@ -103,8 +103,6 @@ class mi_aecuserdetails
 		if ( !empty( $return['error'] ) ) {
 			return $return;
 		}
-
-		$database = &JFactory::getDBO();
 
 		$params = array();
 		if ( !empty( $this->settings['settings'] ) ) {

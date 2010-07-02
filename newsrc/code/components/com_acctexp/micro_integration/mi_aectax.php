@@ -160,14 +160,12 @@ class mi_aectax
 		return $return;
 	}
 
-	function invoice_items( $request )
+	function invoice_item( $request )
 	{
 		$location = $this->getLocation( $request );
 
 		if ( !empty( $location ) ) {
-			$item = array_pop( $request->add->itemlist );
-
-			$request = $this->addTax( $request, $item, $location );
+			$request = $this->addTax( $request, $request->add, $location );
 		}
 
 		return true;
@@ -175,6 +173,12 @@ class mi_aectax
 
 	function invoice_items_total( $request )
 	{
+		if ( isset( $request->add->tax ) ) {
+			return true;
+		} else {
+			$request->add->tax = array();
+		}
+
 		$location = $this->getLocation( $request );
 
 		$taxtypes		= array();
@@ -197,7 +201,7 @@ class mi_aectax
 							$taxcollections[$typeid] = 0;
 						}
 
-						$taxcollections[$typeid] += $cost->renderCost();
+						$taxcollections[$typeid] += ( $cost->renderCost() * $item['quantity'] );
 					}
 				}
 			}
@@ -210,10 +214,6 @@ class mi_aectax
 		$total = serialize( $request->add->total );
 
 		$taxamount = 0;
-
-		if ( !isset( $request->add->tax ) ) {
-			$request->add->tax = array();
-		}
 
 		// Add tax items to total
 		foreach ( $taxcollections as $tid => $amount ) {

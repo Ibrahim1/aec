@@ -100,13 +100,14 @@ if ( !empty( $task ) ) {
 
 		case 'addressexception':
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$cart		= aecGetParam( 'cart', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0 );
 
 			if ( !empty( $user->id ) ) {
 				$userid = $user->id;
 			}
 
-			repeatInvoice( $option, $invoice, $userid );
+			repeatInvoice( $option, $invoice, $cart, $userid );
 			break;
 
 		case 'savesubscription':
@@ -308,7 +309,7 @@ if ( !empty( $task ) ) {
 			$userid		= aecGetParam( 'userid', 0 );
 			$first		= aecGetParam( 'first', 0 );
 
-			repeatInvoice( $option, $invoice, $userid, $first );
+			repeatInvoice( $option, $invoice, null, $userid, $first );
 			break;
 
 		case 'cancelpayment':
@@ -1069,7 +1070,7 @@ function internalCheckout( $option, $invoice_number, $userid )
 	}
 }
 
-function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
+function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 {
 	$database = &JFactory::getDBO();
 
@@ -1085,11 +1086,9 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 		$userid = AECfetchfromDB::UserIDfromInvoiceNumber( $invoice_number );
 	}
 
-	$cartid = $invoiceid = null;
+	$invoiceid = null;
 
-	if ( strpos( $invoice_number, 'c.' ) !== false ) {
-		$cartid = true;
-	} else {
+	if ( empty( $cart ) ) {
 		$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
 	}
 
@@ -1115,15 +1114,16 @@ function repeatInvoice( $option, $invoice_number, $userid, $first=0 )
 		} else {
 			return aecNotAuth();
 		}
-	} elseif ( $cartid ) {
+	} elseif ( $cart ) {
 		$iFactory = new InvoiceFactory( $userid );
 
-		$iFactory->usage = $invoice_number;
+		$iFactory->usage = 'c.'.$cart;
 
-		$iFactory->loadMetaUser();
+		if ( !empty( $invoice_number ) ) {
+			$iFactory->invoice_number = $invoice_number;
+		}
 
-		$iFactory->puffer( $option );
-		return $iFactory->checkout( $option, !$first );
+		return $iFactory->confirmcart( $option, null, true );
 	} else {
 		return aecNotAuth();
 	}
@@ -1250,7 +1250,7 @@ function InvoiceAddParams( $option )
 	$objinvoice->check();
 	$objinvoice->store();
 
-	repeatInvoice( $option, $invoice, $objinvoice->userid );
+	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
 }
 
 function InvoiceMakeGift( $option )
@@ -1267,7 +1267,7 @@ function InvoiceMakeGift( $option )
 		$objinvoice->storeload();
 	}
 
-	repeatInvoice( $option, $invoice, $objinvoice->userid );
+	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
 }
 
 function InvoiceRemoveGift( $option )
@@ -1283,7 +1283,7 @@ function InvoiceRemoveGift( $option )
 		$objinvoice->storeload();
 	}
 
-	repeatInvoice( $option, $invoice, $objinvoice->userid );
+	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
 }
 
 function InvoiceRemoveGiftConfirm( $option )
@@ -1338,7 +1338,7 @@ function InvoiceAddCoupon( $option )
 	$objinvoice->addCoupon( $coupon_code );
 	$objinvoice->computeAmount();
 
-	repeatInvoice( $option, $invoice, $objinvoice->userid );
+	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
 }
 
 function InvoiceRemoveCoupon( $option )
@@ -1353,7 +1353,7 @@ function InvoiceRemoveCoupon( $option )
 	$objinvoice->removeCoupon( $coupon_code );
 	$objinvoice->computeAmount();
 
-	repeatInvoice( $option, $invoice, $objinvoice->userid );
+	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
 }
 
 function notAllowed( $option )

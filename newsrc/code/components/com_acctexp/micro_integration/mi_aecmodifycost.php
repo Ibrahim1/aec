@@ -107,14 +107,12 @@ class mi_aecmodifycost
 		return $return;
 	}
 
-	function invoice_items( $request )
+	function invoice_item( $request )
 	{
 		$option = $this->getOption( $request );
 
 		if ( !empty( $option ) ) {
-			$item = array_pop( $request->add->itemlist );
-
-			$request = $this->addCost( $request, $item, $option );
+			$request = $this->addCost( $request, $request->add, $option );
 		}
 
 		return true;

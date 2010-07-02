@@ -5293,6 +5293,10 @@ class aecHTML
 			}
 		}
 
+		if ( empty( $lists ) && !empty( $this->lists ) ) {
+			$lists = $this->lists;
+		}
+
 		global $aecConfig;
 
 		$return = '';
@@ -7562,9 +7566,9 @@ class InvoiceFactory
 		}
 	}
 
-	function puffer( $option )
+	function puffer( $option, $testmi=false )
 	{
-		$this->loadPlanObject( $option );
+		$this->loadPlanObject( $option, $testmi );
 
 		$this->loadProcessorObject();
 
@@ -7575,7 +7579,7 @@ class InvoiceFactory
 		return;
 	}
 
-	function loadPlanObject( $option )
+	function loadPlanObject( $option, $testmi=false )
 	{
 		$database = &JFactory::getDBO();
 
@@ -7634,11 +7638,17 @@ class InvoiceFactory
 				$this->cartprocexceptions = true;
 			}
 
-			if ( empty( $this->mi_error ) ) {
+			if ( !isset( $this->mi_error ) ) {
 				$this->mi_error = array();
 			}
 
-			foreach ( $this->cart as $cartitem ) {
+			$offset = 0;
+
+			if ( !empty( $this->exceptions ) ) {
+				$offset = count( $this->exceptions );
+			}
+
+			foreach ( $this->cart as $cid => $cartitem ) {
 				$mi_form = null;
 				if ( empty( $cartitem['obj'] ) ) {
 					continue;
@@ -7646,7 +7656,10 @@ class InvoiceFactory
 
 				$mi_form = $cartitem['obj']->getMIformParams( $this->metaUser, $this->mi_error );
 
-				if ( isset( $mi_form['lists'] ) && empty( $mi_form['lists'] ) ) {
+				$lists = null;
+				if ( isset( $mi_form['lists'] ) && !empty( $mi_form['lists'] ) ) {
+					$lists = $mi_form['lists'];
+
 					unset( $mi_form['lists'] );
 				}
 
@@ -7654,12 +7667,31 @@ class InvoiceFactory
 					continue;
 				}
 
-				$ex = array();
-				$ex['head'] = "";
-				$ex['desc'] = "";
-				$ex['rows'] = $mi_form;
+				if ( !empty( $lists ) ) {
+					// Rewrite lists so they fit a multi-plan context
+					foreach( $lists as $lkey => $litem ) {
+						$mi_form['lists'][($cid+$offset).'_'.$lkey] = str_replace( $lkey, ($cid+$offset).'_'.$lkey, $litem );
+					}
+				}
 
-				$this->raiseException( $ex );
+				$this->mi_error = array();
+
+				$check = $this->verifyMIForms( $cartitem['obj'], $mi_form, $offset.'_' );
+
+				if ( !$check ) {
+					$ex = array();
+					$ex['head'] = "";
+
+					if ( !empty( $this->mi_error ) ) {
+						$ex['desc'] = "<p>" . implode( "</p><p>", $this->mi_error ) . "</p>";
+					} else {
+						$ex['desc'] = "";
+					}
+
+					$ex['rows'] = $mi_form;
+
+					$this->raiseException( $ex );
+				}
 
 				if ( is_array( $this->passthrough ) ) {
 					foreach ( $mi_form as $mik => $miv ) {
@@ -7716,6 +7748,10 @@ class InvoiceFactory
 			$fname = 'cartgroup_'.$pgid.'_processor';
 
 			$pgsel = aecGetParam( $fname, null, true, array( 'word', 'string' ) );
+
+			if ( empty( $pgsel ) ) {
+				$pgsel = aecGetParam( $pgid.'_'.$fname, null, true, array( 'word', 'string' ) );
+			}
 
 			$selection = false;
 			if ( !is_null( $pgsel ) ) {
@@ -7782,7 +7818,9 @@ class InvoiceFactory
 			$this->raiseException( $ex );
 		}
 
-		if ( !$single_select ) {
+		if ( $single_select ) {
+			$this->processor = PaymentProcessor::getNameById( str_replace( '_recurring', '', $selection ) );
+		} else {
 			$database = &JFactory::getDBO();
 
 			// We have different processors selected for this cart
@@ -8005,6 +8043,8 @@ class InvoiceFactory
 
 		$hasform = false;
 
+		$lists = array();
+
 		$params = array();
 		foreach ( $this->exceptions as $eid => $ex ) {
 			// Convert Exception into actionable form
@@ -8013,13 +8053,27 @@ class InvoiceFactory
 				$hasform = true;
 			}
 
+			if ( isset( $ex['rows']['lists'] ) ) {
+				$lists = array_merge( $lists, $ex['rows']['lists'] );
+
+				unset( $ex['rows']['lists'] );
+			}
+
 			foreach ( $ex['rows'] as $rid => $row ) {
+				if ( $row[0] == 'radio' ) {
+					$row[1] = $eid.'_'.$row[1];
+				}
+
+				if ( $row[0] == 'hidden' ) {
+					$row[2] = $eid.'_'.$row[2];
+				}
+
 				$params[$eid.'_'.$rid] = $row;
 			}
 		}
 
 		$settings = new aecSettings ( 'exception', 'frontend_exception' );
-		$settings->fullSettingsArray( $params, array(), array() ) ;
+		$settings->fullSettingsArray( $params, array(), $lists ) ;
 
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
@@ -8083,6 +8137,12 @@ class InvoiceFactory
 												'params'	=> $params
 											);
 
+			$cid = array_pop( array_keys( $this->items->itemlist ) );
+
+			$exchange = $silent = null;
+
+			$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
+
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
 		} else {
@@ -8111,38 +8171,36 @@ class InvoiceFactory
 					}
 
 					$this->items->itemlist[$cid]['params'] = $params;
+
+					$exchange = $silent = null;
+
+					$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
 				}
 			}
 		}
-
-		$exchange = $silent = null;
-
-		$this->triggerMIs( 'invoice_items', $exchange, $this->items, $silent );
 	}
 
 	function loadItemTotal()
 	{
-		if ( empty( $this->cart ) ) {
-			$cost = clone( $this->items->itemlist[0]['terms']->terms[0]->cost[0] );
+		$cost = null;
+		foreach ( $this->items->itemlist as $cid => $citem ) {
+			if ( $citem['obj'] == false ) {
+				continue;
+			}
 
-			foreach ( $this->items->itemlist[0]['terms']->terms[0]->cost as $k => $v ) {
-				if ( ( $k > 0 ) && ( $v->type == 'cost' ) ) {
-					$cost->cost['amount'] = $cost->cost['amount'] + $v->cost['amount'];
-				}
+			$citem['terms']->nextterm->computeTotal();
+
+			if ( empty( $cost ) ) {
+				$cost = clone( $citem['terms']->nextterm->getBaseCostObject() );
+			} else {
+				$ccost = $citem['terms']->nextterm->getBaseCostObject();
+
+				$cost->cost['amount'] = $cost->cost['amount'] + ( $ccost->cost['amount'] * $citem['quantity'] );
 			}
 
 			$this->items->total = $cost;
 
 			$this->items->grand_total = clone( $this->items->total );
-		} else {
-			$this->getCart();
-
-			foreach ( $this->cart as $cid => $citem ) {
-				if ( $citem['obj'] == false ) {
-					$this->items->total = $citem['cost'];
-					$this->items->grand_total = $citem['cost'];
-				}
-			}
 		}
 
 		$exchange = $silent = null;
@@ -9032,7 +9090,7 @@ class InvoiceFactory
 		Payment_HTML::cart( $option, $this );
 	}
 
-	function confirmcart( $option, $coupon=null )
+	function confirmcart( $option, $coupon=null, $testmi=false )
 	{
 		global $mainframe, $task;
 
@@ -9049,6 +9107,8 @@ class InvoiceFactory
 			$this->invoice->storeload();
 
 			// Make sure we have the correct amount loaded
+			$this->touchInvoice( $option );
+		} else {
 			$this->touchInvoice( $option );
 		}
 
@@ -9097,7 +9157,7 @@ class InvoiceFactory
 		}
 	}
 
-	function verifyMIForms( $plan )
+	function verifyMIForms( $plan, $mi_form, $prefix="" )
 	{
 		if ( empty( $plan ) ) {
 			return null;
@@ -9105,7 +9165,9 @@ class InvoiceFactory
 			return null;
 		}
 
-		$mi_form = $plan->getMIformParams( $this->metaUser );
+		if ( empty( $mi_form ) ) {
+			$mi_form = $plan->getMIformParams( $this->metaUser );
+		}
 
 		if ( !empty( $mi_form ) ) {
 			$params = array();
@@ -9114,7 +9176,11 @@ class InvoiceFactory
 					$key = str_replace( '[]', '', $key );
 				}
 
-				$value = aecGetParam( $key, '__DEL' );
+				$value = aecGetParam( $prefix.$key, '__DEL' );
+
+				if ( strpos( $key, $prefix ) !== false ) {
+					$key = str_replace( $prefix, '', $key );
+				}
 
 				if ( $value !== '__DEL' ) {
 					$k = explode( '_', $key, 3 );
@@ -10616,7 +10682,7 @@ class Invoice extends serialParamDBTable
 					$int_var['objUsage'] = $InvoiceFactory->cartobject;
 				}
 
-				$int_var['amount'] = $int_var['objUsage']->getAmount( $InvoiceFactory->metaUser );
+				$int_var['amount'] = $InvoiceFactory->items->grand_total->renderCost();
 			}
 		}
 
@@ -11571,11 +11637,13 @@ class aecCart extends serialParamDBTable
 
 	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
 	{
-		$checkout = $this->getCheckout( $metaUser );
-
-		foreach ( $checkout as $item ) {
-			if ( !empty( $item['obj'] ) ) {
-				$item['obj']->triggerMIs( $action, $metaUser, $exchange, $invoice, $add, $silent );
+		if ( is_array( $add ) ) {
+			if ( !empty( $add['obj'] ) ) {
+				$add['obj']->triggerMIs( $action, $metaUser, $exchange, $invoice, $add, $silent );
+			}
+		} else {
+			foreach ( $add->itemlist as $nadd ) {
+				$nadd['obj']->triggerMIs( $action, $metaUser, $exchange, $invoice, $add, $silent );
 			}
 		}
 	}
