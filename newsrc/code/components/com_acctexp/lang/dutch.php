@@ -119,7 +119,7 @@ define( '_INVOICEPRINT_BLOCKNOTICE', 'Dit blok zal niet te zien zijn bij het afd
 define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Typ uw adres in het bovenstaande vak');
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>Deze factuur is nog niet betaald.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Deze factuur is betaald op: %s');
-define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'Deze factuur wordt gefactureerd op recurrente basis.');
+define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');
 
 define( '_AEC_YOUSURE', 'Weet u het zeker?');
 

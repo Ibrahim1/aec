@@ -462,7 +462,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			}
 
 
-			$cim = $this->loadCIMpay( $ppParams, $cim );
+			$cim = $this->loadCIMpay( $ppParams );
 			$cim = $this->loadCIMship( $ppParams, $cim );
 		} else {
 			$cim = $this->loadCIMpay( $ppParams );

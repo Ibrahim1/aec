@@ -1660,7 +1660,23 @@ class Payment_HTML
 					</table>
 				</div>
 				<div id="text_after_content"><?php echo $data['after_content']; ?></div>
-				<div id="invoice_paidstatus"><?php echo $data['paidstatus']; ?></div>
+				<?php if ( !empty( $data['recurringstatus'] ) ) { ?>
+					<div id="invoice_paidstatus">
+						<p><?php echo $data['paidstatus']; ?></p>
+						<div id="invoice_billing_history">
+							<table id="invoice_billing_history">
+								<tr>
+									<th><?php echo _HISTORY_COL3_TITLE; ?></th>
+									<th><?php echo _HISTORY_COL2_TITLE; ?></th>
+									<th><?php echo _HISTORY_COL4_TITLE; ?></th>
+								</tr>
+								<?php echo $data['invoice_billing_history']; ?>
+							</table>
+						</div>
+					</div>
+				<?php } else { ?>
+					<div id="invoice_paidstatus"><p><?php echo $data['paidstatus']; ?></p></div>
+				<?php } ?>
 				<div id="invoice_recurringstatus"><?php echo $data['recurringstatus']; ?></div>
 				<div id="before_footer"><?php echo $data['before_footer']; ?></div>
 				<div id="footer"><?php echo $data['footer']; ?></div>

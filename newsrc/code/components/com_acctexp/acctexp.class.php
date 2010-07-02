@@ -1452,7 +1452,7 @@ class metaUserDB extends serialParamDBTable
 			$this->processor_params = array();
 		}
 
-		if ( !is_array( $this->processor_params[$processorid] ) ) {
+		if ( empty( $this->processor_params[$processorid] ) ) {
 			$this->processor_params[$processorid] = array();
 		}
 
@@ -6796,7 +6796,7 @@ class SubscriptionPlan extends serialParamDBTable
 			$g->load( $parent );
 
 			if ( !empty( $g->params['micro_integrations'] ) ) {
-				$pmilist = array_merge( $milist, $g->params['micro_integrations'] );
+				$milist = array_merge( $milist, $g->params['micro_integrations'] );
 			}
 		}
 
@@ -6848,7 +6848,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		// Remove entries from the plan MIs that are already inherited
-		if ( !empty( $pmilist ) ) {
+		if ( !empty( $pmilist ) && !empty( $milist ) ) {
 			$theintersect = array_intersect( $pmilist, $milist );
 
 			if ( !empty( $theintersect ) ) {
@@ -9157,7 +9157,7 @@ class InvoiceFactory
 		}
 	}
 
-	function verifyMIForms( $plan, $mi_form, $prefix="" )
+	function verifyMIForms( $plan, $mi_form=null, $prefix="" )
 	{
 		if ( empty( $plan ) ) {
 			return null;
@@ -9178,8 +9178,10 @@ class InvoiceFactory
 
 				$value = aecGetParam( $prefix.$key, '__DEL' );
 
-				if ( strpos( $key, $prefix ) !== false ) {
-					$key = str_replace( $prefix, '', $key );
+				if ( !empty( $prefix ) ) {
+					if ( strpos( $key, $prefix ) !== false ) {
+						$key = str_replace( $prefix, '', $key );
+					}
 				}
 
 				if ( $value !== '__DEL' ) {
@@ -11007,10 +11009,26 @@ class Invoice extends serialParamDBTable
 			$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, $date );
 		}
 
-		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
-			$data['recurringstatus'] = "";
+		if ( $this->subscr_id ) {
+			$recurring = AECfetchfromDB::RecurringStatusfromSubscriptionID( $this->subscr_id );
 		} else {
+			$recurring = false;
+		}
+
+		$data['recurringstatus'] = "";
+		if ( $recurring ) {
 			$data['recurringstatus'] = _INVOICEPRINT_RECURRINGSTATUS_ONCE;
+		}
+
+		$data['invoice_billing_history'] = "";
+		if ( !empty( $this->transactions ) ) {
+			if ( count( $this->transactions ) > 0 ) {
+				$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, "" );
+
+				foreach ( $this->transactions as $transaction ) {
+					$data['invoice_billing_history'] = '<td>' . strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $transaction->timestamp ) ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $transaction->processor . '</td>';
+				}
+			}
 		}
 
 		$otherfields = array( "page_title", "before_header", "header", "after_header", "address", "before_content", "after_content", "before_footer", "footer", "after_footer" );
@@ -12691,6 +12709,19 @@ class AECfetchfromDB
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' ORDER BY `primary` DESC'
+				;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
+	function RecurringStatusfromSubscriptionID( $subscriptionid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `recurring`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `id` = \'' . (int) $subscriptionid . '\''
 				. ' ORDER BY `primary` DESC'
 				;
 		$database->setQuery( $query );
