@@ -284,9 +284,11 @@ define( '_CFG_2CHECKOUT_SID_DESC', 'Your 2checkout account number.');
 define( '_CFG_2CHECKOUT_SECRET_WORD_NAME', 'Secret Word');
 define( '_CFG_2CHECKOUT_SECRET_WORD_DESC', 'Same secret word set by yourself on the Look and Feel page.');
 define( '_CFG_2CHECKOUT_INFO_NAME', 'IMPORTANT NOTE!');
-define( '_CFG_2CHECKOUT_INFO_DESC', 'On your 2Checkout Account Homepage, >>Helpful Links<< section, locate and click the >>Look and Feel<< link. Set up the field >>Approved URL<< with the URL "http://yoursite.com/index.php?option=com_acctexp&task=2conotification". Replace "yoursite.com" with your own domain.');
+define( '_CFG_2CHECKOUT_INFO_DESC', 'On your 2Checkout Account Homepage, >>Helpful Links<< section, locate and click the >>Look and Feel<< link. Set up the field >>Approved URL<< with the URL "http://yoursite.com/index.php?option=com_acctexp&task=2conotification". Replace "yoursite.com" with your own domain. To use recurring billing, please make sure that you not only select recurring = Yes in the AEC Settings for 2Checkout here, but that you also set a product ID in the AEC payment plan which corresponds to the payment plan you have set up in 2Checkout.');
 define( '_CFG_2CHECKOUT_ALT2COURL_NAME', 'Alternate Url');
 define( '_CFG_2CHECKOUT_ALT2COURL_DESC', 'Try this in case you encounter a parameter error.');
+define( '_CFG_2CHECKOUT_PLAN_PARAMS_PRODUCTID_NAME', 'Product ID');
+define( '_CFG_2CHECKOUT_PLAN_PARAMS_PRODUCTID_DESC', 'The 2Checkout Product ID - Use this in combination with recurring mode. A product ID is MANDATORY if you want to use recurring billing - if you don\'t provide one, the user will just buy a regular one-off item.');
 
 // WorldPay Settings
 define( '_CFG_WORLDPAY_LONGNAME',		'WorldPay' );
