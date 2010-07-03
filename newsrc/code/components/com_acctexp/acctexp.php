@@ -225,9 +225,10 @@ if ( !empty( $task ) ) {
 
 		case 'checkout':
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$processor	= aecGetParam( 'processor', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
-			internalcheckout( $option, $invoice, $userid );
+			internalCheckout( $option, $invoice, $processor, $userid );
 			break;
 
 		case 'backsubscription':
@@ -1046,7 +1047,7 @@ function subscriptionDetails( $option, $sub='overview' )
 	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subList, $custom, $properties );
 }
 
-function internalCheckout( $option, $invoice_number, $userid )
+function internalCheckout( $option, $invoice_number, $processor, $userid )
 {
 	$database = &JFactory::getDBO();
 
@@ -1061,7 +1062,7 @@ function internalCheckout( $option, $invoice_number, $userid )
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
-		$iFactory = new InvoiceFactory( $userid );
+		$iFactory = new InvoiceFactory( $userid, null, null, $processor );
 		$iFactory->touchInvoice( $option, $invoice_number );
 		$iFactory->internalcheckout( $option );
 	} else {

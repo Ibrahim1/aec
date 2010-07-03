@@ -184,9 +184,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$return .= '<table id="aec_checkout_params"><tbody><tr><td>';
 			$return .= '<p style="float:left;text-align:left;"><strong>' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_RETURN . '</strong></p>';
 			$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
-			$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
-			$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-			$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+			$return .= $this->getStdFormVars( $request );
 			$return .= '<input type="hidden" name="express" value="1" />' . "\n";
 			$return .= '<input type="hidden" name="token" value="' . $_REQUEST['token'] . '" />' . "\n";
 			$return .= '<input type="hidden" name="PayerID" value="' . $_REQUEST['PayerID'] . '" />' . "\n";
@@ -198,9 +196,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$return .= '<table id="aec_checkout_params"><tbody><tr><td>';
 				$return .= '<p style="float:left;text-align:left;"><strong>' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_HEADLINE . '</strong></p><p style="float:left;text-align:left;">' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_NOTE . '</p>';
 				$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
-				$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
-				$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-				$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+				$return .= $this->getStdFormVars( $request );
 				$return .= '<input type="hidden" name="express" value="1" />' . "\n";
 				$return .= '<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 				$return .= '</form>' . "\n";

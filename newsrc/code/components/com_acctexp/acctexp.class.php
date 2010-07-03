@@ -50,8 +50,6 @@ if ( !defined( '_AEC_LANG' ) ) {
 	define( '_AEC_LANG', 1 );
 }
 
-include_once( JPATH_SITE . '/administrator/components/com_acctexp/lang/general.php' );
-
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 }
@@ -3959,13 +3957,23 @@ class XMLprocessor extends processor
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 
 		if ( $stdvars ) {
-			$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
-			$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-			$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+			$return .= $this->getStdFormVars( $request );
 		}
 
 		$return .= '<input type="submit" class="button' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
+
+		return $return;
+	}
+
+	function getStdFormVars( $request )
+	{
+		$return = "";
+
+		$return = '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
+		$return .= '<input type="hidden" name="processor" value="' . $this->name . '" />' . "\n";
+		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
+		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
 
 		return $return;
 	}
@@ -7831,7 +7839,9 @@ class InvoiceFactory
 		}
 
 		if ( $single_select ) {
-			$this->processor = PaymentProcessor::getNameById( str_replace( '_recurring', '', $selection ) );
+			if ( !empty( $selection ) ) {
+				$this->processor = PaymentProcessor::getNameById( str_replace( '_recurring', '', $selection ) );
+			}
 		} else {
 			$database = &JFactory::getDBO();
 
@@ -9426,9 +9436,9 @@ class InvoiceFactory
 	{
 		$this->metaUser = new metaUser( $this->userid );
 
-		$this->puffer( $option );
-
 		$this->touchInvoice( $option );
+
+		$this->puffer( $option );
 
 		$objUsage = $this->getObjUsage();
 
@@ -9444,6 +9454,12 @@ class InvoiceFactory
 				unset( $_POST[$badvar] );
 			}
 		}
+
+		$this->loadItems();
+
+		$this->applyCoupons();
+
+		$this->loadItemTotal();
 
 		$var = $this->invoice->getWorkingData( $this );
 

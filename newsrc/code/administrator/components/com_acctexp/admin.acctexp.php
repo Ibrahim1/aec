@@ -69,8 +69,6 @@ if ( file_exists( $langPathPROC . $GLOBALS['mosConfig_lang']. '.php' ) ) {
 	include_once( $langPathPROC . 'english.php' );
 }
 
-include_once( $langPathBE . 'general.php' );
-
 $task			= trim( aecGetParam( 'task', null ) );
 $returnTask 	= trim( aecGetParam( 'returnTask', null ) );
 $userid			= aecGetParam( 'userid', null );

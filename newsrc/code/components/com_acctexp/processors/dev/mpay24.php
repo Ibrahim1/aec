@@ -199,9 +199,7 @@ class processor_mpay24 extends XMLprocessor
 		}
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
-		$return .= '<input type="hidden" name="invoice" value="' . $request->invoice->invoice_number . '" />' . "\n";
-		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-		$return .= '<input type="hidden" name="task" value="checkout" />' . "\n";
+		$return .= $this->getStdFormVars( $request );
 		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
