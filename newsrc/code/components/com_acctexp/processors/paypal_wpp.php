@@ -16,16 +16,17 @@ class processor_paypal_wpp extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'paypal_wpp';
-		$info['longname']		= _CFG_PAYPAL_WPP_LONGNAME;
-		$info['statement']		= _CFG_PAYPAL_WPP_STATEMENT;
-		$info['description']	= _CFG_PAYPAL_WPP_DESCRIPTION;
-		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB';
-		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
-		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
-		$info['recurring']		= 2;
-		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
-		$info['secure']			= 1;
+		$info['name']				= 'paypal_wpp';
+		$info['longname']			= _CFG_PAYPAL_WPP_LONGNAME;
+		$info['statement']			= _CFG_PAYPAL_WPP_STATEMENT;
+		$info['description']		= _CFG_PAYPAL_WPP_DESCRIPTION;
+		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB';
+		$info['languages']			= AECToolbox::getISO3166_1a2_codes();
+		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
+		$info['recurring']			= 2;
+		$info['actions']			= array( 'cancel' => array( 'confirm' ) );
+		$info['secure']				= 1;
+		$info['recurring_buttons']	= 2;
 
 		return $info;
 	}

@@ -24,6 +24,7 @@ class processor_clickbank extends URLprocessor
 		$info['currencies']				= "USD";
 		$info['recurring'] 				= 2;
 		$info['notify_trail_thanks']	= 1;
+		$info['recurring_buttons']		= 2;
 
 		return $info;
 	}
@@ -64,7 +65,7 @@ class processor_clickbank extends URLprocessor
 
 	function createGatewayLink( $request )
 	{
-		$item_number			= $var['allowedTypes'] = $request->int_var['planparams']['item_number'];
+		$item_number			= $request->int_var['planparams']['item_number'];
 
 		$var['post_url']		= 'http://'.$item_number.'.'.$this->settings['publisher'].'.pay.clickbank.net?';
 

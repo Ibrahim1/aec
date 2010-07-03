@@ -16,17 +16,17 @@ class processor_iats extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'iats';
-		$info['longname']		= _CFG_IATS_LONGNAME;
-		$info['statement']		= _CFG_IATS_STATEMENT;
-		$info['description']	= _CFG_IATS_DESCRIPTION;
-		$info['currencies']		= 'USD,GBP,AUD';
-		$info['languages']		= 'GB';
-		$info['cc_list']		= 'visa,mastercard,discover,americanexpress';
-		$info['recurring']		= 2;
-		// TODO: $info['recurring_buttons']	= 2;
-		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
-		$info['secure']			= 1;
+		$info['name']				= 'iats';
+		$info['longname']			= _CFG_IATS_LONGNAME;
+		$info['statement']			= _CFG_IATS_STATEMENT;
+		$info['description']		= _CFG_IATS_DESCRIPTION;
+		$info['currencies']			= 'USD,GBP,AUD';
+		$info['languages']			= 'GB';
+		$info['cc_list']			= 'visa,mastercard,discover,americanexpress';
+		$info['recurring']			= 2;
+		$info['recurring_buttons']	= 2;
+		$info['actions']			= array( 'cancel' => array( 'confirm' ) );
+		$info['secure']				= 1;
 
 		return $info;
 	}

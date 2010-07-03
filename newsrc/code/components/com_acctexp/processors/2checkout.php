@@ -21,10 +21,25 @@ class processor_2checkout extends POSTprocessor
 		$info['statement'] 				= _AEC_PROC_INFO_2CO_STMNT;
 		$info['description'] 			= _DESCRIPTION_2CHECKOUT;
 		$info['cc_list'] 				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] 				= 0;
+		$info['recurring'] 				= 2;
+		$info['actions']				= array( 'cancel' => array( 'confirm' ) );
 		$info['notify_trail_thanks']	= 1;
+		$info['recurring_buttons']		= 2;
 
 		return $info;
+	}
+
+	function getActions( $invoice, $subscription )
+	{
+		$actions = parent::getActions( $invoice, $subscription );
+
+		if ( ( $subscription->status == 'Cancelled' ) || ( $invoice->transaction_date == '0000-00-00 00:00:00' ) ) {
+			if ( isset( $actions['cancel'] ) ) {
+				unset( $actions['cancel'] );
+			}
+		}
+
+		return $actions;
 	}
 
 	function settings()
@@ -34,9 +49,9 @@ class processor_2checkout extends POSTprocessor
 		$settings['secret_word']	= 'secret_word';
 		$settings['testmode']		= 0;
 		$settings['alt2courl']		= '';
-		$settings['info']			= ''; // new mic
+		$settings['info']			= '';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['customparams']		= "";
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -55,6 +70,14 @@ class processor_2checkout extends POSTprocessor
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
+	}
+
+	function CustomPlanParams()
+	{
+		$p = array();
+		$p['productid']				= array( 'inputC' );
+
+		return $p;
 	}
 
 	function createGatewayLink( $request )
@@ -80,6 +103,14 @@ class processor_2checkout extends POSTprocessor
 		$var['username']			= $request->metaUser->cmsUser->username;
 		$var['name']				= $request->metaUser->cmsUser->name;
 
+		if ( !empty( $request->int_var['planparams']['productid'] ) ) {
+			$var['product_id'] = $request->int_var['planparams']['productid'];
+			$var['quantity'] = 1;
+		}
+
+		$var['cart_brand_name'] 	= 'AEC';
+		$var['cart_version_name'] 	= _AEC_VERSION . ' Revision ' . _AEC_REVISION;
+
 		return $var;
 	}
 
@@ -104,7 +135,7 @@ class processor_2checkout extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		if ($this->settings['testmode']) {
+		if ( $this->settings['testmode'] ) {
 			$string_to_hash	= $this->settings['secret_word'].$this->settings['sid']."1".$post['total'];
 		} else {
 			$string_to_hash	= $this->settings['secret_word'].$this->settings['sid'].$post['order_number'].$post['total'];
@@ -115,6 +146,28 @@ class processor_2checkout extends POSTprocessor
 		$response['valid'] = (strcmp($check_key, $post['key']) == 0);
 
 		return $response;
+	}
+
+	function customaction_cancel( $request )
+	{
+		$path	= '/api/sales/stop_lineitem_recurring';
+		$url	= 'https://www.2checkout.com' . $path;
+
+		$content	= array( 'line_item' => "" );
+
+		$header	= array( "Accept" => "application/json" );
+
+		$curlextra[URLOPT_HTTPHEADER] = array ( "Accept: application/json" );
+
+		$return = json_decode( $this->transmitRequest( $url, $path, $content, 443, $curlextra, $header ) );
+
+		if ( !empty( $response ) ) {
+
+
+			return $return;
+		} else {
+			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
+		}
 	}
 
 }

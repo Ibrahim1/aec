@@ -36,7 +36,6 @@ if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	} else {
 		include_once( $langPath. 'english.php' );
 	}
-	include_once( $langPath . 'general.php' );
 }
 
 if ( !defined( '_AEC_LANG' ) ) {
@@ -46,6 +45,8 @@ if ( !defined( '_AEC_LANG' ) ) {
 	} else {
 		include_once( $langPath . 'english.php' );
 	}
+	include_once( $langPath . 'general.php' );
+
 	define( '_AEC_LANG', 1 );
 }
 
@@ -3656,30 +3657,30 @@ class processor extends serialParamDBTable
 		return $var;
 	}
 
-	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null )
+	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
 	{
 		global $aecConfig;
 
 		$response = null;
 
 		if ( $aecConfig->cfg['curl_default'] ) {
-			$response = $this->doTheCurl( $url, $content, $curlextra );
+			$response = $this->doTheCurl( $url, $content, $curlextra, $header );
 			if ( $response === false ) {
 				// If curl doesn't work try using fsockopen
-				$response = $this->doTheHttp( $url, $path, $content, $port );
+				$response = $this->doTheHttp( $url, $path, $content, $port, $header );
 			}
 		} else {
-			$response = $this->doTheHttp( $url, $path, $content, $port );
+			$response = $this->doTheHttp( $url, $path, $content, $port, $header );
 			if ( $response === false ) {
 				// If fsockopen doesn't work try using curl
-				$response = $this->doTheCurl( $url, $content, $curlextra );
+				$response = $this->doTheCurl( $url, $content, $curlextra, $header );
 			}
 		}
 
 		return $response;
 	}
 
-	function doTheHttp( $url, $path, $content, $port=443 )
+	function doTheHttp( $url, $path, $content, $port=443, $extra_header=null )
 	{
 		global $aecConfig;
 
@@ -3742,35 +3743,46 @@ class processor extends serialParamDBTable
 
 			return false;
 		} else {
-			if ( !is_null( $content ) ) {
-				$header = "POST " . $path . " HTTP/1.0\r\n";
-			} else {
-				$header = "GET " . $path . " HTTP/1.0\r\n";
-			}
-
 		    if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 				$hosturl = $aecConfig->cfg['proxy'];
 		    } else {
 		    	$hosturl = $url_info['host'];
 		    }
 
-			$header  .=	"Host: " . $hosturl  . "\r\n";
+			$header_array["Host"] = $hosturl;
 
 			if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 				if ( !empty( $aecConfig->cfg['proxy_username'] ) && !empty( $aecConfig->cfg['proxy_password'] ) ) {
-					$header .= "Proxy-Authorization: Basic ". base64_encode( $aecConfig->cfg['proxy_username'] . ":" . $aecConfig->cfg['proxy_password'] )."\r\n\r\n";
+					$header_array["Proxy-Authorization"] = "Basic ". base64_encode( $aecConfig->cfg['proxy_username'] . ":" . $aecConfig->cfg['proxy_password'] );
 				}
 			}
 
-			$header .=	"User-Agent: PHP Script\r\n"
-						. "Content-Type: application/x-www-form-urlencoded\r\n"
-						;
+			$header_array["User-Agent"] = "PHP Script";
+			$header_array["Content-Type"] = "application/x-www-form-urlencoded";
 
 			if ( !is_null( $content ) ) {
-				$header .=	"Content-Length: " . strlen( $content ) . "\r\n";
+				$header_array["Content-Length"] = strlen( $content );
 			}
 
-			$header .=	"Connection: close\r\n\r\n";;
+			if ( !empty( $extra_header ) ) {
+				foreach ( $extra_header as $h => $v ) {
+					$header_array[$h] = $v;
+				}
+			}
+
+			$header_array["Connection"] = "close";
+
+			if ( !is_null( $content ) ) {
+				$header = "POST " . $path . " HTTP/1.0\r\n";
+			} else {
+				$header = "GET " . $path . " HTTP/1.0\r\n";
+			}
+
+			foreach ( $header_array as $h => $v ) {
+				$header .=	$h . ": " . $v . "\r\n";
+			}
+
+			$header .= "\r\n";
 
 			if ( !is_null( $content ) ) {
 				$header .= $content;
@@ -3818,7 +3830,7 @@ class processor extends serialParamDBTable
 		}
 	}
 
-	function doTheCurl( $url, $content, $curlextra=null )
+	function doTheCurl( $url, $content, $curlextra=null, $header=null )
 	{
 		global $aecConfig;
 

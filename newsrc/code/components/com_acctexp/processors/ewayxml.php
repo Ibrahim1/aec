@@ -134,19 +134,5 @@ class processor_ewayxml extends XMLprocessor
 		return $var;
 	}
 
-	function doTheCurl( $url, $content )
-	{
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml") );
-		curl_setopt( $ch, CURLOPT_POST, 1 );
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, $content );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
-		$response = curl_exec( $ch );
-		curl_close( $ch );
-
-		return $response;
-	}
 }
 ?>
