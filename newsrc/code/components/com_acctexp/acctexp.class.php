@@ -4431,6 +4431,19 @@ class XMLprocessor extends processor
 		return $this->checkoutResponse( $request, $response );
 	}
 
+	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
+	{
+		if ( is_array( $header ) ) {
+			if ( !isset( $header["Content-Type"] ) ) {
+				$header["Content-Type"] = "text/xml";
+			}
+		} else {
+			$header = array( "Content-Type" => "text/xml" );
+		}
+
+		return parent::transmitRequest( $url, $path, $content, $port, $curlextra, $header );
+	}
+
 	function checkoutResponse( $request, $response )
 	{
 		if ( !empty( $response['error'] ) ) {
@@ -6569,27 +6582,24 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		$plans_comparison		= false;
 		$plans_comparison_total	= false;
-		$is_trial				= 0;
 
 		if ( is_object( $metaUser ) ) {
 			if ( is_object( $metaUser->objSubscription ) ) {
 				$comparison				= $this->doPlanComparison( $metaUser->focusSubscription );
 				$plans_comparison		= $comparison['comparison'];
 				$plans_comparison_total	= $comparison['total_comparison'];
-				$is_trial				= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
 			}
 		} elseif ( is_object( $user_subscription ) ) {
 			$comparison				= $this->doPlanComparison( $user_subscription );
 			$plans_comparison		= $comparison['comparison'];
 			$plans_comparison_total	= $comparison['total_comparison'];
-			$is_trial				= ( strcmp( $user_subscription->status, 'Trial' ) === 0 );
 		}
 
 		if ( !isset( $this->params['full_free'] ) ) {
 			$this->params['full_free'] = false;
 		}
 
-		$allow_trial = ( $plans_comparison === false ) && ( $plans_comparison_total === false ) && !$is_trial;
+		$allow_trial = ( $plans_comparison === false ) && ( $plans_comparison_total === false );
 
 		$terms = new mammonTerms();
 		$terms->readParams( $this->params, $allow_trial );
@@ -7666,6 +7676,10 @@ class InvoiceFactory
 
 			if ( !empty( $this->exceptions ) ) {
 				$offset = count( $this->exceptions );
+			}
+
+			if ( empty( $this->cart ) ) {
+				return;
 			}
 
 			foreach ( $this->cart as $cid => $cartitem ) {
@@ -11174,6 +11188,10 @@ class aecCartHelper
 	{
 		$proclist = array();
 
+		if ( empty( $cart->content ) ) {
+			return $proclist;
+		}
+
 		foreach ( $cart->content as $cid => $c ) {
 			$cartitem = aecCartHelper::getCartItemObject( $cart, $cid );
 
@@ -11656,9 +11674,13 @@ class aecCart extends serialParamDBTable
 	{
 		$checkout = $this->getCheckout( $metaUser, $counter );
 
-		$max = array_pop( array_keys( $checkout ) );
+		if ( !empty( $checkout ) ) {
+			$max = array_pop( array_keys( $checkout ) );
 
-		return $checkout[$max]['cost_total'];
+			return $checkout[$max]['cost_total'];
+		} else {
+			return '0.00';
+		}
 	}
 
 	function checkAllFree( $metaUser, $counter=0 )
@@ -11688,8 +11710,10 @@ class aecCart extends serialParamDBTable
 				$add['obj']->triggerMIs( $action, $metaUser, $exchange, $invoice, $add, $silent );
 			}
 		} else {
-			foreach ( $add->itemlist as $nadd ) {
-				$nadd['obj']->triggerMIs( $action, $metaUser, $exchange, $invoice, $add, $silent );
+			if ( is_object( $add ) ) {
+				foreach ( $add->itemlist as $nadd ) {
+					$nadd['obj']->triggerMIs( $action, $metaUser, $exchange, $invoice, $add, $silent );
+				}
 			}
 		}
 	}

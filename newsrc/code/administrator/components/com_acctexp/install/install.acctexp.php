@@ -77,7 +77,7 @@ function com_install()
 	$eucaInstalldb	= new eucaInstallDB();
 	$eucaInstallef	= new eucaInstalleditfile();
 
-	include_once( $pathLang . 'general.php' );
+	include_once( JPATH_SITE . '/components/com_acctexp/lang/general.php' );
 
 	// Slot in DB tables that do not exist yet
 	$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';

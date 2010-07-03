@@ -186,23 +186,20 @@ class mi_aectax
 
 		// Collect all the taxes from the individual item costs
 		foreach ( $request->add->itemlist as $item ) {
-			foreach ( $item['terms']->terms as $term ) {
-				foreach ( $term->cost as $cost ) {
-					if ( $cost->type == 'tax' ) {
-						if ( in_array( $cost->cost['details'], $taxtypes ) ) {
-							$typeid = array_search( $cost->cost['details'], $taxtypes );
-						} else {
-							$taxtypes[] = $cost->cost['details'];
+			foreach ( $item['terms']->nextterm->cost as $cost ) {
+				if ( $cost->type == 'tax' ) {
+					if ( in_array( $cost->cost['details'], $taxtypes ) ) {
+						$typeid = array_search( $cost->cost['details'], $taxtypes );
+					} else {
+						$taxtypes[] = $cost->cost['details'];
 
-							$typeid = count( $taxtypes ) - 1;
-						}
-
-						if ( !isset( $taxcollections[$typeid] ) ) {
-							$taxcollections[$typeid] = 0;
-						}
-
-						$taxcollections[$typeid] += ( $cost->renderCost() * $item['quantity'] );
+						$typeid = count( $taxtypes ) - 1;
 					}
+
+					if ( !isset( $taxcollections[$typeid] ) ) {
+						$taxcollections[$typeid] = 0;
+					}
+					$taxcollections[$typeid] += ( $cost->renderCost() * $item['quantity'] );
 				}
 			}
 		}

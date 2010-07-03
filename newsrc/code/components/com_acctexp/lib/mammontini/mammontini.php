@@ -599,7 +599,9 @@ class mammonTerm extends eucaObject
 	{
 		$return = null;
 		foreach ( $this->cost as $id => $cost ) {
-			if ( $cost->type == 'tax' ) {
+			if ( ( $cost->type == 'tax' ) || ( $cost->type == 'total' ) ) {
+				$return->cost['amount'] = AECToolbox::correctAmount( $return->cost['amount'] );
+
 				return $return;
 			}
 
@@ -610,7 +612,7 @@ class mammonTerm extends eucaObject
 			}
 		}
 
-		$k = array_pop( array_keys( $this->cost ) );
+		$return->cost['amount'] = AECToolbox::correctAmount( $return->cost['amount'] );
 
 		return $return;
 	}
