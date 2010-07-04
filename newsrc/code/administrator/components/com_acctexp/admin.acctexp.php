@@ -1381,18 +1381,20 @@ function saveUser( $option, $apply=0 )
 					}
 				}
 
-				$m->profile_form_save( $metaUser );
+				$m->profile_form_save( $metaUser, $params );
 			}
+
+			$admin_params = array();
 
 			$af = $m->admin_form( $metaUser );
 			if ( !empty( $af ) ) {
 				foreach ( $af as $k => $v ) {
 					if ( isset( $post[$pref.$k] ) ) {
-						$params[$k] = $post[$pref.$k];
+						$admin_params[$k] = $post[$pref.$k];
 					}
 				}
 
-				$m->admin_form_save( $metaUser );
+				$m->admin_form_save( $metaUser, $admin_params );
 			}
 
 			if ( empty( $params ) ) {

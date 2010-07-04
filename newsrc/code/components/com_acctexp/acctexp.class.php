@@ -1516,11 +1516,25 @@ class metaUserDB extends serialParamDBTable
 		return true;
 	}
 
+	function getCustomParams()
+	{
+		return $this->custom_params;
+	}
+
 	function addCustomParams( $params )
 	{
 		global $mainframe;
 
 		$this->addParams( $params, 'custom_params' );
+
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
+	}
+
+	function setCustomParams( $params )
+	{
+		global $mainframe;
+
+		$this->setParams( $params, 'custom_params' );
 
 		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
 	}
@@ -16134,12 +16148,13 @@ class microIntegration extends serialParamDBTable
 		return $settings;
 	}
 
-	function profile_form_save( $metaUser )
+	function profile_form_save( $metaUser, $params )
 	{
 		$request = new stdClass();
-		$request->parent	=&	$this;
-		$request->metaUser	=&	$metaUser;
-		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+		$request->parent		=&	$this;
+		$request->metaUser		=&	$metaUser;
+		$request->old_params	=	$metaUser->meta->getMIParams( $this->id );
+		$request->params		=	$params;
 
 		return $this->functionProxy( 'profile_form_save', $request );
 	}
@@ -16164,12 +16179,13 @@ class microIntegration extends serialParamDBTable
 		return $settings;
 	}
 
-	function admin_form_save( $metaUser )
+	function admin_form_save( $metaUser, $params )
 	{
 		$request = new stdClass();
-		$request->parent	=&	$this;
-		$request->metaUser	=&	$metaUser;
-		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+		$request->parent		=&	$this;
+		$request->metaUser		=&	$metaUser;
+		$request->old_params	=	$metaUser->meta->getMIParams( $this->id );
+		$request->params		=	$params;
 
 		return $this->functionProxy( 'admin_form_save', $request );
 	}

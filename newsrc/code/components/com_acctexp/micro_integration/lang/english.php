@@ -1423,8 +1423,4 @@ define( '_MI_MI_MAILCHIMP_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_MAILCHIMP_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_MAILCHIMP_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
 
-// Support Time Tracker
-define( '_AEC_MI_NAME_SUPPORTTIMETRACKER',		'Support Time Tracker' );
-define( '_AEC_MI_DESC_SUPPORTTIMETRACKER',		'Simple time tracker that can be used to keep track of support hours' );
-
 ?>
