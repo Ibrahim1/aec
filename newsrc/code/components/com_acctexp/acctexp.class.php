@@ -6412,7 +6412,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );
-		$renew = $metaUser->is_renewing();
+		$renew 			= $metaUser->is_renewing();
 
 		$lifetime		= $metaUser->focusSubscription->lifetime;
 
@@ -8385,7 +8385,9 @@ class InvoiceFactory
 
 		$recurring = null;
 		if ( !empty( $this->invoice_number ) ) {
-			$this->loadInvoice( $option );
+			if ( $this->loadInvoice( $option ) === false ) {
+				$recurring = $this->createInvoice( $storenew );
+			}
 		} else {
 			$recurring = $this->createInvoice( $storenew );
 		}
@@ -8417,6 +8419,10 @@ class InvoiceFactory
 
 		if ( $this->invoice->invoice_number != $this->invoice_number ) {
 			$this->invoice->loadInvoiceNumber( $this->invoice_number );
+
+			if ( empty( $this->invoice->id ) ) {
+				return false;
+			}
 		}
 
 		$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
@@ -8434,6 +8440,8 @@ class InvoiceFactory
 		} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) === false ) ) {
 			$this->create( $option, 0, $this->usage, $this->invoice_number );
 		}
+
+		return true;
 	}
 
 	function createInvoice( $storenew=false )
@@ -10462,12 +10470,14 @@ class Invoice extends serialParamDBTable
 					$this->params['cart'] = new aecCart( $database );
 					$this->params['cart']->load( $usage[1] );
 
-					foreach ( $this->params['cart']->content as $c ) {
-						$new_plan = new SubscriptionPlan( $database );
-						$new_plan->load( $c['id'] );
+					if ( !empty( $this->params['cart']->content ) ) {
+						foreach ( $this->params['cart']->content as $c ) {
+							$new_plan = new SubscriptionPlan( $database );
+							$new_plan->load( $c['id'] );
 
-						for ( $i=0; $i<$c['quantity']; $i++ ) {
-							$plans[] = $new_plan;
+							for ( $i=0; $i<$c['quantity']; $i++ ) {
+								$plans[] = $new_plan;
+							}
 						}
 					}
 
@@ -10506,10 +10516,6 @@ class Invoice extends serialParamDBTable
 					$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
 				} else {
 					$application = $plan->applyPlan( 0, $this->method, 0, $multiplicator, $this );
-				}
-
-				if ( $application === false ) {
-					return false;
 				}
 			}
 		}
@@ -10615,7 +10621,7 @@ class Invoice extends serialParamDBTable
 
 		$this->setTransactionDate();
 
-		return $application;
+		return true;
 	}
 
 	function substring_between( $haystack, $start, $end )

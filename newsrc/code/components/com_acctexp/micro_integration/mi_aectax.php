@@ -309,14 +309,14 @@ class mi_aectax
 				case 'reverse_pseudo_subtract':
 					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
 
-					$item['terms']->nextterm->modifyCost( 0, $newtotal );
+					$item['terms']->terms[$tid]->modifyCost( 0, $newtotal );
 
 					$tax = "0.00";
 					break;
 				case 'pseudo_subtract':
 					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
 
-					$item['terms']->nextterm->modifyCost( 0, $newtotal );
+					$item['terms']->terms[$tid]->modifyCost( 0, $newtotal );
 
 					$tax = AECToolbox::correctAmount( $total - $newtotal );
 					break;

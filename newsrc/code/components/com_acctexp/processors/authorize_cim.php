@@ -778,8 +778,8 @@ class processor_authorize_cim extends PROFILEprocessor
 			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
 
 			$cim->createCustomerProfileTransactionRequest( $this );
-
-			if ( $cim->isSuccessful() ) {
+aecDebug($cim);
+			if ( $cim->isSuccessful() ) {aecDebug('CIM successful');
 				$invoice->pay();
 
 				if ( empty( $invoice->params['maxOccurrences'] ) ) {
