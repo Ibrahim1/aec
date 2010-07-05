@@ -80,12 +80,14 @@ class plgSystemAECrouting extends JPlugin
 		// Standard Joomla
 		$vars['cu']			= $vars['option'] == 'com_user';
 
+		$vars['aec']		= $vars['option'] == 'com_acctexp';
 		$vars['j_reg']		= $vars['cu']	&& ( ( $vars['view'] == 'register' ) || ( $vars['task'] == 'register' ) );
 		$vars['cb_reg']		= $vars['ccb']	&& ( $vars['task'] == 'registers' );
 		$vars['joms_reg']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
 		$vars['joms_regp']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
 		$vars['joms_regs']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerSucess' );
 		$vars['joms_regsv']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
+		$vars['k2_regsv']	= $vars['k2']	&& ( $vars['task'] == 'register_save' );
 		$vars['tcregs']		= $vars['task'] == 'saveregisters';
 		$vars['tsregs']		= $vars['task'] == 'saveRegistration';
 		$vars['tsue']		= $vars['task'] == 'saveUserEdit';
@@ -97,7 +99,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['isreg']		= ( $vars['j_reg'] || $vars['cb_reg'] || $vars['joms_any'] );
 
 		$vars['cbsreg']		= ( ( $vars['ccb'] && $vars['tsue'] ) || ( $vars['cu'] && $vars['tsu'] ) );
-		$vars['cbsregsv']	= ( ( $vars['ccb'] && $vars['tcregs'] ) );
+		$vars['cb_sregsv']	= ( ( $vars['ccb'] && $vars['tcregs'] ) );
 
 		$vars['pfirst']		= $aecConfig->cfg['plans_first'];
 		$vars['int_reg']	= $aecConfig->cfg['integrate_registration'];
@@ -106,7 +108,7 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['has_usage']	= !empty( $vars['usage'] );
 
-		if ( ( $vars['joms_any'] || $vars['ccb12'] ) && !$vars['has_usage'] ) {
+		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] ) && !$vars['has_usage'] ) {
 			$database = &JFactory::getDBO();
 
 			if ( $vars['joms_any'] ) {
@@ -144,7 +146,17 @@ class plgSystemAECrouting extends JPlugin
 					$content = array();
 					$temptoken->content['username']		= $_REQUEST['username'];
 					$temptoken->content['password']		= $_REQUEST['password'];
+					$temptoken->content['password2']	= $_REQUEST['password2'];
 					$temptoken->content['email']		= $_REQUEST['email'];
+
+					if ( $vars['k2_regsv'] ) {
+						$temptoken->content['handler']	= 'k2';
+					} elseif ( $vars['joms_regsv'] ) {
+						$temptoken->content['handler']	= 'joomla';
+					} elseif ( $vars['cb_sregsv'] ) {
+						$temptoken->content['handler']	= 'cb';
+					}
+
 					$temptoken->storeload();
 				}
 			} elseif ( !empty( $temptoken->content['username'] ) ) {
@@ -188,7 +200,7 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars = $this->getVars();
 
-		if ( ( $vars['isreg'] || $vars['cbsregsv'] ) && $vars['int_reg'] ) {
+		if ( ( $vars['isreg'] || $vars['cb_sregsv'] || $vars['k2_regsv'] ) && $vars['int_reg'] ) {
 			// Joomla or CB registration...
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
 				// Plans first and not yet selected -> select!
@@ -203,6 +215,10 @@ class plgSystemAECrouting extends JPlugin
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
 				global $mainframe;
 				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+			} elseif ( $vars['has_user'] && !$vars['has_usage'] && $vars['k2_regsv'] ) {
+
+			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['k2_regsv'] ) {
+
 			} elseif ( $vars['has_usage'] && ( $vars['joms_reg'] || $vars['cb_reg'] ) ) {
 				$database = &JFactory::getDBO();
 
@@ -213,14 +229,16 @@ class plgSystemAECrouting extends JPlugin
 
 				$temptoken = new aecTempToken( $database );
 				$temptoken->create( $content );
-			} elseif ( $vars['has_user'] && ( $vars['joms_regsv'] || $vars['cbsregsv'] ) ) {
+			} elseif ( $vars['has_user'] && ( $vars['joms_regsv'] || $vars['cb_sregsv'] ) ) {
 				if ( $vars['joms_regsv'] ) {
 					$username	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password	= aecGetParam( 'jspassword', "", true, array( 'string', 'clear_nonalnum' ) );
+					$password2	= aecGetParam( 'jspassword2', "", true, array( 'string', 'clear_nonalnum' ) );
 					$email		= aecGetParam( 'jsemail', "", true, array( 'string', 'clear_nonalnum' ) );
 				} else {
 					$username	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password	= aecGetParam( 'password', "", true, array( 'string', 'clear_nonalnum' ) );
+					$password2	= aecGetParam( 'password2', "", true, array( 'string', 'clear_nonalnum' ) );
 					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonalnum' ) );
 				}
 
@@ -230,10 +248,19 @@ class plgSystemAECrouting extends JPlugin
 					$temptoken = new aecTempToken( $database );
 					$temptoken->getComposite();
 
-					$content = array();
 					$temptoken->content['username']		= $username;
 					$temptoken->content['password']		= $password;
+					$temptoken->content['password2']	= $password2;
 					$temptoken->content['email']		= $email;
+
+					if ( $vars['k2_regsv'] ) {
+						$temptoken->content['handler']	= 'k2';
+					} elseif ( $vars['joms_regsv'] ) {
+						$temptoken->content['handler']	= 'joomla';
+					} elseif ( $vars['cb_sregsv'] ) {
+						$temptoken->content['handler']	= 'cb';
+					}
+
 					$temptoken->storeload();
 				}
 			}
@@ -267,15 +294,29 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars = $this->getVars();
 
+		// Check whether we have a registration situation...
+		if ( !$vars['int_reg'] ) {
+			return;
+		}
+
 		if ( $vars['j_reg'] ) {
 			$vars['k2'] = strpos( $body, '<input type="hidden" name="K2UserForm" value="1" />' ) !== false;
 		} else {
 			$vars['k2'] = 0;
 		}
 
-		// Check whether we have a registration situation...
-		if ( !$vars['int_reg'] ) {
-			return;
+		$activation = $mainframe->getCfg( 'useractivation' );
+
+		if ( ( strpos( $body, '<dt class="message">Message</dt>' ) !== false ) && !$vars['aec'] ) {
+			$database = &JFactory::getDBO();
+
+			$temptoken = new aecTempToken( $database );
+			$temptoken->getComposite();
+
+			if ( !empty( $temptoken->content['password2'] ) ) {
+				global $mainframe;
+				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+			}
 		}
 
 		if ( !( $vars['j_reg'] || $vars['ccb'] ) || $vars['lostpw'] ) {

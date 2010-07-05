@@ -530,9 +530,17 @@ function subscribe( $option )
 
 	$forget		= aecGetParam( 'forget', '', true, array( 'string' ) );
 
+	$k2mode		= false;
+
 	if ( $token ) {
 		$temptoken = new aecTempToken( $database );
 		$temptoken->getComposite();
+
+		if ( !empty( $temptoken->content['handler'] ) ) {
+			if ( $temptoken->content['handler'] == 'k2' ) {
+				$k2mode = true;
+			}
+		}
 
 		if ( !empty( $temptoken->content ) ) {
 			$password = null;
@@ -549,6 +557,7 @@ function subscribe( $option )
 				$details[] = 'username';
 				$details[] = 'email';
 				$details[] = 'password';
+				$details[] = 'password2';
 			}
 
 			foreach ( $details as $d ) {
@@ -583,7 +592,7 @@ function subscribe( $option )
 		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
 		$JS = ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) );
 
-		if ( $isJoomla15 && !$CB && !$JS ) {
+		if ( $isJoomla15 && !$CB && !$JS && !$k2mode ) {
 			// Joomla 1.5 Sanity Check
 
 			// Get required system objects
