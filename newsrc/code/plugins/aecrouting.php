@@ -68,6 +68,8 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['submit']		= JRequest::getVar( 'submit', '' );
 
+		$vars['k2']			= JRequest::getVar( 'K2UserForm', 0 );
+
 		// Community Builder
 		$vars['ccb']		= $vars['option'] == 'com_comprofiler';
 		$vars['ccb12']		= GeneralInfoRequester::detect_component( 'CB1.2' );
@@ -265,6 +267,12 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars = $this->getVars();
 
+		if ( $vars['j_reg'] ) {
+			$vars['k2'] = strpos( $body, '<input type="hidden" name="K2UserForm" value="1" />' ) !== false;
+		} else {
+			$vars['k2'] = 0;
+		}
+
 		// Check whether we have a registration situation...
 		if ( !$vars['int_reg'] ) {
 			return;
@@ -295,7 +303,7 @@ class plgSystemAECrouting extends JPlugin
 			if ( strpos( $body, '<script type="text/javascript">alert(' ) === false ) {
 				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
 			}
-		} elseif ( $vars['j_reg'] ) {
+		} elseif ( $vars['j_reg'] && !$vars['k2'] ) {
 			$addinmarker = '<input type="hidden" name="task" value="register_save" />';
 
 			$search[]	= $addinmarker;
@@ -313,6 +321,16 @@ class plgSystemAECrouting extends JPlugin
 								. '<tr><td height="40"><label></label></td><td>'
 								. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
 			}
+		} elseif ( $vars['k2'] ) {
+			$database = &JFactory::getDBO();
+
+			$content = array();
+			$content['usage']		= $vars['usage'];
+			$content['processor']	= $vars['processor'];
+			$content['recurring']	= $vars['recurring'];
+
+			$temptoken = new aecTempToken( $database );
+			$temptoken->create( $content );
 		}
 
 		if ( !empty( $addinmarker ) ) {
