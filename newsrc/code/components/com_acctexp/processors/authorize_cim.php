@@ -750,6 +750,44 @@ class processor_authorize_cim extends PROFILEprocessor
 		$invoice = new Invoice( $database );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
+		$option = 'com_acctexp';
+
+		$iFactory = new InvoiceFactory( null, null, null, 'authorize_cim' );
+
+		$iFactory->userid = $invoice->usage;
+		$iFactory->usage = $subscription->userid;
+		$iFactory->processor = 'authorize_cim';
+
+		$iFactory->loadMetaUser();
+
+		$iFactory->touchInvoice( $option, $invoice->invoice_number );
+		$iFactory->puffer( $option );
+
+		$iFactory->loadItems();
+
+		$iFactory->applyCoupons();
+
+		$iFactory->loadItemTotal();
+
+		$var = $iFactory->invoice->getWorkingData( $this );
+
+		if ( is_array( $var['amount'] ) ) {
+			if ( isset( $var['amount']['amount1'] ) ) {
+				$amount = $var['amount']['amount1'];
+			} else {
+				$amount = $var['amount']['amount3'];
+			}
+		} else {
+			$amount = $var['amount'];
+		}
+
+		if ( empty( $amount ) || ( $amount == '0.00' ) ) {
+			// Free, so no billing neccessary
+			$return['valid']	= true;
+
+			return false;
+		}
+
 		if ( !empty( $invoice->params['totalOccurrences'] ) && !empty( $invoice->params['maxOccurrences'] ) ) {
 			// Only restrict rebill if we have all the info, otherwise fix below (d'oh)
 			if ( $invoice->params['totalOccurrences'] >= $invoice->params['maxOccurrences'] ) {
@@ -769,7 +807,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			$invoice->computeAmount();
 
-			$cim->setParameter( 'transaction_amount',		$invoice->amount );
+			$cim->setParameter( 'transaction_amount',		AECToolbox::correctAmount( $amount ) );
 
 			$cim->setParameter( 'refId',					$invoice->invoice_number );
 			$cim->setParameter( 'order_invoiceNumber',		$invoice->invoice_number);
@@ -778,8 +816,8 @@ class processor_authorize_cim extends PROFILEprocessor
 			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
 
 			$cim->createCustomerProfileTransactionRequest( $this );
-aecDebug($cim);
-			if ( $cim->isSuccessful() ) {aecDebug('CIM successful');
+
+			if ( $cim->isSuccessful() ) {
 				$invoice->pay();
 
 				if ( empty( $invoice->params['maxOccurrences'] ) ) {

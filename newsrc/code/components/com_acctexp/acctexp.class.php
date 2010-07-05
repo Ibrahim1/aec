@@ -6767,7 +6767,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function verifyMIformParams( $metaUser )
+	function verifyMIformParams( $metaUser, $params=null )
 	{
 		$mis = $this->getMicroIntegrations();
 
@@ -6783,7 +6783,7 @@ class SubscriptionPlan extends serialParamDBTable
 					continue;
 				}
 
-				$verify = $mi->verifyMIform( $this, $metaUser );
+				$verify = $mi->verifyMIform( $this, $metaUser, $params );
 
 				if ( !empty( $verify ) && is_array( $verify ) ) {
 					$v[] = array_merge( array( 'id' => $mi->id ), $verify );
@@ -7562,7 +7562,7 @@ class InvoiceFactory
 			return null;
 		}
 
-		$this->loadMetaUser( false, true );
+		$this->loadMetaUser();
 
 		$database = &JFactory::getDBO();
 
@@ -15999,9 +15999,11 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'getMIform', $request );
 	}
 
-	function verifyMIform( $plan, $metaUser )
+	function verifyMIform( $plan, $metaUser, $params=null )
 	{
-		$params	= $metaUser->meta->getMIParams( $this->id, $plan->id, false );
+		if ( empty( $params ) ) {
+			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id, false );
+		}
 
 		$request = new stdClass();
 		$request->action	=	'verifyMIform';
