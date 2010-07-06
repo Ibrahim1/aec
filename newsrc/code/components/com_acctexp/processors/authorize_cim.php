@@ -821,6 +821,10 @@ class processor_authorize_cim extends PROFILEprocessor
 				if ( empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
 					$iFactory->invoice->params['maxOccurrences'] = $this->settings['totalOccurrences'];
 
+					if ( !isset( $iFactory->invoice->params['totalOccurrences'] ) ) {
+						$iFactory->invoice->params['totalOccurrences'] = 1;
+					}
+
 					if ( $iFactory->invoice->params['totalOccurrences'] == $this->settings['totalOccurrences'] ) {
 						// Reset old bug
 						$iFactory->invoice->params['totalOccurrences'] = 1;

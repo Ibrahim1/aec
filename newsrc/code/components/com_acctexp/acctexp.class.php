@@ -7669,7 +7669,7 @@ class InvoiceFactory
 
 						$this->plan = aecCartHelper::getCartItemObject( $this->cartobject, 0 );
 					} else {
-						$am = $this->cartobject->getAmount( $this->metaUser );
+						$am = $this->cartobject->getAmount( $this->metaUser, 0, $this );
 
 						if ( $am['amount'] == "0.00" ) {
 							$this->processor = 'free';
@@ -8046,7 +8046,7 @@ class InvoiceFactory
 		} elseif( !empty( $this->cart ) ) {
 			$this->getCart();
 
-			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser );
+			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
 		}
 
 		// Amend ->payment
@@ -8149,7 +8149,7 @@ class InvoiceFactory
 		$this->loadMetaUser();
 
 		if ( !empty( $this->cartobject->id ) ) {
-			$this->cart = $this->cartobject->getCheckout( $this->metaUser );
+			$this->cart = $this->cartobject->getCheckout( $this->metaUser, 0, $this );
 		}
 	}
 
@@ -8317,7 +8317,7 @@ class InvoiceFactory
 			}
 
 			if ( !empty( $this->cart ) ) {
-				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser );
+				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
 			}
 		}
 	}
@@ -8505,6 +8505,8 @@ class InvoiceFactory
 	{
 		if ( !empty( $coupon ) ) {
 			$this->invoice->addCoupon( $coupon );
+
+			$this->invoice->computeAmount( $this, true );
 		}
 	}
 
@@ -9160,20 +9162,12 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		if ( !empty( $coupon ) ) {
-			$this->invoice->addCoupon( $coupon );
-			$this->invoice->storeload();
-
-			// Make sure we have the correct amount loaded
-			$this->touchInvoice( $option );
-		} else {
-			$this->touchInvoice( $option );
-		}
+		$this->touchInvoice( $option );
 
 		if ( $this->hasExceptions() ) {
 			return $this->addressExceptions( $option );
 		} else {
-			$this->checkout( $option );
+			$this->checkout( $option, 0, null, $coupon );
 		}
 	}
 
@@ -9325,6 +9319,9 @@ class InvoiceFactory
 
 		// If this is marked as supposedly free
 		if ( in_array( strtolower( $this->processor ), $exceptproc ) && !empty( $this->plan ) ) {
+			// Double Check Amount for made_free
+			$this->invoice->computeAmount( $this );
+
 			// And if it is either made free through coupons
 			if (
 				!empty( $this->invoice->made_free )
@@ -10006,9 +10003,9 @@ class Invoice extends serialParamDBTable
 							}
 						}
 
-						$return = $cart->getAmount( $metaUser, $this->counter );
+						$return = $cart->getAmount( $metaUser, $this->counter, $this );
 
-						$allfree = $cart->checkAllFree( $metaUser, $this->counter );
+						$allfree = $cart->checkAllFree( $metaUser, $this->counter, $this );
 
 						$this->amount = $return;
 					} elseif ( isset( $this->params->cart ) ) {
@@ -10021,7 +10018,7 @@ class Invoice extends serialParamDBTable
 							}
 						}
 
-						$return = $cart->getAmount( $metaUser, $this->counter );
+						$return = $cart->getAmount( $metaUser, $this->counter, $this );
 
 						$this->amount = $return;
 					} else {
@@ -11190,9 +11187,13 @@ class aecCartHelper
 
 	function getFirstCartItemObject( $cart )
 	{
-		foreach ( $cart->content as $cid => $c ) {
-			return aecCartHelper::getCartItemObject( $cart, $cid );
+		if ( !empty( $cart->content ) ) {
+			foreach ( $cart->content as $cid => $c ) {
+				return aecCartHelper::getCartItemObject( $cart, $cid );
+			}
 		}
+
+		return null;
 	}
 
 	function getFirstSortedCartItemObject( $cart )
@@ -11200,7 +11201,7 @@ class aecCartHelper
 		$database = &JFactory::getDBO();
 
 		$highest = 0;
-		$cursor = 999999;
+		$cursor = 1000000;
 
 		foreach ( $cart->content as $cid => $c ) {
 			$query = 'SELECT ordering'
@@ -11601,7 +11602,7 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function getCheckout( $metaUser, $counter=0 )
+	function getCheckout( $metaUser, $counter=0, $InvoiceFactory=null )
 	{
 		$database = &JFactory::getDBO();
 
@@ -11685,7 +11686,7 @@ class aecCart extends serialParamDBTable
 		}
 
 		if ( !empty( $this->params['overall_coupons'] ) ) {
-			$cpsh = new couponsHandler( $metaUser, false, $this->params['overall_coupons'] );
+			$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->params['overall_coupons'] );
 
 			$totalcost_ncp = $totalcost;
 			$totalcost = $cpsh->applyToAmount( $totalcost );
@@ -11705,9 +11706,9 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function getAmount( $metaUser=null, $counter=0 )
+	function getAmount( $metaUser=null, $counter=0, $InvoiceFactory=null )
 	{
-		$checkout = $this->getCheckout( $metaUser, $counter );
+		$checkout = $this->getCheckout( $metaUser, $counter, $InvoiceFactory );
 
 		if ( !empty( $checkout ) ) {
 			$max = array_pop( array_keys( $checkout ) );
@@ -11718,9 +11719,9 @@ class aecCart extends serialParamDBTable
 		}
 	}
 
-	function checkAllFree( $metaUser, $counter=0 )
+	function checkAllFree( $metaUser, $counter=0, $InvoiceFactory=null )
 	{
-		$co = $this->getCheckout( $metaUser, $counter=0 );
+		$co = $this->getCheckout( $metaUser, $counter, $InvoiceFactory );
 
 		foreach ( $co as $entry ) {
 			if ( is_object( $entry ) ) {
@@ -11906,6 +11907,10 @@ class Subscription extends serialParamDBTable
 			}
 		} else {
 			$subscriptionid = $database->loadResult();
+		}
+
+		if ( !isset( $subscriptionid ) ) {
+			$subscriptionid = null;
 		}
 
 		if ( empty( $subscriptionid ) && !$similar ) {

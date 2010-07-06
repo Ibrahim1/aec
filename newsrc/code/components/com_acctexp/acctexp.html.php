@@ -1341,7 +1341,9 @@ class Payment_HTML
 
 										$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
 
-										$t .= '&nbsp;( ' . $cost->cost['details'] . ' )';
+										if ( !empty( $cost->cost['details'] ) ) {
+											$t .= '&nbsp;( ' . $cost->cost['details'] . ' )';
+										}
 
 										echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
 									}
