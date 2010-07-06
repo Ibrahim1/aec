@@ -7580,6 +7580,25 @@ class InvoiceFactory
 		}
 	}
 
+	function usageStatus()
+	{
+		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) !== false ) ) {
+			$this->getCart();
+
+			foreach ( $this->cart as $citem ) {
+				if ( is_object( $citem['obj'] ) ) {
+					if ( !$citem['obj']->active ) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		} else {
+			return SubscriptionPlanHandler::PlanStatus( $this->usage );
+		}
+	}
+
 	function getPassthrough( $unset=null )
 	{
 		if ( !empty( $this->passthrough ) ) {
@@ -7623,7 +7642,7 @@ class InvoiceFactory
 		return;
 	}
 
-	function loadPlanObject( $option, $testmi=false )
+	function loadPlanObject( $option, $testmi=false, $quick=false )
 	{
 		$database = &JFactory::getDBO();
 
@@ -7692,7 +7711,7 @@ class InvoiceFactory
 				$offset = count( $this->exceptions );
 			}
 
-			if ( empty( $this->cart ) ) {
+			if ( empty( $this->cart ) || $quick ) {
 				return;
 			}
 

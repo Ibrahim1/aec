@@ -1116,14 +1116,17 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 		$iFactory = new InvoiceFactory( $userid );
 		$iFactory->touchInvoice( $option, $invoice_number );
 
-		$status = SubscriptionPlanHandler::PlanStatus( $iFactory->invoice->usage );
+		$status = $iFactory->usageStatus();
+
 		if ( $status || ( !$status && $aecConfig->cfg['allow_invoice_unpublished_item'] ) ) {
-			if ( $iFactory->checkout( $option, !$first ) === false ) {
+			if ( !$iFactory->checkAuth( $option ) ) {
 				return aecNotAuth();
 			}
 		} else {
 			return aecNotAuth();
 		}
+
+		$iFactory->confirmcart( $option, null, true );
 	} elseif ( $cart ) {
 		$iFactory = new InvoiceFactory( $userid );
 
@@ -1345,7 +1348,9 @@ function InvoiceAddCoupon( $option )
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
+
 	$objinvoice->addCoupon( $coupon_code );
+
 	$objinvoice->computeAmount();
 
 	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
@@ -1360,7 +1365,9 @@ function InvoiceRemoveCoupon( $option )
 
 	$objinvoice = new Invoice( $database );
 	$objinvoice->loadInvoiceNumber( $invoice );
+
 	$objinvoice->removeCoupon( $coupon_code );
+
 	$objinvoice->computeAmount();
 
 	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
