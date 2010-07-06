@@ -8266,11 +8266,13 @@ class InvoiceFactory
 
 				$cost->cost['amount'] = $cost->cost['amount'] + ( $ccost->cost['amount'] * $citem['quantity'] );
 			}
-
-			$this->items->total = $cost;
-
-			$this->items->grand_total = clone( $this->items->total );
 		}
+
+		$this->items->total = $cost;
+
+		$this->items->grand_total = clone( $this->items->total );
+
+		$this->applyCouponsTotal();
 
 		$exchange = $silent = null;
 
@@ -8305,7 +8307,7 @@ class InvoiceFactory
 					$this->loadItems();
 
 					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-					$this->items->itemlist = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
+					$this->items = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
 				}
 			} else {
 				$this->items->itemlist = $cpsh->applyToItemList( $this->items->itemlist );
@@ -8338,6 +8340,33 @@ class InvoiceFactory
 			if ( !empty( $this->cart ) ) {
 				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
 			}
+		}
+	}
+
+	function applyCouponsTotal()
+	{
+		global $aecConfig;
+
+		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->invoice->coupons ) ) {
+			$coupons = $this->invoice->coupons;
+
+			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
+
+			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+				$this->items->discount = $cpsh->applyToTotal( $this->items, $this->cartobject, $this->cart );
+
+				if ( !empty( $this->items->discount ) ) {
+					$discount = 0;
+					foreach ( $this->items->discount as $cost ) {
+						if ( $cost->type == 'discount' ) {
+							$discount += $cost->cost['amount'];
+						}
+					}
+
+					$this->items->grand_total->cost['amount'] += $discount;
+				}
+			}
+
 		}
 	}
 
@@ -16694,6 +16723,31 @@ class couponsHandler extends eucaObject
 		return true;
 	}
 
+	function applyToTotal( $items, $cart=false, $fullcart=false )
+	{
+		$this->prefilter( $items, $cart, $fullcart );
+
+		if ( !empty( $this->fullcartlist ) ) {
+			// Dummy terms
+			$terms = new mammonTerms();
+			$term = new mammonTerm();
+
+			$term->addCost( $items->total->cost['amount'] );
+
+			$terms->addTerm( $term );
+
+			foreach ( $this->fullcartlist as $coupon_code ) {
+				if ( $this->loadCoupon( $coupon_code ) ) {
+					$terms = $this->cph->applyToTerms( $terms );
+				}
+			}
+
+			return $terms->terms[0]->cost;
+		}
+
+		return null;
+	}
+
 	function applyToCart( $items, $cart=false, $fullcart=false )
 	{
 		$this->prefilter( $items, $cart, $fullcart );
@@ -16895,7 +16949,7 @@ class couponsHandler extends eucaObject
 				$r = $this->cph->checkRestrictions( $this->metaUser, $terms, $this->InvoiceFactory->usage );
 
 				if ( $this->cph->status ) {
-					$item['terms'] = $this->cph->applyToTerms( $terms, $this->cph );
+					$item['terms'] = $this->cph->applyToTerms( $terms );
 
 					$this->addCouponToRecord( $id, $coupon_code, $ccombo );
 
@@ -17505,6 +17559,7 @@ class couponHandler
 
 		return $terms;
 	}
+
 }
 
 class coupon extends serialParamDBTable

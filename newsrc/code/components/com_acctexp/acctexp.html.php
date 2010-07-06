@@ -1327,8 +1327,27 @@ class Payment_HTML
 						echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_TOTAL . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
 					}
 
+					if ( !empty( $InvoiceFactory->items->discount ) ) {
+						// Iterate through full discounts
+						foreach ( $InvoiceFactory->items->discount as $cost ) {
+							if ( $cost->type == 'discount' ) {
+								$t = constant( strtoupper( '_aec_checkout_' . $cost->type ) );
+
+								$amount = AECToolbox::correctAmount( $cost->cost['amount'] );
+
+								$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
+
+								if ( !empty( $cost->cost['details'] ) ) {
+									$t .= '&nbsp;( ' . $cost->cost['details'] . ' )';
+								}
+
+								echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
+							}
+						}
+					}
+
 					if ( !empty( $InvoiceFactory->items->tax ) ) {
-						// Iterate through costs
+						// Iterate through taxes
 						foreach ( $InvoiceFactory->items->tax as $titems ) {
 							foreach ( $titems['terms']->terms as $titem ) {
 								$citem = $titem->renderCost();
