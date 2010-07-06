@@ -754,13 +754,14 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		$iFactory = new InvoiceFactory( null, null, null, 'authorize_cim' );
 
-		$iFactory->userid = $invoice->usage;
-		$iFactory->usage = $subscription->userid;
+		$iFactory->userid = $subscription->userid;
+		$iFactory->usage = $invoice->usage;
 		$iFactory->processor = 'authorize_cim';
 
 		$iFactory->loadMetaUser();
 
 		$iFactory->touchInvoice( $option, $invoice->invoice_number );
+
 		$iFactory->puffer( $option );
 
 		$iFactory->loadItems();
@@ -769,7 +770,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		$iFactory->loadItemTotal();
 
-		$var = $iFactory->invoice->getWorkingData( $this );
+		$var = $iFactory->invoice->getWorkingData( $iFactory );
 
 		if ( is_array( $var['amount'] ) ) {
 			if ( isset( $var['amount']['amount1'] ) ) {
@@ -788,15 +789,14 @@ class processor_authorize_cim extends PROFILEprocessor
 			return false;
 		}
 
-		if ( !empty( $invoice->params['totalOccurrences'] ) && !empty( $invoice->params['maxOccurrences'] ) ) {
+		if ( !empty( $iFactory->invoice->params['totalOccurrences'] ) && !empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
 			// Only restrict rebill if we have all the info, otherwise fix below (d'oh)
-			if ( $invoice->params['totalOccurrences'] >= $invoice->params['maxOccurrences'] ) {
+			if ( $iFactory->invoice->params['totalOccurrences'] >= $iFactory->invoice->params['maxOccurrences'] ) {
 				return false;
 			}
 		}
 
-		$metaUser = new metaUser( $invoice->userid );
-		$ppParams = $metaUser->meta->getProcessorParams( $this->id );
+		$ppParams = $iFactory->metaUser->meta->getProcessorParams( $this->id );
 
 		if ( !empty( $ppParams->profileid ) ) {
 			$cim = $this->loadCIMpay( $ppParams );
@@ -805,34 +805,32 @@ class processor_authorize_cim extends PROFILEprocessor
 			$cim->setParameter( 'customerPaymentProfileId',	$cim->customerPaymentProfileId );
 			$cim->setParameter( 'customerAddressId',		$cim->customerAddressId );
 
-			$invoice->computeAmount();
-
 			$cim->setParameter( 'transaction_amount',		AECToolbox::correctAmount( $amount ) );
 
-			$cim->setParameter( 'refId',					$invoice->invoice_number );
-			$cim->setParameter( 'order_invoiceNumber',		$invoice->invoice_number);
-			$cim->setParameter( 'merchantCustomerId',		$invoice->userid );
+			$cim->setParameter( 'refId',					$iFactory->invoice->invoice_number );
+			$cim->setParameter( 'order_invoiceNumber',		$iFactory->invoice->invoice_number);
+			$cim->setParameter( 'merchantCustomerId',		$iFactory->invoice->userid );
 
 			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
 
 			$cim->createCustomerProfileTransactionRequest( $this );
 
 			if ( $cim->isSuccessful() ) {
-				$invoice->pay();
+				$iFactory->invoice->pay();
 
-				if ( empty( $invoice->params['maxOccurrences'] ) ) {
-					$invoice->params['maxOccurrences'] = $this->settings['totalOccurrences'];
+				if ( empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
+					$iFactory->invoice->params['maxOccurrences'] = $this->settings['totalOccurrences'];
 
-					if ( $invoice->params['totalOccurrences'] == $this->settings['totalOccurrences'] ) {
+					if ( $iFactory->invoice->params['totalOccurrences'] == $this->settings['totalOccurrences'] ) {
 						// Reset old bug
-						$invoice->params['totalOccurrences'] = 1;
+						$iFactory->invoice->params['totalOccurrences'] = 1;
 					}
 				}
 
-				if ( !empty( $invoice->params['maxOccurrences'] ) && !empty( $invoice->params['totalOccurrences'] ) ) {
-					$invoice->params['totalOccurrences']++;
+				if ( !empty( $iFactory->invoice->params['maxOccurrences'] ) && !empty( $iFactory->invoice->params['totalOccurrences'] ) ) {
+					$iFactory->invoice->params['totalOccurrences']++;
 
-					$invoice->storeload();
+					$iFactory->invoice->storeload();
 				}
 
 				return true;

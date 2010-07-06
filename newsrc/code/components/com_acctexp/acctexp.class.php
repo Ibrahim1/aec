@@ -8143,7 +8143,7 @@ class InvoiceFactory
 		}
 
 		if ( empty( $this->cartobject->content ) && !empty( $this->invoice->params['cart'] ) ) {
-			$this->cartobject = $this->invoice->params['cart'];
+			$this->cartobject = clone( $this->invoice->params['cart'] );
 		}
 
 		$this->loadMetaUser();
@@ -10481,10 +10481,32 @@ class Invoice extends serialParamDBTable
 			switch ( strtolower( $usage[0] ) ) {
 				case 'c':
 				case 'cart':
-					$this->params['cart'] = new aecCart( $database );
-					$this->params['cart']->load( $usage[1] );
+					if ( empty( $this->params['cart']->content ) ) {
+						$this->params['cart'] = new aecCart( $database );
+						$this->params['cart']->load( $usage[1] );
 
-					if ( !empty( $this->params['cart']->content ) ) {
+						if ( !empty( $this->params['cart']->content ) ) {
+							foreach ( $this->params['cart']->content as $c ) {
+								$new_plan = new SubscriptionPlan( $database );
+								$new_plan->load( $c['id'] );
+
+								for ( $i=0; $i<$c['quantity']; $i++ ) {
+									$plans[] = $new_plan;
+								}
+							}
+						}
+
+						$this->params['cart']->clear();
+
+						$this->storeload();
+
+						// Load and delete original entry
+						$cart = new aecCart( $database );
+						$cart->load( $usage[1] );
+						if ( $cart->id ) {
+							$cart->delete();
+						}
+					} else {
 						foreach ( $this->params['cart']->content as $c ) {
 							$new_plan = new SubscriptionPlan( $database );
 							$new_plan->load( $c['id'] );
@@ -10494,13 +10516,6 @@ class Invoice extends serialParamDBTable
 							}
 						}
 					}
-
-					$this->params['cart']->clear();
-
-					// Load and delete original entry
-					$cart = new aecCart( $database );
-					$cart->load( $usage[1] );
-					$cart->delete();
 					break;
 				case 'p':
 				case 'plan':

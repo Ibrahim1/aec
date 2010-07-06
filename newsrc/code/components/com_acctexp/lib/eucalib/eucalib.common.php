@@ -544,7 +544,7 @@ class serialParamDBTable extends paramDBTable
 		$props = get_object_vars( $this );
 
 		foreach ( $props as $n => $prop ) {
-			if ( !array_key_exists( $n, $vars  ) || ( $n[0] == '_' ) ) {
+			if ( !array_key_exists( $n, $vars  ) || ( strpos( $n, '_' ) === 0 ) ) {
 				unset( $this->$n );
 			}
 		}
