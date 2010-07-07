@@ -8210,6 +8210,8 @@ class InvoiceFactory
 
 			$exchange = $silent = null;
 
+			$this->applyCoupons();
+
 			$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
 
 			$this->cartobject = new aecCart( $database );
@@ -8242,6 +8244,8 @@ class InvoiceFactory
 					$this->items->itemlist[$cid]['params'] = $params;
 
 					$exchange = $silent = null;
+
+					$this->applyCoupons();
 
 					$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
 				}
@@ -9407,8 +9411,6 @@ class InvoiceFactory
 
 		$this->loadItems();
 
-		$this->applyCoupons();
-
 		$this->loadItemTotal();
 
 		$exchange = $silent = null;
@@ -9538,8 +9540,6 @@ class InvoiceFactory
 
 		$this->loadItems();
 
-		$this->applyCoupons();
-
 		$this->loadItemTotal();
 
 		$var = $this->invoice->getWorkingData( $this );
@@ -9566,8 +9566,6 @@ class InvoiceFactory
 			$this->checkout( $option, true, $response['error'] );
 		} elseif ( isset( $response['doublecheckout'] ) ) {
 			$this->loadItems();
-
-			$this->applyCoupons();
 
 			$this->loadItemTotal();
 
@@ -9693,8 +9691,6 @@ class InvoiceFactory
 		$this->puffer( $option );
 
 		$this->loadItems();
-
-		$this->applyCoupons();
 
 		$this->loadItemTotal();
 
@@ -17508,7 +17504,7 @@ class couponHandler
 		return AECToolbox::correctAmount( $amount );
 	}
 
-	function applyToTerms( $terms )
+	function applyToTerms( $terms, $allow_amount_discount=true )
 	{
 		$offset = 0;
 
@@ -17534,24 +17530,28 @@ class couponHandler
 				$terms->addTerm( clone( $terms->terms[$i] ) );
 			}
 
-			if ( $this->discount['percent_first'] ) {
-				if ( $this->discount['amount_percent_use'] ) {
-					$info['details'] = '-' . $this->discount['amount_percent'] . '%';
-					$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
-				}
-				if ( $this->discount['amount_use'] ) {
-					$info['details'] = null;
-					$terms->terms[$i]->discount( $this->discount['amount'], null, $info );
+			if ( $allow_amount_discount ) {
+				if ( $this->discount['percent_first'] ) {
+					if ( $this->discount['amount_percent_use'] ) {
+						$info['details'] = '-' . $this->discount['amount_percent'] . '%';
+						$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
+					}
+					if ( $this->discount['amount_use'] ) {
+						$info['details'] = null;
+						$terms->terms[$i]->discount( $this->discount['amount'], null, $info );
+					}
+				} else {
+					if ( $this->discount['amount_use'] ) {
+						$info['details'] = null;
+						$terms->terms[$i]->discount( $this->discount['amount'], null, $info );
+					}
+					if ( $this->discount['amount_percent_use'] ) {
+						$info['details'] = '-' . $this->discount['amount_percent'] . '%';
+						$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
+					}
 				}
 			} else {
-				if ( $this->discount['amount_use'] ) {
-					$info['details'] = null;
-					$terms->terms[$i]->discount( $this->discount['amount'], null, $info );
-				}
-				if ( $this->discount['amount_percent_use'] ) {
-					$info['details'] = '-' . $this->discount['amount_percent'] . '%';
-					$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
-				}
+				
 			}
 		}
 

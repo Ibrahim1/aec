@@ -208,8 +208,6 @@ class mi_aectax
 			return null;
 		}
 
-		$total = serialize( $request->add->total );
-
 		$taxamount = 0;
 
 		// Add tax items to total
@@ -232,12 +230,20 @@ class mi_aectax
 			$taxamount += $amount;
 		}
 
-		$grand_total = AECToolbox::correctAmount( $request->add->total->cost['amount'] + $taxamount );
+		$grand_total = $request->add->total->cost['amount'];
+
+		if ( !empty( $request->add->discount ) ) {
+			foreach ( $request->add->discount as $cost ) {
+				if ( $cost->type == 'discount' ) {
+					$grand_total += $cost->cost['amount'];
+				}
+			}
+		}
+
+		$grand_total = AECToolbox::correctAmount( $grand_total + $taxamount );
 
 		// Modify grand total according to tax
 		$request->add->grand_total->set( 'cost', array( 'amount' => $grand_total ) );
-
-		$request->add->total = unserialize( $total );
 
 		return true;
 	}
