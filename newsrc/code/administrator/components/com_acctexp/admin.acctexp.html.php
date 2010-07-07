@@ -898,10 +898,16 @@ class HTML_AcctExp
 										array( 'history', 'history', _AEC_CENTR_VIEW_HISTORY ),
 										array( 'eventlog', 'eventlog', _AEC_CENTR_LOG ),
 										array( 'hacks', 'hacks', _AEC_CENTR_HACKS ),
-										array( 'help', 'help', _AEC_CENTR_HELP ),
-										array( 'export', 'export', _AEC_CENTR_EXPORT ),
-										array( 'readout', 'export', _AEC_READOUT )
+										array( 'help', 'help', _AEC_CENTR_HELP )
 						);
+
+						if ( aecJoomla15check() ) {
+							$links[] = array( 'import', 'import', _AEC_CENTR_IMPORT );
+						}
+
+						$links[] = array( 'export', 'export', _AEC_CENTR_EXPORT );
+						$links[] = array( 'readout', 'export', _AEC_READOUT );
+						
 
 						$linkroot = "index2.php?option=com_acctexp&amp;task=";
 						foreach ( $links as $litem ) {
@@ -3098,13 +3104,47 @@ class HTML_AcctExp
 
 	function import( $option, $aecHTML )
 	{
-		// 1st Stage - Select or upload a csv
-		// Auto-Select last uploaded (checkbox for automatically moving into it)
-		// 2nd Stage - Act on data
-		//  1- Create Joomla User <-accepts data from csv
-		//  2- Assign before plan(s) verbatim
-		//  3- Assign main plan <-accepts data from csv
-		//  4- Assign after plan(s) verbatim
+		loadOverlib();
+		HTML_myCommon::addBackendCSS();
+		?>
+		<form action="index2.php" method="post" name="adminForm">
+		<table class="adminheading">
+		<tr>
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_import.png) no-repeat left;" rowspan="2" nowrap="nowrap">
+				<?php echo _AEC_HEAD_IMPORT; ?>
+			</th>
+			<td nowrap="nowrap" style="padding: 0 5px;">
+			</td>
+		</tr>
+		</table>
+		<table class="aecadminform">
+			<tr>
+				<td valign="top">
+					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+						echo $aecHTML->createSettingsParticle( $rowname );
+					} ?>
+					
+					<?php if ( $aecHTML->offer_upload ) { ?>
+					    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+					    Upload: <input name="userfile" type="file" />
+					<?php } ?>
+				</td>
+			</tr>
+		</table>
+
+		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="returnTask" value="import" />
+		</form>
+
+		<?php
+		echo $aecHTML->loadJS();
+
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $aecHTML );
+		}
+
+ 		HTML_myCommon::Valanx();
 	}
 
 	function export( $option, $aecHTML )

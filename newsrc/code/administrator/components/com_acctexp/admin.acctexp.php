@@ -6727,9 +6727,18 @@ function readout( $option )
 	}
 }
 
-function importData()
+function importData( $option )
 {
+	$offer_upload = true;
+
+	if ( !empty( $_FILES ) ) {
+		$dest = JPATH_SITE . '/tmp';
+	}
+
+	$file_select = aecGetParam( 'file_select', '' );
+	
 	// File Selected?
+	
 	// No -> Show only file selection&upload dialog
 	// Yes:
 	// Preparse File (show 2 sample lines of data)
@@ -6738,7 +6747,16 @@ function importData()
 	// Preset selected?
 	// YES -> Load Preset
 	// No -> Load Defaults
-	//
+
+
+	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+	// Call HTML Class
+	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+	$aecHTML->offer_upload = $offer_upload;
+
+	HTML_AcctExp::import( $option, $aecHTML );
 }
 
 function exportData( $option, $cmd=null )

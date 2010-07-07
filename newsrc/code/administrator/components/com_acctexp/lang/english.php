@@ -2014,6 +2014,13 @@ define( '_PEND_DESC', 'Subscriptions that does not complete the process. This st
 define( '_ACTIVATE', 'Activate');
 define( '_ACTIVATED', 'User activated.');
 
+// --== IMPORT ==--
+define( '_AEC_HEAD_IMPORT', 'Import');
+define( '_IMPORT_LOAD', 'Load');
+define( '_IMPORT_APPLY', 'Apply');
+define( '_IMPORT_GENERAL_SELECTED_IMPORT_NAME', 'Import Preset');
+define( '_IMPORT_GENERAL_SELECTED_IMPORT_DESC', 'Select a preset (or an automatically saved previous export) instead of making the selections below. You can also click apply on the upper right and preview the preset.');
+
 // --== EXPORT ==--
 define( '_AEC_HEAD_EXPORT', 'Export');
 define( '_EXPORT_LOAD', 'Load');
