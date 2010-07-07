@@ -8246,7 +8246,7 @@ class InvoiceFactory
 
 		foreach ( $this->items->itemlist as $cid => $citem ) {
 			$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
-		}print_r($this->items);exit;
+		}
 	}
 
 	function loadItemTotal()
@@ -16752,22 +16752,51 @@ class couponsHandler extends eucaObject
 						$items->itemlist[$cid]['terms'] = $this->cph->applyToTerms( $items->itemlist[$cid]['terms'], true );
 					}
 
-					// Dummy terms
-					$terms = new mammonTerms();
-					$term = new mammonTerm();
-
-					$term->addCost( $cost->cost['amount'] );
-
-					$terms->addTerm( $term );
-
-					$terms = $this->cph->applyToTerms( $terms );
-
-					if ( empty( $items->discount ) ) {
-						$items->discount = array();
-					}
-
-					$items->discount[] = $terms->terms;
 				}
+			}
+
+			$discounttypes = array();
+			$discount_col = array();
+			foreach ( $items->itemlist as $item ) {
+				foreach ( $item['terms']->nextterm->cost as $cost ) {
+					if ( $cost->type == 'discount' ) {
+						$cc = $cost->cost['coupon'] . ' - ' . $cost->cost['details'];
+
+						if ( in_array( $cc, $discounttypes ) ) {
+							$typeid = array_search( $cc, $discounttypes );
+						} else {
+							$discounttypes[] = $cc;
+
+							$typeid = count( $discounttypes ) - 1;
+						}
+
+						if ( !isset( $discount_col[$typeid] ) ) {
+							$discount_col[$typeid] = 0;
+						}
+
+						$discount_col[$typeid] += $cost->renderCost();
+					}
+				}
+			}
+
+			if ( !empty( $discount_col ) ) {
+				// Dummy terms
+				$terms = new mammonTerms();
+				$term = new mammonTerm();
+
+				foreach ( $discount_col as $cid => $discount ) {
+					$cce = explode( ' - ', $discounttypes[$cid], 2 );
+
+					$term->addCost( $discount, array( 'amount' => $discount, 'coupon' => $cce[0], 'details' => $cce[1] ) );
+				}
+
+				$terms->addTerm( $term );
+
+				if ( empty( $items->discount ) ) {
+					$items->discount = array();
+				}
+
+				$items->discount[] = $terms->terms;
 			}
 
 		}
@@ -17893,7 +17922,7 @@ class aecImport
 {
 	function aecImport( $file )
 	{
-		
+
 	}
 
 	function read( $content )

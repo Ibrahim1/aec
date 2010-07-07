@@ -605,10 +605,14 @@ class mammonTerm extends eucaObject
 
 		$return = null;
 		foreach ( $this->cost as $id => $cost ) {
-			if ( in_array( $cost->type, $filter ) || ( isset( $return->cost['temp_coupon'] ) && $filter_temp_coupons ) ) {
-				$return->cost['amount'] = AECToolbox::correctAmount( $return->cost['amount'] );
+			if ( in_array( $cost->type, $filter ) || ( isset( $cost->cost['temp_coupon'] ) && $filter_temp_coupons ) ) {
+				if ( isset( $return->cost['amount'] ) ) {
+					$return->cost['amount'] = AECToolbox::correctAmount( $return->cost['amount'] );
 
-				return $return;
+					return $return;
+				} else {
+					return $cost;
+				}
 			}
 
 			if ( empty( $return ) ) {

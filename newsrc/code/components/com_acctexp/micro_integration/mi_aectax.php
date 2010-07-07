@@ -290,8 +290,6 @@ class mi_aectax
 	function addTax( $request, $item, $location )
 	{
 		foreach ( $item['terms']->terms as $tid => $term ) {
-			$total = $term->renderTotal();
-var_dump($total);print_r($item['terms']->terms[$tid]);
 			if ( !empty( $this->settings['vat_no_request'] ) ) {
 				if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
 					$vatlist = $this->vatList();
@@ -311,7 +309,9 @@ var_dump($total);print_r($item['terms']->terms[$tid]);
 					}
 				}
 			}
-print_r($location['mode']);
+
+			$total = $term->renderTotal();
+
 			switch ( $location['mode'] ) {
 				default:
 					$newtotal = $total;
@@ -319,16 +319,28 @@ print_r($location['mode']);
 					$tax = "0.00";
 					break;
 				case 'reverse_pseudo_subtract':
-					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
+					// Get root cost without coupons
+					$cost = $term->getBaseCostObject( false, true );
+
+					$newtotal = ( $cost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
 
 					$item['terms']->terms[$tid]->modifyCost( 0, $newtotal );
 
 					$tax = "0.00";
 					break;
 				case 'pseudo_subtract':
-					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
+					// Get root cost without coupons
+					$cost = $term->getBaseCostObject( false, true );
 
+					$newtotal = ( $cost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
+
+					// Set new root cost
 					$item['terms']->terms[$tid]->modifyCost( 0, $newtotal );
+
+					// Get the actual total to compute the real tax
+					$total = $term->renderTotal();
+
+					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
 
 					$tax = AECToolbox::correctAmount( $total - $newtotal );
 					break;
@@ -349,12 +361,12 @@ print_r($location['mode']);
 					$total = AECToolbox::correctAmount( $newtotal + $tax );
 					break;
 			}
-print_r($item['terms']->terms[$tid]);
+
 			$item['terms']->terms[$tid]->addCost( $tax, array( 'details' => $location['extra'] ), true );
 		}
 
 		$item['cost'] = $item['terms']->nextterm->renderTotal();
-print_r($item['terms']->terms[$tid]);
+
 		$request->add->itemlist[] = $item;
 
 		return $request;

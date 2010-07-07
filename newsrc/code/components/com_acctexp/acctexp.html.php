@@ -1341,6 +1341,10 @@ class Payment_HTML
 
 										$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
 
+										if ( !empty( $cost->cost['details'] ) ) {
+											$t .= '&nbsp;(' . $cost->cost['details'] . ')';
+										}
+
 										if ( !empty( $cost->cost['coupon'] ) ) {
 											$t .= '&nbsp;[<a href="'
 												. AECToolbox::deadsureURL( 'index.php?option=' . $option
