@@ -3169,7 +3169,7 @@ class PaymentProcessor
 		return $settings;
 	}
 
-	function checkoutAction( $int_var=null, $metaUser=null, $plan=null, $invoice=null, $cart=null )
+	function checkoutAction( $int_var=null, $metaUser=null, $plan=null, $InvoiceFactory=null, $cart=null )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -3190,13 +3190,13 @@ class PaymentProcessor
 		$request->int_var			=& $int_var;
 		$request->metaUser			=& $metaUser;
 		$request->plan				=& $plan;
-		$request->invoice			=& $invoice;
+		$request->invoice			=& $InvoiceFactory->invoice;
 		$request->cart				=& $cart;
 
-		return $this->processor->checkoutAction( $request );
+		return $this->processor->checkoutAction( $request, $InvoiceFactory );
 	}
 
-	function checkoutProcess( $int_var=null, $metaUser=null, $plan=null, $invoice=null, $cart=null )
+	function checkoutProcess( $int_var=null, $metaUser=null, $plan=null, $InvoiceFactory=null, $cart=null )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -3217,10 +3217,10 @@ class PaymentProcessor
 		$request->int_var			=& $int_var;
 		$request->metaUser			=& $metaUser;
 		$request->plan				=& $plan;
-		$request->invoice			=& $invoice;
+		$request->invoice			=& $InvoiceFactory->invoice;
 		$request->cart				=& $cart;
 
-		return $this->processor->checkoutProcess( $request );
+		return $this->processor->checkoutProcess( $request, $InvoiceFactory );
 	}
 
 	function customAction( $action, $invoice, $metaUser, $int_var=null )
@@ -3598,7 +3598,7 @@ class processor extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		return '<p>' . $this->settings['info'] . '</p>';
 	}
@@ -3943,7 +3943,7 @@ class processor extends serialParamDBTable
 
 class XMLprocessor extends processor
 {
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 
@@ -4421,7 +4421,7 @@ class XMLprocessor extends processor
 		return true;
 	}
 
-	function checkoutProcess( $request )
+	function checkoutProcess( $request, $InvoiceFactory )
 	{
 		$this->sanitizeRequest( $request );
 
@@ -4442,7 +4442,7 @@ class XMLprocessor extends processor
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
 		}
 
-		return $this->checkoutResponse( $request, $response );
+		return $this->checkoutResponse( $request, $response, $InvoiceFactory );
 	}
 
 	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
@@ -4458,7 +4458,7 @@ class XMLprocessor extends processor
 		return parent::transmitRequest( $url, $path, $content, $port, $curlextra, $header );
 	}
 
-	function checkoutResponse( $request, $response )
+	function checkoutResponse( $request, $response, $InvoiceFactory=null )
 	{
 		if ( !empty( $response['error'] ) ) {
 			return $response;
@@ -4475,7 +4475,7 @@ class XMLprocessor extends processor
 				unset( $response['raw'] );
 			}
 
-			return $request->invoice->processorResponse( $request->parent, $response, $resp, true );
+			return $request->invoice->processorResponse( $InvoiceFactory, $response, $resp, true );
 		} else {
 			return false;
 		}
@@ -4786,7 +4786,7 @@ class PROFILEprocessor extends XMLprocessor
 
 class POSTprocessor extends processor
 {
-	function checkoutAction( $request, $xvar=null )
+	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null )
 	{
 		if ( empty( $xvar ) ) {
 			$var = $this->createGatewayLink( $request );
@@ -4821,7 +4821,7 @@ class POSTprocessor extends processor
 
 class GETprocessor extends processor
 {
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		$var = $this->createGatewayLink( $request );
 
@@ -4852,7 +4852,7 @@ class GETprocessor extends processor
 
 class URLprocessor extends processor
 {
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $mainframe;
 
@@ -8208,12 +8208,6 @@ class InvoiceFactory
 
 			$cid = array_pop( array_keys( $this->items->itemlist ) );
 
-			$exchange = $silent = null;
-
-			$this->applyCoupons();
-
-			$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
-
 			$this->cartobject = new aecCart( $database );
 			$this->cartobject->addItem( array(), $this->plan );
 		} else {
@@ -8242,15 +8236,17 @@ class InvoiceFactory
 					}
 
 					$this->items->itemlist[$cid]['params'] = $params;
-
-					$exchange = $silent = null;
-
-					$this->applyCoupons();
-
-					$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
 				}
 			}
 		}
+
+		$exchange = $silent = null;
+
+		$this->applyCoupons();
+
+		foreach ( $this->items->itemlist as $cid => $citem ) {
+			$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
+		}print_r($this->items);exit;
 	}
 
 	function loadItemTotal()
@@ -8264,9 +8260,9 @@ class InvoiceFactory
 			$citem['terms']->nextterm->computeTotal();
 
 			if ( empty( $cost ) ) {
-				$cost = clone( $citem['terms']->nextterm->getBaseCostObject() );
+				$cost = clone( $citem['terms']->nextterm->getBaseCostObject( false, true ) );
 			} else {
-				$ccost = $citem['terms']->nextterm->getBaseCostObject();
+				$ccost = $citem['terms']->nextterm->getBaseCostObject( false, true );
 
 				$cost->cost['amount'] = $cost->cost['amount'] + ( $ccost->cost['amount'] * $citem['quantity'] );
 			}
@@ -8281,6 +8277,11 @@ class InvoiceFactory
 		$exchange = $silent = null;
 
 		$this->triggerMIs( 'invoice_items_total', $exchange, $this->items, $silent );
+
+		// Reset Invoice Price
+		$this->invoice->amount = $this->items->grand_total->cost['amount'];
+
+		$this->invoice->storeload();
 	}
 
 	function applyCoupons()
@@ -8311,7 +8312,7 @@ class InvoiceFactory
 					$this->loadItems();
 
 					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-					$this->items = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
+					$this->items->itemlist = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
 				}
 			} else {
 				$this->items->itemlist = $cpsh->applyToItemList( $this->items->itemlist );
@@ -8341,6 +8342,12 @@ class InvoiceFactory
 				}
 			}
 
+			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+				$this->items = $cpsh->applyToTotal( $this->items, $this->cartobject, $this->cart );
+			} else {
+				$this->items = $cpsh->applyToTotal( $this->items );
+			}
+
 			if ( !empty( $this->cart ) ) {
 				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
 			}
@@ -8356,20 +8363,7 @@ class InvoiceFactory
 
 			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 
-			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
-				$this->items->discount = $cpsh->applyToTotal( $this->items, $this->cartobject, $this->cart );
 
-				if ( !empty( $this->items->discount ) ) {
-					$discount = 0;
-					foreach ( $this->items->discount as $cost ) {
-						if ( $cost->type == 'discount' ) {
-							$discount += $cost->cost['amount'];
-						}
-					}
-
-					$this->items->grand_total->cost['amount'] += $discount;
-				}
-			}
 
 		}
 	}
@@ -9446,9 +9440,9 @@ class InvoiceFactory
 		// Assemble Checkout Response
 		if ( !empty( $int_var['objUsage'] ) ) {
 			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
-				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this->invoice );
+				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, $int_var['objUsage'], $this );
 			} else {
-				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this->invoice, $int_var['objUsage'] );
+				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
 			}
 		}
 
@@ -9557,9 +9551,9 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
-			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice, $this->cart );
+			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this, $this->cart );
 		} else {
-			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this->invoice );
+			$response = $this->pp->checkoutProcess( $var, $targetUser, $new_subscription, $this );
 		}
 
 		if ( isset( $response['error'] ) ) {
@@ -9588,7 +9582,11 @@ class InvoiceFactory
 
 		$this->puffer( $option );
 
-		$this->invoice->processorResponse( $this->pp, $response );
+		$this->loadItems();
+
+		$this->loadItemTotal();
+
+		$this->invoice->processorResponse( $this, $response, '', false );
 
 		if ( isset( $response['error'] ) ) {
 			$this->checkout( $option, true, $response['error'] );
@@ -9643,7 +9641,7 @@ class InvoiceFactory
 
 			$response = $pp->customAction( $action, $this->invoice, $this->metaUser );
 
-			$response = $this->invoice->processorResponse( $pp, $response, '', true );
+			$response = $this->invoice->processorResponse( $this, $response, '', true );
 
 			if ( isset( $response['cancel'] ) ) {
 				HTML_Results::cancel( 'com_acctexp' );
@@ -9674,7 +9672,7 @@ class InvoiceFactory
 		if ( isset( $response['InvoiceToCheckout'] ) ) {
 			$this->InvoiceToCheckout( 'com_acctexp', true, false );
 		} else {
-			$response = $this->invoice->processorResponse( $this->pp, $response, '', true );
+			$response = $this->invoice->processorResponse( $this, $response, '', true );
 
 			if ( isset( $response['cancel'] ) ) {
 				HTML_Results::cancel( 'com_acctexp' );
@@ -10189,7 +10187,7 @@ class Invoice extends serialParamDBTable
 		return $inum;
 	}
 
-	function processorResponse( $pp, $response, $resp='', $altvalidation=false )
+	function processorResponse( $InvoiceFactory, $response, $resp='', $altvalidation=false )
 	{
 		global $aecConfig;
 
@@ -10208,7 +10206,7 @@ class Invoice extends serialParamDBTable
 
 		$database = &JFactory::getDBO();
 
-		$this->computeAmount();
+		$this->amount = $InvoiceFactory->items->grand_total->cost['amount'];
 
 		$objUsage = $this->getObjUsage();
 
@@ -10219,16 +10217,16 @@ class Invoice extends serialParamDBTable
 		}
 
 		$post = aecPostParamClear( $_POST );
-		$post['planparams'] = $plan->getProcessorParameters( $pp->id );
+		$post['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp->id );
 
 		$response['userid'] = $this->userid;
 
-		$pp->exchangeSettingsByPlan( $plan, $plan->params );
+		$InvoiceFactory->pp->exchangeSettingsByPlan( $plan, $plan->params );
 
 		if ( $altvalidation ) {
-			$response = $pp->instantvalidateNotification( $response, $post, $this );
+			$response = $InvoiceFactory->pp->instantvalidateNotification( $response, $post, $this );
 		} else {
-			$response = $pp->validateNotification( $response, $post, $this );
+			$response = $InvoiceFactory->pp->validateNotification( $response, $post, $this );
 		}
 
 		if ( isset( $response['userid'] ) ) {
@@ -10259,7 +10257,7 @@ class Invoice extends serialParamDBTable
 
 		// Create history entry
 		$history = new logHistory( $database );
-		$history->entryFromInvoice( $this, $resp, $pp );
+		$history->entryFromInvoice( $this, $resp, $InvoiceFactory->pp );
 
 		$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
 		$event = _AEC_MSG_PROC_INVOICE_ACTION_EV . "\n";
@@ -10285,7 +10283,7 @@ class Invoice extends serialParamDBTable
 			$break = 0;
 
 			// If not in Testmode, check for amount and currency
-			if ( empty( $pp->settings['testmode'] ) ) {
+			if ( empty( $InvoiceFactory->pp->settings['testmode'] ) ) {
 				if ( isset( $response['amount_paid'] ) ) {
 					if ( $response['amount_paid'] != $this->amount ) {
 						// Amount Fraud, cancel payment and create error log addition
@@ -10471,9 +10469,9 @@ class Invoice extends serialParamDBTable
 		$eventlog->issue( $short, $tags, $event, $level, $params, $forcedisplay );
 
 		if ( !empty( $notificationerror ) ) {
-			$pp->notificationError( $response, $notificationerror );
+			$InvoiceFactory->pp->notificationError( $response, $notificationerror );
 		} else {
-			$pp->notificationSuccess( $response );
+			$InvoiceFactory->pp->notificationSuccess( $response );
 		}
 
 		return $response;
@@ -16724,24 +16722,57 @@ class couponsHandler extends eucaObject
 		$this->prefilter( $items, $cart, $fullcart );
 
 		if ( !empty( $this->fullcartlist ) ) {
-			// Dummy terms
-			$terms = new mammonTerms();
-			$term = new mammonTerm();
-
-			$term->addCost( $items->total->cost['amount'] );
-
-			$terms->addTerm( $term );
-
 			foreach ( $this->fullcartlist as $coupon_code ) {
 				if ( $this->loadCoupon( $coupon_code ) ) {
+					if ( $this->cph->discount['amount_use'] ) {
+						$this->cph->discount['amount'] = $this->cph->discount['amount'] / count( $items->itemlist );
+					}
+
+					$cost = null;
+					$costarray = array();
+					foreach ( $items->itemlist as $cid => $citem ) {
+						if ( $citem['obj'] == false ) {
+							continue;
+						}
+
+						$citem['terms']->nextterm->computeTotal();
+
+						if ( empty( $cost ) ) {
+							$cost = clone( $citem['terms']->nextterm->getBaseCostObject() );
+
+							$costarray[$cid] = $cost->cost['amount'];
+						} else {
+							$ccost = $citem['terms']->nextterm->getBaseCostObject();
+
+							$cost->cost['amount'] = $cost->cost['amount'] + ( $ccost->cost['amount'] * $citem['quantity'] );
+
+							$costarray[$cid] = $ccost->cost['amount'];
+						}
+
+						$items->itemlist[$cid]['terms'] = $this->cph->applyToTerms( $items->itemlist[$cid]['terms'], true );
+					}
+
+					// Dummy terms
+					$terms = new mammonTerms();
+					$term = new mammonTerm();
+
+					$term->addCost( $cost->cost['amount'] );
+
+					$terms->addTerm( $term );
+
 					$terms = $this->cph->applyToTerms( $terms );
+
+					if ( empty( $items->discount ) ) {
+						$items->discount = array();
+					}
+
+					$items->discount[] = $terms->terms;
 				}
 			}
 
-			return $terms->terms[0]->cost;
 		}
 
-		return null;
+		return $items;
 	}
 
 	function applyToCart( $items, $cart=false, $fullcart=false )
@@ -16763,16 +16794,18 @@ class couponsHandler extends eucaObject
 			}
 
 			if ( $this->cph->coupon->restrictions['usage_cart_full'] ) {
-				$this->fullcartlist[] = $coupon_code;
+				if ( !in_array( $coupon_code, $this->fullcartlist ) ) {
+					$this->fullcartlist[] = $coupon_code;
 
-				if ( !$cart->hasCoupon( $coupon_code ) ) {
-					$cart->addCoupon( $coupon_code );
-					$cart->storeload();
+					if ( !$cart->hasCoupon( $coupon_code ) ) {
+						$cart->addCoupon( $coupon_code );
+						$cart->storeload();
 
-					$this->affectedCart = true;
+						$this->affectedCart = true;
+					}
+
+					continue;
 				}
-
-				continue;
 			}
 
 			$plans = $cart->getItemIdArray();
@@ -17504,7 +17537,7 @@ class couponHandler
 		return AECToolbox::correctAmount( $amount );
 	}
 
-	function applyToTerms( $terms, $allow_amount_discount=true )
+	function applyToTerms( $terms, $temp_coupon=false )
 	{
 		$offset = 0;
 
@@ -17518,40 +17551,42 @@ class couponHandler
 		$info = array();
 		$info['coupon'] = $this->coupon->coupon_code;
 
+		if ( $temp_coupon ) {
+			$info['temp_coupon'] = true;
+		}
+
 		$initcount = count( $terms->terms );
 
 		for ( $i = $offset; $i < $initcount; $i++ ) {
+			// Do not apply on trial
 			if ( !$this->discount['useon_full'] && ( $i > 0 ) ) {
 				continue;
 			}
 
+			// Check whether it's only on ONE full period
 			if ( !$this->discount['useon_full_all'] && ( $i < $initcount ) ) {
 				// Duplicate current term
 				$terms->addTerm( clone( $terms->terms[$i] ) );
 			}
 
-			if ( $allow_amount_discount ) {
-				if ( $this->discount['percent_first'] ) {
-					if ( $this->discount['amount_percent_use'] ) {
-						$info['details'] = '-' . $this->discount['amount_percent'] . '%';
-						$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
-					}
-					if ( $this->discount['amount_use'] ) {
-						$info['details'] = null;
-						$terms->terms[$i]->discount( $this->discount['amount'], null, $info );
-					}
-				} else {
-					if ( $this->discount['amount_use'] ) {
-						$info['details'] = null;
-						$terms->terms[$i]->discount( $this->discount['amount'], null, $info );
-					}
-					if ( $this->discount['amount_percent_use'] ) {
-						$info['details'] = '-' . $this->discount['amount_percent'] . '%';
-						$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
-					}
+			if ( $this->discount['percent_first'] ) {
+				if ( $this->discount['amount_percent_use'] ) {
+					$info['details'] = '-' . $this->discount['amount_percent'] . '%';
+					$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
+				}
+				if ( $this->discount['amount_use'] ) {
+					$info['details'] = null;
+					$terms->terms[$i]->discount( $this->discount['amount'], null, $info );
 				}
 			} else {
-				
+				if ( $this->discount['amount_use'] ) {
+					$info['details'] = null;
+					$terms->terms[$i]->discount( $this->discount['amount'], null, $info );
+				}
+				if ( $this->discount['amount_percent_use'] ) {
+					$info['details'] = '-' . $this->discount['amount_percent'] . '%';
+					$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
+				}
 			}
 		}
 
@@ -17854,32 +17889,11 @@ class couponXuser extends serialParamDBTable
 	}
 }
 
-class aecImport extends serialParamDBTable
+class aecImport
 {
-	/** @var int Primary key */
-	var $id					= null;
-	/** @var int */
-	var $system				= null;
-	/** @var string */
-	var $name				= null;
-	/** @var datetime */
-	var $created_date 		= null;
-	/** @var datetime */
-	var $lastused_date 		= null;
-	/** @var text */
-	var $raw				= null;
-	/** @var text */
-	var $parsed				= null;
-	/** @var text */
-	var $conversion			= null;
-	/** @var text */
-	var $options			= null;
-	/** @var text */
-	var $params				= null;
-
-	function aecImport( &$db )
+	function aecImport( $file )
 	{
-		parent::__construct( '#__acctexp_import', 'id', $db );
+		
 	}
 
 	function read( $content )

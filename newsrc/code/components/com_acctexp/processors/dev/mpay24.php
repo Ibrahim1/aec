@@ -176,7 +176,7 @@ class processor_mpay24 extends XMLprocessor
 		return $var;
 	}
 
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 

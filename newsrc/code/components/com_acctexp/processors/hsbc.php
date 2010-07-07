@@ -81,7 +81,7 @@ class processor_hsbc extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		if ( $this->settings['pas'] ) {
 			if ( isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
@@ -113,7 +113,7 @@ class processor_hsbc extends XMLprocessor
 
 				$var = $this->createGatewayLink( $request );
 
-				return POSTprocessor::checkoutAction( $request, $var );
+				return POSTprocessor::checkoutAction( $request, $InvoiceFactory, $var );
 			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {
 aecDebug('CcpaResultsCode');aecDebug($check);
 aecDebug($addin);
@@ -138,7 +138,7 @@ aecDebug($addin);
 					$this->simpleCheckoutMod( $mod );
 
 					// Display PAC Form
-					return POSTprocessor::checkoutAction( $request, $var );
+					return POSTprocessor::checkoutAction( $request, $InvoiceFactory, $var );
 				}
 			}
 		}
@@ -152,7 +152,7 @@ aecDebug($addin);
 		$this->simpleCheckoutMod( $mod );
 
 		// Display standard CC collection Form
-		return parent::checkoutAction( $request );
+		return parent::checkoutAction( $request, $InvoiceFactory );
 	}
 
 	function createGatewayLink( $request )
@@ -200,14 +200,14 @@ aecDebug($addin);
 		return $var;
 	}
 
-	function checkoutProcess( $request )
+	function checkoutProcess( $request, $InvoiceFactory )
 	{
 		if ( $this->settings['pas'] && is_null( $request->int_var['params']['CcpaResultsCode'] ) ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
 
 			return array( 'doublecheckout' => true );
 		} else {
-			return parent::checkoutProcess( $request );
+			return parent::checkoutProcess( $request, $InvoiceFactory );
 		}
 	}
 

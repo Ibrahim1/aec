@@ -251,7 +251,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $var;
 	}
 
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 

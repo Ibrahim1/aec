@@ -233,9 +233,15 @@ class mi_aectax
 		$grand_total = $request->add->total->cost['amount'];
 
 		if ( !empty( $request->add->discount ) ) {
-			foreach ( $request->add->discount as $cost ) {
-				if ( $cost->type == 'discount' ) {
-					$grand_total += $cost->cost['amount'];
+			foreach ( $request->add->discount as $citems ) {
+				foreach ( $citems as $ccitem ) {
+					$citem = $ccitem->renderCost();
+
+					foreach ( $citem as $cost ) {
+						if ( $cost->type == 'discount' ) {
+							$grand_total += $cost->cost['amount'];
+						}
+					}
 				}
 			}
 		}
@@ -285,7 +291,7 @@ class mi_aectax
 	{
 		foreach ( $item['terms']->terms as $tid => $term ) {
 			$total = $term->renderTotal();
-
+var_dump($total);print_r($item['terms']->terms[$tid]);
 			if ( !empty( $this->settings['vat_no_request'] ) ) {
 				if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
 					$vatlist = $this->vatList();
@@ -305,7 +311,7 @@ class mi_aectax
 					}
 				}
 			}
-
+print_r($location['mode']);
 			switch ( $location['mode'] ) {
 				default:
 					$newtotal = $total;
@@ -343,12 +349,12 @@ class mi_aectax
 					$total = AECToolbox::correctAmount( $newtotal + $tax );
 					break;
 			}
-
+print_r($item['terms']->terms[$tid]);
 			$item['terms']->terms[$tid]->addCost( $tax, array( 'details' => $location['extra'] ), true );
 		}
 
 		$item['cost'] = $item['terms']->nextterm->renderTotal();
-
+print_r($item['terms']->terms[$tid]);
 		$request->add->itemlist[] = $item;
 
 		return $request;

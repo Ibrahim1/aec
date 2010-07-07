@@ -409,7 +409,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $var;
 	}
 
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 

@@ -1554,8 +1554,8 @@ function processNotification( $option, $processor )
 
 		return;
 	} else {
-		$iFactoryory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
-		$iFactoryory->processorResponse( $option, $response );
+		$iFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
+		$iFactory->processorResponse( $option, $response );
 	}
 }
 

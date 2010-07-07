@@ -595,11 +595,17 @@ class mammonTerm extends eucaObject
 	 * @return	string
 	 * @since	1.0
 	 */
-	function getBaseCostObject()
+	function getBaseCostObject( $filters=false, $filter_temp_coupons=false )
 	{
+		$filter = array( 'tax', 'total' );
+
+		if ( !empty( $filter_add ) ) {
+			$filter = $filters;
+		}
+
 		$return = null;
 		foreach ( $this->cost as $id => $cost ) {
-			if ( ( $cost->type == 'tax' ) || ( $cost->type == 'total' ) ) {
+			if ( in_array( $cost->type, $filter ) || ( isset( $return->cost['temp_coupon'] ) && $filter_temp_coupons ) ) {
 				$return->cost['amount'] = AECToolbox::correctAmount( $return->cost['amount'] );
 
 				return $return;

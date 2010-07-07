@@ -176,7 +176,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		$return = "";
 
@@ -203,7 +203,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$return .= '</td></tr></tbody></table>';
 			}
 
-			$return .= parent::checkoutAction( $request );
+			$return .= parent::checkoutAction( $request, $InvoiceFactory );
 		}
 
 		return $return;
@@ -232,7 +232,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function checkoutProcess( $request )
+	function checkoutProcess( $request, $InvoiceFactory )
 	{
 		$this->sanitizeRequest( $request );
 
@@ -312,7 +312,7 @@ class processor_paypal_wpp extends XMLprocessor
 			}
 		}
 
-		return $this->checkoutResponse( $request, $response );
+		return $this->checkoutResponse( $request, $response, $InvoiceFactory );
 	}
 
 	function createRequestXML( $request )

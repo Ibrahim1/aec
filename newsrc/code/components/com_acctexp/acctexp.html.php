@@ -1329,19 +1329,30 @@ class Payment_HTML
 
 					if ( !empty( $InvoiceFactory->items->discount ) ) {
 						// Iterate through full discounts
-						foreach ( $InvoiceFactory->items->discount as $cost ) {
-							if ( $cost->type == 'discount' ) {
-								$t = constant( strtoupper( '_aec_checkout_' . $cost->type ) );
+						foreach ( $InvoiceFactory->items->discount as $citems ) {
+							foreach ( $citems as $ccitem ) {
+								$citem = $ccitem->renderCost();
 
-								$amount = AECToolbox::correctAmount( $cost->cost['amount'] );
+								foreach ( $citem as $cost ) {
+									if ( $cost->type == 'discount' ) {
+										$t = constant( strtoupper( '_aec_checkout_' . $cost->type ) );
 
-								$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
+										$amount = AECToolbox::correctAmount( $cost->cost['amount'] );
 
-								if ( !empty( $cost->cost['details'] ) ) {
-									$t .= '&nbsp;( ' . $cost->cost['details'] . ' )';
+										$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
+
+										if ( !empty( $cost->cost['coupon'] ) ) {
+											$t .= '&nbsp;[<a href="'
+												. AECToolbox::deadsureURL( 'index.php?option=' . $option
+												. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice->invoice_number
+												. '&amp;coupon_code=' . $cost->cost['coupon'] )
+												. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
+												. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
+										}
+
+										echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
+									}
 								}
-
-								echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
 							}
 						}
 					}
