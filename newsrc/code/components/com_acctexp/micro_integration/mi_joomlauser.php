@@ -48,7 +48,11 @@ class mi_joomlauser
 			$set[] = '`activation` = \'\'';
 		}
 
-		$set[] = '`username` = \'' . $this->getUsername( $request ) . '\'';
+		$username = $this->getUsername( $request );
+
+		if ( !empty( $username ) ) {
+			$set[] = '`username` = \'' . $username . '\'';
+		}
 
 		if ( !empty( $this->settings['password'] ) ) {
 			$pw = AECToolbox::rewriteEngineRQ( $this->settings['password'], $request );
