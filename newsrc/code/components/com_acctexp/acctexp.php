@@ -1351,6 +1351,8 @@ function InvoiceAddCoupon( $option )
 
 	$objinvoice->addCoupon( $coupon_code );
 
+	$objinvoice->storeload();
+
 	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
 }
 
