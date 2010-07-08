@@ -293,7 +293,7 @@ class ComponentMenu
 		if ( !aecJoomla15check() ) {
 			JToolBarHelper::startTable();
 		}
-		JToolBarHelper::custom( 'applyImport', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
+		JToolBarHelper::custom( 'import', 'apply.png',  'apply_f2.png', _APPLY_PAYPLAN, false );
 		JToolBarHelper::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', _CANCEL, false );
 		if ( !aecJoomla15check() ) {
 			JToolBarHelper::endTable();

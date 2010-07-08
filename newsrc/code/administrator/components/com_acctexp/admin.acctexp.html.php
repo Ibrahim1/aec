@@ -3107,7 +3107,7 @@ class HTML_AcctExp
 		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 		?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index2.php" enctype="multipart/form-data" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_import.png) no-repeat left;" rowspan="2" nowrap="nowrap">
@@ -3126,14 +3126,14 @@ class HTML_AcctExp
 					
 					<?php if ( $aecHTML->offer_upload ) { ?>
 					    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
-					    Upload: <input name="userfile" type="file" />
+					    Upload: <input name="import_file" type="file" />
 					<?php } ?>
 				</td>
 			</tr>
 		</table>
 
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="task" value="import" />
 		<input type="hidden" name="returnTask" value="import" />
 		</form>
 

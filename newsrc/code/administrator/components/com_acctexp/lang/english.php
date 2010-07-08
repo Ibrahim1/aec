@@ -2018,8 +2018,8 @@ define( '_ACTIVATED', 'User activated.');
 define( '_AEC_HEAD_IMPORT', 'Import');
 define( '_IMPORT_LOAD', 'Load');
 define( '_IMPORT_APPLY', 'Apply');
-define( '_IMPORT_GENERAL_SELECTED_IMPORT_NAME', 'Import Preset');
-define( '_IMPORT_GENERAL_SELECTED_IMPORT_DESC', 'Select a preset (or an automatically saved previous export) instead of making the selections below. You can also click apply on the upper right and preview the preset.');
+define( '_IMPORT_GENERAL_FILE_SELECT_NAME', 'Select File');
+define( '_IMPORT_GENERAL_FILE_SELECT_DESC', 'Select an existing file from the /tmp folder.');
 
 // --== EXPORT ==--
 define( '_AEC_HEAD_EXPORT', 'Export');

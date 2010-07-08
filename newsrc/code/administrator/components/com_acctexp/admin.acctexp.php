@@ -6731,16 +6731,66 @@ function importData( $option )
 {
 	$offer_upload = true;
 
+	$temp_dir = JPATH_SITE . '/tmp';
+
+	$file_list = AECToolbox::getFileArray( $temp_dir, 'csv', false, true );
+
+	$params = array();
+	$lists = array();
+
 	if ( !empty( $_FILES ) ) {
-		$dest = JPATH_SITE . '/tmp';
+		$offer_upload = false;
+
+		if ( strpos( $_FILES['import_file']['name'], '.csv' ) === false ) {
+			$len = strlen( $_FILES['import_file']['name'] );
+
+			$last = strrpos( $_FILES['import_file']['name'], '.' );
+
+			$filename = substr( $_FILES['import_file']['name'], 0, $last ) . '.csv';
+		} else {
+			$filename = $_FILES['import_file']['name'];
+		}
+
+		$destination = $temp_dir . '/' . $filename;
+
+		if ( move_uploaded_file( $_FILES['import_file']['tmp_name'], $destination ) ) {
+			$file_select = $filename;
+		}
+	} else {
+		
 	}
 
-	$file_select = aecGetParam( 'file_select', '' );
-	
-	// File Selected?
-	
-	// No -> Show only file selection&upload dialog
-	// Yes:
+	if ( empty( $file_select ) ) {
+		$file_select = aecGetParam( 'file_select', '' );
+	}
+
+	if ( empty( $file_select ) ) {
+		$params['file_select']			= array( 'list', '' );
+
+		$file_htmllist		= array();
+		$file_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
+
+		if ( !empty( $file_list ) ) {
+			foreach ( $file_list as $name ) {
+				$file_htmllist[] = mosHTML::makeOption( $name, $name );
+			}
+		}
+
+		$lists['file_select'] = mosHTML::selectList( $file_htmllist, 'file_select[]', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '', 'value', 'text', array() );
+	} else {
+		$import = new aecImport( $temp_dir );
+		
+		if ( !$import->read() ) {
+			die( 'could not read file' );
+		}
+
+		$import->parse();
+
+		if ( !empty( $import->list ) ) {
+			
+		}
+	}
+
 	// Preparse File (show 2 sample lines of data)
 	// Preset Dialog
 	// Prepare Settings Object
@@ -6748,7 +6798,9 @@ function importData( $option )
 	// YES -> Load Preset
 	// No -> Load Defaults
 
+	$settingsparams = array();
 
+	$settings = new aecSettings ( 'import', 'general' );
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
 	// Call HTML Class
