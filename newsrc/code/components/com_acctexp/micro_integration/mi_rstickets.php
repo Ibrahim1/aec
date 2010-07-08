@@ -39,6 +39,14 @@ class mi_rstickets extends MI
 
 		$this->loadRStickets();
 
+		if ( !isset( $this->settings['department'] ) ) {
+			$this->settings['department'] = 0;
+		}
+
+		if ( !isset( $this->settings['priority'] ) ) {
+			$this->settings['priority'] = 0;
+		}
+
 		if ( !function_exists( 'rst_get_departments' ) ) {
 			$settings['info']				= array( 'p', 'Notice', 'You need to have RStickets installed to use this MI!' );
 		} else {

@@ -26,7 +26,7 @@ class mi_kunena extends MI
 	{
 		$settings = array();
 
-		if ( !include_once( rtrim(JPATH_ROOT, DS) . DS . 'components' . DS . 'com_kunena' . DS . 'lib' . DS . 'kunena.user.class.php' ) ) {
+		if ( !@include_once( rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_kunena' . DS . 'lib' . DS . 'kunena.user.class.php' ) ) {
 			echo 'This module can not work without the Kunena Forum Component';
 			return $settings;
 		}

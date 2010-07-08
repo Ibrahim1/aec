@@ -40,18 +40,20 @@ class mi_rsgallery2 extends MI
 		$sgs = array();
 
 		$gr = array();
-		foreach( $galleries as $gallery ) {
-			$gr[] = mosHTML::makeOption( $gallery->id, $gallery->name );
+		if ( !empty( $galleries ) ) {
+			foreach( $galleries as $gallery ) {
+				$gr[] = mosHTML::makeOption( $gallery->id, $gallery->name );
 
-			if ( !empty( $this->settings['galleries'] ) ) {
-				if ( in_array( $gallery->id, $this->settings['galleries'] ) ) {
-					$sg[] = mosHTML::makeOption( $gallery->id, $gallery->name );
+				if ( !empty( $this->settings['galleries'] ) ) {
+					if ( in_array( $gallery->id, $this->settings['galleries'] ) ) {
+						$sg[] = mosHTML::makeOption( $gallery->id, $gallery->name );
+					}
 				}
-			}
 
-			if ( !empty( $this->settings['gallery_sel_scope'] ) ) {
-				if ( in_array( $gallery->id, $this->settings['gallery_sel_scope'] ) ) {
-					$sgs[] = mosHTML::makeOption( $gallery->id, $gallery->name );
+				if ( !empty( $this->settings['gallery_sel_scope'] ) ) {
+					if ( in_array( $gallery->id, $this->settings['gallery_sel_scope'] ) ) {
+						$sgs[] = mosHTML::makeOption( $gallery->id, $gallery->name );
+					}
 				}
 			}
 		}

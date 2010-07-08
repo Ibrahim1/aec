@@ -35,12 +35,13 @@ class mi_juga
 	 	$groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach ( $groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->id, $group->title . ' - '
-			. substr( strip_tags( $group->description ), 0, 30 ) );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				$sg[] = mosHTML::makeOption( $group->id, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+			}
 		}
 
-				$settings = array();
+		$settings = array();
 
 		// Explode the selected groups
 		if ( !empty( $this->settings['enroll_group'] ) ) {
