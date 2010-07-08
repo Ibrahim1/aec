@@ -1351,8 +1351,6 @@ function InvoiceAddCoupon( $option )
 
 	$objinvoice->addCoupon( $coupon_code );
 
-	$objinvoice->computeAmount();
-
 	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
 }
 

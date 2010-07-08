@@ -522,6 +522,12 @@ class mammonTerm extends eucaObject
 		if ( !$this->free ) {
 			// discount amount
 			if ( !empty( $amount ) ) {
+				$total = $this->renderTotal();
+
+				if ( $amount > $this->renderTotal() ) {
+					$amount = $total;
+				}
+
 				$am = 0 - $amount;
 				$am = AECToolbox::correctAmount( $am );
 				$this->addCost( $am, $info );
@@ -616,7 +622,7 @@ class mammonTerm extends eucaObject
 			}
 
 			if ( empty( $return ) ) {
-				$return = $cost;
+				$return = clone( $cost );
 			} else {
 				$return->cost['amount'] = $return->cost['amount'] + $cost->cost['amount'];
 			}

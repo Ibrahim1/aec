@@ -3072,9 +3072,16 @@ class PaymentProcessor
 			$this->getInfo();
 		}
 
+		if ( isset( $this->settings['recurring'] ) ) {
+			$rec_set = $this->info['recurring'];
+		} else {
+			$rec_set = null;
+		}
+
+
 		if ( !isset( $this->info['recurring'] ) ) {
 			// Keep false
-		} elseif ( $this->info['recurring'] > 1 ) {
+		} elseif ( ( $this->info['recurring'] > 1 ) && ( $rec_set !== 1 ) ) {
 			if ( empty( $this->settings ) ) {
 				$this->getSettings();
 			}
@@ -8260,7 +8267,9 @@ class InvoiceFactory
 			$citem['terms']->nextterm->computeTotal();
 
 			if ( empty( $cost ) ) {
-				$cost = clone( $citem['terms']->nextterm->getBaseCostObject( false, true ) );
+				$ccost = $citem['terms']->nextterm->getBaseCostObject( false, true );
+
+				$cost = clone( $ccost );
 			} else {
 				$ccost = $citem['terms']->nextterm->getBaseCostObject( false, true );
 
@@ -8271,8 +8280,6 @@ class InvoiceFactory
 		$this->items->total = $cost;
 
 		$this->items->grand_total = clone( $this->items->total );
-
-		$this->applyCouponsTotal();
 
 		$exchange = $silent = null;
 
@@ -8308,8 +8315,6 @@ class InvoiceFactory
 					// Reload cart object and cart - was changed by $cpsh
 					$this->cartobject->reload();
 					$this->getCart();
-
-					$this->loadItems();
 
 					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 					$this->items->itemlist = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
@@ -8351,20 +8356,6 @@ class InvoiceFactory
 			if ( !empty( $this->cart ) ) {
 				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
 			}
-		}
-	}
-
-	function applyCouponsTotal()
-	{
-		global $aecConfig;
-
-		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->invoice->coupons ) ) {
-			$coupons = $this->invoice->coupons;
-
-			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-
-
-
 		}
 	}
 
@@ -9413,7 +9404,7 @@ class InvoiceFactory
 
 		// Either this is fully free, or the next term is free and this is non recurring
 		if ( !empty( $this->items->grand_total ) && !$this->recurring ) {
-			if ( $this->items->grand_total->isFree() ) {
+			if ( $this->items->grand_total->isFree() && !$this->recurring ) {
 				$this->invoice->pay();
 
 				return $this->thanks( $option, false, true );
@@ -9557,12 +9548,14 @@ class InvoiceFactory
 		}
 
 		if ( isset( $response['error'] ) ) {
+			unset( $this->cart );
+			unset( $this->cartobject );
+			unset( $this->items );
+			unset( $this->pp );
+			unset( $this->pp );
+
 			$this->checkout( $option, true, $response['error'] );
 		} elseif ( isset( $response['doublecheckout'] ) ) {
-			$this->loadItems();
-
-			$this->loadItemTotal();
-
 			$exchange = $silent = null;
 
 			$this->triggerMIs( 'invoice_items_checkout', $exchange, $this->items, $silent );
@@ -10801,16 +10794,6 @@ class Invoice extends serialParamDBTable
 				}
 
 				$int_var['amount'] = $InvoiceFactory->items->grand_total->renderCost();
-			}
-		}
-
-		// Does not apply for Cart - as it has already happened in cart->getAmount()
-		// Yet might apply for non-usage invoice
-		if ( empty( $int_var['objUsage'] ) || is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
-			if ( !empty( $this->coupons ) ) {
-				$cph = new couponsHandler( $InvoiceFactory->metaUser, $InvoiceFactory, $this->coupons );
-
-				$int_var['amount'] = $cph->applyToAmount( $int_var['amount'] );
 			}
 		}
 
@@ -16719,8 +16702,6 @@ class couponsHandler extends eucaObject
 
 	function applyToTotal( $items, $cart=false, $fullcart=false )
 	{
-		$this->prefilter( $items, $cart, $fullcart );
-
 		if ( !empty( $this->fullcartlist ) ) {
 			foreach ( $this->fullcartlist as $coupon_code ) {
 				if ( $this->loadCoupon( $coupon_code ) ) {
@@ -16826,15 +16807,21 @@ class couponsHandler extends eucaObject
 				if ( !in_array( $coupon_code, $this->fullcartlist ) ) {
 					$this->fullcartlist[] = $coupon_code;
 
-					if ( !$cart->hasCoupon( $coupon_code ) ) {
-						$cart->addCoupon( $coupon_code );
-						$cart->storeload();
+					if ( !empty( $cart ) ) {
+						if ( !$cart->hasCoupon( $coupon_code ) ) {
+							$cart->addCoupon( $coupon_code );
+							$cart->storeload();
 
-						$this->affectedCart = true;
+							$this->affectedCart = true;
+						}
 					}
 
 					continue;
 				}
+			}
+
+			if ( empty( $cart ) && empty( $fullcart ) ) {
+				return;
 			}
 
 			$plans = $cart->getItemIdArray();
@@ -17562,8 +17549,12 @@ class couponHandler
 
 		$amount = round( $amount, 2 );
 
-		// Fix Amount if broken and return
-		return AECToolbox::correctAmount( $amount );
+		if ( $amount <= 0 ) {
+			return "0.00";
+		} else {
+			// Fix Amount if broken and return
+			return AECToolbox::correctAmount( $amount );
+		}
 	}
 
 	function applyToTerms( $terms, $temp_coupon=false )
