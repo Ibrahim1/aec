@@ -41,6 +41,11 @@ class mi_coupon
 
 		$settings['subject']			= array( 'inputE' );
 		$settings['text_html']			= array( 'list_yesno' );
+
+		if ( !isset( $this->settings['text_html'] ) ) {
+			$this->settings['text_html'] = 0;
+		}
+
 		$settings['text']				= array( $this->settings['text_html'] ? 'editor' : 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

@@ -32,8 +32,10 @@ class mi_agora extends MI
 		$grouplist = array();
 		$grouplist[] = mosHTML::makeOption ( 0, "--- --- ---" );
 
-		foreach ( $groups as $id => $row ) {
-			$grouplist[] = mosHTML::makeOption ( $row->id, $row->id . ': ' . $row->name );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $id => $row ) {
+				$grouplist[] = mosHTML::makeOption ( $row->id, $row->id . ': ' . $row->name );
+			}
 		}
 
 		$database = &JFactory::getDBO();
@@ -44,8 +46,10 @@ class mi_agora extends MI
 		$rolelist = array();
 		$rolelist[] = mosHTML::makeOption ( 0, "--- --- ---" );
 
-		foreach ( $roles as $id => $row ) {
-			$rolelist[] = mosHTML::makeOption ( $row->id, $row->id . ': ' . $row->name );
+		if ( !empty( $roles ) ) {
+			foreach ( $roles as $id => $row ) {
+				$rolelist[] = mosHTML::makeOption ( $row->id, $row->id . ': ' . $row->name );
+			}
 		}
 
 		$settings['group']		= array( 'list' );

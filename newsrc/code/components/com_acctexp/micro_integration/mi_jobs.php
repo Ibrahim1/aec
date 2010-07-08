@@ -39,13 +39,25 @@ class mi_jobs
 		$typelist = array();
 		$typelist[] = mosHTML::makeOption ( 'job_seeker' , 'Job Seeker' );
 		$typelist[] = mosHTML::makeOption ( 'employer' , 'Employer' );
-		
+
+		if ( !isset( $this->settings['subscription_type'] ) ) {
+			$this->settings['subscription_type'] = 0;
+		}
+
 		$settings['lists']['subscription_type'] = mosHTML::selectList( $typelist,'subscription_type','size=4', 'value', 'text' , $this->settings['subscription_type'] );
 
 		$drs_typelist = array();
 		$drs_typelist[] = mosHTML::makeOption ( '0' , 'Unpublished' );
 		$drs_typelist[] = mosHTML::makeOption ( '1' , 'Published' );
-		
+
+		if ( !isset( $this->settings['default_resume_status'] ) ) {
+			$this->settings['default_resume_status'] = 0;
+		}
+
+		if ( !isset( $this->settings['default_company_status'] ) ) {
+			$this->settings['default_company_status'] = 0;
+		}
+
 		$settings['lists']['default_resume_status'] = mosHTML::selectList( $drs_typelist,'default_resume_status','size=4', 'value', 'text' , $this->settings['default_resume_status'] );
 		$settings['lists']['default_company_status'] = mosHTML::selectList( $drs_typelist,'default_company_status','size=4', 'value', 'text' , $this->settings['default_company_status'] );
 

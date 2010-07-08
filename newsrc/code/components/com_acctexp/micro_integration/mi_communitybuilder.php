@@ -39,16 +39,18 @@ class mi_communitybuilder
 		$database->setQuery( $query );
 		$objects = $database->loadObjectList();
 
-		foreach ( $objects as $object ) {
-			if ( strpos( $object->title, '_' ) === 0 ) {
-				$title = $object->name;
-			} else {
-				$title = $object->title;
-			}
+		if ( !empty( $objects ) ) {
+			foreach ( $objects as $object ) {
+				if ( strpos( $object->title, '_' ) === 0 ) {
+					$title = $object->name;
+				} else {
+					$title = $object->title;
+				}
 
-			$settings['cbfield_' . $object->name] = array( 'inputE', $title, $title );
-			$expname = $title . " "  . _MI_MI_COMMUNITYBUILDER_EXPMARKER;
-			$settings['cbfield_' . $object->name . '_exp' ] = array( 'inputE', $expname, $expname );
+				$settings['cbfield_' . $object->name] = array( 'inputE', $title, $title );
+				$expname = $title . " "  . _MI_MI_COMMUNITYBUILDER_EXPMARKER;
+				$settings['cbfield_' . $object->name . '_exp' ] = array( 'inputE', $expname, $expname );
+			}
 		}
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

@@ -32,8 +32,10 @@ class mi_apc
 	 	$groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach( $groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->groupid, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+		if ( !empty( $groups ) ) {
+			foreach( $groups as $group ) {
+				$sg[] = mosHTML::makeOption( $group->groupid, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+			}
 		}
 
         $settings = array();
@@ -45,6 +47,14 @@ class mi_apc
 		$settings['group_exp']			= array( 'list' );
 		$settings['rebuild']			= array( 'list_yesno' );
 		$settings['remove']				= array( 'list_yesno' );
+
+		if ( !isset( $this->settings['group'] ) ) {
+			$this->settings['group'] = 0;
+		}
+
+		if ( !isset( $this->settings['group_exp'] ) ) {
+			$this->settings['group_exp'] = 0;
+		}
 
 		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
 		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );

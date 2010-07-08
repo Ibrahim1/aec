@@ -43,6 +43,18 @@ class mi_eventlog extends MI
 		$levels[] = mosHTML::makeOption( 32, _AEC_NOTICE_NUMBER_32 );
 		$levels[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
 
+		if ( !isset( $this->settings['level'] ) ) {
+			$this->settings['level'] = 0;
+		}
+
+		if ( !isset( $this->settings['level_exp'] ) ) {
+			$this->settings['level_exp'] = 0;
+		}
+
+		if ( !isset( $this->settings['level_pre_exp'] ) ) {
+			$this->settings['level_pre_exp'] = 0;
+		}
+
 		$settings['lists']['level'] = mosHTML::selectList($levels, 'level', 'size="5"', 'value', 'text', $this->settings['level'] );
 		$settings['lists']['level_exp'] = mosHTML::selectList($levels, 'level_exp', 'size="5"', 'value', 'text', $this->settings['level_exp'] );
 		$settings['lists']['level_pre_exp'] = mosHTML::selectList($levels, 'level_pre_exp', 'size="5"', 'value', 'text', $this->settings['level_pre_exp'] );

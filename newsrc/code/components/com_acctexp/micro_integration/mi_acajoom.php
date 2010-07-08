@@ -33,8 +33,18 @@ class mi_acajoom
 	 	$lists = $database->loadObjectList();
 
 		$li = array();
-		foreach( $lists as $list ) {
-			$li[] = mosHTML::makeOption( $list->id, $list->list_name );
+		if ( !empty( $lists ) ) {
+			foreach( $lists as $list ) {
+				$li[] = mosHTML::makeOption( $list->id, $list->list_name );
+			}
+		}
+
+		if ( !isset( $this->settings['list'] ) ) {
+			$this->settings['list'] = 0;
+		}
+
+		if ( !isset( $this->settings['list_exp'] ) ) {
+			$this->settings['list_exp'] = 0;
 		}
 
 		$settings = array();

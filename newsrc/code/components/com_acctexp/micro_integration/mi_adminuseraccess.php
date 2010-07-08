@@ -37,8 +37,18 @@ class mi_adminuseraccess
 		$auagroups = array();
 		$auagroups[] = mosHTML::makeOption(0, 'no group');
 
-		foreach ( $groups as $group ) {
-			$auagroups[] = mosHTML::makeOption( $group->id, $group->name );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				$auagroups[] = mosHTML::makeOption( $group->id, $group->name );
+			}
+		}
+
+		if ( !isset( $this->settings['group'] ) ) {
+			$this->settings['group'] = 0;
+		}
+
+		if ( !isset( $this->settings['group_exp'] ) ) {
+			$this->settings['group_exp'] = 0;
 		}
 
         $settings = array();

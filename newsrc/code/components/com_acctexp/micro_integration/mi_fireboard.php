@@ -34,11 +34,21 @@ class mi_fireboard
 	 	$groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach ( $groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->id, $group->title );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				$sg[] = mosHTML::makeOption( $group->id, $group->title );
+			}	
 		}
 
         $settings = array();
+
+		if ( !isset( $this->settings['group'] ) ) {
+			$this->settings['group'] = 0;
+		}
+
+		if ( !isset( $this->settings['group_exp'] ) ) {
+			$this->settings['group_exp'] = 0;
+		}
 
 		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
 		$settings['lists']['group_exp'] = mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);

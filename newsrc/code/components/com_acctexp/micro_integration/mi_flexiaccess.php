@@ -36,9 +36,10 @@ class mi_flexiaccess
 	 	$groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach ( $groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->id, $group->name . ' - '
-			. substr( strip_tags( $group->description ), 0, 30 ) );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				$sg[] = mosHTML::makeOption( $group->id, $group->name . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+			}
 		}
 
         $settings = array();
