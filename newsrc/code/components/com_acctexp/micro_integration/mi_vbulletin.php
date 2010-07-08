@@ -337,8 +337,8 @@ class mi_vbulletin
 
 		$fields = $db->loadResultArray();
 
+		$return = array();
 		if ( !empty( $fields ) ) {
-			$return = array();
 			foreach ( $fields as $key ) {
 				if ( !in_array( $key, $excluded ) ) {
 					$return[] = $key;

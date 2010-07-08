@@ -42,12 +42,16 @@ class mi_sobi extends MI
 
 	function relayAction( $request )
 	{
-		if ( $this->settings['unpublish_all'.$request->area] ) {
-			$this->unpublishItems( $request->metaUser );
+		if ( isset( $this->settings['unpublish_all'.$request->area] ) ) {
+			if ( $this->settings['unpublish_all'.$request->area] ) {
+				$this->unpublishItems( $request->metaUser );
+			}
 		}
 
-		if ( $this->settings['publish_all'.$request->area] ) {
-			$this->publishItems( $request->metaUser );
+		if ( isset( $this->settings['publish_all'.$request->area] ) ) {
+			if ( $this->settings['publish_all'.$request->area] ) {
+				$this->publishItems( $request->metaUser );
+			}
 		}
 
 		return true;

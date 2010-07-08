@@ -33,15 +33,23 @@ class mi_virtuemart
 	 	$shopper_groups = $database->loadObjectList();
 
 		$sg = array();
-		foreach ( $shopper_groups as $group ) {
-			$sg[] = mosHTML::makeOption( $group->shopper_group_id, $group->shopper_group_name );
+		if ( !empty( $shopper_groups ) ) {
+			foreach ( $shopper_groups as $group ) {
+				$sg[] = mosHTML::makeOption( $group->shopper_group_id, $group->shopper_group_name );
+			}
+		}
+
+		if ( !isset( $this->settings['shopper_group'] ) ) {
+			$this->settings['shopper_group'] = 0;
+		}
+
+		if ( !isset( $this->settings['shopper_group_exp'] ) ) {
+			$this->settings['shopper_group_exp'] = 0;
 		}
 
 		$settings = array();
-		$settings['lists']['shopper_group']		= mosHTML::selectList( $sg, 'shopper_group', 'size="4"', 'value', 'text',
-												$this->settings['shopper_group'] );
-		$settings['lists']['shopper_group_exp'] = mosHTML::selectList( $sg, 'shopper_group_exp', 'size="4"', 'value', 'text',
-												$this->settings['shopper_group_exp'] );
+		$settings['lists']['shopper_group']		= mosHTML::selectList( $sg, 'shopper_group', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
+		$settings['lists']['shopper_group_exp'] = mosHTML::selectList( $sg, 'shopper_group_exp', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
 
 		$settings['set_shopper_group']		= array( 'list_yesno' );
 		$settings['shopper_group']			= array( 'list' );

@@ -59,7 +59,7 @@ class mi_uddeim
 		return;
 	}
 
-	function Settings( $params )
+	function Settings()
 	{
 		$database = &JFactory::getDBO();
 
