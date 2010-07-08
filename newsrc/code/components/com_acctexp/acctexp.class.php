@@ -680,11 +680,14 @@ class metaUser
 		$return = false;
 
 		// To be failsafe, a new subscription may have to be added in here
-		if ( empty( $this->hasSubscription ) || !$plan_params['make_primary'] ) {
+		if ( empty( $this->hasSubscription ) || !$plan_params['make_primary'] || $plan_params['update_existing'] ) {
 			if ( !empty( $existing_record ) && ( ( $existing_status == 'Pending' ) || $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
 				// Update existing non-primary subscription
-				$this->focusSubscription = new Subscription( $database );
-				$this->focusSubscription->load( $existing_record );
+				if ( $this->focusSubscription->id !== $existing_record ) {
+					$this->focusSubscription = new Subscription( $database );
+					$this->focusSubscription->load( $existing_record );
+				}
+
 				$return = 'existing';
 			} else {
 				if ( !empty( $this->hasSubscription ) ) {
@@ -717,7 +720,7 @@ class metaUser
 		}
 
 		if ( empty( $this->objSubscription ) && !empty( $this->focusSubscription ) ) {
-			$this->objSubscription = $this->focusSubscription;
+			$this->objSubscription = clone( $this->focusSubscription );
 		}
 
 		$this->temporaryRFIX();
@@ -6417,18 +6420,15 @@ class SubscriptionPlan extends serialParamDBTable
 			$this->params['make_primary'] = 1;
 		}
 
-		if ( !$metaUser->hasSubscription ) {
-			$status = $metaUser->establishFocus( $this, $processor, false );
+		$status = $metaUser->establishFocus( $this, $processor, false );
 
-			if ( !empty( $this->params['update_existing'] ) && ( $status == 'existing') ) {
-				$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
-				$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
-			} else {
-				$is_pending	= true;
-				$is_trial	= false;
-			}
-		} else {
+		// TODO: Figure out why $status returns 'existing' - even on a completely fresh subscr
+
+		if ( $status != 'existing' ) {
 			$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
+			$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
+		} else {
+			$is_pending	= false;
 			$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
 		}
 
