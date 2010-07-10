@@ -6757,7 +6757,7 @@ function importData( $option )
 			$file_select = $filename;
 		}
 	} else {
-		
+
 	}
 
 	if ( empty( $file_select ) ) {
@@ -6776,10 +6776,12 @@ function importData( $option )
 			}
 		}
 
-		$lists['file_select'] = mosHTML::selectList( $file_htmllist, 'file_select[]', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '', 'value', 'text', array() );
+		$lists['file_select'] = mosHTML::selectList( $file_htmllist, 'file_select', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '', 'value', 'text', array() );
 	} else {
-		$import = new aecImport( $temp_dir );
-		
+		$options = array( 'mode' => 'comma' );
+
+		$import = new aecImport( $temp_dir . '/' . $file_select, $options );
+
 		if ( !$import->read() ) {
 			die( 'could not read file' );
 		}
@@ -6787,7 +6789,9 @@ function importData( $option )
 		$import->parse();
 
 		if ( !empty( $import->list ) ) {
-			
+
+		} else {
+			die( 'could not find any entries in this file' );
 		}
 	}
 

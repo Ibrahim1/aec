@@ -17922,40 +17922,86 @@ class couponXuser extends serialParamDBTable
 
 class aecImport
 {
-	function aecImport( $file )
+	function aecImport( $file, $options )
 	{
+		$this->filepath = $file;
 
+		$this->options = $options;
 	}
 
-	function read( $content )
+	function read()
 	{
-		$this->raw = $content;
-
-		$this->storeload();
+		if ( is_readable( $this->filepath ) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	function parse( $content )
+	function parse()
 	{
-		$linearray = explode( "\n", $this->raw );
+		include_once( JPATH_SITE . '/components/com_acctexp/lib/parsecsv/parsecsv.lib.php' );
 
-		foreach ( $linearray as $lineitem ) {
-			if ( $this->options['mode'] == 'semicolon' ) {
-				$itemfields = explode( ";", $lineitem );
+		$csv = new parseCSV();
+		$csv->heading = false;
 
-				foreach ( $itemfields as $itemfield ) {
+		$this->rows = $csv->parse( $this->filepath );
 
-				}
+		if ( empty( $this->rows ) ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	function getConversionList()
+	{
+		foreach( $this->rows[0] as $k => $v ) {
+			if ( isset( $_POST['convert_field_'.$k] ) ) {
+				$this->conversion[$k] = $_POST['convert_field_'.$k];
 			}
 		}
 	}
 
-	function import( $content )
+	function convertRow( $row )
+	{
+		$converted = array();
+		foreach ( $this->conversions as $k => $v ) {
+			if ( isset( $row[$k] ) ) {
+				$converted[$v] = $row[$k];
+			} else {
+				$converted[$v] = "";
+			}
+		}
+
+		return $converted;
+	}
+
+	function import()
 	{
 		$database = &JFactory::getDBO();
 
+		foreach( $this->rows as $row ) {
+			$user = $this->convertRow( $row );
+
+			if ( empty( $row['username'] ) ) {
+
+			}
+
+			$query = 'SELECT `id`'
+					. ' FROM #__users'
+					. ' WHERE `username` = \'' . $username . '\''
+					;
+			$database->setQuery( $query );
+
+			if ( $database->loadResult() ) {
+				return false;
+				}
+		}
+
 		// Do a full check for existing usernames
 		if ( $this->options['override_duplicated_usernames'] ){
-			foreach ( $this->parsed as $pitem ) {
+			foreach ( $this->rows as $pitem ) {
 				$username = $pitem[$this->conversion['username']];
 
 				$query = 'SELECT `id`'

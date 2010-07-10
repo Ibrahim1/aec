@@ -442,6 +442,30 @@ border-bottom: solid 3px #998;
 width: 320px;
 }
 
+.aec_import {
+font-align: right;
+margin: 0 auto;
+background-color: #EED;
+background-image: url(../images/admin/gfx/infoblock_lowerright.png);
+background-position: bottom right;
+background-repeat: no-repeat;
+padding: 12px 3px 12px 6px;
+border-bottom: solid 3px #998;
+width: 480px;
+}
+
+.aec_import_large {
+font-align: right;
+margin: 0 auto;
+background-color: #EED;
+background-image: url(../images/admin/gfx/infoblock_lowerright.png);
+background-position: bottom right;
+background-repeat: no-repeat;
+padding: 12px 3px 12px 6px;
+border-bottom: solid 3px #998;
+width: 98%;
+}
+
 div.aec_processor_experimentalnote {
 margin: 12px;
 border: 1px solid #c16161;

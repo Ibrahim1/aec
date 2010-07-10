@@ -907,7 +907,7 @@ class HTML_AcctExp
 
 						$links[] = array( 'export', 'export', _AEC_CENTR_EXPORT );
 						$links[] = array( 'readout', 'export', _AEC_READOUT );
-						
+
 
 						$linkroot = "index2.php?option=com_acctexp&amp;task=";
 						foreach ( $links as $litem ) {
@@ -3117,20 +3117,22 @@ class HTML_AcctExp
 			</td>
 		</tr>
 		</table>
-		<table class="aecadminform">
-			<tr>
-				<td valign="top">
-					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-						echo $aecHTML->createSettingsParticle( $rowname );
-					} ?>
-					
-					<?php if ( $aecHTML->offer_upload ) { ?>
-					    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
-					    Upload: <input name="import_file" type="file" />
-					<?php } ?>
-				</td>
-			</tr>
-		</table>
+		<div class="aec_import<?php echo $aecHTML->offer_upload ? '' : '_large'; ?>">
+			<table style="width:100%;">
+				<tr>
+					<td valign="top">
+						<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+							echo $aecHTML->createSettingsParticle( $rowname );
+						} ?>
+
+						<?php if ( $aecHTML->offer_upload ) { ?>
+						    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+						    Upload: <input name="import_file" type="file" />
+						<?php } ?>
+					</td>
+				</tr>
+			</table>
+		</div>
 
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="import" />
