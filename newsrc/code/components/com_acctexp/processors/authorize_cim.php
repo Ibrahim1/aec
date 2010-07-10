@@ -466,7 +466,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			$cim = $this->loadCIMpay( $ppParams );
 		}
 
-		$basicdata = array(	'refId'					=> $request->invoice->invoice_number,
+		$basicdata = array(	'refId'					=> $request->invoice->id,
 							'order_invoiceNumber'	=> $request->invoice->invoice_number,
 							'order_description'		=> AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ),
 							'merchantCustomerId'	=> $request->metaUser->cmsUser->id,
@@ -750,6 +750,10 @@ class processor_authorize_cim extends PROFILEprocessor
 		$invoice = new Invoice( $database );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
+		if ( empty( $invoice->id ) ) {
+			return false;
+		}
+
 		$option = 'com_acctexp';
 
 		$iFactory = new InvoiceFactory( null, null, null, 'authorize_cim' );
@@ -807,7 +811,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			$cim->setParameter( 'transaction_amount',		AECToolbox::correctAmount( $amount ) );
 
-			$cim->setParameter( 'refId',					$iFactory->invoice->invoice_number );
+			$cim->setParameter( 'refId',					$iFactory->invoice->id . '_r_' . $iFactory->invoice->counter );
 			$cim->setParameter( 'order_invoiceNumber',		$iFactory->invoice->invoice_number);
 			$cim->setParameter( 'merchantCustomerId',		$iFactory->invoice->userid );
 

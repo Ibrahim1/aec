@@ -115,8 +115,6 @@ class processor_hsbc extends XMLprocessor
 
 				return POSTprocessor::checkoutAction( $request, $InvoiceFactory, $var );
 			} elseif ( !empty( $request->int_var['params']['cardNumber'] ) ) {
-aecDebug('CcpaResultsCode');aecDebug($check);
-aecDebug($addin);
 				if ( !is_null( $check ) ) {
 					$mod = array(	'enable_coupons' => false,
 									'processor_addin' => $addin,

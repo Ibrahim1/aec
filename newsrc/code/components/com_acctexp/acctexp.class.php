@@ -681,7 +681,7 @@ class metaUser
 
 		// To be failsafe, a new subscription may have to be added in here
 		if ( empty( $this->hasSubscription ) || !$plan_params['make_primary'] || $plan_params['update_existing'] ) {
-			if ( !empty( $existing_record ) && ( ( $existing_status == 'Pending' ) || $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
+			if ( !empty( $existing_record ) && ( ( $existing_status == 'Trial' ) || ( $existing_status == 'Pending' ) || $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
 				// Update existing non-primary subscription
 				if ( $this->focusSubscription->id !== $existing_record ) {
 					$this->focusSubscription = new Subscription( $database );
@@ -711,7 +711,7 @@ class metaUser
 				$this->hasSubscription = 1;
 
 				if ( $plan_params['make_primary'] ) {
-					$this->objSubscription = $this->focusSubscription;
+					$this->objSubscription = clone( $this->focusSubscription );
 				}
 
 				$return = 'new';
@@ -8184,7 +8184,7 @@ class InvoiceFactory
 		$this->items = new stdClass();
 		$this->items->itemlist = array();
 
-		if ( empty( $this->cartobject ) ) {
+		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
 			$database = &JFactory::getDBO();
 
 			$terms = $this->plan->getTermsForUser( $this->recurring, $this->metaUser );
@@ -9552,7 +9552,6 @@ class InvoiceFactory
 			unset( $this->cartobject );
 			unset( $this->items );
 			unset( $this->pp );
-			unset( $this->pp );
 
 			$this->checkout( $option, true, $response['error'] );
 		} elseif ( isset( $response['doublecheckout'] ) ) {
@@ -9582,6 +9581,11 @@ class InvoiceFactory
 		$this->invoice->processorResponse( $this, $response, '', false );
 
 		if ( isset( $response['error'] ) ) {
+			unset( $this->cart );
+			unset( $this->cartobject );
+			unset( $this->items );
+			unset( $this->pp );
+
 			$this->checkout( $option, true, $response['error'] );
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
@@ -10571,7 +10575,14 @@ class Invoice extends serialParamDBTable
 						$targetUser->establishFocus( $plan, $this->method );
 					}
 
-					$this->subscr_id = $targetUser->focusSubscription->id;
+					if ( $this->subscr_id != $targetUser->focusSubscription->id ) {
+						// Moving to a new subsription, so expire the old
+						$expire_sub = new Subscription( $database );
+						$expire_sub->load( $this->subscr_id );
+						$expire_sub->expire();
+
+						$this->subscr_id = $targetUser->focusSubscription->id;
+					}
 
 					// Apply the Plan
 					$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
