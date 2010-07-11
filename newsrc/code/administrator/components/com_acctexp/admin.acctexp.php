@@ -1341,7 +1341,13 @@ function saveUser( $option, $apply=0 )
 				} else {
 					$metaUser->focusSubscription->expiration = $post['expiration'];
 				}
-				$metaUser->focusSubscription->status = 'Active';
+
+				if ( $metaUser->focusSubscription->status == 'Trial' ) {
+					$metaUser->focusSubscription->status = 'Trial';
+				} else {
+					$metaUser->focusSubscription->status = 'Active';
+				}
+
 				$metaUser->focusSubscription->lifetime = 0;
 			}
 		}
