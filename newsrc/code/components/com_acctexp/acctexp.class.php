@@ -658,6 +658,28 @@ class metaUser
 			$plan_params['make_primary'] = 1;
 		}
 
+		if ( $plan_params['make_primary'] ) {
+			if ( $this->objSubscription->primary ) {
+				$this->focusSubscription = $this->objSubscription;
+
+				return 'existing';
+			} else {
+				$existing_record = $this->objSubscription->getSubscriptionID( $this->userid );
+
+				if ( $existing_record ) {
+					$this->objSubscription = new Subscription( $database );
+					$this->objSubscription->load( $existing_record );
+
+					$this->focusSubscription = $this->objSubscription;
+
+					return 'existing';
+				}
+			}
+		}
+
+		// If we are not dealing with a primary (or an otherwise unclear situation),
+		// we need to figure out how to prepare the switch
+
 		$existing_record = 0;
 		$existing_status = false;
 
