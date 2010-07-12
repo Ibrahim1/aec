@@ -50,6 +50,24 @@ class mi_aecdonate
 		return $settings;
 	}
 
+	function verifyMIform( $request )
+	{
+		$return = array();
+
+		if ( empty( $request->params['amt'] ) || ( $request->params['amt'] == "" ) ) {
+			$return['error'] = "Please provide an amount";
+		}
+
+		return $return;
+	}
+
+	function invoice_item( $request )
+	{
+		$this->modifyPrice( $request );
+
+		return true;
+	}
+
 	function modifyPrice( $request )
 	{
 		if ( !isset( $request->params['amt'] ) ) {
@@ -72,7 +90,7 @@ class mi_aecdonate
 
 		$price = AECToolbox::correctAmount( $price );
 
-		$request->add->nextterm->setCost( $price );
+		$request->add['terms']->nextterm->setCost( $price );
 
 		return null;
 	}

@@ -6629,16 +6629,6 @@ class SubscriptionPlan extends serialParamDBTable
 			$terms->incrementPointer();
 		}
 
-		if ( !empty( $this->micro_integrations ) && ( is_object( $user_subscription ) || is_object( $metaUser ) ) ) {
-			$mih = new microIntegrationHandler();
-
-			if ( !is_object( $metaUser ) ) {
-				$metaUser = new metaUser( $user_subscription->userid );
-			}
-
-			$mih->applyMIs( $terms, $this, $metaUser );
-		}
-
 		return $terms;
 	}
 
@@ -6790,7 +6780,15 @@ class SubscriptionPlan extends serialParamDBTable
 					continue;
 				}
 
-				$verify = $mi->verifyMIform( $this, $metaUser, $params );
+				if ( !is_null( $params ) ) {
+					if ( !empty( $params[$this->id][$mi->id] ) ) {
+						$verify = $mi->verifyMIform( $this, $metaUser, $params[$this->id][$mi->id] );
+					} else {
+						$verify = $mi->verifyMIform( $this, $metaUser, array() );
+					}
+				} else {
+					$verify = $mi->verifyMIform( $this, $metaUser );
+				}
 
 				if ( !empty( $verify ) && is_array( $verify ) ) {
 					$v[] = array_merge( array( 'id' => $mi->id ), $verify );
@@ -6943,7 +6941,17 @@ class SubscriptionPlan extends serialParamDBTable
 						}
 					}
 				} else {
-					if ( $mi->relayAction( $metaUser, $exchange, $invoice, $this, $action, $add ) === false ) {
+					if ( isset( $invoice->params['userMIParams'] ) ) {
+						if ( isset( $invoice->params['userMIParams'][$this->id][$mi->id] ) ) {
+							$params = $invoice->params['userMIParams'][$this->id][$mi->id];
+						} else {
+							$params = array();
+						}
+					} else {
+						$params = null;
+					}
+
+					if ( $mi->relayAction( $metaUser, $exchange, $invoice, $this, $action, $add, $params ) === false ) {
 						if ( $aecConfig->cfg['breakon_mi_error'] ) {
 							return false;
 						}
@@ -7744,13 +7752,15 @@ class InvoiceFactory
 				if ( !empty( $lists ) ) {
 					// Rewrite lists so they fit a multi-plan context
 					foreach( $lists as $lkey => $litem ) {
-						$mi_form['lists'][($cid+$offset).'_'.$lkey] = str_replace( $lkey, ($cid+$offset).'_'.$lkey, $litem );
+						$mi_form['lists'][($offset).'_'.$lkey] = str_replace( $lkey, ($offset).'_'.$lkey, $litem );
 					}
 				}
 
 				$this->mi_error = array();
 
-				$check = $this->verifyMIForms( $cartitem['obj'], $mi_form, $offset.'_' );
+				$check = $this->verifyMIForms( $cartitem['obj'], $mi_form,  $offset.'_' );
+
+				$offset++;
 
 				if ( !$check ) {
 					$ex = array();
@@ -7785,7 +7795,6 @@ class InvoiceFactory
 					}
 				}
 			}
-
 		}
 	}
 
@@ -8445,6 +8454,22 @@ class InvoiceFactory
 
 		if ( is_null( $recurring ) ) {
 			$recurring = aecGetParam( 'recurring', null );
+		}
+
+		if ( isset( $this->userMIParams ) ) {
+			if ( empty( $this->invoice->params['userMIParams'] ) ) {
+				$this->invoice->params['userMIParams'] = array();
+			}
+
+			foreach ( $this->userMIParams as $planid => $mis ) {
+				foreach ( $mis as $miid => $content ) {
+					foreach ( $content as $k => $v ) {
+						$this->invoice->params['userMIParams'][$planid][$miid][$k] = $v;
+					}
+				}
+			}
+
+			$this->invoice->storeload();
 		}
 
 		if ( isset( $this->invoice->params['userselect_recurring'] ) ) {
@@ -9286,13 +9311,27 @@ class InvoiceFactory
 
 			if ( !empty( $params ) ) {
 				foreach ( $params as $mi_id => $content ) {
-					$this->metaUser->meta->setMIParams( $mi_id, $plan->id, $content, true );
+					if ( is_object( $this->invoice ) ) {
+						$this->invoice->params['userMIParams'][$plan->id][$mi_id] = $content;
+					} else {
+						$this->userMIParams[$plan->id][$mi_id] = $content;
+					}
 				}
 
-				$this->metaUser->meta->storeload();
+				if ( is_object( $this->invoice ) ) {
+					$userMIParams = $this->invoice->params['userMIParams'];
+
+					$this->invoice->storeload();
+				} else {
+					$userMIParams = $this->userMIParams;
+				}
 			}
 
-			$verifymi = $plan->verifyMIformParams( $this->metaUser );
+			if ( empty( $userMIParams ) ) {
+				$userMIParams = array();
+			}
+
+			$verifymi = $plan->verifyMIformParams( $this->metaUser, $userMIParams );
 
 			$this->mi_error = array();
 			if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
@@ -10561,9 +10600,22 @@ class Invoice extends serialParamDBTable
 
 					$plans[] = $new_plan;
 					break;
-				// Single Payments?
 			}
 
+		}
+
+		if ( is_object( $metaUser ) ) {
+			if ( !empty( $this->params['userMIParams'] ) ) {
+				foreach ( $this->params['userMIParams'] as $plan => $mis ) {
+					foreach ( $mis as $mi_id => $content ) {
+						$metaUser->meta->setMIParams( $mi_id, $plan, $content );
+					}
+				}
+
+				$metaUser->meta->storeload();
+
+				unset( $this->params['userMIParams'] );
+			}
 		}
 
 		foreach ( $plans as $plan ) {
@@ -10643,40 +10695,7 @@ class Invoice extends serialParamDBTable
 				$cph = new couponHandler();
 				$cph->load( $coupon_code );
 
-				// See whether this coupon has micro integrations
-				if ( empty( $cph->coupon->micro_integrations ) ) {
-					continue;
-				}
-
-				foreach ( $cph->coupon->micro_integrations as $mi_id ) {
-					$mi = new microIntegration( $database );
-
-					// Only call if it exists
-					if ( !$mi->mi_exists( $mi_id ) ) {
-						continue;
-					}
-
-					$mi->load( $mi_id );
-
-					// Check whether we can really call
-					if ( !$mi->callIntegration() ) {
-						continue;
-					}
-
-					if ( is_object( $metaUser ) ) {
-						if ( $mi->action( $metaUser, null, $this, $new_plan ) === false ) {
-							if ( $aecConfig->cfg['breakon_mi_error'] ) {
-								return false;
-							}
-						}
-					} else {
-						if ( $mi->action( false, null, $this, $new_plan ) === false ) {
-							if ( $aecConfig->cfg['breakon_mi_error'] ) {
-								return false;
-							};
-						}
-					}
-				}
+				$cph->triggerMIs( $metaUser, $this, $metaUser );
 			}
 		}
 
@@ -15472,37 +15491,6 @@ class microIntegrationHandler
 		}
 	}
 
-	function applyMIs( &$terms, $subscription, $metaUser )
-	{
-		$database = &JFactory::getDBO();
-
-		$add = $terms;
-
-		$micro_integrations = $subscription->getMicroIntegrations();
-
-		if ( !empty( $micro_integrations ) ) {
-			foreach ( $micro_integrations as $mi_id ) {
-				$mi = new microIntegration( $database );
-
-				if ( !$mi->mi_exists( $mi_id ) ) {
-					continue;
-				}
-
-				$mi->load( $mi_id );
-
-				if ( !$mi->callIntegration() ) {
-					continue;
-				}
-
-				if ( method_exists( $mi->mi_class, 'modifyPrice' )  ) {
-					$mi->relayAction( $metaUser, null, null, $subscription, 'modifyPrice', $add );
-				}
-
-				unset( $mi );
-			}
-		}
-	}
-
 	function getActiveListbyList( $milist )
 	{
 		$database = &JFactory::getDBO();
@@ -15940,7 +15928,7 @@ class microIntegration extends serialParamDBTable
 		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add );
 	}
 
-	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add )
+	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add, $params=null )
 	{
 		// Exchange Settings
 		if ( is_array( $exchange ) && !empty( $exchange ) ) {
@@ -15954,7 +15942,11 @@ class microIntegration extends serialParamDBTable
 		$request->invoice	=&	$invoice;
 		$request->plan		=&	$objplan;
 
-		$request->params	=&	$metaUser->meta->getMIParams( $this->id, $objplan->id );
+		if ( !is_null( $params ) ) {
+			$request->params	=&	$params;
+		} else {
+			$request->params	=&	$metaUser->meta->getMIParams( $this->id, $objplan->id );
+		}
 
 		if ( $add !== false ) {
 			$request->add	=& $add;
@@ -16057,7 +16049,7 @@ class microIntegration extends serialParamDBTable
 
 	function verifyMIform( $plan, $metaUser, $params=null )
 	{
-		if ( empty( $params ) ) {
+		if ( is_null( $params ) ) {
 			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id, false );
 		}
 
@@ -16982,7 +16974,11 @@ class couponsHandler extends eucaObject
 		if ( isset( $item['terms'] ) ) {
 			$terms = $item['terms'];
 		} elseif ( isset( $item['obj'] ) ) {
-			$terms = $item['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser );
+			if ( !empty( $this->invoice ) ) {
+				$terms = $item['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser, $this->invoice );
+			} else {
+				$terms = $item['obj']->getTerms( false, $this->metaUser->focusSubscription, $this->metaUser );
+			}
 		} elseif ( isset( $item['cost'] ) ) {
 			$terms = $item['cost'];
 		} else {
@@ -17626,6 +17622,47 @@ class couponHandler
 		return $terms;
 	}
 
+	function triggerMIs( $metaUser, $invoice, $new_plan )
+	{
+		global $aecConfig;
+
+		$database = &JFactory::getDBO();
+
+		// See whether this coupon has micro integrations
+		if ( empty( $this->coupon->micro_integrations ) ) {
+			continue;
+		}
+
+		foreach ( $this->coupon->micro_integrations as $mi_id ) {
+			$mi = new microIntegration( $database );
+
+			// Only call if it exists
+			if ( !$mi->mi_exists( $mi_id ) ) {
+				continue;
+			}
+
+			$mi->load( $mi_id );
+
+			// Check whether we can really call
+			if ( !$mi->callIntegration() ) {
+				continue;
+			}
+
+			if ( is_object( $metaUser ) ) {
+				if ( $mi->action( $metaUser, null, $invoice, $new_plan ) === false ) {
+					if ( $aecConfig->cfg['breakon_mi_error'] ) {
+						return false;
+					}
+				}
+			} else {
+				if ( $mi->action( false, null, $invoice, $new_plan ) === false ) {
+					if ( $aecConfig->cfg['breakon_mi_error'] ) {
+						return false;
+					}
+				}
+			}
+		}
+	}
 }
 
 class coupon extends serialParamDBTable
@@ -17985,36 +18022,71 @@ class aecImport
 			$user = $this->convertRow( $row );
 
 			if ( empty( $row['username'] ) ) {
-
+				continue;
 			}
 
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
-					. ' WHERE `username` = \'' . $username . '\''
+					. ' WHERE `username` = \'' . $row['username'] . '\''
 					;
 			$database->setQuery( $query );
 
 			if ( $database->loadResult() ) {
-				return false;
+				continue;
+			}
+
+			if ( !empty( $row['email']  ) ) {
+				if ( empty( $row['password'] ) ) {
+					$row['password'] = AECToolbox::randomstring( 8, true );
 				}
-		}
 
-		// Do a full check for existing usernames
-		if ( $this->options['override_duplicated_usernames'] ){
-			foreach ( $this->rows as $pitem ) {
-				$username = $pitem[$this->conversion['username']];
-
-				$query = 'SELECT `id`'
-						. ' FROM #__users'
-						. ' WHERE `username` = \'' . $username . '\''
-						;
-				$database->setQuery( $query );
-
-				if ( $database->loadResult() ) {
-					return false;
+				if ( !empty( $row['password'] ) ) {
+					$row['password2'] = $row['password'];
 				}
+
+				if ( empty( $this->options['assign_plan'] ) && empty( $row['plan_id'] ) ) {
+					continue;
+				}
+
+				$userid = $this->createUser( $row );
+
+				$metaUser = new metaUser( $userid );
+
+				if ( !empty( $row['plan_id'] ) ) {
+					$pid = $row['plan_id'];
+				} else {
+					$pid = $this->options['assign_plan'];
+				}
+
+				$plan = new SubscriptionPlan( $database );
+				$plan->load( $pid );
+
+				$metaUser->establishFocus( $plan );
+
+				$metaUser->focusSubscription->applyUsage( $pid, 'none', 1 );
+
+				if ( empty( $row['expiration'] ) ) {
+					continue;
+				}
+
+				$metaUser->focusSubscription->expiration = date( 'Y-m-d H:i:s', $row['expiration'] );
+
+				if ( $metaUser->focusSubscription->status == 'Trial' ) {
+					$metaUser->focusSubscription->status = 'Trial';
+				} else {
+					$metaUser->focusSubscription->status = 'Active';
+				}
+
+				$metaUser->focusSubscription->lifetime = 0;
+
+				$metaUser->focusSubscription->storeload();
 			}
 		}
+	}
+
+	function createUser( $fields )
+	{
+		return AECToolbox::saveUserRegistration( 'com_acctexp', $fields, true, true, true );
 	}
 
 	function undo()

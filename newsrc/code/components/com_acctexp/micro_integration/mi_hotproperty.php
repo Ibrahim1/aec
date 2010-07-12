@@ -130,6 +130,13 @@ class mi_hotproperty extends MI
 		return $settings;
 	}
 
+	function invoice_item( $request )
+	{
+		$this->modifyPrice( $request );
+
+		return true;
+	}
+
 	function modifyPrice( $request )
 	{
 		if ( !empty( $request->params['hpamt'] ) ) {
@@ -138,17 +145,17 @@ class mi_hotproperty extends MI
 					switch ( $this->settings['elu_'.$i.'_op'] ) {
 						case 'EQ':
 							if ( $request->params['hpamt'] == $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->parseEasyPrice( $request->add->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
+								$request->add['terms']->price = $this->parseEasyPrice( $request->add['terms']->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 						case 'GT':
 							if ( $request->params['hpamt'] > $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->parseEasyPrice( $request->add->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
+								$request->add['terms']->price = $this->parseEasyPrice( $request->add['terms']->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 						case 'LT':
 							if ( $request->params['hpamt'] < $this->settings['elu_'.$i.'_no'] ) {
-								$request->add->price = $this->parseEasyPrice( $request->add->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
+								$request->add['terms']->price = $this->parseEasyPrice( $request->add['terms']->price, $request->params['hpamt'], $this->settings['elu_'.$i.'_ch'] );
 							}
 							break;
 					}
@@ -188,7 +195,7 @@ class mi_hotproperty extends MI
 
 				$cph = new couponHandler();
 				if ( $cph->forceload( $discount ) ) {
-					$cph->applyCoupon( $request->add->price );
+					$cph->applyCoupon( $request->add['terms']->price );
 				}
 
 				return true;
