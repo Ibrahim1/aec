@@ -658,7 +658,7 @@ class metaUser
 			$plan_params['make_primary'] = 1;
 		}
 
-		if ( $plan_params['make_primary'] ) {
+		if ( $plan_params['make_primary'] && $this->hasSubscription ) {
 			if ( $this->objSubscription->primary ) {
 				$this->focusSubscription = $this->objSubscription;
 
