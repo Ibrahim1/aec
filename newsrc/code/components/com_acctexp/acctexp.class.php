@@ -809,6 +809,8 @@ class metaUser
 
 		$acl = &JFactory::getACL();
 
+		$user = &JFactory::getUser();
+
 		// Always protect last administrator
 		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
 			$query = 'SELECT count(*)'
@@ -890,12 +892,17 @@ class metaUser
 					if ( !empty( $sessionextra ) ) {
 						foreach ( $sessionextra as $sk => $sv ) {
 							$se[$key]['user']->$sk = $sv;
+
+							$user->$sk	= $sv;
 						}
 					}
 
 					if ( isset( $se[$key]['user'] ) ) {
 						$se[$key]['user']->gid		= $gid;
 						$se[$key]['user']->usertype	= $gid_name;
+
+						$user->gid		= $gid;
+						$user->usertype	= $gid_name;
 					}
 
 					$sdata = $this->joomserializesession( $se );

@@ -183,7 +183,8 @@ class mi_acl
 
 					asort( $sessiongroups );
 
-					$sessionextra['jaclplus'] = implode( ',', $sessiongroups );
+					$sessionextra['gids']		= $gid;
+					$sessionextra['jaclplus']	= implode( ',', $sessiongroups );
 				}
 			}
 
