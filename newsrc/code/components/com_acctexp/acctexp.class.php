@@ -13597,25 +13597,27 @@ class reWriteEngine
 		}
 
 		if ( is_object( $this->data['invoice'] ) ) {
-			$this->rewrite['invoice_id']				= $this->data['invoice']->id;
-			$this->rewrite['invoice_number']			= $this->data['invoice']->invoice_number;
-			$this->rewrite['invoice_created_date']		= $this->data['invoice']->created_date;
-			$this->rewrite['invoice_transaction_date']	= $this->data['invoice']->transaction_date;
-			$this->rewrite['invoice_method']			= $this->data['invoice']->method;
-			$this->rewrite['invoice_amount']			= $this->data['invoice']->amount;
-			$this->rewrite['invoice_currency']			= $this->data['invoice']->currency;
+			if ( !empty( $this->data['invoice']->id ) ) {
+				$this->rewrite['invoice_id']				= $this->data['invoice']->id;
+				$this->rewrite['invoice_number']			= $this->data['invoice']->invoice_number;
+				$this->rewrite['invoice_created_date']		= $this->data['invoice']->created_date;
+				$this->rewrite['invoice_transaction_date']	= $this->data['invoice']->transaction_date;
+				$this->rewrite['invoice_method']			= $this->data['invoice']->method;
+				$this->rewrite['invoice_amount']			= $this->data['invoice']->amount;
+				$this->rewrite['invoice_currency']			= $this->data['invoice']->currency;
 
-			if ( !empty( $this->data['invoice']->coupons ) && is_array( $this->data['invoice']->coupons ) ) {
-				$this->rewrite['invoice_coupons']		=  implode( ';', $this->data['invoice']->coupons );
-			} else {
-				$this->rewrite['invoice_coupons']		=  '';
-			}
+				if ( !empty( $this->data['invoice']->coupons ) && is_array( $this->data['invoice']->coupons ) ) {
+					$this->rewrite['invoice_coupons']		=  implode( ';', $this->data['invoice']->coupons );
+				} else {
+					$this->rewrite['invoice_coupons']		=  '';
+				}
 
-			if ( !empty( $this->data['metaUser'] ) && !empty( $this->data['invoice'] ) ) {
-				if ( !empty( $this->data['invoice']->id ) ) {
-					$this->data['invoice']->formatInvoiceNumber();
-					$this->rewrite['invoice_number_format']	= $this->data['invoice']->invoice_number;
-					$this->data['invoice']->deformatInvoiceNumber();
+				if ( !empty( $this->data['metaUser'] ) && !empty( $this->data['invoice'] ) ) {
+					if ( !empty( $this->data['invoice']->id ) ) {
+						$this->data['invoice']->formatInvoiceNumber();
+						$this->rewrite['invoice_number_format']	= $this->data['invoice']->invoice_number;
+						$this->data['invoice']->deformatInvoiceNumber();
+					}
 				}
 			}
 		}
@@ -14479,7 +14481,7 @@ class AECToolbox
 		return true;
 	}
 
-	function saveUserRegistration( $option, $var, $internal=false, $overrideActivation=false, $overrideEmails=false )
+	function saveUserRegistration( $option, $var, $internal=false, $overrideActivation=false, $overrideEmails=false, $overrideJS=false )
 	{
 		$database = &JFactory::getDBO();
 
@@ -14563,7 +14565,7 @@ class AECToolbox
 					$synchronize->synchronizeFrom( $uid );
 				}
 			}
-		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) && !$overrideJS ) {
 
 		} else {
 			// This is a joomla registration, borrowing their code to save the user
@@ -18055,23 +18057,37 @@ class aecImport
 		$database = &JFactory::getDBO();
 
 		foreach( $this->rows as $row ) {
+			$userid = null;
+
 			$user = $this->convertRow( $row );
 
-			if ( empty( $user['username'] ) ) {
+			if ( empty( $user['username'] ) && empty( $user['id'] ) ) {
 				continue;
 			}
 
-			$query = 'SELECT `id`'
-					. ' FROM #__users'
-					. ' WHERE `username` = \'' . $user['username'] . '\''
-					;
-			$database->setQuery( $query );
+			if ( !empty( $user['id'] ) ) {
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE `id` = \'' . $user['id'] . '\''
+						;
+				$database->setQuery( $query );
 
-			$userid = $database->loadResult();
+				$userid = $database->loadResult();
+			}
+
+			if ( empty( $userid ) ) {
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE `username` = \'' . $user['username'] . '\''
+						;
+				$database->setQuery( $query );
+
+				$userid = $database->loadResult();
+			}
 
 			if ( !$userid ) {
-				// We cannot find any user by this name, create one
-				if ( !empty( $user['email']  ) ) {
+				// We cannot find any user by this id or name, create one
+				if ( !empty( $user['email'] ) && !empty( $user['username'] ) ) {
 					if ( empty( $user['password'] ) ) {
 						$user['password'] = AECToolbox::randomstring( 8, true );
 					}
@@ -18084,11 +18100,17 @@ class aecImport
 						$user['password2'] = $user['password'];
 					}
 
-					if ( empty( $this->options['assign_plan'] ) && empty( $user['plan_id'] ) ) {
-						continue;
+					$fields = $user;
+
+					$excludefields = array( 'plan_id', 'invoice_number', 'expiration' );
+
+					foreach ( $excludefields as $field ) {
+						if ( isset( $fields[$field] ) ) {
+							unset( $fields[$field] );
+						}
 					}
 
-					$userid = $this->createUser( $user );
+					$userid = $this->createUser( $fields );
 				} else {
 					continue;
 				}
@@ -18102,6 +18124,8 @@ class aecImport
 				$pid = $this->options['assign_plan'];
 			}
 
+			$subscr_action = false;
+
 			if ( !empty( $pid ) ) {
 				$plan = new SubscriptionPlan( $database );
 				$plan->load( $pid );
@@ -18109,6 +18133,8 @@ class aecImport
 				$d = $metaUser->establishFocus( $plan, 'none', true );
 
 				$metaUser->focusSubscription->applyUsage( $pid, 'none', 1 );
+
+				$subscr_action = true;
 			}
 
 			if ( !empty( $user['expiration'] ) ) {
@@ -18123,22 +18149,29 @@ class aecImport
 				$metaUser->focusSubscription->lifetime = 0;
 
 				$metaUser->focusSubscription->storeload();
+
+				$subscr_action = true;
 			}
 
-			if ( !empty( $user['invoice_number'] ) ) {
+			if ( !empty( $user['invoice_number'] ) && !empty( $pid ) ) {
 				// Create Invoice
+				$invoice = new Invoice( $database );
+				$invoice->create( $userid, $pid, 'none', $user['invoice_number'] );
+
+				if ( $subscr_action ) {
+					$invoice->subscr_id = $metaUser->focusSubscription->id;
+				}
+
+				$invoice->setTransactionDate();
 			}
 		}
 	}
 
 	function createUser( $fields )
 	{
-		return AECToolbox::saveUserRegistration( 'com_acctexp', $fields, true, true, true );
+		return AECToolbox::saveUserRegistration( 'com_acctexp', $fields, true, true, true, true );
 	}
 
-	function undo()
-	{
-	}
 }
 
 class aecExport extends serialParamDBTable

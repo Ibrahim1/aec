@@ -3131,7 +3131,9 @@ class HTML_AcctExp
 						} else {
 							echo $aecHTML->createSettingsParticle( 'file_select' );
 
-							echo '<table style="width:100%;">';
+							echo '<p>Please let us know what the columns in your .csv file mean:</p><p></p>';
+
+							echo '<table id="aec_import_table">';
 
 							echo '<tr>';
 							foreach ( $aecHTML->columns as $column ) {
@@ -3150,6 +3152,7 @@ class HTML_AcctExp
 							}
 
 							echo '</table>';
+							echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
 
 							echo $aecHTML->createSettingsParticle( 'assign_plan' );
 						}

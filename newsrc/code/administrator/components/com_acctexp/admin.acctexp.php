@@ -6771,7 +6771,7 @@ function importData( $option )
 		$lists['file_select'] = mosHTML::selectList( $file_htmllist, 'file_select', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '"', 'value', 'text', 0 );
 	} else {
 		$options = array();
-		
+
 		if ( !empty( $_POST['assign_plan'] ) ) {
 			$options['assign_plan'] = $_POST['assign_plan'];
 		}
@@ -6788,7 +6788,8 @@ function importData( $option )
 			$params['file_select']		= array( 'hidden', $file_select );
 
 			if ( !isset( $_POST['convert_field_0'] ) ) {
-				$fields = array(	"name" => "User Name",
+				$fields = array(	"id" => "User ID",
+									"name" => "User Full Name",
 									"username" => "Username",
 									"email" => "User Email",
 									"password" => "Password",
@@ -6798,7 +6799,7 @@ function importData( $option )
 								);
 
 				$field_htmllist		= array();
-				$field_htmllist[]	= mosHTML::makeOption( 0, _AEC_CMN_NONE_SELECTED );
+				$field_htmllist[]	= mosHTML::makeOption( 0, 'Ignore' );
 
 				foreach ( $fields as $name => $longname ) {
 					$field_htmllist[] = mosHTML::makeOption( $name, $longname );
@@ -6811,18 +6812,20 @@ function importData( $option )
 					$columns[] = 'convert_field_'.$i;
 
 					$params['convert_field_'.$i] = array( 'list', '', '', '' );
-					
+
 					$lists['convert_field_'.$i] = mosHTML::selectList( $field_htmllist, 'convert_field_'.$i, 'size="1"', 'value', 'text', 0 );
 				}
 
-				$rowcount = min( count( $import->rows ), 5 );
+				$rows_count = count( $import->rows );
+
+				$rowcount = min( $rows_count, 5 );
 
 				$rows = array();
 				for ( $i=0; $i<$rowcount; $i++ ) {
 					$rows[] = $import->rows[$i];
 				}
 
-				$params['assign_plan'] = array( 'list', 'Assign Plan', 'Assign this user to a specific payment plan. Is overridden if you provide a plan ID with the "Payment Plan ID" field assignment.' );
+				$params['assign_plan'] = array( 'list', 'Assign Plan', 'Assign users to a specific payment plan. Is overridden if you provide an individual plan ID with the "Payment Plan ID" field assignment.' );
 
 				$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
@@ -6852,6 +6855,7 @@ function importData( $option )
 
 	if ( !$show_form ) {
 		$aecHTML->user_rows = $rows;
+		$aecHTML->user_rows_count = $rows_count;
 		$aecHTML->columns = $columns;
 	}
 
