@@ -1214,30 +1214,13 @@ function editUser(  $option, $userid, $subscriptionid, $task )
 	}
 
 	// get available plans
-	$available_plans	= array();
-	$available_plans[]	= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
-
-	$query = 'SELECT `id` AS value, `name` AS text'
-			. ' FROM #__acctexp_plans'
-			. ' WHERE `active` = \'1\''
-			;
-	$database->setQuery( $query	);
-
-	$dbaplans = $database->loadObjectList();
-
-	if ( is_array( $dbaplans ) ) {
- 		$available_plans	= array_merge( $available_plans, $database->loadObjectList() );
-	}
-	$total_plans		= count( $available_plans ) + 1;
-
-	$selected_plan = isset( $row->fallback ) ? $row->fallback : '';
+	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
 	$lists['assignto_plan'] = mosHTML::selectList( $available_plans, 'assignto_plan', 'size="5"', 'value', 'text', 0 );
 
-	$mi = array();
-
 	$userMIs = $metaUser->getUserMIs();
 
+	$mi					= array();
 	$mi['profile']		= array();
 	$mi['admin']		= array();
 	$mi['profile_form']	= array();
@@ -6735,7 +6718,8 @@ function readout( $option )
 
 function importData( $option )
 {
-	$offer_upload = true;
+	$show_form = false;
+	$done = false;
 
 	$temp_dir = JPATH_SITE . '/tmp';
 
@@ -6745,8 +6729,6 @@ function importData( $option )
 	$lists = array();
 
 	if ( !empty( $_FILES ) ) {
-		$offer_upload = false;
-
 		if ( strpos( $_FILES['import_file']['name'], '.csv' ) === false ) {
 			$len = strlen( $_FILES['import_file']['name'] );
 
@@ -6771,7 +6753,11 @@ function importData( $option )
 	}
 
 	if ( empty( $file_select ) ) {
+		$show_form = true;
+
 		$params['file_select']			= array( 'list', '' );
+		$params['MAX_FILE_SIZE']		= array( 'hidden', '30000' );
+		$params['import_file']			= array( 'file', 'Upload', 'Upload a file and select it for importing', '' );
 
 		$file_htmllist		= array();
 		$file_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
@@ -6782,9 +6768,13 @@ function importData( $option )
 			}
 		}
 
-		$lists['file_select'] = mosHTML::selectList( $file_htmllist, 'file_select', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '', 'value', 'text', array() );
+		$lists['file_select'] = mosHTML::selectList( $file_htmllist, 'file_select', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '"', 'value', 'text', 0 );
 	} else {
-		$options = array( 'mode' => 'comma' );
+		$options = array();
+		
+		if ( !empty( $_POST['assign_plan'] ) ) {
+			$options['assign_plan'] = $_POST['assign_plan'];
+		}
 
 		$import = new aecImport( $temp_dir . '/' . $file_select, $options );
 
@@ -6794,19 +6784,60 @@ function importData( $option )
 
 		$import->parse();
 
-		if ( !empty( $import->list ) ) {
+		if ( !empty( $import->rows ) ) {
+			$params['file_select']		= array( 'hidden', $file_select );
 
+			if ( !isset( $_POST['convert_field_0'] ) ) {
+				$fields = array(	"name" => "User Name",
+									"username" => "Username",
+									"email" => "User Email",
+									"password" => "Password",
+									"plan_id" => "Payment Plan ID",
+									"invoice_number" => "Invoice Number",
+									"expiration" => "Membership Expiration"
+								);
+
+				$field_htmllist		= array();
+				$field_htmllist[]	= mosHTML::makeOption( 0, _AEC_CMN_NONE_SELECTED );
+
+				foreach ( $fields as $name => $longname ) {
+					$field_htmllist[] = mosHTML::makeOption( $name, $longname );
+				}
+
+				$cols = count( $import->rows[0] );
+
+				$columns = array();
+				for ( $i=0; $i<$cols; $i++ ) {
+					$columns[] = 'convert_field_'.$i;
+
+					$params['convert_field_'.$i] = array( 'list', '', '', '' );
+					
+					$lists['convert_field_'.$i] = mosHTML::selectList( $field_htmllist, 'convert_field_'.$i, 'size="1"', 'value', 'text', 0 );
+				}
+
+				$rowcount = min( count( $import->rows ), 5 );
+
+				$rows = array();
+				for ( $i=0; $i<$rowcount; $i++ ) {
+					$rows[] = $import->rows[$i];
+				}
+
+				$params['assign_plan'] = array( 'list', 'Assign Plan', 'Assign this user to a specific payment plan. Is overridden if you provide a plan ID with the "Payment Plan ID" field assignment.' );
+
+				$available_plans	= SubscriptionPlanHandler::getActivePlanList();
+
+				$lists['assign_plan'] = mosHTML::selectList( $available_plans, 'assign_plan', 'size="5"', 'value', 'text', 0 );
+			} else {
+				$import->getConversionList();
+
+				$import->import();
+
+				$done = true;
+			}
 		} else {
 			die( 'could not find any entries in this file' );
 		}
 	}
-
-	// Preparse File (show 2 sample lines of data)
-	// Preset Dialog
-	// Prepare Settings Object
-	// Preset selected?
-	// YES -> Load Preset
-	// No -> Load Defaults
 
 	$settingsparams = array();
 
@@ -6816,7 +6847,13 @@ function importData( $option )
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	$aecHTML->offer_upload = $offer_upload;
+	$aecHTML->form = $show_form;
+	$aecHTML->done = $done;
+
+	if ( !$show_form ) {
+		$aecHTML->user_rows = $rows;
+		$aecHTML->columns = $columns;
+	}
 
 	HTML_AcctExp::import( $option, $aecHTML );
 }

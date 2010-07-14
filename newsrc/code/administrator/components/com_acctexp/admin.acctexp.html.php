@@ -3117,18 +3117,43 @@ class HTML_AcctExp
 			</td>
 		</tr>
 		</table>
-		<div class="aec_import<?php echo $aecHTML->offer_upload ? '' : '_large'; ?>">
+		<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?>">
 			<table style="width:100%;">
 				<tr>
 					<td valign="top">
-						<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-							echo $aecHTML->createSettingsParticle( $rowname );
-						} ?>
+						<?php
+						if ( $aecHTML->done ) {
+							echo '<p>Import successful.</p>';
+						} elseif ( $aecHTML->form ) {
+							foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+								echo $aecHTML->createSettingsParticle( $rowname );
+							}
+						} else {
+							echo $aecHTML->createSettingsParticle( 'file_select' );
 
-						<?php if ( $aecHTML->offer_upload ) { ?>
-						    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
-						    Upload: <input name="import_file" type="file" />
-						<?php } ?>
+							echo '<table style="width:100%;">';
+
+							echo '<tr>';
+							foreach ( $aecHTML->columns as $column ) {
+								echo '<th>' . $aecHTML->createSettingsParticle( $column ) . '</th>';
+							}
+							echo '</tr>';
+
+							foreach ( $aecHTML->user_rows as $row ) {
+								echo '<tr>';
+
+								foreach ( $row as $k => $v ) {
+									echo '<td>' . $v . '</td>';
+								}
+
+								echo '</tr>';
+							}
+
+							echo '</table>';
+
+							echo $aecHTML->createSettingsParticle( 'assign_plan' );
+						}
+						?>
 					</td>
 				</tr>
 			</table>

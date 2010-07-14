@@ -5265,6 +5265,11 @@ class aecHTML
 				$return .= $this->lists[$name];
 				$return .= '</div>';
 				break;
+			case 'file':
+				$return .= '<div class="setting_form">';
+				$return .= '<input name="' . $name . '" type="file" />';
+				$return .= '</div>';
+				break;
 			case 'accordion_start':
 				if ( !isset( $this->accordions ) ) {
 					$this->accordions = 1;
@@ -18013,10 +18018,12 @@ class aecImport
 
 		$this->rows = $csv->parse( $this->filepath );
 
-		if ( empty( $this->rows ) ) {
-			return false;
-		} else {
+		if ( $csv->parse( $this->filepath ) ) {
+			$this->rows = $csv->data;
+
 			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -18032,7 +18039,7 @@ class aecImport
 	function convertRow( $row )
 	{
 		$converted = array();
-		foreach ( $this->conversions as $k => $v ) {
+		foreach ( $this->conversion as $k => $v ) {
 			if ( isset( $row[$k] ) ) {
 				$converted[$v] = $row[$k];
 			} else {
@@ -18050,13 +18057,13 @@ class aecImport
 		foreach( $this->rows as $row ) {
 			$user = $this->convertRow( $row );
 
-			if ( empty( $row['username'] ) ) {
+			if ( empty( $user['username'] ) ) {
 				continue;
 			}
 
 			$query = 'SELECT `id`'
 					. ' FROM #__users'
-					. ' WHERE `username` = \'' . $row['username'] . '\''
+					. ' WHERE `username` = \'' . $user['username'] . '\''
 					;
 			$database->setQuery( $query );
 
@@ -18064,20 +18071,24 @@ class aecImport
 
 			if ( !$userid ) {
 				// We cannot find any user by this name, create one
-				if ( !empty( $row['email']  ) ) {
-					if ( empty( $row['password'] ) ) {
-						$row['password'] = AECToolbox::randomstring( 8, true );
+				if ( !empty( $user['email']  ) ) {
+					if ( empty( $user['password'] ) ) {
+						$user['password'] = AECToolbox::randomstring( 8, true );
 					}
 
-					if ( !empty( $row['password'] ) ) {
-						$row['password2'] = $row['password'];
+					if ( empty( $user['user_name'] ) ) {
+						$user['user_name'] = $user['username'];
 					}
 
-					if ( empty( $this->options['assign_plan'] ) && empty( $row['plan_id'] ) ) {
+					if ( !empty( $user['password'] ) ) {
+						$user['password2'] = $user['password'];
+					}
+
+					if ( empty( $this->options['assign_plan'] ) && empty( $user['plan_id'] ) ) {
 						continue;
 					}
 
-					$userid = $this->createUser( $row );
+					$userid = $this->createUser( $user );
 				} else {
 					continue;
 				}
@@ -18085,36 +18096,36 @@ class aecImport
 
 			$metaUser = new metaUser( $userid );
 
-			if ( !empty( $row['plan_id'] ) ) {
-				$pid = $row['plan_id'];
+			if ( !empty( $user['plan_id'] ) ) {
+				$pid = $user['plan_id'];
 			} else {
 				$pid = $this->options['assign_plan'];
 			}
 
-			$plan = new SubscriptionPlan( $database );
-			$plan->load( $pid );
+			if ( !empty( $pid ) ) {
+				$plan = new SubscriptionPlan( $database );
+				$plan->load( $pid );
 
-			$metaUser->establishFocus( $plan );
+				$d = $metaUser->establishFocus( $plan, 'none', true );
 
-			$metaUser->focusSubscription->applyUsage( $pid, 'none', 1 );
-
-			if ( empty( $row['expiration'] ) ) {
-				continue;
+				$metaUser->focusSubscription->applyUsage( $pid, 'none', 1 );
 			}
 
-			$metaUser->focusSubscription->expiration = date( 'Y-m-d H:i:s', $row['expiration'] );
+			if ( !empty( $user['expiration'] ) ) {
+				$metaUser->focusSubscription->expiration = date( 'Y-m-d H:i:s', strtotime( $user['expiration'] ) );
 
-			if ( $metaUser->focusSubscription->status == 'Trial' ) {
-				$metaUser->focusSubscription->status = 'Trial';
-			} else {
-				$metaUser->focusSubscription->status = 'Active';
+				if ( $metaUser->focusSubscription->status == 'Trial' ) {
+					$metaUser->focusSubscription->status = 'Trial';
+				} else {
+					$metaUser->focusSubscription->status = 'Active';
+				}
+
+				$metaUser->focusSubscription->lifetime = 0;
+
+				$metaUser->focusSubscription->storeload();
 			}
 
-			$metaUser->focusSubscription->lifetime = 0;
-
-			$metaUser->focusSubscription->storeload();
-
-			if ( !empty( $row['invoice_number'] ) ) {
+			if ( !empty( $user['invoice_number'] ) ) {
 				// Create Invoice
 			}
 		}
