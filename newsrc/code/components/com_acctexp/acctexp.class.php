@@ -6301,7 +6301,7 @@ class SubscriptionPlanHandler
 				. ' ORDER BY `ordering`'
 			 	;
 
-		if ( !empty( $limitstart ) && !empty( $limit ) ) {
+		if ( ( $limitstart !== false ) && ( $limit !== false ) ) {
 			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
 		}
 
