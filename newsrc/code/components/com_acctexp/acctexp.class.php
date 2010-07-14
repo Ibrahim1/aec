@@ -18060,55 +18060,62 @@ class aecImport
 					;
 			$database->setQuery( $query );
 
-			if ( $database->loadResult() ) {
+			$userid = $database->loadResult();
+
+			if ( !$userid ) {
+				// We cannot find any user by this name, create one
+				if ( !empty( $row['email']  ) ) {
+					if ( empty( $row['password'] ) ) {
+						$row['password'] = AECToolbox::randomstring( 8, true );
+					}
+
+					if ( !empty( $row['password'] ) ) {
+						$row['password2'] = $row['password'];
+					}
+
+					if ( empty( $this->options['assign_plan'] ) && empty( $row['plan_id'] ) ) {
+						continue;
+					}
+
+					$userid = $this->createUser( $row );
+				} else {
+					continue;
+				}
+			}
+
+			$metaUser = new metaUser( $userid );
+
+			if ( !empty( $row['plan_id'] ) ) {
+				$pid = $row['plan_id'];
+			} else {
+				$pid = $this->options['assign_plan'];
+			}
+
+			$plan = new SubscriptionPlan( $database );
+			$plan->load( $pid );
+
+			$metaUser->establishFocus( $plan );
+
+			$metaUser->focusSubscription->applyUsage( $pid, 'none', 1 );
+
+			if ( empty( $row['expiration'] ) ) {
 				continue;
 			}
 
-			if ( !empty( $row['email']  ) ) {
-				if ( empty( $row['password'] ) ) {
-					$row['password'] = AECToolbox::randomstring( 8, true );
-				}
+			$metaUser->focusSubscription->expiration = date( 'Y-m-d H:i:s', $row['expiration'] );
 
-				if ( !empty( $row['password'] ) ) {
-					$row['password2'] = $row['password'];
-				}
+			if ( $metaUser->focusSubscription->status == 'Trial' ) {
+				$metaUser->focusSubscription->status = 'Trial';
+			} else {
+				$metaUser->focusSubscription->status = 'Active';
+			}
 
-				if ( empty( $this->options['assign_plan'] ) && empty( $row['plan_id'] ) ) {
-					continue;
-				}
+			$metaUser->focusSubscription->lifetime = 0;
 
-				$userid = $this->createUser( $row );
+			$metaUser->focusSubscription->storeload();
 
-				$metaUser = new metaUser( $userid );
-
-				if ( !empty( $row['plan_id'] ) ) {
-					$pid = $row['plan_id'];
-				} else {
-					$pid = $this->options['assign_plan'];
-				}
-
-				$plan = new SubscriptionPlan( $database );
-				$plan->load( $pid );
-
-				$metaUser->establishFocus( $plan );
-
-				$metaUser->focusSubscription->applyUsage( $pid, 'none', 1 );
-
-				if ( empty( $row['expiration'] ) ) {
-					continue;
-				}
-
-				$metaUser->focusSubscription->expiration = date( 'Y-m-d H:i:s', $row['expiration'] );
-
-				if ( $metaUser->focusSubscription->status == 'Trial' ) {
-					$metaUser->focusSubscription->status = 'Trial';
-				} else {
-					$metaUser->focusSubscription->status = 'Active';
-				}
-
-				$metaUser->focusSubscription->lifetime = 0;
-
-				$metaUser->focusSubscription->storeload();
+			if ( !empty( $row['invoice_number'] ) ) {
+				// Create Invoice
 			}
 		}
 	}
