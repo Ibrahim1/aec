@@ -32,8 +32,10 @@ class mi_mailchimp
 
 			$lists = $MCAPI->lists();
 
-			foreach( $lists as $list ) {
-				$li[] = mosHTML::makeOption( $list['id'], $list['name'] );
+			if ( !empty( $lists ) ) {
+				foreach( $lists as $list ) {
+					$li[] = mosHTML::makeOption( $list['id'], $list['name'] );
+				}
 			}
 		}
 
@@ -445,7 +447,7 @@ class MCAPI {
         return $this->callServer("callMethod", $params);
     }
 
-	function callServer( $method, $params )
+	function callServerAEC( $method, $params )
 	{
 		$db = &JFactory::getDBO();
 
@@ -476,7 +478,7 @@ class MCAPI {
      * Actually connect to the server and call the requested methods, parsing the result
      * You should never have to call this function manually
      */
-    function callServerOriginal($method, $params) {
+    function callServer($method, $params) {
 	    $dc = "us1";
 	    if (strstr($this->api_key,"-")){
         	list($key, $dc) = explode("-",$this->api_key,2);

@@ -2775,7 +2775,21 @@ class HTML_AcctExp
 				<td align="center"><?php echo $row->proc_name; ?></td>
 				<td align="center"><?php echo $row->amount; ?></td>
 				<td align="left">
-					<?php if ( !empty( $row->response ) ) { $field = unserialize( base64_decode( $row->response ) ); foreach ( $field as $n => $v) { echo $n." = ".$v."<br />"; } } ?>
+					<?php
+						if ( !empty( $row->response ) ) {
+							$field = unserialize( base64_decode( $row->response ) );
+
+							if ( count( $field ) == 1 ) {
+								foreach ( $field as $k => $v ) {
+									$field = unserialize( base64_decode( $k ) );
+								}
+							}
+
+							foreach ( $field as $n => $v) {
+								echo $n." = ".$v."<br />";
+							}
+						}
+					?>
 				</td>
 			</tr>
 			<?php

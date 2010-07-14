@@ -25,10 +25,7 @@ class mi_supporttimetracker extends MI
 	function Settings()
 	{
 		$settings = array();
-		$settings['add_minutes']		= array( 'inputE', 'Add Support Minutes', 'Add this amount of minutes to the user account' );
-
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings['add_minutes']		= array( 'inputC', 'Add Support Minutes', 'Add this amount of minutes to the user account' );
 
 		return $settings;
 	}

@@ -8322,7 +8322,11 @@ class InvoiceFactory
 
 		$this->items->total = $cost;
 
-		$this->items->grand_total = clone( $this->items->total );
+		if ( is_object( $cost ) ) {
+			$this->items->grand_total = clone( $this->items->total );
+		} else {
+			$this->items->grand_total = $this->items->total;
+		}
 
 		$exchange = $silent = null;
 
@@ -8561,7 +8565,7 @@ class InvoiceFactory
 		$this->invoice = new Invoice( $database );
 
 		$id = 0;
-		if ( strpos( $this->usage, 'c' ) !== false ) {
+		if ( !empty( $this->usage ) && strpos( $this->usage, 'c' ) !== false ) {
 			$id = aecCartHelper::getInvoiceIdByCart( $this->cartobject );
 		}
 
@@ -17025,8 +17029,6 @@ class couponsHandler extends eucaObject
 
 		if ( !empty( $item['obj']->id ) ) {
 			$this->InvoiceFactory->usage = $item['obj']->id;
-		} else {
-			$this->InvoiceFactory->usage = null;
 		}
 
 		if ( !$this->mixCheck( $id, $coupon_code, $ccombo ) ) {
@@ -17666,7 +17668,7 @@ class couponHandler
 
 		// See whether this coupon has micro integrations
 		if ( empty( $this->coupon->micro_integrations ) ) {
-			continue;
+			return null;
 		}
 
 		foreach ( $this->coupon->micro_integrations as $mi_id ) {

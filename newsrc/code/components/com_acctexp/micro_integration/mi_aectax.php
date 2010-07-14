@@ -392,6 +392,19 @@ class mi_aectax
 		}
 
 		$locations = array();
+
+		if ( !empty( $this->settings['locations_amount'] ) ) {
+			for ( $i=0; $this->settings['locations_amount']>$i; $i++ ) {
+				$locations[] = array(	'id'			=> $this->settings[$i.'_id'],
+										'text'			=> $this->settings[$i.'_text'],
+										'percentage'	=> $this->settings[$i.'_percentage'],
+										'mode'			=> $this->settings[$i.'_mode'],
+										'extra'			=> $this->settings[$i.'_extra'],
+										'mi'			=> $this->settings[$i.'_mi']
+									);
+			}
+		}
+
 		if ( !empty( $this->settings['vat_countrylist'] ) ) {
 			$list = $this->vatList();
 
@@ -412,18 +425,6 @@ class mi_aectax
 										'mode'			=> $this->settings['vat_mode'],
 										'extra'			=> $tax . '%',
 										'mi'			=> null
-									);
-			}
-		}
-
-		if ( !empty( $this->settings['locations_amount'] ) ) {
-			for ( $i=0; $this->settings['locations_amount']>$i; $i++ ) {
-				$locations[] = array(	'id'			=> $this->settings[$i.'_id'],
-										'text'			=> $this->settings[$i.'_text'],
-										'percentage'	=> $this->settings[$i.'_percentage'],
-										'mode'			=> $this->settings[$i.'_mode'],
-										'extra'			=> $this->settings[$i.'_extra'],
-										'mi'			=> $this->settings[$i.'_mi']
 									);
 			}
 		}

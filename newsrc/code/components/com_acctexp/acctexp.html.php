@@ -788,6 +788,12 @@ class Payment_HTML
 	{
 		global $aecConfig;
 
+		if ( !empty( $user->id ) ) {
+			$userid = $user->id;
+		} else {
+			$userid = 0;
+		}
+
 		HTML_frontend::aec_styling( $option );
 		?>
 
@@ -820,12 +826,12 @@ class Payment_HTML
 						<td><p><?php echo $InvoiceFactory->plan->name; ?></p></td>
 						<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
 					</tr>
-					<?php if ( empty( $user->id ) && $aecConfig->cfg['confirmation_changeusername'] && $aecConfig->cfg['confirmation_changeusage'] ) { ?>
+					<?php if ( empty( $userid ) && $aecConfig->cfg['confirmation_changeusername'] && $aecConfig->cfg['confirmation_changeusage'] ) { ?>
 					<tr>
 						<td>
 							<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
-								<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+								<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
 								<input type="hidden" name="task" value="subscribe" />
 								<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
 								<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
@@ -840,7 +846,7 @@ class Payment_HTML
 						<td colspan="2">
 							<form class="aectextright" name="backFormUserPlan" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
-								<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+								<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
 								<input type="hidden" name="task" value="subscribe" />
 								<input type="hidden" name="forget" value="usage" />
 								<?php if ( $passthrough != false ) { ?>
@@ -856,12 +862,12 @@ class Payment_HTML
 						<td colspan="3" class="aec_left"><strong><?php echo _CONFIRM_YOU_HAVE_SELECTED; ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
 					</tr>
 					<?php } ?>
-					<?php if ( $aecConfig->cfg['confirmation_changeusage'] && !( empty( $user->id ) && $aecConfig->cfg['confirmation_changeusername'] ) ) { ?>
+					<?php if ( $aecConfig->cfg['confirmation_changeusage'] && !( empty( $userid ) && $aecConfig->cfg['confirmation_changeusername'] ) ) { ?>
 					<tr>
 						<td colspan="3" class="aec_left">
 							<form name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
-								<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+								<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
 								<input type="hidden" name="task" value="subscribe" />
 								<input type="hidden" name="forget" value="usage" />
 								<?php if ( $passthrough != false ) { ?>
@@ -948,7 +954,7 @@ class Payment_HTML
 					<td id="confirmation_button">
 					<div id="confirmation_button">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
-						<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
+						<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
 						<input type="hidden" name="task" value="saveSubscription" />
 						<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
 						<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
