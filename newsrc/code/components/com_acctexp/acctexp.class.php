@@ -8863,7 +8863,7 @@ class InvoiceFactory
 			$g = new ItemGroup( $database );
 			$g->load( $group );
 
-			if ( $g->checkVisibility( $this->metaUser ) ) {
+			if ( $g->checkPermission( $this->metaUser ) ) {
 				if ( !empty( $g->params['symlink'] ) ) {
 					aecRedirect( $g->params['symlink'] );
 				}
@@ -19015,7 +19015,7 @@ class aecRestrictionHelper
 
 			$status = array_merge( $status, $metaUser->permissionResponse( $restrictions ) );
 
-			if ( !empty( $status ) ) {
+			if ( count( $status ) ) {
 				foreach ( $status as $stname => $ststatus ) {
 					if ( !$ststatus ) {
 						return false;
@@ -19051,6 +19051,8 @@ class aecRestrictionHelper
 		if ( !empty( $restrictions['previousgroup_req_enabled'] ) ) {
 			if ( !empty( $restrictions['previousgroup_req'] ) ) {
 				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'previousgroup_req', 'previousplan_req' );
+
+				$restrictions['previousplan_req_enabled'] = true;
 			}
 		}
 
@@ -19058,6 +19060,8 @@ class aecRestrictionHelper
 		if ( !empty( $restrictions['previousgroup_req_enabled_excluded'] ) ) {
 			if ( !empty( $restrictions['previousgroup_req_excluded'] ) ) {
 				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'previousgroup_req_excluded', 'previousplan_req_excluded' );
+
+				$restrictions['previousplan_req_enabled_excluded'] = true;
 			}
 		}
 
@@ -19065,6 +19069,8 @@ class aecRestrictionHelper
 		if ( !empty( $restrictions['currentgroup_req_enabled'] ) ) {
 			if ( !empty( $restrictions['currentgroup_req'] ) ) {
 				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'currentgroup_req', 'currentplan_req' );
+
+				$restrictions['currentplan_req_enabled'] = true;
 			}
 		}
 
@@ -19072,13 +19078,17 @@ class aecRestrictionHelper
 		if ( !empty( $restrictions['currentgroup_req_enabled_excluded'] ) ) {
 			if ( !empty( $restrictions['currentgroup_req_excluded'] ) ) {
 				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'currentgroup_req_excluded', 'currentplan_req_excluded' );
+
+				$restrictions['currentplan_req_enabled_excluded'] = true;
 			}
 		}
 
 		// Check for a overall used group
 		if ( !empty( $restrictions['overallgroup_req_enabled'] ) ) {
 			if ( !empty( $restrictions['overallgroup_req'] ) ) {
-				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'overallplan_req', 'overallgroup_req' );
+				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'overallgroup_req', 'overallplan_req' );
+
+				$restrictions['overallplan_req_enabled'] = true;
 			}
 		}
 
@@ -19086,6 +19096,8 @@ class aecRestrictionHelper
 		if ( !empty( $restrictions['overallgroup_req_enabled_excluded'] ) ) {
 			if ( !empty( $restrictions['overallgroup_req_excluded'] ) ) {
 				$restrictions = aecRestrictionHelper::addGroupPlans( $restrictions, 'overallgroup_req_excluded', 'overallplan_req_excluded' );
+
+				$restrictions['overallplan_req_enabled_excluded'] = true;
 			}
 		}
 
