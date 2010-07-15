@@ -993,7 +993,7 @@ class HTML_AcctExp
 				padding: 0 12px;
 			}</style>
 		<div style="width: 1024px; margin: 0 auto;">
-		<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx.png) no-repeat top right; margin: 0 6px;">
+		<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx_0_14.png) no-repeat top right; margin: 0 6px;">
 			<div style="width: 100%; height: 290px;"></div>
 			<div class="installnote">
 				<h1>Leading Programmer</h1>
@@ -1003,10 +1003,12 @@ class HTML_AcctExp
 				<h1>Past Contributing Programmers</h1>
 				<p>Helder 'hlblog' Garcia, Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
 				<h1>Graphics</h1>
-				<p>All layout and graphics design is <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2010 David 'skOre' Deutsch.</p>
+				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2010 David 'skOre' Deutsch unless otherwise noted.</p>
 				<p>Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).</p>
+				<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
 				<h1>Libraries</h1>
-				<p>The import function uses a modified parsecsv library by Jim Myhrberg - <a href="http://code.google.com/p/parsecsv-for-php/">code.google.com/p/parsecsv-for-php</a>.</p>				<p>Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).</p>
+				<p>The import function uses a modified parsecsv library by Jim Myhrberg - <a href="http://code.google.com/p/parsecsv-for-php/">code.google.com/p/parsecsv-for-php</a>.</p>
+				<p>Furthermore, these libraries are used in one place or another: <a href="http://www.blueprintcss.org/">blueprint</a>, <a href="http://krumo.sourceforge.net/">krumo</a>, <a href="http://www.mootools.net/">mootools</a>, <a href="http://www.jquery.com/">jquery</a>, <a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>.</p>
 				<h1>Eternal Gratitude</h1>
 				<p>These are the people without whom I could not have kept up the pace:</p>
 				<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>

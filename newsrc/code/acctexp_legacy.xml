@@ -15,9 +15,12 @@
 		<filename>acctexp.html.php</filename>
 		<filename>lang/index.html</filename>
 		<filename>lang/brazilian_portuguese.php</filename>
+		<filename>lang/czech.php</filename>
+		<filename>lang/danish.php</filename>
 		<filename>lang/dutch.php</filename>
 		<filename>lang/english.php</filename>
 		<filename>lang/french.php</filename>
+		<filename>lang/general.php</filename>
 		<filename>lang/german.php</filename>
 		<filename>lang/germanf.php</filename>
 		<filename>lang/germani.php</filename>
@@ -74,18 +77,20 @@
 		<filename>micro_integration/mi_acajoom.php</filename>
 		<filename>micro_integration/mi_acl.php</filename>
 		<filename>micro_integration/mi_adminuseraccess.php</filename>
+		<filename>micro_integration/mi_adsmanager.php</filename>
 		<filename>micro_integration/mi_aecdonate.php</filename>
 		<filename>micro_integration/mi_aecinvoiceprintmod.php</filename>
+		<filename>micro_integration/mi_aecmodifycost.php</filename>
 		<filename>micro_integration/mi_aecmodifyexpiration.php</filename>
 		<filename>micro_integration/mi_aecplan.php</filename>
 		<filename>micro_integration/mi_aectax.php</filename>
 		<filename>micro_integration/mi_aecuserdetails.php</filename>
 		<filename>micro_integration/mi_affiliatepro.php</filename>
 		<filename>micro_integration/mi_age_restriction.php</filename>
+		<filename>micro_integration/mi_agora.php</filename>
 		<filename>micro_integration/mi_amigos.php</filename>
 		<filename>micro_integration/mi_apc.php</filename>
 		<filename>micro_integration/mi_attend_events.php</filename>
-		<filename>micro_integration/mi_communityacl.php</filename>
 		<filename>micro_integration/mi_communitybuilder.php</filename>
 		<filename>micro_integration/mi_coupon.php</filename>
 		<filename>micro_integration/mi_directory.php</filename>
@@ -97,6 +102,8 @@
 		<filename>micro_integration/mi_eventlog.php</filename>
 		<filename>micro_integration/mi_file.php</filename>
 		<filename>micro_integration/mi_fireboard.php</filename>
+		<filename>micro_integration/mi_flexiaccess.php</filename>
+		<filename>micro_integration/mi_frontenduseraccess.php</filename>
 		<filename>micro_integration/mi_googleadsenseconversion.php</filename>
 		<filename>micro_integration/mi_googleanalytics.php</filename>
 		<filename>micro_integration/mi_hotproperty.php</filename>
@@ -104,22 +111,25 @@
 		<filename>micro_integration/mi_http_query.php</filename>
 		<filename>micro_integration/mi_idevaffiliate.php</filename>
 		<filename>micro_integration/mi_jarc.php</filename>
+		<filename>micro_integration/mi_joomsocial.php</filename>
 		<filename>micro_integration/mi_joomlaplugin.php</filename>
 		<filename>micro_integration/mi_joomlauser.php</filename>
 		<filename>micro_integration/mi_juga.php</filename>
 		<filename>micro_integration/mi_k2.php</filename>
 		<filename>micro_integration/mi_kunena.php</filename>
+		<filename>micro_integration/mi_mailchimp.php</filename>
 		<filename>micro_integration/mi_mosets_tree.php</filename>
 		<filename>micro_integration/mi_mysms.php</filename>
 		<filename>micro_integration/mi_mysql_query.php</filename>
 		<filename>micro_integration/mi_phpbb3.php</filename>
-		<filename>micro_integration/mi_proma.php</filename>
 		<filename>micro_integration/mi_raffle.php</filename>
 		<filename>micro_integration/mi_rsgallery2.php</filename>
 		<filename>micro_integration/mi_rstickets.php</filename>
 		<filename>micro_integration/mi_shareasale.php</filename>
 		<filename>micro_integration/mi_sobi.php</filename>
+		<filename>micro_integration/mi_supporttimetracker.php</filename>
 		<filename>micro_integration/mi_uddeim.php</filename>
+		<filename>micro_integration/mi_unpack.php</filename>
 		<filename>micro_integration/mi_virtuemart.php</filename>
 		<filename>micro_integration/mi_htaccess/index.html</filename>
 		<filename>micro_integration/mi_htaccess/htaccess.class.php</filename>
@@ -140,7 +150,10 @@
 		<filename>processors/epsnetpay.php</filename>
 		<filename>processors/eway.php</filename>
 		<filename>processors/ewayxml.php</filename>
+		<filename>processors/hsbc.php</filename>
 		<filename>processors/iats.php</filename>
+		<filename>processors/ideal_advanced.php</filename>
+		<filename>processors/ideal_basic.php</filename>
 		<filename>processors/ipayment_silent.php</filename>
 		<filename>processors/moneybookers.php</filename>
 		<filename>processors/moneyproxy.php</filename>
