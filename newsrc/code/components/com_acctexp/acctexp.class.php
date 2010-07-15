@@ -893,7 +893,9 @@ class metaUser
 						foreach ( $sessionextra as $sk => $sv ) {
 							$se[$key]['user']->$sk = $sv;
 
-							$user->$sk	= $sv;
+							if ( $this->id == $user->id ) {
+								$user->$sk	= $sv;
+							}
 						}
 					}
 
@@ -901,8 +903,10 @@ class metaUser
 						$se[$key]['user']->gid		= $gid;
 						$se[$key]['user']->usertype	= $gid_name;
 
-						$user->gid		= $gid;
-						$user->usertype	= $gid_name;
+						if ( $this->id == $user->id ) {
+							$user->gid		= $gid;
+							$user->usertype	= $gid_name;
+						}
 					}
 
 					$sdata = $this->joomserializesession( $se );
