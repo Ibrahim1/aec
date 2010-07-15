@@ -1005,6 +1005,8 @@ class HTML_AcctExp
 				<h1>Graphics</h1>
 				<p>All layout and graphics design is <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2010 David 'skOre' Deutsch.</p>
 				<p>Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).</p>
+				<h1>Libraries</h1>
+				<p>The import function uses a modified parsecsv library by Jim Myhrberg - <a href="http://code.google.com/p/parsecsv-for-php/">code.google.com/p/parsecsv-for-php</a>.</p>				<p>Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).</p>
 				<h1>Eternal Gratitude</h1>
 				<p>These are the people without whom I could not have kept up the pace:</p>
 				<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>
@@ -1013,9 +1015,9 @@ class HTML_AcctExp
 				<p>Calum 'polc1410' Polwart, Aleksey Pikulik</p>
 				<h1>Contributors</h1>
 				<p>People who have helped on our code by submitting additions and patches at one place or another:</p>
-				<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design</p>
+				<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design, Carsten Engel, Joel Bassett, Emmanuel Danan, Rebekah Pitt, Daniel Lowhorn, berner, Mitchell Mink, Joshua Tan, Casey Eyring</p>
 				<h1>Translators</h1>
-				<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on dutch translation)</p>
+				<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on dutch translation), anderscarlen (swedish translation), David Mara (czech translation)</p>
 				<p>Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky</p>
 			</div>
 			<div style="width: 100%; height: 60px;"></div>
