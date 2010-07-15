@@ -1690,7 +1690,7 @@ class HTML_AcctExp
 										<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_action' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
