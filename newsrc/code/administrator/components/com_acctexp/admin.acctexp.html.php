@@ -717,10 +717,10 @@ class HTML_AcctExp
 				<table class="aecadminform">
 					<tr>
 						<td valign="top" style="padding: 10px;">
-							<?php foreach ( $mi['profile'] as $mi ) { ?>
+							<?php foreach ( $mi['profile'] as $mix ) { ?>
 									<div class="profileinfobox">
-										<h3><?php echo $mi['name']; ?></h3>
-										<p><?php echo $mi['info']; ?></p>
+										<h3><?php echo $mix['name']; ?></h3>
+										<p><?php echo $mix['info']; ?></p>
 									</div>
 								<?php
 							} ?>
@@ -747,10 +747,10 @@ class HTML_AcctExp
 				<table class="aecadminform">
 					<tr>
 						<td valign="top" style="padding: 10px;">
-							<?php foreach ( $mi['admin'] as $mi ) { ?>
+							<?php foreach ( $mi['admin'] as $mix ) { ?>
 									<div class="admininfobox">
-										<h3><?php echo $mi['name']; ?></h3>
-										<p><?php echo $mi['info']; ?></p>
+										<h3><?php echo $mix['name']; ?></h3>
+										<p><?php echo $mix['info']; ?></p>
 									</div>
 								<?php
 							} ?>

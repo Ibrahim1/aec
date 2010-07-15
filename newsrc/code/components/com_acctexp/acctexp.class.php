@@ -1306,7 +1306,7 @@ class metaUser
 			$selected_plan = new SubscriptionPlan( $database );
 			$selected_plan->load( $this->objSubscription->plan );
 
-			$mis = $selected_plan->micro_integrations;
+			$mis = $selected_plan->getMicroIntegrations();
 
 			if ( empty( $mis ) ) {
 				$mis = array();
@@ -1316,17 +1316,21 @@ class metaUser
 
 			if ( !empty( $sec ) ) {
 				foreach ( $sec as $pid ) {
-					$selected_plan = new SubscriptionPlan( $database );
-					$selected_plan->load( $this->objSubscription->plan );
+					if ( $this->moveFocus( $pid ) ) {
+						$selected_plan = new SubscriptionPlan( $database );
+						$selected_plan->load( $this->focusSubscription->plan );
 
-					if ( !empty( $selected_plan->micro_integrations ) ) {
-						$mis = array_merge( $mis, $selected_plan->micro_integrations );
+						$miis = $selected_plan->getMicroIntegrations();
+
+						if ( !empty( $miis ) ) {
+							$mis = array_merge( $mis, $miis );
+						}
 					}
 				}
 			}
 
 			if ( count( $mis ) ) {
-				array_unique( $mis );
+				$mis = array_unique( $mis );
 
 				foreach ( $mis as $mi_id ) {
 					if ( $mi_id ) {
@@ -1566,7 +1570,7 @@ class metaUserDB extends serialParamDBTable
 	{
 		global $mainframe;
 
-		$this->setParams( $params, 'custom_params' );
+		$this->addParams( $params, 'custom_params', true );
 
 		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
 	}

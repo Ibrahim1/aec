@@ -1052,7 +1052,7 @@ function help( $option )
 	HTML_AcctExp::help( $option, $diagnose ) ;
 }
 
-function editUser(  $option, $userid, $subscriptionid, $task )
+function editUser( $option, $userid, $subscriptionid, $task )
 {
 	$database = &JFactory::getDBO();
 

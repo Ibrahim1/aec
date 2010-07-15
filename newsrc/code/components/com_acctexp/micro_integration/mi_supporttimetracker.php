@@ -46,10 +46,10 @@ class mi_supporttimetracker extends MI
 		if ( empty( $minutes ) ) {
 			$message = "You don't have any Support Time left for this account";
 		} else {
-			$hrs = $minutes / 60;
+			$hrs = (int) ( $minutes / 60 );
 			$min = $minutes % 60;
 
-			$message = "You have <strong>" . $hrs . " hour" . ( ( $hrs == 1 ) ? 's' : '' ) . ' and ' . $min . " minute" . ( ( $min == 1 ) ? 's' : '' ) . '</strong> Support Time left in this account.';
+			$message = "You have <strong>" . $hrs . " hour" . ( ( $hrs == 1 ) ? '' : 's' ) . ' and ' . $min . " minute" . ( ( $min == 1 ) ? '' : 's' ) . '</strong> Support Time left for this account.';
 		}
 
 		return $message;
@@ -87,19 +87,28 @@ class mi_supporttimetracker extends MI
 		} else {
 			global $mainframe;
 
-			$history_table = '<table>';
-			$history_table .= '<tr><th>ID</th><th>Date</th><th>Minutes</th><th>Change</th><th>Minutes Used</th><th>Used Change</th><th>Details</th></tr>';
+			$history_table = '<table style="width:950px;">';
+			$history_table .= '<tr><th>ID</th><th>Date</th><th>Minutes</th><th>Total Minutes Used</th><th>Added</th><th>Used</th><th>Details</th></tr>';
 
+			$history = array_reverse( $history );
+
+			$i = 0;
 			foreach ( $history as $id => $entry ) {
+				if ( $i > 20 ) {
+					continue;
+				}
+
 				$history_table .= '<tr>'
 									. '<td>' . $id . '</td>'
 									. '<td>' . date( 'Y-m-d H:i:s', $entry['tstamp'] + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) . '</td>'
-									. '<td>' . $entry['support_minutes'] . '</td>'
+									. '<td>' . ( $entry['support_minutes'] ? $entry['support_minutes'] : '0' ). '</td>'
+									. '<td>' . ( $entry['support_minutes_used'] ? $entry['support_minutes_used'] : '- - -' ) . '</td>'
 									. '<td>' . $entry['minutes_added'] . '</td>'
-									. '<td>' . $entry['support_minutes_used'] . ' Used</td>'
-									. '<td>' . $entry['minutes_used'] . ' Change</td>'
+									. '<td>' . ( $entry['minutes_used'] ? $entry['minutes_used'] : '- - -' ) . '</td>'
 									. '<td>' . $entry['details'] . '</td>'
 									. '</tr>';
+
+				$i++;
 			}
 
 			$history_table .= '</table>';
@@ -112,7 +121,20 @@ class mi_supporttimetracker extends MI
 
 	function admin_form_save( $request )
 	{
-		if ( !empty( $request->params['log_minutes'] ) ) {
+		if ( !empty( $request->params['remove_last'] ) ) {
+			$history = $this->getSupportHistory( $request->metaUser );
+
+			$max = count( $history ) - 1;
+
+			if ( $history[$max]['minutes_added'] ) {
+				$this->updateSupportMinutes( $request->metaUser, 0, $history[$max]['minutes_added'], $request->params['details'] );
+			} elseif ( $history[$max]['minutes_used'] ) {
+				$this->updateSupportMinutes( $request->metaUser, $history[$max]['minutes_used'], 0, $request->params['details'] );
+			}
+
+			$request->params['log_minutes']	= 0;
+			$request->params['details']		= '';
+		} elseif ( !empty( $request->params['log_minutes'] ) ) {
 			$this->updateSupportMinutes( $request->metaUser, 0, $request->params['log_minutes'], $request->params['details'] );
 
 			$request->params['log_minutes']	= 0;
@@ -125,7 +147,9 @@ class mi_supporttimetracker extends MI
 		$uparams = $metaUser->meta->getCustomParams();
 
 		if ( !empty( $uparams['support_minutes_history'] ) ) {
-			return $uparams['support_minutes_history'];
+			if ( is_array( $uparams['support_minutes_history'] ) ) {
+				return $uparams['support_minutes_history'];
+			}
 		}
 
 		return array();
@@ -148,6 +172,8 @@ class mi_supporttimetracker extends MI
 
 	function updateSupportMinutes( $metaUser, $minutes, $use_minutes, $details )
 	{
+		$user = &JFactory::getUser();
+
 		$uparams = $metaUser->meta->getCustomParams();
 
 		if ( !empty( $uparams['support_minutes_history'] ) ) {
@@ -164,23 +190,30 @@ class mi_supporttimetracker extends MI
 
 		if ( !empty( $use_minutes ) && !empty( $uparams['support_minutes_used'] ) ) {
 			$uparams['support_minutes_used'] = $uparams['support_minutes_used'] - $use_minutes;
-		} elseif ( !empty( $minutes ) ) {
+		} elseif ( !empty( $use_minutes ) ) {
 			$uparams['support_minutes_used'] = $use_minutes;
 		}
 
-		$params		= array(	'support_minutes_history'	=> $history,
-								'support_minutes_used'		=> $uparams['support_minutes_used'],
-								'support_minutes'			=> $uparams['support_minutes']
-							);
+		if ( !empty( $user->id ) && ( $user->id != $metaUser->userid ) ) {
+			$userid = $user->id;
+		} else {
+			$userid = $metaUser->id;
+		}
 
 		$history = $this->getSupportHistory( $metaUser );
 
 		$history[]	= array(	'tstamp'				=> time(),
-								'support_minutes'		=> $params['support_minutes'],
+								'userid'				=> $userid,
+								'support_minutes'		=> $uparams['support_minutes'],
 								'minutes_added'			=> $minutes,
-								'support_minutes_used'	=> $params['support_minutes_used'],
+								'support_minutes_used'	=> $uparams['support_minutes_used'],
 								'minutes_used'			=> $use_minutes,
 								'details'				=> $details
+							);
+
+		$params		= array(	'support_minutes_history'	=> $history,
+								'support_minutes_used'		=> $uparams['support_minutes_used'],
+								'support_minutes'			=> $uparams['support_minutes']
 							);
 
 		$metaUser->meta->setCustomParams( $params );
