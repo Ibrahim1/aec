@@ -8912,6 +8912,10 @@ class InvoiceFactory
 				if ( is_bool( $list ) ) {
 					return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
 				} else {
+					if ( strpos( $list, 'option=com_acctexp' ) ) {
+						$list .= '&userid=' . $this->userid;
+					}
+
 					return aecRedirect( $list );
 				}
 			} else {
