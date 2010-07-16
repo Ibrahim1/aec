@@ -12824,7 +12824,7 @@ class AECfetchfromDB
 					// Plan is not active anymore, try the next invoice.
 					$excludedusage[] = $invoice->usage;
 
-					return AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
+					return AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid, $excludedusage );
 				}
 			}
 		}
