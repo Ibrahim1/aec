@@ -1260,6 +1260,7 @@ class metaUser
 					$return[$name] = $status;
 				}
 			}
+
 			return $return;
 		} else {
 			return array();
@@ -8859,16 +8860,30 @@ class InvoiceFactory
 				// Plan does not exist
 				$auth_problem = true;
 			}
-		} elseif ( !empty( $group ) ) {
+		} else {
+			if ( !empty( $group ) ) {
+				$gid = $group;
+			} else {
+				if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
+					$gid = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
+				} else {
+					$gid = array( $aecConfig->cfg['root_group'] );
+				}
+			}
+
+			if ( is_array( $gid ) ) {
+				$gid = $gid[0];
+			}
+
 			$g = new ItemGroup( $database );
-			$g->load( $group );
+			$g->load( $gid );
 
 			if ( $g->checkPermission( $this->metaUser ) ) {
 				if ( !empty( $g->params['symlink'] ) ) {
 					aecRedirect( $g->params['symlink'] );
 				}
 
-				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $group ), $this->metaUser );
+				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $gid ), $this->metaUser );
 
 				if ( count( $list ) == 0 ) {
 					$auth_problem = true;
@@ -8879,25 +8894,6 @@ class InvoiceFactory
 
 			if ( $auth_problem && !empty( $g->params['notauth_redirect'] ) ) {
 				$auth_problem = $g->params['notauth_redirect'];
-			}
-		} else {
-			if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
-				$x = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
-			} else {
-				$x = array( $aecConfig->cfg['root_group'] );
-			}
-
-			if ( !is_array( $x ) && !empty( $x ) ) {
-				$x = array( $x );
-			} else {
-				$x = array( $aecConfig->cfg['root_group'] );
-			}
-
-			$list = ItemGroupHandler::getTotalAllowedChildItems( $x, $this->metaUser );
-
-			// Retry in case a RWengine call didn't work out
-			if ( empty( $list ) && !empty( $aecConfig->cfg['root_group_rw'] ) ) {
-				$list = ItemGroupHandler::getTotalAllowedChildItems( $aecConfig->cfg['root_group'], $this->metaUser );
 			}
 		}
 
