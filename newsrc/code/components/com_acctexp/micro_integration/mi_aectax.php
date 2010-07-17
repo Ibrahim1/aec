@@ -329,6 +329,8 @@ class mi_aectax
 					$tax = "0.00";
 					break;
 				case 'pseudo_subtract':
+					$original_total = $term->renderTotal();
+
 					// Get root cost without coupons
 					$cost = $term->getBaseCostObject( false, true );
 
@@ -340,9 +342,7 @@ class mi_aectax
 					// Get the actual total to compute the real tax
 					$total = $term->renderTotal();
 
-					$newtotal = ( $total / ( 100 + $location['percentage'] ) ) * 100;
-
-					$tax = AECToolbox::correctAmount( $total - $newtotal );
+					$tax = AECToolbox::correctAmount( $original_total - $total );aecDebug($tax);
 					break;
 				case 'subtract':
 					$tax = AECToolbox::correctAmount( $total * ( $location['percentage'] / 100 ) );

@@ -35,11 +35,7 @@ $task = trim( aecGetParam( 'view' ) );
 if ( empty( $task ) ) {
 	// Regular mode - try to get the task
 	$task = trim( aecGetParam( 'task' ) );
-} else {
-	if ( !aecJoomla15check() ) {
-		aecNotAuth();
-	}
-
+} elseif ( aecJoomla15check() ) {
 	$params = &JComponentHelper::getParams( 'com_acctexp' );
 
 	$translate = array( 'usage', 'group', 'processor', 'intro', 'sub' );
