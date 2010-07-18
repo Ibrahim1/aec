@@ -9698,13 +9698,22 @@ class InvoiceFactory
 			$this->invoice->loadLatest( $this->metaUser->userid, $this->metaUser->focusSubscription->plan );
 		}
 
+		if ( empty( $this->usage ) ) {
+			$this->usage = $this->invoice->usage;
+		}
+
 		if ( empty( $this->processor ) ) {
 			$this->processor = $this->invoice->method;
 		}
 
-		$pp = new PaymentProcessor( $database );
-		if ( $pp->loadName( $this->invoice->method ) ) {
-			$pp->fullInit();
+		$this->puffer( 'com_acctexp' );
+
+		$this->loadItems();
+
+		$this->loadItemTotal();
+
+		if ( $this->pp->id ) {
+			$this->pp->fullInit();
 
 			$usage = $this->getObjUsage();
 
@@ -9713,15 +9722,15 @@ class InvoiceFactory
 					$new_plan = new SubscriptionPlan( $database );
 					$new_plan->load( $c['id'] );
 
-					$pp->exchangeSettingsByPlan( $new_plan );
+					$this->pp->exchangeSettingsByPlan( $new_plan );
 				}
 			} elseif ( is_a( $usage, 'SubscriptionPlan' ) ) {
-				$pp->exchangeSettingsByPlan( $usage );
+				$this->pp->exchangeSettingsByPlan( $usage );
 			} else {
 				return aecNotAuth();
 			}
 
-			$response = $pp->customAction( $action, $this->invoice, $this->metaUser );
+			$response = $this->pp->customAction( $action, $this->invoice, $this->metaUser );
 
 			$response = $this->invoice->processorResponse( $this, $response, '', true );
 
@@ -9733,19 +9742,17 @@ class InvoiceFactory
 		}
 	}
 
-	function invoiceprocessoraction( $action, $invoiceNum=null )
+	function invoiceprocessoraction( $option, $action, $invoiceNum=null )
 	{
 		$database = &JFactory::getDBO();
 
 		$this->loadMetaUser();
 
-		$this->invoice = new Invoice( $database );
-		$this->invoice->loadInvoiceNumber( $invoiceNum );
+		$this->puffer( $option );
 
-		$this->pp = new PaymentProcessor( $database );
-		if ( $this->pp->loadName( $this->invoice->method ) ) {
-			$this->pp->fullInit();
-		}
+		$this->loadItems();
+
+		$this->loadItemTotal();
 
 		$var = $this->invoice->getWorkingData( $this );
 
@@ -12071,15 +12078,16 @@ class Subscription extends serialParamDBTable
 		global $mainframe, $aecConfig;
 
 		if ( !$this->is_lifetime() ) {
-			$expiration_cushion = str_pad( $aecConfig->cfg['expiration_cushion'], 2, '0', STR_PAD_LEFT );
 
 			if ( $offset ) {
 				$expstamp = strtotime( ( '-' . $offset . ' days' ), strtotime( $this->expiration ) );
 			} else {
-				$expstamp = strtotime( ( '+' . $expiration_cushion . ' hours' ), strtotime( $this->expiration ) );
+				$expstamp = strtotime( ( '+' . $aecConfig->cfg['expiration_cushion'] . ' hours' ), strtotime( $this->expiration ) );
 			}
 
 			if ( ( $expstamp > 0 ) && ( ( $expstamp - ( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) ) < 0 ) ) {
+				return true;
+			} elseif ( ( $expstamp <= 0 ) ) {
 				return true;
 			} else {
 				return false;

@@ -1221,7 +1221,7 @@ function planaction( $option, $action, $subscr )
 	}
 }
 
-function invoiceAction( $option, $action, $invoice )
+function invoiceAction( $option, $action, $invoice_number )
 {
 	$user = &JFactory::getUser();
 
@@ -1229,7 +1229,8 @@ function invoiceAction( $option, $action, $invoice )
 		return aecNotAuth();
 	} else {
 		$iFactory = new InvoiceFactory( $user->id );
-		$iFactory->invoiceprocessoraction( $action, $invoice );
+		$iFactory->touchInvoice( $option, $invoice_number );
+		$iFactory->invoiceprocessoraction( $option, $action );
 
 		subscriptionDetails( $option, 'invoices' );
 	}
