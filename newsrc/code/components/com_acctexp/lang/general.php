@@ -33,6 +33,6 @@
 // ----======== FUNCTIONAL TEXT ========----
 
 define( '_AEC_VERSION','0.14');
-define( '_AEC_REVISION','3000');
+define( '_AEC_REVISION','3010');
 
 ?>
