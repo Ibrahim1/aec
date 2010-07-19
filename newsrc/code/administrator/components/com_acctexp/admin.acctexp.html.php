@@ -2789,8 +2789,12 @@ class HTML_AcctExp
 								}
 							}
 
-							foreach ( $field as $n => $v) {
-								echo $n." = ".$v."<br />";
+							if ( is_array( $field ) ) {
+								foreach ( $field as $n => $v) {
+									echo $n." = ".$v."<br />";
+								}
+							} else {
+								echo $field."<br />";
 							}
 						}
 					?>
