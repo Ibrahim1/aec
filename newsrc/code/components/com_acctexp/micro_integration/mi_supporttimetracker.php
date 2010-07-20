@@ -189,7 +189,7 @@ class mi_supporttimetracker extends MI
 		}
 
 		if ( !empty( $use_minutes ) && !empty( $uparams['support_minutes_used'] ) ) {
-			$uparams['support_minutes_used'] = $uparams['support_minutes_used'] - $use_minutes;
+			$uparams['support_minutes_used'] = $uparams['support_minutes_used'] + $use_minutes;
 		} elseif ( !empty( $use_minutes ) ) {
 			$uparams['support_minutes_used'] = $use_minutes;
 		}
