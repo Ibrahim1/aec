@@ -123,6 +123,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$var['a3'] = $request->int_var['amount']['amount3'];
 		$var['p3'] = $request->int_var['amount']['period3'];
 		$var['t3'] = $request->int_var['amount']['unit3'];
+
 /*  Disabling this for now - if a user has an old tax setting set-up AEC would still find it.  If PP adds this feature in future this can be re-enabled.
 		if ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
 			$tax = $var['a3']/(100+$this->settings['tax'])*100;
@@ -130,6 +131,7 @@ class processor_paypal_subscription extends POSTprocessor
 			$var['a3'] = round($tax, 2);
 		}
 */
+
 		$var['business']		= $this->settings['business'];
 		$var['invoice']			= $request->invoice->invoice_number;
 		$var['cancel_return']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );

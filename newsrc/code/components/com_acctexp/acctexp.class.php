@@ -9410,7 +9410,7 @@ class InvoiceFactory
 		}
 
 		$this->puffer( $option );
-
+print_r($this);exit;
 		$this->touchInvoice( $option, false, true );
 
 		if ( !empty( $coupon ) ) {
