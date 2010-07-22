@@ -11,8 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-//error_reporting(E_ALL);
-
 global $aecConfig;
 
 if ( !defined( 'JPATH_SITE' ) ) {
@@ -22,11 +20,16 @@ if ( !defined( 'JPATH_SITE' ) ) {
 }
 
 // Make sure we are compatible with php4
-if (version_compare(phpversion(), '5.0' ) < 0) {
+if ( version_compare( phpversion(), '5.0' ) < 0 ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
 }
 
-// Make sure we are compatible with joomla1.0
+// and php5.0<>5.2
+if (  ( version_compare( phpversion(), '5.0') >= 0 )  && ( version_compare( phpversion(), '5.2' ) < 0 ) ) {
+	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/phplt5_2.php' );
+}
+
+// and joomla 1.0
 include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
