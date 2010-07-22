@@ -7901,6 +7901,8 @@ class InvoiceFactory
 
 				$selected_form[] = array( 'hidden', $pgsel, $fname, $pgsel );
 
+				$this->processor_userselect = true;
+
 				continue;
 			} else {
 				$c = true;
@@ -8553,7 +8555,7 @@ class InvoiceFactory
 
 		$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
 
-		if ( !empty( $this->invoice->method ) ) {
+		if ( !empty( $this->invoice->method ) && empty( $this->processor_userselect ) ) {
 			$this->processor = $this->invoice->method;
 		}
 
@@ -9413,7 +9415,7 @@ class InvoiceFactory
 		}
 
 		$this->puffer( $option );
-print_r($this);exit;
+
 		$this->touchInvoice( $option, false, true );
 
 		if ( !empty( $coupon ) ) {
@@ -10851,7 +10853,18 @@ class Invoice extends serialParamDBTable
 		$int_var['objUsage'] = $this->getObjUsage();
 
 		$urladd = '';
+		$doublecheck = false;
 		if ( !empty( $int_var['objUsage'] ) ) {
+			if ( !is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
+				if ( !empty( $InvoiceFactory->items->itemlist ) ) {
+					if ( count( $InvoiceFactory->items->itemlist ) === 1 ) {
+						$int_var['objUsage'] = $InvoiceFactory->cart[0]['obj'];
+
+						$doublecheck = true;
+					}
+				}
+			}
+			
 			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
 				$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp->id );
 
@@ -10880,6 +10893,20 @@ class Invoice extends serialParamDBTable
 				}
 
 				$int_var['amount'] = $InvoiceFactory->items->grand_total->renderCost();
+			}
+
+			if ( $doublecheck ) {
+				if ( $InvoiceFactory->cart[0]['quantity'] > 1 ) {
+					if ( is_array( $int_var['amount'] ) ) {
+						foreach ( $int_var['amount'] as $k => $v ) {
+							if ( strpos( $k, 'amount' ) !== false ) {
+								$int_var['amount'][$k] = AECToolbox::correctAmount( $v * $InvoiceFactory->cart[0]['quantity'] );
+							}
+						}
+					} else {
+						$int_var['amount'] = AECToolbox::correctAmount( $int_var['amount'] * $InvoiceFactory->cart[0]['quantity'] );
+					}
+				}
 			}
 		}
 
