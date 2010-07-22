@@ -7669,10 +7669,10 @@ class InvoiceFactory
 
 			switch ( $unset ) {
 				case 'userdetails':
-					$unset = array_merge( $unset, array( 'name', 'username', 'password', 'password2', 'email' ) );
+					$unsets = array_merge( $unsets, array( 'name', 'username', 'password', 'password2', 'email' ) );
 					break;
 				case 'usage':
-					$unset = array_merge( $unset, array( 'usage', 'processor', 'recurring' ) );
+					$unsets = array_merge( $unsets, array( 'usage', 'processor', 'recurring' ) );
 					break;
 				default:
 					break;
