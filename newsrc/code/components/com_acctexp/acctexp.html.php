@@ -256,7 +256,7 @@ class HTML_frontEnd
 								if ( !empty( $subscription->lifetime ) ) {
 									echo '<p>' . _AEC_ISLIFETIME . '</p>';
 								} else {
-									if ( $subscription->recurring ) {
+									if ( $subscription->recurring && ( in_array( $subscription->status, array( 'Active', 'Trial' ) ) ) ) {
 										echo '<p>' . _AEC_WILLRENEW . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
 									} else {
 										echo '<p>' . _AEC_WILLEXPIRE . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
