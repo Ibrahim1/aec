@@ -2783,12 +2783,6 @@ class HTML_AcctExp
 						if ( !empty( $row->response ) ) {
 							$field = unserialize( base64_decode( $row->response ) );
 
-							if ( count( $field ) == 1 ) {
-								foreach ( $field as $k => $v ) {
-									$field = unserialize( base64_decode( $k ) );
-								}
-							}
-
 							if ( is_array( $field ) ) {
 								foreach ( $field as $n => $v) {
 									echo $n." = ".$v."<br />";

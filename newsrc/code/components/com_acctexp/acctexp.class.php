@@ -906,7 +906,7 @@ class metaUser
 						$se[$key]['user']->gid		= $gid;
 						$se[$key]['user']->usertype	= $gid_name;
 
-						if ( $this->id == $user->id ) {
+						if ( $this->userid == $user->id ) {
 							$user->gid		= $gid;
 							$user->usertype	= $gid_name;
 						}
@@ -10864,7 +10864,7 @@ class Invoice extends serialParamDBTable
 					}
 				}
 			}
-			
+
 			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
 				$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp->id );
 
