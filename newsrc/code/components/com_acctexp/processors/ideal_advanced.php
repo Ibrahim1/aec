@@ -31,7 +31,7 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings = array();
 		$settings['testmode']		= 0;
 		$settings['testmodestage']  = 0;
-		$settings['secure_path']    = 'components/com_acctexp/processors/includes/security';
+		$settings['secure_path']    = '/full/system/path/to/components/com_acctexp/processors/includes/security';
 		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		return $settings;
 	}
