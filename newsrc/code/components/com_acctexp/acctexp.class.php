@@ -17677,7 +17677,9 @@ class couponHandler
 			// Check whether it's only on ONE full period
 			if ( !$this->discount['useon_full_all'] && ( $i < $initcount ) ) {
 				// Duplicate current term
-				$terms->addTerm( clone( $terms->terms[$i] ) );
+				$newterm = unserialize( serialize( $terms->terms[$i] ) );
+
+				$terms->addTerm( $newterm );
 			}
 
 			if ( $this->discount['percent_first'] ) {

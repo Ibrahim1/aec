@@ -601,12 +601,10 @@ class mammonTerm extends eucaObject
 	 * @return	string
 	 * @since	1.0
 	 */
-	function getBaseCostObject( $filters=false, $filter_temp_coupons=false )
+	function getBaseCostObject( $filter=false, $filter_temp_coupons=false )
 	{
-		$filter = array( 'tax', 'total' );
-
-		if ( !empty( $filter_add ) ) {
-			$filter = $filters;
+		if ( $filter === false ) {
+			$filter = array( 'tax', 'total' );
 		}
 
 		$return = null;

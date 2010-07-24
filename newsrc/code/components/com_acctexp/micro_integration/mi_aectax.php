@@ -310,55 +310,46 @@ class mi_aectax
 				}
 			}
 
-			$total = $term->renderTotal();
-
 			switch ( $location['mode'] ) {
 				default:
-					$newtotal = $total;
-
 					$tax = "0.00";
 					break;
 				case 'reverse_pseudo_subtract':
 					// Get root cost without coupons
 					$cost = $term->getBaseCostObject( false, true );
 
-					$newtotal = ( $cost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
+					$itemtotal = ( $cost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
 
-					$item['terms']->terms[$tid]->modifyCost( 0, $newtotal );
+					$item['terms']->terms[$tid]->modifyCost( 0, $itemtotal );
 
 					$tax = "0.00";
 					break;
 				case 'pseudo_subtract':
-					$original_total = $term->renderTotal();
-
 					// Get root cost without coupons
-					$cost = $term->getBaseCostObject( false, true );
+					$itemcost = $term->getBaseCostObject( array( 'tax', 'discount', 'total' ), true );
 
-					$newtotal = ( $cost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
+					// Compute cost as it would have been with pure tax subtracted
+					$originalcost = ( $itemcost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
 
 					// Set new root cost
-					$item['terms']->terms[$tid]->modifyCost( 0, $newtotal );
+					$item['terms']->terms[$tid]->modifyCost( 0, $originalcost );
 
-					// Get the actual total to compute the real tax
-					$total = $term->renderTotal();
+					// Get tax for (discounted?) item
+					$fullcost = $term->getBaseCostObject( array( 'tax', 'total' ), true );
 
-					$tax = AECToolbox::correctAmount( $original_total - $total );aecDebug($tax);
+					$tax = AECToolbox::correctAmount( $fullcost->cost['amount'] * ( $location['percentage'] / 100 ) );
 					break;
 				case 'subtract':
+					$total = $term->renderTotal();
+
 					$tax = AECToolbox::correctAmount( $total * ( $location['percentage'] / 100 ) );
-
-					$newtotal = $total;
-
-					$total = AECToolbox::correctAmount( $newtotal - $tax );
 
 					$tax = -$tax;
 					break;
 				case 'add':
+					$total = $term->renderTotal();
+
 					$tax = AECToolbox::correctAmount( $total * ( $location['percentage'] / 100 ) );
-
-					$newtotal = $total;
-
-					$total = AECToolbox::correctAmount( $newtotal + $tax );
 					break;
 			}
 
