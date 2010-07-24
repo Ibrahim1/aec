@@ -322,8 +322,8 @@ class mi_hotproperty extends MI
 			$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
 			$hacks[$n]['type']				=	'file';
 			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.hotproperty.php';
-			$hacks[$n]['read']				=	'/* ===END OF TESTS=== */';
-			$hacks[$n]['insert']			=	$hacks[$n]['read'] . "\n"  . $edithack2;
+			$hacks[$n]['read']				=	'$hotproperty =& MosetsFactory::getApplication(\'hotproperty\');';
+			$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
 		} else {
 			$edithack = '// AEC HACK hotproperty1 START' . "\n"
 			. ( defined( '_JEXEC' ) ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
