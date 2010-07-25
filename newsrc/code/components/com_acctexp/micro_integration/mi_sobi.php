@@ -45,12 +45,16 @@ class mi_sobi extends MI
 		if ( isset( $this->settings['unpublish_all'.$request->area] ) ) {
 			if ( $this->settings['unpublish_all'.$request->area] ) {
 				$this->unpublishItems( $request->metaUser );
+
+				$this->clearSOBIcache();
 			}
 		}
 
 		if ( isset( $this->settings['publish_all'.$request->area] ) ) {
 			if ( $this->settings['publish_all'.$request->area] ) {
 				$this->publishItems( $request->metaUser );
+
+				$this->clearSOBIcache();
 			}
 		}
 
@@ -66,6 +70,7 @@ class mi_sobi extends MI
 				. ' WHERE `owner` = \'' . $metaUser->userid . '\''
 				;
 		$database->setQuery( $query );
+
 		if ( $database->query() ) {
 			return true;
 		} else {
@@ -83,6 +88,7 @@ class mi_sobi extends MI
 				. ' WHERE `owner` = \'' . $metaUser->userid . '\''
 				;
 		$database->setQuery( $query );
+
 		if ( $database->query() ) {
 			return true;
 		} else {
@@ -91,6 +97,21 @@ class mi_sobi extends MI
 		}
 	}
 
+	function clearSOBIcache()
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'TRUNCATE #__sobi2_cache'
+				;
+		$database->setQuery( $query );
+
+		if ( $database->query() ) {
+			return true;
+		} else {
+			$this->setError( $database->getErrorMsg() );
+			return false;
+		}
+	}
 }
 
 ?>
