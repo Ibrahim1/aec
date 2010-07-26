@@ -766,10 +766,6 @@ switch( strtolower( $task ) ) {
 		HTML_AcctExp::credits();
 		break;
 
-	case 'migrate':
-		migrate( $option );
-		break;
-
 	case 'quicklookup':
 		$return = quicklookup( $option );
 
@@ -5483,121 +5479,6 @@ function eventlog( $option )
 	HTML_AcctExp::eventlog( $option, $events, $search, $pageNav );
 }
 
-function migrate( $option )
-{
-	$database = &JFactory::getDBO();
-
-	$query = 'SELECT `userid`'
-			. ' FROM #__acctexp_subscr'
-			. ' WHERE LOWER( `status` ) = \'active\''
-			. ' AND `plan` != \'23\''
-			;
-	$database->setQuery( $query );
-	$rows = $database->loadResultArray();
-
-	foreach ( $rows as $userid ) {
-
-		$metaUser = new metaUser($userid);
-		if ( $metaUser->hasSubscription ) {
-			if ($metaUser->objSubscription->plan != 23) {
-				$metaUser->instantGIDchange(19);
-			}
-		}
-	}
-		exit();
-/*
-		$JTableUser = new JTableUser( $database );
-		$JTableUser->load( $userid );
-
-
-		// Fixing mosLock broken user accounts
-		// it sometimes seems to forget setting the usertype
-		if ( $JTableUser->usertype == '' ) {
-			$JTableUser->usertype = 'Registered';
-			$JTableUser->check();
-			$JTableUser->store();
-		}
-
-		// If subscription control was previously done by blocking,
-		// unblock users
-		if ( $JTableUser->block == 1 ) {
-			$JTableUser->block = 0;
-			$JTableUser->check();
-			$JTableUser->store();
-		}
-
-		// Create dummy active subscription entry
-		$subscriptionid	= AECfetchfromDB::SubscriptionIDfromUserID( $userid );
-		$expirationid	= AECfetchfromDB::ExpirationIDfromUserID( $userid );
-
-		$subscriptionHandler = new mosSubscription( $database );
-
-		if ( !$subscriptionid ) {
-			$subscriptionHandler->load( 0 );
-
-			$subscriptionHandler->plan			= 1;
-			$subscriptionHandler->signup_date	= $JTableUser->registerDate;
-
-			$subscriptionHandler->check();
-			$subscriptionHandler->store();
-		}
-
-		// Set Expiration date one year after registration
-		$expirationHandler = new mosAcctExp( $database );
-
-		if ( !$expirationid ) {
-			$expirationHandler->load(0);
-			$expirationHandler->userid = $userid;
-
-			$timestamp			= strtotime( $JTableUser->registerDate );
-			$registrationdate	= date( 'Y-m-d H:i:s', $timestamp );
-
-			$expirationHandler->expiration = $registrationdate;
-			$expirationHandler->setexpiration( 'Y', 1, 1 );
-
-			$expirationHandler->check();
-			$expirationHandler->store();
-		}*/
-
-// Fix JACLplus associations after uninstall/reinstall
-$query = 'SELECT id'
-. ' FROM #__users'
-. ' WHERE gid = \'31\''
-;
-$database->setQuery( $query );
-$rows = $database->loadResultArray();
-
-foreach ( $rows as $userid ){
-	$user = new JTableUser($database);
-	$user->load(1);
-	print_r($user);
-}
-/*
-	$database = &JFactory::getDBO();
-
-	$query = 'SELECT `id`, `introtext`, `fulltext`'
-			. ' FROM #__content'
-			;
-	$database->setQuery( $query );
-	$articles = $database->loadObjectList();
-
-	foreach ( $articles as $article ) {
-		$article->introtext = str_replace( "/images/stories/", "images/stories/", $article->introtext );
-		$article->fulltext = str_replace( "/images/stories/", "images/stories/", $article->fulltext );
-		$article->introtext = str_replace( "..images/stories/", "images/stories/", $article->introtext );
-		$article->fulltext = str_replace( "..images/stories/", "images/stories/", $article->fulltext );
-
-		$query = 'UPDATE #__content'
-				. ' SET `introtext` = \'' . $database->getEscaped( $article->introtext ) . '\','
-				. ' `fulltext` = \'' . $database->getEscaped( $article->fulltext ) . '\''
-				. ' WHERE `id` = \'' . $article->id . '\''
-				;
-		$database->setQuery( $query );
-		$database->query();
-	}
-*/
-}
-
 function quicklookup( $option )
 {
 	$database = &JFactory::getDBO();
@@ -7116,6 +6997,35 @@ function exportData( $option, $cmd=null )
 		aecRedirect( 'index2.php?option=' . $option . '&task=showCentral' );
 	} else {
 		HTML_AcctExp::export( $option, $aecHTML );
+	}
+}
+
+function toolBoxTool( $option, $cmd )
+{
+	if ( empty( $cmd ) ) {
+		$list = array();
+
+		$path = JPATH_SITE . '/components/com_acctexp/toolbox';
+
+		$files = AECToolbox::getFileArray( $path, 'php', false, true );
+
+		foreach ( $files as $n => $name ) {
+			$file = $path . '/' . $name . '.php';
+
+			include_once $file;
+
+			$tool = new $name();
+
+			if ( !method_exists( $tool, 'Info' ) ) {
+				continue;
+			}
+
+			$info = $tool->Info();
+
+			$list[]
+		}
+
+		HTML_AcctExp::toolBox( $option, $list );
 	}
 }
 

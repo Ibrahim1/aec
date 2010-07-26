@@ -3234,6 +3234,45 @@ class HTML_AcctExp
  		HTML_myCommon::Valanx();
 	}
 
+	function toolBox( $option, $list )
+	{
+		loadOverlib();
+		HTML_myCommon::addBackendCSS();
+		?>
+		<form action="index2.php" method="post" name="adminForm">
+		<table class="adminheading">
+		<tr>
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">
+				<?php echo _AEC_HEAD_EXPORT; ?>
+			</th>
+			<td nowrap="nowrap" style="padding: 0 5px;">
+			</td>
+		</tr>
+		</table>
+
+		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup extensively and blame problems on small animals if things went wrong</p>
+
+		<table class="aecadminform">
+			<?php foreach ( $list as $cmd => $litem ) {
+				echo '<tr><td><h3>' . $litem['name'] . '</h3><p>' . $litem['desc'] . '</p></td><td><a href="' . $litem['link'] . '">execute!</a></td></tr>';
+			} ?>
+		</table>
+
+		<input type="hidden" name="option" value="<?php echo $option;?>" />
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="returnTask" value="export" />
+		</form>
+
+		<?php
+		echo $aecHTML->loadJS();
+
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $aecHTML );
+		}
+
+ 		HTML_myCommon::Valanx();
+	}
+
 	/**
 	 * Formats a given date
 	 *
