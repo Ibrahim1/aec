@@ -7022,7 +7022,7 @@ function toolBoxTool( $option, $cmd )
 
 			$info = $tool->Info();
 
-			$list[]
+			$list[] = "test";
 		}
 
 		HTML_AcctExp::toolBox( $option, $list );
