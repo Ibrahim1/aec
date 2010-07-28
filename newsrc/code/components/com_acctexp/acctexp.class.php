@@ -5458,7 +5458,7 @@ class aecHTML
 				break;
 			case 'checkbox':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="checkbox" id="' . $name . '" name="' . $name . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $sx;
+				$return .= '<input type="checkbox" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $sx;
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
@@ -8327,6 +8327,10 @@ class InvoiceFactory
 				$ccost = $citem['terms']->nextterm->getBaseCostObject( false, true );
 
 				$cost = clone( $ccost );
+
+				if ( $citem['quantity'] > 1 ) {
+					$cost->cost['amount'] = $ccost->cost['amount'] * $citem['quantity'];
+				}
 			} else {
 				$ccost = $citem['terms']->nextterm->getBaseCostObject( false, true );
 
