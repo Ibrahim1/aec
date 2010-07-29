@@ -2278,10 +2278,12 @@ class aecHeartbeat extends JTable
 			} else {
 				$event .= 'Expires 1 user';
 			}
-			$tags[] = 'expiration';
+
 			if ( $exp_actions ) {
 				$event .= ', ';
 			}
+
+			$tags[] = 'expiration';
 		}
 
 		if ( $exp_actions ) {
@@ -2289,6 +2291,7 @@ class aecHeartbeat extends JTable
 			$event .= ( $exp_actions > 1 ) ? 's' : '';
 			$event .= ' for ' . $exp_users . ' user';
 			$event .= ( $exp_users > 1 ) ? 's' : '';
+
 			$tags[] = 'pre-expiration';
 		}
 
@@ -12412,18 +12415,21 @@ class Subscription extends serialParamDBTable
 	function hold( $invoice=null )
 	{
 		$this->setStatus( 'Hold' );
+
 		return true;
 	}
 
 	function hold_settle( $invoice=null )
 	{
 		$this->setStatus( 'Active' );
+
 		return true;
 	}
 
 	function setStatus( $status )
 	{
 		$this->status = $status;
+
 		$this->storeload();
 	}
 

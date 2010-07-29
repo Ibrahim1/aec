@@ -30,11 +30,11 @@ if ( _EUCA_DEBUGMODE ) {
 
 $user = &JFactory::getUser();
 
-$task = trim( aecGetParam( 'view' ) );
+$task = trim( aecGetParam( 'view', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
 
 if ( empty( $task ) ) {
 	// Regular mode - try to get the task
-	$task = trim( aecGetParam( 'task' ) );
+	$task = trim( aecGetParam( 'task', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
 } elseif ( aecJoomla15check() ) {
 	$params = &JComponentHelper::getParams( 'com_acctexp' );
 
@@ -43,11 +43,12 @@ if ( empty( $task ) ) {
 	foreach ( $translate as $k ) {
 		// Do not overwrite stuff that our forms supplied
 		if ( !isset( $_POST[$k] ) ) {
-			$_POST[$k] = $params->get( $k );
+			$_REQUEST[$k]	= $params->get( $k );
+			$_POST[$k]		= $params->get( $k );
 		}
 	}
 
-	$layout = trim( aecGetParam( 'layout' ) );
+	$layout = trim( aecGetParam( 'layout', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
 
 	if ( !empty( $layout ) ) {
 		if ( $layout != 'default' ) {
@@ -258,10 +259,10 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'errap':
-			$usage		= aecGetParam( 'usage', true, array( 'word', 'string', 'clear_nonalnum' ) );
-			$userid		= aecGetParam( 'userid', true, array( 'word', 'int' ) );
-			$username	= aecGetParam( 'username', true, array( 'string', 'clear_nonalnum' ) );
-			$name		= aecGetParam( 'name', true, array( 'string', 'clear_nonalnum' ) );
+			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+			$username	= aecGetParam( 'username', 0, true, array( 'string', 'clear_nonalnum' ) );
+			$name		= aecGetParam( 'name', 0, true, array( 'string', 'clear_nonalnum' ) );
 			$recurring	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
 
 			errorAP( $option, $usage, $userid, $username, $name, $recurring);
