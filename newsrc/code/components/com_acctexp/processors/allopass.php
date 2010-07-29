@@ -94,7 +94,7 @@ class processor_allopass extends XMLprocessor
 		$var = array();
 		$var['CODE']		= urlencode( $request->int_var['params']['CODE0'] );
 		$var['AUTH']		= $this->settings['auth'];
-		$var['SITE_ID']	= $this->settings['siteid'];
+		$var['SITE_ID']		= $this->settings['siteid'];
 		$var['DOC_ID']		= $this->settings['docid'];
 
 		$content = array();
@@ -131,22 +131,5 @@ class processor_allopass extends XMLprocessor
 
 		return $response;
 	}
-
 }
-
-		//$var['currency_code']			= $this->settings['currency_code'];
-		//$var['ssl_merchant_id']			= $var['SITE_ID'];
-		//$var['ssl_user_id']				= $var['DOC_ID'];
-		//$var['ssl_pin']					= $var['AUTH'];
-		//$var['ssl_invoice_number']		= $request->invoice->invoice_number;
-		//$var['ssl_salestax']			= "0";
-		//$var['ssl_result_format']		= "HTML";
-		//$var['ssl_receipt_link_method']	= "POST";
-		//$var['ssl_receipt_link_url']	= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=allopassnotification");
-		//$var['ssl_receipt_link_text']	= "Continue";
-		//$var['ssl_amount']				= $request->int_var['amount'];
-
-		//$var['ssl_customer_code']		= $request->metaUser->cmsUser->id;
-		//$var['ssl_description']			= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-
 ?>

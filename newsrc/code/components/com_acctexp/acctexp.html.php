@@ -1764,26 +1764,6 @@ class Payment_HTML
 		<?php
 	}
 
-	function errorAP( $option, $planid, $userid, $username, $name, $recurring )
-	{
-		HTML_frontend::aec_styling($option);
-		?>
-		<table class="single_subscription">
-			 <th class="heading"><?php echo _REGTITLE ?> <?php echo _ERRORCODE ?></th>
-			 <tr><td class="description"><?php echo _FTEXTA ?><br /><?php echo _RECODE ?></td></tr>
-			<tr><td class="buttons">
-				<div class="gateway_button">
-					<?php
-					$html_code	= '';
-					Payment_HTML::getPayButtonHTML( $gw->name, $gw->recurring, $gw->currency_code, $row->id, $userid, $username, $name, $html_code );
-					echo $html_code; ?>
-				</div>
-				</td>
-			</tr>
-		</table>
-	<?php
-	}
-
 	function generalError( $option )
 	{
 		HTML_frontend::aec_styling( $option );

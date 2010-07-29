@@ -258,16 +258,6 @@ if ( !empty( $task ) ) {
 			cancelPayment( $option );
 			break;
 
-		case 'errap':
-			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
-			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
-			$username	= aecGetParam( 'username', 0, true, array( 'string', 'clear_nonalnum' ) );
-			$name		= aecGetParam( 'name', 0, true, array( 'string', 'clear_nonalnum' ) );
-			$recurring	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
-
-			errorAP( $option, $usage, $userid, $username, $name, $recurring);
-			break;
-
 		case 'subscriptiondetails':
 			$sub		= aecGetParam( 'sub', 'overview', true, array( 'word', 'string' ) );
 
@@ -1555,11 +1545,6 @@ function processNotification( $option, $processor )
 		$iFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
 		$iFactory->processorResponse( $option, $response );
 	}
-}
-
-function errorAP( $option, $usage, $userid, $username, $name, $recurring )
-{
-	Payment_HTML::errorAP( $option, $usage, $userid, $username, $name, $recurring );
 }
 
 function cancelPayment( $option )
