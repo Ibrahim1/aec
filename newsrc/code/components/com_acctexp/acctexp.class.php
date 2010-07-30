@@ -8214,9 +8214,9 @@ class InvoiceFactory
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
 		if ( $hasform ) {
-			$mainframe->SetPageTitle( _EXCEPTION_TITLE );
+			$mainframe->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE ) );
 		} else {
-			$mainframe->SetPageTitle( _EXCEPTION_TITLE_NOFORM );
+			$mainframe->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE_NOFORM ) );
 		}
 
 		Payment_HTML::exceptionForm( $option, $this, $aecHTML, $hasform );
@@ -8724,7 +8724,7 @@ class InvoiceFactory
 	{
 		global $mainframe;
 
-		$mainframe->SetPageTitle( _AEC_PROMPT_PASSWORD );
+		$mainframe->SetPageTitle( html_entity_decode( _AEC_PROMPT_PASSWORD ) );
 
 		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
 	}
@@ -8809,7 +8809,7 @@ class InvoiceFactory
 				$register = 0;
 			}
 
-			$mainframe->SetPageTitle( _PAYPLANS_HEADER );
+			$mainframe->SetPageTitle( html_entity_decode( _PAYPLANS_HEADER ) );
 
 			if ( $group ) {
 				$g = new ItemGroup( $database );
@@ -9017,6 +9017,10 @@ class InvoiceFactory
 							$pp = new PaymentProcessor();
 
 							if ( !$pp->loadId( $n ) ) {
+								continue;
+							}
+
+							if ( !$pp->processor->active ) {
 								continue;
 							}
 
@@ -9230,7 +9234,7 @@ class InvoiceFactory
 		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
 			global $mainframe;
 
-			$mainframe->SetPageTitle( _CONFIRM_TITLE );
+			$mainframe->SetPageTitle( html_entity_decode( _CONFIRM_TITLE ) );
 
 			if ( empty( $aecConfig->cfg['custom_confirm_userdetails'] ) ) {
 				$this->userdetails = "";
@@ -9555,7 +9559,7 @@ class InvoiceFactory
 			$this->pp->modifyCheckout( $int_var, $this );
 		}
 
-		$mainframe->SetPageTitle( $this->checkout['checkout_title'] );
+		$mainframe->SetPageTitle( html_entity_decode( $this->checkout['checkout_title'] ) );
 
 		if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
 			JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
@@ -9829,7 +9833,7 @@ class InvoiceFactory
 	{
 		global $mainframe;
 
-		$mainframe->SetPageTitle( _CHECKOUT_ERROR_TITLE );
+		$mainframe->SetPageTitle( html_entity_decode( _CHECKOUT_ERROR_TITLE ) );
 
 		Payment_HTML::error( $option, $objUser, $invoice, $error );
 	}
@@ -14957,7 +14961,7 @@ class AECToolbox
 			}
 		}
 
-		$a = explode( '.', (string) round( $amount, 2 ) );
+		$a = explode( '.', (string) AECToolbox::roundAmount( $amount ) );
 
 		if ( empty( $a[1] ) ) {
 			$amount = $a[0] . '.00';
@@ -14966,6 +14970,25 @@ class AECToolbox
 		}
 
 		return $amount;
+	}
+
+	function roundAmount( $amount )
+	{
+		$pow = pow( 10, 2 );
+
+		$ceil = ceil( $amount * $pow ) / $pow;
+		$floor = floor( $amount * $pow ) / $pow;
+
+		$pow = pow( 10, 3 );
+
+		$diffCeil	= $pow * ( $ceil - $amount );
+		$diffFloor	= $pow * ( $amount - $floor ) + ( $amount < 0 ? -1 : 1 );
+   
+		if ( $diffCeil >= $diffFloor ) {
+			return $floor;
+		} else {
+			return $ceil;
+		}
 	}
 
 	function getCurrencySymbol( $currency )
