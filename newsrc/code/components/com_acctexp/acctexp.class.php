@@ -1309,6 +1309,8 @@ class metaUser
 	function getUserMIs(){
 		$database = &JFactory::getDBO();
 
+		$focus = $this->focusSubscription->id;
+
 		$return = array();
 		if ( !empty( $this->objSubscription->plan ) ) {
 			$selected_plan = new SubscriptionPlan( $database );
@@ -1353,6 +1355,11 @@ class metaUser
 					}
 				}
 			}
+		}
+
+		// Go back to initial focus, if it has been changed
+		if ( $this->focusSubscription->id != $focus ) {
+			$this->moveFocus( $focus );
 		}
 
 		return $return;
