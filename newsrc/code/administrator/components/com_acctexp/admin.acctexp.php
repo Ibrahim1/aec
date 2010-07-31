@@ -1855,6 +1855,17 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 				if ( !in_array( 'active', $groups ) ) {
 					$groups[] = 'active';
 				}
+			} elseif ( strcmp( $expire, 'lifetime' ) === 0 ) {
+				if ( !$subscriptionHandler->is_lifetime() ) {
+					$subscriptionHandler->expiration = '9999-12-31 00:00:00';
+					$subscriptionHandler->lifetime = 1;
+				}
+
+				$subscriptionHandler->setStatus( 'Active' );
+
+				if ( !in_array( 'active', $groups ) ) {
+					$groups[] = 'active';
+				}
 			} elseif ( strpos( $expire, 'set' ) === 0 ) {
 				$subscriptionHandler->setExpiration( 'M', substr( $expire, 4 ), 0 );
 
@@ -2117,6 +2128,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = mosHTML::makeOption( '',			_EXPIRE_SET );
 	$group_selection[] = mosHTML::makeOption( 'now',		_EXPIRE_NOW );
 	$group_selection[] = mosHTML::makeOption( 'exclude',	_EXPIRE_EXCLUDE );
+	$group_selection[] = mosHTML::makeOption( 'lifetime',	_AEC_CMN_LIFETIME );
 	$group_selection[] = mosHTML::makeOption( 'include',	_EXPIRE_INCLUDE );
 	$group_selection[] = mosHTML::makeOption( 'close',		_EXPIRE_CLOSE );
 	$group_selection[] = mosHTML::makeOption( 'hold',		_EXPIRE_HOLD );
