@@ -329,15 +329,21 @@ class mi_aectax
 					$itemcost = $term->getBaseCostObject( array( 'tax', 'discount', 'total' ), true );
 
 					// Compute cost as it would have been with pure tax subtracted
-					$originalcost = ( $itemcost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
+					$originalcost = AECToolbox::correctAmount( ( $itemcost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100 );
 
 					// Set new root cost
 					$item['terms']->terms[$tid]->modifyCost( 0, $originalcost );
 
-					// Get tax for (discounted?) item
+					// Get cost of the (discounted?) item
 					$fullcost = $term->getBaseCostObject( array( 'tax', 'total' ), true );
 
-					$tax = AECToolbox::correctAmount( $fullcost->cost['amount'] * ( $location['percentage'] / 100 ) );
+					if ( $fullcost->cost['amount'] == $originalcost ) {
+						// No discounts, just make it fit
+						$tax = AECToolbox::correctAmount( $itemcost->cost['amount'] - $originalcost );
+					} else {
+						// Discounts, re-compute
+						$tax = AECToolbox::correctAmount( $fullcost->cost['amount'] * ( $location['percentage'] / 100 ) );
+					}
 					break;
 				case 'subtract':
 					$total = $term->renderTotal();
