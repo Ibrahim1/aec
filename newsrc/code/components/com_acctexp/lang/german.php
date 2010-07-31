@@ -61,7 +61,7 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', User has been expired' );
 // end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
-define( '_PAYPLANS_HEADER',					'Bezahlungspl&auml;ne' );
+define( '_PAYPLANS_HEADER',					'Bezahlpl&auml;ne' );
 define( '_NOPLANS_ERROR',					'Es trat ein interner Fehler auf, dadurch sind momentan keine Abonnements vorhanden, bitte den Administrator informieren - danke!');
 define( '_NOPLANS_AUTHERROR', 'You are not authorized to access this option. Please contact administrator if you have any further questions.');
 define( '_PLANGROUP_BACK', '&lt; Zur&uuml;ck');

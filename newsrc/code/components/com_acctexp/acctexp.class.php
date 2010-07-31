@@ -2566,8 +2566,8 @@ class eventLog extends serialParamDBTable
 			$subject2	= sprintf( _AEC_ASEND_NOTICE, constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $mainframe->getCfg( 'sitename' ) );
 			$message2	= sprintf( _AEC_ASEND_NOTICE_MSG, $this->event  );
 
-			$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
-			$message2	= html_entity_decode( $message2, ENT_QUOTES );
+			$subject2	= html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
+			$message2	= html_entity_decode( $message2, ENT_QUOTES, 'UTF-8' );
 
 			// get email addresses of all admins and superadmins set to recieve system emails
 			$admins = AECToolbox::getAdminEmailList();
@@ -8221,9 +8221,9 @@ class InvoiceFactory
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
 		if ( $hasform ) {
-			$mainframe->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE ) );
+			$mainframe->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE, ENT_COMPAT, 'UTF-8' ) );
 		} else {
-			$mainframe->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE_NOFORM ) );
+			$mainframe->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE_NOFORM, ENT_COMPAT, 'UTF-8' ) );
 		}
 
 		Payment_HTML::exceptionForm( $option, $this, $aecHTML, $hasform );
@@ -8731,7 +8731,7 @@ class InvoiceFactory
 	{
 		global $mainframe;
 
-		$mainframe->SetPageTitle( html_entity_decode( _AEC_PROMPT_PASSWORD ) );
+		$mainframe->SetPageTitle( html_entity_decode( _AEC_PROMPT_PASSWORD, ENT_COMPAT, 'UTF-8' ) );
 
 		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
 	}
@@ -8816,7 +8816,7 @@ class InvoiceFactory
 				$register = 0;
 			}
 
-			$mainframe->SetPageTitle( html_entity_decode( _PAYPLANS_HEADER ) );
+			$mainframe->SetPageTitle( html_entity_decode( _PAYPLANS_HEADER, ENT_COMPAT, 'UTF-8' ) );
 
 			if ( $group ) {
 				$g = new ItemGroup( $database );
@@ -8831,8 +8831,14 @@ class InvoiceFactory
 				$cart = false;
 			}
 
+			if ( !empty( $group ) || !empty( $usage ) ) {
+				$selected = true;
+			} else {
+				$selected = false;
+			}
+
 			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart );
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart, $selected );
 		}
 	}
 
@@ -9241,7 +9247,7 @@ class InvoiceFactory
 		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
 			global $mainframe;
 
-			$mainframe->SetPageTitle( html_entity_decode( _CONFIRM_TITLE ) );
+			$mainframe->SetPageTitle( html_entity_decode( _CONFIRM_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 			if ( empty( $aecConfig->cfg['custom_confirm_userdetails'] ) ) {
 				$this->userdetails = "";
@@ -9566,7 +9572,7 @@ class InvoiceFactory
 			$this->pp->modifyCheckout( $int_var, $this );
 		}
 
-		$mainframe->SetPageTitle( html_entity_decode( $this->checkout['checkout_title'] ) );
+		$mainframe->SetPageTitle( html_entity_decode( $this->checkout['checkout_title'], ENT_COMPAT, 'UTF-8' ) );
 
 		if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
 			JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
@@ -9840,7 +9846,7 @@ class InvoiceFactory
 	{
 		global $mainframe;
 
-		$mainframe->SetPageTitle( html_entity_decode( _CHECKOUT_ERROR_TITLE ) );
+		$mainframe->SetPageTitle( html_entity_decode( _CHECKOUT_ERROR_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 		Payment_HTML::error( $option, $objUser, $invoice, $error );
 	}
@@ -12532,8 +12538,8 @@ class Subscription extends serialParamDBTable
 
 		$message .= _ACCTEXP_MAILPARTICLE_FOOTER;
 
-		$subject = html_entity_decode( $subject, ENT_QUOTES );
-		$message = html_entity_decode( $message, ENT_QUOTES );
+		$subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
+		$message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
 
 		// Send email to user
 		if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
@@ -12571,8 +12577,8 @@ class Subscription extends serialParamDBTable
 			$message2 = sprintf( _ACCTEXP_ASEND_MSG, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
 		}
 
-		$subject2 = html_entity_decode( $subject2, ENT_QUOTES );
-		$message2 = html_entity_decode( $message2, ENT_QUOTES );
+		$subject2 = html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
+		$message2 = html_entity_decode( $message2, ENT_QUOTES, 'UTF-8' );
 
 		$admins = AECToolbox::getAdminEmailList();
 
@@ -14756,7 +14762,7 @@ class AECToolbox
 			$username 	= $row->username;
 
 			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
-			$subject 	= html_entity_decode( $subject, ENT_QUOTES );
+			$subject 	= html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 			if ( aecJoomla15check() ) {
 				$usersConfig = &JComponentHelper::getParams( 'com_users' );
 				$activation = $usersConfig->get('useractivation');
@@ -14770,7 +14776,7 @@ class AECToolbox
 				$message = sprintf( _AEC_USEND_MSG, $name, $mainframe->getCfg( 'sitename' ), JURI::root() );
 			}
 
-			$message = html_entity_decode( $message, ENT_QUOTES );
+			$message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
 
 			// check if Global Config `mailfrom` and `fromname` values exist
 			if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
@@ -14806,8 +14812,8 @@ class AECToolbox
 			$subject2	= sprintf( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
 
-			$subject2	= html_entity_decode( $subject2, ENT_QUOTES );
-			$message2	= html_entity_decode( $message2, ENT_QUOTES );
+			$subject2	= html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
+			$message2	= html_entity_decode( $message2, ENT_QUOTES, 'UTF-8' );
 
 			// get email addresses of all admins and superadmins set to recieve system emails
 			$admins = AECToolbox::getAdminEmailList();

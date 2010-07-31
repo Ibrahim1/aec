@@ -520,7 +520,7 @@ class HTML_Results
 
 class Payment_HTML
 {
-	function selectSubscriptionPlanForm( $option, $userid, $list, $passthrough=false, $register=false, $cart=false )
+	function selectSubscriptionPlanForm( $option, $userid, $list, $passthrough=false, $register=false, $cart=false, $selected=false )
 	{
 		global $aecConfig;
 
@@ -545,7 +545,7 @@ class Payment_HTML
 				<?php
 			} ?>
 			<?php
-			if ( isset( $list['group'] ) ) { ?>
+			if ( isset( $list['group'] ) && $selected ) { ?>
 				<div class="aec_group_backlink">
 					<?php
 					$urlbutton = JURI::root() . 'media/com_acctexp/images/site/back_button.png';
