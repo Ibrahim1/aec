@@ -13017,7 +13017,7 @@ class aecSuperCommand
 
 			$this->audience = $this->getParticle( $particles[1] );
 			$this->action = $this->getParticle( $particles[2] );
-
+var_dump($string);print_r($this);exit;
 			return true;
 		} elseif ( count( $particles ) == 2 ) {
 			$this->focus = 'users';
@@ -13170,6 +13170,8 @@ class aecSuperCommand
 					return false;
 				}
 		}
+
+		return true;
 	}
 
 	function cmdHas( $params )
