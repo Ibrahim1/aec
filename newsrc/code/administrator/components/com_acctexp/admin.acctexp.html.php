@@ -3234,7 +3234,7 @@ class HTML_AcctExp
  		HTML_myCommon::Valanx();
 	}
 
-	function toolBox( $option, $list )
+	function toolBox( $option, $result )
 	{
 		loadOverlib();
 		HTML_myCommon::addBackendCSS();
@@ -3243,19 +3243,25 @@ class HTML_AcctExp
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-				<?php echo _AEC_HEAD_EXPORT; ?>
+				<?php echo _AEC_HEAD_TOOLBOX; ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
 			</td>
 		</tr>
 		</table>
 
-		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup extensively and blame problems on small animals if things went wrong</p>
+		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup extensively and blame problems on small animals should things go wrong</p>
 
 		<table class="aecadminform">
-			<?php foreach ( $list as $cmd => $litem ) {
-				echo '<tr><td><h3>' . $litem['name'] . '</h3><p>' . $litem['desc'] . '</p></td><td><a href="' . $litem['link'] . '">execute!</a></td></tr>';
-			} ?>
+			<?php
+			if ( is_array( $result ) ) {
+				foreach ( $result as $cmd => $litem ) {
+					echo '<tr><td><h3>' . $litem['name'] . '</h3><p>' . $litem['desc'] . '</p></td><td><a href="' . $litem['link'] . '">execute!</a></td></tr>';
+				}
+			} else {
+				echo $result;
+			}
+			?>
 		</table>
 
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -3264,11 +3270,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		echo $aecHTML->loadJS();
-
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML );
-		}
 
  		HTML_myCommon::Valanx();
 	}

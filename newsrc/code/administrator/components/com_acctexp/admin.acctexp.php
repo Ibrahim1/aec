@@ -762,6 +762,12 @@ switch( strtolower( $task ) ) {
 		importData( $option );
 		break;
 
+	case 'toolbox':
+		$cmd = trim( aecGetParam( 'cmd', null ) );
+
+		toolBoxTool( $option, $cmd );
+		break;
+
 	case 'credits':
 		HTML_AcctExp::credits();
 		break;
@@ -7014,19 +7020,21 @@ function exportData( $option, $cmd=null )
 
 function toolBoxTool( $option, $cmd )
 {
+	$path = JPATH_SITE . '/components/com_acctexp/toolbox';
+
 	if ( empty( $cmd ) ) {
 		$list = array();
-
-		$path = JPATH_SITE . '/components/com_acctexp/toolbox';
 
 		$files = AECToolbox::getFileArray( $path, 'php', false, true );
 
 		foreach ( $files as $n => $name ) {
-			$file = $path . '/' . $name . '.php';
+			$file = $path . '/' . $name;
 
 			include_once $file;
 
-			$tool = new $name();
+			$class = str_replace( '.php', '', $name );
+
+			$tool = new $class();
 
 			if ( !method_exists( $tool, 'Info' ) ) {
 				continue;
@@ -7034,10 +7042,26 @@ function toolBoxTool( $option, $cmd )
 
 			$info = $tool->Info();
 
-			$list[] = "test";
+			$info['link'] = AECToolbox::deadsureURL( 'administrator/index2.php?option=' . $option . '&task=toolbox&cmd=' . $class );
+
+			$list[] = $info;
 		}
 
 		HTML_AcctExp::toolBox( $option, $list );
+	} else {
+		$file = $path . '/' . $cmd . '.php';
+
+		include_once $file;
+
+		$tool = new $cmd();
+
+		if ( !method_exists( $tool, 'Action' ) ) {
+			$return = "<p>Tool doesn't have an action to carry out!</p>";
+		} else {
+			$return = $tool->Action();
+		}
+
+		HTML_AcctExp::toolBox( $option, $return );
 	}
 }
 

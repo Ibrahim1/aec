@@ -5869,7 +5869,7 @@ class ItemGroupHandler
 			if ( !isset( $groupstore[$group] ) ) {
 				$groupstore[$group] = ItemGroupHandler::getTotalChildItems( array( $group ) );
 
-				array_unique( $groupstore[$group] );
+				$groupstore[$group] = array_unique( $groupstore[$group] );
 			}
 
 			$plans = array_merge( $plans, $groupstore[$group] );
@@ -13227,7 +13227,7 @@ class aecSuperCommand
 					$plans = array_merge( $plans, microIntegrationHandler::getPlansbyMI( $params[1] ) );
 				}
 
-				array_unique( $plans );
+				$plans = array_unique( $plans );
 
 				$p = array();
 				$p[0] = 'plan';
@@ -15627,7 +15627,7 @@ class microIntegrationHandler
 	{
 		$database = &JFactory::getDBO();
 
-		array_unique($milist);
+		$milist = array_unique( $milist );
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
@@ -19310,7 +19310,7 @@ class aecRestrictionHelper
 
 		$plans = array_merge( $plans, $newplans );
 
-		array_unique( $plans );
+		$plans = array_unique( $plans );
 
 		if ( is_null( $target ) ) {
 			$restrictions[$pkey] = $plans;

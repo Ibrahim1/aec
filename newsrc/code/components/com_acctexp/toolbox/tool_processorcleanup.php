@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: tool_subscriptioncleanup.php
+ * @version $Id: tool_processorcleanup.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Toolbox - Processor Cleanup
  * @copyright 2010 Copyright (C) David Deutsch
@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class tool_subscriptioncleanup
+class tool_processorcleanup
 {
 	function Info()
 	{
