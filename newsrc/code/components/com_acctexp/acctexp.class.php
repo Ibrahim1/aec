@@ -14593,21 +14593,6 @@ class AECToolbox
 					$ueConfig['reg_pend_appr_sub'] = '';
 				}
 			}
-
-			if ( $internal ) {
-				// Simulate Spoofing
-				$var[cbSpoofField()] = cbSpoofString( null, 'registerForm' );
-
-				// Simulate Anti-Spam
-				$regAntiSpamValues = cbGetRegAntiSpams();
-
-				$field = cbGetRegAntiSpamInputTag( $cbGetRegAntiSpams = null );
-
-				// Cut out variable name and content
-				$fv = explode( "\"", $field );
-
-				$var[$fv[3]] = $fv[5];
-			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			$savetask	= $task;
 			$task		= 'blind';
