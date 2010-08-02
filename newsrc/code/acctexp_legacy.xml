@@ -27,6 +27,20 @@
 		<filename>lang/italian.php</filename>
 		<filename>lang/simplified_chinese.php</filename>
 		<filename>lang/spanish.php</filename>
+		<filename>lib/blueprint/index.html</filename>
+		<filename>lib/blueprint/ie.css</filename>
+		<filename>lib/blueprint/print.css</filename>
+		<filename>lib/blueprint/screen.css</filename>
+		<filename>lib/blueprint/src/index.html</filename>
+		<filename>lib/blueprint/src/forms.css</filename>
+		<filename>lib/blueprint/src/grid.css</filename>
+		<filename>lib/blueprint/src/grid.png</filename>
+		<filename>lib/blueprint/src/ie.css</filename>
+		<filename>lib/blueprint/src/print.css</filename>
+		<filename>lib/blueprint/src/reset.css</filename>
+		<filename>lib/blueprint/src/typography.css</filename>
+		<filename>lib/codeofshame/index.html</filename>
+		<filename>lib/codeofshame/cbregister.php</filename>
 		<filename>lib/eucalib/index.html</filename>
 		<filename>lib/eucalib/eucalib.add.php</filename>
 		<filename>lib/eucalib/eucalib.admin.common.php</filename>

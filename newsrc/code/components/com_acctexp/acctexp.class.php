@@ -14634,7 +14634,13 @@ class AECToolbox
 
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to save the user
-			@saveRegistration( $option );
+			if ( $internal && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
+				include_once( JPATH_SITE . '/components/com_acctexp/lib/codeofshame/cbregister.php' );
+
+				@saveRegistrationNOCHECKSLOL( $option );
+			} else {
+				@saveRegistration( $option );
+			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			// This is a JUSER registration, borrowing their code to save the user
 			saveRegistration( $option );
