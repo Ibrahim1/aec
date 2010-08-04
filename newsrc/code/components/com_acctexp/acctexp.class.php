@@ -1013,29 +1013,38 @@ class metaUser
 
 	function explodeName()
 	{
-		$name = array();
-		$name['first_first']	= "";
-		$name['first']			= "";
-		$name['last']			= "";
+		return $this->_explodeName( $this->cmsUser->name );
+	}
+
+	function _explodeName( $name )
+	{
+		$return = array();
+		$return['first_first']	= "";
+		$return['first']		= "";
+		$return['last']			= "";
 
 		// Explode Name
-		if ( isset( $this->name ) ) {
-			if ( is_array( $this->name ) ) {
-				$namearray	= $this->name;
+		if ( !empty( $name ) ) {
+			if ( is_array( $name ) ) {
+				$namearray	= $name;
 			} else {
-				$namearray	= explode( " ", $this->name );
+				$namearray	= explode( " ", $name );
 			}
 
-			$name['first_first']	= $namearray[0];
+			$return['first_first']	= $namearray[0];
 			$maxname				= count($namearray) - 1;
-			$name['last']			= $namearray[$maxname];
+			$return['last']			= $namearray[$maxname];
 
 			unset( $namearray[$maxname] );
 
-			$name['first']			= implode( ' ', $namearray );
+			$return['first']			= implode( ' ', $namearray );
+
+			if ( empty( $return['first'] ) ) {
+				$return['first'] = $return['first_first'];
+			}
 		}
 
-		return $name;
+		return $return;
 	}
 
 	function CustomRestrictionResponse( $restrictions )
@@ -14621,6 +14630,18 @@ class AECToolbox
 			// This is a CB registration, borrowing their code to save the user
 			if ( $internal && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				include_once( JPATH_SITE . '/components/com_acctexp/lib/codeofshame/cbregister.php' );
+
+				$name = metaUser::_explodeName( $_POST['name'] );
+
+				$_POST['firstname'] = $name['first'];
+
+				if ( empty( $name['last'] ) ) {
+					$_POST['lastname'] = $name['first'];
+				} else {
+					$_POST['lastname'] = $name['last'];
+				}
+
+				$_POST['password__verify'] = $_POST['password2'];
 
 				@saveRegistrationNOCHECKSLOL( $option );
 			} else {
