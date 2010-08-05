@@ -1013,7 +1013,11 @@ class metaUser
 
 	function explodeName()
 	{
-		return $this->_explodeName( $this->cmsUser->name );
+		if ( !empty( $this->cmsUser->name ) ) {
+			return $this->_explodeName( $this->cmsUser->name );
+		} else {
+			return $this->_explodeName( "" );
+		}
 	}
 
 	function _explodeName( $name )
@@ -6620,6 +6624,8 @@ class SubscriptionPlan extends serialParamDBTable
 		} else {
 			$metaUser->focusSubscription->recurring = 0;
 		}
+print_r($metaUser->focusSubscription);
+		$metaUser->focusSubscription->storeload();
 
 		if ( empty( $invoice ) ) {
 			$invoice = new stdClass();
@@ -6628,7 +6634,9 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$exchange = $add = null;
 
-		$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
+		$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );print_r($metaUser->focusSubscription);
+$sub = new Subscription($database);$sub->load($metaUser->focusSubscription->id);print_r($sub);exit;
+		$metaUser->focusSubscription->load( $metaUser->focusSubscription->id );
 
 		if ( $result === false ) {
 			return false;
@@ -16008,7 +16016,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function action( $metaUser, $exchange=null, $invoice=null, $objplan=null )
+	function action( &$metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
 		if ( isset( $this->settings['_aec_action'] ) ) {
 			if ( !$this->settings['_aec_action'] ) {
@@ -16027,7 +16035,7 @@ class microIntegration extends serialParamDBTable
 		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', $add );
 	}
 
-	function pre_expiration_action( $metaUser, $objplan=null )
+	function pre_expiration_action( &$metaUser, $objplan=null )
 	{
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) || method_exists( $this->mi_class, 'relayAction' ) ) {
 			global $mainframe;
@@ -16073,7 +16081,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function expiration_action( $metaUser, $objplan=null )
+	function expiration_action( &$metaUser, $objplan=null )
 	{
 		// Needs to be declared as variable due to call by reference
 		$add = false;
@@ -16265,7 +16273,7 @@ class microIntegration extends serialParamDBTable
 
 	function getErrors()
 	{
-		if ( !empty( $this->mi_class->error ) ) {
+		if ( !empty( $this->mi_class->error ) && is_array( $this->mi_class->error ) ) {
 			if ( count( $this->mi_class->error ) > 1 ) {
 				$return = 'Error:';
 			} else {
