@@ -67,8 +67,8 @@ class mi_idevaffiliate
 
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
 
-		if ( !empty( $userflags['IDEV_IP_ADDRESS'] ) ) {
-			$ip = $userflags['IDEV_IP_ADDRESS'];
+		if ( !empty( $userflags['idev_ip_address'] ) ) {
+			$ip = $userflags['idev_ip_address'];
 		} else {
 			if ( isset( $request->metaUser->focusSubscription->params['creator_ip'] ) ) {
 				$ip = $request->metaUser->focusSubscription->params['creator_ip'];

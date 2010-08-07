@@ -814,6 +814,10 @@ class metaUser
 
 		$user = &JFactory::getUser();
 
+		if ( empty( $this->cmsUser ) ) {
+			return null;
+		}
+
 		// Always protect last administrator
 		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
 			$query = 'SELECT count(*)'
@@ -6583,9 +6587,6 @@ class SubscriptionPlan extends serialParamDBTable
 		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
 		$metaUser->focusSubscription->type = $processor;
 
-		// Clear parameters
-		$metaUser->focusSubscription->params = array();
-
 		$recurring_choice = null;
 		if ( is_object( $invoice ) ) {
 			if ( !empty( $invoice->params ) ) {
@@ -6624,7 +6625,7 @@ class SubscriptionPlan extends serialParamDBTable
 		} else {
 			$metaUser->focusSubscription->recurring = 0;
 		}
-print_r($metaUser->focusSubscription);
+
 		$metaUser->focusSubscription->storeload();
 
 		if ( empty( $invoice ) ) {
@@ -6634,12 +6635,13 @@ print_r($metaUser->focusSubscription);
 
 		$exchange = $add = null;
 
-		$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );print_r($metaUser->focusSubscription);
-$sub = new Subscription($database);$sub->load($metaUser->focusSubscription->id);print_r($sub);exit;
-		$metaUser->focusSubscription->load( $metaUser->focusSubscription->id );
+		$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
 
 		if ( $result === false ) {
 			return false;
+		} elseif ( $result === true ) {
+			// MIs might have changed the subscription. Reload it.
+			$metaUser->focusSubscription->reload();
 		}
 
 		if ( $this->params['gid_enabled'] ) {
@@ -7033,6 +7035,8 @@ $sub = new Subscription($database);$sub->load($metaUser->focusSubscription->id);
 
 				unset( $mi );
 			}
+		} else {
+			return null;
 		}
 
 		return true;
@@ -12620,7 +12624,7 @@ class Subscription extends serialParamDBTable
 		if ( $this->params ) {
 			foreach ( $this->params as $name => $value ) {
 				if ( strpos( $name, $flag_name ) == 0 ) {
-					$paramname = substr( strtoupper( $name ), strlen( $flag_name ) + 1 );
+					$paramname = strtolower( substr( strtoupper( $name ), strlen( $flag_name ) + 1 ) );
 					$mi_params[$paramname] = $value;
 				}
 			}
@@ -13034,7 +13038,7 @@ class aecSuperCommand
 
 			$this->audience = $this->getParticle( $particles[1] );
 			$this->action = $this->getParticle( $particles[2] );
-var_dump($string);print_r($this);exit;
+
 			return true;
 		} elseif ( count( $particles ) == 2 ) {
 			$this->focus = 'users';

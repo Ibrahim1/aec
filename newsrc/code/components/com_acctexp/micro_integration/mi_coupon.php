@@ -64,8 +64,8 @@ class mi_coupon
 
 		$existing_coupons = array();
 		if ( is_array( $userflags ) ) {
-			if ( !empty( $userflags['COUPONS'] ) ) {
-				$existing_coupons = explode( ',', $userflags['COUPONS'] );
+			if ( !empty( $userflags['coupons'] ) ) {
+				$existing_coupons = explode( ',', $userflags['coupons'] );
 				$total_coupons = array_merge( $total_coupons, $existing_coupons );
 
 				if ( !empty( $this->settings['inc_old_coupons'] ) ) {
