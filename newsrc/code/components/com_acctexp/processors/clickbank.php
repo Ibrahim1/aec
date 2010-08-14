@@ -146,7 +146,7 @@ class processor_clickbank extends URLprocessor
 			$verify = strtoupper( substr( implode( '|', $params ), 0, 8 ) );
 
 			if ( $cverify == $verify ) {
-				switch ( $post['ctransreceipt'] ) {
+				switch ( $post['ctransaction'] ) {
 					// The purchase of a standard product or the initial purchase of recurring billing product.
 					case 'SALE':
 						$response['valid']	= 1;
