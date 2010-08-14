@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- $Id$ -->
 <project name="AEC" basedir="." default="build">
-	<target name="build" description="Build all installable packages" depends="config, svn_lastrevision">
+	<target name="build" description="Build all installable packages" depends="config, git_lastrevision">
 		<property file="properties/com.properties" override="true" />
 
 		<property name="file.dist_package" value="AEC" />
@@ -17,8 +17,8 @@
 		</phing>
 	</target>
 
-	<target name="svn_lastrevision">
-		<svnlastrevision workingcopy="${dir.local}/components/com_acctexp/acctexp.class.php" propertyname="svn.lastrevision" />
+	<target name="git_lastrevision">
+		<property name="git.lastrevision" value="3045" />
 	</target>
 
 	<target name="config" description="Load configuration file">
