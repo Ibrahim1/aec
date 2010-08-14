@@ -3,7 +3,7 @@
  * @version $Id: swedish.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Language - Frontend - English
- * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @copyright 2006-2010 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
 
  * @Translation into Swedish: Anders Carlén <anders@carlencommunications.se> - http://www.carlencommunications.s

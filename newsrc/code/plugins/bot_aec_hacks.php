@@ -3,7 +3,7 @@
  * @version $Id: bot_aec_hacks.php
  * @package AEC - Account Control Expiration - Joomla 1.0 Plugins
  * @subpackage Hacks Bot
- * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @copyright 2006-2010 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */

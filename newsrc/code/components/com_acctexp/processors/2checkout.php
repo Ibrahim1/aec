@@ -3,7 +3,7 @@
  * @version $Id: 2checkout.php,v 1.0 2007/06/21 09:22:22 mic Exp $ $Revision: 1.0 $
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - 2CheckOut
- * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @copyright 2006-2010 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
