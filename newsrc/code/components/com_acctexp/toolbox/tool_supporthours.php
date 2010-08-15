@@ -56,6 +56,20 @@ class tool_supporthours
 
 		$userlist = array_unique( $userlist );
 
+		$tstamp = time();
+
+		$day = date('d', $tstamp);
+
+		if ( ( $day < 7 ) || ( $day > 22 ) ) {
+			// Show second week
+			$start_timeframe = strtotime( date('Y-m-15 00:00:00'), $tstamp );
+			$end_timeframe = strtotime( date('Y-m-t 23:59:59'), $tstamp );
+		} else {
+			// Show first week
+			$start_timeframe = strtotime( date('Y-m-1 00:00:00'), $tstamp );
+			$end_timeframe = strtotime( date('Y-m-14 23:59:59'), $tstamp );
+		}
+
 		$historylist = array();
 		foreach ( $userlist as $userid ) {
 			$metaUser = new metaUser( $userid );
@@ -65,16 +79,85 @@ class tool_supporthours
 			if ( !empty( $uparams['support_minutes_history'] ) ) {
 				if ( is_array( $uparams['support_minutes_history'] ) ) {
 					foreach( $uparams['support_minutes_history'] as $history ) {
-						if ( !empty( $history['userid'] ) ) {
-							$historylist[$history['userid']][] = $history['support_minutes_used'] . ' - ' . $history['details'];
+						if ( ( $history['tstamp'] > $start_timeframe ) && ( $history['tstamp'] <= $end_timeframe ) ) {
+							if ( !empty( $history['userid'] ) && $history['minutes_used'] ) {
+								$add = array();
+								$add['userid'] = $metaUser->cmsUser->id;
+								$add['name'] = $metaUser->cmsUser->name;
+								$add['username'] = $metaUser->cmsUser->username;
+
+								$historylist[$history['userid']][] = array_merge( $history, $add );
+							}
 						}
 					}
 				}
 			}
 		}
 
-		return "<pre>" . obsafe_print_r( $historylist, true) . "</pre>";
+		$return = "";
+
+		foreach ( $historylist as $userid => $history_list ) {
+			if ( empty( $history_list ) ) {
+				continue;
+			}
+
+			$total_minutes = 0;
+
+			$metaUser = new metaUser( $userid );
+
+			$return .= '<h1>' . $metaUser->cmsUser->name . '</h1>';
+			$return .= '<table class="adminlist">';
+			$return .= '<tr><th>Date</th><th>Username</th><th>Time Used</th><th>Details</th></tr>';
+
+			$history_list = $this->historySort( $history_list );
+
+			foreach ( $history_list as $history ) {
+				$userlink = '<a href="';
+				$userlink .= JURI::base() . 'index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $history['userid'];
+				$userlink .= '">';
+				$userlink .= $history['name'] . ' (' . $history['username'] . ')';
+				$userlink .= '</a>';
+
+				$return .= '<tr>';
+				$return .= '<td>' . date( 'Y-m-d H:i:s', $history['tstamp'] ) . '</td>';
+				$return .= '<td>' . $userlink . '</td>';
+				$return .= '<td>' . $history['minutes_used'] . '</td>';
+				$return .= '<td>' . $history['details'] . '</td>';
+				$return .= '</tr>';
+
+				$total_minutes += $history['minutes_used'];
+			}
+
+			$return .= '<tr><td><strong>TOTAL</strong></td><td></td><td><strong>' . $total_minutes . '</strong></td><td></td></tr>';
+
+			$return .= '</table><br /><br />';
+		}
+
+		return $return;
 	}
 
+	function historySort( $array )
+	{
+		// Bastardized Quicksort
+		if ( !isset( $array[2] ) ) {
+			return $array;
+		}
+
+		$piv = $array[0];
+		$x = $y = array();
+		$len = count( $array );
+		$i = 1;
+
+		while ( $i < $len ) {
+			if ( $array[$i]['tstamp'] < $piv['tstamp'] ) {
+				$x[] = $array[$i];
+			} else {
+				$y[] = $array[$i];
+			}
+			++$i;
+		}
+
+		return array_merge( tool_supporthours::historySort($x), array($piv), tool_supporthours::historySort($y) );
+	}
 }
 ?>
