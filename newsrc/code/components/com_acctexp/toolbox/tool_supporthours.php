@@ -62,8 +62,23 @@ class tool_supporthours
 
 		if ( ( $day < 7 ) || ( $day > 22 ) ) {
 			// Show second week
-			$start_timeframe = strtotime( date('Y-m-15 00:00:00'), $tstamp );
-			$end_timeframe = strtotime( date('Y-m-t 23:59:59'), $tstamp );
+			if ( $day > 22 ) {
+				$start_timeframe = strtotime( date( 'Y-m-15 00:00:00' ), $tstamp );
+				$end_timeframe = strtotime( date( 'Y-m-t 23:59:59' ), $tstamp );
+			} else {
+				// This should probably be replaced by something using straight strtotime
+				$year = strtotime( date( 'Y' ) );
+				$prevmonth = date( 'm' ) - 1;
+
+				if ( $prevmonth <= 0 ) {
+					$year = $year - 1;
+
+					$prevmonth = 12;
+				}
+
+				$start_timeframe = strtotime( date( $year . '-' . $prevmonth . '-15 00:00:00' ), $tstamp );
+				$end_timeframe = strtotime( date( $year . '-' . $prevmonth . '-t 23:59:59' ), $tstamp );
+			}
 		} else {
 			// Show first week
 			$start_timeframe = strtotime( date('Y-m-1 00:00:00'), $tstamp );
