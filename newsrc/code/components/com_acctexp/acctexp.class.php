@@ -8925,9 +8925,9 @@ class InvoiceFactory
 			$g->load( $gid );
 
 			if ( $g->checkPermission( $this->metaUser ) ) {
-				if ( !empty( $g->params['symlink_userid'] ) ) {
+				if ( !empty( $g->params['symlink_userid'] ) && !empty( $g->params['symlink'] ) ) {
 					aecRedirect( $g->params['symlink'], $this->userid, "aechidden" );
-				} else {
+				} elseif ( !empty( $g->params['symlink'] ) ) {
 					return $g->params['symlink'];
 				}
 
