@@ -2322,6 +2322,7 @@ class HTML_AcctExp
 											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
+											<?php echo $aecHTML->createSettingsParticle( 'symlink_userid' ); ?>
 											<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 										</div>
 									</div>

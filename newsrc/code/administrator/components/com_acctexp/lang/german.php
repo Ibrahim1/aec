@@ -1552,6 +1552,8 @@ define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_NAME', 'Untergeordnete Elemente a
 define( '_ITEMGROUP_GENERAL_REVEAL_CHILD_ITEMS_DESC', 'Wenn Sie dieses Bedienungsfeld auf "ja" setzen, wird das AEC keinen Gruppenbutton zeigen (der den Benutzer zu den Inhalten der Gruppe leitet), sondern die Inhalte der Gruppe in einer direkt anzeigen.');
 define( '_ITEMGROUP_GENERAL_SYMLINK_NAME', 'Gruppe Symbolische Verkn&uuml;pfung');
 define( '_ITEMGROUP_GENERAL_SYMLINK_DESC', 'Einen Link hier einzugeben, wird einen Benutzer zu diesem Link weiterleiten, wenn diese Gruppe auf der Auswahlseite der Pl&auml;ne ausgew&auml;hlt wird. Hebt jede Verlinkung zu Inhalten dieser Gruppe auf!');
+define( '_ITEMGROUP_GENERAL_SYMLINK_USERID_NAME', 'Symlink Userid');
+define( '_ITEMGROUP_GENERAL_SYMLINK_USERID_DESC', 'Pass Userid via a Joomla notification. This can be helpful for flexible custom signup pages that need to function even if the user is not logged in. You can use Javascript to modify your signup links according to the passed userid.');
 
 define( '_ITEMGROUP_GENERAL_NOTAUTH_REDIRECT_NAME', 'Denied Access Redirect');
 define( '_ITEMGROUP_GENERAL_NOTAUTH_REDIRECT_DESC', 'Redirect to a different URL should the user follow a direct link to this item without having the right authorization.');

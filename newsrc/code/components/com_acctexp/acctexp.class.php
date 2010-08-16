@@ -6157,7 +6157,7 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		// Filter out params
-		$fixed = array( 'color', 'icon', 'reveal_child_items', 'symlink', 'notauth_redirect', 'micro_integrations' );
+		$fixed = array( 'color', 'icon', 'reveal_child_items', 'symlink', 'symlink_userid', 'notauth_redirect', 'micro_integrations' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -8925,8 +8925,10 @@ class InvoiceFactory
 			$g->load( $gid );
 
 			if ( $g->checkPermission( $this->metaUser ) ) {
-				if ( !empty( $g->params['symlink'] ) ) {
-					aecRedirect( $g->params['symlink'] );
+				if ( !empty( $g->params['symlink_userid'] ) ) {
+					aecRedirect( $g->params['symlink'], $this->userid, "aechidden" );
+				} else {
+					return $g->params['symlink'];
 				}
 
 				$list = ItemGroupHandler::getTotalAllowedChildItems( array( $gid ), $this->metaUser );

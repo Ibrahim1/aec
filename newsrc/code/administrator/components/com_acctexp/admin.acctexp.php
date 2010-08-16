@@ -4148,6 +4148,7 @@ function editItemGroup( $id, $option )
 
 	$params['reveal_child_items']		= array( 'list_yesno', 0 );
 	$params['symlink']					= array( 'inputC', '' );
+	$params['symlink_userid']			= array( 'list_yesno', 0 );
 
 	$params['notauth_redirect']			= array( 'inputD', '' );
 
