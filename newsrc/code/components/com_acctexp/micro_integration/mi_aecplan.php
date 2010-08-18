@@ -121,7 +121,7 @@ class mi_aecplan
 
 		$request->metaUser->establishFocus( $new_plan, 'none', false );
 
-		$request->metaUser->focusSubscription->applyUsage( $this->settings['plan_apply'.$request->area] );
+		$new_plan->applyPlan( $request->metaUser );
 
 		if ( ( ( $request->area == '_first' ) && !empty( $this->settings['first_plan_copy_expiration'] ) )
 			|| ( empty( $request->area ) && !empty( $this->settings['plan_copy_expiration'] ) ) ) {

@@ -6493,11 +6493,11 @@ class SubscriptionPlan extends serialParamDBTable
 			$this->params['make_primary'] = 1;
 		}
 
-		$status = $metaUser->establishFocus( $this, $processor, false );
+		$fstatus = $metaUser->establishFocus( $this, $processor, false );
 
 		// TODO: Figure out why $status returns 'existing' - even on a completely fresh subscr
 
-		if ( $status != 'existing' ) {
+		if ( $fstatus != 'existing' ) {
 			$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
 			$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
 		} else {
@@ -12368,13 +12368,8 @@ class Subscription extends serialParamDBTable
 			}
 
 			if ( !$overridefallback ) {
-				if ( $subscription_plan !== false ) {
-					$mih = new microIntegrationHandler();
-					$mih->userPlanExpireActions( $metaUser, $subscription_plan );
-				}
-
 				$this->applyUsage( $subscription_plan->params['fallback'], 'none', 1 );
-				$this->load( $this->id );
+				$this->reload();
 				return false;
 			}
 		} else {
@@ -12387,16 +12382,14 @@ class Subscription extends serialParamDBTable
 				}
 			}
 
+			if ( !( strcmp( $this->status, 'Expired' ) === 0 ) && !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
+				$this->setStatus( 'Expired' );
+			}
+
 			// Call Expiration MIs
 			if ( $subscription_plan !== false ) {
 				$mih = new microIntegrationHandler();
 				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
-			}
-
-			if ( !( strcmp( $this->status, 'Expired' ) === 0 ) || !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
-				return $this->setStatus( 'Expired' );
-			} else {
-				return false;
 			}
 		}
 	}

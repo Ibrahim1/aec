@@ -1344,7 +1344,7 @@ function saveUser( $option, $apply=0 )
 		if ( strcmp( $set_status, 'now' ) === 0 ) {
 			$metaUser->focusSubscription->expire();
 		} else {
-			$statusstatus = array( 'exclude' => 'Excluded', 'Closed' => 'Closed', 'include' => 'Active', 'hold' => 'Hold' );
+			$statusstatus = array( 'exclude' => 'Excluded', 'close' => 'Closed', 'include' => 'Active', 'hold' => 'Hold' );
 
 			if ( isset( $statusstatus[$set_status] ) ) {
 				$metaUser->focusSubscription->setStatus( $statusstatus[$set_status] );
