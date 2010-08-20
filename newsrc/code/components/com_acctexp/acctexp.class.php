@@ -1,4 +1,7 @@
-<?php
+
+ $process_Id {
+	
+}<?php
 /**
  * @version $Id: acctexp.class.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -2068,36 +2071,36 @@ class aecHeartbeat extends JTable
 		}
 	}
 
-	function beat()
+	function init()
 	{
-		$database = &JFactory::getDBO();
+		$this->processors = array();
 
-		global $mainframe, $aecConfig;
+		$this->result = array(	'expired' => 0,
+								'pre_expired' => 0,
+								'pre_exp_actions' => 0
+								);
+	}
 
-		// Delete old token entries
-		$query = 'DELETE'
-				. ' FROM #__acctexp_temptoken'
-				. ' WHERE `created_date` <= \'' . AECToolbox::computeExpiration( "-3", 'H', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) . '\''
-				;
-		$database->setQuery( $query );
-		$database->query();
+	function getProcessor( $name )
+	{
+		if ( !isset( $this->processors[$name] ) ) {
+			$processor = new PaymentProcessor();
+			if ( $processor->loadName( $name ) ) {
+				$processor->init();
 
-		// Receive maximum pre expiration time
-		$query = 'SELECT MAX(pre_exp_check)'
-				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `active` = \'1\''
-				;
-		$database->setQuery( $query );
-		$pre_expiration = $database->loadResult();
-
-		if ( $pre_expiration ) {
-			// pre-expiration found, search limit set to the maximum pre-expiration time
-			$expiration_limit = AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
-		} else {
-			// No pre-expiration actions found, limiting search to all users who expire until tomorrow (just to be safe)
-			$pre_expiration		= false;
-			$expiration_limit	= AECToolbox::computeExpiration( 1, 'D', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+				$this->processors[$name] = $processor;
+			} else {
+				// Processor does not exist
+				$this->processors[$name] = false;
+			}
 		}
+
+		return $this->processors[$name];
+	}
+
+	function getSubscribers( $pre_expiration )
+	{
+		$expiration_limit = $this->getExpirationLimit( $pre_expiration );
 
 		// Select all the users that are Active and have an expiration date
 		$query = 'SELECT `id`'
@@ -2110,30 +2113,82 @@ class aecHeartbeat extends JTable
 				;
 		$database->setQuery( $query );
 		$subscription_list = $database->loadResultArray();
+	}
 
-		$expired_users		= array();
-		$pre_expired_users	= array();
-		$found_expired		= 1;
-		$e					= 0;
-		$pe					= 0;
-		$exp_actions		= 0;
-		$exp_users			= 0;
-		$pps				= array();
+	function getExpirationLimit( $pre_expiration )
+	{
+		if ( $pre_expiration ) {
+			// pre-expiration found, search limit set to the maximum pre-expiration time
+			return AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		} else {
+			// No pre-expiration actions found, limiting search to all users who expire until tomorrow (just to be safe)
+			return AECToolbox::computeExpiration( 1, 'D', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		}
+	}
+
+	function processorValidation( $subscription, $subscription_list )
+	{
+		$database = &JFactory::getDBO();
+
+		$pp = $this->getProcessor( $subscription->type );
+
+		if ( $pp != false ) {
+			// Load prepare validation function
+			$prepval = $pp->prepareValidation( $subscription_list );
+
+			if ( $prepval === null ) {
+				// This Processor has no such function, set to false to ignore later calls
+				$pps[$subscription->type] = false;
+			} elseif ( $prepval === false ) {
+				$database = &JFactory::getDBO();
+
+				// Break - we have a problem with one processor
+				$eventlog = new eventLog( $database );
+				$eventlog->issue( 'heartbeat failed - processor', 'heartbeat, failure,'.$subscription->type, 'The payment processor failed to respond to validation request - waiting for next turn', 128 );
+				return false;
+			}
+
+			$validation = null;
+
+			// Carry out validation if possible
+			if ( !empty( $pps[$subscription->type] ) ) {
+				if ( $subscription->recurring ) {
+					$validation = $pps[$subscription->type]->validateSubscription( $subscription->id, $subscription_list );
+				}
+			}
+
+			return $validation;
+		} else {
+			return null;
+		}
+	}
+
+	function beat()
+	{
+		$database = &JFactory::getDBO();
+
+		global $mainframe;
+
+		$this->init();
+
+		// Some cleanup
+		$this->deleteTempTokens();
+
+		// Receive maximum pre expiration time
+		$pre_expiration = microIntegrationHandler::getMaxPreExpirationTime();
+
+		$subscription_list = $this->getSubscribers( $pre_expiration );
 
 		// Efficient way to check for expired users without checking on each one
 		if ( !empty( $subscription_list ) ) {
-			foreach ( $subscription_list as $sub_id ) {
-				$subscription = new Subscription($database);
+			$pre_expired_users	= array();
+
+			$found_expired		= 1;
+			foreach ( $subscription_list as $sid => $sub_id ) {
+				$subscription = new Subscription( $database );
 				$subscription->load( $sub_id );
 
-				$query = 'SELECT `username`'
-						. ' FROM #__users'
-						. ' WHERE `id` = \'' . $subscription->userid . '\''
-						;
-				$database->setQuery( $query );
-				$username = $database->loadResult();
-
-				if ( empty( $username ) ) {
+				if ( !AECfetchfromDB::UserExists( $subscription->userid ) ) {
 					continue;
 				}
 
@@ -2143,98 +2198,36 @@ class aecHeartbeat extends JTable
 					$found_expired = $subscription->is_expired();
 
 					if ( $found_expired ) {
-						// We may need to carry out processor functions
-						if ( !isset( $pps[$subscription->type] ) ) {
-							// Load payment processor into overall array
-							$pps[$subscription->type] = new PaymentProcessor();
-							if ( $pps[$subscription->type]->loadName( $subscription->type ) ) {
-								$pps[$subscription->type]->init();
+						// If we don't have any validation response, expire
+						$validate = $this->processorValidation( $subscription, $subscription_list );
 
-								// Load prepare validation function
-								$prepval = $pps[$subscription->type]->prepareValidation( $subscription_list );
-								if ( $prepval === null ) {
-									// This Processor has no such function, set to false to ignore later calls
-									$pps[$subscription->type] = false;
-								} elseif ( $prepval === false ) {
-									// Break - we have a problem with one processor
-									$eventlog = new eventLog( $database );
-									$eventlog->issue( 'heartbeat failed - processor', 'heartbeat, failure,'.$subscription->type, 'The payment processor failed to respond to validation request - waiting for next turn', 128 );
-									return;
-								}
-							} else {
-								// Processor does not exist
-								$pps[$subscription->type] = false;
-							}
-						}
-
-						// Carry out validation if possible
-						$validation = false;
-
-						if ( !empty( $pps[$subscription->type] ) ) {
-							if ( $subscription->recurring ) {
-								$validation = $pps[$subscription->type]->validateSubscription( $sub_id, $subscription_list );
-							}
-						}
-
-						// Validation failed or was not possible for this processor - expire
-						if ( empty( $validation ) ) {
+						if ( $validate === false ) {
+							// There was some fatal error, return.
+							return;
+						} elseif ( $validate !== true ) {
 							if ( $subscription->expire() ) {
-								$e++;
+								$this->result['expired']++;
 							}
 						}
-					}
-				}
-
-				// If we have found all expired users, put all others into pre expiration
-				if ( !$found_expired && !in_array( $subscription->id, $pre_expired_users ) ) {
-					if ( $pre_expiration ) {
-						$pre_expired_users[] = $subscription->id;
+						
+						unset( $subscription_list[$sid] );
 					}
 				}
 			}
 
 			// Only go for pre expiration action if we have at least one user for it
-			if ( $pre_expiration && !empty( $pre_expired_users ) ) {
+			if ( $pre_expiration && !empty( $subscription_list ) ) {
 				// Get all the MIs which have a pre expiration check
-				$query = 'SELECT `id`'
-						. ' FROM #__acctexp_microintegrations'
-						. ' WHERE `pre_exp_check` > 0'
-						;
-				$database->setQuery( $query );
-				$mi_pexp = $database->loadResultArray();
+				$mi_pexp = microIntegrationHandler::getPreExpIntegrations();
 
-				// Get all the plans which have MIs
-				$query = 'SELECT `id`'
-						. ' FROM #__acctexp_plans'
-						. ' WHERE `micro_integrations` IS NOT NULL'
-						;
-				$database->setQuery( $query );
-				$plans_mi = $database->loadResultArray();
-
-				// Filter out plans which have not got the right MIs applied
-				$expmi_plans = array();
-				foreach ( $plans_mi as $plan_id ) {
-					$query = 'SELECT `micro_integrations`'
-							. ' FROM #__acctexp_plans'
-							. ' WHERE `id` = \'' . $plan_id . '\''
-							;
-					$database->setQuery( $query );
-					$plan_mis = unserialize( base64_decode( $database->loadResult() ) );
-
-					if ( is_array( $plan_mis ) && !empty( $plan_mis ) ) {
-						$pexp_mis = array_intersect( $plan_mis, $mi_pexp );
-
-						if ( count( $pexp_mis ) ) {
-							$expmi_plans[] = $plan_id;
-						}
-					}
-				}
+				// Find plans which have the MIs assigned
+				$expmi_plans = microIntegrationHandler::getPlansbyMI( $mi_pexp );
 
 				// Filter out the users which dont have the correct plan
 				$query = 'SELECT `id`, `userid`'
 						. ' FROM #__acctexp_subscr'
-						. ' WHERE `id` IN (' . implode( ',', $pre_expired_users ) . ')'
-						. ' AND `plan` IN (' . implode( ',', $expmi_plans) . ')'
+						. ' WHERE `id` IN (' . implode( ',', $subscription_list ) . ')'
+						. ' AND `plan` IN (' . implode( ',', $expmi_plans ) . ')'
 						;
 				$database->setQuery( $query );
 				$sub_list = $database->loadObjectList();
@@ -2250,6 +2243,7 @@ class aecHeartbeat extends JTable
 								// Its ok - load the plan
 								$subscription_plan = new SubscriptionPlan( $database );
 								$subscription_plan->load( $metaUser->focusSubscription->plan );
+
 								$userplan_mis = $subscription_plan->micro_integrations;
 
 								// Double check whether we have the MIs
@@ -2261,7 +2255,7 @@ class aecHeartbeat extends JTable
 								$user_pexpmis = array_intersect( $userplan_mis, $mi_pexp );
 
 								// loop through MIs and apply pre exp action
-								$check_actions = $exp_actions;
+								$check_actions = $this->result['pre_exp_actions'];
 
 								foreach ( $user_pexpmis as $mi_id ) {
 									$mi = new microIntegration( $database );
@@ -2273,15 +2267,15 @@ class aecHeartbeat extends JTable
 											if ( $metaUser->focusSubscription->is_expired( $mi->pre_exp_check ) ) {
 												$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
 												if ( $result ) {
-													$exp_actions++;
+													$this->result['pre_exp_actions']++;
 												}
 											}
 										}
 									}
 								}
 
-								if ( $exp_actions > $check_actions ) {
-									$exp_users++;
+								if ( $this->result['pre_exp_actions'] > $check_actions ) {
+									$this->result['pre_expired']++;
 								}
 							}
 						}
@@ -2292,29 +2286,37 @@ class aecHeartbeat extends JTable
 
 		aecEventHandler::pingEvents();
 
+		// And we're done.
+		$this->fileEventlog();
+	}
+
+	function fileEventlog()
+	{
+		$database = &JFactory::getDBO();
+
 		$short	= _AEC_LOG_SH_HEARTBEAT;
 		$event	= _AEC_LOG_LO_HEARTBEAT . ' ';
 		$tags	= array( 'heartbeat' );
 
-		if ( $e ) {
-			if ( $e > 1 ) {
-				$event .= 'Expires ' . $e . ' users';
+		if ( $this->result['expired'] ) {
+			if ( $this->result['expired'] > 1 ) {
+				$event .= 'Expires ' . $this->result['expired'] . ' users';
 			} else {
 				$event .= 'Expires 1 user';
 			}
 
-			if ( $exp_actions ) {
+			if ( $this->result['pre_exp_actions'] ) {
 				$event .= ', ';
 			}
 
 			$tags[] = 'expiration';
 		}
 
-		if ( $exp_actions ) {
-			$event .= $exp_actions . ' Pre-expiration action';
-			$event .= ( $exp_actions > 1 ) ? 's' : '';
-			$event .= ' for ' . $exp_users . ' user';
-			$event .= ( $exp_users > 1 ) ? 's' : '';
+		if ( $this->result['pre_exp_actions'] ) {
+			$event .= $this->result['pre_exp_actions'] . ' Pre-expiration action';
+			$event .= ( $this->result['pre_exp_actions'] > 1 ) ? 's' : '';
+			$event .= ' for ' . $this->result['pre_expired'] . ' user';
+			$event .= ( $this->result['pre_expired'] > 1 ) ? 's' : '';
 
 			$tags[] = 'pre-expiration';
 		}
@@ -2325,7 +2327,19 @@ class aecHeartbeat extends JTable
 
 		$eventlog = new eventLog( $database );
 		$eventlog->issue( $short, implode( ',', $tags ), $event, 2 );
+	}
 
+	function deleteTempTokens()
+	{
+		$database = &JFactory::getDBO();
+
+		// Delete old token entries
+		$query = 'DELETE'
+				. ' FROM #__acctexp_temptoken'
+				. ' WHERE `created_date` <= \'' . AECToolbox::computeExpiration( "-3", 'H', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) . '\''
+				;
+		$database->setQuery( $query );
+		$database->query();
 	}
 
 }
@@ -13019,6 +13033,18 @@ class AECfetchfromDB
 		return $database->loadResult();
 	}
 
+	function UserExists( $userid )
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__users'
+				. ' WHERE `id` = \'' . $userid . '\''
+				;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+	
 }
 
 class aecSuperCommand
@@ -15503,18 +15529,10 @@ class microIntegrationHandler
 	{
 		$database = &JFactory::getDBO();
 
-		$query = 'SELECT `micro_integrations`'
-				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` = \'' . $plan_id . '\''
-				;
-		$database->setQuery( $query );
-		$mis = $database->loadResult();
+		$plan = new SubscriptionPlan( $database );
+		$plan->load( $plan_id );
 
-		if ( empty( $mis ) ) {
-			return array();
-		}
-
-		return unserialize( base64_decode( $mis ) );
+		return $plan->getMicroIntegrations();
 	}
 
 	function getPlansbyMI( $mi_id )
@@ -15523,7 +15541,6 @@ class microIntegrationHandler
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_plans'
-				. ' WHERE `micro_integrations` != \'\''
 				;
 		$database->setQuery( $query );
 		$plans = $database->loadResultArray();
@@ -15532,6 +15549,7 @@ class microIntegrationHandler
 		foreach ( $plans as $planid ) {
 			$plan = new SubscriptionPlan( $database );
 			$plan->load( $planid );
+
 			$mis = $plan->getMicroIntegrations();
 			if ( is_array( $mis ) ) {
 				if ( in_array( $mi_id, $mis ) ) {
@@ -15599,13 +15617,27 @@ class microIntegrationHandler
 		return $hacks;
 	}
 
+	function getPreExpIntegrations()
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `active` = \'1\''
+				. ' AND `pre_exp_check` > 0'
+				;
+		$database->setQuery( $query );
+		return $database->loadResultArray();
+	}
+
 	function getAutoIntegrations()
 	{
 		$database = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `auto_check` = \'1\''
+				. ' WHERE `active` = \'1\''
+				. ' AND `auto_check` = \'1\''
 				;
 		$database->setQuery( $query );
 		return $database->loadResultArray();
@@ -15678,6 +15710,19 @@ class microIntegrationHandler
 		$database->setQuery( $query );
 		return $database->loadResultArray();
 	}
+
+	function getMaxPreExpirationTime()
+	{
+		$database = &JFactory::getDBO();
+
+		$query = 'SELECT MAX(pre_exp_check)'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `active` = \'1\''
+				;
+		$database->setQuery( $query );
+		return $database->loadResult();
+	}
+
 }
 
 class MI
