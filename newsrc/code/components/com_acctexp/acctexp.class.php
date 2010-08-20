@@ -12368,22 +12368,22 @@ class Subscription extends serialParamDBTable
 			}
 
 			if ( !$overridefallback ) {
-				$this->applyUsage( $subscription_plan->params['fallback'], 'none', 1 );
+				$metaUser->focusSubscription->applyUsage( $subscription_plan->params['fallback'], 'none', 1 );
 				$this->reload();
 				return false;
 			}
 		} else {
 			// Set a Trial flag if this is an expired Trial for further reference
 			if ( strcmp( $this->status, 'Trial' ) === 0 ) {
-				$this->addParams( array( 'trialflag' => 1 ) );
+				$metaUser->focusSubscription->addParams( array( 'trialflag' => 1 ) );
 			} elseif ( is_array( $this->params ) ) {
 				if ( in_array( 'trialflag', $this->params ) ) {
-					$this->delParams( array( 'trialflag' ) );
+					$metaUser->focusSubscription->delParams( array( 'trialflag' ) );
 				}
 			}
 
-			if ( !( strcmp( $this->status, 'Expired' ) === 0 ) && !( strcmp( $this->status, 'Closed' ) === 0 ) ) {
-				$this->setStatus( 'Expired' );
+			if ( !( strcmp( $metaUser->focusSubscription->status, 'Expired' ) === 0 ) && !( strcmp( $metaUser->focusSubscription->status, 'Closed' ) === 0 ) ) {
+				$metaUser->focusSubscription->setStatus( 'Expired' );
 			}
 
 			// Call Expiration MIs
@@ -12392,6 +12392,10 @@ class Subscription extends serialParamDBTable
 				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
 			}
 		}
+
+		$this->reload();
+
+		return true;
 	}
 
 	function cancel( $invoice=null )
