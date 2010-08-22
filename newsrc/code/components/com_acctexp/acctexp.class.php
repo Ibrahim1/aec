@@ -3828,7 +3828,7 @@ class processor extends serialParamDBTable
 			$header_array["User-Agent"] = "PHP Script";
 			$header_array["Content-Type"] = "application/x-www-form-urlencoded";
 
-			if ( empty( $content ) ) {
+			if ( !empty( $content ) ) {
 				$header_array["Content-Length"] = strlen( $content );
 			}
 
@@ -3840,7 +3840,7 @@ class processor extends serialParamDBTable
 
 			$header_array["Connection"] = "Close";
 
-			if ( empty( $content ) ) {
+			if ( !empty( $content ) ) {
 				$header = "POST " . $path . " HTTP/1.0\r\n";
 			} else {
 				$header = "GET " . $path . " HTTP/1.0\r\n";
@@ -3852,7 +3852,7 @@ class processor extends serialParamDBTable
 
 			$header .= "\r\n";
 
-			if ( empty( $content ) ) {
+			if ( !empty( $content ) ) {
 				$header .= $content;
 			}
 
@@ -3927,7 +3927,7 @@ class processor extends serialParamDBTable
 		$curl_calls[CURLOPT_HTTPHEADER]		= array( 'Content-Type: text/xml' );
 		$curl_calls[CURLOPT_HEADER]			= false;
 
-		if ( empty( $content ) ) {
+		if ( !empty( $content ) ) {
 			$curl_calls[CURLOPT_POST]			= true;
 			$curl_calls[CURLOPT_POSTFIELDS]		= $content;
 		}
