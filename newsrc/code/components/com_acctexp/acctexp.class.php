@@ -3838,7 +3838,7 @@ class processor extends serialParamDBTable
 				}
 			}
 
-			$header_array["Connection"] = "close";
+			$header_array["Connection"] = "Close";
 
 			if ( !is_null( $content ) ) {
 				$header = "POST " . $path . " HTTP/1.0\r\n";

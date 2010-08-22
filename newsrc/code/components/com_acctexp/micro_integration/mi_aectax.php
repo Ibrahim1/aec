@@ -94,13 +94,17 @@ class mi_aectax
 		$locations = $this->getLocationList();
 
 		if ( !empty( $locations ) ) {
-			if ( !empty( $this->settings['custominfo'] ) ) {
-				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
-			} else {
-				$settings['exp'] = array( 'p', "", _MI_MI_AECTAX_DEFAULT_NOTICE );
+			if ( ( count( $locations ) > 1 ) || !empty( $this->settings['vat_no_request'] ) ) {
+				if ( !empty( $this->settings['custominfo'] ) ) {
+					$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+				} else {
+					$settings['exp'] = array( 'p', "", _MI_MI_AECTAX_DEFAULT_NOTICE );
+				}
 			}
 
-			if ( count( $locations ) < 5 ) {
+			if ( count( $locations ) == 1 ) {
+				// Only one location, nothing to do here
+			} elseif ( count( $locations ) < 5 ) {
 				$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
 
 				foreach ( $locations as $id => $choice ) {
@@ -124,10 +128,8 @@ class mi_aectax
 		}
 
 		if ( !empty( $this->settings['vat_no_request'] ) ) {
-			if ( !empty( $this->settings['custominfo'] ) ) {
-				$settings['vat_desc'] = array( 'p', "", _MI_MI_AECTAX_VAT_DESC_NAME );
-				$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
-			}
+			$settings['vat_desc'] = array( 'p', "", _MI_MI_AECTAX_VAT_DESC_NAME );
+			$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
 		}
 
 		return $settings;
@@ -137,9 +139,13 @@ class mi_aectax
 	{
 		$return = array();
 
-		if ( empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
-			$return['error'] = "Please make a selection";
-			return $return;
+		$locations = $this->getLocationList();
+
+		if ( count( $locations ) > 1 ) {
+			if ( empty( $request->params['location'] ) || ( $request->params['location'] == "" ) ) {
+				$return['error'] = "Please make a selection";
+				return $return;
+			}
 		}
 
 		if ( !empty( $this->settings['vat_no_request'] ) ) {
@@ -296,7 +302,7 @@ class mi_aectax
 
 					$vat_number = $this->clearVatNumber( $request->params['vat_number'] );
 
-					$check = $this->checkVatNumber( $vat_number, $request->params['location'], $vatlist );
+					$check = $this->checkVatNumber( $vat_number, $location['id'], $vatlist );
 
 					if ( $check && $this->settings['vat_removeonvalid'] ) {
 						if ( $location['mode'] == 'pseudo_subtract') {
@@ -372,6 +378,10 @@ class mi_aectax
 	function getLocation( $request )
 	{
 		$locations = $this->getLocationList();
+
+		if ( count( $locations ) == 1 ) {
+			return $locations[0];
+		}
 
 		foreach ( $locations as $location ) {
 			if ( $location['id'] == $request->params['location'] ) {
