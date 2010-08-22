@@ -1,7 +1,4 @@
-
- $process_Id {
-	
-}<?php
+<?php
 /**
  * @version $Id: acctexp.class.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -2071,8 +2068,10 @@ class aecHeartbeat extends JTable
 		}
 	}
 
-	function initVars()
+	function beat()
 	{
+		$database = &JFactory::getDBO();
+
 		$this->processors = array();
 		$this->proc_prepare = array();
 
@@ -2080,15 +2079,6 @@ class aecHeartbeat extends JTable
 								'pre_expired' => 0,
 								'pre_exp_actions' => 0
 								);
-	}
-
-	function beat()
-	{
-		$database = &JFactory::getDBO();
-
-		global $mainframe;
-
-		$this->initVars();
 
 		// Some cleanup
 		$this->deleteTempTokens();
@@ -2190,6 +2180,8 @@ class aecHeartbeat extends JTable
 
 	function getSubscribers( $pre_expiration )
 	{
+		$database = &JFactory::getDBO();
+
 		$expiration_limit = $this->getExpirationLimit( $pre_expiration );
 
 		// Select all the users that are Active and have an expiration date
@@ -2207,6 +2199,8 @@ class aecHeartbeat extends JTable
 
 	function getExpirationLimit( $pre_expiration )
 	{
+		global $mainframe;
+
 		if ( $pre_expiration ) {
 			// pre-expiration found, search limit set to the maximum pre-expiration time
 			return AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
@@ -2299,6 +2293,8 @@ class aecHeartbeat extends JTable
 
 	function deleteTempTokens()
 	{
+		global $mainframe;
+
 		$database = &JFactory::getDBO();
 
 		// Delete old token entries
@@ -12387,9 +12383,12 @@ class Subscription extends serialParamDBTable
 			$subscription_plan = false;
 		}
 
-		// Move the focus Subscription
 		$metaUser = new metaUser( $this->userid );
-		$metaUser->moveFocus( $this->id );
+
+		// Move the focus Subscription		
+		if ( !$metaUser->moveFocus( $this->id ) ) {
+			return null;
+		}
 
 		// Recognize the fallback plan, if not overridden
 		if ( !empty( $subscription_plan->params['fallback'] ) && !$overridefallback ) {

@@ -93,7 +93,8 @@ switch( strtolower( $task ) ) {
 	case 'heartbeat':
 	case 'beat':
 		// Manual Heartbeat
-		aecHeartbeat::beat();
+		$heartbeat = new aecHeartbeat( $database );
+		$heartbeat->beat();
 		echo "wolves teeth";
 		break;
 
