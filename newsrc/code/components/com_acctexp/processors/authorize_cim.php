@@ -632,8 +632,18 @@ class processor_authorize_cim extends PROFILEprocessor
 			}
 
 			$cim->setParameter( 'transaction_amount',	AECToolbox::correctAmount( $amount ) );
-
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
+			
+			if ( is_array( $request->int_var['amount'] ) ) {
+				$cim->setParameter( 'refId',			$request->invoice->id . '_r_' . $request->invoice->counter );
+			} else {
+				$cim->setParameter( 'refId',			$request->invoice->id );
+			}
+			
+			$cim->setParameter( 'order_description',	AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) );
+
+			$cim->setParameter( 'order_invoiceNumber',	$request->invoice->invoice_number);
+			$cim->setParameter( 'merchantCustomerId',	$request->invoice->userid );
 
 			if ( !empty( $request->int_var['params']['cardVV2'] ) ) {
 				$cim->setParameter( 'transactionCardCode',	trim( $request->int_var['params']['cardVV2'] ) );
