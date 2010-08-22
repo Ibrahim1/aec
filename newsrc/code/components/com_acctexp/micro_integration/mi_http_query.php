@@ -108,19 +108,11 @@ class mi_http_query
 
 		if ( $aecConfig->cfg['curl_default'] ) {
 			$response = processor::doTheCurl( $url, '' );
-			if ( $response === false ) {
-				// If curl doesn't work try using fsockopen
-				$response = processor::doTheHttp( $url, $path, '', $port );
-			}
 		} else {
 			$response = processor::doTheHttp( $url, $path, '', $port );
-			if ( $response === false ) {
-				// If fsockopen doesn't work try using curl
-				$response = processor::doTheCurl( $url, '' );
-			}
 		}
 
-		return $response;
+		return true;
 	}
 }
 ?>

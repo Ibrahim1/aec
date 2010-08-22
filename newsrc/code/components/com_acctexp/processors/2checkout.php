@@ -162,8 +162,6 @@ class processor_2checkout extends POSTprocessor
 		$return = json_decode( $this->transmitRequest( $url, $path, $content, 443, $curlextra, $header ) );
 
 		if ( !empty( $response ) ) {
-
-
 			return $return;
 		} else {
 			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );

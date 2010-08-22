@@ -3888,13 +3888,7 @@ class processor extends serialParamDBTable
 
 			fclose( $connection );
 
-			$tres = trim( $res );
-
-			if ( empty( $tres ) ) {
-				return false;
-			} else {
-				return $res;
-			}
+			return $res;
 		}
 	}
 
