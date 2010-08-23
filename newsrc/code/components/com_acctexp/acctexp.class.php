@@ -2098,6 +2098,8 @@ class aecHeartbeat extends JTable
 				$subscription->load( $sub_id );
 
 				if ( !AECfetchfromDB::UserExists( $subscription->userid ) ) {
+					unset( $subscription_list[$sid] );
+
 					continue;
 				}
 
@@ -2118,7 +2120,7 @@ class aecHeartbeat extends JTable
 					
 					unset( $subscription_list[$sid] );
 				} else {
-					continue 2;
+					break;
 				}
 			}
 
@@ -2144,7 +2146,7 @@ class aecHeartbeat extends JTable
 						$metaUser = new metaUser( $sl->userid );
 						$metaUser->moveFocus( $sl->id );
 
-						$res = $metaUser->focusSubscription->triggerPreExpiration();
+						$res = $metaUser->focusSubscription->triggerPreExpiration( $metaUser, $mi_pexp );
 
 						if ( $res ) {
 							$this->result['pre_exp_actions'] += $res;
@@ -2194,7 +2196,7 @@ class aecHeartbeat extends JTable
 				. ' ORDER BY `expiration`'
 				;
 		$database->setQuery( $query );
-		$subscription_list = $database->loadResultArray();
+		return $database->loadResultArray();
 	}
 
 	function getExpirationLimit( $pre_expiration )
@@ -6956,56 +6958,6 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		return array( 'plan' => $milist, 'inherited' => $pmilist );
-	}
-
-	function triggerPreExpiration( $metaUser, $mi_pexp )
-	{
-		$actions = 0;
-
-		// No actions on expired or recurring
-		if ( ( strcmp( $this->status, 'Expired' ) === 0 ) || $this->recurring ) {
-			return $actions;
-		}
-
-		$micro_integrations = $this->getMicroIntegrations();
-
-		if ( is_array( $micro_integrations ) ) {
-			$subscription_plan = new SubscriptionPlan( $this->_db );
-			$subscription_plan->load( $this->plan );
-
-			foreach ( $micro_integrations as $mi_id ) {
-				if ( !in_array( $mi_id, $mi_pexp ) ) {
-					continue;
-				}
-
-				$mi = new microIntegration( $this->_db );
-
-				if ( !$mi->mi_exists( $mi_id ) ) {
-					continue;
-				}
-
-				$mi->load( $mi_id );
-
-				if ( !$mi->callIntegration() ) {
-					continue;
-				}
-
-				// Do the actual pre expiration check on this MI
-				if ( $this->status != 'Trial' ) {
-					if ( $this->is_expired( $mi->pre_exp_check ) ) {
-						$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
-						if ( $result ) {
-							$actions++;
-						}
-					}
-				}
-
-
-				unset( $mi );
-			}
-		}
-
-		return $actions;
 	}
 
 	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
@@ -12515,6 +12467,58 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
+	function triggerPreExpiration( $metaUser, $mi_pexp )
+	{
+		$actions = 0;
+
+		// No actions on expired or recurring
+		if ( ( strcmp( $this->status, 'Expired' ) === 0 ) || $this->recurring ) {
+			return $actions;
+		}
+
+		$subscription_plan = new SubscriptionPlan( $this->_db );
+		$subscription_plan->load( $this->plan );
+
+		$micro_integrations = $subscription_plan->getMicroIntegrations();
+
+		if ( empty( $micro_integrations ) ) {
+			return $actions;
+		}
+
+		foreach ( $micro_integrations as $mi_id ) {
+			if ( !in_array( $mi_id, $mi_pexp ) ) {
+				continue;
+			}
+
+			$mi = new microIntegration( $this->_db );
+
+			if ( !$mi->mi_exists( $mi_id ) ) {
+				continue;
+			}
+
+			$mi->load( $mi_id );
+
+			if ( !$mi->callIntegration() ) {
+				continue;
+			}
+
+				// Do the actual pre expiration check on this MI
+			if ( $this->status != 'Trial' ) {
+				if ( $this->is_expired( $mi->pre_exp_check ) ) {
+					$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
+					if ( $result ) {
+						$actions++;
+					}
+				}
+			}
+
+
+			unset( $mi );
+		}
+
+		return $actions;
+	}
+
 	function sendEmailRegistered( $renew, $adminonly=false )
 	{
 		$database = &JFactory::getDBO();
@@ -15564,9 +15568,15 @@ class microIntegrationHandler
 			$plan->load( $planid );
 
 			$mis = $plan->getMicroIntegrations();
-			if ( is_array( $mis ) ) {
-				if ( in_array( $mi_id, $mis ) ) {
-					$plan_list[] = $planid;
+			if ( !empty( $mis ) ) {
+				if ( is_array( $mi_id ) ) {
+					if ( array_intersect( $mi_id, $mis ) ) {
+						$plan_list[] = $planid;
+					}
+				} else {
+					if ( in_array( $mi_id, $mis ) ) {
+						$plan_list[] = $planid;
+					}
 				}
 			}
 		}
