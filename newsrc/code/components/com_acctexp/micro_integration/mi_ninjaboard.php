@@ -52,7 +52,7 @@ class mi_ninjaboard
 
 		$settings = array();
 
-		$s = array( 'group', 'group_exp', 'groups_exclude' );
+		$s = array( 'group', 'remove_group', 'group_exp', 'remove_group_exp', 'groups_exclude' );
 
 		foreach ( $s as $si ) {
 			$v = null;
@@ -101,12 +101,7 @@ class mi_ninjaboard
 
 		if ( $this->settings['set_group'] ) {
 			foreach ( $this->settings['group'] as $groupid ) {
-				if ( in_array( $groupid, $groups ) ) {
-					$query = KFactory::tmp('lib.koowa.database.query');
-					$table->delete(
-						$query->where('joomla_user_id', '=', $id)->where('ninjaboard_user_group_id', '=', $groupid)
-					);
-
+				if ( !in_array( $groupid, $groups ) ) {
 					$row = KFactory::tmp('admin::com.ninjaboard.model.usergroup_maps')->getItem()->setData(array(
 						'id' => $id,
 						'ninjaboard_user_group_id' => $groupid
@@ -150,12 +145,7 @@ class mi_ninjaboard
 
 			if ( $this->settings['set_group_exp'] ) {
 				foreach ( $this->settings['group_exp'] as $groupid ) {
-					if ( in_array( $groupid, $groups ) ) {
-						$query = KFactory::tmp('lib.koowa.database.query');
-						$table->delete(
-							$query->where('joomla_user_id', '=', $id)->where('ninjaboard_user_group_id', '=', $groupid)
-						);
-
+					if ( !in_array( $groupid, $groups ) ) {
 						$row = KFactory::tmp('admin::com.ninjaboard.model.usergroup_maps')->getItem()->setData(array(
 							'id' => $id,
 							'ninjaboard_user_group_id' => $groupid
@@ -200,7 +190,8 @@ class mi_ninjaboard
 			'_MI_MI_NINJABOARD_REMOVE_DESC'
 		) as $translate)
 		{
-			$text = str_replace('_MI_MI_NINJABOARD_', '', $translate);
+			$text = str_replace( array( '_MI_MI_NINJABOARD_', '_NAME', '_DESC' ), '', $translate);
+
 			define($translate, KInflector::humanize($text));
 		}
 	}
