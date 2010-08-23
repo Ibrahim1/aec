@@ -1281,7 +1281,6 @@ function saveUser( $option, $apply=0 )
 	$post = $_POST;
 
 	$metaUser = new metaUser( $post['userid'] );
-	$established = false;
 
 	if ( $metaUser->hasSubscription && !empty( $post['id'] ) ) {
 		$metaUser->moveFocus( $post['id'] );
@@ -1304,7 +1303,7 @@ function saveUser( $option, $apply=0 )
 		// We have to reload the metaUser object because of the changes
 		$metaUser = new metaUser( $post['userid'] );
 
-		$established = true;
+		$metaUser->hasSubscription = true;
 	}
 
 	$ck_lifetime = aecGetParam( 'ck_lifetime', 'off' );
@@ -1322,7 +1321,7 @@ function saveUser( $option, $apply=0 )
 			$metaUser->focusSubscription->lifetime	= 1;
 		} elseif ( !empty( $post['expiration'] ) ) {
 			if ( $post['expiration'] != $post['expiration_check'] ) {
-				if ( strpos( $post, ':' ) === false ) {
+				if ( strpos( $post['expiration'], ':' ) === false ) {
 					$metaUser->focusSubscription->expiration = $post['expiration'] . ' 00:00:00';
 				} else {
 					$metaUser->focusSubscription->expiration = $post['expiration'];
@@ -1355,6 +1354,10 @@ function saveUser( $option, $apply=0 )
 
 	if ( !empty( $post['notes'] ) ) {
 		$metaUser->focusSubscription->customparams['notes'] = $post['notes'];
+	}
+
+	if ( $metaUser->hasSubscription ) {
+		$metaUser->focusSubscription->storeload();
 	}
 
 	$userMIs = $metaUser->getUserMIs();
@@ -1397,10 +1400,6 @@ function saveUser( $option, $apply=0 )
 		}
 
 		$metaUser->meta->storeload();
-	}
-
-	if ( $metaUser->hasSubscription || $established ) {
-		$metaUser->focusSubscription->storeload();
 	}
 
  	$limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
