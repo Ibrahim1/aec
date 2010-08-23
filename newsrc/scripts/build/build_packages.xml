@@ -8,9 +8,6 @@
 		<phing phingfile="build_component.xml" inheritRefs="true">
 			<property file="properties/com.properties" override="true" />
 		</phing>
-		<phing phingfile="build_mambot_hacks.xml" inheritRefs="true">
-			<property file="properties/mambot_hacks.properties" override="true" />
-		</phing>
 		<phing phingfile="build_module.xml" inheritRefs="true">
 			<property file="properties/module.properties" override="true" />
 		</phing>
@@ -34,20 +31,8 @@
 			</fileset>
 		</copy>
 
-		<mkdir dir="${dir.packages}/Joomla_1.0_mambot" />
-		<copy todir="${dir.packages}/Joomla_1.0_mambot">
-			<fileset dir="${dir.packages}">
-				<include name="mambot**" />
-			</fileset>
-		</copy>
-		<delete>
-			<fileset dir="${dir.packages}">
-				<include name="mambot**" />
-			</fileset>
-		</delete>
-
-		<mkdir dir="${dir.packages}/Joomla_1.5_plugins" />
-		<copy todir="${dir.packages}/Joomla_1.5_plugins">
+		<mkdir dir="${dir.packages}/plugins" />
+		<copy todir="${dir.packages}/plugins">
 			<fileset dir="${dir.packages}">
 				<include name="plugin**" />
 			</fileset>
@@ -65,8 +50,13 @@
 			</fileset>
 		</copy>
 
-		<delete dir="${dir.packages}/Joomla_1.5_plugins" />
-		<delete dir="${dir.packages}/Joomla_1.0_mambot" />
+		<copy todir="${dir.packages}/fullpack" includeemptydirs="false">
+			<fileset dir="${dir.root}/../">
+				<include name="README.txt" />
+			</fileset>
+		</copy>
+
+		<delete dir="${dir.packages}/plugins" />
 		<delete>
 			<fileset dir="${dir.packages}">
 				<include name="*acctexp*" />
