@@ -3,38 +3,24 @@ copyright 2006-2010 Copyright (C) David Deutsch
 author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
 license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 
-This package contains Free Software. The contents are (alphabetical):
-
-aecaccess_plugin_*.zip
-aecerror_plugin_*.zip
-aechacks_mambot_*.zip
-aecuser_plugin_*.zip
-com_acctexp_*.zip
-mod_acctexp_*.zip
-
-If you want to deploy this in a Joomla 1.0.x CMS, please install (in this order):
-
-com_acctexp_*.zip
-aechacks_mambot_*.zip
-mod_acctexp_*.zip
+This package contains Free Software. Please read about Free Software here: http://www.fsf.org/about/what-is-free-software
 
 If you want to deploy this in a Joomla 1.5.x CMS, please install (in this order):
 
-ALWAYS order the joomla legacy plugin BEFORE all the AEC plugins!!!
-
 com_acctexp_*.zip
-aecaccess_plugin_*.zip
-aecerror_plugin_*.zip
-aecrouting_plugin_*.zip
-aecuser_plugin_*.zip
+plugin_aecaccess_*.zip
+plugin_aecerror_*.zip
+plugin_aecrouting_*.zip
+plugin_aecuser_*.zip
 mod_acctexp_*.zip
-
 
 The individual packages are:
 
 com_acctexp_*.zip - The AccountExpirationControl Component
 
-This is the AEC Component. Please always install this first. The Component in itself will also not restrict access to content or to the system, but (for example) give you options to modify user accounts to have the system grant different access rights.
+This is the AEC Component. Please always install this first.
+
+The Component in itself will not restrict access to content or to the system, but (for example) give you options to modify user accounts to have the system grant different access rights.
 
 mod_acctexp_*.zip - The AEC Module
 
@@ -51,10 +37,6 @@ This Plugin handles error behavior of your Joomla CMS. For example, instead of r
 aecrouting_plugin_*.zip - AECrouting Plugin - Routing Manager
 
 A general purpose router for AEC related events such as registration (where, according to your settings, the AEC might redirect to the plan selection screen first).
-
-aechacks_mambot_*.zip - AEChacks Mambot - System Hacks Emulator
-
-While previously, the AEC relied on hacking (editing) core Joomla files, this mambot emulates this behavior by intercepting certain calls and redirecting them to AEC functions. It may still be necessary to hack certain files, but the majority of systems will have a complete integration with this Mambot alone.
 
 aecuser_plugin_*.zip - AECuser Plugin - User Manager
 
