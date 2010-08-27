@@ -18341,7 +18341,7 @@ class aecImport
 				$subscr_action = true;
 			}
 
-			if ( !empty( $user['expiration'] ) ) {
+			if ( !empty( $user['expiration'] ) && !empty( $metaUser->focusSubscription->id ) ) {
 				$metaUser->focusSubscription->expiration = date( 'Y-m-d H:i:s', strtotime( $user['expiration'] ) );
 
 				if ( $metaUser->focusSubscription->status == 'Trial' ) {
