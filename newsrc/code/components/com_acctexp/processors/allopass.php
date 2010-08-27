@@ -23,13 +23,14 @@ class processor_allopass extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = "allopass";
-		$info['longname'] = "Allopass";
-		$info['statement'] = "Make payments with Allopass!";
-		$info['description'] = _DESCRIPTION_ALLOPASS;
-		$info['cc_list'] = "visa,mastercard";
-		$info['recurring'] = 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= "allopass";
+		$info['longname']				= "Allopass";
+		$info['statement']				= "Make payments with Allopass!";
+		$info['description']			= _DESCRIPTION_ALLOPASS;
+		$info['currencies']				= "EUR";
+		$info['cc_list']				= "visa,mastercard";
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -37,6 +38,7 @@ class processor_allopass extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['currency']		= "EUR";
 		$settings['siteid']			= "siteid";
 		$settings['docid']			= "docid";
 		$settings['auth']			= "auth";
@@ -51,6 +53,7 @@ class processor_allopass extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= array( "list_yesno" );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['siteid']			= array( "inputC" );
 		$settings['auth']			= array( "inputC" );
 		$settings['item_name']		= array( "inputE" );

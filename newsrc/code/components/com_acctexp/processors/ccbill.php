@@ -32,6 +32,7 @@ class processor_ccbill extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['currency']			= "USD";
 		$settings['clientAccnum']		= "Account Number";
 		$settings['clientSubacc']		= "Sub Account";
 		$settings['formName']			= "Form Name";
@@ -47,6 +48,7 @@ class processor_ccbill extends POSTprocessor
 		$settings = array();
 
 		$settings = array();
+		$settings['currency']				= array( 'list_currency' );
 		$settings['clientAccnum']			= array( 'inputC' );
 		$settings['clientSubacc']			= array( 'inputC' );
 		$settings['formName']				= array( 'inputC' );

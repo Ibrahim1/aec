@@ -32,6 +32,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['currency']		= "USD";
 		$settings['login']			= 'your@login';
 		$settings['partner']		= 'partner';
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -43,11 +44,12 @@ class processor_paypal_payflow_link extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['aec_experimental']	= array( "p" );
-		$settings['login']			= array( 'inputC' );
-		$settings['partner']		= array( 'inputC' );
-		$settings['item_name']		= array( 'inputE' );
-		$settings['customparams']	= array( 'inputD' );
+		$settings['aec_experimental']	= array( 'p' );
+		$settings['currency']			= array( 'list_currency' );
+		$settings['login']				= array( 'inputC' );
+		$settings['partner']			= array( 'inputC' );
+		$settings['item_name']			= array( 'inputE' );
+		$settings['customparams']		= array( 'inputD' );
 
         $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

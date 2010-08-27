@@ -15,46 +15,47 @@ class processor_verotel extends URLprocessor
 {
 	function info()
 	{
-		$i = array();
-		$i['name']					= 'verotel';
-		$i['longname']				= _CFG_VEROTEL_LONGNAME;
-		$i['statement']				= _CFG_VEROTEL_STATEMENT;
-		$i['description']			= _CFG_VEROTEL_DESCRIPTION;
-		$i['currencies']			= 'USD';
-		$i['languages']				= 'AU,DE,FR,IT,GB,ES,US';
-		$i['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
-		$i['notify_trail_thanks']	= 1;
-		$i['recurring']				= 0;
+		$info = array();
+		$info['name']					= 'verotel';
+		$info['longname']				= _CFG_VEROTEL_LONGNAME;
+		$info['statement']				= _CFG_VEROTEL_STATEMENT;
+		$info['description']			= _CFG_VEROTEL_DESCRIPTION;
+		$info['currencies']				= 'USD';
+		$info['languages']				= 'AU,DE,FR,IT,GB,ES,US';
+		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
+		$info['notify_trail_thanks']	= 1;
+		$info['recurring']				= 0;
 
-		return $i;
+		return $info;
 	}
 
 	function settings()
 	{
-		$s = array();
-		$s['merchantid']		= "merchantid";
-		$s['resellerid']		= "resellerid";
-		$s['siteid']			= "siteid";
-		$s['secretcode']		= "secretcode";
-		$s['use_ticketsclub']	= 1;
-		$s['customparams']		= "";
+		$settings = array();
+		$settings['currency']			= "USD";
+		$settings['merchantid']			= "merchantid";
+		$settings['resellerid']			= "resellerid";
+		$settings['siteid']				= "siteid";
+		$settings['secretcode']			= "secretcode";
+		$settings['use_ticketsclub']	= 1;
+		$settings['customparams']		= "";
 
-		return $s;
+		return $settings;
 	}
 
 	function backend_settings()
 	{
-		$s = array();
+		$settings = array();
+		$settings['currency']			= array( 'list_currency' );
+		$settings['merchantid']			= array( 'inputC' );
+		$settings['resellerid']			= array( 'inputC' );
+		$settings['siteid']				= array( 'inputC' );
+		$settings['secretcode']			= array( 'inputC' );
+		$settings['use_ticketsclub']	= array( 'list_yesno' );
+		$settings['info']				= array( 'fieldset' );
+		$settings['customparams']		= array( 'inputD' );
 
-		$s['merchantid']		= array( 'inputC' );
-		$s['resellerid']		= array( 'inputC' );
-		$s['siteid']			= array( 'inputC' );
-		$s['secretcode']		= array( 'inputC' );
-		$s['use_ticketsclub']	= array( 'list_yesno' );
-		$settings['info']		= array( 'fieldset' );
-		$s['customparams']		= array( 'inputD' );
-
-		return $s;
+		return $settings;
 	}
 
 	function CustomPlanParams()

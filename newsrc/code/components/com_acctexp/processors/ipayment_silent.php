@@ -16,14 +16,14 @@ class processor_ipayment_silent extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'ipayment_silent';
-		$info['longname'] = _CFG_IPAYMENT_SILENT_LONGNAME;
-		$info['statement'] = _CFG_IPAYMENT_SILENT_STATEMENT;
-		$info['description'] = _CFG_IPAYMENT_SILENT_DESCRIPTION;
-		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['secure'] = 1;
-		$info['recurring']				= 0;
+		$info['name']			= 'ipayment_silent';
+		$info['longname']		= _CFG_IPAYMENT_SILENT_LONGNAME;
+		$info['statement']		= _CFG_IPAYMENT_SILENT_STATEMENT;
+		$info['description']	= _CFG_IPAYMENT_SILENT_DESCRIPTION;
+		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
+		$info['secure']			= 1;
+		$info['recurring']		= 0;
 
 		return $info;
 	}

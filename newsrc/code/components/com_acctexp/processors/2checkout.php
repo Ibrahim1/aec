@@ -20,6 +20,7 @@ class processor_2checkout extends POSTprocessor
 		$info['longname'] 				= _AEC_PROC_INFO_2CO_LNAME;
 		$info['statement'] 				= _AEC_PROC_INFO_2CO_STMNT;
 		$info['description'] 			= _DESCRIPTION_2CHECKOUT;
+		$info['currencies']				= "USD";
 		$info['cc_list'] 				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] 				= 2;
 		$info['actions']				= array( 'cancel' => array( 'confirm' ) );
@@ -45,6 +46,7 @@ class processor_2checkout extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['currency']		= "USD";
 		$settings['sid']			= '2checkout sid';
 		$settings['secret_word']	= 'secret_word';
 		$settings['testmode']		= 0;
@@ -60,6 +62,7 @@ class processor_2checkout extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['sid']			= array( 'inputC' );
 		$settings['secret_word']	= array( 'inputC' );
 		$settings['info']			= array( 'fieldset' );

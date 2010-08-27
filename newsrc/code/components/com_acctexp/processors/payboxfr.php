@@ -48,16 +48,16 @@ class processor_payboxfr extends POSTprocessor
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( "p" );
-		$settings['site']			= array( 'inputC' );
-		$settings['testmode']		= array( 'list_yesno' );
-		$settings['rank']			= array( 'inputC' );
-		$settings['identifiant']	= array( 'inputC' );
-		$settings['publickey']		= array( 'inputD' );
-		$settings['path']			= array( 'inputC' );
-		$settings['info']			= array( 'fieldset' );
-		$settings['currency']		= array( 'list_currency' );
-		$settings['language']		= array( 'list_language' );
-		$settings['customparams']	= array( 'inputD' );
+		$settings['site']				= array( 'inputC' );
+		$settings['testmode']			= array( 'list_yesno' );
+		$settings['rank']				= array( 'inputC' );
+		$settings['identifiant']		= array( 'inputC' );
+		$settings['publickey']			= array( 'inputD' );
+		$settings['path']				= array( 'inputC' );
+		$settings['info']				= array( 'fieldset' );
+		$settings['currency']			= array( 'list_currency' );
+		$settings['language']			= array( 'list_language' );
+		$settings['customparams']		= array( 'inputD' );
 
 		return $settings;
 	}

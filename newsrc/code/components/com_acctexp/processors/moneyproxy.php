@@ -31,6 +31,7 @@ class processor_moneyproxy extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['currency']				= "USD";
 		$settings['merchant_id']			= "merchant_id";
 		$settings['force_client_receipt']	= 0;
 		$settings['secret_key']				= "secret_key";
@@ -46,7 +47,7 @@ class processor_moneyproxy extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-
+		$settings['currency']				= array( 'list_currency' );
 		$settings['merchant_id']			= array( 'inputC' );
 		$settings['secret_key']				= array( 'inputC' );
 		$settings['force_client_receipt']	= array( 'list_yesno' );

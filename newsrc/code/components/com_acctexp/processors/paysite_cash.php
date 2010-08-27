@@ -15,42 +15,42 @@ class processor_paysite_cash extends URLprocessor
 {
 	function info()
 	{
-		$i = array();
-		$i['name']			= 'paysite_cash';
-		$i['longname']		= _CFG_PAYSITE_CASH_LONGNAME;
-		$i['statement']		= _CFG_PAYSITE_CASH_STATEMENT;
-		$i['description']	= _CFG_PAYSITE_CASH_DESCRIPTION;
-		$i['currencies']	= 'EUR,USD,CAD,GBP,CHF';
-		$i['languages']		= 'FR,US';
-		$i['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck';
-		$i['notify_trail_thanks'] = 0;
-		$i['recurring']		= 2;
+		$info = array();
+		$info['name']					= 'paysite_cash';
+		$info['longname']				= _CFG_PAYSITE_CASH_LONGNAME;
+		$info['statement']				= _CFG_PAYSITE_CASH_STATEMENT;
+		$info['description']			= _CFG_PAYSITE_CASH_DESCRIPTION;
+		$info['currencies']				= 'EUR,USD,CAD,GBP,CHF';
+		$info['languages']				= 'FR,US';
+		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
+		$info['notify_trail_thanks']	= 0;
+		$info['recurring']				= 2;
 
-		return $i;
+		return $info;
 	}
 
 	function settings()
 	{
-		$s = array();
-		$s['testmode']		= 0;
-		$s['siteid']		= "siteid";
-		$s['secret']		= "secret";
-		$s['currency']		= "EUR";
-		$s['customparams']	= "";
+		$settings = array();
+		$settings['testmode']		= 0;
+		$settings['siteid']			= "siteid";
+		$settings['secret']			= "secret";
+		$settings['currency']		= "EUR";
+		$settings['customparams']	= "";
 
-		return $s;
+		return $settings;
 	}
 
 	function backend_settings()
 	{
-		$s = array();
-		$s['testmode']		= array( 'list_yesno' );
-		$s['siteid']		= array( 'inputC' );
-		$s['secret']		= array( 'inputC' );
-		$s['currency']		= array( 'list_currency' );
-		$s['customparams']	= array( 'inputD' );
+		$settings = array();
+		$settings['testmode']		= array( 'list_yesno' );
+		$settings['siteid']			= array( 'inputC' );
+		$settings['secret']			= array( 'inputC' );
+		$settings['currency']		= array( 'list_currency' );
+		$settings['customparams']	= array( 'inputD' );
 
-		return $s;
+		return $settings;
 	}
 
 	function createGatewayLink( $request )

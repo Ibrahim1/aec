@@ -32,6 +32,7 @@ class processor_payos extends URLprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['currency']		= "USD";
 		$settings['webmaster_id']	= 'webmaster';
 		$settings['content_id']		= 'content_id';
 		$settings['secret']			= 'secret';
@@ -43,6 +44,7 @@ class processor_payos extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['currency']		= array( 'list_currency' );
 		$settings['webmaster_id']	= array( 'inputC' );
 		$settings['content_id']		= array( 'inputC' );
 		$settings['secret']			= array( 'inputC' );

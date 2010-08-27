@@ -20,6 +20,7 @@ class processor_virtualmerchant extends POSTprocessor
 		$info['longname']				= "VirtualMerchant";
 		$info['statement']				= "Make payments with VirtualMerchant!";
 		$info['description']			= 'Virtual Merchant is your global source for innovative payment solutions - the one company that clients and partners everywhere trust to securely and reliably manage their payments business.';
+		$info['currencies']				= "USD";
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,giropay";
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;
@@ -30,6 +31,7 @@ class processor_virtualmerchant extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['currency']		= "USD";
 		$settings['accountid']		= "your account id";
 		$settings['userid']			= "your user id";
 		$settings['pin']			= "your pin";
@@ -43,14 +45,15 @@ class processor_virtualmerchant extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['aec_experimental']	= array( "p" );
-		$settings['aec_insecure']		= array( "p" );
-		$settings['testmode']		= array( "list_yesno" );
-		$settings['accountid']		= array( "inputC" );
-		$settings['userid']			= array( "inputC" );
-		$settings['pin']			= array( "inputC" );
-		$settings['item_name']		= array( "inputE" );
-		$settings['customparams']	= array( 'inputD' );
+		$settings['aec_experimental']	= array( 'p' );
+		$settings['aec_insecure']		= array( 'p' );
+		$settings['testmode']			= array( 'list_yesno' );
+		$settings['currency']			= array( 'list_currency' );
+		$settings['accountid']			= array( 'inputC' );
+		$settings['userid']				= array( 'inputC' );
+		$settings['pin']				= array( 'inputC' );
+		$settings['item_name']			= array( 'inputE' );
+		$settings['customparams']		= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

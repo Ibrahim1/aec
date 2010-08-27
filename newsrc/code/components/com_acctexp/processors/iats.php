@@ -48,7 +48,7 @@ class processor_iats extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']	= 0;
-
+		$settings['currency']	= "USD";
 		$settings['agent_code']	= '';
 		$settings['password']	= '';
 
@@ -62,11 +62,11 @@ class processor_iats extends XMLprocessor
 		$settings['currency']		= array( 'list_currency' );
 		$settings['server_type']	= array( 'list_yesno' );
 
-		$settings['agent_code']	= array( 'inputC' );
-		$settings['password']	= array( 'inputC' );
+		$settings['agent_code']		= array( 'inputC' );
+		$settings['password']		= array( 'inputC' );
 
-		$settings['exp_amount']	= array( 'inputC' );
-		$settings['exp_unit']	= array( 'list' );
+		$settings['exp_amount']		= array( 'inputC' );
+		$settings['exp_unit']		= array( 'list' );
 
 		$perunit = array();
 		$perunit[] = mosHTML::makeOption( 'M', _PAYPLAN_PERUNIT3 );

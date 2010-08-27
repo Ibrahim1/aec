@@ -30,6 +30,7 @@ class processor_ideal_advanced extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
+		$settings['currency']		= "EUR";
 		$settings['testmodestage']  = 0;
 		$settings['secure_path']    = '/full/system/path/to/components/com_acctexp/processors/includes/security';
 		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -40,6 +41,7 @@ class processor_ideal_advanced extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['testmodestage']  = array( 'inputA') ;
 		$settings['secure_path']    = array( 'inputD') ;
 		$settings['description']	= array( 'inputE' );

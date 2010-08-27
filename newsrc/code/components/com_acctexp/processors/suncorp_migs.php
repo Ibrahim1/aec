@@ -21,6 +21,7 @@ class processor_suncorp_migs extends URLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
+		$settings['currency']			= "USD";
 		$settings['vpc_Version']		= "1";
 		$settings['vpc_Command']		= "pay";
 		$settings['vpc_AccessCode']		= "ACCESSCODE";
@@ -36,14 +37,15 @@ class processor_suncorp_migs extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['aec_experimental']	= array( "p" );
-		$settings['testmode']			= array( "list_yesno" );
-		$settings['vpc_Version']		= array( "inputC" );
-		$settings['vpc_Command']		= array( "inputC" );
-		$settings['vpc_AccessCode']		= array( "inputC" );
-		$settings['vpc_Merchant']		= array( "inputC" );
-		$settings['vpc_Locale']			= array( "list_language" );
-		$settings['vpc_TicketNo']		= array( "inputC" );
+		$settings['aec_experimental']	= array( 'p' );
+		$settings['testmode']			= array( 'list_yesno' );
+		$settings['currency']			= array( 'list_currency' );
+		$settings['vpc_Version']		= array( 'inputC' );
+		$settings['vpc_Command']		= array( 'inputC' );
+		$settings['vpc_AccessCode']		= array( 'inputC' );
+		$settings['vpc_Merchant']		= array( 'inputC' );
+		$settings['vpc_Locale']			= array( 'list_language' );
+		$settings['vpc_TicketNo']		= array( 'inputC' );
 		$settings['customparams']		= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );

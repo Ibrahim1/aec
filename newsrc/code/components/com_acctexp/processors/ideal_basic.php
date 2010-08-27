@@ -15,52 +15,52 @@ class processor_ideal_basic extends POSTprocessor
 {
 	function info()
 	{
-		$i = array();
-		$i['name']					= 'ideal_basic';
-		$i['longname']				= _CFG_IDEAL_BASIC_LONGNAME;
-		$i['statement']				= _CFG_IDEAL_BASIC_STATEMENT;
-		$i['description']			= _CFG_IDEAL_BASIC_DESCRIPTION;
-		$i['currencies']			= 'EUR';
-		$i['languages']				= 'NL';
-		$i['cc_list']				= 'rabobank,ing';
-		$i['recurring']				= 0;
-		$i['notify_trail_thanks']	= 1;
+		$info = array();
+		$info['name']					= 'ideal_basic';
+		$info['longname']				= _CFG_IDEAL_BASIC_LONGNAME;
+		$info['statement']				= _CFG_IDEAL_BASIC_STATEMENT;
+		$info['description']			= _CFG_IDEAL_BASIC_DESCRIPTION;
+		$info['currencies']				= 'EUR';
+		$info['languages']				= 'NL';
+		$info['cc_list']				= 'rabobank,ing';
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
-		return $i;
+		return $info;
 	}
 
 	function settings()
 	{
-		$s = array();
-		$s['merchantid']	= "merchantid";
-		$s['testmode']		= 0;
-		$s['currency']		= 'EUR';
-		$s['testmodestage']	= 1;
-		$s['bank']			= "ing";
-		$s['subid']			= "0";
-		$s['language']		= "NL";
-		$s['key']			= "key";
-		$s['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$s['customparams']	= "";
+		$settings = array();
+		$settings['merchantid']		= "merchantid";
+		$settings['testmode']		= 0;
+		$settings['currency']		= 'EUR';
+		$settings['testmodestage']	= 1;
+		$settings['bank']			= "ing";
+		$settings['subid']			= "0";
+		$settings['language']		= "NL";
+		$settings['key']			= "key";
+		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']	= "";
 
-		return $s;
+		return $settings;
 	}
 
 	function backend_settings()
 	{
-		$s = array();
-		$s['aec_experimental']	= array( "p" );
-		$s['aec_insecure']		= array( "p" );
-		$s['merchantid']		= array( 'inputC' );
-		$s['testmode']			= array( 'list_yesno' );
-		$s['currency']			= array( 'list_currency' );
-		$s['testmodestage']		= array( 'inputC' );
-		$s['bank']				= array( 'list' );
-		$s['subid']				= array( 'inputC' );
-		$s['language']			= array( 'list_language' );
-		$s['key']				= array( 'inputC' );
-		$s['description']		= array( 'inputE' );
-		$s['customparams']		= array( 'inputD' );
+		$settings = array();
+		$settings['aec_experimental']	= array( "p" );
+		$settings['aec_insecure']		= array( "p" );
+		$settings['merchantid']			= array( 'inputC' );
+		$settings['testmode']			= array( 'list_yesno' );
+		$settings['currency']			= array( 'list_currency' );
+		$settings['testmodestage']		= array( 'inputC' );
+		$settings['bank']				= array( 'list' );
+		$settings['subid']				= array( 'inputC' );
+		$settings['language']			= array( 'list_language' );
+		$settings['key']				= array( 'inputC' );
+		$settings['description']		= array( 'inputE' );
+		$settings['customparams']		= array( 'inputD' );
 
  		$banks = array();
 		$banks[] = mosHTML::makeOption ( "ing", "ING" );
@@ -72,9 +72,9 @@ class processor_ideal_basic extends POSTprocessor
 			$ba = "ing";
 		}
 
-		$s['lists']['bank']	= mosHTML::selectList( $banks, 'bank', 'size="2"', 'value', 'text', $ba );
+		$settings['lists']['bank']	= mosHTML::selectList( $banks, 'bank', 'size="2"', 'value', 'text', $ba );
 
-		return $s;
+		return $settings;
 	}
 
 	function createGatewayLink( $request )

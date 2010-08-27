@@ -32,18 +32,15 @@ class processor_netdebit extends URLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode']		= 0;
-
-		$settings['content_id']		= 'content_id';
-		$settings['pid']			= 'pid';
-		$settings['sid']			= 'sid';
-		$settings['type']			= 1;
-
-		$settings['secret']			= 'secret';
-
+		$settings['testmode']				= 0;
+		$settings['currency']				= "USD";
+		$settings['content_id']				= 'content_id';
+		$settings['pid']					= 'pid';
+		$settings['sid']					= 'sid';
+		$settings['type']					= 1;
+		$settings['secret']					= 'secret';
 		$settings['javascript_checkout']	= 0;
-
-		$settings['customparams']	= "";
+		$settings['customparams']			= "";
 
 		return $settings;
 	}
@@ -51,18 +48,15 @@ class processor_netdebit extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
-
-		$settings['content_id']		= array( 'inputC' );
-		$settings['pid']			= array( 'inputC' );
-		$settings['sid']			= array( 'inputC' );
-		$settings['type']			= array( 'list' );
-
-		$settings['secret']			= array( 'inputC' );
-
+		$settings['testmode']				= array( 'list_yesno' );
+		$settings['currency']				= array( 'list_currency' );
+		$settings['content_id']				= array( 'inputC' );
+		$settings['pid']					= array( 'inputC' );
+		$settings['sid']					= array( 'inputC' );
+		$settings['type']					= array( 'list' );
+		$settings['secret']					= array( 'inputC' );
 		$settings['javascript_checkout']	= array( 'list_yesno' );
-
-		$settings['customparams']	= array( 'inputD' );
+		$settings['customparams']			= array( 'inputD' );
 
  		$typelist = array();
 		$typelist[0] = mosHTML::makeOption ( 1, _CFG_NETDEBIT_TYPE_LISTITEM_ELV );

@@ -16,13 +16,13 @@ class processor_airtoy extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'airtoy';
-		$info['longname'] = _CFG_AIRTOY_LONGNAME;
-		$info['statement'] = _CFG_AIRTOY_STATEMENT;
-		$info['description'] = _CFG_AIRTOY_DESCRIPTION;
-		$info['currencies'] = 'EUR';
-		$info['cc_list'] = "";
-		$info['recurring'] = 0;
+		$info['name']			= 'airtoy';
+		$info['longname']		= _CFG_AIRTOY_LONGNAME;
+		$info['statement']		= _CFG_AIRTOY_STATEMENT;
+		$info['description']	= _CFG_AIRTOY_DESCRIPTION;
+		$info['currencies']		= 'EUR';
+		$info['cc_list']		= "";
+		$info['recurring']		= 0;
 
 		return $info;
 	}
@@ -30,9 +30,10 @@ class processor_airtoy extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode']			= 0;
-		$settings['phone_number']		= "222222";
-		$settings['response']			= "";
+		$settings['testmode']		= 0;
+		$settings['currency']		= "EUR";
+		$settings['phone_number']	= "222222";
+		$settings['response']		= "";
 		$settings['secret']			= "";
 
 		return $settings;
@@ -41,11 +42,11 @@ class processor_airtoy extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array("list_yesno");
-		$settings['phone_number']	= array("inputC");
-
-		$settings['response']		= array("inputE");
-		$settings['secret']			= array("inputC");
+		$settings['testmode']		= array( "list_yesno" );
+		$settings['currency']		= array( 'list_currency' );
+		$settings['phone_number']	= array( "inputC" );
+		$settings['response']		= array( "inputE" );
+		$settings['secret']			= array( "inputC" );
 
 		return $settings;
 	}

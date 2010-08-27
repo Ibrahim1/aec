@@ -20,6 +20,7 @@ class processor_viaklix extends POSTprocessor
 		$info['longname']				= "Viaklix";
 		$info['statement']				= "Make payments with Viaklix!";
 		$info['description']			= _DESCRIPTION_VIAKLIX;
+		$info['currencies']				= "USD";
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,giropay";
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;
@@ -30,7 +31,7 @@ class processor_viaklix extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-
+		$settings['currency']		= "USD";
 		$settings['accountid']		= "your account id";
 		$settings['userid']			= "your user id";
 		$settings['pin']			= "your pin";
@@ -44,12 +45,12 @@ class processor_viaklix extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-
-		$settings['testmode']		= array( "list_yesno" );
-		$settings['accountid']		= array( "inputC" );
-		$settings['userid']			= array( "inputC" );
-		$settings['pin']			= array( "inputC" );
-		$settings['item_name']		= array( "inputE" );
+		$settings['testmode']		= array( 'list_yesno' );
+		$settings['currency']		= array( 'list_currency' );
+		$settings['accountid']		= array( 'inputC' );
+		$settings['userid']			= array( 'inputC' );
+		$settings['pin']			= array( 'inputC' );
+		$settings['item_name']		= array( 'inputE' );
 		$settings['customparams']	= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );

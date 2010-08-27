@@ -16,14 +16,14 @@ class processor_paycom extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = "paycom";
-		$info['longname'] = "paycom";
-		$info['statement'] = "Make payments with Paycom!";
-		$info['description'] = "paycom";
-		$info['cc_list'] = "visa,mastercard,discover,echeck,jcb";
-		$info['currencies'] = "USD";
-		$info['recurring'] = 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= "paycom";
+		$info['longname']				= "paycom";
+		$info['statement']				= "Make payments with Paycom!";
+		$info['description']			= "paycom";
+		$info['currencies']				= "USD";
+		$info['cc_list']				= "visa,mastercard,discover,echeck,jcb";
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -31,6 +31,7 @@ class processor_paycom extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['currency']		= "USD";
 		$settings['co_code']		= "Company Code";
 		$settings['product_id']		= "Product Code";
 		$settings['secretWord']		= "Secret Word";
@@ -42,6 +43,7 @@ class processor_paycom extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
+		$settings['currency']		= array( 'list_currency' );
 		$settings['co_code']		= array( "inputC","Company Code","Three (3) alphanumeric ID assigned by Paycom.net" );
 		$settings['product_id']		= array( "inputC","Product Code","Alphanumeric product code assigned by Paycom.net" );
 		$settings['secretWord']		= array( "inputC","Secret Word","Used to encrypt and protect transactions" );

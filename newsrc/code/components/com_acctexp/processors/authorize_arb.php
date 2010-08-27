@@ -16,15 +16,15 @@ class processor_authorize_arb extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'authorize_arb';
-		$info['longname'] = _CFG_AUTHORIZE_ARB_LONGNAME;
-		$info['statement'] = _CFG_AUTHORIZE_ARB_STATEMENT;
-		$info['description'] = _CFG_AUTHORIZE_ARB_DESCRIPTION;
-		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] = 1;
-		$info['actions'] = array( 'cancel' => array( 'confirm' ) );
-		$info['secure'] = 1;
+		$info['name']			= 'authorize_arb';
+		$info['longname']		= _CFG_AUTHORIZE_ARB_LONGNAME;
+		$info['statement']		= _CFG_AUTHORIZE_ARB_STATEMENT;
+		$info['description']	= _CFG_AUTHORIZE_ARB_DESCRIPTION;
+		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
+		$info['recurring']		= 1;
+		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
+		$info['secure']			= 1;
 
 		return $info;
 	}
@@ -45,16 +45,16 @@ class processor_authorize_arb extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['login']				= "login";
-		$settings['transaction_key']	= "transaction_key";
-		$settings['testmode']			= 0;
+		$settings['login']					= "login";
+		$settings['transaction_key']		= "transaction_key";
+		$settings['testmode']				= 0;
 		$settings['ignore_empty_invoices']	= 0;
-		$settings['currency']			= "USD";
-		$settings['promptAddress']		= 0;
-		$settings['totalOccurrences']	= 12;
-		$settings['trialOccurrences']	= 1;
+		$settings['currency']				= "USD";
+		$settings['promptAddress']			= 0;
+		$settings['totalOccurrences']		= 12;
+		$settings['trialOccurrences']		= 1;
 		$settings['useSilentPostResponse']	= 1;
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -62,17 +62,17 @@ class processor_authorize_arb extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array("list_yesno");
-		$settings['ignore_empty_invoices']	= array("list_yesno");
-		$settings['login'] 				= array("inputC");
-		$settings['transaction_key']	= array("inputC");
-		$settings['currency']			= array("list_currency");
-		$settings['promptAddress']		= array("list_yesno");
-		$settings['totalOccurrences']	= array("inputA");
-		$settings['trialOccurrences']	= array("inputA");
-		$settings['useSilentPostResponse']		= array("list_yesno");
-		$settings['SilentPost_info']			= array( 'fieldset' );
-		$settings['item_name']			= array("inputE");
+		$settings['testmode']				= array( "list_yesno" );
+		$settings['ignore_empty_invoices']	= array( "list_yesno" );
+		$settings['login'] 					= array( "inputC" );
+		$settings['transaction_key']		= array( "inputC" );
+		$settings['currency']				= array( "list_currency" );
+		$settings['promptAddress']			= array( "list_yesno" );
+		$settings['totalOccurrences']		= array( "inputA" );
+		$settings['trialOccurrences']		= array( "inputA" );
+		$settings['useSilentPostResponse']	= array( "list_yesno" );
+		$settings['SilentPost_info']		= array( "fieldset" );
+		$settings['item_name']				= array( "inputE" );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

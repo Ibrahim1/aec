@@ -48,13 +48,13 @@ class processor_onebip extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['aec_insecure']		= array( "p" );
-		$settings['username']	= array( 'inputC' );
-		$settings['site_id']	= array( 'inputC' );
-		$settings['currency']	= array( 'list_currency' );
-		$settings['country']	= array( 'list_language' );
-		$settings['secret']		= array( 'inputC' );
-		$settings['item_name']	= array( 'inputE' );
+		$settings['aec_insecure']	= array( 'p' );
+		$settings['username']		= array( 'inputC' );
+		$settings['site_id']		= array( 'inputC' );
+		$settings['currency']		= array( 'list_currency' );
+		$settings['country']		= array( 'list_language' );
+		$settings['secret']			= array( 'inputC' );
+		$settings['item_name']		= array( 'inputE' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

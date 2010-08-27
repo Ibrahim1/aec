@@ -16,14 +16,14 @@ class processor_psigate extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = "psigate";
-		$info['longname'] = "psigate";
-		$info['statement'] = "Make payments with PSIGate!";
-		$info['description'] = "PSIGate";
-		$info['cc_list'] = "visa,mastercard,discover,echeck,jcb";
-		$info['currencies'] = "USD,CAD";
-		$info['recurring'] = 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= "psigate";
+		$info['longname']				= "psigate";
+		$info['statement']				= "Make payments with PSIGate!";
+		$info['description']			= "PSIGate";
+		$info['cc_list']				= "visa,mastercard,discover,echeck,jcb";
+		$info['currencies']				= "USD,CAD";
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -32,6 +32,7 @@ class processor_psigate extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
+		$settings['currency']		= "USD";
 		$settings['StoreKey']		= "StoreKey";
 		$settings['secretWord']		= "Secret Word";
 		$settings['customparams']	= "";
@@ -44,6 +45,7 @@ class processor_psigate extends POSTprocessor
 		$settings = array();
 
 		$settings['testmode']		= array( "list_yesno", "Test Mode", "Operate in PSIGate TEST mode" );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['StoreKey']		= array( "inputC","Store Key","Your Alphanumeric ID assigned by PSIGate" );
 		$settings['secretWord']		= array( "inputC","Secret Word","Used to encrypt and protect transactions" );
 		$settings['customparams']	= array( 'inputD' );

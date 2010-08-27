@@ -30,6 +30,7 @@ class processor_netpay extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
+		$settings['currency']		= "USD";
 		$settings['custId']			= "custid";
 		$settings['password']		= "password";
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -43,6 +44,7 @@ class processor_netpay extends POSTprocessor
 		$settings = array();
 
 		$settings['testmode']			= array( 'list_yesno' );
+		$settings['currency']			= array( 'list_currency' );
 		$settings['custId']				= array( 'inputC' );
 		$settings['password']			= array( 'inputC' );
 		$settings['item_name']			= array( 'inputE' );

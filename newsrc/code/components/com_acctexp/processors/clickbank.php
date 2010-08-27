@@ -32,11 +32,12 @@ class processor_clickbank extends URLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode']			= 0;
-		$settings['publisher']			= 'clickbank';
-		$settings['secret_key']			= 'secret_key';
-		$settings['info']				= "";
-		$settings['customparams']		= "";
+		$settings['testmode']		= 0;
+		$settings['currency']		= "USD";
+		$settings['publisher']		= 'clickbank';
+		$settings['secret_key']		= 'secret_key';
+		$settings['info']			= "";
+		$settings['customparams']	= "";
 
 		return $settings;
 	}
@@ -44,11 +45,12 @@ class processor_clickbank extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( 'list_yesno' );
-		$settings['publisher']			= array( 'inputC' );
-		$settings['secret_key']			= array( 'inputC' );
-		$settings['info']				= array( 'fieldset' );
-		$settings['customparams']		= array( 'inputD' );
+		$settings['currency']		= array( 'list_currency' );
+		$settings['testmode']		= array( 'list_yesno' );
+		$settings['publisher']		= array( 'inputC' );
+		$settings['secret_key']		= array( 'inputC' );
+		$settings['info']			= array( 'fieldset' );
+		$settings['customparams']	= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

@@ -16,16 +16,16 @@ class processor_hsbc extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'hsbc';
-		$info['longname'] = _CFG_HSBC_LONGNAME;
-		$info['statement'] = _CFG_HSBC_STATEMENT;
-		$info['description'] = _CFG_HSBC_DESCRIPTION;
-		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] = 2;
-		$info['actions'] = array( 'cancel' => array( 'confirm' ) );
-		$info['secure'] = 1;
-		$info['recurring_buttons']		= 2;
+		$info['name']				= 'hsbc';
+		$info['longname']			= _CFG_HSBC_LONGNAME;
+		$info['statement']			= _CFG_HSBC_STATEMENT;
+		$info['description']		= _CFG_HSBC_DESCRIPTION;
+		$info['currencies']			= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['cc_list']			= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
+		$info['recurring']			= 2;
+		$info['actions']			= array( 'cancel' => array( 'confirm' ) );
+		$info['secure']				= 1;
+		$info['recurring_buttons']	= 2;
 
 		return $info;
 	}
@@ -65,16 +65,17 @@ class processor_hsbc extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array("list_yesno");
-		$settings['clientid'] 			= array("inputC");
-		$settings['name'] 				= array("inputC");
-		$settings['password'] 			= array("inputC");
-		$settings['pas']				= array("list_yesno");
-		$settings['pas_id'] 			= array("inputC");
-		$settings['pas_url'] 			= array("inputC");
-		$settings['currency']			= array("list_currency");
-		$settings['promptAddress']		= array("list_yesno");
-		$settings['item_name']			= array("inputE");
+		$settings['testmode']			= array( 'list_yesno' );
+		$settings['currency']			= array( 'list_currency' );
+		$settings['clientid'] 			= array( 'inputC' );
+		$settings['name'] 				= array( 'inputC' );
+		$settings['password'] 			= array( 'inputC' );
+		$settings['pas']				= array( 'list_yesno' );
+		$settings['pas_id'] 			= array( 'inputC' );
+		$settings['pas_url'] 			= array( 'inputC' );
+		$settings['currency']			= array( 'list_currency' );
+		$settings['promptAddress']		= array( 'list_yesno' );
+		$settings['item_name']			= array( 'inputE' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

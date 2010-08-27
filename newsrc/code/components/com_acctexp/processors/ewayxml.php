@@ -20,6 +20,7 @@ class processor_ewayxml extends XMLprocessor
 		$info['longname']		= _CFG_EWAYXML_LONGNAME;
 		$info['statement']		= _CFG_EWAYXML_STATEMENT;
 		$info['description']	= _CFG_EWAYXML_DESCRIPTION;
+		$info['currencies']		= "AUD";
 		$info['cc_list']		= 'visa,mastercard';
 		$info['recurring']		= 0;
 
@@ -30,12 +31,13 @@ class processor_ewayxml extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
-		$settings['custId']		= "87654321";
+		$settings['currency']		= "USD";
+		$settings['custId']			= "87654321";
 		$settings['tax']			= "10";
-		$settings['testAmount']	= "00";
-		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['testAmount']		= "00";
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
-		$settings['SiteTitle']	= '';
+		$settings['SiteTitle']		= '';
 
 		return $settings;
 	}
@@ -44,6 +46,7 @@ class processor_ewayxml extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']	= array( 'list_yesno' );
+		$settings['currency']	= array( 'list_currency' );
 		$settings['custId']		= array( 'inputC' );
 		$settings['SiteTitle']	= array( 'inputC' );
 		$settings['item_name']	= array( 'inputE' );

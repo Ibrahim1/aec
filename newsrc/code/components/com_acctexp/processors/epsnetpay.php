@@ -16,13 +16,14 @@ class processor_epsnetpay extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = "epsnetpay";
-		$info['longname'] = "epsNetpay";
-		$info['statement'] = "Bezahlen sie mit epsNetpay!";
-		$info['description'] = _DESCRIPTION_EPSNETPAY;
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,giropay";
-		$info['recurring'] = 0;
-		$info['notify_trail_thanks'] = 1;
+		$info['name']					= "epsnetpay";
+		$info['longname']				= "epsNetpay";
+		$info['statement']				= "Bezahlen sie mit epsNetpay!";
+		$info['description']			= _DESCRIPTION_EPSNETPAY;
+		$info['currencies']				= "EUR";
+		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,giropay";
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}

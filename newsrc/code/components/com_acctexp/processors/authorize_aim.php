@@ -16,15 +16,15 @@ class processor_authorize_aim extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name'] = 'authorize_aim';
-		$info['longname'] = _CFG_AUTHORIZE_AIM_LONGNAME;
-		$info['statement'] = _CFG_AUTHORIZE_AIM_STATEMENT;
-		$info['description'] = _CFG_AUTHORIZE_AIM_DESCRIPTION;
-		$info['currencies'] = AECToolbox::aecCurrencyField( true, true, true, true );
-		$info['cc_list'] = "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['recurring'] = 0;
-		$info['actions'] = array( 'cancel' => array( 'confirm' ) );
-		$info['secure'] = 1;
+		$info['name']			= 'authorize_aim';
+		$info['longname']		= _CFG_AUTHORIZE_AIM_LONGNAME;
+		$info['statement']		= _CFG_AUTHORIZE_AIM_STATEMENT;
+		$info['description']	= _CFG_AUTHORIZE_AIM_DESCRIPTION;
+		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
+		$info['recurring']		= 0;
+		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
+		$info['secure']			= 1;
 
 		return $info;
 	}

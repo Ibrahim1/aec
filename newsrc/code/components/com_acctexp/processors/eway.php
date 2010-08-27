@@ -20,6 +20,7 @@ class processor_eway extends POSTprocessor
 		$info['longname']				= _CFG_EWAY_LONGNAME;
 		$info['statement']				= _CFG_EWAY_STATEMENT;
 		$info['description']			= _CFG_EWAY_DESCRIPTION;
+		$info['currencies']				= "AUD";
 		$info['cc_list']				= 'visa,mastercard';
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;
@@ -31,6 +32,7 @@ class processor_eway extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
+		$settings['currency']		= "USD";
 		$settings['custId']			= "87654321";
 		$settings['tax']			= "10";
 		$settings['autoRedirect']	= 1;
@@ -45,6 +47,7 @@ class processor_eway extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['custId']			= array( 'inputC' );
 		$settings['autoRedirect']	= array( 'list_yesno' ) ;
 		$settings['SiteTitle']		= array( 'inputC' );
