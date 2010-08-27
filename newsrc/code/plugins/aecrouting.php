@@ -146,7 +146,13 @@ class plgSystemAECrouting extends JPlugin
 					$content = array();
 					$temptoken->content['username']		= $_REQUEST['username'];
 					$temptoken->content['password']		= $_REQUEST['password'];
-					$temptoken->content['password2']	= $_REQUEST['password2'];
+
+					if ( isset( $_REQUEST['password2'] ) ) {
+						$temptoken->content['password2']	= $_REQUEST['password2'];
+					} elseif ( isset( $_REQUEST['password__verify'] ) ) {
+						$temptoken->content['password2']	= $_REQUEST['password__verify'];
+					}
+
 					$temptoken->content['email']		= $_REQUEST['email'];
 
 					if ( $vars['k2_regsv'] ) {
