@@ -585,7 +585,7 @@ function subscribe( $option )
 			// Get required system objects
 			$user 		= clone(JFactory::getUser());
 
-			$duplicationcheck = checkDuplicateUsernameEmail( $username, $email );
+			$duplicationcheck = checkUsernameEmail( $username, $email );
 
 			// Bind the post array to the user object
 			if ( !$user->bind( JRequest::get('post'), 'usertype' ) || ( $duplicationcheck !== true ) ) {
@@ -622,7 +622,7 @@ function subscribe( $option )
 			}
 		} elseif ( empty( $token ) ) {
 			if ( isset( $_POST['username'] ) && isset( $_POST['email'] ) ) {
-				$check = checkDuplicateUsernameEmail( $username, $email );
+				$check = checkUsernameEmail( $username, $email );
 				if ( $check !== true ) {
 					return $check;
 				}
@@ -639,7 +639,7 @@ function subscribe( $option )
 			$passthrough	= false;
 		} elseif ( empty( $userid ) ) {
 			if ( !empty( $_POST['username'] ) && !empty( $_POST['email'] ) ) {
-				$check = checkDuplicateUsernameEmail( $username, $email );
+				$check = checkUsernameEmail( $username, $email );
 				if ( $check !== true ) {
 					return $check;
 				}
@@ -662,8 +662,21 @@ function subscribe( $option )
 	}
 }
 
-function checkDuplicateUsernameEmail( $username, $email )
+function checkUsernameEmail( $username, $email )
 {
+	// Implementing the Javascript check in case that is broken on the site
+	$regex = eregi( "[\<|\>|\"|\'|\%|\;|\(|\)|\&]", $username );
+
+	if ( ( strlen( $username ) < 2 ) || $regex ) {
+		if ( !aecJoomla15check() ) {
+			mosErrorAlert( _REGWARN_INUSE );
+			return false;
+		} else {
+			mosErrorAlert( JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 ) );
+			return JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 );
+		}
+	}
+
 	global $mainframe;
 
 	$database = &JFactory::getDBO();
