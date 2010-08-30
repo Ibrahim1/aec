@@ -115,8 +115,6 @@ class mi_htaccess
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
-
 		$ht = new htaccess();
 		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
 		$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
@@ -128,15 +126,10 @@ class mi_htaccess
 		if ( $this->settings['use_md5'] ) {
 			$ht->addUser( $request->metaUser->cmsUser->username, $request->metaUser->cmsUser->password );
 		} else {
-			$apachepw = new apachepw( $database );
+			$apachepw = $this->getApachePW( $request->metaUser->userid );
 
-			$apwid = $apachepw->getIDbyUserID( $request->metaUser->userid );
-
-			if ( $apwid ) {
-				$apachepw->load( $apwid );
-			} else {
-				// notify User? Admin?
-				return false;
+			if ( empty( $apachepw->id ) ) {
+				$apachepw->
 			}
 
 			$ht->addUser( $request->metaUser->cmsUser->username, $apachepw->apachepw );
@@ -148,37 +141,11 @@ class mi_htaccess
 
 	function on_userchange_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$apachepw = $this->getApachePW( $request->row->id );
 
-		$apachepw = new apachepw( $database );
-		$apwid = $apachepw->getIDbyUserID( $request->row->id );
+		$password = $this->getPWrequest( $request, $apachepw );
 
-		if ( $apwid ) {
-			$apachepw->load( $apwid );
-		} else {
-			$apachepw->load(0);
-			$apachepw->userid = $request->row->id;
-		}
-
-		if ( isset( $request->post['password_clear'] ) ) {
-			$password = crypt( $request->post['password_clear'] );
-
-		} elseif ( !empty( $request->post['password'] ) ) {
-			$password = $request->post['password'];
-		} elseif ( !empty( $request->post['password2'] ) ) {
-			$password = $request->post['password2'];
-		} elseif ( !$apwid ) {
-			// No new password and no existing password - nothing to be done here
-			return;
-		}
-
-		if ( !empty( $this->settings['use_apachemd5'] ) ) {
-			$apachepw->apachepw = $this->crypt_apr1_md5( $password );
-		} elseif( $this->settings['use_md5'] ) {
-			$apachepw->apachepw = md5( $password );
-		} else {
-			$apachepw->apachepw = crypt( $password );
-		}
+		$apachepw->apachepw = $this->makePassword( $password );
 
 		$apachepw->check();
 		$apachepw->store();
@@ -217,6 +184,48 @@ class mi_htaccess
 			return true;
 		}
 		return false;
+	}
+
+	function getPWrequest( $request, $apachepw )
+	{
+		if ( isset( $request->post['password_clear'] ) ) {
+			$password = crypt( $request->post['password_clear'] );
+		} elseif ( !empty( $request->post['password'] ) ) {
+			$password = $request->post['password'];
+		} elseif ( !empty( $request->post['password2'] ) ) {
+			$password = $request->post['password2'];
+		} elseif ( empty( $apachepw->id ) ) {
+			// No new password and no existing password - nothing to be done here
+			return;
+		}
+	}
+
+	function getApachePW( $userid )
+	{
+		$database = &JFactory::getDBO();
+
+		$apachepw = new apachepw( $database );
+		$apwid = $apachepw->getIDbyUserID( $userid );
+
+		if ( $apwid ) {
+			$apachepw->load( $apwid );
+		} else {
+			$apachepw->load(0);
+			$apachepw->userid = $userid;
+		}
+
+		return $apachepw;
+	}
+
+	function makePassword( $cleartext )
+	{
+		if ( !empty( $this->settings['use_apachemd5'] ) ) {
+			return $this->crypt_apr1_md5( $cleartext );
+		} elseif( $this->settings['use_md5'] ) {
+			return md5( $cleartext );
+		} else {
+			return crypt( $cleartext );
+		}
 	}
 
 	function crypt_apr1_md5( $plainpasswd )
