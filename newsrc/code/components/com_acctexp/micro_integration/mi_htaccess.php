@@ -92,12 +92,12 @@ class mi_htaccess
 		$newparams['mi_folder_user_fullpath']	= $newparams['mi_passwordfolder'] . "/.htuser" . str_replace( "/", "_", str_replace( ".", "/", $newparams['mi_folder'] ) );
 
 		if ( !file_exists( $newparams['mi_folder_fullpath'] ) && !$params['rebuild'] ) {
-			$ht = new htaccess();
-			$ht->setFPasswd( $newparams['mi_folder_user_fullpath'] );
-			$ht->setFHtaccess( $newparams['mi_folder_fullpath'] );
+			$ht = $this->getHTAccess();
+
 			if( isset( $newparams['mi_name'] ) ) {
 				$ht->setAuthName( $newparams['mi_name'] );
 			}
+
 			$ht->addLogin();
 		}
 
@@ -108,16 +108,13 @@ class mi_htaccess
 	{
 		$database = &JFactory::getDBO();
 
-		$ht = new htaccess();
-		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
+		$ht = $this->getHTAccess();
 		$ht->delUser( $request->metaUser->cmsUser->username );
 	}
 
 	function action( $request )
 	{
-		$ht = new htaccess();
-		$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
-		$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
+		$ht = $this->getHTAccess();
 
 		if ( isset( $this->settings['mi_name'] ) ) {
 			$ht->setAuthName( $this->settings['mi_name'] );
@@ -128,14 +125,13 @@ class mi_htaccess
 		} else {
 			$apachepw = $this->getApachePW( $request->metaUser->userid );
 
-			if ( empty( $apachepw->id ) ) {
-				$apachepw->
+			if ( !empty( $apachepw->id ) ) {
+				$ht->addUser( $request->metaUser->cmsUser->username, $apachepw->apachepw );
 			}
-
-			$ht->addUser( $request->metaUser->cmsUser->username, $apachepw->apachepw );
 		}
 
 		$ht->addLogin();
+
 		return true;
 	}
 
@@ -151,9 +147,8 @@ class mi_htaccess
 		$apachepw->store();
 
 		if ( !( strcmp( $request->trace, 'registration' ) === 0 ) ) {
-			$ht = new htaccess();
-			$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
-			$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
+			$ht = $this->getHTAccess();
+
 			if ( isset( $this->settings['mi_name'] ) ) {
 				$ht->setAuthName( $this->settings['mi_name'] );
 			}
@@ -162,28 +157,18 @@ class mi_htaccess
 
 			if ( in_array( $request->row->username, $userlist ) ) {
 				$ht->delUser( $request->row->username );
+
 				if ( $this->settings['use_md5'] ) {
 					$ht->addUser( $request->row->username, $request->row->password );
 				} else {
 					$ht->addUser( $request->row->username, $apachepw->apachepw );
 				}
+
 				$ht->addLogin();
 			}
 		}
+
 		return true;
-	}
-
-	function delete()
-	{
-		if ( !file_exists( $this->settings['mi_folder_fullpath'] ) ) {
-			$ht = new htaccess();
-			$ht->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
-			$ht->setFHtaccess( $this->settings['mi_folder_fullpath'] );
-
-			$ht->delLogin();
-			return true;
-		}
-		return false;
 	}
 
 	function getPWrequest( $request, $apachepw )
@@ -198,6 +183,15 @@ class mi_htaccess
 			// No new password and no existing password - nothing to be done here
 			return;
 		}
+	}
+
+	function getHTAccess()
+	{
+		$htaccess = new htaccess();
+		$htaccess->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
+		$htaccess->setFHtaccess( $this->settings['mi_folder_fullpath'] );
+
+		return $htaccess;
 	}
 
 	function getApachePW( $userid )
