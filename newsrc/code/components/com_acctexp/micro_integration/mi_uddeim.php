@@ -127,7 +127,7 @@ class mi_uddeim
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
 		. 'if($restrictionhandler->active){'. "\n\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
-		. '\tif (!$restrictionhandler->hasMessagesLeft()) {' . "\n"
+		. "\t".'if (!$restrictionhandler->hasMessagesLeft()) {' . "\n"
 		. "\t\t" . '$restrictionhandler->noMessagesLeft();' . "\n"
 		. '\t}else{' . "\n"
 		. "\t\t" . '$restrictionhandler->useMessage();' . "\n"
