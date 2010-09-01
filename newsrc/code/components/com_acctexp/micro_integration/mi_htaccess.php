@@ -92,11 +92,7 @@ class mi_htaccess
 		$newparams['mi_folder_user_fullpath']	= $newparams['mi_passwordfolder'] . "/.htuser" . str_replace( "/", "_", str_replace( ".", "/", $newparams['mi_folder'] ) );
 
 		if ( !file_exists( $newparams['mi_folder_fullpath'] ) && !$params['rebuild'] ) {
-			$ht = $this->getHTAccess();
-
-			if( isset( $newparams['mi_name'] ) ) {
-				$ht->setAuthName( $newparams['mi_name'] );
-			}
+			$ht = $this->getHTAccess( $newparams );
 
 			$ht->addLogin();
 		}
@@ -108,17 +104,13 @@ class mi_htaccess
 	{
 		$database = &JFactory::getDBO();
 
-		$ht = $this->getHTAccess();
+		$ht = $this->getHTAccess( $this->settings );
 		$ht->delUser( $request->metaUser->cmsUser->username );
 	}
 
 	function action( $request )
 	{
-		$ht = $this->getHTAccess();
-
-		if ( isset( $this->settings['mi_name'] ) ) {
-			$ht->setAuthName( $this->settings['mi_name'] );
-		}
+		$ht = $this->getHTAccess( $this->settings );
 
 		if ( $this->settings['use_md5'] ) {
 			$ht->addUser( $request->metaUser->cmsUser->username, $request->metaUser->cmsUser->password );
@@ -147,11 +139,7 @@ class mi_htaccess
 		$apachepw->store();
 
 		if ( !( strcmp( $request->trace, 'registration' ) === 0 ) ) {
-			$ht = $this->getHTAccess();
-
-			if ( isset( $this->settings['mi_name'] ) ) {
-				$ht->setAuthName( $this->settings['mi_name'] );
-			}
+			$ht = $this->getHTAccess( $this->settings );
 
 			$userlist = $ht->getUsers();
 
@@ -185,11 +173,15 @@ class mi_htaccess
 		}
 	}
 
-	function getHTAccess()
+	function getHTAccess( $settings )
 	{
 		$htaccess = new htaccess();
-		$htaccess->setFPasswd( $this->settings['mi_folder_user_fullpath'] );
-		$htaccess->setFHtaccess( $this->settings['mi_folder_fullpath'] );
+		$htaccess->setFPasswd( $settings['mi_folder_user_fullpath'] );
+		$htaccess->setFHtaccess( $settings['mi_folder_fullpath'] );
+
+		if ( !empty( $settings['mi_name'] ) ) {
+			$htaccess->setAuthName( $settings['mi_name'] );
+		}
 
 		return $htaccess;
 	}
