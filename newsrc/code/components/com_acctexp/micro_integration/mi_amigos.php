@@ -38,6 +38,10 @@ class mi_amigos
 
 	function action( $request )
 	{
+		if ( empty( $_REQUEST['amigosid'] ) ) {
+			return true;
+		}
+
 		$domain = $this->settings['amigos_domain'];
 
 		// if domain was incorrectly entered, add http:// to it
