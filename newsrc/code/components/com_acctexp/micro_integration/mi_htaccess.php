@@ -162,14 +162,13 @@ class mi_htaccess
 	function getPWrequest( $request, $apachepw )
 	{
 		if ( isset( $request->post['password_clear'] ) ) {
-			$password = crypt( $request->post['password_clear'] );
+			return $request->post['password_clear'];
 		} elseif ( !empty( $request->post['password'] ) ) {
-			$password = $request->post['password'];
+			return $request->post['password'];
 		} elseif ( !empty( $request->post['password2'] ) ) {
-			$password = $request->post['password2'];
-		} elseif ( empty( $apachepw->id ) ) {
-			// No new password and no existing password - nothing to be done here
-			return;
+			return $request->post['password2'];
+		} else {
+			return "";
 		}
 	}
 
