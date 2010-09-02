@@ -122,7 +122,7 @@ class mi_uddeim
 
 		$messagehack =	'// AEC HACK %s START' . "\n"
 		. 'global $my, JPATH_SITE;' . "\n"
-		. 'include( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
 		. '$restrictionhandler = new uddeim_restriction( $database );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
 		. 'if($restrictionhandler->active){'. "\n\n"
