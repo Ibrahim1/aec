@@ -77,6 +77,9 @@ class plgSystemAECrouting extends JPlugin
 		// JomSocial
 		$vars['joms']		= $vars['option'] == 'com_community';
 
+		// AlphaUser
+		$vars['alpha']		= $vars['option'] == 'com_community';
+
 		// Standard Joomla
 		$vars['cu']			= $vars['option'] == 'com_user';
 
@@ -87,6 +90,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['joms_regp']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
 		$vars['joms_regs']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerSucess' );
 		$vars['joms_regsv']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
+		$vars['alpha_reg']	= $vars['alpha']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
 		$vars['k2_regsv']	= $vars['k2']	&& ( $vars['task'] == 'register_save' );
 		$vars['tcregs']		= $vars['task'] == 'saveregisters';
 		$vars['tsregs']		= $vars['task'] == 'saveRegistration';
@@ -108,7 +112,7 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['has_usage']	= !empty( $vars['usage'] );
 
-		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] ) && !$vars['has_usage'] ) {
+		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] || $vars['alpha_reg'] ) && !$vars['has_usage'] ) {
 			$database = &JFactory::getDBO();
 
 			if ( $vars['joms_any'] ) {
@@ -245,6 +249,11 @@ class plgSystemAECrouting extends JPlugin
 					$username	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password	= aecGetParam( 'password', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password2	= aecGetParam( 'password2', "", true, array( 'string', 'clear_nonalnum' ) );
+
+					if ( empty( $password2 ) ) {
+						$password2	= aecGetParam( 'password__verify', "", true, array( 'string', 'clear_nonalnum' ) );
+					}
+
 					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonalnum' ) );
 				}
 
