@@ -1,24 +1,15 @@
 <?php
 /**
- * @version $Id: desjardinsxml.php
+ * @version $Id: desjardins.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - desjardins XML
- * @copyright 2006-2008 Copyright (C) David Deutsch
+ * @copyright 2006-2010 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
-
-/**
-* AcctExp Component
-* @package AEC - Account Control Expiration - Membership Manager
-* @subpackage processor
-* @copyright 2006-2008 Copyright (C) David Deutsch
-* @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
-* @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
-**/
 
 class processor_desjardins extends XMLprocessor
 {
@@ -39,14 +30,14 @@ class processor_desjardins extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode']		= "1";
-		$settings['custId']		= "131302";
-		$settings['transactionKey']		= "3f463a64393d16c94593da4d263e55b3";
+		$settings['testmode']		= "0";
+		$settings['custId']			= "";
+		$settings['transactionKey']	= "";
 		$settings['tax']			= "10";
-		$settings['testAmount']	= "00";
-		$settings['item_name']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['testAmount']		= "00";
+		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= ''; // added mic
-		$settings['SiteTitle']	= '';
+		$settings['SiteTitle']		= '';
 
 		return $settings;
 	}
