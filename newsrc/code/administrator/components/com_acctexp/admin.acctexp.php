@@ -1308,10 +1308,15 @@ function saveUser( $option, $apply=0 )
 
 	$ck_lifetime = aecGetParam( 'ck_lifetime', 'off' );
 
-	if( $metaUser->focusSubscription == NULL )
-	{
-		echo "<script> alert('"._AEC_ERR_NO_SUBSCRIPTION."'); window.history.go(-1); </script>\n";
-		exit();
+	$set_status = trim( aecGetParam( 'set_status', null ) );
+
+	if ( !$metaUser->hasSubscription ) {
+		if ( $set_status == 'exclude' ) {
+			$metaUser->
+		} else {
+			echo "<script> alert('"._AEC_ERR_NO_SUBSCRIPTION."'); window.history.go(-1); </script>\n";
+			exit();
+		}
 	}
 
 	if ( empty( $post['assignto_plan'] ) ) {
@@ -1337,8 +1342,6 @@ function saveUser( $option, $apply=0 )
 			}
 		}
 	}
-
-	$set_status = trim( aecGetParam( 'set_status', null ) );
 
 	if ( !is_null( $set_status ) ) {
 		if ( strcmp( $set_status, 'now' ) === 0 ) {
