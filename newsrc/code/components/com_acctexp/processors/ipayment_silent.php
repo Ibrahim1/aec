@@ -225,7 +225,7 @@ echo '</p>';
 
 		// This will not turn up a response (why, that would be, like, logial and all)
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curl_calls );
-		$response2 = $this->transmitRequest( "https://allorca.com/components/com_acctexp/postback.php", $path, $xml, 443, $curl_calls );
+		$response2 = $this->transmitRequest( "https://[domain].com/components/com_acctexp/postback.php", $path, $xml, 443, $curl_calls );
 echo '<h1>R&uuml;ckmeldung:</h1>';
 echo '<div style="margin:12px;padding:24px;background-color:#bbb;color:#555;">';
 echo '<p>';

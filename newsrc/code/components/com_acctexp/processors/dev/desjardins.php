@@ -36,7 +36,7 @@ class processor_desjardins extends XMLprocessor
 		$settings['tax']			= "10";
 		$settings['testAmount']		= "00";
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['rewriteInfo']	= ''; // added mic
+		$settings['rewriteInfo']	= '';
 		$settings['SiteTitle']		= '';
 
 		return $settings;
@@ -131,7 +131,7 @@ XML;
 		$xml_step3_request .= 'Information de la commande'."\n";
 		$xml_step3_request .= "No d'authorisation : ".$request->invoice->invoice_number ."\n";
 		$xml_step3_request .= 'Abonnement : '.$request->plan->name ."\n";
-		$xml_step3_request .= 'Subscription Cost : ' . ((Integer)($amount/1.075/1.05)/100) ."\n";
+		$xml_step3_request .= 'Subscription Cost : ' . ((int)($amount/1.075/1.05)/100) ."\n";
 		$xml_step3_request .= 'TPS 5.0 % : '. (($amount/1.075/1.05)*0.05)/100 ."\n";  
 		$xml_step3_request .= 'TVQ 7.5 % : '. ((($amount/1.075/1.05)*0.05 + ($amount/1.075/1.05))*0.075)/100 ."\n";        
 		$xml_step3_request .= 'Total                 : '. $amount/100 ."\n";
@@ -255,7 +255,14 @@ XML;
 		curl_setopt($ch, CURLOPT_VERBOSE, 0);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST,'POST');
 		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
-		
+
+		$curl_calls[CURLOPT_RETURNTRANSFER]		= 1;
+		$curl_calls[CURLOPT_HTTPHEADER]		= $header;
+		$curl_calls[CURLOPT_TIMEOUT]		= 25;
+		$curl_calls[CURLOPT_VERBOSE]		= 0;
+		$curl_calls[CURLOPT_CUSTOMREQUEST]		= 'POST';
+		$curl_calls[CURLOPT_SSL_VERIFYPEER]		= false;
+
 		$response = curl_exec( $ch );
 		$this->l("the response is");
 		$this->l(print_r($response, true));
@@ -267,30 +274,6 @@ XML;
 		curl_close( $ch );
 		return $response;
 	}
-	function confirm($trxid) 
-	{
-		$sql = "SELECT * FROM #__acctexp_desjardins_log WHERE trxId ='" . $trxid . "'";
-		$this->l("in confirm");
-		$database->setQuery($sql);
-		$database->query() or die( $database->stderr() );
-		$log=$database->loadObjectList();
-		$response = array();
-		if (count($log) > 0 )
-		{
-			$sql = "UPDATE #__acctexp_desjardins_log SET paid = '1' WHERE logId =" . $log->logId;
-			$database->setQuery($sql);
-			$database->query() or die( $database->stderr() );
-			$invoice = new InvoiceFactory( null, null, null, 'desjardins', $log->invoiceNo );
-			//$invoice->invoice->loadInvoiceNumber($log->invoiceNo);
-			
-			$response['amount_paid'] = $log->amount;
-			$response['invoice'] = $log->invoiceNo;
-			$response['valid'] = 1;
-			$invoiceFactory->processorResponse('com_acctexp', $response );
-			
-		} else {
-			//something is wrong
-		} 
-	}
+
 }
 ?>
