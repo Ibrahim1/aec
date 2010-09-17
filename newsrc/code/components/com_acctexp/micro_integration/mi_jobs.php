@@ -221,7 +221,7 @@ class mi_jobs
 
 		$fields = array(	'title'			=> $title,
 							'language'		=> ucwords(strtolower(AECToolbox::rewriteEngineRQ( $this->settings['default_resume_language'], $request ))),
-							'published'		=> $this->settings['default_company_status'],
+							'published'		=> $this->settings['default_resume_status'],
 							'name'			=> $request->metaUser->cmsUser->username,
 							'email_address'	=> $request->metaUser->cmsUser->email,
 							'memberid'		=> $request->metaUser->userid,
