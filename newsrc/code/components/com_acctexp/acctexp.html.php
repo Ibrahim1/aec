@@ -1716,10 +1716,10 @@ class Payment_HTML
 							</table>
 						</div>
 					</div>
+					<div id="invoice_recurringstatus"><?php echo $data['recurringstatus']; ?></div>
 				<?php } else { ?>
 					<div id="invoice_paidstatus"><p><?php echo $data['paidstatus']; ?></p></div>
 				<?php } ?>
-				<div id="invoice_recurringstatus"><?php echo $data['recurringstatus']; ?></div>
 				<div id="before_footer"><?php echo $data['before_footer']; ?></div>
 				<div id="footer"><?php echo $data['footer']; ?></div>
 				<div id="after_footer"><?php echo $data['after_footer']; ?></div>

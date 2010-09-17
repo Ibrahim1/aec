@@ -11191,6 +11191,25 @@ class Invoice extends serialParamDBTable
 					. '<td>' . $item['quantity'] . '</td>'
 					. '<td>' . AECToolbox::formatAmount( $amt * $item['quantity'], $InvoiceFactory->invoice->currency ) . '</td>'
 					. '</tr>';
+
+				foreach ( $item['terms']->nextterm->cost as $cid => $cost ) {
+					if ( $cid != 0 ) {
+						if ( $cost->type == 'discount' ) {
+							if ( !empty( $cost->cost['details'] ) ) {
+								$ta = '&nbsp;(' . $cost->cost['details'] . ')';
+							} else {
+								$ta = "";
+							}
+
+							$data['itemlist'][] = '<tr id="invoice_content_item">'
+							. '<td>' . _AEC_CHECKOUT_DISCOUNT . $ta . '</td>'
+							. '<td></td>'
+							. '<td></td>'
+							. '<td>' . AECToolbox::formatAmount( $cost->cost['amount'], $InvoiceFactory->invoice->currency ) . '</td>'
+							. '</tr>';
+						}
+					}
+				}
 			}
 		}
 
