@@ -33,8 +33,6 @@ class processor_desjardins extends XMLprocessor
 		$settings['testmode']		= "0";
 		$settings['custId']			= "";
 		$settings['transactionKey']	= "";
-		$settings['tax']			= "10";
-		$settings['testAmount']		= "00";
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 		$settings['SiteTitle']		= '';
@@ -46,10 +44,10 @@ class processor_desjardins extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
-		$settings['custId']		= array( 'inputC' );
-		$settings['transactionKey']		= array( 'inputC' );
-		$settings['SiteTitle']	= array( 'inputC' );
-		$settings['item_name']	= array( 'inputE' );
+		$settings['custId']			= array( 'inputC' );
+		$settings['transactionKey']	= array( 'inputC' );
+		$settings['SiteTitle']		= array( 'inputC' );
+		$settings['item_name']		= array( 'inputE' );
 
         $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -145,133 +143,50 @@ XML;
 		return $xml_step3_request;
 	}
 
-	function transmitRequest( $url, $path, $content )
-	{
-		echo("starting transmit -> ");
-		global $aecConfig;
-
-		$response = null;
-
-		echo ("doing the curl -> ");
-		$response = $this->doTheCurl( $url, $content );
-		echo ("curl done -> ");
-		
-		return $response;
-	}
-	
 	function transmitRequestXML( $xml, $request )
 	{
 		global $mainframe;
 		$database = &JFactory::getDBO();
-		if ( $this->settings['testmode'] ) {
-			$url = 'https://www.labdevtrx3.com/catch';
-		} else {
-			$url = 'https://www.labdevtrx3.com/catch';
-		}
-		//$response = array();
 		
-		//step 1
-		$resp =  $this->transmitRequest( $url, '', $xml );
-	
+		$path = '/catch';
+		$url = 'https://www.labdevtrx3.com' . $path;
+
+		$header = array();
+		$header['MIME-Version']		= "1.0";
+		$header['Content-type']		= "text/xml";
+		$header['Accept']			= "text/xml";
+		$header['Cache-Control']	= "no-cache";
+
+		$curlextra[CURLOPT_RETURNTRANSFER]	= 1;
+		$curlextra[CURLOPT_TIMEOUT]			= 25;
+		$curlextra[CURLOPT_VERBOSE]			= 0;
+		$curlextra[CURLOPT_CUSTOMREQUEST]	= 'POST';
+		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
+
+		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
+
+		$xml = $this->createRequestStep3XML( $resp, $request );
 		
-		//record transaction attempt
-		$xml_step1_Obj = simplexml_load_string($resp);
-		$sql = "INSERT INTO #__acctexp_desjardins_log (fname , username ,email ,planID, planName ,amount,invoiceNo, trxId , paid, error, date, uid) ";
-		$sql .= "VALUES (";
-		$sql .= "'". $request->metaUser->cmsUser->name."',";
-		//$sql .= "'". $request->metaUser->cmsUser->last_name."',";
-		$sql .= "'". $request->metaUser->cmsUser->username."',";
-		$sql .= "'". $request->metaUser->cmsUser->email."',";
-		$sql .= "'". $request->plan->id ."',";
-		$sql .= "'". $request->plan->name. "',";
-		$sql .= "'". $request->invoice->amount ."', ";
-		$sql .= "'". $request->invoice->invoice_number . "',";
-		$sql .= "'". $xml_step1_Obj->merchant->login->trx['id'] ."',"; 
-		$sql .= " 0 ,"; //paid == false;
-		$sql .= "'',"; //no error yet;
-		$sql .= "NOW(),";
-		$sql .= $request->metaUser->userid . ")";
+		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
 		
-		$database->setQuery($sql);
-		$database->query() or die( $database->stderr() ); 
-		
-		//step 3
-			
-		$xml = $this->createRequestStep3XML($resp,$request);
-		
-		$resp = $this->transmitRequest( $url, '', $xml );
-		
-		$xml_step3_Obj = simplexml_load_string($resp);
+		$xml_step3_Obj = simplexml_load_string( $resp );
+
 		echo "<br>simplexml string<br>" . $xml_step3_Obj->asXML() . "<br><br>";
+
 		$redir_url = $xml_step3_Obj->merchant->transactions->transaction->urls->url->path;
 		$trx_number = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_id"]');
 		$trx_key = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_key"]');
 		$trx_merch_id = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="merchant_id"]');
+
 		$url = $redir_url . "?transaction_id=".$trx_number[0];
 		$url .= "&merchant_id=".$trx_merch_id[0];
 		$url .= "&transaction_key=".$trx_key[0];
+
 		echo('redir url<br><br>' . $url. '<br><br>');
+
 		$mainframe->redirect($url);
 			
 		$response = true;
-		return $response;
-	}
-
-	function checkoutform()
-	{
-		$var = '';
-		//$var = $this->getUserform();
-		//$var = $this->getCCform();
-
-		return $var;
-	}
-
-	function l($message) {
-		//$fh = fopen(echo (dirname(__FILE__) ) . '\log.txt', "a");
-		$file = dirname(__FILE__) . '\log\log.text' ;
-		$fh = fopen($file, "a");
-		fwrite($fh, $message . "\n");
-		fclose($fh);
-		
-	}
-	
-	function doTheCurl( $url, $content )
-	{
-		$header[] = "MIME-Version: 1.0";
-		$header[] = "Content-type: text/xml";
-		$header[] = "Accept: text/xml";
-		$header[] = "Content-length: " . strlen($content);
-		$header[] = "Cache-Control: no-cache";
-		$header[] = "Connection: close";
-		$this->l("the message is");
-		$this->l(print_r($content, true));
-		$ch = curl_init($url);
-//		curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER["PHP_SELF"].' VERSION:'. VERSION .' (PHP-' . phpversion() . ')');
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_POST, 1 );
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 25); //times out after 25s
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, $content );
-		curl_setopt($ch, CURLOPT_VERBOSE, 0);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST,'POST');
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
-
-		$curl_calls[CURLOPT_RETURNTRANSFER]		= 1;
-		$curl_calls[CURLOPT_HTTPHEADER]		= $header;
-		$curl_calls[CURLOPT_TIMEOUT]		= 25;
-		$curl_calls[CURLOPT_VERBOSE]		= 0;
-		$curl_calls[CURLOPT_CUSTOMREQUEST]		= 'POST';
-		$curl_calls[CURLOPT_SSL_VERIFYPEER]		= false;
-
-		$response = curl_exec( $ch );
-		$this->l("the response is");
-		$this->l(print_r($response, true));
-		if (curl_errno($ch)) {
-			 "\nError: " . curl_error($ch);
-		} else {
-			echo"\nNoError";
-		}
-		curl_close( $ch );
 		return $response;
 	}
 
