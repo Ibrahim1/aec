@@ -411,9 +411,13 @@ function expired( $option, $userid, $expiration )
 	if ( !empty( $userid ) ) {
 		$metaUser = new metaUser( $userid );
 
-		$expired = strtotime( $metaUser->objSubscription->expiration );
+		$trial		= false;
+		$expired	= false;
+		$invoice	= false;
 
 		if ( $metaUser->hasSubscription ) {
+			$expired = strtotime( $metaUser->objSubscription->expiration );
+
 			$trial = (strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
 			if (!$trial) {
 				$params = $metaUser->objSubscription->params;
@@ -421,16 +425,12 @@ function expired( $option, $userid, $expiration )
 					$trial = 1;
 				}
 			}
-		} else {
-			$trial = false;
 		}
 
 		$invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
 
 		if ( $invoices ) {
 			$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
-		} else {
-			$invoice = false;
 		}
 
 		$expiration	= strftime( $aecConfig->cfg['display_date_frontend'], $expired);
@@ -438,7 +438,7 @@ function expired( $option, $userid, $expiration )
 		$mainframe->SetPageTitle( _EXPIRED_TITLE );
 
 		$continue = false;
-		if ( $aecConfig->cfg['continue_button'] ) {
+		if ( $aecConfig->cfg['continue_button'] && $metaUser->hasSubscription ) {
 			$status = SubscriptionPlanHandler::PlanStatus( $metaUser->focusSubscription->plan );
 			if ( !empty( $status ) ) {
 				$continue = true;
