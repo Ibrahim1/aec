@@ -8731,7 +8731,7 @@ class InvoiceFactory
 		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
 	}
 
-	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0 )
+	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $unselect=null )
 	{
 		$database = &JFactory::getDBO();
 
@@ -8778,7 +8778,7 @@ class InvoiceFactory
 				}
 			} else {
 				// Jump back and use the only group we found
-				return $this->create( $option, $intro, 0, $list[0]['id'] );
+				return $this->create( $option, $intro, 0, $list[0]['id'], null, 0, true );
 			}
 		}
 
@@ -8826,7 +8826,7 @@ class InvoiceFactory
 				$cart = false;
 			}
 
-			if ( !empty( $group ) || !empty( $usage ) ) {
+			if ( ( !empty( $group ) || !empty( $usage ) ) && !$unselect ) {
 				$selected = true;
 			} else {
 				$selected = false;
