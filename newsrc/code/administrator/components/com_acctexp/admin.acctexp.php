@@ -1312,7 +1312,7 @@ function saveUser( $option, $apply=0 )
 
 	if ( !$metaUser->hasSubscription ) {
 		if ( $set_status == 'exclude' ) {
-			$metaUser->
+			//$metaUser->
 		} else {
 			echo "<script> alert('"._AEC_ERR_NO_SUBSCRIPTION."'); window.history.go(-1); </script>\n";
 			exit();
