@@ -839,6 +839,8 @@ function subscriptionDetails( $option, $sub='overview' )
 		$sList = array_merge( array( $metaUser->objSubscription ), $sList );
 	}
 
+	$subList = array();
+
 	// Prepare Payment Processors attached to active subscriptions
 	if ( !empty( $sList ) ) {
 		foreach( $sList as $usid => $subscription ) {
