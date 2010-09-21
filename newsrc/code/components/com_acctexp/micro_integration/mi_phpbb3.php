@@ -220,7 +220,7 @@ class mi_phpbb3
 		}
 
 		if ( $phpbbUserId ) {
-			$groups = $this->UserGroups( $phpbbdb );
+			$groups = $this->userGroups( $phpbbdb, $phpbbUserId );
 
 			if ( $this->settings['set_remove_group'] ) {
 				foreach ( $this->settings['remove_group'] as $groupid ) {
@@ -267,7 +267,7 @@ class mi_phpbb3
 			$this->updateUser( $phpbbdb, $content );
 		}
 
-		$groups = $this->UserGroups( $phpbbdb );
+		$groups = $this->userGroups( $phpbbdb, $phpbbUserId );
 
 		if ( $this->settings['set_clear_groups'] ) {
 			if ( $this->settings['set_groups_exclude'] && !empty( $this->settings['groups_exclude'] ) ) {
