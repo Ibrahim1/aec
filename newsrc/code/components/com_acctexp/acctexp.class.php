@@ -15740,6 +15740,10 @@ class microIntegrationHandler
 
 	function getActiveListbyList( $milist )
 	{
+		if ( empty( $milist ) ) {
+			return array();
+		}
+		
 		$database = &JFactory::getDBO();
 
 		$milist = array_unique( $milist );
