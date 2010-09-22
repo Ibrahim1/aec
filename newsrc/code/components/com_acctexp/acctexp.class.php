@@ -8829,6 +8829,10 @@ class InvoiceFactory
 				$selected = false;
 			}
 
+			if ( !$selected && !empty( $list['group'] ) ) {
+				unset( $list['group'] );
+			}
+
 			// Of to the Subscription Plan Selection Page!
 			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart, $selected );
 		}
