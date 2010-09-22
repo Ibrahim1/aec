@@ -2090,9 +2090,6 @@ class aecHeartbeat extends JTable
 
 		// Efficient way to check for expired users without checking on each one
 		if ( !empty( $subscription_list ) ) {
-			$pre_expired_users	= array();
-
-			$found_expired		= 1;
 			foreach ( $subscription_list as $sid => $sub_id ) {
 				$subscription = new Subscription( $database );
 				$subscription->load( $sub_id );
@@ -2193,7 +2190,7 @@ class aecHeartbeat extends JTable
 				. ' AND `status` != \'Expired\''
 				. ' AND `status` != \'Closed\''
 				. ' AND `status` != \'Excluded\''
-				. ' ORDER BY `expiration`'
+				. ' ORDER BY `expiration` ASC'
 				;
 		$database->setQuery( $query );
 		return $database->loadResultArray();
@@ -3531,7 +3528,7 @@ class PaymentProcessor
 		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
 			$response = $this->processor->validateSubscription( $subscription_id );
 		} else {
-			$response = false;
+			$response = null;
 		}
 
 		return $response;
@@ -8731,7 +8728,7 @@ class InvoiceFactory
 		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
 	}
 
-	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $unselect=null )
+	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
 	{
 		$database = &JFactory::getDBO();
 
@@ -8777,7 +8774,7 @@ class InvoiceFactory
 					$nochoice = true;
 				}
 			} else {
-				// Jump back and use the only group we found
+				// Jump back and use the only group we've found
 				return $this->create( $option, $intro, 0, $list[0]['id'], null, 0, true );
 			}
 		}
@@ -8826,7 +8823,7 @@ class InvoiceFactory
 				$cart = false;
 			}
 
-			if ( ( !empty( $group ) || !empty( $usage ) ) && !$unselect ) {
+			if ( ( !empty( $group ) || !empty( $usage ) ) && !$autoselect ) {
 				$selected = true;
 			} else {
 				$selected = false;
