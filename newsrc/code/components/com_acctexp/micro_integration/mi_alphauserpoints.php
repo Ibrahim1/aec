@@ -17,21 +17,13 @@ class mi_alphauserpoints
 	{
 		$settings = array();
 
-		$settings['first_plan_not_membership']		= array( 'list_yesno' );
+		$settings['add_points']			= array( 'inputB' );
+		$settings['subtract_points']	= array( 'inputB' );
 
-		$settings['plan_apply_first']				= array( 'list' );
-		$settings['lists']['plan_apply_first']		= mosHTML::selectList( $payment_plans, 'plan_apply_first', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_first'] );
-		$settings['first_plan_copy_expiration']		= array( 'list_yesno' );
+		$settings = $this->autoduplicatesettings( $settings );
 
-		$settings['plan_apply']						= array( 'list' );
-		$settings['lists']['plan_apply']			= mosHTML::selectList( $payment_plans, 'plan_apply', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply'] );
-		$settings['plan_copy_expiration']			= array( 'list_yesno' );
-
-		$settings['plan_apply_pre_exp']				= array( 'list' );
-		$settings['lists']['plan_apply_pre_exp']	= mosHTML::selectList( $payment_plans, 'plan_apply_pre_exp', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_pre_exp'] );
-
-		$settings['plan_apply_exp']					= array( 'list' );
-		$settings['lists']['plan_apply_exp']		= mosHTML::selectList( $payment_plans, 'plan_apply_exp', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_exp'] );
+		$settings['aup_checkout_discount']	= array( 'list_yesno' );
+		$settings['aup_checkout_discount']	= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -41,30 +33,6 @@ class mi_alphauserpoints
 		if ( $request->action == 'action' ) {
 			// Do NOT act on regular action call
 			return null;
-		}
-
-		if ( $request->area == 'afteraction' ) {
-			// But on after action
-			$request->area = '';
-
-			// Or maybe this is a first plan?
-			if ( !empty( $this->settings['plan_apply_first'] ) ) {
-				if ( !empty( $this->settings['first_plan_not_membership'] ) ) {
-					$used_plans = $request->metaUser->meta->getUsedPlans();
-
-					if ( empty( $used_plans ) ) {
-						$request->area = '_first';
-					} else {
-						if ( !in_array( $request->plan->id, $used_plans ) ) {
-							$request->area = '_first';
-						}
-					}
-				} else {
-					if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
-						$request->area = '_first';
-					}
-				}
-			}
 		}
 
 		if ( !isset( $this->settings['plan_apply'.$request->area] ) ) {
@@ -86,17 +54,25 @@ class mi_alphauserpoints
 		return true;
 	}
 
-	function loadAUP()
+	function getAlphaUserAccount( $userid )
 	{
-		$api_AUP = JPATH_SITE.DS.'components'.DS.'com_alphauserpoints'.DS.'helper.php'; 
+		$db	   =& JFactory::getDBO();	
 
-		if ( file_exists( $api_AUP ) ) { 
-			include_once( $api_AUP ); 
+		$query = "SELECT id FROM #__alpha_userpoints WHERE `referreid`='" . $userid . "'";
+		$db->setQuery( $query );
 
-			return true; 
-		} else {
-			return false;
-		}
+		$referrerUser = $db->loadResult();
+		
+		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_alphauserpoints'.DS.'tables');				
+		$row =& JTable::getInstance('userspoints');
+			
+		// update points into alpha_userpoints table
+		$row->load( intval($referrerUser) );
+	}
+
+	function AlphaUserPoints( $AUPObject )
+	{
+		
 	}
 }
 ?>
