@@ -77,26 +77,33 @@ class plgSystemAECrouting extends JPlugin
 		// JomSocial
 		$vars['joms']		= $vars['option'] == 'com_community';
 
-		// AlphaUser
-		$vars['alpha']		= $vars['option'] == 'com_community';
+		// AlphaRegistration
+		$vars['alpha']		= $vars['option'] == 'com_alpharegistration';
 
 		// Standard Joomla
 		$vars['cu']			= $vars['option'] == 'com_user';
 
-		$vars['aec']		= $vars['option'] == 'com_acctexp';
-		$vars['j_reg']		= $vars['cu']	&& ( ( $vars['view'] == 'register' ) || ( $vars['task'] == 'register' ) );
-		$vars['cb_reg']		= $vars['ccb']	&& ( $vars['task'] == 'registers' );
-		$vars['joms_reg']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
-		$vars['joms_regp']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
-		$vars['joms_regs']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerSucess' );
-		$vars['joms_regsv']	= $vars['joms']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
-		$vars['alpha_reg']	= $vars['alpha']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
-		$vars['k2_regsv']	= $vars['k2']	&& ( $vars['task'] == 'register_save' );
-		$vars['tcregs']		= $vars['task'] == 'saveregisters';
-		$vars['tsregs']		= $vars['task'] == 'saveRegistration';
-		$vars['tsue']		= $vars['task'] == 'saveUserEdit';
-		$vars['tsu']		= $vars['task'] == 'save';
-		$vars['lostpw']		= $vars['task'] == 'lostPassword';
+		$vars['aec']			= $vars['option'] == 'com_acctexp';
+
+		$vars['j_reg']			= $vars['cu']		&& ( ( $vars['view'] == 'register' ) || ( $vars['task'] == 'register' ) );
+
+		$vars['cb_reg']			= $vars['ccb']		&& ( $vars['task'] == 'registers' );
+
+		$vars['joms_reg']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
+		$vars['joms_regp']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
+		$vars['joms_regs']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerSucess' );
+		$vars['joms_regsv']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
+
+		$vars['alpha_reg']		= $vars['alpha']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
+		$vars['alpha_regsv']	= $vars['alpha']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
+
+		$vars['k2_regsv']		= $vars['k2']		&& ( $vars['task'] == 'register_save' );
+
+		$vars['tcregs']			= $vars['task'] == 'saveregisters';
+		$vars['tsregs']			= $vars['task'] == 'saveRegistration';
+		$vars['tsue']			= $vars['task'] == 'saveUserEdit';
+		$vars['tsu']			= $vars['task'] == 'save';
+		$vars['lostpw']			= $vars['task'] == 'lostPassword';
 
 		$vars['joms_any']	= ( $vars['joms_regsv'] || $vars['joms_regs'] || $vars['joms_regp'] || $vars['joms_reg'] );
 
@@ -239,7 +246,7 @@ class plgSystemAECrouting extends JPlugin
 
 				$temptoken = new aecTempToken( $database );
 				$temptoken->create( $content );
-			} elseif ( $vars['has_user'] && ( $vars['joms_regsv'] || $vars['cb_sregsv'] ) ) {
+			} elseif ( $vars['has_user'] && ( $vars['alpha_regsv'] || $vars['joms_regsv'] || $vars['cb_sregsv'] ) ) {
 				if ( $vars['joms_regsv'] ) {
 					$username	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password	= aecGetParam( 'jspassword', "", true, array( 'string', 'clear_nonalnum' ) );

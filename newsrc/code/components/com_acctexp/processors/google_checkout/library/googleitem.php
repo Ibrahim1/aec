@@ -38,11 +38,12 @@
     var $merchant_item_id;
     var $tax_table_selector;
     var $email_delivery;
+    var $subscription;
     var $digital_content=false;
     var $digital_description;
     var $digital_key;
     var $digital_url;
-    
+    var $currency;
     var $item_weight;
     var $numeric_weight;
 
@@ -156,6 +157,89 @@
       $this->digital_description = $digital_description;
       $this->email_delivery = 'false';  
       $this->digital_content = true;
+    }
+    
+  /**
+    *  Sets the subscription item for the cart
+    *
+    *   @param googlesubscription $sub the subscription item 
+    *   @return void
+    */
+    
+    function SetSubscription($sub) {
+      $this->subscription = $sub;
+    }
+  
+  /**
+    * Sets the currency for the item
+    * 
+    * @param string $currency currency USD or GBP
+    * @return void
+    */
+    function SetCurrency($currency){
+      $this->currency = $currency;
+    }
+      
+  /**
+      * Returns the generated XMl from item specifications
+      * To use this function, you need to specify the item currency
+      * @param void
+      * @return string XML cart
+      */  
+    function GetXML(){
+      require_once('xml-processing/gc_xmlbuilder.php');
+      
+      $xml_data = new gc_XmlBuilder();
+      $xml_data->Push('item');
+      $xml_data->Element('item-name', $this->item_name);
+      $xml_data->Element('item-description', $this->item_description);
+      $xml_data->Element('unit-price', $this->unit_price,
+          array('currency' => $this->currency));
+      $xml_data->Element('quantity', $this->quantity);
+      if($this->merchant_private_item_data != '') {
+      //          echo get_class($item->merchant_private_item_data);
+        if(is_a($this->merchant_private_item_data, 
+                                            'merchantprivate')) {
+          $this->merchant_private_item_data->AddMerchantPrivateToXML($xml_data);
+        }
+        else {
+          $xml_data->Element('merchant-private-item-data', 
+                                           $this->merchant_private_item_data);
+        }
+      }
+      if($this->merchant_item_id != '')
+        $xml_data->Element('merchant-item-id', $this->merchant_item_id);
+      if($this->tax_table_selector != '')
+        $xml_data->Element('tax-table-selector', $this->tax_table_selector);
+      //     recurring Carrier calculation
+      if($this->item_weight != '' && $this->numeric_weight !== '') {
+        $xml_data->EmptyElement('item-weight', array( 'unit' => $this->item_weight,
+                                              'value' => $this->numeric_weight
+                                             ));
+      }
+      //     recurring Digital Delivery Tags
+      if($this->digital_content) {
+        $xml_data->Push('digital-content');
+        if(!empty($this->digital_url)) {
+          $xml_data->Element('description', substr($this->digital_description,
+                                                        0, MAX_DIGITAL_DESC));
+          $xml_data->Element('url', $this->digital_url);
+      //            To avoid NULL key message in GC confirmation Page
+          if(!empty($this->digital_key)) {
+            $xml_data->Element('key', $this->digital_key);
+          }
+        }
+        else if(!empty($item->digital_description)) {
+          $xml_data->element('description', substr($item->digital_description, 0,MAX_DIGITAL_DESC));
+        }
+        else {
+          $xml_data->Element('email-delivery', 
+                    $this->_GetBooleanValue($this->email_delivery, "true"));
+        }
+        $xml_data->pop('digital-content');          
+      }
+      $xml_data->Pop('item'); 
+      return $xml_data->GetXML();
     }
   }
 ?>
