@@ -897,8 +897,7 @@ class HTML_AcctExp
 										array( 'editCSS', 'css', _AEC_CENTR_EDIT_CSS ),
 										array( 'history', 'history', _AEC_CENTR_VIEW_HISTORY ),
 										array( 'eventlog', 'eventlog', _AEC_CENTR_LOG ),
-										array( 'hacks', 'hacks', _AEC_CENTR_HACKS ),
-										array( 'help', 'help', _AEC_CENTR_HELP )
+										array( 'hacks', 'hacks', _AEC_CENTR_HACKS )
 						);
 
 						if ( aecJoomla15check() ) {
@@ -1147,79 +1146,6 @@ class HTML_AcctExp
  		<?php
 		if ( _EUCA_DEBUGMODE ) {
 			krumo( $option, $hacks );
-		}
-
- 		HTML_myCommon::Valanx();
-	}
-
-	function help ( $option, $diagnose )
-	{
-		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
-			<input type="hidden" name="option" value="<?php echo $option;?>" />
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="returnTask" value="" />
-			<input type="hidden" name="boxchecked" value="0" />
-		</form>
-		<table class="adminheading">
-			<tr>
-				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_help.png) no-repeat left;">
-				<?php echo _AEC_CMN_HELP; ?>
-				</th>
-			</tr>
-			<tr><td></td></tr>
-		</table>
-		<table class="aecadminform">
-			<tr><td>
-				<table border="0">
-					<tr><td>
-					<p><?php echo _AEC_HELP_DESC; ?></p>
-					<p><strong class="importance_1"><?php echo _AEC_HELP_GREEN; ?></p>
-					<p><strong class="importance_2"><?php echo _AEC_HELP_YELLOW; ?></p>
-					<p><strong class="importance_3"><?php echo _AEC_HELP_RED; ?></p>
-					<p><?php echo _AEC_HELP_GEN; ?></p>
-					<?php
-					/**
-					 * Syntax:
-					 * 0 Name
-					 * 1 Status
-					 * 2 Importance
-					 * 3 Explaination
-					 * 4 Advice
-					 * 5 DetectOnly (0:No, 1:Yes -Don't display if Status=0)
-					 */
-					foreach ( $diagnose as $dia ) {
-						if (!$dia[5] || ($dia[5] && $dia[1])) {
-							if (!$dia[5]) {
-								$importance = $dia[1] ? 1 : $dia[2];
-								$advice = !$dia[1];
-								$icon_status = aecHTML::Icon( $dia[1] ? 'tick.png' : 'stop.png' );
-							} else {
-								$importance = $dia[2];
-								$advice = $dia[1];
-								$icon_status = aecHTML::Icon( 'stop.png' );
-							} ?>
-							<div class="diagnose">
-								<img src="<?php echo JURI::root();?>media/com_acctexp/images/admin/icons/aec_symbol_importance_<?php echo $importance; ?>.png" width="60" height="80" alt="" />
-								<h1 class="importance_<?php echo $importance; ?>"><?php echo $dia[0]; ?></h1>
-								<p class="notice_<?php echo $advice; ?>"><?php echo $icon_status; ?> <?php echo $dia[3]; ?></p>
-								<?php
-								if ($dia[4] && $advice) { ?>
-									<p class="notice_1"><?php echo aecHTML::Icon("arrow_right.png"); ?> <?php echo $dia[4]; ?></p>
-									<?php
-								} ?>
-							</div>
-							<?php
-						}
-					} ?>
-					</td></tr>
-				</table>
-			</tr>
-		</table>
-
- 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $diagnose );
 		}
 
  		HTML_myCommon::Valanx();
