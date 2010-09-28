@@ -54,6 +54,13 @@ class processor_desjardins extends XMLprocessor
 		return $settings;
 	}
 
+	function checkoutform( $request, $vcontent=null, $updated=null )
+	{
+		$var = array();
+
+		return $var;
+	}
+
 	function createRequestXML( $request )
 	{
 $xml_request_str = <<<XML
