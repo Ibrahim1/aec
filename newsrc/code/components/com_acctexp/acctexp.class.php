@@ -12771,11 +12771,12 @@ class GeneralInfoRequester
 		}
 
 		$pathCB		= JPATH_SITE . '/components/com_comprofiler';
-		$pathSMF	= JPATH_SITE . '/administrator/components/com_smf';
+
 		switch ( $component ) {
 			case 'anyCB': // any Community Builder
 				return is_dir( $pathCB );
 				break;
+
 			case 'CB1.2': // Community Builder 1.2
 				$is_cbe	= ( is_dir( $pathCB. '/enhanced' ) || is_dir( $pathCB . '/enhanced_admin' ) );
 				$is_cb	= ( is_dir( $pathCB ) && !$is_cbe );
@@ -12800,11 +12801,17 @@ class GeneralInfoRequester
 				return file_exists( JPATH_SITE . '/modules/mod_comprofilermoderator.php' );
 				break;
 
+			case 'ALPHA': // AlphaRegistration
+				return file_exists( JPATH_SITE . '/components/com_alpharegistration/alpharegistration.php' );
+				break;
+
 			case 'UE': // User Extended
 				return in_array( $mainframe->getCfg( 'dbprefix' ) . 'user_extended', $tables );
 				break;
 
 			case 'SMF': // Simple Machines Forum
+				$pathSMF	= JPATH_SITE . '/administrator/components/com_smf';
+
 				return file_exists( $pathSMF . '/config.smf.php') || file_exists( $pathSMF . '/smf.php' );
 				break;
 

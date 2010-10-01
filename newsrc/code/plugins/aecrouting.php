@@ -95,7 +95,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['joms_regsv']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
 
 		$vars['alpha_reg']		= $vars['alpha']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
-		$vars['alpha_regsv']	= $vars['alpha']	&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
+		$vars['alpha_regsv']	= $vars['alpha']	&& ( $vars['task'] == 'register_save' );
 
 		$vars['k2_regsv']		= $vars['k2']		&& ( $vars['task'] == 'register_save' );
 
@@ -119,7 +119,7 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['has_usage']	= !empty( $vars['usage'] );
 
-		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] || $vars['alpha_reg'] ) && !$vars['has_usage'] ) {
+		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] || $vars['alpha_regsv'] ) && !$vars['has_usage'] ) {
 			$database = &JFactory::getDBO();
 
 			if ( $vars['joms_any'] ) {
@@ -236,16 +236,6 @@ class plgSystemAECrouting extends JPlugin
 
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['k2_regsv'] ) {
 
-			} elseif ( $vars['has_usage'] && ( $vars['joms_reg'] || $vars['cb_reg'] ) ) {
-				$database = &JFactory::getDBO();
-
-				$content = array();
-				$content['usage']		= $vars['usage'];
-				$content['processor']	= $vars['processor'];
-				$content['recurring']	= $vars['recurring'];
-
-				$temptoken = new aecTempToken( $database );
-				$temptoken->create( $content );
 			} elseif ( $vars['has_user'] && ( $vars['alpha_regsv'] || $vars['joms_regsv'] || $vars['cb_sregsv'] ) ) {
 				if ( $vars['joms_regsv'] ) {
 					$username	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
@@ -285,6 +275,16 @@ class plgSystemAECrouting extends JPlugin
 
 					$temptoken->storeload();
 				}
+			} elseif ( $vars['has_usage'] ) {
+				$database = &JFactory::getDBO();
+
+				$content = array();
+				$content['usage']		= $vars['usage'];
+				$content['processor']	= $vars['processor'];
+				$content['recurring']	= $vars['recurring'];
+
+				$temptoken = new aecTempToken( $database );
+				$temptoken->create( $content );
 			}
 		} elseif ( $vars['cbsreg'] ) {
 			// Any kind of user profile edit = trigger MIs

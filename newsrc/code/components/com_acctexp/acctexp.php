@@ -577,9 +577,10 @@ function subscribe( $option )
 
 	if ( !empty( $username ) && $usage ) {
 		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
+		$AL = ( GeneralInfoRequester::detect_component( 'ALPHA' ) );
 		$JS = ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) );
 
-		if ( $isJoomla15 && !$CB && !$JS && !$k2mode ) {
+		if ( $isJoomla15 && !$AL && !$CB && !$JS && !$k2mode ) {
 			// Joomla 1.5 Sanity Check
 
 			// Get required system objects
