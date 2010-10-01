@@ -22,8 +22,9 @@ class mi_alphauserpoints
 
 		$settings = $this->autoduplicatesettings( $settings );
 
-		$settings['aup_checkout_discount']	= array( 'list_yesno' );
-		$settings['aup_checkout_discount']	= array( 'list_yesno' );
+		$settings['aup_checkout_discount']			= array( 'list_yesno' );
+		$settings['aup_checkout_showconversion']	= array( 'list_yesno' );
+		$settings['aup_checkout_conversion']		= array( 'inputB' );
 
 		return $settings;
 	}
