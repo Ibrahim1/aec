@@ -67,11 +67,14 @@ $xml_request_str = <<<XML
 <?xml version="1.0" encoding="ISO-8859-15"?><request></request>
 XML;
 		$xml_step1_request = new SimpleXMLElement($xml_request_str);
-		$merchant = $xml_step1_request->addChild('merchant');
-		$merchant->addAttribute('key', trim($this->settings['transactionKey']));
-		$login = $merchant->addChild('login');
-		$trx = $login->addChild('trx');
-		$trx->addAttribute('id','trx_' . $request->invoice->id);
+
+		$merchant = $xml_step1_request->addChild( 'merchant' );
+		$merchant->addAttribute( 'key', trim( $this->settings['transactionKey'] ) );
+
+		$login = $merchant->addChild( 'login' );
+
+		$trx = $login->addChild( 'trx' );
+		$trx->addAttribute( 'id', $request->invoice->invoice_number );
 		
 		return $xml_step1_request->asXML();
 	}
@@ -151,7 +154,6 @@ XML;
 	function transmitRequestXML( $xml, $request )
 	{
 		global $mainframe;
-		$database = &JFactory::getDBO();
 		
 		$path = '/catch';
 		$url = 'https://www.labdevtrx3.com' . $path;
@@ -195,18 +197,57 @@ XML;
 
 	function parseNotification( $post )
 	{
-		$database = &JFactory::getDBO();
-
 		$response = array();
-		$response['invoice'] = aecGetParam( 'invoice_number', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );;
-aecDebug($_REQUEST);
+		$response['invoice'] = aecGetParam( 'invoice_number', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
-aecDebug("Here is where we will validate JAKE");aecDebug($response);
+
+$xml_request_str = <<<XML
+<?xml version="1.0" encoding="ISO-8859-15"?><response></response>
+XML;
+
+		$xml_step1_request = new SimpleXMLElement($xml_request_str);
+
+		$merchant = $xml_step1_request->addChild( 'merchant' );
+		$merchant->addAttribute( 'id', trim( $this->settings['custId'] ) );
+
+		$trx = $merchant->addChild( 'transaction' );
+		$trx->addAttribute( 'id', $response['invoice'] );
+		$trx->addAttribute( 'accepted', 'yes' );
+
+		$xml = $xml_step1_request->asXML();
+aecDebug($xml);
+		$path = '/catch';
+		$url = 'https://www.labdevtrx3.com' . $path;
+
+		$header = array();
+		$header['MIME-Version']		= "1.0";
+		$header['Content-type']		= "text/xml";
+		$header['Accept']			= "text/xml";
+		$header['Cache-Control']	= "no-cache";
+
+		$curlextra[CURLOPT_RETURNTRANSFER]	= 1;
+		$curlextra[CURLOPT_TIMEOUT]			= 25;
+		$curlextra[CURLOPT_VERBOSE]			= 0;
+		$curlextra[CURLOPT_CUSTOMREQUEST]	= 'POST';
+		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
+
+		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
+
+		if ( strpos( $resp, '<confirm>' ) ) {
+			$response['valid'] = 1;
+		} else {
+			$response['error'] = "Validation failed";
+		}
+
+		// Final OK to the server
+		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
+aecDebug($resp);
 		return $response;
 	}
 }
