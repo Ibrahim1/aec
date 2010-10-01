@@ -217,7 +217,7 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars = $this->getVars();
 
-		if ( ( $vars['isreg'] || $vars['cb_sregsv'] || $vars['k2_regsv'] ) && $vars['int_reg'] ) {
+		if ( ( $vars['isreg'] || $vars['cb_sregsv'] || $vars['k2_regsv'] || $vars['alpha_regsv'] ) && $vars['int_reg'] ) {
 			// Joomla or CB registration...
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
 				// Plans first and not yet selected -> select!
@@ -274,6 +274,11 @@ class plgSystemAECrouting extends JPlugin
 					}
 
 					$temptoken->storeload();
+				}
+
+				if ( $vars['alpha_regsv'] ) {
+					global $mainframe;
+					$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
 				}
 			} elseif ( $vars['has_usage'] ) {
 				$database = &JFactory::getDBO();
