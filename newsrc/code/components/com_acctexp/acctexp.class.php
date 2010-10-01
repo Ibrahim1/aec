@@ -9570,6 +9570,10 @@ class InvoiceFactory
 			$this->pp->modifyCheckout( $int_var, $this );
 		}
 
+		$exchange = $silent = null;
+
+		$this->triggerMIs( '_checkout_form', $exchange, $int_var, $silent );
+
 		$mainframe->SetPageTitle( html_entity_decode( $this->checkout['checkout_title'], ENT_COMPAT, 'UTF-8' ) );
 
 		if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {

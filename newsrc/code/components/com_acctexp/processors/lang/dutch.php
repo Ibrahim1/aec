@@ -944,4 +944,17 @@ define( '_CFG_HSBC_PROMPTADDRESS_DESC', 'Ask the user to put in an Address with 
 
 define( '_CFG_HSBC_2ND_CHECKOUT_INFO', 'This page should forward you to your own visa card issuer for identification. After you successfully identify yourself you will be sent back to this site where the subscription process will be completed. <br /><br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your username and password - Our System will give you an option to try your payment again.');
 
+// Desjardins
+define( '_CFG_DESJARDINS_LONGNAME','Desjardins');
+define( '_CFG_DESJARDINS_STATEMENT','Desjardins');
+define( '_CFG_DESJARDINS_DESCRIPTION','Desjardins Credit Card Processing');
+define( '_CFG_DESJARDINS_CUSTID_NAME', 'Customer ID');
+define( '_CFG_DESJARDINS_CUSTID_DESC', 'Your Customer ID.');
+define( '_CFG_DESJARDINS_AUTOREDIRECT_NAME', 'Autoredirect');
+define( '_CFG_DESJARDINS_AUTOREDIRECT_DESC', 'Automatic Redirect for Desjardins transaction');
+define( '_CFG_DESJARDINS_SITETITLE_NAME', 'Site Title');
+define( '_CFG_DESJARDINS_SITETITLE_DESC', 'The Site Title of the Desjardins Transaction');
+define( '_CFG_DESJARDINS_TRANSACTIONKEY_NAME', 'Transaction Key');
+define( '_CFG_DESJARDINS_TRANSACTIONKEY_DESC', 'Transaction Key is provided by Desjardins');
+
 ?>

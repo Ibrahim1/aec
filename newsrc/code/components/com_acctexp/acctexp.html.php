@@ -1486,6 +1486,7 @@ class Payment_HTML
 				</table>
 				<?php
 			}
+
 			if ( !empty( $params ) ) { ?>
 				<table width="100%" id="paramsbox">
 					<tr>
@@ -1535,9 +1536,7 @@ class Payment_HTML
 		<?php if ( is_string( $var ) ) { ?>
 			<tr>
 				<td class="checkout_action">
-					<?php
-					print $var;
-					?>
+					<?php print $var; ?>
 				</td>
 			</tr>
 		<?php } ?>

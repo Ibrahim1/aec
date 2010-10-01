@@ -103,22 +103,22 @@ define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Vue g&eacute;n&eacute;rale');
 define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Factures');
 define( '_AEC_SUBDETAILS_TAB_DETAILS', 'D&eacute;tails');
 
-define( '_HISTORY_ACTION_PRINT', 'print');
+define( '_HISTORY_ACTION_PRINT', 'Imprimer');
 define( '_INVOICEPRINT_DATE', 'Date');
 define( '_INVOICEPRINT_ID', 'ID');
-define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Reference Number');
-define( '_INVOICEPRINT_ITEM_NAME', 'Item Name');
-define( '_INVOICEPRINT_UNIT_PRICE', 'Unit Price');
-define( '_INVOICEPRINT_QUANTITY', 'Quantity');
+define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Num&eacute;ro de r&eacute;f&eacute;rence');
+define( '_INVOICEPRINT_ITEM_NAME', "Nom de l'article");
+define( '_INVOICEPRINT_UNIT_PRICE', "Prix &agrave; l'unit&eacute;");
+define( '_INVOICEPRINT_QUANTITY', 'Quantit&eacute;');
 define( '_INVOICEPRINT_TOTAL', 'Total');
 define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
 
-define( '_INVOICEPRINT_ADDRESSFIELD', 'Enter your Address here - it will then show on the printout.');
-define( '_INVOICEPRINT_PRINT', 'Print');
-define( '_INVOICEPRINT_BLOCKNOTICE', 'This block (including the text field and print button) will not show on your printout.');
-define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Please type your address into the field above.');
+define( '_INVOICEPRINT_ADDRESSFIELD', "Entrez ici votre adresse &macr; il affichera alors sur l'imprim&eacute;.");
+define( '_INVOICEPRINT_PRINT', 'Imprimer');
+define( '_INVOICEPRINT_BLOCKNOTICE', "Ce bloc (y compris le champ de texte et un bouton d'impression) ne s'affichent pas sur votre impression.");
+define( '_INVOICEPRINT_PRINT_TYPEABOVE', "S'il vous pla&icirc;t votre adresse de type dans le champ ci&macr;dessus.");
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>This invoice has not been paid yet.</strong>');
-define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'This invoice has been paid on: %s');
+define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Cette facture a &eacute;t&eacute; pay&eacute;e sur: %s');
 define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');
 
 define( '_AEC_YOUSURE', 'Are you sure?');
@@ -142,7 +142,7 @@ define( '_DEAR', 'Cher(e) %s');
 define( '_CONFIRM_TITLE', 'Formulaire de confirmation');
 define( '_CONFIRM_COL1_TITLE', 'Compte');
 define( '_CONFIRM_COL2_TITLE', 'Informations');
-define( '_CONFIRM_COL3_TITLE', 'Montant');
+define( '_CONFIRM_COL3_TITLE', 'Montant / Processor');
 define( '_CONFIRM_ROW_NAME', 'Nom: ');
 define( '_CONFIRM_ROW_USERNAME', 'Identifiant : ');
 define( '_CONFIRM_ROW_EMAIL', 'mail:');
@@ -153,11 +153,11 @@ define( '_CONFIRM_TOS_IFRAME', "J\'ai lu et j\'accepte les conditions d\'utilisa
 define( '_CONFIRM_TOS_ERROR', 'Veuillez lire et accepter nos conditions d\'utilisation');
 define( '_CONFIRM_COUPON_INFO', 'Si vous avez un code de bon de r&eacute;duction, vous pourrez le saisir sur la page du r&egrave;glement pour qu\'il soit pris en compte.');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'Si vous avez un bon de r&eacute;duction, vous pouvez le saisir ici ou sur la page de confirmation pour b&eacute;n&eacute;ficier de la remise');
-define( '_CONFIRM_FREETRIAL', 'P&eacute;riode d\'essai gratuite');
-define( '_CONFIRM_YOU_HAVE_SELECTED', 'You have selected');
+define( '_CONFIRM_FREETRIAL', "P&eacute;riode d'essai gratuite");
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'Vous avez s&eacute;lectionn&eacute;');
 
-define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Want to change the user details?');
-define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', "Vous voulez changer les d&eacute;tails d'utilisateur?");
+define( '_CONFIRM_DIFFERENT_ITEM', 'Vous voulez modifier votre plan?');
 
 // --== SHOPPING CART FORM ==--
 define( '_CART_TITLE', 'Panier');
@@ -258,10 +258,10 @@ define( '_HOLD_EXPLANATION', 'Votre compte est actuellement suspendu. La raison 
 // --== PAGE REMERCIEMENT ==--
 define( '_THANKYOU_TITLE', 'Merci !');
 define( '_SUB_FEPARTICLE_HEAD', 'Abonnement compl&eacute;t&eacute;!');
-define( '_SUB_FEPARTICLE_HEAD_RENEW', 'Renouvellement d\'abonnement compl&eacute;t&eacute;!');
+define( '_SUB_FEPARTICLE_HEAD_RENEW', "Renouvellement d'abonnement compl&eacute;t&eacute;!");
 define( '_SUB_FEPARTICLE_LOGIN', 'Vous pouvez vous connecter maintenant.');
 define( '_SUB_FEPARTICLE_THANKS', 'Merci de vous &ecirc;tre abonn&eacute;. ');
-define( '_SUB_FEPARTICLE_THANKSRENEW', 'Merci d\'avoir renouvel&eacute; votre abonnement. ');
+define( '_SUB_FEPARTICLE_THANKSRENEW', "Merci d'avoir renouvel&eacute; votre abonnement. ");
 define( '_SUB_FEPARTICLE_PROCESS', 'Notre syst&egrave;me va maintenant traiter votre demande. ');
 define( '_SUB_FEPARTICLE_PROCESSPAY', 'Notre syst&egrave;me est en attente de votre paiement. ');
 define( '_SUB_FEPARTICLE_ACTMAIL', 'Vous allez recevoir un message par mail qui contiendra un lien d\'activation quand notre syst&egrave;me aura trait&eacute; votre demande. ');
@@ -292,10 +292,10 @@ define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Ce bon n\'est plus valide ou bien in
 // ----======== TEXTE POUR MESSAGES mailS ========----
 
 define( '_AEC_SEND_SUB',				"D&eacute;tails du compte de %s &agrave; %s" );
-define( '_AEC_USEND_MSG',				"Bonjour %s,\n\nMerci de vous &ecirc;tre inscrit &agrave; %s.\n\nVous pouvez maintenant vous connecter &agrave; %s avec l\'identifiant et le mot de passe avec lesquels vous vous &ecirc;tes inscrit." );
+define( '_AEC_USEND_MSG',				"Bonjour %s,\n\nMerci de vous &ecirc;tre inscrit &agrave; %s.\n\nVous pouvez maintenant vous connecter &agrave; %s avec l'identifiant et le mot de passe avec lesquels vous vous &ecirc;tes inscrit." );
 define( '_AEC_USEND_MSG_ACTIVATE',				"Bonjour %s,\n\nMerci de vous &ecirc;tre inscrit &agrave; %s. Votre compte est cr&eacute;&eacute; et doit &ecirc;tre activ&eacute; avant de pouvoir &ecirc;tre utilis&eacute;.\nPour activer votre compte, cliquer sur le lien suivant ou faites)en un copier/coller dans votre navigateur :\n%s\n\nApr&egrave;s l\'activation vous pourrez vous connecter &agrave; %s avec l\'identifiant et le mot de passe suivants :\n\nIdentifiant - %s\nMot de passe - %s" );
 define( '_ACCTEXP_SEND_MSG','Abonnement de %s &agrave; %s');
-define( '_ACCTEXP_SEND_MSG_RENEW','Renouvellement de l\'abonnement de %s &agrave; %s');
+define( '_ACCTEXP_SEND_MSG_RENEW',"Renouvellement de l'abonnement de %s &agrave; %s");
 define( '_ACCTEXP_MAILPARTICLE_GREETING', 'Bonjour %s,\n\n');
 define( '_ACCTEXP_MAILPARTICLE_THANKSREG', 'Merci de vous &ecirc;tre abonn&eacute; &agrave; %s.\n');
 define( '_ACCTEXP_MAILPARTICLE_THANKSREN', 'Merci d\'avoir renouvel&eacute; votre abonnement &agrave; %s.');
