@@ -72,38 +72,14 @@ XML;
 		$login = $merchant->addChild('login');
 		$trx = $login->addChild('trx');
 		$trx->addAttribute('id','trx_' . $request->invoice->id);
-		$order_total = $request->int_var['amount'] * 100;
-		$my_trxn_number = uniqid( "desjardins_" );
-
-		/*$nodes = array(	"desjardinsCustomerID" => $this->settings['custId'],
-						"desjardinsTotalAmount" => $order_total,
-						"desjardinsCustomerFirstName" => $request->metaUser->cmsUser->username,
-						"desjardinsCustomerLastName" => $request->metaUser->cmsUser->name,
-						"desjardinsCustomerInvoiceDescription" => AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ),
-						"desjardinsCustomerInvoiceRef" => $request->int_var['invoice'],
-						"desjardinsOption1" => $request->metaUser->cmsUser->id, //Send in option1, the id of the user
-						"desjardinsOption2" => $request->int_var['invoice'], //Send in option2, the invoice number
-						"desjardinsTrxnNumber" => $my_trxn_number,
-						"desjardinsSiteTitle" => $this->settings['SiteTitle'],
-						"desjardinsCardHoldersName" => $request->int_var['params']['billFirstName'] . ' ' . $request->int_var['params']['billLastName'],
-						"desjardinsCardNumber" => $request->int_var['params']['cardNumber'],
-						"desjardinsCardExpiryMonth" => $request->int_var['params']['expirationMonth'],
-						"desjardinsCardExpiryYear" => $request->int_var['params']['expirationYear'],
-						"desjardinsCustomerEmail" => $request->metaUser->cmsUser->email,
-						"desjardinsCustomerAddress" => '',
-						"desjardinsCustomerPostcode" => '',
-						"desjardinsOption3" => ''
-						);
-		$xml = '<desjardinsgatdesjardins>';*/
 		
 		return $xml_step1_request->asXML();
 	}
 		
-	function createRequestStep3XML($resp,$request){
+	function createRequestStep3XML( $resp, $request ) {
 	
 		$xml_step1_Obj = simplexml_load_string($resp);
 		$amount = $request->int_var['amount'] * 100;
-		//$host  = $_SERVER['HTTP_HOST'];// & request)URI
 
 		$return = JURI::root() . 'index.php';
 
@@ -127,8 +103,8 @@ XML;
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
 		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
-		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
-		$xml_step3_request .= '			      <parameter name="invoice_number">' . $request->invoice->invoice_number . '</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="task">thanks</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="usage">' . $request->plan->id . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="cancel">'."\n";
@@ -222,8 +198,8 @@ XML;
 		$database = &JFactory::getDBO();
 
 		$response = array();
-		$response['invoice'] = $post['invoice_number'];
-aecDebug($post);
+		$response['invoice'] = aecGetParam( 'invoice_number', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );;
+aecDebug($_REQUEST);
 		return $response;
 	}
 
