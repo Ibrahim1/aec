@@ -3,7 +3,7 @@
 AEC micro-integration plugin
 for Frontend-User-Access
 connects subscription plans to Frontend-User-Access-usergroups
-version 1.0.1
+version 2.0.0
 */
 
 
@@ -44,18 +44,47 @@ class mi_frontenduseraccess
 			}
 		}
 
+		//if no array, reformat to make into array, as of version 2 of this MI, needed for FUA from version 3.1.0 and up.
+		if ( !empty( $this->settings['group'] ) ) {
+			if( !is_array( $this->settings['group'] ) ) {
+				$this->settings['group'] = array( $this->settings['group'] );
+			}
+		} else {
+			$this->settings['group'] = array();;
+		}
+
+		if ( isset( $this->settings['group_exp'] ) ) {
+			if ( !is_array($this->settings['group_exp'] ) ) {
+				$this->settings['group_exp'] = array( $this->settings['group_exp'] );
+			}
+		} else {
+			$this->settings['group_exp'] = array();
+		}
+
 		$settings = array();
 
-		if ( !isset( $this->settings['group'] ) ) {
-			$this->settings['group'] = 0;
+		if ( !empty( $this->settings['group'] ) ) {
+			$fua_groups = array();
+
+			foreach ( $this->settings['group'] as $temp ) {
+				$fua_groups[]->value = $temp;
+			}
+		} else {
+			$fua_groups	= '';
 		}
 
-		if ( !isset( $this->settings['group_exp'] ) ) {
-			$this->settings['group_exp'] = 0;
+		if ( !empty( $this->settings['group_exp'] ) ) {
+			$fua_groups_exp = array();
+
+			foreach ( $this->settings['group_exp'] as $temp ) {
+				$fua_groups_exp[]->value = $temp;
+			}
+		} else {
+			$fua_groups_exp	= '';
 		}
 
-		$settings['lists']['group']		= mosHTML::selectList($fuagroups, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
-		$settings['lists']['group_exp'] = mosHTML::selectList($fuagroups, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
+		$settings['lists']['group']		= mosHTML::selectList($fuagroups, 'group[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups);
+		$settings['lists']['group_exp'] = mosHTML::selectList($fuagroups, 'group_exp[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp);
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
@@ -70,7 +99,7 @@ class mi_frontenduseraccess
 	function action( $request )
 	{
 		if ( !empty( $this->settings['set_group'] ) && !empty( $this->settings['group'] ) ) {
-			$this->set_fua_group( $request->metaUser->userid, $this->settings['group'] );
+			$this->update_fua_group( $request->metaUser->userid, $this->settings['group'] );
 		}
 
 		return true;
@@ -79,33 +108,20 @@ class mi_frontenduseraccess
 	function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['set_group_exp'] ) && !empty( $this->settings['group_exp'] ) ) {
-			$this->set_fua_group( $request->metaUser->userid, $this->settings['group_exp'] );
+			$this->update_fua_group( $request->metaUser->userid, $this->settings['group_exp'] );
 		}
 
 		return true;
 	}
 
-	function set_fua_group( $user_id, $fua_group )
-	{
-		$database = &JFactory::getDBO();
-
-		$query = 'SELECT `group_id`'
-				. ' FROM #__fua_userindex'
-				. ' WHERE `user_id` = \'' . $user_id . '\''
-				;
-		$database->setQuery( $query );
-
-		if ( $database->loadResult() ) {
-			$this->update_fua_group( $user_id, $fua_group );
-		} else {
-			$this->insert_fua_group( $user_id, $fua_group );
-		}
-	}
-
 	function update_fua_group( $user_id, $fua_group )
 	{
 		$database = &JFactory::getDBO();
+		
+		sort( $fua_group );
 
+		$fua_group = $this->array_to_csv( $fua_group );
+		
 		$query = 'UPDATE #__fua_userindex'
 				. ' SET `group_id` = \'' . $fua_group . '\''
 				. ' WHERE `user_id` = \'' . $user_id . '\''
@@ -113,17 +129,26 @@ class mi_frontenduseraccess
 		$database->setQuery( $query );
 		$database->query();
 	}
-
-	function insert_fua_group( $user_id, $fua_group )
+	
+	function array_to_csv($array){	
+		$return = '';	
+		for($n = 0; $n < count($array); $n++){
+			if($n){
+				$return .= ',';
+			}
+			$row = each($array);
+			$value = $row['value'];
+			if(is_string($value)){
+				$value = addslashes($value);
+			}	
+			$return .= '"'.$value.'"';		
+		}		
+		return $return;
+	}
+	
+	function detect_application()
 	{
-		$database = &JFactory::getDBO();
-
-		$query = 'INSERT INTO #__fua_userindex'
-				. ' (`group_id`, `user_id` )'
-				. 'VALUES ( \'' . $fua_group . '\', \'' . $user_id . '\' )'
-				;
-		$database->setQuery( $query );
-		$database->query();
+		return is_dir( JPATH_SITE . '/components/com_frontenduseraccess' );
 	}
 
 }
