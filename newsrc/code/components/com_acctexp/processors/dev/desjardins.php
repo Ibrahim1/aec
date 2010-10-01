@@ -71,7 +71,7 @@ XML;
 		$merchant->addAttribute('key', trim($this->settings['transactionKey']));
 		$login = $merchant->addChild('login');
 		$trx = $login->addChild('trx');
-		$trx->addAttribute('id','trx_' . rand(0,999999));
+		$trx->addAttribute('id','trx_' . $request->invoice->id);
 		$order_total = $request->int_var['amount'] * 100;
 		$my_trxn_number = uniqid( "desjardins_" );
 
@@ -105,6 +105,8 @@ XML;
 		$amount = $request->int_var['amount'] * 100;
 		//$host  = $_SERVER['HTTP_HOST'];// & request)URI
 
+		$return = JURI::root() . 'index.php';
+
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
 		$xml_step3_request .= '	  <merchant id="'.trim($xml_step1_Obj->merchant['id']).'" key="'.trim($xml_step1_Obj->merchant['key']).'">'."\n";
@@ -114,16 +116,36 @@ XML;
 		$xml_step3_request .= '			<language>fr</language>'."\n";
 		$xml_step3_request .= '			<urls>'."\n";
 		$xml_step3_request .= '			  <url name="response">'."\n";
-		$xml_step3_request .= '			  <path>http://www.aqlass.org/dej_return.php</path>'."\n";
+		$xml_step3_request .= '			    <path>' . $return . '</path>'."\n";
+		$xml_step3_request .= '			    <parameters>'."\n";
+		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="invoice_number">' . $request->invoice->invoice_number . '</parameter>'."\n";
+		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="success">'."\n";
-		$xml_step3_request .= '				<path>http://www.aqlass.org/dej_reg_success.php</path>'."\n";
+		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
+		$xml_step3_request .= '			    <parameters>'."\n";
+		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="invoice_number">' . $request->invoice->invoice_number . '</parameter>'."\n";
+		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="cancel">'."\n";
-		$xml_step3_request .= '				<path>http://www.aqlass.org/dej_cancel.php</path>'."\n";
+		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
+		$xml_step3_request .= '			    <parameters>'."\n";
+		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="invoice_number">' . $request->invoice->invoice_number . '</parameter>'."\n";
+		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="error">'."\n";
-		$xml_step3_request .= '				<path>http://www.aqlass.org/dej_error.php</path>'."\n";
+		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
+		$xml_step3_request .= '			    <parameters>'."\n";
+		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="invoice_number">' . $request->invoice->invoice_number . '</parameter>'."\n";
+		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			</urls>'."\n";
 		$xml_step3_request .= '			<details>'."\n";
@@ -175,7 +197,7 @@ XML;
 		$xml = $this->createRequestStep3XML( $resp, $request );
 		
 		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-		
+
 		$xml_step3_Obj = simplexml_load_string( $resp );
 
 		echo "<br>simplexml string<br>" . $xml_step3_Obj->asXML() . "<br><br>";
@@ -189,13 +211,27 @@ XML;
 		$url .= "&merchant_id=".$trx_merch_id[0];
 		$url .= "&transaction_key=".$trx_key[0];
 
-		echo('redir url<br><br>' . $url. '<br><br>');
-
 		$mainframe->redirect($url);
 			
 		$response = true;
 		return $response;
 	}
 
+	function parseNotification( $post )
+	{
+		$database = &JFactory::getDBO();
+
+		$response = array();
+		$response['invoice'] = $post['invoice_number'];
+aecDebug($post);
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $invoice )
+	{
+		$response['valid'] = 0;
+aecDebug("Here is where we will validate JAKE");aecDebug($response);
+		return $response;
+	}
 }
 ?>
