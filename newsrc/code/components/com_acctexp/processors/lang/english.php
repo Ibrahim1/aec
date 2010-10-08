@@ -968,6 +968,11 @@ define( '_CFG_DESJARDINS_SITETITLE_DESC', 'The Site Title of the Desjardins Tran
 define( '_CFG_DESJARDINS_TRANSACTIONKEY_NAME', 'Transaction Key');
 define( '_CFG_DESJARDINS_TRANSACTIONKEY_DESC', 'Transaction Key is provided by Desjardins');
 
+// Google Checkout
+define( '_CFG_GOOGLE_CHECKOUT_LONGNAME', 'Google Checkout');
+define( '_CFG_GOOGLE_CHECKOUT_STATEMENT', 'Google Checkout');
+define( '_CFG_GOOGLE_CHECKOUT_DESCRIPTION', 'Google Checkout - a faster, safer, and more convenient way to shop online?');
+
 // Mpay24
 define( '_CFG_MPAY24_LONGNAME', 'Mpay24');
 define( '_CFG_MPAY24_STATEMENT', 'mPAY24 - Die Zahlungsplattform für E- und M-Commerce');
