@@ -406,7 +406,7 @@ class mosetstree extends JTable
 	function hasListingsLeft()
 	{
 		$listings = $this->getListingsLeft();
-		if ( $listings == 'unlimited' ) {
+		if ( $listings === 'unlimited' ) {print_r($listings);exit;
 			return true;
 		} elseif ( $listings > 0 ) {
 			return true;
