@@ -22,7 +22,8 @@ class processor_desjardins extends XMLprocessor
 		$info['description']	= _CFG_DESJARDINS_DESCRIPTION;
 		$info['cc_list']		= 'visa,mastercard';
 		$info['recurring']		= 0;
-		$info['notify_trail_thanks'] = true;
+		$info['notify_trail_thanks'] = false;
+		$info['custom_notify_trail'] = true;
 
 		return $info;
 	}
@@ -84,7 +85,7 @@ XML;
 		$xml_step1_Obj = simplexml_load_string($resp);
 		$amount = $request->int_var['amount'] * 100;
 
-		$return = JURI::root() . 'index.php';
+		$return = JURI::root() . 'components/com_acctexp/processors/notify/notify_redirect.php';
 
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
@@ -97,30 +98,25 @@ XML;
 		$xml_step3_request .= '			  <url name="response">'."\n";
 		$xml_step3_request .= '			    <path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
 		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="success">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
 		$xml_step3_request .= '			      <parameter name="task">thanks</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="cancel">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
 		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="error">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="option">com_acctexp</parameter>'."\n";
 		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
-		$xml_step3_request .= '			      <parameter name="invoice_number">' . $request->invoice->invoice_number . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			</urls>'."\n";
@@ -246,6 +242,22 @@ aecDebug($xml);
 		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
 aecDebug($resp);
 		return $response;
+	}
+
+	function notify_trail( $InvoiceFactory )
+	{aecDebug($_REQUEST);
+		$xml = <<<XML
+<?xml version="1.0" encoding="ISO-8859-15"?>
+XML;
+
+		$xml .= '<response>';
+		$xml .= '<merchant id="' . trim($xml_step1_Obj->merchant['id']) . '">';
+		$xml .= '<transaction id="YourUniqueTransactionNumber" accepted="yes" />';
+		$xml .= '</merchant>';
+		$xml .= '</response>';
+
+		echo $xml;
+		exit;
 	}
 }
 ?>
