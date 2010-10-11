@@ -63,7 +63,7 @@ class processor_desjardins extends XMLprocessor
 	}
 
 	function createRequestXML( $request )
-	{
+	{aecDebug("createRequestXML");
 $xml_request_str = <<<XML
 <?xml version="1.0" encoding="ISO-8859-15"?><request></request>
 XML;
@@ -80,13 +80,13 @@ XML;
 		return $xml_step1_request->asXML();
 	}
 		
-	function createRequestStep3XML( $resp, $request ) {
-	
+	function createRequestStep3XML( $resp, $request )
+	{
 		$xml_step1_Obj = simplexml_load_string($resp);
 		$amount = $request->int_var['amount'] * 100;
 
 		$return = JURI::root() . 'components/com_acctexp/processors/notify/notify_redirect.php';
-
+aecDebug($return);
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
 		$xml_step3_request .= '	  <merchant id="'.trim($xml_step1_Obj->merchant['id']).'" key="'.trim($xml_step1_Obj->merchant['key']).'">'."\n";
@@ -145,7 +145,7 @@ XML;
 	}
 
 	function transmitRequestXML( $xml, $request )
-	{
+	{aecDebug("transmitRequestXML");
 		global $mainframe;
 		
 		$path = '/catch';
@@ -189,15 +189,15 @@ XML;
 	}
 
 	function parseNotification( $post )
-	{
+	{aecDebug("parseNotification");
 		$response = array();
-		$response['invoice'] = aecGetParam( 'invoice_number', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+		$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
-	{
+	{aecDebug("validateNotification");
 		$response['valid'] = 0;
 
 $xml_request_str = <<<XML
@@ -231,7 +231,7 @@ aecDebug($xml);
 		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
 
 		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-
+aecDebug($resp);
 		if ( strpos( $resp, '<confirm>' ) ) {
 			$response['valid'] = 1;
 		} else {
@@ -245,7 +245,7 @@ aecDebug($resp);
 	}
 
 	function notify_trail( $InvoiceFactory )
-	{aecDebug($_REQUEST);
+	{aecDebug("notify_trail");aecDebug($_REQUEST);
 		$xml = <<<XML
 <?xml version="1.0" encoding="ISO-8859-15"?>
 XML;
@@ -255,7 +255,7 @@ XML;
 		$xml .= '<transaction id="YourUniqueTransactionNumber" accepted="yes" />';
 		$xml .= '</merchant>';
 		$xml .= '</response>';
-
+aecDebug($xml);
 		echo $xml;
 		exit;
 	}

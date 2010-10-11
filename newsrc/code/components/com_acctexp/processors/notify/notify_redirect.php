@@ -13,6 +13,6 @@ foreach ( $_GET as $k => $v ) {
 	$get[] = $k . "=" . $v;
 }
 
-header( 'Location: index.php?' . implode( '&', $get ) );
+header( 'Location: http://' . $_SERVER['HTTP_HOST'] . str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php?' . implode( '&', $get ) );
 
 ?>

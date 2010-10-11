@@ -3552,6 +3552,15 @@ class PaymentProcessor
 		}
 	}
 
+	function notify_trail( $InvoiceFactory )
+	{
+		if ( method_exists( $this->processor, 'notify_trail' ) ) {
+			$response = $this->processor->notify_trail( $InvoiceFactory );
+		}
+
+		return $response;
+	}
+
 	function getProfileTabs()
 	{
 		$addtabs = $this->registerProfileTabs();
@@ -9706,6 +9715,8 @@ class InvoiceFactory
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
+			} elseif ( !empty( $this->pp->info['custom_notify_trail'] ) ) {
+				$this->pp->notify_trail( $this );
 			} else {
 				header("HTTP/1.0 200 OK");
 				exit;
