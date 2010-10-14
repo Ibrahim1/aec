@@ -20,8 +20,14 @@ if ( !empty( $_GET ) ) {
 	}
 }
 
-$post = $_POST;
+$post = file_get_contents("php://input");
 
+if ( empty( $post ) ) {
+	$post = $GLOBALS['HTTP_RAW_POST_DATA'];
+}
+
+$post = array( 'aec_passthrough' => base64_encode( serialize( $post ) ) );
+$get[] = 'aec_passthrough=' . $post['aec_passthrough'];
 // Instead of doing fancy-pants figuring out of the subdirectory, just deduct that from the call
 $path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . implode( '&', $get );
 
@@ -111,7 +117,7 @@ class bootstrapLoader
 			$header_array["Host"] = $hosturl;
 
 			$header_array["User-Agent"] = "PHP Script";
-			$header_array["Content-Type"] = "application/x-www-form-urlencoded";
+			$header_array["Content-Type"] = "text/xml";
 
 			if ( !empty( $content ) ) {
 				$header_array["Content-Length"] = strlen( $content );

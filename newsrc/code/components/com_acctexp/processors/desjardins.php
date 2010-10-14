@@ -63,7 +63,7 @@ class processor_desjardins extends XMLprocessor
 	}
 
 	function createRequestXML( $request )
-	{aecDebug("createRequestXML");
+	{
 $xml_request_str = <<<XML
 <?xml version="1.0" encoding="ISO-8859-15"?><request></request>
 XML;
@@ -86,7 +86,7 @@ XML;
 		$amount = $request->int_var['amount'] * 100;
 
 		$return = JURI::root() . 'components/com_acctexp/processors/notify/notify_redirect.php';
-aecDebug($return);
+
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
 		$xml_step3_request .= '	  <merchant id="'.trim($this->settings['custId']).'" key="'.trim($this->settings['transactionKey']).'">'."\n";
@@ -145,7 +145,7 @@ aecDebug($return);
 	}
 
 	function transmitRequestXML( $xml, $request )
-	{aecDebug("transmitRequestXML");
+	{
 		global $mainframe;
 		
 		$path = '/catch';
@@ -162,13 +162,13 @@ aecDebug($return);
 		$curlextra[CURLOPT_VERBOSE]			= 0;
 		$curlextra[CURLOPT_CUSTOMREQUEST]	= 'POST';
 		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
-aecDebug("sending payment request");aecDebug($xml);
+
 		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-aecDebug("response");aecDebug($resp);
+
 		$xml = $this->createRequestStep3XML( $resp, $request );
-aecDebug("sending 3XML payment request");aecDebug($xml);		
+
 		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-aecDebug("response");aecDebug($resp);
+
 		$xml_step3_Obj = simplexml_load_string( $resp );
 
 		//print_r($resp);exit;
@@ -181,7 +181,7 @@ aecDebug("response");aecDebug($resp);
 		$url = $redir_url . "?transaction_id=".$trx_number[0];
 		$url .= "&merchant_id=".$trx_merch_id[0];
 		$url .= "&transaction_key=".$trx_key[0];
-aecDebug("redirecting user to ".$url);
+
 		$mainframe->redirect($url);
 			
 		$response = true;
