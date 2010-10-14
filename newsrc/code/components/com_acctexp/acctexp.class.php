@@ -3866,12 +3866,12 @@ class processor extends serialParamDBTable
 
 			fwrite( $connection, $header );
 
+			$res = "";
 			if ( function_exists( 'stream_set_timeout' ) ) {
 				stream_set_timeout( $connection, 300 );
 
 				$info = stream_get_meta_data( $connection );
 
-				$res = "";
 				while ( !feof( $connection ) && ( !$info["timed_out"] ) ) {
 					$res = fgets( $connection, 8192 );
 				}
@@ -3888,7 +3888,6 @@ class processor extends serialParamDBTable
 					$eventlog->issue( $short, $tags, $event, 128, $params );
 		        }
 			} else {
-				$res = "";
 				while ( !feof( $connection ) ) {
 					$res = fgets( $connection, 1024 );
 				}
@@ -4012,7 +4011,13 @@ class XMLprocessor extends processor
 
 			unset( $var['aec_alternate_checkout'] );
 		} else {
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=checkout', $this->info['secure'] );
+			if ( isset( $this->info['secure'] ) ) {
+				$secure = $this->info['secure'];
+			} else {
+				$secure = false;
+			}
+			
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=checkout', $secure );
 		}
 
 		if ( isset( $var['aec_remove_std_vars'] ) ) {
@@ -6608,7 +6613,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$metaUser->focusSubscription->storeload();
 
-		if ( empty( $invoice ) ) {
+		if ( empty( $invoice->id ) ) {
 			$invoice = new stdClass();
 			$invoice->amount = $amount;
 		}

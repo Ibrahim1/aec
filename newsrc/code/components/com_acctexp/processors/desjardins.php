@@ -89,7 +89,7 @@ XML;
 aecDebug($return);
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
-		$xml_step3_request .= '	  <merchant id="'.trim($xml_step1_Obj->merchant['id']).'" key="'.trim($xml_step1_Obj->merchant['key']).'">'."\n";
+		$xml_step3_request .= '	  <merchant id="'.trim($this->settings['custId']).'" key="'.trim($this->settings['transactionKey']).'">'."\n";
 		$xml_step3_request .= '		<transactions>'."\n";
 		$xml_step3_request .= '		  <transaction id="' . trim($xml_step1_Obj->merchant->login->trx['id']) . '" key="'.trim($xml_step1_Obj->merchant->login->trx['key']) .'" type="purchase" currency="CAD" currencyText="$CAD">'."\n";
 		$xml_step3_request .= '			<amount>'.$amount.'</amount>'."\n";
@@ -162,16 +162,16 @@ aecDebug($return);
 		$curlextra[CURLOPT_VERBOSE]			= 0;
 		$curlextra[CURLOPT_CUSTOMREQUEST]	= 'POST';
 		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
-
+aecDebug("sending payment request");aecDebug($xml);
 		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-
+aecDebug("response");aecDebug($resp);
 		$xml = $this->createRequestStep3XML( $resp, $request );
-		
+aecDebug("sending 3XML payment request");aecDebug($xml);		
 		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-
+aecDebug("response");aecDebug($resp);
 		$xml_step3_Obj = simplexml_load_string( $resp );
 
-		echo "<br>simplexml string<br>" . $xml_step3_Obj->asXML() . "<br><br>";
+		//print_r($resp);exit;
 
 		$redir_url = $xml_step3_Obj->merchant->transactions->transaction->urls->url->path;
 		$trx_number = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_id"]');
@@ -181,7 +181,7 @@ aecDebug($return);
 		$url = $redir_url . "?transaction_id=".$trx_number[0];
 		$url .= "&merchant_id=".$trx_merch_id[0];
 		$url .= "&transaction_key=".$trx_key[0];
-
+aecDebug("redirecting user to ".$url);
 		$mainframe->redirect($url);
 			
 		$response = true;
@@ -189,7 +189,7 @@ aecDebug($return);
 	}
 
 	function parseNotification( $post )
-	{aecDebug("parseNotification");
+	{aecDebug("parseNotification");aecDebug($post);aecDebug($_REQUEST);
 		$response = array();
 		$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
@@ -251,8 +251,8 @@ aecDebug($resp);
 XML;
 
 		$xml .= '<response>';
-		$xml .= '<merchant id="' . trim($xml_step1_Obj->merchant['id']) . '">';
-		$xml .= '<transaction id="YourUniqueTransactionNumber" accepted="yes" />';
+		$xml .= '<merchant id="' . trim($this->settings['custId']) . '">';
+		$xml .= '<transaction id="' . $InvoiceFactory->invoice->invoice_number . '" accepted="yes" />';
 		$xml .= '</merchant>';
 		$xml .= '</response>';
 aecDebug($xml);
