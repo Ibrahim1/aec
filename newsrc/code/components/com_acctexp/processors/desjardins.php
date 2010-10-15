@@ -189,7 +189,7 @@ XML;
 	}
 
 	function parseNotification( $post )
-	{aecDebug("parseNotification");aecDebug($post);aecDebug($_REQUEST);
+	{aecDebug("parseNotification");aecDebug(unserialize( base64_decode( $post['original'] ) ));
 		$response = array();
 		$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
