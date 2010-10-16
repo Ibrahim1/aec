@@ -1498,18 +1498,7 @@ function processNotification( $option, $processor )
 			break;
 	}
 
-	if ( isset( $_REQUEST['aec_passthrough'] ) ) {
-		$_POST = unserialize( base64_decode( $_REQUEST['aec_passthrough'] ) );
-	}
-
-	// Figure out whether this might be an internal redirect
-	if ( is_array( $_POST ) ) {
-		if ( ( count( $_POST ) === 1 ) && isset( $_POST['aec_passthrough'] ) ) {
-			$_POST = unserialize( base64_decode( $_POST['aec_passthrough'] ) );
-		}
-	}
-
-	aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+	//aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
 
 	$response = array();
 	$response['fullresponse'] = $_POST;

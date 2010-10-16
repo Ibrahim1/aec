@@ -144,13 +144,8 @@ XML;
 		return $xml_step3_request;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	function transmitRequestDesjardin( $url, $path, $xml )
 	{
-		global $mainframe;
-		
-		$path = '/catch';
-		$url = 'https://www.labdevtrx3.com' . $path;
-
 		$header = array();
 		$header['MIME-Version']		= "1.0";
 		$header['Content-type']		= "text/xml";
@@ -163,11 +158,21 @@ XML;
 		$curlextra[CURLOPT_CUSTOMREQUEST]	= 'POST';
 		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
 
-		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
+		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
+	}
+
+	function transmitRequestXML( $xml, $request )
+	{
+		global $mainframe;
+		
+		$path = '/catch';
+		$url = 'https://www.labdevtrx3.com' . $path;
+
+		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
 
 		$xml = $this->createRequestStep3XML( $resp, $request );
 
-		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
+		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
 
 		$xml_step3_Obj = simplexml_load_string( $resp );
 
@@ -189,9 +194,22 @@ XML;
 	}
 
 	function parseNotification( $post )
-	{aecDebug("parseNotification");aecDebug(unserialize( base64_decode( $post['original'] ) ));
+	{aecDebug("parseNotification");
 		$response = array();
-		$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+		
+		if ( !empty( $post['original'] ) ) {
+			aecDebug( base64_decode( $post['original'] ));
+			
+			$xml_step3_Obj = simplexml_load_string( $post['original'] );
+			
+			$response['invoice'] = $xml_step3_Obj->xpath('urls/url/parameters/parameter[@name="TrxId"]');
+
+			if ( empty( $response['invoice'] ) ) {
+				$response['invoice'] = $xml_step3_Obj->xpath('transaction/@id]');
+			}
+		} else {
+			$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+		}
 
 		return $response;
 	}
@@ -199,6 +217,35 @@ XML;
 	function validateNotification( $response, $post, $invoice )
 	{aecDebug("validateNotification");
 		$response['valid'] = 0;
+
+		if ( strpos( $post['original'], '<confirm>' ) ) {
+			$response['valid'] = 1;
+		} else {
+$xml_request_str = <<<XML
+<?xml version="1.0" encoding="ISO-8859-15"?><response></response>
+XML;
+
+			$xml_step1_request = new SimpleXMLElement($xml_request_str);
+
+			$merchant = $xml_step1_request->addChild( 'merchant' );
+			$merchant->addAttribute( 'id', trim( $this->settings['custId'] ) );
+
+			$trx = $merchant->addChild( 'transaction' );
+			$trx->addAttribute( 'id', $response['invoice'] );
+			$trx->addAttribute( 'accepted', 'yes' );
+
+			$xml = $xml_step1_request->asXML();
+aecDebug("echoing");aecDebug($xml);
+			echo $xml;exit;
+		}
+
+		return $response;
+	}
+
+	function notify_trail( $InvoiceFactory )
+	{aecDebug("notify_trail");
+		$path = '/catch';
+		$url = 'https://www.labdevtrx3.com' . $path;
 
 $xml_request_str = <<<XML
 <?xml version="1.0" encoding="ISO-8859-15"?><response></response>
@@ -210,53 +257,12 @@ XML;
 		$merchant->addAttribute( 'id', trim( $this->settings['custId'] ) );
 
 		$trx = $merchant->addChild( 'transaction' );
-		$trx->addAttribute( 'id', $response['invoice'] );
+		$trx->addAttribute( 'id', $InvoiceFactory->invoice->invoice_number );
 		$trx->addAttribute( 'accepted', 'yes' );
 
 		$xml = $xml_step1_request->asXML();
 aecDebug($xml);
-		$path = '/catch';
-		$url = 'https://www.labdevtrx3.com' . $path;
-
-		$header = array();
-		$header['MIME-Version']		= "1.0";
-		$header['Content-type']		= "text/xml";
-		$header['Accept']			= "text/xml";
-		$header['Cache-Control']	= "no-cache";
-
-		$curlextra[CURLOPT_RETURNTRANSFER]	= 1;
-		$curlextra[CURLOPT_TIMEOUT]			= 25;
-		$curlextra[CURLOPT_VERBOSE]			= 0;
-		$curlextra[CURLOPT_CUSTOMREQUEST]	= 'POST';
-		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
-
-		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-aecDebug($resp);
-		if ( strpos( $resp, '<confirm>' ) ) {
-			$response['valid'] = 1;
-		} else {
-			$response['error'] = "Validation failed";
-		}
-
-		// Final OK to the server
-		$resp = $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-aecDebug($resp);
-		return $response;
-	}
-
-	function notify_trail( $InvoiceFactory )
-	{aecDebug("notify_trail");aecDebug($_REQUEST);
-		$xml = <<<XML
-<?xml version="1.0" encoding="ISO-8859-15"?>
-XML;
-
-		$xml .= '<response>';
-		$xml .= '<merchant id="' . trim($this->settings['custId']) . '">';
-		$xml .= '<transaction id="' . $InvoiceFactory->invoice->invoice_number . '" accepted="yes" />';
-		$xml .= '</merchant>';
-		$xml .= '</response>';
-aecDebug($xml);
-		echo $xml;
+		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
 		exit;
 	}
 }

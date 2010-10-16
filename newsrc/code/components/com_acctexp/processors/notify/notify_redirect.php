@@ -27,7 +27,7 @@ if ( empty( $post ) ) {
 }
 
 
-$post = array( "original" => base64_encode( serialize( stripslashes( $original ) ) ) );
+$post = array( "original" => base64_encode( stripslashes( $original ) ) );
 // Instead of doing fancy-pants figuring out of the subdirectory, just deduct that from the call
 $path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . implode( '&', $get );
 
