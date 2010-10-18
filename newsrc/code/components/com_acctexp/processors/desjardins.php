@@ -110,13 +110,13 @@ XML;
 		$xml_step3_request .= '			  <url name="cancel">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="task">cancel</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="error">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="task">error</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			</urls>'."\n";
@@ -196,21 +196,16 @@ XML;
 	function parseNotification( $post )
 	{aecDebug("parseNotification");
 		$response = array();
-		
+aecDebug( $post );		
 		if ( !empty( $post['original'] ) ) {
-			aecDebug( base64_decode( $post['original'] ));
-			
-			$xml_step3_Obj = simplexml_load_string( $post['original'] );
-			
-			$response['invoice'] = $xml_step3_Obj->xpath('urls/url/parameters/parameter[@name="TrxId"]');
-
-			if ( empty( $response['invoice'] ) ) {
-				$response['invoice'] = $xml_step3_Obj->xpath('transaction/@id]');
-			}
+			$post['original'] = base64_decode( $post['original'] );
+aecDebug( $post['original']);
+			$response['invoice'] = $this->substring_between( $post['original'], '<transaction id="', '"' );
+aecDebug( $response['invoice'] );
 		} else {
 			$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 		}
-
+aecDebug("response");aecDebug( $response );
 		return $response;
 	}
 
@@ -218,7 +213,7 @@ XML;
 	{aecDebug("validateNotification");
 		$response['valid'] = 0;
 
-		if ( strpos( $post['original'], '<confirm>' ) ) {
+		if ( strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {
 			$response['valid'] = 1;
 		} else {
 $xml_request_str = <<<XML
@@ -265,5 +260,17 @@ aecDebug($xml);
 		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
 		exit;
 	}
+
+	function substring_between( $haystack, $start, $end )
+	{
+		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
+			return false;
+		 } else {
+			$start_position = strpos( $haystack, $start ) + strlen( $start );
+			$end_position = strpos( $haystack, $end, $start_position );
+			return substr( $haystack, $start_position, $end_position - $start_position );
+		}
+	}
+
 }
 ?>

@@ -6,11 +6,6 @@ $bsLoader = new bootstrapLoader();
 // Force redirection to AEC
 $_GET['option'] = 'com_acctexp';
 
-// Block out anything that aims at non-notification actions
-if ( strpos( $_GET['task'], 'notification' ) === false ) {
-	exit;
-}
-
 // Get our GET and POST, but make sure there is no weird stuff going on in those variables.
 $get = null;
 if ( !empty( $_GET ) ) {
@@ -20,12 +15,21 @@ if ( !empty( $_GET ) ) {
 	}
 }
 
+// Block out anything that aims at non-notification actions
+if ( strpos( $_GET['task'], 'notification' ) === false ) {
+	$path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . implode( '&', $get );
+
+	$url = 'http://' . $_SERVER['HTTP_HOST'] . $path;
+
+	header( 'Location: ' . $url );
+	exit;
+}
+
 $original = file_get_contents("php://input");
 
 if ( empty( $post ) ) {
 	$original = $GLOBALS['HTTP_RAW_POST_DATA'];
 }
-
 
 $post = array( "original" => base64_encode( stripslashes( $original ) ) );
 // Instead of doing fancy-pants figuring out of the subdirectory, just deduct that from the call
@@ -40,8 +44,9 @@ if ( $response === false ) {
 	header( 'Location: ' . $url );
 } else {
 	echo $response;
-	exit;
 }
+
+exit;
 
 class bootstrapLoader
 {

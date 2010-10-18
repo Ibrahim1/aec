@@ -970,11 +970,11 @@ class Payment_HTML
 						if ( !empty( $aecConfig->cfg['tos_iframe'] ) && !empty( $aecConfig->cfg['tos'] ) ) { ?>
 							<iframe src="<?php echo $aecConfig->cfg['tos']; ?>" width="100%" height="150px"></iframe>
 							<p><input name="tos" type="checkbox" /><?php echo _CONFIRM_TOS_IFRAME; ?></p>
-							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
 						} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $aecConfig->cfg['tos'] ); ?></p>
-							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
 						} else { ?>
 							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
@@ -1157,11 +1157,11 @@ class Payment_HTML
 						if ( !empty( $aecConfig->cfg['tos_iframe'] ) && !empty( $aecConfig->cfg['tos'] ) ) { ?>
 							<iframe src="<?php echo $aecConfig->cfg['tos']; ?>" width="100%" height="150px"></iframe>
 							<p><input name="tos" type="checkbox" /><?php echo _CONFIRM_TOS_IFRAME; ?></p>
-							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
 						} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $aecConfig->cfg['tos'] ); ?></p>
-							<input type="button" onclick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
 							<?php
 						} else { ?>
 							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
@@ -1665,14 +1665,14 @@ class Payment_HTML
 				<div id="printbutton">
 					<div id="printbutton_inner">
 						<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['address']; ?></textarea>
-						<button onclick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
+						<button onClick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
 					</div>
 					<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
 				</div>
 			<?php } else { ?>
 				<div id="printbutton">
 					<div id="printbutton_inner">
-						<button onclick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
+						<button onClick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
 					</div>
 				</div>
 			<?php } ?>
@@ -1903,7 +1903,7 @@ function joomlaregisterForm($option, $useractivation)
 	<?php if ( isset( $_POST['recurring'] ) ) { ?>
 	<input type="hidden" name="recurring" value="<?php echo $_POST['recurring'];?>" />
 	<?php } ?>
-	<input type="button" value="<?php echo _BUTTON_SEND_REG; ?>" class="button" onclick="submitbutton_reg()" />
+	<input type="button" value="<?php echo _BUTTON_SEND_REG; ?>" class="button" onClick="submitbutton_reg()" />
 	<input type="hidden" name="<?php echo $validate; ?>" value="1" />
 	</form>
 	<?php
