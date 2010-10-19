@@ -194,23 +194,22 @@ XML;
 	}
 
 	function parseNotification( $post )
-	{aecDebug("parseNotification");
+	{
 		$response = array();
-aecDebug( $post );		
+
 		if ( !empty( $post['original'] ) ) {
 			$post['original'] = base64_decode( $post['original'] );
-aecDebug( $post['original']);
+
 			$response['invoice'] = $this->substring_between( $post['original'], '<transaction id="', '"' );
-aecDebug( $response['invoice'] );
 		} else {
 			$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 		}
-aecDebug("response");aecDebug( $response );
+
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
-	{aecDebug("validateNotification");
+	{
 		$response['valid'] = 0;
 
 		if ( strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {
@@ -230,7 +229,7 @@ XML;
 			$trx->addAttribute( 'accepted', 'yes' );
 
 			$xml = $xml_step1_request->asXML();
-aecDebug("echoing");aecDebug($xml);
+
 			echo $xml;exit;
 		}
 
@@ -238,7 +237,7 @@ aecDebug("echoing");aecDebug($xml);
 	}
 
 	function notify_trail( $InvoiceFactory )
-	{aecDebug("notify_trail");
+	{
 		$path = '/catch';
 		$url = 'https://www.labdevtrx3.com' . $path;
 
@@ -256,7 +255,7 @@ XML;
 		$trx->addAttribute( 'accepted', 'yes' );
 
 		$xml = $xml_step1_request->asXML();
-aecDebug($xml);
+
 		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
 		exit;
 	}
