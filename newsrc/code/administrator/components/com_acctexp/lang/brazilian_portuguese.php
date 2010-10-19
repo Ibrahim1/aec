@@ -1843,6 +1843,7 @@ define( '_CURRENCY_THB', 'Baht');
 define( '_CURRENCY_TOP', 'Tonga Pa\'anga');
 define( '_CURRENCY_TTD', 'D&oacute;lar Trinidade &amp; Tobago');
 define( '_CURRENCY_TND', 'Dinar Tunisino');
+define( '_CURRENCY_TRY', 'Turkish Lira');
 define( '_CURRENCY_UGX', 'Xelim Uganda');
 define( '_CURRENCY_UAH', 'Hryvnia da Ucr&acirc;nia');
 define( '_CURRENCY_ECV', 'Unidade de Valor Constante');
