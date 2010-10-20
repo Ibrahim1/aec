@@ -213,8 +213,9 @@ class processor_paypal extends POSTprocessor
 		$payment_type	= null;
 		$payment_status	= null;
 		$reason_code	= null;
+		$pending_reason	= null;
 
-		$getposts = array( 'txn_type', 'receiver_email', 'payment_status', 'payment_type', 'reason_code' );
+		$getposts = array( 'txn_type', 'receiver_email', 'payment_status', 'payment_type', 'reason_code', 'pending_reason' );
 
 		foreach ( $getposts as $n ) {
 			if ( isset( $post[$n] ) ) {
@@ -267,7 +268,7 @@ class processor_paypal extends POSTprocessor
 			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
 				$response['pending']			= 1;
 				$response['pending_reason']	 = 'signup';
-			} elseif ( strcmp( $txn_type, 'paymentreview' ) == 0 ) {
+			} elseif ( ( strcmp( $txn_type, 'paymentreview' ) == 0 ) || ( strcmp( $pending_reason, 'paymentreview' ) == 0 ) ) {
 				$response['pending']			= 1;
 				$response['pending_reason']	 = 'paymentreview';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {

@@ -670,8 +670,9 @@ class processor_paypal_wpp extends XMLprocessor
 		$payment_type	= null;
 		$payment_status	= null;
 		$reason_code	= null;
+		$pending_reason	= null;
 
-		$getposts = array( 'txn_type', 'receiver_email', 'payment_status', 'payment_type', 'reason_code' );
+		$getposts = array( 'txn_type', 'receiver_email', 'payment_status', 'payment_type', 'reason_code', 'pending_reason' );
 
 		foreach ( $getposts as $n ) {
 			if ( isset( $post[$n] ) ) {
@@ -691,9 +692,9 @@ class processor_paypal_wpp extends XMLprocessor
 			}
 
 			// Process payment: Paypal Subscription & Buy Now
-			if ( ( $txn_type == 'web_accept' ) || ( $txn_type == 'subscr_payment' ) || ( $txn_type == 'recurring_payment' ) ) {
+			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
 
-				$recurring = ( ( $txn_type == 'subscr_payment' ) || ( $txn_type == 'recurring_payment' ) );
+				$recurring = ( strcmp( $txn_type, 'subscr_payment' ) == 0 );
 
 				if ( ( strcmp( $payment_type, 'instant' ) == 0 ) && ( strcmp( $payment_status, 'Pending' ) == 0 ) ) {
 					$response['pending_reason'] = $post['pending_reason'];
@@ -703,40 +704,28 @@ class processor_paypal_wpp extends XMLprocessor
 					if ( $this->settings['acceptpendingecheck'] ) {
 						if ( is_object( $invoice ) ) {
 							$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
-							$invoice->check();
-							$invoice->store();
+							$invoice->storeload();
 						}
 
 						$response['valid']			= 1;
-						$response['pending_reason'] = 'echeck';
 					} else {
 						$response['pending']		= 1;
 						$response['pending_reason'] = 'echeck';
 					}
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					if ( $this->settings['acceptpendingecheck'] ) {
-						if ( is_object( $invoice ) ) {
-							$invoiceparams = $invoice->getParams();
+					$response['valid']		= 1;
 
-							if ( isset( $invoiceparams['acceptedpendingecheck'] ) ) {
-								$response['valid']		= 0;
-								$response['duplicate']	= 1;
-
-								$invoice->delParams( array( 'acceptedpendingecheck' ) );
-								$invoice->check();
-								$invoice->store();
-							}
-						} else {
-							$response['valid']			= 1;
+					if ( is_object( $invoice ) ) {
+						if ( isset( $invoice->params['acceptedpendingecheck'] ) ) {
+							$response['valid']		= 0;
+							$response['duplicate']	= 1;
 						}
-					} else {
-						$response['valid']			= 1;
 					}
 				}
-			} elseif ( ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) || ( strcmp( $txn_type, 'recurring_payment_profile_created' ) == 0 ) ) {
-				$response['pending']		= 1;
-				$response['pending_reason'] = 'silent_signup';
-			} elseif ( strcmp( $txn_type, 'paymentreview' ) == 0 ) {
+			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
+				$response['pending']			= 1;
+				$response['pending_reason']	 = 'signup';
+			} elseif ( ( strcmp( $txn_type, 'paymentreview' ) == 0 ) || ( strcmp( $pending_reason, 'paymentreview' ) == 0 ) ) {
 				$response['pending']			= 1;
 				$response['pending_reason']	 = 'paymentreview';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
