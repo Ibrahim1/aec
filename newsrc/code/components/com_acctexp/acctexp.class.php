@@ -12639,11 +12639,12 @@ class Subscription extends serialParamDBTable
 		} else {
 			$query = 'SELECT `name`, `email`'
 					. ' FROM #__users'
-					. ' WHERE `usertype` = \'superadministrator\''
+					. ' WHERE LOWER( usertype ) = \'superadministrator\''
+					. ' OR LOWER( usertype ) = \'super administrator\''
 					;
 			$database->setQuery( $query );
 			$rows = $database->loadObjectList();
-			$row2 = $rows[0];
+			$row2 			= $rows[0];
 
 			$adminName2		= $row2->name;
 			$adminEmail2	= $row2->email;
