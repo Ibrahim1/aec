@@ -256,7 +256,7 @@ XML;
 
 		$xml = $xml_step1_request->asXML();
 
-		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
+		echo $xml;exit;
 		exit;
 	}
 
