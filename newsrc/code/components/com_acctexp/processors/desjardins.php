@@ -130,17 +130,20 @@ XML;
 		$xml_step3_request .= 'Information de la commande'."\n";
 		$xml_step3_request .= "No d'authorisation : ".$request->invoice->invoice_number ."\n";
 		$xml_step3_request .= 'Abonnement : '.$request->plan->name ."\n";
-		$xml_step3_request .= 'Subscription Cost : ' . ((int)($amount/1.075/1.05)/100) ."\n";
-		$xml_step3_request .= 'TPS 5.0 % : '. (($amount/1.075/1.05)*0.05)/100 ."\n";  
-		$xml_step3_request .= 'TVQ 7.5 % : '. ((($amount/1.075/1.05)*0.05 + ($amount/1.075/1.05))*0.075)/100 ."\n";        
-		$xml_step3_request .= 'Total                 : '. $amount/100 ."\n";
+		$xml_step3_request .= 'Subscription Cost : ' . $request->items->total->cost['amount'] ."\n";
+
+		foreach ( $request->items->tax as $tax ) {
+			$xml_step3_request .= $tax['terms']->terms[0]->cost[0]->cost['details'] . ' : '. $tax['cost'] ."\n";
+		}
+
+		$xml_step3_request .= 'Total : '. $request->items->grand_total->cost['amount'] ."\n";
 		$xml_step3_request .= '			   ]]>'."\n";
 		$xml_step3_request .= '			</details_text>'."\n";
 		$xml_step3_request .= '		  </transaction>'."\n";
 		$xml_step3_request .= '		</transactions>'."\n";
 		$xml_step3_request .= '	  </merchant>'."\n";
 		$xml_step3_request .= '	</request>'."\n";
-		
+
 		return $xml_step3_request;
 	}
 

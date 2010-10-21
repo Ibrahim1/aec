@@ -3246,6 +3246,7 @@ class PaymentProcessor
 		$request->metaUser			=& $metaUser;
 		$request->plan				=& $plan;
 		$request->invoice			=& $InvoiceFactory->invoice;
+		$request->items				=& $InvoiceFactory->items;
 		$request->cart				=& $cart;
 
 		return $this->processor->checkoutAction( $request, $InvoiceFactory );
@@ -3273,6 +3274,7 @@ class PaymentProcessor
 		$request->metaUser			=& $metaUser;
 		$request->plan				=& $plan;
 		$request->invoice			=& $InvoiceFactory->invoice;
+		$request->items				=& $InvoiceFactory->items;
 		$request->cart				=& $cart;
 
 		return $this->processor->checkoutProcess( $request, $InvoiceFactory );
