@@ -38,10 +38,10 @@ class mi_eventlog extends MI
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
-		$levels[] = mosHTML::makeOption( 2, _AEC_NOTICE_NUMBER_2 );
-		$levels[] = mosHTML::makeOption( 8, _AEC_NOTICE_NUMBER_8 );
-		$levels[] = mosHTML::makeOption( 32, _AEC_NOTICE_NUMBER_32 );
-		$levels[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
+		$levels[] = JHTML::_('select.option', 2, _AEC_NOTICE_NUMBER_2 );
+		$levels[] = JHTML::_('select.option', 8, _AEC_NOTICE_NUMBER_8 );
+		$levels[] = JHTML::_('select.option', 32, _AEC_NOTICE_NUMBER_32 );
+		$levels[] = JHTML::_('select.option', 128, _AEC_NOTICE_NUMBER_128 );
 
 		if ( !isset( $this->settings['level'] ) ) {
 			$this->settings['level'] = 0;
@@ -55,9 +55,9 @@ class mi_eventlog extends MI
 			$this->settings['level_pre_exp'] = 0;
 		}
 
-		$settings['lists']['level'] = mosHTML::selectList($levels, 'level', 'size="5"', 'value', 'text', $this->settings['level'] );
-		$settings['lists']['level_exp'] = mosHTML::selectList($levels, 'level_exp', 'size="5"', 'value', 'text', $this->settings['level_exp'] );
-		$settings['lists']['level_pre_exp'] = mosHTML::selectList($levels, 'level_pre_exp', 'size="5"', 'value', 'text', $this->settings['level_pre_exp'] );
+		$settings['lists']['level'] = JHTML::_('select.genericlist', $levels, 'level', 'size="5"', 'value', 'text', $this->settings['level'] );
+		$settings['lists']['level_exp'] = JHTML::_('select.genericlist', $levels, 'level_exp', 'size="5"', 'value', 'text', $this->settings['level_exp'] );
+		$settings['lists']['level_pre_exp'] = JHTML::_('select.genericlist', $levels, 'level_pre_exp', 'size="5"', 'value', 'text', $this->settings['level_pre_exp'] );
 
 		return $settings;
 	}

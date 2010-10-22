@@ -398,7 +398,7 @@ function hold( $option, $userid )
 		$frontend = new HTML_frontEnd ();
 		$frontend->hold( $option, $metaUser );
 	} else {
-		aecRedirect( sefRelToAbs( 'index.php' ) );
+		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
 	}
 }
 
@@ -448,7 +448,7 @@ function expired( $option, $userid, $expiration )
 		$frontend = new HTML_frontEnd ();
 		$frontend->expired( $option, $metaUser, $expiration, $invoice, $trial, $continue );
 	} else {
-		aecRedirect( sefRelToAbs( 'index.php' ) );
+		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
 	}
 }
 
@@ -492,7 +492,7 @@ function pending( $option, $userid )
 		$frontend = new HTML_frontEnd ();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
 	} else {
-		aecRedirect( sefRelToAbs( 'index.php' ) );
+		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
 	}
 }
 
@@ -648,7 +648,7 @@ function checkUsernameEmail( $username, $email )
 	$regex = eregi( "[\<|\>|\"|\'|\%|\;|\(|\)|\&]", $username );
 
 	if ( ( strlen( $username ) < 2 ) || $regex ) {
-		mosErrorAlert( JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 ) );
+		aecErrorAlert( JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 ) );
 		return JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 );
 	}
 
@@ -663,7 +663,7 @@ function checkUsernameEmail( $username, $email )
 	$database->setQuery( $query );
 
 	if ( $database->loadResult() ) {
-		mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
+		aecErrorAlert( JText::_( 'WARNREG_INUSE' ) );
 		return JText::_( 'WARNREG_INUSE' );
 	}
 
@@ -675,7 +675,7 @@ function checkUsernameEmail( $username, $email )
 		$database->setQuery( $query );
 
 		if ( $database->loadResult() ) {
-			mosErrorAlert( _REGWARN_EMAIL_INUSE );
+			aecErrorAlert( _REGWARN_EMAIL_INUSE );
 			return _REGWARN_EMAIL_INUSE;
 		}
 	}
@@ -1660,6 +1660,29 @@ function aecSimpleThanks( $option, $renew, $free )
 	$mainframe->SetPageTitle( _THANKYOU_TITLE );
 
 	HTML_Results::thanks( $option, $b );
+}
+
+function aecErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )
+{
+	global $mainframe;
+
+	$text = strip_tags( addslashes( nl2br( $text ) ) );
+
+	switch ( $mode ) {
+		case 2:
+			echo "<script>$action</script> \n";
+			break;
+
+		case 1:
+		default:
+			echo "<script>alert('$text'); $action</script> \n";
+			echo '<noscript>';
+			echo "$text\n";
+			echo '</noscript>';
+			break;
+	}
+
+	$mainframe->close();
 }
 
 function aecNotAuth()

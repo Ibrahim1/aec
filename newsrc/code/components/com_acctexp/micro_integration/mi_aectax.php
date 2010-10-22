@@ -40,9 +40,9 @@ class mi_aectax
 		$settings['locations_amount']	= array( 'inputB' );
 
 		$vatval = array();
-		$vatval[] = mosHTML::makeOption( '0', _MI_MI_AECTAX_SET_VATVAL_NONE );
-		$vatval[] = mosHTML::makeOption( '1', _MI_MI_AECTAX_SET_VATVAL_BASIC );
-		$vatval[] = mosHTML::makeOption( '2', _MI_MI_AECTAX_SET_VATVAL_EXTENDED );
+		$vatval[] = JHTML::_('select.option', '0', _MI_MI_AECTAX_SET_VATVAL_NONE );
+		$vatval[] = JHTML::_('select.option', '1', _MI_MI_AECTAX_SET_VATVAL_BASIC );
+		$vatval[] = JHTML::_('select.option', '2', _MI_MI_AECTAX_SET_VATVAL_EXTENDED );
 
 		if ( isset( $this->settings['vat_validation'] ) ) {
 			$vval = $this->settings['vat_validation'];
@@ -50,12 +50,12 @@ class mi_aectax
 			$vval = '2';
 		}
 
-		$settings['lists']['vat_validation'] = mosHTML::selectList( $vatval, 'vat_validation', 'size="1"', 'value', 'text', $vval );
+		$settings['lists']['vat_validation'] = JHTML::_('select.genericlist', $vatval, 'vat_validation', 'size="1"', 'value', 'text', $vval );
 
 		$modes = array();
-		$modes[] = mosHTML::makeOption( 'pseudo_subtract', _MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT );
-		$modes[] = mosHTML::makeOption( 'add', _MI_MI_AECTAX_SET_MODE_ADD );
-		$modes[] = mosHTML::makeOption( 'subtract', _MI_MI_AECTAX_SET_MODE_SUBTRACT );
+		$modes[] = JHTML::_('select.option', 'pseudo_subtract', _MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT );
+		$modes[] = JHTML::_('select.option', 'add', _MI_MI_AECTAX_SET_MODE_ADD );
+		$modes[] = JHTML::_('select.option', 'subtract', _MI_MI_AECTAX_SET_MODE_SUBTRACT );
 
 		if ( !empty( $this->settings['locations_amount'] ) ) {
 			for ( $i=0; $i<$this->settings['locations_amount']; $i++ ) {
@@ -74,7 +74,7 @@ class mi_aectax
 					$val = 'pseudo_subtract';
 				}
 
-				$settings['lists'][$p.'mode']	= mosHTML::selectList( $modes, $p.'mode', 'size="1"', 'value', 'text', $val );
+				$settings['lists'][$p.'mode']	= JHTML::_('select.genericlist', $modes, $p.'mode', 'size="1"', 'value', 'text', $val );
 			}
 		}
 
@@ -82,7 +82,7 @@ class mi_aectax
 			$this->settings['vat_mode'] = 'pseudo_subtract';
 		}
 
-		$settings['lists']['vat_mode']			= mosHTML::selectList( $modes, 'vat_mode', 'size="1"', 'value', 'text', $this->settings['vat_mode'] );
+		$settings['lists']['vat_mode']			= JHTML::_('select.genericlist', $modes, 'vat_mode', 'size="1"', 'value', 'text', $this->settings['vat_mode'] );
 
 		return $settings;
 	}
@@ -114,13 +114,13 @@ class mi_aectax
 				$settings['location'] = array( 'list', "", "" );
 
 				$loc = array();
-				$loc[] = mosHTML::makeOption( 0, "- - - - - - - -" );
+				$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
 
 				foreach ( $locations as $id => $choice ) {
-					$loc[] = mosHTML::makeOption( $choice['id'], $choice['text'] );
+					$loc[] = JHTML::_('select.option', $choice['id'], $choice['text'] );
 				}
 
-				$settings['lists']['location']	= mosHTML::selectList( $loc, 'location', 'size="1"', 'value', 'text', 0 );
+				$settings['lists']['location']	= JHTML::_('select.genericlist', $loc, 'location', 'size="1"', 'value', 'text', 0 );
 			}
 
 		} else {

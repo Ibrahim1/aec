@@ -304,22 +304,6 @@ class uddeim_restriction extends JTable {
 		}
 	}
 
-	function noMessagesLeft()
-	{
-		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-			global $mainframe;
-
-			$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-			if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
-				include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
-			} else {
-				include_once( $langPathMI . 'english.php' );
-			}
-		}
-
-		mosErrorAlert( _AEC_MI_UDDEIM_NOCREDIT );
-	}
-
 	function useMessage()
 	{
 		if ( $this->hasMessagesLeft() && $this->is_active() ) {

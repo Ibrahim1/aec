@@ -54,10 +54,10 @@ class processor_ideal_advanced extends XMLprocessor
 
 		$bank_selection = array();
 		foreach ( $banks as $name ) {
-			$bank_selection[] = mosHTML::makeOption( $name, $name );
+			$bank_selection[] = JHTML::_('select.option', $name, $name );
 		}
 
-		$s['lists']['bank']	= mosHTML::selectList($bank_selection, 'ideal_advanced_bank', 'size="5"', 'value', 'text', $this->settings['bank'] );
+		$s['lists']['bank']	= JHTML::_( 'select.genericlist', $bank_selection, 'ideal_advanced_bank', 'size="5"', 'value', 'text', $this->settings['bank'] );
 
 		return $s;
 	}

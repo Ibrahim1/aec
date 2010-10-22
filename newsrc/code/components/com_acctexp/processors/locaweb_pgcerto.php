@@ -71,18 +71,18 @@ class processor_locaweb_pgcerto extends XMLprocessor
 
 		// Create a selection box with payment options
 		$paymentOptions					= array();
-		$paymentOptions[]				= mosHTML::makeOption( 'CartaoCredito', 'Cartão de Crédito VISA' );
-		$paymentOptions[]				= mosHTML::makeOption( 'Boleto', 'Boleto Bancário' );
+		$paymentOptions[]				= JHTML::_('select.option', 'CartaoCredito', 'Cartão de Crédito VISA' );
+		$paymentOptions[]				= JHTML::_('select.option', 'Boleto', 'Boleto Bancário' );
 
-		$var['params']['lists']['modulo']	= mosHTML::selectList($paymentOptions, 'modulo', 'size="2"', 'value', 'text', 0);
+		$var['params']['lists']['modulo']	= JHTML::_( 'select.genericlist', $paymentOptions, 'modulo', 'size="2"', 'value', 'text', 0 );
 		$var['params']['modulo']		= array( 'list', _CFG_LOCAWEB_PGCERTO_MODULE_NAME, _CFG_LOCAWEB_PGCERTO_MODULE_DESC);
 
 		// Create a selection box with type of buyer
 		$tipoPessoa						= array();
-		$tipoPessoa[]					= mosHTML::makeOption( 'Fisica', 'Pessoa Física' );
-		$tipoPessoa[]					= mosHTML::makeOption( 'Juridica', 'Pessoa Jurídica' );
+		$tipoPessoa[]					= JHTML::_('select.option', 'Fisica', 'Pessoa Física' );
+		$tipoPessoa[]					= JHTML::_('select.option', 'Juridica', 'Pessoa Jurídica' );
 
-		$var['params']['lists']['tipoPessoa']	= mosHTML::selectList($tipoPessoa, 'tipoPessoa', 'size="2"', 'value', 'text', 0);
+		$var['params']['lists']['tipoPessoa']	= JHTML::_( 'select.genericlist', $tipoPessoa, 'tipoPessoa', 'size="2"', 'value', 'text', 0 );
 		$var['params']['tipoPessoa']			= array( 'list', _CFG_LOCAWEB_PGCERTO_TIPOPESSOA_NAME, _CFG_LOCAWEB_PGCERTO_TIPOPESSOA_DESC);
 
 		$var['params']['cnpj']			= array( 'inputC', _CFG_LOCAWEB_PGCERTO_CNPJ_NAME, _CFG_LOCAWEB_PGCERTO_CNPJ_NAME, '');

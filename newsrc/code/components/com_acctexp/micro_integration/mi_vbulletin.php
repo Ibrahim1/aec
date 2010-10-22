@@ -74,7 +74,7 @@ class mi_vbulletin
 		$sg2	= array();
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
-				$sg[] = mosHTML::makeOption( $group->usergroupid, $group->title );
+				$sg[] = JHTML::_('select.option', $group->usergroupid, $group->title );
 			}
 		}
 
@@ -107,7 +107,7 @@ class mi_vbulletin
 				$v = $this->settings[$si];
 			}
 
-			$settings['lists'][$si]	= mosHTML::selectList( $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
+			$settings['lists'][$si]	= JHTML::_( 'select.genericlist', $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
 		}
 
 		$settings['set_group']				= array( 'list_yesno' );

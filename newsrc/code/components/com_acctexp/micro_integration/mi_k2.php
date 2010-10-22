@@ -59,24 +59,24 @@ class mi_k2
 					$gid = $group->groups_id;
 				}
 
-				$gr[] = mosHTML::makeOption( $gid, $group->name );
+				$gr[] = JHTML::_('select.option', $gid, $group->name );
 
 				if ( !empty( $this->settings['group'] ) ) {
 					if ( $gid == $this->settings['group'] ) {
-						$sg[] = mosHTML::makeOption( $gid, $group->name );
+						$sg[] = JHTML::_('select.option', $gid, $group->name );
 					}
 				}
 
 				if ( !empty( $this->settings['group_exp'] ) ) {
 					if ( $gid == $this->settings['group_exp'] ) {
-						$sge[] = mosHTML::makeOption( $gid, $group->name );
+						$sge[] = JHTML::_('select.option', $gid, $group->name );
 					}
 				}
 			}
 		}
 
-		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group', 'size="4"', 'value', 'text', $sg );
-		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp', 'size="4"', 'value', 'text', $sge );
+		$settings['lists']['group']			= JHTML::_( 'select.genericlist', $gr, 'group', 'size="4"', 'value', 'text', $sg );
+		$settings['lists']['group_exp'] 	= JHTML::_( 'select.genericlist', $gr, 'group_exp', 'size="4"', 'value', 'text', $sge );
 
 		return $settings;
 	}

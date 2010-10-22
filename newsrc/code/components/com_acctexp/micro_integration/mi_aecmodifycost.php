@@ -29,8 +29,8 @@ class mi_aecmodifycost
 		$settings['options']		= array( 'inputB' );
 
 		$modes = array();
-		$modes[] = mosHTML::makeOption( 'basic', _MI_MI_AECMODIFYCOST_SET_MODE_BASIC );
-		$modes[] = mosHTML::makeOption( 'percentage', _MI_MI_AECMODIFYCOST_SET_MODE_PERCENTAGE );
+		$modes[] = JHTML::_('select.option', 'basic', _MI_MI_AECMODIFYCOST_SET_MODE_BASIC );
+		$modes[] = JHTML::_('select.option', 'percentage', _MI_MI_AECMODIFYCOST_SET_MODE_PERCENTAGE );
 
 		if ( !empty( $this->settings['options'] ) ) {
 			for ( $i=0; $i<$this->settings['options']; $i++ ) {
@@ -49,7 +49,7 @@ class mi_aecmodifycost
 					$val = 'basic';
 				}
 
-				$settings['lists'][$p.'mode']			= mosHTML::selectList( $modes, $p.'mode', 'size="1"', 'value', 'text', $val );
+				$settings['lists'][$p.'mode']			= JHTML::_('select.genericlist', $modes, $p.'mode', 'size="1"', 'value', 'text', $val );
 			}
 		}
 
@@ -79,13 +79,13 @@ class mi_aecmodifycost
 				$settings['option'] = array( 'list', "", "" );
 
 				$loc = array();
-				$loc[] = mosHTML::makeOption( 0, "- - - - - - - -" );
+				$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
 
 				foreach ( $options as $id => $choice ) {
-					$loc[] = mosHTML::makeOption( $choice['id'], $choice['text'] );
+					$loc[] = JHTML::_('select.option', $choice['id'], $choice['text'] );
 				}
 
-				$settings['lists']['option']	= mosHTML::selectList( $loc, 'option', 'size="1"', 'value', 'text', 0 );
+				$settings['lists']['option']	= JHTML::_('select.genericlist', $loc, 'option', 'size="1"', 'value', 'text', 0 );
 			}
 
 		} else {

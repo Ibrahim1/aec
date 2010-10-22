@@ -35,11 +35,11 @@ class mi_adminuseraccess
 		$groups = $database->loadObjectList();
 
 		$auagroups = array();
-		$auagroups[] = mosHTML::makeOption(0, 'no group');
+		$auagroups[] = JHTML::_('select.option', 0, 'no group' );
 
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
-				$auagroups[] = mosHTML::makeOption( $group->id, $group->name );
+				$auagroups[] = JHTML::_('select.option', $group->id, $group->name );
 			}
 		}
 
@@ -53,8 +53,8 @@ class mi_adminuseraccess
 
         $settings = array();
 
-		$settings['lists']['group']		= mosHTML::selectList($auagroups, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
-		$settings['lists']['group_exp'] = mosHTML::selectList($auagroups, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
+		$settings['lists']['group']		= JHTML::_('select.genericlist', $auagroups, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
+		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $auagroups, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );

@@ -69,10 +69,10 @@ class processor_iats extends XMLprocessor
 		$settings['exp_unit']		= array( 'list' );
 
 		$perunit = array();
-		$perunit[] = mosHTML::makeOption( 'M', _PAYPLAN_PERUNIT3 );
-		$perunit[] = mosHTML::makeOption( 'Y', _PAYPLAN_PERUNIT4 );
+		$perunit[] = JHTML::_('select.option', 'M', _PAYPLAN_PERUNIT3 );
+		$perunit[] = JHTML::_('select.option', 'Y', _PAYPLAN_PERUNIT4 );
 
-		$settings['lists']['exp_unit']		= mosHTML::selectList( $perunit, 'iats_exp_unit', 'size="4"', 'value', 'text', ( empty($this->settings['exp_unit']) ? 'Y' : $this->settings['exp_unit'] ) );
+		$settings['lists']['exp_unit']		= JHTML::_( 'select.genericlist', $perunit, 'iats_exp_unit', 'size="4"', 'value', 'text', ( empty($this->settings['exp_unit']) ? 'Y' : $this->settings['exp_unit'] ) );
 
 		return $settings;
 	}

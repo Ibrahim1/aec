@@ -35,7 +35,7 @@ class mi_acajoom
 		$li = array();
 		if ( !empty( $lists ) ) {
 			foreach( $lists as $list ) {
-				$li[] = mosHTML::makeOption( $list->id, $list->list_name );
+				$li[] = JHTML::_('select.option', $list->id, $list->list_name );
 			}
 		}
 
@@ -48,8 +48,8 @@ class mi_acajoom
 		}
 
 		$settings = array();
-		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $this->settings['list']);
-		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp']);
+		$settings['lists']['list']		= JHTML::_('select.genericlist', $li, 'list', 'size="4"', 'value', 'text', $this->settings['list']);
+		$settings['lists']['list_exp']	= JHTML::_('select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp']);
 
 		$settings['list']			= array( 'list' );
 		$settings['list_exp']		= array( 'list' );

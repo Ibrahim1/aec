@@ -28,11 +28,11 @@ class mi_googleanalytics
 		$settings['account_id']			= array( 'inputB' );
 		$settings['method'] 			= array( 'list' );
 
-		$listsValues[] = mosHTML::makeOption ( "3", "Asynchronous Tracking" );
-		$listsValues[] = mosHTML::makeOption ( "2", "Standard Trackingg" );
-		$listsValues[] = mosHTML::makeOption ( "1", "Old Urchin Tracking" );
+		$listsValues[] = JHTML::_('select.option', "3", "Asynchronous Tracking" );
+		$listsValues[] = JHTML::_('select.option', "2", "Standard Trackingg" );
+		$listsValues[] = JHTML::_('select.option', "1", "Old Urchin Tracking" );
 
-		$settings['lists']['method']	= mosHTML::selectList( $listsValues, 'method', 'size="1"', 'value', 'text', empty( $this->settings['method'] ) ? '2' : $this->settings['method'] );
+		$settings['lists']['method']	= JHTML::_('select.genericlist', $listsValues, 'method', 'size="1"', 'value', 'text', empty( $this->settings['method'] ) ? '2' : $this->settings['method'] );
 
 		return $settings;
 	}

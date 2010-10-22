@@ -42,10 +42,10 @@ class mi_joomlaplugin
 		foreach( $rows as $plugin ) {
 			$desc = $plugin->folder . ' - ' . substr( strip_tags( $plugin->name ), 0, 30 );
 
-			$pl[] = mosHTML::makeOption( $plugin->folder."_".$plugin->element, $desc );
+			$pl[] = JHTML::_('select.option', $plugin->folder."_".$plugin->element, $desc );
 		}
 
-		$settings['lists']['plugin'] 	= mosHTML::selectList( $pl, 'plugin', 'size="10"', 'value', 'text', $this->settings['plugin'] );
+		$settings['lists']['plugin'] 	= JHTML::_( 'select.genericlist', $pl, 'plugin', 'size="10"', 'value', 'text', $this->settings['plugin'] );
 
 		return $settings;
 	}

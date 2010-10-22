@@ -34,7 +34,7 @@ class mi_apc
 		$sg = array();
 		if ( !empty( $groups ) ) {
 			foreach( $groups as $group ) {
-				$sg[] = mosHTML::makeOption( $group->groupid, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+				$sg[] = JHTML::_('select.option', $group->groupid, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
 			}
 		}
 
@@ -56,8 +56,8 @@ class mi_apc
 			$this->settings['group_exp'] = 0;
 		}
 
-		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
-		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );
+		$settings['lists']['group']		= JHTML::_('select.genericlist', $sg, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
+		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );
 
 		return $settings;
 	}

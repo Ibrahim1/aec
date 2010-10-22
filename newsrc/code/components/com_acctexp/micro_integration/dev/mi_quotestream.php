@@ -44,17 +44,17 @@ class mi_quotestream
 			foreach( $pkg as $p ) {
 				$desc = $p->retailPackageCode . " - " - $p->displayName;
 
-				$sp[] = mosHTML::makeOption( $p->retailPackageCode, $desc );
+				$sp[] = JHTML::_('select.option', $p->retailPackageCode, $desc );
 
 				if ( !empty( $this->settings['products'] ) ) {
 					if ( in_array( $p->retailPackageCode, $this->settings['products'] ) ) {
-						$sps[] = mosHTML::makeOption( $p->retailPackageCode, $desc );
+						$sps[] = JHTML::_('select.option', $p->retailPackageCode, $desc );
 					}
 				}
 			}
 
 			$settings['products']			= array( 'list' );
-			$settings['lists']['products']	= mosHTML::selectList( $sp, 'products[]', 'size="4" multiple="multiple"', 'value', 'text', $sps );
+			$settings['lists']['products']	= JHTML::_( 'select.genericlist', $sp, 'products[]', 'size="4" multiple="multiple"', 'value', 'text', $sps );
 		} else {
 			$settings['products']			= array( 'inputB' );
 		}

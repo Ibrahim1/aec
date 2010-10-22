@@ -37,7 +37,7 @@ class mi_juga
 		$sg = array();
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
-				$sg[] = mosHTML::makeOption( $group->id, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+				$sg[] = JHTML::_('select.option', $group->id, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
 			}
 		}
 
@@ -62,8 +62,8 @@ class mi_juga
 			$selected_enroll_gps_exp		= '';
 		}
 
-		$settings['lists']['enroll_group']		= mosHTML::selectList( $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps );
-		$settings['lists']['enroll_group_exp']	= mosHTML::selectList( $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps_exp );
+		$settings['lists']['enroll_group']		= JHTML::_( 'select.genericlist', $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps );
+		$settings['lists']['enroll_group_exp']	= JHTML::_( 'select.genericlist', $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps_exp );
 
 		$settings['set_remove_group']			= array( 'list_yesno' );
 		$settings['set_enroll_group']			= array( 'list_yesno' );

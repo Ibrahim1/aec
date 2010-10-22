@@ -176,7 +176,7 @@ class processor_epsnetpay extends POSTprocessor
 		$bank_selection = array();
 		while ( isset( $this->settings['merchantactive_' . $merchantnumber] ) ) {
 			if ($this->settings['merchantactive_' . $merchantnumber]) {
-				$bank_selection[] = mosHTML::makeOption( $merchantnumber, $this->settings['merchantname_' . $merchantnumber] );
+				$bank_selection[] = JHTML::_('select.option', $merchantnumber, $this->settings['merchantname_' . $merchantnumber] );
 			}
 			$merchantnumber++;
 		}
@@ -187,7 +187,7 @@ class processor_epsnetpay extends POSTprocessor
 			$selected = $params['bank_selection'];
 		}
 
-		$var['params']['lists']['bank_selection']	= mosHTML::selectList( $bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $selected );
+		$var['params']['lists']['bank_selection']	= JHTML::_( 'select.genericlist', $bank_selection, 'bank_selection', 'size="5"', 'value', 'text', $selected );
 		$var['params']['bank_selection']			= array( "list", "Bank Auswahl", "Bitte w&auml;hlen Sie die gew&uuml;nschte Bank aus." );
 
 		return $var;

@@ -35,7 +35,7 @@ class mi_virtuemart
 		$sg = array();
 		if ( !empty( $shopper_groups ) ) {
 			foreach ( $shopper_groups as $group ) {
-				$sg[] = mosHTML::makeOption( $group->shopper_group_id, $group->shopper_group_name );
+				$sg[] = JHTML::_('select.option', $group->shopper_group_id, $group->shopper_group_name );
 			}
 		}
 
@@ -48,8 +48,8 @@ class mi_virtuemart
 		}
 
 		$settings = array();
-		$settings['lists']['shopper_group']		= mosHTML::selectList( $sg, 'shopper_group', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
-		$settings['lists']['shopper_group_exp'] = mosHTML::selectList( $sg, 'shopper_group_exp', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
+		$settings['lists']['shopper_group']		= JHTML::_( 'select.genericlist', $sg, 'shopper_group', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
+		$settings['lists']['shopper_group_exp'] = JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
 
 		$settings['set_shopper_group']		= array( 'list_yesno' );
 		$settings['shopper_group']			= array( 'list' );

@@ -74,9 +74,9 @@ class mi_acl
 			}
 		}
 
-		$settings['lists']['gid'] 			= mosHTML::selectList( $gtree, 'gid', 'size="6"', 'value', 'text', ( empty( $this->settings['gid'] ) ? 18 : $this->settings['gid'] ) );
-		$settings['lists']['gid_exp'] 		= mosHTML::selectList( $gtree, 'gid_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_exp'] ) ? 18 : $this->settings['gid_exp'] ) );
-		$settings['lists']['gid_pre_exp'] 	= mosHTML::selectList( $gtree, 'gid_pre_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_pre_exp'] ) ? 18 : $this->settings['gid_pre_exp'] ) );
+		$settings['lists']['gid'] 			= JHTML::_('select.genericlist', $gtree, 'gid', 'size="6"', 'value', 'text', ( empty( $this->settings['gid'] ) ? 18 : $this->settings['gid'] ) );
+		$settings['lists']['gid_exp'] 		= JHTML::_('select.genericlist', $gtree, 'gid_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_exp'] ) ? 18 : $this->settings['gid_exp'] ) );
+		$settings['lists']['gid_pre_exp'] 	= JHTML::_('select.genericlist', $gtree, 'gid_pre_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_pre_exp'] ) ? 18 : $this->settings['gid_pre_exp'] ) );
 
 		$subgroups = array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' );
 
@@ -88,7 +88,7 @@ class mi_acl
 				}
 			}
 
-			$settings['lists'][$groupname] = mosHTML::selectList( $gtree, $groupname.'[]', 'size="6" multiple="multiple"', 'value', 'text', $selected );
+			$settings['lists'][$groupname] = JHTML::_('select.genericlist', $gtree, $groupname.'[]', 'size="6" multiple="multiple"', 'value', 'text', $selected );
 		}
 
 		return $settings;

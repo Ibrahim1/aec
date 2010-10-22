@@ -113,16 +113,16 @@ class processor_moneybookers extends POSTprocessor
 		$pmethods = array();
 		$pmethodssel = array();
 		foreach ( $methods as $name => $key ) {
-			$pmethods[] = mosHTML::makeOption ( $key, $name );
+			$pmethods[] = JHTML::_('select.option', $key, $name );
 
 			if ( !empty( $this->settings['payment_methods'] )) {
 				if ( in_array( $key, $this->settings['payment_methods'] ) ) {
-					$pmethodssel[] = mosHTML::makeOption ( $key, $name );
+					$pmethodssel[] = JHTML::_('select.option', $key, $name );
 				}
 			}
 		}
 
-		$settings['lists']['payment_methods'] = mosHTML::selectList( $pmethods, 'payment_methods[]', 'size="8" multiple="multiple"', 'value', 'text', $pmethodssel );
+		$settings['lists']['payment_methods'] = JHTML::_( 'select.genericlist', $pmethods, 'payment_methods[]', 'size="8" multiple="multiple"', 'value', 'text', $pmethodssel );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

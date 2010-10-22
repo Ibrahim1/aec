@@ -33,7 +33,7 @@ class mi_proma
 		$sg = array();
 		if ( !empty( $groups ) ) {
 			foreach( $groups as $group ) {
-				$sg[] = mosHTML::makeOption( $group->groupid, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
+				$sg[] = JHTML::_('select.option', $group->groupid, $group->title . ' - ' . substr( strip_tags( $group->description ), 0, 30 ) );
 			}
 		}
 
@@ -57,8 +57,8 @@ class mi_proma
 			$group_exp = $this->settings['group_exp'];
 		}
 
-		$settings['lists']['group']		= mosHTML::selectList( $sg, 'group', 'size="4"', 'value', 'text', $group );
-		$settings['lists']['group_exp'] = mosHTML::selectList( $sg, 'group_exp', 'size="4"', 'value', 'text', $group_exp );
+		$settings['lists']['group']		= JHTML::_( 'select.genericlist', $sg, 'group', 'size="4"', 'value', 'text', $group );
+		$settings['lists']['group_exp'] = JHTML::_( 'select.genericlist', $sg, 'group_exp', 'size="4"', 'value', 'text', $group_exp );
 
 		return $settings;
 	}

@@ -34,7 +34,7 @@ class mi_aecuserdetails
 
  		$typelist = array();
  		foreach ( $types as $type ) {
- 			$typelist[] = mosHTML::makeOption ( $type, $type );
+ 			$typelist[] = JHTML::_('select.option', $type, $type );
  		}
 
 		if ( !empty( $this->settings['settings'] ) ) {
@@ -45,7 +45,7 @@ class mi_aecuserdetails
 					$this->settings[$p.'type'] = null;
 				}
 
-				$settings['lists'][$p.'type']	= mosHTML::selectList( $typelist, $p.'type', 'size="' . max( 10, min( 20, count( $types ) ) ) . '"', 'value', 'text', $this->settings[$p.'type'] );
+				$settings['lists'][$p.'type']	= JHTML::_('select.genericlist', $typelist, $p.'type', 'size="' . max( 10, min( 20, count( $types ) ) ) . '"', 'value', 'text', $this->settings[$p.'type'] );
 
 				$settings[$p.'short']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_SHORT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_SHORT_DESC );
 
@@ -131,7 +131,7 @@ class mi_aecuserdetails
 
 		$language_code_list = array();
 		foreach ( $language_array as $language ) {
-			$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+			$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
 		}
 
 		$settings	= array();
@@ -176,16 +176,16 @@ class mi_aecuserdetails
 							$options = array();
 							foreach ( $fields as $field ) {
 								if ( !empty( $field[1] ) ) {
-									$options[] = mosHTML::makeOption( trim( $field[0] ), trim( $field[1] ) );
+									$options[] = JHTML::_('select.option', trim( $field[0] ), trim( $field[1] ) );
 								}
 							}
 
-							$lists[$this->settings[$p.'short']]	= mosHTML::selectList( $options, $this->settings[$p.'short'], 'size="1"', 'value', 'text', 0 );
+							$lists[$this->settings[$p.'short']]	= JHTML::_('select.genericlist', $options, $this->settings[$p.'short'], 'size="1"', 'value', 'text', 0 );
 						}
 					}
 
 					if ( $this->settings[$p.'type'] == 'list_language' ) {
-						$lists[$this->settings[$p.'short']] = mosHTML::selectList( $language_code_list, $this->settings[$p.'short'], 'size="10"', 'value', 'text', $content );
+						$lists[$this->settings[$p.'short']] = JHTML::_('select.genericlist', $language_code_list, $this->settings[$p.'short'], 'size="10"', 'value', 'text', $content );
 
 						$this->settings[$p.'type'] = 'list';
 					}

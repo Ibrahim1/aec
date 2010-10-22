@@ -92,24 +92,24 @@ class mi_docman
 			foreach( $groups as $group ) {
 				$desc = $group->groups_name . ' - ' . substr( strip_tags( $group->groups_description ), 0, 30 );
 
-				$gr[] = mosHTML::makeOption( $group->groups_id, $desc );
+				$gr[] = JHTML::_('select.option', $group->groups_id, $desc );
 
 				if ( !empty( $this->settings['group'] ) ) {
 					if ( in_array( $group->groups_id, $this->settings['group'] ) ) {
-						$sg[] = mosHTML::makeOption( $group->groups_id, $desc );
+						$sg[] = JHTML::_('select.option', $group->groups_id, $desc );
 					}
 				}
 
 				if ( !empty( $this->settings['group_exp'] ) ) {
 					if ( in_array( $group->groups_id, $this->settings['group_exp'] ) ) {
-						$sge[] = mosHTML::makeOption( $group->groups_id, $desc );
+						$sge[] = JHTML::_('select.option', $group->groups_id, $desc );
 					}
 				}
 			}
 		}
 
-		$settings['lists']['group']			= mosHTML::selectList( $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
-		$settings['lists']['group_exp'] 	= mosHTML::selectList( $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
+		$settings['lists']['group']			= JHTML::_('select.genericlist', $gr, 'group[]', 'size="4" multiple="multiple"', 'value', 'text', $sg );
+		$settings['lists']['group_exp'] 	= JHTML::_('select.genericlist', $gr, 'group_exp[]', 'size="4" multiple="multiple"', 'value', 'text', $sge );
 
 		if ( !empty( $this->settings['delete_on_set'] ) ) {
 			$des = $this->settings['delete_on_set'];
@@ -124,14 +124,14 @@ class mi_docman
 		}
 
  		$del_opts = array();
-		$del_opts[] = mosHTML::makeOption ( "No", "Just apply group(s) below." );
-		$del_opts[] = mosHTML::makeOption ( "All", "Delete ALL, then apply group(s) below." );
+		$del_opts[] = JHTML::_('select.option', "No", "Just apply group(s) below." );
+		$del_opts[] = JHTML::_('select.option', "All", "Delete ALL, then apply group(s) below." );
 
-		$settings['lists']['delete_on_set']	= mosHTML::selectList( $del_opts, 'delete_on_set', 'size="3"', 'value', 'text', $des );
+		$settings['lists']['delete_on_set']	= JHTML::_('select.genericlist', $del_opts, 'delete_on_set', 'size="3"', 'value', 'text', $des );
 
-		$del_opts[] = mosHTML::makeOption ( "Set", "Delete group(s) selected above, then apply group(s) below." );
+		$del_opts[] = JHTML::_('select.option', "Set", "Delete group(s) selected above, then apply group(s) below." );
 
-		$settings['lists']['delete_on_exp']	= mosHTML::selectList( $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $dee );
+		$settings['lists']['delete_on_exp']	= JHTML::_('select.genericlist', $del_opts, 'delete_on_exp', 'size="3"', 'value', 'text', $dee );
 
 		return $settings;
 	}

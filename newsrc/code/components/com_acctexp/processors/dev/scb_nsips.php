@@ -50,10 +50,10 @@ class processor_scb_nsips extends URLprocessor
 		$settings['customparams']	= array( 'inputD' );
 
  		$typelist = array();
-		$typelist[0] = mosHTML::makeOption ( 1, _CFG_NETDEBIT_TYPE_LISTITEM_ELV );
-		$typelist[1] = mosHTML::makeOption ( 2, _CFG_NETDEBIT_TYPE_LISTITEM_CC );
+		$typelist[0] = JHTML::_('select.option', 1, _CFG_NETDEBIT_TYPE_LISTITEM_ELV );
+		$typelist[1] = JHTML::_('select.option', 2, _CFG_NETDEBIT_TYPE_LISTITEM_CC );
 
-		$settings['lists']['type']	= mosHTML::selectList( $typelist, 'scb_nsips_type', 'size="1"', 'value', 'text', $this->settings['type'] );
+		$settings['lists']['type']	= JHTML::_( 'select.genericlist', $typelist, 'scb_nsips_type', 'size="1"', 'value', 'text', $this->settings['type'] );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

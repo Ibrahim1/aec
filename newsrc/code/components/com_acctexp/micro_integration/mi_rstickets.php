@@ -54,18 +54,18 @@ class mi_rstickets extends MI
 
 			$deps_list = array();
 			foreach ( $departments as $dep ) {
-				$deps_list[] = mosHTML::makeOption ( $dep['DepartmentId'], $dep['DepartmentPrefix'] . ' - ' . $dep['DepartmentName'] );
+				$deps_list[] = JHTML::_('select.option', $dep['DepartmentId'], $dep['DepartmentPrefix'] . ' - ' . $dep['DepartmentName'] );
 			}
 
-			$settings['lists']['department'] = mosHTML::selectList( $deps_list, 'department', 'size="1"', 'value', 'text', $this->settings['department'] );
+			$settings['lists']['department'] = JHTML::_( 'select.genericlist', $deps_list, 'department', 'size="1"', 'value', 'text', $this->settings['department'] );
 		}
 
  		$priorities = array();
-		$priorities[] = mosHTML::makeOption ( "low", "low" );
-		$priorities[] = mosHTML::makeOption ( "normal", "normal" );
-		$priorities[] = mosHTML::makeOption ( "high", "high" );
+		$priorities[] = JHTML::_('select.option', "low", "low" );
+		$priorities[] = JHTML::_('select.option', "normal", "normal" );
+		$priorities[] = JHTML::_('select.option', "high", "high" );
 
-		$settings['lists']['priority'] = mosHTML::selectList( $priorities, 'priority', 'size="1"', 'value', 'text', $this->settings['priority'] );
+		$settings['lists']['priority'] = JHTML::_( 'select.genericlist', $priorities, 'priority', 'size="1"', 'value', 'text', $this->settings['priority'] );
 
 		return $settings;
 	}

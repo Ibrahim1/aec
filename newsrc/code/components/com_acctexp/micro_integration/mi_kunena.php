@@ -37,10 +37,10 @@ class mi_kunena extends MI
 		$ranks = $database->loadObjectList();
 
 		$ranklist = array();
-		$ranklist[] = mosHTML::makeOption ( 0, "--- --- ---" );
+		$ranklist[] = JHTML::_('select.option', 0, "--- --- ---" );
 
 		foreach ( $ranks as $id => $row ) {
-			$ranklist[] = mosHTML::makeOption ( $row->rank_id, $row->rank_id . ': ' . $row->rank_title );
+			$ranklist[] = JHTML::_('select.option', $row->rank_id, $row->rank_id . ': ' . $row->rank_title );
 		}
 
 		$settings['rank']	= array( 'list' );
@@ -50,9 +50,9 @@ class mi_kunena extends MI
 
 		foreach ( $settings as $k => $v ) {
 			if ( isset( $this->settings[$k] ) ) {
-				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="1"', 'value', 'text', $this->settings[$k] );
+				$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $ranklist, $k, 'size="1"', 'value', 'text', $this->settings[$k] );
 			} else {
-				$settings['lists'][$k]	= mosHTML::selectList( $ranklist, $k, 'size="1"', 'value', 'text', '' );
+				$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $ranklist, $k, 'size="1"', 'value', 'text', '' );
 			}
 		}
 

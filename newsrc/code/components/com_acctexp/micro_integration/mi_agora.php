@@ -30,11 +30,11 @@ class mi_agora extends MI
 		$groups = $database->loadObjectList();
 
 		$grouplist = array();
-		$grouplist[] = mosHTML::makeOption ( 0, "--- --- ---" );
+		$grouplist[] = JHTML::_('select.option', 0, "--- --- ---" );
 
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $id => $row ) {
-				$grouplist[] = mosHTML::makeOption ( $row->id, $row->id . ': ' . $row->name );
+				$grouplist[] = JHTML::_('select.option', $row->id, $row->id . ': ' . $row->name );
 			}
 		}
 
@@ -44,11 +44,11 @@ class mi_agora extends MI
 		$roles = $database->loadObjectList();
 
 		$rolelist = array();
-		$rolelist[] = mosHTML::makeOption ( 0, "--- --- ---" );
+		$rolelist[] = JHTML::_('select.option', 0, "--- --- ---" );
 
 		if ( !empty( $roles ) ) {
 			foreach ( $roles as $id => $row ) {
-				$rolelist[] = mosHTML::makeOption ( $row->id, $row->id . ': ' . $row->name );
+				$rolelist[] = JHTML::_('select.option', $row->id, $row->id . ': ' . $row->name );
 			}
 		}
 
@@ -67,9 +67,9 @@ class mi_agora extends MI
 			}
 
 			if ( strpos( $k, "role" ) !== false ) {
-				$settings['lists'][$k]	= mosHTML::selectList( $rolelist, $k, 'size="1"', 'value', 'text', $value );
+				$settings['lists'][$k]	= JHTML::_('select.genericlist', $rolelist, $k, 'size="1"', 'value', 'text', $value );
 			} else {
-				$settings['lists'][$k]	= mosHTML::selectList( $grouplist, $k, 'size="1"', 'value', 'text', $value );
+				$settings['lists'][$k]	= JHTML::_('select.genericlist', $grouplist, $k, 'size="1"', 'value', 'text', $value );
 			}
 		}
 

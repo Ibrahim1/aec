@@ -50,25 +50,25 @@ class mi_g2 extends MI
 		foreach( $groups as $group ) {
 			$desc = $group->g_groupName . '' . substr( strip_tags( "" ), 0, 30 );
 
-			$gr[] = mosHTML::makeOption( $group->g_id, $desc );
+			$gr[] = JHTML::_('select.option', $group->g_id, $desc );
 
 			if ( !empty( $this->settings['groups'] ) ) {
 				if ( in_array( $group->g_id, $this->settings['groups'] ) ) {
-					$sg[] = mosHTML::makeOption( $group->g_id, $desc );
+					$sg[] = JHTML::_('select.option', $group->g_id, $desc );
 				}
 			}
 
 			if ( !empty( $this->settings['groups_sel_scope'] ) ) {
 				if ( in_array( $group->g_id, $this->settings['groups_sel_scope'] ) ) {
-					$sgs[] = mosHTML::makeOption( $group->g_id, $desc );
+					$sgs[] = JHTML::_('select.option', $group->g_id, $desc );
 				}
 			}
 		}
 
 		$settings['groups']				= array( 'list' );
-		$settings['lists']['groups']	= mosHTML::selectList( $gr, 'groups[]', 'size="6" multiple="multiple"', 'value', 'text', $sg );
+		$settings['lists']['groups']	= JHTML::_( 'select.genericlist', $gr, 'groups[]', 'size="6" multiple="multiple"', 'value', 'text', $sg );
 		$settings['groups_sel_scope']			= array( 'list' );
-		$settings['lists']['groups_sel_scope']	= mosHTML::selectList( $gr, 'groups_sel_scope[]', 'size="6" multiple="multiple"', 'value', 'text', $sgs );
+		$settings['lists']['groups_sel_scope']	= JHTML::_( 'select.genericlist', $gr, 'groups_sel_scope[]', 'size="6" multiple="multiple"', 'value', 'text', $sgs );
 
 		return $settings;
 	}
@@ -91,12 +91,12 @@ class mi_g2 extends MI
 			foreach ( $groups as $group ) {
 				$desc = $group->g_groupName . '' . substr( strip_tags( "" ), 0, 30 );
 
-				$gr[] = mosHTML::makeOption( $group->g_id, $desc );
+				$gr[] = JHTML::_('select.option', $group->g_id, $desc );
 			}
 
 			for ( $i=0; $i<$this->settings['groups_sel_amt']; $i++ ) {
 				$settings['g2group_'.$i]			= array( 'list', _MI_MI_G2_USERSELECT_GROUP_NAME, _MI_MI_G2_USERSELECT_GROUP_DESC );
-				$settings['lists']['g2group_'.$i]	= mosHTML::selectList( $gr, 'g2group_'.$i, 'size="6"', 'value', 'text', '' );
+				$settings['lists']['g2group_'.$i]	= JHTML::_( 'select.genericlist', $gr, 'g2group_'.$i, 'size="6"', 'value', 'text', '' );
 			}
 		} else {
 			return false;

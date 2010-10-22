@@ -64,25 +64,25 @@ class processor_payer extends POSTprocessor
 		$settings['item_name']		= array( 'inputE' );
 
  		$debugmode = array();
-		$debugmode[] = mosHTML::makeOption ( "silent", "silent" );
-		$debugmode[] = mosHTML::makeOption ( "brief", "brief" );
-		$debugmode[] = mosHTML::makeOption ( "verbose", "verbose" );
+		$debugmode[] = JHTML::_('select.option', "silent", "silent" );
+		$debugmode[] = JHTML::_('select.option', "brief", "brief" );
+		$debugmode[] = JHTML::_('select.option', "verbose", "verbose" );
 
-		$settings['lists']['debugmode'] = mosHTML::selectList( $debugmode, 'payer_debugmode', 'size="3"', 'value', 'text', $this->settings['debugmode'] );
+		$settings['lists']['debugmode'] = JHTML::_( 'select.genericlist', $debugmode, 'payer_debugmode', 'size="3"', 'value', 'text', $this->settings['debugmode'] );
 
  		$payment_method = array();
-		$payment_method[] = mosHTML::makeOption ( "sms", "sms" );
-		$payment_method[] = mosHTML::makeOption ( "card", "card" );
-		$payment_method[] = mosHTML::makeOption ( "bank", "bank" );
-		$payment_method[] = mosHTML::makeOption ( "phone", "phone" );
-		$payment_method[] = mosHTML::makeOption ( "invoice", "invoice" );
+		$payment_method[] = JHTML::_('select.option', "sms", "sms" );
+		$payment_method[] = JHTML::_('select.option', "card", "card" );
+		$payment_method[] = JHTML::_('select.option', "bank", "bank" );
+		$payment_method[] = JHTML::_('select.option', "phone", "phone" );
+		$payment_method[] = JHTML::_('select.option', "invoice", "invoice" );
 
 		$pm = explode( ';', $this->settings['payment_method'] );
 		foreach ( $pm as $name ) {
-			$selected_methods[] = mosHTML::makeOption( $name, $name );
+			$selected_methods[] = JHTML::_('select.option', $name, $name );
 		}
 
-		$settings['lists']['payment_method'] = mosHTML::selectList( $payment_method, 'payer_payment_method', 'size="5" multiple="multiple"', 'value', 'text', $selected_methods );
+		$settings['lists']['payment_method'] = JHTML::_( 'select.genericlist', $payment_method, 'payer_payment_method', 'size="5" multiple="multiple"', 'value', 'text', $selected_methods );
 
         $settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

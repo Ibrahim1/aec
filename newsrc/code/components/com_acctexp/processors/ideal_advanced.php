@@ -59,11 +59,11 @@ class processor_ideal_advanced extends XMLprocessor
 
 		foreach ( $issuerlist as $IssuerEntry ) {
 			if ( is_a( $IssuerEntry, 'IssuerEntry' ) ) {
-				$options[]	= mosHTML::makeOption( $IssuerEntry->getIssuerID(), $IssuerEntry->getIssuerName() );
+				$options[]	= JHTML::_('select.option', $IssuerEntry->getIssuerID(), $IssuerEntry->getIssuerName() );
 			}
 		}
 
-		$var['params']['lists']['issuerId'] = mosHTML::selectList( $options, 'issuerId', 'size="1"', 'value', 'text', null );
+		$var['params']['lists']['issuerId'] = JHTML::_( 'select.genericlist', $options, 'issuerId', 'size="1"', 'value', 'text', null );
 		$var['params']['issuerId'] = array( 'list', 'Selecteer je bank', null );
 
 		return $var;

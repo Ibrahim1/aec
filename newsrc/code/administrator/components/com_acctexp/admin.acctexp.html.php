@@ -1115,6 +1115,8 @@ class HTML_AcctExp
 
 	function Settings( $option, $aecHTML, $tab_data, $editors )
 	{
+		jimport( 'joomla.html.editor' );
+
 		HTML_myCommon::addBackendCSS();
 		loadOverlib();
 		?>
@@ -1122,9 +1124,12 @@ class HTML_AcctExp
 		    /* <![CDATA[ */
 			function submitbutton(pressbutton) {
 				<?php
+				
+
 				$k = 1;
 				foreach ($editors as $editor) {
-					getEditorContents( 'editor' . $k, $editor );
+					$editor =& JFactory::getEditor();
+					echo $editor->save( $editor );
 					$k++;
 				}
 				?>
@@ -1219,7 +1224,7 @@ class HTML_AcctExp
 				<tr class="row<?php echo $k; ?>">
 					<td width="1%" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td width="1%" align="center"><?php echo $row->processor->id; ?></td>
-					<td width="1%"><?php echo mosHTML::idBox( $i, $row->processor->id, false, 'id' ); ?></td>
+					<td width="1%"><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
 					<td width="15%">
 						<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->processor->info['longname']; ?></a>
 					</td>
@@ -1389,7 +1394,7 @@ class HTML_AcctExp
 					} ?>
 						<tr class="row<?php echo $k; ?>"<?php echo $rowstyle; ?>>
 							<td width="20" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-							<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
+							<td width="20"><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 							<td width="20"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star.png', _AEC_USER_SUBSCRIPTIONS_PRIMARY ) : '&nbsp;'; ?></td>
 							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $row->name; ?> </a></td>
 							<td width="10%" align="left"><?php echo $row->username; ?></td>
@@ -1476,7 +1481,7 @@ class HTML_AcctExp
 				<tr class="row<?php echo $k; ?>">
 					<td width="20" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td width="20" align="center"><?php echo $row->id; ?></td>
-					<td width="20"><?php echo mosHTML::idBox( $i, $row->id, false, 'id' ); ?></td>
+					<td width="20"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 					<td width="15%">
 						<?php
 						if (!isset($row->id)) {
@@ -1712,7 +1717,7 @@ class HTML_AcctExp
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
-					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
 					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td  align="left">
@@ -1765,13 +1770,17 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
+		jimport( 'joomla.html.editor' );
+
+		$editor =& JFactory::getEditor();
+
 		loadOverlib();
 		HTML_myCommon::addBackendCSS(); ?>
 
 		<script type="text/javascript">
 		    /* <![CDATA[ */
 			function submitbutton(pressbutton) {
-				<?php getEditorContents( 'desc', 'desc' ) ; ?>;
+				<?php echo $editor->save( 'desc' ); ?>;
 				submitform( pressbutton );
 			}
 			/* ]]> */
@@ -2113,7 +2122,7 @@ class HTML_AcctExp
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
-					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
 					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td  align="left">
@@ -2337,7 +2346,7 @@ class HTML_AcctExp
 			?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td><?php echo mosHTML::idBox( $i, $rows[$i]->id, false, 'id' ); ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td align="center"><strong><?php echo $rows[$i]->coupon_code; ?></strong></td>
 					<td align="left">

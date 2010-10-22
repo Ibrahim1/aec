@@ -28,9 +28,6 @@ if (version_compare(phpversion(), '5.0') < 0) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
 }
 
-// Make sure we are compatible with joomla1.0
-include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
-
 function com_install()
 {
 	$database = &JFactory::getDBO();
@@ -58,9 +55,6 @@ function com_install()
 
 	// Make sure we are compatible with php4
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
-
-	// Make sure we are compatible with joomla1.0
-	include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
 
 	require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 	require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );

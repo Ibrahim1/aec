@@ -42,26 +42,26 @@ class mi_rsgallery2 extends MI
 		$gr = array();
 		if ( !empty( $galleries ) ) {
 			foreach( $galleries as $gallery ) {
-				$gr[] = mosHTML::makeOption( $gallery->id, $gallery->name );
+				$gr[] = JHTML::_('select.option', $gallery->id, $gallery->name );
 
 				if ( !empty( $this->settings['galleries'] ) ) {
 					if ( in_array( $gallery->id, $this->settings['galleries'] ) ) {
-						$sg[] = mosHTML::makeOption( $gallery->id, $gallery->name );
+						$sg[] = JHTML::_('select.option', $gallery->id, $gallery->name );
 					}
 				}
 
 				if ( !empty( $this->settings['gallery_sel_scope'] ) ) {
 					if ( in_array( $gallery->id, $this->settings['gallery_sel_scope'] ) ) {
-						$sgs[] = mosHTML::makeOption( $gallery->id, $gallery->name );
+						$sgs[] = JHTML::_('select.option', $gallery->id, $gallery->name );
 					}
 				}
 			}
 		}
 
 		$settings['galleries']						= array( 'list' );
-		$settings['lists']['galleries']			= mosHTML::selectList( $gr, 'galleries[]', 'size="6" multiple="multiple"', 'value', 'text', $sg );
+		$settings['lists']['galleries']			= JHTML::_( 'select.genericlist', $gr, 'galleries[]', 'size="6" multiple="multiple"', 'value', 'text', $sg );
 		$settings['gallery_sel_scope']			= array( 'list' );
-		$settings['lists']['gallery_sel_scope']	= mosHTML::selectList( $gr, 'gallery_sel_scope[]', 'size="6" multiple="multiple"', 'value', 'text', $sgs );
+		$settings['lists']['gallery_sel_scope']	= JHTML::_( 'select.genericlist', $gr, 'gallery_sel_scope[]', 'size="6" multiple="multiple"', 'value', 'text', $sgs );
 
 		return $settings;
 	}
@@ -84,12 +84,12 @@ class mi_rsgallery2 extends MI
 			foreach ( $galleries as $gallery ) {
 				$desc = $gallery->name . '' . substr( strip_tags( "" ), 0, 30 );
 
-				$gr[] = mosHTML::makeOption( $gallery->id, $desc );
+				$gr[] = JHTML::_('select.option', $gallery->id, $desc );
 			}
 
 			for ( $i=0; $i<$this->settings['gallery_sel_amt']; $i++ ) {
 				$settings['mi_gallery_'.$i]			= array( 'list', _MI_MI_RSGALLERY2_GALLERY_USERSELECT_NAME, _MI_MI_RSGALLERY2_GALLERY_USERSELECT_DESC );
-				$settings['lists']['mi_gallery_'.$i]	= mosHTML::selectList( $gr, 'mi_gallery_'.$i, 'size="6"', 'value', 'text', '' );
+				$settings['lists']['mi_gallery_'.$i]	= JHTML::_( 'select.genericlist', $gr, 'mi_gallery_'.$i, 'size="6"', 'value', 'text', '' );
 			}
 		} else {
 			return false;

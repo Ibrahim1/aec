@@ -875,14 +875,14 @@ function editUser( $option, $userid, $subscriptionid, $task )
  	}
 
 	$group_selection = array();
-	$group_selection[] = mosHTML::makeOption( '',			_EXPIRE_SET );
-	$group_selection[] = mosHTML::makeOption( 'now',		_EXPIRE_NOW );
-	$group_selection[] = mosHTML::makeOption( 'exclude',	_EXPIRE_EXCLUDE );
-	$group_selection[] = mosHTML::makeOption( 'include',	_EXPIRE_INCLUDE );
-	$group_selection[] = mosHTML::makeOption( 'close',		_EXPIRE_CLOSE );
-	$group_selection[] = mosHTML::makeOption( 'hold',		_EXPIRE_HOLD );
+	$group_selection[] = JHTML::_('select.option', '',			_EXPIRE_SET );
+	$group_selection[] = JHTML::_('select.option', 'now',		_EXPIRE_NOW );
+	$group_selection[] = JHTML::_('select.option', 'exclude',	_EXPIRE_EXCLUDE );
+	$group_selection[] = JHTML::_('select.option', 'include',	_EXPIRE_INCLUDE );
+	$group_selection[] = JHTML::_('select.option', 'close',		_EXPIRE_CLOSE );
+	$group_selection[] = JHTML::_('select.option', 'hold',		_EXPIRE_HOLD );
 
-	$lists['set_status'] = mosHTML::selectList( $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
+	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
 
 	$invoices = array();
 	$couponsh = array();
@@ -990,7 +990,7 @@ function editUser( $option, $userid, $subscriptionid, $task )
 	// get available plans
 	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
-	$lists['assignto_plan'] = mosHTML::selectList( $available_plans, 'assignto_plan', 'size="5"', 'value', 'text', 0 );
+	$lists['assignto_plan'] = JHTML::_('select.genericlist', $available_plans, 'assignto_plan', 'size="5"', 'value', 'text', 0 );
 
 	$userMIs = $metaUser->getUserMIs();
 
@@ -1834,31 +1834,31 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$sel = array();
 	if ( $set_group != "manual" ) {
-		$sel[] = mosHTML::makeOption( 'expiration ASC',		_EXP_ASC );
-		$sel[] = mosHTML::makeOption( 'expiration DESC',	_EXP_DESC );
+		$sel[] = JHTML::_('select.option', 'expiration ASC',	_EXP_ASC );
+		$sel[] = JHTML::_('select.option', 'expiration DESC',	_EXP_DESC );
 	}
 
-	$sel[] = mosHTML::makeOption( 'name ASC',			_NAME_ASC );
-	$sel[] = mosHTML::makeOption( 'name DESC',			_NAME_DESC );
-	$sel[] = mosHTML::makeOption( 'lastname ASC',		_LASTNAME_ASC );
-	$sel[] = mosHTML::makeOption( 'lastname DESC',		_LASTNAME_DESC );
-	$sel[] = mosHTML::makeOption( 'username ASC',		_LOGIN_ASC );
-	$sel[] = mosHTML::makeOption( 'username DESC',		_LOGIN_DESC );
-	$sel[] = mosHTML::makeOption( 'signup_date ASC',	_SIGNUP_ASC );
-	$sel[] = mosHTML::makeOption( 'signup_date DESC',	_SIGNUP_DESC );
+	$sel[] = JHTML::_('select.option', 'name ASC',			_NAME_ASC );
+	$sel[] = JHTML::_('select.option', 'name DESC',			_NAME_DESC );
+	$sel[] = JHTML::_('select.option', 'lastname ASC',		_LASTNAME_ASC );
+	$sel[] = JHTML::_('select.option', 'lastname DESC',		_LASTNAME_DESC );
+	$sel[] = JHTML::_('select.option', 'username ASC',		_LOGIN_ASC );
+	$sel[] = JHTML::_('select.option', 'username DESC',		_LOGIN_DESC );
+	$sel[] = JHTML::_('select.option', 'signup_date ASC',	_SIGNUP_ASC );
+	$sel[] = JHTML::_('select.option', 'signup_date DESC',	_SIGNUP_DESC );
 
 	if ( $set_group != "manual" ) {
-		$sel[] = mosHTML::makeOption( 'lastpay_date ASC',	_LASTPAY_ASC );
-		$sel[] = mosHTML::makeOption( 'lastpay_date DESC',	_LASTPAY_DESC );
-		$sel[] = mosHTML::makeOption( 'plan_name ASC',		_PLAN_ASC );
-		$sel[] = mosHTML::makeOption( 'plan_name DESC',		_PLAN_DESC );
-		$sel[] = mosHTML::makeOption( 'status ASC',			_STATUS_ASC );
-		$sel[] = mosHTML::makeOption( 'status DESC',		_STATUS_DESC );
-		$sel[] = mosHTML::makeOption( 'type ASC',			_TYPE_ASC );
-		$sel[] = mosHTML::makeOption( 'type DESC',			_TYPE_DESC );
+		$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	_LASTPAY_ASC );
+		$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	_LASTPAY_DESC );
+		$sel[] = JHTML::_('select.option', 'plan_name ASC',		_PLAN_ASC );
+		$sel[] = JHTML::_('select.option', 'plan_name DESC',	_PLAN_DESC );
+		$sel[] = JHTML::_('select.option', 'status ASC',		_STATUS_ASC );
+		$sel[] = JHTML::_('select.option', 'status DESC',		_STATUS_DESC );
+		$sel[] = JHTML::_('select.option', 'type ASC',			_TYPE_ASC );
+		$sel[] = JHTML::_('select.option', 'type DESC',			_TYPE_DESC );
 	}
 
-	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby_subscr', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -1868,53 +1868,53 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$database->setQuery( $query );
 	$db_plans = $database->loadObjectList();
 
-	$plans[] = mosHTML::makeOption( '0', _FILTER_PLAN, 'id', 'name' );
+	$plans[] = JHTML::_('select.option', '0', _FILTER_PLAN, 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
-	$lists['filterplanid']	= mosHTML::selectList( $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
+	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
-	$plans2[] = mosHTML::makeOption( '0', _BIND_USER, 'id', 'name' );
+	$plans2[] = JHTML::_('select.option', '0', _BIND_USER, 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans2 = array_merge( $plans2, $db_plans );
 	}
-	$lists['planid']	= mosHTML::selectList( $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
+	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
 
 	$group_selection = array();
-	$group_selection[] = mosHTML::makeOption( 'excluded',	_AEC_SEL_EXCLUDED );
-	$group_selection[] = mosHTML::makeOption( 'pending',	_AEC_SEL_PENDING );
-	$group_selection[] = mosHTML::makeOption( 'active',		_AEC_SEL_ACTIVE );
-	$group_selection[] = mosHTML::makeOption( 'expired',	_AEC_SEL_EXPIRED );
-	$group_selection[] = mosHTML::makeOption( 'closed',		_AEC_SEL_CLOSED );
-	$group_selection[] = mosHTML::makeOption( 'cancelled',	_AEC_SEL_CANCELLED );
-	$group_selection[] = mosHTML::makeOption( 'hold',		_AEC_SEL_HOLD );
-	$group_selection[] = mosHTML::makeOption( 'notconfig',	_AEC_SEL_NOT_CONFIGURED );
+	$group_selection[] = JHTML::_('select.option', 'excluded',	_AEC_SEL_EXCLUDED );
+	$group_selection[] = JHTML::_('select.option', 'pending',	_AEC_SEL_PENDING );
+	$group_selection[] = JHTML::_('select.option', 'active',	_AEC_SEL_ACTIVE );
+	$group_selection[] = JHTML::_('select.option', 'expired',	_AEC_SEL_EXPIRED );
+	$group_selection[] = JHTML::_('select.option', 'closed',	_AEC_SEL_CLOSED );
+	$group_selection[] = JHTML::_('select.option', 'cancelled',	_AEC_SEL_CANCELLED );
+	$group_selection[] = JHTML::_('select.option', 'hold',		_AEC_SEL_HOLD );
+	$group_selection[] = JHTML::_('select.option', 'notconfig',	_AEC_SEL_NOT_CONFIGURED );
 
 	$selected_groups = array();
 	if ( is_array( $groups ) ) {
 		foreach ($groups as $name ) {
-			$selected_groups[] = mosHTML::makeOption( $name, $name );
+			$selected_groups[] = JHTML::_('select.option', $name, $name );
 		}
 	}
 
-	$lists['groups'] = mosHTML::selectList($group_selection, 'groups[]', 'size="5" multiple="multiple"', 'value', 'text', $selected_groups);
+	$lists['groups'] = JHTML::_('select.genericlist', $group_selection, 'groups[]', 'size="5" multiple="multiple"', 'value', 'text', $selected_groups);
 
 	$group_selection = array();
-	$group_selection[] = mosHTML::makeOption( '',			_EXPIRE_SET );
-	$group_selection[] = mosHTML::makeOption( 'now',		_EXPIRE_NOW );
-	$group_selection[] = mosHTML::makeOption( 'exclude',	_EXPIRE_EXCLUDE );
-	$group_selection[] = mosHTML::makeOption( 'lifetime',	_AEC_CMN_LIFETIME );
-	$group_selection[] = mosHTML::makeOption( 'include',	_EXPIRE_INCLUDE );
-	$group_selection[] = mosHTML::makeOption( 'close',		_EXPIRE_CLOSE );
-	$group_selection[] = mosHTML::makeOption( 'hold',		_EXPIRE_HOLD );
-	$group_selection[] = mosHTML::makeOption( 'add_1',		_EXPIRE_ADD01MONTH );
-	$group_selection[] = mosHTML::makeOption( 'add_3',		_EXPIRE_ADD03MONTH );
-	$group_selection[] = mosHTML::makeOption( 'add_12',	_EXPIRE_ADD12MONTH );
-	$group_selection[] = mosHTML::makeOption( 'set_1',		_EXPIRE_01MONTH );
-	$group_selection[] = mosHTML::makeOption( 'set_3',		_EXPIRE_03MONTH );
-	$group_selection[] = mosHTML::makeOption( 'set_12',	_EXPIRE_12MONTH );
+	$group_selection[] = JHTML::_('select.option', '',			_EXPIRE_SET );
+	$group_selection[] = JHTML::_('select.option', 'now',		_EXPIRE_NOW );
+	$group_selection[] = JHTML::_('select.option', 'exclude',	_EXPIRE_EXCLUDE );
+	$group_selection[] = JHTML::_('select.option', 'lifetime',	_AEC_CMN_LIFETIME );
+	$group_selection[] = JHTML::_('select.option', 'include',	_EXPIRE_INCLUDE );
+	$group_selection[] = JHTML::_('select.option', 'close',		_EXPIRE_CLOSE );
+	$group_selection[] = JHTML::_('select.option', 'hold',		_EXPIRE_HOLD );
+	$group_selection[] = JHTML::_('select.option', 'add_1',		_EXPIRE_ADD01MONTH );
+	$group_selection[] = JHTML::_('select.option', 'add_3',		_EXPIRE_ADD03MONTH );
+	$group_selection[] = JHTML::_('select.option', 'add_12',	_EXPIRE_ADD12MONTH );
+	$group_selection[] = JHTML::_('select.option', 'set_1',		_EXPIRE_01MONTH );
+	$group_selection[] = JHTML::_('select.option', 'set_3',		_EXPIRE_03MONTH );
+	$group_selection[] = JHTML::_('select.option', 'set_12',	_EXPIRE_12MONTH );
 
-	$lists['set_expiration'] = mosHTML::selectList($group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
+	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
 	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
 }
@@ -1939,7 +1939,7 @@ function editSettings( $option )
 	$lists = array();
 
 	$currency_code_list	= AECToolbox::aecCurrencyField( true, true, true );
-	$lists['currency_code_general'] = mosHTML::selectList( $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
+	$lists['currency_code_general'] = JHTML::_('select.genericlist', $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
 
 	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
@@ -1947,7 +1947,7 @@ function editSettings( $option )
 		$aecConfig->cfg['entry_plan'] = 0;
 	}
 
-	$lists['entry_plan'] = mosHTML::selectList( $available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $aecConfig->cfg['entry_plan'] );
+	$lists['entry_plan'] = JHTML::_('select.genericlist', $available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $aecConfig->cfg['entry_plan'] );
 
 	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
@@ -1964,7 +1964,7 @@ function editSettings( $option )
 	}
 
 	// Create GID related Lists
-	$lists['checkout_as_gift_access'] 		= mosHTML::selectList( $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
+	$lists['checkout_as_gift_access'] 		= JHTML::_('select.genericlist', $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
 
 	$tab_data = array();
 
@@ -2253,20 +2253,20 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( _CFG_TAB_EXPERT_TITLE, key( $params ), '<h2>' . _CFG_TAB_EXPERT_SUBTITLE . '</h2>' );
 
-	$error_reporting_notices[] = mosHTML::makeOption( 512, _AEC_NOTICE_NUMBER_512 );
-	$error_reporting_notices[] = mosHTML::makeOption( 128, _AEC_NOTICE_NUMBER_128 );
-	$error_reporting_notices[] = mosHTML::makeOption( 32, _AEC_NOTICE_NUMBER_32 );
-	$error_reporting_notices[] = mosHTML::makeOption( 8, _AEC_NOTICE_NUMBER_8 );
-	$error_reporting_notices[] = mosHTML::makeOption( 2, _AEC_NOTICE_NUMBER_2 );
-	$lists['error_notification_level']			= mosHTML::selectList($error_reporting_notices, 'error_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['error_notification_level'] );
-	$lists['email_notification_level']			= mosHTML::selectList($error_reporting_notices, 'email_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['email_notification_level'] );
+	$error_reporting_notices[] = JHTML::_('select.option', 512, _AEC_NOTICE_NUMBER_512 );
+	$error_reporting_notices[] = JHTML::_('select.option', 128, _AEC_NOTICE_NUMBER_128 );
+	$error_reporting_notices[] = JHTML::_('select.option', 32, _AEC_NOTICE_NUMBER_32 );
+	$error_reporting_notices[] = JHTML::_('select.option', 8, _AEC_NOTICE_NUMBER_8 );
+	$error_reporting_notices[] = JHTML::_('select.option', 2, _AEC_NOTICE_NUMBER_2 );
+	$lists['error_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'error_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['error_notification_level'] );
+	$lists['email_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'email_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['email_notification_level'] );
 
 	$pph					= new PaymentProcessorHandler();
 	$gwlist					= $pph->getProcessorList();
 
 	$gw_list_enabled		= array();
 	$gw_list_enabled_html	= array();
-	$gw_list_enabled_html[] = mosHTML::makeOption( 'none', _AEC_CMN_NONE_SELECTED );
+	$gw_list_enabled_html[] = JHTML::_('select.option', 'none', _AEC_CMN_NONE_SELECTED );
 
 	// Display Processor descriptions?
 	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
@@ -2298,23 +2298,23 @@ function editSettings( $option )
 				}
 
 				// Add to Description List
-				$gw_list_enabled_html[] = mosHTML::makeOption( $gwname, $pp->info['longname'] );
+				$gw_list_enabled_html[] = JHTML::_('select.option', $gwname, $pp->info['longname'] );
 
 			}
 		}
 	}
 
-	$lists['gwlist']			= mosHTML::selectList($gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 3) . '" multiple="multiple"', 'value', 'text', $gwlist_selected);
+	$lists['gwlist']			= JHTML::_('select.genericlist', $gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 3) . '" multiple="multiple"', 'value', 'text', $gwlist_selected);
 
 	$grouplist = ItemGroupHandler::getTree();
 
 	$glist = array();
 
 	foreach ( $grouplist as $id => $glisti ) {
-		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
 	}
 
-	$lists['root_group'] 		= mosHTML::selectList( $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', $aecConfig->cfg['root_group'] );
+	$lists['root_group'] 		= JHTML::_('select.genericlist', $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', $aecConfig->cfg['root_group'] );
 
 	$editors = array();
 	foreach ( $tab_data as $tab ) {
@@ -2544,12 +2544,12 @@ function editProcessor( $id, $option )
 					$currency_code_list = array();
 					foreach ( $currency_array as $currency ) {
 						if ( defined( '_CURRENCY_' . $currency )) {
-							$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+							$currency_code_list[] = JHTML::_('select.option', $currency, constant( '_CURRENCY_' . $currency ) );
 						}
 					}
 
 					// Create list
-					$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
 					$settings_array[$name][0] = 'list';
 					break;
 				case 'list_language':
@@ -2563,15 +2563,15 @@ function editProcessor( $id, $option )
 					// Transform languages into OptionArray
 					$language_code_list = array();
 					foreach ( $language_array as $language ) {
-						$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+						$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
 					}
 					// Create list
-					$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
 					$settings_array[$name][0] = 'list';
 					break;
 				case 'list_plan':
 					// Create list
-					$lists[$setting_name] = mosHTML::selectList($available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
+					$lists[$setting_name] = JHTML::_('select.genericlist', $available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
 					$settings_array[$name][0] = 'list';
 					break;
 				default:
@@ -2661,11 +2661,11 @@ function editProcessor( $id, $option )
 				$pp->getInfo();
 
 				// Add to general PP List
-				$pp_list_html[] = mosHTML::makeOption( $ppname, $readppname );
+				$pp_list_html[] = JHTML::_('select.option', $ppname, $readppname );
 			}
 		}
 
-		$lists['processor']	= mosHTML::selectList( $pp_list_html, 'processor', 'size="' . max(min(count($pplist), 24), 2) . '"', 'value', 'text' );
+		$lists['processor']	= JHTML::_('select.genericlist', $pp_list_html, 'processor', 'size="' . max(min(count($pplist), 24), 2) . '"', 'value', 'text' );
 
 		$params['processor'] = array( 'list' );
 		$settingsparams = array();
@@ -2907,22 +2907,22 @@ function listSubscriptionPlans( $option )
 	$glist		= array();
 	$sel_groups	= array();
 
-	$glist[] = mosHTML::makeOption( 0, '- - - - - -' );
+	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 
 	if ( empty( $filter_group ) ) {
-		$sel_groups[] = mosHTML::makeOption( 0, '- - - - - -' );
+		$sel_groups[] = JHTML::_('select.option', 0, '- - - - - -' );
 	}
 
 	foreach ( $grouplist as $id => $glisti ) {
-		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
 		if ( !empty( $filter_group ) ) {
 			if ( in_array( $glisti[0], $filter_group ) ) {
-				$sel_groups[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+				$sel_groups[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
 			}
 		}
 	}
 
-	$lists['filter_group'] = mosHTML::selectList( $glist, 'filter_group[]', 'size="' . min(8,count($glist)+1) . '" multiple="multiple"', 'value', 'text', $sel_groups );
+	$lists['filter_group'] = JHTML::_('select.genericlist', $glist, 'filter_group[]', 'size="' . min(8,count($glist)+1) . '" multiple="multiple"', 'value', 'text', $sel_groups );
 
  	HTML_AcctExp::listSubscriptionPlans( $rows, $lists, $pageNav, $option );
  }
@@ -3048,12 +3048,12 @@ function editSubscriptionPlan( $id, $option )
 
 	$glist = array();
 
-	$glist[] = mosHTML::makeOption( 0, '- - - - - -' );
+	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 	foreach ( $grouplist as $id => $glisti ) {
-		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
 	}
 
-	$lists['add_group'] 			= mosHTML::selectList( $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
 	$params['add_group']			= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
@@ -3123,13 +3123,13 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	// make the select list for first trial period units
-	$perunit[] = mosHTML::makeOption( 'D', _PAYPLAN_PERUNIT1 );
-	$perunit[] = mosHTML::makeOption( 'W', _PAYPLAN_PERUNIT2 );
-	$perunit[] = mosHTML::makeOption( 'M', _PAYPLAN_PERUNIT3 );
-	$perunit[] = mosHTML::makeOption( 'Y', _PAYPLAN_PERUNIT4 );
+	$perunit[] = JHTML::_('select.option', 'D', _PAYPLAN_PERUNIT1 );
+	$perunit[] = JHTML::_('select.option', 'W', _PAYPLAN_PERUNIT2 );
+	$perunit[] = JHTML::_('select.option', 'M', _PAYPLAN_PERUNIT3 );
+	$perunit[] = JHTML::_('select.option', 'Y', _PAYPLAN_PERUNIT4 );
 
-	$lists['trial_periodunit'] = mosHTML::selectList( $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
-	$lists['full_periodunit'] = mosHTML::selectList( $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
+	$lists['trial_periodunit'] = JHTML::_('select.genericlist', $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
+	$lists['full_periodunit'] = JHTML::_('select.genericlist', $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
 
 	$params['processors_remap'] = array("subarea_change", "plan_params");
 
@@ -3243,7 +3243,12 @@ function editSubscriptionPlan( $id, $option )
 			// ...assign new list fields
 			switch( $settings_array[$name][0] ) {
 				case 'list_yesno':
-					$lists[$setting_name] = mosHTML::yesnoSelectList( $setting_name, '', $value );
+					$arr = array(
+						JHTML::_('select.option', 0, JText::_( 'no' ) ),
+						JHTML::_('select.option', 1, JText::_( 'yes' ) ),
+					);
+
+					$lists[$setting_name] = JHTML::_('select.genericlist', $arr, $setting_name, '', 'value', 'text', (int) $value );
 
 					$settings_array[$name][0] = 'list';
 					break;
@@ -3256,12 +3261,12 @@ function editSubscriptionPlan( $id, $option )
 					$currency_code_list = array();
 					foreach ( $currency_array as $currency ) {
 						if ( defined( '_CURRENCY_' . $currency )) {
-							$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+							$currency_code_list[] = JHTML::_('select.option', $currency, constant( '_CURRENCY_' . $currency ) );
 						}
 					}
 
 					// Create list
-					$lists[$setting_name] = mosHTML::selectList( $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
+					$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
 					$settings_array[$name][0] = 'list';
 					break;
 
@@ -3276,10 +3281,10 @@ function editSubscriptionPlan( $id, $option )
 					// Transform languages into OptionArray
 					$language_code_list = array();
 					foreach ( $language_array as $language ) {
-						$language_code_list[] = mosHTML::makeOption( $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+						$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
 					}
 					// Create list
-					$lists[$setting_name] = mosHTML::selectList( $language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
+					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
 					$settings_array[$name][0] = 'list';
 					break;
 
@@ -3331,7 +3336,7 @@ function editSubscriptionPlan( $id, $option )
 
 	// get available active plans
 	$available_plans = array();
-	$available_plans[] = mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+	$available_plans[] = JHTML::_('select.option', '0', _PAYPLAN_NOPLAN );
 
 	$query = 'SELECT `id` AS value, `name` AS text'
 			. ' FROM #__acctexp_plans'
@@ -3346,8 +3351,8 @@ function editSubscriptionPlan( $id, $option )
  	}
 	$total_plans	= min( max( (count( $active_plans ) + 1 ), 4 ), 20 );
 
-	$lists['fallback'] = mosHTML::selectList($active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
-	$lists['standard_parent'] = mosHTML::selectList($active_plans, 'standard_parent', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
+	$lists['fallback'] = JHTML::_('select.genericlist', $active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
+	$lists['standard_parent'] = JHTML::_('select.genericlist', $active_plans, 'standard_parent', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
 
 	// get similar plans
 	if ( !empty( $params_values['similarplans'] ) ) {
@@ -3362,7 +3367,7 @@ function editSubscriptionPlan( $id, $option )
 		$sel_similar_plans = 0;
 	}
 
-	$lists['similarplans'] = mosHTML::selectList($payment_plans, 'similarplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_similar_plans);
+	$lists['similarplans'] = JHTML::_('select.genericlist', $payment_plans, 'similarplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_similar_plans);
 
 	// get equal plans
 	if ( !empty( $params_values['equalplans'] ) ) {
@@ -3377,7 +3382,7 @@ function editSubscriptionPlan( $id, $option )
 		$sel_equal_plans = 0;
 	}
 
-	$lists['equalplans'] = mosHTML::selectList($payment_plans, 'equalplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_equal_plans);
+	$lists['equalplans'] = JHTML::_('select.genericlist', $payment_plans, 'equalplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_equal_plans);
 
 	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
 
@@ -3403,7 +3408,7 @@ function editSubscriptionPlan( $id, $option )
 		$selected_mi = array();
 	}
 
-	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
+	$lists['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
 
 	$inherited = $row->getMicroIntegrationsSeparate();
 
@@ -3417,13 +3422,13 @@ function editSubscriptionPlan( $id, $option )
 		}
 	}
 
-	$lists['micro_integrations_inherited'] = mosHTML::selectList($inherited_list, 'micro_integrations_inherited[]', 'size="' . min((count( $inherited_list ) + 1), 25) . '" disabled="disabled"', 'value', 'text', array());
+	$lists['micro_integrations_inherited'] = JHTML::_('select.genericlist', $inherited_list, 'micro_integrations_inherited[]', 'size="' . min((count( $inherited_list ) + 1), 25) . '" disabled="disabled"', 'value', 'text', array());
 
 	$mi_handler = new microIntegrationHandler();
 	$mi_list = $mi_handler->getIntegrationList();
 
 	$mi_htmllist = array();
-	$mi_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
+	$mi_htmllist[]	= JHTML::_('select.option', '', _AEC_CMN_NONE_SELECTED );
 
 	foreach ( $mi_list as $name ) {
 		$mi = new microIntegration( $database );
@@ -3431,7 +3436,7 @@ function editSubscriptionPlan( $id, $option )
 		if ( $mi->callIntegration() ){
 			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
 			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . substr($mi->desc, 0, 120);
-			$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
+			$mi_htmllist[] = JHTML::_('select.option', $name, $fullname );
 		}
 	}
 
@@ -3448,18 +3453,18 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	// make the select list for first trial period units
-	$cartmode[] = mosHTML::makeOption( '0', _PAYPLAN_CARTMODE_INHERIT );
-	$cartmode[] = mosHTML::makeOption( '1', _PAYPLAN_CARTMODE_FORCE_CART );
-	$cartmode[] = mosHTML::makeOption( '2', _PAYPLAN_CARTMODE_FORCE_DIRECT );
+	$cartmode[] = JHTML::_('select.option', '0', _PAYPLAN_CARTMODE_INHERIT );
+	$cartmode[] = JHTML::_('select.option', '1', _PAYPLAN_CARTMODE_FORCE_CART );
+	$cartmode[] = JHTML::_('select.option', '2', _PAYPLAN_CARTMODE_FORCE_DIRECT );
 
-	$lists['cart_behavior'] = mosHTML::selectList( $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
+	$lists['cart_behavior'] = JHTML::_('select.genericlist', $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
 
 	$customparamsarray->hasperplanmi = false;
 
 	if ( !empty( $aecConfig->cfg['per_plan_mis'] ) || !empty( $hidden_mi ) ) {
 		$customparamsarray->hasperplanmi = true;
 
-		$lists['micro_integrations_plan'] = mosHTML::selectList( $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', array() );
+		$lists['micro_integrations_plan'] = JHTML::_('select.genericlist', $mi_htmllist, 'micro_integrations_plan[]', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" multiple="multiple"', 'value', 'text', array() );
 
 		$custompar = array();
 
@@ -3912,12 +3917,12 @@ function editItemGroup( $id, $option )
 
 	$glist = array();
 
-	$glist[] = mosHTML::makeOption( 0, '- - - - - -' );
+	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 	foreach ( $grouplist as $id => $glisti ) {
-		$glist[] = mosHTML::makeOption( $glisti[0], $glisti[1] );
+		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
 	}
 
-	$lists['add_group'] 	= mosHTML::selectList( $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+	$lists['add_group'] 	= JHTML::_('select.genericlist', $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
 	$params['add_group']	= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
@@ -3942,7 +3947,7 @@ function editItemGroup( $id, $option )
 		$colorlist[] = $obj;
 	}
 
-	$lists['color'] = mosHTML::selectList($colorlist, 'color', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'color', 'BBDDFF'));
+	$lists['color'] = JHTML::_('select.genericlist', $colorlist, 'color', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'color', 'BBDDFF'));
 
 	$icons = array( 'blue', 'green', 'orange', 'pink', 'purple', 'red', 'yellow' );
 
@@ -3956,7 +3961,7 @@ function editItemGroup( $id, $option )
 		$iconlist[] = $obj;
 	}
 
-	$lists['icon'] = mosHTML::selectList($iconlist, 'icon', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'icon', 'blue'));
+	$lists['icon'] = JHTML::_('select.genericlist', $iconlist, 'icon', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'icon', 'blue'));
 
 	// get available micro integrations
 	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
@@ -3980,7 +3985,7 @@ function editItemGroup( $id, $option )
 		$selected_mi = array();
 	}
 
-	$lists['micro_integrations'] = mosHTML::selectList($mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
+	$lists['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
 
 	$settings = new aecSettings ( 'itemgroup', 'general' );
 	if ( is_array( $customparams_values ) ) {
@@ -4191,16 +4196,16 @@ function listMicroIntegrations( $option )
 	}
 
 	$sel = array();
-	$sel[] = mosHTML::makeOption( 'ordering ASC',		_ORDERING_ASC );
-	$sel[] = mosHTML::makeOption( 'ordering DESC',		_ORDERING_DESC );
-	$sel[] = mosHTML::makeOption( 'id ASC',				_ID_ASC );
-	$sel[] = mosHTML::makeOption( 'id DESC',			_ID_DESC );
-	$sel[] = mosHTML::makeOption( 'name ASC',			_NAME_ASC );
-	$sel[] = mosHTML::makeOption( 'name DESC',			_NAME_DESC );
-	$sel[] = mosHTML::makeOption( 'class_name ASC',		_CLASSNAME_ASC );
-	$sel[] = mosHTML::makeOption( 'class_name DESC',	_CLASSNAME_DESC );
+	$sel[] = JHTML::_('select.option', 'ordering ASC',		_ORDERING_ASC );
+	$sel[] = JHTML::_('select.option', 'ordering DESC',		_ORDERING_DESC );
+	$sel[] = JHTML::_('select.option', 'id ASC',			_ID_ASC );
+	$sel[] = JHTML::_('select.option', 'id DESC',			_ID_DESC );
+	$sel[] = JHTML::_('select.option', 'name ASC',			_NAME_ASC );
+	$sel[] = JHTML::_('select.option', 'name DESC',			_NAME_DESC );
+	$sel[] = JHTML::_('select.option', 'class_name ASC',	_CLASSNAME_ASC );
+	$sel[] = JHTML::_('select.option', 'class_name DESC',	_CLASSNAME_DESC );
 
-	$lists['orderNav'] = mosHTML::selectList( $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -4210,11 +4215,11 @@ function listMicroIntegrations( $option )
 	$database->setQuery( $query );
 	$db_plans = $database->loadObjectList();
 
-	$plans[] = mosHTML::makeOption( '0', _FILTER_PLAN, 'id', 'name' );
+	$plans[] = JHTML::_('select.option', '0', _FILTER_PLAN, 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
-	$lists['filterplanid']	= mosHTML::selectList( $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
+	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
 	HTML_AcctExp::listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering );
 }
@@ -4254,11 +4259,11 @@ function editMicroIntegration ( $id, $option )
 
 					$len = 60 - AECToolbox::visualstrlen( trim( $nname ) );
 					$fullname = str_replace( '#', '&nbsp;', str_pad( $nname, $len, '#' ) ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
-					$mi_htmllist[] = mosHTML::makeOption( $name, $fullname );
+					$mi_htmllist[] = JHTML::_('select.option', $name, $fullname );
 				}
 			}
 
-			$lists['class_name'] = mosHTML::selectList( $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '"', 'value', 'text', '' );
+			$lists['class_name'] = JHTML::_('select.genericlist', $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '"', 'value', 'text', '' );
 		} else {
 			$lists['class_name'] = '';
 		}
@@ -4609,7 +4614,7 @@ function editCoupon( $id, $option, $new, $type )
 
 	// get available plans
 	$available_plans = array();
-	$available_plans[]			= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+	$available_plans[]			= JHTML::_('select.option', '0', _PAYPLAN_NOPLAN );
 
 	$query = 'SELECT `id` as value, `name` as text'
 			. ' FROM #__acctexp_plans'
@@ -4637,7 +4642,7 @@ function editCoupon( $id, $option, $new, $type )
 		$sel_usage_plans = 0;
 	}
 
-	$lists['usage_plans']		= mosHTML::selectList($all_plans, 'usage_plans[]', 'size="' . $total_all_plans . '" multiple="multiple"',
+	$lists['usage_plans']		= JHTML::_('select.genericlist', $all_plans, 'usage_plans[]', 'size="' . $total_all_plans . '" multiple="multiple"',
 									'value', 'text', $sel_usage_plans);
 
 
@@ -4672,7 +4677,7 @@ function editCoupon( $id, $option, $new, $type )
  		$selected_mi = array();
  	}
 
-	$lists['micro_integrations'] = mosHTML::selectList( $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi );
+	$lists['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi );
 
 	$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
 			. ' FROM #__acctexp_coupons'
@@ -4713,7 +4718,7 @@ function editCoupon( $id, $option, $new, $type )
 			}
 		}
 
-		$lists[$cpn] = mosHTML::selectList($coupons, $cpn.'[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $cur);
+		$lists[$cpn] = JHTML::_('select.genericlist', $coupons, $cpn.'[]', 'size="' . min((count( $coupons ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $cur);
 	}
 
 	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
@@ -6127,15 +6132,15 @@ function importData( $option )
 		$params['import_file']			= array( 'file', 'Upload', 'Upload a file and select it for importing', '' );
 
 		$file_htmllist		= array();
-		$file_htmllist[]	= mosHTML::makeOption( '', _AEC_CMN_NONE_SELECTED );
+		$file_htmllist[]	= JHTML::_('select.option', '', _AEC_CMN_NONE_SELECTED );
 
 		if ( !empty( $file_list ) ) {
 			foreach ( $file_list as $name ) {
-				$file_htmllist[] = mosHTML::makeOption( $name, $name );
+				$file_htmllist[] = JHTML::_('select.option', $name, $name );
 			}
 		}
 
-		$lists['file_select'] = mosHTML::selectList( $file_htmllist, 'file_select', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '"', 'value', 'text', 0 );
+		$lists['file_select'] = JHTML::_('select.genericlist', $file_htmllist, 'file_select', 'size="' . min( ( count( $file_htmllist ) + 1 ), 25 ) . '"', 'value', 'text', 0 );
 	} else {
 		$options = array();
 
@@ -6166,10 +6171,10 @@ function importData( $option )
 								);
 
 				$field_htmllist		= array();
-				$field_htmllist[]	= mosHTML::makeOption( 0, 'Ignore' );
+				$field_htmllist[]	= JHTML::_('select.option', 0, 'Ignore' );
 
 				foreach ( $fields as $name => $longname ) {
-					$field_htmllist[] = mosHTML::makeOption( $name, $longname );
+					$field_htmllist[] = JHTML::_('select.option', $name, $longname );
 				}
 
 				$cols = count( $import->rows[0] );
@@ -6180,7 +6185,7 @@ function importData( $option )
 
 					$params['convert_field_'.$i] = array( 'list', '', '', '' );
 
-					$lists['convert_field_'.$i] = mosHTML::selectList( $field_htmllist, 'convert_field_'.$i, 'size="1"', 'value', 'text', 0 );
+					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1"', 'value', 'text', 0 );
 				}
 
 				$rows_count = count( $import->rows );
@@ -6196,7 +6201,7 @@ function importData( $option )
 
 				$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
-				$lists['assign_plan'] = mosHTML::selectList( $available_plans, 'assign_plan', 'size="5"', 'value', 'text', 0 );
+				$lists['assign_plan'] = JHTML::_('select.genericlist', $available_plans, 'assign_plan', 'size="5"', 'value', 'text', 0 );
 			} else {
 				$import->getConversionList();
 
@@ -6369,17 +6374,17 @@ function exportData( $option, $cmd=null )
 			}
 
 			if ( $user === false ) {
-				$listitems[] = mosHTML::makeOption( $user_exports[$i]->id, substr( $user_exports[$i]->name, 0, 64 ) . ' - ' . 'last used: ' . $user_exports[$i]->lastused_date . ', created: ' . $user_exports[$i]->created_date );
+				$listitems[] = JHTML::_('select.option', $user_exports[$i]->id, substr( $user_exports[$i]->name, 0, 64 ) . ' - ' . 'last used: ' . $user_exports[$i]->lastused_date . ', created: ' . $user_exports[$i]->created_date );
 			} else {
 				$ix = $i - $user;
-				$listitems[] = mosHTML::makeOption( $system_exports[$ix]->id, substr( $system_exports[$ix]->name, 0, 64 ) . ' - ' . 'last used: ' . $system_exports[$ix]->lastused_date . ', created: ' . $system_exports[$ix]->created_date );
+				$listitems[] = JHTML::_('select.option', $system_exports[$ix]->id, substr( $system_exports[$ix]->name, 0, 64 ) . ' - ' . 'last used: ' . $system_exports[$ix]->lastused_date . ', created: ' . $system_exports[$ix]->created_date );
 			}
 		}
 	} else {
-		$listitems[] = mosHTML::makeOption( 0, " --- No saved Preset available --- " );
+		$listitems[] = JHTML::_('select.option', 0, " --- No saved Preset available --- " );
 	}
 
-	$lists['selected_export'] = mosHTML::selectList($listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries ) ) . '"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );
+	$lists['selected_export'] = JHTML::_('select.genericlist', $listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries ) ) . '"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -6392,63 +6397,63 @@ function exportData( $option, $cmd=null )
 	$selected_plans = array();
 	$plans = array();
 	foreach ( $db_plans as $dbplan ) {
-		$plans[] = mosHTML::makeOption( $dbplan->id, $dbplan->name );
+		$plans[] = JHTML::_('select.option', $dbplan->id, $dbplan->name );
 
 		if ( !empty( $filter_values->planid ) ) {
 			if ( in_array( $dbplan->id, $filter_values->planid ) ) {
-				$selected_plans[] = mosHTML::makeOption( $dbplan->id, $dbplan->name );
+				$selected_plans[] = JHTML::_('select.option', $dbplan->id, $dbplan->name );
 			}
 		}
 	}
 
-	$lists['planid']	= mosHTML::selectList( $plans, 'planid[]', 'class="inputbox" size="' . min( 20, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
+	$lists['planid']	= JHTML::_('select.genericlist', $plans, 'planid[]', 'class="inputbox" size="' . min( 20, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
 
 	// Statusfilter
 	$group_selection = array();
-	$group_selection[] = mosHTML::makeOption( 'excluded',	_AEC_SEL_EXCLUDED );
-	$group_selection[] = mosHTML::makeOption( 'pending',	_AEC_SEL_PENDING );
-	$group_selection[] = mosHTML::makeOption( 'trial',		_AEC_SEL_TRIAL );
-	$group_selection[] = mosHTML::makeOption( 'active',		_AEC_SEL_ACTIVE );
-	$group_selection[] = mosHTML::makeOption( 'expired',	_AEC_SEL_EXPIRED );
-	$group_selection[] = mosHTML::makeOption( 'closed',		_AEC_SEL_CLOSED );
-	$group_selection[] = mosHTML::makeOption( 'cancelled',	_AEC_SEL_CANCELLED );
-	$group_selection[] = mosHTML::makeOption( 'manual',		_AEC_SEL_NOT_CONFIGURED );
+	$group_selection[] = JHTML::_('select.option', 'excluded',	_AEC_SEL_EXCLUDED );
+	$group_selection[] = JHTML::_('select.option', 'pending',	_AEC_SEL_PENDING );
+	$group_selection[] = JHTML::_('select.option', 'trial',		_AEC_SEL_TRIAL );
+	$group_selection[] = JHTML::_('select.option', 'active',	_AEC_SEL_ACTIVE );
+	$group_selection[] = JHTML::_('select.option', 'expired',	_AEC_SEL_EXPIRED );
+	$group_selection[] = JHTML::_('select.option', 'closed',	_AEC_SEL_CLOSED );
+	$group_selection[] = JHTML::_('select.option', 'cancelled',	_AEC_SEL_CANCELLED );
+	$group_selection[] = JHTML::_('select.option', 'manual',	_AEC_SEL_NOT_CONFIGURED );
 
 	$selected_status = array();
 	if ( !empty( $filter_values->status ) ) {
 		foreach ( $filter_values->status as $name ) {
-			$selected_status[] = mosHTML::makeOption( $name, $name );
+			$selected_status[] = JHTML::_('select.option', $name, $name );
 		}
 	}
 
-	$lists['status'] = mosHTML::selectList($group_selection, 'status[]', 'size="6" multiple="multiple"', 'value', 'text', $selected_status);
+	$lists['status'] = JHTML::_('select.genericlist', $group_selection, 'status[]', 'size="6" multiple="multiple"', 'value', 'text', $selected_status);
 
 	// Ordering
 	$sel = array();
-	$sel[] = mosHTML::makeOption( 'expiration ASC',		_EXP_ASC );
-	$sel[] = mosHTML::makeOption( 'expiration DESC',		_EXP_DESC );
-	$sel[] = mosHTML::makeOption( 'name ASC',				_NAME_ASC );
-	$sel[] = mosHTML::makeOption( 'name DESC',				_NAME_DESC );
-	$sel[] = mosHTML::makeOption( 'username ASC',			_LOGIN_ASC );
-	$sel[] = mosHTML::makeOption( 'username DESC',		_LOGIN_DESC );
-	$sel[] = mosHTML::makeOption( 'signup_date ASC',		_SIGNUP_ASC );
-	$sel[] = mosHTML::makeOption( 'signup_date DESC',	_SIGNUP_DESC );
-	$sel[] = mosHTML::makeOption( 'lastpay_date ASC',	_LASTPAY_ASC );
-	$sel[] = mosHTML::makeOption( 'lastpay_date DESC',	_LASTPAY_DESC );
-	$sel[] = mosHTML::makeOption( 'plan_name ASC',		_PLAN_ASC );
-	$sel[] = mosHTML::makeOption( 'plan_name DESC',		_PLAN_DESC );
-	$sel[] = mosHTML::makeOption( 'status ASC',			_STATUS_ASC );
-	$sel[] = mosHTML::makeOption( 'status DESC',			_STATUS_DESC );
-	$sel[] = mosHTML::makeOption( 'type ASC',				_TYPE_ASC );
-	$sel[] = mosHTML::makeOption( 'type DESC',				_TYPE_DESC );
+	$sel[] = JHTML::_('select.option', 'expiration ASC',	_EXP_ASC );
+	$sel[] = JHTML::_('select.option', 'expiration DESC',	_EXP_DESC );
+	$sel[] = JHTML::_('select.option', 'name ASC',			_NAME_ASC );
+	$sel[] = JHTML::_('select.option', 'name DESC',			_NAME_DESC );
+	$sel[] = JHTML::_('select.option', 'username ASC',		_LOGIN_ASC );
+	$sel[] = JHTML::_('select.option', 'username DESC',		_LOGIN_DESC );
+	$sel[] = JHTML::_('select.option', 'signup_date ASC',	_SIGNUP_ASC );
+	$sel[] = JHTML::_('select.option', 'signup_date DESC',	_SIGNUP_DESC );
+	$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	_LASTPAY_ASC );
+	$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	_LASTPAY_DESC );
+	$sel[] = JHTML::_('select.option', 'plan_name ASC',		_PLAN_ASC );
+	$sel[] = JHTML::_('select.option', 'plan_name DESC',	_PLAN_DESC );
+	$sel[] = JHTML::_('select.option', 'status ASC',		_STATUS_ASC );
+	$sel[] = JHTML::_('select.option', 'status DESC',		_STATUS_DESC );
+	$sel[] = JHTML::_('select.option', 'type ASC',			_TYPE_ASC );
+	$sel[] = JHTML::_('select.option', 'type DESC',			_TYPE_DESC );
 
-	$lists['orderby'] = mosHTML::selectList( $sel, 'orderby', 'class="inputbox" size="10"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
+	$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="10"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
 
 	// Export Method
 	$sel = array();
-	$sel[] = mosHTML::makeOption( 'csv', 'csv' );
+	$sel[] = JHTML::_('select.option', 'csv', 'csv' );
 
-	$lists['export_method'] = mosHTML::selectList( $sel, 'export_method', 'class="inputbox" size="4"', 'value', 'text', 'csv' );
+	$lists['export_method'] = JHTML::_('select.genericlist', $sel, 'export_method', 'class="inputbox" size="4"', 'value', 'text', 'csv' );
 
 	$settings = new aecSettings ( 'export', 'general' );
 

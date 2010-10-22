@@ -29,8 +29,11 @@ if (  ( version_compare( phpversion(), '5.0') >= 0 )  && ( version_compare( phpv
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/phplt5_2.php' );
 }
 
-// and joomla 1.0
-include_once( JPATH_SITE . '/components/com_acctexp/lib/j15/j15.php' );
+// Get old language file names
+JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
+
+$lang =& JFactory::getLanguage();
+$GLOBALS['mosConfig_lang']          = $lang->getBackwardLang();
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
@@ -3159,14 +3162,14 @@ class PaymentProcessor
 			$cc = array();
 			$ccs = array();
 			foreach ( $cc_array as $ccname ) {
-				$cc[] = mosHTML::makeOption( $ccname, $ccname );
+				$cc[] = JHTML::_('select.option', $ccname, $ccname );
 
 				if ( in_array( $ccname, $set ) ) {
-					$ccs[] = mosHTML::makeOption( $ccname, $ccname );
+					$ccs[] = JHTML::_('select.option', $ccname, $ccname );
 				}
 			}
 
-			$settings['lists']['cc_icons'] = mosHTML::selectList( $cc, $this->processor_name.'_cc_icons[]', 'size="4" multiple="multiple"', 'value', 'text', $ccs );
+			$settings['lists']['cc_icons'] = JHTML::_( 'select.genericlist', $cc, $this->processor_name.'_cc_icons[]', 'size="4" multiple="multiple"', 'value', 'text', $ccs );
 		}
 
 		return $settings;
@@ -4123,10 +4126,10 @@ class XMLprocessor extends processor
 
 					$options = array();
 					foreach ( $cctlist as $ccname => $cclongname ) {
-						$options[] = mosHTML::makeOption( $ccname, $cclongname );
+						$options[] = JHTML::_('select.option', $ccname, $cclongname );
 					}
 
-					$var['params']['lists']['cardType'] = mosHTML::selectList( $options, 'cardType', 'size="1" style="width:120px;" class="aec_formfield" title="'._AEC_CCFORM_CARDNUMBER_DESC.'" ', 'value', 'text', $vcontent );
+					$var['params']['lists']['cardType'] = JHTML::_( 'select.genericlist', $options, 'cardType', 'size="1" style="width:120px;" class="aec_formfield" title="'._AEC_CCFORM_CARDNUMBER_DESC.'" ', 'value', 'text', $vcontent );
 					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME.$pf );
 					break;
 				case 'card_number':
@@ -4138,10 +4141,10 @@ class XMLprocessor extends processor
 					$months = array();
 					for( $i = 1; $i < 13; $i++ ){
 						$month = str_pad( $i, 2, "0", STR_PAD_LEFT );
-						$months[] = mosHTML::makeOption( $month, $month );
+						$months[] = JHTML::_('select.option', $month, $month );
 					}
 
-					$var['params']['lists']['expirationMonth'] = mosHTML::selectList( $months, 'expirationMonth', 'size="1" class="aec_formfield" style="width:50px;" title="'._AEC_CCFORM_EXPIRATIONMONTH_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['lists']['expirationMonth'] = JHTML::_( 'select.genericlist', $months, 'expirationMonth', 'size="1" class="aec_formfield" style="width:50px;" title="'._AEC_CCFORM_EXPIRATIONMONTH_DESC.'"', 'value', 'text', $vcontent );
 					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME.$pf, _AEC_CCFORM_EXPIRATIONMONTH_DESC );
 					break;
 				case 'card_exp_year':
@@ -4150,10 +4153,10 @@ class XMLprocessor extends processor
 					$years = array();
 
 					for ( $i = $year; $i < $year + 15; $i++ ) {
-						$years[] = mosHTML::makeOption( $i, $i );
+						$years[] = JHTML::_('select.option', $i, $i );
 					}
 
-					$var['params']['lists']['expirationYear'] = mosHTML::selectList( $years, 'expirationYear', 'size="1" class="aec_formfield" style="width:70px;" title="'._AEC_CCFORM_EXPIRATIONYEAR_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['lists']['expirationYear'] = JHTML::_( 'select.genericlist', $years, 'expirationYear', 'size="1" class="aec_formfield" style="width:70px;" title="'._AEC_CCFORM_EXPIRATIONYEAR_DESC.'"', 'value', 'text', $vcontent );
 					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME.$pf, _AEC_CCFORM_EXPIRATIONYEAR_DESC );
 					break;
 				case 'card_cvv2':
@@ -4297,13 +4300,13 @@ class XMLprocessor extends processor
 					$statelist = array();
 					foreach ( $states as $state ) {
 						if ( strpos( $state, '---' ) !== false ) {
-							$statelist[] = mosHTML::makeOption( '" disabled="disabled', $state );
+							$statelist[] = JHTML::_('select.option', '" disabled="disabled', $state );
 						} else {
-							$statelist[] = mosHTML::makeOption( $state, $state );
+							$statelist[] = JHTML::_('select.option', $state, $state );
 						}
 					}
 
-					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLSTATE_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['lists']['billState'] = JHTML::_( 'select.genericlist', $statelist, 'billState', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLSTATE_DESC.'"', 'value', 'text', $vcontent );
 					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME.$pf, _AEC_USERFORM_BILLSTATE_DESC );
 					break;
 				case 'state_usca':
@@ -4319,13 +4322,13 @@ class XMLprocessor extends processor
 					$statelist = array();
 					foreach ( $states as $state ) {
 						if ( strpos( $state, '---' ) !== false ) {
-							$statelist[] = mosHTML::makeOption( '" disabled="disabled', $state );
+							$statelist[] = JHTML::_('select.option', '" disabled="disabled', $state );
 						} else {
-							$statelist[] = mosHTML::makeOption( $state, $state );
+							$statelist[] = JHTML::_('select.option', $state, $state );
 						}
 					}
 
-					$var['params']['lists']['billState'] = mosHTML::selectList( $statelist, 'billState', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLSTATEPROV_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['lists']['billState'] = JHTML::_( 'select.genericlist', $statelist, 'billState', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLSTATEPROV_DESC.'"', 'value', 'text', $vcontent );
 					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME.$pf, _AEC_USERFORM_BILLSTATEPROV_DESC );
 					break;
 				case 'zip':
@@ -4334,7 +4337,7 @@ class XMLprocessor extends processor
 				case 'country_list':
 					$countries = AECToolbox::getCountryCodeList();
 
-					$countrylist[] = mosHTML::makeOption( '" disabled="disabled', COUNTRYCODE_SELECT );
+					$countrylist[] = JHTML::_('select.option', '" disabled="disabled', COUNTRYCODE_SELECT );
 
 					if ( empty( $vcontent ) ) {
 						$vcontent = 'US';
@@ -4349,11 +4352,11 @@ class XMLprocessor extends processor
 								$vcontent = $country;
 							}
 
-							$countrylist[] = mosHTML::makeOption( $country, $cname );
+							$countrylist[] = JHTML::_('select.option', $country, $cname );
 						}
 					}
 
-					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['lists']['billCountry'] = JHTML::_( 'select.genericlist', $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
 					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC );
 					break;
 				case 'country3_list':
@@ -4366,7 +4369,7 @@ class XMLprocessor extends processor
 					$conversion = AECToolbox::ISO3166_conversiontable( 'num', 'a2' );
 
 					$countrylist = array();
-					$countrylist[] = mosHTML::makeOption( '" disabled="disabled', COUNTRYCODE_SELECT );
+					$countrylist[] = JHTML::_('select.option', '" disabled="disabled', COUNTRYCODE_SELECT );
 
 					foreach ( $countries as $country ) {
 						if ( defined( 'COUNTRYCODE_' . $conversion[$country] ) ) {
@@ -4376,13 +4379,13 @@ class XMLprocessor extends processor
 								$vcontent = $country;
 							}
 
-							$countrylist[] = mosHTML::makeOption( $country, $cname );
+							$countrylist[] = JHTML::_('select.option', $country, $cname );
 						} elseif ( is_null( $country ) ) {
-							$countrylist[] = mosHTML::makeOption( '" disabled="disabled', " -- -- -- -- -- -- " );
+							$countrylist[] = JHTML::_('select.option', '" disabled="disabled', " -- -- -- -- -- -- " );
 						}
 					}
 
-					$var['params']['lists']['billCountry'] = mosHTML::selectList( $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
+					$var['params']['lists']['billCountry'] = JHTML::_( 'select.genericlist', $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
 					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC );
 					break;
 				case 'country':
@@ -5054,7 +5057,12 @@ class aecSettings
 
 	function remap_list_yesno( $name, $value )
 	{
-		$this->lists[$name] = mosHTML::yesnoSelectList( $name, '', $value );
+		$arr = array(
+			JHTML::_('select.option', 0, JText::_( 'no' ) ),
+			JHTML::_('select.option', 1, JText::_( 'yes' ) ),
+		);
+
+		$this->lists[$name] = JHTML::_('select.genericlist', $arr, $name, '', 'value', 'text', (int) $value );
 		return 'list';
 	}
 
@@ -5062,7 +5070,7 @@ class aecSettings
 	{
 		$currency_code_list = AECToolbox::aecCurrencyField( true, true, true );
 
-		$this->lists[$name] = mosHTML::selectList( $currency_code_list, $name, 'size="10"', 'value', 'text', $value );
+		$this->lists[$name] = JHTML::_( 'select.genericlist', $currency_code_list, $name, 'size="10"', 'value', 'text', $value );
 
 		return 'list';
 	}
@@ -5073,10 +5081,10 @@ class aecSettings
 
 		$code_list = array();
 		foreach ( $country_code_list as $country ) {
-			$code_list[] = mosHTML::makeOption( $country, constant( '_AEC_LANG_' . $country ) );
+			$code_list[] = JHTML::_('select.option', $country, constant( '_AEC_LANG_' . $country ) );
 		}
 
-		$this->lists[$name] = mosHTML::selectList( $code_list, $name.'[]', 'size="10" multiple="multiple"', 'value', 'text', $value );
+		$this->lists[$name] = JHTML::_( 'select.genericlist', $code_list, $name.'[]', 'size="10" multiple="multiple"', 'value', 'text', $value );
 
 		return 'list';
 	}
@@ -5087,35 +5095,33 @@ class aecSettings
 
 		$code_list = array();
 		foreach ( $country_code_list as $country ) {
-			$code_list[] = mosHTML::makeOption( $country, $country . " - " . constant( '_AEC_LANG_' . $country ) );
+			$code_list[] = JHTML::_('select.option', $country, $country . " - " . constant( '_AEC_LANG_' . $country ) );
 		}
 
-		$this->lists[$name] = mosHTML::selectList( $code_list, $name.'[]', 'size="10" multiple="multiple"', 'value', 'text', $value );
+		$this->lists[$name] = JHTML::_( 'select.genericlist', $code_list, $name.'[]', 'size="10" multiple="multiple"', 'value', 'text', $value );
 
 		return 'list';
 	}
 
 	function remap_list_yesnoinherit( $name, $value )
 	{
-		$this->lists[$name] = mosHTML::yesnoSelectList( $name, '', $value );
-
 		$arr = array(
-			mosHTML::makeOption( '0', _AEC_CMN_NO ),
-			mosHTML::makeOption( '1', _AEC_CMN_YES ),
-			mosHTML::makeOption( '1', _AEC_CMN_INHERIT ),
+			JHTML::_('select.option', '0', _AEC_CMN_NO ),
+			JHTML::_('select.option', '1', _AEC_CMN_YES ),
+			JHTML::_('select.option', '1', _AEC_CMN_INHERIT ),
 		);
 
-		$this->lists[$name] = mosHTML::selectList( $arr, $name, '', 'value', 'text', $value );
+		$this->lists[$name] = JHTML::_( 'select.genericlist', $arr, $name, '', 'value', 'text', $value );
 		return 'list';
 	}
 
 	function remap_list_recurring( $name, $value )
 	{
-		$recurring[] = mosHTML::makeOption( 0, _AEC_SELECT_RECURRING_NO );
-		$recurring[] = mosHTML::makeOption( 1, _AEC_SELECT_RECURRING_YES );
-		$recurring[] = mosHTML::makeOption( 2, _AEC_SELECT_RECURRING_BOTH );
+		$recurring[] = JHTML::_('select.option', 0, _AEC_SELECT_RECURRING_NO );
+		$recurring[] = JHTML::_('select.option', 1, _AEC_SELECT_RECURRING_YES );
+		$recurring[] = JHTML::_('select.option', 2, _AEC_SELECT_RECURRING_BOTH );
 
-		$this->lists[$name] = mosHTML::selectList( $recurring, $name, 'size="3"', 'value', 'text', $value );
+		$this->lists[$name] = JHTML::_( 'select.genericlist', $recurring, $name, 'size="3"', 'value', 'text', $value );
 
 		return 'list';
 	}
@@ -6236,7 +6242,7 @@ class SubscriptionPlanHandler
 
 		// get entry Plan selection
 		$available_plans	= array();
-		$available_plans[]	= mosHTML::makeOption( '0', _PAYPLAN_NOPLAN );
+		$available_plans[]	= JHTML::_('select.option', '0', _PAYPLAN_NOPLAN );
 
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'
@@ -14061,10 +14067,10 @@ class AECToolbox
 			foreach ( $currencies as $currencyfield ) {
 				$currency_array = explode( ',', $currencyfield );
 				foreach ( $currency_array as $currency ) {
-					$currency_code_list[] = mosHTML::makeOption( $currency, constant( '_CURRENCY_' . $currency ) );
+					$currency_code_list[] = JHTML::_('select.option', $currency, constant( '_CURRENCY_' . $currency ) );
 				}
 
-				$currency_code_list[] = mosHTML::makeOption( '" disabled="disabled', '- - - - - - - - - - - - - -' );
+				$currency_code_list[] = JHTML::_('select.option', '" disabled="disabled', '- - - - - - - - - - - - - -' );
 			}
 		}
 
@@ -14370,18 +14376,24 @@ class AECToolbox
 				}
 			}
 
-			if ( !function_exists( 'sefRelToAbs' ) ) {
-				include_once( JPATH_SITE . '/includes/sef.php' );
-			}
+			// Replace all &amp; with & as the router doesn't understand &amp;
+			$xurl = str_replace('&amp;', '&', $url);
 
-			$new_url = sefRelToAbs( $url );
+			if ( substr( strtolower( $xurl ), 0, 9 ) != "index.php" ) {
+				 $new_url = $xurl;
+			} else {
+				$uri    = JURI::getInstance();
+				$prefix = $uri->toString( array( 'scheme', 'host', 'port' ) );
+
+				$new_url = $prefix.JRoute::_( $xurl );
+			}
 
 			if ( !( strpos( $new_url, $base ) === 0 ) ) {
 				// look out for malformed live_site
 				if ( strpos( $base, '/' ) === strlen( $base ) ) {
 					$new_url = substr( $base, 0, -1 ) . $new_url;
 				} else {
-					// It seems we have a sefRelToAbs malfunction (subdirectory is not appended)
+					// It seems we have a problem malfunction - subdirectory is not appended
 					$metaurl = explode( '/', $base );
 					$rooturl = $metaurl[0] . '//' . $metaurl[2];
 
@@ -19402,13 +19414,13 @@ class aecRestrictionHelper
 		}
 
 		// Create GID related Lists
-		$lists['gid'] 		= mosHTML::selectList( $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', 18) );
-		$lists['mingid'] 	= mosHTML::selectList( $gtree, 'mingid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'mingid', 18) );
-		$lists['fixgid'] 	= mosHTML::selectList( $gtree, 'fixgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'fixgid', 19) );
-		$lists['maxgid'] 	= mosHTML::selectList( $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
+		$lists['gid'] 		= JHTML::_( 'select.genericlist', $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', 18) );
+		$lists['mingid'] 	= JHTML::_( 'select.genericlist', $gtree, 'mingid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'mingid', 18) );
+		$lists['fixgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'fixgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'fixgid', 19) );
+		$lists['maxgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
 
 		$available_plans = array();
-		$available_plans[] = mosHTML::makeOption( '0', "- " . _PAYPLAN_NOPLAN . " -" );
+		$available_plans[] = JHTML::_('select.option', '0', "- " . _PAYPLAN_NOPLAN . " -" );
 
 		// Fetch Payment Plans
 		$query = 'SELECT `id` AS value, `name` AS text'
@@ -19428,11 +19440,11 @@ class aecRestrictionHelper
 		$planrest = array( 'previousplan_req', 'currentplan_req', 'overallplan_req', 'used_plan_min', 'used_plan_max', 'previousplan_req_excluded', 'currentplan_req_excluded', 'overallplan_req_excluded'  );
 
 		foreach ( $planrest as $name ) {
-			$lists[$name] = mosHTML::selectList( $all_plans, $name.'[]', 'size="' . $total_all_plans . '" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
+			$lists[$name] = JHTML::_( 'select.genericlist', $all_plans, $name.'[]', 'size="' . $total_all_plans . '" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
 		}
 
 		$available_groups = array();
-		$available_groups[] = mosHTML::makeOption( '0', _PAYPLAN_NOGROUP );
+		$available_groups[] = JHTML::_('select.option', '0', _PAYPLAN_NOGROUP );
 
 		// Fetch Item Groups
 		$query = 'SELECT `id` AS value, `name` AS text'
@@ -19452,7 +19464,7 @@ class aecRestrictionHelper
 		$grouprest = array( 'previousgroup_req', 'currentgroup_req', 'overallgroup_req', 'used_group_min', 'used_group_max', 'previousgroup_req_excluded', 'currentgroup_req_excluded', 'overallgroup_req_excluded' );
 
 		foreach ( $grouprest as $name ) {
-			$lists[$name] = mosHTML::selectList( $all_groups, $name.'[]', 'size="' . $total_all_groups . '" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
+			$lists[$name] = JHTML::_( 'select.genericlist', $all_groups, $name.'[]', 'size="' . $total_all_groups . '" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
 		}
 
 		return $lists;

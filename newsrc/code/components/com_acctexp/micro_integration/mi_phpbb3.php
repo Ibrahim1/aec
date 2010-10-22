@@ -74,7 +74,7 @@ class mi_phpbb3
 		$sg2	= array();
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
-				$sg[] = mosHTML::makeOption( $group->group_id, $group->group_name . " #" . $group->group_colour );
+				$sg[] = JHTML::_('select.option', $group->group_id, $group->group_name . " #" . $group->group_colour );
 			}
 		}
 
@@ -107,7 +107,7 @@ class mi_phpbb3
 				$v = $this->settings[$si];
 			}
 
-			$settings['lists'][$si]	= mosHTML::selectList( $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
+			$settings['lists'][$si]	= JHTML::_( 'select.genericlist', $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
 		}
 
 		$settings['set_group']				= array( 'list_yesno' );

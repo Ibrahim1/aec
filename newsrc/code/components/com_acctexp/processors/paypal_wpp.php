@@ -83,10 +83,10 @@ class processor_paypal_wpp extends XMLprocessor
 		$settings['item_name']				= array( 'inputE' );
 
 		$country_sel = array();
-		$country_sel[] = mosHTML::makeOption( 'US', 'US' );
-		//$country_sel[] = mosHTML::makeOption( 'UK', 'UK' );
+		$country_sel[] = JHTML::_('select.option', 'US', 'US' );
+		//$country_sel[] = JHTML::_('select.option', 'UK', 'UK' );
 
-		$settings['lists']['country'] = mosHTML::selectList( $country_sel, 'paypal_wpp_country', 'size="2"', 'value', 'text', $this->settings['country'] );
+		$settings['lists']['country'] = JHTML::_( 'select.genericlist', $country_sel, 'paypal_wpp_country', 'size="2"', 'value', 'text', $this->settings['country'] );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

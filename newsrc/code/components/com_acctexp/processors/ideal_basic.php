@@ -63,8 +63,8 @@ class processor_ideal_basic extends POSTprocessor
 		$settings['customparams']		= array( 'inputD' );
 
  		$banks = array();
-		$banks[] = mosHTML::makeOption ( "ing", "ING" );
-		$banks[] = mosHTML::makeOption ( "rabo", "Rabobank" );
+		$banks[] = JHTML::_('select.option', "ing", "ING" );
+		$banks[] = JHTML::_('select.option', "rabo", "Rabobank" );
 
 		if ( !empty( $this->settings['bank'] ) ) {
 			$ba = $this->settings['bank'];
@@ -72,7 +72,7 @@ class processor_ideal_basic extends POSTprocessor
 			$ba = "ing";
 		}
 
-		$settings['lists']['bank']	= mosHTML::selectList( $banks, 'bank', 'size="2"', 'value', 'text', $ba );
+		$settings['lists']['bank']	= JHTML::_( 'select.genericlist', $banks, 'bank', 'size="2"', 'value', 'text', $ba );
 
 		return $settings;
 	}

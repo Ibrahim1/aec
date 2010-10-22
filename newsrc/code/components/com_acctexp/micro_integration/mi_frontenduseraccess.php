@@ -36,11 +36,11 @@ class mi_frontenduseraccess
 		$groups = $database->loadObjectList();
 
 		$fuagroups = array();
-		$fuagroups[] = mosHTML::makeOption(0, 'no group');
+		$fuagroups[] = JHTML::_('select.option', 0, 'no group');
 
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
-				$fuagroups[] = mosHTML::makeOption( $group->id, $group->name );
+				$fuagroups[] = JHTML::_('select.option', $group->id, $group->name );
 			}
 		}
 
@@ -83,8 +83,8 @@ class mi_frontenduseraccess
 			$fua_groups_exp	= '';
 		}
 
-		$settings['lists']['group']		= mosHTML::selectList($fuagroups, 'group[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups);
-		$settings['lists']['group_exp'] = mosHTML::selectList($fuagroups, 'group_exp[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp);
+		$settings['lists']['group']		= JHTML::_('select.genericlist', $fuagroups, 'group[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups );
+		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $fuagroups, 'group_exp[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp );
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );

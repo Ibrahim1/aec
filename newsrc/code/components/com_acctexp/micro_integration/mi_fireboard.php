@@ -36,7 +36,7 @@ class mi_fireboard
 		$sg = array();
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
-				$sg[] = mosHTML::makeOption( $group->id, $group->title );
+				$sg[] = JHTML::_('select.option', $group->id, $group->title );
 			}	
 		}
 
@@ -50,8 +50,8 @@ class mi_fireboard
 			$this->settings['group_exp'] = 0;
 		}
 
-		$settings['lists']['group']		= mosHTML::selectList($sg, 'group', 'size="4"', 'value', 'text', $this->settings['group']);
-		$settings['lists']['group_exp'] = mosHTML::selectList($sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp']);
+		$settings['lists']['group']		= JHTML::_('select.genericlist', $sg, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
+		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );

@@ -30,11 +30,11 @@ class mi_aecinvoiceprintmod
 					);
 
  		$modelist = array();
-		$modelist[] = mosHTML::makeOption ( "none", AEC_TEXTMODE_NONE );
-		$modelist[] = mosHTML::makeOption ( "before", AEC_TEXTMODE_BEFORE );
-		$modelist[] = mosHTML::makeOption ( "after", AEC_TEXTMODE_AFTER );
-		$modelist[] = mosHTML::makeOption ( "replace", AEC_TEXTMODE_REPLACE );
-		$modelist[] = mosHTML::makeOption ( "delete", AEC_TEXTMODE_DELETE );
+		$modelist[] = JHTML::_('select.option', "none", AEC_TEXTMODE_NONE );
+		$modelist[] = JHTML::_('select.option', "before", AEC_TEXTMODE_BEFORE );
+		$modelist[] = JHTML::_('select.option', "after", AEC_TEXTMODE_AFTER );
+		$modelist[] = JHTML::_('select.option', "replace", AEC_TEXTMODE_REPLACE );
+		$modelist[] = JHTML::_('select.option', "delete", AEC_TEXTMODE_DELETE );
 
 		$settings = array();
 		foreach ( $s as $x ) {
@@ -47,7 +47,7 @@ class mi_aecinvoiceprintmod
 			}
 
 			$settings[$y]			= array( "list" );
-			$settings['lists'][$y]	= mosHTML::selectList( $modelist, $y, 'size="1"', 'value', 'text', $dv );
+			$settings['lists'][$y]	= JHTML::_('select.genericlist', $modelist, $y, 'size="1"', 'value', 'text', $dv );
 
 			$settings[$x]			= array( "editor" );
 		}

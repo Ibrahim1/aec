@@ -87,14 +87,14 @@ class processor_chase_paymentech extends PROFILEprocessor
 				$desc = $cname;
 			}
 
-			$paytypes_selection[] = mosHTML::makeOption( $name, $desc );
+			$paytypes_selection[] = JHTML::_('select.option', $name, $desc );
 
 			if ( in_array( $name, $this->settings['pay_types'] ) ) {
-				$pt[] = mosHTML::makeOption( $name, $desc );
+				$pt[] = JHTML::_('select.option', $name, $desc );
 			}
 		}
 
-		$s['lists']['bank']	= mosHTML::selectList( $paytypes_selection, 'chase_paymentech_pay_types', 'size="5"', 'value', 'text', $pt );
+		$s['lists']['bank']	= JHTML::_( 'select.genericlist',  $paytypes_selection, 'chase_paymentech_pay_types', 'size="5"', 'value', 'text', $pt );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 

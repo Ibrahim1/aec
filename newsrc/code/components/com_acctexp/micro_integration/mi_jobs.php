@@ -37,18 +37,18 @@ class mi_jobs
         $settings['lists'] = array();
 
 		$typelist = array();
-		$typelist[] = mosHTML::makeOption ( 'job_seeker' , 'Job Seeker' );
-		$typelist[] = mosHTML::makeOption ( 'employer' , 'Employer' );
+		$typelist[] = JHTML::_('select.option', 'job_seeker' , 'Job Seeker' );
+		$typelist[] = JHTML::_('select.option', 'employer' , 'Employer' );
 
 		if ( !isset( $this->settings['subscription_type'] ) ) {
 			$this->settings['subscription_type'] = 0;
 		}
 
-		$settings['lists']['subscription_type'] = mosHTML::selectList( $typelist,'subscription_type','size=4', 'value', 'text' , $this->settings['subscription_type'] );
+		$settings['lists']['subscription_type'] = JHTML::_( 'select.genericlist', $typelist,'subscription_type','size=4', 'value', 'text' , $this->settings['subscription_type'] );
 
 		$drs_typelist = array();
-		$drs_typelist[] = mosHTML::makeOption ( '0' , 'Unpublished' );
-		$drs_typelist[] = mosHTML::makeOption ( '1' , 'Published' );
+		$drs_typelist[] = JHTML::_('select.option', '0' , 'Unpublished' );
+		$drs_typelist[] = JHTML::_('select.option', '1' , 'Published' );
 
 		if ( !isset( $this->settings['default_resume_status'] ) ) {
 			$this->settings['default_resume_status'] = 0;
@@ -58,8 +58,8 @@ class mi_jobs
 			$this->settings['default_company_status'] = 0;
 		}
 
-		$settings['lists']['default_resume_status'] = mosHTML::selectList( $drs_typelist,'default_resume_status','size=4', 'value', 'text' , $this->settings['default_resume_status'] );
-		$settings['lists']['default_company_status'] = mosHTML::selectList( $drs_typelist,'default_company_status','size=4', 'value', 'text' , $this->settings['default_company_status'] );
+		$settings['lists']['default_resume_status'] = JHTML::_( 'select.genericlist', $drs_typelist,'default_resume_status','size=4', 'value', 'text' , $this->settings['default_resume_status'] );
+		$settings['lists']['default_company_status'] = JHTML::_( 'select.genericlist', $drs_typelist,'default_company_status','size=4', 'value', 'text' , $this->settings['default_company_status'] );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );

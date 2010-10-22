@@ -77,12 +77,12 @@ class mi_hotproperty extends MI
 
 		if ( !empty( $this->settings['easy_list_userchoice_n'] ) ) {
 	 		$opts = array();
-			$opts[0] = mosHTML::makeOption ( "EQ", "Equal to" ); // Should probably be langauge file defined?
-			$opts[1] = mosHTML::makeOption ( "LT", "Lesser than" );
-			$opts[2] = mosHTML::makeOption ( "GT", "Greater than" );
+			$opts[0] = JHTML::_('select.option', "EQ", "Equal to" ); // Should probably be langauge file defined?
+			$opts[1] = JHTML::_('select.option', "LT", "Lesser than" );
+			$opts[2] = JHTML::_('select.option', "GT", "Greater than" );
 
 			for( $i=0; $i<$this->settings['easy_list_userchoice_n']; $i++ ) {
-				$settings['lists']['elu_'.$i.'_op']	= mosHTML::selectList( $opts, 'elu_'.$i.'_op', 'size="1"', 'value', 'text', $this->settings['elu_'.$i.'_op'] );
+				$settings['lists']['elu_'.$i.'_op']	= JHTML::_('select.genericlist', $opts, 'elu_'.$i.'_op', 'size="1"', 'value', 'text', $this->settings['elu_'.$i.'_op'] );
 
 				$settings[] = array( '', 'hr', '' );
 				$settings['elu_'.$i.'_op'] = array( 'list', _AEC_MI_HOTPROPERTY_EASYLIST_OP_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_OP_DESC );
@@ -115,14 +115,14 @@ class mi_hotproperty extends MI
 			foreach ( $groups as $group ) {
 				if ( strpos( $group, ',' ) ) {
 					$gg = explode( ',', $group );
-					$gr[] = mosHTML::makeOption( $gg[0], $gg[1] );
+					$gr[] = JHTML::_('select.option', $gg[0], $gg[1] );
 				} else {
-					$gr[] = mosHTML::makeOption( $group, $group.' Listings' );
+					$gr[] = JHTML::_('select.option', $group, $group.' Listings' );
 				}
 			}
 
 			$settings['hpamt']			= array( 'list', _MI_MI_HOTPROPERTY_USERSELECT_ADDAMOUNT_NAME, _MI_MI_HOTPROPERTY_USERSELECT_ADDAMOUNT_DESC );
-			$settings['lists']['hpamt']	= mosHTML::selectList( $gr, 'hpamt', 'size="6"', 'value', 'text', '' );
+			$settings['lists']['hpamt']	= JHTML::_('select.genericlist', $gr, 'hpamt', 'size="6"', 'value', 'text', '' );
 		} else {
 			return false;
 		}

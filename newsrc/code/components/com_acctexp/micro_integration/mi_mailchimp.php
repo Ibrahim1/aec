@@ -25,7 +25,7 @@ class mi_mailchimp
 	function Settings()
 	{
 		$li = array();
-		$li[] = mosHTML::makeOption( 0, "--- --- ---" );
+		$li[] = JHTML::_('select.option', 0, "--- --- ---" );
 
 		if ( !empty( $this->settings['api_key'] ) ) {
 			$MCAPI = new MCAPI( $this->settings['api_key'] );
@@ -34,7 +34,7 @@ class mi_mailchimp
 
 			if ( !empty( $lists ) ) {
 				foreach( $lists as $list ) {
-					$li[] = mosHTML::makeOption( $list['id'], $list['name'] );
+					$li[] = JHTML::_('select.option', $list['id'], $list['name'] );
 				}
 			}
 		}
@@ -53,8 +53,8 @@ class mi_mailchimp
 		$settings['account_name']	= array( 'inputC' );
 		$settings['account_id']		= array( 'inputC' );
 
-		$settings['lists']['list']		= mosHTML::selectList($li, 'list', 'size="4"', 'value', 'text', $this->settings['list']);
-		$settings['lists']['list_exp']	= mosHTML::selectList($li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp']);
+		$settings['lists']['list']		= JHTML::_( 'select.genericlist', $li, 'list', 'size="4"', 'value', 'text', $this->settings['list'] );
+		$settings['lists']['list_exp']	= JHTML::_( 'select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp'] );
 
 		$settings['list']			= array( 'list' );
 		$settings['list_exp']		= array( 'list' );

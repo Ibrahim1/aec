@@ -120,7 +120,12 @@ class eucaSettings
 
 	function remap_list_yesno( $name, $value )
 	{
-		$this->lists[$name] = mosHTML::yesnoSelectList( $name, '', $value );
+		$arr = array(
+			JHTML::_('select.option', 0, JText::_( 'no' ) ),
+			JHTML::_('select.option', 1, JText::_( 'yes' ) ),
+		);
+
+		$this->lists[$name] = JHTML::_('select.genericlist', $arr, $name, '', 'value', 'text', (int) $value );
 		return 'list';
 	}
 
@@ -253,7 +258,7 @@ class eucaHTMLbackend
 	function displaymethod_editor( $name, $value, $return )
 	{
 		$return .= '<div class="setting_form">';
-		$return .= editorArea( $name, $value, $name, '100%;', '250', '10', '60' );
+		$return .= $editor->display($name, $value, '100%;', '250', '10', '60');
 		$return .= '</div>';
 	}
 
