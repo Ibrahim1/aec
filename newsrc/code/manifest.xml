@@ -38,6 +38,6 @@
 		<folder>images</folder>
 		<folder>js</folder>
 	</media>
-	<installfile>install/install.acctexp.php</installfile>
-	<uninstallfile>install/uninstall.acctexp.php</uninstallfile>
+	<installfile>install.acctexp.php</installfile>
+	<uninstallfile>uninstall.acctexp.php</uninstallfile>
 </install>

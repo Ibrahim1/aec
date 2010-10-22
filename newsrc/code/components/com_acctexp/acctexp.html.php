@@ -20,12 +20,8 @@ class HTML_frontEnd
 
 	function aec_styling( $option )
 	{
-		global $mainframe;
-
-		$html = '<link rel="stylesheet" type="text/css" media="all" href="'
-		. JURI::root() . 'media/' . $option . '/css/site.css" />';
-
-		$mainframe->addCustomHeadTag( $html );
+		$document=& JFactory::getDocument();
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . 'media/' . $option . '/css/site.css" />' );
 	}
 
 	function expired( $option, $metaUser, $expiration, $invoice, $trial, $continue=0 )

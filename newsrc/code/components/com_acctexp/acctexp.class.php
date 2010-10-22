@@ -4045,9 +4045,10 @@ class XMLprocessor extends processor
 		global $mainframe;
 
 		// Include Mootools tabber
-		$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
-		$mainframe->addCustomHeadTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
-		$mainframe->addCustomHeadTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
+		$document=& JFactory::getDocument();
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
 
 		$nlist	= array();
 		$prefix	= array();
@@ -4870,17 +4871,17 @@ class URLprocessor extends processor
 {
 	function checkoutAction( $request, $InvoiceFactory=null )
 	{
-		global $mainframe;
-
 		$var = $this->createGatewayLink( $request );
 
 		if ( isset( $var['_aec_html_head'] ) ) {
+			$document=& JFactory::getDocument();
+
 			if ( is_array( $var['_aec_html_head'] ) ) {
 				foreach ( $var['_aec_html_head'] as $content ) {
-					$mainframe->addCustomHeadTag( $content );
+					$document->addCustomTag( $content );
 				}
 			} else {
-				$mainframe->addCustomHeadTag( $var['_aec_html_head'] );
+				$document->addCustomTag( $var['_aec_html_head'] );
 			}
 
 			unset( $var['_aec_html_head'] );

@@ -9,6 +9,8 @@
 				<include name="administrator/**" />
 				<include name="components/**" />
 				<include name="media/**" />
+				<include name="install.acctexp.php" />
+				<include name="uninstall.acctexp.php" />
 				<include name="*.xml" />
 				<include name="*.txt" />
 			</fileset>

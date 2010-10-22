@@ -34,9 +34,10 @@ function com_install()
 
 	$user = &JFactory::getUser();
 
-	global $mainframe;
+	$app = JFactory::getApplication();
 
-	$mainframe->addCustomHeadTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . '/media/com_acctexp/css/admin.css" />' );
+	$document=& JFactory::getDocument();
+	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . '/media/com_acctexp/css/admin.css" />' );
 
 	// Tracking arrays
 	$queri		= array();
@@ -46,9 +47,11 @@ function com_install()
 	$newinstall = false;
 	$tables		= $database->getTableList();
 
+	$lang =& JFactory::getLanguage();
+
 	$pathLang = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-	if ( file_exists( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
-		include_once( $pathLang . $mainframe->getCfg( 'lang' ) . '.php' );
+	if ( file_exists( $pathLang . $lang->getBackwardLang() . '.php' ) ) {
+		include_once( $pathLang . $lang->getBackwardLang() . '.php' );
 	} else {
 		include_once( $pathLang . 'english.php' );
 	}
@@ -80,7 +83,7 @@ function com_install()
 	include_once( $incpath . '/settings_0_12_6_upgrade.inc.php' );
 
 	// Load Class (and thus aecConfig)
-	require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
+	require_once( $app->getPath( 'class', 'com_acctexp' ) );
 
 	global $aecConfig;
 
