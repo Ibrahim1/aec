@@ -348,7 +348,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::addBackendCSS();
 
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 
 		JHTML::_('behavior.calendar');
 
@@ -1118,7 +1118,7 @@ class HTML_AcctExp
 		jimport( 'joomla.html.editor' );
 
 		HTML_myCommon::addBackendCSS();
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		?>
 		<script language="javascript" type="text/javascript">
 		    /* <![CDATA[ */
@@ -1264,7 +1264,7 @@ class HTML_AcctExp
 	function editProcessor( $option, $aecHTML )
 	{
 		HTML_myCommon::addBackendCSS();
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
@@ -1536,7 +1536,7 @@ class HTML_AcctExp
 		//$Returnid = intval( aecGetParam( $_REQUEST, 'Returnid', 0 ) );
 
 		$tabs = new JPaneTabs(0);
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 
 		?>
@@ -1774,7 +1774,7 @@ class HTML_AcctExp
 
 		$editor =& JFactory::getEditor();
 
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS(); ?>
 
 		<script type="text/javascript">
@@ -2172,7 +2172,7 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS(); ?>
 
 		<table class="adminheading">
@@ -2392,7 +2392,7 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 
 		JHTML::_('behavior.calendar');
@@ -2553,7 +2553,7 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
 		<form action="index2.php" method="post" name="adminForm">
@@ -2629,7 +2629,7 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 
 		?>
@@ -2709,7 +2709,7 @@ class HTML_AcctExp
 
 	function eventlog( $option, $events, $search, $pageNav )
 	{
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS(); ?>
 		<form action="index2.php" method="post" name="adminForm">
 		<table class="adminheading">
@@ -2775,7 +2775,7 @@ class HTML_AcctExp
 
 	function readoutSetup( $option, $aecHTML )
 	{
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
 		<form action="index2.php" method="post" name="adminForm">
@@ -2824,7 +2824,7 @@ class HTML_AcctExp
 
 	function readout( $option, $readout )
 	{
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addReadoutCSS();
 
 		if ( isset( $_POST['column_headers'] ) ) {
@@ -3008,7 +3008,7 @@ class HTML_AcctExp
 
 	function import( $option, $aecHTML )
 	{
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
 		<form action="index2.php" enctype="multipart/form-data" method="post" name="adminForm">
@@ -3083,7 +3083,7 @@ class HTML_AcctExp
 
 	function export( $option, $aecHTML )
 	{
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
 		<form action="index2.php" method="post" name="adminForm">
@@ -3124,7 +3124,7 @@ class HTML_AcctExp
 
 	function toolBox( $option, $result )
 	{
-		loadOverlib();
+		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
 		<form action="index2.php" method="post" name="adminForm">
