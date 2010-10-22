@@ -143,19 +143,13 @@ class mi_acl
 			}
 
 			if ( $this->settings['change_session'] ) {
-				$session = null;
-
 				// Get Session
 				$query = 'SELECT *'
 						. ' FROM #__session'
 						. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
 						;
 				$database->setQuery( $query );
-				if ( aecJoomla15check() ) {
-					$session = $database->loadObject();
-				} else {
-					$database->loadObject($session);
-				}
+				$session = $database->loadObject();
 
 				if ( !empty( $session->userid ) ) {
 					$query = 'SELECT `group_id`'

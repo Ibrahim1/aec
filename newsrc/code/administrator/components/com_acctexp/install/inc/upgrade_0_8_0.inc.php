@@ -10,23 +10,14 @@
 
 // Update routine 0.6.0 -> 0.8.0
 $queri	= array();
-$result = null;
 
 $database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'alertlevel1'");
-if ( aecJoomla15check() ) {
-	$result = $database->loadObject();
-} else {
-	$database->loadObject($result);
-}
+$result = $database->loadObject();
 
 if ( is_object( $result ) ) {
 	if (strcmp($result->Field, 'alertlevel1') === 0) {
 		$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'email'");
-		if ( aecJoomla15check() ) {
-			$result = $database->loadObject();
-		} else {
-			$database->loadObject($result);
-		}
+		$result = $database->loadObject();
 
 		if (strcmp($result->Field, 'email') === 0) {
 			$queri[] = "ALTER TABLE #__acctexp_config DROP `email`";

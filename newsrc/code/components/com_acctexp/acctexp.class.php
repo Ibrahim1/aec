@@ -76,30 +76,9 @@ function aecQuickLog( $short, $tags, $text, $level = 128 )
 	}
 }
 
-if ( !function_exists( 'aecJoomla15check' ) ) {
-	function aecJoomla15check()
-	{
-		if ( !defined( 'AECJOOMLA15CHECK' ) ) {
-			global $aecConfig;
-
-			if ( !empty( $aecConfig->cfg['overrideJ15'] ) ) {
-				define( 'AECJOOMLA15CHECK', false );
-			} else {
-				define( 'AECJOOMLA15CHECK', defined( '_JEXEC' ) );
-			}
-		}
-
-		return AECJOOMLA15CHECK;
-	}
-}
-
 function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 {
-	if ( aecJoomla15check() ) {
-		$return = JArrayHelper::getValue( $_REQUEST, $name, $default );
-	} else {
-		$return = mosGetParam( $_REQUEST, $name, $default, 0x0002 );
-	}
+	$return = JArrayHelper::getValue( $_REQUEST, $name, $default );
 
 	if ( !isset( $_REQUEST[$name] ) && !isset( $_POST[$name] ) ) {
 		return $default;
@@ -225,17 +204,9 @@ function aecPostParamClear( $array, $safe=false, $safe_params=array( 'string', '
 
 function aecRedirect( $url, $msg=null, $class=null )
 {
-	if ( aecJoomla15check() ) {
-		global $mainframe;
+	global $mainframe;
 
-		$mainframe->redirect( $url, $msg, $class );
-	} else {
-		if ( !empty( $class ) ) {
-			$msg = "<div class=\"" . $class . "\">".$msg."</div>";
-		}
-
-		mosRedirect( $url, $msg );
-	}
+	$mainframe->redirect( $url, $msg, $class );
 }
 
 class metaUser
@@ -840,7 +811,7 @@ class metaUser
 		}
 
 		// Get ARO ID for user
-		$query = 'SELECT `' . ( aecJoomla15check() ? 'id' : 'aro_id' )  . '`'
+		$query = 'SELECT `id`'
 				. ' FROM #__core_acl_aro'
 				. ' WHERE `value` = \'' . (int) $this->userid . '\''
 				;
@@ -881,53 +852,44 @@ class metaUser
 
 		if ( $session ) {
 			// Update Session
-			if ( aecJoomla15check() ) {
-				$query = 'SELECT data'
-				. ' FROM #__session'
-				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-				;
-				$database->setQuery( $query );
-				$data = $database->loadResult();
+			$query = 'SELECT data'
+			. ' FROM #__session'
+			. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+			;
+			$database->setQuery( $query );
+			$data = $database->loadResult();
 
-				if ( !empty( $data ) ) {
-					$se = $this->joomunserializesession( $data );
+			if ( !empty( $data ) ) {
+				$se = $this->joomunserializesession( $data );
 
-					$keys = array_keys( $se );
+				$keys = array_keys( $se );
 
-					$key = array_pop( $keys );
+				$key = array_pop( $keys );
 
-					if ( !empty( $sessionextra ) ) {
-						foreach ( $sessionextra as $sk => $sv ) {
-							$se[$key]['user']->$sk = $sv;
+				if ( !empty( $sessionextra ) ) {
+					foreach ( $sessionextra as $sk => $sv ) {
+						$se[$key]['user']->$sk = $sv;
 
-							if ( $this->id == $user->id ) {
-								$user->$sk	= $sv;
-							}
+						if ( $this->id == $user->id ) {
+							$user->$sk	= $sv;
 						}
 					}
-
-					if ( isset( $se[$key]['user'] ) ) {
-						$se[$key]['user']->gid		= $gid;
-						$se[$key]['user']->usertype	= $gid_name;
-
-						if ( $this->userid == $user->id ) {
-							$user->gid		= $gid;
-							$user->usertype	= $gid_name;
-						}
-					}
-
-					$sdata = $this->joomserializesession( $se );
-
-					$query = 'UPDATE #__session'
-							. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
-							. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-							;
-					$database->setQuery( $query );
-					$database->query() or die( $database->stderr() );
 				}
-			} else {
+
+				if ( isset( $se[$key]['user'] ) ) {
+					$se[$key]['user']->gid		= $gid;
+					$se[$key]['user']->usertype	= $gid_name;
+
+					if ( $this->userid == $user->id ) {
+						$user->gid		= $gid;
+						$user->usertype	= $gid_name;
+					}
+				}
+
+				$sdata = $this->joomserializesession( $se );
+
 				$query = 'UPDATE #__session'
-						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
+						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
 						. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 						;
 				$database->setQuery( $query );
@@ -978,11 +940,7 @@ class metaUser
 			. ' FROM #__users u, #__comprofiler ue'
 			. ' WHERE `user_id` = \'' . (int) $this->userid . '\' AND u.id = ue.id';
 		$database->setQuery( $query );
-		if ( aecJoomla15check() ) {
-			$this->cbUser = $database->loadObject();
-		} else {
-			$database->loadObject($this->cbUser);
-		}
+		$this->cbUser = $database->loadObject();
 
 		if ( is_object( $this->cbUser ) ) {
 			$this->hasCBprofile = true;
@@ -2568,11 +2526,7 @@ class eventLog extends serialParamDBTable
 
 			foreach ( $admins as $adminemail ) {
 				if ( !empty( $adminemail ) ) {
-					if ( aecJoomla15check() ) {
-						JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
-					} else {
-						mosMail( $adminEmail2, $adminName2, $adminemail, $subject2, $message2 );
-					}
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
 				}
 			}
 		}
@@ -2878,19 +2832,13 @@ class PaymentProcessor
 		// Set Name
 		$this->processor_name = strtolower( $name );
 
-		$res = null;
-
 		// See if the processor is installed & set id
 		$query = 'SELECT id, active'
 				. ' FROM #__acctexp_config_processors'
 				. ' WHERE `name` = \'' . $this->processor_name . '\''
 				;
 		$database->setQuery( $query );
-		if ( aecJoomla15check() ) {
-			$res = $database->loadObject();
-		} else {
-			$database->loadObject($res);
-		}
+		$res = $database->loadObject();
 
 		if ( !empty( $res ) && is_object( $res ) ) {
 			$this->id = $res->id ? $res->id : 0;
@@ -5174,12 +5122,8 @@ class aecSettings
 
 	function remap_list_date( $name, $value )
 	{
-		if ( !aecJoomla15check() ) {
-			$this->lists[$name] = '<input class="text_area" type="text" name="' . $name . '" id="' . $name . '" size="19" maxlength="19" value="' . $value . '"/>'
-				.'<input type="reset" name="reset" class="button" onClick="return showCalendar(\'' . $name . '\', \'y-mm-dd\');" value="..." />';
-		} else {
-			$this->lists[$name] = JHTML::_('calendar', $value, $name, $name, '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19'));
-		}
+		$this->lists[$name] = '<input class="text_area" type="text" name="' . $name . '" id="' . $name . '" size="19" maxlength="19" value="' . $value . '"/>'
+			.'<input type="reset" name="reset" class="button" onClick="return showCalendar(\'' . $name . '\', \'y-mm-dd\');" value="..." />';
 
 		return 'list';
 	}
@@ -5217,22 +5161,18 @@ class aecHTML
 			}
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
-				if ( aecJoomla15check() ) {
-					$return = '<div class="setting_desc">';
-					$return .= '<span class="editlinktip hasTip" title="';
+				$return = '<div class="setting_desc">';
+				$return .= '<span class="editlinktip hasTip" title="';
 
-					if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
-						$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1", false );
-						$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
-					} else {
-						$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1" );
-						$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
-					}
-
-					$return .= '</div>';
+				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
+					$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1", false );
+					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
 				} else {
-					$return = '<div class="setting_desc">' . $this->ToolTip( $row[2], $row[1] ) . $row[1] . '</div>';
+					$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1" );
+					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
 				}
+
+				$return .= '</div>';
 			}
 		} else {
 			if ( isset( $row[1] ) ) {
@@ -5276,13 +5216,9 @@ class aecHTML
 			case 'editor':
 				$return .= '<div class="setting_form">';
 
-				if ( aecJoomla15check() ) {
-					$editor = &JFactory::getEditor();
+				$editor = &JFactory::getEditor();
 
-					$return .= '<div>' . $editor->display( $name,  $value , '100%', '250', '50', '20' ) . '</div>';
-				} else {
-					$return .= '<div>' . editorArea( $name, $value, $name, '100%;', '250', '50', '20' ) . '</div>';
-				}
+				$return .= '<div>' . $editor->display( $name,  $value , '100%', '250', '50', '20' ) . '</div>';
 
 				$return .= '</div>';
 				break;
@@ -7430,14 +7366,8 @@ class aecTempToken extends serialParamDBTable
 
 	function getToken()
 	{
-		if ( aecJoomla15check() ) {
-			$session =& JFactory::getSession();
-			return $session->getToken();
-		} else {
-			global $mainframe;
-
-			return $mainframe->_session->session_id;
-		}
+		$session =& JFactory::getSession();
+		return $session->getToken();
 	}
 
 	function getComposite()
@@ -7500,12 +7430,8 @@ class aecTempToken extends serialParamDBTable
 		global $mainframe;
 
 		if ( empty( $token ) ) {
-			if ( aecJoomla15check() ) {
-				$session =& JFactory::getSession();
-				$token = $session->getToken();
-			} else {
-				$token = $mainframe->_session->session_id;
-			}
+			$session =& JFactory::getSession();
+			$token = $session->getToken();
 		}
 
 		$query = 'SELECT `id`'
@@ -9124,13 +9050,7 @@ class InvoiceFactory
 	{
 		global $mainframe;
 
-		if ( aecJoomla15check() ) {
-			$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
-		} else {
-			$activation = $mainframe->getCfg( 'useractivation' );
-
-			joomlaregisterForm( $option, $activation );
-		}
+		$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
 	}
 
 	function registerRedirectCB( $option, $plan )
@@ -11051,14 +10971,9 @@ class Invoice extends serialParamDBTable
 					;
 
 		foreach ( $queries as $base_query ) {
-			$res = null;
 			$query = 'SELECT `id`, `username`, `email` ' . $base_query;
 			$database->setQuery( $query );
-			if ( aecJoomla15check() ) {
-				$res = $database->loadObject();
-			} else {
-				$database->loadObject($res);
-			}
+			$res = $database->loadObject();
 
 			if ( !empty( $res ) ) {
 				$this->params['target_user'] = $res->id;
@@ -12653,11 +12568,7 @@ class Subscription extends serialParamDBTable
 		}
 
 		if ( !$adminonly ) {
-			if ( aecJoomla15check() ) {
-				JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
-			} else {
-				mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
-			}
+			JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 		}
 
 		// Send notification to all administrators
@@ -12678,11 +12589,7 @@ class Subscription extends serialParamDBTable
 
 		foreach ( $admins as $adminemail ) {
 			if ( !empty( $adminemail ) ) {
-				if ( aecJoomla15check() ) {
-					JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
-				} else {
-					mosMail( $adminEmail2, $adminName2, $adminemail, $subject2, $message2 );
-				}
+				JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
 			}
 		}
 	}
@@ -12728,32 +12635,6 @@ class Subscription extends serialParamDBTable
 
 class GeneralInfoRequester
 {
-	/**
-	 * Check which CMS system is running
-	 * @return string
-	 */
-	function getCMSName()
-	{
-		$filename	= JPATH_SITE . '/includes/version.php';
-
-		if ( file_exists( $filename ) ) {
-			$originalFileHandle = fopen( $filename, 'r' ) or die ( "Cannot open $filename<br />" );
-			// Transfer File into variable
-			$Data = fread( $originalFileHandle, filesize( $filename ) );
-			fclose( $originalFileHandle );
-
-			if ( strpos( $Data, '@package Joomla' ) ) {
-				return 'Joomla';
-			} elseif ( strpos( $Data, '@package Mambo' ) ) {
-				return 'Mambo';
-			} else {
-				return 'UNKNOWN';
-			}
-		} elseif (  aecJoomla15check() ) {
-			return 'Joomla15';
-		}
-	}
-
 	/**
 	 * Check whether a component is installed
 	 * @return Bool
@@ -12868,11 +12749,11 @@ class GeneralInfoRequester
 		$group_list	= array();
 		$groups		= '';
 
-		$query = 'SELECT g2.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ''
+		$query = 'SELECT g2.id'
 				. ' FROM #__core_acl_aro_groups AS g1'
 				. ' INNER JOIN #__core_acl_aro_groups AS g2 ON g1.lft >= g2.lft AND g1.lft <= g2.rgt'
-				. ' WHERE g1.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ' = ' . $group_id
-				. ' GROUP BY g2.' . ( aecJoomla15check() ? 'id' : 'group_id' )  . ''
+				. ' WHERE g1.id = ' . $group_id
+				. ' GROUP BY g2.id'
 				. ' ORDER BY g2.lft'
 				;
 		$database->setQuery( $query );
@@ -12880,11 +12761,7 @@ class GeneralInfoRequester
 
 		for( $i = 0, $n = count( $rows ); $i < $n; $i++ ) {
 			$row = &$rows[$i];
-			if ( aecJoomla15check() ) {
-				$group_list[$i] = $row->id;
-			} else {
-				$group_list[$i] = $row->group_id;
-			}
+			$group_list[$i] = $row->id;
 		}
 
 		if ( count( $group_list ) > 0 ) {
@@ -13731,12 +13608,7 @@ class reWriteEngine
 					} else {
 						if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
-
-							if ( aecJoomla15check() ) {
-								$this->rewrite['user_activationlink']	= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
-							} else {
-								$this->rewrite['user_activationlink']	= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
-							}
+							$this->rewrite['user_activationlink']	= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 						} else {
 							$this->rewrite['user_activationcode']		= "";
 							$this->rewrite['user_activationlink']		= "";
@@ -13745,12 +13617,7 @@ class reWriteEngine
 				} else {
 					if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 						$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
-
-						if ( aecJoomla15check() ) {
-							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
-						} else {
-							$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_registration&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
-						}
+						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
 					}
 				}
 
@@ -14781,111 +14648,65 @@ class AECToolbox
 			// This is a joomla registration, borrowing their code to save the user
 			global $mainframe;
 
-			if ( aecJoomla15check() ) {
-				global $mainframe;
-
-				// Check for request forgeries
-				if ( !$internal ) {
-					JRequest::checkToken() or die( 'Invalid Token' );
-				}
-
-				// Get required system objects
-				$user 		= clone(JFactory::getUser());
-				//$pathway 	=& $mainframe->getPathway();
-				$config		=& JFactory::getConfig();
-				$authorize	=& JFactory::getACL();
-				$document   =& JFactory::getDocument();
-
-				// If user registration is not allowed, show 403 not authorized.
-				$usersConfig = &JComponentHelper::getParams( 'com_users' );
-				if ($usersConfig->get('allowUserRegistration') == '0') {
-					JError::raiseError( 403, JText::_( 'Access Forbidden' ));
-					return;
-				}
-
-				// Initialize new usertype setting
-				$newUsertype = $usersConfig->get( 'new_usertype' );
-				if (!$newUsertype) {
-					$newUsertype = 'Registered';
-				}
-
-				// Bind the post array to the user object
-				if (!$user->bind( JRequest::get('post'), 'usertype' )) {
-					JError::raiseError( 500, $user->getError());
-
-					unset($_POST);
-					subscribe();
-					return false;
-				}
-
-				// Set some initial user values
-				$user->set('id', 0);
-				$user->set('usertype', '');
-				$user->set('gid', $authorize->get_group_id( '', $newUsertype, 'ARO' ));
-
-				$user->set('registerDate', date('Y-m-d H:i:s'));
-
-				// If user activation is turned on, we need to set the activation information
-				$useractivation = $usersConfig->get( 'useractivation' );
-				if ( ($useractivation == '1') &&  !$overrideActivation )
-				{
-					jimport('joomla.user.helper');
-					$user->set('activation', md5( JUserHelper::genRandomPassword()) );
-					$user->set('block', '1');
-				}
-
-				// If there was an error with registration, set the message and display form
-				if ( !$user->save() )
-				{
-					JError::raiseWarning('', JText::_( $user->getError()));
-					echo JText::_( $user->getError());
-					return false;
-				}
-
-				$row = $user;
-			} else {
-				// simple spoof check security
-				if ( function_exists( 'josSpoofCheck' ) && !$internal ) {
-					josSpoofCheck();
-				}
-
-				$row = new JTableUser( $database );
-
-				if ( !$row->bind( $_POST, 'usertype' )) {
-					mosErrorAlert( $row->getError() );
-				}
-
-				mosMakeHtmlSafe( $row );
-
-				$row->id 		= 0;
-				$row->usertype 	= '';
-				$row->gid 		= $acl->get_group_id( 'Registered', 'ARO' );
-
-				if ( ( $mainframe->getCfg( 'useractivation' ) == 1 ) && !$overrideActivation ) {
-					$row->activation = md5( mosMakePassword() );
-					$row->block = '1';
-				}
-
-				if ( !$row->check() ) {
-					echo '<script>alert(\''
-					. html_entity_decode( $row->getError() )
-					. '\');window.history.go(-1);</script>' . "\n";
-					exit();
-				}
-
-				$pwd 				= $row->password;
-				$row->password 		= md5( $row->password );
-
-				$row->registerDate 	= date( 'Y-m-d H:i:s' );
-
-				if ( !$row->store() ) {
-					echo '<script>alert(\''
-					. html_entity_decode( $row->getError())
-					. '\');window.history.go(-1);</script>' . "\n";
-					exit();
-				}
-				$row->checkin();
+			// Check for request forgeries
+			if ( !$internal ) {
+				JRequest::checkToken() or die( 'Invalid Token' );
 			}
+
+			// Get required system objects
+			$user 		= clone(JFactory::getUser());
+			//$pathway 	=& $mainframe->getPathway();
+			$config		=& JFactory::getConfig();
+			$authorize	=& JFactory::getACL();
+			$document   =& JFactory::getDocument();
+
+			// If user registration is not allowed, show 403 not authorized.
+			$usersConfig = &JComponentHelper::getParams( 'com_users' );
+			if ($usersConfig->get('allowUserRegistration') == '0') {
+				JError::raiseError( 403, JText::_( 'Access Forbidden' ));
+				return;
+			}
+
+			// Initialize new usertype setting
+			$newUsertype = $usersConfig->get( 'new_usertype' );
+			if (!$newUsertype) {
+				$newUsertype = 'Registered';
+			}
+
+			// Bind the post array to the user object
+			if (!$user->bind( JRequest::get('post'), 'usertype' )) {
+				JError::raiseError( 500, $user->getError());
+
+				unset($_POST);
+				subscribe();
+				return false;
+			}
+
+			// Set some initial user values
+			$user->set('id', 0);
+			$user->set('usertype', '');
+			$user->set('gid', $authorize->get_group_id( '', $newUsertype, 'ARO' ));
+
+			$user->set('registerDate', date('Y-m-d H:i:s'));
+
+			// If user activation is turned on, we need to set the activation information
+			$useractivation = $usersConfig->get( 'useractivation' );
+			if ( ($useractivation == '1') &&  !$overrideActivation )
+			{
+				jimport('joomla.user.helper');
+				$user->set('activation', md5( JUserHelper::genRandomPassword()) );
+				$user->set('block', '1');
+			}
+
+			// If there was an error with registration, set the message and display form
+			if ( !$user->save() )
+			{
+				JError::raiseWarning('', JText::_( $user->getError()));
+				echo JText::_( $user->getError());
+				return false;
+			}
+
+			$row = $user;
 
 			$mih = new microIntegrationHandler();
 			$mih->userchange($row, $_POST, 'registration');
@@ -14896,15 +14717,12 @@ class AECToolbox
 
 			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
-			if ( aecJoomla15check() ) {
-				$usersConfig = &JComponentHelper::getParams( 'com_users' );
-				$activation = $usersConfig->get('useractivation');
-			} else {
-				$activation = $mainframe->getCfg( 'useractivation' );
-			}
+
+			$usersConfig = &JComponentHelper::getParams( 'com_users' );
+			$activation = $usersConfig->get('useractivation');
 
 			if ( ( $activation == 1 ) && !$overrideActivation ) {
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), JURI::root()."index.php?option=" . ( aecJoomla15check() ? 'com_user' : 'com_registration' ) . "&task=activate&activation=".$row->activation, JURI::root(), $username, $savepwd );
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), JURI::root()."index.php?option=com_user&task=activate&activation=".$row->activation, JURI::root(), $username, $savepwd );
 			} else {
 				$message = sprintf( _AEC_USEND_MSG, $name, $mainframe->getCfg( 'sitename' ), JURI::root() );
 			}
@@ -14932,11 +14750,7 @@ class AECToolbox
 
 			// Send email to user
 			if ( !$aecConfig->cfg['nojoomlaregemails'] || $overrideEmails ) {
-				if ( aecJoomla15check() ) {
-					JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
-				} else {
-					mosMail( $adminEmail2, $adminName2, $email, $subject, $message );
-				}
+				JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 			}
 
 			// Send notification to all administrators
@@ -14953,11 +14767,7 @@ class AECToolbox
 
 			foreach ( $admins as $adminemail ) {
 				if ( !empty( $adminemail ) ) {
-					if ( aecJoomla15check() ) {
-						JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
-					} else {
-						mosMail( $adminEmail2, $adminName2, $adminemail, $subject2, $message2 );
-					}
+					JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
 				}
 			}
 		}
@@ -18630,25 +18440,18 @@ class aecReadout
 
 		$this->lists = array();
 
-		if ( aecJoomla15check() ) {
-			$acl =& JFactory::getACL();
+		$acl =& JFactory::getACL();
 
-			$acllist = $acl->get_group_children( 28, 'ARO', 'RECURSE' );
+		$acllist = $acl->get_group_children( 28, 'ARO', 'RECURSE' );
 
-			$this->acllist = array();
-			foreach ( $acllist as $aclli ) {
-				$acldata = $acl->get_group_data( $aclli );
+		$this->acllist = array();
+		foreach ( $acllist as $aclli ) {
+			$acldata = $acl->get_group_data( $aclli );
 
-				$this->acllist[$aclli] = new stdClass();
+			$this->acllist[$aclli] = new stdClass();
 
-				$this->acllist[$aclli]->group_id	= $acldata[0];
-				$this->acllist[$aclli]->name		= $acldata[3];
-			}
-		} else {
-			global $acl;
-
-			$this->acllist = $acl->_getBelow( '#__core_acl_aro_groups', 'g1.group_id, g1.name', 'g1.name', null, 'USERS', true );
-
+			$this->acllist[$aclli]->group_id	= $acldata[0];
+			$this->acllist[$aclli]->name		= $acldata[3];
 		}
 
 		foreach ( $this->acllist as $aclitem ) {

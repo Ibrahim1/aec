@@ -103,11 +103,7 @@ class processor_offline_payment extends processor
         }
         $recipients = $recipients2;
 
-		if ( aecJoomla15check() ) {
-			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
-		} else {
-			mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
-		}
+		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 
 		return true;
 	}
@@ -153,11 +149,7 @@ class processor_offline_payment extends processor
 				$bcc = null;
 			}
 
-			if ( aecJoomla15check() ) {
-				JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
-			} else {
-				mosMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
-			}
+			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
 		}
 
 		if ( $this->settings['waitingplan'] ) {

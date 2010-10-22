@@ -35,7 +35,7 @@ $task = trim( aecGetParam( 'view', '', true, array( 'word', 'string', 'clear_non
 if ( empty( $task ) ) {
 	// Regular mode - try to get the task
 	$task = trim( aecGetParam( 'task', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
-} elseif ( aecJoomla15check() ) {
+} else {
 	$params = &JComponentHelper::getParams( 'com_acctexp' );
 
 	$translate = array( 'usage', 'group', 'processor', 'intro', 'sub' );
@@ -573,14 +573,12 @@ function subscribe( $option )
 		}
 	}
 
-	$isJoomla15 = aecJoomla15check();
-
 	if ( !empty( $username ) && $usage ) {
 		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
 		$AL = ( GeneralInfoRequester::detect_component( 'ALPHA' ) );
 		$JS = ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) );
 
-		if ( $isJoomla15 && !$AL && !$CB && !$JS && !$k2mode ) {
+		if ( !$AL && !$CB && !$JS && !$k2mode ) {
 			// Joomla 1.5 Sanity Check
 
 			// Get required system objects
@@ -601,25 +599,6 @@ function subscribe( $option )
 				unset($_POST);
 				subscribe();
 				return false;
-			}
-		} elseif ( !$isJoomla15 && !$CB ) {
-			// Joomla 1.0 Sanity Check
-			$row = new JTableUser( $database );
-
-			if (!$row->bind( $_POST, 'usertype' )) {
-				mosErrorAlert( $row->getError() );
-			}
-
-			$row->name		= trim( $row->name );
-			$row->email		= trim( $row->email );
-			$row->username	= trim( $row->username );
-			$row->password	= trim( $row->password );
-
-			mosMakeHtmlSafe($row);
-
-			if (!$row->check()) {
-				echo "<script> alert('".html_entity_decode($row->getError())."'); window.history.go(-1); </script>\n";
-				exit();
 			}
 		} elseif ( empty( $token ) ) {
 			if ( isset( $_POST['username'] ) && isset( $_POST['email'] ) ) {
@@ -669,13 +648,8 @@ function checkUsernameEmail( $username, $email )
 	$regex = eregi( "[\<|\>|\"|\'|\%|\;|\(|\)|\&]", $username );
 
 	if ( ( strlen( $username ) < 2 ) || $regex ) {
-		if ( !aecJoomla15check() ) {
-			mosErrorAlert( _REGWARN_INUSE );
-			return false;
-		} else {
-			mosErrorAlert( JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 ) );
-			return JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 );
-		}
+		mosErrorAlert( JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 ) );
+		return JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 );
 	}
 
 	global $mainframe;
@@ -687,33 +661,22 @@ function checkUsernameEmail( $username, $email )
 			. ' WHERE `username` = \'' . $username . '\''
 			;
 	$database->setQuery( $query );
+
 	if ( $database->loadResult() ) {
-		if ( !aecJoomla15check() ) {
-			mosErrorAlert( _REGWARN_INUSE );
-			return false;
-		} else {
-			mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
-			return JText::_( 'WARNREG_INUSE' );
-		}
+		mosErrorAlert( JText::_( 'WARNREG_INUSE' ) );
+		return JText::_( 'WARNREG_INUSE' );
 	}
 
 	if ( !empty( $email ) ) {
-		if ( $mainframe->getCfg( 'uniquemail' ) || aecJoomla15check() ) { // J1.5 forces unique email
-			// check for existing email
-			$query = 'SELECT `id`'
-					. ' FROM #__users'
-					. ' WHERE `email` = \'' . $email . '\''
-					;
-			$database->setQuery( $query );
-			if ( $database->loadResult() ) {
-				if ( !aecJoomla15check() ) {
-					mosErrorAlert( _REGWARN_EMAIL_INUSE );
-					return _REGWARN_EMAIL_INUSE;
-				} else {
-					mosErrorAlert( JText::_( 'WARNREG_EMAIL_INUSE' ) );
-					return JText::_( 'WARNREG_EMAIL_INUSE' );
-				}
-			}
+		$query = 'SELECT `id`'
+				. ' FROM #__users'
+				. ' WHERE `email` = \'' . $email . '\''
+				;
+		$database->setQuery( $query );
+
+		if ( $database->loadResult() ) {
+			mosErrorAlert( _REGWARN_EMAIL_INUSE );
+			return _REGWARN_EMAIL_INUSE;
 		}
 	}
 
@@ -1426,11 +1389,7 @@ function notAllowed( $option )
 		if ( $CB ) {
 			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&task=registers' );
 		} else {
-			if ( aecJoomla15check() ) {
-				$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&view=register' );
-			} else {
-				$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_registration&task=register' );
-			}
+			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&view=register' );
 		}
 	}
 
@@ -1705,20 +1664,11 @@ function aecSimpleThanks( $option, $renew, $free )
 
 function aecNotAuth()
 {
-	if ( aecJoomla15check() ) {
-		$user =& JFactory::getUser();
+	$user =& JFactory::getUser();
 
-		echo JText::_('ALERTNOTAUTH');
-		if ( $user->get('id') < 1 ) {
-			echo "<br />" . JText::_( 'You need to login.' );
-		}
-	} else {
-		global $my;
-
-		echo _NOT_AUTH;
-		if ( $my->id < 1 ) {
-			echo "<br />" . _DO_LOGIN;
-		}
+	echo JText::_('ALERTNOTAUTH');
+	if ( $user->get('id') < 1 ) {
+		echo "<br />" . JText::_( 'You need to login.' );
 	}
 }
 

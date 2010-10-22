@@ -79,14 +79,8 @@ class mi_raffle
 		$tables	= $database->getTableList();
 
 		if ( in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_mi_rafflelist', $tables ) ) {
-			$result = null;
-
 			$database->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
-			if ( aecJoomla15check() ) {
-				$result = $database->loadObject();
-			} else {
-				$database->loadObject($result);
-			}
+			$result = $database->loadObject();
 
 			if ( empty( $result->Field ) ) {
 				$database->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default '0'" );
@@ -167,18 +161,12 @@ class mi_raffle
 			$colET .= 'Further Participants:' . "\n" . "\n";
 
 			foreach ( $result['participants'] as $userid ) {
-				$u = null;
-
 				$query = 'SELECT `username`, `email`'
 					. ' FROM #__users'
 					. ' WHERE `id` = \'' . $userid . '\'';
 					;
 				$database->setQuery( $query );
-				if ( aecJoomla15check() ) {
-					$u = $database->loadObject();
-				} else {
-					$database->loadObject($u);
-				}
+				$u = $database->loadObject();
 
 				$colET .= $userid . ';' . $u->username . ';' . $u->email . "\n";
 			}
@@ -209,11 +197,7 @@ class mi_raffle
 
 			$subject = 'Raffle Drawing Results for ' . $mainframe->getCfg( 'sitename' );
 
-			if ( aecJoomla15check() ) {
-				JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $colET );
-			} else {
-				mosMail( $adminEmail2, $adminName2, $admin->email, $subject, $colET );
-			}
+			JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $colET );
 		}
 
 		$rafflelist->check();

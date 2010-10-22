@@ -22,13 +22,8 @@ if ( $eucaInstalldb->columnintable( 'entry', 'plans' ) ) {
 	}
 }
 
-$result = null;
 $database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'desc'");
-if ( aecJoomla15check() ) {
-	$result = $database->loadObject();
-} else {
-	$database->loadObject($result);
-}
+$result = $database->loadObject();
 
 if ( (strcmp($result->Field, 'desc') === 0) && (strcmp($result->Type, 'varchar(255)') === 0) ) {
 	// Give extra space for plan description
@@ -55,13 +50,8 @@ $eucaInstalldb->addColifNotExists( 'micro_integrations', "text NULL",  'plans' )
 $eucaInstalldb->addColifNotExists( 'params', "varchar(255) NULL",  'invoices' );
 $eucaInstalldb->addColifNotExists( 'email_desc', "text NULL", 'plans' );
 
-$result = null;
 $database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'fixed'");
-if ( aecJoomla15check() ) {
-	$result = $database->loadObject();
-} else {
-	$database->loadObject($result);
-}
+$result = $database->loadObject();
 
 if (!(strcmp($result->Field, 'fixed') === 0)) {
 	$query = "ALTER TABLE #__acctexp_invoices ADD `fixed` int(4) default '0'";
@@ -89,13 +79,9 @@ if ( $eucaInstalldb->columnintable( 'planid', 'invoices' ) ) {
     	$errors[] = array( $database->getErrorMsg(), $query );
 	}
 } else {
-	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'usage'");
-	if ( aecJoomla15check() ) {
-		$result = $database->loadObject();
-	} else {
-		$database->loadObject($result);
-	}
+	$result = $database->loadObject();
+
 	if ( !$eucaInstalldb->columnintable( 'usage', 'invoices' ) ) {
 		$database->setQuery("ALTER TABLE #__acctexp_invoices ADD `usage` varchar(255) NULL");
 		if ( !$database->query() ) {
@@ -108,13 +94,8 @@ $eucaInstalldb->dropColifExists( 'reuse', 'plans' );
 $eucaInstalldb->addColifNotExists( 'processors', "varchar(255) NULL",  'plans' );
 $eucaInstalldb->addColifNotExists( 'active', "int(4) default '1'",  'invoices' );
 
-$result = null;
 $database->setQuery("SHOW COLUMNS FROM #__acctexp_subscr LIKE 'extra01'");
-if ( aecJoomla15check() ) {
-	$result = $database->loadObject();
-} else {
-	$database->loadObject($result);
-}
+$result = $database->loadObject();
 
 if ( is_object( $result ) ) {
 	if (strcmp($result->Field, 'extra01') === 0) {
@@ -144,13 +125,8 @@ if ( $oldplans || in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_config_p
 
 		foreach ( $used_processors AS $i => $n ) {
 
-			$old_cfg = null;
 			$database->setQuery( "SELECT * FROM #__acctexp_config_" . $legacy_processors_db[$n] );
-			if ( aecJoomla15check() ) {
-				$old_cfg = $database->loadObject();
-			} else {
-				$database->loadObject($old_cfg);
-			}
+			$old_cfg = $database->loadObject();
 
 			$pp = new PaymentProcessor();
 			$pp->loadName($legacy_processors_name[$n]);

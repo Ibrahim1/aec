@@ -15,13 +15,6 @@
 // Trying to buy us some time
 @set_time_limit( 240 );
 
-if ( !function_exists( 'aecJoomla15check' ) ) {
-	function aecJoomla15check()
-	{
-		return defined( '_JEXEC' );
-	}
-}
-
 if ( !defined( '_JEXEC' ) && !defined( 'JPATH_SITE' ) ) {
 	global $mosConfig_absolute_path;
 

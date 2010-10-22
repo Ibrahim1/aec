@@ -57,15 +57,11 @@ class mi_joomlauser
 		if ( !empty( $this->settings['password'] ) ) {
 			$pw = AECToolbox::rewriteEngineRQ( $this->settings['password'], $request );
 
-			if ( aecJoomla15check() ) {
-				jimport('joomla.user.helper');
+			jimport('joomla.user.helper');
 
-				$salt  = JUserHelper::genRandomPassword( 32 );
-				$crypt = JUserHelper::getCryptedPassword( $pw, $salt );
-				$password = $crypt.':'.$salt;
-			} else {
-				$password = md5( $pw );
-			}
+			$salt  = JUserHelper::genRandomPassword( 32 );
+			$crypt = JUserHelper::getCryptedPassword( $pw, $salt );
+			$password = $crypt.':'.$salt;
 
 			$set[] = '`password` = \'' . $password . '\'';
 		}

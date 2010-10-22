@@ -15,13 +15,8 @@ $database->setQuery( "SELECT max(id) FROM #__acctexp_log_history" );
 $himax = $database->loadResult();
 
 for ( $hid=1; $hid<=$himax; $hid++ ) {
-	$history = null;
 	$database->setQuery( "SELECT * FROM #__acctexp_log_history WHERE `id` = $hid" );
-	if ( aecJoomla15check() ) {
-		$history = $database->loadObject();
-	} else {
-		$database->loadObject($history);
-	}
+	$history = $database->loadObject();
 
 	if ( ( $history->id != $hid ) || empty( $history->response ) ) {
 		continue;

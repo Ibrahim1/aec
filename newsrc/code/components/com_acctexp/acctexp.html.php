@@ -632,13 +632,10 @@ class Payment_HTML
 						$option	= 'com_community';
 						$task	= '';
 						$view 	= 'register';
-					} elseif ( aecJoomla15check() ) {
+					} else {
 						$option	= 'com_user';
 						$task	= '';
 						$view 	= 'register';
-					} else {
-						$option	= 'com_acctexp';
-						$task	= 'subscribe';
 					}
 				} else {
 					$option		= 'com_acctexp';

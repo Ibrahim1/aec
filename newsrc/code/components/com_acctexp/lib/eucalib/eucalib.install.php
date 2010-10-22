@@ -27,11 +27,7 @@ class eucaInstall extends eucaObject
 	function unpackFileArray( $array )
 	{
 		if ( !class_exists( 'Archive_Tar' ) || function_exists( 'PclTarExtract' ) ) {
-			if ( aecJoomla15check() ) {
-				require_once( JPATH_SITE . '/administrator/includes/pcl/pcltar.lib.php' );
-			} else {
-				require_once( JPATH_SITE . '/includes/Archive/Tar.php' );
-			}
+			require_once( JPATH_SITE . '/administrator/includes/pcl/pcltar.lib.php' );
 		}
 
 		foreach ( $array as $file ) {
@@ -73,20 +69,10 @@ class eucaInstall extends eucaObject
 				}
 			}
 
-			if (  aecJoomla15check() ) {
-				if ( PclTarExtract( $fullpath, $deploypath) !== 0 ) {
-					@unlink( $fullpath );
-				} else {
-					$this->setError( array( 'Extraction Error', 'the file ' . $file[0] . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
-				}
+			if ( PclTarExtract( $fullpath, $deploypath) !== 0 ) {
+				@unlink( $fullpath );
 			} else {
-				$archive = new Archive_Tar( $fullpath, 'gz' );
-
-				if ( $archive->extract( $deploypath ) ) {
-					@unlink( $fullpath );
-				} else {
-					$this->setError( array( 'Extraction Error', 'the file ' . $file[0] . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
-				}
+				$this->setError( array( 'Extraction Error', 'the file ' . $file[0] . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );
 			}
 		}
 	}
@@ -203,8 +189,6 @@ class eucaInstallDB extends eucaObject
 	{
 		$database = &JFactory::getDBO();
 
-		$result = null;
-
 		if ( !empty( $column ) ) {
 			$this->column = $column;
 		}
@@ -222,11 +206,7 @@ class eucaInstallDB extends eucaObject
 				;
 
 		$database->setQuery( $query );
-		if ( aecJoomla15check() ) {
-			$result = $database->loadObject();
-		} else {
-			$database->loadObject($result);
-		}
+		$result = $database->loadObject();
 
 		if( is_object( $result ) ) {
 			if ( strcmp($result->Field, $column) === 0 ) {

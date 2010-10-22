@@ -11,11 +11,7 @@
 // first delete old menu entries
 $eucaInstall->deleteAdminMenuEntries();
 
-if ( aecJoomla15check() ) {
-	$iconroot = '../media/com_acctexp/images/admin/icons/';
-} else {
-	$iconroot = '../media/com_acctexp/images/admin/icons/';
-}
+$iconroot = '../media/com_acctexp/images/admin/icons/';
 
 // insert first component entry
 $eucaInstall->createAdminMenuEntry( array( 'showCentral', _AEC_INST_MAIN_COMP_ENTRY, $iconroot . 'aec_logo_tiny.png', 0 ) );

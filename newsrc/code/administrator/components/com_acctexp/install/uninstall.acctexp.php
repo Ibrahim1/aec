@@ -41,12 +41,6 @@ function com_uninstall()
 
 	$user = &JFactory::getUser();
 
-	if ( !aecJoomla15check() ) {
-		global $mosConfig_absolute_path;
-
-		delTree( $mosConfig_absolute_path . "/media/com_acctexp" );
-	}
-
 	if ( $aecConfig->cfg['delete_tables'] && $aecConfig->cfg['delete_tables_sure'] ) {
 		global $mainframe;
 

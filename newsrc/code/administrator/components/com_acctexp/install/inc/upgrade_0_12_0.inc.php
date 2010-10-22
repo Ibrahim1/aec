@@ -52,22 +52,12 @@ if ( isset( $aecConfig->cfg['invoicenum_display_id'] ) ) {
 $aecConfig->saveSettings();
 
 // check for old values and update (if happen) old tables
-$result = null;
 $database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'params'");
-if ( aecJoomla15check() ) {
-	$result = $database->loadObject();
-} else {
-	$database->loadObject($result);
-}
+$result = $database->loadObject();
 
 if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
-	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
-	if ( aecJoomla15check() ) {
-		$result = $database->loadObject();
-	} else {
-		$database->loadObject($result);
-	}
+	$result = $database->loadObject();
 
 	if ( strcmp( $result->Field, 'mingid' ) === 0 ) {
 		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `restrictions` text NULL");
@@ -199,13 +189,8 @@ $eucaInstalldb->addColifNotExists( 'customparams', "text NULL", 'subscr' );
 $eucaInstalldb->addColifNotExists( 'pre_exp_check', "int(4) NULL", 'microintegrations' );
 
 if ( in_array( $mainframe->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
-	$result = null;
 	$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
-	if ( aecJoomla15check() ) {
-		$result = $database->loadObject();
-	} else {
-		$database->loadObject($result);
-	}
+	$result = $database->loadObject();
 
 	if ( !empty( $result ) ) {
 		if ( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {

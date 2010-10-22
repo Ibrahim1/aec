@@ -170,11 +170,11 @@ class mi_docman
 		$hacks = array();
 
 		$downloadhack =	'// AEC HACK docmandownloadphp START' . "\n"
-		. ( aecJoomla15check() ? '$user =& JFactory::getUser();' : 'global $my, $mosConfig_absolute_path;' ) . "\n"
-		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( ' . ( aecJoomla15check() ? 'JPATH_SITE' : '$mosConfig_absolute_path' ) . ' . \'/components/com_acctexp/micro_integration/mi_docman.php\');' . "\n\n"
+		. '$user =& JFactory::getUser();' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_docman.php\');' . "\n\n"
 		. '$restrictionhandler = new docman_restriction( $database );' . "\n"
-		. '$restrict_id = $restrictionhandler->getIDbyUserID( ' . ( aecJoomla15check() ? '$user->id' : '$my->id' ) . ' );' . "\n"
+		. '$restrict_id = $restrictionhandler->getIDbyUserID( $user->id );' . "\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
 		. 'if (!$restrictionhandler->hasDownloadsLeft()) {' . "\n"
 		. "\t" . '$restrictionhandler->noDownloadsLeft();' . "\n"

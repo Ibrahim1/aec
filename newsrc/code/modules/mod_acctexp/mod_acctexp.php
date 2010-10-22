@@ -33,7 +33,7 @@ if ( $user->id ) {
 	}
 
 	if ( $showExpiration ) {
-		$langPath = JPATH_SITE . '/modules/' . ( aecJoomla15check() ? 'mod_acctexp/' : '' ) . 'mod_acctexp_language/';
+		$langPath = JPATH_SITE . '/modules/mod_acctexp/mod_acctexp_language/';
 		if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
 				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
 		} else {

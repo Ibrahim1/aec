@@ -40,16 +40,11 @@ if ( $jsonconversion ) {
 		}
 
 		foreach ( $entries as $id ) {
-			$object = null;
 			$query = 'SELECT `' . implode( '`, `', $fielddeclare ) . '` FROM #__acctexp_' . $dbtable
 			. ' WHERE `id` = \'' . $id . '\''
 			;
 			$database->setQuery( $query );
-			if ( aecJoomla15check() ) {
-				$object = $database->loadObject();
-			} else {
-				$database->loadObject($object);
-			}
+			$object = $database->loadObject();
 
 			$dec = $fielddeclare;
 			foreach ( $fielddeclare as $fieldname ) {
@@ -153,16 +148,11 @@ if ( $jsonconversion ) {
 		}
 
 		foreach ( $entries as $id ) {
-			$object = null;
 			$query = 'SELECT `' . implode( '`, `', $fielddeclare ) . '` FROM #__acctexp_' . $dbtable
 			. ' WHERE `id` = \'' . $id . '\''
 			;
 			$database->setQuery( $query );
-			if ( aecJoomla15check() ) {
-				$object = $database->loadObject();
-			} else {
-				$database->loadObject($object);
-			}
+			$object = $database->loadObject();
 
 			$dec = $fielddeclare;
 			foreach ( $fielddeclare as $fieldname ) {

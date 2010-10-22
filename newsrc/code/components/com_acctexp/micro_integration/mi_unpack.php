@@ -56,12 +56,8 @@ class mi_unpack extends MI
 
 	function unpackFile( $source, $target )
 	{
-		if ( !class_exists( 'Archive_Tar' ) || function_exists( 'PclTarExtract' ) ) {
-			if ( aecJoomla15check() ) {
-				require_once( JPATH_SITE . '/administrator/includes/pcl/pcltar.lib.php' );
-			} else {
-				require_once( JPATH_SITE . '/includes/Archive/Tar.php' );
-			}
+		if ( !function_exists( 'PclTarExtract' ) ) {
+			require_once( JPATH_SITE . '/administrator/includes/pcl/pcltar.lib.php' );
 		}
 
 		if ( !@is_dir( $target ) ) {
@@ -80,13 +76,7 @@ class mi_unpack extends MI
 			}
 		}
 
-		if (  aecJoomla15check() ) {
-			return PclTarExtract( $source, $target );
-		} else {
-			$archive = new Archive_Tar( $source, 'gz' );
-
-			return $archive->extract( $target );
-		}
+		return PclTarExtract( $source, $target );
 	}
 
 }

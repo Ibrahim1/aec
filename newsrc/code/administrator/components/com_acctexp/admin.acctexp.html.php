@@ -143,9 +143,6 @@ class HTML_myCommon
 	{
 		?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css" />
-		<?php if ( !aecJoomla15check() ) { ?>
-			<script type="text/javascript" src="<?php echo JURI::root(); ?>components/com_acctexp/lib/mootools/mootools.js"></script>
-		<?php } ?>
 		<?php
 	}
 
@@ -235,13 +232,9 @@ class formParticles
 					<td width="10%" colspan="2">
 					<!-- <textarea name="<?php echo $thisrow_extra; ?>" align="left" cols="60" maxlength="2048" rows="5"><?php echo $thisrow_var; ?></textarea> //-->
 					<?php
-					if ( aecJoomla15check() ) {
-						$editor = &JFactory::getEditor();
+					$editor = &JFactory::getEditor();
 
-						$return .= $editor->display( $thisrow_extra,  $thisrow_var , '100%', '250', '50', '20' );
-					} else {
-						$return .= editorArea( $thisrow_extra, $thisrow_var, $thisrow_extra, '100%;', '250', '50', '20' );
-					}
+					$return .= $editor->display( $thisrow_extra,  $thisrow_var , '100%', '250', '50', '20' );
 					?>
 					</td>
 				</tr>
@@ -302,13 +295,9 @@ class General_css
 						</span>
 					</td>
 					<?php
-					if ( aecJoomla15check() ) {
-						jimport('joomla.filesystem.path');
+					jimport('joomla.filesystem.path');
 
-						$chmod = JPath::canChmod( $file );
-					} else {
-						$chmod = mosIsChmodable( $file );
-					}
+					$chmod = JPath::canChmod( $file );
 
 					if ( $chmod ) {
 						if ( is_writable( $file ) ) { ?>
@@ -360,18 +349,11 @@ class HTML_AcctExp
 		HTML_myCommon::addBackendCSS();
 
 		loadOverlib();
-		if ( aecJoomla15check() ) {
-			JHTML::_('behavior.calendar');
-		} else {
-			mosCommonHTML::loadCalendar();
-		}
 
-		if ( aecJoomla15check() ) {
-			$edituserlink = "index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=" . $metaUser->userid;
-			JHTML::_('behavior.calendar');
-		} else {
-			$edituserlink = "index2.php?option=com_users&amp;task=editA&amp;id=" . $metaUser->userid . "&amp;hidemainmenu=1";
-		}
+		JHTML::_('behavior.calendar');
+
+		$edituserlink = "index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=" . $metaUser->userid;
+		JHTML::_('behavior.calendar');
 
 		$cb = GeneralInfoRequester::detect_component('anyCB');
 
@@ -426,7 +408,7 @@ class HTML_AcctExp
 								<?php echo _AEC_USER_USERID; ?>:&nbsp;<strong><?php echo $metaUser->userid; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_STATUS; ?>:&nbsp;
-								<strong><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . 'index.php?option=' . ( aecJoomla15check() ? 'com_user' : 'com_registration' ) . '&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
+								<strong><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . 'index.php?option=com_user&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_PROFILE; ?>:
@@ -469,12 +451,7 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
-									<?php if ( !aecJoomla15check() ) { ?>
-										<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $exp; ?>" disabled="disabled" />
-										<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." disabled="disabled" />
-									<?php } else {
-										echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19', 'disabled'=>"disabled" ));
-									} ?>
+									<?php echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19', 'disabled'=>"disabled" )); ?>
 									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
 								</p>
 								<?php
@@ -491,12 +468,7 @@ class HTML_AcctExp
 								</p>
 								<p>
 									<?php echo _AEC_USER_RESET_EXP_DATE; ?>:&nbsp;<?php echo aecHTML::Icon( 'clock_edit.png', _AEC_USER_RESET_EXP_DATE ); ?>
-									<?php if ( !aecJoomla15check() ) { ?>
-										<input class="text_area" type="text" name="expiration" id="expiration" size="19" maxlength="19" value="<?php echo $exp; ?>" />
-										<input type="reset" name="reset" class="button" onClick="return showCalendar('expiration', 'y-mm-dd');" value="..." />
-									<?php } else {
-										echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19'));
-									} ?>
+									<?php echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19')); ?>
 									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
 								</p>
 								<?php
@@ -900,10 +872,7 @@ class HTML_AcctExp
 										array( 'hacks', 'hacks', _AEC_CENTR_HACKS )
 						);
 
-						if ( aecJoomla15check() ) {
-							$links[] = array( 'import', 'import', _AEC_CENTR_IMPORT );
-						}
-
+						$links[] = array( 'import', 'import', _AEC_CENTR_IMPORT );
 						$links[] = array( 'export', 'export', _AEC_CENTR_EXPORT );
 						$links[] = array( 'readout', 'export', _AEC_READOUT );
 
@@ -1044,7 +1013,6 @@ class HTML_AcctExp
 	function hacks ( $option, $hacks )
 	{
 		$infohandler	= new GeneralInfoRequester();
-		$cmsname		= strtolower($infohandler->getCMSName());
 		HTML_myCommon::addBackendCSS(); ?>
 
 		<form action="index2.php" method="post" name="adminForm">
@@ -1072,12 +1040,6 @@ class HTML_AcctExp
 						<p><?php echo _AEC_HACKS_NOTICE_DESC2; ?></p>
 						<p><?php echo _AEC_HACKS_NOTICE_DESC3; ?></p>
 					</div>
-					<?php if ( !aecJoomla15check() ) { ?>
-						<div class="usernote" style="width:350px; margin:5px;">
-							<h2><?php echo _AEC_HACKS_NOTICE_JACL; ?>:</h2>
-							<p><?php echo _AEC_HACKS_NOTICE_JACL_DESC; ?></p>
-						</div>
-					<?php } ?>
 				</div>
 				<?php
 				foreach ( $hacks as $handle => $content ) {
@@ -1769,15 +1731,9 @@ class HTML_AcctExp
 					</td>
 					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'orderplanup' ); ?></td>
 					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'orderplandown' ); ?></td>
-					<?php if ( aecJoomla15check() ) { ?>
-						<td align="center"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $rows[$i]->id; ?>"><strong><?php echo $rows[$i]->usercount; ?></strong></a></td>
-						<td align="center"><a href="index.php?option=com_acctexp&amp;task=showExpired&amp;plan=<?php echo $rows[$i]->id; ?>"><?php echo $rows[$i]->expiredcount; ?></a></td>
-						<td align="center"><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $rows[$i]->id; ?>"><strong><?php echo $rows[$i]->usercount + $rows[$i]->expiredcount; ?></strong></a></td>
-					<?php } else { ?>
-						<td align="center"><a href="index2.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $rows[$i]->id; ?>"><strong><?php echo $rows[$i]->usercount; ?></strong></a></td>
-						<td align="center"><a href="index2.php?option=com_acctexp&amp;task=showExpired&amp;plan=<?php echo $rows[$i]->id; ?>"><?php echo $rows[$i]->expiredcount; ?></a></td>
-						<td align="center"><a href="index2.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $rows[$i]->id; ?>"><strong><?php echo $rows[$i]->usercount + $rows[$i]->expiredcount; ?></strong></a></td>
-					<?php } ?>
+					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $rows[$i]->id; ?>"><strong><?php echo $rows[$i]->usercount; ?></strong></a></td>
+					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showExpired&amp;plan=<?php echo $rows[$i]->id; ?>"><?php echo $rows[$i]->expiredcount; ?></a></td>
+					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $rows[$i]->id; ?>"><strong><?php echo $rows[$i]->usercount + $rows[$i]->expiredcount; ?></strong></a></td>
 				</tr>
 			<?php
 			$k = 1 - $k;
@@ -2430,11 +2386,7 @@ class HTML_AcctExp
 		loadOverlib();
 		HTML_myCommon::addBackendCSS();
 
-		if ( aecJoomla15check() ) {
-			JHTML::_('behavior.calendar');
-		} else {
-			mosCommonHTML::loadCalendar();
-		}
+		JHTML::_('behavior.calendar');
 
 		?>
 		<table class="adminheading">
