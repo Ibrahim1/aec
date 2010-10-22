@@ -111,9 +111,9 @@ if ( is_object( $result ) ) {
 }
 
 $database->setQuery("SELECT count(*) FROM  #__acctexp_config_processors");
-$oldplans = ( $database->loadResult() == 0 && in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_processors_plans', $tables ) );
+$oldplans = ( $database->loadResult() == 0 && in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_processors_plans', $tables ) );
 
-if ( $oldplans || in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_config_paypal', $tables ) ) {
+if ( $oldplans || in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_config_paypal', $tables ) ) {
 	$database->setQuery( "SELECT proc_id FROM #__acctexp_processors_plans" );
 	$db_processors = $database->loadResultArray();
 

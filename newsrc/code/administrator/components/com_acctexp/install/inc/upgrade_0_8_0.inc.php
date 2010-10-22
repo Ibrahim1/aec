@@ -33,7 +33,7 @@ if ( is_object( $result ) ) {
 			}
 		}
 
-		if ( in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_payplans', $tables ) ) {
+		if ( in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_payplans', $tables ) ) {
 			$queri = null;
 			// Drop new table __acctexp_plans. We going to recreate it from old __acctexp_payplans
 			$queri[] = "DROP TABLE  #__acctexp_plans";
