@@ -13,12 +13,6 @@
 
 global $aecConfig;
 
-if ( !defined( 'JPATH_SITE' ) ) {
-	global $mosConfig_absolute_path;
-
-	define( 'JPATH_SITE', $mosConfig_absolute_path );
-}
-
 // Make sure we are compatible with php4
 if ( version_compare( phpversion(), '5.0' ) < 0 ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
@@ -33,12 +27,11 @@ if (  ( version_compare( phpversion(), '5.0') >= 0 )  && ( version_compare( phpv
 JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
 
 $lang =& JFactory::getLanguage();
-$GLOBALS['mosConfig_lang']          = $lang->getBackwardLang();
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
-		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+	if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
+		include_once( $langPath . $lang->getBackwardLang() . '.php' );
 	} else {
 		include_once( $langPath. 'english.php' );
 	}
@@ -46,8 +39,8 @@ if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 
 if ( !defined( '_AEC_LANG' ) ) {
 	$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
-	if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
-		include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+	if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
+		include_once( $langPath . $lang->getBackwardLang() . '.php' );
 	} else {
 		include_once( $langPath . 'english.php' );
 	}
@@ -2509,9 +2502,11 @@ class eventLog extends serialParamDBTable
 			}
 
 			if ( !defined( "_AEC_NOTICE_NUMBER_" . $this->level ) ) {
+				$lang =& JFactory::getLanguage();
+				
 				$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-				if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
-					include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+				if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
+					include_once( $langPath . $lang->getBackwardLang() . '.php' );
 				} else {
 					include_once( $langPath. 'english.php' );
 				}
@@ -2852,10 +2847,12 @@ class PaymentProcessor
 		// Check whether processor exists
 		if ( file_exists( $file ) ) {
 			if ( !defined( '_AEC_LANG_PROCESSOR' ) ) {
+				$lang =& JFactory::getLanguage();
+				
 				$langPath = $this->pph->pp_dir . '/lang/';
 				// Include language files for processors
-				if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
-					include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+				if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
+					include_once( $langPath . $lang->getBackwardLang() . '.php' );
 				} else {
 					include_once( $langPath . 'english.php' );
 				}
@@ -12491,9 +12488,11 @@ class Subscription extends serialParamDBTable
 
 		global $mainframe;
 
+		$lang =& JFactory::getLanguage();
+
 		$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
-		if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' ) ) {
-			include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+		if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
+			include_once( $langPath . $lang->getBackwardLang() . '.php' );
 		} else {
 			include_once( $langPath . 'english.php' );
 		}

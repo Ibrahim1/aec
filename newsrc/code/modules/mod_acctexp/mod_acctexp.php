@@ -34,8 +34,11 @@ if ( $user->id ) {
 
 	if ( $showExpiration ) {
 		$langPath = JPATH_SITE . '/modules/mod_acctexp/mod_acctexp_language/';
-		if ( file_exists( $langPath . $GLOBALS['mosConfig_lang'] . '.php' )) {
-				include_once( $langPath . $GLOBALS['mosConfig_lang'] . '.php' );
+		
+		$lang =& JFactory::getLanguage();
+
+		if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' )) {
+				include_once( $langPath . $lang->getBackwardLang() . '.php' );
 		} else {
 				include_once( $langPath. 'english.php' );
 		}
