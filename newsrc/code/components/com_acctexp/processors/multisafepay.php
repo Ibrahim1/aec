@@ -129,7 +129,7 @@ class processor_multisafepay extends XMLprocessor
 		$response = array();
 		$response['valid'] = 0;
 
-		$reply = $this->transmitToDesjardin( $xml );
+		$reply = $this->transmitToMultisafepay( $xml );
 
 		if ( !empty( $reply ) ) {
 			$matches = array();
@@ -165,7 +165,7 @@ class processor_multisafepay extends XMLprocessor
 		return $response;
 	}
 
-	function transmitToDesjardin( $xml, $request )
+	function transmitToMultisafepay( $xml, $request )
 	{
 		$path = "/ewx";
 
@@ -192,7 +192,7 @@ class processor_multisafepay extends XMLprocessor
 
 		$gateways = array();
 
-		$reply = $this->transmitToDesjardin( $xml );
+		$reply = $this->transmitToMultisafepay( $xml );
 
 		if ( !empty( $reply ) ) {
 			$matches = array();
