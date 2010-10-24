@@ -200,9 +200,9 @@ function aecPostParamClear( $array, $safe=false, $safe_params=array( 'string', '
 
 function aecRedirect( $url, $msg=null, $class=null )
 {
-	global $mainframe;
+	$app = JFactory::getApplication();
 
-	$mainframe->redirect( $url, $msg, $class );
+	$app->redirect( $url, $msg, $class );
 }
 
 class metaUser
@@ -3693,20 +3693,20 @@ class processor extends serialParamDBTable
 			$response = $this->doTheCurl( $url, $content, $curlextra, $header );
 			if ( $response === false ) {
 				// If curl doesn't work try using fsockopen
-				$response = $this->doTheHttp( $url, $path, $content, $port, $header );
+				$response = $this->doTheHttp( $url, $path, $content, $port, $header, $curlextra );
 			}
 		} else {
 			$response = $this->doTheHttp( $url, $path, $content, $port, $header );
 			if ( $response === false ) {
 				// If fsockopen doesn't work try using curl
-				$response = $this->doTheCurl( $url, $content, $curlextra, $header );
+				$response = $this->doTheCurl( $url, $content, $curlextra, $header, $curlextra );
 			}
 		}
 
 		return $response;
 	}
 
-	function doTheHttp( $url, $path, $content, $port=443, $extra_header=null )
+	function doTheHttp( $url, $path, $content, $port=443, $extra_header=null, $curlextra=null )
 	{
 		global $aecConfig;
 
@@ -3750,6 +3750,15 @@ class processor extends serialParamDBTable
 			$connection = fsockopen( $aecConfig->cfg['proxy'], $proxyport, $errno, $errstr, 30 );
 		} else {
 			$connection = fsockopen( $url, $port, $errno, $errstr, 30 );
+		}
+
+		// Emulate some cURL functionality
+		if ( !empty( $curlextra ) && function_exists( "stream_context_set_params" ) ) {
+			if ( isset( $curlextra['verify_peer'] ) && isset( $curlextra['allow_self_signed'] ) ) {
+				$set_params = array( 'ssl' => array( 'verify_peer' => $curlextra['verify_peer'],'allow_self_signed' => $curlextra['allow_self_signed'] ) );
+
+				stream_context_set_params( $connection, $set_params );
+			}
 		}
 
 		if ( $connection === false ) {

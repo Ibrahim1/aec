@@ -153,7 +153,7 @@ class processor_ideal_advanced extends XMLprocessor
 				default:
 					$response['valid'] = false;
 					$redirect = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=cancel");
-					aecRedirect ($redirect);
+					aecRedirect($redirect);
 			}
 		}
 
