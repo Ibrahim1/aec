@@ -224,14 +224,11 @@ class plgSystemAECrouting extends JPlugin
 				global $mainframe;
 				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe', false, true ) );
 			} elseif ( !$vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] && !$vars['pfirst'] ) {
-				global $mainframe;
-				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+				$this->redirectToken();
 			} elseif ( $vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] ) {
-				global $mainframe;
-				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+				$this->redirectToken();
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
-				global $mainframe;
-				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+				$this->redirectToken();
 			} elseif ( $vars['has_user'] && !$vars['has_usage'] && $vars['k2_regsv'] ) {
 
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['k2_regsv'] ) {
@@ -274,11 +271,14 @@ class plgSystemAECrouting extends JPlugin
 					}
 
 					$temptoken->storeload();
+
+					if ( $vars['cb_sregsv'] ) {
+						$this->redirectToken();
+					}
 				}
 
 				if ( $vars['alpha_regsv'] ) {
-					global $mainframe;
-					$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+					$this->redirectToken();
 				}
 			} elseif ( $vars['has_usage'] ) {
 				$database = &JFactory::getDBO();
@@ -341,8 +341,7 @@ class plgSystemAECrouting extends JPlugin
 			$temptoken->getComposite();
 
 			if ( !empty( $temptoken->content['password2'] ) ) {
-				global $mainframe;
-				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+				$this->redirectToken();
 			}
 		}
 
@@ -369,7 +368,7 @@ class plgSystemAECrouting extends JPlugin
 			$replace[]	= '<input type="hidden" name="task" value="subscribe" />';
 		} elseif ( $vars['ccb'] && $vars['ccb12'] && $vars['tcregs'] ) {
 			if ( strpos( $body, '<script type="text/javascript">alert(' ) === false ) {
-				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+				$this->redirectToken();
 			}
 		} elseif ( $vars['j_reg'] && !$vars['k2'] ) {
 			$addinmarker = '<input type="hidden" name="task" value="register_save" />';
@@ -435,6 +434,11 @@ class plgSystemAECrouting extends JPlugin
 		return str_replace( $search, $search.$add, $text );
 	}
 
+	function redirectToken()
+	{
+		global $mainframe;
+		$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+	}
 }
 
 ?>

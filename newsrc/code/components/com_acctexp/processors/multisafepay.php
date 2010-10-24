@@ -103,7 +103,7 @@ class processor_multisafepay extends XMLprocessor
 
 		$var['params']['lists']['gateway'] = JHTML::_( 'select.genericlist', $options, 'gateway', 'size="1"', 'value', 'text', null );
 		$var['params']['gateway'] = array( 'list', 'Kies een betaalmethode', null ); // TODO replace with language param/constant eventually
-		$var['params']['country'] = array( 'list_country', 'Kies een betaalmethode', null );
+		$var['params']['country'] = array( 'list_country' );
 
 		return $var;
 	}
