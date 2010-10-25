@@ -97,26 +97,38 @@ XML;
 		$xml_step3_request .= '			<urls>'."\n";
 		$xml_step3_request .= '			  <url name="response">'."\n";
 		$xml_step3_request .= '			    <path>' . $return . '</path>'."\n";
+
+		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'response', 'invoice' => $request->invoice->invoice_number ) );
+
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="task">desjardinsnotification</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="success">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
+
+		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'success', 'invoice' => $request->invoice->invoice_number ) );
+
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="task">thanks</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="cancel">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="task">cancel</parameter>'."\n";
+
+		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'cancel', 'invoice' => $request->invoice->invoice_number ) );
+
+		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="error">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="task">error</parameter>'."\n";
+
+		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'error', 'invoice' => $request->invoice->invoice_number ) );
+
+		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			</urls>'."\n";
@@ -199,7 +211,7 @@ XML;
 	function parseNotification( $post )
 	{
 		$response = array();
-
+aecDebug($_REQUEST);aecDebug($post);
 		if ( !empty( $post['original'] ) ) {
 			$post['original'] = base64_decode( $post['original'] );
 

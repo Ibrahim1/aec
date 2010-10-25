@@ -6,6 +6,8 @@ $bsLoader = new bootstrapLoader();
 // Force redirection to AEC
 $_GET['option'] = 'com_acctexp';
 
+$post = array();
+
 // Get our GET and POST, but make sure there is no weird stuff going on in those variables.
 $get = null;
 if ( !empty( $_GET ) ) {
@@ -15,14 +17,33 @@ if ( !empty( $_GET ) ) {
 	}
 }
 
+// See whether we have some sneaky encoded request
+if ( !empty( $_GET['aec_request'] ) ) {
+	$decode = unserialize( base64_decode( $_GET['aec_request'] ) );
+
+	if ( !empty( $decode['get'] ) ) {
+		foreach ( $decode['get'] as $k => $v ) {
+			$_GET[$k] = $v;
+		}
+	}
+
+	if ( !empty( $decode['post'] ) ) {
+		foreach ( $decode['post'] as $k => $v ) {
+			$post[$k] = $v;
+		}
+	}
+}
+
 // Block out anything that aims at non-notification actions
-if ( strpos( $_GET['task'], 'notification' ) === false ) {
-	$path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . implode( '&', $get );
+if ( isset( $_GET['task'] ) ) {
+	if ( strpos( $_GET['task'], 'notification' ) === false ) {
+		$path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . implode( '&', $get );
 
-	$url = 'http://' . $_SERVER['HTTP_HOST'] . $path;
+		$url = 'http://' . $_SERVER['HTTP_HOST'] . $path;
 
-	header( 'Location: ' . $url );
-	exit;
+		header( 'Location: ' . $url );
+		exit;
+	}
 }
 
 $original = file_get_contents("php://input");
@@ -31,7 +52,8 @@ if ( empty( $post ) ) {
 	$original = $GLOBALS['HTTP_RAW_POST_DATA'];
 }
 
-$post = array( "original" => base64_encode( stripslashes( $original ) ) );
+$post['original'] = base64_encode( stripslashes( $original ) );
+
 // Instead of doing fancy-pants figuring out of the subdirectory, just deduct that from the call
 $path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . implode( '&', $get );
 
