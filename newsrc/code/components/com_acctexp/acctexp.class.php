@@ -4057,8 +4057,8 @@ class XMLprocessor extends processor
 
 		// Include Mootools tabber
 		$document=& JFactory::getDocument();
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
 		$document->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
 
 		$nlist	= array();
@@ -5557,7 +5557,6 @@ class aecHTML
 
 	/**
 	 * displays an icon
-	 * mic: corrected name
 	 *
 	 * @param 	string	$image	image name
 	 * @param	string	$alt	optional alt/title text
@@ -5569,7 +5568,7 @@ class aecHTML
 			$name	= explode( '.', $image );
 			$alt	= $name[0];
 		}
-		$image 	= JURI::root() . 'media/com_acctexp/images/site/icons/'. $image;
+		$image 	= JURI::root(true) . 'media/com_acctexp/images/site/icons/'. $image;
 
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" class="aec_icon" />';
 	}
