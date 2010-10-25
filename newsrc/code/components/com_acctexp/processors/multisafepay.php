@@ -21,6 +21,8 @@ define( '_CFG_MULTISAFEPAY_SITE_ID_NAME', 'Site ID');
 define( '_CFG_MULTISAFEPAY_SITE_ID_DESC', 'Site ID');
 define( '_CFG_MULTISAFEPAY_SITE_SECURE_CODE_NAME', 'Site Secure Code');
 define( '_CFG_MULTISAFEPAY_SITE_SECURE_CODE_DESC', 'Site Secure Code');
+define( '_CFG_MULTISAFEPAY_SELECT_GATEWAY', 'Kies een betaalmethode'); // choose payment gateway
+define( '_CFG_MULTISAFEPAY_SELECT_COUNTRY', 'Kies een land'); // your country
 
 class processor_multisafepay extends XMLprocessor
 {
@@ -95,6 +97,11 @@ class processor_multisafepay extends XMLprocessor
 
 	function checkoutform( $request )
 	{
+		$var = array();
+
+		$var['params']['gateway'] = array( 'list', _CFG_MULTISAFEPAY_SELECT_GATEWAY, null );
+		$var['params']['country'] = array( 'list', _CFG_MULTISAFEPAY_SELECT_COUNTRY, null );
+
 		$gateways = $this->getGateways( $request );
 		
 		foreach ( $gateways as $id => $description ) {
@@ -102,8 +109,15 @@ class processor_multisafepay extends XMLprocessor
 		}		
 
 		$var['params']['lists']['gateway'] = JHTML::_( 'select.genericlist', $options, 'gateway', 'size="1"', 'value', 'text', null );
-		$var['params']['gateway'] = array( 'list', 'Kies een betaalmethode', null ); // TODO replace with language param/constant eventually
-		$var['params']['country'] = array( 'list_country' );
+
+		$country_code_list = AECToolbox::getISO3166_1a2_codes();
+
+		$code_list = array();
+		foreach ( $country_code_list as $country ) {
+			$code_list[] = JHTML::_('select.option', $country, $country . " - " . constant( '_AEC_LANG_' . $country ) );
+		}
+
+		$var['params']['lists']['country'] = JHTML::_( 'select.genericlist', $code_list, 'country', 'size="1"', 'value', 'text', 'NL' );
 
 		return $var;
 	}
@@ -129,7 +143,7 @@ class processor_multisafepay extends XMLprocessor
 		$response = array();
 		$response['valid'] = 0;
 
-		$reply = $this->transmitToMultisafepay( $xml );
+		$reply = $this->transmitToMultiSafepay( $xml );
 
 		if ( !empty( $reply ) ) {
 			$matches = array();
@@ -165,7 +179,7 @@ class processor_multisafepay extends XMLprocessor
 		return $response;
 	}
 
-	function transmitToMultisafepay( $xml, $request )
+	function transmitToMultiSafepay( $xml )
 	{
 		$path = "/ewx";
 
@@ -192,7 +206,7 @@ class processor_multisafepay extends XMLprocessor
 
 		$gateways = array();
 
-		$reply = $this->transmitToMultisafepay( $xml );
+		$reply = $this->transmitToMultiSafepay( $xml );
 
 		if ( !empty( $reply ) ) {
 			$matches = array();
@@ -228,14 +242,14 @@ class processor_multisafepay extends XMLprocessor
 		return array(	'account'			=> $this->settings['account'],
 						'site_id'			=> $this->settings['site_id'],
 						'site_secure_code'	=> $this->settings['site_secure_code'],
-						'notification_url'	=> AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=desjardinnotification' )
+						'notification_url'	=> AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=multisafepaynotification' )
 		);
 	}
 
 	function get_customer_info( $request )
 	{
-		if ( !empty( $request->int_var['params']['gateway'] ) ) {
-			$country = $request->int_var['params']['gateway'];
+		if ( !empty( $request->int_var['params']['country'] ) ) {
+			$country = $request->int_var['params']['country'];
 		} else {
 			$country = 'NL';
 		}
@@ -253,7 +267,7 @@ class processor_multisafepay extends XMLprocessor
 						'currency'		=> $this->settings['currency'],
 						'amount'		=> $request->int_var['amount'] * 100,
 						'description'	=> AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ),
-						'items'			=> "[access period]",
+						'items'			=> $request->plan->name,
 						'manual'		=> 'true',
 						'gateway'		=> $request->int_var['params']['gateway']
 		);
