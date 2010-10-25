@@ -433,7 +433,7 @@ function expired( $option, $userid, $expiration )
 			$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
 		}
 
-		$expiration	= strftime( $aecConfig->cfg['display_date_frontend'], $expired);
+		$expiration	= AECToolbox::formatDate( $expired );
 
 		$mainframe->SetPageTitle( _EXPIRED_TITLE );
 

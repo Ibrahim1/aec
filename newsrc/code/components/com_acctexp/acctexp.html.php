@@ -465,7 +465,7 @@ class HTML_frontEnd
 		} else {
 			$database = &JFactory::getDBO();
 
-			$retVal = strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $SQLDate ) );
+			$retVal = AECToolbox::formatDate( $SQLDate );
 
 			if ( $check ) {
 				$timeDif = strtotime( $SQLDate ) - ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );

@@ -11210,7 +11210,7 @@ class Invoice extends serialParamDBTable
 		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
 			$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_UNPAID;
 		} else {
-			$date = strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->transaction_date ) );
+			$date = AECToolbox::formatDate( $this->transaction_date );
 
 			$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, $date );
 		}
@@ -11232,7 +11232,7 @@ class Invoice extends serialParamDBTable
 				$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, "" );
 
 				foreach ( $this->transactions as $transaction ) {
-					$data['invoice_billing_history'] = '<td>' . strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $transaction->timestamp ) ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $transaction->processor . '</td>';
+					$data['invoice_billing_history'] = '<td>' . AECToolbox::formatDate( $transaction->timestamp ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $transaction->processor . '</td>';
 				}
 			}
 		}
@@ -13546,10 +13546,10 @@ class reWriteEngine
 
 		$this->rewrite = array();
 
-		$this->rewrite['system_timestamp']			= strftime( $aecConfig->cfg['display_date_frontend'],  ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
-		$this->rewrite['system_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
-		$this->rewrite['system_serverstamp_time']	= strftime( $aecConfig->cfg['display_date_frontend'], time() );
-		$this->rewrite['system_server_timestamp_backend']	= strftime( $aecConfig->cfg['display_date_backend'], time() );
+		$this->rewrite['system_timestamp']					= AECToolbox::formatDate( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->rewrite['system_timestamp_backend']			= AECToolbox::formatDate( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ), true );
+		$this->rewrite['system_serverstamp_time']			= AECToolbox::formatDate( time() );
+		$this->rewrite['system_server_timestamp_backend']	= AECToolbox::formatDate( time(), true );
 
 		$this->rewrite['cms_absolute_path']	= JPATH_SITE;
 		$this->rewrite['cms_live_site']		= JURI::root();
@@ -13660,8 +13660,8 @@ class reWriteEngine
 
 					$this->rewrite['subscription_recurring']		= $this->data['metaUser']->focusSubscription->recurring;
 					$this->rewrite['subscription_lifetime']			= $this->data['metaUser']->focusSubscription->lifetime;
-					$this->rewrite['subscription_expiration_date']	= strftime( $aecConfig->cfg['display_date_frontend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
-					$this->rewrite['subscription_expiration_date_backend']	= strftime( $aecConfig->cfg['display_date_backend'], strtotime( $this->data['metaUser']->focusSubscription->expiration ) );
+					$this->rewrite['subscription_expiration_date']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->expiration );
+					$this->rewrite['subscription_expiration_date_backend']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->expiration, true );
 				}
 
 				if ( empty( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
@@ -14859,6 +14859,29 @@ class AECToolbox
 		}
 	}
 
+	function formatDate( $date, $backend=false )
+	{
+		global $aecConfig;
+
+		if ( is_string( $date ) ) {
+			$date = strtotime( $date );
+		}
+
+		if ( $backend ) {
+			if ( empty( $aecConfig->cfg['display_date_backend'] ) ) {
+				return strftime( JText::_('DATE_FORMAT_LC4'), $date );
+			} else {
+				return strftime( $aecConfig->cfg['display_date_backend'], $date );
+			}
+		} else {
+			if ( empty( $aecConfig->cfg['display_date_frontend'] ) ) {
+				return strftime( JText::_('DATE_FORMAT_LC4'), $date );
+			} else {
+				return strftime( $aecConfig->cfg['display_date_frontend'], $date );
+			}
+		}
+	}
+
 	function formatAmountCustom( $request, $plan, $forcedefault=false, $proposed=null )
 	{
 		if ( empty( $plan->params['customamountformat'] ) || $forcedefault ) {
@@ -14887,7 +14910,8 @@ class AECToolbox
 		return $amount;
 	}
 
-	function formatAmount( $amount, $currency=null ) {
+	function formatAmount( $amount, $currency=null )
+	{
 		global $aecConfig;
 
 		if ( !empty( $currency ) ) {

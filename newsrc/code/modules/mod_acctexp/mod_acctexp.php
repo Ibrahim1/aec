@@ -137,7 +137,7 @@ class AECModuleHelper
 			$timeOffset = $mainframe->getCfg( 'offset' );
 		}
 
-		$retVal = strftime( $aecConfig->cfg['display_date_frontend'], ( strtotime( $expiration ) + $timeOffset*3600 ) );
+		$retVal = AECToolbox::formatDate( ( strtotime( $expiration ) + $timeOffset*3600 ) );
 
 		if ( $recurring ) {
 			return "<p>" . _ACCOUNT_RENEWAL . ": " . $retVal . "</p>";
