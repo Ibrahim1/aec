@@ -51,6 +51,7 @@ class processor_multisafepay extends XMLprocessor
 		$settings['currency']			= "EUR";
 		$settings['gateway']			= array( 'IDEAL,DIRDEB,VISA,WALLET,IDEAL,BANKTRANS,MAESTRO,MASTERCARD' );
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']        = "";
 
 		return $settings;
 	}
@@ -66,6 +67,7 @@ class processor_multisafepay extends XMLprocessor
 		$settings['currency']			= array( 'list_currency' );
 
 		$settings['item_name']			= array( 'inputE' );
+		$settings['customparams']		= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -108,7 +110,7 @@ class processor_multisafepay extends XMLprocessor
 			$options[]	= JHTML::_('select.option', htmlspecialchars($id), htmlspecialchars($description) );
 		}		
 
-		$var['params']['lists']['gateway'] = JHTML::_( 'select.genericlist', $options, 'gateway', 'size="1"', 'value', 'text', null );
+		$var['params']['lists']['gateway'] = JHTML::_( 'select.genericlist', $options, 'gateway', 'size="1"', 'value', 'text', 'IDEAL' );
 
 		$country_code_list = AECToolbox::getISO3166_1a2_codes();
 
@@ -173,7 +175,7 @@ class processor_multisafepay extends XMLprocessor
 				$response['valid'] = 1;
 			}
 		} else {
-			$response['error'] = "Cannot connect to Desjardin";
+			$response['error'] = "Cannot connect to MultiSafepay";
 		}
 
 		return $response;
@@ -181,7 +183,7 @@ class processor_multisafepay extends XMLprocessor
 
 	function transmitToMultiSafepay( $xml )
 	{
-		$path = "/ewx";
+		$path = "/ewx/"; // don't remove the trailing slash otherwise the MultiSafepay API will return an error!
 
 		if ( $this->settings['testmode'] ) {
 			$url = 'https://testapi.multisafepay.com' . $path;
@@ -194,6 +196,15 @@ class processor_multisafepay extends XMLprocessor
 		$curlextra = array(	CURLOPT_TIMEOUT => 30 );
 
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
+	}
+
+	function parseNotification ( $return_msg )
+	{
+		// do nothing here until further notice...
+aecDebug($_GET); // DEBUG - remove when ready
+		$response = array();
+		$response['valid'] = 1;
+		return $response;
 	}
 
 	function getGateways( $request )
