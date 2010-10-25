@@ -1277,8 +1277,13 @@ class metaUser
 		}
 	}
 
-	function getUserMIs(){
+	function getUserMIs()
+	{
 		$database = &JFactory::getDBO();
+
+		if ( empty( $this->focusSubscription->id ) ) {
+			return array();
+		}
 
 		$focus = $this->focusSubscription->id;
 

@@ -1085,7 +1085,10 @@ function saveUser( $option, $apply=0 )
 
 	if ( !$metaUser->hasSubscription ) {
 		if ( $set_status == 'exclude' ) {
-			//$metaUser->
+			$metaUser->focusSubscription = new Subscription( $database );
+			$metaUser->focusSubscription->createNew( $metaUser->userid, 'none', 0 );
+
+			$metaUser->hasSubscription = true;
 		} else {
 			echo "<script> alert('"._AEC_ERR_NO_SUBSCRIPTION."'); window.history.go(-1); </script>\n";
 			exit();
