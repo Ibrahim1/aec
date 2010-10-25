@@ -283,7 +283,7 @@ class processor_multisafepay extends XMLprocessor
 		$data = '<' . $name . '>' . "\n";
 
 		foreach ( $arr as $key => $value ) {
-			$data .= '<' . $key . '>' . htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '</' . $key . '>' . "\n";
+			$data .= '<' . $key . '>' . htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ) . '</' . $key . '>' . "\n";
 		}
 
 		$data .= '</' . $name . '>' . "\n";
