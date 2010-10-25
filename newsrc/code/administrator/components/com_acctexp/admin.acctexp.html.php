@@ -1722,7 +1722,7 @@ class HTML_AcctExp
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo _AEC_CMN_CLICK_TO_EDIT; ?>"><?php echo $rows[$i]->name; ?></a></td>
 					<td  align="left">
 						<?php
-						echo $description; ?>
+						echo stripslashes( $description ); ?>
 					</td>
 					<td align="center">
 						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>')">
