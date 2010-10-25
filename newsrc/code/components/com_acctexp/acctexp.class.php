@@ -6517,7 +6517,6 @@ class SubscriptionPlan extends serialParamDBTable
 			} else {
 				$status = ( $this->params['make_active'] ? ( $trial ? 'Trial' : 'Active' ) : 'Pending' );
 			}
-			$renew = 1;
 		}
 
 		$metaUser->focusSubscription->status = $status;
