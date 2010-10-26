@@ -34,7 +34,7 @@ class processor_multisafepay extends XMLprocessor
 		$info['statement']			= _CFG_MULTISAFEPAY_STATEMENT;
 		$info['description']		= _CFG_MULTISAFEPAY_DESCRIPTION;
 		$info['currencies']			= 'EUR';
-		$info['languages']			= 'NL';
+		$info['languages']			= 'DE,EN,NL,ES,FR';
 		$info['cc_list']			= 'visa,maestro,mastercard';//'DIRDEB,VISA,WALLET,IDEAL,BANKTRANS,MAESTRO,MASTERCARD';
 		$info['recurring']			= 0;
 
@@ -45,6 +45,7 @@ class processor_multisafepay extends XMLprocessor
 	{
 		$settings = array();
 		$settings['account']			= "";
+		$settings['language']			= "DK";
 		$settings['site_id']			= "";
 		$settings['site_secure_code']	= "";
 		$settings['testmode']			= "0";
@@ -60,6 +61,7 @@ class processor_multisafepay extends XMLprocessor
 	{
 		$settings = array();
 		$settings['account']			= array( 'inputC' );
+		$settings['language']			= array( 'list_language' );
 		$settings['site_id']			= array( 'inputC' );
 		$settings['site_secure_code']	= array( 'inputC' );
 		
@@ -198,13 +200,23 @@ class processor_multisafepay extends XMLprocessor
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
 	}
 
-	function parseNotification ( $return_msg )
+	function parseNotification ( $post )
 	{
 		// do nothing here until further notice...
 aecDebug($_GET); // DEBUG - remove when ready
 		$response = array();
-		$response['valid'] = 1;
+		$response['invoice']			= $post['invoice'];
+		$response['amount_currency']	= $post['mc_currency'];
+		$response['amount_paid']		= $post['mc_gross'];
+
 		return $response;
+	}
+
+	function validateNotification( $response, $post, $invoice )
+	{
+		$response = array();
+
+		$response['valid'] = 0;
 	}
 
 	function getGateways( $request )
@@ -265,11 +277,26 @@ aecDebug($_GET); // DEBUG - remove when ready
 			$country = 'NL';
 		}
 		
-		return array(	'firstname'	=> $request->metaUser->cmsUser->username,
+		$user = array(	'firstname'	=> $request->metaUser->cmsUser->username,
 						'lastname'	=> $request->metaUser->cmsUser->name,
 						'email'		=> $request->metaUser->cmsUser->email,
-						'country'	=> $country
+						'country'	=> $country,
+						'locale'	=> $this->settings['language']
 		);
+
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$params = explode( "\n", AECToolbox::rewriteEngineRQ( $this->settings['customparams'], $request ) );
+
+			foreach ( $params as $custom ) {
+				$paramsarray = explode( '=', $custom, 2 );
+
+				if ( !empty( $paramsarray[0] ) && isset( $paramsarray[1] ) ) {
+					$user[$paramsarray[0]] = $paramsarray[1];
+				}
+			}
+		}
+
+		return $params;
 	}
 
 	function get_transaction_info( $request )
