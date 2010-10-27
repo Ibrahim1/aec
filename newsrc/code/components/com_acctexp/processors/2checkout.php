@@ -98,6 +98,8 @@ class processor_2checkout extends POSTprocessor
 
 		$var['sid']					= $this->settings['sid'];
 		$var['invoice_number']		= $request->invoice->invoice_number;
+		$var['merchant_order_id']	= $request->invoice->invoice_number;
+		$var['x_invoice_num']		= $request->invoice->invoice_number;
 		$var['fixed']				= 'Y';
 		$var['total']				= $request->int_var['amount'];
 
@@ -131,7 +133,13 @@ class processor_2checkout extends POSTprocessor
 		$name			= $post['name'];
 
 		$response = array();
-		$response['invoice'] = $invoice_number;
+		if ( !empty( $post['invoice_number'] ) ) {
+			$response['invoice'] = $post['invoice_number'];
+		} elseif ( !empty( $post['merchant_order_id'] ) ) {
+			$response['invoice'] = $post['merchant_order_id'];
+		} else {
+			$response['invoice'] = $post['x_invoice_num'];
+		}
 
 		return $response;
 	}
