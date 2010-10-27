@@ -171,7 +171,7 @@ class processor_moneybookers extends POSTprocessor
 
 		$md5sig = md5( $post['merchant_id'] . $post['transaction_id'] . strtoupper( md5( $this->settings['secret_word'] ) ) . $post['mb_amount'] . $post['mb_currency'] . $post['status'] );
 
-		if ( ( $post['status'] == '2' ) && ( $md5sig == $post['md5sig'] ) ) {
+		if ( ( $post['status'] == '2' ) && ( strtoupper( $md5sig ) == $post['md5sig'] ) ) {
 			$response['valid'] = true;
 		}
 
