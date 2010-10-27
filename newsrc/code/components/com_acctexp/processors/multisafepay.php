@@ -202,21 +202,73 @@ class processor_multisafepay extends XMLprocessor
 
 	function parseNotification ( $post )
 	{
-		// do nothing here until further notice...
-aecDebug($_GET); // DEBUG - remove when ready
-		$response = array();
-		$response['invoice']			= $post['invoice'];
-		$response['amount_currency']	= $post['mc_currency'];
-		$response['amount_paid']		= $post['mc_gross'];
+		// comment TRE: $post is empty, $_GET is not.... what to do with this?
 
+		// generate xml request to check payment status and retrieve invoice information
+		$response = array();
+		$response['valid'] = 0;
+		$transaction_id = $this->xml_escape(trim(stripslashes($_GET['transactionid'])));
+		$type           = trim(stripslashes($_GET['type']));
+
+		$xml  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
+				. '<status ua="aec-processor-1.0">' . "\n"
+				. $this->xml_array_to_xml($this->get_merchant_info(), 'merchant')
+				. $this->xml_array_to_xml(array ('id' => $transaction_id), 'transaction')
+				. '<signature>' . $signature . '</signature>' . "\n"
+				. '</status>' . "\n"
+				;
+
+		// fire off xml
+		$reply = $this->transmitToMultiSafepay( $xml );
+		
+aecDebug($reply); // DEBUG - remove when ready
+		
+		if ( !empty( $reply ) ) {
+		
+			// check payment status
+			preg_match('/\<status result="(.*)"\>/U', $reply, $matches);
+		
+			if (count($matches) == 0 || $matches[1] != "ok") {
+				$matches = array();
+				// default error message
+				$response['error']   = 'An error has occured while checking payment status.';
+		
+				// get error message if any
+				preg_match('/\<error\>.*\<description\>(.*)\<\/description\>.*\<\/error\>/U', $reply, $matches);
+		
+				if ($matches > 0) {
+					$response['error'] = $this->xml_unescape($matches[1]);
+				}
+			} else {
+				// response = ok!
+				$response['valid'] = 1;
+				$response['invoice'] = $transaction_id;
+			
+				$matches = 0;
+				preg_match('/\<transaction\>.*\<currency\>(.*)\<\/currency\>.*\<\/transaction\>/U', $reply, $matches);	
+				$response['amount_currency'] = $this->xml_unescape($matches[1]);
+
+				$matches = 0;
+				preg_match('/\<transaction\>.*\<amount\>(.*)\<\/amount\>.*\<\/transaction\>/U', $reply, $matches);	
+				$response['amount_paid'] = $this->xml_unescape($matches[1]);
+			}
+		} else {
+			$response['error'] = "Cannot connect to MultiSafepay";
+		}
+
+aecDebug($response); // DEBUG - remove when ready
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$response = array();
-
-		$response['valid'] = 0;
+		//$response = array();
+		//$response['valid'] = 0;
+		
+aecDebug($response); // DEBUG - remove when ready
+aecDebug($post); // DEBUG - remove when ready	
+aecDebug($invoice); // DEBUG - remove when ready			
+		return $response;
 	}
 
 	function getGateways( $request )
@@ -296,7 +348,7 @@ aecDebug($_GET); // DEBUG - remove when ready
 			}
 		}
 
-		return $params;
+		return $user;
 	}
 
 	function get_transaction_info( $request )
@@ -309,6 +361,11 @@ aecDebug($_GET); // DEBUG - remove when ready
 						'manual'		=> 'true',
 						'gateway'		=> $request->int_var['params']['gateway']
 		);
+	}
+
+	function xml_escape($str)
+	{
+		return htmlspecialchars($str, ENT_COMPAT, 'UTF-8');
 	}
 
 	function xml_unescape( $str )
