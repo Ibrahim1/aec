@@ -195,7 +195,7 @@ class mi_jobs
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'0\''
-				. ' WHERE `company_id` (' . implode( ',', $company_list ) . ')'
+				. ' WHERE `company_id` IN (' . implode( ',', $company_list ) . ')'
 				;
 
 		$database->setQuery( $query );
