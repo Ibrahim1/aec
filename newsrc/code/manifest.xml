@@ -22,6 +22,7 @@
 		<folder>views</folder>
 	</files>
 	<administration>
+		<menu>Account Expiration Control</menu>
 		<files folder="administrator/components/com_acctexp">
 			<file>index.html</file>
 			<file>admin.acctexp.php</file>
