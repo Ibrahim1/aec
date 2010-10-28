@@ -50,8 +50,8 @@ function com_install()
 	$lang =& JFactory::getLanguage();
 
 	$pathLang = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-	if ( file_exists( $pathLang . $lang->getBackwardLang() . '.php' ) ) {
-		include_once( $pathLang . $lang->getBackwardLang() . '.php' );
+	if ( file_exists( $pathLang . $lang->getTag() . '.php' ) ) {
+		include_once( $pathLang . $lang->getTag() . '.php' );
 	} else {
 		include_once( $pathLang . 'english.php' );
 	}

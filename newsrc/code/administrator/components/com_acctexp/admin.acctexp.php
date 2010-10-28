@@ -13,8 +13,10 @@
 
 global $aecConfig;
 
-require_once( $app->getPath( 'class' ) );
-require_once( $app->getPath( 'admin_html' ) );
+$app = JFactory::getApplication();
+
+require_once( JApplicationHelper::getPath( 'class' ) );
+require_once( JApplicationHelper::getPath( 'admin_html' ) );
 
 JLoader::register('JPaneTabs',  JPATH_LIBRARIES.DS.'joomla'.DS.'html'.DS.'pane.php');
 
@@ -41,8 +43,6 @@ if ( !$acpermission ) {
 		!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] )
 		&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $aecConfig->cfg['manageraccess'] )
 	 ) {
-		$app = JFactory::getApplication();
-
 		$app->redirect( 'index2.php', _NOT_AUTH );
 	}
 }
@@ -50,15 +50,15 @@ if ( !$acpermission ) {
 $lang =& JFactory::getLanguage();
 
 $langPathBE = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-if ( file_exists( $langPathBE . $lang->getBackwardLang() . '.php' ) ) {
-	include_once( $langPathBE . $lang->getBackwardLang() . '.php' );
+if ( file_exists( $langPathBE . $lang->getTag() . '.php' ) ) {
+	include_once( $langPathBE . $lang->getTag() . '.php' );
 } else {
 	include_once( $langPathBE . 'english.php' );
 }
 
 $langPathPROC = JPATH_SITE . '/components/com_acctexp/processors/lang/';
-if ( file_exists( $langPathPROC . $lang->getBackwardLang(). '.php' ) ) {
-	include_once( $langPathPROC . $lang->getBackwardLang() . '.php' );
+if ( file_exists( $langPathPROC . $lang->getTag(). '.php' ) ) {
+	include_once( $langPathPROC . $lang->getTag() . '.php' );
 } else {
 	include_once( $langPathPROC . 'english.php' );
 }

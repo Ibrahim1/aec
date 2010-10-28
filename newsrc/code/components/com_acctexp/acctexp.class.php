@@ -30,8 +30,8 @@ $lang =& JFactory::getLanguage();
 
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-	if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
-		include_once( $langPath . $lang->getBackwardLang() . '.php' );
+	if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
+		include_once( $langPath . $lang->getTag() . '.php' );
 	} else {
 		include_once( $langPath. 'english.php' );
 	}
@@ -39,8 +39,8 @@ if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 
 if ( !defined( '_AEC_LANG' ) ) {
 	$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
-	if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
-		include_once( $langPath . $lang->getBackwardLang() . '.php' );
+	if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
+		include_once( $langPath . $lang->getTag() . '.php' );
 	} else {
 		include_once( $langPath . 'english.php' );
 	}
@@ -2514,8 +2514,8 @@ class eventLog extends serialParamDBTable
 				$lang =& JFactory::getLanguage();
 				
 				$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-				if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
-					include_once( $langPath . $lang->getBackwardLang() . '.php' );
+				if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
+					include_once( $langPath . $lang->getTag() . '.php' );
 				} else {
 					include_once( $langPath. 'english.php' );
 				}
@@ -2860,8 +2860,8 @@ class PaymentProcessor
 				
 				$langPath = $this->pph->pp_dir . '/lang/';
 				// Include language files for processors
-				if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
-					include_once( $langPath . $lang->getBackwardLang() . '.php' );
+				if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
+					include_once( $langPath . $lang->getTag() . '.php' );
 				} else {
 					include_once( $langPath . 'english.php' );
 				}
@@ -12525,8 +12525,8 @@ class Subscription extends serialParamDBTable
 		$lang =& JFactory::getLanguage();
 
 		$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
-		if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' ) ) {
-			include_once( $langPath . $lang->getBackwardLang() . '.php' );
+		if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
+			include_once( $langPath . $lang->getTag() . '.php' );
 		} else {
 			include_once( $langPath . 'english.php' );
 		}

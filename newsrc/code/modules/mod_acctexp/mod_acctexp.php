@@ -37,8 +37,8 @@ if ( $user->id ) {
 		
 		$lang =& JFactory::getLanguage();
 
-		if ( file_exists( $langPath . $lang->getBackwardLang() . '.php' )) {
-				include_once( $langPath . $lang->getBackwardLang() . '.php' );
+		if ( file_exists( $langPath . $lang->getTag() . '.php' )) {
+				include_once( $langPath . $lang->getTag() . '.php' );
 		} else {
 				include_once( $langPath. 'english.php' );
 		}
