@@ -143,7 +143,7 @@ define( '_CONFIRM_COL3_TITLE', 'Belopp'); //Amount
 define( '_CONFIRM_ROW_NAME', 'Namn: '); //Name
 define( '_CONFIRM_ROW_USERNAME', 'Användarnamn: '); //Username
 define( '_CONFIRM_ROW_EMAIL', 'E-post:'); //E-mail
-define( '_CONFIRM_INFO', 'Klicka på Fortsätt-knappen för att fullfölja ditt köp.'); //Please use the Continue-Button to complete your registration.
+define( '_CONFIRM_INFO', 'Klicka på Fortsätt-knappen för att fullfölja ditt köp.'); //Please use the Continue-Button to confirm.
 define( '_BUTTON_CONFIRM', 'Fortsätt'); //Continue
 define( '_CONFIRM_TOS', "Jag har läst och godkänt <a href=\"%s\" target=\"_blank\" title=\"ToS\">villkoren</a>."); //I have read and agree to the <a href=\"%s\" target=\"_blank\" title=\"ToS\">Terms of Service</a>.
 define( '_CONFIRM_TOS_IFRAME', "Jag har läst och godkänt villkoren (ovan)"); //I have read and agree to the Terms of Service (above)

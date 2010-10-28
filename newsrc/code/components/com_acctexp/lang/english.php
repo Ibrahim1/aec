@@ -137,7 +137,7 @@ define( '_CONFIRM_COL3_TITLE', 'Amount');
 define( '_CONFIRM_ROW_NAME', 'Name: ');
 define( '_CONFIRM_ROW_USERNAME', 'Username: ');
 define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
-define( '_CONFIRM_INFO', 'Please use the Continue-Button to complete your registration.');
+define( '_CONFIRM_INFO', 'Please use the Continue-Button to confirm.');
 define( '_BUTTON_CONFIRM', 'Continue');
 define( '_CONFIRM_TOS', "I have read and agree to the <a href=\"%s\" target=\"_blank\" title=\"ToS\">Terms of Service</a>.");
 define( '_CONFIRM_TOS_IFRAME', "I have read and agree to the Terms of Service (above)");
@@ -169,7 +169,7 @@ define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Continue');
 
 // --== CHECKOUT FORM ==--
 define( '_CHECKOUT_TITLE', 'Checkout');
-define( '_CHECKOUT_INFO', 'Your Registration has been saved now. On this page, you can complete your payment for invoice %s. <br /><br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your username and password - Our System will give you an option to try your payment again.');
+define( '_CHECKOUT_INFO', 'Thank you for confirming your choice. On this page, you can complete your payment for invoice %s. <br /><br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your username and password - Our System will give you an option to try your payment again.');
 define( '_CHECKOUT_INFO_REPEAT', 'Thank you for coming back. On this page, you can complete your payment for invoice %s. <br /><br /> If something goes wrong along the way, you can always come back to this step by logging in to our site with your username and password - Our System will give you an option to try your payment again.');
 define( '_BUTTON_CHECKOUT', 'Checkout');
 define( '_BUTTON_APPEND', 'Append');
