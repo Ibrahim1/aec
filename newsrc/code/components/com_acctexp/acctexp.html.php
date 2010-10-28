@@ -1632,10 +1632,11 @@ class Payment_HTML
 		<?php
 	}
 
-	function printInvoice( $option, $data )
+	function printInvoice( $option, $data, $standalone=true )
 	{
 		global $aecConfig;
 
+		if ( $standalone ) {
 		?>
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb" dir="ltr" >
@@ -1671,6 +1672,7 @@ class Payment_HTML
 					</div>
 				</div>
 			<?php } ?>
+		<?php } ?>
 			<div id="invoice_wrap">
 				<div id="before_header"><?php echo $data['before_header']; ?></div>
 				<div id="header">
@@ -1724,9 +1726,11 @@ class Payment_HTML
 				<div id="footer"><?php echo $data['footer']; ?></div>
 				<div id="after_footer"><?php echo $data['after_footer']; ?></div>
 			</div>
+		<?php if ( $standalone ) { ?>
 		</body>
 		<?php
 		exit;
+		}
 	}
 
 	function error( $option, $objUser, $invoice, $error=false, $suppressactions=false )

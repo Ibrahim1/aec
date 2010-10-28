@@ -5574,7 +5574,7 @@ class aecHTML
 			$name	= explode( '.', $image );
 			$alt	= $name[0];
 		}
-		$image 	= JURI::root(true) . 'media/com_acctexp/images/site/icons/'. $image;
+		$image 	= JURI::root() . 'media/com_acctexp/images/site/icons/'. $image;
 
 		return '<img src="'. $image .'" border="0" alt="' . $alt . '" class="aec_icon" />';
 	}
