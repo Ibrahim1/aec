@@ -60,7 +60,7 @@ class processor_ewayxml extends XMLprocessor
 	function createRequestXML( $request )
 	{
 
-		$order_total = $request->int_var['amount'] * 100;
+		$order_total = (int) ( $request->int_var['amount'] * 100 );
 		$my_trxn_number = uniqid( "eway_" );
 
 		$nodes = array(	"ewayCustomerID" => $this->settings['custId'],
@@ -122,7 +122,7 @@ class processor_ewayxml extends XMLprocessor
 
 	function checkoutform()
 	{
-		$var = $this->getUserform();
+		$var = $this->getUserform( $var );
 		$var = $this->getCCform();
 
 		return $var;
