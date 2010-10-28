@@ -11,19 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-// Multisafepay
-define( '_CFG_MULTISAFEPAY_LONGNAME','MultiSafepay');
-define( '_CFG_MULTISAFEPAY_STATEMENT','MultiSafepay: de goedkoopste online betaaloplossing!');
-define( '_CFG_MULTISAFEPAY_DESCRIPTION','Iedereen in uw webwinkel kan gebruik maken van MultiSafepay. Laat uw klanten betalen via iDEAL, Visa, Master Card, Bankoverboeking (NL en BE), Mister Cash of diverse buitenlandse betaalmethoden. Uiteraard worden uw MultiSafepay-transacties uitgevoerd volgens strikte veiligheidseisen.');
-define( '_CFG_MULTISAFEPAY_ACCOUNT_NAME', 'Account');
-define( '_CFG_MULTISAFEPAY_ACCOUNT_DESC', 'Your Account');
-define( '_CFG_MULTISAFEPAY_SITE_ID_NAME', 'Site ID');
-define( '_CFG_MULTISAFEPAY_SITE_ID_DESC', 'Site ID');
-define( '_CFG_MULTISAFEPAY_SITE_SECURE_CODE_NAME', 'Site Secure Code');
-define( '_CFG_MULTISAFEPAY_SITE_SECURE_CODE_DESC', 'Site Secure Code');
-define( '_CFG_MULTISAFEPAY_SELECT_GATEWAY', 'Kies een betaalmethode'); // choose payment gateway
-define( '_CFG_MULTISAFEPAY_SELECT_COUNTRY', 'Kies een land'); // your country
-
 class processor_multisafepay extends XMLprocessor
 {
 	function info()
@@ -45,14 +32,15 @@ class processor_multisafepay extends XMLprocessor
 	{
 		$settings = array();
 		$settings['account']			= "";
-		$settings['language']			= "DK";
 		$settings['site_id']			= "";
 		$settings['site_secure_code']	= "";
 		$settings['testmode']			= "0";
 		$settings['currency']			= "EUR";
+		$settings['language']			= "NL";
+		$settings['customparams']        = "";
+
 		$settings['gateway']			= array( 'IDEAL,DIRDEB,VISA,WALLET,IDEAL,BANKTRANS,MAESTRO,MASTERCARD' );
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['customparams']        = "";
 
 		return $settings;
 	}
@@ -61,15 +49,14 @@ class processor_multisafepay extends XMLprocessor
 	{
 		$settings = array();
 		$settings['account']			= array( 'inputC' );
-		$settings['language']			= array( 'list_language' );
 		$settings['site_id']			= array( 'inputC' );
 		$settings['site_secure_code']	= array( 'inputC' );
 		
 		$settings['testmode']			= array( 'list_yesno' );
 		$settings['currency']			= array( 'list_currency' );
-
-		$settings['item_name']			= array( 'inputE' );
+		$settings['language']			= array( 'list_language' );
 		$settings['customparams']		= array( 'inputD' );
+		$settings['item_name']			= array( 'inputE' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -204,7 +191,7 @@ class processor_multisafepay extends XMLprocessor
 	{
 		$response = array();
 		$response['invoice'] = AECfetchfromDB::InvoiceNumberfromId( aecGetParam( 'transactionid', 0, true, array( 'word', 'int' ) ) );
-aecDebug($_GET);
+
 		return $response;
 	}
 
@@ -223,7 +210,7 @@ aecDebug($_GET);
 				;
 
 		$reply = $this->transmitToMultiSafepay( $xml );
-aecDebug($reply);
+
 		if ( !empty( $reply ) ) {
 			preg_match('/\<status result="(.*)"\>/U', $reply, $matches);
 
@@ -237,11 +224,14 @@ aecDebug($reply);
 				}
 			} else {
 				$response['valid'] = 1;
+
+				// A link for getting back to the AEC Thanks page
+				echo '<a href="' . $request->int_var['return_url'] . '">' . _CFG_MULTISAFEPAY_RETURN_TO_SHOP . '</a>';
 			}
 		} else {
 			$response['error'] = "Cannot connect to MultiSafepay";
 		}
-aecDebug($response);aecDebug($invoice);
+
 		return $response;
 	}
 

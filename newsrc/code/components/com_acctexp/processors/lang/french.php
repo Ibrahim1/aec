@@ -962,4 +962,17 @@ define( '_CFG_DESJARDINS_SITETITLE_DESC', 'The Site Title of the Desjardins Tran
 define( '_CFG_DESJARDINS_TRANSACTIONKEY_NAME', 'Transaction Key');
 define( '_CFG_DESJARDINS_TRANSACTIONKEY_DESC', 'Transaction Key is provided by Desjardins');
 
+// Multisafepay
+define( '_CFG_MULTISAFEPAY_LONGNAME','MultiSafepay');
+define( '_CFG_MULTISAFEPAY_STATEMENT','MultiSafepay: de goedkoopste online betaaloplossing!');
+define( '_CFG_MULTISAFEPAY_DESCRIPTION','Iedereen in uw webwinkel kan gebruik maken van MultiSafepay. Laat uw klanten betalen via iDEAL, Visa, Master Card, Bankoverboeking (NL en BE), Mister Cash of diverse buitenlandse betaalmethoden. Uiteraard worden uw MultiSafepay-transacties uitgevoerd volgens strikte veiligheidseisen.');
+define( '_CFG_MULTISAFEPAY_ACCOUNT_NAME', 'Account');
+define( '_CFG_MULTISAFEPAY_ACCOUNT_DESC', 'Your Account');
+define( '_CFG_MULTISAFEPAY_SITE_ID_NAME', 'Site ID');
+define( '_CFG_MULTISAFEPAY_SITE_ID_DESC', 'Site ID');
+define( '_CFG_MULTISAFEPAY_SITE_SECURE_CODE_NAME', 'Site Secure Code');
+define( '_CFG_MULTISAFEPAY_SITE_SECURE_CODE_DESC', 'Site Secure Code');
+define( '_CFG_MULTISAFEPAY_SELECT_GATEWAY', 'Payment Gateway');
+define( '_CFG_MULTISAFEPAY_SELECT_COUNTRY', 'Select country');
+
 ?>
