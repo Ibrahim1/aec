@@ -125,7 +125,7 @@ class HTML_myCommon
 					$add = 1;
 				}
 				$html .= '<div class="sidebar_button_' . $sizing[$size + $add] . '>'
-				. '<a href="index2.php?option=com_acctexp&amp;task=' . $items[$cursor][1] . '>'
+				. '<a href="index.php?option=com_acctexp&amp;task=' . $items[$cursor][1] . '>'
 				. '<img src="' . JURI::root() . 'media/com_acctexp/images/admin/icons/aec_icon_' . $items[$cursor][2] . '_' . $sizing[$size + $add] . '.png" alt="" title="" />'
 				. '<p>' . $items[$cursor][2] . '</p></a>'
 				. '</div>' . "\n";
@@ -281,7 +281,7 @@ class General_css
 	{
 		$file = JPATH_SITE . '/media/' . $option . '/css/site.css';
 		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<table cellpadding="1" cellspacing="1" border="0" width="100%">
 				<tr>
 					<td width="180">
@@ -391,7 +391,7 @@ class HTML_AcctExp
 			</tr>
 		</table>
 
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<?php
 			$tabs = new JPaneTabs(0);
 			echo $tabs->startPane( 'settings' );
@@ -414,7 +414,7 @@ class HTML_AcctExp
 								<?php echo _AEC_USER_PROFILE; ?>:
 								&nbsp;
 								<a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user.png', _AEC_USER_PROFILE_LINK ); ?>&nbsp;<?php echo _AEC_USER_PROFILE_LINK; ?></a>
-								<?php echo $cb ? (' | CB Profile: <a href="index2.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_orange.png', _AEC_USER_PROFILE_LINK ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
+								<?php echo $cb ? (' | CB Profile: <a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_orange.png', _AEC_USER_PROFILE_LINK ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_USERNAME; ?>:&nbsp;
@@ -582,7 +582,7 @@ class HTML_AcctExp
 											<tr<?php echo isset( $subs->current_focus ) ? ' style="background-color:#eff;"' : ''; ?>>
 												<td><?php echo isset( $subs->current_focus ) ? '&rArr;' : '&nbsp;'; ?></td>
 												<td><?php echo $subs->primary ? aecHTML::Icon( 'star.png', _AEC_USER_SUBSCRIPTIONS_PRIMARY ) : '&nbsp;'; ?></td>
-												<td><?php echo !isset( $subs->current_focus ) ? '<a href="index2.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
+												<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
 												<td><?php echo $subs->status; ?></td>
 												<td><?php echo $subs->type; ?></td>
 												<td><?php echo $subs->signup_date; ?></td>
@@ -812,7 +812,7 @@ class HTML_AcctExp
 		<div class="central_quicksearch">
 			<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
 			<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
-			<form action="<?php echo JURI::base(); ?>index2.php?option=com_acctexp&amp;task=quicklookup" method="post">
+			<form action="<?php echo JURI::base(); ?>index.php?option=com_acctexp&amp;task=quicklookup" method="post">
 			<input type="text" size="80" name="search" class="inputbox" value="<?php echo $searchcontent; ?>" />
 			<input type="submit" />
 			</form>
@@ -877,7 +877,7 @@ class HTML_AcctExp
 						$links[] = array( 'readout', 'export', _AEC_READOUT );
 
 
-						$linkroot = "index2.php?option=com_acctexp&amp;task=";
+						$linkroot = "index.php?option=com_acctexp&amp;task=";
 						foreach ( $links as $litem ) {
 							if ( is_array( $litem ) ) {
 								HTML_AcctExp::quickiconButton( $linkroot.$litem[0], 'aec_symbol_'.$litem[1].'.png', $litem[2] );
@@ -897,7 +897,7 @@ class HTML_AcctExp
 						<div class="central_notices">
 							<h2><?php echo _AEC_NOTICES_FOUND; ?></h2>
 							<p><?php echo _AEC_NOTICES_FOUND_DESC; ?></p>
-							<p><a href="index2.php?option=com_acctexp&amp;task=readAllNotices"><?php echo _AEC_NOTICE_MARK_ALL_READ; ?></a></p>
+							<p><a href="index.php?option=com_acctexp&amp;task=readAllNotices"><?php echo _AEC_NOTICE_MARK_ALL_READ; ?></a></p>
 							<table align="center">
 							<?php
 							foreach( $notices as $notice ) {
@@ -906,7 +906,7 @@ class HTML_AcctExp
 								<tr>
 									<td><?php echo $notice->datetime; ?></td>
 									<td><?php echo $notice->short; ?></td>
-									<td>[<a href="index2.php?option=com_acctexp&amp;task=readNotice&amp;id=<?php echo $notice->id; ?>"><?php echo _AEC_NOTICE_MARK_READ; ?></a>]</td>
+									<td>[<a href="index.php?option=com_acctexp&amp;task=readNotice&amp;id=<?php echo $notice->id; ?>"><?php echo _AEC_NOTICE_MARK_READ; ?></a>]</td>
 								</tr>
 								<tr>
 									<td class="notice_level_<?php echo $notice->level; ?>">&nbsp;</td>
@@ -1015,7 +1015,7 @@ class HTML_AcctExp
 		$infohandler	= new GeneralInfoRequester();
 		HTML_myCommon::addBackendCSS(); ?>
 
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="returnTask" value="" />
@@ -1066,7 +1066,7 @@ class HTML_AcctExp
 							echo aecHTML::Icon( $content['status'] ? 'tick.png' : 'stop.png' )
 							. ' ' . ( $content['status'] ? _AEC_HACKS_ISHACKED : _AEC_HACKS_NOTHACKED ) ; ?>
 							&nbsp;|&nbsp;
-							 <a href="<?php echo 'index2.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? _AEC_HACKS_UNDO : _AEC_HACKS_COMMIT ; ?></a>
+							 <a href="<?php echo 'index.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? _AEC_HACKS_UNDO : _AEC_HACKS_COMMIT ; ?></a>
 						</div>
 						<?php
 						if ( !empty( $content['important'] ) && !$content['status'] ) { ?>
@@ -1137,7 +1137,7 @@ class HTML_AcctExp
 			}
 			/* ]]> */
 		</script>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
 				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
@@ -1197,7 +1197,7 @@ class HTML_AcctExp
 	function listProcessors( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
 					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
@@ -1266,7 +1266,7 @@ class HTML_AcctExp
 		HTML_myCommon::addBackendCSS();
 		JHTML::_('behavior.tooltip');
 		?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
 				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
@@ -1325,7 +1325,7 @@ class HTML_AcctExp
 		$user = &JFactory::getUser();
 
 		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading" cellpadding="2" cellspacing="2">
 				<tr>
 					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left;"><?php echo $action[1]; ?></th>
@@ -1440,7 +1440,7 @@ class HTML_AcctExp
 	function listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering )
 	{
 		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
 					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_microintegrations.png) no-repeat left;"><?php echo _MI_TITLE; ?></th>
@@ -1564,7 +1564,7 @@ class HTML_AcctExp
 	        	</th>
 			</tr>
 		</table>
-		<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td valign="top">
@@ -1645,7 +1645,7 @@ class HTML_AcctExp
 	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
 					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_plans.png) no-repeat left;"><?php echo _PAYPLANS_TITLE; ?></th>
@@ -1794,7 +1794,7 @@ class HTML_AcctExp
 	        	</th>
 			</tr>
 		</table>
-		<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td valign="top">
@@ -2055,7 +2055,7 @@ class HTML_AcctExp
 	function listItemGroups( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
 					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_itemgroups.png) no-repeat left;">
@@ -2184,7 +2184,7 @@ class HTML_AcctExp
 	        	</th>
 			</tr>
 		</table>
-		<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td valign="top">
@@ -2318,7 +2318,7 @@ class HTML_AcctExp
 	function listCoupons( $rows, $pageNav, $option, $type )
 	{
 		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
 					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left;">
@@ -2405,8 +2405,8 @@ class HTML_AcctExp
 	        	</th>
 			</tr>
 		</table>
-		<!--<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data" onLoad="swap();" >-->
-		<form action="index2.php" method="post" name="adminForm" enctype="multipart/form-data">
+		<!--<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data" onLoad="swap();" >-->
+		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td valign="top">
@@ -2556,7 +2556,7 @@ class HTML_AcctExp
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_invoices.png) no-repeat left;" rowspan="2" nowrap="nowrap">
@@ -2589,7 +2589,7 @@ class HTML_AcctExp
 			?>
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-				<td><a href="index2.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->username; ?></a></td>
+				<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->username; ?></a></td>
 				<td align="center"><?php echo $rows[$i]->invoice_number; ?></td>
 				<td align="center"><?php echo $rows[$i]->secondary_ident; ?></td>
 				<td align="center"><?php echo $rows[$i]->created_date; ?></td>
@@ -2633,7 +2633,7 @@ class HTML_AcctExp
 		HTML_myCommon::addBackendCSS();
 
 		?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_history.png) no-repeat left;" rowspan="2" nowrap="nowrap">
@@ -2711,7 +2711,7 @@ class HTML_AcctExp
 	{
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS(); ?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_eventlog.png) no-repeat left;" rowspan="2" nowrap="nowrap">
@@ -2778,7 +2778,7 @@ class HTML_AcctExp
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">
@@ -3011,7 +3011,7 @@ class HTML_AcctExp
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
-		<form action="index2.php" enctype="multipart/form-data" method="post" name="adminForm">
+		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_import.png) no-repeat left;" rowspan="2" nowrap="nowrap">
@@ -3086,7 +3086,7 @@ class HTML_AcctExp
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">
@@ -3127,7 +3127,7 @@ class HTML_AcctExp
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
 		?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">

@@ -97,7 +97,7 @@ function resolveProxy ( $task, $returntask=null, $admin=false )
 		}
 
 		if ( $admin ) {
-			mosRedirect( '/administrator/index2.php?option=com_' . _EUCA_APP_SHORTNAME . '&task='  . $returntask . $append );
+			mosRedirect( '/administrator/index.php?option=com_' . _EUCA_APP_SHORTNAME . '&task='  . $returntask . $append );
 		} else {
 			mosRedirect( 'index.php?option=com_' . _EUCA_APP_SHORTNAME . '&task='  . $returntask . $append );
 		}

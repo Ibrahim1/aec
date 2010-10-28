@@ -375,7 +375,7 @@ class eucaList
 	function display()
 	{
 		?>
-		<form action="index2.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm">
 		<div id="dvs_servers_overview">
 		<table>
 			<tr>

@@ -14351,7 +14351,7 @@ class AECToolbox
 	 */
 	function backendTaskLink( $task, $text )
 	{
-		return '<a href="' .  JURI::root() . 'administrator/index2.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
+		return '<a href="' .  JURI::root() . 'administrator/index.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
 	}
 
 	/**

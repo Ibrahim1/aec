@@ -128,7 +128,7 @@ class tool_supporthours
 
 			foreach ( $history_list as $history ) {
 				$userlink = '<a href="';
-				$userlink .= JURI::base() . 'index2.php?option=com_acctexp&amp;task=edit&amp;userid=' . $history['userid'];
+				$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $history['userid'];
 				$userlink .= '">';
 				$userlink .= $history['name'] . ' (' . $history['username'] . ')';
 				$userlink .= '</a>';
