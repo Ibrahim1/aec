@@ -29,7 +29,7 @@ if (version_compare(phpversion(), '5.0') < 0) {
 }
 
 function com_install()
-{print_r("hier");exit;
+{
 	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();

@@ -401,7 +401,9 @@ class metaUser
 
 	function setTempAuth( $password=false )
 	{
-		global $aecConfig, $app;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		if ( !empty( $this->cmsUser->password ) ) {
 			// Make sure we catch traditional and new joomla passwords
@@ -13566,7 +13568,9 @@ class reWriteEngine
 	{
 		$db = &JFactory::getDBO();
 
-		global $aecConfig, $app;
+		$app = JFactory::getApplication();
+
+		global $aecConfig;
 
 		$this->rewrite = array();
 

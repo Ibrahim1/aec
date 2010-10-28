@@ -1536,7 +1536,9 @@ function cancelPayment( $option )
 {
 	$db = &JFactory::getDBO();
 
-	global $aecConfig, $app;
+	$app = JFactory::getApplication();
+
+	global $aecConfig;
 
 	$userid = aecGetParam( 'itemnumber', true, array( 'word', 'int' ) );
 	// The user cancel the payment operation
