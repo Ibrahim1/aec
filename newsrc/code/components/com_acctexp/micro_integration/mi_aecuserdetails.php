@@ -24,7 +24,7 @@ class mi_aecuserdetails
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['lists']		= array();

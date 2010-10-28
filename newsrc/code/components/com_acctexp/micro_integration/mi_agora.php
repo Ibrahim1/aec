@@ -24,10 +24,10 @@ class mi_agora extends MI
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
-		$database->setQuery( 'SELECT `id`, `name` FROM #__agora_group' );
+		$db = &JFactory::getDBO();
+		$db->setQuery( 'SELECT `id`, `name` FROM #__agora_group' );
 
-		$groups = $database->loadObjectList();
+		$groups = $db->loadObjectList();
 
 		$grouplist = array();
 		$grouplist[] = JHTML::_('select.option', 0, "--- --- ---" );
@@ -38,10 +38,10 @@ class mi_agora extends MI
 			}
 		}
 
-		$database = &JFactory::getDBO();
-		$database->setQuery( 'SELECT `id`, `name` FROM #__agora_roles' );
+		$db = &JFactory::getDBO();
+		$db->setQuery( 'SELECT `id`, `name` FROM #__agora_roles' );
 
-		$roles = $database->loadObjectList();
+		$roles = $db->loadObjectList();
 
 		$rolelist = array();
 		$rolelist[] = JHTML::_('select.option', 0, "--- --- ---" );
@@ -112,32 +112,32 @@ class mi_agora extends MI
 
 	function AgoraUserId( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__agora_users'
 				. ' WHERE `jos_id` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResult();
+		return $db->loadResult();
 	}
 
 	function getUserGroupRole( $userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `role` FROM #__agora_user_group'
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				. ' AND `group_id` = \'' . $groupid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResult();
+		return $db->loadResult();
 	}
 
 	function createUser( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'INSERT INTO #__agora_users'
 				. ' (`jos_id`,  `username`, `email`, `registered`, `last_visit` )'
@@ -145,14 +145,14 @@ class mi_agora extends MI
 				. $metaUser->cmsUser->email . '\', \'' . intval( strtotime( $metaUser->cmsUser->registerDate )) . '\', \''
 				. intval( strtotime( $metaUser->cmsUser->lastvisitDate )) . '\', )'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->query();
+		return $db->query();
 	}
 
 	function removeGroup( $userid, $groupid, $roleid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'DELETE FROM #__agora_user_group'
 				. ' WHERE `user_id` = \'' . $userid . '\''
@@ -163,36 +163,36 @@ class mi_agora extends MI
 			$query .= ' AND `role_id` = \'' . $roleid . '\'';
 		}
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->query();
+		return $db->query();
 	}
 
 	function addGroup( $userid, $groupid, $roleid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'INSERT INTO #__agora_user_group'
 				. ' (`user_id`,  `group_id`, `role_id` )'
 				. ' VALUES (\'' . $userid . '\', \'' . $groupid . '\', \'' . $roleid . '\' )'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->query();
+		return $db->query();
 	}
 
 	function updateRole( $userid, $groupid, $roleid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__agora_user_group'
 				. ' SET `role_id` = \'' . $roleid . '\''
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				. ' AND `group_id` = \'' . $groupid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResult();
+		return $db->loadResult();
 	}
 
 }

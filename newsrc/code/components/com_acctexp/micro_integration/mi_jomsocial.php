@@ -23,7 +23,7 @@ class mi_jomsocial
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['overwrite_existing']	= array( 'list_yesno' );
@@ -38,8 +38,8 @@ class mi_jomsocial
 				. ' FROM #__community_fields'
 				. ' WHERE `type` != \'group\''
 				;
-		$database->setQuery( $query );
-		$objects = $database->loadObjectList();
+		$db->setQuery( $query );
+		$objects = $db->loadObjectList();
 
 		if ( !empty( $objects ) ) {
 			foreach ( $objects as $object ) {
@@ -58,15 +58,15 @@ class mi_jomsocial
 	function relayAction( $request )
 	{
 		if ( ( $request->action == 'action' ) || ( $request->action == 'expiration_action' ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			if ( $this->settings['set_fields'.$request->area] ) {
 				$query = 'SELECT `id`, `name`'
 						. ' FROM #__community_fields'
 						. ' WHERE `type` != \'group\''
 						;
-				$database->setQuery( $query );
-				$objects = $database->loadObjectList();
+				$db->setQuery( $query );
+				$objects = $db->loadObjectList();
 
 				foreach ( $objects as $object ) {
 					if ( isset( $this->settings['jsfield_' . $object->id.$request->area] ) ) {
@@ -109,7 +109,7 @@ class mi_jomsocial
 
 	function setFields( $fields, $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$ids = array();
 		foreach ( $fields as $fi => $ff ) {
@@ -121,8 +121,8 @@ class mi_jomsocial
 					. ' WHERE `field_id` IN (' . implode( ',', $ids ) . ')'
 					. ' AND `user_id` = \'' . (int) $userid . '\'';
 				;
-		$database->setQuery( $query );
-		$existingfields = $database->loadObjectList();
+		$db->setQuery( $query );
+		$existingfields = $db->loadObjectList();
 
 		foreach( $fields as $id => $value ) {
 			$existingfield = false;
@@ -146,69 +146,69 @@ class mi_jomsocial
 			} elseif ( !$existingfield ) {
 				$query	= 'INSERT INTO #__community_fields_values'
 						. ' (`user_id`, `field_id`, `value` )'
-						. ' VALUES ( \'' . (int) $userid . '\', \'' . (int) $id . '\', \'' . $database->getEscaped( $value ) . '\' )'
+						. ' VALUES ( \'' . (int) $userid . '\', \'' . (int) $id . '\', \'' . $db->getEscaped( $value ) . '\' )'
 						;
 			}
 
 			if ( !empty( $query ) ) {
-				$database->setQuery( $query );
-				$database->query();
+				$db->setQuery( $query );
+				$db->query();
 			}
 		}
 	}
 
 	function addToGroup( $userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Check whether group exists
 		$query = 'SELECT `id`'
 				. ' FROM #__community_groups'
 					. ' WHERE `id` = \'' . (int) $groupid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if( $database->loadResult() ) {
+		if( $db->loadResult() ) {
 			// Check whether user already has the group
 			$query = 'SELECT `groupid`'
 					. ' FROM #__community_groups_members'
 						. ' WHERE `groupid` = \'' . (int) $groupid . '\''
 						. ' AND `memberid` = \'' . (int) $userid . '\''
 					;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
-			if( !$database->loadResult() ) {
+			if( !$db->loadResult() ) {
 				$query	= 'INSERT INTO #__community_groups_members'
 						. ' (`groupid`, `memberid`, `approved` )'
 						. ' VALUES ( \'' . (int) $groupid . '\', \'' . (int) $userid . '\', \'1\' )'
 						;
 
-				$database->setQuery( $query );
-				$database->query();
+				$db->setQuery( $query );
+				$db->query();
 			}
 		}
 	}
 
 	function removeFromGroup( $userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Check whether group exists
 		$query = 'SELECT `id`'
 				. ' FROM #__community_groups'
 					. ' WHERE `id` = \'' . (int) $groupid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if( $database->loadResult() ) {
+		if( $db->loadResult() ) {
 			$query	= 'DELETE'
 					. ' FROM #__community_groups_members'
 					. ' WHERE `groupid` = \'' . (int) $groupid . '\''
 					. ' AND `memberid` = \'' . (int) $userid . '\''
 					;
 
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 		}
 	}
 }

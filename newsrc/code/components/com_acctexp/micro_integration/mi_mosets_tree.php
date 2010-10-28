@@ -24,19 +24,19 @@ class mi_mosets_tree extends MI
 
 	function checkInstallation()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
-		return in_array( $mainframe->getCfg( 'dbprefix' ) . '_acctexp_mi_mosetstree', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) . '_acctexp_mi_mosetstree', $tables );
 	}
 
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_mosetstree` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -48,8 +48,8 @@ class mi_mosets_tree extends MI
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 		return;
 	}
 
@@ -74,9 +74,9 @@ class mi_mosets_tree extends MI
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$mi_mosetshandler = new mosetstree( $database );
+		$mi_mosetshandler = new mosetstree( $db );
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 
 		$mi_mosetshandler->load( $id );
@@ -110,9 +110,9 @@ class mi_mosets_tree extends MI
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$mi_mosetshandler = new mosetstree( $database );
+		$mi_mosetshandler = new mosetstree( $db );
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_mosetshandler->load( $mi_id );
@@ -168,7 +168,7 @@ class mi_mosets_tree extends MI
 		. ( defined( '_JEXEC' ) ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
-		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
+		. '$mi_mosetshandler = new mosetstree( $db );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
 		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
@@ -188,7 +188,7 @@ class mi_mosets_tree extends MI
 		. ( defined( '_JEXEC' ) ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
-		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
+		. '$mi_mosetshandler = new mosetstree( $db );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
 		. 'if( $mi_mosetshandler->hasListingsLeft() ) {' . "\n"
@@ -209,7 +209,7 @@ class mi_mosets_tree extends MI
 		. ( defined( '_JEXEC' ) ? '' : 'global $mosConfig_absolute_path;' ) . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_mosets_tree.php\' );' . "\n"
-		. '$mi_mosetshandler = new mosetstree( $database );' . "\n"
+		. '$mi_mosetshandler = new mosetstree( $db );' . "\n"
 		. '$mi_mosetshandler->loadUserID( $mtLinks->user_id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
 		. 'if( $mi_mosetshandler->hasListingsLeft() ) {' . "\n"
@@ -252,9 +252,9 @@ class mi_mosets_tree extends MI
 
 	function profile_info( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$mi_mosetshandler = new mosetstree( $database );
+		$mi_mosetshandler = new mosetstree( $db );
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
@@ -267,68 +267,68 @@ class mi_mosets_tree extends MI
 
 	function publishListings( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_published` = \'1\''
 				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
 				;
-		$database->setQuery( $query );
-		if ( $database->query() ) {
+		$db->setQuery( $query );
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}
 
 	function unpublishListings( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_published` = \'0\''
 				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
 				;
-		$database->setQuery( $query );
-		if ( $database->query() ) {
+		$db->setQuery( $query );
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}
 
 	function featureListings( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_featured` = \'1\''
 				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
 				;
-		$database->setQuery( $query );
-		if ( $database->query() ) {
+		$db->setQuery( $query );
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}
 
 	function unfeatureListings( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_featured` = \'0\''
 				. ' WHERE `user_id` = \'' . $metaUser->userid . '\''
 				;
-		$database->setQuery( $query );
-		if ( $database->query() ) {
+		$db->setQuery( $query );
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}
@@ -352,11 +352,11 @@ class mosetstree extends JTable
 
 	function mosetstree( &$db )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
-			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
+		if ( file_exists( $langPathMI . $app->getCfg( 'lang' ) . '.php' ) ) {
+			include_once( $langPathMI . $app->getCfg( 'lang' ) . '.php' );
 		} else {
 			include_once( $langPathMI . 'english.php' );
 		}
@@ -366,14 +366,14 @@ class mosetstree extends JTable
 
 	function getIDbyUserID( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_mosetstree'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function loadUserID( $userid )

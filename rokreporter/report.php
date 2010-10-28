@@ -69,7 +69,7 @@ class AEC_subscribers_Report extends Report
 		}
 
 		global $mosConfig_absolute_path;
-		$database = &$this->getDBO();
+		$db = &$this->getDBO();
 		$query = "";
 		$query = "SELECT DISTINCT(#__users.id), #__users.*, ";
 
@@ -90,8 +90,8 @@ class AEC_subscribers_Report extends Report
 
 		$query .= "GROUP BY #__users.id";
 
-		$database->setQuery( $query );
-		$rows = $database->loadAssocList();  //this is exporting data with column heading
+		$db->setQuery( $query );
+		$rows = $db->loadAssocList();  //this is exporting data with column heading
 		$buffer = trim( $this->ExportToCSV( $rows ) );
 
 		$filename = "AEC_subscribers";

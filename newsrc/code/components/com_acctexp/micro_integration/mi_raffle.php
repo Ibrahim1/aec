@@ -14,19 +14,19 @@ class mi_raffle
 {
 	function checkInstallation()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
-		return in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_mi_rafflelist', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_rafflelist', $tables );
 	}
 
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_rafflelist` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -36,8 +36,8 @@ class mi_raffle
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_raffleuser` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -48,15 +48,15 @@ class mi_raffle
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 
 		return true;
 	}
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
         $settings = array();
 		$settings['list_group']			= array( 'inputA' );
@@ -71,20 +71,20 @@ class mi_raffle
 
 	function saveparams( $params )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
-		if ( in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_mi_rafflelist', $tables ) ) {
-			$database->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
-			$result = $database->loadObject();
+		if ( in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_rafflelist', $tables ) ) {
+			$db->setQuery( "SHOW COLUMNS FROM #__acctexp_mi_rafflelist LIKE 'finished'" );
+			$result = $db->loadObject();
 
 			if ( empty( $result->Field ) ) {
-				$database->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default '0'" );
-				$database->query();
+				$db->setQuery( "ALTER TABLE #__acctexp_mi_rafflelist ADD `finished` int(11) default '0'" );
+				$db->query();
 			}
 		}
 
@@ -93,9 +93,9 @@ class mi_raffle
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$raffleuser = new AECMI_raffleuser( $database );
+		$raffleuser = new AECMI_raffleuser( $db );
 		$raffleuser->loadUserid( $request->metaUser->userid );
 
 		if ( empty( $raffleuser->id ) ) {
@@ -113,7 +113,7 @@ class mi_raffle
 
 		$list_group = empty( $this->settings['list_group'] ) ? 0 : $this->settings['list_group'];
 
-		$rafflelist = new AECMI_rafflelist( $database );
+		$rafflelist = new AECMI_rafflelist( $db );
 
 		if ( $rafflelist->loadMax( $list_group ) === false ) {
 			$rafflelist->id = 0;
@@ -140,7 +140,7 @@ class mi_raffle
 		$request->metaUser->meta->storeload();
 
 		if ( count( $rafflelist->params->participants ) >= $rafflelist->params->settings['draw_range'] ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
 			$range = (int) $rafflelist->params->settings['draw_range'];
 
@@ -165,16 +165,16 @@ class mi_raffle
 					. ' FROM #__users'
 					. ' WHERE `id` = \'' . $userid . '\'';
 					;
-				$database->setQuery( $query );
-				$u = $database->loadObject();
+				$db->setQuery( $query );
+				$u = $db->loadObject();
 
 				$colET .= $userid . ';' . $u->username . ';' . $u->email . "\n";
 			}
 
 			// check if Global Config `mailfrom` and `fromname` values exist
-			if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
-				$adminName2 	= $mainframe->getCfg( 'fromname' );
-				$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
+			if ( $app->getCfg( 'mailfrom' ) != '' && $app->getCfg( 'fromname' ) != '' ) {
+				$adminName2 	= $app->getCfg( 'fromname' );
+				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
 				$query = 'SELECT `name`, `email`'
@@ -182,8 +182,8 @@ class mi_raffle
 						. ' WHERE LOWER( usertype ) = \'superadministrator\''
 						. ' OR LOWER( usertype ) = \'super administrator\''
 						;
-				$database->setQuery( $query );
-				$rows = $database->loadObjectList();
+				$db->setQuery( $query );
+				$rows = $db->loadObjectList();
 
 				$adminName2 	= $rows[0]->name;
 				$adminEmail2 	= $rows[0]->email;
@@ -195,7 +195,7 @@ class mi_raffle
 				$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
 			}
 
-			$subject = 'Raffle Drawing Results for ' . $mainframe->getCfg( 'sitename' );
+			$subject = 'Raffle Drawing Results for ' . $app->getCfg( 'sitename' );
 
 			JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $colET );
 		}
@@ -232,7 +232,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 	}
 
 	function loadMax( $group=null ) {
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT max(`id`)'
 			. ' FROM #__acctexp_mi_rafflelist'
@@ -243,8 +243,8 @@ class AECMI_rafflelist extends serialParamDBTable {
 			$query .= ' AND `group` = \'' . $group . '\'';
 		}
 
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 		if ( empty( $id ) ) {
 			return false;
 		} else {
@@ -254,12 +254,12 @@ class AECMI_rafflelist extends serialParamDBTable {
 
 	function closeRun( $winid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$participants = array();
 		$winners = array();
 		foreach ( $this->params->participants as $rid ) {
-			$raffleuser = new AECMI_raffleuser( $database );
+			$raffleuser = new AECMI_raffleuser( $db );
 			$raffleuser->load( $rid );
 
 			$raffleuser->runs += 1;
@@ -307,14 +307,14 @@ class AECMI_raffleuser extends serialParamDBTable {
 	}
 
 	function loadUserid( $userid) {
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_raffleuser'
 			. ' WHERE `userid` = \'' . $userid . '\''
 			;
-		$database->setQuery( $query );
-		return $this->load( $database->loadResult() );
+		$db->setQuery( $query );
+		return $this->load( $db->loadResult() );
 	}
 }
 

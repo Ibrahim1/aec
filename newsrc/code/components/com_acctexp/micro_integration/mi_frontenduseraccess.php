@@ -24,16 +24,16 @@ class mi_frontenduseraccess
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`'
 				. ' FROM #__fua_usergroups'
 				. ' WHERE id <> 9 AND id <> 10'
 				. ' ORDER BY name ASC'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$groups = $database->loadObjectList();
+		$groups = $db->loadObjectList();
 
 		$fuagroups = array();
 		$fuagroups[] = JHTML::_('select.option', 0, 'no group');
@@ -116,7 +116,7 @@ class mi_frontenduseraccess
 
 	function update_fua_group( $user_id, $fua_group )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 		
 		sort( $fua_group );
 
@@ -126,8 +126,8 @@ class mi_frontenduseraccess
 				. ' SET `group_id` = \'' . $fua_group . '\''
 				. ' WHERE `user_id` = \'' . $user_id . '\''
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 	
 	function array_to_csv($array){	

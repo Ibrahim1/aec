@@ -31,10 +31,10 @@ class mi_kunena extends MI
 			return $settings;
 		}
 
-		$database = &JFactory::getDBO();
-		$database->setQuery( 'SELECT * FROM #__fb_ranks' );
+		$db = &JFactory::getDBO();
+		$db->setQuery( 'SELECT * FROM #__fb_ranks' );
 
-		$ranks = $database->loadObjectList();
+		$ranks = $db->loadObjectList();
 
 		$ranklist = array();
 		$ranklist[] = JHTML::_('select.option', 0, "--- --- ---" );
@@ -71,15 +71,15 @@ class mi_kunena extends MI
 
 	function changeRank( $userid, $add, $remove )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `userid`, `group_id`'
 				. ' FROM #__fb_users'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$kuser = $database->loadObject();
+		$kuser = $db->loadObject();
 
 		if ( isset( $kuser->group_id ) ) {
 			$rank = $kuser->group_id;
@@ -121,8 +121,8 @@ class mi_kunena extends MI
 					;
 		}
 
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 
 }

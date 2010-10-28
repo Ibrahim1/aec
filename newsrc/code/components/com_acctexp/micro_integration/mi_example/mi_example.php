@@ -23,14 +23,14 @@ class mi_example
 		// Also check out the below example for a db check for the table that is created
 		// within the install function.
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
-		return in_array($mainframe->getCfg( 'dbprefix' )."_acctexp_mi_sampletable", $tables);
+		return in_array($app->getCfg( 'dbprefix' )."_acctexp_mi_sampletable", $tables);
 	}
 
 	function install()
@@ -43,7 +43,7 @@ class mi_example
 		// for readability of databases) or the installation of other files.
 		// Below is an example how a sample db table creation could look like:
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query =	"CREATE TABLE IF NOT EXISTS `#__acctexp_mi_sampletable` (" . "\n" .
 					"`id` int(11) NOT NULL auto_increment," . "\n" .
@@ -52,8 +52,8 @@ class mi_example
 					"`params` text NULL," . "\n" .
 					"PRIMARY KEY  (`id`)" . "\n" .
 					")";
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 		return;
 	}
 

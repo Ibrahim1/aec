@@ -26,19 +26,19 @@ class mi_phpbb3
 
 	function checkInstallation()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
-		return in_array( $mainframe->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw', $tables );
 	}
 
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_phpbb3pw`'
 		. ' (`id` int(11) NOT NULL auto_increment,'
@@ -47,14 +47,14 @@ class mi_phpbb3
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 		return;
 	}
 
 	function Settings()
 	{
-		$database = $this->getDB();
+		$db = $this->getDB();
 
 		$phpbbdb = $this->getDB();
 
@@ -67,8 +67,8 @@ class mi_phpbb3
 		$query = 'SELECT `group_id`, `group_name`, `group_colour`'
 			 	. ' FROM ' . $prefix . 'groups'
 			 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg		= array();
 		$sg2	= array();
@@ -170,7 +170,7 @@ class mi_phpbb3
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$phpbbdb = $this->getDB();
 
@@ -179,7 +179,7 @@ class mi_phpbb3
 		if ( empty( $phpbbUserId ) && empty( $this->settings['create_user'] ) ) {
 			return null;
 		} elseif ( empty( $phpbbUserId ) ) {
-			$phpbb3pw = new phpbb3pw( $database );
+			$phpbb3pw = new phpbb3pw( $db );
 			$phpbb3pw->loadUserID( $request->metaUser->userid );
 
 			$password = $phpbb3pw->phpbb3pw;
@@ -452,19 +452,19 @@ class mi_phpbb3
 								'prefix'	=> $this->settings['table_prefix']
 								);
 
-	        $database = &JDatabase::getInstance($options);
+	        $db = &JDatabase::getInstance($options);
         } else {
-        	$database = &JFactory::getDBO();
+        	$db = &JFactory::getDBO();
         }
 
-		return $database;
+		return $db;
 	}
 
 	function on_userchange_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$phpbb3pw = new phpbb3pw( $database );
+		$phpbb3pw = new phpbb3pw( $db );
 		$apwid = $phpbb3pw->getIDbyUserID( $request->row->id );
 
 		if ( $apwid ) {
@@ -519,14 +519,14 @@ class phpbb3pw extends JTable
 
 	function getIDbyUserID( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_phpbb3pw'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 // Code copied over from phpBB3:

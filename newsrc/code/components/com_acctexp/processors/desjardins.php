@@ -178,7 +178,7 @@ XML;
 
 	function transmitRequestXML( $xml, $request )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 		
 		$path = '/catch';
 		$url = 'https://www.labdevtrx3.com' . $path;
@@ -202,7 +202,7 @@ XML;
 		$url .= "&merchant_id=".$trx_merch_id[0];
 		$url .= "&transaction_key=".$trx_key[0];
 
-		$mainframe->redirect($url);
+		$app->redirect($url);
 			
 		$response = true;
 		return $response;

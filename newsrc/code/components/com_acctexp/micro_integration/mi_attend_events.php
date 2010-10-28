@@ -29,15 +29,15 @@ class mi_attend_events
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		include_once( JPATH_SITE . '/components/com_attend_events/attend_events.class.php' );
 
-		$database->setQuery("SELECT transaction_id FROM #__events_transactions WHERE ( registration_id = '" . $this->settings['registration_id'] . "' )");
-		$transaction_id = $database->loadResult();
+		$db->setQuery("SELECT transaction_id FROM #__events_transactions WHERE ( registration_id = '" . $this->settings['registration_id'] . "' )");
+		$transaction_id = $db->loadResult();
 
 		// mark ae invoice as cleared
-		$transaction = new comAETransaction( $database );
+		$transaction = new comAETransaction( $db );
 		$transaction->load( $transaction_id );
 		$transaction->bind( $_POST );
 		$transaction->gateway = 'Cybermut';

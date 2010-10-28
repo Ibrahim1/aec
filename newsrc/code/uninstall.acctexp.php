@@ -11,9 +11,9 @@
 // Dont allow direct linking
 //( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mainframe;
+$app = JFactory::getApplication();
 
-require_once( $mainframe->getPath( 'class', "com_acctexp" ) );
+require_once( $app->getPath( 'class', "com_acctexp" ) );
 
 function delTree($path)
 {
@@ -37,20 +37,20 @@ function com_uninstall()
 {
 	global $aecConfig;
 
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
 	if ( $aecConfig->cfg['delete_tables'] && $aecConfig->cfg['delete_tables_sure'] ) {
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$tables		= $database->getTableList();
+		$tables		= $db->getTableList();
 
 		$tfound = false;
 		foreach ( $tables as $tname ) {
-			if ( strpos( $tname, $mainframe->getCfg( 'dbprefix' ) . 'acctexp_' ) === 0 ) {
-				$database->setQuery( "DROP TABLE IF EXISTS $tname" );
-				$database->query();
+			if ( strpos( $tname, $app->getCfg( 'dbprefix' ) . 'acctexp_' ) === 0 ) {
+				$db->setQuery( "DROP TABLE IF EXISTS $tname" );
+				$db->query();
 
 				$tfound = true;
 			}
@@ -68,7 +68,7 @@ function com_uninstall()
 		$event = "AEC has been removed";
 		$tags = "uninstall,system";
 
-		$eventlog = new eventLog($database);
+		$eventlog = new eventLog($db);
 		$params = array("userid" => $user->id);
 		$eventlog->issue( $short, $tags, $event, 2, $params );
 print_r($eventlog);

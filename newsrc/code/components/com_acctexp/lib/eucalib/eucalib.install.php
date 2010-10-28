@@ -79,17 +79,17 @@ class eucaInstall extends eucaObject
 
 	function deleteAdminMenuEntries()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'DELETE'
 				. ' FROM #__components'
 				. ' WHERE `option` LIKE "%option=' . _EUCA_APP_COMPNAME . '%"'
 				. ' OR `option`=\'' . _EUCA_APP_COMPNAME . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( !$database->query() ) {
-	    	$this->setError( array( $database->getErrorMsg(), $query ) );
+		if ( !$db->query() ) {
+	    	$this->setError( array( $db->getErrorMsg(), $query ) );
 		}
 	}
 
@@ -107,15 +107,15 @@ class eucaInstall extends eucaObject
 
 	function populateAdminMenuEntry( $array )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// get id from component entry
 		$query = 'SELECT `id`'
 				. ' FROM #__components'
 				. ' WHERE `link` = \'option=' . _EUCA_APP_COMPNAME . '\''
 				;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
 		$k = 0;
 		$errors = array();
@@ -128,7 +128,7 @@ class eucaInstall extends eucaObject
 
 	function AdminMenuEntry ( $entry, $id, $ordering, $frontend=0 )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$values = array();
 		$fields = array();
@@ -157,10 +157,10 @@ class eucaInstall extends eucaObject
 				. ' VALUES '
 				. '(\'' . implode( '\', \'', $values) . '\')'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( !$database->query() ) {
-	    	$this->setError( array( $database->getErrorMsg(), $query ) );
+		if ( !$db->query() ) {
+	    	$this->setError( array( $db->getErrorMsg(), $query ) );
 	    	return false;
 		} else {
 			return true;
@@ -175,19 +175,19 @@ class eucaInstallDB extends eucaObject
 
 	function multiQueryExec( $queri )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		foreach ( $queri as $query ) {
-			$database->setQuery( $query );
-		    if ( !$database->query() ) {
-		        $this->setError( array( $database->getErrorMsg(), $query ) );
+			$db->setQuery( $query );
+		    if ( !$db->query() ) {
+		        $this->setError( array( $db->getErrorMsg(), $query ) );
 		    }
 		}
 	}
 
 	function ColumninTable( $column=null, $table=null, $prefix=true )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $column ) ) {
 			$this->column = $column;
@@ -205,8 +205,8 @@ class eucaInstallDB extends eucaObject
 				. ' LIKE \'' . $this->column . '\''
 				;
 
-		$database->setQuery( $query );
-		$result = $database->loadObject();
+		$db->setQuery( $query );
+		$result = $db->loadObject();
 
 		if( is_object( $result ) ) {
 			if ( strcmp($result->Field, $column) === 0 ) {
@@ -235,18 +235,18 @@ class eucaInstallDB extends eucaObject
 
 	function addColumn( $options )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'ALTER TABLE #__' . $this->table
 				. ' ADD COLUMN `' . $this->column . '` ' . $options
 				;
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$result = $database->query();
+		$result = $db->query();
 
 		if ( !$result ) {
-	    	$this->setError( array( $database->getErrorMsg(), $query ) );
+	    	$this->setError( array( $db->getErrorMsg(), $query ) );
 	    	return false;
 		} else {
 			return true;
@@ -255,7 +255,7 @@ class eucaInstallDB extends eucaObject
 
 	function dropTableifExists( $table, $prefix=true )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $table ) ) {
 			if ( $prefix ) {
@@ -268,12 +268,12 @@ class eucaInstallDB extends eucaObject
 		$query = 'DROP TABLE IF EXISTS #__' . $this->table
 		;
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$result = $database->query();
+		$result = $db->query();
 
 		if ( !$result ) {
-	    	$this->setError( array( $database->getErrorMsg(), $query ) );
+	    	$this->setError( array( $db->getErrorMsg(), $query ) );
 	    	return false;
 		} else {
 			return true;
@@ -282,18 +282,18 @@ class eucaInstallDB extends eucaObject
 
 	function dropColumn( $options )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'ALTER TABLE #__' . $this->table
 				. ' DROP COLUMN `' . $this->column . '`'
 				;
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$result = $database->query();
+		$result = $db->query();
 
 		if ( !$result ) {
-	    	$this->setError( array( $database->getErrorMsg(), $query ) );
+	    	$this->setError( array( $db->getErrorMsg(), $query ) );
 	    	return false;
 		} else {
 			return true;

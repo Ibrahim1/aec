@@ -44,11 +44,11 @@ class mi_displaypipeline
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$text = AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
 
-		$displaypipeline = new displayPipeline($database);
+		$displaypipeline = new displayPipeline($db);
 		$displaypipeline->create( $metaUser->userid, $this->settings['only_user'], $this->settings['once_per_user'], $this->settings['expire'], $this->settings['expiration'], $this->settings['displaymax'], $text );
 		return true;
 	}

@@ -8,9 +8,9 @@
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
-$database->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `coupons` `coupons` text NULL");
-if ( !$database->query() ) {
-	$errors[] = array( $database->getErrorMsg(), $query );
+$db->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `coupons` `coupons` text NULL");
+if ( !$db->query() ) {
+	$errors[] = array( $db->getErrorMsg(), $query );
 }
 
 ?>

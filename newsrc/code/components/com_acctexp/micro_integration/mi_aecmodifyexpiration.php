@@ -37,16 +37,16 @@ class mi_aecmodifyexpiration
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( empty( $this->settings['timestamp'] ) && empty( $this->settings['time_mod'] ) ) {
 			return true;
 		}
 
 		if ( empty( $this->settings['timestamp'] ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			$tstamp = ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
+			$tstamp = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
 		} else {
 			$tstamp = strtotime( AECToolbox::rewriteEngineRQ( $this->settings['timestamp'], $request ) );
 		}

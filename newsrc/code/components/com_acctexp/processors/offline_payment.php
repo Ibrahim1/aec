@@ -153,13 +153,13 @@ class processor_offline_payment extends processor
 		}
 
 		if ( $this->settings['waitingplan'] ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$metaUser = new metaUser( $objInvoice->userid );
 
 			if ( !$metaUser->hasSubscription || in_array( $metaUser->objSubscription->status, array( 'Expired', 'Closed' ) ) ) {
 				if ( !$metaUser->hasSubscription ) {
-					$payment_plan = new SubscriptionPlan( $database );
+					$payment_plan = new SubscriptionPlan( $db );
 					$payment_plan->load( $this->settings['waitingplan'] );
 
 					$metaUser->establishFocus( $payment_plan, 'offline_payment', false );
@@ -172,7 +172,7 @@ class processor_offline_payment extends processor
 				$tags	= 'processor,waitingplan';
 				$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
-				$eventlog = new eventLog( $database );
+				$eventlog = new eventLog( $db );
 				$eventlog->issue( $short, $tags, $event, 2, $params );
 			}
 		}

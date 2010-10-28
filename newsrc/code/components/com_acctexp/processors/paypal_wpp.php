@@ -290,7 +290,7 @@ class processor_paypal_wpp extends XMLprocessor
 				}
 			}
 		} else {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			// Create the xml string
 			$xml = $this->createRequestXML( $request );
@@ -303,7 +303,7 @@ class processor_paypal_wpp extends XMLprocessor
 			}
 
 			if ( $request->invoice->invoice_number != $response['invoice'] ) {
-				$request->invoice = new Invoice( $database );
+				$request->invoice = new Invoice( $db );
 				$request->invoice->loadInvoiceNumber( $response['invoice'] );
 			}
 
@@ -317,7 +317,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$var = $this->getPayPalVars( $request );
 
@@ -326,7 +326,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function getPayPalVars( $request, $regular=true )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Method']			= 'CreateRecurringPaymentsProfile';
@@ -380,7 +380,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function getPaymentVars( $var, $request )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
@@ -403,9 +403,9 @@ class processor_paypal_wpp extends XMLprocessor
 					case 'Y': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 356; break;
 				}
 
-				$timestamp = time() - ($mainframe->getCfg( 'offset_user' ) *3600) + $offset;
+				$timestamp = time() - ($app->getCfg( 'offset_user' ) *3600) + $offset;
 			} else {
-				$timestamp = time() - $mainframe->getCfg( 'offset_user' ) *3600;
+				$timestamp = time() - $app->getCfg( 'offset_user' ) *3600;
 			}
 
 			$var['ProfileStartDate']    = date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
@@ -619,7 +619,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function parseNotification( $post )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$mc_gross			= $post['mc_gross'];
 		if ( $mc_gross == '' ) {

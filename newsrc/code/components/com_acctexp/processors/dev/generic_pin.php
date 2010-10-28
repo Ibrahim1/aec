@@ -133,12 +133,12 @@ class processor_generic_pin extends XMLprocessor
 								'prefix'	=> $this->settings['table_prefix']
 								);
 
-			$database =& JDatabase::getInstance($options);
+			$db =& JDatabase::getInstance($options);
 		} else {
-			$database =& JFactory::getDBO();
+			$db =& JFactory::getDBO();
 		}
 
-		return $database;
+		return $db;
 	}
 
 	function usePIN( $pin )

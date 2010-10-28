@@ -11,12 +11,12 @@
 $eucaInstalldb->addColifNotExists( 'hidden', "int(4) NOT NULL default '0'", 'microintegrations' );
 
 // Upgrade old processor notification storage
-$database->setQuery( "SELECT max(id) FROM #__acctexp_log_history" );
-$himax = $database->loadResult();
+$db->setQuery( "SELECT max(id) FROM #__acctexp_log_history" );
+$himax = $db->loadResult();
 
 for ( $hid=1; $hid<=$himax; $hid++ ) {
-	$database->setQuery( "SELECT * FROM #__acctexp_log_history WHERE `id` = $hid" );
-	$history = $database->loadObject();
+	$db->setQuery( "SELECT * FROM #__acctexp_log_history WHERE `id` = $hid" );
+	$history = $db->loadObject();
 
 	if ( ( $history->id != $hid ) || empty( $history->response ) ) {
 		continue;
@@ -49,8 +49,8 @@ for ( $hid=1; $hid<=$himax; $hid++ ) {
 	. ' SET `response` = \'' . base64_encode( serialize( $temp ) ) . '\''
 	. ' WHERE `id` = \'' . $hid . '\''
 	;
-	$database->setQuery( $query );
-	$database->query();
+	$db->setQuery( $query );
+	$db->query();
 }
 
 /*

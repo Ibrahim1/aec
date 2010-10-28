@@ -26,13 +26,13 @@ class mi_juga
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `title`, `description`'
 			 	. ' FROM #__juga_groups'
 			 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg = array();
 		if ( !empty( $groups ) ) {
@@ -84,7 +84,7 @@ class mi_juga
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group_exp'] ) {
 			foreach ( $this->settings['enroll_group'] as $groupid ) {
@@ -105,7 +105,7 @@ class mi_juga
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group'] ) {
 			$this->DeleteUserFromGroup( $request->metaUser->userid );
@@ -122,7 +122,7 @@ class mi_juga
 
 	function AddUserToGroup( $userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Check user is not already a member of the group.
 		$query = 'SELECT `user_id`'
@@ -130,8 +130,8 @@ class mi_juga
 				. ' WHERE `group_id` = \'' . $groupid . '\''
 				. ' AND `user_id` = \''.$userid . '\''
 				;
-		$database->setQuery( $query );
-		$user = $database->loadResult();
+		$db->setQuery( $query );
+		$user = $db->loadResult();
 
 		if( $user !== $userid ) {
 			// then the user is not already a member of this group and can be set
@@ -151,11 +151,11 @@ class mi_juga
 			$query = 'INSERT INTO #__juga_u2g'
 					. ' SET `group_id` = \'' . $groupid . '\', `user_id` = \''.$userid . '\''
 					;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
-			if (!$database->query()) {
+			if (!$db->query()) {
 				$return->error = true;
-				$return->errorMsg = $database->getErrorMsg();
+				$return->errorMsg = $db->getErrorMsg();
 				return false;
 			}
 
@@ -171,7 +171,7 @@ class mi_juga
 
 	function DeleteUserFromGroup( $userid, $groupid=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$return = new stdClass();
 		// load the plugins
@@ -193,11 +193,11 @@ class mi_juga
 			$query .= ' AND `group_id` = \''. $groupid . '\'';
 		}
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if (!$database->query()) {
+		if (!$db->query()) {
 			$return->error = true;
-			$return->errorMsg = $database->getErrorMsg();
+			$return->errorMsg = $db->getErrorMsg();
 			return false;
 		}
 

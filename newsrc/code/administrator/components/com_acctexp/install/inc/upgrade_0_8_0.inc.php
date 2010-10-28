@@ -11,13 +11,13 @@
 // Update routine 0.6.0 -> 0.8.0
 $queri	= array();
 
-$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'alertlevel1'");
-$result = $database->loadObject();
+$db->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'alertlevel1'");
+$result = $db->loadObject();
 
 if ( is_object( $result ) ) {
 	if (strcmp($result->Field, 'alertlevel1') === 0) {
-		$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'email'");
-		$result = $database->loadObject();
+		$db->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE 'email'");
+		$result = $db->loadObject();
 
 		if (strcmp($result->Field, 'email') === 0) {
 			$queri[] = "ALTER TABLE #__acctexp_config DROP `email`";
@@ -26,9 +26,9 @@ if ( is_object( $result ) ) {
 			$queri[] = "ALTER TABLE #__acctexp_config DROP `testmode`";
 
 			foreach ( $queri AS $query ) {
-				$database->setQuery( $query );
-			    if ( !$database->query() ) {
-			        $errors[] = array( $database->getErrorMsg(), $query );
+				$db->setQuery( $query );
+			    if ( !$db->query() ) {
+			        $errors[] = array( $db->getErrorMsg(), $query );
 			    }
 			}
 		}
@@ -70,28 +70,28 @@ if ( is_object( $result ) ) {
 			$queri[] = "ALTER TABLE #__acctexp_paylog RENAME TO #__acctexp_log_paypal";
 
 			foreach ( $queri as $query ) {
-				$database->setQuery( $query );
-			    if ( !$database->query() ) {
-			        $errors[] = array( $database->getErrorMsg(), $query );
+				$db->setQuery( $query );
+			    if ( !$db->query() ) {
+			        $errors[] = array( $db->getErrorMsg(), $query );
 			    }
 			}
 
 			// Associate all those old plans with PayPal processors.
-			$database->setQuery("SELECT id FROM  #__acctexp_plans");
-			$rows = $database->loadObjectList();
+			$db->setQuery("SELECT id FROM  #__acctexp_plans");
+			$rows = $db->loadObjectList();
 			for ($i=0, $n=count( $rows ); $i < $n; $i++) {
 				$row = &$rows[$i];
-				$database->setQuery("INSERT INTO `#__acctexp_processors_plans` VALUES ($row->id, '1')");
-				if ( !$database->query() ) {
-			    	$errors[] = array( $database->getErrorMsg(), $query );
+				$db->setQuery("INSERT INTO `#__acctexp_processors_plans` VALUES ($row->id, '1')");
+				if ( !$db->query() ) {
+			    	$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}
 
 		// Configure extra01 field indicating recurring subscriptions...
-		$database->setQuery("UPDATE #__acctexp_subscr SET extra01='1' WHERE extra01 is NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
+		$db->setQuery("UPDATE #__acctexp_subscr SET extra01='1' WHERE extra01 is NULL");
+		if ( !$db->query() ) {
+	    	$errors[] = array( $db->getErrorMsg(), $query );
 		}
 
 	} else {

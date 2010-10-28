@@ -9,8 +9,8 @@
  */
 
 // load settings (creates settings parameters that got added in this version)
-$database->setQuery( "SHOW COLUMNS FROM #__acctexp_config LIKE 'settings'" );
-$result = $database->loadObject();
+$db->setQuery( "SHOW COLUMNS FROM #__acctexp_config LIKE 'settings'" );
+$result = $db->loadObject();
 
 if ( strcmp( $result->Field, 'settings' ) !== 0 ) {
 	$columns = array(	"transferinfo", "initialexp", "alertlevel1", "alertlevel2",
@@ -22,28 +22,28 @@ if ( strcmp( $result->Field, 'settings' ) !== 0 ) {
 
 	$settings = array();
 	foreach ($columns as $column) {
-		$database->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE '" . $column . "'");
-		$result = $database->loadObject();
+		$db->setQuery("SHOW COLUMNS FROM #__acctexp_config LIKE '" . $column . "'");
+		$result = $db->loadObject();
 
 		if (strcmp($result->Field, $column) === 0) {
-			$database->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
-			$settings[$column] = $database->loadResult();
+			$db->setQuery( "SELECT " . $column . " FROM #__acctexp_config WHERE id='1'" );
+			$settings[$column] = $db->loadResult();
 
-			$database->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+			$db->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
+			if ( !$db->query() ) {
+		    	$errors[] = array( $db->getErrorMsg(), $query );
 			}
 		}
 	}
 
-	$database->setQuery("ALTER TABLE #__acctexp_config ADD `settings` text");
-	if ( !$database->query() ) {
-    	$errors[] = array( $database->getErrorMsg(), $query );
+	$db->setQuery("ALTER TABLE #__acctexp_config ADD `settings` text");
+	if ( !$db->query() ) {
+    	$errors[] = array( $db->getErrorMsg(), $query );
 	}
 
-	$database->setQuery("UPDATE #__acctexp_config SET `settings` = '" . parameterHandler::encode( $settings ) . "' WHERE id = '1'");
-	if ( !$database->query() ) {
-    	$errors[] = array( $database->getErrorMsg(), $query );
+	$db->setQuery("UPDATE #__acctexp_config SET `settings` = '" . parameterHandler::encode( $settings ) . "' WHERE id = '1'");
+	if ( !$db->query() ) {
+    	$errors[] = array( $db->getErrorMsg(), $query );
 	}
 }
 ?>

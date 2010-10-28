@@ -24,15 +24,15 @@ class mi_adminuseraccess
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`'
 				. ' FROM #__pi_aua_usergroups'
 				. ' ORDER BY name ASC'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$groups = $database->loadObjectList();
+		$groups = $db->loadObjectList();
 
 		$auagroups = array();
 		$auagroups[] = JHTML::_('select.option', 0, 'no group' );
@@ -86,14 +86,14 @@ class mi_adminuseraccess
 
 	function update_aua_group($user_id, $aua_group)
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__pi_aua_userindex'
 				. ' SET `group_id` = \'' . $aua_group . '\''
 				. ' WHERE `user_id` = \'' . $user_id . '\''
 				;
-		$database->setQuery( "UPDATE #__pi_aua_userindex SET group_id='$aua_group' WHERE user_id='$user_id'"	);
-		$database->query();
+		$db->setQuery( "UPDATE #__pi_aua_userindex SET group_id='$aua_group' WHERE user_id='$user_id'"	);
+		$db->query();
 	}
 
 }

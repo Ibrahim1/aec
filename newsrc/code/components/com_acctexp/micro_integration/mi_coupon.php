@@ -56,7 +56,7 @@ class mi_coupon
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
 

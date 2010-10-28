@@ -24,14 +24,14 @@ class mi_uddeim
 
 	function checkInstallation()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
-		return in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_mi_uddeim', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_uddeim', $tables );
 	}
 
 	function detect_application()
@@ -41,7 +41,7 @@ class mi_uddeim
 
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_uddeim` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -54,14 +54,14 @@ class mi_uddeim
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 		return;
 	}
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
         $settings = array();
 		$settings['add_messages']		= array( 'inputA' );
@@ -89,8 +89,8 @@ class mi_uddeim
 
 	function profile_info( $request )
 	{
-		$database = &JFactory::getDBO();
-		$mi_uddeimhandler = new uddeim_restriction( $database );
+		$db = &JFactory::getDBO();
+		$mi_uddeimhandler = new uddeim_restriction( $db );
 		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
@@ -123,7 +123,7 @@ class mi_uddeim
 		$messagehack =	'// AEC HACK %s START' . "\n"
 		. 'global $my, JPATH_SITE;' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
-		. '$restrictionhandler = new uddeim_restriction( $database );' . "\n"
+		. '$restrictionhandler = new uddeim_restriction( $db );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
 		. 'if($restrictionhandler->active){'. "\n\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
@@ -158,9 +158,9 @@ class mi_uddeim
 	function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['unset_unlimited'] ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-			$mi_uddeimhandler = new uddeim_restriction( $database );
+			$mi_uddeimhandler = new uddeim_restriction( $db );
 			$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 			$mi_id = $id ? $id : 0;
 			$mi_uddeimhandler->load( $mi_id );
@@ -186,9 +186,9 @@ class mi_uddeim
 	function action( $request )
 	{
 		if ( !empty( $this->settings['set_messages'] ) || !empty( $this->settings['add_messages'] ) || !empty( $this->settings['set_unlimited'] ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-			$mi_uddeimhandler = new uddeim_restriction( $database );
+			$mi_uddeimhandler = new uddeim_restriction( $db );
 			$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 			$mi_id = $id ? $id : 0;
 			$mi_uddeimhandler->load( $mi_id );
@@ -221,7 +221,7 @@ class mi_uddeim
 
 	function send_message( $request, $from, $to, $msg )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$f = AECToolbox::rewriteEngineRQ( $from, $request );
 		$t = AECToolbox::rewriteEngineRQ( $to, $request );
@@ -229,8 +229,8 @@ class mi_uddeim
 
 		$query = 'INSERT INTO `jos_uddeim` (`id`, `replyid`, `fromid`, `toid`, `message`, `datum`)'
 				. ' VALUES (NULL, \'0\', \'' . $f . '\', \'' . $t . '\', \'' . $m . '\', UNIX_TIMESTAMP() );';
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 
 		return true;
 	}
@@ -254,14 +254,14 @@ class uddeim_restriction extends JTable {
 	var $params					= null;
 
 	function getIDbyUserID( $userid ) {
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_uddeim'
 			. ' WHERE `userid` = \'' . $userid . '\''
 			;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function uddeim_restriction( &$db ) {

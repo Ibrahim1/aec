@@ -107,15 +107,15 @@ class mi_jobs
 
 	function getCompanyList( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM `#__jobs_companies`'
 				. ' WHERE `memberid` = \'' . $userid . '\'';
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResultArray();
+		return $db->loadResultArray();
 	}
 
 	function createDummyCompany( $request )
@@ -139,80 +139,80 @@ class mi_jobs
 
 	function createCompany( $fields )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'INSERT INTO #__jobs_companies'
 				. ' (`' . implode( '`, `', array_keys( $fields ) ) . '`)'
 				. ' VALUES ( \'' . implode( '\', \'', array_values( $fields ) ) . '\' )'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$database->query();
+		$db->query();
 	}
 
 	function publishCompanies( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'1\''
 				. ' WHERE `memberid` = \'' . $userid . '\''
 				;
 
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 	}
 
 	function unpublishCompanies( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'0\''
 				. ' WHERE `memberid` = \'' . $$userid . '\''
 				;
 
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 	}
 
 	function publishJobs( $company_list )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'1\''
 				. ' WHERE `company_id` IN (' . implode( ',', $company_list ) . ')'
 				;
 
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 	}
 
 	function unpublishJobs( $company_list )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'0\''
 				. ' WHERE `company_id` IN (' . implode( ',', $company_list ) . ')'
 				;
 
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 	}
 
 	function getResumeList( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM `#__jobs_resumes`'
 				. ' WHERE `memberid` = \'' . $userid . '\'';
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResultArray();
+		return $db->loadResultArray();
 	}
 
 	function createDummyResume( $request )
@@ -234,41 +234,41 @@ class mi_jobs
 
 	function createResume( $fields )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'INSERT INTO #__jobs_resumes'
 				. ' (`' . implode( '`, `', array_keys( $fields ) ) . '`)'
 				. ' VALUES ( \'' . implode( '\', \'', array_values( $fields ) ) . '\' )'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$database->query();
+		$db->query();
 	}
 
 	function publishResumes( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_resumes`'
 				. ' SET `published` = \'1\''
 				. ' WHERE `memberid` = \'' . $userid . '\'';
 				;
 
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 	}
 
 	function unpublishResumes( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_resumes`'
 				. ' SET `published` = \'0\''
 				. ' WHERE `memberid` = \'' . $userid . '\'';
 				;
 
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 	}
 
 	function getAlias( $string )

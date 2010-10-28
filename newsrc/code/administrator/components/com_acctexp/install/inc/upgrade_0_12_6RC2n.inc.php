@@ -9,26 +9,26 @@
  */
 
 // Making up for old thoughts
-$database->setQuery("UPDATE #__acctexp_itemxgroup SET group_id='1' WHERE group_id='0'");
-$database->query();
+$db->setQuery("UPDATE #__acctexp_itemxgroup SET group_id='1' WHERE group_id='0'");
+$db->query();
 
 // Fixing secondary invoice numbers for CCBill
 $query = 'SELECT id FROM #__acctexp_config_processors WHERE name = \'ccbill\'';
-$database->setQuery( $query );
+$db->setQuery( $query );
 
-$ccid = $database->loadResult();
+$ccid = $db->loadResult();
 
 // Checking whether CCBill is installed at all
 if ( $ccid ) {
 	// Get all history entries for CCBill
 	$query = 'SELECT id FROM #__acctexp_log_history WHERE proc_id = \'' . $ccid . '\'';
-	$database->setQuery( $query );
+	$db->setQuery( $query );
 
-	$list = $database->loadResultArray();
+	$list = $db->loadResultArray();
 
 	if ( !empty( $list ) ) {
 		foreach ( $list as $hid ) {
-			$history = new logHistory( $database );
+			$history = new logHistory( $db );
 			$history->load( $hid );
 
 			$params = parameterHandler::decode( stripslashes( $history->response ) );
@@ -36,8 +36,8 @@ if ( $ccid ) {
 			// Check for the parameters we need
 			if ( isset( $params['subscription_id'] ) && isset( $params['invoice'] ) ) {
 				$query = 'UPDATE #__acctexp_invoices SET `secondary_ident` = \'' . $params['subscription_id'] . '\' WHERE invoice_number = \'' . $params['invoice'] . '\'';
-				$database->setQuery( $query );
-				$database->query();
+				$db->setQuery( $query );
+				$db->query();
 			}
 		}
 	}
@@ -45,22 +45,22 @@ if ( $ccid ) {
 
 // Haunted by ghosts of xmas past
 $query = 'SELECT `id` FROM #__acctexp_subscr WHERE `params` LIKE \'%_jsoon%\'';
-$database->setQuery( $query );
+$db->setQuery( $query );
 
-$list = $database->loadResultArray();
+$list = $db->loadResultArray();
 
 if ( !empty( $list ) ) {
 	foreach ( $list as $sid ) {
 		$query = 'SELECT `params` FROM #__acctexp_subscr WHERE `id` = \'' . $sid . '\'';
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$params = $database->loadResult();
+		$params = $db->loadResult();
 		$decode = stripslashes( str_replace( array( '\n', '\t', '\r' ), array( "\n", "\t", "\r" ), trim($params) ) );
 		$temp = jsoonHandler::decode( $decode );
 
 		$query = 'UPDATE #__acctexp_subscr SET `params` = \'' . base64_encode( serialize( $temp ) ) . '\' WHERE `id` = \'' . $sid . '\'';
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 }
 
@@ -75,16 +75,16 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_mi_hotproperty", $tables ) 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_hotproperty'
 				;
-		$database->setQuery( $query );
-		$entries = $database->loadResultArray();
+		$db->setQuery( $query );
+		$entries = $db->loadResultArray();
 
 		if ( !empty( $entries ) ) {
 			foreach ( $entries as $id ) {
 				$query = 'SELECT `params` FROM #__acctexp_mi_hotproperty'
 				. ' WHERE `id` = \'' . $id . '\''
 				;
-				$database->setQuery( $query );
-				$object = $database->loadObject();
+				$db->setQuery( $query );
+				$object = $db->loadObject();
 
 				if ( empty( $object->params ) ) {
 					continue;
@@ -103,9 +103,9 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_mi_hotproperty", $tables ) 
 				. ' SET `params` = \'' . base64_encode( serialize( $temp ) ) . '\''
 				. ' WHERE `id` = \'' . $id . '\''
 				;
-				$database->setQuery( $query );
-				if ( !$database->query() ) {
-			    	$errors[] = array( $database->getErrorMsg(), $query );
+				$db->setQuery( $query );
+				if ( !$db->query() ) {
+			    	$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}

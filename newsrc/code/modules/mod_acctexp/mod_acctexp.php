@@ -11,9 +11,9 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mainframe;
+$app = JFactory::getApplication();
 
-require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
+require_once( $app->getPath( 'class', 'com_acctexp' ) );
 
 $class_sfx				= $params->get( 'moduleclass_sfx', "");
 $pretext 				= $params->get( 'pretext' );
@@ -79,7 +79,7 @@ class AECModuleHelper
 {
 	function getExpirationSimple( $user )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$expiration = null;
 		$query = 'SELECT `id`, `expiration`, `lifetime`, `recurring`'
@@ -87,8 +87,8 @@ class AECModuleHelper
 				. ' WHERE `userid` = \'' . $user->id . '\''
 				. ' AND `primary` = \'1\''
 				. ' AND `status` != \'Excluded\'';
-		$database->setQuery($query);
-		$entry = $database->loadObject();
+		$db->setQuery($query);
+		$entry = $db->loadObject();
 
 		if ( !empty( $entry->lifetime ) ) {
 			return AECModuleHelper::textExpiration( $user, $entry->expiration, $entry->lifetime, $entry->recurring );
@@ -99,8 +99,8 @@ class AECModuleHelper
 					. ' FROM #__acctexp_subscr'
 					. ' WHERE `userid` = \'' . $user->id . '\''
 	                . ' AND `status` != \'Excluded\'';
-			$database->setQuery($query);
-			$entry = $database->loadObject();
+			$db->setQuery($query);
+			$entry = $db->loadObject();
 		}
 
 		if ( empty( $entry->id ) ) {
@@ -126,15 +126,17 @@ class AECModuleHelper
 
 	function textExpirationDate( $expiration, $recurring )
 	{
-		global $mainframe, $aecConfig;
+		global $aecConfig;
 
-		$ou = $mainframe->getCfg( 'offset_user' );
+		$app = JFactory::getApplication();
+
+		$ou = $app->getCfg( 'offset_user' );
 
 		// compatibility with Mambo
 		if ( !empty( $ou ) ) {
 			$timeOffset = $ou;
 		} else {
-			$timeOffset = $mainframe->getCfg( 'offset' );
+			$timeOffset = $app->getCfg( 'offset' );
 		}
 
 		$retVal = AECToolbox::formatDate( ( strtotime( $expiration ) + $timeOffset*3600 ) );

@@ -30,7 +30,7 @@ if (version_compare(phpversion(), '5.0') < 0) {
 
 function com_install()
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
@@ -45,7 +45,7 @@ function com_install()
 
 	// Overall Variables
 	$newinstall = false;
-	$tables		= $database->getTableList();
+	$tables		= $db->getTableList();
 
 	$lang =& JFactory::getLanguage();
 
@@ -164,7 +164,7 @@ function com_install()
 	}
 
 	// Force Init Params
-	$aecConfig = new Config_General( $database );
+	$aecConfig = new Config_General( $db );
 	$aecConfig->initParams();
 
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---
@@ -176,14 +176,14 @@ function com_install()
 	require_once( $incpath . '/create_rootgroup.inc.php' );
 
 	// Make all Superadmins excluded by default
-	$database->setQuery("SELECT id FROM #__users WHERE gid='25'");
-	$administrators = $database->loadResultArray();
+	$db->setQuery("SELECT id FROM #__users WHERE gid='25'");
+	$administrators = $db->loadResultArray();
 
 	foreach ( $administrators as $adminid ) {
 		$metaUser = new metaUser( $adminid );
 
 		if ( !$metaUser->hasSubscription ) {
-			$metaUser->objSubscription = new Subscription( $database );
+			$metaUser->objSubscription = new Subscription( $db );
 			$metaUser->objSubscription->createNew( $adminid, 'free', 0 );
 			$metaUser->objSubscription->setStatus( 'Excluded' );
 		}
@@ -234,7 +234,7 @@ function com_install()
 	$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION." Revision "._AEC_REVISION );
 	$tags		= 'install,system';
 
-	$eventlog	= new eventLog( $database );
+	$eventlog	= new eventLog( $db );
 	$params		= array( 'userid' => $user->id );
 	$eventlog->issue( $short, $tags, $event, 2, $params, 1 );
 
@@ -242,7 +242,7 @@ function com_install()
 
 	if ( !empty( $errors ) ) {
 		foreach ( $errors as $error ) {
-			$eventlog	= new eventLog( $database );
+			$eventlog	= new eventLog( $db );
 			$eventlog->issue( '', $tags, $error );
 		}
 	}

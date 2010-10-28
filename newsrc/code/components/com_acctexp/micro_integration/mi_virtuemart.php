@@ -24,13 +24,13 @@ class mi_virtuemart
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `shopper_group_id`, `shopper_group_name`'
 				. ' FROM #__vm_shopper_group'
 				;
-	 	$database->setQuery( $query );
-	 	$shopper_groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$shopper_groups = $db->loadObjectList();
 
 		$sg = array();
 		if ( !empty( $shopper_groups ) ) {
@@ -79,7 +79,7 @@ class mi_virtuemart
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_shopper_group'] ) {
 			if ( $this->checkVMuserexists( $request->metaUser->userid ) ) {
@@ -96,33 +96,33 @@ class mi_virtuemart
 
 	function checkVMuserexists( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `user_id`' // Jonathan Appleton changed this from id to user_id - good find indeed!
 				. ' FROM #__vm_user_info'
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function updateVMuserSgroup( $userid, $shoppergroup )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__vm_shopper_vendor_xref'
 				. ' SET `shopper_group_id` = \'' . $shoppergroup . '\''
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 
 	function createVMuser( $metaUser, $shoppergroup )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// TODO: Replace with RWEngine call
 		$name = explode( ' ', $metaUser->cmsUser->name );
@@ -155,25 +155,25 @@ class mi_virtuemart
 					. ' FROM #__vm_user_info'
 					. ' WHERE `user_info_id` = \'' . $inum . '\''
 					;
-			$database->setQuery( $query );
-			$numberofrows = $database->loadResult();
+			$db->setQuery( $query );
+			$numberofrows = $db->loadResult();
 		}
 
 		// Create Useraccount
 		$query  = 'INSERT INTO #__vm_user_info'
 				. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
-				. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) . '\', \'' . ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) . '\', \'shopper\', \'Checking\')'
+				. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) . '\', \'' . ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) . '\', \'shopper\', \'Checking\')'
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 
 		// Create Shopper -ShopperGroup - Relationship
 		$query  = 'INSERT INTO #__vm_shopper_vendor_xref'
 				. ' (user_id, shopper_group_id)'
 				. ' VALUES(\'' . $metaUser->userid . '\', \'' . $shoppergroup . '\')'
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 }
 ?>

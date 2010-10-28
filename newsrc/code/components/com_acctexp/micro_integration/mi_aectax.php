@@ -268,9 +268,9 @@ class mi_aectax
 			return true;
 		}
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$mi = new microIntegration( $database );
+		$mi = new microIntegration( $db );
 
 		if ( !$mi->mi_exists( $location['mi'] ) ) {
 			return true;

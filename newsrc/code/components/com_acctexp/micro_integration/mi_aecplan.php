@@ -15,14 +15,14 @@ class mi_aecplan
 {
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'
 				. ' WHERE `active` = 1'
 				;
-		$database->setQuery( $query );
-		$plans = $database->loadObjectList();
+		$db->setQuery( $query );
+		$plans = $db->loadObjectList();
 
 		$payment_plans = array_merge( array( JHTML::_('select.option', '0', "- " . _PAYPLAN_NOPLAN . " -" ) ), $plans );
 
@@ -114,9 +114,9 @@ class mi_aecplan
 
 		$expiration = $request->metaUser->focusSubscription->expiration;
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$new_plan = new SubscriptionPlan( $database );
+		$new_plan = new SubscriptionPlan( $db );
 		$new_plan->load( $this->settings['plan_apply'.$request->area] );
 
 		$request->metaUser->establishFocus( $new_plan, 'none', false );

@@ -24,14 +24,14 @@ class mi_docman
 
 	function checkInstallation()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
-		return in_array( $mainframe->getCfg( 'dbprefix' ) . 'acctexp_mi_docman', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_docman', $tables );
 	}
 
 	function detect_application()
@@ -41,7 +41,7 @@ class mi_docman
 
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_docman` ('
 					. '`id` int(11) NOT NULL auto_increment,'
@@ -54,14 +54,14 @@ class mi_docman
 					. ' PRIMARY KEY (`id`)'
 					. ')'
 					;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 		return;
 	}
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
         $settings = array();
 		$settings['add_downloads']		= array( 'inputA' );
@@ -81,8 +81,8 @@ class mi_docman
 		$query = 'SELECT groups_id, groups_name, groups_description'
 			 	. ' FROM #__docman_groups'
 			 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg = array();
 		$sge = array();
@@ -138,8 +138,8 @@ class mi_docman
 
 	function profile_info( $request )
 	{
-		$database = &JFactory::getDBO();
-		$mi_docmanhandler = new docman_restriction( $database );
+		$db = &JFactory::getDBO();
+		$mi_docmanhandler = new docman_restriction( $db );
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
@@ -173,7 +173,7 @@ class mi_docman
 		. '$user =& JFactory::getUser();' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_docman.php\');' . "\n\n"
-		. '$restrictionhandler = new docman_restriction( $database );' . "\n"
+		. '$restrictionhandler = new docman_restriction( $db );' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $user->id );' . "\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
 		. 'if (!$restrictionhandler->hasDownloadsLeft()) {' . "\n"
@@ -203,7 +203,7 @@ class mi_docman
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
  		if ( $this->settings['delete_on_exp'] == "Set" ) {
 			foreach ( $this->settings['group'] as $tgroup ) {
@@ -223,7 +223,7 @@ class mi_docman
 			}
 		}
 
-		$mi_docmanhandler = new docman_restriction( $database );
+		$mi_docmanhandler = new docman_restriction( $db );
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
@@ -243,7 +243,7 @@ class mi_docman
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
  		if ( $this->settings['delete_on_set'] == "All" ) {
 			$groups = $this->GetUserGroups( $request->metaUser->userid );
@@ -259,7 +259,7 @@ class mi_docman
 			}
 		}
 
-		$mi_docmanhandler = new docman_restriction( $database );
+		$mi_docmanhandler = new docman_restriction( $db );
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
@@ -286,13 +286,13 @@ class mi_docman
 
 	function GetUserGroups( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `groups_id`'
 				. ' FROM #__docman_groups'
 				;
-		$database->setQuery( $query );
-		$ids = $database->loadResultArray();
+		$db->setQuery( $query );
+		$ids = $db->loadResultArray();
 
 		$groups = array();
 		foreach ( $ids as $groupid ) {
@@ -300,8 +300,8 @@ class mi_docman
 					. ' FROM #__docman_groups'
 					. ' WHERE `groups_id` = \'' . $groupid . '\''
 					;
-			$database->setQuery( $query );
-			$users = explode( ',', $database->loadResult() );
+			$db->setQuery( $query );
+			$users = explode( ',', $db->loadResult() );
 
 			if ( in_array( $userid, $users ) ) {
 				$groups[] = $groupid;
@@ -313,14 +313,14 @@ class mi_docman
 
 	function AddUserToGroup( $userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `groups_members`'
 			. ' FROM #__docman_groups'
 			. ' WHERE `groups_id` = \'' . $groupid . '\''
 			;
-		$database->setQuery( $query );
-		$users = explode( ',', $database->loadResult() );
+		$db->setQuery( $query );
+		$users = explode( ',', $db->loadResult() );
 
 		if ( in_array( $userid, $users ) ) {
 			return null;
@@ -340,8 +340,8 @@ class mi_docman
 				. ' SET `groups_members` = \'' . implode( ',', $users ) . '\''
 				. ' WHERE `groups_id` = \'' . $groupid . '\''
 				;
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 
 			return true;
 		}
@@ -349,14 +349,14 @@ class mi_docman
 
 	function DeleteUserFromGroup( $userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `groups_members`'
 			. ' FROM #__docman_groups'
 			. ' WHERE `groups_id` = \'' . $groupid . '\''
 			;
-		$database->setQuery( $query );
-		$users = explode( ',', $database->loadResult() );
+		$db->setQuery( $query );
+		$users = explode( ',', $db->loadResult() );
 
 		if ( in_array( $userid, $users ) ) {
 			$key = array_search( $userid, $users );
@@ -375,8 +375,8 @@ class mi_docman
 				. ' SET `groups_members` = \'' . implode( ',', $users ) . '\''
 				. ' WHERE `groups_id` = \'' . $groupid . '\''
 				;
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 
 			return true;
 		} else {
@@ -402,14 +402,14 @@ class docman_restriction extends JTable {
 	var $params					= null;
 
 	function getIDbyUserID( $userid ) {
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_docman'
 			. ' WHERE `userid` = \'' . $userid . '\''
 			;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function docman_restriction( &$db ) {
@@ -456,11 +456,11 @@ class docman_restriction extends JTable {
 	function noDownloadsLeft()
 	{
 		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
 			$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-			if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
-				include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
+			if ( file_exists( $langPathMI . $app->getCfg( 'lang' ) . '.php' ) ) {
+				include_once( $langPathMI . $app->getCfg( 'lang' ) . '.php' );
 			} else {
 				include_once( $langPathMI . 'english.php' );
 			}

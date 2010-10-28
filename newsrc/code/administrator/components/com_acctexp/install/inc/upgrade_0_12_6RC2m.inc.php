@@ -11,8 +11,8 @@
 $query = 'SELECT `id`'
 		. ' FROM #__acctexp_metauser'
 		;
-$database->setQuery( $query );
-$entries = $database->loadResultArray();
+$db->setQuery( $query );
+$entries = $db->loadResultArray();
 
 /*
  * This may seem odd, but due to unforseen consequences, json encoding and decoding
@@ -22,7 +22,7 @@ $entries = $database->loadResultArray();
  */
 
 foreach ( $entries as $eid ) {
-	$meta = new metaUserDB( $database );
+	$meta = new metaUserDB( $db );
 	$meta->load( $eid );
 
 	if ( !empty( $meta->params ) ) {

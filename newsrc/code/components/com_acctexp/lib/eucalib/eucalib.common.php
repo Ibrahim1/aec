@@ -740,7 +740,7 @@ class parameterHandler
 	 */
 	function encode( $array )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$params = array();
 		foreach ( $array as $key => $value ) {
@@ -754,7 +754,7 @@ class parameterHandler
 					$value = stripslashes( $value );
 				}
 
-				$value = $database->getEscaped( $value );
+				$value = $db->getEscaped( $value );
 
 				$params[] = $key . '=' . $value;
 			}

@@ -107,9 +107,9 @@ class mi_age_restriction extends MI
 
 	function getAge( $bd )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		return ( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) - strtotime( $bd ) ) / 31536000;
+		return ( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) - strtotime( $bd ) ) / 31536000;
 	}
 }
 ?>

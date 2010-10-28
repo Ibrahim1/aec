@@ -23,7 +23,7 @@ class mi_communitybuilder
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['approve']		= array( 'list_yesno' );
@@ -36,8 +36,8 @@ class mi_communitybuilder
 				. ' WHERE `table` != \'#__users\''
 				. ' AND `name` != \'NA\''
 				;
-		$database->setQuery( $query );
-		$objects = $database->loadObjectList();
+		$db->setQuery( $query );
+		$objects = $db->loadObjectList();
 
 		if ( !empty( $objects ) ) {
 			foreach ( $objects as $object ) {
@@ -62,15 +62,15 @@ class mi_communitybuilder
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if( $this->settings['approve'] ) {
 			$query = 'UPDATE #__comprofiler'
 					.' SET `approved` = \'1\''
 					.' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 					;
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
 		}
 
 		if ( $this->settings['set_fields'] ) {
@@ -79,8 +79,8 @@ class mi_communitybuilder
 					. ' WHERE `table` != \'#__users\''
 					. ' AND `name` != \'NA\''
 					;
-			$database->setQuery( $query );
-			$objects = $database->loadObjectList();
+			$db->setQuery( $query );
+			$objects = $db->loadObjectList();
 
 			foreach ( $objects as $object ) {
 				if ( isset( $this->settings['cbfield_' . $object->name] ) ) {
@@ -110,23 +110,23 @@ class mi_communitybuilder
 						. ' SET ' . implode( ', ', $alterstring )
 						. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 						;
-				$database->setQuery( $query );
-				$database->query() or die( $database->stderr() );
+				$db->setQuery( $query );
+				$db->query() or die( $db->stderr() );
 			}
 		}
 	}
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if( $this->settings['unapprove_exp'] ) {
 			$query = 'UPDATE #__comprofiler'
 					.' SET `approved` = \'0\''
 					.' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 					;
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
 		}
 
 		if ( $this->settings['set_fields_exp'] ) {
@@ -135,8 +135,8 @@ class mi_communitybuilder
 					. ' WHERE `table` != \'#__users\''
 					. ' AND `name` != \'NA\''
 					;
-			$database->setQuery( $query );
-			$objects = $database->loadObjectList();
+			$db->setQuery( $query );
+			$objects = $db->loadObjectList();
 
 			foreach ( $objects as $object ) {
 				if ( !empty( $this->settings['cbfield_' . $object->name . '_exp' ] ) ) {
@@ -162,8 +162,8 @@ class mi_communitybuilder
 						. ' SET ' . implode( ', ', $alterstring )
 						. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 						;
-				$database->setQuery( $query );
-				$database->query() or die( $database->stderr() );
+				$db->setQuery( $query );
+				$db->query() or die( $db->stderr() );
 			}
 		}
 	}

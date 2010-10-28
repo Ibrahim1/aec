@@ -126,7 +126,7 @@ class processor_ccbill extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$invoice			= $post['invoice'];
 		$username			= $post['username'];
@@ -198,8 +198,8 @@ class processor_ccbill extends POSTprocessor
 					. ' WHERE custom_params LIKE \'%' . $search . '%\''
 					;
 
-					$database->setQuery( $query );
-					$planid = $database->loadResult();
+					$db->setQuery( $query );
+					$planid = $db->loadResult();
 
 					if ( $planid ) {
 						$usage = $planid;
@@ -262,7 +262,7 @@ class processor_ccbill extends POSTprocessor
 
 	function prepareValidation( $subscription_list )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $this->settings['datalink_username'] ) ) {
 			if ( empty( $this->datalink_temp ) ) {
@@ -303,8 +303,8 @@ class processor_ccbill extends POSTprocessor
 						. ' WHERE invoice_number = \'' . $info[2] . '\''
 						. ' OR secondary_ident = \'' . $info[2] . '\''
 						;
-						$database->setQuery( $query );
-						$subscription_id = $database->loadResult();
+						$db->setQuery( $query );
+						$subscription_id = $db->loadResult();
 
 						switch ( $info[0] ) {
 							case 'EXPIRE':
@@ -322,7 +322,7 @@ class processor_ccbill extends POSTprocessor
 									if ( !in_array( $subscription_id, $subscription_list ) ) {
 										// But if that is not the case, expire and set to cancel
 
-										$subscription = new Subscription( $database );
+										$subscription = new Subscription( $db );
 										$subscription->load( $subscription_id );
 										$subscription->cancel();
 									}
@@ -343,12 +343,12 @@ class processor_ccbill extends POSTprocessor
 
 	function validateSubscription( $subscription_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $this->datalink_rebill_temp ) ) {
 			// Now lets check for this subscription
 			if ( in_array( $subscription_id, $this->datalink_rebill_temp ) ) {
-				$invoice = new Invoice( $database );
+				$invoice = new Invoice( $db );
 				$invoice->loadbySubscriptionId( $subscription_id );
 
 				if ( $invoice->id ) {

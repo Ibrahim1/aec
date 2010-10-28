@@ -39,7 +39,7 @@ class mi_joomlauser
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$set = array();
 
@@ -71,8 +71,8 @@ class mi_joomlauser
 			$query .= ' SET ' . implode( ', ', $set );
 			$query .= ' WHERE `id` = \'' . (int) $request->metaUser->userid . '\'';
 
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
 
 			$userid = $request->metaUser->userid;
 
@@ -84,7 +84,7 @@ class mi_joomlauser
 	function getUsername( $request )
 	{
 		if ( !empty( $this->settings['username_rand'] ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$numberofrows	= 1;
 			while ( $numberofrows ) {
@@ -94,8 +94,8 @@ class mi_joomlauser
 						. ' FROM #__users'
 						. ' WHERE `username` = \'' . $uname . '\''
 						;
-				$database->setQuery( $query );
-				$numberofrows = $database->loadResult();
+				$db->setQuery( $query );
+				$numberofrows = $db->loadResult();
 			}
 
 			return $uname;
@@ -107,15 +107,15 @@ class mi_joomlauser
 	function expiration_action( $request )
 	{
 		if ( $this->settings['block'] ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$query = 'UPDATE #__users'
 				. ' SET `block` = \'1\''
 				. ' WHERE `id` = \'' . (int) $request->metaUser->userid . '\''
 				;
 
-			$database->setQuery( $query );
-			$database->query() or die( $database->stderr() );
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
 		}
 
 	}

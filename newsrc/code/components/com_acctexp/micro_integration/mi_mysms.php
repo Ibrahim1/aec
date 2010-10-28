@@ -33,7 +33,7 @@ class mi_mysms
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $this->settings['disable_exp'] ) ) {
 			// unpublish the user
@@ -41,8 +41,8 @@ class mi_mysms
 					' SET `status` = \'0\'' .
 					' WHERE `userid` = \'' . $request->metaUser->userid . '\'' .
 					' LIMIT 1';
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 		}
 
 		return true;
@@ -50,7 +50,7 @@ class mi_mysms
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $this->settings['add_credits'] ) ) {
 			$credits = (int) $this->settings['add_credits'];
@@ -61,8 +61,8 @@ class mi_mysms
 					' `credits` = credits+' . $credits .
 					' WHERE `userid` = \'' . $request->metaUser->userid . '\'' .
 					' LIMIT 1';
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 		}
 
 		return true;

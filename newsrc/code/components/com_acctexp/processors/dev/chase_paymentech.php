@@ -439,9 +439,9 @@ aecDebug( $response );
 
 	function validateSubscription( $subscription_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$invoice = new Invoice( $database );
+		$invoice = new Invoice( $db );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
 		$metaUser = new metaUser( $invoice->userid );

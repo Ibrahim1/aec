@@ -30,19 +30,19 @@ class processor_moneybookers extends POSTprocessor
 
 	function settings()
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$settings = array();
 
 		$settings['pay_to_email']			= '';
 		$settings['secret_word']			= '';
-		$settings['recipient_description']	= $mainframe->getCfg( 'sitename' );
+		$settings['recipient_description']	= $app->getCfg( 'sitename' );
 		$settings['logo_url'] 				= AECToolbox::deadsureURL( 'images/logo.png' );
 		$settings['language'] 				= 'EN';
 		$settings['payment_methods']		= array( 'ACC' );
 		$settings['hide_login'] 			= 1;
 		$settings['currency'] 				= 'USD';
-		$settings['confirmation_note']		= "Thank you for subscribing on " . $mainframe->getCfg( 'sitename' ) . "!";
+		$settings['confirmation_note']		= "Thank you for subscribing on " . $app->getCfg( 'sitename' ) . "!";
 		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']			= "";
 

@@ -25,19 +25,19 @@ class mi_vbulletin
 
 	function checkInstallation()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$conf =& JFactory::getConfig();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
 		return in_array( $conf->getValue('config.dbprefix') .'_acctexp_mi_vbulletinpw', $tables );
 	}
 
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_vbulletinpw`'
 		. ' (`id` int(11) NOT NULL auto_increment,'
@@ -47,14 +47,14 @@ class mi_vbulletin
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 		return;
 	}
 
 	function Settings()
 	{
-		$database = $this->getDB();
+		$db = $this->getDB();
 
 		$vbdb = $this->getDB();
 
@@ -67,8 +67,8 @@ class mi_vbulletin
 		$query = 'SELECT `usergroupid`, `title`'
 			 	. ' FROM ' . $prefix . 'usergroup'
 			 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg		= array();
 		$sg2	= array();
@@ -165,9 +165,9 @@ class mi_vbulletin
 
 	function action( $request )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$vbdb = $this->getDB();
 
@@ -176,7 +176,7 @@ class mi_vbulletin
 		if ( empty( $vbUserId ) && empty( $this->settings['create_user'] ) ) {
 			return null;
 		} elseif ( empty( $vbUserId ) ) {
-			$vbulletinpw = new vbulletinpw( $database );
+			$vbulletinpw = new vbulletinpw( $db );
 			$vbulletinpw->loadUserID( $request->metaUser->userid );
 
 			$password = $vbulletinpw->vbulletinpw;
@@ -192,8 +192,8 @@ class mi_vbulletin
 				}
 			}
 
-			$content['joindate']		= ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
-			$content['passworddate']	= date( 'Y-m-d', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			$content['joindate']		= ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+			$content['passworddate']	= date( 'Y-m-d', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 			$content['usertitle']		= 'Junior Member';
 
 			if ( empty( $content['username'] ) ) {
@@ -382,19 +382,19 @@ class mi_vbulletin
 								'prefix'	=> $this->settings['table_prefix']
 								);
 
-	        $database = &JDatabase::getInstance($options);
+	        $db = &JDatabase::getInstance($options);
         } else {
-        	$database = &JFactory::getDBO();
+        	$db = &JFactory::getDBO();
         }
 
-		return $database;
+		return $db;
 	}
 
 	function on_userchange_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$vbulletinpw = new vbulletinpw( $database );
+		$vbulletinpw = new vbulletinpw( $db );
 		$apwid = $vbulletinpw->getIDbyUserID( $request->row->id );
 
 		if ( $apwid ) {
@@ -416,7 +416,7 @@ class mi_vbulletin
 			return;
 		}
 
-		$vbulletinpw->vbulletinsalt	= $database->getEscaped( $vbulletinpw->saltgen() );
+		$vbulletinpw->vbulletinsalt	= $db->getEscaped( $vbulletinpw->saltgen() );
 		$vbulletinpw->vbulletinpw	= $vbulletinpw->hash( $password, $vbulletinpw->vbulletinsalt );
 
 		$vbulletinpw->check();
@@ -452,14 +452,14 @@ class vbulletinpw extends JTable
 
 	function getIDbyUserID( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_vbulletinpw'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function hash( $password, $salt )

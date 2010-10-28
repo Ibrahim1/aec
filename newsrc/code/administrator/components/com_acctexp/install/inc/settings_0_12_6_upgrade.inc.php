@@ -16,8 +16,8 @@ $jsonconversion = false;
 $query = 'SELECT `settings` FROM #__acctexp_config'
 . ' WHERE `id` = \'1\''
 ;
-$database->setQuery( $query );
-$res = $database->loadResult();
+$db->setQuery( $query );
+$res = $db->loadResult();
 
 if ( ( ( strpos( $res, '{' ) === 0 ) || ( strpos( $res, "\n" ) !== false ) ) && !empty( $res ) ) {
 	if ( strpos( $res, '{' ) === 0 ) {
@@ -46,8 +46,8 @@ if ( ( ( strpos( $res, '{' ) === 0 ) || ( strpos( $res, "\n" ) !== false ) ) && 
 	. ' SET `settings` = \'' . $entry . '\''
 	. ' WHERE `id` = \'1\''
 	;
-	$database->setQuery( $query );
-	$database->query();
+	$db->setQuery( $query );
+	$db->query();
 } elseif ( empty( $res ) ) {
 	$newinstall = true;
 }

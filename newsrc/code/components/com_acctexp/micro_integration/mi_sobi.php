@@ -14,7 +14,7 @@ class mi_sobi extends MI
 {
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
         $settings = array();
 		$settings['publish_all']		= array( 'list_yesno' );
@@ -63,52 +63,52 @@ class mi_sobi extends MI
 
 	function publishItems( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__sobi2_item'
 				. ' SET `published` = \'1\''
 				. ' WHERE `owner` = \'' . $metaUser->userid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( $database->query() ) {
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}
 
 	function unpublishItems( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__sobi2_item'
 				. ' SET `published` = \'0\''
 				. ' WHERE `owner` = \'' . $metaUser->userid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( $database->query() ) {
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}
 
 	function clearSOBIcache()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'TRUNCATE #__sobi2_cache'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( $database->query() ) {
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}

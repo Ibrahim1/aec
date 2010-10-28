@@ -29,14 +29,14 @@ class tool_supporthours
 
 	function Action()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
 				. ' WHERE `class_name` LIKE \'%mi_supporttimetracker%\''
 				;
-		$database->setQuery( $query );
-		$mis = $database->loadResultArray();
+		$db->setQuery( $query );
+		$mis = $db->loadResultArray();
 
 		$planlist = array();
 		foreach ( $mis as $mi ) {

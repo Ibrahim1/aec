@@ -85,7 +85,7 @@ class mi_supporttimetracker extends MI
 		if ( empty( $history ) ) {
 			$settings['history']	= array( 'fieldset', 'History', 'There is no history for this account' );
 		} else {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
 			$history_table = '<table style="width:950px;">';
 			$history_table .= '<tr><th>ID</th><th>Date</th><th>Minutes</th><th>Total Minutes Used</th><th>Added</th><th>Used</th><th>Details</th></tr>';
@@ -100,7 +100,7 @@ class mi_supporttimetracker extends MI
 
 				$history_table .= '<tr>'
 									. '<td>' . $id . '</td>'
-									. '<td>' . date( 'Y-m-d H:i:s', $entry['tstamp'] + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) . '</td>'
+									. '<td>' . date( 'Y-m-d H:i:s', $entry['tstamp'] + ( $app->getCfg( 'offset' ) * 3600 ) ) . '</td>'
 									. '<td>' . ( $entry['support_minutes'] ? $entry['support_minutes'] : '0' ). '</td>'
 									. '<td>' . ( $entry['support_minutes_used'] ? $entry['support_minutes_used'] : '- - -' ) . '</td>'
 									. '<td>' . $entry['minutes_added'] . '</td>'

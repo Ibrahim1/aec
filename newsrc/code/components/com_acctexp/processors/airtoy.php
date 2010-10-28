@@ -61,7 +61,7 @@ class processor_airtoy extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$code = $request->int_var['planparams']['smscode_prefix'] . ' ' . $request->invoice->id;
 
@@ -112,7 +112,7 @@ class processor_airtoy extends XMLprocessor
 
 	function parseNotification( $post )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$smscode	= aecGetParam('smscode');
 		$secret		= aecGetParam('secret');
@@ -123,7 +123,7 @@ class processor_airtoy extends XMLprocessor
 			$sms = explode( '+', $smscode );
 		}
 
-		$invoice = new Invoice( $database );
+		$invoice = new Invoice( $db );
 		$invoice->load( $sms[1] );
 
 		if ( $invoice->id ) {

@@ -78,7 +78,7 @@ class processor_authorize extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= "https://test.authorize.net/gateway/transact.dll";
@@ -100,9 +100,9 @@ class processor_authorize extends POSTprocessor
 		$sequence = rand(1, 1000);
 
 		if ( !empty( $this->settings['timestamp_offset'] ) ) {
-			$tstamp = ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) + $this->settings['timestamp_offset'];
+			$tstamp = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) + $this->settings['timestamp_offset'];
 		} else {
-			$tstamp = ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
+			$tstamp = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
 		}
 
 		// Calculate fingerprint

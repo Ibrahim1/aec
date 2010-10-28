@@ -338,25 +338,25 @@ class eucaList
 
 	function buildRows()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$option = 'com_' . _EUCA_APP_SHORTNAME;
 
-		$this->limit		= $mainframe->getUserStateFromRequest( "viewlistlimit", 'limit', $mainframe->getCfg( 'list_limit' ) );
-		$this->limitstart	= $mainframe->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+		$this->limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+		$this->limitstart	= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-		$this->orderby		= $mainframe->getUserStateFromRequest( "orderby", 'orderby', 'id ASC' );
-		$this->search		= $mainframe->getUserStateFromRequest( "search{$option}", 'search', '' );
-		$this->search		= $database->getEscaped( trim( strtolower( $this->search ) ) );
+		$this->orderby		= $app->getUserStateFromRequest( "orderby", 'orderby', 'id ASC' );
+		$this->search		= $app->getUserStateFromRequest( "search{$option}", 'search', '' );
+		$this->search		= $db->getEscaped( trim( strtolower( $this->search ) ) );
 
 		// Get total amount of records
 		$query	= 'SELECT count(*)'
 				. ' FROM ' . $this->table
 				;
-		$database->setQuery( $query );
-		$this->totalrows = $database->loadResult();
+		$db->setQuery( $query );
+		$this->totalrows = $db->loadResult();
 
 		if ( $this->limitstart > ( $this->totalrows ) ) {
 			$this->limitstart = 0;
@@ -368,8 +368,8 @@ class eucaList
 				. ' ORDER BY ' . $this->orderby
 				. ' LIMIT ' . $this->limitstart . ',' . $this->limit
 				;
-		$database->setQuery( $query );
-		$this->rows = $database->loadObjectList();
+		$db->setQuery( $query );
+		$this->rows = $db->loadObjectList();
 	}
 
 	function display()
@@ -567,7 +567,7 @@ class eucaObjectHandler
 
 	function edit( $id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$params_values = array();
 		$params_values['startform'] = $this->area . '_' . $this->focus . '_save';
@@ -587,7 +587,7 @@ class eucaObjectHandler
 					$params['formblockbranding_' . $i] = 'formblockbranding';
 					$params_values['formblockbranding_' . $i] = "#" . $i;
 
-					$object = new $this->rootclass( $database );
+					$object = new $this->rootclass( $db );
 					$object->load( $i );
 
 					foreach ( $object->fullparamsValuesArray() as $name => $value ) {
@@ -606,7 +606,7 @@ class eucaObjectHandler
 			$params['formblockstart_' . $id] = 'formblockstart';
 			$params_values['formblockstart_' . $id] = 1;
 
-			$object = new $this->rootclass( $database );
+			$object = new $this->rootclass( $db );
 			$object->load( $id );
 
 			foreach ( $object->fullparamsValuesArray() as $name => $value ) {
@@ -655,7 +655,7 @@ class eucaObjectHandler
 
 	function save()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( isset( $_POST['euca_collation'] ) ) {
 
@@ -669,12 +669,12 @@ class eucaObjectHandler
 			foreach ( $superpost as $name => $post ) {
 				// Save Object
 				if ( !( ( strcmp( $name, 'euca' ) === 0 ) || ( strcmp( $name, 'mce' ) === 0 ) ) ) {
-					$object = new $this->rootclass( $database );
+					$object = new $this->rootclass( $db );
 					$object->fullSave( $post );
 				}
 			}
 		} else {
-			$object = new $this->rootclass( $database );
+			$object = new $this->rootclass( $db );
 			$object->fullSave( $_POST );
 		}
 
@@ -683,9 +683,9 @@ class eucaObjectHandler
 
 	function delete( $id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$object = new $this->rootclass( $database );
+		$object = new $this->rootclass( $db );
 		$object->load( $id );
 		$object->delete();
 

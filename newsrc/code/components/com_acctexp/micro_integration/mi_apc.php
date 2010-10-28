@@ -23,13 +23,13 @@ class mi_apc
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT groupid, title, description'
 	 	. ' FROM #__comprofiler_accesscontrol_groups'
 	 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg = array();
 		if ( !empty( $groups ) ) {
@@ -64,7 +64,7 @@ class mi_apc
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_group_exp'] ) {
 			return $this->setGroupId( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['set_default_exp'] );
@@ -80,22 +80,22 @@ class mi_apc
 
 	function setGroupId( $userid, $groupid, $default = false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $default ) {
 			$query = 'SELECT title'
 		 	. ' FROM #__comprofiler_accesscontrol_groups'
 		 	. ' WHERE default = \'1\''
 		 	;
-		 	$database->setQuery( $query );
-		 	$group = $database->loadResult();
+		 	$db->setQuery( $query );
+		 	$group = $db->loadResult();
 		} else {
 			$query = 'SELECT title'
 		 	. ' FROM #__comprofiler_accesscontrol_groups'
 		 	. ' WHERE groupid = \'' . $groupid . '\''
 		 	;
-		 	$database->setQuery( $query );
-		 	$group = $database->loadResult();
+		 	$db->setQuery( $query );
+		 	$group = $db->loadResult();
 		}
 
 		if ( !empty( $group ) ) {
@@ -103,7 +103,7 @@ class mi_apc
 					. ' SET `apc_type` = \'' . $group . '\''
 					. ' WHERE `id` = \'' . (int) $this->userid . '\''
 					;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 		} else {
 			return false;
 		}

@@ -44,9 +44,9 @@ class mi_googleanalytics
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		switch ( $this->settings['ga_method'] ) {
 			case 1:
@@ -58,7 +58,7 @@ class mi_googleanalytics
 							. '  urchinTracker();'
 							. '</script>'
 							. '<form style="display:none;" name="utmform">'
-							. '<textarea id="utmtrans">UTM:T|' . $request->invoice->invoice_number . '|' . $mainframe->getCfg( 'sitename' ) . '|' . $request->invoice->amount . '|0.00|0.00|||'
+							. '<textarea id="utmtrans">UTM:T|' . $request->invoice->invoice_number . '|' . $app->getCfg( 'sitename' ) . '|' . $request->invoice->amount . '|0.00|0.00|||'
 							. 'UTM:I|' . $request->invoice->invoice_number . '|' . $request->plan->id . '|' . $request->plan->name . '|subscription|' . $request->invoice->amount . '|1</textarea>'
 							. '</form>'
 							. '<script type="text/javascript">'
@@ -80,7 +80,7 @@ class mi_googleanalytics
 						. 'pageTracker._addTrans('
 						// Order ID, Affiliation, Total, Tax, Shipping, City, State, Country
 						. '"' . $request->invoice->invoice_number . '",'
-						. '"' . $mainframe->getCfg( 'sitename' ) . '",'
+						. '"' . $app->getCfg( 'sitename' ) . '",'
 						. '"' . $request->invoice->amount . '",'
 						. '"0",'
 						. '"0",'
@@ -113,7 +113,7 @@ class mi_googleanalytics
 						. '_gaq.push(["_addTrans",'
 						// Order ID, Affiliation, Total, Tax, Shipping, City, State, Country
 						. '"' . $request->invoice->invoice_number . '",'
-						. '"' . $mainframe->getCfg( 'sitename' ) . '",'
+						. '"' . $app->getCfg( 'sitename' ) . '",'
 						. '"' . $request->invoice->amount . '",'
 						. '"0",'
 						. '"0",'
@@ -142,7 +142,7 @@ class mi_googleanalytics
 				break;
 		}
 
-		$displaypipeline = new displayPipeline($database);
+		$displaypipeline = new displayPipeline($db);
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;

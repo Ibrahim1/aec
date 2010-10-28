@@ -745,9 +745,9 @@ class processor_authorize_cim extends PROFILEprocessor
 
 	function validateSubscription( $subscription_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$subscription = new Subscription( $database );
+		$subscription = new Subscription( $db );
 		$subscription->load( $subscription_id );
 
 		$allowed = array( "Trial", "Active" );
@@ -756,7 +756,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			return false;
 		}
 
-		$invoice = new Invoice( $database );
+		$invoice = new Invoice( $db );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
 		if ( empty( $invoice->id ) ) {

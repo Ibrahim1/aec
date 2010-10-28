@@ -40,8 +40,6 @@ class plgSystemAECerrorhandler extends JPlugin
 
 	function onAfterInitialise()
 	{
-		global $mainframe;
-
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
 			// Don't act when on backend
 			return true;
@@ -59,8 +57,6 @@ class plgSystemAECerrorhandler extends JPlugin
 	 */
 	function handleLoginRedirect()
 	{
-		global $mainframe;
-
 		$uri	= &JFactory::getURI();
 		$task	= $uri->getVar( 'task' );
 		$option	= $uri->getVar( 'option' );
@@ -118,9 +114,9 @@ class plgSystemAECerrorhandler extends JPlugin
 	function redirectNotAllowed( $error )
 	{
 		if ( $error->code == 403 ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			$mainframe->redirect( "index.php?option=com_acctexp&task=NotAllowed" );
+			$app->redirect( "index.php?option=com_acctexp&task=NotAllowed" );
 		} else {
 			JError::customErrorPage( $error );
 		}

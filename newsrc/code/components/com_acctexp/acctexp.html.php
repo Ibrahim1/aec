@@ -26,7 +26,7 @@ class HTML_frontEnd
 
 	function expired( $option, $metaUser, $expiration, $invoice, $trial, $continue=0 )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -96,7 +96,7 @@ class HTML_frontEnd
 
 	function hold( $option, $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -117,7 +117,7 @@ class HTML_frontEnd
 
 	function pending( $option, $objUser, $invoice, $reason=0 )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -173,7 +173,7 @@ class HTML_frontEnd
 
 	function subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi, $subscriptions = null, $custom = null, $properties )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -362,7 +362,7 @@ class HTML_frontEnd
 
 	function notAllowed( $option, $processors, $registerlink, $loggedin = 0 )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -458,17 +458,19 @@ class HTML_frontEnd
 	 */
 	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false, $trial = false )
 	{
-		global $aecConfig, $mainframe;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		if ( $SQLDate == '' ) {
 			return _AEC_EXPIRE_NOT_SET;
 		} else {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$retVal = AECToolbox::formatDate( $SQLDate );
 
 			if ( $check ) {
-				$timeDif = strtotime( $SQLDate ) - ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
+				$timeDif = strtotime( $SQLDate ) - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
 				if ( $timeDif < 0 ) {
 					$retVal = ( $trial ? _AEC_EXPIRE_TRIAL_PAST : _AEC_EXPIRE_PAST ) . ':&nbsp;<strong>' . $retVal . '</strong>';
 				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {

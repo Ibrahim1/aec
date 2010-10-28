@@ -24,7 +24,7 @@ class mi_k2
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
         $settings = array();
 		$settings['set_group']		= array( 'list_yesno' );
@@ -38,14 +38,14 @@ class mi_k2
 				. ' LIKE \'groups_id\''
 				;
 
-		$database->setQuery( $query );
-		$result = $database->loadResult();
+		$db->setQuery( $query );
+		$result = $db->loadResult();
 
 		$query = 'SELECT ' . ( $result ? 'groups_id' : 'id'  ) . ', name'
 			 	. ' FROM #__k2_user_groups'
 			 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg = array();
 		$sge = array();
@@ -83,7 +83,7 @@ class mi_k2
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_group_exp'] && !empty( $this->settings['group_exp'] ) ) {
 			$this->AddUserToGroup( $request->metaUser, $this->settings['group_exp'] );
@@ -94,7 +94,7 @@ class mi_k2
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_group'] && !empty( $this->settings['group'] ) ) {
 			$this->AddUserToGroup( $request->metaUser, $this->settings['group'] );
@@ -105,28 +105,28 @@ class mi_k2
 
 	function AddUserToGroup( $metaUser, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__k2_users'
 			. ' WHERE `userID` = \'' . $metaUser->userid . '\''
 			;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
 		if ( empty( $id ) ) {
 			$query = 'INSERT INTO #__k2_users'
 				. ' (`userID`, `userName`, `group` )'
 				. ' VALUES ( \'' . $metaUser->userid . '\', \'' . $metaUser->cmsUser->username . '\', \'' . $groupid . '\' )'
 				;
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 		} else {
 			$query = 'UPDATE #__k2_users'
 				. ' SET `group` = \'' . $groupid . '\''
 				. ' WHERE `userID` = \'' . $metaUser->userid . '\''
 				;
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 		}
 
 		return true;

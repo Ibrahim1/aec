@@ -24,7 +24,7 @@ class mi_g2 extends MI
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['gallery2path']		= array( 'inputD' );
@@ -40,8 +40,8 @@ class mi_g2 extends MI
 		$query = 'SELECT `g_id`, `g_groupType`, `g_groupName`'
 			 	. ' FROM g2_Group'
 			 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg = array();
 		$sgs = array();
@@ -75,7 +75,7 @@ class mi_g2 extends MI
 
 	function getMIform( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$settings = array();
 
@@ -84,8 +84,8 @@ class mi_g2 extends MI
 				 	. ' FROM g2_Group'
 				 	. ' WHERE `g_id` IN (' . implode( ',', $this->settings['groups_sel_scope'] ) . ')'
 				 	;
-		 	$database->setQuery( $query );
-		 	$groups = $database->loadObjectList();
+		 	$db->setQuery( $query );
+		 	$groups = $db->loadObjectList();
 
 			$gr = array();
 			foreach ( $groups as $group ) {
@@ -107,7 +107,7 @@ class mi_g2 extends MI
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$this->loadG2Embed();
 
@@ -140,8 +140,8 @@ class mi_g2 extends MI
 					 	. ' FROM g2_Group'
 					 	. ' WHERE `g_id` = \'' . $groupid . '\''
 					 	;
-			 	$database->setQuery( $query );
-			 	$groupname = $database->loadResult();
+			 	$db->setQuery( $query );
+			 	$groupname = $db->loadResult();
 
 				if ( empty( $groupname ) ) {
 					continue;
@@ -151,8 +151,8 @@ class mi_g2 extends MI
 					 	. ' FROM g2_Item'
 					 	. ' WHERE `g_title` = \'' . $groupname . '\''
 					 	;
-			 	$database->setQuery( $query );
-			 	$parent = $database->loadResult();
+			 	$db->setQuery( $query );
+			 	$parent = $db->loadResult();
 
 				if ( empty( $parent ) ) {
 					continue;
@@ -175,15 +175,15 @@ class mi_g2 extends MI
 
 	function mapUserToGroup( $g2userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT g_userId'
 				. ' FROM g2_UserGroupMap'
 				. ' WHERE `g_userId` = \'' . $g2userid . '\' AND `g_groupId` = \'' . $groupid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( !$database->loadResult() ) {
+		if ( !$db->loadResult() ) {
 			list ($ret, $group) = GalleryCoreApi::addUserToGroup( $g2userid, $groupid );
 			if ($ret) {
 				$this->setError( $ret->_errorMessage );
@@ -196,7 +196,7 @@ class mi_g2 extends MI
 
 	function createAlbumInAlbum( $g2userid, $parentid, $albumname )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Check that we don't create a duplicate
 		$query = 'SELECT g_id'
@@ -204,16 +204,16 @@ class mi_g2 extends MI
 				. ' WHERE `g_ownerId` = \'' . $g2userid . '\''
 				. ' AND `g_title` = \'' . $albumname . '\''
 				;
-		$database->setQuery( $query );
-		$eid = $database->loadResult();
+		$db->setQuery( $query );
+		$eid = $db->loadResult();
 
 		if ( $eid ) {
 			$query = 'SELECT g_parentId'
 					. ' FROM g2_ChildEntity'
 					. ' WHERE `g_id` = \'' . $eid . '\''
 					;
-			$database->setQuery( $query );
-			$pid = $database->loadResult();
+			$db->setQuery( $query );
+			$pid = $db->loadResult();
 
 			if ( $pid == $parentid ) {
 				return null;
@@ -225,8 +225,8 @@ class mi_g2 extends MI
 				. ' FROM g2_Item'
 				. ' WHERE `g_ownerId` = \'' . $g2userid . '\''
 				;
-		$database->setQuery( $query );
-		$entries = $database->loadResult();
+		$db->setQuery( $query );
+		$entries = $db->loadResult();
 
 		if ( $entries >= $this->settings['groups_sel_amt'] ) {
 			return null;
@@ -243,17 +243,17 @@ class mi_g2 extends MI
 
 	function deleteUserFromGroup( $g2userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'DELETE FROM g2_UserGroupMap'
 				. ' WHERE `g_userId` = \'' . $g2userid . '\' AND `g_groupId` = \'' . $groupid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( $database->query() ) {
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}
@@ -273,27 +273,27 @@ class mi_g2 extends MI
 
 	function hasG2userid( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT g_id'
 				. ' FROM g2_User'
 				. ' WHERE `g_userName` = \'' . $metaUser->cmsUser->username . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResult();
+		return $db->loadResult();
 	}
 
 	function createG2User( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT max(g_id)'
 				. ' FROM g2_Entity'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$userid = $database->loadResult() + 1;
+		$userid = $db->loadResult() + 1;
 
 		$args = array();
 		$args['username']		= $metaUser->cmsUser->username;
@@ -311,10 +311,10 @@ class mi_g2 extends MI
 		$this->mapUserToGroup( $userid, 2 );
 		$this->mapUserToGroup( $userid, 4 );
 
-		if ( $database->query() ) {
+		if ( $db->query() ) {
 			return $userid;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}

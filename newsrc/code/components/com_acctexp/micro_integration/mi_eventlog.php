@@ -69,7 +69,7 @@ class mi_eventlog extends MI
 			return null;
 		}
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
 
@@ -77,7 +77,7 @@ class mi_eventlog extends MI
 			$this->settings[$rw_name.$request->area] = AECToolbox::rewriteEngineRQ( $this->settings[$rw_name.$request->area], $request );
 		}
 
-		$log_entry = new EventLog( $database );
+		$log_entry = new EventLog( $db );
 		$log_entry->issue( $this->settings['short'.$request->area], $this->settings['tags'.$request->area], $this->settings['text'.$request->area], $this->settings['level'.$request->area], $this->settings['params'.$request->area], $this->settings['force_notify'.$request->area], $this->settings['force_email'.$request->area] );
 	}
 }

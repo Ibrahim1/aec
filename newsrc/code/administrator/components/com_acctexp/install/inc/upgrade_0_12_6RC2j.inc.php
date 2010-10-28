@@ -32,8 +32,8 @@ if ( $jsonconversion ) {
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_' . $dbtable
 				;
-		$database->setQuery( $query );
-		$entries = $database->loadResultArray();
+		$db->setQuery( $query );
+		$entries = $db->loadResultArray();
 
 		if ( empty( $entries ) ) {
 			continue;
@@ -43,8 +43,8 @@ if ( $jsonconversion ) {
 			$query = 'SELECT `' . implode( '`, `', $fielddeclare ) . '` FROM #__acctexp_' . $dbtable
 			. ' WHERE `id` = \'' . $id . '\''
 			;
-			$database->setQuery( $query );
-			$object = $database->loadObject();
+			$db->setQuery( $query );
+			$object = $db->loadObject();
 
 			$dec = $fielddeclare;
 			foreach ( $fielddeclare as $fieldname ) {
@@ -82,9 +82,9 @@ if ( $jsonconversion ) {
 				. ' SET ' . implode( ', ', $sets ) . ''
 				. ' WHERE `id` = \'' . $id . '\''
 				;
-				$database->setQuery( $query );
-				if ( !$database->query() ) {
-			    	$errors[] = array( $database->getErrorMsg(), $query );
+				$db->setQuery( $query );
+				if ( !$db->query() ) {
+			    	$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}
@@ -122,8 +122,8 @@ if ( $jsonconversion ) {
 			$query = 'SHOW COLUMNS'
 					. ' FROM #__acctexp_subscr'
 					;
-			$database->setQuery( $query );
-			$entries = $database->loadResultArray();
+			$db->setQuery( $query );
+			$entries = $db->loadResultArray();
 
 			$unsetdec[] = 'userid';
 			$unsetdec[] = 'plan';
@@ -140,8 +140,8 @@ if ( $jsonconversion ) {
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_' . $dbtable
 				;
-		$database->setQuery( $query );
-		$entries = $database->loadResultArray();
+		$db->setQuery( $query );
+		$entries = $db->loadResultArray();
 
 		if ( empty( $entries ) ) {
 			continue;
@@ -151,8 +151,8 @@ if ( $jsonconversion ) {
 			$query = 'SELECT `' . implode( '`, `', $fielddeclare ) . '` FROM #__acctexp_' . $dbtable
 			. ' WHERE `id` = \'' . $id . '\''
 			;
-			$database->setQuery( $query );
-			$object = $database->loadObject();
+			$db->setQuery( $query );
+			$object = $db->loadObject();
 
 			$dec = $fielddeclare;
 			foreach ( $fielddeclare as $fieldname ) {
@@ -199,7 +199,7 @@ if ( $jsonconversion ) {
 				// Make sure to capture exceptions
 				if ( ( $dbtable == 'subscr' ) && ( $fieldname == 'params' ) ) {
 					if ( isset( $object->userid ) ) {
-						$metaUserDB = new metaUserDB( $database );
+						$metaUserDB = new metaUserDB( $db );
 						$metaUserDB->loadUserid( $object->userid );
 
 						if ( !empty( $temp ) ) {
@@ -377,9 +377,9 @@ if ( $jsonconversion ) {
 				. ' SET ' . implode( ', ', $sets ) . ''
 				. ' WHERE `id` = \'' . $id . '\''
 				;
-				$database->setQuery( $query );
-				if ( !$database->query() ) {
-			    	$errors[] = array( $database->getErrorMsg(), $query );
+				$db->setQuery( $query );
+				if ( !$db->query() ) {
+			    	$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}

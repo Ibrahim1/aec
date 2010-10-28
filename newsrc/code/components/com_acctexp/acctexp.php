@@ -11,12 +11,14 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mainframe, $aecConfig;
+global $aecConfig;
+
+$app = JFactory::getApplication();
 
 define( '_AEC_FRONTEND', 1 );
 
-require_once( $mainframe->getPath( 'class',			'com_acctexp' ) );
-require_once( $mainframe->getPath( 'front_html',	'com_acctexp' ) );
+require_once( $app->getPath( 'class',			'com_acctexp' ) );
+require_once( $app->getPath( 'front_html',	'com_acctexp' ) );
 
 if ( !defined( '_EUCA_DEBUGMODE' ) ) {
 	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
@@ -64,9 +66,9 @@ if ( !empty( $task ) ) {
 			// Manual Heartbeat
 			$hash = aecGetParam( 'hash', 0, true, array( 'word', 'string' ) );
 
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-			$heartbeat = new aecHeartbeat( $database );
+			$heartbeat = new aecHeartbeat( $db );
 			$heartbeat->frontendping( true, $hash );
 			break;
 
@@ -245,9 +247,9 @@ if ( !empty( $task ) ) {
 			$iFactory = new InvoiceFactory();
 
 			if ( !empty( $usage ) ) {
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
-				$iFactory->plan = new SubscriptionPlan( $database );
+				$iFactory->plan = new SubscriptionPlan( $db );
 				$iFactory->plan->load( $usage );
 			}
 
@@ -388,12 +390,12 @@ if ( !empty( $task ) ) {
 
 function hold( $option, $userid )
 {
-	global $mainframe;
+	$app = JFactory::getApplication();
 
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );
 
-		$mainframe->SetPageTitle( _HOLD_TITLE );
+		$app->SetPageTitle( _HOLD_TITLE );
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->hold( $option, $metaUser );
@@ -404,9 +406,11 @@ function hold( $option, $userid )
 
 function expired( $option, $userid, $expiration )
 {
-	global $mainframe, $aecConfig;
+	global $aecConfig;
 
-	$database = &JFactory::getDBO();
+	$app = JFactory::getApplication();
+
+	$db = &JFactory::getDBO();
 
 	if ( !empty( $userid ) ) {
 		$metaUser = new metaUser( $userid );
@@ -435,7 +439,7 @@ function expired( $option, $userid, $expiration )
 
 		$expiration	= AECToolbox::formatDate( $expired );
 
-		$mainframe->SetPageTitle( _EXPIRED_TITLE );
+		$app->SetPageTitle( _EXPIRED_TITLE );
 
 		$continue = false;
 		if ( $aecConfig->cfg['continue_button'] && $metaUser->hasSubscription ) {
@@ -454,21 +458,21 @@ function expired( $option, $userid, $expiration )
 
 function pending( $option, $userid )
 {
-	global $mainframe;
+	$app = JFactory::getApplication();
 
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$reason = "";
 
 	if ( $userid > 0 ) {
-		$objUser = new JTableUser( $database );
+		$objUser = new JTableUser( $db );
 		$objUser->load( $userid );
 
 		$invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
 
 		if ( $invoices ) {
 			$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
-			$objInvoice = new Invoice( $database );
+			$objInvoice = new Invoice( $db );
 			$objInvoice->loadInvoiceNumber( $invoice );
 			$params = $objInvoice->params;
 
@@ -487,7 +491,7 @@ function pending( $option, $userid )
 			$invoice = 'none';
 		}
 
-		$mainframe->SetPageTitle( _PENDING_TITLE );
+		$app->SetPageTitle( _PENDING_TITLE );
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
@@ -500,7 +504,7 @@ function subscribe( $option )
 {
 	global $aecConfig;
 
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
@@ -520,7 +524,7 @@ function subscribe( $option )
 	$k2mode		= false;
 
 	if ( $token ) {
-		$temptoken = new aecTempToken( $database );
+		$temptoken = new aecTempToken( $db );
 		$temptoken->getComposite();
 
 		if ( !empty( $temptoken->content['handler'] ) ) {
@@ -560,8 +564,8 @@ function subscribe( $option )
 				. ' FROM #__users'
 				. ' WHERE username = \'' . $username . '\''
 				;
-				$database->setQuery( $query );
-				$id = $database->loadResult();
+				$db->setQuery( $query );
+				$id = $db->loadResult();
 
 				if ( !empty( $id ) ) {
 					$userid = $id;
@@ -652,17 +656,17 @@ function checkUsernameEmail( $username, $email )
 		return JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 );
 	}
 
-	global $mainframe;
+	$app = JFactory::getApplication();
 
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$query = 'SELECT `id`'
 			. ' FROM #__users'
 			. ' WHERE `username` = \'' . $username . '\''
 			;
-	$database->setQuery( $query );
+	$db->setQuery( $query );
 
-	if ( $database->loadResult() ) {
+	if ( $db->loadResult() ) {
 		aecErrorAlert( JText::_( 'WARNREG_INUSE' ) );
 		return JText::_( 'WARNREG_INUSE' );
 	}
@@ -672,9 +676,9 @@ function checkUsernameEmail( $username, $email )
 				. ' FROM #__users'
 				. ' WHERE `email` = \'' . $email . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( $database->loadResult() ) {
+		if ( $db->loadResult() ) {
 			aecErrorAlert( _REGWARN_EMAIL_INUSE );
 			return _REGWARN_EMAIL_INUSE;
 		}
@@ -687,9 +691,11 @@ function confirmSubscription( $option )
 {
 	$user = &JFactory::getUser();
 
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
-	global $mainframe, $aecConfig;
+	global $aecConfig;
+
+	$app = JFactory::getApplication();
 
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -712,10 +718,10 @@ function confirmSubscription( $option )
 			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
 			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
 
-			registerForm( $option, $mainframe->getCfg( 'emailpass' ), null );
+			registerForm( $option, $app->getCfg( 'emailpass' ), null );
 		} else {
 			// This is a joomla registration
-			joomlaregisterForm( $option, $mainframe->getCfg( 'useractivation' ) );
+			joomlaregisterForm( $option, $app->getCfg( 'useractivation' ) );
 		}
 	} else {
 		if ( !empty( $usage ) ) {
@@ -729,14 +735,16 @@ function confirmSubscription( $option )
 
 function subscriptionDetails( $option, $sub='overview' )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 	$user = &JFactory::getUser();
 
 	if ( !$user->id ) {
 		return notAllowed( $option );
 	}
 
-	global $mainframe, $aecConfig;
+	global $aecConfig;
+
+	$app = JFactory::getApplication();
 
 	$ssl		= !empty( $aecConfig->cfg['ssl_profile'] );
 
@@ -814,7 +822,7 @@ function subscriptionDetails( $option, $sub='overview' )
 
 			$subList[$usid] = $subscription;
 
-			$subList[$usid]->objPlan = new SubscriptionPlan( $database );
+			$subList[$usid]->objPlan = new SubscriptionPlan( $db );
 			$subList[$usid]->objPlan->load( $subscription->plan );
 
 			if ( !empty( $subscription->type ) ) {
@@ -831,7 +839,7 @@ function subscriptionDetails( $option, $sub='overview' )
 	foreach ( $invoiceList as $invoiceid ) {
 		$invoices[$invoiceid] = array();
 
-		$invoice = new Invoice( $database );
+		$invoice = new Invoice( $db );
 		$invoice->load( $invoiceid );
 
 		$rowstyle		= '';
@@ -888,7 +896,7 @@ function subscriptionDetails( $option, $sub='overview' )
 
 			foreach ( $mis as $mi_id ) {
 				if ( $mi_id ) {
-					$mi = new MicroIntegration( $database );
+					$mi = new MicroIntegration( $db );
 					$mi->load( $mi_id );
 
 					if ( !$mi->callIntegration() ) {
@@ -1016,7 +1024,7 @@ function subscriptionDetails( $option, $sub='overview' )
 		}
 	}
 
-	$mainframe->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub] );
+	$app->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub] );
 
 	$html = new HTML_frontEnd();
 	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subList, $custom, $properties );
@@ -1024,7 +1032,7 @@ function subscriptionDetails( $option, $sub='overview' )
 
 function internalCheckout( $option, $invoice_number, $processor, $userid )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
@@ -1048,7 +1056,7 @@ function internalCheckout( $option, $invoice_number, $processor, $userid )
 
 function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
@@ -1110,7 +1118,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 
 function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
@@ -1131,7 +1139,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
-		$objInvoice = new Invoice( $database );
+		$objInvoice = new Invoice( $db );
 		$objInvoice->load( $invoiceid );
 
 		if ( !$objInvoice->fixed ) {
@@ -1153,8 +1161,8 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 					case 'cart':
 						// Delete Carts referenced in this Invoice as well
 						$query = 'DELETE FROM #__acctexp_cart WHERE `id` = \'' . $u[1] . '\'';
-						$database->setQuery( $query );
-						$database->query();
+						$db->setQuery( $query );
+						$db->query();
 						break;
 				}
 			}
@@ -1174,7 +1182,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 
 function planaction( $option, $action, $subscr )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
@@ -1220,11 +1228,11 @@ function InvoicePrintout( $option, $invoice )
 
 function InvoiceAddParams( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$invoice = aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-	$objinvoice = new Invoice( $database );
+	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 	$objinvoice->savePostParams( $_POST );
 	$objinvoice->check();
@@ -1235,12 +1243,12 @@ function InvoiceAddParams( $option )
 
 function InvoiceMakeGift( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
-	$objinvoice = new Invoice( $database );
+	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	if ( $objinvoice->addTargetUser( strtolower( $user_ident ) ) ) {
@@ -1252,11 +1260,11 @@ function InvoiceMakeGift( $option )
 
 function InvoiceRemoveGift( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-	$objinvoice = new Invoice( $database );
+	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	if ( $objinvoice->removeTargetUser() ) {
@@ -1268,7 +1276,7 @@ function InvoiceRemoveGift( $option )
 
 function InvoiceRemoveGiftConfirm( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
@@ -1277,7 +1285,7 @@ function InvoiceRemoveGiftConfirm( $option )
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
 
-	$objinvoice = new Invoice( $database );
+	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	if ( $objinvoice->removeTargetUser() ) {
@@ -1290,12 +1298,12 @@ function InvoiceRemoveGiftConfirm( $option )
 
 function InvoiceRemoveGiftCart( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
-	$objinvoice = new Invoice( $database );
+	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	if ( $objinvoice->removeTargetUser() ) {
@@ -1308,12 +1316,12 @@ function InvoiceRemoveGiftCart( $option )
 
 function InvoiceAddCoupon( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-	$objinvoice = new Invoice( $database );
+	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$objinvoice->addCoupon( $coupon_code );
@@ -1325,12 +1333,12 @@ function InvoiceAddCoupon( $option )
 
 function InvoiceRemoveCoupon( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-	$objinvoice = new Invoice( $database );
+	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$objinvoice->removeCoupon( $coupon_code );
@@ -1342,11 +1350,13 @@ function InvoiceRemoveCoupon( $option )
 
 function notAllowed( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
-	global $mainframe, $aecConfig;
+	global $aecConfig;
+
+	$app = JFactory::getApplication();
 
 	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
 		aecRedirect( $aecConfig->cfg['customnotallowed'] );
@@ -1369,7 +1379,7 @@ function notAllowed( $option )
 				$tags	= 'processor,loading,error';
 				$params = array();
 
-				$eventlog = new eventLog( $database );
+				$eventlog = new eventLog( $db );
 				$eventlog->issue( $short, $tags, $event, 128, $params );
 
 				unset( $processors[$processor] );
@@ -1393,7 +1403,7 @@ function notAllowed( $option )
 		}
 	}
 
-	$mainframe->SetPageTitle( _NOT_ALLOWED_HEADLINE );
+	$app->SetPageTitle( _NOT_ALLOWED_HEADLINE );
 
 	$frontend = new HTML_frontEnd ();
 	$frontend->notAllowed( $option, $processors, $registerlink, $loggedin );
@@ -1401,13 +1411,13 @@ function notAllowed( $option )
 
 function backSubscription( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
 
 	$acl = &JFactory::getACL();
 
-	global $mainframe;
+	$app = JFactory::getApplication();
 
 	// Rebuild array
 	foreach ( $_POST as $key => $value ) {
@@ -1419,11 +1429,11 @@ function backSubscription( $option )
 	$usage	= $var['usage'];
 
  	// get the payment plan
-	$objplan = new SubscriptionPlan( $database );
+	$objplan = new SubscriptionPlan( $db );
 	$objplan->load( $usage );
 
  	// get the user object
-	$objuser = new JTableUser( $database );
+	$objuser = new JTableUser( $db );
 	$objuser->load( $userid );
 
 	$unset = array( 'id', 'gid', 'task', 'option', 'name', 'username', 'email', 'password', '', 'password2' );
@@ -1433,13 +1443,13 @@ function backSubscription( $option )
 		}
 	}
 
-	$mainframe->SetPageTitle( _REGISTER_TITLE );
+	$app->SetPageTitle( _REGISTER_TITLE );
 	Payment_HTML::subscribeForm( $option, $var, $objplan, null, $objuser );
 }
 
 function processNotification( $option, $processor )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	// Legacy naming support
 	switch ( $processor ) {
@@ -1468,13 +1478,13 @@ function processNotification( $option, $processor )
 		$pp->init();
 		$response = array_merge( $response, $pp->parseNotification( $_POST ) );
 	} else {
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 		$short	= 'processor loading failure';
 		$event	= 'When receiving payment notification, tried to load processor: ' . $processor;
 		$tags	= 'processor,loading,error';
 		$params = array();
 
-		$eventlog = new eventLog( $database );
+		$eventlog = new eventLog( $db );
 		$eventlog->issue( $short, $tags, $event, 128, $params );
 
 		return;
@@ -1497,13 +1507,13 @@ function processNotification( $option, $processor )
 				$tags	.= 'invoice,processor,payment,null';
 		} else {
 			$event	= sprintf( _AEC_MSG_PROC_INVOICE_FAILED_EV, $processor, $response['invoice'] )
-					. ' ' . $database->getErrorMsg();
+					. ' ' . $db->getErrorMsg();
 			$tags	= 'invoice,processor,payment,error';
 		}
 
 		$params = array();
 
-		$eventlog = new eventLog( $database );
+		$eventlog = new eventLog( $db );
 
 		if ( isset( $response['null'] ) ) {
 			$eventlog->issue( $short, $tags, $event, 8, $params );
@@ -1524,14 +1534,14 @@ function processNotification( $option, $processor )
 
 function cancelPayment( $option )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
-	global $aecConfig, $mainframe;
+	global $aecConfig, $app;
 
 	$userid = aecGetParam( 'itemnumber', true, array( 'word', 'int' ) );
 	// The user cancel the payment operation
 	// But user is already created as blocked on database, so we need to delete it
-	$obj = new JTableUser( $database );
+	$obj = new JTableUser( $db );
 	$obj->load( $userid );
 
 	if ( $obj->id ) {
@@ -1546,7 +1556,7 @@ function cancelPayment( $option )
 	if ( $aecConfig->cfg['customcancel'] ) {
 		aecRedirect( $aecConfig->cfg['customcancel'] );
 	} else {
-		$mainframe->SetPageTitle( _CANCEL_TITLE );
+		$app->SetPageTitle( _CANCEL_TITLE );
 
 		HTML_Results::cancel( $option );
 	}
@@ -1554,7 +1564,9 @@ function cancelPayment( $option )
 
 function aecThanks( $option, $renew, $free, $plan=null )
 {
-	global $mainframe, $aecConfig, $mainframe;
+	global $aecConfig;
+
+	$app = JFactory::getApplication();
 
 	if ( !empty( $plan ) ) {
 		if ( is_object( $plan ) ) {
@@ -1582,7 +1594,7 @@ function aecThanks( $option, $renew, $free, $plan=null )
 
 		$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
 
-		$msg .= $mainframe->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
+		$msg .= $app->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
 	}
 
 	$b = '';
@@ -1615,14 +1627,16 @@ function aecThanks( $option, $renew, $free, $plan=null )
 		$msg = $b;
 	}
 
-	$mainframe->SetPageTitle( _THANKYOU_TITLE );
+	$app->SetPageTitle( _THANKYOU_TITLE );
 
 	HTML_Results::thanks( $option, $msg );
 }
 
 function aecSimpleThanks( $option, $renew, $free )
 {
-	global $mainframe, $aecConfig, $mainframe;
+	global $aecConfig;
+
+	$app = JFactory::getApplication();
 
 	// Look whether we have a custom ThankYou page
 	if ( $aecConfig->cfg['customthanks'] ) {
@@ -1641,7 +1655,7 @@ function aecSimpleThanks( $option, $renew, $free )
 
 		$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
 
-		$msg .= $mainframe->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
+		$msg .= $app->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
 	}
 
 	$b = '';
@@ -1657,14 +1671,14 @@ function aecSimpleThanks( $option, $renew, $free )
 		$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
 	}
 
-	$mainframe->SetPageTitle( _THANKYOU_TITLE );
+	$app->SetPageTitle( _THANKYOU_TITLE );
 
 	HTML_Results::thanks( $option, $b );
 }
 
 function aecErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )
 {
-	global $mainframe;
+	$app = JFactory::getApplication();
 
 	$text = strip_tags( addslashes( nl2br( $text ) ) );
 
@@ -1682,7 +1696,7 @@ function aecErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )
 			break;
 	}
 
-	$mainframe->close();
+	$app->close();
 }
 
 function aecNotAuth()

@@ -9,16 +9,16 @@
  */
 
 // There was a glitch with the RC2p update, making sure that this gets applied here
-$database->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `coupons` `coupons` text NULL");
-if ( !$database->query() ) {
-	$errors[] = array( $database->getErrorMsg(), $query );
+$db->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `coupons` `coupons` text NULL");
+if ( !$db->query() ) {
+	$errors[] = array( $db->getErrorMsg(), $query );
 }
 
 $query = 'SELECT `id`'
 		. ' FROM #__acctexp_metauser'
 		;
-$database->setQuery( $query );
-$entries = $database->loadResultArray();
+$db->setQuery( $query );
+$entries = $db->loadResultArray();
 
 /*
  * Again using the same method from RC2m to fix the processor params fields here:
@@ -29,7 +29,7 @@ $entries = $database->loadResultArray();
  */
 
 foreach ( $entries as $eid ) {
-	$meta = new metaUserDB( $database );
+	$meta = new metaUserDB( $db );
 	$meta->load( $eid );
 
 	if ( !empty( $meta->processor_params ) ) {
@@ -60,24 +60,24 @@ foreach ( $entries as $eid ) {
 $eucaInstalldb->dropColifExists( 'processors', 'plans' );
 
 // Fixing stupid mistake - creating all processors at once for no good reason
-$database->setQuery("SELECT count(*) FROM  #__acctexp_config_processors");
+$db->setQuery("SELECT count(*) FROM  #__acctexp_config_processors");
 
-$procnum = $database->loadResult();
+$procnum = $db->loadResult();
 
-$database->setQuery("SELECT count(*) FROM  #__acctexp_plans");
+$db->setQuery("SELECT count(*) FROM  #__acctexp_plans");
 
-$plannum = $database->loadResult();
+$plannum = $db->loadResult();
 
 if ( ( $procnum > 20 ) && ( $plannum > 0 ) ) {
 	$allprocs = array();
 
 	$query = 'SELECT id FROM #__acctexp_plans';
-	$database->setQuery( $query );
+	$db->setQuery( $query );
 
-	$plans = $database->loadResultArray();
+	$plans = $db->loadResultArray();
 
 	foreach ( $plans as $planid ) {
-		$plan = new SubscriptionPlan( $database );
+		$plan = new SubscriptionPlan( $db );
 		$plan->load( $planid );
 
 		if ( !empty( $plan->params['processors'] ) ) {
@@ -90,21 +90,21 @@ if ( ( $procnum > 20 ) && ( $plannum > 0 ) ) {
 	}
 
 	$query = 'SELECT id FROM #__acctexp_config_processors';
-	$database->setQuery( $query );
+	$db->setQuery( $query );
 
-	$procs = $database->loadResultArray();
+	$procs = $db->loadResultArray();
 
 	foreach ( $procs as $procid ) {
 		// Check whether the processor has a plan it is applied to
 		if ( !in_array( $procid, $allprocs ) ) {
 			// Double check whether we have a history entry
 			$query = 'SELECT id FROM #__acctexp_log_history WHERE `proc_id` = \'' . $procid . '\'';
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
-			if ( !$database->loadResult() ) {
+			if ( !$db->loadResult() ) {
 				$query = 'DELETE FROM #__acctexp_config_processors WHERE `id` = \'' . $procid . '\'';
-				$database->setQuery( $query );
-				$database->query();
+				$db->setQuery( $query );
+				$db->query();
 			}
 		}
 	}

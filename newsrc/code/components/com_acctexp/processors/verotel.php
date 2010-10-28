@@ -113,20 +113,20 @@ class processor_verotel extends URLprocessor
 		if ( $res[3] == 'add' ) {
 			$response['invoice'] = $payment_id;
 		} else {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$query = 'SELECT `id` FROM #__users WHERE `username` = \'' . $username . '\'';
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
-			$userid = $database->loadResult();
+			$userid = $db->loadResult();
 
 			if ( $userid ) {
 				$id = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid );
 
 				$query = 'SELECT `invoice_number` FROM #__acctexp_invoices WHERE `id` = \'' . $id . '\'';
-				$database->setQuery( $query );
+				$db->setQuery( $query );
 
-				$invoice_number = $database->loadResult();
+				$invoice_number = $db->loadResult();
 
 				if ( !empty( $invoice_number ) ) {
 					$response['invoice'] = $invoice_number;

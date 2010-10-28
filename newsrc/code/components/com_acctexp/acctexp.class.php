@@ -62,9 +62,9 @@ function aecDebug( $text, $level = 128 )
 
 function aecQuickLog( $short, $tags, $text, $level = 128 )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
-	$eventlog = new eventLog( $database );
+	$eventlog = new eventLog( $db );
 	if ( !is_string( $text ) ) {
 		$eventlog->issue( $short, $tags, json_encode( $text ), $level );
 	} else {
@@ -112,7 +112,7 @@ function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 
 function aecEscape( $value, $safe_params )
 {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$regex = "#{aecjson}(.*?){/aecjson}#s";
 
@@ -185,7 +185,7 @@ function aecEscape( $value, $safe_params )
 
 	}
 
-	return $database->getEscaped( $return );
+	return $db->getEscaped( $return );
 }
 
 function aecPostParamClear( $array, $safe=false, $safe_params=array( 'string', 'badchars' ) )
@@ -218,13 +218,13 @@ class metaUser
 
 	function metaUser( $userid, $subscriptionid=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( empty( $userid ) && !empty( $subscriptionid ) ) {
 			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
 		}
 
-		$this->meta = new metaUserDB( $database );
+		$this->meta = new metaUserDB( $db );
 		$this->meta->loadUserid( $userid );
 
 		$this->cmsUser = false;
@@ -237,7 +237,7 @@ class metaUser
 		$this->focusSubscription = null;
 
 		if ( $userid ) {
-			$this->cmsUser = new JTableUser( $database );
+			$this->cmsUser = new JTableUser( $db );
 			$this->cmsUser->load( $userid );
 
 			$this->userid = $userid;
@@ -249,9 +249,9 @@ class metaUser
 			}
 
 			if ( $aecid ) {
-				$this->objSubscription = new Subscription( $database );
+				$this->objSubscription = new Subscription( $db );
 				$this->objSubscription->load( $aecid );
-				$this->focusSubscription = new Subscription( $database );
+				$this->focusSubscription = new Subscription( $db );
 				$this->focusSubscription->load( $aecid );
 				$this->hasSubscription = 1;
 				$this->temporaryRFIX();
@@ -341,7 +341,7 @@ class metaUser
 
 	function setCMSparams( $array )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$params = explode( "\n", $this->cmsUser->params );
 
@@ -371,7 +371,7 @@ class metaUser
 					$value = stripslashes( $value );
 				}
 
-				$value = $database->getEscaped( $value );
+				$value = $db->getEscaped( $value );
 
 				$params[] = $key . '=' . $value;
 			}
@@ -389,9 +389,9 @@ class metaUser
 
 		// Only authorize if user IP is matching and the grant is not expired
 		if ( isset( $this->meta->custom_params['tempauth_exptime'] ) && isset( $this->meta->custom_params['tempauth_ip'] ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			if ( ( $this->meta->custom_params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->meta->custom_params['tempauth_exptime'] >= ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) ) {
+			if ( ( $this->meta->custom_params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->meta->custom_params['tempauth_exptime'] >= ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) ) {
 				return true;
 			}
 		}
@@ -401,7 +401,7 @@ class metaUser
 
 	function setTempAuth( $password=false )
 	{
-		global $aecConfig, $mainframe;
+		global $aecConfig, $app;
 
 		if ( !empty( $this->cmsUser->password ) ) {
 			// Make sure we catch traditional and new joomla passwords
@@ -423,7 +423,7 @@ class metaUser
 		// Set params
 		$params = array();
 		$params['tempauth_ip'] = $_SERVER['REMOTE_ADDR'];
-		$params['tempauth_exptime'] = strtotime( '+' . max( 10, $aecConfig->cfg['temp_auth_exp'] ) . ' minutes', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$params['tempauth_exptime'] = strtotime( '+' . max( 10, $aecConfig->cfg['temp_auth_exp'] ) . ' minutes', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 
 		// Save params either to subscription or to _user entry
 		$this->meta->addCustomParams( $params );
@@ -434,19 +434,19 @@ class metaUser
 
 	function getAllSubscriptions()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function getAllCurrentSubscriptionsInfo()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `a`.`recurring`, `a`.`lifetime`, `b`.`name`'
 				. ' FROM #__acctexp_subscr AS a'
@@ -457,13 +457,13 @@ class metaUser
 				. ' AND `status` != \'Hold\''
 				. ' ORDER BY `lastpay_date` DESC'
 				;
-		$database->setQuery( $query );
-		return $database->loadObjectList();
+		$db->setQuery( $query );
+		return $db->loadObjectList();
 	}
 
 	function getAllCurrentSubscriptions()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -473,13 +473,13 @@ class metaUser
 				. ' AND `status` != \'Hold\''
 				. ' ORDER BY `lastpay_date` DESC'
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function getAllCurrentSubscriptionPlans()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `plan`'
 				. ' FROM #__acctexp_subscr'
@@ -489,13 +489,13 @@ class metaUser
 				. ' AND `status` != \'Hold\''
 				. ' ORDER BY `lastpay_date` DESC'
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function getSecondarySubscriptions( $simple=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`' . ( $simple ? '' : ', `status`, `plan`, `type`, `expiration`, `recurring`, `lifetime`' )
 				. ' FROM #__acctexp_subscr'
@@ -505,11 +505,11 @@ class metaUser
 				. ' AND `status` != \'Closed\''
 				. ' ORDER BY `lastpay_date` DESC'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 		if ( $simple ) {
-			return $database->loadResultArray();
+			return $db->loadResultArray();
 		} else {
-			return $database->loadObjectList();
+			return $db->loadObjectList();
 		}
 	}
 
@@ -557,15 +557,17 @@ class metaUser
 
 	function procTriggerCreate( $user, $payment, $usage )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		// Create a new cmsUser from user details - only allowing basic details so far
 		// Try different types of usernames to make sure we have a unique one
 		$usernames = array( $user['username'],
 							$user['username'] . substr( md5( $user['name'] ), 0, 3 ),
-							$user['username'] . substr( md5( ( $user['name'] . ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) ), 0, 3 )
+							$user['username'] . substr( md5( ( $user['name'] . ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) ), 0, 3 )
 							);
 
 		// Iterate through semi-random and pseudo-random usernames until a non-existing is found
@@ -578,9 +580,9 @@ class metaUser
 					. ' FROM #__users'
 					. ' WHERE `username` = \'' . $username . '\''
 					;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
-			$id = $database->loadResult();
+			$id = $db->loadResult();
 			$k++;
 		}
 
@@ -594,7 +596,7 @@ class metaUser
 		$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $var, true );
 
 		// Create a new invoice with $invoiceid as secondary ident
-		$invoice = new Invoice( $database );
+		$invoice = new Invoice( $db );
 		$invoice->create( $userid, $usage, $payment['processor'], $payment['secondary_ident'] );
 
 		// return nothing, the invoice will be handled by the second ident anyways
@@ -603,12 +605,12 @@ class metaUser
 
 	function establishFocus( $payment_plan, $processor='none', $silent=false, $bias=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !is_object( $payment_plan ) ) {
 			$planid = $payment_plan;
 
-			$payment_plan = new SubscriptionPlan( $database );
+			$payment_plan = new SubscriptionPlan( $db );
 			$payment_plan->load( $planid );
 
 			if ( empty( $payment_plan->id ) ) {
@@ -637,7 +639,7 @@ class metaUser
 				$existing_record = $this->objSubscription->getSubscriptionID( $this->userid );
 
 				if ( $existing_record ) {
-					$this->objSubscription = new Subscription( $database );
+					$this->objSubscription = new Subscription( $db );
 					$this->objSubscription->load( $existing_record );
 
 					$this->focusSubscription = $this->objSubscription;
@@ -662,8 +664,8 @@ class metaUser
 						. ' FROM #__acctexp_subscr'
 						. ' WHERE `id` = \'' . (int) $existing_record . '\''
 						;
-				$database->setQuery( $query );
-				$existing_status = $database->loadResult();
+				$db->setQuery( $query );
+				$existing_status = $db->loadResult();
 			}
 		} else {
 			$existing_record = 0;
@@ -676,7 +678,7 @@ class metaUser
 			if ( !empty( $existing_record ) && ( ( $existing_status == 'Trial' ) || ( $existing_status == 'Pending' ) || $plan_params['update_existing'] || $plan_params['make_primary'] ) ) {
 				// Update existing non-primary subscription
 				if ( $this->focusSubscription->id !== $existing_record ) {
-					$this->focusSubscription = new Subscription( $database );
+					$this->focusSubscription = new Subscription( $db );
 					$this->focusSubscription->load( $existing_record );
 				}
 
@@ -690,14 +692,14 @@ class metaUser
 
 				// Create a root new subscription
 				if ( empty( $this->hasSubscription ) && !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) && empty( $existing_parent ) ) {
-					$this->objSubscription = new Subscription( $database );
+					$this->objSubscription = new Subscription( $db );
 					$this->objSubscription->load( 0 );
 					$this->objSubscription->createNew( $this->userid, 'none', 1, 1, $plan_params['standard_parent'] );
 					$this->objSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
 				}
 
 				// Create new subscription
-				$this->focusSubscription = new Subscription( $database );
+				$this->focusSubscription = new Subscription( $db );
 				$this->focusSubscription->load( 0 );
 				$this->focusSubscription->createNew( $this->userid, $processor, 1, $plan_params['make_primary'], $payment_plan->id );
 				$this->hasSubscription = 1;
@@ -722,9 +724,9 @@ class metaUser
 
 	function moveFocus( $subscrid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$subscription = new Subscription( $database );
+		$subscription = new Subscription( $db );
 		$subscription->load( $subscrid );
 
 		// If Subscription exists, move the focus to that one
@@ -745,21 +747,21 @@ class metaUser
 
 	function loadSubscriptions()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Get all the users subscriptions
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				;
-		$database->setQuery( $query );
-		$subscrids = $database->loadResultArray();
+		$db->setQuery( $query );
+		$subscrids = $db->loadResultArray();
 
 		if ( count( $subscrids ) > 1 ) {
 			$this->allSubscriptions = array();
 
 			foreach ( $subscrids as $subscrid ) {
-				$subscription = new Subscription( $database );
+				$subscription = new Subscription( $db );
 				$subscription->load( $subscrid );
 
 				$this->allSubscriptions[] = $subscription;
@@ -775,7 +777,7 @@ class metaUser
 
 	function instantGIDchange( $gid, $session=true, $sessionextra=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$acl = &JFactory::getACL();
 
@@ -791,8 +793,8 @@ class metaUser
 					. ' FROM #__core_acl_groups_aro_map'
 					. ' WHERE `group_id` = \'25\''
 					;
-			$database->setQuery( $query );
-			if ( $database->loadResult() <= 1) {
+			$db->setQuery( $query );
+			if ( $db->loadResult() <= 1) {
 				return false;
 			}
 
@@ -800,8 +802,8 @@ class metaUser
 					. ' FROM #__core_acl_groups_aro_map'
 					. ' WHERE `group_id` = \'24\''
 					;
-			$database->setQuery( $query );
-			if ( $database->loadResult() <= 1) {
+			$db->setQuery( $query );
+			if ( $db->loadResult() <= 1) {
 				return false;
 			}
 		}
@@ -811,8 +813,8 @@ class metaUser
 				. ' FROM #__core_acl_aro'
 				. ' WHERE `value` = \'' . (int) $this->userid . '\''
 				;
-		$database->setQuery( $query );
-		$aro_id = $database->loadResult();
+		$db->setQuery( $query );
+		$aro_id = $db->loadResult();
 
 		// If we have no aro id, something went wrong and we need to create it
 		if ( empty( $aro_id ) ) {
@@ -820,11 +822,11 @@ class metaUser
 					. ' (`section_value`, `value`, `order_value`, `name`, `hidden` )'
 					. ' VALUES ( \'users\', \'' . $this->userid . '\', \'0\', \'' . $this->cmsUser->name . '\', \'0\' )'
 					;
-			$database->setQuery( $query2 );
-			$database->query();
+			$db->setQuery( $query2 );
+			$db->query();
 
-			$database->setQuery( $query );
-			$aro_id = $database->loadResult();
+			$db->setQuery( $query );
+			$aro_id = $db->loadResult();
 		}
 
 		// Carry out ARO ID -> ACL group mapping
@@ -832,8 +834,8 @@ class metaUser
 				. ' SET `group_id` = \'' . (int) $gid . '\''
 				. ' WHERE `aro_id` = \'' . $aro_id . '\''
 				;
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 
 		// Moxie Mod - updated to add usertype to users table and update session table for immediate access to usertype features
 		$gid_name = $acl->get_group_name( $gid, 'ARO' );
@@ -843,8 +845,8 @@ class metaUser
 				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
 				. ' WHERE `id` = \''  . (int) $this->userid . '\''
 				;
-		$database->setQuery( $query );
-		$database->query() or die( $database->stderr() );
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 
 		if ( $session ) {
 			// Update Session
@@ -852,8 +854,8 @@ class metaUser
 			. ' FROM #__session'
 			. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 			;
-			$database->setQuery( $query );
-			$data = $database->loadResult();
+			$db->setQuery( $query );
+			$data = $db->loadResult();
 
 			if ( !empty( $data ) ) {
 				$se = $this->joomunserializesession( $data );
@@ -888,8 +890,8 @@ class metaUser
 						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
 						. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 						;
-				$database->setQuery( $query );
-				$database->query() or die( $database->stderr() );
+				$db->setQuery( $query );
+				$db->query() or die( $db->stderr() );
 			}
 		}
 	}
@@ -930,13 +932,13 @@ class metaUser
 
 	function loadCBuser()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT *'
 			. ' FROM #__users u, #__comprofiler ue'
 			. ' WHERE `user_id` = \'' . (int) $this->userid . '\' AND u.id = ue.id';
-		$database->setQuery( $query );
-		$this->cbUser = $database->loadObject();
+		$db->setQuery( $query );
+		$this->cbUser = $db->loadObject();
 
 		if ( is_object( $this->cbUser ) ) {
 			$this->hasCBprofile = true;
@@ -945,22 +947,22 @@ class metaUser
 
 	function loadJSuser()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__community_fields'
 				. ' WHERE `type` != \'group\''
 				;
-		$database->setQuery( $query );
-		$ids = $database->loadResultArray();
+		$db->setQuery( $query );
+		$ids = $db->loadResultArray();
 
 		$query = 'SELECT `field_id`, `value`'
 				. ' FROM #__community_fields_values'
 					. ' WHERE `field_id` IN (' . implode( ',', $ids ) . ')'
 					. ' AND `user_id` = \'' . (int) $this->userid . '\'';
 				;
-		$database->setQuery( $query );
-		$fields = $database->loadObjectList();
+		$db->setQuery( $query );
+		$fields = $db->loadObjectList();
 
 		$this->jsUser = $fields;
 
@@ -1243,7 +1245,7 @@ class metaUser
 
 	function usedCoupon ( $couponid, $type )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `usecount`'
 				. ' FROM #__acctexp_couponsxuser'
@@ -1251,8 +1253,8 @@ class metaUser
 				. ' AND `coupon_id` = \'' . $couponid . '\''
 				. ' AND `coupon_type` = \'' . $type . '\''
 				;
-		$database->setQuery( $query );
-		$usecount = $database->loadResult();
+		$db->setQuery( $query );
+		$usecount = $db->loadResult();
 
 		if ( $usecount ) {
 			return $usecount;
@@ -1279,7 +1281,7 @@ class metaUser
 
 	function getUserMIs()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( empty( $this->focusSubscription->id ) ) {
 			return array();
@@ -1289,7 +1291,7 @@ class metaUser
 
 		$return = array();
 		if ( !empty( $this->objSubscription->plan ) ) {
-			$selected_plan = new SubscriptionPlan( $database );
+			$selected_plan = new SubscriptionPlan( $db );
 			$selected_plan->load( $this->objSubscription->plan );
 
 			$mis = $selected_plan->getMicroIntegrations();
@@ -1303,7 +1305,7 @@ class metaUser
 			if ( !empty( $sec ) ) {
 				foreach ( $sec as $pid ) {
 					if ( $this->moveFocus( $pid ) ) {
-						$selected_plan = new SubscriptionPlan( $database );
+						$selected_plan = new SubscriptionPlan( $db );
 						$selected_plan->load( $this->focusSubscription->plan );
 
 						$miis = $selected_plan->getMicroIntegrations();
@@ -1320,7 +1322,7 @@ class metaUser
 
 				foreach ( $mis as $mi_id ) {
 					if ( $mi_id ) {
-						$mi = new MicroIntegration( $database );
+						$mi = new MicroIntegration( $db );
 						$mi->load( $mi_id );
 
 						if ( !$mi->callIntegration() ) {
@@ -1438,24 +1440,24 @@ class metaUserDB extends serialParamDBTable
 
 	function getIDbyUserid( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_metauser'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResult();
+		return $db->loadResult();
 	}
 
 	function createNew( $userid )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->userid			= $userid;
-		$this->created_date		= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
-		$this->modified_date	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->created_date		= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 
 		$this->storeload();
 
@@ -1472,7 +1474,7 @@ class metaUserDB extends serialParamDBTable
 
 	function setProcessorParams( $processorid, $params )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( empty( $this->processor_params ) ) {
 			$this->processor_params = array();
@@ -1484,7 +1486,7 @@ class metaUserDB extends serialParamDBTable
 
 		$this->processor_params[$processorid] = $params;
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 
 		$this->storeload();
 	}
@@ -1514,7 +1516,7 @@ class metaUserDB extends serialParamDBTable
 
 	function setMIParams( $miid, $usageid=false, $params, $replace=false )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( $usageid ) {
 			if ( is_object( $this->plan_params ) ) {
@@ -1538,7 +1540,7 @@ class metaUserDB extends serialParamDBTable
 			$this->params->mi[$miid] = $params;
 		}
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
 
 		return true;
 	}
@@ -1550,25 +1552,25 @@ class metaUserDB extends serialParamDBTable
 
 	function addCustomParams( $params )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->addParams( $params, 'custom_params' );
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
 	}
 
 	function setCustomParams( $params )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->addParams( $params, 'custom_params', true );
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
 	}
 
 	function addPreparedMIParams( $plan_mi, $mi=false )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->addParams( $plan_mi, 'plan_params' );
 
@@ -1584,14 +1586,14 @@ class metaUserDB extends serialParamDBTable
 			}
 		}
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
 
 		$this->storeload();
 	}
 
 	function addPlanID( $id )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->plan_history->plan_history[] = $id;
 
@@ -1601,7 +1603,7 @@ class metaUserDB extends serialParamDBTable
 			$this->plan_history->used_plans[$id] = 1;
 		}
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
 
 		$this->storeload();
 
@@ -1832,19 +1834,19 @@ class Config_General extends serialParamDBTable
 	{
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$query = 'SELECT * FROM #__acctexp_config'
 			. ' WHERE `id` = \'1\''
 			;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
-			if ( !$database->loadResult() ) {
+			if ( !$db->loadResult() ) {
 				$query = 'INSERT INTO #__acctexp_config'
 				. ' VALUES( \'1\', \'\' )'
 				;
-				$database->setQuery( $query );
-				$database->query() or die( $database->stderr() );
+				$db->setQuery( $query );
+				$db->query() or die( $db->stderr() );
 			}
 
 			$this->id = 1;
@@ -1874,13 +1876,13 @@ class Config_General extends serialParamDBTable
 
 	function RowDuplicationCheck()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_config'
 				;
-		$database->setQuery( $query );
-		$rows = $database->loadResult();
+		$db->setQuery( $query );
+		$rows = $db->loadResult();
 
 		if ( $rows > 1 ) {
 			return true;
@@ -1891,39 +1893,39 @@ class Config_General extends serialParamDBTable
 
 	function CleanDuplicatedRows()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT max(id)'
 				. ' FROM #__acctexp_config'
 				;
-		$database->setQuery( $query );
-		$database->query();
-		$max = $database->loadResult();
+		$db->setQuery( $query );
+		$db->query();
+		$max = $db->loadResult();
 
 		$query = 'DELETE'
 				. ' FROM #__acctexp_config'
 				. ' WHERE `id` != \'' . $max . '\''
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 
 		if ( !( $max == 1 ) ) {
 			$query = 'UPDATE #__acctexp_config'
 					. ' SET `id` = \'1\''
 					. ' WHERE `id` =\'' . $max . '\''
 					;
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 		}
 	}
 }
 
 if ( !is_object( $aecConfig ) ) {
-	$database = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
-	$aecConfig = new Config_General( $database );
+	$aecConfig = new Config_General( $db );
 }
 
 class aecHeartbeat extends JTable
@@ -1968,13 +1970,13 @@ class aecHeartbeat extends JTable
 			if ( empty( $hash ) ) {
 				return;
 			} elseif( $hash != $aecConfig->cfg['custom_heartbeat_securehash'] ) {
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 				$short	= 'custom heartbeat failure';
 				$event	= 'Custom Frontend Heartbeat attempted, but faile due to false hashcode: "' . $hash . '"';
 				$tags	= 'heartbeat, failure';
 				$params = array();
 
-				$eventlog = new eventLog( $database );
+				$eventlog = new eventLog( $db );
 				$eventlog->issue( $short, $tags, $event, 128, $params );
 
 				return;
@@ -1999,7 +2001,7 @@ class aecHeartbeat extends JTable
 
 	function ping( $configCycle )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( empty( $this->last_beat ) ) {
 			$this->load(1);
@@ -2013,8 +2015,8 @@ class aecHeartbeat extends JTable
 			$ping = 0;
 		}
 
-		if ( ( $ping - ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) <= 0 ) {
-			$this->last_beat = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		if ( ( $ping - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) <= 0 ) {
+			$this->last_beat = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 			$this->check();
 			$this->store();
 			$this->load(1);
@@ -2029,7 +2031,7 @@ class aecHeartbeat extends JTable
 
 	function beat()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$this->processors = array();
 		$this->proc_prepare = array();
@@ -2050,7 +2052,7 @@ class aecHeartbeat extends JTable
 		// Efficient way to check for expired users without checking on each one
 		if ( !empty( $subscription_list ) ) {
 			foreach ( $subscription_list as $sid => $sub_id ) {
-				$subscription = new Subscription( $database );
+				$subscription = new Subscription( $db );
 				$subscription->load( $sub_id );
 
 				if ( !AECfetchfromDB::UserExists( $subscription->userid ) ) {
@@ -2094,8 +2096,8 @@ class aecHeartbeat extends JTable
 						. ' WHERE `id` IN (' . implode( ',', $subscription_list ) . ')'
 						. ' AND `plan` IN (' . implode( ',', $expmi_plans ) . ')'
 						;
-				$database->setQuery( $query );
-				$sub_list = $database->loadObjectList();
+				$db->setQuery( $query );
+				$sub_list = $db->loadObjectList();
 
 				if ( !empty( $sub_list ) ) {
 					foreach ( $sub_list as $sl ) {
@@ -2138,7 +2140,7 @@ class aecHeartbeat extends JTable
 
 	function getSubscribers( $pre_expiration )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$expiration_limit = $this->getExpirationLimit( $pre_expiration );
 
@@ -2151,26 +2153,26 @@ class aecHeartbeat extends JTable
 				. ' AND `status` != \'Excluded\''
 				. ' ORDER BY `expiration` ASC'
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function getExpirationLimit( $pre_expiration )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( $pre_expiration ) {
 			// pre-expiration found, search limit set to the maximum pre-expiration time
-			return AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			return AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		} else {
 			// No pre-expiration actions found, limiting search to all users who expire until tomorrow (just to be safe)
-			return AECToolbox::computeExpiration( 1, 'D', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			return AECToolbox::computeExpiration( 1, 'D', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		}
 	}
 
 	function processorValidation( $subscription, $subscription_list )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$pp = $this->getProcessor( $subscription->type );
 
@@ -2187,10 +2189,10 @@ class aecHeartbeat extends JTable
 				// This Processor has no such function, set to false to ignore later calls
 				$this->processors[$subscription->type] = false;
 			} elseif ( $prepval === false ) {
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				// Break - we have a problem with one processor
-				$eventlog = new eventLog( $database );
+				$eventlog = new eventLog( $db );
 				$eventlog->issue( 'heartbeat failed - processor', 'heartbeat, failure,'.$subscription->type, 'The payment processor failed to respond to validation request - waiting for next turn', 128 );
 				return false;
 			}
@@ -2212,7 +2214,7 @@ class aecHeartbeat extends JTable
 
 	function fileEventlog()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$short	= _AEC_LOG_SH_HEARTBEAT;
 		$event	= _AEC_LOG_LO_HEARTBEAT . ' ';
@@ -2245,23 +2247,23 @@ class aecHeartbeat extends JTable
 			$event .= _AEC_LOG_AD_HEARTBEAT_DO_NOTHING;
 		}
 
-		$eventlog = new eventLog( $database );
+		$eventlog = new eventLog( $db );
 		$eventlog->issue( $short, implode( ',', $tags ), $event, 2 );
 	}
 
 	function deleteTempTokens()
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Delete old token entries
 		$query = 'DELETE'
 				. ' FROM #__acctexp_temptoken'
-				. ' WHERE `created_date` <= \'' . AECToolbox::computeExpiration( "-3", 'H', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) . '\''
+				. ' WHERE `created_date` <= \'' . AECToolbox::computeExpiration( "-3", 'H', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) . '\''
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 
 }
@@ -2275,25 +2277,25 @@ class displayPipelineHandler
 
 	function getUserPipelineEvents( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		// Entries for this user only
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_displaypipeline'
 				. ' WHERE `userid` = \'' . $userid . '\' AND `only_user` = \'1\''
 				;
-		$database->setQuery( $query );
-		$events = $database->loadResultArray();
+		$db->setQuery( $query );
+		$events = $db->loadResultArray();
 
 		// Entries for all users
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_displaypipeline'
 				. ' WHERE `only_user` = \'0\''
 				;
-		$database->setQuery( $query );
-		$events = array_merge( $events, $database->loadResultArray() );
+		$db->setQuery( $query );
+		$events = array_merge( $events, $db->loadResultArray() );
 
 		$return = '';
 		if ( empty( $events ) ) {
@@ -2301,14 +2303,14 @@ class displayPipelineHandler
 		}
 
 		foreach ( $events as $eventid ) {
-			$displayPipeline = new displayPipeline( $database );
+			$displayPipeline = new displayPipeline( $db );
 			$displayPipeline->load( $eventid );
 			if ( $displayPipeline->id ) {
 
 				// If expire & expired -> delete
 				if ( $displayPipeline->expire ) {
 					$expstamp = strtotime( $displayPipeline->expstamp );
-					if ( ( $expstamp - ( time() + $mainframe->getCfg( 'offset' )*3600 ) ) < 0 ) {
+					if ( ( $expstamp - ( time() + $app->getCfg( 'offset' )*3600 ) ) < 0 ) {
 						$displayPipeline->delete();
 						continue;
 					}
@@ -2395,16 +2397,16 @@ class displayPipeline extends serialParamDBTable
 
 	function create( $userid, $only_user, $once_per_user, $expire, $expiration, $displaymax, $displaytext, $params=null )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->id				= 0;
 		$this->userid			= $userid;
 		$this->only_user		= $only_user;
 		$this->once_per_user	= $once_per_user;
-		$this->timestamp		= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->timestamp		= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		$this->expire			= $expire ? 1 : 0;
 		if ( $expire ) {
-			$this->expstamp			= date( 'Y-m-d H:i:s', strtotime( $expiration ) + $mainframe->getCfg( 'offset' ) *3600 );
+			$this->expstamp			= date( 'Y-m-d H:i:s', strtotime( $expiration ) + $app->getCfg( 'offset' ) *3600 );
 		}
 		$this->displaycount		= 0;
 		$this->displaymax		= $displaymax;
@@ -2463,7 +2465,9 @@ class eventLog extends serialParamDBTable
 
 	function issue( $short, $tags, $text, $level = 2, $params = null, $force_notify = 0, $force_email = 0 )
 	{
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		$legal_levels = array( 2, 8, 32, 128 );
 
@@ -2471,7 +2475,7 @@ class eventLog extends serialParamDBTable
 			$level = $legal_levels[0];
 		}
 
-		$this->datetime	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->datetime	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		$this->short	= $short;
 		$this->tags		= $tags;
 		$this->event	= $text;
@@ -2486,12 +2490,12 @@ class eventLog extends serialParamDBTable
 
 		// Mail out notification to all admins if this matches the desired level
 		if ( ( $this->level >= $aecConfig->cfg['email_notification_level'] ) || $force_email ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			// check if Global Config `mailfrom` and `fromname` values exist
-			if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
-				$adminName2 	= $mainframe->getCfg( 'fromname' );
-				$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
+			if ( $app->getCfg( 'mailfrom' ) != '' && $app->getCfg( 'fromname' ) != '' ) {
+				$adminName2 	= $app->getCfg( 'fromname' );
+				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
 				$query = 'SELECT `name`, `email`'
@@ -2499,8 +2503,8 @@ class eventLog extends serialParamDBTable
 						. ' WHERE LOWER( usertype ) = \'superadministrator\''
 						. ' OR LOWER( usertype ) = \'super administrator\''
 						;
-				$database->setQuery( $query );
-				$rows = $database->loadObjectList();
+				$db->setQuery( $query );
+				$rows = $db->loadObjectList();
 
 				$adminName2 	= $rows[0]->name;
 				$adminEmail2 	= $rows[0]->email;
@@ -2518,7 +2522,7 @@ class eventLog extends serialParamDBTable
 			}
 
 			// Send notification to all administrators
-			$subject2	= sprintf( _AEC_ASEND_NOTICE, constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $mainframe->getCfg( 'sitename' ) );
+			$subject2	= sprintf( _AEC_ASEND_NOTICE, constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $app->getCfg( 'sitename' ) );
 			$message2	= sprintf( _AEC_ASEND_NOTICE_MSG, $this->event  );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
@@ -2548,7 +2552,7 @@ class aecEventHandler
 {
 	function pingEvents()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Load all events happening now or before now
 		$query = 'SELECT `id`'
@@ -2556,12 +2560,12 @@ class aecEventHandler
 				. ' WHERE `due_date` <= \'' . date( 'Y-m-d H:i:s' ) . '\''
 	 			. ' AND `status` = \'waiting\''
 				;
-		$database->setQuery( $query );
-		$events = $database->loadResultArray();
+		$db->setQuery( $query );
+		$events = $db->loadResultArray();
 
 		// Call each event individually
 		foreach ( $events as $evid ) {
-			$event = new aecEvent( $database );
+			$event = new aecEvent( $db );
 			$event->load( $evid );
 			$event->trigger();
 		}
@@ -2570,7 +2574,7 @@ class aecEventHandler
 	// TODO: Finish function that, according to setting, cleans out old entries (like more than two weeks old default)
 	function deleteOldEvents()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Load all events happening now or before now
 		$query = 'SELECT `id`'
@@ -2578,12 +2582,12 @@ class aecEventHandler
 				. ' WHERE `due_date` <= \'' . date( 'Y-m-d H:i:s' ) . '\''
 	 			. ' AND `status` = \'waiting\''
 				;
-		$database->setQuery( $query );
-		$events = $database->loadResultArray();
+		$db->setQuery( $query );
+		$events = $db->loadResultArray();
 
 		// Call each event individually
 		foreach ( $events as $evid ) {
-			$event = new aecEvent( $database );
+			$event = new aecEvent( $db );
 			$event->load( $evid );
 			$event->trigger();
 		}
@@ -2632,7 +2636,7 @@ class aecEvent extends serialParamDBTable
 
 	function issue( $type, $subtype, $appid, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->userid			= $userid;
 		$this->status			= 'waiting';
@@ -2641,7 +2645,7 @@ class aecEvent extends serialParamDBTable
 		$this->subtype			= $subtype;
 		$this->appid			= $appid;
 		$this->event			= $event;
-		$this->created_date 	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );;
+		$this->created_date 	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );;
 		$this->due_date 		= $due_date;
 
 		$this->context			= $context;
@@ -2655,7 +2659,7 @@ class aecEvent extends serialParamDBTable
 
 	function trigger()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( empty( $this->type ) ) {
 			return null;
@@ -2669,7 +2673,7 @@ class aecEvent extends serialParamDBTable
 
 		switch ( $this->type ) {
 			case 'mi':
-				$obj = new microIntegration( $database );
+				$obj = new microIntegration( $db );
 				$obj->load( $this->appid );
 				break;
 		}
@@ -2714,26 +2718,26 @@ class PaymentProcessorHandler
 
 	function getProcessorIdfromName( $name )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $database->getEscaped( $name ) . '\'';
-		$database->setQuery( $query );
+				. ' WHERE `name` = \'' . $db->getEscaped( $name ) . '\'';
+		$db->setQuery( $query );
 
-		return $database->loadResult();
+		return $db->loadResult();
 	}
 
 	function getProcessorNamefromId( $id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `name`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `id` = \'' . $database->getEscaped( $id ) . '\'';
-		$database->setQuery( $query );
+				. ' WHERE `id` = \'' . $db->getEscaped( $id ) . '\'';
+		$db->setQuery( $query );
 
-		return $database->loadResult();
+		return $db->loadResult();
 	}
 
 	/**
@@ -2744,7 +2748,7 @@ class PaymentProcessorHandler
 	 */
 	function getInstalledObjectList( $active = false, $simple = false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `name`' . ( $simple ? '' : ', `active`, `id`' )
 				. ' FROM #__acctexp_config_processors'
@@ -2752,18 +2756,18 @@ class PaymentProcessorHandler
 		if ( $active ) {
 			$query .= ' WHERE `active` = \'1\'';
 		}
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
 		if ( $simple ) {
-			return $database->loadResultArray();
+			return $db->loadResultArray();
 		} else {
-			return $database->loadObjectList();
+			return $db->loadObjectList();
 		}
 	}
 
 	function getInstalledNameList($active=false)
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `name`'
 				. ' FROM #__acctexp_config_processors'
@@ -2771,9 +2775,9 @@ class PaymentProcessorHandler
 		if ( $active !== false ) {
 			$query .= ' WHERE `active` = \'' . $active . '\'';
 		}
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResultArray();
+		return $db->loadResultArray();
 	}
 
 	function getObjectList( $array, $getinfo=false, $getsettings=false )
@@ -2830,7 +2834,7 @@ class PaymentProcessor
 
 	function loadName( $name )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Set Name
 		$this->processor_name = strtolower( $name );
@@ -2840,8 +2844,8 @@ class PaymentProcessor
 				. ' FROM #__acctexp_config_processors'
 				. ' WHERE `name` = \'' . $this->processor_name . '\''
 				;
-		$database->setQuery( $query );
-		$res = $database->loadObject();
+		$db->setQuery( $query );
+		$res = $db->loadObject();
 
 		if ( !empty( $res ) && is_object( $res ) ) {
 			$this->id = $res->id ? $res->id : 0;
@@ -2868,7 +2872,7 @@ class PaymentProcessor
 
 			// Initiate Payment Processor Class
 			$class_name = 'processor_' . $this->processor_name;
-			$this->processor = new $class_name( $database );
+			$this->processor = new $class_name( $db );
 			$this->processor->id = $this->id;
 
 			if ( is_object( $res ) ) {
@@ -2885,15 +2889,15 @@ class PaymentProcessor
 
 	function getNameById( $ppid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Fetch name from db and load processor
 		$query = 'SELECT `name`'
 				. ' FROM #__acctexp_config_processors'
 				. ' WHERE `id` = \'' . $ppid . '\''
 				;
-		$database->setQuery( $query );
-		$name = $database->loadResult();
+		$db->setQuery( $query );
+		$name = $db->loadResult();
 
 		if ( $name ) {
 			return $name;
@@ -2943,7 +2947,7 @@ class PaymentProcessor
 
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Create new db entry
 		$this->processor->load( 0 );
@@ -2963,10 +2967,10 @@ class PaymentProcessor
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $database->getEscaped( $this->processor_name ) . '\''
+				. ' WHERE `name` = \'' . $db->getEscaped( $this->processor_name ) . '\''
 				;
-		$database->setQuery( $query );
-		$result = $database->loadResult();
+		$db->setQuery( $query );
+		$result = $db->loadResult();
 
 		$this->id = $result ? $result : 0;
 	}
@@ -3279,13 +3283,13 @@ class PaymentProcessor
 		$method = 'customtab_' . $action;
 
 		if ( method_exists( $this->processor, $method ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$request = new stdClass();
 			$request->parent			=& $this;
 			$request->metaUser			=& $metaUser;
 
-			$invoice = new Invoice( $database );
+			$invoice = new Invoice( $db );
 			$invoice->loadbySubscriptionId( $metaUser->objSubscription->id );
 
 			$request->invoice			=& $invoice;
@@ -3386,7 +3390,7 @@ class PaymentProcessor
 
 	function parseNotification( $post )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -3403,7 +3407,7 @@ class PaymentProcessor
 			$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $return['_aec_createuser'], true, true, false );
 
 			// Create Invoice
-			$invoice = new Invoice( $database );
+			$invoice = new Invoice( $db );
 			$invoice->create( $userid, $usage, $this->processor_name );
 			$invoice->computeAmount();
 
@@ -3414,7 +3418,7 @@ class PaymentProcessor
 		// Always amend secondary ident codes
 		if ( !empty( $return['secondary_ident'] )&& !empty( $return['invoice'] ) ) {
 
-			$invoice = new Invoice( $database );
+			$invoice = new Invoice( $db );
 			$invoice->loadInvoiceNumber( $return['invoice'] );
 			$invoice->secondary_ident = $return['secondary_ident'];
 			$invoice->storeload();
@@ -3596,14 +3600,14 @@ class processor extends serialParamDBTable
 
 	function loadName( $name )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $database->getEscaped( $name ) . '\''
+				. ' WHERE `name` = \'' . $db->getEscaped( $name ) . '\''
 				;
-		$database->setQuery( $query );
-		$this->load( $database->loadResult() );
+		$db->setQuery( $query );
+		$this->load( $db->loadResult() );
 	}
 
 	function createNew( $name, $info, $settings )
@@ -3624,9 +3628,9 @@ class processor extends serialParamDBTable
 
 	function fileError( $text, $level=128, $tags="", $params=array() )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$eventlog = new eventLog( $database );
+		$eventlog = new eventLog( $db );
 
 		$t = explode( ',', $tags );
 		$t[] = $this->name;
@@ -3767,7 +3771,7 @@ class processor extends serialParamDBTable
 		}
 
 		if ( $connection === false ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			if ( $errno == 0 ) {
 				$errstr .= " This is usually an SSL error.  Check if your server supports fsocket open via SSL.";
@@ -3778,7 +3782,7 @@ class processor extends serialParamDBTable
 			$tags	= 'processor,payment,phperror';
 			$params = array();
 
-			$eventlog = new eventLog( $database );
+			$eventlog = new eventLog( $db );
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 
 			return false;
@@ -3841,14 +3845,14 @@ class processor extends serialParamDBTable
 				}
 
 		        if ( $info["timed_out"] ) {
-					$database = &JFactory::getDBO();
+					$db = &JFactory::getDBO();
 
 					$short	= 'fsockopen failure';
 					$event	= 'Trying to establish connection with ' . $url . ' timed out - will try cURL instead. If Error persists and cURL works, please permanently switch to using that!';
 					$tags	= 'processor,payment,phperror';
 					$params = array();
 
-					$eventlog = new eventLog( $database );
+					$eventlog = new eventLog( $db );
 					$eventlog->issue( $short, $tags, $event, 128, $params );
 		        }
 			} else {
@@ -3870,13 +3874,13 @@ class processor extends serialParamDBTable
 		if ( !function_exists( 'curl_init' ) ) {
 			$response = false;
 
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed - curl_init is not available - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 			$tags	= 'processor,payment,phperror';
 			$params = array();
 
-			$eventlog = new eventLog( $database );
+			$eventlog = new eventLog( $db );
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 			return false;
 		}
@@ -3944,14 +3948,14 @@ class processor extends serialParamDBTable
 		$response = curl_exec( $ch );
 
 		if ( $response === false ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 			$tags	= 'processor,payment,phperror';
 			$params = array();
 
-			$eventlog = new eventLog( $database );
+			$eventlog = new eventLog( $db );
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 		}
 
@@ -4053,7 +4057,7 @@ class XMLprocessor extends processor
 
 	function getMULTIPAYform( $var, $array )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		// Include Mootools tabber
 		$document=& JFactory::getDocument();
@@ -4464,9 +4468,9 @@ class XMLprocessor extends processor
 		}
 
 		if ( $request->invoice->invoice_number != $response['invoice'] ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-			$request->invoice = new Invoice( $database );
+			$request->invoice = new Invoice( $db );
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
 		}
 
@@ -5579,32 +5583,32 @@ class ItemGroupHandler
 {
 	function getGroups()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemgroups'
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function getTree()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemxgroup'
 				. ' WHERE `type` = \'group\''
 				;
-		$database->setQuery( $query );
-		$nitems = $database->loadResultArray();
+		$db->setQuery( $query );
+		$nitems = $db->loadResultArray();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemgroups'
 				. ( !empty( $nitems ) ? ' WHERE `id` NOT IN (' . implode( ',', $nitems ) . ')' : '' )
 				;
-		$database->setQuery( $query );
-		$items = $database->loadResultArray();
+		$db->setQuery( $query );
+		$items = $db->loadResultArray();
 
 		$list = array();
 		foreach( $items as $itemid ) {
@@ -5650,21 +5654,21 @@ class ItemGroupHandler
 
 	function groupName( $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT name'
 				. ' FROM #__acctexp_itemgroups'
 				. ' WHERE `id` = \'' . $groupid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function groupColor( $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$group = new ItemGroup( $database );
+		$group = new ItemGroup( $db );
 		$group->load( $groupid );
 
 		return $group->params['color'];
@@ -5672,9 +5676,9 @@ class ItemGroupHandler
 
 	function groupIcon( $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$group = new ItemGroup( $database );
+		$group = new ItemGroup( $db );
 		$group->load( $groupid );
 
 		return $group->params['icon'];
@@ -5682,15 +5686,15 @@ class ItemGroupHandler
 
 	function parentGroups( $item_id, $type='item' )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT group_id'
 				. ' FROM #__acctexp_itemxgroup'
 				. ' WHERE `type` = \'' . $type . '\''
 				. ' AND `item_id` = \'' . $item_id . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function updateChildRelation( $item_id, $groups, $type='item' )
@@ -5711,7 +5715,7 @@ class ItemGroupHandler
 
 	function setChild( $child_id, $group_id, $type='item' )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $type == 'group' ) {
 			// Don't let a group be assigned to itself
@@ -5727,13 +5731,13 @@ class ItemGroupHandler
 			}
 		}
 
-		$ig = new itemXgroup( $database );
+		$ig = new itemXgroup( $db );
 		return $ig->createNew( $type, $child_id, $group_id );
 	}
 
 	function setChildren( $group_id, $children, $type='item' )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		foreach ( $children as $child_id ) {
 			// Check bogus assignments
@@ -5751,7 +5755,7 @@ class ItemGroupHandler
 				}
 			}
 
-			$ig = new itemXgroup( $database );
+			$ig = new itemXgroup( $db );
 
 			if ( !$ig->createNew( $type, $child_id, $group_id ) ) {
 				return false;
@@ -5777,7 +5781,7 @@ class ItemGroupHandler
 
 	function getChildren( $groups, $type )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$where = array();
 
@@ -5799,8 +5803,8 @@ class ItemGroupHandler
 			$query .= ' WHERE ( ' . implode( ' AND ', $where ) . ' )';
 		}
 
-		$database->setQuery( $query );
-		$result = $database->loadResultArray();
+		$db->setQuery( $query );
+		$result = $db->loadResultArray();
 
 		if ( !empty( $result ) ) {
 		// Order results
@@ -5809,9 +5813,9 @@ class ItemGroupHandler
 					. ' WHERE id IN (' . implode( ',', $result ) . ')'
 					. ' ORDER BY `ordering`'
 					;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
-			return $database->loadResultArray();
+			return $db->loadResultArray();
 		} else {
 			return $result;
 		}
@@ -5911,12 +5915,12 @@ class ItemGroupHandler
 
 	function getTotalAllowedChildItems( $gids, $metaUser, $list=array() )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$groups = ItemGroupHandler::getChildren( $gids, 'group' );
 
 		foreach ( $groups as $groupid ) {
-			$group = new ItemGroup( $database );
+			$group = new ItemGroup( $db );
 			$group->load( $groupid );
 
 			if ( !$group->checkVisibility( $metaUser ) ) {
@@ -5936,7 +5940,7 @@ class ItemGroupHandler
 
 		$i = 0;
 		foreach( $items as $itemid ) {
-			$plan = new SubscriptionPlan( $database );
+			$plan = new SubscriptionPlan( $db );
 			$plan->load( $itemid );
 
 			if ( !$plan->checkVisibility( $metaUser ) ) {
@@ -5973,7 +5977,7 @@ class ItemGroupHandler
 
 	function removeChildren( $items, $groups, $type='item' )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'DELETE'
 				. ' FROM #__acctexp_itemxgroup'
@@ -5990,8 +5994,8 @@ class ItemGroupHandler
 			$query .= ' AND `group_id` IN (' . implode( ',', $groups ) . ')';
 		}
 
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 }
@@ -6063,7 +6067,7 @@ class ItemGroup extends serialParamDBTable
 
 	function savePOSTsettings( $post )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Fake knowing the planid if is zero.
 		if ( !empty( $post['id'] ) ) {
@@ -6158,7 +6162,7 @@ class ItemGroup extends serialParamDBTable
 
 	function delete()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->id == 1 ) {
 			return false;
@@ -6169,9 +6173,9 @@ class ItemGroup extends serialParamDBTable
 				. ' WHERE `group_id` = \'' . $this->id . '\''
 				. ' AND `type` = \'item\''
 				;
-		$database->setQuery( $query );
-		if ( !$database->query() ) {
-			echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		$db->setQuery( $query );
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
@@ -6180,9 +6184,9 @@ class ItemGroup extends serialParamDBTable
 				. ' WHERE `group_id` = \'' . $this->id . '\''
 				. ' AND `type` = \'group\''
 				;
-		$database->setQuery( $query );
-		if ( !$database->query() ) {
-			echo "<script> alert('".$database->getErrorMsg()."'); window.history.go(-1); </script>\n";
+		$db->setQuery( $query );
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 
@@ -6225,7 +6229,7 @@ class SubscriptionPlanHandler
 {
 	function getPlanList( $limitstart=false, $limit=false, $use_order=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 			 	. ' FROM #__acctexp_plans'
@@ -6236,11 +6240,11 @@ class SubscriptionPlanHandler
 			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
 		}
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$rows = $database->loadResultArray();
-		if ( $database->getErrorNum() ) {
-			echo $database->stderr();
+		$rows = $db->loadResultArray();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
 			return false;
 		} else {
 			return $rows;
@@ -6249,7 +6253,7 @@ class SubscriptionPlanHandler
 
 	function getActivePlanList()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// get entry Plan selection
 		$available_plans	= array();
@@ -6259,8 +6263,8 @@ class SubscriptionPlanHandler
 				. ' FROM #__acctexp_plans'
 				. ' WHERE `active` = \'1\''
 				;
-		$database->setQuery( $query );
-		$dbaplans = $database->loadObjectList();
+		$db->setQuery( $query );
+		$dbaplans = $db->loadObjectList();
 
 	 	if ( is_array( $dbaplans ) ) {
 	 		$available_plans = array_merge( $available_plans, $dbaplans );
@@ -6271,7 +6275,7 @@ class SubscriptionPlanHandler
 
 	function getFullPlanList( $limitstart=false, $limit=false, $subselect=array() )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT *'
 				. ' FROM #__acctexp_plans'
@@ -6284,11 +6288,11 @@ class SubscriptionPlanHandler
 			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
 		}
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$rows = $database->loadObjectList();
-		if ( $database->getErrorNum() ) {
-			echo $database->stderr();
+		$rows = $db->loadObjectList();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
 			return false;
 		} else {
 			return $rows;
@@ -6297,40 +6301,40 @@ class SubscriptionPlanHandler
 
 	function getPlanUserlist( $planid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_subscr'
-				. ' WHERE `plan` = \'' . $database->getEscaped( $planid ) . '\' AND ( `status` = \'Active\' OR `status` = \'Trial\' ) '
+				. ' WHERE `plan` = \'' . $db->getEscaped( $planid ) . '\' AND ( `status` = \'Active\' OR `status` = \'Trial\' ) '
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResultArray();
+		return $db->loadResultArray();
 	}
 
 	function PlanStatus( $planid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `active`'
 				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` = \'' . $database->getEscaped( $planid ) . '\''
+				. ' WHERE `id` = \'' . $db->getEscaped( $planid ) . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResult();
+		return $db->loadResult();
 	}
 
 	function listPlans()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_plans'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		return $database->loadResultArray();
+		return $db->loadResultArray();
 	}
 }
 
@@ -6400,9 +6404,11 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function applyPlan( $user, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		$forcelifetime = false;
 
@@ -6494,7 +6500,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( $is_pending ) {
 			// Is new = set signup date
-			$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 			if ( ( $this->params['trial_period'] ) > 0 && !$is_trial ) {
 				$status = 'Trial';
 			} else {
@@ -6523,7 +6529,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$metaUser->meta->addPlanID( $this->id );
 
-		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		$metaUser->focusSubscription->type = $processor;
 
 		$recurring_choice = null;
@@ -6648,7 +6654,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function doPlanComparison( $user_subscription )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$return['total_comparison']	= false;
 		$return['comparison']		= false;
@@ -6664,7 +6670,7 @@ class SubscriptionPlan extends serialParamDBTable
 								continue;
 							}
 
-							$used_subscription = new SubscriptionPlan( $database );
+							$used_subscription = new SubscriptionPlan( $db );
 							$used_subscription->load( $planid );
 
 							if ( $this->id === $used_subscription->id ) {
@@ -6685,7 +6691,7 @@ class SubscriptionPlan extends serialParamDBTable
 				}
 			}
 
-			$last_subscription = new SubscriptionPlan( $database );
+			$last_subscription = new SubscriptionPlan( $db );
 			$last_subscription->load( $user_subscription->plan );
 
 			if ( $this->id === $last_subscription->id ) {
@@ -6742,13 +6748,13 @@ class SubscriptionPlan extends serialParamDBTable
 		$mis = $this->getMicroIntegrations();
 
 		if ( !empty( $mis ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$params = array();
 			$lists = array();
 			foreach ( $mis as $mi_id ) {
 
-				$mi = new MicroIntegration( $database );
+				$mi = new MicroIntegration( $db );
 				$mi->load( $mi_id );
 
 				if ( !$mi->callIntegration() ) {
@@ -6783,11 +6789,11 @@ class SubscriptionPlan extends serialParamDBTable
 		$mis = $this->getMicroIntegrations();
 
 		if ( !empty( $mis ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$v = array();
 			foreach ( $mis as $mi_id ) {
-				$mi = new MicroIntegration( $database );
+				$mi = new MicroIntegration( $db );
 				$mi->load( $mi_id );
 
 				if ( !$mi->callIntegration() ) {
@@ -6843,7 +6849,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function getMicroIntegrations( $separate=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( empty( $this->micro_integrations ) ) {
 			$milist = array();
@@ -6855,7 +6861,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$parents = ItemGroupHandler::getParents( $this->id );
 
 		foreach ( $parents as $parent ) {
-			$g = new ItemGroup( $database );
+			$g = new ItemGroup( $db );
 			$g->load( $parent );
 
 			if ( !empty( $g->params['micro_integrations'] ) ) {
@@ -6878,7 +6884,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function getMicroIntegrationsSeparate()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( empty( $this->micro_integrations ) ) {
 			$milist = array();
@@ -6891,7 +6897,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$pmilist = array();
 		foreach ( $parents as $parent ) {
-			$g = new ItemGroup( $database );
+			$g = new ItemGroup( $db );
 			$g->load( $parent );
 
 			if ( !empty( $g->params['micro_integrations'] ) ) {
@@ -7004,7 +7010,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function savePOSTsettings( $post )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $post['id'] ) ) {
 			$planid = $post['id'];
@@ -7029,7 +7035,7 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( !empty( $post['micro_integrations_plan'] ) ) {
 			foreach ( $post['micro_integrations_plan'] as $miname ) {
 				// Create new blank MIs
-				$mi = new microIntegration( $database );
+				$mi = new microIntegration( $db );
 				$mi->load(0);
 
 				$mi->class_name = $miname;
@@ -7064,7 +7070,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		// Update MI settings
 		foreach ( $post['micro_integrations'] as $miid ) {
-			$mi = new microIntegration( $database );
+			$mi = new microIntegration( $db );
 			$mi->load( $miid );
 
 			// Only act special on hidden MIs
@@ -7249,7 +7255,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function saveParams( $params )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// If the admin wants this to be a free plan, we have to make this more explicit
 		// Setting processors to zero and full_free
@@ -7323,14 +7329,14 @@ class logHistory extends serialParamDBTable
 
 	function entryFromInvoice( $objInvoice, $response, $pp )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$user = new JTableUser( $database );
+		$user = new JTableUser( $db );
 		$user->load( $objInvoice->userid );
 
-		$plan = new SubscriptionPlan( $database );
+		$plan = new SubscriptionPlan( $db );
 		$plan->load( $objInvoice->usage );
 
 		$this->proc_id			= $pp->id;
@@ -7339,7 +7345,7 @@ class logHistory extends serialParamDBTable
 		$this->user_name		= $user->username;
 		$this->plan_id			= $plan->id;
 		$this->plan_name		= $plan->name;
-		$this->transaction_date	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->transaction_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		$this->amount			= $objInvoice->amount;
 		$this->invoice_number	= $objInvoice->invoice_number;
 		$this->response			= $response;
@@ -7349,7 +7355,7 @@ class logHistory extends serialParamDBTable
 		$tags	= 'history,processor,payment';
 		$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
-		$eventlog = new eventLog( $database );
+		$eventlog = new eventLog( $db );
 		$eventlog->issue( $short, $tags, $event, 2, $params );
 
 		$this->check();
@@ -7403,31 +7409,31 @@ class aecTempToken extends serialParamDBTable
 		}
 
 		if ( empty( $this->ip ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			$this->created_date	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			$this->created_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 			$this->ip			= $_SERVER['REMOTE_ADDR'];
 		}
 	}
 
 	function getByToken( $token )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 		. ' FROM #__acctexp_temptoken'
 		. ' WHERE `token` = \'' . $token . '\''
 		;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
 		if ( empty( $id ) ) {
 			$query = 'SELECT `id`'
 			. ' FROM #__acctexp_temptoken'
 			. ' WHERE `ip` = \'' . $_SERVER['REMOTE_ADDR'] . '\''
 			;
-			$database->setQuery( $query );
-			$id = $database->loadResult();
+			$db->setQuery( $query );
+			$id = $db->loadResult();
 		}
 
 		$this->load( $id );
@@ -7441,9 +7447,9 @@ class aecTempToken extends serialParamDBTable
 
 	function create( $content, $token=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( empty( $token ) ) {
 			$session =& JFactory::getSession();
@@ -7455,20 +7461,20 @@ class aecTempToken extends serialParamDBTable
 		. ' WHERE `token` = \'' . $token . '\''
 		. ' OR `ip` = \'' . $_SERVER['REMOTE_ADDR'] . '\''
 		;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
 		if ( $id ) {
 			$this->id		= $id;
 		}
 
 		if ( empty( $token ) ) {
-			$token = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			$token = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		}
 
 		$this->token		= $token;
 		$this->content		= $content;
-		$this->created_date	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->created_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		$this->ip			= $_SERVER['REMOTE_ADDR'];
 
 		setcookie( 'aec_token', $token, time()+600 );
@@ -7493,9 +7499,9 @@ class InvoiceFactory
 	{
 		// If we have some kind of internal call, we need to load the HTML class
 		if ( !class_exists( 'Payment_HTML' ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			require_once( $mainframe->getPath( 'front_html', 'com_acctexp' ) );
+			require_once( $app->getPath( 'front_html', 'com_acctexp' ) );
 		}
 
 		$this->initUser( $userid );
@@ -7528,18 +7534,18 @@ class InvoiceFactory
 					// This user is not expired, so she could log in...
 					return aecNotAuth();
 				} else {
-					$database = &JFactory::getDBO();
+					$db = &JFactory::getDBO();
 
-					$this->userid = $database->getEscaped( $userid );
+					$this->userid = $db->getEscaped( $userid );
 
 					// Delete set userid if it doesn't exist
 					if ( !is_null( $this->userid ) ) {
 						$query = 'SELECT `id`'
 								. ' FROM #__users'
 								. ' WHERE `id` = \'' . $this->userid . '\'';
-						$database->setQuery( $query );
+						$db->setQuery( $query );
 
-						if ( !$database->loadResult() ) {
+						if ( !$db->loadResult() ) {
 							$this->userid = null;
 						}
 					}
@@ -7585,9 +7591,9 @@ class InvoiceFactory
 
 		$this->loadMetaUser();
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$plan = new SubscriptionPlan( $database );
+		$plan = new SubscriptionPlan( $db );
 		$plan->load( $this->usage );
 
 		$restrictions = $plan->getRestrictionsArray();
@@ -7665,11 +7671,11 @@ class InvoiceFactory
 
 	function loadPlanObject( $option, $testmi=false, $quick=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
 			// get the payment plan
-			$this->plan = new SubscriptionPlan( $database );
+			$this->plan = new SubscriptionPlan( $db );
 			$this->plan->load( $this->usage );
 
 			if ( !is_object( $this->plan ) ) {
@@ -7914,7 +7920,7 @@ class InvoiceFactory
 				$this->processor = PaymentProcessor::getNameById( str_replace( '_recurring', '', $selection ) );
 			}
 		} else {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			// We have different processors selected for this cart
 			$prelg = array();
@@ -7941,7 +7947,7 @@ class InvoiceFactory
 				$mpg = array_pop( array_keys( $pgroups ) );
 				if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
 					// We have more than one item for this processor, create temporary cart
-					$tempcart = new aecCart( $database );
+					$tempcart = new aecCart( $db );
 					$tempcart->userid = $this->userid;
 
 					foreach ( $pgroups as $pgr ) {
@@ -7955,13 +7961,13 @@ class InvoiceFactory
 					$carthash = 'c.' . $tempcart->id;
 
 					// Create a cart invoice
-					$invoice = new Invoice( $database );
+					$invoice = new Invoice( $db );
 					$invoice->create( $this->userid, $carthash, $processor_name, null, true, $this, $procrecurring );
 				} else {
 					// Only one item in this, create a simple invoice
 					$member = $pgroups[$mpg]['members'][0];
 
-					$invoice = new Invoice( $database );
+					$invoice = new Invoice( $db );
 					$invoice->create( $this->userid, $this->cartobject->content[$member]['id'], $processor_name, null, true, $this, $procrecurring );
 				}
 
@@ -8029,14 +8035,14 @@ class InvoiceFactory
 
 						$this->payment->currency	= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
 					} else {
-						$database = &JFactory::getDBO();
+						$db = &JFactory::getDBO();
 
 						$short	= 'processor loading failure';
 						$event	= 'Tried to load processor: ' . $this->processor;
 						$tags	= 'processor,loading,error';
 						$params = array();
 
-						$eventlog = new eventLog( $database );
+						$eventlog = new eventLog( $db );
 						$eventlog->issue( $short, $tags, $event, 128, $params );
 					}
 					break;
@@ -8053,9 +8059,9 @@ class InvoiceFactory
 			if ( !empty( $this->metaUser ) ) {
 				$this->renew = $this->metaUser->meta->is_renewing();
 			} elseif ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
-				$user_subscription = new Subscription( $database );
+				$user_subscription = new Subscription( $db );
 				$user_subscription->loadUserID( $this->userid );
 
 				if ( ( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) !== 0 )  ) {
@@ -8132,7 +8138,7 @@ class InvoiceFactory
 
 	function addressExceptions( $option )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$hasform = false;
 
@@ -8171,9 +8177,9 @@ class InvoiceFactory
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
 		if ( $hasform ) {
-			$mainframe->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE, ENT_COMPAT, 'UTF-8' ) );
+			$app->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE, ENT_COMPAT, 'UTF-8' ) );
 		} else {
-			$mainframe->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE_NOFORM, ENT_COMPAT, 'UTF-8' ) );
+			$app->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE_NOFORM, ENT_COMPAT, 'UTF-8' ) );
 		}
 
 		Payment_HTML::exceptionForm( $option, $this, $aecHTML, $hasform );
@@ -8202,7 +8208,7 @@ class InvoiceFactory
 		$this->items->itemlist = array();
 
 		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$terms = $this->plan->getTermsForUser( $this->recurring, $this->metaUser );
 
@@ -8232,7 +8238,7 @@ class InvoiceFactory
 
 			$cid = array_pop( array_keys( $this->items->itemlist ) );
 
-			$this->cartobject = new aecCart( $database );
+			$this->cartobject = new aecCart( $db );
 			$this->cartobject->addItem( array(), $this->plan );
 		} else {
 			$this->getCart();
@@ -8386,7 +8392,7 @@ class InvoiceFactory
 
 	function addtoCart( $option, $usage )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
@@ -8401,7 +8407,7 @@ class InvoiceFactory
 		foreach ( $usage as $us ) {
 			$this->cartobject->action( 'addItem', $us );
 
-			$plan = new SubscriptionPlan( $database );
+			$plan = new SubscriptionPlan( $db );
 			$plan->load( $us );
 		}
 
@@ -8505,8 +8511,8 @@ class InvoiceFactory
 		}
 
 		if ( !is_object( $this->invoice ) ) {
-			$database = &JFactory::getDBO();
-			$this->invoice = new Invoice( $database );
+			$db = &JFactory::getDBO();
+			$this->invoice = new Invoice( $db );
 		}
 
 		if ( $this->invoice->invoice_number != $this->invoice_number ) {
@@ -8538,9 +8544,9 @@ class InvoiceFactory
 
 	function createInvoice( $storenew=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$this->invoice = new Invoice( $database );
+		$this->invoice = new Invoice( $db );
 
 		$id = 0;
 		if ( !empty( $this->usage ) && strpos( $this->usage, 'c' ) !== false ) {
@@ -8590,7 +8596,7 @@ class InvoiceFactory
 
 	function storeInvoice()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$this->invoice->computeAmount( $this, true );
 
@@ -8603,7 +8609,7 @@ class InvoiceFactory
 		$this->triggerMIs( '_invoice_creation', $exchange, $add, $silent );
 
 		// Delete TempToken - the data is now safe with the invoice
-		$temptoken = new aecTempToken( $database );
+		$temptoken = new aecTempToken( $db );
 		$temptoken->getComposite();
 
 		if ( $temptoken->id ) {
@@ -8679,18 +8685,20 @@ class InvoiceFactory
 
 	function promptpassword( $option, $wrong=false )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$mainframe->SetPageTitle( html_entity_decode( _AEC_PROMPT_PASSWORD, ENT_COMPAT, 'UTF-8' ) );
+		$app->SetPageTitle( html_entity_decode( _AEC_PROMPT_PASSWORD, ENT_COMPAT, 'UTF-8' ) );
 
 		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
 	}
 
 	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		$register = !$this->loadMetaUser( true );
 
@@ -8766,10 +8774,10 @@ class InvoiceFactory
 				$register = 0;
 			}
 
-			$mainframe->SetPageTitle( html_entity_decode( _PAYPLANS_HEADER, ENT_COMPAT, 'UTF-8' ) );
+			$app->SetPageTitle( html_entity_decode( _PAYPLANS_HEADER, ENT_COMPAT, 'UTF-8' ) );
 
 			if ( $group ) {
-				$g = new ItemGroup( $database );
+				$g = new ItemGroup( $db );
 				$g->load( $group );
 
 				$list['group'] = ItemGroupHandler::getGroupListItem( $g );
@@ -8800,7 +8808,7 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$auth_problem = null;
 
@@ -8809,11 +8817,11 @@ class InvoiceFactory
 					. ' FROM #__acctexp_plans'
 					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
 					;
-			$database->setQuery( $query );
-			$id = $database->loadResult();
+			$db->setQuery( $query );
+			$id = $db->loadResult();
 
 			if ( $id ) {
-				$plan = new SubscriptionPlan( $database );
+				$plan = new SubscriptionPlan( $db );
 				$plan->load( $id );
 
 				if ( !empty( $plan->params['fixed_redirect'] ) ) {
@@ -8854,7 +8862,7 @@ class InvoiceFactory
 				$gid = $gid[0];
 			}
 
-			$g = new ItemGroup( $database );
+			$g = new ItemGroup( $db );
 			$g->load( $gid );
 
 			if ( $g->checkPermission( $this->metaUser ) ) {
@@ -9064,9 +9072,9 @@ class InvoiceFactory
 
 	function registerRedirectJoomla( $option, $intro, $plan )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$mainframe->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
+		$app->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
 	}
 
 	function registerRedirectCB( $option, $plan )
@@ -9086,7 +9094,9 @@ class InvoiceFactory
 
 			aecRedirect( 'index.php?option=com_comprofiler&task=registers' );
 		} else {
-			global $task, $mainframe, $_PLUGINS, $ueConfig, $_CB_database;;
+			global $task, $_PLUGINS, $ueConfig, $_CB_database;;
+
+			$app = JFactory::getApplication();
 
 			$savetask	= $task;
 			$_REQUEST['task'] = 'done';
@@ -9096,7 +9106,7 @@ class InvoiceFactory
 
 			$task = $savetask;
 
-			registerForm( $option, $mainframe->getCfg( 'emailpass' ), null );
+			registerForm( $option, $app->getCfg( 'emailpass' ), null );
 		}
 	}
 
@@ -9124,9 +9134,9 @@ class InvoiceFactory
 
 	function TempTokenFromPlan( $plan )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$temptoken = new aecTempToken( $database );
+		$temptoken = new aecTempToken( $db );
 		$temptoken->getComposite();
 
 		if ( empty( $temptoken->content ) ) {
@@ -9195,9 +9205,9 @@ class InvoiceFactory
 		}
 
 		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			$mainframe->SetPageTitle( html_entity_decode( _CONFIRM_TITLE, ENT_COMPAT, 'UTF-8' ) );
+			$app->SetPageTitle( html_entity_decode( _CONFIRM_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 			if ( empty( $aecConfig->cfg['custom_confirm_userdetails'] ) ) {
 				$this->userdetails = "";
@@ -9239,7 +9249,9 @@ class InvoiceFactory
 
 	function confirmcart( $option, $coupon=null, $testmi=false )
 	{
-		global $mainframe, $task;
+		global $task;
+
+		$app = JFactory::getApplication();
 
 		$this->confirmed = 1;
 
@@ -9480,7 +9492,9 @@ class InvoiceFactory
 
 	function InvoiceToCheckout( $option, $repeat=0, $error=null, $data=null )
 	{
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		if ( $this->hasExceptions() ) {
 			return $this->addressExceptions( $option );
@@ -9526,7 +9540,7 @@ class InvoiceFactory
 
 		$this->triggerMIs( '_checkout_form', $exchange, $int_var, $silent );
 
-		$mainframe->SetPageTitle( html_entity_decode( $this->checkout['checkout_title'], ENT_COMPAT, 'UTF-8' ) );
+		$app->SetPageTitle( html_entity_decode( $this->checkout['checkout_title'], ENT_COMPAT, 'UTF-8' ) );
 
 		if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
 			JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
@@ -9540,14 +9554,14 @@ class InvoiceFactory
 		if ( isset( $this->invoice->usage ) ) {
 			return $this->invoice->getObjUsage();
 		} elseif ( !empty( $this->usage ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$u = explode( '.', $this->usage );
 
 			switch ( strtolower( $u[0] ) ) {
 				case 'c':
 				case 'cart':
-					$objUsage = new aecCart( $database );
+					$objUsage = new aecCart( $db );
 					$objUsage->load( $u[1] );
 					break;
 				case 'p':
@@ -9557,7 +9571,7 @@ class InvoiceFactory
 						$u[1] = $u[0];
 					}
 
-					$objUsage = new SubscriptionPlan( $database );
+					$objUsage = new SubscriptionPlan( $db );
 					$objUsage->load( $u[1] );
 					break;
 			}
@@ -9669,11 +9683,11 @@ class InvoiceFactory
 
 	function planprocessoraction( $action, $subscr=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$this->loadMetaUser();
 
-		$this->invoice = new Invoice( $database );
+		$this->invoice = new Invoice( $db );
 
 		if ( !empty( $subscr ) ) {
 			if ( $this->metaUser->moveFocus( $subscr ) ) {
@@ -9704,7 +9718,7 @@ class InvoiceFactory
 
 			if ( is_a( $usage, 'aecCart' ) ) {
 				foreach ( $usage->content as $c ) {
-					$new_plan = new SubscriptionPlan( $database );
+					$new_plan = new SubscriptionPlan( $db );
 					$new_plan->load( $c['id'] );
 
 					$this->pp->exchangeSettingsByPlan( $new_plan );
@@ -9729,7 +9743,7 @@ class InvoiceFactory
 
 	function invoiceprocessoraction( $option, $action, $invoiceNum=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$this->loadMetaUser();
 
@@ -9779,7 +9793,9 @@ class InvoiceFactory
 
 	function thanks( $option, $renew=false, $free=false )
 	{
-		global $mainframe, $aecConfig, $mainframe;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		if ( $this->userid ) {
 			$this->loadMetaUser();
@@ -9800,9 +9816,9 @@ class InvoiceFactory
 
 	function error( $option, $objUser, $invoice, $error )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$mainframe->SetPageTitle( html_entity_decode( _CHECKOUT_ERROR_TITLE, ENT_COMPAT, 'UTF-8' ) );
+		$app->SetPageTitle( html_entity_decode( _CHECKOUT_ERROR_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 		Payment_HTML::error( $option, $objUser, $invoice, $error );
 	}
@@ -9926,15 +9942,15 @@ class Invoice extends serialParamDBTable
 
 	function loadInvoiceNumber( $invoiceNum )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE invoice_number = \'' . $invoiceNum . '\''
 		. ' OR secondary_ident = \'' . $invoiceNum . '\''
 		;
-		$database->setQuery( $query );
-		$this->load($database->loadResult());
+		$db->setQuery( $query );
+		$this->load($db->loadResult());
 	}
 
 	function formatInvoiceNumber( $invoice=null, $nostore=false )
@@ -9973,23 +9989,23 @@ class Invoice extends serialParamDBTable
 
 	function deformatInvoiceNumber()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
 		$query = 'SELECT invoice_number'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE id = \'' . $database->getEscaped( $this->id ) . '\''
-		. ' OR secondary_ident = \'' . $database->getEscaped( $this->invoice_number ) . '\''
+		. ' WHERE id = \'' . $db->getEscaped( $this->id ) . '\''
+		. ' OR secondary_ident = \'' . $db->getEscaped( $this->invoice_number ) . '\''
 		;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$this->invoice_number = $database->loadResult();
+		$this->invoice_number = $db->loadResult();
 	}
 
 	function loadbySubscriptionId( $subscrid, $userid=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -10002,35 +10018,35 @@ class Invoice extends serialParamDBTable
 
 		$query .= ' ORDER BY `transaction_date` DESC';
 
-		$database->setQuery( $query );
-		$this->load( $database->loadResult() );
+		$db->setQuery( $query );
+		$this->load( $db->loadResult() );
 	}
 
 	function hasDuplicate( $userid, $invoiceNum )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = ' . (int) $userid
 				. ' AND `invoice_number` = \'' . $invoiceNum . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function isRecurring()
 	{
 		if ( !empty( $this->subscr_id ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$query = 'SELECT `recurring`'
 					. ' FROM #__acctexp_subscr'
 					. ' WHERE `id` = \'' . $this->subscr_id . '\''
 					;
 
-			$database->setQuery( $query );
-			return $database->loadResult();
+			$db->setQuery( $query );
+			return $db->loadResult();
 		}
 
 		if ( isset( $this->params['userselect_recurring'] ) ) {
@@ -10042,7 +10058,7 @@ class Invoice extends serialParamDBTable
 
 	function computeAmount( $InvoiceFactory=null, $save=true, $recurring_choice=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $InvoiceFactory->metaUser ) ) {
 			$metaUser = $InvoiceFactory->metaUser;
@@ -10086,7 +10102,7 @@ class Invoice extends serialParamDBTable
 							$tags	= 'processor,loading,error';
 							$params = array();
 
-							$eventlog = new eventLog( $database );
+							$eventlog = new eventLog( $db );
 							$eventlog->issue( $short, $tags, $event, 128, $params );
 
 							return;
@@ -10195,7 +10211,7 @@ class Invoice extends serialParamDBTable
 					$tags	= 'processor,loading,error';
 					$params = array();
 
-					$eventlog = new eventLog( $database );
+					$eventlog = new eventLog( $db );
 					$eventlog->issue( $short, $tags, $event, 128, $params );
 
 					$this->method = 'error';
@@ -10214,7 +10230,7 @@ class Invoice extends serialParamDBTable
 
 	function create( $userid, $usage, $processor, $second_ident=null, $store=true, $InvoiceFactory=null, $recurring_choice=null )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$invoice_number			= $this->generateInvoiceNumber();
 
@@ -10227,7 +10243,7 @@ class Invoice extends serialParamDBTable
 
 		$this->active			= 1;
 		$this->fixed			= 0;
-		$this->created_date		= date( 'Y-m-d H:i:s', time() + $mainframe->getCfg( 'offset' )*3600 );
+		$this->created_date		= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
 		$this->transaction_date	= '0000-00-00 00:00:00';
 		$this->userid			= $userid;
 		$this->method			= $processor;
@@ -10244,7 +10260,7 @@ class Invoice extends serialParamDBTable
 
 	function generateInvoiceNumber( $maxlength = 16 )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$numberofrows	= 1;
 		while ( $numberofrows ) {
@@ -10255,8 +10271,8 @@ class Invoice extends serialParamDBTable
 					. ' WHERE `invoice_number` = \'' . $inum . '\''
 					. ' OR `secondary_ident` = \'' . $inum . '\''
 					;
-			$database->setQuery( $query );
-			$numberofrows = $database->loadResult();
+			$db->setQuery( $query );
+			$numberofrows = $db->loadResult();
 		}
 		return $inum;
 	}
@@ -10266,9 +10282,9 @@ class Invoice extends serialParamDBTable
 		global $aecConfig;
 
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) {
+			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) {
 				// The last notification has not been too long ago - skipping this one
 				return $response;
 			}
@@ -10278,7 +10294,7 @@ class Invoice extends serialParamDBTable
 			$response = array( 'original_response' => $response );
 		}
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$this->amount = $InvoiceFactory->items->grand_total->cost['amount'];
 
@@ -10330,7 +10346,7 @@ class Invoice extends serialParamDBTable
 		$mi_event = null;
 
 		// Create history entry
-		$history = new logHistory( $database );
+		$history = new logHistory( $db );
 		$history->entryFromInvoice( $this, $resp, $InvoiceFactory->pp );
 
 		$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
@@ -10527,7 +10543,7 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( !empty( $mi_event ) && !empty( $this->usage ) ) {
-			$objUsage = new SubscriptionPlan( $database );
+			$objUsage = new SubscriptionPlan( $db );
 			$objUsage->load( $this->usage );
 
 			$exchange = $silent = null;
@@ -10539,7 +10555,7 @@ class Invoice extends serialParamDBTable
 			$event .= " (" . $response['explanation'] . ")";
 		}
 
-		$eventlog = new eventLog( $database );
+		$eventlog = new eventLog( $db );
 		$eventlog->issue( $short, $tags, $event, $level, $params, $forcedisplay );
 
 		if ( !empty( $notificationerror ) ) {
@@ -10553,7 +10569,7 @@ class Invoice extends serialParamDBTable
 
 	function pay( $multiplicator=1 )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -10595,12 +10611,12 @@ class Invoice extends serialParamDBTable
 				case 'c':
 				case 'cart':
 					if ( empty( $this->params['cart']->content ) ) {
-						$this->params['cart'] = new aecCart( $database );
+						$this->params['cart'] = new aecCart( $db );
 						$this->params['cart']->load( $usage[1] );
 
 						if ( !empty( $this->params['cart']->content ) ) {
 							foreach ( $this->params['cart']->content as $c ) {
-								$new_plan = new SubscriptionPlan( $database );
+								$new_plan = new SubscriptionPlan( $db );
 								$new_plan->load( $c['id'] );
 
 								for ( $i=0; $i<$c['quantity']; $i++ ) {
@@ -10614,14 +10630,14 @@ class Invoice extends serialParamDBTable
 						$this->storeload();
 
 						// Load and delete original entry
-						$cart = new aecCart( $database );
+						$cart = new aecCart( $db );
 						$cart->load( $usage[1] );
 						if ( $cart->id ) {
 							$cart->delete();
 						}
 					} else {
 						foreach ( $this->params['cart']->content as $c ) {
-							$new_plan = new SubscriptionPlan( $database );
+							$new_plan = new SubscriptionPlan( $db );
 							$new_plan->load( $c['id'] );
 
 							for ( $i=0; $i<$c['quantity']; $i++ ) {
@@ -10633,7 +10649,7 @@ class Invoice extends serialParamDBTable
 				case 'p':
 				case 'plan':
 				default:
-					$new_plan = new SubscriptionPlan( $database );
+					$new_plan = new SubscriptionPlan( $db );
 					$new_plan->load( $this->usage );
 
 					$plans[] = $new_plan;
@@ -10667,7 +10683,7 @@ class Invoice extends serialParamDBTable
 
 					if ( $this->subscr_id != $targetUser->focusSubscription->id ) {
 						// Moving to a new subsription, so expire the old
-						$expire_sub = new Subscription( $database );
+						$expire_sub = new Subscription( $db );
 						$expire_sub->load( $this->subscr_id );
 						$expire_sub->expire();
 
@@ -10694,7 +10710,7 @@ class Invoice extends serialParamDBTable
 
 			if ( is_array( $micro_integrations ) ) {
 				foreach ( $micro_integrations as $micro_int ) {
-					$mi = new microIntegration( $database );
+					$mi = new microIntegration( $db );
 
 					if ( isset( $micro_integration['parameters'] ) ) {
 						$exchange = $micro_integration['parameters'];
@@ -10744,7 +10760,7 @@ class Invoice extends serialParamDBTable
 			$tags	= 'invoice,application,payment,action_failed';
 			$params = array( 'invoice_number' => $this->invoice_number );
 
-			$eventlog = new eventLog( $database );
+			$eventlog = new eventLog( $db );
 			$eventlog->issue( $short, $tags, $event, 32, $params );
 		}
 
@@ -10766,13 +10782,15 @@ class Invoice extends serialParamDBTable
 
 	function setTransactionDate()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		$tdate				= strtotime( $this->transaction_date );
-		$time_passed		= ( ( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) - $tdate ) / 3600;
-		$transaction_date	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$time_passed		= ( ( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) - $tdate ) / 3600;
+		$transaction_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 
 		if ( !empty( $aecConfig->cfg['invoicecushion'] ) ) {
 			$cushion = $aecConfig->cfg['invoicecushion']*60;
@@ -10801,7 +10819,7 @@ class Invoice extends serialParamDBTable
 
 	function getWorkingData( $InvoiceFactory )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$int_var = array();
 
@@ -10903,7 +10921,7 @@ class Invoice extends serialParamDBTable
 
 	function getObjUsage()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$usage = null;
 		if ( !empty( $this->usage ) ) {
@@ -10919,7 +10937,7 @@ class Invoice extends serialParamDBTable
 					if ( isset( $this->params['cart'] ) ) {
 						$objUsage = $this->params['cart'];
 					} else {
-						$objUsage = new aecCart( $database );
+						$objUsage = new aecCart( $db );
 						$objUsage->load( $u[1] );
 					}
 					break;
@@ -10930,7 +10948,7 @@ class Invoice extends serialParamDBTable
 						$u[1] = $u[0];
 					}
 
-					$objUsage = new SubscriptionPlan( $database );
+					$objUsage = new SubscriptionPlan( $db );
 					$objUsage->load( $u[1] );
 					break;
 			}
@@ -10943,7 +10961,7 @@ class Invoice extends serialParamDBTable
 
 	function addTargetUser( $user_ident )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -10988,8 +11006,8 @@ class Invoice extends serialParamDBTable
 
 		foreach ( $queries as $base_query ) {
 			$query = 'SELECT `id`, `username`, `email` ' . $base_query;
-			$database->setQuery( $query );
-			$res = $database->loadObject();
+			$db->setQuery( $query );
+			$res = $db->loadObject();
 
 			if ( !empty( $res ) ) {
 				$this->params['target_user'] = $res->id;
@@ -11041,7 +11059,7 @@ class Invoice extends serialParamDBTable
 
 	function removeCoupon( $coupon_code )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$oldcoupons = $this->coupons;
 
@@ -11075,7 +11093,7 @@ class Invoice extends serialParamDBTable
 				switch ( strtolower( $usage[0] ) ) {
 					case 'c':
 					case 'cart':
-						$cart = new aecCart( $database );
+						$cart = new aecCart( $db );
 						$cart->load( $usage[1] );
 
 						$cart->removeCoupon( $coupon_code );
@@ -11276,25 +11294,25 @@ class aecCartHelper
 {
 	function getCartidbyUserid( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_cart'
 				. ' WHERE userid = \'' . $userid . '\''
 				;
 
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 
 	}
 
 	function getCartbyUserid( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$id = aecCartHelper::getCartidbyUserid( $userid );
 
-		$cart = new aecCart( $database );
+		$cart = new aecCart( $db );
 		$cart->load( $id );
 
 		if ( empty( $id ) ) {
@@ -11308,9 +11326,9 @@ class aecCartHelper
 	{
 		$item = $cart->getItem( $id );
 		if ( !empty( $item ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-			$plan = new SubscriptionPlan( $database );
+			$plan = new SubscriptionPlan( $db );
 			$plan->load( $item['id'] );
 
 			return $plan;
@@ -11330,7 +11348,7 @@ class aecCartHelper
 
 	function getFirstSortedCartItemObject( $cart )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$highest = 0;
 		$cursor = 1000000;
@@ -11340,8 +11358,8 @@ class aecCartHelper
 			. ' FROM #__acctexp_plans'
 			. ' WHERE `id` = \'' . $c['id'] . '\''
 			;
-			$database->setQuery( $query );
-			$ordering = $database->loadResult();
+			$db->setQuery( $query );
+			$ordering = $db->loadResult();
 
 			if ( $ordering < $cursor ) {
 				$highest = $cid;
@@ -11477,15 +11495,15 @@ class aecCartHelper
 
 	function getInvoiceIdByCart( $cart )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
 		. ' WHERE `usage` = \'c.' . $cart->id . '\''
 		. ' AND active = \'1\''
 		;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 }
 
@@ -11537,13 +11555,13 @@ class aecCart extends serialParamDBTable
 
 	function save()
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( !$this->id || ( strcmp( $user_subscription->created_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
-			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		}
 
-		$this->last_updated = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->last_updated = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 
 		return parent::save();
 	}
@@ -11551,12 +11569,12 @@ class aecCart extends serialParamDBTable
 	function action( $action, $details=null )
 	{
 		if ( $action == "clearCart" ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			// Delete Invoices referencing this Cart as well
 			$query = 'DELETE FROM #__acctexp_invoices WHERE `usage` = \'c.' . $this->id . '\'';
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 
 			return $this->delete();
 		}
@@ -11736,7 +11754,7 @@ class aecCart extends serialParamDBTable
 
 	function getCheckout( $metaUser, $counter=0, $InvoiceFactory=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$c = array();
 
@@ -11752,7 +11770,7 @@ class aecCart extends serialParamDBTable
 			if ( !isset( $c[$content['type']][$content['id']] ) ) {
 				switch ( $content['type'] ) {
 					case 'plan':
-						$obj = new SubscriptionPlan( $database );
+						$obj = new SubscriptionPlan( $db );
 						$obj->load( $content['id'] );
 
 						$o = array();
@@ -11888,7 +11906,7 @@ class aecCart extends serialParamDBTable
 
 	function issueHistoryEvent( $class, $event, $details )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		if ( $class == 'error' ) {
 			$this->_error = $event;
@@ -11899,7 +11917,7 @@ class aecCart extends serialParamDBTable
 		}
 
 		$this->history[] = array(
-							'timestamp'	=> date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ),
+							'timestamp'	=> date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ),
 							'class'		=> $class,
 							'event'		=> $event,
 							'details'	=> $details,
@@ -11983,7 +12001,7 @@ class Subscription extends serialParamDBTable
 
 	function getSubscriptionID( $userid, $usage=null, $primary=1, $similar=false, $bias=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -11991,7 +12009,7 @@ class Subscription extends serialParamDBTable
 				;
 
 		if ( !empty( $usage ) ) {
-			$plan = new SubscriptionPlan( $database );
+			$plan = new SubscriptionPlan( $db );
 			$plan->load( $usage );
 
 			if ( ( !empty( $plan->params['similarplans'] ) && $similar ) || !empty( $plan->params['equalplans'] ) ) {
@@ -12029,16 +12047,16 @@ class Subscription extends serialParamDBTable
 			$query .= ' AND `primary` = \'0\'';
 		}
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
 		if ( !empty( $bias ) ) {
-			$subscriptionids = $database->loadResultArray();
+			$subscriptionids = $db->loadResultArray();
 
 			if ( in_array( $bias, $subscriptionids ) ) {
 				$subscriptionid = $bias;
 			}
 		} else {
-			$subscriptionid = $database->loadResult();
+			$subscriptionid = $db->loadResult();
 		}
 
 		if ( !isset( $subscriptionid ) ) {
@@ -12054,14 +12072,14 @@ class Subscription extends serialParamDBTable
 
 	function makePrimary()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__acctexp_subscr'
 				. ' SET `primary` = \'0\''
 				. ' WHERE `userid` = \'' . $this->userid . '\''
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 
 		$this->primary = 1;
 		$this->storeload();
@@ -12079,12 +12097,12 @@ class Subscription extends serialParamDBTable
 
 	function createNew( $userid, $processor, $pending, $primary=1, $plan=null )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->userid		= $userid;
 		$this->primary		= $primary;
-		$this->signup_date	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
-		$this->expiration	= date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->signup_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->expiration	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		$this->status		= $pending ? 'Pending' : 'Active';
 		$this->type			= $processor;
 
@@ -12097,7 +12115,9 @@ class Subscription extends serialParamDBTable
 
 	function is_expired( $offset=false )
 	{
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		if ( !$this->is_lifetime() ) {
 
@@ -12107,7 +12127,7 @@ class Subscription extends serialParamDBTable
 				$expstamp = strtotime( ( '+' . $aecConfig->cfg['expiration_cushion'] . ' hours' ), strtotime( $this->expiration ) );
 			}
 
-			$localtime = time() + ( $mainframe->getCfg( 'offset' ) * 3600 );
+			$localtime = time() + ( $app->getCfg( 'offset' ) * 3600 );
 
 			$is_past = ( $expstamp - $localtime ) < 0;
 
@@ -12134,9 +12154,9 @@ class Subscription extends serialParamDBTable
 
 	function setExpiration( $unit, $value, $extend )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$now = ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
+		$now = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
 
 		if ( $extend ) {
 			$current = strtotime( $this->expiration );
@@ -12164,9 +12184,11 @@ class Subscription extends serialParamDBTable
 	*/
 	function GetAlertLevel()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		if ( $this->expiration ) {
 			$alert['level']		= -1;
@@ -12175,7 +12197,7 @@ class Subscription extends serialParamDBTable
 			$expstamp = strtotime( $this->expiration );
 
 			// Get how many days left to expire (3600 sec = 1 hour)
-			$alert['daysleft']	= round( ( $expstamp - ( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) ) / ( 3600 * 24 ) );
+			$alert['daysleft']	= round( ( $expstamp - ( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) ) / ( 3600 * 24 ) );
 
 			if ( $alert['daysleft'] < 0 ) {
 				// Subscription already expired. Alert Level 0!
@@ -12198,7 +12220,7 @@ class Subscription extends serialParamDBTable
 
 	function verifylogin( $block, $metaUser=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -12244,7 +12266,7 @@ class Subscription extends serialParamDBTable
 
 	function verify( $block, $metaUser=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -12287,7 +12309,7 @@ class Subscription extends serialParamDBTable
 
 	function expire( $overridefallback=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Users who are excluded cannot expire
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
@@ -12296,7 +12318,7 @@ class Subscription extends serialParamDBTable
 
 		// Load plan variables, otherwise load dummies
 		if ( $this->plan ) {
-			$subscription_plan = new SubscriptionPlan( $database );
+			$subscription_plan = new SubscriptionPlan( $db );
 			$subscription_plan->load( $this->plan );
 		} else {
 			$subscription_plan = false;
@@ -12352,15 +12374,15 @@ class Subscription extends serialParamDBTable
 
 	function cancel( $invoice=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Since some processors do not notify each period, we need to check whether the expiration
 		// lies too far in the future and cut it down to the end of the period the user has paid
 
 		if ( $this->plan ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			$subscription_plan = new SubscriptionPlan( $database );
+			$subscription_plan = new SubscriptionPlan( $db );
 			$subscription_plan->load( $this->plan );
 
 			// Resolve blocks that we are going to substract from the set expiration date
@@ -12380,7 +12402,7 @@ class Subscription extends serialParamDBTable
 			$periodlength = $subscription_plan->params['full_period'] * $unit;
 
 			$newexpiration = strtotime( $this->expiration );
-			$now = ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
+			$now = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
 
 			// ...cut away blocks until we are in the past
 			while ( $newexpiration > $now ) {
@@ -12424,13 +12446,13 @@ class Subscription extends serialParamDBTable
 
 	function applyUsage( $usage = 0, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !$usage ) {
 			$usage = $this->plan;
 		}
 
-		$new_plan = new SubscriptionPlan( $database );
+		$new_plan = new SubscriptionPlan( $db );
 		$new_plan->load( $usage );
 
 		if ( $new_plan->id ) {
@@ -12494,11 +12516,11 @@ class Subscription extends serialParamDBTable
 
 	function sendEmailRegistered( $renew, $adminonly=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$acl = &JFactory::getACL();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$lang =& JFactory::getLanguage();
 
@@ -12511,10 +12533,10 @@ class Subscription extends serialParamDBTable
 
 		$free = ( strcmp( strtolower( $this->type ), 'none' ) == 0 || strcmp( strtolower( $this->type ), 'free' ) == 0 );
 
-		$urow = new JTableUser( $database );
+		$urow = new JTableUser( $db );
 		$urow->load( $this->userid );
 
-		$plan = new SubscriptionPlan( $database );
+		$plan = new SubscriptionPlan( $db );
 		$plan->load( $this->plan );
 
 		$name			= $urow->name;
@@ -12527,9 +12549,9 @@ class Subscription extends serialParamDBTable
 
 		// Assemble E-Mail Subject & Message
 		if ( $renew ) {
-			$subject = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $mainframe->getCfg( 'sitename' ) );
+			$subject = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $app->getCfg( 'sitename' ) );
 
-			$message .= sprintf( _ACCTEXP_MAILPARTICLE_THANKSREN, $mainframe->getCfg( 'sitename' ) );
+			$message .= sprintf( _ACCTEXP_MAILPARTICLE_THANKSREN, $app->getCfg( 'sitename' ) );
 
 			if ( $plan->email_desc ) {
 				$message .= "\n\n" . $plan->email_desc . "\n\n";
@@ -12544,9 +12566,9 @@ class Subscription extends serialParamDBTable
 				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
 			}
 		} else {
-			$subject = sprintf( _ACCTEXP_SEND_MSG, $name, $mainframe->getCfg( 'sitename' ) );
+			$subject = sprintf( _ACCTEXP_SEND_MSG, $name, $app->getCfg( 'sitename' ) );
 
-			$message .= sprintf(_ACCTEXP_MAILPARTICLE_THANKSREG, $mainframe->getCfg( 'sitename' ) );
+			$message .= sprintf(_ACCTEXP_MAILPARTICLE_THANKSREG, $app->getCfg( 'sitename' ) );
 
 			if ( $plan->email_desc ) {
 				$message .= "\n\n" . $plan->email_desc . "\n\n";
@@ -12568,17 +12590,17 @@ class Subscription extends serialParamDBTable
 		$message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
 
 		// Send email to user
-		if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
-			$adminName2		= $mainframe->getCfg( 'fromname' );
-			$adminEmail2	= $mainframe->getCfg( 'mailfrom' );
+		if ( $app->getCfg( 'mailfrom' ) != '' && $app->getCfg( 'fromname' ) != '' ) {
+			$adminName2		= $app->getCfg( 'fromname' );
+			$adminEmail2	= $app->getCfg( 'mailfrom' );
 		} else {
 			$query = 'SELECT `name`, `email`'
 					. ' FROM #__users'
 					. ' WHERE LOWER( usertype ) = \'superadministrator\''
 					. ' OR LOWER( usertype ) = \'super administrator\''
 					;
-			$database->setQuery( $query );
-			$rows = $database->loadObjectList();
+			$db->setQuery( $query );
+			$rows = $db->loadObjectList();
 			$row2 			= $rows[0];
 
 			$adminName2		= $row2->name;
@@ -12593,11 +12615,11 @@ class Subscription extends serialParamDBTable
 		$aecUser = AECToolbox::aecIP();
 
 		if ( $renew ) {
-			$subject2 = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $mainframe->getCfg( 'sitename' ) );
-			$message2 = sprintf( _ACCTEXP_ASEND_MSG_RENEW, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
+			$subject2 = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $app->getCfg( 'sitename' ) );
+			$message2 = sprintf( _ACCTEXP_ASEND_MSG_RENEW, $adminName2, $app->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
 		} else {
-			$subject2 = sprintf( _ACCTEXP_SEND_MSG, $name, $mainframe->getCfg( 'sitename' ) );
-			$message2 = sprintf( _ACCTEXP_ASEND_MSG, $adminName2, $mainframe->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
+			$subject2 = sprintf( _ACCTEXP_SEND_MSG, $name, $app->getCfg( 'sitename' ) );
+			$message2 = sprintf( _ACCTEXP_ASEND_MSG, $adminName2, $app->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
 		}
 
 		$subject2 = html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
@@ -12659,12 +12681,14 @@ class GeneralInfoRequester
 	 */
 	function detect_component( $component )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
 		if ( !empty( $aecConfig->cfg['bypassintegration'] ) ) {
 			$bypass = str_replace( ',', ' ', $aecConfig->cfg['bypassintegration'] );
@@ -12724,7 +12748,7 @@ class GeneralInfoRequester
 				break;
 
 			case 'UE': // User Extended
-				return in_array( $mainframe->getCfg( 'dbprefix' ) . 'user_extended', $tables );
+				return in_array( $app->getCfg( 'dbprefix' ) . 'user_extended', $tables );
 				break;
 
 			case 'SMF': // Simple Machines Forum
@@ -12734,11 +12758,11 @@ class GeneralInfoRequester
 				break;
 
 			case 'VM': // VirtueMart
-				return in_array( $mainframe->getCfg( 'dbprefix' ) . 'vm_orders', $tables );
+				return in_array( $app->getCfg( 'dbprefix' ) . 'vm_orders', $tables );
 				break;
 
 			case 'JACL': // JACL
-				return in_array( $mainframe->getCfg( 'dbprefix' ) . 'jaclplus', $tables );
+				return in_array( $app->getCfg( 'dbprefix' ) . 'jaclplus', $tables );
 				break;
 
 			case 'UHP2':
@@ -12762,7 +12786,7 @@ class GeneralInfoRequester
 	 */
 	function getLowerACLGroup( $group_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$group_list	= array();
 		$groups		= '';
@@ -12774,8 +12798,8 @@ class GeneralInfoRequester
 				. ' GROUP BY g2.id'
 				. ' ORDER BY g2.lft'
 				;
-		$database->setQuery( $query );
-		$rows = $database->loadObjectList();
+		$db->setQuery( $query );
+		$rows = $db->loadObjectList();
 
 		for( $i = 0, $n = count( $rows ); $i < $n; $i++ ) {
 			$row = &$rows[$i];
@@ -12794,19 +12818,19 @@ class AECfetchfromDB
 {
 	function UserIDfromInvoiceNumber( $invoice_number )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `invoice_number` = \'' . $invoice_number . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function InvoiceIDfromNumber( $invoice_number, $userid = 0, $override_active = false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -12826,13 +12850,13 @@ class AECfetchfromDB
 			$query .= ' AND `userid` = \'' . $userid . '\'';
 		}
 
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function InvoiceNumberfromId( $id, $override_active = false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
@@ -12846,8 +12870,8 @@ class AECfetchfromDB
 
 		$query .= ' `id` = \'' . $id . '\'';
 
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function lastUnclearedInvoiceIDbyUserID( $userid, $excludedusage=null )
@@ -12858,7 +12882,7 @@ class AECfetchfromDB
 			$excludedusage = array();
 		}
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `invoice_number`, `usage`'
 				. ' FROM #__acctexp_invoices'
@@ -12867,8 +12891,8 @@ class AECfetchfromDB
 				. ' AND `active` = \'1\''
 				. ' ORDER BY `id` DESC'
 				;
-		$database->setQuery( $query );
-		$invoice_list = $database->loadObjectList();
+		$db->setQuery( $query );
+		$invoice_list = $db->loadObjectList();
 
 		if ( empty( $invoice_list ) ) {
 			return false;
@@ -12895,7 +12919,7 @@ class AECfetchfromDB
 
 	function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_invoices'
@@ -12908,26 +12932,26 @@ class AECfetchfromDB
 
 		$query .= ' ORDER BY `transaction_date` DESC';
 
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function InvoiceCountbyUserID( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = \'' . (int) $userid . '\''
 				. ' AND `active` = \'1\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function InvoiceNumberbyCartId( $userid, $cartid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
@@ -12935,13 +12959,13 @@ class AECfetchfromDB
 				. ' AND `usage` = \'c.' . $cartid . '\''
 				;
 
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function InvoiceIdList( $userid, $total, $max=20, $sort='`transaction_date` DESC' )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$min_limit	= ( $total > $max ) ? ( $total - $max ) : 0;
 
@@ -12952,59 +12976,59 @@ class AECfetchfromDB
 				. ' ORDER BY ' . $sort . ', `id` DESC'
 				. ' LIMIT ' . $min_limit . ',' . $max
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function SubscriptionIDfromUserID( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $userid . '\''
 				. ' ORDER BY `primary` DESC'
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function RecurringStatusfromSubscriptionID( $subscriptionid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `recurring`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `id` = \'' . (int) $subscriptionid . '\''
 				. ' ORDER BY `primary` DESC'
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function UserIDfromSubscriptionID( $susbcriptionid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `id` = \'' . (int) $susbcriptionid . '\''
 				. ' ORDER BY `primary` DESC'
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function UserExists( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__users'
 				. ' WHERE `id` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 	
 }
@@ -13086,18 +13110,18 @@ class aecSuperCommand
 		switch ( $this->audience['command'] ) {
 			case 'all':
 			case 'everybody':
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
 						;
-				$database->setQuery( $query );
-				$userlist = $database->loadResultArray();
+				$db->setQuery( $query );
+				$userlist = $db->loadResultArray();
 				break;
 			case 'orphans':
 				/*$this->focus == 'subscriptions';
 
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$query = 'SELECT id'
 						. ' FROM #__acctexp_subscr AS subs'
@@ -13109,11 +13133,11 @@ class aecSuperCommand
 						. ' FROM #__users'
 						. ' WHERE `userid` IN (' . $params[1] . ')'
 						;
-				$database->setQuery( $query );*/
-				return $database->loadResultArray();
+				$db->setQuery( $query );*/
+				return $db->loadResultArray();
 				break;
 			case 'subscribers':
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$query = 'SELECT ' . ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`';
 
@@ -13135,8 +13159,8 @@ class aecSuperCommand
 							;
 				}
 
-				$database->setQuery( $query );
-				return $database->loadResultArray();
+				$db->setQuery( $query );
+				return $db->loadResultArray();
 			default:
 				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
 
@@ -13189,24 +13213,24 @@ class aecSuperCommand
 				return explode( ',', $params[1] );
 				break;
 			case 'userid':
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
 						. ' WHERE `userid` IN (' . $params[1] . ')'
 						;
-				$database->setQuery( $query );
-				return $database->loadResultArray();
+				$db->setQuery( $query );
+				return $db->loadResultArray();
 				break;
 			case 'username':
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
 						. ' WHERE LOWER( `username` ) LIKE \'%' . $params[1] . '%\''
 						;
-				$database->setQuery( $query );
-				$ids = $database->loadResultArray();
+				$db->setQuery( $query );
+				$ids = $db->loadResultArray();
 
 				$p = array();
 				$p[0] = 'userid';
@@ -13215,7 +13239,7 @@ class aecSuperCommand
 				return $this->cmdHas( $p );
 				break;
 			case 'plan':
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$query = 'SELECT ' . ( ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`' )
 						. ' FROM #__acctexp_subscr'
@@ -13224,11 +13248,11 @@ class aecSuperCommand
 						. ' AND `status` != \'Closed\''
 						. ' AND `status` != \'Hold\''
 						;
-				$database->setQuery( $query );
-				return $database->loadResultArray();
+				$db->setQuery( $query );
+				return $db->loadResultArray();
 				break;
 			case 'mi':
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$mis = explode( ',', $params[1] );
 
@@ -13250,14 +13274,14 @@ class aecSuperCommand
 
 	function cmdApply( $metaUser, $params )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		switch ( strtolower( $params[0] ) ) {
 			case 'plan':
 				$plans = explode( ',', $params[1] );
 
 				foreach ( $plans as $planid ) {
-					$plan = new SubscriptionPlan( $database );
+					$plan = new SubscriptionPlan( $db );
 					$plan->load( $planid );
 
 					$metaUser->establishFocus( $plan );
@@ -13270,7 +13294,7 @@ class aecSuperCommand
 
 				if ( is_array( $micro_integrations ) ) {
 					foreach ( $micro_integrations as $mi_id ) {
-						$mi = new microIntegration( $database );
+						$mi = new microIntegration( $db );
 
 						if ( !$mi->mi_exists( $mi_id ) ) {
 							continue;
@@ -13365,14 +13389,14 @@ class reWriteEngine
 			$rewrite['user'][] = 'activationlink';
 
 			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$query = 'SELECT name, title'
 						. ' FROM #__comprofiler_fields'
 						. ' WHERE `table` != \'#__users\''
 						. ' AND name != \'NA\'';
-				$database->setQuery( $query );
-				$objects = $database->loadObjectList();
+				$db->setQuery( $query );
+				$objects = $db->loadObjectList();
 
 				if ( is_array( $objects ) ) {
 					foreach ( $objects as $object ) {
@@ -13393,14 +13417,14 @@ class reWriteEngine
 			}
 
 			if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$query = 'SELECT `id`, `name`'
 						. ' FROM #__community_fields'
 						. ' WHERE `type` != \'group\''
 						;
-				$database->setQuery( $query );
-				$fields = $database->loadObjectList();
+				$db->setQuery( $query );
+				$fields = $db->loadObjectList();
 
 				if ( is_array( $fields ) ) {
 					foreach ( $fields as $field ) {
@@ -13540,14 +13564,14 @@ class reWriteEngine
 
 	function armRewrite()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $aecConfig, $mainframe;
+		global $aecConfig, $app;
 
 		$this->rewrite = array();
 
-		$this->rewrite['system_timestamp']					= AECToolbox::formatDate( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
-		$this->rewrite['system_timestamp_backend']			= AECToolbox::formatDate( ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ), true );
+		$this->rewrite['system_timestamp']					= AECToolbox::formatDate( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->rewrite['system_timestamp_backend']			= AECToolbox::formatDate( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ), true );
 		$this->rewrite['system_serverstamp_time']			= AECToolbox::formatDate( time() );
 		$this->rewrite['system_server_timestamp_backend']	= AECToolbox::formatDate( time(), true );
 
@@ -13667,7 +13691,7 @@ class reWriteEngine
 				if ( empty( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
 					$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->data['metaUser']->cmsUser->id );
 
-					$this->data['invoice'] = new Invoice( $database );
+					$this->data['invoice'] = new Invoice( $db );
 					$this->data['invoice']->load( $lastinvoice );
 				}
 			}
@@ -14333,7 +14357,7 @@ class AECToolbox
 	 */
 	function deadsureURL( $url, $secure=false, $internal=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -14448,19 +14472,19 @@ class AECToolbox
 	 */
 	function VerifyUsername( $username )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
-		$heartbeat = new aecHeartbeat( $database );
+		$heartbeat = new aecHeartbeat( $db );
 		$heartbeat->frontendping();
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
 		. ' WHERE username = \'' . aecEscape( $username, array( 'string', 'badchars' ) ) . '\''
 		;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
 		if ( empty( $id ) ) {
 			return false;
@@ -14473,7 +14497,7 @@ class AECToolbox
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
-					$payment_plan = new SubscriptionPlan( $database );
+					$payment_plan = new SubscriptionPlan( $db );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
 					$metaUser->establishFocus( $payment_plan, 'Free', false );
@@ -14505,19 +14529,19 @@ class AECToolbox
 
 	function VerifyUser( $username )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		global $aecConfig;
 
-		$heartbeat = new aecHeartbeat( $database );
+		$heartbeat = new aecHeartbeat( $db );
 		$heartbeat->frontendping();
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
 		. ' WHERE username = \'' . aecEscape( $username, array( 'string', 'badchars' ) ) . '\''
 		;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
 		if ( empty( $id ) ) {
 			return false;
@@ -14536,7 +14560,7 @@ class AECToolbox
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
-					$payment_plan = new SubscriptionPlan( $database );
+					$payment_plan = new SubscriptionPlan( $db );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
 					$metaUser->establishFocus( $payment_plan, 'Free', false );
@@ -14566,11 +14590,13 @@ class AECToolbox
 
 	function saveUserRegistration( $option, $var, $internal=false, $overrideActivation=false, $overrideEmails=false, $overrideJS=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$acl = &JFactory::getACL();
 
-		global $mainframe, $task, $aecConfig;
+		global $task, $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		ob_start();
 
@@ -14650,16 +14676,16 @@ class AECToolbox
 					. ' FROM #__users'
 					. ' WHERE `username` = \'' . $var['username'] . '\''
 					;
-			$database->setQuery( $query );
-			$uid = $database->loadResult();
+			$db->setQuery( $query );
+			$uid = $db->loadResult();
 			JUser::saveUser_ext( $uid );
 			//synchronize dublicate user data
 			$query = 'SELECT `id`' .
 					' FROM #__juser_integration' .
 					' WHERE `published` = \'1\'' .
 					' AND `export_status` = \'1\'';
-			$database->setQuery( $query );
-			$components = $database->loadObjectList();
+			$db->setQuery( $query );
+			$components = $db->loadObjectList();
 			if ( !empty( $components ) ) {
 				foreach ( $components as $component ) {
 					$synchronize = require_integration( $component->id );
@@ -14670,7 +14696,7 @@ class AECToolbox
 
 		} else {
 			// This is a joomla registration, borrowing their code to save the user
-			global $mainframe;
+			$app = JFactory::getApplication();
 
 			// Check for request forgeries
 			if ( !$internal ) {
@@ -14679,7 +14705,7 @@ class AECToolbox
 
 			// Get required system objects
 			$user 		= clone(JFactory::getUser());
-			//$pathway 	=& $mainframe->getPathway();
+			//$pathway 	=& $app->getPathway();
 			$config		=& JFactory::getConfig();
 			$authorize	=& JFactory::getACL();
 			$document   =& JFactory::getDocument();
@@ -14739,24 +14765,24 @@ class AECToolbox
 			$email 		= $row->email;
 			$username 	= $row->username;
 
-			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
+			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $app->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
 			$usersConfig = &JComponentHelper::getParams( 'com_users' );
 			$activation = $usersConfig->get('useractivation');
 
 			if ( ( $activation == 1 ) && !$overrideActivation ) {
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $mainframe->getCfg( 'sitename' ), JURI::root()."index.php?option=com_user&task=activate&activation=".$row->activation, JURI::root(), $username, $savepwd );
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $app->getCfg( 'sitename' ), JURI::root()."index.php?option=com_user&task=activate&activation=".$row->activation, JURI::root(), $username, $savepwd );
 			} else {
-				$message = sprintf( _AEC_USEND_MSG, $name, $mainframe->getCfg( 'sitename' ), JURI::root() );
+				$message = sprintf( _AEC_USEND_MSG, $name, $app->getCfg( 'sitename' ), JURI::root() );
 			}
 
 			$message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
 
 			// check if Global Config `mailfrom` and `fromname` values exist
-			if ( $mainframe->getCfg( 'mailfrom' ) != '' && $mainframe->getCfg( 'fromname' ) != '' ) {
-				$adminName2 	= $mainframe->getCfg( 'fromname' );
-				$adminEmail2 	= $mainframe->getCfg( 'mailfrom' );
+			if ( $app->getCfg( 'mailfrom' ) != '' && $app->getCfg( 'fromname' ) != '' ) {
+				$adminName2 	= $app->getCfg( 'fromname' );
+				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
 				$query = 'SELECT `name`, `email`'
@@ -14764,8 +14790,8 @@ class AECToolbox
 						. ' WHERE LOWER( usertype ) = \'superadministrator\''
 						. ' OR LOWER( usertype ) = \'super administrator\''
 						;
-				$database->setQuery( $query );
-				$rows = $database->loadObjectList();
+				$db->setQuery( $query );
+				$rows = $db->loadObjectList();
 				$row2 			= $rows[0];
 
 				$adminName2 	= $row2->name;
@@ -14780,8 +14806,8 @@ class AECToolbox
 			// Send notification to all administrators
 			$aecUser	= AECToolbox::aecIP();
 
-			$subject2	= sprintf( _AEC_SEND_SUB, $name, $mainframe->getCfg( 'sitename' ) );
-			$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $mainframe->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
+			$subject2	= sprintf( _AEC_SEND_SUB, $name, $app->getCfg( 'sitename' ) );
+			$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $app->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
 			$message2	= html_entity_decode( $message2, ENT_QUOTES, 'UTF-8' );
@@ -14803,8 +14829,8 @@ class AECToolbox
 				. ' FROM #__users'
 				. ' WHERE `username` = \'' . $var['username'] . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function randomstring( $length=16, $alphanum_only=false, $uppercase=false )
@@ -14838,15 +14864,15 @@ class AECToolbox
 			return null;
 		}
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `status`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `userid` = \'' . (int) $userid . '\''
 				. ' AND `primary` = \'1\''
 				;
-		$database->setQuery( $query );
-		$aecstatus = $database->loadResult();
+		$db->setQuery( $query );
+		$aecstatus = $db->loadResult();
 
 		if ( $aecstatus ) {
 			if ( ( strcmp( $aecstatus, 'Active' ) === 0 ) || ( strcmp( $aecstatus, 'Trial' ) === 0 ) ) {
@@ -15288,13 +15314,13 @@ class AECToolbox
 					} elseif ( $test ) {
 						return false;
 					} else {
-						$database = &JFactory::getDBO();
+						$db = &JFactory::getDBO();
 
 						$props = array_keys( get_object_vars( $subject ) );
 
 						$event = $erx . $k . ' does not exist! Possible object values are: ' . implode( ';', $props );
 
-						$eventlog = new eventLog( $database );
+						$eventlog = new eventLog( $db );
 						$eventlog->issue( $err, $erp, $event, 128, array() );
 					}
 				} elseif ( is_array( $subject ) ) {
@@ -15307,24 +15333,24 @@ class AECToolbox
 					} elseif ( $test ) {
 						return false;
 					} else {
-						$database = &JFactory::getDBO();
+						$db = &JFactory::getDBO();
 
 						$props = array_keys( $subject );
 
 						$event = $erx . $k . ' does not exist! Possible array values are: ' . implode( ';', $props );
 
-						$eventlog = new eventLog( $database );
+						$eventlog = new eventLog( $db );
 						$eventlog->issue( $err, $erp, $event, 128, array() );
 					}
 
 				} elseif ( $test ) {
 					return false;
 				} else {
-					$database = &JFactory::getDBO();
+					$db = &JFactory::getDBO();
 
 					$event = $erx . $k . '; neither property nor array field';
 
-					$eventlog = new eventLog( $database );
+					$eventlog = new eventLog( $db );
 					$eventlog->issue( $err, $erp, $event, 128, array() );
 					return false;
 				}
@@ -15340,7 +15366,7 @@ class AECToolbox
 
 		$adminlist = array();
 		if ( $aecConfig->cfg['email_default_admins'] ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$query = 'SELECT email, sendEmail'
 			. ' FROM #__users'
@@ -15348,8 +15374,8 @@ class AECToolbox
 			. ' AND sendEmail = 1'
 			. ' AND block = 0'
 			;
-			$database->setQuery( $query );
-			$admins = $database->loadObjectList();
+			$db->setQuery( $query );
+			$admins = $db->loadObjectList();
 
 			foreach ( $admins as $admin ) {
 				if ( !empty( $admin->sendEmail ) ) {
@@ -15372,14 +15398,14 @@ class microIntegrationHandler
 {
 	function microIntegrationHandler()
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->mi_dir = JPATH_SITE . '/components/com_acctexp/micro_integration';
 	}
 
 	function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false, $classname=false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id, class_name' . ( $name ? ', name' : '' )
 			 	. ' FROM #__acctexp_microintegrations'
@@ -15393,11 +15419,11 @@ class microIntegrationHandler
 			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
 		}
 
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		$rows = $database->loadObjectList();
-		if ( $database->getErrorNum() ) {
-			echo $database->stderr();
+		$rows = $db->loadObjectList();
+		if ( $db->getErrorNum() ) {
+			echo $db->stderr();
 			return false;
 		} else {
 			return $rows;
@@ -15406,11 +15432,11 @@ class microIntegrationHandler
 
 	function compareMIs( $mi, $cmi_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$excluded_props = array( 'id' );
 
-		$cmi = new microIntegration( $database );
+		$cmi = new microIntegration( $db );
 		$cmi->load( $cmi_id );
 
 		if ( !$cmi->callIntegration( true ) ) {
@@ -15452,9 +15478,9 @@ class microIntegrationHandler
 
 	function getMIsbyPlan( $plan_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$plan = new SubscriptionPlan( $database );
+		$plan = new SubscriptionPlan( $db );
 		$plan->load( $plan_id );
 
 		return $plan->getMicroIntegrations();
@@ -15462,17 +15488,17 @@ class microIntegrationHandler
 
 	function getPlansbyMI( $mi_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_plans'
 				;
-		$database->setQuery( $query );
-		$plans = $database->loadResultArray();
+		$db->setQuery( $query );
+		$plans = $db->loadResultArray();
 
 		$plan_list = array();
 		foreach ( $plans as $planid ) {
-			$plan = new SubscriptionPlan( $database );
+			$plan = new SubscriptionPlan( $db );
 			$plan->load( $planid );
 
 			$mis = $plan->getMicroIntegrations();
@@ -15494,7 +15520,7 @@ class microIntegrationHandler
 
 	function userPlanExpireActions( $metaUser, $subscription_plan )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$mi_autointegrations = $this->getAutoIntegrations();
 
@@ -15509,7 +15535,7 @@ class microIntegrationHandler
 
 			if ( count( $user_auto_integrations ) ) {
 				foreach ( $user_auto_integrations as $mi_id ) {
-					$mi = new microIntegration( $database );
+					$mi = new microIntegration( $db );
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
 						$mi->expiration_action( $metaUser, $subscription_plan );
@@ -15550,46 +15576,46 @@ class microIntegrationHandler
 
 	function getPreExpIntegrations()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
 				. ' WHERE `active` = \'1\''
 				. ' AND `pre_exp_check` > 0'
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function getAutoIntegrations()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
 				. ' WHERE `active` = \'1\''
 				. ' AND `auto_check` = \'1\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function getUserChangeIntegrations()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_microintegrations'
 				. ' WHERE `active` = \'1\''
 				. ' AND `on_userchange` = \'1\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function userchange( $row, $post, $trace = '' )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$mi_list = $this->getUserChangeIntegrations();
 
@@ -15600,8 +15626,8 @@ class microIntegrationHandler
 			. ' FROM #__users'
 			. ' WHERE username = \'' . $row . '\''
 			;
-			$database->setQuery( $query );
-			$userid = $database->loadResult();
+			$db->setQuery( $query );
+			$userid = $db->loadResult();
 		} elseif ( is_array( $row ) ) {
 			$userid = $row['id'];
 		} elseif ( !is_object( $row ) ) {
@@ -15609,14 +15635,14 @@ class microIntegrationHandler
 		}
 
 		if ( !is_object( $row ) ) {
-			$row = new JTableUser( $database );
+			$row = new JTableUser( $db );
 			$row->load( $userid );
 		}
 
 		if ( !empty( $mi_list ) ) {
 			foreach ( $mi_list as $mi_id ) {;
 				if ( !is_null( $mi_id ) && ( $mi_id != '' ) && $mi_id ) {
-					$mi = new microIntegration($database);
+					$mi = new microIntegration($db);
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
 						$mi->on_userchange_action( $row, $post, $trace );
@@ -15632,7 +15658,7 @@ class microIntegrationHandler
 			return array();
 		}
 		
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$milist = array_unique( $milist );
 
@@ -15642,20 +15668,20 @@ class microIntegrationHandler
 	 			. ' AND `active` = \'1\''
 				. ' ORDER BY `ordering` ASC'
 				;
-		$database->setQuery( $query );
-		return $database->loadResultArray();
+		$db->setQuery( $query );
+		return $db->loadResultArray();
 	}
 
 	function getMaxPreExpirationTime()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT MAX(pre_exp_check)'
 				. ' FROM #__acctexp_microintegrations'
 				. ' WHERE `active` = \'1\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 }
@@ -15735,7 +15761,7 @@ class MI
 
 	function issueUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_event'
@@ -15745,8 +15771,8 @@ class MI
 				. ' AND `type` = \'mi\''
 	 			. ' AND `status` = \'waiting\''
 				;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
 		if ( $id ) {
 			return null;
@@ -15757,7 +15783,7 @@ class MI
 
 	function redateUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_event'
@@ -15767,11 +15793,11 @@ class MI
 				. ' AND `type` = \'mi\''
 	 			. ' AND `status` = \'waiting\''
 				;
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
 		if ( $id ) {
-			$aecEvent = new aecEvent( $database );
+			$aecEvent = new aecEvent( $db );
 			$aecEvent->load( $id );
 
 			if ( $aecEvent->due_date != $due_date ) {
@@ -15785,7 +15811,7 @@ class MI
 
 	function removeEvents( $request, $event )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'DELETE'
 				. ' FROM #__acctexp_event'
@@ -15795,13 +15821,13 @@ class MI
 				. ' AND `type` = \'mi\''
 	 			. ' AND `status` = \'waiting\''
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 
 	function issueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $request->metaUser ) ) {
 			$context['user_id']	= $request->metaUser->userid;
@@ -15823,14 +15849,14 @@ class MI
 			$context['invoice_number'] = $request->invoice->invoice_number;
 		}
 
-		$aecEvent = new aecEvent( $database );
+		$aecEvent = new aecEvent( $db );
 
 		return $aecEvent->issue( 'mi', $this->info['name'], $this->id, $event, $userid, $due_date, $context, $params, $customparams );
 	}
 
 	function aecEventHook( $event )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$method = 'aecEventHook' . $event->event;
 
@@ -15857,7 +15883,7 @@ class MI
 
 		// Select correct invoice
 		if ( !empty( $event->context['invoice_id'] ) ) {
-			$request->invoice = new Invoice( $database );
+			$request->invoice = new Invoice( $db );
 			$request->invoice->load( $event->context['invoice_id'] );
 		}
 
@@ -15934,11 +15960,11 @@ class microIntegration extends serialParamDBTable
 
 	function callMILanguage()
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-		if ( file_exists( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' ) ) {
-			include_once( $langPathMI . $mainframe->getCfg( 'lang' ) . '.php' );
+		if ( file_exists( $langPathMI . $app->getCfg( 'lang' ) . '.php' ) ) {
+			include_once( $langPathMI . $app->getCfg( 'lang' ) . '.php' );
 		} else {
 			include_once( $langPathMI . 'english.php' );
 		}
@@ -15946,14 +15972,14 @@ class microIntegration extends serialParamDBTable
 
 	function mi_exists( $mi_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_microintegrations'
 				. ' WHERE `id` = \'' . $mi_id . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function callDry( $mi_name )
@@ -16021,7 +16047,7 @@ class microIntegration extends serialParamDBTable
 	function pre_expiration_action( &$metaUser, $objplan=null )
 	{
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) || method_exists( $this->mi_class, 'relayAction' ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
 			$userflags = $metaUser->meta->getMIParams( $this->id, $objplan->id );
 
@@ -16040,7 +16066,7 @@ class microIntegration extends serialParamDBTable
 						// This is a retrigger as expiration dates are equal => break
 						return false;
 					} else {
-						if ( ( time() + $mainframe->getCfg( 'offset' ) * 3600 ) > $current_expiration ) {
+						if ( ( time() + $app->getCfg( 'offset' ) * 3600 ) > $current_expiration ) {
 							// This trigger comes too late as the expiration already happened => break
 							return false;
 						}
@@ -16049,7 +16075,7 @@ class microIntegration extends serialParamDBTable
 			}
 
 			$newflags[$spc]		= $current_expiration;
-			$newflags[$spca]	= time() + $mainframe->getCfg( 'offset' ) * 3600;
+			$newflags[$spca]	= time() + $app->getCfg( 'offset' ) * 3600;
 
 			// Create the new flags
 			$metaUser->meta->setMIParams( $this->id, $objplan->id, $newflags );
@@ -16163,7 +16189,7 @@ class microIntegration extends serialParamDBTable
 
 		// If returning fatal error, issue additional entry
 		if ( $return === false ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out due to errors, plan application was halted';
 
@@ -16178,7 +16204,7 @@ class microIntegration extends serialParamDBTable
 				$params = array();
 			}
 
-			$eventlog = new eventLog( $database );
+			$eventlog = new eventLog( $db );
 			$eventlog->issue( 'MI application failed', 'mi, failure, '.$this->class_name, $error, 128, $params );
 		}
 
@@ -16433,18 +16459,18 @@ class microIntegration extends serialParamDBTable
 			$common_data = $this->mi_class->CommonData();
 
 			if ( !empty( $common_data ) ) {
-					$database = &JFactory::getDBO();
+					$db = &JFactory::getDBO();
 
 					$query = 'SELECT id'
 						 	. ' FROM #__acctexp_microintegrations'
 						 	. ' WHERE `class_name` = \'' . $this->class_name . '\''
 						 	. ' ORDER BY `id` DESC'
 						 	;
-					$database->setQuery( $query );
-					$last_id = $database->loadResult();
+					$db->setQuery( $query );
+					$last_id = $db->loadResult();
 
 					if ( $last_id ) {
-						$last_mi = new microIntegration( $database );
+						$last_mi = new microIntegration( $db );
 						$last_mi->load( $last_id );
 
 						foreach ( $common_data as $key ) {
@@ -16548,12 +16574,12 @@ class microIntegration extends serialParamDBTable
 		$this->pre_exp_check	= $array['pre_exp_check'];
 
 		if ( !empty( $new_params['rebuild'] ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
 
 			foreach ( $planlist as $planid ) {
-				$plan = new SubscriptionPlan( $database );
+				$plan = new SubscriptionPlan( $db );
 				$plan->load( $planid );
 
 				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
@@ -16570,12 +16596,12 @@ class microIntegration extends serialParamDBTable
 		}
 
 		if ( !empty( $new_params['remove'] ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
 
 			foreach ( $planlist as $planid ) {
-				$plan = new SubscriptionPlan( $database );
+				$plan = new SubscriptionPlan( $db );
 				$plan->load( $planid );
 
 				$userlist = SubscriptionPlanHandler::getPlanUserlist( $planid );
@@ -16628,13 +16654,13 @@ class microIntegration extends serialParamDBTable
 		$method = 'customtab_' . $action;
 
 		if ( method_exists( $this->mi_class, $method ) ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$request = new stdClass();
 			$request->parent			=& $this;
 			$request->metaUser			=& $metaUser;
 
-			$invoice = new Invoice( $database );
+			$invoice = new Invoice( $db );
 			$invoice->loadbySubscriptionId( $metaUser->objSubscription->id );
 
 			$request->invoice			=& $invoice;
@@ -17224,7 +17250,7 @@ class couponHandler
 
 	function idFromCode( $coupon_code )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$return = array();
 
@@ -17233,8 +17259,8 @@ class couponHandler
 				. ' FROM #__acctexp_coupons_static'
 				. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
 				;
-		$database->setQuery( $query );
-		$couponid = $database->loadResult();
+		$db->setQuery( $query );
+		$couponid = $db->loadResult();
 
 		if ( $couponid ) {
 			// Its static, so set type to 1
@@ -17245,8 +17271,8 @@ class couponHandler
 					. ' FROM #__acctexp_coupons'
 					. ' WHERE `coupon_code` = \'' . $coupon_code . '\''
 					;
-			$database->setQuery( $query );
-			$couponid = $database->loadResult();
+			$db->setQuery( $query );
+			$couponid = $db->loadResult();
 
 			// Its not static, so set type to 0
 			$return['type'] = 0;
@@ -17259,9 +17285,9 @@ class couponHandler
 
 	function load( $coupon_code )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$cc = $this->idFromCode( $coupon_code );
 
@@ -17272,7 +17298,7 @@ class couponHandler
 			$this->status = true;
 
 			// establish coupon object
-			$this->coupon = new coupon( $database, $this->type );
+			$this->coupon = new coupon( $db, $this->type );
 			$this->coupon->load( $cc['id'] );
 
 			// Check whether coupon is active
@@ -17289,7 +17315,7 @@ class couponHandler
 				$expstamp = strtotime( $this->restrictions['start_date'] );
 
 				// Error: Use of this coupon has not started yet
-				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) > 0 ) ) {
+				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) > 0 ) ) {
 					$this->setError( _COUPON_ERROR_NOTSTARTED );
 				}
 			}
@@ -17299,7 +17325,7 @@ class couponHandler
 				$expstamp = strtotime( $this->restrictions['expiration'] );
 
 				// Error: Use of this coupon has expired
-				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) < 0 ) ) {
+				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) < 0 ) ) {
 					$this->setError( _COUPON_ERROR_EXPIRED );
 					$this->coupon->deactivate();
 				}
@@ -17324,9 +17350,9 @@ class couponHandler
 							. ' FROM #__acctexp_subscr'
 							. ' WHERE `id` = \'' . $this->restrictions['subscr_id_dependency'] . '\''
 							;
-					$database->setQuery( $query );
+					$db->setQuery( $query );
 
-					$subscr_status = strtolower( $database->loadResult() );
+					$subscr_status = strtolower( $db->loadResult() );
 
 					// Error: The Subscription this Coupon depends on has run out
 					if ( ( strcmp( $subscr_status, 'active' ) === 0 ) || ( ( strcmp( $subscr_status, 'trial' ) === 0 ) && $this->restrictions['allow_trial_depend_subscr'] ) ) {
@@ -17343,7 +17369,7 @@ class couponHandler
 
 	function forceload( $coupon_code )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$cc = $this->idFromCode( $coupon_code );
 
@@ -17354,7 +17380,7 @@ class couponHandler
 			$this->status = true;
 
 			// establish coupon object
-			$this->coupon = new coupon( $database, $this->type );
+			$this->coupon = new coupon( $db, $this->type );
 			$this->coupon->load( $cc['id'] );
 			return true;
 		} else {
@@ -17364,10 +17390,10 @@ class couponHandler
 
 	function switchType()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Duplicate Coupon at other table
-		$newcoupon = new coupon( $database, !$this->type );
+		$newcoupon = new coupon( $db, !$this->type );
 		$newcoupon->createNew( $this->coupon->coupon_code, $this->coupon->created_date );
 
 		// Switch id over to new table max
@@ -17386,13 +17412,13 @@ class couponHandler
 				. ' WHERE `coupon_id` = \'' . $oldid . '\''
 				;
 
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 
 	function incrementCount( $invoice )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Get existing coupon relations for this user
 		$query = 'SELECT `id`'
@@ -17402,19 +17428,19 @@ class couponHandler
 				. ' AND `coupon_type` = \'' . $this->type . '\''
 				;
 
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
-		$couponxuser = new couponXuser( $database );
+		$couponxuser = new couponXuser( $db );
 
 		if ( !empty( $id ) ) {
 			// Relation exists, update count
-			global $mainframe;
+			$app = JFactory::getApplication();
 
 			$couponxuser->load( $id );
 			$couponxuser->usecount += 1;
 			$couponxuser->addInvoice( $invoice->invoice_number );
-			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
+			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + ( $app->getCfg( 'offset' ) * 3600 ) );
 			$couponxuser->storeload();
 		} else {
 			// Relation does not exist, create one
@@ -17428,7 +17454,7 @@ class couponHandler
 
 	function decrementCount( $invoice )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Get existing coupon relations for this user
 		$query = 'SELECT `id`'
@@ -17438,19 +17464,19 @@ class couponHandler
 				. ' AND `coupon_type` = \'' . $this->type . '\''
 				;
 
-		$database->setQuery( $query );
-		$id = $database->loadResult();
+		$db->setQuery( $query );
+		$id = $db->loadResult();
 
-		$couponxuser = new couponXuser( $database );
+		$couponxuser = new couponXuser( $db );
 
 		// Only do something if a relation exists
 		if ( $id ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
 			// Decrement use count
 			$couponxuser->load( $id );
 			$couponxuser->usecount -= 1;
-			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) );
+			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + ( $app->getCfg( 'offset' ) * 3600 ) );
 
 			if ( $couponxuser->usecount ) {
 				// Use count is 1 or above - break invoice relation but leave overall relation intact
@@ -17778,7 +17804,7 @@ class couponHandler
 	{
 		global $aecConfig;
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// See whether this coupon has micro integrations
 		if ( empty( $this->coupon->micro_integrations ) ) {
@@ -17786,7 +17812,7 @@ class couponHandler
 		}
 
 		foreach ( $this->coupon->micro_integrations as $mi_id ) {
-			$mi = new microIntegration( $database );
+			$mi = new microIntegration( $db );
 
 			// Only call if it exists
 			if ( !$mi->mi_exists( $mi_id ) ) {
@@ -17876,9 +17902,9 @@ class coupon extends serialParamDBTable
 		}
 		// Set created date if supplied
 		if ( is_null( $created ) ) {
-			global $mainframe;
+			$app = JFactory::getApplication();
 
-			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		} else {
 			$this->created_date = $created;
 		}
@@ -17967,7 +17993,7 @@ class coupon extends serialParamDBTable
 
 	function generateCouponCode( $maxlength = 6 )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$numberofrows = 1;
 
@@ -17978,16 +18004,16 @@ class coupon extends serialParamDBTable
 					. ' FROM #__acctexp_coupons'
 					. ' WHERE `coupon_code` = \'' . $inum . '\''
 					;
-			$database->setQuery( $query );
-			$numberofrows_normal = $database->loadResult();
+			$db->setQuery( $query );
+			$numberofrows_normal = $db->loadResult();
 
 			// check static coupons
 			$query = 'SELECT count(*)'
 					. ' FROM #__acctexp_coupons_static'
 					. ' WHERE `coupon_code` = \'' . $inum . '\''
 					;
-			$database->setQuery( $query );
-			$numberofrows_static = $database->loadResult();
+			$db->setQuery( $query );
+			$numberofrows_static = $db->loadResult();
 
 			$numberofrows = $numberofrows_normal + $numberofrows_static;
 		}
@@ -18028,15 +18054,15 @@ class couponXuser extends serialParamDBTable
 
 	function createNew( $userid, $coupon, $type, $params=null )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$this->id = 0;
 		$this->coupon_id = $coupon->id;
 		$this->coupon_type = $type;
 		$this->coupon_code = $coupon->coupon_code;
 		$this->userid = $userid;
-		$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
-		$this->last_updated = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->last_updated = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 
 		if ( is_array( $params ) ) {
 			$this->params = $params;
@@ -18170,7 +18196,7 @@ class aecImport
 
 	function import()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		foreach( $this->rows as $row ) {
 			$userid = null;
@@ -18186,9 +18212,9 @@ class aecImport
 						. ' FROM #__users'
 						. ' WHERE `id` = \'' . $user['id'] . '\''
 						;
-				$database->setQuery( $query );
+				$db->setQuery( $query );
 
-				$userid = $database->loadResult();
+				$userid = $db->loadResult();
 			}
 
 			if ( empty( $userid ) ) {
@@ -18196,9 +18222,9 @@ class aecImport
 						. ' FROM #__users'
 						. ' WHERE `username` = \'' . $user['username'] . '\''
 						;
-				$database->setQuery( $query );
+				$db->setQuery( $query );
 
-				$userid = $database->loadResult();
+				$userid = $db->loadResult();
 			}
 
 			if ( !$userid ) {
@@ -18243,7 +18269,7 @@ class aecImport
 			$subscr_action = false;
 
 			if ( !empty( $pid ) ) {
-				$plan = new SubscriptionPlan( $database );
+				$plan = new SubscriptionPlan( $db );
 				$plan->load( $pid );
 
 				$d = $metaUser->establishFocus( $plan, 'none', true );
@@ -18271,7 +18297,7 @@ class aecImport
 
 			if ( !empty( $user['invoice_number'] ) && !empty( $pid ) ) {
 				// Create Invoice
-				$invoice = new Invoice( $database );
+				$invoice = new Invoice( $db );
 				$invoice->create( $userid, $pid, 'none', $user['invoice_number'] );
 
 				if ( $subscr_action ) {
@@ -18321,7 +18347,7 @@ class aecExport extends serialParamDBTable
 
 	function useExport()
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		// Load Exporting Class
 		$filename = JPATH_SITE . '/components/com_acctexp/lib/export/' . $this->params->export_method . '.php';
@@ -18331,7 +18357,7 @@ class aecExport extends serialParamDBTable
 
 		$exphandler = new $classname();
 
-		$fname = 'aecexport_' . urlencode( stripslashes( $this->name ) ) . '_' . date( 'Y_m_d', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$fname = 'aecexport_' . urlencode( stripslashes( $this->name ) ) . '_' . date( 'Y_m_d', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 
 		// Send download header
 		header("Pragma: public");
@@ -18432,15 +18458,15 @@ class aecExport extends serialParamDBTable
 
 	function setUsedDate()
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$this->lastused_date = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+		$this->lastused_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		$this->storeload();
 	}
 
 	function save( $name, $filter, $options, $params, $system=false )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		// Drop old system saves to always keep 10 records
 		if ( $system ) {
@@ -18470,7 +18496,7 @@ class aecExport extends serialParamDBTable
 		$this->params = $params;
 
 		if ( ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) === 0 ) || empty( $this->created_date ) ) {
-			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) );
+			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		}
 
 		$this->storeload();
@@ -18582,7 +18608,7 @@ class aecReadout
 
 	function readProcessors()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$readout = array();
 
@@ -18593,7 +18619,7 @@ class aecReadout
 
 		foreach ( $processors as $procname ) {
 			$pp = null;
-			$pp = new PaymentProcessor( $database );
+			$pp = new PaymentProcessor( $db );
 
 			if ( !$pp->loadName( $procname ) ) {
 				continue;
@@ -18675,7 +18701,7 @@ class aecReadout
 
 	function readPlans()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$r = array();
 		$r['head'] = "Payment Plans";
@@ -18744,7 +18770,7 @@ class aecReadout
 
 		$r['set'] = array();
 		foreach ( $plans as $planid ) {
-			$plan = new SubscriptionPlan( $database );
+			$plan = new SubscriptionPlan( $db );
 			$plan->load( $planid );
 
 			$ps = array();
@@ -18760,7 +18786,7 @@ class aecReadout
 
 	function readPlanMIrel()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$r = array();
 		$r['head'] = "Payment Plan - MicroIntegration relationships";
@@ -18776,7 +18802,7 @@ class aecReadout
 		$micursor = '';
 		$mis = array();
 		foreach ( $this->milist as $miobj ) {
-			$mi = new microIntegration( $database );
+			$mi = new microIntegration( $db );
 			$mi->load( $miobj->id );
 			if ( !$mi->callIntegration() ) {
 				continue;
@@ -18798,7 +18824,7 @@ class aecReadout
 
 		$r['set'] = array();
 		foreach ( $this->planlist as $planid => $planobj ) {
-			$plan = new SubscriptionPlan( $database );
+			$plan = new SubscriptionPlan( $db );
 			$plan->load( $planobj->id );
 
 			if ( !empty( $plan->micro_integrations ) ) {
@@ -18822,7 +18848,7 @@ class aecReadout
 
 	function readMIs()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$r = array();
 		$r['head'] = "Micro Integration";
@@ -18830,7 +18856,7 @@ class aecReadout
 
 		$micursor = '';
 		foreach ( $this->milist as $miobj ) {
-			$mi = new microIntegration( $database );
+			$mi = new microIntegration( $db );
 			$mi->load( $miobj->id );
 			$mi->callIntegration(true);
 
@@ -19421,7 +19447,7 @@ class aecRestrictionHelper
 
 	function getLists( $params_values, $restrictions_values )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$user = &JFactory::getUser();
 
@@ -19462,8 +19488,8 @@ class aecRestrictionHelper
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'
 				;
-		$database->setQuery( $query );
-		$plans = $database->loadObjectList();
+		$db->setQuery( $query );
+		$plans = $db->loadObjectList();
 
 	 	if ( is_array( $plans ) ) {
 	 		$all_plans	= array_merge( $available_plans, $plans );
@@ -19486,8 +19512,8 @@ class aecRestrictionHelper
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_itemgroups'
 				;
-		$database->setQuery( $query );
-		$groups = $database->loadObjectList();
+		$db->setQuery( $query );
+		$groups = $db->loadObjectList();
 
 	 	if ( is_array( $groups ) ) {
 	 		$all_groups	= array_merge( $available_groups, $groups );

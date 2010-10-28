@@ -52,22 +52,22 @@ if ( isset( $aecConfig->cfg['invoicenum_display_id'] ) ) {
 $aecConfig->saveSettings();
 
 // check for old values and update (if happen) old tables
-$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'params'");
-$result = $database->loadObject();
+$db->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'params'");
+$result = $db->loadObject();
 
 if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
-	$result = $database->loadObject();
+	$db->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'mingid'");
+	$result = $db->loadObject();
 
 	if ( strcmp( $result->Field, 'mingid' ) === 0 ) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `restrictions` text NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
+		$db->setQuery("ALTER TABLE #__acctexp_plans ADD `restrictions` text NULL");
+		if ( !$db->query() ) {
+	    	$errors[] = array( $db->getErrorMsg(), $query );
 		}
 
-		$database->setQuery("ALTER TABLE #__acctexp_plans ADD `params` text NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
+		$db->setQuery("ALTER TABLE #__acctexp_plans ADD `params` text NULL");
+		if ( !$db->query() ) {
+	    	$errors[] = array( $db->getErrorMsg(), $query );
 		}
 
 		$remap_params = array();
@@ -88,8 +88,8 @@ if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 		$remap_params["gid"]		= "gid";
 		$remap_params["mingid"]		= "mingid";
 
-		$database->setQuery("SELECT * FROM  #__acctexp_plans");
-		$plans = $database->loadObjectList();
+		$db->setQuery("SELECT * FROM  #__acctexp_plans");
+		$plans = $db->loadObjectList();
 
 		$plans_new = array();
 		foreach ( $remap_params as $field => $arrayfield ) {
@@ -101,9 +101,9 @@ if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 				}
 			}
 
-			$database->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `" . $field . "`");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+			$db->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `" . $field . "`");
+			if ( !$db->query() ) {
+		    	$errors[] = array( $db->getErrorMsg(), $query );
 			}
 		}
 
@@ -150,9 +150,9 @@ if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 			// Making sure that plans act the same as they did before .49
 			$params .= "gid_enabled=1\n";
 
-			$database->setQuery("UPDATE #__acctexp_plans SET params='" . $params . "', restrictions='" . $restrictions . "' WHERE id='" . $id . "'");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+			$db->setQuery("UPDATE #__acctexp_plans SET params='" . $params . "', restrictions='" . $restrictions . "' WHERE id='" . $id . "'");
+			if ( !$db->query() ) {
+		    	$errors[] = array( $db->getErrorMsg(), $query );
 			}
 		}
 
@@ -171,11 +171,11 @@ $eucaInstalldb->dropColifExists( 'send_exp_mail', 'plans' );
 $eucaInstalldb->dropColifExists( 'fallback', 'plans' );
 
 if ( $eucaInstalldb->ColumninTable( 'customparams', 'plans' ) ) {
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
+	$db->setQuery("SHOW COLUMNS FROM #__acctexp_plans LIKE 'custom_params'");
 	if ( !$eucaInstalldb->ColumninTable( 'custom_params', 'plans' ) ) {
-		$database->setQuery("ALTER TABLE #__acctexp_plans CHANGE `customparams` `custom_params` text NULL");
-		if ( !$database->query() ) {
-	    	$errors[] = array( $database->getErrorMsg(), $query );
+		$db->setQuery("ALTER TABLE #__acctexp_plans CHANGE `customparams` `custom_params` text NULL");
+		if ( !$db->query() ) {
+	    	$errors[] = array( $db->getErrorMsg(), $query );
 		}
 	}
 }
@@ -189,15 +189,15 @@ $eucaInstalldb->addColifNotExists( 'customparams', "text NULL", 'subscr' );
 $eucaInstalldb->addColifNotExists( 'pre_exp_check', "int(4) NULL", 'microintegrations' );
 
 if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
-	$database->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
-	$result = $database->loadObject();
+	$db->setQuery("SHOW COLUMNS FROM #__acctexp LIKE 'expiration'");
+	$result = $db->loadObject();
 
 	if ( !empty( $result ) ) {
 		if ( (strcmp($result->Field, 'expiration') === 0) && (strcmp($result->Type, 'date') === 0) ) {
 			// Give extra space for plan description
-			$database->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");
-			if ( !$database->query() ) {
-		    	$errors[] = array( $database->getErrorMsg(), $query );
+			$db->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");
+			if ( !$db->query() ) {
+		    	$errors[] = array( $db->getErrorMsg(), $query );
 			}
 		}
 	}
@@ -219,27 +219,27 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
 	$query = 'UPDATE #__acctexp_subscr'
 			. ' SET `primary` = \'1\''
 			;
-	$database->setQuery( $query );
-	$database->query();
+	$db->setQuery( $query );
+	$db->query();
 
 	// copy expiration date
 	$query = 'UPDATE #__acctexp_subscr as a'
 			. ' INNER JOIN #__acctexp as b ON a.userid = b.userid'
 			. ' SET a.expiration = b.expiration'
 			;
-	$database->setQuery( $query );
-	$database->query();
+	$db->setQuery( $query );
+	$db->query();
 
 	// Get plans
 	$query = 'SELECT `id`'
 			. ' FROM #__acctexp_plans'
 			;
-	$database->setQuery( $query );
-	$pplans = $database->loadResultArray();
+	$db->setQuery( $query );
+	$pplans = $db->loadResultArray();
 
 	// Assign new make_primary flag to all old plans
 	foreach ( $pplans as $planid ) {
-		$subscription_plan = new SubscriptionPlan( $database );
+		$subscription_plan = new SubscriptionPlan( $db );
 
 		$subscription_plan->addParams( array( 'make_primary' => 1 ) );
 	}
@@ -271,26 +271,26 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_mi_docman", $tables ) ) {
 $query = 'UPDATE #__acctexp_invoices'
 		. ' SET `method` = \'offline_payment\''
 		. ' WHERE `method` = \'transfer\'';
-$database->setQuery( $query );
-if ( !$database->query() ) {
-	$errors[] = array( $database->getErrorMsg(), $query );
+$db->setQuery( $query );
+if ( !$db->query() ) {
+	$errors[] = array( $db->getErrorMsg(), $query );
 }
 
 $query = 'UPDATE #__acctexp_subscr'
 		. ' SET `type` = \'offline_payment\''
 		. ' WHERE `type` = \'transfer\'';
-$database->setQuery( $query );
-if ( !$database->query() ) {
-	$errors[] = array( $database->getErrorMsg(), $query );
+$db->setQuery( $query );
+if ( !$db->query() ) {
+	$errors[] = array( $db->getErrorMsg(), $query );
 }
 
 // Cater a strange bug that resets recurring due to the above
 $query = 'UPDATE #__acctexp_subscr'
 		. ' SET `recurring` = \'0\''
 		. ' WHERE `type` = \'transfer\' OR `type` = \'offline_payment\'';
-$database->setQuery( $query );
-if ( !$database->query() ) {
-	$errors[] = array( $database->getErrorMsg(), $query );
+$db->setQuery( $query );
+if ( !$db->query() ) {
+	$errors[] = array( $db->getErrorMsg(), $query );
 }
 
 $eucaInstalldb->addColifNotExists( 'level', "int(4) NOT NULL default '2'", 'eventlog' );

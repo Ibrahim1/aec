@@ -22,13 +22,13 @@ class mi_proma
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT groupid, title, description'
 	 	. ' FROM #__proma_groups'
 	 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg = array();
 		if ( !empty( $groups ) ) {
@@ -79,22 +79,22 @@ class mi_proma
 
 	function setGroupId( $userid, $groupid, $default = false )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $default ) {
 			$query = 'SELECT title'
 		 	. ' FROM #__proma_groups'
 		 	. ' WHERE default = \'1\''
 		 	;
-		 	$database->setQuery( $query );
-		 	$group = $database->loadResult();
+		 	$db->setQuery( $query );
+		 	$group = $db->loadResult();
 		} else {
 			$query = 'SELECT title'
 		 	. ' FROM #__proma_groups'
 		 	. ' WHERE groupid = \'' . $groupid . '\''
 		 	;
-		 	$database->setQuery( $query );
-		 	$group = $database->loadResult();
+		 	$db->setQuery( $query );
+		 	$group = $db->loadResult();
 		}
 
 		if ( !empty( $group ) ) {
@@ -102,7 +102,7 @@ class mi_proma
 					. ' SET `proma_type` = \'' . $group . '\''
 					. ' WHERE `id` = \'' . (int) $userid . '\''
 					;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 		} else {
 			return false;
 		}

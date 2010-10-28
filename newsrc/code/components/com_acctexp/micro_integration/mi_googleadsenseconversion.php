@@ -53,7 +53,7 @@ class mi_googleadsenseconversion
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$text = '<script language="JavaScript" type="text/javascript">' . "\n"
 				. '<!--' . "\n"
@@ -72,7 +72,7 @@ class mi_googleadsenseconversion
 				. $request->invoice->amount . 'amp;label=' . $this->settings['label'] . '&amp;guid=ON&amp;script=0"/>'
 				. '</noscript>';
 
-		$displaypipeline = new displayPipeline($database);
+		$displaypipeline = new displayPipeline($db);
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;

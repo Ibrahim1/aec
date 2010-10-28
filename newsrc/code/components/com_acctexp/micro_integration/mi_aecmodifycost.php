@@ -146,9 +146,9 @@ class mi_aecmodifycost
 			return true;
 		}
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$mi = new microIntegration( $database );
+		$mi = new microIntegration( $db );
 
 		if ( !$mi->mi_exists( $option['mi'] ) ) {
 			return true;

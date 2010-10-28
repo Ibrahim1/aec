@@ -743,9 +743,9 @@ class processor_google_checkout extends XMLprocessor
 
 	function validateSubscription( $subscription_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$subscription = new Subscription( $database );
+		$subscription = new Subscription( $db );
 		$subscription->load( $subscription_id );
 
 		$allowed = array( "Trial", "Active" );
@@ -754,7 +754,7 @@ class processor_google_checkout extends XMLprocessor
 			return false;
 		}
 
-		$invoice = new Invoice( $database );
+		$invoice = new Invoice( $db );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
 		if ( empty( $invoice->id ) ) {

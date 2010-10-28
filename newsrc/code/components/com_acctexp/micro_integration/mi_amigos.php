@@ -74,8 +74,8 @@ aecDebug($request);
 					.'src="' . $url . '" '
 					.'border="0" width="1" height="1" />';
 
-			$database = &JFactory::getDBO();
-			$displaypipeline = new displayPipeline($database);
+			$db = &JFactory::getDBO();
+			$displaypipeline = new displayPipeline($db);
 			$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 		}
 

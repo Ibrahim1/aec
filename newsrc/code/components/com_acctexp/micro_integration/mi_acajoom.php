@@ -24,13 +24,13 @@ class mi_acajoom
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `list_name`, `list_type`'
 				. ' FROM #__acajoom_lists'
 				;
-	 	$database->setQuery( $query );
-	 	$lists = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$lists = $db->loadObjectList();
 
 		$li = array();
 		if ( !empty( $lists ) ) {
@@ -140,29 +140,29 @@ class mi_acajoom
 
 	function createSubscriber( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$user = new JTableUser( $database );
+		$user = new JTableUser( $db );
 		$user->load( $userid );
 
 		$query  = 'INSERT INTO #__acajoom_subscribers'
 				. ' (user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params)'
 				. ' VALUES(\'' . $userid . '\', \'' . $user->name . '\', \'' . $user->email . '\', \'1\', \'1\', \'0\', \'00:00:00\', \'eng\', \'' . date( 'Y-m-d H:i:s' ) . '\', \'\' )'
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 
 	function hasList( $subscriber_id, $listid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 		$query = 'SELECT `qid`'
 				. ' FROM #__acajoom_queue'
 				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
 				. ' AND `list_id` = \'' . $listid . '\''
 				;
-		$database->setQuery( $query );
-		if ( $database->loadResult() ) {
+		$db->setQuery( $query );
+		if ( $db->loadResult() ) {
 			return true;
 		} else {
 			return false;
@@ -171,36 +171,36 @@ class mi_acajoom
 
 	function getSubscriberID( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 		$query = 'SELECT `id`'
 				. ' FROM #__acajoom_subscribers'
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 
 	function addToList( $subscriber_id, $list_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query  = 'INSERT INTO #__acajoom_queue'
 				. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
 				. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  time() + $GLOBALS['mosConfig_offset'] *60*60 ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
 				;
-		$database->setQuery( $query );
-		return $database->query();
+		$db->setQuery( $query );
+		return $db->query();
 	}
 
 	function deleteFromList( $subscriber_id, $list_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 		$query = 'DELETE FROM #__acajoom_queue'
 				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
 				. ' AND `list_id` = \'' . $list_id . '\''
 				;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 	}
 
 }

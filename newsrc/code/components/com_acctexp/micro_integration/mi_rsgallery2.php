@@ -15,7 +15,7 @@ class mi_rsgallery2 extends MI
 {
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$settings = array();
 		$settings['create_galleries']		= array( 'list_yesno' );
@@ -33,8 +33,8 @@ class mi_rsgallery2 extends MI
 			 	. ' FROM #__rsgallery2_galleries'
 			 	. ' WHERE parent = \'0\''
 			 	;
-	 	$database->setQuery( $query );
-	 	$galleries = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$galleries = $db->loadObjectList();
 
 		$sg = array();
 		$sgs = array();
@@ -68,7 +68,7 @@ class mi_rsgallery2 extends MI
 
 	function getMIform( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$settings = array();
 
@@ -77,8 +77,8 @@ class mi_rsgallery2 extends MI
 				 	. ' FROM #__rsgallery2_galleries'
 				 	. ' WHERE `id` IN (' . implode( ',', $this->settings['gallery_sel_scope'] ) . ')'
 				 	;
-		 	$database->setQuery( $query );
-		 	$galleries = $database->loadObjectList();
+		 	$db->setQuery( $query );
+		 	$galleries = $db->loadObjectList();
 
 			$gr = array();
 			foreach ( $galleries as $gallery ) {
@@ -100,25 +100,25 @@ class mi_rsgallery2 extends MI
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !empty( $this->settings['publish_all'] ) ) {
 			$query = 'SELECT `id`'
 				 	. ' FROM #__rsgallery2_galleries'
 				 	. ' WHERE `uid` = ' . $request->metaUser->userid . ''
 				 	;
-		 	$database->setQuery( $query );
+		 	$db->setQuery( $query );
 
 			// Make sure we have at least one entry
-			if ( $database->loadResult() ) {
+			if ( $db->loadResult() ) {
 				$query = 'UPDATE #__rsgallery2_galleries'
 						. ' SET published = \'1\''
 						. ' WHERE uid =  \'' . $request->metaUser->userid . '\'';
 						;
-				$database->setQuery( $query );
+				$db->setQuery( $query );
 
-				if ( !$database->query() ) {
-					$this->setError( $database->getErrorMsg() );
+				if ( !$db->query() ) {
+					$this->setError( $db->getErrorMsg() );
 					return false;
 				}
 			}
@@ -162,18 +162,18 @@ class mi_rsgallery2 extends MI
 				 	. ' FROM #__rsgallery2_galleries'
 				 	. ' WHERE `uid` = ' . $request->metaUser->userid . ''
 				 	;
-		 	$database->setQuery( $query );
+		 	$db->setQuery( $query );
 
 			// Make sure we have at least one entry
-			if ( $database->loadResult() ) {
+			if ( $db->loadResult() ) {
 				$query = 'UPDATE #__rsgallery2_galleries'
 						. ' SET published = \'0\''
 						. ' WHERE uid =  \'' . $request->metaUser->userid . '\'';
 						;
-				$database->setQuery( $query );
+				$db->setQuery( $query );
 
-				if ( !$database->query() ) {
-					$this->setError( $database->getErrorMsg() );
+				if ( !$db->query() ) {
+					$this->setError( $db->getErrorMsg() );
 					return false;
 				}
 			}
@@ -184,19 +184,19 @@ class mi_rsgallery2 extends MI
 
 	function createAlbum( $userid, $parentid, $name, $desc )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Check that we don't create a duplicate
 		$query = 'SELECT id'
 				. ' FROM #__rsgallery2_galleries'
 				. ' WHERE `uid` = \'' . $userid . '\''
 				. ' AND `parent` = \'' . $parentid . '\''
-				. ' AND `name` = \'' . $database->getEscaped( $name ) . '\''
+				. ' AND `name` = \'' . $db->getEscaped( $name ) . '\''
 				;
-		$database->setQuery( $query );
-		$tentries = $database->loadResult();
+		$db->setQuery( $query );
+		$tentries = $db->loadResult();
 
 		if ( $tentries ) {
 			return null;
@@ -207,8 +207,8 @@ class mi_rsgallery2 extends MI
 				. ' FROM #__rsgallery2_galleries'
 				. ' WHERE `uid` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		$entries = $database->loadResult();
+		$db->setQuery( $query );
+		$entries = $db->loadResult();
 
 		if ( $entries >= $this->settings['gallery_sel_amt'] ) {
 			return null;
@@ -216,12 +216,12 @@ class mi_rsgallery2 extends MI
 
 		$query = 'INSERT INTO #__rsgallery2_galleries'
 				. ' ( `parent`, `name`, `description`, `published`, `date`, `uid` )'
-				. ' VALUES ( \'' . $parentid . '\', \'' . $database->getEscaped( $name ) . '\', \'' . $database->getEscaped( $desc ) . '\', \'1\', \'' . date( 'Y-m-d H:i:s', ( time() + ( $mainframe->getCfg( 'offset' ) * 3600 ) ) ) . '\', \'' . $userid . '\' )'
+				. ' VALUES ( \'' . $parentid . '\', \'' . $db->getEscaped( $name ) . '\', \'' . $db->getEscaped( $desc ) . '\', \'1\', \'' . date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) . '\', \'' . $userid . '\' )'
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
+		if ( !$db->query() ) {
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 
@@ -229,19 +229,19 @@ class mi_rsgallery2 extends MI
 		$query = 'SELECT max(id)'
 				. ' FROM #__rsgallery2_galleries'
 				;
-		$database->setQuery( $query );
-		$gid = $database->loadResult();
+		$db->setQuery( $query );
+		$gid = $db->loadResult();
 
 		$query = 'INSERT INTO #__rsgallery2_acl'
 				. ' ( `gallery_id`, `parent_id`, `registered_up_mod_img`, `registered_create_mod_gal` )'
 				//. ' ( `gallery_id`, `parent_id`, `public_view`, `public_up_mod_img`, `public_del_img`, `public_create_mod_gal`, `public_del_gal`, `public_vote_view`, `public_vote_vote`, `registered_view`, `registered_up_mod_img`, `registered_del_img`, `registered_create_mod_gal`, `registered_del_gal`, `registered_vote_view`, `registered_vote_vote` )'
 				. ' VALUES ( \'' . $gid . '\', \'' . $parentid . '\', \'0\', \'0\') '
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
 
-		if ( !$database->query() ) {
-			$this->setError( $database->getErrorMsg() );
+		if ( !$db->query() ) {
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 		return true;

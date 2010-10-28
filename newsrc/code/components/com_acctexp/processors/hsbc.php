@@ -451,9 +451,9 @@ class processor_hsbc extends XMLprocessor
 
 	function validateSubscription( $subscription_id )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$subscription = new Subscription( $database );
+		$subscription = new Subscription( $db );
 		$subscription->load( $subscription_id );
 
 		$allowed = array( "Trial", "Active" );

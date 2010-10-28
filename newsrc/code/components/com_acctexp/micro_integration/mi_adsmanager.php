@@ -15,7 +15,7 @@ class mi_adsmanager extends MI
 {
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
         $settings = array();
 		$settings['publish_all']		= array( 'list_yesno' );
@@ -48,34 +48,34 @@ class mi_adsmanager extends MI
 
 	function publishItems( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__adsmanager_ads'
 				. ' SET `published` = \'1\''
 				. ' WHERE `userid` = \'' . $metaUser->userid . '\''
 				;
-		$database->setQuery( $query );
-		if ( $database->query() ) {
+		$db->setQuery( $query );
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}
 
 	function unpublishItems( $metaUser )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'UPDATE #__adsmanager_ads'
 				. ' SET `published` = \'0\''
 				. ' WHERE `userid` = \'' . $metaUser->userid . '\''
 				;
-		$database->setQuery( $query );
-		if ( $database->query() ) {
+		$db->setQuery( $query );
+		if ( $db->query() ) {
 			return true;
 		} else {
-			$this->setError( $database->getErrorMsg() );
+			$this->setError( $db->getErrorMsg() );
 			return false;
 		}
 	}

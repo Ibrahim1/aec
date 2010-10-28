@@ -120,7 +120,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['has_usage']	= !empty( $vars['usage'] );
 
 		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] || $vars['alpha_regsv'] ) && !$vars['has_usage'] ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			if ( $vars['joms_any'] ) {
 				$vars['username']	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
@@ -128,7 +128,7 @@ class plgSystemAECrouting extends JPlugin
 				$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
 			}
 
-			$temptoken = new aecTempToken( $database );
+			$temptoken = new aecTempToken( $db );
 			$temptoken->getComposite();
 
 			if ( !empty( $temptoken->content['usage'] ) ) {
@@ -149,9 +149,9 @@ class plgSystemAECrouting extends JPlugin
 
 				if ( !empty( $_REQUEST['username'] ) && !empty( $_REQUEST['password'] ) && !empty( $_REQUEST['email'] )
 					&& empty( $temptoken->content['username'] ) && empty( $temptoken->content['password'] ) && empty( $temptoken->content['email'] ) ) {
-					$database = &JFactory::getDBO();
+					$db = &JFactory::getDBO();
 
-					$temptoken = new aecTempToken( $database );
+					$temptoken = new aecTempToken( $db );
 					$temptoken->getComposite();
 
 					$content = array();
@@ -221,8 +221,8 @@ class plgSystemAECrouting extends JPlugin
 			// Joomla or CB registration...
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
 				// Plans first and not yet selected -> select!
-				global $mainframe;
-				$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe', false, true ) );
+				$app = JFactory::getApplication();
+				$app->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe', false, true ) );
 			} elseif ( !$vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] && !$vars['pfirst'] ) {
 				$this->redirectToken();
 			} elseif ( $vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] ) {
@@ -252,9 +252,9 @@ class plgSystemAECrouting extends JPlugin
 				}
 
 				if ( !empty( $username ) && !empty( $password ) && !empty( $email ) ) {
-					$database = &JFactory::getDBO();
+					$db = &JFactory::getDBO();
 
-					$temptoken = new aecTempToken( $database );
+					$temptoken = new aecTempToken( $db );
 					$temptoken->getComposite();
 
 					$temptoken->content['username']		= $username;
@@ -281,14 +281,14 @@ class plgSystemAECrouting extends JPlugin
 					$this->redirectToken();
 				}
 			} elseif ( $vars['has_usage'] ) {
-				$database = &JFactory::getDBO();
+				$db = &JFactory::getDBO();
 
 				$content = array();
 				$content['usage']		= $vars['usage'];
 				$content['processor']	= $vars['processor'];
 				$content['recurring']	= $vars['recurring'];
 
-				$temptoken = new aecTempToken( $database );
+				$temptoken = new aecTempToken( $db );
 				$temptoken->create( $content );
 			}
 		} elseif ( $vars['cbsreg'] ) {
@@ -315,7 +315,9 @@ class plgSystemAECrouting extends JPlugin
 
 		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
-		global $mainframe, $aecConfig;
+		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		$body = JResponse::getBody();
 
@@ -332,12 +334,12 @@ class plgSystemAECrouting extends JPlugin
 			$vars['k2'] = 0;
 		}
 
-		$activation = $mainframe->getCfg( 'useractivation' );
+		$activation = $app->getCfg( 'useractivation' );
 
 		if ( ( strpos( $body, '<dt class="message">Message</dt>' ) !== false ) && !$vars['aec'] ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-			$temptoken = new aecTempToken( $database );
+			$temptoken = new aecTempToken( $db );
 			$temptoken->getComposite();
 
 			if ( !empty( $temptoken->content['password2'] ) ) {
@@ -389,14 +391,14 @@ class plgSystemAECrouting extends JPlugin
 								. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
 			}
 		} elseif ( $vars['k2'] ) {
-			$database = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
 			$content = array();
 			$content['usage']		= $vars['usage'];
 			$content['processor']	= $vars['processor'];
 			$content['recurring']	= $vars['recurring'];
 
-			$temptoken = new aecTempToken( $database );
+			$temptoken = new aecTempToken( $db );
 			$temptoken->create( $content );
 		}
 
@@ -436,8 +438,8 @@ class plgSystemAECrouting extends JPlugin
 
 	function redirectToken()
 	{
-		global $mainframe;
-		$mainframe->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
+		$app = JFactory::getApplication();
+		$app->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
 	}
 }
 

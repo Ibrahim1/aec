@@ -26,14 +26,14 @@ class mi_flexiaccess
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`, `description`'
 			 	. ' FROM #__flexiaccess_groups'
 			 	. ' WHERE id > 1'
 			 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg = array();
 		if ( !empty( $groups ) ) {
@@ -85,7 +85,7 @@ class mi_flexiaccess
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group_exp'] ) {
 			foreach ( $this->settings['enroll_group'] as $groupid ) {
@@ -106,7 +106,7 @@ class mi_flexiaccess
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group'] ) {
 			$this->DeleteUserFromGroup( $request->metaUser->userid );
@@ -123,7 +123,7 @@ class mi_flexiaccess
 
 	function AddUserToGroup( $userid, $groupid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		// Check user is not already a member of the group.
 		$query = 'SELECT `member_id`'
@@ -131,8 +131,8 @@ class mi_flexiaccess
 				. ' WHERE `group_id` = \'' . $groupid . '\''
 				. ' AND `member_id` = \''.$userid . '\''
 				;
-		$database->setQuery( $query );
-		$user = $database->loadResult();
+		$db->setQuery( $query );
+		$user = $db->loadResult();
 
 		if( $user !== $userid ) {
 			// then the user is not already a member of this group and can be set
@@ -140,8 +140,8 @@ class mi_flexiaccess
 			$query = 'INSERT INTO #__flexiaccess_members'
 					. ' SET `group_id` = \'' . $groupid . '\', `member_id` = \''.$userid . '\''
 					;
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 
 			return true;
 		} else {
@@ -151,7 +151,7 @@ class mi_flexiaccess
 
 	function DeleteUserFromGroup( $userid, $groupid=null )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'DELETE FROM #__flexiaccess_members'
 				. ' WHERE `member_id` = \''. $userid . '\''
@@ -161,8 +161,8 @@ class mi_flexiaccess
 			$query .= ' AND `group_id` = \''. $groupid . '\'';
 		}
 
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 
 		return true;
 	}

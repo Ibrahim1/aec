@@ -11,9 +11,9 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-global $mainframe;
+$app = JFactory::getApplication();
 
-require_once( $mainframe->getPath( 'class', 'com_acctexp' ) );
+require_once( $app->getPath( 'class', 'com_acctexp' ) );
 
 $class_sfx	= $params->get( 'moduleclass_sfx', "");
 $pretext 	= $params->get( 'pretext' );

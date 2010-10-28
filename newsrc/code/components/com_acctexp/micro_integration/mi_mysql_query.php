@@ -55,16 +55,16 @@ class mi_mysql_query
 									'prefix'	=> $this->settings['table_prefix']
 									);
 
-		        $database =& JDatabase::getInstance($options);
+		        $db =& JDatabase::getInstance($options);
 	        } else {
-	        	$database = &JFactory::getDBO();
+	        	$db = &JFactory::getDBO();
 	        }
 
 			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 
-			$database->setQuery( $query );
-			if ( !$database->queryBatch( false ) ) {
-				$this->error = "MYSQL ERROR: " . $database->stderr();
+			$db->setQuery( $query );
+			if ( !$db->queryBatch( false ) ) {
+				$this->error = "MYSQL ERROR: " . $db->stderr();
 			}
 		}
 

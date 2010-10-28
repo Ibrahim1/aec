@@ -9,11 +9,11 @@
  */
 
 // Check for a root group
-$database->setQuery("SELECT id FROM  #__acctexp_itemgroups WHERE id='1'");
+$db->setQuery("SELECT id FROM  #__acctexp_itemgroups WHERE id='1'");
 
 // Create root group completely out of thin air (tadaa!)
-if ( $database->loadResult() != 1 ) {
-	$rootgroup = new ItemGroup( $database );
+if ( $db->loadResult() != 1 ) {
+	$rootgroup = new ItemGroup( $db );
 
 	$rootgroup->id = 0;
 	$rootgroup->active = 1;
@@ -25,16 +25,16 @@ if ( $database->loadResult() != 1 ) {
 	$rootgroup->storeload();
 
 	if ( $rootgroup->id != 1 ) {
-		$database->setQuery("UPDATE #__acctexp_itemgroups SET id='1' WHERE id='" . $rootgroup->id . "'");
-		$database->query();
+		$db->setQuery("UPDATE #__acctexp_itemgroups SET id='1' WHERE id='" . $rootgroup->id . "'");
+		$db->query();
 	}
 
 	// Adding in root group relation for all plans
 	$planlist = SubscriptionPlanHandler::listPlans();
 
-	$database->setQuery("SELECT count(*) FROM  #__acctexp_itemxgroup");
+	$db->setQuery("SELECT count(*) FROM  #__acctexp_itemxgroup");
 
-	if ( count( $planlist ) > $database->loadResult() ) {
+	if ( count( $planlist ) > $db->loadResult() ) {
 		ItemGroupHandler::setChildren( 1, $planlist );
 	}
 }

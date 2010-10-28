@@ -23,7 +23,7 @@ class mi_jarc
 
 	function Settings( $params=null )
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$settings = array();
 		$settings['create_affiliates']	= array( 'list_yesno' );
@@ -40,7 +40,7 @@ class mi_jarc
 
 	function on_userchange_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( !$this->settings['create_affiliates'] ) {
 			return null;
@@ -63,16 +63,16 @@ class mi_jarc
 
 	function checkaffiliate( $userid )
 	{
-		global $mainframe;
-		$database = &JFactory::getDBO();
+		$app = JFactory::getApplication();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT affiliate_id'
 				. ' FROM #__jarc_affiliate_network'
 				. ' WHERE `affiliate_id` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( $database->loadResult() )  {
+		if ( $db->loadResult() )  {
 				return true;
 		} else {
 				return false;
@@ -81,8 +81,8 @@ class mi_jarc
 
 	function createaffiliate( $userid )
 	{
-		global $mainframe;
-		$database = &JFactory::getDBO();
+		$app = JFactory::getApplication();
+		$db = &JFactory::getDBO();
 		$session = &JFactory::getSession();
 		// Get affiliate ID from cookie.
 		//$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
@@ -94,9 +94,9 @@ class mi_jarc
 		. ' SET `affiliate_id` = \'' . $userid . '\','
 		. ' `parent_id` = \'' . $cookie_aid . '\''
 		;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( !$database->query() )  {
+		if ( !$db->query() )  {
 				return false;
 		} else {
 				return true;
@@ -105,8 +105,8 @@ class mi_jarc
 
 	function logpayment( $invoice )
 	{
-		global $mainframe;
-		$database = &JFactory::getDBO();
+		$app = JFactory::getApplication();
+		$db = &JFactory::getDBO();
 		$session = &JFactory::getSession();
 		// Get affiliate ID from cookie.
 		//$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
@@ -115,11 +115,11 @@ class mi_jarc
 		list($cookie_aid, $cookie_count) = split(':',$sessioncookie,2);
 
 		require_once( JPATH_BASE.DS.'components'.DS.'com_jarc'.DS.'jarc.class.php' );
-		$affiliate = new jarc_affiliate($database);
+		$affiliate = new jarc_affiliate($db);
 		$affiliate->findById( intval($cookie_aid) );
 
 		$query = 'INSERT INTO #__jarc_payments' .
-				' SET `date` = \'' . gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + ( $mainframe->getCfg('offset_user') * 3600 ) ) . '\','
+				' SET `date` = \'' . gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + ( $app->getCfg('offset_user') * 3600 ) ) . '\','
 				. ' `user_id` = \'' . $invoice->userid . '\','
 				. ' `payment_type` = \''.$invoice->method.'\','
 				. ' `payment_status` = \'2\','
@@ -127,10 +127,10 @@ class mi_jarc
 				. ' `commission_id` = \'' . $affiliate->commission_id . '\','
 				. ' `affiliate_id` = \'' . intval($cookie_aid) . '\''
 				;
-		$database->setQuery( $query );
+		$db->setQuery( $query );
 
-		if ( !$database->query() ) {
-				var_dump( $database );exit();
+		if ( !$db->query() ) {
+				var_dump( $db );exit();
 				return false;
 		} else {
 				return true;

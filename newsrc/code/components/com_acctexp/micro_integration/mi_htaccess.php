@@ -28,19 +28,19 @@ class mi_htaccess
 
 	function checkInstallation()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
-		$tables	= $database->getTableList();
+		$tables	= $db->getTableList();
 
-		return in_array( $mainframe->getCfg( 'dbprefix' ) .'_acctexp_mi_htaccess_apachepw', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) .'_acctexp_mi_htaccess_apachepw', $tables );
 	}
 
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_htaccess_apachepw`'
 		. ' (`id` int(11) NOT NULL auto_increment,'
@@ -49,8 +49,8 @@ class mi_htaccess
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
-		$database->setQuery( $query );
-		$database->query();
+		$db->setQuery( $query );
+		$db->query();
 		return;
 	}
 
@@ -71,7 +71,7 @@ class mi_htaccess
 
 	function saveparams( $params )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$newparams = $params;
 
@@ -102,7 +102,7 @@ class mi_htaccess
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$ht = $this->getHTAccess( $this->settings );
 		$ht->delUser( $request->metaUser->cmsUser->username );
@@ -187,9 +187,9 @@ class mi_htaccess
 
 	function getApachePW( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-		$apachepw = new apachepw( $database );
+		$apachepw = new apachepw( $db );
 		$apwid = $apachepw->getIDbyUserID( $userid );
 
 		if ( $apwid ) {
@@ -276,14 +276,14 @@ class apachepw extends JTable
 
 	function getIDbyUserID( $userid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_htaccess_apachepw'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				;
-		$database->setQuery( $query );
-		return $database->loadResult();
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 }
 ?>

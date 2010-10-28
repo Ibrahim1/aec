@@ -109,7 +109,7 @@ class mi_acl
 
 	function instantGIDchange( $metaUser, $gid )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$acl = &JFactory::getACL();
 
@@ -124,22 +124,22 @@ class mi_acl
 					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 					. ' AND `group_type` = \'main\''
 					;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
-			if ( $database->loadResult() ) {
+			if ( $db->loadResult() ) {
 				$query = 'UPDATE #__jaclplus_user_group'
 						. ' SET `group_id` = \'' . (int) $gid . '\''
 						. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 						. ' AND `group_type` = \'main\''
 						;
-				$database->setQuery( $query );
-				$database->query() or die( $database->stderr() );
+				$db->setQuery( $query );
+				$db->query() or die( $db->stderr() );
 			} else {
 				$query = 'INSERT INTO #__jaclplus_user_group'
 						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $gid . '\', \'\' )'
 						;
-				$database->setQuery( $query );
-				$database->query() or die( $database->stderr() );
+				$db->setQuery( $query );
+				$db->query() or die( $db->stderr() );
 			}
 
 			if ( $this->settings['change_session'] ) {
@@ -148,23 +148,23 @@ class mi_acl
 						. ' FROM #__session'
 						. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
 						;
-				$database->setQuery( $query );
-				$session = $database->loadObject();
+				$db->setQuery( $query );
+				$session = $db->loadObject();
 
 				if ( !empty( $session->userid ) ) {
 					$query = 'SELECT `group_id`'
 							. ' FROM #__jaclplus_user_group'
 							. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 							;
-					$database->setQuery( $query );
-					$groups = $database->loadResultArray();
+					$db->setQuery( $query );
+					$groups = $db->loadResultArray();
 
 					$query = 'SELECT `value`'
 							. ' FROM #__core_acl_aro_groups'
 							. ' WHERE `id` IN (' . implode( ',', $groups ) . ')'
 							;
-					$database->setQuery( $query );
-					$valuelist = $database->loadResultArray();
+					$db->setQuery( $query );
+					$valuelist = $db->loadResultArray();
 
 					$sessiongroups = array();
 					foreach ( $valuelist as $vlist ) {
@@ -191,7 +191,7 @@ class mi_acl
 
 	function jaclplusGIDchange( $metaUser, $section )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$acl = &JFactory::getACL();
 
@@ -201,8 +201,8 @@ class mi_acl
 					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 					. ' AND `group_type` = \'sub\''
 					;
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 
 			$groups = array();
 		} else {
@@ -212,8 +212,8 @@ class mi_acl
 					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 					. ' AND `group_type` = \'sub\''
 					;
-			$database->setQuery( $query );
-			$groups = $database->loadResultArray();
+			$db->setQuery( $query );
+			$groups = $db->loadResultArray();
 		}
 
 		if ( !empty( $this->settings[$section.'_del'] ) ) {
@@ -224,8 +224,8 @@ class mi_acl
 							. ' AND `group_type` = \'sub\''
 							. ' AND `group_id` = \'' . (int) $gid . '\''
 							;
-					$database->setQuery( $query );
-					$database->query() or die( $database->stderr() );
+					$db->setQuery( $query );
+					$db->query() or die( $db->stderr() );
 				}
 
 
@@ -238,8 +238,8 @@ class mi_acl
 					$query = 'INSERT INTO #__jaclplus_user_group'
 							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\', \'\' )'
 							;
-					$database->setQuery( $query );
-					$database->query() or die( $database->stderr() );
+					$db->setQuery( $query );
+					$db->query() or die( $db->stderr() );
 				}
 			}
 		}

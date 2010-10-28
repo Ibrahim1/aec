@@ -25,13 +25,13 @@ class mi_fireboard
 
 	function Settings()
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`, `title`'
 			 	. ' FROM #__fb_groups'
 			 	;
-	 	$database->setQuery( $query );
-	 	$groups = $database->loadObjectList();
+	 	$db->setQuery( $query );
+	 	$groups = $db->loadObjectList();
 
 		$sg = array();
 		if ( !empty( $groups ) ) {
@@ -70,15 +70,15 @@ class mi_fireboard
 
 	function expiration_action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_group_exp'] ) {
 			$query = 'UPDATE #__fb_users'
 				. ' SET `group_id` = \'' . $this->settings['group_exp'] . '\''
 				. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
 				;
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 		}
 
 		return true;
@@ -86,7 +86,7 @@ class mi_fireboard
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( $this->settings['set_group'] ) {
 			// Check if exists - users only appear in FB users table normally when they have posted
@@ -94,10 +94,10 @@ class mi_fireboard
 					. ' FROM #__fb_users'
 					. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
 					;
-			$database->setQuery( $query );
+			$db->setQuery( $query );
 
 			// If already an entry exists -> update, if not -> create
-			if ( $database->loadResult() ) {
+			if ( $db->loadResult() ) {
 				$query = 'UPDATE #__fb_users'
 						. ' SET `group_id` = \'' . $this->settings['group'] . '\''
 						. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
@@ -110,8 +110,8 @@ class mi_fireboard
 			}
 
 			// Carry out query
-			$database->setQuery( $query );
-			$database->query();
+			$db->setQuery( $query );
+			$db->query();
 		}
 
 		return true;

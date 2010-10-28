@@ -103,7 +103,7 @@ class processor_ipayment_silent extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		$database = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
 		if ( isset( $request->invoice->params['creator_ip'] ) ) {
 			$ip = $request->invoice->params['creator_ip'];
