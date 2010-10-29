@@ -551,6 +551,11 @@ function subscribe( $option )
 				$details[] = 'password2';
 			}
 
+			if ( $forget != 'crap' ) {
+				$details[] = 'cbsecuritym3';
+				$details[] = 'cbrasitway';
+			}
+
 			foreach ( $details as $d ) {
 				if ( !empty( $temptoken->content[$d] ) ) {
 					$$d = $temptoken->content[$d];

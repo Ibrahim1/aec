@@ -270,6 +270,14 @@ class plgSystemAECrouting extends JPlugin
 						$temptoken->content['handler']	= 'cb';
 					}
 
+					$nicetohave = array( 'cbsecuritym3', 'cbrasitway' );
+
+					foreach ( $nicetohave as $k ) {
+						$nicejobgoodtimes = aecGetParam( $k, "", true, array( 'string', 'clear_nonalnum' ) );
+
+						$temptoken->content[$k]	= $nicejobgoodtimes;
+					}
+
 					$temptoken->storeload();
 
 					if ( $vars['cb_sregsv'] ) {
