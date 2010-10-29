@@ -9662,7 +9662,7 @@ class InvoiceFactory
 
 		$this->loadItemTotal();
 
-		$this->invoice->processorResponse( $this, $response, '', false );
+		$response = $this->invoice->processorResponse( $this, $response, '', false );
 
 		if ( isset( $response['error'] ) ) {
 			unset( $this->cart );
@@ -9671,6 +9671,8 @@ class InvoiceFactory
 			unset( $this->pp );
 
 			$this->checkout( $option, true, $response['error'] );
+		} elseif ( isset( $response['customthanks'] ) ) {
+			HTML_Results::thanks( $option, $response['customthanks'] );
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
@@ -10287,8 +10289,11 @@ class Invoice extends serialParamDBTable
 			$app = JFactory::getApplication();
 
 			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) {
-				// The last notification has not been too long ago - skipping this one
-				return $response;
+				// Desjardins is the only exception so far... bad bad bad
+				if ( $InvoiceFactory->pp->processor_name != 'desjardins' ) {
+					// The last notification has not been too long ago - skipping this one
+					return $response;
+				}
 			}
 		}
 

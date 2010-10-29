@@ -6,6 +6,12 @@ $bsLoader = new bootstrapLoader();
 // Force redirection to AEC
 $_GET['option'] = 'com_acctexp';
 
+$original = file_get_contents("php://input");
+
+if ( empty( $original ) ) {
+	$original = $GLOBALS['HTTP_RAW_POST_DATA'];
+}
+
 $post = array();
 
 // See whether we have some sneaky encoded request
@@ -44,12 +50,6 @@ if ( isset( $_GET['task'] ) ) {
 		header( 'Location: ' . $url );
 		exit;
 	}
-}
-
-$original = file_get_contents("php://input");
-
-if ( empty( $original ) ) {
-	$original = $GLOBALS['HTTP_RAW_POST_DATA'];
 }
 
 $post['original'] = base64_encode( stripslashes( $original ) );

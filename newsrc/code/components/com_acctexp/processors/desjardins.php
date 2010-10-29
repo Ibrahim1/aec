@@ -226,30 +226,32 @@ aecDebug($post);aecDebug($response);
 	}
 
 	function validateNotification( $response, $post, $invoice )
-	{
+	{aecDebug("validateNotification");
 		$response['valid'] = 0;
 
 		if ( $post['status'] == 'error' ) {
-			
+			$response['error'] = "Error processing your payment";
+
+			return $response;
 		}
 
 		if ( $post['status'] == 'cancel' ) {
 			$invoice->cancel();
 
-			$this->displayInvoice( $invoice );
+			$response['customthanks'] = $this->displayInvoice( $invoice );
 
-			exit;
+			return $response;
 		}
 
 		if ( $post['status'] == 'success' ) {
-			$this->displayInvoice( $invoice );
+			$response['customthanks'] = $this->displayInvoice( $invoice );
 
-			exit;
+			return $response;
 		}
 
-		if ( strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {
+		if ( strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {aecDebug("confirming");
 			$response['valid'] = 1;
-		} else {
+		} else {aecDebug("echoing xml");
 $xml_request_str = <<<XML
 <?xml version="1.0" encoding="ISO-8859-15"?><response></response>
 XML;
@@ -274,7 +276,7 @@ XML;
 	}
 
 	function notify_trail( $InvoiceFactory )
-	{
+	{aecDebug("notify_trail");
 		$path = '/catch';
 		$url = 'https://www.labdevtrx3.com' . $path;
 
@@ -299,9 +301,13 @@ XML;
 	}
 
 	function displayInvoice( $invoice )
-	{
+	{aecDebug("displayInvoice");
+		ob_start();
+
 		$iFactory = new InvoiceFactory( $invoice->userid );
 		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false );
+
+		return ob_get_flush();
 	}
 
 	function substring_between( $haystack, $start, $end )
