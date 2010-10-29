@@ -1147,31 +1147,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 		$objInvoice = new Invoice( $db );
 		$objInvoice->load( $invoiceid );
 
-		if ( !$objInvoice->fixed ) {
-			$objInvoice->active = 0;
-			$objInvoice->params = array( 'deactivated' => 'cancel' );
-			$objInvoice->check();
-			$objInvoice->store();
-
-			$usage = null;
-			if ( !empty( $objInvoice->usage ) ) {
-				$usage = $objInvoice->usage;
-			}
-
-			if ( !empty( $usage ) ) {
-				$u = explode( '.', $usage );
-
-				switch ( strtolower( $u[0] ) ) {
-					case 'c':
-					case 'cart':
-						// Delete Carts referenced in this Invoice as well
-						$query = 'DELETE FROM #__acctexp_cart WHERE `id` = \'' . $u[1] . '\'';
-						$db->setQuery( $query );
-						$db->query();
-						break;
-				}
-			}
-		}
+		$objInvoice->cancel();
 	} else {
 		aecNotAuth();
 		return;
@@ -1472,16 +1448,16 @@ function processNotification( $option, $processor )
 			break;
 	}
 
-	//aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+	aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
 
 	$response = array();
-	$response['fullresponse'] = $_POST;
-
+	$response['fullresponse'] = aecPostParamClear( $_POST );
+aecDebug($response);
 	// parse processor notification
 	$pp = new PaymentProcessor();
 	if ( $pp->loadName( $processor ) ) {
 		$pp->init();
-		$response = array_merge( $response, $pp->parseNotification( $_POST ) );
+		$response = array_merge( $response, $pp->parseNotification( $response['fullresponse'] ) );
 	} else {
 		$db = &JFactory::getDBO();
 		$short	= 'processor loading failure';

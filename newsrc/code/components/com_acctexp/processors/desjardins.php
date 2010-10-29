@@ -87,6 +87,8 @@ XML;
 
 		$return = JURI::root() . 'components/com_acctexp/processors/notify/notify_redirect.php';
 
+		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'response', 'invoice' => $request->invoice->invoice_number ) );
+
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
 		$xml_step3_request .= '	  <merchant id="'.trim($this->settings['custId']).'" key="'.trim($this->settings['transactionKey']).'">'."\n";
@@ -97,9 +99,6 @@ XML;
 		$xml_step3_request .= '			<urls>'."\n";
 		$xml_step3_request .= '			  <url name="response">'."\n";
 		$xml_step3_request .= '			    <path>' . $return . '</path>'."\n";
-
-		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'response', 'invoice' => $request->invoice->invoice_number ) );
-
 		$xml_step3_request .= '			    <parameters>'."\n";
 		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
@@ -107,7 +106,7 @@ XML;
 		$xml_step3_request .= '			  <url name="success">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 
-		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'success', 'invoice' => $request->invoice->invoice_number ) );
+		$request['post']['status'] = 'success';
 
 		$xml_step3_request .= '			    <parameters>'."\n";
 		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
@@ -117,7 +116,7 @@ XML;
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
 
-		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'cancel', 'invoice' => $request->invoice->invoice_number ) );
+		$request['post']['status'] = 'cancel';
 
 		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
@@ -126,7 +125,7 @@ XML;
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
 
-		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'error', 'invoice' => $request->invoice->invoice_number ) );
+		$request['post']['status'] = 'error';
 
 		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
@@ -211,21 +210,42 @@ XML;
 	function parseNotification( $post )
 	{
 		$response = array();
-aecDebug($_REQUEST);aecDebug($post);
-		if ( !empty( $post['original'] ) ) {
-			$post['original'] = base64_decode( $post['original'] );
+		$response['invoice'] = $post['invoice'];
 
-			$response['invoice'] = $this->substring_between( $post['original'], '<transaction id="', '"' );
-		} else {
+		if ( empty( $response['invoice'] ) ) {
 			$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 		}
 
+		if ( empty( $response['invoice'] ) && !empty( $post['original'] ) ) {
+			$post['original'] = base64_decode( $post['original'] );
+
+			$response['invoice'] = $this->substring_between( $post['original'], '<transaction id="', '"' );
+		}
+aecDebug($post);aecDebug($response);
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
+
+		if ( $post['status'] == 'error' ) {
+			
+		}
+
+		if ( $post['status'] == 'cancel' ) {
+			$invoice->cancel();
+
+			$this->displayInvoice( $invoice );
+
+			exit;
+		}
+
+		if ( $post['status'] == 'success' ) {
+			$this->displayInvoice( $invoice );
+
+			exit;
+		}
 
 		if ( strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {
 			$response['valid'] = 1;
@@ -245,7 +265,9 @@ XML;
 
 			$xml = $xml_step1_request->asXML();
 
-			echo $xml;exit;
+			echo $xml;
+
+			exit;
 		}
 
 		return $response;
@@ -271,8 +293,15 @@ XML;
 
 		$xml = $xml_step1_request->asXML();
 
-		echo $xml;exit;
+		echo $xml;
+
 		exit;
+	}
+
+	function displayInvoice( $invoice )
+	{
+		$iFactory = new InvoiceFactory( $invoice->userid );
+		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false );
 	}
 
 	function substring_between( $haystack, $start, $end )

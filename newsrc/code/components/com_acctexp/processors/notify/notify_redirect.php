@@ -8,15 +8,6 @@ $_GET['option'] = 'com_acctexp';
 
 $post = array();
 
-// Get our GET and POST, but make sure there is no weird stuff going on in those variables.
-$get = null;
-if ( !empty( $_GET ) ) {
-	foreach ( $_GET as $k => $v ) {
-		// Make extra sure that the variable contains no shenanigans
-		$get[] = $bsLoader->clearKey($k) . '=' . urlencode( $bsLoader->clearVariable($v) );
-	}
-}
-
 // See whether we have some sneaky encoded request
 if ( !empty( $_GET['aec_request'] ) ) {
 	$decode = unserialize( base64_decode( $_GET['aec_request'] ) );
@@ -34,6 +25,15 @@ if ( !empty( $_GET['aec_request'] ) ) {
 	}
 }
 
+// Get our GET and POST, but make sure there is no weird stuff going on in those variables.
+$get = null;
+if ( !empty( $_GET ) ) {
+	foreach ( $_GET as $k => $v ) {
+		// Make extra sure that the variable contains no shenanigans
+		$get[] = $bsLoader->clearKey($k) . '=' . urlencode( $bsLoader->clearVariable($v) );
+	}
+}
+
 // Block out anything that aims at non-notification actions
 if ( isset( $_GET['task'] ) ) {
 	if ( strpos( $_GET['task'], 'notification' ) === false ) {
@@ -48,7 +48,7 @@ if ( isset( $_GET['task'] ) ) {
 
 $original = file_get_contents("php://input");
 
-if ( empty( $post ) ) {
+if ( empty( $original ) ) {
 	$original = $GLOBALS['HTTP_RAW_POST_DATA'];
 }
 

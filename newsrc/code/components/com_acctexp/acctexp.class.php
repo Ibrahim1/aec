@@ -9675,7 +9675,7 @@ class InvoiceFactory
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
 			} elseif ( !empty( $this->pp->info['custom_notify_trail'] ) ) {
-				$this->pp->notify_trail( $this );
+				$this->pp->notify_trail( $this, $response );
 			} else {
 				header("HTTP/1.0 200 OK");
 				exit;
@@ -9770,7 +9770,7 @@ class InvoiceFactory
 		}
 	}
 
-	function invoiceprint( $option, $invoice_number )
+	function invoiceprint( $option, $invoice_number, $standalone=true )
 	{
 		$this->loadMetaUser();
 
@@ -9790,7 +9790,7 @@ class InvoiceFactory
 
 		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
 
-		Payment_HTML::printInvoice( $option, $data );
+		Payment_HTML::printInvoice( $option, $data, $standalone );
 	}
 
 	function thanks( $option, $renew=false, $free=false )
@@ -10767,6 +10767,41 @@ class Invoice extends serialParamDBTable
 		}
 
 		$this->setTransactionDate();
+
+		return true;
+	}
+
+	function cancel()
+	{
+		if ( $this->fixed ) {
+			return false;
+		}
+
+		$db = &JFactory::getDBO();
+
+		$this->active = 0;
+		$this->params = array( 'deactivated' => 'cancel' );
+		$this->check();
+		$this->store();
+
+		$usage = null;
+		if ( !empty( $this->usage ) ) {
+			$usage = $this->usage;
+		}
+
+		if ( !empty( $usage ) ) {
+			$u = explode( '.', $usage );
+
+			switch ( strtolower( $u[0] ) ) {
+				case 'c':
+				case 'cart':
+					// Delete Carts referenced in this Invoice as well
+					$query = 'DELETE FROM #__acctexp_cart WHERE `id` = \'' . $u[1] . '\'';
+					$db->setQuery( $query );
+					$db->query();
+					break;
+			}
+		}
 
 		return true;
 	}
