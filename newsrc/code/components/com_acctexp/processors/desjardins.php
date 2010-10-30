@@ -230,7 +230,7 @@ aecDebug($post);aecDebug($response);
 		$response['valid'] = 0;
 
 		if ( $post['status'] == 'error' ) {
-			$response['error'] = "Error processing your payment";
+			$response['error'] = "Error processing your payment details: Could not process your Credit Card.";
 
 			return $response;
 		}
@@ -239,12 +239,14 @@ aecDebug($post);aecDebug($response);
 			$invoice->cancel();
 
 			$response['customthanks'] = $this->displayInvoice( $invoice );
+			$response['break_processing'] = true;
 
 			return $response;
 		}
 
 		if ( $post['status'] == 'success' ) {
 			$response['customthanks'] = $this->displayInvoice( $invoice );
+			$response['break_processing'] = true;
 
 			return $response;
 		}
@@ -304,10 +306,12 @@ XML;
 	{aecDebug("displayInvoice");
 		ob_start();
 
-		$iFactory = new InvoiceFactory( $invoice->userid );
+		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false );
 		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false );
 
-		return ob_get_flush();
+		$content = ob_get_contents();
+		ob_end_clean();
+		return $content;
 	}
 
 	function substring_between( $haystack, $start, $end )

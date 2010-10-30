@@ -1697,8 +1697,8 @@ class Config_General extends serialParamDBTable
 		$def['heartbeat_cycle_backend']			= 1;
 		$def['plans_first']						= 0;
 		$def['simpleurls']						= 0;
-		$def['display_date_frontend']			= "%d %b %Y";
-		$def['display_date_backend']			= "%a, %d %b %Y %T %Z";
+		$def['display_date_frontend']			= "";
+		$def['display_date_backend']			= "";
 		//$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
 		$def['displayccinfo']					= 1;
@@ -7497,7 +7497,7 @@ class InvoiceFactory
 	/** @var int */
 	var $confirmed		= null;
 
-	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null )
+	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null, $alert=true )
 	{
 		// If we have some kind of internal call, we need to load the HTML class
 		if ( !class_exists( 'Payment_HTML' ) ) {
@@ -7506,7 +7506,7 @@ class InvoiceFactory
 			require_once( $app->getPath( 'front_html', 'com_acctexp' ) );
 		}
 
-		$this->initUser( $userid );
+		$this->initUser( $userid, $alert );
 
 		// Init variables
 		$this->usage			= $usage;
@@ -7519,7 +7519,7 @@ class InvoiceFactory
 		$this->verifyUsage();
 	}
 
-	function initUser( $userid )
+	function initUser( $userid, $alert=true )
 	{
 		$user = &JFactory::getUser();
 
@@ -7534,7 +7534,9 @@ class InvoiceFactory
 			} elseif ( $this->userid ) {
 				if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
 					// This user is not expired, so she could log in...
-					return aecNotAuth();
+					if ( $alert ) {
+						return aecNotAuth();
+					}
 				} else {
 					$db = &JFactory::getDBO();
 
@@ -10348,6 +10350,12 @@ class Invoice extends serialParamDBTable
 			unset( $response['fullresponse'] );
 		}
 
+		if ( isset( $response['break_processing'] ) ) {
+			unset( $response['break_processing'] );
+
+			return $response;
+		}
+
 		$metaUser = new metaUser( $this->userid );
 
 		$mi_event = null;
@@ -10786,8 +10794,7 @@ class Invoice extends serialParamDBTable
 
 		$this->active = 0;
 		$this->params = array( 'deactivated' => 'cancel' );
-		$this->check();
-		$this->store();
+		$this->storeload();
 
 		$usage = null;
 		if ( !empty( $this->usage ) ) {
@@ -11268,7 +11275,11 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
-			$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_UNPAID;
+			if ( !$this->active ) {
+				$data['paidstatus'] = "This payment was canceled";
+			} else {
+				$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_UNPAID;
+			}
 		} else {
 			$date = AECToolbox::formatDate( $this->transaction_date );
 
@@ -11288,7 +11299,7 @@ class Invoice extends serialParamDBTable
 
 		$data['invoice_billing_history'] = "";
 		if ( !empty( $this->transactions ) ) {
-			if ( count( $this->transactions ) > 0 ) {
+			if ( count( $this->transactions ) > 1 ) {
 				$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, "" );
 
 				foreach ( $this->transactions as $transaction ) {
@@ -14939,7 +14950,7 @@ class AECToolbox
 
 		if ( $backend ) {
 			if ( empty( $aecConfig->cfg['display_date_backend'] ) ) {
-				return strftime( JText::_('DATE_FORMAT_LC4'), $date );
+				return strftime( JText::_('DATE_FORMAT_LC2'), $date );
 			} else {
 				return strftime( $aecConfig->cfg['display_date_backend'], $date );
 			}

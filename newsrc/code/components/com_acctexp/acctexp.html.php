@@ -1678,11 +1678,11 @@ class Payment_HTML
 			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_print.css" />' );
 		} ?>
 			<div id="invoice_wrap">
-				<div id="before_header"><?php echo $data['before_header']; ?></div>
-				<div id="header">
+				<div id="before_invoice_header"><?php echo $data['before_header']; ?></div>
+				<div id="invoice_header">
 					<?php echo $data['header']; ?>
 				</div>
-				<div id="after_header"><?php echo $data['after_header']; ?></div>
+				<div id="after_invoice_header"><?php echo $data['after_header']; ?></div>
 				<div id="address"><pre><?php echo $data['address']; ?></pre></div>
 				<div id="invoice_details">
 					<table id="invoice_details">

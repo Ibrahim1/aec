@@ -99,7 +99,7 @@ overflow:hidden;
 padding:20px;
 }
 
-div#before_header {
+div#before_invoice_header {
 height: 60px;
 }
 
@@ -119,7 +119,7 @@ margin: 24px;
 padding: 12px;
 }
 
-div#after_header {
+div#after_invoice_header {
 height: 12px;
 }
 
