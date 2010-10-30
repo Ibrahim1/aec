@@ -1448,11 +1448,11 @@ function processNotification( $option, $processor )
 			break;
 	}
 
-	aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+	//aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
 
 	$response = array();
 	$response['fullresponse'] = aecPostParamClear( $_POST );
-aecDebug($response);
+
 	// parse processor notification
 	$pp = new PaymentProcessor();
 	if ( $pp->loadName( $processor ) ) {

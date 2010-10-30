@@ -52,7 +52,7 @@ class mi_amigos
 		if ( substr( $domain, -1 ) == '/' ) {
 			$domain = substr( $domain, 0, -1 );
 		}
-aecDebug($request);
+
 		$amigos_id			= $_REQUEST['amigosid'];
 		$amigos_ordertype	= 'com_acctexp';
 		$amigos_orderid		= $request->invoice->invoice_number;

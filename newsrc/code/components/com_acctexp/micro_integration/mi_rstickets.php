@@ -91,8 +91,6 @@ class mi_rstickets extends MI
 			$email		= AECToolbox::rewriteEngineRQ( $this->settings['email'], $request );
 
 			$r = rst_add_ticket( $this->settings['department'], $subject, $text, $this->settings['priority'], $userid, $email, 0, array(), true );
-
-			aecDebug($r);
 		}
 
 		return true;
