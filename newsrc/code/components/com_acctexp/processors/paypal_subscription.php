@@ -20,7 +20,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$info['longname'] 		= _AEC_PROC_INFO_PPS_LNAME;
 		$info['statement'] 		= _AEC_PROC_INFO_PPS_STMNT;
 		$info['description'] 	= _DESCRIPTION_PAYPAL_SUBSCRIPTION;
-		$info['currencies'] 	= 'EUR,USD,AUD,CAD,GBP,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB';
+		$info['currencies'] 	= 'EUR,USD,AUD,CAD,GBP,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
 		$info['languages'] 		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 1;
