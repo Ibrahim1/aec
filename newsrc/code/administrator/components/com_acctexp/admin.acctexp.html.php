@@ -460,7 +460,7 @@ class HTML_AcctExp
 								<p>
 									<?php echo _AEC_USER_CURR_EXPIRE_DATE; ?>:&nbsp;
 									<?php echo aecHTML::Icon( 'clock_red.png', _AEC_USER_CURR_EXPIRE_DATE ); ?>&nbsp;
-									<strong><?php echo ( !empty( $exp ) ? $exp : _AEC_CMN_NOT_SET ); ?></strong>
+									<strong><?php echo HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></strong>
 								</p>
 								<p>
 									<?php echo _AEC_USER_LIFETIME; ?>:&nbsp;
@@ -586,7 +586,7 @@ class HTML_AcctExp
 												<td><?php echo $subs->status; ?></td>
 												<td><?php echo $subs->type; ?></td>
 												<td><?php echo $subs->signup_date; ?></td>
-												<td><?php echo $subs->lifetime ? _AEC_CMN_LIFETIME : HTML_AcctExp::DisplayDateInLocalTime($subs->expiration); ?></td>
+												<td><?php echo $subs->lifetime ? _AEC_CMN_LIFETIME : HTML_AcctExp::DisplayDateInLocalTime( $subs->expiration ); ?></td>
 											</tr>
 											<?php
 										} ?>
@@ -3173,11 +3173,7 @@ class HTML_AcctExp
 		if ( $SQLDate == '' || $SQLDate == '-' || $SQLDate == '0000-00-00 00:00:00')  {
 			return _AEC_CMN_NOT_SET;
 		} else {
-			$db = &JFactory::getDBO();
-
-			global $aecConfig;
-
-			return strftime( $aecConfig->cfg['display_date_backend'], strtotime( $SQLDate )  );
+			return AECToolbox::formatDate( $SQLDate, true );
 		}
 	}
 }
