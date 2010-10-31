@@ -384,11 +384,7 @@ class mosetstree extends JTable
 
 	function is_active()
 	{
-		if( $this->active ) {
-			return true;
-		}else{
-			return false;
-		}
+		return $this->active ? true : false;
 	}
 
 	function getListingsLeft()
@@ -398,15 +394,14 @@ class mosetstree extends JTable
 		} elseif ( !empty( $this->params['unlimited'] ) ) {
 			return 'unlimited';
 		} else {
-			$listings_left = $this->granted_listings - $this->used_listings;
-			return $listings_left;
+			return $this->granted_listings - $this->used_listings;
 		}
 	}
 
 	function hasListingsLeft()
 	{
 		$listings = $this->getListingsLeft();
-		if ( $listings === 'unlimited' ) {print_r($listings);exit;
+		if ( $listings === 'unlimited' ) {
 			return true;
 		} elseif ( $listings > 0 ) {
 			return true;

@@ -879,24 +879,24 @@ class aec_hotproperty extends serialParamDBTable
 
 	function is_active()
 	{
-		if( $this->active ) {
-			return true;
-		} else {
-			return false;
-		}
+		return $this->active ? true : false;
 	}
 
 	function getListingsLeft()
 	{
-		$listings_left = $this->granted_listings - $this->used_listings;
-		return $listings_left;
+		if ( !empty( $this->params['unlimited'] ) ) {
+			return 'unlimited';
+		} else {
+			return $this->granted_listings - $this->used_listings;
+		}
 	}
 
 	function hasListingsLeft()
 	{
-		if ( !empty( $this->params['unlimited'] ) ) {
+		$listings = $this->getListingsLeft();
+		if ( $listings === 'unlimited' ) {
 			return true;
-		} elseif( $this->getListingsLeft() > 0 ) {
+		} elseif ( $listings > 0 ) {
 			return true;
 		} else {
 			return false;
@@ -905,11 +905,12 @@ class aec_hotproperty extends serialParamDBTable
 
 	function useListing()
 	{
-		if ( $this->hasListingsLeft() && $this->is_active() ) {
+		if( $this->hasListingsLeft() && $this->is_active() ) {
 			$this->used_listings++;
-			$this->storeload();
+			$this->check();
+			$this->store();
 			return true;
-		} else {
+		}else{
 			return false;
 		}
 	}
