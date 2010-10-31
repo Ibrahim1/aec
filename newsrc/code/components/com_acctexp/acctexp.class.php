@@ -14757,7 +14757,7 @@ class AECToolbox
 
 				@saveRegistrationNOCHECKSLOL( $option );
 			} else {
-				@saveRegistration( $option );
+				@saveRegistration( $option );exit;
 			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			// This is a JUSER registration, borrowing their code to save the user

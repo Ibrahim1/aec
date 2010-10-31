@@ -257,6 +257,14 @@ class plgSystemAECrouting extends JPlugin
 					$temptoken = new aecTempToken( $db );
 					$temptoken->getComposite();
 
+					$skip = array( 'coupon_code', 'task', 'option' );
+					
+					foreach ( $_POST as $k => $v ) {
+						if ( !in_array( $k, $skip ) ) {
+							$temptoken->content[$k]	= aecGetParam( $k, "", true, array( 'string', 'clear_nonalnum' ) );
+						}
+					}
+
 					$temptoken->content['username']		= $username;
 					$temptoken->content['password']		= $password;
 					$temptoken->content['password2']	= $password2;
@@ -268,14 +276,6 @@ class plgSystemAECrouting extends JPlugin
 						$temptoken->content['handler']	= 'joomla';
 					} elseif ( $vars['cb_sregsv'] ) {
 						$temptoken->content['handler']	= 'cb';
-					}
-
-					$nicetohave = array( 'cbsecuritym3', 'cbrasitway' );
-
-					foreach ( $nicetohave as $k ) {
-						$nicejobgoodtimes = aecGetParam( $k, "", true, array( 'string', 'clear_nonalnum' ) );
-
-						$temptoken->content[$k]	= $nicejobgoodtimes;
 					}
 
 					$temptoken->storeload();

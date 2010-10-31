@@ -536,29 +536,24 @@ function subscribe( $option )
 
 			$details = array();
 
-			if ( $forget != 'usage' ) {
+			if ( $forget == 'usage' ) {
 				$details[] = 'usage';
 				$details[] = 'processor';
 				$details[] = 'recurring';
 			}
 
-			if ( $forget != 'userdetails' ) {
+			if ( $forget == 'userdetails' ) {
 				$details[] = 'username';
 				$details[] = 'email';
 				$details[] = 'password';
 				$details[] = 'password2';
 			}
 
-			if ( $forget != 'crap' ) {
-				$details[] = 'cbsecuritym3';
-				$details[] = 'cbrasitway';
-			}
+			foreach ( $temptoken->content as $k => $v ) {
+				if ( !in_array( $k, $details ) ) {
+					$$k = $v;
 
-			foreach ( $details as $d ) {
-				if ( !empty( $temptoken->content[$d] ) ) {
-					$$d = $temptoken->content[$d];
-
-					$_POST[$d] = $temptoken->content[$d];
+					$_POST[$k] = $v;
 				}
 			}
 
