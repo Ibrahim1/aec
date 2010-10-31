@@ -226,13 +226,18 @@ class mi_phpbb3
 				foreach ( $this->settings['remove_group'] as $groupid ) {
 					if ( in_array( $groupid, $groups ) ) {
 						$this->removeGroup( $phpbbdb, $phpbbUserId, $groupid );
+
+						$unset = array_search( $groupid, $groups );
+						if ( isset( $groups[$unset] ) ) {
+							unset( $groups[$unset] );
+						}
 					}
 				}
 			}
 
 			if ( $this->settings['set_group'] ) {
 				foreach ( $this->settings['group'] as $groupid ) {
-					if ( in_array( $groupid, $groups ) ) {
+					if ( !in_array( $groupid, $groups ) ) {
 						$this->assignGroup( $phpbbdb, $phpbbUserId, $groupid );
 					}
 				}
@@ -280,13 +285,18 @@ class mi_phpbb3
 				foreach ( $this->settings['remove_group_exp'] as $groupid ) {
 					if ( in_array( $groupid, $groups ) ) {
 						$this->removeGroup( $phpbbdb, $phpbbUserId, $groupid );
+						
+						$unset = array_search( $groupid, $groups );
+						if ( isset( $groups[$unset] ) ) {
+							unset( $groups[$unset] );
+						}
 					}
 				}
 			}
 
 			if ( $this->settings['set_group_exp'] ) {
 				foreach ( $this->settings['group_exp'] as $groupid ) {
-					if ( in_array( $groupid, $groups ) ) {
+					if ( !in_array( $groupid, $groups ) ) {
 						$this->assignGroup( $phpbbdb, $phpbbUserId, $groupid );
 					}
 				}
