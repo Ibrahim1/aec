@@ -40,5 +40,6 @@
 		<folder>js</folder>
 	</media>
 	<installfile>install.acctexp.php</installfile>
+	<scriptfile>install.acctexp.php</scriptfile>
 	<uninstallfile>uninstall.acctexp.php</uninstallfile>
 </install>

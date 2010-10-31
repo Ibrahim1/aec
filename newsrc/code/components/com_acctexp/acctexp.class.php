@@ -4554,6 +4554,44 @@ class XMLprocessor extends processor
 		return $element;
 	}
 
+	function NVPtoArray( $nvpstr )
+	{
+		$intial = 0;
+	 	$nvpArray = array();
+
+		while ( strlen( $nvpstr ) ) {
+			// postion of Key
+			$keypos = strpos( $nvpstr, '=' );
+
+			// position of value
+			$valuepos = strpos( $nvpstr, '&' ) ? strpos( $nvpstr, '&' ) : strlen( $nvpstr );
+
+			// getting the Key and Value values and storing in a Associative Array
+			$keyval = substr( $nvpstr, $intial, $keypos );
+			$valval = substr( $nvpstr, $keypos+1, $valuepos-$keypos-1 );
+
+			// decoding the respose
+			$nvpArray[urldecode( $keyval )] = urldecode( $valval );
+			$nvpstr = substr( $nvpstr, $valuepos+1, strlen( $nvpstr ) );
+		}
+
+		return $nvpArray;
+	}
+
+	function arrayToNVP( $var, $nofiddle=false )
+	{
+		$content = array();
+		foreach ( $var as $name => $value ) {
+			if ( $nofiddle ) {
+				$content[] .= $name . '=' . urlencode( stripslashes( $value ) );
+			} else {
+				$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
+			}
+		}
+
+		return implode( '&', $content );
+	}
+
 }
 
 class SOAPprocessor extends XMLprocessor
@@ -7501,9 +7539,7 @@ class InvoiceFactory
 	{
 		// If we have some kind of internal call, we need to load the HTML class
 		if ( !class_exists( 'Payment_HTML' ) ) {
-			$app = JFactory::getApplication();
-
-			require_once( $app->getPath( 'front_html', 'com_acctexp' ) );
+			require_once( JApplicationHelper::getPath( 'front_html', 'com_acctexp' ) );
 		}
 
 		$this->initUser( $userid, $alert );

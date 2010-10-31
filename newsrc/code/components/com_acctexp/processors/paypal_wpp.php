@@ -248,7 +248,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$var = $this->getPaymentVars( $var, $request );
 
-				$xml = $this->getPayPalNVPstring( $var );
+				$xml = $this->arrayToNVP( $var );
 
 				$response = $this->transmitRequestXML( $xml, $request );
 			} else {
@@ -259,7 +259,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, false, true );
 				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
 
-				$xml = $this->getPayPalNVPstring( $var );
+				$xml = $this->arrayToNVP( $var );
 
 				$response = $this->transmitRequestXML( $xml, $request );
 
@@ -273,7 +273,7 @@ class processor_paypal_wpp extends XMLprocessor
 					$var['RETURNURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, false, true );
 					$var['CANCELURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
 
-					$get = $this->getPayPalNVPstring( $var, true );
+					$get = $this->arrayToNVP( $var, true );
 
 					if ( $this->settings['testmode'] ) {
 						return aecRedirect( 'https://www.sandbox.paypal.com/webscr?' . $get );
@@ -321,7 +321,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$var = $this->getPayPalVars( $request );
 
-		return $this->getPayPalNVPstring( $var );
+		return $this->arrayToNVP( $var );
 	}
 
 	function getPayPalVars( $request, $regular=true )
@@ -425,20 +425,6 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function getPayPalNVPstring( $var, $nofiddle=false )
-	{
-		$content = array();
-		foreach ( $var as $name => $value ) {
-			if ( $nofiddle ) {
-				$content[] .= $name . '=' . urlencode( stripslashes( $value ) );
-			} else {
-				$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
-			}
-		}
-
-		return implode( '&', $content );
-	}
-
 	function transmitToPayPal( $xml, $request )
 	{
 		$path = "/nvp";
@@ -472,7 +458,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$return['raw'] = $response;
 
 		// converting NVPResponse to an Associative Array
-		$nvpResArray = $this->deformatNVP( $response );
+		$nvpResArray = $this->NVPtoArray( $response );
 
 		if ( !empty( $response ) ) {
 			if ( isset( $nvpResArray['PROFILEID'] ) ) {
@@ -591,30 +577,6 @@ class processor_paypal_wpp extends XMLprocessor
 		$response = $this->transmitToPayPal( $xml, $request );
 
 		return $this->deformatNVP( $response );
-	}
-
-	function deformatNVP( $nvpstr )
-	{
-		$intial = 0;
-	 	$nvpArray = array();
-
-		while ( strlen( $nvpstr ) ) {
-			// postion of Key
-			$keypos = strpos( $nvpstr, '=' );
-
-			// position of value
-			$valuepos = strpos( $nvpstr, '&' ) ? strpos( $nvpstr, '&' ) : strlen( $nvpstr );
-
-			// getting the Key and Value values and storing in a Associative Array
-			$keyval = substr( $nvpstr, $intial, $keypos );
-			$valval = substr( $nvpstr, $keypos+1, $valuepos-$keypos-1 );
-
-			// decoding the respose
-			$nvpArray[urldecode( $keyval )] = urldecode( $valval );
-			$nvpstr = substr( $nvpstr, $valuepos+1, strlen( $nvpstr ) );
-		}
-
-		return $nvpArray;
 	}
 
 	function parseNotification( $post )

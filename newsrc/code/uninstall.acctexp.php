@@ -11,9 +11,7 @@
 // Dont allow direct linking
 //( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-$app = JFactory::getApplication();
-
-require_once( $app->getPath( 'class', "com_acctexp" ) );
+require_once( JApplicationHelper::getPath( 'class', "com_acctexp" ) );
 
 function delTree($path)
 {

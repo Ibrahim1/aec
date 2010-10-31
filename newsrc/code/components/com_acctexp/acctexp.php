@@ -13,12 +13,10 @@
 
 global $aecConfig;
 
-$app = JFactory::getApplication();
-
 define( '_AEC_FRONTEND', 1 );
 
-require_once( $app->getPath( 'class',			'com_acctexp' ) );
-require_once( $app->getPath( 'front_html',	'com_acctexp' ) );
+require_once( JApplicationHelper::getPath( 'class',		'com_acctexp' ) );
+require_once( JApplicationHelper::getPath( 'front_html',	'com_acctexp' ) );
 
 if ( !defined( '_EUCA_DEBUGMODE' ) ) {
 	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );

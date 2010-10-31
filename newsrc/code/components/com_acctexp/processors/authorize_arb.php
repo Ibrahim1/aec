@@ -83,22 +83,13 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		$var = $this->getCCform();
 
-		$name = explode( ' ', $request->metaUser->cmsUser->name );
-
-		if ( empty( $name[1] ) ) {
-			$name[1] = "";
-		}
-
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $name[0]);
-		$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $name[1]);
+		$values = array( 'firstname', 'lastname' );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME );
-			$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME );
-			$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
-			$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME );
+			$values = array_merge( $values, array( 'address', 'city', 'state_usca', 'zip', 'country_list' ) );
 		}
+
+		$var = $this->getUserform( $var, $values, $request->metaUser );
 
 		return $var;
 	}
