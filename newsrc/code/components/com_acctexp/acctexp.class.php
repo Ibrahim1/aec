@@ -282,6 +282,19 @@ class metaUser
 				}
 			}
 
+			if ( empty( $this->cmsUser->name ) && ( !empty( $cpass['firstname'] ) || !empty( $cpass['middlename'] ) || !empty( $cpass['lastname'] ) ) ) {
+				$names = array( 'firstname', 'middlename', 'lastname' );
+
+				$namearray = array();
+				foreach ( $names as $n ) {
+					if ( !empty( $cpass[$n] ) ) {
+						$namearray[] = $cpass[$n];
+					}
+				}
+
+				$this->cmsUser->name = implode( " ", $namearray );
+			}
+
 			// Create dummy CB/CBE user
 			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 				$this->hasCBprofile = 1;
@@ -9249,7 +9262,11 @@ class InvoiceFactory
 
 			$app->SetPageTitle( html_entity_decode( _CONFIRM_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
-			if ( empty( $aecConfig->cfg['custom_confirm_userdetails'] ) ) {
+			$pt = $this->getPassthrough();
+
+			$custom = trim( $aecConfig->cfg['custom_confirm_userdetails'] );
+
+			if ( empty( $custom ) || ( $custom == '<p><br mce_bogus="1"></p>' ) ) {
 				$this->userdetails = "";
 
 				if ( !empty( $this->metaUser->cmsUser->name ) ) {
@@ -9259,11 +9276,13 @@ class InvoiceFactory
 				$this->userdetails .= '<p>' . _CONFIRM_ROW_USERNAME . $this->metaUser->cmsUser->username . '</p>';
 				$this->userdetails .= '<p>' . _CONFIRM_ROW_EMAIL . $this->metaUser->cmsUser->email . '</p>';
 			} else {
-				$this->userdetails = AECToolbox::rewriteEngineRQ( $aecConfig->cfg['custom_confirm_userdetails'], $this );
+				$this->userdetails = AECToolbox::rewriteEngineRQ( $custom, $this );
 			}
 
 			Payment_HTML::confirmForm( $option, $this, $this->metaUser->cmsUser, $this->getPassthrough() );
 		} else {
+			$this->getPassthrough();
+
 			$this->save( $option );
 		}
 	}
@@ -14757,7 +14776,7 @@ class AECToolbox
 
 				@saveRegistrationNOCHECKSLOL( $option );
 			} else {
-				@saveRegistration( $option );exit;
+				@saveRegistration( $option );
 			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			// This is a JUSER registration, borrowing their code to save the user
