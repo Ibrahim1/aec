@@ -270,7 +270,9 @@ if ( !empty( $task ) ) {
 			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'int' ) );
 
 			$iFactory = new InvoiceFactory( $userid );
-			$iFactory->create( $option, $intro, $usage );
+			if ( $iFactory->checkAuth( $option ) ) {
+				$iFactory->create( $option, $intro, $usage );
+			}
 			break;
 
 		case 'expired':
@@ -418,10 +420,15 @@ function expired( $option, $userid, $expiration )
 		$invoice	= false;
 
 		if ( $metaUser->hasSubscription ) {
+			// Make sure this really is expired
+			if ( !$metaUser->objSubscription->is_expired() ) {
+				return aecNotAuth();
+			}
+
 			$expired = strtotime( $metaUser->objSubscription->expiration );
 
-			$trial = (strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
-			if (!$trial) {
+			$trial = ( strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
+			if ( !$trial ) {
 				$params = $metaUser->objSubscription->params;
 				if ( isset( $params['trialflag'])) {
 					$trial = 1;
