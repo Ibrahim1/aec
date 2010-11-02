@@ -1668,6 +1668,7 @@ class Payment_HTML
 			<?php } else { ?>
 				<div id="printbutton">
 					<div id="printbutton_inner">
+						<textarea align="left" cols="40" rows="5" name="address" disabled="disabled" /><?php echo $data['address']; ?></textarea>
 						<button onClick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
 					</div>
 				</div>
