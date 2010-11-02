@@ -221,12 +221,12 @@ XML;
 
 			$response['invoice'] = $this->substring_between( $post['original'], '<transaction id="', '"' );
 		}
-aecDebug($post);aecDebug($response);
+
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
-	{aecDebug("validateNotification");
+	{
 		$response['valid'] = 0;
 
 		if ( $post['status'] == 'error' ) {
@@ -251,9 +251,9 @@ aecDebug($post);aecDebug($response);
 			return $response;
 		}
 
-		if ( strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {aecDebug("confirming");
+		if ( strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {
 			$response['valid'] = 1;
-		} else {aecDebug("echoing xml");
+		} else {
 $xml_request_str = <<<XML
 <?xml version="1.0" encoding="ISO-8859-15"?><response></response>
 XML;
@@ -278,7 +278,7 @@ XML;
 	}
 
 	function notify_trail( $InvoiceFactory )
-	{aecDebug("notify_trail");
+	{
 		$path = '/catch';
 		$url = 'https://www.labdevtrx3.com' . $path;
 
@@ -303,7 +303,7 @@ XML;
 	}
 
 	function displayInvoice( $invoice )
-	{aecDebug("displayInvoice");
+	{
 		ob_start();
 
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false );
@@ -311,6 +311,7 @@ XML;
 
 		$content = ob_get_contents();
 		ob_end_clean();
+
 		return $content;
 	}
 

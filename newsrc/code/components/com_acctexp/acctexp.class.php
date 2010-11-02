@@ -8510,12 +8510,12 @@ class InvoiceFactory
 		$this->cartobject->action( 'updateItems', array( $item => 0 ) );
 	}
 
-	function touchInvoice( $option, $invoice_number=false, $storenew=false )
+	function touchInvoice( $option, $invoice_number=false, $storenew=false, $anystatus=false )
 	{
 		// Checking whether we are trying to repeat an invoice
 		if ( !empty( $invoice_number ) ) {
 			// Make sure the invoice really exists and that its the correct user carrying out this action
-			$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $this->userid );
+			$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $this->userid, $anystatus );
 
 			if ( $invoiceid ) {
 				$this->invoice_number = $invoice_number;
@@ -9837,7 +9837,7 @@ class InvoiceFactory
 	{
 		$this->loadMetaUser();
 
-		$this->touchInvoice( $option, $invoice_number );
+		$this->touchInvoice( $option, $invoice_number, false, true );
 
 		$this->puffer( $option );
 
@@ -11353,9 +11353,13 @@ class Invoice extends serialParamDBTable
 				$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_UNPAID;
 			}
 		} else {
-			$date = AECToolbox::formatDate( $this->transaction_date );
+			if ( !$this->active ) {
+				$data['paidstatus'] = "This payment was canceled";
+			} else {
+				$date = AECToolbox::formatDate( $this->transaction_date );
 
-			$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, $date );
+				$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, $date );
+			}
 		}
 
 		if ( $this->subscr_id ) {
