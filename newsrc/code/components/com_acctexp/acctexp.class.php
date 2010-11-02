@@ -11119,7 +11119,7 @@ class Invoice extends serialParamDBTable
 
 			if ( !empty( $res ) ) {
 				$this->params['target_user'] = $res->id;
-				$this->params['target_username'] = $res->username . ' (' . $res->email . ')';
+				$this->params['target_username'] = $user_ident;
 				return true;
 			}
 		}
