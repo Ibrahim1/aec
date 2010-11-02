@@ -116,8 +116,15 @@ class mi_aectax
 				$loc = array();
 				$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
 
+				$llist = array();
 				foreach ( $locations as $id => $choice ) {
-					$loc[] = JHTML::_('select.option', $choice['id'], $choice['text'] );
+					$llist[$choice['text']] = $id;
+				}
+
+				asort( $llist );
+
+				foreach ( $llist as $id ) {
+					$loc[] = JHTML::_('select.option', $locations[$id]['id'], $locations[$id]['text'] );
 				}
 
 				$settings['lists']['location']	= JHTML::_('select.genericlist', $loc, 'location', 'size="1"', 'value', 'text', 0 );
