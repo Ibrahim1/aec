@@ -166,6 +166,17 @@ class mi_aectax
 		return $return;
 	}
 
+	function invoice_item_cost( $request )
+	{
+		$location = $this->getLocation( $request );
+
+		if ( !empty( $location ) ) {
+			$request = $this->prepareTax( $request, $request->add, $location );
+		}
+
+		return true;
+	}
+
 	function invoice_item( $request )
 	{
 		$location = $this->getLocation( $request );
@@ -293,33 +304,10 @@ class mi_aectax
 		}
 	}
 
-	function addTax( $request, $item, $location )
+	function prepareTax( $request, $item, $location )
 	{
 		foreach ( $item['terms']->terms as $tid => $term ) {
-			if ( !empty( $this->settings['vat_no_request'] ) ) {
-				if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
-					$vatlist = $this->vatList();
-
-					$vat_number = $this->clearVatNumber( $request->params['vat_number'] );
-
-					$check = $this->checkVatNumber( $vat_number, $location['id'], $vatlist );
-
-					if ( $check && $this->settings['vat_removeonvalid'] ) {
-						if ( $location['mode'] == 'pseudo_subtract') {
-							$location['mode'] = 'reverse_pseudo_subtract';
-						} elseif ( $location['mode'] == 'add' ) {
-							$location['mode'] = '';
-						} elseif ( $location['mode'] == 'subtract' ) {
-							$location['mode'] = '';
-						}
-					}
-				}
-			}
-
 			switch ( $location['mode'] ) {
-				default:
-					$tax = "0.00";
-					break;
 				case 'reverse_pseudo_subtract':
 					// Get root cost without coupons
 					$cost = $term->getBaseCostObject( false, true );
@@ -327,10 +315,35 @@ class mi_aectax
 					$itemtotal = ( $cost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
 
 					$item['terms']->terms[$tid]->modifyCost( 0, $itemtotal );
-
-					$tax = "0.00";
 					break;
 				case 'pseudo_subtract':
+					// Get root cost without coupons
+					$itemcost = $term->getBaseCostObject( array( 'tax', 'discount', 'total' ), true );
+
+					// Compute cost as it would have been with pure tax subtracted
+					$originalcost = AECToolbox::correctAmount( ( $itemcost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100 );
+
+					// Set new root cost
+					$item['terms']->terms[$tid]->modifyCost( 0, $originalcost );
+					break;
+			}
+		}
+
+		$item['cost'] = $item['terms']->nextterm->renderTotal();
+
+		$request->add->itemlist[] = $item;
+
+		return $request;
+	}
+
+	function addTax( $request, $item, $location )
+	{
+		foreach ( $item['terms']->terms as $tid => $term ) {
+			switch ( $location['mode'] ) {
+				default:
+					$tax = "0.00";
+					break;
+				case 'xpseudo_subtract':
 					// Get root cost without coupons
 					$itemcost = $term->getBaseCostObject( array( 'tax', 'discount', 'total' ), true );
 
@@ -358,6 +371,7 @@ class mi_aectax
 
 					$tax = -$tax;
 					break;
+				case 'pseudo_subtract':
 				case 'add':
 					$total = $term->renderTotal();
 
@@ -379,17 +393,45 @@ class mi_aectax
 	{
 		$locations = $this->getLocationList();
 
+		$lid = null;
+
 		if ( count( $locations ) == 1 ) {
-			return $locations[0];
+			$lid = 0;
 		}
 
-		foreach ( $locations as $location ) {
+		foreach ( $locations as $lix => $location ) {
 			if ( $location['id'] == $request->params['location'] ) {
-				return $location;
+				$lid = $lix;
 			}
 		}
 
-		return null;
+		if ( is_null( $lid ) ) {
+			return $lid;
+		}
+
+		$location = $locations[$lid];
+
+		if ( !empty( $this->settings['vat_no_request'] ) ) {
+			if ( !empty( $request->params['vat_number'] ) && ( $request->params['vat_number'] !== "" ) ) {
+				$vatlist = $this->vatList();
+
+				$vat_number = $this->clearVatNumber( $request->params['vat_number'] );
+
+				$check = $this->checkVatNumber( $vat_number, $location['id'], $vatlist );
+
+				if ( $check && $this->settings['vat_removeonvalid'] ) {
+					if ( $location['mode'] == 'pseudo_subtract') {
+						$location['mode'] = 'reverse_pseudo_subtract';
+					} elseif ( $location['mode'] == 'add' ) {
+						$location['mode'] = '';
+					} elseif ( $location['mode'] == 'subtract' ) {
+						$location['mode'] = '';
+					}
+				}
+			}
+		}
+
+		return $location;
 	}
 
 	function getLocationList()

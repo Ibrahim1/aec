@@ -130,7 +130,7 @@ class mi_hotproperty extends MI
 		return $settings;
 	}
 
-	function invoice_item( $request )
+	function invoice_item_cost( $request )
 	{
 		$this->modifyPrice( $request );
 

@@ -61,7 +61,7 @@ class mi_aecdonate
 		return $return;
 	}
 
-	function invoice_item( $request )
+	function invoice_item_cost( $request )
 	{
 		$this->modifyPrice( $request );
 

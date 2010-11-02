@@ -8325,6 +8325,10 @@ class InvoiceFactory
 
 		$exchange = $silent = null;
 
+		foreach ( $this->items->itemlist as $cid => $citem ) {
+			$this->triggerMIs( 'invoice_item_cost', $exchange, $this->items->itemlist[$cid], $silent );
+		}
+
 		$this->applyCoupons();
 
 		foreach ( $this->items->itemlist as $cid => $citem ) {
