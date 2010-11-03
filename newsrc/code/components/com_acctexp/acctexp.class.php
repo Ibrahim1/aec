@@ -10662,9 +10662,11 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( !empty( $this->params['aec_pickup'] ) ) {
-			foreach ( $this->params['aec_pickup'] as $key ) {
-				if ( isset( $this->params[$key] ) ) {
-					unset( $this->params[$key] );
+			if ( is_array( $this->params['aec_pickup'] ) ) {
+				foreach ( $this->params['aec_pickup'] as $key ) {
+					if ( isset( $this->params[$key] ) ) {
+						unset( $this->params[$key] );
+					}
 				}
 			}
 
