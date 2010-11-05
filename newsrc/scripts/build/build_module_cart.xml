@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<!-- $Id$ -->
+<project name="AEC" basedir="." default="build">
+	<target name="build" description="Build installable package">
+		<mkdir dir="${dir.tmp}" />
+
+		<copy todir="${dir.tmp}">
+			<fileset dir="${dir.local}/modules/mod_acctexp_cart">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<if>
+			<equals arg1="${file.extension}" arg2="zip" />
+			<then>
+				<zip destfile="${dir.packages}/${file.package}_ver${file.version}_rev${git.lastrevision}.${file.extension}" basedir="${dir.tmp}" />
+			</then>
+			<else>
+				<tar destfile="${dir.packages}/${file.package}_ver${file.version}_rev${git.lastrevision}.${file.extension}" basedir="${dir.tmp}" compression="${file.compression}" />
+			</else>
+		</if>
+
+		<delete dir="${dir.tmp}" includeemptydirs="true" />
+	</target>
+</project>

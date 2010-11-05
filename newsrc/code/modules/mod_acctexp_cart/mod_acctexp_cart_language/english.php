@@ -1,5 +1,6 @@
 <?php
-DEFINE ('_ACCOUNT_EXPIRES','Expires on');
-DEFINE ('_ACCOUNT_RENEWAL','Account Renewal');
-DEFINE ('_ACCOUNT_UNLIMIT','Unlimited access');
+DEFINE ('_AEC_CART_MODULE_ROW_ITEM','Item');
+DEFINE ('_AEC_CART_MODULE_ROW_COST','Cost');
+DEFINE ('_AEC_CART_MODULE_ROW_AMOUNT','Quantity');
+DEFINE ('_AEC_CART_MODULE_ROW_TOTAL','Total');
 ?>

@@ -11,6 +11,9 @@
 		<phing phingfile="build_module.xml" inheritRefs="true">
 			<property file="properties/module.properties" override="true" />
 		</phing>
+		<phing phingfile="build_module_cart.xml" inheritRefs="true">
+			<property file="properties/module_cart.properties" override="true" />
+		</phing>
 		<phing phingfile="build_plugin_access.xml" inheritRefs="true">
 			<property file="properties/plugin_access.properties" override="true" />
 		</phing>

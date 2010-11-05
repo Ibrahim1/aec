@@ -6,13 +6,11 @@
 <copyright>This module is released under the GNU/GPL License.</copyright>
 <authorEmail>skore@valanx.org</authorEmail>
 <authorUrl>www.valanx.org</authorUrl>
-<version>0.14</version>
+<version>0.14.4</version>
 <description>Module to show the cart from the Account Expiration Control Component.</description>
 <files>
 	<filename module="mod_acctexp">mod_acctexp.php</filename>
 	<filename>mod_acctexp_language/english.php</filename>
-	<filename>mod_acctexp_language/german.php</filename>
-	<filename>mod_acctexp_language/germani.php</filename>
 </files>
 <params>
 	<param name="pretext" type="text" default="" label="Pre Text" description="Text that you want to display before the automatically generated text." />
