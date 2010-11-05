@@ -24,30 +24,38 @@ class mi_email extends MI
 
 	function Settings()
 	{
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+
 		$settings = array();
 		$settings['sender']				= array( 'inputE' );
 		$settings['sender_name']		= array( 'inputE' );
 
 		$settings['recipient']			= array( 'inputE' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
+		$settings['aectab_reg']			= array( 'tab', 'Regular Email', 'Regular Email' );
 		$settings['subject']			= array( 'inputE' );
 		$settings['text_html']			= array( 'list_yesno' );
 		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
+		$settings['aectab_first']		= array( 'tab', 'First Email', 'First Email' );
 		$settings['subject_first']		= array( 'inputE' );
 		$settings['text_first_html']	= array( 'list_yesno' );
 		$settings['text_first']			= array( !empty( $this->settings['text_first_html'] ) ? 'editor' : 'inputD' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
+		$settings['aectab_exp']			= array( 'tab', 'Expiration Email', 'Expiration Email' );
 		$settings['subject_exp']		= array( 'inputE' );
 		$settings['text_exp_html']		= array( 'list_yesno' );
 		$settings['text_exp']			= array( !empty( $this->settings['text_exp_html'] ) ? 'editor' : 'inputD' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
+		$settings['aectab_preexp']		= array( 'tab', 'Pre-Expiration Email', 'Pre-Expiration Email' );
 		$settings['subject_pre_exp']	= array( 'inputE' );
 		$settings['text_pre_exp_html']	= array( 'list_yesno' );
 		$settings['text_pre_exp']		= array( !empty( $this->settings['text_pre_exp_html'] ) ? 'editor' : 'inputD' );
-
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

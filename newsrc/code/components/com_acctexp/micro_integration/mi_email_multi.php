@@ -34,11 +34,12 @@ class mi_email_multi extends MI
 			for ( $i=0; $i<$this->settings['emails_count']; $i++ ) {
 				$pf = 'email_' . $i . '_';
 
-				$settings[$pf.'timing']		= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_TIMING_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TIMING_DESC );
-				$settings[$pf.'recipient']	= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_RECIPIENT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_RECIPIENT_DESC );
-				$settings[$pf.'subject']	= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_SUBJECT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_SUBJECT_DESC );
-				$settings[$pf.'text_html']	= array( 'list_yesno', sprintf( _MI_MI_EMAIL_MULTI_TEXT_HTML_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TEXT_HTML_DESC );
-				$settings[$pf.'text']		= array( ( !empty( $this->settings[$pf.'text_html'] ) ? 'editor' : 'inputD' ), sprintf( _MI_MI_EMAIL_MULTI_TEXT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TEXT_DESC );
+				$settings['aectab_email_'.$i]	= array( 'tab', 'Regular Email', 'Regular Email' );
+				$settings[$pf.'timing']			= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_TIMING_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TIMING_DESC );
+				$settings[$pf.'recipient']		= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_RECIPIENT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_RECIPIENT_DESC );
+				$settings[$pf.'subject']		= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_SUBJECT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_SUBJECT_DESC );
+				$settings[$pf.'text_html']		= array( 'list_yesno', sprintf( _MI_MI_EMAIL_MULTI_TEXT_HTML_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TEXT_HTML_DESC );
+				$settings[$pf.'text']			= array( ( !empty( $this->settings[$pf.'text_html'] ) ? 'editor' : 'inputD' ), sprintf( _MI_MI_EMAIL_MULTI_TEXT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TEXT_DESC );
 			}
 		}
 

@@ -27,10 +27,8 @@ class mi_http_query
         $settings = array();
         $settings['url']			= array( 'inputE' );
         $settings['query']			= array( 'inputD' );
-        $settings['url_exp']		= array( 'inputE' );
-        $settings['query_exp']		= array( 'inputD' );
-        $settings['url_pre_exp']	= array( 'inputE' );
-        $settings['query_pre_exp']	= array( 'inputD' );
+
+        $settings					= $this->autoduplicatesettings( $settings );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 

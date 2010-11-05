@@ -1120,23 +1120,6 @@ class HTML_AcctExp
 		HTML_myCommon::addBackendCSS();
 		JHTML::_('behavior.tooltip');
 		?>
-		<script language="javascript" type="text/javascript">
-		    /* <![CDATA[ */
-			function submitbutton(pressbutton) {
-				<?php
-				
-
-				$k = 1;
-				foreach ($editors as $editor) {
-					$editor =& JFactory::getEditor();
-					echo $editor->save( $editor );
-					$k++;
-				}
-				?>
-				submitform( pressbutton );
-			}
-			/* ]]> */
-		</script>
 		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
@@ -1617,9 +1600,25 @@ class HTML_AcctExp
 				                <div class="aec_tabheading"><h2><?php echo _MI_E_SETTINGS; ?></h2></div>
 				                <table width="100%" class="aecadminform">
 									<?php
-									foreach ( $aecHTML->customparams as $name ) { ?>
-				                		<tr><td><?php echo $aecHTML->createSettingsParticle( $name ); ?></td></tr>
-				                		<?php
+									foreach ( $aecHTML->customparams as $name ) {
+										if ( strpos( $name, 'aectab_' ) === 0 ) {
+											?></table><?php
+											echo $tabs->endPanel();
+											echo $tabs->startPanel( $aecHTML->rows[$name][1], $aecHTML->rows[$name][1] ); ?>
+							                <div class="aec_tabheading"><h2><?php echo $aecHTML->rows[$name][1]; ?></h2></div>
+							                <table width="100%" class="aecadminform">
+											<?php
+										} else {
+											if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+												echo '<tr><td>';
+											}
+											
+					                		echo $aecHTML->createSettingsParticle( $name );
+
+					                		if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+												echo '</td></tr>';
+											}
+				                		}
 									} ?>
 								</table>
 								<?php
@@ -1635,6 +1634,9 @@ class HTML_AcctExp
 		</form>
 
 		<?php
+
+		echo $aecHTML->loadJS();
+
 		if ( _EUCA_DEBUGMODE ) {
 			krumo( $option, $row, $lists, $aecHTML );
 		}
