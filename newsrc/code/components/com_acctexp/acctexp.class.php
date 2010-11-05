@@ -8449,6 +8449,8 @@ class InvoiceFactory
 
 	function addtoCart( $option, $usage )
 	{
+		global $aecConfig;
+		
 		$db = &JFactory::getDBO();
 
 		if ( empty( $this->cartobject ) ) {
@@ -8470,8 +8472,10 @@ class InvoiceFactory
 
 		if ( !empty( $plan->params['addtocart_redirect'] ) ) {
 			return aecRedirect( $plan->params['addtocart_redirect'] );
+		} elseif ( $aecConfig->cfg['additem_stayonpage'] ) {
+			
 		} else {
-			return true;
+			$iFactory->cart( $option );
 		}
 	}
 

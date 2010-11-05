@@ -603,6 +603,8 @@ class Payment_HTML
 
 	function getPayButtonHTML( $pps, $planid, $userid, $passthrough = false, $register = false )
 	{
+		global $aecConfig;
+
 		$html_code = '';
 
 		$imgroot = JURI::root(true) . '/media/com_acctexp/images/site/';
@@ -620,6 +622,10 @@ class Payment_HTML
 				$hidden = array();
 				if ( !empty( $planid ) ) {
 					$hidden[] = array( 'usage', $planid );
+				}
+
+				if ( $aecConfig->cfg['additem_stayonpage'] ) {
+					$hidden[] = array( 'returnurl', $planid );
 				}
 			} else {
 				if ( $register ) {

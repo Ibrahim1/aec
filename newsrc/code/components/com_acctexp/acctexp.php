@@ -131,7 +131,6 @@ if ( !empty( $task ) ) {
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
 				$iFactory->addtoCart( $option, $usage );
-				$iFactory->cart( $option );
 			}
 			break;
 
