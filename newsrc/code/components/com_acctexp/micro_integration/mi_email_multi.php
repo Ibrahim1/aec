@@ -34,7 +34,7 @@ class mi_email_multi extends MI
 			for ( $i=0; $i<$this->settings['emails_count']; $i++ ) {
 				$pf = 'email_' . $i . '_';
 
-				$settings['aectab_email_'.$i]	= array( 'tab', 'Regular Email', 'Regular Email' );
+				$settings['aectab_'.$pf]		= array( 'tab', 'Email '.($i+1), 'Email '.($i+1) );
 				$settings[$pf.'timing']			= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_TIMING_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TIMING_DESC );
 				$settings[$pf.'recipient']		= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_RECIPIENT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_RECIPIENT_DESC );
 				$settings[$pf.'subject']		= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_SUBJECT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_SUBJECT_DESC );

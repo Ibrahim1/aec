@@ -73,10 +73,11 @@ class mi_agora extends MI
 			}
 		}
 
-		$settings['rebuild']	= array( 'list_yesno' );
-		$settings['remove']		= array( 'list_yesno' );
+		$xsettings = array();
+		$xsettings['rebuild']	= array( 'list_yesno' );
+		$xsettings['remove']	= array( 'list_yesno' );
 
-		return $settings;
+		return array_merge( $settings, $xsettings );
 	}
 
 	function relayAction( $request )

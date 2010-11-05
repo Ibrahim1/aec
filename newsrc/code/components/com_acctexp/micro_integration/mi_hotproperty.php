@@ -66,42 +66,43 @@ class mi_hotproperty extends MI
 		$settings['publish_all']	= array( 'list_yesno' );
 		$settings['unpublish_all']	= array( 'list_yesno' );
 
-		$settings = $this->autoduplicatesettings( $settings );
+		$settings = $this->autoduplicatesettings( $settings, array(), true, true );
 
-		$settings['add_list_userchoice']		= array( 'list_yesno' );
-		$settings['add_list_userchoice_amt']	= array( 'inputD' );
-		$settings['add_list_customprice']		= array( 'inputD' );
+		$xsettings = array();
+		$xsettings['add_list_userchoice']		= array( 'list_yesno' );
+		$xsettings['add_list_userchoice_amt']	= array( 'inputD' );
+		$xsettings['add_list_customprice']		= array( 'inputD' );
 
-		$settings['easy_list_userchoice']		= array( 'list_yesno' );
-		$settings['easy_list_userchoice_n']		= array( 'inputA' );
+		$xsettings['easy_list_userchoice']		= array( 'list_yesno' );
+		$xsettings['easy_list_userchoice_n']		= array( 'inputA' );
 
 		if ( !empty( $this->settings['easy_list_userchoice_n'] ) ) {
 	 		$opts = array();
-			$opts[0] = JHTML::_('select.option', "EQ", "Equal to" ); // Should probably be langauge file defined?
+			$opts[0] = JHTML::_('select.option', "EQ", "Equal to" ); // Should probably be language file defined?
 			$opts[1] = JHTML::_('select.option', "LT", "Lesser than" );
 			$opts[2] = JHTML::_('select.option', "GT", "Greater than" );
 
 			for( $i=0; $i<$this->settings['easy_list_userchoice_n']; $i++ ) {
-				$settings['lists']['elu_'.$i.'_op']	= JHTML::_('select.genericlist', $opts, 'elu_'.$i.'_op', 'size="1"', 'value', 'text', $this->settings['elu_'.$i.'_op'] );
+				$xsettings['lists']['elu_'.$i.'_op']	= JHTML::_('select.genericlist', $opts, 'elu_'.$i.'_op', 'size="1"', 'value', 'text', $this->settings['elu_'.$i.'_op'] );
 
-				$settings[] = array( '', 'hr', '' );
-				$settings['elu_'.$i.'_op'] = array( 'list', _AEC_MI_HOTPROPERTY_EASYLIST_OP_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_OP_DESC );
-				$settings['elu_'.$i.'_no'] = array( 'inputA', _AEC_MI_HOTPROPERTY_EASYLIST_NO_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_NO_DESC );
-				$settings['elu_'.$i.'_ch'] = array( 'inputA', _AEC_MI_HOTPROPERTY_EASYLIST_CH_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_CH_DESC );
+				$xsettings[] = array( '', 'hr', '' );
+				$xsettings['elu_'.$i.'_op'] = array( 'list', _AEC_MI_HOTPROPERTY_EASYLIST_OP_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_OP_DESC );
+				$xsettings['elu_'.$i.'_no'] = array( 'inputA', _AEC_MI_HOTPROPERTY_EASYLIST_NO_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_NO_DESC );
+				$xsettings['elu_'.$i.'_ch'] = array( 'inputA', _AEC_MI_HOTPROPERTY_EASYLIST_CH_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_CH_DESC );
 			}
 
-			$settings[] = array( '', 'hr', '' );
+			$xsettings[] = array( '', 'hr', '' );
 		}
 
-		$settings['assoc_company']	= array( 'list_yesno' );
-		$settings['rebuild']		= array( 'list_yesno' );
-		$settings['remove']			= array( 'list_yesno' );
+		$xsettings['assoc_company']	= array( 'list_yesno' );
+		$xsettings['rebuild']		= array( 'list_yesno' );
+		$xsettings['remove']			= array( 'list_yesno' );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
-		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$xsettings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $xsettings );
 
-		return $settings;
+		return array_merge( $xsettings, $settings );
 	}
 
 	function getMIform( $request )

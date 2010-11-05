@@ -29,11 +29,7 @@ class mi_file extends MI
 		$settings['append']			= array( 'list_yesno' );
 		$settings['content']		= array( 'inputD' );
 
-		$settings = $this->autoduplicatesettings( $settings );
-
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-
-		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = $this->autoduplicatesettings( $settings, array(), true, true );
 
 		return $settings;
 	}

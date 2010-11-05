@@ -28,10 +28,7 @@ class mi_unpack extends MI
 		$settings['source']			= array( 'inputE' );
 		$settings['target']			= array( 'inputE' );
 
-		$settings = $this->autoduplicatesettings( $settings );
-
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = $this->autoduplicatesettings( $settings, array(), true, true );
 
 		return $settings;
 	}

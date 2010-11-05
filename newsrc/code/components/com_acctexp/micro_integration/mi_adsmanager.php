@@ -21,16 +21,13 @@ class mi_adsmanager extends MI
 		$settings['publish_all']	= array( 'list_yesno' );
 		$settings['unpublish_all']	= array( 'list_yesno' );
 
-		$settings = $this->autoduplicatesettings( $settings );
+		$settings = $this->autoduplicatesettings( $settings, array(), true, true );
 
-		$settings['rebuild']		= array( 'list_yesno' );
-		$settings['remove']			= array( 'list_yesno' );
+		$xsettings = array();
+		$xsettings['rebuild']		= array( 'list_yesno' );
+		$xsettings['remove']		= array( 'list_yesno' );
 
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-
-		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
-
-		return $settings;
+		return array_merge( $xsettings, $settings );
 	}
 
 

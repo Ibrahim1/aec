@@ -15819,7 +15819,7 @@ class microIntegrationHandler
 
 class MI
 {
-	function autoduplicatesettings( $settings, $ommit=array(), $collate=true )
+	function autoduplicatesettings( $settings, $ommit=array(), $collate=true, $rwEngine=false )
 	{
 		if ( isset( $settings['lists'] ) ) {
 			$lists = $settings['lists'];
@@ -15847,6 +15847,12 @@ class MI
 		}
 
 		if ( $collate ) {
+			$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+
+			$new_settings				= AECToolbox::rewriteEngineInfo( $rewriteswitches, $new_settings );
+			$new_settings_exp			= AECToolbox::rewriteEngineInfo( $rewriteswitches, $new_settings_exp );
+			$new_settings_pxp			= AECToolbox::rewriteEngineInfo( $rewriteswitches, $new_settings_pxp );
+
 			$new_settings = array_merge(	$new_settings,
 											array( 'aectab_exp_'.$name => array( 'tab', _MI_E_AUTO_CHECK_NAME, _MI_E_AUTO_CHECK_NAME ) ),
 											$new_settings_exp,

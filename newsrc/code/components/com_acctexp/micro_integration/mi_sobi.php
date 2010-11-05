@@ -22,13 +22,11 @@ class mi_sobi extends MI
 
 		$settings = $this->autoduplicatesettings( $settings );
 
-		$settings['rebuild']			= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$xsettings = array();
+		$xsettings['rebuild']			= array( 'list_yesno' );
+		$xsettings['remove']				= array( 'list_yesno' );
 
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
-
-		return $settings;
+		return array_merge( $xsettings, $settings );
 	}
 
 	function Defaults()

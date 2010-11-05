@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_alphauserpoints
+class mi_alphauserpoints extends MI
 {
 	function Settings()
 	{
@@ -22,11 +22,12 @@ class mi_alphauserpoints
 
 		$settings = $this->autoduplicatesettings( $settings );
 
-		$settings['aup_checkout_discount']			= array( 'list_yesno' );
-		$settings['aup_checkout_showconversion']	= array( 'list_yesno' );
-		$settings['aup_checkout_conversion']		= array( 'inputB' );
+		$xsettings = array();
+		$xsettings['aup_checkout_discount']			= array( 'list_yesno' );
+		$xsettings['aup_checkout_showconversion']	= array( 'list_yesno' );
+		$xsettings['aup_checkout_conversion']		= array( 'inputB' );
 
-		return $settings;
+		return array_merge( $xsettings, $settings );
 	}
 
 	function relayAction( $request )

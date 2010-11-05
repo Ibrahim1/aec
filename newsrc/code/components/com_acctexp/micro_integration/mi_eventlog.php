@@ -33,11 +33,7 @@ class mi_eventlog extends MI
 		$settings['force_email']	= array( 'list_yesno' );
 		$settings['params']			= array( 'inputD' );
 
-		$settings = $this->autoduplicatesettings( $settings );
-
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-
-		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = $this->autoduplicatesettings( $settings, array(), true, true );
 
 		$levels[] = JHTML::_('select.option', 2, _AEC_NOTICE_NUMBER_2 );
 		$levels[] = JHTML::_('select.option', 8, _AEC_NOTICE_NUMBER_8 );

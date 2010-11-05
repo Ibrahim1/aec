@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_http_query
+class mi_http_query extends MI
 {
 	function Info()
 	{
@@ -28,11 +28,7 @@ class mi_http_query
         $settings['url']			= array( 'inputE' );
         $settings['query']			= array( 'inputD' );
 
-        $settings					= $this->autoduplicatesettings( $settings );
-
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-
-		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+        $settings					= $this->autoduplicatesettings( $settings, array(), true, true );
 
 		return $settings;
 	}
