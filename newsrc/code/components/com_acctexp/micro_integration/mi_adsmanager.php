@@ -18,16 +18,17 @@ class mi_adsmanager extends MI
 		$db = &JFactory::getDBO();
 
         $settings = array();
-		$settings['publish_all']		= array( 'list_yesno' );
-		$settings['unpublish_all']		= array( 'list_yesno' );
+		$settings['publish_all']	= array( 'list_yesno' );
+		$settings['unpublish_all']	= array( 'list_yesno' );
 
 		$settings = $this->autoduplicatesettings( $settings );
 
-		$settings['rebuild']			= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['rebuild']		= array( 'list_yesno' );
+		$settings['remove']			= array( 'list_yesno' );
 
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+
+		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

@@ -38,7 +38,8 @@ class mi_mysql_query
         $settings['query_pre_exp']	= array( 'inputD' );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

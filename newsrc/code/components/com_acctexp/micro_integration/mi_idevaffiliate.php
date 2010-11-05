@@ -31,8 +31,10 @@ class mi_idevaffiliate
 		$settings['use_curl']			= array( 'list_yesno' );
 		$settings['onlycustomparams']	= array( 'list_yesno' );
 		$settings['customparams']		= array( 'inputD' );
+
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

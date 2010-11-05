@@ -31,7 +31,7 @@ class mi_unpack extends MI
 		$settings = $this->autoduplicatesettings( $settings );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

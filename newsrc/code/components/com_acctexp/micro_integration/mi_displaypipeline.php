@@ -36,8 +36,8 @@ class mi_displaypipeline
 		$settings['text']				= array( 'inputE' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,
-										AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

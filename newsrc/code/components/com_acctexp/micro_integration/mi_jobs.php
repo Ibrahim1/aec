@@ -62,7 +62,8 @@ class mi_jobs
 		$settings['lists']['default_company_status'] = JHTML::_( 'select.genericlist', $drs_typelist,'default_company_status','size=4', 'value', 'text' , $this->settings['default_company_status'] );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

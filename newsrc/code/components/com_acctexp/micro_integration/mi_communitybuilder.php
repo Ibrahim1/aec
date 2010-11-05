@@ -53,9 +53,9 @@ class mi_communitybuilder
 			}
 		}
 
-		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']		= array( 'fieldset', _AEC_MI_SET11_EMAIL,
-										AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$rewriteswitches	= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+
+		$settings			= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}

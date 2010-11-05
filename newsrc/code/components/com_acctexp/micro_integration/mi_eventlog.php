@@ -36,7 +36,8 @@ class mi_eventlog extends MI
 		$settings = $this->autoduplicatesettings( $settings );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_SET4_MYSQL, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+
+		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		$levels[] = JHTML::_('select.option', 2, _AEC_NOTICE_NUMBER_2 );
 		$levels[] = JHTML::_('select.option', 8, _AEC_NOTICE_NUMBER_8 );
