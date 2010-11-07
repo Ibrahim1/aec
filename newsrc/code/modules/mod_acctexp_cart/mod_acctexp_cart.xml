@@ -9,8 +9,8 @@
 <version>0.14.4</version>
 <description>Module to show the cart from the Account Expiration Control Component.</description>
 <files>
-	<filename module="mod_acctexp">mod_acctexp.php</filename>
-	<filename>mod_acctexp_language/english.php</filename>
+	<filename module="mod_acctexp_cart">mod_acctexp_cart.php</filename>
+	<filename>mod_acctexp_cart_language/english.php</filename>
 </files>
 <params>
 	<param name="pretext" type="text" default="" label="Pre Text" description="Text that you want to display before the automatically generated text." />
