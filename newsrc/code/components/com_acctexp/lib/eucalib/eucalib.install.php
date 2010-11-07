@@ -26,9 +26,7 @@ class eucaInstall extends eucaObject
 
 	function unpackFileArray( $array )
 	{
-		if ( !class_exists( 'Archive_Tar' ) || function_exists( 'PclTarExtract' ) ) {
-			require_once( JPATH_SITE . '/administrator/includes/pcl/pcltar.lib.php' );
-		}
+		jimport('joomla.filesystem.archive');
 
 		foreach ( $array as $file ) {
 			if ( !empty( $file[3] ) ) {
@@ -69,7 +67,7 @@ class eucaInstall extends eucaObject
 				}
 			}
 
-			if ( PclTarExtract( $fullpath, $deploypath) !== 0 ) {
+			if ( JArchive::extract( $fullpath, $deploypath ) !== 0 ) {
 				@unlink( $fullpath );
 			} else {
 				$this->setError( array( 'Extraction Error', 'the file ' . $file[0] . ' could not be extracted to ' . $deploypath . '. You can try to unpack the files yourself.' ) );

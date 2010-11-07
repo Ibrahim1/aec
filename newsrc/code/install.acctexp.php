@@ -28,6 +28,8 @@ if (version_compare(phpversion(), '5.0') < 0) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
 }
 
+if ( !function_exists( 'com_install' ) ) {
+
 function com_install()
 {
 	$db = &JFactory::getDBO();
@@ -312,4 +314,6 @@ function com_install()
 	</div>
 	</div>
 	<?php
+}
+
 } ?>
