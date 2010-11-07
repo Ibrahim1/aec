@@ -1423,4 +1423,47 @@ define( '_MI_MI_MAILCHIMP_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_MAILCHIMP_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_MAILCHIMP_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
 
+// Invoice Email
+define( '_AEC_MI_NAME_AECINVOICEPRINTEMAIL',		'Send out the invoice record via email' );
+define( '_AEC_MI_DESC_AECINVOICEPRINTEMAIL',		'Change the Information that is displayed when printing the invoice for a plan that has this MI attached' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_MODE_NAME',		'Text Mode (Before Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_NAME',		'Before Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_DESC',		'Modify the text that is displayed before the header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_MODE_NAME',		'Text Mode (Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_NAME',		'Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_DESC',		'Modify the text that is displayed as the header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_MODE_NAME',		'Text Mode (After Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_NAME',		'After Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_DESC',		'Modify the text that is displayed after the header' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_MODE_NAME',		'Text Mode (Address)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_NAME',		'Address' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_DESC',		'Modify the text that is displayed in the address field' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_MODE_NAME',		'Text Mode (Before Content)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_NAME',		'Before Content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_DESC',		'Modify the text that is displayed before the content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_MODE_NAME',		'Text Mode (After Content)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_NAME',		'After Content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_DESC',		'Modify the text that is displayed after the content' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_MODE_NAME',		'Text Mode (Before Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_NAME',		'Before Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_DESC',		'Modify the text that is displayed before the footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_MODE_NAME',		'Text Mode (Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_NAME',		'Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_DESC',		'Modify the text that is displayed as the footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_MODE_NAME',		'Text Mode (After Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_NAME',		'After Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_DESC',		'Modify the text that is displayed after the footer' );
+
 ?>
