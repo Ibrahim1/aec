@@ -1724,6 +1724,8 @@ class aecACLhandler
 	{
 		$acl = &JFactory::getACL();
 
+		$user = &JFactory::getUser();
+
 		// ensure user can't add group higher than themselves
 		$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
 		if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
@@ -1732,7 +1734,6 @@ class aecACLhandler
 			$ex_groups = array();
 		}
 
-		$gtree = aecACLhandler::getGroupTree();
 		$gtree = $acl->get_group_children_tree( null, 'USERS', true );
 
 		$ex_groups = array_merge( $ex_groups, $ex );
