@@ -804,21 +804,7 @@ class metaUser
 
 		// Always protect last administrator
 		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
-			$query = 'SELECT count(*)'
-					. ' FROM #__core_acl_groups_aro_map'
-					. ' WHERE `group_id` = \'25\''
-					;
-			$db->setQuery( $query );
-			if ( $db->loadResult() <= 1) {
-				return false;
-			}
-
-			$query = 'SELECT count(*)'
-					. ' FROM #__core_acl_groups_aro_map'
-					. ' WHERE `group_id` = \'24\''
-					;
-			$db->setQuery( $query );
-			if ( $db->loadResult() <= 1) {
+			if ( aecACLhandler::countAdmins() < 2) {
 				return false;
 			}
 		}
@@ -856,12 +842,7 @@ class metaUser
 		$gid_name = $acl->get_group_name( $gid, 'ARO' );
 
 		// Set GID and usertype
-		$query = 'UPDATE #__users'
-				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
-				. ' WHERE `id` = \''  . (int) $this->userid . '\''
-				;
-		$db->setQuery( $query );
-		$db->query() or die( $db->stderr() );
+		$rows = aecACLhandler::setGID( (int) $this->userid, $gid, $gid_name );
 
 		if ( $session ) {
 			// Update Session
@@ -1658,6 +1639,127 @@ class metaUserDB extends serialParamDBTable
 		} else {
 			return null;
 		}
+	}
+}
+
+class aecACLhandler
+{
+	function getSuperAdmins()
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `name`, `email`, `sendEmail`'
+				. ' FROM #__users'
+				. ' WHERE LOWER( usertype ) = \'superadministrator\''
+				. ' OR LOWER( usertype ) = \'super administrator\''
+				;
+		$db->setQuery( $query );
+		return $db->loadObjectList();
+	}
+
+	function setGID( $userid, $gid, $gid_name )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'UPDATE #__users'
+				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
+				. ' WHERE `id` = \''  . (int) $this->userid . '\''
+				;
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
+	}
+
+	function adminBlock()
+	{
+		global $aecConfig;
+
+		$user = &JFactory::getUser();
+
+		$acl = &JFactory::getACL();
+
+		$acl->addACL( 'administration', 'config', 'users', 'super administrator' );
+
+		$acpermission = $acl->acl_check( 'administration', 'config', 'users', $user->usertype );
+
+		if ( !$acpermission ) {
+			if (
+				!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] )
+				&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $aecConfig->cfg['manageraccess'] )
+			 ) {
+				$app->redirect( 'index.php', _NOT_AUTH );
+			}
+		}
+	}
+
+	function adminCheck( $userid, $msg )
+	{
+		// check for a super admin ... can't delete them
+		$acl = &JFactory::getACL();
+
+		$user = &JFactory::getUser();
+
+		$groups         = $acl->get_object_groups( 'users', $userid, 'ARO' );
+		$this_group = strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
+
+		if ( $this_group == 'super administrator' ) {
+			return _AEC_MSG_NODELETE_SUPERADMIN;
+		} else if ( $userid == $user->id ) {
+			return _AEC_MSG_NODELETE_YOURSELF;
+		} else if ( ( $this_group == 'administrator' ) && ( $user->gid == 24 ) ) {
+			return _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
+		} else {
+			$db = &JFactory::getDBO();
+
+			$obj = new JTableUser( $db );
+
+			if ( !$obj->delete( $userid ) ) {
+				return $obj->getError();
+			}
+		}
+
+		return $msg;
+	}
+
+	function getGroupTree( $ex=array() )
+	{
+		$acl = &JFactory::getACL();
+
+		// ensure user can't add group higher than themselves
+		$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
+		if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
+			$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
+		} else {
+			$ex_groups = array();
+		}
+
+		$gtree = aecACLhandler::getGroupTree();
+		$gtree = $acl->get_group_children_tree( null, 'USERS', true );
+
+		$ex_groups = array_merge( $ex_groups, $ex );
+
+		// remove users 'above' me
+		$i = 0;
+		while ( $i < count( $gtree ) ) {
+			if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
+				array_splice( $gtree, $i, 1 );
+			} else {
+				$i++;
+			}
+		}
+
+		return $gtree;
+	}
+
+	function countAdmins()
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT count(*)'
+				. ' FROM #__core_acl_groups_aro_map'
+				. ' WHERE `group_id` IN (\'25\',\'24\')'
+				;
+		$db->setQuery( $query );
+		return $db->loadResult();
 	}
 }
 
@@ -2505,21 +2607,12 @@ class eventLog extends serialParamDBTable
 
 		// Mail out notification to all admins if this matches the desired level
 		if ( ( $this->level >= $aecConfig->cfg['email_notification_level'] ) || $force_email ) {
-			$db = &JFactory::getDBO();
-
 			// check if Global Config `mailfrom` and `fromname` values exist
 			if ( $app->getCfg( 'mailfrom' ) != '' && $app->getCfg( 'fromname' ) != '' ) {
 				$adminName2 	= $app->getCfg( 'fromname' );
 				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
-				// use email address and name of first superadmin for use in email sent to user
-				$query = 'SELECT `name`, `email`'
-						. ' FROM #__users'
-						. ' WHERE LOWER( usertype ) = \'superadministrator\''
-						. ' OR LOWER( usertype ) = \'super administrator\''
-						;
-				$db->setQuery( $query );
-				$rows = $db->loadObjectList();
+				$rows = aecACLhandler::getSuperAdmins();
 
 				$adminName2 	= $rows[0]->name;
 				$adminEmail2 	= $rows[0]->email;
@@ -12653,8 +12746,6 @@ class Subscription extends serialParamDBTable
 	{
 		$db = &JFactory::getDBO();
 
-		$acl = &JFactory::getACL();
-
 		$app = JFactory::getApplication();
 
 		$lang =& JFactory::getLanguage();
@@ -12729,13 +12820,7 @@ class Subscription extends serialParamDBTable
 			$adminName2		= $app->getCfg( 'fromname' );
 			$adminEmail2	= $app->getCfg( 'mailfrom' );
 		} else {
-			$query = 'SELECT `name`, `email`'
-					. ' FROM #__users'
-					. ' WHERE LOWER( usertype ) = \'superadministrator\''
-					. ' OR LOWER( usertype ) = \'super administrator\''
-					;
-			$db->setQuery( $query );
-			$rows = $db->loadObjectList();
+			$rows = aecACLhandler::getSuperAdmins();
 			$row2 			= $rows[0];
 
 			$adminName2		= $row2->name;
@@ -14729,8 +14814,6 @@ class AECToolbox
 	{
 		$db = &JFactory::getDBO();
 
-		$acl = &JFactory::getACL();
-
 		global $task, $aecConfig;
 
 		$app = JFactory::getApplication();
@@ -14922,13 +15005,7 @@ class AECToolbox
 				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
-				$query = 'SELECT `name`, `email`'
-						. ' FROM #__users'
-						. ' WHERE LOWER( usertype ) = \'superadministrator\''
-						. ' OR LOWER( usertype ) = \'super administrator\''
-						;
-				$db->setQuery( $query );
-				$rows = $db->loadObjectList();
+				$rows = aecACLhandler::getSuperAdmins();
 				$row2 			= $rows[0];
 
 				$adminName2 	= $row2->name;
@@ -15503,16 +15580,7 @@ class AECToolbox
 
 		$adminlist = array();
 		if ( $aecConfig->cfg['email_default_admins'] ) {
-			$db = &JFactory::getDBO();
-
-			$query = 'SELECT email, sendEmail'
-			. ' FROM #__users'
-			. ' WHERE ( gid = 24 OR gid = 25 )'
-			. ' AND sendEmail = 1'
-			. ' AND block = 0'
-			;
-			$db->setQuery( $query );
-			$admins = $db->loadObjectList();
+			$admins = aecACLhandler::getSuperAdmins();
 
 			foreach ( $admins as $admin ) {
 				if ( !empty( $admin->sendEmail ) ) {
@@ -19599,29 +19667,7 @@ class aecRestrictionHelper
 
 		$user = &JFactory::getUser();
 
-		$acl = &JFactory::getACL();
-
-		// ensure user can't add group higher than themselves
-		$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
-		if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
-			$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
-		} else {
-			$ex_groups = array();
-		}
-
-		$gtree = $acl->get_group_children_tree( null, 'USERS', true );
-
-		$ex_groups = array_merge( $ex_groups, array( 28, 29, 30 ) );
-
-		// remove users 'above' me
-		$i = 0;
-		while ( $i < count( $gtree ) ) {
-			if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
-				array_splice( $gtree, $i, 1 );
-			} else {
-				$i++;
-			}
-		}
+		$gtree = aecACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
 		// Create GID related Lists
 		$lists['gid'] 		= JHTML::_( 'select.genericlist', $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', 18) );

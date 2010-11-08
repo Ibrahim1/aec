@@ -30,22 +30,7 @@ if ( _EUCA_DEBUGMODE ) {
 	$eucaDebug = new eucaDebug();
 }
 
-$user = &JFactory::getUser();
-
-$acl = &JFactory::getACL();
-
-$acl->addACL( 'administration', 'config', 'users', 'super administrator' );
-
-$acpermission = $acl->acl_check( 'administration', 'config', 'users', $user->usertype );
-
-if ( !$acpermission ) {
-	if (
-		!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] )
-		&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $aecConfig->cfg['manageraccess'] )
-	 ) {
-		$app->redirect( 'index.php', _NOT_AUTH );
-	}
-}
+aecACLhandler::adminBlock();
 
 $lang =& JFactory::getLanguage();
 
@@ -1199,13 +1184,11 @@ function removeUser( $userid, $option )
 
 	$user = &JFactory::getUser();
 
-	$acl = &JFactory::getACL();
-
 	// $userid contains values corresponding to id field of #__acctexp table
-		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
-			exit;
-		}
+	if ( !is_array( $userid ) || count( $userid ) < 1 ) {
+		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+		exit;
+	}
 
 	$userids	= implode( ',', $userid );
 	$msg		= _REMOVED;
@@ -1223,28 +1206,7 @@ function removeUser( $userid, $option )
 			$uid = $db->loadResult();
 
 			if ( $uid ) {
-				// check for a super admin ... can't delete them
-				$groups		= $acl->get_object_groups( 'users', $uid, 'ARO' );
-				$this_group = strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
-
-				if ( $this_group == 'super administrator' ) {
-					$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-				} elseif ( $uid == $user->id ){
-					$msg = _AEC_MSG_NODELETE_YOURSELF;
-				} elseif ( ( $this_group == 'administrator' ) && ( $user->gid == 24 ) ){
-					$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
-				} else {
-					$query = 'DELETE FROM #__acctexp'
-					. ' WHERE userid = ' . $uid
-					;
-				 	$db->setQuery( $query );
-					if (!$db->query()) {
-						echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-					}
-					if ( !$obj->delete( $uid ) ) {
-						$msg = $obj->getError();
-					}
-				}
+				$msg = aecACLhandler::adminCheck( $uid, $msg );
 			}
 		}
 	}
@@ -1257,8 +1219,6 @@ function removeClosedSubscription( $userid, $option )
 	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
-
-	$acl = &JFactory::getACL();
 
 	$app = JFactory::getApplication();
 
@@ -1300,23 +1260,8 @@ function removeClosedSubscription( $userid, $option )
 
 	$msg = _REMOVED;
 	if ( count( $userid ) ) {
-		$obj = new JTableUser( $db );
 		foreach ( $userid as $id ) {
-			// check for a super admin ... can't delete them
-			$groups		= $acl->get_object_groups( 'users', $id, 'ARO' );
-			$this_group	= strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
-
-			if ( $this_group == 'super administrator' ) {
-				$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-			} else if ( $id == $user->id ) {
-				$msg = _AEC_MSG_NODELETE_YOURSELF;
-			} else if ( ( $this_group == 'administrator' ) && ( $user->gid == 24 ) ) {
-				$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
-			} else {
-				if ( !$obj->delete( $id ) ) {
-					$msg = $obj->getError();
-				}
-			}
+			$msg = aecACLhandler::adminCheck( $userid, $msg );
 		}
 	}
 
@@ -1332,16 +1277,11 @@ function removeClosedSubscription( $userid, $option )
 
 }
 
-function activateClosedSubscription( $userid, $option )
-{}
-
 function removePendingSubscription( $userid, $option )
 {
 	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
-
-	$acl = &JFactory::getACL();
 
 	$app = JFactory::getApplication();
 
@@ -1383,22 +1323,8 @@ function removePendingSubscription( $userid, $option )
 
 	$msg = _REMOVED;
 	if ( count( $userid ) ) {
-		$obj = new JTableUser( $db );
-		foreach ($userid as $id) {
-			// check for a super admin ... can't delete them
-			$groups         = $acl->get_object_groups( 'users', $id, 'ARO' );
-			$this_group = strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
-			if ( $this_group == 'super administrator' ) {
-				$msg = _AEC_MSG_NODELETE_SUPERADMIN;
-			} else if ( $id == $user->id ) {
-				$msg = _AEC_MSG_NODELETE_YOURSELF;
-			} else if ( ( $this_group == 'administrator' ) && ( $user->gid == 24 ) ) {
-				$msg = _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
-			} else {
-				if ( !$obj->delete( $id ) ) {
-					$msg = $obj->getError();
-				}
-			}
+		foreach ( $userid as $id ) {
+			$msg = aecACLhandler::adminCheck( $userid, $msg );
 		}
 	}
 
@@ -1930,8 +1856,6 @@ function editSettings( $option )
 
 	$user = &JFactory::getUser();
 
-	$acl = &JFactory::getACL();
-
 	global $aecConfig;
 
 	// See whether we have a duplication
@@ -1954,19 +1878,7 @@ function editSettings( $option )
 
 	$lists['entry_plan'] = JHTML::_('select.genericlist', $available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $aecConfig->cfg['entry_plan'] );
 
-	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
-
-	$ex_groups = array( 28, 29, 30 );
-
-	// remove users 'above' me
-	$i = 0;
-	while ( $i < count( $gtree ) ) {
-		if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
-			array_splice( $gtree, $i, 1 );
-		} else {
-			$i++;
-		}
-	}
+	$gtree = aecACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
 	// Create GID related Lists
 	$lists['checkout_as_gift_access'] 		= JHTML::_('select.genericlist', $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
@@ -2386,7 +2298,6 @@ function saveSettings( $option, $return=0 )
 {
 	$db		= &JFactory::getDBO();
 	$user	= &JFactory::getUser();
-	$acl	= &JFactory::getACL();
 
 	global $aecConfig;
 
@@ -2742,8 +2653,6 @@ function saveProcessor( $option, $return=0 )
 
 	$user = &JFactory::getUser();
 
-	$acl = &JFactory::getACL();
-
 	$pp = new PaymentProcessor();
 
 	if ( !empty( $_POST['id'] ) ) {
@@ -2942,8 +2851,6 @@ function editSubscriptionPlan( $id, $option )
 
 	$user = &JFactory::getUser();
 
-	$acl = &JFactory::getACL();
-
 	$lists = array();
 	$params_values = array();
 	$restrictions_values = array();
@@ -3104,30 +3011,6 @@ function editSubscriptionPlan( $id, $option )
 
 	$rewriteswitches				= array( 'cms', 'user' );
 	$params['rewriteInfo']			= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
-
-	// ensure user can't add group higher than themselves
-	$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
-	if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
-		$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
-	} else {
-		$ex_groups = array();
-	}
-
-	$gtree = $acl->get_group_children_tree( null, 'USERS', true );
-
-	$ex_groups[] = 28;
-	$ex_groups[] = 29;
-	$ex_groups[] = 30;
-
-	// remove users 'above' me
-	$i = 0;
-	while ( $i < count( $gtree ) ) {
-		if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
-			array_splice( $gtree, $i, 1 );
-		} else {
-			$i++;
-		}
-	}
 
 	// make the select list for first trial period units
 	$perunit[] = JHTML::_('select.option', 'D', _PAYPLAN_PERUNIT1 );
@@ -4237,8 +4120,6 @@ function editMicroIntegration ( $id, $option )
 
 	$user = &JFactory::getUser();
 
-	$acl = &JFactory::getACL();
-
 	$lists	= array();
 	$mi		= new microIntegration( $db );
 	$mi->load( $id );
@@ -4527,8 +4408,6 @@ function editCoupon( $id, $option, $new, $type )
 	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
-
-	$acl = &JFactory::getACL();
 
 	$app = JFactory::getApplication();
 

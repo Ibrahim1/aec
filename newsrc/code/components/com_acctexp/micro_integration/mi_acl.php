@@ -26,8 +26,6 @@ class mi_acl
 	{
 		$user = &JFactory::getUser();
 
-		$acl = &JFactory::getACL();
-
 		$settings = array();
 		$settings['change_session']	= array( 'list_yesno' );
 
@@ -51,28 +49,7 @@ class mi_acl
 		$settings['sub_gid_pre_exp_del']	= array( 'list' );
 		$settings['sub_gid_pre_exp']		= array( 'list' );
 
-		// ensure user can't add group higher than themselves
-		$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
-		if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
-			$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
-		} else {
-			$ex_groups = array();
-		}
-
-		$gtree = $acl->get_group_children_tree( null, 'USERS', false );
-
-		$ex_groups[] = 29;
-		$ex_groups[] = 30;
-
-		// remove users 'above' me
-		$i = 0;
-		while ( $i < count( $gtree ) ) {
-			if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
-				array_splice( $gtree, $i, 1 );
-			} else {
-				$i++;
-			}
-		}
+		$gtree = aecACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
 		$settings['lists']['gid'] 			= JHTML::_('select.genericlist', $gtree, 'gid', 'size="6"', 'value', 'text', ( empty( $this->settings['gid'] ) ? 18 : $this->settings['gid'] ) );
 		$settings['lists']['gid_exp'] 		= JHTML::_('select.genericlist', $gtree, 'gid_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_exp'] ) ? 18 : $this->settings['gid_exp'] ) );

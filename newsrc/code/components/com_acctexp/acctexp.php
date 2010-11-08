@@ -1395,8 +1395,6 @@ function backSubscription( $option )
 
 	$user = &JFactory::getUser();
 
-	$acl = &JFactory::getACL();
-
 	$app = JFactory::getApplication();
 
 	// Rebuild array
@@ -1519,20 +1517,6 @@ function cancelPayment( $option )
 	$app = JFactory::getApplication();
 
 	global $aecConfig;
-
-	$userid = aecGetParam( 'itemnumber', true, array( 'word', 'int' ) );
-	// The user cancel the payment operation
-	// But user is already created as blocked on database, so we need to delete it
-	$obj = new JTableUser( $db );
-	$obj->load( $userid );
-
-	if ( $obj->id ) {
-		if ( (  (strcasecmp( $obj->usertype, 'Super Administrator' ) != 0 ) || ( strcasecmp( $obj->usertype, 'superadministrator' ) != 0 ) ) && ( strcasecmp( $obj->usertype, 'Administrator' ) != 0 ) && ( $obj->block == 1 ) ) {
-			// If the user is not blocked this can be a false cancel
-			// So just delete user if he is blocked and is not an administrator or super admnistrator
-			$obj->delete();
-		}
-	}
 
 	// Look whether we have a custom Cancel page
 	if ( $aecConfig->cfg['customcancel'] ) {

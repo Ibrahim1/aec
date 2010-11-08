@@ -177,13 +177,7 @@ class mi_raffle
 				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
-				$query = 'SELECT `name`, `email`'
-						. ' FROM #__users'
-						. ' WHERE LOWER( usertype ) = \'superadministrator\''
-						. ' OR LOWER( usertype ) = \'super administrator\''
-						;
-				$db->setQuery( $query );
-				$rows = $db->loadObjectList();
+				$rows = aecACLhandler::getSuperAdmins();
 
 				$adminName2 	= $rows[0]->name;
 				$adminEmail2 	= $rows[0]->email;
