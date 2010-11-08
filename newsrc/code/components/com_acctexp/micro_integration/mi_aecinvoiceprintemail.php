@@ -24,6 +24,18 @@ class mi_aecinvoiceprintemail
 
 	function Settings()
 	{
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+
+		$settings = array();
+		$settings['sender']				= array( 'inputE' );
+		$settings['sender_name']		= array( 'inputE' );
+
+		$settings['recipient']			= array( 'inputE' );
+		$settings['customcss']			= array( 'inputD' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		$settings['aectab_reg']			= array( 'tab', 'Modify Invoice', 'Modify Invoice' );
+
 		$s = array( "before_header", "header", "after_header", "address",
 					"before_content", "after_content",
 					"before_footer", "footer", "after_footer",
@@ -53,6 +65,64 @@ class mi_aecinvoiceprintemail
 		}
 
 		return $settings;
+	}
+
+	function relayAction( $request )
+	{
+		if ( $request->action == 'action' ) {
+			if ( !empty( $this->settings['text_first'] ) ) {
+				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
+					$request->area = '_first';
+				}
+			}
+		}
+
+		if ( !isset( $this->settings['text' . $request->area] ) || !isset( $this->settings['subject' . $request->area] ) ) {
+			return null;
+		}
+
+		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $request->area], $request );
+
+		$message = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>' . $subject . '</title>
+	<meta http-equiv="Content-Type" content="text/html;" />
+	<style type="text/css">' . $this->settings['customcss'] . '</style>
+</head>
+<body style="padding:0;margin:0;background-color:#fff;" >';
+
+		$message	.= $this->getInvoice( $request->invoice ) . '</body></html>';
+
+		if ( empty( $message ) ) {
+			return null;
+		}
+
+		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
+		$recips = explode( ',', $recipients );
+
+        $recipients2 = array();
+        foreach ( $recips as $k => $email ) {
+            $recipients2[$k] = trim( $email );
+        }
+        $recipients = $recipients2;
+
+		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, true );
+
+		return true;
+	}
+
+	function getInvoice( $invoice )
+	{
+		ob_start();
+
+		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false );
+		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false );
+
+		$content = ob_get_contents();
+		ob_end_clean();
+
+		return $content;
 	}
 
 	function invoice_printout( $request )
