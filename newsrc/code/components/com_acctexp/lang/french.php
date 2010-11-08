@@ -149,7 +149,7 @@ define( '_CONFIRM_ROW_EMAIL', 'mail:');
 define( '_CONFIRM_INFO', 'Veuillez utiliser le bouton Continuer pour compl&eacute;ter votre enregistrement.');
 define( '_BUTTON_CONFIRM', 'Continuer');
 define( '_CONFIRM_TOS', 'J\'ai lu et j\'accepte les &lt;a href=\&quot;%s\&quot; target=\&quot;_blank\&quot; title=\&quot;CdU\&quot;&gt;conditions d\'utilisation&lt;/a&gt;');
-define( '_CONFIRM_TOS_IFRAME', "J\'ai lu et j\'accepte les conditions d\'utilisation (ci-dessus)");
+define( '_CONFIRM_TOS_IFRAME', 'J\'ai lu et j\'accepte les conditions d\'utilisation (ci-dessus)');
 define( '_CONFIRM_TOS_ERROR', 'Veuillez lire et accepter nos conditions d\'utilisation');
 define( '_CONFIRM_COUPON_INFO', 'Si vous avez un code de bon de r&eacute;duction, vous pourrez le saisir sur la page du r&egrave;glement pour qu\'il soit pris en compte.');
 define( '_CONFIRM_COUPON_INFO_BOTH', 'Si vous avez un bon de r&eacute;duction, vous pouvez le saisir ici ou sur la page de confirmation pour b&eacute;n&eacute;ficier de la remise');

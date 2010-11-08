@@ -28,10 +28,12 @@ JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'ta
 
 $lang =& JFactory::getLanguage();
 
+$language = AECToolbox::oldLangConversion( $lang->getTag() );
+
 if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-	if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
-		include_once( $langPath . $lang->getTag() . '.php' );
+	if ( file_exists( $langPath . $language . '.php' ) ) {
+		include_once( $langPath . $language . '.php' );
 	} else {
 		include_once( $langPath. 'english.php' );
 	}
@@ -39,8 +41,8 @@ if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
 
 if ( !defined( '_AEC_LANG' ) ) {
 	$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
-	if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
-		include_once( $langPath . $lang->getTag() . '.php' );
+	if ( file_exists( $langPath . $language . '.php' ) ) {
+		include_once( $langPath . $language . '.php' );
 	} else {
 		include_once( $langPath . 'english.php' );
 	}
@@ -9947,6 +9949,8 @@ class InvoiceFactory
 
 		$data = $this->invoice->getPrintout( $this );
 
+		$data['standalone'] = $standalone;
+
 		$exchange = $silent = null;
 
 		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
@@ -14543,6 +14547,32 @@ class AECToolbox
 		}
 
 		return $aecUser;
+	}
+
+	function oldLangConversion( $lang )
+	{
+		$ll = explode( '-', $lang );
+
+		$lang_codes = array( 	'pt' => 'brazilian_portoguese',
+								'cz' => 'czech',
+								'da' => 'danish',
+								'nl' => 'dutch',
+								'en' => 'english',
+								'fr' => 'french',
+								'de' => 'german',
+								'it' => 'italian',
+								'ja' => 'japanese',
+								'ru' => 'russian',
+								'zh' => 'simlified_chinese',
+								'es' => 'spanish',
+								'sv' => 'swedish'
+								);
+
+		if ( isset( $lang_codes[$ll[0]] ) ) {
+			return $lang_codes[$ll[0]];
+		} else {
+			return 'english';
+		}
 	}
 
 	function in_ip_range( $ip_one, $ip_two=false )

@@ -34,16 +34,18 @@ aecACLhandler::adminBlock();
 
 $lang =& JFactory::getLanguage();
 
+$language = AECToolbox::oldLangConversion( $lang->getTag() );
+
 $langPathBE = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-if ( file_exists( $langPathBE . $lang->getTag() . '.php' ) ) {
-	include_once( $langPathBE . $lang->getTag() . '.php' );
+if ( file_exists( $langPathBE . $language . '.php' ) ) {
+	include_once( $langPathBE . $language . '.php' );
 } else {
 	include_once( $langPathBE . 'english.php' );
 }
 
 $langPathPROC = JPATH_SITE . '/components/com_acctexp/processors/lang/';
-if ( file_exists( $langPathPROC . $lang->getTag(). '.php' ) ) {
-	include_once( $langPathPROC . $lang->getTag() . '.php' );
+if ( file_exists( $langPathPROC . $language . '.php' ) ) {
+	include_once( $langPathPROC . $language . '.php' );
 } else {
 	include_once( $langPathPROC . 'english.php' );
 }

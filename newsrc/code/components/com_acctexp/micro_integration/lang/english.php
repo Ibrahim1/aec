@@ -1426,6 +1426,18 @@ define( '_MI_MI_MAILCHIMP_DEFAULT_NOTICE',		'Do you want to subscribe to our new
 // Invoice Email
 define( '_AEC_MI_NAME_AECINVOICEPRINTEMAIL',		'Send out the invoice record via email' );
 define( '_AEC_MI_DESC_AECINVOICEPRINTEMAIL',		'Change the Information that is displayed when printing the invoice for a plan that has this MI attached' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME',					'Sender E-Mail' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_DESC',					'Sender E-Mail Address' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME_NAME',			'Sender Name' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME_DESC',			'The displayed name of the Sender' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_RECIPIENT_NAME',				'Recipient(s)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_RECIPIENT_DESC',				'Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SUBJECT_NAME',				'Subject' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SUBJECT_DESC',				'Subject of this email (Uses RewriteEngine explained below as well)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_TEXT_HTML_NAME',				'HTML Encoding' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_TEXT_HTML_DESC',				'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
+
 define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_MODE_NAME',		'Text Mode (Before Header)' );
 define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_MODE_DESC',		'Define what to do with the original text' );
 define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_NAME',		'Before Header' );
