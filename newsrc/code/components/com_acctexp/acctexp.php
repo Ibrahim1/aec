@@ -1232,8 +1232,11 @@ function InvoiceMakeGift( $option )
 	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
-	if ( $objinvoice->addTargetUser( strtolower( $user_ident ) ) ) {
-		$objinvoice->storeload();
+	$iFactory = new InvoiceFactory( $objinvoice->userid );
+	$iFactory->touchInvoice( $option, $objinvoice->invoice_number );
+
+	if ( $iFactory->invoice->addTargetUser( strtolower( $user_ident ) ) ) {
+		$iFactory->invoice->storeload();
 	}
 
 	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
@@ -1248,8 +1251,11 @@ function InvoiceRemoveGift( $option )
 	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
-	if ( $objinvoice->removeTargetUser() ) {
-		$objinvoice->storeload();
+	$iFactory = new InvoiceFactory( $objinvoice->userid );
+	$iFactory->touchInvoice( $option, $objinvoice->invoice_number );
+
+	if ( $iFactory->invoice->removeTargetUser() ) {
+		$iFactory->invoice->storeload();
 	}
 
 	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
@@ -1287,8 +1293,11 @@ function InvoiceRemoveGiftCart( $option )
 	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
 
-	if ( $objinvoice->removeTargetUser() ) {
-		$objinvoice->storeload();
+	$iFactory = new InvoiceFactory( $objinvoice->userid );
+	$iFactory->touchInvoice( $option, $objinvoice->invoice_number );
+
+	if ( $iFactory->invoice->removeTargetUser() ) {
+		$iFactory->invoice->storeload();
 	}
 
 	$iFactory = new InvoiceFactory( $userid );

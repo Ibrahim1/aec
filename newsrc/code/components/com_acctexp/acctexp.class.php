@@ -11177,17 +11177,16 @@ class Invoice extends serialParamDBTable
 
 	function addTargetUser( $user_ident )
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
 			if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-				$user = &JFactory::getUser();
+				$metaUser = new metaUser( $this->userid );
 
-				$metaUser = new metaUser( $user->id );
+				if ( empty( $metaUser->cmsUser->gid ) ) {
+					return false;
+				}
 
-				// Apparently, we cannot trust $user->gid
 				$groups = GeneralInfoRequester::getLowerACLGroup( $metaUser->cmsUser->gid );
 
 				if ( !in_array( $aecConfig->cfg['checkout_as_gift_access'], $groups ) ) {
@@ -11219,6 +11218,8 @@ class Invoice extends serialParamDBTable
 		$queries[] = 'FROM #__users'
 					. ' WHERE LOWER( `name` ) LIKE \'%' . $user_ident . '%\''
 					;
+
+		$db = &JFactory::getDBO();
 
 		foreach ( $queries as $base_query ) {
 			$query = 'SELECT `id`, `username`, `email` ' . $base_query;
