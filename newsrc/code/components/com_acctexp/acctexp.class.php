@@ -8568,8 +8568,12 @@ class InvoiceFactory
 
 		if ( !empty( $plan->params['addtocart_redirect'] ) ) {
 			return aecRedirect( $plan->params['addtocart_redirect'] );
-		} elseif ( $aecConfig->cfg['additem_stayonpage'] && !empty( $returngroup ) ) {
-			return $this->create( $option, 0, 0, $returngroup );
+		} elseif ( $aecConfig->cfg['additem_stayonpage'] ) {
+			if ( !empty( $returngroup ) ) {
+				return $this->create( $option, 0, 0, $returngroup );
+			} else {
+				return $this->create( $option );
+			}
 		} else {
 			$this->cart( $option );
 		}
@@ -10307,9 +10311,9 @@ class Invoice extends serialParamDBTable
 						$allfree = $cart->checkAllFree( $metaUser, $this->counter, $this );
 
 						$this->amount = $return;
-					} elseif ( isset( $this->params->cart ) ) {
+					} elseif ( isset( $this->params['cart'] ) ) {
 						// Cart has been deleted, use copied data
-						$vars = get_object_vars( $this->params->cart );
+						$vars = get_object_vars( $this->params['cart'] );
 						foreach ( $vars as $v => $c ) {
 							// Make extra sure we don't put through any _properties
 							if ( strpos( $v, '_' ) !== 0 ) {
