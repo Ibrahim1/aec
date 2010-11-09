@@ -55,8 +55,8 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Keine Zahlung - Abo ist abgelau
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','Keine Zahlung - Duplikat' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL','Keine Zahlung - Null' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Unbekannter Fehler' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'No Payment - Subscription Deleted (refund)' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', User has been expired' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'Keine Zahlung - Mitgliedschaft wurde abgebrochen (Erstattung)' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', Benutzerkonto ausgelaufen' );
 
 // end mic ########################################################
 
@@ -147,7 +147,7 @@ define( '_CONFIRM_TOS',						"Ich habe die <a href=\"%s\" target=\"_blank\" titl
 define( '_CONFIRM_TOS_IFRAME', "Ich habe die Allgemeinen Gesch&auml;ftsbedigungen (s.o.) gelesen und bin einverstanden.");
 define( '_CONFIRM_TOS_ERROR',				'Sie m&uuml;ssen unsere AGBs lesen und akzeptieren');
 define( '_CONFIRM_COUPON_INFO',				'Falls Sie einen Gutscheincode haben geben Sie ihn bitte auf den nachfolgenden Seiten an, um einen allf&auml;lligen Abzug zu ber&uuml;cksichtigen');
-define( '_CONFIRM_COUPON_INFO_BOTH', 'If you have a coupon code, you can enter it here, or on the Checkout Page to get a discount on your payment');
+define( '_CONFIRM_COUPON_INFO_BOTH', 'Falls Sie einen Rabatt-Coupon haben, k&ouml;nnen Sie dessen Code entweder hier oder auf der endg&uuml;ltigen Bezahlseite angeben');
 define( '_CONFIRM_FREETRIAL', 'Kostenlose Testphase');
 define( '_CONFIRM_YOU_HAVE_SELECTED', 'Sie haben gewählt');
 
@@ -162,9 +162,9 @@ define( '_CART_CLEAR_ALL', 'alles aus dem Einkaufswagen entfernen');
 define( '_CART_DELETE_ITEM', 'entfernen');
 
 // --== EXCEPTION FORM ==--
-define( '_EXCEPTION_TITLE', 'Additional Information Required');
-define( '_EXCEPTION_TITLE_NOFORM', 'Please note:');
-define( '_EXCEPTION_INFO', 'To proceed with your checkout, we need you to provide additional information as specified below:');
+define( '_EXCEPTION_TITLE', 'Weitere Angaben n&ouml;tig');
+define( '_EXCEPTION_TITLE_NOFORM', 'Bitte beachten:');
+define( '_EXCEPTION_INFO', 'Um mit der Bezahlung fortzufahren ben&ouml;tigen wir weitere Angaben:');
 
 // --== PROMPT PASSWORD FORM ==--
 define( '_AEC_PROMPT_PASSWORD', 'Aus Sicherheitsgr&uuml;nden m&uuml;ssen Sie ihr Passwort eingeben.');
@@ -189,28 +189,28 @@ define( '_CHECKOUT_COUPON_INFO',			'Falls Sie einen Gutscheincode haben, geben S
 define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
 define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
 
-define( '_AEC_TERMTYPE_TRIAL', 'Initial Billing');
-define( '_AEC_TERMTYPE_TERM', 'Regular Billing Term');
-define( '_AEC_CHECKOUT_TERM', 'Billing Term');
-define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'not applicable');
-define( '_AEC_CHECKOUT_FUTURETERM', 'future term');
-define( '_AEC_CHECKOUT_COST', 'Cost');
-define( '_AEC_CHECKOUT_TAX', 'Tax');
-define( '_AEC_CHECKOUT_DISCOUNT', 'Discount');
-define( '_AEC_CHECKOUT_TOTAL', 'Total');
-define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Grand Total');
-define( '_AEC_CHECKOUT_DURATION', 'Duration');
+define( '_AEC_TERMTYPE_TRIAL', 'Erste Zahlung');
+define( '_AEC_TERMTYPE_TERM', 'Regul&auml;re Zahlung');
+define( '_AEC_CHECKOUT_TERM', 'Zeitraum');
+define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'nicht anwendbar');
+define( '_AEC_CHECKOUT_FUTURETERM', 'Zuk&uuml;nftige Zahlung');
+define( '_AEC_CHECKOUT_COST', 'Preis');
+define( '_AEC_CHECKOUT_TAX', 'Steuer');
+define( '_AEC_CHECKOUT_DISCOUNT', 'Rabatt');
+define( '_AEC_CHECKOUT_TOTAL', 'Gesamt');
+define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Summe');
+define( '_AEC_CHECKOUT_DURATION', 'Dauer');
 
-define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Lifetime');
+define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Lebenszeit');
 
-define( '_AEC_CHECKOUT_DUR_DAY', 'Day');
-define( '_AEC_CHECKOUT_DUR_DAYS', 'Days');
-define( '_AEC_CHECKOUT_DUR_WEEK', 'Week');
-define( '_AEC_CHECKOUT_DUR_WEEKS', 'Weeks');
-define( '_AEC_CHECKOUT_DUR_MONTH', 'Month');
-define( '_AEC_CHECKOUT_DUR_MONTHS', 'Months');
-define( '_AEC_CHECKOUT_DUR_YEAR', 'Year');
-define( '_AEC_CHECKOUT_DUR_YEARS', 'Years');
+define( '_AEC_CHECKOUT_DUR_DAY', 'Tag');
+define( '_AEC_CHECKOUT_DUR_DAYS', 'Tage');
+define( '_AEC_CHECKOUT_DUR_WEEK', 'Woche');
+define( '_AEC_CHECKOUT_DUR_WEEKS', 'Wochen');
+define( '_AEC_CHECKOUT_DUR_MONTH', 'Monat');
+define( '_AEC_CHECKOUT_DUR_MONTHS', 'Monate');
+define( '_AEC_CHECKOUT_DUR_YEAR', 'Jahr');
+define( '_AEC_CHECKOUT_DUR_YEARS', 'Jahre');
 
 // --== ALLOPASS SPECIFIC ==--
 define( '_REGTITLE',						'INSCRIPTION');
@@ -265,10 +265,10 @@ define( '_SUB_FEPARTICLE_ACTMAIL',			'Sobald die Anfrage abgeschlossen ist, erha
 define( '_SUB_FEPARTICLE_MAIL',				'Sobald die Anfrage abgeschlossen ist, erhalten Sie von uns ein Email');
 
 // --== CHECKOUT ERROR PAGE ==--
-define( '_CHECKOUT_ERROR_TITLE', 'Error while processing the payment!');
-define( '_CHECKOUT_ERROR_EXPLANATION', 'An error occured while processing your payment');
-define( '_CHECKOUT_ERROR_OPENINVOICE', 'This leaves your invoice uncleared. To retry the payment, you can go to the checkout page once again to try again:');
-define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
+define( '_CHECKOUT_ERROR_TITLE', 'Fehler w&auml;hrend der Zahlung!');
+define( '_CHECKOUT_ERROR_EXPLANATION', 'bei der Bearbeiten Ihrer Zahlung ist ein Fehler aufgetreten');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'Ihre Rechnung bleibt somit unbezahlt. Um einen weiteren Versuch zu unternehmen k&oouml;nnen Sie zur Bezahlseite zur&uuml;ckkehren:');
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'Ihre Rechnung bleibt somit unbezahlt. Um einen weiteren Versuch zu unternehmen k&oouml;nnen Sie zur Bezahlseite zur&uuml;ckkehren. Falls Sie bei der Bezahlung Hilfe brauchen, z&ouml;gern Sie bitte nicht, uns direkt zu kontaktieren.');
 
 // --== COUPON INFO ==--
 define( '_COUPON_INFO',						'Gutscheine:');
