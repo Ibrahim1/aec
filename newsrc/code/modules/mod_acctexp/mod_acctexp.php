@@ -32,13 +32,15 @@ if ( $user->id ) {
 
 	if ( $showExpiration ) {
 		$langPath = JPATH_SITE . '/modules/mod_acctexp/mod_acctexp_language/';
-		
+
 		$lang =& JFactory::getLanguage();
 
-		if ( file_exists( $langPath . $lang->getTag() . '.php' )) {
-				include_once( $langPath . $lang->getTag() . '.php' );
+		$language = AECToolbox::oldLangConversion( $lang->getTag() );
+
+		if ( file_exists( $langPath . $language . '.php' )) {
+			include_once( $langPath . $language . '.php' );
 		} else {
-				include_once( $langPath. 'english.php' );
+			include_once( $langPath. 'english.php' );
 		}
 
 		if ( !$extended ) {

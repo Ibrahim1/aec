@@ -29,6 +29,18 @@ if ( $user->id ) {
 		echo $pretext;
 	}
 
+	$langPath = JPATH_SITE . '/modules/mod_acctexp_cart/mod_acctexp_cart_language/';
+
+	$lang =& JFactory::getLanguage();
+
+	$language = AECToolbox::oldLangConversion( $lang->getTag() );
+
+	if ( file_exists( $langPath . $language . '.php' )) {
+		include_once( $langPath . $language . '.php' );
+	} else {
+		include_once( $langPath. 'english.php' );
+	}
+
 	$cart = aecCartHelper::getCartbyUserid( $user->id );
 
 	switch ( $mode ) {
@@ -46,21 +58,27 @@ if ( $user->id ) {
 					<th><?php echo _AEC_CART_MODULE_ROW_AMOUNT; ?></th>
 					<th><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></th>
 				</tr><?php
-			foreach ( $cart as $bid => $bitem ) {
-				if ( !empty( $bitem['name'] ) ) {
-					?><tr>
-						<td><?php echo $bitem['name']; ?></td>
-						<td><?php echo $bitem['cost']; ?></td>
-						<td><?php echo $bitem['quantity']; ?></td>
-						<td><?php echo $bitem['cost_total']; ?></td>
-					</tr><?php
-				} else {
-					?><tr>
-						<td><strong><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></strong></td>
-						<td></td>
-						<td></td>
-						<td><strong><?php echo $bitem['cost']; ?></strong></td>
-					</tr><?php
+			if ( empty( $cart->content ) ) {
+				?><tr>
+					<td colspan="4"><?php echo _AEC_CART_MODULE_CART_EMPTY; ?></td>
+				</tr><?php
+			} else {
+				foreach ( $cart->content as $bid => $bitem ) {
+					if ( !empty( $bitem['name'] ) ) {
+						?><tr>
+							<td><?php echo $bitem['name']; ?></td>
+							<td><?php echo $bitem['cost']; ?></td>
+							<td><?php echo $bitem['quantity']; ?></td>
+							<td><?php echo $bitem['cost_total']; ?></td>
+						</tr><?php
+					} else {
+						?><tr>
+							<td><strong><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></strong></td>
+							<td></td>
+							<td></td>
+							<td><strong><?php echo $bitem['cost']; ?></strong></td>
+						</tr><?php
+					}
 				}
 			}
 
@@ -70,7 +88,9 @@ if ( $user->id ) {
 	}
 
 	if ( $button ) {
-		?><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo JURI::root() . 'media/com_acctexp/images/site/your_cart_button.png'; ?></a><?php
+		global $aecConfig;
+
+		?><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>"><img src="<?php echo JURI::root() . 'media/com_acctexp/images/site/your_cart_button.png'; ?>" /></a><?php
 	}
 
 	if ( !empty( $posttext ) ) {
