@@ -625,7 +625,9 @@ class Payment_HTML
 				}
 
 				if ( $aecConfig->cfg['additem_stayonpage'] ) {
-					$hidden[] = array( 'returnurl', $planid );
+					$group = aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
+
+					$hidden[] = array( 'returngroup', $group );
 				}
 			} else {
 				if ( $register ) {

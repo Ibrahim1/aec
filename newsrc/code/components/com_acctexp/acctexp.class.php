@@ -8543,7 +8543,7 @@ class InvoiceFactory
 		}
 	}
 
-	function addtoCart( $option, $usage )
+	function addtoCart( $option, $usage, $returngroup=null )
 	{
 		global $aecConfig;
 		
@@ -8568,10 +8568,10 @@ class InvoiceFactory
 
 		if ( !empty( $plan->params['addtocart_redirect'] ) ) {
 			return aecRedirect( $plan->params['addtocart_redirect'] );
-		} elseif ( $aecConfig->cfg['additem_stayonpage'] ) {
-			
+		} elseif ( $aecConfig->cfg['additem_stayonpage'] && !empty( $returngroup ) ) {
+			return $this->create( $option, 0, 0, $returngroup );
 		} else {
-			$iFactory->cart( $option );
+			$this->cart( $option );
 		}
 	}
 

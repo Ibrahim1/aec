@@ -119,8 +119,9 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'addtocart':
-			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
-			$usage		= aecGetParam( 'usage', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$userid			= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+			$usage			= aecGetParam( 'usage', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+			$returngroup	= aecGetParam( 'returngroup', '', true, array( 'word', 'int' ) );
 
 			if ( !empty( $user->id ) ) {
 				$userid = $user->id;
