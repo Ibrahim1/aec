@@ -41,13 +41,18 @@ if ( $user->id ) {
 		include_once( $langPath. 'english.php' );
 	}
 
-	$cart = aecCartHelper::getCartbyUserid( $user->id );
+	$c = aecCartHelper::getCartbyUserid( $user->id );
+
+	$metaUser = new metaUser( $user->id );
+
+	$cart = $c->getCheckout( $metaUser );
 
 	switch ( $mode ) {
 		default:
 		case 'abridged':
-			?><p>Items in cart: <?php echo count( $cart ) - 1; ?></p>
-			<p>Total:
+			$items = count( $cart ) - 1;
+			?><p><?php echo _AEC_CART_MODULE_ITEMS_IN_CART; ?>: <?php echo $items; ?></p>
+			<p><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?>: <?php echo $cart[$items]['cost_total']; ?></p>
 			<?php
 			break;
 		case 'full':
@@ -58,13 +63,13 @@ if ( $user->id ) {
 					<th><?php echo _AEC_CART_MODULE_ROW_AMOUNT; ?></th>
 					<th><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></th>
 				</tr><?php
-			if ( empty( $cart->content ) ) {
+			if ( empty( $c->content ) ) {
 				?><tr>
 					<td colspan="4"><?php echo _AEC_CART_MODULE_CART_EMPTY; ?></td>
 				</tr><?php
 			} else {
-				foreach ( $cart->content as $bid => $bitem ) {
-					if ( !empty( $bitem['name'] ) ) {
+				foreach ( $cart as $bid => $bitem ) {
+					if ( !empty( $bitem['obj'] ) ) {
 						?><tr>
 							<td><?php echo $bitem['name']; ?></td>
 							<td><?php echo $bitem['cost']; ?></td>
@@ -76,7 +81,7 @@ if ( $user->id ) {
 							<td><strong><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></strong></td>
 							<td></td>
 							<td></td>
-							<td><strong><?php echo $bitem['cost']; ?></strong></td>
+							<td><strong><?php echo $bitem['cost_total']; ?></strong></td>
 						</tr><?php
 					}
 				}
