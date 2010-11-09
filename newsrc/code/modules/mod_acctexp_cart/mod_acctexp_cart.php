@@ -47,49 +47,54 @@ if ( $user->id ) {
 
 	$cart = $c->getCheckout( $metaUser );
 
-	switch ( $mode ) {
-		default:
-		case 'abridged':
-			$items = count( $cart ) - 1;
-			?><p><?php echo _AEC_CART_MODULE_ITEMS_IN_CART; ?>: <?php echo $items; ?></p>
-			<p><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?>: <?php echo $cart[$items]['cost_total']; ?></p>
-			<?php
-			break;
-		case 'full':
-			?><table>
-				<tr>
-					<th><?php echo _AEC_CART_MODULE_ROW_ITEM; ?></th>
-					<th><?php echo _AEC_CART_MODULE_ROW_COST; ?></th>
-					<th><?php echo _AEC_CART_MODULE_ROW_AMOUNT; ?></th>
-					<th><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></th>
-				</tr><?php
-			if ( empty( $c->content ) ) {
-				?><tr>
-					<td colspan="4"><?php echo _AEC_CART_MODULE_CART_EMPTY; ?></td>
-				</tr><?php
-			} else {
+	if ( empty( $c->content ) ) {
+		?><p><?php echo _AEC_CART_MODULE_CART_EMPTY; ?></p><?php
+	} else {
+		switch ( $mode ) {
+			default:
+			case 'abridged':
+				$quantity = 0;
+				$total = 0;
 				foreach ( $cart as $bid => $bitem ) {
 					if ( !empty( $bitem['obj'] ) ) {
-						?><tr>
-							<td><?php echo $bitem['name']; ?></td>
-							<td><?php echo $bitem['cost']; ?></td>
-							<td><?php echo $bitem['quantity']; ?></td>
-							<td><?php echo $bitem['cost_total']; ?></td>
-						</tr><?php
+						$quantity += $bitem['quantity'];
 					} else {
-						?><tr>
-							<td><strong><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></strong></td>
-							<td></td>
-							<td></td>
-							<td><strong><?php echo $bitem['cost_total']; ?></strong></td>
-						</tr><?php
+						$total = $bitem['cost_total'];
 					}
 				}
-			}
+				?><p><?php echo _AEC_CART_MODULE_ITEMS_IN_CART; ?>: <?php echo $quantity; ?></p>
+				<p><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?>: <?php echo $total; ?></p>
+				<?php
+				break;
+			case 'full':
+				?><table>
+					<tr>
+						<th><?php echo _AEC_CART_MODULE_ROW_ITEM; ?></th>
+						<th><?php echo _AEC_CART_MODULE_ROW_COST; ?></th>
+						<th><?php echo _AEC_CART_MODULE_ROW_AMOUNT; ?></th>
+						<th><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></th>
+					</tr><?php
 
-			?></table><?php
-
-			break;
+					foreach ( $cart as $bid => $bitem ) {
+						if ( !empty( $bitem['obj'] ) ) {
+							?><tr>
+								<td><?php echo $bitem['name']; ?></td>
+								<td><?php echo $bitem['cost']; ?></td>
+								<td><?php echo $bitem['quantity']; ?></td>
+								<td><?php echo $bitem['cost_total']; ?></td>
+							</tr><?php
+						} else {
+							?><tr>
+								<td><strong><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></strong></td>
+								<td></td>
+								<td></td>
+								<td><strong><?php echo $bitem['cost_total']; ?></strong></td>
+							</tr><?php
+						}
+					}
+				?></table><?php
+				break;
+		}
 	}
 
 	if ( $button ) {
