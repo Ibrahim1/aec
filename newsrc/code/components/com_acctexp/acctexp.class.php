@@ -8961,7 +8961,7 @@ class InvoiceFactory
 			}
 
 			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart, $selected );
+			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart, $selected, $group );
 		}
 	}
 

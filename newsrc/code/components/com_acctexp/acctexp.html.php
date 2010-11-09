@@ -520,7 +520,7 @@ class HTML_Results
 
 class Payment_HTML
 {
-	function selectSubscriptionPlanForm( $option, $userid, $list, $passthrough=false, $register=false, $cart=false, $selected=false )
+	function selectSubscriptionPlanForm( $option, $userid, $list, $passthrough=false, $register=false, $cart=false, $selected=false, $group=null )
 	{
 		global $aecConfig;
 
@@ -585,7 +585,7 @@ class Payment_HTML
 						<h2><?php echo $litem['name']; ?></h2>
 						<p><?php echo $litem['desc']; ?></p>
 						<div class="aec_procbuttons">
-							<?php echo Payment_HTML::getPayButtonHTML( $litem['gw'], $litem['id'], $userid, $passthrough, $register ); ?>
+							<?php echo Payment_HTML::getPayButtonHTML( $litem['gw'], $litem['id'], $userid, $passthrough, $register, $group ); ?>
 						</div>
 					<?php
 				}
@@ -601,7 +601,7 @@ class Payment_HTML
 		<?php
 	}
 
-	function getPayButtonHTML( $pps, $planid, $userid, $passthrough = false, $register = false )
+	function getPayButtonHTML( $pps, $planid, $userid, $passthrough = false, $register = false, $group = null )
 	{
 		global $aecConfig;
 
@@ -625,8 +625,6 @@ class Payment_HTML
 				}
 
 				if ( $aecConfig->cfg['additem_stayonpage'] ) {
-					$group = aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
-
 					$hidden[] = array( 'returngroup', $group );
 				}
 			} else {

@@ -131,7 +131,7 @@ if ( !empty( $task ) ) {
 				notAllowed( $option );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->addtoCart( $option, $usage );
+				$iFactory->addtoCart( $option, $usage, $returngroup );
 			}
 			break;
 
