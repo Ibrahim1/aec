@@ -1105,7 +1105,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 			return aecNotAuth();
 		}
 
-		$iFactory->confirmcart( $option, null, true );
+		return $iFactory->save( $option, null );
 	} elseif ( $cart ) {
 		$iFactory = new InvoiceFactory( $userid );
 
@@ -1228,6 +1228,9 @@ function InvoiceMakeGift( $option )
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
+
+	unset( $_POST['user_ident'] );
+	unset( $_REQUEST['user_ident'] );
 
 	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
