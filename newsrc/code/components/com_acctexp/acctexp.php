@@ -647,7 +647,12 @@ function subscribe( $option )
 		}
 
 		$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor, null, $passthrough );
-		$iFactory->create( $option, $intro, $usage, $group, $processor, 0 );
+
+		if ( !empty( $iFactory->passthrough['invoice'] ) ) {
+			repeatInvoice( $option, $iFactory->passthrough['invoice'], null, $userid );
+		} else {
+			$iFactory->create( $option, $intro, $usage, $group, $processor, 0 );
+		}
 	}
 }
 
