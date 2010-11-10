@@ -9937,7 +9937,7 @@ class InvoiceFactory
 		}
 	}
 
-	function invoiceprint( $option, $invoice_number, $standalone=true )
+	function invoiceprint( $option, $invoice_number, $standalone=true, $extradata=null )
 	{
 		$this->loadMetaUser();
 
@@ -9956,6 +9956,12 @@ class InvoiceFactory
 		$data['standalone'] = $standalone;
 
 		$exchange = $silent = null;
+
+		if ( !empty( $extradata ) ) {
+			foreach ( $extradata as $k => $v ) {
+				$data[$k] = $v;
+			}
+		}
 
 		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
 

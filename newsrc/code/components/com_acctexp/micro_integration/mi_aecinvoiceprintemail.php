@@ -117,7 +117,7 @@ class mi_aecinvoiceprintemail
 		ob_start();
 
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false );
-		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false );
+		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ) );
 
 		$content = ob_get_contents();
 		ob_end_clean();
@@ -127,6 +127,11 @@ class mi_aecinvoiceprintemail
 
 	function invoice_printout( $request )
 	{
+		// Only handle self-calls
+		if ( !isset( $request->add['mi_aecinvoiceprintemail'] ) ) {
+			return true;
+		}
+		
 		$db = &JFactory::getDBO();
 
 		foreach ( $request->add as $k => $v ) {
