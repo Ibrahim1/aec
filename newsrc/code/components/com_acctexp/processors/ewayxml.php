@@ -122,8 +122,8 @@ class processor_ewayxml extends XMLprocessor
 
 	function checkoutform()
 	{
-		$var = $this->getUserform( $var );
-		$var = $this->getCCform();
+		$var = $this->getUserform();
+		$var = $this->getCCform( $var );
 
 		return $var;
 	}
