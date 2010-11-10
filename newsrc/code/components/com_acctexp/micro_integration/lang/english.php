@@ -1424,8 +1424,8 @@ define( '_MI_MI_MAILCHIMP_CUSTOMINFO_DESC',		'AEC normally displays the text "Do
 define( '_MI_MI_MAILCHIMP_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
 
 // Invoice Email
-define( '_AEC_MI_NAME_AECINVOICEPRINTEMAIL',		'Send out the invoice record via email' );
-define( '_AEC_MI_DESC_AECINVOICEPRINTEMAIL',		'Change the Information that is displayed when printing the invoice for a plan that has this MI attached' );
+define( '_AEC_MI_NAME_AECINVOICEPRINTEMAIL',		'HTML Invoice Mailout' );
+define( '_AEC_MI_DESC_AECINVOICEPRINTEMAIL',		'Send out a modified HTML version of the Invoice printout page' );
 
 define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME',					'Sender E-Mail' );
 define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_DESC',					'Sender E-Mail Address' );

@@ -48,7 +48,6 @@ class mi_aecinvoiceprintemail
 		$modelist[] = JHTML::_('select.option', "replace", AEC_TEXTMODE_REPLACE );
 		$modelist[] = JHTML::_('select.option', "delete", AEC_TEXTMODE_DELETE );
 
-		$settings = array();
 		foreach ( $s as $x ) {
 			$y = $x."_mode";
 
@@ -64,6 +63,8 @@ class mi_aecinvoiceprintemail
 			$settings[$x]			= array( "editor" );
 		}
 
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
 		return $settings;
 	}
 
@@ -75,10 +76,16 @@ class mi_aecinvoiceprintemail
 					$request->area = '_first';
 				}
 			}
+		} else {
+			return null;
 		}
 
-		if ( !isset( $this->settings['text' . $request->area] ) || !isset( $this->settings['subject' . $request->area] ) ) {
+		if ( empty( $this->settings['subject' . $request->area] ) ) {
 			return null;
+		}
+
+		if ( isset( $request->invoice->params['mi_aecinvoiceprintemail'] ) ) {
+			
 		}
 
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $request->area], $request );
@@ -131,7 +138,7 @@ class mi_aecinvoiceprintemail
 		if ( !isset( $request->add['mi_aecinvoiceprintemail'] ) ) {
 			return true;
 		}
-		
+
 		$db = &JFactory::getDBO();
 
 		foreach ( $request->add as $k => $v ) {
