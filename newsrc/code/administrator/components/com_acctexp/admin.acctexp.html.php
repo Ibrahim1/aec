@@ -813,7 +813,7 @@ class HTML_AcctExp
 			<h2><?php echo _AEC_QUICKSEARCH; ?></h2>
 			<p><?php echo _AEC_QUICKSEARCH_DESC; ?></p>
 			<form action="<?php echo JURI::base(); ?>index.php?option=com_acctexp&amp;task=quicklookup" method="post">
-			<input type="text" size="80" name="search" class="inputbox" value="<?php echo $searchcontent; ?>" />
+			<input type="text" size="80" name="search" class="inputbox" value="<?php echo htmlspecialchars($searchcontent); ?>" />
 			<input type="submit" />
 			</form>
 			<?php
@@ -1329,7 +1329,7 @@ class HTML_AcctExp
 						<?php } ?>
 						<?php echo _AEC_CMN_SEARCH; ?>
 						<br />
-						<input type="text" name="search" value="<?php echo $search; ?>" class="inputbox" onChange="document.adminForm.submit();" />
+						<input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
 					</td>
 				</tr>
 				<tr><td></td></tr>
@@ -1438,7 +1438,7 @@ class HTML_AcctExp
 						<br />
 						<?php echo _AEC_CMN_SEARCH; ?>
 						<br />
-						<input type="text" name="search" value="<?php echo $search; ?>" class="inputbox" onChange="document.adminForm.submit();" />
+						<input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
 					</td>
 				</tr>
 				<tr><td></td></tr>
@@ -2566,7 +2566,7 @@ class HTML_AcctExp
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
 			<?php echo _INVOICE_SEARCH; ?>: <br />
-			<input type="text" name="search" value="<?php echo $search;?>" class="text_area" onChange="document.adminForm.submit();" />
+			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
 			</td>
 		</tr>
 		</table>
@@ -2643,7 +2643,7 @@ class HTML_AcctExp
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
 			<?php echo _HISTORY_SEARCH; ?>: <br />
-			<input type="text" name="search" value="<?php echo $search;?>" class="text_area" onChange="document.adminForm.submit();" />
+			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
 			</td>
 		</tr>
 		</table>
@@ -2721,7 +2721,7 @@ class HTML_AcctExp
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
 			<?php echo _HISTORY_SEARCH; ?>: <br />
-			<input type="text" name="search" value="<?php echo $search;?>" class="text_area" onChange="document.adminForm.submit();" />
+			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
 			</td>
 		</tr>
 		</table>
