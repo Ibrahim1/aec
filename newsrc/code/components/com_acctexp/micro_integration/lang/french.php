@@ -1375,4 +1375,61 @@ define( '_MI_MI_MAILCHIMP_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_MAILCHIMP_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_MAILCHIMP_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
 
+// Invoice Email
+define( '_AEC_MI_NAME_AECINVOICEPRINTEMAIL',		'HTML Invoice Mailout' );
+define( '_AEC_MI_DESC_AECINVOICEPRINTEMAIL',		'Send out a modified HTML version of the Invoice printout page' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME',					'Sender E-Mail' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_DESC',					'Sender E-Mail Address' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME_NAME',			'Sender Name' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME_DESC',			'The displayed name of the Sender' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_RECIPIENT_NAME',				'Recipient(s)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_RECIPIENT_DESC',				'Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SUBJECT_NAME',				'Subject' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SUBJECT_DESC',				'Subject of this email (Uses RewriteEngine as explained below)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_CUSTOMCSS_NAME',				'Custom CSS' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_CUSTOMCSS_DESC',				'If you want custom styling on your html email, you can put it in here.' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_TEXT_HTML_NAME',				'HTML Encoding' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_TEXT_HTML_DESC',				'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_MODE_NAME',		'Text Mode (Before Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_NAME',		'Before Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_DESC',		'Modify the text that is displayed before the header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_MODE_NAME',		'Text Mode (Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_NAME',		'Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_DESC',		'Modify the text that is displayed as the header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_MODE_NAME',		'Text Mode (After Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_NAME',		'After Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_DESC',		'Modify the text that is displayed after the header' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_MODE_NAME',		'Text Mode (Address)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_NAME',		'Address' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_DESC',		'Modify the text that is displayed in the address field' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_MODE_NAME',		'Text Mode (Before Content)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_NAME',		'Before Content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_DESC',		'Modify the text that is displayed before the content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_MODE_NAME',		'Text Mode (After Content)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_NAME',		'After Content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_DESC',		'Modify the text that is displayed after the content' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_MODE_NAME',		'Text Mode (Before Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_NAME',		'Before Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_DESC',		'Modify the text that is displayed before the footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_MODE_NAME',		'Text Mode (Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_NAME',		'Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_DESC',		'Modify the text that is displayed as the footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_MODE_NAME',		'Text Mode (After Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_NAME',		'After Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_DESC',		'Modify the text that is displayed after the footer' );
+
 ?>

@@ -7644,14 +7644,14 @@ class InvoiceFactory
 	/** @var int */
 	var $confirmed		= null;
 
-	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null, $alert=true )
+	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null, $alert=true, $forceinternal=false )
 	{
 		// If we have some kind of internal call, we need to load the HTML class
 		if ( !class_exists( 'Payment_HTML' ) ) {
 			require_once( JApplicationHelper::getPath( 'front_html', 'com_acctexp' ) );
 		}
 
-		$this->initUser( $userid, $alert );
+		$this->initUser( $userid, $alert, $forceinternal );
 
 		// Init variables
 		$this->usage			= $usage;
@@ -7664,7 +7664,7 @@ class InvoiceFactory
 		$this->verifyUsage();
 	}
 
-	function initUser( $userid, $alert=true )
+	function initUser( $userid, $alert=true, $forceinternal=false )
 	{
 		$user = &JFactory::getUser();
 
@@ -7672,8 +7672,8 @@ class InvoiceFactory
 		$this->authed = false;
 
 		// Check whether this call is legitimate
-		if ( empty( $user->id ) ) {
-			if ( !$this->userid ) {
+		if ( empty( $user->id ) || $forceinternal ) {
+			if ( !$this->userid || $forceinternal ) {
 				// It's ok, this is a registration/subscription hybrid call
 				$this->authed = true;
 			} elseif ( $this->userid ) {
@@ -16225,11 +16225,13 @@ class microIntegration extends serialParamDBTable
 
 	function callMILanguage()
 	{
-		$app = JFactory::getApplication();
+		$lang =& JFactory::getLanguage();
+
+		$language = AECToolbox::oldLangConversion( $lang->getTag() );
 
 		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-		if ( file_exists( $langPathMI . $app->getCfg( 'lang' ) . '.php' ) ) {
-			include_once( $langPathMI . $app->getCfg( 'lang' ) . '.php' );
+		if ( file_exists( $langPathMI . $language . '.php' ) ) {
+			include_once( $langPathMI . $language . '.php' );
 		} else {
 			include_once( $langPathMI . 'english.php' );
 		}

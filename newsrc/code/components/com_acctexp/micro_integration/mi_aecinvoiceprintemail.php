@@ -92,12 +92,24 @@ class mi_aecinvoiceprintemail
 
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $request->area], $request );
 
+		if ( !empty( $this->settings['customcss'] ) ) {
+			$css = $this->settings['customcss'];
+		} else {
+			$cssfile = JPATH_SITE . '/media/com_acctexp/css/invoice.css';
+
+			if ( file_exists( $cssfile ) ) {
+				$css = file_get_contents( $cssfile );
+			} else {
+				$css = "";
+			}
+		}
+
 		$message = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>' . $subject . '</title>
 	<meta http-equiv="Content-Type" content="text/html;" />
-	<style type="text/css">' . $this->settings['customcss'] . '</style>
+	<style type="text/css">' . $css . '</style>
 </head>
 <body style="padding:0;margin:0;background-color:#fff;" >';
 
@@ -128,7 +140,7 @@ class mi_aecinvoiceprintemail
 	{
 		ob_start();
 
-		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false );
+		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
 		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ) );
 
 		$content = ob_get_contents();
