@@ -8863,6 +8863,12 @@ class InvoiceFactory
 
 		$register = !$this->loadMetaUser( true );
 
+		if ( !$register ) {
+			$this->expired = $this->metaUser->objSubscription->is_expired();
+		} else {
+			$this->expired = true;
+		}
+
 		if ( empty( $this->usage ) && empty( $group ) ) {
 			// Check if the user has already subscribed once, if not - link to intro
 			if ( $this->metaUser->hasSubscription && !$aecConfig->cfg['customintro_always'] ) {
@@ -9111,7 +9117,7 @@ class InvoiceFactory
 				$plan['plan']->params['cart_behavior'] = 0;
 			}
 
-			if ( $this->userid && ( $aecConfig->cfg['enable_shoppingcart'] || ( $plan['plan']->params['cart_behavior'] == 1 ) ) && ( $plan['plan']->params['cart_behavior'] != 2 ) ) {
+			if ( $this->userid && !$this->expired && ( $aecConfig->cfg['enable_shoppingcart'] || ( $plan['plan']->params['cart_behavior'] == 1 ) ) && ( $plan['plan']->params['cart_behavior'] != 2 ) ) {
 				// We have a shopping cart situation, care about processors later
 
 				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
@@ -12363,8 +12369,9 @@ class Subscription extends serialParamDBTable
 
 		$app = JFactory::getApplication();
 
-		if ( !$this->is_lifetime() ) {
-
+		if ( $this->status == 'Expired' ) {
+			return true;
+		} elseif ( !$this->is_lifetime() ) {
 			if ( $offset ) {
 				$expstamp = strtotime( ( '-' . $offset . ' days' ), strtotime( $this->expiration ) );
 			} else {
