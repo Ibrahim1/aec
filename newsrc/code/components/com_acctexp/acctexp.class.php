@@ -8585,7 +8585,8 @@ class InvoiceFactory
 		foreach ( $data as $dn => $dv ) {
 			if ( strpos( $dn, 'cartitem_' ) !== false ) {
 				$n = str_replace( 'cartitem_', '', $dn );
-				$update[$n] = $dv;
+
+				$update[$n] = aecGetParam( $n, 0, true, array( 'word', 'int' ) );
 			}
 		}
 
