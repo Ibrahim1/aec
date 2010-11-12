@@ -1683,6 +1683,8 @@ class aecACLhandler
 				!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] )
 				&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $aecConfig->cfg['manageraccess'] )
 			 ) {
+				$app = JFactory::getApplication();
+
 				$app->redirect( 'index.php', _NOT_AUTH );
 			}
 		}
