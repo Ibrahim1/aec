@@ -164,12 +164,7 @@ function aecEscape( $value, $safe_params )
 					}
 					break;
 				case 'badchars':
-					for ( $n=0; $n<strlen($return); $n++ ) {
-						if ( eregi( "[\<|\>|\"|\'|\%|\;|\(|\)]", $return[$n] ) ) {
-							 $r = substr( $return, 0, $n );
-							 continue;
-						}
-					}
+					$r = preg_replace( '`[\<|\>|\"|\'|\%|\;|\(|\)]`Di', '', $return );
 					break;
 				case 'int':
 					$r = (int) $return;
