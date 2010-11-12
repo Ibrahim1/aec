@@ -77,6 +77,7 @@ class HTML_frontEnd
 						<input type="hidden" name="usage" value="<?php echo $metaUser->focusSubscription->plan; ?>" />
 						<input type="hidden" name="task" value="renewSubscription" />
 						<input type="submit" class="button" value="<?php echo _RENEW_BUTTON_CONTINUE;?>" />
+						 <?php echo JHTML::_( 'form.token' ); ?>
 						</form>
 					</div>
 					<?php
@@ -87,6 +88,7 @@ class HTML_frontEnd
 					<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
 					<input type="submit" class="button" value="<?php echo _RENEW_BUTTON;?>" />
+					<?php echo JHTML::_( 'form.token' ); ?>
 					</form>
 				</div>
 			</div>
@@ -159,6 +161,7 @@ class HTML_frontEnd
 					<input type="hidden" name="userid" value="<?php echo $objUser->id; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
 					<input type="submit" class="button" value="<?php echo _PENDING_NOINVOICE_BUTTON;?>" />
+					<?php echo JHTML::_( 'form.token' ); ?>
 				</form>
 			</div>
 			<?php
@@ -218,6 +221,7 @@ class HTML_frontEnd
 					if ( $properties['hascart'] ) { ?>
 					<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<div id="update_button"><input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+					<?php echo JHTML::_( 'form.token' ); ?>
 					</form><br /><br />
 					<?php }
 
@@ -312,6 +316,7 @@ class HTML_frontEnd
 										<input type="hidden" name="task" value="renewsubscription" />
 										<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />
 										<input type="submit" class="button" value="<?php echo _RENEW_BUTTON_UPGRADE;?>" />
+										<?php echo JHTML::_( 'form.token' ); ?>
 									</form>
 								</div>
 								<?php
@@ -533,6 +538,7 @@ class Payment_HTML
 			<table id="aec_checkout">
 			<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 			<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+			<?php echo JHTML::_( 'form.token' ); ?>
 			</form><br /><br />
 			</table>
 			</div>
@@ -702,7 +708,8 @@ class Payment_HTML
 		$html_code .= '<div class="' . $class . '">' . "\n"
 		. '<form action="' . AECToolbox::deadsureURL( 'index.php?option=' . $option . $t, $aecConfig->cfg['ssl_signup'] ) . '"'
 		. ' method="post">' . "\n"
-		. '<input type="image" src="' . $urlbutton . '" border="0" name="submit" alt="submit" />';
+		. '<input type="image" src="' . $urlbutton . '" border="0" name="submit" alt="submit" />'
+		. JHTML::_( 'form.token' );
 
 		$hidden[] = array( 'option', $option );
 
@@ -784,6 +791,7 @@ class Payment_HTML
 						<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
 					<?php } ?>
 					<input type="submit" class="button" value="<?php echo _AEC_PROMPT_PASSWORD_BUTTON;?>" />
+					<?php echo JHTML::_( 'form.token' ); ?>
 				</form>
 			</div>
 		</div>
@@ -848,6 +856,7 @@ class Payment_HTML
 									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'userdetails' ); ?>" />
 								<?php } ?>
 								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_USER_DETAILS; ?></span></button>
+								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
 						<td colspan="2">
@@ -860,6 +869,7 @@ class Payment_HTML
 									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
 								<?php } ?>
 								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_ITEM; ?></span></button>
+								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
 					</tr>
@@ -881,6 +891,7 @@ class Payment_HTML
 									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
 								<?php } ?>
 								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_ITEM; ?></span></button>
+								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
 					</tr>
@@ -995,6 +1006,7 @@ class Payment_HTML
 					</table>
 				</td></tr>
 			</table>
+			<?php echo JHTML::_( 'form.token' ); ?>
 			</form>
 		</div>
 		<div class="aec_clearfix"></div>
@@ -1068,6 +1080,7 @@ class Payment_HTML
 				<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />
 				<input type="hidden" name="task" value="updateCart" />
 				<div id="update_button"><input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/update_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+				<?php echo JHTML::_( 'form.token' ); ?>
 				</form>
 				<?php } ?>
 				<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
@@ -1082,6 +1095,7 @@ class Payment_HTML
 				<div id="continue_button">
 					<form name="continueForm" action="<?php echo $continueurl; ?>" method="post">
 						<input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
+						<?php echo JHTML::_( 'form.token' ); ?>
 					</form>
 				</div>
 				<?php } ?>
@@ -1182,6 +1196,7 @@ class Payment_HTML
 					</table>
 				</td></tr>
 			</table>
+			<?php echo JHTML::_( 'form.token' ); ?>
 			</form>
 			<?php } ?>
 		</div>
@@ -1218,6 +1233,7 @@ class Payment_HTML
 			<?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
 				<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+				<?php echo JHTML::_( 'form.token' ); ?>
 				</form><br /><br />
 			<?php } ?>
 			<?php
@@ -1439,6 +1455,7 @@ class Payment_HTML
 								<input type="hidden" name="task" value="InvoiceAddCoupon" />
 								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
+								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
 					</tr>
@@ -1480,6 +1497,7 @@ class Payment_HTML
 								<input type="hidden" name="task" value="InvoiceMakeGift" />
 								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
+								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 							<?php } ?>
 						</td>
@@ -1498,6 +1516,7 @@ class Payment_HTML
 								<input type="hidden" name="task" value="InvoiceAddParams" />
 								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
 								<input type="submit" class="button" value="<?php echo _BUTTON_APPEND; ?>" />
+								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
 					</tr>
@@ -1621,6 +1640,7 @@ class Payment_HTML
 					</td>
 				</tr>
 			</table>
+			<?php echo JHTML::_( 'form.token' ); ?>
 			</form>
 			<table width="100%">
 				<tr><td>

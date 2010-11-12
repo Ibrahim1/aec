@@ -8631,9 +8631,7 @@ class InvoiceFactory
 		// Checking whether we are trying to repeat an invoice
 		if ( !empty( $invoice_number ) ) {
 			// Make sure the invoice really exists and that its the correct user carrying out this action
-			$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $this->userid, $anystatus );
-
-			if ( $invoiceid ) {
+			if ( AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $this->userid, $anystatus ) ) {
 				$this->invoice_number = $invoice_number;
 			}
 		}
