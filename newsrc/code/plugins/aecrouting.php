@@ -169,7 +169,7 @@ class plgSystemAECrouting extends JPlugin
 					if ( $vars['k2_regsv'] ) {
 						$temptoken->content['handler']	= 'k2';
 					} elseif ( $vars['joms_regsv'] ) {
-						$temptoken->content['handler']	= 'joomla';
+						$temptoken->content['handler']	= 'jomsocial';
 					} elseif ( $vars['cb_sregsv'] ) {
 						$temptoken->content['handler']	= 'cb';
 					}
@@ -291,13 +291,19 @@ class plgSystemAECrouting extends JPlugin
 			} elseif ( $vars['has_usage'] ) {
 				$db = &JFactory::getDBO();
 
+				$temptoken = new aecTempToken( $db );
+				$temptoken->getComposite();
+
 				$content = array();
 				$content['usage']		= $vars['usage'];
 				$content['processor']	= $vars['processor'];
 				$content['recurring']	= $vars['recurring'];
 
-				$temptoken = new aecTempToken( $db );
-				$temptoken->create( $content );
+				if ( empty( $temptoken->id ) ) {
+					$temptoken->create( $content );
+				} else {
+					$temptoken->content = array_merge( $temptoken->content, $content );
+				}
 			}
 		} elseif ( $vars['cbsreg'] ) {
 			// Any kind of user profile edit = trigger MIs
