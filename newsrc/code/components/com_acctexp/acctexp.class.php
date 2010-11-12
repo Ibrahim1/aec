@@ -139,17 +139,17 @@ function aecEscape( $value, $safe_params )
 				$safe_params[] = 'clear_nonalnum';
 			}
 		} else {
-			$array = explode('@', $value, 2);
+			$array = explode('@', $return, 2);
 
 			$username = preg_replace( '/[^a-z0-9._+-]+/i', '', $username );
 			$domain = preg_replace( '/[^a-z0-9.-]+/i', '', $domain );
 
-			$value = $username.'@'.$domain;
+			$return = $username.'@'.$domain;
 		}
 	}
 
 	if ( in_array( 'clear_nonalnum', $safe_params ) ) {
-		$value = preg_replace( "/[^a-z \d]/i", "", $value );
+		$return = preg_replace( "/[^a-z \d]/i", '', $return );
 	}
 
 	if ( !empty( $safe_params ) ) {
