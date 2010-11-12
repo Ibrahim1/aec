@@ -9959,6 +9959,10 @@ class InvoiceFactory
 
 		$this->touchInvoice( $option, $invoice_number, false, true );
 
+		if ( $this->invoice->invoice_number != $invoice_number ) {
+			return aecNotAuth();
+		}
+
 		$this->puffer( $option );
 
 		$this->loadItems();
