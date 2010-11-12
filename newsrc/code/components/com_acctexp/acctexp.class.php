@@ -3798,6 +3798,20 @@ class processor extends serialParamDBTable
 		return $var;
 	}
 
+	function parseNotification( $post )
+	{
+		$response = array();
+
+		return $response;
+	}
+
+	function validateNotification( $response, $post, $invoice )
+	{
+		$response['valid'] = 0;
+
+		return $response;
+	}
+
 	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
 	{
 		global $aecConfig;
