@@ -50,6 +50,12 @@ if ( isset( $_GET['task'] ) ) {
 		header( 'Location: ' . $url );
 		exit;
 	}
+} else {
+	foreach ( $_GET as $k => $v ) {
+		if ( strpos( $v, 'notification' ) !== false ) {
+			$_GET['task'] = $v; 
+		}
+	}
 }
 
 $post['original'] = base64_encode( stripslashes( $original ) );
@@ -60,7 +66,7 @@ $path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.
 $url = 'http://' . $_SERVER['HTTP_HOST'] . $path;
 
 $response = $bsLoader->transmitRequest( $url, $path, $post );
-//print_r($get);print_r($post);var_dump($url);var_dump($response);exit;
+
 if ( $response === false ) {
 	//  Last fallback - use a redirect
 	header( 'Location: ' . $url );
