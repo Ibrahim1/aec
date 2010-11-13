@@ -6016,7 +6016,7 @@ function importData( $option )
 		$show_form = true;
 
 		$params['file_select']			= array( 'list', '' );
-		$params['MAX_FILE_SIZE']		= array( 'hidden', '30000' );
+		$params['MAX_FILE_SIZE']		= array( 'hidden', '5120000' );
 		$params['import_file']			= array( 'file', 'Upload', 'Upload a file and select it for importing', '' );
 
 		$file_htmllist		= array();
