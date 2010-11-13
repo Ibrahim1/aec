@@ -9593,19 +9593,9 @@ class InvoiceFactory
 
 		$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
 
-		if ( !empty( $user_ident ) && !empty( $this->invoice ) ) {
-			if ( is_object( $this->invoice ) ) {
-				if ( $this->invoice->addTargetUser( strtolower( $user_ident ) ) ) {
-					$this->invoice->storeload();
-				}
-
-				if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
-					// Bounce back to cart
-					return $this->cart( $option );
-				} else {
-					// or confirmation
-					return $this->confirm( $option );
-				}
+		if ( !empty( $user_ident ) && !empty( $this->invoice->id ) ) {
+			if ( $this->invoice->addTargetUser( strtolower( $user_ident ) ) ) {
+				$this->invoice->storeload();
 			}
 		}
 
