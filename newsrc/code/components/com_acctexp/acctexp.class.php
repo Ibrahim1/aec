@@ -15087,7 +15087,7 @@ class AECToolbox
 
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to save the user
-			if ( $internal && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( /*$internal*/true && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				include_once( JPATH_SITE . '/components/com_acctexp/lib/codeofshame/cbregister.php' );
 
 				$name = metaUser::_explodeName( $_POST['name'] );
@@ -15104,12 +15104,6 @@ class AECToolbox
 
 				@saveRegistrationNOCHECKSLOL( $option );
 			} else {
-				foreach ( $_POST as $k => $v ) {
-					if ( strlen( $k ) > 30 ) {
-						unset( $_POST[$k] );
-					}
-				}
-print_r($_POST);
 				@saveRegistration( $option );
 			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
