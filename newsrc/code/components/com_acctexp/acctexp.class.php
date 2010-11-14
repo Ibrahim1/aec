@@ -149,7 +149,7 @@ function aecEscape( $value, $safe_params )
 	}
 
 	if ( in_array( 'clear_nonalnum', $safe_params ) ) {
-		$return = preg_replace( "/[^a-z \d]/i", '', $return );
+		$return = preg_replace( "/[^a-z0-9._+-]/i", '', $return );
 	}
 
 	if ( !empty( $safe_params ) ) {
