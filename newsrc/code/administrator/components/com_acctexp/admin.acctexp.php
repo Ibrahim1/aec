@@ -1646,21 +1646,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	// get the total number of records
 	if ( $notconfig ) {
-		$query	= 'SELECT `userid`'
-				. ' FROM #__acctexp_subscr'
-				. ' WHERE `userid` != \'\''
-				;
-		$db->setQuery( $query );
-		$userarray = $db->loadResultArray();
+		$where[] = 'b.status is null';
 
 		$query = 'SELECT count(*)'
-				. ' FROM #__users'
+				. ' FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 				;
-		if ( count( $userarray ) > 0 ) {
-			$where[] = 'id NOT IN (' . implode(',', $userarray) . ')';
-		}
-
-		$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
 	} else {
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_subscr AS a'
@@ -1693,37 +1685,13 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 			$orderby = str_replace( 'lastname', 'SUBSTRING_INDEX(name, \' \', -1)', $orderby );
 		}
 
-		$query = 'SELECT `userid`'
-				. ' FROM #__acctexp_subscr'
-				. ' WHERE `userid` != \'\''
+		$query = 'SELECT a.id, a.name, a.username, a.registerDate as signup_date'
+				. ' FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+				. ' ORDER BY ' . str_replace( 'signup_date', 'registerDate', $orderby )
+				. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 				;
-		$db->setQuery( $query );
-		$userarray = $db->loadResultArray();
-
-			foreach ( $userarray as $i => $v ) {
-					if ( empty( $v ) ){
-						unset( $userarray[$i] );
-					}
-			}
-
-		$query = 'SELECT `id`, `name`, `username`, `email`, `usertype`, `block`, `gid`, `registerDate` as signup_date, `lastvisitDate`'
-				. ' FROM #__users'
-				;
-		if ( count( $userarray ) > 0 ) {
-			$where[] = 'id NOT IN (' . implode(',', $userarray) . ')';
-		}
-
-		$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
-
- 		if ( $orderby == 'signup_date ASC' ) {
-			$query .= ' ORDER BY ' . 'registerDate ASC';
-		} elseif ( $orderby == 'signup_date DESC' ) {
-			$query .= ' ORDER BY ' . 'registerDate DESC';
-		} else {
-			$query .= ' ORDER BY ' . $orderby;
-		}
-
-		$query .=	' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 
 		if ( strpos( $orderby, 'SUBSTRING_INDEX' ) !== false ) {
 			$orderby = str_replace( 'SUBSTRING_INDEX(name, \' \', -1)', 'lastname', $orderby );
