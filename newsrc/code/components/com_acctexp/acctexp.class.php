@@ -9764,6 +9764,14 @@ class InvoiceFactory
 
 		$exceptproc = array( 'none', 'free' );
 
+		if ( isset( $this->invoice->params['userselect_recurring'] ) ) {
+			$recurring_choice = $this->invoice->params['userselect_recurring'];
+		} else {
+			$recurring_choice = null;
+		}
+
+		$recurring = $this->pp->is_recurring( $recurring_choice );
+
 		// If this is marked as supposedly free
 		if ( in_array( strtolower( $this->processor ), $exceptproc ) && !empty( $this->plan ) ) {
 			// Double Check Amount for made_free
