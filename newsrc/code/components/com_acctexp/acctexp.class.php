@@ -1643,14 +1643,80 @@ class aecACLhandler
 {
 	function getSuperAdmins()
 	{
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$groups = aecACLhandler::getAdminGroups();
+
+			$users = aecACLhandler::getUsersByGroup( $groups );
+
+			return aecACLhandler::getUserObjects( $users );
+		} else {
+			$db = &JFactory::getDBO();
+
+			$query = 'SELECT `name`, `email`, `sendEmail`'
+					. ' FROM #__users'
+					. ' WHERE LOWER( usertype ) = \'superadministrator\''
+					. ' OR LOWER( usertype ) = \'super administrator\''
+					;
+			$db->setQuery( $query );
+			return $db->loadObjectList();
+		}
+	}
+
+	function getAdminGroups( $regular_admins=true )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__usergroups'
+				. ' WHERE LOWER( title ) = \'super users\''
+				. ( $regular_admins ? ' OR LOWER( title ) = \'administrator\'' : '' )
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResultArray();
+	}
+
+	function getManagerGroups()
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__usergroups'
+				. ' WHERE LOWER( title ) = \'manager\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResultArray();
+	}
+
+	function getUsersByGroup( $group )
+	{
+		$acl = &JFactory::getACL();
+
+		if ( is_array( $group ) ) {
+			$groups = $group;
+		} else {
+			$groups[] = $group;
+		}
+
+		$users = array();
+		foreach ( $groups as $group_id ) {
+			$users = array_merge( $users, $acl->getUsersByGroup( $group_id ) );
+		}
+
+		return array_unique( $users );
+	}
+
+	function getUserObjects( $users )
+	{
 		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `name`, `email`, `sendEmail`'
 				. ' FROM #__users'
-				. ' WHERE LOWER( usertype ) = \'superadministrator\''
-				. ' OR LOWER( usertype ) = \'super administrator\''
+				. ' WHERE id IN (' . implode( ',', $users ) . ')'
 				;
 		$db->setQuery( $query );
+
 		return $db->loadObjectList();
 	}
 
@@ -1658,12 +1724,20 @@ class aecACLhandler
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'UPDATE #__users'
-				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
-				. ' WHERE `id` = \''  . (int) $this->userid . '\''
-				;
-		$db->setQuery( $query );
-		$db->query() or die( $db->stderr() );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$db->setQuery(
+				'INSERT INTO `#__user_usergroup_map` (`user_id`, `group_id`)' .
+				' VALUES ('.$userid.', '.$gid.')'
+			);
+			$db->query() or die( $db->stderr() );
+		} else {
+			$query = 'UPDATE #__users'
+					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
+					. ' WHERE `id` = \''  . (int) $this->userid . '\''
+					;
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
+		}
 	}
 
 	function adminBlock()
@@ -1672,39 +1746,91 @@ class aecACLhandler
 
 		$user = &JFactory::getUser();
 
-		$acl = &JFactory::getACL();
+		$block = false;
 
-		$acl->addACL( 'administration', 'config', 'users', 'super administrator' );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$allowed_groups = aecACLhandler::getAdminGroups( $aecConfig->cfg['adminaccess'] );
 
-		$acpermission = $acl->acl_check( 'administration', 'config', 'users', $user->usertype );
-
-		if ( !$acpermission ) {
-			if (
-				!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] )
-				&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $aecConfig->cfg['manageraccess'] )
-			 ) {
-				$app = JFactory::getApplication();
-
-				$app->redirect( 'index.php', _NOT_AUTH );
+			if ( $aecConfig->cfg['manageraccess'] ) {
+				$allowed_groups = array_merge( $allowed_groups, aecACLhandler::getManagerGroups() );
 			}
+
+			$usergroups = $acl->getUsersByGroup( $user->id );
+
+			if ( !count( array_intersect( $allowed_groups, $usergroups ) ) ) {
+				$block = true;
+			}
+		} else {
+			$acl = &JFactory::getACL();
+
+			$acl->addACL( 'administration', 'config', 'users', 'super administrator' );
+
+			$acpermission = $acl->acl_check( 'administration', 'config', 'users', $user->usertype );
+
+			if ( !$acpermission ) {
+				if (
+					!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $aecConfig->cfg['adminaccess'] )
+					&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $aecConfig->cfg['manageraccess'] )
+				 ) {
+					$block = true;
+				}
+			}
+		}
+
+		if ( $block ) {
+			$app = JFactory::getApplication();
+
+			$app->redirect( 'index.php', _NOT_AUTH );
 		}
 	}
 
-	function adminCheck( $userid, $msg )
+	function userDelete( $userid, $msg )
 	{
-		// check for a super admin ... can't delete them
+		if ( $userid == $user->id ) {
+			return _AEC_MSG_NODELETE_YOURSELF;
+		} 
+
 		$acl = &JFactory::getACL();
 
 		$user = &JFactory::getUser();
 
-		$groups         = $acl->get_object_groups( 'users', $userid, 'ARO' );
-		$this_group = strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$superadmins = aecACLhandler::getAdminGroups( false );
 
-		if ( $this_group == 'super administrator' ) {
-			return _AEC_MSG_NODELETE_SUPERADMIN;
-		} else if ( $userid == $user->id ) {
-			return _AEC_MSG_NODELETE_YOURSELF;
-		} else if ( ( $this_group == 'administrator' ) && ( $user->gid == 24 ) ) {
+			$alladmins = aecACLhandler::getAdminGroups();
+
+			$groups = $acl->getGroupsByUser( $userid );
+
+			if ( count( array_intersect( $groups, $superadmins ) ) ) {
+				return _AEC_MSG_NODELETE_SUPERADMIN;
+			}
+
+			$is_admin = false;
+			if ( count( array_intersect( $groups, $alladmins ) ) ) {
+				$is_admin = true;
+			}
+
+			$usergroups = $acl->getGroupsByUser( $user->id );
+
+			$deletor_admin = true;
+			if ( count( array_intersect( $usergroups, $superadmins ) ) ) {
+				$deletor_admin = false;
+			}
+		} else {
+			$groups		= $acl->get_object_groups( 'users', $userid, 'ARO' );
+
+			$this_group	= strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
+			
+			$deletor_admin = $user->gid == 24;
+			
+			if( $this_group == 'super administrator' ) {
+				return _AEC_MSG_NODELETE_SUPERADMIN;
+			}
+
+			$is_admin		= $this_group == 'administrator';
+		}
+
+		if ( $is_admin && $deletor_admin ) {
 			return _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
 		} else {
 			$db = &JFactory::getDBO();
@@ -1715,8 +1841,6 @@ class aecACLhandler
 				return $obj->getError();
 			}
 		}
-
-		return $msg;
 	}
 
 	function getGroupTree( $ex=array() )
@@ -1725,19 +1849,52 @@ class aecACLhandler
 
 		$user = &JFactory::getUser();
 
-		// ensure user can't add group higher than themselves
-		$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
-		if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
-			$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
+		$ex_groups = array();
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$db = JFactory::getDbo();
+
+			$db->setQuery(
+				'SELECT a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level'
+				. ' FROM #__usergroups AS a'
+				. ' LEFT JOIN `#__usergroups` AS b ON a.lft > b.lft AND a.rgt < b.rgt'
+				. ' WHERE a.parent_id != 0'
+				. ' GROUP BY a.id'
+				. ' ORDER BY a.lft ASC'
+			);
+
+			$gtree = $db->loadObjectList();
+
+			foreach ( $gtree as &$option ) {
+				$option->text = str_repeat('- ',$option->level).$option->text;
+			}
+
+			$usergroups = $acl->getGroupsByUser( $user->id );
+
+			$superadmins = aecACLhandler::getAdminGroups( false );
+
+			$alladmins = aecACLhandler::getAdminGroups();
+
+			if ( !count( array_intersect( $usergroups, $superadmins ) ) ) {
+				$ex_groups = array_merge( $ex_groups, $superadmins );
+			} else {
+				$ex_groups = array_merge( $ex_groups, $alladmins );
+			}
 		} else {
-			$ex_groups = array();
+			$gtree = $acl->get_group_children_tree( null, 'USERS', true );
+
+			$my_groups = $acl->get_object_groups( 'users', $user->id, 'ARO' );
+
+			if ( is_array( $my_groups ) && count( $my_groups ) > 0) {
+				$ex_groups = $acl->get_group_children( $my_groups[0], 'ARO', 'RECURSE' );
+			} else {
+				$ex_groups = array();
+			}
+
+			$ex_groups = array_merge( $ex_groups, $ex );
 		}
 
-		$gtree = $acl->get_group_children_tree( null, 'USERS', true );
-
-		$ex_groups = array_merge( $ex_groups, $ex );
-
-		// remove users 'above' me
+		// remove groups 'above' current user
 		$i = 0;
 		while ( $i < count( $gtree ) ) {
 			if ( in_array( $gtree[$i]->value, $ex_groups ) ) {
@@ -1752,14 +1909,18 @@ class aecACLhandler
 
 	function countAdmins()
 	{
-		$db = &JFactory::getDBO();
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			return count( aecACLhandler::getUsersByGroup( aecACLhandler::getAdminGroups() ) );
+		} else {
+			$db = &JFactory::getDBO();
 
-		$query = 'SELECT count(*)'
-				. ' FROM #__core_acl_groups_aro_map'
-				. ' WHERE `group_id` IN (\'25\',\'24\')'
-				;
-		$db->setQuery( $query );
-		return $db->loadResult();
+			$query = 'SELECT count(*)'
+					. ' FROM #__core_acl_groups_aro_map'
+					. ' WHERE `group_id` IN (\'25\',\'24\')'
+					;
+			$db->setQuery( $query );
+			return $db->loadResult();
+		}
 	}
 }
 
@@ -14943,6 +15104,12 @@ class AECToolbox
 
 				@saveRegistrationNOCHECKSLOL( $option );
 			} else {
+				foreach ( $_POST as $k => $v ) {
+					if ( strlen( $k ) > 30 ) {
+						unset( $_POST[$k] );
+					}
+				}
+print_r($_POST);
 				@saveRegistration( $option );
 			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {

@@ -63,7 +63,7 @@ class HTML_frontEnd
 					?>
 					<p>
 						<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-						<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $invoice . '&userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+						<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $invoice . '&userid=' . $metaUser->userid.'&'. JUtility::getToken() .'=1' ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
 					</p>
 					<?php
 				} ?>
@@ -230,7 +230,7 @@ class HTML_frontEnd
 						<br /><br />
 						<p>
 							<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $properties['showcheckout'] . '&userid=' . $metaUser->userid ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $properties['showcheckout'] . '&userid=' . $metaUser->userid.'&'. JUtility::getToken() .'=1' ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
 						</p>
 						<br /><br />
 						<?php
@@ -890,8 +890,8 @@ class Payment_HTML
 								<?php if ( $passthrough != false ) { ?>
 									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
 								<?php } ?>
+
 								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_ITEM; ?></span></button>
-								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
 					</tr>
@@ -1045,7 +1045,7 @@ class Payment_HTML
 				<p>Your Shopping Cart is empty!</p>
 				<?php } else { ?>
 				<p>&nbsp;</p>
-				<div id="clear_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_CLEAR_ALL; ?></a></div>
+				<div id="clear_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_CLEAR_ALL; ?></a></div>
 				<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
@@ -1063,7 +1063,7 @@ class Payment_HTML
 								<td><?php echo $bitem['cost']; ?></td>
 								<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid; ?>" value="<?php echo $bitem['quantity']; ?>" /></td>
 								<td><?php echo $bitem['cost_total']; ?></td>
-								<td><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid, $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_DELETE_ITEM; ?></a></td>
+								<td><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_DELETE_ITEM; ?></a></td>
 							</tr><?php
 						} else {
 							?><tr>
@@ -1096,7 +1096,6 @@ class Payment_HTML
 				<div id="continue_button">
 					<form name="continueForm" action="<?php echo $continueurl; ?>" method="post">
 						<input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/continue_shopping_button.png'; ?>" border="0" name="submit" alt="submit" />
-						<?php echo JHTML::_( 'form.token' ); ?>
 					</form>
 				</div>
 				<?php } ?>
@@ -1152,7 +1151,7 @@ class Payment_HTML
 						<tr>
 							<td class="giftdetails">
 								<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftCart&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGiftCart&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 								<?php } else { ?>
 									<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
 									<input type="text" size="20" name="user_ident" class="inputbox" value="" />
@@ -1489,7 +1488,7 @@ class Payment_HTML
 					<tr>
 						<td class="giftdetails">
 							<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-								<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGift&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+								<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGift&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 							<?php } else { ?>
 							<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
 							<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">

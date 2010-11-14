@@ -1208,7 +1208,7 @@ function removeUser( $userid, $option )
 			$uid = $db->loadResult();
 
 			if ( $uid ) {
-				$msg = aecACLhandler::adminCheck( $uid, $msg );
+				$msg = aecACLhandler::userDelete( $uid, $msg );
 			}
 		}
 	}
@@ -1263,7 +1263,7 @@ function removeClosedSubscription( $userid, $option )
 	$msg = _REMOVED;
 	if ( count( $userid ) ) {
 		foreach ( $userid as $id ) {
-			$msg = aecACLhandler::adminCheck( $userid, $msg );
+			$msg = aecACLhandler::userDelete( $userid, $msg );
 		}
 	}
 
@@ -1326,7 +1326,7 @@ function removePendingSubscription( $userid, $option )
 	$msg = _REMOVED;
 	if ( count( $userid ) ) {
 		foreach ( $userid as $id ) {
-			$msg = aecACLhandler::adminCheck( $userid, $msg );
+			$msg = aecACLhandler::userDelete( $userid, $msg );
 		}
 	}
 

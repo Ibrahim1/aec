@@ -41,6 +41,8 @@ function com_install()
 	$document=& JFactory::getDocument();
 	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . '/media/com_acctexp/css/admin.css" />' );
 
+	$is_j16 = defined( 'JPATH_MANIFESTS' );
+
 	// Tracking arrays
 	$queri		= array();
 	$errors		= array();

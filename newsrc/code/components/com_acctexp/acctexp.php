@@ -96,6 +96,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'addressexception':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$cart		= aecGetParam( 'cart', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0 );
@@ -108,6 +110,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'savesubscription':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
@@ -136,6 +140,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'cart':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$user = &JFactory::getUser();
 
 			if ( !$user->id ) {
@@ -153,6 +159,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'updatecart':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
 			if ( !empty( $user->id ) ) {
@@ -169,6 +177,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'clearcart':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
 			if ( !empty( $user->id ) ) {
@@ -187,6 +197,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'clearcartitem':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$item		= aecGetParam( 'item', 0, true, array( 'word', 'int' ) );
 
 			if ( !empty( $user->id ) ) {
@@ -205,6 +217,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'confirmcart':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
@@ -265,6 +279,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'renewsubscription':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 			$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
 			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'int' ) );
@@ -295,6 +311,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'repeatpayment':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0 );
 			$first		= aecGetParam( 'first', 0 );
@@ -331,22 +349,32 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'invoicemakegift':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			InvoiceMakeGift( $option );
 			break;
 
 		case 'invoiceremovegift':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			InvoiceRemoveGift( $option );
 			break;
 
 		case 'invoiceremovegiftcart':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			InvoiceRemoveGiftCart( $option );
 			break;
 
 		case 'invoiceremovegiftconfirm':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			InvoiceRemoveGiftConfirm( $option );
 			break;
 
 		case 'invoiceaddcoupon':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			InvoiceAddCoupon( $option );
 			break;
 
@@ -355,6 +383,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'invoiceaddparams':
+			JRequest::checkToken() or die( 'Invalid Token' );
+
 			InvoiceAddParams( $option );
 			break;
 
@@ -609,6 +639,8 @@ function subscribe( $option )
 				subscribe();
 				return false;
 			}
+
+			JRequest::checkToken() or die( 'Invalid Token' );
 		} elseif ( empty( $token ) ) {
 			if ( isset( $_POST['username'] ) && isset( $_POST['email'] ) ) {
 				$check = checkUsernameEmail( $username, $email );
