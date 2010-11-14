@@ -16,7 +16,7 @@ class tool_invoicecleanup
 	function Info()
 	{
 		$info = array();
-		$info['name'] = "Orphaned Subscription Cleanup";
+		$info['name'] = "System Cleanup";
 		$info['desc'] = "Gets rid of subscriptions for users that don't exist anymore.";
 
 		return $info;
