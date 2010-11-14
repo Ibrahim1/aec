@@ -672,10 +672,6 @@ switch( strtolower( $task ) ) {
 		HTML_AcctExp::hacks( $option, hackcorefile( $option, 0, 1, 0 ) );
 		break;
 
-		case 'help':
-		help( $option );
-		break;
-
 	case 'invoices':
 		invoices( $option );
 		break;
