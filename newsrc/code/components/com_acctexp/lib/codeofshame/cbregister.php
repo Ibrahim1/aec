@@ -14,6 +14,14 @@
 function saveRegistrationNOCHECKSLOL( $option ) {
 	global $_CB_framework, $_CB_database, $ueConfig, $_POST, $_PLUGINS;
 
+	// Check rights to access:
+
+	if ( ( ( $_CB_framework->getCfg( 'allowUserRegistration' ) == '0' )
+		   && ( ( ! isset($ueConfig['reg_admin_allowcbregistration']) ) || $ueConfig['reg_admin_allowcbregistration'] != '1' ) )
+		 || $_CB_framework->myId() ) {
+		cbNotAuth();
+		return;
+	}
 	if ( ! isset( $ueConfig['emailpass'] ) ) {
 		$ueConfig['emailpass']			=	'0';
 	}

@@ -149,7 +149,7 @@ function aecEscape( $value, $safe_params )
 	}
 
 	if ( in_array( 'clear_nonalnum', $safe_params ) ) {
-		$return = preg_replace( "/[^a-z0-9._+-]/i", '', $return );
+		$return = preg_replace( "/[^a-z0-9@._+-]/i", '', $return );
 	}
 
 	if ( !empty( $safe_params ) ) {
@@ -15048,7 +15048,7 @@ class AECToolbox
 
 		$app = JFactory::getApplication();
 
-		ob_start();
+		//ob_start();
 
 		// Let CB/JUSER think that everything is going fine
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
@@ -15099,17 +15099,19 @@ class AECToolbox
 
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to save the user
-			if ( /*$internal*/true && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( $internal && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				include_once( JPATH_SITE . '/components/com_acctexp/lib/codeofshame/cbregister.php' );
 
-				$name = metaUser::_explodeName( $_POST['name'] );
+				if ( empty( $_POST['firstname'] ) && !empty( $_POST['name'] ) ) {
+					$name = metaUser::_explodeName( $_POST['name'] );
 
-				$_POST['firstname'] = $name['first'];
+					$_POST['firstname'] = $name['first'];
 
-				if ( empty( $name['last'] ) ) {
-					$_POST['lastname'] = $name['first'];
-				} else {
-					$_POST['lastname'] = $name['last'];
+					if ( empty( $name['last'] ) ) {
+						$_POST['lastname'] = $name['first'];
+					} else {
+						$_POST['lastname'] = $name['last'];
+					}
 				}
 
 				$_POST['password__verify'] = $_POST['password2'];
