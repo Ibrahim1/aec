@@ -79,11 +79,20 @@ class eucaInstall extends eucaObject
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'DELETE'
-				. ' FROM #__components'
-				. ' WHERE `option` LIKE "%option=' . _EUCA_APP_COMPNAME . '%"'
-				. ' OR `option`=\'' . _EUCA_APP_COMPNAME . '\''
-				;
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$query = 'DELETE'
+					. ' FROM #__extensions'
+					. ' WHERE `element` LIKE "%' . _EUCA_APP_COMPNAME . '%"'
+					. ' OR `element`=\'' . _EUCA_APP_COMPNAME . '\''
+					;
+		} else {
+			$query = 'DELETE'
+					. ' FROM #__components'
+					. ' WHERE `option` LIKE "%option=' . _EUCA_APP_COMPNAME . '%"'
+					. ' OR `option`=\'' . _EUCA_APP_COMPNAME . '\''
+					;
+		}
+
 		$db->setQuery( $query );
 
 		if ( !$db->query() ) {
@@ -107,53 +116,95 @@ class eucaInstall extends eucaObject
 	{
 		$db = &JFactory::getDBO();
 
-		// get id from component entry
-		$query = 'SELECT `id`'
-				. ' FROM #__components'
-				. ' WHERE `link` = \'option=' . _EUCA_APP_COMPNAME . '\''
-				;
-		$db->setQuery( $query );
-		$id = $db->loadResult();
-
-		$k = 0;
-		$errors = array();
-		foreach ( $array as $entry ) {
-			if ( $this->AdminMenuEntry( $entry, $id, $k ) ) {
-				$k++;
+		$details = array();
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			// get id from component entry
+			$query = 'SELECT `id`'
+					. ' FROM #__extensions'
+					. ' WHERE `name` = \'' . _EUCA_APP_COMPNAME . '\''
+					;
+			$db->setQuery( $query );
+			$details['component_id'] = $db->loadResult();
+	
+			$k = 0;
+			$errors = array();
+			foreach ( $array as $entry ) {
+				if ( $this->AdminMenuEntry( $entry, $id, $k ) ) {
+					$k++;
+				}
+			}
+		} else {
+			// get id from component entry
+			$query = 'SELECT `id`'
+					. ' FROM #__components'
+					. ' WHERE `link` = \'option=' . _EUCA_APP_COMPNAME . '\''
+					;
+			$db->setQuery( $query );
+			$details['component_id'] = $db->loadResult();
+	
+			$k = 0;
+			$errors = array();
+			foreach ( $array as $entry ) {
+				if ( $this->AdminMenuEntry( $entry, $details, $k ) ) {
+					$k++;
+				}
 			}
 		}
 	}
 
-	function AdminMenuEntry ( $entry, $id, $ordering, $frontend=0 )
+	function AdminMenuEntry( $entry, $details, $ordering, $frontend=0 )
 	{
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$table = '#__menu';
+
+			$insert = array(
+							'id'				=> '',
+							'menutype'			=> 'menu',
+							'title'				=> $entry[1],
+							'alias'				=> '',
+							'note'				=> '',
+							'path'				=> '',
+							'link'				=> $frontend ? ( 'option=' . _EUCA_APP_COMPNAME ) : '',
+							'type'				=> 'component',
+							'published'			=> 1,
+							'parent_id'			=> '',
+							'level'				=> 2,
+							'component_id'		=> $details['component_id'],
+							'ordering'			=> 0,
+							'checked_out'		=> 0,
+							'checked_out_time'	=> '0000-00-00 00:00:00',
+							'browserNav'		=> 0,
+							'access'			=> 0,
+							'img'				=> '',
+							'template_style_id'	=> 0,
+							'params'			=> '',
+							'lft'				=> '',
+							'rgt'				=> '',
+							'home'				=> 0,
+							'language'			=> '*',
+							'client_id'			=> 1
+							);
+		} else {
+			$table = '#__components';
+
+			$insert = array(
+							'id'				=> '',
+							'name'				=> $entry[1],
+							'link'				=> $frontend ? ( 'option=' . _EUCA_APP_COMPNAME ) : '',
+							'parent'			=> $details['component_id'],
+							'admin_menu_link'	=> 'option=' . _EUCA_APP_COMPNAME . '&task=' . $entry[0],
+							'admin_menu_alt'	=> $entry[1],
+							'option'			=> _EUCA_APP_COMPNAME,
+							'ordering'			=> isset( $entry[3] ) ? $entry[3] : $ordering,
+							'admin_menu_img'	=> $entry[2]
+							);
+		}
+
 		$db = &JFactory::getDBO();
-
-		$values = array();
-		$fields = array();
-
-		$fields[] = 'id';
-		$values[] = '';
-		$fields[] = 'name';
-		$values[] = $entry[1];
-		$fields[] = 'link';
-		$values[] = $frontend ? ( 'option=' . _EUCA_APP_COMPNAME ) : '' ;
-		$fields[] = 'parent';
-		$values[] = $id;
-		$fields[] = 'admin_menu_link';
-		$values[] = 'option=' . _EUCA_APP_COMPNAME . '&task=' . $entry[0];
-		$fields[] = 'admin_menu_alt';
-		$values[] = $entry[1];
-		$fields[] = 'option';
-		$values[] = _EUCA_APP_COMPNAME;
-		$fields[] = 'ordering';
-		$values[] = isset( $entry[3] ) ? $entry[3] : $ordering;
-		$fields[] = 'admin_menu_img';
-		$values[] = $entry[2];
-
-		$query = 'INSERT INTO #__components'
-				. ' (`' . implode( '`, `', $fields) . '`)'
+		$query = 'INSERT INTO ' . $table
+				. ' (`' . implode( '`, `', array_keys( $insert ) ) . '`)'
 				. ' VALUES '
-				. '(\'' . implode( '\', \'', $values) . '\')'
+				. '(\'' . implode( '\', \'', array_values( $insert ) ) . '\')'
 				;
 		$db->setQuery( $query );
 
