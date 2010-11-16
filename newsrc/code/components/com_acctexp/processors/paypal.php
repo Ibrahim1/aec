@@ -34,6 +34,7 @@ class processor_paypal extends POSTprocessor
 		$settings['business']		= 'your@paypal@account.com';
 		$settings['testmode']		= 0;
 		$settings['brokenipnmode']	= 0;
+		$settings['invoice_tax']	= 0;
 		$settings['tax']			= '';
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
@@ -66,6 +67,7 @@ class processor_paypal extends POSTprocessor
 		$settings['business']				= array( 'inputC' );
 		$settings['testmode']				= array( 'list_yesno' );
 		$settings['brokenipnmode']			= array( 'list_yesno' );
+		$settings['invoice_tax']			= array( 'list_yesno' );
 		$settings['tax']					= array( 'inputA' );
 		$settings['currency']				= array( 'list_currency' );
 		$settings['checkbusiness']			= array( 'list_yesno' );
@@ -103,7 +105,15 @@ class processor_paypal extends POSTprocessor
 
 		$var['cmd']				= '_xclick';
 
-		if ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
+		if ( !empty( $this->settings['invoice_tax'] ) ) {
+			foreach ( $request->items->tax as $tax ) {
+				$tax += $tax['cost'];
+			}
+
+			$var['tax']			= $tax;
+
+			$var['amount']		= $request->items->total->cost['amount'];
+		} elseif ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
 			$tax				= $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
 			$var['tax']			= round( ( $request->int_var['amount'] - $tax ), 2 );
 			$var['amount']		= round( $tax, 2 );

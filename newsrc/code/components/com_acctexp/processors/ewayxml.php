@@ -33,7 +33,6 @@ class processor_ewayxml extends XMLprocessor
 		$settings['testmode']		= "1";
 		$settings['currency']		= "USD";
 		$settings['custId']			= "87654321";
-		$settings['tax']			= "10";
 		$settings['testAmount']		= "00";
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';

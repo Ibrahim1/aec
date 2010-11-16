@@ -36,7 +36,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['business']		= 'your@paypal@account.com';
 		$settings['testmode']		= 0;
 		$settings['brokenipnmode']	= 0;
-		$settings['tax']			= ''; // PayPal Subscriptions doesn't support tax but leaving in blank for future.
+		$settings['invoice_tax']	= 0;
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
 		$settings['acceptpendingecheck'] = 0;
@@ -68,7 +68,6 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['business']				= array( 'inputC' );
 		$settings['testmode']				= array( 'list_yesno' );
 		$settings['brokenipnmode']			= array( 'list_yesno' );
-//		$settings['tax']					= array( 'inputA' );
 		$settings['currency']				= array( 'list_currency' );
 		$settings['checkbusiness']			= array( 'list_yesno' );
 		$settings['acceptpendingecheck']	= array( 'list_yesno' );
@@ -123,14 +122,6 @@ class processor_paypal_subscription extends POSTprocessor
 		$var['a3'] = $request->int_var['amount']['amount3'];
 		$var['p3'] = $request->int_var['amount']['period3'];
 		$var['t3'] = $request->int_var['amount']['unit3'];
-
-/*  Disabling this for now - if a user has an old tax setting set-up AEC would still find it.  If PP adds this feature in future this can be re-enabled.
-		if ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
-			$tax = $var['a3']/(100+$this->settings['tax'])*100;
-			$var['tax'] = round(($var['a3'] - $tax), 2);
-			$var['a3'] = round($tax, 2);
-		}
-*/
 
 		$var['business']		= $this->settings['business'];
 		$var['invoice']			= $request->invoice->invoice_number;

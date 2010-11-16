@@ -75,12 +75,7 @@ class processor_alertpay extends POSTprocessor
 				$var['ap_trialperiodlength'] 	= $put['period'];
 			}
 
-			if ( !empty( $this->settings['tax'] ) ) {
-				$tax = $request->int_var['amount']['amount3'] / ( 100 + $this->settings['tax'] ) * 100;
-				$var['ap_amount'] 	= round( $tax, 2 );
-			} else {
-				$var['ap_amount'] 	= $request->int_var['amount']['amount3'];
-			}
+			$var['ap_amount'] 	= $request->int_var['amount']['amount3'];
 
 			$puf = $this->convertPeriodUnit( $request->int_var['amount']['unit3'], $request->int_var['amount']['period3'] );
 			$var['ap_timeunit'] 		= $puf['unit'];
@@ -88,12 +83,7 @@ class processor_alertpay extends POSTprocessor
 		} else {
 			$var['ap_purchasetype']	= 'Item';
 
-			if ( !empty( $this->settings['tax'] ) ) {
-				$tax = $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
-				$var['ap_amount'] 	= round( $tax, 2 );
-			} else {
-				$var['ap_amount'] 	= $request->int_var['amount'];
-			}
+			$var['ap_amount'] 	= $request->int_var['amount'];
 		}
 
 		$var['ap_merchant']		= $this->settings['merchant'];

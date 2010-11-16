@@ -37,7 +37,8 @@ class processor_payer extends POSTprocessor
 		$settings['agentid']		= '';
 		$settings['key1']			= '';
 		$settings['key2']			= '';
-		$settings['tax']			= '0';
+		$settings['invoice_tax']	= 0;
+		$settings['tax']			= '';
 
 		$settings['currency']		= 'SEK';
 		$settings['language']		= 'sv';
@@ -57,6 +58,7 @@ class processor_payer extends POSTprocessor
 		$settings['key1']			= array( 'inputE' );
 		$settings['key2']			= array( 'inputE' );
 
+		$settings['invoice_tax']	= array( 'list_yesno' );
 		$settings['tax']			= array( 'inputA' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );
@@ -139,12 +141,20 @@ class processor_payer extends POSTprocessor
 
 		$desc = AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
+		if ( !empty( $this->settings['invoice_tax'] ) ) {
+			foreach ( $request->items->tax as $tax ) {
+				$tax += $tax['cost'];
+			}
+		} else {
+			$tax = $this->settings['tax'];
+		}
+
 		// Purchase list (freeform purchases)
 		$xml .= 		"<freeform_purchase>" .
 							"<line_number>"			.  htmlspecialchars(1)								. "</line_number>" .
 							"<description>"			.  htmlspecialchars($desc)							. "</description>" .
 							"<price_including_vat>"	.  htmlspecialchars($request->int_var['amount'])	. "</price_including_vat>" .
-							"<vat_percentage>"		.  htmlspecialchars($this->settings['tax'])			. "</vat_percentage>" .
+							"<vat_percentage>"		.  htmlspecialchars($tax)							. "</vat_percentage>" .
 							"<quantity>"			.  htmlspecialchars(1)								. "</quantity>" .
 						"</freeform_purchase>";
 

@@ -61,6 +61,8 @@ define( '_CFG_PROCESSOR_COUNTRY_NAME', 'Country');
 define( '_CFG_PROCESSOR_COUNTRY_DESC', 'Select a country.');
 define( '_CFG_PROCESSOR_RECURRING_NAME', 'Paiement r&eacute;current');
 define( '_CFG_PROCESSOR_RECURRING_DESC', 'Choisissez le type de facturation &agrave; utiliser.');
+define( '_CFG_PROCESSOR_INVOICE_TAX_NAME', 'Use Invoice Tax:');
+define( '_CFG_PROCESSOR_INVOICE_TAX_DESC', 'Use the tax as defined on the invoice (through MicroIntegrations)');
 define( '_CFG_PROCESSOR_TAX_NAME', 'Tax:');
 define( '_CFG_PROCESSOR_TAX_DESC', 'Set the percentage that should be split to taxes. For example if you want 10% of 10$ to be tax - put in a 10. This will result in an amount of 9.09 and a tax amount of additional 0.91.');
 define( '_CFG_PROCESSOR_GENERIC_BUTTONS_NAME', 'Generic Buttons:');
