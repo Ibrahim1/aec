@@ -17,13 +17,12 @@ class processor_usaepay extends XMLprocessor
 	{
 		$info = array();
 		$info['name']					= "usaepay";
-		$info['longname']				= "USAepay";
-		$info['statement']				= "Make payments with USAepay!";
-		$info['description']			= "USAepay";
+		$info['longname']				= _CFG_USAEPAY_LONGNAME;
+		$info['statement']				= _CFG_USAEPAY_STATEMENT;
+		$info['description']			= _CFG_USAEPAY_DESCRIPTION;
+		$info['currencies']				= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']				= "visa,mastercard,discover,jcb";
-		$info['currencies']				= "USD";
-		$info['recurring']				= 1;
-		$info['notify_trail_thanks']	= 1;
+		$info['recurring']				= 2;
 
 		return $info;
 	}
@@ -33,8 +32,9 @@ class processor_usaepay extends XMLprocessor
 		$settings = array();
 
 		$settings['testmode']		= 0;
+		$settings['currency']		= 'USD';
 		$settings['StoreKey']		= "StoreKey";
-		$settings['secretWord']		= "Secret Word";
+		$settings['StorePin']		= "Pin";
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
@@ -45,9 +45,10 @@ class processor_usaepay extends XMLprocessor
 	{
 		$settings = array();
 
-		$settings['testmode']		= array( "list_yesno", "Test Mode", "Operate in USAePay TEST mode" );
-		$settings['StoreKey']		= array( "inputC","Store Key","Your Alphanumeric ID assigned by USAePay" );
-		$settings['secretWord']		= array( "inputC","Secret Word","Used to encrypt and protect transactions" );
+		$settings['testmode']		= array( "list_yesno" );
+		$settings['currency']		= array( 'list_currency' );
+		$settings['StoreKey']		= array( "inputC" );
+		$settings['StorePin']		= array( "inputC" );
 		$settings['item_name']		= array( 'inputE' );
 		$settings['customparams']	= array( 'inputD' );
 		
@@ -68,21 +69,48 @@ class processor_usaepay extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		$var['UMkey']			= $this->settings['StoreKey'];
+		$var = array(
+					"UMkey" => $this->settings['StoreKey'], 
+					"UMcommand" => 'sale',
+					"UMcard" => trim( $request->int_var['params']['cardNumber'] ),
+					"UMexpir" => $request->int_var['params']['expirationMonth'] . $request->int_var['params']['expirationYear'],
+					"UMinvoice" => $request->invoice->invoice_number, 
+					"UMorderid" => $request->invoice->id,
+					"UMtax" => '',
+					"UMcurrency" => $request->invoice->currency,
+					"UMname" => $request->int_var['params']['billFirstName'] . ' ' . $request->int_var['params']['billLastName'],
+					"UMstreet" => $request->int_var['params']['billAddress'],
+					"UMzip" => $request->int_var['params']['billZip'],
+					"UMdescription" => AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ),
+					"UMcvv2" => trim( $request->int_var['params']['cardVV2'] ),
+					"UMtestmode" => $this->settings['testmode']
+					);
 
-		$var['UMinvoice']		= $request->invoice->invoice_number;
-		$var['UMdescription']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['UMamount']		= 1.95;
-		$var['UMbillamount']	= 9.95;
-                
-		$var['UMrecurring']		= "yes";                                          
-		$var['UMstart']			= date("Ymd", time() + (15 * 24 * 60 * 60));  //UMstart Must be entered in YYYYMMDD
-               		
+		if ( is_array( $request->int_var['amount'] ) ) {
+			// Seems to only support one cycle type
+			$var = array_merge( $var, array(
+											"UMaddcustomer" => 1,
+											"UMschedule" => $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] ),
+											"UMstart" => 'next'
+											)
+								);
+
+			$amount = $request->int_var['amount']['amount3'];
+		} else {
+			$amount = $request->int_var['amount'];
+		}
+
+		$var["UMamount"] = $amount;
+
+		$var = $this->customParams( $this->settings['customparams'], $var, $request );
+
 		return $this->getNVPstring( $var );
 	}
 
 	function transmitRequestXML( $xml, $request )
 	{
+		$return['valid'] = false;
+
 		$path = '/interface/epayform/' . $this->settings['StoreKey'] . '/';
 
 		if ( $this->settings['testmode'] ) {
@@ -94,67 +122,78 @@ class processor_usaepay extends XMLprocessor
 
 		$response = $this->transmitRequest( $url, $path, $xml );
 
-		
+		if ( !empty( $response ) ) {
+			$result = parse_str( $response );
+			
+			if ( $result['result'] == 'Approved' ) {
+				$return['valid'] = true;
+			} else {
+				$return['error'] = $result['error'];
+			}
+		} else {
+			$return['error'] = 'Could not connect to USAepay';
+		}
+
+		return $return;
 	}
 
-	function parseNotification ( $post )
+	function convertPeriodUnit( $period, $unit )
 	{
-		$response = array();
-
-		$response['invoice']	= $post['UMinvoice'];
-		$response['amount']		= $post['UMauthAmount'];
-
-		return $response;
-	}
-
-	function validateNotification( $response, $post, $invoice )
-	{
-		$response['valid'] = false;
-
-		$ReturnCode	= aecGetParam('ReturnCode', 'NA');
-		$ErrMsg		= aecGetParam('ErrMsg', 'NA');
-		$FullTotal	= 1.95;   //aecGetParam('FullTotal', 'NA');  //   <========== working
-		$CardNumber	= aecGetParam('CardNumber', 'NA');
-		$OrderID	= aecGetParam('UMinvoice', 'NA');
-
-		$checksum	= md5($OrderID . $FullTotal);
-
-		$response = array();
-		$response['TransRefNumber']	= aecGetParam('UMrefNum', 'NA');
-		$response['Approved']		= aecGetParam('UMstatus', 'NA');
-		$response['FullTotal']		= $FullTotal;
-		$response['CardNumber']		= $CardNumber;
-		$response['OrderID']		= $OrderID;
-		$response['invoice']		= aecGetParam('UMinvoice', 'NA');
-                //$response['valid']              = aecGetParam('valid', '0');
-		//$validate			= md5($this->settings['secretWord'] . $FullTotal);
-		//$response['valid']	= (strcmp($validate, $checksum) == 0);
-                
-		//if ( $response['valid'] = 1 )
-                if  ($response['Approved'] == "Approved" ) {
-			//if ( substr( $ReturnCode, 0, 1 ) == "Y" ) {
-			        print_r("Response was...". $response['Approved'] . "<br/>");
-				print_r("<b>Thankyou! - Your Card was approved</b><br/>");
-				print_r("</br>");
-				//print_r("<b>Card No:</b>". $CardNumber . "<br/>");
-				print_r("<b>Total Charged:</b>". $FullTotal . "<br/>");
-				//print_r("<br/>");
-         			$response['valid'] = 1;
-	          		$response['pending']= 0;
-                                  				
-			//} else {
-			//	$response['valid']		= 0;
-			//	$response['pending']		= 1;
-			//	$response['pending_reason']	= $ErrMsg;
-			//	print_r("<b>Transaction Declined <br/>Reason: </b>" .$ErrMsg . "<br/>");
-			//}
-		} else  {
-			$response['valid'] = 0;
-			$response['pending']= 1;
-			$response['pending_reason']=$ErrMsg;
-			print_r("<b>Transaction Declined (cs)<br/>Reason: </b>" .$ErrMsg . "<br/>");
-
+		switch ( $unit ) {
+			case 'D':
+				if ( $period <= 4 ) {
+					return 'daily';
+				} elseif ( ( $period > 4 ) && ( $period <= 11 ) ) {
+					return 'weekly';
+				} elseif ( ( $period > 11 ) && ( $period <= 24 ) ) {
+					return 'biweekly';
+				} elseif ( ( $period > 24 ) && ( $period <= 42 ) ) {
+					return 'monthly';
+				} elseif ( ( $period > 42 ) && ( $period <= 66 ) ) {
+					return 'bimonthly';
+				} elseif ( ( $period > 66 ) && ( $period <= 140 ) ) {
+					return 'quarterly';
+				} elseif ( ( $period > 140 ) && ( $period <= 196 ) ) {
+					return 'biannually';
+				} else {
+					return 'annually';
+				}
+				break;
+			case 'W':
+				if ( $period == 1 ) {
+					return 'weekly';
+				} elseif ( ( $period > 1 ) && ( $period <= 2 ) ) {
+					return 'biweekly';
+				} elseif ( ( $period > 2 ) && ( $period <= 5 ) ) {
+					return 'monthly';
+				} elseif ( ( $period > 5 ) && ( $period <= 9 ) ) {
+					return 'bimonthly';
+				} elseif ( ( $period > 9 ) && ( $period <= 20 ) ) {
+					return 'quarterly';
+				} elseif ( ( $period > 20 ) && ( $period <= 36 ) ) {
+					return 'biannually';
+				} else {
+					return 'annually';
+				}
+				break;
+			case 'M':
+				if ( $period == 1 ) {
+					return 'monthly';
+				} elseif ( ( $period > 1 ) && ( $period <= 3 ) ) {
+					return 'bimonthly';
+				} elseif ( ( $period > 3 ) && ( $period <= 5 ) ) {
+					return 'quarterly';
+				} elseif ( ( $period > 5 ) && ( $period <= 10 ) ) {
+					return 'biannually';
+				} else {
+					return 'annually';
+				}
+				break;
+			case 'Y':
+				return 'annually';
+				break;
 		}
 	}
+
 }
 ?>
