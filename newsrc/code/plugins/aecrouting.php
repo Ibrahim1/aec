@@ -81,11 +81,11 @@ class plgSystemAECrouting extends JPlugin
 		$vars['alpha']		= $vars['option'] == 'com_alpharegistration';
 
 		// Standard Joomla
-		$vars['cu']			= $vars['option'] == 'com_user';
+		$vars['cu']			= ( ( $vars['option'] == 'com_user' ) || $vars['option'] == 'com_users' );
 
 		$vars['aec']			= $vars['option'] == 'com_acctexp';
 
-		$vars['j_reg']			= $vars['cu']		&& ( ( $vars['view'] == 'register' ) || ( $vars['task'] == 'register' ) );
+		$vars['j_reg']			= $vars['cu']		&& ( ( $vars['view'] == 'register' ) || ( $vars['view'] == 'registration' ) || ( $vars['task'] == 'register' ) );
 
 		$vars['cb_reg']			= $vars['ccb']		&& ( $vars['task'] == 'registers' );
 
@@ -387,22 +387,38 @@ class plgSystemAECrouting extends JPlugin
 				$this->redirectToken();
 			}
 		} elseif ( $vars['j_reg'] && !$vars['k2'] ) {
-			$addinmarker = '<input type="hidden" name="task" value="register_save" />';
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$addinmarker = '<input type="hidden" name="task" value="registration.register" />';
+			} else {
+				$addinmarker = '<input type="hidden" name="task" value="register_save" />';
+			}
 
 			$search[]	= $addinmarker;
 			$replace[]	= '<input type="hidden" name="task" value="subscribe" />'
 							. '<input type="hidden" name="option" value="com_acctexp" />';
 
-			$search[]	= '<form action="' . JRoute::_( 'index.php?option=com_user' ) . '" method="post"';
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$search[]	= '<form id="member-registration" action="' . JRoute::_( 'index.php?option=com_users&task=registration.register' ) . '" method="post"';
+			} else {
+				$search[]	= '<form action="' . JRoute::_( 'index.php?option=com_users' ) . '" method="post"';
+			}
+
 			$replace[]	= '<form action="' . JRoute::_( 'index.php?option=com_acctexp' ) . '" method="post"';
 
 			if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
 				require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
-				$search[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *';
-				$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *</td></tr>'
-								. '<tr><td height="40"><label></label></td><td>'
-								. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
+				if ( defined( 'JPATH_MANIFESTS' ) ) {
+					$search[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *';
+					$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *</td></tr>'
+									. '<tr><td height="40"><label></label></td><td>'
+									. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
+				} else {
+					$search[]	= 'jform_email2" value="" class="validate-email required" size="30"/></dd>';
+					$replace[]	= 'jform_email2" value="" class="validate-email required" size="30"/></dd><dt>'
+									. '<label id="jform_recaptcha-lbl" for="recaptcha_challenge_field" class="hasTip required" title="ReCAPTCHA">ReCAPTCHA:</label>'
+									. '<dd>' . recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) . '</dd>';
+				}
 			}
 		} elseif ( $vars['k2'] ) {
 			$db = &JFactory::getDBO();

@@ -125,11 +125,11 @@ class eucaInstall extends eucaObject
 					;
 			$db->setQuery( $query );
 			$details['component_id'] = $db->loadResult();
-	
+
 			$k = 0;
 			$errors = array();
 			foreach ( $array as $entry ) {
-				if ( $this->AdminMenuEntry( $entry, $id, $k ) ) {
+				if ( $this->AdminMenuEntry( $entry, $details, $k ) ) {
 					$k++;
 				}
 			}
@@ -155,38 +155,26 @@ class eucaInstall extends eucaObject
 	function AdminMenuEntry( $entry, $details, $ordering, $frontend=0 )
 	{
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$table = '#__menu';
-
 			$insert = array(
-							'id'				=> '',
 							'menutype'			=> 'menu',
 							'title'				=> $entry[1],
-							'alias'				=> '',
-							'note'				=> '',
-							'path'				=> '',
-							'link'				=> $frontend ? ( 'option=' . _EUCA_APP_COMPNAME ) : '',
+							'alias'				=> $entry[1],
+							'link'				=> 'index.php?option=' . _EUCA_APP_COMPNAME . '&task=' . $entry[0],
 							'type'				=> 'component',
 							'published'			=> 1,
 							'parent_id'			=> '',
-							'level'				=> 2,
 							'component_id'		=> $details['component_id'],
-							'ordering'			=> 0,
-							'checked_out'		=> 0,
-							'checked_out_time'	=> '0000-00-00 00:00:00',
-							'browserNav'		=> 0,
-							'access'			=> 0,
-							'img'				=> '',
-							'template_style_id'	=> 0,
-							'params'			=> '',
-							'lft'				=> '',
-							'rgt'				=> '',
-							'home'				=> 0,
-							'language'			=> '*',
+							'img'				=> 'class:component',
 							'client_id'			=> 1
 							);
-		} else {
-			$table = '#__components';
 
+			$table = JTable::getInstance('menu');
+
+			if (!$table->setLocation($parent_id, 'last-child') || !$table->bind($insert) || !$table->check() || !$table->store()) {
+				// Install failed, rollback changes
+				return false;
+			}
+		} else {
 			$insert = array(
 							'id'				=> '',
 							'name'				=> $entry[1],
@@ -198,21 +186,21 @@ class eucaInstall extends eucaObject
 							'ordering'			=> isset( $entry[3] ) ? $entry[3] : $ordering,
 							'admin_menu_img'	=> $entry[2]
 							);
-		}
 
-		$db = &JFactory::getDBO();
-		$query = 'INSERT INTO ' . $table
-				. ' (`' . implode( '`, `', array_keys( $insert ) ) . '`)'
-				. ' VALUES '
-				. '(\'' . implode( '\', \'', array_values( $insert ) ) . '\')'
-				;
-		$db->setQuery( $query );
+			$db = &JFactory::getDBO();
+			$query = 'INSERT INTO #__components'
+					. ' (`' . implode( '`, `', array_keys( $insert ) ) . '`)'
+					. ' VALUES '
+					. '(\'' . implode( '\', \'', array_values( $insert ) ) . '\')'
+					;
+			$db->setQuery( $query );
 
-		if ( !$db->query() ) {
-	    	$this->setError( array( $db->getErrorMsg(), $query ) );
-	    	return false;
-		} else {
-			return true;
+			if ( !$db->query() ) {
+		    	$this->setError( array( $db->getErrorMsg(), $query ) );
+		    	return false;
+			} else {
+				return true;
+			}
 		}
 	}
 }

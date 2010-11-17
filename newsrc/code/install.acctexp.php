@@ -174,21 +174,20 @@ function com_install()
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---
 
 	// Create the Joomla Backend Menu
-	require_once( $incpath . '/menusetup.inc.php' );
+	//require_once( $incpath . '/menusetup.inc.php' );
 
 	// Create root group
 	require_once( $incpath . '/create_rootgroup.inc.php' );
 
 	// Make all Superadmins excluded by default
-	$db->setQuery("SELECT id FROM #__users WHERE gid='25'");
-	$administrators = $db->loadResultArray();
+	$administrators = aecACLhandler::getSuperAdmins();
 
-	foreach ( $administrators as $adminid ) {
-		$metaUser = new metaUser( $adminid );
+	foreach ( $administrators as $admin ) {
+		$metaUser = new metaUser( $admin->id );
 
 		if ( !$metaUser->hasSubscription ) {
 			$metaUser->objSubscription = new Subscription( $db );
-			$metaUser->objSubscription->createNew( $adminid, 'free', 0 );
+			$metaUser->objSubscription->createNew( $admin->id, 'free', 0 );
 			$metaUser->objSubscription->setStatus( 'Excluded' );
 		}
 	}
