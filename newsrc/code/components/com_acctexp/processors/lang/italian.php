@@ -973,4 +973,13 @@ define( '_CFG_MULTISAFEPAY_SITE_SECURE_CODE_DESC', 'Site Secure Code');
 define( '_CFG_MULTISAFEPAY_SELECT_GATEWAY', 'Payment Gateway');
 define( '_CFG_MULTISAFEPAY_SELECT_COUNTRY', 'Select country');
 
+// USA ePay
+define( '_CFG_USAEPAY_LONGNAME', 'USAepay');
+define( '_CFG_USAEPAY_STATEMENT', 'Make payments with USAepay!');
+define( '_CFG_USAEPAY_DESCRIPTION', 'USAepay');
+define( '_CFG_USAEPAY_STOREKEY_NAME', 'Store Key');
+define( '_CFG_USAEPAY_STOREKEY_DESC', 'Your Alphanumeric ID assigned by USAePay');
+define( '_CFG_USAEPAY_STOREPIN_NAME', 'Store Pin');
+define( '_CFG_USAEPAY_STOREPIN_DESC', 'Your Store Pin that you can set up with USAePay - Used to encrypt and protect transactions');
+
 ?>

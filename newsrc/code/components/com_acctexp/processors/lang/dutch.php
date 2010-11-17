@@ -974,4 +974,13 @@ define( '_CFG_MULTISAFEPAY_SELECT_COUNTRY', 'Kies een land'); // your country
 define( '_CFG_MULTISAFEPAY_RETURN_URL_NAME', 'Return URL'); // return to the webshop label
 define( '_CFG_MULTISAFEPAY_RETURN_TO_SHOP', 'Terug naar de webshop'); // return to the webshop link text
 
+// USA ePay
+define( '_CFG_USAEPAY_LONGNAME', 'USAepay');
+define( '_CFG_USAEPAY_STATEMENT', 'Make payments with USAepay!');
+define( '_CFG_USAEPAY_DESCRIPTION', 'USAepay');
+define( '_CFG_USAEPAY_STOREKEY_NAME', 'Store Key');
+define( '_CFG_USAEPAY_STOREKEY_DESC', 'Your Alphanumeric ID assigned by USAePay');
+define( '_CFG_USAEPAY_STOREPIN_NAME', 'Store Pin');
+define( '_CFG_USAEPAY_STOREPIN_DESC', 'Your Store Pin that you can set up with USAePay - Used to encrypt and protect transactions');
+
 ?>
