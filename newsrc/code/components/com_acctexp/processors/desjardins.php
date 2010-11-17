@@ -16,14 +16,15 @@ class processor_desjardins extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'Desjardins';
-		$info['longname']		= _CFG_DESJARDINS_LONGNAME;
-		$info['statement']		= _CFG_DESJARDINS_STATEMENT;
-		$info['description']	= _CFG_DESJARDINS_DESCRIPTION;
-		$info['cc_list']		= 'visa,mastercard';
-		$info['recurring']		= 0;
-		$info['notify_trail_thanks'] = false;
-		$info['custom_notify_trail'] = true;
+		$info['name']					= 'Desjardins';
+		$info['longname']				= _CFG_DESJARDINS_LONGNAME;
+		$info['statement']				= _CFG_DESJARDINS_STATEMENT;
+		$info['description']			= _CFG_DESJARDINS_DESCRIPTION;
+		$info['cc_list']				= 'visa,mastercard';
+		$info['currencies']				= "CAD";
+		$info['recurring']				= 0;
+		$info['notify_trail_thanks']	= false;
+		$info['custom_notify_trail']	= true;
 
 		return $info;
 	}
@@ -32,6 +33,7 @@ class processor_desjardins extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= "0";
+		$settings['currency']		= "CAD";
 		$settings['custId']			= "";
 		$settings['transactionKey']	= "";
 		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -45,6 +47,7 @@ class processor_desjardins extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
+		$settings['currency']		= array( 'list_currency' );
 		$settings['custId']			= array( 'inputC' );
 		$settings['transactionKey']	= array( 'inputC' );
 		$settings['SiteTitle']		= array( 'inputC' );

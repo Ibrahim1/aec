@@ -841,7 +841,7 @@ class Payment_HTML
 						<td><p><?php echo $InvoiceFactory->plan->name; ?></p></td>
 						<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
 					</tr>
-					<?php if ( empty( $userid ) && $aecConfig->cfg['confirmation_changeusername'] && $aecConfig->cfg['confirmation_changeusage'] ) { ?>
+					<?php if ( empty( $userid ) && $aecConfig->cfg['confirmation_changeusername'] ) { ?>
 					<tr>
 						<td>
 							<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">

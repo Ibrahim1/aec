@@ -15472,7 +15472,7 @@ class AECToolbox
 		global $aecConfig;
 
 		$cursym = array(	'AUD' => 'AU$', 'AWG' => '&#402;', 'ANG' => '&#402;', 'BDT' => '&#2547;',
-							'BRL' => 'R$', 'BWP' => 'P', 'BYR' => 'Br', 'CHF' => 'Fr.',
+							'BRL' => 'R$', 'BWP' => 'P', 'BYR' => 'Br', 'CAD' => '$CAD', 'CHF' => 'Fr.',
 							'CLP' => '$', 'CNY' => '&#165;', 'CRC' => '&#8353;', 'CVE' => '$',
 							'CZK' => '&#75;&#269;', 'DKK' => 'kr', 'EUR' => '&euro;', 'GBP' => '&pound;',
 							'GHS' => '&#8373;', 'GTQ' => 'Q', 'HUF' => 'Ft', 'HKD' => 'HK$',
