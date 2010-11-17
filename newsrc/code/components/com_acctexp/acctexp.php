@@ -420,12 +420,12 @@ if ( !empty( $task ) ) {
 
 function hold( $option, $userid )
 {
-	$app = JFactory::getApplication();
-
 	if ( $userid > 0 ) {
 		$metaUser = new metaUser( $userid );
 
-		$app->SetPageTitle( _HOLD_TITLE );
+		$document=& JFactory::getDocument();
+
+		$document->setTitle( html_entity_decode( _HOLD_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->hold( $option, $metaUser );
@@ -437,8 +437,6 @@ function hold( $option, $userid )
 function expired( $option, $userid, $expiration )
 {
 	global $aecConfig;
-
-	$app = JFactory::getApplication();
 
 	$db = &JFactory::getDBO();
 
@@ -474,7 +472,9 @@ function expired( $option, $userid, $expiration )
 
 		$expiration	= AECToolbox::formatDate( $expired );
 
-		$app->SetPageTitle( _EXPIRED_TITLE );
+		$document=& JFactory::getDocument();
+
+		$document->setTitle( html_entity_decode( _EXPIRED_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 		$continue = false;
 		if ( $aecConfig->cfg['continue_button'] && $metaUser->hasSubscription ) {
@@ -493,8 +493,6 @@ function expired( $option, $userid, $expiration )
 
 function pending( $option, $userid )
 {
-	$app = JFactory::getApplication();
-
 	$db = &JFactory::getDBO();
 
 	$reason = "";
@@ -526,7 +524,9 @@ function pending( $option, $userid )
 			$invoice = 'none';
 		}
 
-		$app->SetPageTitle( _PENDING_TITLE );
+		$document=& JFactory::getDocument();
+
+		$document->setTitle( html_entity_decode( _PENDING_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
@@ -542,6 +542,18 @@ function subscribe( $option )
 	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
+
+	if ( defined( 'JPATH_MANIFESTS' ) && !empty( $_REQUEST['jform'] ) ) {
+		foreach ( $_REQUEST['jform'] as $k => $v ) {
+			$map = array( 'password1' => 'password', 'email1' => 'email' );
+			
+			if ( isset( $map[$k] ) ) {
+				$_POST[$map[$k]] = $v;
+			} else {
+				$_POST[$k] = $v;
+			}
+		}
+	}
 
 	$task		= aecGetParam( 'task', 0, true, array( 'word', 'string' ) );
 	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
@@ -698,8 +710,6 @@ function checkUsernameEmail( $username, $email )
 		return JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 );
 	}
 
-	$app = JFactory::getApplication();
-
 	$db = &JFactory::getDBO();
 
 	$query = 'SELECT `id`'
@@ -785,8 +795,6 @@ function subscriptionDetails( $option, $sub='overview' )
 	}
 
 	global $aecConfig;
-
-	$app = JFactory::getApplication();
 
 	$ssl		= !empty( $aecConfig->cfg['ssl_profile'] );
 
@@ -1066,7 +1074,9 @@ function subscriptionDetails( $option, $sub='overview' )
 		}
 	}
 
-	$app->SetPageTitle( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub] );
+	$document=& JFactory::getDocument();
+
+	$document->setTitle( html_entity_decode( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub], ENT_COMPAT, 'UTF-8' ) );
 
 	$html = new HTML_frontEnd();
 	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subList, $custom, $properties );
@@ -1386,8 +1396,6 @@ function notAllowed( $option )
 
 	global $aecConfig;
 
-	$app = JFactory::getApplication();
-
 	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
 		aecRedirect( $aecConfig->cfg['customnotallowed'] );
 	}
@@ -1433,7 +1441,9 @@ function notAllowed( $option )
 		}
 	}
 
-	$app->SetPageTitle( _NOT_ALLOWED_HEADLINE );
+	$document=& JFactory::getDocument();
+
+	$document->setTitle( html_entity_decode( _NOT_ALLOWED_HEADLINE, ENT_COMPAT, 'UTF-8' ) );
 
 	$frontend = new HTML_frontEnd ();
 	$frontend->notAllowed( $option, $processors, $registerlink, $loggedin );
@@ -1444,8 +1454,6 @@ function backSubscription( $option )
 	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
-
-	$app = JFactory::getApplication();
 
 	// Rebuild array
 	foreach ( $_POST as $key => $value ) {
@@ -1471,7 +1479,10 @@ function backSubscription( $option )
 		}
 	}
 
-	$app->SetPageTitle( _REGISTER_TITLE );
+	$document=& JFactory::getDocument();
+
+	$document->setTitle( html_entity_decode( _REGISTER_TITLE, ENT_COMPAT, 'UTF-8' ) );
+
 	Payment_HTML::subscribeForm( $option, $var, $objplan, null, $objuser );
 }
 
@@ -1564,15 +1575,15 @@ function cancelPayment( $option )
 {
 	$db = &JFactory::getDBO();
 
-	$app = JFactory::getApplication();
-
 	global $aecConfig;
 
 	// Look whether we have a custom Cancel page
 	if ( $aecConfig->cfg['customcancel'] ) {
 		aecRedirect( $aecConfig->cfg['customcancel'] );
 	} else {
-		$app->SetPageTitle( _CANCEL_TITLE );
+		$document=& JFactory::getDocument();
+
+		$document->setTitle( html_entity_decode( _CANCEL_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 		HTML_Results::cancel( $option );
 	}
@@ -1643,7 +1654,9 @@ function aecThanks( $option, $renew, $free, $plan=null )
 		$msg = $b;
 	}
 
-	$app->SetPageTitle( _THANKYOU_TITLE );
+	$document=& JFactory::getDocument();
+
+	$document->setTitle( html_entity_decode( _THANKYOU_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 	HTML_Results::thanks( $option, $msg );
 }
@@ -1687,7 +1700,9 @@ function aecSimpleThanks( $option, $renew, $free )
 		$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
 	}
 
-	$app->SetPageTitle( _THANKYOU_TITLE );
+	$document=& JFactory::getDocument();
+
+	$document->setTitle( html_entity_decode( _THANKYOU_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 	HTML_Results::thanks( $option, $b );
 }

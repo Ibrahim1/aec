@@ -1652,7 +1652,7 @@ class aecACLhandler
 		} else {
 			$db = &JFactory::getDBO();
 
-			$query = 'SELECT `name`, `email`, `sendEmail`'
+			$query = 'SELECT `id`, `name`, `email`, `sendEmail`'
 					. ' FROM #__users'
 					. ' WHERE LOWER( usertype ) = \'superadministrator\''
 					. ' OR LOWER( usertype ) = \'super administrator\''
@@ -1711,7 +1711,7 @@ class aecACLhandler
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT `name`, `email`, `sendEmail`'
+		$query = 'SELECT `id`, `name`, `email`, `sendEmail`'
 				. ' FROM #__users'
 				. ' WHERE id IN (' . implode( ',', $users ) . ')'
 				;
@@ -1746,6 +1746,8 @@ class aecACLhandler
 
 		$user = &JFactory::getUser();
 
+		$acl = &JFactory::getACL();
+
 		$block = false;
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
@@ -1755,14 +1757,12 @@ class aecACLhandler
 				$allowed_groups = array_merge( $allowed_groups, aecACLhandler::getManagerGroups() );
 			}
 
-			$usergroups = $acl->getUsersByGroup( $user->id );
+			$usergroups = $acl->getGroupsByUser( $user->id );
 
 			if ( !count( array_intersect( $allowed_groups, $usergroups ) ) ) {
 				$block = true;
 			}
 		} else {
-			$acl = &JFactory::getACL();
-
 			$acl->addACL( 'administration', 'config', 'users', 'super administrator' );
 
 			$acpermission = $acl->acl_check( 'administration', 'config', 'users', $user->usertype );
@@ -2218,6 +2218,8 @@ class aecHeartbeat extends JTable
 	 */
 	function aecHeartbeat( &$db )
 	{
+	 	$db = &JFactory::getDBO();
+
 	 	parent::__construct( '#__acctexp_heartbeat', 'id', $db );
 	 	$this->load(1);
 
@@ -2227,8 +2229,8 @@ class aecHeartbeat extends JTable
 			$query = 'INSERT INTO #__acctexp_heartbeat'
 			. ' VALUES( \'1\', \'' . date( 'Y-m-d H:i:s', ( time() - $aecConfig->cfg['heartbeat_cycle'] * 3600 ) ) . '\' )'
 			;
-			$this->_db->setQuery( $query );
-			$this->_db->query() or die( $this->_db->stderr() );
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
 		}
 	}
 
@@ -6166,11 +6168,13 @@ class ItemGroupHandler
 
 	function checkParentRestrictions( $item, $type, $metaUser )
 	{
+		$db = &JFactory::getDBO();
+
 		$parents = ItemGroupHandler::parentGroups( $item->id, $type );
 
 		if ( !empty( $parents ) ) {
 			foreach ( $parents as $parent ) {
-				$g = new ItemGroup( $item->_db );
+				$g = new ItemGroup( $db );
 				$g->load( $parent );
 
 				// Only check for permission, visibility might be overridden
@@ -6189,11 +6193,13 @@ class ItemGroupHandler
 
 	function hasVisibleChildren( $group, $metaUser )
 	{
+		$db = &JFactory::getDBO();
+
 		$children = ItemGroupHandler::getChildren( $group->id, 'item' );
 		if ( !empty( $children ) ) {
 			$i = 0;
 			foreach( $children as $itemid ) {
-				$plan = new SubscriptionPlan( $group->_db );
+				$plan = new SubscriptionPlan( $db );
 				$plan->load( $itemid );
 
 				if ( $plan->checkVisibility( $metaUser ) ) {
@@ -6205,7 +6211,7 @@ class ItemGroupHandler
 		$groups = ItemGroupHandler::getChildren( $group->id, 'group' );
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $groupid ) {
-				$g = new ItemGroup( $group->_db );
+				$g = new ItemGroup( $db );
 				$g->load( $groupid );
 
 				if ( !$g->checkVisibility( $metaUser ) ) {
@@ -7256,11 +7262,13 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		global $aecConfig;
 
+		$db = &JFactory::getDBO();
+
 		$micro_integrations = $this->getMicroIntegrations();
 
 		if ( is_array( $micro_integrations ) ) {
 			foreach ( $micro_integrations as $mi_id ) {
-				$mi = new microIntegration( $this->_db );
+				$mi = new microIntegration( $db );
 
 				if ( !$mi->mi_exists( $mi_id ) ) {
 					continue;
@@ -8459,8 +8467,6 @@ class InvoiceFactory
 
 	function addressExceptions( $option )
 	{
-		$app = JFactory::getApplication();
-
 		$hasform = false;
 
 		$lists = array();
@@ -8497,10 +8503,12 @@ class InvoiceFactory
 
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
+		$document=& JFactory::getDocument();
+
 		if ( $hasform ) {
-			$app->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE, ENT_COMPAT, 'UTF-8' ) );
+			$document->setTitle( html_entity_decode( _EXCEPTION_TITLE, ENT_COMPAT, 'UTF-8' ) );
 		} else {
-			$app->SetPageTitle( html_entity_decode( _EXCEPTION_TITLE_NOFORM, ENT_COMPAT, 'UTF-8' ) );
+			$document->setTitle( html_entity_decode( _EXCEPTION_TITLE_NOFORM, ENT_COMPAT, 'UTF-8' ) );
 		}
 
 		Payment_HTML::exceptionForm( $option, $this, $aecHTML, $hasform );
@@ -9017,9 +9025,9 @@ class InvoiceFactory
 
 	function promptpassword( $option, $wrong=false )
 	{
-		$app = JFactory::getApplication();
+		$document=& JFactory::getDocument();
 
-		$app->SetPageTitle( html_entity_decode( _AEC_PROMPT_PASSWORD, ENT_COMPAT, 'UTF-8' ) );
+		$document->setTitle( html_entity_decode( _AEC_PROMPT_PASSWORD, ENT_COMPAT, 'UTF-8' ) );
 
 		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
 	}
@@ -9029,8 +9037,6 @@ class InvoiceFactory
 		$db = &JFactory::getDBO();
 
 		global $aecConfig;
-
-		$app = JFactory::getApplication();
 
 		$register = !$this->loadMetaUser( true );
 
@@ -9112,7 +9118,9 @@ class InvoiceFactory
 				$register = 0;
 			}
 
-			$app->SetPageTitle( html_entity_decode( _PAYPLANS_HEADER, ENT_COMPAT, 'UTF-8' ) );
+			$document=& JFactory::getDocument();
+
+			$document->setTitle( html_entity_decode( _PAYPLANS_HEADER, ENT_COMPAT, 'UTF-8' ) );
 
 			if ( $group ) {
 				$g = new ItemGroup( $db );
@@ -9412,7 +9420,17 @@ class InvoiceFactory
 	{
 		$app = JFactory::getApplication();
 
-		$app->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $plan['gw'][0]->recurring );
+		if ( isset( $plan['gw'][0]->recurring ) ) {
+			$recurring = $plan['gw'][0]->recurring;
+		} else {
+			$recurring = 0;
+		}
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$app->redirect( 'index.php?option=com_users&view=registration&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $recurring );
+		} else {
+			$app->redirect( 'index.php?option=com_user&view=register&usage=' . $plan['id'] . '&processor=' . $plan['gw'][0]->processor_name . '&recurring=' . $recurring );
+		}
 	}
 
 	function registerRedirectCB( $option, $plan )
@@ -9543,9 +9561,9 @@ class InvoiceFactory
 		}
 
 		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
-			$app = JFactory::getApplication();
+			$document=& JFactory::getDocument();
 
-			$app->SetPageTitle( html_entity_decode( _CONFIRM_TITLE, ENT_COMPAT, 'UTF-8' ) );
+			$document->setTitle( html_entity_decode( _CONFIRM_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 			$pt = $this->getPassthrough();
 
@@ -9840,8 +9858,6 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 
-		$app = JFactory::getApplication();
-
 		if ( $this->hasExceptions() ) {
 			return $this->addressExceptions( $option );
 		}
@@ -9886,7 +9902,9 @@ class InvoiceFactory
 
 		$this->triggerMIs( '_checkout_form', $exchange, $int_var, $silent );
 
-		$app->SetPageTitle( html_entity_decode( $this->checkout['checkout_title'], ENT_COMPAT, 'UTF-8' ) );
+		$document=& JFactory::getDocument();
+
+		$document->setTitle( html_entity_decode( $this->checkout['checkout_title'], ENT_COMPAT, 'UTF-8' ) );
 
 		if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
 			JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
@@ -10176,9 +10194,9 @@ class InvoiceFactory
 
 	function error( $option, $objUser, $invoice, $error )
 	{
-		$app = JFactory::getApplication();
+		$document=& JFactory::getDocument();
 
-		$app->SetPageTitle( html_entity_decode( _CHECKOUT_ERROR_TITLE, ENT_COMPAT, 'UTF-8' ) );
+		$document->setTitle( html_entity_decode( _CHECKOUT_ERROR_TITLE, ENT_COMPAT, 'UTF-8' ) );
 
 		Payment_HTML::error( $option, $objUser, $invoice, $error );
 	}
@@ -12896,6 +12914,8 @@ class Subscription extends serialParamDBTable
 
 	function triggerPreExpiration( $metaUser, $mi_pexp )
 	{
+		$db = &JFactory::getDBO();
+
 		$actions = 0;
 
 		// No actions on expired or recurring
@@ -12903,7 +12923,7 @@ class Subscription extends serialParamDBTable
 			return $actions;
 		}
 
-		$subscription_plan = new SubscriptionPlan( $this->_db );
+		$subscription_plan = new SubscriptionPlan( $db );
 		$subscription_plan->load( $this->plan );
 
 		$micro_integrations = $subscription_plan->getMicroIntegrations();
@@ -12917,7 +12937,7 @@ class Subscription extends serialParamDBTable
 				continue;
 			}
 
-			$mi = new microIntegration( $this->_db );
+			$mi = new microIntegration( $db );
 
 			if ( !$mi->mi_exists( $mi_id ) ) {
 				continue;
@@ -15147,65 +15167,101 @@ class AECToolbox
 		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) && !$overrideJS ) {
 
 		} else {
-			// This is a joomla registration, borrowing their code to save the user
 			$app = JFactory::getApplication();
 
-			// Check for request forgeries
-			if ( !$internal ) {
-				JRequest::checkToken() or die( 'Invalid Token' );
-			}
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$params = JComponentHelper::getParams('com_users');
 
-			// Get required system objects
-			$user 		= clone(JFactory::getUser());
-			//$pathway 	=& $app->getPathway();
-			$config		=& JFactory::getConfig();
-			$authorize	=& JFactory::getACL();
-			$document   =& JFactory::getDocument();
+				// Initialise the table with JUser.
+				JUser::getTable('User', 'JTable');
+				$user = new JUser();
 
-			// If user registration is not allowed, show 403 not authorized.
-			$usersConfig = &JComponentHelper::getParams( 'com_users' );
-			if ($usersConfig->get('allowUserRegistration') == '0') {
-				JError::raiseError( 403, JText::_( 'Access Forbidden' ));
-				return;
-			}
+				$data = JRequest::get('post');
 
-			// Initialize new usertype setting
-			$newUsertype = $usersConfig->get( 'new_usertype' );
-			if (!$newUsertype) {
-				$newUsertype = 'Registered';
-			}
+				// Prepare the data for the user object.
+				$useractivation = $params->get('useractivation');
 
-			// Bind the post array to the user object
-			if (!$user->bind( JRequest::get('post'), 'usertype' )) {
-				JError::raiseError( 500, $user->getError());
+				// Check if the user needs to activate their account.
+				if (($useractivation == 1) || ($useractivation == 2)) {
+					jimport('joomla.user.helper');
+					$data['activation'] = JUtility::getHash(JUserHelper::genRandomPassword());
+					$data['block'] = 1;
+				}
 
-				unset($_POST);
-				subscribe();
-				return false;
-			}
+				// Bind the data.
+				if (!$user->bind($data)) {
+					$this->setError(JText::sprintf('COM_USERS_REGISTRATION_BIND_FAILED', $user->getError()));
+					return false;
+				}
 
-			// Set some initial user values
-			$user->set('id', 0);
-			$user->set('usertype', '');
-			$user->set('gid', $authorize->get_group_id( '', $newUsertype, 'ARO' ));
+				// Load the users plugin group.
+				JPluginHelper::importPlugin('users');
 
-			$user->set('registerDate', date('Y-m-d H:i:s'));
+				// Store the data.
+				if (!$user->save()) {
+					$this->setError(JText::sprintf('COM_USERS_REGISTRATION_SAVE_FAILED', $user->getError()));
+					return false;
+				}
+			} else {
+				// This is a joomla registration, borrowing their code to save the user
 
-			// If user activation is turned on, we need to set the activation information
-			$useractivation = $usersConfig->get( 'useractivation' );
-			if ( ($useractivation == '1') &&  !$overrideActivation )
-			{
-				jimport('joomla.user.helper');
-				$user->set('activation', md5( JUserHelper::genRandomPassword()) );
-				$user->set('block', '1');
-			}
+				// Check for request forgeries
+				if ( !$internal ) {
+					JRequest::checkToken() or die( 'Invalid Token' );
+				}
 
-			// If there was an error with registration, set the message and display form
-			if ( !$user->save() )
-			{
-				JError::raiseWarning('', JText::_( $user->getError()));
-				echo JText::_( $user->getError());
-				return false;
+				// Get required system objects
+				$user 		= clone(JFactory::getUser());
+				//$pathway 	=& $app->getPathway();
+				$config		=& JFactory::getConfig();
+				$authorize	=& JFactory::getACL();
+				$document   =& JFactory::getDocument();
+
+				// If user registration is not allowed, show 403 not authorized.
+				$usersConfig = &JComponentHelper::getParams( 'com_users' );
+				if ($usersConfig->get('allowUserRegistration') == '0') {
+					JError::raiseError( 403, JText::_( 'Access Forbidden' ));
+					return;
+				}
+
+				// Initialize new usertype setting
+				$newUsertype = $usersConfig->get( 'new_usertype' );
+				if (!$newUsertype) {
+					$newUsertype = 'Registered';
+				}
+
+				// Bind the post array to the user object
+				if (!$user->bind( JRequest::get('post'), 'usertype' )) {
+					JError::raiseError( 500, $user->getError());
+
+					unset($_POST);
+					subscribe();
+					return false;
+				}
+
+				// Set some initial user values
+				$user->set('id', 0);
+				$user->set('usertype', '');
+				$user->set('gid', $authorize->get_group_id( '', $newUsertype, 'ARO' ));
+
+				$user->set('registerDate', date('Y-m-d H:i:s'));
+
+				// If user activation is turned on, we need to set the activation information
+				$useractivation = $usersConfig->get( 'useractivation' );
+				if ( ($useractivation == '1') &&  !$overrideActivation )
+				{
+					jimport('joomla.user.helper');
+					$user->set('activation', md5( JUserHelper::genRandomPassword()) );
+					$user->set('block', '1');
+				}
+
+				// If there was an error with registration, set the message and display form
+				if ( !$user->save() )
+				{
+					JError::raiseWarning('', JText::_( $user->getError()));
+					echo JText::_( $user->getError());
+					return false;
+				}
 			}
 
 			$row = $user;
@@ -15245,7 +15301,7 @@ class AECToolbox
 			}
 
 			// Send email to user
-			if ( !$aecConfig->cfg['nojoomlaregemails'] || $overrideEmails ) {
+			if ( !( $aecConfig->cfg['nojoomlaregemails'] || $overrideEmails ) ) {
 				JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 			}
 
@@ -16101,7 +16157,7 @@ class microIntegrationHandler
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `id` IN (' . $this->_db->getEscaped( implode( ',', $milist ) ) . ')'
+				. ' WHERE `id` IN (' . $db->getEscaped( implode( ',', $milist ) ) . ')'
 	 			. ' AND `active` = \'1\''
 				. ' ORDER BY `ordering` ASC'
 				;
@@ -16558,6 +16614,8 @@ class microIntegration extends serialParamDBTable
 
 	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add, $params=null )
 	{
+		$db = &JFactory::getDBO();
+
 		// Exchange Settings
 		if ( is_array( $exchange ) && !empty( $exchange ) ) {
 			$this->exchangeSettings( $exchange );
@@ -16633,7 +16691,7 @@ class microIntegration extends serialParamDBTable
 				$params = array();
 			}
 
-			$eventlog = new eventLog( $this->_db );
+			$eventlog = new eventLog( $db );
 			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, $error, $level, $params );
 		}
 
@@ -16643,7 +16701,7 @@ class microIntegration extends serialParamDBTable
 
 			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out due to errors, plan application was halted';
 
-			$err = $this->_db->getErrorMsg();
+			$err = $db->getErrorMsg();
 			if ( !empty( $err ) ) {
 				$error .= ' Last Database Error: ' . $err;
 			}
@@ -18363,21 +18421,23 @@ class coupon extends serialParamDBTable
 
 	function savePOSTsettings( $post )
 	{
+		$db = &JFactory::getDBO();
+
 		if ( !empty( $post['coupon_code'] ) ) {
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_coupons_static'
 					. ' WHERE `coupon_code` = \'' . $post['coupon_code'] . '\''
 					;
-			$this->_db->setQuery( $query );
-			$couponid = $this->_db->loadResult();
+			$db->setQuery( $query );
+			$couponid = $db->loadResult();
 
 			if ( empty( $couponid ) ) {
 				$query = 'SELECT `id`'
 						. ' FROM #__acctexp_coupons'
 						. ' WHERE `coupon_code` = \'' . $post['coupon_code'] . '\''
 						;
-				$this->_db->setQuery( $query );
-				$couponid = $this->_db->loadResult();
+				$db->setQuery( $query );
+				$couponid = $db->loadResult();
 			}
 
 			if ( !empty( $couponid ) && ( $couponid !== $this->id ) ) {
@@ -18799,6 +18859,8 @@ class aecExport extends serialParamDBTable
 	{
 		$app = JFactory::getApplication();
 
+		$db = &JFactory::getDBO();
+
 		// Load Exporting Class
 		$filename = JPATH_SITE . '/components/com_acctexp/lib/export/' . $this->params->export_method . '.php';
 		$classname = 'AECexport_' . $this->params->export_method;
@@ -18860,10 +18922,10 @@ class aecExport extends serialParamDBTable
 					;
 		}
 
-		$this->_db->setQuery( $query );
+		$db->setQuery( $query );
 
 		// Fetch Userlist
-		$userlist = $this->_db->loadObjectList();
+		$userlist = $db->loadObjectList();
 
 		// Plans Array
 		$plans = array();
@@ -18881,7 +18943,7 @@ class aecExport extends serialParamDBTable
 					$planid = $metaUser->focusSubscription->plan;
 
 					if ( !isset( $plans[$planid] ) ) {
-						$plans[$planid] = new SubscriptionPlan( $this->_db );
+						$plans[$planid] = new SubscriptionPlan( $db );
 						$plans[$planid]->load( $planid );
 					}
 
@@ -18918,14 +18980,16 @@ class aecExport extends serialParamDBTable
 	{
 		$app = JFactory::getApplication();
 
+		$db = &JFactory::getDBO();
+
 		// Drop old system saves to always keep 10 records
 		if ( $system ) {
 			$query = 'SELECT count(*) '
 					. ' FROM #__acctexp_export'
 					. ' WHERE `system` = \'1\''
 					;
-			$this->_db->setQuery( $query );
-			$sysrows = $this->_db->loadResult();
+			$db->setQuery( $query );
+			$sysrows = $db->loadResult();
 
 			if ( $sysrows > 9 ) {
 				$query = 'DELETE'
@@ -18934,8 +18998,8 @@ class aecExport extends serialParamDBTable
 						. ' ORDER BY `id` ASC'
 						. ' LIMIT 1'
 						;
-				$this->_db->setQuery( $query );
-				$this->_db->query();
+				$db->setQuery( $query );
+				$db->query();
 			}
 		}
 

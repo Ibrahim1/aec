@@ -643,9 +643,15 @@ class Payment_HTML
 						$task	= '';
 						$view 	= 'register';
 					} else {
-						$option	= 'com_user';
-						$task	= '';
-						$view 	= 'register';
+						if ( defined( 'JPATH_MANIFESTS' ) ) {
+							$option	= 'com_users';
+							$task	= '';
+							$view 	= 'registration';
+						} else {
+							$option	= 'com_user';
+							$task	= '';
+							$view 	= 'register';
+						}
 					}
 				} else {
 					$option		= 'com_acctexp';
