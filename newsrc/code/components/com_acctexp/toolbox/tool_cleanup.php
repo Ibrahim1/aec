@@ -41,7 +41,7 @@ class tool_cleanup
 		foreach ( $tables as $table ) {
 			$query = 'SELECT count(*)'
 					. ' FROM #__acctexp_' . $table . ' AS a'
-					. ' LEFT JOIN jos_users AS b ON a.userid = b.id'
+					. ' LEFT JOIN #__users AS b ON a.userid = b.id'
 					. ' WHERE b.id is null'
 					;
 			$db->setQuery( $query );
@@ -52,11 +52,44 @@ class tool_cleanup
 		}
 
 		if ( !empty( $_POST['delete'] ) ) {
-			
+			$return = '<p>Deleted a total of ' . $found['total'] . ' entries.<p>'
+					. '<ul>'
+					;
+
+			foreach ( $found as $table => $count ) {
+				if ( ( $table != 'total' ) && $count ) {
+					$query = 'SELECT a.id'
+							. ' FROM #__acctexp_' . $table . ' AS a'
+							. ' LEFT JOIN #__users AS b ON a.userid = b.id'
+							. ' WHERE b.id is null'
+							;
+					$db->setQuery( $query );
+					$ids = $db->loadResultArray();
+
+					$query = 'DELETE'
+							. ' FROM #__acctexp_' . $table
+							. ' WHERE id IN (' . implode( ',', $ids ) . ')'
+							;
+					$db->setQuery( $query );
+					$db->query();
+
+					$return .= '<li>' . $count . ' entries in table ' . $table . '</li>';
+				}
+			}
+
+			return $return;
 		} else {
+			$return = '<p>Found a total of ' . $found['total'] . ' entries.<p>'
+					. '<ul>'
+					;
 
+			foreach ( $found as $table => $count ) {
+				if ( ( $table != 'total' ) ) {
+					$return .= '<li>' . $count . ' entries in table ' . $table . '</li>';
+				}
+			}
 
-			return 'Found a total of ' . $found['total'] . ' entries.';
+			return $return;
 		}
 	}
 
