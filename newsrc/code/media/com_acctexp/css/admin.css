@@ -503,6 +503,22 @@ div.aec_processor_experimentalnote p {
 font-size: 130%;
 }
 
+div#aec-toolbox-result {
+margin: 0px 20px;
+margin-top: 20px;
+width: 98%;
+background: #fff;
+border: 2px solid #eee;
+}
+
+div#aec-toolbox-form {
+margin: 0px 20px;
+margin-top: 20px;
+width: 300px;
+background: #eee;
+text-align: center;
+}
+
 td.aec_bigcell {
 overflow-x: auto;
 }

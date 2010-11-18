@@ -6372,7 +6372,7 @@ function toolBoxTool( $option, $cmd )
 			$list[] = $info;
 		}
 
-		HTML_AcctExp::toolBox( $option, $list );
+		HTML_AcctExp::toolBox( $option, '', $list );
 	} else {
 		$file = $path . '/' . $cmd . '.php';
 
@@ -6380,13 +6380,35 @@ function toolBoxTool( $option, $cmd )
 
 		$tool = new $cmd();
 
+		$return = '';
 		if ( !method_exists( $tool, 'Action' ) ) {
-			$return = "<p>Tool doesn't have an action to carry out!</p>";
+			$return .= '<div id="aec-toolbox-result">' . '<p>Tool doesn\'t have an action to carry out!</p>' . '</div>';
 		} else {
-			$return = $tool->Action();
+			if ( method_exists( $tool, 'Settings' ) ) {
+				$tb_settings = $tool->Settings();
+
+				if ( !empty( $tb_settings ) ) {
+					$return .= '<div id="aec-toolbox-form">';
+
+					$settings = new aecSettings( 'TOOLBOX', 'E' );
+					$settings->fullSettingsArray( $tb_settings, array(), array() );
+
+					// Call HTML Class
+					$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+					foreach ( $tb_settings as $n => $v ) {
+						$return .= $aecHTML->createSettingsParticle( $n );
+					}
+
+					$return .= '<input type="submit" />';
+					$return .= '</div>';
+				}
+			}
+
+			$return .= '<div id="aec-toolbox-result">' . $tool->Action() . '</div>';
 		}
 
-		HTML_AcctExp::toolBox( $option, $return );
+		HTML_AcctExp::toolBox( $option, $cmd, $return );
 	}
 }
 

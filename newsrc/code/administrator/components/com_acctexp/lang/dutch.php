@@ -142,6 +142,7 @@ define( '_AEC_HEAD_HOLD_SUBS',					'Subscriber on Hold' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Gesloten registrant(en)' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Handmatige registrant(en)' );
 define( '_AEC_HEAD_SUBCRIBER',					'Registrant(en)' );
+define( '_AEC_HEAD_TOOLBOX',					'Toolbox' );
 
 // hacks
 define( '_AEC_HACK_HACK',						'Hack' );

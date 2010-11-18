@@ -142,6 +142,7 @@ define( '_AEC_HEAD_HOLD_SUBS',					'Angehaltene Abonnenten' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Abgeschlossene Abonnenten' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Ohne Abonnement' );
 define( '_AEC_HEAD_SUBCRIBER',					'Abonnent' );
+define( '_AEC_HEAD_TOOLBOX',					'Werkzeuge' );
 
 // hacks (special)
 define( '_AEC_HACK_HACK',						'&Auml;nderung' );

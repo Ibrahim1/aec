@@ -3051,7 +3051,7 @@ class HTML_AcctExp
  		HTML_myCommon::Valanx();
 	}
 
-	function toolBox( $option, $result )
+	function toolBox( $option, $cmd, $result )
 	{
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
@@ -3066,9 +3066,7 @@ class HTML_AcctExp
 			</td>
 		</tr>
 		</table>
-
-		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup extensively and blame problems on small animals should things go wrong</p>
-
+		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup extensively.</p>
 		<table class="aecadminform">
 			<?php
 			if ( is_array( $result ) ) {
@@ -3080,10 +3078,9 @@ class HTML_AcctExp
 			}
 			?>
 		</table>
-
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="returnTask" value="export" />
+		<input type="hidden" name="task" value="toolbox" />
+		<input type="hidden" name="cmd" value="<?php echo $cmd;?>" />
 		</form>
 
 		<?php

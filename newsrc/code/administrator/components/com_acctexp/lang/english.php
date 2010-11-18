@@ -142,6 +142,7 @@ define( '_AEC_HEAD_HOLD_SUBS',					'Subscriber on Hold' );
 define( '_AEC_HEAD_CLOSED_SUBS',				'Closed Subscriber' );
 define( '_AEC_HEAD_MANUAL_SUBS',				'Non Subscriber' );
 define( '_AEC_HEAD_SUBCRIBER',					'Subscriber' );
+define( '_AEC_HEAD_TOOLBOX',					'Toolbox' );
 
 // hacks
 define( '_AEC_HACK_HACK',						'Hack' );
