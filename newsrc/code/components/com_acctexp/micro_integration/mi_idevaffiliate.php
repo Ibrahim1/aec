@@ -44,7 +44,7 @@ class mi_idevaffiliate
 		return array( 'profile', 'directory', 'use_curl' );
 	}
 
-	function action( $request )
+	function afteraction( $request )
 	{
 		$db = &JFactory::getDBO();
 
