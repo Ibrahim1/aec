@@ -304,6 +304,7 @@ define( '_AEC_CENTR_VIEW_HISTORY',				'View History' );
 define( '_AEC_CENTR_HACKS',						'Hacks' );
 define( '_AEC_CENTR_M_INTEGRATION',				'Micro Integr.' );
 define( '_AEC_CENTR_HELP',						'Help' );
+define( '_AEC_CENTR_TOOLBOX',					'Toolbox' );
 define( '_AEC_CENTR_LOG',						'EventLog' );
 define( '_AEC_CENTR_MANUAL',					'Non Members' );
 define( '_AEC_CENTR_EXPORT',					'Export' );

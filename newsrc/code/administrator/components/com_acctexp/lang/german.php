@@ -303,6 +303,7 @@ define( '_AEC_CENTR_VIEW_HISTORY',				'Archiv' );
 define( '_AEC_CENTR_HACKS',						'Modifikationen' );
 define( '_AEC_CENTR_M_INTEGRATION',				'MicroIntegration' );
 define( '_AEC_CENTR_HELP',						'Hilfe' );
+define( '_AEC_CENTR_TOOLBOX',					'Werkzeuge' );
 define( '_AEC_CENTR_LOG',						'Logdatei' );
 define( '_AEC_CENTR_MANUAL',					'Ohne Abo' );
 define( '_AEC_CENTR_EXPORT',					'Export' );

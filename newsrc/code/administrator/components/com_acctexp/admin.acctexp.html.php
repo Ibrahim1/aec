@@ -795,6 +795,7 @@ class HTML_AcctExp
 										array( 'editCSS', 'css', _AEC_CENTR_EDIT_CSS ),
 										array( 'history', 'history', _AEC_CENTR_VIEW_HISTORY ),
 										array( 'eventlog', 'eventlog', _AEC_CENTR_LOG ),
+										array( 'toolbox', 'settings', _AEC_CENTR_TOOLBOX ),
 										array( 'hacks', 'hacks', _AEC_CENTR_HACKS )
 						);
 
