@@ -9041,7 +9041,11 @@ class InvoiceFactory
 		$register = !$this->loadMetaUser( true );
 
 		if ( !$register ) {
-			$this->expired = $this->metaUser->objSubscription->is_expired();
+			if ( $this->metaUser->hasSubscription ) {
+				$this->expired = $this->metaUser->objSubscription->is_expired();
+			} else {
+				$this->expired = false;
+			}
 		} else {
 			$this->expired = true;
 		}
