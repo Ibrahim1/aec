@@ -239,6 +239,7 @@ background-color: #f9f9e9;
 margin: 4px auto;
 padding: 4px;
 width: 95%;
+float: left;
 }
 
 .aec_userinfobox_sub h4 {

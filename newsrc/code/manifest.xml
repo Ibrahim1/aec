@@ -31,7 +31,7 @@
             <menu link="option=com_acctexp&amp;task=showCancelled" img="../media/com_acctexp/images/admin/icons/aec_symbol_cancelled_tiny.png">Cancelled</menu>
             <menu link="option=com_acctexp&amp;task=showClosed" img="../media/com_acctexp/images/admin/icons/aec_symbol_closed_tiny.png">Close</menu>
             <menu link="option=com_acctexp&amp;task=showExcluded" img="../media/com_acctexp/images/admin/icons/aec_symbol_excluded_tiny.png">Excluded</menu>
-            <menu link="option=com_acctexp&amp;task=showManual" img="../media/com_acctexp/images/admin/icons/aec_symbol_manual_tiny.png">Manual</menu>
+            <menu link="option=com_acctexp&amp;task=showManual" img="../media/com_acctexp/images/admin/icons/aec_symbol_manual_tiny.png">Non-Members</menu>
             <menu link="option=com_acctexp&amp;task=showMicroIntegrations" img="../media/com_acctexp/images/admin/icons/aec_symbol_mi_tiny.png">MicroIntegrations</menu>
             <menu link="option=com_acctexp&amp;task=showSettings" img="../media/com_acctexp/images/admin/icons/aec_symbol_settings_tiny.png">Settings</menu>
             <menu link="option=com_acctexp&amp;task=showProcessors" img="../media/com_acctexp/images/admin/icons/aec_symbol_settings_tiny.png">Processors</menu>

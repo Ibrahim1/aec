@@ -800,48 +800,51 @@ class metaUser
 		}
 
 		// Always protect last administrator
-		if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
+		if ( $this->isAdmin() ) {
 			if ( aecACLhandler::countAdmins() < 2) {
 				return false;
 			}
 		}
 
-		// Get ARO ID for user
-		$query = 'SELECT `id`'
-				. ' FROM #__core_acl_aro'
-				. ' WHERE `value` = \'' . (int) $this->userid . '\''
-				;
-		$db->setQuery( $query );
-		$aro_id = $db->loadResult();
-
-		// If we have no aro id, something went wrong and we need to create it
-		if ( empty( $aro_id ) ) {
-			$query2 = 'INSERT INTO #__core_acl_aro'
-					. ' (`section_value`, `value`, `order_value`, `name`, `hidden` )'
-					. ' VALUES ( \'users\', \'' . $this->userid . '\', \'0\', \'' . $this->cmsUser->name . '\', \'0\' )'
+		if ( !defined( 'JPATH_MANIFESTS' ) ) {
+			// Get ARO ID for user
+			$query = 'SELECT `id`'
+					. ' FROM #__core_acl_aro'
+					. ' WHERE `value` = \'' . (int) $this->userid . '\''
 					;
-			$db->setQuery( $query2 );
-			$db->query();
-
 			$db->setQuery( $query );
 			$aro_id = $db->loadResult();
+
+			// If we have no aro id, something went wrong and we need to create it
+			if ( empty( $aro_id ) ) {
+				$query2 = 'INSERT INTO #__core_acl_aro'
+						. ' (`section_value`, `value`, `order_value`, `name`, `hidden` )'
+						. ' VALUES ( \'users\', \'' . $this->userid . '\', \'0\', \'' . $this->cmsUser->name . '\', \'0\' )'
+						;
+				$db->setQuery( $query2 );
+				$db->query();
+	
+				$db->setQuery( $query );
+				$aro_id = $db->loadResult();
+			}
+
+			// Carry out ARO ID -> ACL group mapping
+			$query = 'UPDATE #__core_acl_groups_aro_map'
+					. ' SET `group_id` = \'' . (int) $gid . '\''
+					. ' WHERE `aro_id` = \'' . $aro_id . '\''
+					;
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
+
+			$gid_name = $acl->get_group_name( $gid, 'ARO' );
+		} else {
+			$gid_name = "";
 		}
-
-		// Carry out ARO ID -> ACL group mapping
-		$query = 'UPDATE #__core_acl_groups_aro_map'
-				. ' SET `group_id` = \'' . (int) $gid . '\''
-				. ' WHERE `aro_id` = \'' . $aro_id . '\''
-				;
-		$db->setQuery( $query );
-		$db->query() or die( $db->stderr() );
-
-		// Moxie Mod - updated to add usertype to users table and update session table for immediate access to usertype features
-		$gid_name = $acl->get_group_name( $gid, 'ARO' );
 
 		// Set GID and usertype
 		$rows = aecACLhandler::setGID( (int) $this->userid, $gid, $gid_name );
 
-		if ( $session ) {
+		if ( $session && !defined( 'JPATH_MANIFESTS' ) ) {
 			// Update Session
 			$query = 'SELECT data'
 			. ' FROM #__session'
@@ -912,6 +915,27 @@ class metaUser
 		$key = array_pop( array_keys( $data ) );
 
 		return $key . "|" . serialize( $data[$key] );
+	}
+
+	function isAdmin()
+	{
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$acl = &JFactory::getACL();
+
+			$allowed_groups = aecACLhandler::getAdminGroups( true );
+
+			$usergroups = $acl->getGroupsByUser( $this->cmsUser->id );
+
+			if ( count( array_intersect( $allowed_groups, $usergroups ) ) ) {
+				return true;
+			}
+		} else {
+			if ( ( $this->cmsUser->gid == 24 ) || ( $this->cmsUser->gid == 25 ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	function is_renewing()
@@ -15400,13 +15424,13 @@ class AECToolbox
 
 		if ( $backend ) {
 			if ( empty( $aecConfig->cfg['display_date_backend'] ) ) {
-				return strftime( JText::_('DATE_FORMAT_LC2'), $date );
+				return JHTML::_('date',$date, JText::_('DATE_FORMAT_LC2'));
 			} else {
 				return strftime( $aecConfig->cfg['display_date_backend'], $date );
 			}
 		} else {
 			if ( empty( $aecConfig->cfg['display_date_frontend'] ) ) {
-				return strftime( JText::_('DATE_FORMAT_LC4'), $date );
+				return JHTML::_('date',$date, JText::_('DATE_FORMAT_LC4'));
 			} else {
 				return strftime( $aecConfig->cfg['display_date_frontend'], $date );
 			}
