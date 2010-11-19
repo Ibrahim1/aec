@@ -5467,8 +5467,7 @@ class aecSettings
 
 	function remap_list_date( $name, $value )
 	{
-		$this->lists[$name] = '<input class="text_area" type="text" name="' . $name . '" id="' . $name . '" size="19" maxlength="19" value="' . $value . '"/>'
-			.'<input type="reset" name="reset" class="button" onClick="return showCalendar(\'' . $name . '\', \'y-mm-dd\');" value="..." />';
+		$this->lists[$name] = JHTML::_('calendar', $value, $name, $name, '%Y-%m-%d', array('class'=>'inputbox', 'size'=>'25',  'maxlength'=>'19' ));
 
 		return 'list';
 	}
