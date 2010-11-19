@@ -308,7 +308,7 @@ define( '_ACCTEXP_ASEND_MSG',				"Hallo %s,\n\nein neues Abonnement wurde auf [ 
 define( '_ACCTEXP_ASEND_MSG_RENEW',			"Hallo %s,\n\neine Aboverl&auml;ngerung auf %s.\n\nHier die Benutzerdetails:\n\nName.........: %s\nEmail........: %s\nBenutzername : %s\nAbo-ID.......: %s\nAbonnement...: %s\nIP...........: %s\nISP..........: %s\n\nDas ist eine automatische Benachrichtigung, bitte nicht antworten." );
 define( '_AEC_ASEND_MSG_NEW_REG',			"Hallo %s,\n\nEin neuer Benutzer wurde auf [ %s ] registriert.\n\nHier die Details:\n\nName . . . . : %s\nEmail : %s\nBenutzername  . . . : %s\nIP . . . . . : %s\nISP	 . . . . : %s\n\nDas ist eine automatische Benachrichtigung, bitte nicht antworten." );
 define( '_AEC_ASEND_NOTICE',				"AEC %s: %s at %s" );
-define( '_AEC_ASEND_NOTICE_MSG',		"According to the E-Mail reporting level you have selected, this is an automatic notification about an EventLog entry.\n\nThe details of this message are:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nPlease do not respond to this message as it is automatically generated and is for information purposes only. You can change the level of reported entries in your AEC Settings." );
+define( '_AEC_ASEND_NOTICE_MSG',		"Aufgrund der Reporting Einstellungen bekommen sie ab einem bestimmten Schweregrad Benachrichtigungen von AEC zugeschickt.\n\nDie Details dieser Nachricht sind:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nBitte antworten Sie nicht auf diese Nachricht. Falls Sie die Benachrichtigungseinstellungen ver&auml;ndern m&ouml;chten, k&ouml;nnen Sie dies in den AEC Einstellungen tun." );
 
 // ----======== COUNTRY CODES ========----
 
