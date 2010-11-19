@@ -6380,6 +6380,8 @@ function toolBoxTool( $option, $cmd )
 
 		$tool = new $cmd();
 
+		$info = $tool->Info();
+
 		$return = '';
 		if ( !method_exists( $tool, 'Action' ) ) {
 			$return .= '<div id="aec-toolbox-result">' . '<p>Tool doesn\'t have an action to carry out!</p>' . '</div>';
@@ -6408,7 +6410,7 @@ function toolBoxTool( $option, $cmd )
 			$return .= '<div id="aec-toolbox-result">' . $tool->Action() . '</div>';
 		}
 
-		HTML_AcctExp::toolBox( $option, $cmd, $return );
+		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );
 	}
 }
 

@@ -24,11 +24,50 @@ class tool_supporthours
 
 	function Settings()
 	{
-		return array();
+		// Compute sensible timeframe for the default
+		$day = date('d');
+
+		if ( ( $day < 7 ) || ( $day > 22 ) ) {
+			// Show second week
+			if ( $day > 22 ) {
+				$start	= strtotime( date( 'Y-m' ) . '-15 00:00:00' );
+				$end	= strtotime( date( 'Y-m-t' ) );
+			} else {
+				// This should probably be replaced by something using straight strtotime
+				$year = date( 'Y' );
+				
+				$prevmonth = date( 'm' ) - 1;
+
+				if ( $prevmonth <= 0 ) {
+					$year = $year - 1;
+
+					$prevmonth = 12;
+				}
+
+				$lastday = date( 't', strtotime( $year . '-' . $prevmonth . '-15 00:00:00' ) );
+
+				$start	= strtotime( $year . '-' . $prevmonth . '-15 00:00:00' );
+				$end	= strtotime( $year . '-' . $prevmonth . '-' . $lastday . ' 23:59:59' );
+			}
+		} else {
+			// Show first week
+			$start	= strtotime( date( 'Y-m' ) . '-1 00:00:00' );
+			$end	= strtotime( date( 'Y-m' ) . '-14 23:59:59' );
+		}
+
+		$settings = array();
+		$settings['start_date']	= array( 'list_date', 'Start Date', '', date( 'Y-m-d', $start ) );
+		$settings['end_date']	= array( 'list_date', 'End Date', '', date( 'Y-m-d', $end ) );
+
+		return $settings;
 	}
 
 	function Action()
 	{
+		if ( empty( $_POST['start_date'] ) ) {
+			return null;
+		}
+
 		$db = &JFactory::getDBO();
 
 		$query = 'SELECT `id`'
@@ -56,34 +95,12 @@ class tool_supporthours
 
 		$userlist = array_unique( $userlist );
 
-		$day = date('d');
+		$start_timeframe = strtotime( $_POST['start_date'] . ' 00:00:00' );
 
-		if ( ( $day < 7 ) || ( $day > 22 ) ) {
-			// Show second week
-			if ( $day > 22 ) {
-				$start_timeframe = strtotime( date( 'Y-m' ) . '-15 00:00:00' );
-				$end_timeframe = strtotime( date( 'Y-m-t' ) . ' 23:59:59' );
-			} else {
-				// This should probably be replaced by something using straight strtotime
-				$year = date( 'Y' );
-				
-				$prevmonth = date( 'm' ) - 1;
-
-				if ( $prevmonth <= 0 ) {
-					$year = $year - 1;
-
-					$prevmonth = 12;
-				}
-
-				$lastday = date( 't', strtotime( $year . '-' . $prevmonth . '-15 00:00:00' ) );
-
-				$start_timeframe = strtotime( $year . '-' . $prevmonth . '-15 00:00:00' );
-				$end_timeframe = strtotime( $year . '-' . $prevmonth . '-' . $lastday . ' 23:59:59' );
-			}
+		if ( !empty( $_POST['end_date'] ) ) {
+			$end_timeframe = strtotime( $_POST['end_date'] . ' 23:59:59' );
 		} else {
-			// Show first week
-			$start_timeframe = strtotime( date( 'Y-m' ) . '-1 00:00:00' );
-			$end_timeframe = strtotime( date( 'Y-m' ) . '-14 23:59:59' );
+			$end_timeframe = time();
 		}
 
 		$historylist = array();
