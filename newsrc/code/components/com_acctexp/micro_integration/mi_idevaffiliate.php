@@ -79,7 +79,7 @@ class mi_idevaffiliate
 			}
 
 			$newflags['idev_ip_address'] = $ip;
-			$request->metaUser->objSubscription->setMIflags( $request->plan->id, $this->id, $newflags );
+			$request->metaUser->focusSubscription->setMIflags( $request->plan->id, $this->id, $newflags );
 		}
 
 		$getparams[] = 'ip_address=' . $ip;
