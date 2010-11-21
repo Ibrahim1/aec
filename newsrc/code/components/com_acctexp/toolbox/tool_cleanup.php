@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: tool_invoicecleanup.php
+ * @version $Id: tool_cleanup.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Toolbox - Invoice Cleanup
+ * @subpackage Toolbox - Cleanup
  * @copyright 2010 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
