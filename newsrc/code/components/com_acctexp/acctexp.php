@@ -140,8 +140,6 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'cart':
-			JRequest::checkToken() or die( 'Invalid Token' );
-
 			$user = &JFactory::getUser();
 
 			if ( !$user->id ) {
