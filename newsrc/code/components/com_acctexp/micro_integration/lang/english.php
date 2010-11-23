@@ -767,6 +767,13 @@ define( '_MI_MI_PHPBB3_CREATE_FIELD',				'Create - Field' );
 define( '_MI_MI_PHPBB3_UPDATE_FIELD',				'Update - Field' );
 define( '_MI_MI_PHPBB3_UPDATE_FIELD_EXP',			'Update (Expired) - Field' );
 
+define( '_MI_MI_PHPBB3_CREATE_USER_NAME',			'Create User' );
+define( '_MI_MI_PHPBB3_CREATE_USER_DESC',			'Activate this to create a user' );
+define( '_MI_MI_PHPBB3_UPDATE_USER_NAME',			'Update User' );
+define( '_MI_MI_PHPBB3_UPDATE_USER_DESC',			'Update the user details' );
+define( '_MI_MI_PHPBB3_UPDATE_USER_EXP_NAME',			'Update User (Expiration)' );
+define( '_MI_MI_PHPBB3_UPDATE_USER_EXP_DESC',			'Update the user details one expiration' );
+
 define( '_MI_MI_PHPBB3_USE_ALTDB_NAME','Different Database' );
 define( '_MI_MI_PHPBB3_USE_ALTDB_DESC','If your phpbb3 forum uses a different database than joomla, you can set this option to Yes and provide details below.' );
 define( '_MI_MI_PHPBB3_DBMS_NAME','Database Type' );

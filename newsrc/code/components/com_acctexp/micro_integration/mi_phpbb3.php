@@ -99,7 +99,7 @@ class mi_phpbb3
 		$settings['dbname']			= array( 'inputC' );
 		$settings['table_prefix']	= array( 'inputC' );
 
-		$s = array( 'group', 'group_exp', 'groups_exclude' );
+		$s = array( 'group', 'remove_group', 'group_exp', 'remove_group_exp', 'groups_exclude' );
 
 		foreach ( $s as $si ) {
 			$v = null;
@@ -312,11 +312,11 @@ class mi_phpbb3
 	{
 		$query = 'SELECT `user_id`'
 				. ' FROM ' . $this->settings['table_prefix'] . 'users'
-				. ' WHERE LOWER( `user_email` ) = \'' . $email . '\''
+				. ' WHERE LOWER( `user_email` ) = \'' . strtolower( $email ) . '\''
 				;
 		$db->setQuery( $query );
 
-		return $db->loadResult();
+		$id = $db->loadResult();
 	}
 
 	function createUser( $db, $fields )
