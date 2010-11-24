@@ -954,7 +954,7 @@ define( '_CFG_HSBC_2ND_CHECKOUT_INFO', 'This page should forward you to your own
 // Desjardins
 define( '_CFG_DESJARDINS_LONGNAME','Desjardins');
 define( '_CFG_DESJARDINS_STATEMENT','Desjardins');
-define( '_CFG_DESJARDINS_DESCRIPTION','Desjardins Credit Card Processing');
+define( '_CFG_DESJARDINS_DESCRIPTION','Procession de transaction par Desjardins');
 define( '_CFG_DESJARDINS_CUSTID_NAME', 'Customer ID');
 define( '_CFG_DESJARDINS_CUSTID_DESC', 'Your Customer ID.');
 define( '_CFG_DESJARDINS_AUTOREDIRECT_NAME', 'Autoredirect');

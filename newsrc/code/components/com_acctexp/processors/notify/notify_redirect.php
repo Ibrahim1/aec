@@ -3,9 +3,6 @@
 // harr harr harr
 $bsLoader = new bootstrapLoader();
 
-// Force redirection to AEC
-$_GET['option'] = 'com_acctexp';
-
 $original = file_get_contents("php://input");
 
 if ( empty( $original ) ) {
@@ -16,7 +13,22 @@ $post = array();
 
 // See whether we have some sneaky encoded request
 if ( !empty( $_GET['aec_request'] ) ) {
-	$decode = unserialize( base64_decode( $_GET['aec_request'] ) );
+	if ( strpos( $_GET['aec_request'], '_' ) !== false ) {
+		$data = explode( '_', urlencode( $bsLoader->clearVariable( $_GET['aec_request'] ) ) );
+
+		$pmap = array( 'djd' => 'desjardins' );
+
+		if ( in_array( $_GET['task'], $pmap ) ) {
+			$_GET['task'] = $pmap[$data[0]];
+		} else {
+			$_GET['task'] = $data[0];
+		}
+
+		$post['invoice_number'] = $data[1];
+		$post['status'] = $data[2];
+	} else {
+		$decode = unserialize( base64_decode( $_GET['aec_request'] ) );
+	}
 
 	if ( !empty( $decode['get'] ) ) {
 		foreach ( $decode['get'] as $k => $v ) {
@@ -30,6 +42,9 @@ if ( !empty( $_GET['aec_request'] ) ) {
 		}
 	}
 }
+
+// Force redirection to AEC
+$_GET['option'] = 'com_acctexp';
 
 // Get our GET and POST, but make sure there is no weird stuff going on in those variables.
 $get = null;

@@ -90,7 +90,7 @@ XML;
 
 		$return = JURI::root() . 'components/com_acctexp/processors/notify/notify_redirect.php';
 
-		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'response', 'invoice' => $request->invoice->invoice_number ) );
+		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'response', 'invoice_number' => $request->invoice->invoice_number ) );
 
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
@@ -103,7 +103,7 @@ XML;
 		$xml_step3_request .= '			  <url name="response">'."\n";
 		$xml_step3_request .= '			    <path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="aec_request">djd_' . $request->invoice->invoice_number . '_response</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="success">'."\n";
@@ -112,7 +112,7 @@ XML;
 		$request['post']['status'] = 'success';
 
 		$xml_step3_request .= '			    <parameters>'."\n";
-		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="aec_request">djd_' . $request->invoice->invoice_number . '_success</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="cancel">'."\n";
@@ -121,7 +121,7 @@ XML;
 
 		$request['post']['status'] = 'cancel';
 
-		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="aec_request">djd_' . $request->invoice->invoice_number . '_cancel</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="error">'."\n";
@@ -130,7 +130,7 @@ XML;
 
 		$request['post']['status'] = 'error';
 
-		$xml_step3_request .= '			      <parameter name="aec_request">' . base64_encode( serialize( $request ) ) . '</parameter>'."\n";
+		$xml_step3_request .= '			      <parameter name="aec_request">djd_' . $request->invoice->invoice_number . '_error</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			</urls>'."\n";
@@ -213,7 +213,7 @@ XML;
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice'] = $post['invoice'];
+		$response['invoice'] = $post['invoice_number'];
 
 		if ( empty( $response['invoice'] ) ) {
 			$response['invoice'] = aecGetParam( 'ResponseFile', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );

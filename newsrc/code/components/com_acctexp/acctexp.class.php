@@ -9600,11 +9600,11 @@ class InvoiceFactory
 				$this->userdetails = "";
 
 				if ( !empty( $this->metaUser->cmsUser->name ) ) {
-					$this->userdetails .= '<p>' . _CONFIRM_ROW_NAME . $this->metaUser->cmsUser->name . '</p>';
+					$this->userdetails .= '<p>' . _CONFIRM_ROW_NAME . "&nbsp;" . $this->metaUser->cmsUser->name . '</p>';
 				}
 
-				$this->userdetails .= '<p>' . _CONFIRM_ROW_USERNAME . $this->metaUser->cmsUser->username . '</p>';
-				$this->userdetails .= '<p>' . _CONFIRM_ROW_EMAIL . $this->metaUser->cmsUser->email . '</p>';
+				$this->userdetails .= '<p>' . _CONFIRM_ROW_USERNAME . "&nbsp;" . $this->metaUser->cmsUser->username . '</p>';
+				$this->userdetails .= '<p>' . _CONFIRM_ROW_EMAIL . "&nbsp;" . $this->metaUser->cmsUser->email . '</p>';
 			} else {
 				$this->userdetails = AECToolbox::rewriteEngineRQ( $custom, $this );
 			}
