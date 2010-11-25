@@ -3,7 +3,7 @@
 AEC micro-integration plugin
 for Frontend-User-Access
 connects subscription plans to Frontend-User-Access-usergroups
-version 2.0.0
+version 2.0.1
 */
 
 
@@ -61,7 +61,6 @@ class mi_frontenduseraccess
 			$this->settings['group_exp'] = array();
 		}
 
-		$settings = array();
 
 		if ( !empty( $this->settings['group'] ) ) {
 			$fua_groups = array();
@@ -82,6 +81,8 @@ class mi_frontenduseraccess
 		} else {
 			$fua_groups_exp	= '';
 		}
+
+		$settings = array();
 
 		$settings['lists']['group']		= JHTML::_('select.genericlist', $fuagroups, 'group[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups );
 		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $fuagroups, 'group_exp[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp );
@@ -121,11 +122,24 @@ class mi_frontenduseraccess
 		sort( $fua_group );
 
 		$fua_group = $this->array_to_csv( $fua_group );
-		
-		$query = 'UPDATE #__fua_userindex'
-				. ' SET `group_id` = \'' . $fua_group . '\''
-				. ' WHERE `user_id` = \'' . $user_id . '\''
+
+		$query = 'SELECT user_id'
+				. ' FROM #__fua_userindex'
+				. ' WHERE user_id = \'' . $user_id . '\' '			
 				;
+		$db->setQuery( $query );
+
+		if ( !$db->loadResult() ) {		
+			$query = "INSERT INTO #__fua_userindex "
+					." SET group_id='$fua_group', user_id='$user_id' "			
+					;
+		} else {	
+			$query = 'UPDATE #__fua_userindex'
+					. ' SET `group_id` = \'' . $fua_group . '\''
+					. ' WHERE `user_id` = \'' . $user_id . '\''
+					;
+		}
+
 		$db->setQuery( $query );
 		$db->query();
 	}
