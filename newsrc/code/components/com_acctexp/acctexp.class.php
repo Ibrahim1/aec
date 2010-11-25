@@ -8789,7 +8789,7 @@ class InvoiceFactory
 			if ( strpos( $dn, 'cartitem_' ) !== false ) {
 				$n = str_replace( 'cartitem_', '', $dn );
 
-				$update[$n] = aecGetParam( $n, 0, true, array( 'word', 'int' ) );
+				$update[$n] = aecGetParam( $dn, 0, true, array( 'word', 'int' ) );
 			}
 		}
 
@@ -9857,7 +9857,7 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
-			aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ), true, true ) );
+			aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ) . '&'. JUtility::getToken() .'=1', true, true ) );
 			exit();
 		}
 

@@ -175,7 +175,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'clearcart':
-			JRequest::checkToken() or die( 'Invalid Token' );
+			JRequest::checkToken( 'get' ) or die( 'Invalid Token' );
 
 			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
@@ -195,7 +195,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'clearcartitem':
-			JRequest::checkToken() or die( 'Invalid Token' );
+			JRequest::checkToken( 'get' ) or die( 'Invalid Token' );
 
 			$item		= aecGetParam( 'item', 0, true, array( 'word', 'int' ) );
 

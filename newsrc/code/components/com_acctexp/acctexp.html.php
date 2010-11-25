@@ -1780,7 +1780,7 @@ class Payment_HTML
 			$actions =	_CHECKOUT_ERROR_OPENINVOICE
 			. ' <a href="'
 			.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
-			. $invoice . '&amp;userid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
+			. $invoice . '&amp;userid=' . $objUser->id ) . '&'. JUtility::getToken() .'=1" title="' . _GOTO_CHECKOUT . '">'
 			. _GOTO_CHECKOUT
 			. '</a>'
 			. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
