@@ -395,8 +395,8 @@ class mi_phpbb3
 	function assignGroup( $db, $userid, $groupid )
 	{
 		$query = 'INSERT INTO ' . $this->settings['table_prefix'] . 'user_group'
-				. ' (`user_id`, `group_id` )'
-				. ' VALUES ( \'' . $userid . '\', \'' . $groupid . '\' )'
+				. ' (`user_id`, `group_id`, `user_pending` )'
+				. ' VALUES ( \'' . $userid . '\', \'' . $groupid . '\', 0 )'
 				;
 		$db->setQuery( $query );
 
