@@ -22,7 +22,7 @@ class processor_ideal_basic extends POSTprocessor
 		$info['description']			= _CFG_IDEAL_BASIC_DESCRIPTION;
 		$info['currencies']				= 'EUR';
 		$info['languages']				= 'NL';
-		$info['cc_list']				= 'rabobank,ing';
+		$info['cc_list']				= '';
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;
 
@@ -32,7 +32,7 @@ class processor_ideal_basic extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['merchantid']		= "merchantid";
+		$settings['merchantid']		= "123456789";
 		$settings['testmode']		= 0;
 		$settings['currency']		= 'EUR';
 		$settings['testmodestage']	= 1;
@@ -49,8 +49,6 @@ class processor_ideal_basic extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['aec_experimental']	= array( "p" );
-		$settings['aec_insecure']		= array( "p" );
 		$settings['merchantid']			= array( 'inputC' );
 		$settings['testmode']			= array( 'list_yesno' );
 		$settings['currency']			= array( 'list_currency' );
@@ -93,9 +91,11 @@ class processor_ideal_basic extends POSTprocessor
 
 		$var['merchantID']			= $this->settings['merchantid'];
 		$var['subID']				= $this->settings['subid'];
-		$var['purchaseID']			= substr( $request->invoice->invoice_number, 1 );
+		$var['purchaseID']			= (int) $request->invoice->id;
 
 		if ( $this->settings['testmode'] ) {
+			$var['post_url']		= "https://" . $sub . ".rabobank.nl/ideal/mpiPayInitRabo.do";
+
 			$var['amount']			= max( 1, min( 7, (int) $this->settings['testmodestage'] ) ) . '00';
 		} else {
 			$var['amount']			= (int) $request->int_var['amount'] * 100;
@@ -139,27 +139,16 @@ class processor_ideal_basic extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice'] = 'I'.$_GET['ideal']['order'];
+		$response['valid'] = 0;
+
+		$response['null'] = true;
+		$response['error'] = "Ideal Basic does not support automatic payment notification. Please clear invoice in user profile after checking for new payments.";
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$response['valid'] = 0;
-		if ( !isset( $_GET['ideal']['status'] ) ) {
-			return $response;
-		}
-
-		switch ( strtolower( $_GET['ideal']['status'] ) ) {
-			case 'success':
-				$response['valid'] = 1;
-				break;
-			case 'error':
-				$response['error'] = $_GET['ideal'];
-				break;
-		}
-
 		return $response;
 	}
 

@@ -1553,7 +1553,11 @@ function processNotification( $option, $processor )
 		$eventlog = new eventLog( $db );
 
 		if ( isset( $response['null'] ) ) {
-			$eventlog->issue( $short, $tags, $event, 8, $params );
+			if ( isset( $response['error'] ) ) {
+				$eventlog->issue( $short, $tags, $response['error'], 128, $params );
+			} else {
+				$eventlog->issue( $short, $tags, $event, 8, $params );
+			}
 		} else {
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 
