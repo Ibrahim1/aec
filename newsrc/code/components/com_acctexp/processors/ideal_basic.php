@@ -71,7 +71,7 @@ class processor_ideal_basic extends POSTprocessor
 		}
 
 		$settings['lists']['bank']	= JHTML::_( 'select.genericlist', $banks, 'bank', 'size="2"', 'value', 'text', $ba );
-
+print_r($this);print_r($settings);exit;
 		return $settings;
 	}
 
