@@ -15146,7 +15146,7 @@ class AECToolbox
 
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to save the user
-			if ( $internal && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( /*$internal &&*/ !GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				include_once( JPATH_SITE . '/components/com_acctexp/lib/codeofshame/cbregister.php' );
 
 				if ( empty( $_POST['firstname'] ) && !empty( $_POST['name'] ) ) {
