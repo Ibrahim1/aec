@@ -2403,8 +2403,11 @@ function editProcessor( $id, $option )
 
 		if ( isset( $settings_array['lists'] ) ) {
 			foreach ( $settings_array['lists'] as $lname => $lvalue ) {
-				$lists[$pp->processor_name . '_' . $lname] = $lvalue;
+				$list_name = $pp->processor_name . '_' . $lname;
+
+				$lists[$list_name] = str_replace( 'name="' . $lname . '"', 'name="' . $list_name . '"', $lvalue );
 			}
+
 			unset( $settings_array['lists'] );
 		}
 
