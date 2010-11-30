@@ -26,13 +26,19 @@ class mi_kunena extends MI
 	{
 		$settings = array();
 
-		if ( !@include_once( rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_kunena' . DS . 'lib' . DS . 'kunena.user.class.php' ) ) {
+		if ( $this->is16() ) {
+			$checkpath = rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_kunena' . DS . 'libraries' . DS . 'tables' . DS . 'kunenauser.php';
+		} else {
+			$checkpath = rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_kunena' . DS . 'lib' . DS . 'kunena.user.class.php';
+		}
+
+		if ( !@include_once( $checkpath ) ) {
 			echo 'This module can not work without the Kunena Forum Component';
 			return $settings;
 		}
 
 		$db = &JFactory::getDBO();
-		$db->setQuery( 'SELECT * FROM #__fb_ranks' );
+		$db->setQuery( 'SELECT * FROM #__' . $this->dbTable() . '_ranks WHERE `rank_special` = 1 ' );
 
 		$ranks = $db->loadObjectList();
 
@@ -63,6 +69,32 @@ class mi_kunena extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
+	function is16()
+	{
+		static $is;
+
+		if ( is_null( $is ) ) {
+			$app = JFactory::getApplication();
+
+			$db = &JFactory::getDBO();
+
+			$tables = $db->getTableList();
+
+			return in_array( $app->getCfg( 'dbprefix' ) . "kunena_ranks", $tables );
+		} else {
+			return $is;
+		}
+	}
+
+	function dbTable()
+	{
+		if ( $this->is16() ) {
+			return 'kunena';
+		} else {
+			return 'fb';
+		}
+	}
+
 	function relayAction( $request )
 	{
 		if ( !empty( $this->settings['rank' . $request->area] ) || !empty( $this->settings['unrank' . $request->area] ) ) {
@@ -74,16 +106,17 @@ class mi_kunena extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT `userid`, `group_id`'
-				. ' FROM #__fb_users'
+		$query = 'SELECT `userid`, `rank`'
+				. ' FROM #__' . $this->dbTable() . '_users'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				;
+
 		$db->setQuery( $query );
 
 		$kuser = $db->loadObject();
 
-		if ( isset( $kuser->group_id ) ) {
-			$rank = $kuser->group_id;
+		if ( isset( $kuser->rank ) ) {
+			$rank = $kuser->rank;
 		} else {
 			$rank = 0;
 		}
@@ -103,21 +136,19 @@ class mi_kunena extends MI
 			}
 		}
 
-		if ( !isset( $rank ) && !empty( $add ) ) {
-			$rank = $add;
-		} else {
-			// Nothing to do
-			return null;
-		}
+		if ( is_null($kuser) && !empty( $add ) ) {
+			$newrank = $add;
+		} 
+
 
 		if ( $kuser->userid ) {
-			$query = 'UPDATE #__fb_users'
-					. ' SET `group_id` = \'' . $newrank . '\''
+			$query = 'UPDATE #__' . $this->dbTable() . '_users'
+					. ' SET `rank` = \'' . $newrank . '\''
 					. ' WHERE `userid` = \'' . $userid . '\''
 					;
 		} else {
-			$query = 'INSERT INTO #__fb_users'
-					. ' ( `group_id` , `userid` )'
+			$query = 'INSERT INTO #__' . $this->dbTable() . '_users'
+					. ' ( `rank` , `userid` )'
 					. ' VALUES (\'' . $newrank . '\', \'' . $userid . '\')'
 					;
 		}
