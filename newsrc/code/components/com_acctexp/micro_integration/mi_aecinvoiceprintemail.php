@@ -90,6 +90,12 @@ class mi_aecinvoiceprintemail
 			}
 		}
 
+		if ( $request->invoice->transaction_date == '0000-00-00 00:00:00' ) {
+			$app = JFactory::getApplication();
+
+			$request->invoice->transaction_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		}
+
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $request->area], $request );
 
 		if ( !empty( $this->settings['customcss'] ) ) {
