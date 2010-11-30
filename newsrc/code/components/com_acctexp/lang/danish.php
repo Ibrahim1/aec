@@ -26,7 +26,7 @@ define( '_AEC_EXPIRE_TRIAL_FUTURE',			'Pr&oslash;vetiden er aktiv indtil' );
 define( '_AEC_EXPIRE_TRIAL_PAST',			'Pr&oslash;vetiden var aktiv indtil' );
 
 define( '_AEC_EXPIRE_NOT_SET',				'Ikke sat' );
-define( '_AEC_GEN_ERROR',					'<h1>Generel Fejl</h1><p>Vi har problemer med din betaling. Kontakt venligst sidens administrator.</p>' );
+define( '_AEC_GEN_ERROR',					'<h1>Generel fejl</h1><p>Vi har problemer med din betaling. Kontakt venligst sidens administrator.</p>' );
 
 // payments
 define( '_AEC_PAYM_METHOD_FREE',			'Gratis' );
@@ -34,7 +34,7 @@ define( '_AEC_PAYM_METHOD_NONE',			'Ingen' );
 define( '_AEC_PAYM_METHOD_TRANSFER',		'Overf&oslash;r' );
 
 // processor errors
-define( '_AEC_MSG_PROC_INVOICE_FAILED_SH',			'Fraktura betalings fejl' );
+define( '_AEC_MSG_PROC_INVOICE_FAILED_SH',			'Fejl ved betaling af faktura' );
 define( '_AEC_MSG_PROC_INVOICE_FAILED_EV',			'Proces %s bem&aelig;rkning for %s har fejlet - fakturanummeret eksisterer ikke:' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_SH',			'Faktura betaling' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV',			'Betalings informations process bem&aelig;rkning:' );
@@ -45,25 +45,25 @@ define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID',	'Betaling korrekt, handlingen u
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL',	'Betaling korrekt, software fejl!' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL',	'Betaling korrekt - gratis pr&oslash;ve' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND',		'Betaling forkert - status er under opdatering pga: %s' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Ingen betaling - Abonnoment annulleret' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL',	'Ingen betaling - Abonnement annulleret' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK',	'Ingen betaling - tilbagef&oslash;rsel' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE',	'Ingen betaling - tilbagef&oslash;rsels aftale' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS',	', Bruger status er opdateret til \'Annuleret\'' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD',	', Bruger status er opdateret til \'Stoppet\'' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE',	', Bruger status er opdateret til \'Aktiv\'' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Ingen betaling - Abonnoment udl&oslash;bet' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT',		'Ingen betaling - Abonnement udl&oslash;bet' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE','Ingen betaling - Duplet' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL','Ingen betaling - Nul' );
 define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR',	'Ukendt fejl' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'Ingen betaling - Abonnoment slettet (refund)' );
-define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', Bruger er blevet udl&oslash;bet' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND',	'Ingen betaling - Abonnement slettet (refundering)' );
+define( '_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED',	', Brugerabonnement er udl&oslash;bet' );
 
 // end mic ########################################################
 
 // --== PAYMENT PLANS PAGE ==--
-define( '_PAYPLANS_HEADER', 'Betalings muligheder');
-define( '_NOPLANS_ERROR', 'Ingen betalingsmuligheder tilg&aelig;ngelige. Kontakt venligst administrator.');
-define( '_NOPLANS_AUTHERROR', 'Du har ikke adgang til dette. Kontakt venligst sidens administrator hvis du har yderligere sp&oslash;rgsm&aring;l.');
+define( '_PAYPLANS_HEADER', 'Betalingsmuligheder');
+define( '_NOPLANS_ERROR', 'Der er ingen tilgængelige betalingsmuligheder. Kontakt venligst administrator.');
+define( '_NOPLANS_AUTHERROR', 'Du har ikke adgang til dette. Kontakt venligst sidens administrator, hvis du har yderligere sp&oslash;rgsm&aring;l.');
 define( '_PLANGROUP_BACK', '&lt; G&aring; tilbage');
 
 // --== ACCOUNT DETAILS PAGE ==--
@@ -71,7 +71,7 @@ define( '_CHK_USERNAME_AVAIL', "Brugernavnet %s er ledigt");
 define( '_CHK_USERNAME_NOTAVAIL', "Brugernavnet %s er desv&aelig;rre optaget!");
 
 // --== MY SUBSCRIPTION PAGE ==--
-define( '_MYSUBSCRIPTION_TITLE', 'Mit abonnoment');
+define( '_MYSUBSCRIPTION_TITLE', 'Mit abonnement');
 define( '_MEMBER_SINCE', 'Medlem siden');
 define( '_HISTORY_COL1_TITLE', 'Faktura');
 define( '_HISTORY_COL2_TITLE', 'Bel&oslash;b');
@@ -80,58 +80,58 @@ define( '_HISTORY_COL4_TITLE', 'Metode');
 define( '_HISTORY_COL5_TITLE', 'Handling');
 define( '_HISTORY_COL6_TITLE', 'Plan');
 define( '_HISTORY_ACTION_REPEAT', 'betal');
-define( '_HISTORY_ACTION_CANCEL', 'annuler');
-define( '_RENEW_LIFETIME', 'Du har et livstids abonnoment.');
-define( '_RENEW_DAYSLEFT_EXCLUDED', 'Dit abonnoment har ingen udl&oslash;bsdato');
+define( '_HISTORY_ACTION_CANCEL', 'annuller');
+define( '_RENEW_LIFETIME', 'Du har et livstids-abonnement.');
+define( '_RENEW_DAYSLEFT_EXCLUDED', 'Dit abonnement har ingen udl&oslash;bsdato');
 define( '_RENEW_DAYSLEFT_INFINITE', '&#8734');
 define( '_RENEW_DAYSLEFT', 'Dage tilbage');
 define( '_RENEW_DAYSLEFT_TRIAL', 'Dage tilbage af pr&oslash;vetiden');
-define( '_RENEW_INFO', 'Du bruger gentagende betalinger.');
+define( '_RENEW_INFO', 'Du bruger gentagne betalinger.');
 define( '_RENEW_OFFLINE', 'Forny');
 define( '_RENEW_BUTTON_UPGRADE', 'Opgrader/Forny');
 define( '_PAYMENT_PENDING_REASON_ECHECK', 'echeck uafklaret (1-4 forretnings dage)');
 define( '_PAYMENT_PENDING_REASON_TRANSFER', 'afventer betaling');
-define( '_YOUR_SUBSCRIPTION', 'Dit abonnoment');
-define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Fremtidig Medlemsskab');
-define( '_PLAN_PROCESSOR_ACTIONS', 'For dette, har du flg. muligheder');
+define( '_YOUR_SUBSCRIPTION', 'Dit abonnement');
+define( '_YOUR_FURTHER_SUBSCRIPTIONS', 'Fremtidigt medlemsskab');
+define( '_PLAN_PROCESSOR_ACTIONS', 'For dette har du flg. muligheder');
 define( '_AEC_SUBDETAILS_TAB_OVERVIEW', 'Oversigt');
 define( '_AEC_SUBDETAILS_TAB_INVOICES', 'Faktura');
 define( '_AEC_SUBDETAILS_TAB_DETAILS', 'Detaljer');
 
 define( '_HISTORY_ACTION_PRINT', 'print');
-define( '_INVOICEPRINT_DATE', 'Date');
+define( '_INVOICEPRINT_DATE', 'Dato');
 define( '_INVOICEPRINT_ID', 'ID');
-define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Reference Number');
-define( '_INVOICEPRINT_ITEM_NAME', 'Item Name');
-define( '_INVOICEPRINT_UNIT_PRICE', 'Unit Price');
-define( '_INVOICEPRINT_QUANTITY', 'Quantity');
+define( '_INVOICEPRINT_REFERENCE_NUMBER', 'Reference-nummer');
+define( '_INVOICEPRINT_ITEM_NAME', 'Abonnements-navn');
+define( '_INVOICEPRINT_UNIT_PRICE', 'Pris');
+define( '_INVOICEPRINT_QUANTITY', 'Antal');
 define( '_INVOICEPRINT_TOTAL', 'Total');
-define( '_INVOICEPRINT_GRAND_TOTAL', 'Grand Total');
+define( '_INVOICEPRINT_GRAND_TOTAL', 'Samlet total');
 
-define( '_INVOICEPRINT_ADDRESSFIELD', 'Enter your Address here - it will then show on the printout.');
+define( '_INVOICEPRINT_ADDRESSFIELD', 'Skriv din adresse her - det vil blive vist på printet.');
 define( '_INVOICEPRINT_PRINT', 'Print');
-define( '_INVOICEPRINT_BLOCKNOTICE', 'This block (including the text field and print button) will not show on your printout.');
-define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Please type your address into the field above.');
-define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>This invoice has not been paid yet.</strong>');
-define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'This invoice has been paid on: %s');
-define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');
+define( '_INVOICEPRINT_BLOCKNOTICE', 'Denne blok (inklusiv tekstfeltet og print-knappen) bliver ikke vist på printet.');
+define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Indtast venligst din adresse i feltet ovenfor.');
+define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>Denne faktura er ikke betalt endnu.</strong>');
+define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Fakturaen er betalt d.: %s');
+define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'Abonnementet faktureres løbende. Fakturabeløbet dækker muligvis den næste fakturering, og ikke den, der blev betalt sidst. Listen over betalingsdatoer ovenfor viser hvilke beløb, der er betalt hvornår.');
 
-define( '_AEC_YOUSURE', 'Are you sure?');
+define( '_AEC_YOUSURE', 'Er du sikker?');
 
-define( '_AEC_WILLEXPIRE', 'This membership will expire');
-define( '_AEC_WILLRENEW', 'This membership will renew');
-define( '_AEC_ISLIFETIME', 'Lifetime Membership');
+define( '_AEC_WILLEXPIRE', 'Dette medlemsskab udløber');
+define( '_AEC_WILLRENEW', 'Dette medlemsskab bliver fornyet');
+define( '_AEC_ISLIFETIME', 'Livslangt medlemsskab');
 
 // --== EXPIRATION PAGE ==--
 define( '_EXPIRE_INFO', 'Din konto er aktiv indtil');
 define( '_RENEW_BUTTON', 'Forny nu');
-define( '_RENEW_BUTTON_CONTINUE', 'Forl&aelig;ng tidl. medlemsskab');
+define( '_RENEW_BUTTON_CONTINUE', 'Forl&aelig;ng tidligere medlemsskab');
 define( '_ACCT_DATE_FORMAT', '%d-%m-%Y');
 define( '_EXPIRED', 'Dit medlemsskab udl&oslash;b: ');
 define( '_EXPIRED_TRIAL', 'Din pr&oslash;ve periode udl&oslash;b: ');
 define( '_ERRTIMESTAMP', 'Kan ikke konvertere tidspunkt.');
 define( '_EXPIRED_TITLE', 'Medlemsskab udl&oslash;bet!');
-define( '_DEAR', 'Dear %s');
+define( '_DEAR', 'Hej %s');
 
 // --== CONFIRMATION FORM ==--
 define( '_CONFIRM_TITLE', 'Bekr&aelig;ft');
@@ -141,34 +141,34 @@ define( '_CONFIRM_COL3_TITLE', 'Bel&oslash;b');
 define( '_CONFIRM_ROW_NAME', 'Navn: ');
 define( '_CONFIRM_ROW_USERNAME', 'Brugernavn: ');
 define( '_CONFIRM_ROW_EMAIL', 'E-mail:');
-define( '_CONFIRM_INFO', 'Brug venligst fors&aelig;t knappen, for at f&aelig;rdigg&oslash;re deres registrering.');
+define( '_CONFIRM_INFO', 'Klik på Fors&aelig;t for at f&aelig;rdigg&oslash;re din registrering.');
 define( '_BUTTON_CONFIRM', 'Fors&aelig;t');
-define( '_CONFIRM_TOS', "Jeg har l&aelig;st og accepterer <a href=\"%s\" target=\"_blank\" title=\"ToS\">Terms of Service</a>");
-define( '_CONFIRM_TOS_IFRAME', "Jeg har l&aelig;st og accepterer Terms of Service (som vist ovenfor)");
-define( '_CONFIRM_TOS_ERROR', 'Jeg har l&aelig;st og accepterer Terms of Service');
-define( '_CONFIRM_COUPON_INFO', 'Hvis du har en kupon kode, kan du indtaste den p&aring; tjek ud síden for at f&aring; rabat p&aring; din betaling');
-define( '_CONFIRM_COUPON_INFO_BOTH', 'Hvis du har en kupon kode, kan ud indtaste den her, eller p&aring; tjek ud siden for at f&aring; rabat p&aring; din betaling');
+define( '_CONFIRM_TOS', "Jeg har l&aelig;st og accepterer <a href=\"%s\" target=\"_blank\" title=\"ToS\">Betingelser for brug</a>");
+define( '_CONFIRM_TOS_IFRAME', "Jeg har l&aelig;st og accepterer Betingelser for brug (som vist ovenfor)");
+define( '_CONFIRM_TOS_ERROR', 'Jeg har l&aelig;st og accepterer Betingelser for brug');
+define( '_CONFIRM_COUPON_INFO', 'Hvis du har en rabatkode, kan du indtaste den undervejs for at f&aring; rabat p&aring; din betaling');
+define( '_CONFIRM_COUPON_INFO_BOTH', 'Hvis du har en rabatkode, kan du indtaste den her eller senere i processen for at f&aring; rabat p&aring; din betaling');
 define( '_CONFIRM_FREETRIAL', 'Gratis pr&oslash;veperiode');
-define( '_CONFIRM_YOU_HAVE_SELECTED', 'You have selected');
+define( '_CONFIRM_YOU_HAVE_SELECTED', 'Du har valgt');
 
-define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Want to change the user details?');
-define( '_CONFIRM_DIFFERENT_ITEM', 'Wanted to select a different item?');
+define( '_CONFIRM_DIFFERENT_USER_DETAILS', 'Vil du ændre brugeroplysningerne?');
+define( '_CONFIRM_DIFFERENT_ITEM', 'Ville du vælge et andet abonnement?');
 
 // --== SHOPPING CART FORM ==--
-define( '_CART_TITLE', 'Shopping Cart');
+define( '_CART_TITLE', 'Indkøbskurv');
 define( '_CART_ROW_TOTAL', 'Total');
-define( '_CART_INFO', 'Please use the Continue-Button below to complete your purchase.');
-define( '_CART_CLEAR_ALL', 'clear the whole cart');
-define( '_CART_DELETE_ITEM', 'remove');
+define( '_CART_INFO', 'Klik på Fortsæt nedenfor for at gennemføre købet.');
+define( '_CART_CLEAR_ALL', 'Tøm kurven');
+define( '_CART_DELETE_ITEM', 'fjern');
 
 // --== EXCEPTION FORM ==--
-define( '_EXCEPTION_TITLE', 'Additional Information Required');
-define( '_EXCEPTION_TITLE_NOFORM', 'Please note:');
-define( '_EXCEPTION_INFO', 'To proceed with your checkout, we need you to provide additional information as specified below:');
+define( '_EXCEPTION_TITLE', 'Yderligere information påkrævet');
+define( '_EXCEPTION_TITLE_NOFORM', 'Vær opmærksom på:');
+define( '_EXCEPTION_INFO', 'For at gennemføre købet har vi brug for yderligere oplysninger som specificeret nedenfor:');
 
 // --== PROMPT PASSWORD FORM ==--
-define( '_AEC_PROMPT_PASSWORD', 'For sikkerhedsgrunde skal du indtaste dit kodeord for at fors&aelig;tte.');
-define( '_AEC_PROMPT_PASSWORD_WRONG', 'Det indtastede kodeord passer ikke det det vi har registreret tilh&oslash;rende din konto. Pr&oslash;v venligst igen.');
+define( '_AEC_PROMPT_PASSWORD', 'Af sikkerhedsgrunde skal du indtaste dit kodeord for at fors&aelig;tte.');
+define( '_AEC_PROMPT_PASSWORD_WRONG', 'Det indtastede kodeord passer ikke til det, vi har registreret tilh&oslash;rende din konto. Pr&oslash;v venligst igen.');
 define( '_AEC_PROMPT_PASSWORD_BUTTON', 'Forts&aelig;t');
 
 // --== CHECKOUT FORM ==--
@@ -180,25 +180,25 @@ define( '_BUTTON_APPEND', 'Tilf&oslash;j');
 define( '_BUTTON_APPLY', 'Tilf&oslash;j');
 define( '_BUTTON_EDIT', 'Ret');
 define( '_BUTTON_SELECT', 'v&aelig;lg');
-define( '_CHECKOUT_COUPON_CODE', 'Kupon kode');
-define( '_CHECKOUT_INVOICE_AMOUNT', 'Faktura bel&oslash;b');
-define( '_CHECKOUT_INVOICE_COUPON', 'Kupon');
+define( '_CHECKOUT_COUPON_CODE', 'Rabatkode');
+define( '_CHECKOUT_INVOICE_AMOUNT', 'Fakturabel&oslash;b');
+define( '_CHECKOUT_INVOICE_COUPON', 'Rabatkode');
 define( '_CHECKOUT_INVOICE_COUPON_REMOVE', 'fjern');
-define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Total Bel&oslash;b');
-define( '_CHECKOUT_COUPON_INFO', 'Hvis du har en kupon kode, kan du skrive den her, for at f&aring; rabat p&aring; din betaling');
-define( '_CHECKOUT_GIFT_HEAD', 'Gift to another user');
-define( '_CHECKOUT_GIFT_INFO', 'Enter details for another user of this site to give the item(s) you are about to purchase to that account.');
+define( '_CHECKOUT_INVOICE_TOTAL_AMOUNT', 'Totalbel&oslash;b');
+define( '_CHECKOUT_COUPON_INFO', 'Hvis du har en rabatkode, kan du skrive den her for at f&aring; rabat p&aring; din betaling');
+define( '_CHECKOUT_GIFT_HEAD', 'Gave til en anden bruger');
+define( '_CHECKOUT_GIFT_INFO', 'Indtast oplysningerne på en anden bruger på sitet for at give den/de vare(r), du er ved at købe, til den bruger.');
 
-define( '_AEC_TERMTYPE_TRIAL', 'Start regning');
-define( '_AEC_TERMTYPE_TERM', 'Normale betalings betingelser');
-define( '_AEC_CHECKOUT_TERM', 'Betalings betingelser');
+define( '_AEC_TERMTYPE_TRIAL', 'Første betaling');
+define( '_AEC_TERMTYPE_TERM', 'Normal pris');
+define( '_AEC_CHECKOUT_TERM', 'Pris');
 define( '_AEC_CHECKOUT_NOTAPPLICABLE', 'kan ikke anvendes');
-define( '_AEC_CHECKOUT_FUTURETERM', 'fremtidig term');
+define( '_AEC_CHECKOUT_FUTURETERM', 'fremtidig pris');
 define( '_AEC_CHECKOUT_COST', 'Pris');
-define( '_AEC_CHECKOUT_TAX', 'Tax');
+define( '_AEC_CHECKOUT_TAX', 'Moms');
 define( '_AEC_CHECKOUT_DISCOUNT', 'Rabat');
 define( '_AEC_CHECKOUT_TOTAL', 'Total');
-define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Grand Total');
+define( '_AEC_CHECKOUT_GRAND_TOTAL', 'Samlet pris');
 define( '_AEC_CHECKOUT_DURATION', 'Varighed');
 
 define( '_AEC_CHECKOUT_DUR_LIFETIME', 'Livstid');
@@ -221,93 +221,93 @@ define( '_RECODE','Saisir de nouveau le code Allopass');
 // --== REGISTRATION STEPS ==--
 define( '_STEP_DATA', 'Dine data');
 define( '_STEP_CONFIRM', 'Bekr&aelig;ft');
-define( '_STEP_PLAN', 'V&aelig;lg abonnoment');
+define( '_STEP_PLAN', 'V&aelig;lg abonnement');
 define( '_STEP_EXPIRED', 'Udl&oslash;bet!');
 
 // --== NOT ALLOWED PAGE ==--
 define( '_NOT_ALLOWED_HEADLINE', 'Medlemsskab p&aring;kr&aelig;vet!');
-define( '_NOT_ALLOWED_FIRSTPAR', 'Indholdet som du pr&oslash;ver at f&aring; adgnag til, er kun tilg&aelig;ngeligt for medlemmer. Hvis du allerede er medlem, skal du logge p&aring;. F&oslash;lg dette link hvis du vil blive medlem: ');
+define( '_NOT_ALLOWED_FIRSTPAR', 'Det indhold, du pr&oslash;ver at f&aring; adgang til, er kun tilg&aelig;ngeligt for medlemmer. Hvis du allerede er medlem, skal du logge p&aring;. F&oslash;lg dette link hvis du vil blive medlem: ');
 define( '_NOT_ALLOWED_REGISTERLINK', 'Registeringsside');
-define( '_NOT_ALLOWED_FIRSTPAR_LOGGED', 'Indholdet som du pr&oslash;ve at se, er kun tilg&aelig;ngeligt for medlemmer med et s&aelig;rligt abonnoment. F&oslash;lg vejligst dette link for at &aelig;ndre deres abonnoment: ');
-define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Abonnoments side');
-define( '_NOT_ALLOWED_SECONDPAR', 'Du vil blive medlem p&aring; mindre end et minut - we bruger denne service:');
+define( '_NOT_ALLOWED_FIRSTPAR_LOGGED', 'Det indhold, du pr&oslash;ve at se, er kun tilg&aelig;ngeligt for medlemmer med et s&aelig;rligt abonnement. F&oslash;lg venligst dette link for at &aelig;ndre dit abonnement: ');
+define( '_NOT_ALLOWED_REGISTERLINK_LOGGED', 'Abonnements-side');
+define( '_NOT_ALLOWED_SECONDPAR', 'Du kan blive medlem p&aring; mindre end et minut - vi bruger denne service:');
 
 // --== CANCELLED PAGE ==--
-define( '_CANCEL_TITLE', 'Abonnoments resultat: Annuleret!');
-define( '_CANCEL_MSG', 'Vores system har modtaget den besked, at du &oslash;nsker at stoppe din betaling. Hvis det er grundet problemer du har oplevet p&aring; vores side, t&oslash;v da ikke med at kontakt os!');
+define( '_CANCEL_TITLE', 'Abonnements resultat: Annulleret!');
+define( '_CANCEL_MSG', 'Vi har fået besked om, at du &oslash;nsker at stoppe din betaling. Hvis det er grundet problemer du har oplevet p&aring; vores side, vil vi bede dig om at kontakte os, så vi kan få løst dem.');
 
 // --== PENDING PAGE ==--
 define( '_PENDING_TITLE', 'Konto under behandling');
-define( '_WARN_PENDING', 'Din konto er midlertidigt blevet suspenderet eller under opdatering. Hvis denne besked vises i mere end nogle tider og din betaling er bekr&aelig;ftet. Kontakt da sidens administrator.');
-define( '_PENDING_OPENINVOICE', 'Det ser ud som om du har en faktura i systemet der ikke er betalt - Hvis der er sket en fejl i processen, kan du f&aring; til tjek-ud siden og pr&oslash;ve igen:');
-define( '_GOTO_CHECKOUT', 'G&aring; til tjek-ud siden igen');
-define( '_GOTO_CHECKOUT_CANCEL', 'du kan annulere betalingen (du vil have mulighed for at komme til abonnoments siden igen):');
-define( '_PENDING_NOINVOICE', 'Det ser ud som om du har annuleret den eneste faktura tilbage p&aring; din konto. Brug venligst knappen neden under til at g&aring; til abonnoments oversigten igen:');
-define( '_PENDING_NOINVOICE_BUTTON', 'Abonnoments oversigt');
-define( '_PENDING_REASON_ECHECK', '(Iflg. vores information, vil du betale med echeck (eller ligende), s&aring; du m&aring; vente til betalingen er registreret - hvilket normalt tage 1-4 dage.');
-define( '_PENDING_REASON_WAITING_RESPONSE', '(Iflg. vores informationer, venter vi p&aring; godkendelse af betalingen. Du vil f&aring; besked n&aring;r dette sker. Vi beklager forsinkelsen)');
-define( '_PENDING_REASON_TRANSFER', '(Iflg. vores informationer, har du valgt at betale offline. Dette betyder desv&aelig;rre en lille forsinkelse til din betaling er registreret. Dette kan tage et par bankdage.)');
+define( '_WARN_PENDING', 'Din konto er midlertidigt blevet suspenderet eller er under opdatering. Hvis denne besked vises i mere end et par timer og din betaling er bekr&aelig;ftet, så kontakt os venligst.');
+define( '_PENDING_OPENINVOICE', 'Det ser ud som om du har en faktura i systemet der ikke er betalt - Hvis der er sket en fejl i processen, kan du gå til kassen og pr&oslash;ve igen:');
+define( '_GOTO_CHECKOUT', 'G&aring; til kassen igen');
+define( '_GOTO_CHECKOUT_CANCEL', 'du kan annullere betalingen (du får mulighed for at komme til abonnementssiden igen):');
+define( '_PENDING_NOINVOICE', 'Det ser ud som om du har annulleret den eneste faktura, der er tilbage p&aring; din konto. Brug venligst knappen nedenfor til at g&aring; til abonnementsoversigten igen:');
+define( '_PENDING_NOINVOICE_BUTTON', 'Abonnementsoversigt');
+define( '_PENDING_REASON_ECHECK', '(Eftersom du betaler med echeck (eller lignende), m&aring; du desværre vente til betalingen er registreret - hvilket normalt tager 1-4 dage.');
+define( '_PENDING_REASON_WAITING_RESPONSE', '(Iflg. vores informationer venter vi p&aring; godkendelse af betalingen. Du vil f&aring; besked n&aring;r dette sker. Vi beklager forsinkelsen)');
+define( '_PENDING_REASON_TRANSFER', '(Iflg. vores informationer har du valgt at betale offline. Dette betyder desv&aelig;rre en lille forsinkelse til din betaling er registreret. Dette kan tage et par bankdage.)');
 
 // --== HOLD PAGE ==--
 define( '_HOLD_TITLE', 'Din konto er sat i bero');
-define( '_HOLD_EXPLANATION', 'Din konto er sat i bero. Det er formenligt fordi der har v&aelig;ret et problem med batalingen. Hvis du ikke har modtaget en mail inden for de n&aelig;ste 24 timer, kontakt da siden administrator.');
+define( '_HOLD_EXPLANATION', 'Din konto er sat i bero. Det er formenligt fordi der har v&aelig;ret et problem med betalingen. Hvis du ikke har modtaget en mail inden for de n&aelig;ste 24 timer, så kontakt os venligst.');
 
 // --== THANK YOU PAGE ==--
 define( '_THANKYOU_TITLE', 'Tak!');
-define( '_SUB_FEPARTICLE_HEAD', 'Dit abonnoment er aktiveret!');
+define( '_SUB_FEPARTICLE_HEAD', 'Dit abonnement er aktiveret!');
 define( '_SUB_FEPARTICLE_HEAD_RENEW', 'Fornyelsen er aktiveret!');
 define( '_SUB_FEPARTICLE_LOGIN', 'Du kan nu logge ind.');
-define( '_SUB_FEPARTICLE_THANKS', 'Tak for din registering. ');
-define( '_SUB_FEPARTICLE_THANKSRENEW', 'Tak for at du ville fornye din registering. ');
-define( '_SUB_FEPARTICLE_PROCESS', 'Vores system vil nu bearbejdet din forsp&oslash;rgsel. ');
+define( '_SUB_FEPARTICLE_THANKS', 'Tak for din registrering. ');
+define( '_SUB_FEPARTICLE_THANKSRENEW', 'Tak for at du ville fornye din registrering. ');
+define( '_SUB_FEPARTICLE_PROCESS', 'Vores system vil nu bearbejde din forsp&oslash;rgsel. ');
 define( '_SUB_FEPARTICLE_PROCESSPAY', 'Vores system vil nu afvente din betaling. ');
-define( '_SUB_FEPARTICLE_ACTMAIL', 'Du vil modtange en e-mail indeholdende et aktiverings link, n&aring;r vores system har bearbejdet din forsp&oslash;rgsel. ');
-define( '_SUB_FEPARTICLE_MAIL', 'Du vil modtage en e-mail, n&aring;r vores system har bearbejdet din forsp&oslash;rgsel. ');
+define( '_SUB_FEPARTICLE_ACTMAIL', 'Du vil modtage en e-mail indeholdende et aktiverings link, så snart vores system har bearbejdet din forsp&oslash;rgsel. ');
+define( '_SUB_FEPARTICLE_MAIL', 'Du vil modtage en e-mail, så snart vores system har bearbejdet din forsp&oslash;rgsel. ');
 
 // --== CHECKOUT ERROR PAGE ==--
 define( '_CHECKOUT_ERROR_TITLE', 'Fejl under betalingen!');
 define( '_CHECKOUT_ERROR_EXPLANATION', 'Der er sket en fejl under din betaling');
-define( '_CHECKOUT_ERROR_OPENINVOICE', 'Dette efterlader din faktura ubetalt. For at betale igen, skal du g&aring; til tjek ud siden igen:');
-define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
+define( '_CHECKOUT_ERROR_OPENINVOICE', 'Dette efterlader din faktura ubetalt. For at betale igen, skal du g&aring; til kassen igen:');
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'Dette efterlader din faktura ubetalt, men du kan prøve at gennemføre igen nedenfor. Hvis du fortsat oplever problemer eller har brug for hjælp til at gennemføre købet, er du meget velkommen til at kontakte os.');
 
 // --== COUPON INFO ==--
-define( '_COUPON_INFO', 'Kupon:');
-define( '_COUPON_INFO_CONFIRM', 'Hvis du vil bruge en eller flere kupon koder ved denne betaling, kan du g&oslash;re det p&aring; tjek-ud siden.');
-define( '_COUPON_INFO_CHECKOUT', 'Indtast venligst din kupon kode her, og klik p&aring; knappen for at aktiverer den.');
+define( '_COUPON_INFO', 'Rabatkode:');
+define( '_COUPON_INFO_CONFIRM', 'Hvis du vil bruge en eller flere rabatkoder ved denne betaling, kan du g&oslash;re det undervejs i købet.');
+define( '_COUPON_INFO_CHECKOUT', 'Indtast venligst din rabatkode her og klik p&aring; knappen for at aktivere den.');
 
 // --== COUPON ERROR MESSAGES ==--
-define( '_COUPON_WARNING_AMOUNT', 'En kupon du har tilf&oslash;jet til denne betaling, vil ikke p&aring;virke betalingen. S&aring; uanset om det ser ud som om den ingen effekt har, vil din p&aring;virke dine fremtidige betalinger.');
+define( '_COUPON_WARNING_AMOUNT', 'En rabatkode, du har indtastet, p&aring;virker ikke denne betaling. S&aring; selvom om det ser ud som om den ingen effekt har, vil den p&aring;virke en fremtidig betaling.');
 define( '_COUPON_ERROR_PRETEXT', 'Vi beklager:');
-define( '_COUPON_ERROR_EXPIRED', 'Denne kupon er desv&aelig;rre udl&oslash;bet.');
-define( '_COUPON_ERROR_NOTSTARTED', 'Du kan ikke bruge denne kupon her endnu.');
-define( '_COUPON_ERROR_NOTFOUND', 'Den kupon kode kan ikke blive fundet.');
-define( '_COUPON_ERROR_MAX_REUSE', 'Denne kupon kode, har blevet brugt det maximale antal gange tilladt.');
-define( '_COUPON_ERROR_PERMISSION', 'Du har ikke tilladelse til at bruge denne kupon.');
-define( '_COUPON_ERROR_WRONG_USAGE', 'Du kan ikke bruge den kupon til dette.');
-define( '_COUPON_ERROR_WRONG_PLAN', 'Du har ikke det korrekt abonnoment, for at bruge denne kode.');
-define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'For at bruge denne kupon, skal dit sidste abonnoment v&aelig;re anderledes.');
-define( '_COUPON_ERROR_WRONG_PLANS_OVERALL', 'Du har ikke det korrekte abonoment, in din bruger historie til at bruge denne kupon kode.');
-define( '_COUPON_ERROR_TRIAL_ONLY', 'Du kan kun bruge denne kupon i pr&oslash;ve perioden.');
-define( '_COUPON_ERROR_COMBINATION', 'Du kan ikke bruge denne kupon sammen med andre kupon koder.');
-define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Kampagne for denne kupon er stoppet eller inaktiveret.');
+define( '_COUPON_ERROR_EXPIRED', 'Denne rabatkode er desv&aelig;rre udl&oslash;bet.');
+define( '_COUPON_ERROR_NOTSTARTED', 'Du kan ikke bruge denne rabatkode her endnu.');
+define( '_COUPON_ERROR_NOTFOUND', 'Rabatkoden blev ikke fundet.');
+define( '_COUPON_ERROR_MAX_REUSE', 'Rabatkoden er blevet brugt det maximale antal gange.');
+define( '_COUPON_ERROR_PERMISSION', 'Du har ikke tilladelse til at bruge denne rabatkode.');
+define( '_COUPON_ERROR_WRONG_USAGE', 'Du kan ikke bruge den rabatkode til dette.');
+define( '_COUPON_ERROR_WRONG_PLAN', 'Du har ikke det korrekte abonnement til at bruge denne kode.');
+define( '_COUPON_ERROR_WRONG_PLAN_PREVIOUS', 'For at bruge denne rabatkode skal dit sidste abonnement v&aelig;re anderledes.');
+define( '_COUPON_ERROR_WRONG_PLANS_OVERALL', 'Du har ikke det korrekte abonnement i din brugerhistorie til at bruge denne rabatkode.');
+define( '_COUPON_ERROR_TRIAL_ONLY', 'Du kan kun bruge denne rabatkode i pr&oslash;veperioden.');
+define( '_COUPON_ERROR_COMBINATION', 'Du kan ikke bruge denne rabatkode sammen med andre rabatkoder.');
+define( '_COUPON_ERROR_SPONSORSHIP_ENDED', 'Kampagne for denne rabatkode er stoppet eller deaktiveret.');
 
 // ----======== EMAIL TEXT ========----
 define( '_AEC_SEND_SUB',				"Konto detaljer for %s p&aring; %s" );
 define( '_AEC_USEND_MSG',				"Hej %s,\n\nTak for at du har registret dig hos %s.\n\nDu kan nu logge ind med dit brugernavn samt kodeord." );
-define( '_AEC_USEND_MSG_ACTIVATE',				"Hej %s,\n\nTak for at du har registreret dig hos %s. Din konto er oprettet og skal aktiveres f&oslash;r du kan logge ind p&aring; siden.\nFor at aktiverer din konto, skal du klikke p&aring; dette link, eller kopir det ind i din browser:\n%s\n\nEfter aktiveringen kan du logge ind til %s med dit brugernavn samt kodeord:\n\nBrugernavn - %s\nKodeord - %s" );
-define( '_ACCTEXP_SEND_MSG',"Abonnoment for %s p&aring; %s");
-define( '_ACCTEXP_SEND_MSG_RENEW',"Abonnument fornyelse for %s p&aring; %s");
+define( '_AEC_USEND_MSG_ACTIVATE',				"Hej %s,\n\nTak for at du har registreret dig hos %s. Din konto er oprettet og skal aktiveres f&oslash;r du kan logge ind p&aring; siden.\nFor at aktivere din konto skal du klikke p&aring; dette link, eller kopiere det ind i din browser:\n%s\n\nEfter aktiveringen kan du logge ind på %s med dit brugernavn samt kodeord:\n\nBrugernavn - %s\nKodeord - %s" );
+define( '_ACCTEXP_SEND_MSG',"Abonnement for %s p&aring; %s");
+define( '_ACCTEXP_SEND_MSG_RENEW',"Abonnementsfornyelse for %s p&aring; %s");
 define( '_ACCTEXP_MAILPARTICLE_GREETING', "Hej %s, \n\n");
-define( '_ACCTEXP_MAILPARTICLE_THANKSREG', "Tak for at du din registering hos %s.");
-define( '_ACCTEXP_MAILPARTICLE_THANKSREN', "Tak for at du har fornyet dit abonnoment hos %s.");
-define( '_ACCTEXP_MAILPARTICLE_PAYREC', "Din betaling for dit abonnoment er modtaget.");
-define( '_ACCTEXP_MAILPARTICLE_LOGIN', "Du kan nu logge ind til %s med dit brugernavn samt kodeord.");
-define( '_ACCTEXP_MAILPARTICLE_FOOTER',"\n\nV&aelig;r venlig ikke at svare tilbage p&aring; denne besked. Den er automatisk genereret for informations form&aring;l.");
-define( '_ACCTEXP_ASEND_MSG',				"Hej %s,\n\na en ny bruger har oprettet et abonnoment p&aring; [ %s ].\n\nHer er yderligere detaljer:\n\nNavn.........: %s\nEmail........: %s\nBrugernavn.....: %s\nSubscr.-ID...: %s\nAbonnoment.: %s\nIP...........: %s\nISP..........: %s\n\nV&aelig;r venlig ikke at svare p&aring; denne mail den er automatisk genereret." );
-define( '_ACCTEXP_ASEND_MSG_RENEW',			"Hej %s,\n\na en bruger har fornyet dit abonnoment p&aring; [ %s ].\n\nHer er yderligere detaljer:\n\nNavn.........: %s\nEmail........: %s\nBrugernavn.....: %s\nSubscr.-ID...: %s\nAbonnoment.: %s\nIP...........: %s\nISP..........: %s\n\nV&aelig;r venlig ikke at svare p&aring; denne mail den er automatisk genereret." );
-define( '_AEC_ASEND_MSG_NEW_REG',			"Hej %s,\n\nDer er en ny bruger som har registreret sig p&aring; [ %s ].\n\nYderligere detaljer:\n\nNavn.....: %s\nEmail.: %s\nBrugernavn....: %s\nIP.......: %s\nISP......: %s\n\nV&aelig;r venlig ikke at svare p&aring; denne mail den er automatisk genereret." );
+define( '_ACCTEXP_MAILPARTICLE_THANKSREG', "Tak fordi du har oprettet dig som bruger hos %s.");
+define( '_ACCTEXP_MAILPARTICLE_THANKSREN', "Tak fordi du har fornyet dit abonnement hos %s.");
+define( '_ACCTEXP_MAILPARTICLE_PAYREC', "Betalingen for dit abonnement er modtaget.");
+define( '_ACCTEXP_MAILPARTICLE_LOGIN', "Du kan nu logge ind på %s med dit brugernavn samt kodeord.");
+define( '_ACCTEXP_MAILPARTICLE_FOOTER',"\n\nV&aelig;r venlig ikke at besvare denne besked. Den er automatisk genereret og blot til information.");
+define( '_ACCTEXP_ASEND_MSG',				"Hej %s,\n\na en ny bruger har oprettet et abonnement p&aring; [ %s ].\n\nHer er yderligere detaljer:\n\nNavn.........: %s\nEmail........: %s\nBrugernavn.....: %s\nSubscr.-ID...: %s\nAbonnement.: %s\nIP...........: %s\nISP..........: %s\n\nV&aelig;r venlig ikke at svare p&aring; denne mail - den er automatisk genereret." );
+define( '_ACCTEXP_ASEND_MSG_RENEW',			"Hej %s,\n\na en bruger har fornyet sit abonnement p&aring; [ %s ].\n\nHer er yderligere detaljer:\n\nNavn.........: %s\nEmail........: %s\nBrugernavn.....: %s\nSubscr.-ID...: %s\nAbonnement.: %s\nIP...........: %s\nISP..........: %s\n\nV&aelig;r venlig ikke at svare p&aring; denne mail - den er automatisk genereret." );
+define( '_AEC_ASEND_MSG_NEW_REG',			"Hej %s,\n\nDer er en ny bruger, der har registreret sig p&aring; [ %s ].\n\nYderligere detaljer:\n\nNavn.....: %s\nEmail.: %s\nBrugernavn....: %s\nIP.......: %s\nISP......: %s\n\nV&aelig;r venlig ikke at svare p&aring; denne mail - den er automatisk genereret." );
 define( '_AEC_ASEND_NOTICE',				"AEC %s: %s p&aring; %s" );
-define( '_AEC_ASEND_NOTICE_MSG',		"Iflg. E-mail reporterings niveauet du har valgt, dette er en autoamtisk besked fra EventLog .\n\nDetaljerne for beskeder er:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nV&aelig;r venlig ikke at svare p&aring; denne mail den er automatisk genereret. Du kan &aelig;ndre niveauet for reporter i dine AEC indstillinger." );
+define( '_AEC_ASEND_NOTICE_MSG',		"Dette er en automatisk besked fra EventLog, baseret på det email rapporterings-niveau, du har valgt.\n\nDetaljerne for beskeder er:\n\n--- --- --- ---\n\n%s\n\n--- --- --- ---\n\nV&aelig;r venlig ikke at svare p&aring; denne mail, da den er automatisk genereret. Du kan &aelig;ndre niveauet for rapporter i dine AEC indstillinger." );
 
 // ----======== COUNTRY CODES ========----
 
