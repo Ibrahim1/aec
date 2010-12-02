@@ -82,6 +82,7 @@ class tool_minireport
 				. ' FROM #__acctexp_log_history'
 				. ' WHERE transaction_date >= \'' . $start_timeframe . '\''
 				. ' AND transaction_date <= \'' . $end_timeframe . '\''
+				. ' ORDER BY transaction_date ASC'
 				;
 		$db->setQuery( $query );
 		$entries = $db->loadResultArray();
