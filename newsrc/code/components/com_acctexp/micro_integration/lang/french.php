@@ -1432,4 +1432,14 @@ define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_MODE_DESC',		'Define what to d
 define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_NAME',		'After Footer' );
 define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_DESC',		'Modify the text that is displayed after the footer' );
 
+// Eventlist
+define( '_AEC_MI_NAME_EVENTLIST', 'Event List' );
+define( '_AEC_MI_DESC_EVENTLIST', 'Register a user for an event in the Eventlist component' );
+define( '_MI_MI_EVENTLIST_EVENT_NAME', 'Register for this Event' );
+define( '_MI_MI_EVENTLIST_EVENT_DESC', 'Which event for this action do you want to register to user to' );
+define( '_MI_MI_EVENTLIST_EVENT_EXP_NAME', 'Register for this Event' );
+define( '_MI_MI_EVENTLIST_EVENT_EXP_DESC', 'Which event for this action do you want to register to user to' );
+define( '_MI_MI_EVENTLIST_EVENT_PRE_EXP_NAME', 'Register for this Event' );
+define( '_MI_MI_EVENTLIST_EVENT_PRE_EXP_DESC', 'Which event for this action do you want to register to user to' );
+
 ?>
