@@ -1497,4 +1497,20 @@ define( '_MI_MI_EVENTLIST_EVENT_EXP_DESC', 'Which event for this action do you w
 define( '_MI_MI_EVENTLIST_EVENT_PRE_EXP_NAME', 'Register for this Event' );
 define( '_MI_MI_EVENTLIST_EVENT_PRE_EXP_DESC', 'Which event for this action do you want to register to user to' );
 
+// Phoca Download
+define( '_AEC_MI_NAME_PHOCADOWNLOAD', 'Phoca Download' );
+define( '_AEC_MI_DESC_PHOCADOWNLOAD', 'Assign Users to access rights to categories' );
+define( '_MI_MI_PHOCADOWNLOAD_ADDACCESS_NAME', 'Set Access to' );
+define( '_MI_MI_PHOCADOWNLOAD_UNACCESS_NAME', 'Unset Acess to' );
+define( '_MI_MI_PHOCADOWNLOAD_ADDACCESS_PRE_EXP_NAME', 'Set Access to' );
+define( '_MI_MI_PHOCADOWNLOAD_UNACCESS_PRE_EXP_NAME', 'Unset Acess to' );
+define( '_MI_MI_PHOCADOWNLOAD_ADDACCESS_EXP_NAME', 'Set Access to' );
+define( '_MI_MI_PHOCADOWNLOAD_UNACCESS_EXP_NAME', 'Unset Acess to' );
+define( '_MI_MI_PHOCADOWNLOAD_ADDACCESS_DESC', 'Choose the phoca download category to set access to' );
+define( '_MI_MI_PHOCADOWNLOAD_UNACCESS_DESC', 'Choose the phoca download category to unset access to' );
+define( '_MI_MI_PHOCADOWNLOAD_ADDACCESS_PRE_EXP_DESC', 'Choose the phoca download category to set access to' );
+define( '_MI_MI_PHOCADOWNLOAD_UNACCESS_PRE_EXP_DESC', 'Choose the phoca download category to unset access to' );
+define( '_MI_MI_PHOCADOWNLOAD_ADDACCESS_EXP_DESC', 'Choose the phoca download category to set access to' );
+define( '_MI_MI_PHOCADOWNLOAD_UNACCESS_EXP_DESC', 'Choose the phoca download category to unset access to' ); 
+
 ?>
