@@ -11,24 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-define('_CFG_IDEAL_ADVANCED_TESTMODE_DESC','Set to "No" to process LIVE payments. Set to "Yes" if you need to execute the mandatory test payments against your acquiring bank, define the applicable test plan per test payment (1 to 7 EUR). ');
-define('_CFG_IDEAL_ADVANCED_MERCHANTID_NAME','Merchant ID');
-define('_CFG_IDEAL_ADVANCED_MERCHANTID_DESC','Your unique iDEAL Merchant ID');
-define('_CFG_IDEAL_ADVANCED_ACQUIRER_NAME','iDEAL Platform');
-define('_CFG_IDEAL_ADVANCED_ACQUIRER_DESC','This processor supports "ABN AMRO iDEAL Zelfbouw", "Rabobank iDEAL Professional" and "ING Bank iDEAL Advanced". Choose "Simulator" for workflow testing. ');
-define('_CFG_IDEAL_ADVANCED_IDEAL_SUB_ID_NAME','Sub ID');
-define('_CFG_IDEAL_ADVANCED_IDEAL_SUB_ID_DESC','Your iDEAL Sub ID');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_CERTIFICATE_FILE_NAME','Private certificate file');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_CERTIFICATE_FILE_DESC','Name of your private certificate file (should be located in the SSL files map)');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_KEY_NAME','Private key');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_KEY_DESC','Password used to generate private key file');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_KEY_FILE_NAME','Private key file');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_KEY_FILE_DESC','Name of your private key file (should be located in the SSL files map)');
-define('_CFG_IDEAL_ADVANCED_CACHE_PATH_NAME','Cache files map');
-define('_CFG_IDEAL_ADVANCED_CACHE_PATH_DESC','Use FALSE for NOCACHE, make sure PATH and inner files are writable (This folder should not be accessible for webusers)');
-define('_CFG_IDEAL_ADVANCED_SSL_PATH_NAME','SSL files map');
-define('_CFG_IDEAL_ADVANCED_SSL_PATH_DESC','Path to your private key & certificate files (This folder should not be accessible for webusers)');
-
 class processor_ideal_advanced extends XMLprocessor
 {
 	function info()
