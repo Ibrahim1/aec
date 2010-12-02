@@ -84,71 +84,119 @@ class tool_minireport
 				. ' AND transaction_date <= \'' . $end_timeframe . '\''
 				;
 		$db->setQuery( $query );
-		$entries = $db->loadObjectArray();
-print_r($db);print_r($entries);exit;
+		$entries = $db->loadResultArray();
+
+		if ( empty( $entries ) ) {
+			return "nothing to list";
+		}
+
 		$historylist = array();
 		$groups = array();
-		foreach ( $entries as $entry ) {
-			$metaUser = new metaUser( $userid );
+		foreach ( $entries as $id ) {
+			$entry = new logHistory( $db );
+			$entry->load( $id );
 
-			$uparams = $metaUser->meta->getCustomParams();
-
-			if ( !empty( $uparams['support_minutes_history'] ) ) {
-				if ( is_array( $uparams['support_minutes_history'] ) ) {
-					foreach( $uparams['support_minutes_history'] as $history ) {
-						if ( ( $history['tstamp'] > $start_timeframe ) && ( $history['tstamp'] <= $end_timeframe ) ) {
-							if ( !empty( $history['userid'] ) && $history['minutes_used'] ) {
-								$add = array();
-								$add['userid'] = $metaUser->cmsUser->id;
-								$add['name'] = $metaUser->cmsUser->name;
-								$add['username'] = $metaUser->cmsUser->username;
-
-								$historylist[$history['userid']][] = array_merge( $history, $add );
-							}
-						}
-					}
+			$refund = false;
+			foreach ( $entry->response as $v ) {
+				if ( $v == 'refund' ) {
+					$refund = true;
 				}
 			}
+
+			$date = date( 'Y-m-d', strtotime( $entry->transaction_date ) );
+
+			$pgroups = ItemGroupHandler::parentGroups( $entry->plan_id );
+
+			if ( !in_array( $pgroups[0], $groups ) ) {
+				$groups[] = $pgroups[0];
+			}
+
+			if ( $refund ) {
+				$historylist[$date]['amount'] -= $entry->amount;
+				$historylist[$date]['groups'][$pgroups[0]]--;
+			} else {
+				$historylist[$date]['amount'] += $entry->amount;
+				$historylist[$date]['groups'][$pgroups[0]]++;
+			}
+		}
+
+		foreach ( $historylist as $date => $entry ) {
+			ksort( $historylist[$date]['groups'] );
 		}
 
 		$return = "";
 
-		foreach ( $historylist as $userid => $history_list ) {
-			if ( empty( $history_list ) ) {
-				continue;
+		$return .= '<table style="background-color: fff; width: 30%; margin: 0 auto; text-align: center !important; font-size: 180%;">';
+
+		$groupnames = array();
+		foreach ( $groups as $group ) {
+			$groupnames[$group] = ItemGroupHandler::groupName( $group );
+		}
+
+		foreach ( $historylist as $date => $history ) {
+			if ( date( 'D', strtotime( $date ) ) == 'Mon' ) {
+				$week = array();
+			}
+			
+			$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em;">';
+
+			$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">' . $date . '</td>';
+			$return .= '<td style="width: 5em;">&nbsp;</td>';
+
+			foreach ( $groups as $group ) {
+				if ( empty( $history['groups'][$group] ) ) {
+					$count = 0;
+				} else {
+					$count = $history['groups'][$group];
+				}
+
+				$return .= '<td title="' . $groupnames[$group] . '" style="font-weight: bold; width: 5em;">' . $count . '</td>';
+
+				if ( isset( $week ) ) {
+					$week['groups'][$group] += $count;
+				}
 			}
 
-			$total_minutes = 0;
+			if ( isset( $week ) ) {
+				$week['amount'] += $history['amount'];
+			}
 
-			$metaUser = new metaUser( $userid );
+			$return .= '<td style="width: 5em;">&nbsp;</td>';
+			$return .= '<td title="Amount" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $history['amount'] ) . '</td>';
+			$return .= '</tr>';
 
-			$return .= '<h1>' . $metaUser->cmsUser->name . '</h1>';
-			$return .= '<table class="adminlist">';
-			$return .= '<tr><th>Date</th><th>Username</th><th>Time Used</th><th>Details</th></tr>';
+			$return .= '<tr style="height: 1px; background-color: #999;">';
+			$return .= '<td colspan="' . ( count($groups) + 4 ) . '"></td>';
+			$return .= '</tr>';
 
-			$history_list = $this->historySort( $history_list );
+			if ( isset( $week ) && ( date( 'D', strtotime( $date ) ) == 'Sun' ) ) {
+				$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em; background-color: #ddd;">';
 
-			foreach ( $history_list as $history ) {
-				$userlink = '<a href="';
-				$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $history['userid'];
-				$userlink .= '">';
-				$userlink .= $history['name'] . ' (' . $history['username'] . ')';
-				$userlink .= '</a>';
+				$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">Week</td>';
+				$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-				$return .= '<tr>';
-				$return .= '<td>' . date( 'Y-m-d H:i:s', $history['tstamp'] ) . '</td>';
-				$return .= '<td>' . $userlink . '</td>';
-				$return .= '<td>' . $history['minutes_used'] . '</td>';
-				$return .= '<td>' . $history['details'] . '</td>';
+				foreach ( $groups as $group ) {
+					if ( empty( $week['groups'][$group] ) ) {
+						$count = 0;
+					} else {
+						$count = $week['groups'][$group];
+					}
+
+					$return .= '<td title="' . $groupnames[$group] . '" style="font-weight: bold; width: 5em;">' . $count . '</td>';
+				}
+
+				$return .= '<td style="width: 5em;">&nbsp;</td>';
+				$return .= '<td title="Amount" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $week['amount'] ) . '</td>';
 				$return .= '</tr>';
 
-				$total_minutes += $history['minutes_used'];
+				$return .= '<tr style="height: 1px; background-color: #999;">';
+				$return .= '<td colspan="' . ( count($groups) + 4 ) . '"></td>';
+				$return .= '</tr>';
 			}
 
-			$return .= '<tr><td><strong>TOTAL</strong></td><td></td><td><strong>' . $total_minutes . '</strong></td><td></td></tr>';
-
-			$return .= '</table><br /><br />';
 		}
+
+		$return .= '</table><br /><br />';
 
 		return $return;
 	}
