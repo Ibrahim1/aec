@@ -26,9 +26,14 @@ class mi_phocadownload extends MI
 	{
 		$settings = array();
 
-		if ( !@include_once( rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_phocadownload' . DS . 'tables' . DS . 'phocadownloadcat.php' ) ) {
+		$path = rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_phocadownload' . DS . 'tables' . DS . 'phocadownloadcat.php';
+
+		if ( !file_exists( $path ) ) {
 			echo 'This module can not work without the Phoca Download Component';
+
 			return $settings;
+		} else {
+			@include_once( $path );
 		}
 
 		$db = &JFactory::getDBO();

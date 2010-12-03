@@ -26,9 +26,14 @@ class mi_eventlist extends MI
 	{
 		$settings = array();
 
-		if ( !@include_once( rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_eventlist' . DS . 'helpers' . DS . 'helper.php' ) ) {
+		$path = rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_eventlist' . DS . 'helpers' . DS . 'helper.php';
+
+		if ( !file_exists( $path ) ) {
 			echo 'This module can not work without the Event List Component';
+
 			return $settings;
+		} else {
+			@include_once( $path );
 		}
 
 		$db = &JFactory::getDBO();

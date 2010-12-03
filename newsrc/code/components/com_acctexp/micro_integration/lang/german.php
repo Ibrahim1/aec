@@ -1397,4 +1397,24 @@ define( '_MI_MI_PHOCADOWNLOAD_UNACCESS_PRE_EXP_DESC', 'Choose the phoca download
 define( '_MI_MI_PHOCADOWNLOAD_ADDACCESS_EXP_DESC', 'Choose the phoca download category to set access to' );
 define( '_MI_MI_PHOCADOWNLOAD_UNACCESS_EXP_DESC', 'Choose the phoca download category to unset access to' ); 
 
+// ACY Mailing
+define( '_AEC_MI_NAME_ACYMAIL', 'ACY Mailing' );
+define( '_AEC_MI_DESC_ACYMAIL', 'Assign Users to ACY Mailign List' );
+define( '_MI_MI_ACYMAIL_ADDLIST_NAME', 'Assign User to List' );
+define( '_MI_MI_ACYMAIL_REMOVELIST_NAME', 'Remove User From List' );
+define( '_MI_MI_ACYMAIL_ADDLIST_PRE_EXP_NAME', 'Assign User to List' );
+define( '_MI_MI_ACYMAIL_REMOVELIST_PRE_EXP_NAME', 'Remove User From List' );
+define( '_MI_MI_ACYMAIL_ADDLIST_EXP_NAME', 'Assign User to List' );
+define( '_MI_MI_ACYMAIL_REMOVELIST_EXP_NAME', 'Remove User From List' );
+define( '_MI_MI_ACYMAIL_ADDLIST_DESC', 'Choose the ACY Mailing List to set access to' );
+define( '_MI_MI_ACYMAIL_REMOVELIST_DESC', 'Choose the ACY Mailing List to unset access to' );
+define( '_MI_MI_ACYMAIL_ADDLIST_PRE_EXP_DESC', 'Choose the ACY Mailing List to set access to' );
+define( '_MI_MI_ACYMAIL_REMOVELIST_PRE_EXP_DESC', 'Choose the ACY Mailing List to unset access to' );
+define( '_MI_MI_ACYMAIL_ADDLIST_EXP_DESC', 'Choose the ACY Mailing List to set access to' );
+define( '_MI_MI_ACYMAIL_REMOVELIST_EXP_DESC', 'Choose the ACY Mailing List to unset access to' );
+define( '_MI_MI_ACYMAIL_CUSTOMINFO_NAME',		'Custom Info' );
+define( '_MI_MI_ACYMAIL_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
+define( '_MI_MI_ACYMAIL_USER_CHECKBOX_NAME',		'User Checkbox' );
+define( '_MI_MI_ACYMAIL_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter.' );
+
 ?>
