@@ -6395,8 +6395,15 @@ function toolBoxTool( $option, $cmd )
 				if ( !empty( $tb_settings ) ) {
 					$return .= '<div id="aec-toolbox-form">';
 
+					$lists = array();
+					if ( isset( $tb_settings['lists'] ) ) {
+						$lists = $tb_settings['lists'];
+
+						unset( $tb_settings['lists'] );
+					}
+
 					$settings = new aecSettings( 'TOOLBOX', 'E' );
-					$settings->fullSettingsArray( $tb_settings, array(), array() );
+					$settings->fullSettingsArray( $tb_settings, array(), $lists );
 
 					// Call HTML Class
 					$aecHTML = new aecHTML( $settings->settings, $settings->lists );

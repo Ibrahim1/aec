@@ -513,11 +513,10 @@ border: 2px solid #eee;
 }
 
 div#aec-toolbox-form {
-margin: 0px 20px;
-margin-top: 20px;
-width: 300px;
-background: #eee;
+background: none repeat scroll 0 0 #EEEEEE;
+margin: 0 25%;
 text-align: center;
+width: 50%;
 }
 
 td.aec_bigcell {

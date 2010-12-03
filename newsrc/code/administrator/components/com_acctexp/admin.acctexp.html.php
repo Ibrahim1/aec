@@ -47,7 +47,7 @@ class HTML_myCommon
 					</div>
 					<div align="center">
 						<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
-						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
+						<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', htmlentities( _AEC_FOOT_CREDIT_LTEXT ) ) ); ?></p>
 					</div>
 				</td>
 				<td align="center">
@@ -3071,7 +3071,7 @@ class HTML_AcctExp
 		<table class="aecadminform">
 			<?php
 			if ( is_array( $result ) ) {
-				foreach ( $result as $cmd => $litem ) {
+				foreach ( $result as $x => $litem ) {
 					echo '<tr><td><h3>' . $litem['name'] . '</h3><p>' . $litem['desc'] . '</p></td><td><a href="' . $litem['link'] . '">execute!</a></td></tr>';
 				}
 			} else {
