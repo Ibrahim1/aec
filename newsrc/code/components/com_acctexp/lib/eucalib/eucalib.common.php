@@ -477,23 +477,27 @@ class serialParamDBTable extends paramDBTable
 		if ( is_object( $subject ) ) {
 			$properties = get_object_vars( $subject2 );
 
-			foreach ( $properties as $pname => $pvalue ) {
-				if ( isset( $subject->$pname ) ) {
-					if ( $overwrite ) {
-						$subject->$pname = serialParamDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
+			if ( !empty( $properties ) ) {
+				foreach ( $properties as $pname => $pvalue ) {
+					if ( isset( $subject->$pname ) ) {
+						if ( $overwrite ) {
+							$subject->$pname = serialParamDBTable::mergeParams( $subject->$pname, $pvalue, $overwrite );
+						}
+					} else  {
+						$subject->$pname = $pvalue;
 					}
-				} else  {
-					$subject->$pname = $pvalue;
 				}
 			}
 		} elseif ( is_array( $subject ) ) {
-			foreach ( $subject2 as $pname => $pvalue ) {
-				if ( isset( $subject[$pname] ) ) {
-					if ( $overwrite ) {
-						$subject[$pname] = serialParamDBTable::mergeParams( $subject[$pname], $pvalue, $overwrite );
+			if ( !empty( $properties ) ) {
+				foreach ( $subject2 as $pname => $pvalue ) {
+					if ( isset( $subject[$pname] ) ) {
+						if ( $overwrite ) {
+							$subject[$pname] = serialParamDBTable::mergeParams( $subject[$pname], $pvalue, $overwrite );
+						}
+					} else {
+						$subject[$pname] = $pvalue;
 					}
-				} else {
-					$subject[$pname] = $pvalue;
 				}
 			}
 		} else {

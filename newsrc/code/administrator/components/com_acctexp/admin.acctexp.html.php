@@ -3057,7 +3057,7 @@ class HTML_AcctExp
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::addBackendCSS();
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;" rowspan="2" nowrap="nowrap">

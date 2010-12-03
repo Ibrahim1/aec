@@ -5640,9 +5640,7 @@ class aecHTML
 			case 'fieldset':
 				$return = '<div class="setting_form">' . "\n"
 				. '<fieldset><legend>' . $row[1] . '</legend>' . "\n"
-				. '<table cellpadding="1" cellspacing="1" border="0">' . "\n"
-				. '<tr align="left" valign="middle" ><td>' . $row[2] . '</td></tr>' . "\n"
-				. '</table>' . "\n"
+				. $row[2] . "\n"
 				. '</fieldset>' . "\n"
 				. '</div>'
 				;

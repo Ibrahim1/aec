@@ -29,14 +29,16 @@ class tool_miimport
 		$settings = array();
 
 		if ( !empty( $_FILES ) ) {
-			echo file_get_contents($_FILES['import_file']['tmp_name']);exit;
+			$file = file_get_contents($_FILES['import_file']['tmp_name']);
 
 			$content = unserialize( base64_decode( $file ) );
 
-			$settings['count']	= array( 'hidden', base64_encode( serialize( $mi ) ) );
+			$settings['count']	= array( 'hidden', count( $content ) );
 
 			foreach ( $content as $id => $mi ) {
-				$settings[$id.'_data']	= array( 'hidden', base64_encode( serialize( $mi ) ) );
+				$settings[]						= array( 'fieldset', 'Import #'.$id, '<h3>'.$mi->name.'</h3><p>'.$mi->desc.'</p>' );
+				$settings[$id.'_data_import']	= array( 'checkbox', 'Import this', 1, 1, "Sign up to our Newsletter" );
+				$settings[$id.'_data']			= array( 'hidden', base64_encode( serialize( $mi ) ) );
 			}
 		} else {
 			$settings['MAX_FILE_SIZE']	= array( 'hidden', '5120000' );
@@ -57,33 +59,24 @@ class tool_miimport
 			return null;
 		}
 
-		foreach ( $_POST['micro_integrations'] as $mi_id ) {
-			$mi = new microIntegration( $db );
-			$mi->load( $mi_id );
+		$count = 0;
+		for ( $i=0; $i<$_POST['count']; $i++ ) {
+			if ( !empty( $_POST[$i.'_data_import'] ) && !empty( $_POST[$i.'_data'] ) ) {
+				$src = unserialize( base64_decode( $_POST[$i.'_data'] ) );
 
-			$mi->id = 0;
+				$src->clear();
 
-			$mi->clear();
+				$mi = new microIntegration( $db );
+				$mi->mergeParams( $mi, $src );
 
-			$list[] = clone( $mi );
+				$mi->check();
+				if ( $mi->store() ) {
+					$count++;
+				}
+			}
 		}
 
-		// Generate somewhat unique filename
-		$fname = 'aec_mi_export_' . date( 'Y_m_d', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) . '_' . ( time() - strtotime( date( 'Y_m_d' ) ) );
-
-		header("Pragma: public");
-		header("Expires: 0");
-		header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-
-		header("Content-Type: application/force-download");
-		header("Content-Type: application/octet-stream");
-
-		header("Content-Type: application/download");
-		header('Content-Disposition: inline; filename="' . $fname . '.mi"');
-
-		echo base64_encode( serialize( $list ) );
-
-		exit;
+		return "<h3>Success! " . $count . " MIs imported.</h3>";
 	}
 
 }
