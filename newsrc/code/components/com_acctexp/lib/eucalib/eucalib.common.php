@@ -489,7 +489,7 @@ class serialParamDBTable extends paramDBTable
 				}
 			}
 		} elseif ( is_array( $subject ) ) {
-			if ( !empty( $properties ) ) {
+			if ( !empty( $subject2 ) ) {
 				foreach ( $subject2 as $pname => $pvalue ) {
 					if ( isset( $subject[$pname] ) ) {
 						if ( $overwrite ) {

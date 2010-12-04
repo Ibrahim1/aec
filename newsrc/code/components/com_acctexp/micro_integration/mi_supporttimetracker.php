@@ -126,6 +126,10 @@ class mi_supporttimetracker extends MI
 
 			$max = count( $history ) - 1;
 
+			if ( empty( $request->params['details'] ) ) {
+				$request->params['details'] = "Removing last entry";
+			}
+
 			if ( $history[$max]['minutes_added'] ) {
 				$this->updateSupportMinutes( $request->metaUser, 0, $history[$max]['minutes_added'], $request->params['details'] );
 			} elseif ( $history[$max]['minutes_used'] ) {

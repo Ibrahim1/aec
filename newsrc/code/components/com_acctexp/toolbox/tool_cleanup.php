@@ -30,7 +30,7 @@ class tool_cleanup
 		return $settings;
 	}
 
-	function Action( $request )
+	function Action()
 	{
 		$db = &JFactory::getDBO();
 

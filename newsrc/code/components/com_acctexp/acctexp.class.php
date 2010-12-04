@@ -9824,12 +9824,13 @@ class InvoiceFactory
 			// Double Check Amount for made_free
 			$this->invoice->computeAmount( $this );
 
-			// And if it is either made free through coupons
 			if (
+				// If it is either made free through coupons
 				!empty( $this->invoice->made_free )
-				// Or a free full period that the user CAN use
-				|| ( $this->plan->params['full_free'] && $this->invoice->counter )
+				// Or a free full period that the user CAN use and no trial
 				|| ( $this->plan->params['full_free'] && empty( $this->invoice->counter ) && empty( $this->plan->params['trial_period'] ) )
+				// Or a free full period that the user CAN use and a skipped trial
+				|| ( $this->plan->params['full_free'] && $this->invoice->counter )
 				// Or a free trial that the user CAN use
 				|| ( $this->plan->params['trial_free'] && empty( $this->invoice->counter ) )
 			) {
