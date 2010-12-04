@@ -497,34 +497,43 @@ define( '_CFG_CCBILL_DATALINK_USERNAME_NAME', 'Datalink Username');
 define( '_CFG_CCBILL_DATALINK_USERNAME_DESC', 'If you want to use Recurring Billing, you need to supply a Datalink Username here. Also remember to set the "recurring" switch in the payment plans that are supposed to have this functionality.');
 
 // iDeal Basic
-define('_CFG_IDEAL_ADVANCED_TESTMODE_DESC','Set to "No" to process LIVE payments. Set to "Yes" if you need to execute the mandatory test payments against your acquiring bank, define the applicable test plan per test payment (1 to 7 EUR). ');
-define('_CFG_IDEAL_ADVANCED_MERCHANTID_NAME','Merchant ID');
-define('_CFG_IDEAL_ADVANCED_MERCHANTID_DESC','Your unique iDEAL Merchant ID');
-define('_CFG_IDEAL_ADVANCED_ACQUIRER_NAME','iDEAL Platform');
-define('_CFG_IDEAL_ADVANCED_ACQUIRER_DESC','This processor supports "ABN AMRO iDEAL Zelfbouw", "Rabobank iDEAL Professional" and "ING Bank iDEAL Advanced". Choose "Simulator" for workflow testing. ');
-define('_CFG_IDEAL_ADVANCED_IDEAL_SUB_ID_NAME','Sub ID');
-define('_CFG_IDEAL_ADVANCED_IDEAL_SUB_ID_DESC','Your iDEAL Sub ID');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_CERTIFICATE_FILE_NAME','Private certificate file');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_CERTIFICATE_FILE_DESC','Name of your private certificate file (should be located in the SSL files map)');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_KEY_NAME','Private key');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_KEY_DESC','Password used to generate private key file');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_KEY_FILE_NAME','Private key file');
-define('_CFG_IDEAL_ADVANCED_PRIVATE_KEY_FILE_DESC','Name of your private key file (should be located in the SSL files map)');
-define('_CFG_IDEAL_ADVANCED_CACHE_PATH_NAME','Cache files map');
-define('_CFG_IDEAL_ADVANCED_CACHE_PATH_DESC','Use FALSE for NOCACHE, make sure PATH and inner files are writable (This folder should not be accessible for webusers)');
-define('_CFG_IDEAL_ADVANCED_SSL_PATH_NAME','SSL files map');
-define('_CFG_IDEAL_ADVANCED_SSL_PATH_DESC','Path to your private key & certificate files (This folder should not be accessible for webusers)');
+define( '_CFG_IDEAL_BASIC_LONGNAME', 'iDeal');
+define( '_CFG_IDEAL_BASIC_STATEMENT', 'Make payments with iDeal');
+define( '_CFG_IDEAL_BASIC_DESCRIPTION', 'De veilige manier van betalen op internet.');
+define( '_CFG_IDEAL_BASIC_MERCHANTID_NAME', 'Merchant ID');
+define( '_CFG_IDEAL_BASIC_MERCHANTID_DESC', 'Your Merchant ID');
+define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_NAME', 'Testmode Stage');
+define( '_CFG_IDEAL_BASIC_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
+define( '_CFG_IDEAL_BASIC_BANK_NAME', 'Bank');
+define( '_CFG_IDEAL_BASIC_BANK_DESC', 'Select which Bank to use');
+define( '_CFG_IDEAL_BASIC_SUBID_NAME', 'Testmode Stage');
+define( '_CFG_IDEAL_BASIC_SUBID_DESC', 'Set to 0 unless you have specific reasons not to');
+define( '_CFG_IDEAL_BASIC_KEY_NAME', 'Key');
+define( '_CFG_IDEAL_BASIC_KEY_DESC', 'Your secret key');
+define( '_CFG_IDEAL_BASIC_DESCRIPTION_NAME', 'Item Description');
+define( '_CFG_IDEAL_BASIC_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
 
 // iDeal Advanced
 define( '_CFG_IDEAL_ADVANCED_LONGNAME', 'iDeal');
 define( '_CFG_IDEAL_ADVANCED_STATEMENT', 'Make payments with iDeal');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION', 'De veilige manier van betalen op internet.');
-define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_NAME', 'Secure Details Path');
-define( '_CFG_IDEAL_ADVANCED_SECURE_PATH_DESC', 'The filesystem path to where you have saved your secure details config file on your server - should NOT be in or below your publicly accessible webserver directory. There is a sample config file located at components/com_acctexp/processors/ideal_advanced/includes/security');
-define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_NAME', 'Testmode Stage');
-define( '_CFG_IDEAL_ADVANCED_TESTMODESTAGE_DESC', 'Which of the tests (1-7) do you want to conduct?');
-define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_NAME', 'Item Description');
-define( '_CFG_IDEAL_ADVANCED_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
+define( '_CFG_IDEAL_ADVANCED_TESTMODE_DESC','Set to "No" to process LIVE payments. Set to "Yes" if you need to execute the mandatory test payments against your acquiring bank, define the applicable test plan per test payment (1 to 7 EUR). ');
+define( '_CFG_IDEAL_ADVANCED_MERCHANTID_NAME','Merchant ID');
+define( '_CFG_IDEAL_ADVANCED_MERCHANTID_DESC','Your unique iDEAL Merchant ID');
+define( '_CFG_IDEAL_ADVANCED_ACQUIRER_NAME','iDEAL Platform');
+define( '_CFG_IDEAL_ADVANCED_ACQUIRER_DESC','This processor supports "ABN AMRO iDEAL Zelfbouw", "Rabobank iDEAL Professional" and "ING Bank iDEAL Advanced". Choose "Simulator" for workflow testing. ');
+define( '_CFG_IDEAL_ADVANCED_IDEAL_SUB_ID_NAME','Sub ID');
+define( '_CFG_IDEAL_ADVANCED_IDEAL_SUB_ID_DESC','Your iDEAL Sub ID');
+define( '_CFG_IDEAL_ADVANCED_PRIVATE_CERTIFICATE_FILE_NAME','Private certificate file');
+define( '_CFG_IDEAL_ADVANCED_PRIVATE_CERTIFICATE_FILE_DESC','Name of your private certificate file (should be located in the SSL files map)');
+define( '_CFG_IDEAL_ADVANCED_PRIVATE_KEY_NAME','Private key');
+define( '_CFG_IDEAL_ADVANCED_PRIVATE_KEY_DESC','Password used to generate private key file');
+define( '_CFG_IDEAL_ADVANCED_PRIVATE_KEY_FILE_NAME','Private key file');
+define( '_CFG_IDEAL_ADVANCED_PRIVATE_KEY_FILE_DESC','Name of your private key file (should be located in the SSL files map)');
+define( '_CFG_IDEAL_ADVANCED_CACHE_PATH_NAME','Cache files map');
+define( '_CFG_IDEAL_ADVANCED_CACHE_PATH_DESC','Use FALSE for NOCACHE, make sure PATH and inner files are writable (This folder should not be accessible for webusers)');
+define( '_CFG_IDEAL_ADVANCED_SSL_PATH_NAME','SSL files map');
+define( '_CFG_IDEAL_ADVANCED_SSL_PATH_DESC','Path to your private key & certificate files (This folder should not be accessible for webusers)');
 
 // Authorize.net AIM
 define( '_CFG_AUTHORIZE_AIM_LONGNAME', 'Authorize.net AIM');
