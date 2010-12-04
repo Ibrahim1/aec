@@ -795,7 +795,7 @@ class HTML_AcctExp
 										array( 'editCSS', 'css', _AEC_CENTR_EDIT_CSS ),
 										array( 'history', 'history', _AEC_CENTR_VIEW_HISTORY ),
 										array( 'eventlog', 'eventlog', _AEC_CENTR_LOG ),
-										array( 'toolbox', 'settings', _AEC_CENTR_TOOLBOX ),
+										array( 'toolbox', 'toolbox', _AEC_CENTR_TOOLBOX ),
 										array( 'hacks', 'hacks', _AEC_CENTR_HACKS )
 						);
 
@@ -3060,7 +3060,7 @@ class HTML_AcctExp
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_toolbox.png) no-repeat left;" rowspan="2" nowrap="nowrap">
 				<?php echo _AEC_HEAD_TOOLBOX . ( $title ? ( ': ' . $title ) : '' ); ?>
 			</th>
 			<td nowrap="nowrap" style="padding: 0 5px;">
