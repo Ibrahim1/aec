@@ -9834,9 +9834,12 @@ class InvoiceFactory
 				// Or a free trial that the user CAN use
 				|| ( $this->plan->params['trial_free'] && empty( $this->invoice->counter ) )
 			) {
-				// mark paid
-				if ( $this->invoice->pay() !== false ) {
-					return $this->thanks( $option, false, true );
+				// Only allow clearing while recurring if everything is free
+				if ( !( $recurring && ( empty( $this->plan->params['full_free'] ) || empty( $this->plan->params['trial_free'] ) ) ) ) {
+					// mark paid
+					if ( $this->invoice->pay() !== false ) {
+						return $this->thanks( $option, false, true );
+					}
 				}
 			}
 
