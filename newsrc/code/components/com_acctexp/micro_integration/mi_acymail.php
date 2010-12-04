@@ -30,6 +30,8 @@ class mi_acymail extends MI
 			echo 'This module can not work without the ACY Mailing Component';
 
 			return $settings;
+		} else {
+			@include_once( rtrim( JPATH_ADMINISTRATOR, DS ).DS.'components'.DS.'com_acymailing'.DS.'helpers'.DS.'helper.php' );
 		}
 
 		$db = &JFactory::getDBO();
@@ -51,9 +53,9 @@ class mi_acymail extends MI
 
 		foreach ( $settings as $k => $v ) {
 			if ( isset( $this->settings[$k] ) ) {
-				$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $listslist, $k, 'size="1"', 'value', 'text', $this->settings[$k] );
+				$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $listslist, $k.'[]', 'size="4" multiple="multiple"', 'value', 'text', $this->settings[$k] );
 			} else {
-				$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $listslist, $k, 'size="1"', 'value', 'text', '' );
+				$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $listslist, $k.'[]', 'size="4" multiple="multiple"', 'value', 'text', '' );
 			}
 		}
 
@@ -93,79 +95,56 @@ class mi_acymail extends MI
 			$is_allowed = true;
 		}
 
-		$subscriberid = $this->getSubscriberID( $request, $is_allowed );
+		$subscriber = $this->getSubscriberID( $request, $is_allowed );
 
 		if ( empty( $subscriberid ) ) {
 			return null;
 		}
 
+		if ( empty( $subscriber->confirmed ) && $config->get( 'require_confirmation',false ) ) {
+			$statusAdd = 2;
+		} else {
+			$statusAdd = 1;
+		}
+
+		$lists = array();
 		if ( !empty( $this->settings['addlist' . $request->area] ) && $is_allowed ) {
-			$this->addToList( $this->settings['addlist' . $request->area], $subscriberid );
+			foreach ( $this->settings['addlist' . $request->area] as $list ) {
+				$lists[$list] = array( 'status' => $statusAdd );
+			}
 		}
 
 		if ( !empty( $this->settings['removelist' . $request->area] ) ) {
-			$this->removeFromList( $this->settings['removelist' . $request->area], $subscriberid );
+			$lists[$list] = array( 'status' => 0 );
+		}
+
+		if ( !empty( $lists ) ) {
+			$subscriber->saveSubscription( $subscriber->id, $lists );
 		}
 	}
 
-	function getSubscriberID( $request, $create_user )
+	function getSubscriber( $request )
 	{
-		$db = &JFactory::getDBO();
+		$config = acymailing::config();
+		
+		$joomUser = new stdClass();
 
-		$query = 'SELECT `subid`'
-				. ' FROM #__acymailing_subscriber'
-				. ' WHERE `userid` = \'' . $request->metaUser->userid . '\''
-				;
-		$db->setQuery( $query );
+		$joomUser->email = $request->metaUser->cmsUser->email;
+		$joomUser->name = $request->metaUser->cmsUser->name;
 
-		$sid = $db->loadResult();
-
-		if ( empty( $sid ) && $create_user ) {
-			$this->createSubscriber( $request );
-			
-			return $this->getSubscriberID( $request, $create_user );
-		} else {
-			return $sid;
+		if ( empty( $request->metaUser->cmsUser->block ) ) {
+			$joomUser->confirmed = 1;
 		}
-	}
 
-	function createSubscriber( $request )
-	{
-		$db = &JFactory::getDBO();
+		$joomUser->enabled = $config->get('require_confirmation',false) ? (1 - (int)$user->block) : 1;
+		$joomUser->userid = $request->metaUser->userid;
 
-		$query = 'INSERT INTO #__acymailing_subscriber'
-				. ' ( `email` , `userid` , `name` , `confirmed`)'
-				. ' VALUES (\'' . $request->metaUser->cmsUser->email . '\', \'' . $request->metaUser->userid . '\',\'' . $request->metaUser->cmsUser->name . '\', \'1\')'
-				;
+		$userClass = acymailing::get('class.subscriber');
 
-		$db->setQuery( $query );
-		$db->query();
-	}
+		$userClass->checkVisitor = false;
+		$userClass->sendConf = false;
 
-	function addToList( $list, $user )
-	{
-		$db = &JFactory::getDBO();
-
-		$query = 'INSERT INTO #__acymailing_listsub'
-				. ' ( `listid` , `subid` , `subdate` , `status`)'
-				. ' VALUES (\'' . $list . '\', \'' . $user . '\',\'' . time() . '\', \'1\')'
-				;
-
-		$db->setQuery( $query );
-		$db->query();
-	}
-
-	function removeFromList( $list, $user )
-	{
-		$db = &JFactory::getDBO();
-
-		$query = 'DELETE FROM #__acymailing_listsub'
-				. ' WHERE `listid` = \'' . $list . '\''
-				. ' AND `subid` = \'' . $user . '\' LIMIT 1'
-				;
-
-		$db->setQuery( $query );
-		$db->query();
+		return $userClass->save( $joomUser );
 	}
 
 }
