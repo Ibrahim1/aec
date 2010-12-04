@@ -3067,18 +3067,19 @@ class HTML_AcctExp
 			</td>
 		</tr>
 		</table>
-		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup extensively.</p>
-		<table class="aecadminform">
-			<?php
-			if ( is_array( $result ) ) {
-				foreach ( $result as $x => $litem ) {
-					echo '<tr><td><h3>' . $litem['name'] . '</h3><p>' . $litem['desc'] . '</p></td><td><a href="' . $litem['link'] . '">execute!</a></td></tr>';
-				}
-			} else {
-				echo $result;
-			}
-			?>
-		</table>
+		<?php if ( empty( $cmd ) ) { ?>
+		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup your data extensively.</p>
+		<?php } ?>
+		<?php if ( is_array( $result ) ) { ?>
+			<div id="aec-toolbox-list">
+			<?php foreach ( $result as $x => $litem ) {
+				echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
+				echo '<hr />';
+			} ?>
+			</div>
+		<?php } else { ?>
+			<?php echo $result; ?>
+		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="toolbox" />
 		<input type="hidden" name="cmd" value="<?php echo $cmd;?>" />

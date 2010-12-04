@@ -504,6 +504,13 @@ div.aec_processor_experimentalnote p {
 font-size: 130%;
 }
 
+div#aec-toolbox-list {
+width: 50%;
+padding: 20px;
+min-width: 400px;
+margin: 0 25%;
+}
+
 div#aec-toolbox-result {
 margin: 0px 20px;
 margin-top: 20px;
@@ -517,6 +524,13 @@ background: none repeat scroll 0 0 #EEEEEE;
 margin: 0 25%;
 text-align: center;
 width: 50%;
+padding: 20px;
+}
+
+div#aec-toolbox-form submit {
+margin: 40px 10px 10px;
+position: relative;
+right: -50%;
 }
 
 td.aec_bigcell {

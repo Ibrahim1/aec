@@ -50,14 +50,11 @@ class tool_miimport
 
 	function Action()
 	{
-		$db = &JFactory::getDBO();
-
-		$app = JFactory::getApplication();
-
-		$list = array();
 		if ( empty( $_POST['count'] ) ) {
 			return null;
 		}
+
+		$db = &JFactory::getDBO();
 
 		$count = 0;
 		for ( $i=0; $i<$_POST['count']; $i++ ) {
