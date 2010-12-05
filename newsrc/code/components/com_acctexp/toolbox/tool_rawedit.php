@@ -41,27 +41,55 @@ class tool_rawedit
 					$fixed = array( 'userid' );
 
 					$object = new metaUserDB( $db );
+
+					$_POST['id'] = $object->getIDbyUserid( $_POST['id'] );
 					break;
 				case 'processor':
+					if ( !is_numeric( $_POST['id'] ) )  {
+						$query = 'SELECT `id`'
+								. ' FROM #__acctexp_config_processors'
+								. ' WHERE `name` = \'' . $db->getEscaped( $_POST['id'] ) . '\''
+								;
+						$db->setQuery( $query );
+
+						$_POST['id'] = $db->loadResult();
+					}
+
 					$object = new processor( $db );
 					break;
 				case 'invoice':
+					if ( !is_numeric( $_POST['id'] ) )  {
+						$_POST['id'] = AECfetchfromDB::InvoicIDfromNumber( $_POST['id'] );
+					}
+
 					$object = new Invoice( $db );
 					break;
 			}
+
+			$object->load( $_POST['id'] );
 
 			$vars = get_object_vars( $object );
 
 			$encoded = $object->declareParamFields();
 
 			foreach ( $vars as $k => $v ) {
+				if ( is_null( $k ) ) {
+					$k = "";
+				}
+
 				if ( $k == 'id' ) {
 					$settings['id']	= array( 'hidden', $v );
 				} elseif ( in_array( $k, $fixed ) ) {
 					$settings[$k]	= array( 'p', $k, $k, $v );
 				} elseif ( in_array( $k, $encoded ) ) {
-					$settings[$k]	= array( 'inputD', $k, $k, jsoonHandler::encode( $v ) );
-				} else {
+					$v = jsoonHandler::encode( $v );
+
+					if ( $v === "null" ) {
+						$v = "";
+					}
+
+					$settings[$k]	= array( 'inputD', $k, $k, $v );
+				} elseif ( strpos( $k, '_' ) !== 0 ) {
 					$settings[$k]	= array( 'inputD', $k, $k, $v );
 				}
 			}
@@ -99,8 +127,6 @@ class tool_rawedit
 				break;
 			case 'invoice':
 				$object = new Invoice( $db );
-
-				$_POST['id'] = AECfetchfromDB::InvoiceIDfromNumber( $_POST['id'] );
 				break;
 		}
 
@@ -116,9 +142,13 @@ class tool_rawedit
 
 		foreach ( $vars as $k => $v ) {
 			if ( in_array( $k, $encoded ) ) {
-				$object->$k	= jsoonHandler::decode( $v );
-			} else {
-				$object->$k	= $v;
+				if ( get_magic_quotes_gpc() ) {
+					$object->$k	= jsoonHandler::decode( stripslashes( $_POST[$k] ) );
+				} else {
+					$object->$k	= $_POST[$k];
+				}
+			} elseif ( strpos( $k, '_' ) !== 0 ) {
+				$object->$k	= $_POST[$k];
 			}
 		}
 
