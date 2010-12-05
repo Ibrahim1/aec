@@ -85,18 +85,16 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		$issuerRequest = new IssuerRequest();
+		$request = new IssuerRequest();
 
-		$issuerRequest->initMerchant( $this->settings );
+		$request->initMerchant( $this->settings );
 
-		// retrieve issuer list (list of banks servicing iDEAL to our subscriber)
-		$issuerList = $issuerRequest->doRequest();
+		$issuerList = $request->doRequest();
 
-		if( $issuerRequest->hasErrors() ) {
-			$errors = $issuerRequest->getErrors();			
-			// what do to here?			
+		if( $request->hasErrors() ) {
+			$errors = implode( ', ', $request->getErrors() );			
 		} else {		
-			foreach( $issuerList as $key => $name ) {
+			foreach ( $issuerList as $key => $name ) {
 				$options[]	= JHTML::_('select.option', $key, $name );
 			}
 	
@@ -109,38 +107,33 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		return true;
+		return "";
 	}
 
 	function transmitRequestXML( $xml, $request )
 	{
 		$return = array();
 
-		$description 		= substr(AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ),0,32);
-		$merchantReturnURL	= AECToolbox::deadsureURL("index.php?option=com_acctexp&task=ideal_advancednotification") ;
+		$description 		= substr( AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ), 0, 32 );
+		$merchantReturnURL	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=ideal_advancednotification" );
 		
-		$transactionRequest = new TransactionRequest();	
-		$transactionRequest->setOrderId( $request->invoice->invoice_number );
-		$transactionRequest->setOrderDescription( $description );
-		$transactionRequest->setOrderAmount( $request->int_var['amount'] );	
-		$transactionRequest->setIssuerId( $request->int_var['params']['issuerId'] );
-		$transactionRequest->setEntranceCode( $request->invoice->invoice_number );
-		$transactionRequest->setReturnUrl( $merchantReturnURL );
+		$request = new TransactionRequest();
+		$request->initMerchant( $this->settings );	
 
-		//TODO solve the state problem in a more elegant way...
-		//$transactionRequest->setAcquirer($this->settings['acquirer'],$this->settings['testmode']);
-		$issuerRequest->initMerchant( $this->settings );
-		
+		$request->setOrderId			( $request->invoice->invoice_number );
+		$request->setOrderDescription	( $description );
+		$request->setOrderAmount		( $request->int_var['amount'] );	
+		$request->setIssuerId			( $request->int_var['params']['issuerId'] );
+		$request->setEntranceCode		( $request->invoice->invoice_number );
+		$request->setReturnUrl			( $merchantReturnURL );
+
 		// get a valid transaction id
-		$transactionId = $transactionRequest->doRequest();
-		// TODO improve errorhandling
-		if($transactionRequest->hasErrors()) {
-			$return['error'] = $transactionRequest->getErrors();
+		$transactionId = $request->doRequest();
+
+		if ( $request->hasErrors() ) {
+			$return['error'] = implode( ', ', $request->getErrors() );
 		} else {
-			// TODO (?) log order, TransactionID and EntranceCode in database if necessary.
-			
-			// execute transaction
-			$transactionRequest->doTransaction();
+			$request->doTransaction();
 		}
 
 		return $return;
@@ -148,37 +141,25 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function parseNotification( $post )
 	{
-		$entrancecode = trim( aecGetParam( 'ec' ) );
-		$transactionID = trim( aecGetParam( 'trxid' ) );
-
-		$response = array();
-		$response['valid'] = false;
-		$response['invoice'] = $entrancecode;
+		$response				= array();
+		$response['valid']		= false;
+		$response['invoice']	= trim( aecGetParam( 'ec' ) );
 		
-		$statusRequest = new StatusRequest();
-		$statusRequest->setTransactionId($transactionID); 
+		$request = new StatusRequest();
+		$request->initMerchant( $this->settings );
 
-		//TODO solve the state problem in a more elegant way...
-		//$statusRequest->setAcquirer($this->settings['acquirer'],$this->settings['testmode']);
-		$issuerRequest->initMerchant( $this->settings );	
+		$request->setTransactionId( trim( aecGetParam( 'trxid' ) ) ); 
 
-		// get iDEAL transaction status
-		$status = $statusRequest->doRequest();
+		$status = $request->doRequest();
 
-		if ( $statusRequest->hasErrors() ) {
+		if ( $request->hasErrors() ) {
 			$response['error']		= true;
-			$response['errormsg']	= $statusRequest->getErrors();
+			$response['errormsg']	= implode( ', ', $request->getErrors() );
 		} elseif ( strcasecmp( $status, 'SUCCESS' ) === 0) {
 			$response['valid'] = true;
 		}
 
 		return $response;
-	}
-
-	function notificationError( $response, $notificationerror )
-	{
-		$redirect = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=cancel");
-		aecRedirect($redirect);
 	}
 }
 
@@ -688,11 +669,11 @@ class TransactionRequest extends IdealRequest
 
 	public function initMerchant( $settings )
 	{
-		$this->setAcquirer( $settings['acquirer'], $settings['testmode'] );
-		$this->setCachePath( $settings['cache_path'] );
-		$this->setMerchant( $settings['merchantid'],$settings['ideal_sub_id'] );
-		$this->setPrivateKey( $settings['private_key'], $settings['private_key_file'], $settings['private_certificate_file']);
-		$this->setSecurePath( $this->settings['ssl_path'] );
+		$this->setAcquirer		( $settings['acquirer'], $settings['testmode'] );
+		$this->setCachePath		( $settings['cache_path'] );
+		$this->setMerchant		( $settings['merchantid'],$settings['ideal_sub_id'] );
+		$this->setPrivateKey	( $settings['private_key'], $settings['private_key_file'], $settings['private_certificate_file']);
+		$this->setSecurePath	( $this->settings['ssl_path'] );
 	}
 
 	public function setOrderId($sOrderId)
