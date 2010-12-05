@@ -59,7 +59,7 @@ class tool_rawedit
 					break;
 				case 'invoice':
 					if ( !is_numeric( $_POST['id'] ) )  {
-						$_POST['id'] = AECfetchfromDB::InvoicIDfromNumber( $_POST['id'] );
+						$_POST['id'] = AECfetchfromDB::InvoiceIDfromNumber( $_POST['id'] );
 					}
 
 					$object = new Invoice( $db );
