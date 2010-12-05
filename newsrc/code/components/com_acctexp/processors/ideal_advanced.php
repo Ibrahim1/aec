@@ -86,26 +86,17 @@ class processor_ideal_advanced extends XMLprocessor
 	function checkoutform( $request )
 	{
 		$issuerRequest = new IssuerRequest();
-		
-		//TODO solve the state problem in a more elegant way...
-		//$issuerRequest->setAcquirer($this->settings['acquirer'],$this->settings['testmode']);
-		$issuerRequest->setAcquirer("sim",$this->settings['testmode']);
-		$issuerRequest->setCachePath($this->settings['cache_path']);
-		$issuerRequest->setMerchant($this->settings['merchantid'],$this->settings['ideal_sub_id']);
-		$issuerRequest->setPrivateKey(  $this->settings['private_key'],
-										$this->settings['private_key_file'],
-										$this->settings['private_certificate_file']);
-		$issuerRequest->setSecurePath($this->settings['ssl_path']);
-		
+
+		$issuerRequest->initMerchant( $this->settings );
+
 		// retrieve issuer list (list of banks servicing iDEAL to our subscriber)
 		$issuerList = $issuerRequest->doRequest();
-		// TODO improve errorhandling
-		if($issuerRequest->hasErrors()) {
+
+		if( $issuerRequest->hasErrors() ) {
 			$errors = $issuerRequest->getErrors();			
 			// what do to here?			
 		} else {		
-			// all is well for now...
-			foreach($issuerList as $key => $name) {
+			foreach( $issuerList as $key => $name ) {
 				$options[]	= JHTML::_('select.option', $key, $name );
 			}
 	
@@ -118,7 +109,6 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		// nothing to do here
 		return true;
 	}
 
@@ -126,38 +116,26 @@ class processor_ideal_advanced extends XMLprocessor
 	{
 		$return = array();
 
-		$issuerId 		= $request->int_var['params']['issuerId'];
-		$purchaseId		= $request->invoice->invoice_number;		
-		$entranceCode	= $purchaseId;
-		$amount			= $request->int_var['amount'];
-		$description 	= substr(AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ),0,32);
-		$merchantReturnURL = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=ideal_advancednotification") ;
+		$description 		= substr(AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ),0,32);
+		$merchantReturnURL	= AECToolbox::deadsureURL("index.php?option=com_acctexp&task=ideal_advancednotification") ;
 		
 		$transactionRequest = new TransactionRequest();	
-		$transactionRequest->setOrderId($purchaseId);
-		$transactionRequest->setOrderDescription($description);
-		$transactionRequest->setOrderAmount($amount);	
-		$transactionRequest->setIssuerId($issuerId);
-		$transactionRequest->setEntranceCode($entranceCode);
-		$transactionRequest->setReturnUrl($merchantReturnURL);
+		$transactionRequest->setOrderId( $request->invoice->invoice_number );
+		$transactionRequest->setOrderDescription( $description );
+		$transactionRequest->setOrderAmount( $request->int_var['amount'] );	
+		$transactionRequest->setIssuerId( $request->int_var['params']['issuerId'] );
+		$transactionRequest->setEntranceCode( $request->invoice->invoice_number );
+		$transactionRequest->setReturnUrl( $merchantReturnURL );
 
 		//TODO solve the state problem in a more elegant way...
 		//$transactionRequest->setAcquirer($this->settings['acquirer'],$this->settings['testmode']);
-		$transactionRequest->setAcquirer("sim",$this->settings['testmode']);
-		$transactionRequest->setCachePath($this->settings['cache_path']);
-		$transactionRequest->setMerchant($this->settings['merchantid'],$this->settings['ideal_sub_id']);
-		$transactionRequest->setPrivateKey(	$this->settings['private_key'],
-											$this->settings['private_key_file'],
-											$this->settings['private_certificate_file']);
-		$transactionRequest->setSecurePath($this->settings['ssl_path']);
+		$issuerRequest->initMerchant( $this->settings );
 		
 		// get a valid transaction id
 		$transactionId = $transactionRequest->doRequest();
 		// TODO improve errorhandling
 		if($transactionRequest->hasErrors()) {
 			$return['error'] = $transactionRequest->getErrors();
-			//$redirect = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=cancel");
-			//aecRedirect($redirect);			
 		} else {
 			// TODO (?) log order, TransactionID and EntranceCode in database if necessary.
 			
@@ -182,33 +160,18 @@ class processor_ideal_advanced extends XMLprocessor
 
 		//TODO solve the state problem in a more elegant way...
 		//$statusRequest->setAcquirer($this->settings['acquirer'],$this->settings['testmode']);
-		$statusRequest->setAcquirer("sim",$this->settings['testmode']);
-		$statusRequest->setCachePath($this->settings['cache_path']);
-		$statusRequest->setMerchant($this->settings['merchantid'],$this->settings['ideal_sub_id']);
-		$statusRequest->setPrivateKey(  $this->settings['private_key'],
-										$this->settings['private_key_file'],
-										$this->settings['private_certificate_file']);
-		$statusRequest->setSecurePath($this->settings['ssl_path']);		
+		$issuerRequest->initMerchant( $this->settings );	
 
 		// get iDEAL transaction status
 		$status = $statusRequest->doRequest();
-		// TODO improve errorhandling
-		if($statusRequest->hasErrors()) {
+
+		if ( $statusRequest->hasErrors() ) {
 			$response['error']		= true;
 			$response['errormsg']	= $statusRequest->getErrors();
-			//$redirect = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=cancel");
-			//aecRedirect ($redirect);				
-		} else {
-			if(strcasecmp($status, 'SUCCESS') === 0) {
-				$response['valid'] = true;
-			} else {
-				// status = CANCELLED, FAILURE, OPEN or EXPIRED
-				$response['valid'] = false;
-				//$redirect = AECToolbox::deadsureURL("index.php?option=com_acctexp&task=cancel");
-				//aecRedirect ($redirect);				
-			}
+		} elseif ( strcasecmp( $status, 'SUCCESS' ) === 0) {
+			$response['valid'] = true;
 		}
-		
+
 		return $response;
 	}
 
@@ -721,6 +684,15 @@ class TransactionRequest extends IdealRequest
 
 		// Random EntranceCode
 		$this->sEntranceCode = sha1(rand(1000000, 9999999));
+	}
+
+	public function initMerchant( $settings )
+	{
+		$this->setAcquirer( $settings['acquirer'], $settings['testmode'] );
+		$this->setCachePath( $settings['cache_path'] );
+		$this->setMerchant( $settings['merchantid'],$settings['ideal_sub_id'] );
+		$this->setPrivateKey( $settings['private_key'], $settings['private_key_file'], $settings['private_certificate_file']);
+		$this->setSecurePath( $this->settings['ssl_path'] );
 	}
 
 	public function setOrderId($sOrderId)
