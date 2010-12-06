@@ -691,51 +691,6 @@ class processor_google_checkout extends XMLprocessor
 		return $ppParams;
 	}
 
-	function loadCIM()
-	{
-		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
-
-		return $cim;
-	}
-
-	function loadCIMpay( $ppParams, $cim=null )
-	{
-		if ( is_null( $cim ) ) {
-			$cim = $this->loadCIM();
-		}
-
-		if ( empty( $ppParams->profileid ) ) {
-			return $cim;
-		}
-
-		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
-
-		if ( !empty( $ppParams->paymentprofileid ) ) {
-			$cim->setParameter( 'customerPaymentProfileId', $ppParams->paymentProfiles[$ppParams->paymentprofileid]->profileid );
-		}
-
-		$cim->getCustomerProfileRequest( $this );
-
-		return $cim;
-	}
-
-	function loadCIMship( $ppParams, $cim=null )
-	{
-		if ( is_null( $cim ) ) {
-			$cim = $this->loadCIM();
-		}
-
-		$cim->setParameter( 'customerProfileId', $ppParams->profileid );
-
-		if ( !empty( $ppParams->shippingprofileid ) ) {
-			$cim->setParameter( 'customerAddressId', $ppParams->shippingProfiles[$ppParams->shippingprofileid]->profileid );
-		}
-
-		$cim->getCustomerShippingAddressRequest( $this );
-
-		return $cim;
-	}
-
 	function prepareValidation( $subscription_list )
 	{
 		return true;
@@ -751,14 +706,14 @@ class processor_google_checkout extends XMLprocessor
 		$allowed = array( "Trial", "Active" );
 
 		if ( !in_array( $subscription->status, $allowed ) ) {
-			return false;
+			return null;
 		}
 
 		$invoice = new Invoice( $db );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
 		if ( empty( $invoice->id ) ) {
-			return false;
+			return null;
 		}
 
 		$option = 'com_acctexp';
@@ -797,13 +752,13 @@ class processor_google_checkout extends XMLprocessor
 			// Free, so no billing neccessary
 			$return['valid']	= true;
 
-			return false;
+			return null;
 		}
 
 		if ( !empty( $iFactory->invoice->params['totalOccurrences'] ) && !empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
 			// Only restrict rebill if we have all the info, otherwise fix below (d'oh)
 			if ( $iFactory->invoice->params['totalOccurrences'] >= $iFactory->invoice->params['maxOccurrences'] ) {
-				return false;
+				return null;
 			}
 		}
 
@@ -848,7 +803,7 @@ class processor_google_checkout extends XMLprocessor
 					$iFactory->invoice->storeload();
 				}
 
-				return true;
+				return null;
 			}
 		}
 

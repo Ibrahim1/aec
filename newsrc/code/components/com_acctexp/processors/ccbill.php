@@ -366,7 +366,7 @@ class processor_ccbill extends POSTprocessor
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 	function fetchURL( $url ) {

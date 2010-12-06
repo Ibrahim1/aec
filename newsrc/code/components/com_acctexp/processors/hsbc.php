@@ -460,7 +460,7 @@ class processor_hsbc extends XMLprocessor
 
 		if ( !in_array( $subscription->status, $allowed ) ) {
 			// Do not renew when the account has been canceled
-			return false;
+			return null;
 		}
 
 		return true;

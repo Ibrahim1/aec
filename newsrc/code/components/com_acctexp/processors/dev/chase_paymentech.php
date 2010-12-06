@@ -455,7 +455,7 @@ aecDebug( $response );
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 }

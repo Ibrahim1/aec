@@ -753,14 +753,14 @@ class processor_authorize_cim extends PROFILEprocessor
 		$allowed = array( "Trial", "Active" );
 
 		if ( !in_array( $subscription->status, $allowed ) ) {
-			return false;
+			return null;
 		}
 
 		$invoice = new Invoice( $db );
 		$invoice->loadbySubscriptionId( $subscription_id );
 
 		if ( empty( $invoice->id ) ) {
-			return false;
+			return null;
 		}
 
 		$option = 'com_acctexp';
@@ -799,13 +799,13 @@ class processor_authorize_cim extends PROFILEprocessor
 			// Free, so no billing neccessary
 			$return['valid']	= true;
 
-			return false;
+			return null;
 		}
 
 		if ( !empty( $iFactory->invoice->params['totalOccurrences'] ) && !empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
 			// Only restrict rebill if we have all the info, otherwise fix below (d'oh)
 			if ( $iFactory->invoice->params['totalOccurrences'] >= $iFactory->invoice->params['maxOccurrences'] ) {
-				return false;
+				return null;
 			}
 		}
 
@@ -854,7 +854,7 @@ class processor_authorize_cim extends PROFILEprocessor
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 }

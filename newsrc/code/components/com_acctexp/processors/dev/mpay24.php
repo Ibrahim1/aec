@@ -439,7 +439,7 @@ class processor_mpay24 extends XMLprocessor
 		$allowed = array( "Trial", "Active" );
 
 		if ( !in_array( $subscription->status, $allowed ) ) {
-			return false;
+			return null;
 		}
 
 		$invoice = new Invoice( $db );
@@ -448,7 +448,7 @@ class processor_mpay24 extends XMLprocessor
 		if ( !empty( $invoice->params['totalOccurrences'] ) && !empty( $invoice->params['maxOccurrences'] ) ) {
 			// Only restrict rebill if we have all the info, otherwise fix below (d'oh)
 			if ( $invoice->params['totalOccurrences'] >= $invoice->params['maxOccurrences'] ) {
-				return false;
+				return null;
 			}
 		}
 
@@ -498,7 +498,7 @@ class processor_mpay24 extends XMLprocessor
 			}
 		}
 
-		return false;
+		return null;
 	}
 
 }
