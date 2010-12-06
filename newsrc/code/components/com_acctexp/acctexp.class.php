@@ -2773,6 +2773,7 @@ class eventLog extends serialParamDBTable
 
 		$app = JFactory::getApplication();
 
+		// Event, Notice, Warning, Error
 		$legal_levels = array( 2, 8, 32, 128 );
 
 		if ( !in_array( (int) $level, $legal_levels ) ) {

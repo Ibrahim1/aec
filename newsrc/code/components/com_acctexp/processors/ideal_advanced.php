@@ -16,13 +16,15 @@ class processor_ideal_advanced extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'ideal_advanced';
-		$info['longname']		= _CFG_IDEAL_ADVANCED_LONGNAME;
-		$info['statement']		= _CFG_IDEAL_ADVANCED_STATEMENT;
-		$info['description']	= _CFG_IDEAL_ADVANCED_DESCRIPTION;
-		$info['currencies']	    = 'EUR';
-		$info['languages']		= 'NL';
-		$info['recurring']	    = 0;
+		$info['name']					= 'ideal_advanced';
+		$info['longname']				= _CFG_IDEAL_ADVANCED_LONGNAME;
+		$info['statement']				= _CFG_IDEAL_ADVANCED_STATEMENT;
+		$info['description']			= _CFG_IDEAL_ADVANCED_DESCRIPTION;
+		$info['currencies']				= 'EUR';
+		$info['languages']				= 'NL';
+		$info['recurring']	   			= 0;
+		$info['notify_trail_thanks']	= true;
+
 		return $info;
 	}
 
@@ -92,7 +94,15 @@ class processor_ideal_advanced extends XMLprocessor
 		$issuerList = $request->doRequest();
 
 		if( $request->hasErrors() ) {
-			$errors = implode( ', ', $request->getErrors() );			
+			$db = &JFactory::getDBO();
+
+			$short	= 'issuer list error';
+			$event	= 'Could not retrieve Issuer list. Error(s): ' . implode( ', ', $request->getErrors() );
+			$tags	= 'processor,ideal_advanced';
+			$params = array();
+
+			$eventlog = new eventLog( $db );
+			$eventlog->issue( $short, $tags, $event, 128, $params );
 		} else {		
 			foreach ( $issuerList as $key => $name ) {
 				$options[]	= JHTML::_('select.option', $key, $name );
@@ -112,7 +122,8 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		$return = array();
+		$response				= array();
+		$response['valid']		= false;
 
 		$description 		= substr( AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ), 0, 32 );
 		$merchantReturnURL	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=ideal_advancednotification" );
@@ -127,16 +138,16 @@ class processor_ideal_advanced extends XMLprocessor
 		$request->setEntranceCode		( $request->invoice->invoice_number );
 		$request->setReturnUrl			( $merchantReturnURL );
 
-		// get a valid transaction id
 		$transactionId = $request->doRequest();
 
 		if ( $request->hasErrors() ) {
 			$return['error'] = implode( ', ', $request->getErrors() );
-		} else {
-			$request->doTransaction();
-		}
 
-		return $return;
+			return $return;
+		} else {
+			// Redirect
+			return $request->doTransaction();
+		}
 	}
 
 	function parseNotification( $post )
