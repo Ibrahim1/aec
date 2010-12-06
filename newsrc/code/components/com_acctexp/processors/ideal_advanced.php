@@ -206,7 +206,16 @@ class IdealRequest
 	public function __construct()
 	{
 	}
-	
+
+	public function initMerchant( $settings )
+	{
+		$this->setAcquirer		( $settings['acquirer'], $settings['testmode'] );
+		$this->setCachePath		( $settings['cache_path'] );
+		$this->setMerchant		( $settings['merchantid'],$settings['ideal_sub_id'] );
+		$this->setPrivateKey	( $settings['private_key'], $settings['private_key_file'], $settings['private_certificate_file']);
+		$this->setSecurePath	( $this->settings['ssl_path'] );
+	}
+
 	// Should point to directory with .cer and .key files
 	public function setSecurePath($sPath)
 	{
@@ -676,15 +685,6 @@ class TransactionRequest extends IdealRequest
 
 		// Random EntranceCode
 		$this->sEntranceCode = sha1(rand(1000000, 9999999));
-	}
-
-	public function initMerchant( $settings )
-	{
-		$this->setAcquirer		( $settings['acquirer'], $settings['testmode'] );
-		$this->setCachePath		( $settings['cache_path'] );
-		$this->setMerchant		( $settings['merchantid'],$settings['ideal_sub_id'] );
-		$this->setPrivateKey	( $settings['private_key'], $settings['private_key_file'], $settings['private_certificate_file']);
-		$this->setSecurePath	( $this->settings['ssl_path'] );
 	}
 
 	public function setOrderId($sOrderId)

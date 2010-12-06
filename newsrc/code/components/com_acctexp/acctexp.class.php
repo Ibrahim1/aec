@@ -6878,6 +6878,8 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$metaUser->meta->addPlanID( $this->id );
 
+		$metaUser->temporaryRFIX();
+
 		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 		$metaUser->focusSubscription->type = $processor;
 
