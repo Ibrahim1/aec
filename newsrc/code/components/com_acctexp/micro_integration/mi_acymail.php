@@ -87,17 +87,17 @@ class mi_acymail extends MI
 
 	function relayAction( $request )
 	{
-		$is_allowed = false;
+		$new_allowed = false;
 
 		if ( empty( $this->settings['user_checkbox'] ) ) {
-			$is_allowed = true;
+			$new_allowed = true;
 		} elseif ( !empty( $this->settings['user_checkbox'] ) && !empty( $request->params['get_newsletter'] ) ) {
-			$is_allowed = true;
+			$new_allowed = true;
 		}
 
-		$subscriber = $this->getSubscriberID( $request, $is_allowed );
+		$subscriber = $this->getSubscriber( $request, $new_allowed );
 
-		if ( empty( $subscriberid ) ) {
+		if ( empty( $subscriber ) ) {
 			return null;
 		}
 
@@ -108,7 +108,7 @@ class mi_acymail extends MI
 		}
 
 		$lists = array();
-		if ( !empty( $this->settings['addlist' . $request->area] ) && $is_allowed ) {
+		if ( !empty( $this->settings['addlist' . $request->area] ) && $new_allowed ) {
 			foreach ( $this->settings['addlist' . $request->area] as $list ) {
 				$lists[$list] = array( 'status' => $statusAdd );
 			}
@@ -123,28 +123,38 @@ class mi_acymail extends MI
 		}
 	}
 
-	function getSubscriber( $request )
+	function getSubscriber( $request, $new_allowed )
 	{
 		$config = acymailing::config();
-		
-		$joomUser = new stdClass();
 
-		$joomUser->email = $request->metaUser->cmsUser->email;
-		$joomUser->name = $request->metaUser->cmsUser->name;
+		$subid = $userClass->subid( $request->metaUser->cmsUser->email );
 
-		if ( empty( $request->metaUser->cmsUser->block ) ) {
-			$joomUser->confirmed = 1;
+		if ( empty( $subid ) && !$new_allowed ) {
+			return false;
+		} elseif ( empty( $subid ) ) {
+			$joomUser = new stdClass();
+
+			$joomUser->email = $request->metaUser->cmsUser->email;
+			$joomUser->name = $request->metaUser->cmsUser->name;
+
+			if ( empty( $request->metaUser->cmsUser->block ) ) {
+				$joomUser->confirmed = 1;
+			}
+
+			$joomUser->enabled = $config->get('require_confirmation',false) ? (1 - (int)$user->block) : 1;
+			$joomUser->userid = $request->metaUser->userid;
+
+			$userClass = acymailing::get('class.subscriber');
+
+			$userClass->checkVisitor = false;
+			$userClass->sendConf = false;
+
+			$subid = $userClass->save( $joomUser );
 		}
-
-		$joomUser->enabled = $config->get('require_confirmation',false) ? (1 - (int)$user->block) : 1;
-		$joomUser->userid = $request->metaUser->userid;
 
 		$userClass = acymailing::get('class.subscriber');
 
-		$userClass->checkVisitor = false;
-		$userClass->sendConf = false;
-
-		return $userClass->save( $joomUser );
+		return $userClass->get( $subid );
 	}
 
 }
