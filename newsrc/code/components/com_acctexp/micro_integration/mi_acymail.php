@@ -26,12 +26,10 @@ class mi_acymail extends MI
 	{
 		$settings = array();
 
-		if ( !file_exists( rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_acymailing' . DS . 'helpers' . DS . 'list.php' ) ) {
+		if ( !$this->loadACY() ) {
 			echo 'This module can not work without the ACY Mailing Component';
 
-			return $settings;
-		} else {
-			@include_once( rtrim( JPATH_ADMINISTRATOR, DS ).DS.'components'.DS.'com_acymailing'.DS.'helpers'.DS.'helper.php' );
+			return false;
 		}
 
 		$db = &JFactory::getDBO();
@@ -87,6 +85,10 @@ class mi_acymail extends MI
 
 	function relayAction( $request )
 	{
+		if ( !$this->loadACY() ) {
+			return null;
+		}
+
 		$new_allowed = false;
 
 		if ( empty( $this->settings['user_checkbox'] ) ) {
@@ -157,5 +159,20 @@ class mi_acymail extends MI
 		return $userClass->get( $subid );
 	}
 
+	function loadACY()
+	{
+		if ( !file_exists( rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_acymailing' . DS . 'helpers' . DS . 'list.php' ) ) {
+			echo 'This module can not work without the ACY Mailing Component';
+
+			return false;
+		} else {
+			if ( !class_exists( 'acymailing' ) ) {
+				@include_once( rtrim( JPATH_ADMINISTRATOR, DS ).DS.'components'.DS.'com_acymailing'.DS.'helpers'.DS.'helper.php' );
+			}
+
+			return true;
+		}
+
+	}
 }
 ?>
