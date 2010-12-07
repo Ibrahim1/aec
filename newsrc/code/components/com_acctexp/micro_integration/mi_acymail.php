@@ -26,12 +26,10 @@ class mi_acymail extends MI
 	{
 		$settings = array();
 
-		if ( !file_exists( rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_acymailing' . DS . 'helpers' . DS . 'list.php' ) ) {
+		if ( !$this->loadACY() ) {
 			echo 'This module can not work without the ACY Mailing Component';
 
-			return $settings;
-		} else {
-			@include_once( rtrim( JPATH_ADMINISTRATOR, DS ).DS.'components'.DS.'com_acymailing'.DS.'helpers'.DS.'helper.php' );
+			return false;
 		}
 
 		$db = &JFactory::getDBO();
@@ -87,17 +85,21 @@ class mi_acymail extends MI
 
 	function relayAction( $request )
 	{
-		$is_allowed = false;
-
-		if ( empty( $this->settings['user_checkbox'] ) ) {
-			$is_allowed = true;
-		} elseif ( !empty( $this->settings['user_checkbox'] ) && !empty( $request->params['get_newsletter'] ) ) {
-			$is_allowed = true;
+		if ( !$this->loadACY() ) {
+			return null;
 		}
 
-		$subscriber = $this->getSubscriberID( $request, $is_allowed );
+		$new_allowed = false;
 
-		if ( empty( $subscriberid ) ) {
+		if ( empty( $this->settings['user_checkbox'] ) ) {
+			$new_allowed = true;
+		} elseif ( !empty( $this->settings['user_checkbox'] ) && !empty( $request->params['get_newsletter'] ) ) {
+			$new_allowed = true;
+		}
+
+		$subscriber = $this->getSubscriber( $request, $new_allowed );
+
+		if ( empty( $subscriber ) ) {
 			return null;
 		}
 
@@ -108,7 +110,7 @@ class mi_acymail extends MI
 		}
 
 		$lists = array();
-		if ( !empty( $this->settings['addlist' . $request->area] ) && $is_allowed ) {
+		if ( !empty( $this->settings['addlist' . $request->area] ) && $new_allowed ) {
 			foreach ( $this->settings['addlist' . $request->area] as $list ) {
 				$lists[$list] = array( 'status' => $statusAdd );
 			}
@@ -123,29 +125,54 @@ class mi_acymail extends MI
 		}
 	}
 
-	function getSubscriber( $request )
+	function getSubscriber( $request, $new_allowed )
 	{
 		$config = acymailing::config();
-		
-		$joomUser = new stdClass();
 
-		$joomUser->email = $request->metaUser->cmsUser->email;
-		$joomUser->name = $request->metaUser->cmsUser->name;
+		$subid = $userClass->subid( $request->metaUser->cmsUser->email );
 
-		if ( empty( $request->metaUser->cmsUser->block ) ) {
-			$joomUser->confirmed = 1;
+		if ( empty( $subid ) && !$new_allowed ) {
+			return false;
+		} elseif ( empty( $subid ) ) {
+			$joomUser = new stdClass();
+
+			$joomUser->email = $request->metaUser->cmsUser->email;
+			$joomUser->name = $request->metaUser->cmsUser->name;
+
+			if ( empty( $request->metaUser->cmsUser->block ) ) {
+				$joomUser->confirmed = 1;
+			}
+
+			$joomUser->enabled = $config->get('require_confirmation',false) ? (1 - (int)$user->block) : 1;
+			$joomUser->userid = $request->metaUser->userid;
+
+			$userClass = acymailing::get('class.subscriber');
+
+			$userClass->checkVisitor = false;
+			$userClass->sendConf = false;
+
+			$subid = $userClass->save( $joomUser );
 		}
-
-		$joomUser->enabled = $config->get('require_confirmation',false) ? (1 - (int)$user->block) : 1;
-		$joomUser->userid = $request->metaUser->userid;
 
 		$userClass = acymailing::get('class.subscriber');
 
-		$userClass->checkVisitor = false;
-		$userClass->sendConf = false;
-
-		return $userClass->save( $joomUser );
+		return $userClass->get( $subid );
 	}
 
+	function loadACY()
+	{
+		if ( !file_exists( rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_acymailing' . DS . 'helpers' . DS . 'list.php' ) ) {
+			echo 'This module can not work without the ACY Mailing Component';
+
+			return false;
+		} else {
+			if ( !class_exists( 'acymailing' ) ) {
+				@include_once( rtrim( JPATH_ADMINISTRATOR, DS ).DS.'components'.DS.'com_acymailing'.DS.'helpers'.DS.'helper.php' );
+			}
+
+			return true;
+		}
+
+	}
 }
 ?>
