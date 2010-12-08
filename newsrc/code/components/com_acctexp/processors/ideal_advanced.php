@@ -87,17 +87,17 @@ class processor_ideal_advanced extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		$request = new IssuerRequest();
+		$idealRequest = new IssuerRequest();
 
-		$request->initMerchant( $this->settings );
+		$idealRequest->initMerchant( $this->settings );
 
-		$issuerList = $request->doRequest();
+		$issuerList = $idealRequest->doRequest();
 
-		if( $request->hasErrors() ) {
+		if( $idealRequest->hasErrors() ) {
 			$db = &JFactory::getDBO();
 
 			$short	= 'issuer list error';
-			$event	= 'Could not retrieve Issuer list. Error(s): ' . implode( ', ', $request->getErrors() );
+			$event	= 'Could not retrieve Issuer list. Error(s): ' . implode( ', ', $idealRequest->getErrorsDesc() );
 			$tags	= 'processor,ideal_advanced';
 			$params = array();
 
@@ -128,25 +128,25 @@ class processor_ideal_advanced extends XMLprocessor
 		$description 		= substr( AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ), 0, 32 );
 		$merchantReturnURL	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=ideal_advancednotification" );
 		
-		$request = new TransactionRequest();
-		$request->initMerchant( $this->settings );	
+		$idealRequest = new TransactionRequest();
+		$idealRequest->initMerchant( $this->settings );	
 
-		$request->setOrderId			( $request->invoice->invoice_number );
-		$request->setOrderDescription	( $description );
-		$request->setOrderAmount		( $request->int_var['amount'] );	
-		$request->setIssuerId			( $request->int_var['params']['issuerId'] );
-		$request->setEntranceCode		( $request->invoice->invoice_number );
-		$request->setReturnUrl			( $merchantReturnURL );
+		$idealRequest->setOrderId			( $request->invoice->invoice_number );
+		$idealRequest->setOrderDescription	( $description );
+		$idealRequest->setOrderAmount		( $request->int_var['amount'] );	
+		$idealRequest->setIssuerId			( $request->int_var['params']['issuerId'] );
+		$idealRequest->setEntranceCode		( $request->invoice->invoice_number );
+		$idealRequest->setReturnUrl			( $merchantReturnURL );
 
-		$transactionId = $request->doRequest();
+		$transactionId = $idealRequest->doRequest();
 
-		if ( $request->hasErrors() ) {
-			$return['error'] = implode( ', ', $request->getErrors() );
+		if ( $idealRequest->hasErrors() ) {
+			$return['error'] = implode( ', ', $idealRequest->getErrorsDesc() );
 
 			return $return;
 		} else {
 			// Redirect
-			return $request->doTransaction();
+			return $idealRequest->doTransaction();
 		}
 	}
 
@@ -154,19 +154,24 @@ class processor_ideal_advanced extends XMLprocessor
 	{
 		$response				= array();
 		$response['valid']		= false;
-		$response['invoice']	= trim( aecGetParam( 'ec' ) );
-		
-		$request = new StatusRequest();
-		$request->initMerchant( $this->settings );
+		$response['invoice']	= aecGetParam( 'ec', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-		$request->setTransactionId( trim( aecGetParam( 'trxid' ) ) ); 
+		return $response;
+	}
 
-		$status = $request->doRequest();
+	function validateNotification( $response, $post, $invoice )
+	{
+		$idealRequest = new StatusRequest();
+		$idealRequest->initMerchant( $this->settings );
 
-		if ( $request->hasErrors() ) {
+		$idealRequest->setTransactionId( trim( aecGetParam( 'trxid', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) ) ); 
+
+		$status = $idealRequest->doRequest();
+
+		if ( $idealRequest->hasErrors() ) {
 			$response['error']		= true;
-			$response['errormsg']	= implode( ', ', $request->getErrors() );
-		} elseif ( strcasecmp( $status, 'SUCCESS' ) === 0) {
+			$response['errormsg']	= implode( ', ', $idealRequest->getErrorsDesc() );
+		} elseif ( $status == 'SUCCESS' ) {
 			$response['valid'] = true;
 		}
 
@@ -213,7 +218,7 @@ class IdealRequest
 		$this->setCachePath		( $settings['cache_path'] );
 		$this->setMerchant		( $settings['merchantid'],$settings['ideal_sub_id'] );
 		$this->setPrivateKey	( $settings['private_key'], $settings['private_key_file'], $settings['private_certificate_file']);
-		$this->setSecurePath	( $this->settings['ssl_path'] );
+		$this->setSecurePath	( $settings['ssl_path'] );
 	}
 
 	// Should point to directory with .cer and .key files
@@ -332,10 +337,22 @@ class IdealRequest
 	{
 		return $this->aErrors;
 	}
-	
+
+	public function getErrorsDesc()
+	{
+		$errors = $this->getErrors();
+
+		$array = array();
+		foreach ( $errors as $error ) {
+			$array[] = $error['desc'];
+		}
+
+		return $array;
+	}
+
 	public function hasErrors()
 	{
-		return (sizeof($this->aErrors) ? true : false);
+		return (count($this->aErrors) ? true : false);
 	}
 	
 	// Validate configuration
@@ -343,7 +360,7 @@ class IdealRequest
 	{
 		$bOk = true;
 	
-		for($i = 0; $i < sizeof($aSettings); $i++)
+		for($i = 0; $i < count($aSettings); $i++)
 		{
 			if(empty($this->$aSettings[$i]))
 			{
