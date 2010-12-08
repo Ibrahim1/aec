@@ -1741,7 +1741,7 @@ class Payment_HTML
 					</table>
 				</div>
 				<div id="text_after_content"><?php echo $data['after_content']; ?></div>
-				<?php if ( !empty( $data['recurringstatus'] ) ) { ?>
+				<?php if ( !empty( $data['recurringstatus'] ) && !empty( $data['invoice_billing_history'] ) ) { ?>
 					<div id="invoice_paidstatus">
 						<p><?php echo $data['paidstatus']; ?></p>
 						<div id="invoice_billing_history">
