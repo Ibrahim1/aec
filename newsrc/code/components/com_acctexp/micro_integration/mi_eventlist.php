@@ -63,6 +63,38 @@ class mi_eventlist extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
+	function detect_application()
+	{
+		$path = rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_eventlist' . DS . 'helpers' . DS . 'helper.php';
+
+		return file_exists( $path );
+	}
+
+	function hacks()
+	{
+		$hacks = array();
+
+		$edithack = '// AEC HACK eventlist1 START' . "\n"
+		. 'case 4:' . "\n"
+		. '// Tell the user to use the standard register link' . "\n"
+		. 'echo "Register using the link above"' . "\n"
+		. 'break;' . "\n"
+		. '// Dismissing the standard case 4 here' . "\n"
+		. 'case 999:' . "\n"
+		. '// AEC HACK eventlist1 END' . "\n"
+		;
+
+		$n = 'eventlist1';
+		$hacks[$n]['name']				=	'default_attendees.php #1';
+		$hacks[$n]['desc']				=	"Show a registration notice instead of a registration form, which could result in broken registrations.";
+		$hacks[$n]['type']				=	'file';
+		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_eventlist/views/details/tmpl/default_attendees.php';
+		$hacks[$n]['read']				=	'case 4:';
+		$hacks[$n]['insert']			=	$edithack . "\n";
+
+		return $hacks;
+	}
+
 	function relayAction( $request )
 	{
 		if ( !empty( $this->settings['event' . $request->area] ) ) {
