@@ -7912,11 +7912,11 @@ class InvoiceFactory
 	}
 
 	function initPassthrough( $passthrough )
-	{
+	{aecDebug("incomingPT");aecDebug($passthrough);aecDebug("incomingPOST");aecDebug($_POST);
 		if ( empty( $passthrough ) ) {
 			$passthrough = aecPostParamClear( $_POST, '', true );
 		}
-
+aecDebug("clearedPT");aecDebug($passthrough);
 		if ( isset( $passthrough['aec_passthrough'] ) ) {
 			if ( is_array( $passthrough['aec_passthrough'] ) ) {
 				$this->passthrough = $passthrough['aec_passthrough'];
@@ -9466,13 +9466,11 @@ class InvoiceFactory
 		if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
 			$this->TempTokenFromPlan( $plan );
 
-			$myparams = "";
-
-			if ( $_GET['fname'] ) {
+			if ( !empty( $_GET['fname'] ) ) {
 				setcookie( "fname", $_GET['fname'], time()+60*10 );
 			}
 
-			if ( $_GET['femail'] ) {
+			if ( !empty( $_GET['femail'] ) ) {
 				setcookie( "femail", $_GET['femail'], time()+60*10 );
 			}
 
@@ -15100,7 +15098,7 @@ class AECToolbox
 
 		$app = JFactory::getApplication();
 
-		//ob_start();
+		ob_start();
 
 		// Let CB/JUSER think that everything is going fine
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
@@ -15148,10 +15146,10 @@ class AECToolbox
 		$var['username'] = aecEscape( $var['username'], array( 'string', 'badchars' ) );
 
 		$savepwd = aecEscape( $var['password'], array( 'string', 'badchars' ) );
-
+aecDebug($_POST);
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to save the user
-			if ( /*$internal &&*/ !GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( $internal && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
 				include_once( JPATH_SITE . '/components/com_acctexp/lib/codeofshame/cbregister.php' );
 
 				if ( empty( $_POST['firstname'] ) && !empty( $_POST['name'] ) ) {
@@ -15167,9 +15165,9 @@ class AECToolbox
 				}
 
 				$_POST['password__verify'] = $_POST['password2'];
-
+aecDebug("saveRegistrationNOCHECKSLOL");
 				@saveRegistrationNOCHECKSLOL( $option );
-			} else {
+			} else {aecDebug("saveRegistration");
 				@saveRegistration( $option );
 			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
@@ -15355,7 +15353,7 @@ class AECToolbox
 				}
 			}
 		}
-
+aecDebug(ob_get_contents());
 		ob_clean();
 
 		// We need the new userid, so we're fetching it from the newly created entry here
