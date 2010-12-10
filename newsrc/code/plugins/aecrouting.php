@@ -64,6 +64,13 @@ class plgSystemAECrouting extends JPlugin
 		$vars['processor']	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 		$vars['recurring']	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
 
+		$vars['tcregs']			= $vars['task'] == 'saveregisters';
+		$vars['tregs']			= $vars['task'] == 'registers';
+		$vars['tsregs']			= $vars['task'] == 'saveRegistration';
+		$vars['tsue']			= $vars['task'] == 'saveUserEdit';
+		$vars['tsu']			= $vars['task'] == 'save';
+		$vars['lostpw']			= $vars['task'] == 'lostPassword';
+
 		$vars['forget']		= JRequest::getVar( 'forget', '' );
 
 		$vars['submit']		= JRequest::getVar( 'submit', '' );
@@ -87,7 +94,7 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['j_reg']			= $vars['cu']		&& ( ( $vars['view'] == 'register' ) || ( $vars['view'] == 'registration' ) || ( $vars['task'] == 'register' ) );
 
-		$vars['cb_reg']			= $vars['ccb']		&& ( $vars['task'] == 'registers' );
+		$vars['cb_reg']			= $vars['ccb']		&& $vars['tregs'];
 
 		$vars['joms_reg']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
 		$vars['joms_regp']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
@@ -98,12 +105,6 @@ class plgSystemAECrouting extends JPlugin
 		$vars['alpha_regsv']	= $vars['alpha']	&& ( $vars['task'] == 'register_save' );
 
 		$vars['k2_regsv']		= $vars['k2']		&& ( $vars['task'] == 'register_save' );
-
-		$vars['tcregs']			= $vars['task'] == 'saveregisters';
-		$vars['tsregs']			= $vars['task'] == 'saveRegistration';
-		$vars['tsue']			= $vars['task'] == 'saveUserEdit';
-		$vars['tsu']			= $vars['task'] == 'save';
-		$vars['lostpw']			= $vars['task'] == 'lostPassword';
 
 		$vars['joms_any']	= ( $vars['joms_regsv'] || $vars['joms_regs'] || $vars['joms_regp'] || $vars['joms_reg'] );
 
@@ -369,7 +370,7 @@ class plgSystemAECrouting extends JPlugin
 		$search		= array();
 		$replace	= array();
 		$change		= false;
-
+aecDebug($vars);
 		if ( $vars['ccb'] && !$vars['ccb12'] ) {
 			$addinmarker = '<input type="hidden" name="task" value="saveregisters" />';
 
