@@ -560,7 +560,7 @@ function subscribe( $option )
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 	$username	= aecGetParam( 'username', '', true, array( 'string' ) );
-	$email		= aecGetParam( 'email', '', true, array( 'string' ) );
+	$email		= aecGetParam( 'email', '', true, array( 'string', 'clear_nonemail' ) );
 
 	$token		= aecGetParam( 'aectoken', 0, true, array( 'string' ) );
 

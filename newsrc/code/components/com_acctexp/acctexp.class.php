@@ -141,8 +141,8 @@ function aecEscape( $value, $safe_params )
 		} else {
 			$array = explode('@', $return, 2);
 
-			$username = preg_replace( '/[^a-z0-9._+-]+/i', '', $username );
-			$domain = preg_replace( '/[^a-z0-9.-]+/i', '', $domain );
+			$username = preg_replace( '/[^a-z0-9._+-]+/i', '', $array[0] );
+			$domain = preg_replace( '/[^a-z0-9.-]+/i', '', $array[1] );
 
 			$return = $username.'@'.$domain;
 		}
@@ -7912,11 +7912,11 @@ class InvoiceFactory
 	}
 
 	function initPassthrough( $passthrough )
-	{aecDebug("incomingPT");aecDebug($passthrough);aecDebug("incomingPOST");aecDebug($_POST);
+	{
 		if ( empty( $passthrough ) ) {
 			$passthrough = aecPostParamClear( $_POST, '', true );
 		}
-aecDebug("clearedPT");aecDebug($passthrough);
+
 		if ( isset( $passthrough['aec_passthrough'] ) ) {
 			if ( is_array( $passthrough['aec_passthrough'] ) ) {
 				$this->passthrough = $passthrough['aec_passthrough'];
@@ -15146,7 +15146,7 @@ class AECToolbox
 		$var['username'] = aecEscape( $var['username'], array( 'string', 'badchars' ) );
 
 		$savepwd = aecEscape( $var['password'], array( 'string', 'badchars' ) );
-aecDebug($_POST);
+
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to save the user
 			if ( $internal && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
@@ -15165,10 +15165,29 @@ aecDebug($_POST);
 				}
 
 				$_POST['password__verify'] = $_POST['password2'];
-aecDebug("saveRegistrationNOCHECKSLOL");
+
 				@saveRegistrationNOCHECKSLOL( $option );
-			} else {aecDebug("saveRegistration");
+			} else {
 				@saveRegistration( $option );
+
+				$cbreply = ob_get_contents();
+
+				$alertstart = strpos( $cbreply, '<script type="text/javascript">alert(\'' );
+
+				// Emergency fallback
+				if ( $alertstart !== false ) {
+					ob_clean();
+
+					$alertend = strpos( $cbreply, '\'); </script>', $alertstart );
+
+					$alert = substr( $cbreply, $alertstart, $alertend-$alertstart );
+
+					if ( $aecConfig->cfg['plans_first'] ) {
+						return aecErrorAlert( $alert, $action='window.history.go(-2);' );
+					} else {
+						return aecErrorAlert( $alert, $action='window.history.go(-3);' );
+					}
+				}
 			}
 		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 			// This is a JUSER registration, borrowing their code to save the user
@@ -15353,7 +15372,7 @@ aecDebug("saveRegistrationNOCHECKSLOL");
 				}
 			}
 		}
-aecDebug(ob_get_contents());
+
 		ob_clean();
 
 		// We need the new userid, so we're fetching it from the newly created entry here

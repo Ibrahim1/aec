@@ -239,7 +239,7 @@ class plgSystemAECrouting extends JPlugin
 					$username	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password	= aecGetParam( 'jspassword', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password2	= aecGetParam( 'jspassword2', "", true, array( 'string', 'clear_nonalnum' ) );
-					$email		= aecGetParam( 'jsemail', "", true, array( 'string', 'clear_nonalnum' ) );
+					$email		= aecGetParam( 'jsemail', "", true, array( 'string', 'clear_nonemail' ) );
 				} else {
 					$username	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password	= aecGetParam( 'password', "", true, array( 'string', 'clear_nonalnum' ) );
@@ -249,7 +249,7 @@ class plgSystemAECrouting extends JPlugin
 						$password2	= aecGetParam( 'password__verify', "", true, array( 'string', 'clear_nonalnum' ) );
 					}
 
-					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonalnum' ) );
+					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonemail' ) );
 				}
 
 				if ( !empty( $username ) && !empty( $password ) && !empty( $email ) ) {
@@ -262,7 +262,7 @@ class plgSystemAECrouting extends JPlugin
 					
 					foreach ( $_POST as $k => $v ) {
 						if ( !in_array( $k, $skip ) ) {
-							$temptoken->content[$k]	= aecGetParam( $k, "", true, array( 'string', 'clear_nonalnum' ) );
+							$temptoken->content[$k]	= aecGetParam( $k, "", true, array( 'string' ) );
 						}
 					}
 
@@ -370,7 +370,7 @@ class plgSystemAECrouting extends JPlugin
 		$search		= array();
 		$replace	= array();
 		$change		= false;
-aecDebug($vars);
+
 		if ( $vars['ccb'] && !$vars['ccb12'] ) {
 			$addinmarker = '<input type="hidden" name="task" value="saveregisters" />';
 
