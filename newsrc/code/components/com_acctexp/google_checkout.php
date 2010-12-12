@@ -26,7 +26,7 @@ class processor_google_checkout extends XMLprocessor
 		$info['longname']				= _CFG_GOOGLE_CHECKOUT_LONGNAME;
 		$info['statement']				= _CFG_GOOGLE_CHECKOUT_STATEMENT;
 		$info['description']			= _CFG_GOOGLE_CHECKOUT_DESCRIPTION;
-		$info['currencies']				= "USD,GBP"; // only USD and GBP are accepted by Google Checkout
+		$info['currencies']				= "usd,gbp"; // only USD and GBP are accepted by Google Checkout
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['notify_trail_thanks']	= true;
 
@@ -36,8 +36,8 @@ class processor_google_checkout extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['merchant_id']		= '--';
-		$settings['merchant_key']		= '--';
+		$settings['merchant_id']		= '477250470079899';
+		$settings['merchant_key']		= '5daHScuvdmf5awZFzAkc-g';
 		$settings['testmode']			= true;
 		$settings['currency']			= 'USD';
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -71,8 +71,8 @@ class processor_google_checkout extends XMLprocessor
 	{
 		require_once('google_checkout/library/googlecart.php');
 		require_once('google_checkout/library/googleitem.php');
-		//require_once('google_checkout/library/googleshipping.php');
-		//require_once('google_checkout/library/googletax.php');
+		//require_once('google_checkout/library/googleshipping.php'); NYI
+		//require_once('google_checkout/library/googletax.php'); NYI
 		
 		if ( $this->settings['testmode'] ) {
 			$server_type = "sandbox";
@@ -91,13 +91,15 @@ class processor_google_checkout extends XMLprocessor
 		
       	$cart	= new GoogleCart( $merchant_id, $merchant_key, $server_type, $currency );
       	$item_1 = new GoogleItem( $item_name, $item_description, $qty, $amount ); 
-      	
+		
 		$cart->AddItem($item_1);
             
 		$cart->SetContinueShoppingUrl($merchantReturnURL);	
-
+		
 	    $cart->SetMerchantPrivateData( new MerchantPrivateData(array("invoice" => $request->invoice->invoice_number )));
-
+			
+//aecdebug($request);
+			
 		// Display the Google Checkout button instead of the normal checkout button.
 		$return = '<p style="float:right;text-align:right;">' . $cart->CheckoutButtonCode("SMALL") . '</p>';
 		
