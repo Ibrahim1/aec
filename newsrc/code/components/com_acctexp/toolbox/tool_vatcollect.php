@@ -70,9 +70,13 @@ class tool_vatcollect
 			$entry = new logHistory( $db );
 			$entry->load( $id );
 
+			$filter = array( 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel' );
+
 			$refund = false;
 			foreach ( $entry->response as $v ) {
-				if ( $v == 'refund' ) {
+				if ( in_array( $v, $filter ) ) {
+					continue 2;
+				} elseif ( $v == 'refund' ) {
 					$refund = true;
 				}
 			}
@@ -111,10 +115,22 @@ class tool_vatcollect
 
 			if ( $refund ) {
 				$historylist[$date]['amount'] -= $amount;
-				$historylist[$date]['tax'] -= $tax;
+
+				if ( $tax ) {
+					$historylist[$date]['taxed'] -= $amount;
+					$historylist[$date]['tax'] -= $tax;
+				} else {
+					$historylist[$date]['untaxed'] -= $amount;
+				}
 			} else {
 				$historylist[$date]['amount'] += $amount;
-				$historylist[$date]['tax'] += $tax;
+				
+				if ( $tax ) {
+					$historylist[$date]['taxed'] += $amount;
+					$historylist[$date]['tax'] += $tax;
+				} else {
+					$historylist[$date]['untaxed'] += $amount;
+				}
 			}
 		}
 		$return = "";
@@ -125,15 +141,20 @@ class tool_vatcollect
 			if ( date( 'j', strtotime( $date ) ) == 1 ) {
 				$month = array();
 			}
-			
+
 			$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em;">';
 
 			$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">' . $date . '</td>';
 			$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $history['amount'] . '</td>';
-			$return .= '<td style="width: 5em;">&bull;</td>';
-			$return .= '<td title="Tax" style="font-weight: bold; width: 5em;">' . $history['tax'] . '</td>';
+			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $history['untaxed'] . '</td>';
+			$return .= '<td style="width: 5em;">+</td>';
+			$return .= '<td style="width: 5em;">(</td>';
+			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $history['taxed'] . '</td>';
+			$return .= '<td style="width: 5em;">+</td>';
+			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $history['tax'] . '</td>';
+			$return .= '<td style="width: 5em;">)</td>';
+			$return .= '<td style="width: 5em;">=</td>';
 
 			$return .= '<td style="width: 5em;">&nbsp;</td>';
 			$return .= '<td title="Grand Total" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $history['amount'] + $history['tax'] ) . '</td>';
@@ -146,17 +167,25 @@ class tool_vatcollect
 			if ( isset( $month ) ) {
 				$month['amount'] += $history['amount'];
 				$month['tax'] += $history['tax'];
+
+				$month['taxed'] += $history['taxed'];
+				$month['untaxed'] += $history['untaxed'];
 			}
 
 			if ( isset( $month ) && ( date( 'j', strtotime( $date ) ) == date( 't', strtotime( $date ) ) ) ) {
 				$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em; background-color: #ddd;">';
 
-				$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">Week</td>';
+				$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">Month</td>';
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-				$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $month['amount'] . '</td>';
-				$return .= '<td style="width: 5em;">&bull;</td>';
-				$return .= '<td title="Tax" style="font-weight: bold; width: 5em;">' . $month['tax'] . '</td>';
+			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $month['untaxed'] . '</td>';
+			$return .= '<td style="width: 5em;">+</td>';
+			$return .= '<td style="width: 5em;">(</td>';
+			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $month['taxed'] . '</td>';
+			$return .= '<td style="width: 5em;">+</td>';
+			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $month['tax'] . '</td>';
+			$return .= '<td style="width: 5em;">)</td>';
+			$return .= '<td style="width: 5em;">=</td>';
 
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
 				$return .= '<td title="Grand Total" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $month['amount'] + $month['tax'] ) . '</td>';

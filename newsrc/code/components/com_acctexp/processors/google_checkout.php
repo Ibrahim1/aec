@@ -82,7 +82,6 @@ class processor_google_checkout extends XMLprocessor
 		
 		$item_name			= $request->plan->name;
 		$item_description 	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$merchantReturnURL	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=google_checkoutnotification" );
 		$merchant_id		= $this->settings['merchant_id'];
 		$merchant_key		= $this->settings['merchant_key'];		
 		$currency			= $this->settings['currency'];
@@ -94,7 +93,7 @@ class processor_google_checkout extends XMLprocessor
       	
 		$cart->AddItem($item_1);
             
-		$cart->SetContinueShoppingUrl($merchantReturnURL);	
+		$cart->SetContinueShoppingUrl($request->int_var['return_url']);	
 
 	    $cart->SetMerchantPrivateData( new MerchantPrivateData(array("invoice" => $request->invoice->invoice_number )));
 
