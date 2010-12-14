@@ -6405,7 +6405,7 @@ function toolBoxTool( $option, $cmd )
 					// Get preset values from POST
 					foreach ( $tb_settings as $n => $v ) {
 						if ( isset( $_POST[$n] ) ) {
-							$tb_settings[$n][4] = $_POST[$n];
+							$tb_settings[$n][3] = $_POST[$n];
 						}
 					}
 
