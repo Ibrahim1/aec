@@ -2601,8 +2601,18 @@ class HTML_AcctExp
 							$field = unserialize( base64_decode( $row->response ) );
 
 							if ( is_array( $field ) ) {
-								foreach ( $field as $n => $v) {
-									echo $n." = ".$v."<br />";
+								if ( count( $field ) == 1 ) {
+									foreach ( $field as $n => $v) {
+										$field = unserialize( base64_decode( $n ) );
+									}
+								}
+
+								if ( is_array( $field ) ) {
+									foreach ( $field as $n => $v) {
+										echo $n." = ".$v."<br />";
+									}
+								} else {
+									echo $field."<br />";
 								}
 							} else {
 								echo $field."<br />";
