@@ -24,36 +24,9 @@ class tool_vatcollect
 
 	function Settings()
 	{
-		// Compute sensible timeframe for the default
-		$day = date('d');
-
-		if ( ( $day < 7 ) || ( $day > 22 ) ) {
-			// Show second week
-			if ( $day > 22 ) {
-				$start	= strtotime( date( 'Y-m' ) . '-15 00:00:00' );
-				$end	= strtotime( date( 'Y-m-t' ) );
-			} else {
-				// This should probably be replaced by something using straight strtotime
-				$year = date( 'Y' );
-				
-				$prevmonth = date( 'm' ) - 1;
-
-				if ( $prevmonth <= 0 ) {
-					$year = $year - 1;
-
-					$prevmonth = 12;
-				}
-
-				$lastday = date( 't', strtotime( $year . '-' . $prevmonth . '-15 00:00:00' ) );
-
-				$start	= strtotime( $year . '-' . $prevmonth . '-15 00:00:00' );
-				$end	= strtotime( $year . '-' . $prevmonth . '-' . $lastday . ' 23:59:59' );
-			}
-		} else {
-			// Show first week
-			$start	= strtotime( date( 'Y-m' ) . '-1 00:00:00' );
-			$end	= strtotime( date( 'Y-m' ) . '-14 23:59:59' );
-		}
+		// Always show full month
+		$start	= strtotime( date( 'Y-m' ) . '-1 00:00:00' );
+		$end	= strtotime( date( 'Y-m-t' ) . ' 23:59:59' );
 
 		$settings = array();
 		$settings['start_date']	= array( 'list_date', 'Start Date', '', date( 'Y-m-d', $start ) );
@@ -78,7 +51,7 @@ class tool_vatcollect
 			$end_timeframe = date( 'Y-m-d', time() );
 		}
 
-		$query = 'SELECT `id`, `plan_id`, `amount`, `transaction_date`'
+		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_log_history'
 				. ' WHERE transaction_date >= \'' . $start_timeframe . '\''
 				. ' AND transaction_date <= \'' . $end_timeframe . '\''
@@ -106,37 +79,51 @@ class tool_vatcollect
 
 			$date = date( 'Y-m-d', strtotime( $entry->transaction_date ) );
 
-			$pgroups = ItemGroupHandler::parentGroups( $entry->plan_id );
+			$iFactory = new InvoiceFactory( $entry->user_id, null, null, null, null, null, false, true );
 
-			if ( !in_array( $pgroups[0], $groups ) ) {
-				$groups[] = $pgroups[0];
+			if ( $iFactory->userid != $entry->user_id ) {
+				continue;
+			}
+
+			$iFactory->loadMetaUser();
+			$iFactory->touchInvoice( 'com_acctexp', $entry->invoice_number, false, true );
+
+			if ( $iFactory->invoice_number != $entry->invoice_number ) {
+				continue;
+			}
+
+			$iFactory->puffer( 'com_acctexp' );
+
+			$iFactory->loadItems();
+
+			$iFactory->loadItemTotal();
+
+			if ( isset( $iFactory->items->total ) ) {
+				$amount = $iFactory->items->total->cost['amount'];
+			} else {
+				continue;
+			}
+
+			$tax = 0;
+			foreach ( $iFactory->items->tax as $item ) {
+				$tax += $item['cost'];
 			}
 
 			if ( $refund ) {
-				$historylist[$date]['amount'] -= $entry->amount;
-				$historylist[$date]['groups'][$pgroups[0]]--;
+				$historylist[$date]['amount'] -= $amount;
+				$historylist[$date]['tax'] -= $tax;
 			} else {
-				$historylist[$date]['amount'] += $entry->amount;
-				$historylist[$date]['groups'][$pgroups[0]]++;
+				$historylist[$date]['amount'] += $amount;
+				$historylist[$date]['tax'] += $tax;
 			}
 		}
-
-		foreach ( $historylist as $date => $entry ) {
-			ksort( $historylist[$date]['groups'] );
-		}
-
 		$return = "";
 
 		$return .= '<table style="background-color: fff; width: 30%; margin: 0 auto; text-align: center !important; font-size: 180%;">';
 
-		$groupnames = array();
-		foreach ( $groups as $group ) {
-			$groupnames[$group] = ItemGroupHandler::groupName( $group );
-		}
-
 		foreach ( $historylist as $date => $history ) {
-			if ( date( 'D', strtotime( $date ) ) == 'Mon' ) {
-				$week = array();
+			if ( date( 'j', strtotime( $date ) ) == 1 ) {
+				$month = array();
 			}
 			
 			$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em;">';
@@ -144,54 +131,39 @@ class tool_vatcollect
 			$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">' . $date . '</td>';
 			$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-			foreach ( $groups as $group ) {
-				if ( empty( $history['groups'][$group] ) ) {
-					$count = 0;
-				} else {
-					$count = $history['groups'][$group];
-				}
-
-				$return .= '<td title="' . $groupnames[$group] . '" style="font-weight: bold; width: 5em;">' . $count . '</td>';
-
-				if ( isset( $week ) ) {
-					$week['groups'][$group] += $count;
-				}
-			}
-
-			if ( isset( $week ) ) {
-				$week['amount'] += $history['amount'];
-			}
+			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $history['amount'] . '</td>';
+			$return .= '<td style="width: 5em;">&bull;</td>';
+			$return .= '<td title="Tax" style="font-weight: bold; width: 5em;">' . $history['tax'] . '</td>';
 
 			$return .= '<td style="width: 5em;">&nbsp;</td>';
-			$return .= '<td title="Amount" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $history['amount'] ) . '</td>';
+			$return .= '<td title="Grand Total" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $history['amount'] + $history['tax'] ) . '</td>';
 			$return .= '</tr>';
 
 			$return .= '<tr style="height: 1px; background-color: #999;">';
-			$return .= '<td colspan="' . ( count($groups) + 4 ) . '"></td>';
+			$return .= '<td colspan="7"></td>';
 			$return .= '</tr>';
 
-			if ( isset( $week ) && ( date( 'D', strtotime( $date ) ) == 'Sun' ) ) {
+			if ( isset( $month ) ) {
+				$month['amount'] += $history['amount'];
+				$month['tax'] += $history['tax'];
+			}
+
+			if ( isset( $month ) && ( date( 'j', strtotime( $date ) ) == date( 't', strtotime( $date ) ) ) ) {
 				$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em; background-color: #ddd;">';
 
 				$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">Week</td>';
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-				foreach ( $groups as $group ) {
-					if ( empty( $week['groups'][$group] ) ) {
-						$count = 0;
-					} else {
-						$count = $week['groups'][$group];
-					}
-
-					$return .= '<td title="' . $groupnames[$group] . '" style="font-weight: bold; width: 5em;">' . $count . '</td>';
-				}
+				$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $month['amount'] . '</td>';
+				$return .= '<td style="width: 5em;">&bull;</td>';
+				$return .= '<td title="Tax" style="font-weight: bold; width: 5em;">' . $month['tax'] . '</td>';
 
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
-				$return .= '<td title="Amount" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $week['amount'] ) . '</td>';
+				$return .= '<td title="Grand Total" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $month['amount'] + $month['tax'] ) . '</td>';
 				$return .= '</tr>';
 
 				$return .= '<tr style="height: 1px; background-color: #999;">';
-				$return .= '<td colspan="' . ( count($groups) + 4 ) . '"></td>';
+				$return .= '<td colspan="7"></td>';
 				$return .= '</tr>';
 			}
 

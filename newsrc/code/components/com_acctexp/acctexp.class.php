@@ -8868,7 +8868,7 @@ class InvoiceFactory
 		return true;
 	}
 
-	function loadInvoice( $option )
+	function loadInvoice( $option, $redirect=true )
 	{
 		if ( !isset( $this->invoice ) ) {
 			$this->invoice = null;
@@ -8897,10 +8897,14 @@ class InvoiceFactory
 			$this->usage = $this->invoice->usage;
 		}
 
+		if ( !$redirect ) {
+			return true;
+		}
+
 		if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
-			$this->create( $option, 0, 0, $this->invoice_number );
+			return $this->create( $option, 0, 0, $this->invoice_number );
 		} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) === false ) ) {
-			$this->create( $option, 0, $this->usage, $this->invoice_number );
+			return $this->create( $option, 0, $this->usage, $this->invoice_number );
 		}
 
 		return true;

@@ -78,7 +78,7 @@ class tool_minireport
 			$end_timeframe = date( 'Y-m-d', time() );
 		}
 
-		$query = 'SELECT `id`, `plan_id`, `amount`, `transaction_date`'
+		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_log_history'
 				. ' WHERE transaction_date >= \'' . $start_timeframe . '\''
 				. ' AND transaction_date <= \'' . $end_timeframe . '\''

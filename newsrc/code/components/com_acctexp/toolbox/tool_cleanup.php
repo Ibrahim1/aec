@@ -35,13 +35,19 @@ class tool_cleanup
 		$db = &JFactory::getDBO();
 
 		// Find all entries lacking an existing user account
-		$tables = array( 'cart', 'couponsxuser', 'invoices', 'metauser', 'subscr' );
+		$tables = array(	'cart' => 'userid',
+							'couponsxuser' => 'userid',
+							'invoices' => 'userid',
+							'metauser' => 'userid',
+							'subscr' => 'userid',
+							'log_history' => 'user_id'
+						);
 
 		$found = array( 'total' => 0 );
-		foreach ( $tables as $table ) {
+		foreach ( $tables as $table => $key ) {
 			$query = 'SELECT count(*)'
 					. ' FROM #__acctexp_' . $table . ' AS a'
-					. ' LEFT JOIN #__users AS b ON a.userid = b.id'
+					. ' LEFT JOIN #__users AS b ON a.' . $key . ' = b.id'
 					. ' WHERE b.id is null'
 					;
 			$db->setQuery( $query );

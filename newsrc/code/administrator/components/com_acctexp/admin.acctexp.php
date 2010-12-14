@@ -6402,6 +6402,13 @@ function toolBoxTool( $option, $cmd )
 						unset( $tb_settings['lists'] );
 					}
 
+					// Get preset values from POST
+					foreach ( $tb_settings as $n => $v ) {
+						if ( isset( $_POST[$n] ) ) {
+							$tb_settings[$n][4] = $_POST[$n];
+						}
+					}
+
 					$settings = new aecSettings( 'TOOLBOX', 'E' );
 					$settings->fullSettingsArray( $tb_settings, array(), $lists );
 
