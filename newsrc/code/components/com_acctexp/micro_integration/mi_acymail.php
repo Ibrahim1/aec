@@ -129,6 +129,8 @@ class mi_acymail extends MI
 	{
 		$config = acymailing::config();
 
+		$userClass = acymailing::get('class.subscriber');
+
 		$subid = $userClass->subid( $request->metaUser->cmsUser->email );
 
 		if ( empty( $subid ) && !$new_allowed ) {
