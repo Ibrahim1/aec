@@ -154,9 +154,9 @@ class mi_acymail extends MI
 			$userClass->sendConf = false;
 
 			$subid = $userClass->save( $joomUser );
+		} else {
+			$userClass = acymailing::get('class.subscriber');
 		}
-
-		$userClass = acymailing::get('class.subscriber');
 
 		return $userClass->get( $subid );
 	}
