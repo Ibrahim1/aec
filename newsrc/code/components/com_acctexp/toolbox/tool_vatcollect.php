@@ -147,13 +147,18 @@ class tool_vatcollect
 			$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">' . $date . '</td>';
 			$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $history['untaxed'] . '</td>';
-			$return .= '<td style="width: 5em;">+</td>';
-			$return .= '<td style="width: 5em;">(</td>';
-			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $history['taxed'] . '</td>';
-			$return .= '<td style="width: 5em;">+</td>';
-			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $history['tax'] . '</td>';
-			$return .= '<td style="width: 5em;">)</td>';
+			$return .= '<td title="Non-Taxed" style="font-weight: bold; width: 5em;">' . $history['untaxed'] . '</td>';
+
+			if ( !empty( $history['taxed'] ) ) {
+				$return .= '<td style="width: 5em;">+</td>';
+				$return .= '<td title="Taxed including Tax" style="font-weight: bold; width: 5em;">' . ( $history['taxed'] + $history['tax'] ) . '</td>';
+				$return .= '<td title="Taxed" style="font-weight: bold; width: 5em; color: #aaa;">(' . $history['taxed'] . '</td>';
+				$return .= '<td style="width: 5em; color: #aaa;">+</td>';
+				$return .= '<td title="Tax" style="font-weight: bold; width: 5em; color: #aaa;">' . $history['tax'] . ')</td>';
+			} else {
+				$return .= '<td colspan="5"></td>';
+			}
+
 			$return .= '<td style="width: 5em;">=</td>';
 
 			$return .= '<td style="width: 5em;">&nbsp;</td>';
@@ -161,7 +166,7 @@ class tool_vatcollect
 			$return .= '</tr>';
 
 			$return .= '<tr style="height: 1px; background-color: #999;">';
-			$return .= '<td colspan="7"></td>';
+			$return .= '<td colspan="11"></td>';
 			$return .= '</tr>';
 
 			if ( isset( $month ) ) {
@@ -178,21 +183,26 @@ class tool_vatcollect
 				$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">Month</td>';
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $month['untaxed'] . '</td>';
-			$return .= '<td style="width: 5em;">+</td>';
-			$return .= '<td style="width: 5em;">(</td>';
-			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $month['taxed'] . '</td>';
-			$return .= '<td style="width: 5em;">+</td>';
-			$return .= '<td title="Total" style="font-weight: bold; width: 5em;">' . $month['tax'] . '</td>';
-			$return .= '<td style="width: 5em;">)</td>';
-			$return .= '<td style="width: 5em;">=</td>';
+				$return .= '<td title="Non-Taxed" style="font-weight: bold; width: 5em;">' . $month['untaxed'] . '</td>';
+
+				if ( !empty( $month['taxed'] ) ) {
+					$return .= '<td style="width: 5em;">+</td>';
+					$return .= '<td title="Taxed including Tax" style="font-weight: bold; width: 5em;">' . ( $month['taxed'] + $month['tax'] ) . '</td>';
+					$return .= '<td title="Taxed" style="font-weight: bold; width: 5em; color: #aaa;">(' . $month['taxed'] . '</td>';
+					$return .= '<td style="width: 5em; color: #aaa;">+</td>';
+					$return .= '<td title="Tax" style="font-weight: bold; width: 5em; color: #aaa;">' . $month['tax'] . ')</td>';
+				} else {
+					$return .= '<td colspan="5"></td>';
+				}
+
+				$return .= '<td style="width: 5em;">=</td>';
 
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
 				$return .= '<td title="Grand Total" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $month['amount'] + $month['tax'] ) . '</td>';
 				$return .= '</tr>';
 
 				$return .= '<tr style="height: 1px; background-color: #999;">';
-				$return .= '<td colspan="7"></td>';
+				$return .= '<td colspan="11"></td>';
 				$return .= '</tr>';
 			}
 
