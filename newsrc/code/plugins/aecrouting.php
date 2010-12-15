@@ -410,15 +410,15 @@ class plgSystemAECrouting extends JPlugin
 				require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
 				if ( defined( 'JPATH_MANIFESTS' ) ) {
-					$search[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *';
-					$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *</td></tr>'
-									. '<tr><td height="40"><label></label></td><td>'
-									. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
-				} else {
 					$search[]	= 'jform_email2" value="" class="validate-email required" size="30"/></dd>';
 					$replace[]	= 'jform_email2" value="" class="validate-email required" size="30"/></dd><dt>'
 									. '<label id="jform_recaptcha-lbl" for="recaptcha_challenge_field" class="hasTip required" title="ReCAPTCHA">ReCAPTCHA:</label>'
 									. '<dd>' . recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) . '</dd>';
+				} else {
+					$search[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *';
+					$replace[]	= 'type="password" id="password2" name="password2" size="40" value="" /> *</td></tr>'
+									. '<tr><td height="40"><label></label></td><td>'
+									. recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] );
 				}
 			}
 		} elseif ( $vars['k2'] ) {
