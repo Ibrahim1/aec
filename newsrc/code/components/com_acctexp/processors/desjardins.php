@@ -77,8 +77,13 @@ XML;
 
 		$login = $merchant->addChild( 'login' );
 
+		$suffix = '';
+		if ( isset( $invoice->params['desjardin_retries'] ) ) {
+			$suffix = '_' . $invoice->params['desjardin_retries'];
+		}
+
 		$trx = $login->addChild( 'trx' );
-		$trx->addAttribute( 'id', $request->invoice->invoice_number );
+		$trx->addAttribute( 'id', $request->invoice->invoice_number.$suffix );
 		
 		return $xml_step1_request->asXML();
 	}
@@ -89,8 +94,6 @@ XML;
 		$amount = $request->int_var['amount'] * 100;
 
 		$return = JURI::root() . 'components/com_acctexp/processors/notify/notify_redirect.php';
-
-		$request = array( 'get' => array( 'task' => 'desjardinsnotification' ), 'post' => array( 'status' => 'response', 'invoice_number' => $request->invoice->invoice_number ) );
 
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
@@ -108,9 +111,6 @@ XML;
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="success">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
-
-		$request['post']['status'] = 'success';
-
 		$xml_step3_request .= '			    <parameters>'."\n";
 		$xml_step3_request .= '			      <parameter name="aec_request">djd_' . $request->invoice->invoice_number . '_success</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
@@ -118,18 +118,12 @@ XML;
 		$xml_step3_request .= '			  <url name="cancel">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-
-		$request['post']['status'] = 'cancel';
-
 		$xml_step3_request .= '			      <parameter name="aec_request">djd_' . $request->invoice->invoice_number . '_cancel</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
 		$xml_step3_request .= '			  <url name="error">'."\n";
 		$xml_step3_request .= '				<path>' . $return . '</path>'."\n";
 		$xml_step3_request .= '			    <parameters>'."\n";
-
-		$request['post']['status'] = 'error';
-
 		$xml_step3_request .= '			      <parameter name="aec_request">djd_' . $request->invoice->invoice_number . '_error</parameter>'."\n";
 		$xml_step3_request .= '			    </parameters>'."\n";
 		$xml_step3_request .= '			  </url>'."\n";
@@ -233,6 +227,15 @@ XML;
 		$response['valid'] = 0;
 
 		if ( $post['status'] == 'error' ) {
+			if ( isset( $invoice->params['desjardin_retries'] ) ) {
+				$retries = $invoice->params['desjardin_retries'] + 1;
+			} else {
+				$retries = 1;
+			}
+
+			$invoice->setParams( array( 'desjardin_retries' => $retries ) );
+			$invoice->storeload();
+
 			$response['error'] = "Error processing your payment details: Could not process your Credit Card.";
 
 			return $response;

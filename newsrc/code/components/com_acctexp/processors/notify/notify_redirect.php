@@ -16,9 +16,9 @@ if ( !empty( $_GET['aec_request'] ) ) {
 	if ( strpos( $_GET['aec_request'], '_' ) !== false ) {
 		$data = explode( '_', urlencode( $bsLoader->clearVariable( $_GET['aec_request'] ) ) );
 
-		$pmap = array( 'djd' => 'desjardins' );
+		$pmap = array( 'djd' => 'desjardinsnotification' );
 
-		if ( in_array( $_GET['task'], $pmap ) ) {
+		if ( array_key_exists( $data[0], $pmap ) ) {
 			$_GET['task'] = $pmap[$data[0]];
 		} else {
 			$_GET['task'] = $data[0];
@@ -41,6 +41,8 @@ if ( !empty( $_GET['aec_request'] ) ) {
 			$post[$k] = $v;
 		}
 	}
+
+	unset( $_GET['aec_request'] );
 }
 
 // Force redirection to AEC
