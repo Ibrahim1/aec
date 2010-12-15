@@ -988,4 +988,13 @@ define( '_CFG_MULTISAFEPAY_SITE_SECURE_CODE_DESC', 'Site Secure Code');
 define( '_CFG_MULTISAFEPAY_SELECT_GATEWAY', 'Payment Gateway');
 define( '_CFG_MULTISAFEPAY_SELECT_COUNTRY', 'Select country');
 
+// Google Checkout
+define( '_CFG_GOOGLE_CHECKOUT_LONGNAME', 'Google Checkout');
+define( '_CFG_GOOGLE_CHECKOUT_STATEMENT', 'Google Checkout');
+define( '_CFG_GOOGLE_CHECKOUT_DESCRIPTION', 'Google Checkout - a faster, safer, and more convenient way to shop online?');
+define( '_CFG_GOOGLE_CHECKOUT_MERCHANT_ID_NAME','Merchant ID');
+define( '_CFG_GOOGLE_CHECKOUT_MERCHANT_ID_DESC','Your Google Merchant ID');
+define( '_CFG_GOOGLE_CHECKOUT_MERCHANT_KEY_NAME','Merchant Key');
+define( '_CFG_GOOGLE_CHECKOUT_MERCHANT_KEY_DESC','Your Google Merchant Key');
+
 ?>

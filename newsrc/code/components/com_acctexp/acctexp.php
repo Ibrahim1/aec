@@ -1540,8 +1540,15 @@ function processNotification( $option, $processor )
 		$short	= _AEC_MSG_PROC_INVOICE_FAILED_SH;
 
 		if ( isset( $response['null'] ) ) {
+			if ( isset( $response['explanation'] ) ) {
+				$short	= _AEC_MSG_PROC_INVOICE_ACTION_SH;
+
+				$event .= $response['explanation'];
+			} else {
 				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_NULL;
-				$tags	.= 'invoice,processor,payment,null';
+			}
+
+			$tags	.= 'invoice,processor,payment,null';
 		} else {
 			$event	= sprintf( _AEC_MSG_PROC_INVOICE_FAILED_EV, $processor, $response['invoice'] )
 					. ' ' . $db->getErrorMsg();

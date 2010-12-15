@@ -11,12 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-define('_CFG_GOOGLE_CHECKOUT_MERCHANT_ID_NAME','Merchant ID');
-define('_PP_GENERAL_GOOGLE_CHECKOUT_MERCHANT_ID_NAME','Your Google Merchant ID');
-define('_CFG_GOOGLE_CHECKOUT_MERCHANT_KEY_NAME','Merchant Key');
-define('_PP_GENERAL_GOOGLE_CHECKOUT_MERCHANT_KEY_NAME','Your Google Merchant Key');
-define('_CFG_GOOGLE_CHECKOUT_NOTE_RETURN','David - pls arrange for the correct checkout headline/comment...');
-
 class processor_google_checkout extends XMLprocessor
 {
 	function info()
@@ -71,15 +65,13 @@ class processor_google_checkout extends XMLprocessor
 	{
 		require_once('google_checkout/library/googlecart.php');
 		require_once('google_checkout/library/googleitem.php');
-		//require_once('google_checkout/library/googleshipping.php');
-		//require_once('google_checkout/library/googletax.php');
-		
+
 		if ( $this->settings['testmode'] ) {
 			$server_type = "sandbox";
 		} else {
 			$server_type = "Production";
 		}
-		
+
 		$item_name			= $request->plan->name;
 		$item_description 	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$merchant_id		= $this->settings['merchant_id'];
@@ -87,48 +79,47 @@ class processor_google_checkout extends XMLprocessor
 		$currency			= $this->settings['currency'];
 		$amount				= $request->int_var['amount'];
       	$qty				= 1;
-		
-      	$cart	= new GoogleCart( $merchant_id, $merchant_key, $server_type, $currency );
-      	$item_1 = new GoogleItem( $item_name, $item_description, $qty, $amount ); 
-      	
-		$cart->AddItem($item_1);
-            
-		$cart->SetContinueShoppingUrl($request->int_var['return_url']);	
 
-	    $cart->SetMerchantPrivateData( new MerchantPrivateData(array("invoice" => $request->invoice->invoice_number )));
+		$cart	= new GoogleCart( $merchant_id, $merchant_key, $server_type, $currency );
+		$item_1 = new GoogleItem( $item_name, $item_description, $qty, $amount );
+
+		$cart->AddItem( $item_1 );
+
+		$cart->SetContinueShoppingUrl( $request->int_var['return_url'] );
+
+	    $cart->SetMerchantPrivateData( new MerchantPrivateData(array("invoice" => $request->invoice->invoice_number )) );
 
 		// Display the Google Checkout button instead of the normal checkout button.
 		$return = '<p style="float:right;text-align:right;">' . $cart->CheckoutButtonCode("SMALL") . '</p>';
-		
+
 		return $return;
-	}	
-	
+	}
+
 	function createRequestXML( $request )
 	{
-		// Nothing to do here.
 		return "";
-	}	
+	}
 	
 	function transmitRequestXML( $xml, $request )
 	{
-		// Nothing to do here until further notice...
 		$response 				= array();
-		$response['valid'] 		= true;	
+		$response['valid'] 		= true;
+
 		return $response;	
 	}
-	
+
 	function parseNotification( $post )
 	{
-aecdebug($_REQUEST);
-//comment: aecdebug($post) returns empty []
-		require_once('google_checkout/library/googleresponse.php');
-		require_once('google_checkout/library/googlemerchantcalculations.php');
-		require_once('google_checkout/library/googleresult.php');
 		require_once('google_checkout/library/googlerequest.php');
+		
+		$response			= array();
+		$response['valid'] = false;
 
 		$merchant_id		= $this->settings['merchant_id'];
-		$merchant_key		= $this->settings['merchant_key'];		
+		$merchant_key		= $this->settings['merchant_key'];
 		$currency			= $this->settings['currency'];
+
+		$serial_number		= $_POST["serial-number"];
 
 		if ( $this->settings['testmode'] ) {
 			$server_type = "sandbox";
@@ -136,41 +127,105 @@ aecdebug($_REQUEST);
 			$server_type = "Production";
 		}
 
-  $Gresponse = new GoogleResponse($merchant_id, $merchant_key);
+		$googleRequest = new GoogleRequest( $merchant_id, $merchant_key, $server_type, $currency, $serial_number );
+		
+		$googleRequest->SendAcknowledgementRequest();
 
-  $Grequest = new GoogleRequest($merchant_id, $merchant_key, $server_type, $currency);
+		list( $res, $xml_response ) = $googleRequest->SendHistoryRequest();
 
-  // Retrieve the XML sent in the HTTP POST request to the ResponseHandler
-  $xml_response = isset($HTTP_RAW_POST_DATA)?
-                    $HTTP_RAW_POST_DATA:file_get_contents("php://input");
-  if (get_magic_quotes_gpc()) {
-    $xml_response = stripslashes($xml_response);
-  }
-  list($root, $data) = $Gresponse->GetParsedXML($xml_response);
-  $Gresponse->SetMerchantAuthentication($merchant_id, $merchant_key);
+		if ( $res != 200 ) {
+			return $response;
+		}
 
-/*
-  $status = $Gresponse->HttpAuthentication();
-  if(! $status) {
-    die('authentication failed');
-  }
-  */
-aecdebug($xml_response);
-  
-aecdebug($Gresponse->GetParsedXML($xml_response));
+		// Quick way of filtering out notifications
+		$filter = array( 'order-state-change-notification', 'charge-amount-notification', 'risk-information-notification' );
 
-		$response				= array();
-		$response['valid']		= true;		
-		$response['invoice'] 	= "ERROR"; // dummy test value forcing invoice error message...
+		foreach ( $filter as $f ) {
+			if ( strpos( $xml_response, $f ) !== false ) {
+				$response['null']			= 1;
+				$response['explanation']	= 'An additional notification for order ' . $serial_number . ' has arrived.';
+
+				switch ( $f ) {
+					case 'order-state-change-notification':
+						$prev_fullf = $this->XMLsubstring_tag( $xml_response, 'previous-fulfillment-order-state' );
+						$curr_fullf = $this->XMLsubstring_tag( $xml_response, 'new-fulfillment-order-state' );
+
+						$prev_finan = $this->XMLsubstring_tag( $xml_response, 'previous-financial-order-state' );
+						$curr_finan = $this->XMLsubstring_tag( $xml_response, 'new-financial-order-state' );
+
+						if ( $prev_fullf != $curr_fullf ) {
+							$response['explanation'] .= ' Fullfillment State changed from ' . $prev_fullf . ' to ' . $curr_fullf . '.';
+						}
+
+						if ( $prev_finan != $curr_finan ) {
+							$response['explanation'] .= ' Financial State changed from ' . $prev_finan . ' to ' . $curr_finan . '.';
+						}
+
+						break;
+					case 'charge-amount-notification':
+						$response['explanation'] .= ' The amount has been charged.';
+
+						break;
+					default:
+						$response['explanation'] .= $f;
+
+						break;
+				}
+
+				return $response;
+			}
+		}
+
+		$response['valid']					= true;
+		$response['invoice']				= $this->XMLsubstring_tag( $xml_response, 'invoice' );
+		$response['google-order-number']	= $this->XMLsubstring_tag( $xml_response, 'google-order-number' );
+		$response['serial_number']			= $serial_number;
+		$response['server_type']			= $server_type;
+
 		return $response;
 	}
-	
+
 	function validateNotification( $response, $post, $invoice )
 	{
-		// Nothing to do here until further notice...
-		$response				= array();
-		$response['valid']		= true;
+		if ( $response['valid'] ) {
+			$googleRequest = new GoogleRequest(	$this->settings['merchant_id'],
+											$this->settings['merchant_key'],
+											$response['server_type'],
+											$this->settings['currency'],
+											$response['serial_number']
+											);
+
+			$order_number = $response['google-order-number'];
+
+			unset( $response['google-order-number'] );
+			unset( $response['server_type'] );
+			unset( $response['serial_number'] );
+
+			list( $res, $xml_response ) = $googleRequest->SendDeliverOrder( $order_number );
+
+			if ( $res != 200 ) {
+				$response['valid']			= false;
+				$response['pending_reason']	= 'Sending Deliver Order failed';
+
+				return $response;
+			}
+
+			list( $res, $xml_response ) = $googleRequest->SendChargeOrder( $order_number );
+
+			if ( $res != 200 ) {
+				$response['valid']			= false;
+				$response['pending_reason']	= 'Sending Charge Order failed';
+
+				return $response;
+			}
+		} else {
+			unset( $response['google-order-number'] );
+			unset( $response['server_type'] );
+			unset( $response['serial_number'] );
+		}
+
 		return $response;
 	}
+
 }
 ?>
