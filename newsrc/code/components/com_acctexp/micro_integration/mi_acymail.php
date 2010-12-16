@@ -117,11 +117,15 @@ class mi_acymail extends MI
 		}
 
 		if ( !empty( $this->settings['removelist' . $request->area] ) ) {
-			$lists[$list] = array( 'status' => 0 );
+			foreach ( $this->settings['removelist' . $request->area] as $list ) {
+				$lists[$list] = array( 'status' => 0 );
+			}
 		}
 
 		if ( !empty( $lists ) ) {
-			$subscriber->saveSubscription( $subscriber->id, $lists );
+			$sub = acymailing::get('class.subscriber');
+
+			$sub->saveSubscription( $subscriber->subid, $lists );
 		}
 	}
 
@@ -154,9 +158,9 @@ class mi_acymail extends MI
 			$userClass->sendConf = false;
 
 			$subid = $userClass->save( $joomUser );
-		} else {
-			$userClass = acymailing::get('class.subscriber');
 		}
+
+		$userClass = acymailing::get('class.subscriber');
 
 		return $userClass->get( $subid );
 	}
