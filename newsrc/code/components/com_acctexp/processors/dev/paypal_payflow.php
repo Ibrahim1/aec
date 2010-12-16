@@ -523,7 +523,7 @@ class processor_paypal_payflow extends XMLprocessor
 				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
 					if ( $this->settings['acceptpendingecheck'] ) {
 						if ( is_object( $invoice ) ) {
-							$invoice->setParams( array( 'acceptedpendingecheck' => 1 ) );
+							$invoice->addParams( array( 'acceptedpendingecheck' => 1 ) );
 							$invoice->check();
 							$invoice->store();
 						}

@@ -194,10 +194,15 @@ XML;
 		$trx_key = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_key"]');
 		$trx_merch_id = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="merchant_id"]');
 
-		$url = $redir_url . "?transaction_id=".$trx_number[0];
+		$suffix = '';
+		if ( isset( $request->invoice->params['desjardin_retries'] ) ) {
+			$suffix = '_' . $request->invoice->params['desjardin_retries'];
+		}
+
+		$url = $redir_url . "?transaction_id=".$trx_number[0].$suffix;
 		$url .= "&merchant_id=".$trx_merch_id[0];
 		$url .= "&transaction_key=".$trx_key[0];
-
+aecDebug($url);
 		$app->redirect($url);
 			
 		$response = true;
@@ -233,9 +238,9 @@ XML;
 				$retries = 1;
 			}
 
-			$invoice->setParams( array( 'desjardin_retries' => $retries ) );
+			$invoice->addParams( array( 'desjardin_retries' => $retries ) );
 			$invoice->storeload();
-
+aecDebug($invoice);
 			$response['error'] = "Error processing your payment details: Could not process your Credit Card.";
 
 			return $response;

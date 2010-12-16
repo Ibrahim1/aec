@@ -309,8 +309,6 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'repeatpayment':
-			JRequest::checkToken() or die( 'Invalid Token' );
-
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0 );
 			$first		= aecGetParam( 'first', 0 );
@@ -903,7 +901,7 @@ function subscriptionDetails( $option, $sub='overview' )
 		if ( ( $invoice->transaction_date == '0000-00-00 00:00:00' ) || ( $invoice->subscr_id  ) ) {
 			if ( $invoice->transaction_date == '0000-00-00 00:00:00' ) {
 				$actionsarray[] = array( 	'task'	=> 'repeatPayment',
-											'add'	=> 'invoice=' . $invoice->invoice_number,
+											'add'	=> 'invoice=' . $invoice->invoice_number . '&'. JUtility::getToken() .'=1',
 											'text'	=> _HISTORY_ACTION_REPEAT );
 
 				if ( is_null( $invoice->fixed ) || !$invoice->fixed ) {

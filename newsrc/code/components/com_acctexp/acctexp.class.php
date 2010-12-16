@@ -7329,10 +7329,12 @@ class SubscriptionPlan extends serialParamDBTable
 					}
 				} else {
 					if ( isset( $invoice->params['userMIParams'] ) ) {
-						if ( isset( $invoice->params['userMIParams'][$this->id][$mi->id] ) ) {
-							$params = $invoice->params['userMIParams'][$this->id][$mi->id];
-						} else {
-							$params = array();
+						$params = array();
+
+						if ( is_array( $invoice->params['userMIParams'] ) ) {
+							if ( isset( $invoice->params['userMIParams'][$this->id][$mi->id] ) ) {
+								$params = $invoice->params['userMIParams'][$this->id][$mi->id];
+							}
 						}
 					} else {
 						$params = null;
