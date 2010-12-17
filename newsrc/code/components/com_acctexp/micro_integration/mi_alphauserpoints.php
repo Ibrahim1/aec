@@ -13,6 +13,15 @@
 
 class mi_alphauserpoints extends MI
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = "Alpha User Points";
+		$info['desc'] = "Granting or Charging points, as well as giving the user the option to 'pay' with points.";
+
+		return $info;
+	}
+
 	function Settings()
 	{
 		$settings = array();
@@ -34,10 +43,6 @@ class mi_alphauserpoints extends MI
 	{
 		if ( $request->action == 'action' ) {
 			// Do NOT act on regular action call
-			return null;
-		}
-
-		if ( !isset( $this->settings['plan_apply'.$request->area] ) ) {
 			return null;
 		}
 
