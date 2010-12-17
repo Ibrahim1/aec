@@ -15186,7 +15186,9 @@ class AECToolbox
 
 				$_POST['password__verify'] = $_POST['password2'];
 
-				@saveRegistrationNOCHECKSLOL( $option );
+				unset( $_POST['password2'] );
+
+				echo saveRegistrationNOCHECKSLOL( $option );
 			} else {
 				@saveRegistration( $option );
 
@@ -18813,8 +18815,8 @@ class aecImport
 						$user['password'] = AECToolbox::randomstring( 8, true );
 					}
 
-					if ( empty( $user['user_name'] ) ) {
-						$user['user_name'] = $user['username'];
+					if ( empty( $user['name'] ) ) {
+						$user['name'] = $user['username'];
 					}
 
 					if ( !empty( $user['password'] ) ) {
@@ -18831,7 +18833,7 @@ class aecImport
 						}
 					}
 
-					$userid = $this->createUser( $fields );
+					$userid = $this->createUser( $fields );print_r($fields);exit;
 				} else {
 					continue;
 				}
