@@ -20,7 +20,7 @@ class processor_2checkout extends POSTprocessor
 		$info['longname'] 				= _AEC_PROC_INFO_2CO_LNAME;
 		$info['statement'] 				= _AEC_PROC_INFO_2CO_STMNT;
 		$info['description'] 			= _DESCRIPTION_2CHECKOUT;
-		$info['currencies']				= "USD";
+		$info['currencies']				= "USD,ARS,AUD,BRL,CAD,DKR,EUR,GBP,HKD,INR,JPY,MXN,NZD,NOK,ZAR,SEK,CHF";
 		$info['cc_list'] 				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] 				= 2;
 		$info['actions']				= array( 'cancel' => array( 'confirm' ) );
