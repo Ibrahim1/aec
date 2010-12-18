@@ -10184,7 +10184,7 @@ class InvoiceFactory
 		}
 	}
 
-	function invoiceprint( $option, $invoice_number, $standalone=true, $extradata=null )
+	function invoiceprint( $option, $invoice_number, $standalone=true, $extradata=null, $forcecleared=false, $forcecounter=null )
 	{
 		$this->loadMetaUser();
 
@@ -10202,7 +10202,7 @@ class InvoiceFactory
 
 		$this->invoice->formatInvoiceNumber();
 
-		$data = $this->invoice->getPrintout( $this );
+		$data = $this->invoice->getPrintout( $this, $forcecleared, $forcecounter );
 
 		$data['standalone'] = $standalone;
 
@@ -11617,9 +11617,19 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function getPrintout( $InvoiceFactory )
+	function getPrintout( $InvoiceFactory, $forcecleared=false, $forcecounter=null )
 	{
 		global $aecConfig;
+
+		if ( is_null( $forcecounter ) ) {
+			$this->counter = $forcecounter;
+		}
+
+		if ( ( $this->transaction_date == '0000-00-00 00:00:00' ) && $forcecleared ) {
+			$app = JFactory::getApplication();
+
+			$this->transaction_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		}
 
 		$data = $this->getWorkingData( $InvoiceFactory );
 

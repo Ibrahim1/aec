@@ -90,11 +90,6 @@ class mi_aecinvoiceprintemail
 			}
 		}
 
-		if ( $request->invoice->transaction_date == '0000-00-00 00:00:00' ) {
-			$app = JFactory::getApplication();
-
-			$request->invoice->transaction_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
-		}
 
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $request->area], $request );
 
@@ -147,7 +142,7 @@ class mi_aecinvoiceprintemail
 		ob_start();
 
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
-		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ) );
+		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ), true );
 
 		$content = ob_get_contents();
 		ob_end_clean();
