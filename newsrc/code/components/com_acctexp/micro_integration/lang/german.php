@@ -869,6 +869,8 @@ define( '_MI_MI_AECMODIFYEXPIRATION_TIME_MOD_NAME', 'Time Modification' );
 define( '_MI_MI_AECMODIFYEXPIRATION_TIME_MOD_DESC', 'Plain English modification (according to PHP manual on the strtotime() function, e.g. "+1 week 2 days 4 hours 2 seconds", "10 September 2000" or "last Monday")');
 define( '_MI_MI_AECMODIFYEXPIRATION_TIMESTAMP_NAME', 'Base Timestamp' );
 define( '_MI_MI_AECMODIFYEXPIRATION_TIMESTAMP_DESC', 'The point in time from which the modification is made. Defaults to the current time, but you can use the rewrite engine to, for instance, use the original expiration date.');
+define( '_MI_MI_AECMODIFYEXPIRATION_FORCE_LAST_EXPIRATION_NAME', 'Use Last Expiration' );
+define( '_MI_MI_AECMODIFYEXPIRATION_FORCE_LAST_EXPIRATION_DESC', 'Enable this to always use the last expiration date as the starting point for the time modification. Shorthand for using [[subscription_expiration_date]] as a base timestamp.');
 
 // Multi Emails
 define( '_AEC_MI_NAME_EMAIL_MULTI',		'Multiple Emails' );

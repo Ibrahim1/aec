@@ -25,8 +25,9 @@ class mi_aecmodifyexpiration
 	function Settings()
 	{
 		$settings = array();
-		$settings['time_mod']		= array('inputD');
-		$settings['timestamp']		= array('inputD');
+		$settings['time_mod']				= array( 'inputD' );
+		$settings['timestamp']				= array( 'inputD' );
+		$settings['force_last_expiration']	= array( 'list_yesno' );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
@@ -44,12 +45,14 @@ class mi_aecmodifyexpiration
 			return true;
 		}
 
-		if ( empty( $this->settings['timestamp'] ) ) {
+		if ( !empty( $this->settings['force_last_expiration'] ) ) {
+			$tstamp = strtotime( $request->metaUser->focusSubscription->expiration );
+		} elseif ( !empty( $this->settings['timestamp'] ) ) {
+			$tstamp = strtotime( AECToolbox::rewriteEngineRQ( $this->settings['timestamp'], $request ) );
+		} else {
 			$app = JFactory::getApplication();
 
 			$tstamp = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
-		} else {
-			$tstamp = strtotime( AECToolbox::rewriteEngineRQ( $this->settings['timestamp'], $request ) );
 		}
 
 		$new_expiration = strtotime( $this->settings['time_mod'], $tstamp );
