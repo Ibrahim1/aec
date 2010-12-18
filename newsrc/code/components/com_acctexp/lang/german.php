@@ -113,6 +113,7 @@ define( '_INVOICEPRINT_PRINT', 'Drucken');
 define( '_INVOICEPRINT_BLOCKNOTICE', 'Dieser Bereich (inklusive Textfeld und Druckbutton) wird nicht mit ausgedruckt.');
 define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Bitte geben Sie im Feld oben ihren Namen und Anschrift ein.');
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>Diese Rechnung wurde noch nicht bezahlt.</strong>');
+define( '_INVOICEPRINT_PAIDSTATUS_CANCEL', '<strong>Diese Rechnung wurde verworfen.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Diese Rechnung wurde am folgenden Datum bezahlt: %s');
 define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');
 

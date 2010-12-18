@@ -79,7 +79,7 @@ XML;
 
 		$suffix = '';
 		if ( isset( $invoice->params['desjardin_retries'] ) ) {
-			$suffix = '_' . $invoice->params['desjardin_retries'];
+			$suffix = $invoice->params['desjardin_retries'];
 		}
 
 		$trx = $login->addChild( 'trx' );
@@ -196,13 +196,13 @@ XML;
 
 		$suffix = '';
 		if ( isset( $request->invoice->params['desjardin_retries'] ) ) {
-			$suffix = '_' . $request->invoice->params['desjardin_retries'];
+			$suffix = $request->invoice->params['desjardin_retries'];
 		}
 
 		$url = $redir_url . "?transaction_id=".$trx_number[0].$suffix;
 		$url .= "&merchant_id=".$trx_merch_id[0];
 		$url .= "&transaction_key=".$trx_key[0];
-aecDebug($url);
+
 		$app->redirect($url);
 			
 		$response = true;
@@ -224,6 +224,9 @@ aecDebug($url);
 			$response['invoice'] = $this->substring_between( $post['original'], '<transaction id="', '"' );
 		}
 
+		// Make sure we don't have a subinvoice number
+		$response['invoice'] = substr( $response['invoice'], 0, 17 );
+
 		return $response;
 	}
 
@@ -240,8 +243,8 @@ aecDebug($url);
 
 			$invoice->addParams( array( 'desjardin_retries' => $retries ) );
 			$invoice->storeload();
-aecDebug($invoice);
-			$response['error'] = "Error processing your payment details: Could not process your Credit Card.";
+
+			$response['error'] = "Erreur de procession de vos d&eacute;tails de paiement: Nous ne pouvons effectuer votre transaction par carte de cr&eacute;dit";
 
 			return $response;
 		}

@@ -113,6 +113,7 @@ define( '_INVOICEPRINT_PRINT', 'Print');
 define( '_INVOICEPRINT_BLOCKNOTICE', 'Denne blok (inklusiv tekstfeltet og print-knappen) bliver ikke vist på printet.');
 define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Indtast venligst din adresse i feltet ovenfor.');
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>Denne faktura er ikke betalt endnu.</strong>');
+define( '_INVOICEPRINT_PAIDSTATUS_CANCEL', '<strong>This payment was canceled.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Fakturaen er betalt d.: %s');
 define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'Abonnementet faktureres løbende. Fakturabeløbet dækker muligvis den næste fakturering, og ikke den, der blev betalt sidst. Listen over betalingsdatoer ovenfor viser hvilke beløb, der er betalt hvornår.');
 

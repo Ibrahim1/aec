@@ -118,6 +118,7 @@ define( '_INVOICEPRINT_PRINT', 'Imprimer');
 define( '_INVOICEPRINT_BLOCKNOTICE', "Ce bloc (y compris le champ de texte et un bouton d'impression) ne s'affichent pas sur votre impression.");
 define( '_INVOICEPRINT_PRINT_TYPEABOVE', "S'il vous pla&icirc;t votre adresse de type dans le champ ci&macr;dessus.");
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>This invoice has not been paid yet.</strong>');
+define( '_INVOICEPRINT_PAIDSTATUS_CANCEL', '<strong>Ce paiement a &eacute;t&eacute; annul&eacute;.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Cette facture a &eacute;t&eacute; pay&eacute;e le: %s');
 define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');
 
@@ -271,7 +272,7 @@ define( '_SUB_FEPARTICLE_MAIL', 'Vous allez recevoir un mail une fois que notre 
 define( '_CHECKOUT_ERROR_TITLE', 'Erreur pendant le traitement de votre paiement!');
 define( '_CHECKOUT_ERROR_EXPLANATION', 'Une erreur est survenue pendant le traitement de votre paiement');
 define( '_CHECKOUT_ERROR_OPENINVOICE', 'Votre facture reste invalid&eacute;. Pour refaire une tentative de paiement, vous pouvez retourner sur la page de validation:');
-define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'This leaves your invoice uncleared, but you can try to check out again below. If you experience further problems or need any assistance with your checkout, please do not hesitate to contact us.');
+define( '_CHECKOUT_ERROR_FURTHEREXPLANATION', 'Ceci laisse votre facture impay&eacute;e. Rev&eacute;rifier ci-bas.  Si vous exp&eacute;rimentez d’autres probl&egrave;mes ou avez besoin d’assistance, n’h&eacute;sitez pas &agrave; nous contacter.');
 
 // --== COUPON ERROR MESSAGES ==--
 define( '_COUPON_WARNING_AMOUNT', 'Un des bons de r&eacute;duction que vous avez ajout&eacute; &agrave; cette facture ne modifie pas le montant du prochain paiement. Bien qu\'il semble ne pas affecter cette facture, il modifie en r&eacute;alit&eacute; un paiement ult&eacute;rieur.');

@@ -11728,13 +11728,13 @@ class Invoice extends serialParamDBTable
 
 		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
 			if ( !$this->active ) {
-				$data['paidstatus'] = "This payment was canceled";
+				$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_CANCEL;
 			} else {
 				$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_UNPAID;
 			}
 		} else {
 			if ( !$this->active ) {
-				$data['paidstatus'] = "This payment was canceled";
+				$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_CANCEL;
 			} else {
 				$date = AECToolbox::formatDate( $this->transaction_date );
 
@@ -15198,7 +15198,7 @@ class AECToolbox
 
 				unset( $_POST['password2'] );
 
-				echo saveRegistrationNOCHECKSLOL( $option );
+				@saveRegistrationNOCHECKSLOL( $option );
 			} else {
 				@saveRegistration( $option );
 
@@ -18843,7 +18843,7 @@ class aecImport
 						}
 					}
 
-					$userid = $this->createUser( $fields );print_r($fields);exit;
+					$userid = $this->createUser( $fields );
 				} else {
 					continue;
 				}

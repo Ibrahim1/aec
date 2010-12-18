@@ -115,6 +115,7 @@ define( '_INVOICEPRINT_PRINT', 'Skriv ut'); //Print
 define( '_INVOICEPRINT_BLOCKNOTICE', 'Varken denna ruta, text-fältet ovan, eller skriv-ut knappen kommer att synas på den utskrivna fakturan.'); //This block (including the text field and print button) will not show on your printout.
 define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Skriv in din adress i rutan ovan, tack!'); //Please type your address into the field above.
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>Denna faktura är EJ BETALD.</strong>'); //<strong>This invoice has not been paid yet.</strong>
+define( '_INVOICEPRINT_PAIDSTATUS_CANCEL', '<strong>This payment was canceled.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Denna faktura betalades den %s'); //This invoice has been paid on: %s'
 define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');
 
