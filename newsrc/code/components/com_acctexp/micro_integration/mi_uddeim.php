@@ -121,10 +121,10 @@ class mi_uddeim
 		$hacks = array();
 
 		$messagehack =	'// AEC HACK %s START' . "\n"
-		. 'global $my, JPATH_SITE;' . "\n"
+		. '$user = &JFactory::getUser();' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
 		. '$restrictionhandler = new uddeim_restriction( $db );' . "\n"
-		. '$restrict_id = $restrictionhandler->getIDbyUserID( $my->id );' . "\n"
+		. '$restrict_id = $restrictionhandler->getIDbyUserID( $user->id );' . "\n"
 		. 'if($restrictionhandler->active){'. "\n\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
 		. "\t".'if (!$restrictionhandler->hasMessagesLeft()) {' . "\n"
