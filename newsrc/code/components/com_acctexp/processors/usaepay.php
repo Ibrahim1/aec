@@ -31,6 +31,8 @@ class processor_usaepay extends XMLprocessor
 	{
 		$settings = array();
 
+		$settings['aec_experimental'] = true;
+
 		$settings['testmode']		= 0;
 		$settings['currency']		= 'USD';
 		$settings['StoreKey']		= "StoreKey";
