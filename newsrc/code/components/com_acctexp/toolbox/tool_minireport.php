@@ -98,9 +98,11 @@ class tool_minireport
 			$entry->load( $id );
 
 			$refund = false;
-			foreach ( $entry->response as $v ) {
-				if ( $v == 'refund' ) {
-					$refund = true;
+			if ( !is_array( $entry->response ) ) {
+				foreach ( $entry->response as $v ) {
+					if ( $v == 'refund' ) {
+						$refund = true;
+					}
 				}
 			}
 

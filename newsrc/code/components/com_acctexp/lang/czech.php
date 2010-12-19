@@ -109,6 +109,7 @@ define( '_INVOICEPRINT_PRINT', 'Tisk');
 define( '_INVOICEPRINT_BLOCKNOTICE', 'tento &uacute;sek (v&#269;etn&#283; textov&eacute;ho pole a tla&#269;&iacute;tka tisk) nebude vyti&scaron;t&#283;n.');
 define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Pros&iacute;m vložte Va&scaron;i adresu do v&yacute;&scaron;e uveden&eacute;ho pole.');
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>tato platba je&scaron;te nebyla zaplacena.</strong>');
+define( '_INVOICEPRINT_PAIDSTATUS_CANCEL', '<strong>This payment was canceled.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Platba byla zaplacena: %s');
 define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');
 
