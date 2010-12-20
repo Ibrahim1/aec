@@ -39,6 +39,18 @@ class mi_alphauserpoints extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
+	function getMIform( $request )
+	{
+		$settings = array();
+
+		if ( $this->settings['aup_checkout_discount'] ) {
+			$settings['vat_desc'] = array( 'p', "", sprintf( _MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO ) );
+			$settings['use_points'] = array( 'inputC', _MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME, _MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC, '' );
+		}
+
+		return $settings;
+	}
+
 	function relayAction( $request )
 	{
 		if ( $request->action == 'action' ) {
@@ -59,6 +71,14 @@ class mi_alphauserpoints extends MI
 		}
 
 		return true;
+	}
+
+	function invoice_item_cost( $request )
+	{
+		// 
+		print_r($request);
+
+		return $request;
 	}
 
 	function getAlphaUserAccount( $userid )
