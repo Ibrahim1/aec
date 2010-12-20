@@ -14909,10 +14909,13 @@ class AECToolbox
 			if ( !strpos( strtolower( $url ), 'itemid' ) ) {
 				$parts = explode( '&', $url );
 
-				$task= "";
+				$task	= "";
+				$sub	= "";
 				foreach ( $parts as $part ) {
 					if ( strpos( $part, 'task=' ) === 0 ) {
 						$task = strtolower( str_replace( 'task=', '', $part ) );
+					} elseif ( strpos( $part, 'sub=' ) === 0 ) {
+						$sub = strtolower( str_replace( 'sub=', '', $part ) );
 					}
 				}
 
@@ -14929,7 +14932,9 @@ class AECToolbox
 					}
 				}
 
-				if ( !empty( $aecConfig->cfg['itemid_' . $task] ) ) {
+				if ( !empty( $aecConfig->cfg['itemid_' . $task.'_'.$sub] ) ) {
+					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task.'_'.$sub];
+				} elseif ( !empty( $aecConfig->cfg['itemid_' . $task] ) ) {
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task];
 				} elseif ( !empty( $aecConfig->cfg['itemid_default'] ) ) {
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_default'];

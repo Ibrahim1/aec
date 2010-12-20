@@ -2002,20 +2002,30 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
+
+	$itemidlist = array(	'cart' => array( 'view' => 'cart', 'params' => false ),
+							'checkout' => array( 'view' => 'checkout', 'params' => false ),
+							'confirmation' => array( 'view' => 'confirmation', 'params' => false ),
+							'subscribe' => array( 'view' => 'subscribe', 'params' => false ),
+							'exception' => array( 'view' => 'exception', 'params' => false ),
+							'thanks' => array( 'view' => 'thanks', 'params' => false ),
+							'expired' => array( 'view' => 'expired', 'params' => false ),
+							'hold' => array( 'view' => 'hold', 'params' => false ),
+							'notallowed' => array( 'view' => 'notallowed', 'params' => false ),
+							'pending' => array( 'view' => 'pending', 'params' => false ),
+							'subscriptiondetails' => array( 'view' => 'subscriptiondetails', 'params' => false ),
+							'subscriptiondetails_invoices' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=invoices' ),
+							'subscriptiondetails_details' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=details' )
+							);
+
+
 	$params[] = array( 'userinfobox', 48 );
 	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_ITEMID );
-	$params['itemid_default']					= array( 'inputB', '' );
-	$params['itemid_cart']						= array( 'inputB', '' );
-	$params['itemid_checkout']					= array( 'inputB', '' );
-	$params['itemid_confirmation']				= array( 'inputB', '' );
-	$params['itemid_subscribe']					= array( 'inputB', '' );
-	$params['itemid_exception']					= array( 'inputB', '' );
-	$params['itemid_thanks']					= array( 'inputB', '' );
-	$params['itemid_expired']					= array( 'inputB', '' );
-	$params['itemid_hold']						= array( 'inputB', '' );
-	$params['itemid_notallowed']				= array( 'inputB', '' );
-	$params['itemid_pending']					= array( 'inputB', '' );
-	$params['itemid_subscriptiondetails']		= array( 'inputB', '' );
+
+	foreach ( $itemidlist as $param => $xparams ) {
+		$params['itemid_'.$param]				= array( 'inputB', '' );
+	}
+
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -2208,29 +2218,32 @@ function editSettings( $option )
 		}
 	}
 
-	$params['itemid_cart']						= array( 'inputB', '' );
-	$params['itemid_checkout']					= array( 'inputB', '' );
-	$params['itemid_confirmation']				= array( 'inputB', '' );
-	$params['itemid_subscribe']					= array( 'inputB', '' );
-	$params['itemid_exception']					= array( 'inputB', '' );
-	$params['itemid_thanks']					= array( 'inputB', '' );
-	$params['itemid_expired']					= array( 'inputB', '' );
-	$params['itemid_hold']						= array( 'inputB', '' );
-	$params['itemid_notallowed']				= array( 'inputB', '' );
-	$params['itemid_pending']					= array( 'inputB', '' );
-	$params['itemid_subscriptiondetails']		= array( 'inputB', '' );
-
-	$itemidlist = array( 'cart', 'checkout', 'confirmation', 'subscribe', 'exception', 'thanks', 'expired', 'hold', 'notallowed', 'pending', 'subscriptiondetails' );
-
-	foreach ( $itemidlist as $idk ) {
+	foreach ( $itemidlist as $idk => $idkp ) {
 		if ( empty( $aecConfig->cfg['itemid_' . $idk] ) ) {
 			$query = 'SELECT `id`'
 					. ' FROM #__menu'
-					. ' WHERE LOWER( `link` ) = \'index.php?option=com_acctexp&view=' . $idk . '\''
-					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idk . '%\''
+					. ' WHERE LOWER( `link` ) = \'index.php?option=com_acctexp&view=' . $idkp['view'] . '\''
+					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idkp['view'] . '%\''
 					;
 			$db->setQuery( $query );
-			$mid = $db->loadResult();
+
+			$mid = 0;
+			if ( empty( $idkp['params'] ) ) {
+				$mid = $db->loadResult();
+			} else {
+				$mids = $db->loadResultArray();
+
+				if ( !empty( $mids ) ) {
+					$query = 'SELECT `id`'
+							. ' FROM #__menu'
+							. ' WHERE `id` IN (' . implode( ',', $mids ) . ')'
+							. ' AND `params` LIKE \'%' . $idkp['params'] . '%\''
+							;
+					$db->setQuery( $query );
+
+					$mid = $db->loadResult();
+				}
+			}
 
 			if ( $mid ) {
 				$aecConfig->cfg['itemid_' . $idk] = $mid;
