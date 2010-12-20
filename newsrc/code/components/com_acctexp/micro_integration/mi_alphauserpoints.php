@@ -85,7 +85,7 @@ class mi_alphauserpoints extends MI
 	{
 		$db	   =& JFactory::getDBO();	
 
-		$query = "SELECT id FROM #__alpha_userpoints WHERE `referreid`='" . $userid . "'";
+		$query = "SELECT id FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
 		$db->setQuery( $query );
 
 		$referrerUser = $db->loadResult();
