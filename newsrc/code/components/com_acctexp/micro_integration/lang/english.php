@@ -1540,9 +1540,16 @@ define( '_AEC_MI_NAME_ALPHAUSERPOINTS', 'Alpha User Points' );
 define( '_AEC_MI_DESC_ALPHAUSERPOINTS', 'Granting or Charging points, as well as giving the user the option to "pay" with points (get a discount for points).' );
 define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_NAME', 'Change Points' );
 define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_DESC', 'Put in a positive value to grant points, negative value to take them away.' );
-define( '_MI_MI_ALPHAUSERPOINTS_EVENT_EXP_NAME', 'Register for this Event' );
-define( '_MI_MI_ALPHAUSERPOINTS_EVENT_EXP_DESC', 'Which event for this action do you want to register to user to' );
-define( '_MI_MI_ALPHAUSERPOINTS_EVENT_PRE_EXP_NAME', 'Register for this Event' );
-define( '_MI_MI_ALPHAUSERPOINTS_EVENT_PRE_EXP_DESC', 'Which event for this action do you want to register to user to' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_PRE_EXP_NAME', 'Change Points (Pre-Expiration)' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_PRE_EXP_DESC', 'Put in a positive value to grant points, negative value to take them away (before expiration).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_EXP_NAME', 'Change Points (Expiration)' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_EXP_DESC', 'Put in a positive value to grant points, negative value to take them away (on expiration).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_DISCOUNT_NAME', 'Allow Discount with Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_DISCOUNT_DESC', 'The user can get a discount with his or her Userpoints' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_CONVERSION_NAME', 'Point Conversion Rate' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_CONVERSION_DESC', 'The value of a Userpoint.' );
+define( '_MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME', 'Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC', 'The amount of points you want to .' );
+define( '_MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO', 'You have %s points that you can use to get a discount on this invoice. Enter the amount of points you want to use below. One point is worth %s giving you a total value of %s for your points.' );
 
 ?>

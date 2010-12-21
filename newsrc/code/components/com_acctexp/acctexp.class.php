@@ -7328,22 +7328,25 @@ class SubscriptionPlan extends serialParamDBTable
 						}
 					}
 				} else {
+					$params = array();
 					if ( isset( $invoice->params['userMIParams'] ) ) {
-						$params = array();
-
 						if ( is_array( $invoice->params['userMIParams'] ) ) {
 							if ( isset( $invoice->params['userMIParams'][$this->id][$mi->id] ) ) {
 								$params = $invoice->params['userMIParams'][$this->id][$mi->id];
 							}
 						}
-					} else {
-						$params = null;
 					}
 
 					if ( $mi->relayAction( $metaUser, $exchange, $invoice, $this, $action, $add, $params ) === false ) {
 						if ( $aecConfig->cfg['breakon_mi_error'] ) {
 							return false;
 						}
+					}
+
+					if ( !empty( $params ) ) {
+						$invoice->params['userMIParams'][$this->id][$mi->id] = $params;
+
+						$invoice->storeload();
 					}
 				}
 
@@ -16316,21 +16319,6 @@ class MI
 		return $new_settings;
 	}
 
-	function pre_expiration_action( $params, $metaUser, $plan )
-	{
-		return $this->relayAction( $params, $metaUser, $plan, null, '_pre_exp', $add=false );
-	}
-
-	function expiration_action( $params, $metaUser, $plan )
-	{
-		return $this->relayAction( $params, $metaUser, $plan, null, '_exp', $add=false );
-	}
-
-	function action( $params, $metaUser, $invoice, $plan )
-	{
-		return $this->relayAction( $params, $metaUser, $plan, $invoice, '', $add=false );
-	}
-
 	function setError( $error )
 	{
 		if ( !isset( $this->error ) ) {
@@ -16674,9 +16662,9 @@ class microIntegration extends serialParamDBTable
 
 			$metaUser->meta->storeload();
 
-			$add = false;
+			$add = $params = false;
 
-			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', $add );
+			return $this->relayAction( $metaUser, null, null, $objplan, 'pre_expiration_action', $add, $params );
 		} else {
 			return null;
 		}
@@ -16684,9 +16672,6 @@ class microIntegration extends serialParamDBTable
 
 	function expiration_action( &$metaUser, $objplan=null )
 	{
-		// Needs to be declared as variable due to call by reference
-		$add = false;
-
 		// IF ExpireAllInstances=0 AND hasMoreThanOneInstance -> return null
 		if ( empty( $this->settings['_aec_global_exp_all'] ) ) {
 			if ( $metaUser->getMIcount( $this->id ) > 1 ) {
@@ -16695,10 +16680,12 @@ class microIntegration extends serialParamDBTable
 			}
 		}
 
-		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add );
+		$add = $params = false;
+
+		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add, $params );
 	}
 
-	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add, $params=null )
+	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add, &$params )
 	{
 		$db = &JFactory::getDBO();
 

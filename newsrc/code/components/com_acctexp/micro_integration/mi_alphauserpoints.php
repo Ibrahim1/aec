@@ -41,8 +41,12 @@ class mi_alphauserpoints extends MI
 	{
 		$settings = array();
 
-		if ( $this->settings['aup_checkout_discount'] ) {
-			$settings['vat_desc'] = array( 'p', "", sprintf( _MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO ) );
+		if ( $this->settings['checkout_discount'] ) {
+			$points = $this->getPoints( $metaUser->userid );
+			$value = AECToolbox::formatAmount( $this->settings['checkout_conversion'], $request->invoice->currency );
+			$total = AECToolbox::formatAmount( ( $points * $this->settings['checkout_conversion'] ), $request->invoice->currency );
+
+			$settings['vat_desc'] = array( 'p', "", sprintf( _MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO, $points, $value, $total ) );
 			$settings['use_points'] = array( 'inputC', _MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME, _MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC, '' );
 		}
 
@@ -56,7 +60,7 @@ class mi_alphauserpoints extends MI
 		$request->params['use_points'] = (int) $request->params['use_points'];
 
 		if ( $request->params['use_points'] > $this->getPoints( $request->metaUser->userid ) ) {
-			$return['error'] = "You don't have that many points'";
+			$return['error'] = "You don't have that many points";
 		}
 
 		return $return;
@@ -83,36 +87,28 @@ class mi_alphauserpoints extends MI
 
 	function invoice_item_cost( $request )
 	{
-		$this->modifyPrice( $request );
-
-		return true;
+		if ( $this->settings['checkout_discount'] && !empty( $this->settings['checkout_conversion'] ) && !empty( $request->params['use_points'] ) ) {
+			return $this->modifyPrice( $request );
+		} else {
+			return null;
+		}
 	}
 
 	function modifyPrice( $request )
 	{
-		if ( !isset( $request->params['amt'] ) ) {
-			return null;
+		$discount = $request->params['use_points'] * $this->settings['checkout_conversion'];
+
+		$original_price = $request->add->renderTotal();
+
+		if ( $discount > $original_price ) {
+			$discount = $original_price;
+
+			$request->params['use_points'] = $discount / $this->settings['checkout_conversion'];
 		}
 
-		$price = AECToolbox::correctAmount( $request->params['amt'] );
+		$request->add['terms']->nextterm->discount( $discount );
 
-		if ( !empty( $this->settings['max'] ) ) {
-			if ( $price > $this->settings['max'] ) {
-				$price = $this->settings['max'];
-			}
-		}
-
-		if ( !empty( $this->settings['min'] ) ) {
-			if ( $price < $this->settings['min'] ) {
-				$price = $this->settings['min'];
-			}
-		}
-
-		$price = AECToolbox::correctAmount( $price );
-
-		$request->add['terms']->nextterm->setCost( $price );
-
-		return null;
+		return true;
 	}
 
 	function getPoints( $userid )
