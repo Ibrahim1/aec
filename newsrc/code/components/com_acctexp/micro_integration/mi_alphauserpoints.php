@@ -41,10 +41,19 @@ class mi_alphauserpoints extends MI
 	{
 		$settings = array();
 
-		if ( $this->settings['checkout_discount'] ) {
-			$points = $this->getPoints( $metaUser->userid );
-			$value = AECToolbox::formatAmount( $this->settings['checkout_conversion'], $request->invoice->currency );
-			$total = AECToolbox::formatAmount( ( $points * $this->settings['checkout_conversion'] ), $request->invoice->currency );
+		$points = $this->getPoints( $request->metaUser->userid );
+
+		if ( $this->settings['checkout_discount'] && $points ) {
+			if ( !empty( $request->invoice->currency ) ) {
+				$currency = $request->invoice->currency;
+			} else {
+				global $aecConfig;
+
+				$currency = $aecConfig->cfg['standard_currency'];
+			}
+			
+			$value = AECToolbox::formatAmount( $this->settings['checkout_conversion'], $currency );
+			$total = AECToolbox::formatAmount( ( $points * $this->settings['checkout_conversion'] ), $currency );
 
 			$settings['vat_desc'] = array( 'p', "", sprintf( _MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO, $points, $value, $total ) );
 			$settings['use_points'] = array( 'inputC', _MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME, _MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC, '' );
@@ -76,11 +85,27 @@ class mi_alphauserpoints extends MI
 			}
 		}
 
+		if ( $request->action == 'action' ) {
+			$params = $request->metaUser->meta->getMIParams( $request->parent->id, $request->plan->id );
+
+			if ( $params['use_points'] ) {
+				$points = -$params['use_points'];
+
+				$this->updatePoints( $request->metaUser->userid, $points, $request->invoice->invoice_number );
+
+				unset( $params['use_points'] );
+
+				$request->metaUser->meta->setMIParams( $request->parent->id, $request->plan->id, $params, true );
+
+				$request->metaUser->meta->storeload();
+			}
+		}
+
 		if ( empty( $this->settings['change_points'.$request->area] ) ) {
 			return null;
 		}
 
-		$this->updatePoints( $metaUser->userid, $this->settings['change_points'.$request->area], $request->invoice->invoice_number );
+		$this->updatePoints( $request->metaUser->userid, $this->settings['change_points'.$request->area], $request->invoice->invoice_number );
 
 		return true;
 	}
@@ -98,7 +123,7 @@ class mi_alphauserpoints extends MI
 	{
 		$discount = $request->params['use_points'] * $this->settings['checkout_conversion'];
 
-		$original_price = $request->add->renderTotal();
+		$original_price = $request->add['terms']->nextterm->renderTotal();
 
 		if ( $discount > $original_price ) {
 			$discount = $original_price;
@@ -106,7 +131,7 @@ class mi_alphauserpoints extends MI
 			$request->params['use_points'] = $discount / $this->settings['checkout_conversion'];
 		}
 
-		$request->add['terms']->nextterm->discount( $discount );
+		$request->add['terms']->nextterm->discount( $discount, null, $request->params['use_points'] . " Points" );
 
 		return true;
 	}
@@ -125,10 +150,10 @@ class mi_alphauserpoints extends MI
 	{
 		$db	   =& JFactory::getDBO();
 
-		$query = "SELECT id, referreid, points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
+		$query = "SELECT id, userid, referreid, points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
 		$db->setQuery( $query );
 
-		$aupUser = $db->loadResultObject();
+		$aupUser = $db->loadObject();
 
 		$query = 'UPDATE #__alpha_userpoints'
 				. ' SET `points` = \'' . ( $aupUser->points + $points ) . '\''

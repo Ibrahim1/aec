@@ -1550,6 +1550,6 @@ define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_CONVERSION_NAME', 'Point Conversion Rat
 define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_CONVERSION_DESC', 'The value of a Userpoint.' );
 define( '_MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME', 'Points' );
 define( '_MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC', 'The amount of points you want to .' );
-define( '_MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO', 'You have %s points that you can use to get a discount on this invoice. Enter the amount of points you want to use below. One point is worth %s giving you a total value of %s for your points.' );
+define( '_MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO', 'You have <strong>%s points</strong> that you can use to get a discount on this invoice. Enter the amount of points you want to use below. One point is worth <strong>%s</strong> giving you a total value of <strong>%s</strong> for your points.' );
 
 ?>
