@@ -1535,4 +1535,14 @@ define( '_MI_MI_ACYMAIL_CUSTOMINFO_DESC',		'AEC normally displays the text "Do y
 define( '_MI_MI_ACYMAIL_USER_CHECKBOX_NAME',		'User Checkbox' );
 define( '_MI_MI_ACYMAIL_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter.' );
 
+// Alpha User Points
+define( '_AEC_MI_NAME_ALPHAUSERPOINTS', 'Alpha User Points' );
+define( '_AEC_MI_DESC_ALPHAUSERPOINTS', 'Granting or Charging points, as well as giving the user the option to "pay" with points (get a discount for points).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_NAME', 'Change Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_DESC', 'Put in a positive value to grant points, negative value to take them away.' );
+define( '_MI_MI_ALPHAUSERPOINTS_EVENT_EXP_NAME', 'Register for this Event' );
+define( '_MI_MI_ALPHAUSERPOINTS_EVENT_EXP_DESC', 'Which event for this action do you want to register to user to' );
+define( '_MI_MI_ALPHAUSERPOINTS_EVENT_PRE_EXP_NAME', 'Register for this Event' );
+define( '_MI_MI_ALPHAUSERPOINTS_EVENT_PRE_EXP_DESC', 'Which event for this action do you want to register to user to' );
+
 ?>

@@ -16727,7 +16727,9 @@ class microIntegration extends serialParamDBTable
 		}
 
 		// Call Action
-		if ( method_exists( $this->mi_class, 'relayAction' ) ) {
+		if ( method_exists( $this->mi_class, $stage ) ) {
+			$return = $this->mi_class->$stage( $request );
+		} elseif ( method_exists( $this->mi_class, 'relayAction' ) ) {
 			switch ( $stage ) {
 				case 'action':
 					$request->area = '';
@@ -16744,13 +16746,8 @@ class microIntegration extends serialParamDBTable
 			}
 
 			$return = $this->mi_class->relayAction( $request );
-		} elseif ( method_exists( $this->mi_class, $stage ) ) {
-			$return = $this->mi_class->$stage( $request );
 		} else {
 			return null;
-			/*$eventlog = new eventLog( $this->_db );
-			$eventlog->issue( 'MI application problems', 'mi, problems, '.$this->class_name, 'Action not found: '.$stage, 32 );
-			$return = null;*/
 		}
 
 		// Gather Errors and Warnings

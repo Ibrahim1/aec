@@ -26,15 +26,13 @@ class mi_alphauserpoints extends MI
 	{
 		$settings = array();
 
-		$settings['add_points']			= array( 'inputB' );
-		$settings['subtract_points']	= array( 'inputB' );
+		$settings['change_points']			= array( 'inputB' );
 
 		$settings = $this->autoduplicatesettings( $settings );
 
 		$xsettings = array();
-		$xsettings['aup_checkout_discount']			= array( 'list_yesno' );
-		$xsettings['aup_checkout_showconversion']	= array( 'list_yesno' );
-		$xsettings['aup_checkout_conversion']		= array( 'inputB' );
+		$xsettings['checkout_discount']			= array( 'list_yesno' );
+		$xsettings['checkout_conversion']		= array( 'inputB' );
 
 		return array_merge( $xsettings, $settings );
 	}
@@ -51,17 +49,21 @@ class mi_alphauserpoints extends MI
 		return $settings;
 	}
 
+	function verifyMIform( $request )
+	{
+		$return = array();
+
+		$request->params['use_points'] = (int) $request->params['use_points'];
+
+		if ( $request->params['use_points'] > $this->getPoints( $request->metaUser->userid ) ) {
+			$return['error'] = "You don't have that many points'";
+		}
+
+		return $return;
+	}
+
 	function relayAction( $request )
 	{
-		if ( $request->action == 'action' ) {
-			// Do NOT act on regular action call
-			return null;
-		}
-
-		if ( empty( $this->settings['plan_apply'.$request->area] ) ) {
-			return null;
-		}
-
 		if ( $request->action == 'action' ) {
 			if ( !empty( $this->settings['plan_apply_first'] ) ) {
 				if ( empty( $request->metaUser->objSubscription->previous_plan ) ) {
@@ -70,36 +72,81 @@ class mi_alphauserpoints extends MI
 			}
 		}
 
+		if ( empty( $this->settings['change_points'.$request->area] ) ) {
+			return null;
+		}
+
+		$this->updatePoints( $metaUser->userid, $this->settings['change_points'.$request->area], $request->invoice->invoice_number );
+
 		return true;
 	}
 
 	function invoice_item_cost( $request )
 	{
-		// 
-		print_r($request);
+		$this->modifyPrice( $request );
 
-		return $request;
+		return true;
 	}
 
-	function getAlphaUserAccount( $userid )
+	function modifyPrice( $request )
 	{
-		$db	   =& JFactory::getDBO();	
+		if ( !isset( $request->params['amt'] ) ) {
+			return null;
+		}
 
-		$query = "SELECT id FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
+		$price = AECToolbox::correctAmount( $request->params['amt'] );
+
+		if ( !empty( $this->settings['max'] ) ) {
+			if ( $price > $this->settings['max'] ) {
+				$price = $this->settings['max'];
+			}
+		}
+
+		if ( !empty( $this->settings['min'] ) ) {
+			if ( $price < $this->settings['min'] ) {
+				$price = $this->settings['min'];
+			}
+		}
+
+		$price = AECToolbox::correctAmount( $price );
+
+		$request->add['terms']->nextterm->setCost( $price );
+
+		return null;
+	}
+
+	function getPoints( $userid )
+	{
+		$db	   =& JFactory::getDBO();
+
+		$query = "SELECT points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
 		$db->setQuery( $query );
 
-		$referrerUser = $db->loadResult();
-		
-		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_alphauserpoints'.DS.'tables');				
-		$row =& JTable::getInstance('userspoints');
-			
-		// update points into alpha_userpoints table
-		$row->load( intval($referrerUser) );
+		return $db->loadResult();
 	}
 
-	function AlphaUserPoints( $AUPObject )
+	function updatePoints( $userid, $points, $comment )
 	{
-		
+		$db	   =& JFactory::getDBO();
+
+		$query = "SELECT id, referreid, points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
+		$db->setQuery( $query );
+
+		$aupUser = $db->loadResultObject();
+
+		$query = 'UPDATE #__alpha_userpoints'
+				. ' SET `points` = \'' . ( $aupUser->points + $points ) . '\''
+				. ' WHERE `userid` = \'' . $aupUser->userid . '\''
+				;
+		$db->setQuery( $query );
+		$db->query();
+
+		$query  = 'INSERT INTO #__alpha_userpoints_details'
+				. ' (referreid, points, insert_date, status, rule, approved, datareference)'
+				. ' VALUES(\'' . $aupUser->referreid . '\', \'' . $points . '\', \'' . date( 'Y-m-d H:i:s' ) . '\', \'1\', \'1\', \'1\', \'' . $comment . '\' )'
+				;
+		$db->setQuery( $query );
+		$db->query();
 	}
 }
 ?>
