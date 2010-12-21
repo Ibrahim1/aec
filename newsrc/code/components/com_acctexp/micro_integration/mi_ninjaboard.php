@@ -74,8 +74,6 @@ class mi_ninjaboard
 		$settings['set_groups_exclude']		= array( 'list_yesno' );
 		$settings['groups_exclude']			= array( 'list' );
 		$settings['set_clear_groups']		= array( 'list_yesno' );
-		$settings['rebuild']				= array( 'list_yesno' );
-		$settings['remove']					= array( 'list_yesno' );
 
 		return $settings;
 	}
@@ -84,17 +82,17 @@ class mi_ninjaboard
 	{
 		$id = $request->metaUser->userid;
 
-		$model	= KFactory::tmp('admin::com.ninjaboard.model.usergroup_maps');
-		$table  = KFactory::get($model->getTable());
+		$model	= KFactory::tmp('admin::com.ninjaboard.model.usergroupmaps');
+		$table  = $model->getTable();
 		$groups = $model->id($id)->getGroups();
 
 		if ( $this->settings['set_remove_group'] ) {
 			foreach ( $this->settings['remove_group'] as $groupid ) {
 				if ( in_array( $groupid, $groups ) ) {
 					$query = KFactory::tmp('lib.koowa.database.query');
-					$table->delete(
+					$table->select(
 						$query->where('joomla_user_id', '=', $id)->where('ninjaboard_user_group_id', '=', $groupid)
-					);
+					)->delete();
 				}
 			}
 		}
@@ -102,8 +100,8 @@ class mi_ninjaboard
 		if ( $this->settings['set_group'] ) {
 			foreach ( $this->settings['group'] as $groupid ) {
 				if ( !in_array( $groupid, $groups ) ) {
-					$row = KFactory::tmp('admin::com.ninjaboard.model.usergroup_maps')->getItem()->setData(array(
-						'id' => $id,
+					$row = KFactory::tmp('admin::com.ninjaboard.model.usergroupmaps')->getItem()->setData(array(
+						'joomla_user_id' => $id,
 						'ninjaboard_user_group_id' => $groupid
 					));
 					$table->insert($row);
@@ -118,8 +116,8 @@ class mi_ninjaboard
 	{
 		$id = $request->metaUser->userid;
 
-		$model	= KFactory::tmp('admin::com.ninjaboard.model.usergroup_maps');
-		$table  = KFactory::get($model->getTable());
+		$model	= KFactory::tmp('admin::com.ninjaboard.model.usergroupmaps');
+		$table  = $model->getTable();
 		$groups = $model->id($id)->getGroups();
 
 		if ( $this->settings['set_clear_groups'] ) {
@@ -128,17 +126,17 @@ class mi_ninjaboard
 			}
 
 			$query = KFactory::tmp('lib.koowa.database.query');
-			$table->delete(
+			$table->select(
 				$query->where('joomla_user_id', '=', $id)->where('ninjaboard_user_group_id', 'IN', $groups)
-			);
+			)->delete();
 		} else {
 			if ( $this->settings['set_remove_group_exp'] ) {
 				foreach ( $this->settings['remove_group_exp'] as $groupid ) {
 					if ( in_array( $groupid, $groups ) ) {
 						$query = KFactory::tmp('lib.koowa.database.query');
-						$table->delete(
+						$table->select(
 							$query->where('joomla_user_id', '=', $id)->where('ninjaboard_user_group_id', '=', $groupid)
-						);
+						)->delete();
 					}
 				}
 			}
@@ -146,8 +144,8 @@ class mi_ninjaboard
 			if ( $this->settings['set_group_exp'] ) {
 				foreach ( $this->settings['group_exp'] as $groupid ) {
 					if ( !in_array( $groupid, $groups ) ) {
-						$row = KFactory::tmp('admin::com.ninjaboard.model.usergroup_maps')->getItem()->setData(array(
-							'id' => $id,
+						$row = KFactory::tmp('admin::com.ninjaboard.model.usergroupmaps')->getItem()->setData(array(
+							'joomla_user_id' => $id,
 							'ninjaboard_user_group_id' => $groupid
 						));
 						$table->insert($row);
@@ -183,11 +181,7 @@ class mi_ninjaboard
 			'_MI_MI_NINJABOARD_GROUPS_EXCLUDE_NAME',
 			'_MI_MI_NINJABOARD_GROUPS_EXCLUDE_DESC',
 			'_MI_MI_NINJABOARD_SET_CLEAR_GROUPS_NAME',
-			'_MI_MI_NINJABOARD_SET_CLEAR_GROUPS_DESC',
-			'_MI_MI_NINJABOARD_REBUILD_NAME',
-			'_MI_MI_NINJABOARD_REBUILD_DESC',
-			'_MI_MI_NINJABOARD_REMOVE_NAME',
-			'_MI_MI_NINJABOARD_REMOVE_DESC'
+			'_MI_MI_NINJABOARD_SET_CLEAR_GROUPS_DESC'
 		) as $translate)
 		{
 			$text = str_replace( array( '_MI_MI_NINJABOARD_', '_NAME', '_DESC' ), '', $translate);
