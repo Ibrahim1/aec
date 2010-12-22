@@ -7342,12 +7342,6 @@ class SubscriptionPlan extends serialParamDBTable
 							return false;
 						}
 					}
-
-					if ( !empty( $params ) ) {
-						$invoice->params['userMIParams'][$this->id][$mi->id] = $params;
-
-						$invoice->storeload();
-					}
 				}
 
 				unset( $mi );
@@ -16701,11 +16695,11 @@ class microIntegration extends serialParamDBTable
 		$request->invoice	=&	$invoice;
 		$request->plan		=&	$objplan;
 
-		if ( !is_null( $params ) ) {
-			$request->params	=&	$params;
-		} else {
-			$request->params	=&	$metaUser->meta->getMIParams( $this->id, $objplan->id );
+		if ( empty( $params ) ) {
+			$params	=&	$metaUser->meta->getMIParams( $this->id, $objplan->id );
 		}
+
+		$request->params	=&	$params;
 
 		if ( $add !== false ) {
 			$request->add	=& $add;
