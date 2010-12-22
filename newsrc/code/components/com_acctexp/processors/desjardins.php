@@ -186,9 +186,7 @@ XML;
 		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
 
 		$xml_step3_Obj = simplexml_load_string( $resp );
-
-		//print_r($resp);exit;
-
+ 
 		$redir_url = $xml_step3_Obj->merchant->transactions->transaction->urls->url->path;
 		$trx_number = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_id"]');
 		$trx_key = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_key"]');
@@ -205,8 +203,7 @@ XML;
 
 		$app->redirect($url);
 			
-		$response = true;
-		return $response;
+		return true;
 	}
 
 	function parseNotification( $post )
@@ -233,6 +230,13 @@ XML;
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
+
+		if ( !empty( $post['original'] ) ) {
+			$xml = base64_decode( $post['original'] );
+
+			$transactiondetails = array( $this->XMLsubstring_tag( $xml, $tag )
+										);
+		}
 
 		if ( $post['status'] == 'error' ) {
 			if ( isset( $invoice->params['desjardin_retries'] ) ) {
