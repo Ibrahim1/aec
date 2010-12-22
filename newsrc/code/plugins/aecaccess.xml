@@ -7,7 +7,7 @@
 	<license>GNU/GPL Version 2.0 or later - http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>skore@valanx.org</authorEmail>
 	<authorUrl>https://valanx.org</authorUrl>
-	<version>0.6</version>
+	<version>0.14.4</version>
 	<description>The AEC Access Plugin regulates overall access to Joomla! based on the subscription status of a user within the AEC.</description>
 	<files>
 		<filename plugin="aecaccess">aecaccess.php</filename>
