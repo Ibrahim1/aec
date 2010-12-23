@@ -9612,7 +9612,7 @@ class InvoiceFactory
 
 			$custom = trim( $aecConfig->cfg['custom_confirm_userdetails'] );
 
-			if ( empty( $custom ) || ( $custom == '<p><br mce_bogus="1"></p>' ) ) {
+			if ( empty( $custom ) || ( $custom == '<p><br mce_bogus="1"></p>' )|| ( $custom == '<br mce_bogus="1">' ) ) {
 				$this->userdetails = "";
 
 				if ( !empty( $this->metaUser->cmsUser->name ) ) {

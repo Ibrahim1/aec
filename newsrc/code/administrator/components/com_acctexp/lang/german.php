@@ -1254,6 +1254,10 @@ define( '_CFG_GENERAL_ITEMID_PENDING_NAME', 'Itemid Pending Page');
 define( '_CFG_GENERAL_ITEMID_PENDING_DESC', 'The Itemid for the pending page.');
 define( '_CFG_GENERAL_ITEMID_SUBSCRIPTIONDETAILS_NAME', 'Itemid Subscription Details Page');
 define( '_CFG_GENERAL_ITEMID_SUBSCRIPTIONDETAILS_DESC', 'The Itemid for the subscription details page.');
+define( '_CFG_GENERAL_ITEMID_SUBSCRIPTIONDETAILS_INVOICES_NAME', 'Itemid Subscription Details - Invoices Page');
+define( '_CFG_GENERAL_ITEMID_SUBSCRIPTIONDETAILS_INVOICES_DESC', 'The Itemid for the subscription details Invoices sub-page.');
+define( '_CFG_GENERAL_ITEMID_SUBSCRIPTIONDETAILS_DETAILS_NAME', 'Itemid Subscription Details - Details Page');
+define( '_CFG_GENERAL_ITEMID_SUBSCRIPTIONDETAILS_DETAILS_DESC', 'The Itemid for the subscription details Details sub-page.');
 
 // Invoice settings
 define( '_CFG_GENERAL_SENDINVOICE_NAME', 'eine Rechnungs-Email senden');

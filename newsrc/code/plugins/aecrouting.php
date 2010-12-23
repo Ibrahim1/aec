@@ -60,6 +60,15 @@ class plgSystemAECrouting extends JPlugin
 			$vars['view']	= JRequest::getVar( 'view', null );
 		}
 
+		// Community Builder
+		$vars['ccb']		= $vars['option'] == 'com_comprofiler';
+		$vars['ccb12']		= GeneralInfoRequester::detect_component( 'CB1.2' );
+
+		if ( $vars['ccb'] ) {
+			// We have to overwrite this here because CB can't keep their tasks consistent
+			$vars['task']	= JRequest::getVar( 'task', null );
+		}
+
 		$vars['usage']		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 		$vars['processor']	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 		$vars['recurring']	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
@@ -76,10 +85,6 @@ class plgSystemAECrouting extends JPlugin
 		$vars['submit']		= JRequest::getVar( 'submit', '' );
 
 		$vars['k2']			= JRequest::getVar( 'K2UserForm', 0 );
-
-		// Community Builder
-		$vars['ccb']		= $vars['option'] == 'com_comprofiler';
-		$vars['ccb12']		= GeneralInfoRequester::detect_component( 'CB1.2' );
 
 		// JomSocial
 		$vars['joms']		= $vars['option'] == 'com_community';
@@ -305,6 +310,8 @@ class plgSystemAECrouting extends JPlugin
 				} else {
 					$temptoken->content = array_merge( $temptoken->content, $content );
 				}
+
+				$temptoken->storeload();
 			}
 		} elseif ( $vars['cbsreg'] ) {
 			// Any kind of user profile edit = trigger MIs
