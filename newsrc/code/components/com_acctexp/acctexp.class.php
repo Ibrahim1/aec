@@ -8682,6 +8682,22 @@ class InvoiceFactory
 			$this->items->grand_total = $this->items->total;
 		}
 
+		if ( !empty( $this->items->discount ) ) {
+			foreach ( $this->items->discount as $discount ) {
+				foreach ( $discount as $term ) {
+					foreach ( $term->cost as $cost ) {
+						if ( $cost->type == 'total' ) {
+							if ( is_object( $this->items->grand_total ) ) {
+								$this->items->grand_total->cost['amount'] += $cost->cost['amount'];
+							} else {
+								$this->items->grand_total += $cost->cost['amount'];
+							}
+						}
+					}
+				}
+			}
+		}
+
 		$exchange = $silent = null;
 
 		$this->triggerMIs( 'invoice_items_total', $exchange, $this->items, $silent );
