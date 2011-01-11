@@ -160,7 +160,7 @@ class mi_acl
 			}
 
 		}
-
+aecDebug($sessionextra);
 		$metaUser->instantGIDchange( $gid, $this->settings['change_session'], $sessionextra );
 
 		return true;
