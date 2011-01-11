@@ -70,14 +70,17 @@ class tool_vatcollect
 			$entry = new logHistory( $db );
 			$entry->load( $id );
 
-			$filter = array( 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel' );
-
 			$refund = false;
-			foreach ( $entry->response as $v ) {
-				if ( in_array( $v, $filter ) ) {
-					continue 2;
-				} elseif ( $v == 'refund' ) {
-					$refund = true;
+			if ( is_array( $entry->response ) ) {
+				$filter = array( 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel' );
+
+				$refund = false;
+				foreach ( $entry->response as $v ) {
+					if ( in_array( $v, $filter ) ) {
+						continue 2;
+					} elseif ( $v == 'refund' ) {
+						$refund = true;
+					}
 				}
 			}
 

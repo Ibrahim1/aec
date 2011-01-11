@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: tool_minireport.php
+ * @version $Id: tool_weekly_performance.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Toolbox - Mini Report
+ * @subpackage Toolbox - Weekly Performance
  * @copyright 2010 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
@@ -11,13 +11,13 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class tool_minireport
+class tool_weekly_performance
 {
 	function Info()
 	{
 		$info = array();
-		$info['name'] = "Mini Report";
-		$info['desc'] = "A quick overview on sales and revenue for a given timeframe.";
+		$info['name'] = "Weekly Performance";
+		$info['desc'] = "Compare how individual weeks have performed.";
 
 		return $info;
 	}
