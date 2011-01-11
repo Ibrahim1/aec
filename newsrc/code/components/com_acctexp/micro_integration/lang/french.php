@@ -1173,6 +1173,11 @@ define( '_MI_MI_FRONTENDUSERACCESS_REBUILD_DESC','This option will rebuild your 
 define( '_MI_MI_FRONTENDUSERACCESS_REMOVE_NAME','Remove' );
 define( '_MI_MI_FRONTENDUSERACCESS_REMOVE_DESC','Carry out the expiration action for all users with an active plan attached to this micro-integration' );
 
+define( '_MI_MI_FRONTENDUSERACCESS_KEEP_GROUPS_NAME','Keep Groups' );
+define( '_MI_MI_FRONTENDUSERACCESS_KEEP_GROUPS_DESC','Keep existing groups instead of replacing them.' );
+define( '_MI_MI_FRONTENDUSERACCESS_KEEP_GROUPS_EXP_NAME','Keep Groups (Expiration)' );
+define( '_MI_MI_FRONTENDUSERACCESS_KEEP_GROUPS_EXP_DESC','Keep existing groups instead of replacing them on expiration.' );
+
 // Kunena MI
 define( '_AEC_MI_NAME_KUNENA','Kunena Forum' );
 define( '_AEC_MI_DESC_KUNENA','Change the Users Rank in Kunena' );
