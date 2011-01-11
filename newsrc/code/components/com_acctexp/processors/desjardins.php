@@ -227,14 +227,60 @@ XML;
 		return $response;
 	}
 
+/*
+ * <?xml version="1.0" encoding="ISO-8859-15"?>
+  <request input="xml">
+    <merchant id="131302" >
+      <transaction id="INzQ4N2RiNGIxODg2" currency="CAD" currencyText="CAD $ " approved="no">
+        <terminal_id>-</terminal_id>
+        <urls>
+          <url name="cancel">
+            <path>http://www.aqlass.org/components/com_acctexp/processors/notify/notify_redirect.php</path>
+            <parameters>
+              <parameter name="aec_request">djd_INzQ4N2RiNGIxODg2_cancel</parameter>
+              <parameter name="TrxId">INzQ4N2RiNGIxODg2</parameter>
+            </parameters>
+          </url>
+        </urls>
+        <ecr_number>-</ecr_number>
+        <amount>16931</amount>
+        <language>FR</language>
+        <card_holder_name>
+        </card_holder_name>
+        <date>10/12/29 19:41:29</date>
+        <transaction_code>0</transaction_code>
+        <condition_code>103</condition_code>
+        <iso_code>
+        </iso_code>
+        <host_code>
+        </host_code>
+        <action_code>1</action_code>
+        <batch_no>
+        </batch_no>
+        <sequence_no>
+        </sequence_no>
+        <process_info>T@1</process_info>
+        <authorization_no>
+        </authorization_no>
+        <receipt_text>TRANSACTION NON COMPLETEE</receipt_text>
+        <receipt>
+          -
+          </receipt>
+        </transaction>
+      </merchant>
+    </request>
+
+ */
+
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
 		if ( !empty( $post['original'] ) ) {
 			$xml = base64_decode( $post['original'] );
-
-			$transactiondetails = array( $this->XMLsubstring_tag( $xml, $tag )
+aecDebug($xml);
+			$transactiondetails = array(	'receipt_text' => $this->XMLsubstring_tag( $xml, 'receipt_text' ),
+											'receipt_text' => $this->XMLsubstring_tag( $xml, 'receipt_text' )
 										);
 		}
 
