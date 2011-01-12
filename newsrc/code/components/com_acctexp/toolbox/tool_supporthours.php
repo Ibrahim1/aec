@@ -103,6 +103,8 @@ class tool_supporthours
 			$end_timeframe = time();
 		}
 
+		$unused = 0;
+
 		$historylist = array();
 		foreach ( $userlist as $userid ) {
 			$metaUser = new metaUser( $userid );
@@ -124,6 +126,10 @@ class tool_supporthours
 						}
 					}
 				}
+			}
+
+			if ( !empty( $uparams['support_minutes'] ) ) {
+				$unused += $uparams['support_minutes'] - $uparams['support_minutes_used'];
 			}
 		}
 
@@ -165,6 +171,8 @@ class tool_supporthours
 
 			$return .= '</table><br /><br />';
 		}
+
+		$return .= 'Total unused minutes: ' . $unused;
 
 		return $return;
 	}

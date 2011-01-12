@@ -3,7 +3,7 @@
 AEC micro-integration plugin
 for Frontend-User-Access
 connects subscription plans to Frontend-User-Access-usergroups
-version 2.0.1
+version 2.0.2
 */
 
 
@@ -89,8 +89,10 @@ class mi_frontenduseraccess
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
+		$settings['keep_groups']		= array( 'list_yesno' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
+		$settings['keep_groups_exp']	= array( 'list_yesno' );
 		$settings['rebuild']			= array( 'list_yesno' );
 		$settings['remove']				= array( 'list_yesno' );
 
@@ -100,7 +102,11 @@ class mi_frontenduseraccess
 	function action( $request )
 	{
 		if ( !empty( $this->settings['set_group'] ) && !empty( $this->settings['group'] ) ) {
-			$this->update_fua_group( $request->metaUser->userid, $this->settings['group'] );
+			if ( !isset( $this->settings['keep_groups'] ) ) {
+				$this->settings['keep_groups'] = false;
+			}
+
+			$this->update_fua_group( $request->metaUser->userid, $this->settings['group'], $this->settings['keep_groups'] );
 		}
 
 		return true;
@@ -109,29 +115,42 @@ class mi_frontenduseraccess
 	function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['set_group_exp'] ) && !empty( $this->settings['group_exp'] ) ) {
-			$this->update_fua_group( $request->metaUser->userid, $this->settings['group_exp'] );
+			if ( !isset( $this->settings['keep_groups_exp'] ) ) {
+				$this->settings['keep_groups_exp'] = false;
+			}
+
+			$this->update_fua_group( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['keep_groups_exp'] );
 		}
 
 		return true;
 	}
 
-	function update_fua_group( $user_id, $fua_group )
+	function update_fua_group( $user_id, $fua_group, $keep_groups )
 	{
 		$db = &JFactory::getDBO();
-		
-		sort( $fua_group );
 
-		$fua_group = $this->array_to_csv( $fua_group );
-
-		$query = 'SELECT user_id'
+		$query = 'SELECT user_id, group_id'
 				. ' FROM #__fua_userindex'
-				. ' WHERE user_id = \'' . $user_id . '\' '			
+				. ' WHERE user_id = \'' . $user_id . '\' '
+				." LIMIT 1 "			
 				;
 		$db->setQuery( $query );
 
-		if ( !$db->loadResult() ) {		
-			$query = "INSERT INTO #__fua_userindex "
-					." SET group_id='$fua_group', user_id='$user_id' "			
+		$fua_user = $db->loadObject();
+
+		if ( ( $fua_user->user_id == $user_id ) && $keep_groups ) {
+			$groups = array_unique( array_merge( $fua_group, $this->csv_to_array( $fua_user->group_id ) ) );
+		} else {
+			$groups = $fua_group;
+		}
+
+		sort( $groups );
+
+		$fua_group = $this->array_to_csv( $groups );
+
+		if ( $fua_user->user_id == $user_id ) {		
+			$query = 'INSERT INTO #__fua_userindex'
+					. ' SET group_id = \'' . $fua_group . '\', user_id = \'' . $user_id . '\' '
 					;
 		} else {	
 			$query = 'UPDATE #__fua_userindex'
@@ -143,7 +162,17 @@ class mi_frontenduseraccess
 		$db->setQuery( $query );
 		$db->query();
 	}
-	
+
+	function csv_to_array($json){		
+		$array = array();
+		$temp = explode(',', $json);
+		for($n = 0; $n < count($temp); $n++){
+			$value = str_replace('"','',$temp[$n]);
+			$array[] = $value;
+		}
+		return $array;
+	}
+
 	function array_to_csv($array){	
 		$return = '';	
 		for($n = 0; $n < count($array); $n++){
