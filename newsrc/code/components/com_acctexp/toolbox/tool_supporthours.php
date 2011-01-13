@@ -17,7 +17,7 @@ class tool_supporthours
 	{
 		$info = array();
 		$info['name'] = "Support Hours";
-		$info['desc'] = "Gets rid of subscriptions for users that don't exist anymore.";
+		$info['desc'] = "Counts and collates logged support hours for a given time period.";
 
 		return $info;
 	}
