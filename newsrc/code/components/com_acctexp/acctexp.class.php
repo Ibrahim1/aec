@@ -4902,12 +4902,14 @@ class XMLprocessor extends processor
 
 	function XMLsubstring_tag( $haystack, $tag )
 	{
-		$start = '<' . $tag . '>';
-		$end = '</' . $tag . '>';
+		return XMLprocessor::substring_between( $haystack, '<' . $tag . '>', '</' . $tag . '>' );
+	}
 
+	function substring_between( $haystack, $start, $end )
+	{
 		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
 			return false;
-		} else {
+		 } else {
 			$start_position = strpos( $haystack, $start ) + strlen( $start );
 			$end_position = strpos( $haystack, $end );
 			return substr( $haystack, $start_position, $end_position - $start_position );
