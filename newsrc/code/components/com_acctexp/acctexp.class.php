@@ -864,7 +864,7 @@ class metaUser
 					foreach ( $sessionextra as $sk => $sv ) {
 						$se[$key]['user']->$sk = $sv;
 
-						if ( $this->id == $user->id ) {
+						if ( $this->userid == $user->id ) {
 							$user->$sk	= $sv;
 						}
 					}
