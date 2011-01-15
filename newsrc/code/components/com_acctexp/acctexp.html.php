@@ -1707,7 +1707,7 @@ class Payment_HTML
 			<?php } ?>
 		<?php } else {
 			$document=& JFactory::getDocument();
-			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="screen, print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice.css" />' );
+			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="screen, print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_embed.css" />' );
 			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_print.css" />' );
 		} ?>
 			<div id="invoice_wrap">
@@ -1798,7 +1798,7 @@ class Payment_HTML
 
 		<div class="componentheading"><?php echo _CHECKOUT_ERROR_TITLE; ?></div>
 		<div id="box_pending">
-			<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ( $error ? ( ': ' . $error) : '' ); ?></p>
+			<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ( $error ? ( ': ' . $error ) : '' ); ?></p>
 			<p><?php echo $actions; ?></p>
 		</div>
 		<div class="aec_clearfix"></div>

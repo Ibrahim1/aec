@@ -78,8 +78,8 @@ XML;
 		$login = $merchant->addChild( 'login' );
 
 		$suffix = '';
-		if ( isset( $invoice->params['desjardin_retries'] ) ) {
-			$suffix = $invoice->params['desjardin_retries'];
+		if ( isset( $request->invoice->params['desjardin_retries'] ) ) {
+			$suffix = $request->invoice->params['desjardin_retries'];
 		}
 
 		$trx = $login->addChild( 'trx' );
@@ -93,13 +93,18 @@ XML;
 		$xml_step1_Obj = simplexml_load_string($resp);
 		$amount = $request->int_var['amount'] * 100;
 
+		$suffix = '';
+		if ( isset( $request->invoice->params['desjardin_attempts'] ) ) {
+			$suffix = $request->invoice->params['desjardin_attempts'];
+		}
+
 		$return = JURI::root() . 'components/com_acctexp/processors/notify/notify_redirect.php';
 
 		$xml_step3_request = '<?xml version="1.0" encoding="ISO-8859-15" ?>'."\n";
 		$xml_step3_request .= '	<request>'."\n";
 		$xml_step3_request .= '	  <merchant id="'.trim($this->settings['custId']).'" key="'.trim($this->settings['transactionKey']).'">'."\n";
 		$xml_step3_request .= '		<transactions>'."\n";
-		$xml_step3_request .= '		  <transaction id="' . trim($xml_step1_Obj->merchant->login->trx['id']) . '" key="'.trim($xml_step1_Obj->merchant->login->trx['key']) .'" type="purchase" currency="CAD" currencyText="$CAD">'."\n";
+		$xml_step3_request .= '		  <transaction id="' . trim($xml_step1_Obj->merchant->login->trx['id']).$suffix . '" key="'.trim($xml_step1_Obj->merchant->login->trx['key']) .'" type="purchase" currency="CAD" currencyText="$CAD">'."\n";
 		$xml_step3_request .= '			<amount>'.$amount.'</amount>'."\n";
 		$xml_step3_request .= '			<language>fr</language>'."\n";
 		$xml_step3_request .= '			<urls>'."\n";
@@ -193,13 +198,22 @@ XML;
 		$trx_merch_id = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="merchant_id"]');
 
 		$suffix = '';
-		if ( isset( $request->invoice->params['desjardin_retries'] ) ) {
-			$suffix = $request->invoice->params['desjardin_retries'];
+		if ( isset( $request->invoice->params['desjardin_attempts'] ) ) {
+			$suffix = $request->invoice->params['desjardin_attempts'];
 		}
 
 		$url = $redir_url . "?transaction_id=".$trx_number[0].$suffix;
 		$url .= "&merchant_id=".$trx_merch_id[0];
 		$url .= "&transaction_key=".$trx_key[0];
+
+		if ( isset( $request->invoice->params['desjardin_attempts'] ) ) {
+			$attempts = $request->invoice->params['desjardin_attempts'] + 1;
+		} else {
+			$attempts = 1;
+		}
+
+		$request->invoice->addParams( array( 'desjardin_attempts' => $attempts ) );
+		$request->invoice->storeload();
 
 		$app->redirect($url);
 			
@@ -231,34 +245,49 @@ XML;
 	{
 		$response['valid'] = 0;
 
-		$transactiondetails = null;
+		$td = null;
 		if ( !empty( $post['original'] ) ) {
 			$xml = base64_decode( $post['original'] );
-aecDebug($xml);
-			$transactiondetails = array(	'authorization_no' => $this->XMLsubstring_tag( $xml, 'authorization_no' ),
-											'reference_no' => $this->XMLsubstring_tag( $xml, 'reference_no' ),
-											'card_type' => $this->XMLsubstring_tag( $xml, 'card_type' ),
-											'transaction_type' => $this->XMLsubstring_tag( $xml, 'transaction_type' ),
-											'transaction_status' => $this->XMLsubstring_tag( $xml, 'transaction_status' )
-										);
+
+			$auth = $this->XMLsubstring_tag( $xml, 'authorization_no' );
+
+			if ( empty( $request->invoice->params['authorization_no'] ) && !empty( $auth ) ) {
+				switch ( $post['status'] ) {
+					case 'success': $status = 'APPROVED'; break;
+					case 'cancel': $status = 'CANCELLED'; break;
+					case 'error': $status = 'DECLINED'; break;
+					default: $status = 'NOT COMPLETED'; break;
+				}
+
+				$td = array(	'authorization_no' => $auth,
+								'reference_no' => $this->XMLsubstring_tag( $xml, 'sequence_no' ) . ' ' . $this->XMLsubstring_tag( $xml, 'terminal_id' ),
+								'card_type' => $this->XMLsubstring_tag( $xml, 'card_type' ),
+								'transaction_type' => 'Purchase',
+								'transaction_status' => $status
+							);
+			}
+		} elseif ( !isset( $request->invoice->params['authorization_no'] ) ) {
+				$td = array(	'authorization_no' => '',
+								'reference_no' => '',
+								'card_type' => '',
+								'transaction_type' => '',
+								'transaction_status' => ''
+							);
 		}
 
-		if ( !empty( $transactiondetails ) ) {
-			$invoice->addParams( $transactiondetails );
+		if ( !empty( $td ) ) {
+			$invoice->addParams( $td );
 			$invoice->storeload();
 		}
 
 		if ( $post['status'] == 'error' ) {
-			if ( isset( $invoice->params['desjardin_retries'] ) ) {
-				$retries = $invoice->params['desjardin_retries'] + 1;
-			} else {
-				$retries = 1;
-			}
-
-			$invoice->addParams( array( 'desjardin_retries' => $retries ) );
+			$invoice->transaction_date == '0000-00-00 00:00:00';
 			$invoice->storeload();
 
-			$response['error'] = "Erreur de procession de vos d&eacute;tails de paiement: Nous ne pouvons effectuer votre transaction par carte de cr&eacute;dit";
+			$error = "Erreur de procession de vos d&eacute;tails de paiement: Nous ne pouvons effectuer votre transaction par carte de cr&eacute;dit";
+
+			$response['customthanks'] = $this->displayError( $invoice, $error ) . '<br /><br />' . $this->displayInvoice( $invoice );
+			$response['break_processing'] = true;
 
 			return $response;
 		}
@@ -273,6 +302,11 @@ aecDebug($xml);
 		}
 
 		if ( $post['status'] == 'success' ) {
+			$td = array( 'transaction_status' => 'APPROVED' );
+
+			$invoice->addParams( $td );
+			$invoice->storeload();
+
 			$response['customthanks'] = $this->displayInvoice( $invoice );
 			$response['break_processing'] = true;
 
@@ -336,6 +370,23 @@ XML;
 
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false );
 		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false );
+
+		$content = ob_get_contents();
+		ob_end_clean();
+
+		return $content;
+	}
+
+	function displayError( $invoice, $error )
+	{
+		$db = &JFactory::getDBO();
+
+		$user = new JTableUser( $db );
+		$user->load( $invoice->userid );
+
+		ob_start();
+
+		Payment_HTML::error( 'com_acctexp', $user, $invoice->invoice_number, $error );
 
 		$content = ob_get_contents();
 		ob_end_clean();
