@@ -244,15 +244,15 @@ XML;
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
-
+aecDebug($invoice->params);
 		$td = null;
 		if ( !empty( $post['original'] ) ) {
 			$xml = base64_decode( $post['original'] );
-
+aecDebug($post['status']);aecDebug($xml);
 			$auth = $this->XMLsubstring_tag( $xml, 'authorization_no' );
 
-			if ( empty( $request->invoice->params['authorization_no'] ) && !empty( $auth ) ) {
-				switch ( $post['status'] ) {
+			if ( empty( $invoice->params['authorization_no'] ) && !empty( $auth ) ) {
+				switch ( strtolower( $post['status'] ) ) {
 					case 'success': $status = 'APPROVED'; break;
 					case 'cancel': $status = 'CANCELLED'; break;
 					case 'error': $status = 'DECLINED'; break;
@@ -265,8 +265,19 @@ XML;
 								'transaction_type' => 'Purchase',
 								'transaction_status' => $status
 							);
+
+				$success = true;
+				foreach ( $td as $v ) {
+					if ( empty( $v ) ) {
+						$success = false;
+					}
+				}
+
+				if ( $success ) {
+					$td['transaction_status'] = 'APPROVED';
+				}
 			}
-		} elseif ( !isset( $request->invoice->params['authorization_no'] ) ) {
+		} elseif ( !isset( $invoice->params['authorization_no'] ) ) {
 				$td = array(	'authorization_no' => '',
 								'reference_no' => '',
 								'card_type' => '',
@@ -274,7 +285,7 @@ XML;
 								'transaction_status' => ''
 							);
 		}
-
+aecDebug($td);
 		if ( !empty( $td ) ) {
 			$invoice->addParams( $td );
 			$invoice->storeload();
@@ -302,11 +313,6 @@ XML;
 		}
 
 		if ( $post['status'] == 'success' ) {
-			$td = array( 'transaction_status' => 'APPROVED' );
-
-			$invoice->addParams( $td );
-			$invoice->storeload();
-
 			$response['customthanks'] = $this->displayInvoice( $invoice );
 			$response['break_processing'] = true;
 

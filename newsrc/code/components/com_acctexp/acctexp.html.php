@@ -865,6 +865,7 @@ class Payment_HTML
 								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
+						<?php if ( empty( $userid ) && $aecConfig->cfg['confirmation_changeusage'] ) { ?>
 						<td colspan="2">
 							<form class="aectextright" name="backFormUserPlan" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -878,6 +879,7 @@ class Payment_HTML
 								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
+						<?php } ?>
 					</tr>
 					<?php } ?>
 					<?php if ( !empty( $InvoiceFactory->plan->desc ) ) { ?>
