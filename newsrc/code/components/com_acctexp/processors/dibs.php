@@ -109,10 +109,8 @@ class processor_dibs extends POSTprocessor
 			$onclick = 'onclick="' . $var['_aec_checkout_onclick'] . '"';
 			unset( $var['_aec_checkout_onclick'] );
 		} else {
-			$onclick = ""; // TODO: 'onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"';
+			$onclick = "";
 		}
-		
-		//aecdebug($request);aecdebug($var);
 
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
 		unset( $var['post_url'] );
@@ -137,11 +135,11 @@ class processor_dibs extends POSTprocessor
 			$code_list[] = JHTML::_('select.option', $country, $country . " - " . constant( '_AEC_LANG_' . $country ) );
 		}
 
-		$return .=  _CFG_MULTISAFEPAY_SELECT_COUNTRY . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $code_list, 'country', 'size="1"', 'value', 'text', 'NL' );		
+		$return .=  _CFG_MULTISAFEPAY_SELECT_COUNTRY . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $code_list, 'delivery03.Country', 'size="1"', 'value', 'text', 'NL' );		
 		
 		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . _BUTTON_CHECKOUT . '" />' . "\n";
 		$return .= '</form>' . "\n";
-
+aecdebug("checkoutAction");aecdebug($return);
 		return $return;
 	}	
 
@@ -166,10 +164,10 @@ class processor_dibs extends POSTprocessor
 		$var['cancelurl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
 		$var['accepturl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=dibsnotification' );
 
-		$var['delivery01.Firstname']	= clean($request->metaUser->cmsUser->username);
-		$var['delivery02.Lastname']		= clean($request->metaUser->cmsUser->name);
-		$var['delivery03.Country'] 		= clean($country);
-		$var['delivery04.Email']		= clean($request->metaUser->cmsUser->email);	
+		$var['delivery01.Firstname']	= trim($request->metaUser->cmsUser->username);
+		$var['delivery02.Lastname']		= trim($request->metaUser->cmsUser->name);
+		//$var['delivery03.Country'] 		= trim("");
+		$var['delivery04.Email']		= trim($request->metaUser->cmsUser->email);	
 		
 		$var['ordline0-1'] = 'Subscription';
 		$var['ordline0-2'] = 'Description';
@@ -193,15 +191,12 @@ class processor_dibs extends POSTprocessor
 					);
 		
 		$var["md5key"] = $md5key;		
-		
-			
-
+aecdebug("createGatewayLink");aecdebug($var);
 		return $var;
 	}
 
 	function parseNotification( $post )
-	{
-	aecdebug($post);aecdebug($_REQUEST);
+	{aecdebug("parseNotification");aecdebug($post);aecdebug($_REQUEST);
 		$response				= array();
 		$response['valid']		= true;
 		$response['invoice']	= aecGetParam( 'orderid', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -210,8 +205,7 @@ class processor_dibs extends POSTprocessor
 	}
 
 	function validateNotification( $response, $post, $invoice )
-	{
-	aecdebug($response);
+	{aecdebug("validateNotification");aecdebug($response);
 		require_once('dibs/DIBSFunctions.php');
 		
 		$response['valid'] = false;
