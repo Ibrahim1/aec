@@ -559,7 +559,7 @@ class HTML_AcctExp
 											}
 										} else {
 											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
-											. _AEC_USER_NO_COUPONS
+											. _AEC_USER_NO_INVOICES
 											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
 										} ?>
 								</table>
