@@ -250,22 +250,30 @@ aecDebug($invoice->params);
 			$xml = base64_decode( $post['original'] );
 aecDebug($post['status']);aecDebug($xml);
 			$auth = $this->XMLsubstring_tag( $xml, 'authorization_no' );
+			$card_type = $this->XMLsubstring_tag( $xml, 'card_type' );
 
-			if ( empty( $invoice->params['authorization_no'] ) && !empty( $auth ) ) {
-				switch ( strtolower( $post['status'] ) ) {
-					case 'success': $status = 'APPROVED'; break;
-					case 'cancel': $status = 'CANCELLED'; break;
-					case 'error': $status = 'DECLINED'; break;
-					default: $status = 'NOT COMPLETED'; break;
+			if ( ( empty( $invoice->params['authorization_no'] ) || ( $invoice->params['authorization_no'] == '---' ) ) && !empty( $auth ) ) {
+				$stdstatus = $this->XMLsubstring_tag( $xml, 'receipt_text' );
+
+				if ( empty( $stdstatus ) ) {
+					switch ( strtolower( $post['status'] ) ) {
+						case 'success': $status = 'APPROVED'; break;
+						case 'cancel': $status = 'CANCELLED'; break;
+						case 'error': $status = 'DECLINED'; break;
+						default: $status = 'NOT COMPLETED'; break;
+					}
+				} else {
+					$status = $stdstatus;
 				}
 
 				$td = array(	'authorization_no' => $auth,
 								'reference_no' => $this->XMLsubstring_tag( $xml, 'sequence_no' ) . ' ' . $this->XMLsubstring_tag( $xml, 'terminal_id' ),
-								'card_type' => $this->XMLsubstring_tag( $xml, 'card_type' ),
+								'card_type' => $card_type,
+								'card_holder' => $this->XMLsubstring_tag( $xml, 'card_holder_name' ),
 								'transaction_type' => 'Purchase',
 								'transaction_status' => $status
 							);
-
+aecDebug($td);
 				$success = true;
 				foreach ( $td as $v ) {
 					if ( empty( $v ) ) {
@@ -276,14 +284,22 @@ aecDebug($post['status']);aecDebug($xml);
 				if ( $success ) {
 					$td['transaction_status'] = 'APPROVED';
 				}
+			} elseif ( empty( $invoice->params['authorization_no'] ) && !empty( $auth ) ) {
+				$td = array(	'authorization_no' => '---',
+								'reference_no' => '---',
+								'card_type' => $card_type,
+								'card_holder' => $this->XMLsubstring_tag( $xml, 'card_holder_name' ),
+								'transaction_type' => '---',
+								'transaction_status' => $this->XMLsubstring_tag( $xml, 'receipt_text' )
+							);
 			}
 		} elseif ( !isset( $invoice->params['authorization_no'] ) ) {
-				$td = array(	'authorization_no' => '',
-								'reference_no' => '',
-								'card_type' => '',
-								'transaction_type' => '',
-								'transaction_status' => ''
-							);
+			$td = array(	'authorization_no' => '---',
+							'reference_no' => '---',
+							'card_type' => '---',
+							'transaction_type' => '---',
+							'transaction_status' => '---'
+						);
 		}
 aecDebug($td);
 		if ( !empty( $td ) ) {
