@@ -128,7 +128,7 @@ class mi_aecinvoiceprintemail
             $recipients2[$k] = trim( $email );
         }
         $recipients = $recipients2;
-
+print_r($message);exit;
 		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, true );
 
 		$request->invoice->params['mi_aecinvoiceprintemail'] = time();
@@ -144,7 +144,7 @@ class mi_aecinvoiceprintemail
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
 		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ), true );
 
-		$content = ob_get_contents();
+		$content = AECToolbox::rewriteEngineRQ( ob_get_contents(), $iFactory );
 		ob_end_clean();
 
 		return $content;
