@@ -149,13 +149,13 @@ class mi_frontenduseraccess
 		$fua_group = $this->array_to_csv( $groups );
 
 		if ( $fua_user->user_id == $user_id ) {		
-			$query = 'INSERT INTO #__fua_userindex'
-					. ' SET group_id = \'' . $fua_group . '\', user_id = \'' . $user_id . '\' '
-					;
-		} else {	
 			$query = 'UPDATE #__fua_userindex'
 					. ' SET `group_id` = \'' . $fua_group . '\''
 					. ' WHERE `user_id` = \'' . $user_id . '\''
+					;
+		} else {	
+			$query = 'INSERT INTO #__fua_userindex'
+					. ' SET group_id = \'' . $fua_group . '\', user_id = \'' . $user_id . '\' '
 					;
 		}
 
