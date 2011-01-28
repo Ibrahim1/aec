@@ -11,7 +11,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-jimport('joomla.event.plugin');
+jimport('joomla.plugin.plugin');
 
 /**
  * AEC Authentication plugin
