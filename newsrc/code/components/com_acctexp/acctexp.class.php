@@ -14282,6 +14282,10 @@ class reWriteEngine
 		$search = array();
 		$replace = array();
 		foreach ( $this->rewrite as $name => $replacement ) {
+			if ( is_array( $replacement ) ) {
+				$replacement = implode( $replacement );
+			}
+
 			$search[]	= '[[' . $name . ']]';
 			$replace[]	= $replacement;
 		}
