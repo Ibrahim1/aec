@@ -1673,8 +1673,7 @@ class Payment_HTML
 		if ( $standalone ) {
 		?>
 		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-		<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb" lang="en-gb" dir="ltr" >
-
+		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<title><?php echo $data['page_title']; ?></title>
 			<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option; ?>/css/invoice.css" type="text/css" media="screen, print" />
