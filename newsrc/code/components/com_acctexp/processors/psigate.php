@@ -91,7 +91,6 @@ class processor_psigate extends POSTprocessor
 		$response['OrderID']		= $OrderID;
 		$response['invoice']		= aecGetParam('CustomerRefNo', 'NA');
 
-
 		$validate			= md5($this->settings['secretWord'] . $FullTotal);
 		$response['valid']	= (strcmp($validate, $checksum) == 0);
 
