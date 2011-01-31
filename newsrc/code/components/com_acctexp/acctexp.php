@@ -727,8 +727,8 @@ function checkUsernameEmail( $username, $email )
 		$db->setQuery( $query );
 
 		if ( $db->loadResult() ) {
-			aecErrorAlert( _REGWARN_EMAIL_INUSE );
-			return _REGWARN_EMAIL_INUSE;
+			aecErrorAlert( JText::_( 'WARNREG_INUSE' ) );
+			return JText::_( 'WARNREG_INUSE' );
 		}
 	}
 
