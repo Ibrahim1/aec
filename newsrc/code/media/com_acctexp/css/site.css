@@ -517,7 +517,6 @@ clear: both;
 }
 
 button.aeclink {
--moz-user-select: text;
 background: transparent none repeat scroll 0 0;
 border: medium none;
 color: #777;
