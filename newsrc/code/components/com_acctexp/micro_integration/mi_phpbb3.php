@@ -316,7 +316,7 @@ class mi_phpbb3
 				;
 		$db->setQuery( $query );
 
-		$id = $db->loadResult();
+		return $db->loadResult();
 	}
 
 	function createUser( $db, $fields )
