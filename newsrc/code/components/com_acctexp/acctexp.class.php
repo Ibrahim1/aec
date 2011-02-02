@@ -17038,9 +17038,9 @@ class microIntegration extends serialParamDBTable
 		$settings['active']					= array( 'list_yesno', 1 );
 		$settings['_aec_action']			= array( 'list_yesno', 1 );
 		$settings['_aec_only_first_bill']	= array( 'list_yesno', 0 );
-		$settings['auto_check']				= array( 'list_yesno', '' );
+		$settings['auto_check']				= array( 'list_yesno', 1 );
 		$settings['_aec_global_exp_all']	= array( 'list_yesno', 0 );
-		$settings['on_userchange']			= array( 'list_yesno', '' );
+		$settings['on_userchange']			= array( 'list_yesno', 1 );
 		$settings['pre_exp_check']			= array( 'inputB', '' );
 
 		return $settings;
