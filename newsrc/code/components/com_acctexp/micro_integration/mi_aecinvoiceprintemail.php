@@ -128,7 +128,7 @@ class mi_aecinvoiceprintemail
             $recipients2[$k] = trim( $email );
         }
         $recipients = $recipients2;
-print_r($message);exit;
+
 		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, true );
 
 		$request->invoice->params['mi_aecinvoiceprintemail'] = time();
