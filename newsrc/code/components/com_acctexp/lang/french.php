@@ -117,7 +117,7 @@ define( '_INVOICEPRINT_ADDRESSFIELD', "Entrez ici votre adresse &macr; il affich
 define( '_INVOICEPRINT_PRINT', 'Imprimer');
 define( '_INVOICEPRINT_BLOCKNOTICE', "Ce bloc (y compris le champ de texte et un bouton d'impression) ne s'affichent pas sur votre impression.");
 define( '_INVOICEPRINT_PRINT_TYPEABOVE', "S'il vous pla&icirc;t votre adresse de type dans le champ ci&macr;dessus.");
-define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>This invoice has not been paid yet.</strong>');
+define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>Cette facture n’est toujours pas acquitt&eacute;e.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_CANCEL', '<strong>Ce paiement a &eacute;t&eacute; annul&eacute;.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Cette facture a &eacute;t&eacute; pay&eacute;e le: %s');
 define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');

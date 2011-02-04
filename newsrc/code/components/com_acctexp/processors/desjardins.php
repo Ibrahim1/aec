@@ -245,8 +245,8 @@ XML;
 	{
 		$response['valid'] = 0;
 
-		$params = array( 'authorization_no' => '', 'reference_no' => '', 'card_type' => '', 'card_holder' => '', 'transaction_type' => '', 'transaction_status' => '' );
-
+		$params = array( 'authorization_no' => '', 'reference_no' => '', 'card_type' => '', 'card_holder' => '', 'transaction_type' => 'Achat', 'transaction_status' => '' );
+aecDebug($post);
 		foreach ( $params as $k => $v ) {
 			if ( isset( $invoice->params[$k] ) ) {
 				if ( $invoice->params[$k] == '---' ) {
@@ -256,11 +256,11 @@ XML;
 				}
 			}
 		}
-
+aecDebug($params);
 		$td = null;
 		if ( !empty( $post['original'] ) ) {
 			$xml = base64_decode( $post['original'] );
-
+aecDebug($xml);
 			$auth = $this->XMLsubstring_tag( $xml, 'authorization_no' );
 			$card_holder_name = $this->XMLsubstring_tag( $xml, 'card_holder_name' );
 
@@ -282,7 +282,7 @@ XML;
 				$params['reference_no']			= $this->XMLsubstring_tag( $xml, 'sequence_no' ) . ' ' . $this->XMLsubstring_tag( $xml, 'terminal_id' );
 				$params['card_type']			= $this->XMLsubstring_tag( $xml, 'card_type' );
 				$params['card_holder']			= $this->XMLsubstring_tag( $xml, 'card_holder_name' );
-				$params['transaction_type']		= 'Purchase';
+				$params['transaction_type']		= 'Achat';
 				$params['transaction_status']	= $status;
 
 				$success = true;
@@ -301,16 +301,16 @@ XML;
 				$params['transaction_status']	= $this->XMLsubstring_tag( $xml, 'receipt_text' );
 			}
 		}
-
+aecDebug($params);
 		foreach ( $params as $k => $v ) {
 			if ( empty( $v ) ) {
 				$params[$k] = '---';
 			}
 		}
-
+aecDebug($params);
 		$invoice->addParams( $params );
 		$invoice->storeload();
-
+aecDebug($invoice);
 		if ( $post['status'] == 'error' ) {
 			$invoice->transaction_date == '0000-00-00 00:00:00';
 			$invoice->storeload();
@@ -361,7 +361,7 @@ XML;
 
 			exit;
 		}
-
+aecDebug($invoice);
 		return $response;
 	}
 

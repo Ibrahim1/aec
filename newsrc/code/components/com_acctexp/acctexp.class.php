@@ -11232,7 +11232,7 @@ class Invoice extends serialParamDBTable
 		$db = &JFactory::getDBO();
 
 		$this->active = 0;
-		$this->params = array( 'deactivated' => 'cancel' );
+		$this->params['deactivated'] = 'cancel';
 		$this->storeload();
 
 		$usage = null;
