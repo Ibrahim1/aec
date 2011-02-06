@@ -333,8 +333,15 @@ aecDebug($invoice);
 		}
 
 		if ( $post['status'] == 'success' ) {
+			// Temporarily setting the transaction date
+			$invoice->transaction_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			$invoice->storeload();
+			
 			$response['customthanks'] = $this->displayInvoice( $invoice );
 			$response['break_processing'] = true;
+
+			$invoice->transaction_date = '0000-00-00 00:00:00';
+			$invoice->storeload();
 
 			return $response;
 		}

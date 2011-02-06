@@ -67,10 +67,15 @@ function aecQuickLog( $short, $tags, $text, $level = 128 )
 	$db = &JFactory::getDBO();
 
 	$eventlog = new eventLog( $db );
-	if ( !is_string( $text ) ) {
-		$eventlog->issue( $short, $tags, json_encode( $text ), $level );
-	} else {
+	if ( empty( $text ) ) {
+		$eventlog->issue( $short, $tags, "[[EMPTY]]", $level );
+	} elseif ( is_array( $text ) || is_object( $text ) ) {
+		// Due to some weird error, json_encode sometimes throws a notice - even on a proper array or object
+		$eventlog->issue( $short, $tags, @json_encode( $text ), $level );
+	} elseif ( is_string( $text ) || is_bool( $text ) || is_float( $text ) ) {
 		$eventlog->issue( $short, $tags, $text, $level );
+	} else {
+		$eventlog->issue( $short, $tags, "[[UNSUPPORTED TYPE]]", $level );
 	}
 }
 
