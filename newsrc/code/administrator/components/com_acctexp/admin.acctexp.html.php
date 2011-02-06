@@ -837,7 +837,7 @@ class HTML_AcctExp
 								</tr>
 								<tr>
 									<td class="notice_level_<?php echo $notice->level; ?>">&nbsp;</td>
-									<td><?php echo htmlentities( stripslashes( $notice->event ) ); ?></td>
+									<td><?php echo substr( 0, 256, htmlentities( stripslashes( $notice->event ) ) ); ?></td>
 									<td><?php echo $notice->tags; ?></td>
 								</tr>
 							<?php
@@ -2684,7 +2684,7 @@ class HTML_AcctExp
 				<td class="notice_level_<?php echo $row->level; ?>"><?php echo constant( "_AEC_NOTICE_NUMBER_" . $row->level ); ?>
 				<td align="left"><?php echo $row->short; ?></td>
 	  			<td align="left"><?php echo $row->tags; ?></td>
-				<td align="left" class="aec_bigcell"><?php echo htmlentities( stripslashes( $row->event ) ); ?></td>
+				<td align="left" class="aec_bigcell"><?php echo $row->event ?></td>
 				<td align="left"><?php echo ( $row->params ? $row->params : _AEC_CMN_NONE ); ?></td>
 			</tr>
 			<?php

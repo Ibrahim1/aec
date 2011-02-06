@@ -5067,6 +5067,14 @@ function eventlog( $option )
 			}
 		}
 		$events[$id]->params = implode( ', ', $params );
+
+		$format = @json_decode( $row->event );
+
+		if ( is_array( $format ) || is_object( $format ) ) {
+			$events[$id]->event = "<pre>".print_r($format,true)."</pre>";
+		} else {
+			$events[$id]->event = htmlentities( stripslashes( $events[$id]->event ) );
+		}
 	}
 
 	HTML_AcctExp::eventlog( $option, $events, $search, $pageNav );
