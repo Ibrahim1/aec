@@ -333,6 +333,8 @@ aecDebug($invoice);
 		}
 
 		if ( $post['status'] == 'success' ) {
+			$app = JFactory::getApplication();
+
 			// Temporarily setting the transaction date
 			$invoice->transaction_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 			$invoice->storeload();
