@@ -9313,7 +9313,7 @@ class InvoiceFactory
 		if ( !is_array( $list ) ) {
 			if ( $list ) {
 				if ( is_bool( $list ) ) {
-					return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_AUTHERROR ), false, true );
+					return aecRedirect( AECToolbox::deadsureURL( 'index.php', _NOPLANS_AUTHERROR ), false, true );
 				} else {
 					if ( strpos( $list, 'option=com_acctexp' ) ) {
 						$list .= '&userid=' . $this->userid;
@@ -9322,13 +9322,13 @@ class InvoiceFactory
 					return aecRedirect( $list );
 				}
 			} else {
-				return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR ), false, true );
+				return aecRedirect( AECToolbox::deadsureURL( 'index.php', _NOPLANS_ERROR ), false, true );
 			}
 		}
 
 		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
 		 if ( count( $list ) == 0 ) {
-			return aecRedirect( AECToolbox::deadsureURL( 'index.php?mosmsg=' . _NOPLANS_ERROR, false, true ), false, true );
+			return aecRedirect( AECToolbox::deadsureURL( 'index.php', _NOPLANS_ERROR, false, true ), false, true );
 		}
 	}
 
