@@ -362,8 +362,6 @@ aecDebug("Step #5");
 			// Step #8 - We send a final acknowledgement
 			return $this->notify_trail( $response );
 		}
-
-		return $response;
 	}
 
 	function notify_trail( $InvoiceFactory, $response )
