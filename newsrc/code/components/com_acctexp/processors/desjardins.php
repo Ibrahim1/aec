@@ -87,7 +87,72 @@ XML;
 		
 		return $xml_step1_request->asXML();
 	}
+
+	function transmitRequestDesjardin( $url, $path, $xml )
+	{
+		$header = array();
+		$header['MIME-Version']		= "1.0";
+		$header['Content-type']		= "text/xml";
+		$header['Accept']			= "text/xml";
+		$header['Cache-Control']	= "no-cache";
+
+		$curlextra[CURLOPT_RETURNTRANSFER]	= 1;
+		$curlextra[CURLOPT_TIMEOUT]			= 25;
+		$curlextra[CURLOPT_VERBOSE]			= 0;
+		$curlextra[CURLOPT_CUSTOMREQUEST]	= 'POST';
+		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
+
+		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
+	}
+
+	function transmitRequestXML( $xml, $request )
+	{
+		$app = JFactory::getApplication();
 		
+		$path = '/catch';
+		$url = 'https://www.labdevtrx3.com' . $path;
+
+		// Step #1 - Logging in with Desjardins
+		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
+aecDebug("Step #1");
+		// Step #2 - Receiving the Transaction ID
+		$xml = $this->createRequestStep3XML( $resp, $request );
+aecDebug("Step #2");
+		// Step #3 - Making the Purchase Request
+		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
+aecDebug("Step #3");
+		// Step #4 - Desjardins validates the information
+		$xml_step3_Obj = simplexml_load_string( $resp );
+ aecDebug("Step #4");
+		$redir_url = $xml_step3_Obj->merchant->transactions->transaction->urls->url->path;
+		$trx_number = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_id"]');
+		$trx_key = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_key"]');
+		$trx_merch_id = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="merchant_id"]');
+
+		$suffix = '';
+		if ( isset( $request->invoice->params['desjardin_attempts'] ) ) {
+			$suffix = $request->invoice->params['desjardin_attempts'];
+		}
+
+		$url = $redir_url . "?transaction_id=".$trx_number[0].$suffix;
+		$url .= "&merchant_id=".$trx_merch_id[0];
+		$url .= "&transaction_key=".$trx_key[0];
+
+		if ( isset( $request->invoice->params['desjardin_attempts'] ) ) {
+			$attempts = $request->invoice->params['desjardin_attempts'] + 1;
+		} else {
+			$attempts = 1;
+		}
+
+		$request->invoice->addParams( array( 'desjardin_attempts' => $attempts ) );
+		$request->invoice->storeload();
+aecDebug("Step #5");
+		// Step #5 - Redirecting the user to Desjardins
+		$app->redirect($url);
+			
+		return true;
+	}
+
 	function createRequestStep3XML( $resp, $request )
 	{
 		$xml_step1_Obj = simplexml_load_string($resp);
@@ -158,66 +223,6 @@ XML;
 		$xml_step3_request .= '	</request>'."\n";
 
 		return $xml_step3_request;
-	}
-
-	function transmitRequestDesjardin( $url, $path, $xml )
-	{
-		$header = array();
-		$header['MIME-Version']		= "1.0";
-		$header['Content-type']		= "text/xml";
-		$header['Accept']			= "text/xml";
-		$header['Cache-Control']	= "no-cache";
-
-		$curlextra[CURLOPT_RETURNTRANSFER]	= 1;
-		$curlextra[CURLOPT_TIMEOUT]			= 25;
-		$curlextra[CURLOPT_VERBOSE]			= 0;
-		$curlextra[CURLOPT_CUSTOMREQUEST]	= 'POST';
-		$curlextra[CURLOPT_SSL_VERIFYPEER]	= false;
-
-		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
-	}
-
-	function transmitRequestXML( $xml, $request )
-	{
-		$app = JFactory::getApplication();
-		
-		$path = '/catch';
-		$url = 'https://www.labdevtrx3.com' . $path;
-
-		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
-
-		$xml = $this->createRequestStep3XML( $resp, $request );
-
-		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
-
-		$xml_step3_Obj = simplexml_load_string( $resp );
- 
-		$redir_url = $xml_step3_Obj->merchant->transactions->transaction->urls->url->path;
-		$trx_number = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_id"]');
-		$trx_key = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_key"]');
-		$trx_merch_id = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="merchant_id"]');
-
-		$suffix = '';
-		if ( isset( $request->invoice->params['desjardin_attempts'] ) ) {
-			$suffix = $request->invoice->params['desjardin_attempts'];
-		}
-
-		$url = $redir_url . "?transaction_id=".$trx_number[0].$suffix;
-		$url .= "&merchant_id=".$trx_merch_id[0];
-		$url .= "&transaction_key=".$trx_key[0];
-
-		if ( isset( $request->invoice->params['desjardin_attempts'] ) ) {
-			$attempts = $request->invoice->params['desjardin_attempts'] + 1;
-		} else {
-			$attempts = 1;
-		}
-
-		$request->invoice->addParams( array( 'desjardin_attempts' => $attempts ) );
-		$request->invoice->storeload();
-
-		$app->redirect($url);
-			
-		return true;
 	}
 
 	function parseNotification( $post )
@@ -333,6 +338,8 @@ aecDebug($invoice);
 		}
 
 		if ( $post['status'] == 'success' ) {
+			$app = JFactory::getApplication();
+
 			// Temporarily setting the transaction date
 			$invoice->transaction_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
 			$invoice->storeload();
@@ -346,33 +353,20 @@ aecDebug($invoice);
 			return $response;
 		}
 
-		if ( strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {
-			$response['valid'] = 1;
-		} else {
-$xml_request_str = <<<XML
-<?xml version="1.0" encoding="ISO-8859-15"?><response></response>
-XML;
-
-			$xml_step1_request = new SimpleXMLElement($xml_request_str);
-
-			$merchant = $xml_step1_request->addChild( 'merchant' );
-			$merchant->addAttribute( 'id', trim( $this->settings['custId'] ) );
-
-			$trx = $merchant->addChild( 'transaction' );
-			$trx->addAttribute( 'id', $response['invoice'] );
-			$trx->addAttribute( 'accepted', 'yes' );
-
-			$xml = $xml_step1_request->asXML();
-
-			echo $xml;
-
-			exit;
+		if ( !strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {aecDebug("Step #6");
+			// Step #6 - Validate that we're still talking about the same transaction
+			return $this->notify_trail( $response );
+		} else {aecDebug("Step #7");
+			// Step #7 - Desjardins sends a final confirmation
+			$response['valid'] = 1;aecDebug("Step #8");
+			// Step #8 - We send a final acknowledgement
+			return $this->notify_trail( $response );
 		}
 aecDebug($invoice);
 		return $response;
 	}
 
-	function notify_trail( $InvoiceFactory )
+	function notify_trail( $InvoiceFactory, $response )
 	{
 		$path = '/catch';
 		$url = 'https://www.labdevtrx3.com' . $path;

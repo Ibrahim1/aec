@@ -3812,13 +3812,13 @@ class PaymentProcessor
 		}
 	}
 
-	function notify_trail( $InvoiceFactory )
+	function notify_trail( $InvoiceFactory, $response )
 	{
 		if ( method_exists( $this->processor, 'notify_trail' ) ) {
-			$response = $this->processor->notify_trail( $InvoiceFactory );
+			return $this->processor->notify_trail( $InvoiceFactory, $response );
+		} else {
+			return array();
 		}
-
-		return $response;
 	}
 
 	function getProfileTabs()
