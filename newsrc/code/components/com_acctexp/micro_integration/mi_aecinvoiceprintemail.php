@@ -70,27 +70,26 @@ class mi_aecinvoiceprintemail
 	}
 
 	function relayAction( $request )
-	{
+	{aecDebug("relayAction");aecDebug($request->action);
 		if ( $request->action != 'action' ) {
 			return null;
 		}
-
+aecDebug("2");
 		if ( empty( $request->invoice->id ) ){
 			return null;
 		}
-
+aecDebug("3");
 		if ( empty( $this->settings['subject'] ) ) {
 			return null;
 		}
-
+aecDebug("4");
 		if ( isset( $request->invoice->params['mi_aecinvoiceprintemail'] ) ) {
 			if ( ( time() - $request->invoice->params['mi_aecinvoiceprintemail'] ) < 10 ) {
 				// Seems like we have a card processing, skip
 				return null;
 			}
 		}
-
-
+aecDebug("5");
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject' . $request->area], $request );
 
 		if ( !empty( $this->settings['customcss'] ) ) {
@@ -114,8 +113,8 @@ class mi_aecinvoiceprintemail
 </head>
 <body style="padding:0;margin:0;background-color:#fff;" >';
 
-		$message	.= $this->getInvoice( $request->invoice ) . '</body></html>';
-
+		$message .= $this->getInvoice( $request->invoice ) . '</body></html>';
+aecDebug($message);
 		if ( empty( $message ) ) {
 			return null;
 		}
@@ -128,7 +127,7 @@ class mi_aecinvoiceprintemail
             $recipients2[$k] = trim( $email );
         }
         $recipients = $recipients2;
-
+aecDebug($recipients);
 		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, true );
 
 		$request->invoice->params['mi_aecinvoiceprintemail'] = time();

@@ -251,7 +251,7 @@ aecDebug("Step #5");
 		$response['valid'] = 0;
 
 		$params = array( 'authorization_no' => '', 'reference_no' => '', 'card_type' => '', 'card_holder' => '', 'transaction_type' => 'Achat', 'transaction_status' => '' );
-aecDebug($post);
+
 		foreach ( $params as $k => $v ) {
 			if ( isset( $invoice->params[$k] ) ) {
 				if ( $invoice->params[$k] == '---' ) {
@@ -261,11 +261,11 @@ aecDebug($post);
 				}
 			}
 		}
-aecDebug($params);
+
 		$td = null;
 		if ( !empty( $post['original'] ) ) {
 			$xml = base64_decode( $post['original'] );
-aecDebug($xml);
+
 			$auth = $this->XMLsubstring_tag( $xml, 'authorization_no' );
 			$card_holder_name = $this->XMLsubstring_tag( $xml, 'card_holder_name' );
 
@@ -306,16 +306,16 @@ aecDebug($xml);
 				$params['transaction_status']	= $this->XMLsubstring_tag( $xml, 'receipt_text' );
 			}
 		}
-aecDebug($params);
+
 		foreach ( $params as $k => $v ) {
 			if ( empty( $v ) ) {
 				$params[$k] = '---';
 			}
 		}
-aecDebug($params);
+
 		$invoice->addParams( $params );
 		$invoice->storeload();
-aecDebug($invoice);
+
 		if ( $post['status'] == 'error' ) {
 			$invoice->transaction_date == '0000-00-00 00:00:00';
 			$invoice->storeload();
@@ -362,7 +362,7 @@ aecDebug($invoice);
 			// Step #8 - We send a final acknowledgement
 			return $this->notify_trail( $response );
 		}
-aecDebug($invoice);
+
 		return $response;
 	}
 
