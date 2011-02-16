@@ -24,40 +24,11 @@ class tool_minireport
 
 	function Settings()
 	{
-		// Compute sensible timeframe for the default
-		$day = date('d');
-
-		if ( ( $day < 7 ) || ( $day > 22 ) ) {
-			// Show second week
-			if ( $day > 22 ) {
-				$start	= strtotime( date( 'Y-m' ) . '-15 00:00:00' );
-				$end	= strtotime( date( 'Y-m-t' ) );
-			} else {
-				// This should probably be replaced by something using straight strtotime
-				$year = date( 'Y' );
-				
-				$prevmonth = date( 'm' ) - 1;
-
-				if ( $prevmonth <= 0 ) {
-					$year = $year - 1;
-
-					$prevmonth = 12;
-				}
-
-				$lastday = date( 't', strtotime( $year . '-' . $prevmonth . '-15 00:00:00' ) );
-
-				$start	= strtotime( $year . '-' . $prevmonth . '-15 00:00:00' );
-				$end	= strtotime( $year . '-' . $prevmonth . '-' . $lastday . ' 23:59:59' );
-			}
-		} else {
-			// Show first week
-			$start	= strtotime( date( 'Y-m' ) . '-1 00:00:00' );
-			$end	= strtotime( date( 'Y-m' ) . '-14 23:59:59' );
-		}
+		$monthago = time() - ( 60*60*24 * 31 );
 
 		$settings = array();
-		$settings['start_date']	= array( 'list_date', 'Start Date', '', date( 'Y-m-d', $start ) );
-		$settings['end_date']	= array( 'list_date', 'End Date', '', date( 'Y-m-d', $end ) );
+		$settings['start_date']	= array( 'list_date', 'Start Date', '', date( 'Y-m-d', $monthago ) );
+		$settings['end_date']	= array( 'list_date', 'End Date', '', date( 'Y-m-d' ) );
 
 		return $settings;
 	}
@@ -177,6 +148,8 @@ class tool_minireport
 			$return .= '<td colspan="' . ( count($groups) + 4 ) . '"></td>';
 			$return .= '</tr>';
 
+			$closer = 0;
+
 			if ( isset( $week ) && ( date( 'D', strtotime( $date ) ) == 'Sun' ) ) {
 				$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em; background-color: #ddd;">';
 
@@ -200,8 +173,37 @@ class tool_minireport
 				$return .= '<tr style="height: 1px; background-color: #999;">';
 				$return .= '<td colspan="' . ( count($groups) + 4 ) . '"></td>';
 				$return .= '</tr>';
+
+				$closer = 1;
 			}
 
+		}
+
+		if ( !$closer ) {
+			$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em; background-color: #ddd;">';
+
+			$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">(Week)</td>';
+			$return .= '<td style="width: 5em;">&nbsp;</td>';
+
+			foreach ( $groups as $group ) {
+				if ( empty( $week['groups'][$group] ) ) {
+					$count = 0;
+				} else {
+					$count = $week['groups'][$group];
+				}
+
+				$return .= '<td title="' . $groupnames[$group] . '" style="font-weight: bold; width: 5em;">' . $count . '</td>';
+			}
+
+			$return .= '<td style="width: 5em;">&nbsp;</td>';
+			$return .= '<td title="Amount" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $week['amount'] ) . '</td>';
+			$return .= '</tr>';
+
+			$return .= '<tr style="height: 1px; background-color: #999;">';
+			$return .= '<td colspan="' . ( count($groups) + 4 ) . '"></td>';
+			$return .= '</tr>';
+
+			$closer = 1;
 		}
 
 		$return .= '</table><br /><br />';
