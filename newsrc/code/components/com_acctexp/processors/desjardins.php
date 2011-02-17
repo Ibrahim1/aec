@@ -339,29 +339,28 @@ aecDebug("Step #5");
 
 		if ( $post['status'] == 'success' ) {
 			$app = JFactory::getApplication();
-
-			// Temporarily setting the transaction date
-			$invoice->transaction_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
-			$invoice->storeload();
-			
+aecDebug("TRANSACTION DATE");aecDebug($invoice->transaction_date);
 			$response['customthanks'] = $this->displayInvoice( $invoice );
 			$response['break_processing'] = true;
-
-			$invoice->transaction_date = '0000-00-00 00:00:00';
-			$invoice->storeload();
 
 			return $response;
 		}
 
 		if ( !strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {aecDebug("Step #6");
 			// Step #6 - Validate that we're still talking about the same transaction
-			return $this->notify_trail( $response );
+			echo $this->notify_trail( $response );
+
+			exit;
 		} else {aecDebug("Step #7");
 			// Step #7 - Desjardins sends a final confirmation
 			$response['valid'] = 1;aecDebug("Step #8");
+
+			$response['customthanks_strict'] = true;
 			// Step #8 - We send a final acknowledgement
-			return $this->notify_trail( $response );
+			$response['customthanks'] = $this->notify_trail( $response );
 		}
+aecDebug($response);
+		return $response;
 	}
 
 	function notify_trail( $InvoiceFactory, $response )
@@ -384,9 +383,7 @@ XML;
 
 		$xml = $xml_step1_request->asXML();
 
-		echo $xml;
-
-		exit;
+		return $xml;
 	}
 
 	function displayInvoice( $invoice )

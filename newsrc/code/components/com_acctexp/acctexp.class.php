@@ -7310,7 +7310,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$db = &JFactory::getDBO();
 
 		$micro_integrations = $this->getMicroIntegrations();
-
+aecDebug($micro_integrations);
 		if ( is_array( $micro_integrations ) ) {
 			foreach ( $micro_integrations as $mi_id ) {
 				$mi = new microIntegration( $db );
@@ -10104,7 +10104,12 @@ class InvoiceFactory
 
 			$this->checkout( $option, true, $response['error'] );
 		} elseif ( isset( $response['customthanks'] ) ) {
-			HTML_Results::thanks( $option, $response['customthanks'] );
+			if ( !empty( $response['customthanks_strict'] ) ) {
+				echo $response['customthanks'];
+				exit;
+			} else {
+				HTML_Results::thanks( $option, $response['customthanks'] );
+			}
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
 				$this->thanks( $option );
