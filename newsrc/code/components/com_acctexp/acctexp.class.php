@@ -7310,7 +7310,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$db = &JFactory::getDBO();
 
 		$micro_integrations = $this->getMicroIntegrations();
-aecDebug($micro_integrations);
+
 		if ( is_array( $micro_integrations ) ) {
 			foreach ( $micro_integrations as $mi_id ) {
 				$mi = new microIntegration( $db );

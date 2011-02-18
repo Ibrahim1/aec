@@ -36,6 +36,11 @@ class plgUserAECaccess extends JPlugin
 		parent::__construct( $subject, $config );
 	}
 
+	function onUserLogin($user, $options)
+	{
+		return $this->onLoginUser( $user, null );
+	}
+
 	/**
 	 * This method should handle any authentication and report back to the subject
 	 *
@@ -61,6 +66,11 @@ class plgUserAECaccess extends JPlugin
 		} else {
 			return true;
 		}
+	}
+
+	function onUserLoginFailure($response, $options)
+	{
+		return $this->onLoginFailure( $response, null );
 	}
 
 	function onLoginFailure( $credentials, $response=null )
