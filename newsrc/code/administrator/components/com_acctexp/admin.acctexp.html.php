@@ -278,7 +278,14 @@ class HTML_AcctExp
 
 		JHTML::_('behavior.calendar');
 
-		$edituserlink = "index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=" . $metaUser->userid;
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$edituserlink		= 'index.php?option=com_users&amp;view=user&amp;layout=edit&amp;id=' . $metaUser->userid;
+			$activateuserlink	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $metaUser->cmsUser->activation;
+		} else {
+			$edituserlink		= 'index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=' . $metaUser->userid;
+			$activateuserlink	= 'index.php?option=com_user&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation;
+		}
+
 		JHTML::_('behavior.calendar');
 
 		$cb = GeneralInfoRequester::detect_component('anyCB');
@@ -334,7 +341,7 @@ class HTML_AcctExp
 								<?php echo _AEC_USER_USERID; ?>:&nbsp;<strong><?php echo $metaUser->userid; ?></strong>
 								&nbsp;|&nbsp;
 								<?php echo _AEC_USER_STATUS; ?>:&nbsp;
-								<strong><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . 'index.php?option=com_user&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
+								<strong><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', _AEC_USER_ACTIVE ) . '&nbsp;' . _AEC_USER_ACTIVE . '</strong>' : aecHTML::Icon( 'exclamation.png', _AEC_USER_BLOCKED ) . '&nbsp;' . _AEC_USER_BLOCKED . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . _AEC_USER_ACTIVE_LINK . '</a>)' ); ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_PROFILE; ?>:
