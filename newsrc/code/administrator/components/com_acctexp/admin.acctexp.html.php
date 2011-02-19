@@ -290,6 +290,8 @@ class HTML_AcctExp
 
 		$cb = GeneralInfoRequester::detect_component('anyCB');
 
+		$js = GeneralInfoRequester::detect_component('JOMSOCIAL');
+
 		$exp = "";
 
 		if ( $metaUser->hasSubscription ) {
@@ -345,9 +347,10 @@ class HTML_AcctExp
 							</p>
 							<p>
 								<?php echo _AEC_USER_PROFILE; ?>:
-								&nbsp;
+								&nbsp; http://dev5.websgold.com/administrator/index.php?option=com_community&view=users&layout=edit&id=109
 								<a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user.png', _AEC_USER_PROFILE_LINK ); ?>&nbsp;<?php echo _AEC_USER_PROFILE_LINK; ?></a>
 								<?php echo $cb ? (' | CB Profile: <a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_orange.png', _AEC_USER_PROFILE_LINK ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
+								<?php echo $js ? (' | JomSocial Profile: <a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_green.png', _AEC_USER_PROFILE_LINK ) . '&nbsp;' . _AEC_USER_PROFILE_LINK . '</a>') : ''; ?>
 							</p>
 							<p>
 								<?php echo _AEC_USER_USERNAME; ?>:&nbsp;
