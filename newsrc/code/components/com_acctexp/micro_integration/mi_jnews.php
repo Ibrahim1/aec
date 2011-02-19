@@ -156,8 +156,8 @@ class mi_jnews
 	function hasList( $subscriber_id, $listid )
 	{
 		$db = &JFactory::getDBO();
-		$query = 'SELECT `qid`'
-				. ' FROM #__jnews_queue'
+		$query = 'SELECT `list_id`'
+				. ' FROM #__jnews_listssubscribers'
 				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
 				. ' AND `list_id` = \'' . $listid . '\''
 				;
@@ -189,6 +189,15 @@ class mi_jnews
 				. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  time() + $GLOBALS['mosConfig_offset'] *60*60 ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
 				;
 		$db->setQuery( $query );
+
+		$db->query();
+
+		$query  = 'INSERT INTO #__jnews_listssubscribers'
+				. ' (list_id, subscriber_id, subdate)'
+				. ' VALUES(\'' . $list_id . '\', \'' . $subscriber_id . '\', \'' . date( 'Y-m-d H:i:s',  time() + $GLOBALS['mosConfig_offset'] *60*60 ) . '\')'
+				;
+		$db->setQuery( $query );
+
 		return $db->query();
 	}
 
