@@ -37,7 +37,7 @@ class mi_eventlist extends MI
 		}
 
 		$db = &JFactory::getDBO();
-		$db->setQuery( 'SELECT * FROM #__eventlist_events WHERE `registra` = 1 AND `published` =1 ' );
+		$db->setQuery( 'SELECT * FROM #__eventlist_events WHERE `registra` = 1 AND `published` = 1' );
 
 		$events = $db->loadObjectList();
 
@@ -53,9 +53,11 @@ class mi_eventlist extends MI
 		$settings = $this->autoduplicatesettings( $settings );
 
 		foreach ( $settings as $k => $v ) {
-			if ( isset( $this->settings[$k] ) ) {
-				$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $eventslist, $k, 'size="1"', 'value', 'text', $this->settings[$k] );
-			} 
+			if ( !isset( $this->settings[$k] ) ) {
+				$this->settings[$k] = null;
+			}
+
+			$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $eventslist, $k, 'size="1"', 'value', 'text', $this->settings[$k] );
 		}
 
 		$xsettings = array();
