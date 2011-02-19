@@ -108,7 +108,7 @@ class mi_googleanalytics
 				$text =  '<script type="text/javascript">' . "\n"
 						. '	/* <![CDATA[ */' . "\n"
 						. 'var _gaq = _gaq || [];' . "\n"
-						. '_gaq.push(["_setAccount", ' . $this->settings['account_id'] . '"]);' . "\n"
+						. '_gaq.push(["_setAccount", "' . $this->settings['account_id'] . '"]);' . "\n"
 						. '_gaq.push(["_trackPageview"]);' . "\n"
 						. '_gaq.push(["_addTrans",'
 						// Order ID, Affiliation, Total, Tax, Shipping, City, State, Country
