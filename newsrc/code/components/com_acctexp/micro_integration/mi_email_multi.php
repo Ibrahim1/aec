@@ -37,6 +37,8 @@ class mi_email_multi extends MI
 				$settings['aectab_'.$pf]		= array( 'tab', 'Email '.($i+1), 'Email '.($i+1) );
 				$settings[$pf.'timing']			= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_TIMING_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TIMING_DESC );
 				$settings[$pf.'recipient']		= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_RECIPIENT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_RECIPIENT_DESC );
+				$settings[$pf.'cc']				= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_CC_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_CC_DESC );
+				$settings[$pf.'bcc']			= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_BCC_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_BCC_DESC );
 				$settings[$pf.'subject']		= array( 'inputE', sprintf( _MI_MI_EMAIL_MULTI_SUBJECT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_SUBJECT_DESC );
 				$settings[$pf.'text_html']		= array( 'list_yesno', sprintf( _MI_MI_EMAIL_MULTI_TEXT_HTML_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TEXT_HTML_DESC );
 				$settings[$pf.'text']			= array( ( !empty( $this->settings[$pf.'text_html'] ) ? 'editor' : 'inputD' ), sprintf( _MI_MI_EMAIL_MULTI_TEXT_NAME, $i+1 ), _MI_MI_EMAIL_MULTI_TEXT_DESC );
@@ -100,16 +102,23 @@ class mi_email_multi extends MI
 			return null;
 		}
 
-		$recipients = AECToolbox::rewriteEngineRQ( $this->settings[$pf.'recipient'], $request );
-		$recips = explode( ',', $recipients );
+		$recipients = $cc = $bcc = array();
 
-        $recipients2 = array();
-        foreach ( $recips as $k => $email ) {
-            $recipients2[$k] = trim( $email );
-        }
-        $recipients = $recipients2;
+		$rec_groups = array( "recipients", "cc", "bcc" );
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings[$pf.'text_html'] );
+		foreach ( $rec_groups as $setting ) {
+			$list = AECToolbox::rewriteEngineRQ( $this->settings[$pf.$setting], $request );
+
+			$recipient_array = explode( ',', $list );
+
+	        if ( !empty( $recipient_array ) ) {
+		        foreach ( $recipient_array as $k => $email ) {
+		            $$setting[$k] = trim( $email );
+		        }
+	        }
+		}
+
+		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings[$pf.'text_html'], $cc, $bcc );
 	}
 }
 ?>
