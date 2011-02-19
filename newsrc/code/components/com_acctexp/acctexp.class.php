@@ -713,6 +713,13 @@ class metaUser
 					$this->objSubscription->load( 0 );
 					$this->objSubscription->createNew( $this->userid, 'none', 1, 1, $plan_params['standard_parent'] );
 					$this->objSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
+				} elseif ( !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) && $existing_parent ) {
+					$this->objSubscription = new Subscription( $db );
+					$this->objSubscription->load( $existing_parent );
+
+					if ( $this->objSubscription->is_expired() ) {
+						$this->objSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
+					}
 				}
 
 				// Create new subscription
