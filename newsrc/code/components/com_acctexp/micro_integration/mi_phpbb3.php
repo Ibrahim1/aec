@@ -574,7 +574,7 @@ function phpbb_hash($password)
 {
 	$itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
-	$random_state = unique_id();
+	$random_state = phpbb3pw::unique_id();
 	$random = '';
 	$count = 6;
 
@@ -590,7 +590,7 @@ function phpbb_hash($password)
 
 		for ($i = 0; $i < $count; $i += 16)
 		{
-			$random_state = md5(unique_id() . $random_state);
+			$random_state = md5(phpbb3pw::unique_id() . $random_state);
 			$random .= pack('H*', md5($random_state));
 		}
 		$random = substr($random, 0, $count);
@@ -745,6 +745,18 @@ function _hash_crypt_private($password, $setting, &$itoa64)
 	$output .= phpbb3pw::_hash_encode64($hash, 16, $itoa64);
 
 	return $output;
+}
+
+/**
+* Return unique id
+* @param string $extra additional entropy
+*/
+function unique_id($extra = 'c')
+{
+	$val = rand() . microtime();
+	$val = md5($val);
+
+	return substr($val, 4, 16);
 }
 
 }
