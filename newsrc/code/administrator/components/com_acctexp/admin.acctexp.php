@@ -4128,12 +4128,22 @@ function editMicroIntegration ( $id, $option )
 					}
 
 					$len = 60 - AECToolbox::visualstrlen( trim( $nname ) );
-					$fullname = str_replace( '#', '&nbsp;', str_pad( $nname, $len, '#' ) ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
+					if ( defined( 'JPATH_MANIFESTS' ) ) {
+						// 1.6 blows up when you put in &nbps;s, so we change them later
+						$fullname = str_pad( $nname, $len, '#' ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
+					} else {
+						$fullname = str_replace( '#', '&nbsp;', str_pad( $nname, $len, '#' ) ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
+					}
+
 					$mi_htmllist[] = JHTML::_('select.option', $name, $fullname );
 				}
 			}
 
 			$lists['class_name'] = JHTML::_('select.genericlist', $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '"', 'value', 'text', '' );
+
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$lists['class_name'] = str_replace( '#', '&nbsp;', $lists['class_name'] );
+			}
 		} else {
 			$lists['class_name'] = '';
 		}
