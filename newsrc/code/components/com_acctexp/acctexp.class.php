@@ -1761,11 +1761,22 @@ class aecACLhandler
 		$db = &JFactory::getDBO();
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$db->setQuery(
-				'INSERT INTO `#__user_usergroup_map` (`user_id`, `group_id`)' .
-				' VALUES ('.$userid.', '.$gid.')'
-			);
-			$db->query() or die( $db->stderr() );
+			// Make sure the user does not have this group assigned yet
+			$query = 'SELECT `user_id`'
+					. ' FROM #__user_usergroup_map'
+					. ' WHERE `user_id` = \'' . $userid . '\''
+					. ' AND `group_id` = \'' . $gid . '\''
+					;
+			$db->setQuery( $query );
+			$id = $db->loadResult();
+
+			if ( empty( $id ) ) {
+				$query = 'INSERT INTO `#__user_usergroup_map` (`user_id`, `group_id`)'
+						. ' VALUES ('.$userid.', '.$gid.')'
+						;
+				$db->setQuery( $query );
+				$db->query() or die( $db->stderr() );
+			}
 		} else {
 			$query = 'UPDATE #__users'
 					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
