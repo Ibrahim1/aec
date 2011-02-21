@@ -83,9 +83,9 @@ class mi_email extends MI
 			return null;
 		}
 
-		$recipients = $cc = $bcc = array();
+		$recipient = $cc = $bcc = null;
 
-		$rec_groups = array( "recipients", "cc", "bcc" );
+		$rec_groups = array( "recipient", "cc", "bcc" );
 
 		foreach ( $rec_groups as $setting ) {
 			$list = AECToolbox::rewriteEngineRQ( $this->settings[$setting], $request );
@@ -93,13 +93,15 @@ class mi_email extends MI
 			$recipient_array = explode( ',', $list );
 
 	        if ( !empty( $recipient_array ) ) {
+		        $$setting = array();
+
 		        foreach ( $recipient_array as $k => $email ) {
-		            $$setting[$k] = trim( $email );
+		            ${$setting}[] = trim( $email );
 		        }
 	        }
 		}
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text' . $request->area . '_html'], $cc, $bcc );
+		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings['text' . $request->area . '_html'], $cc, $bcc );
 
 		return true;
 	}
