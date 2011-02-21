@@ -34,18 +34,6 @@
 			</fileset>
 		</copy>
 
-		<mkdir dir="${dir.packages}/plugins" />
-		<copy todir="${dir.packages}/plugins">
-			<fileset dir="${dir.packages}">
-				<include name="plugin**" />
-			</fileset>
-		</copy>
-		<delete>
-			<fileset dir="${dir.packages}">
-				<include name="plugin**" />
-			</fileset>
-		</delete>
-
 		<mkdir dir="${dir.packages}/fullpack" />
 		<copy todir="${dir.packages}/fullpack" includeemptydirs="false">
 			<fileset dir="${dir.packages}">
@@ -59,13 +47,6 @@
 			</fileset>
 		</copy>
 
-		<delete dir="${dir.packages}/plugins" />
-		<delete>
-			<fileset dir="${dir.packages}">
-				<include name="*acctexp*" />
-			</fileset>
-		</delete>
-
 		<zip destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${git.lastrevision}_${file.extensionsafe}_UNZIP_FIRST.zip" basedir="${dir.packages}/fullpack" />
 
 		<delete dir="${dir.packages}/fullpack" />
@@ -75,13 +56,6 @@
 
 		<copy todir="${dir.dropbox}/${file.extension}" includeemptydirs="false">
 			<fileset dir="${dir.packages}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-
-		<mkdir dir="${dir.dropbox}/${file.extension}/packages" />
-		<copy todir="${dir.dropbox}/${file.extension}/packages" includeemptydirs="false">
-			<fileset dir="${dir.packages}/packages">
 				<include name="*.*" />
 			</fileset>
 		</copy>
