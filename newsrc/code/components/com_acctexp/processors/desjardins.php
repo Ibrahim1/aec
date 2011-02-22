@@ -114,16 +114,16 @@ XML;
 
 		// Step #1 - Logging in with Desjardins
 		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
-aecDebug("Step #1");
+
 		// Step #2 - Receiving the Transaction ID
 		$xml = $this->createRequestStep3XML( $resp, $request );
-aecDebug("Step #2");
+
 		// Step #3 - Making the Purchase Request
 		$resp = $this->transmitRequestDesjardin( $url, $path, $xml );
-aecDebug("Step #3");
+
 		// Step #4 - Desjardins validates the information
 		$xml_step3_Obj = simplexml_load_string( $resp );
- aecDebug("Step #4");
+
 		$redir_url = $xml_step3_Obj->merchant->transactions->transaction->urls->url->path;
 		$trx_number = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_id"]');
 		$trx_key = $xml_step3_Obj->xpath('merchant/transactions/transaction/urls/url/parameters/parameter[@name="transaction_key"]');
@@ -146,7 +146,7 @@ aecDebug("Step #3");
 
 		$request->invoice->addParams( array( 'desjardin_attempts' => $attempts ) );
 		$request->invoice->storeload();
-aecDebug("Step #5");
+
 		// Step #5 - Redirecting the user to Desjardins
 		$app->redirect($url);
 			
@@ -339,27 +339,33 @@ aecDebug("Step #5");
 
 		if ( $post['status'] == 'success' ) {
 			$app = JFactory::getApplication();
-aecDebug("TRANSACTION DATE");aecDebug($invoice->transaction_date);
+
 			$response['customthanks'] = $this->displayInvoice( $invoice );
 			$response['break_processing'] = true;
 
 			return $response;
 		}
 
-		if ( !strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {aecDebug("Step #6");
+		if ( !strpos( base64_decode( $post['original'] ), '<confirm>' ) ) {
+			$if = new stdClass();
+			$if->invoice = $invoice;
+
 			// Step #6 - Validate that we're still talking about the same transaction
-			echo $this->notify_trail( $response );
+			echo $this->notify_trail( $if, $response );
 
 			exit;
-		} else {aecDebug("Step #7");
+		} else {
+			$if = new stdClass();
+			$if->invoice = $invoice;
+
 			// Step #7 - Desjardins sends a final confirmation
-			$response['valid'] = 1;aecDebug("Step #8");
+			$response['valid'] = 1;
 
 			$response['customthanks_strict'] = true;
 			// Step #8 - We send a final acknowledgement
-			$response['customthanks'] = $this->notify_trail( $response );
+			$response['customthanks'] = $this->notify_trail( $if, $response );
 		}
-aecDebug($response);
+
 		return $response;
 	}
 
