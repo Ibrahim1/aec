@@ -763,7 +763,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'recallinstall':
-		include_once( JPATH_SITE . '/administrator/components/com_acctexp/install/install.acctexp.php' );
+		include_once( JPATH_SITE . '/administrator/components/com_acctexp/install.acctexp.php' );
 		com_install();
 		break;
 

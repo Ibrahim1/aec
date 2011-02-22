@@ -9331,7 +9331,7 @@ class InvoiceFactory
 		if ( !is_array( $list ) ) {
 			if ( $list ) {
 				if ( is_bool( $list ) ) {
-					return aecRedirect( AECToolbox::deadsureURL( 'index.php', _NOPLANS_AUTHERROR ), false, true );
+					return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), _NOPLANS_AUTHERROR );
 				} else {
 					if ( strpos( $list, 'option=com_acctexp' ) ) {
 						$list .= '&userid=' . $this->userid;
@@ -9340,13 +9340,13 @@ class InvoiceFactory
 					return aecRedirect( $list );
 				}
 			} else {
-				return aecRedirect( AECToolbox::deadsureURL( 'index.php', _NOPLANS_ERROR ), false, true );
+				return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), _NOPLANS_ERROR );
 			}
 		}
 
 		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
 		 if ( count( $list ) == 0 ) {
-			return aecRedirect( AECToolbox::deadsureURL( 'index.php', _NOPLANS_ERROR, false, true ), false, true );
+			return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), _NOPLANS_ERROR );
 		}
 	}
 
@@ -16651,18 +16651,6 @@ class microIntegration extends serialParamDBTable
 
 	function action( &$metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
-		if ( isset( $this->settings['_aec_action'] ) ) {
-			if ( !$this->settings['_aec_action'] ) {
-				return null;
-			}
-		}
-
-		if ( isset( $this->settings['_aec_only_first_bill'] ) && !empty( $invoice ) ) {
-			if ( $this->settings['_aec_only_first_bill'] && ( $invoice->counter > 1 ) ) {
-				return null;
-			}
-		}
-
 		$add = false;
 
 		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', $add );
@@ -16731,6 +16719,20 @@ class microIntegration extends serialParamDBTable
 
 	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add, &$params )
 	{
+		if ( $stage == 'action' ) {
+			if ( isset( $this->settings['_aec_action'] ) ) {
+				if ( !$this->settings['_aec_action'] ) {
+					return null;
+				}
+			}
+
+			if ( isset( $this->settings['_aec_only_first_bill'] ) && !empty( $invoice ) ) {
+				if ( $this->settings['_aec_only_first_bill'] && ( $invoice->counter > 1 ) ) {
+					return null;
+				}
+			}
+		}
+
 		$db = &JFactory::getDBO();
 
 		// Exchange Settings
