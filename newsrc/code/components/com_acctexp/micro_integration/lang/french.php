@@ -172,20 +172,20 @@ define( '_MI_MI_MYSQL_QUERY_QUERY_EXP_DESC',        'MySQL query to be carried o
 define( '_MI_MI_MYSQL_QUERY_QUERY_PRE_EXP_NAME',    'Pre Expiration Query' );
 define( '_MI_MI_MYSQL_QUERY_QUERY_PRE_EXP_DESC',    'MySQL query to be carried out when this MI is called before expiration (specify when on the first tab)' );
 
-define( '_MI_MI_MYSQL_USE_ALTDB_NAME','Different Database' );
-define( '_MI_MI_MYSQL_USE_ALTDB_DESC','If you want to act on a different database than the one your joomla uses, you can set this option to Yes and provide details below.' );
-define( '_MI_MI_MYSQL_DBMS_NAME','Database Type' );
-define( '_MI_MI_MYSQL_DBMS_DESC','Typically mysql or mysqli' );
-define( '_MI_MI_MYSQL_DBHOST_NAME','Database Host' );
-define( '_MI_MI_MYSQL_DBHOST_DESC','Typically localhost - or the IP an external DB' );
-define( '_MI_MI_MYSQL_DBUSER_NAME','Database Username' );
-define( '_MI_MI_MYSQL_DBUSER_DESC','Your Database Access Username' );
-define( '_MI_MI_MYSQL_DBPASSWD_NAME','Database Password' );
-define( '_MI_MI_MYSQL_DBPASSWD_DESC','Your Database Access Password' );
-define( '_MI_MI_MYSQL_DBNAME_NAME','Database Name' );
-define( '_MI_MI_MYSQL_DBNAME_DESC','The Name of the database' );
-define( '_MI_MI_MYSQL_TABLE_PREFIX_NAME','Table Prefix' );
-define( '_MI_MI_MYSQL_TABLE_PREFIX_DESC','Typically jos_ or mos_' );
+define( '_MI_MI_MYSQL_QUERY_USE_ALTDB_NAME','Different Database' );
+define( '_MI_MI_MYSQL_QUERY_USE_ALTDB_DESC','If you want to act on a different database than the one your joomla uses, you can set this option to Yes and provide details below.' );
+define( '_MI_MI_MYSQL_QUERY_DBMS_NAME','Database Type' );
+define( '_MI_MI_MYSQL_QUERY_DBMS_DESC','Typically mysql or mysqli' );
+define( '_MI_MI_MYSQL_QUERY_DBHOST_NAME','Database Host' );
+define( '_MI_MI_MYSQL_QUERY_DBHOST_DESC','Typically localhost - or the IP an external DB' );
+define( '_MI_MI_MYSQL_QUERY_DBUSER_NAME','Database Username' );
+define( '_MI_MI_MYSQL_QUERY_DBUSER_DESC','Your Database Access Username' );
+define( '_MI_MI_MYSQL_QUERY_DBPASSWD_NAME','Database Password' );
+define( '_MI_MI_MYSQL_QUERY_DBPASSWD_DESC','Your Database Access Password' );
+define( '_MI_MI_MYSQL_QUERY_DBNAME_NAME','Database Name' );
+define( '_MI_MI_MYSQL_QUERY_DBNAME_DESC','The Name of the database' );
+define( '_MI_MI_MYSQL_QUERY_TABLE_PREFIX_NAME','Table Prefix' );
+define( '_MI_MI_MYSQL_QUERY_TABLE_PREFIX_DESC','Typically jos_ or mos_' );
 
 define( '_AEC_MI_SET4_MYSQL',        'Rewriting Info' );
 
@@ -692,6 +692,20 @@ define( '_MI_MI_AECPLAN_FIRST_PLAN_COPY_EXPIRATION_DESC',		'Copy the Expiration 
 define( '_MI_MI_AECPLAN_PLAN_COPY_EXPIRATION_NAME',		'Copy Expiration' );
 define( '_MI_MI_AECPLAN_PLAN_COPY_EXPIRATION_DESC',		'Copy the Expiration directly from the parent plan applying the MI - in order to sync up both subscriptions' );
 
+// Raffle MI
+define( '_AEC_MI_RAFFLE_NAME', 'Raffle' );
+define( '_AEC_MI_RAFFLE_DESC', 'A very basic raffle setup' );
+define( '_MI_MI_RAFFLE_LIST_GROUP_NAME',		'List Group' );
+define( '_MI_MI_RAFFLE_LIST_GROUP_DESC',		'If you want to have separate drawing cycles, use a different group number here.' );
+define( '_MI_MI_RAFFLE_DRAW_RANGE_NAME',		'Draw Range' );
+define( '_MI_MI_RAFFLE_DRAW_RANGE_DESC',		'This sets the number of spots in one drawing cycle that have to be handed out before a winner is chosen by random.' );
+define( '_MI_MI_RAFFLE_MAX_PARTICIPATIONS_NAME','Max Participations' );
+define( '_MI_MI_RAFFLE_MAX_PARTICIPATIONS_DESC','Maximum amount of times a user can take part in a raffle.' );
+define( '_MI_MI_RAFFLE_MAX_WINS_NAME',			'Max Wins' );
+define( '_MI_MI_RAFFLE_MAX_WINS_DESC',			'Maximum amount of times a user can win a raffle before being excluded from further raffles.' );
+define( '_MI_MI_RAFFLE_COL_RECIPIENT_NAME',		'Result Recipient Email' );
+define( '_MI_MI_RAFFLE_COL_RECIPIENT_DESC',		'To whom should the results of the raffle be sent? (includes winner and participants with their username and email)' );
+
 // SOBI
 define( '_AEC_MI_SOBI_NAME',		'SOBI' );
 define( '_AEC_MI_SOBI_DESC',		'Publish or unpublish listings in Joomla\'s Sigsiu Online Business Index component' );
@@ -747,6 +761,13 @@ define( '_MI_MI_PHPBB3_REMOVE_DESC',				'Choose yes and then save the MI to carr
 define( '_MI_MI_PHPBB3_CREATE_FIELD',				'Create - Field' );
 define( '_MI_MI_PHPBB3_UPDATE_FIELD',				'Update - Field' );
 define( '_MI_MI_PHPBB3_UPDATE_FIELD_EXP',				'Update (Expired) - Field' );
+
+define( '_MI_MI_PHPBB3_CREATE_USER_NAME',			'Create User' );
+define( '_MI_MI_PHPBB3_CREATE_USER_DESC',			'Activate this to create a user' );
+define( '_MI_MI_PHPBB3_UPDATE_USER_NAME',			'Update User' );
+define( '_MI_MI_PHPBB3_UPDATE_USER_DESC',			'Update the user details' );
+define( '_MI_MI_PHPBB3_UPDATE_USER_EXP_NAME',			'Update User (Expiration)' );
+define( '_MI_MI_PHPBB3_UPDATE_USER_EXP_DESC',			'Update the user details one expiration' );
 
 define( '_MI_MI_PHPBB3_USE_ALTDB_NAME','Different Database' );
 define( '_MI_MI_PHPBB3_USE_ALTDB_DESC','If your phpbb3 forum uses a different database than joomla, you can set this option to Yes and provide details below.' );
@@ -1299,6 +1320,31 @@ define( '_MI_MI_ADSMANAGER_REBUILD_NAME',			'Rebuild: ' );
 define( '_MI_MI_ADSMANAGER_REBUILD_DESC',			'Choose yes and then save the MI to recreate the actions fo all users with this MI on a currently active plan.' );
 define( '_MI_MI_ADSMANAGER_REMOVE_NAME',			'Remove: ' );
 define( '_MI_MI_ADSMANAGER_REMOVE_DESC',			'Choose yes and then save the MI to carry out the expiration action for all users with this MI on a currently active plan.' );
+
+// AEC Extra Cost
+define( '_AEC_MI_AECMODIFYCOST_NAME',		'Modify Cost' );
+define( '_AEC_MI_AECMODIFYCOST_DESC',		'Give the user several customized options which will modify the checkout cost' );
+define( '_MI_MI_AECMODIFYCOST_OPTIONS_NAME',		'Options' );
+define( '_MI_MI_AECMODIFYCOST_OPTIONS_DESC',		'How many different options should the user choose from?' );
+define( '_MI_MI_AECMODIFYCOST_CUSTOMINFO_NAME',		'Custom Info' );
+define( '_MI_MI_AECMODIFYCOST_CUSTOMINFO_DESC',		'AEC normally displays the text "Please select:" on confirmation above the options. If you want it to say something else, enter your text here.' );
+
+define( '_MI_MI_AECMODIFYCOST_SET_MODE_BASIC',	'Add Amount' );
+define( '_MI_MI_AECMODIFYCOST_SET_MODE_PERCENTAGE',	'Add Amount as Percentage' );
+define( '_MI_MI_AECMODIFYCOST_DEFAULT_NOTICE',		'Please select:' );
+
+define( '_MI_MI_AECMODIFYCOST_SET_ID_NAME',		'#%s: Short ID' );
+define( '_MI_MI_AECMODIFYCOST_SET_ID_DESC',		'A technical/internal handle for the setting. i.e.: "telephone_number" or "pool_size" - no spaces or funny characters' );
+define( '_MI_MI_AECMODIFYCOST_SET_TEXT_NAME',	'#%s: Text' );
+define( '_MI_MI_AECMODIFYCOST_SET_TEXT_DESC',	'The selection field text.' );
+define( '_MI_MI_AECMODIFYCOST_SET_AMOUNT_NAME',	'#%s: Amount' );
+define( '_MI_MI_AECMODIFYCOST_SET_AMOUNT_DESC',	'The price change amount for this field' );
+define( '_MI_MI_AECMODIFYCOST_SET_MODE_NAME',		'#%s: Mode' );
+define( '_MI_MI_AECMODIFYCOST_SET_MODE_DESC',		'Select how the percentage is supposed to be applied' );
+define( '_MI_MI_AECMODIFYCOST_SET_EXTRA_NAME',	'#%s: Extra Text' );
+define( '_MI_MI_AECMODIFYCOST_SET_EXTRA_DESC',	'Line Item Text as it will show up ' );
+define( '_MI_MI_AECMODIFYCOST_SET_MI_NAME',	'#%s: MI' );
+define( '_MI_MI_AECMODIFYCOST_SET_MI_DESC',	'Chain an MI to this option - the MI will be carried out when the plan is paid for' );
 
 // JNews
 define( '_AEC_MI_NAME_JNEWS',		'JNews' );
