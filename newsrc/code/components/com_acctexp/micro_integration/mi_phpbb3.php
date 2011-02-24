@@ -74,7 +74,11 @@ class mi_phpbb3
 		$sg2	= array();
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
-				$sg[] = JHTML::_('select.option', $group->group_id, $group->group_name . " #" . $group->group_colour );
+				if ( !empty( $group->group_colour ) ) {
+					$sg[] = JHTML::_('select.option', $group->group_id, $group->group_name . " #" . $group->group_colour );
+				} else {
+					$sg[] = JHTML::_('select.option', $group->group_id, $group->group_name );
+				}
 			}
 		}
 
