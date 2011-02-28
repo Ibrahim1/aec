@@ -43,7 +43,7 @@ class mi_phpbb3
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_phpbb3pw`'
 		. ' (`id` int(11) NOT NULL auto_increment,'
 		. '`userid` int(11) NOT NULL,'
-		. '`vbulletinpw` varchar(255) NOT NULL default \'1\','
+		. '`phpbb3pw` varchar(255) NOT NULL default \'1\','
 		. ' PRIMARY KEY (`id`)'
 		. ')'
 		;
@@ -55,6 +55,23 @@ class mi_phpbb3
 	function Settings()
 	{
 		$db = $this->getDB();
+
+		// Oh well, old mistakes...
+		$query = 'SHOW COLUMNS FROM ' . $app->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw'
+				. ' LIKE `vbulletinpw`'
+				;
+		$db->setQuery( $query );
+		$result = $db->loadObject();
+
+		if ( is_object( $result ) ) {
+			if ( strcmp($result->Field, 'vbulletinpw') === 0 ) {
+				$query = 'ALTER TABLE ' . $app->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw'
+						. ' CHANGE `vbulletinpw` `phpbb3pw` varchar(255)'
+						;
+				$db->setQuery( $query );
+				$db->query();
+			}
+		}
 
 		$phpbbdb = $this->getDB();
 
