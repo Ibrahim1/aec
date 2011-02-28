@@ -244,10 +244,10 @@ class processor_paypal extends POSTprocessor
 				$response['fullresponse']['paypal_verification'] = "MANUAL_OVERRIDE";
 			}
 
-			// Process payment: Paypal Subscription & Buy Now
-			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
+			$recurring = ( $txn_type == 'subscr_payment' ) || ( $txn_type == 'recurring_payment' );
 
-				$recurring = ( strcmp( $txn_type, 'subscr_payment' ) == 0 );
+			// Process payment: Paypal Subscription & Buy Now
+			if ( ( $txn_type == 'web_accept' ) || $recurring ) {
 
 				if ( ( strcmp( $payment_type, 'instant' ) == 0 ) && ( strcmp( $payment_status, 'Pending' ) == 0 ) ) {
 					$response['pending_reason'] = $post['pending_reason'];
