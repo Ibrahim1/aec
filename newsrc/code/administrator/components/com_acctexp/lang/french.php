@@ -809,6 +809,8 @@ define( '_CFG_GENERAL_CUSTOMCANCEL_NAME', 'Lien personnalis&eacute; de la page d
 define( '_CFG_GENERAL_CUSTOMCANCEL_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page d&amp;acute;annulation personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
 define( '_CFG_GENERAL_TOS_NAME', 'Conditions d\'utilisation:');
 define( '_CFG_GENERAL_TOS_DESC', 'Entrez l&amp;acute;URL de conditions d&amp;acute;utilisation. L&amp;acute;utilisateur devra s&eacute;lectionner une case &agrave; cocher lors de la confirmation de son compte. Si laiss&eacute; vide, rien ne sera affich&eacute;.');
+define( '_CFG_GENERAL_TOS_IFRAME_NAME', 'ToS Iframe:');
+define( '_CFG_GENERAL_TOS_IFRAME_DESC', 'Display the Terms of Service (as specified above) in an iframe on confirmation');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_NAME', 'Lien personnalis&eacute; de la page Non-autoris&eacute;:');
 define( '_CFG_GENERAL_CUSTOMNOTALLOWED_DESC', 'Fournir un lien complet (avec http://) qui dirige &agrave; votre page de non autoris&eacute;s personnalis&eacute;e. Laissez ce champ vide si vous n&amp;acute;en voulez.');
 

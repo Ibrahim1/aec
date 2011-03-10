@@ -77,7 +77,7 @@ define( '_CHK_USERNAME_NOTAVAIL', 'L\'identifiant %s est d&eacute;j&agrave; pris
 
 // --== PAGE ABONNEMENT ==--
 define( '_MYSUBSCRIPTION_TITLE', 'Mon abonnement');
-define( '_HISTORY_SUBTITLE', 'Membre depuis ');
+define( '_MEMBER_SINCE', 'Membre depuis ');
 define( '_HISTORY_COL1_TITLE', 'Facture');
 define( '_HISTORY_COL2_TITLE', 'Montant');
 define( '_HISTORY_COL3_TITLE', 'Date de Paiement');
@@ -124,9 +124,9 @@ define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recur
 
 define( '_AEC_YOUSURE', 'Are you sure?');
 
-define( '_AEC_WILLEXPIRE', 'This membership will expire');
-define( '_AEC_WILLRENEW', 'This membership will renew');
-define( '_AEC_ISLIFETIME', 'Lifetime Membership');
+define( '_AEC_WILLEXPIRE', 'Cet abonnement prendra fin');
+define( '_AEC_WILLRENEW', 'Cet abonnement se renouvellera');
+define( '_AEC_ISLIFETIME', 'Membre &agrave; vie');
 
 // --== PAGE EXPIRATION ==--
 define( '_EXPIRE_INFO', 'Votre compte est actif jusqu\'au');

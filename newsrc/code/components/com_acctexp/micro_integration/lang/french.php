@@ -76,6 +76,11 @@ define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME',             'Action pour les groupes
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',            'Choisissez ce qui arrive &agrave; l\'expiration aux groupes DocMan d&eacute;j&agrave; d&eacute;finis.');
 define( '_MI_MI_DOCMAN_REMOVE_NAME', 				'Remove: ' );
 define( '_MI_MI_DOCMAN_REMOVE_DESC',			'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+define( '_AEC_MI_DIV1_DOCMAN_USED',		'You have used <strong>%s</strong> downloads.' );
+define( '_AEC_MI_DIV1_DOCMAN_REMAINING',	'You have <strong>%s</strong> downloads remaining.' );
+define( '_AEC_MI_DIV1_DOCMAN_UNLIMITED', 	'unlimited' );
+define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_NAME',			'Unset Unlimited on Expiration: ' );
+define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_DESC',			'Remove unlimited downloads when user expires.' );
 
 // email
 define( '_AEC_MI_NAME_EMAIL',        'Email' );
@@ -210,6 +215,9 @@ define( '_AEC_MI_HACK1_REMOS',        'No Credits' );
 define( '_AEC_MI_HACK2_REMOS',        'Build in a downloads restriction for reMOSitory, to be used with Micro Integrations.' );
 define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_NAME',             'Action for existing groups when account expires:');
 define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_DESC',            'Choose what action you want to happen to already defined ReMOSitory groups when the user expires.');
+define( '_MI_MI_REMOSITORY_DELETERULES_NO',			'Just apply group(s) below.' );
+define( '_MI_MI_REMOSITORY_DELETERULES_ALL',			'Delete ALL, then apply group(s) below.' );
+define( '_MI_MI_REMOSITORY_DELETERULES_SET',			'Delete Group Set on Application, then apply group(s) below.' );
 
 // VirtueMart
 define( '_AEC_MI_NAME_VIRTM',        'VirtueMart' );
@@ -743,10 +751,10 @@ define( '_MI_MI_PHPBB3_SET_GROUP_EXP_NAME','Set Group (Expiration)' );
 define( '_MI_MI_PHPBB3_SET_GROUP_EXP_DESC','Choose Yes if you wish the phpBB3 group to be changed when the plan expires' );
 define( '_MI_MI_PHPBB3_GROUP_EXP_NAME','Group (Expiration)' );
 define( '_MI_MI_PHPBB3_GROUP_EXP_DESC','The group you wish to apply when the plan expires.' );
-define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_EXPIRATION_NAME','Remove Groups (Expiration)' );
-define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_EXPIRATION_DESC','Choose Yes if you wish a phpBB3 group to be applied when the plan expires' );
-define( '_MI_MI_PHPBB3_REMOVE_GROUP_EXPIRATION_NAME','Groups (Expiration)' );
-define( '_MI_MI_PHPBB3_REMOVE_GROUP_EXPIRATION_DESC','The groups you wish to be removed when the plan expires - if you chose yes above.' );
+define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_EXP_NAME','Remove Groups (Expiration)' );
+define( '_MI_MI_PHPBB3_SET_REMOVE_GROUP_EXP_DESC','Choose Yes if you wish a phpBB3 group to be applied when the plan expires' );
+define( '_MI_MI_PHPBB3_REMOVE_GROUP_EXP_NAME','Groups (Expiration)' );
+define( '_MI_MI_PHPBB3_REMOVE_GROUP_EXP_DESC','The groups you wish to be removed when the plan expires - if you chose yes above.' );
 define( '_MI_MI_PHPBB3_SET_GROUPS_EXCLUDE_NAME',	'Exclude Groups?' );
 define( '_MI_MI_PHPBB3_SET_GROUPS_EXCLUDE_DESC',	'If set to Yes, all groups that a user belongs to will be checked for exclusion (primary and secondary groups).  Set to No and only primary groups will be checked against the exclude list' );
 define( '_MI_MI_PHPBB3_SET_CLEAR_GROUPS_NAME',		'Clear Groups' );
@@ -1542,5 +1550,22 @@ define( '_MI_MI_ACYMAIL_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_ACYMAIL_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_ACYMAIL_USER_CHECKBOX_NAME',		'User Checkbox' );
 define( '_MI_MI_ACYMAIL_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter.' );
+
+// Alpha User Points
+define( '_AEC_MI_NAME_ALPHAUSERPOINTS', 'Alpha User Points' );
+define( '_AEC_MI_DESC_ALPHAUSERPOINTS', 'Granting or Charging points, as well as giving the user the option to "pay" with points (get a discount for points).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_NAME', 'Change Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_DESC', 'Put in a positive value to grant points, negative value to take them away.' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_PRE_EXP_NAME', 'Change Points (Pre-Expiration)' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_PRE_EXP_DESC', 'Put in a positive value to grant points, negative value to take them away (before expiration).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_EXP_NAME', 'Change Points (Expiration)' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_EXP_DESC', 'Put in a positive value to grant points, negative value to take them away (on expiration).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_DISCOUNT_NAME', 'Allow Discount with Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_DISCOUNT_DESC', 'The user can get a discount with his or her Userpoints' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_CONVERSION_NAME', 'Point Conversion Rate' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_CONVERSION_DESC', 'The value of a Userpoint.' );
+define( '_MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME', 'Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC', 'The amount of points you want to .' );
+define( '_MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO', 'You have <strong>%s points</strong> that you can use to get a discount on this invoice. Enter the amount of points you want to use below. One point is worth <strong>%s</strong> giving you a total value of <strong>%s</strong> for your points.' );
 
 ?>

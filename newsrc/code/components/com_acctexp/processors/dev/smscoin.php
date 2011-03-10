@@ -17,9 +17,9 @@ class processor_smscoin extends POSTprocessor
 		$info = array();
 		$info['name']			= "smscoin";
 		$info['longname']		= "SMSCoin";
-		$info['statement']		= "Make payments with smscoin - it\'s fast, free and secure!";
+		$info['statement']		= "Make payments with smscoin";
 		$info['currencies']		= "y.e.";
-		$info['description']		= "SMSCoin is the easiest and most affordable payment gateway.";
+		$info['description']	= "SMSCoin is the easiest and most affordable payment gateway.";
 		$info['recurring']		= 0;
 
 		return $info;
@@ -28,8 +28,8 @@ class processor_smscoin extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['s_purse']		= "3849";
-		$settings['password']		= "1234";
+		$settings['s_purse']		= '1234';
+		$settings['password']		= '1234';
 		$settings['s_clear_amount']	= '0';
 		$settings['s_description']	= 'Payout';
 	
