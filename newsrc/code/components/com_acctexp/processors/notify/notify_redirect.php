@@ -48,19 +48,12 @@ if ( !empty( $_GET['aec_request'] ) ) {
 // Force redirection to AEC
 $_GET['option'] = 'com_acctexp';
 
-// Get our GET and POST, but make sure there is no weird stuff going on in those variables.
-$get = null;
-if ( !empty( $_GET ) ) {
-	foreach ( $_GET as $k => $v ) {
-		// Make extra sure that the variable contains no shenanigans
-		$get[] = $bsLoader->clearKey($k) . '=' . urlencode( $bsLoader->clearVariable($v) );
-	}
-}
+$get = array();
 
 // Block out anything that aims at non-notification actions
 if ( isset( $_GET['task'] ) ) {
 	if ( strpos( $_GET['task'], 'notification' ) === false ) {
-		$path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . implode( '&', $get );
+		$path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . $bsLoader->makeGet( $_GET );
 
 		$url = 'http://' . $_SERVER['HTTP_HOST'] . $path;
 
@@ -70,15 +63,30 @@ if ( isset( $_GET['task'] ) ) {
 } else {
 	foreach ( $_GET as $k => $v ) {
 		if ( strpos( $v, 'notification' ) !== false ) {
-			$_GET['task'] = $v; 
+			$get['task'] = $v; 
 		}
 	}
 }
 
-$post['original'] = base64_encode( stripslashes( $original ) );
+foreach ( $_GET as $k => $v ) {
+	if ( strpos( $k, 'Zombaio' ) !== false ) {
+		$post = $_GET;
+
+		unset( $_GET );
+
+		$get['option'] = 'com_acctexp';
+		$get['task'] = 'zombaionotification';
+
+		break;
+	}
+}
+
+if ( !empty( $original ) ) {
+	$post['original'] = base64_encode( stripslashes( $original ) );
+}
 
 // Instead of doing fancy-pants figuring out of the subdirectory, just deduct that from the call
-$path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . implode( '&', $get );
+$path = str_replace( '/components/com_acctexp/processors/notify/notify_redirect.php', '', $_SERVER['PHP_SELF'] ) . '/index.php' . '?' . $bsLoader->makeGet( $get );
 
 $url = 'http://' . $_SERVER['HTTP_HOST'] . $path;
 
@@ -98,6 +106,18 @@ class bootstrapLoader
 	function clearKey( $key )
 	{
 		return preg_replace( "/[^a-z \d]/i", "", $key );
+	}
+
+	function makeGet( $array )
+	{
+		$reduced = array();
+
+		foreach ( $array as $k => $v ) {
+			// Make extra sure that the variable contains no shenanigans
+			$reduced[] = $this->clearKey($k) . '=' . urlencode( $this->clearVariable($v) );
+		}
+
+		return implode( '&', $reduced );
 	}
 
 	function clearVariable( $var )
