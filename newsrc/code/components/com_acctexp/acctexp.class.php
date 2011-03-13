@@ -14201,7 +14201,12 @@ class reWriteEngine
 					} else {
 						if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
-							$this->rewrite['user_activationlink']	= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+
+							if ( defined( 'JPATH_MANIFESTS' ) ) {
+								$this->rewrite['user_activationlink']	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $this->data['metaUser']->cmsUser->activation;
+							} else {
+								$this->rewrite['user_activationlink']	= 'index.php?option=com_user&amp;task=activate&amp;activation=' . $this->data['metaUser']->cmsUser->activation;
+							}
 						} else {
 							$this->rewrite['user_activationcode']		= "";
 							$this->rewrite['user_activationlink']		= "";
@@ -15415,7 +15420,13 @@ class AECToolbox
 			$activation = $usersConfig->get('useractivation');
 
 			if ( ( $activation == 1 ) && !$overrideActivation ) {
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $app->getCfg( 'sitename' ), JURI::root()."index.php?option=com_user&task=activate&activation=".$row->activation, JURI::root(), $username, $savepwd );
+				if ( defined( 'JPATH_MANIFESTS' ) ) {
+					$activation_link	= JURI::root() . 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $row->activation;
+				} else {
+					$activation_link	= JURI::root() . 'index.php?option=com_user&amp;task=activate&amp;activation=' . $row->activation;
+				}
+
+				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $app->getCfg( 'sitename' ), $activation_link, JURI::root(), $username, $savepwd );
 			} else {
 				$message = sprintf( _AEC_USEND_MSG, $name, $app->getCfg( 'sitename' ), JURI::root() );
 			}
