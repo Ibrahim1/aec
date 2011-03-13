@@ -10756,9 +10756,11 @@ class Invoice extends serialParamDBTable
 			$app = JFactory::getApplication();
 
 			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) {
-				// Desjardins is the only exception so far... bad bad bad
-				if ( $InvoiceFactory->pp->processor_name != 'desjardins' ) {
+				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {
+					// Desjardins is the only exception so far... bad bad bad
+				} elseif ( $response['valid'] ) {
 					// The last notification has not been too long ago - skipping this one
+					// But only skip actual payment notifications - errors are OK
 					return $response;
 				}
 			}
