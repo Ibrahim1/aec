@@ -15577,43 +15577,27 @@ class AECToolbox
 	{
 		global $aecConfig;
 
+		$amount = AECToolbox::correctAmount( $amount );
+
+		if ( $aecConfig->cfg['amount_use_comma'] ) {
+			$amount = number_format( $amount, 2, ',', '.' );
+		} else {
+			$amount = number_format( $amount, 2, '.', ',' );
+		}
+
 		if ( !empty( $currency ) ) {
 			if ( !empty( $aecConfig->cfg['amount_currency_symbol'] ) ) {
-				switch ( $currency ) {
-					case 'USD':
-						$currency = '$';
-						break;
-					case 'GBP':
-						$currency = '&pound;';
-						break;
-					case 'EUR':
-						$currency = '&euro;';
-						break;
-					case 'CNY':
-					case 'JPY':
-						$currency = '&yen;';
-						break;
-				}
-			}
-
-			$amount = AECToolbox::correctAmount( $amount );
-
-			if ( $aecConfig->cfg['amount_use_comma'] ) {
-				$amount = str_replace( '.', ',', $amount );
+				$currency = AECToolbox::getCurrencySymbol( $currency );
 			}
 
 			if ( $aecConfig->cfg['amount_currency_symbolfirst'] ) {
-				return $currency . '&nbsp;' . $amount;
+				$amount = $currency . '&nbsp;' . $amount;
 			} else {
-				return $amount . '&nbsp;' . $currency;
+				$amount .= '&nbsp;' . $currency;
 			}
-		} else {
-			if ( $aecConfig->cfg['amount_use_comma'] ) {
-				$amount = str_replace( '.', ',', $amount );
-			}
-
-			return $amount;
 		}
+
+		return $amount;
 	}
 
 	function correctAmount( $amount )
