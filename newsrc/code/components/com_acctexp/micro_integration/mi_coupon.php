@@ -135,9 +135,10 @@ class mi_coupon
 
 	function mailOut( $request, $newcodes )
 	{
+		$codelist = "";
 		if ( $this->settings['text_html'] ) {
 			foreach ( $newcodes as $code ) {
-				$codelist = "<p>" . $code . "</p>";
+				$codelist .= "<p>" . $code . "</p>";
 			}
 		} else {
 			$codelist = implode( "\n", $newcodes );
