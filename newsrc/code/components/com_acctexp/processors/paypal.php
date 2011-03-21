@@ -105,7 +105,7 @@ class processor_paypal extends POSTprocessor
 
 		$var['cmd']				= '_xclick';
 
-		if ( !empty( $this->settings['invoice_tax'] ) ) {
+		if ( !empty( $this->settings['invoice_tax'] ) && isset( $request->items->tax ) ) {
 			foreach ( $request->items->tax as $tax ) {
 				$tax += $tax['cost'];
 			}
