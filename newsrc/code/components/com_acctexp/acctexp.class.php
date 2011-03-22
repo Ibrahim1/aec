@@ -3671,6 +3671,10 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
+		if ( !isset( $this->info['recurring'] ) ) {
+			$this->info['recurring'] = 0;
+		}
+
 		if ( $this->info['recurring'] == 2 ) {
 			$settings = array_merge( array( 'recurring' => array( 'list_recurring' ) ), $this->processor->backend_settings() );
 		} else {
@@ -16874,7 +16878,7 @@ class microIntegration extends serialParamDBTable
 			if ( !empty( $mi_form['lists'] ) ) {
 				foreach ( $mi_form['lists'] as $lname => $lcontent ) {
 					$tempname = $pref.$lname;
-					$lists[$tempname] = str_replace( $lname, $tempname, $lcontent );
+					$lists[$tempname] = str_replace( '"'.$lname.'"', '"'.$tempname.'"', $lcontent );
 				}
 
 				unset( $mi_form['lists'] );
