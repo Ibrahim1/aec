@@ -1767,7 +1767,6 @@ class HTML_AcctExp
 													<p style="float:left;padding:2px;padding-left:40px;"><a href="<?php echo JURI::root(); ?>index.php?option=com_acctexp&amp;task=addtocart&amp;usage=<?php echo $row->id; ?>" title="<?php echo _AEC_CGF_LINK_CART_FRONTEND; ?>" target="_blank"><?php echo _AEC_CGF_LINK_CART_FRONTEND; ?></a></p>
 													<?php
 												}
-
 												?>
 											</div>
 										</div>
