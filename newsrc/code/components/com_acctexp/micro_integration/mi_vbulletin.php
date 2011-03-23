@@ -71,23 +71,11 @@ class mi_vbulletin
 	 	$groups = $db->loadObjectList();
 
 		$sg		= array();
-		$sg2	= array();
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
 				$sg[] = JHTML::_('select.option', $group->usergroupid, $group->title );
 			}
 		}
-
-         // Explode the Groups to Exclude
-         if ( !empty($this->settings['groups_exclude'] ) ) {
-     		$selected_groups_exclude = array();
-
-     		foreach ( $this->settings['groups_exclude'] as $group_exclude ) {
-     			$selected_groups_exclude[]->value = $group_exclude;
-     		}
-     	} else {
-     		$selected_groups_exclude			= '';
-     	}
 
 		$settings = array();
 
@@ -99,9 +87,12 @@ class mi_vbulletin
 		$settings['dbname']			= array( 'inputC' );
 		$settings['table_prefix']	= array( 'inputC' );
 
-		$s = array( 'group', 'group_exp', 'groups_exclude', 'remove_group', 'remove_group_exp' );
+		$s = array( 'group', 'group_exp' );
 
 		foreach ( $s as $si ) {
+			$settings['set_'.$s]	= array( 'list_yesno' );
+			$settings[$s]			= array( 'list' );
+
 			$v = null;
 			if ( isset( $this->settings[$si] ) ) {
 				$v = $this->settings[$si];
@@ -110,12 +101,8 @@ class mi_vbulletin
 			$settings['lists'][$si]	= JHTML::_( 'select.genericlist', $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
 		}
 
-		$settings['set_group']				= array( 'list_yesno' );
-		$settings['group']					= array( 'list' );
-		$settings['set_group_exp']			= array( 'list_yesno' );
-		$settings['group_exp']				= array( 'list' );
-		$settings['rebuild']				= array( 'list_yesno' );
-		$settings['remove']					= array( 'list_yesno' );
+		$settings['rebuild']		= array( 'list_yesno' );
+		$settings['remove']			= array( 'list_yesno' );
 
 		$settings['create_user']			= array( 'list_yesno' );
 
