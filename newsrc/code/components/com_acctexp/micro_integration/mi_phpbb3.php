@@ -56,6 +56,8 @@ class mi_phpbb3
 	{
 		$db = $this->getDB();
 
+		$app = JFactory::getApplication();
+
 		// Oh well, old mistakes...
 		$query = 'SHOW COLUMNS FROM ' . $app->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw'
 				. ' LIKE `vbulletinpw`'
