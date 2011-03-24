@@ -54,7 +54,7 @@ class mi_vbulletin
 
 	function Settings()
 	{
-		$db = $this->getDB();
+		$db = &JFactory::getDBO();
 
 		$vbdb = $this->getDB();
 
@@ -67,8 +67,8 @@ class mi_vbulletin
 		$query = 'SELECT `usergroupid`, `title`'
 			 	. ' FROM ' . $prefix . 'usergroup'
 			 	;
-	 	$db->setQuery( $query );
-	 	$groups = $db->loadObjectList();
+	 	$vbdb->setQuery( $query );
+	 	$groups = $vbdb->loadObjectList();
 
 		$sg		= array();
 		if ( !empty( $groups ) ) {
@@ -79,6 +79,10 @@ class mi_vbulletin
 
 		$settings = array();
 
+		$settings['rebuild']		= array( 'list_yesno' );
+		$settings['remove']			= array( 'list_yesno' );
+
+		$settings['aectab_dat']		= array( 'tab', 'Database', 'Database' );
 		$settings['use_altdb']		= array( 'list_yesno' );
 		$settings['dbms']			= array( 'inputC' );
 		$settings['dbhost']			= array( 'inputC' );
@@ -87,34 +91,50 @@ class mi_vbulletin
 		$settings['dbname']			= array( 'inputC' );
 		$settings['table_prefix']	= array( 'inputC' );
 
-		$s = array( 'group', 'group_exp' );
+		$s = array( 'group', 'displaygroup', 'add_secondarygroups', 'remove_secondarygroups', 'group_exp', 'displaygroup_exp', 'add_secondarygroups_exp', 'remove_secondarygroups_exp' );
 
+		$settings['aectab_act']		= array( 'tab', 'Groups', 'Groups' );
+
+		$exp = false;
 		foreach ( $s as $si ) {
-			$settings['set_'.$s]	= array( 'list_yesno' );
-			$settings[$s]			= array( 'list' );
+			if ( strpos( $si, '_exp' ) && !$exp ) {
+				$exp = true;
+
+				$settings['aectab_exp']		= array( 'tab', 'Groups (Expiration)', 'Groups (Expiration)' );
+			}
+
+			$settings['set_'.$si]	= array( 'list_yesno' );
+			$settings[$si]			= array( 'list' );
 
 			$v = null;
 			if ( isset( $this->settings[$si] ) ) {
 				$v = $this->settings[$si];
 			}
 
-			$settings['lists'][$si]	= JHTML::_( 'select.genericlist', $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
+			if ( strpos( $si, 'secondarygroups' ) ) {
+				$settings['lists'][$si]	= JHTML::_( 'select.genericlist', $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
+			} else {
+				if ( is_array( $v ) ) {
+					$v = $v[0];
+				}
+
+				$settings['lists'][$si]	= JHTML::_( 'select.genericlist', $sg, $si, 'size="10"', 'value', 'text', $v );
+			}
 		}
-
-		$settings['rebuild']		= array( 'list_yesno' );
-		$settings['remove']			= array( 'list_yesno' );
-
-		$settings['create_user']			= array( 'list_yesno' );
 
 		$userfields = $this->getUserFields( $vbdb );
 
 		if ( !empty( $userfields ) ) {
+			$settings['aectab_cuu']				= array( 'tab', 'Create User', 'Create User' );
+			$settings['create_user']			= array( 'list_yesno' );
+
 			foreach ( $userfields as $key ) {
 				$ndesc = _MI_MI_VBULLETIN_CREATE_FIELD . ": " . $key;
 
 				$settings['create_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 			}
 
+			$settings['aectab_uuu']				= array( 'tab', 'Update User', 'Update User' );
 			$settings['update_user']			= array( 'list_yesno' );
 
 			foreach ( $userfields as $key ) {
@@ -208,19 +228,7 @@ class mi_vbulletin
 		}
 
 		if ( $vbUserId ) {
-			$groups = $this->userGroup( $vbdb, $vbUserId );
-
-			if ( $this->settings['set_group'] ) {
-				foreach ( $this->settings['group'] as $groupid ) {
-					if ( !empty( $groups ) ) {
-						if ( in_array( $groupid, $groups ) ) {
-							continue;
-						}
-					}
-
-					$this->assignGroup( $vbdb, $vbUserId, $groupid );
-				}
-			}
+			$this->updateGroups( $vbdb, $vbUserId );
 		}
 
 		return true;
@@ -236,31 +244,102 @@ class mi_vbulletin
 			return null;
 		}
 
-		if ( $this->settings['update_user_exp'] ) {
-			$fields = $this->getUserFields( $vbdb );
-
-			$content = array();
-			foreach ( $fields as $key ) {
-				if ( !empty( $this->settings['update_user_exp_'.$key] ) ) {
-					$content[$key] = $this->settings['update_user_exp_'.$key];
-				}
-			}
-
-			$this->updateUser( $vbdb, $content );
+		if ( $vbUserId ) {
+			$this->updateGroups( $vbdb, $vbUserId, '_exp' );
 		}
 
-		$groups = $this->userGroup( $vbdb, $vbUserId );
+		return true;
+	}
 
-		if ( $this->settings['set_group_exp'] ) {
-			foreach ( $this->settings['group_exp'] as $groupid ) {
-				if ( !empty( $groups ) ) {
-					if ( in_array( $groupid, $groups ) ) {
-						continue;
-					}
+	function userGroups( $db, $userid )
+	{
+		$query = 'SELECT `userid`, `usergroupid`, `membergroupids`, `displaygroupid`'
+				. ' FROM ' . $this->settings['table_prefix'] . 'user'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadObject();
+	}
+
+	function updateGroups( $db, $userid, $suffix="" )
+	{
+		$user = $this->userGroups( $db, $userid );
+
+		$user->membergroupids = explode( ',', $user->membergroupids );
+
+		$change = false;
+
+		$s = array( 'group', 'displaygroup', 'add_secondarygroups', 'remove_secondarygroups' );
+
+		foreach ( $s as $setting ) {
+			$set .= $suffix;
+
+			if ( !empty( $this->settings[$set] ) && !empty( $this->settings['set_'.$set] ) ) {
+				switch ( $setting ) {
+					case 'group':
+						if ( $user->usergroupid !== $this->settings[$set] ) {
+							$change = true;
+
+							$user->usergroupid = $this->settings[$set];
+						}
+						break;
+					case 'displaygroup':
+						if ( $user->displaygrouppid !== $this->settings[$set] ) {
+							$change = true;
+
+							$user->displaygroupid = $this->settings[$set];
+						}
+						break;
+					default:
+						$groups = array();
+
+						if ( strpos( $set, 'add_' ) !== false ) {
+							foreach ( $this->settings[$set] as $group ) {
+								if ( !in_array( $group, $user->membergroupids ) ) {
+									$groups[] = $group;
+								}
+							}
+
+							if ( !empty( $groups ) ) {
+								$change = true;
+
+								$user->membergroupids = array_merge( $user->membergroupids,$groups );
+
+								asort( $user->membergroupids );
+							}
+						} else {
+							foreach ( $this->settings[$set] as $group ) {
+								if ( in_array( $group, $user->membergroupids ) ) {
+									$change = true;
+
+									unset( $user->membergroupids[array_search( $group, $user->membergroupids )] );
+								}
+							}
+						}
+						break;
 				}
-
-				$this->assignGroup( $vbdb, $vbUserId, $groupid );
 			}
+		}
+
+		if ( $change ) {
+			if ( is_array( $user->usergroupid ) ) {
+				$user->usergroupid = $user->usergroupid[0];
+			}
+
+			if ( is_array( $user->displaygroupid ) ) {
+				$user->displaygroupid = $user->displaygroupid[0];
+			}
+
+			$query = 'UPDATE ' . $this->settings['table_prefix'] . 'user'
+					. ' SET ' . '`usergroupid` = \'' . $user->usergroupid . '\','
+					. ' `membergroupids` = \'' . implode( ',', $user->membergroupids ) . '\','
+					. ' `displaygroupid` = \'' . $user->displaygroupid . '\''
+					. ' WHERE `userid` = \'' . $user->userid . '\''
+					;
+			$db->setQuery( $query );
+
+			$db->query();
 		}
 
 		return true;
@@ -334,28 +413,6 @@ class mi_vbulletin
 		}
 
 		return $return;
-	}
-
-	function userGroup( $db, $userid )
-	{
-		$query = 'SELECT `usergroupid`'
-				. ' FROM ' . $this->settings['table_prefix'] . 'user'
-				. ' WHERE `userid` = \'' . $userid . '\''
-				;
-		$db->setQuery( $query );
-
-		return $db->loadResultArray();
-	}
-
-	function assignGroup( $db, $userid, $groupid )
-	{
-		$query = 'UPDATE ' . $this->settings['table_prefix'] . 'user'
-				. ' SET ' . '`usergroupid` = \'' . $groupid . '\''
-				. ' WHERE `userid` = \'' . $userid . '\''
-				;
-		$db->setQuery( $query );
-
-		$db->query();
 	}
 
 	function getDB()
