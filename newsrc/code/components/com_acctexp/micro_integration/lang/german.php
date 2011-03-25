@@ -1357,15 +1357,44 @@ define( '_MI_MI_JNEWS_DEFAULT_NOTICE',		'Do you want to subscribe to our newslet
 
 // vBulletin
 define( '_AEC_MI_NAME_VBULLETIN','vBulletin Integration' );
-define( '_AEC_MI_DESC_VBULLETIN','will set the users group in vBulletin on subscription/expiration' );
-define( '_MI_MI_VBULLETIN_SET_GROUP_NAME','Set Groups' );
-define( '_MI_MI_VBULLETIN_SET_GROUP_DESC','Choose Yes if you wish one or more vBulletin groups to be applied when the plan is applied' );
-define( '_MI_MI_VBULLETIN_GROUP_NAME','Group' );
-define( '_MI_MI_VBULLETIN_GROUP_DESC','The groups you wish to be applied - if you chose yes above.' );
-define( '_MI_MI_VBULLETIN_SET_GROUP_EXP_NAME','Set Group (Expiration)' );
-define( '_MI_MI_VBULLETIN_SET_GROUP_EXP_DESC','Choose Yes if you wish the vBulletin group to be changed when the plan expires' );
-define( '_MI_MI_VBULLETIN_GROUP_EXP_NAME','Group (Expiration)' );
-define( '_MI_MI_VBULLETIN_GROUP_EXP_DESC','The group you wish to apply when the plan expires.' );
+define( '_AEC_MI_DESC_VBULLETIN','Will update vBulletin usergroups on subscription/expiration' );
+
+define( '_MI_MI_VBULLETIN_SET_GROUP_NAME','Set Usergroup' );
+define( '_MI_MI_VBULLETIN_SET_GROUP_DESC','Choose Yes if you want to update the primary vBulletin Usergroup when the plan is applied' );
+define( '_MI_MI_VBULLETIN_GROUP_NAME','Usergroup' );
+define( '_MI_MI_VBULLETIN_GROUP_DESC','The Usergroup you want to be assigned - if you chose yes above.' );
+define( '_MI_MI_VBULLETIN_SET_GROUP_EXP_NAME','Set Usergroup (Expiration)' );
+define( '_MI_MI_VBULLETIN_SET_GROUP_EXP_DESC','Choose Yes if you want to update the primary vBulletin Usergroup when the plan expires' );
+define( '_MI_MI_VBULLETIN_GROUP_EXP_NAME','Usergroup (Expiration)' );
+define( '_MI_MI_VBULLETIN_GROUP_EXP_DESC','The Usergroup you want to be assigned when the plan expires.' );
+
+define( '_MI_MI_VBULLETIN_SET_DISPLAYGROUP_NAME','Set Displaygroup' );
+define( '_MI_MI_VBULLETIN_SET_DISPLAYGROUP_DESC','Choose Yes if you want to update the vBulletin Displaygroup when the plan is applied' );
+define( '_MI_MI_VBULLETIN_DISPLAYGROUP_NAME','Displaygroup' );
+define( '_MI_MI_VBULLETIN_DISPLAYGROUP_DESC','The Displaygroup you want to be assigned - if you chose yes above.' );
+define( '_MI_MI_VBULLETIN_SET_DISPLAYGROUP_EXP_NAME','Set Displaygroup (Expiration)' );
+define( '_MI_MI_VBULLETIN_SET_DISPLAYGROUP_EXP_DESC','Choose Yes if you want to update the vBulletin Displaygroup when the plan expires' );
+define( '_MI_MI_VBULLETIN_DISPLAYGROUP_EXP_NAME','Displaygroup (Expiration)' );
+define( '_MI_MI_VBULLETIN_DISPLAYGROUP_EXP_DESC','The Displaygroup you want to be assigned when the plan expires.' );
+
+define( '_MI_MI_VBULLETIN_SET_ADD_SECONDARYGROUPS_NAME','Set Secondary Usergroups' );
+define( '_MI_MI_VBULLETIN_SET_ADD_SECONDARYGROUPS_DESC','Choose Yes if you want one or more secondary vBulletin usergroups to be assigned when the plan is applied' );
+define( '_MI_MI_VBULLETIN_ADD_SECONDARYGROUPS_NAME','Secondary Usergroups' );
+define( '_MI_MI_VBULLETIN_ADD_SECONDARYGROUPS_DESC','The secondary usergroups you want to be assigned - if you chose yes above.' );
+define( '_MI_MI_VBULLETIN_SET_ADD_SECONDARYGROUPS_EXP_NAME','Set Secondary Usergroups (Expiration)' );
+define( '_MI_MI_VBULLETIN_SET_ADD_SECONDARYGROUPS_EXP_DESC','Choose Yes if you want to assign secondary vBulletin usergroups when the plan expires' );
+define( '_MI_MI_VBULLETIN_ADD_SECONDARYGROUPS_EXP_NAME','Secondary Usergroups (Expiration)' );
+define( '_MI_MI_VBULLETIN_ADD_SECONDARYGROUPS_EXP_DESC','The secondary usergroups you want to apply when the plan expires.' );
+
+define( '_MI_MI_VBULLETIN_SET_REMOVE_SECONDARYGROUPS_NAME','Remove Secondary Usergroups' );
+define( '_MI_MI_VBULLETIN_SET_REMOVE_SECONDARYGROUPS_DESC','Choose Yes if you want one or more secondary vBulletin usergroups to be removed when the plan is applied' );
+define( '_MI_MI_VBULLETIN_REMOVE_SECONDARYGROUPS_NAME','Secondary Usergroups' );
+define( '_MI_MI_VBULLETIN_REMOVE_SECONDARYGROUPS_DESC','The secondary usergroups you want to be removed - if you chose yes above.' );
+define( '_MI_MI_VBULLETIN_SET_REMOVE_SECONDARYGROUPS_EXP_NAME','Remove Secondary Usergroups (Expiration)' );
+define( '_MI_MI_VBULLETIN_SET_REMOVE_SECONDARYGROUPS_EXP_DESC','Choose Yes if you want to remove secondary vBulletin usergroups when the plan expires' );
+define( '_MI_MI_VBULLETIN_REMOVE_SECONDARYGROUPS_EXP_NAME','Secondary Usergroups (Expiration)' );
+define( '_MI_MI_VBULLETIN_REMOVE_SECONDARYGROUPS_EXP_DESC','The secondary usergroups you want to apply when the plan expires.' );
+
 define( '_MI_MI_VBULLETIN_REBUILD_NAME','Rebuild: ' );
 define( '_MI_MI_VBULLETIN_REBUILD_DESC','Choose yes and then save the MI to recreate the actions fo all users with this MI on a currently active plan.' );
 define( '_MI_MI_VBULLETIN_REMOVE_NAME','Remove: ' );
@@ -1383,7 +1412,7 @@ define( '_MI_MI_VBULLETIN_UPDATE_FIELD','Update - Field' );
 define( '_MI_MI_VBULLETIN_UPDATE_FIELD_EXP','Update (Expired) - Field' );
 
 define( '_MI_MI_VBULLETIN_USE_ALTDB_NAME','Different Database' );
-define( '_MI_MI_VBULLETIN_USE_ALTDB_DESC','If your vBulletin3 forum uses a different database than joomla, you can set this option to Yes and provide details below.' );
+define( '_MI_MI_VBULLETIN_USE_ALTDB_DESC','If your vBulletin forum uses a different database than joomla, you can set this option to Yes and provide details below.' );
 define( '_MI_MI_VBULLETIN_DBMS_NAME','Database Type' );
 define( '_MI_MI_VBULLETIN_DBMS_DESC','Typically mysql or mysqli' );
 define( '_MI_MI_VBULLETIN_DBHOST_NAME','Database Host' );
