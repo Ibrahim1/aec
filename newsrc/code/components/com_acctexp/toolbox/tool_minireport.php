@@ -70,7 +70,7 @@ class tool_minireport
 
 			$refund = false;
 			if ( is_array( $entry->response ) ) {
-				$filter = array( 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel' );
+				$filter = array( 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
 
 				$refund = false;
 				foreach ( $entry->response as $v ) {
