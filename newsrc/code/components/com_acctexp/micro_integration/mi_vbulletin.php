@@ -266,29 +266,63 @@ class mi_vbulletin
 	{
 		$user = $this->userGroups( $db, $userid );
 
-		$user->membergroupids = explode( ',', $user->membergroupids );
+		if ( !empty( $user->membergroupids ) ) {
+			$user->membergroupids = explode( ',', $user->membergroupids );
+		} else {
+			$user->membergroupids = array();
+		}
 
 		$change = false;
 
 		$s = array( 'group', 'displaygroup', 'add_secondarygroups', 'remove_secondarygroups' );
 
 		foreach ( $s as $setting ) {
-			$set .= $suffix;
+			$set = $setting.$suffix;
 
 			if ( !empty( $this->settings[$set] ) && !empty( $this->settings['set_'.$set] ) ) {
 				switch ( $setting ) {
 					case 'group':
+						if ( is_array( $this->settings[$set] ) ) {
+							if ( !is_array( $this->settings['add_secondarygroups'.$suffix] ) ) {
+								$this->settings['add_secondarygroups'.$suffix] = array();
+							} 
+
+							$this->settings['set_add_secondarygroups'.$suffix] = true;
+
+							$this->settings['add_secondarygroups'.$suffix] = array_merge( $this->settings['add_secondarygroups'.$suffix], $this->settings[$set] );
+
+							$this->settings['add_secondarygroups'.$suffix] = array_unique( $this->settings['add_secondarygroups'.$suffix] );
+
+							$this->settings[$set] = $this->settings[$set][0];
+						}
+
 						if ( $user->usergroupid !== $this->settings[$set] ) {
 							$change = true;
 
 							$user->usergroupid = $this->settings[$set];
 						}
+
+						if ( !in_array( $this->settings[$set], $user->membergroupids ) ) {
+							$change = true;
+
+							$user->membergroupids[] = $this->settings[$set];
+						}
 						break;
 					case 'displaygroup':
+						if ( is_array( $this->settings[$set] ) ) {
+							$this->settings[$set] = $this->settings[$set][0];
+						}
+
 						if ( $user->displaygrouppid !== $this->settings[$set] ) {
 							$change = true;
 
 							$user->displaygroupid = $this->settings[$set];
+						}
+
+						if ( !in_array( $this->settings[$set], $user->membergroupids ) ) {
+							$change = true;
+
+							$user->membergroupids[] = $this->settings[$set];
 						}
 						break;
 					default:
@@ -304,7 +338,7 @@ class mi_vbulletin
 							if ( !empty( $groups ) ) {
 								$change = true;
 
-								$user->membergroupids = array_merge( $user->membergroupids,$groups );
+								$user->membergroupids = array_merge( $user->membergroupids, $groups );
 
 								asort( $user->membergroupids );
 							}
