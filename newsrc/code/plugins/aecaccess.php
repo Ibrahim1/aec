@@ -36,7 +36,7 @@ class plgUserAECaccess extends JPlugin
 		parent::__construct( $subject, $config );
 	}
 
-	function onUserLogin($user, $options)
+	function onUserLogin( $user, $options )
 	{
 		return $this->onLoginUser( $user, null );
 	}
@@ -68,12 +68,12 @@ class plgUserAECaccess extends JPlugin
 		}
 	}
 
-	function onUserLoginFailure($response, $options)
+	function onUserLoginFailure( $response, $options=null )
 	{
-		return $this->onLoginFailure( $response, null );
+		return $this->onLoginFailure( $response, $options );
 	}
 
-	function onLoginFailure( $credentials, $response=null )
+	function onLoginFailure( $response, $options=null )
 	{
 		$db =& JFactory::getDBO();
 
@@ -111,7 +111,7 @@ class plgUserAECaccess extends JPlugin
 		}
 	}
 
-	function verify( $credentials)
+	function verify( $credentials )
 	{
 		$savetask = '';
 		if ( isset( $_REQUEST['task'] ) ) {
