@@ -256,8 +256,8 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$var['Method']			= 'SetExpressCheckout';
 				$var['Version']			= '52.0';
-				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, false, true );
-				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
+				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
+				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
 
 				$xml = $this->arrayToNVP( $var );
 
@@ -270,8 +270,8 @@ class processor_paypal_wpp extends XMLprocessor
 
 					$var = $this->getPaymentVars( $var, $request );
 
-					$var['RETURNURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, false, true );
-					$var['CANCELURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
+					$var['RETURNURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
+					$var['CANCELURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
 
 					$get = $this->arrayToNVP( $var, true );
 
@@ -371,7 +371,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$var = $this->getPaymentVars( $var, $request );
 
-		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=paypal_wppnotification', false, true );
+		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=paypal_wppnotification', $this->info['secure'], true );
 		$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['InvNum']				= $request->invoice->invoice_number;
 
