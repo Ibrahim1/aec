@@ -9592,7 +9592,7 @@ class InvoiceFactory
 			}
 
 			$temptoken->create( $content );
-		} elseif ( empty( $temptoken->content['usage'] ) ) {
+		} elseif ( empty( $temptoken->content['usage'] ) || ( $temptoken->content['usage'] !== $plan['id'] ) ) {
 			$temptoken->content['usage']		= $plan['id'];
 			$temptoken->content['processor']	= $plan['gw'][0]->processor_name;
 			if ( isset( $plan['gw'][0]->recurring ) ) {
