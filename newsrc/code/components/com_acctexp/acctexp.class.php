@@ -14161,7 +14161,7 @@ class reWriteEngine
 
 				$this->rewrite['user_first_name']		= $name['first'];
 				$this->rewrite['user_first_first_name']	= $name['first_first'];
-				$this->rewrite['user_last_name']		= $name['first'];
+				$this->rewrite['user_last_name']		= $name['last'];
 
 				if ( !empty( $this->data['metaUser']->cmsUser->email ) ) {
 					$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;

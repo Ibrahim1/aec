@@ -501,7 +501,7 @@ define( '_CFG_IDEAL_BASIC_DESCRIPTION_NAME', 'Item Description');
 define( '_CFG_IDEAL_BASIC_DESCRIPTION_DESC', 'The Item description that is shown on the invoice - max 32 characters!');
 
 // iDeal Advanced
-define( '_CFG_IDEAL_ADVANCED_LONGNAME', 'iDeal');
+define( '_CFG_IDEAL_ADVANCED_LONGNAME', 'iDeal Advanced');
 define( '_CFG_IDEAL_ADVANCED_STATEMENT', 'Make payments with iDeal');
 define( '_CFG_IDEAL_ADVANCED_DESCRIPTION', 'De veilige manier van betalen op internet.');
 define( '_CFG_IDEAL_ADVANCED_TESTMODE_DESC','Set to "No" to process LIVE payments. Set to "Yes" if you need to execute the mandatory test payments against your acquiring bank, define the applicable test plan per test payment (1 to 7 EUR). ');
