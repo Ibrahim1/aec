@@ -14897,6 +14897,7 @@ class AECToolbox
 								'en' => 'english',
 								'fr' => 'french',
 								'de' => 'german',
+								'el' => 'greek',
 								'it' => 'italian',
 								'ja' => 'japanese',
 								'ru' => 'russian',
