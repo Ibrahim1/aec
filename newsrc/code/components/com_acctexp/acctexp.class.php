@@ -850,13 +850,18 @@ class metaUser
 
 			$gid_name = $acl->get_group_name( $gid, 'ARO' );
 		} else {
-			$gid_name = "";
+			$query = 'SELECT `title`'
+					. ' FROM #__usergroups'
+					. ' WHERE `id` = \'' . $gid . '\''
+					;
+			$db->setQuery( $query );
+			$gid_name = $db->loadResult();
 		}
 
 		// Set GID and usertype
 		$rows = aecACLhandler::setGID( (int) $this->userid, $gid, $gid_name );
 
-		if ( $session && !defined( 'JPATH_MANIFESTS' ) ) {
+		if ( $session ) {
 			// Update Session
 			$query = 'SELECT data'
 			. ' FROM #__session'
@@ -882,7 +887,7 @@ class metaUser
 					}
 				}
 
-				if ( isset( $se[$key]['user'] ) ) {
+				if ( isset( $se[$key]['user'] ) && !defined( 'JPATH_MANIFESTS' ) ) {
 					$se[$key]['user']->gid		= $gid;
 					$se[$key]['user']->usertype	= $gid_name;
 
@@ -890,14 +895,24 @@ class metaUser
 						$user->gid		= $gid;
 						$user->usertype	= $gid_name;
 					}
+				} elseif ( isset( $se[$key]['user'] ) ) {
+					$user->groups[$gid] = $gid_name;
 				}
 
 				$sdata = $this->joomserializesession( $se );
 
-				$query = 'UPDATE #__session'
-						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
-						. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-						;
+				if ( defined( 'JPATH_MANIFESTS' ) ) {
+					$query = 'UPDATE #__session'
+							. ' SET `data` = \'' . $sdata . '\''
+							. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+							;
+				} elseif ( isset( $se[$key]['user'] ) ) {
+					$query = 'UPDATE #__session'
+							. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
+							. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+							;
+				}
+
 				$db->setQuery( $query );
 				$db->query() or die( $db->stderr() );
 			}
