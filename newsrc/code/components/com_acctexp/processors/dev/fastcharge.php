@@ -2,7 +2,7 @@
 /**
  * @version $Id: fastcharge.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Processors - PayPal Website Payments Pro
+ * @subpackage Processors - Fastcharge
  * @copyright 2007-2008 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
@@ -50,9 +50,12 @@ class processor_fastcharge extends XMLprocessor
 		$settings['testmode']			= 0;
 		$settings['currency']			= 'USD';
 
-		$settings['api_user']			= '';
-		$settings['api_password']		= '';
+		$settings['acctid']				= '';
+		$settings['subid']				= '';
+		$settings['merchantpin']		= '';
 		$settings['country']			= 'US';
+
+		$settings['allow_echecks']		= 0;
 
 		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
@@ -65,9 +68,12 @@ class processor_fastcharge extends XMLprocessor
 		$settings['testmode']				= array( 'list_yesno' );
 		$settings['currency']				= array( 'list_currency' );
 
-		$settings['api_user']				= array( 'inputC' );
-		$settings['api_password']			= array( 'inputC' );
+		$settings['acctid']					= array( 'inputC' );
+		$settings['subid']					= array( 'inputC' );
+		$settings['merchantpin']			= array( 'inputC' );
 		$settings['country'] 				= array( 'list' );
+
+		$settings['allow_echecks']			= array( 'list_yesno' );
 
 		$settings['cancel_note']			= array( 'inputE' );
 		$settings['item_name']				= array( 'inputE' );
@@ -90,246 +96,96 @@ class processor_fastcharge extends XMLprocessor
 		return $tab;
 	}
 
-	function customtab_details( $request )
-	{
-		$profileid = $request->invoice->params['fastcharge_customerProfileId'];
-
-		$billfirstname	= aecGetParam( 'billFirstName', null );
-		$billcardnumber	= aecGetParam( 'cardNumber', null );
-
-		$updated = null;
-
-		if ( !empty( $billfirstname ) && !empty( $billcardnumber ) && ( strpos( $billcardnumber, 'X' ) === false ) ) {
-			$var['Method']					= 'UpdateRecurringPaymentsProfile';
-			$var['Profileid']				= $profileid;
-
-			$var['card_type']				= aecGetParam( 'cardType' );
-			$var['card_number']				= aecGetParam( 'cardNumber' );
-			$var['expDate']					= str_pad( aecGetParam( 'expirationMonth' ), 2, '0', STR_PAD_LEFT ) . aecGetParam( 'expirationYear' );
-			$var['CardVerificationValue']	= aecGetParam( 'cardVV2' );
-
-			$udata = array( 'firstname' => 'billFirstName', 'lastname' => 'billLastName', 'street' => 'billAddress', 'street2' => 'billAddress2',
-							'city' => 'billCity', 'state' => 'billState', 'zip' => 'billZip', 'country' => 'billCountry'
-							);
-
-			foreach ( $udata as $authvar => $aecvar ) {
-				$value = trim( aecGetParam( $aecvar ) );
-
-				if ( !empty( $value ) ) {
-					$var[$authvar] = $value;
-				}
-			}
-
-			$result = $this->ProfileRequest( $request, $profileid, $var );
-
-			$updated = true;
-		}
-
-		if ( $profileid ) {
-			$var['Method']				= 'GetRecurringPaymentsProfileDetails';
-			$var['Profileid']			= $profileid;
-
-			$vars = $this->ProfileRequest( $request, $profileid, $var );
-
-			$vcontent = array();
-			$vcontent['card_type']		= strtolower( $vars['CREDITCARDTYPE'] );
-			$vcontent['card_number']	= 'XXXX' . $vars['ACCT'];
-			$vcontent['firstname']		= $vars['FIRSTNAME'];
-			$vcontent['lastname']		= $vars['LASTNAME'];
-
-			if ( isset( $vars['STREET1'] ) ) {
-				$vcontent['address']		= $vars['STREET1'];
-				$vcontent['address2']		= $vars['STREET2'];
-			} else {
-				$vcontent['address']		= $vars['STREET'];
-			}
-
-			$vcontent['city']			= $vars['CITY'];
-			$vcontent['state_usca']		= $vars['STATE'];
-			$vcontent['zip']			= $vars['ZIP'];
-			$vcontent['country_list']	= $vars['COUNTRY'];
-		} else {
-			$vcontent = array();
-		}
-
-		$var = $this->checkoutform( $request, $vcontent, $updated );
-
-		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=fastcharge_details', true ) . '" method="post">' . "\n";
-		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
-		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
-		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
-		$return .= '<input type="hidden" name="sub" value="fastcharge_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
-		$return .= '</form>' . "\n";
-
-		return $return;
-	}
-
 	function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		$var = array();
 
-		if ( !empty( $vcontent ) ) {
-			if ( !empty( $updated ) ) {
-				$msg = _AEC_CCFORM_UPDATE2_DESC;
-			} else {
-				$msg = _AEC_CCFORM_UPDATE_DESC;
-			}
-
-			$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, $msg, '' );
-		}
-
-		$values = array( 'card_type', 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
-		$var = $this->getCCform( $var, $values, $vcontent );
-
 		$values = array( 'firstname', 'lastname', 'address', 'address2', 'city', 'state_usca', 'zip', 'country_list' );
 		$var = $this->getUserform( $var, $values, $request->metaUser, $vcontent );
 
-		return $var;
-	}
+		if ( $this->settings['allow_echecks'] ) {
+			$var['params'][] = array( 'tabberstart', '', '', '' );
+			$var['params'][] = array( 'tabregisterstart', '', '', '' );
+			$var['params'][] = array( 'tabregister', 'ccdetails', 'Credit Card', true );
+			$var['params'][] = array( 'tabregister', 'echeckdetails', 'eCheck', false );
+			$var['params'][] = array( 'tabregisterend', '', '', '' );
 
-	function checkoutProcess( $request, $InvoiceFactory )
-	{
-		$this->sanitizeRequest( $request );
+			$var['params'][] = array( 'tabstart', 'ccdetails', true, '' );
+			$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
+			$var['params'][] = array( 'tabend', '', '', '' );
 
-		if ( !empty( $request->int_var['params']['express'] ) && $this->settings['allow_express_checkout'] ) {
-			if ( !empty( $request->int_var['params']['token'] ) ) {
-				// The user has already returned from Paypal - finish the deal
-				$var = $this->getPayPalVars( $request, false );
+			$var['params'][] = array( 'tabstart', 'echeckdetails', true, '' );
+			$var = $this->getECHECKform( $var );
+			$var['params'][] = array( 'tabend', '', '', '' );
 
-				$var['Method']			= 'DoExpressCheckoutPayment';
-				$var['Version']			= '52.0';
-				$var['token']			= $request->int_var['params']['token'];
-				$var['PayerID']			= $request->int_var['params']['PayerID'];
-
-				$var = $this->getPaymentVars( $var, $request );
-
-				$xml = $this->arrayToNVP( $var );
-
-				$response = $this->transmitRequestXML( $xml, $request );
-			} else {
-				$var = $this->getPayPalVars( $request, false );
-
-				$var['Method']			= 'SetExpressCheckout';
-				$var['Version']			= '52.0';
-				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, false, true );
-				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
-
-				$xml = $this->arrayToNVP( $var );
-
-				$response = $this->transmitRequestXML( $xml, $request );
-
-				if ( isset( $response['correlationid'] ) && isset( $response['token'] ) ) {
-					$var = array();
-					$var['cmd']			= '_express-checkout';
-					$var['token']		= $response['token'];
-
-					$var = $this->getPaymentVars( $var, $request );
-
-					$var['RETURNURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, false, true );
-					$var['CANCELURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
-
-					$get = $this->arrayToNVP( $var, true );
-
-					if ( $this->settings['testmode'] ) {
-						return aecRedirect( 'https://www.sandbox.paypal.com/webscr?' . $get );
-					} else {
-						return aecRedirect( 'https://www.paypal.com/webscr?' . $get );
-					}
-
-					unset( $response['correlationid'] );
-					unset( $response['token'] );
-				} elseif ( !empty( $response['error'] ) ) {
-					$response['error'] .= " - Could not retrieve token";
-				} else {
-					$response['error'] = "Could not retrieve token";
-				}
-			}
+			$var['params'][] = array( 'tabberend', '', '', '' );
 		} else {
-			$db = &JFactory::getDBO();
-
-			// Create the xml string
-			$xml = $this->createRequestXML( $request );
-
-			// Transmit xml to server
-			$response = $this->transmitRequestXML( $xml, $request );
-
-			if ( empty( $response['invoice'] ) ) {
-				$response['invoice'] = $request->invoice->invoice_number;
-			}
-
-			if ( $request->invoice->invoice_number != $response['invoice'] ) {
-				$request->invoice = new Invoice( $db );
-				$request->invoice->loadInvoiceNumber( $response['invoice'] );
-			}
-
-			if ( isset( $response['correlationid'] ) ) {
-				unset( $response['correlationid'] );
-			}
+			$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
 		}
 
-		return $this->checkoutResponse( $request, $response, $InvoiceFactory );
+		return $var;
 	}
 
 	function createRequestXML( $request )
 	{
 		$app = JFactory::getApplication();
 
-		$var = $this->getPayPalVars( $request );
+		$var = $this->getFCVars( $request );
 
 		return $this->arrayToNVP( $var );
 	}
 
-	function getPayPalVars( $request, $regular=true )
+	function getFCVars( $request )
 	{
 		$app = JFactory::getApplication();
 
-		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['Method']			= 'CreateRecurringPaymentsProfile';
+		if( !empty( $request->int_var['params']['account_no'] ) ) {
+			$var['action']		= 'ns_quicksale_check';
 		} else {
-			$var['Method']			= 'DoDirectPayment';
+			$var['action']		= 'ns_quicksale_cc';
 		}
 
-		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['Version']			= '50.0';
+		$var['acctid']			= $this->settings['acctid'];
+
+		$var['amount']			= $this->settings['acctid'];
+
+		if( !empty( $request->int_var['params']['account_no'] ) ) {
+			$var['ckaba']		= $request->int_var['params']['routing_no'];
+			$var['ckacct']		= $request->int_var['params']['account_no'];
+
+			$var['achtransactiontype']		= "WEB";
 		} else {
-			$var['Version']			= '3.2';
+			$var['ccname']		= trim( $request->int_var['params']['billFirstName'] ) . " " . trim( $request->int_var['params']['billLastName'] );
+			$var['ccnum']		= $request->int_var['params']['cardNumber'];
+			$var['expmon']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT );
+			$var['expyear']		= $request->int_var['params']['expirationYear'];
+			$var['cvv2']		= $request->int_var['params']['cardVV2'];
 		}
 
-		$var['user']				= $this->settings['api_user'];
-		$var['pwd']					= $this->settings['api_password'];
-		$var['signature']			= $this->settings['signature'];
+		$var['subid']			= $this->settings['subid'];
+		$var['pwd']				= $this->settings['api_password'];
+		$var['signature']		= $this->settings['signature'];
 
-		$var['paymentAction']		= 'Sale';
-		$var['IPaddress']			= $_SERVER['REMOTE_ADDR'];
+		$var['accepturl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks', false, true );
+		$var['declineurl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel', false, true );
 
-		if ( $regular ) {
-			$var['firstName']			= trim( $request->int_var['params']['billFirstName'] );
-			$var['lastName']			= trim( $request->int_var['params']['billLastName'] );
-			$var['creditCardType']		= $request->int_var['params']['cardType'];
-			$var['acct']				= $request->int_var['params']['cardNumber'];
-			$var['expDate']				= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
+		$var['ci_billaddr1']		= $request->int_var['params']['billAddress'];
 
-			$var['CardVerificationValue'] = $request->int_var['params']['cardVV2'];
-			$var['cvv2']				= $request->int_var['params']['cardVV2'];
-
-			$var['street']				= $request->int_var['params']['billAddress'];
-
-			if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
-				$var['street2']			= $request->int_var['params']['billAddress2'];
-			}
-
-			$var['city']				= $request->int_var['params']['billCity'];
-			$var['state']				= $request->int_var['params']['billState'];
-			$var['zip']					= $request->int_var['params']['billZip'];
-			$var['countrycode']			= $request->int_var['params']['billCountry'];
+		if ( !empty( $request->int_var['params']['billAddress2'] ) ) {
+			$var['ci_billaddr2']	= $request->int_var['params']['billAddress2'];
 		}
+
+		$var['ci_billcity']			= $request->int_var['params']['billCity'];
+		$var['ci_billstate']		= $request->int_var['params']['billState'];
+		$var['ci_billzip']			= $request->int_var['params']['billZip'];
+		$var['ci_billcountry']		= $request->int_var['params']['billCountry'];
+
+		$var['ci_email']			= trim( $request->metaUser->cmsUser->email );
 
 		$var = $this->getPaymentVars( $var, $request );
 
 		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=fastchargenotification', false, true );
-		$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['InvNum']				= $request->invoice->invoice_number;
+		$var['merchantordernumber']	= $request->invoice->invoice_number;
 
 		return $var;
 	}
