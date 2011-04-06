@@ -2471,7 +2471,7 @@ function editProcessor( $id, $option )
 					break;
 				case 'list_plan':
 					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $available_plans, $setting_name, 'size="' . $total_plans . '"', 'value', 'text', $pp->settings[$name] );
+					$lists[$setting_name] = JHTML::_('select.genericlist', $available_plans, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
 					$settings_array[$name][0] = 'list';
 					break;
 				default:
