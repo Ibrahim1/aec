@@ -121,35 +121,34 @@ class processor_offline_payment extends processor
 			$message	= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
 			$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
 
-			if ( empty( $message ) ) {
-				return null;
+			if ( !empty( $message ) ) {
+				$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
+				$recips = explode( ',', $recipients );
+
+		        $recipients2 = array();
+		        foreach ( $recips as $k => $email ) {
+		            $recipients2[$k] = trim( $email );
+		        }
+		        $recipients = $recipients2;
+
+				$bccipients = AECToolbox::rewriteEngineRQ( $this->settings['bcc'], $request );
+				$bccips = explode( ',', $bccipients );
+
+		        $bccipients2 = array();
+		        foreach ( $bccips as $k => $email ) {
+		            $bccipients2[$k] = trim( $email );
+		        }
+		        $bccipients = $bccipients2;
+
+				if ( !empty( $bccipients2 ) ) {
+					$bcc = $bccipients;
+				} else {
+					$bcc = null;
+				}
+
+				JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
 			}
 
-			$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
-			$recips = explode( ',', $recipients );
-
-	        $recipients2 = array();
-	        foreach ( $recips as $k => $email ) {
-	            $recipients2[$k] = trim( $email );
-	        }
-	        $recipients = $recipients2;
-
-			$bccipients = AECToolbox::rewriteEngineRQ( $this->settings['bcc'], $request );
-			$bccips = explode( ',', $bccipients );
-
-	        $bccipients2 = array();
-	        foreach ( $bccips as $k => $email ) {
-	            $bccipients2[$k] = trim( $email );
-	        }
-	        $bccipients = $bccipients2;
-
-			if ( !empty( $bccipients2 ) ) {
-				$bcc = $bccipients;
-			} else {
-				$bcc = null;
-			}
-
-			JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
 		}
 
 		if ( $this->settings['waitingplan'] ) {
