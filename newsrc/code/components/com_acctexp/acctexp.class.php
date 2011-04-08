@@ -11401,15 +11401,17 @@ class Invoice extends serialParamDBTable
 			}
 
 			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
-				$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp->id );
-
 				if ( is_object( $InvoiceFactory->pp ) ) {
+					$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp->id );
+
 					if ( isset( $int_var['params']['userselect_recurring'] ) ) {
 						$int_var['recurring'] = $InvoiceFactory->pp->is_recurring( $int_var['params']['userselect_recurring'], true );
 					} else {
 						$int_var['recurring'] = $InvoiceFactory->pp->is_recurring();
 					}
 				} else {
+					$int_var['planparams'] = array();
+
 					$int_var['recurring'] = false;
 				}
 

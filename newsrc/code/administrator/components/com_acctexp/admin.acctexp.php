@@ -676,6 +676,12 @@ switch( strtolower( $task ) ) {
 		invoices( $option );
 		break;
 
+		case 'invoiceprint':
+			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+			AdminInvoicePrintout( $option, $invoice );
+			break;
+
 	case 'history':
 		history( $option );
 		break;
@@ -893,20 +899,27 @@ function editUser( $option, $userid, $subscriptionid, $task )
 			$invoice_counter++;
 		}
 
-		$status = 'uncleared';
+		$status = aecHTML::Icon( 'add.png' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->created_date ) . '<br />';
+
+		$current_status = 'uncleared';
 
 		if ( isset( $invoice->params['deactivated'] ) ) {
-			$status = 'deactivated';
+			$status .= aecHTML::Icon( 'delete.png' ) . 'deactivated';
 		} elseif ( isset( $invoice->params['pending_reason'] ) ) {
 			if (  defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
-				$status = constant( '_PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
+				$status .= aecHTML::Icon( 'error.png' ) . constant( '_PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
 			} else {
-				$status = $invoice->params['pending_reason'];
+				$status .= aecHTML::Icon( 'error.png' ) . $invoice->params['pending_reason'];
 			}
+		} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+			$status .= aecHTML::Icon( 'hourglass.png' ) . 'uncleared';
 		}
 
+		$actions	= '';
+		$rowstyle	= '';
+
 		if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-			$actions = '<a href="'
+			$actions .= '<a href="'
 			. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice='
 			. $invoice->invoice_number ) . '">'
 			. aecHTML::Icon( 'arrow_redo.png' ) . "&nbsp;"
@@ -932,10 +945,14 @@ function editUser( $option, $userid, $subscriptionid, $task )
 			. '<br />';
 			$rowstyle = ' style="background-color:#fee;"';
 		} else {
-			$status		= $invoice->transaction_date;
-			$actions	= '- - -';
-			$rowstyle	= '';
+			$status .= aecHTML::Icon( 'coins.png' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
 		}
+
+		$actions	.= '<a href="'
+			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice='
+			. $invoice->invoice_number ) . '" target="_blank">'
+			. aecHTML::Icon( 'printer.png' ) . '&nbsp;'
+			. _HISTORY_ACTION_PRINT . '</a>';
 
 		$non_formatted = $invoice->invoice_number;
 		$invoice->formatInvoiceNumber();
@@ -4950,6 +4967,17 @@ function cancelInvoice( $option, $invoice_number, $task )
 	}
 
 	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, _REMOVED );
+}
+
+function AdminInvoicePrintout( $option, $invoice_number )
+{
+	$db = &JFactory::getDBO();
+
+	$invoice = new Invoice( $db );
+	$invoice->loadInvoiceNumber( $invoice_number );
+
+	$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
+	$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number );
 }
 
 function history( $option )
