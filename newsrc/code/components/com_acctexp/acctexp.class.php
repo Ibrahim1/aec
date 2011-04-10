@@ -11816,16 +11816,30 @@ class Invoice extends serialParamDBTable
 
 		$data['recurringstatus'] = "";
 		if ( $recurring ) {
-			$data['recurringstatus'] = _INVOICEPRINT_RECURRINGSTATUS_ONCE;
+			$data['recurringstatus'] = _INVOICEPRINT_RECURRINGSTATUS_RECURRING;
+		} elseif ( !empty( $InvoiceFactory->plan->id ) ) {
+			if ( !empty( $InvoiceFactory->plan->params['trial_amount'] ) && $InvoiceFactory->plan->params['trial_period'] ) {
+				$data['recurringstatus'] = _INVOICEPRINT_RECURRINGSTATUS_ONCE;
+			}
 		}
+
+		$pplist = array();
 
 		$data['invoice_billing_history'] = "";
 		if ( !empty( $this->transactions ) ) {
-			if ( count( $this->transactions ) > 1 ) {
+			if ( count( $this->transactions ) > 0 ) {
 				$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, "" );
 
 				foreach ( $this->transactions as $transaction ) {
-					$data['invoice_billing_history'] = '<td>' . AECToolbox::formatDate( $transaction->timestamp ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $transaction->processor . '</td>';
+					if ( !isset( $pplist[$transaction->processor] ) ) {
+						$pp = new PaymentProcessor();
+						$pp->loadName( $transaction->processor );
+						$pp->getInfo();
+
+						$pplist[$transaction->processor] = $pp;
+					}
+
+					$data['invoice_billing_history'] = '<td>' . AECToolbox::formatDate( $transaction->timestamp ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $pplist[$transaction->processor]->info['longname'] . '</td>';
 				}
 			}
 		}

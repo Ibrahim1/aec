@@ -111,7 +111,8 @@ define( '_INVOICEPRINT_PRINT_TYPEABOVE', 'Pros&iacute;m vložte Va&scaron;i adre
 define( '_INVOICEPRINT_PAIDSTATUS_UNPAID', '<strong>tato platba je&scaron;te nebyla zaplacena.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_CANCEL', '<strong>This payment was canceled.</strong>');
 define( '_INVOICEPRINT_PAIDSTATUS_PAID', 'Platba byla zaplacena: %s');
-define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payment dates above clarifies which amount has been paid and when.');
+define( '_INVOICEPRINT_RECURRINGSTATUS_RECURRING', 'This invoice is billed on a recurring basis. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payments above clarifies what has been paid and when.');
+define( '_INVOICEPRINT_RECURRINGSTATUS_ONCE', 'This invoice involves multiple, separate, payments. The invoice amount listing may represent that of the next billing cycle, not of the one that has been paid for last. The list of payments above clarifies what has been paid and when.');
 
 define( '_AEC_YOUSURE', 'Jste si jist&yacute;?');
 

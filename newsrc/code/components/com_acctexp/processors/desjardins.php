@@ -16,7 +16,7 @@ class processor_desjardins extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']					= 'Desjardins';
+		$info['name']					= 'desjardins';
 		$info['longname']				= _CFG_DESJARDINS_LONGNAME;
 		$info['statement']				= _CFG_DESJARDINS_STATEMENT;
 		$info['description']			= _CFG_DESJARDINS_DESCRIPTION;
