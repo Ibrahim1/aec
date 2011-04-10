@@ -7401,6 +7401,10 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		$procparams = array();
 		if ( !empty( $this->custom_params ) ) {
+			if ( empty( $this->custom_params[$processorid.'_aec_overwrite_settings'] ) ) {
+				return $procparams;
+			}
+
 			foreach ( $this->custom_params as $name => $value ) {
 				$realname = explode( '_', $name, 2 );
 
