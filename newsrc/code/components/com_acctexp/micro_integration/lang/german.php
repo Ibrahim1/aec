@@ -76,6 +76,11 @@ define( '_MI_MI_DOCMAN_DELETE_ON_EXP_NAME', 		'Action for existing groups when a
 define( '_MI_MI_DOCMAN_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined DocMan groups when the user expires.');
 define( '_MI_MI_DOCMAN_REMOVE_NAME', 				'Remove: ' );
 define( '_MI_MI_DOCMAN_REMOVE_DESC',				'Carry out the expiration action for all users with an active plan attached to this micro-integration' );
+define( '_AEC_MI_DIV1_DOCMAN_USED',		'You have used <strong>%s</strong> downloads.' );
+define( '_AEC_MI_DIV1_DOCMAN_REMAINING',	'You have <strong>%s</strong> downloads remaining.' );
+define( '_AEC_MI_DIV1_DOCMAN_UNLIMITED', 	'unlimited' );
+define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_NAME',			'Unset Unlimited on Expiration: ' );
+define( '_MI_MI_DOCMAN_UNSET_UNLIMITED_DESC',			'Remove unlimited downloads when user expires.' );
 
 // email
 define( '_AEC_MI_NAME_EMAIL',		'Email' );
@@ -208,6 +213,11 @@ define( '_MI_MI_REMOSITORY_GROUP_EXP_NAME',			'Expiration group' );
 define( '_MI_MI_REMOSITORY_GROUP_EXP_DESC',			'Mit "Ja" best&auml;tigen wenn die reMOSitory-Gruppe bei Aboablauf verwendet werden soll' );
 define( '_AEC_MI_HACK1_REMOS',		'Kein Guthaben' );
 define( '_AEC_MI_HACK2_REMOS',		'Bildet eine Downloadeinschr&auml;nkung f&uuml;reMOSitory' );
+define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_NAME', 			'Action for existing groups when account expires:' );
+define( '_MI_MI_REMOSITORY_DELETE_ON_EXP_DESC',			'Choose what action you want to happen to already defined ReMOSitory groups when the user expires.' );
+define( '_MI_MI_REMOSITORY_DELETERULES_NO',			'Just apply group(s) below.' );
+define( '_MI_MI_REMOSITORY_DELETERULES_ALL',			'Delete ALL, then apply group(s) below.' );
+define( '_MI_MI_REMOSITORY_DELETERULES_SET',			'Delete Group Set on Application, then apply group(s) below.' );
 
 // VirtueMart
 define( '_AEC_MI_NAME_VIRTM',		'VirtueMart' );
@@ -369,6 +379,8 @@ define( '_MI_MI_HTTP_QUERY_QUERY_PRE_EXP_DESC',			'Transmit these variables via 
 // MySMS
 define('_AEC_MI_NAME_MYSMS', 'MySMS Micro Integration');
 define('_AEC_MI_DESC_MYSMS', 'Erlaubt es einem Benutzer Sms mit MySMS zu versenden, indem x Credits dem Benuterkonto gutgeschrieben.');
+define( '_MI_MI_MYSMS_ADD_CREDITS_NAME', 'Add credits' );
+define( '_MI_MI_MYSMS_ADD_CREDITS_DESC', 'Add this amount of credits.' );
 define('_MI_MI_MYSMS_DISABLE_EXP_NAME', 'Disable Account (Expiration)');
 define('_MI_MI_MYSMS_DISABLE_EXP_DESC', 'Disable the user account on expiration.');
 
@@ -866,7 +878,7 @@ define( '_MI_MI_EMAIL_FILES_MAX_CHOICES_DESC',	'How many items may the user sele
 define( '_MI_MI_EMAIL_FILES_MIN_CHOICES_NAME',	'Min Choices' );
 define( '_MI_MI_EMAIL_FILES_MIN_CHOICES_DESC',	'How many items must the user select?' );
 define( '_MI_MI_USER_CHOICE_FILES_NAME',	'Please select:' );
-define( '_MI_MI_USER_CHOICE_FILES_DESC',	'Please select' );
+define( '_MI_MI_USER_CHOICE_FILES_DESC',	'Download Delivery Option' );
 
 // AEC Donate MI
 define( '_AEC_MI_AECDONATE_NAME', 'AEC Donate' );
@@ -920,7 +932,7 @@ define( '_MI_MI_EMAIL_MULTI_CC_DESC',			'CC Recipients for this email. Separate 
 define( '_MI_MI_EMAIL_MULTI_BCC_NAME',			'#%s: BCC Recipient(s)' );
 define( '_MI_MI_EMAIL_MULTI_BCC_DESC',			'BCC Recipients for this email. Separate with comma. The rewriting routines explained below will work for this field.' );
 define( '_MI_MI_EMAIL_MULTI_SUBJECT_NAME',		'#%s: Subject' );
-define( '_MI_MI_EMAIL_MULTI_SUBJECT_DESC',		'Subject of this email (Uses RewriteEngine explained below as well)' );
+define( '_MI_MI_EMAIL_MULTI_SUBJECT_DESC',		'Subject of this email (Uses RewriteEngine as explained below)' );
 define( '_MI_MI_EMAIL_MULTI_TEXT_HTML_NAME',	'#%s: HTML Encoding' );
 define( '_MI_MI_EMAIL_MULTI_TEXT_HTML_DESC',	'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
 define( '_MI_MI_EMAIL_MULTI_TEXT_NAME',			'#%s: Text' );
@@ -1465,6 +1477,67 @@ define( '_MI_MI_MAILCHIMP_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_MAILCHIMP_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_MAILCHIMP_DEFAULT_NOTICE',		'Do you want to subscribe to our newsletter?' );
 
+// Invoice Email
+define( '_AEC_MI_NAME_AECINVOICEPRINTEMAIL',		'HTML Invoice Mailout' );
+define( '_AEC_MI_DESC_AECINVOICEPRINTEMAIL',		'Send out a modified HTML version of the Invoice printout page' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME',					'Sender E-Mail' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_DESC',					'Sender E-Mail Address' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME_NAME',			'Sender Name' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SENDER_NAME_DESC',			'The displayed name of the Sender' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_RECIPIENT_NAME',				'Recipient(s)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_RECIPIENT_DESC',				'Who is to receive this E-Mail? Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_CC_NAME',						'CC Recipient(s)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_CC_DESC',						'CC Recipients for this email. Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BCC_NAME',					'BCC Recipient(s)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BCC_DESC',					'BCC Recipients for this email. Separate with comma. The rewriting routines explained below will work for this field.' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SUBJECT_NAME',				'Subject' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_SUBJECT_DESC',				'Subject of this email (Uses RewriteEngine as explained below)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_CUSTOMCSS_NAME',				'Custom CSS' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_CUSTOMCSS_DESC',				'If you want custom styling on your html email, you can put it in here.' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_TEXT_HTML_NAME',				'HTML Encoding' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_TEXT_HTML_DESC',				'Do you want this email to be HTML encoded? (Make sure that there are not tags in it if you do not want this)' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_MODE_NAME',		'Text Mode (Before Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_NAME',		'Before Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_HEADER_DESC',		'Modify the text that is displayed before the header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_MODE_NAME',		'Text Mode (Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_NAME',		'Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_HEADER_DESC',		'Modify the text that is displayed as the header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_MODE_NAME',		'Text Mode (After Header)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_NAME',		'After Header' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_HEADER_DESC',		'Modify the text that is displayed after the header' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_MODE_NAME',		'Text Mode (Address)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_NAME',		'Address' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_ADDRESS_DESC',		'Modify the text that is displayed in the address field' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_MODE_NAME',		'Text Mode (Before Content)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_NAME',		'Before Content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_CONTENT_DESC',		'Modify the text that is displayed before the content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_MODE_NAME',		'Text Mode (After Content)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_NAME',		'After Content' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_CONTENT_DESC',		'Modify the text that is displayed after the content' );
+
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_MODE_NAME',		'Text Mode (Before Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_NAME',		'Before Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_BEFORE_FOOTER_DESC',		'Modify the text that is displayed before the footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_MODE_NAME',		'Text Mode (Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_NAME',		'Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_FOOTER_DESC',		'Modify the text that is displayed as the footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_MODE_NAME',		'Text Mode (After Footer)' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_MODE_DESC',		'Define what to do with the original text' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_NAME',		'After Footer' );
+define( '_MI_MI_AECINVOICEPRINTEMAIL_AFTER_FOOTER_DESC',		'Modify the text that is displayed after the footer' );
+
 // Eventlist
 define( '_AEC_MI_NAME_EVENTLIST', 'Event List' );
 define( '_AEC_MI_DESC_EVENTLIST', 'Register a user for an event in the Eventlist component' );
@@ -1510,5 +1583,22 @@ define( '_MI_MI_ACYMAIL_CUSTOMINFO_NAME',		'Custom Info' );
 define( '_MI_MI_ACYMAIL_CUSTOMINFO_DESC',		'AEC normally displays the text "Do you want to subscribe to our newsletter?" on confirmation above checkbox. If you want it to say something else, enter your text here.' );
 define( '_MI_MI_ACYMAIL_USER_CHECKBOX_NAME',		'User Checkbox' );
 define( '_MI_MI_ACYMAIL_USER_CHECKBOX_DESC',		'Display a Checkbox to let the user decide whether he or she wants a newsletter.' );
+
+// Alpha User Points
+define( '_AEC_MI_NAME_ALPHAUSERPOINTS', 'Alpha User Points' );
+define( '_AEC_MI_DESC_ALPHAUSERPOINTS', 'Granting or Charging points, as well as giving the user the option to "pay" with points (get a discount for points).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_NAME', 'Change Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_DESC', 'Put in a positive value to grant points, negative value to take them away.' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_PRE_EXP_NAME', 'Change Points (Pre-Expiration)' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_PRE_EXP_DESC', 'Put in a positive value to grant points, negative value to take them away (before expiration).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_EXP_NAME', 'Change Points (Expiration)' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHANGE_POINTS_EXP_DESC', 'Put in a positive value to grant points, negative value to take them away (on expiration).' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_DISCOUNT_NAME', 'Allow Discount with Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_DISCOUNT_DESC', 'The user can get a discount with his or her Userpoints' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_CONVERSION_NAME', 'Point Conversion Rate' );
+define( '_MI_MI_ALPHAUSERPOINTS_CHECKOUT_CONVERSION_DESC', 'The value of a Userpoint.' );
+define( '_MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME', 'Points' );
+define( '_MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC', 'The amount of points you want to .' );
+define( '_MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO', 'You have <strong>%s points</strong> that you can use to get a discount on this invoice. Enter the amount of points you want to use below. One point is worth <strong>%s</strong> giving you a total value of <strong>%s</strong> for your points.' );
 
 ?>

@@ -31,6 +31,8 @@ class mi_aecinvoiceprintemail
 		$settings['sender_name']		= array( 'inputE' );
 
 		$settings['recipient']			= array( 'inputE' );
+		$settings['cc']					= array( 'inputE' );
+		$settings['bcc']				= array( 'inputE' );
 		$settings['subject']			= array( 'inputE' );
 		$settings['customcss']			= array( 'inputD' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
@@ -119,16 +121,25 @@ class mi_aecinvoiceprintemail
 			return null;
 		}
 
-		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
-		$recips = explode( ',', $recipients );
+		$recipient = $cc = $bcc = null;
 
-        $recipients2 = array();
-        foreach ( $recips as $k => $email ) {
-            $recipients2[$k] = trim( $email );
-        }
-        $recipients = $recipients2;
+		$rec_groups = array( "recipient", "cc", "bcc" );
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, true );
+		foreach ( $rec_groups as $setting ) {
+			$list = AECToolbox::rewriteEngineRQ( $this->settings[$setting], $request );
+
+			$recipient_array = explode( ',', $list );
+
+	        if ( !empty( $recipient_array ) ) {
+		        $$setting = array();
+
+		        foreach ( $recipient_array as $k => $email ) {
+		            ${$setting}[] = trim( $email );
+		        }
+	        }
+		}
+
+		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, true, $cc, $bcc );
 
 		$request->invoice->params['mi_aecinvoiceprintemail'] = time();
 		$request->invoice->storeload();
