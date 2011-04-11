@@ -94,7 +94,9 @@ switch( strtolower( $task ) ) {
 			$userid[0] = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid[0] );
 		}
 
-		editUser( $option, $userid, $subscriptionid, $returnTask );
+		$page	= trim( aecGetParam( 'page', '0' ) );
+
+		editUser( $option, $userid, $subscriptionid, $returnTask, $page );
 		break;
 
 	case 'save':
@@ -817,7 +819,7 @@ function cancel( $option )
 	$app->redirect( 'index.php?option=' . $option . '&task=' . $nexttask, _CANCELED );
 }
 
-function editUser( $option, $userid, $subscriptionid, $task )
+function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 {
 	$db = &JFactory::getDBO();
 
@@ -850,20 +852,9 @@ function editUser( $option, $userid, $subscriptionid, $task )
 		}
 	}
 
-	$invoices_limit	= 15;	// Returns last 15 payments
+	$invoices_limit = 15;
 
- 	// get payments of user
- 	$query = 'SELECT `id`'
-		 	. ' FROM #__acctexp_invoices'
-		 	. ' WHERE `userid` = \'' . $userid[0] . '\''
-		 	. ' ORDER BY `transaction_date` DESC'
-		 	;
- 	$db->setQuery( $query );
- 	$invoice_ids = $db->loadResultArray();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
+	$invoice_ids = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $page*$invoices_limit, $invoices_limit );
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', '',			_EXPIRE_SET );
@@ -1039,8 +1030,12 @@ function editUser( $option, $userid, $subscriptionid, $task )
 		// Call HTML Class
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 	} else {
-		$aecHTML = false;
+		$aecHTML = new stdClass();
 	}
+
+	$aecHTML->invoice_pages	= (int) ( AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid ) / $invoices_limit );
+	$aecHTML->invoice_page	= $page;
+	$aecHTML->sid			= $sid;
 
 	HTML_AcctExp::userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $task, $aecHTML );
 }

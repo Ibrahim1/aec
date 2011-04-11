@@ -566,12 +566,28 @@ class HTML_AcctExp
 												</tr>
 												<?php
 											}
+
+											echo '</table>';
+
+											if ( $aecHTML->invoice_pages > 1 ) {
+												echo '<div class="aec-invoices-pagination"><p>';
+												$plist = array();
+												for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
+													if ( $i == $aecHTML->invoice_page ) {
+														$plist[] = ( $i + 1 );
+													} else {
+														$plist[] = '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
+													}
+												}
+												echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
+											}
 										} else {
 											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
 											. _AEC_USER_NO_INVOICES
 											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+
+											echo '</table>';
 										} ?>
-								</table>
 							</div>
 						</div>
 						<div class="userinfobox">

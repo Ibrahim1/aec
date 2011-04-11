@@ -235,6 +235,11 @@ width: 95%;
 margin: 2px;
 }
 
+div.aec-invoices-pagination {
+margin-top: 12px;
+text-align: center;
+}
+
 .aec_userinfobox_sub {
 background-color: #f9f9e9;
 margin: 4px auto;
