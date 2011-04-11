@@ -89,5 +89,48 @@ class mi_affiliatepro
 
 		return true;
 	}
+
+	function later()
+	{
+        //-------------PAP affiliate approval-----------------------------
+            if ( $response['valid'] ) {
+
+                include_once('/PATH_TO/PapApi.class.php');
+        
+                $session = new Gpf_Api_Session("http://merkacity.postaffiliatepro.com/scripts/server.php");
+                    if(!$session->login("USERNAME", "PASSWORD")) {
+                        //die("Cannot login. Message: ".$session->getMessage());
+                    }
+
+                    // loading affiliate by his ID
+                    $affiliate = new Pap_Api_Affiliate($session);
+                    $affiliate->setData(25, $response['userid']);
+                    //$affiliate->setUsername("infoweb@merkacity.com");
+                    try {
+                        if(!$affiliate->load()) {
+                            //die('Cannot load affiliate, error: '.$affiliate->getMessage());
+                        }
+                    } catch (Exception $e) {
+                        //die('Cannot load affiliate, error: '.$e->getMessage());
+                      }
+
+                   $affiliate->setStatus('A');  //A - Approved, D - Declined, P - Pending
+                   try {
+                       $affiliate->save();
+                   } catch (Exception $e) {
+                       //die('Failed to save affiliate: ' . $e->getMessage());
+                   }
+
+            }
+        //------------------ end PAP ------------------------------
+
+		/* PAN integration */
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "http://USERNAME.postaffiliatepro.com/plugins/PayPal/paypal.php");
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $_POST);
+		curl_exec($ch);
+		/* end of PAN integration */
+	}
 }
 ?>
