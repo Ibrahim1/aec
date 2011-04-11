@@ -11812,11 +11812,19 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		if ( $this->subscr_id ) {
-			$recurring = AECfetchfromDB::RecurringStatusfromSubscriptionID( $this->subscr_id );
-		} else {
-			$recurring = false;
+		$pplist = array();
+
+		$pp = new PaymentProcessor();
+		$pp->loadName( $this->method );
+		$pp->init();
+
+		if ( !empty( $InvoiceFactory->plan->id ) ) {
+			$pp->exchangeSettingsByPlan( $InvoiceFactory->plan->id, $InvoiceFactory->plan->params );
 		}
+
+		$pplist[$this->method] = $pp;
+
+		$recurring = $pplist[$this->method]->is_recurring();
 
 		$data['recurringstatus'] = "";
 		if ( $recurring ) {
@@ -11827,11 +11835,9 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		$pplist = array();
-
 		$data['invoice_billing_history'] = "";
 		if ( !empty( $this->transactions ) ) {
-			if ( count( $this->transactions ) > 0 ) {
+			if ( ( count( $this->transactions ) > 0 ) && !empty( $data['recurringstatus'] ) ) {
 				$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, "" );
 
 				foreach ( $this->transactions as $transaction ) {
