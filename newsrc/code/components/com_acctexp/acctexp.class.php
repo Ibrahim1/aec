@@ -1214,11 +1214,9 @@ class metaUser
 								foreach ( $check as $v ) {
 									$c = explode( ',', $v );
 
-									// We have to add one here if the user is currently in the plan
+									// Make sure we have an entry if the user is currently in this plan
 									if ( in_array( $c[0], $subs ) ) {
-										if ( isset( $usage[(int) $c[0]] ) ) {
-											$usage[(int) $c[0]] += 1;
-										} else {
+										if ( !isset( $usage[(int) $c[0]] ) ) {
 											$usage[(int) $c[0]] = 1;
 										}
 									}
@@ -1245,11 +1243,9 @@ class metaUser
 								foreach ( $check as $v ) {
 									$c = explode( ',', $v );
 
-									// We have to add one here if the user is currently in the plan
+									// Make sure we have an entry if the user is currently in this plan
 									if ( in_array( $c[0], $subs ) ) {
-										if ( isset( $usage[(int) $c[0]] ) ) {
-											$usage[(int) $c[0]] += 1;
-										} else {
+										if ( !isset( $usage[(int) $c[0]] ) ) {
 											$usage[(int) $c[0]] = 1;
 										}
 									}
@@ -19949,7 +19945,9 @@ class aecRestrictionHelper
 
 				if ( is_array( $restrictions['used_plan_min'] ) ) {
 					foreach ( $restrictions['used_plan_min'] as $planid ) {
-						$newrest['plan_amount_min'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_plan_min_amount'] );
+						if ( $planid ) {
+							$newrest['plan_amount_min'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_plan_min_amount'] );
+						}
 					}
 				} else {
 					$newrest['plan_amount_min'][] = array( ( (int) $restrictions['used_plan_min'] ) . ',' . ( (int) $restrictions['used_plan_min_amount'] ) );
@@ -19964,7 +19962,9 @@ class aecRestrictionHelper
 
 				$ps = array();
 				foreach ( $temp['used_plan_min'] as $planid ) {
-					$newrest['used_plan_min'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_group_min_amount'] );
+					if ( $planid ) {
+						$newrest['plan_amount_min'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_group_min_amount'] );
+					}
 				}
 			}
 		}
@@ -19978,7 +19978,9 @@ class aecRestrictionHelper
 
 				if ( is_array( $restrictions['used_plan_max'] ) ) {
 					foreach ( $restrictions['used_plan_max'] as $planid ) {
-						$newrest['plan_amount_max'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_plan_max_amount'] );
+						if ( $planid ) {
+							$newrest['plan_amount_max'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_plan_max_amount'] );
+						}
 					}
 				} else {
 					$newrest['plan_amount_max'][] = ( (int) $restrictions['used_plan_max'] ) . ',' . ( (int) $restrictions['used_plan_max_amount'] );
@@ -19993,7 +19995,9 @@ class aecRestrictionHelper
 
 				$ps = array();
 				foreach ( $temp['used_plan_max'] as $planid ) {
-					$newrest['used_plan_max'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_group_max_amount'] );
+					if ( $planid ) {
+						$newrest['plan_amount_max'][] = ( (int) $planid ) . ',' . ( (int) $restrictions['used_group_max_amount'] );
+					}
 				}
 			}
 		}
