@@ -272,8 +272,9 @@ if ( !empty( $task ) ) {
 
 		case 'subscriptiondetails':
 			$sub		= aecGetParam( 'sub', 'overview', true, array( 'word', 'string' ) );
+			$page		= aecGetParam( 'page', '0', true, array( 'word', 'int' ) );
 
-			subscriptionDetails( $option, $sub );
+			subscriptionDetails( $option, $sub, $page );
 			break;
 
 		case 'renewsubscription':
@@ -781,7 +782,7 @@ function confirmSubscription( $option )
 	}
 }
 
-function subscriptionDetails( $option, $sub='overview' )
+function subscriptionDetails( $option, $sub='overview', $page=0 )
 {
 	$db = &JFactory::getDBO();
 	$user = &JFactory::getUser();
@@ -879,7 +880,12 @@ function subscriptionDetails( $option, $sub='overview' )
 		}
 	}
 
-	$invoiceList = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $invoiceno );
+	$pagesize = 15;
+
+	$invoiceList = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $page*$pagesize, $pagesize );
+
+	$properties['invoice_pages'] = (int) ( $invoiceno / $pagesize);
+	$properties['invoice_page'] = $page;
 
 	$invoices = array();
 	foreach ( $invoiceList as $invoiceid ) {

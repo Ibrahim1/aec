@@ -13557,18 +13557,16 @@ class AECfetchfromDB
 		return $db->loadResult();
 	}
 
-	function InvoiceIdList( $userid, $total, $max=20, $sort='`transaction_date` DESC' )
+	function InvoiceIdList( $userid, $start, $limit, $sort='`transaction_date` DESC' )
 	{
 		$db = &JFactory::getDBO();
-
-		$min_limit	= ( $total > $max ) ? ( $total - $max ) : 0;
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `userid` = \'' . $userid . '\''
 				. ' AND `active` = \'1\''
 				. ' ORDER BY ' . $sort . ', `id` DESC'
-				. ' LIMIT ' . $min_limit . ',' . $max
+				. ' LIMIT ' . $start . ',' . $limit
 				;
 		$db->setQuery( $query );
 		return $db->loadResultArray();

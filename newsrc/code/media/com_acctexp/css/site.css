@@ -173,7 +173,7 @@ border-bottom: 2px solid #003e56;
 padding: 1px;
 }
 
-H1.plan_name { /*Style for the name of the plan*/
+h1.plan_name { /*Style for the name of the plan*/
 padding-left: 1em;
 margin-top: 4px;
 }
@@ -186,7 +186,7 @@ margin: 5px auto;
 background: #b0efff;
 }
 
-P.plan_desc { /*The plans description*/
+p.plan_desc { /*The plans description*/
 margin-top: 1px;
 padding-left: 1em;
 padding-bottom: 1em;
@@ -233,14 +233,14 @@ padding: 2px;
 margin: 5px;
 }
 
-H1.gateway_title { /*Description Text Heading*/
+h1.gateway_title { /*Description Text Heading*/
 display: block;
 font-size: 90% !important;
 border-bottom: 1px solid #003e56;
 padding-bottom: 2px;
 }
 
-P.gateway_description { /*Description Text*/
+p.gateway_description { /*Description Text*/
 display: block;
 font-size: 90% !important;
 }
@@ -886,6 +886,11 @@ border: 1px solid #aaa;
 padding: 8px;
 }
 
+#subscription_details div.aec-invoices-pagination {
+margin-top: 12px;
+text-align: center;
+}
+
 div#aec_navlist_profile
 {
 margin: 10px;
@@ -953,7 +958,6 @@ font-size: 110%;
 }
 
 #subscription_details table {
-float:left;
 width: 100%;
 padding-top:10px;
 }
