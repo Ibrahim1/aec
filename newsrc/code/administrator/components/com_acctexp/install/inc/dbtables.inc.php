@@ -12,14 +12,14 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config` ('
 . '`id` int(11) NOT NULL AUTO_INCREMENT,'
 . '`settings` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_heartbeat` ('
 . '`id` int(11) NOT NULL auto_increment,'
 . '`last_beat` datetime NOT NULL default \'0000-00-00 00:00:00\','
 . '	PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM AUTO_INCREMENT=1;'
+. ') ENGINE=MyISAM AUTO_INCREMENT=1;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_metauser` ('
@@ -33,7 +33,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_metauser` ('
 . '`params` text NULL,'
 . '`custom_params` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM AUTO_INCREMENT=1;'
+. ') ENGINE=MyISAM AUTO_INCREMENT=1;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_displaypipeline` ('
@@ -49,7 +49,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_displaypipeline` ('
 . '`displaytext` text NULL,'
 . '`params` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM AUTO_INCREMENT=1;'
+. ') ENGINE=MyISAM AUTO_INCREMENT=1;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_eventlog` ('
@@ -62,7 +62,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_eventlog` ('
 . '`notify` int(1) NOT NULL default \'0\','
 . '`params` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM AUTO_INCREMENT=1;'
+. ') ENGINE=MyISAM AUTO_INCREMENT=1;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config_processors` ('
@@ -73,7 +73,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config_processors` ('
 . '`settings` text NULL,'
 . '`params` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_invoices` ('
@@ -97,7 +97,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_invoices` ('
 . '`params` text NULL,'
 . '`conditions` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_temptoken` ('
@@ -107,7 +107,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_temptoken` ('
 . '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
 . '`ip` varchar(25) NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_cart` ('
@@ -120,7 +120,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_cart` ('
 . '`params` text NULL,'
 . '`customparams` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_log_history` ('
@@ -136,7 +136,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_log_history` ('
 . '`invoice_number` varchar(60) NULL,'
 . '`response` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_plans` ('
@@ -152,7 +152,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_plans` ('
 . '`restrictions` text NULL,'
 . '`micro_integrations` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_itemgroups` ('
@@ -166,7 +166,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_itemgroups` ('
 . '`custom_params` text NULL,'
 . '`restrictions` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_itemxgroup` ('
@@ -175,7 +175,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_itemxgroup` ('
 . '`item_id` int(11) NULL,'
 . '`group_id` int(11) NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_microintegrations` ('
@@ -192,7 +192,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_microintegrations` ('
 . '`on_userchange` int(4) NOT NULL default \'0\','
 . '`pre_exp_check` int(4) NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 /*
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_scope` ('
@@ -200,7 +200,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_scope` ('
 . '`mi_id` int(11) NULL,'
 . '`scope` varchar(64) NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 */
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_event` ('
@@ -217,7 +217,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_event` ('
 . '`params` text NULL,'
 . '`customparams` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_subscr` ('
@@ -240,7 +240,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_subscr` ('
 . '`params` text NULL,'
 . '`customparams` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_coupons` ('
@@ -257,7 +257,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_coupons` ('
 . '`usecount` int(64) NOT NULL default \'0\','
 . '`micro_integrations` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_coupons_static` ('
@@ -274,7 +274,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_coupons_static` ('
 . '`usecount` int(64) NOT NULL default \'0\','
 . '`micro_integrations` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_couponsxuser` ('
@@ -288,7 +288,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_couponsxuser` ('
 . '`params` text NULL,'
 . '`usecount` int(64) NOT NULL default \'0\','
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_export` ('
@@ -301,6 +301,6 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_export` ('
 . '`options` text NULL,'
 . '`params` text NULL,'
 . ' PRIMARY KEY (`id`)'
-. ') TYPE=MyISAM;'
+. ') ENGINE=MyISAM;'
 ;
 ?>
