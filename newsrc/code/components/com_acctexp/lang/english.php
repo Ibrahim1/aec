@@ -79,7 +79,7 @@ define( '_HISTORY_ACTION_REPEAT', 'pay');
 define( '_HISTORY_ACTION_CANCEL', 'cancel');
 define( '_RENEW_LIFETIME', 'You have a lifetime subscription.');
 define( '_RENEW_DAYSLEFT_EXCLUDED', 'You are excluded from expiration');
-define( '_RENEW_DAYSLEFT_INFINITE', '&#8734');
+define( '_RENEW_DAYSLEFT_INFINITE', '&#8734;');
 define( '_RENEW_DAYSLEFT', 'Days left');
 define( '_RENEW_DAYSLEFT_TRIAL', 'Days left in Trial');
 define( '_RENEW_INFO', 'You are using recurring payments.');

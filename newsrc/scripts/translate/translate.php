@@ -14,9 +14,11 @@ $rootlang = 'english';
 
 $temppath = dirname(__FILE__) .'/temp';
 
-if ( !is_dir( dirname(__FILE__) .'/temp' ) ) {
-	mkdir( dirname(__FILE__) .'/temp' );
+if ( file_exists( $temppath ) ) {
+	vTranslate::rrmdir( $temppath );
 }
+
+mkdir( $temppath );
 
 $dirs = vTranslate::getFolders( $path );
 
@@ -51,42 +53,86 @@ foreach( $dirs as $sourcedir ) {
 
 	$translations = array();
 	foreach ( $files as $file ) {
-		if ( $file != $rootlang.'.php' ) {
-			$lang = str_replace( '.php', '', $file );
+		$lang = str_replace( '.php', '', $file );
 
-			$translations[] = $lang;
+		$translations[] = $lang;
+
+		if ( $file != $rootlang.'.php' ) {
 			$translations_echo[] = $lang . " (=>" . vTranslate::ISO3166_2ify( $lang ) . ")" ;
 		}
 	}
 
-	echo "Translations found: " . implode( ", ", $translations_echo ) . "\n";
+	echo "Translations found: " . implode( ", ", $translations_echo ) . "\n\n";
 
 	$translator = array();
-	$file = new SplFileObject( $sourcedir.'/'.$rootlang.'.php' );
-
-	while ( !$file->eof() ) {
-		$line = vTranslate::parseLine( $file->fgets() );
-
-		if ( $line['type'] == 'empty' ) {
-			
-		} elseif ( $line['type'] == 'comment' ) {
-			
+	$translatef = array();
+	foreach ( $translations as $translation ) {
+		if ( !isset( $translator[$translation] ) ) {
+			$translator[$translation] = array();
 		}
+
+		$file = new SplFileObject( $sourcedir.'/'.$translation.'.php' );
+
+		while ( !$file->eof() ) {
+			$line = vTranslate::parseLine( $file->fgets() );
+
+			if ( $line['type'] == 'ham' ) {
+				$translator[$translation][$line['content']['name']] = $line['content']['content'];
+			}
+		}
+
+		$inifile = $targetpath.'/'.vTranslate::ISO3166_2ify( $translation ).'.ini';
+
+		if ( file_exists( $inifile ) ) {
+			unlink( $inifile );
+		}
+
+		$translatef[$translation] = new SplFileObject( $inifile, 'w' );
 	}
 
 	$file = new SplFileObject( $sourcedir.'/'.$rootlang.'.php' );
 
+	$emptyline = 1;
 	while ( !$file->eof() ) {
 		$line = vTranslate::parseLine( $file->fgets() );
 
-		if ( $line['type'] == 'empty' ) {
-			
-		} elseif ( $line['type'] == 'comment' ) {
-			
+		if ( ( $line['type'] == 'empty' ) || ( $line['type'] == 'comment' ) ) {
+			$content = "\n";
+			if ( $line['type'] == 'comment' ) {
+				$emptyline = 0;
+
+				$content = "; " . $line['content'] . "\n";
+			} else {
+				if ( $emptyline ) {
+					continue;
+				} else {
+					$emptyline = 1;
+				}
+			}
+
+			foreach ( $translations as $translation ) {
+				$translatef[$translation]->fwrite( utf8_encode( $content ) );
+			}
+		} elseif ( $line['type'] == 'ham' ) {
+			foreach ( $translations as $translation ) {
+				if ( $translation != $rootlang ) {
+					if ( !isset( $translator[$translation][$line['content']['name']] ) ) {
+						continue;
+					}
+
+					if ( $translator[$translation][$line['content']['name']] == $line['content']['content'] ) {
+						continue;
+					}
+				}
+
+				$content = $line['content']['name'].'='.'"'.html_entity_decode( $translator[$translation][$line['content']['name']]).'"' . "\n";
+
+				if ( !empty( $content ) ) {
+					$translatef[$translation]->fwrite( utf8_encode( $content ) );
+				}
+			}
 		}
 	}
-
-	echo "\n";
 }
 
 class vTranslate
@@ -141,13 +187,29 @@ class vTranslate
 		}
 
 		$return = array();
+
+		$return['type']		= 'empty';
+
+		if ( $comment == 'Dont allow direct linking' ) {
+			$comment = "";
+		}
+
 		if ( empty( $line ) ) {
-			$return['type']		= 'empty';
+
 		} elseif ( !empty( $comment ) ) {
+			$comment = str_replace( '2010', '2011', $comment );
+			$comment = str_replace( '.php', '.ini', $comment );
+
 			$return['type']		= 'comment';
 			$return['content']	= $comment;
 		} elseif ( strpos( $line, 'define' ) === 0 ) {
 			$return['type'] = 'ham';
+
+			if ( strpos( $line, '\', "' ) && strpos( $line, '");' ) ) {
+				$line = str_replace( '\', "', '\', \'', $line );
+				$line = str_replace( '");', '\');', $line );
+			}
+
 			$defstart	= strpos( $line, '\'' );
 			$defend		= strpos( $line, '\'', $defstart+1 );
 
@@ -225,7 +287,27 @@ class vTranslate
 		if ( isset( $lang_codes[$ll[0]] ) ) {
 			return $lang_codes[$ll[0]];
 		} else {
-			return 'english';
+			return 'error-'.$ll[0];
+		}
+	}
+
+	function rrmdir( $dir )
+	{
+		if ( is_dir($dir) ) {
+			$objects = scandir($dir);
+			foreach ( $objects as $object ) {
+				if ( $object != "." && $object != ".." ) {
+					if ( filetype($dir."/".$object) == "dir" ) {
+						vTranslate::rrmdir( $dir."/".$object );
+					} else {
+						unlink( $dir."/".$object );
+					}
+				}
+			}
+
+			reset($objects);
+
+			rmdir($dir);
 		}
 	}
 }
