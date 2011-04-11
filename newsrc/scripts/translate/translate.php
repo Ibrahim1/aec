@@ -46,22 +46,44 @@ foreach( $dirs as $sourcedir ) {
 
 		continue;
 	} else {
-		echo "Root Language found: " . $rootlang . "\n";
+		echo "Root Language found: " . $rootlang . " (=>" . vTranslate::ISO3166_2ify( $rootlang ) . ")" . "\n";
 	}
 
 	$translations = array();
 	foreach ( $files as $file ) {
 		if ( $file != $rootlang.'.php' ) {
-			$translations[] = str_replace( '.php', '', $file );
+			$lang = str_replace( '.php', '', $file );
+
+			$translations[] = $lang;
+			$translations_echo[] = $lang . " (=>" . vTranslate::ISO3166_2ify( $lang ) . ")" ;
 		}
 	}
 
-	echo "Translations found: " . implode( ", ", $translations ) . "\n";
+	echo "Translations found: " . implode( ", ", $translations_echo ) . "\n";
+
+	$translator = array();
+	$file = new SplFileObject( $sourcedir.'/'.$rootlang.'.php' );
+
+	while ( !$file->eof() ) {
+		$line = vTranslate::parseLine( $file->fgets() );
+
+		if ( $line['type'] == 'empty' ) {
+			
+		} elseif ( $line['type'] == 'comment' ) {
+			
+		}
+	}
 
 	$file = new SplFileObject( $sourcedir.'/'.$rootlang.'.php' );
 
 	while ( !$file->eof() ) {
-		echo $file->fgets();exit;
+		$line = vTranslate::parseLine( $file->fgets() );
+
+		if ( $line['type'] == 'empty' ) {
+			
+		} elseif ( $line['type'] == 'comment' ) {
+			
+		}
 	}
 
 	echo "\n";
@@ -103,6 +125,108 @@ class vTranslate
 		}
 
 		return $arr;
+	}
+
+	function parseLine( $line )
+	{
+		$line = trim( $line );
+
+		$comments = array( '/**', '* ', '//' );
+
+		$comment = '';
+		foreach ( $comments as $c ) {
+			if ( strpos( $line, $c ) === 0 ) {
+				$comment = trim( str_replace( $c, '', $line ) );
+			}
+		}
+
+		$return = array();
+		if ( empty( $line ) ) {
+			$return['type']		= 'empty';
+		} elseif ( !empty( $comment ) ) {
+			$return['type']		= 'comment';
+			$return['content']	= $comment;
+		} elseif ( strpos( $line, 'define' ) === 0 ) {
+			$return['type'] = 'ham';
+			$defstart	= strpos( $line, '\'' );
+			$defend		= strpos( $line, '\'', $defstart+1 );
+
+			$name = substr( $line, $defstart+1, $defend-$defstart-1 );
+			
+			$constart	= strpos( $line, '\'', $defend+1 );
+			$conend		= strrpos( $line, '\'' );
+
+			$content = substr( $line, $constart+1, $conend-$constart-1 );
+
+			$return['content'] = array( 'name' => $name, 'content' => $content );
+		}
+
+		return $return;
+	}
+
+
+	function ISO3166_2ify( $lang )
+	{
+		$ll = explode( '-', $lang );
+
+		$lang_codes = array( 	'brazilian_portoguese' => 'pt-BR',
+								'brazilian_portuguese' => 'pt-BR',
+								'czech' => 'cz-CZ',
+								'danish' => 'da-da',
+								'dutch' => 'nl-nl',
+								'english' => 'en-GB',
+								'french' => 'fr-fr',
+								'german' => 'de-DE',
+								'germani' => 'de-DE-informal',
+								'germanf' => 'de-DE-formal',
+								'greek' => 'el-GR',
+								'italian' => 'it-IT',
+								'japanese' => 'ja-JP',
+								'russian' => 'ru-RU',
+								'simplified_chinese' => 'zh-CN',
+								'spanish' => 'es-ES',
+								'swedish' => 'sv-SE',
+								'arabic' => 'ar-DZ',
+								'belarusian' => 'be-BY',
+								'bulgarian' => 'bg-BG',
+								'bengali' => 'bn-IN',
+								'bosnian' => 'bs-BA',
+								'esperanto' => 'eo-XX',
+								'basque' => 'eu-ES',
+								'persian' => 'fa-IR',
+								'finnish' => 'fi-FI',
+								'hebrew' => 'he-IL',
+								'croatian' => 'hr-HR',
+								'hungarian' => 'hu-HU',
+								'korean' => 'ko-KR',
+								'lao' => 'lo-LA',
+								'lithuanian' => 'lt-LT',
+								'latvian' => 'lv-LV',
+								'macedonian' => 'mk-MK',
+								'norwegian' => 'nb-NO',
+								'polish' => 'pl-PL',
+								'portoguese' => 'pt-PT',
+								'romanian' => 'ro-RO',
+								'sindhi' => 'sd-PK',
+								'sinhala' => 'si-LK',
+								'slovak' => 'sk-SK',
+								'shqip' => 'sq-AL',
+								'montenegrin' => 'sr-ME',
+								'serbian' => 'sr-RS',
+								'syriac' => 'sy-IQ',
+								'tamil' => 'ta-LK',
+								'thai' => 'th-TH',
+								'turkish' => 'tr-TR',
+								'ukrainian' => 'uk-UA',
+								'vietnamese' => 'vi-VN',
+								'traditional_chinese' => 'zh-TW'
+								);
+
+		if ( isset( $lang_codes[$ll[0]] ) ) {
+			return $lang_codes[$ll[0]];
+		} else {
+			return 'english';
+		}
 	}
 }
 ?>
