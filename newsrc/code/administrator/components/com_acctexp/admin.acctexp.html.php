@@ -862,7 +862,7 @@ class HTML_AcctExp
 								</tr>
 								<tr>
 									<td class="notice_level_<?php echo $notice->level; ?>">&nbsp;</td>
-									<td><?php echo substr( 0, 256, htmlentities( stripslashes( $notice->event ) ) ); ?></td>
+									<td><?php echo substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ); ?></td>
 									<td><?php echo $notice->tags; ?></td>
 								</tr>
 							<?php
