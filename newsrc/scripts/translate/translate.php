@@ -111,7 +111,7 @@ foreach( $dirs as $sourcedir ) {
 			}
 
 			foreach ( $translations as $translation ) {
-				$translatef[$translation]->fwrite( utf8_encode( $content ) );
+				$translatef[$translation]->fwrite( vTranslate::safeEncode( $content ) );
 			}
 		} elseif ( $line['type'] == 'ham' ) {
 			foreach ( $translations as $translation ) {
@@ -128,7 +128,7 @@ foreach( $dirs as $sourcedir ) {
 				$content = $line['content']['name'].'='.'"'.html_entity_decode( $translator[$translation][$line['content']['name']]).'"' . "\n";
 
 				if ( !empty( $content ) ) {
-					$translatef[$translation]->fwrite( utf8_encode( $content ) );
+					$translatef[$translation]->fwrite( vTranslate::safeEncode( $content ) );
 				}
 			}
 		}
@@ -137,7 +137,7 @@ foreach( $dirs as $sourcedir ) {
 
 class vTranslate
 {
-	function getFolders( $path, $list=array() )
+	function getFolders( $path, $list=array(), $other=false )
 	{
 		$iterator = new DirectoryIterator( $path );
 
@@ -148,7 +148,13 @@ class vTranslate
 
 			if ( $object->isDir() ) {
 				if ( ($object->getFilename() == 'language') || ($object->getFilename() == 'lang') ) {
-					$list[] = $object->getPathname();
+					if ( !$other ) {
+						$list[] = $object->getPathname();
+					}
+				} else {
+					if ( $other ) {
+						$list[] = $object->getPathname();
+					}
 				}
 
 				$list = array_merge( vTranslate::getFolders($object->getPathname(), $list) );
@@ -219,6 +225,8 @@ class vTranslate
 			$conend		= strrpos( $line, '\'' );
 
 			$content = substr( $line, $constart+1, $conend-$constart-1 );
+
+			$content = str_replace( "\'", "'", $content );
 
 			$return['content'] = array( 'name' => $name, 'content' => $content );
 		}
@@ -309,6 +317,15 @@ class vTranslate
 
 			rmdir($dir);
 		}
+	}
+
+	function safeEncode( $content )
+	{
+		if ( !mb_check_encoding( $content, 'UTF-8' ) || !( $content === mb_convert_encoding( mb_convert_encoding( $content, 'UTF-32', 'UTF-8' ), 'UTF-8', 'UTF-32' ) ) ) {
+			$content = mb_convert_encoding( $content, 'UTF-8' );
+		}
+
+		return $content;
 	}
 }
 ?>
