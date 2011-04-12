@@ -8,30 +8,37 @@
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 
+// Point this to the root directory of your software
 $path = realpath( dirname(__FILE__) .'/../../code' );
 
+// The root language that everything else is based and formatted after
 $rootlang = 'english';
 
+// Creating a temp directory
 $temppath = dirname(__FILE__) .'/temp';
 
-if ( file_exists( $temppath."/log.txt" ) ) {
-	unlink( $temppath."/log.txt" );
-}
-
-$log = new SplFileObject( $temppath."/log.txt", 'w' );
-
+// (Make sure we have a fresh start)
 if ( file_exists( $temppath ) ) {
 	vTranslate::rrmdir( $temppath );
 }
 
 mkdir( $temppath );
 
+// Log - this is broken cause I'm too stupid
+if ( file_exists( $temppath."/log.txt" ) ) {
+	unlink( $temppath."/log.txt" );
+}
+
+$log = new SplFileObject( $temppath."/log.txt", 'w' );
+
 $all_targets = array();
 
+// Get all our folders, including project root
 $stddirs = array();
 $stddirs[] = $path;
 $stddirs = vTranslate::getFolders( $path, $stddirs, true );
 
+// Create all the target directories
 foreach( $stddirs as $sourcedir ) {
 	$targetpath = str_replace( $path, $temppath, $sourcedir );
 
@@ -43,6 +50,7 @@ foreach( $stddirs as $sourcedir ) {
 
 	$files = vTranslate::getFiles( $sourcedir );
 
+	// Take note which files we might want to translate later on
 	if ( !empty( $files ) ) {
 		foreach ( $files as $file ) {
 			$all_targets[] = array( 'source' => $sourcedir.'/'.$file, 'target' => $targetpath.'/'.$file );
@@ -54,6 +62,7 @@ $dirs = vTranslate::getFolders( $path );
 
 $all_constants = array();
 
+// Convert .php to .ini
 foreach( $dirs as $sourcedir ) {
 	vTranslate::log( "Processing: " . $sourcedir . "\n", $log );
 
@@ -172,6 +181,8 @@ foreach ( $all_constants as $constant ) {
 	}
 }
 
+// Voodoo: Reverse sorting the array of language keys
+// This way, smaller keys cannot cut into larger ones
 function sortByLengthReverse( $a, $b )
 {
 	return strlen($b) - strlen($a);
@@ -179,6 +190,7 @@ function sortByLengthReverse( $a, $b )
 
 uksort( $all_jtext, "sortByLengthReverse" );
 
+// Split array
 $all_constants = array();
 $all_contents = array();
 foreach ( $all_jtext as $k => $v ) {
@@ -188,6 +200,7 @@ foreach ( $all_jtext as $k => $v ) {
 	}
 }
 
+// custom str_replace that doesn't double replace
 function stro_replace($search, $replace, $subject)
 {
     return strtr( $subject, array_combine($search, $replace) );
@@ -208,6 +221,8 @@ foreach ( $all_targets as $file ) {
 
 		$line = $source->fgets();
 
+		// This is very expensive and takes a while
+		// But looks cool in the readout :D
 		foreach ( $all_constants as $k ) {
 			if ( strpos( $line, $k ) !== false ) {
 				$counto++;
@@ -226,6 +241,7 @@ foreach ( $all_targets as $file ) {
 
 		$count++;
 
+		// Log every 100 lines whether we found sth
 		if ( ( $count%100 ) == 0 ) {
 			if ( $found ) {
 				vTranslate::log( "+", $log );
@@ -239,6 +255,7 @@ foreach ( $all_targets as $file ) {
 
 	vTranslate::log( "\n", $log );
 
+	// Give a readout for this file
 	if ( $countx ) {
 		vTranslate::log( $count . " lines checked\n", $log );
 		vTranslate::log( $countx . " lines updated\n", $log );
@@ -251,6 +268,7 @@ foreach ( $all_targets as $file ) {
 	}
 }
 
+// et voilà
 vTranslate::log( "All done." . "\n\n", $log );
 
 class vTranslate
@@ -300,9 +318,10 @@ class vTranslate
 
 	function parseLine( $line )
 	{
+		// Clean up line
 		$line = trim( $line );
 
-		$comments = array( '/**', '* ', '//' );
+		$comments = array( '/**', '* ', '//', '#' );
 
 		$comment = '';
 		foreach ( $comments as $c ) {
@@ -316,38 +335,43 @@ class vTranslate
 		$return['type']		= 'empty';
 
 		if ( $comment == 'Dont allow direct linking' ) {
-			$comment = "";
+			$comment = '';
 		}
 
 		if ( empty( $line ) ) {
-
+			// Skip
 		} elseif ( !empty( $comment ) ) {
-			$comment = str_replace( '2010', '2011', $comment );
-			$comment = str_replace( '.php', '.ini', $comment );
+			// Custom hacks to modify dates and file references
+			//$comment = str_replace( '2010', '2011', $comment );
+			//$comment = str_replace( '.php', '.ini', $comment );
 
 			$return['type']		= 'comment';
 			$return['content']	= $comment;
 		} elseif ( strpos( strtolower($line), 'define' ) === 0 ) {
 			$return['type'] = 'ham';
 
+			// If lines have their content in ""'s, move that to '''s
 			if ( strpos( $line, '\', "' ) && strpos( $line, '");' ) ) {
 				$line = str_replace( '\', "', '\', \'', $line );
 				$line = str_replace( '");', '\');', $line );
 			}
 
+			// Get the language key
 			$defstart	= strpos( $line, '\'' );
 			$defend		= strpos( $line, '\'', $defstart+1 );
 
 			$name = substr( $line, $defstart+1, $defend-$defstart-1 );
-			
+
 			$constart	= strpos( $line, '\'', $defend+1 );
 			$conend		= strrpos( $line, '\'' );
 
+			// Get the translation
 			$content = substr( $line, $constart+1, $conend-$constart-1 );
 
 			$content = str_replace( "\'", "'", $content );
 			$content = str_replace( '\"', '"', $content );
 
+			// Use ini-style encoding for double quotes
 			$content = str_replace( '"', '"_QQ_"', $content );
 
 			$return['content'] = array( 'name' => $name, 'content' => $content );
