@@ -17,8 +17,8 @@ class mi_mysms
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_MYSMS;
-		$info['desc'] = _AEC_MI_DESC_MYSMS;
+		$info['name'] = JText::_('_AEC_MI_NAME_MYSMS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_MYSMS');
 
 		return $info;
 	}

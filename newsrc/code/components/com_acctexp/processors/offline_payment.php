@@ -17,9 +17,9 @@ class processor_offline_payment extends processor
 	{
 		$info = array();
 		$info['name']			= 'offline_payment';
-		$info['longname']		= _CFG_OFFLINE_PAYMENT_LONGNAME;
-		$info['statement']		= _CFG_OFFLINE_PAYMENT_STATEMENT;
-		$info['description']	= _CFG_OFFLINE_PAYMENT_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_OFFLINE_PAYMENT_LONGNAME');
+		$info['statement']		= JText::_('_CFG_OFFLINE_PAYMENT_STATEMENT');
+		$info['description']	= JText::_('_CFG_OFFLINE_PAYMENT_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "";
 		$info['recurring']		= 0;

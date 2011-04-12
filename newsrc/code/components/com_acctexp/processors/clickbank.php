@@ -17,9 +17,9 @@ class processor_clickbank extends URLprocessor
 	{
 		$info = array();
 		$info['name']					= 'clickbank';
-		$info['longname'] 				= _CFG_CLICKBANK_LONGNAME;
-		$info['statement'] 				= _CFG_CLICKBANK_STATEMENT;
-		$info['description'] 			= _CFG_CLICKBANK_DESCRIPTION;
+		$info['longname'] 				= JText::_('_CFG_CLICKBANK_LONGNAME');
+		$info['statement'] 				= JText::_('_CFG_CLICKBANK_STATEMENT');
+		$info['description'] 			= JText::_('_CFG_CLICKBANK_DESCRIPTION');
 		$info['cc_list'] 				= "visa,mastercard,americanexpress,discover,dinersclub,jcb,paypal";
 		$info['currencies']				= "USD";
 		$info['recurring'] 				= 2;

@@ -16,8 +16,8 @@ class mi_idevaffiliate
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_IDEV;
-		$info['desc'] = _AEC_MI_DESC_IDEV;
+		$info['name'] = JText::_('_AEC_MI_NAME_IDEV');
+		$info['desc'] = JText::_('_AEC_MI_DESC_IDEV');
 
 		return $info;
 	}

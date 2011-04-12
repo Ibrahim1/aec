@@ -16,8 +16,8 @@ class mi_adminuseraccess
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_ADMINUSERACCESS;
-		$info['desc'] = _AEC_MI_DESC_ADMINUSERACCESS;
+		$info['name'] = JText::_('_AEC_MI_NAME_ADMINUSERACCESS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_ADMINUSERACCESS');
 
 		return $info;
 	}

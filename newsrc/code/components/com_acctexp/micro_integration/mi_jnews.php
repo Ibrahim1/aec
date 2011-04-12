@@ -16,8 +16,8 @@ class mi_jnews
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_JNEWS;
-		$info['desc'] = _AEC_MI_DESC_JNEWS;
+		$info['name'] = JText::_('_AEC_MI_NAME_JNEWS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_JNEWS');
 
 		return $info;
 	}
@@ -70,7 +70,7 @@ class mi_jnews
 		if ( !empty( $this->settings['custominfo'] ) ) {
 			$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
 		} else {
-			$settings['exp'] = array( 'p', "", _MI_MI_JNEWS_DEFAULT_NOTICE );
+			$settings['exp'] = array( 'p', "", JText::_('_MI_MI_JNEWS_DEFAULT_NOTICE') );
 		}
 
 		$settings['get_newsletter'] = array( 'checkbox', 'mi_'.$this->id.'_get_newsletter', 1, 0, "Sign up to our Newsletter" );

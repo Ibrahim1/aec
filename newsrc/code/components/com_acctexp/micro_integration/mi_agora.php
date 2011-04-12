@@ -16,8 +16,8 @@ class mi_agora extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_AGORA;
-		$info['desc'] = _AEC_MI_DESC_AGORA;
+		$info['name'] = JText::_('_AEC_MI_NAME_AGORA');
+		$info['desc'] = JText::_('_AEC_MI_DESC_AGORA');
 
 		return $info;
 	}

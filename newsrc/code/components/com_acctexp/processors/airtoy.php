@@ -17,9 +17,9 @@ class processor_airtoy extends XMLprocessor
 	{
 		$info = array();
 		$info['name']			= 'airtoy';
-		$info['longname']		= _CFG_AIRTOY_LONGNAME;
-		$info['statement']		= _CFG_AIRTOY_STATEMENT;
-		$info['description']	= _CFG_AIRTOY_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_AIRTOY_LONGNAME');
+		$info['statement']		= JText::_('_CFG_AIRTOY_STATEMENT');
+		$info['description']	= JText::_('_CFG_AIRTOY_DESCRIPTION');
 		$info['currencies']		= 'EUR';
 		$info['cc_list']		= "";
 		$info['recurring']		= 0;
@@ -65,8 +65,8 @@ class processor_airtoy extends XMLprocessor
 
 		$code = $request->int_var['planparams']['smscode_prefix'] . ' ' . $request->invoice->id;
 
-		$var['params']['explain'] = array( 'p', _AEC_AIRTOY_PARAMS_EXPLAIN_NAME, sprintf( _AEC_AIRTOY_PARAMS_EXPLAIN_DESC, $code, $this->settings['phone_number'] ) );
-		$var['params']['smscode'] = array( 'inputC', _AEC_AIRTOY_PARAMS_SMSCODE_NAME, _AEC_AIRTOY_PARAMS_SMSCODE_DESC);
+		$var['params']['explain'] = array( 'p', JText::_('_AEC_AIRTOY_PARAMS_EXPLAIN_NAME'), sprintf( JText::_('_AEC_AIRTOY_PARAMS_EXPLAIN_DESC'), $code, $this->settings['phone_number'] ) );
+		$var['params']['smscode'] = array( 'inputC', JText::_('_AEC_AIRTOY_PARAMS_SMSCODE_NAME'), JText::_('_AEC_AIRTOY_PARAMS_SMSCODE_DESC'));
 
 		return $var;
 	}
@@ -81,7 +81,7 @@ class processor_airtoy extends XMLprocessor
 		$return['valid'] = false;
 
 		if ( empty( $request->int_var['params']['smscode'] ) ) {
-			$return['error'] = _AEC_AIRTOY_ERROR_NOCODE;
+			$return['error'] = JText::_('_AEC_AIRTOY_ERROR_NOCODE');
 			return $return;
 		}
 
@@ -91,7 +91,7 @@ class processor_airtoy extends XMLprocessor
 			$return['valid'] = true;
 			$return['invoice'] = $request->invoice->invoice_number;
 		} else {
-			$return['error'] = _AEC_AIRTOY_CODE_WRONG;
+			$return['error'] = JText::_('_AEC_AIRTOY_CODE_WRONG');
 		}
 
 /*

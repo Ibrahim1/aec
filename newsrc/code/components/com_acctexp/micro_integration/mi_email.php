@@ -16,8 +16,8 @@ class mi_email extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_EMAIL;
-		$info['desc'] = _AEC_MI_DESC_EMAIL;
+		$info['name'] = JText::_('_AEC_MI_NAME_EMAIL');
+		$info['desc'] = JText::_('_AEC_MI_DESC_EMAIL');
 
 		return $info;
 	}

@@ -17,9 +17,9 @@ class processor_payboxfr extends POSTprocessor
 	{
 		$info = array();
 		$info['name']				= 'payboxfr';
-		$info['longname']			= _CFG_PAYBOXFR_LONGNAME;
-		$info['statement']			= _CFG_PAYBOXFR_STATEMENT;
-		$info['description'] 		= _CFG_PAYBOXFR_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_PAYBOXFR_LONGNAME');
+		$info['statement']			= JText::_('_CFG_PAYBOXFR_STATEMENT');
+		$info['description'] 		= JText::_('_CFG_PAYBOXFR_DESCRIPTION');
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD';
 		$info['languages']			= 'GB,DE,FR,IT,ES,SV,NL';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';

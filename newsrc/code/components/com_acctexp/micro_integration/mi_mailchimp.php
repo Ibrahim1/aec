@@ -16,8 +16,8 @@ class mi_mailchimp
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_MAILCHIMP;
-		$info['desc'] = _AEC_MI_DESC_MAILCHIMP;
+		$info['name'] = JText::_('_AEC_MI_NAME_MAILCHIMP');
+		$info['desc'] = JText::_('_AEC_MI_DESC_MAILCHIMP');
 
 		return $info;
 	}
@@ -48,7 +48,7 @@ class mi_mailchimp
 		}
 
 		$settings = array();
-		$settings['explanation']	= array( 'fieldset', _MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_NAME, _MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_DESC );
+		$settings['explanation']	= array( 'fieldset', JText::_('_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_NAME'), JText::_('_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_DESC') );
 		$settings['api_key']		= array( 'inputC' );
 		$settings['account_name']	= array( 'inputC' );
 		$settings['account_id']		= array( 'inputC' );
@@ -120,7 +120,7 @@ class mi_mailchimp
 			if ( !empty( $this->settings['custominfo'] ) ) {
 				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
 			} else {
-				$settings['exp'] = array( 'p', "", _MI_MI_MAILCHIMP_DEFAULT_NOTICE );
+				$settings['exp'] = array( 'p', "", JText::_('_MI_MI_MAILCHIMP_DEFAULT_NOTICE') );
 			}
 
 			$settings['get_newsletter'] = array( 'checkbox', 'mi_'.$this->id.'_get_newsletter', 1, 0, "Sign up to our Newsletter" );

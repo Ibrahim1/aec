@@ -17,9 +17,9 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		$info = array();
 		$info['name']			= 'ipayment_silent';
-		$info['longname']		= _CFG_IPAYMENT_SILENT_LONGNAME;
-		$info['statement']		= _CFG_IPAYMENT_SILENT_STATEMENT;
-		$info['description']	= _CFG_IPAYMENT_SILENT_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_IPAYMENT_SILENT_LONGNAME');
+		$info['statement']		= JText::_('_CFG_IPAYMENT_SILENT_STATEMENT');
+		$info['description']	= JText::_('_CFG_IPAYMENT_SILENT_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['secure']			= 1;
@@ -39,7 +39,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$settings['password']		= "password";
 		$settings['currency']		= "USD";
 		$settings['promptAddress']	= 0;
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 
 		return $settings;
@@ -66,11 +66,11 @@ class processor_ipayment_silent extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		$var['params']['billInfo']			= array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC );
-		$var['params']['accountName']		= array( 'inputC', _AEC_WTFORM_ACCOUNTNAME_NAME, _AEC_WTFORM_ACCOUNTNAME_NAME, $request->metaUser->cmsUser->name );
-		$var['params']['accountNumber']		= array( 'inputC', _AEC_WTFORM_ACCOUNTNUMBER_NAME, _AEC_WTFORM_ACCOUNTNUMBER_NAME, '' );
-		$var['params']['bankNumber']		= array( 'inputC', _AEC_WTFORM_BANKNUMBER_NAME, _AEC_WTFORM_BANKNUMBER_NAME, '' );
-		$var['params']['bankName']			= array( 'inputC', _AEC_WTFORM_BANKNAME_NAME, _AEC_WTFORM_BANKNAME_NAME, '' );
+		$var['params']['billInfo']			= array( 'p', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME'), JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC') );
+		$var['params']['accountName']		= array( 'inputC', JText::_('_AEC_WTFORM_ACCOUNTNAME_NAME'), JText::_('_AEC_WTFORM_ACCOUNTNAME_NAME'), $request->metaUser->cmsUser->name );
+		$var['params']['accountNumber']		= array( 'inputC', JText::_('_AEC_WTFORM_ACCOUNTNUMBER_NAME'), JText::_('_AEC_WTFORM_ACCOUNTNUMBER_NAME'), '' );
+		$var['params']['bankNumber']		= array( 'inputC', JText::_('_AEC_WTFORM_BANKNUMBER_NAME'), JText::_('_AEC_WTFORM_BANKNUMBER_NAME'), '' );
+		$var['params']['bankName']			= array( 'inputC', JText::_('_AEC_WTFORM_BANKNAME_NAME'), JText::_('_AEC_WTFORM_BANKNAME_NAME'), '' );
 
 		$name = explode( ' ', $request->metaUser->cmsUser->name );
 
@@ -78,24 +78,24 @@ class processor_ipayment_silent extends XMLprocessor
 			$name[1] = "";
 		}
 
-		$var['params']['billInfo2']			= array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC );
+		$var['params']['billInfo2']			= array( 'p', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_NAME'), JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_CC_DESC') );
 
 		$values = array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
 
 		$var = $this->getCCform( $var, $values );
 
-		$var['params']['billInfo']			= array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC );
-		$var['params']['billFirstName']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME, $name[0] );
-		$var['params']['billLastName']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME, $name[1] );
+		$var['params']['billInfo']			= array( 'p', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME'), JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC') );
+		$var['params']['billFirstName']		= array( 'inputC', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME'), JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME'), $name[0] );
+		$var['params']['billLastName']		= array( 'inputC', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME'), JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME'), $name[1] );
 
-		$var['params']['billInfo']			= array( 'p', _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME, _AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC );
+		$var['params']['billInfo']			= array( 'p', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME'), JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC') );
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$var['params']['billAddress']	= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME );
-			$var['params']['billCity']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLCITY_NAME );
-			$var['params']['billState']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME );
-			$var['params']['billZip']		= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME );
-			$var['params']['billCountry']	= array( 'inputC', _AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME );
+			$var['params']['billAddress']	= array( 'inputC', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLADDRESS_NAME') );
+			$var['params']['billCity']		= array( 'inputC', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLCITY_NAME') );
+			$var['params']['billState']		= array( 'inputC', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLSTATE_NAME') );
+			$var['params']['billZip']		= array( 'inputC', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLZIP_NAME') );
+			$var['params']['billCountry']	= array( 'inputC', JText::_('_AEC_IPAYMENT_SILENT_PARAMS_BILLCOUNTRY_NAME') );
 		}
 
 		return $var;

@@ -19,7 +19,7 @@ class processor_paysignet extends POSTprocessor
 		$info['name']					= "paysignet";
 		$info['longname']				= "Paysignet";
 		$info['statement']				= "Make payments with Paysignet!";
-		$info['description']			= _DESCRIPTION_PAYSIGNET;
+		$info['description']			= JText::_('_DESCRIPTION_PAYSIGNET');
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck";
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;

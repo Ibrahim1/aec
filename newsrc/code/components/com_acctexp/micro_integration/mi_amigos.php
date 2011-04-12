@@ -16,8 +16,8 @@ class mi_amigos
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_AMIGOS;
-		$info['desc'] = _AEC_MI_DESC_AMIGOS;
+		$info['name'] = JText::_('_AEC_MI_NAME_AMIGOS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_AMIGOS');
 
 		return $info;
 	}

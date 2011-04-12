@@ -7,9 +7,9 @@ class processor_vcs extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'VCS';
-		$info['longname']		= _CFG_VCS_LONGNAME;
-		$info['statement']		= _CFG_VCS_STATEMENT;
-		$info['description']	= _CFG_VCS_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_VCS_LONGNAME');
+		$info['statement']		= JText::_('_CFG_VCS_STATEMENT');
+		$info['description']	= JText::_('_CFG_VCS_DESCRIPTION');
 		$info['currencies']		= 'ZAR';
 		$info['cc_list']		= 'visa,mastercard';
 		$info['recurring']		= 2;
@@ -24,7 +24,7 @@ class processor_vcs extends POSTprocessor
 		$settings['merchant_id']	= '1234';
 		$settings['pam']			= 'PAM';
 		$settings['currency']		= 'ZAR';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

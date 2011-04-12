@@ -17,9 +17,9 @@ class processor_alertpay extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= 'alertpay';
-		$info['longname']				= _AEC_PROC_INFO_AP_LNAME;
-		$info['statement']				= _AEC_PROC_INFO_AP_STMNT;
-		$info['description']			= _DESCRIPTION_ALERTPAY;
+		$info['longname']				= JText::_('_AEC_PROC_INFO_AP_LNAME');
+		$info['statement']				= JText::_('_AEC_PROC_INFO_AP_STMNT');
+		$info['description']			= JText::_('_DESCRIPTION_ALERTPAY');
 		$info['currencies']				= 'USD,EUR,GBP,CAD,AUD,BGN,CZK,DKK,EEK,HKD,HUF,LTL,MYR,NZD,NOK,PLN,ROL,SGD,ZAR,SEK,CHF';
 		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
 		$info['recurring']				= 2;
@@ -37,7 +37,7 @@ class processor_alertpay extends POSTprocessor
 		$settings['securitycode']	= 'security code';
 		$settings['currency']		= 'EUR';
 		$settings['testmode']		= 0;
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

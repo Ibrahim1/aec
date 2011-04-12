@@ -39,13 +39,13 @@ class HTML_frontEnd
 		}
 
 		if ( $aecConfig->cfg['customtext_expired_keeporiginal'] ) {?>
-			<div class="componentheading"><?php echo _EXPIRED_TITLE; ?></div>
+			<div class="componentheading"><?php echo JText::_('_EXPIRED_TITLE'); ?></div>
 			<div id="expired_greeting">
-				<p><?php echo sprintf( _DEAR, $metaUser->cmsUser->name ); ?></p><p><?php
+				<p><?php echo sprintf( JText::_('_DEAR'), $metaUser->cmsUser->name ); ?></p><p><?php
 					if ( $trial ) {
-						echo _EXPIRED_TRIAL;
+						echo JText::_('_EXPIRED_TRIAL');
 					} else {
-						echo _EXPIRED;
+						echo JText::_('_EXPIRED');
 					}
 					echo $expiration; ?>
 				</p>
@@ -62,8 +62,8 @@ class HTML_frontEnd
 				if ( $invoice ) {
 					?>
 					<p>
-						<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-						<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $invoice . '&userid=' . $metaUser->userid.'&'. JUtility::getToken() .'=1' ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+						<?php echo JText::_('_PENDING_OPENINVOICE'); ?>&nbsp;
+						<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $invoice . '&userid=' . $metaUser->userid.'&'. JUtility::getToken() .'=1' ); ?>" title="<?php echo JText::_('_GOTO_CHECKOUT'); ?>"><?php echo JText::_('_GOTO_CHECKOUT'); ?></a>
 					</p>
 					<?php
 				} ?>
@@ -76,7 +76,7 @@ class HTML_frontEnd
 						<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 						<input type="hidden" name="usage" value="<?php echo $metaUser->focusSubscription->plan; ?>" />
 						<input type="hidden" name="task" value="renewSubscription" />
-						<input type="submit" class="button" value="<?php echo _RENEW_BUTTON_CONTINUE;?>" />
+						<input type="submit" class="button" value="<?php echo JText::_('_RENEW_BUTTON_CONTINUE');?>" />
 						 <?php echo JHTML::_( 'form.token' ); ?>
 						</form>
 					</div>
@@ -87,7 +87,7 @@ class HTML_frontEnd
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
 					<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
-					<input type="submit" class="button" value="<?php echo _RENEW_BUTTON;?>" />
+					<input type="submit" class="button" value="<?php echo JText::_('_RENEW_BUTTON');?>" />
 					<?php echo JHTML::_( 'form.token' ); ?>
 					</form>
 				</div>
@@ -103,10 +103,10 @@ class HTML_frontEnd
 		global $aecConfig;
 
 		if ($aecConfig->cfg['customtext_hold_keeporiginal'] ) {?>
-			<div class="componentheading"><?php echo _HOLD_TITLE; ?></div>
+			<div class="componentheading"><?php echo JText::_('_HOLD_TITLE'); ?></div>
 			<div id="expired_greeting">
-				<p><?php echo sprintf( _DEAR, $metaUser->cmsUser->name ); ?></p>
-				<p><?php echo _HOLD_EXPLANATION; ?></p>
+				<p><?php echo sprintf( JText::_('_DEAR'), $metaUser->cmsUser->name ); ?></p>
+				<p><?php echo JText::_('_HOLD_EXPLANATION'); ?></p>
 			</div>
 			<?php
 		}
@@ -123,18 +123,18 @@ class HTML_frontEnd
 
 		global $aecConfig;
 
-		$actions =	_PENDING_OPENINVOICE
+		$actions =	JText::_('_PENDING_OPENINVOICE')
 		. ' <a href="'
 		.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice='
-		. $invoice . '&amp;userid=' . $objUser->id ) . '" title="' . _GOTO_CHECKOUT . '">'
-		. _GOTO_CHECKOUT
+		. $invoice . '&amp;userid=' . $objUser->id ) . '" title="' . JText::_('_GOTO_CHECKOUT') . '">'
+		. JText::_('_GOTO_CHECKOUT')
 		. '</a>'
-		. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
+		. ', ' . JText::_('_GOTO_CHECKOUT_CANCEL') . ' '
 		. '<a href="'
 		. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cancelPayment&invoice='
 		. $invoice . '&amp;userid=' . $objUser->id . '&amp;pending=1' )
-		. '" title="' . _HISTORY_ACTION_CANCEL . '">'
-		. _HISTORY_ACTION_CANCEL
+		. '" title="' . JText::_('_HISTORY_ACTION_CANCEL') . '">'
+		. JText::_('_HISTORY_ACTION_CANCEL')
 		. '</a>';
 
 		if ( $reason !== 0 ) {
@@ -142,9 +142,9 @@ class HTML_frontEnd
 		}
 
 		if ( $aecConfig->cfg['customtext_pending_keeporiginal'] ) { ?>
-			<div class="componentheading"><?php echo _PENDING_TITLE; ?></div>
-			<p class="expired_dear"><?php echo sprintf( _DEAR, $objUser->name ) . ','; ?></p>
-			<p class="expired_date"><?php echo _WARN_PENDING; ?></p>
+			<div class="componentheading"><?php echo JText::_('_PENDING_TITLE'); ?></div>
+			<p class="expired_dear"><?php echo sprintf( JText::_('_DEAR'), $objUser->name ) . ','; ?></p>
+			<p class="expired_date"><?php echo JText::_('_WARN_PENDING'); ?></p>
 			<?php
 		}
 		if ( $aecConfig->cfg['customtext_pending'] ) { ?>
@@ -154,13 +154,13 @@ class HTML_frontEnd
 		<div id="box_pending">
 		<?php
 		if ( strcmp($invoice, "none") === 0 ) { ?>
-			<p><?php echo _PENDING_NOINVOICE; ?></p>
+			<p><?php echo JText::_('_PENDING_NOINVOICE'); ?></p>
 			<div id="upgrade_button">
 				<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
 					<input type="hidden" name="userid" value="<?php echo $objUser->id; ?>" />
 					<input type="hidden" name="task" value="renewSubscription" />
-					<input type="submit" class="button" value="<?php echo _PENDING_NOINVOICE_BUTTON;?>" />
+					<input type="submit" class="button" value="<?php echo JText::_('_PENDING_NOINVOICE_BUTTON');?>" />
 					<?php echo JHTML::_( 'form.token' ); ?>
 				</form>
 			</div>
@@ -193,7 +193,7 @@ class HTML_frontEnd
 			return r;
 		}
 		</script>
-		<div class="componentheading"><?php echo _MYSUBSCRIPTION_TITLE;?></div>
+		<div class="componentheading"><?php echo JText::_('_MYSUBSCRIPTION_TITLE');?></div>
 		<div id="subscription_details">
 			<?php if ( $aecConfig->cfg['subscriptiondetails_menu'] ) { ?>
 				<div id="aec_navlist_profile">
@@ -215,7 +215,7 @@ class HTML_frontEnd
 			switch ( $sub ) {
 				case 'overview':
 					if ( !empty( $metaUser->objSubscription->signup_date ) ) {
-						echo '<p>' . _MEMBER_SINCE . '&nbsp;' . HTML_frontend::DisplayDateInLocalTime( $metaUser->objSubscription->signup_date ) .'</p>';
+						echo '<p>' . JText::_('_MEMBER_SINCE') . '&nbsp;' . HTML_frontend::DisplayDateInLocalTime( $metaUser->objSubscription->signup_date ) .'</p>';
 					}
 
 					if ( $properties['hascart'] ) { ?>
@@ -229,8 +229,8 @@ class HTML_frontEnd
 						?>
 						<br /><br />
 						<p>
-							<?php echo _PENDING_OPENINVOICE; ?>&nbsp;
-							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $properties['showcheckout'] . '&userid=' . $metaUser->userid.'&'. JUtility::getToken() .'=1' ); ?>" title="<?php echo _GOTO_CHECKOUT; ?>"><?php echo _GOTO_CHECKOUT; ?></a>
+							<?php echo JText::_('_PENDING_OPENINVOICE'); ?>&nbsp;
+							<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $properties['showcheckout'] . '&userid=' . $metaUser->userid.'&'. JUtility::getToken() .'=1' ); ?>" title="<?php echo JText::_('_GOTO_CHECKOUT'); ?>"><?php echo JText::_('_GOTO_CHECKOUT'); ?></a>
 						</p>
 						<br /><br />
 						<?php
@@ -241,10 +241,10 @@ class HTML_frontEnd
 							foreach ( $subscriptions as $sid => $subscription ) {
 								switch ( $sid ) {
 									case 0:
-										echo '<h2>' . _YOUR_SUBSCRIPTION . '</h2>';
+										echo '<h2>' . JText::_('_YOUR_SUBSCRIPTION') . '</h2>';
 										break;
 									case 1:
-										echo '<div style="clear:both"></div><h2>' . _YOUR_FURTHER_SUBSCRIPTIONS . '</h2>';
+										echo '<div style="clear:both"></div><h2>' . JText::_('_YOUR_FURTHER_SUBSCRIPTIONS') . '</h2>';
 										break;
 								}
 
@@ -253,15 +253,15 @@ class HTML_frontEnd
 								echo '<p><strong>' . $subscription->objPlan->getProperty( 'name' ) . '</strong></p>';
 								echo '<p>' . $subscription->objPlan->getProperty( 'desc' ) . '</p>';
 								if ( !empty( $subscription->objPlan->proc_actions ) ) {
-									echo '<p>' . _PLAN_PROCESSOR_ACTIONS . ' ' . implode( " | ", $subscription->objPlan->proc_actions ) . '</p>';
+									echo '<p>' . JText::_('_PLAN_PROCESSOR_ACTIONS') . ' ' . implode( " | ", $subscription->objPlan->proc_actions ) . '</p>';
 								}
 								if ( !empty( $subscription->lifetime ) ) {
-									echo '<p>' . _AEC_ISLIFETIME . '</p>';
+									echo '<p>' . JText::_('_AEC_ISLIFETIME') . '</p>';
 								} else {
 									if ( $subscription->recurring && ( in_array( $subscription->status, array( 'Active', 'Trial' ) ) ) ) {
-										echo '<p>' . _AEC_WILLRENEW . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+										echo '<p>' . JText::_('_AEC_WILLRENEW') . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
 									} else {
-										echo '<p>' . _AEC_WILLEXPIRE . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+										echo '<p>' . JText::_('_AEC_WILLEXPIRE') . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
 									}
 								}
 
@@ -279,7 +279,7 @@ class HTML_frontEnd
 								}
 
 								if ( $lifetime ) { ?>
-									<p><strong><?php echo _RENEW_LIFETIME; ?></strong></p><?php
+									<p><strong><?php echo JText::_('_RENEW_LIFETIME'); ?></strong></p><?php
 								} else { ?>
 									<p>
 										<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->focusSubscription->expiration, true, true, $trial ); ?>
@@ -291,18 +291,18 @@ class HTML_frontEnd
 							<div id="days_left">
 								<?php
 								if ( strcmp( $properties['alert']['daysleft'], 'infinite' ) === 0 ) {
-									$daysleft			= _RENEW_DAYSLEFT_INFINITE;
-									$daysleft_append	= $trial ? _RENEW_DAYSLEFT_TRIAL : _RENEW_DAYSLEFT;
+									$daysleft			= JText::_('_RENEW_DAYSLEFT_INFINITE');
+									$daysleft_append	= $trial ? JText::_('_RENEW_DAYSLEFT_TRIAL') : JText::_('_RENEW_DAYSLEFT');
 								} elseif ( strcmp( $properties['alert']['daysleft'], 'excluded' ) === 0 ) {
-									$daysleft			= _RENEW_DAYSLEFT_EXCLUDED;
+									$daysleft			= JText::_('_RENEW_DAYSLEFT_EXCLUDED');
 									$daysleft_append	= '';
 								} else {
 									if ( $properties['alert']['daysleft'] >= 0 ) {
 										$daysleft			= $properties['alert']['daysleft'];
-										$daysleft_append	= $trial ? _RENEW_DAYSLEFT_TRIAL : _RENEW_DAYSLEFT;
+										$daysleft_append	= $trial ? JText::_('_RENEW_DAYSLEFT_TRIAL') : JText::_('_RENEW_DAYSLEFT');
 									} else {
 										$daysleft			= $properties['alert']['daysleft'];
-										$daysleft_append	= _AEC_DAYS_ELAPSED;
+										$daysleft_append	= JText::_('_AEC_DAYS_ELAPSED');
 									}
 								}
 								?>
@@ -315,7 +315,7 @@ class HTML_frontEnd
 										<input type="hidden" name="option" value="<?php echo $option; ?>" />
 										<input type="hidden" name="task" value="renewsubscription" />
 										<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />
-										<input type="submit" class="button" value="<?php echo _RENEW_BUTTON_UPGRADE;?>" />
+										<input type="submit" class="button" value="<?php echo JText::_('_RENEW_BUTTON_UPGRADE');?>" />
 										<?php echo JHTML::_( 'form.token' ); ?>
 									</form>
 								</div>
@@ -331,11 +331,11 @@ class HTML_frontEnd
 					?>
 					<table>
 						<tr>
-							<th><?php echo _HISTORY_COL1_TITLE;?></th>
-							<th><?php echo _HISTORY_COL2_TITLE;?></th>
-							<th><?php echo _HISTORY_COL3_TITLE;?></th>
-							<th><?php echo _HISTORY_COL4_TITLE;?></th>
-							<th><?php echo _HISTORY_COL5_TITLE;?></th>
+							<th><?php echo JText::_('_HISTORY_COL1_TITLE');?></th>
+							<th><?php echo JText::_('_HISTORY_COL2_TITLE');?></th>
+							<th><?php echo JText::_('_HISTORY_COL3_TITLE');?></th>
+							<th><?php echo JText::_('_HISTORY_COL4_TITLE');?></th>
+							<th><?php echo JText::_('_HISTORY_COL5_TITLE');?></th>
 						</tr>
 						<?php
 						foreach ( $invoices as $invoice ) { ?>
@@ -387,16 +387,16 @@ class HTML_frontEnd
 			HTML_frontEnd::aec_styling();
 		} ?>
 		<?php if ( $aecConfig->cfg['customtext_notallowed_keeporiginal'] ) { ?>
-			<div class="componentheading"><?php echo _NOT_ALLOWED_HEADLINE; ?></div>
+			<div class="componentheading"><?php echo JText::_('_NOT_ALLOWED_HEADLINE'); ?></div>
 			<p>
 				<?php
 				if ( $loggedin ) {
-					echo _NOT_ALLOWED_FIRSTPAR_LOGGED; ?>&nbsp;
-					<a href="<?php echo $registerlink; ?>" title="<?php echo _NOT_ALLOWED_REGISTERLINK_LOGGED; ?>"><?php echo _NOT_ALLOWED_REGISTERLINK_LOGGED; ?></a>
+					echo JText::_('_NOT_ALLOWED_FIRSTPAR_LOGGED'); ?>&nbsp;
+					<a href="<?php echo $registerlink; ?>" title="<?php echo JText::_('_NOT_ALLOWED_REGISTERLINK_LOGGED'); ?>"><?php echo JText::_('_NOT_ALLOWED_REGISTERLINK_LOGGED'); ?></a>
 					<?php
 				} else {
-					echo _NOT_ALLOWED_FIRSTPAR; ?>&nbsp;
-					<a href="<?php echo $registerlink; ?>" title="<?php echo _NOT_ALLOWED_REGISTERLINK; ?>"><?php echo _NOT_ALLOWED_REGISTERLINK; ?></a>
+					echo JText::_('_NOT_ALLOWED_FIRSTPAR'); ?>&nbsp;
+					<a href="<?php echo $registerlink; ?>" title="<?php echo JText::_('_NOT_ALLOWED_REGISTERLINK'); ?>"><?php echo JText::_('_NOT_ALLOWED_REGISTERLINK'); ?></a>
 					<?php
 				} ?>
 			</p>
@@ -408,7 +408,7 @@ class HTML_frontEnd
 		<?php
 		if ( !empty( $processors ) && !empty( $aecConfig->cfg['gwlist'] ) ) { ?>
 			<p>&nbsp;</p>
-			<p><?php echo _NOT_ALLOWED_SECONDPAR; ?></p>
+			<p><?php echo JText::_('_NOT_ALLOWED_SECONDPAR'); ?></p>
 			<table id="cc_list">
 				<?php
 				foreach ( $processors as $processor ) {
@@ -480,7 +480,7 @@ class HTML_frontEnd
 		$app = JFactory::getApplication();
 
 		if ( $SQLDate == '' ) {
-			return _AEC_EXPIRE_NOT_SET;
+			return JText::_('_AEC_EXPIRE_NOT_SET');
 		} else {
 			$db = &JFactory::getDBO();
 
@@ -489,11 +489,11 @@ class HTML_frontEnd
 			if ( $check ) {
 				$timeDif = strtotime( $SQLDate ) - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
 				if ( $timeDif < 0 ) {
-					$retVal = ( $trial ? _AEC_EXPIRE_TRIAL_PAST : _AEC_EXPIRE_PAST ) . ':&nbsp;<strong>' . $retVal . '</strong>';
+					$retVal = ( $trial ? JText::_('_AEC_EXPIRE_TRIAL_PAST') : JText::_('_AEC_EXPIRE_PAST') ) . ':&nbsp;<strong>' . $retVal . '</strong>';
 				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
-					$retVal = ( $trial ? _AEC_EXPIRE_TRIAL_TODAY : _AEC_EXPIRE_TODAY );
+					$retVal = ( $trial ? JText::_('_AEC_EXPIRE_TRIAL_TODAY') : JText::_('_AEC_EXPIRE_TODAY') );
 				} else {
-					$retVal = ( $trial ? _AEC_EXPIRE_TRIAL_FUTURE : _AEC_EXPIRE_FUTURE ) . ': ' . $retVal;
+					$retVal = ( $trial ? JText::_('_AEC_EXPIRE_TRIAL_FUTURE') : JText::_('_AEC_EXPIRE_FUTURE') ) . ': ' . $retVal;
 				}
 			}
 
@@ -519,7 +519,7 @@ class HTML_Results
 		HTML_frontend::aec_styling( $option );
 
 		?>
-		<div class="componentheading"><?php echo _CANCEL_TITLE; ?></div>
+		<div class="componentheading"><?php echo JText::_('_CANCEL_TITLE'); ?></div>
 		<?php
 		if ( $aecConfig->cfg['customtext_cancel'] ) { ?>
 			<p><?php echo $aecConfig->cfg['customtext_cancel']; ?></p>
@@ -527,7 +527,7 @@ class HTML_Results
 		}
 		if ( $aecConfig->cfg['customtext_cancel_keeporiginal'] ) { ?>
 			<div id="cancel_page">
-			<p><?php echo _CANCEL_MSG; ?></p>
+			<p><?php echo JText::_('_CANCEL_MSG'); ?></p>
 			</div>
 			<?php
 		}
@@ -544,7 +544,7 @@ class Payment_HTML
 		HTML_frontend::aec_styling( $option );
 		?>
 
-		<div class="componentheading"><?php echo _PAYPLANS_HEADER; ?></div>
+		<div class="componentheading"><?php echo JText::_('_PAYPLANS_HEADER'); ?></div>
 		<?php if ( !empty( $cart ) ) { ?>
 			<div id="checkout">
 			<table id="aec_checkout">
@@ -787,10 +787,10 @@ class Payment_HTML
 		global $aecConfig;
 		?>
 		<div id="box_pending">
-			<p><?php echo _AEC_PROMPT_PASSWORD; ?></p>
+			<p><?php echo JText::_('_AEC_PROMPT_PASSWORD'); ?></p>
 			<?php
 				if ( $wrong ) {
-					echo '<p><strong>' . _AEC_PROMPT_PASSWORD_WRONG . '</strong></p>';
+					echo '<p><strong>' . JText::_('_AEC_PROMPT_PASSWORD_WRONG') . '</strong></p>';
 				}
 			?>
 			<div id="upgrade_button">
@@ -808,7 +808,7 @@ class Payment_HTML
 						} ?>
 						<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
 					<?php } ?>
-					<input type="submit" class="button" value="<?php echo _AEC_PROMPT_PASSWORD_BUTTON;?>" />
+					<input type="submit" class="button" value="<?php echo JText::_('_AEC_PROMPT_PASSWORD_BUTTON');?>" />
 					<?php echo JHTML::_( 'form.token' ); ?>
 				</form>
 			</div>
@@ -830,7 +830,7 @@ class Payment_HTML
 		HTML_frontend::aec_styling( $option );
 		?>
 
-		<div class="componentheading"><?php echo _CONFIRM_TITLE; ?></div>
+		<div class="componentheading"><?php echo JText::_('_CONFIRM_TITLE'); ?></div>
 		<?php
 		if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 			<script type="text/javascript">
@@ -839,7 +839,7 @@ class Payment_HTML
 					if ( document.confirmForm.tos.checked ) {
 						document.confirmForm.submit();
 					} else {
-						alert("<?php echo html_entity_decode( _CONFIRM_TOS_ERROR ); ?>");
+						alert("<?php echo html_entity_decode( JText::_('_CONFIRM_TOS_ERROR') ); ?>");
 					}
 				}
 				/* ]]> */
@@ -850,9 +850,9 @@ class Payment_HTML
 			<div id="confirmation_info">
 				<table>
 					<tr>
-						<th><?php echo _CONFIRM_COL1_TITLE; ?></th>
-						<th><?php echo _CONFIRM_COL2_TITLE; ?></th>
-						<th><?php echo _CONFIRM_COL3_TITLE; ?></th>
+						<th><?php echo JText::_('_CONFIRM_COL1_TITLE'); ?></th>
+						<th><?php echo JText::_('_CONFIRM_COL2_TITLE'); ?></th>
+						<th><?php echo JText::_('_CONFIRM_COL3_TITLE'); ?></th>
 					</tr>
 					<tr>
 						<td><?php echo $InvoiceFactory->userdetails; ?></td>
@@ -873,7 +873,7 @@ class Payment_HTML
 								<?php if ( $passthrough != false ) { ?>
 									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'userdetails' ); ?>" />
 								<?php } ?>
-								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_USER_DETAILS; ?></span></button>
+								<button class="aeclink" type="submit"><span><?php echo JText::_('_CONFIRM_DIFFERENT_USER_DETAILS'); ?></span></button>
 								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
@@ -887,7 +887,7 @@ class Payment_HTML
 								<?php if ( $passthrough != false ) { ?>
 									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
 								<?php } ?>
-								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_ITEM; ?></span></button>
+								<button class="aeclink" type="submit"><span><?php echo JText::_('_CONFIRM_DIFFERENT_ITEM'); ?></span></button>
 								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
@@ -896,7 +896,7 @@ class Payment_HTML
 					<?php } ?>
 					<?php if ( !empty( $InvoiceFactory->plan->desc ) ) { ?>
 					<tr>
-						<td colspan="3" class="aec_left"><strong><?php echo _CONFIRM_YOU_HAVE_SELECTED; ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
+						<td colspan="3" class="aec_left"><strong><?php echo JText::_('_CONFIRM_YOU_HAVE_SELECTED'); ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
 					</tr>
 					<?php } ?>
 					<?php if ( $aecConfig->cfg['confirmation_changeusage'] && !( empty( $userid ) && $aecConfig->cfg['confirmation_changeusername'] ) ) { ?>
@@ -911,7 +911,7 @@ class Payment_HTML
 									<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
 								<?php } ?>
 
-								<button class="aeclink" type="submit"><span><?php echo _CONFIRM_DIFFERENT_ITEM; ?></span></button>
+								<button class="aeclink" type="submit"><span><?php echo JText::_('_CONFIRM_DIFFERENT_ITEM'); ?></span></button>
 							</form>
 						</td>
 					</tr>
@@ -938,18 +938,18 @@ class Payment_HTML
 							<?php
 						}
 						if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
-							<p><?php echo _CONFIRM_INFO; ?></p>
+							<p><?php echo JText::_('_CONFIRM_INFO'); ?></p>
 							<?php
 						}
 						if ( $InvoiceFactory->coupons['active'] ) {
 							if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) {
-								?><p><?php echo _CONFIRM_COUPON_INFO_BOTH; ?></p><?php
+								?><p><?php echo JText::_('_CONFIRM_COUPON_INFO_BOTH'); ?></p><?php
 							} else {
-								?><p><?php echo _CONFIRM_COUPON_INFO; ?></p><?php
+								?><p><?php echo JText::_('_CONFIRM_COUPON_INFO'); ?></p><?php
 							}
 						} ?>
 						<?php if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) { ?>
-							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
+							<strong><?php echo JText::_('_CHECKOUT_COUPON_CODE'); ?></strong>
 							<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 						<?php } ?>
 					</td>
@@ -973,7 +973,7 @@ class Payment_HTML
 				if ( $makegift ) { ?>
 						<tr>
 							<td class="couponinfo">
-								<strong><?php echo _CHECKOUT_GIFT_HEAD; ?></strong>
+								<strong><?php echo JText::_('_CHECKOUT_GIFT_HEAD'); ?></strong>
 							</td>
 						</tr>
 						<tr>
@@ -982,7 +982,7 @@ class Payment_HTML
 									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftConfirm&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 									<input type="hidden" name="user_ident" value="<?php echo $InvoiceFactory->invoice->params['target_username']; ?>" />
 								<?php } else { ?>
-									<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
+									<p><?php echo JText::_('_CHECKOUT_GIFT_INFO'); ?></p>
 									<input type="text" size="20" name="user_ident" class="inputbox" value="" />
 								<?php } ?>
 							</td>
@@ -1002,15 +1002,15 @@ class Payment_HTML
 						<?php }
 						if ( !empty( $aecConfig->cfg['tos_iframe'] ) && !empty( $aecConfig->cfg['tos'] ) ) { ?>
 							<iframe src="<?php echo $aecConfig->cfg['tos']; ?>" width="100%" height="150px"></iframe>
-							<p><input name="tos" type="checkbox" /><?php echo _CONFIRM_TOS_IFRAME; ?></p>
-							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<p><input name="tos" type="checkbox" /><?php echo JText::_('_CONFIRM_TOS_IFRAME'); ?></p>
+							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('_BUTTON_CONFIRM'); ?>" />
 							<?php
 						} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
-							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $aecConfig->cfg['tos'] ); ?></p>
-							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<p><input name="tos" type="checkbox" /><?php echo sprintf( JText::_('_CONFIRM_TOS'), $aecConfig->cfg['tos'] ); ?></p>
+							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('_BUTTON_CONFIRM'); ?>" />
 							<?php
 						} else { ?>
-							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<input type="submit" class="button" value="<?php echo JText::_('_BUTTON_CONFIRM'); ?>" />
 							<?php
 						} ?>
 						<?php if ( $passthrough != false ) { ?>
@@ -1043,7 +1043,7 @@ class Payment_HTML
 		HTML_frontend::aec_styling( $option );
 		?>
 
-		<div class="componentheading"><?php echo _CART_TITLE; ?></div>
+		<div class="componentheading"><?php echo JText::_('_CART_TITLE'); ?></div>
 		<?php
 		if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 			<script type="text/javascript">
@@ -1052,7 +1052,7 @@ class Payment_HTML
 					if ( document.confirmForm.tos.checked ) {
 						document.confirmForm.submit();
 					} else {
-						alert("<?php echo html_entity_decode( _CONFIRM_TOS_ERROR ); ?>");
+						alert("<?php echo html_entity_decode( JText::_('_CONFIRM_TOS_ERROR') ); ?>");
 					}
 				}
 				/* ]]> */
@@ -1065,7 +1065,7 @@ class Payment_HTML
 				<p>Your Shopping Cart is empty!</p>
 				<?php } else { ?>
 				<p>&nbsp;</p>
-				<div id="clear_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_CLEAR_ALL; ?></a></div>
+				<div id="clear_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo JText::_('_CART_CLEAR_ALL'); ?></a></div>
 				<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 				<table>
 					<tr>
@@ -1083,11 +1083,11 @@ class Payment_HTML
 								<td><?php echo $bitem['cost']; ?></td>
 								<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid; ?>" value="<?php echo $bitem['quantity']; ?>" /></td>
 								<td><?php echo $bitem['cost_total']; ?></td>
-								<td><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo _CART_DELETE_ITEM; ?></a></td>
+								<td><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo JText::_('_CART_DELETE_ITEM'); ?></a></td>
 							</tr><?php
 						} else {
 							?><tr>
-								<td><strong><?php echo _CART_ROW_TOTAL; ?></strong></td>
+								<td><strong><?php echo JText::_('_CART_ROW_TOTAL'); ?></strong></td>
 								<td></td>
 								<td></td>
 								<td><strong><?php echo $bitem['cost']; ?></strong></td>
@@ -1141,7 +1141,7 @@ class Payment_HTML
 							<?php
 						}
 						if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
-							<p><?php echo _CART_INFO; ?></p>
+							<p><?php echo JText::_('_CART_INFO'); ?></p>
 							<?php
 						} ?>
 					</td>
@@ -1165,7 +1165,7 @@ class Payment_HTML
 				if ( $makegift ) { ?>
 						<tr>
 							<td class="couponinfo">
-								<strong><?php echo _CHECKOUT_GIFT_HEAD; ?></strong>
+								<strong><?php echo JText::_('_CHECKOUT_GIFT_HEAD'); ?></strong>
 							</td>
 						</tr>
 						<tr>
@@ -1173,7 +1173,7 @@ class Payment_HTML
 								<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
 									<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGiftCart&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 								<?php } else { ?>
-									<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
+									<p><?php echo JText::_('_CHECKOUT_GIFT_INFO'); ?></p>
 									<input type="text" size="20" name="user_ident" class="inputbox" value="" />
 								<?php } ?>
 							</td>
@@ -1191,15 +1191,15 @@ class Payment_HTML
 						<?php }
 						if ( !empty( $aecConfig->cfg['tos_iframe'] ) && !empty( $aecConfig->cfg['tos'] ) ) { ?>
 							<iframe src="<?php echo $aecConfig->cfg['tos']; ?>" width="100%" height="150px"></iframe>
-							<p><input name="tos" type="checkbox" /><?php echo _CONFIRM_TOS_IFRAME; ?></p>
-							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<p><input name="tos" type="checkbox" /><?php echo JText::_('_CONFIRM_TOS_IFRAME'); ?></p>
+							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('_BUTTON_CONFIRM'); ?>" />
 							<?php
 						} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
-							<p><input name="tos" type="checkbox" /><?php echo sprintf( _CONFIRM_TOS, $aecConfig->cfg['tos'] ); ?></p>
-							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<p><input name="tos" type="checkbox" /><?php echo sprintf( JText::_('_CONFIRM_TOS'), $aecConfig->cfg['tos'] ); ?></p>
+							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('_BUTTON_CONFIRM'); ?>" />
 							<?php
 						} else { ?>
-							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<input type="submit" class="button" value="<?php echo JText::_('_BUTTON_CONFIRM'); ?>" />
 							<?php
 						} ?>
 					</div>
@@ -1289,7 +1289,7 @@ class Payment_HTML
 
 						$ttype = 'aec_termtype_' . $term->type;
 
-						$applicable = ( $tid >= $item['terms']->pointer ) ? '' : '&nbsp;('._AEC_CHECKOUT_NOTAPPLICABLE.')';
+						$applicable = ( $tid >= $item['terms']->pointer ) ? '' : '&nbsp;('.JText::_('_AEC_CHECKOUT_NOTAPPLICABLE').')';
 
 						$current = ( $tid == $item['terms']->pointer ) ? ' current_period' : '';
 
@@ -1298,7 +1298,7 @@ class Payment_HTML
 
 						if ( !isset( $term->duration['none'] ) && empty( $item['params']['hide_duration_checkout'] ) ) {
 							// Subheadline - specify the details of this term
-							echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . _AEC_CHECKOUT_DURATION . ': ' . $term->renderDuration() . '</td></tr>';
+							echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . JText::_('_AEC_CHECKOUT_DURATION') . ': ' . $term->renderDuration() . '</td></tr>';
 						}
 
 						// Iterate through costs
@@ -1325,8 +1325,8 @@ class Payment_HTML
 											. AECToolbox::deadsureURL( 'index.php?option=' . $option
 											. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice->invoice_number
 											. '&amp;coupon_code=' . $citem->cost['coupon'] )
-											. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
-											. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
+											. '" title="' . JText::_('_CHECKOUT_INVOICE_COUPON_REMOVE') . '">'
+											. JText::_('_CHECKOUT_INVOICE_COUPON_REMOVE') . '</a>]';
 									}
 
 									$t = $ta;
@@ -1368,12 +1368,12 @@ class Payment_HTML
 
 				if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
 					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
-					echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . _CART_ROW_TOTAL . '</th></tr>';
+					echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . JText::_('_CART_ROW_TOTAL') . '</th></tr>';
 
 					if ( !empty( $InvoiceFactory->items->total ) ) {
 						$c = AECToolbox::formatAmount( $InvoiceFactory->items->total->renderCost(), $InvoiceFactory->payment->currency );
 
-						echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_TOTAL . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
+						echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . JText::_('_AEC_CHECKOUT_TOTAL') . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
 					}
 
 					if ( !empty( $InvoiceFactory->items->discount ) ) {
@@ -1399,8 +1399,8 @@ class Payment_HTML
 												. AECToolbox::deadsureURL( 'index.php?option=' . $option
 												. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice->invoice_number
 												. '&amp;coupon_code=' . $cost->cost['coupon'] )
-												. '" title="' . _CHECKOUT_INVOICE_COUPON_REMOVE . '">'
-												. _CHECKOUT_INVOICE_COUPON_REMOVE . '</a>]';
+												. '" title="' . JText::_('_CHECKOUT_INVOICE_COUPON_REMOVE') . '">'
+												. JText::_('_CHECKOUT_INVOICE_COUPON_REMOVE') . '</a>]';
 										}
 
 										echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
@@ -1439,7 +1439,7 @@ class Payment_HTML
 					if ( !empty( $InvoiceFactory->items->grand_total ) ) {
 						$c = AECToolbox::formatAmount( $InvoiceFactory->items->grand_total->renderCost(), $InvoiceFactory->payment->currency );
 
-						echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . _AEC_CHECKOUT_GRAND_TOTAL . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
+						echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . JText::_('_AEC_CHECKOUT_GRAND_TOTAL') . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
 					}
 
 					echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
@@ -1452,7 +1452,7 @@ class Payment_HTML
 				<table width="100%" id="couponsbox">
 					<tr>
 						<td class="couponinfo">
-							<strong><?php echo _CHECKOUT_COUPON_CODE; ?></strong>
+							<strong><?php echo JText::_('_CHECKOUT_COUPON_CODE'); ?></strong>
 						</td>
 					</tr>
 					<?php
@@ -1460,7 +1460,7 @@ class Payment_HTML
 						foreach ( $InvoiceFactory->errors as $err ) { ?>
 						<tr>
 							<td class="couponerror">
-								<p><strong><?php echo _COUPON_ERROR_PRETEXT; ?></strong>&nbsp;<?php echo $err; ?></p>
+								<p><strong><?php echo JText::_('_COUPON_ERROR_PRETEXT'); ?></strong>&nbsp;<?php echo $err; ?></p>
 							</td>
 						</tr>
 						<?php
@@ -1468,13 +1468,13 @@ class Payment_HTML
 					} ?>
 					<tr>
 						<td class="coupondetails">
-							<p><?php echo _CHECKOUT_COUPON_INFO; ?></p>
+							<p><?php echo JText::_('_CHECKOUT_COUPON_INFO'); ?></p>
 							<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="task" value="InvoiceAddCoupon" />
 								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
-								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
+								<input type="submit" class="button" value="<?php echo JText::_('_BUTTON_APPLY'); ?>" />
 								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
@@ -1502,7 +1502,7 @@ class Payment_HTML
 				<table width="100%" id="giftbox">
 					<tr>
 						<td class="couponinfo">
-							<strong><?php echo _CHECKOUT_GIFT_HEAD; ?></strong>
+							<strong><?php echo JText::_('_CHECKOUT_GIFT_HEAD'); ?></strong>
 						</td>
 					</tr>
 					<tr>
@@ -1510,13 +1510,13 @@ class Payment_HTML
 							<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
 								<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGift&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 							<?php } else { ?>
-							<p><?php echo _CHECKOUT_GIFT_INFO; ?></p>
+							<p><?php echo JText::_('_CHECKOUT_GIFT_INFO'); ?></p>
 							<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
 								<input type="text" size="20" name="user_ident" class="inputbox" value="" />
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="task" value="InvoiceMakeGift" />
 								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
-								<input type="submit" class="button" value="<?php echo _BUTTON_APPLY; ?>" />
+								<input type="submit" class="button" value="<?php echo JText::_('_BUTTON_APPLY'); ?>" />
 								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 							<?php } ?>
@@ -1535,7 +1535,7 @@ class Payment_HTML
 								<input type="hidden" name="option" value="<?php echo $option; ?>" />
 								<input type="hidden" name="task" value="InvoiceAddParams" />
 								<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number; ?>" />
-								<input type="submit" class="button" value="<?php echo _BUTTON_APPEND; ?>" />
+								<input type="submit" class="button" value="<?php echo JText::_('_BUTTON_APPEND'); ?>" />
 								<?php echo JHTML::_( 'form.token' ); ?>
 							</form>
 						</td>
@@ -1560,9 +1560,9 @@ class Payment_HTML
 		<?php if ( is_string( $InvoiceFactory->display_error ) ) { ?>
 			<tr>
 				<td class="checkout_error">
-					<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ":"; ?></p>
+					<p><?php echo JText::_('_CHECKOUT_ERROR_EXPLANATION') . ":"; ?></p>
 					<p><strong><?php echo $InvoiceFactory->display_error; ?></strong></p>
-					<p><?php echo _CHECKOUT_ERROR_FURTHEREXPLANATION; ?></p>
+					<p><?php echo JText::_('_CHECKOUT_ERROR_FURTHEREXPLANATION'); ?></p>
 				</td>
 			</tr>
 		<?php } ?>
@@ -1605,11 +1605,11 @@ class Payment_HTML
 		HTML_frontend::aec_styling( $option );
 
 		?>
-		<div class="componentheading"><?php echo $hasform ? _EXCEPTION_TITLE : _EXCEPTION_TITLE_NOFORM ; ?></div>
+		<div class="componentheading"><?php echo $hasform ? JText::_('_EXCEPTION_TITLE') : JText::_('_EXCEPTION_TITLE_NOFORM') ; ?></div>
 		<div id="checkout">
 			<?php
 			if ( $aecConfig->cfg['customtext_exception_keeporiginal'] ) { ?>
-				<p><?php echo $hasform ? _EXCEPTION_INFO : ""; ?></p>
+				<p><?php echo $hasform ? JText::_('_EXCEPTION_INFO') : ""; ?></p>
 				<?php
 			}
 			if ( $aecConfig->cfg['customtext_exception'] ) { ?>
@@ -1642,7 +1642,7 @@ class Payment_HTML
 			</table>
 
 			<table width="100%" id="checkoutbox">
-				<tr><th><?php echo _CONFIRM_TITLE; ?></th></tr>
+				<tr><th><?php echo JText::_('_CONFIRM_TITLE'); ?></th></tr>
 				<tr>
 					<td class="checkout_action">
 							<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -1656,7 +1656,7 @@ class Payment_HTML
 							}
 							?>
 							<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid; ?>" />
-							<input type="submit" class="button" value="<?php echo _BUTTON_CONFIRM; ?>" />
+							<input type="submit" class="button" value="<?php echo JText::_('_BUTTON_CONFIRM'); ?>" />
 					</td>
 				</tr>
 			</table>
@@ -1706,15 +1706,15 @@ class Payment_HTML
 				<div id="printbutton">
 					<div id="printbutton_inner">
 						<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['address']; ?></textarea>
-						<button onClick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
+						<button onClick="window.print()" id="printbutton"><?php echo JText::_('_INVOICEPRINT_PRINT'); ?></button>
 					</div>
-					<p><?php echo _INVOICEPRINT_BLOCKNOTICE; ?></p>
+					<p><?php echo JText::_('_INVOICEPRINT_BLOCKNOTICE'); ?></p>
 				</div>
 			<?php } else { ?>
 				<div id="printbutton">
 					<div id="printbutton_inner">
 						<textarea align="left" cols="40" rows="5" name="address" disabled="disabled" /><?php echo $data['address']; ?></textarea>
-						<button onClick="window.print()" id="printbutton"><?php echo _INVOICEPRINT_PRINT; ?></button>
+						<button onClick="window.print()" id="printbutton"><?php echo JText::_('_INVOICEPRINT_PRINT'); ?></button>
 					</div>
 				</div>
 			<?php } ?>
@@ -1732,11 +1732,11 @@ class Payment_HTML
 				<div id="address"><pre><?php echo $data['address']; ?></pre></div>
 				<div id="invoice_details">
 					<table id="invoice_details">
-						<tr><th><?php echo _INVOICEPRINT_DATE; ?></th></tr>
+						<tr><th><?php echo JText::_('_INVOICEPRINT_DATE'); ?></th></tr>
 						<tr><td><?php echo $data['invoice_date']; ?></td></tr>
-						<tr><th><?php echo _INVOICEPRINT_ID; ?></th></tr>
+						<tr><th><?php echo JText::_('_INVOICEPRINT_ID'); ?></th></tr>
 						<tr><td><?php echo $data['invoice_id']; ?></td></tr>
-						<tr><th><?php echo _INVOICEPRINT_REFERENCE_NUMBER; ?></th></tr>
+						<tr><th><?php echo JText::_('_INVOICEPRINT_REFERENCE_NUMBER'); ?></th></tr>
 						<tr><td><?php echo $data['invoice_number']; ?></td></tr>
 					</table>
 				</div>
@@ -1744,10 +1744,10 @@ class Payment_HTML
 				<div id="invoice_content">
 					<table id="invoice_content">
 						<tr>
-							<th><?php echo _INVOICEPRINT_ITEM_NAME; ?></th>
-							<th><?php echo _INVOICEPRINT_UNIT_PRICE; ?></th>
-							<th><?php echo _INVOICEPRINT_QUANTITY; ?></th>
-							<th><?php echo _INVOICEPRINT_TOTAL; ?></th>
+							<th><?php echo JText::_('_INVOICEPRINT_ITEM_NAME'); ?></th>
+							<th><?php echo JText::_('_INVOICEPRINT_UNIT_PRICE'); ?></th>
+							<th><?php echo JText::_('_INVOICEPRINT_QUANTITY'); ?></th>
+							<th><?php echo JText::_('_INVOICEPRINT_TOTAL'); ?></th>
 						</tr>
 						<?php echo implode( "\r\n", $data['itemlist'] ); ?>
 						<?php echo implode( "\r\n", $data['totallist'] ); ?>
@@ -1760,9 +1760,9 @@ class Payment_HTML
 						<div id="invoice_billing_history">
 							<table id="invoice_billing_history">
 								<tr>
-									<th><?php echo _HISTORY_COL3_TITLE; ?></th>
-									<th><?php echo _HISTORY_COL2_TITLE; ?></th>
-									<th><?php echo _HISTORY_COL4_TITLE; ?></th>
+									<th><?php echo JText::_('_HISTORY_COL3_TITLE'); ?></th>
+									<th><?php echo JText::_('_HISTORY_COL2_TITLE'); ?></th>
+									<th><?php echo JText::_('_HISTORY_COL4_TITLE'); ?></th>
 								</tr>
 								<?php echo $data['invoice_billing_history']; ?>
 							</table>
@@ -1790,18 +1790,18 @@ class Payment_HTML
 		HTML_frontend::aec_styling($option);
 
 		if ( !$suppressactions ) {
-			$actions =	_CHECKOUT_ERROR_OPENINVOICE
+			$actions =	JText::_('_CHECKOUT_ERROR_OPENINVOICE')
 			. ' <a href="'
 			.  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice='
-			. $invoice . '&amp;userid=' . $objUser->id ) . '&'. JUtility::getToken() .'=1" title="' . _GOTO_CHECKOUT . '">'
-			. _GOTO_CHECKOUT
+			. $invoice . '&amp;userid=' . $objUser->id ) . '&'. JUtility::getToken() .'=1" title="' . JText::_('_GOTO_CHECKOUT') . '">'
+			. JText::_('_GOTO_CHECKOUT')
 			. '</a>'
-			. ', ' . _GOTO_CHECKOUT_CANCEL . ' '
+			. ', ' . JText::_('_GOTO_CHECKOUT_CANCEL') . ' '
 			. '<a href="'
 			. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=cancelPayment&amp;invoice='
 			. $invoice . '&amp;userid=' . $objUser->id . '&amp;pending=1' )
-			. '" title="' . _HISTORY_ACTION_CANCEL . '">'
-			. _HISTORY_ACTION_CANCEL
+			. '" title="' . JText::_('_HISTORY_ACTION_CANCEL') . '">'
+			. JText::_('_HISTORY_ACTION_CANCEL')
 			. '</a>'
 			;
 		} else {
@@ -1809,9 +1809,9 @@ class Payment_HTML
 		}
 		?>
 
-		<div class="componentheading"><?php echo _CHECKOUT_ERROR_TITLE; ?></div>
+		<div class="componentheading"><?php echo JText::_('_CHECKOUT_ERROR_TITLE'); ?></div>
 		<div id="box_pending">
-			<p><?php echo _CHECKOUT_ERROR_EXPLANATION . ( $error ? ( ': ' . $error ) : '' ); ?></p>
+			<p><?php echo JText::_('_CHECKOUT_ERROR_EXPLANATION') . ( $error ? ( ': ' . $error ) : '' ); ?></p>
 			<p><?php echo $actions; ?></p>
 		</div>
 		<div class="aec_clearfix"></div>
@@ -1822,7 +1822,7 @@ class Payment_HTML
 	{
 		HTML_frontend::aec_styling( $option );
 
-		echo _AEC_GEN_ERROR;
+		echo JText::_('_AEC_GEN_ERROR');
 	}
 }
 

@@ -17,9 +17,9 @@ class processor_moneyproxy extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'moneyproxy';
-		$info['longname']		= _CFG_MONEYPROXY_LONGNAME;
-		$info['statement']		= _CFG_MONEYPROXY_STATEMENT;
-		$info['description']	= _CFG_MONEYPROXY_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_MONEYPROXY_LONGNAME');
+		$info['statement']		= JText::_('_CFG_MONEYPROXY_STATEMENT');
+		$info['description']	= JText::_('_CFG_MONEYPROXY_DESCRIPTION');
 		$info['currencies']		= "GAU,CAD,EUR,USD";
 		$info['languages']		= "EN";
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,giropay";
@@ -37,7 +37,7 @@ class processor_moneyproxy extends POSTprocessor
 		$settings['secret_key']				= "secret_key";
 		$settings['suggested_memo']			= "";
 		$settings['language']				= 'EN';
-		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]',
+		$settings['item_name']				= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]',
 											'[[user_name]]', '[[user_username]]' );
 		$settings['customparams']			= "";
 

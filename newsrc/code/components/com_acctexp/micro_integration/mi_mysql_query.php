@@ -16,8 +16,8 @@ class mi_mysql_query
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_MYSQL;
-		$info['desc'] = _AEC_MI_DESC_MYSQL;
+		$info['name'] = JText::_('_AEC_MI_NAME_MYSQL');
+		$info['desc'] = JText::_('_AEC_MI_DESC_MYSQL');
 
 		return $info;
 	}

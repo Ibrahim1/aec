@@ -15,8 +15,8 @@ class mi_htaccess
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_HTACCESS;
-		$info['desc'] = _AEC_MI_DESC_HTACCESS;
+		$info['name'] = JText::_('_AEC_MI_NAME_HTACCESS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_HTACCESS');
 
 		return $info;
 	}

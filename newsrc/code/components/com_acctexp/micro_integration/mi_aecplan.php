@@ -24,7 +24,7 @@ class mi_aecplan
 		$db->setQuery( $query );
 		$plans = $db->loadObjectList();
 
-		$payment_plans = array_merge( array( JHTML::_('select.option', '0', "- " . _PAYPLAN_NOPLAN . " -" ) ), $plans );
+		$payment_plans = array_merge( array( JHTML::_('select.option', '0', "- " . JText::_('_PAYPLAN_NOPLAN') . " -" ) ), $plans );
 
 		$total_plans = min( max( (count( $payment_plans ) + 1 ), 4 ), 20 );
 

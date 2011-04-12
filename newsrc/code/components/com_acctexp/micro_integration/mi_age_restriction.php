@@ -27,7 +27,7 @@ class mi_age_restriction extends MI
 	{
 		$settings = array();
 
-		$settings['birthday'] = array( 'inputC', _MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_NAME, _MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_DESC );
+		$settings['birthday'] = array( 'inputC', JText::_('_MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_NAME'), JText::_('_MI_MI_AGE_RESTRICTION_USERSELECT_BIRTHDAY_DESC') );
 
 		return $settings;
 	}

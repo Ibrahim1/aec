@@ -16,8 +16,8 @@ class mi_kunena extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_KUNENA;
-		$info['desc'] = _AEC_MI_DESC_KUNENA;
+		$info['name'] = JText::_('_AEC_MI_NAME_KUNENA');
+		$info['desc'] = JText::_('_AEC_MI_DESC_KUNENA');
 
 		return $info;
 	}

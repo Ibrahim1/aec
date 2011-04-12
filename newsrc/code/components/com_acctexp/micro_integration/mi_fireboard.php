@@ -17,8 +17,8 @@ class mi_fireboard
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_FIREBOARD;
-		$info['desc'] = _AEC_MI_DESC_FIREBOARD;
+		$info['name'] = JText::_('_AEC_MI_NAME_FIREBOARD');
+		$info['desc'] = JText::_('_AEC_MI_DESC_FIREBOARD');
 
 		return $info;
 	}

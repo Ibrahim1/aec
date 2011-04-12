@@ -16,8 +16,8 @@ class mi_jobs
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_JOBS;
-		$info['desc'] = _AEC_MI_DESC_JOBS;
+		$info['name'] = JText::_('_AEC_MI_NAME_JOBS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_JOBS');
 
 		return $info;
 	}

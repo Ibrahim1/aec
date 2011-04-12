@@ -21,8 +21,8 @@ define('_CFG_DIBS_MD5_KEY1_NAME','MD5 KEY 1');
 define('_CFG_DIBS_MD5_KEY1_DESC','Your MD5 KEY 1');
 define('_CFG_DIBS_MD5_KEY2_NAME','MD5 KEY 2');
 define('_CFG_DIBS_MD5_KEY2_DESC','Your MD5 KEY 2');
-define('_CFG_DIBS_PAYMENT_METHODS_NAME','Payment Methods');
-define('_CFG_DIBS_PAYMENT_METHODS_DESC','Select the payment methods you enabled in your DIBS administration panel.');
+define('_CFG_DIBS_PAYMENTJText::_('_METHOD')S_NAME','Payment Methods');
+define('_CFG_DIBS_PAYMENTJText::_('_METHOD')S_DESC','Select the payment methods you enabled in your DIBS administration panel.');
 
 
 class processor_dibs extends POSTprocessor
@@ -54,7 +54,7 @@ class processor_dibs extends POSTprocessor
 		$settings['payment_methods']	= array( 'ACC' );
 		$settings['currency'] 			= 'DKK';
 		
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= "";
 
 		return $settings;
@@ -125,7 +125,7 @@ class processor_dibs extends POSTprocessor
 			$options[]	= JHTML::_('select.option', htmlspecialchars($id), htmlspecialchars($description) );
 		}		
 
-		$return .= _CFG_MULTISAFEPAY_SELECT_GATEWAY . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $options, 'payment_method', 'size="1"', 'value', 'text', null );		
+		$return .= JText::_('_CFG_MULTISAFEPAY_SELECT_GATEWAY') . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $options, 'payment_method', 'size="1"', 'value', 'text', null );		
 		
 		$return .= "&nbsp;&nbsp;";
 		
@@ -135,9 +135,9 @@ class processor_dibs extends POSTprocessor
 			$code_list[] = JHTML::_('select.option', $country, $country . " - " . constant( '_AEC_LANG_' . $country ) );
 		}
 
-		$return .=  _CFG_MULTISAFEPAY_SELECT_COUNTRY . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $code_list, 'delivery03.Country', 'size="1"', 'value', 'text', 'NL' );		
+		$return .=  JText::_('_CFG_MULTISAFEPAY_SELECT_COUNTRY') . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $code_list, 'delivery03.Country', 'size="1"', 'value', 'text', 'NL' );		
 		
-		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . JText::_('_BUTTON_CHECKOUT') . '" />' . "\n";
 		$return .= '</form>' . "\n";
 aecdebug("checkoutAction");aecdebug($return);
 		return $return;

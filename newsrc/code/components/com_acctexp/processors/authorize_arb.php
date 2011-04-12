@@ -17,9 +17,9 @@ class processor_authorize_arb extends XMLprocessor
 	{
 		$info = array();
 		$info['name']			= 'authorize_arb';
-		$info['longname']		= _CFG_AUTHORIZE_ARB_LONGNAME;
-		$info['statement']		= _CFG_AUTHORIZE_ARB_STATEMENT;
-		$info['description']	= _CFG_AUTHORIZE_ARB_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_AUTHORIZE_ARB_LONGNAME');
+		$info['statement']		= JText::_('_CFG_AUTHORIZE_ARB_STATEMENT');
+		$info['description']	= JText::_('_CFG_AUTHORIZE_ARB_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 1;
@@ -54,7 +54,7 @@ class processor_authorize_arb extends XMLprocessor
 		$settings['totalOccurrences']		= 12;
 		$settings['trialOccurrences']		= 1;
 		$settings['useSilentPostResponse']	= 1;
-		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']				= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}

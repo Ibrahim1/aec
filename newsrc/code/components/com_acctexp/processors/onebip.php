@@ -17,9 +17,9 @@ class processor_onebip extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= 'onebip';
-		$info['longname']				= _CFG_ONEBIP_LONGNAME;
-		$info['statement']				= _CFG_ONEBIP_STATEMENT;
-		$info['description'] 			= _CFG_ONEBIP_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_ONEBIP_LONGNAME');
+		$info['statement']				= JText::_('_CFG_ONEBIP_STATEMENT');
+		$info['description'] 			= JText::_('_CFG_ONEBIP_DESCRIPTION');
 		$info['currencies']				= 'AUD,BAM,BGN,BRL,CAD,CHF,CNY,CZK,DKK,EEK,EUR,GBP,HKD,HRK,HUF,IDR'
 											. 'INR,JPY,KRW,KZT,LTL,LVL,MXN,MYR,NOK,NZD,PHP,PLN,RON,RSD,RUB,SEK,SGD,THB,TRY,TWD,UAH,USD,ZAR';
 		$info['languages']				= 'AU,AT,BE,BA,BG,CA,HR,CZ,DK,EE,FI,FR,DE,HU,ID,IE,IT,KZ,LV,LT,MY,NL,NO,PL,'

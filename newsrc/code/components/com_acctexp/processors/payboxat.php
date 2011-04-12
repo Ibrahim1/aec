@@ -17,9 +17,9 @@ class processor_payboxat extends SOAPprocessor
 	{
 		$info = array();
 		$info['name'] 			= 'payboxat';
-		$info['longname']	 	= _CFG_PAYBOXAT_LONGNAME;
-		$info['statement']		= _CFG_PAYBOXAT_STATEMENT;
-		$info['description']	= _CFG_PAYBOXAT_DESCRIPTION;
+		$info['longname']	 	= JText::_('_CFG_PAYBOXAT_LONGNAME');
+		$info['statement']		= JText::_('_CFG_PAYBOXAT_STATEMENT');
+		$info['description']	= JText::_('_CFG_PAYBOXAT_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list'] 		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
@@ -37,7 +37,7 @@ class processor_payboxat extends SOAPprocessor
 		$settings['merchant_phone']		= "your_phone_number";
 		$settings['currency']			= "EUR";
 		$settings['language']			= "DE";
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
 		return $settings;

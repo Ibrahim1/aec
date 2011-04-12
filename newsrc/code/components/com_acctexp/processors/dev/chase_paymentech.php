@@ -17,9 +17,9 @@ class processor_chase_paymentech extends PROFILEprocessor
 	{
 		$info = array();
 		$info['name']				= 'chase_paymentech';
-		$info['longname']			= _CFG_CHASE_PAYMENTECH_LONGNAME;
-		$info['statement']			= _CFG_CHASE_PAYMENTECH_STATEMENT;
-		$info['description']		= _CFG_CHASE_PAYMENTECH_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_CHASE_PAYMENTECH_LONGNAME');
+		$info['statement']			= JText::_('_CFG_CHASE_PAYMENTECH_STATEMENT');
+		$info['description']		= JText::_('_CFG_CHASE_PAYMENTECH_DESCRIPTION');
 		$info['currencies']			= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']			= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']			= 2;
@@ -54,7 +54,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		$settings['pay_types']			= array( 'cc' );
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
 		return $settings;
@@ -104,7 +104,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 	function registerProfileTabs()
 	{
 		$tab			= array();
-		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+		$tab['details']	= JText::_('_AEC_USERFORM_BILLING_DETAILS_NAME');
 
 		return $tab;
 	}
@@ -171,7 +171,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
 		$return .= '<input type="hidden" name="sub" value="chase_paymentech_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . JText::_('_BUTTON_APPLY') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -270,7 +270,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request ) ) . '<br /><br />';
 		$return .= $this->getStdFormVars( $request );
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . JText::_('_BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;

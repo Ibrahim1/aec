@@ -57,7 +57,7 @@ class processor_fastcharge extends XMLprocessor
 
 		$settings['allow_echecks']		= 0;
 
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -91,7 +91,7 @@ class processor_fastcharge extends XMLprocessor
 	function registerProfileTabs()
 	{
 		$tab			= array();
-		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+		$tab['details']	= JText::_('_AEC_USERFORM_BILLING_DETAILS_NAME');
 
 		return $tab;
 	}
@@ -302,7 +302,7 @@ class processor_fastcharge extends XMLprocessor
 
 				$count = 0;
 				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
-						$return['error'] .= 'Error ' . $nvpResArray["L_ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
+						$return['error'] .= 'Error ' . $nvpResArray["LJText::_('_ERRORCODE')".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
 						$count++;
 				}
 			}

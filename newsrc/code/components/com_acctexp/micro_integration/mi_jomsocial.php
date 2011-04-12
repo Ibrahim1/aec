@@ -15,8 +15,8 @@ class mi_jomsocial
 	function Info ()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_JOMSOCIAL;
-		$info['desc'] = _AEC_MI_DESC_JOMSOCIAL;
+		$info['name'] = JText::_('_AEC_MI_NAME_JOMSOCIAL');
+		$info['desc'] = JText::_('_AEC_MI_DESC_JOMSOCIAL');
 
 		return $info;
 	}
@@ -44,7 +44,7 @@ class mi_jomsocial
 		if ( !empty( $objects ) ) {
 			foreach ( $objects as $object ) {
 				$settings['jsfield_' . $object->id] = array( 'inputE', $object->name, $object->name );
-				$expname = $object->name . " " . _MI_MI_JOMSOCIAL_EXPMARKER;
+				$expname = $object->name . " " . JText::_('_MI_MI_JOMSOCIAL_EXPMARKER');
 				$settings['jsfield_' . $object->id . '_exp' ] = array( 'inputE', $expname, $expname );
 			}
 		}

@@ -42,9 +42,9 @@ class mi_aecdonate
 		$settings = array();
 
 		if ( !empty( $this->settings['rec'] ) ) {
-			$settings['amt'] = array( 'inputC', _MI_MI_AECDONATE_USERSELECT_AMT_NAME, _MI_MI_AECDONATE_USERSELECT_AMT_DESC, $this->settings['rec'] );
+			$settings['amt'] = array( 'inputC', JText::_('_MI_MI_AECDONATE_USERSELECT_AMT_NAME'), JText::_('_MI_MI_AECDONATE_USERSELECT_AMT_DESC'), $this->settings['rec'] );
 		} else {
-			$settings['amt'] = array( 'inputC', _MI_MI_AECDONATE_USERSELECT_AMT_NAME, _MI_MI_AECDONATE_USERSELECT_AMT_DESC, '' );
+			$settings['amt'] = array( 'inputC', JText::_('_MI_MI_AECDONATE_USERSELECT_AMT_NAME'), JText::_('_MI_MI_AECDONATE_USERSELECT_AMT_DESC'), '' );
 		}
 
 		return $settings;

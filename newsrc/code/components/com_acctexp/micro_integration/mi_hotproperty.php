@@ -86,9 +86,9 @@ class mi_hotproperty extends MI
 				$xsettings['lists']['elu_'.$i.'_op']	= JHTML::_('select.genericlist', $opts, 'elu_'.$i.'_op', 'size="1"', 'value', 'text', $this->settings['elu_'.$i.'_op'] );
 
 				$xsettings[] = array( '', 'hr', '' );
-				$xsettings['elu_'.$i.'_op'] = array( 'list', _AEC_MI_HOTPROPERTY_EASYLIST_OP_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_OP_DESC );
-				$xsettings['elu_'.$i.'_no'] = array( 'inputA', _AEC_MI_HOTPROPERTY_EASYLIST_NO_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_NO_DESC );
-				$xsettings['elu_'.$i.'_ch'] = array( 'inputA', _AEC_MI_HOTPROPERTY_EASYLIST_CH_NAME, _AEC_MI_HOTPROPERTY_EASYLIST_CH_DESC );
+				$xsettings['elu_'.$i.'_op'] = array( 'list', JText::_('_AEC_MI_HOTPROPERTY_EASYLIST_OP_NAME'), JText::_('_AEC_MI_HOTPROPERTY_EASYLIST_OP_DESC') );
+				$xsettings['elu_'.$i.'_no'] = array( 'inputA', JText::_('_AEC_MI_HOTPROPERTY_EASYLIST_NO_NAME'), JText::_('_AEC_MI_HOTPROPERTY_EASYLIST_NO_DESC') );
+				$xsettings['elu_'.$i.'_ch'] = array( 'inputA', JText::_('_AEC_MI_HOTPROPERTY_EASYLIST_CH_NAME'), JText::_('_AEC_MI_HOTPROPERTY_EASYLIST_CH_DESC') );
 			}
 
 			$xsettings[] = array( '', 'hr', '' );
@@ -123,7 +123,7 @@ class mi_hotproperty extends MI
 				}
 			}
 
-			$settings['hpamt']			= array( 'list', _MI_MI_HOTPROPERTY_USERSELECT_ADDAMOUNT_NAME, _MI_MI_HOTPROPERTY_USERSELECT_ADDAMOUNT_DESC );
+			$settings['hpamt']			= array( 'list', JText::_('_MI_MI_HOTPROPERTY_USERSELECT_ADDAMOUNT_NAME'), JText::_('_MI_MI_HOTPROPERTY_USERSELECT_ADDAMOUNT_DESC') );
 			$settings['lists']['hpamt']	= JHTML::_('select.genericlist', $gr, 'hpamt', 'size="6"', 'value', 'text', '' );
 		} else {
 			return false;
@@ -279,13 +279,13 @@ class mi_hotproperty extends MI
 			. '$mi_hphandler->loadUserID( $user->id );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
 			. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
-			. 'echo "' . _AEC_MI_HACK1_HOTPROPERTY . '";' . "\n"
+			. 'echo "' . JText::_('_AEC_MI_HACK1_HOTPROPERTY') . '";' . "\n"
 			. 'return;' . "\n"
 			. '} elseif ( $task == "save" ) {' . "\n"
 			. '$mi_hphandler->useListing();' . "\n"
 			. '}' . "\n"
 			. '} else {' . "\n"
-			. 'echo "' . _AEC_MI_HACK2_HOTPROPERTY . '";' . "\n"
+			. 'echo "' . JText::_('_AEC_MI_HACK2_HOTPROPERTY') . '";' . "\n"
 			. 'return;' . "\n"
 			. '}' . "\n"
 			. '}' . "\n"
@@ -295,7 +295,7 @@ class mi_hotproperty extends MI
 
 			$n = 'hotproperty1';
 			$hacks[$n]['name']				=	'hotproperty.php #1';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
+			$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK3_HOTPROPERTY');
 			$hacks[$n]['type']				=	'file';
 			$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/hotproperty.php';
 			$hacks[$n]['read']				=	'$hotproperty =& MosetsFactory::getApplication(\'hotproperty\');';
@@ -321,7 +321,7 @@ class mi_hotproperty extends MI
 
 			$n = 'adminhotproperty1';
 			$hacks[$n]['name']				=	'admin.hotproperty.php #1';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
+			$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK5_HOTPROPERTY');
 			$hacks[$n]['type']				=	'file';
 			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.hotproperty.php';
 			$hacks[$n]['read']				=	'$hotproperty =& MosetsFactory::getApplication(\'hotproperty\');';
@@ -335,11 +335,11 @@ class mi_hotproperty extends MI
 			. '$mi_hphandler->loadUserID( $user->id );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
 			. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
-			. 'echo "' . _AEC_MI_HACK1_HOTPROPERTY . '";' . "\n"
+			. 'echo "' . JText::_('_AEC_MI_HACK1_HOTPROPERTY') . '";' . "\n"
 			. 'return;' . "\n"
 			. '}' . "\n"
 			. '} else {' . "\n"
-			. 'echo "' . _AEC_MI_HACK2_HOTPROPERTY . '";' . "\n"
+			. 'echo "' . JText::_('_AEC_MI_HACK2_HOTPROPERTY') . '";' . "\n"
 			. 'return;' . "\n"
 			. '}' . "\n"
 			. '// AEC HACK hotproperty1 END' . "\n"
@@ -355,11 +355,11 @@ class mi_hotproperty extends MI
 			. 'if( $mi_hphandler->hasListingsLeft() ) {' . "\n"
 			. '$mi_hphandler->useListing();' . "\n"
 			. '} else {' . "\n"
-			. 'echo "' . _AEC_MI_HACK1_HOTPROPERTY . '";' . "\n"
+			. 'echo "' . JText::_('_AEC_MI_HACK1_HOTPROPERTY') . '";' . "\n"
 			. 'return;' . "\n"
 			. '}' . "\n"
 			. '} else {' . "\n"
-			. 'echo "' . _AEC_MI_HACK2_HOTPROPERTY . '";' . "\n"
+			. 'echo "' . JText::_('_AEC_MI_HACK2_HOTPROPERTY') . '";' . "\n"
 			. 'return;' . "\n"
 			. '}' . "\n"
 			. '// AEC HACK hotproperty2 END' . "\n"
@@ -398,7 +398,7 @@ class mi_hotproperty extends MI
 
 			$n = 'hotproperty1';
 			$hacks[$n]['name']				=	'hotproperty.php #1';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK3_HOTPROPERTY;
+			$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK3_HOTPROPERTY');
 			$hacks[$n]['type']				=	'file';
 			if ( $v10 ) {
 				$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/controller.php';
@@ -411,7 +411,7 @@ class mi_hotproperty extends MI
 
 			$n = 'hotproperty2';
 			$hacks[$n]['name']				=	'hotproperty.php #2';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK4_HOTPROPERTY;
+			$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK4_HOTPROPERTY');
 			$hacks[$n]['type']				=	'file';
 			if ( $v10 ) {
 				$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_hotproperty/controller.php';
@@ -428,7 +428,7 @@ class mi_hotproperty extends MI
 			/*
 			$n = 'adminhotproperty3';
 			$hacks[$n]['name']				=	'admin.hotproperty.php #3';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
+			$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK5_HOTPROPERTY');
 			$hacks[$n]['type']				=	'file';
 			$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/admin.mtree.php';
 			$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
@@ -437,7 +437,7 @@ class mi_hotproperty extends MI
 
 			$n = 'adminhotproperty4';
 			$hacks[$n]['name']				=	'admin.hotproperty.php #4';
-			$hacks[$n]['desc']				=	_AEC_MI_HACK5_HOTPROPERTY;
+			$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK5_HOTPROPERTY');
 			$hacks[$n]['type']				=	'file';
 			if ( $v10 ) {
 				$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_hotproperty/controller.php';
@@ -463,7 +463,7 @@ class mi_hotproperty extends MI
 
 		if ( $id ) {
 			$mi_hphandler->load( $id );
-			return '<p>' . sprintf( _AEC_MI_DIV1_HOTPROPERTY, $mi_hphandler->getListingsLeft() ) . '</p>';
+			return '<p>' . sprintf( JText::_('_AEC_MI_DIV1_HOTPROPERTY'), $mi_hphandler->getListingsLeft() ) . '</p>';
 		} else {
 			return '';
 		}

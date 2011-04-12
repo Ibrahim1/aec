@@ -738,9 +738,9 @@ switch( strtolower( $task ) ) {
 		} elseif ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
 			aecCentral( $option, $return );
 		} elseif ( !empty( $return ) ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=edit&userid=' . $return, _AEC_QUICKSEARCH_THANKS );
+			aecRedirect( 'index.php?option=' . $option . '&task=edit&userid=' . $return, JText::_('_AEC_QUICKSEARCH_THANKS') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showcentral', _AEC_QUICKSEARCH_NOTFOUND );
+			aecRedirect( 'index.php?option=' . $option . '&task=showcentral', JText::_('_AEC_QUICKSEARCH_NOTFOUND') );
 		}
 		break;
 
@@ -816,7 +816,7 @@ function cancel( $option )
 	$limitstart = $app->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 
-	$app->redirect( 'index.php?option=' . $option . '&task=' . $nexttask, _CANCELED );
+	$app->redirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('_CANCELED') );
 }
 
 function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
@@ -857,12 +857,12 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 	$invoice_ids = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $page*$invoices_limit, $invoices_limit );
 
 	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', '',			_EXPIRE_SET );
-	$group_selection[] = JHTML::_('select.option', 'now',		_EXPIRE_NOW );
-	$group_selection[] = JHTML::_('select.option', 'exclude',	_EXPIRE_EXCLUDE );
-	$group_selection[] = JHTML::_('select.option', 'include',	_EXPIRE_INCLUDE );
-	$group_selection[] = JHTML::_('select.option', 'close',		_EXPIRE_CLOSE );
-	$group_selection[] = JHTML::_('select.option', 'hold',		_EXPIRE_HOLD );
+	$group_selection[] = JHTML::_('select.option', '',			JText::_('_EXPIRE_SET') );
+	$group_selection[] = JHTML::_('select.option', 'now',		JText::_('_EXPIRE_NOW') );
+	$group_selection[] = JHTML::_('select.option', 'exclude',	JText::_('_EXPIRE_EXCLUDE') );
+	$group_selection[] = JHTML::_('select.option', 'include',	JText::_('_EXPIRE_INCLUDE') );
+	$group_selection[] = JHTML::_('select.option', 'close',		JText::_('_EXPIRE_CLOSE') );
+	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('_EXPIRE_HOLD') );
 
 	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
 
@@ -914,25 +914,25 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 			. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice='
 			. $invoice->invoice_number ) . '">'
 			. aecHTML::Icon( 'arrow_redo.png' ) . "&nbsp;"
-			. _USERINVOICE_ACTION_REPEAT . '</a>'
+			. JText::_('_USERINVOICE_ACTION_REPEAT') . '</a>'
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=cancelpayment&invoice='
 			. $invoice->invoice_number . '&returnTask=edit&userid=' . $metaUser->userid ) . '">'
 			. aecHTML::Icon( 'delete.png' ) . '&nbsp;'
-			. _USERINVOICE_ACTION_CANCEL . '</a>'
+			. JText::_('_USERINVOICE_ACTION_CANCEL') . '</a>'
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=clearpayment&invoice='
 			. $invoice->invoice_number . '&returnTask=edit&userid=' . $metaUser->userid ) . '">'
 			. aecHTML::Icon( 'coins.png' ) . '&nbsp;'
-			. _USERINVOICE_ACTION_CLEAR . '</a>'
+			. JText::_('_USERINVOICE_ACTION_CLEAR') . '</a>'
 			. '<br />'
 			. '<a href="'
 			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=clearpayment&invoice='
 			. $invoice->invoice_number . '&applyplan=1&returnTask=edit&userid=' . $metaUser->userid ) . '">'
 			. aecHTML::Icon( 'coins_add.png' ) . '&nbsp;'
-			. _USERINVOICE_ACTION_CLEAR_APPLY . '</a>'
+			. JText::_('_USERINVOICE_ACTION_CLEAR_APPLY') . '</a>'
 			. '<br />';
 			$rowstyle = ' style="background-color:#fee;"';
 		} else {
@@ -943,7 +943,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice='
 			. $invoice->invoice_number ) . '" target="_blank">'
 			. aecHTML::Icon( 'printer.png' ) . '&nbsp;'
-			. _HISTORY_ACTION_PRINT . '</a>';
+			. JText::_('_HISTORY_ACTION_PRINT') . '</a>';
 
 		$non_formatted = $invoice->invoice_number;
 		$invoice->formatInvoiceNumber();
@@ -1085,7 +1085,7 @@ function saveUser( $option, $apply=0 )
 
 			$metaUser->hasSubscription = true;
 		} else {
-			echo "<script> alert('"._AEC_ERR_NO_SUBSCRIPTION."'); window.history.go(-1); </script>\n";
+			echo "<script> alert('".JText::_('_AEC_ERR_NO_SUBSCRIPTION')."'); window.history.go(-1); </script>\n";
 			exit();
 		}
 	}
@@ -1182,9 +1182,9 @@ function saveUser( $option, $apply=0 )
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 	if ( $apply ) {
 		$subID = !empty($post['id']) ? $post['id'] : $metaUser->focusSubscription->id;
-		aecRedirect( 'index.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, _AEC_MSG_SUCESSFULLY_SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, JText::_('_AEC_MSG_SUCESSFULLY_SAVED') );
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, _SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('_SAVED') );
 	}
 }
 
@@ -1196,12 +1196,12 @@ function removeUser( $userid, $option )
 
 	// $userid contains values corresponding to id field of #__acctexp table
 	if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+		echo "<script> alert('" . JText::_('_AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
 	$userids	= implode( ',', $userid );
-	$msg		= _REMOVED;
+	$msg		= JText::_('_REMOVED');
 
 	if ( count( $userid ) ) {
 		$obj = new JTableUser( $db );
@@ -1234,7 +1234,7 @@ function removeClosedSubscription( $userid, $option )
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+			echo "<script> alert('" . JText::_('_AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 			exit;
 		}
 
@@ -1268,7 +1268,7 @@ function removeClosedSubscription( $userid, $option )
 		$db->query();
 	}
 
-	$msg = _REMOVED;
+	$msg = JText::_('_REMOVED');
 	if ( count( $userid ) ) {
 		foreach ( $userid as $id ) {
 			$msg = aecACLhandler::userDelete( $userid, $msg );
@@ -1297,7 +1297,7 @@ function removePendingSubscription( $userid, $option )
 
 	// $userid contains values corresponding to id field of #__acctexp table
 		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+			echo "<script> alert('" . JText::_('_AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 			exit;
 		}
 
@@ -1331,7 +1331,7 @@ function removePendingSubscription( $userid, $option )
 		$db->query();
 	}
 
-	$msg = _REMOVED;
+	$msg = JText::_('_REMOVED');
 	if ( count( $userid ) ) {
 		foreach ( $userid as $id ) {
 			$msg = aecACLhandler::userDelete( $userid, $msg );
@@ -1355,7 +1355,7 @@ function activatePendingSubscription( $userid, $option, $renew )
 	$db = &JFactory::getDBO();
 
 		if (!is_array( $userid ) || count( $userid ) < 1) {
-			echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+			echo "<script> alert('" . JText::_('_AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 			exit;
 		}
 
@@ -1388,12 +1388,12 @@ function activatePendingSubscription( $userid, $option, $renew )
 	if ( $renew ) {
 		// Admin confirmed an offline payment for a renew
 		// He is working on the Active queue
-		$msg = $n . ' ' . _AEC_MSG_SUBS_RENEWED;
+		$msg = $n . ' ' . JText::_('_AEC_MSG_SUBS_RENEWED');
 		aecRedirect( 'index.php?option=' . $option . '&task=showActive', $msg );
 	} else {
 		// Admin confirmed an offline payment for a new subscription
 		// He is working on the Pending queue
-		$msg = $n . ' ' . _AEC_MSG_SUBS_ACTIVATED;
+		$msg = $n . ' ' . JText::_('_AEC_MSG_SUBS_ACTIVATED');
 		aecRedirect( 'index.php?option=' . $option . '&task=showPending', $msg );
 	}
 }
@@ -1455,42 +1455,42 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	switch( $set_group ){
 		case 'active':
 			$action[0]	= 'active';
-			$action[1]	= _AEC_HEAD_ACTIVE_SUBS;
+			$action[1]	= JText::_('_AEC_HEAD_ACTIVE_SUBS');
 			break;
 
 		case 'excluded':
 			$action[0]	= 'excluded';
-			$action[1]	= _AEC_HEAD_EXCLUDED_SUBS;
+			$action[1]	= JText::_('_AEC_HEAD_EXCLUDED_SUBS');
 			break;
 
 		case 'expired':
 			$action[0]	= 'expired';
-			$action[1]	= _AEC_HEAD_EXPIRED_SUBS;
+			$action[1]	= JText::_('_AEC_HEAD_EXPIRED_SUBS');
 			break;
 
 		case 'pending':
 			$action[0]	= 'pending';
-			$action[1]	= _AEC_HEAD_PENDING_SUBS;
+			$action[1]	= JText::_('_AEC_HEAD_PENDING_SUBS');
 			break;
 
 		case 'cancelled':
 			$action[0]	= 'cancelled';
-			$action[1]	= _AEC_HEAD_CANCELLED_SUBS;
+			$action[1]	= JText::_('_AEC_HEAD_CANCELLED_SUBS');
 			break;
 
 		case 'hold':
 			$action[0]	= 'hold';
-			$action[1]	= _AEC_HEAD_HOLD_SUBS;
+			$action[1]	= JText::_('_AEC_HEAD_HOLD_SUBS');
 			break;
 
 		case 'closed':
 			$action[0]	= 'closed';
-			$action[1]	= _AEC_HEAD_CLOSED_SUBS;
+			$action[1]	= JText::_('_AEC_HEAD_CLOSED_SUBS');
 		break;
 
 		case 'notconfig':
 			$action[0]	= 'manual';
-			$action[1]	= _AEC_HEAD_MANUAL_SUBS;
+			$action[1]	= JText::_('_AEC_HEAD_MANUAL_SUBS');
 			break;
 	}
 
@@ -1743,28 +1743,28 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$sel = array();
 	if ( $set_group != "manual" ) {
-		$sel[] = JHTML::_('select.option', 'expiration ASC',	_EXP_ASC );
-		$sel[] = JHTML::_('select.option', 'expiration DESC',	_EXP_DESC );
+		$sel[] = JHTML::_('select.option', 'expiration ASC',	JText::_('_EXP_ASC') );
+		$sel[] = JHTML::_('select.option', 'expiration DESC',	JText::_('_EXP_DESC') );
 	}
 
-	$sel[] = JHTML::_('select.option', 'name ASC',			_NAME_ASC );
-	$sel[] = JHTML::_('select.option', 'name DESC',			_NAME_DESC );
-	$sel[] = JHTML::_('select.option', 'lastname ASC',		_LASTNAME_ASC );
-	$sel[] = JHTML::_('select.option', 'lastname DESC',		_LASTNAME_DESC );
-	$sel[] = JHTML::_('select.option', 'username ASC',		_LOGIN_ASC );
-	$sel[] = JHTML::_('select.option', 'username DESC',		_LOGIN_DESC );
-	$sel[] = JHTML::_('select.option', 'signup_date ASC',	_SIGNUP_ASC );
-	$sel[] = JHTML::_('select.option', 'signup_date DESC',	_SIGNUP_DESC );
+	$sel[] = JHTML::_('select.option', 'name ASC',			JText::_('_NAME_ASC') );
+	$sel[] = JHTML::_('select.option', 'name DESC',			JText::_('_NAME_DESC') );
+	$sel[] = JHTML::_('select.option', 'lastname ASC',		JText::_('_LASTNAME_ASC') );
+	$sel[] = JHTML::_('select.option', 'lastname DESC',		JText::_('_LASTNAME_DESC') );
+	$sel[] = JHTML::_('select.option', 'username ASC',		JText::_('_LOGIN_ASC') );
+	$sel[] = JHTML::_('select.option', 'username DESC',		JText::_('_LOGIN_DESC') );
+	$sel[] = JHTML::_('select.option', 'signup_date ASC',	JText::_('_SIGNUP_ASC') );
+	$sel[] = JHTML::_('select.option', 'signup_date DESC',	JText::_('_SIGNUP_DESC') );
 
 	if ( $set_group != "manual" ) {
-		$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	_LASTPAY_ASC );
-		$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	_LASTPAY_DESC );
-		$sel[] = JHTML::_('select.option', 'plan_name ASC',		_PLAN_ASC );
-		$sel[] = JHTML::_('select.option', 'plan_name DESC',	_PLAN_DESC );
-		$sel[] = JHTML::_('select.option', 'status ASC',		_STATUS_ASC );
-		$sel[] = JHTML::_('select.option', 'status DESC',		_STATUS_DESC );
-		$sel[] = JHTML::_('select.option', 'type ASC',			_TYPE_ASC );
-		$sel[] = JHTML::_('select.option', 'type DESC',			_TYPE_DESC );
+		$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	JText::_('_LASTPAY_ASC') );
+		$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	JText::_('_LASTPAY_DESC') );
+		$sel[] = JHTML::_('select.option', 'plan_name ASC',		JText::_('_PLAN_ASC') );
+		$sel[] = JHTML::_('select.option', 'plan_name DESC',	JText::_('_PLAN_DESC') );
+		$sel[] = JHTML::_('select.option', 'status ASC',		JText::_('_STATUS_ASC') );
+		$sel[] = JHTML::_('select.option', 'status DESC',		JText::_('_STATUS_DESC') );
+		$sel[] = JHTML::_('select.option', 'type ASC',			JText::_('_TYPE_ASC') );
+		$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('_TYPE_DESC') );
 	}
 
 	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
@@ -1777,27 +1777,27 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$db->setQuery( $query );
 	$db_plans = $db->loadObjectList();
 
-	$plans[] = JHTML::_('select.option', '0', _FILTER_PLAN, 'id', 'name' );
+	$plans[] = JHTML::_('select.option', '0', JText::_('_FILTER_PLAN'), 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
 	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
-	$plans2[] = JHTML::_('select.option', '0', _BIND_USER, 'id', 'name' );
+	$plans2[] = JHTML::_('select.option', '0', JText::_('_BIND_USER'), 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans2 = array_merge( $plans2, $db_plans );
 	}
 	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
 
 	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', 'excluded',	_AEC_SEL_EXCLUDED );
-	$group_selection[] = JHTML::_('select.option', 'pending',	_AEC_SEL_PENDING );
-	$group_selection[] = JHTML::_('select.option', 'active',	_AEC_SEL_ACTIVE );
-	$group_selection[] = JHTML::_('select.option', 'expired',	_AEC_SEL_EXPIRED );
-	$group_selection[] = JHTML::_('select.option', 'closed',	_AEC_SEL_CLOSED );
-	$group_selection[] = JHTML::_('select.option', 'cancelled',	_AEC_SEL_CANCELLED );
-	$group_selection[] = JHTML::_('select.option', 'hold',		_AEC_SEL_HOLD );
-	$group_selection[] = JHTML::_('select.option', 'notconfig',	_AEC_SEL_NOT_CONFIGURED );
+	$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('_AEC_SEL_EXCLUDED') );
+	$group_selection[] = JHTML::_('select.option', 'pending',	JText::_('_AEC_SEL_PENDING') );
+	$group_selection[] = JHTML::_('select.option', 'active',	JText::_('_AEC_SEL_ACTIVE') );
+	$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('_AEC_SEL_EXPIRED') );
+	$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('_AEC_SEL_CLOSED') );
+	$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('_AEC_SEL_CANCELLED') );
+	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('_AEC_SEL_HOLD') );
+	$group_selection[] = JHTML::_('select.option', 'notconfig',	JText::_('_AEC_SEL_NOT_CONFIGURED') );
 
 	$selected_groups = array();
 	if ( is_array( $groups ) ) {
@@ -1809,19 +1809,19 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$lists['groups'] = JHTML::_('select.genericlist', $group_selection, 'groups[]', 'size="5" multiple="multiple"', 'value', 'text', $selected_groups);
 
 	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', '',			_EXPIRE_SET );
-	$group_selection[] = JHTML::_('select.option', 'now',		_EXPIRE_NOW );
-	$group_selection[] = JHTML::_('select.option', 'exclude',	_EXPIRE_EXCLUDE );
-	$group_selection[] = JHTML::_('select.option', 'lifetime',	_AEC_CMN_LIFETIME );
-	$group_selection[] = JHTML::_('select.option', 'include',	_EXPIRE_INCLUDE );
-	$group_selection[] = JHTML::_('select.option', 'close',		_EXPIRE_CLOSE );
-	$group_selection[] = JHTML::_('select.option', 'hold',		_EXPIRE_HOLD );
-	$group_selection[] = JHTML::_('select.option', 'add_1',		_EXPIRE_ADD01MONTH );
-	$group_selection[] = JHTML::_('select.option', 'add_3',		_EXPIRE_ADD03MONTH );
-	$group_selection[] = JHTML::_('select.option', 'add_12',	_EXPIRE_ADD12MONTH );
-	$group_selection[] = JHTML::_('select.option', 'set_1',		_EXPIRE_01MONTH );
-	$group_selection[] = JHTML::_('select.option', 'set_3',		_EXPIRE_03MONTH );
-	$group_selection[] = JHTML::_('select.option', 'set_12',	_EXPIRE_12MONTH );
+	$group_selection[] = JHTML::_('select.option', '',			JText::_('_EXPIRE_SET') );
+	$group_selection[] = JHTML::_('select.option', 'now',		JText::_('_EXPIRE_NOW') );
+	$group_selection[] = JHTML::_('select.option', 'exclude',	JText::_('_EXPIRE_EXCLUDE') );
+	$group_selection[] = JHTML::_('select.option', 'lifetime',	JText::_('_AEC_CMN_LIFETIME') );
+	$group_selection[] = JHTML::_('select.option', 'include',	JText::_('_EXPIRE_INCLUDE') );
+	$group_selection[] = JHTML::_('select.option', 'close',		JText::_('_EXPIRE_CLOSE') );
+	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('_EXPIRE_HOLD') );
+	$group_selection[] = JHTML::_('select.option', 'add_1',		JText::_('_EXPIRE_ADD01MONTH') );
+	$group_selection[] = JHTML::_('select.option', 'add_3',		JText::_('_EXPIRE_ADD03MONTH') );
+	$group_selection[] = JHTML::_('select.option', 'add_12',	JText::_('_EXPIRE_ADD12MONTH') );
+	$group_selection[] = JHTML::_('select.option', 'set_1',		JText::_('_EXPIRE_01MONTH') );
+	$group_selection[] = JHTML::_('select.option', 'set_3',		JText::_('_EXPIRE_03MONTH') );
+	$group_selection[] = JHTML::_('select.option', 'set_12',	JText::_('_EXPIRE_12MONTH') );
 
 	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
@@ -1864,19 +1864,19 @@ function editSettings( $option )
 	$tab_data = array();
 
 	$params[] = array( 'userinfobox', 32 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_ACCESS );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_ACCESS') );
 	$params['require_subscription']			= array( 'list_yesno', 0 );
 	$params['adminaccess']					= array( 'list_yesno', 0 );
 	$params['manageraccess']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SYSTEM );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_SYSTEM') );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_EMAIL );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_EMAIL') );
 	$params['noemails']						= array( 'list_yesno', 0 );
 	$params['nojoomlaregemails']			= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_DEBUG') );
 	$params['curl_default']					= array( 'list_yesno', 0 );
 	$params['simpleurls']					= array( 'list_yesno', 0 );
 	$params['error_notification_level']		= array( 'list', 0 );
@@ -1885,17 +1885,17 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 33 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_REGFLOW );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_REGFLOW') );
 	$params['plans_first']					= array( 'list_yesno', 0 );
 	$params['integrate_registration']		= array( 'list_yesno', 0 );
 	$params['skip_confirmation']			= array( 'list_yesno', 0 );
 	$params['displayccinfo']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CONFIRMATION );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_CONFIRMATION') );
 	$params['tos']							= array( 'inputC', '' );
 	$params['tos_iframe']					= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CHECKOUT );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_CHECKOUT') );
 	$params['enable_coupons']				= array( 'list_yesno', 0 );
 	$params['checkout_display_descriptions']	= array( 'list_yesno', '' );
 	$params['checkout_as_gift']				= array( 'list_yesno', '' );
@@ -1905,7 +1905,7 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 32 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_PLANS') );
 	$params['root_group']					= array( 'list', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
@@ -1913,20 +1913,20 @@ function editSettings( $option )
 	$params['customlink_continueshopping']	= array( 'inputC', '' );
 	$params['additem_stayonpage']			= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PROCESSORS );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_PROCESSORS') );
 	$params['gwlist']						= array( 'list', 0 );
 	$params['standard_currency']			= array( 'list_currency', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB1_TITLE, key( $params ), '<h2>' . _CFG_TAB1_SUBTITLE . '</h2>' );
+	$tab_data[] = array( JText::_('_CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('_CFG_TAB1_SUBTITLE') . '</h2>' );
 
 	$params[] = array( 'userinfobox', 48 );
 	$params[] = array( 'userinfobox_sub', 'AEC' );
 	$params['quicksearch_top']					= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_PROXY );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_SUB_PROXY') );
 	$params['use_proxy']						= array( 'list_yesno', '' );
 	$params['proxy']							= array( 'inputC', '' );
 	$params['proxy_port']						= array( 'inputC', '' );
@@ -1934,7 +1934,7 @@ function editSettings( $option )
 	$params['proxy_password']					= array( 'inputC', '' );
 	$params['gethostbyaddr']					= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_BUTTONS_SUB );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_SUB_BUTTONS_SUB') );
 	$params['renew_button_never']				= array( 'list_yesno', '' );
 	$params['renew_button_nolifetimerecurring']	= array( 'list_yesno', '' );
 	$params['continue_button']					= array( 'list_yesno', '' );
@@ -1942,20 +1942,20 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 48 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_FORMAT_DATE );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_FORMAT_PRICE );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
 	$params['amount_currency_symbol']			= array( 'list_yesno', 0 );
 	$params['amount_currency_symbolfirst']		= array( 'list_yesno', 0 );
 	$params['amount_use_comma']					= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_FORMAT_INUM );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_SUB_FORMAT_INUM') );
 	$params['invoicenum_doformat']				= array( 'list_yesno', '' );
 	$params['invoicenum_formatting']			= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CAPTCHA );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_SUB_CAPTCHA') );
 	$params['use_recaptcha']					= array( 'list_yesno', '' );
 	$params['recaptcha_privatekey']				= array( 'inputC', '' );
 	$params['recaptcha_publickey']				= array( 'inputC', '' );
@@ -1963,34 +1963,34 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB_CUSTOMIZATION_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMIZATION_SUBTITLE . '</h2>' );
+	$tab_data[] = array( JText::_('_CFG_TAB_CUSTOMIZATION_TITLE'), key( $params ), '<h2>' . JText::_('_CFG_TAB_CUSTOMIZATION_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS') );
 	$params[] = array( 'accordion_start', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_HEADER_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_INVOICE_HEADER_NAME') );
 	$params['invoice_page_title']				= array( 'inputD', '' );
 	$params['invoice_header']					= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_AFTER_HEADER_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_INVOICE_AFTER_HEADER_NAME') );
 	$params['invoice_after_header']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_ADDRESS_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_INVOICE_ADDRESS_NAME') );
 	$params['invoice_address_allow_edit']		= array( 'list_yesno', '' );
 	$params['invoice_address']					= array( 'inputD', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME') );
 	$params['invoice_before_content']			= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME') );
 	$params['invoice_after_content']			= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_BEFORE_FOOTER_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_INVOICE_BEFORE_FOOTER_NAME') );
 	$params['invoice_before_footer']			= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_FOOTER_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_INVOICE_FOOTER_NAME') );
 	$params['invoice_footer']					= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_INVOICE_AFTER_FOOTER_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_INVOICE_AFTER_FOOTER_NAME') );
 	$params['invoice_after_footer']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
@@ -2001,10 +2001,10 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB_CUSTOMINVOICE_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMINVOICE_SUBTITLE . '</h2>' );
+	$tab_data[] = array( JText::_('_CFG_TAB_CUSTOMINVOICE_TITLE'), key( $params ), '<h2>' . JText::_('_CFG_TAB_CUSTOMINVOICE_SUBTITLE') . '</h2>' );
 
 	$params[] = array( 'userinfobox', 48 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_CREDIRECT );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_SUB_CREDIRECT') );
 	$params['customintro']						= array( 'inputC', '' );
 	$params['customintro_userid']				= array( 'list_yesno', '' );
 	$params['customintro_always']				= array( 'list_yesno', '' );
@@ -2032,7 +2032,7 @@ function editSettings( $option )
 
 
 	$params[] = array( 'userinfobox', 48 );
-	$params[] = array( 'userinfobox_sub', _CFG_CUSTOMIZATION_SUB_ITEMID );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_CUSTOMIZATION_SUB_ITEMID') );
 
 	foreach ( $itemidlist as $param => $xparams ) {
 		$params['itemid_'.$param]				= array( 'inputB', '' );
@@ -2045,53 +2045,53 @@ function editSettings( $option )
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 
 	$params[] = array( 'accordion_start', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_PLANS_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_PLANS_NAME') );
 	$params['customtext_plans']					= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME') );
 	$params['custom_confirm_userdetails']		= array( 'editor', '' );
 	$params['customtext_confirm_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_confirm']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME') );
 	$params['customtext_checkout_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_checkout']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_EXCEPTION_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_EXCEPTION_NAME') );
 	$params['customtext_exception_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_exception']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME') );
 	$params['customtext_notallowed_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_notallowed']			= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_PENDING_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_PENDING_NAME') );
 	$params['customtext_pending_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_pending']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_HOLD_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_HOLD_NAME') );
 	$params['customtext_hold_keeporiginal']		= array( 'list_yesno', '' );
 	$params['customtext_hold']					= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME') );
 	$params['customtext_expired_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_expired']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_THANKS_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_THANKS_NAME') );
 	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_thanks']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'accordion_itemstart', _CFG_GENERAL_CUSTOMTEXT_CANCEL_NAME );
+	$params[] = array( 'accordion_itemstart', JText::_('_CFG_GENERAL_CUSTOMTEXT_CANCEL_NAME') );
 	$params['customtext_cancel_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_cancel']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB_CUSTOMPAGES_TITLE, key( $params ), '<h2>' . _CFG_TAB_CUSTOMPAGES_SUBTITLE . '</h2>' );
+	$tab_data[] = array( JText::_('_CFG_TAB_CUSTOMPAGES_TITLE'), key( $params ), '<h2>' . JText::_('_CFG_TAB_CUSTOMPAGES_SUBTITLE') . '</h2>' );
 
 	$params[] = array( 'userinfobox', 32 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SYSTEM );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_SYSTEM') );
 	$params['alertlevel2']					= array( 'inputA', 0 );
 	$params['alertlevel1']					= array( 'inputA', 0 );
 	$params['expiration_cushion']			= array( 'inputA', 0 );
@@ -2103,7 +2103,7 @@ function editSettings( $option )
 	$params['countries_available']			= array( 'list_country_full', 0 );
 	$params['countries_top']				= array( 'list_country_full', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_DEBUG );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_DEBUG') );
 	$params['bypassintegration']			= array( 'inputC', '' );
 
 	$params['breakon_mi_error']				= array( 'list_yesno', 0 );
@@ -2114,23 +2114,23 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 33 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_REGFLOW );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_REGFLOW') );
 	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
 	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
 	$params['intro_expired']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CONFIRMATION );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_CONFIRMATION') );
 	$params['confirmation_changeusername']	= array( 'list_yesno', '' );
 	$params['confirmation_changeusage']		= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_CHECKOUT );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_CHECKOUT') );
 	$params['checkoutform_jsvalidation']	= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS') );
 	$params['subscriptiondetails_menu']		= array( 'list_yesno', 1 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_PLANS );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_PLANS') );
 	$params['root_group_rw']				= array( 'inputD', 0 );
 	$params['entry_plan']					= array( 'list', 0 );
 	$params['per_plan_mis']					= array( 'list_yesno', 0 );
@@ -2138,7 +2138,7 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 32 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_SECURITY );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_SECURITY') );
 	$params['ssl_signup']					= array( 'list_yesno', 0 );
 	$params['ssl_profile']					= array( 'list_yesno', 0 );
 	$params['override_reqssl']				= array( 'list_yesno', 0 );
@@ -2149,20 +2149,20 @@ function editSettings( $option )
 	$params['ssl_capath']					= array( 'inputC', '' );
 	$params['allow_invoice_unpublished_item']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', _CFG_GENERAL_SUB_UNINSTALL );
+	$params[] = array( 'userinfobox_sub', JText::_('_CFG_GENERAL_SUB_UNINSTALL') );
 	$params['delete_tables']				= array( 'list_yesno', 0 );
 	$params['delete_tables_sure']			= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
-	$tab_data[] = array( _CFG_TAB_EXPERT_TITLE, key( $params ), '<h2>' . _CFG_TAB_EXPERT_SUBTITLE . '</h2>' );
+	$tab_data[] = array( JText::_('_CFG_TAB_EXPERT_TITLE'), key( $params ), '<h2>' . JText::_('_CFG_TAB_EXPERT_SUBTITLE') . '</h2>' );
 
-	$error_reporting_notices[] = JHTML::_('select.option', 512, _AEC_NOTICE_NUMBER_512 );
-	$error_reporting_notices[] = JHTML::_('select.option', 128, _AEC_NOTICE_NUMBER_128 );
-	$error_reporting_notices[] = JHTML::_('select.option', 32, _AEC_NOTICE_NUMBER_32 );
-	$error_reporting_notices[] = JHTML::_('select.option', 8, _AEC_NOTICE_NUMBER_8 );
-	$error_reporting_notices[] = JHTML::_('select.option', 2, _AEC_NOTICE_NUMBER_2 );
+	$error_reporting_notices[] = JHTML::_('select.option', 512, JText::_('_AEC_NOTICE_NUMBER_512') );
+	$error_reporting_notices[] = JHTML::_('select.option', 128, JText::_('_AEC_NOTICE_NUMBER_128') );
+	$error_reporting_notices[] = JHTML::_('select.option', 32, JText::_('_AEC_NOTICE_NUMBER_32') );
+	$error_reporting_notices[] = JHTML::_('select.option', 8, JText::_('_AEC_NOTICE_NUMBER_8') );
+	$error_reporting_notices[] = JHTML::_('select.option', 2, JText::_('_AEC_NOTICE_NUMBER_2') );
 	$lists['error_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'error_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['error_notification_level'] );
 	$lists['email_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'email_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['email_notification_level'] );
 
@@ -2171,7 +2171,7 @@ function editSettings( $option )
 
 	$gw_list_enabled		= array();
 	$gw_list_enabled_html	= array();
-	$gw_list_enabled_html[] = JHTML::_('select.option', 'none', _AEC_CMN_NONE_SELECTED );
+	$gw_list_enabled_html[] = JHTML::_('select.option', 'none', JText::_('_AEC_CMN_NONE_SELECTED') );
 
 	// Display Processor descriptions?
 	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
@@ -2281,7 +2281,7 @@ function editSettings( $option )
 */
 function cancelSettings( $option )
 {
-	aecRedirect( 'index.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_CANCELLED );
+	aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('_AEC_CONFIG_CANCELLED') );
 }
 
 
@@ -2321,8 +2321,8 @@ function saveSettings( $option, $return=0 )
 
 	$ip = AECToolbox::aecIP();
 
-	$short	= _AEC_LOG_SH_SETT_SAVED;
-	$event	= _AEC_LOG_LO_SETT_SAVED . ' ' . $difference;
+	$short	= JText::_('_AEC_LOG_SH_SETT_SAVED');
+	$event	= JText::_('_AEC_LOG_LO_SETT_SAVED') . ' ' . $difference;
 	$tags	= 'settings,system';
 	$params = array(	'userid' => $user->id,
 						'ip' => $ip['ip'],
@@ -2354,9 +2354,9 @@ function saveSettings( $option, $return=0 )
 	}
 
 	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=showSettings', _AEC_CONFIG_SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=showSettings', JText::_('_AEC_CONFIG_SAVED') );
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showCentral', _AEC_CONFIG_SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('_AEC_CONFIG_SAVED') );
 	}
 }
 
@@ -2503,7 +2503,7 @@ function editProcessor( $id, $option )
 					if ( defined( $genericname ) ) {
 						$settings_array[$name][1] = constant( $genericname );
 					} else {
-						$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+						$settings_array[$name][1] = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
 					}
 				}
 
@@ -2515,7 +2515,7 @@ function editProcessor( $id, $option )
 					if ( defined( $genericname ) ) {
 						$settings_array[$name][2] = constant( $genericdesc );
 					} else {
-						$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+						$settings_array[$name][2] = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
 					}
 				}
 			}
@@ -2542,14 +2542,14 @@ function editProcessor( $id, $option )
 		$settingsparams = $pp->settings;
 
 		$params = array();
-		$params[$pp->processor_name.'_active'] = array( 'list_yesno', _PP_GENERAL_ACTIVE_NAME, _PP_GENERAL_ACTIVE_DESC, $pp->processor->active);
+		$params[$pp->processor_name.'_active'] = array( 'list_yesno', JText::_('_PP_GENERAL_ACTIVE_NAME'), JText::_('_PP_GENERAL_ACTIVE_DESC'), $pp->processor->active);
 
 		if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
 			$params = array_merge( $params, $settings_array );
 		}
 
-		$params[$longname] = array( 'inputC', _CFG_PROCESSOR_NAME_NAME, _CFG_PROCESSOR_NAME_DESC, $pp->info['longname'], $longname);
-		$params[$description] = array( 'editor', _CFG_PROCESSOR_DESC_NAME, _CFG_PROCESSOR_DESC_DESC, $pp->info['description'], $description);
+		$params[$longname] = array( 'inputC', JText::_('_CFG_PROCESSOR_NAME_NAME'), JText::_('_CFG_PROCESSOR_NAME_DESC'), $pp->info['longname'], $longname);
+		$params[$description] = array( 'editor', JText::_('_CFG_PROCESSOR_DESC_NAME'), JText::_('_CFG_PROCESSOR_DESC_DESC'), $pp->info['description'], $description);
 	} else {
 		// Create Processor Selection Screen
 		$pph					= new PaymentProcessorHandler();
@@ -2604,7 +2604,7 @@ function editProcessor( $id, $option )
 */
 function cancelProcessor( $option )
 {
-	aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', _AEC_CONFIG_CANCELLED );
+	aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('_AEC_CONFIG_CANCELLED') );
 }
 
 function changeProcessor( $cid=null, $state=0, $type, $option )
@@ -2612,7 +2612,7 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 	$db = &JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
-		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+		echo "<script> alert('" . JText::_('_AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -2631,12 +2631,12 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 	}
 
 	if ( $state == '1' ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_PUBLISHED : _AEC_CMN_MADE_VISIBLE );
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('_AEC_CMN_PUBLISHED') : JText::_('_AEC_CMN_MADE_VISIBLE') );
 	} elseif ( $state == '0' ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_NOT_PUBLISHED : _AEC_CMN_MADE_INVISIBLE );
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('_AEC_CMN_NOT_PUBLISHED') : JText::_('_AEC_CMN_MADE_INVISIBLE') );
 	}
 
-	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
+	$msg = sprintf( JText::_('_AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', $msg );
 }
@@ -2720,9 +2720,9 @@ function saveProcessor( $option, $return=0 )
 	$pp->storeload();
 
 	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->id, _AEC_CONFIG_SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->id, JText::_('_AEC_CONFIG_SAVED') );
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', _AEC_CONFIG_SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('_AEC_CONFIG_SAVED') );
 	}
 }
 
@@ -2904,7 +2904,7 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	$stdformat = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
-				.'{"cmd":"concat","vars":[{"cmd":"constant","vars":"_CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
+				.'{"cmd":"concat","vars":[{"cmd":"jtext","vars":"_CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
 				.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
 				.']}{/aecjson}'
 				;
@@ -3007,10 +3007,10 @@ function editSubscriptionPlan( $id, $option )
 	$params['rewriteInfo']			= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 	// make the select list for first trial period units
-	$perunit[] = JHTML::_('select.option', 'D', _PAYPLAN_PERUNIT1 );
-	$perunit[] = JHTML::_('select.option', 'W', _PAYPLAN_PERUNIT2 );
-	$perunit[] = JHTML::_('select.option', 'M', _PAYPLAN_PERUNIT3 );
-	$perunit[] = JHTML::_('select.option', 'Y', _PAYPLAN_PERUNIT4 );
+	$perunit[] = JHTML::_('select.option', 'D', JText::_('_PAYPLAN_PERUNIT1') );
+	$perunit[] = JHTML::_('select.option', 'W', JText::_('_PAYPLAN_PERUNIT2') );
+	$perunit[] = JHTML::_('select.option', 'M', JText::_('_PAYPLAN_PERUNIT3') );
+	$perunit[] = JHTML::_('select.option', 'Y', JText::_('_PAYPLAN_PERUNIT4') );
 
 	$lists['trial_periodunit'] = JHTML::_('select.genericlist', $perunit, 'trial_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'trial_periodunit', "D") );
 	$lists['full_periodunit'] = JHTML::_('select.genericlist', $perunit, 'full_periodunit', 'size="4"', 'value', 'text', arrayValueDefault($params_values, 'full_periodunit', "D") );
@@ -3059,10 +3059,10 @@ function editSubscriptionPlan( $id, $option )
 		$custompar[$pp->id]['name'] = $pp->info['longname'];
 		$custompar[$pp->id]['params'] = array();
 
-		$params['processor_' . $pp->id] = array( 'checkbox', _PAYPLAN_PROCESSORS_ACTIVATE_NAME, _PAYPLAN_PROCESSORS_ACTIVATE_DESC  );
+		$params['processor_' . $pp->id] = array( 'checkbox', JText::_('_PAYPLAN_PROCESSORS_ACTIVATE_NAME'), JText::_('_PAYPLAN_PROCESSORS_ACTIVATE_DESC')  );
 		$custompar[$pp->id]['params'][] = 'processor_' . $pp->id;
 
-		$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME, _PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC );
+		$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', JText::_('_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME'), JText::_('_PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC') );
 		$custompar[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
 
 		$customparams = $pp->getCustomPlanParams();
@@ -3194,7 +3194,7 @@ function editSubscriptionPlan( $id, $option )
 					if ( defined( $genericname ) ) {
 						$settings_array[$name][1] = constant( $genericname );
 					} else {
-						$settings_array[$name][1] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+						$settings_array[$name][1] = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
 					}
 				}
 
@@ -3206,7 +3206,7 @@ function editSubscriptionPlan( $id, $option )
 					if ( defined( $genericname ) ) {
 						$settings_array[$name][2] = constant( $genericdesc );
 					} else {
-						$settings_array[$name][2] = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+						$settings_array[$name][2] = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
 					}
 				}
 			}
@@ -3220,7 +3220,7 @@ function editSubscriptionPlan( $id, $option )
 
 	// get available active plans
 	$available_plans = array();
-	$available_plans[] = JHTML::_('select.option', '0', _PAYPLAN_NOPLAN );
+	$available_plans[] = JHTML::_('select.option', '0', JText::_('_PAYPLAN_NOPLAN') );
 
 	$query = 'SELECT `id` AS value, `name` AS text'
 			. ' FROM #__acctexp_plans'
@@ -3312,7 +3312,7 @@ function editSubscriptionPlan( $id, $option )
 	$mi_list = $mi_handler->getIntegrationList();
 
 	$mi_htmllist = array();
-	$mi_htmllist[]	= JHTML::_('select.option', '', _AEC_CMN_NONE_SELECTED );
+	$mi_htmllist[]	= JHTML::_('select.option', '', JText::_('_AEC_CMN_NONE_SELECTED') );
 
 	foreach ( $mi_list as $name ) {
 		$mi = new microIntegration( $db );
@@ -3337,9 +3337,9 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	// make the select list for first trial period units
-	$cartmode[] = JHTML::_('select.option', '0', _PAYPLAN_CARTMODE_INHERIT );
-	$cartmode[] = JHTML::_('select.option', '1', _PAYPLAN_CARTMODE_FORCE_CART );
-	$cartmode[] = JHTML::_('select.option', '2', _PAYPLAN_CARTMODE_FORCE_DIRECT );
+	$cartmode[] = JHTML::_('select.option', '0', JText::_('_PAYPLAN_CARTMODE_INHERIT') );
+	$cartmode[] = JHTML::_('select.option', '1', JText::_('_PAYPLAN_CARTMODE_FORCE_CART') );
+	$cartmode[] = JHTML::_('select.option', '2', JText::_('_PAYPLAN_CARTMODE_FORCE_DIRECT') );
 
 	$lists['cart_behavior'] = JHTML::_('select.genericlist', $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
 
@@ -3383,7 +3383,7 @@ function editSubscriptionPlan( $id, $option )
 				$params[] = array( 'area_change', 'MI' );
 				$params[] = array( 'subarea_change', 'E' );
 				$params[] = array( 'add_prefix', $prefix );
-				$params[] = array( 'userinfobox_sub', _MI_E_TITLE );
+				$params[] = array( 'userinfobox_sub', JText::_('_MI_E_TITLE') );
 
 				$generalsettings = $mi->getGeneralSettings();
 
@@ -3413,7 +3413,7 @@ function editSubscriptionPlan( $id, $option )
 				$params[] = array( 'area_change', 'MI' );
 				$params[] = array( 'subarea_change', $mi->class_name );
 				$params[] = array( 'add_prefix', $prefix );
-				$params[] = array( 'userinfobox_sub', _MI_E_SETTINGS );
+				$params[] = array( 'userinfobox_sub', JText::_('_MI_E_SETTINGS') );
 
 				foreach ( $misettings as $name => $value ) {
 					$params[$prefix . $name] = $value;
@@ -3538,7 +3538,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 	}
 
 	if ( $apply ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, JText::_('_AEC_MSG_SUCESSFULLY_SAVED') );
 	} else {
 		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans' );
 	}
@@ -3558,7 +3558,7 @@ function removeSubscriptionPlan( $id, $option )
 	$total = $db->loadResult();
 
 	if ( $total == 0 ) {
-		echo "<script> alert('" . html_entity_decode( _AEC_MSG_NO_ITEMS_TO_DELETE ) . "'); window.history.go(-1);</script>\n";
+		echo "<script> alert('" . html_entity_decode( JText::_('_AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -3574,7 +3574,7 @@ function removeSubscriptionPlan( $id, $option )
 	$subscribers = $db->loadResult();
 
 	if ( $subscribers > 0 ) {
-		$msg = _AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER;
+		$msg = JText::_('_AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER');
 	} else {
 		// Delete plans
 		$query = 'DELETE FROM #__acctexp_plans'
@@ -3588,14 +3588,14 @@ function removeSubscriptionPlan( $id, $option )
 
 		ItemGroupHandler::removeChildren( $id, false, 'item' );
 
-		$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
+		$msg = $total . ' ' . JText::_('_AEC_MSG_ITEMS_DELETED');
 	}
 	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
 
 function cancelSubscriptionPlan( $option )
 {
-	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', _AEC_CMN_EDIT_CANCELLED );
+	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('_AEC_CMN_EDIT_CANCELLED') );
 }
 
 function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
@@ -3603,7 +3603,7 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 	$db = &JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
-		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+		echo "<script> alert('" . JText::_('_AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -3622,12 +3622,12 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 	}
 
 	if ( $state == '1' ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_PUBLISHED : _AEC_CMN_MADE_VISIBLE );
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('_AEC_CMN_PUBLISHED') : JText::_('_AEC_CMN_MADE_VISIBLE') );
 	} elseif ( $state == '0' ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_NOT_PUBLISHED : _AEC_CMN_MADE_INVISIBLE );
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('_AEC_CMN_NOT_PUBLISHED') : JText::_('_AEC_CMN_MADE_INVISIBLE') );
 	}
 
-	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
+	$msg = sprintf( JText::_('_AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
@@ -3923,7 +3923,7 @@ function saveItemGroup( $option, $apply=0 )
 	}
 
 	if ( $apply ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editItemGroup&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=editItemGroup&id=' . $id, JText::_('_AEC_MSG_SUCESSFULLY_SAVED') );
 	} else {
 		aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups' );
 	}
@@ -3943,7 +3943,7 @@ function removeItemGroup( $id, $option )
 	$total = $db->loadResult();
 
 	if ( $total == 0 ) {
-		echo "<script> alert('" . html_entity_decode( _AEC_MSG_NO_ITEMS_TO_DELETE ) . "'); window.history.go(-1);</script>\n";
+		echo "<script> alert('" . html_entity_decode( JText::_('_AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -3961,10 +3961,10 @@ function removeItemGroup( $id, $option )
 	}
 
 	if ( $total == 0 ) {
-		echo "<script> alert('" . html_entity_decode( _AEC_MSG_NO_ITEMS_TO_DELETE ) . "'); window.history.go(-1);</script>\n";
+		echo "<script> alert('" . html_entity_decode( JText::_('_AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
 		exit;
 	} else {
-		$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
+		$msg = $total . ' ' . JText::_('_AEC_MSG_ITEMS_DELETED');
 
 		aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', $msg );
 	}
@@ -3972,7 +3972,7 @@ function removeItemGroup( $id, $option )
 
 function cancelItemGroup( $option )
 {
-	aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', _AEC_CMN_EDIT_CANCELLED );
+	aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('_AEC_CMN_EDIT_CANCELLED') );
 }
 
 function changeItemGroup( $cid=null, $state=0, $type, $option )
@@ -3980,7 +3980,7 @@ function changeItemGroup( $cid=null, $state=0, $type, $option )
 	$db = &JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
-		echo "<script> alert('" . _AEC_ALERT_SELECT_FIRST . "'); window.history.go(-1);</script>\n";
+		echo "<script> alert('" . JText::_('_AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -3999,12 +3999,12 @@ function changeItemGroup( $cid=null, $state=0, $type, $option )
 	}
 
 	if ( $state == '1' ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_PUBLISHED : _AEC_CMN_MADE_VISIBLE );
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('_AEC_CMN_PUBLISHED') : JText::_('_AEC_CMN_MADE_VISIBLE') );
 	} elseif ( $state == '0' ) {
-		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? _AEC_CMN_NOT_PUBLISHED : _AEC_CMN_MADE_INVISIBLE );
+		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('_AEC_CMN_NOT_PUBLISHED') : JText::_('_AEC_CMN_MADE_INVISIBLE') );
 	}
 
-	$msg = sprintf( _AEC_MSG_ITEMS_SUCESSFULLY, $total ) . ' ' . $msg;
+	$msg = sprintf( JText::_('_AEC_MSG_ITEMS_SUCESSFULLY'), $total ) . ' ' . $msg;
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', $msg );
 }
@@ -4080,14 +4080,14 @@ function listMicroIntegrations( $option )
 	}
 
 	$sel = array();
-	$sel[] = JHTML::_('select.option', 'ordering ASC',		_ORDERING_ASC );
-	$sel[] = JHTML::_('select.option', 'ordering DESC',		_ORDERING_DESC );
-	$sel[] = JHTML::_('select.option', 'id ASC',			_ID_ASC );
-	$sel[] = JHTML::_('select.option', 'id DESC',			_ID_DESC );
-	$sel[] = JHTML::_('select.option', 'name ASC',			_NAME_ASC );
-	$sel[] = JHTML::_('select.option', 'name DESC',			_NAME_DESC );
-	$sel[] = JHTML::_('select.option', 'class_name ASC',	_CLASSNAME_ASC );
-	$sel[] = JHTML::_('select.option', 'class_name DESC',	_CLASSNAME_DESC );
+	$sel[] = JHTML::_('select.option', 'ordering ASC',		JText::_('_ORDERING_ASC') );
+	$sel[] = JHTML::_('select.option', 'ordering DESC',		JText::_('_ORDERING_DESC') );
+	$sel[] = JHTML::_('select.option', 'id ASC',			JText::_('_ID_ASC') );
+	$sel[] = JHTML::_('select.option', 'id DESC',			JText::_('_ID_DESC') );
+	$sel[] = JHTML::_('select.option', 'name ASC',			JText::_('_NAME_ASC') );
+	$sel[] = JHTML::_('select.option', 'name DESC',			JText::_('_NAME_DESC') );
+	$sel[] = JHTML::_('select.option', 'class_name ASC',	JText::_('_CLASSNAME_ASC') );
+	$sel[] = JHTML::_('select.option', 'class_name DESC',	JText::_('_CLASSNAME_DESC') );
 
 	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
@@ -4099,7 +4099,7 @@ function listMicroIntegrations( $option )
 	$db->setQuery( $query );
 	$db_plans = $db->loadObjectList();
 
-	$plans[] = JHTML::_('select.option', '0', _FILTER_PLAN, 'id', 'name' );
+	$plans[] = JHTML::_('select.option', '0', JText::_('_FILTER_PLAN'), 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
@@ -4264,12 +4264,12 @@ function saveMicroIntegration( $option, $apply=0 )
 
 	if ( $id ) {
 		if ( $apply ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+			aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $id, JText::_('_AEC_MSG_SUCESSFULLY_SAVED') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', _AEC_MSG_SUCESSFULLY_SAVED );
+			aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('_AEC_MSG_SUCESSFULLY_SAVED') );
 		}
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->id , _AEC_MSG_SUCESSFULLY_SAVED );
+		aecRedirect( 'index.php?option=' . $option . '&task=editMicroIntegration&id=' . $mi->id , JText::_('_AEC_MSG_SUCESSFULLY_SAVED') );
 	}
 
 }
@@ -4288,7 +4288,7 @@ function removeMicroIntegration( $id, $option )
 	$total = $db->loadResult();
 
 	if ( $total==0 ) {
-		echo "<script> alert('" . html_entity_decode( _AEC_MSG_NO_ITEMS_TO_DELETE ) . "'); window.history.go(-1);</script>\n";
+		echo "<script> alert('" . html_entity_decode( JText::_('_AEC_MSG_NO_ITEMS_TO_DELETE') ) . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -4312,14 +4312,14 @@ function removeMicroIntegration( $id, $option )
 		exit();
 	}
 
-	$msg = $total . ' ' . _AEC_MSG_ITEMS_DELETED;
+	$msg = $total . ' ' . JText::_('_AEC_MSG_ITEMS_DELETED');
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
 }
 
 function cancelMicroIntegration( $option )
 {
-	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', _AEC_CMN_EDIT_CANCELLED );
+	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('_AEC_CMN_EDIT_CANCELLED') );
 }
 
 // Changes the state of one or more content pages
@@ -4332,8 +4332,8 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 	$db = &JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
-		$action = $state == 1 ? _AEC_CMN_TOPUBLISH: _AEC_CMN_TOUNPUBLISH;
-		echo "<script> alert('" . sprintf( html_entity_decode( _AEC_ALERT_SELECT_FIRST_TO ), $action ) . "'); window.history.go(-1);</script>\n";
+		$action = $state == 1 ? JText::_('_AEC_CMN_TOPUBLISH'): JText::_('_AEC_CMN_TOUNPUBLISH');
+		echo "<script> alert('" . sprintf( html_entity_decode( JText::_('_AEC_ALERT_SELECT_FIRST_TO') ), $action ) . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -4351,9 +4351,9 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 	}
 
 	if ( $state == '1' ) {
-		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_PUBLISHED;
+		$msg = $total . ' ' . JText::_('_AEC_MSG_ITEMS_SUCC_PUBLISHED');
 	} elseif ( $state == '0' ) {
-		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_UNPUBLISHED;
+		$msg = $total . ' ' . JText::_('_AEC_MSG_ITEMS_SUCC_UNPUBLISHED');
 	}
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
@@ -4504,7 +4504,7 @@ function editCoupon( $id, $option, $new, $type )
 
 	// get available plans
 	$available_plans = array();
-	$available_plans[]			= JHTML::_('select.option', '0', _PAYPLAN_NOPLAN );
+	$available_plans[]			= JHTML::_('select.option', '0', JText::_('_PAYPLAN_NOPLAN') );
 
 	$query = 'SELECT `id` as value, `name` as text'
 			. ' FROM #__acctexp_plans'
@@ -4692,12 +4692,12 @@ function saveCoupon( $option, $type, $apply=0 )
 		}
 
 		if ( $apply ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editCoupon' . ( $type ? 'Static' : '' ) . '&id=' . $id, _AEC_MSG_SUCESSFULLY_SAVED );
+			aecRedirect( 'index.php?option=' . $option . '&task=editCoupon' . ( $type ? 'Static' : '' ) . '&id=' . $id, JText::_('_AEC_MSG_SUCESSFULLY_SAVED') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_SUCESSFULLY_SAVED );
+			aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), JText::_('_AEC_MSG_SUCESSFULLY_SAVED') );
 		}
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), _AEC_MSG_NO_COUPON_CODE );
+		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), JText::_('_AEC_MSG_NO_COUPON_CODE') );
 	}
 
 }
@@ -4720,14 +4720,14 @@ function removeCoupon( $id, $option, $returnTask, $type )
 		exit();
 	}
 
-	$msg = _AEC_MSG_ITEMS_DELETED;
+	$msg = JText::_('_AEC_MSG_ITEMS_DELETED');
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
 }
 
 function cancelCoupon( $option, $type )
 {
-	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ($type ? 'Static' : '' ), _AEC_CMN_EDIT_CANCELLED );
+	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ($type ? 'Static' : '' ), JText::_('_AEC_CMN_EDIT_CANCELLED') );
 }
 
 function changeCoupon( $cid=null, $state=0, $option, $type )
@@ -4735,8 +4735,8 @@ function changeCoupon( $cid=null, $state=0, $option, $type )
 	$db = &JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
-		$action = $state == 1 ? _AEC_CMN_TOPUBLISH : _AEC_CMN_TOUNPUBLISH;
-		echo "<script> alert('" . sprintf( html_entity_decode( _AEC_ALERT_SELECT_FIRST_TO ) ), $action . "'); window.history.go(-1);</script>\n";
+		$action = $state == 1 ? JText::_('_AEC_CMN_TOPUBLISH') : JText::_('_AEC_CMN_TOUNPUBLISH');
+		echo "<script> alert('" . sprintf( html_entity_decode( JText::_('_AEC_ALERT_SELECT_FIRST_TO') ) ), $action . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
@@ -4751,9 +4751,9 @@ function changeCoupon( $cid=null, $state=0, $option, $type )
 	$db->query();
 
 	if ( $state ) {
-		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_PUBLISHED;
+		$msg = $total . ' ' . JText::_('_AEC_MSG_ITEMS_SUCC_PUBLISHED');
 	} else {
-		$msg = $total . ' ' . _AEC_MSG_ITEMS_SUCC_UNPUBLISHED;
+		$msg = $total . ' ' . JText::_('_AEC_MSG_ITEMS_SUCC_UNPUBLISHED');
 	}
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
@@ -4767,7 +4767,7 @@ function editCSS( $option ) {
 		$content = htmlspecialchars( $content );
 		General_css::editCSSSource( $content, $option );
 	} else {
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', sprintf( _AEC_MSG_OP_FAILED, $file ) );
+		aecRedirect( 'index.php?option='. $option .'&task=editCSS', sprintf( JText::_('_AEC_MSG_OP_FAILED'), $file ) );
 	}
 }
 
@@ -4776,7 +4776,7 @@ function saveCSS( $option )
 	$filecontent = aecGetParam( 'filecontent' );
 
 	if ( !$filecontent ) {
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_EMPTY );
+		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('_AEC_MSG_OP_FAILED_EMPTY') );
 	}
 
 	$file			= JPATH_SITE .'/media/' . $option . '/css/site.css';
@@ -4789,7 +4789,7 @@ function saveCSS( $option )
 
 	clearstatcache();
 	if ( is_writable( $file ) == false ) {
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_NOT_WRITEABLE );
+		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('_AEC_MSG_OP_FAILED_NOT_WRITEABLE') );
 	}
 
 	if ( $fp = fopen ($file, 'wb') ) {
@@ -4800,10 +4800,10 @@ function saveCSS( $option )
 		} elseif ( aecGetParam( 'disable_write', 0 ) ) {
 			@chmod( $file, $oldperms & 0777555 );
 		}
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', _AEC_CMN_FILE_SAVED );
+		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('_AEC_CMN_FILE_SAVED') );
 	} elseif ( $enable_write ) {
 		@chmod($file, $oldperms);
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', _AEC_MSG_OP_FAILED_NO_WRITE );
+		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('_AEC_MSG_OP_FAILED_NO_WRITE') );
 	}
 
 }
@@ -4938,7 +4938,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		}
 	}
 
-	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, _AEC_MSG_INVOICE_CLEARED );
+	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('_AEC_MSG_INVOICE_CLEARED') );
 }
 
 function cancelInvoice( $option, $invoice_number, $task )
@@ -4961,7 +4961,7 @@ function cancelInvoice( $option, $invoice_number, $task )
 		}
 	}
 
-	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, _REMOVED );
+	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('_REMOVED') );
 }
 
 function AdminInvoicePrintout( $option, $invoice_number )
@@ -5311,16 +5311,6 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 	$app = JFactory::getApplication();
 
-	if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-		if ( file_exists( $langPathMI . $app->getCfg( 'lang' ) . '.php' ) ) {
-			include_once( $langPathMI . $app->getCfg( 'lang' ) . '.php' );
-		} else {
-			include_once( $langPathMI . 'english.php' );
-		}
-
-	}
-
 	$aec_hack_start				= "// AEC HACK %s START" . "\n";
 	$aec_hack_end				= "// AEC HACK %s END" . "\n";
 
@@ -5499,8 +5489,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 					. $aec_hack_end;
 
 	$n = 'errorphp';
-	$hacks[$n]['name']			=	'error.php ' . _AEC_HACK_HACK . ' #1';
-	$hacks[$n]['desc']			=	_AEC_HACKS_NOTAUTH;
+	$hacks[$n]['name']			=	'error.php ' . JText::_('_AEC_HACK_HACK') . ' #1';
+	$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_NOTAUTH');
 	$hacks[$n]['type']			=	'file';
 	$hacks[$n]['filename']		=	JPATH_SITE . '/libraries/joomla/error/error.php';
 	$hacks[$n]['read']			=	'// Initialize variables';
@@ -5509,7 +5499,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 	$n = 'joomlaphp4';
 	$hacks[$n]['name']			=	'authentication.php';
-	$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY_PLUGIN;
+	$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_LEGACY_PLUGIN');
 	$hacks[$n]['uncondition']	=	'joomlaphp';
 	$hacks[$n]['type']			=	'file';
 	$hacks[$n]['filename']		=	JPATH_SITE . '/libraries/joomla/user/authentication.php';
@@ -5519,8 +5509,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 	if ( GeneralInfoRequester::detect_component( 'UHP2' ) ) {
 		$n = 'uhp2menuentry';
-		$hacks[$n]['name']			=	_AEC_HACKS_UHP2;
-		$hacks[$n]['desc']			=	_AEC_HACKS_UHP2_DESC;
+		$hacks[$n]['name']			=	JText::_('_AEC_HACKS_UHP2');
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_UHP2_DESC');
 		$hacks[$n]['uncondition']	=	'uhp2managephp';
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_uhp2_manage.php';
@@ -5528,13 +5518,13 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['insert']		=	sprintf( $hacks[$n]['read'] . "\n</li>\n<?php " . $aec_hack_start . '?>'
 		. '<li class="latest<?php echo $moduleclass_sfx; ?>">'
 		. '<a href="index.php?option=com_acctexp&task=subscriptionDetails" class="latest<?php echo $moduleclass_sfx; ?>">'
-		. _AEC_SPEC_MENU_ENTRY . '</a>'."\n<?php ".$aec_hack_end."?>", $n, $n );
+		. JText::_('_AEC_SPEC_MENU_ENTRY') . '</a>'."\n<?php ".$aec_hack_end."?>", $n, $n );
 	}
 
 	if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
 		$n = 'comprofilerphp2';
-		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
+		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #2';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB2');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'function registerForm( $option, $emailpass, $regErrorMSG = null ) {';
@@ -5542,8 +5532,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['legacy']		=	1;
 
 		$n = 'comprofilerphp6';
-		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #6';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB6;
+		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #6';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB6');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'HTML_comprofiler::registerForm( $option, $emailpass, $userComplete, $regErrorMSG );';
@@ -5551,27 +5541,27 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['legacy']		=	1;
 
 		$n = 'comprofilerhtml2';
-		$hacks[$n]['name']			=	'comprofiler.html.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
+		$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('_AEC_HACK_HACK') . ' #2';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB_HTML2');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'echo HTML_comprofiler::_cbTemplateRender( $user, \'RegisterForm\'';
 		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fixcb, $n, $n) . "\n" . $hacks[$n]['read'];
-		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_LEGACY');
 		$hacks[$n]['legacy']		=	1;
 
 	} elseif ( GeneralInfoRequester::detect_component( 'CB' ) ) {
 		$n = 'comprofilerphp2';
-		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
+		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #2';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB2');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'if ($regErrorMSG===null) {';
 		$hacks[$n]['insert']		=	sprintf($aec_optionhack, $n, $n) . "\n" . $hacks[$n]['read'];
 
 		$n = 'comprofilerphp6';
-		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #6';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB6;
+		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #6';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB6');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['condition']		=	'comprofilerphp2';
 		$hacks[$n]['uncondition']	=	'comprofilerphp3';
@@ -5580,8 +5570,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
 
 		$n = 'comprofilerhtml2';
-		$hacks[$n]['name']			=	'comprofiler.html.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
+		$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('_AEC_HACK_HACK') . ' #2';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB_HTML2');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
@@ -5590,16 +5580,16 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 	} elseif ( GeneralInfoRequester::detect_component( 'CBE' ) ) {
 		$n = 'comprofilerphp2';
-		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB2;
+		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #2';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB2');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 		$hacks[$n]['read']			=	'$rowFieldValues=array();';
 		$hacks[$n]['insert']		=	sprintf($aec_optionhack, $n, $n) . "\n" . $hacks[$n]['read'];
 
 		$n = 'comprofilerphp6';
-		$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #6';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB6;
+		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #6';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB6');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['condition']		=	'comprofilerphp2';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
@@ -5607,8 +5597,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore2, $n, $n) . "\n" . $hacks[$n]['read'];
 
 		$n = 'comprofilerhtml2';
-		$hacks[$n]['name']			=	'comprofiler.html.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_CB_HTML2;
+		$hacks[$n]['name']			=	'comprofiler.html.php ' . JText::_('_AEC_HACK_HACK') . ' #2';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CB_HTML2');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'comprofilerhtml';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
@@ -5616,24 +5606,24 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 	} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
 		$n = 'juserhtml1';
-		$hacks[$n]['name']			=	'juser.html.php ' . _AEC_HACK_HACK . ' #1';
-		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_HTML1;
+		$hacks[$n]['name']			=	'juser.html.php ' . JText::_('_AEC_HACK_HACK') . ' #1';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_JUSER_HTML1');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="option" value="com_juser" />';
 		$hacks[$n]['insert']		=	sprintf($aec_regvarshack_fix, $n, $n) . "\n" . '<input type="hidden" name="option" value="com_acctexp" />';
 
 		$n = 'juserphp1';
-		$hacks[$n]['name']			=	'juser.php ' . _AEC_HACK_HACK . ' #1';
-		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_PHP1;
+		$hacks[$n]['name']			=	'juser.php ' . JText::_('_AEC_HACK_HACK') . ' #1';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_JUSER_PHP1');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.php';
 		$hacks[$n]['read']			=	'HTML_JUser::userEdit( $row, $option, $params, $ext_row, \'saveUserRegistration\' );';
 		$hacks[$n]['insert']		=	sprintf($aec_rhackbefore_fix, $n, $n) . "\n" . $hacks[$n]['read'];
 
 		$n = 'juserphp2';
-		$hacks[$n]['name']			=	'juser.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_JUSER_PHP2;
+		$hacks[$n]['name']			=	'juser.php ' . JText::_('_AEC_HACK_HACK') . ' #2';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_JUSER_PHP2');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_juser/juser.php';
 		$hacks[$n]['read']			=	'default:';
@@ -5641,8 +5631,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	} else {
 
 		$n = 'registrationhtml2';
-		$hacks[$n]['name']			=	'registration.html.php ' . _AEC_HACK_HACK . ' #2';
-		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+		$hacks[$n]['name']			=	'registration.html.php ' . JText::_('_AEC_HACK_HACK') . ' #2';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_LEGACY');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'registrationhtml';
 		$hacks[$n]['condition']		=	'registrationphp2';
@@ -5653,7 +5643,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 		$n = 'registrationphp6';
 		$hacks[$n]['name']			=	'user.php';
-		$hacks[$n]['desc']			=	_AEC_HACKS_REG5;
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_REG5');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['uncondition']	=	'registrationphp5';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
@@ -5665,8 +5655,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 		if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
 			$n = 'comprofilerphp7';
-			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #7';
-			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #7';
+			$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_MI1');
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
@@ -5674,8 +5664,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['legacy']		=	1;
 
 			$n = 'comprofilerphp8';
-			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #8';
-			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #8';
+			$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_MI1');
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['filename']		=	JPATH_SITE . '/administrator/components/com_comprofiler/library/cb/cb.tables.php';
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array( &$this, &$this, true ) );';
@@ -5683,8 +5673,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['legacy']		=	1;
 		} else {
 			$n = 'comprofilerphp4';
-			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #4';
-			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #4';
+			$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_MI1');
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['filename']		=	JPATH_SITE . "/components/com_comprofiler/comprofiler.php";
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserRegistrationMailsSent\',';
@@ -5692,8 +5682,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['legacy']		=	1;
 
 			$n = 'comprofilerphp5';
-			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #5';
-			$hacks[$n]['desc']			=	_AEC_HACKS_MI2;
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #5';
+			$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_MI2');
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['filename']		=	JPATH_SITE . "/components/com_comprofiler/comprofiler.php";
 			$hacks[$n]['read']			=	'$_PLUGINS->trigger( \'onAfterUserUpdate\', array($row, $rowExtras, true));';
@@ -5701,8 +5691,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['legacy']		=	1;
 
 			$n = 'comprofilerphp7';
-			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #7';
-			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #7';
+			$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_MI1');
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['uncondition']	=	'comprofilerphp4';
 			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
@@ -5710,8 +5700,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			$hacks[$n]['insert']		=	sprintf( $aec_uchangehack, $n, 'registration', $n ) . "\n" . $hacks[$n]['read'];
 
 			$n = 'comprofilerphp8';
-			$hacks[$n]['name']			=	'comprofiler.php ' . _AEC_HACK_HACK . ' #8';
-			$hacks[$n]['desc']			=	_AEC_HACKS_MI1;
+			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('_AEC_HACK_HACK') . ' #8';
+			$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_MI1');
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['uncondition']	=	'comprofilerphp5';
 			$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.php';
@@ -5721,7 +5711,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	} else {
 		$n = 'userphp';
 		$hacks[$n]['name']			=	'user.php';
-		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_LEGACY');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
 		$hacks[$n]['read']			=	'if ($model->store($post)) {';
@@ -5729,8 +5719,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['legacy']		=	1;
 
 		$n = 'registrationphp1';
-		$hacks[$n]['name']			=	'registration.php ' . _AEC_HACK_HACK . ' #1';
-		$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+		$hacks[$n]['name']			=	'registration.php ' . JText::_('_AEC_HACK_HACK') . ' #1';
+		$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_LEGACY');
 		$hacks[$n]['type']			=	'file';
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_user/controller.php';
 		$hacks[$n]['read']			=	'UserController::_sendMail($user, $password);';
@@ -5740,7 +5730,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 
 	$n = 'adminuserphp';
 	$hacks[$n]['name']			=	'admin.user.php';
-	$hacks[$n]['desc']			=	_AEC_HACKS_LEGACY;
+	$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_LEGACY');
 	$hacks[$n]['type']			=	'file';
 	$hacks[$n]['filename']		=	JPATH_SITE . '/administrator/components/com_users/controller.php';
 	$hacks[$n]['read']			=	'if (!$user->save())';
@@ -5751,7 +5741,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		if ( !GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
 			$n = 'comprofilermoderator';
 			$hacks[$n]['name']			=	'comprofilermoderator.php';
-			$hacks[$n]['desc']			=	_AEC_HACKS_CBM;
+			$hacks[$n]['desc']			=	JText::_('_AEC_HACKS_CBM');
 			$hacks[$n]['type']			=	'file';
 			$hacks[$n]['filename']		=	JPATH_SITE . '/modules/mod_comprofilermoderator.php';
 			$hacks[$n]['read']			=	'mosNotAuth();';
@@ -6045,7 +6035,7 @@ function importData( $option )
 		$params['import_file']			= array( 'file', 'Upload', 'Upload a file and select it for importing', '' );
 
 		$file_htmllist		= array();
-		$file_htmllist[]	= JHTML::_('select.option', '', _AEC_CMN_NONE_SELECTED );
+		$file_htmllist[]	= JHTML::_('select.option', '', JText::_('_AEC_CMN_NONE_SELECTED') );
 
 		if ( !empty( $file_list ) ) {
 			foreach ( $file_list as $name ) {
@@ -6323,14 +6313,14 @@ function exportData( $option, $cmd=null )
 
 	// Statusfilter
 	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', 'excluded',	_AEC_SEL_EXCLUDED );
-	$group_selection[] = JHTML::_('select.option', 'pending',	_AEC_SEL_PENDING );
-	$group_selection[] = JHTML::_('select.option', 'trial',		_AEC_SEL_TRIAL );
-	$group_selection[] = JHTML::_('select.option', 'active',	_AEC_SEL_ACTIVE );
-	$group_selection[] = JHTML::_('select.option', 'expired',	_AEC_SEL_EXPIRED );
-	$group_selection[] = JHTML::_('select.option', 'closed',	_AEC_SEL_CLOSED );
-	$group_selection[] = JHTML::_('select.option', 'cancelled',	_AEC_SEL_CANCELLED );
-	$group_selection[] = JHTML::_('select.option', 'manual',	_AEC_SEL_NOT_CONFIGURED );
+	$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('_AEC_SEL_EXCLUDED') );
+	$group_selection[] = JHTML::_('select.option', 'pending',	JText::_('_AEC_SEL_PENDING') );
+	$group_selection[] = JHTML::_('select.option', 'trial',		JText::_('_AEC_SEL_TRIAL') );
+	$group_selection[] = JHTML::_('select.option', 'active',	JText::_('_AEC_SEL_ACTIVE') );
+	$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('_AEC_SEL_EXPIRED') );
+	$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('_AEC_SEL_CLOSED') );
+	$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('_AEC_SEL_CANCELLED') );
+	$group_selection[] = JHTML::_('select.option', 'manual',	JText::_('_AEC_SEL_NOT_CONFIGURED') );
 
 	$selected_status = array();
 	if ( !empty( $filter_values->status ) ) {
@@ -6343,22 +6333,22 @@ function exportData( $option, $cmd=null )
 
 	// Ordering
 	$sel = array();
-	$sel[] = JHTML::_('select.option', 'expiration ASC',	_EXP_ASC );
-	$sel[] = JHTML::_('select.option', 'expiration DESC',	_EXP_DESC );
-	$sel[] = JHTML::_('select.option', 'name ASC',			_NAME_ASC );
-	$sel[] = JHTML::_('select.option', 'name DESC',			_NAME_DESC );
-	$sel[] = JHTML::_('select.option', 'username ASC',		_LOGIN_ASC );
-	$sel[] = JHTML::_('select.option', 'username DESC',		_LOGIN_DESC );
-	$sel[] = JHTML::_('select.option', 'signup_date ASC',	_SIGNUP_ASC );
-	$sel[] = JHTML::_('select.option', 'signup_date DESC',	_SIGNUP_DESC );
-	$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	_LASTPAY_ASC );
-	$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	_LASTPAY_DESC );
-	$sel[] = JHTML::_('select.option', 'plan_name ASC',		_PLAN_ASC );
-	$sel[] = JHTML::_('select.option', 'plan_name DESC',	_PLAN_DESC );
-	$sel[] = JHTML::_('select.option', 'status ASC',		_STATUS_ASC );
-	$sel[] = JHTML::_('select.option', 'status DESC',		_STATUS_DESC );
-	$sel[] = JHTML::_('select.option', 'type ASC',			_TYPE_ASC );
-	$sel[] = JHTML::_('select.option', 'type DESC',			_TYPE_DESC );
+	$sel[] = JHTML::_('select.option', 'expiration ASC',	JText::_('_EXP_ASC') );
+	$sel[] = JHTML::_('select.option', 'expiration DESC',	JText::_('_EXP_DESC') );
+	$sel[] = JHTML::_('select.option', 'name ASC',			JText::_('_NAME_ASC') );
+	$sel[] = JHTML::_('select.option', 'name DESC',			JText::_('_NAME_DESC') );
+	$sel[] = JHTML::_('select.option', 'username ASC',		JText::_('_LOGIN_ASC') );
+	$sel[] = JHTML::_('select.option', 'username DESC',		JText::_('_LOGIN_DESC') );
+	$sel[] = JHTML::_('select.option', 'signup_date ASC',	JText::_('_SIGNUP_ASC') );
+	$sel[] = JHTML::_('select.option', 'signup_date DESC',	JText::_('_SIGNUP_DESC') );
+	$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	JText::_('_LASTPAY_ASC') );
+	$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	JText::_('_LASTPAY_DESC') );
+	$sel[] = JHTML::_('select.option', 'plan_name ASC',		JText::_('_PLAN_ASC') );
+	$sel[] = JHTML::_('select.option', 'plan_name DESC',	JText::_('_PLAN_DESC') );
+	$sel[] = JHTML::_('select.option', 'status ASC',		JText::_('_STATUS_ASC') );
+	$sel[] = JHTML::_('select.option', 'status DESC',		JText::_('_STATUS_DESC') );
+	$sel[] = JHTML::_('select.option', 'type ASC',			JText::_('_TYPE_ASC') );
+	$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('_TYPE_DESC') );
 
 	$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="10"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
 

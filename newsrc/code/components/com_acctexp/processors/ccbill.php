@@ -17,9 +17,9 @@ class processor_ccbill extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= 'ccbill';
-		$info['longname']				= _CFG_CCBILL_LONGNAME;
-		$info['statement']				= _CFG_CCBILL_STATEMENT;
-		$info['description']			= _CFG_CCBILL_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_CCBILL_LONGNAME');
+		$info['statement']				= JText::_('_CFG_CCBILL_STATEMENT');
+		$info['description']			= JText::_('_CFG_CCBILL_DESCRIPTION');
 		$info['cc_list']				= "visa,mastercard,discover,echeck,jcb";
 		$info['currencies']				= "USD";
 		$info['recurring']				= 2;

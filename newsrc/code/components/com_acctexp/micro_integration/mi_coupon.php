@@ -16,8 +16,8 @@ class mi_coupon
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_COUPON;
-		$info['desc'] = _AEC_MI_DESC_COUPON;
+		$info['name'] = JText::_('_AEC_MI_NAME_COUPON');
+		$info['desc'] = JText::_('_AEC_MI_DESC_COUPON');
 
 		return $info;
 	}

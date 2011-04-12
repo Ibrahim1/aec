@@ -39,10 +39,10 @@ class mi_eventum extends MI
 
 		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
-		$levels[] = JHTML::_('select.option', 2, _AEC_NOTICE_NUMBER_2 );
-		$levels[] = JHTML::_('select.option', 8, _AEC_NOTICE_NUMBER_8 );
-		$levels[] = JHTML::_('select.option', 32, _AEC_NOTICE_NUMBER_32 );
-		$levels[] = JHTML::_('select.option', 128, _AEC_NOTICE_NUMBER_128 );
+		$levels[] = JHTML::_('select.option', 2, JText::_('_AEC_NOTICE_NUMBER_2') );
+		$levels[] = JHTML::_('select.option', 8, JText::_('_AEC_NOTICE_NUMBER_8') );
+		$levels[] = JHTML::_('select.option', 32, JText::_('_AEC_NOTICE_NUMBER_32') );
+		$levels[] = JHTML::_('select.option', 128, JText::_('_AEC_NOTICE_NUMBER_128') );
 
 		$settings['lists']['level'] = JHTML::_( 'select.genericlist', $levels, 'level', 'size="5"', 'value', 'text', $this->settings['level'] );
 		$settings['lists']['level_exp'] = JHTML::_( 'select.genericlist', $levels, 'level_exp', 'size="5"', 'value', 'text', $this->settings['level_exp'] );

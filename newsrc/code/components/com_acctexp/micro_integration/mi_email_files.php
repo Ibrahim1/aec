@@ -16,8 +16,8 @@ class mi_email_files
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_EMAIL_FILES;
-		$info['desc'] = _AEC_MI_DESC_EMAIL_FILES;
+		$info['name'] = JText::_('_AEC_MI_NAME_EMAIL_FILES');
+		$info['desc'] = JText::_('_AEC_MI_DESC_EMAIL_FILES');
 
 		return $info;
 	}
@@ -60,7 +60,7 @@ class mi_email_files
 				return $settings;
 			}
 
-			$settings['exp'] = array( 'p', _MI_MI_USER_CHOICE_FILES_NAME, _MI_MI_USER_CHOICE_FILES_DESC );
+			$settings['exp'] = array( 'p', JText::_('_MI_MI_USER_CHOICE_FILES_NAME'), JText::_('_MI_MI_USER_CHOICE_FILES_DESC') );
 
 			$gr = array();
 			foreach ( $list as $id => $choice ) {

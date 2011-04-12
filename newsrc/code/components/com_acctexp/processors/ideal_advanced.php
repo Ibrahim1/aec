@@ -17,9 +17,9 @@ class processor_ideal_advanced extends XMLprocessor
 	{
 		$info = array();
 		$info['name']					= 'ideal_advanced';
-		$info['longname']				= _CFG_IDEAL_ADVANCED_LONGNAME;
-		$info['statement']				= _CFG_IDEAL_ADVANCED_STATEMENT;
-		$info['description']			= _CFG_IDEAL_ADVANCED_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_IDEAL_ADVANCED_LONGNAME');
+		$info['statement']				= JText::_('_CFG_IDEAL_ADVANCED_STATEMENT');
+		$info['description']			= JText::_('_CFG_IDEAL_ADVANCED_DESCRIPTION');
 		$info['currencies']				= 'EUR';
 		$info['languages']				= 'NL';
 		$info['recurring']	   			= 0;
@@ -45,7 +45,7 @@ class processor_ideal_advanced extends XMLprocessor
 		
 		$settings['currency']		= 'EUR';
 
-		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );		
+		$settings['description']	= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );		
 		
 		$settings['customparams']	= "";
 		

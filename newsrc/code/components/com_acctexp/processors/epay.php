@@ -16,9 +16,9 @@ class processor_epay extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['longname']		= _CFG_EPAY_LONGNAME;
-		$info['statement']		= _CFG_EPAY_STATEMENT;
-		$info['description']	= _CFG_EPAY_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_EPAY_LONGNAME');
+		$info['statement']		= JText::_('_CFG_EPAY_STATEMENT');
+		$info['description']	= JText::_('_CFG_EPAY_DESCRIPTION');
 		$info['currencies']		= 'AUD,CAD,DKK,HKD,ISK,JPY,MXN,NZD,NOK,SGD,ZAR,SEK,CHF,GBP,USD,TRY,EUR,PLN';
 		$info['languages']		= "DK,UK,SE,NO,GR,IS,DE";
 		$info['cc_list']		= "mastercard,jcb,diners,americanexpress,giropay";
@@ -38,7 +38,7 @@ class processor_epay extends POSTprocessor
 		$settings['windowstate']	= 0;
 		$settings['instantcapture']	= 0;
 		$settings['group']			= "";
-		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['description']	= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['authsms']		= "";
 		$settings['authmail']		= "";
 		$settings['use3D']			= 0;

@@ -16,8 +16,8 @@ class mi_joomlauser
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_JOOMLAUSER;
-		$info['desc'] = _AEC_MI_DESC_JOOMLAUSER;
+		$info['name'] = JText::_('_AEC_MI_NAME_JOOMLAUSER');
+		$info['desc'] = JText::_('_AEC_MI_DESC_JOOMLAUSER');
 
 		return $info;
 	}

@@ -33,7 +33,7 @@ class processor_netpay extends POSTprocessor
 		$settings['currency']		= "USD";
 		$settings['custId']			= "custid";
 		$settings['password']		= "password";
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 
 		return $settings;

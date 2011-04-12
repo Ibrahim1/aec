@@ -17,9 +17,9 @@ class processor_desjardins extends XMLprocessor
 	{
 		$info = array();
 		$info['name']					= 'desjardins';
-		$info['longname']				= _CFG_DESJARDINS_LONGNAME;
-		$info['statement']				= _CFG_DESJARDINS_STATEMENT;
-		$info['description']			= _CFG_DESJARDINS_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_DESJARDINS_LONGNAME');
+		$info['statement']				= JText::_('_CFG_DESJARDINS_STATEMENT');
+		$info['description']			= JText::_('_CFG_DESJARDINS_DESCRIPTION');
 		$info['cc_list']				= 'visa,mastercard';
 		$info['currencies']				= "CAD";
 		$info['recurring']				= 0;
@@ -36,7 +36,7 @@ class processor_desjardins extends XMLprocessor
 		$settings['currency']		= "CAD";
 		$settings['custId']			= "";
 		$settings['transactionKey']	= "";
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 		$settings['SiteTitle']		= '';
 

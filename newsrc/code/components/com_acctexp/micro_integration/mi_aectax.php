@@ -16,8 +16,8 @@ class mi_aectax
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_AECTAX;
-		$info['desc'] = _AEC_MI_DESC_AECTAX;
+		$info['name'] = JText::_('_AEC_MI_NAME_AECTAX');
+		$info['desc'] = JText::_('_AEC_MI_DESC_AECTAX');
 
 		return $info;
 	}
@@ -40,9 +40,9 @@ class mi_aectax
 		$settings['locations_amount']	= array( 'inputB' );
 
 		$vatval = array();
-		$vatval[] = JHTML::_('select.option', '0', _MI_MI_AECTAX_SET_VATVAL_NONE );
-		$vatval[] = JHTML::_('select.option', '1', _MI_MI_AECTAX_SET_VATVAL_BASIC );
-		$vatval[] = JHTML::_('select.option', '2', _MI_MI_AECTAX_SET_VATVAL_EXTENDED );
+		$vatval[] = JHTML::_('select.option', '0', JText::_('_MI_MI_AECTAX_SET_VATVAL_NONE') );
+		$vatval[] = JHTML::_('select.option', '1', JText::_('_MI_MI_AECTAX_SET_VATVAL_BASIC') );
+		$vatval[] = JHTML::_('select.option', '2', JText::_('_MI_MI_AECTAX_SET_VATVAL_EXTENDED') );
 
 		if ( isset( $this->settings['vat_validation'] ) ) {
 			$vval = $this->settings['vat_validation'];
@@ -53,20 +53,20 @@ class mi_aectax
 		$settings['lists']['vat_validation'] = JHTML::_('select.genericlist', $vatval, 'vat_validation', 'size="1"', 'value', 'text', $vval );
 
 		$modes = array();
-		$modes[] = JHTML::_('select.option', 'pseudo_subtract', _MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT );
-		$modes[] = JHTML::_('select.option', 'add', _MI_MI_AECTAX_SET_MODE_ADD );
-		$modes[] = JHTML::_('select.option', 'subtract', _MI_MI_AECTAX_SET_MODE_SUBTRACT );
+		$modes[] = JHTML::_('select.option', 'pseudo_subtract', JText::_('_MI_MI_AECTAX_SET_MODE_PSEUDO_SUBTRACT') );
+		$modes[] = JHTML::_('select.option', 'add', JText::_('_MI_MI_AECTAX_SET_MODE_ADD') );
+		$modes[] = JHTML::_('select.option', 'subtract', JText::_('_MI_MI_AECTAX_SET_MODE_SUBTRACT') );
 
 		if ( !empty( $this->settings['locations_amount'] ) ) {
 			for ( $i=0; $i<$this->settings['locations_amount']; $i++ ) {
 				$p = $i . '_';
 
-				$settings[$p.'id']			= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_ID_NAME, $i+1 ), _MI_MI_AECTAX_SET_ID_DESC );
-				$settings[$p.'text']		= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_TEXT_NAME, $i+1 ), _MI_MI_AECTAX_SET_TEXT_DESC );
-				$settings[$p.'percentage']	= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_PERCENTAGE_NAME, $i+1 ), _MI_MI_AECTAX_SET_PERCENTAGE_DESC );
-				$settings[$p.'mode']		= array( 'list', sprintf( _MI_MI_AECTAX_SET_MODE_NAME, $i+1 ), _MI_MI_AECTAX_SET_MODE_DESC );
-				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_EXTRA_NAME, $i+1 ), _MI_MI_AECTAX_SET_EXTRA_DESC );
-				$settings[$p.'mi']			= array( 'inputC', sprintf( _MI_MI_AECTAX_SET_MI_NAME, $i+1 ), _MI_MI_AECTAX_SET_MI_DESC );
+				$settings[$p.'id']			= array( 'inputC', sprintf( JText::_('_MI_MI_AECTAX_SET_ID_NAME'), $i+1 ), JText::_('_MI_MI_AECTAX_SET_ID_DESC') );
+				$settings[$p.'text']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECTAX_SET_TEXT_NAME'), $i+1 ), JText::_('_MI_MI_AECTAX_SET_TEXT_DESC') );
+				$settings[$p.'percentage']	= array( 'inputC', sprintf( JText::_('_MI_MI_AECTAX_SET_PERCENTAGE_NAME'), $i+1 ), JText::_('_MI_MI_AECTAX_SET_PERCENTAGE_DESC') );
+				$settings[$p.'mode']		= array( 'list', sprintf( JText::_('_MI_MI_AECTAX_SET_MODE_NAME'), $i+1 ), JText::_('_MI_MI_AECTAX_SET_MODE_DESC') );
+				$settings[$p.'extra']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECTAX_SET_EXTRA_NAME'), $i+1 ), JText::_('_MI_MI_AECTAX_SET_EXTRA_DESC') );
+				$settings[$p.'mi']			= array( 'inputC', sprintf( JText::_('_MI_MI_AECTAX_SET_MI_NAME'), $i+1 ), JText::_('_MI_MI_AECTAX_SET_MI_DESC') );
 
 				if ( isset( $this->settings[$p.'mode'] ) ) {
 					$val = $this->settings[$p.'mode'];
@@ -98,7 +98,7 @@ class mi_aectax
 				if ( !empty( $this->settings['custominfo'] ) ) {
 					$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
 				} else {
-					$settings['exp'] = array( 'p', "", _MI_MI_AECTAX_DEFAULT_NOTICE );
+					$settings['exp'] = array( 'p', "", JText::_('_MI_MI_AECTAX_DEFAULT_NOTICE') );
 				}
 			}
 
@@ -135,8 +135,8 @@ class mi_aectax
 		}
 
 		if ( !empty( $this->settings['vat_no_request'] ) ) {
-			$settings['vat_desc'] = array( 'p', "", _MI_MI_AECTAX_VAT_DESC_NAME );
-			$settings['vat_number'] = array( 'inputC', _MI_MI_AECTAX_VAT_NUMBER_NAME, _MI_MI_AECTAX_VAT_NUMBER_DESC, '' );
+			$settings['vat_desc'] = array( 'p', "", JText::_('_MI_MI_AECTAX_VAT_DESC_NAME') );
+			$settings['vat_number'] = array( 'inputC', JText::_('_MI_MI_AECTAX_VAT_NUMBER_NAME'), JText::_('_MI_MI_AECTAX_VAT_NUMBER_DESC'), '' );
 		}
 
 		return $settings;

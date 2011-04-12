@@ -16,8 +16,8 @@ class mi_affiliatepro
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_AFFPRO;
-		$info['desc'] = _AEC_MI_DESC_AFFPRO;
+		$info['name'] = JText::_('_AEC_MI_NAME_AFFPRO');
+		$info['desc'] = JText::_('_AEC_MI_DESC_AFFPRO');
 
 		return $info;
 	}

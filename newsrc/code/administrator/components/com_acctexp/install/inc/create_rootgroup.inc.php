@@ -18,8 +18,8 @@ if ( $db->loadResult() != 1 ) {
 	$rootgroup->id = 0;
 	$rootgroup->active = 1;
 	$rootgroup->visible = 1;
-	$rootgroup->name = _AEC_INST_ROOT_GROUP_NAME;
-	$rootgroup->desc = _AEC_INST_ROOT_GROUP_DESC;
+	$rootgroup->name = JText::_('_AEC_INST_ROOT_GROUP_NAME');
+	$rootgroup->desc = JText::_('_AEC_INST_ROOT_GROUP_DESC');
 	$rootgroup->params = array( 'color' => 'bbddff', 'icon' => 'flag_blue', 'reveal_child_items' => 1 );
 
 	$rootgroup->storeload();

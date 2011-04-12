@@ -17,9 +17,9 @@ class processor_multisafepay extends XMLprocessor
 	{
 		$info = array();
 		$info['name']				= 'multisafepay';
-		$info['longname']			= _CFG_MULTISAFEPAY_LONGNAME;
-		$info['statement']			= _CFG_MULTISAFEPAY_STATEMENT;
-		$info['description']		= _CFG_MULTISAFEPAY_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_MULTISAFEPAY_LONGNAME');
+		$info['statement']			= JText::_('_CFG_MULTISAFEPAY_STATEMENT');
+		$info['description']		= JText::_('_CFG_MULTISAFEPAY_DESCRIPTION');
 		$info['currencies']			= 'EUR';
 		$info['languages']			= 'DE,EN,NL,ES,FR';
 		$info['cc_list']			= 'visa,maestro,mastercard';//'DIRDEB,VISA,WALLET,IDEAL,BANKTRANS,MAESTRO,MASTERCARD';
@@ -40,7 +40,7 @@ class processor_multisafepay extends XMLprocessor
 		$settings['customparams']        = "";
 
 		$settings['gateway']			= array( 'IDEAL,DIRDEB,VISA,WALLET,IDEAL,BANKTRANS,MAESTRO,MASTERCARD' );
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -90,8 +90,8 @@ class processor_multisafepay extends XMLprocessor
 	{
 		$var = array();
 
-		$var['params']['gateway'] = array( 'list', _CFG_MULTISAFEPAY_SELECT_GATEWAY, null );
-		$var['params']['country'] = array( 'list', _CFG_MULTISAFEPAY_SELECT_COUNTRY, null );
+		$var['params']['gateway'] = array( 'list', JText::_('_CFG_MULTISAFEPAY_SELECT_GATEWAY'), null );
+		$var['params']['country'] = array( 'list', JText::_('_CFG_MULTISAFEPAY_SELECT_COUNTRY'), null );
 
 		$gateways = $this->getGateways( $request );
 		

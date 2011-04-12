@@ -16,8 +16,8 @@ class mi_aecmodifyexpiration
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_AECMODIFYEXPIRATION;
-		$info['desc'] = _AEC_MI_DESC_AECMODIFYEXPIRATION;
+		$info['name'] = JText::_('_AEC_MI_NAME_AECMODIFYEXPIRATION');
+		$info['desc'] = JText::_('_AEC_MI_DESC_AECMODIFYEXPIRATION');
 
 		return $info;
 	}

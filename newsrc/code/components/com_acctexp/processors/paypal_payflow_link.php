@@ -17,14 +17,14 @@ class processor_paypal_payflow_link extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'paypal_payflow_link';
-		$info['longname'] 		= _CFG_PAYPAL_PAYFLOW_LINK_LONGNAME;
-		$info['statement'] 		= _CFG_PAYPAL_PAYFLOW_LINK_STATEMENT;
-		$info['description'] 	= _CFG_PAYPAL_PAYFLOW_LINK_DESCRIPTION;
+		$info['longname'] 		= JText::_('_CFG_PAYPAL_PAYFLOW_LINK_LONGNAME');
+		$info['statement'] 		= JText::_('_CFG_PAYPAL_PAYFLOW_LINK_STATEMENT');
+		$info['description'] 	= JText::_('_CFG_PAYPAL_PAYFLOW_LINK_DESCRIPTION');
 		$info['currencies'] 	= 'EUR,USD,AUD,CAD,GBP,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
 		$info['languages'] 		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 0;
-		$info['cancel_info']	= _PAYPAL_SUBSCRIPTION_CANCEL_INFO;
+		$info['cancel_info']	= JText::_('_PAYPAL_SUBSCRIPTION_CANCEL_INFO');
 
 		return $info;
 	}
@@ -35,7 +35,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 		$settings['currency']		= "USD";
 		$settings['login']			= 'your@login';
 		$settings['partner']		= 'partner';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

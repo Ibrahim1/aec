@@ -16,8 +16,8 @@ class mi_g2 extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_G2;
-		$info['desc'] = _AEC_MI_DESC_G2;
+		$info['name'] = JText::_('_AEC_MI_NAME_G2');
+		$info['desc'] = JText::_('_AEC_MI_DESC_G2');
 
 		return $info;
 	}
@@ -95,7 +95,7 @@ class mi_g2 extends MI
 			}
 
 			for ( $i=0; $i<$this->settings['groups_sel_amt']; $i++ ) {
-				$settings['g2group_'.$i]			= array( 'list', _MI_MI_G2_USERSELECT_GROUP_NAME, _MI_MI_G2_USERSELECT_GROUP_DESC );
+				$settings['g2group_'.$i]			= array( 'list', JText::_('_MI_MI_G2_USERSELECT_GROUP_NAME'), JText::_('_MI_MI_G2_USERSELECT_GROUP_DESC') );
 				$settings['lists']['g2group_'.$i]	= JHTML::_( 'select.genericlist', $gr, 'g2group_'.$i, 'size="6"', 'value', 'text', '' );
 			}
 		} else {

@@ -17,9 +17,9 @@ class processor_eway extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= 'eway';
-		$info['longname']				= _CFG_EWAY_LONGNAME;
-		$info['statement']				= _CFG_EWAY_STATEMENT;
-		$info['description']			= _CFG_EWAY_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_EWAY_LONGNAME');
+		$info['statement']				= JText::_('_CFG_EWAY_STATEMENT');
+		$info['description']			= JText::_('_CFG_EWAY_DESCRIPTION');
 		$info['currencies']				= "AUD";
 		$info['cc_list']				= 'visa,mastercard';
 		$info['recurring']				= 0;
@@ -36,7 +36,7 @@ class processor_eway extends POSTprocessor
 		$settings['custId']			= "87654321";
 		$settings['autoRedirect']	= 1;
 		$settings['testAmount']		= "00";
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

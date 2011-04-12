@@ -346,7 +346,7 @@ class mammonTerm extends eucaObject
 		if ( isset( $this->duration['none'] ) ) {
 			return '';
 		} elseif ( isset( $this->duration['lifetime'] ) ) {
-			return _AEC_CHECKOUT_DUR_LIFETIME;
+			return JText::_('_AEC_CHECKOUT_DUR_LIFETIME');
 		} else {
 			switch ( $this->duration['unit'] ) {
 				case 'D':

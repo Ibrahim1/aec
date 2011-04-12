@@ -16,8 +16,8 @@ class mi_directory
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_DIRECTORY;
-		$info['desc'] = _AEC_MI_DESC_DIRECTORY;
+		$info['name'] = JText::_('_AEC_MI_NAME_DIRECTORY');
+		$info['desc'] = JText::_('_AEC_MI_DESC_DIRECTORY');
 
 		return $info;
 	}

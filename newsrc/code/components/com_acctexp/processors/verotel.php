@@ -17,9 +17,9 @@ class processor_verotel extends URLprocessor
 	{
 		$info = array();
 		$info['name']					= 'verotel';
-		$info['longname']				= _CFG_VEROTEL_LONGNAME;
-		$info['statement']				= _CFG_VEROTEL_STATEMENT;
-		$info['description']			= _CFG_VEROTEL_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_VEROTEL_LONGNAME');
+		$info['statement']				= JText::_('_CFG_VEROTEL_STATEMENT');
+		$info['description']			= JText::_('_CFG_VEROTEL_DESCRIPTION');
 		$info['currencies']				= 'USD';
 		$info['languages']				= 'AU,DE,FR,IT,GB,ES,US';
 		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';

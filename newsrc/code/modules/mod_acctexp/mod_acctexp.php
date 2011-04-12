@@ -121,7 +121,7 @@ class AECModuleHelper
 
 	function textUnlimited()
 	{
-		return "<p>" . _ACCOUNT_UNLIMIT . "</p>";
+		return "<p>" . JText::_('_ACCOUNT_UNLIMIT') . "</p>";
 	}
 
 	function textExpirationDate( $expiration, $recurring )
@@ -142,9 +142,9 @@ class AECModuleHelper
 		$retVal = AECToolbox::formatDate( ( strtotime( $expiration ) + $timeOffset*3600 ) );
 
 		if ( $recurring ) {
-			return "<p>" . _ACCOUNT_RENEWAL . ": " . $retVal . "</p>";
+			return "<p>" . JText::_('_ACCOUNT_RENEWAL') . ": " . $retVal . "</p>";
 		} else {
-			return "<p>" . _ACCOUNT_EXPIRES . ": " . $retVal . "</p>";
+			return "<p>" . JText::_('_ACCOUNT_EXPIRES') . ": " . $retVal . "</p>";
 		}
 	}
 }

@@ -19,7 +19,7 @@ class processor_authorize extends POSTprocessor
 		$info['name']					= "authorize";
 		$info['longname']				= "Authorize.net";
 		$info['statement']				= "Make payments with Authorize.net!";
-		$info['description']			= _DESCRIPTION_AUTHORIZE;
+		$info['description']			= JText::_('_DESCRIPTION_AUTHORIZE');
 		$info['currencies']				= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']				= 0;
@@ -36,7 +36,7 @@ class processor_authorize extends POSTprocessor
 		$settings['testmode']			= 0;
 		$settings['currency']			= "USD";
 		$settings['timestamp_offset']	= '';
-        $settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+        $settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
         $settings['customparams']		= "";
 
 		// Customization

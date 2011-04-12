@@ -16,7 +16,7 @@ define( '_CFG_MOLLIE_WALLIE_STATEMENT', 'Laat uw klanten betalingen doen via de 
 define( '_CFG_MOLLIE_WALLIE_DESCRIPTION', 'Wallie is de populairste prepaidcard voor online betalingen die veel door ouders voor hun kinderen wordt gekocht.' );
 
 define( '_CFG_MOLLIE_WALLIE_PARTNER_ID_NAME', 'Partner ID' );
-define( '_CFG_MOLLIE_WALLIE_PARTNER_ID_DESC', 'Uw Mollie Partner ID' );
+define( '_CFG_MOLLIE_WALLIE_PARTNERJText::_('_ID_DESC')', 'Uw Mollie Partner ID' );
 define( '_CFG_MOLLIE_WALLIE_DESCRIPTION_NAME', 'Omschrijving' );
 define( '_CFG_MOLLIE_WALLIE_DESCRIPTION_DESC', 'Orderinfo t.b.v. payment processor' );
 
@@ -45,7 +45,7 @@ class processor_mollie_wallie extends XMLprocessor
 		$settings['testmode']		= 0;
 		$settings['partner_id']		= "00000";
 		$settings['currency']		= 'EUR';
-		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['description']	= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		
 		$settings['customparams']	= "";
 		

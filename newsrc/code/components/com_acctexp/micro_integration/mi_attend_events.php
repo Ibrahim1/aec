@@ -15,8 +15,8 @@ class mi_attend_events
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_ATTEND_EVENTS;
-		$info['desc'] = _AEC_MI_DESC_ATTEND_EVENTS;
+		$info['name'] = JText::_('_AEC_MI_NAME_ATTEND_EVENTS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_ATTEND_EVENTS');
 
 		return $info;
 	}

@@ -16,8 +16,8 @@ class mi_unpack extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_UNPACK_NAME;
-		$info['desc'] = _AEC_MI_UNPACK_DESC;
+		$info['name'] = JText::_('_AEC_MI_UNPACK_NAME');
+		$info['desc'] = JText::_('_AEC_MI_UNPACK_DESC');
 
 		return $info;
 	}

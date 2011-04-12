@@ -217,8 +217,8 @@ function com_install()
 	}
 
 	if ( $translation ) {
-		if ( file_exists( JPATH_SITE . '/administrator/components/com_acctexp/install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz' ) ) {
-			$xmlInst = 'install/jf_content_elements_aec.' . _AEC_LANGUAGE . '.tar.gz';
+		if ( file_exists( JPATH_SITE . '/administrator/components/com_acctexp/install/jf_content_elements_aec.' . JText::_('_AEC_LANGUAGE') . '.tar.gz' ) ) {
+			$xmlInst = 'install/jf_content_elements_aec.' . JText::_('_AEC_LANGUAGE') . '.tar.gz';
 		} else {
 			$xmlInst = 'install/jf_content_elements_aec.en.tar.gz';
 		}
@@ -233,8 +233,8 @@ function com_install()
 	$eucaInstallef->fileEdit( $krumoabspath . 'krumo.ini', 'http://www.example.com/Krumo/', $krumourlpath, "Krumor Debug Lib did not receive a proper url path, due to writing permission problems" );
 
 	// log installation
-	$short		= _AEC_LOG_SH_INST;
-	$event		= sprintf( _AEC_LOG_LO_INST, _AEC_VERSION." Revision "._AEC_REVISION );
+	$short		= JText::_('_AEC_LOG_SH_INST');
+	$event		= sprintf( JText::_('_AEC_LOG_LO_INST'), _AEC_VERSION." Revision "._AEC_REVISION );
 	$tags		= 'install,system';
 
 	$eventlog	= new eventLog( $db );
@@ -272,7 +272,7 @@ function com_install()
 		<?php
 		if ( $errors ) {
 			echo '<div style="color: #FF0000; text-align: left; border: 1px solid #FF0000; background-color: #fff; margin: 12px; padding: 8px;">' . "\n"
-			. _AEC_INST_ERRORS
+			. JText::_('_AEC_INST_ERRORS')
 			. '<ul>' . "\n";
 			foreach ( $errors AS $error ) {
 				if ( is_array( $error ) ) {
@@ -286,15 +286,15 @@ function com_install()
 			. '</div>' . "\n";
 		} ?>
 		<div class="installnote">
-			<h1><?php echo _AEC_INST_HINTS; ?></h1>
-			<p><?php echo sprintf( _AEC_INST_HINT1, 'http://valanx.org' ); ?></p>
-			<p><?php echo _AEC_INST_HINT2; ?></p>
+			<h1><?php echo JText::_('_AEC_INST_HINTS'); ?></h1>
+			<p><?php echo sprintf( JText::_('_AEC_INST_HINT1'), 'http://valanx.org' ); ?></p>
+			<p><?php echo JText::_('_AEC_INST_HINT2'); ?></p>
 		</div>
 		<div class="installnote">
-			<h1><?php echo _AEC_INST_NOTE_IMPORTANT; ?>:</h1>
-			<p><?php echo _AEC_INST_NOTE_SECURITY; ?></p>
-			<p><?php printf( _AEC_INST_APPLY_HACKS, AECToolbox::backendTaskLink( 'hacks', _AEC_INST_APPLY_HACKS_LTEXT ) ); ?></p>
-			<p><?php echo _AEC_INST_NOTE_UPGRADE; ?></p>
+			<h1><?php echo JText::_('_AEC_INST_NOTE_IMPORTANT'); ?>:</h1>
+			<p><?php echo JText::_('_AEC_INST_NOTE_SECURITY'); ?></p>
+			<p><?php printf( JText::_('_AEC_INST_APPLY_HACKS'), AECToolbox::backendTaskLink( 'hacks', JText::_('_AEC_INST_APPLY_HACKS_LTEXT') ) ); ?></p>
+			<p><?php echo JText::_('_AEC_INST_NOTE_UPGRADE'); ?></p>
 		</div>
 		<div style="width: 100%; height: 60px;"></div>
 	</div>
@@ -304,12 +304,12 @@ function com_install()
 			<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
 			<br /><br />
 			<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?> - Revision <?php echo _AEC_REVISION; ?></p>
-			<p><?php echo _AEC_FOOT_TX_CHOOSING; ?></p>
+			<p><?php echo JText::_('_AEC_FOOT_TX_CHOOSING'); ?></p>
 			<div style="margin: 0 auto;text-align:center;">
 				<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
-				<p><?php echo _AEC_FOOT_TX_GPL; ?></p>
-				<p><?php echo _AEC_FOOT_TX_SUBSCRIBE; ?></p>
-				<p><?php printf( _AEC_FOOT_CREDIT, AECToolbox::backendTaskLink( 'credits', _AEC_FOOT_CREDIT_LTEXT ) ); ?></p>
+				<p><?php echo JText::_('_AEC_FOOT_TX_GPL'); ?></p>
+				<p><?php echo JText::_('_AEC_FOOT_TX_SUBSCRIBE'); ?></p>
+				<p><?php printf( JText::_('_AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', JText::_('_AEC_FOOT_CREDIT_LTEXT') ) ); ?></p>
 			</div>
 		</div>
 	</div>

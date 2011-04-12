@@ -16,8 +16,8 @@ class mi_docman
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_DOCMAN;
-		$info['desc'] = _AEC_MI_DESC_DOCMAN;
+		$info['name'] = JText::_('_AEC_MI_NAME_DOCMAN');
+		$info['desc'] = JText::_('_AEC_MI_DESC_DOCMAN');
 
 		return $info;
 	}
@@ -152,11 +152,11 @@ class mi_docman
 					$used = $mi_docmanhandler->used_downloads;
 				}
 				$unlimited = $mi_docmanhandler->unlimited_downloads;
-				$message = '<p>'.sprintf(_AEC_MI_DIV1_DOCMAN_USED, $used).'</p>';
+				$message = '<p>'.sprintf(JText::_('_AEC_MI_DIV1_DOCMAN_USED'), $used).'</p>';
 				if ( $unlimited > 0 ) {
-					$message .='<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, _AEC_MI_DIV1_DOCMAN_UNLIMITED ) . '</p>';
+					$message .='<p>' . sprintf( JText::_('_AEC_MI_DIV1_DOCMAN_REMAINING'), JText::_('_AEC_MI_DIV1_DOCMAN_UNLIMITED') ) . '</p>';
 				} else {
-					$message .= '<p>' . sprintf( _AEC_MI_DIV1_DOCMAN_REMAINING, $left ) . '</p>';
+					$message .= '<p>' . sprintf( JText::_('_AEC_MI_DIV1_DOCMAN_REMAINING'), $left ) . '</p>';
 				}
 				return $message;
 			}
@@ -186,7 +186,7 @@ class mi_docman
 
 		$n = 'docmandownloadphp';
 		$hacks[$n]['name']				=	'download.php';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK1_DOCMAN;
+		$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK1_DOCMAN');
 		$hacks[$n]['type']				=	'file';
 
 		if ( file_exists( JPATH_SITE . '/components/com_docman/includes_frontend/download.php' ) ) {
@@ -455,7 +455,7 @@ class docman_restriction extends JTable {
 
 	function noDownloadsLeft()
 	{
-		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
+		if ( !defined( 'JText::_('_AEC_LANG_INCLUDED_MI')' ) ) {
 			$app = JFactory::getApplication();
 
 			$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
@@ -466,7 +466,7 @@ class docman_restriction extends JTable {
 			}
 		}
 
-		aecRedirect( 'index.php?option=com_docman' , _AEC_MI_DOCMAN_NOCREDIT );
+		aecRedirect( 'index.php?option=com_docman' , JText::_('_AEC_MI_DOCMAN_NOCREDIT') );
 	}
 
 	function useDownload()

@@ -16,8 +16,8 @@ class mi_aecmodifycost
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_AECMODIFYCOST_NAME;
-		$info['desc'] = _AEC_MI_AECMODIFYCOST_DESC;
+		$info['name'] = JText::_('_AEC_MI_AECMODIFYCOST_NAME');
+		$info['desc'] = JText::_('_AEC_MI_AECMODIFYCOST_DESC');
 
 		return $info;
 	}
@@ -29,19 +29,19 @@ class mi_aecmodifycost
 		$settings['options']		= array( 'inputB' );
 
 		$modes = array();
-		$modes[] = JHTML::_('select.option', 'basic', _MI_MI_AECMODIFYCOST_SET_MODE_BASIC );
-		$modes[] = JHTML::_('select.option', 'percentage', _MI_MI_AECMODIFYCOST_SET_MODE_PERCENTAGE );
+		$modes[] = JHTML::_('select.option', 'basic', JText::_('_MI_MI_AECMODIFYCOST_SET_MODE_BASIC') );
+		$modes[] = JHTML::_('select.option', 'percentage', JText::_('_MI_MI_AECMODIFYCOST_SET_MODE_PERCENTAGE') );
 
 		if ( !empty( $this->settings['options'] ) ) {
 			for ( $i=0; $i<$this->settings['options']; $i++ ) {
 				$p = $i . '_';
 
-				$settings[$p.'id']			= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_ID_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_ID_DESC );
-				$settings[$p.'text']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_TEXT_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_TEXT_DESC );
-				$settings[$p.'amount']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_AMOUNT_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_AMOUNT_DESC );
-				$settings[$p.'mode']		= array( 'list', sprintf( _MI_MI_AECMODIFYCOST_SET_MODE_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_MODE_DESC );
-				$settings[$p.'extra']		= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_EXTRA_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_EXTRA_DESC );
-				$settings[$p.'mi']			= array( 'inputC', sprintf( _MI_MI_AECMODIFYCOST_SET_MI_NAME, $i+1 ), _MI_MI_AECMODIFYCOST_SET_MI_DESC );
+				$settings[$p.'id']			= array( 'inputC', sprintf( JText::_('_MI_MI_AECMODIFYCOST_SET_ID_NAME'), $i+1 ), JText::_('_MI_MI_AECMODIFYCOST_SET_ID_DESC') );
+				$settings[$p.'text']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECMODIFYCOST_SET_TEXT_NAME'), $i+1 ), JText::_('_MI_MI_AECMODIFYCOST_SET_TEXT_DESC') );
+				$settings[$p.'amount']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECMODIFYCOST_SET_AMOUNT_NAME'), $i+1 ), JText::_('_MI_MI_AECMODIFYCOST_SET_AMOUNT_DESC') );
+				$settings[$p.'mode']		= array( 'list', sprintf( JText::_('_MI_MI_AECMODIFYCOST_SET_MODE_NAME'), $i+1 ), JText::_('_MI_MI_AECMODIFYCOST_SET_MODE_DESC') );
+				$settings[$p.'extra']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECMODIFYCOST_SET_EXTRA_NAME'), $i+1 ), JText::_('_MI_MI_AECMODIFYCOST_SET_EXTRA_DESC') );
+				$settings[$p.'mi']			= array( 'inputC', sprintf( JText::_('_MI_MI_AECMODIFYCOST_SET_MI_NAME'), $i+1 ), JText::_('_MI_MI_AECMODIFYCOST_SET_MI_DESC') );
 
 				if ( isset( $this->settings[$p.'mode'] ) ) {
 					$val = $this->settings[$p.'mode'];
@@ -66,7 +66,7 @@ class mi_aecmodifycost
 			if ( !empty( $this->settings['custominfo'] ) ) {
 				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
 			} else {
-				$settings['exp'] = array( 'p', "", _MI_MI_AECMODIFYCOST_DEFAULT_NOTICE );
+				$settings['exp'] = array( 'p', "", JText::_('_MI_MI_AECMODIFYCOST_DEFAULT_NOTICE') );
 			}
 
 			if ( count( $options ) < 5 ) {

@@ -17,9 +17,9 @@ class processor_nochex extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'nochex';
-		$info['longname']		= _CFG_NOCHEX_LONGNAME;
-		$info['statement']		= _CFG_NOCHEX_STATEMENT;
-		$info['description']	= _CFG_NOCHEX_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_NOCHEX_LONGNAME');
+		$info['statement']		= JText::_('_CFG_NOCHEX_STATEMENT');
+		$info['description']	= JText::_('_CFG_NOCHEX_DESCRIPTION');
 		$info['currencies']		= 'USD';
 		$info['cc_list']		= 'visa,mastercard';
 		$info['recurring']		= 0;
@@ -33,7 +33,7 @@ class processor_nochex extends POSTprocessor
 		$settings['testmode'] 		= 1;
 		$settings['currency']		= "USD";
 		$settings['merchant_id']	= 'nochex@aec.com';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

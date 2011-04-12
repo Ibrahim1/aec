@@ -15,8 +15,8 @@ class mi_communitybuilder
 	function Info ()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_COMMUNITYBUILDER;
-		$info['desc'] = _AEC_MI_DESC_COMMUNITYBUILDER;
+		$info['name'] = JText::_('_AEC_MI_NAME_COMMUNITYBUILDER');
+		$info['desc'] = JText::_('_AEC_MI_DESC_COMMUNITYBUILDER');
 
 		return $info;
 	}
@@ -48,7 +48,7 @@ class mi_communitybuilder
 				}
 
 				$settings['cbfield_' . $object->name] = array( 'inputE', $title, $title );
-				$expname = $title . " "  . _MI_MI_COMMUNITYBUILDER_EXPMARKER;
+				$expname = $title . " "  . JText::_('_MI_MI_COMMUNITYBUILDER_EXPMARKER');
 				$settings['cbfield_' . $object->name . '_exp' ] = array( 'inputE', $expname, $expname );
 			}
 		}

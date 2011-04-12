@@ -17,9 +17,9 @@ class processor_scb_nsips extends URLprocessor
 	{
 		$info = array();
 		$info['name']				= 'scb_nsips';
-		$info['longname']			= _CFG_SCB_NSIPS_LONGNAME;
-		$info['statement']			= _CFG_SCB_NSIPS_LONGNAME;
-		$info['description'] 		= _CFG_SCB_NSIPS_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_SCB_NSIPS_LONGNAME');
+		$info['statement']			= JText::_('_CFG_SCB_NSIPS_LONGNAME');
+		$info['description'] 		= JText::_('_CFG_SCB_NSIPS_DESCRIPTION');
 		$info['currencies']			= 'THB,USD,GBP,EUR,JPY,AUD,CAD,DKK,HKD,NZD,SGD,CHF,SEK';
 		$info['languages']			= 'GB,DE,FR,IT,ES,US,NL';
 		$info['cc_list']			= 'visa,mastercard,eurocard';
@@ -50,8 +50,8 @@ class processor_scb_nsips extends URLprocessor
 		$settings['customparams']	= array( 'inputD' );
 
  		$typelist = array();
-		$typelist[0] = JHTML::_('select.option', 1, _CFG_NETDEBIT_TYPE_LISTITEM_ELV );
-		$typelist[1] = JHTML::_('select.option', 2, _CFG_NETDEBIT_TYPE_LISTITEM_CC );
+		$typelist[0] = JHTML::_('select.option', 1, JText::_('_CFG_NETDEBIT_TYPE_LISTITEM_ELV') );
+		$typelist[1] = JHTML::_('select.option', 2, JText::_('_CFG_NETDEBIT_TYPE_LISTITEM_CC') );
 
 		$settings['lists']['type']	= JHTML::_( 'select.genericlist', $typelist, 'scb_nsips_type', 'size="1"', 'value', 'text', $this->settings['type'] );
 

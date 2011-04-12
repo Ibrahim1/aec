@@ -17,9 +17,9 @@ class processor_paysite_cash extends URLprocessor
 	{
 		$info = array();
 		$info['name']					= 'paysite_cash';
-		$info['longname']				= _CFG_PAYSITE_CASH_LONGNAME;
-		$info['statement']				= _CFG_PAYSITE_CASH_STATEMENT;
-		$info['description']			= _CFG_PAYSITE_CASH_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_PAYSITE_CASH_LONGNAME');
+		$info['statement']				= JText::_('_CFG_PAYSITE_CASH_STATEMENT');
+		$info['description']			= JText::_('_CFG_PAYSITE_CASH_DESCRIPTION');
 		$info['currencies']				= 'EUR,USD,CAD,GBP,CHF';
 		$info['languages']				= 'FR,US';
 		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';

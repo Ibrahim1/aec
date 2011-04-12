@@ -422,7 +422,7 @@ function hold( $option, $userid )
 
 		$document=& JFactory::getDocument();
 
-		$document->setTitle( html_entity_decode( _HOLD_TITLE, ENT_COMPAT, 'UTF-8' ) );
+		$document->setTitle( html_entity_decode( JText::_('_HOLD_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->hold( $option, $metaUser );
@@ -471,7 +471,7 @@ function expired( $option, $userid, $expiration )
 
 		$document=& JFactory::getDocument();
 
-		$document->setTitle( html_entity_decode( _EXPIRED_TITLE, ENT_COMPAT, 'UTF-8' ) );
+		$document->setTitle( html_entity_decode( JText::_('_EXPIRED_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 		$continue = false;
 		if ( $aecConfig->cfg['continue_button'] && $metaUser->hasSubscription ) {
@@ -523,7 +523,7 @@ function pending( $option, $userid )
 
 		$document=& JFactory::getDocument();
 
-		$document->setTitle( html_entity_decode( _PENDING_TITLE, ENT_COMPAT, 'UTF-8' ) );
+		$document->setTitle( html_entity_decode( JText::_('_PENDING_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 		$frontend = new HTML_frontEnd ();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
@@ -900,7 +900,7 @@ function subscriptionDetails( $option, $sub='overview', $page=0 )
 		if ( !in_array( $invoice->method, $excludedprocs ) ) {
 			$actionsarray[] = array( 	'task'	=> 'invoicePrint',
 										'add'	=> 'invoice=' . $invoice->invoice_number,
-										'text'	=> _HISTORY_ACTION_PRINT,
+										'text'	=> JText::_('_HISTORY_ACTION_PRINT'),
 										'insert' => ' target="_blank" ' );
 		}
 
@@ -908,12 +908,12 @@ function subscriptionDetails( $option, $sub='overview', $page=0 )
 			if ( $invoice->transaction_date == '0000-00-00 00:00:00' ) {
 				$actionsarray[] = array( 	'task'	=> 'repeatPayment',
 											'add'	=> 'invoice=' . $invoice->invoice_number . '&'. JUtility::getToken() .'=1',
-											'text'	=> _HISTORY_ACTION_REPEAT );
+											'text'	=> JText::_('_HISTORY_ACTION_REPEAT') );
 
 				if ( is_null( $invoice->fixed ) || !$invoice->fixed ) {
 					$actionsarray[] = array('task'	=> 'cancelPayment',
 											'add'	=> 'invoice=' . $invoice->invoice_number,
-											'text'	=> _HISTORY_ACTION_CANCEL );
+											'text'	=> JText::_('_HISTORY_ACTION_CANCEL') );
 				}
 			}
 
@@ -985,7 +985,7 @@ function subscriptionDetails( $option, $sub='overview', $page=0 )
 
 	// Add Details tab for MI Stuff
 	if ( !empty( $mi_info ) ) {
-		$tabs['details'] = _AEC_SUBDETAILS_TAB_DETAILS;
+		$tabs['details'] = JText::_('_AEC_SUBDETAILS_TAB_DETAILS');
 	}
 
 	$invoiceactionlink = 'index.php?option=' . $option . '&amp;task=%s&amp;%s';
@@ -1078,7 +1078,7 @@ function subscriptionDetails( $option, $sub='overview', $page=0 )
 
 	$document=& JFactory::getDocument();
 
-	$document->setTitle( html_entity_decode( _MYSUBSCRIPTION_TITLE . ' - ' . $tabs[$sub], ENT_COMPAT, 'UTF-8' ) );
+	$document->setTitle( html_entity_decode( JText::_('_MYSUBSCRIPTION_TITLE') . ' - ' . $tabs[$sub], ENT_COMPAT, 'UTF-8' ) );
 
 	$html = new HTML_frontEnd();
 	$html->subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi_info, $subList, $custom, $properties );
@@ -1445,7 +1445,7 @@ function notAllowed( $option )
 
 	$document=& JFactory::getDocument();
 
-	$document->setTitle( html_entity_decode( _NOT_ALLOWED_HEADLINE, ENT_COMPAT, 'UTF-8' ) );
+	$document->setTitle( html_entity_decode( JText::_('_NOT_ALLOWED_HEADLINE'), ENT_COMPAT, 'UTF-8' ) );
 
 	$frontend = new HTML_frontEnd ();
 	$frontend->notAllowed( $option, $processors, $registerlink, $loggedin );
@@ -1541,20 +1541,20 @@ function processNotification( $option, $processor )
 	}
 
 	if ( !$id ) {
-		$short	= _AEC_MSG_PROC_INVOICE_FAILED_SH;
+		$short	= JText::_('_AEC_MSG_PROC_INVOICE_FAILED_SH');
 
 		if ( isset( $response['null'] ) ) {
 			if ( isset( $response['explanation'] ) ) {
-				$short	= _AEC_MSG_PROC_INVOICE_ACTION_SH;
+				$short	= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_SH');
 
 				$event .= $response['explanation'];
 			} else {
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_NULL;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL');
 			}
 
 			$tags	.= 'invoice,processor,payment,null';
 		} else {
-			$event	= sprintf( _AEC_MSG_PROC_INVOICE_FAILED_EV, $processor, $response['invoice'] )
+			$event	= sprintf( JText::_('_AEC_MSG_PROC_INVOICE_FAILED_EV'), $processor, $response['invoice'] )
 					. ' ' . $db->getErrorMsg();
 			$tags	= 'invoice,processor,payment,error';
 		}
@@ -1596,7 +1596,7 @@ function cancelPayment( $option )
 	} else {
 		$document=& JFactory::getDocument();
 
-		$document->setTitle( html_entity_decode( _CANCEL_TITLE, ENT_COMPAT, 'UTF-8' ) );
+		$document->setTitle( html_entity_decode( JText::_('_CANCEL_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 		HTML_Results::cancel( $option );
 	}
@@ -1623,23 +1623,23 @@ function aecThanks( $option, $renew, $free, $plan=null )
 	}
 
 	if ( $renew ) {
-		$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
+		$msg = JText::_('_SUB_FEPARTICLE_HEAD_RENEW') . '</p><p>' . JText::_('_SUB_FEPARTICLE_THANKSRENEW');
 		if ( $free ) {
-			$msg .= _SUB_FEPARTICLE_LOGIN;
+			$msg .= JText::_('_SUB_FEPARTICLE_LOGIN');
 		} else {
-			$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
+			$msg .= JText::_('_SUB_FEPARTICLE_PROCESSPAY') . JText::_('_SUB_FEPARTICLE_MAIL');
 		}
 	} else {
-		$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
+		$msg = JText::_('_SUB_FEPARTICLE_HEAD') . '</p><p>' . JText::_('_SUB_FEPARTICLE_THANKS');
 
-		$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
+		$msg .=  $free ? JText::_('_SUB_FEPARTICLE_PROCESS') : JText::_('_SUB_FEPARTICLE_PROCESSPAY');
 
-		$msg .= $app->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
+		$msg .= $app->getCfg( 'useractivation' ) ? JText::_('_SUB_FEPARTICLE_ACTMAIL') : JText::_('_SUB_FEPARTICLE_MAIL');
 	}
 
 	$b = '';
 	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-		$b .= '<div class="componentheading">' . _THANKYOU_TITLE . '</div>';
+		$b .= '<div class="componentheading">' . JText::_('_THANKYOU_TITLE') . '</div>';
 	}
 
 	if ( $aecConfig->cfg['customtext_thanks'] ) {
@@ -1669,7 +1669,7 @@ function aecThanks( $option, $renew, $free, $plan=null )
 
 	$document=& JFactory::getDocument();
 
-	$document->setTitle( html_entity_decode( _THANKYOU_TITLE, ENT_COMPAT, 'UTF-8' ) );
+	$document->setTitle( html_entity_decode( JText::_('_THANKYOU_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 	HTML_Results::thanks( $option, $msg );
 }
@@ -1686,23 +1686,23 @@ function aecSimpleThanks( $option, $renew, $free )
 	}
 
 	if ( $renew ) {
-		$msg = _SUB_FEPARTICLE_HEAD_RENEW . '</p><p>' . _SUB_FEPARTICLE_THANKSRENEW;
+		$msg = JText::_('_SUB_FEPARTICLE_HEAD_RENEW') . '</p><p>' . JText::_('_SUB_FEPARTICLE_THANKSRENEW');
 		if ( $free ) {
-			$msg .= _SUB_FEPARTICLE_LOGIN;
+			$msg .= JText::_('_SUB_FEPARTICLE_LOGIN');
 		} else {
-			$msg .= _SUB_FEPARTICLE_PROCESSPAY . _SUB_FEPARTICLE_MAIL;
+			$msg .= JText::_('_SUB_FEPARTICLE_PROCESSPAY') . JText::_('_SUB_FEPARTICLE_MAIL');
 		}
 	} else {
-		$msg = _SUB_FEPARTICLE_HEAD . '</p><p>' . _SUB_FEPARTICLE_THANKS;
+		$msg = JText::_('_SUB_FEPARTICLE_HEAD') . '</p><p>' . JText::_('_SUB_FEPARTICLE_THANKS');
 
-		$msg .=  $free ? _SUB_FEPARTICLE_PROCESS : _SUB_FEPARTICLE_PROCESSPAY;
+		$msg .=  $free ? JText::_('_SUB_FEPARTICLE_PROCESS') : JText::_('_SUB_FEPARTICLE_PROCESSPAY');
 
-		$msg .= $app->getCfg( 'useractivation' ) ? _SUB_FEPARTICLE_ACTMAIL : _SUB_FEPARTICLE_MAIL;
+		$msg .= $app->getCfg( 'useractivation' ) ? JText::_('_SUB_FEPARTICLE_ACTMAIL') : JText::_('_SUB_FEPARTICLE_MAIL');
 	}
 
 	$b = '';
 	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-		$b .= '<div class="componentheading">' . _THANKYOU_TITLE . '</div>';
+		$b .= '<div class="componentheading">' . JText::_('_THANKYOU_TITLE') . '</div>';
 	}
 
 	if ( $aecConfig->cfg['customtext_thanks'] ) {
@@ -1715,7 +1715,7 @@ function aecSimpleThanks( $option, $renew, $free )
 
 	$document=& JFactory::getDocument();
 
-	$document->setTitle( html_entity_decode( _THANKYOU_TITLE, ENT_COMPAT, 'UTF-8' ) );
+	$document->setTitle( html_entity_decode( JText::_('_THANKYOU_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 	HTML_Results::thanks( $option, $b );
 }

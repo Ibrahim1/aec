@@ -16,8 +16,8 @@ class mi_virtuemart
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_VIRTM;
-		$info['desc'] = _AEC_MI_DESC_VIRTM;
+		$info['name'] = JText::_('_AEC_MI_NAME_VIRTM');
+		$info['desc'] = JText::_('_AEC_MI_DESC_VIRTM');
 
 		return $info;
 	}

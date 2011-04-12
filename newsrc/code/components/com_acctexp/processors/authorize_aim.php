@@ -17,9 +17,9 @@ class processor_authorize_aim extends XMLprocessor
 	{
 		$info = array();
 		$info['name']			= 'authorize_aim';
-		$info['longname']		= _CFG_AUTHORIZE_AIM_LONGNAME;
-		$info['statement']		= _CFG_AUTHORIZE_AIM_STATEMENT;
-		$info['description']	= _CFG_AUTHORIZE_AIM_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_AUTHORIZE_AIM_LONGNAME');
+		$info['statement']		= JText::_('_CFG_AUTHORIZE_AIM_STATEMENT');
+		$info['description']	= JText::_('_CFG_AUTHORIZE_AIM_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 0;
@@ -52,7 +52,7 @@ class processor_authorize_aim extends XMLprocessor
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
 		return $settings;
@@ -86,20 +86,20 @@ class processor_authorize_aim extends XMLprocessor
 		$maxname		= count($namearray) - 1;
 		$lastname		= $namearray[$maxname];
 
-		$var['params']['billFirstName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME, $firstfirstname );
-		$var['params']['billLastName'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME, _AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME, $lastname );
+		$var['params']['billFirstName'] = array( 'inputC', JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME'), JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME'), $firstfirstname );
+		$var['params']['billLastName'] = array( 'inputC', JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME'), JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME'), $lastname );
 
 		if ( !empty( $this->settings['promptAddress'] ) || !empty( $this->settings['promptZipOnly'] ) ) {
 			if ( empty( $this->settings['promptZipOnly'] ) ) {
-				$var['params']['billAddress'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLADDRESS_NAME );
-				$var['params']['billCity'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLCITY_NAME );
-				$var['params']['billState'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLSTATE_NAME );
+				$var['params']['billAddress'] = array( 'inputC', JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLADDRESS_NAME') );
+				$var['params']['billCity'] = array( 'inputC', JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLCITY_NAME') );
+				$var['params']['billState'] = array( 'inputC', JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLSTATE_NAME') );
 			}
 
-			$var['params']['billZip'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLZIP_NAME );
+			$var['params']['billZip'] = array( 'inputC', JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLZIP_NAME') );
 
 			if ( empty( $this->settings['promptZipOnly'] ) ) {
-				$var['params']['billCountry'] = array( 'inputC', _AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME );
+				$var['params']['billCountry'] = array( 'inputC', JText::_('_AEC_AUTHORIZE_AIM_PARAMS_BILLCOUNTRY_NAME') );
 			}
 		}
 

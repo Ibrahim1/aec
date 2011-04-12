@@ -17,9 +17,9 @@ class processor_hsbc extends XMLprocessor
 	{
 		$info = array();
 		$info['name']				= 'hsbc';
-		$info['longname']			= _CFG_HSBC_LONGNAME;
-		$info['statement']			= _CFG_HSBC_STATEMENT;
-		$info['description']		= _CFG_HSBC_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_HSBC_LONGNAME');
+		$info['statement']			= JText::_('_CFG_HSBC_STATEMENT');
+		$info['description']		= JText::_('_CFG_HSBC_DESCRIPTION');
 		$info['currencies']			= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']			= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']			= 2;
@@ -57,7 +57,7 @@ class processor_hsbc extends XMLprocessor
 		$settings['pas_url']			= "https://www.ccpa.hsbc.com/ccpa";
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -108,7 +108,7 @@ class processor_hsbc extends XMLprocessor
 								'customtext_checkout_keeporiginal' => 'false',
 								'introtext' => '',
 								'processor_addin' => $addin,
-								'customtext_checkout' => _CFG_HSBC_2ND_CHECKOUT_INFO
+								'customtext_checkout' => JText::_('_CFG_HSBC_2ND_CHECKOUT_INFO')
 							);
 				$this->simpleCheckoutMod( $mod );
 
@@ -132,7 +132,7 @@ class processor_hsbc extends XMLprocessor
 									'checkout_title' => 'Checkout - Security Check',
 									'processor_addin' => $addin,
 									'customtext_checkout_keeporiginal' => 'false',
-									'customtext_checkout' => _CFG_HSBC_2ND_CHECKOUT_INFO
+									'customtext_checkout' => JText::_('_CFG_HSBC_2ND_CHECKOUT_INFO')
 								);
 					$this->simpleCheckoutMod( $mod );
 

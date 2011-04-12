@@ -17,9 +17,9 @@ class processor_paypal_payflow extends XMLprocessor
 	{
 		$info = array();
 		$info['name']			= 'paypal_payflow';
-		$info['longname']		= _CFG_PAYPAL_PAYFLOW_LONGNAME;
-		$info['statement']		= _CFG_PAYPAL_PAYFLOW_STATEMENT;
-		$info['description']	= _CFG_PAYPAL_PAYFLOW_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_PAYPAL_PAYFLOW_LONGNAME');
+		$info['statement']		= JText::_('_CFG_PAYPAL_PAYFLOW_STATEMENT');
+		$info['description']	= JText::_('_CFG_PAYPAL_PAYFLOW_DESCRIPTION');
 		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
 		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
@@ -57,7 +57,7 @@ class processor_paypal_payflow extends XMLprocessor
 		$settings['signature']				= '';
 		$settings['country']				= 'US';
 
-		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']				= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -91,7 +91,7 @@ class processor_paypal_payflow extends XMLprocessor
 	function registerProfileTabs()
 	{
 		$tab			= array();
-		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+		$tab['details']	= JText::_('_AEC_USERFORM_BILLING_DETAILS_NAME');
 
 		return $tab;
 	}
@@ -165,7 +165,7 @@ class processor_paypal_payflow extends XMLprocessor
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
 		$return .= '<input type="hidden" name="sub" value="paypal_payflow_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . JText::_('_BUTTON_APPLY') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -177,12 +177,12 @@ class processor_paypal_payflow extends XMLprocessor
 
 		if ( !empty( $vcontent ) ) {
 			if ( !empty( $updated ) ) {
-				$msg = _AEC_CCFORM_UPDATE2_DESC;
+				$msg = JText::_('_AEC_CCFORM_UPDATE2_DESC');
 			} else {
-				$msg = _AEC_CCFORM_UPDATE_DESC;
+				$msg = JText::_('_AEC_CCFORM_UPDATE_DESC');
 			}
 
-			$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, $msg, '' );
+			$var['params']['billUpdateInfo'] = array( 'p', JText::_('_AEC_CCFORM_UPDATE_NAME'), $msg, '' );
 		}
 
 		$values = array( 'card_type', 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
@@ -334,7 +334,7 @@ class processor_paypal_payflow extends XMLprocessor
 			} else {
 				$count = 0;
 				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
-						$return['error'] .= 'Error ' . $nvpResArray["L_ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
+						$return['error'] .= 'Error ' . $nvpResArray["LJText::_('_ERRORCODE')".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
 						$count++;
 				}
 			}

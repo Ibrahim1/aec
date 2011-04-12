@@ -16,8 +16,8 @@ class mi_aecinvoiceprintmod
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_AECINVOICEPRINTMOD;
-		$info['desc'] = _AEC_MI_DESC_AECINVOICEPRINTMOD;
+		$info['name'] = JText::_('_AEC_MI_NAME_AECINVOICEPRINTMOD');
+		$info['desc'] = JText::_('_AEC_MI_DESC_AECINVOICEPRINTMOD');
 
 		return $info;
 	}
@@ -30,11 +30,11 @@ class mi_aecinvoiceprintmod
 					);
 
  		$modelist = array();
-		$modelist[] = JHTML::_('select.option', "none", AEC_TEXTMODE_NONE );
-		$modelist[] = JHTML::_('select.option', "before", AEC_TEXTMODE_BEFORE );
-		$modelist[] = JHTML::_('select.option', "after", AEC_TEXTMODE_AFTER );
-		$modelist[] = JHTML::_('select.option', "replace", AEC_TEXTMODE_REPLACE );
-		$modelist[] = JHTML::_('select.option', "delete", AEC_TEXTMODE_DELETE );
+		$modelist[] = JHTML::_('select.option', "none", JText::_('AEC_TEXTMODE_NONE') );
+		$modelist[] = JHTML::_('select.option', "before", JText::_('AEC_TEXTMODE_BEFORE') );
+		$modelist[] = JHTML::_('select.option', "after", JText::_('AEC_TEXTMODE_AFTER') );
+		$modelist[] = JHTML::_('select.option', "replace", JText::_('AEC_TEXTMODE_REPLACE') );
+		$modelist[] = JHTML::_('select.option', "delete", JText::_('AEC_TEXTMODE_DELETE') );
 
 		$settings = array();
 		foreach ( $s as $x ) {

@@ -16,8 +16,8 @@ class mi_k2
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_K2;
-		$info['desc'] = _AEC_MI_DESC_K2;
+		$info['name'] = JText::_('_AEC_MI_NAME_K2');
+		$info['desc'] = JText::_('_AEC_MI_DESC_K2');
 
 		return $info;
 	}

@@ -14,28 +14,50 @@ $rootlang = 'english';
 
 $temppath = dirname(__FILE__) .'/temp';
 
+if ( file_exists( $temppath."/log.txt" ) ) {
+	unlink( $temppath."/log.txt" );
+}
+
+$log = new SplFileObject( $temppath."/log.txt", 'w' );
+
 if ( file_exists( $temppath ) ) {
 	vTranslate::rrmdir( $temppath );
 }
 
 mkdir( $temppath );
 
-$dirs = vTranslate::getFolders( $path );
+$all_targets = array();
 
-foreach( $dirs as $sourcedir ) {
-	echo "Processing: " . $sourcedir . "\n";
+$stddirs = array();
+$stddirs[] = $path;
+$stddirs = vTranslate::getFolders( $path, $stddirs, true );
 
-	$dpath = explode( '/', $sourcedir );
+foreach( $stddirs as $sourcedir ) {
+	$targetpath = str_replace( $path, $temppath, $sourcedir );
 
-	$l = count( $dpath );
+	vTranslate::log( "Preparing regular files in: " . $targetpath . "\n", $log );
 
-	$parentpath = $temppath . '/' . $dpath[$l-2];
-
-	if ( !is_dir( $parentpath ) ) {
-		mkdir( $parentpath );
+	if ( !is_dir( $targetpath ) ) {
+		mkdir( $targetpath );
 	}
 
-	$targetpath = $parentpath . '/' . $dpath[$l-1];
+	$files = vTranslate::getFiles( $sourcedir );
+
+	if ( !empty( $files ) ) {
+		foreach ( $files as $file ) {
+			$all_targets[] = array( 'source' => $sourcedir.'/'.$file, 'target' => $targetpath.'/'.$file );
+		}
+	}
+}
+
+$dirs = vTranslate::getFolders( $path );
+
+$all_constants = array();
+
+foreach( $dirs as $sourcedir ) {
+	vTranslate::log( "Processing: " . $sourcedir . "\n", $log );
+
+	$targetpath = str_replace( $path, $temppath, $sourcedir );
 
 	if ( !is_dir( $targetpath ) ) {
 		mkdir( $targetpath );
@@ -44,11 +66,11 @@ foreach( $dirs as $sourcedir ) {
 	$files = vTranslate::getFiles( $sourcedir );
 
 	if ( !in_array($rootlang.'.php', $files) ) {
-		echo "ERROR: Root Language not found: " . $sourcedir . "/" . $rootlang.'.php' . "\n";
+		vTranslate::log( "ERROR: Root Language not found: " . $sourcedir . "/" . $rootlang.'.php' . "\n", $log );
 
 		continue;
 	} else {
-		echo "Root Language found: " . $rootlang . " (=>" . vTranslate::ISO3166_2ify( $rootlang ) . ")" . "\n";
+		vTranslate::log( "Root Language found: " . $rootlang . " (=>" . vTranslate::ISO3166_2ify( $rootlang ) . ")" . "\n", $log );
 	}
 
 	$translations = array();
@@ -62,7 +84,7 @@ foreach( $dirs as $sourcedir ) {
 		}
 	}
 
-	echo "Translations found: " . implode( ", ", $translations_echo ) . "\n\n";
+	vTranslate::log( "Translations found: " . implode( ", ", $translations_echo ) . "\n\n", $log );
 
 	$translator = array();
 	$translatef = array();
@@ -114,6 +136,8 @@ foreach( $dirs as $sourcedir ) {
 				$translatef[$translation]->fwrite( vTranslate::safeEncode( $content ) );
 			}
 		} elseif ( $line['type'] == 'ham' ) {
+			$all_constants[] = $line['content']['name'];
+
 			foreach ( $translations as $translation ) {
 				if ( $translation != $rootlang ) {
 					if ( !isset( $translator[$translation][$line['content']['name']] ) ) {
@@ -133,7 +157,101 @@ foreach( $dirs as $sourcedir ) {
 			}
 		}
 	}
+
+	vTranslate::log( "Translation done.", $log );
+
+	vTranslate::log( "\n\n", $log );
 }
+
+vTranslate::log( "Now replacing constants in .php files with JText equivalent" . "\n\n", $log );
+
+$all_jtext = array();
+foreach ( $all_constants as $constant ) {
+	if ( !empty( $constant ) ) {
+		$all_jtext[$constant] = 'JText::_(\'' . $constant . '\')';
+	}
+}
+
+function sortByLengthReverse( $a, $b )
+{
+	return strlen($b) - strlen($a);
+}
+
+uksort( $all_jtext, "sortByLengthReverse" );
+
+$all_constants = array();
+$all_contents = array();
+foreach ( $all_jtext as $k => $v ) {
+	if ( !empty( $k ) ) {
+		$all_constants[] = $k;
+		$all_contents[] = $v;
+	}
+}
+
+function stro_replace($search, $replace, $subject)
+{
+    return strtr( $subject, array_combine($search, $replace) );
+}
+
+foreach ( $all_targets as $file ) {
+	$source = new SplFileObject( $file['source'] );
+	$target = new SplFileObject( $file['target'], 'w' );
+
+	vTranslate::log( $file['target'] . "\n", $log );
+
+	$count = 0;
+	$countx = 0;
+	$counto = 0;
+	$found = false;
+	while ( !$source->eof() ) {
+		$lfound = false;
+
+		$line = $source->fgets();
+
+		foreach ( $all_constants as $k ) {
+			if ( strpos( $line, $k ) !== false ) {
+				$counto++;
+				$found = true;
+				$lfound = true;
+			}
+		}
+
+		if ( $lfound ) {
+			$countx++;
+		}
+
+		$line = stro_replace( $all_constants, $all_contents, $line );
+
+		$target->fwrite( $line );
+
+		$count++;
+
+		if ( ( $count%100 ) == 0 ) {
+			if ( $found ) {
+				vTranslate::log( "+", $log );
+			} else {
+				vTranslate::log( "-", $log );
+			}
+
+			$found = false;
+		}
+	}
+
+	vTranslate::log( "\n", $log );
+
+	if ( $countx ) {
+		vTranslate::log( $count . " lines checked\n", $log );
+		vTranslate::log( $countx . " lines updated\n", $log );
+		vTranslate::log( "Replaced " . $counto . " constants\n\n", $log );
+	} else {
+		vTranslate::log( $count . " lines checked\n", $log );
+		vTranslate::log( "Nothing to update, deleting copy\n\n", $log );
+
+		unlink( $file['target'] );
+	}
+}
+
+vTranslate::log( "All done." . "\n\n", $log );
 
 class vTranslate
 {
@@ -147,7 +265,7 @@ class vTranslate
 			}
 
 			if ( $object->isDir() ) {
-				if ( ($object->getFilename() == 'language') || ($object->getFilename() == 'lang') ) {
+				if ( ($object->getFilename() == 'language') || ($object->getFilename() == 'lang') || ( strpos( $object->getFilename(), 'language' ) !== false ) ) {
 					if ( !$other ) {
 						$list[] = $object->getPathname();
 					}
@@ -157,7 +275,7 @@ class vTranslate
 					}
 				}
 
-				$list = array_merge( vTranslate::getFolders($object->getPathname(), $list) );
+				$list = array_merge( vTranslate::getFolders($object->getPathname(), $list, $other) );
 			}
 		}
 
@@ -168,6 +286,7 @@ class vTranslate
 	{
 		$iterator = new DirectoryIterator( $path );
 
+		$arr = array();
 		foreach( $iterator as $object ) {
 			if ( !$object->isDot() && !$object->isDir() ) {
 				if ( strpos( $object->getFilename(), '.php' ) ) {
@@ -208,7 +327,7 @@ class vTranslate
 
 			$return['type']		= 'comment';
 			$return['content']	= $comment;
-		} elseif ( strpos( $line, 'define' ) === 0 ) {
+		} elseif ( strpos( strtolower($line), 'define' ) === 0 ) {
 			$return['type'] = 'ham';
 
 			if ( strpos( $line, '\', "' ) && strpos( $line, '");' ) ) {
@@ -227,6 +346,9 @@ class vTranslate
 			$content = substr( $line, $constart+1, $conend-$constart-1 );
 
 			$content = str_replace( "\'", "'", $content );
+			$content = str_replace( '\"', '"', $content );
+
+			$content = str_replace( '"', '"_QQ_"', $content );
 
 			$return['content'] = array( 'name' => $name, 'content' => $content );
 		}
@@ -242,10 +364,10 @@ class vTranslate
 		$lang_codes = array( 	'brazilian_portoguese' => 'pt-BR',
 								'brazilian_portuguese' => 'pt-BR',
 								'czech' => 'cz-CZ',
-								'danish' => 'da-da',
-								'dutch' => 'nl-nl',
+								'danish' => 'da-DA',
+								'dutch' => 'nl-NL',
 								'english' => 'en-GB',
-								'french' => 'fr-fr',
+								'french' => 'fr-FR',
 								'german' => 'de-DE',
 								'germani' => 'de-DE-informal',
 								'germanf' => 'de-DE-formal',
@@ -326,6 +448,13 @@ class vTranslate
 		}
 
 		return $content;
+	}
+	
+	function log( $thing, $log )
+	{
+		echo $thing;
+
+		$log->fwrite( $thing );
 	}
 }
 ?>

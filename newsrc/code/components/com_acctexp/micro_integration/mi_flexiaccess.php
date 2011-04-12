@@ -18,8 +18,8 @@ class mi_flexiaccess
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_FLEXIACCESS;
-		$info['desc'] = _AEC_MI_DESC_FLEXIACCESS;
+		$info['name'] = JText::_('_AEC_MI_NAME_FLEXIACCESS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_FLEXIACCESS');
 
 		return $info;
 	}

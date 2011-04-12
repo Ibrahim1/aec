@@ -16,9 +16,9 @@ class processor_netcash extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= 'Netcash';
-		$info['longname'] 				= _CFG_NETCASH_LONGNAME;
-		$info['statement'] 				= _CFG_NETCASH_STATEMENT;
-		$info['description'] 			= _CFG_NETCASH_DESCRIPTION;
+		$info['longname'] 				= JText::_('_CFG_NETCASH_LONGNAME');
+		$info['statement'] 				= JText::_('_CFG_NETCASH_STATEMENT');
+		$info['description'] 			= JText::_('_CFG_NETCASH_DESCRIPTION');
 		$info['currencies']				= 'ZAR';
 		$info['cc_list'] 				= "visa,mastercard";
 		$info['recurring'] 				= 0;
@@ -42,7 +42,7 @@ class processor_netcash extends POSTprocessor
 		$settings['language'] 				= 'EN';
 		$settings['currency'] 				= 'ZAR';
 		$settings['confirmation_note']		= "Thank you for subscribing on " . $app->getCfg( 'sitename' ) . "!";
-		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']				= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']			= "";
 
 		return $settings;

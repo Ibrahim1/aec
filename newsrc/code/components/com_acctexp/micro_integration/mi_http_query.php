@@ -16,8 +16,8 @@ class mi_http_query extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_HTTP_QUERY;
-		$info['desc'] = _AEC_MI_DESC_HTTP_QUERY;
+		$info['name'] = JText::_('_AEC_MI_NAME_HTTP_QUERY');
+		$info['desc'] = JText::_('_AEC_MI_DESC_HTTP_QUERY');
 
 		return $info;
 	}

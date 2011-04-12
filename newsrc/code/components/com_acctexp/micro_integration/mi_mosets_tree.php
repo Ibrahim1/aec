@@ -16,8 +16,8 @@ class mi_mosets_tree extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_MOSETS;
-		$info['desc'] = _AEC_MI_DESC_MOSETS;
+		$info['name'] = JText::_('_AEC_MI_NAME_MOSETS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_MOSETS');
 
 		return $info;
 	}
@@ -172,11 +172,11 @@ class mi_mosets_tree extends MI
 		. '$mi_mosetshandler->loadUserID( $my->id );' . "\n"
 		. 'if( $mi_mosetshandler->id ) {' . "\n"
 		. 'if( !$mi_mosetshandler->hasListingsLeft() ) {' . "\n"
-		. 'echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
+		. 'echo "' . JText::_('_AEC_MI_HACK1_MOSETS') . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
 		. '} else {' . "\n"
-		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
+		. 'echo "' . JText::_('_AEC_MI_HACK2_MOSETS') . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
 		. '}' . "\n"
@@ -194,11 +194,11 @@ class mi_mosets_tree extends MI
 		. 'if( $mi_mosetshandler->hasListingsLeft() ) {' . "\n"
 		. '$mi_mosetshandler->useListing();' . "\n"
 		. '} else {' . "\n"
-		. 'echo "' . _AEC_MI_HACK1_MOSETS . '";' . "\n"
+		. 'echo "' . JText::_('_AEC_MI_HACK1_MOSETS') . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
 		. '} else {' . "\n"
-		. 'echo "' . _AEC_MI_HACK2_MOSETS . '";' . "\n"
+		. 'echo "' . JText::_('_AEC_MI_HACK2_MOSETS') . '";' . "\n"
 		. 'return;' . "\n"
 		. '}' . "\n"
 		. '}' . "\n"
@@ -225,7 +225,7 @@ class mi_mosets_tree extends MI
 
 		$n = 'mtree1';
 		$hacks[$n]['name']				=	'mtree.php #1';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK3_MOSETS;
+		$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK3_MOSETS');
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_mtree/mtree.php';
 		$hacks[$n]['read']				=	'// OK, you can edit';
@@ -233,7 +233,7 @@ class mi_mosets_tree extends MI
 
 		$n = 'mtree2';
 		$hacks[$n]['name']				=	'mtree.php #2';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK4_MOSETS;
+		$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK4_MOSETS');
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_mtree/mtree.php';
 		$hacks[$n]['read']				=	'$row->updateLinkCount( 1 );';
@@ -241,7 +241,7 @@ class mi_mosets_tree extends MI
 
 		$n = 'adminmtree3';
 		$hacks[$n]['name']				=	'admin.mtree.php #3';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK5_MOSETS;
+		$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK5_MOSETS');
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	JPATH_SITE . '/administrator/components/com_mtree/admin.mtree.php';
 		$hacks[$n]['read']				=	'if ( $mtLinks->link_approved == 0 ) {';
@@ -259,7 +259,7 @@ class mi_mosets_tree extends MI
 
 		if ( $id ) {
 			$mi_mosetshandler->load( $id );
-			return '<p>' . sprintf( _AEC_MI_DIV1_MOSETS, $mi_mosetshandler->getListingsLeft() ) . '</p>';
+			return '<p>' . sprintf( JText::_('_AEC_MI_DIV1_MOSETS'), $mi_mosetshandler->getListingsLeft() ) . '</p>';
 		} else {
 			return '';
 		}

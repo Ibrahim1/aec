@@ -55,8 +55,8 @@ class mi_alphauserpoints extends MI
 			$value = AECToolbox::formatAmount( $this->settings['checkout_conversion'], $currency );
 			$total = AECToolbox::formatAmount( ( $points * $this->settings['checkout_conversion'] ), $currency );
 
-			$settings['vat_desc'] = array( 'p', "", sprintf( _MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO, $points, $value, $total ) );
-			$settings['use_points'] = array( 'inputC', _MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME, _MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC, '' );
+			$settings['vat_desc'] = array( 'p', "", sprintf( JText::_('_MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
+			$settings['use_points'] = array( 'inputC', JText::_('_MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME'), JText::_('_MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC'), '' );
 		}
 
 		return $settings;

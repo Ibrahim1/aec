@@ -17,9 +17,9 @@ class processor_paypal extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'paypal';
-		$info['longname']		= _AEC_PROC_INFO_PP_LNAME;
-		$info['statement']		= _AEC_PROC_INFO_PP_STMNT;
-		$info['description']	= _DESCRIPTION_PAYPAL;
+		$info['longname']		= JText::_('_AEC_PROC_INFO_PP_LNAME');
+		$info['statement']		= JText::_('_AEC_PROC_INFO_PP_STMNT');
+		$info['description']	= JText::_('_DESCRIPTION_PAYPAL');
 		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
 		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
@@ -42,7 +42,7 @@ class processor_paypal extends POSTprocessor
 		$settings['lc']				= 'US';
 		$settings['no_shipping']	= 1;
 		$settings['altipnurl']		= '';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['item_number']	= '[[user_id]]';
 		$settings['customparams']	= "";
 

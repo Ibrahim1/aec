@@ -15,8 +15,8 @@ class mi_apc
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_APC;
-		$info['desc'] = _AEC_MI_DESC_APC;
+		$info['name'] = JText::_('_AEC_MI_NAME_APC');
+		$info['desc'] = JText::_('_AEC_MI_DESC_APC');
 
 		return $info;
 	}

@@ -15,8 +15,8 @@ class mi_jarc
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_JARC;
-		$info['desc'] = _AEC_MI_DESC_JARC;
+		$info['name'] = JText::_('_AEC_MI_NAME_JARC');
+		$info['desc'] = JText::_('_AEC_MI_DESC_JARC');
 
 		return $info;
 	}

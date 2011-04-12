@@ -17,9 +17,9 @@ class processor_cybermut extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'cybermut';
-		$info['longname']		= _CFG_CYBERMUT_LONGNAME;
-		$info['statement']		= _CFG_CYBERMUT_STATEMENT;
-		$info['description']	= _CFG_CYBERMUT_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_CYBERMUT_LONGNAME');
+		$info['statement']		= JText::_('_CFG_CYBERMUT_STATEMENT');
+		$info['description']	= JText::_('_CFG_CYBERMUT_DESCRIPTION');
 		$info['currencies']		= "EUR,USD,GBP,CHF";
 		$info['languages']		= "FR,EN,DE,IT,ES,NL";
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,giropay";
@@ -40,7 +40,7 @@ class processor_cybermut extends POSTprocessor
 		$settings['currency']		= 'EUR';
 		$settings['language']		= 'FR';
 		$settings['server']			= 0;
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );

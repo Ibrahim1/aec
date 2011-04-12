@@ -17,9 +17,9 @@ class processor_iats extends XMLprocessor
 	{
 		$info = array();
 		$info['name']				= 'iats';
-		$info['longname']			= _CFG_IATS_LONGNAME;
-		$info['statement']			= _CFG_IATS_STATEMENT;
-		$info['description']		= _CFG_IATS_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_IATS_LONGNAME');
+		$info['statement']			= JText::_('_CFG_IATS_STATEMENT');
+		$info['description']		= JText::_('_CFG_IATS_DESCRIPTION');
 		$info['currencies']			= 'USD,GBP,AUD';
 		$info['languages']			= 'GB';
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress';
@@ -69,8 +69,8 @@ class processor_iats extends XMLprocessor
 		$settings['exp_unit']		= array( 'list' );
 
 		$perunit = array();
-		$perunit[] = JHTML::_('select.option', 'M', _PAYPLAN_PERUNIT3 );
-		$perunit[] = JHTML::_('select.option', 'Y', _PAYPLAN_PERUNIT4 );
+		$perunit[] = JHTML::_('select.option', 'M', JText::_('_PAYPLAN_PERUNIT3') );
+		$perunit[] = JHTML::_('select.option', 'Y', JText::_('_PAYPLAN_PERUNIT4') );
 
 		$settings['lists']['exp_unit']		= JHTML::_( 'select.genericlist', $perunit, 'iats_exp_unit', 'size="4"', 'value', 'text', ( empty($this->settings['exp_unit']) ? 'Y' : $this->settings['exp_unit'] ) );
 
@@ -83,12 +83,12 @@ class processor_iats extends XMLprocessor
 
 		if ( !empty( $vcontent ) ) {
 			if ( !empty( $updated ) ) {
-				$msg = _AEC_CCFORM_UPDATE2_DESC;
+				$msg = JText::_('_AEC_CCFORM_UPDATE2_DESC');
 			} else {
-				$msg = _AEC_CCFORM_UPDATE_DESC;
+				$msg = JText::_('_AEC_CCFORM_UPDATE_DESC');
 			}
 
-			$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, $msg, '' );
+			$var['params']['billUpdateInfo'] = array( 'p', JText::_('_AEC_CCFORM_UPDATE_NAME'), $msg, '' );
 		}
 
 		$values = array( 'card_type', 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );

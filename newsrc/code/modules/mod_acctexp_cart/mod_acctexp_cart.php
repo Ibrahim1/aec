@@ -48,7 +48,7 @@ if ( $user->id ) {
 	$cart = $c->getCheckout( $metaUser );
 
 	if ( empty( $c->content ) ) {
-		?><p><?php echo _AEC_CART_MODULE_CART_EMPTY; ?></p><?php
+		?><p><?php echo JText::_('_AEC_CART_MODULE_CART_EMPTY'); ?></p><?php
 	} else {
 		switch ( $mode ) {
 			default:
@@ -62,17 +62,17 @@ if ( $user->id ) {
 						$total = $bitem['cost_total'];
 					}
 				}
-				?><p><?php echo _AEC_CART_MODULE_ITEMS_IN_CART; ?>: <?php echo $quantity; ?></p>
-				<p><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?>: <?php echo $total; ?></p>
+				?><p><?php echo JText::_('_AEC_CART_MODULE_ITEMS_IN_CART'); ?>: <?php echo $quantity; ?></p>
+				<p><?php echo JText::_('_AEC_CART_MODULE_ROW_TOTAL'); ?>: <?php echo $total; ?></p>
 				<?php
 				break;
 			case 'full':
 				?><table>
 					<tr>
-						<th><?php echo _AEC_CART_MODULE_ROW_ITEM; ?></th>
-						<th><?php echo _AEC_CART_MODULE_ROW_COST; ?></th>
-						<th><?php echo _AEC_CART_MODULE_ROW_AMOUNT; ?></th>
-						<th><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></th>
+						<th><?php echo JText::_('_AEC_CART_MODULE_ROW_ITEM'); ?></th>
+						<th><?php echo JText::_('_AEC_CART_MODULE_ROW_COST'); ?></th>
+						<th><?php echo JText::_('_AEC_CART_MODULE_ROW_AMOUNT'); ?></th>
+						<th><?php echo JText::_('_AEC_CART_MODULE_ROW_TOTAL'); ?></th>
 					</tr><?php
 
 					foreach ( $cart as $bid => $bitem ) {
@@ -85,7 +85,7 @@ if ( $user->id ) {
 							</tr><?php
 						} else {
 							?><tr>
-								<td><strong><?php echo _AEC_CART_MODULE_ROW_TOTAL; ?></strong></td>
+								<td><strong><?php echo JText::_('_AEC_CART_MODULE_ROW_TOTAL'); ?></strong></td>
 								<td></td>
 								<td></td>
 								<td><strong><?php echo $bitem['cost_total']; ?></strong></td>

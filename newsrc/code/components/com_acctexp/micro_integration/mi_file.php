@@ -16,8 +16,8 @@ class mi_file extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_FILE_NAME;
-		$info['desc'] = _AEC_MI_FILE_DESC;
+		$info['name'] = JText::_('_AEC_MI_FILE_NAME');
+		$info['desc'] = JText::_('_AEC_MI_FILE_DESC');
 
 		return $info;
 	}

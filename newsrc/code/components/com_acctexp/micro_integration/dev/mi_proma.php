@@ -14,8 +14,8 @@ class mi_proma
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_PROMA;
-		$info['desc'] = _AEC_MI_DESC_PROMA;
+		$info['name'] = JText::_('_AEC_MI_NAME_PROMA');
+		$info['desc'] = JText::_('_AEC_MI_DESC_PROMA');
 
 		return $info;
 	}

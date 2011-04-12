@@ -17,9 +17,9 @@ class processor_locaweb_pgcerto extends XMLprocessor
 	{
 		$info = array();
 		$info['name']					= 'locaweb_pgcerto';
-		$info['longname']				= _CFG_LOCAWEB_PGCERTO_LONGNAME;
-		$info['statement']				= _CFG_LOCAWEB_PGCERTO_STATEMENT;
-		$info['description'] 			= _CFG_LOCAWEB_PGCERTO_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_LOCAWEB_PGCERTO_LONGNAME');
+		$info['statement']				= JText::_('_CFG_LOCAWEB_PGCERTO_STATEMENT');
+		$info['description'] 			= JText::_('_CFG_LOCAWEB_PGCERTO_DESCRIPTION');
 		$info['currencies']				= "BRL";
 		$info['cc_list']				= 'visa,boleto';
 		$info['notify_trail_thanks'] 	= true;
@@ -32,7 +32,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		$settings = array();
 		$settings['currency']		= "BRL";
 		$settings['chaveVendedor']	= 'Sua Chave de Vendedor';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;
@@ -58,16 +58,16 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		$name = $request->metaUser->cmsUser->name;
 		$email	= $request->metaUser->cmsUser->email;
 
-		$var['params']['nome']			= array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $name);
-		$var['params']['cpf']			= array( 'inputC', _CFG_LOCAWEB_PGCERTO_CPF_NAME, _CFG_LOCAWEB_PGCERTO_CPF_NAME, '');
-		$var['params']['email']			= array( 'inputC', _CFG_LOCAWEB_PGCERTO_EMAIL_NAME, _CFG_LOCAWEB_PGCERTO_EMAIL_NAME, $email);
+		$var['params']['nome']			= array( 'inputC', JText::_('_AEC_USERFORM_BILLFIRSTNAME_NAME'), JText::_('_AEC_USERFORM_BILLFIRSTNAME_NAME'), $name);
+		$var['params']['cpf']			= array( 'inputC', JText::_('_CFG_LOCAWEB_PGCERTO_CPF_NAME'), JText::_('_CFG_LOCAWEB_PGCERTO_CPF_NAME'), '');
+		$var['params']['email']			= array( 'inputC', JText::_('_CFG_LOCAWEB_PGCERTO_EMAIL_NAME'), JText::_('_CFG_LOCAWEB_PGCERTO_EMAIL_NAME'), $email);
 
-		$var['params']['endereco']		= array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME, _AEC_USERFORM_BILLADDRESS_NAME, '');
-		$var['params']['complemento']	= array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME, _AEC_USERFORM_BILLADDRESS2_NAME, '');
-		$var['params']['bairro']		= array( 'inputC', _AEC_USERFORM_BILLSTATEPROV_NAME, _AEC_USERFORM_BILLSTATEPROV_NAME, '');
-		$var['params']['cidade']		= array( 'inputC', _AEC_USERFORM_BILLCITY_NAME, _AEC_USERFORM_BILLCITY_NAME, '');
-		$var['params']['estado']		= array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME, _AEC_USERFORM_BILLSTATE_NAME, '');
-		$var['params']['cep']			= array( 'inputC', _AEC_USERFORM_BILLZIP_NAME, _AEC_USERFORM_BILLZIP_NAME, '');
+		$var['params']['endereco']		= array( 'inputC', JText::_('_AEC_USERFORM_BILLADDRESS_NAME'), JText::_('_AEC_USERFORM_BILLADDRESS_NAME'), '');
+		$var['params']['complemento']	= array( 'inputC', JText::_('_AEC_USERFORM_BILLADDRESS2_NAME'), JText::_('_AEC_USERFORM_BILLADDRESS2_NAME'), '');
+		$var['params']['bairro']		= array( 'inputC', JText::_('_AEC_USERFORM_BILLSTATEPROV_NAME'), JText::_('_AEC_USERFORM_BILLSTATEPROV_NAME'), '');
+		$var['params']['cidade']		= array( 'inputC', JText::_('_AEC_USERFORM_BILLCITY_NAME'), JText::_('_AEC_USERFORM_BILLCITY_NAME'), '');
+		$var['params']['estado']		= array( 'inputC', JText::_('_AEC_USERFORM_BILLSTATE_NAME'), JText::_('_AEC_USERFORM_BILLSTATE_NAME'), '');
+		$var['params']['cep']			= array( 'inputC', JText::_('_AEC_USERFORM_BILLZIP_NAME'), JText::_('_AEC_USERFORM_BILLZIP_NAME'), '');
 
 		// Create a selection box with payment options
 		$paymentOptions					= array();
@@ -75,7 +75,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		$paymentOptions[]				= JHTML::_('select.option', 'Boleto', 'Boleto Bancário' );
 
 		$var['params']['lists']['modulo']	= JHTML::_( 'select.genericlist', $paymentOptions, 'modulo', 'size="2"', 'value', 'text', 0 );
-		$var['params']['modulo']		= array( 'list', _CFG_LOCAWEB_PGCERTO_MODULE_NAME, _CFG_LOCAWEB_PGCERTO_MODULE_DESC);
+		$var['params']['modulo']		= array( 'list', JText::_('_CFG_LOCAWEB_PGCERTO_MODULE_NAME'), _CFG_LOCAWEB_PGCERTO_MODULE_DESC);
 
 		// Create a selection box with type of buyer
 		$tipoPessoa						= array();
@@ -83,10 +83,10 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		$tipoPessoa[]					= JHTML::_('select.option', 'Juridica', 'Pessoa Jurídica' );
 
 		$var['params']['lists']['tipoPessoa']	= JHTML::_( 'select.genericlist', $tipoPessoa, 'tipoPessoa', 'size="2"', 'value', 'text', 0 );
-		$var['params']['tipoPessoa']			= array( 'list', _CFG_LOCAWEB_PGCERTO_TIPOPESSOA_NAME, _CFG_LOCAWEB_PGCERTO_TIPOPESSOA_DESC);
+		$var['params']['tipoPessoa']			= array( 'list', JText::_('_CFG_LOCAWEB_PGCERTO_TIPOPESSOA_NAME'), JText::_('_CFG_LOCAWEB_PGCERTO_TIPOPESSOA_DESC'));
 
-		$var['params']['cnpj']			= array( 'inputC', _CFG_LOCAWEB_PGCERTO_CNPJ_NAME, _CFG_LOCAWEB_PGCERTO_CNPJ_NAME, '');
-		$var['params']['razaoSocial']	= array( 'inputC', _CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_NAME, _CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_NAME, '');
+		$var['params']['cnpj']			= array( 'inputC', JText::_('_CFG_LOCAWEB_PGCERTO_CNPJ_NAME'), JText::_('_CFG_LOCAWEB_PGCERTO_CNPJ_NAME'), '');
+		$var['params']['razaoSocial']	= array( 'inputC', JText::_('_CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_NAME'), JText::_('_CFG_LOCAWEB_PGCERTO_RAZAOSOCIAL_NAME'), '');
 
 		return $var;
 	}
@@ -369,7 +369,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 						$response['fullresponse']['warning'] = '(' . utf8_decode($CodRetornoConsulta) . ') ' . utf8_decode($MensagemRetornoPagamento);
 						$response['valid']								= false;
 						$response['pending']							= true;
-						$response['pending_reason']				= utf8_decode(_PENDING_REASON_WAITING_RESPONSE);
+						$response['pending_reason']				= utf8_decode(JText::_('_PENDING_REASON_WAITING_RESPONSE'));
 						/* Troubleshooting purpose
 						$myFile = "/var/www/hlbog/desenvolvimento/logs/consulta.xml";
 						$fh = fopen($myFile, 'w') or die("can't open file");
@@ -394,7 +394,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 				if ($CodRetornoConsulta == '12' || $CodRetornoConsulta == '13') {
 						// 12 -> Transacao ainda nao processada
 						// 13 -> Transacao em processamento
-						$response['pending_reason']						= utf8_decode(_PENDING_REASON_WAITING_RESPONSE);
+						$response['pending_reason']						= utf8_decode(JText::_('_PENDING_REASON_WAITING_RESPONSE'));
 				}
 			}
 		} else {

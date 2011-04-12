@@ -16,8 +16,8 @@ class mi_googleadsenseconversion
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_GOOGLEADSENSECONVERSION;
-		$info['desc'] = _AEC_MI_DESC_GOOGLEADSENSECONVERSION;
+		$info['name'] = JText::_('_AEC_MI_NAME_GOOGLEADSENSECONVERSION');
+		$info['desc'] = JText::_('_AEC_MI_DESC_GOOGLEADSENSECONVERSION');
 
 		return $info;
 	}

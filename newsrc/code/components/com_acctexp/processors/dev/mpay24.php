@@ -17,9 +17,9 @@ class processor_mpay24 extends XMLprocessor
 	{
 		$info = array();
 		$info['name']			= 'mpay24';
-		$info['longname']		= _CFG_MPAY24_LONGNAME;
-		$info['statement']		= _CFG_MPAY24_STATEMENT;
-		$info['description']	= _CFG_MPAY24_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_MPAY24_LONGNAME');
+		$info['statement']		= JText::_('_CFG_MPAY24_STATEMENT');
+		$info['description']	= JText::_('_CFG_MPAY24_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 2;
@@ -55,7 +55,7 @@ class processor_mpay24 extends XMLprocessor
 		$settings['dedicatedShipping']	= 0;
 		$settings['noechecks']			= 0;
 		$settings['totalOccurrences']	= 12;
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
 		return $settings;
@@ -108,7 +108,7 @@ class processor_mpay24 extends XMLprocessor
 
 		if ( !$nobill ) {
 			if ( $hascim ) {
-				$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, _AEC_CCFORM_UPDATE_DESC, '' );
+				$var['params']['billUpdateInfo'] = array( 'p', JText::_('_AEC_CCFORM_UPDATE_NAME'), JText::_('_AEC_CCFORM_UPDATE_DESC'), '' );
 
 				$vcontent['card_number'] = $cim->substring_between( $cim->response,'<cardNumber>','</cardNumber>' );
 				$vcontent['account_no'] = $cim->substring_between( $cim->response,'<accountNumber>','</accountNumber>' );
@@ -199,7 +199,7 @@ class processor_mpay24 extends XMLprocessor
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
 		$return .= $this->getStdFormVars( $request );
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . JText::_('_BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;

@@ -88,7 +88,7 @@ class mi_rsgallery2 extends MI
 			}
 
 			for ( $i=0; $i<$this->settings['gallery_sel_amt']; $i++ ) {
-				$settings['mi_gallery_'.$i]			= array( 'list', _MI_MI_RSGALLERY2_GALLERY_USERSELECT_NAME, _MI_MI_RSGALLERY2_GALLERY_USERSELECT_DESC );
+				$settings['mi_gallery_'.$i]			= array( 'list', JText::_('_MI_MI_RSGALLERY2_GALLERY_USERSELECT_NAME'), JText::_('_MI_MI_RSGALLERY2_GALLERY_USERSELECT_DESC') );
 				$settings['lists']['mi_gallery_'.$i]	= JHTML::_( 'select.genericlist', $gr, 'mi_gallery_'.$i, 'size="6"', 'value', 'text', '' );
 			}
 		} else {

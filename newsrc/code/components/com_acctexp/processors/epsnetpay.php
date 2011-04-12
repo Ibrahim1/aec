@@ -19,7 +19,7 @@ class processor_epsnetpay extends POSTprocessor
 		$info['name']					= "epsnetpay";
 		$info['longname']				= "epsNetpay";
 		$info['statement']				= "Bezahlen sie mit epsNetpay!";
-		$info['description']			= _DESCRIPTION_EPSNETPAY;
+		$info['description']			= JText::_('_DESCRIPTION_EPSNETPAY');
 		$info['currencies']				= "EUR";
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,giropay";
 		$info['recurring']				= 0;
@@ -77,13 +77,13 @@ class processor_epsnetpay extends POSTprocessor
 
 				$bankname = $vars["merchantname_" . $id];
 
-				$settings["merchantactive_" . $id] = array("list_yesno", _CFG_EPSNETPAY_ACTIVATE_NAME, _CFG_EPSNETPAY_ACTIVATE_DESC);
+				$settings["merchantactive_" . $id] = array("list_yesno", JText::_('_CFG_EPSNETPAY_ACTIVATE_NAME'), JText::_('_CFG_EPSNETPAY_ACTIVATE_DESC'));
 				$settings["merchantname_" . $id] = array("inputC", "Name:", $bankname);
 
-				$idfieldname = $bankname . ": " . _CFG_EPSNETPAY_MERCHANTID_NAME;
-				$settings[$name] = array("inputC", $idfieldname, ($bankname . ": " . _CFG_EPSNETPAY_MERCHANTID_DESC));
-				$pinfieldname = $bankname . ": " . _CFG_EPSNETPAY_MERCHANTPIN_NAME;
-				$settings["merchantpin_" . $id] = array("inputC", $pinfieldname, ($bankname . ": " .  _CFG_EPSNETPAY_MERCHANTPIN_DESC));
+				$idfieldname = $bankname . ": " . JText::_('_CFG_EPSNETPAY_MERCHANTID_NAME');
+				$settings[$name] = array("inputC", $idfieldname, ($bankname . ": " . JText::_('_CFG_EPSNETPAY_MERCHANTID_DESC')));
+				$pinfieldname = $bankname . ": " . JText::_('_CFG_EPSNETPAY_MERCHANTPIN_NAME');
+				$settings["merchantpin_" . $id] = array("inputC", $pinfieldname, ($bankname . ": " .  JText::_('_CFG_EPSNETPAY_MERCHANTPIN_DESC')));
 			}
 		}
 

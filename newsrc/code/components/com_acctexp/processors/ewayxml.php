@@ -17,9 +17,9 @@ class processor_ewayxml extends XMLprocessor
 	{
 		$info = array();
 		$info['name']			= 'ewayxml';
-		$info['longname']		= _CFG_EWAYXML_LONGNAME;
-		$info['statement']		= _CFG_EWAYXML_STATEMENT;
-		$info['description']	= _CFG_EWAYXML_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_EWAYXML_LONGNAME');
+		$info['statement']		= JText::_('_CFG_EWAYXML_STATEMENT');
+		$info['description']	= JText::_('_CFG_EWAYXML_DESCRIPTION');
 		$info['currencies']		= "AUD";
 		$info['cc_list']		= 'visa,mastercard';
 		$info['recurring']		= 0;
@@ -34,7 +34,7 @@ class processor_ewayxml extends XMLprocessor
 		$settings['currency']		= "USD";
 		$settings['custId']			= "87654321";
 		$settings['testAmount']		= "00";
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 		$settings['SiteTitle']		= '';
 

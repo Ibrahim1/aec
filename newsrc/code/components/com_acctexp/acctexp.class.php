@@ -26,7 +26,11 @@ if (  ( version_compare( phpversion(), '5.0') >= 0 )  && ( version_compare( phpv
 // Get old language file names
 JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
 
+jimport('joomla.language.language');
+
 $lang =& JFactory::getLanguage();
+
+$lang->_load( 'com_acctexp')
 
 $language = AECToolbox::oldLangConversion( $lang->getTag() );
 
@@ -1845,7 +1849,7 @@ class aecACLhandler
 	function userDelete( $userid, $msg )
 	{
 		if ( $userid == $user->id ) {
-			return _AEC_MSG_NODELETE_YOURSELF;
+			return JText::_('_AEC_MSG_NODELETE_YOURSELF');
 		} 
 
 		$acl = &JFactory::getACL();
@@ -1860,7 +1864,7 @@ class aecACLhandler
 			$groups = $acl->getGroupsByUser( $userid );
 
 			if ( count( array_intersect( $groups, $superadmins ) ) ) {
-				return _AEC_MSG_NODELETE_SUPERADMIN;
+				return JText::_('_AEC_MSG_NODELETE_SUPERADMIN');
 			}
 
 			$is_admin = false;
@@ -1882,14 +1886,14 @@ class aecACLhandler
 			$deletor_admin = $user->gid == 24;
 			
 			if( $this_group == 'super administrator' ) {
-				return _AEC_MSG_NODELETE_SUPERADMIN;
+				return JText::_('_AEC_MSG_NODELETE_SUPERADMIN');
 			}
 
 			$is_admin		= $this_group == 'administrator';
 		}
 
 		if ( $is_admin && $deletor_admin ) {
-			return _AEC_MSG_NODELETE_EXCEPT_SUPERADMIN;
+			return JText::_('_AEC_MSG_NODELETE_EXCEPT_SUPERADMIN');
 		} else {
 			$db = &JFactory::getDBO();
 
@@ -2123,15 +2127,15 @@ class Config_General extends serialParamDBTable
 		$def['disable_regular_heartbeat']		= 0;
 		$def['custom_heartbeat_securehash']		= "";
 		$def['quicksearch_top']					= 0;
-		$def['invoice_page_title']				= _AEC_CUSTOM_INVOICE_PAGE_TITLE;
+		$def['invoice_page_title']				= JText::_('_AEC_CUSTOM_INVOICE_PAGE_TITLE');
 		$def['invoice_before_header']			= "";
-		$def['invoice_header']					= _AEC_CUSTOM_INVOICE_HEADER;
+		$def['invoice_header']					= JText::_('_AEC_CUSTOM_INVOICE_HEADER');
 		$def['invoice_after_header']			= "";
-		$def['invoice_before_content']			= _AEC_CUSTOM_INVOICE_BEFORE_CONTENT;
-		$def['invoice_after_content']			= _AEC_CUSTOM_INVOICE_AFTER_CONTENT;
+		$def['invoice_before_content']			= JText::_('_AEC_CUSTOM_INVOICE_BEFORE_CONTENT');
+		$def['invoice_after_content']			= JText::_('_AEC_CUSTOM_INVOICE_AFTER_CONTENT');
 		$def['invoice_before_footer']			= "";
-		$def['invoice_footer']					= _AEC_CUSTOM_INVOICE_FOOTER;
-		$def['invoice_address']					= _INVOICEPRINT_ADDRESSFIELD;
+		$def['invoice_footer']					= JText::_('_AEC_CUSTOM_INVOICE_FOOTER');
+		$def['invoice_address']					= JText::_('_INVOICEPRINT_ADDRESSFIELD');
 		$def['invoice_address_allow_edit']		= 1;
 		$def['invoice_after_footer']			= "";
 		$def['delete_tables']					= "";
@@ -2554,8 +2558,8 @@ class aecHeartbeat extends JTable
 	{
 		$db = &JFactory::getDBO();
 
-		$short	= _AEC_LOG_SH_HEARTBEAT;
-		$event	= _AEC_LOG_LO_HEARTBEAT . ' ';
+		$short	= JText::_('_AEC_LOG_SH_HEARTBEAT');
+		$event	= JText::_('_AEC_LOG_LO_HEARTBEAT') . ' ';
 		$tags	= array( 'heartbeat' );
 
 		if ( $this->result['expired'] ) {
@@ -2581,8 +2585,8 @@ class aecHeartbeat extends JTable
 			$tags[] = 'pre-expiration';
 		}
 
-		if ( strcmp( _AEC_LOG_LO_HEARTBEAT . ' ', $event ) === 0 ) {
-			$event .= _AEC_LOG_AD_HEARTBEAT_DO_NOTHING;
+		if ( strcmp( JText::_('_AEC_LOG_LO_HEARTBEAT') . ' ', $event ) === 0 ) {
+			$event .= JText::_('_AEC_LOG_AD_HEARTBEAT_DO_NOTHING');
 		}
 
 		$eventlog = new eventLog( $db );
@@ -2852,8 +2856,8 @@ class eventLog extends serialParamDBTable
 			}
 
 			// Send notification to all administrators
-			$subject2	= sprintf( _AEC_ASEND_NOTICE, constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $app->getCfg( 'sitename' ) );
-			$message2	= sprintf( _AEC_ASEND_NOTICE_MSG, $this->event  );
+			$subject2	= sprintf( JText::_('_AEC_ASEND_NOTICE'), constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $app->getCfg( 'sitename' ) );
+			$message2	= sprintf( JText::_('_AEC_ASEND_NOTICE_MSG'), $this->event  );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
 			$message2	= html_entity_decode( $message2, ENT_QUOTES, 'UTF-8' );
@@ -3185,18 +3189,6 @@ class PaymentProcessor
 
 		// Check whether processor exists
 		if ( file_exists( $file ) ) {
-			if ( !defined( '_AEC_LANG_PROCESSOR' ) ) {
-				$lang =& JFactory::getLanguage();
-				
-				$langPath = $this->pph->pp_dir . '/lang/';
-				// Include language files for processors
-				if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
-					include_once( $langPath . $lang->getTag() . '.php' );
-				} else {
-					include_once( $langPath . 'english.php' );
-				}
-			}
-
 			// Call Integration file
 			include_once $this->pph->pp_dir . '/' . $this->processor_name . '.php';
 
@@ -3472,12 +3464,12 @@ class PaymentProcessor
 
 		if ( isset( $settings['aec_experimental'] ) ) {
 			$settings['aec_experimental'] = "p";
-			$this->settings['aec_experimental'] = '<div class="aec_processor_experimentalnote"><h1>' . _PP_GENERAL_PLEASE_NOTE . '</h1><p>' . _PP_GENERAL_EXPERIMENTAL . '</p></div>';
+			$this->settings['aec_experimental'] = '<div class="aec_processor_experimentalnote"><h1>' . JText::_('_PP_GENERAL_PLEASE_NOTE') . '</h1><p>' . JText::_('_PP_GENERAL_EXPERIMENTAL') . '</p></div>';
 		}
 
 		if ( isset( $settings['aec_insecure'] ) ) {
 			$settings['aec_experimental'] = "p";
-			$this->settings['aec_insecure'] = '<div class="aec_processor_experimentalnote"><h1>' . _PP_GENERAL_PLEASE_NOTE . '</h1><p>' . _PP_GENERAL_INSECURE . '</p></div>';
+			$this->settings['aec_insecure'] = '<div class="aec_processor_experimentalnote"><h1>' . JText::_('_PP_GENERAL_PLEASE_NOTE') . '</h1><p>' . JText::_('_PP_GENERAL_INSECURE') . '</p></div>';
 		}
 
 		if ( !isset( $this->info ) ) {
@@ -3888,7 +3880,7 @@ class PaymentProcessor
 					foreach ( $aoptions as $opt ) {
 						switch ( $opt ) {
 							case 'confirm':
-								$action['insert'] .= ' onclick="return show_confirm(\'' . _AEC_YOUSURE . '\')" ';
+								$action['insert'] .= ' onclick="return show_confirm(\'' . JText::_('_AEC_YOUSURE') . '\')" ';
 								break;
 							default:
 								break;
@@ -4353,7 +4345,7 @@ class XMLprocessor extends processor
 			$return .= $this->getStdFormVars( $request );
 		}
 
-		$return .= '<input type="submit" class="button' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec_checkout_btn" value="' . JText::_('_BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -4493,12 +4485,12 @@ class XMLprocessor extends processor
 						$options[] = JHTML::_('select.option', $ccname, $cclongname );
 					}
 
-					$var['params']['lists']['cardType'] = JHTML::_( 'select.genericlist', $options, 'cardType', 'size="1" style="width:120px;" class="aec_formfield" title="'._AEC_CCFORM_CARDNUMBER_DESC.'" ', 'value', 'text', $vcontent );
-					$var['params']['cardType'] = array( 'list', _AEC_CCFORM_CARDTYPE_NAME.$pf );
+					$var['params']['lists']['cardType'] = JHTML::_( 'select.genericlist', $options, 'cardType', 'size="1" style="width:120px;" class="aec_formfield" title="'.JText::_('_AEC_CCFORM_CARDNUMBER_DESC').'" ', 'value', 'text', $vcontent );
+					$var['params']['cardType'] = array( 'list', JText::_('_AEC_CCFORM_CARDTYPE_NAME').$pf );
 					break;
 				case 'card_number':
 					// Request the Card number
-					$var['params']['cardNumber'] = array( 'inputC', _AEC_CCFORM_CARDNUMBER_NAME.$pf, _AEC_CCFORM_CARDNUMBER_DESC, $vcontent );
+					$var['params']['cardNumber'] = array( 'inputC', JText::_('_AEC_CCFORM_CARDNUMBER_NAME').$pf, JText::_('_AEC_CCFORM_CARDNUMBER_DESC'), $vcontent );
 					break;
 				case 'card_exp_month':
 					// Create a selection box with 12 months
@@ -4508,8 +4500,8 @@ class XMLprocessor extends processor
 						$months[] = JHTML::_('select.option', $month, $month );
 					}
 
-					$var['params']['lists']['expirationMonth'] = JHTML::_( 'select.genericlist', $months, 'expirationMonth', 'size="1" class="aec_formfield" style="width:50px;" title="'._AEC_CCFORM_EXPIRATIONMONTH_DESC.'"', 'value', 'text', $vcontent );
-					$var['params']['expirationMonth'] = array( 'list', _AEC_CCFORM_EXPIRATIONMONTH_NAME.$pf, _AEC_CCFORM_EXPIRATIONMONTH_DESC );
+					$var['params']['lists']['expirationMonth'] = JHTML::_( 'select.genericlist', $months, 'expirationMonth', 'size="1" class="aec_formfield" style="width:50px;" title="'.JText::_('_AEC_CCFORM_EXPIRATIONMONTH_DESC').'"', 'value', 'text', $vcontent );
+					$var['params']['expirationMonth'] = array( 'list', JText::_('_AEC_CCFORM_EXPIRATIONMONTH_NAME').$pf, JText::_('_AEC_CCFORM_EXPIRATIONMONTH_DESC') );
 					break;
 				case 'card_exp_year':
 					// Create a selection box with the next 10 years
@@ -4520,11 +4512,11 @@ class XMLprocessor extends processor
 						$years[] = JHTML::_('select.option', $i, $i );
 					}
 
-					$var['params']['lists']['expirationYear'] = JHTML::_( 'select.genericlist', $years, 'expirationYear', 'size="1" class="aec_formfield" style="width:70px;" title="'._AEC_CCFORM_EXPIRATIONYEAR_DESC.'"', 'value', 'text', $vcontent );
-					$var['params']['expirationYear'] = array( 'list', _AEC_CCFORM_EXPIRATIONYEAR_NAME.$pf, _AEC_CCFORM_EXPIRATIONYEAR_DESC );
+					$var['params']['lists']['expirationYear'] = JHTML::_( 'select.genericlist', $years, 'expirationYear', 'size="1" class="aec_formfield" style="width:70px;" title="'.JText::_('_AEC_CCFORM_EXPIRATIONYEAR_DESC').'"', 'value', 'text', $vcontent );
+					$var['params']['expirationYear'] = array( 'list', JText::_('_AEC_CCFORM_EXPIRATIONYEAR_NAME').$pf, JText::_('_AEC_CCFORM_EXPIRATIONYEAR_DESC') );
 					break;
 				case 'card_cvv2':
-					$var['params']['cardVV2'] = array( 'inputC', _AEC_CCFORM_CARDVV2_NAME.$pf, _AEC_CCFORM_CARDVV2_DESC, null );
+					$var['params']['cardVV2'] = array( 'inputC', JText::_('_AEC_CCFORM_CARDVV2_NAME').$pf, JText::_('_AEC_CCFORM_CARDVV2_DESC'), null );
 					break;
 			}
 		}
@@ -4555,16 +4547,16 @@ class XMLprocessor extends processor
 
 			switch ( strtolower( $value ) ) {
 				case 'routing_no':
-					$var['params']['routing_no'] = array( 'inputC', _AEC_ECHECKFORM_ROUTING_NO_NAME.$pf, _AEC_ECHECKFORM_ROUTING_NO_DESC, $vcontent );
+					$var['params']['routing_no'] = array( 'inputC', JText::_('_AEC_ECHECKFORM_ROUTING_NO_NAME').$pf, JText::_('_AEC_ECHECKFORM_ROUTING_NO_DESC'), $vcontent );
 					break;
 				case 'account_no':
-					$var['params']['account_no'] = array( 'inputC', _AEC_ECHECKFORM_ACCOUNT_NO_NAME.$pf, _AEC_ECHECKFORM_ACCOUNT_NO_DESC, $vcontent );
+					$var['params']['account_no'] = array( 'inputC', JText::_('_AEC_ECHECKFORM_ACCOUNT_NO_NAME').$pf, JText::_('_AEC_ECHECKFORM_ACCOUNT_NO_DESC'), $vcontent );
 					break;
 				case 'account_name':
-					$var['params']['account_name'] = array( 'inputC', _AEC_ECHECKFORM_ACCOUNT_NAME_NAME.$pf, _AEC_ECHECKFORM_ACCOUNT_NAME_DESC, $vcontent );
+					$var['params']['account_name'] = array( 'inputC', JText::_('_AEC_ECHECKFORM_ACCOUNT_NAME_NAME').$pf, JText::_('_AEC_ECHECKFORM_ACCOUNT_NAME_DESC'), $vcontent );
 					break;
 				case 'bank_name':
-					$var['params']['bank_name'] = array( 'inputC', _AEC_ECHECKFORM_BANK_NAME_NAME.$pf, _AEC_ECHECKFORM_BANK_NAME_DESC, $vcontent );
+					$var['params']['bank_name'] = array( 'inputC', JText::_('_AEC_ECHECKFORM_BANK_NAME_NAME').$pf, JText::_('_AEC_ECHECKFORM_BANK_NAME_DESC'), $vcontent );
 					break;
 			}
 		}
@@ -4632,25 +4624,25 @@ class XMLprocessor extends processor
 
 			switch ( strtolower( $value ) ) {
 				case 'firstname':
-					$var['params']['billFirstName'] = array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME.$pf, _AEC_USERFORM_BILLFIRSTNAME_DESC, $vcontent );
+					$var['params']['billFirstName'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLFIRSTNAME_NAME').$pf, JText::_('_AEC_USERFORM_BILLFIRSTNAME_DESC'), $vcontent );
 					break;
 				case 'lastname':
-					$var['params']['billLastName'] = array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME.$pf, _AEC_USERFORM_BILLLASTNAME_DESC, $vcontent );
+					$var['params']['billLastName'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLLASTNAME_NAME').$pf, JText::_('_AEC_USERFORM_BILLLASTNAME_DESC'), $vcontent );
 					break;
 				case 'address':
-					$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME.$pf, _AEC_USERFORM_BILLADDRESS_DESC, $vcontent );
+					$var['params']['billAddress'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLADDRESS_NAME').$pf, JText::_('_AEC_USERFORM_BILLADDRESS_DESC'), $vcontent );
 					break;
 				case 'address2':
-					$var['params']['billAddress2'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS2_NAME.$pf, _AEC_USERFORM_BILLADDRESS2_DESC, $vcontent );
+					$var['params']['billAddress2'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLADDRESS2_NAME').$pf, JText::_('_AEC_USERFORM_BILLADDRESS2_DESC'), $vcontent );
 					break;
 				case 'city':
-					$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME.$pf, _AEC_USERFORM_BILLCITY_DESC, $vcontent );
+					$var['params']['billCity'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLCITY_NAME').$pf, JText::_('_AEC_USERFORM_BILLCITY_DESC'), $vcontent );
 					break;
 				case 'nonus':
-					$var['params']['billNonUs'] = array( 'checkbox', _AEC_USERFORM_BILLNONUS_NAME.$pf, 1, $vcontent, _AEC_USERFORM_BILLNONUS_DESC );
+					$var['params']['billNonUs'] = array( 'checkbox', JText::_('_AEC_USERFORM_BILLNONUS_NAME').$pf, 1, $vcontent, JText::_('_AEC_USERFORM_BILLNONUS_DESC') );
 					break;
 				case 'state':
-					$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME.$pf, _AEC_USERFORM_BILLSTATE_DESC, $vcontent );
+					$var['params']['billState'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLSTATE_NAME').$pf, JText::_('_AEC_USERFORM_BILLSTATE_DESC'), $vcontent );
 					break;
 				case 'state_us':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -4670,8 +4662,8 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billState'] = JHTML::_( 'select.genericlist', $statelist, 'billState', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLSTATE_DESC.'"', 'value', 'text', $vcontent );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATE_NAME.$pf, _AEC_USERFORM_BILLSTATE_DESC );
+					$var['params']['lists']['billState'] = JHTML::_( 'select.genericlist', $statelist, 'billState', 'size="1" class="aec_formfield" title="'.JText::_('_AEC_USERFORM_BILLSTATE_DESC').'"', 'value', 'text', $vcontent );
+					$var['params']['billState'] = array( 'list', JText::_('_AEC_USERFORM_BILLSTATE_NAME').$pf, JText::_('_AEC_USERFORM_BILLSTATE_DESC') );
 					break;
 				case 'state_usca':
 					$states = array( '', '--- United States ---', 'AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI',
@@ -4692,16 +4684,16 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billState'] = JHTML::_( 'select.genericlist', $statelist, 'billState', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLSTATEPROV_DESC.'"', 'value', 'text', $vcontent );
-					$var['params']['billState'] = array( 'list', _AEC_USERFORM_BILLSTATEPROV_NAME.$pf, _AEC_USERFORM_BILLSTATEPROV_DESC );
+					$var['params']['lists']['billState'] = JHTML::_( 'select.genericlist', $statelist, 'billState', 'size="1" class="aec_formfield" title="'.JText::_('_AEC_USERFORM_BILLSTATEPROV_DESC').'"', 'value', 'text', $vcontent );
+					$var['params']['billState'] = array( 'list', JText::_('_AEC_USERFORM_BILLSTATEPROV_NAME').$pf, JText::_('_AEC_USERFORM_BILLSTATEPROV_DESC') );
 					break;
 				case 'zip':
-					$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME.$pf, _AEC_USERFORM_BILLZIP_DESC, $vcontent );
+					$var['params']['billZip'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLZIP_NAME').$pf, JText::_('_AEC_USERFORM_BILLZIP_DESC'), $vcontent );
 					break;
 				case 'country_list':
 					$countries = AECToolbox::getCountryCodeList();
 
-					$countrylist[] = JHTML::_('select.option', '" disabled="disabled', COUNTRYCODE_SELECT );
+					$countrylist[] = JHTML::_('select.option', '" disabled="disabled', JText::_('COUNTRYCODE_SELECT') );
 
 					if ( empty( $vcontent ) ) {
 						$vcontent = 'US';
@@ -4720,8 +4712,8 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billCountry'] = JHTML::_( 'select.genericlist', $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
-					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC );
+					$var['params']['lists']['billCountry'] = JHTML::_( 'select.genericlist', $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'.JText::_('_AEC_USERFORM_BILLCOUNTRY_DESC').'"', 'value', 'text', $vcontent );
+					$var['params']['billCountry'] = array( 'list', JText::_('_AEC_USERFORM_BILLCOUNTRY_NAME').$pf, JText::_('_AEC_USERFORM_BILLCOUNTRY_DESC') );
 					break;
 				case 'country3_list':
 					$countries = AECToolbox::getCountryCodeList( 'num' );
@@ -4733,7 +4725,7 @@ class XMLprocessor extends processor
 					$conversion = AECToolbox::ISO3166_conversiontable( 'num', 'a2' );
 
 					$countrylist = array();
-					$countrylist[] = JHTML::_('select.option', '" disabled="disabled', COUNTRYCODE_SELECT );
+					$countrylist[] = JHTML::_('select.option', '" disabled="disabled', JText::_('COUNTRYCODE_SELECT') );
 
 					foreach ( $countries as $country ) {
 						if ( defined( 'COUNTRYCODE_' . $conversion[$country] ) ) {
@@ -4749,20 +4741,20 @@ class XMLprocessor extends processor
 						}
 					}
 
-					$var['params']['lists']['billCountry'] = JHTML::_( 'select.genericlist', $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'._AEC_USERFORM_BILLCOUNTRY_DESC.'"', 'value', 'text', $vcontent );
-					$var['params']['billCountry'] = array( 'list', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC );
+					$var['params']['lists']['billCountry'] = JHTML::_( 'select.genericlist', $countrylist, 'billCountry', 'size="1" class="aec_formfield" title="'.JText::_('_AEC_USERFORM_BILLCOUNTRY_DESC').'"', 'value', 'text', $vcontent );
+					$var['params']['billCountry'] = array( 'list', JText::_('_AEC_USERFORM_BILLCOUNTRY_NAME').$pf, JText::_('_AEC_USERFORM_BILLCOUNTRY_DESC') );
 					break;
 				case 'country':
-					$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME.$pf, _AEC_USERFORM_BILLCOUNTRY_DESC, $vcontent );
+					$var['params']['billCountry'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLCOUNTRY_NAME').$pf, JText::_('_AEC_USERFORM_BILLCOUNTRY_DESC'), $vcontent );
 					break;
 				case 'phone':
-					$var['params']['billPhone'] = array( 'inputC', _AEC_USERFORM_BILLPHONE_NAME.$pf, _AEC_USERFORM_BILLPHONE_DESC, $vcontent );
+					$var['params']['billPhone'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLPHONE_NAME').$pf, JText::_('_AEC_USERFORM_BILLPHONE_DESC'), $vcontent );
 					break;
 				case 'fax':
-					$var['params']['billFax'] = array( 'inputC', _AEC_USERFORM_BILLFAX_NAME.$pf, _AEC_USERFORM_BILLFAX_DESC, $vcontent );
+					$var['params']['billFax'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLFAX_NAME').$pf, JText::_('_AEC_USERFORM_BILLFAX_DESC'), $vcontent );
 					break;
 				case 'company':
-					$var['params']['billCompany'] = array( 'inputC', _AEC_USERFORM_BILLCOMPANY_NAME.$pf, _AEC_USERFORM_BILLCOMPANY_DESC, $vcontent );
+					$var['params']['billCompany'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLCOMPANY_NAME').$pf, JText::_('_AEC_USERFORM_BILLCOMPANY_DESC'), $vcontent );
 					break;
 			}
 		}
@@ -4779,7 +4771,7 @@ class XMLprocessor extends processor
 		foreach ( $values as $value ) {
 			switch ( strtolower( $value ) ) {
 				case 'asterisk':
-					$var['params']['asteriskInfo'] = array( 'p', 0, _AEC_FORMINFO_ASTERISK, null, ' class="asterisk-info"' );
+					$var['params']['asteriskInfo'] = array( 'p', 0, JText::_('_AEC_FORMINFO_ASTERISK'), null, ' class="asterisk-info"' );
 					break;
 			}
 		}
@@ -5053,7 +5045,7 @@ class PROFILEprocessor extends XMLprocessor
 
 	function payProfileSelect( $var, $ppParams, $select=false, $btn=true )
 	{
-		$var['params'][] = array( 'p', _AEC_USERFORM_BILLING_DETAILS_NAME, '' );
+		$var['params'][] = array( 'p', JText::_('_AEC_USERFORM_BILLING_DETAILS_NAME'), '' );
 
 		if ( !empty( $ppParams->paymentProfiles ) ) {
 			// Single-Select Payment Option
@@ -5086,7 +5078,7 @@ class PROFILEprocessor extends XMLprocessor
 			}
 
 			if ( $btn ) {
-				$var['params']['edit_payprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
+				$var['params']['edit_payprofile'] = array( 'submit', '', '', ( $select ? JText::_('_BUTTON_SELECT') : JText::_('_BUTTON_EDIT') ) );
 			}
 		}
 
@@ -5139,7 +5131,7 @@ class PROFILEprocessor extends XMLprocessor
 
 	function shipProfileSelect( $var, $ppParams, $select=false, $btn=true, $new=true )
 	{
-		$var['params'][] = array( 'p', _AEC_USERFORM_SHIPPING_DETAILS_DESC, '' );
+		$var['params'][] = array( 'p', JText::_('_AEC_USERFORM_SHIPPING_DETAILS_DESC'), '' );
 
 		if ( !empty( $ppParams->shippingProfiles ) ) {
 			// Single-Select Shipment Data
@@ -5172,7 +5164,7 @@ class PROFILEprocessor extends XMLprocessor
 			}
 
 			if ( $btn ) {
-				$var['params']['edit_shipprofile'] = array( 'submit', '', '', ( $select ? _BUTTON_SELECT : _BUTTON_EDIT ) );
+				$var['params']['edit_shipprofile'] = array( 'submit', '', '', ( $select ? JText::_('_BUTTON_SELECT') : JText::_('_BUTTON_EDIT') ) );
 			}
 		}
 
@@ -5246,7 +5238,7 @@ class POSTprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . JText::_('_BUTTON_CHECKOUT') . '" />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5277,7 +5269,7 @@ class GETprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button"' . $onclick . ' value="' . _BUTTON_CHECKOUT . '" />' . "\n";
+		$return .= '<input type="submit" class="button"' . $onclick . ' value="' . JText::_('_BUTTON_CHECKOUT') . '" />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5327,7 +5319,7 @@ class URLprocessor extends processor
 			$return .= implode( '&amp;', $vars );
 		}
 
-		$return .= '"' . $onclick . ' class="linkbutton" >' . _BUTTON_CHECKOUT . '</a>' . "\n";
+		$return .= '"' . $onclick . ' class="linkbutton" >' . JText::_('_BUTTON_CHECKOUT') . '</a>' . "\n";
 
 		return $return;
 	}
@@ -5418,7 +5410,7 @@ class aecSettings
 						$info_name = constant( $genericname );
 					} else {
 						if ( $showmissing ) {
-							$info_name = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantname );
+							$info_name = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
 						} else {
 							$info_name = '';
 						}
@@ -5434,7 +5426,7 @@ class aecSettings
 						$info_desc = constant( $genericdesc );
 					} else {
 						if ( $showmissing ) {
-							$info_desc = sprintf( _AEC_CMN_LANG_CONSTANT_IS_MISSING, $constantdesc );
+							$info_desc = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
 						} else {
 							$info_desc = '';
 						}
@@ -5524,9 +5516,9 @@ class aecSettings
 	function remap_list_yesnoinherit( $name, $value )
 	{
 		$arr = array(
-			JHTML::_('select.option', '0', _AEC_CMN_NO ),
-			JHTML::_('select.option', '1', _AEC_CMN_YES ),
-			JHTML::_('select.option', '1', _AEC_CMN_INHERIT ),
+			JHTML::_('select.option', '0', JText::_('_AEC_CMN_NO') ),
+			JHTML::_('select.option', '1', JText::_('_AEC_CMN_YES') ),
+			JHTML::_('select.option', '1', JText::_('_AEC_CMN_INHERIT') ),
 		);
 
 		$this->lists[$name] = JHTML::_( 'select.genericlist', $arr, $name, '', 'value', 'text', $value );
@@ -5535,9 +5527,9 @@ class aecSettings
 
 	function remap_list_recurring( $name, $value )
 	{
-		$recurring[] = JHTML::_('select.option', 0, _AEC_SELECT_RECURRING_NO );
-		$recurring[] = JHTML::_('select.option', 1, _AEC_SELECT_RECURRING_YES );
-		$recurring[] = JHTML::_('select.option', 2, _AEC_SELECT_RECURRING_BOTH );
+		$recurring[] = JHTML::_('select.option', 0, JText::_('_AEC_SELECT_RECURRING_NO') );
+		$recurring[] = JHTML::_('select.option', 1, JText::_('_AEC_SELECT_RECURRING_YES') );
+		$recurring[] = JHTML::_('select.option', 2, JText::_('_AEC_SELECT_RECURRING_BOTH') );
 
 		$this->lists[$name] = JHTML::_( 'select.genericlist', $recurring, $name, 'size="3"', 'value', 'text', $value );
 
@@ -6490,8 +6482,8 @@ class ItemGroup extends serialParamDBTable
 		if ( $this->id == 1 ) {
 			$post['active']				= 1;
 			$post['visible']			= 1;
-			$post['name']				= _AEC_INST_ROOT_GROUP_NAME;
-			$post['desc']				= _AEC_INST_ROOT_GROUP_DESC;
+			$post['name']				= JText::_('_AEC_INST_ROOT_GROUP_NAME');
+			$post['desc']				= JText::_('_AEC_INST_ROOT_GROUP_DESC');
 			$post['reveal_child_items']	= 1;
 		}
 
@@ -6660,7 +6652,7 @@ class SubscriptionPlanHandler
 
 		// get entry Plan selection
 		$available_plans	= array();
-		$available_plans[]	= JHTML::_('select.option', '0', _PAYPLAN_NOPLAN );
+		$available_plans[]	= JHTML::_('select.option', '0', JText::_('_PAYPLAN_NOPLAN') );
 
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'
@@ -8415,7 +8407,7 @@ class InvoiceFactory
 	{
 		if ( !empty( $this->processor ) ) {
 			$this->pp					= false;
-			$this->payment->method_name = _AEC_PAYM_METHOD_NONE;
+			$this->payment->method_name = JText::_('_AEC_PAYM_METHOD_NONE');
 			$this->payment->currency	= '';
 
 			if ( !isset( $this->recurring ) ) {
@@ -8423,7 +8415,7 @@ class InvoiceFactory
 			}
 
 			switch ( $this->processor ) {
-				case 'free': $this->payment->method_name = _AEC_PAYM_METHOD_FREE; break;
+				case 'free': $this->payment->method_name = JText::_('_AEC_PAYM_METHOD_FREE'); break;
 				case 'none': break;
 				default:
 					$this->pp = new PaymentProcessor();
@@ -8587,9 +8579,9 @@ class InvoiceFactory
 		$document=& JFactory::getDocument();
 
 		if ( $hasform ) {
-			$document->setTitle( html_entity_decode( _EXCEPTION_TITLE, ENT_COMPAT, 'UTF-8' ) );
+			$document->setTitle( html_entity_decode( JText::_('_EXCEPTION_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 		} else {
-			$document->setTitle( html_entity_decode( _EXCEPTION_TITLE_NOFORM, ENT_COMPAT, 'UTF-8' ) );
+			$document->setTitle( html_entity_decode( JText::_('_EXCEPTION_TITLE_NOFORM'), ENT_COMPAT, 'UTF-8' ) );
 		}
 
 		Payment_HTML::exceptionForm( $option, $this, $aecHTML, $hasform );
@@ -9128,7 +9120,7 @@ class InvoiceFactory
 	{
 		$document=& JFactory::getDocument();
 
-		$document->setTitle( html_entity_decode( _AEC_PROMPT_PASSWORD, ENT_COMPAT, 'UTF-8' ) );
+		$document->setTitle( html_entity_decode( JText::_('_AEC_PROMPT_PASSWORD'), ENT_COMPAT, 'UTF-8' ) );
 
 		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
 	}
@@ -9225,7 +9217,7 @@ class InvoiceFactory
 
 			$document=& JFactory::getDocument();
 
-			$document->setTitle( html_entity_decode( _PAYPLANS_HEADER, ENT_COMPAT, 'UTF-8' ) );
+			$document->setTitle( html_entity_decode( JText::_('_PAYPLANS_HEADER'), ENT_COMPAT, 'UTF-8' ) );
 
 			if ( $group ) {
 				$g = new ItemGroup( $db );
@@ -9350,7 +9342,7 @@ class InvoiceFactory
 		if ( !is_array( $list ) ) {
 			if ( $list ) {
 				if ( is_bool( $list ) ) {
-					return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), _NOPLANS_AUTHERROR );
+					return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('_NOPLANS_AUTHERROR') );
 				} else {
 					if ( strpos( $list, 'option=com_acctexp' ) ) {
 						$list .= '&userid=' . $this->userid;
@@ -9359,13 +9351,13 @@ class InvoiceFactory
 					return aecRedirect( $list );
 				}
 			} else {
-				return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), _NOPLANS_ERROR );
+				return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('_NOPLANS_ERROR') );
 			}
 		}
 
 		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
 		 if ( count( $list ) == 0 ) {
-			return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), _NOPLANS_ERROR );
+			return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('_NOPLANS_ERROR') );
 		}
 	}
 
@@ -9666,7 +9658,7 @@ class InvoiceFactory
 		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
 			$document=& JFactory::getDocument();
 
-			$document->setTitle( html_entity_decode( _CONFIRM_TITLE, ENT_COMPAT, 'UTF-8' ) );
+			$document->setTitle( html_entity_decode( JText::_('_CONFIRM_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 			$pt = $this->getPassthrough();
 
@@ -9676,11 +9668,11 @@ class InvoiceFactory
 				$this->userdetails = "";
 
 				if ( !empty( $this->metaUser->cmsUser->name ) ) {
-					$this->userdetails .= '<p>' . _CONFIRM_ROW_NAME . "&nbsp;" . $this->metaUser->cmsUser->name . '</p>';
+					$this->userdetails .= '<p>' . JText::_('_CONFIRM_ROW_NAME') . "&nbsp;" . $this->metaUser->cmsUser->name . '</p>';
 				}
 
-				$this->userdetails .= '<p>' . _CONFIRM_ROW_USERNAME . "&nbsp;" . $this->metaUser->cmsUser->username . '</p>';
-				$this->userdetails .= '<p>' . _CONFIRM_ROW_EMAIL . "&nbsp;" . $this->metaUser->cmsUser->email . '</p>';
+				$this->userdetails .= '<p>' . JText::_('_CONFIRM_ROW_USERNAME') . "&nbsp;" . $this->metaUser->cmsUser->username . '</p>';
+				$this->userdetails .= '<p>' . JText::_('_CONFIRM_ROW_EMAIL') . "&nbsp;" . $this->metaUser->cmsUser->email . '</p>';
 			} else {
 				$this->userdetails = AECToolbox::rewriteEngineRQ( $custom, $this );
 			}
@@ -9988,16 +9980,16 @@ class InvoiceFactory
 
 		$this->invoice->formatInvoiceNumber();
 
-		$introtext = constant( '_CHECKOUT_INFO' . ( $repeat ? '_REPEAT' : '' ) );
+		$introtext = JText::_('_CHECKOUT_INFO'. ( $repeat ? '_REPEAT' : '' ));
 
 		$this->checkout = array();
-		$this->checkout['checkout_title']					= _CHECKOUT_TITLE;
+		$this->checkout['checkout_title']					= JText::_('_CHECKOUT_TITLE');
 		$this->checkout['customtext_checkout_keeporiginal']	= $aecConfig->cfg['customtext_checkout_keeporiginal'];
 		$this->checkout['customtext_checkout']				= $aecConfig->cfg['customtext_checkout'];
 		$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
 		$this->checkout['checkout_display_descriptions']	= $aecConfig->cfg['checkout_display_descriptions'];
 		$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];
-		$this->checkout['customtext_checkout_table']		= _CHECKOUT_TITLE;
+		$this->checkout['customtext_checkout_table']		= JText::_('_CHECKOUT_TITLE');
 
 		$this->display_error = $error;
 
@@ -10308,7 +10300,7 @@ class InvoiceFactory
 	{
 		$document=& JFactory::getDocument();
 
-		$document->setTitle( html_entity_decode( _CHECKOUT_ERROR_TITLE, ENT_COMPAT, 'UTF-8' ) );
+		$document->setTitle( html_entity_decode( JText::_('_CHECKOUT_ERROR_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 		Payment_HTML::error( $option, $objUser, $invoice, $error );
 	}
@@ -10850,8 +10842,8 @@ class Invoice extends serialParamDBTable
 		$history = new logHistory( $db );
 		$history->entryFromInvoice( $this, $resp, $InvoiceFactory->pp );
 
-		$short = _AEC_MSG_PROC_INVOICE_ACTION_SH;
-		$event = _AEC_MSG_PROC_INVOICE_ACTION_EV . "\n";
+		$short = JText::_('_AEC_MSG_PROC_INVOICE_ACTION_SH');
+		$event = JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV') . "\n";
 
 		if ( !empty( $response ) ) {
 			foreach ( $response as $key => $value ) {
@@ -10859,7 +10851,7 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS;
+		$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_STATUS');
 		$tags	= 'invoice,processor';
 		$level	= 2;
 		$params = array( 'invoice_number' => $this->invoice_number );
@@ -10878,7 +10870,7 @@ class Invoice extends serialParamDBTable
 				if ( isset( $response['amount_paid'] ) ) {
 					if ( $response['amount_paid'] != $this->amount ) {
 						// Amount Fraud, cancel payment and create error log addition
-						$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD, $response['amount_paid'], $this->amount );
+						$event	.= sprintf( JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD'), $response['amount_paid'], $this->amount );
 						$tags	.= ',fraud_attempt,amount_fraud';
 						$break	= 1;
 
@@ -10889,7 +10881,7 @@ class Invoice extends serialParamDBTable
 				if ( isset( $response['amount_currency'] ) ) {
 					if ( $response['amount_currency'] != $this->currency ) {
 						// Amount Fraud, cancel payment and create error log addition
-						$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_CURR, $response['amount_currency'], $this->currency );
+						$event	.= sprintf( JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_CURR'), $response['amount_currency'], $this->currency );
 						$tags	.= ',fraud_attempt,currency_fraud';
 						$break	= 1;
 
@@ -10903,10 +10895,10 @@ class Invoice extends serialParamDBTable
 					$notificationerror = 'Item Application failed. Please contact the System Administrator';
 
 					// Something went wrong
-					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL;
+					$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL');
 					$tags	.= ',payment,action_failed';
 				} else {
-					$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID;
+					$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID');
 					$tags	.= ',payment,action';
 				}
 			} else {
@@ -10920,12 +10912,12 @@ class Invoice extends serialParamDBTable
 
 						$this->addParams( array( 'free_trial' => $response['pending_reason'] ), 'params', true );
 
-						$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL;
+						$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_TRIAL');
 						$tags	.= ',payment,action,trial';
 					}
 				} else {
 					$this->addParams( array( 'pending_reason' => $response['pending_reason'] ), 'params', true );
-					$event	.= sprintf( _AEC_MSG_PROC_INVOICE_ACTION_EV_PEND, $response['pending_reason'] );
+					$event	.= sprintf( JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_PEND'), $response['pending_reason'] );
 					$tags	.= ',payment,pending' . $response['pending_reason'];
 
 					$mi_event = '_payment_pending';
@@ -10935,7 +10927,7 @@ class Invoice extends serialParamDBTable
 			} elseif ( isset( $response['cancel'] ) ) {
 				$mi_event = '_payment_cancel';
 
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_CANCEL');
 				$tags	.= ',cancel';
 
 				if ( $metaUser->hasSubscription ) {
@@ -10952,12 +10944,12 @@ class Invoice extends serialParamDBTable
 						$metaUser->focusSubscription->cancel( $this );
 					}
 
-					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS;
+					$event .= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS');
 				}
 			} elseif ( isset( $response['chargeback'] ) ) {
 				$mi_event = '_payment_chargeback';
 
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK');
 				$tags	.= ',chargeback';
 				$level = 128;
 
@@ -10968,12 +10960,12 @@ class Invoice extends serialParamDBTable
 
 					$metaUser->focusSubscription->hold( $this );
 
-					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD;
+					$event .= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_HOLD');
 				}
 			} elseif ( isset( $response['chargeback_settle'] ) ) {
 				$mi_event = '_payment_chargeback_settle';
 
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_CHARGEBACK_SETTLE');
 				$tags	.= ',chargeback_settle';
 				$level = 8;
 				$forcedisplay = true;
@@ -10985,12 +10977,12 @@ class Invoice extends serialParamDBTable
 
 					$metaUser->focusSubscription->hold_settle( $this );
 
-					$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE;
+					$event .= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_USTATUS_ACTIVE');
 				}
 			} elseif ( isset( $response['delete'] ) ) {
 				$mi_event = '_payment_refund';
 
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_REFUND');
 				$tags	.= ',refund';
 				if ( $metaUser->hasSubscription ) {
 					if ( !empty( $this->subscr_id ) ) {
@@ -11004,38 +10996,38 @@ class Invoice extends serialParamDBTable
 						// Maybe the user was already switched to a different plan
 						if ( $metaUser->focusSubscription->plan == $usage->id ) {
 							$metaUser->focusSubscription->expire();
-							$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
+							$event .= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED');
 						}
 					} else {
 						$metaUser->focusSubscription->expire();
-						$event .= _AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED;
+						$event .= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED');
 					}
 				}
 			} elseif ( isset( $response['eot'] ) ) {
 				$mi_event = '_payment_eot';
 
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_EOT;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_EOT');
 				$tags	.= ',eot';
 			} elseif ( isset( $response['duplicate'] ) ) {
 				$mi_event = '_payment_duplicate';
 
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE');
 				$tags	.= ',duplicate';
 			} elseif ( isset( $response['null'] ) ) {
 				$mi_event = '_payment_null';
 
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_NULL;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_NULL');
 				$tags	.= ',null';
 			} elseif ( isset( $response['error'] ) && isset( $response['errormsg'] ) ) {
 				$mi_event = '_payment_error';
 
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR . ' Error:' . $response['errormsg'] ;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR') . ' Error:' . $response['errormsg'] ;
 				$tags	.= ',error';
 				$level = 128;
 
 				$notificationerror = $response['errormsg'];
 			} else {
-				$event	.= _AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR;
+				$event	.= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR');
 				$tags	.= ',general_error';
 				$level = 128;
 
@@ -11259,7 +11251,7 @@ class Invoice extends serialParamDBTable
 		// We need to at least warn the admin if there is an invoice with nothing to do
 		if ( empty( $this->usage ) && empty( $this->conditions ) && empty( $this->coupons ) ) {
 			$short	= 'Nothing to do';
-			$event	= _AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL;
+			$event	= JText::_('_AEC_MSG_PROC_INVOICE_ACTION_EV_VALID_APPFAIL');
 			$tags	= 'invoice,application,payment,action_failed';
 			$params = array( 'invoice_number' => $this->invoice_number );
 
@@ -11728,7 +11720,7 @@ class Invoice extends serialParamDBTable
 							}
 
 							$data['itemlist'][] = '<tr id="invoice_content_item">'
-							. '<td>' . _AEC_CHECKOUT_DISCOUNT . $ta . '</td>'
+							. '<td>' . JText::_('_AEC_CHECKOUT_DISCOUNT') . $ta . '</td>'
 							. '<td></td>'
 							. '<td></td>'
 							. '<td>' . AECToolbox::formatAmount( $cost->cost['amount'], $InvoiceFactory->invoice->currency ) . '</td>'
@@ -11759,7 +11751,7 @@ class Invoice extends serialParamDBTable
 		if ( isset( $InvoiceFactory->items->tax ) ) {
 			if ( isset( $InvoiceFactory->items->total ) ) {
 				$data['totallist'][] = '<tr id="invoice_content_item_total">'
-					. '<td>' . _INVOICEPRINT_TOTAL . '</td>'
+					. '<td>' . JText::_('_INVOICEPRINT_TOTAL') . '</td>'
 					. '<td></td>'
 					. '<td></td>'
 					. '<td>' . AECToolbox::formatAmount( $InvoiceFactory->items->total->cost['amount'], $InvoiceFactory->invoice->currency ) . '</td>'
@@ -11785,7 +11777,7 @@ class Invoice extends serialParamDBTable
 
 		if ( isset( $InvoiceFactory->items->grand_total ) ) {
 			$data['totallist'][] = '<tr id="invoice_content_item_total">'
-				. '<td>' . _INVOICEPRINT_GRAND_TOTAL . '</td>'
+				. '<td>' . JText::_('_INVOICEPRINT_GRAND_TOTAL') . '</td>'
 				. '<td></td>'
 				. '<td></td>'
 				. '<td>' . AECToolbox::formatAmount( $InvoiceFactory->items->grand_total->cost['amount'], $InvoiceFactory->invoice->currency ) . '</td>'
@@ -11794,17 +11786,17 @@ class Invoice extends serialParamDBTable
 
 		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
 			if ( !$this->active ) {
-				$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_CANCEL;
+				$data['paidstatus'] = JText::_('_INVOICEPRINT_PAIDSTATUS_CANCEL');
 			} else {
-				$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_UNPAID;
+				$data['paidstatus'] = JText::_('_INVOICEPRINT_PAIDSTATUS_UNPAID');
 			}
 		} else {
 			if ( !$this->active ) {
-				$data['paidstatus'] = _INVOICEPRINT_PAIDSTATUS_CANCEL;
+				$data['paidstatus'] = JText::_('_INVOICEPRINT_PAIDSTATUS_CANCEL');
 			} else {
 				$date = AECToolbox::formatDate( $this->transaction_date );
 
-				$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, $date );
+				$data['paidstatus'] = sprintf( JText::_('_INVOICEPRINT_PAIDSTATUS_PAID'), $date );
 			}
 		}
 
@@ -11824,17 +11816,17 @@ class Invoice extends serialParamDBTable
 
 		$data['recurringstatus'] = "";
 		if ( $recurring ) {
-			$data['recurringstatus'] = _INVOICEPRINT_RECURRINGSTATUS_RECURRING;
+			$data['recurringstatus'] = JText::_('_INVOICEPRINT_RECURRINGSTATUS_RECURRING');
 		} elseif ( !empty( $InvoiceFactory->plan->id ) ) {
 			if ( !empty( $InvoiceFactory->plan->params['trial_amount'] ) && $InvoiceFactory->plan->params['trial_period'] ) {
-				$data['recurringstatus'] = _INVOICEPRINT_RECURRINGSTATUS_ONCE;
+				$data['recurringstatus'] = JText::_('_INVOICEPRINT_RECURRINGSTATUS_ONCE');
 			}
 		}
 
 		$data['invoice_billing_history'] = "";
 		if ( !empty( $this->transactions ) ) {
 			if ( ( count( $this->transactions ) > 0 ) && !empty( $data['recurringstatus'] ) ) {
-				$data['paidstatus'] = sprintf( _INVOICEPRINT_PAIDSTATUS_PAID, "" );
+				$data['paidstatus'] = sprintf( JText::_('_INVOICEPRINT_PAIDSTATUS_PAID'), "" );
 
 				foreach ( $this->transactions as $transaction ) {
 					if ( !isset( $pplist[$transaction->processor] ) ) {
@@ -13141,13 +13133,13 @@ class Subscription extends serialParamDBTable
 		$pwd			= $urow->password;
 		$activationcode	= $urow->activation;
 
-		$message = sprintf( _ACCTEXP_MAILPARTICLE_GREETING, $name );
+		$message = sprintf( JText::_('_ACCTEXP_MAILPARTICLE_GREETING'), $name );
 
 		// Assemble E-Mail Subject & Message
 		if ( $renew ) {
-			$subject = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $app->getCfg( 'sitename' ) );
+			$subject = sprintf( JText::_('_ACCTEXP_SEND_MSG_RENEW'), $name, $app->getCfg( 'sitename' ) );
 
-			$message .= sprintf( _ACCTEXP_MAILPARTICLE_THANKSREN, $app->getCfg( 'sitename' ) );
+			$message .= sprintf( JText::_('_ACCTEXP_MAILPARTICLE_THANKSREN'), $app->getCfg( 'sitename' ) );
 
 			if ( $plan->email_desc ) {
 				$message .= "\n\n" . $plan->email_desc . "\n\n";
@@ -13156,15 +13148,15 @@ class Subscription extends serialParamDBTable
 			}
 
 			if ( $free ) {
-				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
+				$message .= sprintf( JText::_('_ACCTEXP_MAILPARTICLE_LOGIN'), JURI::root() );
 			} else {
-				$message .= _ACCTEXP_MAILPARTICLE_PAYREC . " "
-				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
+				$message .= JText::_('_ACCTEXP_MAILPARTICLE_PAYREC') . " "
+				. sprintf( JText::_('_ACCTEXP_MAILPARTICLE_LOGIN'), JURI::root() );
 			}
 		} else {
-			$subject = sprintf( _ACCTEXP_SEND_MSG, $name, $app->getCfg( 'sitename' ) );
+			$subject = sprintf( JText::_('_ACCTEXP_SEND_MSG'), $name, $app->getCfg( 'sitename' ) );
 
-			$message .= sprintf(_ACCTEXP_MAILPARTICLE_THANKSREG, $app->getCfg( 'sitename' ) );
+			$message .= sprintf(JText::_('_ACCTEXP_MAILPARTICLE_THANKSREG'), $app->getCfg( 'sitename' ) );
 
 			if ( $plan->email_desc ) {
 				$message .= "\n\n" . $plan->email_desc . "\n\n";
@@ -13173,14 +13165,14 @@ class Subscription extends serialParamDBTable
 			}
 
 			if ( $free ) {
-				$message .= sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
+				$message .= sprintf( JText::_('_ACCTEXP_MAILPARTICLE_LOGIN'), JURI::root() );
 			} else {
-				$message .= _ACCTEXP_MAILPARTICLE_PAYREC . " "
-				. sprintf( _ACCTEXP_MAILPARTICLE_LOGIN, JURI::root() );
+				$message .= JText::_('_ACCTEXP_MAILPARTICLE_PAYREC') . " "
+				. sprintf( JText::_('_ACCTEXP_MAILPARTICLE_LOGIN'), JURI::root() );
 			}
 		}
 
-		$message .= _ACCTEXP_MAILPARTICLE_FOOTER;
+		$message .= JText::_('_ACCTEXP_MAILPARTICLE_FOOTER');
 
 		$subject = html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 		$message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
@@ -13205,11 +13197,11 @@ class Subscription extends serialParamDBTable
 		$aecUser = AECToolbox::aecIP();
 
 		if ( $renew ) {
-			$subject2 = sprintf( _ACCTEXP_SEND_MSG_RENEW, $name, $app->getCfg( 'sitename' ) );
-			$message2 = sprintf( _ACCTEXP_ASEND_MSG_RENEW, $adminName2, $app->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
+			$subject2 = sprintf( JText::_('_ACCTEXP_SEND_MSG_RENEW'), $name, $app->getCfg( 'sitename' ) );
+			$message2 = sprintf( JText::_('_ACCTEXP_ASEND_MSG_RENEW'), $adminName2, $app->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
 		} else {
-			$subject2 = sprintf( _ACCTEXP_SEND_MSG, $name, $app->getCfg( 'sitename' ) );
-			$message2 = sprintf( _ACCTEXP_ASEND_MSG, $adminName2, $app->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
+			$subject2 = sprintf( JText::_('_ACCTEXP_SEND_MSG'), $name, $app->getCfg( 'sitename' ) );
+			$message2 = sprintf( JText::_('_ACCTEXP_ASEND_MSG'), $adminName2, $app->getCfg( 'sitename' ), $name, $email, $username, $plan->id, $plan->name, $aecUser['ip'], $aecUser['isp'] );
 		}
 
 		$subject2 = html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
@@ -14062,9 +14054,9 @@ class reWriteEngine
 		if ( !empty( $params ) ) {
 			$params[] = array( 'accordion_start', 'small_accordion' );
 
-			$params[] = array( 'accordion_itemstart', constant( '_REWRITE_ENGINE_TITLE' ) );
+			$params[] = array( 'accordion_itemstart', JText::_('_REWRITE_ENGINE_TITLE') );
 			$list = '<div class="rewriteinfoblock">' . "\n"
-			. '<p>' . constant( '_REWRITE_ENGINE_DESC' ) . '</p>' . "\n"
+			. '<p>' . JText::_('_REWRITE_ENGINE_DESC') . '</p>' . "\n"
 			. '</div>' . "\n";
 			$params[] = array( 'literal', $list );
 			$params[] = array( 'div_end', '' );
@@ -14085,9 +14077,9 @@ class reWriteEngine
 				$params[] = array( 'div_end', '' );
 			}
 
-			$params[] = array( 'accordion_itemstart', constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) );
+			$params[] = array( 'accordion_itemstart', JText::_('_REWRITE_ENGINE_AECJSON_TITLE' ) );
 			$list = '<div class="rewriteinfoblock">' . "\n"
-			. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
+			. '<p>' . JText::_('_REWRITE_ENGINE_AECJSON_DESC') . '</p>' . "\n"
 			. '</div>' . "\n";
 			$params[] = array( 'literal', $list );
 			$params[] = array( 'div_end', '' );
@@ -14110,8 +14102,8 @@ class reWriteEngine
 			}
 
 			$return .= '<div class="rewriteinfoblock">' . "\n"
-			. '<p><strong>' . constant( '_REWRITE_ENGINE_AECJSON_TITLE' ) . '</strong></p>' . "\n"
-			. '<p>' . constant( '_REWRITE_ENGINE_AECJSON_DESC' ) . '</p>' . "\n"
+			. '<p><strong>' . JText::_('_REWRITE_ENGINE_AECJSON_TITLE') . '</strong></p>' . "\n"
+			. '<p>' . JText::_('_REWRITE_ENGINE_AECJSON_DESC') . '</p>' . "\n"
 			. '</div>' . "\n";
 
 			return $return;
@@ -14475,11 +14467,14 @@ class reWriteEngine
 
 				$result = $this->data['metaUser']->getProperty( $vars );
 				break;
+			case 'jtext':
+				$result = JText::_( $vars );
+				break;
 			case 'constant':
 				if ( defined( $vars ) ) {
 					$result = constant( $vars );
 				} else {
-					$result = $vars;
+					$result = JText::_( $vars );
 				}
 				break;
 			case 'global':
@@ -15453,7 +15448,7 @@ class AECToolbox
 			$email 		= $row->email;
 			$username 	= $row->username;
 
-			$subject 	= sprintf ( _AEC_SEND_SUB, $name, $app->getCfg( 'sitename' ) );
+			$subject 	= sprintf ( JText::_('_AEC_SEND_SUB'), $name, $app->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
 			$usersConfig = &JComponentHelper::getParams( 'com_users' );
@@ -15466,9 +15461,9 @@ class AECToolbox
 					$activation_link	= JURI::root() . 'index.php?option=com_user&amp;task=activate&amp;activation=' . $row->activation;
 				}
 
-				$message = sprintf( _AEC_USEND_MSG_ACTIVATE, $name, $app->getCfg( 'sitename' ), $activation_link, JURI::root(), $username, $savepwd );
+				$message = sprintf( JText::_('_AEC_USEND_MSG_ACTIVATE'), $name, $app->getCfg( 'sitename' ), $activation_link, JURI::root(), $username, $savepwd );
 			} else {
-				$message = sprintf( _AEC_USEND_MSG, $name, $app->getCfg( 'sitename' ), JURI::root() );
+				$message = sprintf( JText::_('_AEC_USEND_MSG'), $name, $app->getCfg( 'sitename' ), JURI::root() );
 			}
 
 			$message = html_entity_decode( $message, ENT_QUOTES, 'UTF-8' );
@@ -15494,8 +15489,8 @@ class AECToolbox
 			// Send notification to all administrators
 			$aecUser	= AECToolbox::aecIP();
 
-			$subject2	= sprintf( _AEC_SEND_SUB, $name, $app->getCfg( 'sitename' ) );
-			$message2	= sprintf( _AEC_ASEND_MSG_NEW_REG, $adminName2, $app->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
+			$subject2	= sprintf( JText::_('_AEC_SEND_SUB'), $name, $app->getCfg( 'sitename' ) );
+			$message2	= sprintf( JText::_('_AEC_ASEND_MSG_NEW_REG'), $adminName2, $app->getCfg( 'sitename' ), $row->name, $email, $username, $aecUser['ip'], $aecUser['isp'] );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
 			$message2	= html_entity_decode( $message2, ENT_QUOTES, 'UTF-8' );
@@ -16386,9 +16381,9 @@ class MI
 			$new_settings_pxp			= AECToolbox::rewriteEngineInfo( $rewriteswitches, $new_settings_pxp );
 
 			$new_settings = array_merge(	$new_settings,
-											array( 'aectab_exp_'.$name => array( 'tab', _MI_E_AUTO_CHECK_NAME, _MI_E_AUTO_CHECK_NAME ) ),
+											array( 'aectab_exp_'.$name => array( 'tab', JText::_('_MI_E_AUTO_CHECK_NAME'), JText::_('_MI_E_AUTO_CHECK_NAME') ) ),
 											$new_settings_exp,
-											array( 'aectab_pxp_'.$name => array( 'tab', _MI_E_PRE_EXP_CHECK_NAME, _MI_E_PRE_EXP_CHECK_NAME ) ),
+											array( 'aectab_pxp_'.$name => array( 'tab', JText::_('_MI_E_PRE_EXP_CHECK_NAME'), JText::_('_MI_E_PRE_EXP_CHECK_NAME') ) ),
 											$new_settings_pxp
 										);
 		}
@@ -16580,10 +16575,6 @@ class microIntegration extends serialParamDBTable
 	function microIntegration(&$db)
 	{
 		parent::__construct( '#__acctexp_microintegrations', 'id', $db );
-
-		if ( !defined( '_AEC_LANG_INCLUDED_MI' ) ) {
-			$this->callMILanguage();
-		}
 	}
 
 	function declareParamFields()
@@ -16615,20 +16606,6 @@ class microIntegration extends serialParamDBTable
 		}
 
 		return parent::check();
-	}
-
-	function callMILanguage()
-	{
-		$lang =& JFactory::getLanguage();
-
-		$language = AECToolbox::oldLangConversion( $lang->getTag() );
-
-		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-		if ( file_exists( $langPathMI . $language . '.php' ) ) {
-			include_once( $langPathMI . $language . '.php' );
-		} else {
-			include_once( $langPathMI . 'english.php' );
-		}
 	}
 
 	function mi_exists( $mi_id )
@@ -17831,7 +17808,7 @@ class couponsHandler extends eucaObject
 		}
 
 		if ( !$this->mixCheck( $id, $coupon_code, $ccombo ) ) {
-			$this->setError( _COUPON_ERROR_COMBINATION );
+			$this->setError( JText::_('_COUPON_ERROR_COMBINATION') );
 		} else {
 			if ( $this->cph->status ) {
 				// Coupon approved, checking restrictions
@@ -17868,7 +17845,7 @@ class couponsHandler extends eucaObject
 			$ccombo	= $this->cph->getCombinations();
 
 			if ( !$this->mixCheck( false, $coupon_code, $ccombo ) ) {
-				$this->setError( _COUPON_ERROR_COMBINATION );
+				$this->setError( JText::_('_COUPON_ERROR_COMBINATION') );
 			} else {
 				if ( $this->cph->status ) {
 					// Coupon approved, checking restrictions
@@ -17964,7 +17941,7 @@ class couponHandler
 
 			// Check whether coupon is active
 			if ( !$this->coupon->active ) {
-				$this->setError( _COUPON_ERROR_EXPIRED );
+				$this->setError( JText::_('_COUPON_ERROR_EXPIRED') );
 			}
 
 			// load parameters into local array
@@ -17977,7 +17954,7 @@ class couponHandler
 
 				// Error: Use of this coupon has not started yet
 				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) > 0 ) ) {
-					$this->setError( _COUPON_ERROR_NOTSTARTED );
+					$this->setError( JText::_('_COUPON_ERROR_NOTSTARTED') );
 				}
 			}
 
@@ -17987,7 +17964,7 @@ class couponHandler
 
 				// Error: Use of this coupon has expired
 				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) < 0 ) ) {
-					$this->setError( _COUPON_ERROR_EXPIRED );
+					$this->setError( JText::_('_COUPON_ERROR_EXPIRED') );
 					$this->coupon->deactivate();
 				}
 			}
@@ -17997,7 +17974,7 @@ class couponHandler
 				if ( !empty( $this->restrictions['max_reuse'] ) ) {
 					// Error: Max Reuse of this coupon is exceeded
 					if ( (int) $this->coupon->usecount > (int) $this->restrictions['max_reuse'] ) {
-						$this->setError( _COUPON_ERROR_MAX_REUSE );
+						$this->setError( JText::_('_COUPON_ERROR_MAX_REUSE') );
 						return;
 					}
 				}
@@ -18017,14 +17994,14 @@ class couponHandler
 
 					// Error: The Subscription this Coupon depends on has run out
 					if ( ( strcmp( $subscr_status, 'active' ) === 0 ) || ( ( strcmp( $subscr_status, 'trial' ) === 0 ) && $this->restrictions['allow_trial_depend_subscr'] ) ) {
-						$this->setError( _COUPON_ERROR_SPONSORSHIP_ENDED );
+						$this->setError( JText::_('_COUPON_ERROR_SPONSORSHIP_ENDED') );
 						return;
 					}
 				}
 			}
 		} else {
 			// Error: Coupon does not exist
-			$this->setError( _COUPON_ERROR_NOTFOUND );
+			$this->setError( JText::_('_COUPON_ERROR_NOTFOUND') );
 		}
 	}
 
@@ -20135,7 +20112,7 @@ class aecRestrictionHelper
 		$lists['maxgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
 
 		$available_plans = array();
-		$available_plans[] = JHTML::_('select.option', '0', "- " . _PAYPLAN_NOPLAN . " -" );
+		$available_plans[] = JHTML::_('select.option', '0', "- " . JText::_('_PAYPLAN_NOPLAN') . " -" );
 
 		// Fetch Payment Plans
 		$query = 'SELECT `id` AS value, `name` AS text'
@@ -20159,7 +20136,7 @@ class aecRestrictionHelper
 		}
 
 		$available_groups = array();
-		$available_groups[] = JHTML::_('select.option', '0', _PAYPLAN_NOGROUP );
+		$available_groups[] = JHTML::_('select.option', '0', JText::_('_PAYPLAN_NOGROUP') );
 
 		// Fetch Item Groups
 		$query = 'SELECT `id` AS value, `name` AS text'

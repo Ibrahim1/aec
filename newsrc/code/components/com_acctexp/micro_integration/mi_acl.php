@@ -16,8 +16,8 @@ class mi_acl
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_ACL;
-		$info['desc'] = _AEC_MI_DESC_ACL;
+		$info['name'] = JText::_('_AEC_MI_NAME_ACL');
+		$info['desc'] = JText::_('_AEC_MI_DESC_ACL');
 
 		return $info;
 	}

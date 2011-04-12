@@ -37,7 +37,7 @@ class processor_servantek extends POSTprocessor
 		$settings['lc']				= 'US';
 		$settings['no_shipping']	= 1;
 		//$settings['altipnurl']		= '';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		// Customization Options

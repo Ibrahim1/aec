@@ -17,9 +17,9 @@ class processor_2checkout extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= '2checkout';
-		$info['longname'] 				= _AEC_PROC_INFO_2CO_LNAME;
-		$info['statement'] 				= _AEC_PROC_INFO_2CO_STMNT;
-		$info['description'] 			= _DESCRIPTION_2CHECKOUT;
+		$info['longname'] 				= JText::_('_AEC_PROC_INFO_2CO_LNAME');
+		$info['statement'] 				= JText::_('_AEC_PROC_INFO_2CO_STMNT');
+		$info['description'] 			= JText::_('_DESCRIPTION_2CHECKOUT');
 		$info['currencies']				= "USD,ARS,AUD,BRL,CAD,DKR,EUR,GBP,HKD,INR,JPY,MXN,NZD,NOK,ZAR,SEK,CHF";
 		$info['cc_list'] 				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] 				= 2;
@@ -52,7 +52,7 @@ class processor_2checkout extends POSTprocessor
 		$settings['testmode']		= 0;
 		$settings['alt2courl']		= '';
 		$settings['info']			= '';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

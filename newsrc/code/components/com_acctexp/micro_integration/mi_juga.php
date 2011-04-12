@@ -18,8 +18,8 @@ class mi_juga
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_JUGA;
-		$info['desc'] = _AEC_MI_DESC_JUGA;
+		$info['name'] = JText::_('_AEC_MI_NAME_JUGA');
+		$info['desc'] = JText::_('_AEC_MI_DESC_JUGA');
 
 		return $info;
 	}

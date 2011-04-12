@@ -19,9 +19,9 @@ class processor_authorize_cim extends PROFILEprocessor
 	{
 		$info = array();
 		$info['name']			= 'authorize_cim';
-		$info['longname']		= _CFG_AUTHORIZE_CIM_LONGNAME;
-		$info['statement']		= _CFG_AUTHORIZE_CIM_STATEMENT;
-		$info['description']	= _CFG_AUTHORIZE_CIM_DESCRIPTION;
+		$info['longname']		= JText::_('_CFG_AUTHORIZE_CIM_LONGNAME');
+		$info['statement']		= JText::_('_CFG_AUTHORIZE_CIM_STATEMENT');
+		$info['description']	= JText::_('_CFG_AUTHORIZE_CIM_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 2;
@@ -57,7 +57,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$settings['dedicatedShipping']	= 0;
 		$settings['noechecks']			= 0;
 		$settings['totalOccurrences']	= 12;
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
 		return $settings;
@@ -87,7 +87,7 @@ class processor_authorize_cim extends PROFILEprocessor
 	function registerProfileTabs()
 	{
 		$tab			= array();
-		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+		$tab['details']	= JText::_('_AEC_USERFORM_BILLING_DETAILS_NAME');
 
 		if ( $this->settings['dedicatedShipping'] ) {
 			$tab['shipping_details'] = _AEC_USERFORM_SHIPPING_DETAILS_NAME;
@@ -232,7 +232,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
 		$return .= '<input type="hidden" name="sub" value="authorize_cim_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . JText::_('_BUTTON_APPLY') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -309,7 +309,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
 		$return .= '<input type="hidden" name="sub" value="authorize_cim_shipping_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . JText::_('_BUTTON_APPLY') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -341,7 +341,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		if ( !$nobill ) {
 			if ( $hascim ) {
-				$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, _AEC_CCFORM_UPDATE_DESC, '' );
+				$var['params']['billUpdateInfo'] = array( 'p', JText::_('_AEC_CCFORM_UPDATE_NAME'), JText::_('_AEC_CCFORM_UPDATE_DESC'), '' );
 
 				$vcontent['card_number'] = $cim->substring_between( $cim->response,'<cardNumber>','</cardNumber>' );
 				$vcontent['account_no'] = $cim->substring_between( $cim->response,'<accountNumber>','</accountNumber>' );
@@ -432,7 +432,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
 		$return .= $this->getStdFormVars( $request );
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . JText::_('_BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;

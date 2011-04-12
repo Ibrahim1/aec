@@ -17,9 +17,9 @@ class processor_ideal_advanced extends XMLprocessor
 	{
 		$i = array();
 		$i['name']			= 'ideal_advanced';
-		$i['longname']		= _CFG_IDEAL_ADVANCED_LONGNAME;
-		$i['statement']		= _CFG_IDEAL_ADVANCED_STATEMENT;
-		$i['description']	= _CFG_IDEAL_ADVANCED_DESCRIPTION;
+		$i['longname']		= JText::_('_CFG_IDEAL_ADVANCED_LONGNAME');
+		$i['statement']		= JText::_('_CFG_IDEAL_ADVANCED_STATEMENT');
+		$i['description']	= JText::_('_CFG_IDEAL_ADVANCED_DESCRIPTION');
 		$i['currencies']	= 'EUR';
 		$i['languages']		= 'NL';
 		$i['cc_list']		= 'rabobank,abnamro,ing,postbank,fortis';
@@ -35,7 +35,7 @@ class processor_ideal_advanced extends XMLprocessor
 		$s['testmode']		= 0;
 		$s['bank']			= "ING";
 		$s['language']		= "NL";
-		$s['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$s['description']	= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $s;
 	}
@@ -72,15 +72,15 @@ class processor_ideal_advanced extends XMLprocessor
 			$name[1] = "";
 		}
 
-		$var['params']['billFirstName']		= array( 'inputC', _AEC_USERFORM_BILLFIRSTNAME_NAME, _AEC_USERFORM_BILLFIRSTNAME_NAME, $name[0]);
-		$var['params']['billLastName']		= array( 'inputC', _AEC_USERFORM_BILLLASTNAME_NAME, _AEC_USERFORM_BILLLASTNAME_NAME, $name[1]);
+		$var['params']['billFirstName']		= array( 'inputC', JText::_('_AEC_USERFORM_BILLFIRSTNAME_NAME'), JText::_('_AEC_USERFORM_BILLFIRSTNAME_NAME'), $name[0]);
+		$var['params']['billLastName']		= array( 'inputC', JText::_('_AEC_USERFORM_BILLLASTNAME_NAME'), JText::_('_AEC_USERFORM_BILLLASTNAME_NAME'), $name[1]);
 
 		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$var['params']['billAddress'] = array( 'inputC', _AEC_USERFORM_BILLADDRESS_NAME );
-			$var['params']['billCity'] = array( 'inputC', _AEC_USERFORM_BILLCITY_NAME );
-			$var['params']['billState'] = array( 'inputC', _AEC_USERFORM_BILLSTATE_NAME );
-			$var['params']['billZip'] = array( 'inputC', _AEC_USERFORM_BILLZIP_NAME );
-			$var['params']['billCountry'] = array( 'inputC', _AEC_USERFORM_BILLCOUNTRY_NAME );
+			$var['params']['billAddress'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLADDRESS_NAME') );
+			$var['params']['billCity'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLCITY_NAME') );
+			$var['params']['billState'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLSTATE_NAME') );
+			$var['params']['billZip'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLZIP_NAME') );
+			$var['params']['billCountry'] = array( 'inputC', JText::_('_AEC_USERFORM_BILLCOUNTRY_NAME') );
 		}
 
 		return $var;

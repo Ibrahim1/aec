@@ -16,8 +16,8 @@ class mi_eventlog extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_EVENTLOG_NAME;
-		$info['desc'] = _AEC_MI_EVENTLOG_DESC;
+		$info['name'] = JText::_('_AEC_MI_EVENTLOG_NAME');
+		$info['desc'] = JText::_('_AEC_MI_EVENTLOG_DESC');
 
 		return $info;
 	}
@@ -35,10 +35,10 @@ class mi_eventlog extends MI
 
 		$settings = $this->autoduplicatesettings( $settings, array(), true, true );
 
-		$levels[] = JHTML::_('select.option', 2, _AEC_NOTICE_NUMBER_2 );
-		$levels[] = JHTML::_('select.option', 8, _AEC_NOTICE_NUMBER_8 );
-		$levels[] = JHTML::_('select.option', 32, _AEC_NOTICE_NUMBER_32 );
-		$levels[] = JHTML::_('select.option', 128, _AEC_NOTICE_NUMBER_128 );
+		$levels[] = JHTML::_('select.option', 2, JText::_('_AEC_NOTICE_NUMBER_2') );
+		$levels[] = JHTML::_('select.option', 8, JText::_('_AEC_NOTICE_NUMBER_8') );
+		$levels[] = JHTML::_('select.option', 32, JText::_('_AEC_NOTICE_NUMBER_32') );
+		$levels[] = JHTML::_('select.option', 128, JText::_('_AEC_NOTICE_NUMBER_128') );
 
 		if ( !isset( $this->settings['level'] ) ) {
 			$this->settings['level'] = 0;

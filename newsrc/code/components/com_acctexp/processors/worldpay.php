@@ -17,9 +17,9 @@ class processor_worldpay extends POSTprocessor
 	{
 		$info = array();
 		$info['name']				= 'worldpay';
-		$info['longname']			= _CFG_WORLDPAY_LONGNAME;
-		$info['statement']			= _CFG_WORLDPAY_STATEMENT;
-		$info['description']		= _CFG_WORLDPAY_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_WORLDPAY_LONGNAME');
+		$info['statement']			= JText::_('_CFG_WORLDPAY_STATEMENT');
+		$info['description']		= JText::_('_CFG_WORLDPAY_DESCRIPTION');
 		$info['currencies']			= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']			= 0;
@@ -33,7 +33,7 @@ class processor_worldpay extends POSTprocessor
 		$settings['instId']			= 'instID';
 		$settings['testmode'] 		= 0;
 		$settings['currency'] 		= 'USD';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 		$settings['callbackPW'] 	= '';
 		$settings['rewriteInfo']	= '';

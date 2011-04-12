@@ -16,9 +16,9 @@ class processor_payer extends POSTprocessor
 	{
 		$info = array();
 		$info['name']				= 'payer';
-		$info['longname']			= _CFG_PAYER_LONGNAME;
-		$info['statement']			= _CFG_PAYER_STATEMENT;
-		$info['description'] 		= _CFG_PAYER_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_PAYER_LONGNAME');
+		$info['statement']			= JText::_('_CFG_PAYER_STATEMENT');
+		$info['description'] 		= JText::_('_CFG_PAYER_DESCRIPTION');
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
 		$info['languages']			= 'GB,DE,FR,IT,ES,US,SV';
 		$info['cc_list']			= 'visa,mastercard';
@@ -43,7 +43,7 @@ class processor_payer extends POSTprocessor
 		$settings['currency']		= 'SEK';
 		$settings['language']		= 'sv';
 		$settings['payment_method']	= 'card';
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}

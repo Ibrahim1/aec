@@ -43,7 +43,7 @@ class processor_securepay extends XMLprocessor
 		$settings['password']		= '';
 		$settings['tax']			= "10";
 		$settings['testAmount']		= "00";
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 		$settings['SiteTitle']		= '';
 
@@ -168,7 +168,7 @@ class processor_securepay extends XMLprocessor
 		$settings['password']		= '';
 		$settings['tax']			= "10";
 		$settings['testAmount']		= "00";
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['rewriteInfo']	= '';
 		$settings['SiteTitle']		= '';
 

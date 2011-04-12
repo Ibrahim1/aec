@@ -16,8 +16,8 @@ class mi_joomlaplugin
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_JOOMLAPLUGIN;
-		$info['desc'] = _AEC_MI_DESC_JOOMLAPLUGIN;
+		$info['name'] = JText::_('_AEC_MI_NAME_JOOMLAPLUGIN');
+		$info['desc'] = JText::_('_AEC_MI_DESC_JOOMLAPLUGIN');
 
 		return $info;
 	}

@@ -26,7 +26,7 @@ class processor_allopass extends XMLprocessor
 		$info['name']					= "allopass";
 		$info['longname']				= "Allopass";
 		$info['statement']				= "Make payments with Allopass!";
-		$info['description']			= _DESCRIPTION_ALLOPASS;
+		$info['description']			= JText::_('_DESCRIPTION_ALLOPASS');
 		$info['currencies']				= "EUR";
 		$info['cc_list']				= "visa,mastercard";
 		$info['recurring']				= 0;
@@ -43,7 +43,7 @@ class processor_allopass extends XMLprocessor
 		$settings['docid']			= "docid";
 		$settings['auth']			= "auth";
 		$settings['testmode']		= 0;
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

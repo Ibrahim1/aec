@@ -17,9 +17,9 @@ class processor_moneybookers extends POSTprocessor
 	{
 		$info = array();
 		$info['name']				= 'moneybookers';
-		$info['longname']			= _CFG_MONEYBOOKERS_LONGNAME;
-		$info['statement']			= _CFG_MONEYBOOKERS_STATEMENT;
-		$info['description']		= _CFG_MONEYBOOKERS_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_MONEYBOOKERS_LONGNAME');
+		$info['statement']			= JText::_('_CFG_MONEYBOOKERS_STATEMENT');
+		$info['description']		= JText::_('_CFG_MONEYBOOKERS_DESCRIPTION');
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
 		$info['languages']			= 'EN,DE,ES,FR,IT,PL,GR,RO,RU,TR,CN,CZ,NL.';
 		$info['cc_list']			= 'visa,mastercard';
@@ -43,7 +43,7 @@ class processor_moneybookers extends POSTprocessor
 		$settings['hide_login'] 			= 1;
 		$settings['currency'] 				= 'USD';
 		$settings['confirmation_note']		= "Thank you for subscribing on " . $app->getCfg( 'sitename' ) . "!";
-		$settings['item_name']				= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']				= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']			= "";
 
 		return $settings;

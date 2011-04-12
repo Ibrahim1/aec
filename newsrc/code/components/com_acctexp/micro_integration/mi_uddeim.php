@@ -16,8 +16,8 @@ class mi_uddeim
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_UDDEIM;
-		$info['desc'] = _AEC_MI_DESC_UDDEIM;
+		$info['name'] = JText::_('_AEC_MI_NAME_UDDEIM');
+		$info['desc'] = JText::_('_AEC_MI_DESC_UDDEIM');
 
 		return $info;
 	}
@@ -103,11 +103,11 @@ class mi_uddeim
 					$used = $mi_uddeimhandler->used_messages;
 				}
 				$unlimited = $mi_uddeimhandler->unlimited_messages;
-				$message = '<p>'.sprintf(_AEC_MI_DIV1_UDDEIM_USED, $used).'</p>';
+				$message = '<p>'.sprintf(JText::_('_AEC_MI_DIV1_UDDEIM_USED'), $used).'</p>';
 				if ( $unlimited > 0 ) {
-					$message .='<p>' . sprintf( _AEC_MI_DIV1_UDDEIM_REMAINING, _AEC_MI_DIV1_UDDEIM_UNLIMITED ) . '</p>';
+					$message .='<p>' . sprintf( JText::_('_AEC_MI_DIV1_UDDEIM_REMAINING'), JText::_('_AEC_MI_DIV1_UDDEIM_UNLIMITED') ) . '</p>';
 				} else {
-					$message .= '<p>' . sprintf( _AEC_MI_DIV1_UDDEIM_REMAINING, $left ) . '</p>';
+					$message .= '<p>' . sprintf( JText::_('_AEC_MI_DIV1_UDDEIM_REMAINING'), $left ) . '</p>';
 				}
 				return $message;
 			}
@@ -138,7 +138,7 @@ class mi_uddeim
 
 		$n = 'uddeimphp';
 		$hacks[$n]['name']				=	'uddeim.php';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK1_UDDEIM;
+		$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK1_UDDEIM');
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_uddeim/uddeim.php';
 		$hacks[$n]['read']				=	'// I could have modified this function to process mails to public users but instead of adding';
@@ -146,7 +146,7 @@ class mi_uddeim
 
 		$n = 'pmsuddeimphp';
 		$hacks[$n]['name']				=	'pms.uddeim.php';
-		$hacks[$n]['desc']				=	_AEC_MI_HACK2_UDDEIM;
+		$hacks[$n]['desc']				=	JText::_('_AEC_MI_HACK2_UDDEIM');
 		$hacks[$n]['type']				=	'file';
 		$hacks[$n]['filename']			=	JPATH_SITE . '/components/com_comprofiler/plugin/user/plug_pmsuddeim/pms.uddeim.php';
 		$hacks[$n]['read']				=	'$adminpath = $this->absolute_path."/administrator/components/com_uddeim";';

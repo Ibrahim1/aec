@@ -17,8 +17,8 @@ class mi_displaypipeline
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_DISPLAYPIPELINE;
-		$info['desc'] = _AEC_MI_DESC_DISPLAYPIPELINE;
+		$info['name'] = JText::_('_AEC_MI_NAME_DISPLAYPIPELINE');
+		$info['desc'] = JText::_('_AEC_MI_DESC_DISPLAYPIPELINE');
 
 		return $info;
 	}

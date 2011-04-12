@@ -16,8 +16,8 @@ class mi_frontenduseraccess
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_FRONTENDUSERACCESS;
-		$info['desc'] = _AEC_MI_DESC_FRONTENDUSERACCESS;
+		$info['name'] = JText::_('_AEC_MI_NAME_FRONTENDUSERACCESS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_FRONTENDUSERACCESS');
 
 		return $info;
 	}

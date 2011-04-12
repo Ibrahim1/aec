@@ -19,7 +19,7 @@ class processor_viaklix extends POSTprocessor
 		$info['name']					= "viaklix";
 		$info['longname']				= "Viaklix";
 		$info['statement']				= "Make payments with Viaklix!";
-		$info['description']			= _DESCRIPTION_VIAKLIX;
+		$info['description']			= JText::_('_DESCRIPTION_VIAKLIX');
 		$info['currencies']				= "USD";
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,giropay";
 		$info['recurring']				= 0;
@@ -36,7 +36,7 @@ class processor_viaklix extends POSTprocessor
 		$settings['userid']			= "your user id";
 		$settings['pin']			= "your pin";
 		$settings['testmode']		= 0;
-		$settings['item_name']		= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']		= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

@@ -16,8 +16,8 @@ class mi_googleanalytics
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_GOOGLEANALYTICS;
-		$info['desc'] = _AEC_MI_DESC_GOOGLEANALYTICS;
+		$info['name'] = JText::_('_AEC_MI_NAME_GOOGLEANALYTICS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_GOOGLEANALYTICS');
 
 		return $info;
 	}

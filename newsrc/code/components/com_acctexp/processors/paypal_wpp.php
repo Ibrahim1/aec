@@ -17,9 +17,9 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		$info = array();
 		$info['name']				= 'paypal_wpp';
-		$info['longname']			= _CFG_PAYPAL_WPP_LONGNAME;
-		$info['statement']			= _CFG_PAYPAL_WPP_STATEMENT;
-		$info['description']		= _CFG_PAYPAL_WPP_DESCRIPTION;
+		$info['longname']			= JText::_('_CFG_PAYPAL_WPP_LONGNAME');
+		$info['statement']			= JText::_('_CFG_PAYPAL_WPP_STATEMENT');
+		$info['description']		= JText::_('_CFG_PAYPAL_WPP_DESCRIPTION');
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
 		$info['languages']			= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress,echeck,giropay';
@@ -59,7 +59,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$settings['signature']			= '';
 		$settings['country']			= 'US';
 
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -96,7 +96,7 @@ class processor_paypal_wpp extends XMLprocessor
 	function registerProfileTabs()
 	{
 		$tab			= array();
-		$tab['details']	= _AEC_USERFORM_BILLING_DETAILS_NAME;
+		$tab['details']	= JText::_('_AEC_USERFORM_BILLING_DETAILS_NAME');
 
 		return $tab;
 	}
@@ -170,7 +170,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="hidden" name="task" value="subscriptiondetails" />' . "\n";
 		$return .= '<input type="hidden" name="sub" value="paypal_wpp_details" />' . "\n";
-		$return .= '<input type="submit" class="button" value="' . _BUTTON_APPLY . '" /><br /><br />' . "\n";
+		$return .= '<input type="submit" class="button" value="' . JText::_('_BUTTON_APPLY') . '" /><br /><br />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -182,23 +182,23 @@ class processor_paypal_wpp extends XMLprocessor
 
 		if ( !empty( $_REQUEST['PayerID'] ) && !empty( $_REQUEST['token'] ) && $this->settings['allow_express_checkout'] ) {
 			$return .= '<table id="aec_checkout_params"><tbody><tr><td>';
-			$return .= '<p style="float:left;text-align:left;"><strong>' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_RETURN . '</strong></p>';
+			$return .= '<p style="float:left;text-align:left;"><strong>' . JText::_('_CFG_PAYPAL_WPP_CHECKOUT_NOTE_RETURN') . '</strong></p>';
 			$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 			$return .= $this->getStdFormVars( $request );
 			$return .= '<input type="hidden" name="express" value="1" />' . "\n";
 			$return .= '<input type="hidden" name="token" value="' . $_REQUEST['token'] . '" />' . "\n";
 			$return .= '<input type="hidden" name="PayerID" value="' . $_REQUEST['PayerID'] . '" />' . "\n";
-			$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+			$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . JText::_('_BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 			$return .= '</form>' . "\n";
 			$return .= '</td></tr></tbody></table>';
 		} else {
 			if ( $this->settings['allow_express_checkout'] ) {
 				$return .= '<table id="aec_checkout_params"><tbody><tr><td>';
-				$return .= '<p style="float:left;text-align:left;"><strong>' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_HEADLINE . '</strong></p><p style="float:left;text-align:left;">' . _CFG_PAYPAL_WPP_CHECKOUT_NOTE_NOTE . '</p>';
+				$return .= '<p style="float:left;text-align:left;"><strong>' . JText::_('_CFG_PAYPAL_WPP_CHECKOUT_NOTE_HEADLINE') . '</strong></p><p style="float:left;text-align:left;">' . JText::_('_CFG_PAYPAL_WPP_CHECKOUT_NOTE_NOTE') . '</p>';
 				$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 				$return .= $this->getStdFormVars( $request );
 				$return .= '<input type="hidden" name="express" value="1" />' . "\n";
-				$return .= '<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class="button" id="aec_checkout_btn" value="' . _BUTTON_CHECKOUT . '" /><br /><br />' . "\n";
+				$return .= '<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class="button" id="aec_checkout_btn" value="' . JText::_('_BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 				$return .= '</form>' . "\n";
 				$return .= '</td></tr></tbody></table>';
 			}
@@ -215,12 +215,12 @@ class processor_paypal_wpp extends XMLprocessor
 
 		if ( !empty( $vcontent ) ) {
 			if ( !empty( $updated ) ) {
-				$msg = _AEC_CCFORM_UPDATE2_DESC;
+				$msg = JText::_('_AEC_CCFORM_UPDATE2_DESC');
 			} else {
-				$msg = _AEC_CCFORM_UPDATE_DESC;
+				$msg = JText::_('_AEC_CCFORM_UPDATE_DESC');
 			}
 
-			$var['params']['billUpdateInfo'] = array( 'p', _AEC_CCFORM_UPDATE_NAME, $msg, '' );
+			$var['params']['billUpdateInfo'] = array( 'p', JText::_('_AEC_CCFORM_UPDATE_NAME'), $msg, '' );
 		}
 
 		$values = array( 'card_type', 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' );
@@ -490,7 +490,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$count = 0;
 				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
-						$return['error'] .= 'Error ' . $nvpResArray["L_ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
+						$return['error'] .= 'Error ' . $nvpResArray["LJText::_('_ERRORCODE')".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
 						$count++;
 				}
 			}

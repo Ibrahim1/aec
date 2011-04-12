@@ -16,7 +16,7 @@ define( '_CFG_MOLLIE_IDEAL_STATEMENT', 'iDEAL via Mollie zonder vaste kosten of 
 define( '_CFG_MOLLIE_IDEAL_DESCRIPTION', 'iDEAL via Mollie zonder vaste kosten of procedures' );
 
 define( '_CFG_MOLLIE_IDEAL_PARTNER_ID_NAME', 'Partner ID' );
-define( '_CFG_MOLLIE_IDEAL_PARTNER_ID_DESC', 'Uw Mollie Partner ID' );
+define( '_CFG_MOLLIE_IDEAL_PARTNERJText::_('_ID_DESC')', 'Uw Mollie Partner ID' );
 define( '_CFG_MOLLIE_IDEAL_DESCRIPTION_NAME', 'Omschrijving' );
 define( '_CFG_MOLLIE_IDEAL_DESCRIPTION_DESC', 'Orderinfo t.b.v. payment processor' );
 
@@ -45,7 +45,7 @@ class processor_mollie_ideal extends XMLprocessor
 		$settings['testmode']		= 0;
 		$settings['partner_id']		= "00000";
 		$settings['currency']		= 'EUR';
-		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['description']	= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		
 		$settings['customparams']	= "";
 		

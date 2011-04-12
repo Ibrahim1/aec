@@ -17,8 +17,8 @@ class mi_vbulletin
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_VBULLETIN;
-		$info['desc'] = _AEC_MI_DESC_VBULLETIN;
+		$info['name'] = JText::_('_AEC_MI_NAME_VBULLETIN');
+		$info['desc'] = JText::_('_AEC_MI_DESC_VBULLETIN');
 
 		return $info;
 	}
@@ -129,7 +129,7 @@ class mi_vbulletin
 			$settings['create_user']			= array( 'list_yesno' );
 
 			foreach ( $userfields as $key ) {
-				$ndesc = _MI_MI_VBULLETIN_CREATE_FIELD . ": " . $key;
+				$ndesc = JText::_('_MI_MI_VBULLETIN_CREATE_FIELD') . ": " . $key;
 
 				$settings['create_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 			}
@@ -138,7 +138,7 @@ class mi_vbulletin
 			$settings['update_user']			= array( 'list_yesno' );
 
 			foreach ( $userfields as $key ) {
-				$ndesc = _MI_MI_VBULLETIN_UPDATE_FIELD . ": " . $key;
+				$ndesc = JText::_('_MI_MI_VBULLETIN_UPDATE_FIELD') . ": " . $key;
 
 				$settings['update_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 			}
@@ -146,7 +146,7 @@ class mi_vbulletin
 			$settings['update_user_exp']		= array( 'list_yesno' );
 
 			foreach ( $userfields as $key ) {
-				$ndesc = _MI_MI_VBULLETIN_UPDATE_FIELD_EXP . ": " . $key;
+				$ndesc = JText::_('_MI_MI_VBULLETIN_UPDATE_FIELD_EXP') . ": " . $key;
 
 				$settings['update_user_exp_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 			}

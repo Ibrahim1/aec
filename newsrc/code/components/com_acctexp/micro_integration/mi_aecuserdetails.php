@@ -16,8 +16,8 @@ class mi_aecuserdetails
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_AECUSERDETAILS;
-		$info['desc'] = _AEC_MI_DESC_AECUSERDETAILS;
+		$info['name'] = JText::_('_AEC_MI_NAME_AECUSERDETAILS');
+		$info['desc'] = JText::_('_AEC_MI_DESC_AECUSERDETAILS');
 
 		return $info;
 	}
@@ -47,23 +47,23 @@ class mi_aecuserdetails
 
 				$settings['lists'][$p.'type']	= JHTML::_('select.genericlist', $typelist, $p.'type', 'size="' . max( 10, min( 20, count( $types ) ) ) . '"', 'value', 'text', $this->settings[$p.'type'] );
 
-				$settings[$p.'short']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_SHORT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_SHORT_DESC );
+				$settings[$p.'short']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECUSERDETAILS_SET_SHORT_NAME'), $i+1 ), JText::_('_MI_MI_AECUSERDETAILS_SET_SHORT_DESC') );
 
 				if ( $this->settings[$p.'type'] != "checkbox" ) {
-					$settings[$p.'mandatory']	= array( 'list_yesno', sprintf( _MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC );
+					$settings[$p.'mandatory']	= array( 'list_yesno', sprintf( JText::_('_MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME'), $i+1 ), JText::_('_MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC') );
 				}
 
-				$settings[$p.'name']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_NAME_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_NAME_DESC );
+				$settings[$p.'name']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECUSERDETAILS_SET_NAME_NAME'), $i+1 ), JText::_('_MI_MI_AECUSERDETAILS_SET_NAME_DESC') );
 
-				$settings[$p.'desc']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DESC_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DESC_DESC );
-				$settings[$p.'type']		= array( 'list', sprintf( _MI_MI_AECUSERDETAILS_SET_TYPE_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_TYPE_DESC );
+				$settings[$p.'desc']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECUSERDETAILS_SET_DESC_NAME'), $i+1 ), JText::_('_MI_MI_AECUSERDETAILS_SET_DESC_DESC') );
+				$settings[$p.'type']		= array( 'list', sprintf( JText::_('_MI_MI_AECUSERDETAILS_SET_TYPE_NAME'), $i+1 ), JText::_('_MI_MI_AECUSERDETAILS_SET_TYPE_DESC') );
 
 				if ( $this->settings[$p.'type'] == "list" ) {
 					$settings[$p.'list']	= array( 'inputD', "List Items", "Provide a newline separated list with items like: item1|Description of first item" );
 					$settings[$p.'ltype']	= array( 'list_yesno', "Radio List", "Select Yes to display a radio button list instead of a dropdown box." );
 				}
 
-				$settings[$p.'default']		= array( 'inputC', sprintf( _MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME, $i+1 ), _MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC );
+				$settings[$p.'default']		= array( 'inputC', sprintf( JText::_('_MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME'), $i+1 ), JText::_('_MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC') );
 			}
 		}
 

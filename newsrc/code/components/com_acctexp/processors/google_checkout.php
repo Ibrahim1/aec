@@ -17,9 +17,9 @@ class processor_google_checkout extends XMLprocessor
 	{
 		$info = array();
 		$info['name']					= 'google_checkout';
-		$info['longname']				= _CFG_GOOGLE_CHECKOUT_LONGNAME;
-		$info['statement']				= _CFG_GOOGLE_CHECKOUT_STATEMENT;
-		$info['description']			= _CFG_GOOGLE_CHECKOUT_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_GOOGLE_CHECKOUT_LONGNAME');
+		$info['statement']				= JText::_('_CFG_GOOGLE_CHECKOUT_STATEMENT');
+		$info['description']			= JText::_('_CFG_GOOGLE_CHECKOUT_DESCRIPTION');
 		$info['currencies']				= "USD,GBP"; // only USD and GBP are accepted by Google Checkout
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['notify_trail_thanks']	= true;
@@ -34,7 +34,7 @@ class processor_google_checkout extends XMLprocessor
 		$settings['merchant_key']		= '--';
 		$settings['testmode']			= true;
 		$settings['currency']			= 'USD';
-		$settings['item_name']			= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
 		return $settings;

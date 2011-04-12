@@ -17,9 +17,9 @@ class processor_ideal_basic extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= 'ideal_basic';
-		$info['longname']				= _CFG_IDEAL_BASIC_LONGNAME;
-		$info['statement']				= _CFG_IDEAL_BASIC_STATEMENT;
-		$info['description']			= _CFG_IDEAL_BASIC_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_IDEAL_BASIC_LONGNAME');
+		$info['statement']				= JText::_('_CFG_IDEAL_BASIC_STATEMENT');
+		$info['description']			= JText::_('_CFG_IDEAL_BASIC_DESCRIPTION');
 		$info['currencies']				= 'EUR';
 		$info['languages']				= 'NL';
 		$info['cc_list']				= '';
@@ -40,7 +40,7 @@ class processor_ideal_basic extends POSTprocessor
 		$settings['subid']			= "0";
 		$settings['language']		= "NL";
 		$settings['key']			= "key";
-		$settings['description']	= sprintf( _CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['description']	= sprintf( JText::_('_CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
 		return $settings;

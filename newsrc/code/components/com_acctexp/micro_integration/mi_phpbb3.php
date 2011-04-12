@@ -18,8 +18,8 @@ class mi_phpbb3
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_PHPBB3;
-		$info['desc'] = _AEC_MI_DESC_PHPBB3;
+		$info['name'] = JText::_('_AEC_MI_NAME_PHPBB3');
+		$info['desc'] = JText::_('_AEC_MI_DESC_PHPBB3');
 
 		return $info;
 	}
@@ -152,7 +152,7 @@ class mi_phpbb3
 		$userfields = $this->getUserFields( $phpbbdb );
 
 		foreach ( $userfields as $key ) {
-			$ndesc = _MI_MI_PHPBB3_CREATE_FIELD . ": " . $key;
+			$ndesc = JText::_('_MI_MI_PHPBB3_CREATE_FIELD') . ": " . $key;
 			
 			$settings['create_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
@@ -160,7 +160,7 @@ class mi_phpbb3
 		$settings['update_user']			= array( 'list_yesno' );
 
 		foreach ( $userfields as $key ) {
-			$ndesc = _MI_MI_PHPBB3_UPDATE_FIELD . ": " . $key;
+			$ndesc = JText::_('_MI_MI_PHPBB3_UPDATE_FIELD') . ": " . $key;
 			
 			$settings['update_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
@@ -168,7 +168,7 @@ class mi_phpbb3
 		$settings['update_user_exp']		= array( 'list_yesno' );
 
 		foreach ( $userfields as $key ) {
-			$ndesc = _MI_MI_PHPBB3_UPDATE_FIELD_EXP . ": " . $key;
+			$ndesc = JText::_('_MI_MI_PHPBB3_UPDATE_FIELD_EXP') . ": " . $key;
 			
 			$settings['update_user_exp_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}

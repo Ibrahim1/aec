@@ -16,8 +16,8 @@ class mi_quotestream
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_QUOTESTREAM;
-		$info['desc'] = _AEC_MI_DESC_QUOTESTREAM;
+		$info['name'] = JText::_('_AEC_MI_NAME_QUOTESTREAM');
+		$info['desc'] = JText::_('_AEC_MI_DESC_QUOTESTREAM');
 
 		return $info;
 	}

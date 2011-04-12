@@ -16,8 +16,8 @@ class mi_phocadownload extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AEC_MI_NAME_PHOCADOWNLOAD;
-		$info['desc'] = _AEC_MI_DESC_PHOCADOWNLOAD;
+		$info['name'] = JText::_('_AEC_MI_NAME_PHOCADOWNLOAD');
+		$info['desc'] = JText::_('_AEC_MI_DESC_PHOCADOWNLOAD');
 
 		return $info;
 	}
