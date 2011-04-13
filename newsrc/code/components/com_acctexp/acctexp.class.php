@@ -32,6 +32,9 @@ $lang->load( 'com_acctexp', JPATH_SITE );
 $lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 $lang->load( 'com_acctexp.processors', JPATH_SITE );
 
+define( '_AEC_VERSION', '0.14.4' );
+define( '_AEC_REVISION', '3344' );
+
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 }
@@ -2185,8 +2188,6 @@ class Config_General extends serialParamDBTable
 			$this->CleanDuplicatedRows();
 			$this->load(1);
 		}
-
-		$this->cfg['aec_version'] = _AEC_VERSION;
 
 		$this->storeload();
 	}

@@ -53,6 +53,8 @@ function com_install()
 
 	$lang =& JFactory::getLanguage();
 
+	$lang->load( 'com_acctexp.admin' );
+
 	$lang->load( 'com_acctexp', JPATH_SITE );
 	$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 	$lang->load( 'com_acctexp.processors', JPATH_SITE );
@@ -67,8 +69,6 @@ function com_install()
 	$eucaInstall	= new eucaInstall();
 	$eucaInstalldb	= new eucaInstallDB();
 	$eucaInstallef	= new eucaInstalleditfile();
-
-	include_once( JPATH_SITE . '/components/com_acctexp/lang/general.php' );
 
 	// Slot in DB tables that do not exist yet
 	$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';

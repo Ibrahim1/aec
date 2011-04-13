@@ -13,4 +13,20 @@ if ( !$db->query() ) {
 	$errors[] = array( $db->getErrorMsg(), $query );
 }
 
+if ( is_dir( JPATH_SITE . '/components/com_acctexp/lang' ) ) {
+	eucaInstall::rrmdir( JPATH_SITE . '/components/com_acctexp/lang' );
+}
+
+if ( is_dir( JPATH_SITE . '/components/com_acctexp/micro_integration/lang' ) ) {
+	eucaInstall::rrmdir( JPATH_SITE . '/components/com_acctexp/micro_integration/lang' );
+}
+
+if ( is_dir( JPATH_SITE . '/components/com_acctexp/processors/lang' ) ) {
+	eucaInstall::rrmdir( JPATH_SITE . '/components/com_acctexp/processors/lang' );
+}
+
+if ( is_dir( JPATH_SITE . '/administrator/components/com_acctexp/lang' ) ) {
+	eucaInstall::rrmdir( JPATH_SITE . '/administrator/components/com_acctexp/lang' );
+}
+
 ?>
