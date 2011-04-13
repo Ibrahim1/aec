@@ -66,7 +66,7 @@ class tool_cleanup
 				if ( ( $table != 'total' ) && $count ) {
 					$query = 'SELECT a.id'
 							. ' FROM #__acctexp_' . $table . ' AS a'
-							. ' LEFT JOIN #__users AS b ON a.userid = b.id'
+							. ' LEFT JOIN #__users AS b ON a.' . $key . ' = b.id'
 							. ' WHERE b.id is null'
 							;
 					$db->setQuery( $query );
