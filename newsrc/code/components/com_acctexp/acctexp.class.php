@@ -28,30 +28,9 @@ JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'ta
 
 $lang =& JFactory::getLanguage();
 
-$lang->_load( 'com_acctexp')
-
-$language = AECToolbox::oldLangConversion( $lang->getTag() );
-
-if ( !defined ( 'AEC_FRONTEND' ) && !defined( '_AEC_LANG' ) ) {
-	$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-	if ( file_exists( $langPath . $language . '.php' ) ) {
-		include_once( $langPath . $language . '.php' );
-	} else {
-		include_once( $langPath. 'english.php' );
-	}
-}
-
-if ( !defined( '_AEC_LANG' ) ) {
-	$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
-	if ( file_exists( $langPath . $language . '.php' ) ) {
-		include_once( $langPath . $language . '.php' );
-	} else {
-		include_once( $langPath . 'english.php' );
-	}
-	include_once( $langPath . 'general.php' );
-
-	define( '_AEC_LANG', 1 );
-}
+$lang->load( 'com_acctexp', JPATH_SITE );
+$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
+$lang->load( 'com_acctexp.processors', JPATH_SITE );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2854,7 +2833,7 @@ class eventLog extends serialParamDBTable
 			}
 
 			// Send notification to all administrators
-			$subject2	= sprintf( JText::_('_AEC_ASEND_NOTICE'), constant( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $app->getCfg( 'sitename' ) );
+			$subject2	= sprintf( JText::_('_AEC_ASEND_NOTICE'), JText::_( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $app->getCfg( 'sitename' ) );
 			$message2	= sprintf( JText::_('_AEC_ASEND_NOTICE_MSG'), $this->event  );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
@@ -4421,7 +4400,7 @@ class XMLprocessor extends processor
 				$nl = strtolower( $name );
 
 				// Register tab in prefix
-				$prefix[] = array( 'tabregister', $nl.'details', constant( '_AEC_'.$nu.'FORM_TABNAME' ), true );
+				$prefix[] = array( 'tabregister', $nl.'details', JText::_( '_AEC_'.$nu.'FORM_TABNAME' ), true );
 
 				// Actual tab code
 				$main[] = array( 'tabstart', $nl.'details', true, '' );
@@ -4700,7 +4679,7 @@ class XMLprocessor extends processor
 					$countrylist = array();
 					foreach ( $countries as $country ) {
 						if ( !empty( $country ) ) {
-							$cname = constant( 'COUNTRYCODE_' . $country );
+							$cname = JText::_( 'COUNTRYCODE_' . $country );
 
 							if ( $vcontent == $cname ) {
 								$vcontent = $country;
@@ -4727,7 +4706,7 @@ class XMLprocessor extends processor
 
 					foreach ( $countries as $country ) {
 						if ( defined( 'COUNTRYCODE_' . $conversion[$country] ) ) {
-							$cname = constant( 'COUNTRYCODE_' . $conversion[$country] );
+							$cname = JText::_( 'COUNTRYCODE_' . $conversion[$country] );
 
 							if ( $vcontent == $cname ) {
 								$vcontent = $country;
@@ -5401,11 +5380,11 @@ class aecSettings
 
 				// If the constantname does not exists, try a generic name or insert an error
 				if ( defined( $constantname ) ) {
-					$info_name = constant( $constantname );
+					$info_name = JText::_( $constantname );
 				} else {
 					$genericname = $constant_generic . '_NAME';
 					if ( defined( $genericname ) ) {
-						$info_name = constant( $genericname );
+						$info_name = JText::_( $genericname );
 					} else {
 						if ( $showmissing ) {
 							$info_name = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
@@ -5417,11 +5396,11 @@ class aecSettings
 
 				// If the constantname does not exists, try a generic name or insert an error
 				if ( defined( $constantdesc ) ) {
-					$info_desc = constant( $constantdesc );
+					$info_desc = JText::_( $constantdesc );
 				} else {
 					$genericdesc = $constant_generic . '_DESC';
 					if ( defined( $genericname ) ) {
-						$info_desc = constant( $genericdesc );
+						$info_desc = JText::_( $genericdesc );
 					} else {
 						if ( $showmissing ) {
 							$info_desc = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
@@ -5489,7 +5468,7 @@ class aecSettings
 
 		$code_list = array();
 		foreach ( $country_code_list as $country ) {
-			$code_list[] = JHTML::_('select.option', $country, constant( '_AEC_LANG_' . $country ) );
+			$code_list[] = JHTML::_('select.option', $country, JText::_( '_AEC_LANG_' . $country ) );
 		}
 
 		$this->lists[$name] = JHTML::_( 'select.genericlist', $code_list, $name.'[]', 'size="10" multiple="multiple"', 'value', 'text', $value );
@@ -5503,7 +5482,7 @@ class aecSettings
 
 		$code_list = array();
 		foreach ( $country_code_list as $country ) {
-			$code_list[] = JHTML::_('select.option', $country, $country . " - " . constant( '_AEC_LANG_' . $country ) );
+			$code_list[] = JHTML::_('select.option', $country, $country . " - " . JText::_( '_AEC_LANG_' . $country ) );
 		}
 
 		$this->lists[$name] = JHTML::_( 'select.genericlist', $code_list, $name.'[]', 'size="10" multiple="multiple"', 'value', 'text', $value );
@@ -11861,7 +11840,7 @@ class Invoice extends serialParamDBTable
 			}
 
 			if ( defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $row->params['pending_reason'] ) ) ) {
-				$transactiondate = constant( '_PAYMENT_PENDING_REASON_' . strtoupper( $row->params['pending_reason'] ) );
+				$transactiondate = JText::_( '_PAYMENT_PENDING_REASON_' . strtoupper( $row->params['pending_reason'] ) );
 			} else {
 				$transactiondate = $row->params['pending_reason'];
 			}
@@ -14058,13 +14037,13 @@ class reWriteEngine
 			$params[] = array( 'div_end', '' );
 
 			foreach ( $rewrite as $area => $keys ) {
-				$params[] = array( 'accordion_itemstart', constant( '_REWRITE_AREA_' . strtoupper( $area ) ) );
+				$params[] = array( 'accordion_itemstart', JText::_( '_REWRITE_AREA_' . strtoupper( $area ) ) );
 
 				$list = '<div class="rewriteinfoblock">' . "\n"
 				. '<ul>' . "\n";
 
 				foreach ( $keys as $key ) {
-					$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+					$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . JText::_( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
 				}
 				$list .= '</ul>' . "\n"
 				. '</div>' . "\n";
@@ -14087,11 +14066,11 @@ class reWriteEngine
 			$return = '';
 			foreach ( $rewrite as $area => $keys ) {
 				$return .= '<div class="rewriteinfoblock">' . "\n"
-				. '<p><strong>' . constant( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
+				. '<p><strong>' . JText::_( '_REWRITE_AREA_' . strtoupper( $area ) ) . '</strong></p>' . "\n"
 				. '<ul>' . "\n";
 
 				foreach ( $keys as $key ) {
-					$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . constant( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+					$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . JText::_( '_REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
 				}
 				$return .= '</ul>' . "\n"
 				. '</div>' . "\n";
@@ -14567,7 +14546,7 @@ class reWriteEngine
 				break;
 			case 'pad':
 				if ( isset( $vars[3] ) ) {
-					$result = str_pad( $vars[0], (int) $vars[1], $vars[2], constant( "STR_PAD_" . strtoupper( $vars[3] ) ) );
+					$result = str_pad( $vars[0], (int) $vars[1], $vars[2], JText::_( "STR_PAD_" . strtoupper( $vars[3] ) ) );
 				} elseif ( isset( $vars[2] ) ) {
 					$result = str_pad( $vars[0], (int) $vars[1], $vars[2] );
 				} else {
@@ -14693,7 +14672,7 @@ class AECToolbox
 			foreach ( $currencies as $currencyfield ) {
 				$currency_array = explode( ',', $currencyfield );
 				foreach ( $currency_array as $currency ) {
-					$currency_code_list[] = JHTML::_('select.option', $currency, constant( '_CURRENCY_' . $currency ) );
+					$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( '_CURRENCY_' . $currency ) );
 				}
 
 				$currency_code_list[] = JHTML::_('select.option', '" disabled="disabled', '- - - - - - - - - - - - - -' );
@@ -14910,33 +14889,6 @@ class AECToolbox
 		}
 
 		return $aecUser;
-	}
-
-	function oldLangConversion( $lang )
-	{
-		$ll = explode( '-', $lang );
-
-		$lang_codes = array( 	'pt' => 'brazilian_portoguese',
-								'cz' => 'czech',
-								'da' => 'danish',
-								'nl' => 'dutch',
-								'en' => 'english',
-								'fr' => 'french',
-								'de' => 'german',
-								'el' => 'greek',
-								'it' => 'italian',
-								'ja' => 'japanese',
-								'ru' => 'russian',
-								'zh' => 'simlified_chinese',
-								'es' => 'spanish',
-								'sv' => 'swedish'
-								);
-
-		if ( isset( $lang_codes[$ll[0]] ) ) {
-			return $lang_codes[$ll[0]];
-		} else {
-			return 'english';
-		}
 	}
 
 	function in_ip_range( $ip_one, $ip_two=false )
@@ -17059,11 +17011,11 @@ class microIntegration extends serialParamDBTable
 		} else {
 			$nname = strtoupper( '_aec_' . $this->class_name . '_name' );
 			$ndesc = strtoupper( '_aec_' . $this->class_name . '_desc' );
-
+// TODO: Language fix
 			$this->info = array();
 			if ( defined( $nname ) && defined( $ndesc ) ) {
-				$this->info['name'] = constant( $nname );
-				$this->info['desc'] = constant( $ndesc );
+				$this->info['name'] = JText::_( $nname );
+				$this->info['desc'] = JText::_( $ndesc );
 			} else {
 				$this->info['name'] = 'NONAME';
 				$this->info['desc'] = 'NODESC';
@@ -18194,7 +18146,7 @@ class couponHandler
 									);
 
 					if ( isset( $errors[$name] ) ) {
-						$this->setError( constant( strtoupper( '_coupon_error_' . $errors[$name] ) ) );
+						$this->setError( JText::_( strtoupper( '_coupon_error_' . $errors[$name] ) ) );
 					} else {
 						$this->status = false;
 					}
@@ -19203,7 +19155,7 @@ class aecReadout
 		$r['def'] = array();
 		foreach ( $setdef as $sd => $sdd ) {
 			if ( ( $sdd === 0 ) || ( $sdd === 1 ) ) {
-				$tname = str_replace( ':', '', constant( '_CFG_GENERAL_' . strtoupper( $sd ) . '_NAME' ) );
+				$tname = str_replace( ':', '', JText::_( '_CFG_GENERAL_' . strtoupper( $sd ) . '_NAME' ) );
 
 				$r['def'][$tname] = array( $sd, 'bool' );
 			}
@@ -19228,9 +19180,9 @@ class aecReadout
 
 					foreach ( $reg as $regg ) {
 						$cname = '_CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
-
+//TODO: Language fix
 						if ( defined( $cname ) )  {
-							$tname = str_replace( ':', '', constant( $cname ) );
+							$tname = str_replace( ':', '', JText::_( $cname ) );
 						}
 					}
 
@@ -19287,7 +19239,7 @@ class aecReadout
 
 				$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($iname) . '_NAME';
 				$gname = '_CFG_PROCESSOR_' . strtoupper($iname) . '_NAME';
-
+//TODO: language fix
 				if ( defined( $cname ) )  {
 					$tname = constant( $cname );
 				} elseif ( defined( $gname ) )  {
@@ -19533,7 +19485,7 @@ class aecReadout
 				if ( !empty( $settings ) ) {
 					foreach ( $settings as $sname => $setting ) {
 						$name =  '_MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
-
+//TODO: language fix
 						if ( defined( $name ) ) {
 							$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
 						} else {

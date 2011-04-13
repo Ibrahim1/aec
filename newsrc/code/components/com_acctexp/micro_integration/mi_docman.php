@@ -455,17 +455,6 @@ class docman_restriction extends JTable {
 
 	function noDownloadsLeft()
 	{
-		if ( !defined( 'JText::_('_AEC_LANG_INCLUDED_MI')' ) ) {
-			$app = JFactory::getApplication();
-
-			$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-			if ( file_exists( $langPathMI . $app->getCfg( 'lang' ) . '.php' ) ) {
-				include_once( $langPathMI . $app->getCfg( 'lang' ) . '.php' );
-			} else {
-				include_once( $langPathMI . 'english.php' );
-			}
-		}
-
 		aecRedirect( 'index.php?option=com_docman' , JText::_('_AEC_MI_DOCMAN_NOCREDIT') );
 	}
 

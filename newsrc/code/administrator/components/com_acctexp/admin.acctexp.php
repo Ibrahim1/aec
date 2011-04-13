@@ -18,6 +18,10 @@ $app = JFactory::getApplication();
 require_once( JApplicationHelper::getPath( 'class' ) );
 require_once( JApplicationHelper::getPath( 'admin_html' ) );
 
+$lang =& JFactory::getLanguage();
+
+$lang->load( 'com_acctexp.admin' );
+
 JLoader::register('JPaneTabs',  JPATH_LIBRARIES.DS.'joomla'.DS.'html'.DS.'pane.php');
 
 if ( !defined( '_EUCA_DEBUGMODE' ) ) {
@@ -31,24 +35,6 @@ if ( _EUCA_DEBUGMODE ) {
 }
 
 aecACLhandler::adminBlock();
-
-$lang =& JFactory::getLanguage();
-
-$language = AECToolbox::oldLangConversion( $lang->getTag() );
-
-$langPathBE = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-if ( file_exists( $langPathBE . $language . '.php' ) ) {
-	include_once( $langPathBE . $language . '.php' );
-} else {
-	include_once( $langPathBE . 'english.php' );
-}
-
-$langPathPROC = JPATH_SITE . '/components/com_acctexp/processors/lang/';
-if ( file_exists( $langPathPROC . $language . '.php' ) ) {
-	include_once( $langPathPROC . $language . '.php' );
-} else {
-	include_once( $langPathPROC . 'english.php' );
-}
 
 $task			= trim( aecGetParam( 'task', null ) );
 $returnTask 	= trim( aecGetParam( 'returnTask', null ) );
@@ -898,7 +884,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 			$status .= aecHTML::Icon( 'delete.png' ) . 'deactivated';
 		} elseif ( isset( $invoice->params['pending_reason'] ) ) {
 			if (  defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
-				$status .= aecHTML::Icon( 'error.png' ) . constant( '_PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
+				$status .= aecHTML::Icon( 'error.png' ) . JText::_( '_PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
 			} else {
 				$status .= aecHTML::Icon( 'error.png' ) . $invoice->params['pending_reason'];
 			}
@@ -2456,7 +2442,7 @@ function editProcessor( $id, $option )
 					$currency_code_list = array();
 					foreach ( $currency_array as $currency ) {
 						if ( defined( '_CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, constant( '_CURRENCY_' . $currency ) );
+							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( '_CURRENCY_' . $currency ) );
 						}
 					}
 
@@ -2475,7 +2461,7 @@ function editProcessor( $id, $option )
 					// Transform languages into OptionArray
 					$language_code_list = array();
 					foreach ( $language_array as $language ) {
-						$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+						$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? JText::_( '_AEC_LANG_' . $language ) : $language ) );
 					}
 					// Create list
 					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
@@ -2497,11 +2483,11 @@ function editProcessor( $id, $option )
 
 				// If the constantname does not exists, try a generic name or insert an error
 				if ( defined( $constantname ) ) {
-					$settings_array[$name][1] = constant( $constantname );
+					$settings_array[$name][1] = JText::_( $constantname );
 				} else {
 					$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
 					if ( defined( $genericname ) ) {
-						$settings_array[$name][1] = constant( $genericname );
+						$settings_array[$name][1] = JText::_( $genericname );
 					} else {
 						$settings_array[$name][1] = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
 					}
@@ -2509,11 +2495,11 @@ function editProcessor( $id, $option )
 
 				// If the constantname does not exists, try a generic name or insert an error
 				if ( defined( $constantdesc ) ) {
-					$settings_array[$name][2] = constant( $constantdesc );
+					$settings_array[$name][2] = JText::_( $constantdesc );
 				} else {
 					$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
 					if ( defined( $genericname ) ) {
-						$settings_array[$name][2] = constant( $genericdesc );
+						$settings_array[$name][2] = JText::_( $genericdesc );
 					} else {
 						$settings_array[$name][2] = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
 					}
@@ -3078,11 +3064,11 @@ function editSubscriptionPlan( $id, $option )
 			foreach ( $customparams as $customparam => $cpcontent ) {
 				// Write the params field
 				if ( defined( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
-					$cp_name = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) );
-					$cp_desc = constant( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_desc" ) );
+					$cp_name = JText::_( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) );
+					$cp_desc = JText::_( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_desc" ) );
 				} else {
-					$cp_name = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
-					$cp_desc = constant( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
+					$cp_name = JText::_( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
+					$cp_desc = JText::_( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
 				}
 
 				$shortname = $pp->id . "_" . $customparam;
@@ -3152,7 +3138,7 @@ function editSubscriptionPlan( $id, $option )
 					$currency_code_list = array();
 					foreach ( $currency_array as $currency ) {
 						if ( defined( '_CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, constant( '_CURRENCY_' . $currency ) );
+							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( '_CURRENCY_' . $currency ) );
 						}
 					}
 
@@ -3172,7 +3158,7 @@ function editSubscriptionPlan( $id, $option )
 					// Transform languages into OptionArray
 					$language_code_list = array();
 					foreach ( $language_array as $language ) {
-						$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+						$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? JText::_( '_AEC_LANG_' . $language ) : $language ) );
 					}
 					// Create list
 					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
@@ -3195,11 +3181,11 @@ function editSubscriptionPlan( $id, $option )
 
 				// If the constantname does not exists, try a generic name or insert an error
 				if ( defined( $constantname ) ) {
-					$settings_array[$name][1] = constant( $constantname );
+					$settings_array[$name][1] = JText::_( $constantname );
 				} else {
 					$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
 					if ( defined( $genericname ) ) {
-						$settings_array[$name][1] = constant( $genericname );
+						$settings_array[$name][1] = JText::_( $genericname );
 					} else {
 						$settings_array[$name][1] = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
 					}
@@ -3207,11 +3193,11 @@ function editSubscriptionPlan( $id, $option )
 
 				// If the constantname does not exists, try a generic name or insert an error
 				if ( defined( $constantdesc ) ) {
-					$settings_array[$name][2] = constant( $constantdesc );
+					$settings_array[$name][2] = JText::_( $constantdesc );
 				} else {
 					$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
 					if ( defined( $genericname ) ) {
-						$settings_array[$name][2] = constant( $genericdesc );
+						$settings_array[$name][2] = JText::_( $genericdesc );
 					} else {
 						$settings_array[$name][2] = sprintf( JText::_('_AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
 					}

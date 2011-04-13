@@ -53,12 +53,9 @@ function com_install()
 
 	$lang =& JFactory::getLanguage();
 
-	$pathLang = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-	if ( file_exists( $pathLang . $lang->getTag() . '.php' ) ) {
-		include_once( $pathLang . $lang->getTag() . '.php' );
-	} else {
-		include_once( $pathLang . 'english.php' );
-	}
+	$lang->load( 'com_acctexp', JPATH_SITE );
+	$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
+	$lang->load( 'com_acctexp.processors', JPATH_SITE );
 
 	// Make sure we are compatible with php4
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );

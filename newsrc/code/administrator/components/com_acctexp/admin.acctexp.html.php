@@ -854,7 +854,7 @@ class HTML_AcctExp
 							<?php
 							foreach( $notices as $notice ) {
 							?>
-								<tr><td class="notice_level_<?php echo $notice->level; ?>" colspan="3"><?php echo constant( "_AEC_NOTICE_NUMBER_" . $notice->level ); ?></tr>
+								<tr><td class="notice_level_<?php echo $notice->level; ?>" colspan="3"><?php echo JText::_( "_AEC_NOTICE_NUMBER_" . $notice->level ); ?></tr>
 								<tr>
 									<td><?php echo $notice->datetime; ?></td>
 									<td><?php echo $notice->short; ?></td>
@@ -2705,7 +2705,7 @@ class HTML_AcctExp
 				<td><?php echo $row->id; ?></td>
 				<td align="left" width="120"><?php echo $row->datetime; ?></td>
 				<td align="left"><?php echo $row->notify ? aecHTML::Icon( 'star.png', '' ) : '&nbsp;'; ?></td>
-				<td class="notice_level_<?php echo $row->level; ?>"><?php echo constant( "_AEC_NOTICE_NUMBER_" . $row->level ); ?>
+				<td class="notice_level_<?php echo $row->level; ?>"><?php echo JText::_( "_AEC_NOTICE_NUMBER_" . $row->level ); ?>
 				<td align="left"><?php echo $row->short; ?></td>
 	  			<td align="left"><?php echo $row->tags; ?></td>
 				<td align="left" class="aec_bigcell"><?php echo $row->event ?></td>

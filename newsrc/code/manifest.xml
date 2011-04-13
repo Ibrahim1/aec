@@ -14,7 +14,6 @@
 		<file>acctexp.php</file>
 		<file>index.html</file>
 
-		<folder>lang</folder>
 		<folder>lib</folder>
 		<folder>micro_integration</folder>
 		<folder>processors</folder>
@@ -44,7 +43,6 @@
 			<file>toolbar.acctexp.php</file>
 			<file>toolbar.acctexp.html.php</file>
 
-			<folder>lang</folder>
 			<folder>install</folder>
 		</files>
 		<languages folder="administrator/language">

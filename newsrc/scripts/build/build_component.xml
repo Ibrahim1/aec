@@ -8,6 +8,7 @@
 			<fileset dir="${dir.local}">
 				<include name="administrator/**" />
 				<include name="components/**" />
+				<include name="language/**" />
 				<include name="media/**" />
 				<include name="install.acctexp.php" />
 				<include name="uninstall.acctexp.php" />
