@@ -47,7 +47,46 @@
 			<folder>lang</folder>
 			<folder>install</folder>
 		</files>
+		<languages folder="administrator/language">
+			<language tag="da-DA">da-DA/da-DA.com_acctexp.admin.ini</language>
+			<language tag="de-DE">de-DE/de-DE.com_acctexp.admin.ini</language>
+			<language tag="el-GR">el-GR/el-GR.com_acctexp.admin.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_acctexp.admin.ini</language>
+			<language tag="es-ES">es-ES/es-ES.com_acctexp.admin.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.com_acctexp.admin.ini</language>
+			<language tag="it-IT">it-IT/it-IT.com_acctexp.admin.ini</language>
+			<language tag="nl-NL">nl-NL/nl-NL.com_acctexp.admin.ini</language>
+			<language tag="pt-BR">pt-BR/pt-BR.com_acctexp.admin.ini</language>
+			<language tag="zh-CN">zh-CN/zh-CN.com_acctexp.admin.ini</language>
+		</languages>
 	</administration>
+	<languages folder="language">
+		<language tag="cz-CZ">cz-CZ/cz-CZ.com_acctexp.ini</language>
+		<language tag="da-DA">da-DA/da-DA.com_acctexp.ini</language>
+		<language tag="de-DE">de-DE/de-DE.com_acctexp.ini</language>
+		<language tag="de-DE">de-DE/de-DE.com_acctexp.microintegrations.ini</language>
+		<language tag="de-DE">de-DE/de-DE.com_acctexp.processors.ini</language>
+		<language tag="el-GR">el-GR/el-GR.com_acctexp.ini</language>
+		<language tag="en-GB">en-GB/en-GB.com_acctexp.ini</language>
+		<language tag="en-GB">en-GB/en-GB.com_acctexp.microintegrations.ini</language>
+		<language tag="en-GB">en-GB/en-GB.com_acctexp.processors.ini</language>
+		<language tag="es-ES">es-ES/es-ES.com_acctexp.ini</language>
+		<language tag="es-ES">es-ES/es-ES.com_acctexp.processors.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.com_acctexp.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.com_acctexp.microintegrations.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.com_acctexp.processors.ini</language>
+		<language tag="it-IT">it-IT/it-IT.com_acctexp.ini</language>
+		<language tag="it-IT">it-IT/it-IT.com_acctexp.processors.ini</language>
+		<language tag="ja-JP">ja-JP/ja-JP.com_acctexp.ini</language>
+		<language tag="nl-NL">nl-NL/nl-NL.com_acctexp.ini</language>
+		<language tag="nl-NL">nl-NL/nl-NL.com_acctexp.processors.ini</language>
+		<language tag="pt-BR">pt-BR/pt-BR.com_acctexp.ini</language>
+		<language tag="pt-BR">pt-BR/pt-BR.com_acctexp.processors.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.com_acctexp.ini</language>
+		<language tag="sv-SE">sv-SE/sv-SE.com_acctexp.ini</language>
+		<language tag="zh-CN">zh-CN/zh-CN.com_acctexp.ini</language>
+		<language tag="zh-CN">zh-CN/zh-CN.com_acctexp.processors.ini</language>
+	</languages>
 	<media destination="com_acctexp" folder="media/com_acctexp">
 		<folder>css</folder>
 		<folder>images</folder>

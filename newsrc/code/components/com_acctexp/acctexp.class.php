@@ -26,8 +26,6 @@ if (  ( version_compare( phpversion(), '5.0') >= 0 )  && ( version_compare( phpv
 // Get old language file names
 JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
 
-jimport('joomla.language.language');
-
 $lang =& JFactory::getLanguage();
 
 $lang->_load( 'com_acctexp')
