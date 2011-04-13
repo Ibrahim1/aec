@@ -6002,11 +6002,9 @@ class ItemGroupHandler
 		$items = $db->loadResultArray();
 
 		$list = array();
-		foreach( $items as $itemid ) {
-			$tree = ItemGroupHandler::resolveTreeItem( $itemid );
+		$tree = ItemGroupHandler::resolveTreeItem( 1 );
 
-			ItemGroupHandler::indentList( $tree, $list );
-		}
+		ItemGroupHandler::indentList( $tree, $list );
 
 		return $list;
 	}

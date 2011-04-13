@@ -2957,11 +2957,18 @@ function editSubscriptionPlan( $id, $option )
 	$glist = array();
 
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
+	$groupids = array();
 	foreach ( $grouplist as $id => $glisti ) {
 		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+
+		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
 	}
 
-	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+
+	foreach ( $groupids as $groupid => $groupcolor ) {
+		$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'"style="background-color:#'.$groupcolor.';"', $lists['add_group'] );
+	}
 
 	$params['add_group']			= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
@@ -3802,11 +3809,18 @@ function editItemGroup( $id, $option )
 	$glist = array();
 
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
+	$groupids = array();
 	foreach ( $grouplist as $id => $glisti ) {
 		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+
+		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
 	}
 
-	$lists['add_group'] 	= JHTML::_('select.genericlist', $glist, 'add_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
+
+	foreach ( $groupids as $groupid => $groupcolor ) {
+		$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'"style="background-color:#'.$groupcolor.';"', $lists['add_group'] );
+	}
 
 	$params['add_group']	= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
@@ -3832,6 +3846,10 @@ function editItemGroup( $id, $option )
 	}
 
 	$lists['color'] = JHTML::_('select.genericlist', $colorlist, 'color', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'color', 'BBDDFF'));
+
+	foreach ( $colors as $color ) {
+		$lists['color'] = str_replace( 'value="'.$color.'"', 'value="'.$color.'"style="background-color:#'.$color.';"', $lists['color'] );
+	}
 
 	$icons = array( 'blue', 'green', 'orange', 'pink', 'purple', 'red', 'yellow' );
 
