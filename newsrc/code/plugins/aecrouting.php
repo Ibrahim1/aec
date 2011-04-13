@@ -215,6 +215,10 @@ class plgSystemAECrouting extends JPlugin
 			return true;
 		}
 
+		if ( JRequest::getVar( 'option', null ) == 'com_docman' ) {
+			return true;
+		}
+
 		if ( !file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			return;
 		}
