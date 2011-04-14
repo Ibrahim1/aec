@@ -367,7 +367,7 @@ class mammonTerm extends eucaObject
 				$unit .= 's';
 			}
 
-			return $this->duration['period'] . ' ' . constant( strtoupper( '_aec_checkout_dur_' . $unit ) );
+			return $this->duration['period'] . ' ' . JText::_( strtoupper( 'aec_checkout_dur_' . $unit ) );
 		}
 	}
 

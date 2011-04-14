@@ -34,11 +34,14 @@ class eucaSettings
 		$this->subarea			= $subarea;
 	}
 
-	function fullSettingsArray( $params, $params_values, $lists = array(), $settings = array() ) {
+	function fullSettingsArray( $params, $params_values, $lists = array(), $settings = array() )
+	{
 		$this->params			= $params;
 		$this->params_values	= $params_values;
 		$this->lists			= $lists;
 		$this->settings			= $settings;
+
+		$lang = JFactory::getLanguage();
 
 		foreach ( $this->params as $name => $type ) {
 
@@ -73,38 +76,38 @@ class eucaSettings
 			if ( strcmp( $type, 'DEL' ) === 0 ) {
 				continue;
 			}
-
+				
 			// Create constant names
-			$constant_generic	= '_' . strtoupper($this->area)
+			$constant_generic	= strtoupper($this->area)
 								. '_' . strtoupper( $this->original_subarea )
 								. '_' . strtoupper( $realname );
-			$constant			= '_' . strtoupper( $this->area )
+			$constant			= strtoupper( $this->area )
 								. '_' . strtoupper( $this->subarea )
 								. '_' . strtoupper( $realname );
 
 			// First try a generic name or insert blank constant for easy copy and paste
 			$constantname = $constant . '_NAME';
-			if ( defined( $constantname ) ) {
-				$info_name = constant( $constantname );
+			if ( $lang->hasKey( $constantname ) ) {
+				$info_name = JText::_( $constantname );
 			} else {
 				$genericname = $constant_generic . '_NAME';
-				if ( defined( $genericname ) ) {
-					$info_name = constant( $genericname );
+				if ( $lang->hasKey( $genericname ) ) {
+					$info_name = JText::_( $genericname );
 				} else {
-					$info_name = $constantname;
+					$info_name = $genericname;
 				}
 			}
 
 			// First try a generic name or insert blank constant for easy copy and paste
 			$constantdesc = $constant . '_DESC';
-			if ( defined( $constantdesc ) ) {
-				$info_desc = constant( $constantdesc );
+			if ( $lang->hasKey( $constantdesc ) ) {
+				$info_desc = JText::_( $constantdesc );
 			} else {
 				$genericdesc = $constant_generic . '_DESC';
-				if ( defined( $genericname ) ) {
-					$info_desc = constant( $genericdesc );
+				if ( $lang->hasKey( $genericname ) ) {
+					$info_desc = JText::_( $genericdesc );
 				} else {
-					$info_desc = $constantdesc;
+					$info_desc = $genericdesc;
 				}
 			}
 

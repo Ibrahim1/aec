@@ -467,7 +467,7 @@ class mi_aectax
 			$conversion = AECToolbox::ISO3166_conversiontable( 'a3', 'a2' );
 
 			foreach ( $list as $ccode => $litem ) {
-				$text = constant( 'COUNTRYCODE_' . $conversion[$ccode] );
+				$text = JText::_( 'COUNTRYCODE_' . $conversion[$ccode] );
 
 				if ( $this->settings['vat_localtax'] ) {
 					$tax = $litem['tax'];

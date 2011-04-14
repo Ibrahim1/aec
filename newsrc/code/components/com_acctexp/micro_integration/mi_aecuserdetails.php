@@ -131,7 +131,7 @@ class mi_aecuserdetails
 
 		$language_code_list = array();
 		foreach ( $language_array as $language ) {
-			$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? constant( '_AEC_LANG_' . $language ) : $language ) );
+			$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'AEC_LANG_' . $language ) );
 		}
 
 		$settings	= array();

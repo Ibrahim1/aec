@@ -1294,7 +1294,7 @@ class Payment_HTML
 						$current = ( $tid == $item['terms']->pointer ) ? ' current_period' : '';
 
 						// Headline - What type is this term
-						echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . constant( strtoupper( '_' . $ttype ) ) . $applicable . '</th></tr>';
+						echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . JText::_( strtoupper( $ttype ) ) . $applicable . '</th></tr>';
 
 						if ( !isset( $term->duration['none'] ) && empty( $item['params']['hide_duration_checkout'] ) ) {
 							// Subheadline - specify the details of this term
@@ -1303,7 +1303,7 @@ class Payment_HTML
 
 						// Iterate through costs
 						foreach ( $term->renderCost() as $citem ) {
-							$t = constant( strtoupper( '_aec_checkout_' . $citem->type ) );
+							$t = JText::_( strtoupper( 'aec_checkout_' . $citem->type ) );
 
 							if ( isset( $item['quantity'] ) ) {
 								$amount = AECToolbox::correctAmount( $citem->cost['amount'] * $item['quantity'] );
@@ -1384,7 +1384,7 @@ class Payment_HTML
 
 								foreach ( $citem as $cost ) {
 									if ( $cost->type == 'discount' ) {
-										$t = constant( strtoupper( '_aec_checkout_' . $cost->type ) );
+										$t = JText::_( strtoupper( 'aec_checkout_' . $cost->type ) );
 
 										$amount = AECToolbox::correctAmount( $cost->cost['amount'] );
 
@@ -1418,7 +1418,7 @@ class Payment_HTML
 
 								foreach ( $citem as $cost ) {
 									if ( $cost->type == 'tax' ) {
-										$t = constant( strtoupper( '_aec_checkout_' . $cost->type ) );
+										$t = JText::_( strtoupper( 'aec_checkout_' . $cost->type ) );
 
 										$amount = AECToolbox::correctAmount( $cost->cost['amount'] );
 

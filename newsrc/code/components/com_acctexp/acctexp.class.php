@@ -5320,6 +5320,8 @@ class aecSettings
 		$this->settings			= $settings;
 		$this->prefix			= '';
 
+		$lang = JFactory::getLanguage();
+
 		foreach ( $this->params as $name => $content ) {
 			if ( !isset( $content[0] ) ) {
 				continue;
@@ -5370,45 +5372,27 @@ class aecSettings
 
 			if ( !isset( $content[2] ) || ( ( $content[2] === false ) && ( $content[2] !== '' ) ) ) {
 				// Create constant names
-				$constant_generic	= '_' . strtoupper($this->area)
+				$constant_generic	= strtoupper($this->area)
 										. '_' . strtoupper( $this->original_subarea )
 										. '_' . strtoupper( $cname );
-				$constant			= '_' . strtoupper( $this->area )
+				$constant			= strtoupper( $this->area )
 										. '_' . strtoupper( $this->subarea )
 										. '_' . strtoupper( $cname );
 				$constantname		= $constant . '_NAME';
 				$constantdesc		= $constant . '_DESC';
-
-				// If the constantname does not exists, try a generic name or insert an error
-				if ( defined( $constantname ) ) {
+				
+				// If the constantname does not exists, try a generic name
+				if ( $lang->hasKey( $constantname ) ) {
 					$info_name = JText::_( $constantname );
 				} else {
-					$genericname = $constant_generic . '_NAME';
-					if ( defined( $genericname ) ) {
-						$info_name = JText::_( $genericname );
-					} else {
-						if ( $showmissing ) {
-							$info_name = sprintf( JText::_('AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
-						} else {
-							$info_name = '';
-						}
-					}
+					$info_name = JText::_( $constant_generic . '_NAME' );
 				}
 
-				// If the constantname does not exists, try a generic name or insert an error
-				if ( defined( $constantdesc ) ) {
+				// If the constantdesc does not exists, try a generic desc
+				if ( $lang->hasKey( $constantdesc ) ) {
 					$info_desc = JText::_( $constantdesc );
 				} else {
-					$genericdesc = $constant_generic . '_DESC';
-					if ( defined( $genericname ) ) {
-						$info_desc = JText::_( $genericdesc );
-					} else {
-						if ( $showmissing ) {
-							$info_desc = sprintf( JText::_('AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
-						} else {
-							$info_desc = '';
-						}
-					}
+					$info_desc = JText::_( $constant_generic . '_DESC' );
 				}
 			} else {
 				$info_name = $content[1];
@@ -19203,6 +19187,8 @@ class aecReadout
 	{
 		$db = &JFactory::getDBO();
 
+		$lang = JFactory::getLanguage();
+
 		$readout = array();
 
 		$r = array();
@@ -19238,13 +19224,13 @@ class aecReadout
 					continue;
 				}
 
-				$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($iname) . '_NAME';
-				$gname = '_CFG_PROCESSOR_' . strtoupper($iname) . '_NAME';
-//TODO: language fix
-				if ( defined( $cname ) )  {
-					$tname = constant( $cname );
-				} elseif ( defined( $gname ) )  {
-					$tname = constant( $gname );
+				$cname = 'CFG_' . strtoupper( $procname ) . '_' . strtoupper($iname) . '_NAME';
+				$gname = 'CFG_PROCESSOR_' . strtoupper($iname) . '_NAME';
+
+				if ( $lang->hasKey( $cname ) ) {
+					$tname = JText::_( $cname );
+				} elseif ( $lang->hasKey( $gname ) )  {
+					$tname = JText::_( $gname );
 				} else {
 					$tname = $iname;
 				}
@@ -19259,13 +19245,13 @@ class aecReadout
 					continue;
 				}
 
-				$cname = '_CFG_' . strtoupper( $procname ) . '_' . strtoupper($psname) . '_NAME';
-				$gname = '_CFG_PROCESSOR_' . strtoupper($psname) . '_NAME';
+				$cname = 'CFG_' . strtoupper( $procname ) . '_' . strtoupper($psname) . '_NAME';
+				$gname = 'CFG_PROCESSOR_' . strtoupper($psname) . '_NAME';
 
-				if ( defined( $cname ) )  {
-					$tname = constant( $cname );
-				} elseif ( defined( $gname ) )  {
-					$tname = constant( $gname );
+				if ( $lang->hasKey( $cname ) )  {
+					$tname = JText::_( $cname );
+				} elseif ( $lang->hasKey( $gname ) )  {
+					$tname = JText::_( $gname );
 				} else {
 					$tname = $psname;
 				}
@@ -19443,6 +19429,8 @@ class aecReadout
 	{
 		$db = &JFactory::getDBO();
 
+		$lang = JFactory::getLanguage();
+
 		$r = array();
 		$r['head'] = "Micro Integration";
 		$r['type'] = "";
@@ -19485,10 +19473,10 @@ class aecReadout
 
 				if ( !empty( $settings ) ) {
 					foreach ( $settings as $sname => $setting ) {
-						$name =  '_MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
-//TODO: language fix
-						if ( defined( $name ) ) {
-							$r['def'][constant($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
+						$name =  'MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
+				
+						if ( $lang->hasKey( $name ) ) {
+							$r['def'][$lang->hasKey($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
 						} else {
 							$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit' );
 						}

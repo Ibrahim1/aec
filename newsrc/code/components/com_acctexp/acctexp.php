@@ -507,8 +507,9 @@ function pending( $option, $userid )
 			$params = $objInvoice->params;
 
 			if ( isset( $params['pending_reason'] ) ) {
-				if ( defined( '_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) ) ) {
-					$reason = constant( '_PENDING_REASON_' . strtoupper( $params['pending_reason'] ) );
+				$lang = JFactory::getLanguage();
+				if ( $lang->hasKey( 'PENDING_REASON_' . strtoupper( $params['pending_reason'] ) ) ) {
+					$reason = JText::_( 'PENDING_REASON_' . strtoupper( $params['pending_reason'] ) );
 				} else {
 					$reason = $params['pending_reason'];
 				}
@@ -819,7 +820,7 @@ function subscriptionDetails( $option, $sub='overview', $page=0 )
 	// Prepare Main Tabs
 	$tabs = array();
 	foreach ( array( 'overview', 'invoices' ) as $fname ) {
-		$tabs[$fname] = constant( strtoupper( '_aec_subdetails_tab_' . $fname ) );
+		$tabs[$fname] = JText::_( strtoupper( 'aec_subdetails_tab_' . $fname ) );
 	}
 
 	// If we have a cart, we want to link to it

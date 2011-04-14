@@ -2461,7 +2461,7 @@ function editProcessor( $id, $option )
 					// Transform languages into OptionArray
 					$language_code_list = array();
 					foreach ( $language_array as $language ) {
-						$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? JText::_( '_AEC_LANG_' . $language ) : $language ) );
+						$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'AEC_LANG_' . $language ) );
 					}
 					// Create list
 					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
@@ -2477,33 +2477,8 @@ function editProcessor( $id, $option )
 			}
 
 			if ( !isset( $settings_array[$name][1] ) ) {
-				// Create constant names
-				$constantname = '_CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_NAME';
-				$constantdesc = '_CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_DESC';
-
-				// If the constantname does not exists, try a generic name or insert an error
-				if ( defined( $constantname ) ) {
-					$settings_array[$name][1] = JText::_( $constantname );
-				} else {
-					$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
-					if ( defined( $genericname ) ) {
-						$settings_array[$name][1] = JText::_( $genericname );
-					} else {
-						$settings_array[$name][1] = sprintf( JText::_('AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
-					}
-				}
-
-				// If the constantname does not exists, try a generic name or insert an error
-				if ( defined( $constantdesc ) ) {
-					$settings_array[$name][2] = JText::_( $constantdesc );
-				} else {
-					$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
-					if ( defined( $genericname ) ) {
-						$settings_array[$name][2] = JText::_( $genericdesc );
-					} else {
-						$settings_array[$name][2] = sprintf( JText::_('AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
-					}
-				}
+				$settings_array[$name][1] = JText::_( 'CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_NAME' );
+				$settings_array[$name][2] = JText::_( 'CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_DESC' );
 			}
 
 			// It might be that the processor has got some new properties, so we need to double check here
@@ -3175,33 +3150,8 @@ function editSubscriptionPlan( $id, $option )
 
 			// ...put in missing language fields
 			if ( !isset( $settings_array[$name][1] ) ) {
-				// Create constant names
-				$constantname = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME';
-				$constantdesc = '_CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_DESC';
-
-				// If the constantname does not exists, try a generic name or insert an error
-				if ( defined( $constantname ) ) {
-					$settings_array[$name][1] = JText::_( $constantname );
-				} else {
-					$genericname = '_CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
-					if ( defined( $genericname ) ) {
-						$settings_array[$name][1] = JText::_( $genericname );
-					} else {
-						$settings_array[$name][1] = sprintf( JText::_('AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantname );
-					}
-				}
-
-				// If the constantname does not exists, try a generic name or insert an error
-				if ( defined( $constantdesc ) ) {
-					$settings_array[$name][2] = JText::_( $constantdesc );
-				} else {
-					$genericdesc = '_CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
-					if ( defined( $genericname ) ) {
-						$settings_array[$name][2] = JText::_( $genericdesc );
-					} else {
-						$settings_array[$name][2] = sprintf( JText::_('AEC_CMN_LANG_CONSTANT_IS_MISSING'), $constantdesc );
-					}
-				}
+				$settings_array[$name][1] = JText::_( 'CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME' );
+				$settings_array[$name][2] = JText::_( 'CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_DESC' );
 			}
 
 			$params[$pp->id . '_' . $name] = $settings_array[$name];

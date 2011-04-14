@@ -79,13 +79,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 
 		$pt = array();
 		foreach ( $paytypes as $name ) {
-			$cname = '_AEC_'.strtoupper($name).'FORM_TABNAME';
-
-			if ( defined( $cname ) ) {
-				$desc = constant( $cname );
-			} else {
-				$desc = $cname;
-			}
+			$desc = JText::_( 'AEC_'.strtoupper($name).'FORM_TABNAME' );
 
 			$paytypes_selection[] = JHTML::_('select.option', $name, $desc );
 
