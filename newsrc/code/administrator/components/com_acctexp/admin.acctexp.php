@@ -811,6 +811,8 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 	$app = JFactory::getApplication();
 
+	$lang = JFactory::getLanguage();
+
 	if ( !empty( $subscriptionid[0] ) ) {
 		$sid = $subscriptionid[0];
 	} else {
@@ -883,8 +885,8 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		if ( isset( $invoice->params['deactivated'] ) ) {
 			$status .= aecHTML::Icon( 'delete.png' ) . 'deactivated';
 		} elseif ( isset( $invoice->params['pending_reason'] ) ) {
-			if (  defined( '_PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
-				$status .= aecHTML::Icon( 'error.png' ) . JText::_( '_PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
+			if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
+				$status .= aecHTML::Icon( 'error.png' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
 			} else {
 				$status .= aecHTML::Icon( 'error.png' ) . $invoice->params['pending_reason'];
 			}
@@ -2398,6 +2400,8 @@ function editProcessor( $id, $option )
 
 	$user = &JFactory::getUser();
 
+	$lang = JFactory::getLanguage();
+
 	if ( $id ) {
 		$pp = new PaymentProcessor();
 
@@ -2441,8 +2445,8 @@ function editProcessor( $id, $option )
 					// Transform currencies into OptionArray
 					$currency_code_list = array();
 					foreach ( $currency_array as $currency ) {
-						if ( defined( '_CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( '_CURRENCY_' . $currency ) );
+						if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
+							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
 						}
 					}
 
@@ -2806,6 +2810,8 @@ function editSubscriptionPlan( $id, $option )
 
 	$user = &JFactory::getUser();
 
+	$lang = JFactory::getLanguage();
+
 	$lists = array();
 	$params_values = array();
 	$restrictions_values = array();
@@ -3038,12 +3044,12 @@ function editSubscriptionPlan( $id, $option )
 		if ( is_array( $customparams ) ) {
 			foreach ( $customparams as $customparam => $cpcontent ) {
 				// Write the params field
-				if ( defined( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
-					$cp_name = JText::_( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_name" ) );
-					$cp_desc = JText::_( strtoupper( "_CFG_processor_plan_params_" . $customparam . "_desc" ) );
+				if ( $lang->hasKey( strtoupper( "CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
+					$cp_name = JText::_( strtoupper( "CFG_processor_plan_params_" . $customparam . "_name" ) );
+					$cp_desc = JText::_( strtoupper( "CFG_processor_plan_params_" . $customparam . "_desc" ) );
 				} else {
-					$cp_name = JText::_( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
-					$cp_desc = JText::_( strtoupper( "_CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
+					$cp_name = JText::_( strtoupper( "CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
+					$cp_desc = JText::_( strtoupper( "CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
 				}
 
 				$shortname = $pp->id . "_" . $customparam;
@@ -3112,8 +3118,8 @@ function editSubscriptionPlan( $id, $option )
 					// Transform currencies into OptionArray
 					$currency_code_list = array();
 					foreach ( $currency_array as $currency ) {
-						if ( defined( '_CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( '_CURRENCY_' . $currency ) );
+						if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
+							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
 						}
 					}
 
@@ -3133,7 +3139,7 @@ function editSubscriptionPlan( $id, $option )
 					// Transform languages into OptionArray
 					$language_code_list = array();
 					foreach ( $language_array as $language ) {
-						$language_code_list[] = JHTML::_('select.option', $language, ( defined( '_AEC_LANG_' . $language  ) ? JText::_( '_AEC_LANG_' . $language ) : $language ) );
+						$language_code_list[] = JHTML::_('select.option', $language, ( $lang->hasKey( 'AEC_LANG_' . $language  ) ? JText::_( 'AEC_LANG_' . $language ) : $language ) );
 					}
 					// Create list
 					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $value );
