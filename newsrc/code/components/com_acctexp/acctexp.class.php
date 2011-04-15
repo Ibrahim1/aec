@@ -887,12 +887,12 @@ class metaUser
 
 				if ( defined( 'JPATH_MANIFESTS' ) ) {
 					$query = 'UPDATE #__session'
-							. ' SET `data` = \'' . $sdata . '\''
+							. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
 							. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 							;
 				} elseif ( isset( $se[$key]['user'] ) ) {
 					$query = 'UPDATE #__session'
-							. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $sdata . '\''
+							. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
 							. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 							;
 				}
