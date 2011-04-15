@@ -32,8 +32,8 @@ $lang->load( 'com_acctexp', JPATH_SITE );
 $lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 $lang->load( 'com_acctexp.processors', JPATH_SITE );
 
-define( '_AEC_VERSION', '0.14.4' );
-define( '_AEC_REVISION', '3344' );
+define( '_AEC_VERSION', '0.14.6beta' );
+define( '_AEC_REVISION', '3426' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
