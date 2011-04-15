@@ -494,11 +494,13 @@ class mi_vbulletin
 			return;
 		}
 
-		$vbulletinpw->vbulletinsalt	= $db->getEscaped( $vbulletinpw->saltgen() );
-		$vbulletinpw->vbulletinpw	= $vbulletinpw->hash( $password, $vbulletinpw->vbulletinsalt );
+		if ( !empty( $password ) ) {
+			$vbulletinpw->vbulletinsalt	= $db->getEscaped( $vbulletinpw->saltgen() );
+			$vbulletinpw->vbulletinpw	= $vbulletinpw->hash( $password, $vbulletinpw->vbulletinsalt );
 
-		$vbulletinpw->check();
-		$vbulletinpw->store();
+			$vbulletinpw->check();
+			$vbulletinpw->store();
+		}
 
 		return true;
 	}
