@@ -162,11 +162,11 @@ class mi_aecmodifycost
 
 		$action = 'action';
 
-		$exchange = null;
+		$exchange = $params = null;
 
-		global $aecConfig;
+		if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, $action, $request->add, $params ) === false ) {
+			global $aecConfig;
 
-		if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, $action, $request->add ) === false ) {
 			if ( $aecConfig->cfg['breakon_mi_error'] ) {
 				return false;
 			}
