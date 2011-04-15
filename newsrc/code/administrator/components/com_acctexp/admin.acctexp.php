@@ -4421,7 +4421,7 @@ function editCoupon( $id, $option, $new, $type )
 	$params['amount_percent']				= array( 'inputB',			'' );
 	$params['percent_first']				= array( 'list_yesno',		'' );
 	$params['useon_trial']					= array( 'list_yesno',		'' );
-	$params['useon_full']					= array( 'list_yesno',		'' );
+	$params['useon_full']					= array( 'list_yesno',		'1' );
 	$params['useon_full_all']				= array( 'list_yesno',		'' );
 
 	$params['has_start_date']				= array( 'list_yesno',		1 );
