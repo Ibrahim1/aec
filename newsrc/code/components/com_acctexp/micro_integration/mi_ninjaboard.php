@@ -11,24 +11,22 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-define( '_AECJText::_('MI_NAME')_NINJABOARD', 'Ninjaboard' );
-define( '_AECJText::_('MI_DESC')_NINJABOARD', 'Assign Groups in Ninjaboard' );
+define( '_AEC_MI_NAME_NINJABOARD', 'Ninjaboard' );
+define( '_AEC_MI_DESC_NINJABOARD', 'Assign Groups in Ninjaboard' );
 
 class mi_ninjaboard
 {
 	function Info()
 	{
 		$info = array();
-		$info['name'] = _AECJText::_('MI_NAME')_NINJABOARD;
-		$info['desc'] = _AECJText::_('MI_DESC')_NINJABOARD;
+		$info['name'] = JText::_('AEC_MI_NAME_NINJABOARD');
+		$info['desc'] = JText::_('AEC_MI_DESC_NINJABOARD');
 
 		return $info;
 	}
 
 	function Settings()
 	{
-	 	$this->getLang();
-
 	 	$groups = KFactory::tmp('admin::com.ninjaboard.model.usergroups')->getList();
 
 		$sg		= array();
@@ -155,38 +153,5 @@ class mi_ninjaboard
 		}
 
 		return true;
-	}
-
-	function getLang()
-	{
-		foreach( array(
-			'_MI_MI_NINJABOARD_SET_GROUP_NAME',
-			'_MI_MI_NINJABOARD_SET_GROUP_DESC',
-			'_MI_MI_NINJABOARD_GROUP_NAME',
-			'_MI_MI_NINJABOARD_GROUP_DESC',
-			'_MI_MI_NINJABOARD_SETJText::_('REMOVE')_GROUP_NAME',
-			'_MI_MI_NINJABOARD_SETJText::_('REMOVE')_GROUP_DESC',
-			'_MI_MI_NINJABOARDJText::_('REMOVE')_GROUP_NAME',
-			'_MI_MI_NINJABOARDJText::_('REMOVE')_GROUP_DESC',
-			'_MI_MI_NINJABOARD_SET_GROUP_EXP_NAME',
-			'_MI_MI_NINJABOARD_SET_GROUPJText::_('EXP_DESC')',
-			'_MI_MI_NINJABOARD_GROUP_EXP_NAME',
-			'_MI_MI_NINJABOARD_GROUPJText::_('EXP_DESC')',
-			'_MI_MI_NINJABOARD_SETJText::_('REMOVE')_GROUP_EXP_NAME',
-			'_MI_MI_NINJABOARD_SETJText::_('REMOVE')_GROUPJText::_('EXP_DESC')',
-			'_MI_MI_NINJABOARDJText::_('REMOVE')_GROUP_EXP_NAME',
-			'_MI_MI_NINJABOARDJText::_('REMOVE')_GROUPJText::_('EXP_DESC')',
-			'_MI_MI_NINJABOARD_SET_GROUPS_EXCLUDE_NAME',
-			'_MI_MI_NINJABOARD_SET_GROUPS_EXCLUDE_DESC',
-			'_MI_MI_NINJABOARD_GROUPS_EXCLUDE_NAME',
-			'_MI_MI_NINJABOARD_GROUPS_EXCLUDE_DESC',
-			'_MI_MI_NINJABOARD_SET_CLEAR_GROUPS_NAME',
-			'_MI_MI_NINJABOARD_SET_CLEAR_GROUPS_DESC'
-		) as $translate)
-		{
-			$text = str_replace( array( '_MI_MI_NINJABOARD_', '_NAME', '_DESC' ), '', $translate);
-
-			define($translate, KInflector::humanize($text));
-		}
 	}
 }

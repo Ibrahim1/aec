@@ -3349,7 +3349,7 @@ class PaymentProcessor
 		}
 
 		if ( empty( $plan_params ) ) {
-			$plan_params = $plan->getProcessorParameters( $this->id );
+			$plan_params = $plan->getProcessorParameters( $this );
 		}
 
 		if ( isset( $plan_params['aec_overwrite_settings'] ) ) {
@@ -7349,18 +7349,31 @@ class SubscriptionPlan extends serialParamDBTable
 		return true;
 	}
 
-	function getProcessorParameters( $processorid )
+	function getProcessorParameters( $processor )
 	{
 		$procparams = array();
+		$filter = array();
 		if ( !empty( $this->custom_params ) ) {
-			if ( empty( $this->custom_params[$processorid.'_aec_overwrite_settings'] ) ) {
-				return $procparams;
+			if ( empty( $this->custom_params[$processor->id.'_aec_overwrite_settings'] ) ) {
+				if ( method_exists( $processor->processor, 'CustomPlanParams' ) ) {
+					$filter = $processor->processor->CustomPlanParams();
+				}
+
+				if ( empty( $filter ) ) {
+					return $procparams;
+				}
 			}
 
 			foreach ( $this->custom_params as $name => $value ) {
 				$realname = explode( '_', $name, 2 );
 
-				if ( ( $realname[0] == $processorid ) && isset( $realname[1] ) ) {
+				if ( !empty( $filter ) ) {
+					if ( !array_key_exists( $realname[1], $filter ) ) {
+						continue;
+					}
+				}
+
+				if ( ( $realname[0] == $processor->id ) && isset( $realname[1] ) ) {
 					$procparams[$realname[1]] = $value;
 				}
 			}
@@ -10758,7 +10771,7 @@ class Invoice extends serialParamDBTable
 		}
 
 		$post = aecPostParamClear( $_POST );
-		$post['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp->id );
+		$post['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp );
 
 		$response['userid'] = $this->userid;
 
@@ -11358,7 +11371,7 @@ class Invoice extends serialParamDBTable
 
 			if ( is_a( $int_var['objUsage'], 'SubscriptionPlan' ) ) {
 				if ( is_object( $InvoiceFactory->pp ) ) {
-					$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp->id );
+					$int_var['planparams'] = $int_var['objUsage']->getProcessorParameters( $InvoiceFactory->pp );
 
 					if ( isset( $int_var['params']['userselect_recurring'] ) ) {
 						$int_var['recurring'] = $InvoiceFactory->pp->is_recurring( $int_var['params']['userselect_recurring'], true );
@@ -19549,6 +19562,12 @@ class aecReadout
 			$types = explode( ' ', $type );
 
 			if ( is_array( $dvalue ) ) {
+				foreach ( $dvalue as $dv ) {
+					if ( is_array( $dv ) ) {
+						return array( $dname => '' );
+					}
+				}
+
 				$dvalue = implode( ',', $dvalue );
 			}
 
