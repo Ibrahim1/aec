@@ -19577,7 +19577,7 @@ class aecReadout
 							$vv = array();
 							foreach ( $dvalue as $val ) {
 								if ( strlen( $val ) > $truncation ) {
-									$vv[] = substr( $val, 0, $truncation-$tls ) . '<strong>[...]</strong>' . substr( $val, -$tls, $tls );
+									$vv[] = substr( $val, 0, $truncation-$tls ) . '<strong title="' . htmlentities($val) . '">[...]</strong>' . substr( $val, -$tls, $tls );
 								} else {
 									$vv[] = $val;
 								}
@@ -19585,7 +19585,7 @@ class aecReadout
 							$dvalue = implode( $nnl, $vv );
 						} else {
 							if ( strlen( $dvalue ) > $truncation ) {
-								$dvalue = substr( $dvalue, 0, $truncation-$tls ) . '<strong>[...]</strong>' . substr( $dvalue, -$tls, $tls );
+								$dvalue = substr( $dvalue, 0, $truncation-$tls ) . '<strong title="' . htmlentities($dvalue) . '">[...]</strong>' . substr( $dvalue, -$tls, $tls );
 							}
 						}
 						break;
