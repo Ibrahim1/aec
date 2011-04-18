@@ -2481,8 +2481,28 @@ function editProcessor( $id, $option )
 			}
 
 			if ( !isset( $settings_array[$name][1] ) ) {
-				$settings_array[$name][1] = JText::_( 'CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_NAME' );
-				$settings_array[$name][2] = JText::_( 'CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_DESC' );
+				$nname = 'CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_NAME';
+				$gname = 'CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
+
+				if ( $lang->hasKey( $nname ) ) {
+					$settings_array[$name][1] = JText::_( $nname );
+				} elseif ( $lang->hasKey( $gname ) ) {
+					$settings_array[$name][1] = JText::_( $gname );
+				} else {
+					$settings_array[$name][1] = JText::_( $nname );
+				}
+
+				$nname = 'CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_DESC';
+				$gname = 'CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
+
+				if ( $lang->hasKey( $nname ) ) {
+					$settings_array[$name][2] = JText::_( $nname );
+				} elseif ( $lang->hasKey( $gname ) ) {
+					$settings_array[$name][2] = JText::_( $gname );
+				} else {
+					$settings_array[$name][2] = JText::_( $nname );
+				}
+				
 			}
 
 			// It might be that the processor has got some new properties, so we need to double check here
