@@ -11,13 +11,13 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class tool_cleanup
+class tool_migrator
 {
 	function Info()
 	{
 		$info = array();
 		$info['name'] = "Migrator";
-		$info['desc'] = "Migrate data from other membership or subscription components into AEC. Caution: In some cases, it may be impossible to migrate and emulate all data and/or behavior.";
+		$info['desc'] = "Migrate data from other membership or subscription components into AEC. Caution: It is unlikely that we can can migrate and emulate all data and/or behavior. We try our best, though.";
 
 		return $info;
 	}
