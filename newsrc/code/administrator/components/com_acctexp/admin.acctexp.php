@@ -1116,6 +1116,8 @@ function saveUser( $option, $apply=0 )
 
 	if ( !empty( $post['notes'] ) ) {
 		$metaUser->focusSubscription->customparams['notes'] = $post['notes'];
+
+		unset( $post['notes'] );
 	}
 
 	if ( $metaUser->hasSubscription ) {
