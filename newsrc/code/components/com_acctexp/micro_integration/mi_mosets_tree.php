@@ -352,14 +352,9 @@ class mosetstree extends JTable
 
 	function mosetstree( &$db )
 	{
-		$app = JFactory::getApplication();
+		$lang =& JFactory::getLanguage();
 
-		$langPathMI = JPATH_SITE . '/components/com_acctexp/micro_integration/lang/';
-		if ( file_exists( $langPathMI . $app->getCfg( 'lang' ) . '.php' ) ) {
-			include_once( $langPathMI . $app->getCfg( 'lang' ) . '.php' );
-		} else {
-			include_once( $langPathMI . 'english.php' );
-		}
+		$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 
 		parent::__construct( '#__acctexp_mi_mosetstree', 'id', $db );
 	}
