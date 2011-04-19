@@ -39,8 +39,6 @@ class plgSystemAECrouting extends JPlugin
 
 	function getVars()
 	{
-		global $aecConfig;
-
 		$vars = array();
 
 		$uri = &JFactory::getURI();
@@ -62,7 +60,6 @@ class plgSystemAECrouting extends JPlugin
 
 		// Community Builder
 		$vars['ccb']		= $vars['option'] == 'com_comprofiler';
-		$vars['ccb12']		= GeneralInfoRequester::detect_component( 'CB1.2' );
 
 		if ( $vars['ccb'] ) {
 			// We have to overwrite this here because CB can't keep their tasks consistent
@@ -118,12 +115,27 @@ class plgSystemAECrouting extends JPlugin
 		$vars['cbsreg']		= ( ( $vars['ccb'] && $vars['tsue'] ) || ( $vars['cu'] && $vars['tsu'] ) );
 		$vars['cb_sregsv']	= ( ( $vars['ccb'] && $vars['tcregs'] ) );
 
-		$vars['pfirst']		= $aecConfig->cfg['plans_first'];
-		$vars['int_reg']	= $aecConfig->cfg['integrate_registration'];
-
 		$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
 
 		$vars['has_usage']	= !empty( $vars['usage'] );
+
+		return $vars;
+	}
+
+	function getAdditionalVars( $vars )
+	{
+		if ( !file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+			return;
+		}
+
+		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+
+		global $aecConfig;
+
+		$vars['ccb12']		= GeneralInfoRequester::detect_component( 'CB1.2' );
+
+		$vars['pfirst']		= $aecConfig->cfg['plans_first'];
+		$vars['int_reg']	= $aecConfig->cfg['integrate_registration'];
 
 		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] || $vars['alpha_regsv'] ) && !$vars['has_usage'] ) {
 			$db = &JFactory::getDBO();
@@ -215,17 +227,14 @@ class plgSystemAECrouting extends JPlugin
 			return true;
 		}
 
-		if ( JRequest::getVar( 'option', null ) == 'com_docman' ) {
+		$vars = $this->getVars();
+
+		// Make sure we need to make a call at all
+		if ( !( $vars['j_reg'] || $vars['ccb'] || $vars['joms'] || $vars['alpha'] || $vars['aec'] ) ) {
 			return true;
 		}
 
-		if ( !file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-			return;
-		}
-
-		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
-
-		$vars = $this->getVars();
+		$vars = $this->getAdditionalVars( $vars );
 
 		if ( ( $vars['isreg'] || $vars['cb_sregsv'] || $vars['k2_regsv'] || $vars['alpha_regsv'] ) && $vars['int_reg'] ) {
 			// Joomla or CB registration...
@@ -335,19 +344,20 @@ class plgSystemAECrouting extends JPlugin
 			return true;
 		}
 
-		if ( !file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-			return;
+		$vars = $this->getVars();
+
+		// Make sure we need to make a call at all
+		if ( !( $vars['j_reg'] || $vars['ccb'] || $vars['joms'] || $vars['alpha'] || $vars['aec'] ) ) {
+			return true;
 		}
 
-		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+		$vars = $this->getAdditionalVars( $vars );
 
 		global $aecConfig;
 
 		$app = JFactory::getApplication();
 
 		$body = JResponse::getBody();
-
-		$vars = $this->getVars();
 
 		// Check whether we have a registration situation...
 		if ( !$vars['int_reg'] ) {
