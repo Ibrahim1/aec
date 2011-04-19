@@ -66,10 +66,6 @@ class plgSystemAECrouting extends JPlugin
 			$vars['task']	= JRequest::getVar( 'task', null );
 		}
 
-		$vars['usage']		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
-		$vars['processor']	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-		$vars['recurring']	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
-
 		$vars['tcregs']			= $vars['task'] == 'saveregisters';
 		$vars['tregs']			= $vars['task'] == 'registers';
 		$vars['tsregs']			= $vars['task'] == 'saveRegistration';
@@ -115,10 +111,6 @@ class plgSystemAECrouting extends JPlugin
 		$vars['cbsreg']		= ( ( $vars['ccb'] && $vars['tsue'] ) || ( $vars['cu'] && $vars['tsu'] ) );
 		$vars['cb_sregsv']	= ( ( $vars['ccb'] && $vars['tcregs'] ) );
 
-		$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
-
-		$vars['has_usage']	= !empty( $vars['usage'] );
-
 		return $vars;
 	}
 
@@ -136,6 +128,14 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['pfirst']		= $aecConfig->cfg['plans_first'];
 		$vars['int_reg']	= $aecConfig->cfg['integrate_registration'];
+
+		$vars['usage']		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+		$vars['processor']	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+		$vars['recurring']	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
+
+		$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
+
+		$vars['has_usage']	= !empty( $vars['usage'] );
 
 		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] || $vars['alpha_regsv'] ) && !$vars['has_usage'] ) {
 			$db = &JFactory::getDBO();
