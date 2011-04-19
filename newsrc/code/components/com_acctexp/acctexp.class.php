@@ -2827,12 +2827,7 @@ class eventLog extends serialParamDBTable
 			if ( !$lang->hasKey( "AEC_NOTICE_NUMBER_" . $this->level ) ) {
 				$lang =& JFactory::getLanguage();
 				
-				$langPath = JPATH_SITE . '/administrator/components/com_acctexp/lang/';
-				if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
-					include_once( $langPath . $lang->getTag() . '.php' );
-				} else {
-					include_once( $langPath. 'english.php' );
-				}
+				$lang->load( 'com_acctexp.admin', JPATH_ADMINISTRATOR );
 			}
 
 			// Send notification to all administrators
@@ -13090,13 +13085,6 @@ class Subscription extends serialParamDBTable
 		$app = JFactory::getApplication();
 
 		$lang =& JFactory::getLanguage();
-
-		$langPath = JPATH_SITE . '/components/com_acctexp/lang/';
-		if ( file_exists( $langPath . $lang->getTag() . '.php' ) ) {
-			include_once( $langPath . $lang->getTag() . '.php' );
-		} else {
-			include_once( $langPath . 'english.php' );
-		}
 
 		$free = ( strcmp( strtolower( $this->type ), 'none' ) == 0 || strcmp( strtolower( $this->type ), 'free' ) == 0 );
 
