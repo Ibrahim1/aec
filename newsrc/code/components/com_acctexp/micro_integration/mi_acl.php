@@ -36,24 +36,55 @@ class mi_acl
 		$settings['set_gid_pre_exp']	= array( 'list_yesno' );
 		$settings['gid_pre_exp']		= array( 'list' );
 
-		$settings['jaclpluspro']		= array( 'list_yesno' );
 		$settings['delete_subgroups']	= array( 'list_yesno' );
 
-		$settings['sub_set_gid']			= array( 'list_yesno' );
-		$settings['sub_gid_del']			= array( 'list' );
-		$settings['sub_gid']				= array( 'list' );
-		$settings['sub_set_gid_exp']		= array( 'list_yesno' );
-		$settings['sub_gid_exp_del']		= array( 'list' );
-		$settings['sub_gid_exp']			= array( 'list' );
-		$settings['sub_set_gid_pre_exp']	= array( 'list_yesno' );
-		$settings['sub_gid_pre_exp_del']	= array( 'list' );
-		$settings['sub_gid_pre_exp']		= array( 'list' );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$settings['set_removegid']			= array( 'list_yesno' );
+			$settings['removegid']				= array( 'list' );
+			$settings['set_removegid_exp']		= array( 'list_yesno' );
+			$settings['removegid_exp']			= array( 'list' );
+			$settings['set_removegid_pre_exp']	= array( 'list_yesno' );
+			$settings['removegid_pre_exp']		= array( 'list' );
+		} else {
+			$settings['jaclpluspro']			= array( 'list_yesno' );
+			$settings['sub_set_gid']			= array( 'list_yesno' );
+			$settings['sub_gid_del']			= array( 'list' );
+			$settings['sub_gid']				= array( 'list' );
+			$settings['sub_set_gid_exp']		= array( 'list_yesno' );
+			$settings['sub_gid_exp_del']		= array( 'list' );
+			$settings['sub_gid_exp']			= array( 'list' );
+			$settings['sub_set_gid_pre_exp']	= array( 'list_yesno' );
+			$settings['sub_gid_pre_exp_del']	= array( 'list' );
+			$settings['sub_gid_pre_exp']		= array( 'list' );
+		}
 
 		$gtree = aecACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
-		$settings['lists']['gid'] 			= JHTML::_('select.genericlist', $gtree, 'gid', 'size="6"', 'value', 'text', ( empty( $this->settings['gid'] ) ? 18 : $this->settings['gid'] ) );
-		$settings['lists']['gid_exp'] 		= JHTML::_('select.genericlist', $gtree, 'gid_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_exp'] ) ? 18 : $this->settings['gid_exp'] ) );
-		$settings['lists']['gid_pre_exp'] 	= JHTML::_('select.genericlist', $gtree, 'gid_pre_exp', 'size="6"', 'value', 'text', ( empty( $this->settings['gid_pre_exp'] ) ? 18 : $this->settings['gid_pre_exp'] ) );
+		$gidlists = array( 'gid', 'gid_exp', 'gid_pre_exp', 'removegid', 'removegid_exp', 'removegid_pre_exp' );
+
+		foreach ( $gidlists as $name ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$selected = array();
+			} else {
+				$selected = 18;
+			}
+
+			if ( !empty( $this->settings[$name] ) ) {
+				if ( is_array( $this->settings[$name] ) ) {
+					foreach ( $this->settings[$name] as $value ) {
+						$selected[]->value = $value;
+					}
+				} else {
+					$selected = $this->settings[$name];
+				}
+			}
+
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$settings['lists'][$name] = JHTML::_('select.genericlist', $gtree, $name.'[]', 'size="6" multiple="multiple"', 'value', 'text', $selected );
+			} else {
+				$settings['lists'][$name] = JHTML::_('select.genericlist', $gtree, $name, 'size="6"', 'value', 'text', $selected );				
+			}
+		}
 
 		$subgroups = array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' );
 
@@ -71,28 +102,116 @@ class mi_acl
 		return $settings;
 	}
 
+	function Defaults()
+	{
+        $defaults = array();
+        $defaults['change_session']			= '1';
+
+		return $defaults;
+	}
+
 	function relayAction( $request )
 	{
 		if ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
 			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
 		}
 
-		if ( !empty( $this->settings['set_gid' . $request->area] ) ) {
-			$this->instantGIDchange( $request->metaUser, $this->settings['gid' . $request->area] );
+		if ( !empty( $this->settings['set_gid' . $request->area] ) || $this->settings['set_removegid' . $request->area] ) {
+			if ( !empty( $this->settings['set_gid' . $request->area] ) && !empty( $this->settings['gid' . $request->area] ) ) {
+				$add = $this->settings['gid' . $request->area];
+			} else {
+				$add = array();
+			}
+
+			if ( !empty( $this->settings['set_removegid' . $request->area] ) && !empty( $this->settings['removegid' . $request->area] ) ) {
+				$remove = $this->settings['removegid' . $request->area];
+			} else {
+				$remove = array();
+			}
+
+			if ( !empty( $add ) || !empty( $remove ) ) {
+				$this->instantGIDchange( $request->metaUser, $add, $remove );
+			}
 		}
 
 		return true;
 	}
 
-	function instantGIDchange( $metaUser, $gid )
+	function instantGIDchange( $metaUser, $add, $remove )
+	{
+		$sessionextra = array();
+		if ( !empty( $add ) ) {
+			$sessionextra = $this->jaclSessionExtra( $add[0] );
+		}
+
+		$metaUser->instantGIDchange( $add, $remove, $this->settings['change_session'], $sessionextra );
+
+		return true;
+	}
+
+	function jaclplusGIDchange( $metaUser, $section )
 	{
 		$db = &JFactory::getDBO();
 
-		$acl = &JFactory::getACL();
+		if ( $this->settings['delete_subgroups'] ) {
+			// Delete sub entries
+			$query = 'DELETE FROM #__jaclplus_user_group'
+					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+					. ' AND `group_type` = \'sub\''
+					;
+			$db->setQuery( $query );
+			$db->query();
 
+			$groups = array();
+		} else {
+			// Check for sub entries
+			$query = 'SELECT `group_id`'
+					. ' FROM #__jaclplus_user_group'
+					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+					. ' AND `group_type` = \'sub\''
+					;
+			$db->setQuery( $query );
+			$groups = $db->loadResultArray();
+		}
+
+		if ( !empty( $this->settings[$section.'_del'] ) ) {
+			foreach ( $this->settings[$section.'_del'] as $gid ) {
+				if ( in_array( $gid, $groups ) ) {
+					$query = 'DELETE FROM #__jaclplus_user_group'
+							. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+							. ' AND `group_type` = \'sub\''
+							. ' AND `group_id` = \'' . (int) $gid . '\''
+							;
+					$db->setQuery( $query );
+					$db->query() or die( $db->stderr() );
+				}
+
+
+			}
+		}
+
+		if ( !empty( $this->settings[$section] ) ) {
+			foreach ( $this->settings[$section] as $gid ) {
+				if ( !in_array( $gid, $groups ) ) {
+					$query = 'INSERT INTO #__jaclplus_user_group'
+							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\', \'\' )'
+							;
+					$db->setQuery( $query );
+					$db->query() or die( $db->stderr() );
+				}
+			}
+		}
+
+		return true;
+	}
+
+	function jaclSessionExtra( $gid )
+	{
 		$sessionextra = array();
 
-		if ( $this->settings['jaclpluspro'] ) {
+		if ( !empty( $this->settings['jaclpluspro'] ) ) {
+			$acl = &JFactory::getACL();
+
 			$gid_name = $acl->get_group_name( $gid, 'ARO' );
 
 			// Check for main entry
@@ -161,68 +280,7 @@ class mi_acl
 
 		}
 
-		$metaUser->instantGIDchange( $gid, $this->settings['change_session'], $sessionextra );
-
-		return true;
+		return $sessionextra;
 	}
-
-	function jaclplusGIDchange( $metaUser, $section )
-	{
-		$db = &JFactory::getDBO();
-
-		$acl = &JFactory::getACL();
-
-		if ( $this->settings['delete_subgroups'] ) {
-			// Delete sub entries
-			$query = 'DELETE FROM #__jaclplus_user_group'
-					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
-					. ' AND `group_type` = \'sub\''
-					;
-			$db->setQuery( $query );
-			$db->query();
-
-			$groups = array();
-		} else {
-			// Check for sub entries
-			$query = 'SELECT `group_id`'
-					. ' FROM #__jaclplus_user_group'
-					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
-					. ' AND `group_type` = \'sub\''
-					;
-			$db->setQuery( $query );
-			$groups = $db->loadResultArray();
-		}
-
-		if ( !empty( $this->settings[$section.'_del'] ) ) {
-			foreach ( $this->settings[$section.'_del'] as $gid ) {
-				if ( in_array( $gid, $groups ) ) {
-					$query = 'DELETE FROM #__jaclplus_user_group'
-							. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
-							. ' AND `group_type` = \'sub\''
-							. ' AND `group_id` = \'' . (int) $gid . '\''
-							;
-					$db->setQuery( $query );
-					$db->query() or die( $db->stderr() );
-				}
-
-
-			}
-		}
-
-		if ( !empty( $this->settings[$section] ) ) {
-			foreach ( $this->settings[$section] as $gid ) {
-				if ( !in_array( $gid, $groups ) ) {
-					$query = 'INSERT INTO #__jaclplus_user_group'
-							. ' VALUES( \'' . (int) $metaUser->userid . '\', \'sub\', \'' . $gid . '\', \'\' )'
-							;
-					$db->setQuery( $query );
-					$db->query() or die( $db->stderr() );
-				}
-			}
-		}
-
-		return true;
-	}
-
 }
 ?>
