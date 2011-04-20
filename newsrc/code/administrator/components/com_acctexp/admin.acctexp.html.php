@@ -362,7 +362,9 @@ class HTML_AcctExp
 								<?php echo JText::_('AEC_USER_EMAIL'); ?>:&nbsp;<strong><?php echo $metaUser->cmsUser->email; ?></strong>
 							 	(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>"><?php echo aecHTML::Icon( 'email.png', JText::_('AEC_USER_SEND_MAIL') ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)
 							</p>
+							<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
 							<p><?php echo JText::_('AEC_USER_TYPE'); ?>:&nbsp;<strong><?php echo $metaUser->cmsUser->usertype; ?></strong></p>
+							<?php } ?>
 							<p>
 								<?php echo JText::_('AEC_USER_REGISTERED'); ?>:&nbsp;<?php echo aecHTML::Icon( 'date.png', JText::_('AEC_USER_REGISTERED') ); ?>&nbsp;
 								<strong><?php echo $metaUser->cmsUser->registerDate; ?></strong>
