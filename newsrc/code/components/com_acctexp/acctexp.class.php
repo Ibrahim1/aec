@@ -783,14 +783,8 @@ class metaUser
 		}
 	}
 
-	function instantGIDchange( $gid, $session=true, $sessionextra=null )
+	function instantGIDchange( $gid, $removegid=array(), $sessionextra=null )
 	{
-		$db = &JFactory::getDBO();
-
-		$acl = &JFactory::getACL();
-
-		$user = &JFactory::getUser();
-
 		if ( empty( $this->cmsUser ) ) {
 			return null;
 		}
@@ -802,105 +796,139 @@ class metaUser
 			}
 		}
 
-		if ( !defined( 'JPATH_MANIFESTS' ) ) {
-			// Get ARO ID for user
-			$query = 'SELECT `id`'
-					. ' FROM #__core_acl_aro'
-					. ' WHERE `value` = \'' . (int) $this->userid . '\''
-					;
-			$db->setQuery( $query );
-			$aro_id = $db->loadResult();
+		$user = &JFactory::getUser();
 
-			// If we have no aro id, something went wrong and we need to create it
-			if ( empty( $aro_id ) ) {
-				$query2 = 'INSERT INTO #__core_acl_aro'
-						. ' (`section_value`, `value`, `order_value`, `name`, `hidden` )'
-						. ' VALUES ( \'users\', \'' . $this->userid . '\', \'0\', \'' . $this->cmsUser->name . '\', \'0\' )'
-						;
-				$db->setQuery( $query2 );
-				$db->query();
-	
-				$db->setQuery( $query );
-				$aro_id = $db->loadResult();
-			}
+		if ( !is_array( $gid ) && !empty( $gid ) ) {
+			$gid = array( $gid );
+		} elseif ( empty( $gid ) ) {
+			$gid = array();
+		}
 
-			// Carry out ARO ID -> ACL group mapping
-			$query = 'UPDATE #__core_acl_groups_aro_map'
-					. ' SET `group_id` = \'' . (int) $gid . '\''
-					. ' WHERE `aro_id` = \'' . $aro_id . '\''
-					;
-			$db->setQuery( $query );
-			$db->query() or die( $db->stderr() );
+		if ( !is_array( $removegid ) ) {
+			$removegid = array( $removegid );
+		}
 
-			$gid_name = $acl->get_group_name( $gid, 'ARO' );
-		} else {
-			$query = 'SELECT `title`'
-					. ' FROM #__usergroups'
-					. ' WHERE `id` = \'' . $gid . '\''
-					;
-			$db->setQuery( $query );
-			$gid_name = $db->loadResult();
+		if ( !empty( $removegid ) ) {
+			aecACLhandler::removeGIDs( (int) $this->userid, $removegid );
 		}
 
 		// Set GID and usertype
-		$rows = aecACLhandler::setGID( (int) $this->userid, $gid, $gid_name );
+		if ( !empty( $gid ) ) {
+			$info = aecACLhandler::setGIDs( (int) $this->userid, $gid );
+		}
 
-		if ( $session ) {
-			// Update Session
-			$query = 'SELECT data'
-			. ' FROM #__session'
-			. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-			;
-			$db->setQuery( $query );
-			$data = $db->loadResult();
+		$session = $this->getSession();
 
-			if ( !empty( $data ) ) {
-				$se = $this->joomunserializesession( $data );
+		if ( empty( $session ) ) {
+			return true;
+		}
 
-				$keys = array_keys( $se );
-
-				$key = array_pop( $keys );
-
-				if ( !empty( $sessionextra ) ) {
-					foreach ( $sessionextra as $sk => $sv ) {
-						$se[$key]['user']->$sk = $sv;
-
-						if ( $this->userid == $user->id ) {
-							$user->$sk	= $sv;
-						}
-					}
-				}
-
-				if ( isset( $se[$key]['user'] ) && !defined( 'JPATH_MANIFESTS' ) ) {
-					$se[$key]['user']->gid		= $gid;
-					$se[$key]['user']->usertype	= $gid_name;
+		if ( !empty( $sessionextra ) ) {
+			if ( is_array( $sessionextra ) ) {
+				foreach ( $sessionextra as $sk => $sv ) {
+					$session['user']->$sk = $sv;
 
 					if ( $this->userid == $user->id ) {
-						$user->gid		= $gid;
-						$user->usertype	= $gid_name;
+						$user->$sk	= $sv;
 					}
-				} elseif ( isset( $se[$key]['user'] ) ) {
-					$user->groups[$gid] = $gid_name;
 				}
-
-				$sdata = $this->joomserializesession( $se );
-
-				if ( defined( 'JPATH_MANIFESTS' ) ) {
-					$query = 'UPDATE #__session'
-							. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
-							. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-							;
-				} elseif ( isset( $se[$key]['user'] ) ) {
-					$query = 'UPDATE #__session'
-							. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
-							. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-							;
-				}
-
-				$db->setQuery( $query );
-				$db->query() or die( $db->stderr() );
 			}
 		}
+
+		if ( isset( $session['user'] ) && !defined( 'JPATH_MANIFESTS' ) ) {
+			$session['user']->gid		= $gid[0];
+			$session['user']->usertype	= $info[$gid[0]];
+
+			if ( $this->userid == $user->id ) {
+				$user->gid		= $gid[0];
+				$user->usertype	= $info[$gid[0]];
+			}
+		} elseif ( isset( $session->user ) ) {
+			if ( $this->userid == $user->id ) {
+				$ugs = $user->get('groups');
+			} else {
+				$ugs = array();
+			}
+
+			$sgsids = JAccess::getGroupsByUser($this->userid);
+
+			$db = &JFactory::getDBO();
+
+			$query = 'SELECT `title`, `id`'
+					. ' FROM #__usergroups'
+					. ' WHERE `id` IN (' . implode( ',', $sgsids ) . ')'
+					;
+			$db->setQuery( $query );
+			$sgslist = $db->loadObjectList();
+
+			$sgs = array();
+
+			foreach ( $sgslist as $gidgroup ) {
+				if ( !in_array( $gidgroup->id, $removegid ) ) {
+					$sgs[$gidgroup->title] = $gidgroup->id;
+				}
+			}
+
+			if ( $this->userid == $user->id ) {
+				$user->set( 'groups', $sgs );
+				
+				$user->set( '_authLevels', JAccess::getAuthorisedViewLevels($this->userid) );
+				$user->set( '_authGroups', JAccess::getGroupsByUser($this->userid) );
+			}
+
+			$session['user']->set( 'groups', $sgs );
+
+			$session['user']->set( '_authLevels', JAccess::getAuthorisedViewLevels($this->userid) );
+			$session['user']->set( '_authGroups', JAccess::getGroupsByUser($this->userid) );
+		}
+
+		$this->putSession( $session, $gid[0], $info[$gid[0]] );
+	}
+
+	function getSession()
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT data'
+		. ' FROM #__session'
+		. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+		;
+		$db->setQuery( $query );
+		$data = $db->loadResult();
+
+		if ( !empty( $data ) ) {
+			$session = $this->joomunserializesession( $data );
+
+			$key = array_pop( array_keys( $session ) );
+
+			$this->sessionkey = $key;
+
+			return $session[$key];
+		} else {
+			return array();
+		}
+	}
+
+	function putSession( $data, $gid=null, $gid_name=null )
+	{
+		$db = &JFactory::getDBO();
+
+		$sdata = $this->joomserializesession( array( $this->sessionkey => $data) );
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$query = 'UPDATE #__session'
+					. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
+					. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+					;
+		} elseif ( isset( $data['user'] ) ) {
+			$query = 'UPDATE #__session'
+					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
+					. ' WHERE `userid` = \'' . (int) $this->userid . '\''
+					;
+		}
+
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
 	}
 
 	function unserializesession( $data )
@@ -1751,6 +1779,33 @@ class aecACLhandler
 		return $db->loadObjectList();
 	}
 
+	function removeGIDs( $userid, $gids )
+	{
+		$db = &JFactory::getDBO();
+
+		foreach ( $gids as $gid ) {
+			$query = 'DELETE'
+					. ' FROM #__user_usergroup_map'
+					. ' WHERE `user_id` = \'' . ( (int) $userid ) . '\''
+					. ' AND `group_id` = \'' . ( (int) $gid ) . '\''
+					;
+			$db->setQuery( $query );
+			$db->query();
+		}
+	}
+
+	function setGIDs( $userid, $gids )
+	{
+		$info = array();
+		foreach ( $gids as $gid ) {
+			$info[$gid] = aecACLhandler::setGIDsTakeNames( $gid );
+
+			aecACLhandler::setGID( $userid, $gid, $info[$gid] );
+		}
+
+		return $info;
+	}
+
 	function setGID( $userid, $gid, $gid_name )
 	{
 		$db = &JFactory::getDBO();
@@ -1780,6 +1835,53 @@ class aecACLhandler
 			$db->setQuery( $query );
 			$db->query() or die( $db->stderr() );
 		}
+	}
+
+	function setGIDsTakeNames( $gid )
+	{
+		$db = &JFactory::getDBO();
+
+		if ( !defined( 'JPATH_MANIFESTS' ) ) {
+			// Get ARO ID for user
+			$query = 'SELECT `id`'
+					. ' FROM #__core_acl_aro'
+					. ' WHERE `value` = \'' . (int) $this->userid . '\''
+					;
+			$db->setQuery( $query );
+			$aro_id = $db->loadResult();
+
+			// If we have no aro id, something went wrong and we need to create it
+			if ( empty( $aro_id ) ) {
+				$query2 = 'INSERT INTO #__core_acl_aro'
+						. ' (`section_value`, `value`, `order_value`, `name`, `hidden` )'
+						. ' VALUES ( \'users\', \'' . $this->userid . '\', \'0\', \'' . $this->cmsUser->name . '\', \'0\' )'
+						;
+				$db->setQuery( $query2 );
+				$db->query();
+	
+				$db->setQuery( $query );
+				$aro_id = $db->loadResult();
+			}
+
+			// Carry out ARO ID -> ACL group mapping
+			$query = 'UPDATE #__core_acl_groups_aro_map'
+					. ' SET `group_id` = \'' . (int) $gid . '\''
+					. ' WHERE `aro_id` = \'' . $aro_id . '\''
+					;
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
+
+			$gid_name = $acl->get_group_name( $gid, 'ARO' );
+		} else {
+			$query = 'SELECT `title`'
+					. ' FROM #__usergroups'
+					. ' WHERE `id` = \'' . $gid . '\''
+					;
+			$db->setQuery( $query );
+			$gid_name = $db->loadResult();
+		}
+
+		return $gid_name;
 	}
 
 	function adminBlock()
@@ -2831,7 +2933,7 @@ class eventLog extends serialParamDBTable
 			}
 
 			// Send notification to all administrators
-			$subject2	= sprintf( JText::_('AEC_ASEND_NOTICE'), JText::_( "_AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $app->getCfg( 'sitename' ) );
+			$subject2	= sprintf( JText::_('AEC_ASEND_NOTICE'), JText::_( "AEC_NOTICE_NUMBER_" . $this->level ), $this->short, $app->getCfg( 'sitename' ) );
 			$message2	= sprintf( JText::_('AEC_ASEND_NOTICE_MSG'), $this->event  );
 
 			$subject2	= html_entity_decode( $subject2, ENT_QUOTES, 'UTF-8' );
