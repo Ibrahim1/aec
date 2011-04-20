@@ -548,6 +548,10 @@ max-width: 1000px;
 background-image:url(../images/admin/icons/aec_central_icon.png);
 }
 
+div.current input, div.current textarea, div.current select {
+float: inherit !important;
+}
+
 #aec_iconlist_flag_blue { background: url(../images/site/icons/flag_blue.png) no-repeat; text-indent: 14px; }
 #aec_iconlist_flag_green { background: url(../images/site/icons/flag_green.png) no-repeat; text-indent: 14px; }
 #aec_iconlist_flag_orange { background: url(../images/site/icons/flag_orange.png) no-repeat; text-indent: 14px; }
