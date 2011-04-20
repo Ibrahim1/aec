@@ -2855,7 +2855,11 @@ function editSubscriptionPlan( $id, $option )
 		$params_values['processors'] = 0;
 
 		$restrictions_values['gid_enabled']	= 1;
-		$restrictions_values['gid']			= 18;
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$restrictions_values['gid']			= 2;
+		} else {
+			$restrictions_values['gid']			= 18;
+		}
 	} else {
 		$params_values = $row->params;
 		$restrictions_values = $row->restrictions;
@@ -2976,7 +2980,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['trial_periodunit']		= array( 'list', 'D' );
 
 	$params['gid_enabled']			= array( 'list_yesno', 1 );
-	$params['gid']					= array( 'list', 18 );
+	$params['gid']					= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
 	$params['lifetime']				= array( 'list_yesno', 0 );
 	$params['processors']			= array( 'list', '' );
 	$params['standard_parent']		= array( 'list', '' );
