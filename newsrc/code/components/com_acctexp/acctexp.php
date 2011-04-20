@@ -665,9 +665,9 @@ function subscribe( $option )
 	} else {
 		if ( $user->id ) {
 			$userid			= $user->id;
-			$passthrough	= false;
+			$passthrough	= array();
 		} elseif ( !empty( $userid ) && !isset( $_POST['username'] ) ) {
-			$passthrough	= false;
+			$passthrough	= array();
 		} elseif ( empty( $userid ) ) {
 			if ( !empty( $_POST['username'] ) && !empty( $_POST['email'] ) ) {
 				$check = checkUsernameEmail( $username, $email );
@@ -688,7 +688,23 @@ function subscribe( $option )
 			}
 		}
 
-		$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor, null, $passthrough );
+		if ( !empty( $userid ) ) {
+			$passthrough['userid'] = $userid;
+
+			$password = aecGetParam( 'password', '', true, array( 'string' ) );
+
+			if ( !empty( $password ) ) {
+				$passthrough['password'] = $password;
+			}
+		}
+
+		$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor, null, $passthrough, false );
+
+		if ( !$iFactory->authed ) {
+			if ( !$iFactory->checkAuth( $option ) ) {
+				return;
+			}
+		}
 
 		if ( !empty( $iFactory->passthrough['invoice'] ) ) {
 			repeatInvoice( $option, $iFactory->passthrough['invoice'], null, $userid );
