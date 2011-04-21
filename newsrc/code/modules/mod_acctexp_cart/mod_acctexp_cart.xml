@@ -8,10 +8,14 @@
 <authorUrl>www.valanx.org</authorUrl>
 <version>0.14.4</version>
 <description>Module to show the cart from the Account Expiration Control Component.</description>
-<files>
+<files folder="modules/mod_acctexp_cart">
 	<filename module="mod_acctexp_cart">mod_acctexp_cart.php</filename>
-	<filename>mod_acctexp_cart_language/english.php</filename>
+	<filename module="mod_acctexp_cart">index.html</filename>
 </files>
+<languages folder="language">
+	<language tag="de-DE">de-DE/de-DE.mod_acctexp_cart.ini</language>
+	<language tag="en-GB">en-GB/en-GB.mod_acctexp_cart.ini</language>
+</languages>
 <params>
 	<param name="pretext" type="text" default="" label="Pre Text" description="Text that you want to display before the automatically generated text." />
 	<param name="posttext" type="text" default="" label="Post Text" description="Text that you want to display after the automatically generated text." />

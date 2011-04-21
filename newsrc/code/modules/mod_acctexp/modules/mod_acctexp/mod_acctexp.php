@@ -23,6 +23,9 @@ $extended				= $params->get( 'extended', 0 );
 $user = &JFactory::getUser();
 
 if ( $user->id ) {
+	$lang =& JFactory::getLanguage();
+
+	$lang->load( 'mod_acctexp', JPATH_SITE );
 
 	echo '<div class="aec_module_inner' . $class_sfx . '">';
 
@@ -31,18 +34,6 @@ if ( $user->id ) {
 	}
 
 	if ( $showExpiration ) {
-		$langPath = JPATH_SITE . '/modules/mod_acctexp/mod_acctexp_language/';
-
-		$lang =& JFactory::getLanguage();
-
-		$language = AECToolbox::oldLangConversion( $lang->getTag() );
-
-		if ( file_exists( $langPath . $language . '.php' )) {
-			include_once( $langPath . $language . '.php' );
-		} else {
-			include_once( $langPath. 'english.php' );
-		}
-
 		if ( !$extended ) {
 			echo AECModuleHelper::getExpirationSimple( $user );
 		} else {

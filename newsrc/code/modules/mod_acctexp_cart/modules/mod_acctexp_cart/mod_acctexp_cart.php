@@ -22,23 +22,14 @@ $button		= $params->get( 'button', 1 );
 $user = &JFactory::getUser();
 
 if ( $user->id ) {
+	$lang =& JFactory::getLanguage();
+
+	$lang->load( 'mod_acctexp_cart', JPATH_SITE );
 
 	echo '<div class="aec_cart_module_inner' . $class_sfx . '">';
 
 	if ( !empty( $pretext ) ) {
 		echo $pretext;
-	}
-
-	$langPath = JPATH_SITE . '/modules/mod_acctexp_cart/mod_acctexp_cart_language/';
-
-	$lang =& JFactory::getLanguage();
-
-	$language = AECToolbox::oldLangConversion( $lang->getTag() );
-
-	if ( file_exists( $langPath . $language . '.php' )) {
-		include_once( $langPath . $language . '.php' );
-	} else {
-		include_once( $langPath. 'english.php' );
 	}
 
 	$c = aecCartHelper::getCartbyUserid( $user->id );
