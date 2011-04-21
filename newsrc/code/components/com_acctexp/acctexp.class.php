@@ -28,9 +28,15 @@ JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'ta
 
 $lang =& JFactory::getLanguage();
 
-$lang->load( 'com_acctexp', JPATH_SITE );
-$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
-$lang->load( 'com_acctexp.processors', JPATH_SITE );
+$lang->load( 'com_acctexp', JPATH_SITE, 'en-GB', true );
+$lang->load( 'com_acctexp', JPATH_SITE, $lang->getDefault(), true );
+$lang->load( 'com_acctexp', JPATH_SITE, null, true );
+$lang->load( 'com_acctexp.microintegrations', JPATH_SITE, 'en-GB', true );
+$lang->load( 'com_acctexp.microintegrations', JPATH_SITE, $lang->getDefault(), true );
+$lang->load( 'com_acctexp.microintegrations', JPATH_SITE, null, true );
+$lang->load( 'com_acctexp.processors', JPATH_SITE, 'en-GB', true );
+$lang->load( 'com_acctexp.processors', JPATH_SITE, $lang->getDefault(), true );
+$lang->load( 'com_acctexp.processors', JPATH_SITE, null, true );
 
 define( '_AEC_VERSION', '0.14.6beta' );
 define( '_AEC_REVISION', '3426' );
@@ -5645,11 +5651,11 @@ class aecHTML
 				$return .= '<span class="editlinktip hasTip" title="';
 
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
-					$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1", false );
-					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
+					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
 				} else {
-					$return .= htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "ISO-8859-1" );
-					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "ISO-8859-1" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8" );
+					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
 				}
 
 				$return .= '</div>';
@@ -6000,9 +6006,9 @@ class aecHTML
 		}
 
 		if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
-			$mousover = 'return overlib(\''. htmlentities( $tooltip, ENT_QUOTES, "ISO-8859-1", false ) .'\''. $title .', BELOW, RIGHT'. $width .');';
+			$mousover = 'return overlib(\''. htmlentities( $tooltip, ENT_QUOTES, "UTF-8", false ) .'\''. $title .', BELOW, RIGHT'. $width .');';
 		} else {
-			$mousover = 'return overlib(\''. htmlentities( $tooltip, ENT_QUOTES, "ISO-8859-1" ) .'\''. $title .', BELOW, RIGHT'. $width .');';
+			$mousover = 'return overlib(\''. htmlentities( $tooltip, ENT_QUOTES, "UTF-8" ) .'\''. $title .', BELOW, RIGHT'. $width .');';
 		}
 
 		$tip = '';

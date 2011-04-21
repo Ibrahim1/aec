@@ -20,7 +20,9 @@ require_once( JApplicationHelper::getPath( 'admin_html' ) );
 
 $lang =& JFactory::getLanguage();
 
-$lang->load( 'com_acctexp.admin' );
+$lang->load( 'com_acctexp.admin', JPATH_ADMINISTRATOR, 'en-GB', true );
+$lang->load( 'com_acctexp.admin', JPATH_ADMINISTRATOR, $lang->getDefault(), true );
+$lang->load( 'com_acctexp.admin', JPATH_ADMINISTRATOR, null, true );
 
 JLoader::register('JPaneTabs',  JPATH_LIBRARIES.DS.'joomla'.DS.'html'.DS.'pane.php');
 
