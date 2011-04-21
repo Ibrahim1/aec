@@ -1841,6 +1841,8 @@ class aecACLhandler
 	{
 		$db = &JFactory::getDBO();
 
+		$acl = &JFactory::getACL();
+
 		if ( !defined( 'JPATH_MANIFESTS' ) ) {
 			// Get ARO ID for user
 			$query = 'SELECT `id`'
