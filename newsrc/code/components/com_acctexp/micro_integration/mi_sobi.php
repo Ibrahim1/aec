@@ -12,6 +12,15 @@
 
 class mi_sobi extends MI
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = JText::_('AEC_MI_SOBI_NAME');
+		$info['desc'] = JText::_('AEC_MI_SOBI_DESC');
+
+		return $info;
+	}
+
 	function Settings()
 	{
 		$db = &JFactory::getDBO();

@@ -17122,8 +17122,8 @@ class microIntegration extends serialParamDBTable
 		if ( method_exists( $this->mi_class, 'Info' ) ) {
 			$this->info = $this->mi_class->Info();
 		} else {
-			$nname = strtoupper( '_aec_' . $this->class_name . '_name' );
-			$ndesc = strtoupper( '_aec_' . $this->class_name . '_desc' );
+			$nname = strtoupper( 'aec_' . $this->class_name . '_name' );
+			$ndesc = strtoupper( 'aec_' . $this->class_name . '_desc' );
 
 			$this->info = array();
 			if ( $lang->hasKey( $nname ) && $lang->hasKey( $ndesc ) ) {

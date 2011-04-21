@@ -13,6 +13,15 @@
 
 class mi_age_restriction extends MI
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = JText::_('AEC_MI_AGE_RESTRICTION_NAME');
+		$info['desc'] = JText::_('AEC_MI_AGE_RESTRICTION_DESC');
+
+		return $info;
+	}
+
 	function Settings()
 	{
         $settings = array();

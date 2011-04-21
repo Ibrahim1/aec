@@ -13,6 +13,15 @@
 
 class mi_aecplan
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = JText::_('AEC_MI_AECPLAN_NAME');
+		$info['desc'] = JText::_('AEC_MI_AECPLAN_DESC');
+
+		return $info;
+	}
+
 	function Settings()
 	{
 		$db = &JFactory::getDBO();

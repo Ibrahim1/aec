@@ -4176,11 +4176,14 @@ function editMicroIntegration ( $id, $option )
 				unset( $mi_settings['lists'] );
 			}
 
-			$settings = new aecSettings( 'MI', 'E' );
-			$settings->fullSettingsArray( array_merge( $mi_gsettings, $mi_settings ), $set, $lists );
+			$gsettings = new aecSettings( 'MI', 'E' );
+			$gsettings->fullSettingsArray( $mi_gsettings, $set, $lists );
+
+			$settings = new aecSettings( 'MI', $mi->class_name );
+			$settings->fullSettingsArray( $mi_settings, $set, $lists );
 
 			// Call HTML Class
-			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+			$aecHTML = new aecHTML( array_merge( $gsettings->settings, $settings->settings ), array_merge( $gsettings->lists, $settings->lists ) );
 
 			$aecHTML->hasSettings = false;
 

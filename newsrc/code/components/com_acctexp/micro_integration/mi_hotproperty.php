@@ -13,6 +13,14 @@
 
 class mi_hotproperty extends MI
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = JText::_('AEC_MI_HOTPROPERTY_NAME');
+		$info['desc'] = JText::_('AEC_MI_HOTPROPERTY_DESC');
+
+		return $info;
+	}
 
 	function checkInstallation()
 	{

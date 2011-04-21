@@ -13,6 +13,15 @@
 
 class mi_aecdonate
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = JText::_('AEC_MI_AECDONATE_NAME');
+		$info['desc'] = JText::_('AEC_MI_AECDONATE_DESC');
+
+		return $info;
+	}
+
 	function Settings()
 	{
 		$settings = array();

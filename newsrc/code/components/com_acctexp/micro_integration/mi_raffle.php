@@ -12,6 +12,15 @@
 
 class mi_raffle
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = JText::_('AEC_MI_RAFFLE_NAME');
+		$info['desc'] = JText::_('AEC_MI_RAFFLE_DESC');
+
+		return $info;
+	}
+
 	function checkInstallation()
 	{
 		$db = &JFactory::getDBO();

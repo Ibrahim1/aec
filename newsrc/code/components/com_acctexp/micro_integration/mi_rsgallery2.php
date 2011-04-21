@@ -13,6 +13,15 @@
 
 class mi_rsgallery2 extends MI
 {
+	function Info()
+	{
+		$info = array();
+		$info['name'] = JText::_('AEC_MI_RSGALLERY2_NAME');
+		$info['desc'] = JText::_('AEC_MI_RSGALLERY2_DESC');
+
+		return $info;
+	}
+
 	function Settings()
 	{
 		$db = &JFactory::getDBO();
