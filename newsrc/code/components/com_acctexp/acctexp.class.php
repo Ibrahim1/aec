@@ -15476,6 +15476,7 @@ class AECToolbox
 				$user->set('id', 0);
 				$user->set('usertype', '');
 				$user->set('gid', $authorize->get_group_id( '', $newUsertype, 'ARO' ));
+				$user->set('sendEmail', 0);
 
 				$user->set('registerDate', date('Y-m-d H:i:s'));
 
