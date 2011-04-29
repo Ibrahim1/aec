@@ -210,6 +210,8 @@ class mi_acl
 		$sessionextra = array();
 
 		if ( !empty( $this->settings['jaclpluspro'] ) ) {
+			$db = &JFactory::getDBO();
+
 			$acl = &JFactory::getACL();
 
 			$gid_name = $acl->get_group_name( $gid, 'ARO' );
