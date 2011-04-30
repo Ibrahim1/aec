@@ -424,7 +424,7 @@ function hold( $option, $userid )
 
 		$document->setTitle( html_entity_decode( JText::_('HOLD_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
-		$frontend = new HTML_frontEnd ();
+		$frontend = new HTML_frontEnd();
 		$frontend->hold( $option, $metaUser );
 	} else {
 		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
@@ -481,7 +481,7 @@ function expired( $option, $userid, $expiration )
 			}
 		}
 
-		$frontend = new HTML_frontEnd ();
+		$frontend = new HTML_frontEnd();
 		$frontend->expired( $option, $metaUser, $expiration, $invoice, $trial, $continue );
 	} else {
 		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
@@ -526,7 +526,7 @@ function pending( $option, $userid )
 
 		$document->setTitle( html_entity_decode( JText::_('PENDING_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
-		$frontend = new HTML_frontEnd ();
+		$frontend = new HTML_frontEnd();
 		$frontend->pending( $option, $objUser, $invoice, $reason );
 	} else {
 		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
@@ -1464,7 +1464,7 @@ function notAllowed( $option )
 
 	$document->setTitle( html_entity_decode( JText::_('NOT_ALLOWED_HEADLINE'), ENT_COMPAT, 'UTF-8' ) );
 
-	$frontend = new HTML_frontEnd ();
+	$frontend = new HTML_frontEnd();
 	$frontend->notAllowed( $option, $processors, $registerlink, $loggedin );
 }
 

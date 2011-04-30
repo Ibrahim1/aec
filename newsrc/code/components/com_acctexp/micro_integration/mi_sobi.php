@@ -38,15 +38,6 @@ class mi_sobi extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function Defaults()
-	{
-		$defaults = array();
-		$defaults['agent_fields']	= "user=[[user_id]]\ncb_id=[[user_id]]\nname=[[user_name]]\nemail=[[user_email]]\ncompany=\nneed_approval=1";
-		$defaults['company_fields']	= "name=[[user_name]]\naddress=\nsuburb=\ncountry=\nstate=\npostcode=\ntelephone=\nfax=\nwebsite=\ncb_id=[[user_id]]\nemail=[[user_email]]";
-
-		return $defaults;
-	}
-
 	function relayAction( $request )
 	{
 		if ( isset( $this->settings['unpublish_all'.$request->area] ) ) {

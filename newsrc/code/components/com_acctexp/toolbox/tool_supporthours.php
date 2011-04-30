@@ -103,7 +103,7 @@ class tool_supporthours
 			$end_timeframe = time();
 		}
 
-		$unused = 0;
+		$unused = $used = 0;
 
 		$historylist = array();
 		foreach ( $userlist as $userid ) {
@@ -130,6 +130,10 @@ class tool_supporthours
 
 			if ( !empty( $uparams['support_minutes'] ) ) {
 				$unused += $uparams['support_minutes'] - $uparams['support_minutes_used'];
+			}
+
+			if ( !empty( $uparams['support_minutes_used'] ) ) {
+				$used += $uparams['support_minutes_used'];
 			}
 		}
 
@@ -167,12 +171,13 @@ class tool_supporthours
 				$total_minutes += $history['minutes_used'];
 			}
 
-			$return .= '<tr><td><strong>TOTAL</strong></td><td></td><td><strong>' . $total_minutes . '</strong></td><td></td></tr>';
+			$return .= '<tr><td><strong>TOTAL</strong></td><td></td><td><strong>' . $total_minutes . '</strong> (' . round( $total_minutes/60, 2 ) . ' hours)</td><td></td></tr>';
 
 			$return .= '</table><br /><br />';
 		}
 
-		$return .= 'Total unused minutes: ' . $unused;
+		$return .= '<p>Total used minutes: <strong>' . $used . '</strong> (' . round( $used/60, 2 ) . ' hours)</p>';
+		$return .= '<p>Total unused minutes: ' . $unused . ' (' . round( $unused/60, 2 ) . ' hours)</p>';
 
 		return $return;
 	}
