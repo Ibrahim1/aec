@@ -116,17 +116,15 @@ class mi_acl
 			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
 		}
 
-		if ( !empty( $this->settings['set_gid' . $request->area] ) || $this->settings['set_removegid' . $request->area] ) {
+		if ( !empty( $this->settings['set_gid' . $request->area] ) || !empty( $this->settings['set_removegid' . $request->area] ) ) {
+			$add = $remove = array();
+
 			if ( !empty( $this->settings['set_gid' . $request->area] ) && !empty( $this->settings['gid' . $request->area] ) ) {
 				$add = $this->settings['gid' . $request->area];
-			} else {
-				$add = array();
 			}
 
 			if ( !empty( $this->settings['set_removegid' . $request->area] ) && !empty( $this->settings['removegid' . $request->area] ) ) {
 				$remove = $this->settings['removegid' . $request->area];
-			} else {
-				$remove = array();
 			}
 
 			if ( !empty( $add ) || !empty( $remove ) ) {
@@ -141,7 +139,7 @@ class mi_acl
 	{
 		$sessionextra = array();
 		if ( !empty( $add ) ) {
-			$sessionextra = $this->jaclSessionExtra( $add[0] );
+			$sessionextra = $this->jaclSessionExtra( $request->metaUser, $add[0] );
 		}
 
 		$metaUser->instantGIDchange( $add, $remove, $this->settings['change_session'], $sessionextra );
@@ -205,7 +203,7 @@ class mi_acl
 		return true;
 	}
 
-	function jaclSessionExtra( $gid )
+	function jaclSessionExtra( $metaUser, $gid )
 	{
 		$sessionextra = array();
 
