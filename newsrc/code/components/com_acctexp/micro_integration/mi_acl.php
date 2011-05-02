@@ -129,8 +129,8 @@ class mi_acl
 	function instantGIDchange( $metaUser, $add, $remove )
 	{
 		$sessionextra = array();
-		if ( !empty( $add ) ) {
-			$sessionextra = $this->jaclSessionExtra( $request->metaUser, $add[0] );
+		if ( !empty( $add ) && !empty( $this->settings['jaclpluspro'] ) ) {
+			$sessionextra = $this->jaclSessionExtra( $metaUser, $add[0] );
 		}
 
 		$metaUser->instantGIDchange( $add, $remove, $sessionextra );
@@ -198,74 +198,72 @@ class mi_acl
 	{
 		$sessionextra = array();
 
-		if ( !empty( $this->settings['jaclpluspro'] ) ) {
-			$db = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-			$acl = &JFactory::getACL();
+		$acl = &JFactory::getACL();
 
-			$gid_name = $acl->get_group_name( $gid, 'ARO' );
+		$gid_name = $acl->get_group_name( $gid, 'ARO' );
 
-			// Check for main entry
-			$query = 'SELECT `group_id`'
-					. ' FROM #__jaclplus_user_group'
+		// Check for main entry
+		$query = 'SELECT `group_id`'
+				. ' FROM #__jaclplus_user_group'
+				. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+				. ' AND `group_type` = \'main\''
+				;
+		$db->setQuery( $query );
+
+		if ( $db->loadResult() ) {
+			$query = 'UPDATE #__jaclplus_user_group'
+					. ' SET `group_id` = \'' . (int) $gid . '\''
 					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 					. ' AND `group_type` = \'main\''
 					;
 			$db->setQuery( $query );
-
-			if ( $db->loadResult() ) {
-				$query = 'UPDATE #__jaclplus_user_group'
-						. ' SET `group_id` = \'' . (int) $gid . '\''
-						. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
-						. ' AND `group_type` = \'main\''
-						;
-				$db->setQuery( $query );
-				$db->query() or die( $db->stderr() );
-			} else {
-				$query = 'INSERT INTO #__jaclplus_user_group'
-						. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $gid . '\', \'\' )'
-						;
-				$db->setQuery( $query );
-				$db->query() or die( $db->stderr() );
-			}
-
-			// Get Session
-			$query = 'SELECT *'
-					. ' FROM #__session'
-					. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
+			$db->query() or die( $db->stderr() );
+		} else {
+			$query = 'INSERT INTO #__jaclplus_user_group'
+					. ' VALUES( \'' . (int) $metaUser->userid . '\', \'main\', \'' . (int) $gid . '\', \'\' )'
 					;
 			$db->setQuery( $query );
-			$session = $db->loadObject();
+			$db->query() or die( $db->stderr() );
+		}
 
-			if ( !empty( $session->userid ) ) {
-				$query = 'SELECT `group_id`'
-						. ' FROM #__jaclplus_user_group'
-						. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
-						;
-				$db->setQuery( $query );
-				$groups = $db->loadResultArray();
+		// Get Session
+		$query = 'SELECT *'
+				. ' FROM #__session'
+				. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
+				;
+		$db->setQuery( $query );
+		$session = $db->loadObject();
 
-				$query = 'SELECT `value`'
-						. ' FROM #__core_acl_aro_groups'
-						. ' WHERE `id` IN (' . implode( ',', $groups ) . ')'
-						;
-				$db->setQuery( $query );
-				$valuelist = $db->loadResultArray();
+		if ( !empty( $session->userid ) ) {
+			$query = 'SELECT `group_id`'
+					. ' FROM #__jaclplus_user_group'
+					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
+					;
+			$db->setQuery( $query );
+			$groups = $db->loadResultArray();
 
-				$sessiongroups = array();
-				foreach ( $valuelist as $vlist ) {
-					$values = explode( ',', $vlist );
+			$query = 'SELECT `value`'
+					. ' FROM #__core_acl_aro_groups'
+					. ' WHERE `id` IN (' . implode( ',', $groups ) . ')'
+					;
+			$db->setQuery( $query );
+			$valuelist = $db->loadResultArray();
 
-					$sessiongroups = array_merge( $sessiongroups, $values );
-				}
+			$sessiongroups = array();
+			foreach ( $valuelist as $vlist ) {
+				$values = explode( ',', $vlist );
 
-				$sessiongroups = array_unique( $sessiongroups );
-
-				asort( $sessiongroups );
-
-				$sessionextra['gids']		= $gid;
-				$sessionextra['jaclplus']	= implode( ',', $sessiongroups );
+				$sessiongroups = array_merge( $sessiongroups, $values );
 			}
+
+			$sessiongroups = array_unique( $sessiongroups );
+
+			asort( $sessiongroups );
+
+			$sessionextra['gids']		= $gid;
+			$sessionextra['jaclplus']	= implode( ',', $sessiongroups );
 		}
 
 		return $sessionextra;
