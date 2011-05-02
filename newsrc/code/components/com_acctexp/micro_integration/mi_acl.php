@@ -27,7 +27,6 @@ class mi_acl
 		$user = &JFactory::getUser();
 
 		$settings = array();
-		$settings['change_session']	= array( 'list_yesno' );
 
 		$settings['set_gid']			= array( 'list_yesno' );
 		$settings['gid']				= array( 'list' );
@@ -102,14 +101,6 @@ class mi_acl
 		return $settings;
 	}
 
-	function Defaults()
-	{
-        $defaults = array();
-        $defaults['change_session']			= '1';
-
-		return $defaults;
-	}
-
 	function relayAction( $request )
 	{
 		if ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
@@ -142,7 +133,7 @@ class mi_acl
 			$sessionextra = $this->jaclSessionExtra( $request->metaUser, $add[0] );
 		}
 
-		$metaUser->instantGIDchange( $add, $remove, $this->settings['change_session'], $sessionextra );
+		$metaUser->instantGIDchange( $add, $remove, $sessionextra );
 
 		return true;
 	}
@@ -238,46 +229,43 @@ class mi_acl
 				$db->query() or die( $db->stderr() );
 			}
 
-			if ( $this->settings['change_session'] ) {
-				// Get Session
-				$query = 'SELECT *'
-						. ' FROM #__session'
-						. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
+			// Get Session
+			$query = 'SELECT *'
+					. ' FROM #__session'
+					. ' WHERE `userid` = \'' . (int) $metaUser->userid . '\''
+					;
+			$db->setQuery( $query );
+			$session = $db->loadObject();
+
+			if ( !empty( $session->userid ) ) {
+				$query = 'SELECT `group_id`'
+						. ' FROM #__jaclplus_user_group'
+						. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 						;
 				$db->setQuery( $query );
-				$session = $db->loadObject();
+				$groups = $db->loadResultArray();
 
-				if ( !empty( $session->userid ) ) {
-					$query = 'SELECT `group_id`'
-							. ' FROM #__jaclplus_user_group'
-							. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
-							;
-					$db->setQuery( $query );
-					$groups = $db->loadResultArray();
+				$query = 'SELECT `value`'
+						. ' FROM #__core_acl_aro_groups'
+						. ' WHERE `id` IN (' . implode( ',', $groups ) . ')'
+						;
+				$db->setQuery( $query );
+				$valuelist = $db->loadResultArray();
 
-					$query = 'SELECT `value`'
-							. ' FROM #__core_acl_aro_groups'
-							. ' WHERE `id` IN (' . implode( ',', $groups ) . ')'
-							;
-					$db->setQuery( $query );
-					$valuelist = $db->loadResultArray();
+				$sessiongroups = array();
+				foreach ( $valuelist as $vlist ) {
+					$values = explode( ',', $vlist );
 
-					$sessiongroups = array();
-					foreach ( $valuelist as $vlist ) {
-						$values = explode( ',', $vlist );
-
-						$sessiongroups = array_merge( $sessiongroups, $values );
-					}
-
-					$sessiongroups = array_unique( $sessiongroups );
-
-					asort( $sessiongroups );
-
-					$sessionextra['gids']		= $gid;
-					$sessionextra['jaclplus']	= implode( ',', $sessiongroups );
+					$sessiongroups = array_merge( $sessiongroups, $values );
 				}
-			}
 
+				$sessiongroups = array_unique( $sessiongroups );
+
+				asort( $sessiongroups );
+
+				$sessionextra['gids']		= $gid;
+				$sessionextra['jaclplus']	= implode( ',', $sessiongroups );
+			}
 		}
 
 		return $sessionextra;
