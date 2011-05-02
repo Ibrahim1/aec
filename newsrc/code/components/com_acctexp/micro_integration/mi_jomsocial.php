@@ -126,11 +126,15 @@ class mi_jomsocial
 		$existingfields = $db->loadObjectList();
 
 		foreach( $fields as $id => $value ) {
-			$existingfield = false;
+			$existingfield = $hasvalue = false;
 			if ( !empty( $existingfields ) ) {
 				foreach ( $existingfields as $ff ) {
 					if ( $ff->field_id == $id ) {
 						$existingfield = true;
+
+						if ( !empty( $ff->value ) ) {
+							$hasvalue = true;
+						}
 
 						continue;
 					}
@@ -138,7 +142,7 @@ class mi_jomsocial
 			}
 
 			$query = null;
-			if ( $existingfield && $this->settings['overwrite_existing'] ) {
+			if ( $existingfield && ( !$hasvalue || $this->settings['overwrite_existing'] ) ) {
 				$query	= 'UPDATE #__community_fields_values SET '
 						. ' `value` = \'' . $value . '\''
 						. ' WHERE `user_id` = \'' . (int) $userid . '\''
