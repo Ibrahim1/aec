@@ -144,7 +144,7 @@ class mi_jomsocial
 			$query = null;
 			if ( $existingfield && ( !$hasvalue || $this->settings['overwrite_existing'] ) ) {
 				$query	= 'UPDATE #__community_fields_values SET '
-						. ' `value` = \'' . $value . '\''
+						. ' `value` = \'' . $db->getEscaped( $value ) . '\''
 						. ' WHERE `user_id` = \'' . (int) $userid . '\''
 						. ' AND `field_id` = \'' . (int) $id . '\''
 						;
