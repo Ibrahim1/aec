@@ -1733,8 +1733,8 @@ class aecACLhandler
 
 		$query = 'SELECT `id`'
 				. ' FROM #__usergroups'
-				. ' WHERE LOWER( title ) = \'super users\''
-				. ( $regular_admins ? ' OR LOWER( title ) = \'administrator\'' : '' )
+				. ' WHERE `id` = 8'
+				. ( $regular_admins ? ' OR `id` = 7' : '' )
 				;
 		$db->setQuery( $query );
 
@@ -1743,15 +1743,8 @@ class aecACLhandler
 
 	function getManagerGroups()
 	{
-		$db = &JFactory::getDBO();
-
-		$query = 'SELECT `id`'
-				. ' FROM #__usergroups'
-				. ' WHERE LOWER( title ) = \'manager\''
-				;
-		$db->setQuery( $query );
-
-		return $db->loadResultArray();
+		// Thank you, I hate myself /quite/ enough
+		return array(6);
 	}
 
 	function getUsersByGroup( $group )
