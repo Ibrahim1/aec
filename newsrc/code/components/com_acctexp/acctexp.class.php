@@ -6227,6 +6227,10 @@ class ItemGroupHandler
 
 	function getParents( $item_id, $type='item' )
 	{
+		if ( ( $item_id == 1 ) && ( $type == 'group' ) ) {
+			return array();
+		}
+		
 		$itemParents = ItemGroupHandler::parentGroups( $item_id, $type );
 
 		$allParents = $itemParents;
@@ -6529,6 +6533,57 @@ class ItemGroup extends serialParamDBTable
 		return aecRestrictionHelper::getRestrictionsArray( $this->restrictions );
 	}
 
+	function getMicroIntegrationsSeparate( $strip_inherited=false )
+	{
+		$db = &JFactory::getDBO();
+
+		if ( empty( $this->params['micro_integrations'] ) ) {
+			$milist = array();
+		} else {
+			$milist = $this->params['micro_integrations'];
+		}
+
+		// Find parent ItemGroups to attach their MIs
+		$parents = ItemGroupHandler::getParents( $this->id );
+
+		$gmilist = array();
+		if ( !empty( $parents ) ) {
+			foreach ( $parents as $parent ) {
+				$g = new ItemGroup( $db );
+				$g->load( $parent );
+
+				if ( !empty( $g->params['micro_integrations'] ) ) {
+					$gmilist = array_merge( $gmilist, $g->params['micro_integrations'] );
+				}
+			}
+		}
+
+		if ( empty( $milist ) && empty( $gmilist ) ) {
+			return array( 'group' => array(), 'inherited' => array() );
+		}
+
+		$milist = microIntegrationHandler::getActiveListbyList( $milist );
+		$gmilist = microIntegrationHandler::getActiveListbyList( $gmilist );
+
+		if ( empty( $milist ) && empty( $gmilist ) ) {
+			return array( 'group' => array(), 'inherited' => array() );
+		}
+
+		// Remove entries from the group MIs that are already inherited
+		if ( !empty( $gmilist ) && !empty( $milist ) && $strip_inherited ) {
+			$theintersect = array_intersect( $gmilist, $milist );
+
+			if ( !empty( $theintersect ) ) {
+				foreach ( $theintersect as $value ) {
+					// STAY IN THE CAR
+					unset( $milist[array_search( $value, $milist )] );
+				}
+			}
+		}
+
+		return array( 'group' => $milist, 'inherited' => $gmilist );
+	}
+
 	function savePOSTsettings( $post )
 	{
 		$db = &JFactory::getDBO();
@@ -6542,6 +6597,10 @@ class ItemGroup extends serialParamDBTable
 
 		if ( isset( $post['id'] ) ) {
 			unset( $post['id'] );
+		}
+
+		if ( isset( $post['inherited_micro_integrations'] ) ) {
+			unset( $post['inherited_micro_integrations'] );
 		}
 
 		if ( !empty( $post['add_group'] ) ) {
@@ -7348,7 +7407,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $milist;
 	}
 
-	function getMicroIntegrationsSeparate()
+	function getMicroIntegrationsSeparate( $strip_inherited=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -7372,18 +7431,18 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		if ( empty( $milist ) && empty( $pmilist ) ) {
-			return false;
+			return array( 'plan' => array(), 'inherited' => array() );
 		}
 
 		$milist = microIntegrationHandler::getActiveListbyList( $milist );
 		$pmilist = microIntegrationHandler::getActiveListbyList( $pmilist );
 
-		if ( empty( $list ) && empty( $pmilist ) ) {
-			return false;
+		if ( empty( $milist ) && empty( $pmilist ) ) {
+			return array( 'plan' => array(), 'inherited' => array() );
 		}
 
 		// Remove entries from the plan MIs that are already inherited
-		if ( !empty( $pmilist ) && !empty( $milist ) ) {
+		if ( !empty( $pmilist ) && !empty( $milist ) && $strip_inherited ) {
 			$theintersect = array_intersect( $pmilist, $milist );
 
 			if ( !empty( $theintersect ) ) {
@@ -7505,6 +7564,10 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( isset( $post['id'] ) ) {
 			unset( $post['id'] );
+		}
+
+		if ( isset( $post['inherited_micro_integrations'] ) ) {
+			unset( $post['inherited_micro_integrations'] );
 		}
 
 		if ( !empty( $post['add_group'] ) ) {
@@ -16401,6 +16464,19 @@ class microIntegrationHandler
 		return $db->loadResult();
 	}
 
+	function getDetailedList()
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`, `name`, `desc`, `class_name`'
+				. ' FROM #__acctexp_microintegrations'
+				. ' WHERE `active` = 1'
+			 	. ' AND `hidden` = \'0\''
+				. ' ORDER BY ordering'
+				;
+		$db->setQuery( $query );
+		return $db->loadObjectList();
+	}
 }
 
 class MI

@@ -3247,43 +3247,34 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
 
-	// get available micro integrations
-	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-			. ' FROM #__acctexp_microintegrations'
-			. ' WHERE `active` = 1'
-		 	. ' AND `hidden` = \'0\''
-			. ' ORDER BY ordering'
-			;
-	$db->setQuery( $query );
-	$mi_list = $db->loadObjectList();
+	// make the select list for first trial period units
+	$cartmode[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_CARTMODE_INHERIT') );
+	$cartmode[] = JHTML::_('select.option', '1', JText::_('PAYPLAN_CARTMODE_FORCE_CART') );
+	$cartmode[] = JHTML::_('select.option', '2', JText::_('PAYPLAN_CARTMODE_FORCE_DIRECT') );
 
-	if ( !empty( $row->micro_integrations ) ) {
-		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `id` IN (' . implode( ',', $row->micro_integrations ) . ')'
-		 		. ' AND `hidden` = \'0\''
-				;
-	 	$db->setQuery( $query );
-		$selected_mi = $db->loadObjectList();
-	} else {
-		$selected_mi = array();
-	}
+	$lists['cart_behavior'] = JHTML::_('select.genericlist', $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
 
-	$lists['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
+	$mi_list = microIntegrationHandler::getDetailedList();
 
-	$inherited = $row->getMicroIntegrationsSeparate();
+	$mi_settings = array( 'inherited' => array(), 'attached' => array(), 'custom' => array() );
 
-	$inherited_list = array();
+	$attached_mis = $row->getMicroIntegrationsSeparate( true );
 
-	if ( !empty( $inherited ) ) {
-		foreach ( $mi_list as $miobj ) {
-			if ( in_array( $miobj->value, $inherited['inherited'] ) ) {
-				$inherited_list[] = $miobj;
-			}
+	foreach ( $mi_list as $mi_details ) {
+		$mi_details->inherited = false;
+		if ( in_array( $mi_details->id, $attached_mis['inherited'] ) ) {
+			$mi_details->inherited = true;
+
+			$mi_settings['inherited'][] = $mi_details;
 		}
-	}
 
-	$lists['micro_integrations_inherited'] = JHTML::_('select.genericlist', $inherited_list, 'micro_integrations_inherited[]', 'size="' . min((count( $inherited_list ) + 1), 25) . '" disabled="disabled"', 'value', 'text', array());
+		$mi_details->attached = false;
+		if ( in_array( $mi_details->id, $attached_mis['plan'] ) ) {
+			$mi_details->attached = true;
+		}
+
+		$mi_settings['attached'][] = $mi_details;
+	}
 
 	$mi_handler = new microIntegrationHandler();
 	$mi_list = $mi_handler->getIntegrationList();
@@ -3312,13 +3303,6 @@ function editSubscriptionPlan( $id, $option )
 	} else {
 		$hidden_mi = array();
 	}
-
-	// make the select list for first trial period units
-	$cartmode[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_CARTMODE_INHERIT') );
-	$cartmode[] = JHTML::_('select.option', '1', JText::_('PAYPLAN_CARTMODE_FORCE_CART') );
-	$cartmode[] = JHTML::_('select.option', '2', JText::_('PAYPLAN_CARTMODE_FORCE_DIRECT') );
-
-	$lists['cart_behavior'] = JHTML::_('select.genericlist', $cartmode, 'cart_behavior', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'cart_behavior', "0") );
 
 	$customparamsarray->hasperplanmi = false;
 
@@ -3402,9 +3386,11 @@ function editSubscriptionPlan( $id, $option )
 		}
 
 		if ( !empty( $custompar ) ) {
-			$customparamsarray->mi = $custompar;
+			$mi_settings['custom'] = $custompar;
 		}
 	}
+
+	$customparamsarray->mi = $mi_settings;
 
 	$settings = new aecSettings ( 'payplan', 'general' );
 
@@ -3835,29 +3821,29 @@ function editItemGroup( $id, $option )
 
 	$lists['icon'] = JHTML::_('select.genericlist', $iconlist, 'icon', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'icon', 'blue'));
 
-	// get available micro integrations
-	$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-			. ' FROM #__acctexp_microintegrations'
-			. ' WHERE `active` = 1'
-		 	. ' AND `hidden` = \'0\''
-			. ' ORDER BY ordering'
-			;
-	$db->setQuery( $query );
-	$mi_list = $db->loadObjectList();
+	$mi_list = microIntegrationHandler::getDetailedList();
 
-	if ( !empty( $row->params['micro_integrations'] ) ) {
-		$query = 'SELECT `id` AS value, CONCAT(`name`, " - ", `desc`) AS text'
-				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `id` IN (' . implode( ',', $row->params['micro_integrations'] ) . ')'
-		 		. ' AND `hidden` = \'0\''
-				;
-	 	$db->setQuery( $query );
-		$selected_mi = $db->loadObjectList();
-	} else {
-		$selected_mi = array();
+	$mi_settings = array( 'inherited' => array(), 'attached' => array(), 'custom' => array() );
+
+	$attached_mis = $row->getMicroIntegrationsSeparate( true );
+
+	foreach ( $mi_list as $mi_details ) {
+		$mi_details->inherited = false;
+		if ( in_array( $mi_details->id, $attached_mis['inherited'] ) ) {
+			$mi_details->inherited = true;
+
+			$mi_settings['inherited'][] = $mi_details;
+		}
+
+		$mi_details->attached = false;
+		if ( in_array( $mi_details->id, $attached_mis['group'] ) ) {
+			$mi_details->attached = true;
+		}
+
+		$mi_settings['attached'][] = $mi_details;
 	}
 
-	$lists['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi);
+	$customparamsarray->mi = $mi_settings;
 
 	$settings = new aecSettings ( 'itemgroup', 'general' );
 	if ( is_array( $customparams_values ) ) {

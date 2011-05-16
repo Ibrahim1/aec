@@ -13,7 +13,7 @@
 
 require_once( JApplicationHelper::getPath( 'toolbar_html' ) );
 
-switch ( $task ) {
+switch ( strtolower( $task ) ) {
 
 	case 'add':
 		ComponentMenu::ADD_MENU();
@@ -23,86 +23,86 @@ switch ( $task ) {
 		ComponentMenu::EDIT_MENU();
 		break;
 
-	case 'showSettings':
+	case 'showsettings':
 		ComponentMenu::EDIT_SETTINGS();
 		break;
 
-	case 'showProcessors':
+	case 'showprocessors':
 		ComponentMenu::LIST_PROCESSORS();
 		break;
 
-	case 'newProcessor':
+	case 'newprocessor':
 		ComponentMenu::EDIT_PROCESSOR();
 		break;
 
-	case 'editProcessor':
+	case 'editprocessor':
 		ComponentMenu::EDIT_PROCESSOR();
 		break;
 
-	case 'showSubscriptionPlans':
+	case 'showsubscriptionplans':
 		ComponentMenu::LIST_SUBSCRIPTIONPLANS();
 		break;
 
-	case 'newSubscriptionPlan':
+	case 'newsubscriptionplan':
 		ComponentMenu::EDIT_SUBSCRIPTIONPLAN();
 		break;
 
-	case 'editSubscriptionPlan':
+	case 'editsubscriptionplan':
 		ComponentMenu::EDIT_SUBSCRIPTIONPLAN();
 		break;
 
-	case 'showItemGroups':
+	case 'showitemgroups':
 		ComponentMenu::LIST_ITEMGROUPS();
 		break;
 
-	case 'newItemGroup':
+	case 'newitemgroup':
 		ComponentMenu::EDIT_ITEMGROUP();
 		break;
 
-	case 'editItemGroup':
+	case 'edititemgroup':
 		ComponentMenu::EDIT_ITEMGROUP();
 		break;
 
-	case 'showMicroIntegrations':
+	case 'showmicrointegrations':
 		ComponentMenu::LIST_MICROINTEGRATIONS();
 		break;
 
-	case 'newMicroIntegration':
+	case 'newmicrointegration':
 		ComponentMenu::EDIT_MICROINTEGRATION();
 		break;
 
-	case 'editMicroIntegration':
+	case 'editmicrointegration':
 		ComponentMenu::EDIT_MICROINTEGRATION();
 		break;
 
-	case 'showCoupons':
+	case 'showcoupons':
 		ComponentMenu::LIST_COUPONS();
 		break;
 
-	case 'newCoupon':
+	case 'newcoupon':
 		ComponentMenu::EDIT_COUPON();
 		break;
 
-	case 'editCoupon':
+	case 'editcoupon':
 		ComponentMenu::EDIT_COUPON();
 		break;
 
-	case 'showCouponsStatic':
+	case 'showcouponsstatic':
 		ComponentMenu::LIST_COUPONS_STATIC();
 		break;
 
-	case 'newCouponStatic':
+	case 'newcouponstatic':
 		ComponentMenu::EDIT_COUPON_STATIC();
 		break;
 
-	case 'editCouponStatic':
+	case 'editcouponstatic':
 		ComponentMenu::EDIT_COUPON_STATIC();
 		break;
 
-	case 'loadExport':
-	case 'applyExport':
-	case 'saveExport':
-	case 'exportExport':
+	case 'loadexport':
+	case 'applyexport':
+	case 'saveexport':
+	case 'exportexport':
 	case 'export':
 		ComponentMenu::EDIT_EXPORT();
 		break;
@@ -111,7 +111,7 @@ switch ( $task ) {
 		ComponentMenu::EDIT_IMPORT();
 		break;
 
-	case 'editCSS':
+	case 'editcss':
 		CommonMenu::EDIT_CSS_MENU();
 		break;
 
@@ -120,13 +120,13 @@ switch ( $task ) {
 	case 'help':
 	case 'history':
 	case 'invoices':
-	case 'showActive':
-	case 'showCancelled':
-	case 'showClosed':
-	case 'showExpired':
-	case 'showExcluded':
-	case 'showManual':
-	case 'showPending':
+	case 'showactive':
+	case 'showcancelled':
+	case 'showclosed':
+	case 'showexpired':
+	case 'showexcluded':
+	case 'showmanual':
+	case 'showpending':
 		ComponentMenu::NO_MENU();
 		break;
 

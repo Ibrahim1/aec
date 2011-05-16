@@ -923,7 +923,7 @@ class HTML_AcctExp
 				<h1>Contributing Programmers</h1>
 				<p>Calum 'polc1410' Polwart, William 'Jake' Jacobs</p>
 				<h1>Past Contributing Programmers</h1>
-				<p>Helder 'hlblog' Garcia, Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
+				<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
 				<h1>Graphics</h1>
 				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2010 David 'skOre' Deutsch unless otherwise noted.</p>
 				<p>Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).</p>
@@ -1959,8 +1959,51 @@ class HTML_AcctExp
 		                <div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_MI'); ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
-								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_inherited' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
+								<h2><?php echo JText::_('Inherited Micro Integrations'); ?></h2>
+								<?php
+								if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
+									echo '<p>' . JText::_('These MIs were inherited from groups that this subscription plan is in') . '</p>';
+									echo '<ul>';
+									foreach ( $aecHTML->customparams->mi['inherited'] as $id => $mi ) {
+										?>
+										<li>
+											<p>
+												<input type="checkbox" name="inherited_micro_integrations[]" value="<?php echo $mi->id; ?>" checked="checked" disabled="disabled" />
+												<strong><?php echo $mi->name; ?></strong> (#<?php echo $mi->id; ?>)
+												(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+											</p>
+											<p><?php echo $mi->desc; ?></p>
+										</li>
+										<?php
+									}
+									echo '</ul>';
+								} else {
+									echo '<p>' . JText::_('No inherited MIs - A subscription plan can inherit MIs from groups that it is in') . '</p>';
+								}
+								?>
+								<h2><?php echo JText::_('Attached Micro Integrations'); ?></h2>
+								<?php
+								if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
+									echo '<ul>';
+									foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
+										?>
+										<li>
+											<p>
+												<input type="checkbox" name="micro_integrations[]" value="<?php echo $mi->id; ?>" <?php echo $mi->attached ? 'checked="checked"' : ''; ?> />
+												<strong><?php echo $mi->name; ?></strong>
+												(#<?php echo $mi->id; ?>)
+												<?php echo $mi->inherited ? ( ' (' . '<input type="checkbox" name="inherited_micro_integrations[]" value="' . $mi->id . '" checked="checked" disabled="disabled" />' . JText::_('Inherited! See above.') . ')' ) : ''; ?>
+												(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+											</p>
+											<p><?php echo $mi->desc; ?></p>
+										</li>
+										<?php
+									}
+									echo '</ul>';
+								} else {
+									echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
+								}
+								?>
 							</div>
 							<?php if ( !empty( $aecHTML->customparams->hasperplanmi ) ) { ?>
 							<div class="userinfobox">
@@ -1969,8 +2012,8 @@ class HTML_AcctExp
 							</div>
 							<?php } ?>
 							<?php
-							if ( !empty( $aecHTML->customparams->mi ) ) {
-								foreach ( $aecHTML->customparams->mi as $id => $mi ) {
+							if ( !empty( $aecHTML->customparams->mi['custom'] ) ) {
+								foreach ( $aecHTML->customparams->mi['custom'] as $id => $mi ) {
 									?>
 									<div class="userinfobox clear">
 										<h2 style="clear:both;"><?php echo $mi['name']; ?></h2>
@@ -2194,10 +2237,12 @@ class HTML_AcctExp
 													}
 												}
 												?>
+											<?php if ( $row->id > 1 ) { ?>
 												<tr>
 													<td><?php echo JText::_('NEW_ITEMGROUP'); ?>:</td>
 													<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
 												</tr>
+											<?php } ?>
 											</table>
 										</div>
 									</div>
@@ -2229,23 +2274,56 @@ class HTML_AcctExp
 						</table>
 						<?php
 		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('ITEMGROUP_RELATIONS_TITLE'), JText::_('ITEMGROUP_RELATIONS_TITLE') );
-						?>
-						<h2><?php echo JText::_('ITEMGROUP_RELATIONS_TITLE'); ?></h2>
-						<table width="100%" class="aecadminform"><tr><td>
-							<div class="userinfobox">
-								<?php echo $aecHTML->createSettingsParticle( 'similargroups' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'equalgroups' ); ?>
-							</div>
-						</td></tr></table>
-						<?php
-		                echo $tabs->endPanel();
 		                echo $tabs->startPanel( JText::_('PAYPLAN_MI'), JText::_('PAYPLAN_MI') );
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_MI'); ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="userinfobox">
-								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
+								<?php if ( $row->id > 1 ) { ?>
+								<h2><?php echo JText::_('Inherited Micro Integrations'); ?></h2>
+								<?php
+								if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
+									echo '<p>' . JText::_('These MIs were inherited from groups that this group is in') . '</p>';
+									echo '<ul>';
+									foreach ( $aecHTML->customparams->mi['inherited'] as $id => $mi ) {
+										?>
+										<li>
+											<p>
+												<input type="checkbox" name="inherited_micro_integrations[]" value="<?php echo $mi->id; ?>" checked="checked" disabled="disabled" />
+												<strong><?php echo $mi->name; ?></strong> (#<?php echo $mi->id; ?>)
+												(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+											</p>
+											<p><?php echo $mi->desc; ?></p>
+										</li>
+										<?php
+									}
+									echo '</ul>';
+								} else {
+									echo '<p>' . JText::_('No inherited MIs - A group can inherit MIs from groups that it is in') . '</p>';
+								}
+								?>
+								<?php } ?>
+								<h2><?php echo JText::_('Attached Micro Integrations'); ?></h2>
+								<?php
+								if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
+									echo '<ul>';
+									foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
+										?>
+										<li>
+											<p>
+												<input type="checkbox" name="micro_integrations[]" value="<?php echo $mi->id; ?>" <?php echo $mi->attached ? 'checked="checked"' : ''; ?> />
+												<strong><?php echo $mi->name; ?></strong>
+												(#<?php echo $mi->id; ?>)
+												<?php echo $mi->inherited ? ( ' (' . '<input type="checkbox" name="inherited_micro_integrations[]" value="' . $mi->id . '" checked="checked" disabled="disabled" />' . JText::_('Inherited! See above.') . ')' ) : ''; ?>
+												(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+											</p>
+											<p><?php echo $mi->desc; ?></p>
+										</li>
+										<?php
+									}
+									echo '</ul>';
+								}
+								?>
 							</div>
 						</td></tr></table>
 						<?php
