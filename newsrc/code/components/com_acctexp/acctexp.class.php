@@ -8472,6 +8472,7 @@ class InvoiceFactory
 			$this->raiseException( $ex );
 		}
 
+		$finalinvoice = null;
 		if ( $single_select ) {
 			if ( !empty( $selection ) ) {
 				$this->processor = PaymentProcessor::getNameById( str_replace( '_recurring', '', $selection ) );
@@ -10014,6 +10015,12 @@ class InvoiceFactory
 		$this->puffer( $option );
 
 		$this->touchInvoice( $option, false, true );
+
+		if ( $this->invoice->method != $this->processor ) {
+			$this->invoice->method = $this->processor;
+
+			$this->invoice->storeload();
+		}
 
 		if ( !empty( $coupon ) ) {
 			$this->InvoiceAddCoupon( $coupon );
