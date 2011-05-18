@@ -1675,7 +1675,7 @@ class HTML_AcctExp
 					<td align="right"><?php echo $rows[$i]->id; ?></td>
 					<td><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
 					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $rows[$i]->name; ?></a></td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo stripslashes( $rows[$i]->name ); ?></a></td>
 					<td  align="left">
 						<?php
 						echo stripslashes( $description ); ?>
@@ -1746,7 +1746,7 @@ class HTML_AcctExp
 				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_plans.png) no-repeat left;">
 					<?php echo JText::_('AEC_HEAD_PLAN_INFO'); ?>:
 					&nbsp;
-					<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
+					<small><?php echo $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW'); ?></small>
 	        	</th>
 			</tr>
 		</table>
