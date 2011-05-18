@@ -17665,7 +17665,21 @@ class couponsHandler extends eucaObject
 			return false;
 		}
 
-		$this->coupons_list[] = array( 'coupon_code' => $coupon_code/*, 'cph' => $cph*/ );
+		if ( $this->coupon->restrictions['cart_multiple_items'] && !empty( $this->coupon->restrictions['cart_multiple_items_amount'] ) ) {
+			if ( !array_key_exists( $coupon_code, $this->max_amount_list ) ) {
+				$this->coupons_list[] = array( 'coupon_code' => $coupon_code );
+
+				$this->max_amount_list[$coupon_code] = $this->coupon->restrictions['cart_multiple_items_amount'];
+			}
+
+			if ( $this->max_amount_list[$coupon_code] ) {
+				$this->max_amount_list[$coupon_code]--;
+			} else {
+				return false;
+			}
+		} else {
+			$this->coupons_list[] = array( 'coupon_code' => $coupon_code );
+		}
 
 		$this->cph = $cph;
 
