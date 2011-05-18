@@ -2486,28 +2486,8 @@ function editProcessor( $id, $option )
 			}
 
 			if ( !isset( $settings_array[$name][1] ) ) {
-				$nname = 'CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_NAME';
-				$gname = 'CFG_PROCESSOR_' . strtoupper($name) . '_NAME';
-
-				if ( $lang->hasKey( $nname ) ) {
-					$settings_array[$name][1] = JText::_( $nname );
-				} elseif ( $lang->hasKey( $gname ) ) {
-					$settings_array[$name][1] = JText::_( $gname );
-				} else {
-					$settings_array[$name][1] = JText::_( $nname );
-				}
-
-				$nname = 'CFG_' . strtoupper( $pp->processor_name ) . '_' . strtoupper($name) . '_DESC';
-				$gname = 'CFG_PROCESSOR_' . strtoupper($name) . '_DESC';
-
-				if ( $lang->hasKey( $nname ) ) {
-					$settings_array[$name][2] = JText::_( $nname );
-				} elseif ( $lang->hasKey( $gname ) ) {
-					$settings_array[$name][2] = JText::_( $gname );
-				} else {
-					$settings_array[$name][2] = JText::_( $nname );
-				}
-				
+				$settings_array[$name][1] = $pp->getParamLang( $name . '_NAME' );
+				$settings_array[$name][2] = $pp->getParamLang( $name . '_DESC' );
 			}
 
 			// It might be that the processor has got some new properties, so we need to double check here
@@ -3072,17 +3052,10 @@ function editSubscriptionPlan( $id, $option )
 
 		if ( is_array( $customparams ) ) {
 			foreach ( $customparams as $customparam => $cpcontent ) {
-				// Write the params field
-				if ( $lang->hasKey( strtoupper( "CFG_processor_plan_params_" . $customparam . "_name" ) ) ) {
-					$cp_name = JText::_( strtoupper( "CFG_processor_plan_params_" . $customparam . "_name" ) );
-					$cp_desc = JText::_( strtoupper( "CFG_processor_plan_params_" . $customparam . "_desc" ) );
-				} else {
-					$cp_name = JText::_( strtoupper( "CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_name" ) );
-					$cp_desc = JText::_( strtoupper( "CFG_" . $pp->processor_name . "_plan_params_" . $customparam . "_desc" ) );
-				}
+				$naming = array( $pp->getParamLang( $customparam . '_NAME' ), $pp->getParamLang( $customparam . '_DESC' ) );
 
 				$shortname = $pp->id . "_" . $customparam;
-				$params[$shortname] = array_merge( $cpcontent, array( $cp_name, $cp_desc ) );
+				$params[$shortname] = array_merge( $cpcontent, $naming );
 				$custompar[$pp->id]['params'][] = $shortname;
 			}
 		}
@@ -3118,6 +3091,10 @@ function editSubscriptionPlan( $id, $option )
 		// Iterate through settings form to...
 		foreach ( $settings_array as $name => $values ) {
 			$setting_name = $pp->id . '_' . $name;
+
+			if ( isset( $params[$setting_name] ) ) {
+				continue;
+			}
 
 			if ( isset( $customparams_values[$setting_name] ) ) {
 				$value = $customparams_values[$setting_name];
@@ -3185,12 +3162,12 @@ function editSubscriptionPlan( $id, $option )
 
 			// ...put in missing language fields
 			if ( !isset( $settings_array[$name][1] ) ) {
-				$settings_array[$name][1] = JText::_( 'CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_NAME' );
-				$settings_array[$name][2] = JText::_( 'CFG_' . strtoupper( $ppobj->name ) . '_' . strtoupper($name) . '_DESC' );
+				$settings_array[$name][1] = $pp->getParamLang( $name . '_NAME' );
+				$settings_array[$name][2] = $pp->getParamLang( $name . '_DESC' );
 			}
 
-			$params[$pp->id . '_' . $name] = $settings_array[$name];
-			$custompar[$pp->id]['params'][] = $pp->id . '_' . $name;
+			$params[$setting_name] = $settings_array[$name];
+			$custompar[$pp->id]['params'][] = $setting_name;
 		}
 	}
 

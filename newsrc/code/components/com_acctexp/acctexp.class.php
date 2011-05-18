@@ -3392,6 +3392,22 @@ class PaymentProcessor
 		}
 	}
 
+	function getParamLang( $name )
+	{
+		$lang = JFactory::getLanguage();
+
+		$nname = 'CFG_' . strtoupper( $this->processor_name ) . '_' . strtoupper($name);
+		$gname = 'CFG_PROCESSOR_' . strtoupper($name);
+
+		if ( $lang->hasKey( $nname ) ) {
+			return JText::_( $nname );
+		} elseif ( $lang->hasKey( $gname ) ) {
+			return JText::_( $gname );
+		} else {
+			return JText::_( $nname );
+		}
+	}
+
 	function getSettings()
 	{
 		if ( !is_object( $this->processor ) ) {
