@@ -72,7 +72,7 @@ class mi_email_multi extends MI
 						$tstamp = strtotime( $request->metaUser->focusSubscription->expiration );
 					} else {
 						// Go from current timestamp
-						$tstamp = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+						$tstamp = (int) gmdate('U');
 					}
 
 					if ( strpos( $timing, '++' ) === 0 ) {

@@ -206,7 +206,7 @@ class processor_ipayment_silent extends XMLprocessor
 		}
 
 		$url = "https://ipayment.de" . $path;
-echo "<p><strong>&Uuml;bertragung - " . date('Y-m-d H:i:s') . " (Serverzeit)- " . date('Y-m-d H:i:s', time()+(60*60*6)) . " (tats&auml;chliche Zeit)</strong></p>";
+echo "<p><strong>&Uuml;bertragung - " . date('Y-m-d H:i:s') . " (Serverzeit)- " . date('Y-m-d H:i:s', ( (int) gmdate('U') )+(60*60*6)) . " (tats&auml;chliche Zeit)</strong></p>";
 echo "<h1>Senden der Daten:</h1>";
 echo '<p>';
 echo $xml;

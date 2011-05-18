@@ -215,9 +215,9 @@ class processor_fastcharge extends XMLprocessor
 					case 'Y': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 356; break;
 				}
 
-				$timestamp = time() - ($app->getCfg( 'offset_user' ) *3600) + $offset;
+				$timestamp = ( (int) gmdate('U') ) + $offset;
 			} else {
-				$timestamp = time() - $app->getCfg( 'offset_user' ) *3600;
+				$timestamp = (int) gmdate('U');
 			}
 
 			$var['ProfileStartDate']    = date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';

@@ -24,7 +24,7 @@ class tool_minireport
 
 	function Settings()
 	{
-		$monthago = time() - ( 60*60*24 * 31 );
+		$monthago = ( (int) gmdate('U') ) - ( 60*60*24 * 31 );
 
 		$settings = array();
 		$settings['start_date']	= array( 'list_date', 'Start Date', '', date( 'Y-m-d', $monthago ) );
@@ -46,7 +46,7 @@ class tool_minireport
 		if ( !empty( $_POST['end_date'] ) ) {
 			$end_timeframe = $_POST['end_date'] . ' 23:59:59';
 		} else {
-			$end_timeframe = date( 'Y-m-d', time() );
+			$end_timeframe = date( 'Y-m-d', ( (int) gmdate('U') ) );
 		}
 
 		$query = 'SELECT `id`'

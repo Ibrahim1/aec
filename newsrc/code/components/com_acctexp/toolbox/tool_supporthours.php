@@ -100,7 +100,7 @@ class tool_supporthours
 		if ( !empty( $_POST['end_date'] ) ) {
 			$end_timeframe = strtotime( $_POST['end_date'] . ' 23:59:59' );
 		} else {
-			$end_timeframe = time();
+			$end_timeframe = ( (int) gmdate('U') );
 		}
 
 		$unused = $used = 0;

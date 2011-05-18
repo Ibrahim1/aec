@@ -172,7 +172,7 @@ class processor_iats extends XMLprocessor
 			$offset2 = strtotime( '+' . $this->settings['exp_amount'] . ' ' . ( ( $this->settings['exp_unit'] == 'M' ) ? 'months' : 'years' ) );
 
 			if ( $hastrial ) {
-				$offset3 = $offset2 + $offset - time();
+				$offset3 = $offset2 + $offset - ( (int) gmdate('U') );
 
 				$fvar['BeginDate']		= date( 'Y-m-d' );
 				$fvar['EndDate']		= date( 'Y-m-d', $offset3 );

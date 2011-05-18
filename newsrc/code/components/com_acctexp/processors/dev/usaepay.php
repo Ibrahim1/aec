@@ -53,7 +53,7 @@ class processor_usaepay extends POSTprocessor
 
 	function recurringDateCalculation()
 	{
-		$recurringChargeDate = date("Ymd", time() + (15 * 24 * 60 * 60));
+		$recurringChargeDate = date("Ymd", ( (int) gmdate('U') ) + (15 * 24 * 60 * 60));
 		print_r("<br/><br/>15 days from today = ".$recurringChargeDate);
 		return $recurringChargeDate;
 	}
@@ -76,7 +76,7 @@ class processor_usaepay extends POSTprocessor
 		$var['UMbillamount']	= 9.95;
 
 		$var['UMrecurring']		= "yes";
-		$var['UMstart']			= date("Ymd", time() + (15 * 24 * 60 * 60));  //UMstart Must be entered in YYYYMMDD
+		$var['UMstart']			= date("Ymd", ( (int) gmdate('U') ) + (15 * 24 * 60 * 60));  //UMstart Must be entered in YYYYMMDD
 
 		return $var;
 	}

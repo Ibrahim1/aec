@@ -105,7 +105,6 @@ class mi_jarc
 
 	function logpayment( $invoice )
 	{
-		$app = JFactory::getApplication();
 		$db = &JFactory::getDBO();
 		$session = &JFactory::getSession();
 		// Get affiliate ID from cookie.
@@ -119,7 +118,7 @@ class mi_jarc
 		$affiliate->findById( intval($cookie_aid) );
 
 		$query = 'INSERT INTO #__jarc_payments' .
-				' SET `date` = \'' . gmstrftime ( '%Y-%m-%d %H:%M:%S', time() + ( $app->getCfg('offset_user') * 3600 ) ) . '\','
+				' SET `date` = \'' . gmstrftime ( '%Y-%m-%d %H:%M:%S', ( (int) gmdate('U') ) ) . '\','
 				. ' `user_id` = \'' . $invoice->userid . '\','
 				. ' `payment_type` = \''.$invoice->method.'\','
 				. ' `payment_status` = \'2\','

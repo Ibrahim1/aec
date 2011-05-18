@@ -67,7 +67,7 @@ class tool_miexport
 		}
 
 		// Generate somewhat unique filename
-		$fname = 'aec_mi_export_' . date( 'Y_m_d', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) . '_' . ( time() - strtotime( date( 'Y_m_d' ) ) );
+		$fname = 'aec_mi_export_' . date( 'Y_m_d', ( (int) gmdate('U') ) ) . '_' . ( ( (int) gmdate('U') ) - strtotime( date( 'Y_m_d' ) ) );
 
 		header("Pragma: public");
 		header("Expires: 0");

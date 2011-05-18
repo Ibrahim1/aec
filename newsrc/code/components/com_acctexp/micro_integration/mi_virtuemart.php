@@ -162,7 +162,7 @@ class mi_virtuemart
 		// Create Useraccount
 		$query  = 'INSERT INTO #__vm_user_info'
 				. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
-				. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) . '\', \'' . ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) . '\', \'shopper\', \'Checking\')'
+				. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\', \'shopper\', \'Checking\')'
 				;
 		$db->setQuery( $query );
 		$db->query();

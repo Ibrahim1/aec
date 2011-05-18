@@ -86,7 +86,7 @@ class mi_aecinvoiceprintemail
 		}
 
 		if ( isset( $request->invoice->params['mi_aecinvoiceprintemail'] ) ) {
-			if ( ( time() - $request->invoice->params['mi_aecinvoiceprintemail'] ) < 10 ) {
+			if ( ( ( (int) gmdate('U') ) - $request->invoice->params['mi_aecinvoiceprintemail'] ) < 10 ) {
 				// Seems like we have a card processing, skip
 				return null;
 			}
@@ -141,7 +141,7 @@ class mi_aecinvoiceprintemail
 
 		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, true, $cc, $bcc );
 
-		$request->invoice->params['mi_aecinvoiceprintemail'] = time();
+		$request->invoice->params['mi_aecinvoiceprintemail'] = (int) gmdate('U');
 		$request->invoice->storeload();
 
 		return true;

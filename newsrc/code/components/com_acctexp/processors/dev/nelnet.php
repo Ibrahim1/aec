@@ -103,7 +103,7 @@ class processor_nelnet extends URLprocessor
 		// Required. Retries allowed by user to make the payment before failure.
 		$var['retriesAllowed'] 		= '3';
 		// Required. Unix Epoch time in milliseconds
-		$var['timestamp']		= (time()*1000);
+		$var['timestamp']		= ( (int) gmdate('U') ) * 1000;
 		
 		// Required. you must make a hash of all variables you are using in correct order + secret key. Do not include any you are not using.
 		$var['hash'] = md5($var['orderType'].$var['orderNumber'].$var['amount'].$var['orderFee'].$var['userChoice1'].$var['userChoice2'].$var['redirectUrl'].$var['redirectUrlParameters'].$var['retriesAllowed'].$var['timestamp'].$this->settings['secret_key']);
@@ -132,7 +132,7 @@ function validateNotification( $response, $post, $invoice )	{
 	
 		//Need to check to see if transaction timestamp is within 5 minutes / 300 seconds as per NelNet documentation
 	$posttime = $_GET["timestamp"];
-	$nowtime = (time()*1000);
+	$nowtime = ( (int) gmdate('U') ) * 1000;
 	
 		// Notes on transactionType
 		// transactionType values:  1 = credit card, 2 = refund, 3 = echeck

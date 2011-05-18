@@ -100,9 +100,9 @@ class processor_authorize extends POSTprocessor
 		$sequence = rand(1, 1000);
 
 		if ( !empty( $this->settings['timestamp_offset'] ) ) {
-			$tstamp = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) + $this->settings['timestamp_offset'];
+			$tstamp = ( (int) gmdate('U') ) + $this->settings['timestamp_offset'];
 		} else {
-			$tstamp = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+			$tstamp = (int) gmdate('U');
 		}
 
 		// Calculate fingerprint

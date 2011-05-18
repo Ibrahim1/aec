@@ -100,7 +100,7 @@ class mi_supporttimetracker extends MI
 
 				$history_table .= '<tr>'
 									. '<td>' . $id . '</td>'
-									. '<td>' . date( 'Y-m-d H:i:s', $entry['tstamp'] + ( $app->getCfg( 'offset' ) * 3600 ) ) . '</td>'
+									. '<td>' . date( 'Y-m-d H:i:s', $entry['tstamp'] + ( (int) gmdate('U') ) . '</td>'
 									. '<td>' . ( $entry['support_minutes'] ? $entry['support_minutes'] : '0' ). '</td>'
 									. '<td>' . ( $entry['support_minutes_used'] ? $entry['support_minutes_used'] : '- - -' ) . '</td>'
 									. '<td>' . $entry['minutes_added'] . '</td>'
@@ -206,7 +206,7 @@ class mi_supporttimetracker extends MI
 
 		$history = $this->getSupportHistory( $metaUser );
 
-		$history[]	= array(	'tstamp'				=> time(),
+		$history[]	= array(	'tstamp'				=> ( (int) gmdate('U') ),
 								'userid'				=> $userid,
 								'support_minutes'		=> $uparams['support_minutes'],
 								'minutes_added'			=> $minutes,

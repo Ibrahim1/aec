@@ -186,7 +186,7 @@ class mi_acajoom
 
 		$query  = 'INSERT INTO #__acajoom_queue'
 				. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
-				. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  time() + $GLOBALS['mosConfig_offset'] *60*60 ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
+				. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
 				;
 		$db->setQuery( $query );
 		return $db->query();

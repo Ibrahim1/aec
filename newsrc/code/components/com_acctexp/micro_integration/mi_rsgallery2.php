@@ -225,7 +225,7 @@ class mi_rsgallery2 extends MI
 
 		$query = 'INSERT INTO #__rsgallery2_galleries'
 				. ' ( `parent`, `name`, `description`, `published`, `date`, `uid` )'
-				. ' VALUES ( \'' . $parentid . '\', \'' . $db->getEscaped( $name ) . '\', \'' . $db->getEscaped( $desc ) . '\', \'1\', \'' . date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) . '\', \'' . $userid . '\' )'
+				. ' VALUES ( \'' . $parentid . '\', \'' . $db->getEscaped( $name ) . '\', \'' . $db->getEscaped( $desc ) . '\', \'1\', \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) . '\', \'' . $userid . '\' )'
 				;
 		$db->setQuery( $query );
 

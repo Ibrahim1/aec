@@ -147,7 +147,7 @@ class mi_jnews
 
 		$query  = 'INSERT INTO #__jnews_subscribers'
 				. ' (user_id, name, email, receive_html, confirmed, blacklist, timezone, language_iso, subscribe_date, params)'
-				. ' VALUES(\'' . $userid . '\', \'' . $user->name . '\', \'' . $user->email . '\', \'1\', \'1\', \'0\', \'00:00:00\', \'eng\', \'' . time() . '\', \'\' )'
+				. ' VALUES(\'' . $userid . '\', \'' . $user->name . '\', \'' . $user->email . '\', \'1\', \'1\', \'0\', \'00:00:00\', \'eng\', \'' . ( (int) gmdate('U') ) . '\', \'\' )'
 				;
 		$db->setQuery( $query );
 		$db->query();
@@ -186,7 +186,7 @@ class mi_jnews
 
 		$query  = 'INSERT INTO #__jnews_queue'
 				. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
-				. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  time() + $GLOBALS['mosConfig_offset'] *60*60 ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
+				. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
 				;
 		$db->setQuery( $query );
 
@@ -194,7 +194,7 @@ class mi_jnews
 
 		$query  = 'INSERT INTO #__jnews_listssubscribers'
 				. ' (list_id, subscriber_id, subdate)'
-				. ' VALUES(\'' . $list_id . '\', \'' . $subscriber_id . '\', \'' . date( 'Y-m-d H:i:s',  time() + $GLOBALS['mosConfig_offset'] *60*60 ) . '\')'
+				. ' VALUES(\'' . $list_id . '\', \'' . $subscriber_id . '\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\')'
 				;
 		$db->setQuery( $query );
 

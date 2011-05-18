@@ -267,7 +267,7 @@ class processor_ccbill extends POSTprocessor
 		if ( !empty( $this->settings['datalink_username'] ) ) {
 			if ( empty( $this->datalink_temp ) ) {
 				$get = array();
-				$get['startTime'] = date( 'YmdHis', ( time() - 24*60*60 - 1 ) );
+				$get['startTime'] = date( 'YmdHis', ( ( (int) gmdate('U') ) - 24*60*60 - 1 ) );
 				$get['endTime'] = date( 'YmdHis' );
 				$get['transactionTypes'] = 'REBILL,EXPIRE';
 				$get['clientAccnum'] = $this->settings['clientAccnum'];

@@ -50,9 +50,7 @@ class mi_aecmodifyexpiration
 		} elseif ( !empty( $this->settings['timestamp'] ) ) {
 			$tstamp = strtotime( AECToolbox::rewriteEngineRQ( $this->settings['timestamp'], $request ) );
 		} else {
-			$app = JFactory::getApplication();
-
-			$tstamp = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+			$tstamp = (int) gmdate('U');
 		}
 
 		$new_expiration = strtotime( $this->settings['time_mod'], $tstamp );

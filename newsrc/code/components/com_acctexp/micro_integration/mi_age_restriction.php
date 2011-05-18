@@ -118,7 +118,7 @@ class mi_age_restriction extends MI
 	{
 		$app = JFactory::getApplication();
 
-		return ( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) - strtotime( $bd ) ) / 31536000;
+		return ( ( (int) gmdate('U') ) - strtotime( $bd ) ) / 31536000;
 	}
 }
 ?>

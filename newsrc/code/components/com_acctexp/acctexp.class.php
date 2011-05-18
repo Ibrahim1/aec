@@ -396,7 +396,7 @@ class metaUser
 		if ( isset( $this->meta->custom_params['tempauth_exptime'] ) && isset( $this->meta->custom_params['tempauth_ip'] ) ) {
 			$app = JFactory::getApplication();
 
-			if ( ( $this->meta->custom_params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->meta->custom_params['tempauth_exptime'] >= ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) ) {
+			if ( ( $this->meta->custom_params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->meta->custom_params['tempauth_exptime'] >= ( (int) gmdate('U') ) ) ) {
 				return true;
 			}
 		}
@@ -430,7 +430,7 @@ class metaUser
 		// Set params
 		$params = array();
 		$params['tempauth_ip'] = $_SERVER['REMOTE_ADDR'];
-		$params['tempauth_exptime'] = strtotime( '+' . max( 10, $aecConfig->cfg['temp_auth_exp'] ) . ' minutes', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$params['tempauth_exptime'] = strtotime( '+' . max( 10, $aecConfig->cfg['temp_auth_exp'] ) . ' minutes', ( (int) gmdate('U') ) );
 
 		// Save params either to subscription or to _user entry
 		$this->meta->addCustomParams( $params );
@@ -574,7 +574,7 @@ class metaUser
 		// Try different types of usernames to make sure we have a unique one
 		$usernames = array( $user['username'],
 							$user['username'] . substr( md5( $user['name'] ), 0, 3 ),
-							$user['username'] . substr( md5( ( $user['name'] . ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) ), 0, 3 )
+							$user['username'] . substr( md5( ( $user['name'] . ( (int) gmdate('U') ) ) ), 0, 3 )
 							);
 
 		// Iterate through semi-random and pseudo-random usernames until a non-existing is found
@@ -1514,8 +1514,8 @@ class metaUserDB extends serialParamDBTable
 		$app = JFactory::getApplication();
 
 		$this->userid			= $userid;
-		$this->created_date		= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
-		$this->modified_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->created_date		= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		$this->storeload();
 
@@ -1544,7 +1544,7 @@ class metaUserDB extends serialParamDBTable
 
 		$this->processor_params[$processorid] = $params;
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		$this->storeload();
 	}
@@ -1598,7 +1598,7 @@ class metaUserDB extends serialParamDBTable
 			$this->params->mi[$miid] = $params;
 		}
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		return true;
 	}
@@ -1614,7 +1614,7 @@ class metaUserDB extends serialParamDBTable
 
 		$this->addParams( $params, 'custom_params' );
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 	}
 
 	function setCustomParams( $params )
@@ -1623,7 +1623,7 @@ class metaUserDB extends serialParamDBTable
 
 		$this->addParams( $params, 'custom_params', true );
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 	}
 
 	function addPreparedMIParams( $plan_mi, $mi=false )
@@ -1644,7 +1644,7 @@ class metaUserDB extends serialParamDBTable
 			}
 		}
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		$this->storeload();
 	}
@@ -1661,7 +1661,7 @@ class metaUserDB extends serialParamDBTable
 			$this->plan_history->used_plans[$id] = 1;
 		}
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		$this->storeload();
 
@@ -2371,7 +2371,7 @@ class aecHeartbeat extends JTable
 			global $aecConfig;
 
 			$query = 'INSERT INTO #__acctexp_heartbeat'
-			. ' VALUES( \'1\', \'' . date( 'Y-m-d H:i:s', ( time() - $aecConfig->cfg['heartbeat_cycle'] * 3600 ) ) . '\' )'
+			. ' VALUES( \'1\', \'' . date( 'Y-m-d H:i:s', ( ( (int) gmdate('U') ) - $aecConfig->cfg['heartbeat_cycle'] * 3600 ) ) . '\' )'
 			;
 			$db->setQuery( $query );
 			$db->query() or die( $db->stderr() );
@@ -2439,8 +2439,8 @@ class aecHeartbeat extends JTable
 			$ping = 0;
 		}
 
-		if ( ( $ping - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) <= 0 ) {
-			$this->last_beat = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		if ( ( $ping - ( (int) gmdate('U') ) ) <= 0 ) {
+			$this->last_beat = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 			$this->check();
 			$this->store();
 			$this->load(1);
@@ -2587,10 +2587,10 @@ class aecHeartbeat extends JTable
 
 		if ( $pre_expiration ) {
 			// pre-expiration found, search limit set to the maximum pre-expiration time
-			return AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			return AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', ( (int) gmdate('U') ) );
 		} else {
 			// No pre-expiration actions found, limiting search to all users who expire until tomorrow (just to be safe)
-			return AECToolbox::computeExpiration( 1, 'D', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			return AECToolbox::computeExpiration( 1, 'D', ( (int) gmdate('U') ) );
 		}
 	}
 
@@ -2684,7 +2684,7 @@ class aecHeartbeat extends JTable
 		// Delete old token entries
 		$query = 'DELETE'
 				. ' FROM #__acctexp_temptoken'
-				. ' WHERE `created_date` <= \'' . AECToolbox::computeExpiration( "-3", 'H', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) . '\''
+				. ' WHERE `created_date` <= \'' . AECToolbox::computeExpiration( "-3", 'H', ( (int) gmdate('U') ) ) . '\''
 				;
 		$db->setQuery( $query );
 		$db->query();
@@ -2734,7 +2734,7 @@ class displayPipelineHandler
 				// If expire & expired -> delete
 				if ( $displayPipeline->expire ) {
 					$expstamp = strtotime( $displayPipeline->expstamp );
-					if ( ( $expstamp - ( time() + $app->getCfg( 'offset' )*3600 ) ) < 0 ) {
+					if ( ( $expstamp - ( (int) gmdate('U') ) ) < 0 ) {
 						$displayPipeline->delete();
 						continue;
 					}
@@ -2827,10 +2827,10 @@ class displayPipeline extends serialParamDBTable
 		$this->userid			= $userid;
 		$this->only_user		= $only_user;
 		$this->once_per_user	= $once_per_user;
-		$this->timestamp		= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->timestamp		= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->expire			= $expire ? 1 : 0;
 		if ( $expire ) {
-			$this->expstamp			= date( 'Y-m-d H:i:s', strtotime( $expiration ) + $app->getCfg( 'offset' ) *3600 );
+			$this->expstamp		= date( 'Y-m-d H:i:s', strtotime( $expiration ) );
 		}
 		$this->displaycount		= 0;
 		$this->displaymax		= $displaymax;
@@ -2902,7 +2902,7 @@ class eventLog extends serialParamDBTable
 			$level = $legal_levels[0];
 		}
 
-		$this->datetime	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->datetime	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->short	= $short;
 		$this->tags		= $tags;
 		$this->event	= $text;
@@ -3058,7 +3058,7 @@ class aecEvent extends serialParamDBTable
 		$this->subtype			= $subtype;
 		$this->appid			= $appid;
 		$this->event			= $event;
-		$this->created_date 	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );;
+		$this->created_date 	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->due_date 		= $due_date;
 
 		$this->context			= $context;
@@ -7017,7 +7017,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( $is_pending ) {
 			// Is new = set signup date
-			$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			$metaUser->focusSubscription->signup_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 			if ( ( $this->params['trial_period'] ) > 0 && !$is_trial ) {
 				$status = 'Trial';
 			} else {
@@ -7048,7 +7048,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$metaUser->temporaryRFIX();
 
-		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$metaUser->focusSubscription->type = $processor;
 
 		$recurring_choice = null;
@@ -7886,7 +7886,7 @@ class logHistory extends serialParamDBTable
 		$this->user_name		= $user->username;
 		$this->plan_id			= $plan->id;
 		$this->plan_name		= $plan->name;
-		$this->transaction_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->transaction_date	= date( 'Y-m-d H:i:s', ( ( (int) gmdate('U') ) ) );
 		$this->amount			= $objInvoice->amount;
 		$this->invoice_number	= $objInvoice->invoice_number;
 		$this->response			= $response;
@@ -7952,7 +7952,7 @@ class aecTempToken extends serialParamDBTable
 		if ( empty( $this->ip ) ) {
 			$app = JFactory::getApplication();
 
-			$this->created_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			$this->created_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 			$this->ip			= $_SERVER['REMOTE_ADDR'];
 		}
 	}
@@ -8010,15 +8010,15 @@ class aecTempToken extends serialParamDBTable
 		}
 
 		if ( empty( $token ) ) {
-			$token = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			$token = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
 
 		$this->token		= $token;
 		$this->content		= $content;
-		$this->created_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->created_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->ip			= $_SERVER['REMOTE_ADDR'];
 
-		setcookie( 'aec_token', $token, time()+600 );
+		setcookie( 'aec_token', $token, ( (int) gmdate('U') )+ 600 );
 
 		return $this->storeload();
 	}
@@ -9675,11 +9675,11 @@ class InvoiceFactory
 			$this->TempTokenFromPlan( $plan );
 
 			if ( !empty( $_GET['fname'] ) ) {
-				setcookie( "fname", $_GET['fname'], time()+60*10 );
+				setcookie( "fname", $_GET['fname'], ( (int) gmdate('U') )+60*10 );
 			}
 
 			if ( !empty( $_GET['femail'] ) ) {
-				setcookie( "femail", $_GET['femail'], time()+60*10 );
+				setcookie( "femail", $_GET['femail'], ( (int) gmdate('U') )+60*10 );
 			}
 
 			aecRedirect( 'index.php?option=com_comprofiler&task=registers' );
@@ -10864,7 +10864,7 @@ class Invoice extends serialParamDBTable
 
 		$this->active			= 1;
 		$this->fixed			= 0;
-		$this->created_date		= date( 'Y-m-d H:i:s', time() + $app->getCfg( 'offset' )*3600 );
+		$this->created_date		= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->transaction_date	= '0000-00-00 00:00:00';
 		$this->userid			= $userid;
 		$this->method			= $processor;
@@ -10905,7 +10905,7 @@ class Invoice extends serialParamDBTable
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
 			$app = JFactory::getApplication();
 
-			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) {
+			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > ( (int) gmdate('U') ) ) {
 				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {
 					// Desjardins is the only exception so far... bad bad bad
 				} elseif ( $response['valid'] ) {
@@ -11457,8 +11457,8 @@ class Invoice extends serialParamDBTable
 		$app = JFactory::getApplication();
 
 		$tdate				= strtotime( $this->transaction_date );
-		$time_passed		= ( ( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) - $tdate ) / 3600;
-		$transaction_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$time_passed		= ( ( ( (int) gmdate('U') ) ) - $tdate ) / 3600;
+		$transaction_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		if ( !empty( $aecConfig->cfg['invoicecushion'] ) ) {
 			$cushion = $aecConfig->cfg['invoicecushion']*60;
@@ -11825,7 +11825,7 @@ class Invoice extends serialParamDBTable
 		if ( ( $this->transaction_date == '0000-00-00 00:00:00' ) && $forcecleared ) {
 			$app = JFactory::getApplication();
 
-			$this->transaction_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			$this->transaction_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
 
 		$data = $this->getWorkingData( $InvoiceFactory );
@@ -12286,10 +12286,10 @@ class aecCart extends serialParamDBTable
 		$app = JFactory::getApplication();
 
 		if ( !$this->id || ( strcmp( $user_subscription->created_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
-			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
 
-		$this->last_updated = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->last_updated = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		return parent::save();
 	}
@@ -12645,7 +12645,7 @@ class aecCart extends serialParamDBTable
 		}
 
 		$this->history[] = array(
-							'timestamp'	=> date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ),
+							'timestamp'	=> date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ),
 							'class'		=> $class,
 							'event'		=> $event,
 							'details'	=> $details,
@@ -12829,8 +12829,8 @@ class Subscription extends serialParamDBTable
 
 		$this->userid		= $userid;
 		$this->primary		= $primary;
-		$this->signup_date	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
-		$this->expiration	= date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->signup_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
+		$this->expiration	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->status		= $pending ? 'Pending' : 'Active';
 		$this->type			= $processor;
 
@@ -12856,7 +12856,7 @@ class Subscription extends serialParamDBTable
 				$expstamp = strtotime( ( '+' . $aecConfig->cfg['expiration_cushion'] . ' hours' ), strtotime( $this->expiration ) );
 			}
 
-			$localtime = time() + ( $app->getCfg( 'offset' ) * 3600 );
+			$localtime = (int) gmdate('U');
 
 			$is_past = ( $expstamp - $localtime ) < 0;
 
@@ -12885,7 +12885,7 @@ class Subscription extends serialParamDBTable
 	{
 		$app = JFactory::getApplication();
 
-		$now = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+		$now = (int) gmdate('U');
 
 		if ( $extend ) {
 			$current = strtotime( $this->expiration );
@@ -12926,7 +12926,7 @@ class Subscription extends serialParamDBTable
 			$expstamp = strtotime( $this->expiration );
 
 			// Get how many days left to expire (3600 sec = 1 hour)
-			$alert['daysleft']	= round( ( $expstamp - ( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) ) / ( 3600 * 24 ) );
+			$alert['daysleft']	= round( ( $expstamp - ( (int) gmdate('U') ) ) / ( 3600 * 24 ) );
 
 			if ( $alert['daysleft'] < 0 ) {
 				// Subscription already expired. Alert Level 0!
@@ -13131,7 +13131,7 @@ class Subscription extends serialParamDBTable
 			$periodlength = $subscription_plan->params['full_period'] * $unit;
 
 			$newexpiration = strtotime( $this->expiration );
-			$now = ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+			$now = (int) gmdate('U');
 
 			// ...cut away blocks until we are in the past
 			while ( $newexpiration > $now ) {
@@ -14294,10 +14294,10 @@ class reWriteEngine
 
 		$this->rewrite = array();
 
-		$this->rewrite['system_timestamp']					= AECToolbox::formatDate( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
-		$this->rewrite['system_timestamp_backend']			= AECToolbox::formatDate( ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ), true );
-		$this->rewrite['system_serverstamp_time']			= AECToolbox::formatDate( time() );
-		$this->rewrite['system_server_timestamp_backend']	= AECToolbox::formatDate( time(), true );
+		$this->rewrite['system_timestamp']					= AECToolbox::formatDate( ( (int) gmdate('U') ), false, false );
+		$this->rewrite['system_timestamp_backend']			= AECToolbox::formatDate( (int) gmdate('U'), true, false );
+		$this->rewrite['system_serverstamp_time']			= AECToolbox::formatDate( ( (int) gmdate('U') ) );
+		$this->rewrite['system_server_timestamp_backend']	= AECToolbox::formatDate( ( (int) gmdate('U') ), true );
 
 		$this->rewrite['cms_absolute_path']	= JPATH_SITE;
 		$this->rewrite['cms_live_site']		= JURI::root();
@@ -15684,7 +15684,7 @@ class AECToolbox
 		}
 	}
 
-	function formatDate( $date, $backend=false )
+	function formatDate( $date, $backend=false, $offset=true )
 	{
 		global $aecConfig;
 
@@ -15692,15 +15692,21 @@ class AECToolbox
 			$date = strtotime( $date );
 		}
 
+		if ( $offset ) {
+			$app = JFactory::getApplication();
+
+			$date += ( $app->getCfg( 'offset' ) * 3600 );
+		}
+
 		if ( $backend ) {
 			if ( empty( $aecConfig->cfg['display_date_backend'] ) ) {
-				return JHTML::_('date',$date, JText::_('DATE_FORMAT_LC2'));
+				return JHTML::_( 'date', $date, JText::_('DATE_FORMAT_LC2') );
 			} else {
 				return strftime( $aecConfig->cfg['display_date_backend'], $date );
 			}
 		} else {
 			if ( empty( $aecConfig->cfg['display_date_frontend'] ) ) {
-				return JHTML::_('date',$date, JText::_('DATE_FORMAT_LC4'));
+				return JHTML::_( 'date', $date, JText::_('DATE_FORMAT_LC4') );
 			} else {
 				return strftime( $aecConfig->cfg['display_date_frontend'], $date );
 			}
@@ -16821,7 +16827,7 @@ class microIntegration extends serialParamDBTable
 						// This is a retrigger as expiration dates are equal => break
 						return false;
 					} else {
-						if ( ( time() + $app->getCfg( 'offset' ) * 3600 ) > $current_expiration ) {
+						if ( ( (int) gmdate('U') ) > $current_expiration ) {
 							// This trigger comes too late as the expiration already happened => break
 							return false;
 						}
@@ -16830,7 +16836,7 @@ class microIntegration extends serialParamDBTable
 			}
 
 			$newflags[$spc]		= $current_expiration;
-			$newflags[$spca]	= time() + $app->getCfg( 'offset' ) * 3600;
+			$newflags[$spca]	= (int) gmdate('U');
 
 			// Create the new flags
 			$metaUser->meta->setMIParams( $this->id, $objplan->id, $newflags );
@@ -18084,7 +18090,7 @@ class couponHandler
 				$expstamp = strtotime( $this->restrictions['start_date'] );
 
 				// Error: Use of this coupon has not started yet
-				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) > 0 ) ) {
+				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( (int) gmdate('U') ) ) > 0 ) ) {
 					$this->setError( JText::_('COUPON_ERROR_NOTSTARTED') );
 				}
 			}
@@ -18094,7 +18100,7 @@ class couponHandler
 				$expstamp = strtotime( $this->restrictions['expiration'] );
 
 				// Error: Use of this coupon has expired
-				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) ) < 0 ) ) {
+				if ( ( $expstamp > 0 ) && ( ( $expstamp - ( (int) gmdate('U') ) ) < 0 ) ) {
 					$this->setError( JText::_('COUPON_ERROR_EXPIRED') );
 					$this->coupon->deactivate();
 				}
@@ -18209,7 +18215,7 @@ class couponHandler
 			$couponxuser->load( $id );
 			$couponxuser->usecount += 1;
 			$couponxuser->addInvoice( $invoice->invoice_number );
-			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+			$couponxuser->last_updated = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 			$couponxuser->storeload();
 		} else {
 			// Relation does not exist, create one
@@ -18245,7 +18251,7 @@ class couponHandler
 			// Decrement use count
 			$couponxuser->load( $id );
 			$couponxuser->usecount -= 1;
-			$couponxuser->last_updated = date( 'Y-m-d H:i:s', time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+			$couponxuser->last_updated = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 			if ( $couponxuser->usecount ) {
 				// Use count is 1 or above - break invoice relation but leave overall relation intact
@@ -18673,7 +18679,7 @@ class coupon extends serialParamDBTable
 		if ( is_null( $created ) ) {
 			$app = JFactory::getApplication();
 
-			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		} else {
 			$this->created_date = $created;
 		}
@@ -18832,8 +18838,8 @@ class couponXuser extends serialParamDBTable
 		$this->coupon_type = $type;
 		$this->coupon_code = $coupon->coupon_code;
 		$this->userid = $userid;
-		$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
-		$this->last_updated = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
+		$this->last_updated = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		if ( is_array( $params ) ) {
 			$this->params = $params;
@@ -19130,7 +19136,7 @@ class aecExport extends serialParamDBTable
 
 		$exphandler = new $classname();
 
-		$fname = 'aecexport_' . urlencode( stripslashes( $this->name ) ) . '_' . date( 'Y_m_d', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$fname = 'aecexport_' . urlencode( stripslashes( $this->name ) ) . '_' . date( 'Y_m_d', ( (int) gmdate('U') ) );
 
 		// Send download header
 		header("Pragma: public");
@@ -19233,7 +19239,7 @@ class aecExport extends serialParamDBTable
 	{
 		$app = JFactory::getApplication();
 
-		$this->lastused_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+		$this->lastused_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->storeload();
 	}
 
@@ -19271,7 +19277,7 @@ class aecExport extends serialParamDBTable
 		$this->params = $params;
 
 		if ( ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) === 0 ) || empty( $this->created_date ) ) {
-			$this->created_date = date( 'Y-m-d H:i:s', ( time() + ( $app->getCfg( 'offset' ) * 3600 ) ) );
+			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
 
 		$this->storeload();

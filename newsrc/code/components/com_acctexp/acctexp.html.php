@@ -487,7 +487,7 @@ class HTML_frontEnd
 			$retVal = AECToolbox::formatDate( $SQLDate );
 
 			if ( $check ) {
-				$timeDif = strtotime( $SQLDate ) - ( time() + ( $app->getCfg( 'offset' ) * 3600 ) );
+				$timeDif = strtotime( $SQLDate ) - ( (int) gmdate('U') );
 				if ( $timeDif < 0 ) {
 					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_PAST') : JText::_('AEC_EXPIRE_PAST') ) . ':&nbsp;<strong>' . $retVal . '</strong>';
 				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {

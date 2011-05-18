@@ -55,7 +55,7 @@ class processor_smscoin extends POSTprocessor
 		$var = array();
 		$var['post_url']	= 'http://service.smscoin.com/bank/';
 		$var['s_purse']		= $this->settings['s_purse'];
-		$var['s_order_id']	= time();
+		$var['s_order_id']	= ( (int) gmdate('U') );
 		$var['invoice']		= $request->invoice->invoice_number;
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['s_amount']= $request->int_var['amount']['amount'];

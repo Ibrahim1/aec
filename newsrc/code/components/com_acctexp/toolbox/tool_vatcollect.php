@@ -48,7 +48,7 @@ class tool_vatcollect
 		if ( !empty( $_POST['end_date'] ) ) {
 			$end_timeframe = $_POST['end_date'] . ' 23:59:59';
 		} else {
-			$end_timeframe = date( 'Y-m-d', time() );
+			$end_timeframe = date( 'Y-m-d', ( (int) gmdate('U') ) );
 		}
 
 		$query = 'SELECT `id`'

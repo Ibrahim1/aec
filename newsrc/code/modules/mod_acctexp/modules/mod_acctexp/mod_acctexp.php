@@ -119,18 +119,7 @@ class AECModuleHelper
 	{
 		global $aecConfig;
 
-		$app = JFactory::getApplication();
-
-		$ou = $app->getCfg( 'offset_user' );
-
-		// compatibility with Mambo
-		if ( !empty( $ou ) ) {
-			$timeOffset = $ou;
-		} else {
-			$timeOffset = $app->getCfg( 'offset' );
-		}
-
-		$retVal = AECToolbox::formatDate( ( strtotime( $expiration ) + $timeOffset*3600 ) );
+		$retVal = AECToolbox::formatDate( ( strtotime( $expiration ) ) );
 
 		if ( $recurring ) {
 			return "<p>" . JText::_('ACCOUNT_RENEWAL') . ": " . $retVal . "</p>";
