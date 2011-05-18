@@ -1884,6 +1884,7 @@ function editSettings( $option )
 	$params['displayccinfo']				= array( 'list_yesno', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
+	$params['confirmation_display_descriptions']	= array( 'list_yesno', '' );
 	$params['tos']							= array( 'inputC', '' );
 	$params['tos_iframe']					= array( 'list_yesno', '' );
 	$params[] = array( 'div_end', 0 );

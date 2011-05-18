@@ -2249,6 +2249,7 @@ class Config_General extends serialParamDBTable
 		$def['itemid_pending']					= "";
 		$def['itemid_subscriptiondetails']		= "";
 		$def['subscriptiondetails_menu']		= 1;
+		$def['confirmation_display_descriptions']	= 1;
 
 		return $def;
 	}

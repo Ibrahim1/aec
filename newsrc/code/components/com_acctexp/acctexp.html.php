@@ -894,7 +894,7 @@ class Payment_HTML
 						<?php } ?>
 					</tr>
 					<?php } ?>
-					<?php if ( !empty( $InvoiceFactory->plan->desc ) ) { ?>
+					<?php if ( !empty( $InvoiceFactory->plan->desc ) && $InvoiceFactory->checkout['confirmation_display_descriptions'] ) { ?>
 					<tr>
 						<td colspan="3" class="aec_left"><strong><?php echo JText::_('CONFIRM_YOU_HAVE_SELECTED'); ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
 					</tr>
