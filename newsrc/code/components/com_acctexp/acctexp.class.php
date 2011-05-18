@@ -7133,7 +7133,7 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
 			$adminonly = ( $this->id == $aecConfig->cfg['entry_plan'] );
 
-			$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly );
+			$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly, $invoice );
 		}
 
 		$result = $this->triggerMIs( 'afteraction', $metaUser, $exchange, $invoice, $add, $silent );
@@ -8485,7 +8485,6 @@ class InvoiceFactory
 				$prelg[$pgroup['processor']][] = $pgroup;
 			}
 
-			$invoice_highest = 0;
 			foreach ( $prelg as $processor => $pgroups ) {
 				if ( strpos( $processor, '_recurring' ) ) {
 					$processor_name = PaymentProcessor::getNameById( str_replace( '_recurring', '', $processor ) );
@@ -8530,7 +8529,7 @@ class InvoiceFactory
 
 				if ( $invoice->amount == "0.00" ) {
 					$invoice->pay();
-				} elseif ( $invoice->amount > $invoice_highest ) {
+				} else {
 					$finalinvoice = $invoice;
 				}
 			}
@@ -13261,13 +13260,15 @@ class Subscription extends serialParamDBTable
 		return $actions;
 	}
 
-	function sendEmailRegistered( $renew, $adminonly=false )
+	function sendEmailRegistered( $renew, $adminonly=false, $invoice=null )
 	{
 		$db = &JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
 		$lang =& JFactory::getLanguage();
+
+		global $aecConfig;
 
 		$free = ( strcmp( strtolower( $this->type ), 'none' ) == 0 || strcmp( strtolower( $this->type ), 'free' ) == 0 );
 
@@ -13343,8 +13344,25 @@ class Subscription extends serialParamDBTable
 			JUTility::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 		}
 
+		$aecUser = array();
+		if ( is_object( $invoice ) ) {
+			if ( !empty( $invoice->params['creator_ip'] ) ) {
+				$aecUser['ip'] 	= $invoice->params['creator_ip'];
+
+				// user Hostname (if not deactivated)
+				if ( $aecConfig->cfg['gethostbyaddr'] ) {
+					$aecUser['isp'] = gethostbyaddr( $invoice->params['creator_ip'] );
+				} else {
+					$aecUser['isp'] = 'deactivated';
+				}
+			}
+		}
+
+		if ( empty( $aecUser ) ) {
+			$aecUser = AECToolbox::aecIP();
+		}
+
 		// Send notification to all administrators
-		$aecUser = AECToolbox::aecIP();
 
 		if ( $renew ) {
 			$subject2 = sprintf( JText::_('ACCTEXP_SEND_MSG_RENEW'), $name, $app->getCfg( 'sitename' ) );
