@@ -404,11 +404,11 @@ class mi_aectax
 
 		if ( count( $locations ) == 1 ) {
 			$lid = 0;
-		}
-
-		foreach ( $locations as $lix => $location ) {
-			if ( $location['id'] == $request->params['location'] ) {
-				$lid = $lix;
+		} else {
+			foreach ( $locations as $lix => $location ) {
+				if ( $location['id'] == $request->params['location'] ) {
+					$lid = $lix;
+				}
 			}
 		}
 
