@@ -17674,11 +17674,16 @@ class couponsHandler extends eucaObject
 
 	function applyToTotal( $items, $cart=false, $fullcart=false )
 	{
+		$itemcount = 0;
+		foreach ( $items->itemlist as $item ) {
+			$itemcount += $item->quantitiy;
+		}
+
 		if ( !empty( $this->fullcartlist ) ) {
 			foreach ( $this->fullcartlist as $coupon_code ) {
 				if ( $this->loadCoupon( $coupon_code ) ) {
 					if ( $this->cph->discount['amount_use'] ) {
-						$this->cph->discount['amount'] = $this->cph->discount['amount'] / count( $items->itemlist );
+						$this->cph->discount['amount'] = $this->cph->discount['amount'] / $itemcount;
 					}
 
 					$cost = null;
