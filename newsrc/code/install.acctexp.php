@@ -179,13 +179,15 @@ function com_install()
 	// Make all Superadmins excluded by default
 	$administrators = aecACLhandler::getSuperAdmins();
 
-	foreach ( $administrators as $admin ) {
-		$metaUser = new metaUser( $admin->id );
+	if ( !empty( $administrators ) ) {
+		foreach ( $administrators as $admin ) {
+			$metaUser = new metaUser( $admin->id );
 
-		if ( !$metaUser->hasSubscription ) {
-			$metaUser->objSubscription = new Subscription( $db );
-			$metaUser->objSubscription->createNew( $admin->id, 'free', 0 );
-			$metaUser->objSubscription->setStatus( 'Excluded' );
+			if ( !$metaUser->hasSubscription ) {
+				$metaUser->objSubscription = new Subscription( $db );
+				$metaUser->objSubscription->createNew( $admin->id, 'free', 0 );
+				$metaUser->objSubscription->setStatus( 'Excluded' );
+			}
 		}
 	}
 

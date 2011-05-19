@@ -14201,7 +14201,11 @@ class reWriteEngine
 		}
 
 		if ( !empty( $newlang ) ) {
-			$lang->_strings = array_merge( $newlang, $lang->_strings );
+			if ( !isset( $lang->_strings ) ) {
+				$lang->_strings = $newlang;
+			} else {
+				$lang->_strings = array_merge( $newlang, $lang->_strings );
+			}
 		}
 
 		if ( in_array( 'subscription', $switches ) ) {
