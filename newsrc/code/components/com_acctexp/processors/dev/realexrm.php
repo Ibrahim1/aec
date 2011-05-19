@@ -81,9 +81,11 @@ class processor_realexrm extends XMLprocessor
 		$cardtype = $request->int_var['params']['cardType'];
 		
 		
+		
 		//substr($request->int_var['params']['expirationYear'],-2)
 		
-		$cardname = $request->metaUser->cmsUser->username;
+		//$cardname = $request->metaUser->cmsUser->username;
+		$cardname = $request->int_var['params']['billFirstName'] . ' ' .  $request->int_var['params']['billLastName'];
 		//$cardtype ="MC";
 
 		
