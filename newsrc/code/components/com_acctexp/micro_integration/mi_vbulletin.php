@@ -200,7 +200,7 @@ class mi_vbulletin
 			}
 
 			$content['joindate']		= (int) gmdate('U');
-			$content['passworddate']	= date( 'Y-m-d', ( (int) gmdate('U') );
+			$content['passworddate']	= date( 'Y-m-d', ( (int) gmdate('U') ) );
 			$content['usertitle']		= 'Junior Member';
 
 			if ( empty( $content['username'] ) ) {
