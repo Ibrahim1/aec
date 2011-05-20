@@ -1006,7 +1006,7 @@ class Payment_HTML
 							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
 							<?php
 						} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
-							<p><input name="tos" type="checkbox" /><?php echo sprintf( JText::_('CONFIRM_TOS'), $aecConfig->cfg['tos'] ); ?></p>
+							<p><input name="tos" type="checkbox" /><?php echo JText::sprintf( 'CONFIRM_TOS', $aecConfig->cfg['tos'] ); ?></p>
 							<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
 							<?php
 						} else { ?>
