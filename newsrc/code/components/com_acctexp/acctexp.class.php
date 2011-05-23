@@ -26,17 +26,12 @@ if (  ( version_compare( phpversion(), '5.0') >= 0 )  && ( version_compare( phpv
 // Get old language file names
 JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
 
-$lang =& JFactory::getLanguage();
+$langlist = array(	'com_acctexp' => JPATH_SITE,
+					'com_acctexp.microintegrations' => JPATH_SITE,
+					'com_acctexp.processors' => JPATH_SITE
+					);
 
-$lang->load( 'com_acctexp', JPATH_SITE, 'en-GB', true );
-$lang->load( 'com_acctexp', JPATH_SITE, $lang->getDefault(), true );
-$lang->load( 'com_acctexp', JPATH_SITE, null, true );
-$lang->load( 'com_acctexp.microintegrations', JPATH_SITE, 'en-GB', true );
-$lang->load( 'com_acctexp.microintegrations', JPATH_SITE, $lang->getDefault(), true );
-$lang->load( 'com_acctexp.microintegrations', JPATH_SITE, null, true );
-$lang->load( 'com_acctexp.processors', JPATH_SITE, 'en-GB', true );
-$lang->load( 'com_acctexp.processors', JPATH_SITE, $lang->getDefault(), true );
-$lang->load( 'com_acctexp.processors', JPATH_SITE, null, true );
+aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6beta' );
 define( '_AEC_REVISION', '3426' );
@@ -1701,6 +1696,32 @@ class metaUserDB extends serialParamDBTable
 		} else {
 			return null;
 		}
+	}
+}
+
+class aecLanguageHandler
+{
+	function loadList( $list )
+	{
+		if ( empty( $list ) ) {
+			return;
+		}
+
+		$lang =& JFactory::getLanguage();
+
+		foreach ( $list as $name => $path ) {
+			$lang->load( $name, $path, 'en-GB', true );
+			$lang->load( $name, $path, $lang->getDefault(), true );
+			$lang->load( $name, $path, null, true );
+		}
+
+		if ( !defined( 'JPATH_MANIFESTS' ) ) {
+			foreach ( $lang->_strings as $k => $v ) {
+				$lang->_strings[$k]= str_replace( '"_QQ_"', '"', $v );
+			}
+		}
+
+		return;
 	}
 }
 
