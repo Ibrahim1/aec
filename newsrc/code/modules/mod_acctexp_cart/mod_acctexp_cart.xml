@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install type="module" version="1.5.0" method="upgrade">
-<name>AEC Module</name>
+<name>AEC Cart Module</name>
 <creationDate>21.05.2010</creationDate>
 <author>David 'skOre' Deutsch</author>
 <copyright>This module is released under the GNU/GPL License.</copyright>
