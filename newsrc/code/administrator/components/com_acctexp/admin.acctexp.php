@@ -5073,6 +5073,11 @@ function quicklookup( $option )
 	$db = &JFactory::getDBO();
 
 	$searcc	= trim( aecGetParam( 'search', 0 ) );
+
+	if ( empty( $searcc ) ) {
+		return false;
+	}
+
 	$search = $db->getEscaped( strtolower( $searcc ) );
 
 	$userid = 0;
