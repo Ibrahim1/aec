@@ -3743,7 +3743,11 @@ function editItemGroup( $id, $option )
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 	$groupids = array();
 	foreach ( $grouplist as $id => $glisti ) {
-		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
+		} else {
+			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		}
 
 		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
 	}
