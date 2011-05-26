@@ -19624,7 +19624,7 @@ class aecReadout
 			"Override Activat." => array( array( 'params', 'override_activation' ), 'bool' ),
 			"Override Reg. Email" => array( array( 'params', 'override_regmail' ), 'bool' ),
 			"Set GID" => array( array( 'params', 'gid_enabled' ), 'bool' ),
-			"GID" => array( array( 'params', 'list', 'gid' ), 'list', 'gid' ),
+			"GID" => array( array( 'params', 'gid' ), 'list', 'gid' ),
 
 			"Standard Parent Plan" => array( array( 'params', 'standard_parent' ), 'list', 'plan' ),
 			"Fallback Plan" => array( array( 'params', 'fallback' ), 'list', 'plan' ),
