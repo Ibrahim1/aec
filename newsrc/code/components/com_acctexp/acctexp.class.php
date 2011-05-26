@@ -14765,6 +14765,9 @@ class reWriteEngine
 					$result = '';
 				}
 				break;
+			case 'hastext':
+				$result = ( strpos( $vars[0], $vars[1] ) !== false ) ? 1 : 0;
+				break;
 			case 'uppercase':
 				$result = strtoupper( $vars );
 				break;
