@@ -2088,6 +2088,45 @@ class aecACLhandler
 			return $db->loadResult();
 		}
 	}
+
+	function aclList()
+	{
+		$list = array();
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$db = &JFactory::getDBO();
+	
+			$query = 'SELECT `id`, `title`'
+					. ' FROM #__usergroups'
+					;
+			$db->setQuery( $query );
+	
+			$acllist = $db->loadObjectList();
+
+			foreach ( $acllist as $aclli ) {
+				$acll = new stdClass();
+
+				$acll->group_id	= $aclli->id;
+				$acll->name		= $aclli->title;
+				
+				$list[] = $acll;
+			}
+		} else {
+			$acl =& JFactory::getACL();
+
+			$acllist = $acl->get_group_children( 28, 'ARO', 'RECURSE' );
+
+			foreach ( $acllist as $aclli ) {
+				$acldata = $acl->get_group_data( $aclli );
+
+				$list[$aclli] = new stdClass();
+
+				$list[$aclli]->group_id	= $acldata[0];
+				$list[$aclli]->name		= $acldata[3];
+			}
+		}
+
+		return $list;
+	}
 }
 
 class Config_General extends serialParamDBTable
@@ -19390,19 +19429,7 @@ class aecReadout
 
 		$this->lists = array();
 
-		$acl =& JFactory::getACL();
-
-		$acllist = $acl->get_group_children( 28, 'ARO', 'RECURSE' );
-
-		$this->acllist = array();
-		foreach ( $acllist as $aclli ) {
-			$acldata = $acl->get_group_data( $aclli );
-
-			$this->acllist[$aclli] = new stdClass();
-
-			$this->acllist[$aclli]->group_id	= $acldata[0];
-			$this->acllist[$aclli]->name		= $acldata[3];
-		}
+		$this->acllist = aecACLhandler::aclList();
 
 		foreach ( $this->acllist as $aclitem ) {
 			$this->lists['gid'][$aclitem->group_id] = $aclitem->name;
@@ -19464,7 +19491,7 @@ class aecReadout
 
 					foreach ( $reg as $regg ) {
 						$cname = '_CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
-//TODO: Language fix
+
 						if ( defined( $cname ) )  {
 							$tname = str_replace( ':', '', JText::_( $cname ) );
 						}
