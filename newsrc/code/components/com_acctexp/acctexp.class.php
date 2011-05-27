@@ -2396,6 +2396,7 @@ class Config_General extends serialParamDBTable
 		$def['itemid_subscriptiondetails']		= "";
 		$def['subscriptiondetails_menu']		= 1;
 		$def['confirmation_display_descriptions']	= 1;
+		$def['itemid_cb']						= "";
 
 		return $def;
 	}
@@ -15304,13 +15305,14 @@ class AECToolbox
 			if ( !strpos( strtolower( $url ), 'itemid' ) ) {
 				$parts = explode( '&', $url );
 
-				$task	= "";
-				$sub	= "";
+				$task	= $sub = $option = "";
 				foreach ( $parts as $part ) {
 					if ( strpos( $part, 'task=' ) === 0 ) {
 						$task = strtolower( str_replace( 'task=', '', $part ) );
 					} elseif ( strpos( $part, 'sub=' ) === 0 ) {
 						$sub = strtolower( str_replace( 'sub=', '', $part ) );
+					} elseif ( strpos( $part, 'option=' ) === 0 ) {
+						$option = strtolower( str_replace( 'option=', '', $part ) );
 					}
 				}
 
@@ -15331,6 +15333,8 @@ class AECToolbox
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task.'_'.$sub];
 				} elseif ( !empty( $aecConfig->cfg['itemid_' . $task] ) ) {
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task];
+				} elseif ( ( $option == 'com_comprofiler') && !empty( $aecConfig->cfg['itemid_cb'] ) ) {
+					$url .= '&Itemid=' . $aecConfig->cfg['itemid_cb'];
 				} elseif ( !empty( $aecConfig->cfg['itemid_default'] ) ) {
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_default'];
 				} else {
