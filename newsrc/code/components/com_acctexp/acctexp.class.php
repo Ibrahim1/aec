@@ -10302,7 +10302,7 @@ class InvoiceFactory
 		$this->checkout = array();
 		$this->checkout['checkout_title']					= JText::_('CHECKOUT_TITLE');
 		$this->checkout['customtext_checkout_keeporiginal']	= $aecConfig->cfg['customtext_checkout_keeporiginal'];
-		$this->checkout['customtext_checkout']				= $aecConfig->cfg['customtext_checkout'];
+		$this->checkout['customtext_checkout']				= AECToolbox::rewriteEngineRQ( $aecConfig->cfg['customtext_checkout'], $this );
 		$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
 		$this->checkout['checkout_display_descriptions']	= $aecConfig->cfg['checkout_display_descriptions'];
 		$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];

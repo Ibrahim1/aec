@@ -53,7 +53,7 @@ class HTML_frontEnd
 			<?php
 		}
 		if ( $aecConfig->cfg['customtext_expired'] ) { ?>
-			<p><?php echo $aecConfig->cfg['customtext_expired']; ?></p>
+			<p><?php echo AECToolbox::rewriteEngine( $aecConfig->cfg['customtext_expired'], $metaUser ); ?></p>
 			<?php
 		} ?>
 		<div id="box_expired">
@@ -111,7 +111,7 @@ class HTML_frontEnd
 			<?php
 		}
 		if ( $aecConfig->cfg['customtext_hold'] ) { ?>
-			<p><?php echo $aecConfig->cfg['customtext_hold']; ?></p>
+			<p><?php echo AECToolbox::rewriteEngine( $aecConfig->cfg['customtext_hold'], $metaUser ); ?></p>
 			<?php
 		} ?>
 		<?php
