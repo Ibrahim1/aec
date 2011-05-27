@@ -646,6 +646,13 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$response['valid'] = 0;
 
+		if ( ( strtotime( $invoice->transaction_date ) + ( 60*60*24 ) ) > ( (int) gmdate('U') ) ) {
+			// Double call -> duplicate
+			$response['duplicate'] = true;
+
+			return $response;
+		}
+
 		if ( strcmp( $receiver_email, $this->settings['business'] ) != 0 && $this->settings['checkbusiness'] ) {
 			$response['pending_reason'] = 'checkbusiness error';
 		} elseif ( ( strcmp( $res, 'VERIFIED' ) == 0 ) || ( empty( $res ) && !empty( $this->settings['brokenipnmode'] ) ) ) {
