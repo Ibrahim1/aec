@@ -67,6 +67,8 @@ class mi_supporttimetracker extends MI
 
 				$this->updateSupportMinutes( $request->metaUser, $this->settings['add_minutes'], 0, $details );
 			}
+		} elseif ( $request->action == 'refund' ) {
+			$this->updateSupportMinutes( $request->metaUser, 0, $this->settings['add_minutes'], 'Refund' );
 		}
 
 		return true;
