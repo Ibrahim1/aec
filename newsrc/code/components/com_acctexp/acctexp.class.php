@@ -19419,7 +19419,16 @@ class aecExport extends serialParamDBTable
 						$plans[$planid]->load( $planid );
 					}
 
-					$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser, $plans[$planid] );
+					$invoiceid = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->userid, $planid );
+
+					if ( $invoiceid ) {
+						$invoice = new Invoice( $db );
+						$invoice->load( $invoiceid );
+
+						$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser, $plans[$planid], $invoice );
+					} else {
+						$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser, $plans[$planid] );
+					}
 				} else {
 					$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser );
 				}

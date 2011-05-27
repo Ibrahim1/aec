@@ -6202,7 +6202,7 @@ function exportData( $option, $cmd=null )
 	$params[] = array( 'userinfobox', 50 );
 	$params['params_remap']	= array( 'subarea_change', 'options' );
 	$params['rewrite_rule']	= array( 'inputD', '' );
-	$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan' );
+	$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 	$params[] = array( '2div_end', '' );
 
