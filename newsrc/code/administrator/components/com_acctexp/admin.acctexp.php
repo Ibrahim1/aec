@@ -2225,8 +2225,9 @@ function editSettings( $option )
 		if ( empty( $aecConfig->cfg['itemid_' . $idk] ) ) {
 			$query = 'SELECT `id`'
 					. ' FROM #__menu'
-					. ' WHERE LOWER( `link` ) = \'index.php?option=com_acctexp&view=' . $idkp['view'] . '\''
-					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idkp['view'] . '%\''
+					. ' WHERE ( LOWER( `link` ) = \'index.php?option=com_acctexp&view=' . $idkp['view'] . '\''
+					. ' OR LOWER( `link` ) LIKE \'%' . 'layout='. $idkp['view'] . '%\' )'
+					. ' AND published = \'1\''
 					;
 			$db->setQuery( $query );
 
@@ -2241,6 +2242,7 @@ function editSettings( $option )
 							. ' FROM #__menu'
 							. ' WHERE `id` IN (' . implode( ',', $mids ) . ')'
 							. ' AND `params` LIKE \'%' . $idkp['params'] . '%\''
+							. ' AND published = \'1\''
 							;
 					$db->setQuery( $query );
 
