@@ -135,8 +135,17 @@ class mi_aectax
 		}
 
 		if ( !empty( $this->settings['vat_no_request'] ) ) {
+			$vat_no = '';
+			if ( $request->metaUser->userid ) {
+				$uparams = $request->metaUser->meta->getCustomParams();
+				
+				if ( isset( $uparams['vat_no'] ) ) {
+					$vat_no = $uparams['vat_no'];
+				}
+			}
+
 			$settings['vat_desc'] = array( 'p', "", JText::_('MI_MI_AECTAX_VAT_DESC_NAME') );
-			$settings['vat_number'] = array( 'inputC', JText::_('MI_MI_AECTAX_VAT_NUMBER_NAME'), JText::_('MI_MI_AECTAX_VAT_NUMBER_DESC'), '' );
+			$settings['vat_number'] = array( 'inputC', JText::_('MI_MI_AECTAX_VAT_NUMBER_NAME'), JText::_('MI_MI_AECTAX_VAT_NUMBER_DESC'), $vat_no );
 		}
 
 		return $settings;
@@ -161,13 +170,18 @@ class mi_aectax
 
 				$vat_number = $this->clearVatNumber( $request->params['vat_number'] );
 
-				$check = $this->checkVatNumber( $request->params['vat_number'], $request->params['location'], $vatlist );
+				$check = $this->checkVatNumber( $vat_number, $request->params['location'], $vatlist );
 
 				if ( !$check ) {
 					$return['error'] = "Invalid VAT Number";
 					return $return;
 				}
 			}
+		}
+
+		if ( !isset( $return['error'] ) && !empty( $vat_number ) && $request->metaUser->userid ) {
+			$request->metaUser->meta->setCustomParams( array( 'vat_no' => $vat_number ) );
+			$request->metaUser->meta->storeload();
 		}
 
 		return $return;
