@@ -5871,6 +5871,9 @@ class aecHTML
 
 				$return .= '</div>';
 				break;
+			case 'textarea':
+				$return .= '<textarea style="width:90%" cols="450" rows="10" name="' . $name . '" id="' . $name . '" >' . $value . '</textarea>';
+				break;
 			case 'list':
 				$return .= '<div class="setting_form">';
 				$return .= $this->lists[$name];
@@ -7906,7 +7909,7 @@ class SubscriptionPlan extends serialParamDBTable
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
 						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
 						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout', 'addtocart_redirect',
-						'cart_behavior'
+						'cart_behavior', 'notes'
 						);
 
 		$params = array();
@@ -11816,10 +11819,6 @@ class Invoice extends serialParamDBTable
 			if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
 				$metaUser = new metaUser( $this->userid );
 
-				if ( empty( $metaUser->cmsUser->gid ) ) {
-					return false;
-				}
-
 				if ( !$metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
 					return false;
 				}
@@ -14336,6 +14335,7 @@ class reWriteEngine
 			$rewrite['subscription'][] = 'lifetime';
 			$rewrite['subscription'][] = 'expiration_date';
 			$rewrite['subscription'][] = 'expiration_date_backend';
+			$rewrite['subscription'][] = 'notes';
 		}
 
 		if ( in_array( 'invoice', $switches ) ) {
@@ -14353,6 +14353,7 @@ class reWriteEngine
 		if ( in_array( 'plan', $switches ) ) {
 			$rewrite['plan'][] = 'name';
 			$rewrite['plan'][] = 'desc';
+			$rewrite['plan'][] = 'notes';
 		}
 
 		if ( !empty( $params ) ) {
@@ -14372,7 +14373,11 @@ class reWriteEngine
 				. '<ul>' . "\n";
 
 				foreach ( $keys as $key ) {
-					$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . JText::_( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+					if ( $lang->hasKey( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) ) {
+						$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . JText::_( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+					} else {
+						$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . ucfirst( str_replace( '_', ' ', $key ) ) . '</li>' . "\n";
+					}
 				}
 				$list .= '</ul>' . "\n"
 				. '</div>' . "\n";
@@ -14399,7 +14404,11 @@ class reWriteEngine
 				. '<ul>' . "\n";
 
 				foreach ( $keys as $key ) {
-					$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . JText::_( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+					if ( $lang->hasKey( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) ) {
+						$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . JText::_( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+					} else {
+						$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . ucfirst( str_replace( '_', ' ', $key ) ) . '</li>' . "\n";
+					}
 				}
 				$return .= '</ul>' . "\n"
 				. '</div>' . "\n";
@@ -14577,6 +14586,12 @@ class reWriteEngine
 					$this->rewrite['subscription_lifetime']			= $this->data['metaUser']->focusSubscription->lifetime;
 					$this->rewrite['subscription_expiration_date']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->expiration );
 					$this->rewrite['subscription_expiration_date_backend']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->expiration, true );
+
+					if ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ) {
+						$this->rewrite['subscription_notes']		=  $metaUser->focusSubscription->customparams['notes'];
+					} else {
+						$this->rewrite['subscription_notes']		=  '';
+					}
 				}
 
 				if ( empty( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
@@ -14618,6 +14633,12 @@ class reWriteEngine
 			if ( is_object( $this->data['plan'] ) ) {
 				$this->rewrite['plan_name'] = $this->data['plan']->getProperty( 'name' );
 				$this->rewrite['plan_desc'] = $this->data['plan']->getProperty( 'desc' );
+
+				if ( !empty( $this->data['plan']->params['notes'] ) ) {
+					$this->rewrite['plan_notes'] = $this->data['plan']->params['notes'];
+				} else {
+					$this->rewrite['plan_notes'] = '';
+				}
 			}
 		}
 	}
