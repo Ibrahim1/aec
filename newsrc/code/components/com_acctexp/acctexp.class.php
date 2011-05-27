@@ -797,164 +797,9 @@ class metaUser
 			}
 		}
 
-		$user = &JFactory::getUser();
+		$shandler = new aecSessionHandler();
 
-		if ( !is_array( $gid ) && !empty( $gid ) ) {
-			$gid = array( $gid );
-		} elseif ( empty( $gid ) ) {
-			$gid = array();
-		}
-
-		if ( !is_array( $removegid ) ) {
-			$removegid = array( $removegid );
-		}
-
-		if ( !empty( $removegid ) ) {
-			aecACLhandler::removeGIDs( (int) $this->userid, $removegid );
-		}
-
-		// Set GID and usertype
-		if ( !empty( $gid ) ) {
-			$info = aecACLhandler::setGIDs( (int) $this->userid, $gid );
-		}
-
-		$session = $this->getSession();
-
-		if ( empty( $session ) ) {
-			return true;
-		}
-
-		if ( !empty( $sessionextra ) ) {
-			if ( is_array( $sessionextra ) ) {
-				foreach ( $sessionextra as $sk => $sv ) {
-					$session['user']->$sk = $sv;
-
-					if ( $this->userid == $user->id ) {
-						$user->$sk	= $sv;
-					}
-				}
-			}
-		}
-
-		if ( isset( $session['user'] ) && !defined( 'JPATH_MANIFESTS' ) ) {
-			$session['user']->gid		= $gid[0];
-			$session['user']->usertype	= $info[$gid[0]];
-
-			if ( $this->userid == $user->id ) {
-				$user->gid		= $gid[0];
-				$user->usertype	= $info[$gid[0]];
-			}
-		} elseif ( isset( $session->user ) ) {
-			if ( $this->userid == $user->id ) {
-				$ugs = $user->get('groups');
-			} else {
-				$ugs = array();
-			}
-
-			$sgsids = JAccess::getGroupsByUser($this->userid);
-
-			$db = &JFactory::getDBO();
-
-			$query = 'SELECT `title`, `id`'
-					. ' FROM #__usergroups'
-					. ' WHERE `id` IN (' . implode( ',', $sgsids ) . ')'
-					;
-			$db->setQuery( $query );
-			$sgslist = $db->loadObjectList();
-
-			$sgs = array();
-
-			foreach ( $sgslist as $gidgroup ) {
-				if ( !in_array( $gidgroup->id, $removegid ) ) {
-					$sgs[$gidgroup->title] = $gidgroup->id;
-				}
-			}
-
-			if ( $this->userid == $user->id ) {
-				$user->set( 'groups', $sgs );
-				
-				$user->set( '_authLevels', JAccess::getAuthorisedViewLevels($this->userid) );
-				$user->set( '_authGroups', JAccess::getGroupsByUser($this->userid) );
-			}
-
-			$session['user']->set( 'groups', $sgs );
-
-			$session['user']->set( '_authLevels', JAccess::getAuthorisedViewLevels($this->userid) );
-			$session['user']->set( '_authGroups', JAccess::getGroupsByUser($this->userid) );
-		}
-
-		$this->putSession( $session, $gid[0], $info[$gid[0]] );
-	}
-
-	function getSession()
-	{
-		$db = &JFactory::getDBO();
-
-		$query = 'SELECT data'
-		. ' FROM #__session'
-		. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-		;
-		$db->setQuery( $query );
-		$data = $db->loadResult();
-
-		if ( !empty( $data ) ) {
-			$session = $this->joomunserializesession( $data );
-
-			$key = array_pop( array_keys( $session ) );
-
-			$this->sessionkey = $key;
-
-			return $session[$key];
-		} else {
-			return array();
-		}
-	}
-
-	function putSession( $data, $gid=null, $gid_name=null )
-	{
-		$db = &JFactory::getDBO();
-
-		$sdata = $this->joomserializesession( array( $this->sessionkey => $data) );
-
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$query = 'UPDATE #__session'
-					. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
-					. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-					;
-		} elseif ( isset( $data['user'] ) ) {
-			$query = 'UPDATE #__session'
-					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
-					. ' WHERE `userid` = \'' . (int) $this->userid . '\''
-					;
-		}
-
-		$db->setQuery( $query );
-		$db->query() or die( $db->stderr() );
-	}
-
-	function unserializesession( $data )
-	{
-		$vars = preg_split('/([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff^|]*)\|/', $data, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
-
-		for ( $i=0; $vars[$i]; $i++ ) {
-			$result[$vars[$i++]] = unserialize( $vars[$i] );
-		}
-
-		return $result;
-	}
-
-	function joomunserializesession( $data )
-	{
-		$se = explode( "|", $data, 2 );
-
-		return array( $se[0] => unserialize( $se[1] ) );
-	}
-
-	function joomserializesession( $data )
-	{
-		$key = array_pop( array_keys( $data ) );
-
-		return $key . "|" . serialize( $data[$key] );
+		$shandler->instantGIDchange( $this->userid, $gid, $removegid, $sessionextra );
 	}
 
 	function isAdmin()
@@ -976,6 +821,50 @@ class metaUser
 		}
 
 		return false;
+	}
+
+	function hasGroup( $group )
+	{
+		if ( is_array( $group ) ) {
+			$usergroups = $this->getGroups();
+
+			foreach ( $group as $g ) {
+				if ( in_array( $g, $usergroups ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		} else {
+			return in_array( $group, $this->getGroups() );
+		}
+		
+	}
+
+	function getGroups()
+	{
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$db = &JFactory::getDBO();
+
+			$query = 'SELECT `group_id`'
+					. ' FROM #__user_usergroup_map'
+					. ' WHERE `user_id`= \'' . (int) $this->userid . '\''
+					;
+			$db->setQuery( $query );
+
+			$groups = $db->loadResultArray();
+
+			$lower = array();
+			foreach ( $groups as $group ) {
+				$lower = array_merge( $lower, aecACLhandler::getLowerACLGroups( $group ) );
+			}
+
+			$groups = array_merge( $groups, $lower );
+
+			return array_unique( $groups );
+		} else {
+			return array_merge( aecACLhandler::getLowerACLGroups( $this->cmsUser->gid ), array( $this->cmsUser->gid ) );
+		}
 	}
 
 	function is_renewing()
@@ -1134,7 +1023,7 @@ class metaUser
 						// Check for a certain GID
 						case 'fixgid':
 							if ( is_object( $this->cmsUser ) ) {
-								if ( (int) $value === (int) $this->cmsUser->gid ) {
+								if ( $this->hasGroup( $value ) ) {
 									$status = true;
 								}
 							}
@@ -1142,8 +1031,7 @@ class metaUser
 						// Check for Minimum GID
 						case 'mingid':
 							if ( is_object( $this->cmsUser ) ) {
-								$groups = GeneralInfoRequester::getLowerACLGroup( (int) $this->cmsUser->gid );
-								if ( in_array( (int) $value, (array) $groups ) ) {
+								if ( $this->hasGroup( $value ) ) {
 									$status = true;
 								}
 							}
@@ -1151,8 +1039,8 @@ class metaUser
 						// Check for Maximum GID
 						case 'maxgid':
 							if ( is_object( $this->cmsUser ) ) {
-								$groups = GeneralInfoRequester::getLowerACLGroup( $value );
-								if ( in_array( (int) $this->cmsUser->gid, (array) $groups) ) {
+								$groups = aecACLhandler::getHigherACLGroups( $value );
+								if ( !$this->hasGroup( $groups ) ) {
 									$status = true;
 								}
 							} else {
@@ -2126,6 +2014,204 @@ class aecACLhandler
 		}
 
 		return $list;
+	}
+
+	function getLowerACLGroups( $group_id )
+	{
+		$db = &JFactory::getDBO();
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$tbl = 'usergroups';
+		} else {
+			$tbl = 'core_acl_aro_groups';
+		}
+
+		$query = 'SELECT g2.id'
+				. ' FROM #__' . $tbl . ' AS g1'
+				. ' INNER JOIN #__' . $tbl . ' AS g2 ON g1.lft > g2.lft AND g1.rgt < g2.rgt'
+				. ' WHERE g1.id = ' . $group_id
+				. ' GROUP BY g2.id'
+				. ' ORDER BY g2.lft'
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResultArray();
+	}
+
+	function getHigherACLGroups( $group_id )
+	{
+		$db = &JFactory::getDBO();
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$tbl = 'usergroups';
+		} else {
+			$tbl = 'core_acl_aro_groups';
+		}
+
+		$query = 'SELECT g2.id'
+				. ' FROM #__' . $tbl . ' AS g1'
+				. ' INNER JOIN #__' . $tbl . ' AS g2 ON g1.lft < g2.lft AND g1.rgt > g2.rgt'
+				. ' WHERE g1.id = ' . $group_id
+				. ' GROUP BY g2.id'
+				. ' ORDER BY g2.lft'
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResultArray();
+	}
+}
+
+class aecSessionHandler
+{
+	function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
+	{
+		$user = &JFactory::getUser();
+
+		if ( !is_array( $gid ) && !empty( $gid ) ) {
+			$gid = array( $gid );
+		} elseif ( empty( $gid ) ) {
+			$gid = array();
+		}
+
+		if ( !is_array( $removegid ) ) {
+			$removegid = array( $removegid );
+		}
+
+		if ( !empty( $removegid ) ) {
+			aecACLhandler::removeGIDs( (int) $userid, $removegid );
+		}
+
+		// Set GID and usertype
+		if ( !empty( $gid ) ) {
+			$info = aecACLhandler::setGIDs( (int) $userid, $gid );
+		}
+
+		$session = $this->getSession( $userid );
+
+		if ( empty( $session ) ) {
+			return true;
+		}
+
+		if ( !empty( $sessionextra ) ) {
+			if ( is_array( $sessionextra ) ) {
+				foreach ( $sessionextra as $sk => $sv ) {
+					$session['user']->$sk = $sv;
+
+					if ( $userid == $user->id ) {
+						$user->$sk	= $sv;
+					}
+				}
+			}
+		}
+
+		if ( isset( $session['user'] ) && !defined( 'JPATH_MANIFESTS' ) ) {
+			$session['user']->gid		= $gid[0];
+			$session['user']->usertype	= $info[$gid[0]];
+
+			if ( $userid == $user->id ) {
+				$user->gid		= $gid[0];
+				$user->usertype	= $info[$gid[0]];
+			}
+		} elseif ( isset( $session->user ) ) {
+			if ( $userid == $user->id ) {
+				$ugs = $user->get('groups');
+			} else {
+				$ugs = array();
+			}
+
+			$sgsids = JAccess::getGroupsByUser( $userid );
+
+			$db = &JFactory::getDBO();
+
+			$query = 'SELECT `title`, `id`'
+					. ' FROM #__usergroups'
+					. ' WHERE `id` IN (' . implode( ',', $sgsids ) . ')'
+					;
+			$db->setQuery( $query );
+			$sgslist = $db->loadObjectList();
+
+			$sgs = array();
+
+			foreach ( $sgslist as $gidgroup ) {
+				if ( !in_array( $gidgroup->id, $removegid ) ) {
+					$sgs[$gidgroup->title] = $gidgroup->id;
+				}
+			}
+
+			if ( $userid == $user->id ) {
+				$user->set( 'groups', $sgs );
+				
+				$user->set( '_authLevels', JAccess::getAuthorisedViewLevels($userid) );
+				$user->set( '_authGroups', JAccess::getGroupsByUser($userid) );
+			}
+
+			$session['user']->set( 'groups', $sgs );
+
+			$session['user']->set( '_authLevels', JAccess::getAuthorisedViewLevels($userid) );
+			$session['user']->set( '_authGroups', JAccess::getGroupsByUser($userid) );
+		}
+
+		$this->putSession( $userid, $session, $gid[0], $info[$gid[0]] );
+	}
+
+	function getSession( $userid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT data'
+		. ' FROM #__session'
+		. ' WHERE `userid` = \'' . (int) $userid . '\''
+		;
+		$db->setQuery( $query );
+		$data = $db->loadResult();
+
+		if ( !empty( $data ) ) {
+			$session = $this->joomunserializesession( $data );
+
+			$key = array_pop( array_keys( $session ) );
+
+			$this->sessionkey = $key;
+
+			return $session[$key];
+		} else {
+			return array();
+		}
+	}
+
+	function putSession( $userid, $data, $gid=null, $gid_name=null )
+	{
+		$db = &JFactory::getDBO();
+
+		$sdata = $this->joomserializesession( array( $this->sessionkey => $data) );
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$query = 'UPDATE #__session'
+					. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
+					. ' WHERE `userid` = \'' . (int) $userid . '\''
+					;
+		} elseif ( isset( $data['user'] ) ) {
+			$query = 'UPDATE #__session'
+					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
+					. ' WHERE `userid` = \'' . (int) $userid . '\''
+					;
+		}
+
+		$db->setQuery( $query );
+		$db->query() or die( $db->stderr() );
+	}
+
+	function joomunserializesession( $data )
+	{
+		$se = explode( "|", $data, 2 );
+
+		return array( $se[0] => unserialize( $se[1] ) );
+	}
+
+	function joomserializesession( $data )
+	{
+		$key = array_pop( array_keys( $data ) );
+
+		return $key . "|" . serialize( $data[$key] );
 	}
 }
 
@@ -11734,9 +11820,7 @@ class Invoice extends serialParamDBTable
 					return false;
 				}
 
-				$groups = GeneralInfoRequester::getLowerACLGroup( $metaUser->cmsUser->gid );
-
-				if ( !in_array( $aecConfig->cfg['checkout_as_gift_access'], $groups ) ) {
+				if ( !$metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
 					return false;
 				}
 			}
@@ -13600,40 +13684,6 @@ class GeneralInfoRequester
 			case 'JOMSOCIAL':
 				return file_exists( JPATH_SITE . '/components/com_community/community.php' );
 				break;
-		}
-	}
-
-	/**
-	 * Return the list of group id with lower priviledge
-	 * @parameter group id
-	 * @return string
-	 */
-	function getLowerACLGroup( $group_id )
-	{
-		$db = &JFactory::getDBO();
-
-		$group_list	= array();
-		$groups		= '';
-
-		$query = 'SELECT g2.id'
-				. ' FROM #__core_acl_aro_groups AS g1'
-				. ' INNER JOIN #__core_acl_aro_groups AS g2 ON g1.lft >= g2.lft AND g1.lft <= g2.rgt'
-				. ' WHERE g1.id = ' . $group_id
-				. ' GROUP BY g2.id'
-				. ' ORDER BY g2.lft'
-				;
-		$db->setQuery( $query );
-		$rows = $db->loadObjectList();
-
-		for( $i = 0, $n = count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i];
-			$group_list[$i] = $row->id;
-		}
-
-		if ( count( $group_list ) > 0 ) {
-			return $group_list;
-		} else {
-			return array();
 		}
 	}
 }

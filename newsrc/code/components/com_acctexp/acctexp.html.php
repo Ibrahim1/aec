@@ -959,10 +959,7 @@ class Payment_HTML
 
 				if ( !empty( $aecConfig->cfg['confirm_as_gift'] ) ) {
 					if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-						// Apparently, we cannot trust $user->gid
-						$groups = GeneralInfoRequester::getLowerACLGroup( $InvoiceFactory->metaUser->cmsUser->gid );
-
-						if ( in_array( $aecConfig->cfg['checkout_as_gift_access'], $groups ) ) {
+						if ( $InvoiceFactory->metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
 							$makegift = true;
 						}
 					} else {
@@ -1151,10 +1148,7 @@ class Payment_HTML
 
 				if ( !empty( $aecConfig->cfg['confirm_as_gift'] ) ) {
 					if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-						// Apparently, we cannot trust $user->gid
-						$groups = GeneralInfoRequester::getLowerACLGroup( $InvoiceFactory->metaUser->cmsUser->gid );
-
-						if ( in_array( $aecConfig->cfg['checkout_as_gift_access'], $groups ) ) {
+						if ( $InvoiceFactory->metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
 							$makegift = true;
 						}
 					} else {
@@ -1487,10 +1481,7 @@ class Payment_HTML
 
 			if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
 				if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-					// Apparently, we cannot trust $user->gid
-					$groups = GeneralInfoRequester::getLowerACLGroup( $InvoiceFactory->metaUser->cmsUser->gid );
-
-					if ( in_array( $aecConfig->cfg['checkout_as_gift_access'], $groups ) ) {
+					if ( $InvoiceFactory->metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
 						$makegift = true;
 					}
 				} else {
