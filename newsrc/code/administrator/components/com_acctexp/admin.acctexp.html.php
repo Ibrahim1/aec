@@ -629,6 +629,7 @@ class HTML_AcctExp
 							<div style="float: left; text-align: left;">
 							<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
 							</div>
+						</div>
 					</td>
 				</tr>
 			</table>
@@ -1857,6 +1858,16 @@ class HTML_AcctExp
 												<h4>Shopping Cart</h4>
 												<?php echo $aecHTML->createSettingsParticle( 'cart_behavior' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
+											</div>
+										</div>
+									</div>
+									<div style="position:relative;float:left;width:32%;padding:4px;">
+										<div class="userinfobox">
+											<div style="float: left; text-align: right;">
+												<h3><?php echo 'Notes'; ?></h3>
+											</div>
+											<div style="float: left; text-align: left;">
+												<?php echo $aecHTML->createSettingsParticle( 'notes' ); ?>
 											</div>
 										</div>
 									</div>
