@@ -14405,9 +14405,9 @@ class reWriteEngine
 
 				foreach ( $keys as $key ) {
 					if ( $lang->hasKey( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) ) {
-						$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . JText::_( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
+						$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . JText::_( 'REWRITE_KEY_' . strtoupper( $area . "_" . $key ) ) . '</li>' . "\n";
 					} else {
-						$list .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . ucfirst( str_replace( '_', ' ', $key ) ) . '</li>' . "\n";
+						$return .= '<li>[[' . $area . "_" . $key . ']] =&gt; ' . ucfirst( str_replace( '_', ' ', $key ) ) . '</li>' . "\n";
 					}
 				}
 				$return .= '</ul>' . "\n"
