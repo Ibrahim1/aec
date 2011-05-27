@@ -2786,6 +2786,11 @@ class aecHeartbeat extends JTable
 	{
 		$db = &JFactory::getDBO();
 
+		// Make sure we have all the language stuff loaded
+		$langlist = array( 'com_acctexp.admin' => JPATH_ADMINISTRATOR );
+
+		aecLanguageHandler::loadList( $langlist );
+
 		$short	= JText::_('AEC_LOG_SH_HEARTBEAT');
 		$event	= JText::_('AEC_LOG_LO_HEARTBEAT') . ' ';
 		$tags	= array( 'heartbeat' );
