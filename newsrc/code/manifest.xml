@@ -4,9 +4,9 @@
 	<creationDate>2010.11.17</creationDate>
 	<author>David Deutsch, Team AEC, Helder Garcia</author>
 	<authorEmail>skore@valanx.org</authorEmail>
-	<copyright>@Copyright (C) 2004-2010 David Deutsch</copyright>
+	<copyright>Copyright (C) 2004-2011 David Deutsch</copyright>
 	<authorUrl>http://valanx.org</authorUrl>
-	<version>0.14.4</version>
+	<version>0.14.6</version>
 	<description>A complete subscription management system. By David Deutsch (skOre) and the team of AEC at valanx.org</description>
 	<files folder="components/com_acctexp">
 		<file>acctexp.class.php</file>
@@ -42,7 +42,6 @@
 			<file>admin.acctexp.html.php</file>
 			<file>toolbar.acctexp.php</file>
 			<file>toolbar.acctexp.html.php</file>
-
 			<folder>install</folder>
 		</files>
 		<languages folder="administrator/language">
