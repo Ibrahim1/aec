@@ -97,6 +97,56 @@ class mi_rstickets extends MI
 		return true;
 	}
 
+	function admin_form( $request )
+	{
+		$db = &JFactory::getDBO();
+
+		$this->loadRStickets();
+
+		$settings = array();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__menu'
+				. ' WHERE LOWER( `link` ) = \'index.php?option=com_rstickets\''
+				. ' AND published = \'1\''
+				. ' ORDER BY `ordering` ASC'
+				;
+		$db->setQuery( $query );
+		$mid = $db->loadResult();
+
+		$history_table = '<table style="width:950px;">';
+		$history_table .= '<tr><th>Ticket</th><th>Status</th><th>Assigned To</th><th>Replies</th><th>Added</th><th>Used</th><th>Details</th></tr>';
+
+		$tickets = rst_get_tickets(	'', '', '', '', '', '',
+									array(), array('open','on-hold','closed'), array('low','normal','high'),
+									1, 'TicketTime', 'DESC', '', '', '',
+									$request->metaUser->cmsUser->username, '', $request->metaUser->cmsUser->email );
+
+		if ( !empty( $tickets ) ) {
+			$i = 0;
+			foreach ( $tickets['tickets'] as $id => $entry ) {
+				if ( $i > 20 ) {
+					continue;
+				}
+
+				$history_table .= '<tr>'
+									. '<td><a href="' . JRoute::_('index.php?option=com_rstickets&page=ticket&id=' . $entry['TicketId'] . '&Itemid=' . $mid ) . '">' . $entry['TicketCode'] . '</a> - ' . $entry['TicketSubject'] . '</td>'
+									. '<td>' . $entry['TicketStatus'] . '</td>'
+									. '<td>' . $entry['StaffFullname'] . '</td>'
+									. '<td>' . $entry['TicketReplies'] . '</td>'
+									. '</tr>';
+
+				$i++;
+			}
+		}
+
+		$history_table .= '</table>';
+
+		$settings['history']	= array( 'fieldset', 'Recent Tickets', $history_table );
+
+		return $settings;
+	}
+
 	function loadRStickets()
 	{
 		if ( file_exists( JPATH_SITE . '/components/com_rstickets/config.php' ) ) {
