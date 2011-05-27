@@ -48,8 +48,11 @@ class mi_phocadownload extends MI
 			$catslist[] = JHTML::_('select.option', $row->id, $row->id . ': ' . $row->title );
 		}
 
-		$settings['addaccess']	= array( 'list' );
-		$settings['unaccess']	= array( 'list' );
+		$settings['addaccess']			= array( 'list' );
+		$settings['unaccess']			= array( 'list' );
+
+		$settings['upload_addaccess']	= array( 'list' );
+		$settings['upload_unaccess']	= array( 'list' );
 
 		$settings = $this->autoduplicatesettings( $settings );
 
@@ -70,6 +73,10 @@ class mi_phocadownload extends MI
 	{
 		if ( !empty( $this->settings['addaccess' . $request->area] ) || !empty( $this->settings['unaccess' . $request->area] ) ) {
 			$this->changeAccess( $request->metaUser->userid, $this->settings['addaccess' . $request->area], $this->settings['unaccess' . $request->area], $request->action );
+		}
+
+		if ( !empty( $this->settings['upload_addaccess' . $request->area] ) || !empty( $this->settings['upload_unaccess' . $request->area] ) ) {
+			$this->changeUploadAccess( $request->metaUser->userid, $this->settings['upload_addaccess' . $request->area], $this->settings['upload_unaccess' . $request->area], $request->action );
 		}
 	}
 
@@ -117,7 +124,49 @@ class mi_phocadownload extends MI
 
 	}
 
+	function changeUploadAccess( $userid, $add, $remove, $act )
+	{
+		$db = &JFactory::getDBO();
 
+		$query = 'SELECT `uploaduserid`'
+				 . ' FROM #__phocadownload_categories'
+				 . ' WHERE `id` = \'' . $add . '\'';
+		$db->setQuery( $query );
+
+		$paccess = $db->loadResult();
+
+		$pos = strpos( $paccess, $userid );
+
+		if ( $add !== '0' && $pos === false ) {
+			$query = 'UPDATE #__phocadownload_categories'
+			. ' SET `uploaduserid` = CONCAT(`uploaduserid`,",", \''. $userid . '\')'
+			. ' WHERE `id` = \'' . $add . '\''
+			;
+
+			$db->setQuery( $query );
+			$db->query();
+		}
+
+		$query = 'SELECT `uploaduserid`'
+				. ' FROM #__phocadownload_categories'
+				. ' WHERE `id` = \'' . $remove . '\'';
+		$db->setQuery( $query );
+
+		$praccess = $db->loadResult();
+
+		$rpos = strpos( $praccess, $userid );
+                 
+		if ( $remove !== '0' && $rpos !== false ) {
+			$query = 'UPDATE #__phocadownload_categories'
+			. ' SET `uploaduserid` = TRIM(BOTH \',\' FROM REPLACE(CONCAT(",",`uploaduserid`,",") , CONCAT(",",\''. $userid . '\',",") , \',\'))'
+			. ' WHERE `id` = \'' . $remove . '\''
+			;
+
+			$db->setQuery( $query );
+			$db->query();
+		} 
+
+	}
 
 }
 ?>
