@@ -2029,6 +2029,8 @@ function editSettings( $option )
 		$params['itemid_'.$param]				= array( 'inputB', '' );
 	}
 
+	$params['itemid_cb']						= array( 'inputB', '' );
+
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 

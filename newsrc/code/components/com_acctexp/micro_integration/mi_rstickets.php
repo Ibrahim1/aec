@@ -122,7 +122,7 @@ class mi_rstickets extends MI
 									1, 'TicketTime', 'DESC', '', '', '',
 									$request->metaUser->cmsUser->username, '', $request->metaUser->cmsUser->email );
 
-		if ( !empty( $tickets ) ) {
+		if ( !empty( $tickets['tickets'] ) ) {
 			$i = 0;
 			foreach ( $tickets['tickets'] as $id => $entry ) {
 				if ( $i > 20 ) {
@@ -130,7 +130,7 @@ class mi_rstickets extends MI
 				}
 
 				$history_table .= '<tr>'
-									. '<td><a href="' . JRoute::_('index.php?option=com_rstickets&page=ticket&id=' . $entry['TicketId'] . '&Itemid=' . $mid ) . '">' . $entry['TicketCode'] . '</a> - ' . $entry['TicketSubject'] . '</td>'
+									. '<td><a href="' . JRoute::_(JURI::root().'index.php?option=com_rstickets&page=ticket&id=' . $entry['TicketId'] . '&Itemid=' . $mid ) . '">' . $entry['TicketCode'] . '</a> - ' . $entry['TicketSubject'] . '</td>'
 									. '<td>' . $entry['TicketStatus'] . '</td>'
 									. '<td>' . $entry['StaffFullname'] . '</td>'
 									. '<td>' . $entry['TicketReplies'] . '</td>'

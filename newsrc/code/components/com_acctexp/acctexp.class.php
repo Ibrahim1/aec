@@ -2396,6 +2396,7 @@ class Config_General extends serialParamDBTable
 		$def['itemid_subscriptiondetails']		= "";
 		$def['subscriptiondetails_menu']		= 1;
 		$def['confirmation_display_descriptions']	= 1;
+		$def['itemid_cb']						= "";
 
 		return $def;
 	}
@@ -11317,11 +11318,11 @@ class Invoice extends serialParamDBTable
 						// Check whether we're really expiring the right membership,
 						// Maybe the user was already switched to a different plan
 						if ( $metaUser->focusSubscription->plan == $usage->id ) {
-							$metaUser->focusSubscription->expire();
+							$metaUser->focusSubscription->expire( false, 'refund' );
 							$event .= JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED');
 						}
 					} else {
-						$metaUser->focusSubscription->expire();
+						$metaUser->focusSubscription->expire( false, 'refund' );
 						$event .= JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_EXPIRED');
 					}
 				}
@@ -13213,7 +13214,7 @@ class Subscription extends serialParamDBTable
 		return true;
 	}
 
-	function expire( $overridefallback=false )
+	function expire( $overridefallback=false, $special=null )
 	{
 		$db = &JFactory::getDBO();
 
@@ -13269,7 +13270,7 @@ class Subscription extends serialParamDBTable
 			// Call Expiration MIs
 			if ( $subscription_plan !== false ) {
 				$mih = new microIntegrationHandler();
-				$mih->userPlanExpireActions( $metaUser, $subscription_plan );
+				$mih->userPlanExpireActions( $metaUser, $subscription_plan, $special );
 			}
 		}
 
@@ -15304,13 +15305,14 @@ class AECToolbox
 			if ( !strpos( strtolower( $url ), 'itemid' ) ) {
 				$parts = explode( '&', $url );
 
-				$task	= "";
-				$sub	= "";
+				$task	= $sub = $option = "";
 				foreach ( $parts as $part ) {
 					if ( strpos( $part, 'task=' ) === 0 ) {
 						$task = strtolower( str_replace( 'task=', '', $part ) );
 					} elseif ( strpos( $part, 'sub=' ) === 0 ) {
 						$sub = strtolower( str_replace( 'sub=', '', $part ) );
+					} elseif ( strpos( $part, 'option=' ) === 0 ) {
+						$option = strtolower( str_replace( 'option=', '', $part ) );
 					}
 				}
 
@@ -15331,6 +15333,8 @@ class AECToolbox
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task.'_'.$sub];
 				} elseif ( !empty( $aecConfig->cfg['itemid_' . $task] ) ) {
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task];
+				} elseif ( ( $option == 'com_comprofiler') && !empty( $aecConfig->cfg['itemid_cb'] ) ) {
+					$url .= '&Itemid=' . $aecConfig->cfg['itemid_cb'];
 				} elseif ( !empty( $aecConfig->cfg['itemid_default'] ) ) {
 					$url .= '&Itemid=' . $aecConfig->cfg['itemid_default'];
 				} else {
@@ -16489,7 +16493,7 @@ class microIntegrationHandler
 		return $plan_list;
 	}
 
-	function userPlanExpireActions( $metaUser, $subscription_plan )
+	function userPlanExpireActions( $metaUser, $subscription_plan, $special=null )
 	{
 		$db = &JFactory::getDBO();
 
@@ -16510,6 +16514,10 @@ class microIntegrationHandler
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
 						$mi->expiration_action( $metaUser, $subscription_plan );
+						
+						if ( !empty( $special ) ) {
+							$mi->relayAction( $metaUser, null, null, $subscription_plan, $special );
+						}
 					}
 				}
 			}

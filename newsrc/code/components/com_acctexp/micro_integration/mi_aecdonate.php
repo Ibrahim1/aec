@@ -64,7 +64,7 @@ class mi_aecdonate
 		$return = array();
 
 		if ( empty( $request->params['amt'] ) || ( $request->params['amt'] == "" ) ) {
-			$return['error'] = "Please provide an amount";
+			$return['error'] = JText::_("Please provide an amount");
 		}
 
 		return $return;
