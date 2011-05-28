@@ -10264,8 +10264,8 @@ class InvoiceFactory
 		$this->triggerMIs( 'invoice_items_checkout', $exchange, $this->items, $silent );
 
 		// Either this is fully free, or the next term is free and this is non recurring
-		if ( !empty( $this->items->grand_total ) && !$this->recurring ) {
-			if ( $this->items->grand_total->isFree() && !$this->recurring ) {
+		if ( !empty( $this->items->grand_total ) && !$recurring ) {
+			if ( $this->items->grand_total->isFree() && !$recurring ) {
 				$this->invoice->pay();
 
 				return $this->thanks( $option, false, true );
@@ -11928,7 +11928,7 @@ class Invoice extends serialParamDBTable
 
 			$cph = new couponHandler();
 			$cph->load( $coupon_code );
-			if ( $cph->coupon->id ) {
+			if ( !empty( $cph->coupon->id ) ) {
 				$cph->decrementCount( $this );
 			}
 
@@ -17826,6 +17826,13 @@ class couponsHandler extends eucaObject
 		$cph = new couponHandler();
 		$cph->load( $coupon_code );
 
+		if ( empty( $cph->coupon->id ) ) {
+			$this->setError( "The code entered is not valid" );
+
+			$this->delete_list[] = $coupon_code;
+			return false;
+		}
+
 		if ( $cph->coupon->coupon_code !== $coupon_code ) {
 			$this->setError( "The code entered is not valid" );
 
@@ -17865,7 +17872,11 @@ class couponsHandler extends eucaObject
 	{
 		$itemcount = 0;
 		foreach ( $items->itemlist as $item ) {
-			$itemcount += $item->quantitiy;
+			if ( is_object( $item ) ) {
+				$itemcount += $item->quantitiy;
+			} else {
+				$itemcount++;
+			}
 		}
 
 		if ( !empty( $this->fullcartlist ) ) {
