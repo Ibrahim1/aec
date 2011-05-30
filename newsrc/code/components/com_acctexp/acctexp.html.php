@@ -1679,6 +1679,7 @@ class Payment_HTML
 		<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<title><?php echo $data['page_title']; ?></title>
+			<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 			<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option; ?>/css/invoice.css" type="text/css" media="screen, print" />
 			<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option; ?>/css/invoice_print.css" type="text/css" media="print" />
 			<?php if ( !empty( $aecConfig->cfg['invoice_address_allow_edit'] ) ) { ?>
@@ -1923,7 +1924,7 @@ function joomlaregisterForm($option, $useractivation)
 	</tr>
 	<?php
 	if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
-		require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+		include_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 		?>
 		<tr>
 			<td></td>
