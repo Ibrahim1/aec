@@ -90,7 +90,11 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['aec']			= $vars['option'] == 'com_acctexp';
 
-		$vars['j_reg']			= $vars['cu']		&& ( ( $vars['view'] == 'register' ) || ( $vars['view'] == 'registration' ) || ( $vars['task'] == 'register' ) );
+		$vars['j_reg']			= $vars['cu']		&& (	( $vars['view'] == 'register' )
+															|| ( $vars['view'] == 'registration' )
+															|| ( $vars['task'] == 'register' )
+															|| ( ( $vars['view'] == 'login' ) && ( $vars['task'] == 'subscribe' ) )
+															);
 
 		$vars['cb_reg']			= $vars['ccb']		&& $vars['tregs'];
 
