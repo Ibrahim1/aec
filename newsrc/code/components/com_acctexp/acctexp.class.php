@@ -6230,6 +6230,7 @@ class ItemGroupHandler
 	{
 		$db = &JFactory::getDBO();
 
+		// Filter out groups that have no relationship
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemxgroup'
 				. ' WHERE `type` = \'group\''
