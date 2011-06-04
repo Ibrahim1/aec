@@ -87,6 +87,7 @@ if ( !empty( $task ) ) {
 		case 'saveregistration':
 		case 'subscribe':
 		case 'signup':
+		case 'login':
 			subscribe( $option );
 			break;
 

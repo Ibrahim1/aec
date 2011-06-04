@@ -6230,6 +6230,7 @@ class ItemGroupHandler
 	{
 		$db = &JFactory::getDBO();
 
+		// Filter out groups that have no relationship
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemxgroup'
 				. ' WHERE `type` = \'group\''
@@ -14485,8 +14486,6 @@ class reWriteEngine
 
 		if ( !empty( $this->data['metaUser'] ) ) {
 			if ( is_object( $this->data['metaUser'] ) ) {
-				$name = $this->data['metaUser']->explodeName();
-
 				if ( isset( $this->data['metaUser']->cmsUser->id ) ) {
 					$this->rewrite['user_id']				= $this->data['metaUser']->cmsUser->id;
 				} else {
@@ -14504,6 +14503,8 @@ class reWriteEngine
 				} else {
 					$this->rewrite['user_name']				= "";
 				}
+
+				$name = $this->data['metaUser']->explodeName();
 
 				$this->rewrite['user_first_name']		= $name['first'];
 				$this->rewrite['user_first_first_name']	= $name['first_first'];
@@ -14593,8 +14594,8 @@ class reWriteEngine
 					$this->rewrite['subscription_expiration_date']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->expiration );
 					$this->rewrite['subscription_expiration_date_backend']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->expiration, true );
 
-					if ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ) {
-						$this->rewrite['subscription_notes']		=  $metaUser->focusSubscription->customparams['notes'];
+					if ( !empty( $this->data['metaUser']->focusSubscription->customparams['notes'] ) ) {
+						$this->rewrite['subscription_notes']		=  $this->data['metaUser']->focusSubscription->customparams['notes'];
 					} else {
 						$this->rewrite['subscription_notes']		=  '';
 					}

@@ -2209,7 +2209,11 @@ function editSettings( $option )
 	$glist = array();
 
 	foreach ( $grouplist as $id => $glisti ) {
-		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
+		} else {
+			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		}
 	}
 
 	$lists['root_group'] 		= JHTML::_('select.genericlist', $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', $aecConfig->cfg['root_group'] );
@@ -2796,7 +2800,12 @@ function listSubscriptionPlans( $option )
 	}
 
 	foreach ( $grouplist as $id => $glisti ) {
-		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
+		} else {
+			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		}
+
 		if ( !empty( $filter_group ) ) {
 			if ( in_array( $glisti[0], $filter_group ) ) {
 				$sel_groups[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
@@ -2937,7 +2946,11 @@ function editSubscriptionPlan( $id, $option )
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 	$groupids = array();
 	foreach ( $grouplist as $id => $glisti ) {
-		$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
+		} else {
+			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+		}
 
 		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
 	}
