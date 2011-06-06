@@ -12155,7 +12155,7 @@ class Invoice extends serialParamDBTable
 						$pplist[$transaction->processor] = $pp;
 					}
 
-					$data['invoice_billing_history'] = '<td>' . AECToolbox::formatDate( $transaction->timestamp ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $pplist[$transaction->processor]->info['longname'] . '</td>';
+					$data['invoice_billing_history'] .= '<td>' . AECToolbox::formatDate( $transaction->timestamp ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $pplist[$transaction->processor]->info['longname'] . '</td>';
 				}
 			}
 		}
