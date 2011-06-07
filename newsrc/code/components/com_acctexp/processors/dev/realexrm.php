@@ -61,70 +61,44 @@ class processor_realexrm extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-
 		$timestamp = strftime("%Y%m%d%H%M%S");
-		mt_srand((double)microtime()*1000000);
 
+		$amount = round( 100*$request->items->total->cost['amount'] );
 
-		$orderid = $timestamp.mt_rand(1, 999);
-		$amt = round(100*$request->items->total->cost['amount']);
-    $curr = $this->settings['currency']	;
-		$accnt = $this->settings['account'];
+		$md5hash = md5(
+						md5(	$timestamp
+								.$this->settings['merchantid']
+								.$request->invoice->id
+								.$amount
+								.$this->settings['currency']
+								.$request->int_var['params']['cardNumber']
+							)
+						.$this->settings['secret']
+					);
 		
-		$mid=$this->settings['merchantid'];
-		$ss= $this->settings['secret'];
-		
-		$cno =$request->int_var['params']['cardNumber'];
-		$expdate = $request->int_var['params']['expirationMonth'].substr($request->int_var['params']['expirationYear'],-2); 
-		$cvv2 = $request->int_var['params']['cardVV2'];
-		
-		$cardtype = $request->int_var['params']['cardType'];
-		
-		
-		
-		//substr($request->int_var['params']['expirationYear'],-2)
-		
-		//$cardname = $request->metaUser->cmsUser->username;
-		$cardname = $request->int_var['params']['billFirstName'] . ' ' .  $request->int_var['params']['billLastName'];
-		//$cardtype ="MC";
-
-		
-		//$tmp = "$timestamp.$mid.$orderid.$amt.$curr";
-		$tmp = "$timestamp.$mid.$orderid.$amt.$curr.$cno";
-
-		$md5hash = md5($tmp);
-		$tmp = "$md5hash.$ss";
-		$md5hash = md5($tmp);
-
-		
-		// Create and initialise XML parser
-		//$xml_parser = xml_parser_create();
-		//xml_set_element_handler($xml_parser, "startElement", "endElement");
-		//xml_set_character_data_handler($xml_parser, "cDataHandler");
-
-		//A number of variables are needed to generate the request xml that is send to Realex Payments.
-		$xml = "<request type='auth' timestamp='$timestamp'>
-				<merchantid>$mid</merchantid>
-				<account>$accnt</account>
-				<orderid>$orderid</orderid>
-				<amount currency='$curr'>$amt</amount>
+		// A number of variables are needed to generate the request xml that is send to Realex Payments.
+		$xml = '<request type="auth" timestamp="' . $timestamp . '">
+				<merchantid>' . $this->settings['merchantid'] . '</merchantid>
+				<account>' . $this->settings['account'] . '</account>
+				<orderid>' . $request->invoice->id . '</orderid>
+				<amount currency="' . $this->settings['currency'] . '">' . $amount . '</amount>
 				<card> 
-					<number>$cno</number>
-					<expdate>$expdate</expdate>
-					<type>$cardtype</type> 
-					<chname>$cardname</chname>
+					<number>' . $request->int_var['params']['cardNumber'] . '</number>
+					<expdate>' . $request->int_var['params']['expirationMonth'] . substr( $request->int_var['params']['expirationYear'], -2 ) . '</expdate>
+					<type>' . $request->int_var['params']['cardType'] . '</type> 
+					<chname>' . $request->int_var['params']['billFirstName'] . ' ' .  $request->int_var['params']['billLastName'] . '</chname>
 					<cvn>
-						<number>$cvv2</number>
+						<number>' . $request->int_var['params']['cardVV2'] . '</number>
 					</cvn>
 				</card> 
-				<autosettle flag='1'/>
-				<md5hash>$md5hash</md5hash>
+				<autosettle flag="1"/>
+				<md5hash>' . $md5hash . '</md5hash>
 				<tssinfo>
 					<address type=\"billing\">
 						<country>ie</country>
 					</address>
 				</tssinfo>
-			</request>";
+			</request>';
 
 
 		return $xml;
