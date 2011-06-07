@@ -1,11 +1,11 @@
 <?php
 
-
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+
 class processor_realexrm extends XMLprocessor
-	{
-		function info()
+{
+	function info()
 		{	$info = array();
 		$info['name']			= 'realexrm';
 		$info['longname']		= _AEC_PROC_INFO_RXRM_LNAME;
@@ -17,45 +17,30 @@ class processor_realexrm extends XMLprocessor
 		$info['recurring']		= 0;
 
 		return $info;
-	
-			
 		}
-		function settings()
-			{
-			$settings = array();
-		$settings['merchantid']		= 'yourmerchantid';
-		$settings['account']		= 'youraccount';
+
+	function settings()
+	{
+		$settings = array();
+		$settings['merchantid']	= 'yourmerchantid';
+		$settings['account']	= 'youraccount';
 		$settings['secret']		= 'yoursecret';
-		$settings['testmode']		= 1;
-		$settings['currency']		= 'EUR';
+		$settings['testmode']	= 1;
+		$settings['currency']	= 'EUR';
 	
-			return $settings;
-			}
+		return $settings;
+	}
 
-		function backend_settings()
-			{
+	function backend_settings()
+	{
 			$settings = array();
 
-    $settings['merchantid']		= array( 'inputC' );
-		$settings['account']		= array( 'inputC' );
+		$settings['merchantid']	= array( 'inputC' );
+		$settings['account']	= array( 'inputC' );
 		$settings['secret']		= array( 'inputC' );
-		$settings['testmode']				= array( 'list_yesno' );
-		$settings['currency']				= array( 'list_currency' );
-		//$settings['image_url']				= array( 'inputE' );
-
-
-
-		/*
 		$settings['testmode']	= array( 'list_yesno' );
 		$settings['currency']	= array( 'list_currency' );
-		$settings['custId']		= array( 'inputC' );
-		$settings['SiteTitle']	= array( 'inputC' );
-		$settings['item_name']	= array( 'inputE' );
 
- 		$rewriteswitches		= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
-		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
-		*/
-		
 		return $settings;
 	}
 
@@ -75,8 +60,7 @@ class processor_realexrm extends XMLprocessor
 							)
 						.$this->settings['secret']
 					);
-		
-		// A number of variables are needed to generate the request xml that is send to Realex Payments.
+
 		$xml = '<request type="auth" timestamp="' . $timestamp . '">
 				<merchantid>' . $this->settings['merchantid'] . '</merchantid>
 				<account>' . $this->settings['account'] . '</account>
@@ -112,56 +96,44 @@ class processor_realexrm extends XMLprocessor
 			$url = 'https://epage.payandshop.com/epage-remote.cgi';
 		}
 		$response1 = array();
-		$response=$this->transmitRequest( $url, '', $xml );
+		$response = $this->transmitRequest( $url, '', $xml );
 		
-		//print_r($response);
+		// Tidy it up
+		$response = eregi_replace ( "[[:space:]]+", " ", $response );
+		$response = eregi_replace ( "[\n\r]", "", $response );
 
-//Tidy it up
-$response = eregi_replace ( "[[:space:]]+", " ", $response );
-$response = eregi_replace ( "[\n\r]", "", $response );
+		$tags = array();
 
-//print_r($response);
-//echo '<br>';
+		$parser = xml_parser_create();
+		xml_parser_set_option( $parser, XML_OPTION_CASE_FOLDING, 0 );
+		xml_parser_set_option( $parser, XML_OPTION_SKIP_WHITE, 1 );
+		xml_parse_into_struct( $parser, $response, $tags );
+		xml_parser_free( $parser );
 
-$parser = xml_parser_create();
-    xml_parser_set_option( $parser, XML_OPTION_CASE_FOLDING, 0 );
-    xml_parser_set_option( $parser, XML_OPTION_SKIP_WHITE, 1 );
-    xml_parse_into_struct( $parser, $response, $tags );
-    xml_parser_free( $parser );
-   
+		$elements = array();
+		$stack = array();
 
-    $elements = array();
-    $stack = array();
-    foreach ( $tags as $tag )
-    {
-        $index = count( $elements );
-        if ( $tag['type'] == "complete" || $tag['type'] == "open" )
-        {
-            $elements[$index] = array();
-            $elements[$index]['name'] = $tag['tag'];
-            $elements[$index]['attributes'] = $tag['attributes'];
-            $elements[$index]['content'] = $tag['value'];
-           
-            if ( $tag['type'] == "open" )
-            {    # push
-                $elements[$index]['children'] = array();
-                $stack[count($stack)] = &$elements;
-                $elements = &$elements[$index]['children'];
-            }
-        }
-       
-        if ( $tag['type'] == "close" )
-        {    # pop
-            $elements = &$stack[count($stack) - 1];
-            unset($stack[count($stack) - 1]);
-        }
-    }
+		foreach ( $tags as $tag ) {
+			$index = count( $elements );
 
-//	echo '<br>elements: ';
+			if ( $tag['type'] == "complete" || $tag['type'] == "open" ) {
+				$elements[$index] = array();
+				$elements[$index]['name'] = $tag['tag'];
+				$elements[$index]['attributes'] = $tag['attributes'];
+				$elements[$index]['content'] = $tag['value'];
 
-//print_r($elements);
-	
-//	echo '<br>';
+				if ( $tag['type'] == "open" ) {    # push
+					$elements[$index]['children'] = array();
+					$stack[count($stack)] = &$elements;
+					$elements = &$elements[$index]['children'];
+				}
+			}
+
+			if ( $tag['type'] == "close" ) {
+				$elements = &$stack[count($stack) - 1];
+				unset($stack[count($stack) - 1]);
+	        }
+    	}
 
 	$tt = $elements[0]['attributes']['timestamp'];
 	//echo '<br>TimeStamp: '.$tt;
@@ -201,13 +173,13 @@ if($md5hash1 != $md5hash)
 }
 */
 
-if ($result_code == '00'){
-	$response1['valid'] = 1;
-}
-else{
-	$response['valid'] = 0;
-	$response1['error']  = $result_mesg.'<br>Please Check the Values';
-}
+		if ( $result_code == '00' ) {
+			$response1['valid'] = 1;
+		} else {
+			$response['valid'] = 0;
+			$response1['error']  = $result_mesg.'<br>Please Check the Values';
+		}
+
 		return $response1;
 	}
 
