@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @version $Id: realex_redirect.php
+ * @package AEC - Account Control Expiration - Membership Manager
+ * @subpackage Processors - Realex - Redirect Mode
+ * @copyright 2011 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
+ */
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
