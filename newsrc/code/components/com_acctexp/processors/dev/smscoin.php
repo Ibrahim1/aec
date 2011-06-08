@@ -40,8 +40,8 @@ class processor_smscoin extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['s_purse']		= array("inputE");
-		$settings['password']		= array("inputE");
+		$settings['s_purse']		= array('inputE');
+		$settings['password']		= array('inputE');
 		$settings['s_clear_amount']	= array('list_yesno');
 		$settings['s_description']	= array('inputE');
 
@@ -53,69 +53,55 @@ class processor_smscoin extends POSTprocessor
 	function createGatewayLink( $request )
 	{
 		$var = array();
-		$var['post_url']	= 'http://service.smscoin.com/bank/';
-		$var['s_purse']		= $this->settings['s_purse'];
-		$var['s_order_id']	= ( (int) gmdate('U') );
-		$var['invoice']		= $request->invoice->invoice_number;
+		$var['post_url']		= 'http://service.smscoin.com/bank/';
+		$var['s_purse']			= $this->settings['s_purse'];
+		$var['s_order_id']		= ( (int) gmdate('U') );
+		$var['invoice']			= $request->invoice->invoice_number;
+
 		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['s_amount']= $request->int_var['amount']['amount'];
+			$var['s_amount']	= $request->int_var['amount']['amount'];
 		} else {
-			$var['s_amount']= $request->int_var['amount'];
+			$var['s_amount']	= $request->int_var['amount'];
 		}
+
 		$var['s_clear_amount']	= $this->settings['s_clear_amount'];
 		$var['s_description']	= $this->settings['s_description'];
-		$var['s_sign']		= $this->ref_sign($this->settings['s_purse'], 
-							$var['s_order_id'], 
-							$var['s_amount'], 
-							$this->settings['s_clear_amount'],
-							$this->settings['s_description'], 
-							$this->settings['password']);
+
+		$var['s_sign']			= $this->ref_sign(	$this->settings['s_purse'], 
+													$var['s_order_id'], 
+													$var['s_amount'], 
+													$this->settings['s_clear_amount'],
+													$this->settings['s_description'], 
+													$this->settings['password']
+												);
 		return $var;
 	}
 
 	function parseNotification( $post )
 	{
-		$s_purse	= $post['s_purse'];
-		$s_order_id	= $post['s_order_id'];
-		$s_amount	= $post['s_amount'];
-		$s_clear_amount	= $post['s_clear_amount'];
-		$s_phone	= $post['s_phone'];
-		$s_inv		= $post['s_inv'];
-		$s_sign_v2	= $post['s_sign_v2'];
-		$item_name	= $post['item_name'];
-
 		$response = array();
-
-		$response['invoice'] = $post['invoice'];
-
-		if ( $s_sign_v2 == $this->ref_sign($this->settings['password'], $s_purse, $s_order_id, $s_amount, $s_clear_amount, $s_inv, $s_phone)) {
-			$response['valid'] = 1;   
-		} else {
-			$response['valid'] = 0;
-		}
+		$response['invoice']	= $post['invoice'];
+		$response['amount']		= $post['s_amount'];
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$s_purse	= $post['s_purse'];
-		$s_order_id	= $post['s_order_id'];
-		$s_amount	= $post['s_amount'];
-		$s_clear_amount	= $post['s_clear_amount'];
-		$s_phone	= $post['s_phone'];
-		$s_inv		= $post['s_inv'];
-		$s_sign_v2	= $post['s_sign_v2'];
-		$item_name	= $post['item_name'];
-
 		$response = array();
+		$response['valid'] = 0;
 
-		$response['invoice'] = $post['invoice'];
+		$hash = $this->ref_sign(	$this->settings['password'],
+									$post['s_purse'],
+									$post['s_order_id'],
+									$post['s_amount'],
+									$post['s_clear_amount'],
+									$post['s_inv'],
+									$post['s_phone']
+								);
 
-		if ( $s_sign_v2 == $this->ref_sign($this->settings['password'], $s_purse, $s_order_id, $s_amount, $s_clear_amount, $s_inv, $s_phone)) {
+		if ( $post['s_sign_v2'] == $hash ) {
 			$response['valid'] = 1;    
-		} else {
-			$response['valid'] = 0;
 		}
 
 		return $response;
@@ -124,8 +110,8 @@ class processor_smscoin extends POSTprocessor
 	function ref_sign()
 	{
 		$params = func_get_args();
-		$prehash = implode("::", $params);
-		return md5($prehash);
+
+		return md5( implode( "::", $params ) );
 	}
 
 }
