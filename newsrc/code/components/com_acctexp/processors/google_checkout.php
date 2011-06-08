@@ -110,7 +110,7 @@ class processor_google_checkout extends XMLprocessor
 
 	function parseNotification( $post )
 	{
-		require_once('google_checkout/library/googlerequest.php');
+		require_once( JPATH_SITE . '/components/com_acctexp/processors/google_checkout/library/googlerequest.php' );
 		
 		$response			= array();
 		$response['valid'] = false;
