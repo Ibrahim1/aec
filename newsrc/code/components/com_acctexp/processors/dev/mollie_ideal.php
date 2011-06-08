@@ -16,7 +16,7 @@ define( '_CFG_MOLLIE_IDEAL_STATEMENT', 'iDEAL via Mollie zonder vaste kosten of 
 define( '_CFG_MOLLIE_IDEAL_DESCRIPTION', 'iDEAL via Mollie zonder vaste kosten of procedures' );
 
 define( '_CFG_MOLLIE_IDEAL_PARTNER_ID_NAME', 'Partner ID' );
-define( '_CFG_MOLLIE_IDEAL_PARTNERJText::_('ID_DESC')', 'Uw Mollie Partner ID' );
+define( '_CFG_MOLLIE_IDEAL_PARTNERID_DESC', 'Uw Mollie Partner ID' );
 define( '_CFG_MOLLIE_IDEAL_DESCRIPTION_NAME', 'Omschrijving' );
 define( '_CFG_MOLLIE_IDEAL_DESCRIPTION_DESC', 'Orderinfo t.b.v. payment processor' );
 

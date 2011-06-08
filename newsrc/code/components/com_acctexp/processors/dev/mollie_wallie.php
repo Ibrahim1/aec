@@ -16,7 +16,7 @@ define( '_CFG_MOLLIE_WALLIE_STATEMENT', 'Laat uw klanten betalingen doen via de 
 define( '_CFG_MOLLIE_WALLIE_DESCRIPTION', 'Wallie is de populairste prepaidcard voor online betalingen die veel door ouders voor hun kinderen wordt gekocht.' );
 
 define( '_CFG_MOLLIE_WALLIE_PARTNER_ID_NAME', 'Partner ID' );
-define( '_CFG_MOLLIE_WALLIE_PARTNERJText::_('ID_DESC')', 'Uw Mollie Partner ID' );
+define( '_CFG_MOLLIE_WALLIE_PARTNERID_DESC', 'Uw Mollie Partner ID' );
 define( '_CFG_MOLLIE_WALLIE_DESCRIPTION_NAME', 'Omschrijving' );
 define( '_CFG_MOLLIE_WALLIE_DESCRIPTION_DESC', 'Orderinfo t.b.v. payment processor' );
 
