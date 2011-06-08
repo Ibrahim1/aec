@@ -16,10 +16,10 @@ class processor_smscoin extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= "smscoin";
-		$info['longname']		= "SMSCoin";
-		$info['statement']		= "Make payments with smscoin";
+		$info['longname']		= JText::_('CFG_SMSCOIN_LONGNAME');
+		$info['statement']		= JText::_('CFG_SMSCOIN_STATEMENT');
+		$info['description']	= JText::_('CFG_SMSCOIN_DESCRIPTION');
 		$info['currencies']		= "y.e.";
-		$info['description']	= "SMSCoin is the easiest and most affordable payment gateway.";
 		$info['recurring']		= 0;
 
 		return $info;
@@ -65,13 +65,13 @@ class processor_smscoin extends POSTprocessor
 		}
 
 		$var['s_clear_amount']	= $this->settings['s_clear_amount'];
-		$var['s_description']	= $this->settings['s_description'];
+		$var['s_description']	= AECToolbox::rewriteEngineRQ( $this->settings['s_description'], $request );
 
-		$var['s_sign']			= $this->ref_sign(	$this->settings['s_purse'], 
+		$var['s_sign']			= $this->ref_sign(	$var['s_purse'], 
 													$var['s_order_id'], 
 													$var['s_amount'], 
-													$this->settings['s_clear_amount'],
-													$this->settings['s_description'], 
+													$var['s_clear_amount'],
+													$var['s_description'], 
 													$this->settings['password']
 												);
 		return $var;
