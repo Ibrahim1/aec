@@ -11,25 +11,15 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-define( '_CFG_MOLLIE_IDEAL_LONGNAME', 'iDEAL via Mollie' );
-define( '_CFG_MOLLIE_IDEAL_STATEMENT', 'iDEAL via Mollie zonder vaste kosten of procedures' );
-define( '_CFG_MOLLIE_IDEAL_DESCRIPTION', 'iDEAL via Mollie zonder vaste kosten of procedures' );
-
-define( '_CFG_MOLLIE_IDEAL_PARTNER_ID_NAME', 'Partner ID' );
-define( '_CFG_MOLLIE_IDEAL_PARTNERID_DESC', 'Uw Mollie Partner ID' );
-define( '_CFG_MOLLIE_IDEAL_DESCRIPTION_NAME', 'Omschrijving' );
-define( '_CFG_MOLLIE_IDEAL_DESCRIPTION_DESC', 'Orderinfo t.b.v. payment processor' );
-
-
 class processor_mollie_ideal extends XMLprocessor
 {
 	function info()
 	{
 		$info = array();
 		$info['name']					= 'mollie_ideal';
-		$info['longname']				= _CFG_MOLLIE_IDEAL_LONGNAME;
-		$info['statement']				= _CFG_MOLLIE_IDEAL_STATEMENT;
-		$info['description']			= _CFG_MOLLIE_IDEAL_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_MOLLIE_IDEAL_LONGNAME');
+		$info['statement']				= JText::_('_CFG_MOLLIE_IDEAL_STATEMENT');
+		$info['description']			= JText::_('_CFG_MOLLIE_IDEAL_DESCRIPTION');
 		$info['currencies']				= 'EUR';
 		$info['languages']				= 'NL';
 		$info['recurring']	   			= 0;
@@ -68,7 +58,7 @@ class processor_mollie_ideal extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		require_once('mollie/cls.ideal.php');
+		require_once( JPATH_SITE . '/components/com_acctexp/processors/mollie/cls.ideal.php' );
 		
 		$var = array();
 		
@@ -110,7 +100,7 @@ class processor_mollie_ideal extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		require_once('mollie/cls.ideal.php');
+		require_once( JPATH_SITE . '/components/com_acctexp/processors/mollie/cls.ideal.php' );
 
 		$response			= array();
 		$response['valid']	= false;
@@ -160,7 +150,7 @@ class processor_mollie_ideal extends XMLprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		require_once('mollie/cls.ideal.php');
+		require_once( JPATH_SITE . '/components/com_acctexp/processors/mollie/cls.ideal.php' );
 
 		$response				= array();
 		$response['valid']		= false;

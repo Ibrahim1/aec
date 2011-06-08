@@ -11,25 +11,15 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-define( '_CFG_MOLLIE_WALLIE_LONGNAME', 'Wallie via Mollie' );
-define( '_CFG_MOLLIE_WALLIE_STATEMENT', 'Laat uw klanten betalingen doen via de populaire prepaid Wallie-cards.' );
-define( '_CFG_MOLLIE_WALLIE_DESCRIPTION', 'Wallie is de populairste prepaidcard voor online betalingen die veel door ouders voor hun kinderen wordt gekocht.' );
-
-define( '_CFG_MOLLIE_WALLIE_PARTNER_ID_NAME', 'Partner ID' );
-define( '_CFG_MOLLIE_WALLIE_PARTNERID_DESC', 'Uw Mollie Partner ID' );
-define( '_CFG_MOLLIE_WALLIE_DESCRIPTION_NAME', 'Omschrijving' );
-define( '_CFG_MOLLIE_WALLIE_DESCRIPTION_DESC', 'Orderinfo t.b.v. payment processor' );
-
-
 class processor_mollie_wallie extends XMLprocessor
 {
 	function info()
 	{
 		$info = array();
 		$info['name']					= 'mollie_wallie';
-		$info['longname']				= _CFG_MOLLIE_WALLIE_LONGNAME;
-		$info['statement']				= _CFG_MOLLIE_WALLIE_STATEMENT;
-		$info['description']			= _CFG_MOLLIE_WALLIE_DESCRIPTION;
+		$info['longname']				= JText::_('_CFG_MOLLIE_WALLIE_LONGNAME');
+		$info['statement']				= JText::_('_CFG_MOLLIE_WALLIE_STATEMENT');
+		$info['description']			= JText::_('_CFG_MOLLIE_WALLIE_DESCRIPTION');
 		$info['currencies']				= 'EUR';
 		$info['languages']				= 'NL';
 		$info['recurring']	   			= 0;
@@ -80,7 +70,7 @@ class processor_mollie_wallie extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		require_once('mollie/cls.wallie.php');
+		require_once( JPATH_SITE . '/components/com_acctexp/processors/mollie/cls.wallie.php' );
 
 		$response			= array();
 		$response['valid']	= false;
@@ -124,7 +114,7 @@ class processor_mollie_wallie extends XMLprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		require_once('mollie/cls.wallie.php');
+		require_once( JPATH_SITE . '/components/com_acctexp/processors/mollie/cls.wallie.php' );
 
 		$response				= array();
 		$response['valid']		= false;
