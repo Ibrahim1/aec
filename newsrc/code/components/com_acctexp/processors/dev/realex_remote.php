@@ -11,11 +11,11 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class processor_realexrm extends XMLprocessor
+class processor_realex_remote extends XMLprocessor
 {
 	function info()
 		{	$info = array();
-		$info['name']			= 'realexrm';
+		$info['name']			= 'realex_remote';
 		$info['longname']		= _AEC_PROC_INFO_RXRM_LNAME;
 		$info['statement']		= _AEC_PROC_INFO_RXRM_STMNT;
 		$info['description']	= _DESCRIPTION_REALEX;
