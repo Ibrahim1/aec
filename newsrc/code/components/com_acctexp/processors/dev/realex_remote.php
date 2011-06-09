@@ -14,18 +14,20 @@
 class processor_realex_remote extends XMLprocessor
 {
 	function info()
-		{	$info = array();
+	{
+		$info = array();
 		$info['name']			= 'realex_remote';
-		$info['longname']		= _AEC_PROC_INFO_RXRM_LNAME;
-		$info['statement']		= _AEC_PROC_INFO_RXRM_STMNT;
-		$info['description']	= _DESCRIPTION_REALEX;
+		$info['longname']		= JText::_('_CFG_REALEX_REDIRECT_LONGNAME');
+		$info['statement']		= JText::_('_CFG_REALEX_REDIRECT_STATEMENT');
+		$info['description']	= JText::_('_CFG_REALEX_REDIRECT_DESCRIPTION');
 		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
 		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,laser';
 		$info['recurring']		= 0;
+		$info['secure']			= 1;
 
 		return $info;
-		}
+	}
 
 	function settings()
 	{
@@ -41,7 +43,7 @@ class processor_realex_remote extends XMLprocessor
 
 	function backend_settings()
 	{
-			$settings = array();
+		$settings = array();
 
 		$settings['merchantid']	= array( 'inputC' );
 		$settings['account']	= array( 'inputC' );
@@ -50,6 +52,14 @@ class processor_realex_remote extends XMLprocessor
 		$settings['currency']	= array( 'list_currency' );
 
 		return $settings;
+	}
+
+	function checkoutform()
+	{
+		$var = $this->getUserform();
+		$var = $this->getCCform( $var, array( 'card_type','card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), null );
+		
+		return $var;
 	}
 
 	function createRequestXML( $request )
@@ -103,6 +113,7 @@ class processor_realex_remote extends XMLprocessor
 		} else {
 			$url = 'https://epage.payandshop.com/epage-remote.cgi';
 		}
+
 		$response1 = array();
 		$response = $this->transmitRequest( $url, '', $xml );
 		
@@ -189,16 +200,6 @@ if($md5hash1 != $md5hash)
 		}
 
 		return $response1;
-	}
-
-	function checkoutform()
-	{
-		$var = $this->getUserform();
-		$var = $this->getCCform( $var, array( 'card_type','card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ),null);
-		
-		//$var = $this->getCCform( $var );
-
-		return $var;
 	}
 
 }
