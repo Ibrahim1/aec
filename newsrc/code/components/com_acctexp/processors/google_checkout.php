@@ -23,6 +23,8 @@ class processor_google_checkout extends XMLprocessor
 		$info['currencies']				= "USD,GBP"; // only USD and GBP are accepted by Google Checkout
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['notify_trail_thanks']	= true;
+		$info['recurring']				= 2;
+		$info['recurring_buttons']		= 2;
 
 		return $info;
 	}
@@ -30,9 +32,10 @@ class processor_google_checkout extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
+		$settings['testmode']			= true;
 		$settings['merchant_id']		= '--';
 		$settings['merchant_key']		= '--';
-		$settings['testmode']			= true;
+		$settings['maximum_recur']		= '12';
 		$settings['currency']			= 'USD';
 		$settings['item_name']			= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
@@ -46,6 +49,7 @@ class processor_google_checkout extends XMLprocessor
 		$settings['testmode']			= array( 'list_yesno' );
 		$settings['merchant_id'] 		= array( 'inputC' );
 		$settings['merchant_key']		= array( 'inputC' );
+		$settings['maximum_recur']		= array( 'inputB' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['item_name']			= array( 'inputE' );
 		$settings['customparams']		= array( 'inputD' );
@@ -74,25 +78,92 @@ class processor_google_checkout extends XMLprocessor
 
 		$item_name			= $request->plan->name;
 		$item_description 	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$merchant_id		= $this->settings['merchant_id'];
-		$merchant_key		= $this->settings['merchant_key'];		
 		$currency			= $this->settings['currency'];
-		$amount				= $request->int_var['amount'];
-      	$qty				= 1;
 
-		$cart	= new GoogleCart( $merchant_id, $merchant_key, $server_type, $currency );
-		$item_1 = new GoogleItem( $item_name, $item_description, $qty, $amount );
+		$cart	= new GoogleCart( $this->settings['merchant_id'], $this->settings['merchant_key'], $server_type, $currency );
+
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$item_1 = new GoogleItem( $item_name, $item_description, 1, '0.00' );
+
+			$item_s = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount']['amount3'] );
+
+			if ( empty( $this->settings['maximum_recur'] ) ) {
+				$maximum = 12;
+			} else {
+				$maximum = $this->settings['maximum_recur'];
+			}
+
+			$period = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
+
+			$subscription = new GoogleSubscription( "google", $period, $request->int_var['amount']['amount3'], $maximum, $item_s );
+			
+			$item_1->SetSubscription( $subscription );
+		} else {	
+			$item_1 = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount'] );
+		}
 
 		$cart->AddItem( $item_1 );
 
 		$cart->SetContinueShoppingUrl( $request->int_var['return_url'] );
 
-	    $cart->SetMerchantPrivateData( new MerchantPrivateData(array("invoice" => $request->invoice->invoice_number )) );
+	    $cart->SetMerchantPrivateData( new MerchantPrivateData( array("invoice" => $request->invoice->invoice_number) ) );
 
 		// Display the Google Checkout button instead of the normal checkout button.
 		$return = '<p style="float:right;text-align:right;">' . $cart->CheckoutButtonCode("SMALL") . '</p>';
 
 		return $return;
+	}
+
+	function convertPeriodUnit( $period, $unit )
+	{
+		switch ( $unit ) {
+			case 'D':
+				if ( $period <= 4 ) {
+					return 'DAILY';
+				} elseif ( ( $period > 4 ) && ( $period <= 11 ) ) {
+					return 'WEEKLY';
+				} elseif ( ( $period > 11 ) && ( $period <= 24 ) ) {
+					return 'SEMI_MONTHLY';
+				} elseif ( ( $period > 24 ) && ( $period <= 42 ) ) {
+					return 'MONTHLY';
+				} elseif ( ( $period > 42 ) && ( $period <= 66 ) ) {
+					return 'EVERY_TWO_MONTHS';
+				} elseif ( ( $period > 66 ) && ( $period <= 140 ) ) {
+					return 'QUARTERLY';
+				} else {
+					return 'YEARLY';
+				}
+				break;
+			case 'W':
+				if ( $period == 1 ) {
+					return 'WEEKLY';
+				} elseif ( ( $period > 1 ) && ( $period <= 2 ) ) {
+					return 'SEMI_MONTHLY';
+				} elseif ( ( $period > 2 ) && ( $period <= 5 ) ) {
+					return 'MONTHLY';
+				} elseif ( ( $period > 5 ) && ( $period <= 9 ) ) {
+					return 'EVERY_TWO_MONTHS';
+				} elseif ( ( $period > 9 ) && ( $period <= 20 ) ) {
+					return 'QUARTERLY';
+				} else {
+					return 'YEARLY';
+				}
+				break;
+			case 'M':
+				if ( $period == 1 ) {
+					return 'MONTHLY';
+				} elseif ( ( $period > 1 ) && ( $period <= 3 ) ) {
+					return 'EVERY_TWO_MONTHS';
+				} elseif ( ( $period > 3 ) && ( $period <= 5 ) ) {
+					return 'QUARTERLY';
+				} else {
+					return 'YEARLY';
+				}
+				break;
+			case 'Y':
+				return 'YEARLY';
+				break;
+		}
 	}
 
 	function createRequestXML( $request )
@@ -138,7 +209,7 @@ class processor_google_checkout extends XMLprocessor
 		}
 
 		// Quick way of filtering out notifications
-		$filter = array( 'order-state-change-notification', 'charge-amount-notification', 'risk-information-notification' );
+		$filter = array( 'order-state-change-notification', 'charge-amount-notification', 'risk-information-notification', 'cancelled-subscription-notification' );
 
 		foreach ( $filter as $f ) {
 			if ( strpos( $xml_response, $f ) !== false ) {
@@ -164,6 +235,11 @@ class processor_google_checkout extends XMLprocessor
 						break;
 					case 'charge-amount-notification':
 						$response['explanation'] .= ' The amount has been charged.';
+
+						break;
+					case 'cancelled-subscription-notification':
+						$response['null']	= false;
+						$response['cancel']	= 1;
 
 						break;
 					default:
