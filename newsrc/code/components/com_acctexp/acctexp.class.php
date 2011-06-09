@@ -1738,7 +1738,7 @@ class aecACLhandler
 		} else {
 			$query = 'UPDATE #__users'
 					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
-					. ' WHERE `id` = \''  . (int) $this->userid . '\''
+					. ' WHERE `id` = \''  . (int) $userid . '\''
 					;
 			$db->setQuery( $query );
 			$db->query() or die( $db->stderr() );
