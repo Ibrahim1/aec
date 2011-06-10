@@ -61,35 +61,28 @@ class processor_realex_redirect extends POSTprocessor
 			$var['post_url']	= 'https://epage.payandshop.com/epage.cgi';
 		}
 
-		//The code below is used to create the timestamp format required by Realex Payments
 		$timestamp = strftime("%Y%m%d%H%M%S");
-		mt_srand((double)microtime()*1000000);
 
+		$amount = (int) round( 100*$request->items->total->cost['amount'] );
 
-		$orderid = $timestamp.mt_rand(1, 999);
-		$amt = round(100*$request->items->total->cost['amount']);
-		$curr = $this->settings['currency']	;
-
-		/*-----------------------------------------------
-		Below is the code for creating the digital signature using the MD5 algorithm provided
-		by PHP. you can use the SHA1 algorithm alternatively. 
-		*/
-		$mid=$this->settings['merchantid'];
-		$ss= $this->settings['secret'];
+		$md5hash = md5(
+						md5(	$timestamp
+								.$this->settings['merchantid']
+								.$request->invoice->id
+								.$amount
+								.$this->settings['currency']
+							)
+						.$this->settings['secret']
+					);	
 		
-		$tmp = "$timestamp.$mid.$orderid.$amt.$curr";
-		$md5hash = md5($tmp);
-		$tmp = "$md5hash.$ss";
-		$md5hash = md5($tmp);		
-		
-		$var['MERCHANT_ID'] = $this->settings['merchantid'];
-		$var['ORDER_ID'] = $orderid;
-		$var['ACCOUNT'] = $this->settings['account'];
-		$var['CURRENCY'] = $curr;
-		$var['AMOUNT']= $amt;
-		$var['TIMESTAMP'] = $timestamp;
-		$var['MD5HASH'] = $md5hash;
-		$var['AUTO_SETTLE_FLAG'] = 1;
+		$var['MERCHANT_ID']			= $this->settings['merchantid'];
+		$var['ORDER_ID']			= $request->invoice->id;
+		$var['ACCOUNT']				= $this->settings['account'];
+		$var['CURRENCY']			= $this->settings['currency'];
+		$var['AMOUNT']				= $amount;
+		$var['TIMESTAMP']			= $timestamp;
+		$var['MD5HASH']				= $md5hash;
+		$var['AUTO_SETTLE_FLAG']	= 1;
 
 		return $var;
 	}

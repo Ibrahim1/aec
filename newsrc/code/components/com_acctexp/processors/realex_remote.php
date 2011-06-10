@@ -66,7 +66,7 @@ class processor_realex_remote extends XMLprocessor
 	{
 		$timestamp = strftime("%Y%m%d%H%M%S");
 
-		$amount = round( 100*$request->items->total->cost['amount'] );
+		$amount = (int) round( 100 * $request->items->total->cost['amount'] );
 
 		$md5hash = md5(
 						md5(	$timestamp
