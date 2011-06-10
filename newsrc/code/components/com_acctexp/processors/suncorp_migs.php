@@ -90,8 +90,8 @@ class processor_suncorp_migs extends URLprocessor
 	{
 		$response = array();
 
-		$response['invoice']	= $_GET['vpc_MerchTxnRef'];
-		$response['amount']		= $_GET['vpc_Amount'] / 100;
+		$response['invoice']		= $_GET['vpc_MerchTxnRef'];
+		$response['amount_paid']	= $_GET['vpc_Amount'] / 100;
 
 		return $response;
 	}

@@ -78,8 +78,8 @@ class processor_nochex extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice'] = $post['order_id'];
-		$response['amount'] = $post['amount'];
+		$response['invoice']		= $post['order_id'];
+		$response['amount_paid']	= $post['amount'];
 
 		return $response;
 	}

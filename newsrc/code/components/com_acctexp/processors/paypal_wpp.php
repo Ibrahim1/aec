@@ -581,8 +581,6 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
-
 		$mc_gross			= $post['mc_gross'];
 		if ( $mc_gross == '' ) {
 			$mc_gross 		= $post['mc_amount1'];

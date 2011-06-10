@@ -2105,12 +2105,14 @@ class aecSessionHandler
 		}
 
 		if ( isset( $session['user'] ) && !defined( 'JPATH_MANIFESTS' ) ) {
-			$session['user']->gid		= $gid[0];
-			$session['user']->usertype	= $info[$gid[0]];
+				if ( !empty( $gid[0] ) ) {
+				$session['user']->gid		= $gid[0];
+				$session['user']->usertype	= $info[$gid[0]];
 
-			if ( $userid == $user->id ) {
-				$user->gid		= $gid[0];
-				$user->usertype	= $info[$gid[0]];
+				if ( $userid == $user->id ) {
+					$user->gid		= $gid[0];
+					$user->usertype	= $info[$gid[0]];
+				}
 			}
 		} elseif ( isset( $session->user ) ) {
 			if ( $userid == $user->id ) {
@@ -2190,10 +2192,17 @@ class aecSessionHandler
 					. ' WHERE `userid` = \'' . (int) $userid . '\''
 					;
 		} elseif ( isset( $data['user'] ) ) {
+			if ( empty( $gid ) ) {
 			$query = 'UPDATE #__session'
-					. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
+					. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
 					. ' WHERE `userid` = \'' . (int) $userid . '\''
 					;
+			} else {
+				$query = 'UPDATE #__session'
+						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
+						. ' WHERE `userid` = \'' . (int) $userid . '\''
+						;
+			}
 		}
 
 		$db->setQuery( $query );
