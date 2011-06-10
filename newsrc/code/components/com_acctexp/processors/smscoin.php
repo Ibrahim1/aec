@@ -80,8 +80,8 @@ class processor_smscoin extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice']	= $post['invoice'];
-		$response['amount']		= $post['s_amount'];
+		$response['invoice']		= $post['invoice'];
+		$response['amount_paid']	= $post['s_amount'];
 
 		return $response;
 	}
