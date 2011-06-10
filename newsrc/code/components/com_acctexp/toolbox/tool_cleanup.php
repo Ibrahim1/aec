@@ -66,7 +66,7 @@ class tool_cleanup
 				if ( ( $table != 'total' ) && $count ) {
 					$query = 'SELECT a.id'
 							. ' FROM #__acctexp_' . $table . ' AS a'
-							. ' LEFT JOIN #__users AS b ON a.' . $key . ' = b.id'
+							. ' LEFT JOIN #__users AS b ON a.' . $tables[$table] . ' = b.id'
 							. ' WHERE b.id is null'
 							;
 					$db->setQuery( $query );
@@ -79,7 +79,7 @@ class tool_cleanup
 					$db->setQuery( $query );
 					$db->query();
 
-					$return .= '<li>' . $count . ' entries in table ' . $table . '</li>';
+					$return .= '<li>deleted ' . $count . ' entries in table ' . $table . '</li>';
 				}
 			}
 
