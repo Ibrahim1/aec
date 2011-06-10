@@ -103,7 +103,7 @@ class mi_acl
 
 	function relayAction( $request )
 	{
-		if ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
+		if ( !empty( $this->settings['jaclpluspro'] ) ) {
 			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
 		}
 
@@ -129,7 +129,7 @@ class mi_acl
 	function instantGIDchange( $metaUser, $add, $remove )
 	{
 		$sessionextra = array();
-		if ( !empty( $add ) && !empty( $this->settings['jaclpluspro'] ) ) {
+		if ( !empty( $this->settings['jaclpluspro'] ) ) {
 			$sessionextra = $this->jaclSessionExtra( $metaUser, $add[0] );
 		}
 
