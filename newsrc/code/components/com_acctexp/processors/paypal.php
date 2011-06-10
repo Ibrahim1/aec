@@ -162,8 +162,6 @@ class processor_paypal extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
-
 		$response = array();
 		$response['invoice'] = $post['invoice'];
 		$response['amount_currency'] = $post['mc_currency'];
