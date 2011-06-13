@@ -792,7 +792,7 @@ class metaUser
 
 		// Always protect last administrator
 		if ( $this->isAdmin() ) {
-			if ( aecACLhandler::countAdmins() < 2) {
+			if ( aecACLhandler::countAdmins() < 2 ) {
 				return false;
 			}
 		}
