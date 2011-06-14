@@ -1706,7 +1706,7 @@ class aecACLhandler
 	{
 		$info = array();
 		foreach ( $gids as $gid ) {
-			$info[$gid] = aecACLhandler::setGIDsTakeNames( $gid );
+			$info[$gid] = aecACLhandler::setGIDsTakeNames( $userid, $gid );
 
 			aecACLhandler::setGID( $userid, $gid, $info[$gid] );
 		}
@@ -1745,7 +1745,7 @@ class aecACLhandler
 		}
 	}
 
-	function setGIDsTakeNames( $gid )
+	function setGIDsTakeNames( $userid, $gid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -1755,16 +1755,18 @@ class aecACLhandler
 			// Get ARO ID for user
 			$query = 'SELECT `id`'
 					. ' FROM #__core_acl_aro'
-					. ' WHERE `value` = \'' . (int) $this->userid . '\''
+					. ' WHERE `value` = \'' . (int) $userid . '\''
 					;
 			$db->setQuery( $query );
 			$aro_id = $db->loadResult();
 
 			// If we have no aro id, something went wrong and we need to create it
 			if ( empty( $aro_id ) ) {
+				$metaUser = new metaUser( $userid );
+
 				$query2 = 'INSERT INTO #__core_acl_aro'
 						. ' (`section_value`, `value`, `order_value`, `name`, `hidden` )'
-						. ' VALUES ( \'users\', \'' . $this->userid . '\', \'0\', \'' . $this->cmsUser->name . '\', \'0\' )'
+						. ' VALUES ( \'users\', \'' . $userid . '\', \'0\', \'' . $metaUser->cmsUser->name . '\', \'0\' )'
 						;
 				$db->setQuery( $query2 );
 				$db->query();

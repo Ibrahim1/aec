@@ -88,6 +88,10 @@ class mi_email extends MI
 		$rec_groups = array( "recipient", "cc", "bcc" );
 
 		foreach ( $rec_groups as $setting ) {
+			if ( empty( $this->settings[$setting] ) ) {
+				continue;
+			}
+
 			$list = AECToolbox::rewriteEngineRQ( $this->settings[$setting], $request );
 
 			$recipient_array = explode( ',', $list );
