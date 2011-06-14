@@ -3081,7 +3081,10 @@ class HTML_AcctExp
 					<td valign="top">
 						<?php
 						if ( $aecHTML->done ) {
-							echo '<p>Import successful.</p>';
+							echo '<p>Import ran through successfully.</p>';
+							if ( $aecHTML->errors ) {
+								echo '<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
+							}
 						} elseif ( $aecHTML->form ) {
 							foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 								echo $aecHTML->createSettingsParticle( $rowname );
