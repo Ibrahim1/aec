@@ -33,7 +33,7 @@ class mi_sobi extends MI
 
 		$xsettings = array();
 		$xsettings['rebuild']			= array( 'list_yesno' );
-		$xsettings['remove']				= array( 'list_yesno' );
+		$xsettings['remove']			= array( 'list_yesno' );
 
 		return array_merge( $xsettings, $settings );
 	}

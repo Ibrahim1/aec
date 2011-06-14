@@ -21,7 +21,7 @@ class processor_sofortueberweisung extends POSTprocessor
 		$info['statement']		= JText::_('_CFG_SOFORTUEBERWEISUNG_STATEMENT');
 		$info['description']	= JText::_('_CFG_SOFORTUEBERWEISUNG_DESCRIPTION');
 		$info['currencies']		= 'EUR,GBP,CHF';
-		$info['languages']		= array( 'DE', 'EN', 'NL', 'FR' );
+		$info['languages']		= array( 'DE', 'GB', 'NL', 'FR' );
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 0;
 
@@ -52,7 +52,6 @@ class processor_sofortueberweisung extends POSTprocessor
 		$settings['project_password']		= array( 'inputC' );
 		$settings['currency']				= array( 'list_currency' );
 		$settings['language']				= array( 'list_language' );
-		$settings['no_shipping']			= array( 'list_yesno' );
 		$settings['item_name_1']			= array( 'inputE' );
 		$settings['item_name_2']			= array( 'inputE' );
 		$settings['customparams']			= array( 'inputD' );
@@ -64,7 +63,7 @@ class processor_sofortueberweisung extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		$var['post_url']		= '"https://www.sofortueberweisung.de/payment/start';
+		$var['post_url']		= 'https://www.sofortueberweisung.de/payment/start';
 
 		$var['user_id']			= $this->settings['user_id'];
 		$var['project_id']		= $this->settings['project_id'];

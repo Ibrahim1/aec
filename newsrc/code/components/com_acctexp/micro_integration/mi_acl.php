@@ -132,7 +132,13 @@ class mi_acl
 	{
 		$sessionextra = array();
 		if ( !empty( $this->settings['jaclpluspro'] ) ) {
-			$sessionextra = $this->jaclSessionExtra( $metaUser, $add[0] );
+			if ( is_array( $add ) ) {
+				$gid = $add[0];
+			} else {
+				$gid = $add;
+			}
+			
+			$sessionextra = $this->jaclSessionExtra( $metaUser, $gid );
 		}
 
 		$metaUser->instantGIDchange( $add, $remove, $sessionextra );
@@ -176,8 +182,6 @@ class mi_acl
 					$db->setQuery( $query );
 					$db->query() or die( $db->stderr() );
 				}
-
-
 			}
 		}
 

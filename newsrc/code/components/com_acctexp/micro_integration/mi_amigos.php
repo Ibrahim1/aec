@@ -53,26 +53,30 @@ class mi_amigos
 			$domain = substr( $domain, 0, -1 );
 		}
 
-		$amigos_id			= $_REQUEST['amigosid'];
-		$amigos_ordertype	= 'com_acctexp';
-		$amigos_orderid		= $request->invoice->invoice_number;
-		$amigos_orderamount	= $request->invoice->amount;
-		$amigos_ipaddress	= $_SERVER['REMOTE_ADDR'];
+		$array = array();
+		$array["option"]				= "com_amigos";
+		$array["task"]					= "sale";
+		$array["amigos_id"]				= $_REQUEST['amigosid'];
+		$array["amigos_ordertype"]		= 'com_acctexp';
+		$array["amigos_orderid"]		= $request->invoice->invoice_number;
+		$array["amigos_orderamount"]	= $request->invoice->amount;
+		$array["amigos_ipaddress"]		= $_SERVER['REMOTE_ADDR'];
+
+		$
 
 		$tmpl = "%s/index.php?option=com_amigos&task=sale&amigos_id=%s&amigos_ordertype=%s&amigos_orderid=%s&amigos_orderamount=%s&amigos_ipaddress=%s";
 		$url = sprintf( $tmpl, $domain, $amigos_id, $amigos_ordertype, $amigos_orderid, $amigos_orderamount, $amigos_ipaddress );
 
-		if ( !empty( $this->settings['amigos_curl'] ) )
-		{
+		if ( !empty( $this->settings['amigos_curl'] ) ) {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url );
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_exec($ch);
 			curl_close($ch);
 		} else {
-			$text = '<img border="0" '
-					.'src="' . $url . '" '
-					.'border="0" width="1" height="1" />';
+			$text = '<img'
+					. ' src="' . $url . '"'
+					. ' border="0" width="1" height="1" />';
 
 			$db = &JFactory::getDBO();
 			$displaypipeline = new displayPipeline($db);
@@ -80,6 +84,6 @@ class mi_amigos
 		}
 
 		return true;
-		}
+	}
 
 }

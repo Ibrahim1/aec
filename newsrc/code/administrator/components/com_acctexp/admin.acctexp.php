@@ -6103,10 +6103,11 @@ function importData( $option )
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	$aecHTML->form = $show_form;
-	$aecHTML->done = $done;
+	$aecHTML->form		= $show_form;
+	$aecHTML->done		= $done;
+	$aecHTML->errors	= $import->errors;
 
-	if ( !$show_form ) {
+	if ( !$show_form && !$done ) {
 		$aecHTML->user_rows = $rows;
 		$aecHTML->user_rows_count = $rows_count;
 		$aecHTML->columns = $columns;

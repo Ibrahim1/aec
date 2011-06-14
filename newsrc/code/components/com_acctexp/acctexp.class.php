@@ -792,7 +792,7 @@ class metaUser
 
 		// Always protect last administrator
 		if ( $this->isAdmin() ) {
-			if ( aecACLhandler::countAdmins() < 2) {
+			if ( aecACLhandler::countAdmins() < 2 ) {
 				return false;
 			}
 		}
@@ -19158,6 +19158,8 @@ class aecImport
 		$this->filepath = $file;
 
 		$this->options = $options;
+
+		$this->errors = 0;
 	}
 
 	function read()
@@ -19272,6 +19274,10 @@ class aecImport
 				} else {
 					continue;
 				}
+			}
+
+			if ( empty( $userid ) ) {
+				$this->errors++;
 			}
 
 			$metaUser = new metaUser( $userid );
