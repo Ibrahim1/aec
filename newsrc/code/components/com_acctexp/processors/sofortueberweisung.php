@@ -63,7 +63,7 @@ class processor_sofortueberweisung extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		$var['post_url']		= '"https://www.sofortueberweisung.de/payment/start';
+		$var['post_url']		= 'https://www.sofortueberweisung.de/payment/start';
 
 		$var['user_id']			= $this->settings['user_id'];
 		$var['project_id']		= $this->settings['project_id'];
