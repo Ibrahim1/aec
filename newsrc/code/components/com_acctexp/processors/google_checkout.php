@@ -85,7 +85,7 @@ class processor_google_checkout extends XMLprocessor
 		if ( is_array( $request->int_var['amount'] ) ) {
 			require_once( JPATH_SITE . '/components/com_acctexp/processors/google_checkout/library/googlesubscription.php' );
 
-			$item_1 = new GoogleItem( $item_name, $item_description, 1, '0.00' );
+			$item_1 = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount']['amount3'] );
 
 			$item_s = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount']['amount3'] );
 
