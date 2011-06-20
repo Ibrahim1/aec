@@ -3,7 +3,7 @@
 * @version $Id: sparkassen_internetkasse_formularservice.php
 * @package AEC - Account Control Expiration - Membership Manager
 * @subpackage Processors - Sparkassen Internetkasse Formularservice
-* @copyright 2007-2008 Copyright (C) David Deutsch
+* @copyright 2011 Copyright (C) David Deutsch
 * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
 * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 */
@@ -66,95 +66,48 @@ class processor_sparkassen_internetkasse_formularservice extends POSTprocessor
 		return $settings;
 	}
 
-/*
-* The checkoutAciton gets called by the user when he/she clicks on the checkout button.
-* It usually forwards the request to the createGatewayLink() function.
-* 
-* In case we silently want to contact the payment processor, we do handle
-* the payment processor right here in this func
-* 
-*/
+	function checkoutAction( $request, $InvoiceFactory=null )
+	{
+		$settings['command'] = 'sslform'; // FIX
+		$settings['post_url_shopschnittstelle_test'] = 'https://testsystem.sparkassen-internetkasse.de/request/request/prot/Request.po';
+		$settings['post_url_shopschnittstelle'] = 'https://system.sparkassen-internetkasse.de/request/request/prot/Request.po';
+		$settings['post_url_formularservice_test'] = 'https://testsystem.sparkassen-internetkasse.de/vbv/mpi_legacy';
+		$settings['post_url_formularservice'] = 'https://system.sparkassen-internetkasse.de/vbv/mpi_legacy';
+		$settings['payment_options'] = 'cardholder;generate_ppan'; // cardholder;generate_ppan
+		$settings['paymentmethod'] = 'creditcard'; // FIX creditcard|registerpan??
+		$settings['sessionid'] = session_id(); // [optional]
+		$settings['transactiontype'] = 'authorization';  // preauthorization|authorization
+		$settings['version'] = '1.5'; // FIX
+		$settings['item_number'] = '[[user_id]]';
 
-function checkoutAction($request, $InvoiceFactory=null) {
-	$settings['command'] = 'sslform'; // FIX
-	$settings['post_url_shopschnittstelle_test'] = 'https://testsystem.sparkassen-internetkasse.de/request/request/prot/Request.po';
-	$settings['post_url_shopschnittstelle'] = 'https://system.sparkassen-internetkasse.de/request/request/prot/Request.po';
-	$settings['post_url_formularservice_test'] = 'https://testsystem.sparkassen-internetkasse.de/vbv/mpi_legacy';
-	$settings['post_url_formularservice'] = 'https://system.sparkassen-internetkasse.de/vbv/mpi_legacy';
-	$settings['payment_options'] = 'cardholder;generate_ppan'; // cardholder;generate_ppan
-	$settings['paymentmethod'] = 'creditcard'; // FIX creditcard|registerpan??
-	$settings['sessionid'] = session_id(); // [optional]
-	$settings['transactiontype'] = 'authorization';  // preauthorization|authorization
-	$settings['version'] = '1.5'; // FIX
-	$settings['item_number'] = '[[user_id]]';
+		// if we have a ppan, we can make a 'silent' bank transfer
+		if ($this->settings['pseudocreditcard']) {
+			$ppan = $this->_getPpan();
+			if ($ppan != null && $ppan != '') {
+				$IS_SILENT = true;
+			}
+		}
 
-	// define some parameter to make things clearer
-	$IS_TEST = $this->settings['testmode'];
-	$IS_SILENT = false; // silent communication, no creditcard form
-	$TIMESTAMP = date('YmdHis');
+		$silentmsg = 'command=authorization';
+		$silentmsg .= '&payment_options=creditcard';
+		$silentmsg .= '&orderid=' . $request->invoice->id;
+		$silentmsg .= '&basketnr=' . trim($request->invoice->invoice_number);
+		$silentmsg .= '&amount=' . trim(str_replace('.', '', $request->int_var['amount']));
+		$silentmsg .= '&currency=' . trim($this->settings['currency']);
+		$silentmsg .= '&ppan=' . $ppan;
 
+		$path = '/request/request/prot/Request.po';
+		if ( $this->settings['testmode'] ) {
+			$url = 'https://testsystem.sparkassen-internetkasse.de' . $path;
+		} else {
+			$url = 'https://system.sparkassen-internetkasse.de' . $path;
+		}
 
-	#echo 'int_var[amount]: ' . $request->int_var['amount'];
-	#print_r($_POST);
+		$curlextra = array();
+		$curlextra[CURLOPT_HEADER] = 0;
+		$curlextra[CURLOPT_USERPWD] = $this->settings['merchant'] . ':' . $this->settings['merchantpass'];
 
-	$task = $_POST['task'];
-
-
-	// if we have a ppan, we can make a 'silent' bank transfer
-	if ($this->settings['pseudocreditcard']) {
-
-	$ppan = $this->_getPpan();
-	#echo 'ppan: '.$ppan;
-	if ($ppan != null && $ppan != '') {
-
-		#if (!isset($_POST['aec_passthrough'])) {
-		$IS_SILENT = true;
-		#}
-	}
-	}
-	#$IS_SILENT = false;
-	#echo 'IS_SILENT: '.$IS_SILENT;
-	#exit;
-	IF ($IS_SILENT) {
-	// ACHTUNG: CSSURL HIER EINTRAGEN (dann muss sie nicht in der Händleroberfläche konfiguriert werden)
-	if ($IS_TEST) {
-		// HTTP-Basic authtentication                
-		$post_url = $this->settings['post_url_shopschnittstelle_test'];
-	} else {
-		$post_url = $this->settings['post_url_shopschnittstelle'];
-	}
-
-	$silentmsg = '';
-
-	$silentmsg .= 'command=authorization';  // 
-	$silentmsg .= '&payment_options=creditcard';
-	$silentmsg .= '&orderid=' . $TIMESTAMP;
-	$silentmsg .= '&basketnr=' . trim($request->invoice->invoice_number);  // 
-	$silentmsg .= '&amount=' . trim(str_replace('.', '', $request->int_var['amount']));
-	$silentmsg .= '&currency=' . trim($this->settings['currency']);
-	$silentmsg .= '&ppan=' . $ppan;
-
-
-	#echo $post_url . '<br>';
-	$c = curl_init();
-	curl_setopt($c, CURLOPT_URL, $post_url);
-
-	// no header in output
-	curl_setopt($c, CURLOPT_HEADER, 0);
-
-	// return reponse as result
-	curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-
-	// do a POST-Request
-	curl_setopt($c, CURLOPT_POST, 1);
-	curl_setopt($c, CURLOPT_TIMEOUT, 60);
-	curl_setopt($c, CURLOPT_USERPWD, $this->settings['merchant'] . ':' . $this->settings['merchantpass']);
-	curl_setopt($c, CURLOPT_POSTFIELDS, $silentmsg);
-
-	$resultstring = curl_exec($c);
-	curl_close($c);
-
-
+		$resultstring = $this->transmitRequest( $url, $path, $silentmsg, 443, $curlextra );
 
 	echo "Plain request: " . $silentmsg . "\n";
 	echo "Plain result : " . $resultstring . "\n";
@@ -183,8 +136,6 @@ function checkoutAction($request, $InvoiceFactory=null) {
 	print_r($result);
 	exit;
 
-	//return $this->checkoutResponse($request, $response, $InvoiceFactory);
-	}
 	// Display standard CC collection Form
 	return parent::checkoutAction($request, $InvoiceFactory);
 }
@@ -448,7 +399,8 @@ function validateNotification($response, $post, $invoice) {
 
 		if ($this->settings['pseudocreditcard']) {
 
-		$this->_setPpan($post['ppan'], $response['invoice']);
+		$request->invoice->addParams( array( 'ppan' => $post['ppan'] ) );
+		$request->invoice->storeload();
 		}
 		#exit;
 		echo 'redirecturls=http://' . $server . '/transaction-success';
@@ -503,41 +455,6 @@ function _hmac($key, $data) {
 	//echo hmac("8A!v#6qPc3?+G1on", "10,00ba_100202sslformEUR20091206_12:23:452009120601creditcardNhdz747458sNXmycompanypreauthorization1.5");
 
 	return sha1($k_opad . pack("H*", sha1($k_ipad . $data)));
-}
-
-function _setPpan($ppan, $invoice_number) {
-
-	$db = & JFactory::getDBO();
-	$ppan_field = 'ppan';
-
-	$query = 'SELECT `userid` FROM #__acctexp_invoices WHERE `invoice_number` = \'' . $invoice_number . '\'';
-	$db->setQuery($query);
-
-	$userid = $db->loadResult();
-
-	$db = & JFactory::getDBO();
-	$query = 'SHOW COLUMNS FROM #__acctexp_subscr';
-	$db->setQuery($query);
-	$columns = $db->loadAssocList();
-	$exists = false;
-	#print_r($columns);
-	foreach ($columns as $c) {
-	#echo $c['Field'];
-
-	if ($c['Field'] == $ppan_field) {
-		$exists = true;
-		break;
-	}
-	}
-	if (!$exists) {
-	$query = "ALTER TABLE #__acctexp_subscr ADD `" . $ppan_field . "` varchar(250)";
-	$db->setQuery($query);
-	$db->query() or die($db->stderr());
-	}
-
-	$query = "UPDATE #__acctexp_subscr SET `" . $ppan_field . "` = '" . $ppan . "' WHERE `userid` = " . $userid;
-	$db->setQuery($query);
-	$db->query() or die($db->stderr());
 }
 
 function _getPpan() {
