@@ -36,7 +36,7 @@ class processor_sofortueberweisung extends POSTprocessor
 		$settings['project_password']	= '';
 		$settings['currency']			= 'EUR';
 		$settings['language']			= 'DE';
-		$settings['item_name_1']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name_1']		= "";
 		$settings['item_name_2']		= "";
 		$settings['customparams']		= "";
 
@@ -69,8 +69,8 @@ class processor_sofortueberweisung extends POSTprocessor
 		$var['project_id']		= $this->settings['project_id'];
 		$var['amount']			= $request->int_var['amount'];
 
-		$var['reason_1']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name_1'], $request );
-		$var['reason_2']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name_2'], $request );
+		$var['reason_1']		= urlencode( AECToolbox::rewriteEngineRQ( $this->settings['item_name_1'], $request ) );
+		$var['reason_2']		= urlencode( AECToolbox::rewriteEngineRQ( $this->settings['item_name_2'], $request ) );
 
 		$var['user_variable_0']	= $request->invoice->invoice_number;
 
@@ -97,9 +97,15 @@ class processor_sofortueberweisung extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice']			= $post['user_variable_0'];
-		$response['amount_currency']	= $post['currency_id'];
-		$response['amount_paid']		= $post['amount'];
+		if ( empty( $post['transaction'] ) ) {
+			$response['invoice']			= aecGetParam( 'user_variable_0', '', true, array( 'word', 'badchars' ) );
+			$response['amount_currency']	= aecGetParam( 'currency_id', '', true, array( 'word', 'badchars' ) );
+			$response['amount_paid']		= aecGetParam( 'amount', '', true, array( 'word', 'badchars' ) );
+		} else {
+			$response['invoice']			= $post['user_variable_0'];
+			$response['amount_currency']	= $post['currency_id'];
+			$response['amount_paid']		= $post['amount'];
+		}
 
 		return $response;
 	}
@@ -111,26 +117,44 @@ class processor_sofortueberweisung extends POSTprocessor
 							'recipient_holder','recipient_account_number','recipient_bank_code','recipient_bank_name','recipient_bank_bic',
 							'recipient_iban','recipient_country_id','international_transaction','amount','currency_id',
 							'reason_1','reason_2','security_criteria','user_variable_0','user_variable_1',
-							'user_variable_2','user_variable_3','user_variable_4', 'user_variable_5','email_sender',
-							'email_recipient','created');
+							'user_variable_2','user_variable_3','user_variable_4', 'user_variable_5','created');
 
-		if ( isset( $post['status'] ) ) {
-			$values[] = 'status';
-			$values[] = 'status_modified';
+		if ( empty( $post['transaction'] ) ) {
+			$status = aecGetParam( 'status' );
+
+			if ( !empty( $status ) ) {
+				$values[] = 'status';
+				$values[] = 'status_modified';
+			}
+		} else {
+			if ( isset( $post['status'] ) ) {
+				$values[] = 'status';
+				$values[] = 'status_modified';
+			}
 		}
-
-		$values[] = $this->settings['project_password'];
 
 		$array = array();
 		foreach ( $values as $value ) {
-			$array[] = $post[$value];
+			if ( empty( $post['transaction'] ) ) {
+				$array[] = aecGetParam( $value );
+			} else {
+				$array[] = $post[$value];
+			}
 		}
 
-		$hash = sha1( implode( '|', $array ) );
+		$array[] = $this->settings['project_password'];
+
+		$hash = md5( implode( '|', $array ) );
 
 		$response['valid'] = 0;
 
-		if ( empty( $post['hash'] ) || ( $hash != $post['hash'] ) ) {
+		if ( empty( $post['transaction'] ) ) {
+			$ohash = aecGetParam( 'hash' );
+		} else {
+			$ohash = $post['hash'];
+		}
+
+		if ( empty( $ohash ) || ( $hash != $ohash ) ) {
 			$response['pending_reason'] = 'hash value verification failed';
 		} else {
 			$response['valid'] = 1;
