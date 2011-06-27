@@ -69,7 +69,7 @@ class processor_onebip extends POSTprocessor
 		$var['item_name']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['price']		= $request->int_var['amount']['amount'] * 100;
+			$var['price']		= $request->int_var['amount']['amount3'] * 100;
 			$var['frequency']	= $this->convertPeriodUnit( $request->int_var['amount']['unit3'], $request->int_var['amount']['period3'] );
 		} else {
 			$var['price']	= $request->int_var['amount'] * 100;
