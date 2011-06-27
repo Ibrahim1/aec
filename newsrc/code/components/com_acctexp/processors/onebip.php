@@ -35,7 +35,6 @@ class processor_onebip extends POSTprocessor
 	{
 		$settings = array();
 		$settings['username']	= 'your@onebip.com';
-		$settings['site_id']	= '0';
 		$settings['currency']	= 'USD';
 		$settings['country']	= 'US';
 		$settings['secret']		= 'secret';
@@ -50,7 +49,6 @@ class processor_onebip extends POSTprocessor
 
 		$settings['aec_insecure']	= array( 'p' );
 		$settings['username']		= array( 'inputC' );
-		$settings['site_id']		= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['country']		= array( 'list_language' );
 		$settings['secret']			= array( 'inputC' );
@@ -68,7 +66,6 @@ class processor_onebip extends POSTprocessor
 		$var['post_url']	= 'https://www.onebip.com/otms/';
 
 		$var['username']	= $this->settings['username'];
-		$var['site_id']		= $this->settings['site_id'];
 		$var['item_name']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		if ( is_array( $request->int_var['amount'] ) ) {
