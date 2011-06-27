@@ -66,7 +66,7 @@ class processor_onebip extends POSTprocessor
 		$var['post_url']	= 'https://www.onebip.com/otms/';
 
 		$var['username']	= $this->settings['username'];
-		$var['item_name']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+		$var['description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['price']		= $request->int_var['amount']['amount3'] * 100;
