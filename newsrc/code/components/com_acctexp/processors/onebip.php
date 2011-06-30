@@ -103,10 +103,10 @@ class processor_onebip extends POSTprocessor
 				return $period * 7;
 				break;
 			case 'M':
-				return $period * 31;
+				return $period * 30;
 				break;
 			case 'Y':
-				return $period * 356;
+				return $period * 365;
 				break;
 		}
 	}
