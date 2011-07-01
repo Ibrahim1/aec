@@ -279,7 +279,7 @@ class HTML_AcctExp
 		JHTML::_('behavior.calendar');
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$edituserlink		= 'index.php?option=com_users&amp;view=user&amp;layout=edit&amp;id=' . $metaUser->userid;
+			$edituserlink		= 'index.php?option=com_users&amp;task=user.edit&amp;id=' . $metaUser->userid;
 			$activateuserlink	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $metaUser->cmsUser->activation;
 		} else {
 			$edituserlink		= 'index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=' . $metaUser->userid;
