@@ -4192,7 +4192,14 @@ class processor extends serialParamDBTable
 				. ' WHERE `name` = \'' . $db->getEscaped( $name ) . '\''
 				;
 		$db->setQuery( $query );
-		$this->load( $db->loadResult() );
+		
+		$id = $db->loadResult();
+
+		if ( $id ) {
+			return $this->load( $db->loadResult() );
+		} else {
+			return false;
+		}
 	}
 
 	function createNew( $name, $info, $settings )
@@ -12138,12 +12145,17 @@ class Invoice extends serialParamDBTable
 
 		$pplist = array();
 
-		$pp = new PaymentProcessor();
-		$pp->loadName( $this->method );
-		$pp->init();
+		if ( $this->method != 'none' ) {
+			$pp = new PaymentProcessor();
+			if ( $pp->loadName( $this->method ) ) {
+				$pp->init();
 
-		if ( !empty( $InvoiceFactory->plan->id ) ) {
-			$pp->exchangeSettingsByPlan( $InvoiceFactory->plan->id, $InvoiceFactory->plan->params );
+				if ( !empty( $InvoiceFactory->plan->id ) ) {
+					$pp->exchangeSettingsByPlan( $InvoiceFactory->plan->id, $InvoiceFactory->plan->params );
+				}
+			}
+		} else {
+			$pp = null;
 		}
 
 		$pplist[$this->method] = $pp;
@@ -12161,16 +12173,18 @@ class Invoice extends serialParamDBTable
 
 		$data['invoice_billing_history'] = "";
 		if ( !empty( $this->transactions ) ) {
-			if ( ( count( $this->transactions ) > 0 ) && !empty( $data['recurringstatus'] ) ) {
+			if ( ( ( count( $this->transactions ) > 0 ) && !empty( $data['recurringstatus'] ) ) && ( $this->method != 'none' ) ) {
 				$data['paidstatus'] = sprintf( JText::_('INVOICEPRINT_PAIDSTATUS_PAID'), "" );
 
 				foreach ( $this->transactions as $transaction ) {
 					if ( !isset( $pplist[$transaction->processor] ) ) {
 						$pp = new PaymentProcessor();
-						$pp->loadName( $transaction->processor );
-						$pp->getInfo();
 
-						$pplist[$transaction->processor] = $pp;
+						if ( $pp->loadName( $transaction->processor ) ) {
+							$pp->getInfo();
+
+							$pplist[$transaction->processor] = $pp;
+						}
 					}
 
 					$data['invoice_billing_history'] .= '<td>' . AECToolbox::formatDate( $transaction->timestamp ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $pplist[$transaction->processor]->info['longname'] . '</td>';
