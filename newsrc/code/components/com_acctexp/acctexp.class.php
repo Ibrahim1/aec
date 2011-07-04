@@ -14350,7 +14350,7 @@ class reWriteEngine
 
 						$content = $field->name;
 
-						$name = '_REWRITE_KEY_USER_JS_' . $field->id;
+						$name = 'REWRITE_KEY_USER_JS_' . $field->id;
 						if ( !$lang->hasKey( $name ) ) {
 							$newlang[$name] = $content;
 						}
