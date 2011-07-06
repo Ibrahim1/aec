@@ -104,6 +104,15 @@ function aecGetParam( $name, $default='', $safe=false, $safe_params=array() )
 
 function aecEscape( $value, $safe_params )
 {
+	if ( is_array( $value ) ) {
+		$array = array();
+		foreach ( $value as $k => $v ) {
+			$array[$k] = aecEscape( $v, $safe_params );
+		}
+
+		return $array;
+	}
+
 	$db = &JFactory::getDBO();
 
 	$regex = "#{aecjson}(.*?){/aecjson}#s";
