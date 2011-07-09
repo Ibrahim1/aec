@@ -11,12 +11,12 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined('_VALID_MOS') ) or die('Direct Access to this location is not allowed.');
 
-class processor_sparkassen_internetkasse_formularservice extends XMLprocessor
+class processor_sparkassen_internetkasse extends XMLprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'sparkassen_internetkasse_formularservice';
+		$info['name']			= 'sparkassen_internetkasse';
 		$info['longname']		= 'Sparkassen-Internetkasse Formularservice';
 		$info['statement']		= 'Sparkassen Internetkasse Formularservice - Die E-Payment-Lösung im Internet';
 		$info['description']	= 'Die Sparkassen-Internetkasse ist ein Management-System für das E-Payment im Internet.';
@@ -96,20 +96,38 @@ class processor_sparkassen_internetkasse_formularservice extends XMLprocessor
 		return $this->arrayToNVP( $var );
 	}
 
-	function getSIFvars( $request )
+	function getSIFvars( $request, $ppan )
 	{
 		$var = array();
-		$var['command']			= 'authorization';
-		$var['payment_options']	= 'creditcard';
-		$var['orderid']			= $request->invoice->id;
-		$var['basketnr']		= $request->invoice->invoice_number;
-		$var['amount']			= (int) ( $request->int_var['amount'] * 100 );
-		$var['currency']		= $this->settings['currency'];
-		$var['ppan']			= $ppan;
+
+		if ( $ppan ) {
+			$var['command']			= 'authorization';
+			$var['payment_options']	= 'creditcard';
+			$var['orderid']			= $request->invoice->id;
+			$var['basketnr']		= $request->invoice->invoice_number;
+			$var['amount']			= (int) ( $request->int_var['amount'] * 100 );
+			$var['currency']		= $this->settings['currency'];
+			$var['ppan']			= $ppan;
+		}
+
+		return $var;
 	}
 
 	function checkoutProcess( $request, $InvoiceFactory )
 	{
+		if ( !empty( $request->int_var['params']['usePPAN'] ) ) {
+			$ppan = $this->getPPAN( $request->metaUser );
+
+			if ( !empty( $ppan ) ) {
+				// Make a form to confirm usage of PPAN
+				$var = $this->getSIFvars( $request, $ppan );
+
+				$var['params']['usePPAN'] = array( 'hidden', 1, 1 );
+
+				return $var;
+			}
+		}
+
 		$this->sanitizeRequest( $request );
 
 
@@ -301,30 +319,30 @@ function parseNotification($post) {
 	#print_r($response);
 	// Values PseudoKreditkarten-Transactions will return
 	$response['posh_version'] = $post['posh_version'];
-	$response['txntype'] = $post['txntype']; //Pflichtfeld
-	$response['posherr'] = $post['posherr']; //Pflichtfeld
-	$response['rmsg'] = $post['rmsg']; //Pflichtfeld
-	$response['rc'] = $post['rc']; //Pflichtfeld, kann leer sein.
-	$response['txn_date'] = $post['txn_date']; //Pflichtfeld
-	$response['txn_time'] = $post['txn_time']; //Pflichtfeld
-	$response['merch_name'] = $post['merch_name']; //Pflichtfeld, kann leer sein.
-	$response['merch_street'] = $post['merch_street']; //Pflichtfeld, kann leer sein.
-	$response['merch_town'] = $post['merch_town']; //Pflichtfeld, kann leer sein.
-	$response['merch_tid'] = $post['merch_tid']; //Pflichtfeld, kann leer sein.
+	$response['txntype'] = $post['txntype'];
+	$response['posherr'] = $post['posherr'];
+	$response['rmsg'] = $post['rmsg'];
+	$response['rc'] = $post['rc'];
+	$response['txn_date'] = $post['txn_date'];
+	$response['txn_time'] = $post['txn_time'];
+	$response['merch_name'] = $post['merch_name'];
+	$response['merch_street'] = $post['merch_street'];
+	$response['merch_town'] = $post['merch_town'];
+	$response['merch_tid'] = $post['merch_tid'];
 	//Im Response enthalten, wenn Parameter rc einen Wert enthält.
-	$response['pcode'] = $post['pcode']; //Pflichtfeld
-	$response['posem'] = $post['posem']; //Pflichtfeld
-	$response['poscc'] = $post['poscc']; //Pflichtfeld
-	$response['aid'] = $post['aid']; //Pflichtfeld
-	$response['trefnum'] = $post['trefnum']; //Pflichtfeld
-	$response['retrefnr'] = $post['retrefnr']; //Pflichtfeld
-	$response['txntype'] = $post['txntype']; //Pflichtfeld
-	$response['timestamp'] = $post['timestamp']; //Pflichtfeld
-	$response['cai'] = $post['cai']; //Pflichtfeld
-	$response['txn_card'] = $post['txn_card']; //Pflichtfeld
-	$response['txn_expdat'] = $post['txn_expdat']; //Pflichtfeld
-	$response['rc_score'] = $post['rc_score']; //Nach American Express Adressverifizierung
-	$response['rc_avsamex'] = $post['rc_avsamex']; //Nach American Express Adressverifizierung
+	$response['pcode'] = $post['pcode'];
+	$response['posem'] = $post['posem'];
+	$response['poscc'] = $post['poscc'];
+	$response['aid'] = $post['aid'];
+	$response['trefnum'] = $post['trefnum'];
+	$response['retrefnr'] = $post['retrefnr'];
+	$response['txntype'] = $post['txntype'];
+	$response['timestamp'] = $post['timestamp'];
+	$response['cai'] = $post['cai'];
+	$response['txn_card'] = $post['txn_card'];
+	$response['txn_expdat'] = $post['txn_expdat'];
+	$response['rc_score'] = $post['rc_score'];
+	$response['rc_avsamex'] = $post['rc_avsamex'];
 	// TODO save ppan to database
 	// 
 	// Values AEC needs
@@ -410,6 +428,33 @@ function validateNotification($response, $post, $invoice) {
 	return $response;
 }
 
+	function setPPAN( $metaUser, $ppan )
+	{
+		$metaUser->meta->setCustomParams( array( 'ppan' => $ppan ) );
+		$metaUser->meta->storeload();
+
+		return true;
+	}
+
+	function getPPAN( $metaUser )
+	{
+		$uparams = $metaUser->meta->getCustomParams();
+		
+		if ( !empty( $uparams['ppan'] ) ) {
+			return $uparams['ppan'];
+		}
+
+		return null;
+	}
+
+	function deletePPAN( $metaUser )
+	{
+		$metaUser->meta->setCustomParams( array( 'ppan' => '' ) );
+		$metaUser->meta->storeload();
+
+		return true;
+	}
+
 	function hmac( $key, $data )
 	{
 	   // RFC 2104 HMAC implementation for php.
@@ -427,79 +472,6 @@ function validateNotification($response, $post, $invoice) {
 
 	   return sha1($k_opad  . pack("H*",sha1($k_ipad . $data)));
 	}
-
-	function setPPAN( $metaUser, $ppan )
-	{
-		$metaUser->meta->addCustomParams( array( 'ppan' => $ppan ) );
-		$metaUser->meta->storeload();
-
-		return true;
-	}
-
-	function getPPAN( $metaUser )
-	{
-		$uparams = $metaUser->meta->getCustomParams();
-		
-		if ( !empty( $uparams['ppan'] ) ) {
-			return $uparams['ppan'];
-		}
-
-		return null;
-	}
-
-function _getPpan() {
-
-	$user = & JFactory::getUser();
-	$db = & JFactory::getDBO();
-	$ppan_field = 'ppan';
-
-	$query = 'SELECT `'.$ppan_field.'` FROM `#__acctexp_subscr` WHERE `userid` = ' . $user->id;
-	$db->setQuery($query);
-	
-	$ppan = $db->loadResult();
-
-	return $ppan;
-}
-
-function _removePpan($invoice_number, $is_notify_user=false) {
-
-	$db = & JFactory::getDBO();
-	$ppan_field = 'ppan';
-
-	$query = 'SELECT `userid` FROM #__acctexp_invoices WHERE `invoice_number` = \'' . $invoice_number . '\'';
-	$db->setQuery($query);
-
-	$userid = $db->loadResult();
-	
-	if ($is_notify_user) {
-
-	$query = "SELECT `email`, `name` FROM #__users WHERE `id` = " . $userid;
-	$db->setQuery($query);
-
-	$receipient = $db->loadResult();
-	
-	
-	$app = JFactory::getApplication();
-	if ($app->getCfg('mailfrom') != '' && $app->getCfg('fromname') != '') {
-		$adminName2 = $app->getCfg('fromname');
-		$adminEmail2 = $app->getCfg('mailfrom');
-	} else {
-		$rows = aecACLhandler::getSuperAdmins();
-		$row2 = $rows[0];
-
-		$adminName2 = $row2->name;
-		$adminEmail2 = $row2->email;
-	}
-	
-	JUTility::sendMail($adminEmail2, $adminEmail2, $receipient, $this->settings['creditcardexpiredmailsubject'], $this->settings['creditcardexpiredmailbody']);
-	}
-	
-	$query = "UPDATE #__acctexp_subscr SET `".$ppan_field."` = '' WHERE `userid` = " . $userid;
-	$db->setQuery($query);
-	$db->query() or die($db->stderr());
-	
-	
-}
 
 }
 
