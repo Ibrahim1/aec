@@ -11,19 +11,19 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined('_VALID_MOS') ) or die('Direct Access to this location is not allowed.');
 
-class processor_sparkassen_internetkasse_formularservice extends POSTprocessor
+class processor_sparkassen_internetkasse_formularservice extends XMLprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'Sparkassen Internetkasse Formularservice';
+		$info['name']			= 'sparkassen_internetkasse_formularservice';
 		$info['longname']		= 'Sparkassen-Internetkasse Formularservice';
 		$info['statement']		= 'Sparkassen Internetkasse Formularservice - Die E-Payment-Lösung im Internet';
 		$info['description']	= 'Die Sparkassen-Internetkasse ist ein Management-System für das E-Payment im Internet.';
 		$info['currencies']		= 'EUR';
 		$info['cc_list']		= 'visa,mastercard,eurocard';
 		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
-		$info['recurring']		= 2;
+		$info['secure']			= 1;
 
 		return $info;
 	}
@@ -48,53 +48,71 @@ class processor_sparkassen_internetkasse_formularservice extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']						= array('list_yesno');
-		$settings['pseudocreditcard']				= array('list_yesno');
-		$settings['additionalnote']					= array('inputC');
-		$settings['sslmerchant']					= array('inputC');
-		$settings['sslmerchantpass']				= array('inputC');
-		$settings['merchant']						= array('inputC');
-		$settings['merchantpass']					= array('inputC');
-		$settings['creditcardexpiredmailsubject']	= array('inputC');
-		$settings['creditcardexpiredmailbody']		= array('inputE');
-
-		$settings['redirecturls_server']			= array('inputC');
-		$settings['redirecturls_testserver']		= array('inputC');
+		$settings['testmode']			= array('list_yesno');
+		$settings['pseudocreditcard']	= array('list_yesno');
+		$settings['additionalnote']		= array('inputC');
+		$settings['sslmerchant']		= array('inputC');
+		$settings['sslmerchantpass']	= array('inputC');
+		$settings['merchant']			= array('inputC');
+		$settings['merchantpass']		= array('inputC');
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	function checkoutform( $request )
 	{
-		$settings['command'] = 'sslform'; // FIX
-		$settings['post_url_shopschnittstelle_test'] = 'https://testsystem.sparkassen-internetkasse.de/request/request/prot/Request.po';
-		$settings['post_url_shopschnittstelle'] = 'https://system.sparkassen-internetkasse.de/request/request/prot/Request.po';
-		$settings['post_url_formularservice_test'] = 'https://testsystem.sparkassen-internetkasse.de/vbv/mpi_legacy';
-		$settings['post_url_formularservice'] = 'https://system.sparkassen-internetkasse.de/vbv/mpi_legacy';
-		$settings['payment_options'] = 'cardholder;generate_ppan'; // cardholder;generate_ppan
-		$settings['paymentmethod'] = 'creditcard'; // FIX creditcard|registerpan??
-		$settings['sessionid'] = session_id(); // [optional]
-		$settings['transactiontype'] = 'authorization';  // preauthorization|authorization
-		$settings['version'] = '1.5'; // FIX
-		$settings['item_number'] = '[[user_id]]';
+		if ( $this->settings['pseudocreditcard'] ) {
+			$ppan = $this->getPPAN( $request->metaUser );
 
-		// if we have a ppan, we can make a 'silent' bank transfer
-		if ($this->settings['pseudocreditcard']) {
-			$ppan = $this->_getPpan();
-			if ($ppan != null && $ppan != '') {
-				$IS_SILENT = true;
+			if ( !empty( $ppan ) ) {
+				// Make a form to confirm usage of PPAN
+				$var = array();
+
+				$var['params']['usePPAN'] = array( 'hidden', 1, 1 );
+
+				return $var;
 			}
 		}
 
-		$silentmsg = 'command=authorization';
-		$silentmsg .= '&payment_options=creditcard';
-		$silentmsg .= '&orderid=' . $request->invoice->id;
-		$silentmsg .= '&basketnr=' . trim($request->invoice->invoice_number);
-		$silentmsg .= '&amount=' . trim(str_replace('.', '', $request->int_var['amount']));
-		$silentmsg .= '&currency=' . trim($this->settings['currency']);
-		$silentmsg .= '&ppan=' . $ppan;
+		$var = $this->getCCform();
+
+		$values = array( 'firstname', 'lastname' );
+
+		if ( !empty( $this->settings['promptAddress'] ) ) {
+			$values = array_merge( $values, array( 'address', 'city', 'zip', 'country_list' ) );
+		}
+
+		$var = $this->getUserform( $var, $values, $request->metaUser );
+
+		return $var;
+	}
+
+	function createRequestXML( $request )
+	{
+		$var = $this->getPayPalVars( $request );
+
+		return $this->arrayToNVP( $var );
+	}
+
+	function getSIFvars( $request )
+	{
+		$var = array();
+		$var['command']			= 'authorization';
+		$var['payment_options']	= 'creditcard';
+		$var['orderid']			= $request->invoice->id;
+		$var['basketnr']		= $request->invoice->invoice_number;
+		$var['amount']			= (int) ( $request->int_var['amount'] * 100 );
+		$var['currency']		= $this->settings['currency'];
+		$var['ppan']			= $ppan;
+	}
+
+	function checkoutProcess( $request, $InvoiceFactory )
+	{
+		$this->sanitizeRequest( $request );
+
+
 
 		$path = '/request/request/prot/Request.po';
 		if ( $this->settings['testmode'] ) {
@@ -104,41 +122,24 @@ class processor_sparkassen_internetkasse_formularservice extends POSTprocessor
 		}
 
 		$curlextra = array();
-		$curlextra[CURLOPT_HEADER] = 0;
 		$curlextra[CURLOPT_USERPWD] = $this->settings['merchant'] . ':' . $this->settings['merchantpass'];
 
-		$resultstring = $this->transmitRequest( $url, $path, $silentmsg, 443, $curlextra );
+		$resultstring = $this->transmitRequest( $url, $path, $this->arrayToNVP($var), 443, $curlextra );
 
-	echo "Plain request: " . $silentmsg . "\n";
-	echo "Plain result : " . $resultstring . "\n";
+		$curlextra = array();
+		$curlextra[CURLOPT_TIMEOUT] = 60;
 
-	$server = $this->settings['redirecturls_server'];
-	if ($this->settings['testmode']) {
-		$server = $this->settings['redirecturls_testserver'];
+		$path = '/index.php?option=com_acctexp&task=sparkassen_internetkasse_formularservicenotification';
+		if ( $this->settings['testmode'] ) {
+			$url = 'http://' . $this->settings['redirecturls_testserver'] . $path;
+		} else {
+			$url = 'http://' . $this->settings['redirecturls_server'] . $path;
+		}
+
+		$result = $this->transmitRequest( $url, $path, $resultstring.'&response_shopschnittstelle=1', 443, $curlextra );
+
+		return $result;
 	}
-	$c = curl_init();
-	curl_setopt($c, CURLOPT_URL, 'http://' . $server . '/index.php?option=com_acctexp&task=sparkassen_internetkasse_formularservicenotification');
-
-	// no header in output
-	curl_setopt($c, CURLOPT_HEADER, 0);
-
-	// return reponse as result
-	curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-
-	// do a POST-Request
-	curl_setopt($c, CURLOPT_POST, 1);
-	curl_setopt($c, CURLOPT_TIMEOUT, 60);
-	curl_setopt($c, CURLOPT_POSTFIELDS, $resultstring.='&response_shopschnittstelle=1');
-
-	$result = curl_exec($c);
-	curl_close($c);
-
-	print_r($result);
-	exit;
-
-	// Display standard CC collection Form
-	return parent::checkoutAction($request, $InvoiceFactory);
-}
 
 /**
 * organizes the communication toward Sparkassen-Internetkasse.
@@ -152,40 +153,40 @@ class processor_sparkassen_internetkasse_formularservice extends POSTprocessor
 * @return Array 
 */
 function createGatewayLink($request) {
+		$settings['command'] = 'sslform'; // FIX
+		$settings['payment_options'] = 'cardholder;generate_ppan'; // cardholder;generate_ppan
+		$settings['paymentmethod'] = 'creditcard'; // FIX creditcard|registerpan??
+		$settings['sessionid'] = session_id(); // [optional]
+		$settings['transactiontype'] = 'authorization';  // preauthorization|authorization
+		$settings['version'] = '1.5'; // FIX
+		$settings['item_number'] = '[[user_id]]';
 
-	$IS_TEST = $this->settings['testmode'];
 	$TIMESTAMP = date('YmdHis');
 
 	if (is_array($request->int_var['amount'])) {
 	#echo 'int_var[amount]: ' . $request->int_var['amount'];
 	}
 	// ACHTUNG: CSSURL HIER EINTRAGEN (dann muss sie nicht in der Händleroberfläche konfiguriert werden)
-	if ($IS_TEST) {
+	if ($this->settings['testmode']) {
 	// 2011.05.24 URL für Testsystem telefonisch bestätigt
 	if ($IS_SILENT) {
 		// HTTP-Basic authtentication                
-		$post_url = $this->settings['post_url_shopschnittstelle_test'];
+		$post_url = 'https://testsystem.sparkassen-internetkasse.de/request/request/prot/Request.po';
 	} else {
-		$post_url = $this->settings['post_url_formularservice_test'];
+		$post_url = 'https://testsystem.sparkassen-internetkasse.de/vbv/mpi_legacy';
 	}
 	} else {
 	// 2011.05.24 URL muss nach Bestellung Sparkassen-Internetkasse erfragt werden
 	if ($IS_SILENT) {
-		$post_url = $this->settings['post_url_shopschnittstelle'];
+		$post_url = 'https://system.sparkassen-internetkasse.de/request/request/prot/Request.po';
 	} else {
-		$post_url = $this->settings['post_url_formularservice'];
+		$post_url = 'https://system.sparkassen-internetkasse.de/vbv/mpi_legacy';
 	}
 	}
-
-	// Calculate MAC
 	/*
 	*  IMPORTANT NOTE: Because the $var array elements gets printed into a
 	*  string the order of the values is essential !!!! 
 	*/
-	#print_r($request->int_var['amount']);
-	#print_r($request);
-	#print_r($request->invoice);
-	#$var['additionalnote']  = trim($this->settings['additionalnote']);
 
 	$var['amount'] = trim(str_replace('.', ',', $request->int_var['amount']));
 	$var['basketid'] = trim($request->invoice->invoice_number);  // 
@@ -215,17 +216,7 @@ function createGatewayLink($request) {
 	}
 	$redirect .= $k . '=' . $v;
 	}
-	// This gets printed out on the overview page
-	#echo '<br><br><br><br><br><br>';
-	#echo 'url: ' . $post_url . '<br>';
-	#echo 'key: ' . $this->settings['sslmerchantpass'] . '<br>';
-	#echo 'mac_string: ' . $mac_string . '<br>';
-	$var['mac'] = $this->_hmac($this->settings['sslmerchantpass'], $mac_string);  // generate
-
-	#echo 'mac: ' . $var['mac'] . '<br>';
-
-	#echo 'mac_array: <br/>';
-	#print_r($var);
+	$var['mac'] = $this->hmac($this->settings['sslmerchantpass'], $mac_string);  // generate
 
 	$redirect .= '&amp;mac=' . $var['mac'];
 
@@ -237,12 +228,6 @@ function createGatewayLink($request) {
 }
 
 function parseNotification($post) {
-
-	#echo '<h2>Parse Notification</h2>';
-	#echo '<h3>POST</h3>';
-	#print_r($post);
-	// 2011.06.07 Response String
-	//timestamp=&txn_date=07%2F06%2F2011&txn_time=11%3A43&txntype=&pcode=&posem=&poscc=&aid=&merch_name=Homeier&merch_street=&merch_town=&merch_tid=57042347&rc=&rmsg=Parameter%20%27payment_options%27%20falsch.&retrefnr=&posherr=310&posh_version=1.0.118&cai=&txn_card=&txn_expdat=&orderid=IYWNkMmQ3NmNkODcx&trefnum=&basketnr=&amount=1%2C00&currency=EUR
 
 
 	$response = array();
@@ -398,9 +383,7 @@ function validateNotification($response, $post, $invoice) {
 		$response['valid'] = true;
 
 		if ($this->settings['pseudocreditcard']) {
-
-		$request->invoice->addParams( array( 'ppan' => $post['ppan'] ) );
-		$request->invoice->storeload();
+			$this->setPPAN( $request->metaUser, $post['ppan'] );
 		}
 		#exit;
 		echo 'redirecturls=http://' . $server . '/transaction-success';
@@ -411,7 +394,7 @@ function validateNotification($response, $post, $invoice) {
 		if ($_GET['code'] == '133') {
 		$msg = 'Karte abgelaufen.';
 		} else if ($_GET['code'] == '344') {
-		$msg = 'Karte in Deutschland nicht gültig. ';
+		$msg = 'Karte in Deutschland nicht gültig.';
 		} else if ($_GET['code'] == '347') {
 		$msg = 'Abbruch durch den Benutzer.';
 		} else if ($_GET['code'] == '349') {
@@ -427,35 +410,42 @@ function validateNotification($response, $post, $invoice) {
 	return $response;
 }
 
-/**
-* Calculates the MAC - Message Authentication Code
-* 
-* uses the HMAC (RFC 2104)
-*       
-* @see $DOC, p. 63ff, p. 68
-* @param type $key
-* @param type $data
-* @return type 
-*/
-function _hmac($key, $data) {
-	// RFC 2104 HMAC implementation for php.
-	// Creates an SHA-1 HMAC.
-	$b = 64; // byte length for SHA-1
-	// if the key has more than 64 bytes, hash it
-	//if (strlen($key) > $b) {
-	// $key = pack("H*",sha1($key));
-	//}
-	$key = str_pad($key, $b, chr(0x00));
-	$ipad = str_pad('', $b, chr(0x36));
-	$opad = str_pad('', $b, chr(0x5c));
-	$k_ipad = $key ^ $ipad;
-	$k_opad = $key ^ $opad;
+	function hmac( $key, $data )
+	{
+	   // RFC 2104 HMAC implementation for php.
+	   // Creates an SHA-1 HMAC.
+	   // Eliminates the need to install mhash to compute a HMAC
+	   // Hacked by Lance Rushing
 
-	//Test:
-	//echo hmac("8A!v#6qPc3?+G1on", "10,00ba_100202sslformEUR20091206_12:23:452009120601creditcardNhdz747458sNXmycompanypreauthorization1.5");
+	   $b = 64; // byte length for SHA-1
 
-	return sha1($k_opad . pack("H*", sha1($k_ipad . $data)));
-}
+	   $key  = str_pad($key, $b, chr(0x00));
+	   $ipad = str_pad('', $b, chr(0x36));
+	   $opad = str_pad('', $b, chr(0x5c));
+	   $k_ipad = $key ^ $ipad ;
+	   $k_opad = $key ^ $opad;
+
+	   return sha1($k_opad  . pack("H*",sha1($k_ipad . $data)));
+	}
+
+	function setPPAN( $metaUser, $ppan )
+	{
+		$metaUser->meta->addCustomParams( array( 'ppan' => $ppan ) );
+		$metaUser->meta->storeload();
+
+		return true;
+	}
+
+	function getPPAN( $metaUser )
+	{
+		$uparams = $metaUser->meta->getCustomParams();
+		
+		if ( !empty( $uparams['ppan'] ) ) {
+			return $uparams['ppan'];
+		}
+
+		return null;
+	}
 
 function _getPpan() {
 
