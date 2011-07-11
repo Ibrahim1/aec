@@ -91,7 +91,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		$var = $this->getPayPalVars( $request );
+		$var = $this->getSIFvars( $request );
 
 		return $this->arrayToNVP( $var );
 	}
