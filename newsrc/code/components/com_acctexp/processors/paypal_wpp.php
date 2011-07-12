@@ -317,8 +317,6 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		$app = JFactory::getApplication();
-
 		$var = $this->getPayPalVars( $request );
 
 		return $this->arrayToNVP( $var );
@@ -326,8 +324,6 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function getPayPalVars( $request, $regular=true )
 	{
-		$app = JFactory::getApplication();
-
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Method']			= 'CreateRecurringPaymentsProfile';
 		} else {
@@ -380,8 +376,6 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function getPaymentVars( $var, $request )
 	{
-		$app = JFactory::getApplication();
-
 		if ( is_array( $request->int_var['amount'] ) ) {
 			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
 			// $var['FailedInitAmtAction'] = 'ContinueOnFailure'; // Not Supported Yet (optional)
