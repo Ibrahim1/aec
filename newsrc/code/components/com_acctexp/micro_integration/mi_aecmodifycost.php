@@ -140,6 +140,14 @@ class mi_aecmodifycost
 
 	function action( $request )
 	{
+
+	}
+	function relayAction( $request )
+	{
+		if ( !( ( $request->action == 'action' ) || ( $request->area == 'afteraction' ) ) ) {
+			return null;
+		}
+
 		$option = $this->getOption( $request );
 
 		if ( empty( $option['mi'] ) ) {
@@ -160,11 +168,9 @@ class mi_aecmodifycost
 			continue;
 		}
 
-		$action = 'action';
-
 		$exchange = $params = null;
 
-		if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, $action, $request->add, $params ) === false ) {
+		if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, $request->action, $request->add, $params ) === false ) {
 			global $aecConfig;
 
 			if ( $aecConfig->cfg['breakon_mi_error'] ) {
