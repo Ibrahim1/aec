@@ -1,9 +1,9 @@
 <?php
 /**
- * @version $Id: mi_http_query.php
+ * @version $Id: mi_pardot_marketing.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Micro Integrations - Http Query
- * @copyright 2006-2010 Copyright (C) David Deutsch
+ * @subpackage Micro Integrations - Pardot Marketing
+ * @copyright 2011 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
@@ -11,13 +11,13 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_http_query extends MI
+class mi_pardot_marketing extends MI
 {
 	function Info()
 	{
 		$info = array();
-		$info['name'] = JText::_('AEC_MI_NAME_HTTP_QUERY');
-		$info['desc'] = JText::_('AEC_MI_DESC_HTTP_QUERY');
+		$info['name'] = JText::_('AEC_MI_NAME_PARDOT_MARKETING');
+		$info['desc'] = JText::_('AEC_MI_DESC_PARDOT_MARKETING');
 
 		return $info;
 	}
