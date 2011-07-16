@@ -33,6 +33,25 @@ class mi_pardot_marketing extends MI
 		return $settings;
 	}
 
+	function install()
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_pardot_marketing` ('
+		. '`id` int(11) NOT NULL auto_increment,'
+		. '`userid` int(11) NOT NULL,'
+		. '`active` int(4) NOT NULL default \'1\','
+		. '`granted_listings` int(11) NULL,'
+		. '`used_listings` int(11) NULL,'
+		. '`api_key` text NULL,'
+		. ' PRIMARY KEY (`id`)'
+		. ')'
+		;
+		$db->setQuery( $query );
+		$db->query();
+		return;
+	}
+
 	function relayAction( $request )
 	{
 		if ( !isset( $this->settings['url'.$request->area] ) ) {
