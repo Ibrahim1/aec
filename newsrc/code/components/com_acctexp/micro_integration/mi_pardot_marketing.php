@@ -39,7 +39,7 @@ class mi_pardot_marketing extends MI
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_pardot_marketing` ('
 		. '`id` int(11) NOT NULL auto_increment,'
-		. '`userid` int(11) NOT NULL,'
+		. '`created_on` datetime NOT NULL default \'0000-00-00 00:00:00\''
 		. '`active` int(4) NOT NULL default \'1\','
 		. '`granted_listings` int(11) NULL,'
 		. '`used_listings` int(11) NULL,'
@@ -62,6 +62,11 @@ class mi_pardot_marketing extends MI
 		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 
 		return $this->fetchURL( $this->createURL( $url, $query ) );
+	}
+
+	function getAPIkey()
+	{
+		
 	}
 
 	function createURL( $url, $query ) {
@@ -89,9 +94,11 @@ class mi_pardot_marketing extends MI
 		return $urlsplit[0] . '?' . implode( '&', $fullp );
 	}
 
-	function fetchURL( $url )
+	function fetch( $area, $cmd )
 	{
 		global $aecConfig;
+
+		$url = 'https://pi.pardot.com/api/' . $area . '/version/3/' . $cmd . '/';
 
 		if ( strpos( $url, '://' ) === false ) {
 			$purl = 'http://' . $url;
@@ -130,4 +137,44 @@ class mi_pardot_marketing extends MI
 		return true;
 	}
 }
+
+class aec_pardot_marketing extends serialParamDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $created_on			= null;
+	/** @var int */
+	var $api_key			= null;
+
+	function aec_pardot_marketing( &$db )
+	{
+		parent::__construct( '#__acctexp_mi_pardot_marketing', 'id', $db );
+	}
+
+	function get()
+	{
+	 	$this->load(1);
+
+		if ( empty( $this->created_on ) || ( $this->created_on == '0000-00-00 00:00:00' ) ) {
+			global $aecConfig;
+
+			$query = 'INSERT INTO #__acctexp_mi_pardot_marketing'
+			. ' VALUES( \'1\', \'' . date( 'Y-m-d H:i:s', ((int) gmdate('U')) ) . '\' )'
+			;
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
+
+			$this->load(1);
+		}
+
+		$diff = strtotime( $this->created_on ) - ((int) gmdate('U'));
+
+		if ( $diff > 3300 ) {
+			// Request new API key
+			
+		}
+	}
+}
+
 ?>

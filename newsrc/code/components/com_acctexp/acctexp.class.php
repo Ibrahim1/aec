@@ -2543,6 +2543,8 @@ class aecHeartbeat extends JTable
 			;
 			$db->setQuery( $query );
 			$db->query() or die( $db->stderr() );
+
+			$this->load(1);
 		}
 	}
 
