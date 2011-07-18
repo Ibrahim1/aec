@@ -40,9 +40,6 @@ class mi_pardot_marketing extends MI
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_pardot_marketing` ('
 		. '`id` int(11) NOT NULL auto_increment,'
 		. '`created_on` datetime NOT NULL default \'0000-00-00 00:00:00\''
-		. '`active` int(4) NOT NULL default \'1\','
-		. '`granted_listings` int(11) NULL,'
-		. '`used_listings` int(11) NULL,'
 		. '`api_key` text NULL,'
 		. ' PRIMARY KEY (`id`)'
 		. ')'
@@ -69,44 +66,39 @@ class mi_pardot_marketing extends MI
 		
 	}
 
-	function createURL( $url, $query ) {
-		$urlsplit = explode( '?', $url );
+}
 
-		$p = explode( "\n", $query );
+class PardotConnector
+{
+	function getAPIkey( $settings )
+	{
+		$params = array( 'email' => $settings['email'], 'password' => $settings['password'], 'user_key' => $settings['user_key'] );
 
-		if ( !empty( $urlsplit[1] ) ) {
-			$p2 = explode( '&', $urlsplit[1] );
-
-			if ( !empty( $p2 ) ) {
-				$p = array_merge( $p2, $p );
-			}
-		}
-
-		$fullp = array();
-		foreach ( $p as $entry ) {
-			$e = explode( '=', $entry );
-
-			if ( !empty( $e[0] ) && !empty( $e[1] ) ) {
-				$fullp[] = urlencode( trim($e[0]) ) . '=' . urlencode( trim($e[1]) );
-			}
-		}
-
-		return $urlsplit[0] . '?' . implode( '&', $fullp );
+		return $this->fetch( 'login', null, $params );
 	}
 
-	function fetch( $area, $cmd )
+	function fetch( $area, $cmd, $params )
 	{
 		global $aecConfig;
 
-		$url = 'https://pi.pardot.com/api/' . $area . '/version/3/' . $cmd . '/';
+		$url = 'https://pi.pardot.com/api/' . $area . '/version/3';
 
-		if ( strpos( $url, '://' ) === false ) {
-			$purl = 'http://' . $url;
-		} else {
-			$purl = $url;
+		if ( !empty( $cmd ) ) {
+			 $url .= '/'.$cmd;
 		}
 
-		$url_parsed = parse_url( $purl );
+		if ( !empty( $params ) ) {
+			$url .= '?';
+
+			$ps = array();
+			foreach ( $params as $k => $v ) {
+				$ps[] = urlencode( $k ) . "=" . urlencode( $v );
+			}
+
+			$url .= implode( '&', $ps );
+		}
+
+		$url_parsed = parse_url( $url );
 
 		$host = $url_parsed["host"];
 
@@ -118,10 +110,9 @@ class mi_pardot_marketing extends MI
 
 		$path = $url_parsed["path"];
 
-		//if url is http://example.com without final "/"
-		//I was getting a 400 error
+		// Prevent 400 Error
 		if ( empty( $path ) ) {
-			$path="/";
+			$path = "/";
 		}
 
 		if ( $url_parsed["query"] != "" ) {
@@ -152,7 +143,7 @@ class aec_pardot_marketing extends serialParamDBTable
 		parent::__construct( '#__acctexp_mi_pardot_marketing', 'id', $db );
 	}
 
-	function get()
+	function get( $settings )
 	{
 	 	$this->load(1);
 
@@ -172,7 +163,9 @@ class aec_pardot_marketing extends serialParamDBTable
 
 		if ( $diff > 3300 ) {
 			// Request new API key
+			$pc = new PardotConnector();
 			
+			$this->api_key = $pc->getAPIkey( $settings );
 		}
 	}
 }

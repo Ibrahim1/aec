@@ -92,10 +92,9 @@ class mi_http_query extends MI
 
 		$path = $url_parsed["path"];
 
-		//if url is http://example.com without final "/"
-		//I was getting a 400 error
+		// Prevent 400 Error
 		if ( empty( $path ) ) {
-			$path="/";
+			$path = "/";
 		}
 
 		if ( $url_parsed["query"] != "" ) {
