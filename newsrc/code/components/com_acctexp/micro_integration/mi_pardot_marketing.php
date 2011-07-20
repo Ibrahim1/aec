@@ -104,7 +104,7 @@ class PardotConnector extends serialParamDBTable
 		parent::__construct( '#__acctexp_mi_pardot_marketing', 'id', $db );
 	}
 
-	function get( $settings )
+	function get( $settings, $force=false )
 	{
 	 	$this->load(1);
 
@@ -122,14 +122,16 @@ class PardotConnector extends serialParamDBTable
 			$this->load(1);
 		}
 
-		$diff = strtotime( $this->created_on ) - ((int) gmdate('U'));
+		$diff = (int) ( gmdate('U') - strtotime( $this->created_on ) );
 
 		// Check whether key is null or old
-		if ( ( $diff > 3300 ) || empty( $this->api_key ) || ( $this->api_key == 'Login failed' ) ) {
-			$request = $this->getAPIkey( $settings );
+		if ( ( $diff > 3300 ) || empty( $this->api_key ) || ( strpos( $this->api_key, 'ERROR:' ) !== false ) ) {
+			$request = $this->getAPIkey( $settings, $force );
 
-			if ( strpos( $request, 'stat="fail"' ) !== false ) {
-				$this->api_key = 'Login failed';
+			if ( strpos( $request, 'Invalid API key' ) !== false ) {
+				$this->api_key = 'ERROR: Invalid API key or user key';
+			} elseif ( strpos( $request, 'stat="fail"' ) !== false ) {
+				$this->api_key = 'ERROR: Login failed';
 			} else {
 				$this->api_key = XMLprocessor::XMLsubstring_tag( $request, 'api_key' );
 			}
@@ -138,11 +140,11 @@ class PardotConnector extends serialParamDBTable
 		}
 	}
 
-	function getAPIkey( $settings )
+	function getAPIkey( $settings, $forced=false )
 	{
 		$params = array( 'email' => $settings['email'], 'password' => $settings['password'], 'user_key' => $settings['user_key'] );
 
-		return $this->fetch( 'login', null, $params );
+		return $this->fetch( $settings, 'login', null, $params, $forced );
 	}
 
 	function createUser( $settings, $email )
@@ -157,10 +159,10 @@ class PardotConnector extends serialParamDBTable
 			}
 		}
 
-		return $this->fetch( 'prospect', 'do/create/email/'.$email, $params );
+		return $this->fetch( $settings, 'prospect', 'do/create/email/'.$email, $params );
 	}
 
-	function fetch( $area, $cmd, $params )
+	function fetch( $settings, $area, $cmd, $params, $retry=false )
 	{
 		global $aecConfig;
 
@@ -206,6 +208,12 @@ aecDebug("calling Pardot: ".$url);
 			$response = processor::doTheCurl( $url, '' );
 		} else {
 			$response = processor::doTheHttp( $url, $path, '', $port );
+		}
+
+		if ( ( strpos( $response, 'Invalid API key' ) !== false ) && !$retry ) {
+			$this->get( $settings, true );
+
+			$this->fetch( $settings, $area, $cmd, $params );
 		}
 aecDebug($response);
 		return $response;
