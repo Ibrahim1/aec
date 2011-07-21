@@ -25,10 +25,13 @@ class mi_pardot_marketing extends MI
 	function Settings()
 	{
         $settings = array();
-        $settings['email']			= array( 'inputC' );
-        $settings['password']		= array( 'inputC' );
-        $settings['user_key']		= array( 'inputC' );
-        $settings['pardot_lists']	= array( 'inputD' );
+        $settings['email']					= array( 'inputC' );
+        $settings['password']				= array( 'inputC' );
+        $settings['user_key']				= array( 'inputC' );
+        $settings['pardot_lists']			= array( 'inputD' );
+        $settings['pardot_lists_del']		= array( 'inputD' );
+        $settings['pardot_lists_exp']		= array( 'inputD' );
+        $settings['pardot_lists_exp_del']	= array( 'inputD' );
 
 		if ( !empty( $this->settings['email'] ) && !empty( $this->settings['password'] ) && !empty( $this->settings['user_key'] ) ) {
 			$db = &JFactory::getDBO();
@@ -85,7 +88,42 @@ class mi_pardot_marketing extends MI
 		$pc = new PardotConnector( $db );
 		$pc->get( $this->settings );
 
-		return $pc->createUser( $this->settings, $request->metaUser->cmsUser->email );
+		$lists = array( 'add' => array(), 'remove' => array() );
+
+		if ( !empty( $settings['pardot_lists'] ) ) {
+			$li = explode( "\n", $settings['pardot_lists'] );
+			
+			foreach ( $li as $k ) {
+				$lists['add'][] = $k;
+			}
+		}
+aecDebug("trying to query existing user");
+		$result = $pc->getUser( $this->settings, $request->metaUser->cmsUser->email );
+aecDebug($result);
+		if ( empty( $result->total_results ) ) {
+			return $pc->createUser( $this->settings, $request->metaUser->cmsUser->email, $lists );
+		} else {
+			// Remove lists that we already have assigned from the query
+			if ( !empty( $result->lists ) ) {
+				foreach ( $result->lists as $list ) {
+					foreach ( $lists['add'] as $k => $v ) {
+						if ( $list->id == $v ) {
+							unset( $lists['add'][$k] );
+						}
+					}
+				}
+			}
+
+			if ( !empty( $settings['pardot_lists_del'] ) ) {
+				$li = explode( "\n", $settings['pardot_lists_del'] );
+
+				foreach ( $li as $k ) {
+					$lists['remove'][] = $k;
+				}
+			}
+
+			return $pc->updateUser( $this->settings, $request->metaUser->cmsUser->email, $lists );
+		}
 	}
 
 }
@@ -126,14 +164,12 @@ class PardotConnector extends serialParamDBTable
 
 		// Check whether key is null or old
 		if ( ( $diff > 3300 ) || empty( $this->api_key ) || ( strpos( $this->api_key, 'ERROR:' ) !== false ) ) {
-			$request = $this->getAPIkey( $settings, $force );
+			$response = $this->getAPIkey( $settings, $force );
 
-			if ( strpos( $request, 'Invalid API key' ) !== false ) {
-				$this->api_key = 'ERROR: Invalid API key or user key';
-			} elseif ( strpos( $request, 'stat="fail"' ) !== false ) {
-				$this->api_key = 'ERROR: Login failed';
+			if ( isset( $response->api_key )  ) {
+				$this->api_key = (string) $response->api_key;
 			} else {
-				$this->api_key = XMLprocessor::XMLsubstring_tag( $request, 'api_key' );
+				$this->api_key = 'ERROR: ' . $response->err;
 			}
 
 			$this->storeload();
@@ -147,19 +183,61 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'login', null, $params, $forced );
 	}
 
-	function createUser( $settings, $email )
+	function createUser( $settings, $email, $lists )
 	{
 		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key );
 
-		if ( !empty( $settings['pardot_lists'] ) ) {
-			$li = explode( "\n", $settings['pardot_lists'] );
-			
-			foreach ( $li as $k ) {
+		if ( !empty( $lists['add'] ) ) {
+			foreach ( $lists['add'] as $k ) {
 				$params[$k] = "1";
 			}
 		}
 
+		if ( !empty( $lists['remove'] ) ) {
+			foreach ( $lists['remove'] as $k ) {
+				$params[$k] = "0";
+			}
+		}
+
 		return $this->fetch( $settings, 'prospect', 'do/create/email/'.$email, $params );
+	}
+
+	function updateUser( $settings, $email )
+	{
+		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key );
+
+		if ( !empty( $lists['add'] ) ) {
+			foreach ( $lists['add'] as $k ) {
+				$params['list_'.$k] = "1";
+			}
+		}
+
+		if ( !empty( $lists['remove'] ) ) {
+			foreach ( $lists['remove'] as $k ) {
+				$params['list_'.$k] = "0";
+			}
+		}
+
+		return $this->fetch( $settings, 'prospect', 'do/update/email/'.$email, $params );
+	}
+
+	function getUser( $settings, $email )
+	{
+		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key, 'assigned_to_user' => $email );
+
+		if ( !empty( $lists['add'] ) ) {
+			foreach ( $lists['add'] as $k ) {
+				$params[$k] = "1";
+			}
+		}
+
+		if ( !empty( $lists['remove'] ) ) {
+			foreach ( $lists['remove'] as $k ) {
+				$params[$k] = "0";
+			}
+		}
+
+		return $this->fetch( $settings, 'prospect', 'do/query', $params );
 	}
 
 	function fetch( $settings, $area, $cmd, $params, $retry=false )
@@ -209,14 +287,14 @@ aecDebug("calling Pardot: ".$url);
 		} else {
 			$response = processor::doTheHttp( $url, $path, '', $port );
 		}
-
+aecDebug($response);
 		if ( ( strpos( $response, 'Invalid API key' ) !== false ) && !$retry ) {
 			$this->get( $settings, true );
 
-			$this->fetch( $settings, $area, $cmd, $params );
+			return $this->fetch( $settings, $area, $cmd, $params, true );
 		}
-aecDebug($response);
-		return $response;
+
+		return simplexml_load_string( $response );
 	}
 }
 
