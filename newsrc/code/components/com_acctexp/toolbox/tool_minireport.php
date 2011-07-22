@@ -112,11 +112,16 @@ class tool_minireport
 			$groupnames[$group] = ItemGroupHandler::groupName( $group );
 		}
 
+		$incomplete = false;
 		foreach ( $historylist as $date => $history ) {
 			if ( date( 'D', strtotime( $date ) ) == 'Mon' ) {
 				$week = array();
+			} elseif ( !isset( $week ) ) {
+				$week = array();
+
+				$incomplete = true;
 			}
-			
+
 			$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em;">';
 
 			$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">' . $date . '</td>';
@@ -150,10 +155,10 @@ class tool_minireport
 
 			$closer = 0;
 
-			if ( isset( $week ) && ( date( 'D', strtotime( $date ) ) == 'Sun' ) ) {
-				$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em; background-color: #ddd;">';
+			if ( date( 'D', strtotime( $date ) ) == 'Sun' ) {
+				$return .= '<tr ' . ( $incomplete ? 'title="Incomplete!"' : '' ) . 'style="border-bottom: 2px solid #999 !important; height: 2em; background-color: #ddd;">';
 
-				$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">Week</td>';
+				$return .= '<td style="text-align: left !important; color: #aaa;">' . ( $incomplete ? '(Week)' : 'Week' ) . '</td>';
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
 
 				foreach ( $groups as $group ) {
@@ -163,11 +168,21 @@ class tool_minireport
 						$count = $week['groups'][$group];
 					}
 
-					$return .= '<td title="' . $groupnames[$group] . '" style="font-weight: bold; width: 5em;">' . $count . '</td>';
+					if ( $incomplete ) {
+						$return .= '<td title="' . $groupnames[$group] . '" style="font-weight: bold; width: 5em;">(' . $count . ')</td>';
+					} else {
+						$return .= '<td title="' . $groupnames[$group] . '" style="font-weight: bold; width: 5em;">' . $count . '</td>';
+					}
 				}
 
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
-				$return .= '<td title="Amount" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $week['amount'] ) . '</td>';
+
+				if ( $incomplete ) {
+					$return .= '<td title="Amount" style="text-align: right !important; color: #608919;">(' . AECToolbox::correctAmount( $week['amount'] ) . ')</td>';
+				} else {
+					$return .= '<td title="Amount" style="text-align: right !important; color: #608919;">' . AECToolbox::correctAmount( $week['amount'] ) . '</td>';
+				}
+
 				$return .= '</tr>';
 
 				$return .= '<tr style="height: 1px; background-color: #999;">';
@@ -175,6 +190,8 @@ class tool_minireport
 				$return .= '</tr>';
 
 				$closer = 1;
+
+				$incomplete = false;
 			}
 
 		}
