@@ -83,6 +83,13 @@ class tool_cleanup
 				}
 			}
 
+			$query = 'DELETE'
+					. ' FROM #__acctexp_eventlog'
+					. ' WHERE tags = \'debug\''
+					;
+			$db->setQuery( $query );
+			$db->query();
+
 			return $return;
 		} else {
 			$return = '<p>Found a total of ' . $found['total'] . ' entries.<p>'
@@ -93,6 +100,17 @@ class tool_cleanup
 				if ( ( $table != 'total' ) ) {
 					$return .= '<li>' . $count . ' entries in table ' . $table . '</li>';
 				}
+			}
+
+			$query = 'SELECT count(*)'
+					. ' FROM #__acctexp_eventlog'
+					. ' WHERE tags = \'debug\''
+					;
+			$db->setQuery( $query );
+			$count = $db->loadResult();
+
+			if ( $count ) {
+				$return .= '<li>Also found ' . $count . ' debug entries in the eventlog</li>';
 			}
 
 			return $return;
