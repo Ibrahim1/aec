@@ -32,6 +32,8 @@ class mi_pardot_marketing extends MI
         $settings['pardot_lists_del']		= array( 'inputD' );
         $settings['pardot_lists_exp']		= array( 'inputD' );
         $settings['pardot_lists_exp_del']	= array( 'inputD' );
+		$settings['rebuild']				= array( 'list_yesno' );
+		$settings['remove']					= array( 'list_yesno' );
 
 		if ( !empty( $this->settings['email'] ) && !empty( $this->settings['password'] ) && !empty( $this->settings['user_key'] ) ) {
 			$db = &JFactory::getDBO();
@@ -90,42 +92,72 @@ class mi_pardot_marketing extends MI
 
 		$lists = array( 'add' => array(), 'remove' => array() );
 
-		if ( !empty( $settings['pardot_lists'] ) ) {
-			$li = explode( "\n", $settings['pardot_lists'] );
+		if ( !empty( $this->settings['pardot_lists'] ) ) {
+			$li = explode( "\n", $this->settings['pardot_lists'] );
 			
 			foreach ( $li as $k ) {
 				$lists['add'][] = $k;
 			}
 		}
-aecDebug("trying to query existing user");
-		$result = $pc->getUser( $this->settings, $request->metaUser->cmsUser->email );
-aecDebug($result);
-		if ( empty( $result->total_results ) ) {
-			return $pc->createUser( $this->settings, $request->metaUser->cmsUser->email, $lists );
-		} else {
-			// Remove lists that we already have assigned from the query
-			if ( !empty( $result->lists ) ) {
-				foreach ( $result->lists as $list ) {
-					foreach ( $lists['add'] as $k => $v ) {
-						if ( $list->id == $v ) {
-							unset( $lists['add'][$k] );
-						}
+
+		$uparams = $request->metaUser->meta->getCustomParams();
+
+		$result = new stdClass();
+		if ( empty( $uparams['mi_pardot_marketing_prospect_id'] ) ) {
+			$result = $pc->createUser( $this->settings, $request->metaUser->cmsUser->email, $lists );
+
+			if ( !empty( $result->prospect->id ) ) {
+				// Completely new user, just create
+				$request->metaUser->meta->setCustomParams( array( 'mi_pardot_marketing_prospect_id' => ( (int) $result->prospect->id ) ) );
+
+				return true;
+			} elseif( !empty( $result->err ) ) {
+				// We have an entry, try to find the prospect
+				if ( strpos( $result->err, 'email address already exists' ) !== false ) {
+					$result = $pc->readProspect( $this->settings, 'email', $request->metaUser->cmsUser->email );
+
+					if ( !empty( $result->prospect->id ) ) {
+						// Found! Store it.
+						$request->metaUser->meta->setCustomParams( array( 'mi_pardot_marketing_prospect_id' => ( (int) $result->prospect->id ) ) );
+						$request->metaUser->meta->storeload();
+
+						$id_type = 'id';
+
+						$id = ( (int) $result->prospect->id );
 					}
 				}
 			}
+		} else {
+			$id_type = 'id';
 
-			if ( !empty( $settings['pardot_lists_del'] ) ) {
-				$li = explode( "\n", $settings['pardot_lists_del'] );
+			$id = $uparams['mi_pardot_marketing_prospect_id'];
 
-				foreach ( $li as $k ) {
-					$lists['remove'][] = $k;
+			$result = $pc->readProspect( $this->settings, 'id', $uparams['mi_pardot_marketing_prospect_id'] );
+		}
+
+		// Remove lists that we already have assigned from the query
+		if ( !empty( $result->lists ) ) {
+			foreach ( $result->lists as $list ) {
+				foreach ( $lists['add'] as $k => $v ) {
+					if ( $list->id == $v ) {
+						unset( $lists['add'][$k] );
+					}
 				}
 			}
+		}
 
-			return $pc->updateUser( $this->settings, $request->metaUser->cmsUser->email, $lists );
+		if ( !empty( $settings['pardot_lists_del'] ) ) {
+			$li = explode( "\n", $settings['pardot_lists_del'] );
+
+			foreach ( $li as $k ) {
+				$lists['remove'][] = $k;
+			}
+		}
+
+		if ( !empty( $lists['add'] ) || !empty( $lists['remove'] ) ) {
+			return $pc->updateUser( $this->settings, $id_type, $id, $lists );
 		}
 	}
-
 }
 
 class PardotConnector extends serialParamDBTable
@@ -146,13 +178,13 @@ class PardotConnector extends serialParamDBTable
 	{
 	 	$this->load(1);
 
-		if ( empty( $this->created_on ) || ( $this->created_on == '0000-00-00 00:00:00' ) ) {
+		if ( empty( $this->id ) ) {
 			global $aecConfig;
 
 			$db = &JFactory::getDBO();
 
 			$query = 'INSERT INTO #__acctexp_mi_pardot_marketing'
-			. ' VALUES( \'1\', \'' . date( 'Y-m-d H:i:s', ((int) gmdate('U')) ) . '\', \'\' )'
+			. ' VALUES( \'1\', \'' . gmdate( 'Y-m-d H:i:s' ) . '\', \'\' )'
 			;
 			$db->setQuery( $query );
 			$db->query() or die( $db->stderr() );
@@ -160,7 +192,7 @@ class PardotConnector extends serialParamDBTable
 			$this->load(1);
 		}
 
-		$diff = (int) ( gmdate('U') - strtotime( $this->created_on ) );
+		$diff = intval( ( (int) gmdate('U') ) - strtotime( $this->created_on ) );
 
 		// Check whether key is null or old
 		if ( ( $diff > 3300 ) || empty( $this->api_key ) || ( strpos( $this->api_key, 'ERROR:' ) !== false ) ) {
@@ -171,6 +203,8 @@ class PardotConnector extends serialParamDBTable
 			} else {
 				$this->api_key = 'ERROR: ' . $response->err;
 			}
+
+			$this->created_on = gmdate( 'Y-m-d H:i:s' );
 
 			$this->storeload();
 		}
@@ -202,7 +236,7 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'prospect', 'do/create/email/'.$email, $params );
 	}
 
-	function updateUser( $settings, $email )
+	function updateUser( $settings, $id_type, $id, $lists )
 	{
 		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key );
 
@@ -218,12 +252,12 @@ class PardotConnector extends serialParamDBTable
 			}
 		}
 
-		return $this->fetch( $settings, 'prospect', 'do/update/email/'.$email, $params );
+		return $this->fetch( $settings, 'prospect', 'do/update/'.$id_type.'/'.$id, $params );
 	}
 
-	function getUser( $settings, $email )
+	function readProspect( $settings, $id_type, $id )
 	{
-		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key, 'assigned_to_user' => $email );
+		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key );
 
 		if ( !empty( $lists['add'] ) ) {
 			foreach ( $lists['add'] as $k ) {
@@ -237,7 +271,7 @@ class PardotConnector extends serialParamDBTable
 			}
 		}
 
-		return $this->fetch( $settings, 'prospect', 'do/query', $params );
+		return $this->fetch( $settings, 'prospect', 'do/read/'.$id_type.'/'.$id, $params );
 	}
 
 	function fetch( $settings, $area, $cmd, $params, $retry=false )
@@ -260,7 +294,7 @@ class PardotConnector extends serialParamDBTable
 
 			$url .= implode( '&', $ps );
 		}
-aecDebug("calling Pardot: ".$url);
+
 		$url_parsed = parse_url( $url );
 
 		$host = $url_parsed["host"];
@@ -287,7 +321,7 @@ aecDebug("calling Pardot: ".$url);
 		} else {
 			$response = processor::doTheHttp( $url, $path, '', $port );
 		}
-aecDebug($response);
+
 		if ( ( strpos( $response, 'Invalid API key' ) !== false ) && !$retry ) {
 			$this->get( $settings, true );
 
