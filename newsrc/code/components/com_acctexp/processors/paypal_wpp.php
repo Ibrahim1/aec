@@ -248,7 +248,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$var = $this->getPaymentVars( $var, $request );
 
-				$xml = $this->arrayToNVP( $var );
+				$xml = $this->arrayToNVP( $var, true );
 
 				$response = $this->transmitRequestXML( $xml, $request );
 			} else {
@@ -259,7 +259,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
 				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
 
-				$xml = $this->arrayToNVP( $var );
+				$xml = $this->arrayToNVP( $var, true );
 
 				$response = $this->transmitRequestXML( $xml, $request );
 
@@ -273,7 +273,7 @@ class processor_paypal_wpp extends XMLprocessor
 					$var['RETURNURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
 					$var['CANCELURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
 
-					$get = $this->arrayToNVP( $var, true );
+					$get = $this->arrayToNVP( $var );
 
 					if ( $this->settings['testmode'] ) {
 						return aecRedirect( 'https://www.sandbox.paypal.com/webscr?' . $get );
@@ -319,7 +319,7 @@ class processor_paypal_wpp extends XMLprocessor
 	{
 		$var = $this->getPayPalVars( $request );
 
-		return $this->arrayToNVP( $var );
+		return $this->arrayToNVP( $var, true );
 	}
 
 	function getPayPalVars( $request, $regular=true )

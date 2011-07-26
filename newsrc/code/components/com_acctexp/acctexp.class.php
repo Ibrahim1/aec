@@ -5195,14 +5195,14 @@ class XMLprocessor extends processor
 		return $nvpArray;
 	}
 
-	function arrayToNVP( $var, $nofiddle=false )
+	function arrayToNVP( $var, $uppercase=false )
 	{
 		$content = array();
 		foreach ( $var as $name => $value ) {
-			if ( $nofiddle ) {
-				$content[] .= $name . '=' . urlencode( stripslashes( $value ) );
-			} else {
+			if ( $uppercase ) {
 				$content[] .= strtoupper( $name ) . '=' . urlencode( stripslashes( $value ) );
+			} else {
+				$content[] .= $name . '=' . urlencode( stripslashes( $value ) );
 			}
 		}
 
