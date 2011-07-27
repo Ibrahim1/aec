@@ -57,7 +57,7 @@ class processor_payfast extends POSTprocessor
 		$settings = array();
 
 		$settings['testmode']						= array( 'list_yesno' );
-		$settings['notification_type']				= array('list');
+		$settings['notification_type']				= array( 'list' );
 		$settings['merchant_id']					= array( 'inputC' );	
 		$settings['merchant_key']					= array( 'inputC' );
 		$settings['merchant_email_confirmation']	= array( 'list_yesno' );
