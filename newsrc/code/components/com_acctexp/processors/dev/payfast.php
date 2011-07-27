@@ -10,28 +10,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-define( 'PAYFAST_SERVER', 'TEST' );
-
-// Messages
-	// Error
-define( 'PF_ERR_BAD_SOURCE_IP', 'Bad source IP address' );
-define( 'PF_ERR_CONNECT_FAILED', 'Failed to connect to PayFast' );
-define( 'PF_ERR_BAD_ACCESS', 'Bad access of page' );
-define( 'PF_ERR_INVALID_SIGNATURE', 'Security signature mismatch' );
-define( 'PF_ERR_CURL_ERROR', 'An error occurred executing cURL' );
-define( 'PF_ERR_INVALID_DATA', 'The data received is invalid' );
-define( 'PF_ERR_UKNOWN', 'Unkown error occurred' );
-define( 'PF_ERR_ORDER_ALREADY_PROCESSED', 'Order has already been processed' );
-define( 'PF_ERR_INVOICE_DATA', 'Invoice data invalid' );
-
-	// General
-define( 'PF_MSG_OK', 'Payment was successful' );
-define( 'PF_MSG_FAILED', 'Payment has failed' );
-define( 'PF_MSG_PENDING',
-	'The payment is pending. Please note, you will receive another Instant'.
-	' Transaction Notification when the payment status changes to'.
-	' "Completed", or "Failed"' );
-
 class processor_payfast extends POSTprocessor
 {	
 
@@ -120,6 +98,7 @@ class processor_payfast extends POSTprocessor
 		// Receiver details
 		$var['merchant_id']		= $this->settings['merchant_id'];
 		$var['merchant_key']	= $this->settings['merchant_key'];
+
 		$var['return_url']		= str_replace( '&amp;', '&' , $request->int_var['return_url'] );		
 		$var['cancel_url']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );	
 		$var['notify_url']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=payfastnotification', false, true );
@@ -177,19 +156,19 @@ class processor_payfast extends POSTprocessor
 		$response['valid'] = 0;
 
 		if ( !$this->pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
-			$response['pending_reason'] = PF_ERR_BAD_SOURCE_IP;					
+			$response['pending_reason'] = "Bad Notification Source IP";					
 
 			return $response; 
 		}
 
 		if ( $this->getSignature( $post ) != $post['signature'] ) {
-			$response['pending_reason'] = PF_ERR_INVALID_SIGNATURE;					
+			$response['pending_reason'] = "Signature mismatch";					
 
 			return $response; 
 		}
 
 		if ( !$this->pfValidate( 'sandbox.payfast.co.za', $response['param_string'] ) ) {
-		  $response['pending_reason'] = PF_ERR_INVALID_DATA;
+		  $response['pending_reason'] = "Validation failed";
 
 		  return $response;
 		}
@@ -250,94 +229,6 @@ class processor_payfast extends POSTprocessor
 
 		return ( strcasecmp( $verifyResult, 'VALID' ) == 0 );
 
-	}
-
-	function pfValidData( $pfHost = 'www.payfast.co.za', $pfParamString = '', $pfProxy = null )
-	{
-		$this->pflog( 'Host = '. $pfHost );
-		$this->pflog( 'Params = '. $pfParamString );
-	
-		// Use cURL (if available)
-		if( function_exists( 'curl_init' ) )
-		{
-			  // Variable initialization
-			  $url = 'https://'. $pfHost .'/eng/query/validate';
-	
-			  // Create default cURL object
-			  $ch = curl_init();
-		
-			  // Set cURL options - Use curl_setopt for freater PHP compatibility
-			  // Base settings
-			  curl_setopt( $ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)' );
-			  curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );		// Return output as string rather than outputting it
-			  curl_setopt( $ch, CURLOPT_HEADER, false );				 // Don't include header in output
-			  curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, true );
-			  curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-			  
-			  // Standard settings
-			  curl_setopt( $ch, CURLOPT_URL, $url );
-			  curl_setopt( $ch, CURLOPT_POST, true );
-			  curl_setopt( $ch, CURLOPT_POSTFIELDS, $pfParamString );
-			  curl_setopt( $ch, CURLOPT_TIMEOUT, PF_TIMEOUT );
-			  if( !empty( $pfProxy ) )
-					curl_setopt( $ch, CURLOPT_PROXY, $proxy );
-		
-			  // Execute CURL
-			  $response = curl_exec( $ch );
-			  curl_close( $ch );
-		}
-		// Use fsockopen
-		else
-		{
-			  // Variable initialization
-			  $header = '';
-			  $res = '';
-			  $headerDone = false;
-			   
-			  // Construct Header
-			  $header = "POST /eng/query/validate HTTP/1.0\r\n";
-			 	$header .= "Host: ". $pfHost ."\r\n";
-			  $header .= "User-Agent: ". PF_USER_AGENT ."\r\n";
-			  $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-			  $header .= "Content-Length: " . strlen( $pfParamString ) . "\r\n\r\n";
-	 
-			  // Connect to server
-			  $socket = fsockopen( 'ssl://'. $pfHost, 443, $errno, $errstr, PF_TIMEOUT );
-	 
-			  // Send command to server
-			  fputs( $socket, $header . $pfParamString );
-	 
-			  // Read the response from the server
-			  while( !feof( $socket ) )
-			  {
-					$line = fgets( $socket, 1024 );
-	 
-					// Check if we are finished reading the header yet
-					if( strcmp( $line, "\r\n" ) == 0 )
-					{
-						// read the header
-						$headerDone = true;
-					}
-					// If header has been processed
-					else if( $headerDone )
-					{
-						// Read the main response
-						$response .= $line;
-					}
-			  }
-			  
-		}
-	
-		$this->pflog( "Response:\n". print_r( $response, true ) );
-	
-		// Interpret Response
-		$lines = explode( "\r\n", $response );
-		$verifyResult = trim( $lines[0] );
-	
-		if( strcasecmp( $verifyResult, 'VALID' ) == 0 )
-			  return( true );
-		else
-			  return( false );
 	}
 
 }
