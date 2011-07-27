@@ -4836,9 +4836,7 @@ function invoices( $option )
 	foreach ( $rows as $id => $row ) {
 		$in_formatted = Invoice::formatInvoiceNumber( $row );
 
-		if ( $in_formatted != $row->invoice_number ) {
-			$rows[$id]->invoice_number = $row->invoice_number . "\n" . '(' . $in_formatted . ')';
-		}
+		$rows[$id]->invoice_number_formatted = $row->invoice_number . "\n" . '(' . $in_formatted . ')';
 
 		if ( !empty( $row->coupons ) ) {
 			$coupons = unserialize( base64_decode( $row->coupons ) );

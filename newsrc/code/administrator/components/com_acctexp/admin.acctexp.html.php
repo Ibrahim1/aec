@@ -2634,7 +2634,7 @@ class HTML_AcctExp
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 				<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->username; ?></a></td>
-				<td align="center"><a href="<?php echo AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice=' . $rows[$i]->invoice_number ); ?>" target="_blank"><?php echo $rows[$i]->invoice_number; ?></a></td>
+				<td align="center"><a href="<?php echo AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice=' . $rows[$i]->invoice_number ); ?>" target="_blank"><?php echo $rows[$i]->invoice_number_formatted; ?></a></td>
 				<td align="center"><?php echo $rows[$i]->secondary_ident; ?></td>
 				<td align="center"><?php echo $rows[$i]->created_date; ?></td>
 				<td align="center"><?php echo $rows[$i]->transaction_date; ?></td>
