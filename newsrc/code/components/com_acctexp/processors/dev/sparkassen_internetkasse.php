@@ -159,18 +159,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $result;
 	}
 
-/**
-* organizes the communication toward Sparkassen-Internetkasse.
-* 
-* If we have a ppan - we will use it to make a silent payment (via 
-* 'Shopschnittstelle' without need to involve user action). 
-* In all other cases we will present the user the payment form 
-* (via 'Formularservice').
-* 
-* @param Array $request
-* @return Array 
-*/
-function createGatewayLink($request) {
+	function createGatewayLink($request) {
 		$settings['command'] = 'sslform'; // FIX
 		$settings['payment_options'] = 'cardholder;generate_ppan'; // cardholder;generate_ppan
 		$settings['paymentmethod'] = 'creditcard'; // FIX creditcard|registerpan??
@@ -243,13 +232,25 @@ function createGatewayLink($request) {
 
 	$var['redirect'] = $redirect;
 	return $var;
-}
+	}
 
-function parseNotification($post) {
+	function parseNotification($post)
+	{
+		$response = array();
+		$response['amount']		= $post['amount'] / 100;
+		$response['currency']	= $post['currency'];
 
+		if ( !empty( $response['basketid'] ) ) {
+			$response['invoice'] = $response['basketid'];
+		} else {
+			$response['invoice'] = $response['basketnr'];
+		}
 
-	$response = array();
+		return $response;
+	}
 
+	function validateNotification($response, $post, $invoice)
+	{
 	if (array_key_exists('response_shopschnittstelle', $post)) {
 	$response['aid'] = $post['aid'];
 	$response['amount'] = $post['amount'] / 100;
@@ -345,22 +346,11 @@ function parseNotification($post) {
 	$response['rc_avsamex'] = $post['rc_avsamex'];
 	// TODO save ppan to database
 	// 
-	// Values AEC needs
-	if (array_key_exists('basketid', $post) && strcmp($post['basketid'], '') != 0) {
-		$response['invoice'] = $response['basketid'];
-	} else {
-		$response['invoice'] = $response['basketnr'];
-	}
+
 	$response['recurring'] = 1;
 	$response['amount_paid'] = $response['amount'];
 	$response['amount_currency'] = $response['currency'];
 	}
-
-
-	return $response;
-}
-
-function validateNotification($response, $post, $invoice) {
 
 	$server = $this->settings['redirecturls_server'];
 	if ($this->settings['testmode']) {
