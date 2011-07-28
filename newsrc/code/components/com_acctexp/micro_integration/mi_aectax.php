@@ -32,12 +32,41 @@ class mi_aectax
 		$settings['custominfo']			= array( 'inputD' );
 		$settings['vat_no_request']		= array( 'list_yesno' );
 		$settings['vat_countrylist']	= array( 'list_yesno' );
+		$settings['vat_merchcountry']	= array( 'list' );
 		$settings['vat_localtax']		= array( 'list_yesno' );
 		$settings['vat_removeonvalid']	= array( 'list_yesno' );
 		$settings['vat_percentage']		= array( 'inputC' );
 		$settings['vat_mode']			= array( 'list' );
 		$settings['vat_validation']		= array( 'list' );
 		$settings['locations_amount']	= array( 'inputB' );
+
+		$locations = $this->getLocationList();
+
+		$loc = array();
+		if ( empty( $locations ) ) {
+			$loc[] = JHTML::_('select.option', 0, "No locations added yet" );
+		} else {
+			$loc = array();
+			$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
+
+			$llist = array();
+			foreach ( $locations as $id => $choice ) {
+				$llist[$choice['text']] = $id;
+			}
+
+			asort( $llist );
+
+			foreach ( $llist as $id ) {
+				$loc[] = JHTML::_('select.option', $locations[$id]['id'], $locations[$id]['text'] );
+			}
+		}
+
+		$mc = 0;
+		if ( !empty( $this->settings['vat_merchcountry'] ) ) {
+			$mc = $this->settings['vat_merchcountry'];
+		}
+
+		$settings['lists']['vat_merchcountry']	= JHTML::_('select.genericlist', $loc, 'vat_merchcountry', 'size="1"', 'value', 'text', $mc );
 
 		$vatval = array();
 		$vatval[] = JHTML::_('select.option', '0', JText::_('MI_MI_AECTAX_SET_VATVAL_NONE') );
@@ -441,12 +470,23 @@ class mi_aectax
 				$check = $this->checkVatNumber( $vat_number, $location['id'], $vatlist );
 
 				if ( $check && $this->settings['vat_removeonvalid'] ) {
-					if ( $location['mode'] == 'pseudo_subtract') {
-						$location['mode'] = 'reverse_pseudo_subtract';
-					} elseif ( $location['mode'] == 'add' ) {
-						$location['mode'] = '';
-					} elseif ( $location['mode'] == 'subtract' ) {
-						$location['mode'] = '';
+					$b2b2c = true;
+					if ( !empty( $this->settings['vat_merchcountry'] ) ) {
+						if ( $this->settings['vat_merchcountry'] == $location['id'] ) {
+							$b2b2c = false;
+						}
+					}
+
+					if ( $b2b2c ) {
+						if ( $location['mode'] == 'pseudo_subtract' ) {
+							// If this is a b2b transaction, remove VAT altogether
+							// But only if it is cross-country, otherwise - add VAT as per usual
+							$location['mode'] = 'reverse_pseudo_subtract';
+						} elseif ( $location['mode'] == 'add' ) {
+							$location['mode'] = '';
+						} elseif ( $location['mode'] == 'subtract' ) {
+							$location['mode'] = '';
+						}
 					}
 				}
 			}
