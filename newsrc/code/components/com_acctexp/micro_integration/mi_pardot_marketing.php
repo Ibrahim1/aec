@@ -28,6 +28,7 @@ class mi_pardot_marketing extends MI
         $settings['email']					= array( 'inputC' );
         $settings['password']				= array( 'inputC' );
         $settings['user_key']				= array( 'inputC' );
+        $settings['prospect_details']		= array( 'inputD' );
         $settings['pardot_lists']			= array( 'inputD' );
         $settings['pardot_lists_del']		= array( 'inputD' );
         $settings['pardot_lists_exp']		= array( 'inputD' );
@@ -104,7 +105,19 @@ class mi_pardot_marketing extends MI
 
 		$result = new stdClass();
 		if ( empty( $uparams['mi_pardot_marketing_prospect_id'] ) ) {
-			$result = $pc->createUser( $this->settings, $request->metaUser->cmsUser->email, $lists );
+			$pparams = array();
+			if ( !empty( $this->settings['prospect_details'] ) ) {
+				$details = explode( "\n", AECToolbox::rewriteEngineRQ( $this->settings['prospect_details'], $request ) );
+
+				foreach ( $details as $chunk ) {
+					$k = explode( '=', $chunk, 2 );
+
+					$kk = trim( $k[0] );
+					$pparams[$kk] = trim( $k[1] );
+				}
+			}
+
+			$result = $pc->createUser( $this->settings, $request->metaUser->cmsUser->email, $lists, $pparams );
 
 			if ( !empty( $result->prospect->id ) ) {
 				// Completely new user, just create
@@ -217,9 +230,15 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'login', null, $params, $forced );
 	}
 
-	function createUser( $settings, $email, $lists )
+	function createUser( $settings, $email, $lists, $p=array() )
 	{
 		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key );
+
+		if ( !empty( $p ) ) {
+			foreach ( $p as $k => $v ) {
+				$params[$k] = $v;
+			}
+		}
 
 		if ( !empty( $lists['add'] ) ) {
 			foreach ( $lists['add'] as $k ) {
