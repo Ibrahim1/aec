@@ -4951,7 +4951,7 @@ class XMLprocessor extends processor
 										'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD',
 										'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'AA',
 										'AE', 'AP', 'AS', 'FM', 'GU', 'MH', 'MP', 'PR', 'PW', 'VI',
-										'--- Canada ---','BC','MB','NB','NL','NT','NS','NU','ON','PE','QC','SK','YT'
+										'--- Canada ---','AB','BC','MB','NB','NL','NT','NS','NU','ON','PE','QC','SK','YT'
 										);
 
 					$statelist = array();
