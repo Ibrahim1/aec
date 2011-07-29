@@ -15377,21 +15377,24 @@ class AECToolbox
 					}
 				}
 
-				if ( !empty( $aecConfig->cfg['itemid_' . $task.'_'.$sub] ) ) {
-					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task.'_'.$sub];
-				} elseif ( !empty( $aecConfig->cfg['itemid_' . $task] ) ) {
-					$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task];
-				} elseif ( ( $option == 'com_comprofiler') && !empty( $aecConfig->cfg['itemid_cb'] ) ) {
-					$url .= '&Itemid=' . $aecConfig->cfg['itemid_cb'];
-				} elseif ( !empty( $aecConfig->cfg['itemid_default'] ) ) {
-					$url .= '&Itemid=' . $aecConfig->cfg['itemid_default'];
-				} else {
-					// No Itemid found - try to get something else
-					global $Itemid;
-					if ( $Itemid ) {
-						$url .= '&Itemid=' . $Itemid;
+				// Do not assign an ItemID on a notification
+				if ( strpos( $task, 'notification' ) === false ) {
+					if ( !empty( $aecConfig->cfg['itemid_' . $task.'_'.$sub] ) ) {
+						$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task.'_'.$sub];
+					} elseif ( !empty( $aecConfig->cfg['itemid_' . $task] ) ) {
+						$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task];
+					} elseif ( ( $option == 'com_comprofiler') && !empty( $aecConfig->cfg['itemid_cb'] ) ) {
+						$url .= '&Itemid=' . $aecConfig->cfg['itemid_cb'];
+					} elseif ( !empty( $aecConfig->cfg['itemid_default'] ) ) {
+						$url .= '&Itemid=' . $aecConfig->cfg['itemid_default'];
 					} else {
-						$url .= '&Itemid=';
+						// No Itemid found - try to get something else
+						global $Itemid;
+						if ( $Itemid ) {
+							$url .= '&Itemid=' . $Itemid;
+						} else {
+							$url .= '&Itemid=';
+						}
 					}
 				}
 			}
