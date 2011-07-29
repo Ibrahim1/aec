@@ -33,8 +33,8 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 
 aecLanguageHandler::loadList( $langlist );
 
-define( '_AEC_VERSION', '0.14.6beta' );
-define( '_AEC_REVISION', '3466' );
+define( '_AEC_VERSION', '0.14.6gamma' );
+define( '_AEC_REVISION', '3576' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -4951,7 +4951,7 @@ class XMLprocessor extends processor
 										'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD',
 										'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'AA',
 										'AE', 'AP', 'AS', 'FM', 'GU', 'MH', 'MP', 'PR', 'PW', 'VI',
-										'--- Canada ---','BC','MB','NB','NL','NT','NS','NU','ON','PE','QC','SK','YT'
+										'--- Canada ---','AB','BC','MB','NB','NL','NT','NS','NU','ON','PE','QC','SK','YT'
 										);
 
 					$statelist = array();

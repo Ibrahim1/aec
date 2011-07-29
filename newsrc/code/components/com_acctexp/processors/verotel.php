@@ -20,7 +20,7 @@ class processor_verotel extends URLprocessor
 		$info['longname']				= JText::_('CFG_VEROTEL_LONGNAME');
 		$info['statement']				= JText::_('CFG_VEROTEL_STATEMENT');
 		$info['description']			= JText::_('CFG_VEROTEL_DESCRIPTION');
-		$info['currencies']				= 'USD';
+		$info['currencies']				= 'USD,EUR,GBP,NOK,SEK,DKK,CAD,CHF';
 		$info['languages']				= 'AU,DE,FR,IT,GB,ES,US';
 		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
 		$info['notify_trail_thanks']	= 1;
