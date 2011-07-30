@@ -47,6 +47,8 @@ class mi_pardot_marketing extends MI
 			$settings['api_key']		= array( 'p', null, null, "API Key currently in use: Please fill in the above details to request an API key" );
 		}
 
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}
