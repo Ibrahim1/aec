@@ -1,6 +1,6 @@
 <?php
 /**
-* @version $Id: sparkassen_internetkasse_formularservice.php
+* @version $Id: sparkassen_internetkasse.php
 * @package AEC - Account Control Expiration - Membership Manager
 * @subpackage Processors - Sparkassen Internetkasse Formularservice
 * @copyright 2011 Copyright (C) David Deutsch
@@ -63,51 +63,18 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 
 	function checkoutform( $request )
 	{
+		$var = array();
+		$var['params']['useREG'] = array( 'hidden', 0 );
+		$var['params']['usePPAN'] = array( 'hidden', 0 );
+
 		if ( $this->settings['pseudocreditcard'] ) {
 			$ppan = $this->getPPAN( $request->metaUser );
 
 			if ( !empty( $ppan ) ) {
-				// Make a form to confirm usage of PPAN
-				$var = array();
-
-				$var['params']['usePPAN'] = array( 'hidden', 1, 1 );
-
-				return $var;
+				$var['params']['usePPAN'] = array( 'hidden', 1 );
 			}
-		}
-
-		$var = $this->getCCform();
-
-		$values = array( 'firstname', 'lastname' );
-
-		if ( !empty( $this->settings['promptAddress'] ) ) {
-			$values = array_merge( $values, array( 'address', 'city', 'zip', 'country_list' ) );
-		}
-
-		$var = $this->getUserform( $var, $values, $request->metaUser );
-
-		return $var;
-	}
-
-	function createRequestXML( $request )
-	{
-		$var = $this->getSIFvars( $request );
-
-		return $this->arrayToNVP( $var );
-	}
-
-	function getSIFvars( $request, $ppan )
-	{
-		$var = array();
-
-		if ( $ppan ) {
-			$var['command']			= 'authorization';
-			$var['payment_options']	= 'creditcard';
-			$var['orderid']			= $request->invoice->id;
-			$var['basketnr']		= $request->invoice->invoice_number;
-			$var['amount']			= (int) ( $request->int_var['amount'] * 100 );
-			$var['currency']		= $this->settings['currency'];
-			$var['ppan']			= $ppan;
+		} else {
+			$var['params']['useREG'] = array( 'hidden', 1 );
 		}
 
 		return $var;
@@ -144,101 +111,69 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 
 		$resultstring = $this->transmitRequest( $url, $path, $this->arrayToNVP($var), 443, $curlextra );
 
-		$curlextra = array();
-		$curlextra[CURLOPT_TIMEOUT] = 60;
+		return $resultstring;
+	}
 
-		$path = '/index.php?option=com_acctexp&task=sparkassen_internetkasse_formularservicenotification';
-		if ( $this->settings['testmode'] ) {
-			$url = 'http://' . $this->settings['redirecturls_testserver'] . $path;
+	function createRequestXML( $request )
+	{
+		$var = $this->getSIFvars( $request );
+
+		return $this->arrayToNVP( $var );
+	}
+
+	function getSIFvars( $request, $ppan )
+	{
+		$var = array();
+
+		if ( $ppan ) {
+			$var['command']			= 'authorization';
+			$var['payment_options']	= 'creditcard';
+			$var['orderid']			= $request->invoice->id;
+			$var['basketnr']		= $request->invoice->invoice_number;
+			$var['amount']			= (int) ( $request->int_var['amount'] * 100 );
+			$var['currency']		= $this->settings['currency'];
+			$var['ppan']			= $ppan;
+
+			$path = '/request/request/prot/Request.po';
 		} else {
-			$url = 'http://' . $this->settings['redirecturls_server'] . $path;
+			$var['amount']			= str_replace( '.', ',', $request->int_var['amount'] );
+			$var['basketid']		= $request->invoice->invoice_number;
+			$var['command']			= 'sslform';
+			$var['currency']		= trim($this->settings['currency']);
+			$var['orderid']			= date('YmdHis');
+			$var['payment_options']	= 'cardholder;generate_ppan';
+			$var['paymentmethod']	= 'creditcard';
+			$var['sessionid']		= session_id();
+			$var['sslmerchant']		= trim($this->settings['sslmerchant']);
+			$var['transactiontype']	= 'authorization';
+			$var['version']			= '1.5';
+
+			$path = '/vbv/mpi_legacy';
 		}
 
-		$result = $this->transmitRequest( $url, $path, $resultstring.'&response_shopschnittstelle=1', 443, $curlextra );
+		if ( $this->settings['testmode'] ) {
+			$url = 'https://testsystem.sparkassen-internetkasse.de' . $path;
+		} else {
+			$url = 'https://system.sparkassen-internetkasse.de' . $path;
+		}
 
-		return $result;
-	}
+		$astring = array();
+		foreach ( $var as $k => $v ) {
+			$astring[] = $k.'='.$v;
+		}
 
-	function createGatewayLink($request) {
-		$settings['command'] = 'sslform'; // FIX
-		$settings['payment_options'] = 'cardholder;generate_ppan'; // cardholder;generate_ppan
-		$settings['paymentmethod'] = 'creditcard'; // FIX creditcard|registerpan??
-		$settings['sessionid'] = session_id(); // [optional]
-		$settings['transactiontype'] = 'authorization';  // preauthorization|authorization
-		$settings['version'] = '1.5'; // FIX
-		$settings['item_number'] = '[[user_id]]';
+		$var['mac'] = $this->hmac( $this->settings['sslmerchantpass'], implode( '&amp;', $astring ) );
 
-	$TIMESTAMP = date('YmdHis');
+		$var['post_url'] = '/kasse';
 
-	if (is_array($request->int_var['amount'])) {
-	#echo 'int_var[amount]: ' . $request->int_var['amount'];
-	}
-	// ACHTUNG: CSSURL HIER EINTRAGEN (dann muss sie nicht in der Händleroberfläche konfiguriert werden)
-	if ($this->settings['testmode']) {
-	// 2011.05.24 URL für Testsystem telefonisch bestätigt
-	if ($IS_SILENT) {
-		// HTTP-Basic authtentication                
-		$post_url = 'https://testsystem.sparkassen-internetkasse.de/request/request/prot/Request.po';
-	} else {
-		$post_url = 'https://testsystem.sparkassen-internetkasse.de/vbv/mpi_legacy';
-	}
-	} else {
-	// 2011.05.24 URL muss nach Bestellung Sparkassen-Internetkasse erfragt werden
-	if ($IS_SILENT) {
-		$post_url = 'https://system.sparkassen-internetkasse.de/request/request/prot/Request.po';
-	} else {
-		$post_url = 'https://system.sparkassen-internetkasse.de/vbv/mpi_legacy';
-	}
-	}
-	/*
-	*  IMPORTANT NOTE: Because the $var array elements gets printed into a
-	*  string the order of the values is essential !!!! 
-	*/
-
-	$var['amount'] = trim(str_replace('.', ',', $request->int_var['amount']));
-	$var['basketid'] = trim($request->invoice->invoice_number);  // 
-	$var['command'] = trim($this->settings['command']);
-	$var['currency'] = trim($this->settings['currency']);
-	#$var['date']            = date('Ymd_H:m:i');  
-	$var['orderid'] = $TIMESTAMP;
-	$var['payment_options'] = trim($this->settings['payment_options']);
-	$var['paymentmethod'] = trim($this->settings['paymentmethod']);
-	$var['sessionid'] = session_id();
-	$var['sslmerchant'] = trim($this->settings['sslmerchant']);
-	$var['transactiontype'] = $this->settings['transactiontype'];
-	$var['version'] = $this->settings['version'];
-
-	#$var['item_number']		= AECToolbox::rewriteEngineRQ( $this->settings['item_number'], $request );
-	//$var['item_name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-	#$var['item_name']	= $request->items->itemlist['0']['name'];
-
-	$mac_string = '';
-	$redirect = $post_url . '?';
-	$counter = 0;
-	foreach ($var as $k => $v) {
-	$counter++;
-	$mac_string .= $v;
-	if ($counter > 1) {
-		$redirect .= '&amp;';
-	}
-	$redirect .= $k . '=' . $v;
-	}
-	$var['mac'] = $this->hmac($this->settings['sslmerchantpass'], $mac_string);  // generate
-
-	$redirect .= '&amp;mac=' . $var['mac'];
-
-	$var['post_url'] = '/kasse';
-	//$var['post_url'] = $post_url;
-
-	$var['redirect'] = $redirect;
-	return $var;
+		return $var;
 	}
 
 	function parseNotification($post)
 	{
 		$response = array();
-		$response['amount']		= $post['amount'] / 100;
-		$response['currency']	= $post['currency'];
+		$response['amount_paid']	= $post['amount'] / 100;
+		$response['amount_paid']	= $post['currency'];
 
 		if ( !empty( $response['basketid'] ) ) {
 			$response['invoice'] = $response['basketid'];
@@ -249,174 +184,57 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification($response, $post, $invoice)
+	function validateNotification( $response, $post, $invoice )
 	{
-	if (array_key_exists('response_shopschnittstelle', $post)) {
-	$response['aid'] = $post['aid'];
-	$response['amount'] = $post['amount'] / 100;
-	$response['basketnr'] = $post['basketnr'];
-	$response['cai'] = $post['cai'];
-	$response['creditc'] = $post['creditc'];
-	$response['currency'] = $post['currency'];
-	$response['cvcode'] = $post['cvcode'];
-	$response['expdat'] = $post['expdat'];
-	$response['merch_name'] = $post['merch_name'];
-	$response['merch_street'] = $post['merch_street'];
-	$response['merch_tid'] = $post['merch_tid'];
-	$response['merch_town'] = $post['merch_town'];
-	$response['orderid'] = $post['orderid'];
-	$response['pcode'] = $post['pcode'];
-	$response['poscc'] = $post['poscc'];
-	$response['posem'] = $post['posem'];
-	$response['posh_version'] = $post['posh_version'];
-	$response['posherr'] = $post['posherr'];
-	$response['ppan'] = $post['ppan'];
-	$response['rc'] = $post['rc'];
-	$response['retrefnr'] = $post['retrefnr'];
-	$response['rmsg'] = $post['rmsg'];
-	$response['timestamp'] = $post['timestamp'];
-	$response['trefnum'] = $post['trefnum'];
-	$response['txn_card'] = $post['txn_card'];
-	$response['txn_date'] = $post['txn_date'];
-	$response['txn_expdat'] = $post['txn_expdat'];
-	$response['txn_time'] = $post['txn_time'];
-	$response['txntype'] = $post['txntype'];
+		$server = $this->settings['redirecturls_server'];
 
+		if ($this->settings['testmode']) {
+			$server = $this->settings['redirecturls_testserver'];
+		}
 
-	// TODO save ppan to database
-	// Values AEC needs
-	$response['invoice'] = $post['basketnr'];
-	$response['recurring'] = 1;
-	$response['amount_paid'] = $post['amount'] / 100;
-	$response['amount_currency'] = $post['currency'];
-	} else {
-
-	$response['aid'] = $post['aid'];
-	$response['amount'] = str_replace(',', '.', $post['amount']);
-	$response['basketid'] = $post['basketid'];
-	$response['basketnr'] = $post['basketnr'];
-	$response['currency'] = $post['currency'];
-	$response['deliverycountry'] = $post['deliverycountry'];
-	$response['directPosErrorCode'] = $post['directPosErrorCode'];
-	$response['directPosErrorMessage'] = utf8_decode($post['directPosErrorMessage']);
-	$response['mac'] = $post['mac'];
-	$response['orderid'] = $post['orderid'];
-	$response['ppan'] = $post['ppan'];
-	$response['rc'] = $post['rc'];
-	$response['rc_avsamex'] = $post['rc_avsamex'];
-	$response['rc_score'] = $post['rc_score'];
-	$response['retrefnum'] = $post['retrefnum'];
-	$response['sessionid'] = $post['sessionid'];
-	$response['trefnum'] = $post['trefnum'];
-
-
-	// ALTERNATIV: Registrierung einer Pseudokartennummer
-	$response['cardholder'] = $post['cardholder'];
-	$response['creditc'] = $post['creditc'];
-	$response['expdat'] = $post['expdat'];
-	$response['txn_card'] = $post['txn_card'];
-
-	#echo '<h3>Response Array</h3>';
-	#print_r($response);
-	// Values PseudoKreditkarten-Transactions will return
-	$response['posh_version'] = $post['posh_version'];
-	$response['txntype'] = $post['txntype'];
-	$response['posherr'] = $post['posherr'];
-	$response['rmsg'] = $post['rmsg'];
-	$response['rc'] = $post['rc'];
-	$response['txn_date'] = $post['txn_date'];
-	$response['txn_time'] = $post['txn_time'];
-	$response['merch_name'] = $post['merch_name'];
-	$response['merch_street'] = $post['merch_street'];
-	$response['merch_town'] = $post['merch_town'];
-	$response['merch_tid'] = $post['merch_tid'];
-	//Im Response enthalten, wenn Parameter rc einen Wert enthält.
-	$response['pcode'] = $post['pcode'];
-	$response['posem'] = $post['posem'];
-	$response['poscc'] = $post['poscc'];
-	$response['aid'] = $post['aid'];
-	$response['trefnum'] = $post['trefnum'];
-	$response['retrefnr'] = $post['retrefnr'];
-	$response['txntype'] = $post['txntype'];
-	$response['timestamp'] = $post['timestamp'];
-	$response['cai'] = $post['cai'];
-	$response['txn_card'] = $post['txn_card'];
-	$response['txn_expdat'] = $post['txn_expdat'];
-	$response['rc_score'] = $post['rc_score'];
-	$response['rc_avsamex'] = $post['rc_avsamex'];
-	// TODO save ppan to database
-	// 
-
-	$response['recurring'] = 1;
-	$response['amount_paid'] = $response['amount'];
-	$response['amount_currency'] = $response['currency'];
-	}
-
-	$server = $this->settings['redirecturls_server'];
-	if ($this->settings['testmode']) {
-	$server = $this->settings['redirecturls_testserver'];
-	}
-
-	$response['valid'] = 0;
-
-	if (array_key_exists('response_shopschnittstelle', $post)) {
-	if ($response['posherr'] == '0') {
-		$response['valid'] = true;
-	} else {
 		$response['valid'] = 0;
 
-		$msg = '';
-		if ($_GET['code'] == '133') {
-		$msg = 'Karte abgelaufen.';
-		$this->_removePpan($response['invoice'], $is_notify_user = true);
-		} else if ($_GET['code'] == '344') {
-		$msg = 'Karte in Deutschland nicht gültig. ';
-		$this->_removePpan($response['invoice']);
-		} else if ($_GET['code'] == '347') {
-		$msg = 'Abbruch durch den Benutzer.';
-		$this->_removePpan($response['invoice']);
-		} else if ($_GET['code'] == '349') {
-		$msg = 'Transaktionslimit überschritten.';
-		$this->_removePpan($response['invoice']);
-		} else if ($_GET['code'] == '350') {
-		$msg = 'Karte gesperrt';
-		$this->_removePpan($response['invoice']);
+		if ( $response['directPosErrorCode'] == '0' ) {
+			$response['valid'] = true;
+
+			if ( $this->settings['pseudocreditcard'] && !empty( $post['ppan'] ) ) {
+				$this->setPPAN( $request->metaUser, $post['ppan'] );
+			}
+
+			echo 'redirecturls=http://' . $server . '/transaction-success';
+		} else {
+			$error = $this->getError( $response['posherr'] );
+
+			if ( empty( $error ) ) {
+				$error = $post['directPosErrorMessage'];
+			}
+
+			$metaUser = new metaUser( $invoice->userid );
+
+			$this->deletePpan( $metaUser );
+
+			$response['pending_reason'] = $msg . ' Fehlercode ' . $response['directPosErrorCode'];
+			echo 'redirecturlf=http://' . $server . '/transaction-error?msg=' . urlencode($response['pending_reason']);
 		}
 
-		
-		// TODO do something, i.e. send an email to the client
+		return $response;
 	}
-	} else {
-	if ($response['directPosErrorCode'] == '0') {
-		$response['valid'] = true;
 
-		if ($this->settings['pseudocreditcard']) {
-			$this->setPPAN( $request->metaUser, $post['ppan'] );
-		}
-		#exit;
-		echo 'redirecturls=http://' . $server . '/transaction-success';
-	} else {
-		$response['valid'] = 0;
+	function getError( $errcode )
+	{
+		$errors = array(	'133' => 'Karte abgelaufen.',
+							'344' => 'Karte in Deutschland nicht gültig.',
+							'347' => 'Abbruch durch den Benutzer.',
+							'349' => 'Karte Transaktionslimit überschritten.',
+							'350' => 'Karte gesperrt.'
+							);
 
-		$msg = '';
-		if ($_GET['code'] == '133') {
-		$msg = 'Karte abgelaufen.';
-		} else if ($_GET['code'] == '344') {
-		$msg = 'Karte in Deutschland nicht gültig.';
-		} else if ($_GET['code'] == '347') {
-		$msg = 'Abbruch durch den Benutzer.';
-		} else if ($_GET['code'] == '349') {
-		$msg = 'Transaktionslimit überschritten.';
-		} else if ($_GET['code'] == '350') {
-		$msg = 'Karte gesperrt';
+		if ( isset( $errors[$errcode] ) ) {
+			return $errors[$errcode];
+		} else {
+			return null;
 		}
-		
-		$response['pending_reason'] = $msg . ' Fehlercode ' . $response['directPosErrorCode'];
-		echo 'redirecturlf=http://' . $server . '/transaction-error?msg=' . urlencode($response['pending_reason']);
 	}
-	}
-	return $response;
-}
 
 	function setPPAN( $metaUser, $ppan )
 	{
