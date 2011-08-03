@@ -115,11 +115,6 @@ switch ( strtolower( $task ) ) {
 		CommonMenu::EDIT_CSS_MENU();
 		break;
 
-	case 'eventlog':
-	case 'hacks':
-	case 'help':
-	case 'history':
-	case 'invoices':
 	case 'showactive':
 	case 'showcancelled':
 	case 'showclosed':
@@ -127,6 +122,14 @@ switch ( strtolower( $task ) ) {
 	case 'showexcluded':
 	case 'showmanual':
 	case 'showpending':
+		ComponentMenu::EDIT_EXPIRATION();
+		break;
+
+	case 'eventlog':
+	case 'hacks':
+	case 'help':
+	case 'history':
+	case 'invoices':
 		ComponentMenu::NO_MENU();
 		break;
 
