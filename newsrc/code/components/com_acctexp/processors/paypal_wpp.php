@@ -570,7 +570,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$response = $this->transmitToPayPal( $xml, $request );
 
-		return $this->deformatNVP( $response );
+		return $this->NVPtoArray( $response );
 	}
 
 	function parseNotification( $post )
