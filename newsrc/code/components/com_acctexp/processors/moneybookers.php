@@ -37,7 +37,7 @@ class processor_moneybookers extends POSTprocessor
 		$settings['pay_to_email']			= '';
 		$settings['secret_word']			= '';
 		$settings['recipient_description']	= $app->getCfg( 'sitename' );
-		$settings['logo_url'] 				= AECToolbox::deadsureURL( 'images/logo.png' );
+		$settings['logo_url'] 				= '';
 		$settings['language'] 				= 'EN';
 		$settings['payment_methods']		= array( 'ACC' );
 		$settings['hide_login'] 			= 1;

@@ -13,6 +13,7 @@
 		<file>acctexp.html.php</file>
 		<file>acctexp.php</file>
 		<file>index.html</file>
+		<file>router.php</file>
 
 		<folder>lib</folder>
 		<folder>micro_integration</folder>

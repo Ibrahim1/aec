@@ -15367,6 +15367,7 @@ class AECToolbox
 				if ( !empty( $task ) ) {
 					$translate = array(	'saveregistration' => 'confirm',
 										'renewsubscription' => 'plans',
+										'addtocart' => 'cart',
 										'clearcart' => 'cart',
 										'clearcartitem' => 'cart',
 										'savesubscription' => 'checkout'
