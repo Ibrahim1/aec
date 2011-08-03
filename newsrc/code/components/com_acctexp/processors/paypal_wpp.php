@@ -241,7 +241,10 @@ class processor_paypal_wpp extends XMLprocessor
 				// The user has already returned from Paypal - finish the deal
 				$var = $this->getPayPalVars( $request, false );
 
-				$var['Method']			= 'DoExpressCheckoutPayment';
+				if ( !is_array( $request->int_var['amount'] ) ) {
+					$var['Method']			= 'DoExpressCheckoutPayment';
+				}
+
 				$var['Version']			= '52.0';
 				$var['token']			= $request->int_var['params']['token'];
 				$var['PayerID']			= $request->int_var['params']['PayerID'];
