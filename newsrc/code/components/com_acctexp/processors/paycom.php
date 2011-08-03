@@ -20,7 +20,7 @@ class processor_paycom extends POSTprocessor
 		$info['longname']				= "paycom";
 		$info['statement']				= "Make payments with Paycom!";
 		$info['description']			= "paycom";
-		$info['currencies']				= "USD";
+		$info['currencies']				= "USD,GBP";
 		$info['cc_list']				= "visa,mastercard,discover,echeck,jcb";
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;
