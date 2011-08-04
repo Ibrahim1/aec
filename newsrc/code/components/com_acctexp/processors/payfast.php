@@ -89,12 +89,6 @@ class processor_payfast extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{  
-		if ( $this->settings['testmode'] ) {
-			$var['post_url']	= 'https://sandbox.payfast.co.za/eng/process';
-		} else {
-			$var['post_url']	= 'https://www.payfast.co.za/eng/process';
-		}	
-
 		// Receiver details
 		$var['merchant_id']		= $this->settings['merchant_id'];
 		$var['merchant_key']	= $this->settings['merchant_key'];
@@ -114,15 +108,19 @@ class processor_payfast extends POSTprocessor
 		$var['m_payment_id']	= $request->invoice->invoice_number;
 		$var['amount']			= $request->int_var['amount'];
 		$var['item_name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['item_description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request );
+		if (!empty($this->settings['item_desc'])) {
+		    $var['item_description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request );
+		}
 
 		// Custom variables
 		for ( $i=1; $i<6; $i++ ) {
 			if ( !empty( $this->settings['custom_str'.$i] ) ) {
 				$var['custom_str'.$i] = $this->settings['custom_str'.$i];
-			}
+			}			
+		}
 
-			if ( !empty( $this->settings['custom_int'.$i] ) ) {
+		for ( $i=1; $i<6; $i++ ) { //order is important to calculate signature
+		        if ( !empty( $this->settings['custom_int'.$i] ) ) {
 				$var['custom_int'.$i] = $this->settings['custom_int'.$i];
 			}
 		}
@@ -138,6 +136,13 @@ class processor_payfast extends POSTprocessor
 		
 		// Security				
 		$var['signature'] = $this->getSignature( $var );
+		
+		//post_url must not be part of the signature calculation
+		if ( $this->settings['testmode'] ) {
+			$var['post_url']	= 'https://sandbox.payfast.co.za/eng/process';
+		} else {
+			$var['post_url']	= 'https://www.payfast.co.za/eng/process';
+		}
 
 		return $var;
 	}
