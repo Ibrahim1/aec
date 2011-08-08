@@ -84,7 +84,7 @@ class mi_pardot_marketing extends MI
 
 	function relayAction( $request )
 	{
-		if ( $request->action != 'action' ) {
+		if ( ( $request->action != 'action' ) || ( $request->action != 'expiration_action' ) ) {
 			return null;
 		}
 
@@ -95,8 +95,8 @@ class mi_pardot_marketing extends MI
 
 		$lists = array( 'add' => array(), 'remove' => array() );
 
-		if ( !empty( $this->settings['pardot_lists'] ) ) {
-			$li = explode( "\n", $this->settings['pardot_lists'] );
+		if ( !empty( $this->settings['pardot_lists'.$request->area] ) ) {
+			$li = explode( "\n", $this->settings['pardot_lists'.$request->area] );
 			
 			foreach ( $li as $k ) {
 				$lists['add'][] = $k;
@@ -161,8 +161,8 @@ class mi_pardot_marketing extends MI
 			}
 		}
 
-		if ( !empty( $settings['pardot_lists_del'] ) ) {
-			$li = explode( "\n", $settings['pardot_lists_del'] );
+		if ( !empty( $settings['pardot_lists'.$request->area.'_del'] ) ) {
+			$li = explode( "\n", $settings['pardot_lists'.$request->area.'_del'] );
 
 			foreach ( $li as $k ) {
 				$lists['remove'][] = $k;
@@ -194,8 +194,6 @@ class PardotConnector extends serialParamDBTable
 	 	$this->load(1);
 
 		if ( empty( $this->id ) ) {
-			global $aecConfig;
-
 			$db = &JFactory::getDBO();
 
 			$query = 'INSERT INTO #__acctexp_mi_pardot_marketing'
@@ -210,7 +208,7 @@ class PardotConnector extends serialParamDBTable
 		$diff = intval( ( (int) gmdate('U') ) - strtotime( $this->created_on ) );
 
 		// Check whether key is null or old
-		if ( ( $diff > 3300 ) || empty( $this->api_key ) || ( strpos( $this->api_key, 'ERROR:' ) !== false ) ) {
+		if ( ( $diff > 2700 ) || empty( $this->api_key ) || ( strpos( $this->api_key, 'ERROR:' ) !== false ) ) {
 			$response = $this->getAPIkey( $settings, $force );
 
 			if ( isset( $response->api_key )  ) {
@@ -227,14 +225,19 @@ class PardotConnector extends serialParamDBTable
 
 	function getAPIkey( $settings, $forced=false )
 	{
-		$params = array( 'email' => $settings['email'], 'password' => $settings['password'], 'user_key' => $settings['user_key'] );
+		$params = array(	'email' => $settings['email'],
+							'password' => $settings['password'],
+							'user_key' => $settings['user_key']
+						);
 
 		return $this->fetch( $settings, 'login', null, $params, $forced );
 	}
 
 	function createUser( $settings, $email, $lists, $p=array() )
 	{
-		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key );
+		$params = array(	'user_key' => $settings['user_key'],
+							'api_key' => $this->api_key
+						);
 
 		if ( !empty( $p ) ) {
 			foreach ( $p as $k => $v ) {
@@ -244,13 +247,13 @@ class PardotConnector extends serialParamDBTable
 
 		if ( !empty( $lists['add'] ) ) {
 			foreach ( $lists['add'] as $k ) {
-				$params[$k] = "1";
+				$params['list_'.$k] = "1";
 			}
 		}
 
 		if ( !empty( $lists['remove'] ) ) {
 			foreach ( $lists['remove'] as $k ) {
-				$params[$k] = "0";
+				$params['list_'.$k] = "0";
 			}
 		}
 
@@ -259,7 +262,9 @@ class PardotConnector extends serialParamDBTable
 
 	function updateUser( $settings, $id_type, $id, $lists )
 	{
-		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key );
+		$params = array(	'user_key' => $settings['user_key'],
+							'api_key' => $this->api_key
+						);
 
 		if ( !empty( $lists['add'] ) ) {
 			foreach ( $lists['add'] as $k ) {
@@ -278,7 +283,9 @@ class PardotConnector extends serialParamDBTable
 
 	function readProspect( $settings, $id_type, $id )
 	{
-		$params = array( 'user_key' => $settings['user_key'], 'api_key' => $this->api_key );
+		$params = array(	'user_key' => $settings['user_key'],
+							'api_key' => $this->api_key
+						);
 
 		if ( !empty( $lists['add'] ) ) {
 			foreach ( $lists['add'] as $k ) {
@@ -343,12 +350,12 @@ class PardotConnector extends serialParamDBTable
 			$response = processor::doTheHttp( $url, $path, '', $port );
 		}
 
-		if ( ( strpos( $response, 'Invalid API key' ) !== false ) && !$retry ) {
+		if ( ( strpos( $response, 'Invalid API key' ) !== false ) && !$retry ) {aecDebug("INVALID API KEY DETECTED");aecDebug($response);
 			$this->get( $settings, true );
 
 			return $this->fetch( $settings, $area, $cmd, $params, true );
 		}
-
+aecDebug($response);
 		return simplexml_load_string( $response );
 	}
 }
