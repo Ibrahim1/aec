@@ -13774,7 +13774,7 @@ class AECfetchfromDB
 				;
 
 		if ( $userid ) {
-			$query .= ' AND `userid` = \'' . $userid . '\'';
+			$query .= ' AND `userid` = \'' . ( (int) $userid ) . '\'';
 		}
 
 		$db->setQuery( $query );
@@ -13795,7 +13795,7 @@ class AECfetchfromDB
 			$query .= ' WHERE `active` = \'1\' AND';
 		}
 
-		$query .= ' `id` = \'' . $id . '\'';
+		$query .= ' `id` = \'' . ( (int) $id ) . '\'';
 
 		$db->setQuery( $query );
 		return $db->loadResult();
@@ -13813,7 +13813,7 @@ class AECfetchfromDB
 
 		$query = 'SELECT `id`, `invoice_number`, `usage`'
 				. ' FROM #__acctexp_invoices'
-				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' WHERE `userid` = \'' . ( (int) $userid ) . '\''
 				. ' AND `transaction_date` = \'0000-00-00 00:00:00\''
 				. ' AND `active` = \'1\''
 				. ' ORDER BY `id` DESC'

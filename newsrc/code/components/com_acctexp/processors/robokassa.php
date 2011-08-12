@@ -61,16 +61,16 @@ class processor_robokassa extends POSTprocessor
 		//MD5 signature formed from the parameters, separated by ':' with sMerchantPass2 added at the end
 		//i.e. nOutSum:nInvId:sMerchantPass2[:sorted_merchant_parameters]
 		if ( $this->settings['testmode'] ) {
-			$var['post_url']	= 'http://test.robokassa.ru/Index.aspx ';
+			$var['post_url']		= 'http://test.robokassa.ru/Index.aspx ';
 		} else {
-			$var['post_url']	= "https://merchant.roboxchange.com/Index.aspx";
+			$var['post_url']		= "https://merchant.roboxchange.com/Index.aspx";
 		}
 
-		$var['MrchLogin']		= trim($this->settings['login']);
+		$var['MrchLogin']			= trim($this->settings['login']);
 		$var['OutSum']				= $request->int_var['amount'];
 		$var['InvId']				= $request->invoice->invoice_number;
-		$var['Desc']			= $this->settings['item_name'];
-		$var['SignatureValue']		= md5(trim($this->settings['login']).':'.$request->int_var['amount'].':'.$request->invoice->invoice_number.':'.trim($this->settings['pass']));			
+		$var['Desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+		$var['SignatureValue']		= $this->getHash();			
 		$var['IncCurrLabel']		= $this->settings['currency'];
 
 		return $var;
@@ -78,12 +78,9 @@ class processor_robokassa extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$response['security_code']	= strtoupper($post['sSignatureValue']);
-		$response['total']			= $post['nOutSum'] ;
-		$response['invoice'] 		= AECfetchfromDB::InvoiceNumberfromId( $post['nInvId'] );
-		$response['sCulture']		= $post['sCulture'];
-		$response['OKnInvId']		= $post['OKnInvId'];
 		$response = array();
+		$response['amount_paid']	= $post['nOutSum'];
+		$response['invoice'] 		= AECfetchfromDB::InvoiceNumberfromId( $post['nInvId'] );
 
 		return $response;
 	}
@@ -92,21 +89,22 @@ class processor_robokassa extends POSTprocessor
 	{
 		$response['valid'] = false;
 		
-		if ( $post['OKnInvId'] != 'OK'.$request->invoice->invoice_number)
-		{
+		if ( $post['OKnInvId'] != 'OK'.$request->invoice->invoice_number ) {
 			$response['error'] = 'Payment Failed';
-		} else 
-		{
-			if ( $post['sSignatureValue'] != $this->settings['securitycode'] ) 
-			{
+		} else  {
+			if ( $post['sSignatureValue'] != $this->settings['securitycode'] ) {
 				$response['error'] = 'Security Code Mismatch: ' . $post['sSignatureValue'];
-			} else 
-			{
+			} else {
 				$response['valid'] = true;
 			}
 		}
 		
 		return $response;
+	}
+
+	function getHash( $invoice )
+	{
+		return md5( trim($this->settings['login']).':'.$invoice->amount.':'.$invoice->invoice_number.':'.trim($this->settings['pass']) );
 	}
 }
 ?>
