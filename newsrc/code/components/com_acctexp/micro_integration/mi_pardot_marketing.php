@@ -82,6 +82,72 @@ class mi_pardot_marketing extends MI
 		return;
 	}
 
+	function on_userchange_action( $request )
+	{
+		$request->metaUser = new metaUser( $request->row-> id );
+
+		$db = &JFactory::getDBO();
+
+		$pc = new PardotConnector( $db );
+		$pc->get( $this->settings );
+
+		$lists = array( 'add' => array(), 'remove' => array() );
+
+		if ( !empty( $this->settings['pardot_lists'.$request->area] ) ) {
+			$li = explode( "\n", $this->settings['pardot_lists'.$request->area] );
+			
+			foreach ( $li as $k ) {
+				$lists['add'][] = $k;
+			}
+		}
+
+		$uparams = $request->metaUser->meta->getCustomParams();
+
+		$pparams = array();
+
+		if ( !empty( $this->settings['prospect_details'] ) ) {
+			$details = explode( "\n", AECToolbox::rewriteEngineRQ( $this->settings['prospect_details'], $request ) );
+
+			foreach ( $details as $chunk ) {
+				$k = explode( '=', $chunk, 2 );
+
+				$kk = trim( $k[0] );
+				$pparams[$kk] = trim( $k[1] );
+			}
+		}
+
+		$result = new stdClass();
+		if ( empty( $uparams['mi_pardot_marketing_prospect_id'] ) ) {
+			$result = $pc->createUser( $this->settings, $request->metaUser->cmsUser->email, $lists, $pparams );
+
+			if ( !empty( $result->prospect->id ) ) {
+				// Completely new user, just create
+				$request->metaUser->meta->setCustomParams( array( 'mi_pardot_marketing_prospect_id' => ( (int) $result->prospect->id ) ) );
+
+				return true;
+			} elseif( !empty( $result->err ) ) {
+				// We have an entry, try to find the prospect
+				if ( strpos( $result->err, 'email address already exists' ) !== false ) {
+					$result = $pc->readProspect( $this->settings, 'email', $request->metaUser->cmsUser->email );
+
+					if ( !empty( $result->prospect->id ) ) {
+						// Found! Store it.
+						$request->metaUser->meta->setCustomParams( array( 'mi_pardot_marketing_prospect_id' => ( (int) $result->prospect->id ) ) );
+						$request->metaUser->meta->storeload();
+
+						$id = ( (int) $result->prospect->id );
+					}
+				}
+			}
+		} else {
+			$id = $uparams['mi_pardot_marketing_prospect_id'];
+
+			$result = $pc->readProspect( $this->settings, 'id', $uparams['mi_pardot_marketing_prospect_id'] );
+		}
+
+		return $pc->updateUser( $this->settings, 'id', $id, $lists, $pparams );
+	}
+
 	function relayAction( $request )
 	{
 		if ( ( $request->action != 'action' ) || ( $request->action != 'expiration_action' ) ) {
@@ -105,20 +171,21 @@ class mi_pardot_marketing extends MI
 
 		$uparams = $request->metaUser->meta->getCustomParams();
 
+		$pparams = array();
+
+		if ( !empty( $this->settings['prospect_details'] ) ) {
+			$details = explode( "\n", AECToolbox::rewriteEngineRQ( $this->settings['prospect_details'], $request ) );
+
+			foreach ( $details as $chunk ) {
+				$k = explode( '=', $chunk, 2 );
+
+				$kk = trim( $k[0] );
+				$pparams[$kk] = trim( $k[1] );
+			}
+		}
+
 		$result = new stdClass();
 		if ( empty( $uparams['mi_pardot_marketing_prospect_id'] ) ) {
-			$pparams = array();
-			if ( !empty( $this->settings['prospect_details'] ) ) {
-				$details = explode( "\n", AECToolbox::rewriteEngineRQ( $this->settings['prospect_details'], $request ) );
-
-				foreach ( $details as $chunk ) {
-					$k = explode( '=', $chunk, 2 );
-
-					$kk = trim( $k[0] );
-					$pparams[$kk] = trim( $k[1] );
-				}
-			}
-
 			$result = $pc->createUser( $this->settings, $request->metaUser->cmsUser->email, $lists, $pparams );
 
 			if ( !empty( $result->prospect->id ) ) {
@@ -136,15 +203,11 @@ class mi_pardot_marketing extends MI
 						$request->metaUser->meta->setCustomParams( array( 'mi_pardot_marketing_prospect_id' => ( (int) $result->prospect->id ) ) );
 						$request->metaUser->meta->storeload();
 
-						$id_type = 'id';
-
 						$id = ( (int) $result->prospect->id );
 					}
 				}
 			}
 		} else {
-			$id_type = 'id';
-
 			$id = $uparams['mi_pardot_marketing_prospect_id'];
 
 			$result = $pc->readProspect( $this->settings, 'id', $uparams['mi_pardot_marketing_prospect_id'] );
@@ -170,7 +233,7 @@ class mi_pardot_marketing extends MI
 		}
 
 		if ( !empty( $lists['add'] ) || !empty( $lists['remove'] ) ) {
-			return $pc->updateUser( $this->settings, $id_type, $id, $lists );
+			return $pc->updateUser( $this->settings, 'id', $id, $lists, $pparams );
 		}
 	}
 }
@@ -260,11 +323,17 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'prospect', 'do/create/email/'.$email, $params );
 	}
 
-	function updateUser( $settings, $id_type, $id, $lists )
+	function updateUser( $settings, $id_type, $id, $lists, $p=array() )
 	{
 		$params = array(	'user_key' => $settings['user_key'],
 							'api_key' => $this->api_key
 						);
+
+		if ( !empty( $p ) ) {
+			foreach ( $p as $k => $v ) {
+				$params[$k] = $v;
+			}
+		}
 
 		if ( !empty( $lists['add'] ) ) {
 			foreach ( $lists['add'] as $k ) {
@@ -343,7 +412,7 @@ class PardotConnector extends serialParamDBTable
 		if ( $url_parsed["query"] != "" ) {
 			$path .= "?".$url_parsed["query"];
 		}
-
+aecDebug("calling " . $url);
 		if ( $aecConfig->cfg['curl_default'] ) {
 			$response = processor::doTheCurl( $url, '' );
 		} else {
@@ -355,7 +424,7 @@ class PardotConnector extends serialParamDBTable
 
 			return $this->fetch( $settings, $area, $cmd, $params, true );
 		}
-aecDebug($response);
+aecDebug("result received");
 		return simplexml_load_string( $response );
 	}
 }
