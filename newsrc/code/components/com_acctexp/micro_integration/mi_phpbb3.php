@@ -33,7 +33,7 @@ class mi_phpbb3
 		$tables	= array();
 		$tables	= $db->getTableList();
 
-		return in_array( $app->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) .'acctexp_mi_phpbb3pw', $tables );
 	}
 
 	function install()
@@ -59,7 +59,7 @@ class mi_phpbb3
 		$app = JFactory::getApplication();
 
 		// Oh well, old mistakes...
-		$query = 'SHOW COLUMNS FROM ' . $app->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw'
+		$query = 'SHOW COLUMNS FROM ' . $app->getCfg( 'dbprefix' ) .'acctexp_mi_phpbb3pw'
 				. ' LIKE `vbulletinpw`'
 				;
 		$db->setQuery( $query );
@@ -67,7 +67,7 @@ class mi_phpbb3
 
 		if ( is_object( $result ) ) {
 			if ( strcmp($result->Field, 'vbulletinpw') === 0 ) {
-				$query = 'ALTER TABLE ' . $app->getCfg( 'dbprefix' ) .'_acctexp_mi_phpbb3pw'
+				$query = 'ALTER TABLE ' . $app->getCfg( 'dbprefix' ) .'acctexp_mi_phpbb3pw'
 						. ' CHANGE `vbulletinpw` `phpbb3pw` varchar(255)'
 						;
 				$db->setQuery( $query );

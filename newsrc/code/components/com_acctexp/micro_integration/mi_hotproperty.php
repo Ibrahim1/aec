@@ -31,7 +31,7 @@ class mi_hotproperty extends MI
 		$tables	= array();
 		$tables	= $db->getTableList();
 
-		return in_array( $app->getCfg( 'dbprefix' ) . '__acctexp_mi_hotproperty', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_hotproperty', $tables );
 	}
 
 	function install()

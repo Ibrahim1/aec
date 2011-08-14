@@ -35,7 +35,7 @@ class mi_htaccess
 		$tables	= array();
 		$tables	= $db->getTableList();
 
-		return in_array( $app->getCfg( 'dbprefix' ) .'_acctexp_mi_htaccess_apachepw', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) .'acctexp_mi_htaccess_apachepw', $tables );
 	}
 
 	function install()

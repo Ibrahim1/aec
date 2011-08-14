@@ -30,7 +30,7 @@ class mi_example
 		$tables	= array();
 		$tables	= $db->getTableList();
 
-		return in_array($app->getCfg( 'dbprefix' )."_acctexp_mi_sampletable", $tables);
+		return in_array($app->getCfg( 'dbprefix' )."acctexp_mi_sampletable", $tables);
 	}
 
 	function install()
