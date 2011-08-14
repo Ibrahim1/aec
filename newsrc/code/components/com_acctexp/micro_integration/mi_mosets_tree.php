@@ -31,7 +31,7 @@ class mi_mosets_tree extends MI
 		$tables	= array();
 		$tables	= $db->getTableList();
 
-		return in_array( $app->getCfg( 'dbprefix' ) . '_acctexp_mi_mosetstree', $tables );
+		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_mosetstree', $tables );
 	}
 
 	function install()
@@ -114,6 +114,7 @@ class mi_mosets_tree extends MI
 
 		$mi_mosetshandler = new mosetstree( $db );
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
+
 		$mi_id = $id ? $id : 0;
 		$mi_mosetshandler->load( $mi_id );
 
@@ -140,8 +141,7 @@ class mi_mosets_tree extends MI
 			$mi_mosetshandler->params['deny'] = true;
 		}
 
-		$mi_mosetshandler->check();
-		$mi_mosetshandler->store();
+		$mi_mosetshandler->storeload();
 
 		if ( $this->settings['publish_all'] ) {
 			$this->publishListings( $request->metaUser );
@@ -335,7 +335,7 @@ class mi_mosets_tree extends MI
 
 }
 
-class mosetstree extends JTable
+class mosetstree extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -357,6 +357,11 @@ class mosetstree extends JTable
 		$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 
 		parent::__construct( '#__acctexp_mi_mosetstree', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'params' );
 	}
 
 	function getIDbyUserID( $userid )
