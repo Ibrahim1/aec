@@ -412,19 +412,19 @@ class PardotConnector extends serialParamDBTable
 		if ( $url_parsed["query"] != "" ) {
 			$path .= "?".$url_parsed["query"];
 		}
-aecDebug("calling " . $url);
+
 		if ( $aecConfig->cfg['curl_default'] ) {
 			$response = processor::doTheCurl( $url, '' );
 		} else {
 			$response = processor::doTheHttp( $url, $path, '', $port );
 		}
 
-		if ( ( strpos( $response, 'Invalid API key' ) !== false ) && !$retry ) {aecDebug("INVALID API KEY DETECTED");aecDebug($response);
+		if ( ( strpos( $response, 'Invalid API key' ) !== false ) && !$retry ) {
 			$this->get( $settings, true );
 
 			return $this->fetch( $settings, $area, $cmd, $params, true );
 		}
-aecDebug("result received");
+
 		return simplexml_load_string( $response );
 	}
 }
