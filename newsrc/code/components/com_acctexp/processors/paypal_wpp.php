@@ -114,10 +114,10 @@ class processor_paypal_wpp extends XMLprocessor
 			$var['Method']					= 'UpdateRecurringPaymentsProfile';
 			$var['Profileid']				= $profileid;
 
-			$var['card_type']				= aecGetParam( 'cardType' );
-			$var['card_number']				= aecGetParam( 'cardNumber' );
+			$var['CreditCardType']			= aecGetParam( 'cardType' );
+			$var['Acct']					= aecGetParam( 'cardNumber' );
 			$var['expDate']					= str_pad( aecGetParam( 'expirationMonth' ), 2, '0', STR_PAD_LEFT ) . aecGetParam( 'expirationYear' );
-			$var['CardVerificationValue']	= aecGetParam( 'cardVV2' );
+			$var['cvv2']					= aecGetParam( 'cardVV2' );
 
 			$udata = array( 'firstname' => 'billFirstName', 'lastname' => 'billLastName', 'street' => 'billAddress', 'street2' => 'billAddress2',
 							'city' => 'billCity', 'state' => 'billState', 'zip' => 'billZip', 'country' => 'billCountry'
