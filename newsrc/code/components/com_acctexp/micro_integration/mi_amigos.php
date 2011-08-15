@@ -62,10 +62,12 @@ class mi_amigos
 		$array["amigos_orderamount"]	= $request->invoice->amount;
 		$array["amigos_ipaddress"]		= $_SERVER['REMOTE_ADDR'];
 
-		$
+		$parts = array();
+		foreach ( $array as $k => $v ) {
+			$parts .= $k . "=" . $v;
+		}
 
-		$tmpl = "%s/index.php?option=com_amigos&task=sale&amigos_id=%s&amigos_ordertype=%s&amigos_orderid=%s&amigos_orderamount=%s&amigos_ipaddress=%s";
-		$url = sprintf( $tmpl, $domain, $amigos_id, $amigos_ordertype, $amigos_orderid, $amigos_orderamount, $amigos_ipaddress );
+		$url = JURI::root() . 'index.php?' . implode( '&', $parts );
 
 		if ( !empty( $this->settings['amigos_curl'] ) ) {
 			$ch = curl_init();
