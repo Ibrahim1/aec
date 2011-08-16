@@ -487,7 +487,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$count = 0;
 				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
-						$return['error'] .= 'Error ' . $nvpResArray["LJText::_('ERRORCODE')".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
+						$return['error'] .= 'Error ' . $nvpResArray["ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
 						$count++;
 				}
 			}
