@@ -2418,6 +2418,7 @@ class Config_General extends serialParamDBTable
 		$def['subscriptiondetails_menu']		= 1;
 		$def['confirmation_display_descriptions']	= 1;
 		$def['itemid_cb']						= "";
+		$def['checkout_coupons']				= 1;
 
 		return $def;
 	}
@@ -10342,7 +10343,13 @@ class InvoiceFactory
 		$this->checkout['customtext_checkout']				= AECToolbox::rewriteEngineRQ( $aecConfig->cfg['customtext_checkout'], $this );
 		$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
 		$this->checkout['checkout_display_descriptions']	= $aecConfig->cfg['checkout_display_descriptions'];
-		$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];
+		
+		if ( isset( $aecConfig->cfg['checkout_coupons'] ) ) {
+			$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'] ? $aecConfig->cfg['checkout_coupons'] : false;
+		} else {
+			$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];
+		}
+
 		$this->checkout['customtext_checkout_table']		= JText::_('CHECKOUT_TITLE');
 
 		$this->display_error = $error;
