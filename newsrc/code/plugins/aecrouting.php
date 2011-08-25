@@ -234,7 +234,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars = $this->getVars();
 
 		// Make sure we need to make a call at all
-		if ( !( $vars['j_reg'] || $vars['ccb'] || $vars['joms'] || $vars['alpha'] || $vars['aec'] ) ) {
+		if ( !( $vars['j_reg'] || $vars['k2_regsv'] || $vars['ccb'] || $vars['joms'] || $vars['alpha'] || $vars['aec'] ) ) {
 			return true;
 		}
 
@@ -252,11 +252,7 @@ class plgSystemAECrouting extends JPlugin
 				$this->redirectToken();
 			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
 				$this->redirectToken();
-			} elseif ( $vars['has_user'] && !$vars['has_usage'] && $vars['k2_regsv'] ) {
-
-			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['k2_regsv'] ) {
-
-			} elseif ( $vars['has_user'] && ( $vars['alpha_regsv'] || $vars['joms_regsv'] || $vars['cb_sregsv'] ) ) {
+			} elseif ( $vars['has_user'] && ( $vars['alpha_regsv'] || $vars['joms_regsv'] || $vars['cb_sregsv'] || $vars['k2_regsv'] ) ) {
 				if ( $vars['joms_regsv'] ) {
 					$username	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
 					$password	= aecGetParam( 'jspassword', "", true, array( 'string', 'clear_nonalnum' ) );
@@ -303,7 +299,7 @@ class plgSystemAECrouting extends JPlugin
 
 					$temptoken->storeload();
 
-					if ( $vars['cb_sregsv'] ) {
+					if ( $vars['cb_sregsv'] || $vars['k2_regsv'] ) {
 						$this->redirectToken();
 					}
 				}
