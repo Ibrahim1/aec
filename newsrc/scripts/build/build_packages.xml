@@ -26,6 +26,9 @@
 		<phing phingfile="build_plugin_user.xml" inheritRefs="true">
 			<property file="properties/plugin_user.properties" override="true" />
 		</phing>
+		<phing phingfile="build_plugin_cb.xml" inheritRefs="true">
+			<property file="properties/plugin_cb.properties" override="true" />
+		</phing>
 
 		<mkdir dir="${dir.packages}/packages" />
 		<copy todir="${dir.packages}/packages" includeemptydirs="false">

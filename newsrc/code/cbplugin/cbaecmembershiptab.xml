@@ -7,7 +7,7 @@
 	<authorEmail>anton@starlingwebdevelopment.com</authorEmail>
 	<authorUrl>www.starlingwebdevelopment.com</authorUrl>
 	<version>1.4</version>
-	<description>This is a CB plugin handles the CB Tab which contains AEC subscribe/unsubscribe/expiration events of current user.</description>
+	<description>This is a CB plugin handles the CB Tab which contains AEC Subscription data for the user.</description>
 	<files>
 		<filename plugin="cbaecmembershiptab">cbaecmembershiptab</filename>
 		<filename>index.html</filename>

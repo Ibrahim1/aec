@@ -58,8 +58,6 @@ class processor_robokassa extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		//MD5 signature formed from the parameters, separated by ':' with sMerchantPass2 added at the end
-		//i.e. nOutSum:nInvId:sMerchantPass2[:sorted_merchant_parameters]
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']		= 'http://test.robokassa.ru/Index.aspx ';
 		} else {
@@ -70,7 +68,7 @@ class processor_robokassa extends POSTprocessor
 		$var['OutSum']				= $request->int_var['amount'];
 		$var['InvId']				= $request->invoice->invoice_number;
 		$var['Desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['SignatureValue']		= $this->getHash();			
+		$var['SignatureValue']		= $this->getHash( $request->invoice );			
 		$var['IncCurrLabel']		= $this->settings['currency'];
 
 		return $var;
@@ -89,11 +87,11 @@ class processor_robokassa extends POSTprocessor
 	{
 		$response['valid'] = false;
 		
-		if ( $post['OKnInvId'] != 'OK'.$request->invoice->invoice_number ) {
+		if ( $post['OKnInvId'] != 'OK'.$invoice->invoice_number ) {
 			$response['error'] = 'Payment Failed';
 		} else  {
-			if ( $post['sSignatureValue'] != $this->settings['securitycode'] ) {
-				$response['error'] = 'Security Code Mismatch: ' . $post['sSignatureValue'];
+			if ( $post['sSignatureValue'] != $this->getHash( $invoice ) ) {
+				$response['error'] = 'Security Code Mismatch';
 			} else {
 				$response['valid'] = true;
 			}
@@ -104,6 +102,9 @@ class processor_robokassa extends POSTprocessor
 
 	function getHash( $invoice )
 	{
+		// MD5 signature formed from the parameters, separated by ':' with sMerchantPass2 added at the end
+		// i.e. nOutSum:nInvId:sMerchantPass2[:sorted_merchant_parameters]
+
 		return md5( trim($this->settings['login']).':'.$invoice->amount.':'.$invoice->invoice_number.':'.trim($this->settings['pass']) );
 	}
 }
