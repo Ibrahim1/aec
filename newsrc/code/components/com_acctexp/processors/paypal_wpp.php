@@ -245,39 +245,45 @@ class processor_paypal_wpp extends XMLprocessor
 					$var['Method']			= 'DoExpressCheckoutPayment';
 				}
 
-				$var['Version']			= '52.0';
-				$var['token']			= $request->int_var['params']['token'];
+				$var['Version']			= '58.0';
+				$var['token']			= str_replace( '-', '%2d', $request->int_var['params']['token'] );
 				$var['PayerID']			= $request->int_var['params']['PayerID'];
 
-				$var = $this->getPaymentVars( $var, $request );
-
 				$xml = $this->arrayToNVP( $var, true );
-
-				$response = $this->transmitRequestXML( $xml, $request );
+aecDebug("1 transmitting to PayPal: ".$xml);
+				$response = $this->transmitRequestXML( $xml, $request );aecDebug($response);
 			} else {
 				$var = $this->getPayPalVars( $request, false );
 
 				$var['Method']			= 'SetExpressCheckout';
-				$var['Version']			= '52.0';
+				$var['Version']			= '58.0';
 				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
 				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
 
+				if ( is_array( $request->int_var['amount'] ) ) {
+					$var['BillingType']		= 'RecurringPayments';
+
+					$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
+		
+					$var['BillingAgreementDescription']		= $request->int_var['amount']['amount3'] . ( ( $full['period'] > 1 ) ? ' every ' . $full['period'] : ' per ' ) . $full['unit'] . ( ( $full['period'] > 1 ) ? 's' : '' );
+				}
+
 				$xml = $this->arrayToNVP( $var, true );
-
+aecDebug("2 transmitting to PayPal: ".$xml);
 				$response = $this->transmitRequestXML( $xml, $request );
-
+aecDebug($response);
 				if ( isset( $response['correlationid'] ) && isset( $response['token'] ) ) {
 					$var = array();
 					$var['cmd']			= '_express-checkout';
 					$var['token']		= $response['token'];
-
+/*
 					$var = $this->getPaymentVars( $var, $request );
 
 					$var['RETURNURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
 					$var['CANCELURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
-
+*/
 					$get = $this->arrayToNVP( $var );
-
+aecDebug("3 redirecting to PayPal: ".$get);
 					if ( $this->settings['testmode'] ) {
 						return aecRedirect( 'https://www.sandbox.paypal.com/webscr?' . $get );
 					} else {
@@ -487,7 +493,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$count = 0;
 				while ( isset( $nvpResArray["L_SHORTMESSAGE".$count] ) ) {
-						$return['error'] .= 'Error ' . $nvpResArray["ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
+						$return['error'] .= 'Error ' . $nvpResArray["L_ERRORCODE".$count] . ' = ' . $nvpResArray["L_SHORTMESSAGE".$count] . ' (' . $nvpResArray["L_LONGMESSAGE".$count] . ')' . "\n";
 						$count++;
 				}
 			}
