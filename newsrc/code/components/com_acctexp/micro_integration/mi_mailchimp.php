@@ -11,6 +11,15 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+define('MI_MI_MAILCHIMP_LIST_UNSUB_NAME', 'Unsubscribe from list');
+define('MI_MI_MAILCHIMP_LIST_EXPUNSUB_NAME', 'Unsubscribe from list (expiration)');
+define('_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_NAME', 'Account ID stuff');
+define('_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_DESC', 'Account ID stuff description');
+define('_AEC_MI_NAME_MAILCHIMP', 'MI for synchronising users with Mailchimp');
+define('_AEC_MI_DESC_MAILCHIMP', 'Allows synchronising firstname, lastname, email, userid, username with Mailchimp'); 
+define( 'MI_MI_MAILCHIMP_COUNTRY_NAME','Country');
+define( 'MI_MI_MAILCHIMP_COUNTRY_DESC','Country merge var (COUNTRY), taken from Jomsocial');
+
 class mi_mailchimp
 {
 	function Info()
@@ -131,7 +140,7 @@ class mi_mailchimp
 
 	function expiration_action( $request )
 	{
-		if ( empty( $this->settings['list'] ) ) {
+		if ( empty( $this->settings['list_exp'] ) ) {
 			return null;
 		}
 
@@ -181,6 +190,69 @@ class mi_mailchimp
 		}
 	}
 
+    function on_userchange_action( $request )
+    {
+		$MCAPI = new MCAPI( $this->settings['api_key'] );
+        $email = $request->row->email;
+    
+        $mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $email);
+        
+        $request->metaUser = new metaUser($request->row->id);
+        
+        $country = AECToolbox::rewriteEngineRQ( $this->settings['country' . $request->area], $request );
+        
+        if($mcuser['id'] && ($request->trace == 'user' || $request->trace == 'adminuser')) 
+        {
+            // if the name was submitted in the last request, we can use that name.  Otherwise, use the current name
+            if($request->post['name'])
+                $name = $this->explodeName($request->post['name']);
+            else
+                $name = $request->metaUser->explodeName();
+            
+            $merge_vars = array (   'FNAME' => $name['first'], 
+                                    'LNAME' => $name['last'], 
+                                    'EMAIL' => $request->post['email'], 
+                                    'USERNAME' => $request->metaUser->cmsUser->username,
+                                    'USERID' => $request->metaUser->cmsUser->id,
+                                    'COUNTRY' => $country,
+                                    'EXPIREDATE' => $request->metaUser->focusSubscription->expiration
+                                    );                                   
+
+            $result = $MCAPI->listUpdateMember( $this->settings['list'], $email, $merge_vars, '', false);            
+            $mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->post['email']);
+        }
+    }
+    
+    function explodeName( $name )
+    {
+        $return = array();
+        $return['first_first']    = "";
+        $return['first']        = "";
+        $return['last']            = "";
+
+        // Explode Name
+        if ( !empty( $name ) ) {
+            if ( is_array( $name ) ) {
+                $namearray    = $name;
+            } else {
+                $namearray    = explode( " ", $name );
+            }
+
+            $return['first_first']    = $namearray[0];
+            $maxname                = count($namearray) - 1;
+            $return['last']            = $namearray[$maxname];
+
+            unset( $namearray[$maxname] );
+
+            $return['first']            = implode( ' ', $namearray );
+
+            if ( empty( $return['first'] ) ) {
+                $return['first'] = $return['first_first'];
+            }
+        }
+
+        return $return;
+    }    
 }
 
 // Official Mailchimp API from http://www.mailchimp.com/api/downloads/
