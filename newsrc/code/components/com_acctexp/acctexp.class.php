@@ -4763,12 +4763,12 @@ class XMLprocessor extends processor
 						$options[] = JHTML::_('select.option', $ccname, $cclongname );
 					}
 
-					$var['params']['lists']['cardType'] = JHTML::_( 'select.genericlist', $options, 'cardType', 'size="1" style="width:120px;" class="aec_formfield" title="'.JText::_('AEC_CCFORM_CARDNUMBER_DESC').'" ', 'value', 'text', $vcontent );
+					$var['params']['lists']['cardType'] = JHTML::_( 'select.genericlist', $options, 'cardType', 'size="1" style="width:120px;" class="aec_formfield" title="'.JText::_('AEC_CCFORM_CARDNUMBER_DESC').'" autocomplete="off" ', 'value', 'text', $vcontent );
 					$var['params']['cardType'] = array( 'list', JText::_('AEC_CCFORM_CARDTYPE_NAME').$pf );
 					break;
 				case 'card_number':
 					// Request the Card number
-					$var['params']['cardNumber'] = array( 'inputC', JText::_('AEC_CCFORM_CARDNUMBER_NAME').$pf, JText::_('AEC_CCFORM_CARDNUMBER_DESC'), $vcontent );
+					$var['params']['cardNumber'] = array( 'inputC', JText::_('AEC_CCFORM_CARDNUMBER_NAME').$pf, JText::_('AEC_CCFORM_CARDNUMBER_DESC') . '" autocomplete="off', $vcontent );
 					break;
 				case 'card_exp_month':
 					// Create a selection box with 12 months
@@ -4778,7 +4778,7 @@ class XMLprocessor extends processor
 						$months[] = JHTML::_('select.option', $month, $month );
 					}
 
-					$var['params']['lists']['expirationMonth'] = JHTML::_( 'select.genericlist', $months, 'expirationMonth', 'size="1" class="aec_formfield" style="width:50px;" title="'.JText::_('AEC_CCFORM_EXPIRATIONMONTH_DESC').'"', 'value', 'text', $vcontent );
+					$var['params']['lists']['expirationMonth'] = JHTML::_( 'select.genericlist', $months, 'expirationMonth', 'size="1" class="aec_formfield" style="width:50px;" title="'.JText::_('AEC_CCFORM_EXPIRATIONMONTH_DESC').'" autocomplete="off"', 'value', 'text', $vcontent );
 					$var['params']['expirationMonth'] = array( 'list', JText::_('AEC_CCFORM_EXPIRATIONMONTH_NAME').$pf, JText::_('AEC_CCFORM_EXPIRATIONMONTH_DESC') );
 					break;
 				case 'card_exp_year':
@@ -4790,11 +4790,11 @@ class XMLprocessor extends processor
 						$years[] = JHTML::_('select.option', $i, $i );
 					}
 
-					$var['params']['lists']['expirationYear'] = JHTML::_( 'select.genericlist', $years, 'expirationYear', 'size="1" class="aec_formfield" style="width:70px;" title="'.JText::_('AEC_CCFORM_EXPIRATIONYEAR_DESC').'"', 'value', 'text', $vcontent );
+					$var['params']['lists']['expirationYear'] = JHTML::_( 'select.genericlist', $years, 'expirationYear', 'size="1" class="aec_formfield" style="width:70px;" title="'.JText::_('AEC_CCFORM_EXPIRATIONYEAR_DESC').'" autocomplete="off"', 'value', 'text', $vcontent );
 					$var['params']['expirationYear'] = array( 'list', JText::_('AEC_CCFORM_EXPIRATIONYEAR_NAME').$pf, JText::_('AEC_CCFORM_EXPIRATIONYEAR_DESC') );
 					break;
 				case 'card_cvv2':
-					$var['params']['cardVV2'] = array( 'inputC', JText::_('AEC_CCFORM_CARDVV2_NAME').$pf, JText::_('AEC_CCFORM_CARDVV2_DESC'), null );
+					$var['params']['cardVV2'] = array( 'inputC', JText::_('AEC_CCFORM_CARDVV2_NAME').$pf, JText::_('AEC_CCFORM_CARDVV2_DESC') . '" autocomplete="off', null );
 					break;
 			}
 		}
@@ -4825,16 +4825,16 @@ class XMLprocessor extends processor
 
 			switch ( strtolower( $value ) ) {
 				case 'routing_no':
-					$var['params']['routing_no'] = array( 'inputC', JText::_('AEC_ECHECKFORM_ROUTING_NO_NAME').$pf, JText::_('AEC_ECHECKFORM_ROUTING_NO_DESC'), $vcontent );
+					$var['params']['routing_no'] = array( 'inputC', JText::_('AEC_ECHECKFORM_ROUTING_NO_NAME').$pf, JText::_('AEC_ECHECKFORM_ROUTING_NO_DESC') . '" autocomplete="off', $vcontent );
 					break;
 				case 'account_no':
-					$var['params']['account_no'] = array( 'inputC', JText::_('AEC_ECHECKFORM_ACCOUNT_NO_NAME').$pf, JText::_('AEC_ECHECKFORM_ACCOUNT_NO_DESC'), $vcontent );
+					$var['params']['account_no'] = array( 'inputC', JText::_('AEC_ECHECKFORM_ACCOUNT_NO_NAME').$pf, JText::_('AEC_ECHECKFORM_ACCOUNT_NO_DESC') . '" autocomplete="off', $vcontent );
 					break;
 				case 'account_name':
-					$var['params']['account_name'] = array( 'inputC', JText::_('AEC_ECHECKFORM_ACCOUNT_NAME_NAME').$pf, JText::_('AEC_ECHECKFORM_ACCOUNT_NAME_DESC'), $vcontent );
+					$var['params']['account_name'] = array( 'inputC', JText::_('AEC_ECHECKFORM_ACCOUNT_NAME_NAME').$pf, JText::_('AEC_ECHECKFORM_ACCOUNT_NAME_DESC') . '" autocomplete="off', $vcontent );
 					break;
 				case 'bank_name':
-					$var['params']['bank_name'] = array( 'inputC', JText::_('AEC_ECHECKFORM_BANK_NAME_NAME').$pf, JText::_('AEC_ECHECKFORM_BANK_NAME_DESC'), $vcontent );
+					$var['params']['bank_name'] = array( 'inputC', JText::_('AEC_ECHECKFORM_BANK_NAME_NAME').$pf, JText::_('AEC_ECHECKFORM_BANK_NAME_DESC') . '" autocomplete="off', $vcontent );
 					break;
 			}
 		}
