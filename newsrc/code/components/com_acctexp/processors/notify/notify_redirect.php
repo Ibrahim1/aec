@@ -5,7 +5,7 @@ $bsLoader = new bootstrapLoader();
 
 $original = file_get_contents("php://input");
 
-if ( empty( $original ) ) {
+if ( empty( $original ) && isset( $GLOBALS['HTTP_RAW_POST_DATA'] ) ) {
 	$original = $GLOBALS['HTTP_RAW_POST_DATA'];
 }
 
@@ -125,7 +125,7 @@ class bootstrapLoader
 		$return = $var;
 
 		for ( $n=0; $n<strlen($var); $n++ ) {
-			if ( eregi( "[\<|\>|\"|\'|\%|\;|\(|\)]", $return[$n] ) ) {
+			if ( preg_match( '`[\<|\>|\"|\'|\%|\;|\(|\)]`Di', $return[$n] ) ) {
 				 $return = substr( $return, 0, $n );
 				 continue;
 			}
