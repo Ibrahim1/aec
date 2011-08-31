@@ -237,22 +237,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$this->sanitizeRequest( $request );
 
 		if ( !empty( $request->int_var['params']['express'] ) && $this->settings['allow_express_checkout'] ) {
-			if ( !empty( $request->int_var['params']['token'] ) ) {
-				// The user has already returned from Paypal - finish the deal
-				$var = $this->getPayPalVars( $request, false );
-
-				if ( !is_array( $request->int_var['amount'] ) ) {
-					$var['Method']			= 'DoExpressCheckoutPayment';
-				}
-
-				$var['Version']			= '58.0';
-				$var['token']			= str_replace( '-', '%2d', $request->int_var['params']['token'] );
-				$var['PayerID']			= $request->int_var['params']['PayerID'];
-
-				$xml = $this->arrayToNVP( $var, true );
-aecDebug("1 transmitting to PayPal: ".$xml);
-				$response = $this->transmitRequestXML( $xml, $request );aecDebug($response);
-			} else {
+			if ( empty( $request->int_var['params']['token'] ) ) {
 				$var = $this->getPayPalVars( $request, false );
 
 				$var['Method']			= 'SetExpressCheckout';
@@ -261,41 +246,69 @@ aecDebug("1 transmitting to PayPal: ".$xml);
 				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
 
 				if ( is_array( $request->int_var['amount'] ) ) {
-					$var['BillingType']		= 'RecurringPayments';
+					unset( $var['desc'] );
 
-					$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
-		
-					$var['BillingAgreementDescription']		= $request->int_var['amount']['amount3'] . ( ( $full['period'] > 1 ) ? ' every ' . $full['period'] : ' per ' ) . $full['unit'] . ( ( $full['period'] > 1 ) ? 's' : '' );
+					$var['L_BillingType0']		= 'RecurringPayments';
+
+					$var['L_BillingAgreementDescription0']		= $this->getPlaintextDetails( $request );
 				}
 
 				$xml = $this->arrayToNVP( $var, true );
-aecDebug("2 transmitting to PayPal: ".$xml);
+
 				$response = $this->transmitRequestXML( $xml, $request );
-aecDebug($response);
+
 				if ( isset( $response['correlationid'] ) && isset( $response['token'] ) ) {
 					$var = array();
 					$var['cmd']			= '_express-checkout';
 					$var['token']		= $response['token'];
-/*
-					$var = $this->getPaymentVars( $var, $request );
 
-					$var['RETURNURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
-					$var['CANCELURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
-*/
 					$get = $this->arrayToNVP( $var );
-aecDebug("3 redirecting to PayPal: ".$get);
+
 					if ( $this->settings['testmode'] ) {
 						return aecRedirect( 'https://www.sandbox.paypal.com/webscr?' . $get );
 					} else {
 						return aecRedirect( 'https://www.paypal.com/webscr?' . $get );
 					}
-
-					unset( $response['correlationid'] );
-					unset( $response['token'] );
 				} elseif ( !empty( $response['error'] ) ) {
 					$response['error'] .= " - Could not retrieve token";
 				} else {
 					$response['error'] = "Could not retrieve token";
+				}
+			} else {
+				// The user has already returned from Paypal - finish the deal
+				$var = $this->getPayPalVars( $request, false, false );
+
+				$var['Version']			= '58.0';
+				$var['token']			= $request->int_var['params']['token'];
+				$var['PayerID']			= $request->int_var['params']['PayerID'];
+
+				$var['Method']			= 'GetExpressCheckoutDetails';
+
+				$xml = $this->arrayToNVP( $var, true );
+
+				$response = $this->transmitRequestXML( $xml, $request );
+
+				$var['Method']			= 'DoExpressCheckoutPayment';
+
+				$xml = $this->arrayToNVP( $var, true );
+
+				$response = $this->transmitRequestXML( $xml, $request );
+
+				if ( is_array( $request->int_var['amount'] ) ) {
+					$var = $this->getPayPalVars( $request, false );
+
+					$var['Version']			= '58.0';
+					$var['token']			= $request->int_var['params']['token'];
+					$var['PayerID']			= $request->int_var['params']['PayerID'];
+
+					unset( $var['paymentAction'] );
+					unset( $var['IPaddress'] );
+
+					$var['desc']		= $this->getPlaintextDetails( $request );
+
+					$xml = $this->arrayToNVP( $var, true );
+
+					$response = $this->transmitRequestXML( $xml, $request );
 				}
 			}
 		} else {
@@ -331,7 +344,7 @@ aecDebug("3 redirecting to PayPal: ".$get);
 		return $this->arrayToNVP( $var, true );
 	}
 
-	function getPayPalVars( $request, $regular=true )
+	function getPayPalVars( $request, $regular=true, $payment=true )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Method']			= 'CreateRecurringPaymentsProfile';
@@ -374,11 +387,13 @@ aecDebug("3 redirecting to PayPal: ".$get);
 			$var['countrycode']			= $request->int_var['params']['billCountry'];
 		}
 
-		$var = $this->getPaymentVars( $var, $request );
+		if ( $payment ) {
+			$var = $this->getPaymentVars( $var, $request );
 
-		$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=paypal_wppnotification', $this->info['secure'], true );
-		$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['InvNum']				= $request->invoice->invoice_number;
+			$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=paypal_wppnotification', $this->info['secure'], true );
+			$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+			$var['InvNum']				= $request->invoice->invoice_number;
+		}
 
 		return $var;
 	}
@@ -386,30 +401,16 @@ aecDebug("3 redirecting to PayPal: ".$get);
 	function getPaymentVars( $var, $request )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
-			// $var['InitAmt'] = 'Initial Amount'; // Not Supported Yet
-			// $var['FailedInitAmtAction'] = 'ContinueOnFailure'; // Not Supported Yet (optional)
-
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
-				/* For now, this is not working, we have to wait until PayPal fixes this
 				$trial = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
 
 				$var['TrialBillingPeriod']		= $trial['unit'];
 				$var['TrialBillingFrequency']	= $trial['period'];
 				$var['TrialAmt']				= $request->int_var['amount']['amount1'];
-				$var['TrialTotalBillingCycles'] = 1; // Not Fully Supported Yet
-				*/
-
-				switch ( $request->int_var['amount']['unit1'] ) {
-					case 'D': $offset = $request->int_var['amount']['period1'] * 3600 * 24; break;
-					case 'W': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 7; break;
-					case 'M': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 31; break;
-					case 'Y': $offset = $request->int_var['amount']['period1'] * 3600 * 24 * 356; break;
-				}
-
-				$timestamp = ( (int) gmdate('U') ) + $offset;
-			} else {
-				$timestamp = (int) gmdate('U');
+				$var['TrialTotalBillingCycles'] = 1;
 			}
+
+			$timestamp = (int) gmdate('U');
 
 			$var['ProfileStartDate']    = date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
 
@@ -418,7 +419,6 @@ aecDebug("3 redirecting to PayPal: ".$get);
 			$var['BillingPeriod']		= $full['unit'];
 			$var['BillingFrequency']	= $full['period'];
 			$var['amt']					= $request->int_var['amount']['amount3'];
-			$var['ProfileReference']	= $request->invoice->invoice_number;
 		} else {
 			$var['amt']					= $request->int_var['amount'];
 		}
@@ -525,6 +525,26 @@ aecDebug("3 redirecting to PayPal: ".$get);
 				$return['period'] = $period;
 				break;
 		}
+
+		return $return;
+	}
+
+	function getPlaintextDetails( $request )
+	{
+		$return = "";
+
+		if ( !empty( $request->int_var['amount']['amount1'] ) ) {
+			$trial = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
+
+			$var['TrialBillingPeriod']		= $trial['unit'];
+			$var['TrialBillingFrequency']	= $trial['period'];
+
+			$return .= str_replace( "&nbsp;", '', AECToolbox::formatAmount( $request->int_var['amount']['amount1'], $this->settings['currency'] ) ) . ' for ' . $trial['period'] . ' ' . $trial['unit'] . ( ( $trial['period'] > 1 ) ? 's' : '' ) . ', then ';
+		}
+
+		$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
+
+		$return .= str_replace( "&nbsp;", '', AECToolbox::formatAmount( $request->int_var['amount']['amount3'], $this->settings['currency'] ) ) . ( ( $full['period'] > 1 ) ? ' every ' . $full['period'] : ' per ' ) . $full['unit'] . ( ( $full['period'] > 1 ) ? 's' : '' );
 
 		return $return;
 	}
