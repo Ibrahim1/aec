@@ -288,6 +288,12 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$response = $this->transmitRequestXML( $xml, $request );
 
+				$var = $this->getPayPalVars( $request, false );
+
+				$var['Version']			= '58.0';
+				$var['token']			= $request->int_var['params']['token'];
+				$var['PayerID']			= $request->int_var['params']['PayerID'];
+
 				$var['Method']			= 'DoExpressCheckoutPayment';
 
 				$xml = $this->arrayToNVP( $var, true );
@@ -300,6 +306,8 @@ class processor_paypal_wpp extends XMLprocessor
 					$var['Version']			= '58.0';
 					$var['token']			= $request->int_var['params']['token'];
 					$var['PayerID']			= $request->int_var['params']['PayerID'];
+
+					$var['ProfileReference']	= $request->invoice->invoice_number;
 
 					unset( $var['paymentAction'] );
 					unset( $var['IPaddress'] );
@@ -616,6 +624,10 @@ class processor_paypal_wpp extends XMLprocessor
 			$response['invoice'] = $post['invoice'];
 		} elseif ( !empty( $post['rp_invoice_id'] ) ) {
 			$response['invoice'] = $post['rp_invoice_id'];
+		} elseif ( !empty( $post['invnum'] ) ) {
+			$response['invoice'] = $post['invnum'];
+		} elseif ( !empty( $post['profilereference'] ) ) {
+			$response['invoice'] = $post['invnum'];
 		}
 
 		$response['amount_paid'] = $mc_gross;
@@ -727,6 +739,9 @@ class processor_paypal_wpp extends XMLprocessor
 				$response['cancel']				= 1;
 			} elseif ( strcmp( $reason_code, 'refund' ) == 0 ) {
 				$response['delete']				= 1;
+			} elseif ( strcmp( $txn_type, 'recurring_payment_profile_created' ) == 0 ) {
+				$response['valid']		= 0;
+				$response['duplicate']	= 1;
 			}
 		} else {
 			$response['pending_reason']			= 'error: ' . $res;

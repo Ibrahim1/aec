@@ -395,6 +395,17 @@ if ( !empty( $task ) ) {
 			processNotification( $option, "paypal" );
 			break;
 
+		case 'auth':
+			$app		= aecGetParam( 'app', 0, true, array( 'word', 'string' ) );
+			$key		= aecGetParam( 'key', 0, true, array( 'word', 'string' ) );
+			$verbose	= aecGetParam( 'verbose', 0, true, array( 'word', 'int' ) );
+
+			$username	= aecGetParam( 'username', 0, true, array( 'badchars', 'string' ) );
+			$password	= aecGetParam( 'password', 0, true, array( 'badchars', 'string' ) );
+
+			customAppAuth( $app, $key, $verbose, $username, $password );
+			break;
+
 		default:
 			if ( strpos( $task, 'notification' ) > 0 ) {
 				$processor = str_replace( 'notification', '', $task );
@@ -414,6 +425,46 @@ if ( !empty( $task ) ) {
 			}
 			break;
 	}
+}
+
+function customAppAuth( $app, $key, $verbose, $username, $password )
+{
+	global $aecConfig;
+
+	if ( isset( $aecConfig->cfg['customAppAuth'][$app] ) ) {
+		if ( $key == $aecConfig->cfg['customAppAuth'][$app] ) {
+			if ( empty( $username ) ) {
+				header("HTTP/1.0 400 Bad Request"); die;
+			}
+
+			$userid = AECfetchfromDB::UserIDfromUsername( $username );
+
+			$return = array();
+			$return['authed'] = 'not_found';
+
+			if ( empty( $userid ) ) {
+				$return['status'] = 'not_found';
+			} else {
+				$return['status'] = AECToolbox::VerifyUserID( $userid );
+
+				$metaUser = new metaUser( $userid );
+
+				$return['expiration'] = $metaUser->objSubscription->expiration;
+			}
+
+			if ( !empty( $req['verbose'] ) ) {
+				switch ( $return['status'] ) {
+					case 'ok':				$return['status_long'] = 'Account is fine.'; break;
+					case 'not_found':		$return['status_long'] = 'Account not found.'; break;
+					case 'expired':			$return['status_long'] = 'Account has expired.'; break;
+					case 'pending':			$return['status_long'] = 'Account is pending - awaiting payment for last invoice to clear.'; break;
+					case 'open_invoice':	$return['status_long'] = 'Account is pending - there is an open invoice waiting to be paid.'; break;
+					case 'hold':			$return['status_long'] = 'Account is on manual hold.'; break;
+			}
+		}
+	}
+
+	header("HTTP/1.0 401 Unauthorized"); die; // die, die
 }
 
 function hold( $option, $userid )

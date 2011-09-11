@@ -13158,8 +13158,8 @@ class Subscription extends serialParamDBTable
 
 			$expstamp = strtotime( $this->expiration );
 
-			// Get how many days left to expire (3600 sec = 1 hour)
-			$alert['daysleft']	= round( ( $expstamp - ( (int) gmdate('U') ) ) / ( 3600 * 24 ) );
+			// Get how many days left to expire (86400 sec = 1 day)
+			$alert['daysleft']	= round( ( $expstamp - ( (int) gmdate('U') ) ) / 86400 );
 
 			if ( $alert['daysleft'] < 0 ) {
 				// Subscription already expired. Alert Level 0!
@@ -13177,6 +13177,7 @@ class Subscription extends serialParamDBTable
 				}
 			}
 		}
+
 		return $alert;
 	}
 
@@ -13934,6 +13935,18 @@ class AECfetchfromDB
 				. ' WHERE `id` = \'' . (int) $subscriptionid . '\''
 				. ' ORDER BY `primary` DESC'
 				;
+		$db->setQuery( $query );
+		return $db->loadResult();
+	}
+
+	function UserIDfromUsername( $username )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT id'
+		. ' FROM #__users'
+		. ' WHERE username = \'' . aecEscape( $username, array( 'string', 'badchars' ) ) . '\''
+		;
 		$db->setQuery( $query );
 		return $db->loadResult();
 	}
@@ -15469,29 +15482,22 @@ class AECToolbox
 	{
 		$db = &JFactory::getDBO();
 
-		global $aecConfig;
-
 		$heartbeat = new aecHeartbeat( $db );
 		$heartbeat->frontendping();
 
-		$query = 'SELECT id'
-		. ' FROM #__users'
-		. ' WHERE username = \'' . aecEscape( $username, array( 'string', 'badchars' ) ) . '\''
-		;
-		$db->setQuery( $query );
-		$id = $db->loadResult();
+		$userid = AECfetchfromDB::UserIDfromUsername( $username );
 
-		if ( empty( $id ) ) {
-			return false;
-		}
-
-		$metaUser = new metaUser( $id );
+		$metaUser = new metaUser( $userid );
 
 		if ( $metaUser->hasSubscription ) {
 			$metaUser->objSubscription->verifylogin( $metaUser->cmsUser->block, $metaUser );
 		} else {
+			global $aecConfig;
+
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
+					$db = &JFactory::getDBO();
+
 					$payment_plan = new SubscriptionPlan( $db );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
@@ -15499,7 +15505,7 @@ class AECToolbox
 
 					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
 
-					return AECToolbox::VerifyUsername( $username );
+					return AECToolbox::VerifyUserID( $userid );
 				} else {
 					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
 
@@ -15508,17 +15514,16 @@ class AECToolbox
 
 						if ( $invoice ) {
 							$metaUser->setTempAuth();
-							aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=pending&userid=' . $id ), false, true );
-							return null;
+							return aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=pending&userid=' . $userid ), false, true );
 						}
 					}
 
 					$metaUser->setTempAuth();
-					aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&userid=' . $id . '&intro=1' ), false, true );
-					return null;
+					return aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&userid=' . $userid . '&intro=1' ), false, true );
 				}
 			}
 		}
+
 		return true;
 	}
 
@@ -15526,23 +15531,21 @@ class AECToolbox
 	{
 		$db = &JFactory::getDBO();
 
-		global $aecConfig;
-
 		$heartbeat = new aecHeartbeat( $db );
 		$heartbeat->frontendping();
 
-		$query = 'SELECT id'
-		. ' FROM #__users'
-		. ' WHERE username = \'' . aecEscape( $username, array( 'string', 'badchars' ) ) . '\''
-		;
-		$db->setQuery( $query );
-		$id = $db->loadResult();
+		$id = AECfetchfromDB::UserIDfromUsername( $username );
 
-		if ( empty( $id ) ) {
+		return AECToolbox::VerifyUserID( $id );
+	}
+
+	function VerifyUserID( $userid )
+	{
+		if ( empty( $userid ) ) {
 			return false;
 		}
 
-		$metaUser = new metaUser( $id );
+		$metaUser = new metaUser( $userid );
 
 		if ( $metaUser->hasSubscription ) {
 			$result = $metaUser->objSubscription->verify( $metaUser->cmsUser->block, $metaUser );
@@ -15555,6 +15558,8 @@ class AECToolbox
 		} else {
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
+					$db = &JFactory::getDBO();
+
 					$payment_plan = new SubscriptionPlan( $db );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
@@ -15562,7 +15567,7 @@ class AECToolbox
 
 					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
 
-					return AECToolbox::VerifyUser( $username );
+					return AECToolbox::VerifyUser( $metaUser->cmsUser->username );
 				} else {
 					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
 
@@ -15580,6 +15585,7 @@ class AECToolbox
 				}
 			}
 		}
+
 		return true;
 	}
 
