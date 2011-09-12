@@ -14409,6 +14409,7 @@ class reWriteEngine
 			$rewrite['subscription'][] = 'lifetime';
 			$rewrite['subscription'][] = 'expiration_date';
 			$rewrite['subscription'][] = 'expiration_date_backend';
+			$rewrite['subscription'][] = 'expiration_daysleft';
 			$rewrite['subscription'][] = 'notes';
 		}
 
@@ -14660,6 +14661,8 @@ class reWriteEngine
 					$this->rewrite['subscription_lifetime']			= $this->data['metaUser']->focusSubscription->lifetime;
 					$this->rewrite['subscription_expiration_date']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->expiration );
 					$this->rewrite['subscription_expiration_date_backend']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->expiration, true );
+
+					$this->rewrite['subscription_expiration_daysleft']	= round( ( strtotime( $this->data['metaUser']->focusSubscription->expiration ) - ( (int) gmdate('U') ) ) / 86400 );
 
 					if ( !empty( $this->data['metaUser']->focusSubscription->customparams['notes'] ) ) {
 						$this->rewrite['subscription_notes']		=  $this->data['metaUser']->focusSubscription->customparams['notes'];
@@ -14963,6 +14966,12 @@ class reWriteEngine
 				break;
 			case 'date':
 				$result = date( $vars[0], strtotime( $vars[1] ) );
+				break;
+			case 'date_distance':
+				$result = round( $vars - ( (int) gmdate('U') ) );
+				break;
+			case 'date_distance_days':
+				$result = round( ( $vars - ( (int) gmdate('U') ) ) / 86400 );
 				break;
 			case 'crop':
 				if ( isset( $vars[2] ) ) {
