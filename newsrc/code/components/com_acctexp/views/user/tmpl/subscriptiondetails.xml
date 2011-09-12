@@ -14,4 +14,13 @@
 			</param>
 		</params>
 	</state>
+	<fields name="params">
+		<fieldset name="basic">
+			<field name="sub" type="radio" default="overview" label="SubSite" description="You can also link to the Invoices sub-page directly.">
+				<option value="overview">Overview</option>
+				<option value="invoices">Invoices list</option>
+				<option value="details">MI Details</option>
+			</field>
+		</fieldset>
+	</fields>
 </metadata>
