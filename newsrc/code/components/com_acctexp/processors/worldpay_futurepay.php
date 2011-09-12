@@ -74,7 +74,12 @@ class processor_worldpay_futurepay extends POSTprocessor
 
 		$units = array( 'D' => '1', 'W' => '2', 'M' => '3', 'Y' => '4' );
 
-		$var['intervalUnit'] = $units[$request->int_var['amount']['unit3']];
+		if ( isset( $units[$request->int_var['amount']['unit3']] ) ) {
+			$var['intervalUnit'] = $units[$request->int_var['amount']['unit3']];
+		} else {
+			$var['intervalUnit'] = 'D';
+		}
+
 		$var['intervalMult'] = $request->int_var['amount']['period3'];
 
 		if ( isset( $request->int_var['amount']['amount1'] ) ) {
@@ -85,47 +90,6 @@ class processor_worldpay_futurepay extends POSTprocessor
 
 		return $var;
 	}
-
-/*
- * POSTBACK variables
- * instId=38290
- * email=tiq%40uk.worldpay.com
- * transTime=999178402000
- * country=GB
- * rawAuthCode=A
- * amount=14.99
- * installation=38290
- * tel=0123+456789012
- * address=
- * est+Road%0D%0ATest+Town%0D%0ATest+City
- * futurePayId=76486
- * MC_log=2379&
- * awAuthMessage=authorised+(testMode+always+Yes)
- * authAmount=23.11
- * amountString=%26%23163%3B14.99
- * cardType=Visa
- * AVS=0001
- * cost=14.99
- * currency=GBP
- * testMode=100
- * authAmountString=EUR23.11
- * fax=01234+5678901
- * lang=en
- * transStatus=Y
- * compName=Ian+Richardson
- * authCurrency=EUR
- * postcode=AB1+2CD
- * authCost=23.11
- * desc=Test+Item
- * countryMatch=S
- * cartId=Test+Item
- * transId=12227758
- * callbackPW=38290
- * M_var1=fred
- * authMode=E
- * countryString=United+Kingdom
- * name=WorldPay+Test
- */
 
 	function parseNotification( $post )
 	{
