@@ -2419,6 +2419,7 @@ class Config_General extends serialParamDBTable
 		$def['confirmation_display_descriptions']	= 1;
 		$def['itemid_cb']						= "";
 		$def['checkout_coupons']				= 1;
+		$def['customAppAuth']					= "";
 
 		return $def;
 	}
@@ -15908,6 +15909,8 @@ class AECToolbox
 
 	function searchUser( $search )
 	{
+		$db = &JFactory::getDBO();
+
 		$k = 0;
 
 		// Try username and name
@@ -20719,86 +20722,89 @@ class aecRestrictionHelper
 class aecAPI
 {
 	var $request	= '';
+	var $metaUser	= '';
 	var $focus		= '';
 	var $error		= '';
-	var $result		= '';
+	var $response	= '';
 
 	function load( $request )
 	{
 		$this->request = $request;
 
-		if ( !empty( $this->request['action'] ) ) {
-			$this->action = $this->request['action'];
+		if ( !empty( $this->request->action ) ) {
+			$this->action = $this->request->action;
 		} else {
-			$this->error = '"action" missing or empty';
+			$this->error = 'action missing or empty';
 		}
 
-		if ( !empty( $this->request['user'] ) ) {
-			$this->request_user = $this->request['user'];
-
+		if ( !empty( $this->request->user ) ) {
 			$this->loadUser();
 		} else {
-			$this->error = '"user" missing or empty';
+			$this->error = 'user missing or empty';
 		}
+
+		$this->response = new stdClass();
 	}
 
 	function loadUser()
 	{
 		$users = array();
 
-		if ( is_array( $this->request_user ) ) {
-			if ( isset( $this->request_user['username'] ) ) {
-				$query = 'FROM #__users'
-						. ' WHERE LOWER( `username` ) LIKE \'%' . $db->getEscaped( strtolower( $this->request_user['username'] ) ) . '%\''
-						. ' SELECT `id`'
+		if ( is_object( $this->request->user ) ) {
+			$db = &JFactory::getDBO();
+
+			if ( isset( $this->request->user->username ) ) {
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE LOWER( `username` ) LIKE \'%' . $db->getEscaped( strtolower( $this->request->user->username ) ) . '%\''
 						;
 				$db->setQuery( $query );
 
 				$users = $db->loadResultArray();
 			}
 
-			if ( empty( $users ) && isset( $this->request_user['name'] ) ) {
-				$query = 'FROM #__users'
-						. ' WHERE LOWER( `name` ) LIKE \'%' . $db->getEscaped( strtolower( $this->request_user['name'] ) ) . '%\''
-						. ' SELECT `id`'
+			if ( empty( $users ) && isset( $this->request->user->name ) ) {
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE LOWER( `name` ) LIKE \'%' . $db->getEscaped( strtolower( $this->request->user->name ) ) . '%\''
 						;
 				$db->setQuery( $query );
 
 				$users = $db->loadResultArray();
 			}
 
-			if ( empty( $users ) && isset( $this->request_user['email'] ) ) {
-				$query = 'FROM #__users'
-						. ' WHERE LOWER( `email` ) = \'' . $db->getEscaped( $this->request_user['email'] ) . '\''
-						. ' SELECT `id`'
+			if ( empty( $users ) && isset( $this->request->user->email ) ) {
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE LOWER( `email` ) = \'' . $db->getEscaped( $this->request->user->email ) . '\''
 						;
 				$db->setQuery( $query );
 
 				$users = $db->loadResultArray();
 			}
 
-			if ( empty( $users ) && isset( $this->request_user['userid'] ) ) {
-				$query = 'FROM #__users'
-						. ' WHERE `id` = \'' . $db->getEscaped( $this->request_user['userid'] ) . '\''
-						. ' SELECT `id`'
+			if ( empty( $users ) && isset( $this->request->user->userid ) ) {
+				$query = 'SELECT `id`'
+						. '  FROM #__users'
+						. ' WHERE `id` = \'' . $db->getEscaped( $this->request->user->userid ) . '\''
 						;
 				$db->setQuery( $query );
 
 				$users = $db->loadResultArray();
 			}
 
-			if ( empty( $users ) && isset( $this->request_user['invoice_number'] ) ) {
-				$query = 'FROM #__acctexp_invoices'
-						. ' WHERE LOWER( `invoice_number` ) = \'' . $db->getEscaped( $this->request_user['invoice_number'] ) . '\''
-						. ' OR LOWER( `secondary_ident` ) = \'' . $db->getEscaped( $this->request_user['invoice_number'] ) . '\''
-						. ' SELECT `userid`'
+			if ( empty( $users ) && isset( $this->request->user->invoice_number ) ) {
+				$query = 'SELECT `userid`'
+						. 'FROM #__acctexp_invoices'
+						. ' WHERE LOWER( `invoice_number` ) = \'' . $db->getEscaped( $this->request->user->invoice_number ) . '\''
+						. ' OR LOWER( `secondary_ident` ) = \'' . $db->getEscaped( $this->request->user->invoice_number ) . '\''
 						;
 				$db->setQuery( $query );
 
 				$users = $db->loadResultArray();
 			}
 		} else {
-			$users = AECToolbox::searchUser( $this->request_user );
+			$users = AECToolbox::searchUser( $this->request->user );
 		}
 
 		if ( !count( $users ) ) {
@@ -20823,36 +20829,46 @@ class aecAPI
 		if ( method_exists( $this, $cmd ) ) {
 			$this->$cmd();
 		} else {
-			$this->error = 'chosen action "' . $cmd . '" does not exist - check spelling';
+			$this->error = 'chosen action ' . $cmd . ' does not exist - check spelling (especially upper- and lowercase)';
 		}
 	}
 
 	function actionUserExists()
 	{
-		$this->result = array( 'result' => !empty( $this->metaUser->userid ) );
+		$this->response->result = !empty( $this->metaUser->userid );
 	}
 
 	function actionMembershipDetails()
 	{
-		$this->result['status'] = AECToolbox::VerifyMetaUser( $this->metaUser );
+		$this->actionUserExists();
 
-		switch ( $this->result['status'] ) {
-			case 'ok':				$this->result['status_long'] = 'Account is fine.'; break;
-			case 'expired':			$this->result['status_long'] = 'Account has expired.'; break;
-			case 'pending':			$this->result['status_long'] = 'Account is pending - awaiting payment for last invoice to clear.'; break;
-			case 'open_invoice':	$this->result['status_long'] = 'Account is pending - there is an open invoice waiting to be paid.'; break;
-			case 'hold':			$this->result['status_long'] = 'Account is on manual hold.'; break;
+		$this->response->status = AECToolbox::VerifyMetaUser( $this->metaUser );
+
+		if ( $this->response->status === true ) {
+			$this->response->status = $this->metaUser->objSubscription->status;
 		}
 
-		if ( !empty( $this->request['details'] ) ) {
-			if ( !is_array( $this->request['details'] ) ) {
-				$this->error = 'details need to be an array of objects (with "key" and "value" as properties)';
+		switch ( strtolower( $this->response->status ) ) {
+			case 'active':			$this->response->status_long = 'Account is fine.'; break;
+			case 'trial':			$this->response->status_long = 'Account is fine (using a trial right now).'; break;
+			case 'expired':			$this->response->status_long = 'Account has expired.'; break;
+			case 'pending':			$this->response->status_long = 'Account is pending - awaiting payment for the last invoice to clear.'; break;
+			case 'open_invoice':	$this->response->status_long = 'Account is pending - there is an open invoice waiting to be paid.'; break;
+			case 'hold':			$this->response->status_long = 'Account is on manual hold.'; break;
+			default:				$this->response->status_long = 'No long status explanation for this.'; break;
+		}
+
+		if ( !empty( $this->request->details ) ) {
+			if ( !is_object( $this->request->details ) ) {
+				$this->error = 'details need to be an objects (with "key" and "value" as properties)';
 			} else {
-				foreach ( $this->request['details'] as $detail ) {
-					if ( empty( $detail->key ) || empty( $detail->value ) ) {
-						$this->error = 'details need to be an array of objects (with "key" and "value" as properties)';
+				$details = get_object_vars( $this->request->details );
+
+				foreach ( $details as $k => $v ) {
+					if ( empty( $k ) || empty( $v ) ) {
+						$this->error = 'one or more details empty or malformed';
 					} else {
-						$this->result[$detail->key] = AECToolbox::rewriteEngineRQ( $detail->value, null, $this->metaUser );
+						$this->response->$k = AECToolbox::rewriteEngineRQ( '{aecjson}'.json_encode($v).'{/aecjson}', null, $this->metaUser );
 					}
 				}
 			}
@@ -20861,9 +20877,17 @@ class aecAPI
 
 	function actionAuth()
 	{
+		if ( empty( $this->request_user->username ) || empty( $this->request_user->password ) ) {
+			$this->error = 'must provide username and password to authenticate';
+
+			$this->response->result =  false;
+
+			return;
+		}
+
 		$credentials = array();
-		$credentials['username'] = $this->request_user['username'];
-		$credentials['password'] = $this->request_user['password'];
+		$credentials['username'] = $this->request_user->username;
+		$credentials['password'] = $this->request_user->password;
 
 		// Get the global JAuthentication object.
 		jimport('joomla.user.authentication');
@@ -20871,36 +20895,7 @@ class aecAPI
 		$authenticate = JAuthentication::getInstance();
 		$response	= $authenticate->authenticate($credentials, array());
 
-		$this->result = array( 'result' => ( $response->status === JAUTHENTICATE_STATUS_SUCCESS ) );
-	}
-
-	function stuff()
-	{
-		$userid = AECfetchfromDB::UserIDfromUsername( $username );
-
-		$return = array();
-		$return['authed'] = 'not_found';
-
-		if ( empty( $userid ) ) {
-			$return['status'] = 'not_found';
-		} else {
-			$return['status'] = AECToolbox::VerifyUserID( $userid );
-
-			$metaUser = new metaUser( $userid );
-
-			$return['expiration'] = $metaUser->objSubscription->expiration;
-		}
-
-		if ( !empty( $req['verbose'] ) ) {
-			switch ( $return['status'] ) {
-				case 'ok':				$return['status_long'] = 'Account is fine.'; break;
-				case 'not_found':		$return['status_long'] = 'Account not found.'; break;
-				case 'expired':			$return['status_long'] = 'Account has expired.'; break;
-				case 'pending':			$return['status_long'] = 'Account is pending - awaiting payment for last invoice to clear.'; break;
-				case 'open_invoice':	$return['status_long'] = 'Account is pending - there is an open invoice waiting to be paid.'; break;
-				case 'hold':			$return['status_long'] = 'Account is on manual hold.'; break;
-			}
-		}
+		$this->response = array( 'result' => ( $response->status === JAUTHENTICATE_STATUS_SUCCESS ) );
 	}
 }
 

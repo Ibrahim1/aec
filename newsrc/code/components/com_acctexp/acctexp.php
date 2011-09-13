@@ -398,7 +398,7 @@ if ( !empty( $task ) ) {
 		case 'api':
 			$app		= aecGetParam( 'app', 0, true, array( 'word', 'string' ) );
 			$key		= aecGetParam( 'key', 0, true, array( 'word', 'string' ) );
-			$request	= aecGetParam( 'request', 0, true, array( 'string' ) );
+			$request	= aecGetParam( 'request' );
 
 			apiCall( $app, $key, $request );
 			break;
@@ -428,10 +428,18 @@ function apiCall( $app, $key, $request )
 {
 	global $aecConfig;
 
-	if ( isset( $aecConfig->cfg['customAppAuth'][$app] ) ) {
-		if ( $key == $aecConfig->cfg['customAppAuth'][$app] ) {
+	if ( empty( $aecConfig->cfg['apiapplist'] ) ) {
+		header("HTTP/1.0 401 Unauthorized"); die; // die, die
+	}
+
+	if ( isset( $aecConfig->cfg['apiapplist'][$app] ) ) {
+		if ( trim($key) == trim($aecConfig->cfg['apiapplist'][$app]) ) {
 			if ( empty( $request ) ) {
 				header( "HTTP/1.0 400 Bad Request" ); die;
+			}
+
+			if ( get_magic_quotes_gpc() ) {
+				$request = stripslashes( $request );
 			}
 
 			$req = json_decode( $request );
@@ -440,6 +448,12 @@ function apiCall( $app, $key, $request )
 				header( "HTTP/1.0 415 Unsupported Media Type" ); die;
 			}
 
+			if ( !is_array($req) ) {
+				$req = array( $req );
+			}
+
+			header( "HTTP/1.0 200 OK" );
+
 			$api = new aecAPI();
 
 			$return = array();
@@ -447,13 +461,15 @@ function apiCall( $app, $key, $request )
 				$api->load( $r );
 
 				$r = new stdClass();
-				$r->error	= null;
-				$r->result	= array( 'result' => false );
+				$r->response	= new stdClass();
+				$r->error		= null;
 
 				if ( empty( $api->error ) ) {
 					$api->resolve();
 
-					$r->result	= $api->result;
+					$r->response	= $api->response;
+				} else {
+					$r->response->result = false;
 				}
 
 				$r->error	= $api->error;
@@ -461,7 +477,9 @@ function apiCall( $app, $key, $request )
 				$return[] = $r;
 			}
 
-			header( "HTTP/1.0 200 OK" );
+			if ( count( $return ) == 1 ) {
+				$return = $return[0];
+			}
 
 			echo json_encode( $return ); die; // regular die
 		}

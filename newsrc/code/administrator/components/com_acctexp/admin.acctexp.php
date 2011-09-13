@@ -2102,7 +2102,7 @@ function editSettings( $option )
 	$params['breakon_mi_error']				= array( 'list_yesno', 0 );
 	$params['debugmode']					= array( 'list_yesno', 0 );
 	$params['email_default_admins']			= array( 'list_yesno', 1 );
-	$params['email_extra_admins']			= array( 'inputD', "" );
+	$params['email_extra_admins']			= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -2142,6 +2142,9 @@ function editSettings( $option )
 	$params['ssl_cainfo']					= array( 'inputC', '' );
 	$params['ssl_capath']					= array( 'inputC', '' );
 	$params['allow_invoice_unpublished_item']				= array( 'list_yesno', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_API') );
+	$params['apiapplist']					= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_UNINSTALL') );
 	$params['delete_tables']				= array( 'list_yesno', 0 );
@@ -2263,6 +2266,18 @@ function editSettings( $option )
 		}
 	}
 
+	if ( !empty( $aecConfig->cfg['apiapplist'] ) ) {
+		$string = "";
+
+		foreach ( $aecConfig->cfg['apiapplist'] as $app => $key ) {
+			$string .= $app . "=" . $key . "\n";
+		}
+
+		$aecConfig->cfg['apiapplist'] = $string;
+	} else {
+		$aecConfig->cfg['apiapplist'] = "";
+	}
+
 	$settings = new aecSettings ( 'cfg', 'general' );
 	$settingsparams = array_merge( $aecConfig->cfg, $ppsettings );
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
@@ -2298,12 +2313,32 @@ function saveSettings( $option, $return=0 )
 	unset( $_POST['task'] );
 	unset( $_POST['option'] );
 
-	$general_settings = array();
-	foreach ( $_POST as $name => $value ) {
-		$general_settings[$name] = $value;
+	$general_settings = $_POST;
+
+	if ( !empty( $general_settings['apiapplist'] ) ) {
+		$list = explode( "\n", $general_settings['apiapplist'] );
+
+		$array = array();
+		foreach ( $list as $item ) {
+			$li = explode( "=", $item, 2 );
+			
+			$k = $li[0];
+
+			if ( !empty( $li[1] ) ) {
+				$v = $li[1];
+			} else {
+				$v = AECToolbox::randomstring( 32, true, true );
+			}
+
+			$array[$k] = $v;
+		}
+
+		$general_settings['apiapplist'] = $array;
+	} else {
+		$general_settings['apiapplist'] = array();
 	}
 
-	$diff = $aecConfig->diffParams($general_settings, 'settings');
+	$diff = $aecConfig->diffParams( $general_settings, 'settings' );
 	$difference = '';
 
 	if ( is_array( $diff ) ) {
