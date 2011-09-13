@@ -395,15 +395,12 @@ if ( !empty( $task ) ) {
 			processNotification( $option, "paypal" );
 			break;
 
-		case 'auth':
+		case 'api':
 			$app		= aecGetParam( 'app', 0, true, array( 'word', 'string' ) );
 			$key		= aecGetParam( 'key', 0, true, array( 'word', 'string' ) );
-			$verbose	= aecGetParam( 'verbose', 0, true, array( 'word', 'int' ) );
+			$request	= aecGetParam( 'request', 0, true, array( 'string' ) );
 
-			$username	= aecGetParam( 'username', 0, true, array( 'badchars', 'string' ) );
-			$password	= aecGetParam( 'password', 0, true, array( 'badchars', 'string' ) );
-
-			customAppAuth( $app, $key, $verbose, $username, $password );
+			apiCall( $app, $key, $request );
 			break;
 
 		default:
@@ -427,40 +424,46 @@ if ( !empty( $task ) ) {
 	}
 }
 
-function customAppAuth( $app, $key, $verbose, $username, $password )
+function apiCall( $app, $key, $request )
 {
 	global $aecConfig;
 
 	if ( isset( $aecConfig->cfg['customAppAuth'][$app] ) ) {
 		if ( $key == $aecConfig->cfg['customAppAuth'][$app] ) {
-			if ( empty( $username ) ) {
-				header("HTTP/1.0 400 Bad Request"); die;
+			if ( empty( $request ) ) {
+				header( "HTTP/1.0 400 Bad Request" ); die;
 			}
 
-			$userid = AECfetchfromDB::UserIDfromUsername( $username );
+			$req = json_decode( $request );
+
+			if ( is_null( $request ) ) {
+				header( "HTTP/1.0 415 Unsupported Media Type" ); die;
+			}
+
+			$api = new aecAPI();
 
 			$return = array();
-			$return['authed'] = 'not_found';
+			foreach ( $req as $r ) {
+				$api->load( $r );
 
-			if ( empty( $userid ) ) {
-				$return['status'] = 'not_found';
-			} else {
-				$return['status'] = AECToolbox::VerifyUserID( $userid );
+				$r = new stdClass();
+				$r->error	= null;
+				$r->result	= array( 'result' => false );
 
-				$metaUser = new metaUser( $userid );
+				if ( empty( $api->error ) ) {
+					$api->resolve();
 
-				$return['expiration'] = $metaUser->objSubscription->expiration;
+					$r->result	= $api->result;
+				}
+
+				$r->error	= $api->error;
+
+				$return[] = $r;
 			}
 
-			if ( !empty( $req['verbose'] ) ) {
-				switch ( $return['status'] ) {
-					case 'ok':				$return['status_long'] = 'Account is fine.'; break;
-					case 'not_found':		$return['status_long'] = 'Account not found.'; break;
-					case 'expired':			$return['status_long'] = 'Account has expired.'; break;
-					case 'pending':			$return['status_long'] = 'Account is pending - awaiting payment for last invoice to clear.'; break;
-					case 'open_invoice':	$return['status_long'] = 'Account is pending - there is an open invoice waiting to be paid.'; break;
-					case 'hold':			$return['status_long'] = 'Account is on manual hold.'; break;
-			}
+			header( "HTTP/1.0 200 OK" );
+
+			echo json_encode( $return ); die; // regular die
 		}
 	}
 

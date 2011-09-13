@@ -5101,9 +5101,6 @@ function quicklookup( $option )
 
 	$search = $db->getEscaped( strtolower( $searcc ) );
 
-	$userid = 0;
-	$k = 0;
-
 	if ( strpos( $search, 'supercommand:' ) !== false ) {
 		$supercommand = new aecSuperCommand();
 
@@ -5140,64 +5137,26 @@ function quicklookup( $option )
 		return "I think you ought to know I'm feeling very depressed. (Something was wrong with your query.)";
 	}
 
-	// Try username and name
-	$queries[$k] = 'FROM #__users'
-				. ' WHERE LOWER( `username` ) LIKE \'%' . $search . '%\' OR LOWER( `name` ) LIKE \'%' . $search . '%\''
-				;
-	$qfields[$k] = 'id';
-	$k++;
+	$s = AECToolbox::searchUser( $search );
 
-	// If its not that, how about the user email?
-	$queries[$k] = 'FROM #__users'
-				. ' WHERE LOWER( `email` ) = \'' . $search . '\''
-				;
-	$qfields[$k] = 'id';
-	$k++;
+	if ( !empty( $s ) ) {
+		if ( is_array( $s ) ) {
+			$return = array();
+			foreach ( $s as $user ) {
+				$JTableUser = new JTableUser( $db );
+				$JTableUser->load( $user );
+				$userlink = '<a href="';
+				$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $JTableUser->id;
+				$userlink .= '">';
+				$userlink .= $JTableUser->name . ' (' . $JTableUser->username . ')';
+				$userlink .= '</a>';
 
-	// Try to find this as a userid
-	$queries[$k] = 'FROM #__users'
-				. ' WHERE `id` = \'' . $search . '\''
-				;
-	$qfields[$k] = 'id';
-	$k++;
-
-	// Or maybe its an invoice number?
-	$queries[$k] = 'FROM #__acctexp_invoices'
-				. ' WHERE LOWER( `invoice_number` ) = \'' . $search . '\''
-				. ' OR LOWER( `secondary_ident` ) = \'' . $search . '\''
-				;
-	$qfields[$k] = 'userid';
-	$k++;
-
-	foreach ( $queries as $qid => $base_query ) {
-		$query = 'SELECT count(*) ' . $base_query;
-		$db->setQuery( $query );
-		$existing = $db->loadResult();
-
-		if ( $existing ) {
-			$query = 'SELECT `' . $qfields[$qid] . '` ' . $base_query;
-			$db->setQuery( $query );
-
-			if ( $existing > 1 ) {
-				$users = $db->loadResultArray();
-
-				$return = array();
-				foreach ( $users as $user ) {
-					$JTableUser = new JTableUser( $db );
-					$JTableUser->load( $user );
-					$userlink = '<a href="';
-					$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $JTableUser->id;
-					$userlink .= '">';
-					$userlink .= $JTableUser->name . ' (' . $JTableUser->username . ')';
-					$userlink .= '</a>';
-
-					$return[] = $userlink;
-				}
-
-				return implode( ', ', $return );
-			} else {
-				return $db->loadResult();
+				$return[] = $userlink;
 			}
+
+			return implode( ', ', $return );
+		} else {
+			return $s;
 		}
 	}
 
