@@ -94,6 +94,10 @@ class processor_paypal_payflow_link extends POSTprocessor
 
 		foreach ( $post as $key => $value ) {
 			$value = urlencode( stripslashes( $value ) );
+
+			// Fix potential linebreaks in Address
+			$value = preg_replace('/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}',$value);
+
 			$req .= "&$key=$value";
 		}
 
