@@ -33,7 +33,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 
 aecLanguageHandler::loadList( $langlist );
 
-define( '_AEC_VERSION', '0.14.6gamma' );
+define( '_AEC_VERSION', '0.14.6omega' );
 define( '_AEC_REVISION', '3576' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
