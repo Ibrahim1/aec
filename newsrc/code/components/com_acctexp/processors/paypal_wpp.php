@@ -294,6 +294,8 @@ class processor_paypal_wpp extends XMLprocessor
 				$var['token']			= $request->int_var['params']['token'];
 				$var['PayerID']			= $request->int_var['params']['PayerID'];
 
+				$var['InvNum']				= $request->invoice->invoice_number;
+
 				$var['Method']			= 'DoExpressCheckoutPayment';
 
 				$xml = $this->arrayToNVP( $var, true );
@@ -306,8 +308,6 @@ class processor_paypal_wpp extends XMLprocessor
 					$var['Version']			= '58.0';
 					$var['token']			= $request->int_var['params']['token'];
 					$var['PayerID']			= $request->int_var['params']['PayerID'];
-
-					$var['ProfileReference']	= $request->invoice->invoice_number;
 
 					unset( $var['paymentAction'] );
 					unset( $var['IPaddress'] );
@@ -400,7 +400,12 @@ class processor_paypal_wpp extends XMLprocessor
 
 			$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=paypal_wppnotification', $this->info['secure'], true );
 			$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-			$var['InvNum']				= $request->invoice->invoice_number;
+
+			if ( is_array( $request->int_var['amount'] ) ) {
+				$var['ProfileReference']	= $request->invoice->invoice_number;
+			} else {
+				$var['InvNum']				= $request->invoice->invoice_number;
+			}
 		}
 
 		return $var;
@@ -653,6 +658,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		foreach ( $post as $key => $value ) {
 			$value = urlencode( stripslashes( $value ) );
+
 			$req .= "&$key=$value";
 		}
 
