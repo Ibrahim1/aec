@@ -198,9 +198,11 @@ class mi_raffle
 				$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
 			}
 
+			$recipients[] = $admin->email;
+
 			$subject = 'Raffle Drawing Results for ' . $app->getCfg( 'sitename' );
 
-			JUTility::sendMail( $adminEmail2, $adminEmail2, $admin->email, $subject, $colET );
+			JUTility::sendMail( $adminEmail2, $adminEmail2, $recipients, $subject, $colET );
 		}
 
 		$rafflelist->check();
