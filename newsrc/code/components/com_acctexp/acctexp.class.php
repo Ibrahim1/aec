@@ -18784,10 +18784,12 @@ class couponHandler
 		$cpl = array( 'bad_combinations', 'good_combinations', 'bad_combinations_cart', 'good_combinations_cart' );
 
 		foreach ( $cpl as $cpn ) {
+			$cmd = str_replace( "combinations", "combination", $cpn );
+
 			if ( strpos( $cpn, 'bad' ) !== false ) {
-				$cmd = str_replace( "bad", "restrict", $cpn );
+				$cmd = str_replace( "bad", "restrict", $cmd );
 			} else {
-				$cmd = str_replace( "good", "allow", $cpn );
+				$cmd = str_replace( "good", "allow", $cmd );
 			}
 
 			if ( !empty( $this->restrictions[$cmd] ) && !empty( $this->restrictions[$cpn] ) ) {
