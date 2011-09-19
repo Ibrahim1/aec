@@ -50,7 +50,7 @@ class mi_frontenduseraccess
 				$this->settings['group'] = array( $this->settings['group'] );
 			}
 		} else {
-			$this->settings['group'] = array();;
+			$this->settings['group'] = array();
 		}
 
 		if ( isset( $this->settings['group_exp'] ) ) {
@@ -61,11 +61,28 @@ class mi_frontenduseraccess
 			$this->settings['group_exp'] = array();
 		}
 
+		if ( isset( $this->settings['group_exp_remove'] ) ) {
+			if ( !is_array($this->settings['group_exp_remove'] ) ) {
+				$this->settings['group_exp_remove'] = array( $this->settings['group_exp_remove'] );
+			}
+		} else {
+			$this->settings['group_exp_remove'] = array();
+		}
 
 		if ( !empty( $this->settings['group'] ) ) {
 			$fua_groups = array();
 
 			foreach ( $this->settings['group'] as $temp ) {
+				$fua_groups[]->value = $temp;
+			}
+		} else {
+			$fua_groups	= '';
+		}
+
+		if ( !empty( $this->settings['group_remove'] ) ) {
+			$fua_groups = array();
+
+			foreach ( $this->settings['group_remove'] as $temp ) {
 				$fua_groups[]->value = $temp;
 			}
 		} else {
@@ -82,16 +99,29 @@ class mi_frontenduseraccess
 			$fua_groups_exp	= '';
 		}
 
+		if ( !empty( $this->settings['group_exp_remove'] ) ) {
+			$fua_groups_exp_remove = array();
+
+			foreach ( $this->settings['group_exp_remove'] as $temp ) {
+				$fua_groups_exp_remove[]->value = $temp;
+			}
+		} else {
+			$fua_groups_exp_remove	= '';
+		}
+
 		$settings = array();
 
 		$settings['lists']['group']		= JHTML::_('select.genericlist', $fuagroups, 'group[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups );
 		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $fuagroups, 'group_exp[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp );
+		$settings['lists']['group_exp_remove'] = JHTML::_('select.genericlist', $fuagroups, 'group_exp_remove[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp_remove );
 
 		$settings['set_group']			= array( 'list_yesno' );
 		$settings['group']				= array( 'list' );
+		$settings['group_remove']		= array( 'list' );
 		$settings['keep_groups']		= array( 'list_yesno' );
 		$settings['set_group_exp']		= array( 'list_yesno' );
 		$settings['group_exp']			= array( 'list' );
+		$settings['group_exp_remove']	= array( 'list', 'Remove From Group(s) (expiration)', 'Groups from which user needs to be removed when expiration action happens' );
 		$settings['keep_groups_exp']	= array( 'list_yesno' );
 		$settings['rebuild']			= array( 'list_yesno' );
 		$settings['remove']				= array( 'list_yesno' );
@@ -101,12 +131,12 @@ class mi_frontenduseraccess
 
 	function action( $request )
 	{
-		if ( !empty( $this->settings['set_group'] ) && !empty( $this->settings['group'] ) ) {
+		if ( !empty( $this->settings['set_group'] ) && ( !empty( $this->settings['group'] ) || !empty( $this->settings['group_remove'] ) ) ) {
 			if ( !isset( $this->settings['keep_groups'] ) ) {
 				$this->settings['keep_groups'] = false;
 			}
 
-			$this->update_fua_group( $request->metaUser->userid, $this->settings['group'], $this->settings['keep_groups'] );
+			$this->update_fua_group( $request->metaUser->userid, $this->settings['group'], $this->settings['group_remove'], $this->settings['keep_groups'] );
 		}
 
 		return true;
@@ -114,18 +144,18 @@ class mi_frontenduseraccess
 
 	function expiration_action( $request )
 	{
-		if ( !empty( $this->settings['set_group_exp'] ) && !empty( $this->settings['group_exp'] ) ) {
+		if ( !empty( $this->settings['set_group_exp'] ) && ( !empty( $this->settings['group_exp'] ) || !empty( $this->settings['group_exp_remove'] ) ) ) {
 			if ( !isset( $this->settings['keep_groups_exp'] ) ) {
 				$this->settings['keep_groups_exp'] = false;
 			}
 
-			$this->update_fua_group( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['keep_groups_exp'] );
+			$this->update_fua_group( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['group_exp_remove'], $this->settings['keep_groups_exp'] );
 		}
 
 		return true;
 	}
 
-	function update_fua_group( $user_id, $fua_group, $keep_groups )
+	function update_fua_group( $user_id, $fua_group, $remove_groups, $keep_groups )
 	{
 		$db = &JFactory::getDBO();
 
@@ -142,6 +172,10 @@ class mi_frontenduseraccess
 			$groups = array_unique( array_merge( $fua_group, $this->csv_to_array( $fua_user->group_id ) ) );
 		} else {
 			$groups = $fua_group;
+		}
+
+		if ( !empty( $groups ) && !empty( $remove_groups ) ) {
+			$groups = array_unique( array_diff( $groups, $remove_groups ) );
 		}
 
 		sort( $groups );
