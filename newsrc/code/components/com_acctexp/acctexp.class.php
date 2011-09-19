@@ -15500,7 +15500,7 @@ class AECToolbox
 		$metaUser = new metaUser( $userid );
 
 		if ( $metaUser->hasSubscription ) {
-			$metaUser->objSubscription->verifylogin( $metaUser->cmsUser->block, $metaUser );
+			return $metaUser->objSubscription->verifylogin( $metaUser->cmsUser->block, $metaUser );
 		} else {
 			global $aecConfig;
 
@@ -15571,6 +15571,8 @@ class AECToolbox
 
 			return $result;
 		} else {
+			global $aecConfig;
+
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
 					$db = &JFactory::getDBO();
