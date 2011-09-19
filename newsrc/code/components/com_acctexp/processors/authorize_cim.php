@@ -779,8 +779,6 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		$iFactory->loadItems();
 
-		$iFactory->applyCoupons();
-
 		$iFactory->loadItemTotal();
 
 		$var = $iFactory->invoice->getWorkingData( $iFactory );
