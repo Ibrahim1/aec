@@ -38,7 +38,7 @@ class plgSystemAECerrorhandler extends JPlugin
 		parent::__construct( $subject, $config );
 	}
 
-	function onAfterInitialise()
+	function onAfterRoute()
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
 			// Don't act when on backend
@@ -57,10 +57,17 @@ class plgSystemAECerrorhandler extends JPlugin
 	 */
 	function handleLoginRedirect()
 	{
+		$app	= JFactory::getApplication();
+
 		$uri	= &JFactory::getURI();
-		$task	= $uri->getVar( 'task' );
-		$option	= $uri->getVar( 'option' );
-		$view	= $uri->getVar( 'view' );
+
+		$router =& $app->getRouter();
+		$result = $router->parse($uri);
+
+		$task	= $router->getVar( 'task' );
+		$option	= $router->getVar( 'option' );
+		$view	= $router->getVar( 'view' );
+		$return = $router->getVar( 'return' );
 
 		if ( empty( $task ) ) {
 			$task	= JRequest::getVar( 'task', null );
@@ -74,12 +81,12 @@ class plgSystemAECerrorhandler extends JPlugin
 			$view	= JRequest::getVar( 'view', null );
 		}
 
-		if ( $return = JRequest::getVar( 'return', '', 'method', 'base64' ) )
-		{
+		if ( empty( $return ) ) {
+			$return = JRequest::getVar( 'return', '', 'method', 'base64' );
+
 			$return = base64_decode( $return );
 
-			if ( function_exists( 'JURI::isInternal' ) )
-			{
+			if ( function_exists( 'JURI::isInternal' ) ) {
 				if ( !JURI::isInternal( $return ) ) {
 					$return = '';
 				}
@@ -92,6 +99,8 @@ class plgSystemAECerrorhandler extends JPlugin
 					$return = '';
 				}
 			}
+		} else {
+			$return = base64_decode( $return );
 		}
 
 		if ( ( $option == 'com_user' ) && ( $view == 'login' ) && ( $return!='' ) )
@@ -101,7 +110,7 @@ class plgSystemAECerrorhandler extends JPlugin
 
 			$cr = array( 'com_content', 'com_mailto', 'com_newsfeeds', 'com_poll', 'com_weblinks' );
 
-			if ( in_array( $option, $cr ) ) {
+			if ( in_array( $option, $cr ) || empty( $option ) ) {
 				$error = new stdClass();
 				$error->code = 403;
 
