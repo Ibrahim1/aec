@@ -2324,13 +2324,15 @@ function saveSettings( $option, $return=0 )
 			
 			$k = $li[0];
 
-			if ( !empty( $li[1] ) ) {
-				$v = $li[1];
-			} else {
-				$v = AECToolbox::randomstring( 32, true, true );
-			}
+			if ( !empty( $k ) ) {
+				if ( !empty( $li[1] ) ) {
+					$v = $li[1];
+				} else {
+					$v = AECToolbox::randomstring( 32, true, true );
+				}
 
-			$array[$k] = $v;
+				$array[$k] = $v;
+			}
 		}
 
 		$general_settings['apiapplist'] = $array;
