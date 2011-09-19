@@ -61,6 +61,18 @@ class mi_ninjaboard
 			$settings['lists'][$si]	= JHTML::_( 'select.genericlist', $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
 		}
 
+		$sub = 0;
+		if ( isset( $this->settings['subsc_action'] ) ) {
+			$sub = $this->settings['subsc_action'];
+		}
+
+ 		$subs = array();
+		$subs[] = JHTML::_('select.option', 0, "Keep subscriptions" );
+		$subs[] = JHTML::_('select.option', 1, "Delete subscriptions" );
+		$subs[] = JHTML::_('select.option', 2, "Mute subscriptions" );
+
+		$settings['lists']['subsc_action']	= JHTML::_('select.genericlist', $subs, 'subsc_action', 'size="3"', 'value', 'text', $sub );
+
 		$settings['set_group']				= array( 'list_yesno' );
 		$settings['group']					= array( 'list' );
 		$settings['set_remove_group']		= array( 'list_yesno' );
@@ -72,6 +84,7 @@ class mi_ninjaboard
 		$settings['set_groups_exclude']		= array( 'list_yesno' );
 		$settings['groups_exclude']			= array( 'list' );
 		$settings['set_clear_groups']		= array( 'list_yesno' );
+		$settings['subsc_action']			= array( 'list' );
 
 		return $settings;
 	}
@@ -104,6 +117,12 @@ class mi_ninjaboard
 					));
 					$table->insert($row);
 				}
+			}
+		}
+
+		if ( !empty( $this->settings['subsc_action'] ) ) {
+			if ( $this->settings['subsc_action'] === 2 ) {
+				KFactory::get('com://site/ninjaboard.controller.person')->id($user->id)->read()->setData(array('notify_enabled' => true))->save();
 			}
 		}
 
@@ -149,6 +168,20 @@ class mi_ninjaboard
 						$table->insert($row);
 					}
 				}
+			}
+		}
+
+		if ( !empty( $this->settings['subsc_action'] ) ) {
+			if ( $this->settings['subsc_action'] === 1 ) {
+				$model	= KFactory::tmp('admin::com.ninjaboard.model.subscriptions');
+				$table  = $model->getTable();
+
+				$query = KFactory::tmp('lib.koowa.database.query');
+				$table->select(
+					$query->where('created_by', '=', $id)
+				)->delete();
+			} else {
+				KFactory::get('com://site/ninjaboard.controller.person')->id($user->id)->read()->setData(array('notify_enabled' => false))->save();
 			}
 		}
 
