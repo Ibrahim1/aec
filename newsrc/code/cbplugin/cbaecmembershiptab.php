@@ -33,7 +33,7 @@ class cbaecmembershipTab extends cbTabHandler
 	{
 		global $_CB_framework;
 
-		$_CB_framework->document->addHeadStyleSheet( '/components/com_comprofiler/plugin/user/plug_cbprofileaeceventlog/cbaeceventlog_' . $location . '_tab.css' );
+		$_CB_framework->document->addHeadStyleSheet( '/components/com_comprofiler/plugin/user/plug_aecsubscriptions/cbaecmembershiptab_' . $location . '_tab.css' );
 
 		if ( ( $user->id == $_CB_framework->myId() ) || in_array( $_CB_framework->myUserType(), array( "Administrator", "Super Administrator" ) ) ) {
 			return $this->displaySubscriptions( $tab, $user, $ui );
@@ -46,16 +46,6 @@ class cbaecmembershipTab extends cbTabHandler
 			return $html_return;
 		}
 
-	}
-
-	function displayNotAllowed( $notAuthMessage )
-	{
-		$html_return = '<div style="margin: 10px; padding 10px;">' 
-		. '<h4>Account Subscriptions</h4>'
-		. $notAuthMessage
-		. '</div>';
-
-		return $html_return;
 	}
 
 	function displaySubscriptions($tab,$user,$ui)

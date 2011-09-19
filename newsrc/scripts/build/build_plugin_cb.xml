@@ -7,6 +7,7 @@
 		<copy todir="${dir.tmp}">
 			<fileset dir="${dir.local}/cbplugin">
 				<include name="cb*" />
+				<include name="index.html" />
 			</fileset>
 		</copy>
 

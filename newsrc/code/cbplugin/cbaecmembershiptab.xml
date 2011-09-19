@@ -9,7 +9,7 @@
 	<version>1.4</version>
 	<description>This is a CB plugin handles the CB Tab which contains AEC Subscription data for the user.</description>
 	<files>
-		<filename plugin="cbaecmembershiptab">cbaecmembershiptab</filename>
+		<filename plugin="cbaecmembershiptab">cbaecmembershiptab.php</filename>
 		<filename>index.html</filename>
 		<filename>cbaecmembershiptab_frontend_tab.css</filename>
 		<filename>cbaecmembershiptab_admin_tab.css</filename>
@@ -19,7 +19,7 @@
 		<param name="notAuthMessage" type="textarea" label="Not Authorized Message" default="Account subscriptions can only be viewed by its respective owners. Open your own profile and instead of this message you will see your subscription details" rows="10" cols="50" description="Please enter the message that peopele will see in this tab when viewing other user's profile" />
 	</params>
 	<tabs>
-		<tab name="Subscriptions" description="This tab contains a list of user subscriptions" class="getcbaeceventlogTab" fields="0" position="cb_tabmain" displaytype="tab">
+		<tab name="Subscriptions" description="This tab contains a list of user subscriptions" class="cbaecmembershipTab" fields="0" position="cb_tabmain" displaytype="tab">
 		</tab>
 	</tabs>
 	<install>
