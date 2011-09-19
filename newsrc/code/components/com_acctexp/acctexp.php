@@ -525,7 +525,7 @@ function expired( $option, $userid, $expiration )
 
 			$expired = strtotime( $metaUser->objSubscription->expiration );
 
-			$trial = ( strcmp($metaUser->objSubscription->status, 'Trial' ) === 0 );
+			$trial = ( strcmp($metaUser->objSubscription->status, 'Trial') === 0 );
 			if ( !$trial ) {
 				$params = $metaUser->objSubscription->params;
 				if ( isset( $params['trialflag'])) {
@@ -568,15 +568,23 @@ function pending( $option, $userid )
 	$reason = "";
 
 	if ( $userid > 0 ) {
-		$objUser = new JTableUser( $db );
-		$objUser->load( $userid );
+		$metaUser = new metaUser( $userid );
+
+		if ( $metaUser->hasSubscription ) {
+			// Make sure this really is pending
+			if ( strcmp($metaUser->objSubscription->status, 'Pending') !== 0 ) {
+				return aecNotAuth();
+			}
+		}
 
 		$invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
 
 		if ( $invoices ) {
 			$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
+
 			$objInvoice = new Invoice( $db );
 			$objInvoice->loadInvoiceNumber( $invoice );
+
 			$params = $objInvoice->params;
 
 			if ( isset( $params['pending_reason'] ) ) {
@@ -600,7 +608,7 @@ function pending( $option, $userid )
 		$document->setTitle( html_entity_decode( JText::_('PENDING_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
 		$frontend = new HTML_frontEnd();
-		$frontend->pending( $option, $objUser, $invoice, $reason );
+		$frontend->pending( $option, $metaUser->cmsUser, $invoice, $reason );
 	} else {
 		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
 	}
