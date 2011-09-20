@@ -21,12 +21,12 @@ class cbaecmembershipTab extends cbTabHandler
 
 	function getDisplayTab( $tab, $user, $ui )
 	{
-		$this->getTab( $tab, $user, $ui, 'frontend' );
+		return $this->getTab( $tab, $user, $ui, 'frontend' );
 	}
 
 	function getEditTab($tab,$user,$ui)
 	{
-		$this->getTab( $tab, $user, $ui, 'admin' );
+		return $this->getTab( $tab, $user, $ui, 'admin' );
 	}
 
 	function getTab( $tab, $user, $ui, $location )
@@ -35,17 +35,7 @@ class cbaecmembershipTab extends cbTabHandler
 
 		$_CB_framework->document->addHeadStyleSheet( '/components/com_comprofiler/plugin/user/plug_aecsubscriptions/cbaecmembershiptab_' . $location . '_tab.css' );
 
-		if ( ( $user->id == $_CB_framework->myId() ) || in_array( $_CB_framework->myUserType(), array( "Administrator", "Super Administrator" ) ) ) {
-			return $this->displaySubscriptions( $tab, $user, $ui );
-		} else {
-			$html_return = '<div style="margin: 10px; padding 10px;">' 
-			. '<h4>Account Subscriptions</h4>'
-			. $this->params->get('notAuthMessage', 'Account subscriptions can only be viewed by its respective owners.<br/> Open your own profile and instead of this message you will see your subscription details/history')
-			. '</div>';
-
-			return $html_return;
-		}
-
+		return $this->displaySubscriptions( $tab, $user, $ui );
 	}
 
 	function displaySubscriptions($tab,$user,$ui)
