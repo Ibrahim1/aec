@@ -57,17 +57,12 @@ class plgSystemAECerrorhandler extends JPlugin
 	 */
 	function handleLoginRedirect()
 	{
-		$app	= JFactory::getApplication();
-
 		$uri	= &JFactory::getURI();
 
-		$router =& $app->getRouter();
-		$result = $router->parse($uri);
-
-		$task	= $router->getVar( 'task' );
-		$option	= $router->getVar( 'option' );
-		$view	= $router->getVar( 'view' );
-		$return = $router->getVar( 'return' );
+		$task	= $uri->getVar( 'task' );
+		$option	= $uri->getVar( 'option' );
+		$view	= $uri->getVar( 'view' );
+		$return = $uri->getVar( 'return' );
 
 		if ( empty( $task ) ) {
 			$task	= JRequest::getVar( 'task', null );
@@ -125,7 +120,7 @@ class plgSystemAECerrorhandler extends JPlugin
 		if ( $error->code == 403 ) {
 			$app = JFactory::getApplication();
 
-			$app->redirect( "index.php?option=com_acctexp&task=NotAllowed" );
+			$app->redirect( JURI::base() . 'index.php?option=com_acctexp&task=NotAllowed' );
 		} else {
 			JError::customErrorPage( $error );
 		}
