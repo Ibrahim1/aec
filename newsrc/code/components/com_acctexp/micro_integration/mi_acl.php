@@ -120,6 +120,11 @@ class mi_acl
 
 			if ( !empty( $add ) || !empty( $remove ) ) {
 				$this->instantGIDchange( $request->metaUser, $add, $remove );
+
+				if ( defined( 'JPATH_MANIFESTS' ) ) {
+					// The Otter isn't working!
+					$this->instantGIDchange( $request->metaUser, $add, $remove );
+				}
 			}
 		} elseif ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
 			

@@ -1699,16 +1699,18 @@ class aecACLhandler
 
 	function removeGIDs( $userid, $gids )
 	{
-		$db = &JFactory::getDBO();
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$db = &JFactory::getDBO();
 
-		foreach ( $gids as $gid ) {
-			$query = 'DELETE'
-					. ' FROM #__user_usergroup_map'
-					. ' WHERE `user_id` = \'' . ( (int) $userid ) . '\''
-					. ' AND `group_id` = \'' . ( (int) $gid ) . '\''
-					;
-			$db->setQuery( $query );
-			$db->query();
+			foreach ( $gids as $gid ) {
+				$query = 'DELETE'
+						. ' FROM #__user_usergroup_map'
+						. ' WHERE `user_id` = \'' . ( (int) $userid ) . '\''
+						. ' AND `group_id` = \'' . ( (int) $gid ) . '\''
+						;
+				$db->setQuery( $query );
+				$db->query();
+			}
 		}
 	}
 
@@ -2078,14 +2080,14 @@ class aecSessionHandler
 	function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
 	{
 		$user = &JFactory::getUser();
-
+print_r($user);
 		if ( !is_array( $gid ) && !empty( $gid ) ) {
 			$gid = array( $gid );
 		} elseif ( empty( $gid ) ) {
 			$gid = array();
 		}
 
-		if ( !is_array( $removegid ) ) {
+		if ( !is_array( $removegid ) && !empty( $removegid ) ) {
 			$removegid = array( $removegid );
 		}
 
@@ -2126,14 +2128,26 @@ class aecSessionHandler
 					$user->usertype	= $info[$gid[0]];
 				}
 			}
-		} elseif ( isset( $session->user ) ) {
-			if ( $userid == $user->id ) {
-				$ugs = $user->get('groups');
-			} else {
-				$ugs = array();
-			}
+		} elseif ( isset( $session['user'] ) ) {
+			$user = &JFactory::getUser();
 
 			$sgsids = JAccess::getGroupsByUser( $userid );
+
+			if ( !empty( $gid ) ) {
+				foreach ( $gid as $g ) {
+					if ( !in_array( $g, $sgsids ) ) {
+						$sgsids[] = $g;
+					}
+				}
+			}
+
+			if ( !empty( $removegid ) ) {
+				foreach ( $sgsids as $k => $g ) {
+					if ( in_array( $g, $removegid ) ) {
+						unset( $sgsids[$k] );
+					}
+				}
+			}
 
 			$db = &JFactory::getDBO();
 
@@ -2155,17 +2169,99 @@ class aecSessionHandler
 			if ( $userid == $user->id ) {
 				$user->set( 'groups', $sgs );
 				
-				$user->set( '_authLevels', JAccess::getAuthorisedViewLevels($userid) );
-				$user->set( '_authGroups', JAccess::getGroupsByUser($userid) );
+				$user->set( '_authLevels', aecSessionHandler::getAuthorisedViewLevels($userid) );
+				$user->set( '_authGroups', aecSessionHandler::getGroupsByUser($userid) );
 			}
 
 			$session['user']->set( 'groups', $sgs );
 
-			$session['user']->set( '_authLevels', JAccess::getAuthorisedViewLevels($userid) );
-			$session['user']->set( '_authGroups', JAccess::getGroupsByUser($userid) );
+			$session['user']->set( '_authLevels', aecSessionHandler::getAuthorisedViewLevels($userid) );
+			$session['user']->set( '_authGroups', aecSessionHandler::getGroupsByUser($userid) );
 		}
 
 		$this->putSession( $userid, $session, $gid[0], $info[$gid[0]] );
+	}
+
+	// The following two functions copied from joomla to circle around their hardcoded caching
+
+	function getGroupsByUser( $userId, $recursive=true )
+	{
+		$db	= JFactory::getDBO();
+
+		// Build the database query to get the rules for the asset.
+		$query	= $db->getQuery(true);
+		$query->select($recursive ? 'b.id' : 'a.id');
+		$query->from('#__user_usergroup_map AS map');
+		$query->where('map.user_id = '.(int) $userId);
+		$query->leftJoin('#__usergroups AS a ON a.id = map.group_id');
+
+		// If we want the rules cascading up to the global asset node we need a self-join.
+		if ($recursive) {
+			$query->leftJoin('#__usergroups AS b ON b.lft <= a.lft AND b.rgt >= a.rgt');
+		}
+
+		// Execute the query and load the rules from the result.
+		$db->setQuery($query);
+		$result	= $db->loadResultArray();
+
+		// Clean up any NULL or duplicate values, just in case
+		JArrayHelper::toInteger($result);
+
+		if (empty($result)) {
+			$result = array('1');
+		}
+		else {
+			$result = array_unique($result);
+		}
+
+		return $result;
+	}
+
+	public static function getAuthorisedViewLevels($userId)
+	{
+		// Get all groups that the user is mapped to recursively.
+		$groups = self::getGroupsByUser($userId);
+
+		// Only load the view levels once.
+		if (empty($viewLevels)) {
+			// Get a database object.
+			$db	= JFactory::getDBO();
+
+			// Build the base query.
+			$query	= $db->getQuery(true);
+			$query->select('id, rules');
+			$query->from('`#__viewlevels`');
+
+			// Set the query for execution.
+			$db->setQuery((string) $query);
+
+			// Build the view levels array.
+			foreach ($db->loadAssocList() as $level) {
+				$viewLevels[$level['id']] = (array) json_decode($level['rules']);
+			}
+		}
+
+		// Initialise the authorised array.
+		$authorised = array(1);
+
+		// Find the authorized levels.
+		foreach ($viewLevels as $level => $rule)
+		{
+			foreach ($rule as $id)
+			{
+				if (($id < 0) && (($id * -1) == $userId)) {
+					$authorised[] = $level;
+					break;
+				}
+				// Check to see if the group is mapped to the level.
+				elseif (($id >= 0) && in_array($id, $groups)) {
+					$authorised[] = $level;
+					break;
+				}
+			}
+		}
+
+		return $authorised;
 	}
 
 	function getSession( $userid )
@@ -2205,10 +2301,10 @@ class aecSessionHandler
 					;
 		} elseif ( isset( $data['user'] ) ) {
 			if ( empty( $gid ) ) {
-			$query = 'UPDATE #__session'
-					. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
-					. ' WHERE `userid` = \'' . (int) $userid . '\''
-					;
+				$query = 'UPDATE #__session'
+						. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
+						. ' WHERE `userid` = \'' . (int) $userid . '\''
+						;
 			} else {
 				$query = 'UPDATE #__session'
 						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
@@ -9389,7 +9485,7 @@ class InvoiceFactory
 
 		$exchange = $add = $silent = null;
 
-		$this->triggerMIs( '_invoice_creation', $exchange, $add, $silent );
+		$this->triggerMIs( 'invoice_creation', $exchange, $add, $silent );
 
 		// Delete TempToken - the data is now safe with the invoice
 		$temptoken = new aecTempToken( $db );
