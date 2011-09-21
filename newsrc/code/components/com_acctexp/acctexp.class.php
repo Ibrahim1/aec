@@ -2080,7 +2080,7 @@ class aecSessionHandler
 	function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
 	{
 		$user = &JFactory::getUser();
-print_r($user);
+
 		if ( !is_array( $gid ) && !empty( $gid ) ) {
 			$gid = array( $gid );
 		} elseif ( empty( $gid ) ) {

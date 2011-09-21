@@ -144,7 +144,7 @@ class mi_aecmodifycost
 	}
 	function relayAction( $request )
 	{
-		if ( !( ( $request->action == 'action' ) || ( $request->area == 'afteraction' ) ) ) {
+		if ( !( $request->area == 'afteraction' ) ) {
 			return null;
 		}
 
@@ -153,7 +153,7 @@ class mi_aecmodifycost
 		if ( empty( $option['mi'] ) ) {
 			return true;
 		}
-
+aecDebug("Found ".$option['mi']);
 		$db = &JFactory::getDBO();
 
 		$mi = new microIntegration( $db );
@@ -163,18 +163,16 @@ class mi_aecmodifycost
 		}
 
 		$mi->load( $option['mi'] );
+aecDebug("Calling on");aecDebug($mi);
+		if ( $mi->callIntegration() ) {
+			$exchange = $params = null;
+aecDebug("Calling RelayAction");
+			if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, 'action', $request->add, $params ) === false ) {
+				global $aecConfig;
 
-		if ( !$mi->callIntegration() ) {
-			continue;
-		}
-
-		$exchange = $params = null;
-
-		if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, $request->action, $request->add, $params ) === false ) {
-			global $aecConfig;
-
-			if ( $aecConfig->cfg['breakon_mi_error'] ) {
-				return false;
+				if ( $aecConfig->cfg['breakon_mi_error'] ) {
+					return false;
+				}
 			}
 		}
 
@@ -184,7 +182,7 @@ class mi_aecmodifycost
 	function getOption( $request )
 	{
 		$options = $this->getOptionList();
-
+aecDebug("Looking for ".$request->params['option']);
 		foreach ( $options as $option ) {
 			if ( $option['id'] == $request->params['option'] ) {
 				return $option;
