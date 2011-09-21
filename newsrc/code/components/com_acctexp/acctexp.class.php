@@ -11599,6 +11599,16 @@ class Invoice extends serialParamDBTable
 							$new_plan = new SubscriptionPlan( $db );
 							$new_plan->load( $c['id'] );
 
+							$restrictions = $new_plan->getRestrictionsArray();
+
+							if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) !== false ) {
+								if ( !ItemGroupHandler::checkParentRestrictions( $new_plan, 'item', $metaUser ) ) {
+									return false;
+								}
+							} else {
+								return false;
+							}
+
 							for ( $i=0; $i<$c['quantity']; $i++ ) {
 								$plans[] = $new_plan;
 							}
@@ -11610,6 +11620,16 @@ class Invoice extends serialParamDBTable
 				default:
 					$new_plan = new SubscriptionPlan( $db );
 					$new_plan->load( $this->usage );
+
+					$restrictions = $new_plan->getRestrictionsArray();
+
+					if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) !== false ) {
+						if ( !ItemGroupHandler::checkParentRestrictions( $new_plan, 'item', $metaUser ) ) {
+							return false;
+						}
+					} else {
+						return false;
+					}
 
 					$plans[] = $new_plan;
 					break;
