@@ -115,10 +115,21 @@ class processor_onebip extends POSTprocessor
 	{
 		$response = array();
 
-		$response['invoice']			= $post['invoice'];
+		if ( empty( $post ) ) {
+			$response['invoice']			= aecGetParam( 'invoice', '', true, array( 'word' ) );
 
-		$response['amount_currency']	= $post['currency'];
-		$response['amount_paid']		= $post['price'];
+			$response['amount_currency']	= aecGetParam( 'original_currency', '', true, array( 'word' ) );
+			$response['amount_paid']		= aecGetParam( 'original_price', '', true, array( 'word' ) );
+		} else {
+			$response['invoice']			= $post['invoice'];
+
+			$response['amount_currency']	= $post['currency'];
+			$response['amount_paid']		= $post['price'];
+		}
+
+		if ( !empty( $response['amount_paid'] ) ) {
+			$response['amount_paid'] = $response['amount_paid'] / 100;
+		}
 
 		return $response;
 	}
