@@ -36,10 +36,24 @@ class mi_amigos
 		return array( 'amigos_domain', 'amigos_curl' );
 	}
 
+	function invoice_creation( $request )
+	{
+		if ( !empty( $_REQUEST['amigosid'] ) ) {
+			$request->invoice->params['mi_amigos'] = $_REQUEST['amigosid'];
+			$request->invoice->storeload();
+		}
+	}
+
 	function action( $request )
 	{
-		if ( empty( $_REQUEST['amigosid'] ) ) {
-			return true;
+		if ( !empty( $request->invoice->params['mi_amigos'] ) ) {
+			$amigosid = $request->invoice->params['mi_amigos'];
+		} else {
+			if ( empty( $_REQUEST['amigosid'] ) ) {
+				return true;
+			} else {
+				$amigosid = $_REQUEST['amigosid'];
+			}
 		}
 
 		$domain = $this->settings['amigos_domain'];
@@ -56,7 +70,7 @@ class mi_amigos
 		$array = array();
 		$array["option"]				= "com_amigos";
 		$array["task"]					= "sale";
-		$array["amigos_id"]				= $_REQUEST['amigosid'];
+		$array["amigos_id"]				= $amigosid;
 		$array["amigos_ordertype"]		= 'com_acctexp';
 		$array["amigos_orderid"]		= $request->invoice->invoice_number;
 		$array["amigos_orderamount"]	= $request->invoice->amount;
@@ -64,7 +78,7 @@ class mi_amigos
 
 		$parts = array();
 		foreach ( $array as $k => $v ) {
-			$parts .= $k . "=" . $v;
+			$parts[] = $k . "=" . $v;
 		}
 
 		$url = JURI::root() . 'index.php?' . implode( '&', $parts );
