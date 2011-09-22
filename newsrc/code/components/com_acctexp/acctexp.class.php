@@ -21015,7 +21015,75 @@ class aecAPI
 		$authenticate = JAuthentication::getInstance();
 		$response	= $authenticate->authenticate($credentials, array());
 
-		$this->response = array( 'result' => ( $response->status === JAUTHENTICATE_STATUS_SUCCESS ) );
+		$this->response->result = ( $response->status === JAUTHENTICATE_STATUS_SUCCESS );
+	}
+
+	function actionRestrictionCheck()
+	{
+		$db = &JFactory::getDBO();
+
+		$this->response->result = false;
+
+		if ( !empty( $this->request->details->plan ) ) {
+			$plan = new SubscriptionPlan( $db );
+			$plan->load( $this->request->details->plan );
+
+			if ( $plan->id != $this->request->details->plan ) {
+				$this->error = 'could not find plan to check restrictions for';
+
+				return;
+			}
+
+			$restrictions = $plan->getRestrictionsArray();
+
+			if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
+				if ( !ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
+					$this->error = 'user is denied permission - plans parent group is restricted from this user';
+				}
+			} else {
+				$this->error = 'user is denied permission - plan is restricted from this user';
+			}
+			
+			unset( $this->request->details->plan );
+		}
+
+		if ( !empty( $this->request->details->group ) ) {
+			$group = new ItemGroup( $db );
+			$group->load( $this->request->details->group );
+
+			if ( $group->id != $this->request->details->group ) {
+				$this->error = 'could not find group to check restrictions for';
+
+				return;
+			}
+
+			$restrictions = $group->getRestrictionsArray();
+
+			if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
+				if ( !ItemGroupHandler::checkParentRestrictions( $group, 'group', $this->metaUser ) ) {
+					$this->error = 'user is denied permission - groups parent group is restricted from this user';
+				}
+			} else {
+				$this->error = 'user is denied permission - group is restricted from this user';
+			}
+			
+			unset( $this->request->details->group );
+		}
+
+
+		if ( !empty( $this->request->details ) ) {
+			$re = get_object_vars( $this->request->details );
+
+			$restrictions = aecRestrictionHelper::getRestrictionsArray( $re );
+
+			if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) === false ) {
+				$this->error = 'user is denied permission - at least one restriction result was negative';
+			}
+		}
+
+		if ( empty( $this->error ) ) {
+			$this->response->result = true;
+		}
 	}
 }
 
