@@ -3,9 +3,9 @@ var mootabs = new Class({
 	initialize: function(element, options) {
 		this.options = Object.extend({
 			width:				'96%',
-			height:				'130px',
+			height:				'210px',
 			changeTransition:	Fx.Transitions.Quint.easeOut,
-			duration:			500,
+			duration:			100,
 			mouseOverClass:		'active',
 			activateOnLoad:		'first',
 			useAjax: 			false,

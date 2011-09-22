@@ -6180,7 +6180,7 @@ class aecHTML
 				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="2" maxlength="10" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
 				break;
 			case "inputC":
-				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="30" value="' . $value . '" title="' . $row[2] . '" class=""/>' . $sx;
+				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="30" value="' . $value . '" title="' . $row[2] . '"/>' . $sx;
 				break;
 			case "inputD":
 				$return .= '<textarea align="left" cols="60" rows="5" id="' . $name . '" name="' . $name . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' form-validate' : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $value . '</textarea>' . $sx;
@@ -6273,7 +6273,7 @@ class aecHTML
 				break;
 		}
 
-		if ( strpos( $return, ($table ? '<tr><td class="cleft">' : '<p>') ) !== false ) {
+		if ( strpos( $return, ($table ? '<tr class="aec_formrow"><td class="cleft">' : '<p>') ) !== false ) {
 			$return .= $table ? '</td></tr>' : '</p>';
 		}
 
@@ -7662,11 +7662,11 @@ class SubscriptionPlan extends serialParamDBTable
 			unset( $params['lists'] );
 
 			if ( !empty( $params ) ) {
-			$settings = new aecSettings ( 'mi', 'frontend_forms' );
-			$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
+				$settings = new aecSettings ( 'mi', 'frontend_forms' );
+				$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
 
-			$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-			return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
+				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+				return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
 			} else {
 				return null;
 			}
