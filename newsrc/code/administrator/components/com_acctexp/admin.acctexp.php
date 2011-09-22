@@ -971,7 +971,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 	// get available plans
 	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
-	$lists['assignto_plan'] = JHTML::_('select.genericlist', $available_plans, 'assignto_plan', 'size="5"', 'value', 'text', 0 );
+	$lists['assignto_plan'] = JHTML::_('select.genericlist', $available_plans, 'assignto_plan[]', 'size="5" multiple="multiple"', 'value', 'text', 0 );
 
 	$userMIs = $metaUser->getUserMIs();
 
@@ -1048,18 +1048,20 @@ function saveUser( $option, $apply=0 )
 		$metaUser->focusSubscription->makePrimary();
 	}
 
-	if ( !empty( $post['assignto_plan'] ) ) {
-		$plan = new SubscriptionPlan( $db );
-		$plan->load( $post['assignto_plan'] );
+	if ( !empty( $post['assignto_plan'] ) && !is_array( $post['assignto_plan'] ) ) {
+		foreach ( $post['assignto_plan'] as $assign_planid ) {
+			$plan = new SubscriptionPlan( $db );
+			$plan->load( $assign_planid );
 
-		$metaUser->establishFocus( $plan );
+			$metaUser->establishFocus( $plan );
 
-		$metaUser->focusSubscription->applyUsage( $post['assignto_plan'], 'none', 1 );
+			$metaUser->focusSubscription->applyUsage( $assign_planid, 'none', 1 );
 
-		// We have to reload the metaUser object because of the changes
-		$metaUser = new metaUser( $post['userid'] );
+			// We have to reload the metaUser object because of the changes
+			$metaUser = new metaUser( $post['userid'] );
 
-		$metaUser->hasSubscription = true;
+			$metaUser->hasSubscription = true;
+		}
 	}
 
 	$ck_lifetime = aecGetParam( 'ck_lifetime', 'off' );
