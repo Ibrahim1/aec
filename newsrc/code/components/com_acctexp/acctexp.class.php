@@ -20997,7 +20997,7 @@ class aecAPI
 
 	function actionAuth()
 	{
-		if ( empty( $this->request_user->username ) || empty( $this->request_user->password ) ) {
+		if ( empty( $this->request->user->username ) || empty( $this->request->user->password ) ) {
 			$this->error = 'must provide username and password to authenticate';
 
 			$this->response->result =  false;
@@ -21006,8 +21006,8 @@ class aecAPI
 		}
 
 		$credentials = array();
-		$credentials['username'] = $this->request_user->username;
-		$credentials['password'] = $this->request_user->password;
+		$credentials['username'] = $this->request->user->username;
+		$credentials['password'] = $this->request->user->password;
 
 		// Get the global JAuthentication object.
 		jimport('joomla.user.authentication');
