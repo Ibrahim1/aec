@@ -136,7 +136,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			foreach ( $udata as $authvar => $aecvar ) {
 				if ( !empty( $post[$aecvar] ) ) {
-					$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
+					$cim->setParameter( $authvar, trim( preg_replace( '`[\<|\>|\&]`Di', '', $post[$aecvar] ) ) );
 				}
 			}
 
@@ -201,7 +201,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 				foreach ( $udata as $authvar => $aecvar ) {
 					if ( !empty( $post[$aecvar] ) ) {
-						$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
+						$cim->setParameter( $authvar, trim( preg_replace( '`[\<|\>|\&]`Di', '', $post[$aecvar] ) ) );
 					}
 				}
 
@@ -269,7 +269,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			foreach ( $udata as $authvar => $aecvar ) {
 				if ( !empty( $post[$aecvar] ) ) {
-					$cim->setParameter( $authvar, trim( $post[$aecvar] ) );
+					$cim->setParameter( $authvar, trim( preg_replace( '`[\<|\>|\&]`Di', '', $post[$aecvar] ) ) );
 				}
 			}
 
@@ -491,7 +491,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		foreach ( $basicdata as $key => $value ) {
-			$cim->setParameter( $key, $value );
+			$cim->setParameter( $key, preg_replace( '`[\<|\>|\&]`Di', '', $value ) );
 		}
 
 		if ( !$this->settings['dedicatedShipping'] || empty( $ppParams ) ) {
@@ -540,7 +540,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		foreach ( $udata as $authvar => $aecvar ) {
 			if ( !empty( $request->int_var['params'][$aecvar] ) ) {
-				$cim->setParameter( $authvar, trim( $request->int_var['params'][$aecvar] ) );
+				$cim->setParameter( $authvar, trim( preg_replace( '`[\<|\>|\&]`Di', '', $request->int_var['params'][$aecvar] ) ) );
 			}
 		}
 
@@ -639,7 +639,7 @@ class processor_authorize_cim extends PROFILEprocessor
 				$cim->setParameter( 'refId',			$request->invoice->id );
 			}
 			
-			$cim->setParameter( 'order_description',	AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) );
+			$cim->setParameter( 'order_description',	preg_replace( '`[\<|\>|\&]`Di', '', AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) ) );
 
 			$cim->setParameter( 'order_invoiceNumber',	$request->invoice->invoice_number);
 			$cim->setParameter( 'merchantCustomerId',	$request->invoice->userid );
