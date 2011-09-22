@@ -48,7 +48,7 @@ class plgUserAECuser extends JPlugin
 	 * @param	boolean		true if user was succesfully stored in the database
 	 * @param	string		message
 	 */
-	function onAfterStoreUser($user, $isnew, $succes, $msg)
+	function onBeforeStoreUser($user, $isnew, $succes, $msg)
 	{
 		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );

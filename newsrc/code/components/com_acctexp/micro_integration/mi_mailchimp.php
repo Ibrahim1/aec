@@ -11,15 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-define('MI_MI_MAILCHIMP_LIST_UNSUB_NAME', 'Unsubscribe from list');
-define('MI_MI_MAILCHIMP_LIST_EXPUNSUB_NAME', 'Unsubscribe from list (expiration)');
-define('_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_NAME', 'Account ID stuff');
-define('_MI_MI_MAILCHIMP_ACCOUNT_ID_NAME_DESC', 'Account ID stuff description');
-define('_AEC_MI_NAME_MAILCHIMP', 'MI for synchronising users with Mailchimp');
-define('_AEC_MI_DESC_MAILCHIMP', 'Allows synchronising firstname, lastname, email, userid, username with Mailchimp'); 
-define( 'MI_MI_MAILCHIMP_COUNTRY_NAME','Country');
-define( 'MI_MI_MAILCHIMP_COUNTRY_DESC','Country merge var (COUNTRY), taken from Jomsocial');
-
 class mi_mailchimp
 {
 	function Info()
@@ -62,13 +53,22 @@ class mi_mailchimp
 		$settings['account_name']	= array( 'inputC' );
 		$settings['account_id']		= array( 'inputC' );
 
-		$settings['lists']['list']		= JHTML::_( 'select.genericlist', $li, 'list', 'size="4"', 'value', 'text', $this->settings['list'] );
-		$settings['lists']['list_exp']	= JHTML::_( 'select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp'] );
+		$settings['custom_details']	= array( 'inputD' );
+
+		$settings['lists']['list']				= JHTML::_( 'select.genericlist', $li, 'list', 'size="4"', 'value', 'text', $this->settings['list'] );
+		$settings['lists']['list_unsub']		= JHTML::_( 'select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_unsub'] );
+		$settings['lists']['list_exp']			= JHTML::_( 'select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp'] );
+		$settings['lists']['list_exp_unsub']	= JHTML::_( 'select.genericlist', $li, 'list_exp_unsub', 'size="4"', 'value', 'text', $this->settings['list_exp_unsub'] );
 
 		$settings['list']			= array( 'list' );
+		$settings['list_unsub']		= array( 'list' );
 		$settings['list_exp']		= array( 'list' );
+		$settings['list_exp_unsub']	= array( 'list' );
 		$settings['user_checkbox']	= array( 'list_yesno' );
 		$settings['custominfo']		= array( 'inputD' );
+
+		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}
@@ -146,18 +146,22 @@ class mi_mailchimp
 
 		$MCAPI = new MCAPI( $this->settings['api_key'] );
 
-		$is_allowed = false;
+		$name = $request->metaUser->explodeName();
 
-		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsUser->email);
+		$merge_vars = array( 'FNAME' => $name['first'], 'LNAME' => $name['last'] );
 
-		if ( empty( $mcuser['id'] ) && $is_allowed ) {
-			$name = $request->metaUser->explodeName();
+		$merge_vars = processor::customParams( $this->settings['custom_details'], $merge_vars, $request );
 
-			$merge_vars = array( 'FNAME' => $name['first'], 'LNAME' => $name['last'] );
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsUser->email );
 
+		if ( empty( $mcuser['id'] ) ) {
 			$result = $MCAPI->listSubscribe( $this->settings['list_exp'], $request->metaUser->cmsUser->email, $merge_vars );
+		}
 
-			$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp'], $request->metaUser->cmsUser->email);
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_exp_unsub'], $request->metaUser->cmsUser->email );
+
+		if ( !empty( $mcuser['id'] ) ) {
+			$result = $MCAPI->listUnsubscribe( $this->settings['list_exp_unsub'], $request->metaUser->cmsUser->email, false, false, false);
 		}
 	}
 
@@ -177,82 +181,53 @@ class mi_mailchimp
 			$is_allowed = true;
 		}
 
-		$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsUser->email);
+		$name = $request->metaUser->explodeName();
+
+		$merge_vars = array( 'FNAME' => $name['first'], 'LNAME' => $name['last'] );
+
+		$merge_vars = processor::customParams( $this->settings['custom_details'], $merge_vars, $request );
+
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsUser->email );
 
 		if ( empty( $mcuser['id'] ) && $is_allowed ) {
-			$name = $request->metaUser->explodeName();
-
-			$merge_vars = array( 'FNAME' => $name['first'], 'LNAME' => $name['last'] );
-
 			$result = $MCAPI->listSubscribe( $this->settings['list'], $request->metaUser->cmsUser->email, $merge_vars );
+		}
 
-			$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->metaUser->cmsUser->email);
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list_unsub'], $request->metaUser->cmsUser->email );
+
+		if ( !empty( $mcuser['id'] ) ) {
+			$result = $MCAPI->listUnsubscribe( $this->settings['list_unsub'], $request->metaUser->cmsUser->email, false, false, false);
 		}
 	}
 
-    function on_userchange_action( $request )
-    {
+	function on_userchange_action( $request )
+	{
 		$MCAPI = new MCAPI( $this->settings['api_key'] );
-        $email = $request->row->email;
-    
-        $mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $email);
-        
-        $request->metaUser = new metaUser($request->row->id);
-        
-        $country = AECToolbox::rewriteEngineRQ( $this->settings['country' . $request->area], $request );
-        
-        if($mcuser['id'] && ($request->trace == 'user' || $request->trace == 'adminuser')) 
-        {
-            // if the name was submitted in the last request, we can use that name.  Otherwise, use the current name
-            if($request->post['name'])
-                $name = $this->explodeName($request->post['name']);
-            else
-                $name = $request->metaUser->explodeName();
-            
-            $merge_vars = array (   'FNAME' => $name['first'], 
-                                    'LNAME' => $name['last'], 
-                                    'EMAIL' => $request->post['email'], 
-                                    'USERNAME' => $request->metaUser->cmsUser->username,
-                                    'USERID' => $request->metaUser->cmsUser->id,
-                                    'COUNTRY' => $country,
-                                    'EXPIREDATE' => $request->metaUser->focusSubscription->expiration
-                                    );                                   
 
-            $result = $MCAPI->listUpdateMember( $this->settings['list'], $email, $merge_vars, '', false);            
-            $mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $request->post['email']);
-        }
-    }
-    
-    function explodeName( $name )
-    {
-        $return = array();
-        $return['first_first']    = "";
-        $return['first']        = "";
-        $return['last']            = "";
+		$email = $request->row->email;
 
-        // Explode Name
-        if ( !empty( $name ) ) {
-            if ( is_array( $name ) ) {
-                $namearray    = $name;
-            } else {
-                $namearray    = explode( " ", $name );
-            }
+		$mcuser = $MCAPI->listMemberInfo( $this->settings['list'], $email );
 
-            $return['first_first']    = $namearray[0];
-            $maxname                = count($namearray) - 1;
-            $return['last']            = $namearray[$maxname];
+		$request->metaUser = new metaUser( $request->row->id );
 
-            unset( $namearray[$maxname] );
+		$country = AECToolbox::rewriteEngineRQ( $this->settings['country' . $request->area], $request );
 
-            $return['first']            = implode( ' ', $namearray );
+		if ( $mcuser['id'] && ($request->trace == 'user' || $request->trace == 'adminuser') ) {
+			// if the name was submitted in the last request, we can use that name.  Otherwise, use the current name
+			if ( $request->post['name'] ) {
+				$name = metaUser::_explodeName( $request->post['name'] );
+			} else {
+				$name = $request->metaUser->explodeName();
+			}
 
-            if ( empty( $return['first'] ) ) {
-                $return['first'] = $return['first_first'];
-            }
-        }
+			$merge_vars = array( 'FNAME' => $name['first'], 'LNAME' => $name['last'] );
 
-        return $return;
-    }    
+			$merge_vars = processor::customParams( $this->settings['custom_details'], $merge_vars, $request );
+
+			$result = $MCAPI->listUpdateMember( $this->settings['list'], $email, $merge_vars, '', false );			
+		}
+	}
+
 }
 
 // Official Mailchimp API from http://www.mailchimp.com/api/downloads/
