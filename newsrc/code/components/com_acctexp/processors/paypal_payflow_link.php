@@ -93,16 +93,13 @@ class processor_paypal_payflow_link extends POSTprocessor
 		}
 
 		foreach ( $post as $key => $value ) {
-			$value = urlencode( stripslashes( $value ) );
+			$req .= "&$key=";
 
-			// Fix potential linebreaks in Address
-			$value = preg_replace('/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}',$value);
+			$value = preg_replace( '/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}', $value );// linebreak fix
 
-			$req .= "&$key=$value";
+			$req .= urlencode( stripslashes( $value ) );
 		}
 
-		$res = null;
-		// try to use fsockopen. some hosting systems disable fsockopen (godaddy.com)
 		$res = $this->transmitRequest( $ppurl, $path, $req );
 
 		$response['fullresponse']['paypal_verification'] = $res;

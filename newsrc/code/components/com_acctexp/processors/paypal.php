@@ -208,12 +208,11 @@ class processor_paypal extends POSTprocessor
 		}
 
 		foreach ( $post as $key => $value ) {
-			$value = urlencode( stripslashes( $value ) );
+			$req .= "&$key=";
 
-			// Fix potential linebreaks in Address
-			$value = preg_replace('/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}',$value);
+			$value = preg_replace( '/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}', $value );// linebreak fix
 
-			$req .= "&$key=$value";
+			$req .= urlencode( stripslashes( $value ) );
 		}
 
 		$res = $this->transmitRequest( $ppurl, $path, $req );
