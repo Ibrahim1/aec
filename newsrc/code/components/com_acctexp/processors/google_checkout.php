@@ -20,7 +20,7 @@ class processor_google_checkout extends XMLprocessor
 		$info['longname']				= JText::_('CFG_GOOGLE_CHECKOUT_LONGNAME');
 		$info['statement']				= JText::_('CFG_GOOGLE_CHECKOUT_STATEMENT');
 		$info['description']			= JText::_('CFG_GOOGLE_CHECKOUT_DESCRIPTION');
-		$info['currencies']				= "USD,GBP"; // only USD and GBP are accepted by Google Checkout
+		$info['currencies']				= "USD,GBP";
 		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['notify_trail_thanks']	= true;
 		$info['recurring']				= 2;
