@@ -43,7 +43,7 @@ class HTML_myCommon
 				</td>
 				<td align="center">
 					<div align="center" class="smallgrey">
-						<p><strong>Account Expiration Control</strong> Component<br />Version <?php echo _AEC_VERSION ?>, Revision <?php echo _AEC_REVISION ?><br />
+						<p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION ); ?>, Revision <?php echo _AEC_REVISION ?><br />
 					</div>
 					<div align="center">
 						<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
@@ -882,7 +882,7 @@ class HTML_AcctExp
 					<br />
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
-					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo _AEC_VERSION; ?>, Revision <?php echo _AEC_REVISION ?></p>
+					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
 						<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 						<div style="margin: 0 auto;text-align:center;">
 							<a href="http://www.valanx.org"> <img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx" /></a>
@@ -952,7 +952,7 @@ class HTML_AcctExp
 				<br />
 				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
 				<br /><br />
-				<p><strong>Account Expiration Control</strong> Component - Version <?php echo _AEC_VERSION; ?></p>
+				<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION ); ?></p>
 				<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 				<div style="margin: 0 auto;text-align:center;">
 					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
