@@ -315,7 +315,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $return;
 	}
 
-	function checkoutform( $request, $cim=null, $nobill=false, $ppParams=false )
+	function checkoutform( $request, $cim=null, $nobill=false, $ppParams=false, $updated=false )
 	{
 		$var = array();
 		$hascim = false;
@@ -354,6 +354,16 @@ class processor_authorize_cim extends PROFILEprocessor
 			$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
 			$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
 			$document->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
+
+			if ( !empty( $vcontent ) ) {
+				if ( !empty( $updated ) ) {
+					$msg = JText::_('AEC_CCFORM_UPDATE2_DESC');
+				} else {
+					$msg = JText::_('AEC_CCFORM_UPDATE_DESC');
+				}
+
+				$var['params']['billUpdateInfo'] = array( 'p', JText::_('AEC_CCFORM_UPDATE_NAME'), $msg, '' );
+			}
 
 			if ( $this->settings['noechecks'] ) {
 				$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
