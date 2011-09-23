@@ -16289,6 +16289,11 @@ class AECToolbox
 
 	function computeExpiration( $value, $unit, $timestamp )
 	{
+		return date( 'Y-m-d H:i:s', AECToolbox::offsetTime( $value, $unit, $timestamp ) );
+	}
+
+	function offsetTime( $value, $unit, $timestamp )
+	{
 		$sign = strpos( $value, '-' ) ? '-' : '+';
 
 		switch ( $unit ) {
@@ -16309,8 +16314,7 @@ class AECToolbox
 				break;
 		}
 
-		$timestamp = strtotime( $add, $timestamp );
-		return date( 'Y-m-d H:i:s', $timestamp );
+		return strtotime( $add, $timestamp );
 	}
 
 	function cleanPOST( $post, $safe=true )
