@@ -111,13 +111,21 @@ class processor_paypal_wpp extends XMLprocessor
 		$updated = null;
 
 		if ( !empty( $billfirstname ) && !empty( $billcardnumber ) && ( strpos( $billcardnumber, 'X' ) === false ) ) {
+			$var['Method']				= 'GetRecurringPaymentsProfileDetails';
+			$var['Profileid']			= $profileid;
+
+			$vars = $this->ProfileRequest( $request, $profileid, $var );
+
 			$var['Method']					= 'UpdateRecurringPaymentsProfile';
 			$var['Profileid']				= $profileid;
 
-			$var['CreditCardType']			= aecGetParam( 'cardType' );
+			$var['CreditCardType']			= $this->getCCType( aecGetParam( 'cardType' ) );
 			$var['Acct']					= aecGetParam( 'cardNumber' );
 			$var['expDate']					= str_pad( aecGetParam( 'expirationMonth' ), 2, '0', STR_PAD_LEFT ) . aecGetParam( 'expirationYear' );
 			$var['cvv2']					= aecGetParam( 'cardVV2' );
+
+			$var['amt']						= $vars['AMT'];
+			$var['currencycode']			= $vars['CURRENCYCODE'];
 
 			$udata = array( 'firstname' => 'billFirstName', 'lastname' => 'billLastName', 'street' => 'billAddress', 'street2' => 'billAddress2',
 							'city' => 'billCity', 'state' => 'billState', 'zip' => 'billZip', 'country' => 'billCountry'
@@ -352,6 +360,17 @@ class processor_paypal_wpp extends XMLprocessor
 		return $this->arrayToNVP( $var, true );
 	}
 
+	function getCCType( $type )
+	{
+		switch ( strtolower( $type ) ) {
+			default: case 'mastercard': return 'MasterCard';
+			case 'visa': return 'Visa';
+			case 'discover': return 'Discover';
+			case 'amex': return 'Amex';
+			case 'maestro': return 'Maestro';
+		}
+	}
+
 	function getPayPalVars( $request, $regular=true, $payment=true )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
@@ -376,7 +395,7 @@ class processor_paypal_wpp extends XMLprocessor
 		if ( $regular ) {
 			$var['firstName']			= trim( $request->int_var['params']['billFirstName'] );
 			$var['lastName']			= trim( $request->int_var['params']['billLastName'] );
-			$var['creditCardType']		= $request->int_var['params']['cardType'];
+			$var['creditCardType']		= $this->getCCType( $request->int_var['params']['cardType'] );
 			$var['acct']				= $request->int_var['params']['cardNumber'];
 			$var['expDate']				= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ).$request->int_var['params']['expirationYear'];
 
@@ -596,7 +615,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function ProfileRequest( $request, $profileid, $var )
 	{
-		$var['Version']				= '50.0';
+		$var['Version']				= '58.0';
 		$var['user']				= $this->settings['api_user'];
 		$var['pwd']					= $this->settings['api_password'];
 		$var['signature']			= $this->settings['signature'];
