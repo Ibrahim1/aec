@@ -249,7 +249,6 @@ class processor_paypal_wpp extends XMLprocessor
 				$var = $this->getPayPalVars( $request, false );
 
 				$var['Method']			= 'SetExpressCheckout';
-				$var['Version']			= '58.0';
 				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
 				$var['CancelUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', $this->info['secure'], true );
 
@@ -286,7 +285,6 @@ class processor_paypal_wpp extends XMLprocessor
 				// The user has already returned from Paypal - finish the deal
 				$var = $this->getPayPalVars( $request, false, false );
 
-				$var['Version']			= '58.0';
 				$var['token']			= $request->int_var['params']['token'];
 				$var['PayerID']			= $request->int_var['params']['PayerID'];
 
@@ -298,7 +296,6 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$var = $this->getPayPalVars( $request, false );
 
-				$var['Version']			= '58.0';
 				$var['token']			= $request->int_var['params']['token'];
 				$var['PayerID']			= $request->int_var['params']['PayerID'];
 
@@ -313,7 +310,6 @@ class processor_paypal_wpp extends XMLprocessor
 				if ( is_array( $request->int_var['amount'] ) ) {
 					$var = $this->getPayPalVars( $request, false, true, true );
 
-					$var['Version']			= '58.0';
 					$var['token']			= $request->int_var['params']['token'];
 					$var['PayerID']			= $request->int_var['params']['PayerID'];
 
@@ -379,11 +375,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$var['Method']			= 'DoDirectPayment';
 		}
 
-		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['Version']			= '50.0';
-		} else {
-			$var['Version']			= '3.2';
-		}
+		$var['Version']			= '58.0';
 
 		$var['user']				= $this->settings['api_user'];
 		$var['pwd']					= $this->settings['api_password'];
@@ -504,7 +496,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		// converting NVPResponse to an Associative Array
 		$nvpResArray = $this->NVPtoArray( $response );
-
+//aecDebug("PayPal Response Follows");aecDebug( $nvpResArray );
 		if ( !empty( $response ) ) {
 			if ( isset( $nvpResArray['PROFILEID'] ) ) {
 				$return['invoiceparams'] = array( "paypal_wpp_customerProfileId" => $nvpResArray['PROFILEID'] );
@@ -625,7 +617,6 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function ProfileRequest( $request, $profileid, $var )
 	{
-		$var['Version']				= '58.0';
 		$var['user']				= $this->settings['api_user'];
 		$var['pwd']					= $this->settings['api_password'];
 		$var['signature']			= $this->settings['signature'];

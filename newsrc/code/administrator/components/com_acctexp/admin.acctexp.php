@@ -1036,6 +1036,10 @@ function saveUser( $option, $apply=0 )
 
 	$post = $_POST;
 
+	if ( $post['assignto_plan'][0] == 0 ) {
+		unset( $post['assignto_plan'][0] );
+	}
+
 	$metaUser = new metaUser( $post['userid'] );
 
 	if ( $metaUser->hasSubscription && !empty( $post['id'] ) ) {
