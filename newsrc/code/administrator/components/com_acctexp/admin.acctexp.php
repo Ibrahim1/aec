@@ -1052,7 +1052,7 @@ function saveUser( $option, $apply=0 )
 		$metaUser->focusSubscription->makePrimary();
 	}
 
-	if ( !empty( $post['assignto_plan'] ) && !is_array( $post['assignto_plan'] ) ) {
+	if ( !empty( $post['assignto_plan'] ) && is_array( $post['assignto_plan'] ) ) {
 		foreach ( $post['assignto_plan'] as $assign_planid ) {
 			$plan = new SubscriptionPlan( $db );
 			$plan->load( $assign_planid );
