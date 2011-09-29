@@ -56,12 +56,12 @@ class processor_epay extends POSTprocessor
 		$settings['md5type']		= array( 'inputC' );
 		$settings['md5key']			= array( 'inputC', );
 		$settings['windowstate']	= array( 'list_yesno' );
-		$settings['instantcapture']	= array( 'list_yesno'	);
+		$settings['instantcapture']	= array( 'list_yesno' );
 		$settings['group']			= array( 'inputC' );
 		$settings['description']	= array( 'inputC' );
-		$settings['authsms']		= array( 'inputC',	);
+		$settings['authsms']		= array( 'inputC' );
 		$settings['authmail']		= array( 'inputC' );
-		$settings['use3D']			= array( 'list_yesno'	);
+		$settings['use3D']			= array( 'list_yesno' );
 		$settings['addfee']			= array( 'list_yesno');
 
 		return $settings;
@@ -105,6 +105,7 @@ class processor_epay extends POSTprocessor
 
 		// for this solution always use state 2 (full window (same window))
 		$var['windowstate']		= $this->settings['windowstate'];
+		$var['instantcapture']	= $this->settings['instantcapture'];
 		$var['accepturl']		= $request->int_var['return_url'];
 		$var['declineurl']		= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=cancel");
 		$var['callbackurl']		= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=epaynotification");
