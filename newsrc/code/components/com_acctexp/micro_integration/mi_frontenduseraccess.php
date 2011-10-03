@@ -53,6 +53,14 @@ class mi_frontenduseraccess
 			$this->settings['group'] = array();
 		}
 
+		if ( !empty( $this->settings['group_remove'] ) ) {
+			if( !is_array( $this->settings['group_remove'] ) ) {
+				$this->settings['group_remove'] = array( $this->settings['group_remove'] );
+			}
+		} else {
+			$this->settings['group_remove'] = array();
+		}
+
 		if ( isset( $this->settings['group_exp'] ) ) {
 			if ( !is_array($this->settings['group_exp'] ) ) {
 				$this->settings['group_exp'] = array( $this->settings['group_exp'] );
@@ -80,13 +88,13 @@ class mi_frontenduseraccess
 		}
 
 		if ( !empty( $this->settings['group_remove'] ) ) {
-			$fua_groups = array();
+			$fua_groups_remove = array();
 
 			foreach ( $this->settings['group_remove'] as $temp ) {
-				$fua_groups[]->value = $temp;
+				$fua_groups_remove[]->value = $temp;
 			}
 		} else {
-			$fua_groups	= '';
+			$fua_groups_remove	= '';
 		}
 
 		if ( !empty( $this->settings['group_exp'] ) ) {
