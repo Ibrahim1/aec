@@ -381,7 +381,11 @@ class mi_aectax
 
 		$item['cost'] = $item['terms']->nextterm->renderTotal();
 
-		$request->add->itemlist[] = $item;
+		if ( is_object( $request->add ) ) {
+			$request->add->itemlist[] = $item;
+		} else {
+			$request->add = $item;
+		}
 
 		return $request;
 	}
@@ -434,7 +438,11 @@ class mi_aectax
 
 		$item['cost'] = $item['terms']->nextterm->renderTotal();
 
-		$request->add->itemlist[] = $item;
+		if ( is_object( $request->add ) ) {
+			$request->add->itemlist[] = $item;
+		} else {
+			$request->add = $item;
+		}
 
 		return $request;
 	}
