@@ -2869,6 +2869,8 @@ class aecHeartbeat extends JTable
 		$pp = $this->getProcessor( $subscription->type );
 
 		if ( $pp != false ) {
+			$prepval = null;
+
 			if ( !isset( $this->proc_prepare[$subscription->type] ) ) {
 				// Prepare validation function
 				$prepval = $pp->prepareValidation( $subscription_list );
