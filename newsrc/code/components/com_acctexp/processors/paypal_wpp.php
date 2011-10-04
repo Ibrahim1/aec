@@ -296,6 +296,10 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$var = $this->getPayPalVars( $request, false );
 
+				if ( isset( $var['amt'] ) ) {
+					unset( $var['amt'] );
+				}
+
 				$var['token']			= $request->int_var['params']['token'];
 				$var['PayerID']			= $request->int_var['params']['PayerID'];
 
@@ -308,7 +312,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$response = $this->transmitRequestXML( $xml, $request );
 
 				if ( is_array( $request->int_var['amount'] ) ) {
-					$var = $this->getPayPalVars( $request, false, true, true );
+					$var = $this->getPayPalVars( $request, false, true );
 
 					$var['token']			= $request->int_var['params']['token'];
 					$var['PayerID']			= $request->int_var['params']['PayerID'];
@@ -367,7 +371,7 @@ class processor_paypal_wpp extends XMLprocessor
 		}
 	}
 
-	function getPayPalVars( $request, $regular=true, $payment=true, $express=false )
+	function getPayPalVars( $request, $regular=true, $payment=true )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Method']			= 'CreateRecurringPaymentsProfile';
@@ -407,7 +411,7 @@ class processor_paypal_wpp extends XMLprocessor
 		}
 
 		if ( $payment ) {
-			$var = $this->getPaymentVars( $var, $request, $express );
+			$var = $this->getPaymentVars( $var, $request );
 
 			$var['NotifyUrl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=paypal_wppnotification', $this->info['secure'], true );
 			$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
@@ -422,7 +426,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function getPaymentVars( $var, $request, $express=false )
+	function getPaymentVars( $var, $request )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
@@ -434,19 +438,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$var['TrialTotalBillingCycles'] = 1;
 			}
 
-			if ( $express ) {
-				if ( isset( $request->int_var['amount']['amount1'] ) ) {
-					$timestamp = AECToolbox::offsetTime( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'], (int) gmdate('U') );
-				} elseif ( isset( $request->int_var['amount']['amount2'] ) ) {
-					$timestamp = AECToolbox::offsetTime( $request->int_var['amount']['period2'], $request->int_var['amount']['unit2'], (int) gmdate('U') );
-				} else {
-					$timestamp = AECToolbox::offsetTime( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'], (int) gmdate('U') );
-				}
-			} else {
-				$timestamp = (int) gmdate('U');
-			}
-
-			$var['ProfileStartDate']    = date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
+			$var['ProfileStartDate']    = date( 'Y-m-d', gmdate('U') ) . 'T' . date( 'H:i:s', gmdate('U') ) . 'Z';
 
 			$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 
