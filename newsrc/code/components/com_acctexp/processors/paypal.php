@@ -291,6 +291,8 @@ class processor_paypal extends POSTprocessor
 				$response['cancel']				= 1;
 			} elseif ( strcmp( $reason_code, 'refund' ) == 0 ) {
 				$response['delete']				= 1;
+			} elseif ( strcmp( $payment_status, 'Reversed' ) == 0 ) {
+				$response['chargeback']			= 1;
 			}
 		} else {
 			$response['pending_reason']			= 'error: ' . $res;

@@ -762,6 +762,8 @@ class processor_paypal_wpp extends XMLprocessor
 			} elseif ( strcmp( $txn_type, 'recurring_payment_profile_created' ) == 0 ) {
 				$response['valid']		= 0;
 				$response['duplicate']	= 1;
+			} elseif ( strcmp( $payment_status, 'Reversed' ) == 0 ) {
+				$response['chargeback']			= 1;
 			}
 		} else {
 			$response['pending_reason']			= 'error: ' . $res;
