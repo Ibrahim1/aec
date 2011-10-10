@@ -26,9 +26,9 @@ class mi_aectip
 	{
 		$settings = array();
 
-		$settings['max']	= array( 'inputB' );
-		$settings['name']	= array( 'inputC' );
-		$settings['desc']	= array( 'inputD' );
+		$settings['max']			= array( 'inputB' );
+		$settings['confirm_name']	= array( 'inputC' );
+		$settings['confirm_desc']	= array( 'inputD' );
 
 		return $settings;
 	}
@@ -37,19 +37,15 @@ class mi_aectip
 	{
 		$settings = array();
 
-		$settings['name']	= array( JText::_('MI_MI_AECTIP_USERSELECT_DEFAULT_NAME') );
-		$settings['desc']	= array( JText::_('MI_MI_AECTIP_USERSELECT_DEFAULT_DESC') );
+		$settings['confirm_name']	= array( JText::_('MI_MI_AECTIP_USERSELECT_DEFAULT_NAME') );
+		$settings['confirm_desc']	= array( JText::_('MI_MI_AECTIP_USERSELECT_DEFAULT_DESC') );
 
 		return $settings;
 	}
 
 	function saveParams( $params )
 	{
-		foreach ( $params as $n => $v ) {
-			if ( !empty( $v ) ) {
-				$params[$n] = AECToolbox::correctAmount( $v );
-			}
-		}
+		$params['max'] = AECToolbox::correctAmount( $params['max'] );
 
 		return $params;
 	}
@@ -58,11 +54,11 @@ class mi_aectip
 	{
 		$settings = array();
 
-		if ( !empty( $this->settings['desc'] ) ) {
-			$settings['desc'] = array( 'p', "", $this->settings['desc'] );
+		if ( !empty( $this->settings['confirm_desc'] ) ) {
+			$settings['confirm_desc'] = array( 'p', "", $this->settings['confirm_desc'] );
 		}
 
-		$settings['amt'] = array( 'inputC', $this->settings['name'], '', '' );
+		$settings['amt'] = array( 'inputC', $this->settings['confirm_name'], '', '' );
 
 		return $settings;
 	}
@@ -95,7 +91,7 @@ class mi_aectip
 
 		$price = AECToolbox::correctAmount( $request->params['amt'] );
 
-		$request->add['terms']->nextterm->addCost( $price, array( 'details' => $this->settings['name'], 'no-discount' => true ) );
+		$request->add['terms']->nextterm->addCost( $price, array( 'details' => $this->settings['confirm_name'], 'no-discount' => true ) );
 
 		return null;
 	}
