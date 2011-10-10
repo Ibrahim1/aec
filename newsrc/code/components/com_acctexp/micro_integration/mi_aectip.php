@@ -95,7 +95,7 @@ class mi_aectip
 
 		$price = AECToolbox::correctAmount( $request->params['amt'] );
 
-		$request->add['terms']->nextterm->addCost( $price, array( 'amount' => $price, 'details' => $this->settings['name'] ) );
+		$request->add['terms']->nextterm->addCost( $price, array( 'details' => $this->settings['name'], 'no-discount' => true ) );
 
 		return null;
 	}

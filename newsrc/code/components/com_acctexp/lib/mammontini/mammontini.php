@@ -395,7 +395,7 @@ class mammonTerm extends eucaObject
 	 * @return	string
 	 * @since	1.0
 	 */
-	function addCost( $amount, $info=null, $tax=null )
+	function addCost( $amount, $info=null )
 	{
 		if ( !empty( $this->cost ) ) {
 			// Delete current total, if exists
@@ -406,8 +406,12 @@ class mammonTerm extends eucaObject
 			}
 		}
 
+		if ( empty( $info ) ) {
+			$info = array();
+		}
+
 		// Tax is Tax, whether positive or negative
-		if ( $tax ) {
+		if ( !empty( $info['tax'] ) ) {
 			$type = 'tax';
 		} else {
 			// Switch this to discount if its negative
@@ -524,6 +528,12 @@ class mammonTerm extends eucaObject
 			if ( !empty( $amount ) ) {
 				$total = $this->renderTotal();
 
+				foreach ( $this->cost as $cost ) {
+					if ( !empty( $cost->cost['no-discount'] ) ) {
+						$total = $total - $cost->cost['amount'];
+					}
+				}
+
 				if ( $amount > $this->renderTotal() ) {
 					$amount = $total;
 				}
@@ -536,6 +546,12 @@ class mammonTerm extends eucaObject
 			// discount percentage
 			if ( !empty( $percent ) ) {
 				$total = $this->renderTotal();
+
+				foreach ( $this->cost as $cost ) {
+					if ( !empty( $cost->cost['no-discount'] ) ) {
+						$total = $total - $cost->cost['amount'];
+					}
+				}
 
 				$am = 0 - round( ( ( $total / 100 ) * $percent ), 2 );
 				$am = AECToolbox::correctAmount( $am );

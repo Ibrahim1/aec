@@ -2712,13 +2712,15 @@ class HTML_AcctExp
 				<td align="center"><?php echo $row->amount; ?></td>
 				<td align="left">
 					<?php
-						if ( !empty( $row->response ) ) {
+						if ( !empty( $row->response ) && ( strlen( $row->response ) > 8) ) {
 							$field = unserialize( base64_decode( $row->response ) );
 
 							if ( is_array( $field ) ) {
 								if ( count( $field ) == 1 ) {
 									foreach ( $field as $n => $v) {
-										$field = unserialize( base64_decode( $n ) );
+										if ( !empty( $n ) && ( strlen( $n ) > 8) ) {
+											$field = unserialize( base64_decode( $n ) );
+										}
 									}
 								}
 

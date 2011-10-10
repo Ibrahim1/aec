@@ -283,9 +283,9 @@ class mi_aectax
 			$term = new mammonTerm();
 
 			if ( !empty( $taxtypes[$tid] ) ) {
-				$term->addCost( $amount, array( 'details' => $taxtypes[$tid] ), true );
+				$term->addCost( $amount, array( 'details' => $taxtypes[$tid], 'tax' => true ) );
 			} else {
-				$term->addCost( $amount, null, true );
+				$term->addCost( $amount, array( 'tax' => true ) );
 			}
 
 			$terms = new mammonTerms();
@@ -433,7 +433,7 @@ class mi_aectax
 					break;
 			}
 
-			$item['terms']->terms[$tid]->addCost( $tax, array( 'details' => $location['extra'] ), true );
+			$item['terms']->terms[$tid]->addCost( $tax, array( 'details' => $location['extra'], 'tax' => true ) );
 		}
 
 		$item['cost'] = $item['terms']->nextterm->renderTotal();
