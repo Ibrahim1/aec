@@ -150,14 +150,14 @@ class tool_vatcollect
 			$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">' . $date . '</td>';
 			$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-			$return .= '<td title="Non-Taxed" style="font-weight: bold; width: 5em;">' . $history['untaxed'] . '</td>';
+			$return .= '<td title="Non-Taxed" style="font-weight: bold; width: 5em;">' . AECToolbox::correctAmount( $history['untaxed'] ) . '</td>';
 
 			if ( !empty( $history['taxed'] ) ) {
 				$return .= '<td style="width: 5em;">+</td>';
-				$return .= '<td title="Taxed including Tax" style="font-weight: bold; width: 5em;">' . ( $history['taxed'] + $history['tax'] ) . '</td>';
-				$return .= '<td title="Taxed" style="font-weight: bold; width: 5em; color: #aaa;">(' . $history['taxed'] . '</td>';
+				$return .= '<td title="Taxed including Tax" style="font-weight: bold; width: 5em;">' . AECToolbox::correctAmount( $history['taxed'] + $history['tax'] ) . '</td>';
+				$return .= '<td title="Taxed" style="font-weight: bold; width: 5em; color: #aaa;">(' . AECToolbox::correctAmount( $history['taxed'] ) . '</td>';
 				$return .= '<td style="width: 5em; color: #aaa;">+</td>';
-				$return .= '<td title="Tax" style="font-weight: bold; width: 5em; color: #aaa;">' . $history['tax'] . ')</td>';
+				$return .= '<td title="Tax" style="font-weight: bold; width: 5em; color: #aaa;">' . AECToolbox::correctAmount( $history['tax'] ) . ')</td>';
 			} else {
 				$return .= '<td colspan="5"></td>';
 			}
@@ -186,14 +186,14 @@ class tool_vatcollect
 				$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">Month</td>';
 				$return .= '<td style="width: 5em;">&nbsp;</td>';
 
-				$return .= '<td title="Non-Taxed" style="font-weight: bold; width: 5em;">' . $month['untaxed'] . '</td>';
+				$return .= '<td title="Non-Taxed" style="font-weight: bold; width: 5em;">' . AECToolbox::correctAmount( $month['untaxed'] ) . '</td>';
 
 				if ( !empty( $month['taxed'] ) ) {
 					$return .= '<td style="width: 5em;">+</td>';
-					$return .= '<td title="Taxed including Tax" style="font-weight: bold; width: 5em;">' . ( $month['taxed'] + $month['tax'] ) . '</td>';
-					$return .= '<td title="Taxed" style="font-weight: bold; width: 5em; color: #aaa;">(' . $month['taxed'] . '</td>';
+					$return .= '<td title="Taxed including Tax" style="font-weight: bold; width: 5em;">' . AECToolbox::correctAmount( $month['taxed'] + $month['tax'] ) . '</td>';
+					$return .= '<td title="Taxed" style="font-weight: bold; width: 5em; color: #aaa;">(' . AECToolbox::correctAmount( $month['taxed'] ) . '</td>';
 					$return .= '<td style="width: 5em; color: #aaa;">+</td>';
-					$return .= '<td title="Tax" style="font-weight: bold; width: 5em; color: #aaa;">' . $month['tax'] . ')</td>';
+					$return .= '<td title="Tax" style="font-weight: bold; width: 5em; color: #aaa;">' . AECToolbox::correctAmount( $month['tax'] ) . ')</td>';
 				} else {
 					$return .= '<td colspan="5"></td>';
 				}
