@@ -6816,7 +6816,7 @@ class ItemGroup extends serialParamDBTable
 		if ( !$this->visible ) {
 			return false;
 		} else {
-			return $this->checkPermission( $metaUser );
+			return $this->checkPermission( $metaUser ) === false;
 		}
 	}
 
@@ -7142,13 +7142,10 @@ class SubscriptionPlanHandler
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT `active`'
-				. ' FROM #__acctexp_plans'
-				. ' WHERE `id` = \'' . $db->getEscaped( $planid ) . '\''
-				;
-		$db->setQuery( $query );
+		$plan = new SubscriptionPlan( $db );
+		$plan->load( $planid );
 
-		return $db->loadResult();
+		return $plan->active && $plan->checkInventory();
 	}
 
 	function listPlans()
@@ -7223,9 +7220,56 @@ class SubscriptionPlan extends serialParamDBTable
 			return false;
 		}
 
-		$restrictions = $this->getRestrictionsArray();
+		return $this->checkAuthorized( $metaUser ) === true;
+	}
 
-		return aecRestrictionHelper::checkRestriction( $restrictions, $metaUser );
+	function checkAuthorized( $metaUser )
+	{
+		$authorized = true;
+
+		if ( !empty( $this->params['fixed_redirect'] ) ) {
+			return $this->params['fixed_redirect'];
+		} else {
+			$authorized = $this->checkInventory();
+				
+			if ( $authorized ) {
+				$restrictions = $this->getRestrictionsArray();
+
+				if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) !== false ) {
+					if ( !ItemGroupHandler::checkParentRestrictions( $this, 'item', $metaUser ) ) {
+						$authorized = false;
+					}
+				} else {
+					$authorized = false;
+				}
+			}
+
+			if ( !$authorized && !empty( $this->params['notauth_redirect'] ) ) {
+				return $this->params['notauth_redirect'];
+			}
+		}
+
+		return $authorized;
+	}
+
+	function checkInventory()
+	{
+		if ( !empty( $this->restrictions['inventory_amount_enabled'] ) ) {
+			if ( $this->restrictions['inventory_amount_used'] >= $this->restrictions['inventory_amount'] ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	function incrementInventory()
+	{
+		if ( !empty( $this->restrictions['inventory_amount_enabled'] ) ) {
+			$this->restrictions['inventory_amount_used']++;
+		}
+
+		return $this->storeload();
 	}
 
 	function applyPlan( $user, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
@@ -7434,6 +7478,8 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( $result === false ) {
 			return false;
 		}
+
+		$this->incrementInventory();
 
 		return $renew;
 	}
@@ -8067,6 +8113,8 @@ class SubscriptionPlan extends serialParamDBTable
 		// Filter out restrictions
 		$fixed = aecRestrictionHelper::paramList();
 
+		$fixed = array_merge( $fixed, array( 'inventory_amount_enabled', 'inventory_amount', 'inventory_amount_used' ) );
+
 		$restrictions = array();
 		foreach ( $fixed as $varname ) {
 			if ( !isset( $post[$varname] ) ) {
@@ -8464,7 +8512,7 @@ class InvoiceFactory
 
 			foreach ( $this->cart as $citem ) {
 				if ( is_object( $citem['obj'] ) ) {
-					if ( !$citem['obj']->active ) {
+					if ( !$citem['obj']->active || !$citem['obj']->checkInventory() ) {
 						return false;
 					}
 				}
@@ -9715,24 +9763,14 @@ class InvoiceFactory
 				$plan = new SubscriptionPlan( $db );
 				$plan->load( $id );
 
-				if ( !empty( $plan->params['fixed_redirect'] ) ) {
-					$auth_problem = $plan->params['fixed_redirect'];
+				$authorized = $plan->checkAuthorized( $this->metaUser );
+
+				if ( $authorized === true ) {
+					$list[] = ItemGroupHandler::getItemListItem( $plan );
+				} elseif ( $authorized === false ) {
+					$auth_problem = true;
 				} else {
-					$restrictions = $plan->getRestrictionsArray();
-
-					if ( aecRestrictionHelper::checkRestriction( $restrictions, $this->metaUser ) !== false ) {
-						if ( ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
-							$list[] = ItemGroupHandler::getItemListItem( $plan );
-						} else {
-							$auth_problem = true;
-						}
-					} else {
-						$auth_problem = true;
-					}
-
-					if ( $auth_problem && !empty( $plan->params['notauth_redirect'] ) ) {
-						$auth_problem = $plan->params['notauth_redirect'];
-					}
+					$auth_problem = $authorized;
 				}
 			} else {
 				// Plan does not exist
@@ -11601,13 +11639,7 @@ class Invoice extends serialParamDBTable
 							$new_plan = new SubscriptionPlan( $db );
 							$new_plan->load( $c['id'] );
 
-							$restrictions = $new_plan->getRestrictionsArray();
-
-							if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) !== false ) {
-								if ( !ItemGroupHandler::checkParentRestrictions( $new_plan, 'item', $metaUser ) ) {
-									return false;
-								}
-							} else {
+							if ( $new_plan->checkPermission( $metaUser ) === false ) {
 								return false;
 							}
 
@@ -11623,13 +11655,7 @@ class Invoice extends serialParamDBTable
 					$new_plan = new SubscriptionPlan( $db );
 					$new_plan->load( $this->usage );
 
-					$restrictions = $new_plan->getRestrictionsArray();
-
-					if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) !== false ) {
-						if ( !ItemGroupHandler::checkParentRestrictions( $new_plan, 'item', $metaUser ) ) {
-							return false;
-						}
-					} else {
+					if ( $new_plan->checkPermission( $metaUser ) === false ) {
 						return false;
 					}
 

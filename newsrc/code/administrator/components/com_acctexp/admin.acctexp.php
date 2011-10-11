@@ -3044,6 +3044,10 @@ function editSubscriptionPlan( $id, $option )
 
 	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
 
+	$params['inventory_amount_enabled']	= array( 'list_yesno', 0 );
+	$params['inventory_amount']			= array( 'inputB', 0 );
+	$params['inventory_amount_used']	= array( 'inputB', 0 );
+
 	$params = array_merge( $params, $restrictionHelper->getParams() );
 
 	$rewriteswitches				= array( 'cms', 'user' );

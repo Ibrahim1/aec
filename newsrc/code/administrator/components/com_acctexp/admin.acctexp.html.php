@@ -1863,11 +1863,11 @@ class HTML_AcctExp
 									</div>
 									<div style="position:relative;float:left;width:32%;padding:4px;">
 										<div class="userinfobox">
-											<div style="float: left; text-align: right;">
-												<h3><?php echo 'Notes'; ?></h3>
-											</div>
-											<div style="float: left; text-align: left;">
-												<?php echo $aecHTML->createSettingsParticle( 'notes' ); ?>
+											<div class="aec_userinfobox_sub">
+												<h4><?php echo 'Notes'; ?></h4>
+												<div style="float: left; text-align: left;">
+													<?php echo $aecHTML->createSettingsParticle( 'notes' ); ?>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -1919,6 +1919,13 @@ class HTML_AcctExp
 		                ?>
 		                <div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_RESTRICTIONS_TITLE'); ?></h2></div>
 						<table class="aecadminform">
+							<tr><td>
+								<div class="userinfobox">
+									<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_enabled' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'inventory_amount' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_used' ); ?>
+								</div>
+							</td></tr>
 							<tr><td>
 								<div class="userinfobox">
 									<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
