@@ -145,7 +145,7 @@ class tool_rawedit
 				if ( get_magic_quotes_gpc() ) {
 					$object->$k	= jsoonHandler::decode( stripslashes( $_POST[$k] ) );
 				} else {
-					$object->$k	= $_POST[$k];
+					$object->$k	= jsoonHandler::decode( $_POST[$k] );
 				}
 			} elseif ( strpos( $k, '_' ) !== 0 ) {
 				$object->$k	= $_POST[$k];
