@@ -59,7 +59,7 @@ class cbaecmembershipTab extends cbTabHandler
 		.'</tr>';
 
 		$subscriptions	= $meta_user->getAllSubscriptions();
-		$subscr_info	= $meta_user->getAllCurrentSubscriptionsInfoComplete( $user->id );
+		$subscr_info	= $this->getAllCurrentSubscriptionsInfoComplete( $user->id );
 
 		foreach ( $subscriptions as $i => $subscriptionid ) {
 			$subscription = new Subscription( $db );
