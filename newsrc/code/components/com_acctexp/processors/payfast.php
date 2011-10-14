@@ -38,8 +38,9 @@ class processor_payfast extends POSTprocessor
 		$settings['merchant_email_confirmation'] = 0;
 		$settings['merchant_email'] = '';
 		$settings['pdt_key']		= '';		
-		$settings['currency']		= 'ZAR';	
-		$settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );							
+		$settings['currency']		= 'ZAR';
+		$settings['item_name']		='[[user_id]]';
+		$settings['item_desc']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );							
 
 		for ( $i=1; $i<6; $i++ ) {
 			$settings['custom_str'.$i]	= "";
