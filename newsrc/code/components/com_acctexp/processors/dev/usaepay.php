@@ -93,7 +93,7 @@ class processor_usaepay extends POSTprocessor
 	{
 		$ReturnCode	= aecGetParam('ReturnCode', 'NA');
 		$ErrMsg		= aecGetParam('ErrMsg', 'NA');
-		$FullTotal	= 1.95;   //aecGetParam('FullTotal', 'NA');  //   <========== working
+		$FullTotal	= aecGetParam('FullTotal', 'NA');
 		$CardNumber	= aecGetParam('CardNumber', 'NA');
 		$OrderID	= aecGetParam('UMinvoice', 'NA');
 
