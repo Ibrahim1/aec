@@ -70,7 +70,7 @@ class cbaecmembershipTab extends cbTabHandler
 			$html_return .= '<tr>'
 			.'<td width="30%" align="center">' . $plan_name . '</td>'
 			.'<td width="10%" align="center">' . ( $subscription->primary ? "Yes" : "No" ) . '</td>'
-			.'<td width="10%" align="center">' . $this->_getIconHtml( $subscription->status ) . ' ' . $subscription->status . '</td>'
+			.'<td width="10%" align="center">' . $this->getIconHtml( $subscription->status ) . ' ' . $subscription->status . '</td>'
 			.'<td width="10%" align="center">' . date( $dateFormat, strtotime($subscription->signup_date) ) . '</td>';
 
 			$html_return .= '<td width="10%" align="center">';
