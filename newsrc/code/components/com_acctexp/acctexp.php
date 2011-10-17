@@ -42,7 +42,7 @@ if ( empty( $task ) ) {
 
 	foreach ( $translate as $k ) {
 		// Do not overwrite stuff that our forms supplied
-		if ( !isset( $_POST[$k] ) ) {
+		if ( !isset( $_REQUEST[$k] ) ) {
 			$_REQUEST[$k]	= $params->get( $k );
 			$_POST[$k]		= $params->get( $k );
 		}
