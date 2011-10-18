@@ -6816,7 +6816,7 @@ class ItemGroup extends serialParamDBTable
 		if ( !$this->visible ) {
 			return false;
 		} else {
-			return $this->checkPermission( $metaUser ) === false;
+			return $this->checkPermission( $metaUser );
 		}
 	}
 
