@@ -98,7 +98,7 @@ class plgSystemAECerrorhandler extends JPlugin
 			$return = base64_decode( $return );
 		}
 
-		if ( ( $option == 'com_user' ) && ( $view == 'login' ) && ( $return!='' ) )
+		if ( ( $option == 'com_user' ) && ( $view == 'login' ) && ( ( $return != '' ) && ( $return != 'index.php' ) ) )
 		{
 			$uri = new JURI( $return );
 			$option = $uri->getVar( 'option' );
