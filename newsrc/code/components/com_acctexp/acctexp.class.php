@@ -17272,6 +17272,7 @@ class microIntegration extends serialParamDBTable
 			}
 
 			$this->settings				=& $this->params;
+			$this->mi_class->info		=& $this->info;
 			$this->mi_class->settings	=& $this->settings;
 
 			return true;
