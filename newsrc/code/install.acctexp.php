@@ -51,13 +51,25 @@ function com_install()
 	$newinstall = false;
 	$tables		= $db->getTableList();
 
+	$langlist = array(	'com_acctexp.admin' => JPATH_ADMINISTRATOR,
+					'com_acctexp' => JPATH_SITE,
+					'com_acctexp.microintegrations' => JPATH_SITE,
+					'com_acctexp.processors' => JPATH_SITE
+					);
+
 	$lang =& JFactory::getLanguage();
 
-	$lang->load( 'com_acctexp.admin' );
+	foreach ( $langlist as $name => $path ) {
+		$lang->load( $name, $path, 'en-GB', true );
+		$lang->load( $name, $path, $lang->getDefault(), true );
+		$lang->load( $name, $path, null, true );
+	}
 
-	$lang->load( 'com_acctexp', JPATH_SITE );
-	$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
-	$lang->load( 'com_acctexp.processors', JPATH_SITE );
+	if ( !defined( 'JPATH_MANIFESTS' ) ) {
+		foreach ( $lang->_strings as $k => $v ) {
+			$lang->_strings[$k]= str_replace( '"_QQ_"', '"', $v );
+		}
+	}
 
 	// Make sure we are compatible with php4
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
