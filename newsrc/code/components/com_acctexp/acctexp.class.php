@@ -2728,7 +2728,8 @@ class aecHeartbeat extends JTable
 		$this->processors = array();
 		$this->proc_prepare = array();
 
-		$this->result = array(	'expired' => 0,
+		$this->result = array(	'fail_expired' => 0,
+								'expired' => 0,
 								'pre_expired' => 0,
 								'pre_exp_actions' => 0
 								);
@@ -2765,6 +2766,8 @@ class aecHeartbeat extends JTable
 					} elseif ( $validate !== true ) {
 						if ( $subscription->expire() ) {
 							$this->result['expired']++;
+						} else {
+							$this->result['fail_expired']++;
 						}
 					}
 					
@@ -2918,6 +2921,7 @@ class aecHeartbeat extends JTable
 		$short	= JText::_('AEC_LOG_SH_HEARTBEAT');
 		$event	= JText::_('AEC_LOG_LO_HEARTBEAT') . ' ';
 		$tags	= array( 'heartbeat' );
+		$level	= 2;
 
 		if ( $this->result['expired'] ) {
 			if ( $this->result['expired'] > 1 ) {
@@ -2926,11 +2930,28 @@ class aecHeartbeat extends JTable
 				$event .= 'Expires 1 subscription';
 			}
 
-			if ( $this->result['pre_exp_actions'] ) {
+			if ( $this->result['pre_exp_actions'] || $this->result['fail_expired'] ) {
 				$event .= ', ';
 			}
 
 			$tags[] = 'expiration';
+		}
+
+		if ( $this->result['fail_expired'] ) {
+			if ( $this->result['fail_expired'] > 1 ) {
+				$event .= 'Failed to expire ' . $this->result['fail_expired'] . ' subscriptions';
+			} else {
+				$event .= 'Failed to expire 1 subscription';
+			}
+
+			$event .= ', please check your subscriptions for problems';
+
+			if ( $this->result['pre_exp_actions'] ) {
+				$event .= ', ';
+			}
+
+			$tags[] = 'error';
+			$level	= 128;
 		}
 
 		if ( $this->result['pre_exp_actions'] ) {
@@ -2947,7 +2968,7 @@ class aecHeartbeat extends JTable
 		}
 
 		$eventlog = new eventLog( $db );
-		$eventlog->issue( $short, implode( ',', $tags ), $event, 2 );
+		$eventlog->issue( $short, implode( ',', $tags ), $event, $level );
 	}
 
 	function deleteTempTokens()
