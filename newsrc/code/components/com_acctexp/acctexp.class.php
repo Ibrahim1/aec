@@ -2769,7 +2769,7 @@ class aecHeartbeat extends JTable
 					}
 					
 					unset( $subscription_list[$sid] );
-				} else {
+				} elseif ( !$subscription->recurring ) {
 					break;
 				}
 			}
