@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '3822' );
+define( '_AEC_REVISION', '3833' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2217,7 +2217,7 @@ class aecSessionHandler
 		return $result;
 	}
 
-	public static function getAuthorisedViewLevels($userId)
+	function getAuthorisedViewLevels($userId)
 	{
 		// Get all groups that the user is mapped to recursively.
 		$groups = self::getGroupsByUser($userId);
