@@ -15727,48 +15727,48 @@ class AECToolbox
 
 	function VerifyMetaUser( $metaUser )
 	{
-		if ( $metaUser->hasSubscription ) {
-			$result = $metaUser->objSubscription->verify( $metaUser->cmsUser->block, $metaUser );
+		global $aecConfig;
 
-			if ( ( $result == 'expired' ) || ( $result == 'pending' ) ) {
-				$metaUser->setTempAuth();
-			}
-
-			return $result;
-		} else {
-			global $aecConfig;
-
-			if ( $aecConfig->cfg['require_subscription'] ) {
-				if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
-					$db = &JFactory::getDBO();
-
-					$payment_plan = new SubscriptionPlan( $db );
-					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
-
-					$metaUser->establishFocus( $payment_plan, 'Free', false );
-
-					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
-
-					return AECToolbox::VerifyUser( $metaUser->cmsUser->username );
-				} else {
-					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
-
-					$metaUser->setTempAuth();
-
-					if ( $invoices ) {
-						$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
-
-						if ( $invoice ) {
-							return 'open_invoice';
-						}
-					}
-
-					return 'subscribe';
-				}
-			}
+		if ( !$aecConfig->cfg['require_subscription'] ) {
+			return true;
 		}
 
-		return true;
+		if ( $metaUser->hasSubscription ) {
+				$result = $metaUser->objSubscription->verify( $metaUser->cmsUser->block, $metaUser );
+
+				if ( ( $result == 'expired' ) || ( $result == 'pending' ) ) {
+					$metaUser->setTempAuth();
+				}
+
+				return $result;
+		}
+
+		if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
+			$db = &JFactory::getDBO();
+
+			$payment_plan = new SubscriptionPlan( $db );
+			$payment_plan->load( $aecConfig->cfg['entry_plan'] );
+
+			$metaUser->establishFocus( $payment_plan, 'Free', false );
+
+			$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
+
+			return AECToolbox::VerifyUser( $metaUser->cmsUser->username );
+		} else {
+			$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+
+			$metaUser->setTempAuth();
+
+			if ( $invoices ) {
+				$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
+
+				if ( $invoice ) {
+					return 'open_invoice';
+				}
+			}
+
+			return 'subscribe';
+		}
 	}
 
 	function saveUserRegistration( $option, $var, $internal=false, $overrideActivation=false, $overrideEmails=false, $overrideJS=false )

@@ -113,6 +113,8 @@ class plgUserAECaccess extends JPlugin
 
 	function verify( $credentials )
 	{
+		global $aecConfig;
+
 		$savetask = '';
 		if ( isset( $_REQUEST['task'] ) ) {
 			$_REQUEST['task'] = '';
@@ -120,6 +122,10 @@ class plgUserAECaccess extends JPlugin
 		}
 
 		$_REQUEST['task'] = $savetask;
+
+		if ( !$aecConfig->cfg['require_subscription'] ) {
+			return true;
+		}
 
 		$verification = AECToolbox::VerifyUser( $credentials['username'] );
 
