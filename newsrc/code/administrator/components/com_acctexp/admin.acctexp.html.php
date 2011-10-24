@@ -922,7 +922,7 @@ class HTML_AcctExp
 				<h1>Leading Programmer</h1>
 				<p>David 'skOre' Deutsch</p>
 				<h1>Contributing Programmers</h1>
-				<p>Calum 'polc1410' Polwart, William 'Jake' Jacobs</p>
+				<p>Calum 'polc1410' Polwart, William 'Jake' Jacobs, Anton 'crashedfx' Skvortsov</p>
 				<h1>Past Contributing Programmers</h1>
 				<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
 				<h1>Graphics</h1>
@@ -940,9 +940,9 @@ class HTML_AcctExp
 				<p>Calum 'polc1410' Polwart, Aleksey Pikulik</p>
 				<h1>Contributors</h1>
 				<p>People who have helped on our code by submitting additions and patches at one place or another:</p>
-				<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design, Carsten Engel, Joel Bassett, Emmanuel Danan, Rebekah Pitt, Daniel Lowhorn, berner, Mitchell Mink, Joshua Tan, Casey Eyring</p>
+				<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design, Carsten Engel, Joel Bassett, Emmanuel Danan, Rebekah Pitt, Daniel Lowhorn, berner, Mitchell Mink, Joshua Tan, Casey Eyring, Thailo van Ree, David Henry, Matthew Weeks, Francois Gagnon, Haris Agic</p>
 				<h1>Translators</h1>
-				<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on dutch translation), anderscarlen (swedish translation), David Mara (czech translation)</p>
+				<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on Dutch translation), anderscarlen (Swedish translation), David Mara (Czech translation), Francois Gagnon (French translation), Ronny Buelund (Danish translation), Alexandros Seitaridis (Greek translation), Kristian from JOKR Solutions (Swedish translation), Masato Sato (Japanese translation), Christian Trujillo (Spanish Translation)</p>
 				<p>Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky</p>
 			</div>
 			<div style="width: 100%; height: 60px;"></div>
