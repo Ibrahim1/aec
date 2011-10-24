@@ -749,7 +749,7 @@ class processor_authorize_cim extends PROFILEprocessor
 	}
 
 	function prepareValidation( $subscription_list )
-	{aecDebug($subscription_list);
+	{
 		return true;
 	}
 
@@ -818,7 +818,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		}
 
 		$ppParams = $iFactory->metaUser->meta->getProcessorParams( $this->id );
-aecDebug($iFactory);
+
 		if ( !empty( $ppParams->profileid ) ) {
 			$cim = $this->loadCIMpay( $ppParams );
 
@@ -835,10 +835,10 @@ aecDebug($iFactory);
 			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
 
 			$cim->createCustomerProfileTransactionRequest( $this );
-aecDebug($cim);
+
 			if ( $cim->isSuccessful() ) {
 				$iFactory->invoice->pay();
-aecDebug($cim);
+
 				if ( empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
 					$iFactory->invoice->params['maxOccurrences'] = $this->settings['totalOccurrences'];
 
