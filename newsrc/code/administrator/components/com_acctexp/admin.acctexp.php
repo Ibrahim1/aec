@@ -678,6 +678,10 @@ switch( strtolower( $task ) ) {
 		eventlog( $option );
 		break;
 
+	case 'stats':
+		aec_stats( $option );
+		break;
+
 	case 'readout':
 		readout( $option );
 		break;
@@ -5134,6 +5138,13 @@ function eventlog( $option )
 	}
 
 	HTML_AcctExp::eventlog( $option, $events, $search, $pageNav );
+}
+
+function aec_stats( $option )
+{
+	$stats = null;
+
+	HTML_AcctExp::stats( $option, $stats );
 }
 
 function quicklookup( $option )

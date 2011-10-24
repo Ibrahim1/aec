@@ -823,6 +823,7 @@ class HTML_AcctExp
 										array( 'editCSS', 'css', JText::_('AEC_CENTR_EDIT_CSS') ),
 										array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY') ),
 										array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') ),
+										array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
 										array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
 										array( 'hacks', 'hacks', JText::_('AEC_CENTR_HACKS') )
 						);
@@ -2831,6 +2832,29 @@ class HTML_AcctExp
 		<?php
 		if ( _EUCA_DEBUGMODE ) {
 			krumo( $option, $events, $search, $pageNav );
+		}
+
+ 		HTML_myCommon::Valanx();
+	}
+
+	function stats( $option, $stats )
+	{
+		JHTML::_('behavior.tooltip');
+		HTML_myCommon::addBackendCSS(); ?>
+		<form action="index.php" method="post" name="adminForm">
+		<table class="adminheading">
+		<tr>
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" rowspan="2" nowrap="nowrap">
+				<?php echo JText::_('AEC_HEAD_STATS'); ?>
+			</th>
+		</tr>
+		</table>
+
+		<h1>Stats aren't done yet, please check back here in the stable release</h1>
+
+		<?php
+		if ( _EUCA_DEBUGMODE ) {
+			krumo( $option, $stats );
 		}
 
  		HTML_myCommon::Valanx();
