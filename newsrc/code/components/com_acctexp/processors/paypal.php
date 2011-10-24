@@ -284,6 +284,10 @@ class processor_paypal extends POSTprocessor
 			} elseif ( ( strcmp( $txn_type, 'paymentreview' ) == 0 ) || ( strcmp( $pending_reason, 'paymentreview' ) == 0 ) ) {
 				$response['pending']			= 1;
 				$response['pending_reason']	 = 'paymentreview';
+			} elseif ( strcmp( $pending_reason, 'intl' ) == 0 ) {
+				$response['pending']			= 1;
+				$response['pending_reason']	 	= 'no auto-accept';
+				$response['explanation']		= 'Configure your PayPal Account to automatically accept incoming payments.';
 			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
 				$response['eot']				= 1;
 			} elseif ( strcmp( $txn_type, 'subscr_failed' ) == 0 ) {
