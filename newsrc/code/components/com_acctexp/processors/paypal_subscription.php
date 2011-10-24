@@ -36,7 +36,6 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['business']		= 'your@paypal@account.com';
 		$settings['testmode']		= 0;
 		$settings['brokenipnmode']	= 0;
-		$settings['invoice_tax']	= 0;
 		$settings['currency']		= 'USD';
 		$settings['checkbusiness']	= 0;
 		$settings['acceptpendingecheck'] = 0;
