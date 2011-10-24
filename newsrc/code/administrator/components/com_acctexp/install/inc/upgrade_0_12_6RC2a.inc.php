@@ -18,6 +18,10 @@ for ( $hid=1; $hid<=$himax; $hid++ ) {
 	$db->setQuery( "SELECT * FROM #__acctexp_log_history WHERE `id` = $hid" );
 	$history = $db->loadObject();
 
+	if ( !is_object( $history ) ) {
+		continue;
+	}
+
 	if ( ( $history->id != $hid ) || empty( $history->response ) ) {
 		continue;
 	}
