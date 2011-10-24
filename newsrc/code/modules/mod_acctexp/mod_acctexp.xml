@@ -2,7 +2,7 @@
 <install type="module" version="1.5.0" method="upgrade">
 	<name>AEC Module</name>
 	<creationDate>24.02.2008</creationDate>
-	<author>Helder Garcia, David 'skOre' Deutsch</author>
+	<author>David 'skOre' Deutsch, Helder Garcia</author>
 	<copyright>This module is released under the GNU/GPL License.  </copyright>
 	<authorEmail>skore@valanx.org</authorEmail>
 	<authorUrl>www.valanx.org</authorUrl>

@@ -3,7 +3,7 @@
  * @version $Id: mi_eventlist.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - Event List
- * @copyright Copyright (C) 2010 David Deutsch
+ * @copyright Copyright (C) 2011 David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */

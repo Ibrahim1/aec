@@ -3,7 +3,7 @@
  * @version $Id: mi_ninjaboard.php 01 2007-08-11 13:29:29Z SBS $
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Micro Integrations - Ninjaboard
- * @copyright 2010 Copyright (C) David Deutsch
+ * @copyright 2011 Copyright (C) David Deutsch
  * @author Stian Didriksen, David Deutsch & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/copyleft/gpl.html
  */

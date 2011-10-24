@@ -3,7 +3,7 @@
  * @version $Id: mi_jnews.php 16 2007-07-01 12:07:07Z mic $
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - JNews
- * @copyright 2010 Copyright (C) David Deutsch
+ * @copyright 2011 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
