@@ -1408,10 +1408,15 @@ class metaUserDB extends serialParamDBTable
 
 		$this->userid			= $userid;
 		$this->created_date		= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
-		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		$this->storeload();
+	}
 
+	function storeload()
+	{
+		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
+
+		parent::storeload();
 	}
 
 	function getProcessorParams( $processorid )
@@ -1436,8 +1441,6 @@ class metaUserDB extends serialParamDBTable
 		}
 
 		$this->processor_params[$processorid] = $params;
-
-		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		$this->storeload();
 	}
@@ -1537,9 +1540,7 @@ class metaUserDB extends serialParamDBTable
 			}
 		}
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
-
-		$this->storeload();
+		return $this->storeload();
 	}
 
 	function addPlanID( $id )
@@ -1554,17 +1555,13 @@ class metaUserDB extends serialParamDBTable
 			$this->plan_history->used_plans[$id] = 1;
 		}
 
-		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
-
-		$this->storeload();
-
-		return true;
+		return $this->storeload();
 	}
 
 	function is_renewing()
 	{
-		if ( isset( $this->plan_history->used_plans ) ) {
-			return count( $this->plan_history->used_plans ) ? true : false;
+		if ( !empty( $this->plan_history->used_plans ) ) {
+			return true;
 		} else {
 			return false;
 		}
@@ -1572,7 +1569,7 @@ class metaUserDB extends serialParamDBTable
 
 	function getUsedPlans()
 	{
-		if ( isset( $this->plan_history->used_plans ) ) {
+		if ( !empty( $this->plan_history->used_plans ) ) {
 			return $this->plan_history->used_plans;
 		} else {
 			return array();
