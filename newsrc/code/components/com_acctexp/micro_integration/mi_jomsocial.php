@@ -10,7 +10,7 @@
 
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_jomsocial
+class mi_jomsocial extends MI
 {
 	function Info ()
 	{
