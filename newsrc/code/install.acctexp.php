@@ -30,6 +30,9 @@ if (version_compare(phpversion(), '5.0') < 0) {
 
 if ( !function_exists( 'com_install' ) ) {
 
+// Joomla 1.7 - throwing errors like there's no tomorrow
+ini_set('display_errors', 'off');
+
 function com_install()
 {
 	$db = &JFactory::getDBO();
@@ -261,6 +264,56 @@ function com_install()
 		}
 	}
 
+	// Install plugins and modules, if we have them
+	jimport('joomla.installer.installer');
+
+	$install_list = array(	'plg_aecaccess' => array ( 'type' => 'user', 'element' => 'aecaccess' ),
+							'plg_aecerror' => array ( 'type' => 'system', 'element' => 'aecerrorhandler' ),
+							'plg_aecrouting' => array ( 'type' => 'system', 'element' => 'aecrouting' ),
+							'plg_aecuser' => array ( 'type' => 'user', 'element' => 'aecuser' ),
+							'mod_acctexp' => array ( 'position' => 'left' ),
+							'mod_acctexp_cart' => array ( 'position' => 'left' )
+	);
+
+	$componentInstaller =& JInstaller::getInstance();
+
+	if ( defined( 'JPATH_MANIFESTS' ) ) {
+		$src = dirname(__FILE__);
+	} else {
+		$src = $componentInstaller->getPath('source');
+	}
+
+	$pckgs = 0;
+	foreach ( $install_list as $name => $details ) {
+		if ( !is_dir( $src.'/'.$name ) ) {
+			continue;
+		}		
+
+		$installer = new JInstaller();
+		$result = $installer->install( $src.'/'.$name );
+
+		if ( $result ) {
+			if ( strpos( $name, 'plg' ) === 0 ) {
+				$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" ) . " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" ) . " WHERE element='".$details['element']."' AND folder='".$details['type']."'";
+			} else {
+				$query = "UPDATE #__modules SET position='".$details['position']."', published=1 WHERE module='".$name."'";
+				$db->setQuery( $query );
+				$db->query();
+
+				$query = "SELECT id FROM #__modules WHERE module = '".$name."'";
+				$db->setQuery( $query );
+				$module_id = $db->loadResult();
+
+				$query = "REPLACE INTO #__modules_menu (moduleid,menuid) VALUES (" . $module_id . ", 0)";
+			}
+
+			$db->setQuery( $query );
+			$db->query();
+
+			$pckgs++;
+		}
+	}
+
 	?>
 
 	<style type="text/css">
@@ -276,7 +329,30 @@ function com_install()
 		.installnote p {
 			color: #ddd;
 			padding: 0 12px;
-		}</style>
+		}
+		div.packages_installed {
+		padding: 0 10px 0 120px;
+		border-bottom: 3px solid #4c7000;
+		border-top: 3px solid #4c7000;
+		color: #fff;
+		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_1.png") no-repeat scroll 28px center #7caa00;
+		margin-bottom: 14px;
+		}
+		div.packages_none {
+		padding: 0 10px 0 120px;
+		border-bottom: 3px solid #706100;
+		border-top: 3px solid #706100;
+		color: #fff;
+		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_2.png") no-repeat scroll 28px center #aa9900;
+		margin-bottom: 14px;
+		}
+		div.packages_installed p, div.packages_none p {
+		font-size: 180%;
+		}
+		div.packages_installed br, div.packages_none br {
+		margin-bottom: 20px;
+		}
+		</style>
 	<div style="width: 1024px; margin: 0 auto;">
 	<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx_0_14.png) no-repeat top right; margin: 0 6px;">
 		<div style="width: 100%; height: 290px;"></div>
@@ -296,16 +372,13 @@ function com_install()
 			echo '</ul>' . "\n"
 			. '</div>' . "\n";
 		} ?>
+		<div class="<?php echo $pckgs ? 'packages_installed' : 'packages_none'; ?>">
+			<p><?php echo $pckgs ? JText::_('AEC_INST_PACKAGES_YES') : JText::_('AEC_INST_PACKAGES_NO'); ?></p>
+		</div>
 		<div class="installnote">
 			<h1><?php echo JText::_('AEC_INST_HINTS'); ?></h1>
 			<p><?php echo sprintf( JText::_('AEC_INST_HINT1'), 'http://valanx.org' ); ?></p>
 			<p><?php echo JText::_('AEC_INST_HINT2'); ?></p>
-		</div>
-		<div class="installnote">
-			<h1><?php echo JText::_('AEC_INST_NOTE_IMPORTANT'); ?>:</h1>
-			<p><?php echo JText::_('AEC_INST_NOTE_SECURITY'); ?></p>
-			<p><?php printf( JText::_('AEC_INST_APPLY_HACKS'), AECToolbox::backendTaskLink( 'hacks', JText::_('AEC_INST_APPLY_HACKS_LTEXT') ) ); ?></p>
-			<p><?php echo JText::_('AEC_INST_NOTE_UPGRADE'); ?></p>
 		</div>
 		<div style="width: 100%; height: 60px;"></div>
 	</div>
@@ -314,7 +387,7 @@ function com_install()
 			<br />
 			<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
 			<br /><br />
-			<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION );; ?> - Revision <?php echo _AEC_REVISION; ?></p>
+			<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION ); ?> - Revision <?php echo _AEC_REVISION; ?></p>
 			<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 			<div style="margin: 0 auto;text-align:center;">
 				<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>

@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<!-- $Id$ -->
+<project name="AEC" basedir="." default="build">
+	<target name="build" description="Build installable package">
+		<mkdir dir="${dir.tmp}" />
+
+		<copy todir="${dir.tmp}">
+			<fileset dir="${dir.local}">
+				<include name="administrator/**" />
+				<include name="components/**" />
+				<include name="language/**" />
+				<include name="media/**" />
+				<include name="install.acctexp.php" />
+				<include name="uninstall.acctexp.php" />
+				<include name="*.xml" />
+				<include name="*.txt" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.tmp}/mod_acctexp" />
+
+		<copy todir="${dir.tmp}/mod_acctexp">
+			<fileset dir="${dir.local}/modules/mod_acctexp">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.tmp}/mod_acctexp_cart" />
+
+		<copy todir="${dir.tmp}/mod_acctexp_cart">
+			<fileset dir="${dir.local}/modules/mod_acctexp_cart">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.tmp}/plg_aecaccess" />
+
+		<copy todir="${dir.tmp}/plg_aecaccess">
+			<fileset dir="${dir.local}/plugins">
+				<include name="aecaccess.*" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.tmp}/plg_aecerror" />
+
+		<copy todir="${dir.tmp}/plg_aecerror">
+			<fileset dir="${dir.local}/plugins">
+				<include name="aecerrorhandler.*" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.tmp}/plg_aecrouting" />
+
+		<copy todir="${dir.tmp}/plg_aecrouting">
+			<fileset dir="${dir.local}/plugins">
+				<include name="aecrouting.*" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.tmp}/plg_aecuser" />
+
+		<copy todir="${dir.tmp}/plg_aecuser">
+			<fileset dir="${dir.local}/plugins">
+				<include name="aecuser.*" />
+			</fileset>
+		</copy>
+
+		<if>
+			<equals arg1="${file.extension}" arg2="zip" />
+			<then>
+				<zip destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${git.lastrevision}_FULL.${file.extension}" basedir="${dir.tmp}" />
+			</then>
+			<else>
+				<tar destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${git.lastrevision}_FULL.${file.extension}" basedir="${dir.tmp}" compression="${file.compression}" />
+			</else>
+		</if>
+
+		<delete dir="${dir.tmp}" includeemptydirs="true" />
+	</target>
+</project>

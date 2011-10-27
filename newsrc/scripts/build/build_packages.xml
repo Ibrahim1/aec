@@ -54,6 +54,10 @@
 
 		<delete dir="${dir.packages}/fullpack" />
 
+		<phing phingfile="build_component_full.xml" inheritRefs="true">
+			<property file="properties/com.properties" override="true" />
+		</phing>
+
 		<delete dir="${dir.dropbox}/${file.extension}" />
 		<mkdir dir="${dir.dropbox}/${file.extension}" />
 

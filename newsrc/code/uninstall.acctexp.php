@@ -69,7 +69,7 @@ function com_uninstall()
 		$eventlog = new eventLog($db);
 		$params = array("userid" => $user->id);
 		$eventlog->issue( $short, $tags, $event, 2, $params );
-print_r($eventlog);
+
 		echo "Component successfully uninstalled. The component tables are still in the database and will be preserved for the next install or upgrade of the component.";
 	}
 
