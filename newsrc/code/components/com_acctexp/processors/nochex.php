@@ -110,7 +110,7 @@ class processor_nochex extends POSTprocessor
 				$response['valid'] = 1;
 			}
 		} else {
-			$response['pending_reason'] = 'notification verification failed: ' . $response;
+			$response['pending_reason'] = 'notification verification failed: ' . $result;
 		}
 
 		return $response;
