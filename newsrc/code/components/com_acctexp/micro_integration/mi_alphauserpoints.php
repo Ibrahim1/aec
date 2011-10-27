@@ -88,7 +88,7 @@ class mi_alphauserpoints extends MI
 		if ( $request->action == 'action' ) {
 			$params = $request->metaUser->meta->getMIParams( $request->parent->id, $request->plan->id );
 
-			if ( $params['use_points'] ) {
+			if ( $params['use_points'] > 0 ) {
 				$points = -$params['use_points'];
 
 				$this->updatePoints( $request->metaUser->userid, $points, $request->invoice->invoice_number );

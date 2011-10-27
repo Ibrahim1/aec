@@ -158,7 +158,7 @@ class mi_jomsocial extends MI
 		if ( $request->action == 'action' ) {
 			$params = $request->metaUser->meta->getMIParams( $request->parent->id, $request->plan->id );
 
-			if ( $params['use_points'] ) {
+			if ( $params['use_points'] > 0 ) {
 				$points = -$params['use_points'];
 
 				$this->updatePoints( $request->metaUser->userid, $points, $request->invoice->invoice_number );
@@ -328,8 +328,8 @@ class mi_jomsocial extends MI
 		$db	   =& JFactory::getDBO();
 
 		$query = 'UPDATE #__community_users'
-				. ' SET `points` = \'' . ( $aupUser->points + $points ) . '\''
-				. ' WHERE `userid` = \'' . $aupUser->userid . '\''
+				. ' SET `points` = \'' . ( $this->getPoints( $userid ) + $points ) . '\''
+				. ' WHERE `userid` = \'' . $userid . '\''
 				;
 		$db->setQuery( $query );
 		$db->query();
