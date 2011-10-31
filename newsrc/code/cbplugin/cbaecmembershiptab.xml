@@ -7,7 +7,7 @@
 	<authorEmail>anton@starlingwebdevelopment.com</authorEmail>
 	<authorUrl>www.starlingwebdevelopment.com</authorUrl>
 	<version>1.4</version>
-	<description>This is a CB plugin handles the CB Tab which contains AEC Subscription data for the user.</description>
+	<description>This is a CommunityBuilder plugin that includes AEC Subscription data in the user tab.</description>
 	<files>
 		<filename plugin="cbaecmembershiptab">cbaecmembershiptab.php</filename>
 		<filename>index.html</filename>
