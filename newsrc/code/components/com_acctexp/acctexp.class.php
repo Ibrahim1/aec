@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '3874' );
+define( '_AEC_REVISION', '3879' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -4344,7 +4344,7 @@ class processor extends serialParamDBTable
 
 	function checkoutAction( $request, $InvoiceFactory=null )
 	{
-		return '<p>' . $this->settings['info'] . '</p>';
+		return '<p>' . AECToolbox::rewriteEngineRQ( $this->settings['info'], $request ) . '</p>';
 	}
 
 	function fileError( $text, $level=128, $tags="", $params=array() )
