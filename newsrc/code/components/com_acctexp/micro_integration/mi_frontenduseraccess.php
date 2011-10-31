@@ -120,6 +120,7 @@ class mi_frontenduseraccess
 		$settings = array();
 
 		$settings['lists']['group']		= JHTML::_('select.genericlist', $fuagroups, 'group[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups );
+		$settings['lists']['group_remove'] = JHTML::_('select.genericlist', $fuagroups, 'group_remove[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_remove );
 		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $fuagroups, 'group_exp[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp );
 		$settings['lists']['group_exp_remove'] = JHTML::_('select.genericlist', $fuagroups, 'group_exp_remove[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp_remove );
 
