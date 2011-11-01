@@ -226,8 +226,7 @@ class mi_jobs
 							'name'			=> $request->metaUser->cmsUser->username,
 							'email_address'	=> $request->metaUser->cmsUser->email,
 							'memberid'		=> $request->metaUser->userid,
-							'created'		=> date( 'Y-m-d H:i:s' ),
-							'alias'			=> $this->getAlias( $title )
+							'created'		=> date( 'Y-m-d H:i:s' )
 							);
 
 		$this->createResume( $fields );
