@@ -1606,8 +1606,7 @@ class aecLanguageHandler
 
 		foreach ( $list as $name => $path ) {
 			$lang->load( $name, $path, 'en-GB', true );
-			$lang->load( $name, $path, $lang->getDefault(), true );
-			$lang->load( $name, $path, null, true );
+			$lang->load( $name, $path, $lang->get('tag'), true );
 		}
 
 		if ( !defined( 'JPATH_MANIFESTS' ) ) {
