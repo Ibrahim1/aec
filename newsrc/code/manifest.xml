@@ -46,7 +46,7 @@
 			<folder>install</folder>
 		</files>
 		<languages folder="administrator/language">
-			<language tag="da-DA">da-DA/da-DA.com_acctexp.admin.ini</language>
+			<language tag="da-DK">da-DK/da-DK.com_acctexp.admin.ini</language>
 			<language tag="de-DE">de-DE/de-DE.com_acctexp.admin.ini</language>
 			<language tag="el-GR">el-GR/el-GR.com_acctexp.admin.ini</language>
 			<language tag="en-GB">en-GB/en-GB.com_acctexp.admin.ini</language>
@@ -61,7 +61,7 @@
 	</administration>
 	<languages folder="language">
 		<language tag="cz-CZ">cz-CZ/cz-CZ.com_acctexp.ini</language>
-		<language tag="da-DA">da-DA/da-DA.com_acctexp.ini</language>
+		<language tag="da-DK">da-DK/da-DK.com_acctexp.ini</language>
 		<language tag="de-DE">de-DE/de-DE.com_acctexp.ini</language>
 		<language tag="de-DE">de-DE/de-DE.com_acctexp.microintegrations.ini</language>
 		<language tag="de-DE">de-DE/de-DE.com_acctexp.processors.ini</language>
