@@ -208,12 +208,6 @@ function com_install()
 
 	// icons
 	$files = array(
-					array( 'icons/backend_icons.tar.gz',	'icons',			1, 1 ),
-					array( 'icons/silk_icons.tar.gz',		'icons',			0, 1 ),
-					array( 'gfx/gfx.tar.gz',				'gfx',				1, 1 ),
-					array( 'cc_icons/cc_icons.tar.gz',		'cc_icons',			0, 1 ),
-					array( 'gateway_buttons.tar.gz',		'',					0, 1 ),
-					array( 'gateway_logos.tar.gz',			'',					0, 1 ),
 					array( 'lib/krumo/krumo.tar.gz',		'lib/krumo/',		0 ),
 					array( 'lib/mootools/mootools.tar.gz',	'lib/mootools/',	0 ),
 					array( 'jquery/css/smoothness/images/jquery_ui_smoothness_img.tar.gz',	'jquery/css/smoothness/images/',				1, 2 ),
