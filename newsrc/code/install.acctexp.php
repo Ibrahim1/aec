@@ -289,26 +289,46 @@ function com_install()
 			continue;
 		}		
 
+		if ( !strpos( $name, 'plg' ) === 0 ) {
+			$query = "SELECT id, position, published FROM #__modules WHERE module = '".$name."'";
+			$db->setQuery( $query );
+			$lemodule = $db->loadObject();
+
+			if ( $menu->id ) {
+				$details['menuid']		= $lemodule->id;
+				$details['position']	= $lemodule->position;
+				$details['published']	= $lemodule->published;
+			} else {
+				$details['menuid']		= 0;
+				$details['published']	= "0";
+			}
+		}
+
 		$installer = new JInstaller();
 		$result = $installer->install( $src.'/'.$name );
 
 		if ( $result ) {
 			if ( strpos( $name, 'plg' ) === 0 ) {
 				$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" ) . " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" ) . " WHERE element='".$details['element']."' AND folder='".$details['type']."'";
-			} else {
-				$query = "UPDATE #__modules SET position='".$details['position']."', published=1 WHERE module='".$name."'";
+
 				$db->setQuery( $query );
 				$db->query();
+			} else {
+				if ( empty( $details['menuid'] ) ) {
+					$query = "UPDATE #__modules SET position='".$details['position']."', published=".$details['published']." WHERE module='".$name."'";
+					$db->setQuery( $query );
+					$db->query();
 
-				$query = "SELECT id FROM #__modules WHERE module = '".$name."'";
-				$db->setQuery( $query );
-				$module_id = $db->loadResult();
+					$query = "SELECT id FROM #__modules WHERE module = '".$name."'";
+					$db->setQuery( $query );
+					$module_id = $db->loadResult();
+	
+					$query = "REPLACE INTO #__modules_menu (moduleid,menuid) VALUES (" . $module_id . ", 0)";
 
-				$query = "REPLACE INTO #__modules_menu (moduleid,menuid) VALUES (" . $module_id . ", 0)";
+					$db->setQuery( $query );
+					$db->query();
+				}
 			}
-
-			$db->setQuery( $query );
-			$db->query();
 
 			$pckgs++;
 		}
