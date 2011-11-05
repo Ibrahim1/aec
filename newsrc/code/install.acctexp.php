@@ -210,7 +210,6 @@ function com_install()
 	$files = array(
 					array( 'lib/krumo/krumo.tar.gz',		'lib/krumo/',		0 ),
 					array( 'lib/mootools/mootools.tar.gz',	'lib/mootools/',	0 ),
-					array( 'jquery/css/smoothness/images/jquery_ui_smoothness_img.tar.gz',	'jquery/css/smoothness/images/',				1, 2 ),
 					array( 'processors/ideal_advanced/ideal_advanced.tar.gz',					'processors/ideal_advanced/',	0 )
 					);
 
