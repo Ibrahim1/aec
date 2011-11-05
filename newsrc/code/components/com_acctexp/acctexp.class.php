@@ -11706,7 +11706,7 @@ class Invoice extends serialParamDBTable
 					}
 
 					if ( $this->subscr_id != $targetUser->focusSubscription->id ) {
-						// Moving to a new subsription, so expire the old
+						// Moving to a new subscription, so expire the old
 						$expire_sub = new Subscription( $db );
 						$expire_sub->load( $this->subscr_id );
 						$expire_sub->expire();

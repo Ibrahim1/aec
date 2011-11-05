@@ -142,8 +142,7 @@ font-size: 110%;
 
 
 .centerlogo {
-background-color:#f9f9f9;
-background-image: url(../images/admin/gfx/centerlogo_bg.png);
+background-color:#fff;
 background-position: top center;
 background-repeat: repeat-y;
 padding: 10px !important;
