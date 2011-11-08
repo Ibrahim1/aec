@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '3915' );
+define( '_AEC_REVISION', '3918' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -11716,14 +11716,7 @@ class Invoice extends serialParamDBTable
 						$targetUser->establishFocus( $plan, $this->method );
 					}
 
-					if ( $this->subscr_id != $targetUser->focusSubscription->id ) {
-						// Moving to a new subscription, so expire the old
-						$expire_sub = new Subscription( $db );
-						$expire_sub->load( $this->subscr_id );
-						$expire_sub->expire();
-
-						$this->subscr_id = $targetUser->focusSubscription->id;
-					}
+					$this->subscr_id = $targetUser->focusSubscription->id;
 
 					// Apply the Plan
 					$application = $targetUser->focusSubscription->applyUsage( $plan->id, $this->method, 0, $multiplicator, $this );
