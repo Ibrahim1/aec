@@ -10632,6 +10632,17 @@ class InvoiceFactory
 		$this->userid = $this->invoice->userid;
 		$this->loadMetaUser();
 
+		// Provide MI Params so they're correct for invoice modifications
+		if ( is_object( $this->metaUser ) ) {
+			if ( !empty( $this->invoice->params['userMIParams'] ) ) {
+				foreach ( $this->invoice->params['userMIParams'] as $plan => $mis ) {
+					foreach ( $mis as $mi_id => $content ) {
+						$metaUser->meta->setMIParams( $mi_id, $plan, $content );
+					}
+				}
+			}
+		}
+
 		$this->puffer( $option );
 
 		$this->loadItems();
