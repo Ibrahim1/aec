@@ -5,7 +5,7 @@
 * @copyright 2006-2011 Copyright (C) David Deutsch
 * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 * @version $Revision: 1.2 $
-* @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+* @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
 **/
 
 // Dont allow direct linking

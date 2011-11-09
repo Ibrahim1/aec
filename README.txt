@@ -1,6 +1,6 @@
 AEC - Account Control Expiration - Membership Manager
 copyright 2006-2011 Copyright (C) David Deutsch
-author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
 license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 
 This package contains Free Software. Please read about Free Software here: http://www.fsf.org/about/what-is-free-software

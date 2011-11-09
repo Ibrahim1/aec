@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Translate J!1.0 -> J!1.5/1.6 language files
  * @copyright 2006-2011 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 

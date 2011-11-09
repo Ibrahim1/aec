@@ -3,7 +3,7 @@
  * @version $Id: mammontini.php
  * @package Mammontini!: General purpose Payment-related functionality
  * @copyright Copyright (C) 2008 David Deutsch, All Rights Reserved
- * @author David Deutsch <skore@skore.de>
+ * @author David Deutsch <skore@valanx.org>
  * @license GNU/GPL v.2 or later http://www.gnu.org/copyleft/gpl.html
  *
  *          _  _ ____ _  _ _  _ ____ __ _ ___ _ __ _ _  /

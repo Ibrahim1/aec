@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Joomla 1.5 Plugins
  * @subpackage User
  * @copyright 2006-2011 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -16,7 +16,7 @@ jimport('joomla.plugin.plugin');
 /**
  * AEC User plugin
  *
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @package AEC Component
  */
 class plgUserAECuser extends JPlugin

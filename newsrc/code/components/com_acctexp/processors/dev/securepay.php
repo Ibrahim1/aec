@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - eWay XML
  * @copyright 2006-2011 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -17,7 +17,7 @@
 * @subpackage processor
 * @copyright 2006-2011 Copyright (C) David Deutsch
 * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
-* @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+* @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
 **/
 
 class processor_securepay extends XMLprocessor
@@ -129,7 +129,7 @@ class processor_securepay extends XMLprocessor
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - eWay XML
  * @copyright 2006-2011 Copyright (C) David Deutsch
- * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
 
@@ -142,7 +142,7 @@ class processor_securepay extends XMLprocessor
 * @subpackage processor
 * @copyright 2006-2011 Copyright (C) David Deutsch
 * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
-* @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
+* @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
 **/
 
 class processor_securepay extends XMLprocessor
