@@ -7310,6 +7310,7 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( empty( $user ) ) {
 			return false;
 		}
+
 		if ( is_object( $user ) ) {
 			if ( is_a( $user, 'metaUser' ) ) {
 				$metaUser = $user;
