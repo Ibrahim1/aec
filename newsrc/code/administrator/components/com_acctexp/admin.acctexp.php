@@ -679,6 +679,10 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'stats':
+		aec_stats2( $option );
+		break;
+
+	case 'stats2':
 		aec_stats( $option );
 		break;
 
@@ -5145,6 +5149,13 @@ function aec_stats( $option )
 	$stats = null;
 
 	HTML_AcctExp::stats( $option, $stats );
+}
+
+function aec_stats2( $option )
+{
+	$stats = null;
+
+	HTML_AcctExp::stats2( $option, $stats );
 }
 
 function quicklookup( $option )
