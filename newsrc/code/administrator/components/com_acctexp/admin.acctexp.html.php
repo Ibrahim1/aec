@@ -927,7 +927,7 @@ class HTML_AcctExp
 				<h1>Past Contributing Programmers</h1>
 				<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
 				<h1>Graphics</h1>
-				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2010 David 'skOre' Deutsch unless otherwise noted.</p>
+				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2011 David 'skOre' Deutsch unless otherwise noted.</p>
 				<p>Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).</p>
 				<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
 				<h1>Libraries</h1>
