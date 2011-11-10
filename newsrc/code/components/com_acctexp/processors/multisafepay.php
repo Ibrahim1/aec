@@ -105,7 +105,7 @@ class processor_multisafepay extends XMLprocessor
 
 		$code_list = array();
 		foreach ( $country_code_list as $country ) {
-			$code_list[] = JHTML::_('select.option', $country, $country . " - " . JText::_( 'AEC_LANG_' . $country ) );
+			$code_list[] = JHTML::_('select.option', $country, $country . " - " . JText::_( 'COUNTRYCODE_' . $country ) );
 		}
 
 		$var['params']['lists']['country'] = JHTML::_( 'select.genericlist', $code_list, 'country', 'size="1"', 'value', 'text', 'NL' );
