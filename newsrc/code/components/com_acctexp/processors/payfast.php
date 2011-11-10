@@ -98,7 +98,7 @@ class processor_payfast extends POSTprocessor
 		// Transaction details		
 		$var['m_payment_id']	= $request->invoice->invoice_number;
 		$var['amount']			= $request->int_var['amount'];
-		$var['item_name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+		$var['item_name']		= trim( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) );
 
 		if ( !empty($this->settings['item_desc']) ) {
 		    $var['item_description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request );
