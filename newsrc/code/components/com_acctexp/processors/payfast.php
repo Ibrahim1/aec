@@ -101,7 +101,7 @@ class processor_payfast extends POSTprocessor
 		$var['item_name']		= trim( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) );
 
 		if ( !empty($this->settings['item_desc']) ) {
-		    $var['item_description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request );
+		    $var['item_description']	= trim( AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request ) );
 		}
 
 		// Custom variables
