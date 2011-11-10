@@ -705,6 +705,7 @@ class metaUser
 				if ( empty( $this->hasSubscription ) && !$plan_params['make_primary'] && !empty( $plan_params['standard_parent'] ) && empty( $existing_parent ) ) {
 					$this->objSubscription = new Subscription( $db );
 					$this->objSubscription->load( 0 );
+
 					if ( $this->objSubscription->createNew( $this->userid, 'none', 1, 1, $plan_params['standard_parent'] ) ) {
 						$this->objSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
 					}
@@ -13238,7 +13239,7 @@ class Subscription extends serialParamDBTable
 			$this->plan		= $plan;
 		}
 
-		$this->storeload();
+		return $this->storeload();
 	}
 
 	function is_expired( $offset=false )
