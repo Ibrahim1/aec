@@ -16,8 +16,8 @@ class mi_webex
 	function Info()
 	{
 		$info = array();
-		$info['name'] = JText::_('AEC_MI_NAME_IDEV');
-		$info['desc'] = JText::_('AEC_MI_DESC_IDEV');
+		$info['name'] = JText::_('AEC_MI_WEBEX_NAME');
+		$info['desc'] = JText::_('AEC_MI_WEBEX_DESC');
 
 		return $info;
 	}
@@ -25,12 +25,9 @@ class mi_webex
 	function Settings()
 	{
 		$settings = array();
-		$settings['setupinfo']			= array( 'fieldset' );
-		$settings['profile']			= array( 'inputC' );
-		$settings['directory']			= array( 'inputC' );
-		$settings['use_curl']			= array( 'list_yesno' );
-		$settings['onlycustomparams']	= array( 'list_yesno' );
-		$settings['customparams']		= array( 'inputD' );
+		$settings['hosted_name']		= array( 'inputC' );
+		$settings['pid']				= array( 'inputC' );
+		//$settings['customparams']		= array( 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
@@ -41,87 +38,52 @@ class mi_webex
 
 	function CommonData()
 	{
-		return array( 'profile', 'directory', 'use_curl' );
+		return array( 'hosted_name', 'pid' );
 	}
 
 	function action( $request )
 	{
 		$db = &JFactory::getDBO();
 
-		$rooturl = $this->getPath();
+		return true;
+	}
 
-		$getparams = array();
+	function on_userchange_action( $request )
+	{
+		$password = $this->getPWrequest( $request );
 
-		if ( !empty( $this->settings['profile'] ) ) {
-			$getparams[] = 'profile=' . $this->settings['profile'];
-		}
+		if ( !( strcmp( $request->trace, 'registration' ) === 0 ) ) {
+			$ht = $this->getHTAccess( $this->settings );
 
-		if ( empty( $request->invoice->amount ) ) {
-			return null;
-		}
+			$userlist = $ht->getUsers();
 
-		$getparams[] = 'idev_saleamt=' . $request->invoice->amount;
-		$getparams[] = 'idev_ordernum=' . $request->invoice->invoice_number;
+			if ( in_array( $request->row->username, $userlist ) ) {
+				$ht->delUser( $request->row->username );
 
-		if ( !empty( $this->settings['onlycustomparams'] ) && !empty( $this->settings['customparams'] ) ) {
-			$getparams = array();
-		}
+				if ( $this->settings['use_md5'] ) {
+					$ht->addUser( $request->row->username, $request->row->password );
+				} else {
+					$ht->addUser( $request->row->username, $apachepw->apachepw );
+				}
 
-		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
-
-		if ( !empty( $userflags['idev_ip_address'] ) ) {
-			$ip = $userflags['idev_ip_address'];
-		} else {
-			if ( isset( $request->metaUser->focusSubscription->params['creator_ip'] ) ) {
-				$ip = $request->metaUser->focusSubscription->params['creator_ip'];
-			} else {
-				$ip = $_SERVER['REMOTE_ADDR'];
+				$ht->addLogin();
 			}
-
-			$newflags['idev_ip_address'] = $ip;
-			$request->metaUser->focusSubscription->setMIflags( $request->plan->id, $this->id, $newflags );
-		}
-
-		$getparams[] = 'ip_address=' . $ip;
-
-		if ( !empty( $this->settings['customparams'] ) ) {
-			$rw_params = AECToolbox::rewriteEngineRQ( $this->settings['customparams'], $request );
-
-			if ( strpos( $rw_params, "\r\n" ) !== false ) {
-				$cps = explode( "\r\n", $rw_params );
-			} else {
-				$cps = explode( "\n", $rw_params );
-			}
-
-			foreach ( $cps as $cp ) {
-				$getparams[] = $cp;
-			}
-		}
-
-		$newget = array();
-		foreach ( $getparams as $v ) {
-			$va = explode( '=', $v, 2 );
-
-			$newget[] = urlencode($va[0]) . '=' . urlencode($va[1]);
-		}
-
-		if ( !empty( $this->settings['use_curl'] ) ) {
-			$ch = curl_init();
-			$curl_url = $rooturl . "/sale.php?" . implode( '&', $newget );
-			curl_setopt($ch, CURLOPT_URL, $curl_url );
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_exec($ch);
-			curl_close($ch);
-		} else {
-			$text = '<img border="0" '
-					.'src="' . $rooturl .'/sale.php?' . implode( '&amp;', $newget ) . '" '
-					.'width="1" height="1" />';
-
-			$displaypipeline = new displayPipeline($db);
-			$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 		}
 
 		return true;
+	}
+
+	function getPWrequest( $request )
+	{
+		if ( !empty( $request->post['password_clear'] ) ) {
+			return $request->post['password_clear'];
+		} elseif ( !empty( $request->post['password'] ) ) {
+			return $request->post['password'];
+		} elseif ( !empty( $request->post['password2'] ) ) {
+			return $request->post['password2'];
+		} else {
+			return "";
+		}
 	}
 
 	function apiUserSignup( $request )
@@ -137,7 +99,7 @@ class mi_webex
 						'WID' => $request->metaUser->username,
 		);
 
-		return $this->apiCall( $array );
+		return $this->apiCall( $array, $request );
 	}
 
 	function apiActivateUser( $request )
@@ -147,7 +109,7 @@ class mi_webex
 						'WID' => $request->metaUser->username,
 		);
 
-		return $this->apiCall( $array );
+		return $this->apiCall( $array, $request );
 	}
 
 	function apiDeactivateUser( $request )
@@ -157,12 +119,50 @@ class mi_webex
 						'WID' => $request->metaUser->username,
 		);
 
-		return $this->apiCall( $array );
+		return $this->apiCall( $array, $request );
 	}
 
-	function apiCall( $array )
+	function apiCall( $array, $request )
 	{
-		
+		global $aecConfig;
+
+		if ( !empty( $this->settings[$array['AT'].'_customparams'] ) ) {
+			$rw_params = AECToolbox::rewriteEngineRQ( $this->settings[$array['AT'].'_customparams'], $request );
+
+			if ( strpos( $rw_params, "\r\n" ) !== false ) {
+				$cps = explode( "\r\n", $rw_params );
+			} else {
+				$cps = explode( "\n", $rw_params );
+			}
+
+			foreach ( $cps as $cp ) {
+				$array[] = $cp;
+			}
+		}
+
+		$req = array();
+		foreach ( $array as $key => $value ) {
+			$req[] = $key.'='.urlencode( stripslashes( $value ) );
+		}
+
+		$path = '/' . $this->settings['hosted_name'] . '/m.php?' . implode( '&', $req );
+		$url = 'https://' . $this->settings['hosted_name'] . '.webex.com' . $path;
+
+		if ( $aecConfig->cfg['curl_default'] ) {
+			$response = processor::doTheCurl( $url, array() );
+			if ( $response === false ) {
+				// If curl doesn't work try using fsockopen
+				$response = processor::doTheHttp( $url, $path, array() );
+			}
+		} else {
+			$response = processor::doTheHttp( $url, $path, array() );
+			if ( $response === false ) {
+				// If fsockopen doesn't work try using curl
+				$response = processor::doTheCurl( $url, array() );
+			}
+		}
+
+		return $response;
 	}
 }
 ?>
