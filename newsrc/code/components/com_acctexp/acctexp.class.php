@@ -11297,6 +11297,8 @@ class Invoice extends serialParamDBTable
 	{
 		global $aecConfig;
 
+		$db = &JFactory::getDBO();
+
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
 			$app = JFactory::getApplication();
 
@@ -11306,6 +11308,17 @@ class Invoice extends serialParamDBTable
 				} elseif ( $response['valid'] ) {
 					// The last notification has not been too long ago - skipping this one
 					// But only skip actual payment notifications - errors are OK
+
+					$short = JText::_('AEC_MSG_PROC_INVOICE_ACTION_SH');
+					$event = JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE') . "\n";
+
+					$tags	= 'invoice,processor,duplicate';
+					$level	= 2;
+					$params = array( 'invoice_number' => $this->invoice_number );
+
+					$eventlog = new eventLog( $db );
+					$eventlog->issue( $short, $tags, $event, $level, $params );
+
 					return $response;
 				}
 			}
