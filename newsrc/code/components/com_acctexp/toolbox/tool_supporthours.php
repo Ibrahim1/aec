@@ -107,9 +107,21 @@ class tool_supporthours
 
 		$historylist = array();
 		foreach ( $userlist as $userid ) {
-			$metaUser = new metaUser( $userid );
+			$db->setQuery(
+				'SELECT a.id, a.name, a.username, b.custom_params'
+				. ' FROM #__users AS a'
+				. ' LEFT JOIN `#__acctexp_metauser` AS b ON a.id = b.userid'
+				. ' WHERE a.id = ' . $userid
+				. ' AND b.custom_params <> ""'
+			);
 
-			$uparams = $metaUser->meta->getCustomParams();
+			$user = $db->loadObject();
+
+			if ( empty( $user->id ) ) {
+				continue;
+			}
+
+			$uparams = unserialize( base64_decode( $user->custom_params ) );
 
 			if ( !empty( $uparams['support_minutes_history'] ) ) {
 				if ( is_array( $uparams['support_minutes_history'] ) ) {
@@ -117,9 +129,9 @@ class tool_supporthours
 						if ( ( $history['tstamp'] > $start_timeframe ) && ( $history['tstamp'] <= $end_timeframe ) ) {
 							if ( !empty( $history['userid'] ) && $history['minutes_used'] ) {
 								$add = array();
-								$add['userid'] = $metaUser->cmsUser->id;
-								$add['name'] = $metaUser->cmsUser->name;
-								$add['username'] = $metaUser->cmsUser->username;
+								$add['userid'] = $user->id;
+								$add['name'] = $user->name;
+								$add['username'] = $user->username;
 
 								$historylist[$history['userid']][] = array_merge( $history, $add );
 							}
