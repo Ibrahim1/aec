@@ -27,6 +27,9 @@ class mi_webex
 		$settings = array();
 		$settings['hosted_name']		= array( 'inputC' );
 		$settings['pid']				= array( 'inputC' );
+		$settings['create_user']		= array( 'list_yesno' );
+		$settings['activate_user']		= array( 'list_yesno' );
+		$settings['deactivate_user']	= array( 'list_yesno' );
 		//$settings['customparams']		= array( 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
@@ -43,7 +46,18 @@ class mi_webex
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		if ( $this->settings['create_user'] ) {
+			$this->apiUserSignup( $request );
+		}
+
+		return true;
+	}
+
+	function expiration_action( $request )
+	{
+		if ( $this->settings['deactivate_user'] ) {
+			$this->apiDeactivateUser( $request );
+		}
 
 		return true;
 	}
