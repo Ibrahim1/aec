@@ -47,6 +47,18 @@ class mi_webex
 	function action( $request )
 	{
 		if ( $this->settings['create_user'] ) {
+			$params = $request->metaUser->meta->custom_params;
+
+			if ( !empty($params['temp_pw']) ) {
+				$request->metaUser->meta->custom_params['is_stored'] = true;
+
+				unset( $request->metaUser->meta->custom_params['temp_pw'] );
+
+				$request->metaUser->meta->storeload();
+
+				$request->metaUser->cmsUser->password = $params['temp_pw'];
+			}
+
 			$this->apiUserSignup( $request );
 		}
 
@@ -64,27 +76,16 @@ class mi_webex
 
 	function on_userchange_action( $request )
 	{
-		$password = $this->getPWrequest( $request );
+		if ( $request->trace == 'registration' ) {
+			$password = $this->getPWrequest( $request );
 
-		if ( !( strcmp( $request->trace, 'registration' ) === 0 ) ) {
-			$ht = $this->getHTAccess( $this->settings );
+			$params = $request->metaUser->meta->custom_params;
 
-			$userlist = $ht->getUsers();
-
-			if ( in_array( $request->row->username, $userlist ) ) {
-				$ht->delUser( $request->row->username );
-
-				if ( $this->settings['use_md5'] ) {
-					$ht->addUser( $request->row->username, $request->row->password );
-				} else {
-					$ht->addUser( $request->row->username, $apachepw->apachepw );
-				}
-
-				$ht->addLogin();
-			}
+			if ( empty( $params['is_stored'] ) && empty( $params['temp_pw']) && !empty( $request->row->password ) ) {
+				$request->metaUser->meta->custom_params['temp_pw'] = $password;
+		        $request->metaUser->meta->storeload();
+    		}
 		}
-
-		return true;
 	}
 
 	function getPWrequest( $request )
@@ -139,6 +140,10 @@ class mi_webex
 	function apiCall( $array, $request )
 	{
 		global $aecConfig;
+
+		if ( empty( $this->settings['hosted_name'] ) ) {
+			return false;
+		}
 
 		if ( !empty( $this->settings[$array['AT'].'_customparams'] ) ) {
 			$rw_params = AECToolbox::rewriteEngineRQ( $this->settings[$array['AT'].'_customparams'], $request );
