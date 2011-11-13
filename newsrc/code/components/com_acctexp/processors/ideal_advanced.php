@@ -78,7 +78,7 @@ class processor_ideal_advanced extends XMLprocessor
 			$options[]	= JHTML::_('select.option', $key, $name );
 		}		
 
-		$settings['lists']['acquirer'] = JHTML::_( 'select.genericlist', $options, 'acquirer', 'size="1"', 'value', 'text', null );
+		$settings['lists']['acquirer'] = JHTML::_( 'select.genericlist', $options, 'acquirer', 'size="1"', 'value', 'text', $this->settings['acquirer'] );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
