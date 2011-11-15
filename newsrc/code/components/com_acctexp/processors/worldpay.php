@@ -61,7 +61,7 @@ class processor_worldpay extends POSTprocessor
 	{
 		$var['post_url']	= 'https://select.worldpay.com/wcc/purchase';
 
-		if ( $this->settings->testmode ) {
+		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://select-test.worldpay.com/wcc/purchase';
 
 			$var['testMode'] = '100';
