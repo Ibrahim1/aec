@@ -7036,6 +7036,20 @@ class ItemGroup extends serialParamDBTable
 
 		return parent::delete();
 	}
+	
+	function copy()
+	{
+		$pid = $this->id;
+
+		$this->id = 0;
+		$this->storeload();
+
+		$parents = ItemGroupHandler::parentGroups( $pid, 'group' );
+
+		foreach ( $parents as $parentid ) {
+			ItemGroupHandler::setChild( $this->id, $parentid, 'group' );
+		}
+	}
 }
 
 class itemXgroup extends JTable
@@ -8203,6 +8217,20 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		$this->params = $params;
+	}
+
+	function copy()
+	{
+		$pid = $this->id;
+
+		$this->id = 0;
+		$this->storeload();
+
+		$parents = ItemGroupHandler::parentGroups( $pid, 'item' );
+
+		foreach ( $parents as $parentid ) {
+			ItemGroupHandler::setChild( $row->id, $parentid, 'item' );
+		}
 	}
 }
 
@@ -19345,7 +19373,16 @@ class coupon extends serialParamDBTable
 
 			$numberofrows = $numberofrows_normal + $numberofrows_static;
 		}
+
 		return $inum;
+	}
+
+	function copy()
+	{
+		$this->id = 0;
+		$this->coupon_code = $this->generateCouponCode();
+		$this->check();
+		$this->store();
 	}
 }
 

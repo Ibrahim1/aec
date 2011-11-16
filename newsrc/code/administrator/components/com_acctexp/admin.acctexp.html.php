@@ -265,10 +265,7 @@ class General_css
 
 class HTML_AcctExp
 {
-	function HTML_AcctExp()
-	{
-
-	}
+	function HTML_AcctExp() {}
 
 	function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
@@ -638,6 +635,12 @@ class HTML_AcctExp
 			echo $tabs->startPanel(JText::_('AEC_USER_MICRO_INTEGRATION'), JText::_('AEC_USER_MICRO_INTEGRATION'));
 			?>
 			<div class="aec_tabheading"><h2><?php echo JText::_('AEC_USER_MICRO_INTEGRATION'); ?>: <?php echo JText::_('AEC_USER_MICRO_INTEGRATION_USER'); ?></h2></div>
+			<?php if ( $metaUser->hasSubscription ) { ?>
+				<p><a href="index.php?"><?php echo JText::_('AEC_USER_QUICKFIRE_GO'); ?></a></p>
+			<?php } else { ?>
+				<p><?php echo JText::_('AEC_USER_QUICKFIRE_UNAVAILABLE'); ?></p>
+			<?php } ?>
+
 			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) {
 				if ( !empty( $mi['profile'] ) ) { ?>
 				<table class="aecadminform">

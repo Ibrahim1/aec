@@ -85,21 +85,16 @@ switch( strtolower( $task ) ) {
 		editUser( $option, $userid, $subscriptionid, $returnTask, $page );
 		break;
 
-	case 'save':
-		saveUser( $option );
+	case 'quickfire':
+		$mi			= trim( aecGetParam( 'mi', '' ) );
+
+		miQuickfire( $option, $subscriptionid, $mi );
 		break;
 
-	case 'apply':
-		saveUser( $option, 1 );
-		break;
-
-	case 'cancel':
-		cancel( $option );
-		break;
-
-	case 'showcentral':
-		aecCentral( $option );
-		break;
+	case 'save': saveUser( $option ); break;
+	case 'apply': saveUser( $option, 1 ); break;
+	case 'cancel': cancel( $option ); break;
+	case 'showcentral': aecCentral( $option ); break;
 
 	case 'clearpayment':
 		$invoice	= trim( aecGetParam( 'invoice', '' ) );
@@ -112,30 +107,6 @@ switch( strtolower( $task ) ) {
 		$invoice	= trim( aecGetParam( 'invoice', '' ) );
 
 		cancelInvoice( $option, $invoice, $returnTask );
-		break;
-
-	case 'removeclosed':
-		removeClosedSubscription( $userid, $option );
-		break;
-
-	case 'removeuser':
-		removeUser( $userid, $option );
-		break;
-
-	case 'removepending':
-		removePendingSubscription( $userid, $option );
-		break;
-
-	case 'activatepending':
-		activatePendingSubscription( $userid, $option, 0 );
-		break;
-
-	case 'renewoffline':
-		activatePendingSubscription( $userid, $option, 1 );
-		break;
-
-	case 'closeactive':
-		closeActiveSubscription( $userid, $option, $returnTask );
 		break;
 
 	case 'showsubscriptions':
@@ -152,13 +123,8 @@ switch( strtolower( $task ) ) {
 		listSubscriptions( $option, $groups, $subscriptionid, $userid, $planid );
 		break;
 
-	case 'showexcluded':
-		listSubscriptions( $option, 'excluded', $subscriptionid, $userid );
-		break;
-
-	case 'showactive':
-		listSubscriptions( $option, 'active', $subscriptionid, $userid );
-		break;
+	case 'showexcluded': listSubscriptions( $option, 'excluded', $subscriptionid, $userid ); break;
+	case 'showactive': listSubscriptions( $option, 'active', $subscriptionid, $userid ); break;
 
 	case 'showexpired':
 		$planid	= trim( aecGetParam( 'plan', null ) );
@@ -166,491 +132,124 @@ switch( strtolower( $task ) ) {
 		listSubscriptions( $option, 'expired', $subscriptionid, $userid, $planid );
 		break;
 
-	case 'showpending':
-		listSubscriptions( $option, 'pending', $subscriptionid, $userid );
-		break;
-
-	case 'showcancelled':
-		listSubscriptions( $option, 'cancelled', $subscriptionid, $userid );
-		break;
-
-	case 'showhold':
-		listSubscriptions( $option, 'hold', $subscriptionid, $userid );
-		break;
-
-	case 'showclosed':
-		listSubscriptions( $option, 'closed', $subscriptionid, $userid );
-		break;
-
-	case 'showmanual':
-		listSubscriptions( $option, 'notconfig', $subscriptionid, $userid );
-		break;
-
-	case 'showsettings':
-		editSettings( $option );
-		break;
-
-	case 'savesettings':
-		saveSettings( $option );
-		break;
-
-	case 'applysettings':
-		saveSettings( $option, 1 );
-		break;
-
-	case 'cancelsettings':
-		cancelSettings( $option );
-		break;
-
-	case 'showprocessors':
-		listProcessors( $option );
-		break;
-
-	case 'newprocessor':
-		editProcessor( 0, $option );
-		break;
-
-	case 'editprocessor':
-		editProcessor( $id[0], $option );
-		break;
-
-	case 'saveprocessor':
-		saveProcessor( $option );
-		break;
-
-	case 'applyprocessor':
-		saveProcessor( $option, 1 );
-		break;
-
-	case 'cancelprocessor':
-		cancelProcessor( $option );
-		break;
-
-	case 'publishprocessor':
-		changeProcessor( $id, 1, 'active', $option );
-		break;
-
-	case 'unpublishprocessor':
-		changeProcessor( $id, 0, 'active', $option );
-		break;
-
-	case 'showsubscriptionplans':
-		listSubscriptionPlans( $option );
-		break;
-
-	case 'newsubscriptionplan':
-		editSubscriptionPlan( 0, $option );
-		break;
-
-	case 'editsubscriptionplan':
-		editSubscriptionPlan( $id[0], $option );
-		break;
-
-	case 'copysubscriptionplan':
-			$db = &JFactory::getDBO();
-
-			if ( is_array( $id ) ) {
-				foreach ( $id as $pid ) {
-					$row = new SubscriptionPlan( $db );
-					$row->load( $pid );
-					$row->id = 0;
-					$row->storeload();
-
-					$parents = ItemGroupHandler::parentGroups( $pid, 'item' );
-
-					foreach ( $parents as $parentid ) {
-						ItemGroupHandler::setChild( $row->id, $parentid, 'item' );
-					}
-				}
-			}
-
-			aecRedirect( 'index.php?option='. $option . '&task=showSubscriptionPlans' );
-		break;
-
-	case 'savesubscriptionplan':
-		saveSubscriptionPlan( $option );
-		break;
-
-	case 'applysubscriptionplan':
-		saveSubscriptionPlan( $option, 1 );
-		break;
-
-	case 'publishsubscriptionplan':
-		changeSubscriptionPlan( $id, 1, 'active', $option );
-		break;
-
-	case 'unpublishsubscriptionplan':
-		changeSubscriptionPlan( $id, 0, 'active', $option );
-		break;
-
-	case 'visiblesubscriptionplan':
-		changeSubscriptionPlan( $id, 1, 'visible', $option );
-		break;
-
-	case 'invisiblesubscriptionplan':
-		changeSubscriptionPlan( $id, 0, 'visible', $option );
-		break;
-
-	case 'removesubscriptionplan':
-		removeSubscriptionPlan( $id, $option, $returnTask );
-		break;
-
-	case 'cancelsubscriptionplan':
-		cancelSubscriptionPlan( $option );
-		break;
-
-		case 'orderplanup':
-			$db = &JFactory::getDBO();
-			$row = new SubscriptionPlan( $db );
-			$row->load( $id[0] );
-			$row->move( -1 );
-
-			aecRedirect( 'index.php?option='. $option . '&task=showSubscriptionPlans' );
-
-			break;
-
-		case 'orderplandown':
-			$db = &JFactory::getDBO();
-			$row = new SubscriptionPlan( $db );
-			$row->load( $id[0] );
-			$row->move( 1 );
-
-			aecRedirect( 'index.php?option='. $option . '&task=showSubscriptionPlans' );
-			break;
-
-	case 'showitemgroups':
-		listItemGroups( $option );
-		break;
-
-	case 'newitemgroup':
-		editItemGroup( 0, $option );
-		break;
-
-	case 'edititemgroup':
-		editItemGroup( $id[0], $option );
-		break;
-
-	case 'copyitemgroup':
-			$db = &JFactory::getDBO();
-
-			if ( is_array( $id ) ) {
-				foreach ( $id as $pid ) {
-					$row = new ItemGroup( $db );
-					$row->load( $pid );
-					$row->id = 0;
-					$row->storeload();
-
-					$parents = ItemGroupHandler::parentGroups( $pid, 'group' );
-
-					foreach ( $parents as $parentid ) {
-						ItemGroupHandler::setChild( $row->id, $parentid, 'group' );
-					}
-				}
-			}
-
-			aecRedirect( 'index.php?option='. $option . '&task=showItemGroups' );
-		break;
-
-	case 'saveitemgroup':
-		saveItemGroup( $option );
-		break;
-
-	case 'applyitemgroup':
-		saveItemGroup( $option, 1 );
-		break;
-
-	case 'publishitemgroup':
-		changeItemGroup( $id, 1, 'active', $option );
-		break;
-
-	case 'unpublishitemgroup':
-		changeItemGroup( $id, 0, 'active', $option );
-		break;
-
-	case 'visibleitemgroup':
-		changeItemGroup( $id, 1, 'visible', $option );
-		break;
-
-	case 'invisibleitemgroup':
-		changeItemGroup( $id, 0, 'visible', $option );
-		break;
-
-	case 'removeitemgroup':
-		removeItemGroup( $id, $option, $returnTask );
-		break;
-
-	case 'cancelitemgroup':
-		cancelItemGroup( $option );
-		break;
-
-		case 'ordergroupup':
-			$db = &JFactory::getDBO();
-			$row = new ItemGroup( $db );
-			$row->load( $id[0] );
-			$row->move( -1 );
-
-			aecRedirect( 'index.php?option='. $option . '&task=showItemGroups' );
-			break;
-
-		case 'ordergroupdown':
-			$db = &JFactory::getDBO();
-			$row = new ItemGroup( $db );
-			$row->load( $id[0] );
-			$row->move( 1 );
-
-			aecRedirect( 'index.php?option='. $option . '&task=showItemGroups' );
-			break;
-
-	case 'showmicrointegrations':
-		listMicroIntegrations( $option );
-		break;
-
-	case 'newmicrointegration':
-		editMicroIntegration( 0, $option );
-		break;
-
-	case 'editmicrointegration':
-		editMicroIntegration( $id[0], $option );
-		break;
-
-	case 'savemicrointegration':
-		saveMicroIntegration( $option );
-		break;
-
-	case 'applymicrointegration':
-		saveMicroIntegration( $option, 1 );
-		break;
-
-	case 'copymicrointegration':
-			$db = &JFactory::getDBO();
-
-			if ( is_array( $id ) ) {
-				foreach ( $id as $pid ) {
-				$row = new microIntegration( $db );
-				$row->load( $pid );
-				$row->id = 0;
-				$row->check();
-				$row->store();
-				}
-			}
-
-			aecRedirect( 'index.php?option='. $option . '&task=showMicroIntegrations' );
-		break;
-
-	case 'publishmicrointegration':
-		changeMicroIntegration( $id, 1, $option );
-		break;
-
-	case 'unpublishmicrointegration':
-		changeMicroIntegration( $id, 0, $option );
-		break;
-
-	case 'removemicrointegration':
-		removeMicroIntegration( $id, $option, $returnTask );
-		break;
-
-	case 'cancelmicrointegration':
-		cancelMicroIntegration( $option );
-		break;
-
-		case 'ordermiup':
-			$db = &JFactory::getDBO();
-			$row = new microIntegration( $db );
-			$row->load( $id[0] );
-			$row->move( -1 );
-
-			$app = JFactory::getApplication();
-
-			$app->redirect( 'index.php?option='. $option . '&task=showMicroIntegrations' );
-
-			break;
-
-		case 'ordermidown':
-			$db = &JFactory::getDBO();
-			$row = new microIntegration( $db );
-			$row->load( $id[0] );
-			$row->move( 1 );
-
-			$app = JFactory::getApplication();
-
-			$app->redirect( 'index.php?option='. $option . '&task=showMicroIntegrations' );
-
-			break;
-
-	case 'showcoupons':
-		listCoupons( $option, 0);
-		break;
+	case 'showpending': listSubscriptions( $option, 'pending', $subscriptionid, $userid ); break;
+	case 'showcancelled': listSubscriptions( $option, 'cancelled', $subscriptionid, $userid ); break;
+	case 'showhold': listSubscriptions( $option, 'hold', $subscriptionid, $userid ); break;
+	case 'showclosed': listSubscriptions( $option, 'closed', $subscriptionid, $userid ); break;
+	case 'showmanual': listSubscriptions( $option, 'notconfig', $subscriptionid, $userid ); break;
+
+	case 'showsettings': editSettings( $option ); break;
+	case 'savesettings': saveSettings( $option ); break;
+	case 'applysettings': saveSettings( $option, 1 ); break;
+	case 'cancelsettings': aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_CANCELLED') ); break;
+
+	case 'showprocessors': listProcessors( $option ); break;
+	case 'newprocessor': editProcessor( 0, $option ); break;
+	case 'editprocessor': editProcessor( $id[0], $option ); break;
+	case 'saveprocessor': saveProcessor( $option ); break;
+	case 'applyprocessor': saveProcessor( $option, 1 ); break;
+	case 'cancelprocessor': aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_CANCELLED') ); break;
+	case 'publishprocessor': changeProcessor( $id, 1, 'active', $option ); break;
+	case 'unpublishprocessor': changeProcessor( $id, 0, 'active', $option ); break;
+
+	case 'showsubscriptionplans': listSubscriptionPlans( $option ); break;
+	case 'newsubscriptionplan': editSubscriptionPlan( 0, $option ); break;
+	case 'editsubscriptionplan': editSubscriptionPlan( $id[0], $option ); break;
+	case 'copysubscriptionplan': copyObject( $option, 'SubscriptionPlan', $id ); break;
+	case 'savesubscriptionplan': saveSubscriptionPlan( $option ); break;
+	case 'applysubscriptionplan': saveSubscriptionPlan( $option, 1 ); break;
+	case 'publishsubscriptionplan': changeSubscriptionPlan( $id, 1, 'active', $option ); break;
+	case 'unpublishsubscriptionplan': changeSubscriptionPlan( $id, 0, 'active', $option ); break;
+	case 'visiblesubscriptionplan': changeSubscriptionPlan( $id, 1, 'visible', $option ); break;
+	case 'invisiblesubscriptionplan': changeSubscriptionPlan( $id, 0, 'visible', $option ); break;
+	case 'removesubscriptionplan': removeSubscriptionPlan( $id, $option, $returnTask ); break;
+	case 'cancelsubscriptionplan': aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'orderplanup': orderObject( $option, 'SubscriptionPlan', $id[0], 1 ); break;
+	case 'orderplandown': orderObject( $option, 'SubscriptionPlan', $id[0], 0 ); break;
+
+	case 'showitemgroups': listItemGroups( $option ); break;
+	case 'newitemgroup': editItemGroup( 0, $option ); break;
+	case 'edititemgroup': editItemGroup( $id[0], $option ); break;
+	case 'copyitemgroup': copyObject( $option, 'ItemGroup', $id ); break;
+	case 'saveitemgroup': saveItemGroup( $option ); break;
+	case 'applyitemgroup': saveItemGroup( $option, 1 ); break;
+	case 'publishitemgroup': changeItemGroup( $id, 1, 'active', $option ); break;
+	case 'unpublishitemgroup': changeItemGroup( $id, 0, 'active', $option ); break;
+	case 'visibleitemgroup': changeItemGroup( $id, 1, 'visible', $option ); break;
+	case 'invisibleitemgroup': changeItemGroup( $id, 0, 'visible', $option ); break;
+	case 'removeitemgroup': removeItemGroup( $id, $option, $returnTask ); break;
+	case 'cancelitemgroup': aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'ordergroupup': orderObject( $option, 'ItemGroup', $id[0], 1 ); break;
+	case 'ordergroupdown': orderObject( $option, 'ItemGroup', $id[0], 0 ); break;
+
+	case 'showmicrointegrations': listMicroIntegrations( $option ); break;
+	case 'newmicrointegration': editMicroIntegration( 0, $option ); break;
+	case 'editmicrointegration': editMicroIntegration( $id[0], $option ); break;
+	case 'savemicrointegration': saveMicroIntegration( $option ); break;
+	case 'applymicrointegration': saveMicroIntegration( $option, 1 ); break;
+	case 'copymicrointegration': copyObject( $option, 'microIntegration', $id ); break;
+	case 'publishmicrointegration': changeMicroIntegration( $id, 1, $option ); break;
+	case 'unpublishmicrointegration': changeMicroIntegration( $id, 0, $option ); break;
+	case 'removemicrointegration': removeMicroIntegration( $id, $option, $returnTask ); break;
+	case 'cancelmicrointegration': cancelMicroIntegration( $option ); break;
+	case 'ordermiup': orderObject( $option, 'microIntegration', $id[0], 1 ); break;
+	case 'ordermidown': orderObject( $option, 'microIntegration', $id[0], 0 ); break;
+
+	case 'showcoupons': listCoupons( $option, 0); break;
 
 	case 'copycoupon':
-			$db = &JFactory::getDBO();
+		$db = &JFactory::getDBO();
 
-			if ( is_array( $id ) ) {
-				foreach ( $id as $pid ) {
-				$row = new Coupon( $db, 0 );
-				$row->load( $pid );
-				$row->id = 0;
-				$row->coupon_code = $row->generateCouponCode();
-				$row->check();
-				$row->store();
-				}
-			}
+		foreach ( $id as $pid ) {
+			$row = new Coupon( $db, 0 );
+			$row->load( $pid );
+			$row->copy();
+		}
 
-			aecRedirect( 'index.php?option='. $option . '&task=showCoupons' );
+		aecRedirect( 'index.php?option='. $option . '&task=showCoupons' );
 		break;
 
-	case 'newcoupon':
-		editCoupon( 0, $option, 1, 0 );
-		break;
+	case 'newcoupon': editCoupon( 0, $option, 1, 0 ); break;
+	case 'editcoupon': editCoupon( $id[0], $option, 0, 0 ); break;
+	case 'savecoupon': saveCoupon( $option, 0 ); break;
+	case 'applycoupon': saveCoupon( $option, 0, 1 ); break;
+	case 'publishcoupon': changeCoupon( $id, 1, $option, 0 ); break;
+	case 'unpublishcoupon': changeCoupon( $id, 0, $option, 0 ); break;
+	case 'removecoupon': removeCoupon( $id, $option, $returnTask, 0 ); break;
+	case 'cancelcoupon': aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'ordercouponup': orderObject( $option, 'coupon', $id[0], 1, 'showCoupons' ); break;
+	case 'ordercoupondown': orderObject( $option, 'coupon', $id[0], 0, 'showCoupons' ); break;
 
-	case 'editcoupon':
-		editCoupon( $id[0], $option, 0, 0 );
-		break;
-
-	case 'savecoupon':
-		saveCoupon( $option, 0 );
-		break;
-
-	case 'applycoupon':
-		saveCoupon( $option, 0, 1 );
-		break;
-
-	case 'publishcoupon':
-		changeCoupon( $id, 1, $option, 0 );
-		break;
-
-	case 'unpublishcoupon':
-		changeCoupon( $id, 0, $option, 0 );
-		break;
-
-	case 'removecoupon':
-		removeCoupon( $id, $option, $returnTask, 0 );
-		break;
-
-	case 'cancelcoupon':
-		cancelCoupon( $option, 0 );
-		break;
-
-	case 'showcouponsstatic':
-		listCoupons( $option, 1);
-		break;
+	case 'showcouponsstatic': listCoupons( $option, 1); break;
 
 	case 'copycouponstatic':
 		$db = &JFactory::getDBO();
 
-		if ( is_array( $id ) ) {
-			foreach ( $id as $pid ) {
+		foreach ( $id as $pid ) {
 			$row = new Coupon( $db, 1 );
 			$row->load( $pid );
-			$row->id = 0;
-			$row->coupon_code = $row->generateCouponCode();
-			$row->check();
-			$row->store();
-			}
+			$row->copy();
 		}
 
-		$app = JFactory::getApplication();
-
-		$app->redirect( 'index.php?option='. $option . '&task=showCouponsStatic' );
-
+		aecRedirect( 'index.php?option='. $option . '&task=showCouponsStatic' );
 		break;
 
-	case 'newcouponstatic':
-		editCoupon( 0, $option, 1, 1 );
-		break;
+	case 'newcouponstatic': editCoupon( 0, $option, 1, 1 ); break;
+	case 'editcouponstatic': editCoupon( $id[0], $option, 0, 1 ); break;
+	case 'savecouponstatic': saveCoupon( $option, 1 ); break;
+	case 'applycouponstatic': saveCoupon( $option, 1, 1 ); break;
+	case 'publishcouponstatic': changeCoupon( $id, 1, $option, 1 ); break;
+	case 'unpublishcouponstatic': changeCoupon( $id, 0, $option, 1 ); break;
+	case 'removecouponstatic': removeCoupon( $id, $option, $returnTask, 1 ); break;
+	case 'cancelcouponstatic': aecRedirect( 'index.php?option=' . $option . '&task=showCouponsStatic', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
+	case 'ordercouponstaticup': orderObject( $option, 'coupon', $id[0], 1, 'showCouponsStatic' ); break;
+	case 'ordercouponstaticdown': orderObject( $option, 'coupon', $id[0], 0, 'showCouponsStatic' ); break;
 
-	case 'editcouponstatic':
-		editCoupon( $id[0], $option, 0, 1 );
-		break;
+	case 'editcss': editCSS( $option ); break;
+	case 'savecss': saveCSS( $option ); break;
+	case 'cancelcss': aecRedirect( 'index.php?option='. $option ); break;
 
-	case 'savecouponstatic':
-		saveCoupon( $option, 1 );
-		break;
-
-	case 'applycouponstatic':
-		saveCoupon( $option, 1, 1 );
-		break;
-
-	case 'publishcouponstatic':
-		changeCoupon( $id, 1, $option, 1 );
-		break;
-
-	case 'unpublishcouponstatic':
-		changeCoupon( $id, 0, $option, 1 );
-		break;
-
-	case 'removecouponstatic':
-		removeCoupon( $id, $option, $returnTask, 1 );
-		break;
-
-	case 'cancelcouponstatic':
-		cancelCoupon( $option, 1 );
-		break;
-
-		case 'ordercouponup':
-			$db = &JFactory::getDBO();
-			$row = new coupon( $db, 0 );
-			$row->load( $id[0] );
-			$row->move( -1 );
-
-			$app = JFactory::getApplication();
-
-			$app->redirect( 'index.php?option='. $option . '&task=showCoupons' );
-
-			break;
-
-		case 'ordercoupondown':
-			$db = &JFactory::getDBO();
-			$row = new coupon( $db, 0 );
-			$row->load( $id[0] );
-			$row->move( 1 );
-
-			$app = JFactory::getApplication();
-
-			$app->redirect( 'index.php?option='. $option . '&task=showCoupons' );
-
-			break;
-
-		case 'ordercouponstaticup':
-			$db = &JFactory::getDBO();
-			$row = new coupon( $db, 1 );
-			$row->load( $id[0] );
-			$row->move( -1 );
-
-			$app = JFactory::getApplication();
-
-			$app->redirect( 'index.php?option='. $option . '&task=showCouponsStatic' );
-
-			break;
-
-		case 'ordercouponstaticdown':
-			$db = &JFactory::getDBO();
-			$row = new coupon( $db, 1 );
-			$row->load( $id[0] );
-			$row->move( 1 );
-
-			$app = JFactory::getApplication();
-
-			$app->redirect( 'index.php?option='. $option . '&task=showCouponsStatic' );
-
-			break;
-
-	case 'editcss':
-		editCSS( $option );
-		break;
-
-	case 'savecss':
-		saveCSS( $option );
-		break;
-
-	case 'cancelcss':
-		cancelCSS( $option );
-		break;
-
-		case 'about':
-		about( );
-		break;
-
-		case 'hacks':
+	case 'hacks':
 		$undohack	= aecGetParam( 'undohack', 0 );
 		$filename	= aecGetParam( 'filename', 0 );
 		$check_hack	= $filename ? 0 : 1;
@@ -660,59 +259,28 @@ switch( strtolower( $task ) ) {
 		HTML_AcctExp::hacks( $option, hackcorefile( $option, 0, 1, 0 ) );
 		break;
 
-	case 'invoices':
-		invoices( $option );
+	case 'invoices': invoices( $option ); break;
+
+	case 'invoiceprint':
+		$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+		AdminInvoicePrintout( $option, $invoice );
 		break;
 
-		case 'invoiceprint':
-			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+	case 'history': history( $option ); break;
+	case 'eventlog': eventlog( $option ); break;
+	case 'stats': aec_stats2( $option ); break;
+	case 'stats2': aec_stats( $option ); break;
 
-			AdminInvoicePrintout( $option, $invoice );
-			break;
+	case 'readout': readout( $option ); break;
 
-	case 'history':
-		history( $option );
-		break;
+	case 'export': exportData( $option ); break;
+	case 'loadexport': exportData( $option, 'load' ); break;
+	case 'applyexport': exportData( $option, 'apply' ); break;
+	case 'exportexport': exportData( $option, 'export' ); break;
+	case 'saveexport': exportData( $option, 'save' ); break;
 
-	case 'eventlog':
-		eventlog( $option );
-		break;
-
-	case 'stats':
-		aec_stats2( $option );
-		break;
-
-	case 'stats2':
-		aec_stats( $option );
-		break;
-
-	case 'readout':
-		readout( $option );
-		break;
-
-	case 'export':
-		exportData( $option );
-		break;
-
-	case 'loadexport':
-		exportData( $option, 'load' );
-		break;
-
-	case 'applyexport':
-		exportData( $option, 'apply' );
-		break;
-
-	case 'exportexport':
-		exportData( $option, 'export' );
-		break;
-
-	case 'saveexport':
-		exportData( $option, 'save' );
-		break;
-
-	case 'import':
-		importData( $option );
-		break;
+	case 'import': importData( $option ); break;
 
 	case 'toolbox':
 		$cmd = trim( aecGetParam( 'cmd', null ) );
@@ -720,9 +288,7 @@ switch( strtolower( $task ) ) {
 		toolBoxTool( $option, $cmd );
 		break;
 
-	case 'credits':
-		HTML_AcctExp::credits();
-		break;
+	case 'credits': HTML_AcctExp::credits(); break;
 
 	case 'quicklookup':
 		$return = quicklookup( $option );
@@ -769,16 +335,33 @@ switch( strtolower( $task ) ) {
 		com_install();
 		break;
 
-	case 'add': editUser( null, $userid, $option, 'notconfig' ); break;
-
-	default:
-		aecCentral( $option );
-		break;
+	default: aecCentral( $option ); break;
 }
 
-/**
-* Central Page
-*/
+function orderObject( $option, $type, $id, $up, $customreturn=null )
+{
+	$db = &JFactory::getDBO();
+
+	$row = new $type( $db );
+	$row->load( $id[0] );
+	$row->move( $up ? -1 : 1 );
+
+	aecRedirect( 'index.php?option='. $option . '&task=' . ( empty( $customreturn ) ? 'show' . $type . 's' : $customreturn ) );
+}
+
+function copyObject( $option, $type, $id, $up, $customreturn=null )
+{
+	$db = &JFactory::getDBO();
+
+	foreach ( $id as $pid ) {
+		$row = new $type( $db, 1 );
+		$row->load( $pid );
+		$row->copy();
+	}
+
+	aecRedirect( 'index.php?option='. $option . '&task=' . ( empty( $customreturn ) ? 'show' . $type . 's' : $customreturn ) );
+}
+
 function aecCentral( $option, $searchresult=null, $searchcontent=null )
 {
 	$db = &JFactory::getDBO();
@@ -797,9 +380,6 @@ function aecCentral( $option, $searchresult=null, $searchcontent=null )
  	HTML_AcctExp::central( $searchresult, $notices, $searchcontent );
 }
 
-/**
-* Cancels an edit operation
-*/
 function cancel( $option )
 {
 	$db = &JFactory::getDBO();
@@ -1189,216 +769,6 @@ function saveUser( $option, $apply=0 )
 		aecRedirect( 'index.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	} else {
 		aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('SAVED') );
-	}
-}
-
-function removeUser( $userid, $option )
-{
-	$db = &JFactory::getDBO();
-
-	$user = &JFactory::getUser();
-
-	// $userid contains values corresponding to id field of #__acctexp table
-	if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
-		exit;
-	}
-
-	$userids	= implode( ',', $userid );
-	$msg		= JText::_('REMOVED');
-
-	if ( count( $userid ) ) {
-		$obj = new JTableUser( $db );
-		foreach ( $userid as $id ) {
-			// Get REAL UserID
-			$query = 'SELECT userid'
-					. ' FROM #__acctexp'
-					. ' WHERE `id` = ' . $id
-					;
-			$uid = null;
-			$db->setQuery( $query );
-			$uid = $db->loadResult();
-
-			if ( $uid ) {
-				$msg = aecACLhandler::userDelete( $uid, $msg );
-			}
-		}
-	}
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showManual', $msg );
-}
-
-function removeClosedSubscription( $userid, $option )
-{
-	$db = &JFactory::getDBO();
-
-	$user = &JFactory::getUser();
-
-	$app = JFactory::getApplication();
-
-	// $userid contains values corresponding to id field of #__acctexp table
-		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
-			exit;
-		}
-
-	$userids = implode(',', $userid);
-	$query  = 'DELETE FROM #__acctexp'
-			. ' WHERE `userid` IN (' . $userids . ')'
-			;
- 	$db->setQuery( $query );
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-	}
-
-	// Delete from the payment history
-	$query = 'DELETE FROM #__acctexp_log_history'
-			. ' WHERE `user_id` IN (' . $userids . ')'
-			;
- 	$db->setQuery( $query );
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-	}
-
-	// CB&CBE Integration
-	$tables	= array();
-	$tables	= $db->getTableList();
-
-	if ( GeneralInfoRequester::detect_component('CB') && GeneralInfoRequester::detect_component('CBE') ) {
-		$query = 'DELETE FROM #__comprofiler'
-				. ' WHERE `id` IN (' . $userids . ')'
-				;
-		$db->setQuery($query);
-		$db->query();
-	}
-
-	$msg = JText::_('REMOVED');
-	if ( count( $userid ) ) {
-		foreach ( $userid as $id ) {
-			$msg = aecACLhandler::userDelete( $userid, $msg );
-		}
-	}
-
-	$query = 'DELETE FROM #__acctexp_subscr'
-			. ' WHERE `userid` IN (' . $userids . ')'
-			;
- 	$db->setQuery( $query );
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-	}
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showClosed', $msg );
-
-}
-
-function removePendingSubscription( $userid, $option )
-{
-	$db = &JFactory::getDBO();
-
-	$user = &JFactory::getUser();
-
-	$app = JFactory::getApplication();
-
-	// $userid contains values corresponding to id field of #__acctexp table
-		if ( !is_array( $userid ) || count( $userid ) < 1 ) {
-			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
-			exit;
-		}
-
-	$userids = implode(',', $userid);
-
-	$query = 'DELETE FROM #__acctexp'
-			. ' WHERE `userid` IN (' . $userids . ')'
-			;
- 	$db->setQuery( $query );
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-	}
-
-	$query = 'DELETE FROM #__acctexp_log_history'
-			. ' WHERE `user_id` IN (' . $userids . ')'
-			;
- 	$db->setQuery( $query );
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-	}
-
-	// CB&CBE Integration
-	$tables	= array();
-	$tables	= $db->getTableList();
-
-	if ( GeneralInfoRequester::detect_component( 'CB' ) && GeneralInfoRequester::detect_component( 'CBE' ) ) {
-		$query = 'DELETE FROM #__comprofiler'
-				. ' WHERE `id` IN (' . $userids . ')'
-				;
-		$db->setQuery( $query );
-		$db->query();
-	}
-
-	$msg = JText::_('REMOVED');
-	if ( count( $userid ) ) {
-		foreach ( $userid as $id ) {
-			$msg = aecACLhandler::userDelete( $userid, $msg );
-		}
-	}
-
-	$query = 'DELETE FROM #__acctexp_subscr'
-			. ' WHERE `userid` IN (' . $userids . ')'
-			;
- 	$db->setQuery( $query );
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-	}
-
-	aecRedirect( 'index.php?option=' . $option . '&task=showPending', $msg );
-
-}
-
-function activatePendingSubscription( $userid, $option, $renew )
-{
-	$db = &JFactory::getDBO();
-
-		if (!is_array( $userid ) || count( $userid ) < 1) {
-			echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
-			exit;
-		}
-
-	$n = 0;
-
-	foreach ( $userid as $id ) {
-		$n++;
-
-		$user_subscription = new Subscription( $db );
-
-		if ( $userid ) {
-			$user_subscription->loadUserID( $id );
-		} else {
-			return;
-		}
-
-		$invoiceid = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $id );
-
-		if ( $invoiceid ) {
-			$invoice = new Invoice( $db );
-			$invoice->load( $invoiceid );
-			$plan = $invoice->usage;
-			$invoice->setTransactionDate();
-		} else {
-			$plan = $user_subscription->plan;
-		}
-
-		$renew = $user_subscription->applyUsage( $plan, 'none', 1 );
-	}
-	if ( $renew ) {
-		// Admin confirmed an offline payment for a renew
-		// He is working on the Active queue
-		$msg = $n . ' ' . JText::_('AEC_MSG_SUBS_RENEWED');
-		aecRedirect( 'index.php?option=' . $option . '&task=showActive', $msg );
-	} else {
-		// Admin confirmed an offline payment for a new subscription
-		// He is working on the Pending queue
-		$msg = $n . ' ' . JText::_('AEC_MSG_SUBS_ACTIVATED');
-		aecRedirect( 'index.php?option=' . $option . '&task=showPending', $msg );
 	}
 }
 
@@ -2305,15 +1675,6 @@ function editSettings( $option )
 	HTML_AcctExp::Settings( $option, $aecHTML, $tab_data, $editors );
 }
 
-/**
-* Cancels an configure operation
-*/
-function cancelSettings( $option )
-{
-	aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_CANCELLED') );
-}
-
-
 function saveSettings( $option, $return=0 )
 {
 	$db		= &JFactory::getDBO();
@@ -2625,14 +1986,6 @@ function editProcessor( $id, $option )
 	$aecHTML->pp = $pp;
 
 	HTML_AcctExp::editProcessor( $option, $aecHTML );
-}
-
-/**
-* Cancels an configure operation
-*/
-function cancelProcessor( $option )
-{
-	aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_CANCELLED') );
 }
 
 function changeProcessor( $cid=null, $state=0, $type, $option )
@@ -3606,11 +2959,6 @@ function removeSubscriptionPlan( $id, $option )
 	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
 
-function cancelSubscriptionPlan( $option )
-{
-	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('AEC_CMN_EDIT_CANCELLED') );
-}
-
 function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 {
 	$db = &JFactory::getDBO();
@@ -3998,11 +3346,6 @@ function removeItemGroup( $id, $option )
 	}
 }
 
-function cancelItemGroup( $option )
-{
-	aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('AEC_CMN_EDIT_CANCELLED') );
-}
-
 function changeItemGroup( $cid=null, $state=0, $type, $option )
 {
 	$db = &JFactory::getDBO();
@@ -4352,11 +3695,6 @@ function cancelMicroIntegration( $option )
 {
 	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', JText::_('AEC_CMN_EDIT_CANCELLED') );
 }
-
-// Changes the state of one or more content pages
-// @param array An array of unique plan id numbers
-// @param integer 0 if unpublishing, 1 if publishing
-//
 
 function changeMicroIntegration( $cid=null, $state=0, $option )
 {
@@ -4754,11 +4092,6 @@ function removeCoupon( $id, $option, $returnTask, $type )
 	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
 }
 
-function cancelCoupon( $option, $type )
-{
-	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ($type ? 'Static' : '' ), JText::_('AEC_CMN_EDIT_CANCELLED') );
-}
-
 function changeCoupon( $cid=null, $state=0, $option, $type )
 {
 	$db = &JFactory::getDBO();
@@ -4835,11 +4168,6 @@ function saveCSS( $option )
 		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('AEC_MSG_OP_FAILED_NO_WRITE') );
 	}
 
-}
-
-function cancelCSS ( $option )
-{
-	aecRedirect( 'index.php?option='. $option );
 }
 
 function invoices( $option )

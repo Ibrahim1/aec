@@ -548,6 +548,13 @@ class serialParamDBTable extends paramDBTable
 		}
 	}
 
+	function copy()
+	{
+		$this->id = 0;
+		$this->check();
+		$this->store();
+	}
+
 	function check( $fields=array() )
 	{
 		if ( method_exists( $this, 'declareParamFields' ) ) {
