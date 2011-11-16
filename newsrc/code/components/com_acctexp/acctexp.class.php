@@ -18175,7 +18175,7 @@ class couponsHandler extends eucaObject
 			return false;
 		}
 
-		if ( $this->coupon->restrictions['cart_multiple_items'] && !empty( $this->coupon->restrictions['cart_multiple_items_amount'] ) ) {
+		if ( $cph->coupon->restrictions['cart_multiple_items'] && !empty( $cph->coupon->restrictions['cart_multiple_items_amount'] ) ) {
 			if ( !array_key_exists( $coupon_code, $this->max_amount_list ) ) {
 				$this->coupons_list[] = array( 'coupon_code' => $coupon_code );
 
