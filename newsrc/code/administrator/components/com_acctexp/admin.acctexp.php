@@ -86,9 +86,10 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'quickfire':
-		$mi			= trim( aecGetParam( 'mi', '' ) );
+		$mi			= trim( aecGetParam( 'mi', 0 ) );
+		$action		= trim( aecGetParam( 'action', 0 ) );
 
-		miQuickfire( $option, $subscriptionid, $mi );
+		miQuickfire( $option, $subscriptionid, $mi, $action );
 		break;
 
 	case 'save': saveUser( $option ); break;
@@ -769,6 +770,19 @@ function saveUser( $option, $apply=0 )
 		aecRedirect( 'index.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	} else {
 		aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('SAVED') );
+	}
+}
+
+function miQuickfire( $option, $subscriptionid, $mi, $action )
+{
+	if ( $mi ) {
+		if ( $action ) {
+			HTML_AcctExp::quickfireResult( $option, $milist, $aecHTML );
+		} else {
+			HTML_AcctExp::quickfireEdit( $option, $milist, $aecHTML );
+		}
+	} else {
+		HTML_AcctExp::quickfireSelect( $option, $milist, $aecHTML );
 	}
 }
 

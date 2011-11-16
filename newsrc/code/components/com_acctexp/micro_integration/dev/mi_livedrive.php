@@ -95,6 +95,10 @@ class mi_livedrive
 			$params = $request->metaUser->meta->custom_params;
 
 			if ( empty( $params['is_stored'] ) && empty( $params['temp_pw']) && !empty( $request->row->password ) ) {
+				if ( empty( $request->metaUser->meta->id ) ) {
+					$request->metaUser->meta->createNew( $request->row->id );
+				}
+				
 				$request->metaUser->meta->custom_params['temp_pw'] = $password;aecDebug( "Storing password: ".$password );
 		        $request->metaUser->meta->storeload();
     		}
