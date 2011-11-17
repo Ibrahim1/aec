@@ -78,9 +78,9 @@ class processor_secureandpay extends POSTprocessor
 				$tax += $itax['cost'];
 			}
 
-			$var['Amount']		= $request->items->total->cost['amount'];
+			$var['Amount']		= (int) $request->items->total->cost['amount']*100;
 		} else {
-			$var['Amount']		= $request->int_var['amount'];
+			$var['Amount']		= (int) $request->int_var['amount']*100;
 		}
 
 		$var['Currency']		= $this->settings['currency'];
@@ -132,7 +132,7 @@ class processor_secureandpay extends POSTprocessor
 		$var['PaymentType']		= 'Direct';
 		//$var['Reccu_Num']		= ???;
 
-		$var['Tax']				= $tax;
+		$var['Tax']				= (int) $tax*100;
 
 		$var['Signature']		= sha1( $var['NumSite'] . $var['Password'] . $var['orderID'] . $var['Amount'] . $var['Currency'] );
 
