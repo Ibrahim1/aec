@@ -9495,14 +9495,14 @@ class InvoiceFactory
 			}
 		}
 
+		if ( !empty( $this->invoice->usage ) ) {
+			$this->usage = $this->invoice->usage;
+		}
+
 		$this->invoice->computeAmount( $this, empty( $this->invoice->id ) );
 
 		if ( !empty( $this->invoice->method ) && empty( $this->processor_userselect ) ) {
 			$this->processor = $this->invoice->method;
-		}
-
-		if ( !empty( $this->invoice->usage ) ) {
-			$this->usage = $this->invoice->usage;
 		}
 
 		if ( !$redirect ) {
