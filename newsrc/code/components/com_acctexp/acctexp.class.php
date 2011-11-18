@@ -10352,6 +10352,8 @@ class InvoiceFactory
 				} else {
 					$userMIParams = $this->userMIParams;
 				}
+			} elseif ( !empty( $this->invoice->params['userMIParams'] ) ) {
+				$userMIParams = $this->invoice->params['userMIParams'];
 			}
 
 			if ( empty( $userMIParams ) ) {
