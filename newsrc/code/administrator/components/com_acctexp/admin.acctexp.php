@@ -273,6 +273,14 @@ switch( strtolower( $task ) ) {
 	case 'stats': aec_stats2( $option ); break;
 	case 'stats2': aec_stats( $option ); break;
 
+	case 'statrequest':
+		$type	= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
+		$start	= aecGetParam( 'start', '', true, array( 'word', 'string' ) );
+		$end	= aecGetParam( 'end', '', true, array( 'word', 'string' ) );
+
+		aec_statrequest( $option, $type, $start, $end );
+		break;
+
 	case 'readout': readout( $option ); break;
 
 	case 'export': exportData( $option ); break;
@@ -4490,7 +4498,102 @@ function aec_stats( $option )
 {
 	$stats = null;
 
+	$document=& JFactory::getDocument();
+	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.min.js"></script>' );
+	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.chart.min.js"></script>' );
+	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.csv.min.js"></script>' );
+	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.geo.min.js"></script>' );
+	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.geom.min.js"></script>' );
+	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.layout.min.js"></script>' );
+	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
+
+	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/stats/test.js"></script>' );
+
 	HTML_AcctExp::stats( $option, $stats );
+}
+
+function aec_statrequest( $option, $type, $start, $end )
+{
+	$tree = new stdClass();
+
+	switch ( $type ) {
+		case 'sales':
+			$db = &JFactory::getDBO();
+
+			$tree->type = "SalesCollection";
+			$tree->sales = array();
+			$tree->groups = array();
+
+			$start_timeframe = $start . ' 00:00:00';
+
+			if ( empty( $end ) ) {
+				$end = date( 'Y-m-d', ( (int) gmdate('U') ) );
+			}
+
+			$end_timeframe = $end . ' 23:59:59';
+
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_log_history'
+					. ' WHERE transaction_date >= \'' . $start_timeframe . '\''
+					. ' AND transaction_date <= \'' . $end_timeframe . '\''
+					. ' ORDER BY transaction_date ASC'
+					;
+			$db->setQuery( $query );
+			$entries = $db->loadResultArray();
+
+			if ( empty( $entries ) ) {
+				return $tree;
+			}
+
+			$historylist = array();
+			$groups = array();
+			foreach ( $entries as $id ) {
+				$entry = new logHistory( $db );
+				$entry->load( $id );
+
+				$refund = false;
+				if ( is_array( $entry->response ) ) {
+					$filter = array( 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
+
+					$refund = false;
+					foreach ( $entry->response as $v ) {
+						if ( in_array( $v, $filter ) ) {
+							continue 2;
+						} elseif ( $v == 'refund' ) {
+							$refund = true;
+						}
+					}
+				}
+
+				$pgroups = ItemGroupHandler::parentGroups( $entry->plan_id );
+
+				if ( !in_array( $pgroups[0], $groups ) ) {
+					$groups[] = $pgroups[0];
+				}
+
+				$sale			= new stdClass();
+				$sale->type		= "Sale";
+				$sale->id		= $id;
+				$sale->invoice	= $entry->invoice_number;
+				$sale->date		= date( 'Y-m-d', strtotime( $entry->transaction_date ) );
+				$sale->group	= $pgroups[0];
+				$sale->amount	= $entry->amount;
+
+				$tree->sales[] = $sale;
+			}
+
+			foreach ( $groups as $groupid ) {
+				$group			= new stdClass();
+				$group->type	= "Group";
+				$group->id		= $id;
+
+				$tree->groups[] = $group;
+			}
+
+			break;
+	}
+
+	echo json_encode( $tree );exit;
 }
 
 function aec_stats2( $option )

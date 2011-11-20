@@ -2844,24 +2844,27 @@ class HTML_AcctExp
 	{
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS(); ?>
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
 		<form action="index.php" method="post" name="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-				<?php echo JText::_('AEC_HEAD_STATS'); ?>
-			</th>
-		</tr>
-		</table>
-
-		<ul>
-			<li>Current</li>
-			<li>Daily Activity</li>
-			<li>User</li>
-			<li>Plans</li>
-			<li>Something</li>
-		</ul>
+		<div id="statnav">
+			<div style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" class="aec_backend_page_heading">
+				<h1><?php echo JText::_('AEC_HEAD_STATS'); ?></h1>
+			</div>
+			<ul>
+				<li>Current</li>
+				<li>Daily Activity</li>
+				<li>User</li>
+				<li>Plans</li>
+				<li class="current">All Time Sales</li>
+			</ul>
+		</div>
 		<div id="stats">
-			
+			<h1>All Time Sales</h1>
+			<div class="gallery" id="chart">
+				<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/d3/d3.time.min.js"></script>
+				<link type="text/css" href="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/colorbrewer/colorbrewer.css" rel="stylesheet" />
+				<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
+			</div>
 		</div>
 
 		<?php

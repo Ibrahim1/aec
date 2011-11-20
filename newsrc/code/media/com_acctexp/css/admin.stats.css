@@ -1,0 +1,72 @@
+div#statnav {
+float: left;
+width: 18%;
+background: #eee;
+padding: 18px 24px;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+}
+
+.aec_backend_page_heading h1 {
+font-size: 120%;
+padding-top: 16px;
+padding-left: 16px;
+} 
+
+div#statnav ul {
+float: left;
+width: 80%;
+list-style-type: none;
+}
+
+div#statnav ul li {
+text-align: center;
+font-size: 120%;
+padding: 4px;
+background: #ddd;
+margin-bottom: 2px;
+}
+
+div#statnav ul li:hover {
+background: #efefef;
+}
+
+div#statnav ul li.current {
+background: #ccc;
+}
+
+div#statnav ul li.current:hover {
+background: #ccc;
+}
+
+div#stats {
+float: left;
+width: 70%;
+padding: 1% 4%;
+}
+
+div#stats h1 {
+text-align: center;
+color: #000;
+font-size: 240%;
+}
+
+.chart rect {
+stroke: white;
+fill: steelblue;
+}
+
+#chart {
+    font: 10px sans-serif;
+    shape-rendering: crispedges;
+}
+.day {
+    fill: #FFFFFF;
+    stroke: #CCCCCC;
+}
+.month {
+    fill: none;
+    stroke: #000000;
+    stroke-width: 2px;
+}
