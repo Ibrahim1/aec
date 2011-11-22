@@ -11,9 +11,6 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-define( '_AEC_MI_NAME_NINJABOARD', 'Ninjaboard' );
-define( '_AEC_MI_DESC_NINJABOARD', 'Assign Groups in Ninjaboard' );
-
 class mi_ninjaboard
 {
 	function Info()
@@ -27,6 +24,10 @@ class mi_ninjaboard
 
 	function Settings()
 	{
+		if ( !class_exists( 'KFactory' ) ) {
+			return array();
+		}
+
 	 	$groups = KFactory::tmp('admin::com.ninjaboard.model.usergroups')->getList();
 
 		$sg		= array();
@@ -91,6 +92,10 @@ class mi_ninjaboard
 
 	function action( $request )
 	{
+		if ( !class_exists( 'KFactory' ) ) {
+			return null;
+		}
+
 		$id = $request->metaUser->userid;
 
 		$model	= KFactory::tmp('admin::com.ninjaboard.model.usergroupmaps');
@@ -131,6 +136,10 @@ class mi_ninjaboard
 
 	function expiration_action( $request )
 	{
+		if ( !class_exists( 'KFactory' ) ) {
+			return array();
+		}
+
 		$id = $request->metaUser->userid;
 
 		$model	= KFactory::tmp('admin::com.ninjaboard.model.usergroupmaps');

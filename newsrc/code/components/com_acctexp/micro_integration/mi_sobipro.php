@@ -15,8 +15,8 @@ class mi_sobipro extends MI
 	function Info()
 	{
 		$info = array();
-		$info['name'] = 'SobiPro'; 
-		$info['desc'] = 'A Micro-Integrator for SobiPro component. This is a port of Sobi2 MI adapted for use with SobiPro';
+		$info['name'] = JText::_('AEC_MI_SOBIPRO_NAME');
+		$info['desc'] = JText::_('AEC_MI_SOBIPRO_DESC');
 
 		return $info;
 	}

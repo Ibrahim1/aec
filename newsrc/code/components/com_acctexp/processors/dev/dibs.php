@@ -11,18 +11,18 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-define('_CFG_DIBS_LONGNAME','DIBS Internet');
-define('_CFG_DIBS_STATEMENT','The leading payment solution in the Nordic countries.');
-define('_CFG_DIBS_DESCRIPTION','DIBS Internet is the safe payment solution for e-commerce shops wishing to receive online-payments with payment cards, bank payments or one of the other payment types accessible through DIBS.');
+define('CFG_DIBS_LONGNAME','DIBS Internet');
+define('CFG_DIBS_STATEMENT','The leading payment solution in the Nordic countries.');
+define('CFG_DIBS_DESCRIPTION','DIBS Internet is the safe payment solution for e-commerce shops wishing to receive online-payments with payment cards, bank payments or one of the other payment types accessible through DIBS.');
 
-define('_CFG_DIBS_MERCHANT_NAME','Merchant ID');
-define('_CFG_DIBS_MERCHANT_DESC','Your DIBS merchant ID');
-define('_CFG_DIBS_MD5_KEY1_NAME','MD5 KEY 1');
-define('_CFG_DIBS_MD5_KEY1_DESC','Your MD5 KEY 1');
-define('_CFG_DIBS_MD5_KEY2_NAME','MD5 KEY 2');
-define('_CFG_DIBS_MD5_KEY2_DESC','Your MD5 KEY 2');
-define('_CFG_DIBS_PAYMENTJText::_('METHOD')S_NAME','Payment Methods');
-define('_CFG_DIBS_PAYMENTJText::_('METHOD')S_DESC','Select the payment methods you enabled in your DIBS administration panel.');
+define('CFG_DIBS_MERCHANT_NAME','Merchant ID');
+define('CFG_DIBS_MERCHANT_DESC','Your DIBS merchant ID');
+define('CFG_DIBS_MD5_KEY1_NAME','MD5 KEY 1');
+define('CFG_DIBS_MD5_KEY1_DESC','Your MD5 KEY 1');
+define('CFG_DIBS_MD5_KEY2_NAME','MD5 KEY 2');
+define('CFG_DIBS_MD5_KEY2_DESC','Your MD5 KEY 2');
+define('CFG_DIBS_PAYMENTMETHODS_NAME','Payment Methods');
+define('CFG_DIBS_PAYMENTMETHODS_DESC','Select the payment methods you enabled in your DIBS administration panel.');
 
 
 class processor_dibs extends POSTprocessor
@@ -31,9 +31,9 @@ class processor_dibs extends POSTprocessor
 	{
 		$info = array();
 		$info['name']					= 'dibs';
-		$info['longname']				= _CFG_DIBS_LONGNAME;
-		$info['statement']				= _CFG_DIBS_STATEMENT;
-		$info['description']			= _CFG_DIBS_DESCRIPTION;
+		$info['longname']				= CFG_DIBS_LONGNAME;
+		$info['statement']				= CFG_DIBS_STATEMENT;
+		$info['description']			= CFG_DIBS_DESCRIPTION;
 		$info['currencies']				= 'DKK,EUR,USD,GBP,SEK,AUD,CAD,ISK,JPY,NZD,NOK,CHF,TRY';
 		$info['cc_list']				= 'visa,mastercard';
 		$info['notify_trail_thanks']	= true;

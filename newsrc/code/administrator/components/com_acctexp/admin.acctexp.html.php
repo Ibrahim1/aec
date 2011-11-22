@@ -2851,7 +2851,7 @@ class HTML_AcctExp
 				<h1><?php echo JText::_('AEC_HEAD_STATS'); ?></h1>
 			</div>
 			<ul>
-				<li>Current</li>
+				<li>Overview</li>
 				<li>Daily Activity</li>
 				<li>User</li>
 				<li>Plans</li>
@@ -2859,10 +2859,15 @@ class HTML_AcctExp
 			</ul>
 		</div>
 		<div id="stats">
-			<h1>All Time Sales</h1>
 			<div class="gallery" id="chart">
 				<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/d3/d3.time.min.js"></script>
 				<link type="text/css" href="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/colorbrewer/colorbrewer.css" rel="stylesheet" />
+				<script type="text/javascript">
+					var	amount_format = d3.format(".2f"),
+						amount_currency = "€",
+						range_start=2007,
+						range_end=2012;
+				</script>
 				<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
 			</div>
 		</div>

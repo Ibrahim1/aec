@@ -17,9 +17,9 @@ class processor_realex_redirect extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'realex_redirect';
-		$info['longname']		= JText::_('_CFG_REALEX_REDIRECT_LONGNAME');
-		$info['statement']		= JText::_('_CFG_REALEX_REDIRECT_STATEMENT');
-		$info['description']	= JText::_('_CFG_REALEX_REDIRECT_DESCRIPTION');
+		$info['longname']		= JText::_('CFG_REALEX_REDIRECT_LONGNAME');
+		$info['statement']		= JText::_('CFG_REALEX_REDIRECT_STATEMENT');
+		$info['description']	= JText::_('CFG_REALEX_REDIRECT_DESCRIPTION');
 		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
 		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,laser';

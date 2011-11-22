@@ -17,9 +17,9 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 	{
 		$info = array();
 		$info['name']			= 'sparkassen_internetkasse';
-		$info['longname']		= 'Sparkassen-Internetkasse Formularservice';
-		$info['statement']		= 'Sparkassen Internetkasse Formularservice - Die E-Payment-Lösung im Internet';
-		$info['description']	= 'Die Sparkassen-Internetkasse ist ein Management-System für das E-Payment im Internet.';
+		$info['longname']		= JText::_('CFG_SPARKASSEN_INTERNETKASSE_LONGNAME');
+		$info['statement']		= JText::_('CFG_SPARKASSEN_INTERNETKASSE_STATEMENT');
+		$info['description']	= JText::_('CFG_SPARKASSEN_INTERNETKASSE_DESCRIPTION');
 		$info['currencies']		= 'EUR';
 		$info['cc_list']		= 'visa,mastercard,eurocard';
 		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
@@ -38,7 +38,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		$settings['merchant']			= '';
 		$settings['merchantpass']		= '';
 
-		$settings['item_name']			= sprintf(_CFG_PROCESSOR_ITEM_NAME_DEFAULT, '[[cms_live_site]]', '[[user_name]]', '[[user_username]]');
+		$settings['item_name']			= sprintf(JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]');
 
 		return $settings;
 	}

@@ -1,11 +1,12 @@
 div#statnav {
 float: left;
-width: 18%;
+width: 240px;
 background: #eee;
-padding: 18px 24px;
+padding: 18px 0 24px 18px;
 -moz-border-radius: 10px;
 -webkit-border-radius: 10px;
 border-radius: 10px;
+margin: 24px 0;
 }
 
 .aec_backend_page_heading h1 {
@@ -14,18 +15,23 @@ padding-top: 16px;
 padding-left: 16px;
 } 
 
+.aec_backend_page_heading {
+margin-left: -2px;
+} 
+
 div#statnav ul {
-float: left;
-width: 80%;
+float: right;
+width: 96%;
 list-style-type: none;
 }
 
 div#statnav ul li {
 text-align: center;
-font-size: 120%;
-padding: 4px;
+font-size: 150%;
+padding: 10px 4px;
 background: #ddd;
 margin-bottom: 2px;
+margin-right: 12px;
 }
 
 div#statnav ul li:hover {
@@ -34,6 +40,8 @@ background: #efefef;
 
 div#statnav ul li.current {
 background: #ccc;
+font-weight: bold;
+margin-right: 0px;
 }
 
 div#statnav ul li.current:hover {
@@ -44,12 +52,21 @@ div#stats {
 float: left;
 width: 70%;
 padding: 1% 4%;
+background: #ccc;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
 }
 
 div#stats h1 {
 text-align: center;
 color: #000;
 font-size: 240%;
+margin: 24px 0;
+background: #fff;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
 }
 
 .chart rect {

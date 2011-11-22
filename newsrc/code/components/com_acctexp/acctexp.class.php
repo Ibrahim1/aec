@@ -1471,8 +1471,6 @@ class metaUserDB extends serialParamDBTable
 
 	function setMIParams( $miid, $usageid=false, $params, $replace=false )
 	{
-		$app = JFactory::getApplication();
-
 		if ( $usageid ) {
 			if ( is_object( $this->plan_params ) ) {
 				$this->plan_params = array();
@@ -19961,7 +19959,7 @@ class aecReadout
 					$reg = array( 'GENERAL', 'MI' );
 
 					foreach ( $reg as $regg ) {
-						$cname = '_CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
+						$cname = 'CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
 
 						if ( defined( $cname ) )  {
 							$tname = str_replace( ':', '', JText::_( $cname ) );

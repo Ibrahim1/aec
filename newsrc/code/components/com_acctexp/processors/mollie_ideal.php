@@ -17,9 +17,9 @@ class processor_mollie_ideal extends XMLprocessor
 	{
 		$info = array();
 		$info['name']					= 'mollie_ideal';
-		$info['longname']				= JText::_('_CFG_MOLLIE_IDEAL_LONGNAME');
-		$info['statement']				= JText::_('_CFG_MOLLIE_IDEAL_STATEMENT');
-		$info['description']			= JText::_('_CFG_MOLLIE_IDEAL_DESCRIPTION');
+		$info['longname']				= JText::_('CFG_MOLLIE_IDEAL_LONGNAME');
+		$info['statement']				= JText::_('CFG_MOLLIE_IDEAL_STATEMENT');
+		$info['description']			= JText::_('CFG_MOLLIE_IDEAL_DESCRIPTION');
 		$info['currencies']				= 'EUR';
 		$info['languages']				= 'NL';
 		$info['recurring']	   			= 0;

@@ -71,7 +71,7 @@ class processor_cybermut extends POSTprocessor
 			$server_selection[] = JHTML::_('select.option', $i, $server );
 		}
 
-		$settings['lists']['cybermut_server'] = JHTML::_( 'select.genericlist', $server_selection, 'cybermut_server', 'size="5"', 'value', 'text', $this->settings['server'] );
+		$settings['lists']['cybermut_server'] = JHTML::_( 'select.genericlist', $server_selection, 'cybermut_server', 'size="5"', 'value', 'text', $this->settings['cybermut_server'] );
 
 		return $settings;
 	}

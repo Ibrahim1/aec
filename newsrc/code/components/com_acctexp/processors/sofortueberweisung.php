@@ -17,9 +17,9 @@ class processor_sofortueberweisung extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'sofortueberweisung';
-		$info['longname']		= JText::_('_CFG_SOFORTUEBERWEISUNG_LONGNAME');
-		$info['statement']		= JText::_('_CFG_SOFORTUEBERWEISUNG_STATEMENT');
-		$info['description']	= JText::_('_CFG_SOFORTUEBERWEISUNG_DESCRIPTION');
+		$info['longname']		= JText::_('CFG_SOFORTUEBERWEISUNG_LONGNAME');
+		$info['statement']		= JText::_('CFG_SOFORTUEBERWEISUNG_STATEMENT');
+		$info['description']	= JText::_('CFG_SOFORTUEBERWEISUNG_DESCRIPTION');
 		$info['currencies']		= 'EUR,GBP,CHF';
 		$info['languages']		= array( 'DE', 'GB', 'NL', 'FR' );
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
