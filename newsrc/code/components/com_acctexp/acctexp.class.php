@@ -10667,7 +10667,7 @@ class InvoiceFactory
 			if ( !empty( $this->invoice->params['userMIParams'] ) ) {
 				foreach ( $this->invoice->params['userMIParams'] as $plan => $mis ) {
 					foreach ( $mis as $mi_id => $content ) {
-						$metaUser->meta->setMIParams( $mi_id, $plan, $content );
+						$this->metaUser->meta->setMIParams( $mi_id, $plan, $content );
 					}
 				}
 			}
