@@ -77,7 +77,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		if ( isset( $units[$request->int_var['amount']['unit3']] ) ) {
 			$var['intervalUnit'] = $units[$request->int_var['amount']['unit3']];
 		} else {
-			$var['intervalUnit'] = 'D';
+			$var['intervalUnit'] = '1';
 		}
 
 		$var['intervalMult'] = $request->int_var['amount']['period3'];
