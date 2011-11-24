@@ -2840,7 +2840,7 @@ class HTML_AcctExp
  		HTML_myCommon::Valanx();
 	}
 
-	function stats( $option, $stats )
+	function stats( $option, $page, $stats )
 	{
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS(); ?>
@@ -2851,11 +2851,18 @@ class HTML_AcctExp
 				<h1><?php echo JText::_('AEC_HEAD_STATS'); ?></h1>
 			</div>
 			<ul>
-				<li>Overview</li>
-				<li>Daily Activity</li>
-				<li>User</li>
-				<li>Plans</li>
-				<li class="current">All Time Sales</li>
+		<?php
+			$menus = array( 'overview' => "Overview",
+							'daily' => "Daily Activity",
+							'users' => "Users",
+							'plans' => "Plans",
+							'all_time' => "All Time Sales" 
+			);
+
+			foreach ( $menus as $menu => $menutext ) {
+				echo '<li' . ( ( $page == $menu ) ? ' class="current"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats2&page=' . $menu . '">' . $menutext . '</a></li>';
+			}
+		?>
 			</ul>
 		</div>
 		<div id="stats">

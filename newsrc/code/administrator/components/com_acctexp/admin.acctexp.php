@@ -271,7 +271,11 @@ switch( strtolower( $task ) ) {
 	case 'history': history( $option ); break;
 	case 'eventlog': eventlog( $option ); break;
 	case 'stats': aec_stats2( $option ); break;
-	case 'stats2': aec_stats( $option ); break;
+	case 'stats2':
+		$page	= aecGetParam( 'page', '', true, array( 'word', 'string' ) );
+
+		aec_stats( $option, $page );
+		break;
 
 	case 'statrequest':
 		$type	= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
@@ -4494,7 +4498,7 @@ function eventlog( $option )
 	HTML_AcctExp::eventlog( $option, $events, $search, $pageNav );
 }
 
-function aec_stats( $option )
+function aec_stats( $option, $page )
 {
 	$stats = null;
 
@@ -4509,7 +4513,7 @@ function aec_stats( $option )
 
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/stats/test.js"></script>' );
 
-	HTML_AcctExp::stats( $option, $stats );
+	HTML_AcctExp::stats( $option, $page, $stats );
 }
 
 function aec_statrequest( $option, $type, $start, $end )
