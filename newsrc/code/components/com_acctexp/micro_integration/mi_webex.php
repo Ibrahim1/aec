@@ -79,11 +79,20 @@ class mi_webex
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );
 
-			$params = $request->metaUser->meta->custom_params;
+			if ( !empty( $request->metaUser->meta->id ) ) {
+				$meta &= $request->metaUser->meta;
+			} else {
+				$db = &JFactory::getDBO();
+
+				$meta = new metaUserDB( $db );
+				$meta->createNew( $request->row->id );
+			}
+
+			$params = $meta->custom_params;
 
 			if ( empty( $params['is_stored'] ) && empty( $params['temp_pw']) && !empty( $request->row->password ) ) {
-				$request->metaUser->meta->custom_params['temp_pw'] = $password;
-		        $request->metaUser->meta->storeload();
+				$meta->custom_params['temp_pw'] = $password;
+		        $meta->storeload();
     		}
 		}
 	}
