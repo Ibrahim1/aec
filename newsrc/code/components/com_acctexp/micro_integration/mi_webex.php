@@ -170,12 +170,14 @@ class mi_webex
 
 		$req = array();
 		foreach ( $array as $key => $value ) {
-			$req[] = $key.'='.urlencode( stripslashes( $value ) );
+			if ( !empty( $value ) ) {
+				$req[] = $key.'='.urlencode( stripslashes( $value ) );
+			}
 		}
 
 		$path = '/' . $this->settings['hosted_name'] . '/m.php?' . implode( '&', $req );
 		$url = 'https://' . $this->settings['hosted_name'] . '.webex.com' . $path;
-
+aecDebug("Webex Query");aecDebug($url);
 		if ( $aecConfig->cfg['curl_default'] ) {
 			$response = processor::doTheCurl( $url, array() );
 			if ( $response === false ) {
@@ -189,7 +191,7 @@ class mi_webex
 				$response = processor::doTheCurl( $url, array() );
 			}
 		}
-
+aecDebug($response);
 		return $response;
 	}
 }

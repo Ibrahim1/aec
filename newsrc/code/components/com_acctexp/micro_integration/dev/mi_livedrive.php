@@ -16,13 +16,6 @@ class mi_livedrive
 
 	function checkInstallation()
 	{
-		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
-
-		// As explained below this checks whether the installation of this
-		// feature has already taken place. If that is not the case, we call install below
-		// Also check out the below example for a db check for the table that is created
-		// within the install function.
-
 		$database = &JFactory::getDBO();
 
 		global $mainframe;
@@ -36,14 +29,6 @@ class mi_livedrive
 	
 	function install()
 	{
-		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
-
-		// In this function, you can specify what has to be done before you
-		// can use this Integration. Common applications could be the creation
-		// of a database table (please prefix with "acctexp_mi_" if you care
-		// for readability of databases) or the installation of other files.
-		// Below is an example how a sample db table creation could look like:
-
 		$database = &JFactory::getDBO();
 
 		$query =	"CREATE TABLE IF NOT EXISTS `#__livedrive_users` (" . "\n" .
@@ -92,15 +77,20 @@ class mi_livedrive
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );
 
-			$params = $request->metaUser->meta->custom_params;
+			if ( !empty( $request->metaUser->meta->id ) ) {
+				$meta &= $request->metaUser->meta;
+			} else {
+				$db = &JFactory::getDBO();
+
+				$meta = new metaUserDB( $db );
+				$meta->createNew( $request->row->id );
+			}
+
+			$params = $meta->custom_params;
 
 			if ( empty( $params['is_stored'] ) && empty( $params['temp_pw']) && !empty( $request->row->password ) ) {
-				if ( empty( $request->metaUser->meta->id ) ) {
-					$request->metaUser->meta->createNew( $request->row->id );
-				}
-				
-				$request->metaUser->meta->custom_params['temp_pw'] = $password;aecDebug( "Storing password: ".$password );
-		        $request->metaUser->meta->storeload();
+				$meta->custom_params['temp_pw'] = $password;aecDebug( "Storing password: ".$password );
+		        $meta->storeload();
     		}
 		}
 	}
