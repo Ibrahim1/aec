@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '3971' );
+define( '_AEC_REVISION', '3975' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -11088,7 +11088,18 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( isset( $this->params['userselect_recurring'] ) ) {
+			$recurring_choice = $this->params['userselect_recurring'];
+		} else {
+			$recurring_choice = null;
+		}
 
+		if ( ( $this->method !== 'none' ) && ( $this->method !== 'free' ) ) {
+			$pp = new PaymentProcessor();
+			if ( $pp->loadName( $this->method ) ) {
+				$pp->fullInit();
+
+				return $pp->is_recurring( $recurring_choice );
+			}
 		}
 
 		return false;
@@ -11667,6 +11678,8 @@ class Invoice extends serialParamDBTable
 			unset( $this->params['aec_pickup'] );
 		}
 
+		$override_permissioncheck = $this->isRecurring() && ( $this->counter > 1 ); 
+
 		if ( !empty( $this->usage ) ) {
 			$usage = explode( '.', $this->usage );
 
@@ -11710,8 +11723,10 @@ class Invoice extends serialParamDBTable
 							$new_plan = new SubscriptionPlan( $db );
 							$new_plan->load( $c['id'] );
 
-							if ( $new_plan->checkPermission( $metaUser ) === false ) {
-								return false;
+							if ( !$override_permissioncheck ) {
+								if ( $new_plan->checkPermission( $metaUser ) === false ) {
+									return false;
+								}
 							}
 
 							for ( $i=0; $i<$c['quantity']; $i++ ) {
@@ -11726,8 +11741,10 @@ class Invoice extends serialParamDBTable
 					$new_plan = new SubscriptionPlan( $db );
 					$new_plan->load( $this->usage );
 
-					if ( $new_plan->checkPermission( $metaUser ) === false ) {
-						return false;
+					if ( !$override_permissioncheck ) {
+						if ( $new_plan->checkPermission( $metaUser ) === false ) {
+							return false;
+						}
 					}
 
 					$plans[] = $new_plan;
