@@ -33,10 +33,9 @@ class processor_cybermut extends POSTprocessor
 		$settings = array();
 		$settings['testmode']		= 0;
 		$settings['tpe']			= '7654321';
-		$settings['ver']			= '1.2open';
 		$settings['soc']			= 'societe';
 		$settings['pass']			= 'passphrase';
-		$settings['key']			= '000102030405060708090A0B0C0D0E0F10111213';
+		$settings['key']			= '0123456789ABCDEF0123456789ABCDEF01234567';
 		$settings['currency']		= 'EUR';
 		$settings['language']		= 'FR';
 		$settings['server']			= 0;
@@ -54,7 +53,6 @@ class processor_cybermut extends POSTprocessor
 		$settings = array();
 		$settings['testmode']		= array( 'list_yesno' );
 		$settings['tpe']			= array( 'inputC' );
-		$settings['ver']			= array( 'inputC' );
 		$settings['soc']			= array( 'inputC' );
 		$settings['pass']			= array( 'inputC' );
 		$settings['key']			= array( 'inputC' );
@@ -86,26 +84,23 @@ class processor_cybermut extends POSTprocessor
 			$var['post_url'] = "https://" . $servers[$this->settings['server']] . "/paiement.cgi";
 		}
 
-		$var['version']			= $this->settings['ver'];
+		$var['version']			= "1.3";
 		$var['TPE']				= $this->settings['tpe'];
 		$var['date']			= date( "d/m/Y:H:i:s" );
 		$var['montant']			= $request->int_var['amount'] . $this->settings['currency'];
 		$var['reference']		= $request->metaUser->userid;
 		$var['texte-libre']		= $request->invoice->invoice_number;
+		$var['mail']			= $request->metaUser->cmsUser->email;
 		$var['lgue']			= $this->settings['language'];
 		$var['societe']			= $this->settings['soc'];
-//print_r($var);print_r($request->int_var);exit();
-		$HMAC = $var['TPE']."*".$var['date']."*".$var['montant']."*".$var['reference']."*".$var['texte-libre']."*".$var['version']."*".$var['lgue']."*".$var['societe']."*";
-
-		//$var['MAC']				= "V1.03.sha1.php4--CtlHmac-" . $this->settings['ver'] . "-[" . $this->settings['tpe'] . "]-" . $this->CMCIC_hmac( $this->settings, $HMAC );
-		$var['MAC']				= $this->CMCIC_hmac( $this->settings, $HMAC );
-
-		/*$var['retourPLUS']		= $request->int_var['return_url'];
-		$var['societe']			= $this->settings['key'];*/
 
 		$var['url_retour']		= JURI::root() . 'index.php';
 		$var['url_retour_ok']	= JURI::root() . 'index.php?option=com_acctexp&task=thanks';
 		$var['url_retour_err']	= JURI::root() . 'index.php?option=com_acctexp&task=cancel';
+
+		$HMAC = $var['TPE']."*".$var['date']."*".$var['montant']."*".$var['reference']."*".$var['texte-libre']."*".$var['version']."*".$var['lgue']."*".$var['societe'].$var['mail']."**********";
+
+		$var['MAC']				= $this->CMCIC_hmac( $HMAC );
 
 		foreach ( $var as $k => $v ) {
 			$var[$k] = $this->HtmlEncode( $v );
@@ -137,9 +132,14 @@ class processor_cybermut extends POSTprocessor
 				break;
 		}
 
-		$HMAC = $post['retourPLUS']."+".$this->settings['tpe']."+".$post['date']."+".$post['montant']."+".$post['reference']."+".$post['texte-libre']."+".$this->settings['version']."+".$post['retour']."+";
+		$HMAC =		$this->settings['tpe']."*".$post['date']."*".$post['montant']."*".$post['reference']."*"
+					.$post['texte-libre']."*"."3.0"."*".$post['code-retour']."*".$post['cvx']."*"
+					.$post['vld']."*".$post['brand']."*".$post['status3ds']."*".$post['numauto']."*"
+					.$post['motifrefus']."*".$post['originecb']."*".$post['bincb']."*".$post['hpancb']."*"
+					.$post['ipclient']."*".$post['originetr']."*".$post['veres']."*".$post['pares']."*"
+					;
 
-		if ( $post['MAC'] !== $this->CMIC_hmac( $this->settings, $HMAC ) ) {
+		if ( $post['MAC'] !== $this->CMIC_hmac( $HMAC ) ) {
 			$response['pending_reason'] = 'invalid HMAC';
 			$response['valid'] = false;
 		}
