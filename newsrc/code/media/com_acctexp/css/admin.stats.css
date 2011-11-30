@@ -69,19 +69,16 @@ background: #fff;
 border-radius: 10px;
 }
 
-.chart rect {
-stroke: white;
-fill: steelblue;
-}
-
 #chart {
     font: 10px sans-serif;
     shape-rendering: crispedges;
+    margin: 24px auto;
 }
+
 .day {
-    fill: #FFFFFF;
-    stroke: #CCCCCC;
+    fill: #fff;
 }
+
 .month {
     fill: none;
     stroke: #000000;

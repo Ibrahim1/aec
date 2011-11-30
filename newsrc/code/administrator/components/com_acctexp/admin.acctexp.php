@@ -4518,12 +4518,22 @@ function aec_stats( $option, $page )
 
 function aec_statrequest( $option, $type, $start, $end )
 {
+	$db = &JFactory::getDBO();
+
 	$tree = new stdClass();
 
 	switch ( $type ) {
-		case 'sales':
-			$db = &JFactory::getDBO();
+		case 'max_sale':
+			$query = 'SELECT amount'
+					. ' FROM #__acctexp_log_history'
+					. ' ORDER BY 0+`amount` DESC'
+					;
+			$db->setQuery( $query );
 
+			$tree->type = "SalesMaxAmount";
+			$tree->amount = $db->loadResult();
+			break;
+		case 'sales':
 			$tree->type = "SalesCollection";
 			$tree->sales = array();
 			$tree->groups = array();
