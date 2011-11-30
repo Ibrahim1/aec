@@ -38,6 +38,13 @@ if ( empty( $task ) ) {
 } else {
 	$params = &JComponentHelper::getParams( 'com_acctexp' );
 
+	$menuitemid = JRequest::getInt( 'Itemid' );
+	if ( $menuitemid ) {
+		$menu = JSite::getMenu();
+		$menuparams = $menu->getParams( $menuitemid );
+		$params->merge( $menuparams );
+	}
+
 	$translate = array( 'usage', 'group', 'processor', 'intro', 'sub' );
 
 	foreach ( $translate as $k ) {
