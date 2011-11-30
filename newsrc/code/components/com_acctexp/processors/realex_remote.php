@@ -21,7 +21,7 @@ class processor_realex_remote extends XMLprocessor
 		$info['statement']		= JText::_('CFG_REALEX_REMOTE_STATEMENT');
 		$info['description']	= JText::_('CFG_REALEX_REMOTE_DESCRIPTION');
 		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
-		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
+		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,laser';
 		$info['recurring']		= 0;
 		$info['secure']			= 1;

@@ -21,7 +21,7 @@ class processor_payfast extends POSTprocessor
 		$info['statement']				= JText::_('CFG_PAYFAST_STATEMENT');
 		$info['description']			= JText::_('CFG_PAYFAST_DESCRIPTION');
 		$info['currencies']				= 'ZAR';
-		$info['languages']				= AECToolbox::getISO3166_1a2_codes();
+		$info['languages']				= AECToolbox::getISO639_1_codes();
 		$info['cc_list']				= 'visa,mastercard';
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= false;

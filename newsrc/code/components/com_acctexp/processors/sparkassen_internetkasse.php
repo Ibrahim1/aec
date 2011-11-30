@@ -22,7 +22,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		$info['description']	= JText::_('CFG_SPARKASSEN_INTERNETKASSE_DESCRIPTION');
 		$info['currencies']		= 'EUR';
 		$info['cc_list']		= 'visa,mastercard,eurocard';
-		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
+		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['recurring']		= 2;
 
 		return $info;

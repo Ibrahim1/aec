@@ -21,7 +21,7 @@ class processor_paypal_payflow extends XMLprocessor
 		$info['statement']		= JText::_('CFG_PAYPAL_PAYFLOW_STATEMENT');
 		$info['description']	= JText::_('CFG_PAYPAL_PAYFLOW_DESCRIPTION');
 		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
-		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
+		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 0;
 		$info['actions']		= array( 'cancel' => array( 'confirm' ) );

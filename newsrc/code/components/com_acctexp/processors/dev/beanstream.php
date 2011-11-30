@@ -21,7 +21,7 @@ class processor_beanstream extends POSTprocessor
 		$info['statement']		= JText::_('CFG_BEANSTREAM_STATEMENT');
 		$info['description']	= JText::_('CFG_BEANSTREAM_DESCRIPTION');
 		$info['currencies']		= 'USD,EUR,GBP,CAD,AUD,BGN,CZK,DKK,EEK,HKD,HUF,LTL,MYR,NZD,NOK,PLN,ROL,SGD,ZAR,SEK,CHF';
-		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
+		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,american express,discovery';
 		$info['recurring']		= 0;
 

@@ -21,7 +21,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 		$info['statement'] 		= JText::_('CFG_PAYPAL_PAYFLOW_LINK_STATEMENT');
 		$info['description'] 	= JText::_('CFG_PAYPAL_PAYFLOW_LINK_DESCRIPTION');
 		$info['currencies'] 	= 'EUR,USD,AUD,CAD,GBP,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
-		$info['languages'] 		= AECToolbox::getISO3166_1a2_codes();
+		$info['languages'] 		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 0;
 		$info['cancel_info']	= JText::_('PAYPAL_SUBSCRIPTION_CANCEL_INFO');

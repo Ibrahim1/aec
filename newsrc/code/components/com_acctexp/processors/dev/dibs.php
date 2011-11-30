@@ -132,7 +132,7 @@ class processor_dibs extends POSTprocessor
 		$country_code_list = array ( 'DK', 'GB', 'ES', 'FI', 'FO', 'FR', 'IT', 'NL', 'NO', 'PL', 'SV' );
 		$code_list = array();
 		foreach ( $country_code_list as $country ) {
-			$code_list[] = JHTML::_('select.option', $country, $country . " - " . JText::_( 'AEC_LANG_' . $country ) );
+			$code_list[] = JHTML::_('select.option', $country, $country . " - " . JText::_( 'COUNTRYCODE_' . $country ) );
 		}
 
 		$return .=  JText::_('CFG_MULTISAFEPAY_SELECT_COUNTRY') . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $code_list, 'delivery03.Country', 'size="1"', 'value', 'text', 'NL' );		
@@ -177,7 +177,6 @@ aecdebug("checkoutAction");aecdebug($return);
 		$var['ordline1-3'] = $request->int_var['amount'];
 
 		$var['amount']				= $amount;
-		$var['language']			= $this->settings['language'];
 		$var['currency']			= $currency;
 		$var['doNotShowLastPage']	= "true";
 

@@ -17,7 +17,7 @@ class processor_servantek extends POSTprocessor
 		$info['statement']			= _AEC_PROC_INFO_SVT_STMNT;
 		$info['description'] 		= _DESCRIPTION_SERVANTEK;
 		$info['currencies']			= 'USD';
-		$info['languages']			= AECToolbox::getISO4271_codes();
+		$info['languages']			= AECToolbox::getISO639_1_codes();
 		$info['cc_list']			= 'visa,mastercard,discover,americanexpress';
 		$info['recurring']			= 0;
 

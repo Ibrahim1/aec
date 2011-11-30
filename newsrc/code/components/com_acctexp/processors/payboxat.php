@@ -21,7 +21,7 @@ class processor_payboxat extends SOAPprocessor
 		$info['statement']		= JText::_('CFG_PAYBOXAT_STATEMENT');
 		$info['description']	= JText::_('CFG_PAYBOXAT_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
-		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
+		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['cc_list'] 		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring'] 		= 0;
 

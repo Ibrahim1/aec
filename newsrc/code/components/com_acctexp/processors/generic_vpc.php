@@ -10,7 +10,7 @@ class processor_generic_vpc extends URLprocessor
 		$info['statement']				= JText::_('CFG_GENERIC_VPC_STATEMENT');
 		$info['description']			= JText::_('CFG_GENERIC_VPC_DESCRIPTION');
 		$info['currencies']				= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS';
-		$info['languages']				= AECToolbox::getISO3166_1a2_codes();
+		$info['languages']				= AECToolbox::getISO639_1_codes();
 		$info['cc_list']				= "visa,mastercard";
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;

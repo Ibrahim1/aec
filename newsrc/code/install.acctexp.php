@@ -224,8 +224,12 @@ function com_install()
 	}
 
 	if ( $translation ) {
-		if ( file_exists( JPATH_SITE . '/administrator/components/com_acctexp/install/jf_content_elements_aec.' . JText::_('AEC_LANGUAGE') . '.tar.gz' ) ) {
-			$xmlInst = 'install/jf_content_elements_aec.' . JText::_('AEC_LANGUAGE') . '.tar.gz';
+		$lang =& JFactory::getLanguage();
+
+		$lcode = substr( $lang->get('tag'), 0, 2 );
+
+		if ( file_exists( JPATH_SITE . '/administrator/components/com_acctexp/install/jf_content_elements_aec.' . $lcode . '.tar.gz' ) ) {
+			$xmlInst = 'install/jf_content_elements_aec.' . $lcode . '.tar.gz';
 		} else {
 			$xmlInst = 'install/jf_content_elements_aec.en.tar.gz';
 		}
