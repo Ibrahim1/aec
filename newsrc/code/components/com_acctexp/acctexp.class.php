@@ -16658,6 +16658,16 @@ class AECToolbox
 			$erp = 'aecjson,data,syntax,error';
 			$erx = 'Syntax Parser cannot parse next property: ';
 
+			if ( empty( $key ) ) {
+				$erx .= 'No Key Found';
+
+				$db = &JFactory::getDBO();
+
+				$eventlog = new eventLog( $db );
+				$eventlog->issue( $err, $erp, $erx, 128, array() );
+				return false;
+			}
+
 			foreach ( $key as $k ) {
 				// and use {}/variable variables instead
 				$subject =& $return;
