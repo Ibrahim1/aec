@@ -462,7 +462,7 @@ class HTML_AcctExp
 									</tr>
 									<tr>
 										<td width="120"><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?>:</td>
-										<td><strong><?php echo aecHTML::Icon( 'money.png', JText::_('AEC_USER_PAYMENT_PROC') ); ?>&nbsp;<?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></strong></td>
+										<td><strong><?php echo aecHTML::Icon( 'money_dollar.png', JText::_('AEC_USER_PAYMENT_PROC') ); ?>&nbsp;<?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></strong></td>
 									</tr>
 									<tr>
 										<td width="120"><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?>:</td>
