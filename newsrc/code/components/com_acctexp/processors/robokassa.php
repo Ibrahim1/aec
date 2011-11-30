@@ -66,7 +66,7 @@ class processor_robokassa extends POSTprocessor
 
 		$var['MrchLogin']			= trim($this->settings['login']);
 		$var['OutSum']				= $request->int_var['amount'];
-		$var['InvId']				= $request->invoice->invoice_number;
+		$var['InvId']				= $request->invoice->id;
 		$var['Desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['SignatureValue']		= $this->getHash( $request->invoice );			
 		$var['IncCurrLabel']		= $this->settings['currency'];
