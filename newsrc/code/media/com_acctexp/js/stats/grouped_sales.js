@@ -1,28 +1,27 @@
+function cellular_years(selector, r_start, r_end) {
 var m = [19, 20, 15, 19], // top right bottom left margin
 	z = 14, // cell size
 	w = z*60 - m[1] - m[3], // width
 	h = z*6 - m[0] - m[2] // height
-;
-
-var day = d3.time.format("%w"),
+	day = d3.time.format("%w"),
 	week = d3.time.format("%U"),
 	mon = d3.time.format("%U"),
 	percent = d3.format(".1%"),
 	format = d3.time.format("%Y-%m-%d");
 
-var svg = d3.select("div#chart")
+var svg = d3.select(selector)
 	.style("width", w + m[1] + m[3])
-	.style("height", h*(range_end-range_start)*3 + m[0] + m[2])
+	.style("height", h*(r_end-r_start)*3 + m[0] + m[2])
 	.append("svg:svg")
-	 .attr("width", w + m[1] + m[3])
-	 .attr("height", h*(range_end-range_start)*3 + m[0] + m[2]);
+		.attr("width", w + m[1] + m[3])
+		.attr("height", h*(r_end-r_start)*3 + m[0] + m[2]);
 
 var year = svg.selectAll("g.year")
-	.data(d3.range(range_start, range_end))
+	.data(d3.range(r_start, r_end))
 	.enter().append("svg:g")
-	.attr("class", function(d) { return "year y-"+d+" RdYlGn"; })
-	.attr("transform", function(d) { return "translate(42," + ( 1 + ( d - range_start ) * h*2.2 ) + ")"; })
-	.style("opacity", "1.0");
+		.attr("class", function(d) { return "year y-"+d+" RdYlGn"; })
+		.attr("transform", function(d) { return "translate(42," + ( 1 + ( d - r_start ) * h*2.2 ) + ")"; })
+		.style("opacity", "0.1");
 
 year.append("svg:text")
 	.attr("transform", "translate(-6," + z * 3.5 + ")rotate(-90)")
@@ -40,24 +39,18 @@ year.selectAll("rect.day")
 	.attr("y", function(d) { return day(d) * z; })
 	.on("mouseover", function(){
 		d3.select(this)
-		.transition()
-		.duration(500)
-			.attr("ry", z/3.33)
-			.attr("rx", z/3.33)
-			.attr("width", z-2)
-			.attr("height", z-2)
+		.transition().ease("elastic").duration(500)
+			.attr("ry", z/3.33).attr("rx", z/3.33).attr("width", z-2).attr("height", z-2)
 			.attr("x", function(d) { return (week(d) * z)+1; })
 			.attr("y", function(d) { return (day(d) * z)+1; });
 	})
 	.on("mouseout", function(){
 		d3.select(this)
 		.transition()
+		.ease("bounce")
 		.delay(100)
 		.duration(500)
-			.attr("ry", 0)
-			.attr("rx", 0)
-			.attr("width", z)
-			.attr("height", z)
+			.attr("ry", 0).attr("rx", 0).attr("width", z).attr("height", z)
 			.attr("x", function(d) { return week(d) * z; })
 			.attr("y", function(d) { return day(d) * z; });
 	})
@@ -92,15 +85,15 @@ var color = d3.scale.quantize()
 	.range(d3.range(9));
 
 d3.selectAll("g.y-"+y+" rect.day")
-	.style("opacity", "0.1")
 	.attr("class", function(d) { return "day q" + color(data[format(d)]) + "-9"; })
-	.transition()
-	.delay(100)
-	.duration(100)
-	.style("opacity", "1.0")
 	;
+
+d3.selectAll("g.y-"+y+"")
+	.transition().ease("cubic").delay(100).duration(500)
+	.style("opacity", "1.0")
 })
-});
+})
+;
 
 function monthPath(t0) {
 var t1 = new Date(t0.getUTCFullYear(), t0.getUTCMonth() + 1, 0),
@@ -111,4 +104,6 @@ return "M" + (w0 + 1) * z + "," + d0 * z
 	+ "H" + w1 * z + "V" + (d1 + 1) * z
 	+ "H" + (w1 + 1) * z + "V" + 0
 	+ "H" + (w0 + 1) * z + "Z";
+}
+
 }

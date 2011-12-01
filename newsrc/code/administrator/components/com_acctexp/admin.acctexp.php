@@ -4504,7 +4504,8 @@ function aec_stats( $option, $page )
 
 	$document=& JFactory::getDocument();
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.min.js"></script>' );
-	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.chart.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
+	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.csv.min.js"></script>' );
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.geo.min.js"></script>' );
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.geom.min.js"></script>' );
