@@ -2868,20 +2868,23 @@ class HTML_AcctExp
 		<div id="stats">
 			<div class="gallery" id="chart">
 				<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
+					<script type="text/javascript">
+						var	amount_format = d3.format(".2f"),
+							amount_currency = "€",
+							range_start=2007,
+							range_end=2012
+							request_url="index.php?option=com_acctexp&task=statrequest";
+					</script>
 		<?php
 			switch ( $page ) {
 				case 'overview':
 					?>
-					<div id="overview-users" class="overview-container"><h3>Your Users</h3></div>
+					<div id="overview-today" class="overview-container"><h3>Today</h3></div>
 					<div id="overview-week" class="overview-container"><h3>This Week</h3></div>
 					<div id="overview-month" class="overview-container"><h3>This Month</h3></div>
 					<div id="overview-year" class="overview-container"><h3>This Year</h3></div>
 					<script type="text/javascript">
-						var	amount_format = d3.format(".2f"),
-							amount_currency = "€",
-							range_start=2011,
-							range_end=2012;
-
+						sunburst_sales( "div#overview-today", "<?php echo /*gmdate('Y-m-d') .*/ '2011-11-23 00:00:00' ?>", "<?php echo /*gmdate('Y-m-d') .*/ '2011-11-23 23:59:59' ?>" );
 						cellular_years( "div#overview-year", <?php echo gmdate('Y') ?>, <?php echo gmdate('Y')+1 ?> );
 					</script>
 					<?php
@@ -2895,11 +2898,6 @@ class HTML_AcctExp
 				case 'all_time':
 					?>
 					<script type="text/javascript">
-						var	amount_format = d3.format(".2f"),
-							amount_currency = "€",
-							range_start=2007,
-							range_end=2012;
-
 						cellular_years( "div#chart", range_start, range_end );
 					</script>
 					<?php

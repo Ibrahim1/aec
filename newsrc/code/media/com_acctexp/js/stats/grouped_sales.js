@@ -58,9 +58,9 @@ year.selectAll("rect.day")
 
 var month = year.selectAll("path.month")
 	.data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
-.enter().append("svg:path")
-	.attr("class", "month")
-	.attr("d", monthPath);
+	.enter().append("svg:path")
+		.attr("class", "month")
+		.attr("d", monthPath);
 
 var maxsale = 0;
 
@@ -69,31 +69,25 @@ maxsale = json.amount;
 });
 
 year.each( function(y) {
-d3.json("index.php?option=com_acctexp&task=statrequest&type=sales&start="+format(new Date(y, 0, 1))+"&end="+format(new Date(y + 1, 0, 0)), function(json) {
-var data = d3.nest()
-	.key(function(d) { return d.date; })
-	.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
-	.map(json.sales);
+	var selyear = d3.select(this);
+	d3.json(request_url+"&type=sales&start="+y+"&end="+ (y+1), function(json) {
+		var data = d3.nest()
+			.key(function(d) { return d.date; })
+			.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
+			.map(json.sales);
 
-d3.selectAll("g.y-"+y+" rect.day")
-	.append("svg:title")
-	.text(function(d) { return (d = format(d)) + (d in data ? ": " + amount_format(data[d]) + amount_currency : ""); })
-	;
+		var color = d3.scale.quantize()
+			.domain([0, maxsale*0.8])
+			.range(d3.range(9));
 
-var color = d3.scale.quantize()
-	.domain([0, maxsale*0.8])
-	.range(d3.range(9));
+		selyear.selectAll("rect.day")
+			.attr("class", function(d) { return "day q" + color(data[format(d)]) + "-9"; })
+			.append("svg:title")
+			.text(function(d) { return (d = format(d)) + (d in data ? ": " + amount_format(data[d]) + amount_currency : ""); });
 
-d3.selectAll("g.y-"+y+" rect.day")
-	.attr("class", function(d) { return "day q" + color(data[format(d)]) + "-9"; })
-	;
-
-d3.selectAll("g.y-"+y+"")
-	.transition().ease("cubic").delay(100).duration(500)
-	.style("opacity", "1.0")
-})
-})
-;
+		selyear.transition().ease("cubic").delay(100).duration(500).style("opacity", "1.0")
+	})
+});
 
 function monthPath(t0) {
 var t1 = new Date(t0.getUTCFullYear(), t0.getUTCMonth() + 1, 0),
@@ -106,4 +100,91 @@ return "M" + (w0 + 1) * z + "," + d0 * z
 	+ "H" + (w0 + 1) * z + "Z";
 }
 
+}
+
+function sunburst_sales(selector, r_start, r_end) {
+var w = 560,
+	h = 300,
+	r = Math.min(w, h) / 2,
+	color = d3.scale.category20c()
+	format = d3.time.format("%Y-%m-%d %X");
+
+var vis = d3.select(selector).append("svg:svg")
+	.attr("width", w)
+	.attr("height", h)
+	.append("svg:g")
+		.attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
+
+var partition = d3.layout.partition()
+	.sort(null)
+	.size([2 * Math.PI, r * r])
+	.value(function(d) { return 1; });
+
+var arc = d3.svg.arc()
+	.startAngle(function(d) { return d.x; })
+	.endAngle(function(d) { return d.x + d.dx; })
+	.innerRadius(function(d) { return Math.sqrt(d.y); })
+	.outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
+
+d3.json(request_url+"&type=sales&start="+encodeURI(r_start)+"&end="+encodeURI(r_end), function(json) {
+	var pre = [d3.nest()
+		.key(function(d) { return d.group; })
+		.rollup(function(v) { return d3.nest()
+										.key(function(d) { return d.plan; })
+										.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
+										.entries(v);
+							})
+		.entries(json.sales)];
+
+	var path = vis.data(pre).selectAll("path")
+		.data(partition.nodes)
+		.enter().append("svg:path")
+			.attr("display", function(d) { return d.depth ? null : "none"; }) // hide inner ring
+			.attr("d", arc)
+			.attr("fill-rule", "evenodd")
+			.style("stroke", "#fff")
+			.style("fill", function(d) { return color((d.values ? d : d.parent).name); })
+			.append("svg:title")
+			.text(function(d) { return amount_format(d.amount) + amount_currency; });
+			;
+
+d3.select("#size").on("click", function() {
+	path
+		.data(partition.value(function(d) { return d.amount; }))
+	  .transition()
+		.duration(1500)
+		.attrTween("d", arcTween);
+
+	d3.select("#size").classed("active", true);
+	d3.select("#count").classed("active", false);
+  });
+
+d3.select("#count").on("click", function() {
+	path
+		.data(partition.value(function(d) { return 1; }))
+	  .transition()
+		.duration(1500)
+		.attrTween("d", arcTween);
+
+	d3.select("#size").classed("active", false);
+	d3.select("#count").classed("active", true);
+  });
+});
+
+// Stash the old values for transition.
+function stash(d) {
+  d.x0 = d.x;
+  d.dx0 = d.dx;
+}
+
+// Interpolate the arcs in data space.
+function arcTween(a) {
+  var i = d3.interpolate({x: a.x0, dx: a.dx0}, a);
+  return function(t) {
+	var b = i(t);
+	a.x0 = b.x;
+	a.dx0 = b.dx;
+	return arc(b);
+  };
+}
 }

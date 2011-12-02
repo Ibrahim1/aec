@@ -272,7 +272,7 @@ switch( strtolower( $task ) ) {
 	case 'eventlog': eventlog( $option ); break;
 	case 'stats': aec_stats2( $option ); break;
 	case 'stats2':
-		$page	= aecGetParam( 'page', '', true, array( 'word', 'string' ) );
+		$page	= aecGetParam( 'page', 'overview', true, array( 'word', 'string' ) );
 
 		aec_stats( $option, $page );
 		break;
@@ -4505,11 +4505,12 @@ function aec_stats( $option, $page )
 	$document=& JFactory::getDocument();
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.min.js"></script>' );
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.layout.min.js"></script>' );
 	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.csv.min.js"></script>' );
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.geo.min.js"></script>' );
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.geom.min.js"></script>' );
-	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.layout.min.js"></script>' );
+
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
 
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/stats/test.js"></script>' );
@@ -4591,6 +4592,7 @@ function aec_statrequest( $option, $type, $start, $end )
 				$sale->id		= $id;
 				$sale->invoice	= $entry->invoice_number;
 				$sale->date		= date( 'Y-m-d', strtotime( $entry->transaction_date ) );
+				$sale->plan		= $entry->plan_id;
 				$sale->group	= $pgroups[0];
 				$sale->amount	= $entry->amount;
 
@@ -4600,7 +4602,7 @@ function aec_statrequest( $option, $type, $start, $end )
 			foreach ( $groups as $groupid ) {
 				$group			= new stdClass();
 				$group->type	= "Group";
-				$group->id		= $id;
+				$group->id		= $groupid;
 
 				$tree->groups[] = $group;
 			}
