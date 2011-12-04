@@ -756,10 +756,10 @@ class processor_authorize_cim extends PROFILEprocessor
 	function validateSubscription( $subscription_id )
 	{
 		$db = &JFactory::getDBO();
-
+aecDebug('validateSubscription');
 		$subscription = new Subscription( $db );
 		$subscription->load( $subscription_id );
-
+aecDebug($subscription);
 		$allowed = array( "Trial", "Active" );
 
 		if ( !in_array( $subscription->status, $allowed ) ) {
@@ -776,7 +776,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$option = 'com_acctexp';
 
 		$iFactory = new InvoiceFactory( null, null, null, 'authorize_cim' );
-
+aecDebug('InvoiceFactory');
 		$iFactory->userid = $subscription->userid;
 		$iFactory->usage = $invoice->usage;
 		$iFactory->processor = 'authorize_cim';
@@ -835,10 +835,10 @@ class processor_authorize_cim extends PROFILEprocessor
 			$cim->setParameter( 'transactionType',			'profileTransAuthCapture' );
 
 			$cim->createCustomerProfileTransactionRequest( $this );
-
+aecDebug('Sending CIM');
 			if ( $cim->isSuccessful() ) {
 				$iFactory->invoice->pay();
-
+aecDebug('CIM successful');
 				if ( empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
 					$iFactory->invoice->params['maxOccurrences'] = $this->settings['totalOccurrences'];
 
@@ -861,7 +861,7 @@ class processor_authorize_cim extends PROFILEprocessor
 				return true;
 			}
 		}
-
+aecDebug('CIM failed');
 		return null;
 	}
 

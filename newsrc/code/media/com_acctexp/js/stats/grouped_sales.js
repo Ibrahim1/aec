@@ -1,3 +1,5 @@
+var sunburst_color = d3.scale.category20();
+
 function cellular_years(selector, r_start, r_end) {
 var m = [19, 20, 15, 19], // top right bottom left margin
 	z = 14, // cell size
@@ -9,14 +11,15 @@ var m = [19, 20, 15, 19], // top right bottom left margin
 	percent = d3.format(".1%"),
 	format = d3.time.format("%Y-%m-%d");
 
-var svg = d3.select(selector)
+var cell = d3.select(selector)
 	.style("width", w + m[1] + m[3])
 	.style("height", h*(r_end-r_start)*3 + m[0] + m[2])
 	.append("svg:svg")
+		.attr("class", "svg-crisp")
 		.attr("width", w + m[1] + m[3])
-		.attr("height", h*(r_end-r_start)*3 + m[0] + m[2]);
+		.attr("height", h*(r_end-r_start)*2 + m[0]*3);
 
-var year = svg.selectAll("g.year")
+var year = cell.selectAll("g.year")
 	.data(d3.range(r_start, r_end))
 	.enter().append("svg:g")
 		.attr("class", function(d) { return "year y-"+d+" RdYlGn"; })
@@ -46,10 +49,7 @@ year.selectAll("rect.day")
 	})
 	.on("mouseout", function(){
 		d3.select(this)
-		.transition()
-		.ease("bounce")
-		.delay(100)
-		.duration(500)
+		.transition().ease("bounce").delay(100).duration(500)
 			.attr("ry", 0).attr("rx", 0).attr("width", z).attr("height", z)
 			.attr("x", function(d) { return week(d) * z; })
 			.attr("y", function(d) { return day(d) * z; });
@@ -76,12 +76,12 @@ year.each( function(y) {
 			.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
 			.map(json.sales);
 
-		var color = d3.scale.quantize()
+		var ccolor = d3.scale.quantize()
 			.domain([0, maxsale*0.8])
 			.range(d3.range(9));
 
 		selyear.selectAll("rect.day")
-			.attr("class", function(d) { return "day q" + color(data[format(d)]) + "-9"; })
+			.attr("class", function(d) { return "day q" + ccolor(data[format(d)]) + "-9"; })
 			.append("svg:title")
 			.text(function(d) { return (d = format(d)) + (d in data ? ": " + amount_format(data[d]) + amount_currency : ""); });
 
@@ -103,88 +103,136 @@ return "M" + (w0 + 1) * z + "," + d0 * z
 }
 
 function sunburst_sales(selector, r_start, r_end) {
-var w = 560,
-	h = 300,
-	r = Math.min(w, h) / 2,
-	color = d3.scale.category20c()
-	format = d3.time.format("%Y-%m-%d %X");
+var w = 200,
+	h = 200,
+	r = (Math.min(w, h) / 2)-6,
+	format = d3.time.format("%Y-%m-%d %X"),
+	sales;
 
-var vis = d3.select(selector).append("svg:svg")
+var sun = d3.select(selector).append("svg:svg")
 	.attr("width", w)
 	.attr("height", h)
 	.append("svg:g")
 		.attr("transform", "translate(" + w / 2 + "," + h / 2 + ")");
 
+sun.append("svg:path")
+	.attr("d",d3.svg.arc()
+		.startAngle(function(d) { return 0; })
+		.endAngle(function(d) { return 360; })
+		.innerRadius(function(d) { return r+1; })
+		.outerRadius(function(d) { return r+2; })
+	)
+	.attr("class", "sunburst-ring")
+	.style("stroke", "#000")
+	.style("opacity", "0.5");
+
+d3.json(request_url+"&type=sales&start="+encodeURI(r_start)+"&end="+encodeURI(r_end), function(json) {
+sales = json;
+
+d3.select(selector+" .sunburst-ring")
+.transition().ease("cubic-out").duration(500)
+.style("opacity", "1.0");
+
+var total = d3.sum(sales.sales, function(v){ return v.amount; });
+
+var txt = sun.append("svg:text")
+	.attr("text-anchor", "middle")
+	.attr("class", "console")
+	.text("")
+	.attr("transform", "translate(0,-6)")
+	.attr("class", "console-amt")
+	.style("opacity", "0.5");
+
+var txt = sun.append("svg:text")
+	.attr("text-anchor", "middle")
+	.attr("class", "console")
+	.text("")
+	.attr("transform", "translate(0,10)")
+	.attr("class", "console-val")
+	.style("opacity", "0.5");
+
 var partition = d3.layout.partition()
 	.sort(null)
 	.size([2 * Math.PI, r * r])
-	.value(function(d) { return 1; });
+	.value(function(d) { return d.values; })
+	.children(function (d) { return d.values; });
 
 var arc = d3.svg.arc()
 	.startAngle(function(d) { return d.x; })
-	.endAngle(function(d) { return d.x + d.dx; })
-	.innerRadius(function(d) { return Math.sqrt(d.y); })
-	.outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
+	.endAngle(function(d) { return (d.x + d.dx)-0.01; })
+	.innerRadius(function(d) { return Math.sqrt(d.y)+1; })
+	.outerRadius(function(d) { return Math.sqrt(d.y + d.dy+1); });
 
-d3.json(request_url+"&type=sales&start="+encodeURI(r_start)+"&end="+encodeURI(r_end), function(json) {
-	var pre = [d3.nest()
-		.key(function(d) { return d.group; })
-		.rollup(function(v) { return d3.nest()
-										.key(function(d) { return d.plan; })
-										.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
-										.entries(v);
-							})
-		.entries(json.sales)];
+var pre = new Object;
+pre.key = 0;
+pre.values = d3.nest()
+	.key(function(d) { return d.group; })
+	.rollup(function(v) { return d3.nest()
+									.key(function(d) { return d.plan; })
+									.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
+									.entries(v);
+						})
+	.entries(sales.sales);
 
-	var path = vis.data(pre).selectAll("path")
-		.data(partition.nodes)
-		.enter().append("svg:path")
-			.attr("display", function(d) { return d.depth ? null : "none"; }) // hide inner ring
-			.attr("d", arc)
-			.attr("fill-rule", "evenodd")
-			.style("stroke", "#fff")
-			.style("fill", function(d) { return color((d.values ? d : d.parent).name); })
-			.append("svg:title")
-			.text(function(d) { return amount_format(d.amount) + amount_currency; });
-			;
+var path = sun.data([pre]).selectAll("path")
+	.data(partition.nodes).enter()
+	.append("svg:path")
+		.attr("display", function(d) { return d.depth ? null : "none"; }) // hide inner ring
+		.attr("d", arc)
+		.attr("fill-rule", "evenodd")
+		.style("opacity", "0.8")
+		.style("stroke", "#fff")
+		.style("stroke-width", "0")
+		.style("fill", function(d) { return sunburst_color(( (typeof d.values != 'object') ? d.parent : d).key); })
+		.on("mouseover", function(d){
+			if (typeof d.values != 'object') {
+				name = "Plan " + d.key + ": ";
+				amount = amount_format(d.values) + amount_currency; 
+			} else {
+				name = "Group " + d.key + ": ";
+				amount = amount_format(d3.sum(d.values.map(function(v) { return v.values; }))) + amount_currency;
+			}
+			d3.select(this)
+				.transition().ease("cubic-out").duration(500)
+				.style("opacity", "1.0")
+				.style("stroke-width", "1");
+			d3.select(selector+" .console-amt")
+				.style("opacity", "0.2")
+				.text(name)
+				.transition().ease("cubic-out").duration(500)
+				.style("opacity", "1.0");
+			d3.select(selector+" .console-val")
+				.style("opacity", "0.2")
+				.text(amount)
+				.transition().ease("cubic-out").duration(500)
+				.style("opacity", "1.0");
+		})
+		.on("mouseout", function(){
+			d3.select(this)
+				.transition().ease("cubic-out").duration(500)
+				.style("opacity", "0.8")
+				.style("stroke-width", "0");
 
-d3.select("#size").on("click", function() {
-	path
-		.data(partition.value(function(d) { return d.amount; }))
-	  .transition()
-		.duration(1500)
-		.attrTween("d", arcTween);
+			center_console();
+		})
+		;
 
-	d3.select("#size").classed("active", true);
-	d3.select("#count").classed("active", false);
-  });
+var center_console = function() {
+	d3.select(selector+" .console-amt")
+	.style("opacity", "0.2")
+	.text("Total:")
+	.transition().ease("cubic-out").duration(500)
+	.style("opacity", "1.0");
 
-d3.select("#count").on("click", function() {
-	path
-		.data(partition.value(function(d) { return 1; }))
-	  .transition()
-		.duration(1500)
-		.attrTween("d", arcTween);
+	d3.select(selector+" .console-val")
+	.style("opacity", "0.2")
+	.text(amount_format(total) + amount_currency)
+	.transition().ease("cubic-out").duration(500)
+	.style("opacity", "1.0");
+}
 
-	d3.select("#size").classed("active", false);
-	d3.select("#count").classed("active", true);
-  });
+center_console();
+
 });
 
-// Stash the old values for transition.
-function stash(d) {
-  d.x0 = d.x;
-  d.dx0 = d.dx;
-}
-
-// Interpolate the arcs in data space.
-function arcTween(a) {
-  var i = d3.interpolate({x: a.x0, dx: a.dx0}, a);
-  return function(t) {
-	var b = i(t);
-	a.x0 = b.x;
-	a.dx0 = b.dx;
-	return arc(b);
-  };
-}
 }

@@ -1,17 +1,12 @@
+div#stats {
+width: 1164px;
+margin: 24px auto;
+}
+
 div#statnav {
 float: left;
 width: 240px;
-background: #eee;
-padding: 18px 0 24px 18px;
--moz-border-radius: 10px;
--webkit-border-radius: 10px;
-border-radius: 10px;
-margin: 24px 0;
-}
-
-div#chart {
-float: left;
-background: #eee;
+background: #ccc;
 padding: 18px 0 24px 18px;
 -moz-border-radius: 10px;
 -webkit-border-radius: 10px;
@@ -39,7 +34,7 @@ div#statnav ul li {
 text-align: center;
 font-size: 150%;
 padding: 10px 4px;
-background: #ddd;
+background: #ccc;
 margin-bottom: 2px;
 margin-right: 12px;
 }
@@ -49,7 +44,7 @@ background: #efefef;
 }
 
 div#statnav ul li.current {
-background: #ccc;
+background: #eee;
 font-weight: bold;
 margin-right: 0px;
 }
@@ -58,39 +53,49 @@ div#statnav ul li.current:hover {
 background: #ccc;
 }
 
-div#stats {
-float: left;
-width: 70%;
-padding: 1% 4%;
-background: #ccc;
--moz-border-radius: 10px;
--webkit-border-radius: 10px;
-border-radius: 10px;
-}
-
-div#stats h1 {
-text-align: center;
-color: #000;
-font-size: 240%;
-margin: 24px 0;
-background: #fff;
--moz-border-radius: 10px;
--webkit-border-radius: 10px;
-border-radius: 10px;
-}
-
 #chart {
-    font: 10px sans-serif;
-    shape-rendering: crispedges;
-    margin: 24px auto;
+float: left;
+background: #eee;
+padding: 18px 0 24px 18px;
+font: 10px sans-serif;
+margin: 24px auto;
+width: 860px;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+}
+
+#chart h3 {
+text-align: center;
+background: #ccc;
+-moz-border-radius: 8px;
+-webkit-border-radius: 8px;
+border-radius: 8px;
+margin: 16px 0;
+padding: 6px 0;
+text-align: center;
+width: 97%;
+}
+
+#chart .svg-crisp {
+shape-rendering: crispedges;
 }
 
 .day {
-    fill: #fff;
+fill: #fff;
 }
 
 .month {
-    fill: none;
-    stroke: #000000;
-    stroke-width: 2px;
+fill: none;
+stroke: #000000;
+stroke-width: 2px;
+}
+
+.console-amt {
+font-size: 110%;
+}
+
+.console-val {
+font-size: 150%;
+font-weight: bold;
 }

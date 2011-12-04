@@ -2846,6 +2846,7 @@ class HTML_AcctExp
 		HTML_myCommon::addBackendCSS(); ?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
 		<form action="index.php" method="post" name="adminForm">
+		<div id="stats">
 		<div id="statnav">
 			<div style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" class="aec_backend_page_heading">
 				<h1><?php echo JText::_('AEC_HEAD_STATS'); ?></h1>
@@ -2853,9 +2854,9 @@ class HTML_AcctExp
 			<ul>
 		<?php
 			$menus = array( 'overview' => "Overview",
-							'daily' => "Daily Activity",
+							'daily' => "Today",
 							'users' => "Users",
-							'plans' => "Plans",
+							'sales' => "Sales Graph",
 							'all_time' => "All Time Sales" 
 			);
 
@@ -2865,7 +2866,6 @@ class HTML_AcctExp
 		?>
 			</ul>
 		</div>
-		<div id="stats">
 			<div class="gallery" id="chart">
 				<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
 					<script type="text/javascript">
@@ -2884,12 +2884,22 @@ class HTML_AcctExp
 					<div id="overview-month" class="overview-container"><h3>This Month</h3></div>
 					<div id="overview-year" class="overview-container"><h3>This Year</h3></div>
 					<script type="text/javascript">
-						sunburst_sales( "div#overview-today", "<?php echo /*gmdate('Y-m-d') .*/ '2011-11-23 00:00:00' ?>", "<?php echo /*gmdate('Y-m-d') .*/ '2011-11-23 23:59:59' ?>" );
+						sunburst_sales( "div#overview-today", "<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>" );
+						sunburst_sales( "div#overview-week", "<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))+86400*7) . ' 23:59:59'; ?>" );
+						sunburst_sales( "div#overview-month", "<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>" );
 						cellular_years( "div#overview-year", <?php echo gmdate('Y') ?>, <?php echo gmdate('Y')+1 ?> );
 					</script>
 					<?php
 					break;
 				case 'daily':
+					?>
+					<div id="daily-yesterday" class="daily-container"><h3>Yesterday</h3></div>
+					<div id="daily-today" class="daily-container"><h3>Today</h3></div>
+					<script type="text/javascript">
+						sunburst_sales( "div#daily-yesterday", "<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>" );
+						sunburst_sales( "div#daily-today", "<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 23:59:59'; ?>" );
+					</script>
+					<?php
 					break;
 				case 'users':
 					break;
@@ -2897,14 +2907,16 @@ class HTML_AcctExp
 					break;
 				case 'all_time':
 					?>
+					<div id="all-time-cells" class"all-time-container"><h3>Daily Cells</h3></div>
 					<script type="text/javascript">
 						cellular_years( "div#chart", range_start, range_end );
 					</script>
+					<div id="all-time-suns" class"all-time-container"><h3>Yearly Totals</h3></div>
 					<?php
 					break;
 			}
 		?>
-			</div>
+		</div>
 		</div>
 
 		<?php
