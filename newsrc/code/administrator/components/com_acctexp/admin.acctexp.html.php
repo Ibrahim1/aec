@@ -2884,10 +2884,20 @@ class HTML_AcctExp
 					<div id="overview-month" class="overview-container"><h3>This Month</h3></div>
 					<div id="overview-year" class="overview-container"><h3>This Year</h3></div>
 					<script type="text/javascript">
-						sunburst_sales( "div#overview-today", "<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>" );
-						sunburst_sales( "div#overview-week", "<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))+86400*7) . ' 23:59:59'; ?>" );
-						sunburst_sales( "div#overview-month", "<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>" );
-						cellular_years( "div#overview-year", <?php echo gmdate('Y') ?>, <?php echo gmdate('Y')+1 ?> );
+						charts = new vCharts();
+						charts.source("sales");
+						charts.range("<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
+						charts.canvas(200, 200, 10);
+						charts.pushTarget("div#overview-today");
+						charts.create("Sunburst", 200);
+						charts.range("<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))+86400*7) . ' 23:59:59'; ?>");
+						charts.pushTarget("div#overview-week");
+						charts.create("Sunburst", 200);
+						charts.range("<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
+						charts.pushTarget("div#overview-month");
+						charts.create("Sunburst", 200);
+
+						//cellular_years( "div#overview-year", <?php echo gmdate('Y') ?>, <?php echo gmdate('Y')+1 ?> );
 					</script>
 					<?php
 					break;
@@ -2896,8 +2906,8 @@ class HTML_AcctExp
 					<div id="daily-yesterday" class="daily-container"><h3>Yesterday</h3></div>
 					<div id="daily-today" class="daily-container"><h3>Today</h3></div>
 					<script type="text/javascript">
-						sunburst_sales( "div#daily-yesterday", "<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>" );
-						sunburst_sales( "div#daily-today", "<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 23:59:59'; ?>" );
+						//sunburst_sales( "div#daily-yesterday", "<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>" );
+						//sunburst_sales( "div#daily-today", "<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 23:59:59'; ?>" );
 					</script>
 					<?php
 					break;
@@ -2909,7 +2919,7 @@ class HTML_AcctExp
 					?>
 					<div id="all-time-cells" class"all-time-container"><h3>Daily Cells</h3></div>
 					<script type="text/javascript">
-						cellular_years( "div#chart", range_start, range_end );
+						//cellular_years( "div#chart", range_start, range_end );
 					</script>
 					<div id="all-time-suns" class"all-time-container"><h3>Yearly Totals</h3></div>
 					<?php
