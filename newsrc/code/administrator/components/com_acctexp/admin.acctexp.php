@@ -279,8 +279,8 @@ switch( strtolower( $task ) ) {
 
 	case 'statrequest':
 		$type	= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
-		$start	= aecGetParam( 'start', '', true, array( 'word', 'string' ) );
-		$end	= aecGetParam( 'end', '', true, array( 'word', 'string' ) );
+		$start	= aecGetParam( 'start', '', true, array( 'string' ) );
+		$end	= aecGetParam( 'end', '', true, array( 'string' ) );
 
 		aec_statrequest( $option, $type, $start, $end );
 		break;
@@ -4500,7 +4500,7 @@ function eventlog( $option )
 
 function aec_stats( $option, $page )
 {
-	$stats = null;
+	$stats = array();
 
 	$document=& JFactory::getDocument();
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.min.js"></script>' );
@@ -4515,6 +4515,15 @@ function aec_stats( $option, $page )
 
 	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/stats/test.js"></script>' );
 
+	$db = &JFactory::getDBO();
+	$query = 'SELECT amount'
+			. ' FROM #__acctexp_log_history'
+			. ' ORDER BY 0+`amount` DESC'
+			;
+	$db->setQuery( $query );
+
+	$stats['max_sale'] = $db->loadResult();
+
 	HTML_AcctExp::stats( $option, $page, $stats );
 }
 
@@ -4525,40 +4534,24 @@ function aec_statrequest( $option, $type, $start, $end )
 	$tree = new stdClass();
 
 	switch ( $type ) {
-		case 'max_sale':
-			$query = 'SELECT amount'
-					. ' FROM #__acctexp_log_history'
-					. ' ORDER BY 0+`amount` DESC'
-					;
-			$db->setQuery( $query );
-
-			$tree->type = "SalesMaxAmount";
-			$tree->amount = $db->loadResult();
-			break;
 		case 'sales':
-			$tree->type = "SalesCollection";
-			$tree->sales = array();
-			$tree->groups = array();
-
-			$start_timeframe = $start . ' 00:00:00';
+			$tree = array();
 
 			if ( empty( $end ) ) {
-				$end = date( 'Y-m-d', ( (int) gmdate('U') ) );
+				$end = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 			}
-
-			$end_timeframe = $end . ' 23:59:59';
 
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_log_history'
-					. ' WHERE transaction_date >= \'' . $start_timeframe . '\''
-					. ' AND transaction_date <= \'' . $end_timeframe . '\''
+					. ' WHERE transaction_date >= \'' . $start . '\''
+					. ' AND transaction_date <= \'' . $end . '\''
 					. ' ORDER BY transaction_date ASC'
 					;
 			$db->setQuery( $query );
 			$entries = $db->loadResultArray();
 
 			if ( empty( $entries ) ) {
-				return $tree;
+				echo json_encode( $tree );exit;
 			}
 
 			$historylist = array();
@@ -4588,23 +4581,15 @@ function aec_statrequest( $option, $type, $start, $end )
 				}
 
 				$sale			= new stdClass();
-				$sale->type		= "Sale";
 				$sale->id		= $id;
 				$sale->invoice	= $entry->invoice_number;
 				$sale->date		= date( 'Y-m-d', strtotime( $entry->transaction_date ) );
+				//$sale->datejs	= date( 'F d, Y H:i:s', strtotime( $entry->transaction_date ) );
 				$sale->plan		= $entry->plan_id;
 				$sale->group	= $pgroups[0];
 				$sale->amount	= $entry->amount;
 
-				$tree->sales[] = $sale;
-			}
-
-			foreach ( $groups as $groupid ) {
-				$group			= new stdClass();
-				$group->type	= "Group";
-				$group->id		= $groupid;
-
-				$tree->groups[] = $group;
+				$tree[] = $sale;
 			}
 
 			break;

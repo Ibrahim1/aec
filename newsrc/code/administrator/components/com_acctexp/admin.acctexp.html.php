@@ -2872,8 +2872,9 @@ class HTML_AcctExp
 						var	amount_format = d3.format(".2f"),
 							amount_currency = "€",
 							range_start=2007,
-							range_end=2012
-							request_url="index.php?option=com_acctexp&task=statrequest";
+							range_end=2012,
+							request_url="index.php?option=com_acctexp&task=statrequest",
+							max_sale = <?php echo $stats['max_sale']; ?>;
 					</script>
 		<?php
 			switch ( $page ) {
@@ -2889,13 +2890,15 @@ class HTML_AcctExp
 						charts.range("<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
 						charts.canvas(200, 200, 10);
 						charts.pushTarget("div#overview-today");
-						charts.create("Sunburst", 200);
+						charts.chain("Sunburst", 200);
+
 						charts.range("<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))+86400*7) . ' 23:59:59'; ?>");
 						charts.pushTarget("div#overview-week");
-						charts.create("Sunburst", 200);
+						charts.chain("Sunburst", 200);
+
 						charts.range("<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
 						charts.pushTarget("div#overview-month");
-						charts.create("Sunburst", 200);
+						charts.chain("Sunburst", 200);
 
 						//cellular_years( "div#overview-year", <?php echo gmdate('Y') ?>, <?php echo gmdate('Y')+1 ?> );
 					</script>
@@ -2919,7 +2922,14 @@ class HTML_AcctExp
 					?>
 					<div id="all-time-cells" class"all-time-container"><h3>Daily Cells</h3></div>
 					<script type="text/javascript">
-						//cellular_years( "div#chart", range_start, range_end );
+						charts = new vCharts();
+						charts.source("sales");
+						charts.range("<?php echo gmdate('2011-1-1') .' 00:00:00'; ?>", "<?php echo gmdate('2011-m-d') . ' 23:59:59'; ?>");
+						charts.canvas(800, 900, 10);
+						charts.pushTarget("div#chart");
+						charts.chain("Cellular", 14);
+
+						//cellular_years( "div#chart", 2010, 2010 );
 					</script>
 					<div id="all-time-suns" class"all-time-container"><h3>Yearly Totals</h3></div>
 					<?php
