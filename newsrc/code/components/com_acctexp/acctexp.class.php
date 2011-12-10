@@ -6589,6 +6589,12 @@ class ItemGroupHandler
 		$db->setQuery( $query );
 		$result = $db->loadResultArray();
 
+		foreach ( $result as $k => $v ) {
+			if ( empty( $v ) ) {
+				unset($result[$k]);
+			}
+		}
+
 		if ( !empty( $result ) ) {
 		// Order results
 			$query = 'SELECT id'
@@ -6706,36 +6712,38 @@ class ItemGroupHandler
 
 		$groups = ItemGroupHandler::getChildren( $gids, 'group' );
 
-		foreach ( $groups as $groupid ) {
-			$group = new ItemGroup( $db );
-			$group->load( $groupid );
+		if ( !empty( $groups ) ) {
+			foreach ( $groups as $groupid ) {
+				$group = new ItemGroup( $db );
+				$group->load( $groupid );
 
-			if ( !$group->checkVisibility( $metaUser ) ) {
-				continue;
-			}
-
-			if ( $group->params['reveal_child_items'] && empty( $group->params['symlink'] ) ) {
-				$list = ItemGroupHandler::getTotalAllowedChildItems( $groupid, $metaUser, $list );
-			} else {
-					if ( ItemGroupHandler::hasVisibleChildren( $group, $metaUser ) ) {
-						$list[] = ItemGroupHandler::getGroupListItem( $group );
-					}
+				if ( !$group->checkVisibility( $metaUser ) ) {
+					continue;
 				}
+
+				if ( $group->params['reveal_child_items'] && empty( $group->params['symlink'] ) ) {
+					$list = ItemGroupHandler::getTotalAllowedChildItems( $groupid, $metaUser, $list );
+				} else {
+						if ( ItemGroupHandler::hasVisibleChildren( $group, $metaUser ) ) {
+							$list[] = ItemGroupHandler::getGroupListItem( $group );
+						}
+					}
+			}
 		}
 
 		$items = ItemGroupHandler::getChildren( $gids, 'item' );
 
-		$i = 0;
-		foreach( $items as $itemid ) {
-			$plan = new SubscriptionPlan( $db );
-			$plan->load( $itemid );
+		if ( !empty( $items ) ) {
+			foreach( $items as $itemid ) {
+				$plan = new SubscriptionPlan( $db );
+				$plan->load( $itemid );
 
-			if ( !$plan->checkVisibility( $metaUser ) ) {
-				continue;
+				if ( !$plan->checkVisibility( $metaUser ) ) {
+					continue;
+				}
+
+				$list[] = ItemGroupHandler::getItemListItem( $plan );
 			}
-
-			$list[] = ItemGroupHandler::getItemListItem( $plan );
-			$i++;
 		}
 
 		return $list;
@@ -7034,7 +7042,7 @@ class ItemGroup extends serialParamDBTable
 
 		return parent::delete();
 	}
-	
+
 	function copy()
 	{
 		$pid = $this->id;
@@ -8230,6 +8238,14 @@ class SubscriptionPlan extends serialParamDBTable
 			ItemGroupHandler::setChild( $row->id, $parentid, 'item' );
 		}
 	}
+
+	function delete()
+	{
+		ItemGroupHandler::removeChildren( $this->id );
+
+		return parent::delete();
+	}
+
 }
 
 class logHistory extends serialParamDBTable
