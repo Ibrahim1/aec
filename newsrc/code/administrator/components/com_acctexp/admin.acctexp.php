@@ -4562,13 +4562,13 @@ function aec_statrequest( $option, $type, $start, $end )
 
 				$refund = false;
 				if ( is_array( $entry->response ) ) {
-					$filter = array( 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
+					$filter = array( 'new_case', 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
 
 					$refund = false;
 					foreach ( $entry->response as $v ) {
 						if ( in_array( $v, $filter ) ) {
 							continue 2;
-						} elseif ( $v == 'refund' ) {
+						} elseif ( ( $v == 'refund' ) || ( $v == 'Reversed' ) || ( $v == 'Refunded' ) ) {
 							$refund = true;
 						}
 					}
@@ -4587,7 +4587,7 @@ function aec_statrequest( $option, $type, $start, $end )
 				//$sale->datejs	= date( 'F d, Y H:i:s', strtotime( $entry->transaction_date ) );
 				$sale->plan		= $entry->plan_id;
 				$sale->group	= $pgroups[0];
-				$sale->amount	= $entry->amount;
+				$sale->amount	= $refund ? (0-$entry->amount) : $entry->amount;
 
 				$tree[] = $sale;
 			}

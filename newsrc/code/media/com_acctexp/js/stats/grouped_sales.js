@@ -7,6 +7,7 @@ function vCharts() {
 	this.queue = [];
 	this.quen = 0;
 	this.datef = d3.time.format("%Y-%m-%d %X");
+	var exstart, exend;
 
 	this.source = function(type) {
 		this.request = request_url+"&type="+type;
@@ -39,8 +40,11 @@ function vCharts() {
 		this.svg = this.charts[this.p];
 	}
 
-	this.getData = function(callback, start, end) {
-		if ( this.exstart == undefined ) {
+	this.getData = function(callback) {
+		var start = this.start,
+		end = this.end;
+
+		if ( !this.exstart ) {
 			this.exstart = start;
 			this.exend = end;
 		}
@@ -49,27 +53,27 @@ function vCharts() {
 
 		if ( ( this.exstart == start ) && ( this.exend == end ) ) {
 			if ( this.data.length < 1 ) {
-				this.pushData(function(data, start, end) {
+				this.pushData(function(data) {
 					that.acquireData(data, callback, start, end);
 				}, start, end);
 			} else {
-				callback(this.data);
+				callback(this.data, start, end);
 			}
 		} else {
 			if ( ( start < this.exstart ) || ( end > this.exend ) ) {
 				if ( start < this.exstart ) {
-					this.pushData(function(data, start, end) {
+					this.pushData(function(data) {
 						that.acquireData(data, callback, start, end);
 					}, start, this.exstart);
 				}
 
 				if ( end > this.exend ) {
-					this.pushData(function(data, start, end) {
+					this.pushData(function(data) {
 						that.acquireData(data, callback, start, end);
 					}, this.exend, end);
 				}
 			} else {
-				callback(this.data.filter( function(d){ return (d.date <= start) && (d.end >= end); }));
+				callback(this.data.filter( function(d){ return (d.date <= start) && (d.date >= end); }), start, end);
 			}
 		}
 	}
@@ -84,7 +88,7 @@ function vCharts() {
 
 		filtered = this.data.filter( function(d){ ddate = short.parse(d.date); return (ddate >= s) && (ddate <= e); }); 
 
-		callback(filtered);
+		callback(filtered, start, end);
 	}
 	
 	this.pushData = function(callback, start, end) {
@@ -96,7 +100,7 @@ function vCharts() {
 			this.exend = end;
 		}
 
-		d3.json(this.request+"&start="+encodeURI(start)+"&end="+encodeURI(end), callback);
+		d3.json(this.request+"&start="+encodeURI(start)+"&end="+encodeURI(end), callback(data));
 	}
 
 	this.chain = function(type, dim) {
@@ -105,29 +109,48 @@ function vCharts() {
 
 	this.create = function(type, dim) {
 		var target = this.svg,
-			p = this.p,
-			start = this.start,
-			end = this.end;
+			p = this.p;
 
-		this.getData(function(data, target, p) {
-			canvas = target.append("svg:g")
-				.attr("class", type)
-				.attr("id", type+"-"+p);
+		start = this.start;
+		end = this.end;
+
+		that = this;
+
+		this.getData((function(data, start, end, target, p) {
+			canvas = target
+			.append("svg:g")
+			.attr("class", type)
+			.attr("id", type+"-"+p);
 
 			chart = new window[type](canvas, dim, data);
-		}, start, end);
+		})(data || [],start,end,target,p));
+	}
+
+	this.cbtest = function(data) {
+		test = data;
+	}
+
+	this.oldcb = function(data) {
+		canvas = target
+		.append("svg:g")
+		.attr("class", type)
+		.attr("id", type+"-"+p);
+
+		chart = new window[type](canvas, dim, data);
 	}
 
 	this.json = function(url, callback) {
 		var req = new XMLHttpRequest;
 
-		if (arguments.length < 3) callback = "application/json";
+		if (arguments.length < 2) callback = "application/json";
 		else if ("application/json" && req.overrideMimeType) req.overrideMimeType("application/json");
 
 		req.open("GET", url, true);
 		req.onreadystatechange = function() {
-			if (req.readyState === 0) callback(req.status < 300 ? req : null);
-			else if (req.readyState === 4) callback(req.status < 300 ? req : null);
+			//if (req.readyState === 0) callback(req.status < 300 ? req : null);
+			if (req.readyState === 4) {
+				callback(req.status < 300 ? req : null);
+			}
 		};
 
 		req.send(null);
@@ -360,7 +383,7 @@ Sunburst = function(canvas, dim, dat) {
 			})
 			;
 
-	var center_console = function() {
+		var center_console = function() {
 		d3.select(selector+" .console-amt")
 		.style("opacity", "0.2")
 		.text("Total:")
