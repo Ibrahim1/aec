@@ -4587,7 +4587,7 @@ function aec_statrequest( $option, $type, $start, $end )
 				//$sale->datejs	= date( 'F d, Y H:i:s', strtotime( $entry->transaction_date ) );
 				$sale->plan		= $entry->plan_id;
 				$sale->group	= $pgroups[0];
-				$sale->amount	= $refund ? (0-$entry->amount) : $entry->amount;
+				$sale->amount	= $refund ? -$entry->amount : $entry->amount;
 
 				$tree[] = $sale;
 			}

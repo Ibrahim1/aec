@@ -2890,15 +2890,21 @@ class HTML_AcctExp
 						charts.range("<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
 						charts.canvas(200, 200, 10);
 						charts.pushTarget("div#overview-today");
-						charts.chain("Sunburst", 200);
+						charts.create("Sunburst", 200);
 
 						charts.range("<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))+86400*7) . ' 23:59:59'; ?>");
 						charts.pushTarget("div#overview-week");
-						charts.chain("Sunburst", 200);
+						charts.create("Sunburst", 200);
 
 						charts.range("<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
 						charts.pushTarget("div#overview-month");
-						charts.chain("Sunburst", 200);
+						charts.create("Sunburst", 200);
+
+						charts.range("<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
+						charts.canvas(1000, 200, 10);
+						charts.pushTarget("div#overview-year");
+						//charts.create("Sunburst", 200);
+						charts.create("Cellular", 14);
 
 						//cellular_years( "div#overview-year", <?php echo gmdate('Y') ?>, <?php echo gmdate('Y')+1 ?> );
 					</script>
@@ -2924,7 +2930,7 @@ class HTML_AcctExp
 					<script type="text/javascript">
 						charts = new vCharts();
 						charts.source("sales");
-						charts.range("<?php echo gmdate('2011-1-1') .' 00:00:00'; ?>", "<?php echo gmdate('2011-m-d') . ' 23:59:59'; ?>");
+						charts.range("<?php echo gmdate('2011-1-1') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
 						charts.canvas(800, 900, 10);
 						charts.pushTarget("div#chart");
 						charts.chain("Cellular", 14);
