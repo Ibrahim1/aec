@@ -16166,19 +16166,35 @@ class AECToolbox
 
 		$k = 0;
 
-		// Try username and name
-		$queries[$k] = 'FROM #__users'
-					. ' WHERE LOWER( `username` ) LIKE \'%' . $search . '%\' OR LOWER( `name` ) LIKE \'%' . $search . '%\''
-					;
-		$qfields[$k] = 'id';
-		$k++;
+		if ( strpos( $search, "@" ) !== false ) {
+			// Try user email
+			$queries[$k] = 'FROM #__users'
+						. ' WHERE LOWER( `email` ) = \'' . $search . '\''
+						;
+			$qfields[$k] = 'id';
+			$k++;
 
-		// If its not that, how about the user email?
-		$queries[$k] = 'FROM #__users'
-					. ' WHERE LOWER( `email` ) = \'' . $search . '\''
-					;
-		$qfields[$k] = 'id';
-		$k++;
+			// If its not that, how about the username and name?
+			$queries[$k] = 'FROM #__users'
+						. ' WHERE LOWER( `username` ) LIKE \'%' . $search . '%\' OR LOWER( `name` ) LIKE \'%' . $search . '%\''
+						;
+			$qfields[$k] = 'id';
+			$k++;
+		} else {
+			// Try username and name
+			$queries[$k] = 'FROM #__users'
+						. ' WHERE LOWER( `username` ) LIKE \'%' . $search . '%\' OR LOWER( `name` ) LIKE \'%' . $search . '%\''
+						;
+			$qfields[$k] = 'id';
+			$k++;
+
+			// If its not that, how about the user email?
+			$queries[$k] = 'FROM #__users'
+						. ' WHERE LOWER( `email` ) = \'' . $search . '\''
+						;
+			$qfields[$k] = 'id';
+			$k++;
+		}
 
 		// Try to find this as a userid
 		$queries[$k] = 'FROM #__users'
