@@ -2895,12 +2895,12 @@ class HTML_AcctExp
 						charts.range("<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', strtotime("last Monday",gmdate("U"))+86400*7) . ' 23:59:59'; ?>");
 						charts.pushTarget("div#overview-week");
 						charts.create("Sunburst", 200);
-						charts.create("Stacked", 55);
+						//charts.create("Stacked", 55);
 
 						charts.range("<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
 						charts.pushTarget("div#overview-month");
 						charts.create("Sunburst", 200);
-						charts.create("Stacked", 55);
+						//charts.create("Stacked", 55);
 
 						charts.range("<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
 						charts.canvas(1000, 200, 10);
