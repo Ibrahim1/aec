@@ -828,8 +828,8 @@ function checkUsernameEmail( $username, $email )
 	$db->setQuery( $query );
 
 	if ( $db->loadResult() ) {
-		aecErrorAlert( JText::_( 'AEC_WARNREG_INUSE' ) );
-		return JText::_( 'AEC_WARNREG_INUSE' );
+		aecErrorAlert( JText::_( 'AEC_WARNREG_INUSE_USERNAME' ) );
+		return JText::_( 'AEC_WARNREG_INUSE_USERNAME' );
 	}
 
 	if ( !empty( $email ) ) {
@@ -840,8 +840,8 @@ function checkUsernameEmail( $username, $email )
 		$db->setQuery( $query );
 
 		if ( $db->loadResult() ) {
-			aecErrorAlert( JText::_( 'AEC_WARNREG_INUSE' ) );
-			return JText::_( 'AEC_WARNREG_INUSE' );
+			aecErrorAlert( JText::_( 'AEC_WARNREG_INUSE_EMAIL' ) );
+			return JText::_( 'AEC_WARNREG_INUSE_EMAIL' );
 		}
 	}
 
