@@ -231,14 +231,12 @@ function Cellular(canvas, dim, dat) {
 
 		this.selectAll("rect.day")
 			.transition().ease("bounce")
-			.delay(function(d, i) { return i * 4; })
+			.delay(function(d, i) { return (i * (8-ccolor(nsales[format(d)])))+(Math.random()*8); })
 			.duration(600)
 			.attr("width", z).attr("height", z)
 			.attr("ry", 0).attr("rx", 0)
 			.attr("x", function(d) { return week(d) * z; })
 			.attr("y", function(d) { return day(d) * z; });
-
-		//this.transition().ease("cubic").delay(100).duration(500).style("opacity", "1.0")
 	});
 
 	function monthPath(t0) {
@@ -269,7 +267,7 @@ function Sunburst(canvas, dim, dat) {
 		)
 		.attr("class", "sunburst-ring")
 		.style("stroke", "#000")
-		.style("opacity", "0.5");
+		.style("opacity", "0.8");
 
 	var total = d3.sum(dat, function(v){ return v.amount; });
 
@@ -319,10 +317,16 @@ function Sunburst(canvas, dim, dat) {
 			.attr("display", function(d) { return d.depth ? null : "none"; }) // hide inner ring
 			.attr("d", arc)
 			.attr("fill-rule", "evenodd")
-			.style("opacity", "0.8")
+			.style("opacity", "0.3")
 			.style("stroke", "#fff")
 			.style("stroke-width", "0")
 			.style("fill", function(d) { return sunburst_color(( (typeof d.values != 'object') ? d.parent : d).key); });
+
+	path.transition().ease("bounce")
+			.delay(function(d, i) { return (i * 50); })
+			.duration(300)
+			.style("opacity", function(d) { return (typeof d.values != 'object') ? "0.6" : "0.9"; });
+
 /*
 	path.transition()
 		.ease("bounce")
@@ -366,7 +370,7 @@ function Sunburst(canvas, dim, dat) {
 		.on("mouseout", function(){
 			d3.select(this)
 				.transition().ease("cubic-out").duration(500)
-				.style("opacity", "0.8")
+				.style("opacity", function(d) { return (typeof d.values != 'object') ? "0.6" : "0.9"; })
 				.style("stroke-width", "0");
 
 			center_console();
