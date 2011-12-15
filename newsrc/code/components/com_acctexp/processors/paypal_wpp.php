@@ -246,7 +246,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		if ( !empty( $request->int_var['params']['express'] ) && $this->settings['allow_express_checkout'] ) {
 			if ( empty( $request->int_var['params']['token'] ) ) {
-				$var = $this->getPayPalVars( $request, !is_array( $request->int_var['amount'] ) );
+				$var = $this->getPayPalVars( $request, false );
 
 				$var['Method']			= 'SetExpressCheckout';
 				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
@@ -260,6 +260,13 @@ class processor_paypal_wpp extends XMLprocessor
 					$var['L_BillingAgreementDescription0']		= $this->getPlaintextDetails( $request );
 				}
 
+				if ( isset( $var['amt'] ) ) {
+					$var['paymentrequest_0_amt'] = $var['amt'];
+					$var['paymentrequest_0_itemamt'] = $var['amt'];unset( $var['amt'] );
+					$var['paymentrequest_0_currencycode'] = $var['currencyCode'];unset( $var['currencyCode'] );
+					$var['paymentrequest_0_paymentaction'] = $var['paymentAction'];unset( $var['paymentAction'] );
+				}
+//aecDebug($var);
 				$xml = $this->arrayToNVP( $var, true );
 
 				$response = $this->transmitRequestXML( $xml, $request );
@@ -379,7 +386,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$var['Method']			= 'DoDirectPayment';
 		}
 
-		$var['Version']			= '58.0';
+		$var['Version']			= '72.0';
 
 		$var['user']				= $this->settings['api_user'];
 		$var['pwd']					= $this->settings['api_password'];
