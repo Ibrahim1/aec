@@ -246,7 +246,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		if ( !empty( $request->int_var['params']['express'] ) && $this->settings['allow_express_checkout'] ) {
 			if ( empty( $request->int_var['params']['token'] ) ) {
-				$var = $this->getPayPalVars( $request, false );
+				$var = $this->getPayPalVars( $request, !is_array( $request->int_var['amount'] ) );
 
 				$var['Method']			= 'SetExpressCheckout';
 				$var['ReturnUrl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=repeatPayment&invoice='.$request->invoice->invoice_number, $this->info['secure'], true );
