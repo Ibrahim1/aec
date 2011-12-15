@@ -724,10 +724,17 @@ function subscribe( $option )
 
 		if ( !$AL && !$CB && !$JS && !$k2mode ) {
 			// Joomla 1.6+ Sanity Check
-			if ( isset($_POST['email2']) ) {
+			if ( isset($_POST['email2']) && isset($_POST['email']) ) {
 				if ( $_POST['email2'] !== $_POST['email'] ) {
 					aecErrorAlert( JText::_( 'AEC_WARNREG_EMAIL_NOMATCH' ) );
 					return JText::_( 'AEC_WARNREG_EMAIL_NOMATCH' );
+				}
+			}
+
+			if ( isset($_POST['password2']) && isset($_POST['password']) ) {
+				if ( $_POST['password2'] !== $_POST['password'] ) {
+					aecErrorAlert( JText::_( 'AEC_WARNREG_PASSWORD_NOMATCH' ) );
+					return JText::_( 'AEC_WARNREG_PASSWORD_NOMATCH' );
 				}
 			}
 
