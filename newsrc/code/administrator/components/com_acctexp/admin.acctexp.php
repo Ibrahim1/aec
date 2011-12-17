@@ -4306,6 +4306,13 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		$objInvoice = new Invoice( $db );
 		$objInvoice->load( $invoiceid );
 
+		$pp = new stdClass();
+		$pp->id = 0;
+		$pp->processor_name = 'none';
+
+		$history = new logHistory( $db );
+		$history->entryFromInvoice( $this, null, $pp );
+
 		if ( $applyplan ) {
 			$objInvoice->pay();
 		} else {
@@ -4582,7 +4589,7 @@ function aec_statrequest( $option, $type, $start, $end )
 
 				$sale			= new stdClass();
 				$sale->id		= $id;
-				$sale->invoice	= $entry->invoice_number;
+				//$sale->invoice	= $entry->invoice_number;
 				$sale->date		= date( 'Y-m-d', strtotime( $entry->transaction_date ) );
 				//$sale->datejs	= date( 'F d, Y H:i:s', strtotime( $entry->transaction_date ) );
 				$sale->plan		= $entry->plan_id;
