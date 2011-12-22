@@ -5349,46 +5349,18 @@ class SOAPprocessor extends XMLprocessor
 	{
 		global $aecConfig;
 
-		if ( class_exists( 'SoapClient' ) ) {
-			$this->soapclient = new SoapClient( $url, $options );
-			
-			if ( method_exist( $this->soapclient, '__soapCall' ) ) {
-				$response['raw'] = $this->soapclient->__soapCall( $command, $content );
-			} elseif ( method_exist( $this->soapclient, 'soapCall' ) ) {
-				$response['raw'] = $this->soapclient->soapCall( $command, $content );
-			} else {
-				$response['raw'] = $this->soapclient->call( $command, $content );
-			}
-
-			if ( $response['raw']->error != 0 ) {
-				$response['error'] = "Error calling native SOAP function: " . $response['raw']->error . ": " . $response['raw']->errorDescription;
-			}
+		$this->soapclient = new SoapClient( $url, $options );
+		
+		if ( method_exist( $this->soapclient, '__soapCall' ) ) {
+			$response['raw'] = $this->soapclient->__soapCall( $command, $content );
+		} elseif ( method_exist( $this->soapclient, 'soapCall' ) ) {
+			$response['raw'] = $this->soapclient->soapCall( $command, $content );
 		} else {
-			require_once( JPATH_SITE . '/components/com_acctexp/lib/nusoap/nusoap.php');
-
-			$this->soapclient = new nusoap_client( $url );
-
-			if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
-				$this->soapclient->setHTTPProxy(	$aecConfig->cfg['proxy'],
-													$aecConfig->cfg['proxy_port'],
-													$aecConfig->cfg['proxy_username'],
-													$aecConfig->cfg['proxy_password']
-												);
-			}
-
-			if ( !empty( $headers ) ) {
-				$this->soapclient->setHeaders( $headers );
-			}
-
-			// execute payment transaction
-			$response = array();
 			$response['raw'] = $this->soapclient->call( $command, $content );
+		}
 
-			$err = $this->soapclient->getError();
-
-			if ( $err != false ) {
-				$response['error'] = "Error calling nuSOAP function: " . $err;
-			}
+		if ( $response['raw']->error != 0 ) {
+			$response['error'] = "Error calling native SOAP function: " . $response['raw']->error . ": " . $response['raw']->errorDescription;
 		}
 
 		return $response;
