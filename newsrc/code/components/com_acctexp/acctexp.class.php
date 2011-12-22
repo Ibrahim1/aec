@@ -163,7 +163,7 @@ function aecEscape( $value, $safe_params )
 					}
 					break;
 				case 'badchars':
-					$r = preg_replace( '`[\<|\>|\"|\'|\%|\;|\(|\)]`Di', '', $return );
+					$r = preg_replace( "#[<>\"'%;()&]#i", '', $return );
 					break;
 				case 'int':
 					$r = (int) $return;

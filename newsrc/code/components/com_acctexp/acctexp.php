@@ -827,7 +827,7 @@ function subscribe( $option )
 function checkUsernameEmail( $username, $email )
 {
 	// Implementing the Javascript check in case that is broken on the site
-	$regex = preg_match( '`[\<|\>|\"|\'|\%|\;|\(|\)]`Di', '', $username );
+	$regex = preg_match( "#[<>\"'%;()&]#i", '', $username );
 
 	if ( ( strlen( $username ) < 2 ) || $regex ) {
 		aecErrorAlert( JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 ) );
