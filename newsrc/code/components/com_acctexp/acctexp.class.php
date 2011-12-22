@@ -9029,6 +9029,8 @@ class InvoiceFactory
 			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
 		}
 
+		$this->payment->amount = AECToolbox::correctAmount( $this->payment->amount );
+
 		// Amend ->payment
 		if ( !empty( $this->payment->currency ) ) {
 			$this->payment->currency_symbol = AECToolbox::getCurrencySymbol( $this->payment->currency );
@@ -9036,20 +9038,10 @@ class InvoiceFactory
 			$this->payment->currency_symbol = '';
 		}
 
-		$amount_array = explode( '.', $this->payment->amount );
-
-		$this->payment->amount_significant	= $amount_array[0];
-
-		if ( isset( $amount_array[1] ) ) {
-			$this->payment->amount_decimal		= $amount_array[1];
-		} else {
-			$this->payment->amount_decimal		= '00';
-		}
-
 		if ( !empty( $this->plan ) ) {
 			$this->payment->amount_format = AECToolbox::formatAmountCustom( $this, $this->plan );
 		} else {
-			$this->payment->amount_format = $this->payment->amount;
+			$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount, $this->payment->currency );
 		}
 	}
 
@@ -12020,6 +12012,16 @@ class Invoice extends serialParamDBTable
 					} else {
 						$int_var['amount'] = AECToolbox::correctAmount( $int_var['amount'] * $InvoiceFactory->cart[0]['quantity'] );
 					}
+				}
+			} else {
+				if ( is_array( $int_var['amount'] ) ) {
+					foreach ( $int_var['amount'] as $k => $v ) {
+						if ( strpos( $k, 'amount' ) !== false ) {
+							$int_var['amount'][$k] = AECToolbox::correctAmount( $v );
+						}
+					}
+				} else {
+					$int_var['amount'] = AECToolbox::correctAmount( $int_var['amount'] );
 				}
 			}
 		}

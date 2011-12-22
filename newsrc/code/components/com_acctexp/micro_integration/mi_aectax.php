@@ -317,6 +317,9 @@ class mi_aectax
 
 		// Modify grand total according to tax
 		$request->add->grand_total->set( 'cost', array( 'amount' => $grand_total ) );
+		
+		// Formatting for total
+		$request->add->total->cost['amount'] = AECToolbox::correctAmount( $request->add->total->cost['amount'] );
 
 		return true;
 	}
@@ -371,7 +374,7 @@ class mi_aectax
 					$itemcost = $term->getBaseCostObject( array( 'tax', 'discount', 'total' ), true );
 
 					// Compute cost as it would have been with pure tax subtracted
-					$originalcost = AECToolbox::correctAmount( ( $itemcost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100 );
+					$originalcost = ( $itemcost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
 
 					// Set new root cost
 					$item['terms']->terms[$tid]->modifyCost( 0, $originalcost );
@@ -402,7 +405,7 @@ class mi_aectax
 					$itemcost = $term->getBaseCostObject( array( 'tax', 'discount', 'total' ), true );
 
 					// Compute cost as it would have been with pure tax subtracted
-					$originalcost = AECToolbox::correctAmount( ( $itemcost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100 );
+					$originalcost = ( $itemcost->cost['amount'] / ( 100 + $location['percentage'] ) ) * 100;
 
 					// Set new root cost
 					$item['terms']->terms[$tid]->modifyCost( 0, $originalcost );
@@ -412,16 +415,16 @@ class mi_aectax
 
 					if ( $fullcost->cost['amount'] == $originalcost ) {
 						// No discounts, just make it fit
-						$tax = AECToolbox::correctAmount( $itemcost->cost['amount'] - $originalcost );
+						$tax = $itemcost->cost['amount'] - $originalcost;
 					} else {
 						// Discounts, re-compute
-						$tax = AECToolbox::correctAmount( $fullcost->cost['amount'] * ( $location['percentage'] / 100 ) );
+						$tax = $fullcost->cost['amount'] * ( $location['percentage'] / 100 );
 					}
 					break;
 				case 'subtract':
 					$total = $term->renderTotal();
 
-					$tax = AECToolbox::correctAmount( $total * ( $location['percentage'] / 100 ) );
+					$tax = $total * ( $location['percentage'] / 100 );
 
 					$tax = -$tax;
 					break;
@@ -429,7 +432,7 @@ class mi_aectax
 				case 'add':
 					$total = $term->renderTotal();
 
-					$tax = AECToolbox::correctAmount( $total * ( $location['percentage'] / 100 ) );
+					$tax = $total * ( $location['percentage'] / 100 );
 					break;
 			}
 

@@ -99,8 +99,8 @@ class processor_servantek extends POSTprocessor
 
 		if ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
 			$tax				= $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
-			$var['tax']			= round( ( $request->int_var['amount'] - $tax ), 2 );
-			$var['amount']		= round( $tax, 2 );
+			$var['tax']			= AECToolbox::correctAmount( ( $request->int_var['amount'] - $tax ), 2 );
+			$var['amount']		= AECToolbox::correctAmount( $tax, 2 );
 		} else {
 			$var['amount']		= $request->int_var['amount'];
 		}

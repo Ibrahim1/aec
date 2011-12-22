@@ -478,8 +478,6 @@ class mammonTerm extends eucaObject
 	{
 		$this->cost = array();
 
-		$amount = AECToolbox::correctAmount( $amount );
-
 		$cost = new mammonCost();
 		$cost->set( 'type', 'cost' );
 
@@ -506,8 +504,6 @@ class mammonTerm extends eucaObject
 	 */
 	function modifyCost( $id, $amount )
 	{
-		$amount = AECToolbox::correctAmount( $amount );
-
 		$this->cost[$id]->cost['amount'] = $amount;
 
 		$this->computeTotal();
@@ -539,7 +535,6 @@ class mammonTerm extends eucaObject
 				}
 
 				$am = 0 - $amount;
-				$am = AECToolbox::correctAmount( $am );
 				$this->addCost( $am, $info );
 			}
 
@@ -554,7 +549,6 @@ class mammonTerm extends eucaObject
 				}
 
 				$am = 0 - round( ( ( $total / 100 ) * $percent ), 2 );
-				$am = AECToolbox::correctAmount( $am );
 				$this->addCost( $am, $info );
 			}
 		}
@@ -627,7 +621,7 @@ class mammonTerm extends eucaObject
 		foreach ( $this->cost as $id => $cost ) {
 			if ( in_array( $cost->type, $filter ) || ( isset( $cost->cost['temp_coupon'] ) && $filter_temp_coupons ) ) {
 				if ( isset( $return->cost['amount'] ) ) {
-					$return->cost['amount'] = AECToolbox::correctAmount( $return->cost['amount'] );
+					$return->cost['amount'] = $return->cost['amount'];
 
 					return $return;
 				} else {
@@ -641,8 +635,6 @@ class mammonTerm extends eucaObject
 				$return->cost['amount'] = $return->cost['amount'] + $cost->cost['amount'];
 			}
 		}
-
-		$return->cost['amount'] = AECToolbox::correctAmount( $return->cost['amount'] );
 
 		return $return;
 	}
@@ -684,7 +676,7 @@ class mammonCost extends eucaObject
 	 */
 	function renderCost()
 	{
-		return AECToolbox::correctAmount( $this->cost['amount'] );
+		return $this->cost['amount'];
 	}
 
 	/**
