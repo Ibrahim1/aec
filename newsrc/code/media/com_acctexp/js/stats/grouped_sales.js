@@ -14,8 +14,8 @@ function vCharts() {
 	}
 
 	this.range = function(start, end) {
-		this.start = start;
-		this.end = end;
+		this.start = this.datef.parse(start);
+		this.end = this.datef.parse(end);
 	}
 
 	this.canvas = function(w, h, m) {
@@ -74,7 +74,9 @@ function vCharts() {
 	}
 
 	this.acquireData = function(json, callback, start, end, target, p) {
-		this.data = this.data.concat(json);
+		short = d3.time.format("%Y-%m-%d");
+
+		this.data = this.data.concat([json.forEach(function(entry){ entry.date = short.parse(entry.date); return entry; })]);
 
 		if ( start < this.exstart ) {
 			this.exstart = start;
@@ -88,18 +90,17 @@ function vCharts() {
 	}
 
 	this.doCallback = function(callback, start, end, target, p){
-		var s = this.datef.parse(start),
-		e = this.datef.parse(end);
+		
 
-		short = d3.time.format("%Y-%m-%d");
-
-		filtered = this.data.filter( function(d){ ddate = short.parse(d.date); return (ddate >= s) && (ddate <= e); }); 
+		filtered = this.data.filter( function(entry){ return (ddate >= start) && (ddate <= end); }); 
 
 		callback(filtered, target, p);
 	}
 
 	this.pushData = function(callback, start, end) {
-		this.json(this.request+"&start="+encodeURI(start)+"&end="+encodeURI(end), callback);
+		short = d3.time.format("%Y-%m-%d");
+
+		this.json(this.request+"&start="+encodeURI(short.parse(start))+"&end="+encodeURI(short.parse(end)), callback);
 	}
 
 	this.create = function(type, dim) {
@@ -148,7 +149,7 @@ function vCharts() {
 
 	this.triggerqueue = function() {
 		if ( this.queue.length ) {
-			if ( this.queue.length == this.queue_next ) {
+			if ( this.queue_next >= this.queue.length ) {
 				item = this.queue.shift();
 				this.getData(item.call, item.start, item.end, item.target, item.p);
 			}
@@ -211,7 +212,8 @@ function Cellular(canvas, dim, dat) {
 		.enter()
 		.append("svg:path")
 			.attr("class", "month")
-			.attr("d", monthPath);
+			.attr("d", monthPath)
+			.style("stroke", "#555");
 
 	var ccolor = d3.scale.quantize()
 	.domain([0, max_sale*0.8])
@@ -260,21 +262,21 @@ function Sunburst(canvas, dim, dat) {
 
 	canvas.append("svg:path")
 		.attr("d",d3.svg.arc()
-			.startAngle(function(d) { return 0; })
-			.endAngle(function(d) { return 360; })
-			.innerRadius(function(d) { return r+1; })
-			.outerRadius(function(d) { return r+2; })
+			.startAngle(0)
+			.endAngle(360)
+			.innerRadius(0)
+			.outerRadius(2*r/3)
 		)
-		.attr("class", "sunburst-ring")
-		.style("stroke", "#000")
-		.style("opacity", "0.8");
+		.attr("class", "sunburst-middle")
+		.style("fill", "#fff")
+		.style("opacity", "1.0");
 
 	var total = d3.sum(dat, function(v){ return v.amount; });
 
 	var txt = canvas.append("svg:text")
 		.attr("text-anchor", "middle")
 		.attr("class", "console")
-		.text("-")
+		.text("---")
 		.attr("transform", "translate(0,-6)")
 		.attr("class", "console-amt")
 		.style("opacity", "0.5");
