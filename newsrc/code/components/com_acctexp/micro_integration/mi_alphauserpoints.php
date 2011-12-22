@@ -131,7 +131,7 @@ class mi_alphauserpoints extends MI
 			$request->params['use_points'] = $discount / $this->settings['checkout_conversion'];
 		}
 
-		$request->add['terms']->nextterm->discount( $discount, null, $request->params['use_points'] . " Points" );
+		$request->add['terms']->nextterm->discount( $discount, null, array( 'details' => $request->params['use_points'] . " Points" ) );
 
 		return true;
 	}
