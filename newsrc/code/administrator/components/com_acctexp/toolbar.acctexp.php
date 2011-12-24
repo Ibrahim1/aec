@@ -122,6 +122,7 @@ switch ( strtolower( $task ) ) {
 	case 'showexcluded':
 	case 'showmanual':
 	case 'showpending':
+	case 'showsubscriptions':
 		ComponentMenu::EDIT_EXPIRATION();
 		break;
 

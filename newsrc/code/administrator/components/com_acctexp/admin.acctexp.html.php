@@ -1338,7 +1338,7 @@ class HTML_AcctExp
 							<td width="20" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 							<td width="20"><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 							<td width="20"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star.png', JText::_('AEC_USER_SUBSCRIPTIONS_PRIMARY') ) : '&nbsp;'; ?></td>
-							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?> </a></td>
+							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
 							<td width="10%" align="left"><?php echo $row->username; ?></td>
 							<td width="10%" align="left"><?php echo $row->status; ?></td>
 							<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
