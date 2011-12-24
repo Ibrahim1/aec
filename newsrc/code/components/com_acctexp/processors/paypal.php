@@ -210,11 +210,13 @@ class processor_paypal extends POSTprocessor
 		}
 
 		foreach ( $post as $key => $value ) {
-			$req .= "&$key=";
+			$value = str_replace('\r\n', "QQLINEBREAKQQ", $value);
 
-			$value = preg_replace( '/(.*[^%^0^D])(%0A)(.*)/i','${1}%0D%0A${3}', $value );// linebreak fix
+			$value = urlencode( stripslashes($value) );
 
-			$req .= urlencode( stripslashes( $value ) );
+			$value = str_replace( "QQLINEBREAKQQ", "\r\n", $value ); // linebreak fix
+
+			$req .= "&$key=".$value;
 		}
 
 		$res = $this->transmitRequest( $ppurl, $path, $req );
