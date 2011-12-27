@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4021' );
+define( '_AEC_REVISION', '4024' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -7408,8 +7408,6 @@ class SubscriptionPlan extends serialParamDBTable
 		$metaUser->focusSubscription->status = $status;
 		$metaUser->focusSubscription->plan = $this->id;
 
-		$metaUser->meta->addPlanID( $this->id );
-
 		$metaUser->temporaryRFIX();
 
 		$metaUser->focusSubscription->lastpay_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
@@ -7483,6 +7481,8 @@ class SubscriptionPlan extends serialParamDBTable
 
 			$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly, $invoice );
 		}
+
+		$metaUser->meta->addPlanID( $this->id );
 
 		$result = $this->triggerMIs( 'afteraction', $metaUser, $exchange, $invoice, $add, $silent );
 
