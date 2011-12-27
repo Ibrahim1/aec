@@ -59,7 +59,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$settings['signature']			= '';
 		$settings['country']			= 'US';
 
-		$settings['item_name']			= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_name']			= '[[invoice_amount]] - ' . sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
