@@ -261,12 +261,12 @@ class processor_paypal_wpp extends XMLprocessor
 				}
 
 				if ( isset( $var['amt'] ) ) {
-					$var['paymentrequest_0_amt'] = $var['amt'];
-					$var['paymentrequest_0_itemamt'] = $var['amt'];unset( $var['amt'] );
-					$var['paymentrequest_0_currencycode'] = $var['currencyCode'];unset( $var['currencyCode'] );
-					$var['paymentrequest_0_paymentaction'] = $var['paymentAction'];unset( $var['paymentAction'] );
+					$var['paymentrequest_0_paymentaction']	= $var['paymentAction'];unset( $var['paymentAction'] );
+					$var['paymentrequest_0_amt']			= $var['amt'];unset( $var['amt'] );
+					$var['paymentrequest_0_desc']			= $var['desc'];unset( $var['desc'] );
+					$var['paymentrequest_0_currencycode']	= $var['currencyCode'];unset( $var['currencyCode'] );
 				}
-//aecDebug($var);
+
 				$xml = $this->arrayToNVP( $var, true );
 
 				$response = $this->transmitRequestXML( $xml, $request );
@@ -304,13 +304,18 @@ class processor_paypal_wpp extends XMLprocessor
 				$var = $this->getPayPalVars( $request, false );
 
 				if ( isset( $var['amt'] ) ) {
-					unset( $var['amt'] );
+					$var['paymentrequest_0_paymentaction']	= $var['paymentAction'];unset( $var['paymentAction'] );
+					$var['paymentrequest_0_amt']			= $var['amt'];
+					$var['paymentrequest_0_itemamt']		= $var['amt'];unset( $var['amt'] );
+					$var['paymentrequest_0_desc']			= $var['desc'];unset( $var['desc'] );
+					$var['paymentrequest_0_currencycode']	= $var['currencyCode'];unset( $var['currencyCode'] );
+					$var['paymentrequest_0_notifyurl']	= $var['NotifyUrl'];unset( $var['NotifyUrl'] );
 				}
 
 				$var['token']			= $request->int_var['params']['token'];
 				$var['PayerID']			= $request->int_var['params']['PayerID'];
 
-				$var['InvNum']			= $request->invoice->invoice_number;
+				$var['paymentrequest_0_InvNum']			= $request->invoice->invoice_number;
 
 				$var['Method']			= 'DoExpressCheckoutPayment';
 
@@ -495,7 +500,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		// converting NVPResponse to an Associative Array
 		$nvpResArray = $this->NVPtoArray( $response );
-//aecDebug("PayPal Response Follows");aecDebug( $nvpResArray );
+
 		if ( !empty( $response ) ) {
 			if ( isset( $nvpResArray['PROFILEID'] ) ) {
 				$return['invoiceparams'] = array( "paypal_wpp_customerProfileId" => $nvpResArray['PROFILEID'] );
@@ -650,8 +655,10 @@ class processor_paypal_wpp extends XMLprocessor
 			$response['invoice'] = $post['rp_invoice_id'];
 		} elseif ( !empty( $post['invnum'] ) ) {
 			$response['invoice'] = $post['invnum'];
+		} elseif ( !empty( $post['paymentrequest_0_invnum'] ) ) {
+			$response['invoice'] = $post['paymentrequest_0_invnum'];
 		} elseif ( !empty( $post['profilereference'] ) ) {
-			$response['invoice'] = $post['invnum'];
+			$response['invoice'] = $post['profilereference'];
 		}
 
 		$response['amount_paid'] = $mc_gross;
