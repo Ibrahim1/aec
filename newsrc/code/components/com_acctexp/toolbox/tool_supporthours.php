@@ -105,6 +105,11 @@ class tool_supporthours
 
 		$unused = $used = 0;
 
+		$minordebt = 0;
+		$minordebtlist = array();
+		$majordebt = 0;
+		$majordebtlist = array();
+
 		$historylist = array();
 		foreach ( $userlist as $userid ) {
 			$db->setQuery(
@@ -137,6 +142,22 @@ class tool_supporthours
 							}
 						}
 					}
+				}
+			}
+
+			if ( !empty( $uparams['support_minutes_used'] ) ) {
+				$utotal = $uparams['support_minutes'] - $uparams['support_minutes_used'];
+			} else {
+				$utotal = $uparams['support_minutes'];
+			}
+
+			if ( $utotal < 0 ) {
+				if ( $utotal < -30 ) {
+					$majordebtlist[] = array( 'userid' => $user->id, 'username' => $user->username, 'debt' => $utotal );
+					$majordebt += $utotal;
+				} else {
+					$minordebtlist[] = array( 'userid' => $user->id, 'username' => $user->username, 'debt' => $utotal );
+					$minordebt += $utotal;
 				}
 			}
 
@@ -191,6 +212,22 @@ class tool_supporthours
 		$return .= '<p>Total used minutes: <strong>' . $used . '</strong> (' . round( $used/60, 2 ) . ' hours)</p>';
 		$return .= '<p>Total unused minutes: ' . $unused . ' (' . round( $unused/60, 2 ) . ' hours)</p>';
 
+		$return .= '<p>Total minor debt: ' . $minordebt . ' (' . round( $minordebt/60, 2 ) . ' hours)</p>';
+
+		$minordebtlist = $this->debtSort( $minordebtlist );
+
+		foreach ( $minordebtlist as  $user ) {
+			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a>';
+		}
+
+		$return .= '<p>Total major debt: ' . $majordebt . ' (' . round( $majordebt/60, 2 ) . ' hours)</p>';
+
+		$majordebtlist = $this->debtSort( $majordebtlist );
+
+		foreach ( $majordebtlist as  $user ) {
+			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a>';
+		}
+
 		return $return;
 	}
 
@@ -216,6 +253,30 @@ class tool_supporthours
 		}
 
 		return array_merge( tool_supporthours::historySort($x), array($piv), tool_supporthours::historySort($y) );
+	}
+
+	function debtSort( $array )
+	{
+		// Bastardized Quicksort
+		if ( !isset( $array[2] ) ) {
+			return $array;
+		}
+
+		$piv = $array[0];
+		$x = $y = array();
+		$len = count( $array );
+		$i = 1;
+
+		while ( $i < $len ) {
+			if ( $array[$i]['debt'] < $piv['debt'] ) {
+				$x[] = $array[$i];
+			} else {
+				$y[] = $array[$i];
+			}
+			++$i;
+		}
+
+		return array_merge( tool_supporthours::debtSort($x), array($piv), tool_supporthours::debtSort($y) );
 	}
 }
 ?>
