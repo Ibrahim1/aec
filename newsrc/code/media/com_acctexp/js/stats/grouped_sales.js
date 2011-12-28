@@ -5,8 +5,9 @@ function vCharts() {
 	this.p = 0;
 	this.data = [];
 	this.queue = [];
-	this.queue_next = 0;
+	this.seeking = false;
 	this.datef = d3.time.format("%Y-%m-%d %X");
+
 	var exstart, exend;
 
 	this.source = function(type) {
@@ -76,8 +77,22 @@ function vCharts() {
 	this.acquireData = function(json, callback, start, end, target, p) {
 		short = d3.time.format("%Y-%m-%d");
 
-		this.data = this.data.concat([json.forEach(function(entry){ entry.date = short.parse(entry.date); return entry; })]);
+		that = this
 
+		test = [json.forEach(function(entry){
+			if ( typeof entry != 'undefined' ) {
+				entry.date = short.parse(entry.date);
+				that.data = that.data.concat([entry]); }
+			})];
+
+		if ( test.length ) {
+			this.data = this.data.concat([test]);
+		}
+
+		this.doCallback(callback, start, end, target, p);
+	}
+
+	this.pushData = function(callback, start, end) {
 		if ( start < this.exstart ) {
 			this.exstart = start;
 		}
@@ -86,31 +101,23 @@ function vCharts() {
 			this.exend = end;
 		}
 
-		this.doCallback(callback, start, end, target, p);
+		this.json(this.request+"&start="+encodeURI(this.datef(start))+"&end="+encodeURI(this.datef(end)), callback);
 	}
 
 	this.doCallback = function(callback, start, end, target, p){
-		
-
-		filtered = this.data.filter( function(entry){ return (ddate >= start) && (ddate <= end); }); 
-
-		callback(filtered, target, p);
-	}
-
-	this.pushData = function(callback, start, end) {
-		short = d3.time.format("%Y-%m-%d");
-
-		this.json(this.request+"&start="+encodeURI(short.parse(start))+"&end="+encodeURI(short.parse(end)), callback);
+		callback(start, end, target, p);
 	}
 
 	this.create = function(type, dim) {
-		this.enqueue(function(data, target, p) {
+		that = this;
+
+		this.enqueue(function(start, end, target, p) {
 			canvas = target
 			.append("svg:g")
 			.attr("class", type)
 			.attr("id", type+"-"+p);
 
-			chart = new window[type](canvas, dim, data);
+			chart = new window[type](canvas, dim, that.data.filter( function(e){ return (e.date >= start) && (e.date <= end); }));
 		})
 	}
 
@@ -133,26 +140,27 @@ function vCharts() {
 	};
 
 	this.enqueue = function(callback) {
-		this.queue_next++;
 		this.queue.push({call:callback,start:this.start,end:this.end,target:this.svg,p:this.p});
 
-		this.triggerqueue();
+		if ( !this.seeking ) {
+			this.seeking == true;
+
+			this.triggerqueue();
+		}
 	}
 
 	this.dequeue = function(data, callback) {
-		this.queue_next--;
-
 		callback(data);
+
+		this.seeking = false;
 
 		this.triggerqueue();
 	}
 
 	this.triggerqueue = function() {
 		if ( this.queue.length ) {
-			if ( this.queue_next >= this.queue.length ) {
-				item = this.queue.shift();
-				this.getData(item.call, item.start, item.end, item.target, item.p);
-			}
+			item = this.queue.shift();
+			this.getData(item.call, item.start, item.end, item.target, item.p);
 		}
 	}
 
@@ -162,21 +170,18 @@ function Cellular(canvas, dim, dat) {
 	var z = dim,
 		day = d3.time.format("%w"),
 		week = d3.time.format("%U"),
-		mon = d3.time.format("%U"),
-		format = d3.time.format("%Y-%m-%d"),
-		dat = dat;
+		format = d3.time.format("%Y-%m-%d");
 
 	canvas.attr("class", "svg-crisp")
 		.attr("transform", "translate("+z*2+","+z+")");
 
 	var r_start = d3.min(dat, function(v){ return v.date; }),
-		r_end = d3.max(dat, function(v){ return v.date; })
-		numyear = Number(r_start.slice(0, 4));
+		r_end = d3.max(dat, function(v){ return v.date; });
+	var numyear = r_start.getFullYear();
 
 	var year = canvas.append("svg:g")
 		.data([numyear])
-		.attr("class", "year y-"+r_start.slice(0, 4)+" RdYlGn")
-		//.attr("transform", "translate(42," + ( 1 + ( d - r_start ) * h*2.2 ) + ")")
+		.attr("class", "year y-"+numyear+" RdYlGn")
 		.style("opacity", "1.0");
 
 	year.append("svg:text")
@@ -185,12 +190,14 @@ function Cellular(canvas, dim, dat) {
 		.text(String);
 
 	year.selectAll("rect.day")
-		.data(d3.time.days(new Date(r_start), new Date(r_end)))
+		.data(d3.time.days(new Date(numyear, 0, 1), new Date(numyear + 1, 0, 1)))
 		.enter()
 		.append("svg:rect")
 		.attr("class", "day")
 		.attr("width", 1).attr("height", 1)
-		.attr("x", function(d) { return (week(d) * z)+z/2; })
+		.attr("x", function(d) {
+			return (week(d) * z)+z/2;
+			})
 		.attr("y", function(d) { return (day(d) * z); })
 		.on("mouseover", function(){
 			d3.select(this)
@@ -226,14 +233,14 @@ function Cellular(canvas, dim, dat) {
 			.map(dat);
 
 		this.selectAll("rect.day")
-			.attr("class", function(d) { dd = format(d); test = nsales[format(d)];return "day q" + ccolor(nsales[format(d)]) + "-9"; })
+			.attr("class", function(d) { return "day q" + ccolor(nsales[d]) + "-9"; })
 			.attr("ry", z/3.33).attr("rx", z/3.33)
 			.append("svg:title")
-			.text(function(d) { return format(d) + (format(d) in nsales ? ": " + amount_format(nsales[format(d)]) + amount_currency : ""); })
+			.text(function(d) { return format(d) + (d in nsales ? ": " + amount_format(nsales[d]) + amount_currency : ""); })
 
 		this.selectAll("rect.day")
 			.transition().ease("bounce")
-			.delay(function(d, i) { return (i * (8-ccolor(nsales[format(d)])))+(Math.random()*8); })
+			.delay(function(d, i) { return nsales[d] ? (i * (8-ccolor(nsales[d])))+(Math.random()*8) : 0; })
 			.duration(600)
 			.attr("width", z).attr("height", z)
 			.attr("ry", 0).attr("rx", 0)
