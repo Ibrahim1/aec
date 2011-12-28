@@ -32,7 +32,8 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_metauser` ('
 . '`plan_params` text NULL,'
 . '`params` text NULL,'
 . '`custom_params` text NULL,'
-. ' PRIMARY KEY (`id`)'
+. ' PRIMARY KEY (`id`),'
+. ' KEY (`userid`)'
 . ') ENGINE=MyISAM AUTO_INCREMENT=1;'
 ;
 
@@ -48,7 +49,8 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_displaypipeline` ('
 . '`displaymax` int(11) NOT NULL default \'0\','
 . '`displaytext` text NULL,'
 . '`params` text NULL,'
-. ' PRIMARY KEY (`id`)'
+. ' PRIMARY KEY (`id`),'
+. ' KEY (`userid`)'
 . ') ENGINE=MyISAM AUTO_INCREMENT=1;'
 ;
 
@@ -96,7 +98,8 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_invoices` ('
 . '`transactions` text NULL,'
 . '`params` text NULL,'
 . '`conditions` text NULL,'
-. ' PRIMARY KEY (`id`)'
+. ' PRIMARY KEY (`id`),'
+. ' KEY (`userid`)'
 . ') ENGINE=MyISAM;'
 ;
 
@@ -119,7 +122,8 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_cart` ('
 . '`history` text NULL,'
 . '`params` text NULL,'
 . '`customparams` text NULL,'
-. ' PRIMARY KEY (`id`)'
+. ' PRIMARY KEY (`id`),'
+. ' KEY (`userid`)'
 . ') ENGINE=MyISAM;'
 ;
 
@@ -194,15 +198,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_microintegrations` ('
 . ' PRIMARY KEY (`id`)'
 . ') ENGINE=MyISAM;'
 ;
-/*
-$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_scope` ('
-. '`id` int(11) NOT NULL auto_increment,'
-. '`mi_id` int(11) NULL,'
-. '`scope` varchar(64) NULL,'
-. ' PRIMARY KEY (`id`)'
-. ') ENGINE=MyISAM;'
-;
-*/
+
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_event` ('
 . '`id` int(11) NOT NULL auto_increment,'
 . '`userid` int(11) NOT NULL default \'0\','
@@ -216,7 +212,8 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_event` ('
 . '`context` text NULL,'
 . '`params` text NULL,'
 . '`customparams` text NULL,'
-. ' PRIMARY KEY (`id`)'
+. ' PRIMARY KEY (`id`),'
+. ' KEY (`userid`)'
 . ') ENGINE=MyISAM;'
 ;
 
@@ -239,7 +236,8 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_subscr` ('
 . '`expiration` datetime NULL default \'0000-00-00 00:00:00\','
 . '`params` text NULL,'
 . '`customparams` text NULL,'
-. ' PRIMARY KEY (`id`)'
+. ' PRIMARY KEY (`id`),'
+. ' KEY (`userid`)'
 . ') ENGINE=MyISAM;'
 ;
 
@@ -287,7 +285,8 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_couponsxuser` ('
 . '`last_updated` datetime NULL default \'0000-00-00 00:00:00\','
 . '`params` text NULL,'
 . '`usecount` int(64) NOT NULL default \'0\','
-. ' PRIMARY KEY (`id`)'
+. ' PRIMARY KEY (`id`),'
+. ' KEY (`userid`)'
 . ') ENGINE=MyISAM;'
 ;
 
