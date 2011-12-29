@@ -14615,6 +14615,7 @@ class reWriteEngine
 		}
 
 		if ( in_array( 'subscription', $switches ) ) {
+			$rewrite['subscription'][] = 'id';
 			$rewrite['subscription'][] = 'type';
 			$rewrite['subscription'][] = 'status';
 			$rewrite['subscription'][] = 'signup_date';
@@ -14861,6 +14862,7 @@ class reWriteEngine
 				}
 
 				if ( $this->data['metaUser']->hasSubscription ) {
+					$this->rewrite['subscription_id']				= $this->data['metaUser']->focusSubscription->id;
 					$this->rewrite['subscription_type']				= $this->data['metaUser']->focusSubscription->type;
 					$this->rewrite['subscription_status']			= $this->data['metaUser']->focusSubscription->status;
 					$this->rewrite['subscription_signup_date']		= $this->data['metaUser']->focusSubscription->signup_date;

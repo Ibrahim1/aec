@@ -3861,7 +3861,7 @@ function editCoupon( $id, $option, $new, $type )
 	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', ( (int) gmdate('U') ) ) );
 	$params['has_expiration']				= array( 'list_yesno',		0);
 	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', ( (int) gmdate('U') ) ) );
-	$params['has_max_reuse']				= array( 'list_yesno',		1 );
+	$params['has_max_reuse']				= array( 'list_yesno',		0 );
 	$params['max_reuse']					= array( 'inputB',			1 );
 	$params['has_max_peruser_reuse']		= array( 'list_yesno',		1 );
 	$params['max_peruser_reuse']			= array( 'inputB',			1 );
