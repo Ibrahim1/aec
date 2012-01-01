@@ -106,6 +106,8 @@ class tool_supporthours
 		$unused = $used = 0;
 
 		$minordebt = 0;
+		$minordebtthresh = 0;
+		$minordebtth = 0;
 		$minordebtlist = array();
 		$majordebt = 0;
 		$majordebtlist = array();
@@ -155,8 +157,13 @@ class tool_supporthours
 				if ( $utotal < -30 ) {
 					$majordebtlist[] = array( 'userid' => $user->id, 'username' => $user->username, 'debt' => $utotal );
 					$majordebt += $utotal;
-				} else {
+				} elseif ( $utotal < -14 ) {
 					$minordebtlist[] = array( 'userid' => $user->id, 'username' => $user->username, 'debt' => $utotal );
+					$minordebt += $utotal;
+				} else {
+					$minordebtthresh++;
+
+					$minordebtth += $utotal;
 					$minordebt += $utotal;
 				}
 			}
@@ -217,15 +224,17 @@ class tool_supporthours
 		$minordebtlist = $this->debtSort( $minordebtlist );
 
 		foreach ( $minordebtlist as  $user ) {
-			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a>';
+			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a> ';
 		}
+
+		$return .= '<p>' . $minordebtthresh . ' Users below the -15 minute threshhold, total debt: ' . $minordebtth . ' (' . round( $majordebt/60, 2 ) . ' hours)</p>';
 
 		$return .= '<p>Total major debt: ' . $majordebt . ' (' . round( $majordebt/60, 2 ) . ' hours)</p>';
 
 		$majordebtlist = $this->debtSort( $majordebtlist );
 
 		foreach ( $majordebtlist as  $user ) {
-			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a>';
+			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a> ';
 		}
 
 		return $return;
