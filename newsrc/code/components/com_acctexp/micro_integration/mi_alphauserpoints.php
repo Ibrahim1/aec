@@ -123,14 +123,18 @@ class mi_alphauserpoints extends MI
 
 	function modifyPrice( $request )
 	{
-		$discount = $request->params['use_points'] * $this->settings['checkout_conversion'];
+		$discount = AECToolbox::correctAmount( $request->params['use_points'] * $this->settings['checkout_conversion'] );
 
 		$original_price = $request->add['terms']->nextterm->renderTotal();
 
 		if ( $discount > $original_price ) {
 			$discount = $original_price;
 
-			$request->params['use_points'] = $discount / $this->settings['checkout_conversion'];
+			$request->params['use_points'] = (int) $discount / $this->settings['checkout_conversion'];
+
+			if ( ( $request->params['use_points'] * $this->settings['checkout_conversion'] ) < $original_price ) {
+				$request->params['use_points']++;
+			}
 		}
 
 		$request->add['terms']->nextterm->discount( $discount, null, array( 'details' => $request->params['use_points'] . " Points" ) );
