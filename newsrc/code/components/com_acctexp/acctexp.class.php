@@ -16314,16 +16314,18 @@ class AECToolbox
 		return $amount;
 	}
 
-	function formatAmount( $amount, $currency=null )
+	function formatAmount( $amount, $currency=null, $round=true )
 	{
 		global $aecConfig;
 
-		$amount = AECToolbox::correctAmount( $amount );
+		$amount = AECToolbox::correctAmount( $amount, $round );
+
+		$a = explode( '.', $amount );
 
 		if ( $aecConfig->cfg['amount_use_comma'] ) {
-			$amount = number_format( $amount, 2, ',', '.' );
+			$amount = number_format( $amount, ( $round ? 2 : strlen($a[1]) ), ',', '.' );
 		} else {
-			$amount = number_format( $amount, 2, '.', ',' );
+			$amount = number_format( $amount, ( $round ? 2 : strlen($a[1]) ), '.', ',' );
 		}
 
 		if ( !empty( $currency ) ) {
@@ -16341,7 +16343,7 @@ class AECToolbox
 		return $amount;
 	}
 
-	function correctAmount( $amount )
+	function correctAmount( $amount, $round=true )
 	{
 		if ( strpos( $amount, '.' ) === 0 ) {
 			$amount = '0' . $amount;
@@ -16353,12 +16355,22 @@ class AECToolbox
 			}
 		}
 
-		$a = explode( '.', (string) AECToolbox::roundAmount( $amount ) );
+		if ( $round ) {
+			$amount = (string) AECToolbox::roundAmount( $amount );
+		} else {
+			$amount = (string) $amount;
+		}
+
+		$a = explode( '.', $amount );
 
 		if ( empty( $a[1] ) ) {
 			$amount = $a[0] . '.00';
 		} else {
-			$amount = $a[0] . '.' . substr( str_pad( $a[1], 2, '0' ), 0, 2 );
+			if ( $round ) {
+				$amount = $a[0] . '.' . substr( str_pad( $a[1], 2, '0' ), 0, 2 );
+			} else {
+				$amount = $a[0] . '.' . str_pad( $a[1], 2, '0' );
+			}
 		}
 
 		return $amount;
