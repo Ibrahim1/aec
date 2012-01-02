@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4033' );
+define( '_AEC_REVISION', '4039' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -14956,7 +14956,7 @@ class reWriteEngine
 			}
 
 			// We have at least one JSON object, switching to JSON mode
-			return $this->decodeTags( $subject );
+			return $this->decodeTags( $subject, $safe );
 		} else {
 			// No JSON found, do traditional parsing
 			return $this->classicRewrite( $subject );
@@ -15006,7 +15006,7 @@ class reWriteEngine
 		return $subject;
 	}
 
-	function resolveJSONitem( $current )
+	function resolveJSONitem( $current, $safe=false )
 	{
 		if ( is_object( $current ) ) {
 			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
@@ -15014,19 +15014,19 @@ class reWriteEngine
 				return "JSON PARSE ERROR - Malformed String!";
 			}
 
-			$variables = $this->resolveJSONitem( $current->vars );
+			$variables = $this->resolveJSONitem( $current->vars, $safe );
 
 			$current = $this->executeCommand( $current->cmd, $variables );
 		} elseif ( is_array( $current ) ) {
 			foreach( $current as $id => $item ) {
-				$current[$id] = $this->resolveJSONitem( $item );
+				$current[$id] = $this->resolveJSONitem( $item, $safe );
 			}
 		}
 
 		return $current;
 	}
 
-	function executeCommand( $command, $vars )
+	function executeCommand( $command, $vars, $safe=false )
 	{
 		$result = '';
 		switch( $command ) {
@@ -15109,7 +15109,7 @@ class reWriteEngine
 						if ( in_array( $call, $allowed ) ) {
 							switch ( $call ) {
 								case 'SERVER':
-									if ( isset( $_SERVER[$v] ) ) {
+									if ( isset( $_SERVER[$v] ) && !$safe ) {
 										$result = $_SERVER[$v];
 									}
 									break;
@@ -15124,7 +15124,7 @@ class reWriteEngine
 									}
 									break;
 								case 'FILES':
-									if ( isset( $_FILES[$v] ) ) {
+									if ( isset( $_FILES[$v] ) && !$safe ) {
 										$result = $_FILES[$v];
 									}
 									break;
@@ -15144,7 +15144,7 @@ class reWriteEngine
 									}
 									break;
 								case 'ENV':
-									if ( isset( $_ENV[$v] ) ) {
+									if ( isset( $_ENV[$v] ) && !$safe ) {
 										$result = $_ENV[$v];
 									}
 									break;
@@ -15240,31 +15240,35 @@ class reWriteEngine
 				$result = AECToolbox::randomstring( (int) $vars, true, true );
 				break;
 			case 'php_function':
-				if ( isset( $vars[1] ) ) {
-					$result = call_user_func_array( $vars[0], $vars[1] );
-				} else {
-					$result = call_user_func_array( $vars[0] );
+				if ( !$safe ) {
+					if ( isset( $vars[1] ) ) {
+						$result = call_user_func_array( $vars[0], $vars[1] );
+					} else {
+						$result = call_user_func_array( $vars[0] );
+					}
 				}
 				break;
 			case 'php_method':
-				if ( function_exists( 'call_user_method_array' ) ) {
-					if ( isset( $vars[2] ) ) {
-						$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
+				if ( !$safe ) {
+					if ( function_exists( 'call_user_method_array' ) ) {
+						if ( isset( $vars[2] ) ) {
+							$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
+						} else {
+							$result = call_user_method_array( $vars[0], $vars[1] );
+						}
 					} else {
-						$result = call_user_method_array( $vars[0], $vars[1] );
-					}
-				} else {
-					$callback = array( $vars[0], $vars[1] );
-
-					if ( isset( $vars[2] ) ) {
-						$result = call_user_func_array( $callback, $vars[2] );
-					} else {
-						$result = call_user_func_array( $callback );
+						$callback = array( $vars[0], $vars[1] );
+	
+						if ( isset( $vars[2] ) ) {
+							$result = call_user_func_array( $callback, $vars[2] );
+						} else {
+							$result = call_user_func_array( $callback );
+						}
 					}
 				}
 				break;
 			default:
-				$result = $command;
+				$result = $command . ' is no command';
 				break;
 		}
 
