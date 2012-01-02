@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="content" method="upgrade">
-	<name>User - AEC Rewrite</name>
+	<name>User - AEC Restriction</name>
 	<author>David Deutsch</author>
 	<creationDate>02.01.2012</creationDate>
 	<copyright>Copyright (C) 2012 David Deutsch</copyright>
@@ -8,9 +8,9 @@
 	<authorEmail>skore@valanx.org</authorEmail>
 	<authorUrl>https://valanx.org</authorUrl>
 	<version>0.14.6</version>
-	<description>The AEC Rewrite Plugin gives you the power of the AEC ReWrite Engine right in your content.</description>
+	<description>The AEC Rescriction Plugin lets you target content to users depending on their membership.</description>
 	<files>
-		<filename plugin="aecrewrite">aecrewrite.php</filename>
+		<filename plugin="aecrestriction">aecrestriction.php</filename>
 	</files>
 	<params/>
 </install>
