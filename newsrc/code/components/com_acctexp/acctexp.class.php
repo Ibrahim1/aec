@@ -7121,7 +7121,7 @@ class SubscriptionPlanHandler
 			 	;
 
 		if ( ( $limitstart !== false ) && ( $limit !== false ) ) {
-			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
+			$query .= ' LIMIT ' . $limitstart . ',' . $limit;
 		}
 
 		$db->setQuery( $query );

@@ -356,7 +356,7 @@ function orderObject( $option, $type, $id, $up, $customreturn=null )
 	$db = &JFactory::getDBO();
 
 	$row = new $type( $db );
-	$row->load( $id[0] );
+	$row->load( $id );
 	$row->move( $up ? -1 : 1 );
 
 	aecRedirect( 'index.php?option='. $option . '&task=' . ( empty( $customreturn ) ? 'show' . $type . 's' : $customreturn ) );
