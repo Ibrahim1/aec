@@ -27,6 +27,7 @@ class mi_multiusercreation
 
 		$settings['expire_child_subscr']	= array( 'list_yesno' );
 		$settings['renew_child_subscr']		= array( 'list_yesno' );
+		$settings['renew_add_child_subscr']	= array( 'list_yesno' );
 
 		$settings['sender']					= array( 'inputE' );
 		$settings['sender_name']			= array( 'inputE' );
@@ -128,76 +129,78 @@ class mi_multiusercreation
 		}
 
 		$userlist = array();
-		for ( $i=0; $i<$this->settings['users_amount']; $i++ ) {
-			$fields = array( 'username', 'name', 'email', 'password_length' );
 
-			$x = $i;
+		if ( empty( $child_list ) || $this->settings['renew_add_child_subscr'] ) {
+			for ( $i=0; $i<$this->settings['users_amount']; $i++ ) {
+				$fields = array( 'username', 'name', 'email', 'password_length' );
 
-			if ( isset( $this->settings['create_user_'.$i.'_copyfrom'] ) ) {
-				if ( $this->settings['create_user_'.$i.'_copyfrom'] !== "NONE" ) {
-					$x = $this->settings['create_user_'.$i.'_copyfrom'];
-				}
-			}
+				$x = $i;
 
-			$userfields = array();
-			foreach ( $fields as $field ) {
-				// Do not create half-empty users
-				if ( empty( $this->settings['create_user_'.$x.'_'.$field] ) ) {
-					continue 2;
-				}
-
-				if ( $field == 'password_length' ) {
-					$userfields['password'] = trim( AECToolbox::randomstring( $this->settings['create_user_'.$x.'_'.$field], true ) );
-				} elseif ( $field == 'username' ) {
-					// Make sure that we create a unique username, but no more often than 10 times
-					$unique = false;
-					$j = 0;
-					while ( !$unique && ( $j < 10 ) ) {
-						$userfields[$field] = trim( AECToolbox::rewriteEngineRQ( $this->settings['create_user_'.$x.'_'.$field], $request ) );
-
-						$query = 'SELECT `id`'
-								. ' FROM #__users'
-								. ' WHERE `username` = \'' . $userfields[$field] . '\''
-								;
-						$database->setQuery( $query );
-
-						$unique = $database->loadResult() ? false : true;
-
-						$j++;
+				if ( isset( $this->settings['create_user_'.$i.'_copyfrom'] ) ) {
+					if ( $this->settings['create_user_'.$i.'_copyfrom'] !== "NONE" ) {
+						$x = $this->settings['create_user_'.$i.'_copyfrom'];
 					}
+				}
 
-					// If we tried more than 10 times, it didn't work - the chosen username generator does not produce unique strings
-					if ( $j >= 10 ) {
+				$userfields = array();
+				foreach ( $fields as $field ) {
+					// Do not create half-empty users
+					if ( empty( $this->settings['create_user_'.$x.'_'.$field] ) ) {
 						continue 2;
 					}
-				} else {
-					$userfields[$field] = trim( AECToolbox::rewriteEngineRQ( $this->settings['create_user_'.$x.'_'.$field], $request ) );
+
+					if ( $field == 'password_length' ) {
+						$userfields['password'] = trim( AECToolbox::randomstring( $this->settings['create_user_'.$x.'_'.$field], true ) );
+					} elseif ( $field == 'username' ) {
+						// Make sure that we create a unique username, but no more often than 10 times
+						$unique = false;
+						$j = 0;
+						while ( !$unique && ( $j < 10 ) ) {
+							$userfields[$field] = trim( AECToolbox::rewriteEngineRQ( $this->settings['create_user_'.$x.'_'.$field], $request ) );
+
+							$query = 'SELECT `id`'
+									. ' FROM #__users'
+									. ' WHERE `username` = \'' . $userfields[$field] . '\''
+									;
+							$database->setQuery( $query );
+
+							$unique = $database->loadResult() ? false : true;
+
+							$j++;
+						}
+
+						// If we tried more than 10 times, it didn't work - the chosen username generator does not produce unique strings
+						if ( $j >= 10 ) {
+							continue 2;
+						}
+					} else {
+						$userfields[$field] = trim( AECToolbox::rewriteEngineRQ( $this->settings['create_user_'.$x.'_'.$field], $request ) );
+					}
 				}
 
+				$userfields['password2'] = $userfields['password'];
+
+				if ( $this->settings['create_user_'.$x.'_username'] == $this->settings['create_user_'.$x.'_name'] ) {
+					$userfields['username'] = $userfields['name'];
+				}
+
+				$userid = $this->createUser( $userfields );
+
+				if ( !empty( $this->settings['create_user_'.$x.'_plan'] ) ) {
+					$metaUser = new metaUser( $userid );
+
+					$plan = new SubscriptionPlan( $database );
+					$plan->load( $this->settings['create_user_'.$x.'_plan'] );
+
+					$metaUser->establishFocus( $plan );
+
+					$plan->applyPlan( $metaUser->focusSubscription, 'none', 1 );
+
+					$child_list[] = $metaUser->focusSubscription->id;
+				}
+
+				$userlist[] = $userfields;
 			}
-
-			$userfields['password2'] = $userfields['password'];
-
-			if ( $this->settings['create_user_'.$x.'_username'] == $this->settings['create_user_'.$x.'_name'] ) {
-				$userfields['username'] = $userfields['name'];
-			}
-
-			$userid = $this->createUser( $userfields );
-
-			if ( !empty( $this->settings['create_user_'.$x.'_plan'] ) ) {
-				$metaUser = new metaUser( $userid );
-
-				$plan = new SubscriptionPlan( $database );
-				$plan->load( $this->settings['create_user_'.$x.'_plan'] );
-
-				$metaUser->establishFocus( $plan );
-
-				$plan->applyPlan( $metaUser->focusSubscription, 'none', 1 );
-
-				$child_list[] = $metaUser->focusSubscription->id;
-			}
-
-			$userlist[] = $userfields;
 		}
 
 		if ( !empty( $child_list ) ) {
