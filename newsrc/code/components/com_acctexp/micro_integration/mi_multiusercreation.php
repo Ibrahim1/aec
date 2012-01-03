@@ -147,13 +147,13 @@ class mi_multiusercreation
 				}
 
 				if ( $field == 'password_length' ) {
-					$userfields['password'] = AECToolbox::randomstring( $this->settings['create_user_'.$x.'_'.$field], true );
+					$userfields['password'] = trim( AECToolbox::randomstring( $this->settings['create_user_'.$x.'_'.$field], true ) );
 				} elseif ( $field == 'username' ) {
 					// Make sure that we create a unique username, but no more often than 10 times
 					$unique = false;
 					$j = 0;
 					while ( !$unique && ( $j < 10 ) ) {
-						$userfields[$field] = AECToolbox::rewriteEngineRQ( $this->settings['create_user_'.$x.'_'.$field], $request );
+						$userfields[$field] = trim( AECToolbox::rewriteEngineRQ( $this->settings['create_user_'.$x.'_'.$field], $request ) );
 
 						$query = 'SELECT `id`'
 								. ' FROM #__users'
@@ -171,7 +171,7 @@ class mi_multiusercreation
 						continue 2;
 					}
 				} else {
-					$userfields[$field] = AECToolbox::rewriteEngineRQ( $this->settings['create_user_'.$x.'_'.$field], $request );
+					$userfields[$field] = trim( AECToolbox::rewriteEngineRQ( $this->settings['create_user_'.$x.'_'.$field], $request ) );
 				}
 
 			}
