@@ -828,7 +828,7 @@ class HTML_AcctExp
 										array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') ),
 										array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
 										array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
-										array( 'hacks', 'hacks', JText::_('AEC_CENTR_HACKS') )
+										JText::_('AEC_CENTR_AREA_EXPORT')
 						);
 
 						$links[] = array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') );
@@ -1550,6 +1550,16 @@ class HTML_AcctExp
 										echo "<p><strong>" . $row->class_name . "</p></strong>";
 									}
 									?>
+									</div>
+								</div>
+								<?php if ( !$aecHTML->hasHacks ) { ?>
+									<h3><?php echo JText::_('MI_E_HACKS_NAME'); ?></h3>
+									<div class="userinfobox">
+										<div style="position:relative;float:left;">
+										<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
+										</div>
+									</div>
+								<?php } ?>
 								</td>
 							</tr>
 							</table>

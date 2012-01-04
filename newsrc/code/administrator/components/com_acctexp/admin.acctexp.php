@@ -3596,6 +3596,8 @@ function editMicroIntegration ( $id, $option )
 
 			$aecHTML->hasSettings = false;
 
+			$aecHTML->hasHacks = method_exists( $mi->mi_class, 'hacks' );
+
 			$aecHTML->customparams = array();
 			foreach ( $mi_settings as $n => $v ) {
 				$aecHTML->customparams[] = $n;
