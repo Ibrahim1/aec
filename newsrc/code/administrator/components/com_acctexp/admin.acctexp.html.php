@@ -1551,7 +1551,7 @@ class HTML_AcctExp
 									?>
 									</div>
 								</div>
-								<?php if ( !$aecHTML->hasHacks ) { ?>
+								<?php if ( $aecHTML->hasHacks ) { ?>
 									<h3><?php echo JText::_('MI_E_HACKS_NAME'); ?></h3>
 									<div class="userinfobox">
 										<div style="position:relative;float:left;">
