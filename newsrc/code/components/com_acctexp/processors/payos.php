@@ -101,8 +101,19 @@ class processor_payos extends URLprocessor
 			$var['AboTermValue'] = $period;
 		} else {
 			$var['Amount'] = $request->int_var['amount'];
-			$var['TermType'] = 5;
-			$var['TermValue'] = 1;
+
+			$period = $request->int_var['objUsage']->params['full_period'];
+
+			switch ( $request->int_var['objUsage']->params['full_periodunit'] ) {
+				// Only allows for Months or Years, so we have to go for the smallest larger amount of time
+				case 'D': case 'W': $period = 1; // no break; - Leaps over to months to set the unit
+				case 'M': $unit = 5; break;
+				case 'Y': $unit = 6; break;
+				default: $unit = 3; break;
+			}
+
+			$var['TermType'] = $unit;
+			$var['TermValue'] = $period;
 			$var['AboTermType'] = 0;
 		}
 
