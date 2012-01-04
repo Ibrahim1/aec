@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4053' );
+define( '_AEC_REVISION', '4058' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -14956,7 +14956,7 @@ class reWriteEngine
 			}
 
 			// We have at least one JSON object, switching to JSON mode
-			return $this->decodeTags( $subject, $safe );
+			return $this->decodeTags( $subject );
 		} else {
 			// No JSON found, do traditional parsing
 			return $this->classicRewrite( $subject );
