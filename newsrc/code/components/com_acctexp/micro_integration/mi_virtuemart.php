@@ -13,6 +13,14 @@
 
 class mi_virtuemart
 {
+	function mi_virtuemart()
+	{
+		$db = &JFactory::getDBO();
+	 	$db->setQuery( 'SHOW TABLES LIKE \'#__virtuemart_shoppergroups\'' );
+
+	 	$this->isv2 = $db->loadResult() ? true : false;
+	}
+
 	function Info()
 	{
 		$info = array();
@@ -24,13 +32,7 @@ class mi_virtuemart
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
-
-		$query = 'SELECT `shopper_group_id`, `shopper_group_name`'
-				. ' FROM #__vm_shopper_group'
-				;
-	 	$db->setQuery( $query );
-	 	$shopper_groups = $db->loadObjectList();
+		$shopper_groups = $this->getShopperGroups();
 
 		$sg = array();
 		if ( !empty( $shopper_groups ) ) {
@@ -89,19 +91,45 @@ class mi_virtuemart
 			}
 
 			return true;
-		}else{
+		} else {
 			return false;
 		}
+	}
+
+	function getShopperGroups()
+	{
+		$db = &JFactory::getDBO();
+
+		if ( $this->isv2 ) {
+			$query = 'SELECT `shopper_group_id`, `shopper_group_name`'
+					. ' FROM #__vm_shopper_group'
+					;
+		} else {
+			$query = 'SELECT `virtuemart_shoppergroup_id` AS `shopper_group_id`, `shopper_group_name`'
+					. ' FROM #__virtuemart_shoppergroups'
+					;
+		}
+	 	$db->setQuery( $query );
+	 	return $db->loadObjectList();
 	}
 
 	function checkVMuserexists( $userid )
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT `user_id`' // Jonathan Appleton changed this from id to user_id - good find indeed!
-				. ' FROM #__vm_user_info'
-				. ' WHERE `user_id` = \'' . $userid . '\''
-				;
+
+		if ( $this->isv2 ) {
+			$query = 'SELECT `virtuemart_user_id`'
+					. ' FROM #__virtuemart_userinfos'
+					. ' WHERE `virtuemart_user_id` = \'' . $userid . '\''
+					;
+		} else {
+			$query = 'SELECT `user_id`' // Jonathan Appleton changed this from id to user_id - good find indeed!
+					. ' FROM #__vm_user_info'
+					. ' WHERE `user_id` = \'' . $userid . '\''
+					;
+		}
+
 		$db->setQuery( $query );
 		return $db->loadResult();
 	}
@@ -110,10 +138,17 @@ class mi_virtuemart
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'UPDATE #__vm_shopper_vendor_xref'
-				. ' SET `shopper_group_id` = \'' . $shoppergroup . '\''
-				. ' WHERE `user_id` = \'' . $userid . '\''
-				;
+		if ( $this->isv2 ) {
+			$query = 'UPDATE #__virtuemart_vmuser_shoppergroups'
+					. ' SET `virtuemart_shoppergroup_id` = \'' . $shoppergroup . '\''
+					. ' WHERE `virtuemart_user_id` = \'' . $userid . '\''
+					;
+		} else {
+			$query = 'UPDATE #__vm_shopper_vendor_xref'
+					. ' SET `shopper_group_id` = \'' . $shoppergroup . '\''
+					. ' WHERE `user_id` = \'' . $userid . '\''
+					;
+		}
 		$db->setQuery( $query );
 		$db->query();
 	}
@@ -151,27 +186,59 @@ class mi_virtuemart
 			srand( (double) microtime() * 10000 );
 			$inum =	strtolower( substr( base64_encode( md5( rand() ) ), 0, 32 ) );
 			// Check if already exists
-			$query = 'SELECT count(*)'
-					. ' FROM #__vm_user_info'
-					. ' WHERE `user_info_id` = \'' . $inum . '\''
-					;
+
+			if ( $this->isv2 ) {
+				$query = 'SELECT count(*)'
+						. ' FROM #__virtuemart_userinfos'
+						. ' WHERE `virtuemart_userinfo_id` = \'' . $inum . '\''
+						;
+			} else {
+				$query = 'SELECT count(*)'
+						. ' FROM #__vm_user_info'
+						. ' WHERE `user_info_id` = \'' . $inum . '\''
+						;
+			}
+
 			$db->setQuery( $query );
 			$numberofrows = $db->loadResult();
 		}
 
 		// Create Useraccount
-		$query  = 'INSERT INTO #__vm_user_info'
-				. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
-				. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\', \'shopper\', \'Checking\')'
-				;
+		if ( $this->isv2 ) {
+			$query  = 'INSERT INTO #__vjos_virtuemart_vmusers'
+					. ' (virtuemart_user_id, virtuemart_vendor_id, user_is_vendor, perms, agreed, created_on, modified_on) '
+					. ' VALUES(\'' . $metaUser->userid . '\', \'0\', \'0\', \'shopper\',\'1\',\'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\')'
+					;
+			$db->setQuery( $query );
+			$db->query();
+
+			$query  = 'INSERT INTO #__virtuemart_userinfos'
+					. ' (virtuemart_userinfo_id, virtuemart_user_id, address_type, last_name, first_name, middle_name, created_on, modified_on) '
+					. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\')'
+					;
+		} else {
+			$query  = 'INSERT INTO #__vm_user_info'
+					. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
+					. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\', \'shopper\', \'Checking\')'
+					;
+		}
+
 		$db->setQuery( $query );
 		$db->query();
 
 		// Create Shopper -ShopperGroup - Relationship
-		$query  = 'INSERT INTO #__vm_shopper_vendor_xref'
-				. ' (user_id, shopper_group_id)'
-				. ' VALUES(\'' . $metaUser->userid . '\', \'' . $shoppergroup . '\')'
-				;
+		if ( $this->isv2 ) {
+			$query  = 'INSERT INTO #__virtuemart_vmuser_shoppergroups'
+					. ' (virtuemart_user_id, virtuemart_shoppergroup_id)'
+					. ' VALUES(\'' . $metaUser->userid . '\', \'' . $shoppergroup . '\')'
+					;
+		} else {
+			$query  = 'INSERT INTO #__vm_shopper_vendor_xref'
+					. ' (user_id, shopper_group_id)'
+					. ' VALUES(\'' . $metaUser->userid . '\', \'' . $shoppergroup . '\')'
+					;
+		}
+
 		$db->setQuery( $query );
 		$db->query();
 	}
