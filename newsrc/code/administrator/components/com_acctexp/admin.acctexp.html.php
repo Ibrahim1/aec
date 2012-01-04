@@ -824,17 +824,16 @@ class HTML_AcctExp
 										array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
 										array( 'showProcessors', 'settings', JText::_('AEC_CENTR_PROCESSORS') ),
 										array( 'editCSS', 'css', JText::_('AEC_CENTR_EDIT_CSS') ),
-										array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY') ),
-										array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') ),
-										array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
 										array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
-										JText::_('AEC_CENTR_AREA_EXPORT')
+										JText::_('AEC_CENTR_AREA_DATA'),
+										array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
+										array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
+										array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
+										array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
+										array( 'readout', 'export', JText::_('AEC_READOUT') ),
+										array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY') ),
+										array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
 						);
-
-						$links[] = array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') );
-						$links[] = array( 'export', 'export', JText::_('AEC_CENTR_EXPORT') );
-						$links[] = array( 'readout', 'export', JText::_('AEC_READOUT') );
-
 
 						$linkroot = "index.php?option=com_acctexp&amp;task=";
 						foreach ( $links as $litem ) {

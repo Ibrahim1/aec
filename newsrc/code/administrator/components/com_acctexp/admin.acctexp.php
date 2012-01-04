@@ -287,11 +287,17 @@ switch( strtolower( $task ) ) {
 
 	case 'readout': readout( $option ); break;
 
-	case 'export': exportData( $option ); break;
-	case 'loadexport': exportData( $option, 'load' ); break;
-	case 'applyexport': exportData( $option, 'apply' ); break;
-	case 'exportexport': exportData( $option, 'export' ); break;
-	case 'saveexport': exportData( $option, 'save' ); break;
+	case 'exportmembers': exportData( $option, 'members' ); break;
+	case 'loadexportmembers': exportData( $option, 'members', 'load' ); break;
+	case 'applyexportmembers': exportData( $option, 'members', 'apply' ); break;
+	case 'exportexportmembers': exportData( $option, 'members', 'export' ); break;
+	case 'saveexportmembers': exportData( $option, 'members', 'save' ); break;
+
+	case 'exportsales': exportData( $option, 'sales' ); break;
+	case 'loadexportsales': exportData( $option, 'sales', 'load' ); break;
+	case 'applyexportsales': exportData( $option, 'sales', 'apply' ); break;
+	case 'exportexportsales': exportData( $option, 'sales', 'export' ); break;
+	case 'saveexportsales': exportData( $option, 'sales', 'save' ); break;
 
 	case 'import': importData( $option ); break;
 
@@ -5599,7 +5605,7 @@ function importData( $option )
 	HTML_AcctExp::import( $option, $aecHTML );
 }
 
-function exportData( $option, $cmd=null )
+function exportData( $option, $type, $cmd=null )
 {
 	$db = &JFactory::getDBO();
 
