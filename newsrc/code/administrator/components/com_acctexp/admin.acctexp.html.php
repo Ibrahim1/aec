@@ -1533,8 +1533,9 @@ class HTML_AcctExp
 								</div>
 							</td>
 							<td valign="top">
-								<h3><?php echo JText::_('MI_E_FUNCTION_NAME'); ?></h3>
+								<h2><?php echo JText::_('MI_E_DETAILS'); ?></h2>
 								<div class="userinfobox">
+									<h4><?php echo JText::_('MI_E_FUNCTION_NAME'); ?></h4>
 									<div style="position:relative;float:left;">
 									<?php if ( !$aecHTML->hasSettings ) {
 										if ( $lists['class_name'] ) {
@@ -1552,8 +1553,8 @@ class HTML_AcctExp
 									</div>
 								</div>
 								<?php if ( $aecHTML->hasHacks ) { ?>
-									<h3><?php echo JText::_('MI_E_HACKS_NAME'); ?></h3>
 									<div class="userinfobox">
+									<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
 										<div style="position:relative;float:left;">
 										<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
 										</div>

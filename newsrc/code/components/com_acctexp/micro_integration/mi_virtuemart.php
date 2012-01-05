@@ -16,7 +16,7 @@ class mi_virtuemart
 	function mi_virtuemart()
 	{
 		$db = &JFactory::getDBO();
-	 	$db->setQuery( 'SHOW TABLES LIKE \'#__virtuemart_shoppergroups\'' );
+	 	$db->setQuery( 'SHOW TABLES LIKE \'%' . $db->getPrefix() . 'virtuemart_shoppergroups%\'' );
 
 	 	$this->isv2 = $db->loadResult() ? true : false;
 	}
@@ -101,12 +101,12 @@ class mi_virtuemart
 		$db = &JFactory::getDBO();
 
 		if ( $this->isv2 ) {
-			$query = 'SELECT `shopper_group_id`, `shopper_group_name`'
-					. ' FROM #__vm_shopper_group'
-					;
-		} else {
 			$query = 'SELECT `virtuemart_shoppergroup_id` AS `shopper_group_id`, `shopper_group_name`'
 					. ' FROM #__virtuemart_shoppergroups'
+					;
+		} else {
+			$query = 'SELECT `shopper_group_id`, `shopper_group_name`'
+					. ' FROM #__vm_shopper_group'
 					;
 		}
 	 	$db->setQuery( $query );
@@ -205,7 +205,7 @@ class mi_virtuemart
 
 		// Create Useraccount
 		if ( $this->isv2 ) {
-			$query  = 'INSERT INTO #__vjos_virtuemart_vmusers'
+			$query  = 'INSERT INTO #__virtuemart_vmusers'
 					. ' (virtuemart_user_id, virtuemart_vendor_id, user_is_vendor, perms, agreed, created_on, modified_on) '
 					. ' VALUES(\'' . $metaUser->userid . '\', \'0\', \'0\', \'shopper\',\'1\',\'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\')'
 					;
