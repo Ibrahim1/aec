@@ -16078,7 +16078,7 @@ class AECToolbox
 			$usersConfig = &JComponentHelper::getParams( 'com_users' );
 			$activation = $usersConfig->get('useractivation');
 
-			if ( ( $activation == 1 ) && !$overrideActivation ) {
+			if ( ( $activation > 0 ) && !$overrideActivation ) {
 				if ( defined( 'JPATH_MANIFESTS' ) ) {
 					$activation_link	= JURI::root() . 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $row->activation;
 				} else {
