@@ -49,6 +49,22 @@
 			</fileset>
 		</copy>
 
+		<mkdir dir="${dir.tmp}/plg_aecrestriction" />
+
+		<copy todir="${dir.tmp}/plg_aecrestriction">
+			<fileset dir="${dir.local}/plugins">
+				<include name="aecrestriction.*" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${dir.tmp}/plg_aecrewrite" />
+
+		<copy todir="${dir.tmp}/plg_aecrewrite">
+			<fileset dir="${dir.local}/plugins">
+				<include name="aecrewrite.*" />
+			</fileset>
+		</copy>
+
 		<mkdir dir="${dir.tmp}/plg_aecrouting" />
 
 		<copy todir="${dir.tmp}/plg_aecrouting">

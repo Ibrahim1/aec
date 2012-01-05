@@ -13,15 +13,22 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
+$mainframe->registerEvent( 'onPrepareContent', 'plgContentAECRewrite' );
+
 class plgContentAECRewrite extends JPlugin
 {
+	function onPrepareContent( &$article, &$params, $limitstart )
+	{
+		return $this->onContentPrepare( "", $article, $params, $limitstart );
+	}
+
 	/**
 	 * @param	string	The context of the content being passed to the plugin.
 	 * @param	object	The article object.  Note $article->text is also available
 	 * @param	object	The article params
 	 * @param	int		The 'page' number
 	 */
-	public function onContentPrepare( $context, &$article, &$params, $page=0 )
+	function onContentPrepare( $context, &$article, &$params, $page=0 )
 	{
 		// See whether there is anything to replace
 		if (JString::strpos($article->text, '{aecrewrite') === false) {
@@ -32,10 +39,12 @@ class plgContentAECRewrite extends JPlugin
 			// component check
 		}
 
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-			$regex = "#{aecrewrite}(.*?){/aecrewrite}#s";
+		$regex = "#{aecrewrite}(.*?){/aecrewrite}#s";
 
+		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
 			$article->text = preg_replace_callback( $regex, array(&$this, '_replace'), $article->text );
+		} else {
+			$article->text = preg_replace( $regex, "", $article->text );
 		}
 
 		return true;
@@ -50,8 +59,6 @@ class plgContentAECRewrite extends JPlugin
 	protected function _replace( &$matches )
 	{
 		static $rwEngine;
-
-		jimport('joomla.utilities.utility');
 
 		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
 
@@ -68,6 +75,6 @@ class plgContentAECRewrite extends JPlugin
 			$rwEngine->resolveRequest( $request );
 		}
 
-		return $rwEngine->resolveJSONitem( $matches[1], true );
+		return $rwEngine->resolve( $matches[1] );
 	}
 }

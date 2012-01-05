@@ -268,6 +268,8 @@ function com_install()
 							'plg_aecerror' => array ( 'type' => 'system', 'element' => 'aecerrorhandler' ),
 							'plg_aecrouting' => array ( 'type' => 'system', 'element' => 'aecrouting' ),
 							'plg_aecuser' => array ( 'type' => 'user', 'element' => 'aecuser' ),
+							'plg_aecrewrite' => array ( 'type' => 'content', 'element' => 'aecrewrite' ),
+							'plg_aecrestriction' => array ( 'type' => 'content', 'element' => 'aecrestriction' ),
 							'mod_acctexp' => array ( 'position' => 'left' ),
 							'mod_acctexp_cart' => array ( 'position' => 'left' )
 	);

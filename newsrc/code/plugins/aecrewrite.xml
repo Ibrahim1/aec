@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="content" method="upgrade">
-	<name>User - AEC Rewrite</name>
+	<name>Content - AEC Rewrite</name>
 	<author>David Deutsch</author>
 	<creationDate>02.01.2012</creationDate>
 	<copyright>Copyright (C) 2012 David Deutsch</copyright>
