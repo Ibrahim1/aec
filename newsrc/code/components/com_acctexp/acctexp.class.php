@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4064' );
+define( '_AEC_REVISION', '4088' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -6043,7 +6043,7 @@ class aecHTML
 				$return = '<div style="position:relative;float:left;width:' . $value . '%;padding:4px;"><div class="userinfobox">';
 				break;
 			case 'userinfobox_sub':
-				$return = '<div class="aec_userinfobox_sub"><h4>' . $value . '</h4>';
+				$return = '<div class="aec_userinfobox_sub">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
 			case 'fieldset':
 				$return = '<div class="setting_form">' . "\n"
@@ -20991,8 +20991,8 @@ class aecRestrictionHelper
 					continue;
 				}
 
-				echo '<tr><td><div class="userinfobox">';
-				$sblockwidth = $width / count( $block );
+				echo '<tr><td><div class="aec_userinfobox_sub">';
+				$sblockwidth = ( $width / count( $block ) ) + 14;
 				foreach ( $block as $sblock ) {
 					echo '<div style="position:relative;float:left;width:' . $sblockwidth . 'px;">';
 					foreach ( $sblock as $vname ) {

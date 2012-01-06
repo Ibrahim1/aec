@@ -2,144 +2,90 @@
 /* 2007.07.01 */
 
 #aec_center {
-float: left;
 text-align: center;
-margin: 0 auto;
-display: block;
 }
 
 #aec_center h3 {
-text-align: left;
-padding-left: 3em;
-margin-left: 6px;
-background-color: #ddd;
 clear: both;
-width: 91%;
-min-width: 91% !important;
 display: block;
-font-size: 125%;
 }
 
-#aec_center div.icon {
-float: left;
-margin: 1px;
+#aec_center div.btn {
+padding: 2px 8px 2px;
 }
 
-#aec_center div.icon a {
+#aec_center div.btn a {
 display: block;
 float: left;
 height: 100px;
-width: 80px;
+width: 90px;
 vertical-align: middle;
 text-decoration : none;
-padding: 2px 5px 1px 5px;
-margin: 2px;
-background-color:#fff;
-border-bottom: 1px solid #888;
-border-left: 1px solid #aaa;
-border-right: 1px solid #aaa;
 }
 
-#aec_center div.icon a:link {
+#aec_center div.btn a:link {
 font-size: 0.9em;
 color : #808080;
 }
 
-#aec_center div.icon a:hover {
+#aec_center div.btn:hover {
 color : #333;
-background-color:#fff;
-border-bottom: 2px solid #666;
-border-left: 1px solid #888;
-border-right: 1px solid #888;
-margin-bottom: 1px;
 }
 
-#aec_center div.icon a:active {
+#aec_center div.btn a:active {
 color : #808080;
 }
 
-#aec_center div.icon a:visited {
+#aec_center div.btn a:visited {
 color : #808080;
 }
 
-#aec_center div.icon img {
+#aec_center div.btn img {
 margin-top: 11px;
 }
 
-#aec_center div.icon span {
+#aec_center div.btn span {
 display: block;
 padding-top: 3px;
 }
 
 div.central_group {
-float: left;
-width: 90%;
-min-width: 90% !important;
 clear: both;
-margin:0 0 10px 22px;
-padding:0 0 4px 10px;
-background-color:inherit;
-border-bottom: 2px solid #aaa;
-border-left: 1px solid #ccc;
-border-right: 1px solid #ccc;
 }
 
 div.central_quicksearch {
-float: left;
-width: 90%;
+width: 95%;
 clear: both;
-padding: 0 12px 12px 12px;
+padding: 6px 12px 12px 12px;
 margin: 12px;
-background-color:#fff;
-border-top: 2px solid #888;
-border-left: 1px solid #aaa;
-border-right: 1px solid #aaa;
 }
 
 div.central_notices {
-float: left;
-width: 90%;
+width: 95%;
 clear: both;
-padding: 0 12px 12px 12px;
+padding: 6px 12px 12px 12px;
 margin: 12px;
-background-color:#fff;
-border-top: 2px solid #888;
-border-left: 1px solid #aaa;
-border-right: 1px solid #aaa;
 }
 
-td.notice_level_2 {
+div.central_notices .alert-message {
+text-align: left;
+}
+
+div.central_notices .alert-message p {
+margin-top: 2px;
+}
+
+div.central_notices .alert-message h5 {
+margin: 4px 0;
 color: #fff;
-background-color: #61b0c1 !important;
-text-align: right !important;
-font-weight: bold;
-font-size: 110%;
 }
 
-td.notice_level_8 {
-color: #fff;
-background-color: #7fc161 !important;
-text-align: right !important;
-font-weight: bold;
-font-size: 110%;
+div.central_notices .alert-message .help-block {
+color: #ddd;
+float: right;
+margin-top: -13px;
+max-width: 600px;
 }
-
-td.notice_level_32 {
-color: #fff;
-background-color: #c1bb61 !important;
-text-align: right !important;
-font-weight: bold;
-font-size: 110%;
-}
-
-td.notice_level_128 {
-color: #fff;
-background-color: #c16161 !important;
-text-align: right !important;
-font-weight: bold;
-font-size: 110%;
-}
-
 
 .centerlogo {
 background-color:#fff;
@@ -215,7 +161,7 @@ padding-right: 4px;
 }
 
 table.aecadminform {
-background-color: #F9F9F9;
+background-color: #ccc;
 border-collapse: collapse;
 margin: 8px 0 15px;
 width: 100%;
@@ -224,14 +170,8 @@ width: 100%;
 .userinfobox {
 position: relative;
 float: left;
-background-color: #EED;
-background-image: url(../images/admin/gfx/infoblock_lowerright.png);
-background-position: bottom right;
-background-repeat: no-repeat;
 padding: 12px 3px 12px 6px;
-border-bottom: solid 3px #998;
 width: 95%;
-margin: 2px;
 }
 
 div.aec-invoices-pagination {
@@ -241,34 +181,26 @@ text-align: center;
 
 .aec_userinfobox_sub {
 background-color: #f9f9e9;
-margin: 4px auto;
-padding: 4px;
+margin: 4px 8px;
+padding: 4px 16px 18px;
 width: 95%;
-float: left;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
+-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
+box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
 }
 
 .aec_userinfobox_sub h4 {
-background: #555 none repeat scroll 0 0;
-background-image: url(../images/admin/gfx/infobox_sub_lr.png);
-background-position: bottom left;
-background-repeat: no-repeat;
-color: #fff;
-float: right;
-margin: -4px;
-padding: 8px 8px 8px 24px;
+border-bottom: 1px solid #999;
+color: #555;
+margin: 0px 12px 24px;
+text-align: center;
 }
 
 #accordion .userinfobox {
 width : 100%;
-}
-
-.usernote {
-position: relative;
-float: left;
-width: 98%;
-background: url(../images/admin/gfx/note_lowerright.png) no-repeat bottom right;
-padding: 6px 18px;
-color: #000;
 }
 
 .userinfobox div.action {
@@ -346,7 +278,7 @@ margin: 4px;
 div.setting_desc {
 position: relative;
 float: left;
-padding: 4px;
+padding: 11px;
 clear: left;
 width: 210px;
 }
@@ -383,6 +315,7 @@ font-family: 'Andale Mono', sans-serif;
 clear: left;
 float: none !important;
 font-size: 11px !important;
+line-height: 20px;
 }
 
 .small_accordion {
@@ -414,17 +347,10 @@ padding:5px 0 5px 30px;
 }
 
 .aec_tabheading {
-background-color: #D5D5D5;
-border: 1px solid #999;
-color: #FFFFFF;
-height: 36px;
-margin: 0px;
-margin-left: -1px;
 }
 
 .aec_tabheading h2 {
-color: #FFFFFF;
-padding: 8px;
+padding: 2px;
 margin: 0px;
 }
 

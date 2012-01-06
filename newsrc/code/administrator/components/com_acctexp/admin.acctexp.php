@@ -1403,7 +1403,10 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', 0 );
 
+	$params[] = array( 'userinfobox_sub', "" );
 	$params = AECToolbox::rewriteEngineInfo( array(), $params );
+	$params[] = array( 'div_end', '' );
+	
 
 	$params[] = array( '2div_end', 0 );
 
@@ -1419,6 +1422,10 @@ function editSettings( $option )
 	$params['customcancel']						= array( 'inputC', '' );
 	$params['customnotallowed']					= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', "" );
+	$rewriteswitches							= array( 'cms', 'invoice' );
+	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', 0 );
 
 
@@ -1450,9 +1457,8 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$rewriteswitches							= array( 'cms', 'invoice' );
-	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
-
+	$params[] = array( 'userinfobox', 95 );
+	$params[] = array( 'userinfobox_sub', JText::_('Custom Text') );
 	$params[] = array( 'accordion_start', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_PLANS_NAME') );
 	$params['customtext_plans']					= array( 'editor', '' );
@@ -1493,6 +1499,8 @@ function editSettings( $option )
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_CANCEL_NAME') );
 	$params['customtext_cancel_keeporiginal']	= array( 'list_yesno', '' );
 	$params['customtext_cancel']				= array( 'editor', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
 
