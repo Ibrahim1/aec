@@ -13,7 +13,8 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
-$mainframe->registerEvent( 'onPrepareContent', 'plgContentAECRewrite' );
+$app =& JFactory::getApplication();
+$app->registerEvent( 'onPrepareContent', 'plgContentAECRewrite' );
 
 class plgContentAECRewrite extends JPlugin
 {

@@ -13,7 +13,8 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
-$mainframe->registerEvent( 'onPrepareContent', 'plgContentAECRestriction' );
+$app =& JFactory::getApplication();
+$app->registerEvent( 'onPrepareContent', 'plgContentAECRestriction' );
 
 class plgContentAECRestriction extends JPlugin
 {
