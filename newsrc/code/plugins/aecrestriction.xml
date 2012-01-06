@@ -8,7 +8,7 @@
 	<authorEmail>skore@valanx.org</authorEmail>
 	<authorUrl>https://valanx.org</authorUrl>
 	<version>0.14.6</version>
-	<description>The AEC Rescriction Plugin lets you target content to users depending on their membership.</description>
+	<description>The AEC Restriction Plugin lets you target content to users depending on their membership.</description>
 	<files>
 		<filename plugin="aecrestriction">aecrestriction.php</filename>
 	</files>

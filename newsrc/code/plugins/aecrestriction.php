@@ -13,8 +13,15 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
-class plgContentAECRewrite extends JPlugin
+$mainframe->registerEvent( 'onPrepareContent', 'plgContentAECRestriction' );
+
+class plgContentAECRestriction extends JPlugin
 {
+	function onPrepareContent( &$article, &$params, $limitstart )
+	{
+		return $this->onContentPrepare( "", $article, $params, $limitstart );
+	}
+
 	/**
 	 * @param	string	The context of the content being passed to the plugin.
 	 * @param	object	The article object.  Note $article->text is also available
