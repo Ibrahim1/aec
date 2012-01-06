@@ -5943,7 +5943,7 @@ function toolBoxTool( $option, $cmd )
 						$return .= $aecHTML->createSettingsParticle( $n );
 					}
 
-					$return .= '<input type="submit" />';
+					$return .= '<input type="submit" class="btn primary"/>';
 					$return .= '</div>';
 				}
 			}

@@ -770,7 +770,7 @@ class HTML_AcctExp
 			<p><?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?></p>
 			<form action="<?php echo JURI::base(); ?>index.php?option=com_acctexp&amp;task=quicklookup" method="post">
 			<input type="text" size="80" name="search" class="inputbox" value="<?php echo htmlspecialchars($searchcontent); ?>" />
-			<input type="submit" />
+			<input type="submit" class="btn primary"/>
 			</form>
 			<?php
 			if ( !empty( $display ) ) {
@@ -801,7 +801,7 @@ class HTML_AcctExp
 						<?php if ( !empty( $aecConfig->cfg['quicksearch_top'] ) ) {
 							HTML_AcctExp::quickSearchBar( $display, $searchcontent );
 						} ?>
-						<div class="aec_userinfobox_sub">
+						<div class="central_buttons aec_userinfobox_sub">
 						<h3><?php echo JText::_('AEC_CENTR_AREA_MEMBERSHIPS'); ?></h3>
 						<div class="central_group">
 						<?php // Assemble Buttons
