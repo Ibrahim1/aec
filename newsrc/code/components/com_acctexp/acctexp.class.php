@@ -4795,8 +4795,9 @@ class XMLprocessor extends processor
 		// Include Mootools tabber
 		$document=& JFactory::getDocument();
 		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/Tabs.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/Fx.Tabs.js"></script>' );
+		$document->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', function() {var fxTabs = new Fx.Tabs();});}</script>' );
 
 		$nlist	= array();
 		$prefix	= array();
@@ -6196,10 +6197,10 @@ class aecHTML
 				}
 				break;
 			case 'tabberstart':
-				$return = '<tr><td colspan="2"><div id="myTabs">';
+				$return = '<tr><td colspan="2"><div id="tabs">';
 				break;
 			case 'tabregisterstart':
-				$return = '<ul class="mootabs_title">';
+				$return = '<ul class="tabs_title">';
 				break;
 			case 'tabregister':
 				$return = '<li title="' . $row[1] . '">' . $row[2] . '</li> ';
@@ -6208,7 +6209,7 @@ class aecHTML
 				$return = '</ul>';
 				break;
 			case 'tabstart':
-				$return = '<div id="' . $row[1] . '" class="mootabs_panel"><table>';
+				$return = '<div id="' . $row[1] . '" class="tabs_panel"><table>';
 				break;
 			case 'tabend':
 				$return = '</table></div>';
