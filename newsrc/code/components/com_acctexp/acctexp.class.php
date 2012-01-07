@@ -15889,6 +15889,13 @@ class AECToolbox
 			}
 		}
 
+		if ( empty( $var['name'] ) ) {
+			// Must be K2
+			$var['name'] = aecEscape( $var['jform']['name'], array( 'string', 'clear_nonalnum' ) );
+
+			unset($var['jform']);
+		}
+
 		$_POST = $var;
 
 		$var['username'] = aecEscape( $var['username'], array( 'string', 'badchars' ) );
@@ -15968,14 +15975,18 @@ class AECToolbox
 		} else {
 			$app = JFactory::getApplication();
 
+			$data = array(	'username' => $var['username'],
+							'password' => $var['password'],
+							'email' => $var['email'],
+							'name' => $var['name'],
+							);
+
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$params = JComponentHelper::getParams('com_users');
 
 				// Initialise the table with JUser.
 				JUser::getTable('User', 'JTable');
 				$user = new JUser();
-
-				$data = JRequest::get('post');
 
 				// Prepare the data for the user object.
 				$useractivation = $params->get('useractivation');
@@ -15989,7 +16000,7 @@ class AECToolbox
 
 				// Bind the data.
 				if (!$user->bind($data)) {
-					$this->setError(JText::sprintf('COM_USERS_REGISTRATION_BIND_FAILED', $user->getError()));
+					JError::raiseError( 500, JText::sprintf('COM_USERS_REGISTRATION_BIND_FAILED', $user->getError()));
 					return false;
 				}
 
@@ -15997,8 +16008,8 @@ class AECToolbox
 				JPluginHelper::importPlugin('users');
 
 				// Store the data.
-				if (!$user->save()) {
-					$this->setError(JText::sprintf('COM_USERS_REGISTRATION_SAVE_FAILED', $user->getError()));
+				if (!$user->save()) {print_r($data);print_r($user);exit;
+					JError::raiseError( 500, JText::sprintf('COM_USERS_REGISTRATION_SAVE_FAILED', $user->getError()));
 					return false;
 				}
 			} else {
@@ -16030,7 +16041,7 @@ class AECToolbox
 				}
 
 				// Bind the post array to the user object
-				if (!$user->bind( JRequest::get('post'), 'usertype' )) {
+				if (!$user->bind( $data )) {
 					JError::raiseError( 500, $user->getError());
 
 					unset($_POST);

@@ -106,7 +106,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['alpha_reg']		= $vars['alpha']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
 		$vars['alpha_regsv']	= $vars['alpha']	&& ( $vars['task'] == 'register_save' );
 
-		$vars['k2_regsv']		= $vars['k2']		&& ( $vars['task'] == 'register_save' );
+		$vars['k2_regsv']		= $vars['k2']		&& ( ($vars['task'] == 'register_save') || ($vars['task'] == 'registration.register') );
 
 		$vars['joms_any']	= ( $vars['joms_regsv'] || $vars['joms_regs'] || $vars['joms_regp'] || $vars['joms_reg'] );
 
@@ -148,6 +148,10 @@ class plgSystemAECrouting extends JPlugin
 				$vars['username']	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
 			} else {
 				$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
+			}
+
+			if ( empty( $vars['username'] ) && $vars['k2_regsv'] ) {
+				$vars['username']	= aecEscape( $_REQUEST['jform']['username'], array( 'string', 'clear_nonalnum' ) );
 			}
 
 			$temptoken = new aecTempToken( $db );
@@ -268,6 +272,18 @@ class plgSystemAECrouting extends JPlugin
 					}
 
 					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonemail' ) );
+
+					if ( $vars['k2_regsv'] && empty( $username ) ) {
+						$username	= aecEscape( $_REQUEST['jform']['username'], array( 'string', 'clear_nonalnum' ) );
+						$password	= aecEscape( $_REQUEST['jform']['password1'], array( 'string', 'clear_nonalnum' ) );
+						$password2	= aecEscape( $_REQUEST['jform']['password2'], array( 'string', 'clear_nonalnum' ) );
+
+						if ( empty( $password2 ) ) {
+							$password2	= aecEscape( $_REQUEST['jform']['password__verify'], array( 'string', 'clear_nonalnum' ) );
+						}
+
+						$email		= aecEscape( $_REQUEST['jform']['email1'], array( 'string', 'clear_nonalnum' ) );
+					}
 				}
 
 				if ( !empty( $username ) && !empty( $password ) && !empty( $email ) ) {
