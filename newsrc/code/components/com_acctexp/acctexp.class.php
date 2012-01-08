@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4106' );
+define( '_AEC_REVISION', '4107' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5935,18 +5935,18 @@ class aecHTML
 			}
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
-				$return = '<div class="setting_desc">';
-				$return .= '<span class="editlinktip hasTip" title="';
+				$return = '<div class="clearfix">';
+				$return .= '<label for="normalSelect"><span class="editlinktip hasTip" title="';
 
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
 					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
-					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . '</span>';
 				} else {
 					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8" );
-					$return .= '">' . $this->Icon( 'help.png') . htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . '</span>';
+					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . '</span>';
 				}
 
-				$return .= '</div>';
+				$return .= '</label>';
 			}
 		} else {
 			if ( isset( $row[1] ) ) {
@@ -5958,56 +5958,56 @@ class aecHTML
 
 		switch ( $type ) {
 			case 'inputA':
-				$return .= '<div class="setting_form">';
-				$return .= '<input name="' . $name . '" type="text" size="4" value="' . $value . '" />';
-				$return .= '</div>';
+				$return .= '<div class="input">';
+				$return .= '<input id="' . $name . '" name="' . $name . '" type="text" size="4" value="' . $value . '" />';
+				$return .= '</div></div>';
 				break;
 			case 'inputB':
-				$return .= '<div class="setting_form">';
-				$return .= '<input class="inputbox" type="text" name="' . $name . '" size="8" value="' . $value . '" />';
-				$return .= '</div>';
+				$return .= '<div class="input">';
+				$return .= '<input id="' . $name . '" class="inputbox" type="text" name="' . $name . '" size="8" value="' . $value . '" />';
+				$return .= '</div></div>';
 				break;
 			case 'inputC':
-				$return .= '<div class="setting_form">';
-				$return .= '<input type="text" size="20" name="' . $name . '" class="inputbox" value="' . $value . '" />';
-				$return .= '</div>';
+				$return .= '<div class="input">';
+				$return .= '<input id="' . $name . '" type="text" size="20" name="' . $name . '" class="inputbox" value="' . $value . '" />';
+				$return .= '</div></div>';
 				break;
 			case 'inputD':
-				$return .= '<div class="setting_form">';
-				$return .= '<textarea cols="50" rows="5" name="' . $name . '" >' . $value . '</textarea>';
-				$return .= '</div>';
+				$return .= '<div class="input">';
+				$return .= '<textarea id="' . $name . '" cols="50" rows="5" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '</div></div>';
 				break;
 			case 'inputE':
-				$return .= '<div class="setting_form">';
-				$return .= '<textarea style="width:520px" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
-				$return .= '</div>';
+				$return .= '<div class="input">';
+				$return .= '<textarea id="' . $name . '" style="width:520px" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '</div></div>';
 				break;
 			case 'checkbox':
-				$return .= '<div class="setting_form">';
-				$return .= '<input type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . '/>';
-				$return .= '</div>';
+				$return .= '<div class="input">';
+				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . '/>';
+				$return .= '</div></div>';
 				break;
 			case 'editor':
-				$return .= '<div class="setting_form">';
+				$return .= '<div class="input">';
 
 				$editor = &JFactory::getEditor();
 
 				$return .= '<div>' . $editor->display( $name,  $value , '100%', '250', '50', '20' ) . '</div>';
 
-				$return .= '</div>';
+				$return .= '</div></div>';
 				break;
 			case 'textarea':
-				$return .= '<textarea style="width:90%" cols="450" rows="10" name="' . $name . '" id="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea style="width:90%" cols="450" rows="10" name="' . $name . '" id="' . $name . '" >' . $value . '</textarea></div>';
 				break;
 			case 'list':
-				$return .= '<div class="setting_form">';
+				$return .= '<div class="input">';
 				$return .= $this->lists[$name];
-				$return .= '</div>';
+				$return .= '</div></div>';
 				break;
 			case 'file':
-				$return .= '<div class="setting_form">';
-				$return .= '<input name="' . $name . '" type="file" />';
-				$return .= '</div>';
+				$return .= '<div class="input">';
+				$return .= '<input id="' . $name . '" name="' . $name . '" type="file" />';
+				$return .= '</div></div>';
 				break;
 			case 'accordion_start':
 				if ( !isset( $this->accordions ) ) {
@@ -6047,7 +6047,7 @@ class aecHTML
 				$return = '<div class="aec_userinfobox_sub">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
 			case 'fieldset':
-				$return = '<div class="setting_form">' . "\n"
+				$return = '<div class="input">' . "\n"
 				. '<fieldset><legend>' . $row[1] . '</legend>' . "\n"
 				. $row[2] . "\n"
 				. '</fieldset>' . "\n"

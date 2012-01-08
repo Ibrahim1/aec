@@ -5,6 +5,14 @@
 text-align: center;
 }
 
+label {
+width: 200px;
+}
+
+form .input {
+margin-left: 220px;
+}
+
 #aec_center h3 {
 clear: both;
 display: block;
@@ -185,7 +193,7 @@ text-align: center;
 .aec_userinfobox_sub {
 background-color: #f9f9e9;
 margin: 4px 6px;
-padding: 4px 16px 18px;
+padding: 4px 16px;
 width: 95%;
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
@@ -205,6 +213,7 @@ color: #555;
 margin: 0px 12px 24px;
 text-align: center;
 font-size: 20px;
+text-shadow: 0 1px 2px #bbb;
 }
 
 #accordion .userinfobox {

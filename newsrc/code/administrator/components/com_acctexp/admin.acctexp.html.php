@@ -68,8 +68,8 @@ class HTML_myCommon
 	function addBackendCSS()
 	{
 		?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css" />
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css" />
 		<?php
 	}
 
