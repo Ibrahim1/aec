@@ -1828,7 +1828,7 @@ function listProcessors( $option )
  	$db->setQuery( $query );
  	$total = $db->loadResult();
 
- 	if ( $limit > $total ) {
+ 	if ( $limitstart > $total ) {
  		$limitstart = 0;
  	}
 
@@ -2171,7 +2171,7 @@ function listSubscriptionPlans( $option )
  	$db->setQuery( $query );
  	$total = $db->loadResult();
 
- 	if ( $limit > $total ) {
+ 	if ( $limitstart > $total ) {
  		$limitstart = 0;
  	}
 
@@ -3050,7 +3050,7 @@ function listItemGroups( $option )
  	$total = $db->loadResult();
  	echo $db->getErrorMsg();
 
- 	if ( $limit > $total ) {
+ 	if ( $limitstart > $total ) {
  		$limitstart = 0;
  	}
 
@@ -3450,7 +3450,7 @@ function listMicroIntegrations( $option )
 	$total = $db->loadResult();
 	echo $db->getErrorMsg();
 
-	if ( $limit > $total ) {
+	if ( $limitstart > $total ) {
 		$limitstart = 0;
 	}
 
@@ -3793,7 +3793,7 @@ function listCoupons( $option, $type )
  	$db->setQuery( $query );
  	$total = $db->loadResult();
 
- 	if ( $limit > $total ) {
+ 	if ( $limitstart > $total ) {
  		$limitstart = 0;
  	}
 
