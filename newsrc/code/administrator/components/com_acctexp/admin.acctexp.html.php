@@ -2483,7 +2483,7 @@ class HTML_AcctExp
 							<tr>
 								<td style="padding:10px;" valign="top">
 									<div style="position:relative;float:left;width:48%;padding:4px;">
-										<div class="userinfobox">
+										<div class="aec_userinfobox_sub">
 											<div style="position:relative;float:left;width:100%;">
 												<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
@@ -2498,7 +2498,7 @@ class HTML_AcctExp
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:48%;padding:4px;">
-										<div class="userinfobox">
+										<div class="aec_userinfobox_sub">
 											<div style="position:relative;float:left;">
 												<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
@@ -2516,7 +2516,7 @@ class HTML_AcctExp
 										</div>
 									</div>
 									<div style="position:relative;float:left;width:90%;padding:4px;">
-										<div class="userinfobox">
+										<div class="aec_userinfobox_sub">
 											<div style="position:relative;float:left;">
 												<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
 												<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
@@ -2555,7 +2555,7 @@ class HTML_AcctExp
 		                <h2><?php echo JText::_('COUPON_RESTRICTIONS_TITLE_FULL'); ?></h2>
 						<table class="aecadminform">
 							<tr><td>
-								<div class="userinfobox">
+								<div class="aec_userinfobox_sub">
 									<div style="position:relative;float:left;width:200px;">
 										<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
@@ -2586,7 +2586,7 @@ class HTML_AcctExp
 		                echo $tabs->startPanel( JText::_('COUPON_MI'), JText::_('COUPON_MI') );
 		                ?>
 		                <table width="100%" class="aecadminform"><tr><td>
-							<div class="userinfobox">
+							<div class="aec_userinfobox_sub">
 								<h2><?php echo JText::_('COUPON_MI_FULL'); ?></h2>
 								<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 							</div>
@@ -3070,7 +3070,7 @@ class HTML_AcctExp
 		</tr>
 		</table>
 
-		<div class="aec_readout">
+		<div class="aec_readout aec_userinfobox_sub">
 			<table style="width:320px;">
 				<tr>
 					<td valign="top">
@@ -3086,7 +3086,7 @@ class HTML_AcctExp
 			<input type="hidden" name="returnTask" value="readout" />
 			<input type="hidden" name="display" value="1" />
 			<br />
-			<input type="submit" />
+			<input type="submit" class="btn primary" />
 			<br />
 		</div>
 
@@ -3302,7 +3302,7 @@ class HTML_AcctExp
 			</td>
 		</tr>
 		</table>
-		<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?>">
+		<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec_userinfobox_sub">
 			<table style="width:100%;">
 				<tr>
 					<td valign="top">
@@ -3384,9 +3384,11 @@ class HTML_AcctExp
 		<table class="aecadminform">
 			<tr>
 				<td valign="top">
+				<div class="aec_userinfobox_sub">
 					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 						echo $aecHTML->createSettingsParticle( $rowname );
 					} ?>
+				</div>
 				</td>
 			</tr>
 		</table>

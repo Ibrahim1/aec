@@ -129,10 +129,6 @@ color: #C30;
 background-color: #EED;
 margin: 5px;
 padding: 3px 3px 12px 3px;
-background-image: url(../images/admin/gfx/infoblock_lowerright.png);
-background-position: bottom right;
-background-repeat: no-repeat;
-border-bottom: solid 3px #998;
 }
 
 .diagnose p {
@@ -373,10 +369,6 @@ margin-top: -100px;
 .aec_readout {
 font-align: right;
 margin: 0 auto;
-background-color: #EED;
-background-image: url(../images/admin/gfx/infoblock_lowerright.png);
-background-position: bottom right;
-background-repeat: no-repeat;
 padding: 12px 3px 12px 6px;
 border-bottom: solid 3px #998;
 width: 320px;
@@ -385,10 +377,6 @@ width: 320px;
 .aec_import {
 font-align: right;
 margin: 0 auto;
-background-color: #EED;
-background-image: url(../images/admin/gfx/infoblock_lowerright.png);
-background-position: bottom right;
-background-repeat: no-repeat;
 padding: 12px 3px 12px 6px;
 border-bottom: solid 3px #998;
 width: 480px;
@@ -397,10 +385,6 @@ width: 480px;
 .aec_import_large {
 font-align: right;
 margin: 0 auto;
-background-color: #EED;
-background-image: url(../images/admin/gfx/infoblock_lowerright.png);
-background-position: bottom right;
-background-repeat: no-repeat;
 padding: 12px 3px 12px 6px;
 border-bottom: solid 3px #998;
 width: 98%;
