@@ -16008,7 +16008,7 @@ class AECToolbox
 				JPluginHelper::importPlugin('users');
 
 				// Store the data.
-				if (!$user->save()) {print_r($data);print_r($user);exit;
+				if (!$user->save()) {
 					JError::raiseError( 500, JText::sprintf('COM_USERS_REGISTRATION_SAVE_FAILED', $user->getError()));
 					return false;
 				}
@@ -18592,6 +18592,12 @@ class couponsHandler extends eucaObject
 
 		if ( !empty( $item['obj']->id ) ) {
 			$this->InvoiceFactory->usage = $item['obj']->id;
+			
+			$usage = $item['obj']->id;
+		} elseif ( !empty( $this->InvoiceFactory->usage ) ) {
+			$usage = $this->InvoiceFactory->usage;
+		} else {
+			$usage = 0;
 		}
 
 		if ( !$this->mixCheck( $id, $coupon_code, $ccombo ) ) {
@@ -18599,7 +18605,7 @@ class couponsHandler extends eucaObject
 		} else {
 			if ( $this->cph->status ) {
 				// Coupon approved, checking restrictions
-				$r = $this->cph->checkRestrictions( $this->metaUser, $terms, $this->InvoiceFactory->usage );
+				$r = $this->cph->checkRestrictions( $this->metaUser, $terms, $usage );
 
 				if ( $this->cph->status ) {
 					$item['terms'] = $this->cph->applyToTerms( $terms );
@@ -19188,13 +19194,13 @@ class couponHandler
 		$initcount = count( $terms->terms );
 
 		for ( $i = $offset; $i < $initcount; $i++ ) {
-			// Do not apply on trial
+			// Check if this is only applied on Trial
 			if ( !$this->discount['useon_full'] && ( $i > 0 ) ) {
 				continue;
 			}
 
-			// Check whether it's only on ONE full period
-			if ( !$this->discount['useon_full_all'] && ( $i < $initcount ) ) {
+			// Check whether it's only on ONE full period and whether we already have a nondiscounted copy set up
+			if ( !$this->discount['useon_full_all'] && ( $i < $initcount ) && ( count($terms->terms[$i]->cost) < 3 ) ) {
 				// Duplicate current term
 				$newterm = unserialize( serialize( $terms->terms[$i] ) );
 
@@ -19219,6 +19225,10 @@ class couponHandler
 					$info['details'] = '-' . $this->discount['amount_percent'] . '%';
 					$terms->terms[$i]->discount( null, $this->discount['amount_percent'], $info );
 				}
+			}
+
+			if ( $this->discount['useon_full'] && !$this->discount['useon_full_all'] ) {
+				break;
 			}
 		}
 

@@ -70,6 +70,8 @@ class mammonTerms extends eucaObject
 
 		$this->pointer = 0;
 
+		$this->terms = array();
+
 		foreach ( $terms as $t ) {
 			// Make sure this period is actually of substance
 			if ( !empty( $params[$t.'period'] ) || ( !empty( $params['lifetime'] ) && ( $t == 'full_' ) ) ) {
