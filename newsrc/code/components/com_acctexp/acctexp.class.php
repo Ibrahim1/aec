@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4103' );
+define( '_AEC_REVISION', '4106' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -15977,6 +15977,7 @@ class AECToolbox
 
 			$data = array(	'username' => $var['username'],
 							'password' => $var['password'],
+							'password2' => $var['password2'],
 							'email' => $var['email'],
 							'name' => $var['name'],
 							);
