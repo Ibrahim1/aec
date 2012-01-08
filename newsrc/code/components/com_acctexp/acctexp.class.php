@@ -20985,8 +20985,6 @@ class aecRestrictionHelper
 
 	function echoSettings( $aecHTML )
 	{
-		$width = 1200;
-
 		$stdvars =	array(	array(
 									array( 'mingid_enabled', 'mingid' ),
 									array( 'fixgid_enabled', 'fixgid' ),
@@ -21014,9 +21012,8 @@ class aecRestrictionHelper
 				}
 
 				echo '<tr><td><div class="aec_userinfobox_sub">';
-				$sblockwidth = ( $width / count( $block ) ) + 14;
 				foreach ( $block as $sblock ) {
-					echo '<div style="position:relative;float:left;width:' . $sblockwidth . 'px;">';
+					echo '<div class="aec_userinfobox_sub_inline" style="width:214px;">';
 					foreach ( $sblock as $vname ) {
 						echo $aecHTML->createSettingsParticle( str_replace( '*', $type, $vname ) );
 					}

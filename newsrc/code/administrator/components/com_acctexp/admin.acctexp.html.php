@@ -1947,12 +1947,10 @@ class HTML_AcctExp
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 							<tr><td>
 									<div class="aec_userinfobox_sub">
-										<div style="position:relative;float:left;">
-											<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-											<br />
-											<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-										</div>
+										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
+										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
+										<br />
+										<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
 									</div>
 							</td></tr>
 						</table>
@@ -2294,12 +2292,10 @@ class HTML_AcctExp
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 						<tr><td>
 							<div class="aec_userinfobox_sub">
-									<div style="position:relative;float:left;">
-										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-										<br />
-										<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-								</div>
+								<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
+								<br />
+								<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
 							</div>
 						</td></tr>
 						</table>
