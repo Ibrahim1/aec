@@ -1512,20 +1512,18 @@ class HTML_AcctExp
 		                <div class="aec_tabheading"><h2><?php echo JText::_('MI_E_TITLE'); ?></h2></div>
 		                <table width="100%" class="aecadminform">
 							<tr>
-							<td>
+							<td valign="top">
 								<h2><?php echo JText::_('MI_E_TITLE_LONG'); ?></h2>
-								<div class="userinfobox">
-									<div class="aec_userinfobox_sub">
-										<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
-										<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
-									</div>
+								<div class="aec_userinfobox_sub">
+									<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
+									<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
 								</div>
 							</td>
 							<td valign="top">
@@ -1536,11 +1534,11 @@ class HTML_AcctExp
 									<?php if ( !$aecHTML->hasSettings ) {
 										if ( $lists['class_name'] ) {
 											echo $lists['class_name']; ?>
-											<br />
+											
 											<?php
-											echo JText::_('MI_E_FUNCTION_DESC');
+											echo "<p>" . JText::_('MI_E_FUNCTION_DESC') . "</p>";
 										} else {
-											echo JText::_('AEC_MSG_MIS_NOT_DEFINED');
+											echo "<p>" . JText::_('AEC_MSG_MIS_NOT_DEFINED') . "</p>";
 										}
 									} else {
 										echo "<p><strong>" . $row->class_name . "</p></strong>";
@@ -1548,7 +1546,7 @@ class HTML_AcctExp
 									?>
 									</div>
 								</div>
-								<?php if ( $aecHTML->hasHacks ) { ?>
+								<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
 									<div class="aec_userinfobox_sub">
 									<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
 										<div style="position:relative;">

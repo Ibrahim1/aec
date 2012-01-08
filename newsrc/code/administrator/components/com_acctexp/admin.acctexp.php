@@ -3562,7 +3562,7 @@ function editMicroIntegration ( $id, $option )
 				}
 			}
 
-			$lists['class_name'] = JHTML::_('select.genericlist', $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '"', 'value', 'text', '' );
+			$lists['class_name'] = JHTML::_('select.genericlist', $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" style="width:760px;"', 'value', 'text', '' );
 
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$lists['class_name'] = str_replace( '#', '&nbsp;', $lists['class_name'] );
