@@ -99,11 +99,16 @@ switch ( strtolower( $task ) ) {
 		ComponentMenu::EDIT_COUPON_STATIC();
 		break;
 
-	case 'loadexport':
-	case 'applyexport':
-	case 'saveexport':
-	case 'exportexport':
-	case 'export':
+	case 'loadexportsales':
+	case 'applyexportsales':
+	case 'saveexportsales':
+	case 'exportexportsales':
+	case 'exportsales':
+	case 'loadexportmembers':
+	case 'applyexportmembers':
+	case 'saveexportmembers':
+	case 'exportexportmembers':
+	case 'exportmembers':
 		ComponentMenu::EDIT_EXPORT();
 		break;
 

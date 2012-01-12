@@ -5936,7 +5936,7 @@ class aecHTML
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
 				$return = '<div class="clearfix">';
-				$return .= '<label for="normalSelect"><span class="editlinktip hasTip" title="';
+				$return .= '<label for="' . $name . '"><span class="editlinktip hasTip" title="';
 
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
 					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );

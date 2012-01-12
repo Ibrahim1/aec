@@ -1072,6 +1072,13 @@ class HTML_AcctExp
 		HTML_myCommon::addBackendCSS();
 		JHTML::_('behavior.tooltip');
 		?>
+		<script type="text/javascript">
+        function submitbutton(pressbutton) {
+        	//alert('test');
+        	submitform(pressbutton);
+            //return 'if (tinyMCE.get(editor).isHidden()) {tinyMCE.get(editor).show()}; tinyMCE.get(editor).save();';';
+        }
+		</script>
 		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 			<tr>
@@ -3359,7 +3366,7 @@ class HTML_AcctExp
  		HTML_myCommon::Valanx();
 	}
 
-	function export( $option, $aecHTML )
+	function export( $option, $task, $aecHTML )
 	{
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addBackendCSS();
@@ -3378,18 +3385,16 @@ class HTML_AcctExp
 		<table class="aecadminform">
 			<tr>
 				<td valign="top">
-				<div class="aec_userinfobox_sub">
 					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 						echo $aecHTML->createSettingsParticle( $rowname );
 					} ?>
-				</div>
 				</td>
 			</tr>
 		</table>
 
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="returnTask" value="export" />
+		<input type="hidden" name="returnTask" value="<?php echo $task;?>" />
 		</form>
 
 		<?php

@@ -5637,10 +5637,10 @@ function exportData( $option, $type, $cmd=null )
 	$postfields = 0;
 	foreach( $getpost as $name => $array ) {
 		$field = $name . '_values';
-		$$field = new stdClass();
+		$$field = array();
 		foreach( $array as $vname ) {
-			 $$field->$vname = aecGetParam( $vname, '' );
-			 if ( !( $$field->$vname == '' ) ) {
+			 $$field[$vname] = aecGetParam( $vname, '' );
+			 if ( !( $$field[$vname] == '' ) ) {
 			 	$postfields++;
 			 }
 		}
@@ -5648,32 +5648,34 @@ function exportData( $option, $type, $cmd=null )
 
 	$lists = array();
 
-	if ( !empty( $system_values->selected_export ) || $cmd_save || $cmd_apply ) {
+	$pname = "";
+
+	if ( !empty( $system_values['selected_export'] ) || $cmd_save || $cmd_apply ) {
 		$row = new aecExport( $db );
-		if ( isset( $system_values->selected_export ) ) {
-			$row->load( $system_values->selected_export );
+		if ( isset( $system_values['selected_export'] ) ) {
+			$row->load( $system_values['selected_export'] );
 		} else {
 			$row->load(0);
 		}
 
-		if ( !empty( $system_values->delete ) ) {
+		if ( !empty( $system_values['delete'] ) ) {
 			// User wants to delete the entry
 			$row->delete();
-		} elseif ( ( $cmd_save || $cmd_apply ) && ( !empty( $system_values->selected_export ) || !empty( $system_values->save_name ) ) ) {
+		} elseif ( ( $cmd_save || $cmd_apply ) && ( !empty( $system_values['selected_export'] ) || !empty( $system_values['save_name'] ) ) ) {
 			// User wants to save an entry
-			if ( $system_values->save == 'on' ) {
+			if ( $system_values['save'] == 'on' ) {
 				// But as a copy of another entry
 				$row->load( 0 );
 			}
-			$row->save( $system_values->save_name, $filter_values, $options_values, $params_values );
+			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
 
-			if ( $system_values->save == 'on' ) {
-				$system_values->selected_export = $row->getMax();
+			if ( $system_values['save'] == 'on' ) {
+				$system_values['selected_export'] = $row->getMax();
 			}
-		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values->selected_export ) && !empty( $system_values->save_name ) && ( $system_values->save == 'on' ) ) ) {
+		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && ( $system_values['save'] == 'on' ) ) ) {
 			// User wants to save a new entry
-			$row->save( $system_values->save_name, $filter_values, $options_values, $params_values );
-		}  elseif ( $cmd_load || ( ( $postfields <= 5 ) && $cmd_export )  ) {
+			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
+		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= 5 ) && $cmd_export )  ) {
 			// User wants to load an entry
 			$filter_values = $row->filter;
 			$options_values = $row->options;
@@ -5681,10 +5683,6 @@ function exportData( $option, $type, $cmd=null )
 			$pname = $row->name;
 			$use_original = 1;
 		}
-	}
-
-	if ( !isset( $pname ) ) {
-		$pname = $system_values->save_name;
 	}
 
 	// Always store the last ten calls, but only if something is happening
@@ -5702,30 +5700,52 @@ function exportData( $option, $type, $cmd=null )
 
 	// Create Parameters
 
-	$params[] = array( 'userinfobox', 100 );
-	$params['selected_export']	= array( 'list', '' );
-	$params['delete']			= array( 'checkbox', 0 );
-	$params[] = array( '2div_end', '' );
-
-	$params[] = array( 'userinfobox', 20 );
-	$params['params_remap']	= array( 'subarea_change', 'filter' );
+	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox_sub', 'Compose Export' );
+	$params['params_remap']		= array( 'subarea_change', 'params' );
+	$params[] = array( 'div', '<div class="alert-message block-message info">' );
+	$params[] = array( 'p', '<p>Take users that fit these criteria:</p>' );
 	$params['planid']			= array( 'list', '' );
 	$params['status']			= array( 'list', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'div', '<div class="alert-message block-message warning">' );
+	$params[] = array( 'p', '<p>Order them like this:</p>' );
 	$params['orderby']			= array( 'list', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'div', '<div class="alert-message block-message success">' );
+	$params[] = array( 'p', '<p>And use these details for each line of the export:</p>' );
+	$params['rewrite_rule']	= array( 'inputD', '[[user_id]];[[user_username]];[[subscription_expiration_date]]' );
+	$params[] = array( '2div_end', '' );
 	$params[] = array( '2div_end', '' );
 
-	$params[] = array( 'userinfobox', 50 );
-	$params['params_remap']	= array( 'subarea_change', 'options' );
-	$params['rewrite_rule']	= array( 'inputD', '' );
+	$params[] = array( 'userinfobox', 65 );
+	$params[] = array( 'userinfobox_sub', 'Save or Load Export Presets' );
+	$params[] = array( 'div', '<div style="float: right">' );
+	$params[] = array( 'p', '<p><a class="btn primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">Load Preset</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">Store Preset</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">Store Preset &amp; Exit</a></p>' );
+	$params[] = array( 'div_end', '' );
+	$params['selected_export']	= array( 'list', '' );
+	$params['delete']			= array( 'checkbox', 0 );
+	$params['save']				= array( 'checkbox', 0 );
+	$params['save_name']		= array( 'inputB', $pname );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( '2div_end', '' );
+
+	$params[] = array( 'userinfobox', 65 );
+	$params[] = array( 'userinfobox_sub', 'Export' );
+	$params[] = array( 'div', '<div style="float: right">' );
+	$params['exportbtn']		= array( 'p', '<p><a class="btn success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">Export Now</a></p>' );
+	$params[] = array( 'div_end', '' );
+	$params['export_method']	= array( 'list', '' );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( '2div_end', '' );
+
+	$params[] = array( 'userinfobox', 65 );
+	$params[] = array( 'userinfobox_sub' );
 	$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
 	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
-	$params[] = array( '2div_end', '' );
-
-	$params[] = array( 'userinfobox', 20 );
-	$params['params_remap']	= array( 'subarea_change', 'params' );
-	$params['save']			= array( 'checkbox', 0 );
-	$params['save_name']		= array( 'inputB', $pname );
-	$params['export_method']	= array( 'list', '' );
+	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
 
 	// Create a list of export options
@@ -5778,14 +5798,14 @@ function exportData( $option, $type, $cmd=null )
 	foreach ( $db_plans as $dbplan ) {
 		$plans[] = JHTML::_('select.option', $dbplan->id, $dbplan->name );
 
-		if ( !empty( $filter_values->planid ) ) {
-			if ( in_array( $dbplan->id, $filter_values->planid ) ) {
+		if ( !empty( $filter_values['planid'] ) ) {
+			if ( in_array( $dbplan->id, $filter_values['planid'] ) ) {
 				$selected_plans[] = JHTML::_('select.option', $dbplan->id, $dbplan->name );
 			}
 		}
 	}
 
-	$lists['planid']	= JHTML::_('select.genericlist', $plans, 'planid[]', 'class="inputbox" size="' . min( 20, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
+	$lists['planid']	= JHTML::_('select.genericlist', $plans, 'planid[]', 'class="inputbox" size="' . min( 14, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
 
 	// Statusfilter
 	$group_selection = array();
@@ -5799,8 +5819,8 @@ function exportData( $option, $type, $cmd=null )
 	$group_selection[] = JHTML::_('select.option', 'manual',	JText::_('AEC_SEL_NOT_CONFIGURED') );
 
 	$selected_status = array();
-	if ( !empty( $filter_values->status ) ) {
-		foreach ( $filter_values->status as $name ) {
+	if ( !empty( $filter_values['status'] ) ) {
+		foreach ( $filter_values['status']as $name ) {
 			$selected_status[] = JHTML::_('select.option', $name, $name );
 		}
 	}
@@ -5848,14 +5868,18 @@ function exportData( $option, $type, $cmd=null )
 		}
 	}
 
-	$settingsparams = array_merge( get_object_vars( $filter_values ), get_object_vars( $options_values ), get_object_vars( $params_values ) );
+	if ( empty( $params_values['rewrite_rule'] ) ) {
+		//$params_values['rewrite_rule'] = '[[user_id]];[[user_username]];[[subscription_expiration_date]]';
+	}
+
+	$settingsparams = array_merge( $filter_values, $options_values, $params_values );
 
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	if ( $cmd_export && !empty( $params_values->export_method ) ) {
+	if ( $cmd_export && !empty( $params_values['export_method'] ) ) {
 		if ( $use_original ) {
 			$row->useExport();
 		} else {
@@ -5866,7 +5890,7 @@ function exportData( $option, $type, $cmd=null )
 	if ( $cmd_save ) {
 		aecRedirect( 'index.php?option=' . $option . '&task=showCentral' );
 	} else {
-		HTML_AcctExp::export( $option, $aecHTML );
+		HTML_AcctExp::export( $option, $type, $aecHTML );
 	}
 }
 

@@ -165,10 +165,6 @@ class ComponentMenu
 
 	function EDIT_EXPORT()
 	{
-		JToolBarHelper::custom( 'loadExport', 'next.png',  'next_f2.png', JText::_('EXPORT_LOAD'), false );
-		JToolBarHelper::custom( 'applyExport', 'apply.png',  'apply_f2.png', JText::_('EXPORT_APPLY'), false );
-		JToolBarHelper::custom( 'exportExport', 'download.png',  'download_f2.png', JText::_('AEC_HEAD_EXPORT'), false );
-		JToolBarHelper::custom( 'saveExport', 'save.png',  'save_f2.png', JText::_('SAVE_PAYPLAN'), false );
 		JToolBarHelper::custom( 'cancelSettings', 'cancel.png',  'cancel_f2.png', JText::_('CANCEL'), false );
 	}
 

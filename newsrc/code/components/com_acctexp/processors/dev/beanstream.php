@@ -75,7 +75,7 @@ class processor_beanstream extends POSTprocessor
 	{
 		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
 
-        ($this->settings['scEnabled']) ? trim( $request->int_var['params']['cardVV2'] ) : '' ;
+        $this->settings['scEnabled'] ? trim( $request->int_var['params']['cardVV2'] ) : '' ;
 
 		$var['params']['billName']      = array( 'inputC', JText::_('AEC_BEANSTREAM_PARAMS_BILLNAME_NAME'), JText::_('AEC_BEANSTREAM_PARAMS_BILLNAME_NAME'), $request->metaUser->cmsUser->name );
         $var['params']['billAddress']   = array( 'inputC', JText::_('AEC_BEANSTREAM_PARAMS_BILLADDRESS_NAME') );
@@ -110,7 +110,7 @@ class processor_beanstream extends POSTprocessor
         $var['ordPostalCode']       = $request->int_var['params']['billZip'];
         $var['ordCountry']          = $request->int_var['params']['billCountry'];
         $var['termURL']             = trim($this->settings['termUrl']);
-        $var['scEnabled']           = ($this->settings['scEnabled']) ? '' :'';
+        $var['scEnabled']           = $this->settings['scEnabled'] ? '' :'';
         $var['errorPage']           ='https//:www.merchantserver.com/auth_script.asp';//place holder example
 
         if ( $this->settings['scEnabled'] ) {
