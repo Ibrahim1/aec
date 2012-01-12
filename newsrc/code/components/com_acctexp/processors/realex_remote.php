@@ -68,17 +68,6 @@ class processor_realex_remote extends XMLprocessor
 
 		$amount = (int) round( 100 * $request->items->total->cost['amount'] );
 
-		$md5hash = md5(
-						md5(	$timestamp
-								.$this->settings['merchantid']
-								.$request->invoice->id
-								.$amount
-								.$this->settings['currency']
-								.$request->int_var['params']['cardNumber']
-							)
-						.$this->settings['secret']
-					);
-
 		$xml = '<request type="auth" timestamp="' . $timestamp . '">
 				<merchantid>' . $this->settings['merchantid'] . '</merchantid>
 				<account>' . $this->settings['account'] . '</account>
@@ -94,7 +83,7 @@ class processor_realex_remote extends XMLprocessor
 					</cvn>
 				</card> 
 				<autosettle flag="1"/>
-				<md5hash>' . $md5hash . '</md5hash>
+				<md5hash>' . $this->getHash( $request, $timestamp, $amount ) . '</md5hash>
 				<tssinfo>
 					<address type=\"billing\">
 						<country>ie</country>
@@ -154,34 +143,17 @@ class processor_realex_remote extends XMLprocessor
 	        }
     	}
 
-	$tt = $elements[0]['attributes']['timestamp'];
-	//echo '<br>TimeStamp: '.$tt;
+		$i=0;
+		while ( $elements[0]['children'][$i]['name'] ) {
+			switch ( $elements[0]['children'][$i]['name'] ) {
+				case 'result': $result_code = $elements[0]['children'][$i]['content']; break;
+				case 'message': $result_msg = $elements[0]['children'][$i]['content']; break;
+				case 'orderid': $result_orderid = $elements[0]['children'][$i]['content']; break;
+				case 'md5hash': $md5hash1 = $elements[0]['children'][$i]['content']; break;
+			}
 
-	$i=0;
-	
-	while ( $elements[0]['children'][$i]['name'] )
-	{
-		if ($elements[0]['children'][$i]['name'] == 'result' )
-				$result_code =$elements[0]['children'][$i]['content'];
-	
-		if ($elements[0]['children'][$i]['name'] == 'message' )
-				$result_mesg =$elements[0]['children'][$i]['content'];
-	
-		if ($elements[0]['children'][$i]['name'] == 'orderid' )
-				$result_orderid =$elements[0]['children'][$i]['content'];
-
-		if ($elements[0]['children'][$i]['name'] == 'md5hash' )
-				$md5hash1 =$elements[0]['children'][$i]['content'];
-			 
-		$i=$i+1;
-	}
-
-
-//	echo '<br>Result Code: '.$result_code;
-//	echo '<br>Result Message: '.$result_mesg;
-//	echo '<br>Order ID: '.$result_orderid;
-
-//echo '<br>';
+			$i++;
+		}
 
 /* To do?
 if($md5hash1 != $md5hash)
@@ -196,11 +168,22 @@ if($md5hash1 != $md5hash)
 			$response1['valid'] = 1;
 		} else {
 			$response['valid'] = 0;
-			$response1['error']  = $result_mesg.'<br>Please Check the Values';
+			$response1['error']  = $result_msg.'<br>Please Check the Values';
 		}
 
 		return $response1;
 	}
 
+	function getHash( $request, $timestamp, $amount )
+	{
+		return md5(	md5($timestamp
+					. $this->settings['merchantid']
+					. $request->invoice->id
+					. $amount
+					. $this->settings['currency']
+					. $request->int_var['params']['cardNumber']
+					) . $this->settings['secret']
+				);
+	}
 }
 ?>
