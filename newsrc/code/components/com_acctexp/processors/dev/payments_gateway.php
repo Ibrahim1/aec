@@ -20,10 +20,11 @@ class processor_payments_gateway extends POSTprocessor
 		$info['longname']		= JText::_('CFG_PAYMENTS_GATEWAY_LONGNAME');
 		$info['statement']		= JText::_('CFG_PAYMENTS_GATEWAY_STATEMENT');
 		$info['description']	= JText::_('CFG_PAYMENTS_GATEWAY_DESCRIPTION');
-		$info['currencies']		= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
+		$info['currencies']		= 'USD';
 		$info['languages']		= AECToolbox::getISO639_1_codes();
-		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
-		$info['recurring']		= 0;
+		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck';
+		$info['recurring']		= 2;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -31,31 +32,13 @@ class processor_payments_gateway extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['business']		= 'your@payments_gateway@account.com';
+		$settings['api_login_id']	= '112233445566';
+		$settings['api_key']		= '112233445566';
 		$settings['testmode']		= 0;
-		$settings['brokenipnmode']	= 0;
 		$settings['invoice_tax']	= 0;
 		$settings['tax']			= '';
 		$settings['currency']		= 'USD';
-		$settings['checkbusiness']	= 0;
-		$settings['acceptpendingecheck'] = 0;
-		$settings['lc']				= 'US';
-		$settings['no_shipping']	= 1;
-		$settings['altipnurl']		= '';
-		$settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['item_number']	= '[[user_id]]';
 		$settings['customparams']	= "";
-
-		// Customization Options
-		$settings['cbt']					= '';
-		$settings['cn']						= '';
-		$settings['cpp_header_image']		= '';
-		$settings['cpp_headerback_color']	= '';
-		$settings['cpp_headerborder_color']	= '';
-		$settings['cpp_payflow_color']		= '';
-		$settings['cs']						= 0;
-		$settings['image_url']				= '';
-		$settings['page_style']				= '';
 
 		return $settings;
 	}
@@ -64,31 +47,13 @@ class processor_payments_gateway extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['business']				= array( 'inputC' );
+		$settings['api_login_id']			= array( 'inputC' );
+		$settings['api_key']				= array( 'inputC' );
 		$settings['testmode']				= array( 'list_yesno' );
-		$settings['brokenipnmode']			= array( 'list_yesno' );
 		$settings['invoice_tax']			= array( 'list_yesno' );
 		$settings['tax']					= array( 'inputA' );
 		$settings['currency']				= array( 'list_currency' );
-		$settings['checkbusiness']			= array( 'list_yesno' );
-		$settings['acceptpendingecheck']	= array( 'list_yesno' );
-		$settings['lc']						= array( 'list_language' );
-		$settings['no_shipping']			= array( 'list_yesno' );
-		$settings['altipnurl']				= array( 'inputC' );
-		$settings['item_name']				= array( 'inputE' );
-		$settings['item_number']			= array( 'inputE' );
 		$settings['customparams']			= array( 'inputD' );
-
-		// Customization Options
-		$settings['cbt']					= array( 'inputE' );
-		$settings['cn']						= array( 'inputE' );
-		$settings['cpp_header_image']		= array( 'inputE' );
-		$settings['cpp_headerback_color']	= array( 'inputC' );
-		$settings['cpp_headerborder_color']	= array( 'inputC' );
-		$settings['cpp_payflow_color']		= array( 'inputC' );
-		$settings['cs']						= array( 'list_yesno' );
-		$settings['image_url']				= array( 'inputE' );
-		$settings['page_style']				= array( 'inputE' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -98,12 +63,15 @@ class processor_payments_gateway extends POSTprocessor
 	function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
-			$var['post_url']	= 'https://www.sandbox.payments_gateway.com/cgi-bin/webscr';
+			$var['post_url']	= 'https://sandbox.paymentsgateway.net/swp/co/default.aspx';
 		} else {
-			$var['post_url']	= 'https://www.payments_gateway.com/cgi-bin/webscr';
+			$var['post_url']	= 'https://swp.paymentsgateway.net/co/default.aspx';
 		}
 
-		$var['cmd']				= '_xclick';
+		$namearray		= $request->metaUser->explodeName();
+
+		$var['pg_billto_postal_name_first']	= $namearray['first'];
+		$var['pg_billto_postal_name_last']	= $namearray['last'];
 
 		if ( !empty( $this->settings['invoice_tax'] ) && isset( $request->items->tax ) ) {
 			$tax = 0;
@@ -112,52 +80,35 @@ class processor_payments_gateway extends POSTprocessor
 				$tax += $itax['cost'];
 			}
 
-			$var['tax']			= $tax;
+			$var['pg_sales_tax_amount']			= $tax;
 
-			$var['amount']		= $request->items->total->cost['amount'];
+			$var['pg_total_amount']		= $request->items->total->cost['amount'];
 		} elseif ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
 			$amount				= $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
-			$var['tax']			= AECToolbox::correctAmount( ( $request->int_var['amount'] - $amount ), 2 );
-			$var['amount']		= AECToolbox::correctAmount( $amount, 2 );
+			$var['pg_sales_tax_amount']			= AECToolbox::correctAmount( ( $request->int_var['amount'] - $amount ), 2 );
+			$var['pg_total_amount']		= AECToolbox::correctAmount( $amount, 2 );
 		} else {
-			$var['amount']		= $request->int_var['amount'];
+			$var['pg_total_amount']		= $request->int_var['amount'];
 		}
 
-		$var['business']		= $this->settings['business'];
-		$var['invoice']			= $request->invoice->invoice_number;
-		$var['cancel_return']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
+		$var['pg_api_login_id']					= $this->settings['api_login_id'];
+		$var['pg_consumerorderid']				= $request->invoice->invoice_number;
 
-		if ( strpos( $this->settings['altipnurl'], 'http://' ) === 0 ) {
-			$var['notify_url']	= $this->settings['altipnurl'] . 'index.php?option=com_acctexp&amp;task=payments_gatewaynotification';
-		} else {
-			$var['notify_url']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payments_gatewaynotification' );
-		}
+		$var['pg_return_url']					= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payments_gatewaynotification' );
+		$var['pg_return_method']				= 'AsyncPost';
 
-		$var['item_number']		= AECToolbox::rewriteEngineRQ( $this->settings['item_number'], $request );
-		$var['item_name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+		$var['pg_version_number']				= '1.0';
+		$var['pg_utc_time']						= (int) gmdate('U');
+		$var['pg_transaction_order_number']		= $request->invoice->id;
 
-		$var['no_shipping']		= $this->settings['no_shipping'];
-		$var['no_note']			= '1';
-		$var['rm']				= '2';
-
-		$var['return']			= $request->int_var['return_url'];
-		$var['currency_code']	= $this->settings['currency'];
-		$var['lc']				= $this->settings['lc'];
-
-		// Customizations
-		$customizations = array( 'cbt', 'cn', 'cpp_header_image', 'cpp_headerback_color', 'cpp_headerborder_color', 'cpp_payflow_color', 'image_url', 'page_style' );
-
-		foreach ( $customizations as $cust ) {
-			if ( !empty( $this->settings[$cust] ) ) {
-					$var[$cust] = $this->settings[$cust];
-			}
-		}
-
-		if ( isset( $this->settings['cs'] ) ) {
-			if ( $this->settings['cs'] != 0 ) {
-				$var['cs'] = $this->settings['cs'];
-			}
-		}
+		$var['pg_ts_hash']	= $this->hmac( implode(" | ", array(	$var['pg_api_login_id'],
+																	pg_transaction_type,
+																	$var['pg_version_number'],
+																	$var['pg_total_amount'],
+																	$var['pg_utc_time'],
+																	$var['pg_transaction_order_number']
+																)
+													), $this->settings['api_key'] ); 
 
 		return $var;
 	}
@@ -307,6 +258,27 @@ class processor_payments_gateway extends POSTprocessor
 		}
 
 		return $response;
+	}
+
+	function hmac( $key, $data )
+	{
+	   // RFC 2104 HMAC implementation for php.
+	   // Creates an md5 HMAC.
+	   // Eliminates the need to install mhash to compute a HMAC
+	   // Hacked by Lance Rushing
+
+	   $b = 64; // byte length for md5
+
+	   if (strlen($key) > $b) {
+	       $key = pack("H*",md5($key));
+	   }
+	   $key  = str_pad($key, $b, chr(0x00));
+	   $ipad = str_pad('', $b, chr(0x36));
+	   $opad = str_pad('', $b, chr(0x5c));
+	   $k_ipad = $key ^ $ipad ;
+	   $k_opad = $key ^ $opad;
+
+	   return md5($k_opad  . pack("H*",md5($k_ipad . $data)));
 	}
 
 }
