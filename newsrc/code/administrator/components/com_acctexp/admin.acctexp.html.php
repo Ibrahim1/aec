@@ -324,7 +324,7 @@ class HTML_AcctExp
 			</tr>
 		</table>
 
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
 			$tabs = new JPaneTabs(0);
 			echo $tabs->startPane( 'settings' );
@@ -787,6 +787,53 @@ class HTML_AcctExp
 		<?php
 	}
 
+	function menuBar()
+	{
+		$menu = $this->getMenu();
+	}
+
+	function getMenu()
+	{
+		$links = array(	'memberships'	=> array( 'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
+												'items'	=> array(	array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
+																	array( 'showPending', 'pending', JText::_('AEC_CENTR_PENDING') ),
+																	array( 'showActive', 'active', JText::_('AEC_CENTR_ACTIVE') ),
+																	array( 'showExpired', 'expired', JText::_('AEC_CENTR_EXPIRED') ),
+																	array( 'showCancelled', 'cancelled', JText::_('AEC_CENTR_CANCELLED') ),
+																	array( 'showHold', 'hold', JText::_('AEC_CENTR_HOLD') ),
+																	array( 'showClosed', 'closed', JText::_('AEC_CENTR_CLOSED') ),
+																	array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') )
+																	)
+												),
+						'payment' 		=> array( 'name'	=> JText::_('AEC_CENTR_AREA_PAYMENT'),
+												'items'	=> array(	array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
+																	array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
+																	array( 'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ),
+																	array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
+																	array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ),
+																	array( 'showCouponsStatic', 'coupons_static', JText::_('AEC_CENTR_COUPONS_STATIC') )
+																	)
+												),
+						'settings' 		=> array( 'name'	=> JText::_('AEC_CENTR_AREA_SETTINGS'),
+												'items'	=> array(	array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
+																	array( 'showProcessors', 'settings', JText::_('AEC_CENTR_PROCESSORS') ),
+																	array( 'editCSS', 'css', JText::_('AEC_CENTR_EDIT_CSS') ),
+																	array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') )
+																	)
+												),
+						'data' 			=> array( 'name'	=> JText::_('AEC_CENTR_AREA_DATA'),
+												'items'	=> array(	array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
+																	array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
+																	array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
+																	array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
+																	array( 'readout', 'export', JText::_('AEC_READOUT') ),
+																	array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY') ),
+																	array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
+																	)
+												)
+		);
+	}
+
 	function central( $display=null, $notices=null, $searchcontent=null )
 	{
 		global $aecConfig;
@@ -804,43 +851,16 @@ class HTML_AcctExp
 						<div class="central_buttons aec_userinfobox_sub">
 						<h3><?php echo JText::_('AEC_CENTR_AREA_MEMBERSHIPS'); ?></h3>
 						<div class="central_group">
-						<?php // Assemble Buttons
-						$links = array(	array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
-										array( 'showPending', 'pending', JText::_('AEC_CENTR_PENDING') ),
-										array( 'showActive', 'active', JText::_('AEC_CENTR_ACTIVE') ),
-										array( 'showExpired', 'expired', JText::_('AEC_CENTR_EXPIRED') ),
-										array( 'showCancelled', 'cancelled', JText::_('AEC_CENTR_CANCELLED') ),
-										array( 'showHold', 'hold', JText::_('AEC_CENTR_HOLD') ),
-										array( 'showClosed', 'closed', JText::_('AEC_CENTR_CLOSED') ),
-										array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ),
-										JText::_('AEC_CENTR_AREA_PAYMENT'),
-										array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
-										array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
-										array( 'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ),
-										array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
-										array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ),
-										array( 'showCouponsStatic', 'coupons_static', JText::_('AEC_CENTR_COUPONS_STATIC') ),
-										JText::_('AEC_CENTR_AREA_SETTINGS'),
-										array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
-										array( 'showProcessors', 'settings', JText::_('AEC_CENTR_PROCESSORS') ),
-										array( 'editCSS', 'css', JText::_('AEC_CENTR_EDIT_CSS') ),
-										array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ),
-										JText::_('AEC_CENTR_AREA_DATA'),
-										array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
-										array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
-										array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
-										array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
-										array( 'readout', 'export', JText::_('AEC_READOUT') ),
-										array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY') ),
-										array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
-						);
-
+						<?php
 						$linkroot = "index.php?option=com_acctexp&amp;task=";
-						foreach ( $links as $litem ) {
-							if ( is_array( $litem ) ) {
-								HTML_AcctExp::quickiconButton( $linkroot.$litem[0], 'aec_symbol_'.$litem[1].'.png', $litem[2] );
-							} else {
-								?></div><h3><?php echo $litem; ?></h3><div class="central_group"><?php
+
+						$menu = $this->getMenu();
+
+						foreach ( $menu as $m ) {
+							?></div><h3><?php echo $m['name']; ?></h3><div class="central_group"><?php
+
+							foreach ( $m['items'] as $item ) {
+								HTML_AcctExp::quickiconButton( $linkroot.$item[0], 'aec_symbol_'.$item[1].'.png', $item[2] );
 							}
 						}
 
@@ -1939,6 +1959,7 @@ class HTML_AcctExp
 						<table class="aecadminform">
 							<tr><td>
 								<div class="aec_userinfobox_sub">
+									<h4><?php echo JText::_('AEC_RESTRICTIONS_INVENTORY_HEADER'); ?></h4>
 									<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_enabled' ); ?>
 									<?php echo $aecHTML->createSettingsParticle( 'inventory_amount' ); ?>
 									<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_used' ); ?>
@@ -1946,12 +1967,14 @@ class HTML_AcctExp
 							</td></tr>
 							<tr><td>
 								<div class="aec_userinfobox_sub">
+									<h4><?php echo JText::_('AEC_RESTRICTIONS_REDIRECT_HEADER'); ?></h4>
 									<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 								</div>
 							</td></tr>
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 							<tr><td>
 									<div class="aec_userinfobox_sub">
+										<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
 										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
 										<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
 										<br />
@@ -2297,6 +2320,7 @@ class HTML_AcctExp
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 						<tr><td>
 							<div class="aec_userinfobox_sub">
+								<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
 								<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
 								<br />
@@ -3461,4 +3485,64 @@ class HTML_AcctExp
 		}
 	}
 }
+
+class bsPaneTabs extends JPane
+{
+	function __construct( $params = array() )
+	{
+		static $loaded = false;
+
+		parent::__construct($params);
+
+		if (!$loaded) {
+			$this->_loadBehavior($params);
+			$loaded = true;
+		}
+	}
+
+	function &getInstance( $behavior = 'Tabs', $params = array())
+	{
+		$classname = 'bsPane'.$behavior;
+		$instance = new $classname($params);
+
+		return $instance;
+	}
+
+	function startPane( $id ) { return '<dl class="tabs" id="'.$id.'">'; }
+
+	function endPane() { return "</dl>"; }
+
+	function startPanel( $text, $id ) { return '<dt id="'.$id.'"><span>'.$text.'</span></dt><dd>'; }
+
+	function endPanel() { return "</dd>"; }
+
+	function _loadBehavior($params = array())
+	{
+		// Include mootools framework
+		JHTML::_('behavior.mootools');
+
+		$document =& JFactory::getDocument();
+
+		$options = '{';
+		$opt['onActive']		= (isset($params['onActive'])) ? $params['onActive'] : null ;
+		$opt['onBackground'] = (isset($params['onBackground'])) ? $params['onBackground'] : null ;
+		$opt['display']		= (isset($params['startOffset'])) ? (int)$params['startOffset'] : null ;
+		foreach ($opt as $k => $v)
+		{
+			if ($v) {
+				$options .= $k.': '.$v.',';
+			}
+		}
+		if (substr($options, -1) == ',') {
+			$options = substr($options, 0, -1);
+		}
+		$options .= '}';
+
+		$js = '		window.addEvent(\'domready\', function(){ $$(\'dl.tabs\').each(function(tabs){ new JTabs(tabs, '.$options.'); }); });';
+
+		$document->addScriptDeclaration( $js );
+		$document->addScript( JURI::root(true). '/media/system/js/tabs.js' );
+	}
+}
+
 ?>
