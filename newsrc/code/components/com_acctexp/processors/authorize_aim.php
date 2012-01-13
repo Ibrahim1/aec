@@ -80,14 +80,10 @@ class processor_authorize_aim extends XMLprocessor
 	{
 		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
 
-		// Explode Name
-		$namearray		= explode( " ", $request->metaUser->cmsUser->name );
-		$firstfirstname	= $namearray[0];
-		$maxname		= count($namearray) - 1;
-		$lastname		= $namearray[$maxname];
+		$namearray		= $request->metaUser->explodeName();
 
-		$var['params']['billFirstName'] = array( 'inputC', JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME'), JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME'), $firstfirstname );
-		$var['params']['billLastName'] = array( 'inputC', JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME'), JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME'), $lastname );
+		$var['params']['billFirstName'] = array( 'inputC', JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME'), JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME'), $namearray['first_first'] );
+		$var['params']['billLastName'] = array( 'inputC', JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME'), JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME'), $namearray['last'] );
 
 		if ( !empty( $this->settings['promptAddress'] ) || !empty( $this->settings['promptZipOnly'] ) ) {
 			if ( empty( $this->settings['promptZipOnly'] ) ) {

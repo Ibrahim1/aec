@@ -134,7 +134,6 @@ class processor_2checkout extends POSTprocessor
 		$username		= $post['username'];
 		$name			= $post['name'];
 		$planid			= $post['planid'];
-		$name			= $post['name'];
 
 		$response = array();
 		if ( !empty( $post['invoice_number'] ) ) {

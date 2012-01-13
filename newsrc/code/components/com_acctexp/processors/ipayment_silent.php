@@ -72,7 +72,7 @@ class processor_ipayment_silent extends XMLprocessor
 		$var['params']['bankNumber']		= array( 'inputC', JText::_('AEC_WTFORM_BANKNUMBER_NAME'), JText::_('AEC_WTFORM_BANKNUMBER_NAME'), '' );
 		$var['params']['bankName']			= array( 'inputC', JText::_('AEC_WTFORM_BANKNAME_NAME'), JText::_('AEC_WTFORM_BANKNAME_NAME'), '' );
 
-		$name = explode( ' ', $request->metaUser->cmsUser->name );
+		$namearray		= $request->metaUser->explodeName();
 
 		if ( empty( $name[1] ) ) {
 			$name[1] = "";
@@ -85,8 +85,8 @@ class processor_ipayment_silent extends XMLprocessor
 		$var = $this->getCCform( $var, $values );
 
 		$var['params']['billInfo']			= array( 'p', JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME'), JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC') );
-		$var['params']['billFirstName']		= array( 'inputC', JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME'), JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME'), $name[0] );
-		$var['params']['billLastName']		= array( 'inputC', JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME'), JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME'), $name[1] );
+		$var['params']['billFirstName']		= array( 'inputC', JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME'), JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLFIRSTNAME_NAME'), $namearray['first'] );
+		$var['params']['billLastName']		= array( 'inputC', JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME'), JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLLASTNAME_NAME'), $namearray['last'] );
 
 		$var['params']['billInfo']			= array( 'p', JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_NAME'), JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_DESC') );
 
