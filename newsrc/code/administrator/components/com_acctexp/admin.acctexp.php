@@ -5825,7 +5825,7 @@ function exportData( $option, $type, $cmd=null )
 		}
 	}
 
-	$lists['status'] = JHTML::_('select.genericlist', $group_selection, 'status[]', 'size="6" multiple="multiple"', 'value', 'text', $selected_status);
+	$lists['status'] = JHTML::_('select.genericlist', $group_selection, 'status[]', 'size="8" multiple="multiple"', 'value', 'text', $selected_status);
 
 	// Ordering
 	$sel = array();

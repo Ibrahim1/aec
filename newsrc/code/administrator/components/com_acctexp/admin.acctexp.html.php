@@ -789,12 +789,12 @@ class HTML_AcctExp
 
 	function menuBar()
 	{
-		$menu = $this->getMenu();
+		$menu = self::getMenu();
 	}
 
 	function getMenu()
 	{
-		$links = array(	'memberships'	=> array( 'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
+		return array(	'memberships'	=> array( 'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
 												'items'	=> array(	array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
 																	array( 'showPending', 'pending', JText::_('AEC_CENTR_PENDING') ),
 																	array( 'showActive', 'active', JText::_('AEC_CENTR_ACTIVE') ),
@@ -854,7 +854,7 @@ class HTML_AcctExp
 						<?php
 						$linkroot = "index.php?option=com_acctexp&amp;task=";
 
-						$menu = $this->getMenu();
+						$menu = self::getMenu();
 
 						foreach ( $menu as $m ) {
 							?></div><h3><?php echo $m['name']; ?></h3><div class="central_group"><?php
@@ -3486,7 +3486,7 @@ class HTML_AcctExp
 	}
 }
 
-class bsPaneTabs extends JPane
+class bsPaneTabs
 {
 	function __construct( $params = array() )
 	{
