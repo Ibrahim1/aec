@@ -171,11 +171,16 @@ vertical-align: bottom;
 padding-right: 4px;
 }
 
+form#adminForm {
+overflow: hidden;
+}
+
 table.aecadminform {
 background-color: #ddd;
 border-collapse: collapse;
 margin: 8px 0 15px;
 width: 100%;
+box-shadow: 0 1px 7px #000 inset, 0 0 10px #999;
 }
 
 .userinfobox {
@@ -194,7 +199,6 @@ text-align: center;
 background-color: #f9f9e9;
 margin: 4px 6px;
 padding: 4px 16px;
-width: 95%;
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
 border-radius: 4px;
@@ -504,3 +508,33 @@ float: inherit !important;
 #aec_colorlist_AA89BB { background: #AA89BB !important; }
 #aec_colorlist_B7B7B7 { background: #B7B7B7 !important; }
 #aec_colorlist_808080 { background: #808080 !important; }
+
+/* Overrides */
+
+.pagination div.limit {
+height: inherit;
+line-height: inherit;
+}
+/*
+div#submenu-box {
+display: none !important;
+}
+
+div#toolbar-box {
+display: none !important;
+}
+*/
+div#element-box div.t, div#element-box div.t div.t, div#element-box div.t div.t div.t,
+div#element-box div.b, div#element-box div.b div.b, div#element-box div.b div.b div.b {
+background: none;
+}
+
+div#element-box div.m {
+border: none;
+padding: none !important;
+}
+
+div#content-box div.m {
+padding: none;
+}
+
