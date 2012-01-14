@@ -98,6 +98,7 @@ class HTML_myCommon
 	{
 		HTML_myCommon::addBackendCSS();
 		HTML_myCommon::addBackendJS();
+		JHTML::_('behavior.tooltip');
 
 		echo '<div id="aec_wrap">';
 		echo HTML_AcctExp::menuBar();
@@ -313,8 +314,6 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 
-		JHTML::_('behavior.tooltip');
-
 		JHTML::_('behavior.calendar');
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
@@ -324,8 +323,6 @@ class HTML_AcctExp
 			$edituserlink		= 'index.php?option=com_users&amp;view=user&amp;task=edit&amp;cid[]=' . $metaUser->userid;
 			$activateuserlink	= 'index.php?option=com_user&amp;task=activate&amp;activation=' . $metaUser->cmsUser->activation;
 		}
-
-		JHTML::_('behavior.calendar');
 
 		$cb = GeneralInfoRequester::detect_component('anyCB');
 
@@ -364,6 +361,7 @@ class HTML_AcctExp
 	        	</th>
 			</tr>
 		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' ); ?>
 
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
@@ -1059,16 +1057,7 @@ class HTML_AcctExp
 			<input type="hidden" name="returnTask" value="" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
-		<table class="adminheading">
-			<tr>
-				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_hacks.png) no-repeat left;">
-				<?php echo JText::_('AEC_HEAD_HACKS'); ?>
-				</th>
-			</tr>
-			<tr>
-				<td></td>
-			</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_HACKS', 'aec_symbol_hacks' ); ?>
 		<table class="aecadminform">
 			<tr><td>
 				<div style="width:100%; float:left;">
@@ -1156,7 +1145,6 @@ class HTML_AcctExp
 		jimport( 'joomla.html.editor' );
 
 		HTML_myCommon::startCommon();
-		JHTML::_('behavior.tooltip');
 		?>
 		<script type="text/javascript">
         function submitbutton(pressbutton) {
@@ -1224,15 +1212,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-			<table class="adminheading">
-				<tr>
-					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
-						<?php echo JText::_('PROCESSORS_TITLE'); ?>
-					</th>
-				</tr>
-				<tr><td></td></tr>
-			</table>
-
+			<?php HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'aec_symbol_settings' ); ?>
 			<table class="adminlist">
 				<thead><tr>
 					<th width="1%">#</th>
@@ -1290,17 +1270,10 @@ class HTML_AcctExp
 	function editProcessor( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-		JHTML::_('behavior.tooltip');
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<table class="adminheading">
-			<tr>
-				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
-					<?php echo JText::_('AEC_HEAD_SETTINGS') . ': ' . ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ); ?>
-				</th>
-			</tr>
-			<tr><td></td></tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' ); ?>
+		<?php echo JText::_('AEC_HEAD_SETTINGS') . ': ' . ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ); ?>
 		<?php
 
 		$tabs = new bsPaneTabs;
@@ -1562,7 +1535,6 @@ class HTML_AcctExp
 		//$Returnid = intval( aecGetParam( $_REQUEST, 'Returnid', 0 ) );
 
 		$tabs = new bsPaneTabs;
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon();
 
 		?>
@@ -1590,6 +1562,7 @@ class HTML_AcctExp
 	        	</th>
 			</tr>
 		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' ); ?>
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -1699,16 +1672,9 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-			<table class="adminheading">
-				<tr>
-					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_plans.png) no-repeat left;"><?php echo JText::_('PAYPLANS_TITLE'); ?></th>
-					<td nowrap="nowrap">
-						<?php echo $lists['filter_group'];?>
-						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
-					</td>
-				</tr>
-				<tr><td></td></tr>
-			</table>
+			<?php HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'aec_symbol_plans' ); ?>
+			<?php echo $lists['filter_group'];?>
+			<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
 
 			<table class="adminlist">
 				<thead><tr>
@@ -1827,7 +1793,6 @@ class HTML_AcctExp
 
 		$editor =& JFactory::getEditor();
 
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon(); ?>
 
 		<script type="text/javascript">
@@ -1838,15 +1803,8 @@ class HTML_AcctExp
 			}
 			/* ]]> */
 		</script>
-		<table class="adminheading">
-			<tr>
-				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_plans.png) no-repeat left;">
-					<?php echo JText::_('AEC_HEAD_PLAN_INFO'); ?>:
-					&nbsp;
-					<small><?php echo $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW'); ?></small>
-	        	</th>
-			</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_PLAN_INFO', 'aec_symbol_plans' ); ?>
+		<small><?php echo $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW'); ?></small>
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -2163,14 +2121,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-			<table class="adminheading">
-				<tr>
-					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_itemgroups.png) no-repeat left;">
-						<?php echo JText::_('ITEMGROUPS_TITLE'); ?>
-					</th>
-				</tr>
-				<tr><td></td></tr>
-			</table>
+			<?php HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'aec_symbol_itemgroups' ); ?>
 
 			<table class="adminlist">
 				<thead><tr>
@@ -2279,18 +2230,9 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon(); ?>
-
-		<table class="adminheading">
-			<tr>
-				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_itemgroups.png) no-repeat left;">
-					<?php echo JText::_('AEC_HEAD_ITEMGROUP_INFO'); ?>:
-					&nbsp;
-					<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
-	        	</th>
-			</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups' ); ?>
+		<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -2459,14 +2401,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-			<table class="adminheading">
-				<tr>
-					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left;">
-						<?php echo JText::_('COUPON_TITLE'. ( $type ? '_STATIC' : '' )); ?>
-					</th>
-				</tr>
-				<tr><td></td></tr>
-			</table>
+			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'aec_symbol_coupons' . ( $type ? '_static' : '' ) ); ?>
 
 			<table class="adminlist">
 				<thead><tr>
@@ -2532,19 +2467,12 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon();
 
 		JHTML::_('behavior.calendar');
-
 		?>
-		<table class="adminheading">
-			<tr>
-				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_coupons<?php echo $type ? '_static' : ''; ?>.png) no-repeat left;">
-				<?php echo JText::_('AEC_COUPON'); ?>:&nbsp;<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
-	        	</th>
-			</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_COUPON', 'aec_symbol_coupons' . ($type ? '_static' : '') ); ?>
+		<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
 		<!--<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data" onLoad="swap();" >-->
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
@@ -2693,21 +2621,12 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_invoices.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-			<?php echo JText::_('INVOICE_TITLE'); ?>
-			</th>
-			<td nowrap="nowrap" style="padding: 0 5px;">
+		<?php HTML_myCommon::getHeader( 'INVOICE_TITLE', 'aec_symbol_invoices' ); ?>
 			<?php echo JText::_('INVOICE_SEARCH'); ?>: <br />
 			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
-			</td>
-		</tr>
-		</table>
 
 		<table class="adminlist">
 		<thead><tr>
@@ -2769,22 +2688,12 @@ class HTML_AcctExp
 	{
 		$user = &JFactory::getUser();
 
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon();
-
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_history.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-			<?php echo JText::_('HISTORY_TITLE2'); ?>
-			</th>
-			<td nowrap="nowrap" style="padding: 0 5px;">
-			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
-			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
-			</td>
-		</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'aec_symbol_history' ); ?>
+		<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
+		<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
 
 		<table class="adminlist">
 		<thead><tr>
@@ -2861,20 +2770,11 @@ class HTML_AcctExp
 
 	function eventlog( $option, $events, $search, $pageNav )
 	{
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_eventlog.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-				<?php echo JText::_('AEC_HEAD_LOG'); ?>
-			</th>
-			<td nowrap="nowrap" style="padding: 0 5px;">
-			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
-			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
-			</td>
-		</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'aec_symbol_eventlog' ); ?>
+		<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
+		<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
 
 		<table class="adminlist">
 		<thead><tr>
@@ -2927,15 +2827,12 @@ class HTML_AcctExp
 
 	function stats( $option, $page, $stats )
 	{
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon(); ?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
 		<form action="index.php" method="post" name="adminForm">
 		<div id="stats">
 		<div id="statnav">
-			<div style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" class="aec_backend_page_heading">
-				<h1><?php echo JText::_('AEC_HEAD_STATS'); ?></h1>
-			</div>
+			<?php HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'aec_symbol_stats' ); ?>
 			<ul>
 		<?php
 			$menus = array( 'overview' => "Overview",
@@ -3109,7 +3006,6 @@ class HTML_AcctExp
 
 	function stats2( $option, $stats )
 	{
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
@@ -3132,19 +3028,10 @@ class HTML_AcctExp
 
 	function readoutSetup( $option, $aecHTML )
 	{
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-				<?php echo JText::_('AEC_READOUT'); ?>
-			</th>
-			<td nowrap="nowrap" style="padding: 0 5px;">
-			</td>
-		</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_READOUT', 'aec_symbol_export' ); ?>
 
 		<div class="aec_readout aec_userinfobox_sub">
 			<table style="width:320px;">
@@ -3181,7 +3068,6 @@ class HTML_AcctExp
 
 	function readout( $option, $readout )
 	{
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addReadoutCSS();
 		HTML_myCommon::startCommon();
 
@@ -3366,19 +3252,10 @@ class HTML_AcctExp
 
 	function import( $option, $aecHTML )
 	{
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_import.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-				<?php echo JText::_('AEC_HEAD_IMPORT'); ?>
-			</th>
-			<td nowrap="nowrap" style="padding: 0 5px;">
-			</td>
-		</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'aec_symbol_import' ); ?>
 		<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec_userinfobox_sub">
 			<table style="width:100%;">
 				<tr>
@@ -3444,19 +3321,10 @@ class HTML_AcctExp
 
 	function export( $option, $task, $aecHTML )
 	{
-		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_export.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-				<?php echo JText::_('AEC_HEAD_EXPORT'); ?>
-			</th>
-			<td nowrap="nowrap" style="padding: 0 5px;">
-			</td>
-		</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'aec_symbol_export' ); ?>
 
 		<table class="aecadminform">
 			<tr>
@@ -3485,20 +3353,12 @@ class HTML_AcctExp
 
 	function toolBox( $option, $cmd, $result, $title=null )
 	{
-		JHTML::_('behavior.tooltip');
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_toolbox.png) no-repeat left;" rowspan="2" nowrap="nowrap">
-				<?php echo JText::_('AEC_HEAD_TOOLBOX') . ( $title ? ( ': ' . $title ) : '' ); ?>
-			</th>
-			<td nowrap="nowrap" style="padding: 0 5px;">
-			</td>
-		</tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox' ); ?>
+		<?php echo JText::_('AEC_HEAD_TOOLBOX') . ( $title ? ( ': ' . $title ) : '' ); ?>
 		<?php if ( empty( $cmd ) ) { ?>
 		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup your data extensively.</p>
 		<?php } ?>
