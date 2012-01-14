@@ -5701,7 +5701,7 @@ function exportData( $option, $type, $cmd=null )
 	// Create Parameters
 
 	$params[] = array( 'userinfobox', 32 );
-	$params[] = array( 'userinfobox_sub', 'Compose Export' );
+	$params[] = array( 'userinfobox_sub_stacked', 'Compose Export' );
 	$params['params_remap']		= array( 'subarea_change', 'params' );
 	$params[] = array( 'div', '<div class="alert-message block-message info">' );
 	$params[] = array( 'p', '<p>Take users that fit these criteria:</p>' );

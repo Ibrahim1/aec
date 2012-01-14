@@ -73,11 +73,43 @@ class HTML_myCommon
 		<?php
 	}
 
+	function addBackendJS()
+	{
+		$document=& JFactory::getDocument();
+
+		$document->addScript( '/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
+		$document->addScript( '/media/com_acctexp/js/jquery/jquerync.js' );
+		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-dropdown.js' );
+		$document->addScriptDeclaration( 'jQuery(document).ready(function($) {
+			jQuery(\'#topbar\').dropdown()
+		});' );
+
+		//print_r($document);exit;
+	}
+
 	function addReadoutCSS()
 	{
 		?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/readout.css" />
 		<?php
+	}
+
+	function startCommon()
+	{
+		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::addBackendJS();
+
+		echo '<div id="aec_wrap">';
+		echo HTML_AcctExp::menuBar();
+	}
+
+	function endCommon( $footer=true )
+	{
+		if ( $footer ) {
+			HTML_myCommon::Valanx();
+		}
+
+		echo '</div>';
 	}
 }
 
@@ -207,7 +239,7 @@ class General_css
 	function editCSSSource( &$content, $option )
 	{
 		$file = JPATH_SITE . '/media/' . $option . '/css/site.css';
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 			<table cellpadding="1" cellspacing="1" border="0" width="100%">
 				<tr>
@@ -260,7 +292,7 @@ class General_css
 			<input type="hidden" name="task" value="" />
 		</form>
 
-		<?php HTML_myCommon::Valanx();
+		<?php HTML_myCommon::endCommon();
 	}
 }
 
@@ -270,7 +302,7 @@ class HTML_AcctExp
 
 	function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 
 		JHTML::_('behavior.tooltip');
 
@@ -330,7 +362,6 @@ class HTML_AcctExp
 			echo $tabs->startPane( 'settings' );
 
 			echo $tabs->startPanel(JText::_('AEC_HEAD_PLAN_INFO'), JText::_('AEC_HEAD_PLAN_INFO'));
-			echo '<div class="aec_tabheading"><h2>' . JText::_('AEC_HEAD_PLAN_INFO') . '</h2></div>';
 			?>
 			<table class="aecadminform">
 				<tr>
@@ -629,7 +660,6 @@ class HTML_AcctExp
 			echo $tabs->endPanel();
 			echo $tabs->startPanel(JText::_('AEC_USER_MICRO_INTEGRATION'), JText::_('AEC_USER_MICRO_INTEGRATION'));
 			?>
-			<div class="aec_tabheading"><h2><?php echo JText::_('AEC_USER_MICRO_INTEGRATION'); ?>: <?php echo JText::_('AEC_USER_MICRO_INTEGRATION_USER'); ?></h2></div>
 			<div class="aec_userinfobox_sub">
 			<?php if ( $metaUser->hasSubscription ) { ?>
 				<p><a href="index.php?"><?php echo JText::_('AEC_USER_QUICKFIRE_GO'); ?></a></p>
@@ -668,7 +698,6 @@ class HTML_AcctExp
 				</table>
 				<?php }
 			} ?>
-			<div class="aec_tabheading"><h2><?php echo JText::_('AEC_USER_MICRO_INTEGRATION'); ?>: <?php echo JText::_('AEC_USER_MICRO_INTEGRATION_ADMIN'); ?></h2></div>
 			<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) {
 				if ( !empty( $mi['admin'] ) ) { ?>
 				<table class="aecadminform">
@@ -700,7 +729,6 @@ class HTML_AcctExp
 			}
 
 			if ( !empty( $metaUser->meta->params->mi ) ) { ?>
-			<div class="aec_tabheading"><h2><?php echo JText::_('AEC_USER_MICRO_INTEGRATION'); ?>: <?php echo JText::_('AEC_USER_MICRO_INTEGRATION_DB'); ?></h2></div>
 			<table class="aecadminform">
 				<tr>
 					<td valign="top" style="padding: 10px;">
@@ -727,7 +755,7 @@ class HTML_AcctExp
 			krumo( $option, $metaUser, $invoices, $lists, $nexttask );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function SubscriptionName( $subscriptionid )
@@ -790,12 +818,41 @@ class HTML_AcctExp
 	function menuBar()
 	{
 		$menu = self::getMenu();
+
+		$linkroot = "index.php?option=com_acctexp&amp;task=";
+		?>
+		<div class="topbar">
+			<div class="topbar-inner">
+			<div class="container">
+				<a href="<?php echo $linkroot.'central' ?>" class="brand">AEC</a>
+				<ul class="nav">
+				<?php foreach ( $menu as $m ) { ?>
+					<li class="dropdown" data-dropdown="dropdown">
+						<a class="dropdown-toggle" href="#"><?php echo $m['short'] ?></a>
+						<ul class="dropdown-menu">
+						<?php
+						foreach ( $m['items'] as $item ) {
+							echo '<li><a href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
+						}
+						?>
+						</ul>
+					</li>
+				<?php } ?>
+				<form action="" class="pull-left">
+					<input type="text" placeholder="Quicksearch">
+				</form>
+	          </ul>
+	        </div>
+	      </div>
+	    </div>
+    <?php
 	}
 
 	function getMenu()
 	{
-		return array(	'memberships'	=> array( 'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
-												'items'	=> array(	array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
+		return array(	'memberships'	=> array(	'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
+													'short'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
+													'items'	=> array(	array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
 																	array( 'showPending', 'pending', JText::_('AEC_CENTR_PENDING') ),
 																	array( 'showActive', 'active', JText::_('AEC_CENTR_ACTIVE') ),
 																	array( 'showExpired', 'expired', JText::_('AEC_CENTR_EXPIRED') ),
@@ -805,8 +862,9 @@ class HTML_AcctExp
 																	array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') )
 																	)
 												),
-						'payment' 		=> array( 'name'	=> JText::_('AEC_CENTR_AREA_PAYMENT'),
-												'items'	=> array(	array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
+						'payment' 		=> array(	'name'	=> JText::_('AEC_CENTR_AREA_PAYMENT'),
+													'short'	=> JText::_('AEC_CENTR_AREA_PAYMENT_SHORT'),
+													'items'	=> array(	array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
 																	array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
 																	array( 'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ),
 																	array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
@@ -814,15 +872,17 @@ class HTML_AcctExp
 																	array( 'showCouponsStatic', 'coupons_static', JText::_('AEC_CENTR_COUPONS_STATIC') )
 																	)
 												),
-						'settings' 		=> array( 'name'	=> JText::_('AEC_CENTR_AREA_SETTINGS'),
-												'items'	=> array(	array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
+						'settings' 		=> array(	'name'	=> JText::_('AEC_CENTR_AREA_SETTINGS'),
+													'short'	=> JText::_('AEC_CENTR_AREA_SETTINGS_SHORT'),
+													'items'	=> array(	array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
 																	array( 'showProcessors', 'settings', JText::_('AEC_CENTR_PROCESSORS') ),
 																	array( 'editCSS', 'css', JText::_('AEC_CENTR_EDIT_CSS') ),
 																	array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') )
 																	)
 												),
-						'data' 			=> array( 'name'	=> JText::_('AEC_CENTR_AREA_DATA'),
-												'items'	=> array(	array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
+						'data' 			=> array(	'name'	=> JText::_('AEC_CENTR_AREA_DATA'),
+													'short'	=> JText::_('AEC_CENTR_AREA_DATA_SHORT'),
+													'items'	=> array(	array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
 																	array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
 																	array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
 																	array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
@@ -838,8 +898,7 @@ class HTML_AcctExp
 	{
 		global $aecConfig;
 
-		HTML_myCommon::addBackendCSS();
-		// frontpage table
+		HTML_myCommon::startCommon();
 		?>
 		<table class="aecadminform">
 			<tr>
@@ -848,23 +907,19 @@ class HTML_AcctExp
 						<?php if ( !empty( $aecConfig->cfg['quicksearch_top'] ) ) {
 							HTML_AcctExp::quickSearchBar( $display, $searchcontent );
 						} ?>
-						<div class="central_buttons aec_userinfobox_sub">
-						<h3><?php echo JText::_('AEC_CENTR_AREA_MEMBERSHIPS'); ?></h3>
-						<div class="central_group">
 						<?php
 						$linkroot = "index.php?option=com_acctexp&amp;task=";
 
 						$menu = self::getMenu();
 
 						foreach ( $menu as $m ) {
-							?></div><h3><?php echo $m['name']; ?></h3><div class="central_group"><?php
+							?><div class="central_buttons aec_userinfobox_sub"><h3><?php echo $m['name']; ?></h3><div class="central_group"><?php
 
 							foreach ( $m['items'] as $item ) {
 								HTML_AcctExp::quickiconButton( $linkroot.$item[0], 'aec_symbol_'.$item[1].'.png', $item[2] );
 							}
+							?></div></div><?php
 						}
-
-						?></div></div><?php
 
 						if ( empty( $aecConfig->cfg['quicksearch_top'] ) ) {
 							HTML_AcctExp::quickSearchBar( $display, $searchcontent );
@@ -912,11 +967,13 @@ class HTML_AcctExp
 			</tr>
 		</table>
 		<?php
+
+		HTML_myCommon::endCommon(false);
 	}
 
 	function credits()
 	{
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 		?>
 		<style type="text/css">
 			.installnote {
@@ -985,8 +1042,8 @@ class HTML_AcctExp
 	function hacks ( $option, $hacks )
 	{
 		$infohandler	= new GeneralInfoRequester();
-		HTML_myCommon::addBackendCSS(); ?>
-
+		HTML_myCommon::startCommon();
+		?>
 		<form action="index.php" method="post" name="adminForm">
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
 			<input type="hidden" name="task" value="" />
@@ -1082,14 +1139,14 @@ class HTML_AcctExp
 			krumo( $option, $hacks );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function Settings( $option, $aecHTML, $tab_data, $editors )
 	{
 		jimport( 'joomla.html.editor' );
 
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 		JHTML::_('behavior.tooltip');
 		?>
 		<script type="text/javascript">
@@ -1116,11 +1173,7 @@ class HTML_AcctExp
 		$i = 0;
 
 		foreach( $tab_data as $tab ) {
-			echo $tabs->startPanel( $tab[0], $tab[0] );
-
-			if ( isset( $tab[2] ) ) {
-				echo '<div class="aec_tabheading">' . $tab[2] . '</div>';
-			}
+			echo $tabs->startPanel( $tab[2], $tab[0] );
 
 			echo '<table width="100%" class="aecadminform"><tr><td>';
 
@@ -1153,12 +1206,12 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML, $tab_data, $editors );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function listProcessors( $rows, $pageNav, $option )
 	{
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
@@ -1220,12 +1273,12 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function editProcessor( $option, $aecHTML )
 	{
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 		JHTML::_('behavior.tooltip');
 		?>
 		<form action="index.php" method="post" name="adminForm">
@@ -1244,7 +1297,6 @@ class HTML_AcctExp
 		if ( !empty( $aecHTML->pp ) ) {
 			echo $tabs->startPanel( $aecHTML->pp->processor_name, $aecHTML->pp->info['longname'] );
 
-			echo '<div class="aec_tabheading"><h2>' . $aecHTML->pp->info['longname'] . '</h2>';
 			echo '<img src="' . JURI::root( true ) . '/media/' . $option . '/images/site/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
 			echo '</div>';
 
@@ -1253,7 +1305,6 @@ class HTML_AcctExp
 		} else {
 			echo $tabs->startPanel( 'new processor', 'new processor' );
 
-			echo '<div class="aec_tabheading"><h2>' . '' . '</h2></div>';
 			echo '<div class="aec_userinfobox_sub">';
 
 			$id = 0;
@@ -1281,14 +1332,14 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
 	{
 		$user = &JFactory::getUser();
 
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading" cellpadding="2" cellspacing="2">
 				<tr>
@@ -1398,12 +1449,12 @@ class HTML_AcctExp
 			krumo( $user, $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering )
 	{
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
@@ -1492,7 +1543,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function editMicroIntegration( $option, $row, $lists, $aecHTML )
@@ -1501,7 +1552,7 @@ class HTML_AcctExp
 
 		$tabs = new JPaneTabs(0);
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 
 		?>
 		<script type="text/javascript">
@@ -1536,7 +1587,6 @@ class HTML_AcctExp
 		                echo $tabs->startPane( 'createMicroIntegration' );
 		                echo $tabs->startPanel( JText::_('MI_E_TITLE'), JText::_('MI_E_TITLE') );
 		                ?>
-		                <div class="aec_tabheading"><h2><?php echo JText::_('MI_E_TITLE'); ?></h2></div>
 		                <table width="100%" class="aecadminform">
 							<tr>
 							<td valign="top">
@@ -1587,7 +1637,6 @@ class HTML_AcctExp
 							<?php if ( $aecHTML->hasSettings ) {
 			                echo $tabs->endPanel();
 			                echo $tabs->startPanel( JText::_('MI_E_SETTINGS'), JText::_('MI_E_SETTINGS') ); ?>
-				                <div class="aec_tabheading"><h2><?php echo JText::_('MI_E_SETTINGS'); ?></h2></div>
 				                <table width="100%" class="aecadminform">
 				                	<div class="aec_userinfobox_sub">
 									<?php
@@ -1596,7 +1645,6 @@ class HTML_AcctExp
 											?></table><?php
 											echo $tabs->endPanel();
 											echo $tabs->startPanel( $aecHTML->rows[$name][1], $aecHTML->rows[$name][1] ); ?>
-							                <div class="aec_tabheading"><h2><?php echo $aecHTML->rows[$name][1]; ?></h2></div>
 							                <table width="100%" class="aecadminform">
 											<?php
 										} else {
@@ -1633,12 +1681,12 @@ class HTML_AcctExp
 			krumo( $option, $row, $lists, $aecHTML );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
 	{
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
@@ -1757,7 +1805,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
@@ -1769,7 +1817,7 @@ class HTML_AcctExp
 		$editor =& JFactory::getEditor();
 
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 
 		<script type="text/javascript">
 		    /* <![CDATA[ */
@@ -1797,7 +1845,6 @@ class HTML_AcctExp
 		                echo $tabs->startPane( 'editSubscriptionPlan' );
 		                echo $tabs->startPanel( JText::_('PAYPLAN_DETAIL_TITLE'), JText::_('PAYPLAN_DETAIL_TITLE') );
 		                ?>
-		                <div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_DETAIL_TITLE'); ?></h2></div>
 						<table class="aecadminform">
 							<tr>
 								<td style="padding:10px;" valign="top">
@@ -1916,7 +1963,6 @@ class HTML_AcctExp
 		                echo $tabs->endPanel();
 		                echo $tabs->startPanel( JText::_('PAYPLAN_PROCESSORS_TITLE'), JText::_('PAYPLAN_PROCESSORS_TITLE') );
 						?>
-						<div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_PROCESSORS_TITLE_LONG'); ?></h2></div>
 						<table width="100%" class="aecadminform"><tr><td>
 							<?php
 							if ( !empty( $aecHTML->customparams->pp ) ) {
@@ -1940,7 +1986,6 @@ class HTML_AcctExp
 		                echo $tabs->endPanel();
 		                echo $tabs->startPanel( JText::_('PAYPLAN_TEXT_TITLE'), JText::_('PAYPLAN_TEXT_TITLE') );
 		                ?>
-		                <div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_TEXT_TITLE'); ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
 								<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
@@ -1955,7 +2000,6 @@ class HTML_AcctExp
 		                echo $tabs->endPanel();
 		                echo $tabs->startPanel( JText::_('PAYPLAN_RESTRICTIONS_TITLE'), JText::_('PAYPLAN_RESTRICTIONS_TITLE') );
 		                ?>
-		                <div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_RESTRICTIONS_TITLE'); ?></h2></div>
 						<table class="aecadminform">
 							<tr><td>
 								<div class="aec_userinfobox_sub">
@@ -1986,7 +2030,6 @@ class HTML_AcctExp
 		                echo $tabs->endPanel();
 		                echo $tabs->startPanel( JText::_('PAYPLAN_TRIAL_TITLE'), JText::_('PAYPLAN_TRIAL_TITLE') );
 						?>
-						<div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_TRIAL_TITLE'); ?><?php echo $aecHTML->ToolTip( JText::_('PAYPLAN_TRIAL_DESC'), JText::_('PAYPLAN_TRIAL') ); ?></h2></div>
 						<table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
 								<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
@@ -2002,7 +2045,6 @@ class HTML_AcctExp
 		                echo $tabs->endPanel();
 		                echo $tabs->startPanel( JText::_('PAYPLAN_RELATIONS_TITLE'), JText::_('PAYPLAN_RELATIONS_TITLE') );
 						?>
-						<div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h2></div>
 						<table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
 								<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
@@ -2013,7 +2055,6 @@ class HTML_AcctExp
 		                echo $tabs->endPanel();
 		                echo $tabs->startPanel( JText::_('PAYPLAN_MI'), JText::_('PAYPLAN_MI') );
 		                ?>
-		                <div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_MI'); ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
 								<h2><?php echo JText::_('Inherited Micro Integrations'); ?></h2>
@@ -2104,12 +2145,12 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML, $row, $hasrecusers );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function listItemGroups( $rows, $pageNav, $option )
 	{
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
@@ -2220,7 +2261,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function editItemGroup( $option, $aecHTML, $row )
@@ -2228,7 +2269,7 @@ class HTML_AcctExp
 		$user = &JFactory::getUser();
 
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 
 		<table class="adminheading">
 			<tr>
@@ -2332,7 +2373,6 @@ class HTML_AcctExp
 		                echo $tabs->endPanel();
 		                echo $tabs->startPanel( JText::_('PAYPLAN_MI'), JText::_('PAYPLAN_MI') );
 		                ?>
-		                <div class="aec_tabheading"><h2><?php echo JText::_('PAYPLAN_MI'); ?></h2></div>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
 								<?php if ( $row->id > 1 ) { ?>
@@ -2401,12 +2441,12 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML, $row );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function listCoupons( $rows, $pageNav, $option, $type )
 	{
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 			<table class="adminheading">
 				<tr>
@@ -2474,7 +2514,7 @@ class HTML_AcctExp
 			krumo( $rows, $pageNav, $option, $type );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function editCoupon( $option, $aecHTML, $row, $type )
@@ -2482,7 +2522,7 @@ class HTML_AcctExp
 		$user = &JFactory::getUser();
 
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 
 		JHTML::_('behavior.calendar');
 
@@ -2635,7 +2675,7 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML, $row, $type );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function viewinvoices( $option, $rows, $search, $pageNav )
@@ -2643,7 +2683,7 @@ class HTML_AcctExp
 		$user = &JFactory::getUser();
 
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
@@ -2711,7 +2751,7 @@ class HTML_AcctExp
 			krumo( $option, $rows, $search, $pageNav );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function viewhistory( $option, $rows, $search, $pageNav )
@@ -2719,7 +2759,7 @@ class HTML_AcctExp
 		$user = &JFactory::getUser();
 
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 
 		?>
 		<form action="index.php" method="post" name="adminForm">
@@ -2805,13 +2845,13 @@ class HTML_AcctExp
 			krumo( $option, $rows, $search, $pageNav );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function eventlog( $option, $events, $search, $pageNav )
 	{
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
@@ -2871,13 +2911,13 @@ class HTML_AcctExp
 			krumo( $option, $events, $search, $pageNav );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function stats( $option, $page, $stats )
 	{
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
 		<form action="index.php" method="post" name="adminForm">
 		<div id="stats">
@@ -3053,13 +3093,13 @@ class HTML_AcctExp
 			krumo( $option, $stats );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function stats2( $option, $stats )
 	{
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS(); ?>
+		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
 		<tr>
@@ -3076,13 +3116,13 @@ class HTML_AcctExp
 			krumo( $option, $stats );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function readoutSetup( $option, $aecHTML )
 	{
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
@@ -3125,13 +3165,14 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function readout( $option, $readout )
 	{
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::addReadoutCSS();
+		HTML_myCommon::startCommon();
 
 		if ( isset( $_POST['column_headers'] ) ) {
 			$ch = $_POST['column_headers'];
@@ -3222,7 +3263,7 @@ class HTML_AcctExp
 		</td></tr></table>
 		<?php
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function readoutCSV( $option, $readout )
@@ -3315,7 +3356,7 @@ class HTML_AcctExp
 	function import( $option, $aecHTML )
 	{
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
 		<table class="adminheading">
@@ -3387,13 +3428,13 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function export( $option, $task, $aecHTML )
 	{
 		JHTML::_('behavior.tooltip');
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm">
 		<table class="adminheading">
@@ -3428,14 +3469,14 @@ class HTML_AcctExp
 			krumo( $option, $aecHTML );
 		}
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	function toolBox( $option, $cmd, $result, $title=null )
 	{
 		JHTML::_('behavior.tooltip');
 		JHTML::_('behavior.calendar');
-		HTML_myCommon::addBackendCSS();
+		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
 		<table class="adminheading">
@@ -3467,7 +3508,7 @@ class HTML_AcctExp
 
 		<?php
 
- 		HTML_myCommon::Valanx();
+ 		HTML_myCommon::endCommon();
 	}
 
 	/**

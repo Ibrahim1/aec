@@ -1,8 +1,64 @@
 /* == AccountExpiration Backend Style by David 'skOre' Deutsch == */
 /* 2007.07.01 */
 
+#aec_wrap {
+overflow: hidden;
+margin-left: -1px;
+margin-right: -1px;
+}
+
+.topbar {
+position: relative;
+z-index: 1;
+}
+
+.topbar-inner {
+background-color: #440000;
+background-repeat: repeat-x;
+background-image: -khtml-gradient(linear, left top, left bottom, from(#440000), to(#780000));
+background-image: -moz-linear-gradient(top, #440000, #780000);
+background-image: -ms-linear-gradient(top, #440000, #780000);
+background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #440000), color-stop(100%, #780000));
+background-image: -webkit-linear-gradient(top, #440000, #780000);
+background-image: -o-linear-gradient(top, #440000, #780000);
+background-image: linear-gradient(top, #440000, #780000);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#440000', endColorstr='#780000', GradientType=0);
+-webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
+-moz-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
+box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
+border-bottom-right-radius: 10px;
+-moz-border-radius-bottomright: 10px;
+border-bottom-left-radius: 10px;
+-moz-border-radius-bottomleft: 10px;
+}
+
+.topbar a {
+color: #eee;
+font-size: 110%;
+}
+
+.dropdown-menu {
+background-color: #440000;
+background-repeat: repeat-x;
+background-image: -khtml-gradient(linear, left top, left bottom, from(#440000), to(#780000));
+background-image: -moz-linear-gradient(top, #440000, #780000);
+background-image: -ms-linear-gradient(top, #440000, #780000);
+background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #440000), color-stop(100%, #780000));
+background-image: -webkit-linear-gradient(top, #440000, #780000);
+background-image: -o-linear-gradient(top, #440000, #780000);
+background-image: linear-gradient(top, #440000, #780000);
+}
+
+.nav .dropdown-menu li a {
+color: #eee;
+}
+
 #aec_center {
 text-align: center;
+}
+
+#aec_center .aec_userinfobox_sub {
+width: 95%;
 }
 
 label {
@@ -178,7 +234,7 @@ overflow: hidden;
 table.aecadminform {
 background-color: #ddd;
 border-collapse: collapse;
-margin: 8px 0 15px;
+margin: -7px 0 15px;
 width: 100%;
 box-shadow: 0 1px 7px #000 inset, 0 0 10px #999;
 }
@@ -372,22 +428,6 @@ text-style:italic;
 padding:5px 0 5px 30px;
 }
 
-.aec_tabheading {
-}
-
-.aec_tabheading h2 {
-padding: 2px;
-margin: 0px;
-}
-
-.aec_tabheading img.plogo {
-border-color: #fff;
-border-style: solid;
-border-width: 0px 12px 8px 12px;
-float: right;
-margin-top: -100px;
-}
-
 .aec_readout {
 font-align: right;
 margin: 0 auto;
@@ -515,26 +555,32 @@ float: inherit !important;
 height: inherit;
 line-height: inherit;
 }
-/*
-div#submenu-box {
+
+#submenu-box {
 display: none !important;
 }
 
-div#toolbar-box {
+#toolbar-box {
 display: none !important;
 }
-*/
-div#element-box div.t, div#element-box div.t div.t, div#element-box div.t div.t div.t,
-div#element-box div.b, div#element-box div.b div.b, div#element-box div.b div.b div.b {
+
+#element-box div.t, #element-box div.t div.t, #element-box div.t div.t div.t,
+#element-box div.b, #element-box div.b div.b, #element-box div.b div.b div.b {
+height: 0;
 background: none;
+padding: 0;
 }
 
-div#element-box div.m {
+#element-box div.m {
 border: none;
-padding: none !important;
+padding: 0 !important;
+
 }
 
-div#content-box div.m {
-padding: none;
+#content-box div.m {
+padding: 0;
 }
 
+#content-box .padding {
+padding: 0;
+}

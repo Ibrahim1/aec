@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4120' );
+define( '_AEC_REVISION', '4139' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -6045,6 +6045,9 @@ class aecHTML
 				break;
 			case 'userinfobox_sub':
 				$return = '<div class="aec_userinfobox_sub">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
+				break;
+			case 'userinfobox_sub_stacked':
+				$return = '<div class="aec_userinfobox_sub form-stacked">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
 			case 'fieldset':
 				$return = '<div class="input">' . "\n"
