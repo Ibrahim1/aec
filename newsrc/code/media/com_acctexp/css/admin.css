@@ -60,6 +60,32 @@ color: #eee;
 font-size: 110%;
 }
 
+div.adminheading {
+float: left;
+padding: 10px;
+}
+
+div.adminheading img {
+float: left;
+padding-left: 10px;
+}
+
+div.adminheading h2 {
+float: left;
+padding-left: 40px;
+}
+
+ul.pills {
+margin: 0px auto;
+width: 600px;
+padding-top: 24px;
+}
+
+.pill-content {
+float: left;
+width: 100%;
+}
+
 #aec_center {
 text-align: center;
 padding: 12px;
