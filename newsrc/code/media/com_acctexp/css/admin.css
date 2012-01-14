@@ -49,16 +49,24 @@ background-image: -o-linear-gradient(top, #440000, #780000);
 background-image: linear-gradient(top, #440000, #780000);
 }
 
+.topbar div > ul .menu-dropdown li a,
+.nav .menu-dropdown li a,
+.topbar div > ul .dropdown-menu li a,
 .nav .dropdown-menu li a {
 color: #eee;
 }
 
+.tabs, .pills {
+font-size: 110%;
+}
+
 #aec_center {
 text-align: center;
+padding: 12px;
 }
 
 #aec_center .aec_userinfobox_sub {
-width: 95%;
+padding-bottom: 18px;
 }
 
 label {
@@ -121,7 +129,6 @@ clear: both;
 }
 
 div.central_quicksearch {
-width: 95%;
 clear: both;
 padding: 6px 12px 12px 12px;
 margin: 12px auto;
@@ -132,7 +139,6 @@ margin: 12px auto;
 }
 
 div.central_notices {
-width: 95%;
 clear: both;
 padding: 6px 12px 12px 12px;
 margin: 12px auto;

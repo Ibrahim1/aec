@@ -25,6 +25,7 @@ class processor_payments_gateway extends POSTprocessor
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck';
 		$info['recurring']		= 2;
 		$info['notify_trail_thanks']	= 1;
+		$info['recurring_buttons']		= 2;
 
 		return $info;
 	}
@@ -102,7 +103,7 @@ class processor_payments_gateway extends POSTprocessor
 		$var['pg_transaction_order_number']		= $request->invoice->id;
 
 		$var['pg_ts_hash']	= $this->hmac( implode(" | ", array(	$var['pg_api_login_id'],
-																	pg_transaction_type,
+																	"",
 																	$var['pg_version_number'],
 																	$var['pg_total_amount'],
 																	$var['pg_utc_time'],
@@ -116,146 +117,14 @@ class processor_payments_gateway extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice'] = $post['invoice'];
-		$response['amount_currency'] = $post['mc_currency'];
-
-		switch ( $post['txn_type'] ) {
-			case "web_accept":
-			case "subscr_payment":
-				$response['amount_paid'] = $post['mc_gross'];
-				break;
-			case "subscr_signup":
-			case "subscr_cancel":
-			case "subscr_modify":
-				// Docs suggest mc_amount1 is set with signup, cancel or modify
-				// Testing shows otherwise
-				$response['amount_paid'] = isset($post['mc_amount1']) ? $post['mc_amount1'] : null;
-			break;
-			case "subscr_failed":
-			case "subscr_eot":
-				// May create a problem somewhere donw the line, but NULL
-				// is a more representative value
-			break;
-			default:
-			// Either a fraud attempt, or PayPal has changed its API
-			// TODO: Raise Error
-			$response['amount_paid'] = null;
-		}
+		aecDebug($post);
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$path = '/cgi-bin/webscr';
-		if ($this->settings['testmode']) {
-			$ppurl = 'https://www.sandbox.payments_gateway.com' . $path;
-		} else {
-			$ppurl = 'https://www.payments_gateway.com' . $path;
-		}
 
-		$req = 'cmd=_notify-validate';
-
-		if ( isset( $post['planparams'] ) ) {
-			unset( $post['planparams'] );
-		}
-
-		foreach ( $post as $key => $value ) {
-			$value = str_replace('\r\n', "QQLINEBREAKQQ", $value);
-
-			$value = urlencode( stripslashes($value) );
-
-			$value = str_replace( "QQLINEBREAKQQ", "\r\n", $value ); // linebreak fix
-
-			$req .= "&$key=".$value;
-		}
-
-		$res = $this->transmitRequest( $ppurl, $path, $req );
-
-		$response['fullresponse']['payments_gateway_verification'] = $res;
-
-		$receiver_email	= null;
-		$txn_type		= null;
-		$payment_type	= null;
-		$payment_status	= null;
-		$reason_code	= null;
-		$pending_reason	= null;
-
-		$getposts = array( 'txn_type', 'receiver_email', 'payment_status', 'payment_type', 'reason_code', 'pending_reason' );
-
-		foreach ( $getposts as $n ) {
-			if ( isset( $post[$n] ) ) {
-				$$n = $post[$n];
-			} else {
-				$$n = null;
-			}
-		}
-
-		$response['valid'] = 0;
-
-		if ( strcmp( $receiver_email, $this->settings['business'] ) != 0 && $this->settings['checkbusiness'] ) {
-			$response['pending_reason'] = 'checkbusiness error';
-		} elseif ( ( strcmp( $res, 'VERIFIED' ) == 0 ) || ( empty( $res ) && !empty( $this->settings['brokenipnmode'] ) ) ) {
-			if ( empty( $res ) && !empty( $this->settings['brokenipnmode'] ) ) {
-				$response['fullresponse']['payments_gateway_verification'] = "MANUAL_OVERRIDE";
-			}
-
-			$recurring = ( $txn_type == 'subscr_payment' ) || ( $txn_type == 'recurring_payment' );
-
-			// Process payment: Paypal Subscription & Buy Now
-			if ( ( $txn_type == 'web_accept' ) || $recurring ) {
-
-				if ( ( strcmp( $payment_type, 'instant' ) == 0 ) && ( strcmp( $payment_status, 'Pending' ) == 0 ) ) {
-					$response['pending_reason'] = $post['pending_reason'];
-				} elseif ( strcmp( $payment_type, 'instant' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					$response['valid']			= 1;
-				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Pending' ) == 0 ) {
-					if ( $this->settings['acceptpendingecheck'] ) {
-						if ( is_object( $invoice ) ) {
-							$invoice->addParams( array( 'acceptedpendingecheck' => 1 ) );
-							$invoice->storeload();
-						}
-
-						$response['valid']			= 1;
-					} else {
-						$response['pending']		= 1;
-						$response['pending_reason'] = 'echeck';
-					}
-				} elseif ( strcmp( $payment_type, 'echeck' ) == 0 && strcmp( $payment_status, 'Completed' ) == 0 ) {
-					$response['valid']		= 1;
-
-					if ( is_object( $invoice ) ) {
-						if ( isset( $invoice->params['acceptedpendingecheck'] ) ) {
-							$response['valid']		= 0;
-							$response['duplicate']	= 1;
-						}
-					}
-				}
-			} elseif ( strcmp( $txn_type, 'subscr_signup' ) == 0 ) {
-				$response['pending']			= 1;
-				$response['pending_reason']	 = 'signup';
-			} elseif ( ( strcmp( $txn_type, 'paymentreview' ) == 0 ) || ( strcmp( $pending_reason, 'paymentreview' ) == 0 ) ) {
-				$response['pending']			= 1;
-				$response['pending_reason']	 = 'paymentreview';
-			} elseif ( strcmp( $pending_reason, 'intl' ) == 0 ) {
-				$response['pending']			= 1;
-				$response['pending_reason']	 	= 'no auto-accept';
-				$response['explanation']		= 'Configure your PayPal Account to automatically accept incoming payments.';
-			} elseif ( strcmp( $txn_type, 'subscr_eot' ) == 0 ) {
-				$response['eot']				= 1;
-			} elseif ( strcmp( $txn_type, 'subscr_failed' ) == 0 ) {
-				$response['null']				= 1;
-				$response['explanation']		= 'Subscription Payment Failed';
-			} elseif ( strcmp( $txn_type, 'subscr_cancel' ) == 0 ) {
-				$response['cancel']				= 1;
-			} elseif ( strcmp( $reason_code, 'refund' ) == 0 ) {
-				$response['delete']				= 1;
-			} elseif ( strcmp( $payment_status, 'Reversed' ) == 0 ) {
-				$response['chargeback']			= 1;
-			}
-		} else {
-			$response['pending_reason']			= 'error: ' . $res;
-		}
 
 		return $response;
 	}

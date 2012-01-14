@@ -111,6 +111,15 @@ class HTML_myCommon
 
 		echo '</div>';
 	}
+
+	function getHeader( $page, $image )
+	{
+		?><div class="adminheading">
+			<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/<?php echo $image; ?>.png">
+			<h2><?php echo JText::_($page); ?></h2>
+		</div>
+		<?php
+	}
 }
 
 class formParticles
@@ -358,7 +367,7 @@ class HTML_AcctExp
 
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
-			$tabs = new JPaneTabs(0);
+			$tabs = new bsPaneTabs;
 			echo $tabs->startPane( 'settings' );
 
 			echo $tabs->startPanel(JText::_('AEC_HEAD_PLAN_INFO'), JText::_('AEC_HEAD_PLAN_INFO'));
@@ -1157,23 +1166,26 @@ class HTML_AcctExp
         }
 		</script>
 		<form action="index.php" method="post" name="adminForm">
-		<table class="adminheading">
-			<tr>
-				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_settings.png) no-repeat left;">
-					<?php echo JText::_('AEC_HEAD_SETTINGS'); ?>
-				</th>
-			</tr>
-			<tr><td></td></tr>
-		</table>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' ); ?>
 		<?php
 
-		$tabs = new JPaneTabs(0);
-		echo $tabs->startPane( 'settings' );
+		$tabs = new bsPaneTabs;
+		$tabs->startTabs();
 
-		$i = 0;
-
+		$first = true;
 		foreach( $tab_data as $tab ) {
-			echo $tabs->startPanel( $tab[2], $tab[0] );
+			$tabs->newTab( strtolower( str_replace( ' ', '-', $tab[0] ) ), $tab[0], $first );
+
+			$first = false;
+		}
+
+		$tabs->endTabs();
+		$tabs->startPanes();
+
+		$first = true;
+		foreach( $tab_data as $tab ) {
+			$tabs->startPane( strtolower( str_replace( ' ', '-', $tab[0] ) ), $first );
+			$first = false;
 
 			echo '<table width="100%" class="aecadminform"><tr><td>';
 
@@ -1183,23 +1195,22 @@ class HTML_AcctExp
 				// Skip to next tab if last item in this one reached
 				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
 					echo '</td></tr></table>';
-					echo $tabs->endPanel();
+					$tabs->endPane();
 					continue 2;
 				}
 			}
 
 			echo '</td></tr></table>';
-			echo $tabs->endPanel();
+			$tabs->endPane();
 		}
+
+		$tabs->endPanes();
 		?>
 		<input type="hidden" name="id" value="1" />
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>
 		<?php
-		// close pane and include footer
-		echo $tabs->endPane();
-
 		echo $aecHTML->loadJS();
 
 		if ( _EUCA_DEBUGMODE ) {
@@ -1292,7 +1303,7 @@ class HTML_AcctExp
 		</table>
 		<?php
 
-		$tabs = new JPaneTabs(0);
+		$tabs = new bsPaneTabs;
 		echo $tabs->startPane( 'settings' );
 		if ( !empty( $aecHTML->pp ) ) {
 			echo $tabs->startPanel( $aecHTML->pp->processor_name, $aecHTML->pp->info['longname'] );
@@ -1550,7 +1561,7 @@ class HTML_AcctExp
 	{
 		//$Returnid = intval( aecGetParam( $_REQUEST, 'Returnid', 0 ) );
 
-		$tabs = new JPaneTabs(0);
+		$tabs = new bsPaneTabs;
 		JHTML::_('behavior.tooltip');
 		HTML_myCommon::startCommon();
 
@@ -1841,7 +1852,7 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 						<?php
-						$tabs = new JPaneTabs(0);
+						$tabs = new bsPaneTabs;
 		                echo $tabs->startPane( 'editSubscriptionPlan' );
 		                echo $tabs->startPanel( JText::_('PAYPLAN_DETAIL_TITLE'), JText::_('PAYPLAN_DETAIL_TITLE') );
 		                ?>
@@ -2285,7 +2296,7 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 						<?php
-						$tabs = new JPaneTabs(0);
+						$tabs = new bsPaneTabs;
 		                echo $tabs->startPane( 'editItemGroup' );
 		                echo $tabs->startPanel( JText::_('ITEMGROUP_DETAIL_TITLE'), JText::_('ITEMGROUP_DETAIL_TITLE') );
 		                ?>
@@ -2540,7 +2551,7 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 						<?php
-						$tabs = new JPaneTabs(0);
+						$tabs = new bsPaneTabs;
 		                echo $tabs->startPane( 'editSubscriptionPlan' );
 		                echo $tabs->startPanel( JText::_('COUPON_DETAIL_TITLE'), JText::_('COUPON_DETAIL_TITLE') ); ?>
 		                <h2><?php echo JText::_('COUPON_DETAIL_TITLE'); ?></h2>
@@ -3533,56 +3544,29 @@ class bsPaneTabs
 	{
 		static $loaded = false;
 
-		parent::__construct($params);
-
 		if (!$loaded) {
-			$this->_loadBehavior($params);
+			self::_loadBehavior($params);
 			$loaded = true;
 		}
 	}
 
-	function &getInstance( $behavior = 'Tabs', $params = array())
-	{
-		$classname = 'bsPane'.$behavior;
-		$instance = new $classname($params);
+	function startTabs() { echo '<ul class="pills">'; }
+	function endTabs() { echo '</ul>'; }
+	function newTab( $handle, $title, $current=false ) { echo '<li' . ( $current ? ' class="active"' : '' ) . '><a href="#' . $handle . '">' . $title . '</a></li>'; }
 
-		return $instance;
-	}
+	function startPanes() { echo '<div class="pill-content">'; }
+	function endPanes() { echo '</div>'; }
 
-	function startPane( $id ) { return '<dl class="tabs" id="'.$id.'">'; }
-
-	function endPane() { return "</dl>"; }
-
-	function startPanel( $text, $id ) { return '<dt id="'.$id.'"><span>'.$text.'</span></dt><dd>'; }
-
-	function endPanel() { return "</dd>"; }
+	function startPane( $id, $current=false ) { echo '<div id="' . $id . '" class="tab-pane' . ( $current ? ' active' : '' ) . '">'; }
+	function endPane() { echo "</div>"; }
 
 	function _loadBehavior($params = array())
 	{
-		// Include mootools framework
-		JHTML::_('behavior.mootools');
-
 		$document =& JFactory::getDocument();
-
-		$options = '{';
-		$opt['onActive']		= (isset($params['onActive'])) ? $params['onActive'] : null ;
-		$opt['onBackground'] = (isset($params['onBackground'])) ? $params['onBackground'] : null ;
-		$opt['display']		= (isset($params['startOffset'])) ? (int)$params['startOffset'] : null ;
-		foreach ($opt as $k => $v)
-		{
-			if ($v) {
-				$options .= $k.': '.$v.',';
-			}
-		}
-		if (substr($options, -1) == ',') {
-			$options = substr($options, 0, -1);
-		}
-		$options .= '}';
-
-		$js = '		window.addEvent(\'domready\', function(){ $$(\'dl.tabs\').each(function(tabs){ new JTabs(tabs, '.$options.'); }); });';
-
-		$document->addScriptDeclaration( $js );
-		$document->addScript( JURI::root(true). '/media/system/js/tabs.js' );
+		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-tabs.js' );
+		$document->addScriptDeclaration( 'jQuery(document).ready(function($) {
+			jQuery(\'.pills\').pills()
+		});' );
 	}
 }
 
