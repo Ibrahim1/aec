@@ -6006,7 +6006,7 @@ class aecHTML
 
 				$editor = &JFactory::getEditor();
 
-				$return .= '<div>' . $editor->display( $name,  $value , '100%', '250', '50', '20' ) . '</div>';
+				$return .= '<div>' . $editor->display( $name,  $value , '', '250', '50', '20' ) . '</div>';
 
 				$return .= '</div></div>';
 				break;

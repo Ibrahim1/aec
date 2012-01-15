@@ -61,8 +61,8 @@
 
 .toggleswitch-inner > .toggleswitch-on {
   background: #7ebb00;
-  width: 4em;
-  padding-left: 1em;
+  width: 3.8em;
+  padding-left: 1.2em;
 }
 
 .toggleswitch-inner > .toggleswitch-off {

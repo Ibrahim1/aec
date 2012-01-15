@@ -2504,10 +2504,10 @@ function editSubscriptionPlan( $id, $option )
 		$custompar[$pp->id]['name'] = $pp->info['longname'];
 		$custompar[$pp->id]['params'] = array();
 
-		$params['processor_' . $pp->id] = array( 'checkbox', JText::_('PAYPLAN_PROCESSORS_ACTIVATE_NAME'), JText::_('PAYPLAN_PROCESSORS_ACTIVATE_DESC')  );
+		$params['processor_' . $pp->id] = array( 'toggle', JText::_('PAYPLAN_PROCESSORS_ACTIVATE_NAME'), JText::_('PAYPLAN_PROCESSORS_ACTIVATE_DESC')  );
 		$custompar[$pp->id]['params'][] = 'processor_' . $pp->id;
 
-		$params[$pp->id . '_aec_overwrite_settings'] = array( 'checkbox', JText::_('PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME'), JText::_('PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC') );
+		$params[$pp->id . '_aec_overwrite_settings'] = array( 'toggle', JText::_('PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_NAME'), JText::_('PAYPLAN_PROCESSORS_OVERWRITE_SETTINGS_DESC') );
 		$custompar[$pp->id]['params'][] = $pp->id . '_aec_overwrite_settings';
 
 		$customparams = $pp->getCustomPlanParams();
