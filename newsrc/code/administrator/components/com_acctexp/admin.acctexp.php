@@ -4169,7 +4169,7 @@ function editCSS( $option ) {
 	if ( $fp = fopen( $file, 'r' ) ) {
 		$content = fread( $fp, filesize( $file ) );
 		$content = htmlspecialchars( $content );
-		General_css::editCSSSource( $content, $option );
+		HTML_AcctExp::editCSS( $content, $option );
 	} else {
 		aecRedirect( 'index.php?option='. $option .'&task=editCSS', sprintf( JText::_('AEC_MSG_OP_FAILED'), $file ) );
 	}
@@ -5602,7 +5602,10 @@ function importData( $option )
 
 	$aecHTML->form		= $show_form;
 	$aecHTML->done		= $done;
-	$aecHTML->errors	= $import->errors;
+
+	if ( !empty( $import->errors ) ) {
+		$aecHTML->errors	= $import->errors;
+	}
 
 	if ( !$show_form && !$done ) {
 		$aecHTML->user_rows = $rows;

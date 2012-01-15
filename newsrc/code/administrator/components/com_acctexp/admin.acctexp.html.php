@@ -16,6 +16,7 @@ class HTML_myCommon
 	function ContentLegend()
 	{
 		?>
+		<div class="aeclegend">
 		<table cellspacing="0" cellpadding="4" border="0" align="center">
 			<tr align="center">
 				<td><?php echo aecHTML::Icon( 'accept.png', JText::_('AEC_CMN_PUBLISHED') ); ?></td>
@@ -29,6 +30,7 @@ class HTML_myCommon
 				<td colspan="6" align="center"><?php echo JText::_('AEC_CMN_CLICK_TO_CHANGE'); ?></td>
 			</tr>
 		</table>
+		</div>
 		<?php
 	}
 
@@ -113,13 +115,22 @@ class HTML_myCommon
 		echo '</div>';
 	}
 
-	function getHeader( $page, $image )
+	function getHeader( $page, $image, $extratext="" )
 	{
 		?><div class="adminheading">
 			<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/<?php echo $image; ?>.png">
-			<h2><?php echo JText::_($page); ?></h2>
+			<h2><?php echo JText::_($page) . $extratext; ?></h2>
 		</div>
 		<?php
+	}
+
+	function getButtons( $buttons, $object )
+	{
+		?><div class="aec-buttons"><?php
+		foreach ( $buttons as $action => $button ) {
+			echo '<a class="btn ' . $button['style'] . '" onclick="javascript: submitbutton(\'' . $action . $object . '\')" href="#">' . $button['text'] . '</a>';
+		}
+		?></div><?php
 	}
 }
 
@@ -241,68 +252,6 @@ class formParticles
 				<?php
 				break;
 		}
-	}
-}
-
-class General_css
-{
-	function editCSSSource( &$content, $option )
-	{
-		$file = JPATH_SITE . '/media/' . $option . '/css/site.css';
-		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
-			<table cellpadding="1" cellspacing="1" border="0" width="100%">
-				<tr>
-					<td width="180">
-						<table class="adminheading">
-							<tr><th class="templates" style="color: #586c79;"><?php echo JText::_('AEC_HEAD_CSS_EDITOR'); ?></th></tr>
-						</table>
-					</td>
-					<td width="260">
-						<span class="componentheading"><?php echo $file; ?>:&nbsp;
-							<?php echo is_writable( $file ) ? '<span style="color:green;">' . JText::_('AEC_CMN_WRITEABLE') . '</span>' : '<span style="color:red;">' . JText::_('AEC_CMN_UNWRITEABLE') . '</span>'; ?>
-						</span>
-					</td>
-					<?php
-					jimport('joomla.filesystem.path');
-
-					$chmod = JPath::canChmod( $file );
-
-					if ( $chmod ) {
-						if ( is_writable( $file ) ) { ?>
-							<td>
-								<input type="checkbox" id="disable_write" name="disable_write" value="1" />
-								<label for="disable_write"><?php echo JText::_('AEC_CMN_UNWRITE_AFTER_SAVE'); ?></label>
-							</td>
-							<?php
-						} else {
-							?>
-							<td>
-								<input type="checkbox" id="enable_write" name="enable_write" value="1" />
-								<label for="enable_write"><?php echoJText::_('AEC_CMN_OVERRIDE_WRITE_PROT'); ?></label>
-							</td>
-							<?php
-						}
-					} ?>
-				</tr>
-			</table>
-			<table class="aecadminform">
-				<tr>
-					<th>
-						<?php echo $file; ?>
-					</th>
-				</tr>
-				<tr>
-					<td>
-						<textarea style="width:100%;height:500px" cols="110" rows="25" name="filecontent" class="inputbox"><?php echo $content; ?></textarea>
-					</td>
-				</tr>
-			</table>
-			<input type="hidden" name="option" value="<?php echo $option;?>" />
-			<input type="hidden" name="task" value="" />
-		</form>
-
-		<?php HTML_myCommon::endCommon();
 	}
 }
 
@@ -831,7 +780,7 @@ class HTML_AcctExp
 		<div class="topbar">
 			<div class="topbar-inner">
 			<div class="container">
-				<a href="<?php echo $linkroot.'central' ?>" class="brand">AEC</a>
+				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
 				<ul class="nav">
 				<?php foreach ( $menu as $m ) { ?>
 					<li class="dropdown" data-dropdown="dropdown">
@@ -845,10 +794,10 @@ class HTML_AcctExp
 						</ul>
 					</li>
 				<?php } ?>
-				<form action="" class="pull-left">
+				</ul>
+				<form action="" class="pull-right">
 					<input type="text" placeholder="Quicksearch">
 				</form>
-	          </ul>
 	        </div>
 	      </div>
 	    </div>
@@ -1154,8 +1103,15 @@ class HTML_AcctExp
         }
 		</script>
 		<form action="index.php" method="post" name="adminForm">
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' ); ?>
 		<?php
+		
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' );
+
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+						);
+		HTML_myCommon::getButtons( $buttons, 'Settings' );
 
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
@@ -1212,7 +1168,17 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-			<?php HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'aec_symbol_settings' ); ?>
+			<?php
+			HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'aec_symbol_settings' );
+
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') )
+							);
+			HTML_myCommon::getButtons( $buttons, 'Processor' );
+			?>
+			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
 					<th width="1%">#</th>
@@ -1252,6 +1218,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
  		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showProcessors" />
@@ -1272,9 +1239,14 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' ); ?>
-		<?php echo JText::_('AEC_HEAD_SETTINGS') . ': ' . ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ); ?>
 		<?php
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', ': ' . ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
+
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+						);
+		HTML_myCommon::getButtons( $buttons, 'Processor' );
 
 		$tabs = new bsPaneTabs;
 		echo $tabs->startPane( 'settings' );
@@ -1325,16 +1297,17 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
+			<?php HTML_myCommon::getHeader( $action[1], 'aec_symbol_' . $action[0] ); ?>
+			<div class="aec-filters">
 			<table class="adminheading" cellpadding="2" cellspacing="2">
 				<tr>
-					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_<?php echo $action[0]; ?>.png) no-repeat left;"><?php echo $action[1]; ?></th>
 					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
 					<td style="text-align:center;">
 						<?php if ( $action[0] != 'manual' ) { ?>
 							<?php echo JText::_('PLAN_FILTER') . '<br />' . $lists['filterplanid'] ?>
 						<?php } ?>
 						<?php echo JText::_('ORDER_BY') . '<br />' . $lists['orderNav']; ?>
-						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
+						<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
 					</td>
 					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
 						<?php echo $lists['planid']; ?>
@@ -1350,6 +1323,8 @@ class HTML_AcctExp
 				</tr>
 				<tr><td></td></tr>
 			</table>
+			</div>
+			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
 					<th width="20">#</th>
@@ -1422,6 +1397,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
 			<input type="hidden" name="task" value="showActive" />
 			<input type="hidden" name="returnTask" value="showActive" />
@@ -1440,14 +1416,15 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
+			<?php HTML_myCommon::getHeader( 'MI_TITLE', 'aec_symbol_microintegrations' ); ?>
+			<div class="aec-filters">
 			<table class="adminheading">
 				<tr>
-					<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_microintegrations.png) no-repeat left;"><?php echo JText::_('MI_TITLE'); ?></th>
 					<td style="text-align:center;">
 						<?php echo JText::_('PLAN_FILTER'); ?>
 						&nbsp;
-						<?php echo $lists['filterplanid'] . JText::_('ORDER_BY') . $lists['orderNav']; ?>
-						<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
+						<?php echo $lists['filterplanid'] . '<br />' . JText::_('ORDER_BY') . $lists['orderNav']; ?>
+						<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
 					</td>
 					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
 						<br />
@@ -1459,6 +1436,9 @@ class HTML_AcctExp
 				</tr>
 				<tr><td></td></tr>
 			</table>
+			</div>
+
+			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
 					<th width="20">#</th>
@@ -1515,6 +1495,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
  		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showMicroIntegrations" />
@@ -1554,15 +1535,15 @@ class HTML_AcctExp
 			*/
 			/* ]]> */
 		</script>
-		<table class="adminheading">
-			<tr>
-				<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_microintegrations.png) no-repeat left;">
-					<?php echo JText::_('AEC_HEAD_MICRO_INTEGRATION'); ?>:&nbsp;
-					<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
-	        	</th>
-			</tr>
-		</table>
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' ); ?>
+		<?php
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
+
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+						);
+		HTML_myCommon::getButtons( $buttons, 'MicroIntegration' );
+		?>
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -1672,10 +1653,24 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-			<?php HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'aec_symbol_plans' ); ?>
-			<?php echo $lists['filter_group'];?>
-			<input type="button" class="button" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
+			<?php
+			HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'aec_symbol_plans' );
 
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN') ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN') )
+							);
+			HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
+			?>
+			<div class="aec-filters">
+			<?php echo $lists['filter_group'];?>
+			<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
+			</div>
+
+			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
 					<th width="1%">#</th>
@@ -1770,6 +1765,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
  		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showSubscriptionPlans" />
@@ -1803,8 +1799,16 @@ class HTML_AcctExp
 			}
 			/* ]]> */
 		</script>
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_PLAN_INFO', 'aec_symbol_plans' ); ?>
-		<small><?php echo $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW'); ?></small>
+		<?php
+		HTML_myCommon::getHeader( 'AEC_HEAD_PLAN_INFO', 'aec_symbol_plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW') );
+
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+						);
+		HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
+
+		?>
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
@@ -2121,8 +2125,20 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-			<?php HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'aec_symbol_itemgroups' ); ?>
+			<?php
+			HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'aec_symbol_itemgroups' );
 
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN') ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN') )
+							);
+			HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
+			?>
+
+			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
 					<th width="1%">#</th>
@@ -2211,6 +2227,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
  		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showItemGroups" />
@@ -2231,7 +2248,15 @@ class HTML_AcctExp
 		$user = &JFactory::getUser();
 
 		HTML_myCommon::startCommon(); ?>
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups' ); ?>
+		<?php
+		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups' );
+
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+						);
+		HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
+		?>
 		<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
 			<table cellspacing="0" cellpadding="0" width="100%">
@@ -2401,8 +2426,18 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
-			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'aec_symbol_coupons' . ( $type ? '_static' : '' ) ); ?>
+			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'aec_symbol_coupons' . ( $type ? '_static' : '' ) );
 
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN') ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN') )
+							);
+			HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );?>
+
+			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
 					<th width="1%">#</th>
@@ -2448,6 +2483,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
  		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
@@ -2471,10 +2507,18 @@ class HTML_AcctExp
 
 		JHTML::_('behavior.calendar');
 		?>
-		<?php HTML_myCommon::getHeader( 'AEC_COUPON', 'aec_symbol_coupons' . ($type ? '_static' : '') ); ?>
+		<?php
+		HTML_myCommon::getHeader( 'AEC_COUPON', 'aec_symbol_coupons' . ($type ? '_static' : '') );
+		
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+						);
+		HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );
+		?>
 		<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
-		<!--<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data" onLoad="swap();" >-->
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
+			<div class="aecadminform">
 			<table cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td valign="top">
@@ -2602,12 +2646,12 @@ class HTML_AcctExp
 					</td>
 				</tr>
 			</table>
+			</div>
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />
 		</form>
-		<!--<script>swap();</script>-->
 
 		<?php
 		if ( _EUCA_DEBUGMODE ) {
@@ -2625,9 +2669,12 @@ class HTML_AcctExp
 		?>
 		<form action="index.php" method="post" name="adminForm">
 		<?php HTML_myCommon::getHeader( 'INVOICE_TITLE', 'aec_symbol_invoices' ); ?>
+		<div class="aec-filters">
 			<?php echo JText::_('INVOICE_SEARCH'); ?>: <br />
 			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
+		</div>
 
+		<div class="aecadminform">
 		<table class="adminlist">
 		<thead><tr>
 			<th width="5%">#</th>
@@ -2670,6 +2717,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="invoices" />
 		<input type="hidden" name="returnTask" value="invoices" />
@@ -2692,9 +2740,12 @@ class HTML_AcctExp
 		?>
 		<form action="index.php" method="post" name="adminForm">
 		<?php HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'aec_symbol_history' ); ?>
-		<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
-		<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
+		<div class="aec-filters">
+			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
+			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
+		</div>
 
+		<div class="aecadminform">
 		<table class="adminlist">
 		<thead><tr>
 			<th align="left" width="15%"><?php echo JText::_('HISTORY_USERID'); ?></th>
@@ -2754,6 +2805,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="history" />
 		<input type="hidden" name="returnTask" value="history" />
@@ -2773,9 +2825,12 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm">
 		<?php HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'aec_symbol_eventlog' ); ?>
-		<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
-		<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
+		<div class="aec-filters">
+			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
+			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
+		</div>
 
+		<div class="aecadminform">
 		<table class="adminlist">
 		<thead><tr>
 			<th align="left" width="30"><?php echo JText::_('AEC_CMN_ID'); ?></th>
@@ -2811,6 +2866,7 @@ class HTML_AcctExp
 			</tr>
 		</tfoot>
 		</table>
+		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="eventlog" />
 		<input type="hidden" name="returnTask" value="eventlog" />
@@ -3255,7 +3311,12 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'aec_symbol_import' ); ?>
+		<?php
+		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'aec_symbol_import' );
+
+		$buttons = array( 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') ) );
+		HTML_myCommon::getButtons( $buttons, 'Settings' );
+		?>
 		<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec_userinfobox_sub">
 			<table style="width:100%;">
 				<tr>
@@ -3263,7 +3324,7 @@ class HTML_AcctExp
 						<?php
 						if ( $aecHTML->done ) {
 							echo '<p>Import ran through successfully.</p>';
-							if ( $aecHTML->errors ) {
+							if ( !empty( $aecHTML->errors ) ) {
 								echo '<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
 							}
 						} elseif ( $aecHTML->form ) {
@@ -3324,7 +3385,13 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'aec_symbol_export' ); ?>
+		<?php
+		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'aec_symbol_export' );
+
+		$buttons = array( 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') ) );
+
+		HTML_myCommon::getButtons( $buttons, 'Settings' );
+		?>
 
 		<table class="aecadminform">
 			<tr>
@@ -3380,6 +3447,70 @@ class HTML_AcctExp
 		<?php
 
  		HTML_myCommon::endCommon();
+	}
+
+	function editCSS( &$content, $option )
+	{
+		$file = JPATH_SITE . '/media/' . $option . '/css/site.css';
+		HTML_myCommon::startCommon();
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_CSS_EDITOR', 'aec_symbol_css' );
+
+		$buttons = array(	'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+						);
+		HTML_myCommon::getButtons( $buttons, 'CSS' );
+		?>
+		<form action="index.php" method="post" name="adminForm">
+			<div class="aec-filters">
+			<table cellpadding="1" cellspacing="1" border="0" width="100%">
+				<tr>
+					<td>
+						<span class="componentheading"><?php echo $file; ?>:&nbsp;
+							<?php echo is_writable( $file ) ? '<span style="color:green;">' . JText::_('AEC_CMN_WRITEABLE') . '</span>' : '<span style="color:red;">' . JText::_('AEC_CMN_UNWRITEABLE') . '</span>'; ?>
+						</span>
+					</td>
+					<?php
+					jimport('joomla.filesystem.path');
+
+					$chmod = JPath::canChmod( $file );
+
+					if ( $chmod ) {
+						if ( is_writable( $file ) ) { ?>
+							<td>
+								<input type="checkbox" id="disable_write" name="disable_write" value="1" />
+								<label for="disable_write"><?php echo JText::_('AEC_CMN_UNWRITE_AFTER_SAVE'); ?></label>
+							</td>
+							<?php
+						} else {
+							?>
+							<td>
+								<input type="checkbox" id="enable_write" name="enable_write" value="1" />
+								<label for="enable_write"><?php echoJText::_('AEC_CMN_OVERRIDE_WRITE_PROT'); ?></label>
+							</td>
+							<?php
+						}
+					} ?>
+				</tr>
+			</table>
+			</div>
+			<table class="aecadminform">
+				<tr>
+					<th>
+						<?php echo $file; ?>
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<textarea style="width:100%;height:500px" cols="110" rows="25" name="filecontent" class="inputbox"><?php echo $content; ?></textarea>
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="task" value="" />
+		</form>
+
+		<?php HTML_myCommon::endCommon();
 	}
 
 	/**

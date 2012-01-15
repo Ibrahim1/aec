@@ -37,6 +37,10 @@ color: #eee;
 font-size: 110%;
 }
 
+.topbar div > ul, .nav {
+padding-left: 10px;
+}
+
 .dropdown-menu {
 background-color: #440000;
 background-repeat: repeat-x;
@@ -56,13 +60,18 @@ background-image: linear-gradient(top, #440000, #780000);
 color: #eee;
 }
 
+a.brand {
+background: url(../images/admin/icons/aec_logo_small_footer.png) no-repeat scroll 50% 0 transparent;
+text-indent: 36px;
+}
+
 .tabs, .pills {
 font-size: 110%;
 }
 
 div.adminheading {
 float: left;
-padding: 10px;
+padding: 20px 10px 0px;
 }
 
 div.adminheading img {
@@ -86,6 +95,33 @@ float: left;
 width: 100%;
 }
 
+table.adminlist {
+}
+
+.aec-buttons {
+float: right;
+margin-top: 48px;
+padding-right: 32px;
+}
+
+.aec-filters {
+margin: 0 auto;
+width: 650px;
+padding: 6px 15px;
+background: #eee;
+-webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75);
+-moz-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75);
+box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75);
+border-bottom-right-radius: 10px;
+-moz-border-radius-bottomright: 10px;
+border-bottom-left-radius: 10px;
+-moz-border-radius-bottomleft: 10px;
+}
+
+.aec-buttons .btn {
+margin-left: 6px;
+}
+
 #aec_center {
 text-align: center;
 padding: 12px;
@@ -97,10 +133,16 @@ padding-bottom: 18px;
 
 label {
 width: 200px;
+padding-right: 36px;
 }
 
 form .input {
-margin-left: 220px;
+margin-left: 0;
+text-align: center;
+}
+
+form .clearfix {
+margin-bottom: 10px;
 }
 
 #aec_center h3 {
@@ -263,12 +305,22 @@ form#adminForm {
 overflow: hidden;
 }
 
-table.aecadminform {
+.aecadminform {
 background-color: #ddd;
 border-collapse: collapse;
-margin: -7px 0 15px;
+margin: 16px 0;
 width: 100%;
-box-shadow: 0 1px 7px #000 inset, 0 0 10px #999;
+box-shadow: 0 1px 7px #000 inset, 0 2px 8px #555;
+float: left;
+}
+
+.aeclegend {
+float: left;
+width: 100%;
+}
+
+#aec_center .aecadminform {
+margin: -7px 0 15px;
 }
 
 .userinfobox {
