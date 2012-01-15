@@ -99,7 +99,7 @@ class processor_payments_gateway extends POSTprocessor
 		$var['pg_return_method']				= 'AsyncPost';
 
 		$var['pg_version_number']				= '1.0';
-		$var['pg_utc_time']						= (int) gmdate('U');
+		$var['pg_utc_time']						= floor( (gmdate('U') - 621355968000000000) / 10000000 );
 		$var['pg_transaction_order_number']		= $request->invoice->id;
 
 		$var['pg_ts_hash']	= $this->hmac( implode(" | ", array(	$var['pg_api_login_id'],
