@@ -23,20 +23,6 @@
 	</files>
 	<administration>
 		<menu link="option=com_acctexp&amp;task=showCentral" img="../media/com_acctexp/images/admin/icons/aec_logo_tiny.png">Account Expiration Control</menu>
-		<submenu>
-            <menu link="option=com_acctexp&amp;task=showCentral" img="../media/com_acctexp/images/admin/icons/aec_logo_tiny.png">AEC Central</menu>
-            <menu link="option=com_acctexp&amp;task=showSubscriptionPlans" img="../media/com_acctexp/images/admin/icons/aec_symbol_plans_tiny.png">Plans</menu>
-            <menu link="option=com_acctexp&amp;task=showActive" img="../media/com_acctexp/images/admin/icons/aec_symbol_active_tiny.png">Active</menu>
-            <menu link="option=com_acctexp&amp;task=showPending" img="../media/com_acctexp/images/admin/icons/aec_symbol_pending_tiny.png">Pending</menu>
-            <menu link="option=com_acctexp&amp;task=showCancelled" img="../media/com_acctexp/images/admin/icons/aec_symbol_cancelled_tiny.png">Cancelled</menu>
-            <menu link="option=com_acctexp&amp;task=showClosed" img="../media/com_acctexp/images/admin/icons/aec_symbol_closed_tiny.png">Close</menu>
-            <menu link="option=com_acctexp&amp;task=showExcluded" img="../media/com_acctexp/images/admin/icons/aec_symbol_excluded_tiny.png">Excluded</menu>
-            <menu link="option=com_acctexp&amp;task=showManual" img="../media/com_acctexp/images/admin/icons/aec_symbol_manual_tiny.png">Non-Members</menu>
-            <menu link="option=com_acctexp&amp;task=showMicroIntegrations" img="../media/com_acctexp/images/admin/icons/aec_symbol_mi_tiny.png">MicroIntegrations</menu>
-            <menu link="option=com_acctexp&amp;task=showSettings" img="../media/com_acctexp/images/admin/icons/aec_symbol_settings_tiny.png">Settings</menu>
-            <menu link="option=com_acctexp&amp;task=showProcessors" img="../media/com_acctexp/images/admin/icons/aec_symbol_settings_tiny.png">Processors</menu>
-            <menu link="option=com_acctexp&amp;task=eventlog" img="../media/com_acctexp/images/admin/icons/aec_symbol_eventlog_tiny.png">Eventlog</menu>
-        </submenu>
 		<files folder="administrator/components/com_acctexp">
 			<file>index.html</file>
 			<file>admin.acctexp.php</file>
