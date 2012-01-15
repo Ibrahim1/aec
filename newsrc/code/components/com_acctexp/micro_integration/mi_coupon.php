@@ -26,12 +26,12 @@ class mi_coupon
 	{
 		$settings = array();
 		$settings['master_coupon']		= array( 'inputC' );
-		$settings['switch_type']		= array( 'list_yesno' );
-		$settings['bind_subscription']	= array( 'list_yesno' );
+		$settings['switch_type']		= array( 'toggle' );
+		$settings['bind_subscription']	= array( 'toggle' );
 		$settings['create_new_coupons']	= array( 'inputC' );
 		$settings['max_reuse']			= array( 'inputC' );
-		$settings['mail_out_coupons']	= array( 'list_yesno' );
-		$settings['always_new_coupons']	= array( 'list_yesno' );
+		$settings['mail_out_coupons']	= array( 'toggle' );
+		$settings['always_new_coupons']	= array( 'toggle' );
 		$settings['inc_old_coupons']	= array( 'inputC' );
 
 		$settings['sender']				= array( 'inputE' );
@@ -40,7 +40,7 @@ class mi_coupon
 		$settings['recipient']			= array( 'inputE' );
 
 		$settings['subject']			= array( 'inputE' );
-		$settings['text_html']			= array( 'list_yesno' );
+		$settings['text_html']			= array( 'toggle' );
 
 		if ( !isset( $this->settings['text_html'] ) ) {
 			$this->settings['text_html'] = 0;

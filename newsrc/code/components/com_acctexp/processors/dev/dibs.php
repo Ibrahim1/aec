@@ -63,7 +63,7 @@ class processor_dibs extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['merchant'] 			= array( 'inputC' );
 		$settings['md5_key1'] 			= array( 'inputC' );
 		$settings['md5_key2'] 			= array( 'inputC' );

@@ -66,15 +66,15 @@ class processor_authorize_cim extends PROFILEprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['login'] 				= array( 'inputC' );
 		$settings['transaction_key']	= array( 'inputC' );
 		$settings['currency']			= array( 'list_currency' );
-		$settings['promptAddress']		= array( 'list_yesno' );
-		$settings['minimalAddress']		= array( 'list_yesno' );
-		$settings['extendedAddress']	= array( 'list_yesno' );
-		$settings['dedicatedShipping']	= array( 'list_yesno' );
-		$settings['noechecks']			= array( 'list_yesno' );
+		$settings['promptAddress']		= array( 'toggle' );
+		$settings['minimalAddress']		= array( 'toggle' );
+		$settings['extendedAddress']	= array( 'toggle' );
+		$settings['dedicatedShipping']	= array( 'toggle' );
+		$settings['noechecks']			= array( 'toggle' );
 		$settings['totalOccurrences']	= array( 'inputA' );
 		$settings['item_name']			= array( 'inputE' );
 		$settings['customparams']		= array( 'inputD' );

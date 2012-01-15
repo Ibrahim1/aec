@@ -67,14 +67,14 @@ class processor_paypal_wpp extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']				= array( 'list_yesno' );
-		$settings['brokenipnmode']			= array( 'list_yesno' );
-		$settings['allow_express_checkout']	= array( 'list_yesno' );
+		$settings['testmode']				= array( 'toggle' );
+		$settings['brokenipnmode']			= array( 'toggle' );
+		$settings['allow_express_checkout']	= array( 'toggle' );
 		$settings['currency']				= array( 'list_currency' );
 
 		$settings['api_user']				= array( 'inputC' );
 		$settings['api_password']			= array( 'inputC' );
-		$settings['use_certificate']		= array( 'list_yesno' );
+		$settings['use_certificate']		= array( 'toggle' );
 		$settings['certificate_path']		= array( 'inputC' );
 		$settings['signature'] 				= array( 'inputC' );
 		$settings['country'] 				= array( 'list' );

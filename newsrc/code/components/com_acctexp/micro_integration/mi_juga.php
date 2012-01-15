@@ -65,14 +65,14 @@ class mi_juga
 		$settings['lists']['enroll_group']		= JHTML::_( 'select.genericlist', $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps );
 		$settings['lists']['enroll_group_exp']	= JHTML::_( 'select.genericlist', $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps_exp );
 
-		$settings['set_remove_group']			= array( 'list_yesno' );
-		$settings['set_enroll_group']			= array( 'list_yesno' );
+		$settings['set_remove_group']			= array( 'toggle' );
+		$settings['set_enroll_group']			= array( 'toggle' );
 		$settings['enroll_group']				= array( 'list' );
-		$settings['set_remove_group_exp']		= array( 'list_yesno' );
-		$settings['set_enroll_group_exp']		= array( 'list_yesno' );
+		$settings['set_remove_group_exp']		= array( 'toggle' );
+		$settings['set_enroll_group_exp']		= array( 'toggle' );
 		$settings['enroll_group_exp']			= array( 'list' );
-		$settings['rebuild']					= array( 'list_yesno' );
-		$settings['remove']						= array( 'list_yesno' );
+		$settings['rebuild']					= array( 'toggle' );
+		$settings['remove']						= array( 'toggle' );
 
 		return $settings;
 	}

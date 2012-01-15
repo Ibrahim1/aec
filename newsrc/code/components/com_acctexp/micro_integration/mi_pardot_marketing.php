@@ -33,8 +33,8 @@ class mi_pardot_marketing extends MI
         $settings['pardot_lists_del']		= array( 'inputD' );
         $settings['pardot_lists_exp']		= array( 'inputD' );
         $settings['pardot_lists_exp_del']	= array( 'inputD' );
-		$settings['rebuild']				= array( 'list_yesno' );
-		$settings['remove']					= array( 'list_yesno' );
+		$settings['rebuild']				= array( 'toggle' );
+		$settings['remove']					= array( 'toggle' );
 
 		if ( !empty( $this->settings['email'] ) && !empty( $this->settings['password'] ) && !empty( $this->settings['user_key'] ) ) {
 			$db = &JFactory::getDBO();

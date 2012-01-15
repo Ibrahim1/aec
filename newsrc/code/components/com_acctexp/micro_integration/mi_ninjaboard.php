@@ -74,17 +74,17 @@ class mi_ninjaboard
 
 		$settings['lists']['subsc_action']	= JHTML::_('select.genericlist', $subs, 'subsc_action', 'size="3"', 'value', 'text', $sub );
 
-		$settings['set_group']				= array( 'list_yesno' );
+		$settings['set_group']				= array( 'toggle' );
 		$settings['group']					= array( 'list' );
-		$settings['set_remove_group']		= array( 'list_yesno' );
+		$settings['set_remove_group']		= array( 'toggle' );
 		$settings['remove_group']			= array( 'list' );
-		$settings['set_group_exp']			= array( 'list_yesno' );
+		$settings['set_group_exp']			= array( 'toggle' );
 		$settings['group_exp']				= array( 'list' );
-		$settings['set_remove_group_exp']	= array( 'list_yesno' );
+		$settings['set_remove_group_exp']	= array( 'toggle' );
 		$settings['remove_group_exp']		= array( 'list' );
-		$settings['set_groups_exclude']		= array( 'list_yesno' );
+		$settings['set_groups_exclude']		= array( 'toggle' );
 		$settings['groups_exclude']			= array( 'list' );
-		$settings['set_clear_groups']		= array( 'list_yesno' );
+		$settings['set_clear_groups']		= array( 'toggle' );
 		$settings['subsc_action']			= array( 'list' );
 
 		return $settings;

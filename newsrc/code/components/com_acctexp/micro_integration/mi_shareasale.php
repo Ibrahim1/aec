@@ -26,7 +26,7 @@ class mi_shareasale
 	{
 		$settings = array();
 		$settings['merchantID']			= array( 'inputC' );
-		$settings['onlycustomparams']	= array( 'list_yesno' );
+		$settings['onlycustomparams']	= array( 'toggle' );
 		$settings['customparams']		= array( 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

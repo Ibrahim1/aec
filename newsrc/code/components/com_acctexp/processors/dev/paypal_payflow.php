@@ -66,7 +66,7 @@ class processor_paypal_payflow extends XMLprocessor
 	{
 		$settings = array();
 		$settings['aec_experimental']		= array( "p" );
-		$settings['testmode']				= array( 'list_yesno' );
+		$settings['testmode']				= array( 'toggle' );
 		$settings['currency']				= array( 'list_currency' );
 
 		$settings['api_user']				= array( 'inputC' );

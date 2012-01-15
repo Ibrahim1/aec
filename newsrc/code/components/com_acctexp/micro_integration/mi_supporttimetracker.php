@@ -81,7 +81,7 @@ class mi_supporttimetracker extends MI
 		$settings = array();
 
 		$settings['log_minutes']	= array( 'inputC', 'Log Minutes', 'The amount of minutes you want to log for this user account. You can also supply a negative value to correct a mistake' );
-		$settings['remove_last']	= array( 'list_yesno', 'Remove Last', 'If you want to correct your last log, set this option to Yes, provide details below and save.' );
+		$settings['remove_last']	= array( 'toggle', 'Remove Last', 'If you want to correct your last log, set this option to Yes, provide details below and save.' );
 		$settings['details']		= array( 'inputD', 'Details', 'Give details on the update' );
 
 		if ( empty( $history ) ) {

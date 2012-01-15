@@ -46,7 +46,7 @@ class processor_google_checkout extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['merchant_id'] 		= array( 'inputC' );
 		$settings['merchant_key']		= array( 'inputC' );
 		$settings['maximum_recur']		= array( 'inputB' );

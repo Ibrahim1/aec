@@ -59,7 +59,7 @@ class processor_moneybookers extends POSTprocessor
 		$settings['logo_url']				= array( 'inputE');
 		$settings['language'] 				= array( 'list_language' );
 		$settings['payment_methods']		= array( 'list');
-		$settings['hide_login']				= array( 'list_yesno');
+		$settings['hide_login']				= array( 'toggle');
 		$settings['currency'] 				= array( 'list_currency' );
 		$settings['confirmation_note']		= array( 'inputE');
 		$settings['item_name']				= array( 'inputE');

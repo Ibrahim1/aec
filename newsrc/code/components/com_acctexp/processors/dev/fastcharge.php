@@ -65,7 +65,7 @@ class processor_fastcharge extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']				= array( 'list_yesno' );
+		$settings['testmode']				= array( 'toggle' );
 		$settings['currency']				= array( 'list_currency' );
 
 		$settings['acctid']					= array( 'inputC' );
@@ -73,7 +73,7 @@ class processor_fastcharge extends XMLprocessor
 		$settings['merchantpin']			= array( 'inputC' );
 		$settings['country'] 				= array( 'list' );
 
-		$settings['allow_echecks']			= array( 'list_yesno' );
+		$settings['allow_echecks']			= array( 'toggle' );
 
 		$settings['cancel_note']			= array( 'inputE' );
 		$settings['item_name']				= array( 'inputE' );

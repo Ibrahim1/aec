@@ -47,7 +47,7 @@ class processor_realex_redirect extends POSTprocessor
 		$settings['merchantid']	= array( 'inputC' );
 		$settings['account']	= array( 'inputC' );
 		$settings['secret']		= array( 'inputC' );
-		$settings['testmode']	= array( 'list_yesno' );
+		$settings['testmode']	= array( 'toggle' );
 		$settings['currency']	= array( 'list_currency' );
 
 		return $settings;

@@ -53,12 +53,12 @@ class mi_fireboard
 		$settings['lists']['group']		= JHTML::_('select.genericlist', $sg, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
 		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $sg, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );
 
-		$settings['set_group']			= array( 'list_yesno' );
+		$settings['set_group']			= array( 'toggle' );
 		$settings['group']				= array( 'list' );
-		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['set_group_exp']		= array( 'toggle' );
 		$settings['group_exp']			= array( 'list' );
-		$settings['rebuild']			= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['rebuild']			= array( 'toggle' );
+		$settings['remove']				= array( 'toggle' );
 
 		return $settings;
 	}

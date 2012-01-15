@@ -46,7 +46,7 @@ class processor_alertpay extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['merchant']		= array( 'inputC' );
 		$settings['securitycode']	= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );

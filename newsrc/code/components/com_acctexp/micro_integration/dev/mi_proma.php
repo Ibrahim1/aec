@@ -38,14 +38,14 @@ class mi_proma
 		}
 
         $settings = array();
-		$settings['set_group']			= array( 'list_yesno' );
-		$settings['set_default']		= array( 'list_yesno' );
+		$settings['set_group']			= array( 'toggle' );
+		$settings['set_default']		= array( 'toggle' );
 		$settings['group']				= array( 'list' );
-		$settings['set_group_exp']		= array( 'list_yesno' );
-		$settings['set_default_exp']	= array( 'list_yesno' );
+		$settings['set_group_exp']		= array( 'toggle' );
+		$settings['set_default_exp']	= array( 'toggle' );
 		$settings['group_exp']			= array( 'list' );
-		$settings['rebuild']			= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['rebuild']			= array( 'toggle' );
+		$settings['remove']				= array( 'toggle' );
 
 		$group = 0;
 		if ( !empty( $this->settings['group'] ) ) {

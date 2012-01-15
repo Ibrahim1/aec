@@ -38,7 +38,7 @@ class processor_generic_vpc extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['vpc_URL']			= array( 'inputD' );
 		$settings['vpc_Version']		= array( 'inputC' );

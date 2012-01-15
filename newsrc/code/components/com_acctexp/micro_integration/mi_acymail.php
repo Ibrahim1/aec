@@ -58,7 +58,7 @@ class mi_acymail extends MI
 		}
 
 		$xsettings = array();
-		$xsettings['user_checkbox']		= array( 'list_yesno' );
+		$xsettings['user_checkbox']		= array( 'toggle' );
 		$xsettings['custominfo']		= array( 'inputD' );
 
 		return array_merge( $xsettings, $settings );

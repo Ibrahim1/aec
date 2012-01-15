@@ -29,8 +29,8 @@ class mi_eventlog extends MI
 		$settings['tags']			= array( 'inputE' );
 		$settings['text']			= array( 'inputD' );
 		$settings['level']			= array( 'list' );
-		$settings['force_notify']	= array( 'list_yesno' );
-		$settings['force_email']	= array( 'list_yesno' );
+		$settings['force_notify']	= array( 'toggle' );
+		$settings['force_email']	= array( 'toggle' );
 		$settings['params']			= array( 'inputD' );
 
 		$settings = $this->autoduplicatesettings( $settings, array(), true, true );

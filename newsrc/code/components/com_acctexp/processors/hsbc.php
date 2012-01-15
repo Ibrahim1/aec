@@ -65,16 +65,16 @@ class processor_hsbc extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['clientid'] 			= array( 'inputC' );
 		$settings['name'] 				= array( 'inputC' );
 		$settings['password'] 			= array( 'inputC' );
-		$settings['pas']				= array( 'list_yesno' );
+		$settings['pas']				= array( 'toggle' );
 		$settings['pas_id'] 			= array( 'inputC' );
 		$settings['pas_url'] 			= array( 'inputC' );
 		$settings['currency']			= array( 'list_currency' );
-		$settings['promptAddress']		= array( 'list_yesno' );
+		$settings['promptAddress']		= array( 'toggle' );
 		$settings['item_name']			= array( 'inputE' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );

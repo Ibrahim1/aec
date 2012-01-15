@@ -27,9 +27,9 @@ class mi_webex
 		$settings = array();
 		$settings['hosted_name']		= array( 'inputC' );
 		$settings['pid']				= array( 'inputC' );
-		$settings['create_user']		= array( 'list_yesno' );
-		$settings['activate_user']		= array( 'list_yesno' );
-		$settings['deactivate_user']	= array( 'list_yesno' );
+		$settings['create_user']		= array( 'toggle' );
+		$settings['activate_user']		= array( 'toggle' );
+		$settings['deactivate_user']	= array( 'toggle' );
 		//$settings['customparams']		= array( 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

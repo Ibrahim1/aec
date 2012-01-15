@@ -40,7 +40,7 @@ class mi_email_multi extends MI
 				$settings[$pf.'cc']				= array( 'inputE', sprintf( JText::_('MI_MI_EMAIL_MULTI_CC_NAME'), $i+1 ), JText::_('MI_MI_EMAIL_MULTI_CC_DESC') );
 				$settings[$pf.'bcc']			= array( 'inputE', sprintf( JText::_('MI_MI_EMAIL_MULTI_BCC_NAME'), $i+1 ), JText::_('MI_MI_EMAIL_MULTI_BCC_DESC') );
 				$settings[$pf.'subject']		= array( 'inputE', sprintf( JText::_('MI_MI_EMAIL_MULTI_SUBJECT_NAME'), $i+1 ), JText::_('MI_MI_EMAIL_MULTI_SUBJECT_DESC') );
-				$settings[$pf.'text_html']		= array( 'list_yesno', sprintf( JText::_('MI_MI_EMAIL_MULTI_TEXT_HTML_NAME'), $i+1 ), JText::_('MI_MI_EMAIL_MULTI_TEXT_HTML_DESC') );
+				$settings[$pf.'text_html']		= array( 'toggle', sprintf( JText::_('MI_MI_EMAIL_MULTI_TEXT_HTML_NAME'), $i+1 ), JText::_('MI_MI_EMAIL_MULTI_TEXT_HTML_DESC') );
 				$settings[$pf.'text']			= array( ( !empty( $this->settings[$pf.'text_html'] ) ? 'editor' : 'inputD' ), sprintf( JText::_('MI_MI_EMAIL_MULTI_TEXT_NAME'), $i+1 ), JText::_('MI_MI_EMAIL_MULTI_TEXT_DESC') );
 			}
 		}

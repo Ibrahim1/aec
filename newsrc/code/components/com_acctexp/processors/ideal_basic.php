@@ -50,7 +50,7 @@ class processor_ideal_basic extends POSTprocessor
 	{
 		$settings = array();
 		$settings['merchantid']			= array( 'inputC' );
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['testmodestage']		= array( 'inputC' );
 		$settings['bank']				= array( 'list' );

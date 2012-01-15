@@ -64,7 +64,7 @@ class mi_mailchimp
 		$settings['list_unsub']		= array( 'list' );
 		$settings['list_exp']		= array( 'list' );
 		$settings['list_exp_unsub']	= array( 'list' );
-		$settings['user_checkbox']	= array( 'list_yesno' );
+		$settings['user_checkbox']	= array( 'toggle' );
 		$settings['custominfo']		= array( 'inputD' );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

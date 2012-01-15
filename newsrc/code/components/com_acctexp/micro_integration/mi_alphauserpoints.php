@@ -31,7 +31,7 @@ class mi_alphauserpoints extends MI
 		$settings = $this->autoduplicatesettings( $settings );
 
 		$xsettings = array();
-		$xsettings['checkout_discount']			= array( 'list_yesno' );
+		$xsettings['checkout_discount']			= array( 'toggle' );
 		$xsettings['checkout_conversion']		= array( 'inputB' );
 
 		return array_merge( $xsettings, $settings );

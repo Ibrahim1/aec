@@ -26,7 +26,7 @@ class mi_amigos
 	{
 		$settings = array();
 		$settings['amigos_domain']	= array( 'inputC' );
-		$settings['amigos_curl']	= array( 'list_yesno' );
+		$settings['amigos_curl']	= array( 'toggle' );
 
 		return $settings;
 	}

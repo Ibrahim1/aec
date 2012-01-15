@@ -26,10 +26,10 @@ class mi_communitybuilder
 		$db = &JFactory::getDBO();
 
 		$settings = array();
-		$settings['approve']		= array( 'list_yesno' );
-		$settings['unapprove_exp']	= array( 'list_yesno' );
-		$settings['set_fields']		= array( 'list_yesno' );
-		$settings['set_fields_exp']	= array( 'list_yesno' );
+		$settings['approve']		= array( 'toggle' );
+		$settings['unapprove_exp']	= array( 'toggle' );
+		$settings['set_fields']		= array( 'toggle' );
+		$settings['set_fields_exp']	= array( 'toggle' );
 
 		$query = 'SELECT `name`, `title`'
 				. ' FROM #__comprofiler_fields'

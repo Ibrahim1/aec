@@ -50,7 +50,7 @@ class processor_nelnet extends URLprocessor
 	{
 		$settings = array();
 		$settings['currency']		= array( 'list_currency' );
-		//$settings['testmode']		= array( 'list_yesno' );
+		//$settings['testmode']		= array( 'toggle' );
 		$settings['publisher']		= array( "inputC","Batch ID Number", "The Batch ID number assigned to you by NelNet QuickPay");
 		$settings['secret_key']		= array( "inputC","Secret Key","Used to encrypt and protect transactions" );
 		$settings['info']			= array( 'fieldset' );

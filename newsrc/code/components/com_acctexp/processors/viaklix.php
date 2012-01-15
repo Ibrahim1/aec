@@ -45,7 +45,7 @@ class processor_viaklix extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['accountid']		= array( 'inputC' );
 		$settings['userid']			= array( 'inputC' );

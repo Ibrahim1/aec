@@ -31,18 +31,18 @@ class mi_jomsocial extends MI
 
 		$xsettings = array();
 		$xsettings['aectab_discount']			= array( 'tab', 'Userpoints Discount', 'Userpoints Discount' );
-		$xsettings['checkout_discount']			= array( 'list_yesno' );
+		$xsettings['checkout_discount']			= array( 'toggle' );
 		$xsettings['checkout_conversion']		= array( 'inputB' );
 		$xsettings['aectab_action']				= array( 'tab', 'Userpoints - Action', 'Userpoints - Action' );
 
 		$settings = array();
-		$settings['overwrite_existing']	= array( 'list_yesno' );
+		$settings['overwrite_existing']	= array( 'toggle' );
 		$settings['assign_group']		= array( 'inputC' );
 		$settings['remove_group']		= array( 'inputC' );
 		$settings['assign_group_exp']	= array( 'inputC' );
 		$settings['remove_group_exp']	= array( 'inputC' );
-		$settings['set_fields']			= array( 'list_yesno' );
-		$settings['set_fields_exp']		= array( 'list_yesno' );
+		$settings['set_fields']			= array( 'toggle' );
+		$settings['set_fields_exp']		= array( 'toggle' );
 
 		$query = 'SELECT `id`, `name`'
 				. ' FROM #__community_fields'

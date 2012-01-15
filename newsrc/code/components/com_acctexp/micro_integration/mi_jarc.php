@@ -26,9 +26,9 @@ class mi_jarc
 		$app = JFactory::getApplication();
 
 		$settings = array();
-		$settings['create_affiliates']	= array( 'list_yesno' );
-		$settings['log_payments']		= array( 'list_yesno' );
-		$settings['log_sales']			= array( 'list_yesno' );
+		$settings['create_affiliates']	= array( 'toggle' );
+		$settings['log_payments']		= array( 'toggle' );
+		$settings['log_sales']			= array( 'toggle' );
 
 		return $settings;
 	}

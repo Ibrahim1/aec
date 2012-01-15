@@ -51,14 +51,14 @@ class processor_payer extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['debugmode']		= array( 'list' );
 
 		$settings['agentid']		= array( 'inputC' );
 		$settings['key1']			= array( 'inputE' );
 		$settings['key2']			= array( 'inputE' );
 
-		$settings['invoice_tax']	= array( 'list_yesno' );
+		$settings['invoice_tax']	= array( 'toggle' );
 		$settings['tax']			= array( 'inputA' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );

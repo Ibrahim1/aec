@@ -28,13 +28,13 @@ class mi_g2 extends MI
 
 		$settings = array();
 		$settings['gallery2path']		= array( 'inputD' );
-		$settings['set_groups']			= array( 'list_yesno' );
+		$settings['set_groups']			= array( 'toggle' );
 		$settings['groups']				= array( 'list' );
-		$settings['set_groups_user']	= array( 'list_yesno' );
+		$settings['set_groups_user']	= array( 'toggle' );
 		$settings['groups_sel_amt']		= array( 'inputA' );
 		$settings['groups_sel_scope']	= array( 'list' );
-		$settings['del_groups_exp']		= array( 'list_yesno' );
-		$settings['create_albums']		= array( 'list_yesno' );
+		$settings['del_groups_exp']		= array( 'toggle' );
+		$settings['create_albums']		= array( 'toggle' );
 		$settings['albums_name']		= array( 'inputC' );
 
 		$query = 'SELECT `g_id`, `g_groupType`, `g_groupName`'

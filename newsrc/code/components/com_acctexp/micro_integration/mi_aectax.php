@@ -30,11 +30,11 @@ class mi_aectax
 
 		$settings = array();
 		$settings['custominfo']			= array( 'inputD' );
-		$settings['vat_no_request']		= array( 'list_yesno' );
-		$settings['vat_countrylist']	= array( 'list_yesno' );
+		$settings['vat_no_request']		= array( 'toggle' );
+		$settings['vat_countrylist']	= array( 'toggle' );
 		$settings['vat_merchcountry']	= array( 'list' );
-		$settings['vat_localtax']		= array( 'list_yesno' );
-		$settings['vat_removeonvalid']	= array( 'list_yesno' );
+		$settings['vat_localtax']		= array( 'toggle' );
+		$settings['vat_removeonvalid']	= array( 'toggle' );
 		$settings['vat_percentage']		= array( 'inputC' );
 		$settings['vat_mode']			= array( 'list' );
 		$settings['vat_validation']		= array( 'list' );

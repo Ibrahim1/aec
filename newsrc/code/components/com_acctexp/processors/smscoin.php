@@ -42,7 +42,7 @@ class processor_smscoin extends POSTprocessor
 
 		$settings['s_purse']		= array('inputE');
 		$settings['password']		= array('inputE');
-		$settings['s_clear_amount']	= array('list_yesno');
+		$settings['s_clear_amount']	= array('toggle');
 		$settings['s_description']	= array('inputE');
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );

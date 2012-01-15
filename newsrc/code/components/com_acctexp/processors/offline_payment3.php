@@ -66,8 +66,8 @@ class processor_offline_payment3 extends processor
 		$settings['info']				= array( 'editor' );
 		$settings['currency']			= array( 'list_currency' );
 
-		$settings['email_info']			= array( 'list_yesno' );
-		$settings['email_link']			= array( 'list_yesno' );
+		$settings['email_info']			= array( 'toggle' );
+		$settings['email_link']			= array( 'toggle' );
 
 		$settings['sender']				= array( 'inputE' );
 		$settings['sender_name']		= array( 'inputE' );
@@ -76,7 +76,7 @@ class processor_offline_payment3 extends processor
 		$settings['bcc']				= array( 'inputE' );
 
 		$settings['subject']			= array( 'inputE' );
-		$settings['text_html']			= array( 'list_yesno' );
+		$settings['text_html']			= array( 'toggle' );
 		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
 
  		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

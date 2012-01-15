@@ -25,7 +25,7 @@ class mi_mysql_query
 	function Settings()
 	{
         $settings = array();
-		$settings['use_altdb']		= array( 'list_yesno' );
+		$settings['use_altdb']		= array( 'toggle' );
 		$settings['dbms']			= array( 'inputC' );
 		$settings['dbhost']			= array( 'inputC' );
 		$settings['dbuser']			= array( 'inputC' );

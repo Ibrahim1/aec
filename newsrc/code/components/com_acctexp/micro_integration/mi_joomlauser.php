@@ -25,8 +25,8 @@ class mi_joomlauser
 	function Settings()
 	{
 		$settings = array();
-		$settings['activate']		= array( 'list_yesno' );
-		$settings['block']			= array( 'list_yesno' );
+		$settings['activate']		= array( 'toggle' );
+		$settings['block']			= array( 'toggle' );
 		$settings['username']		= array( 'inputD' );
 		$settings['username_rand']	= array( 'inputC' );
 		$settings['password']		= array( 'inputD' );

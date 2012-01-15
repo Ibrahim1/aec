@@ -79,11 +79,11 @@ class mi_vbulletin
 
 		$settings = array();
 
-		$settings['rebuild']		= array( 'list_yesno' );
-		$settings['remove']			= array( 'list_yesno' );
+		$settings['rebuild']		= array( 'toggle' );
+		$settings['remove']			= array( 'toggle' );
 
 		$settings['aectab_dat']		= array( 'tab', 'Database', 'Database' );
-		$settings['use_altdb']		= array( 'list_yesno' );
+		$settings['use_altdb']		= array( 'toggle' );
 		$settings['dbms']			= array( 'inputC' );
 		$settings['dbhost']			= array( 'inputC' );
 		$settings['dbuser']			= array( 'inputC' );
@@ -103,7 +103,7 @@ class mi_vbulletin
 				$settings['aectab_exp']		= array( 'tab', 'Groups (Expiration)', 'Groups (Expiration)' );
 			}
 
-			$settings['set_'.$si]	= array( 'list_yesno' );
+			$settings['set_'.$si]	= array( 'toggle' );
 			$settings[$si]			= array( 'list' );
 
 			$v = null;
@@ -126,7 +126,7 @@ class mi_vbulletin
 
 		if ( !empty( $userfields ) ) {
 			$settings['aectab_cuu']				= array( 'tab', 'Create User', 'Create User' );
-			$settings['create_user']			= array( 'list_yesno' );
+			$settings['create_user']			= array( 'toggle' );
 
 			foreach ( $userfields as $key ) {
 				$ndesc = JText::_('MI_MI_VBULLETIN_CREATE_FIELD') . ": " . $key;
@@ -135,7 +135,7 @@ class mi_vbulletin
 			}
 
 			$settings['aectab_uuu']				= array( 'tab', 'Update User', 'Update User' );
-			$settings['update_user']			= array( 'list_yesno' );
+			$settings['update_user']			= array( 'toggle' );
 
 			foreach ( $userfields as $key ) {
 				$ndesc = JText::_('MI_MI_VBULLETIN_UPDATE_FIELD') . ": " . $key;
@@ -143,7 +143,7 @@ class mi_vbulletin
 				$settings['update_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 			}
 
-			$settings['update_user_exp']		= array( 'list_yesno' );
+			$settings['update_user_exp']		= array( 'toggle' );
 
 			foreach ( $userfields as $key ) {
 				$ndesc = JText::_('MI_MI_VBULLETIN_UPDATE_FIELD_EXP') . ": " . $key;

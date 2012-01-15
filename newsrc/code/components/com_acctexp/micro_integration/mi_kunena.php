@@ -63,8 +63,8 @@ class mi_kunena extends MI
 		}
 
 		$xsettings = array();
-		$xsettings['rebuild']	= array( 'list_yesno' );
-		$xsettings['remove']	= array( 'list_yesno' );
+		$xsettings['rebuild']	= array( 'toggle' );
+		$xsettings['remove']	= array( 'toggle' );
 
 		return array_merge( $xsettings, $settings );
 	}

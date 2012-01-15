@@ -58,16 +58,16 @@ class mi_mosets_tree extends MI
 		// field type; name; variable value, description, extra (variable name)
 
 		$settings = array();
-		$settings['allow']				= array( 'list_yesno' );
-		$settings['allow_exp']			= array( 'list_yesno' );
-		$settings['unlimited']			= array( 'list_yesno' );
-		$settings['unlimited_exp']		= array( 'list_yesno' );
+		$settings['allow']				= array( 'toggle' );
+		$settings['allow_exp']			= array( 'toggle' );
+		$settings['unlimited']			= array( 'toggle' );
+		$settings['unlimited_exp']		= array( 'toggle' );
 		$settings['add_listings']		= array( 'inputA' );
 		$settings['set_listings']		= array( 'inputA' );
-		$settings['publish_all']		= array( 'list_yesno' );
-		$settings['unpublish_all']		= array( 'list_yesno' );
-		$settings['feature_all']		= array( 'list_yesno' );
-		$settings['unfeature_all']		= array( 'list_yesno' );
+		$settings['publish_all']		= array( 'toggle' );
+		$settings['unpublish_all']		= array( 'toggle' );
+		$settings['feature_all']		= array( 'toggle' );
+		$settings['unfeature_all']		= array( 'toggle' );
 
 		return $settings;
 	}

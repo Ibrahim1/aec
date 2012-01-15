@@ -50,7 +50,7 @@ class processor_moneyproxy extends POSTprocessor
 		$settings['currency']				= array( 'list_currency' );
 		$settings['merchant_id']			= array( 'inputC' );
 		$settings['secret_key']				= array( 'inputC' );
-		$settings['force_client_receipt']	= array( 'list_yesno' );
+		$settings['force_client_receipt']	= array( 'toggle' );
 		$settings['suggested_memo']			= array( 'inputD' );
 		$settings['language']				= array( 'list_language' );
 		$settings['item_name']				= array( 'inputE' );

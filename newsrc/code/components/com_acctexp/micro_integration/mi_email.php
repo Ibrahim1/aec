@@ -37,25 +37,25 @@ class mi_email extends MI
 
 		$settings['aectab_reg']			= array( 'tab', 'Regular Email', 'Regular Email' );
 		$settings['subject']			= array( 'inputE' );
-		$settings['text_html']			= array( 'list_yesno' );
+		$settings['text_html']			= array( 'toggle' );
 		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		$settings['aectab_first']		= array( 'tab', 'First Email', 'First Email' );
 		$settings['subject_first']		= array( 'inputE' );
-		$settings['text_first_html']	= array( 'list_yesno' );
+		$settings['text_first_html']	= array( 'toggle' );
 		$settings['text_first']			= array( !empty( $this->settings['text_first_html'] ) ? 'editor' : 'inputD' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		$settings['aectab_exp']			= array( 'tab', 'Expiration Email', 'Expiration Email' );
 		$settings['subject_exp']		= array( 'inputE' );
-		$settings['text_exp_html']		= array( 'list_yesno' );
+		$settings['text_exp_html']		= array( 'toggle' );
 		$settings['text_exp']			= array( !empty( $this->settings['text_exp_html'] ) ? 'editor' : 'inputD' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		$settings['aectab_preexp']		= array( 'tab', 'Pre-Expiration Email', 'Pre-Expiration Email' );
 		$settings['subject_pre_exp']	= array( 'inputE' );
-		$settings['text_pre_exp_html']	= array( 'list_yesno' );
+		$settings['text_pre_exp_html']	= array( 'toggle' );
 		$settings['text_pre_exp']		= array( !empty( $this->settings['text_pre_exp_html'] ) ? 'editor' : 'inputD' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 

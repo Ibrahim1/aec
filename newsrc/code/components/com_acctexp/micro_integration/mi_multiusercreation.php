@@ -25,9 +25,9 @@ class mi_multiusercreation
 	{
 		$settings = array();
 
-		$settings['expire_child_subscr']	= array( 'list_yesno' );
-		$settings['renew_child_subscr']		= array( 'list_yesno' );
-		$settings['renew_add_child_subscr']	= array( 'list_yesno' );
+		$settings['expire_child_subscr']	= array( 'toggle' );
+		$settings['renew_child_subscr']		= array( 'toggle' );
+		$settings['renew_add_child_subscr']	= array( 'toggle' );
 
 		$settings['sender']					= array( 'inputE' );
 		$settings['sender_name']			= array( 'inputE' );
@@ -35,7 +35,7 @@ class mi_multiusercreation
 		$settings['recipient']				= array( 'inputE' );
 
 		$settings['subject']				= array( 'inputE' );
-		$settings['text_html']				= array( 'list_yesno' );
+		$settings['text_html']				= array( 'toggle' );
 		$settings['text']					= array( $this->settings['text_html'] ? 'editor' : 'inputD' );
 		$settings['text_userlistitem']		= array( $this->settings['text_html'] ? 'editor' : 'inputD' );
 

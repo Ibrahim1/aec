@@ -114,7 +114,7 @@ class mi_phpbb3
 
 		$settings = array();
 
-		$settings['use_altdb']		= array( 'list_yesno' );
+		$settings['use_altdb']		= array( 'toggle' );
 		$settings['dbms']			= array( 'inputC' );
 		$settings['dbhost']			= array( 'inputC' );
 		$settings['dbuser']			= array( 'inputC' );
@@ -133,21 +133,21 @@ class mi_phpbb3
 			$settings['lists'][$si]	= JHTML::_( 'select.genericlist', $sg, $si.'[]', 'size="10" multiple="true"', 'value', 'text', $v );
 		}
 
-		$settings['set_group']				= array( 'list_yesno' );
+		$settings['set_group']				= array( 'toggle' );
 		$settings['group']					= array( 'list' );
-		$settings['set_remove_group']		= array( 'list_yesno' );
+		$settings['set_remove_group']		= array( 'toggle' );
 		$settings['remove_group']			= array( 'list' );
-		$settings['set_group_exp']			= array( 'list_yesno' );
+		$settings['set_group_exp']			= array( 'toggle' );
 		$settings['group_exp']				= array( 'list' );
-		$settings['set_remove_group_exp']	= array( 'list_yesno' );
+		$settings['set_remove_group_exp']	= array( 'toggle' );
 		$settings['remove_group_exp']		= array( 'list' );
-		$settings['set_groups_exclude']		= array( 'list_yesno' );
+		$settings['set_groups_exclude']		= array( 'toggle' );
 		$settings['groups_exclude']			= array( 'list' );
-		$settings['set_clear_groups']		= array( 'list_yesno' );
-		$settings['rebuild']				= array( 'list_yesno' );
-		$settings['remove']					= array( 'list_yesno' );
+		$settings['set_clear_groups']		= array( 'toggle' );
+		$settings['rebuild']				= array( 'toggle' );
+		$settings['remove']					= array( 'toggle' );
 
-		$settings['create_user']			= array( 'list_yesno' );
+		$settings['create_user']			= array( 'toggle' );
 
 		$userfields = $this->getUserFields( $phpbbdb );
 
@@ -157,7 +157,7 @@ class mi_phpbb3
 			$settings['create_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
 
-		$settings['update_user']			= array( 'list_yesno' );
+		$settings['update_user']			= array( 'toggle' );
 
 		foreach ( $userfields as $key ) {
 			$ndesc = JText::_('MI_MI_PHPBB3_UPDATE_FIELD') . ": " . $key;
@@ -165,7 +165,7 @@ class mi_phpbb3
 			$settings['update_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
 
-		$settings['update_user_exp']		= array( 'list_yesno' );
+		$settings['update_user_exp']		= array( 'toggle' );
 
 		foreach ( $userfields as $key ) {
 			$ndesc = JText::_('MI_MI_PHPBB3_UPDATE_FIELD_EXP') . ": " . $key;

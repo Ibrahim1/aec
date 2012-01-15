@@ -44,7 +44,7 @@ class processor_paysite_cash extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['siteid']			= array( 'inputC' );
 		$settings['secret']			= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );

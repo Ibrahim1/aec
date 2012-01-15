@@ -43,7 +43,7 @@ class processor_netpay extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['custId']				= array( 'inputC' );
 		$settings['password']			= array( 'inputC' );

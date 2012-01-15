@@ -27,7 +27,7 @@ class mi_age_restriction extends MI
         $settings = array();
 		$settings['min_age']			= array( 'inputA' );
 		$settings['max_age']			= array( 'inputA' );
-		$settings['restrict_calendar']	= array( 'list_yesno' );
+		$settings['restrict_calendar']	= array( 'toggle' );
 
 		return $settings;
 	}

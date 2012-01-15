@@ -48,14 +48,14 @@ class processor_netdebit extends URLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']				= array( 'list_yesno' );
+		$settings['testmode']				= array( 'toggle' );
 		$settings['currency']				= array( 'list_currency' );
 		$settings['content_id']				= array( 'inputC' );
 		$settings['pid']					= array( 'inputC' );
 		$settings['sid']					= array( 'inputC' );
 		$settings['type']					= array( 'list' );
 		$settings['secret']					= array( 'inputC' );
-		$settings['javascript_checkout']	= array( 'list_yesno' );
+		$settings['javascript_checkout']	= array( 'toggle' );
 		$settings['customparams']			= array( 'inputD' );
 
  		$typelist = array();

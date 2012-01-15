@@ -45,10 +45,10 @@ class processor_eway extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['custId']			= array( 'inputC' );
-		$settings['autoRedirect']	= array( 'list_yesno' ) ;
+		$settings['autoRedirect']	= array( 'toggle' ) ;
 		$settings['SiteTitle']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
 		$settings['customparams']	= array( 'inputD' );

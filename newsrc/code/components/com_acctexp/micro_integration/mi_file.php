@@ -26,7 +26,7 @@ class mi_file extends MI
 	{
 		$settings = array();
 		$settings['path']			= array( 'inputE' );
-		$settings['append']			= array( 'list_yesno' );
+		$settings['append']			= array( 'toggle' );
 		$settings['content']		= array( 'inputD' );
 
 		$settings = $this->autoduplicatesettings( $settings, array(), true, true );

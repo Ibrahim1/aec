@@ -66,20 +66,20 @@ class mi_uddeim
         $settings = array();
 		$settings['add_messages']		= array( 'inputA' );
 		$settings['set_messages']		= array( 'inputA' );
-		$settings['set_unlimited']		= array( 'list_yesno' );
+		$settings['set_unlimited']		= array( 'toggle' );
 
-		$settings['unset_unlimited']	= array( 'list_yesno' );
+		$settings['unset_unlimited']	= array( 'toggle' );
 
-		$settings['msg']				= array( 'list_yesno' );
+		$settings['msg']				= array( 'toggle' );
 		$settings['msg_sender']			= array( 'inputD' );
 		$settings['msg_recipient']		= array( 'inputD' );
 		$settings['msg_text']			= array( 'inputE' );
-		$settings['msg_exp']			= array( 'list_yesno' );
+		$settings['msg_exp']			= array( 'toggle' );
 		$settings['msg_exp_sender']		= array( 'inputD' );
 		$settings['msg_exp_recipient']	= array( 'inputD' );
 		$settings['msg_exp_text']		= array( 'inputE' );
 
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['remove']				= array( 'toggle' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );

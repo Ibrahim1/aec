@@ -55,7 +55,7 @@ class processor_ideal_advanced extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['merchantid']		= array( 'inputC' );
 		$settings['acquirer'] 		= array( 'list' );
 		$settings['ideal_sub_id']	= array( 'inputC' );

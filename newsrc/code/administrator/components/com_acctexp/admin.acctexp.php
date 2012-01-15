@@ -1269,56 +1269,56 @@ function editSettings( $option )
 
 	$tab_data = array();
 
-	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox', 33.33 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_ACCESS') );
-	$params['require_subscription']			= array( 'list_yesno', 0 );
-	$params['adminaccess']					= array( 'list_yesno', 0 );
-	$params['manageraccess']				= array( 'list_yesno', 0 );
+	$params['require_subscription']			= array( 'toggle', 0 );
+	$params['adminaccess']					= array( 'toggle', 0 );
+	$params['manageraccess']				= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SYSTEM') );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_EMAIL') );
-	$params['noemails']						= array( 'list_yesno', 0 );
-	$params['nojoomlaregemails']			= array( 'list_yesno', 0 );
+	$params['noemails']						= array( 'toggle', 0 );
+	$params['nojoomlaregemails']			= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_DEBUG') );
-	$params['curl_default']					= array( 'list_yesno', 0 );
-	$params['simpleurls']					= array( 'list_yesno', 0 );
+	$params['curl_default']					= array( 'toggle', 0 );
+	$params['simpleurls']					= array( 'toggle', 0 );
 	$params['error_notification_level']		= array( 'list', 0 );
 	$params['email_notification_level']		= array( 'list', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 33 );
+	$params[] = array( 'userinfobox', 33.33 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
-	$params['plans_first']					= array( 'list_yesno', 0 );
-	$params['integrate_registration']		= array( 'list_yesno', 0 );
-	$params['skip_confirmation']			= array( 'list_yesno', 0 );
-	$params['displayccinfo']				= array( 'list_yesno', 0 );
+	$params['plans_first']					= array( 'toggle', 0 );
+	$params['integrate_registration']		= array( 'toggle', 0 );
+	$params['skip_confirmation']			= array( 'toggle', 0 );
+	$params['displayccinfo']				= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
-	$params['confirmation_display_descriptions']	= array( 'list_yesno', '' );
+	$params['confirmation_display_descriptions']	= array( 'toggle', '' );
 	$params['tos']							= array( 'inputC', '' );
-	$params['tos_iframe']					= array( 'list_yesno', '' );
+	$params['tos_iframe']					= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
-	$params['enable_coupons']				= array( 'list_yesno', 0 );
-	$params['checkout_display_descriptions']	= array( 'list_yesno', '' );
-	$params['checkout_as_gift']				= array( 'list_yesno', '' );
+	$params['enable_coupons']				= array( 'toggle', 0 );
+	$params['checkout_display_descriptions']	= array( 'toggle', '' );
+	$params['checkout_as_gift']				= array( 'toggle', '' );
 	$params['checkout_as_gift_access']		= array( 'list', '' );
-	$params['confirm_as_gift']				= array( 'list_yesno', '' );
+	$params['confirm_as_gift']				= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox', 33.33 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
 	$params['root_group']					= array( 'list', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
-	$params['enable_shoppingcart']			= array( 'list_yesno', '' );
+	$params['enable_shoppingcart']			= array( 'toggle', '' );
 	$params['customlink_continueshopping']	= array( 'inputC', '' );
-	$params['additem_stayonpage']			= array( 'list_yesno', '' );
+	$params['additem_stayonpage']			= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
 	$params['gwlist']						= array( 'list', 0 );
@@ -1329,41 +1329,38 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB1_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox', 48 );
-	$params[] = array( 'userinfobox_sub', 'AEC' );
-	$params['quicksearch_top']					= array( 'list_yesno', '' );
-	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox', 49.5 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_PROXY') );
-	$params['use_proxy']						= array( 'list_yesno', '' );
+	$params['use_proxy']						= array( 'toggle', '' );
 	$params['proxy']							= array( 'inputC', '' );
 	$params['proxy_port']						= array( 'inputC', '' );
 	$params['proxy_username']					= array( 'inputC', '' );
 	$params['proxy_password']					= array( 'inputC', '' );
-	$params['gethostbyaddr']					= array( 'list_yesno', '' );
+	$params['gethostbyaddr']					= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_BUTTONS_SUB') );
-	$params['renew_button_never']				= array( 'list_yesno', '' );
-	$params['renew_button_nolifetimerecurring']	= array( 'list_yesno', '' );
-	$params['continue_button']					= array( 'list_yesno', '' );
+	$params['renew_button_never']				= array( 'toggle', '' );
+	$params['renew_button_nolifetimerecurring']	= array( 'toggle', '' );
+	$params['continue_button']					= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 48 );
+	$params[] = array( 'userinfobox', 49.5 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
-	$params['amount_currency_symbol']			= array( 'list_yesno', 0 );
-	$params['amount_currency_symbolfirst']		= array( 'list_yesno', 0 );
-	$params['amount_use_comma']					= array( 'list_yesno', 0 );
+	$params['amount_currency_symbol']			= array( 'toggle', 0 );
+	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
+	$params['amount_use_comma']					= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_INUM') );
-	$params['invoicenum_doformat']				= array( 'list_yesno', '' );
+	$params['invoicenum_doformat']				= array( 'toggle', '' );
 	$params['invoicenum_formatting']			= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
-	$params['use_recaptcha']					= array( 'list_yesno', '' );
+	$params['use_recaptcha']					= array( 'toggle', '' );
 	$params['recaptcha_privatekey']				= array( 'inputC', '' );
 	$params['recaptcha_publickey']				= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
@@ -1382,7 +1379,7 @@ function editSettings( $option )
 	$params['invoice_after_header']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_ADDRESS_NAME') );
-	$params['invoice_address_allow_edit']		= array( 'list_yesno', '' );
+	$params['invoice_address_allow_edit']		= array( 'toggle', '' );
 	$params['invoice_address']					= array( 'inputD', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME') );
@@ -1413,11 +1410,11 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMINVOICE_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMINVOICE_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox', 48 );
+	$params[] = array( 'userinfobox', 49.5 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CREDIRECT') );
 	$params['customintro']						= array( 'inputC', '' );
-	$params['customintro_userid']				= array( 'list_yesno', '' );
-	$params['customintro_always']				= array( 'list_yesno', '' );
+	$params['customintro_userid']				= array( 'toggle', '' );
+	$params['customintro_always']				= array( 'toggle', '' );
 	$params['customthanks']						= array( 'inputC', '' );
 	$params['customcancel']						= array( 'inputC', '' );
 	$params['customnotallowed']					= array( 'inputC', '' );
@@ -1445,7 +1442,7 @@ function editSettings( $option )
 							);
 
 
-	$params[] = array( 'userinfobox', 48 );
+	$params[] = array( 'userinfobox', 49.5 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
 
 	foreach ( $itemidlist as $param => $xparams ) {
@@ -1457,7 +1454,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 95 );
+	$params[] = array( 'userinfobox', 100 );
 	$params[] = array( 'userinfobox_sub', JText::_('Custom Text') );
 	$params[] = array( 'accordion_start', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_PLANS_NAME') );
@@ -1465,39 +1462,39 @@ function editSettings( $option )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_CONFIRM_NAME') );
 	$params['custom_confirm_userdetails']		= array( 'editor', '' );
-	$params['customtext_confirm_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_confirm_keeporiginal']	= array( 'toggle', '' );
 	$params['customtext_confirm']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_CHECKOUT_NAME') );
-	$params['customtext_checkout_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_checkout_keeporiginal']	= array( 'toggle', '' );
 	$params['customtext_checkout']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_EXCEPTION_NAME') );
-	$params['customtext_exception_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_exception_keeporiginal']	= array( 'toggle', '' );
 	$params['customtext_exception']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_NOTALLOWED_NAME') );
-	$params['customtext_notallowed_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_notallowed_keeporiginal']	= array( 'toggle', '' );
 	$params['customtext_notallowed']			= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_PENDING_NAME') );
-	$params['customtext_pending_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_pending_keeporiginal']	= array( 'toggle', '' );
 	$params['customtext_pending']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_HOLD_NAME') );
-	$params['customtext_hold_keeporiginal']		= array( 'list_yesno', '' );
+	$params['customtext_hold_keeporiginal']		= array( 'toggle', '' );
 	$params['customtext_hold']					= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_EXPIRED_NAME') );
-	$params['customtext_expired_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_expired_keeporiginal']	= array( 'toggle', '' );
 	$params['customtext_expired']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_THANKS_NAME') );
-	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_thanks_keeporiginal']	= array( 'toggle', '' );
 	$params['customtext_thanks']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_CUSTOMTEXT_CANCEL_NAME') );
-	$params['customtext_cancel_keeporiginal']	= array( 'list_yesno', '' );
+	$params['customtext_cancel_keeporiginal']	= array( 'toggle', '' );
 	$params['customtext_cancel']				= array( 'editor', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
@@ -1507,15 +1504,15 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMPAGES_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMPAGES_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox', 33.33 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SYSTEM') );
 	$params['alertlevel2']					= array( 'inputA', 0 );
 	$params['alertlevel1']					= array( 'inputA', 0 );
 	$params['expiration_cushion']			= array( 'inputA', 0 );
 	$params['invoice_cushion']				= array( 'inputA', 0 );
 	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
-	$params['allow_frontend_heartbeat']		= array( 'list_yesno', 0 );
-	$params['disable_regular_heartbeat']	= array( 'list_yesno', 0 );
+	$params['allow_frontend_heartbeat']		= array( 'toggle', 0 );
+	$params['disable_regular_heartbeat']	= array( 'toggle', 0 );
 	$params['custom_heartbeat_securehash']	= array( 'inputC', '' );
 	$params['countries_available']			= array( 'list_country_full', 0 );
 	$params['countries_top']				= array( 'list_country_full', 0 );
@@ -1523,56 +1520,56 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_DEBUG') );
 	$params['bypassintegration']			= array( 'inputC', '' );
 
-	$params['breakon_mi_error']				= array( 'list_yesno', 0 );
-	$params['debugmode']					= array( 'list_yesno', 0 );
-	$params['email_default_admins']			= array( 'list_yesno', 1 );
+	$params['breakon_mi_error']				= array( 'toggle', 0 );
+	$params['debugmode']					= array( 'toggle', 0 );
+	$params['email_default_admins']			= array( 'toggle', 1 );
 	$params['email_extra_admins']			= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 33 );
+	$params[] = array( 'userinfobox', 33.33 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
-	$params['show_fixeddecision']			= array( 'list_yesno', 0 );
+	$params['show_fixeddecision']			= array( 'toggle', 0 );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
-	$params['intro_expired']				= array( 'list_yesno', 0 );
+	$params['intro_expired']				= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
-	$params['confirmation_changeusername']	= array( 'list_yesno', '' );
-	$params['confirmation_changeusage']		= array( 'list_yesno', '' );
-	$params['confirmation_coupons']			= array( 'list_yesno', 0 );
+	$params['confirmation_changeusername']	= array( 'toggle', '' );
+	$params['confirmation_changeusage']		= array( 'toggle', '' );
+	$params['confirmation_coupons']			= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
-	$params['checkoutform_jsvalidation']	= array( 'list_yesno', '' );
-	$params['checkout_coupons']				= array( 'list_yesno', 1 );
+	$params['checkoutform_jsvalidation']	= array( 'toggle', '' );
+	$params['checkout_coupons']				= array( 'toggle', 1 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS') );
-	$params['subscriptiondetails_menu']		= array( 'list_yesno', 1 );
+	$params['subscriptiondetails_menu']		= array( 'toggle', 1 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
 	$params['root_group_rw']				= array( 'inputD', 0 );
 	$params['entry_plan']					= array( 'list', 0 );
-	$params['per_plan_mis']					= array( 'list_yesno', 0 );
+	$params['per_plan_mis']					= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 32 );
+	$params[] = array( 'userinfobox', 33.33 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SECURITY') );
-	$params['ssl_signup']					= array( 'list_yesno', 0 );
-	$params['ssl_profile']					= array( 'list_yesno', 0 );
-	$params['override_reqssl']				= array( 'list_yesno', 0 );
+	$params['ssl_signup']					= array( 'toggle', 0 );
+	$params['ssl_profile']					= array( 'toggle', 0 );
+	$params['override_reqssl']				= array( 'toggle', 0 );
 	$params['altsslurl']					= array( 'inputC', '' );
-	$params['ssl_verifypeer']				= array( 'list_yesno', 0 );
+	$params['ssl_verifypeer']				= array( 'toggle', 0 );
 	$params['ssl_verifyhost']				= array( 'inputC', '' );
 	$params['ssl_cainfo']					= array( 'inputC', '' );
 	$params['ssl_capath']					= array( 'inputC', '' );
-	$params['allow_invoice_unpublished_item']				= array( 'list_yesno', 0 );
+	$params['allow_invoice_unpublished_item']				= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_API') );
 	$params['apiapplist']					= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_UNINSTALL') );
-	$params['delete_tables']				= array( 'list_yesno', 0 );
-	$params['delete_tables_sure']			= array( 'list_yesno', 0 );
+	$params['delete_tables']				= array( 'toggle', 0 );
+	$params['delete_tables_sure']			= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -1971,7 +1968,7 @@ function editProcessor( $id, $option )
 		$settingsparams = $pp->settings;
 
 		$params = array();
-		$params[$pp->processor_name.'_active'] = array( 'list_yesno', JText::_('PP_GENERAL_ACTIVE_NAME'), JText::_('PP_GENERAL_ACTIVE_DESC'), $pp->processor->active);
+		$params[$pp->processor_name.'_active'] = array( 'toggle', JText::_('PP_GENERAL_ACTIVE_NAME'), JText::_('PP_GENERAL_ACTIVE_DESC'), $pp->processor->active);
 
 		if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
 			$params = array_merge( $params, $settings_array );
@@ -2342,14 +2339,14 @@ function editSubscriptionPlan( $id, $option )
 				;
 
 	// params and their type values
-	$params['active']					= array( 'list_yesno', 1 );
-	$params['visible']					= array( 'list_yesno', 1 );
+	$params['active']					= array( 'toggle', 1 );
+	$params['visible']					= array( 'toggle', 1 );
 
 	$params['name']						= array( 'inputC', '' );
 	$params['desc']						= array( 'editor', '' );
 	$params['customamountformat']		= array( 'inputD', $stdformat );
 	$params['customthanks']				= array( 'inputC', '' );
-	$params['customtext_thanks_keeporiginal']	= array( 'list_yesno', 1 );
+	$params['customtext_thanks_keeporiginal']	= array( 'toggle', 1 );
 	$params['customtext_thanks']		= array( 'editor', '' );
 	$params['email_desc']				= array( 'inputD', '' );
 	$params['micro_integrations_inherited']		= array( 'list', '' );
@@ -2410,42 +2407,42 @@ function editSubscriptionPlan( $id, $option )
 
 	$params['params_remap']			= array( 'subarea_change', 'params' );
 
-	$params['override_activation']	= array( 'list_yesno', 0 );
-	$params['override_regmail']		= array( 'list_yesno', 0 );
+	$params['override_activation']	= array( 'toggle', 0 );
+	$params['override_regmail']		= array( 'toggle', 0 );
 
-	$params['full_free']			= array( 'list_yesno', '' );
+	$params['full_free']			= array( 'toggle', '' );
 	$params['full_amount']			= array( 'inputB', '' );
 	$params['full_period']			= array( 'inputB', '' );
 	$params['full_periodunit']		= array( 'list', 'D' );
-	$params['trial_free']			= array( 'list_yesno', '' );
+	$params['trial_free']			= array( 'toggle', '' );
 	$params['trial_amount']			= array( 'inputB', '' );
 	$params['trial_period']			= array( 'inputB', '' );
 	$params['trial_periodunit']		= array( 'list', 'D' );
 
-	$params['gid_enabled']			= array( 'list_yesno', 1 );
+	$params['gid_enabled']			= array( 'toggle', 1 );
 	$params['gid']					= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
-	$params['lifetime']				= array( 'list_yesno', 0 );
+	$params['lifetime']				= array( 'toggle', 0 );
 	$params['processors']			= array( 'list', '' );
 	$params['standard_parent']		= array( 'list', '' );
 	$params['fallback']				= array( 'list', '' );
-	$params['fallback_req_parent']	= array( 'list_yesno', 0 );
-	$params['make_active']			= array( 'list_yesno', 1 );
-	$params['make_primary']			= array( 'list_yesno', 1 );
-	$params['update_existing']		= array( 'list_yesno', 1 );
+	$params['fallback_req_parent']	= array( 'toggle', 0 );
+	$params['make_active']			= array( 'toggle', 1 );
+	$params['make_primary']			= array( 'toggle', 1 );
+	$params['update_existing']		= array( 'toggle', 1 );
 
 	$params['similarplans']			= array( 'list', '' );
 	$params['equalplans']			= array( 'list', '' );
 
 	$params['notauth_redirect']		= array( 'inputC', '' );
 	$params['fixed_redirect']		= array( 'inputC', '' );
-	$params['hide_duration_checkout']	= array( 'list_yesno', 0 );
+	$params['hide_duration_checkout']	= array( 'toggle', 0 );
 	$params['cart_behavior']		= array( 'list', 0 );
 	$params['addtocart_redirect']	= array( 'inputC', '' );
 	$params['notes']				= array( 'textarea', '' );
 
 	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );
 
-	$params['inventory_amount_enabled']	= array( 'list_yesno', 0 );
+	$params['inventory_amount_enabled']	= array( 'toggle', 0 );
 	$params['inventory_amount']			= array( 'inputB', 0 );
 	$params['inventory_amount_used']	= array( 'inputB', 0 );
 
@@ -3153,8 +3150,8 @@ function editItemGroup( $id, $option )
 	}
 
 	// params and their type values
-	$params['active']					= array( 'list_yesno', 1 );
-	$params['visible']					= array( 'list_yesno', 0 );
+	$params['active']					= array( 'toggle', 1 );
+	$params['visible']					= array( 'toggle', 0 );
 
 	$params['name']						= array( 'inputC', '' );
 	$params['desc']						= array( 'editor', '' );
@@ -3162,9 +3159,9 @@ function editItemGroup( $id, $option )
 	$params['color']					= array( 'list', '' );
 	$params['icon']						= array( 'list', '' );
 
-	$params['reveal_child_items']		= array( 'list_yesno', 0 );
+	$params['reveal_child_items']		= array( 'toggle', 0 );
 	$params['symlink']					= array( 'inputC', '' );
-	$params['symlink_userid']			= array( 'list_yesno', 0 );
+	$params['symlink_userid']			= array( 'toggle', 0 );
 
 	$params['notauth_redirect']			= array( 'inputD', '' );
 
@@ -3855,8 +3852,8 @@ function editCoupon( $id, $option, $new, $type )
 	$params_values['micro_integrations']	= $cph->coupon->micro_integrations;
 
 	// params and their type values
-	$params['active']						= array( 'list_yesno',		1 );
-	$params['type']							= array( 'list_yesno',		1 );
+	$params['active']						= array( 'toggle',		1 );
+	$params['type']							= array( 'toggle',		1 );
 	$params['name']							= array( 'inputC',			'' );
 	$params['desc']							= array( 'inputE',			'' );
 	$params['coupon_code']					= array( 'inputC',			'' );
@@ -3864,48 +3861,48 @@ function editCoupon( $id, $option, $new, $type )
 
 	$params['params_remap']					= array( 'subarea_change',	'params' );
 
-	$params['amount_use']					= array( 'list_yesno',		'' );
+	$params['amount_use']					= array( 'toggle',		'' );
 	$params['amount']						= array( 'inputB',			'' );
-	$params['amount_percent_use']			= array( 'list_yesno',		'' );
+	$params['amount_percent_use']			= array( 'toggle',		'' );
 	$params['amount_percent']				= array( 'inputB',			'' );
-	$params['percent_first']				= array( 'list_yesno',		'' );
-	$params['useon_trial']					= array( 'list_yesno',		'' );
-	$params['useon_full']					= array( 'list_yesno',		'1' );
-	$params['useon_full_all']				= array( 'list_yesno',		'' );
+	$params['percent_first']				= array( 'toggle',		'' );
+	$params['useon_trial']					= array( 'toggle',		'' );
+	$params['useon_full']					= array( 'toggle',		'1' );
+	$params['useon_full_all']				= array( 'toggle',		'' );
 
-	$params['has_start_date']				= array( 'list_yesno',		1 );
+	$params['has_start_date']				= array( 'toggle',		1 );
 	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', ( (int) gmdate('U') ) ) );
-	$params['has_expiration']				= array( 'list_yesno',		0);
+	$params['has_expiration']				= array( 'toggle',		0);
 	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', ( (int) gmdate('U') ) ) );
-	$params['has_max_reuse']				= array( 'list_yesno',		0 );
+	$params['has_max_reuse']				= array( 'toggle',		0 );
 	$params['max_reuse']					= array( 'inputB',			1 );
-	$params['has_max_peruser_reuse']		= array( 'list_yesno',		1 );
+	$params['has_max_peruser_reuse']		= array( 'toggle',		1 );
 	$params['max_peruser_reuse']			= array( 'inputB',			1 );
 	$params['usecount']						= array( 'inputB',			0 );
 
-	$params['usage_plans_enabled']			= array( 'list_yesno',		0 );
+	$params['usage_plans_enabled']			= array( 'toggle',		0 );
 	$params['usage_plans']					= array( 'list',			0 );
 
-	$params['usage_cart_full']				= array( 'list_yesno',		0 );
-	$params['cart_multiple_items']			= array( 'list_yesno',		0 );
+	$params['usage_cart_full']				= array( 'toggle',		0 );
+	$params['cart_multiple_items']			= array( 'toggle',		0 );
 	$params['cart_multiple_items_amount']	= array( 'inputB',			'' );
 
 	$params['restr_remap']					= array( 'subarea_change',	'restrictions' );
 
-	$params['depend_on_subscr_id']			= array( 'list_yesno',		0 );
+	$params['depend_on_subscr_id']			= array( 'toggle',		0 );
 	$params['subscr_id_dependency']			= array( 'inputB',			'' );
-	$params['allow_trial_depend_subscr']	= array( 'list_yesno',		0 );
+	$params['allow_trial_depend_subscr']	= array( 'toggle',		0 );
 
-	$params['restrict_combination']			= array( 'list_yesno',		0 );
+	$params['restrict_combination']			= array( 'toggle',		0 );
 	$params['bad_combinations']				= array( 'list',			'' );
 
-	$params['allow_combination']			= array( 'list_yesno',		0 );
+	$params['allow_combination']			= array( 'toggle',		0 );
 	$params['good_combinations']			= array( 'list',			'' );
 
-	$params['restrict_combination_cart']	= array( 'list_yesno',		0 );
+	$params['restrict_combination_cart']	= array( 'toggle',		0 );
 	$params['bad_combinations_cart']		= array( 'list',			'' );
 
-	$params['allow_combination_cart']		= array( 'list_yesno',		0 );
+	$params['allow_combination_cart']		= array( 'toggle',		0 );
 	$params['good_combinations_cart']		= array( 'list',			'' );
 
 	$restrictionHelper = new aecRestrictionHelper();

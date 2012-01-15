@@ -46,7 +46,7 @@ class processor_mollie_ideal extends XMLprocessor
 	{
 		$settings = array();
 
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['partner_id']		= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['description']	= array( 'inputE' );

@@ -26,14 +26,14 @@ class mi_sobi extends MI
 		$db = &JFactory::getDBO();
 
         $settings = array();
-		$settings['publish_all']		= array( 'list_yesno' );
-		$settings['unpublish_all']		= array( 'list_yesno' );
+		$settings['publish_all']		= array( 'toggle' );
+		$settings['unpublish_all']		= array( 'toggle' );
 
 		$settings = $this->autoduplicatesettings( $settings );
 
 		$xsettings = array();
-		$xsettings['rebuild']			= array( 'list_yesno' );
-		$xsettings['remove']			= array( 'list_yesno' );
+		$xsettings['rebuild']			= array( 'toggle' );
+		$xsettings['remove']			= array( 'toggle' );
 
 		return array_merge( $xsettings, $settings );
 	}

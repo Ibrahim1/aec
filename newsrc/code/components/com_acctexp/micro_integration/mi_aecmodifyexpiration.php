@@ -27,7 +27,7 @@ class mi_aecmodifyexpiration
 		$settings = array();
 		$settings['time_mod']				= array( 'inputD' );
 		$settings['timestamp']				= array( 'inputD' );
-		$settings['force_last_expiration']	= array( 'list_yesno' );
+		$settings['force_last_expiration']	= array( 'toggle' );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 

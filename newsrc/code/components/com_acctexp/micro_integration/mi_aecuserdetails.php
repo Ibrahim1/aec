@@ -50,7 +50,7 @@ class mi_aecuserdetails
 				$settings[$p.'short']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_SHORT_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_SHORT_DESC') );
 
 				if ( $this->settings[$p.'type'] != "checkbox" ) {
-					$settings[$p.'mandatory']	= array( 'list_yesno', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC') );
+					$settings[$p.'mandatory']	= array( 'toggle', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_MANDATORY_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_MANDATORY_DESC') );
 				}
 
 				$settings[$p.'name']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_NAME_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_NAME_DESC') );
@@ -60,7 +60,7 @@ class mi_aecuserdetails
 
 				if ( $this->settings[$p.'type'] == "list" ) {
 					$settings[$p.'list']	= array( 'inputD', "List Items", "Provide a newline separated list with items like: item1|Description of first item" );
-					$settings[$p.'ltype']	= array( 'list_yesno', "Radio List", "Select Yes to display a radio button list instead of a dropdown box." );
+					$settings[$p.'ltype']	= array( 'toggle', "Radio List", "Select Yes to display a radio button list instead of a dropdown box." );
 				}
 
 				$settings[$p.'default']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC') );

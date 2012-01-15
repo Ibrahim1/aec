@@ -28,8 +28,8 @@ class mi_idevaffiliate
 		$settings['setupinfo']			= array( 'fieldset' );
 		$settings['profile']			= array( 'inputC' );
 		$settings['directory']			= array( 'inputC' );
-		$settings['use_curl']			= array( 'list_yesno' );
-		$settings['onlycustomparams']	= array( 'list_yesno' );
+		$settings['use_curl']			= array( 'toggle' );
+		$settings['onlycustomparams']	= array( 'toggle' );
 		$settings['customparams']		= array( 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

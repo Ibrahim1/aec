@@ -55,15 +55,15 @@ class mi_aecplan
 
 		$settings = array();
 
-		$settings['first_plan_not_membership']		= array( 'list_yesno' );
+		$settings['first_plan_not_membership']		= array( 'toggle' );
 
 		$settings['plan_apply_first']				= array( 'list' );
 		$settings['lists']['plan_apply_first']		= JHTML::_('select.genericlist', $payment_plans, 'plan_apply_first', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_first'] );
-		$settings['first_plan_copy_expiration']		= array( 'list_yesno' );
+		$settings['first_plan_copy_expiration']		= array( 'toggle' );
 
 		$settings['plan_apply']						= array( 'list' );
 		$settings['lists']['plan_apply']			= JHTML::_('select.genericlist', $payment_plans, 'plan_apply', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply'] );
-		$settings['plan_copy_expiration']			= array( 'list_yesno' );
+		$settings['plan_copy_expiration']			= array( 'toggle' );
 
 		$settings['plan_apply_pre_exp']				= array( 'list' );
 		$settings['lists']['plan_apply_pre_exp']	= JHTML::_('select.genericlist', $payment_plans, 'plan_apply_pre_exp', 'size="' . $total_plans . '"', 'value', 'text', $this->settings['plan_apply_pre_exp'] );

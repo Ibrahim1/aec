@@ -51,7 +51,7 @@ class processor_cybermut extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['tpe']			= array( 'inputC' );
 		$settings['soc']			= array( 'inputC' );
 		$settings['pass']			= array( 'inputC' );

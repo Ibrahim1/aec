@@ -53,7 +53,7 @@ class mi_jnews
 
 		$settings['list']			= array( 'list' );
 		$settings['list_exp']		= array( 'list' );
-		$settings['user_checkbox']	= array( 'list_yesno' );
+		$settings['user_checkbox']	= array( 'toggle' );
 		$settings['custominfo']		= array( 'inputD' );
 
 		return $settings;

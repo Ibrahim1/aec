@@ -58,28 +58,28 @@ class mi_hotproperty extends MI
 		$db = &JFactory::getDBO();
 
         $settings = array();
-		$settings['create_agent']	= array( 'list_yesno' );
+		$settings['create_agent']	= array( 'toggle' );
 		$settings['agent_fields']	= array( 'inputD' );
-		$settings['update_agent']	= array( 'list_yesno' );
+		$settings['update_agent']	= array( 'toggle' );
 		$settings['update_afields']	= array( 'inputD' );
-		$settings['create_company']	= array( 'list_yesno' );
+		$settings['create_company']	= array( 'toggle' );
 		$settings['company_fields']	= array( 'inputD' );
-		$settings['update_company']	= array( 'list_yesno' );
+		$settings['update_company']	= array( 'toggle' );
 		$settings['update_cfields']	= array( 'inputD' );
 		$settings['add_listings']	= array( 'inputA' );
 		$settings['set_listings']	= array( 'inputA' );
-		$settings['set_unlimited']	= array( 'list_yesno' );
-		$settings['publish_all']	= array( 'list_yesno' );
-		$settings['unpublish_all']	= array( 'list_yesno' );
+		$settings['set_unlimited']	= array( 'toggle' );
+		$settings['publish_all']	= array( 'toggle' );
+		$settings['unpublish_all']	= array( 'toggle' );
 
 		$settings = $this->autoduplicatesettings( $settings, array(), true, true );
 
 		$xsettings = array();
-		$xsettings['add_list_userchoice']		= array( 'list_yesno' );
+		$xsettings['add_list_userchoice']		= array( 'toggle' );
 		$xsettings['add_list_userchoice_amt']	= array( 'inputD' );
 		$xsettings['add_list_customprice']		= array( 'inputD' );
 
-		$xsettings['easy_list_userchoice']		= array( 'list_yesno' );
+		$xsettings['easy_list_userchoice']		= array( 'toggle' );
 		$xsettings['easy_list_userchoice_n']		= array( 'inputA' );
 
 		if ( !empty( $this->settings['easy_list_userchoice_n'] ) ) {
@@ -100,9 +100,9 @@ class mi_hotproperty extends MI
 			$xsettings[] = array( '', 'hr', '' );
 		}
 
-		$xsettings['assoc_company']	= array( 'list_yesno' );
-		$xsettings['rebuild']		= array( 'list_yesno' );
-		$xsettings['remove']			= array( 'list_yesno' );
+		$xsettings['assoc_company']	= array( 'toggle' );
+		$xsettings['rebuild']		= array( 'toggle' );
+		$xsettings['remove']			= array( 'toggle' );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 

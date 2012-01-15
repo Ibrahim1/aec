@@ -49,8 +49,8 @@ class processor_secureandpay extends POSTprocessor
 
 		$settings['numsite']		= array( 'inputC' );
 		$settings['password']		= array( 'inputC' );
-		$settings['testmode']		= array( 'list_yesno' );
-		$settings['invoice_tax']	= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
+		$settings['invoice_tax']	= array( 'toggle' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );
 		$settings['item_name']		= array( 'inputE' );

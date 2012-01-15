@@ -33,7 +33,7 @@ class mi_email_files
 		$settings['bcc']				= array( 'inputE' );
 
 		$settings['subject']			= array( 'inputE' );
-		$settings['text_html']			= array( 'list_yesno' );
+		$settings['text_html']			= array( 'toggle' );
 		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
 
 		$settings['base_path']			= array( 'inputE' );

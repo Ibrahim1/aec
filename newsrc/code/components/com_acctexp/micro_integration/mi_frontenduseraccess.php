@@ -124,16 +124,16 @@ class mi_frontenduseraccess
 		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $fuagroups, 'group_exp[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp );
 		$settings['lists']['group_exp_remove'] = JHTML::_('select.genericlist', $fuagroups, 'group_exp_remove[]', 'size="7" multiple="true"', 'value', 'text', $fua_groups_exp_remove );
 
-		$settings['set_group']			= array( 'list_yesno' );
+		$settings['set_group']			= array( 'toggle' );
 		$settings['group']				= array( 'list' );
 		$settings['group_remove']		= array( 'list' );
-		$settings['keep_groups']		= array( 'list_yesno' );
-		$settings['set_group_exp']		= array( 'list_yesno' );
+		$settings['keep_groups']		= array( 'toggle' );
+		$settings['set_group_exp']		= array( 'toggle' );
 		$settings['group_exp']			= array( 'list' );
 		$settings['group_exp_remove']	= array( 'list', 'Remove From Group(s) (expiration)', 'Groups from which user needs to be removed when expiration action happens' );
-		$settings['keep_groups_exp']	= array( 'list_yesno' );
-		$settings['rebuild']			= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['keep_groups_exp']	= array( 'toggle' );
+		$settings['rebuild']			= array( 'toggle' );
+		$settings['remove']				= array( 'toggle' );
 
 		return $settings;
 	}

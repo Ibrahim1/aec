@@ -27,16 +27,16 @@ class mi_rsgallery2 extends MI
 		$db = &JFactory::getDBO();
 
 		$settings = array();
-		$settings['create_galleries']		= array( 'list_yesno' );
+		$settings['create_galleries']		= array( 'toggle' );
 		$settings['galleries_name']		= array( 'inputC' );
 		$settings['galleries_desc']		= array( 'inputD' );
-		$settings['set_galleries']			= array( 'list_yesno' );
+		$settings['set_galleries']			= array( 'toggle' );
 		$settings['galleries']				= array( 'list' );
-		$settings['set_galleries_user']	= array( 'list_yesno' );
+		$settings['set_galleries_user']	= array( 'toggle' );
 		$settings['gallery_sel_amt']		= array( 'inputA' );
 		$settings['gallery_sel_scope']	= array( 'list' );
-		$settings['publish_all']		= array( 'list_yesno' );
-		$settings['unpublish_all']		= array( 'list_yesno' );
+		$settings['publish_all']		= array( 'toggle' );
+		$settings['unpublish_all']		= array( 'toggle' );
 
 		$query = 'SELECT `id`, `name`'
 			 	. ' FROM #__rsgallery2_galleries'

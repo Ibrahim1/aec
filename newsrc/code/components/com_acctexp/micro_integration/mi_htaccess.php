@@ -61,10 +61,10 @@ class mi_htaccess
 		$settings['mi_folder']			= array( 'inputD' );
 		$settings['mi_passwordfolder']	= array( 'inputD' );
 		$settings['mi_name']			= array( 'inputC' );
-		$settings['use_md5']			= array( 'list_yesno' );
-		$settings['use_apachemd5']		= array( 'list_yesno' );
-		$settings['rebuild']			= array( 'list_yesno' );
-		$settings['remove']				= array( 'list_yesno' );
+		$settings['use_md5']			= array( 'toggle' );
+		$settings['use_apachemd5']		= array( 'toggle' );
+		$settings['rebuild']			= array( 'toggle' );
+		$settings['remove']				= array( 'toggle' );
 
 		return $settings;
 	}

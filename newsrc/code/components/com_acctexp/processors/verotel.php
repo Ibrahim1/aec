@@ -51,7 +51,7 @@ class processor_verotel extends URLprocessor
 		$settings['resellerid']			= array( 'inputC' );
 		$settings['siteid']				= array( 'inputC' );
 		$settings['secretcode']			= array( 'inputC' );
-		$settings['use_ticketsclub']	= array( 'list_yesno' );
+		$settings['use_ticketsclub']	= array( 'toggle' );
 		$settings['info']				= array( 'fieldset' );
 		$settings['customparams']		= array( 'inputD' );
 

@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4139' );
+define( '_AEC_REVISION', '4168' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2467,7 +2467,6 @@ class Config_General extends serialParamDBTable
 		$def['allow_frontend_heartbeat']		= 0;
 		$def['disable_regular_heartbeat']		= 0;
 		$def['custom_heartbeat_securehash']		= "";
-		$def['quicksearch_top']					= 0;
 		$def['invoice_page_title']				= JText::_('AEC_CUSTOM_INVOICE_PAGE_TITLE');
 		$def['invoice_before_header']			= "";
 		$def['invoice_header']					= JText::_('AEC_CUSTOM_INVOICE_HEADER');
@@ -3846,7 +3845,7 @@ class PaymentProcessor
 			$settings = $this->processor->backend_settings();
 		}
 
-		$settings['generic_buttons']	= array( 'list_yesno' );
+		$settings['generic_buttons']	= array( 'toggle' );
 
 		if ( isset( $settings['aec_experimental'] ) ) {
 			$settings['aec_experimental'] = "p";
@@ -5987,6 +5986,21 @@ class aecHTML
 				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . '/>';
 				$return .= '</div></div>';
 				break;
+			case 'toggle':
+				$return .= '<input type="hidden" name="' . $name . '" value="0" />';
+				$return .= '<div class="input">';
+				$return .= '<div class="toggleswitch">';
+				$return .= '<label class="toggleswitch" onclick="">';
+				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . '/>';
+				$return .= '<span class="toggleswitch-inner">';
+				$return .= '<span class="toggleswitch-on">Yes</span>';
+				$return .= '<span class="toggleswitch-off">No</span>';
+				$return .= '<span class="toggleswitch-handle"></span>';
+				$return .= '</span>';
+				$return .= '</label>';
+				$return .= '</div>';
+				$return .= '</div></div>';
+				break;
 			case 'editor':
 				$return .= '<div class="input">';
 
@@ -6041,7 +6055,7 @@ class aecHTML
 				$return = '</div></div>';
 				break;
 			case 'userinfobox':
-				$return = '<div style="position:relative;float:left;width:' . $value . '%;padding:4px;"><div class="userinfobox">';
+				$return = '<div style="position:relative;float:left;width:' . $value . '%;"><div class="userinfobox">';
 				break;
 			case 'userinfobox_sub':
 				$return = '<div class="aec_userinfobox_sub">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
@@ -17840,12 +17854,12 @@ class microIntegration extends serialParamDBTable
 	{
 		$settings['name']					= array( 'inputC', '' );
 		$settings['desc']					= array( 'inputD', '' );
-		$settings['active']					= array( 'list_yesno', 1 );
-		$settings['_aec_action']			= array( 'list_yesno', 1 );
-		$settings['_aec_only_first_bill']	= array( 'list_yesno', 0 );
-		$settings['auto_check']				= array( 'list_yesno', 1 );
-		$settings['_aec_global_exp_all']	= array( 'list_yesno', 0 );
-		$settings['on_userchange']			= array( 'list_yesno', 1 );
+		$settings['active']					= array( 'toggle', 1 );
+		$settings['_aec_action']			= array( 'toggle', 1 );
+		$settings['_aec_only_first_bill']	= array( 'toggle', 0 );
+		$settings['auto_check']				= array( 'toggle', 1 );
+		$settings['_aec_global_exp_all']	= array( 'toggle', 0 );
+		$settings['on_userchange']			= array( 'toggle', 1 );
 		$settings['pre_exp_check']			= array( 'inputB', '' );
 
 		return $settings;
@@ -20874,49 +20888,49 @@ class aecRestrictionHelper
 	function getParams()
 	{
 		$params = array();
-		$params['mingid_enabled']					= array( 'list_yesno', 0 );
+		$params['mingid_enabled']					= array( 'toggle', 0 );
 		$params['mingid']							= array( 'list', 18 );
-		$params['fixgid_enabled']					= array( 'list_yesno', 0 );
+		$params['fixgid_enabled']					= array( 'toggle', 0 );
 		$params['fixgid']							= array( 'list', 19 );
-		$params['maxgid_enabled']					= array( 'list_yesno', 0 );
+		$params['maxgid_enabled']					= array( 'toggle', 0 );
 		$params['maxgid']							= array( 'list', 21 );
-		$params['previousplan_req_enabled'] 		= array( 'list_yesno', 0 );
+		$params['previousplan_req_enabled'] 		= array( 'toggle', 0 );
 		$params['previousplan_req']					= array( 'list', 0 );
-		$params['previousplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['previousplan_req_enabled_excluded']	= array( 'toggle', 0 );
 		$params['previousplan_req_excluded']			= array( 'list', 0 );
-		$params['currentplan_req_enabled']			= array( 'list_yesno', 0 );
+		$params['currentplan_req_enabled']			= array( 'toggle', 0 );
 		$params['currentplan_req']					= array( 'list', 0 );
-		$params['currentplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['currentplan_req_enabled_excluded']	= array( 'toggle', 0 );
 		$params['currentplan_req_excluded']			= array( 'list', 0 );
-		$params['overallplan_req_enabled']			= array( 'list_yesno', 0 );
+		$params['overallplan_req_enabled']			= array( 'toggle', 0 );
 		$params['overallplan_req']					= array( 'list', 0 );
-		$params['overallplan_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['overallplan_req_enabled_excluded']	= array( 'toggle', 0 );
 		$params['overallplan_req_excluded']			= array( 'list', 0 );
-		$params['used_plan_min_enabled']			= array( 'list_yesno', 0 );
+		$params['used_plan_min_enabled']			= array( 'toggle', 0 );
 		$params['used_plan_min_amount']				= array( 'inputB', 0 );
 		$params['used_plan_min']					= array( 'list', 0 );
-		$params['used_plan_max_enabled']			= array( 'list_yesno', 0 );
+		$params['used_plan_max_enabled']			= array( 'toggle', 0 );
 		$params['used_plan_max_amount']				= array( 'inputB', 0 );
 		$params['used_plan_max']					= array( 'list', 0 );
-		$params['previousgroup_req_enabled'] 		= array( 'list_yesno', 0 );
+		$params['previousgroup_req_enabled'] 		= array( 'toggle', 0 );
 		$params['previousgroup_req']				= array( 'list', 0 );
-		$params['previousgroup_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['previousgroup_req_enabled_excluded']	= array( 'toggle', 0 );
 		$params['previousgroup_req_excluded']		= array( 'list', 0 );
-		$params['currentgroup_req_enabled']			= array( 'list_yesno', 0 );
+		$params['currentgroup_req_enabled']			= array( 'toggle', 0 );
 		$params['currentgroup_req']					= array( 'list', 0 );
-		$params['currentgroup_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['currentgroup_req_enabled_excluded']	= array( 'toggle', 0 );
 		$params['currentgroup_req_excluded']		= array( 'list', 0 );
-		$params['overallgroup_req_enabled']			= array( 'list_yesno', 0 );
+		$params['overallgroup_req_enabled']			= array( 'toggle', 0 );
 		$params['overallgroup_req']					= array( 'list', 0 );
-		$params['overallgroup_req_enabled_excluded']	= array( 'list_yesno', 0 );
+		$params['overallgroup_req_enabled_excluded']	= array( 'toggle', 0 );
 		$params['overallgroup_req_excluded']		= array( 'list', 0 );
-		$params['used_group_min_enabled']			= array( 'list_yesno', 0 );
+		$params['used_group_min_enabled']			= array( 'toggle', 0 );
 		$params['used_group_min_amount']			= array( 'inputB', 0 );
 		$params['used_group_min']					= array( 'list', 0 );
-		$params['used_group_max_enabled']			= array( 'list_yesno', 0 );
+		$params['used_group_max_enabled']			= array( 'toggle', 0 );
 		$params['used_group_max_amount']			= array( 'inputB', 0 );
 		$params['used_group_max']					= array( 'list', 0 );
-		$params['custom_restrictions_enabled']		= array( 'list_yesno', '' );
+		$params['custom_restrictions_enabled']		= array( 'toggle', '' );
 		$params['custom_restrictions']				= array( 'inputD', '' );
 
 		return $params;

@@ -27,7 +27,7 @@ class mi_pepperjam
 		$settings = array();
 		$settings['pid']				= array( 'inputC' );
 		$settings['type']				= array( 'list' );
-		$settings['onlycustomparams']	= array( 'list_yesno' );
+		$settings['onlycustomparams']	= array( 'toggle' );
 		$settings['customparams']		= array( 'inputD' );
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );

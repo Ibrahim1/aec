@@ -27,7 +27,7 @@ class mi_mysms
 	{
 		$settings = array();
 		$settings['add_credits']		= array( 'inputA' );
-		$settings['disable_exp']		= array( 'list_yesno' );
+		$settings['disable_exp']		= array( 'toggle' );
 		return $settings;
 	}
 

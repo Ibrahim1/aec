@@ -59,14 +59,14 @@ class processor_servantek extends POSTprocessor
 		$settings = array();
 
 		$settings['business']				= array( 'inputC' );
-		$settings['testmode']				= array( 'list_yesno' );
-		//$settings['brokenipnmode']			= array( 'list_yesno' );
+		$settings['testmode']				= array( 'toggle' );
+		//$settings['brokenipnmode']			= array( 'toggle' );
 		$settings['tax']					= array( 'inputA' );
 		$settings['currency']				= array( 'list_currency' );
-		$settings['checkbusiness']			= array( 'list_yesno' );
-		$settings['acceptpendingecheck']	= array( 'list_yesno' );
+		$settings['checkbusiness']			= array( 'toggle' );
+		$settings['acceptpendingecheck']	= array( 'toggle' );
 		$settings['lc']						= array( 'list_language' );
-		$settings['no_shipping']			= array( 'list_yesno' );
+		$settings['no_shipping']			= array( 'toggle' );
 		//$settings['altipnurl']				= array( 'inputC' );
 		$settings['item_name']				= array( 'inputE' );
 		$settings['customparams']			= array( 'inputD' );
@@ -78,7 +78,7 @@ class processor_servantek extends POSTprocessor
 		$settings['cpp_headerback_color']	= array( 'inputC' );
 		$settings['cpp_headerborder_color']	= array( 'inputC' );
 		$settings['cpp_payflow_color']		= array( 'inputC' );
-		$settings['cs']						= array( 'list_yesno' );
+		$settings['cs']						= array( 'toggle' );
 		//$settings['image_url']				= array( 'inputE' );
 		//$settings['page_style']				= array( 'inputE' );
 

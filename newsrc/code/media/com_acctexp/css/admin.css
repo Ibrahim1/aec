@@ -87,7 +87,7 @@ padding-left: 40px;
 ul.pills {
 margin: 0px auto;
 width: 600px;
-padding-top: 24px;
+padding-top: 56px;
 }
 
 .pill-content {
@@ -150,7 +150,8 @@ clear: both;
 display: block;
 font-size: 24px;
 line-height: 0px;
-margin-top: 30px;
+margin-top: 20px;
+text-shadow: 0 1px 2px #bbb;
 }
 
 #aec_center div.btn {
@@ -200,16 +201,19 @@ div.central_quicksearch {
 clear: both;
 padding: 6px 12px 12px 12px;
 margin: 12px auto;
+max-width: 840px;
 }
 
 div.central_buttons {
 margin: 12px auto;
+max-width: 840px;
 }
 
 div.central_notices {
 clear: both;
 padding: 6px 12px 12px 12px;
 margin: 12px auto;
+max-width: 840px;
 }
 
 div.central_notices .alert-message {
@@ -236,7 +240,8 @@ max-width: 600px;
 background-color:#fff;
 background-position: top center;
 background-repeat: repeat-y;
-padding: 10px !important;
+padding: 60px 30px;
+text-shadow: 0 1px 4px #999;
 }
 
 h1.importance_1 {
@@ -319,15 +324,19 @@ float: left;
 width: 100%;
 }
 
-#aec_center .aecadminform {
+.aecadminform_seamless {
+border-collapse: collapse;
 margin: -7px 0 15px;
+width: 100%;
+box-shadow: 0 1px 7px #000 inset, 0 2px 8px #555;
+float: left;
 }
 
 .userinfobox {
 position: relative;
 float: left;
 padding: 12px 3px 12px 6px;
-width: 95%;
+width: 98%;
 }
 
 div.aec-invoices-pagination {
@@ -668,3 +677,6 @@ padding: 0;
 #content-box .padding {
 padding: 0;
 }
+
+#system-message {
+margin: 0 0 -10px -25px;

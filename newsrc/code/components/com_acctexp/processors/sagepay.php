@@ -48,11 +48,11 @@ class processor_sagepay extends XMLprocessor
 		function backend_settings()
 		{
 			$settings = array();
-			$settings['testmode']	= array( 'list_yesno' );
+			$settings['testmode']	= array( 'toggle' );
 
 			$settings['vid']		= array( 'inputC' );
 			$settings['secret']		= array( 'inputC' );
-			$settings['3dsecure'] 	= array( 'list_yesno' );
+			$settings['3dsecure'] 	= array( 'toggle' );
 
 			$settings['item_name']	= array( 'inputE' );
 			$settings['currency']	= array( 'list_currency' );

@@ -42,7 +42,7 @@ class processor_nochex extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno');
+		$settings['testmode']		= array( 'toggle');
 		$settings['currency']		= array( 'list_currency' );
 		$settings['merchant_id']	= array( 'inputC');
 		$settings['item_name']		= array( 'inputE');

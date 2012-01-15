@@ -52,7 +52,7 @@ class processor_multisafepay extends XMLprocessor
 		$settings['site_id']			= array( 'inputC' );
 		$settings['site_secure_code']	= array( 'inputC' );
 		
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['language']			= array( 'list_language' );
 		$settings['customparams']		= array( 'inputD' );

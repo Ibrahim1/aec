@@ -38,7 +38,7 @@ class processor_suncorp_migs extends URLprocessor
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( 'p' );
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['vpc_Version']		= array( 'inputC' );
 		$settings['vpc_Command']		= array( 'inputC' );

@@ -49,7 +49,7 @@ class processor_payboxfr extends POSTprocessor
 		$settings = array();
 		$settings['aec_experimental']	= array( "p" );
 		$settings['site']				= array( 'inputC' );
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['rank']				= array( 'inputC' );
 		$settings['identifiant']		= array( 'inputC' );
 		$settings['publickey']			= array( 'inputD' );

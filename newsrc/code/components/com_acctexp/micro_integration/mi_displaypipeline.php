@@ -26,10 +26,10 @@ class mi_displaypipeline
 	function Settings()
 	{
 		$settings = array();
-		$settings['only_user']			= array( 'list_yesno' );
-		$settings['once_per_user']		= array( 'list_yesno' );
+		$settings['only_user']			= array( 'toggle' );
+		$settings['once_per_user']		= array( 'toggle' );
 
-		$settings['expire']				= array( 'list_yesno' );
+		$settings['expire']				= array( 'toggle' );
 		$settings['expiration']			= array( 'inputE' );
 
 		$settings['displaymax']			= array( 'inputB' );

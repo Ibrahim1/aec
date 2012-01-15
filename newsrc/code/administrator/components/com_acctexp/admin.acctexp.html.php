@@ -71,6 +71,7 @@ class HTML_myCommon
 	{
 		?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/toggleswitch/toggleswitch.css" />
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css" />
 		<?php
 	}
@@ -83,7 +84,8 @@ class HTML_myCommon
 		$document->addScript( '/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-dropdown.js' );
 		$document->addScriptDeclaration( 'jQuery(document).ready(function($) {
-			jQuery(\'#topbar\').dropdown()
+			jQuery(\'#topbar\').dropdown();
+			jQuery("#system-message").fadeOut(\'slow\', function() { jQuery(this).slideUp( \'slow\' ); });
 		});' );
 
 		//print_r($document);exit;
@@ -750,7 +752,7 @@ class HTML_AcctExp
 	{
 		?>
 		<div class="central_quicksearch aec_userinfobox_sub">
-			<h2><?php echo JText::_('AEC_QUICKSEARCH'); ?></h2>
+			<h3><?php echo JText::_('AEC_QUICKSEARCH'); ?></h3>
 			<p><?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?></p>
 			<form action="<?php echo JURI::base(); ?>index.php?option=com_acctexp&amp;task=quicklookup" method="post">
 			<input type="text" size="80" name="search" class="inputbox" value="<?php echo htmlspecialchars($searchcontent); ?>" />
@@ -856,13 +858,10 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 		?>
-		<table class="aecadminform">
+		<table class="aecadminform_seamless">
 			<tr>
 				<td valign="top">
 					<div id="aec_center">
-						<?php if ( !empty( $aecConfig->cfg['quicksearch_top'] ) ) {
-							HTML_AcctExp::quickSearchBar( $display, $searchcontent );
-						} ?>
 						<?php
 						$linkroot = "index.php?option=com_acctexp&amp;task=";
 
@@ -877,14 +876,10 @@ class HTML_AcctExp
 							?></div></div><?php
 						}
 
-						if ( empty( $aecConfig->cfg['quicksearch_top'] ) ) {
-							HTML_AcctExp::quickSearchBar( $display, $searchcontent );
-						}
-
 						if ( !empty( $notices ) ) {
 						?>
 						<div class="central_notices aec_userinfobox_sub">
-							<h2><?php echo JText::_('AEC_NOTICES_FOUND'); ?></h2>
+							<h3><?php echo JText::_('AEC_NOTICES_FOUND'); ?></h3>
 							<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
 							<p><a href="index.php?option=com_acctexp&amp;task=readAllNotices"><?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a></p>
 							<?php
@@ -906,7 +901,7 @@ class HTML_AcctExp
 						?>
 					</div>
 				</td>
-				<td width="320" valign="top" class="centerlogo">
+				<td valign="top" class="centerlogo">
 					<br />
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
@@ -1095,13 +1090,6 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 		?>
-		<script type="text/javascript">
-        function submitbutton(pressbutton) {
-        	//alert('test');
-        	submitform(pressbutton);
-            //return 'if (tinyMCE.get(editor).isHidden()) {tinyMCE.get(editor).show()}; tinyMCE.get(editor).save();';';
-        }
-		</script>
 		<form action="index.php" method="post" name="adminForm">
 		<?php
 		

@@ -50,8 +50,8 @@ class processor_payments_gateway extends POSTprocessor
 
 		$settings['api_login_id']			= array( 'inputC' );
 		$settings['api_key']				= array( 'inputC' );
-		$settings['testmode']				= array( 'list_yesno' );
-		$settings['invoice_tax']			= array( 'list_yesno' );
+		$settings['testmode']				= array( 'toggle' );
+		$settings['invoice_tax']			= array( 'toggle' );
 		$settings['tax']					= array( 'inputA' );
 		$settings['currency']				= array( 'list_currency' );
 		$settings['customparams']			= array( 'inputD' );

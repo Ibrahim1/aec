@@ -34,7 +34,7 @@ class processor_vcs extends POSTprocessor
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( "p" );
-		$settings['testmode']			= array( 'list_yesno');
+		$settings['testmode']			= array( 'toggle');
 		$settings['merchant_id']		= array( 'inputC');
 		$settings['pam']				= array( 'inputC');
 		$settings['currency']			= array( 'list_currency' );

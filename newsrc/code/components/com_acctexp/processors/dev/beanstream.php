@@ -58,8 +58,8 @@ class processor_beanstream extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
-        $settings['scEnabled']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
+        $settings['scEnabled']		= array( 'toggle' );
 		$settings['login']			= array( 'inputC' );
         $settings['termUrl']		= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );

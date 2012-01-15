@@ -61,12 +61,12 @@ class processor_2checkout extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['sid']			= array( 'inputC' );
 		$settings['secret_word']	= array( 'inputC' );
 		$settings['info']			= array( 'fieldset' );
-		$settings['alt2courl']		= array( 'list_yesno' );
+		$settings['alt2courl']		= array( 'toggle' );
 		$settings['item_name']		= array( 'inputE' );
 		$settings['customparams']	= array( 'inputD' );
 

@@ -58,9 +58,9 @@ class processor_iats extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['currency']		= array( 'list_currency' );
-		$settings['server_type']	= array( 'list_yesno' );
+		$settings['server_type']	= array( 'toggle' );
 
 		$settings['agent_code']		= array( 'inputC' );
 		$settings['password']		= array( 'inputC' );

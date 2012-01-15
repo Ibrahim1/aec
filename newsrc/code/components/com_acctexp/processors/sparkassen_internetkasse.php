@@ -46,8 +46,8 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array('list_yesno');
-		$settings['pseudocreditcard']	= array('list_yesno');
+		$settings['testmode']			= array('toggle');
+		$settings['pseudocreditcard']	= array('toggle');
 		$settings['sslmerchant']		= array('inputC');
 		$settings['sslmerchantpass']	= array('inputC');
 		$settings['merchant']			= array('inputC');

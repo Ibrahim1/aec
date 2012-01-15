@@ -27,12 +27,12 @@ class mi_k2
 		$db = &JFactory::getDBO();
 
         $settings = array();
-		$settings['set_group']		= array( 'list_yesno' );
+		$settings['set_group']		= array( 'toggle' );
 		$settings['group']			= array( 'list' );
-		$settings['set_group_exp']	= array( 'list_yesno' );
+		$settings['set_group_exp']	= array( 'toggle' );
 		$settings['group_exp']		= array( 'list' );
-		$settings['rebuild']		= array( 'list_yesno' );
-		$settings['remove']			= array( 'list_yesno' );
+		$settings['rebuild']		= array( 'toggle' );
+		$settings['remove']			= array( 'toggle' );
 
 		$query = 'SHOW COLUMNS FROM #__k2_user_groups'
 				. ' LIKE \'groups_id\''

@@ -44,7 +44,7 @@ class processor_ewayxml extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']	= array( 'list_yesno' );
+		$settings['testmode']	= array( 'toggle' );
 		$settings['currency']	= array( 'list_currency' );
 		$settings['custId']		= array( 'inputC' );
 		$settings['SiteTitle']	= array( 'inputC' );

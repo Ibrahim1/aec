@@ -46,7 +46,7 @@ class processor_clickbank extends URLprocessor
 	{
 		$settings = array();
 		$settings['currency']		= array( 'list_currency' );
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['publisher']		= array( 'inputC' );
 		$settings['secret_key']		= array( 'inputC' );
 		$settings['info']			= array( 'fieldset' );

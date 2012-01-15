@@ -64,14 +64,14 @@ class processor_chase_paymentech extends PROFILEprocessor
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( 'p' );
-		$settings['testmode']			= array( 'list_yesno' );
+		$settings['testmode']			= array( 'toggle' );
 		$settings['merchant_id'] 		= array( 'inputC' );
 		$settings['terminal_id'] 		= array( 'inputC' );
 		$settings['BIN']		 		= array( 'inputC' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['pay_types']			= array( 'list' );
-		$settings['promptAddress']		= array( 'list_yesno' );
-		$settings['promptZipOnly']		= array( 'list_yesno' );
+		$settings['promptAddress']		= array( 'toggle' );
+		$settings['promptZipOnly']		= array( 'toggle' );
 		$settings['item_name']			= array( 'inputE' );
 		$settings['customparams']		= array( 'inputD' );
 

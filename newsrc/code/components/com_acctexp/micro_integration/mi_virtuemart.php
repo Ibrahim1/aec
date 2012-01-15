@@ -53,13 +53,13 @@ class mi_virtuemart
 		$settings['lists']['shopper_group']		= JHTML::_( 'select.genericlist', $sg, 'shopper_group', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
 		$settings['lists']['shopper_group_exp'] = JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
 
-		$settings['set_shopper_group']		= array( 'list_yesno' );
+		$settings['set_shopper_group']		= array( 'toggle' );
 		$settings['shopper_group']			= array( 'list' );
-		$settings['set_shopper_group_exp']	= array( 'list_yesno' );
+		$settings['set_shopper_group_exp']	= array( 'toggle' );
 		$settings['shopper_group_exp']		= array( 'list' );
-		$settings['create_account']			= array( 'list_yesno' );
-		$settings['rebuild']				= array( 'list_yesno' );
-		$settings['remove']					= array( 'list_yesno' );
+		$settings['create_account']			= array( 'toggle' );
+		$settings['rebuild']				= array( 'toggle' );
+		$settings['remove']					= array( 'toggle' );
 
 		return $settings;
 	}

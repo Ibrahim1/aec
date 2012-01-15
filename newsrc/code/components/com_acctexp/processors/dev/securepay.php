@@ -53,7 +53,7 @@ class processor_securepay extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['merchantid']		= array( 'inputC' );
 		$settings['password']		= array( 'inputC' );
 		$settings['SiteTitle']		= array( 'inputC' );
@@ -178,7 +178,7 @@ class processor_securepay extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['merchantid']		= array( 'inputC' );
 		$settings['password']		= array( 'inputC' );
 		$settings['SiteTitle']		= array( 'inputC' );

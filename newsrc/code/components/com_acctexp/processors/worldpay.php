@@ -44,7 +44,7 @@ class processor_worldpay extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'list_yesno');
+		$settings['testmode']		= array( 'toggle');
 		$settings['instId']			= array( 'inputC');
 		$settings['currency']		= array( 'list_currency');
 		$settings['info']			= array( 'fieldset' );
