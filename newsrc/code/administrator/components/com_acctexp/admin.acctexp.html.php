@@ -317,9 +317,13 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
 			$tabs = new bsPaneTabs;
-			echo $tabs->startPane( 'settings' );
 
-			echo $tabs->startPanel(JText::_('AEC_HEAD_PLAN_INFO'), JText::_('AEC_HEAD_PLAN_INFO'));
+			$tabs->startTabs();
+			$tabs->newTab( 'user', JText::_('AEC_HEAD_PLAN_INFO'), true );
+			$tabs->newTab( 'mis', JText::_('AEC_USER_MICRO_INTEGRATION') );
+			$tabs->endTabs();
+
+			$tabs->startPane( 'user', true );
 			?>
 			<table class="aecadminform">
 				<tr>
@@ -615,8 +619,8 @@ class HTML_AcctExp
 				</tr>
 			</table>
 			<?php
-			echo $tabs->endPanel();
-			echo $tabs->startPanel(JText::_('AEC_USER_MICRO_INTEGRATION'), JText::_('AEC_USER_MICRO_INTEGRATION'));
+			$tabs->endPane();
+			$tabs->startPane( 'mis' );
 			?>
 			<div class="aec_userinfobox_sub">
 			<?php if ( $metaUser->hasSubscription ) { ?>
@@ -697,8 +701,8 @@ class HTML_AcctExp
 			</div>
 			<?php
 			}
-			echo $tabs->endPanel();
-			echo $tabs->endPane();
+			$tabs->endPane();
+			$tabs->endPanes();
 			?>
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
 			<input type="hidden" name="id" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
@@ -1237,22 +1241,21 @@ class HTML_AcctExp
 		HTML_myCommon::getButtons( $buttons, 'Processor' );
 
 		$tabs = new bsPaneTabs;
-		echo $tabs->startPane( 'settings' );
+
+		$tabs->startTabs();
+		$tabs->newTab( 'processor', ( !empty( $aecHTML->pp ) ? $aecHTML->pp->info['longname'] : 'new processor' ), true );
+		$tabs->endTabs();
+
+		$tabs->startPane( 'processor' );
+
+		$id = 0;
 		if ( !empty( $aecHTML->pp ) ) {
-			echo $tabs->startPanel( $aecHTML->pp->processor_name, $aecHTML->pp->info['longname'] );
-
 			echo '<img src="' . JURI::root( true ) . '/media/' . $option . '/images/site/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
-			echo '</div>';
 
-			echo '<div class="aec_userinfobox_sub">';
 			$id = $aecHTML->pp->id;
-		} else {
-			echo $tabs->startPanel( 'new processor', 'new processor' );
-
-			echo '<div class="aec_userinfobox_sub">';
-
-			$id = 0;
 		}
+
+		echo '<div class="aec_userinfobox_sub">';
 
 		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 			echo $aecHTML->createSettingsParticle( $rowname );
@@ -1260,7 +1263,7 @@ class HTML_AcctExp
 
 		echo '</div>';
 
-		echo $tabs->endPanel();
+		$tabs->endPane();
 		?>
 		<input type="hidden" name="id" value="<?php echo $id; ?>" />
 		<input type="hidden" name="task" value="" />
@@ -1268,7 +1271,7 @@ class HTML_AcctExp
 		</form>
 		<?php
 		// close pane and include footer
-		echo $tabs->endPane();
+		$tabs->endPanes();
 
 		echo $aecHTML->loadJS();
 
@@ -1537,8 +1540,8 @@ class HTML_AcctExp
 				<tr>
 					<td valign="top">
 						<?php
-		                echo $tabs->startPane( 'createMicroIntegration' );
-		                echo $tabs->startPanel( JText::_('MI_E_TITLE'), JText::_('MI_E_TITLE') );
+		                $tabs->startPane( 'createMicroIntegration' );
+		                $tabs->startPane( JText::_('MI_E_TITLE'), JText::_('MI_E_TITLE') );
 		                ?>
 		                <table width="100%" class="aecadminform">
 							<tr>
@@ -1588,16 +1591,16 @@ class HTML_AcctExp
 							</tr>
 							</table>
 							<?php if ( $aecHTML->hasSettings ) {
-			                echo $tabs->endPanel();
-			                echo $tabs->startPanel( JText::_('MI_E_SETTINGS'), JText::_('MI_E_SETTINGS') ); ?>
+			                $tabs->endPane();
+			                $tabs->startPane( JText::_('MI_E_SETTINGS'), JText::_('MI_E_SETTINGS') ); ?>
 				                <table width="100%" class="aecadminform">
 				                	<div class="aec_userinfobox_sub">
 									<?php
 									foreach ( $aecHTML->customparams as $name ) {
 										if ( strpos( $name, 'aectab_' ) === 0 ) {
 											?></table><?php
-											echo $tabs->endPanel();
-											echo $tabs->startPanel( $aecHTML->rows[$name][1], $aecHTML->rows[$name][1] ); ?>
+											$tabs->endPane();
+											$tabs->startPane( $aecHTML->rows[$name][1], $aecHTML->rows[$name][1] ); ?>
 							                <table width="100%" class="aecadminform">
 											<?php
 										} else {
@@ -1616,8 +1619,8 @@ class HTML_AcctExp
 								</table>
 								<?php
 							}
-			                echo $tabs->endPanel();
-			                echo $tabs->endPane(); ?>
+			                $tabs->endPane();
+			                $tabs->endPanes(); ?>
 						</td>
 					</tr>
 				</table>
@@ -1803,8 +1806,8 @@ class HTML_AcctExp
 					<td valign="top">
 						<?php
 						$tabs = new bsPaneTabs;
-		                echo $tabs->startPane( 'editSubscriptionPlan' );
-		                echo $tabs->startPanel( JText::_('PAYPLAN_DETAIL_TITLE'), JText::_('PAYPLAN_DETAIL_TITLE') );
+		                $tabs->startPane( 'editSubscriptionPlan' );
+		                $tabs->startPane( JText::_('PAYPLAN_DETAIL_TITLE'), JText::_('PAYPLAN_DETAIL_TITLE') );
 		                ?>
 						<table class="aecadminform">
 							<tr>
@@ -1921,8 +1924,8 @@ class HTML_AcctExp
 							</tr>
 						</table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('PAYPLAN_PROCESSORS_TITLE'), JText::_('PAYPLAN_PROCESSORS_TITLE') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('PAYPLAN_PROCESSORS_TITLE'), JText::_('PAYPLAN_PROCESSORS_TITLE') );
 						?>
 						<table width="100%" class="aecadminform"><tr><td>
 							<?php
@@ -1944,8 +1947,8 @@ class HTML_AcctExp
 							?>
 						</td></tr></table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('PAYPLAN_TEXT_TITLE'), JText::_('PAYPLAN_TEXT_TITLE') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('PAYPLAN_TEXT_TITLE'), JText::_('PAYPLAN_TEXT_TITLE') );
 		                ?>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
@@ -1958,8 +1961,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('PAYPLAN_RESTRICTIONS_TITLE'), JText::_('PAYPLAN_RESTRICTIONS_TITLE') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('PAYPLAN_RESTRICTIONS_TITLE'), JText::_('PAYPLAN_RESTRICTIONS_TITLE') );
 		                ?>
 						<table class="aecadminform">
 							<tr><td>
@@ -1988,8 +1991,8 @@ class HTML_AcctExp
 							</td></tr>
 						</table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('PAYPLAN_TRIAL_TITLE'), JText::_('PAYPLAN_TRIAL_TITLE') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('PAYPLAN_TRIAL_TITLE'), JText::_('PAYPLAN_TRIAL_TITLE') );
 						?>
 						<table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
@@ -2003,8 +2006,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('PAYPLAN_RELATIONS_TITLE'), JText::_('PAYPLAN_RELATIONS_TITLE') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('PAYPLAN_RELATIONS_TITLE'), JText::_('PAYPLAN_RELATIONS_TITLE') );
 						?>
 						<table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
@@ -2013,8 +2016,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('PAYPLAN_MI'), JText::_('PAYPLAN_MI') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('PAYPLAN_MI'), JText::_('PAYPLAN_MI') );
 		                ?>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
@@ -2088,8 +2091,8 @@ class HTML_AcctExp
 							?>
 						</td></tr></table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->endPane();
+		                $tabs->endPane();
+		                $tabs->endPanes();
 						?>
 					</td>
 				</tr>
@@ -2252,8 +2255,8 @@ class HTML_AcctExp
 					<td valign="top">
 						<?php
 						$tabs = new bsPaneTabs;
-		                echo $tabs->startPane( 'editItemGroup' );
-		                echo $tabs->startPanel( JText::_('ITEMGROUP_DETAIL_TITLE'), JText::_('ITEMGROUP_DETAIL_TITLE') );
+		                $tabs->startPane( 'editItemGroup' );
+		                $tabs->startPane( JText::_('ITEMGROUP_DETAIL_TITLE'), JText::_('ITEMGROUP_DETAIL_TITLE') );
 		                ?>
 		                <h2><?php echo JText::_('ITEMGROUP_DETAIL_TITLE'); ?></h2>
 						<table class="aecadminform">
@@ -2319,8 +2322,8 @@ class HTML_AcctExp
 							</tr>
 						</table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('ITEMGROUP_RESTRICTIONS_TITLE'), JText::_('ITEMGROUP_RESTRICTIONS_TITLE') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('ITEMGROUP_RESTRICTIONS_TITLE'), JText::_('ITEMGROUP_RESTRICTIONS_TITLE') );
 		                ?>
 		                <h2><?php echo JText::_('ITEMGROUP_RESTRICTIONS_TITLE'); ?></h2>
 						<table class="aecadminform">
@@ -2336,8 +2339,8 @@ class HTML_AcctExp
 						</td></tr>
 						</table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('PAYPLAN_MI'), JText::_('PAYPLAN_MI') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('PAYPLAN_MI'), JText::_('PAYPLAN_MI') );
 		                ?>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
@@ -2389,8 +2392,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->endPane();
+		                $tabs->endPane();
+		                $tabs->endPanes();
 						?>
 					</td>
 				</tr>
@@ -2512,8 +2515,8 @@ class HTML_AcctExp
 					<td valign="top">
 						<?php
 						$tabs = new bsPaneTabs;
-		                echo $tabs->startPane( 'editSubscriptionPlan' );
-		                echo $tabs->startPanel( JText::_('COUPON_DETAIL_TITLE'), JText::_('COUPON_DETAIL_TITLE') ); ?>
+		                $tabs->startPane( 'editSubscriptionPlan' );
+		                $tabs->startPane( JText::_('COUPON_DETAIL_TITLE'), JText::_('COUPON_DETAIL_TITLE') ); ?>
 		                <h2><?php echo JText::_('COUPON_DETAIL_TITLE'); ?></h2>
 						<table class="aecadminform">
 							<tr>
@@ -2585,8 +2588,8 @@ class HTML_AcctExp
 							</tr>
 						</table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('COUPON_RESTRICTIONS_TITLE'), JText::_('COUPON_RESTRICTIONS_TITLE') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('COUPON_RESTRICTIONS_TITLE'), JText::_('COUPON_RESTRICTIONS_TITLE') );
 		                ?>
 		                <h2><?php echo JText::_('COUPON_RESTRICTIONS_TITLE_FULL'); ?></h2>
 						<table class="aecadminform">
@@ -2618,8 +2621,8 @@ class HTML_AcctExp
 							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 						</table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->startPanel( JText::_('COUPON_MI'), JText::_('COUPON_MI') );
+		                $tabs->endPane();
+		                $tabs->startPane( JText::_('COUPON_MI'), JText::_('COUPON_MI') );
 		                ?>
 		                <table width="100%" class="aecadminform"><tr><td>
 							<div class="aec_userinfobox_sub">
@@ -2628,8 +2631,8 @@ class HTML_AcctExp
 							</div>
 						</td></tr></table>
 						<?php
-		                echo $tabs->endPanel();
-		                echo $tabs->endPane();
+		                $tabs->endPane();
+		                $tabs->endPanes();
 						?>
 					</td>
 				</tr>
