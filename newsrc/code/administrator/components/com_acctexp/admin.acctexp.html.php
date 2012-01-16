@@ -2224,7 +2224,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
@@ -2242,154 +2242,145 @@ class HTML_AcctExp
 
 		$tabs->startPanes();
 		?>
-		<small><?php echo $row->id ? $row->name : JText::_('AEC_CMN_NEW'); ?></small>
 		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
-			<table class="aecadminform" width="100%">
+			<?php
+			$tabs->startPanes();
+			$tabs->startPane( 'group', true );
+			?>
+			<table class="aecadminform">
 				<tr>
 					<td valign="top">
-						<?php
-		                $tabs->startPane( 'group', true );
-		                ?>
-		                <h2><?php echo JText::_('ITEMGROUP_DETAIL_TITLE'); ?></h2>
-						<table class="aecadminform">
-							<tr>
-								<td valign="top">
-									<div style="position:relative;float:left;width:32%;padding:4px;">
-										<div class="aec_userinfobox_sub">
-											<div style="position:relative;float:left;width:100%;">
-												<?php
-												echo $aecHTML->createSettingsParticle( 'name' );
-												if ( $row->id ) { ?>
-													<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&group=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
-													<?php
-												} ?>
-											</div>
-											<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'symlink_userid' ); ?>
-											<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
-										</div>
-									</div>
-									<div style="position:relative;float:left;width:32%;padding:4px;">
-										<div class="aec_userinfobox_sub">
-											<h2 style="clear:both;"><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h2>
-											<table style="width:100%;">
-												<tr>
-													<th>ID</td>
-													<th>Name</td>
-													<th>delete</td>
-												</tr>
-												<?php
-												if ( !empty( $aecHTML->customparams->groups ) ) {
-													foreach ( $aecHTML->customparams->groups as $id => $group ) {
-														?>
-														<tr>
-															<td align="right" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
-															<td><?php echo $group['name']; ?></td>
-															<td><?php echo $aecHTML->createSettingsParticle( 'group_delete_'.$id ); ?></td>
-														</tr>
-														<?php
-													}
-												}
-												?>
-											<?php if ( $row->id > 1 ) { ?>
-												<tr>
-													<td><?php echo JText::_('NEW_ITEMGROUP'); ?>:</td>
-													<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-												</tr>
-											<?php } ?>
-											</table>
-										</div>
-									</div>
-									<div style="position:relative;float:left;width:98%;padding:4px;">
-										<div class="aec_userinfobox_sub">
-											<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-										</div>
-									</div>
-								</td>
-							</tr>
-						</table>
-						<?php
-		                $tabs->endPane();
-		                $tabs->startPane( 'restrictions' );
-		                ?>
-		                <h2><?php echo JText::_('ITEMGROUP_RESTRICTIONS_TITLE'); ?></h2>
-						<table class="aecadminform">
-							<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-						<tr><td>
+						<div style="position:relative;float:left;width:32%;padding:4px;">
 							<div class="aec_userinfobox_sub">
-								<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
-								<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-								<br />
-								<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
+								<div style="position:relative;float:left;width:100%;">
+									<?php
+									echo $aecHTML->createSettingsParticle( 'name' );
+									if ( $row->id ) { ?>
+										<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&group=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
+										<?php
+									} ?>
+								</div>
+								<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'symlink_userid' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 							</div>
-						</td></tr>
-						</table>
-						<?php
-		                $tabs->endPane();
-		                $tabs->startPane( 'mis' );
-		                ?>
-		                <table width="100%" class="aecadminform"><tr><td>
+						</div>
+						<div style="position:relative;float:left;width:32%;padding:4px;">
 							<div class="aec_userinfobox_sub">
+								<h2 style="clear:both;"><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h2>
+								<table style="width:100%;">
+									<tr>
+										<th>ID</td>
+										<th>Name</td>
+										<th>delete</td>
+									</tr>
+									<?php
+									if ( !empty( $aecHTML->customparams->groups ) ) {
+										foreach ( $aecHTML->customparams->groups as $id => $group ) {
+											?>
+											<tr>
+												<td align="right" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
+												<td><?php echo $group['name']; ?></td>
+												<td><?php echo $aecHTML->createSettingsParticle( 'group_delete_'.$id ); ?></td>
+											</tr>
+											<?php
+										}
+									}
+									?>
 								<?php if ( $row->id > 1 ) { ?>
-								<h2><?php echo JText::_('Inherited Micro Integrations'); ?></h2>
-								<?php
-								if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
-									echo '<p>' . JText::_('These MIs were inherited from groups that this group is in') . '</p>';
-									echo '<ul>';
-									foreach ( $aecHTML->customparams->mi['inherited'] as $id => $mi ) {
-										?>
-										<li>
-											<p>
-												<input type="checkbox" name="inherited_micro_integrations[]" value="<?php echo $mi->id; ?>" checked="checked" disabled="disabled" />
-												<strong><?php echo $mi->name; ?></strong> (#<?php echo $mi->id; ?>)
-												(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
-											</p>
-											<p><?php echo $mi->desc; ?></p>
-										</li>
-										<?php
-									}
-									echo '</ul>';
-								} else {
-									echo '<p>' . JText::_('No inherited MIs - A group can inherit MIs from groups that it is in') . '</p>';
-								}
-								?>
+									<tr>
+										<td><?php echo JText::_('NEW_ITEMGROUP'); ?>:</td>
+										<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+									</tr>
 								<?php } ?>
-								<h2><?php echo JText::_('Attached Micro Integrations'); ?></h2>
-								<?php
-								if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
-									echo '<ul>';
-									foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
-										?>
-										<li>
-											<p>
-												<input type="checkbox" name="micro_integrations[]" value="<?php echo $mi->id; ?>" <?php echo $mi->attached ? 'checked="checked"' : ''; ?> />
-												<strong><?php echo $mi->name; ?></strong>
-												(#<?php echo $mi->id; ?>)
-												<?php echo $mi->inherited ? ( ' (' . '<input type="checkbox" name="inherited_micro_integrations[]" value="' . $mi->id . '" checked="checked" disabled="disabled" />' . JText::_('Inherited! See above.') . ')' ) : ''; ?>
-												(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
-											</p>
-											<p><?php echo $mi->desc; ?></p>
-										</li>
-										<?php
-									}
-									echo '</ul>';
-								}
-								?>
+								</table>
 							</div>
-						</td></tr></table>
-						<?php
-		                $tabs->endPane();
-		                $tabs->endPanes();
-						?>
+						</div>
+						<div style="position:relative;float:left;width:98%;padding:4px;">
+							<div class="aec_userinfobox_sub">
+								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+							</div>
+						</div>
 					</td>
 				</tr>
 			</table>
+			<?php
+            $tabs->endPane();
+            $tabs->startPane( 'restrictions' );
+            ?>
+			<table class="aecadminform">
+				<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+			<tr><td>
+				<div class="aec_userinfobox_sub">
+					<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
+					<br />
+					<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
+				</div>
+			</td></tr>
+			</table>
+			<?php
+            $tabs->endPane();
+            $tabs->startPane( 'mis' );
+            ?>
+            <table width="100%" class="aecadminform"><tr><td>
+				<div class="aec_userinfobox_sub">
+					<?php if ( $row->id > 1 ) { ?>
+					<?php
+					if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
+						echo '<p>' . JText::_('These MIs were inherited from groups that this group is in') . '</p>';
+						echo '<ul>';
+						foreach ( $aecHTML->customparams->mi['inherited'] as $id => $mi ) {
+							?>
+							<li>
+								<p>
+									<input type="checkbox" name="inherited_micro_integrations[]" value="<?php echo $mi->id; ?>" checked="checked" disabled="disabled" />
+									<strong><?php echo $mi->name; ?></strong> (#<?php echo $mi->id; ?>)
+									(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+								</p>
+								<p><?php echo $mi->desc; ?></p>
+							</li>
+							<?php
+						}
+						echo '</ul>';
+					} else {
+						echo '<p>' . JText::_('No inherited MIs - A group can inherit MIs from groups that it is in') . '</p>';
+					}
+					?>
+					<?php } ?>
+					<h2><?php echo JText::_('Attached Micro Integrations'); ?></h2>
+					<?php
+					if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
+						echo '<ul>';
+						foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
+							?>
+							<li>
+								<p>
+									<input type="checkbox" name="micro_integrations[]" value="<?php echo $mi->id; ?>" <?php echo $mi->attached ? 'checked="checked"' : ''; ?> />
+									<strong><?php echo $mi->name; ?></strong>
+									(#<?php echo $mi->id; ?>)
+									<?php echo $mi->inherited ? ( ' (' . '<input type="checkbox" name="inherited_micro_integrations[]" value="' . $mi->id . '" checked="checked" disabled="disabled" />' . JText::_('Inherited! See above.') . ')' ) : ''; ?>
+									(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+								</p>
+								<p><?php echo $mi->desc; ?></p>
+							</li>
+							<?php
+						}
+						echo '</ul>';
+					}
+					?>
+				</div>
+			</td></tr></table>
+			<?php
+            $tabs->endPane();
+            $tabs->endPanes();
+			?>
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
