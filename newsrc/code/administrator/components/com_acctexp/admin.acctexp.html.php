@@ -520,92 +520,86 @@ class HTML_AcctExp
 								<?php } ?>
 						</div>
 					</td>
-					<td width="50%" style="padding:10px; padding-right:20px; vertical-align:top;">
+					<td width="50%" style="padding:10px; vertical-align:top;">
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
-							<div style="float: left; text-align: left;">
-								<table width="100%">
-										<tr>
-											<td><?php echo JText::_('HISTORY_COL_INVOICE');?></td>
-											<td><?php echo JText::_('HISTORY_COL_AMOUNT');?></td>
-											<td><?php echo JText::_('HISTORY_COL_DATE');?></td>
-											<td><?php echo JText::_('HISTORY_COL_METHOD');?></td>
-											<td><?php echo JText::_('HISTORY_COL_PLAN');?></td>
-											<td><?php echo JText::_('HISTORY_COL_ACTION');?></td>
-										</tr>
-										<tr>
-											<td colspan="6" style="border-top: 2px solid #999999;"></td>
+							<table width="100%">
+								<tr>
+									<td><?php echo JText::_('HISTORY_COL_INVOICE');?></td>
+									<td><?php echo JText::_('HISTORY_COL_AMOUNT');?></td>
+									<td><?php echo JText::_('HISTORY_COL_DATE');?></td>
+									<td><?php echo JText::_('HISTORY_COL_METHOD');?></td>
+									<td><?php echo JText::_('HISTORY_COL_PLAN');?></td>
+									<td><?php echo JText::_('HISTORY_COL_ACTION');?></td>
+								</tr>
+								<tr>
+									<td colspan="6" style="border-top: 2px solid #999999;"></td>
+								</tr>
+								<?php
+								if ( !empty( $invoices ) ) {
+									foreach ( $invoices as $invoice ) { ?>
+										<tr<?php echo $invoice['rowstyle']; ?>>
+											<td><?php echo $invoice['invoice_number']; ?></td>
+											<td><?php echo $invoice['amount']; ?></td>
+											<td><?php echo $invoice['status']; ?></td>
+											<td><?php echo $invoice['processor']; ?></td>
+											<td><?php echo $invoice['usage']; ?></td>
+											<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
 										</tr>
 										<?php
-										if ( !empty( $invoices ) ) {
-											foreach ( $invoices as $invoice ) { ?>
-												<tr<?php echo $invoice['rowstyle']; ?>>
-													<td><?php echo $invoice['invoice_number']; ?></td>
-													<td><?php echo $invoice['amount']; ?></td>
-													<td><?php echo $invoice['status']; ?></td>
-													<td><?php echo $invoice['processor']; ?></td>
-													<td><?php echo $invoice['usage']; ?></td>
-													<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
-												</tr>
-												<?php
+									}
+
+									echo '</table>';
+
+									if ( $aecHTML->invoice_pages > 1 ) {
+										echo '<div class="aec-invoices-pagination"><p>';
+										$plist = array();
+										for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
+											if ( $i == $aecHTML->invoice_page ) {
+												$plist[] = ( $i + 1 );
+											} else {
+												$plist[] = '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
 											}
+										}
+										echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
+									}
+								} else {
+									echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
+									. JText::_('AEC_USER_NO_INVOICES')
+									. '&nbsp;&lt;&lt;</td></tr>' . "\n";
 
-											echo '</table>';
-
-											if ( $aecHTML->invoice_pages > 1 ) {
-												echo '<div class="aec-invoices-pagination"><p>';
-												$plist = array();
-												for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
-													if ( $i == $aecHTML->invoice_page ) {
-														$plist[] = ( $i + 1 );
-													} else {
-														$plist[] = '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
-													}
-												}
-												echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
-											}
-										} else {
-											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
-											. JText::_('AEC_USER_NO_INVOICES')
-											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-
-											echo '</table>';
-										} ?>
-							</div>
+									echo '</table>';
+								} ?>
 						</div>
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
-							<div style="float: left; text-align: left;">
-								<table width="100%">
+							<table width="100%">
+								<tr>
+									<td><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></td>
+									<td><?php echo JText::_('HISTORY_COL_INVOICE');?></td>
+								</tr>
+								<tr>
+									<td colspan="6" style="border-top: 2px solid #999999;"></td>
+								</tr>
+								<?php
+								if ( !empty( $coupons ) ) {
+									foreach ( $coupons as $coupon ) { ?>
 										<tr>
-											<td><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></td>
-											<td><?php echo JText::_('HISTORY_COL_INVOICE');?></td>
-										</tr>
-										<tr>
-											<td colspan="6" style="border-top: 2px solid #999999;"></td>
+											<td><?php echo $coupon['coupon_code']; ?></td>
+											<td><?php echo $coupon['invoices']; ?></td>
 										</tr>
 										<?php
-										if ( !empty( $coupons ) ) {
-											foreach ( $coupons as $coupon ) { ?>
-												<tr>
-													<td><?php echo $coupon['coupon_code']; ?></td>
-													<td><?php echo $coupon['invoices']; ?></td>
-												</tr>
-												<?php
-											}
-										} else {
-											echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
-											. JText::_('AEC_USER_NO_COUPONS')
-											. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-										} ?>
-								</table>
-							</div>
+									}
+								} else {
+									echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
+									. JText::_('AEC_USER_NO_COUPONS')
+									. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+								} ?>
+							</table>
 						</div>
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo 'Notes'; ?></h4>
-							<div style="float: left; text-align: left;">
 							<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
-							</div>
 						</div>
 					</td>
 				</tr>

@@ -132,17 +132,26 @@ padding-bottom: 18px;
 }
 
 label {
-width: 200px;
+width: 45%;
 padding-right: 36px;
 }
 
-form .input {
+div.clearfix form .input {
+float: left;
 margin-left: 0;
 text-align: center;
 }
 
 form .clearfix {
 margin-bottom: 10px;
+}
+
+div.liner {
+border-bottom: 1px dashed #999999;
+height: 16px;
+margin: 0 33%;
+position: absolute;
+width: 22%;
 }
 
 #aec_center h3 {
