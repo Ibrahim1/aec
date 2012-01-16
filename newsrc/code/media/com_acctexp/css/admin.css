@@ -154,6 +154,10 @@ position: absolute;
 width: 22%;
 }
 
+.form-stacked {
+vertical-align: top;
+}
+
 #aec_center h3 {
 clear: both;
 display: block;
