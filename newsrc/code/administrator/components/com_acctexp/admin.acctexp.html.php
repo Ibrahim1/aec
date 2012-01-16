@@ -1215,10 +1215,8 @@ class HTML_AcctExp
 	function editProcessor( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-		?>
-		<form action="index.php" method="post" name="adminForm">
-		<?php
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', ': ' . ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
@@ -1226,38 +1224,37 @@ class HTML_AcctExp
 						);
 		HTML_myCommon::getButtons( $buttons, 'Processor' );
 
-		$tabs = new bsPaneTabs;
-
-		$tabs->startTabs();
-		$tabs->newTab( 'processor', ( !empty( $aecHTML->pp ) ? $aecHTML->pp->info['longname'] : 'new processor' ), true );
-		$tabs->endTabs();
-
-		$tabs->startPane( 'processor' );
-
 		$id = 0;
 		if ( !empty( $aecHTML->pp ) ) {
-			echo '<img src="' . JURI::root( true ) . '/media/' . $option . '/images/site/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
+			echo '<div class="aec-filters">';
+			echo '<p style="text-align: center;"><img src="' . JURI::root( true ) . '/media/' . $option . '/images/site/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" /></p>';
+			echo '</div>';
 
 			$id = $aecHTML->pp->id;
 		}
-
-		echo '<div class="aec_userinfobox_sub">';
-
-		foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-			echo $aecHTML->createSettingsParticle( $rowname );
-		}
-
-		echo '</div>';
-
-		$tabs->endPane();
+		
 		?>
-		<input type="hidden" name="id" value="<?php echo $id; ?>" />
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<form action="index.php" method="post" name="adminForm">
+            <table width="100%" class="aecadminform">
+				<tr>
+					<td valign="top">
+						<div class="aec_userinfobox_sub">
+							<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
+							<?php
+							foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+								echo $aecHTML->createSettingsParticle( $rowname );
+							}
+							?>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" name="id" value="<?php echo $id; ?>" />
+			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>
 		<?php
 		// close pane and include footer
-		$tabs->endPanes();
 
 		echo $aecHTML->loadJS();
 
