@@ -608,85 +608,91 @@ class HTML_AcctExp
 			$tabs->endPane();
 			$tabs->startPane( 'mis' );
 			?>
-			<div class="aec_userinfobox_sub">
-			<?php if ( $metaUser->hasSubscription ) { ?>
-				<p><a href="index.php?"><?php echo JText::_('AEC_USER_QUICKFIRE_GO'); ?></a></p>
-			<?php } else { ?>
-				<p><?php echo JText::_('AEC_USER_QUICKFIRE_UNAVAILABLE'); ?></p>
-			<?php } ?>
-			</div>
-
-			<div class="aec_userinfobox_sub">
-			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) {
-				if ( !empty( $mi['profile'] ) ) { ?>
-				<table class="aecadminform">
-					<tr>
-						<td valign="top" style="padding: 10px;">
-							<?php foreach ( $mi['profile'] as $mix ) { ?>
-									<div class="profileinfobox">
-										<h4><?php echo $mix['name']; ?></h4>
-										<p><?php echo $mix['info']; ?></p>
-									</div>
-								<?php
-							} ?>
-						</td>
-					</tr>
-				</table>
-				<?php }
-				if ( !empty( $mi['profile_form'] ) ) { ?>
-				<table class="aecadminform">
-					<tr>
-						<td valign="top" style="padding: 10px;">
-							<?php foreach ( $mi['profile_form'] as $k ) { ?>
-									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
-								<?php
-							} ?>
-						</td>
-					</tr>
-				</table>
-				<?php }
-			} ?>
-			<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) {
-				if ( !empty( $mi['admin'] ) ) { ?>
-				<table class="aecadminform">
-					<tr>
-						<td valign="top" style="padding: 10px;">
-							<?php foreach ( $mi['admin'] as $mix ) { ?>
-									<div class="admininfobox">
-										<h3><?php echo $mix['name']; ?></h3>
-										<p><?php echo $mix['info']; ?></p>
-									</div>
-								<?php
-							} ?>
-						</td>
-					</tr>
-				</table>
-				<?php }
-				if ( !empty( $mi['admin_form'] ) ) { ?>
-				<table class="aecadminform">
-					<tr>
-						<td valign="top" style="padding: 10px;">
-							<?php foreach ( $mi['admin_form'] as $k ) { ?>
-									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
-								<?php
-							} ?>
-						</td>
-					</tr>
-				</table>
-				<?php }
-			}
-
-			if ( !empty( $metaUser->meta->params->mi ) ) { ?>
 			<table class="aecadminform">
 				<tr>
-					<td valign="top" style="padding: 10px;">
-						<pre><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+					<td>
+						<div class="aec_userinfobox_sub">
+						<?php if ( $metaUser->hasSubscription ) { ?>
+							<p><a href="index.php?"><?php echo JText::_('AEC_USER_QUICKFIRE_GO'); ?></a></p>
+						<?php } else { ?>
+							<p><?php echo JText::_('AEC_USER_QUICKFIRE_UNAVAILABLE'); ?></p>
+						<?php } ?>
+						</div>
+
+						<div class="aec_userinfobox_sub">
+						<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) {
+							if ( !empty( $mi['profile'] ) ) { ?>
+							<table class="aecadminform">
+								<tr>
+									<td valign="top" style="padding: 10px;">
+										<?php foreach ( $mi['profile'] as $mix ) { ?>
+												<div class="profileinfobox">
+													<h4><?php echo $mix['name']; ?></h4>
+													<p><?php echo $mix['info']; ?></p>
+												</div>
+											<?php
+										} ?>
+									</td>
+								</tr>
+							</table>
+							<?php }
+							if ( !empty( $mi['profile_form'] ) ) { ?>
+							<table class="aecadminform">
+								<tr>
+									<td valign="top" style="padding: 10px;">
+										<?php foreach ( $mi['profile_form'] as $k ) { ?>
+												<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+											<?php
+										} ?>
+									</td>
+								</tr>
+							</table>
+							<?php }
+						} ?>
+						<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) {
+							if ( !empty( $mi['admin'] ) ) { ?>
+							<table class="aecadminform">
+								<tr>
+									<td valign="top" style="padding: 10px;">
+										<?php foreach ( $mi['admin'] as $mix ) { ?>
+												<div class="admininfobox">
+													<h3><?php echo $mix['name']; ?></h3>
+													<p><?php echo $mix['info']; ?></p>
+												</div>
+											<?php
+										} ?>
+									</td>
+								</tr>
+							</table>
+							<?php }
+							if ( !empty( $mi['admin_form'] ) ) { ?>
+							<table class="aecadminform">
+								<tr>
+									<td valign="top" style="padding: 10px;">
+										<?php foreach ( $mi['admin_form'] as $k ) { ?>
+												<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+											<?php
+										} ?>
+									</td>
+								</tr>
+							</table>
+							<?php }
+						}
+
+						if ( !empty( $metaUser->meta->params->mi ) ) { ?>
+						<table class="aecadminform">
+							<tr>
+								<td valign="top" style="padding: 10px;">
+									<pre><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+								</td>
+							</tr>
+						</table>
+						<?php } ?>
+						</div>
 					</td>
 				</tr>
 			</table>
-			</div>
 			<?php
-			}
 			$tabs->endPane();
 			$tabs->endPanes();
 			?>
@@ -3068,32 +3074,35 @@ class HTML_AcctExp
 	function readoutSetup( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
+		
+		HTML_myCommon::getHeader( 'AEC_READOUT', 'aec_symbol_export' );
 		?>
 		<form action="index.php" method="post" name="adminForm">
-		<?php HTML_myCommon::getHeader( 'AEC_READOUT', 'aec_symbol_export' ); ?>
-
-		<div class="aec_readout aec_userinfobox_sub">
-			<table style="width:320px;">
+            <table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
-						<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-							echo $aecHTML->createSettingsParticle( $rowname );
-						} ?>
+						<div class="aec_readout aec_userinfobox_sub">
+							<table style="width:320px;">
+								<tr>
+									<td valign="top">
+										<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+											echo $aecHTML->createSettingsParticle( $rowname );
+										} ?>
+									</td>
+								</tr>
+							</table>
+							<input type="hidden" name="option" value="<?php echo $option;?>" />
+							<input type="hidden" name="task" value="readout" />
+							<input type="hidden" name="returnTask" value="readout" />
+							<input type="hidden" name="display" value="1" />
+							<br />
+							<input type="submit" class="btn primary" />
+							<br />
+						</div>
 					</td>
 				</tr>
 			</table>
-
-			<input type="hidden" name="option" value="<?php echo $option;?>" />
-			<input type="hidden" name="task" value="readout" />
-			<input type="hidden" name="returnTask" value="readout" />
-			<input type="hidden" name="display" value="1" />
-			<br />
-			<input type="submit" class="btn primary" />
-			<br />
-		</div>
-
 		</form>
-
 
 		<?php
 		echo $aecHTML->loadJS();
@@ -3405,23 +3414,31 @@ class HTML_AcctExp
 	{
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon();
-		?>
+		if ( empty( $cmd ) ) {
+		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox', $title );
+		} else {
+		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox' );
+		} ?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox' ); ?>
-		<?php echo JText::_('AEC_HEAD_TOOLBOX') . ( $title ? ( ': ' . $title ) : '' ); ?>
-		<?php if ( empty( $cmd ) ) { ?>
-		<p>This is an experimental part of AEC. It can destroy lots of data with the click of a button. Please backup your data extensively.</p>
-		<?php } ?>
-		<?php if ( is_array( $result ) ) { ?>
-			<div id="aec-toolbox-list">
-			<?php foreach ( $result as $x => $litem ) {
-				echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
-				echo '<hr />';
-			} ?>
-			</div>
-		<?php } else { ?>
-			<?php echo $result; ?>
-		<?php } ?>
+            <table width="100%" class="aecadminform">
+				<tr>
+					<td valign="top">
+						<div class="aec_userinfobox_sub">
+						<?php if ( is_array( $result ) ) { ?>
+							<div id="aec-toolbox-list">
+							<?php foreach ( $result as $x => $litem ) {
+								echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
+								echo '<p><a href="' . $litem['link'] . '" class="btn success pull-right" style="margin-top: -48px; margin-right: 48px;">use</a></p>';
+								echo '<hr />';
+							} ?>
+							</div>
+						<?php } else { ?>
+							<?php echo $result; ?>
+						<?php } ?>
+						</div>
+					</td>
+				</tr>
+			</table>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="toolbox" />
 		<input type="hidden" name="cmd" value="<?php echo $cmd;?>" />
@@ -3478,11 +3495,6 @@ class HTML_AcctExp
 			</table>
 			</div>
 			<table class="aecadminform">
-				<tr>
-					<th>
-						<?php echo $file; ?>
-					</th>
-				</tr>
 				<tr>
 					<td>
 						<textarea style="width:100%;height:500px" cols="110" rows="25" name="filecontent" class="inputbox"><?php echo $content; ?></textarea>
