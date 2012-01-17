@@ -1342,6 +1342,10 @@ function editSettings( $option )
 	$tab_data[] = array( JText::_('CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB1_SUBTITLE') . '</h2>' );
 
 	$params[] = array( 'userinfobox', 49.5 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
+	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_PROXY') );
 	$params['use_proxy']						= array( 'toggle', '' );
 	$params['proxy']							= array( 'inputC', '' );
@@ -1358,10 +1362,6 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 49.5 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
-	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
 	$params['amount_currency_symbol']			= array( 'toggle', 0 );
 	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
@@ -1529,13 +1529,8 @@ function editSettings( $option )
 	$params['countries_available']			= array( 'list_country_full', 0 );
 	$params['countries_top']				= array( 'list_country_full', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_DEBUG') );
-	$params['bypassintegration']			= array( 'inputC', '' );
-
-	$params['breakon_mi_error']				= array( 'toggle', 0 );
-	$params['debugmode']					= array( 'toggle', 0 );
-	$params['email_default_admins']			= array( 'toggle', 1 );
-	$params['email_extra_admins']			= array( 'inputD', '' );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_API') );
+	$params['apiapplist']					= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -1576,8 +1571,13 @@ function editSettings( $option )
 	$params['ssl_capath']					= array( 'inputC', '' );
 	$params['allow_invoice_unpublished_item']				= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_API') );
-	$params['apiapplist']					= array( 'inputD', '' );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_DEBUG') );
+	$params['bypassintegration']			= array( 'inputC', '' );
+
+	$params['breakon_mi_error']				= array( 'toggle', 0 );
+	$params['debugmode']					= array( 'toggle', 0 );
+	$params['email_default_admins']			= array( 'toggle', 1 );
+	$params['email_extra_admins']			= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_UNINSTALL') );
 	$params['delete_tables']				= array( 'toggle', 0 );
@@ -2662,7 +2662,7 @@ function editSubscriptionPlan( $id, $option )
  	if ( is_array( $payment_plans ) ) {
  		$active_plans	= array_merge( $available_plans, $payment_plans );
  	}
-	$total_plans	= min( max( (count( $active_plans ) + 1 ), 4 ), 20 );
+	$total_plans	= min( max( (count( $active_plans ) + 1 ), 4 ), 15 );
 
 	$lists['fallback'] = JHTML::_('select.genericlist', $active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
 	$lists['standard_parent'] = JHTML::_('select.genericlist', $active_plans, 'standard_parent', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));

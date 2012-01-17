@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
 		jQuery(this).popover('show');
 	});
 	jQuery("#quicksearch").on("focusout", function(e) {
-		jQuery("div.popover").hide();
+		jQuery("div.popover").fadeOut();
 	});
 
 	function lookup(inputString) {

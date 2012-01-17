@@ -5958,27 +5958,27 @@ class aecHTML
 		switch ( $type ) {
 			case 'inputA':
 				$return .= '<div class="input">';
-				$return .= '<input id="' . $name . '" name="' . $name . '" type="text" size="4" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="span2" name="' . $name . '" type="text" value="' . $value . '" />';
 				$return .= '</div></div>';
 				break;
 			case 'inputB':
 				$return .= '<div class="input">';
-				$return .= '<input id="' . $name . '" class="inputbox" type="text" name="' . $name . '" size="8" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="span3" type="text" name="' . $name . '" value="' . $value . '" />';
 				$return .= '</div></div>';
 				break;
 			case 'inputC':
 				$return .= '<div class="input">';
-				$return .= '<input id="' . $name . '" type="text" size="20" name="' . $name . '" class="inputbox" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="span6" type="text" name="' . $name . '" class="inputbox" value="' . $value . '" />';
 				$return .= '</div></div>';
 				break;
 			case 'inputD':
 				$return .= '<div class="input">';
-				$return .= '<textarea id="' . $name . '" cols="50" rows="5" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="span7" rows="5" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div></div>';
 				break;
 			case 'inputE':
 				$return .= '<div class="input">';
-				$return .= '<textarea id="' . $name . '" style="width:520px" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="span14" style="width:520px" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div></div>';
 				break;
 			case 'checkbox':
@@ -5993,8 +5993,8 @@ class aecHTML
 				$return .= '<label class="toggleswitch" onclick="">';
 				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . '/>';
 				$return .= '<span class="toggleswitch-inner">';
-				$return .= '<span class="toggleswitch-on">Yes</span>';
-				$return .= '<span class="toggleswitch-off">No</span>';
+				$return .= '<span class="toggleswitch-on">' . JText::_( 'yes' ) . '</span>';
+				$return .= '<span class="toggleswitch-off">' . JText::_( 'no' ) . '</span>';
 				$return .= '<span class="toggleswitch-handle"></span>';
 				$return .= '</span>';
 				$return .= '</label>';

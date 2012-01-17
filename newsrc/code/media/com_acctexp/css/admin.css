@@ -12,17 +12,26 @@ position: relative;
 z-index: 1;
 }
 
+.topbar .container {
+width: 760px;
+}
+
+.pills a {
+line-height: 12px;
+padding: 10px;
+}
+
 .topbar-inner {
-background-color: #440000;
+background-color: #520404;
 background-repeat: repeat-x;
-background-image: -khtml-gradient(linear, left top, left bottom, from(#440000), to(#780000));
-background-image: -moz-linear-gradient(top, #440000, #780000);
-background-image: -ms-linear-gradient(top, #440000, #780000);
-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #440000), color-stop(100%, #780000));
-background-image: -webkit-linear-gradient(top, #440000, #780000);
-background-image: -o-linear-gradient(top, #440000, #780000);
-background-image: linear-gradient(top, #440000, #780000);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#440000', endColorstr='#780000', GradientType=0);
+background-image: -khtml-gradient(linear, left top, left bottom, from(#520404), to(#850d0d));
+background-image: -moz-linear-gradient(top, #520404, #850d0d);
+background-image: -ms-linear-gradient(top, #520404, #850d0d);
+background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #520404), color-stop(100%, #850d0d));
+background-image: -webkit-linear-gradient(top, #520404, #850d0d);
+background-image: -o-linear-gradient(top, #520404, #850d0d);
+background-image: linear-gradient(top, #520404, #850d0d);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#520404', endColorstr='#850d0d', GradientType=0);
 -webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
 -moz-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
 box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
@@ -42,15 +51,15 @@ padding-left: 10px;
 }
 
 .dropdown-menu {
-background-color: #440000;
+background-color: #520404;
 background-repeat: repeat-x;
-background-image: -khtml-gradient(linear, left top, left bottom, from(#440000), to(#780000));
-background-image: -moz-linear-gradient(top, #440000, #780000);
-background-image: -ms-linear-gradient(top, #440000, #780000);
-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #440000), color-stop(100%, #780000));
-background-image: -webkit-linear-gradient(top, #440000, #780000);
-background-image: -o-linear-gradient(top, #440000, #780000);
-background-image: linear-gradient(top, #440000, #780000);
+background-image: -khtml-gradient(linear, left top, left bottom, from(#520404), to(#850d0d));
+background-image: -moz-linear-gradient(top, #520404, #850d0d);
+background-image: -ms-linear-gradient(top, #520404, #850d0d);
+background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #520404), color-stop(100%, #850d0d));
+background-image: -webkit-linear-gradient(top, #520404, #850d0d);
+background-image: -o-linear-gradient(top, #520404, #850d0d);
+background-image: linear-gradient(top, #520404, #850d0d);
 }
 
 .topbar div > ul .menu-dropdown li a,
@@ -61,7 +70,7 @@ color: #eee;
 }
 
 a.brand {
-background: url(../images/admin/icons/aec_logo_small_footer.png) no-repeat scroll 50% 0 transparent;
+background: url(../images/admin/icons/aec_logo_small_header.png) no-repeat scroll 50% 30% transparent;
 text-indent: 36px;
 }
 
@@ -86,8 +95,9 @@ padding-left: 40px;
 
 ul.pills {
 margin: 0px auto;
-width: 640px;
-padding-top: 56px;
+width: 600px;
+padding-top: 38px;
+text-align: center;
 }
 
 .pill-content {
@@ -95,12 +105,17 @@ float: left;
 width: 100%;
 }
 
+.tabs > li, .pills > li {
+display: inline-block;
+float: none;
+}
+
 table.adminlist {
 }
 
 .aec-buttons {
 float: right;
-margin-top: 48px;
+margin-top: 44px;
 padding-right: 32px;
 }
 
@@ -132,8 +147,9 @@ padding-bottom: 18px;
 }
 
 label {
-width: 45%;
-padding-right: 36px;
+width: 48%;
+padding-right: 12px;
+line-height: 16px;
 }
 
 div.clearfix form .input {
@@ -143,7 +159,7 @@ text-align: center;
 }
 
 form .clearfix {
-margin-bottom: 10px;
+margin-bottom: 16px;
 }
 
 div.liner {
@@ -160,7 +176,7 @@ vertical-align: top;
 
 .popover .inner {
 width: 320px;
-background: #440000;
+background: #520404;
 }
 
 .popover .title {
@@ -168,7 +184,7 @@ margin: 0;
 }
 
 .popover .arrow {
-border-bottom: 5px solid #440000;
+border-bottom: 5px solid #520404;
 }
 
 .popover .content {
@@ -186,6 +202,11 @@ text-align: center;
 border-radius: 3px;
 background: #eee;
 vertical-align: top;
+}
+
+div.input>div>div {
+margin: 0 auto;
+width: 550px;
 }
 
 #aec_center h3 {

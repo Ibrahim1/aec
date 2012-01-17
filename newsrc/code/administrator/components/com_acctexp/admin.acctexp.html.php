@@ -796,8 +796,8 @@ class HTML_AcctExp
 					</li>
 				<?php } ?>
 				</ul>
-				<form action="#">
-					<input type="text" rel="popover" placeholder="Quicksearch" id="quicksearch" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
+				<form action="#" class="pull-right">
+					<input type="text" rel="popover" class="span3" placeholder="Quicksearch" id="quicksearch" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>
 	        </div>
 	      </div>
@@ -2061,22 +2061,34 @@ class HTML_AcctExp
 					<h2><?php echo JText::_('Attached Micro Integrations'); ?></h2>
 					<?php
 					if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
-						echo '<ul>';
+						echo '<table>';
 						foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
 							?>
-							<li>
+							<tr><td>
+									<input type="hidden" name="micro_integrations[]" value="<?php echo $mi->id; ?>" <?php echo $mi->attached ? 'checked="checked"' : ''; ?>" />
+									<div class="input">
+									<div class="toggleswitch">
+									<label class="toggleswitch" onclick="">
+									<input id="micro_integrations[]" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> />
+									<span class="toggleswitch-inner">
+									<span class="toggleswitch-on"><?php echo JText::_( 'yes' ) ?></span>
+									<span class="toggleswitch-off"><?php echo JText::_( 'no' ) ?></span>
+									<span class="toggleswitch-handle"></span>
+									</span>
+									</label>
+									</div>
+									</div></div>
 								<p>
-									<input type="checkbox" name="micro_integrations[]" value="<?php echo $mi->id; ?>" <?php echo $mi->attached ? 'checked="checked"' : ''; ?> />
 									<strong><?php echo $mi->name; ?></strong>
 									(#<?php echo $mi->id; ?>)
 									<?php echo $mi->inherited ? ( ' (' . '<input type="checkbox" name="inherited_micro_integrations[]" value="' . $mi->id . '" checked="checked" disabled="disabled" />' . JText::_('Inherited! See above.') . ')' ) : ''; ?>
 									(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
 								</p>
 								<p><?php echo $mi->desc; ?></p>
-							</li>
+							</td></tr>
 							<?php
 						}
-						echo '</ul>';
+						echo '</table>';
 					} else {
 						echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
 					}
@@ -2277,9 +2289,14 @@ class HTML_AcctExp
 			<table class="aecadminform">
 				<tr>
 					<td valign="top">
-						<div style="position:relative;float:left;width:32%;padding:4px;">
+						<div style="position:relative;float:left;width:33.33%;">
 							<div class="aec_userinfobox_sub">
-								<div style="position:relative;float:left;width:100%;">
+								<h4>General</h4>
+								<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
+								<div style="position:relative;width:100%;">
 									<?php
 									echo $aecHTML->createSettingsParticle( 'name' );
 									if ( $row->id ) { ?>
@@ -2287,19 +2304,20 @@ class HTML_AcctExp
 										<?php
 									} ?>
 								</div>
-								<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
+							</div>
+						</div>
+						<div style="position:relative;float:left;width:33.33%;">
+							<div class="aec_userinfobox_sub">
+								<h4>Details</h4>
 								<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'symlink_userid' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 							</div>
 						</div>
-						<div style="position:relative;float:left;width:32%;padding:4px;">
+						<div style="position:relative;float:left;width:33.33%;">
 							<div class="aec_userinfobox_sub">
-								<h2 style="clear:both;"><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h2>
+								<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
 								<table style="width:100%;">
 									<tr>
 										<th>ID</td>
@@ -2328,7 +2346,7 @@ class HTML_AcctExp
 								</table>
 							</div>
 						</div>
-						<div style="position:relative;float:left;width:98%;padding:4px;">
+						<div style="position:relative;float:left;width:100%;">
 							<div class="aec_userinfobox_sub">
 								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 							</div>
