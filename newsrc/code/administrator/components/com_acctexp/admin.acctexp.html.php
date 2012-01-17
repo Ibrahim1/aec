@@ -83,12 +83,9 @@ class HTML_myCommon
 		$document->addScript( '/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
 		$document->addScript( '/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-dropdown.js' );
-		$document->addScriptDeclaration( 'jQuery(document).ready(function($) {
-			jQuery(\'#topbar\').dropdown();
-			jQuery("#system-message").fadeOut(\'slow\', function() { jQuery(this).slideUp( \'slow\' ); });
-		});' );
-
-		//print_r($document);exit;
+		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-twipsy.js' );
+		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-popover.js' );
+		$document->addScript( '/media/com_acctexp/js/aec-backend.js' );
 	}
 
 	function addReadoutCSS()
@@ -799,8 +796,8 @@ class HTML_AcctExp
 					</li>
 				<?php } ?>
 				</ul>
-				<form action="" class="pull-right">
-					<input type="text" placeholder="Quicksearch">
+				<form action="#">
+					<input type="text" rel="popover" placeholder="Quicksearch" id="quicksearch" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>
 	        </div>
 	      </div>

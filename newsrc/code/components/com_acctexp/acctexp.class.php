@@ -16230,13 +16230,11 @@ class AECToolbox
 				$query = 'SELECT `' . $qfields[$qid] . '` ' . $base_query;
 				$db->setQuery( $query );
 
-				if ( $existing > 1 ) {
-					return $db->loadResultArray();
-				} else {
-					return $db->loadResult();
-				}
+				return $db->loadResultArray();
 			}
 		}
+
+		return array();
 	}
 
 	function randomstring( $length=16, $alphanum_only=false, $uppercase=false )

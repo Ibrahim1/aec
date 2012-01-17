@@ -158,6 +158,36 @@ width: 22%;
 vertical-align: top;
 }
 
+.popover .inner {
+width: 320px;
+background: #440000;
+}
+
+.popover .title {
+margin: 0;
+}
+
+.popover .arrow {
+border-bottom: 5px solid #440000;
+}
+
+.popover .content {
+padding: 2px 14px 14px;
+}
+
+.lookupresult {
+width: 43%;
+padding: 0 1%;
+margin: 1%;
+display: inline-block;
+text-align: center;
+-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+background: #eee;
+vertical-align: top;
+}
+
 #aec_center h3 {
 clear: both;
 display: block;

@@ -323,6 +323,18 @@ switch( strtolower( $task ) ) {
 		}
 		break;
 
+	case 'quicksearch':
+		$search = quicklookup( $option );
+
+		if ( empty($search) ) {
+			echo JText::_('AEC_QUICKSEARCH_NOTFOUND');
+		} else {
+			echo $search;
+		}
+
+		exit;
+		break;
+
 	case 'readnotice':
 		$db = &JFactory::getDBO();
 
@@ -4681,16 +4693,18 @@ function quicklookup( $option )
 			foreach ( $s as $user ) {
 				$JTableUser = new JTableUser( $db );
 				$JTableUser->load( $user );
-				$userlink = '<a href="';
+				$userlink = '<div class="lookupresult">';
+				$userlink .= '<a href="';
 				$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $JTableUser->id;
 				$userlink .= '">';
 				$userlink .= $JTableUser->name . ' (' . $JTableUser->username . ')';
 				$userlink .= '</a>';
+				$userlink .= '</div>';
 
 				$return[] = $userlink;
 			}
 
-			return implode( ', ', $return );
+			return '<div class="lookupresults">' . implode( $return ) . '</div>';
 		} else {
 			return $s;
 		}
@@ -4741,6 +4755,8 @@ function quicklookup( $option )
 	if ( strpos( $search, 'logthis:' ) === 0 ) {
 		$eventlog = new eventLog( $db );
 		$eventlog->issue( 'debug', 'debug', 'debug entry: '.str_replace( 'logthis:', '', $search ), 128 );
+
+		return 'alright, logged.';
 	}
 
 	return false;
