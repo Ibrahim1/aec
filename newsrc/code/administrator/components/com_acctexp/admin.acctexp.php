@@ -4747,9 +4747,11 @@ function quicklookup( $option )
 	if ( in_array( $search, $maybe ) ) {
 		include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.add.php' );
 
-		return '<div class="usernote" style="width:200px; padding-top: 40px; padding-bottom: 40px; float: right;">'
-				. ${'edition_0' . ( rand( 1, 4 ) )}['quote_' . str_pad( rand( 1, ( count( ${'edition_0' . ( rand( 1, 4 ) )} ) + 1 ) ), 2, '0' )]
-				. '</div>';
+		$ed = ( rand( 1, 4 ) );
+		$edf = ${'edition_0' . $ed};
+		$maxed = count( ${'edition_0' . $ed} );
+
+		return $edf['quote_' . str_pad( rand( 1, ( $maxed + 1 ) ), 2, '0' )];
 	}
 
 	if ( strpos( $search, 'logthis:' ) === 0 ) {
