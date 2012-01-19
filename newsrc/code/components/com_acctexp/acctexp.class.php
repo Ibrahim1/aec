@@ -6979,7 +6979,7 @@ class ItemGroup extends serialParamDBTable
 
 		// There might be deletions set for groups
 		foreach ( $post as $varname => $content ) {
-			if ( strpos( $varname, 'group_delete_' ) !== false ) {
+			if ( ( strpos( $varname, 'group_delete_' ) !== false ) && $content ) {
 				$parentid = (int) str_replace( 'group_delete_', '', $varname );
 
 				ItemGroupHandler::removeChildren( $groupid, array( $parentid ), 'group' );
@@ -8164,7 +8164,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		// There might be deletions set for groups
 		foreach ( $post as $varname => $content ) {
-			if ( strpos( $varname, 'group_delete_' ) !== false ) {
+			if ( ( strpos( $varname, 'group_delete_' ) !== false ) && $content ) {
 				$parentid = (int) str_replace( 'group_delete_', '', $varname );
 
 				ItemGroupHandler::removeChildren( $planid, array( $parentid ) );
