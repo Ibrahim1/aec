@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4184' );
+define( '_AEC_REVISION', '4242' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5684,6 +5684,10 @@ class URLprocessor extends processor
 		$return = '<a href="' . $var['post_url'];
 		unset( $var['post_url'] );
 
+		if ( substr( $return, -1, 1 ) !== '?' ) {
+			$return .= '?';
+		}
+
 		$vars = array();
 		if ( !empty( $var ) ) {
 			foreach ( $var as $key => $value ) {
@@ -5983,15 +5987,16 @@ class aecHTML
 				break;
 			case 'checkbox':
 				$return .= '<div class="input">';
-				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . '/>';
+				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
+				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . ' value="1"/>';
 				$return .= '</div></div>';
 				break;
 			case 'toggle':
-				$return .= '<input type="hidden" name="' . $name . '" value="0" />';
+				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 				$return .= '<div class="input">';
 				$return .= '<div class="toggleswitch">';
 				$return .= '<label class="toggleswitch" onclick="">';
-				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . '/>';
+				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
 				$return .= '<span class="toggleswitch-inner">';
 				$return .= '<span class="toggleswitch-on">' . JText::_( 'yes' ) . '</span>';
 				$return .= '<span class="toggleswitch-off">' . JText::_( 'no' ) . '</span>';
@@ -8103,7 +8108,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$processors = array();
 		foreach ( $post as $key => $value ) {
-			if ( ( strpos( $key, 'processor_' ) === 0 ) && ( $value == 'on') ) {
+			if ( ( strpos( $key, 'processor_' ) === 0 ) && $value ) {
 				$ppid = str_replace( 'processor_', '', $key );
 
 				if ( !in_array( $ppid, $processors ) ) {
@@ -12576,7 +12581,7 @@ class aecCartHelper
 				foreach ( $cartitem->params['processors'] as $pid ) {
 					$sid = $pid;
 
-					/*if ( $cartitem->custom_params[$pid . '_aec_overwrite_settings'] == "on" ) {
+					/*if ( $cartitem->custom_params[$pid . '_aec_overwrite_settings'] ) {
 						if ( !empty( $cartitem->custom_params[$pid . '_recurring'] ) ) {
 							if ( $cartitem->custom_params[$pid . '_recurring'] == 2 ) {
 								if ( array_search( $sid, $proclist ) === false ) {
@@ -19920,7 +19925,6 @@ class aecExport extends serialParamDBTable
 				} else {
 					$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser );
 				}
-
 
 				$larray = explode( ';', $line );
 
