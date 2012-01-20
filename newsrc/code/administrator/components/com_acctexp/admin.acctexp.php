@@ -704,7 +704,7 @@ function saveUser( $option, $apply=0 )
 	}
 
 	if ( empty( $post['assignto_plan'] ) ) {
-		if ( $ck_lifetime == 0 ) {
+		if ( $ck_lifetime ) {
 			$metaUser->focusSubscription->expiration	= '9999-12-31 00:00:00';
 			$metaUser->focusSubscription->status		= 'Active';
 			$metaUser->focusSubscription->lifetime	= 1;
