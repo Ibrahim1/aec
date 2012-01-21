@@ -48,6 +48,7 @@ class processor_payos extends URLprocessor
 		$settings['webmaster_id']	= array( 'inputC' );
 		$settings['content_id']		= array( 'inputC' );
 		$settings['secret']			= array( 'inputC' );
+		$settings['type']			= array( 'list' );
 
 		$settings['customparams']	= array( 'inputD' );
 
