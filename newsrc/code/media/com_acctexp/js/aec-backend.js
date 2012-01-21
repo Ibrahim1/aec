@@ -5,17 +5,15 @@ jQuery(document).ready(function($) {
 		trigger:'manual',
 		placement:'below'
 	});
+
 	jQuery("#quicksearch").on("keypress", function(e) {
 		if (e.keyCode == 13) return false;
 		jQuery('.popover .content p').html("Searching...");
-	});
-	jQuery("#quicksearch").on("keyup", function(e) {
+	}).on("keyup", function(e) {
 		lookup(this.value);
-	});
-	jQuery("#quicksearch").on("focusin", function(e) {
+	}).on("focusin", function(e) {
 		jQuery(this).popover('show');
-	});
-	jQuery("#quicksearch").on("focusout", function(e) {
+	}).on("focusout", function(e) {
 		jQuery("div.popover").fadeOut();
 	});
 

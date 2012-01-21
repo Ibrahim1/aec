@@ -125,9 +125,10 @@ class HTML_myCommon
 
 	function getButtons( $buttons, $object )
 	{
+		$v = new JVersion();
 		?><div class="aec-buttons"><?php
 		foreach ( $buttons as $action => $button ) {
-			echo '<a class="btn ' . $button['style'] . '" onclick="javascript: submitbutton(\'' . $action . $object . '\')" href="#">' . $button['text'] . '</a>';
+			echo '<a class="btn ' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')" href="#">' . $button['text'] . '</a>';
 		}
 		?></div><?php
 	}
