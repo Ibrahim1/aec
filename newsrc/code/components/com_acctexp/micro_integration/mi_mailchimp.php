@@ -101,7 +101,7 @@ class mi_mailchimp
 			$server = explode( '-', $this->settings['api_key'] );
 
 			if ( !empty( $mcuser['id'] ) ) {
-				$message = '<p><a href="http://valanx.' . $server[1] . '.list-manage.com/unsubscribe?u=' . $this->settings['account_id'] . '&id=' . $listid . '">Unsubscribe from our newsletter</a></p>';
+				$message = '<p><a href="http://' . $this->settings['account_name'] . '.' . $server[1] . '.list-manage.com/unsubscribe?u=' . $this->settings['account_id'] . '&id=' . $listid . '">Unsubscribe from our newsletter</a></p>';
 				return $message;
 			}
 		}
