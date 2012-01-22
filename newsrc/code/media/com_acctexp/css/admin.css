@@ -238,6 +238,11 @@ background: #eee;
 vertical-align: top;
 }
 
+.lookupresult span.search-match {
+background: #fda;
+padding: 0 1px;
+}
+
 div.input>div>div {
 margin: 0 auto;
 width: 550px;

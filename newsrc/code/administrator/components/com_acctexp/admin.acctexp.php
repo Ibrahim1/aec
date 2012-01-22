@@ -4699,7 +4699,7 @@ function quicklookup( $option )
 				$userlink .= '<a href="';
 				$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $JTableUser->id;
 				$userlink .= '">';
-				$userlink .= $JTableUser->name . ' (' . $JTableUser->username . ')';
+				$userlink .= str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->name ) . ' (' . str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->username ) . ')';
 				$userlink .= '</a>';
 				$userlink .= '</div>';
 

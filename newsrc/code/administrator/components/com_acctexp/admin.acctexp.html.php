@@ -857,7 +857,7 @@ class HTML_AcctExp
 		);
 	}
 
-	function central( $display=null, $notices=null, $searchcontent=null )
+	function central( $display=null, $notices=null, $furthernotices=null, $searchcontent=null )
 	{
 		global $aecConfig;
 
@@ -900,6 +900,7 @@ class HTML_AcctExp
 							<?php
 							}
 							?>
+							<p><span id="further-notices"><?php echo $furthernotices; ?></span> <?php echo JText::_('further notices'); ?></p>
 						</div>
 						<?php
 						}
