@@ -119,6 +119,11 @@ margin-top: 44px;
 padding-right: 32px;
 }
 
+.btn-hl {
+border-left: 1px solid #999999;
+margin-left: 6px;
+}
+
 .aec-filters {
 margin: 0 auto;
 width: 650px;
@@ -407,10 +412,6 @@ color: #586c79;
 img.aec_icon {
 vertical-align: bottom;
 padding-right: 4px;
-}
-
-form#adminForm {
-overflow: hidden;
 }
 
 .aecadminform {

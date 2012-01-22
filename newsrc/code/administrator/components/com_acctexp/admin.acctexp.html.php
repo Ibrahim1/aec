@@ -128,7 +128,11 @@ class HTML_myCommon
 		$v = new JVersion();
 		?><div class="aec-buttons"><?php
 		foreach ( $buttons as $action => $button ) {
-			echo '<a class="btn ' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#">' . $button['text'] . '</a>';
+			if ( !isset( $button['style'] ) ) {
+				echo '<span class="btn-hl"></span>';
+			} else {
+				echo '<a class="btn ' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#">' . $button['text'] . '</a>';
+			}
 		}
 		?></div><?php
 	}
@@ -324,6 +328,7 @@ class HTML_AcctExp
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
+							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, '' );
@@ -902,7 +907,7 @@ class HTML_AcctExp
 								}
 								?>
 							</div>
-							<?php if ( $furthernotices ) { ?>
+							<?php if ( $furthernotices > 0 ) { ?>
 								<p id="further-notices"><span><?php echo $furthernotices; ?></span> <?php echo JText::_('further notice(s)'); ?></p>
 							<?php } ?>
 						</div>
@@ -1005,7 +1010,7 @@ class HTML_AcctExp
 		$infohandler	= new GeneralInfoRequester();
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="returnTask" value="" />
@@ -1100,13 +1105,14 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<?php
 		
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Settings' );
@@ -1165,14 +1171,15 @@ class HTML_AcctExp
 	function listProcessors( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
 			HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'aec_symbol_settings' );
 
 			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
 								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true )
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
+								'hl1' => array(),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
 							);
 			HTML_myCommon::getButtons( $buttons, 'Processor' );
 			?>
@@ -1240,6 +1247,7 @@ class HTML_AcctExp
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
+							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Processor' );
@@ -1254,7 +1262,7 @@ class HTML_AcctExp
 		}
 		
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
             <table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -1290,7 +1298,7 @@ class HTML_AcctExp
 		$user = &JFactory::getUser();
 
 		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php HTML_myCommon::getHeader( $action[1], 'aec_symbol_' . $action[0] ); ?>
 			<div class="aec-filters">
 			<table class="adminheading" cellpadding="2" cellspacing="2">
@@ -1409,16 +1417,18 @@ class HTML_AcctExp
 	function listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering )
 	{
 		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
 			HTML_myCommon::getHeader( 'MI_TITLE', 'aec_symbol_microintegrations' );
 
 			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
 								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
+								'hl1' => array(),
 								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
 								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true )
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true ),
+								'hl2' => array(),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
 							);
 			HTML_myCommon::getButtons( $buttons, 'MicroIntegration' );
 			?>
@@ -1667,16 +1677,18 @@ class HTML_AcctExp
 	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
 			HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'aec_symbol_plans' );
 
 			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
 								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
+								'hl1' => array(),
 								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
 								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true )
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true ),
+								'hl2' => array(),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
 							);
 			HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
 			?>
@@ -2155,16 +2167,18 @@ class HTML_AcctExp
 	function listItemGroups( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
 			HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'aec_symbol_itemgroups' );
 
 			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
 								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
+								'hl1' => array(),
 								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
 								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true )
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true ),
+								'hl2' => array(),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
 							);
 			HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
 			?>
@@ -2481,15 +2495,17 @@ class HTML_AcctExp
 	function listCoupons( $rows, $pageNav, $option, $type )
 	{
 		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'aec_symbol_coupons' . ( $type ? '_static' : '' ) );
 
 			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
 								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'actionable' => true ),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') ),
+								'hl1' => array(),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
 								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true )
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true ),
+								'hl2' => array(),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
 							);
 			HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );?>
 
@@ -2567,6 +2583,7 @@ class HTML_AcctExp
 		
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
+							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );
@@ -2714,7 +2731,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<?php HTML_myCommon::getHeader( 'INVOICE_TITLE', 'aec_symbol_invoices' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('INVOICE_SEARCH'); ?>: <br />
@@ -2785,7 +2802,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<?php HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'aec_symbol_history' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
@@ -2870,7 +2887,7 @@ class HTML_AcctExp
 	function eventlog( $option, $events, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<?php HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'aec_symbol_eventlog' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
@@ -2932,7 +2949,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<div id="stats">
 		<div id="statnav">
 			<?php HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'aec_symbol_stats' ); ?>
@@ -3110,7 +3127,7 @@ class HTML_AcctExp
 	function stats2( $option, $stats )
 	{
 		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<table class="adminheading">
 		<tr>
 			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" rowspan="2" nowrap="nowrap">
@@ -3135,7 +3152,7 @@ class HTML_AcctExp
 		
 		HTML_myCommon::getHeader( 'AEC_READOUT', 'aec_symbol_export' );
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
             <table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -3360,7 +3377,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
+		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm">
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'aec_symbol_import' );
 
@@ -3434,7 +3451,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'aec_symbol_export' );
 
@@ -3477,7 +3494,7 @@ class HTML_AcctExp
 		} else {
 		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox' );
 		} ?>
-		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm">
+		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm">
             <table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -3515,11 +3532,12 @@ class HTML_AcctExp
 		HTML_myCommon::getHeader( 'AEC_HEAD_CSS_EDITOR', 'aec_symbol_css' );
 
 		$buttons = array(	'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
+							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'CSS' );
 		?>
-		<form action="index.php" method="post" name="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<div class="aec-filters">
 			<table cellpadding="1" cellspacing="1" border="0" width="100%">
 				<tr>
