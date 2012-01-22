@@ -5628,7 +5628,7 @@ function importData( $option )
 
 					$params['convert_field_'.$i] = array( 'list', '', '', '' );
 
-					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1"', 'value', 'text', 0 );
+					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="span4"', 'value', 'text', 0 );
 				}
 
 				$rows_count = count( $import->rows );
@@ -5825,7 +5825,9 @@ function exportData( $option, $type, $cmd=null )
 
 	$params[] = array( 'userinfobox', 49 );
 	$params[] = array( 'userinfobox_sub', 'Save or Load Export Presets' );
+	$params[] = array( 'div', '<div class="form-stacked">' );
 	$params['selected_export']	= array( 'list', '' );
+	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div style="float: right">' );
 	$params[] = array( 'p', '<p><a class="btn primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">Load Preset</a></p>' );
 	$params[] = array( 'p', '<p><a class="btn success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">Store Preset</a></p>' );
@@ -5925,8 +5927,27 @@ function exportData( $option, $type, $cmd=null )
 		}
 	}
 
+	// Fetch Item Groups
+	$query = 'SELECT `id`, `name`'
+			. ' FROM #__acctexp_itemgroups'
+			;
+	$db->setQuery( $query );
+	$groups = $db->loadObjectList();
+
+	$selected_groups = array();
+	foreach ( $groups as $dbgroup ) {
+		$all_groups[] = JHTML::_('select.option', $dbgroup->id, $dbgroup->name );
+
+		if ( !empty( $filter_values['planid'] ) ) {
+			if ( in_array( $dbplan->id, $filter_values['planid'] ) ) {
+				$selected_groups[] = JHTML::_('select.option', $dbplan->id, $dbplan->name );
+			}
+		}
+	}
+
 	if ( $type == 'members' ) {
 		$lists['planid']	= JHTML::_('select.genericlist', $plans, 'planid[]', 'class="inputbox" size="' . min( 14, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
+		$lists['groupid']	= JHTML::_('select.genericlist', $all_groups, 'groupid[]', 'class="inputbox" size="' . min( 14, count( $all_groups ) ) . '" multiple="multiple"', 'value', 'text', $selected_groups );
 
 		// Statusfilter
 		$group_selection = array();

@@ -26,7 +26,7 @@ jQuery(document).ready(function($) {
 		jQuery("div.popover").fadeOut();
 	});
 
-	jQuery('form#adminForm input').change(function() {
+	jQuery('form#adminForm input, form#adminForm select').change(function() {
 	  jQuery('div.aec-buttons a[disabled="disabled"]').attr("disabled", false);
 	});
 	
