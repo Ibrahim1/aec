@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4245' );
+define( '_AEC_REVISION', '4261' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5950,6 +5950,9 @@ class aecHTML
 				}
 
 				$return .= '</label>';
+			} else {
+				$return = '<div class="clearfix">';
+				$return .= '<label for="' . $name . '"><span></span></label>';
 			}
 		} else {
 			if ( isset( $row[1] ) ) {

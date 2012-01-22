@@ -90,6 +90,10 @@ class tool_minireport
 				$groups[] = $pgroups[0];
 			}
 
+			if ( !isset( $historylist[$date] ) ) {
+				$historylist[$date] = array( 'amount' => null, 'groups' => null );
+			}
+
 			if ( $refund ) {
 				$historylist[$date]['amount'] -= $entry->amount;
 				$historylist[$date]['groups'][$pgroups[0]]--;
