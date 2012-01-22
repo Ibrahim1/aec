@@ -5853,12 +5853,14 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
 
-	$params[] = array( 'userinfobox', 49 );
-	$params[] = array( 'userinfobox_sub' );
-	$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
-	$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
-	$params[] = array( 'div_end', '' );
-	$params[] = array( '2div_end', '' );
+	if ( $type == 'members' ) {
+		$params[] = array( 'userinfobox', 49 );
+		$params[] = array( 'userinfobox_sub' );
+		$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
+		$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+		$params[] = array( 'div_end', '' );
+		$params[] = array( '2div_end', '' );
+	}
 
 	// Create a list of export options
 	// First, only the non-autosaved entries
