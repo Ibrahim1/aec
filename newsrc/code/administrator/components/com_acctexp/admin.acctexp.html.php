@@ -902,7 +902,9 @@ class HTML_AcctExp
 								}
 								?>
 							</div>
-							<p id="further-notices"><span><?php echo $furthernotices; ?></span> <?php echo JText::_('further notice(s)'); ?></p>
+							<?php if ( $furthernotices ) { ?>
+								<p id="further-notices"><span><?php echo $furthernotices; ?></span> <?php echo JText::_('further notice(s)'); ?></p>
+							<?php } ?>
 						</div>
 						<?php
 						}

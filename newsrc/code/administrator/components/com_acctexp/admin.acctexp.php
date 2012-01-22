@@ -335,12 +335,13 @@ switch( strtolower( $task ) ) {
 		exit;
 		break;
 
-	case 'readnotice':
-		readNotice($id[0]); exit;
+	case 'readnoticeajax':
+		readNotice($id[0]);
+		exit;
 		break;
 
-	case 'readnoticeajax':
-		readNotice($id);
+	case 'readnotice':
+		readNotice($id[0]);
 
 		aecCentral( $option );
 		break;
@@ -428,7 +429,7 @@ function readNotice( $id )
 			. ' WHERE `id` = \'' . $id . '\''
 			;
 	$db->setQuery( $query	);
-	$db->query();
+	$db->query();print_r($db);exit;
 }
 
 function getNotice()
@@ -443,6 +444,10 @@ function getNotice()
 			;
 	$db->setQuery( $query	);
 	$notice = $db->loadObject();
+
+	if ( empty( $notice->id ) ) {
+		return '';
+	}
 
 	$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
 
