@@ -39,7 +39,7 @@ class tool_miexport
 		$db->setQuery( $query );
 		$mi_list = $db->loadObjectList();
 
-		$settings['lists']['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', array());
+		$settings['lists']['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple" style="width:760px;"', 'value', 'text', array());
 
 		return $settings;
 	}
