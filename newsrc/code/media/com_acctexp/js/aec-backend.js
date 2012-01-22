@@ -35,4 +35,23 @@ jQuery(document).ready(function($) {
 			jQuery('.popover .content p').html(data);
 		});
 	}
+
 });
+
+function readNotice(id) {
+	jQuery.post("index.php?option=com_acctexp&task=readNoticeAjax&id="+id , {queryString: ""}, function(data) {
+		jQuery('#alert-'+id).remove();
+
+		if ( jQuery('#further-notices>span').html() ) {
+			if ( ( jQuery('#further-notices>span').html() - 1 ) > 0 ) {
+				jQuery.post("index.php?option=com_acctexp&task=getNotice" , {queryString: ""}, function(data) {
+					jQuery('#aec-alertlist').append(data);
+				});
+
+				jQuery('#further-notices>span').html( jQuery('#further-notices>span').html() - 1 );
+			} else {
+				jQuery('#further-notices').remove();
+			}
+		}
+	});
+}

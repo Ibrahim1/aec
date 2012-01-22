@@ -887,20 +887,22 @@ class HTML_AcctExp
 							<h3><?php echo JText::_('AEC_NOTICES_FOUND'); ?></h3>
 							<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
 							<p><a href="index.php?option=com_acctexp&amp;task=readAllNotices"><?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a></p>
-							<?php
-							$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
-							foreach( $notices as $notice ) {
-							?>
-								<div class="alert-message <?php echo $noticex[$notice->level]; ?>">
-									<a class="close" href="index.php?option=com_acctexp&amp;task=readNotice&amp;id=<?php echo $notice->id; ?>">&times;</a>
-									<h5><strong><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ); ?>: <?php echo $notice->short; ?></strong></h5>
-									<p><?php echo substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ); ?></p>
-									<span class="help-block"><?php echo $notice->datetime; ?></span>
-								</div>
-							<?php
-							}
-							?>
-							<p><span id="further-notices"><?php echo $furthernotices; ?></span> <?php echo JText::_('further notices'); ?></p>
+							<div id="aec-alertlist">
+								<?php
+								$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
+								foreach( $notices as $notice ) {
+								?>
+									<div class="alert-message <?php echo $noticex[$notice->level]; ?>" id="alert-<?php echo $notice->id; ?>">
+										<a class="close" href="#<?php echo $notice->id; ?>" onclick="readNotice(<?php echo $notice->id; ?>)">&times;</a>
+										<h5><strong><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ); ?>: <?php echo $notice->short; ?></strong></h5>
+										<p><?php echo substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ); ?></p>
+										<span class="help-block"><?php echo $notice->datetime; ?></span>
+									</div>
+								<?php
+								}
+								?>
+							</div>
+							<p id="further-notices"><span><?php echo $furthernotices; ?></span> <?php echo JText::_('further notice(s)'); ?></p>
 						</div>
 						<?php
 						}

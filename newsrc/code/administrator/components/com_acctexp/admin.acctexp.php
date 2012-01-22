@@ -336,16 +336,17 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'readnotice':
-		$db = &JFactory::getDBO();
+		readNotice($id[0]); exit;
+		break;
 
-		$query = 'UPDATE #__acctexp_eventlog'
-				. ' SET `notify` = \'0\''
-				. ' WHERE `id` = \'' . $id[0] . '\''
-				;
-		$db->setQuery( $query	);
-		$db->query();
+	case 'readnoticeajax':
+		readNotice($id);
 
 		aecCentral( $option );
+		break;
+
+	case 'getnotice':
+		echo getNotice();exit;
 		break;
 
 	case 'readallnotices':
@@ -399,6 +400,13 @@ function aecCentral( $option, $searchresult=null, $searchcontent=null )
 
 	$app = JFactory::getApplication();
 
+	$query = 'SELECT COUNT(*)'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			;
+	$db->setQuery( $query );
+	$furthernotices = $db->loadResult() - 10;
+
 	$query = 'SELECT *'
 			. ' FROM #__acctexp_eventlog'
 			. ' WHERE `notify` = \'1\''
@@ -408,7 +416,42 @@ function aecCentral( $option, $searchresult=null, $searchcontent=null )
 	$db->setQuery( $query	);
 	$notices = $db->loadObjectList();
 
- 	HTML_AcctExp::central( $searchresult, $notices, $searchcontent );
+ 	HTML_AcctExp::central( $searchresult, $notices, $furthernotices, $searchcontent );
+}
+
+function readNotice( $id )
+{
+	$db = &JFactory::getDBO();
+
+	$query = 'UPDATE #__acctexp_eventlog'
+			. ' SET `notify` = \'0\''
+			. ' WHERE `id` = \'' . $id . '\''
+			;
+	$db->setQuery( $query	);
+	$db->query();
+}
+
+function getNotice()
+{
+	$db = &JFactory::getDBO();
+
+	$query = 'SELECT *'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			. ' ORDER BY `datetime` DESC'
+			. ' LIMIT 10, 1'
+			;
+	$db->setQuery( $query	);
+	$notice = $db->loadObject();
+
+	$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
+
+	return '<div class="alert-message ' . $noticex[$notice->level] . '" id="alert-' . $notice->id . '">
+			<a class="close" href="#' . $notice->id . '" onclick="readNotice(' . $notice->id . ')">&times;</a>
+			<h5><strong>' . JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ) . ': ' . $notice->short . '</strong></h5>
+			<p>' . substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ) . '</p>
+			<span class="help-block">' . $notice->datetime . '</span>
+		</div>';
 }
 
 function cancel( $option )
