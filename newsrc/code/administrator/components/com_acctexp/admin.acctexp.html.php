@@ -95,13 +95,13 @@ class HTML_myCommon
 		<?php
 	}
 
-	function startCommon()
+	function startCommon( $id='aec_wrap' )
 	{
 		HTML_myCommon::addBackendCSS();
 		HTML_myCommon::addBackendJS();
 		JHTML::_('behavior.tooltip');
 
-		echo '<div id="aec_wrap">';
+		echo '<div id="' . $id . '">';
 		echo HTML_AcctExp::menuBar();
 	}
 
@@ -3156,6 +3156,7 @@ class HTML_AcctExp
             <table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
+						<div class="userinfobox">
 						<div class="aec_readout aec_userinfobox_sub">
 							<table style="width:320px;">
 								<tr>
@@ -3173,6 +3174,7 @@ class HTML_AcctExp
 							<br />
 							<input type="submit" class="btn primary" />
 							<br />
+						</div>
 						</div>
 					</td>
 				</tr>
@@ -3192,7 +3194,7 @@ class HTML_AcctExp
 	function readout( $option, $readout )
 	{
 		HTML_myCommon::addReadoutCSS();
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon( 'aec_wrap_over' );
 
 		if ( isset( $_POST['column_headers'] ) ) {
 			$ch = $_POST['column_headers'];
@@ -3202,9 +3204,11 @@ class HTML_AcctExp
 
 		?>
 
-		<table class="aec_bg"><tr><td>
+		<table class="aec_bg aecadminform"><tr><td>
 			<?php foreach ( $readout as $part ) { ?>
 				<?php
+				echo '<div class="aec_userinfobox_sub">';
+
 				if ( !empty( $part['head'] ) ) {
 					if ( !empty( $part['sub'] ) ) {
 						echo "<h2>" . $part['head'] . "</h2>";
@@ -3216,7 +3220,7 @@ class HTML_AcctExp
 				if ( !empty( $part['type'] ) ) {
 				switch ( $part['type'] ) {
 					case 'table':
-						echo "<table class=\"aec_readout\">";
+						echo "<table class=\"aec_readout_bit\">";
 
 						$i = 0; $j = 0;
 						foreach ( $part['set'] as $entry ) {
@@ -3247,7 +3251,11 @@ class HTML_AcctExp
 
 								$tdclass = $dn;
 
-								$dcc = $entry[$dn];
+								if ( isset( $entry[$dn] ) ) {
+									$dcc = $entry[$dn];
+								} else {
+									$dcc = "";
+								}
 
 								if ( isset( $dc[1] ) ) {
 									$types = explode( ' ', $dc[1] );
@@ -3279,6 +3287,7 @@ class HTML_AcctExp
 						break;
 				}
 				} ?>
+				</div>
 			<?php } ?>
 		</td></tr></table>
 		<?php

@@ -647,11 +647,24 @@ padding:5px 0 5px 30px;
 }
 
 .aec_readout {
-font-align: right;
 margin: 0 auto;
 padding: 12px 3px 12px 6px;
 border-bottom: solid 3px #998;
 width: 320px;
+}
+
+.aec_readout_bit {
+padding: 12px 3px 12px 6px;
+border-bottom: solid 3px #998;
+margin-bottom: 16px;
+}
+
+.aec_readout_bit td {
+padding: 4px;
+}
+
+.aec_readout_bit th {
+border-bottom: 1px dashed #999;
 }
 
 .aec_import {

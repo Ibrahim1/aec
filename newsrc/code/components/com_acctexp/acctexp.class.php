@@ -20374,10 +20374,14 @@ class aecReadout
 
 				if ( !empty( $settings ) ) {
 					foreach ( $settings as $sname => $setting ) {
+						if ( is_numeric( $sname ) || ( strpos( $sname, 'aectab_' ) !== false ) ) {
+							continue;
+						}
+
 						$name =  'MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
 				
 						if ( $lang->hasKey( $name ) ) {
-							$r['def'][$lang->hasKey($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
+							$r['def'][JText::_($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
 						} else {
 							$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit' );
 						}
