@@ -5794,30 +5794,32 @@ function exportData( $option, $type, $cmd=null )
 		$params['rewrite_rule']	= array( 'inputD', '[[user_id]];[[user_username]];[[subscription_expiration_date]]' );
 		$params[] = array( '2div_end', '' );
 	} else {
+		$monthago = ( (int) gmdate('U') ) - ( 60*60*24 * 31 );
+
 		$params[] = array( 'userinfobox_sub', 'Compose Export' );
 		$params['params_remap']		= array( 'subarea_change', 'params' );
 		$params[] = array( 'div', '<div class="alert-message block-message info">' );
-		$params[] = array( 'p', '<p>Take users that fit these criteria:</p>' );
+		$params[] = array( 'p', '<p>Collect Sales Data from this range:</p>' );
 		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
-		$params['date_start']		= array( 'date', '' );
-		$params['date_end']			= array( 'date', '' );
-		$params['groupid']			= array( 'list', '' );
+		$params['date_start']		= array( 'list_date', date( 'Y-m-d', $monthago ) );
+		$params['date_end']			= array( 'list_date', date( 'Y-m-d' ) );
+		$params['method']			= array( 'list', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
-		$params['method']			= array( 'list', '' );
 		$params['planid']			= array( 'list', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
-		$params['status']			= array( 'list', '' );
+		$params['groupid']			= array( 'list', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div', '<div class="alert-message block-message warning">' );
-		$params[] = array( 'p', '<p>Order them like this:</p>' );
-		$params['orderby']			= array( 'list', '' );
+		$params[] = array( 'p', '<p>Collate it like this:</p>' );
+		$params['collate']			= array( 'list', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div', '<div class="alert-message block-message success">' );
-		$params[] = array( 'p', '<p>And use these details for each line of the export:</p>' );
-		$params['rewrite_rule']	= array( 'inputD', '[[user_id]];[[user_username]];[[subscription_expiration_date]]' );
+		$params[] = array( 'p', '<p>Break down the data in each line like so:</p>' );
+		$params['breakdown']		= array( 'list', 'month' );
+		$params['breakdown_custom']	= array( 'inputD', '' );
 		$params[] = array( '2div_end', '' );
 	}
 
@@ -5945,11 +5947,10 @@ function exportData( $option, $type, $cmd=null )
 		}
 	}
 
-	if ( $type == 'members' ) {
-		$lists['planid']	= JHTML::_('select.genericlist', $plans, 'planid[]', 'class="inputbox" size="' . min( 14, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
-		$lists['groupid']	= JHTML::_('select.genericlist', $all_groups, 'groupid[]', 'class="inputbox" size="' . min( 14, count( $all_groups ) ) . '" multiple="multiple"', 'value', 'text', $selected_groups );
+	$lists['planid']	= JHTML::_('select.genericlist', $plans, 'planid[]', 'class="inputbox" size="' . min( 14, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
+	$lists['groupid']	= JHTML::_('select.genericlist', $all_groups, 'groupid[]', 'class="inputbox" size="' . min( 14, count( $all_groups ) ) . '" multiple="multiple"', 'value', 'text', $selected_groups );
 
-		// Statusfilter
+	if ( $type == 'members' ) {
 		$group_selection = array();
 		$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('AEC_SEL_EXCLUDED') );
 		$group_selection[] = JHTML::_('select.option', 'pending',	JText::_('AEC_SEL_PENDING') );
@@ -5962,7 +5963,7 @@ function exportData( $option, $type, $cmd=null )
 
 		$selected_status = array();
 		if ( !empty( $filter_values['status'] ) ) {
-			foreach ( $filter_values['status']as $name ) {
+			foreach ( $filter_values['status'] as $name ) {
 				$selected_status[] = JHTML::_('select.option', $name, $name );
 			}
 		}
@@ -5990,7 +5991,27 @@ function exportData( $option, $type, $cmd=null )
 
 		$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="10"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
 	} else {
-		
+		$processors = PaymentProcessorHandler::getInstalledObjectList();
+
+		$proc_list = array();
+		$selected_proc = array();
+		foreach ( $processors as $proc ) {
+			$pp = new PaymentProcessor();
+			$pp->loadName( $proc->name );
+			$pp->getInfo();
+
+			$proc_list[] = JHTML::_('select.option', $pp->id, $pp->info['longname'] );
+
+			if ( !empty( $filter_values['method'] ) ) {
+				foreach ( $filter_values['method'] as $id ) {
+					if ( $id == $pp->id ) {
+						$selected_proc[] = JHTML::_('select.option', $id, $pp->info['longname'] );
+					}
+				}
+			}
+		}
+
+		$lists['method'] = JHTML::_('select.genericlist', $proc_list, 'method[]', 'size="8" multiple="multiple"', 'value', 'text', $selected_proc);
 	}
 
 	// Export Method
