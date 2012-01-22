@@ -476,6 +476,7 @@ width: 100%;
 border-bottom: 1px dashed #999;
 text-align: left;
 padding: 6px;
+background: #ffffef !important;
 }
 
 .infobox_table td {

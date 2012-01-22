@@ -17,6 +17,10 @@ jQuery(document).ready(function($) {
 		jQuery("div.popover").fadeOut();
 	});
 
+	jQuery('form#adminForm input').change(function() {
+	  jQuery('div.aec-buttons a[disabled="disabled"]').attr("disabled", false);
+	});
+	
 	function lookup(inputString) {
 		jQuery.post("index.php?option=com_acctexp&task=quicksearch&search="+inputString , {queryString: ""+inputString+""}, function(data) {
 			jQuery('.popover .content p').html(data);

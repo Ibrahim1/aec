@@ -128,7 +128,7 @@ class HTML_myCommon
 		$v = new JVersion();
 		?><div class="aec-buttons"><?php
 		foreach ( $buttons as $action => $button ) {
-			echo '<a class="btn ' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')" href="#">' . $button['text'] . '</a>';
+			echo '<a class="btn ' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#">' . $button['text'] . '</a>';
 		}
 		?></div><?php
 	}
@@ -322,8 +322,8 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')' );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, '' );
@@ -479,7 +479,7 @@ class HTML_AcctExp
 								<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
 									<br />
 									<p><strong><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS');?>:</strong></p>
-									<table class="infobox_table">
+									<table class="infobox_table zebra-striped">
 										<tr>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
@@ -575,7 +575,7 @@ class HTML_AcctExp
 						</div>
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
-							<table class="infobox_table">
+							<table class="infobox_table zebra-striped">
 								<tr>
 									<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
 									<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
@@ -622,7 +622,7 @@ class HTML_AcctExp
 						</div>
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
-							<table class="infobox_table">
+							<table class="infobox_table zebra-striped">
 								<tr>
 									<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
 									<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
@@ -1164,10 +1164,10 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'aec_symbol_settings' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') )
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true )
 							);
 			HTML_myCommon::getButtons( $buttons, 'Processor' );
 			?>
@@ -1233,8 +1233,8 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Processor' );
@@ -1408,12 +1408,12 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'MI_TITLE', 'aec_symbol_microintegrations' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN') ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN') )
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true )
 							);
 			HTML_myCommon::getButtons( $buttons, 'MicroIntegration' );
 			?>
@@ -1534,8 +1534,8 @@ class HTML_AcctExp
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'MicroIntegration' );
@@ -1666,12 +1666,12 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'aec_symbol_plans' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN') ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN') )
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true )
 							);
 			HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
 			?>
@@ -1801,8 +1801,8 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_PLAN_INFO', 'aec_symbol_plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
@@ -2154,12 +2154,12 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'aec_symbol_itemgroups' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN') ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN') )
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true )
 							);
 			HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
 			?>
@@ -2277,8 +2277,8 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
@@ -2479,12 +2479,12 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm">
 			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'aec_symbol_coupons' . ( $type ? '_static' : '' ) );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN') ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN') ),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'actionable' => true ),
 								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN') ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN') ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN') )
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true )
 							);
 			HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );?>
 
@@ -2560,8 +2560,8 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_COUPON', 'aec_symbol_coupons' . ($type ? '_static' : ''), ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
 		
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );
@@ -3509,7 +3509,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_CSS_EDITOR', 'aec_symbol_css' );
 
-		$buttons = array(	'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+		$buttons = array(	'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
 						);
 		HTML_myCommon::getButtons( $buttons, 'CSS' );
