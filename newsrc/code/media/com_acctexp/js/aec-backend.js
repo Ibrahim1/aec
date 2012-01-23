@@ -11,8 +11,7 @@ jQuery(document).ready(function($) {
 	jQuery("#quicksearch")
 	.on("keypress", function(e) {
 		if (e.keyCode == 13) return false;
-	})
-	.on("keyup", function(e) {
+	}).on("keyup", function(e) {
 		clearTimeout(typingTimer);
 
 		inputString = this.value;

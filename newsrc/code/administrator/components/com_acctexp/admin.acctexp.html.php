@@ -795,16 +795,22 @@ class HTML_AcctExp
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
 				<ul class="nav">
 				<?php foreach ( $menu as $m ) { ?>
-					<li class="dropdown" data-dropdown="dropdown">
-						<a class="dropdown-toggle" href="#"><?php echo $m['short'] ?></a>
-						<ul class="dropdown-menu">
-						<?php
-						foreach ( $m['items'] as $item ) {
-							echo '<li><a href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
-						}
-						?>
-						</ul>
-					</li>
+					<?php if ( isset( $m['items'] ) ) { ?>
+						<li class="dropdown" data-dropdown="dropdown">
+							<a class="dropdown-toggle" href="#"><?php echo $m['short'] ?></a>
+							<ul class="dropdown-menu">
+							<?php
+							foreach ( $m['items'] as $item ) {
+								echo '<li><a href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
+							}
+							?>
+							</ul>
+						</li>
+					<?php } else { ?>
+						<li>
+							<a href="#"><?php echo $m['short'] ?></a>
+						</li>
+					<?php } ?>
 				<?php } ?>
 				</ul>
 				<form action="#" class="pull-right">
@@ -834,7 +840,7 @@ class HTML_AcctExp
 													'short'	=> JText::_('AEC_CENTR_AREA_PAYMENT_SHORT'),
 													'items'	=> array(	array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
 																	array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
-																	array( 'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ),
+																	array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE') ),
 																	array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
 																	array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ),
 																	array( 'showCouponsStatic', 'coupons_static', JText::_('AEC_CENTR_COUPONS_STATIC') )
@@ -858,6 +864,9 @@ class HTML_AcctExp
 																	array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY') ),
 																	array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
 																	)
+												),
+						'help'			=> array(	'name'	=> JText::_('AEC_CENTR_AREA_HELP'),
+													'short'	=> JText::_('AEC_CENTR_AREA_HELP')
 												)
 		);
 	}

@@ -13,7 +13,11 @@ z-index: 1;
 }
 
 .topbar .container {
-width: 760px;
+width: 820px;
+}
+
+.topbar div > ul a, .nav a {
+outline: 0 none !important;
 }
 
 .pills a {
