@@ -1564,6 +1564,14 @@ class HTML_AcctExp
 			$tabs->newTab( 'settings', JText::_('MI_E_SETTINGS') );
 		}
 
+		if ( !empty( $aecHTML->customparams ) ) {
+			foreach ( $aecHTML->customparams as $name ) {
+				if ( strpos( $name, 'aectab_' ) === 0 ) {
+					$tabs->newTab( $name, $aecHTML->rows[$name][1] );
+				}
+			}
+		}
+
 		$tabs->endTabs();
 
 		?>
@@ -1631,10 +1639,19 @@ class HTML_AcctExp
 							<?php
 							foreach ( $aecHTML->customparams as $name ) {
 								if ( strpos( $name, 'aectab_' ) === 0 ) {
-									?></table><?php
+									?>
+											</div>
+										</td>
+									</tr>
+									</table>
+									<?php
 									$tabs->endPane();
-									$tabs->startPane( $aecHTML->rows[$name][1], $aecHTML->rows[$name][1] ); ?>
+									$tabs->startPane( $name ); ?>
 					                <table width="100%" class="aecadminform">
+										<tr>
+											<td valign="top">
+								            	<div class="aec_userinfobox_sub">
+								            	<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
 									<?php
 								} else {
 									if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
