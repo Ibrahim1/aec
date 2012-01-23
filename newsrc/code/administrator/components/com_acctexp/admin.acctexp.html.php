@@ -1575,7 +1575,7 @@ class HTML_AcctExp
 		$tabs->endTabs();
 
 		?>
-		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 			<?php
 			$tabs->startPanes();
             $tabs->startPane( 'mi', true );
@@ -1854,7 +1854,7 @@ class HTML_AcctExp
 		$tabs->endTabs();
 
 		?>
-		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 			<?php
 			$tabs->startPanes();
 			$tabs->startPane( 'plan', true );
@@ -2329,7 +2329,7 @@ class HTML_AcctExp
 
 		$tabs->startPanes();
 		?>
-		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 			<?php
 			$tabs->startPanes();
 			$tabs->startPane( 'group', true );
@@ -2614,7 +2614,7 @@ class HTML_AcctExp
 		$tabs->endTabs();
 
 		?>
-		<form action="index.php" method="post" name="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 			<?php
 			$tabs->startPanes();
             $tabs->startPane( 'coupon', true );
