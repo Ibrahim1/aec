@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4261' );
+define( '_AEC_REVISION', '4276' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -15954,7 +15954,9 @@ class AECToolbox
 
 				$cbreply = ob_get_contents();
 
-				$alertstart = strpos( $cbreply, '<script type="text/javascript">alert(\'' );
+				$indicator = '<script type="text/javascript">alert(\'';
+
+				$alertstart = strpos( $cbreply, $indicator );
 
 				// Emergency fallback
 				if ( $alertstart !== false ) {
@@ -15962,7 +15964,7 @@ class AECToolbox
 
 					$alertend = strpos( $cbreply, '\'); </script>', $alertstart );
 
-					$alert = substr( $cbreply, $alertstart, $alertend-$alertstart );
+					$alert = substr( $cbreply, $alertstart+strlen($indicator), $alertend-$alertstart-strlen($indicator) );
 
 					if ( $aecConfig->cfg['plans_first'] ) {
 						return aecErrorAlert( $alert, $action='window.history.go(-2);' );
