@@ -350,6 +350,10 @@ switch( strtolower( $task ) ) {
 		echo getNotice();exit;
 		break;
 
+	case 'gethelp':
+		echo getHelp();exit;
+		break;
+
 	case 'readallnotices':
 		$db = &JFactory::getDBO();
 
@@ -369,6 +373,11 @@ switch( strtolower( $task ) ) {
 		break;
 
 	default: aecCentral( $option ); break;
+}
+
+function getHelp()
+{
+	return 'test';
 }
 
 function orderObject( $option, $type, $id, $up, $customreturn=null )

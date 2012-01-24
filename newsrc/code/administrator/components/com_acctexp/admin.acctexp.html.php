@@ -85,6 +85,7 @@ class HTML_myCommon
 		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-dropdown.js' );
 		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-twipsy.js' );
 		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-popover.js' );
+		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-modal.js' );
 		$document->addScript( '/media/com_acctexp/js/aec-backend.js' );
 	}
 
@@ -801,14 +802,14 @@ class HTML_AcctExp
 							<ul class="dropdown-menu">
 							<?php
 							foreach ( $m['items'] as $item ) {
-								echo '<li><a href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
+								echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
 							}
 							?>
 							</ul>
 						</li>
 					<?php } else { ?>
 						<li>
-							<a href="#"><?php echo $m['short'] ?></a>
+							<a href="#" id="aecmenu-<?php echo str_replace( " ", "-", strtolower( $m['short'] ) ) ?>"><?php echo $m['short'] ?></a>
 						</li>
 					<?php } ?>
 				<?php } ?>

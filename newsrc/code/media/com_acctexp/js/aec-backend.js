@@ -28,7 +28,21 @@ jQuery(document).ready(function($) {
 	jQuery('form#adminForm input, form#adminForm select').change(function() {
 	  jQuery('div.aec-buttons a[disabled="disabled"]').attr("disabled", false);
 	});
-	
+
+	jQuery('#aecmenu-help').popover({
+		trigger:'manual',
+		placement:'below'
+	});
+
+	jQuery("#aecmenu-help")
+	.on("click", function(e) {
+		jQuery('#aecmenu-help').popover('show');
+
+		jQuery.post("index.php?option=com_acctexp&task=getHelp" , {queryString: ""}, function(data) {
+			jQuery('.popover .content p').html(data);
+		});
+	});
+
 	function lookup() {
 		jQuery.post("index.php?option=com_acctexp&task=quicksearch&search="+inputString , {queryString: ""+inputString+""}, function(data) {
 			jQuery('.popover .content p').html(data);
