@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4282' );
+define( '_AEC_REVISION', '4283' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -16119,13 +16119,19 @@ class AECToolbox
 			$activation = $usersConfig->get('useractivation');
 
 			if ( ( $activation > 0 ) && !$overrideActivation ) {
+				$atext = JText::_('AEC_USEND_MSG_ACTIVATE');
+
 				if ( defined( 'JPATH_MANIFESTS' ) ) {
 					$activation_link	= JURI::root() . 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $row->activation;
+
+					if ( $activation == 2 ) {
+						$atext = JText::_('COM_USERS_MSG_ADMIN_ACTIVATE');
+					}
 				} else {
 					$activation_link	= JURI::root() . 'index.php?option=com_user&amp;task=activate&amp;activation=' . $row->activation;
 				}
 
-				$message = sprintf( JText::_('AEC_USEND_MSG_ACTIVATE'), $name, $app->getCfg( 'sitename' ), $activation_link, JURI::root(), $username, $savepwd );
+				$message = sprintf( $atext, $name, $app->getCfg( 'sitename' ), $activation_link, JURI::root(), $username, $savepwd );
 			} else {
 				$message = sprintf( JText::_('AEC_USEND_MSG'), $name, $app->getCfg( 'sitename' ), JURI::root() );
 			}
