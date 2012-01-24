@@ -887,6 +887,10 @@ class HTML_AcctExp
 						$menu = self::getMenu();
 
 						foreach ( $menu as $m ) {
+							if ( empty( $m['items'] ) ) {
+								continue;
+							}
+
 							?><div class="central_buttons aec_userinfobox_sub"><h3><?php echo $m['name']; ?></h3><div class="central_group"><?php
 
 							foreach ( $m['items'] as $item ) {
