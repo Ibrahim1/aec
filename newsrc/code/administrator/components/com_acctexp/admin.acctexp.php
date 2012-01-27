@@ -4576,12 +4576,12 @@ function eventlog( $option )
 		$events[$id]->params = implode( ', ', $params );
 
 		if ( strpos( $row->event, '<?xml' ) !== false ) {
-			$events[$id]->event = "<p><strong>XML cell - decoded as:</strong></p><pre>".htmlentities($row->event)."</pre>";
+			$events[$id]->event = '<p><strong>XML cell - decoded as:</strong></p><pre class="prettyprint">'.htmlentities($row->event).'</pre>';
 		} else {
 			$format = @json_decode( $row->event );
 
 			if ( is_array( $format ) || is_object( $format ) ) {
-				$events[$id]->event = "<p><strong>JSON cell - decoded as:</strong></p><pre>".print_r($format,true)."</pre>";
+				$events[$id]->event = '<p><strong>JSON cell - decoded as:</strong></p><pre class="prettyprint">'.print_r($format,true).'</pre>';
 			} else {
 				$events[$id]->event = htmlentities( stripslashes( $events[$id]->event ) );
 			}

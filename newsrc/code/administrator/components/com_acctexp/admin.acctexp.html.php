@@ -80,13 +80,13 @@ class HTML_myCommon
 	{
 		$document=& JFactory::getDocument();
 
-		$document->addScript( '/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
-		$document->addScript( '/media/com_acctexp/js/jquery/jquerync.js' );
-		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-dropdown.js' );
-		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-twipsy.js' );
-		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-popover.js' );
-		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-modal.js' );
-		$document->addScript( '/media/com_acctexp/js/aec-backend.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap-dropdown.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap-twipsy.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap-popover.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap-tabs.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/aec-backend.js' );
 	}
 
 	function addReadoutCSS()
@@ -2843,48 +2843,30 @@ class HTML_AcctExp
 		<div class="aecadminform">
 		<table class="adminlist">
 		<thead><tr>
-			<th align="left" width="15%"><?php echo JText::_('HISTORY_USERID'); ?></th>
-			<th align="center" width="10%"><?php echo JText::_('HISTORY_INVOICE_NUMBER'); ?></th>
-			<th width="10%"><?php echo JText::_('HISTORY_PLAN_NAME'); ?></th>
-			<th align="center" width="15%"><?php echo JText::_('HISTORY_TRANSACTION_DATE'); ?></th>
-			<th align="center" width="10%"><?php echo JText::_('HISTORY_METHOD'); ?></th>
-			<th align="center" width="10%"><?php echo JText::_('HISTORY_AMOUNT'); ?></th>
-			<th width="30%"><?php echo JText::_('HISTORY_RESPONSE'); ?></th>
+			<th><?php echo JText::_('HISTORY_USERID'); ?></th>
+			<th><?php echo JText::_('HISTORY_INVOICE_NUMBER'); ?></th>
+			<th><?php echo JText::_('HISTORY_PLAN_NAME'); ?></th>
+			<th><?php echo JText::_('HISTORY_TRANSACTION_DATE'); ?></th>
+			<th><?php echo JText::_('HISTORY_METHOD'); ?></th>
+			<th><?php echo JText::_('HISTORY_AMOUNT'); ?></th>
+			<th><?php echo JText::_('HISTORY_RESPONSE'); ?></th>
 		  </tr></thead>
 		<?php
 		$k = 0;
 		foreach ( $rows as $row ) { ?>
 			<tr class="row<?php echo $k; ?>">
-				<td><?php echo $row->user_name; ?></td>
+				<td align="center"><?php echo $row->user_name; ?></td>
 				<td align="center"><?php echo $row->invoice_number; ?></td>
 				<td align="center"><?php echo $row->plan_name; ?></td>
 	  			<td align="center"><?php echo $row->transaction_date; ?></td>
 				<td align="center"><?php echo $row->proc_name; ?></td>
 				<td align="center"><?php echo $row->amount; ?></td>
-				<td align="left">
+				<td>
 					<?php
 						if ( !empty( $row->response ) && ( strlen( $row->response ) > 8) ) {
 							$field = unserialize( base64_decode( $row->response ) );
 
-							if ( is_array( $field ) ) {
-								if ( count( $field ) == 1 ) {
-									foreach ( $field as $n => $v) {
-										if ( !empty( $n ) && ( strlen( $n ) > 8) ) {
-											$field = unserialize( base64_decode( $n ) );
-										}
-									}
-								}
-
-								if ( is_array( $field ) ) {
-									foreach ( $field as $n => $v) {
-										echo $n." = ".$v."<br />";
-									}
-								} else {
-									echo $field."<br />";
-								}
-							} else {
-								echo $field."<br />";
-							}
+							echo '<pre class="prettyprint">'.print_r($field,true).'</pre>';
 						}
 					?>
 				</td>
