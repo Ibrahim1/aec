@@ -114,7 +114,7 @@ class processor_payments_gateway extends POSTprocessor
 																)
 											)
 										); 
-//unset($var['pg_transaction_type']);unset($var['pg_ts_hash']);
+
 		return $var;
 	}
 
@@ -133,19 +133,17 @@ class processor_payments_gateway extends POSTprocessor
 
 		$hash = $this->hmac(	$this->settings['api_key'],
 								implode("|", array(	$this->settings['api_login_id'],
-													$post['pg_transaction_type'],
-													"1.0",
+													$post['pg_trace_number'],
 													$post['pg_total_amount'],
-													$post['pg_utc_time'],
-													$post['pg_transaction_order_number']
+													$post['pg_utc_time']
 												)
 								)
 							); 
 
 		if ( $post['pg_ts_hash_response'] != $hash ) {
-			//$response['error'] = 'hash mismatch';
+			$response['error'] = 'hash mismatch';
 			//override for now
-			$response['valid'] = 1;
+			//$response['valid'] = 1;
 		} elseif ( $post['pg_response_type'] == 'A01' ) {
 			$response['valid'] = 1;
 		} else {
