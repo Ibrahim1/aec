@@ -26,16 +26,16 @@ padding: 10px;
 }
 
 .topbar-inner {
-background-color: #520404;
+background-color: #850d0d;
 background-repeat: repeat-x;
-background-image: -khtml-gradient(linear, left top, left bottom, from(#520404), to(#850d0d));
-background-image: -moz-linear-gradient(top, #520404, #850d0d);
-background-image: -ms-linear-gradient(top, #520404, #850d0d);
-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #520404), color-stop(100%, #850d0d));
-background-image: -webkit-linear-gradient(top, #520404, #850d0d);
-background-image: -o-linear-gradient(top, #520404, #850d0d);
-background-image: linear-gradient(top, #520404, #850d0d);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#520404', endColorstr='#850d0d', GradientType=0);
+background-image: -khtml-gradient(linear, left top, left bottom, from(#850d0d), to(#c31313));
+background-image: -moz-linear-gradient(top, #850d0d, #c31313);
+background-image: -ms-linear-gradient(top, #850d0d, #c31313);
+background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #850d0d), color-stop(100%, #c31313));
+background-image: -webkit-linear-gradient(top, #850d0d, #c31313);
+background-image: -o-linear-gradient(top, #850d0d, #c31313);
+background-image: linear-gradient(top, #850d0d, #c31313);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#850d0d', endColorstr='#c31313', GradientType=0);
 -webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
 -moz-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
 box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
@@ -55,15 +55,15 @@ padding-left: 10px;
 }
 
 .dropdown-menu {
-background-color: #520404;
+background-color: #850d0d;
 background-repeat: repeat-x;
-background-image: -khtml-gradient(linear, left top, left bottom, from(#520404), to(#850d0d));
-background-image: -moz-linear-gradient(top, #520404, #850d0d);
-background-image: -ms-linear-gradient(top, #520404, #850d0d);
-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #520404), color-stop(100%, #850d0d));
-background-image: -webkit-linear-gradient(top, #520404, #850d0d);
-background-image: -o-linear-gradient(top, #520404, #850d0d);
-background-image: linear-gradient(top, #520404, #850d0d);
+background-image: -khtml-gradient(linear, left top, left bottom, from(#850d0d), to(#c31313));
+background-image: -moz-linear-gradient(top, #850d0d, #c31313);
+background-image: -ms-linear-gradient(top, #850d0d, #c31313);
+background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #850d0d), color-stop(100%, #c31313));
+background-image: -webkit-linear-gradient(top, #850d0d, #c31313);
+background-image: -o-linear-gradient(top, #850d0d, #c31313);
+background-image: linear-gradient(top, #850d0d, #c31313);
 }
 
 .topbar div > ul .menu-dropdown li a,
@@ -219,7 +219,7 @@ margin: 12px 2px 2px;
 
 .popover .inner {
 width: 320px;
-background: #520404;
+background: #850d0d;
 }
 
 .popover .title {
@@ -227,7 +227,7 @@ margin: 0;
 }
 
 .popover .arrow {
-border-bottom: 5px solid #520404;
+border-bottom: 5px solid #850d0d;
 }
 
 .popover .content {
@@ -322,14 +322,25 @@ max-width: 840px;
 }
 
 div.central_notices {
-clear: both;
-padding: 6px 12px 12px 12px;
 margin: 12px auto;
 max-width: 840px;
 }
 
 div.central_notices .alert-message {
 text-align: left;
+}
+
+div.central_notices .warning {
+text-align: left;
+background-image: -khtml-gradient(linear, center top, center bottom, from(#d6aa1a), to(#b59512));
+background-image: -moz-linear-gradient(center top , #d6aa1a 0pt, #b59512 100%);
+background-image: -ms-linear-gradient(center top , #d6aa1a 0pt, #b59512 100%);
+background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0%, #d6aa1a), color-stop(100%, #b59512));
+background-image: -webkit-linear-gradient(center top , #d6aa1a 0pt, #b59512 100%);
+background-image: -o-linear-gradient(center top , #d6aa1a 0pt, #b59512 100%);
+background-image: linear-gradient(center top , #d6aa1a 0pt, #b59512 100%);
+text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+color: #fff;
 }
 
 div.central_notices .alert-message p {
@@ -342,7 +353,7 @@ color: #fff;
 }
 
 div.central_notices .alert-message .help-block {
-color: #ddd;
+color: #eee;
 float: right;
 margin-top: -13px;
 max-width: 600px;
