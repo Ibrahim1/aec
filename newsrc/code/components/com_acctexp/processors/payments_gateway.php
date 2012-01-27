@@ -144,7 +144,7 @@ class processor_payments_gateway extends POSTprocessor
 			$response['error'] = 'hash mismatch';
 			//override for now
 			//$response['valid'] = 1;
-		} elseif ( $post['pg_response_type'] == 'A01' ) {
+		} elseif ( $post['pg_response_type'] == 'A' ) {
 			$response['valid'] = 1;
 		} else {
 			$response['error'] = $post['pg_response_description'];
