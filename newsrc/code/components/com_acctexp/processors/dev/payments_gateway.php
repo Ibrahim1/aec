@@ -33,8 +33,8 @@ class processor_payments_gateway extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['api_login_id']	= '112233445566';
-		$settings['api_key']		= '112233445566';
+		$settings['api_login_id']	= 'a1b2c3d4e5f6';
+		$settings['api_key']		= 'a1b2c3d4e5f6';
 		$settings['testmode']		= 0;
 		$settings['invoice_tax']	= 0;
 		$settings['tax']			= '';
@@ -74,6 +74,15 @@ class processor_payments_gateway extends POSTprocessor
 		$var['pg_billto_postal_name_first']	= $namearray['first'];
 		$var['pg_billto_postal_name_last']	= $namearray['last'];
 
+		$var['pg_api_login_id']					= $this->settings['api_login_id'];
+		$var['pg_transaction_type']				= "10";
+		$var['pg_consumerorderid']				= $request->invoice->invoice_number;
+
+		$var['pg_return_url']					= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payments_gatewaynotification' );
+		$var['pg_return_method']				= 'AsyncPost';
+
+		$var['pg_version_number']				= '1.0';
+
 		if ( !empty( $this->settings['invoice_tax'] ) && isset( $request->items->tax ) ) {
 			$tax = 0;
 
@@ -92,39 +101,56 @@ class processor_payments_gateway extends POSTprocessor
 			$var['pg_total_amount']		= $request->int_var['amount'];
 		}
 
-		$var['pg_api_login_id']					= $this->settings['api_login_id'];
-		$var['pg_consumerorderid']				= $request->invoice->invoice_number;
-
-		$var['pg_return_url']					= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payments_gatewaynotification' );
-		$var['pg_return_method']				= 'AsyncPost';
-
-		$var['pg_version_number']				= '1.0';
-		$var['pg_utc_time']						= floor( (gmdate('U') - 621355968000000000) / 10000000 );
+		$var['pg_utc_time']						= number_format((gmdate('U')*10000000 + 621355968000000000), 0, '', '');
 		$var['pg_transaction_order_number']		= $request->invoice->id;
 
-		$var['pg_ts_hash']	= $this->hmac( implode(" | ", array(	$var['pg_api_login_id'],
-																	"",
+		$var['pg_ts_hash']	= $this->hmac(	$this->settings['api_key'],
+											implode("|", array(	$var['pg_api_login_id'],
+																	$var['pg_transaction_type'],
 																	$var['pg_version_number'],
 																	$var['pg_total_amount'],
 																	$var['pg_utc_time'],
 																	$var['pg_transaction_order_number']
 																)
-													), $this->settings['api_key'] ); 
-
+											)
+										); 
+//unset($var['pg_transaction_type']);unset($var['pg_ts_hash']);
 		return $var;
 	}
 
 	function parseNotification( $post )
 	{
 		$response = array();
-		aecDebug($post);
+		$response['amount']		= $post['pg_total_amount'];
+		$response['invoice']	= AECfetchfromDB::InvoiceNumberfromId( $post['pg_transaction_order_number'] );
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
+		$response['valid'] = 0;
 
+		$hash = $this->hmac(	$this->settings['api_key'],
+								implode("|", array(	$this->settings['api_login_id'],
+													$post['pg_transaction_type'],
+													"1.0",
+													$post['pg_total_amount'],
+													$post['pg_utc_time'],
+													$post['pg_transaction_order_number']
+												)
+								)
+							); 
+
+		if ( $post['pg_ts_hash_response'] != $hash ) {
+			//$response['error'] = 'hash mismatch';
+			//override for now
+			$response['valid'] = 1;
+		} elseif ( $post['pg_response_type'] == 'A01' ) {
+			$response['valid'] = 1;
+		} else {
+			$response['error'] = $post['pg_response_description'];
+		}
 
 		return $response;
 	}
