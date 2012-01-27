@@ -20,7 +20,7 @@ class processor_robokassa extends POSTprocessor
 		$info['longname']		= JText::_('CFG_ROBOKASSA_LONGNAME');
 		$info['statement']		= JText::_('CFG_ROBOKASSA_STATEMENT');
 		$info['description']	= JText::_('CFG_ROBOKASSA_DESCRIPTION');
-		$info['currencies']		= 'USD,EUR,GBP,CAD,AUD,BGN,CZK,DKK,EEK,HKD,HUF,LTL,MYR,NZD,NOK,PLN,ROL,SGD,ZAR,SEK,CHF';
+		$info['currencies']		= 'RUB,USD,EUR,GBP,CAD,AUD,BGN,CZK,DKK,EEK,HKD,HUF,LTL,MYR,NZD,NOK,PLN,ROL,SGD,ZAR,SEK,CHF';
 		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,maestro';
 		$info['recurring']		= 0;
