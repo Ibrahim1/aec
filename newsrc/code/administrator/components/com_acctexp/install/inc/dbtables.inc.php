@@ -302,4 +302,17 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_export` ('
 . ' PRIMARY KEY (`id`)'
 . ') ENGINE=MyISAM;'
 ;
+
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_export_sales` ('
+. '`id` int(11) NOT NULL auto_increment,'
+. '`system` int(2) NOT NULL default \'0\','
+. '`name` varchar(255) NULL,'
+. '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
+. '`lastused_date` datetime NULL default \'0000-00-00 00:00:00\','
+. '`filter` text NULL,'
+. '`options` text NULL,'
+. '`params` text NULL,'
+. ' PRIMARY KEY (`id`)'
+. ') ENGINE=MyISAM;'
+;
 ?>
