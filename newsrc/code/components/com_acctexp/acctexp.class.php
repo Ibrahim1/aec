@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4283' );
+define( '_AEC_REVISION', '4292' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5985,7 +5985,7 @@ class aecHTML
 				break;
 			case 'inputE':
 				$return .= '<div class="input">';
-				$return .= '<textarea id="' . $name . '" class="span14" style="width:520px" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="span11" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div></div>';
 				break;
 			case 'checkbox':
@@ -19821,9 +19821,15 @@ class aecExport extends serialParamDBTable
 	/** @var text */
 	var $params				= null;
 
-	function aecExport( &$db )
+	function aecExport( &$db, $type=false )
 	{
-		parent::__construct( '#__acctexp_export', 'id', $db );
+		$this->type = $type;
+
+		if ( $type ) {
+			parent::__construct( '#__acctexp_export_sales', 'id', $db );
+		} else {
+			parent::__construct( '#__acctexp_export', 'id', $db );
+		}
 	}
 
 	function declareParamFields()
@@ -19969,7 +19975,7 @@ class aecExport extends serialParamDBTable
 		// Drop old system saves to always keep 10 records
 		if ( $system ) {
 			$query = 'SELECT count(*) '
-					. ' FROM #__acctexp_export'
+					. ' FROM ' . $this->_tbl
 					. ' WHERE `system` = \'1\''
 					;
 			$db->setQuery( $query );
@@ -19977,7 +19983,7 @@ class aecExport extends serialParamDBTable
 
 			if ( $sysrows > 9 ) {
 				$query = 'DELETE'
-						. ' FROM #__acctexp_export'
+						. ' FROM ' . $this->_tbl
 						. ' WHERE `system` = \'1\''
 						. ' ORDER BY `id` ASC'
 						. ' LIMIT 1'
@@ -19995,6 +20001,10 @@ class aecExport extends serialParamDBTable
 
 		if ( ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) === 0 ) || empty( $this->created_date ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
+		}
+
+		if ( isset( $this->type ) ) {
+			unset( $this->type );
 		}
 
 		$this->storeload();

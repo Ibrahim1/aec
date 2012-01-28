@@ -142,8 +142,6 @@ class processor_payments_gateway extends POSTprocessor
 
 		if ( $post['pg_ts_hash_response'] != $hash ) {
 			$response['error'] = 'hash mismatch';
-			//override for now
-			//$response['valid'] = 1;
 		} elseif ( $post['pg_response_type'] == 'A' ) {
 			$response['valid'] = 1;
 		} else {
@@ -151,6 +149,62 @@ class processor_payments_gateway extends POSTprocessor
 		}
 
 		return $response;
+	}
+
+	function convertPeriodUnit( $period, $unit )
+	{
+		switch ( $unit ) {
+			case 'D':
+				if ( $period <= 11 ) {
+					return 10;
+				} elseif ( ( $period > 11 ) && ( $period <= 24 ) ) {
+					return 15;
+				} elseif ( ( $period > 24 ) && ( $period <= 42 ) ) {
+					return 20;
+				} elseif ( ( $period > 42 ) && ( $period <= 66 ) ) {
+					return 25;
+				} elseif ( ( $period > 66 ) && ( $period <= 140 ) ) {
+					return 30;
+				} elseif ( ( $period > 140 ) && ( $period <= 196 ) ) {
+					return 35;
+				} else {
+					return 40;
+				}
+				break;
+			case 'W':
+				if ( $period == 1 ) {
+					return 10;
+				} elseif ( ( $period > 1 ) && ( $period <= 2 ) ) {
+					return 15;
+				} elseif ( ( $period > 2 ) && ( $period <= 5 ) ) {
+					return 20;
+				} elseif ( ( $period > 5 ) && ( $period <= 9 ) ) {
+					return 25;
+				} elseif ( ( $period > 9 ) && ( $period <= 20 ) ) {
+					return 30;
+				} elseif ( ( $period > 20 ) && ( $period <= 36 ) ) {
+					return 35;
+				} else {
+					return 40;
+				}
+				break;
+			case 'M':
+				if ( $period == 1 ) {
+					return 20;
+				} elseif ( ( $period > 1 ) && ( $period <= 3 ) ) {
+					return 25;
+				} elseif ( ( $period > 3 ) && ( $period <= 5 ) ) {
+					return 30;
+				} elseif ( ( $period > 5 ) && ( $period <= 10 ) ) {
+					return 35;
+				} else {
+					return 40;
+				}
+				break;
+			case 'Y':
+				return 40;
+				break;
+		}
 	}
 
 	function hmac( $key, $data )
