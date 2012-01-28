@@ -366,7 +366,7 @@ class HTML_AcctExp
 			?>
 			<table class="aecadminform">
 				<tr>
-					<td width="50%" style="padding:10px;" valign="top">
+					<td width="50%" valign="top">
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
 							<?php if ( $metaUser->hasSubscription ) { ?>
@@ -521,7 +521,7 @@ class HTML_AcctExp
 							<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
 						</div>
 					</td>
-					<td width="50%" style="padding:10px; vertical-align:top;">
+					<td width="50%" style="vertical-align:top;">
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
 							<div class="aec_userinfobox_sub_inline form-slim" style="width:35%;padding:0 5%;">
@@ -841,7 +841,7 @@ class HTML_AcctExp
 													'short'	=> JText::_('AEC_CENTR_AREA_PAYMENT_SHORT'),
 													'items'	=> array(	array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
 																	array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
-																	array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE') ),
+																	array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
 																	array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
 																	array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ),
 																	array( 'showCouponsStatic', 'coupons_static', JText::_('AEC_CENTR_COUPONS_STATIC') )
@@ -895,7 +895,11 @@ class HTML_AcctExp
 							?><div class="central_buttons aec_userinfobox_sub"><h3><?php echo $m['name']; ?></h3><div class="central_group"><?php
 
 							foreach ( $m['items'] as $item ) {
-								HTML_AcctExp::quickiconButton( $linkroot.$item[0], 'aec_symbol_'.$item[1].'.png', $item[2] );
+								if ( !empty( $item[3] ) ) {
+									HTML_AcctExp::quickiconButton( $linkroot.$item[0], 'aec_symbol_'.$item[1].'.png', $item[3] );
+								} else {
+									HTML_AcctExp::quickiconButton( $linkroot.$item[0], 'aec_symbol_'.$item[1].'.png', $item[2] );
+								}
 							}
 							?></div></div><?php
 						}
@@ -1875,8 +1879,8 @@ class HTML_AcctExp
 			?>
 			<table class="aecadminform">
 				<tr>
-					<td style="padding:10px;" valign="top">
-						<div style="position:relative;float:left;width:33.33%;">
+					<td valign="top">
+						<div style="position:relative;float:left;width:33.225%;">
 							<div class="userinfobox">
 								<div class="aec_userinfobox_sub">
 									<h4>General</h4>
@@ -1934,7 +1938,7 @@ class HTML_AcctExp
 								</div>
 							</div>
 						</div>
-						<div style="position:relative;float:left;width:33.33%;">
+						<div style="position:relative;float:left;width:33.225%;">
 							<div class="userinfobox">
 								<div class="aec_userinfobox_sub">
 									<h4>Cost&amp;Details</h4>
@@ -1961,7 +1965,7 @@ class HTML_AcctExp
 								</div>
 							</div>
 						</div>
-						<div style="position:relative;float:left;width:33.33%;">
+						<div style="position:relative;float:left;width:33.225%;">
 							<div class="userinfobox">
 								<div class="aec_userinfobox_sub">
 									<h4>Plan Relation</h4>
@@ -2351,7 +2355,7 @@ class HTML_AcctExp
 			<table class="aecadminform">
 				<tr>
 					<td valign="top">
-						<div style="position:relative;float:left;width:33.33%;">
+						<div style="position:relative;float:left;width:33.225%;">
 							<div class="aec_userinfobox_sub">
 								<h4>General</h4>
 								<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
@@ -2368,7 +2372,7 @@ class HTML_AcctExp
 								</div>
 							</div>
 						</div>
-						<div style="position:relative;float:left;width:33.33%;">
+						<div style="position:relative;float:left;width:33.225%;">
 							<div class="aec_userinfobox_sub">
 								<h4>Details</h4>
 								<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
@@ -2377,7 +2381,7 @@ class HTML_AcctExp
 								<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 							</div>
 						</div>
-						<div style="position:relative;float:left;width:33.33%;">
+						<div style="position:relative;float:left;width:33.225%;">
 							<div class="aec_userinfobox_sub">
 								<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
 								<table style="width:100%;">

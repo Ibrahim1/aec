@@ -46,7 +46,7 @@ border-bottom-left-radius: 10px;
 }
 
 .topbar a {
-color: #eee;
+color: #f9f9f9;
 font-size: 110%;
 }
 
@@ -133,9 +133,9 @@ margin: 0 auto;
 width: 650px;
 padding: 6px 15px;
 background: #eee;
--webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75);
--moz-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75);
-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75);
+-webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
+-moz-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
+box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
 border-bottom-right-radius: 10px;
 -moz-border-radius-bottomright: 10px;
 border-bottom-left-radius: 10px;
@@ -434,7 +434,7 @@ background-color: #ddd;
 border-collapse: collapse;
 margin: 16px 0;
 width: 100%;
-box-shadow: 0 1px 7px #000 inset, 0 2px 8px #555;
+box-shadow: 0 1px 7px #000 inset, 0 1px 4px #ccc;
 float: left;
 }
 
@@ -454,8 +454,8 @@ float: left;
 .userinfobox {
 position: relative;
 float: left;
-padding: 12px 3px 12px 6px;
-width: 98%;
+margin: 0.4%;
+width: 100%;
 }
 
 div.aec-invoices-pagination {
@@ -465,7 +465,7 @@ text-align: center;
 
 .aec_userinfobox_sub {
 background-color: #f9f9e9;
-margin: 4px 6px;
+margin: 1%;
 padding: 4px 16px;
 -webkit-border-radius: 4px;
 -moz-border-radius: 4px;
@@ -486,6 +486,10 @@ margin: 0px 12px 24px;
 text-align: center;
 font-size: 20px;
 text-shadow: 0 1px 2px #bbb;
+}
+
+table .span6 {
+width: 45%;
 }
 
 .infobox_table {
@@ -808,6 +812,10 @@ line-height: 22px;
 
 #submenu-box {
 display: none !important;
+}
+
+.submenu-box, div.m {
+background: #fff;
 }
 
 #toolbar-box {
