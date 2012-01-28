@@ -1338,7 +1338,7 @@ function editSettings( $option )
 
 	$tab_data = array();
 
-	$params[] = array( 'userinfobox', 33.33 );
+	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_ACCESS') );
 	$params['require_subscription']			= array( 'toggle', 0 );
 	$params['adminaccess']					= array( 'toggle', 0 );
@@ -1359,7 +1359,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 33.33 );
+	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
 	$params['plans_first']					= array( 'toggle', 0 );
 	$params['integrate_registration']		= array( 'toggle', 0 );
@@ -1380,7 +1380,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 33.33 );
+	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
 	$params['root_group']					= array( 'list', 0 );
 	$params[] = array( 'div_end', 0 );
@@ -1398,7 +1398,7 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB1_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox', 49.5 );
+	$params[] = array( 'userinfobox', 49.8 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
@@ -1418,7 +1418,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 49.5 );
+	$params[] = array( 'userinfobox', 49.8 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
 	$params['amount_currency_symbol']			= array( 'toggle', 0 );
 	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
@@ -1479,7 +1479,7 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMINVOICE_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMINVOICE_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox', 49.5 );
+	$params[] = array( 'userinfobox', 49.8 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CREDIRECT') );
 	$params['customintro']						= array( 'inputC', '' );
 	$params['customintro_userid']				= array( 'toggle', '' );
@@ -1511,7 +1511,7 @@ function editSettings( $option )
 							);
 
 
-	$params[] = array( 'userinfobox', 49.5 );
+	$params[] = array( 'userinfobox', 49.8 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
 
 	foreach ( $itemidlist as $param => $xparams ) {
@@ -1573,7 +1573,7 @@ function editSettings( $option )
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMPAGES_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMPAGES_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox', 33.33 );
+	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SYSTEM') );
 	$params['alertlevel2']					= array( 'inputA', 0 );
 	$params['alertlevel1']					= array( 'inputA', 0 );
@@ -1591,7 +1591,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 33.33 );
+	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
 	$params['show_fixeddecision']			= array( 'toggle', 0 );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
@@ -1616,7 +1616,7 @@ function editSettings( $option )
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
-	$params[] = array( 'userinfobox', 33.33 );
+	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SECURITY') );
 	$params['ssl_signup']					= array( 'toggle', 0 );
 	$params['ssl_profile']					= array( 'toggle', 0 );
@@ -5451,7 +5451,7 @@ function readout( $option )
 		$readout = new aecReadout( $optionlist, $method );
 
 		foreach ( $optionlist as $opt => $odefault ) {
-			if ( !isset( $_POST[$opt] ) ) {
+			if ( !$_POST[$opt] ) {
 				continue;
 			}
 
@@ -5525,7 +5525,7 @@ function readout( $option )
 			}
 
 			if ( ( $optdefault == 1 ) || ( $optdefault == 0 ) ) {
-				$params[$opt] = array( 'checkbox', $optval );
+				$params[$opt] = array( 'toggle', $optval );
 			} else {
 				$params[$opt] = array( 'inputB', $optval );
 			}
