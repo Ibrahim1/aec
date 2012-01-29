@@ -83,6 +83,19 @@ class processor_payments_gateway extends POSTprocessor
 
 		$var['pg_version_number']				= '1.0';
 
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$var['pg_scheduled_transaction']	= 1;
+
+			$var['pg_total_amount'] 	= $request->int_var['amount']['amount3'];
+
+			$pu = $this->convertPeriodUnit( $request->int_var['amount']['unit3'], $request->int_var['amount']['period3'] );
+
+			$var['pg_schedule_frequency'] 	= $pu[0];
+			$var['pg_schedule_start_date'] 	= date( "m/d/Y", $pu[1] );
+		} else {
+			$var['pg_total_amount'] 	= $request->int_var['amount'];
+		}
+
 		if ( !empty( $this->settings['invoice_tax'] ) && isset( $request->items->tax ) ) {
 			$tax = 0;
 
@@ -94,18 +107,16 @@ class processor_payments_gateway extends POSTprocessor
 
 			$var['pg_total_amount']		= $request->items->total->cost['amount'];
 		} elseif ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {
-			$amount				= $request->int_var['amount'] / ( 100 + $this->settings['tax'] ) * 100;
-			$var['pg_sales_tax_amount']			= AECToolbox::correctAmount( ( $request->int_var['amount'] - $amount ), 2 );
+			$amount				= $var['pg_total_amount'] / ( 100 + $this->settings['tax'] ) * 100;
+			$var['pg_sales_tax_amount']			= AECToolbox::correctAmount( ( $var['pg_total_amount'] - $amount ), 2 );
 			$var['pg_total_amount']		= AECToolbox::correctAmount( $amount, 2 );
-		} else {
-			$var['pg_total_amount']		= $request->int_var['amount'];
 		}
 
 		$var['pg_utc_time']						= number_format((gmdate('U')*10000000 + 621355968000000000), 0, '', '');
 		$var['pg_transaction_order_number']		= $request->invoice->id;
 
 		$var['pg_ts_hash']	= $this->hmac(	$this->settings['api_key'],
-											implode("|", array(	$var['pg_api_login_id'],
+											implode("|", array(		$var['pg_api_login_id'],
 																	$var['pg_transaction_type'],
 																	$var['pg_version_number'],
 																	$var['pg_total_amount'],
@@ -156,53 +167,53 @@ class processor_payments_gateway extends POSTprocessor
 		switch ( $unit ) {
 			case 'D':
 				if ( $period <= 11 ) {
-					return 10;
+					return array( 10, strtotime("+1 week", gmdate('U')) );
 				} elseif ( ( $period > 11 ) && ( $period <= 24 ) ) {
-					return 15;
+					return array( 15, strtotime("+2 weeks", gmdate('U') ) );
 				} elseif ( ( $period > 24 ) && ( $period <= 42 ) ) {
-					return 20;
+					return array( 20, strtotime("+1 month", gmdate('U') ) );
 				} elseif ( ( $period > 42 ) && ( $period <= 66 ) ) {
-					return 25;
+					return array( 25, strtotime("+2 months", gmdate('U') ) );
 				} elseif ( ( $period > 66 ) && ( $period <= 140 ) ) {
-					return 30;
+					return array( 30, strtotime("+3 months", gmdate('U') ) );
 				} elseif ( ( $period > 140 ) && ( $period <= 196 ) ) {
-					return 35;
+					return array( 35, strtotime("+6 months", gmdate('U') ) );
 				} else {
-					return 40;
+					return array( 40, strtotime("+1 year", gmdate('U') ) );
 				}
 				break;
 			case 'W':
 				if ( $period == 1 ) {
-					return 10;
+					return array( 10, strtotime("+1 week", gmdate('U') ) );
 				} elseif ( ( $period > 1 ) && ( $period <= 2 ) ) {
-					return 15;
+					return array( 15, strtotime("+2 weeks", gmdate('U') ) );
 				} elseif ( ( $period > 2 ) && ( $period <= 5 ) ) {
-					return 20;
+					return array( 20, strtotime("+1 month", gmdate('U') ) );
 				} elseif ( ( $period > 5 ) && ( $period <= 9 ) ) {
-					return 25;
+					return array( 25, strtotime("+2 months", gmdate('U') ) );
 				} elseif ( ( $period > 9 ) && ( $period <= 20 ) ) {
-					return 30;
+					return array( 30, strtotime("+3 months", gmdate('U') ) );
 				} elseif ( ( $period > 20 ) && ( $period <= 36 ) ) {
-					return 35;
+					return array( 35, strtotime("+6 months", gmdate('U') ) );
 				} else {
-					return 40;
+					return array( 40, strtotime("+1 year", gmdate('U') ) );
 				}
 				break;
 			case 'M':
 				if ( $period == 1 ) {
-					return 20;
+					return array( 20, strtotime("+1 month", gmdate('U') ) );
 				} elseif ( ( $period > 1 ) && ( $period <= 3 ) ) {
-					return 25;
+					return array( 25, strtotime("+2 months", gmdate('U') ) );
 				} elseif ( ( $period > 3 ) && ( $period <= 5 ) ) {
-					return 30;
+					return array( 30, strtotime("+3 months", gmdate('U') ) );
 				} elseif ( ( $period > 5 ) && ( $period <= 10 ) ) {
-					return 35;
+					return array( 35, strtotime("+6 months", gmdate('U') ) );
 				} else {
-					return 40;
+					return array( 40, strtotime("+1 year", gmdate('U') ) );
 				}
 				break;
 			case 'Y':
-				return 40;
+				return array( 40, strtotime("+1 year", gmdate('U') ) );
 				break;
 		}
 	}
