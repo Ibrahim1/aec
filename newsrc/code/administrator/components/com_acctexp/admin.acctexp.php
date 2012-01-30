@@ -5725,19 +5725,31 @@ function exportData( $option, $type, $cmd=null )
 	$options_values = array();
 	$params_values = array();
 
-	$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
-						'filter' => array( 'planid', 'status', 'orderby' ),
-						'options' => array( 'rewrite_rule' ),
-						'params' => array( 'export_method' )
-					);
+	if ( $type == 'sales' ) {
+		$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
+							'filter' => array( 'date_start', 'date_end', 'method', 'planid', 'groupid', 'status', 'orderby' ),
+							'options' => array( 'collate', 'breakdown', 'breakdown_custom' ),
+							'params' => array( 'export_method' )
+						);
+
+		$pf = 8;
+	} else {
+		$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
+							'filter' => array( 'planid', 'status', 'orderby' ),
+							'options' => array( 'rewrite_rule' ),
+							'params' => array( 'export_method' )
+						);
+
+		$pf = 5;
+	}
 
 	$postfields = 0;
 	foreach( $getpost as $name => $array ) {
 		$field = $name . '_values';
-		$$field = array();
+		${$field} = array();
 		foreach( $array as $vname ) {
-			 $$field[$vname] = aecGetParam( $vname, '' );
-			 if ( !( $$field[$vname] == '' ) ) {
+			 ${$field}[$vname] = aecGetParam( $vname, '' );
+			 if ( !( ${$field}[$vname] == '' ) ) {
 			 	$postfields++;
 			 }
 		}
@@ -5764,6 +5776,7 @@ function exportData( $option, $type, $cmd=null )
 				// But as a copy of another entry
 				$row->load( 0 );
 			}
+
 			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
 
 			if ( $system_values['save'] ) {
@@ -5772,7 +5785,7 @@ function exportData( $option, $type, $cmd=null )
 		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) ) {
 			// User wants to save a new entry
 			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
-		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= 5 ) && $cmd_export )  ) {
+		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && $cmd_export )  ) {
 			// User wants to load an entry
 			$filter_values = $row->filter;
 			$options_values = $row->options;
@@ -6022,19 +6035,30 @@ function exportData( $option, $type, $cmd=null )
 
 		$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="10"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
 	} else {
-		$group_selection = array();
-		$group_selection[] = JHTML::_('select.option', 'day',	JText::_('Day') );
-		$group_selection[] = JHTML::_('select.option', 'week',	JText::_('Week') );
-		$group_selection[] = JHTML::_('select.option', 'month',		JText::_('Month') );
-		$group_selection[] = JHTML::_('select.option', 'year',		JText::_('Year') );
+		$collate_selection = array();
+		$collate_selection[] = JHTML::_('select.option', 'day',	JText::_('Day') );
+		$collate_selection[] = JHTML::_('select.option', 'week',	JText::_('Week') );
+		$collate_selection[] = JHTML::_('select.option', 'month',		JText::_('Month') );
+		$collate_selection[] = JHTML::_('select.option', 'year',		JText::_('Year') );
 
-		$selected_filter = 0;
+		$selected_collate = 0;
 		if ( !empty( $filter_values['collate'] ) ) {
-			$selected_filter = $filter_values['collate'];
+			$selected_collate = $filter_values['collate'];
 		}
 
-		$lists['collate'] = JHTML::_('select.genericlist', $group_selection, 'collate', 'size="4"', 'value', 'text', $selected_filter);
+		$lists['collate'] = JHTML::_('select.genericlist', $collate_selection, 'collate', 'size="4"', 'value', 'text', $selected_collate);
 
+		$breakdown_selection = array();
+		$breakdown_selection[] = JHTML::_('select.option', '0',	JText::_('None') );
+		$breakdown_selection[] = JHTML::_('select.option', 'plan',	JText::_('Plan') );
+		$breakdown_selection[] = JHTML::_('select.option', 'group',	JText::_('Group') );
+
+		$selected_breakdown = 0;
+		if ( !empty( $filter_values['breakdown'] ) ) {
+			$selected_breakdown = $filter_values['breakdown'];
+		}
+
+		$lists['breakdown'] = JHTML::_('select.genericlist', $breakdown_selection, 'breakdown', 'size="3"', 'value', 'text', $selected_breakdown);
 
 		$processors = PaymentProcessorHandler::getInstalledObjectList();
 

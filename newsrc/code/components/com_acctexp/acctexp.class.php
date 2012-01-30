@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '0.14.6omega' );
-define( '_AEC_REVISION', '4292' );
+define( '_AEC_REVISION', '4308' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -8386,7 +8386,7 @@ class aecTempToken extends serialParamDBTable
 
 		if ( empty( $id ) ) {
 			$query = 'SELECT `id`'
-			. ' FROM #__acctexp_temptoken'
+			. ' FROM #__accteplan_idmptoken'
 			. ' WHERE `ip` = \'' . $_SERVER['REMOTE_ADDR'] . '\''
 			;
 			$db->setQuery( $query );
@@ -19841,11 +19841,9 @@ class aecExport extends serialParamDBTable
 	{
 		$app = JFactory::getApplication();
 
-		$db = &JFactory::getDBO();
-
 		// Load Exporting Class
-		$filename = JPATH_SITE . '/components/com_acctexp/lib/export/' . $this->params->export_method . '.php';
-		$classname = 'AECexport_' . $this->params->export_method;
+		$filename = JPATH_SITE . '/components/com_acctexp/lib/export/' . $this->params['export_method'] . '.php';
+		$classname = 'AECexport_' . $this->params['export_method'];
 
 		include_once( $filename );
 
@@ -19864,11 +19862,169 @@ class aecExport extends serialParamDBTable
 		header("Content-Type: application/download");
 		header('Content-Disposition: inline; filename="' . $fname . '.csv"');
 
+		if ( $this->type ) {
+			$this->exportSales( $exphandler );
+		} else {
+			$this->exportMembers(  );
+		}
+
+		$this->setUsedDate();
+		exit;
+	}
+
+	function exportSales( $exphandler )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_log_history'
+				. ' WHERE transaction_date >= \'' . $this->filter['date_start'] . '\''
+				. ' AND transaction_date <= \'' . $this->filter['date_end'] . '\''
+				. ' ORDER BY transaction_date ASC'
+				;
+		$db->setQuery( $query );
+		$entries = $db->loadResultArray();
+
+		switch ( $this->options['collate'] ) {
+			default:
+			case 'day':
+				$collation = 'Y-m-d';
+				break;
+			case 'week':
+				$collation = 'Y-m-w';
+				break;
+			case 'month':
+				$collation = 'Y-m';
+				break;				
+			case 'year':
+				$collation = 'Y';
+				break;				
+		}
+
+		$collators = array();
+
+		$historylist = array();
+		$groups = array();
+		foreach ( $entries as $id ) {
+			$entry = new logHistory( $db );
+			$entry->load( $id );
+
+			if ( empty( $entry->plan_id ) || empty( $entry->amount ) ) {
+				continue;
+			}
+
+			$refund = false;
+			if ( is_array( $entry->response ) ) {
+				$filter = array( 'new_case', 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
+
+				$refund = false;
+				foreach ( $entry->response as $v ) {
+					if ( in_array( $v, $filter ) ) {
+						continue 2;
+					} elseif ( ( $v == 'refund' ) || ( $v == 'Reversed' ) || ( $v == 'Refunded' ) ) {
+						$refund = true;
+					}
+				}
+			}
+
+			$date = date( $collation, strtotime( $entry->transaction_date ) );
+
+			if ( !array_key_exists( $entry->plan_id, $collators ) ) {
+				$collators[$entry->plan_id] = 0;
+			}
+
+			if ( !isset( $historylist[$date] ) ) {
+				$historylist[$date] = array();
+			}
+
+			$historylist[$date][] = $entry;
+		}
+
+		$line = array( "date" => "Date" );
+
+		foreach ( $collators as $col => $colamount ) {
+			$line[] = "Plan $col";
+		}
+
+		$line['total_sum'] = "Total";
+
+		// Remove whitespaces and newlines
+		foreach( $line as $larrid => $larrval ) {
+			$line[$larrid] = trim($larrval);
+
+			if ( is_numeric( $larrval ) ) {
+				$line[$larrid] = AECToolbox::correctAmount($larrval);
+			}
+		}
+
+		echo $exphandler->export_line( $line );
+
+		$totalsum = 0;
+		foreach ( $historylist as $date => $collater ) {
+			$linesum = 0;
+			$collatex = array();
+
+			foreach ( $collators as $col => $colv ) {
+				$collatex[$col] = 0;
+			}
+
+			foreach ( $collater as $entry ) {
+				$linesum += $entry->amount;
+				$totalsum += $entry->amount;
+
+				$collatex[$entry->plan_id] += $entry->amount;
+				$collators[$entry->plan_id] += $entry->amount;
+			}
+
+			$line = array( "date" => $date );
+
+			foreach ( $collators as $col => $colamount ) {
+				$line[$col] = $collatex[$col];
+			}
+
+			$line['total_sum'] = $linesum;
+
+			// Remove whitespaces and newlines
+			foreach( $line as $larrid => $larrval ) {
+				$line[$larrid] = trim($larrval);
+
+				if ( is_numeric( $larrval ) ) {
+					$line[$larrid] = AECToolbox::correctAmount($larrval);
+				}
+			}
+
+			echo $exphandler->export_line( $line );
+		}
+
+		$line = array( "date" => "Grand Total" );
+
+		foreach ( $collators as $col => $colamount ) {
+			$line[$col] = $colamount;
+		}
+
+		$line['total_sum'] = $totalsum;
+
+		// Remove whitespaces and newlines
+		foreach( $line as $larrid => $larrval ) {
+			$line[$larrid] = trim($larrval);
+
+			if ( is_numeric( $larrval ) ) {
+				$line[$larrid] = AECToolbox::correctAmount($larrval);
+			}
+		}
+
+		echo $exphandler->export_line( $line );
+	}
+
+	function exportMembers( $exphandler )
+	{
+		$db = &JFactory::getDBO();
+
 		// Assemble Database call
-		if ( !in_array( 'manual', $this->filter->status ) ) {
+		if ( !in_array( 'manual', $this->filter['status'] ) ) {
 			$where = array();
-			if ( !empty( $this->filter->planid ) ) {
-				$where[] = '`plan` IN (' . implode( ',', $this->filter->planid ) . ')';
+			if ( !empty( $this->filter['planid'] ) ) {
+				$where[] = '`plan` IN (' . implode( ',', $this->filter['planid'] ) . ')';
 			}
 
 			$query = 'SELECT a.id, a.userid'
@@ -19879,9 +20035,9 @@ class aecExport extends serialParamDBTable
 				$query .= ' WHERE ( ' . implode( ' OR ', $where ) . ' )';
 			}
 
-			if ( !empty( $this->filter->status ) ) {
+			if ( !empty( $this->filter['status'] ) ) {
 				$stati = array();
-				foreach ( $this->filter->status as $status ) {
+				foreach ( $this->filter['status'] as $status ) {
 					$stati[] = 'LOWER( `status` ) = \'' . strtolower( $status ) . '\'';
 				}
 
@@ -19892,8 +20048,8 @@ class aecExport extends serialParamDBTable
 				}
 			}
 
-			if ( !empty( $this->filter->orderby ) ) {
-				$query .= ' ORDER BY ' . $this->filter->orderby . '';
+			if ( !empty( $this->filter['orderby'] ) ) {
+				$query .= ' ORDER BY ' . $this->filter['orderby'] . '';
 			}
 		} else {
 			$query = 'SELECT DISTINCT b.id AS `userid`'
@@ -19935,12 +20091,12 @@ class aecExport extends serialParamDBTable
 						$invoice = new Invoice( $db );
 						$invoice->load( $invoiceid );
 
-						$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser, $plans[$planid], $invoice );
+						$line = AECToolbox::rewriteEngine( $this->options['rewrite_rule'], $metaUser, $plans[$planid], $invoice );
 					} else {
-						$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser, $plans[$planid] );
+						$line = AECToolbox::rewriteEngine( $this->options['rewrite_rule'], $metaUser, $plans[$planid] );
 					}
 				} else {
-					$line = AECToolbox::rewriteEngine( $this->options->rewrite_rule, $metaUser );
+					$line = AECToolbox::rewriteEngine( $this->options['rewrite_rule'], $metaUser );
 				}
 
 				$larray = explode( ';', $line );
@@ -19953,10 +20109,8 @@ class aecExport extends serialParamDBTable
 				echo $exphandler->export_line( $larray );
 			}
 		}
-
-		$this->setUsedDate();
-		exit;
 	}
+
 
 	function setUsedDate()
 	{

@@ -130,7 +130,7 @@ margin-left: 6px;
 
 .aec-filters {
 margin: 0 auto;
-width: 650px;
+width: 540px;
 padding: 6px 15px;
 background: #eee;
 -webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
@@ -140,6 +140,30 @@ border-bottom-right-radius: 10px;
 -moz-border-radius-bottomright: 10px;
 border-bottom-left-radius: 10px;
 -moz-border-radius-bottomleft: 10px;
+text-align: center;
+}
+
+a#filter-button {
+display: block;
+clear: both;
+}
+
+.aec-filters label {
+text-align: center !important;
+}
+
+.aec-filters input {
+padding: 2px !important;
+}
+
+.aec-filters .inputs-list {
+padding-left: 4px;
+}
+
+.filter-sub {
+float: left;
+width: 30%;
+padding: 2px 8px;
 }
 
 .aec-buttons .btn {
