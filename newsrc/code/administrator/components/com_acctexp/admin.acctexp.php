@@ -6022,6 +6022,20 @@ function exportData( $option, $type, $cmd=null )
 
 		$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="10"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
 	} else {
+		$group_selection = array();
+		$group_selection[] = JHTML::_('select.option', 'day',	JText::_('Day') );
+		$group_selection[] = JHTML::_('select.option', 'week',	JText::_('Week') );
+		$group_selection[] = JHTML::_('select.option', 'month',		JText::_('Month') );
+		$group_selection[] = JHTML::_('select.option', 'year',		JText::_('Year') );
+
+		$selected_filter = 0;
+		if ( !empty( $filter_values['collate'] ) ) {
+			$selected_filter = $filter_values['collate'];
+		}
+
+		$lists['collate'] = JHTML::_('select.genericlist', $group_selection, 'collate', 'size="4"', 'value', 'text', $selected_filter);
+
+
 		$processors = PaymentProcessorHandler::getInstalledObjectList();
 
 		$proc_list = array();
