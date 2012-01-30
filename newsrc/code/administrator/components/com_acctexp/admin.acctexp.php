@@ -1242,7 +1242,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('TYPE_DESC') );
 	}
 
-	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox span3" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -1256,14 +1256,14 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
-	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
+	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox span3" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
 	$plans2[] = JHTML::_('select.option', '0', JText::_('BIND_USER'), 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans2 = array_merge( $plans2, $db_plans );
 	}
-	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
-
+	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox span3" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
+/*
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('AEC_SEL_EXCLUDED') );
 	$group_selection[] = JHTML::_('select.option', 'pending',	JText::_('AEC_SEL_PENDING') );
@@ -1282,6 +1282,24 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	}
 
 	$lists['groups'] = JHTML::_('select.genericlist', $group_selection, 'groups[]', 'size="5" multiple="multiple"', 'value', 'text', $selected_groups);
+*/
+
+	$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
+						'pending'	=> JText::_('AEC_SEL_PENDING'),
+						'active'	=> JText::_('AEC_SEL_ACTIVE'),
+						'expired'	=> JText::_('AEC_SEL_EXPIRED'),
+						'closed'	=> JText::_('AEC_SEL_CLOSED'),
+						'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
+						'hold'		=> JText::_('AEC_SEL_HOLD'),
+						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
+						);
+
+	$group_selection = array();
+	foreach ( $status as $id => $txt ) {
+		$group_selection[] = '<label><input type="checkbox" name="groups[]" value="' . $id . '"' . ( in_array( $id, $groups ) ? 'checked="checked"' : '' ) . ' /><span>' . $txt . '</span></label>';
+	}
+
+	$lists['groups'] = '<div><ul class="inputs-list"><li>' . implode( '</li><li>', $group_selection ) . '</li></ul></div>';
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
@@ -1298,7 +1316,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = JHTML::_('select.option', 'set_3',		JText::_('EXPIRE_03MONTH') );
 	$group_selection[] = JHTML::_('select.option', 'set_12',	JText::_('EXPIRE_12MONTH') );
 
-	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
+	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox span3" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
 	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
 }
@@ -4564,7 +4582,7 @@ function eventlog( $option )
 						$content = '<a href="index.php?option=com_acctexp&amp;task=edit&userid=' . $value . '">' . $value . '</a>';
 						break;
 					case 'invoice_number':
-						$content = '<a href="index.php?option=com_acctexp&amp;task=quicklookup&search=' . $value . '">' . $value . '</a>';
+						$content = '<a class="quicksearch" href="#">' . $value . '</a>';
 						break;
 					default:
 						$content = $value;
@@ -5730,7 +5748,7 @@ function exportData( $option, $type, $cmd=null )
 	$pname = "";
 
 	if ( !empty( $system_values['selected_export'] ) || $cmd_save || $cmd_apply ) {
-		$row = new aecExport( $db );
+		$row = new aecExport( $db, ( $type == 'sales' ) );
 		if ( isset( $system_values['selected_export'] ) ) {
 			$row->load( $system_values['selected_export'] );
 		} else {
@@ -5876,7 +5894,7 @@ function exportData( $option, $type, $cmd=null )
 	// Create a list of export options
 	// First, only the non-autosaved entries
 	$query = 'SELECT `id`, `name`, `created_date`, `lastused_date`'
-			. ' FROM #__acctexp_export'
+			. ' FROM #__acctexp_export' . ( ( $type == 'sales' ) ? '_sales' : '' )
 			. ' WHERE `system` = \''
 			;
 	$db->setQuery( $query . '0\'' );
@@ -5916,8 +5934,8 @@ function exportData( $option, $type, $cmd=null )
 		}
 	} else {
 		$listitems[] = JHTML::_('select.option', 0, " --- No saved Preset available --- " );
-		$listitems[] = JHTML::_('select.option', 0, " --- Your Exports --- " );
-		$listitems[] = JHTML::_('select.option', 0, " --- Autosaves --- " );
+		$listitems[] = JHTML::_('select.option', 0, " --- Your Exports --- ", 'value', 'text', true );
+		$listitems[] = JHTML::_('select.option', 0, " --- Autosaves --- ", 'value', 'text', true );
 	}
 
 	$lists['selected_export'] = JHTML::_('select.genericlist', $listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries+$m+2 ) ) . '" class="span12"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );

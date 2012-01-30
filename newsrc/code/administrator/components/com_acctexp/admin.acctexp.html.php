@@ -1319,30 +1319,25 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php HTML_myCommon::getHeader( $action[1], 'aec_symbol_' . $action[0] ); ?>
 			<div class="aec-filters">
-			<table class="adminheading" cellpadding="2" cellspacing="2">
-				<tr>
-					<td nowrap="nowrap"><?php echo $lists['groups'];?></td>
-					<td style="text-align:center;">
+				<div class="filter-sub">
+					<?php echo $lists['groups'];?>
+				</div>
+				<div class="filter-sub">
+					<?php if ( $action[0] != 'manual' ) { ?>
+						<label><span><?php echo JText::_('PLAN_FILTER'); ?></span><?php echo $lists['filterplanid']; ?></label>
+					<?php } ?>
+					<label><span><?php echo JText::_('ORDER_BY'); ?></span><?php echo $lists['orderNav']; ?></label>
+					<label><span><?php echo JText::_('AEC_CMN_SEARCH'); ?></span><input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" class="inputbox span3" /></label>
+				</div>
+				<div class="filter-sub">
+						<p>With selected users:</p>
+						<label><?php echo $lists['planid']; ?></label>
 						<?php if ( $action[0] != 'manual' ) { ?>
-							<?php echo JText::_('PLAN_FILTER') . '<br />' . $lists['filterplanid'] ?>
+							<label><?php echo $lists['set_expiration']; ?></label>
 						<?php } ?>
-						<?php echo JText::_('ORDER_BY') . '<br />' . $lists['orderNav']; ?>
-						<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
-					</td>
-					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
-						<?php echo $lists['planid']; ?>
-						<br />
-						<?php if ( $action[0] != 'manual' ) { ?>
-						<?php echo $lists['set_expiration']; ?>
-						<br />
-						<?php } ?>
-						<?php echo JText::_('AEC_CMN_SEARCH'); ?>
-						<br />
-						<input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
-					</td>
-				</tr>
-				<tr><td></td></tr>
-			</table>
+						<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+				</div>
+				<a id="filter-button" href="#">&#94;&#94;&nbsp;<?php echo JText::_('more'); ?>&nbsp;&#94;&#94;</a>
 			</div>
 			<div class="aecadminform">
 			<table class="adminlist">
@@ -1738,8 +1733,8 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="2%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+					<th width="1%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
 					<th width="20%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_DESC'); ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
@@ -1792,9 +1787,9 @@ class HTML_AcctExp
 				?>
 				<tr class="row<?php echo $k; ?>">
 					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td align="right"><?php echo $rows[$i]->id; ?></td>
-					<td><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
-					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
+					<td align="center"><?php echo $rows[$i]->id; ?></td>
+					<td align="center"><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
+					<td align="center" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo stripslashes( $rows[$i]->name ); ?></a></td>
 					<td  align="left">
 						<?php
