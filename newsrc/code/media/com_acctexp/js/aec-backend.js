@@ -21,12 +21,28 @@ jQuery(document).ready(function($) {
 		jQuery('.popover .content p').html("Searching...");
 	}).on("focusin", function(e) {
 		jQuery(this).popover('show');
+		
+		if ( this.value != "" ) {
+			inputString = this.value;
+
+			jQuery('.popover .content p').html("Searching...");
+
+			typingTimer = setTimeout(lookup, "100");
+		}
 	}).on("focusout", function(e) {
 		jQuery("div.popover").fadeOut();
 	});
 
 	jQuery('form#adminForm input, form#adminForm select').change(function() {
 	  jQuery('div.aec-buttons a[disabled="disabled"]').attr("disabled", false);
+	});
+
+	jQuery('a.quicksearch').on("click", function(e) {
+		e.preventDefault();
+
+		jQuery("#quicksearch").popover('show');
+
+		jQuery("input#quicksearch").val( this.text ).focus();
 	});
 
 	jQuery('#aecmenu-help').popover({
