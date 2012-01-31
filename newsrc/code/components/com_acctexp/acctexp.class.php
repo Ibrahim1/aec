@@ -6587,14 +6587,14 @@ class ItemGroupHandler
 		$db->setQuery( $query );
 		$result = $db->loadResultArray();
 
-		foreach ( $result as $k => $v ) {
-			if ( empty( $v ) ) {
-				unset($result[$k]);
-			}
-		}
-
 		if ( !empty( $result ) ) {
-		// Order results
+			foreach ( $result as $k => $v ) {
+				if ( empty( $v ) ) {
+					unset($result[$k]);
+				}
+			}
+
+			// Order results
 			$query = 'SELECT id'
 					. ' FROM #__acctexp_' . ( ( $type == 'group' ) ? 'itemgroups' : 'plans' )
 					. ' WHERE id IN (' . implode( ',', $result ) . ')'
@@ -20081,7 +20081,7 @@ class aecExport extends serialParamDBTable
 				$collation = 'Y-m-d';
 				break;
 			case 'week':
-				$collation = 'Y-m-w';
+				$collation = 'Y-W';
 				break;
 			case 'month':
 				$collation = 'Y-m';
@@ -20093,6 +20093,20 @@ class aecExport extends serialParamDBTable
 
 		$collators = array();
 
+		switch ( $this->options['breakdown'] ) {
+			default:
+			case 'plan':
+				break;
+			case 'group':
+				$all_groups = ItemGroupHandler::getGroups();
+
+				$collators = array();
+				foreach ( $all_groups as $gid ) {
+					$collators[$gid] = ItemGroupHandler::getChildren( $gid, 'item' );
+				}
+				break;
+		}
+
 		$historylist = array();
 		$groups = array();
 		foreach ( $entries as $id ) {
@@ -20103,6 +20117,20 @@ class aecExport extends serialParamDBTable
 				continue;
 			}
 
+			if ( !empty( $this->filter['groupid'] ) ) {
+				if ( empty( $this->filter['planid'] ) ) {
+					$this->filter['planid'] = array();
+				}
+
+				$children = ItemGroupHandler::getChildren( $this->filter['groupid'], 'item' );
+
+				if ( !empty( $children ) ) {
+					$this->filter['planid'] = array_merge( $this->filter['planid'], $children );
+
+					$this->filter['planid'] = array_unique( $this->filter['planid'] );
+				}
+			}
+
 			if ( !empty( $this->filter['planid'] ) ) {
 				if ( !in_array( $entry->plan_id, $this->filter['planid'] ) ) {
 					continue;
@@ -20111,7 +20139,7 @@ class aecExport extends serialParamDBTable
 
 			if ( !empty( $this->filter['method'] ) ) {
 				if ( !in_array( $entry->proc_id, $this->filter['method'] ) ) {
-					//continue;
+					continue;
 				}
 			}
 
@@ -20131,8 +20159,10 @@ class aecExport extends serialParamDBTable
 
 			$date = date( $collation, strtotime( $entry->transaction_date ) );
 
-			if ( !array_key_exists( $entry->plan_id, $collators ) ) {
-				$collators[$entry->plan_id] = 0;
+			if ( $this->options['breakdown'] == 'plan' ) {
+				if ( !array_key_exists( $entry->plan_id, $collators ) ) {
+					$collators[$entry->plan_id] = 0;
+				}
 			}
 
 			if ( !isset( $historylist[$date] ) ) {
@@ -20144,8 +20174,15 @@ class aecExport extends serialParamDBTable
 
 		$line = array( "date" => "Date" );
 
-		foreach ( $collators as $col => $colamount ) {
-			$line[] = "Plan $col";
+
+		if ( $this->options['breakdown'] == 'plan' ) {
+			foreach ( $collators as $col => $colamount ) {
+				$line[] = "Plan $col";
+			}
+		} elseif ( $this->options['breakdown'] == 'group' ) {
+			foreach ( $collators as $col => $colplans ) {
+				$line[] = "Group $col";
+			}
 		}
 
 		$line['total_sum'] = "Total";
@@ -20162,20 +20199,40 @@ class aecExport extends serialParamDBTable
 		echo $exphandler->export_line( $line );
 
 		$totalsum = 0;
+		$collate_all = array();
 		foreach ( $historylist as $date => $collater ) {
 			$linesum = 0;
 			$collatex = array();
 
 			foreach ( $collators as $col => $colv ) {
 				$collatex[$col] = 0;
+				$collate_all[$col] = 0;
 			}
 
 			foreach ( $collater as $entry ) {
-				$linesum += $entry->amount;
-				$totalsum += $entry->amount;
+				if ( $this->options['breakdown'] == 'plan' ) {
+					$collatex[$entry->plan_id] += $entry->amount;
+					$collate_all[$entry->plan_id] += $entry->amount;
 
-				$collatex[$entry->plan_id] += $entry->amount;
-				$collators[$entry->plan_id] += $entry->amount;
+					$linesum += $entry->amount;
+					$totalsum += $entry->amount;
+				} else {
+					$pgroup = 0;
+					foreach ( $collators as $gid => $gplans ) {
+						if ( $entry->plan_id == $gid ) {
+							$pgroup = $gid;
+							break;
+						}
+					}
+
+					if ( $pgroup ) {
+						$collatex[$pgroup] += $entry->amount;
+						$collate_all[$pgroup] += $entry->amount;
+
+						$linesum += $entry->amount;
+						$totalsum += $entry->amount;
+					}
+				}
 			}
 
 			$line = array( "date" => $date );
@@ -20187,12 +20244,15 @@ class aecExport extends serialParamDBTable
 			$line['total_sum'] = $linesum;
 
 			// Remove whitespaces and newlines
+			$i = 0;
 			foreach( $line as $larrid => $larrval ) {
 				$line[$larrid] = trim($larrval);
 
-				if ( is_numeric( $larrval ) ) {
+				if ( is_numeric( $larrval ) && $i ) {
 					$line[$larrid] = AECToolbox::correctAmount($larrval);
 				}
+
+				$i++;
 			}
 
 			echo $exphandler->export_line( $line );
@@ -20200,7 +20260,7 @@ class aecExport extends serialParamDBTable
 
 		$line = array( "date" => "Grand Total" );
 
-		foreach ( $collators as $col => $colamount ) {
+		foreach ( $collate_all as $col => $colamount ) {
 			$line[$col] = $colamount;
 		}
 

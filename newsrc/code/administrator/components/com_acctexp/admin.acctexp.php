@@ -5984,9 +5984,9 @@ function exportData( $option, $type, $cmd=null )
 	foreach ( $groups as $dbgroup ) {
 		$all_groups[] = JHTML::_('select.option', $dbgroup->id, $dbgroup->name );
 
-		if ( !empty( $filter_values['planid'] ) ) {
-			if ( in_array( $dbplan->id, $filter_values['planid'] ) ) {
-				$selected_groups[] = JHTML::_('select.option', $dbplan->id, $dbplan->name );
+		if ( !empty( $filter_values['groupid'] ) ) {
+			if ( in_array( $dbgroup->id, $filter_values['groupid'] ) ) {
+				$selected_groups[] = JHTML::_('select.option', $dbgroup->id, $dbgroup->name );
 			}
 		}
 	}
@@ -6042,8 +6042,8 @@ function exportData( $option, $type, $cmd=null )
 		$collate_selection[] = JHTML::_('select.option', 'year',		JText::_('Year') );
 
 		$selected_collate = 0;
-		if ( !empty( $filter_values['collate'] ) ) {
-			$selected_collate = $filter_values['collate'];
+		if ( !empty( $options_values['collate'] ) ) {
+			$selected_collate = $options_values['collate'];
 		}
 
 		$lists['collate'] = JHTML::_('select.genericlist', $collate_selection, 'collate', 'size="4"', 'value', 'text', $selected_collate);
@@ -6054,8 +6054,8 @@ function exportData( $option, $type, $cmd=null )
 		$breakdown_selection[] = JHTML::_('select.option', 'group',	JText::_('Group') );
 
 		$selected_breakdown = 0;
-		if ( !empty( $filter_values['breakdown'] ) ) {
-			$selected_breakdown = $filter_values['breakdown'];
+		if ( !empty( $options_values['breakdown'] ) ) {
+			$selected_breakdown = $options_values['breakdown'];
 		}
 
 		$lists['breakdown'] = JHTML::_('select.genericlist', $breakdown_selection, 'breakdown', 'size="3"', 'value', 'text', $selected_breakdown);
