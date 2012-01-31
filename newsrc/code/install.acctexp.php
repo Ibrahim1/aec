@@ -356,6 +356,7 @@ function com_install()
 		color: #fff;
 		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_1.png") no-repeat scroll 28px center #7caa00;
 		margin-bottom: 14px;
+		margin-top: 14px;
 		}
 		div.packages_none {
 		padding: 0 10px 0 120px;
@@ -364,6 +365,7 @@ function com_install()
 		color: #fff;
 		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_2.png") no-repeat scroll 28px center #aa9900;
 		margin-bottom: 14px;
+		margin-top: 14px;
 		}
 		div.packages_installed p, div.packages_none p {
 		font-size: 180%;
@@ -373,7 +375,7 @@ function com_install()
 		}
 		</style>
 	<div style="width: 1024px; margin: 0 auto;">
-	<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx_0_14.png) no-repeat top right; margin: 0 6px;">
+	<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx_1_0beta.png) no-repeat top right; margin: 0 6px;">
 		<div style="width: 100%; height: 290px;"></div>
 		<?php
 		if ( $errors ) {
