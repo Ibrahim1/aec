@@ -15301,6 +15301,196 @@ class reWriteEngine
 		return $result;
 	}
 
+	function explain( $subject )
+	{
+		// Check whether a replacement exists at all
+		if ( ( strpos( $subject, '[[' ) === false ) && ( strpos( $subject, '{aecjson}' ) === false ) ) {
+			return $subject;
+		}
+
+		if ( empty( $this->rewrite ) ) {
+			$this->armRewrite();
+		}
+
+		if ( strpos( $subject, '{aecjson}' ) !== false ) {
+			if ( ( strpos( $subject, '[[' ) !== false ) && ( strpos( $subject, ']]' ) !== false ) ) {
+				// also found classic tags, doing that rewrite first
+				$subject = $this->classicExplain( $subject );
+			}
+
+			// We have at least one JSON object, switching to JSON mode
+			return $this->explainTags( $subject );
+		} else {
+			// No JSON found, do traditional parsing
+			return $this->classicExplain( $subject );
+		}
+	}
+
+	function classicExplain( $subject )
+	{
+		$search = array();
+		$replace = array();
+		foreach ( $this->rewrite as $name => $replacement ) {
+			if ( is_array( $replacement ) ) {
+				$replacement = implode( $replacement );
+			}
+
+			$search[]	= '[[' . $name . ']]';
+			$replace[]	= $name;
+		}
+
+		return str_replace( $search, $replace, $subject );
+	}
+
+	function explainTags( $subject )
+	{
+		$regex = "#{aecjson}(.*?){/aecjson}#s";
+
+		// find all instances of json code
+		$matches = array();
+		preg_match_all( $regex, $subject, $matches, PREG_SET_ORDER );
+
+		if ( count( $matches ) < 1 ) {
+			return $subject;
+		}
+
+		foreach ( $matches as $match ) {
+			$json = jsoonHandler::decode( $match[1] );
+
+			$result = $this->explainJSONitem( $json );
+
+			$subject = str_replace( $match, $result, $subject );
+		}
+
+		return $subject;
+	}
+
+	function explainJSONitem( $current )
+	{
+		if ( is_object( $current ) ) {
+			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
+				// Malformed String
+				return "JSON PARSE ERROR - Malformed String!";
+			}
+
+			$variables = $this->explainJSONitem( $current->vars );
+
+			$current = $this->explainCommand( $current->cmd, $variables );
+		} elseif ( is_array( $current ) ) {
+			foreach( $current as $id => $item ) {
+				$current[$id] = $this->explainJSONitem( $item );
+			}
+		}
+
+		return $current;
+	}
+
+	function explainCommand( $command, $vars )
+	{
+		switch( $command ) {
+			case 'rw_constant': return $vars; break;
+			case 'checkdata_notempty':
+			case 'checkdata':
+			case 'safedata':
+			case 'data':
+				if ( empty( $this->data ) ) {
+					return false;
+				} elseif ( is_array( $vars ) ) {
+					$vars = implode( '.', $vars );
+				}
+
+				return $vars;
+				break;
+			case 'metaUser':
+				if ( !is_object( $this->data['metaUser'] ) ) {
+					return false;
+				} elseif ( is_array( $vars ) ) {
+					$vars = implode( '.', $vars );
+				}
+
+				return 'metaUser.'.$vars;
+				break;
+			case 'jtext': return JText::_( $vars ); break;
+			case 'constant': return $vars; break;
+			case 'global':
+				if ( is_array( $vars ) ) {
+					if ( isset( $vars[0] ) && isset( $vars[1] ) ) {
+						return $vars[0].'.'.$vars[1];
+					}
+				} else {
+					return $vars;
+				}
+				break;
+			case 'condition':
+				if ( isset( $vars[2] ) ) {
+					$result = $vars[2];
+					return $command.':'.$vars[1].'||'.$vars[2].'?'; break;
+				} else {
+					return $command.':'.$vars[1].'?'; break;
+				}
+				break;
+			case 'hastext': return $command.'-'.$vars[1]; break;
+			case 'lowercase':
+			case 'uppercase': return $command.'-'.$vars; break;
+			case 'concat': return $command.'-'.implode( '|', $vars ); break;
+			case 'date': return $command.'-'.$vars[0]; break;
+			case 'date_distance':
+			case 'date_distance_days': return $command.'-'.$vars; break;
+			case 'crop':
+				if ( isset( $vars[2] ) ) {
+					return $command.'-'.$vars[0].'['.(int) $vars[1].'-'.(int) $vars[2].']'; break;
+				} else {
+					return $command.'-'.$vars[0].'['.(int) $vars[1].']'; break;
+				}
+				break;
+			case 'pad':
+				if ( isset( $vars[3] ) ) {
+					return $command.'-'.$vars[0].'['.(int) $vars[1].'-'.(int) $vars[2].'-'.(int) $vars[3].']'; break;
+				} elseif ( isset( $vars[2] ) ) {
+					return $command.'-'.$vars[0].'['.(int) $vars[1].'-'.(int) $vars[2].']'; break;
+				} else {
+					return $command.'-'.$vars[0].'['.(int) $vars[1].']'; break;
+				}
+				break;
+			case 'chunk':
+				if ( isset( $vars[2] ) ) {
+					return $command.'-'.$vars[0].'['.(int) $vars[1].'-'.(int) $vars[2].']'; break;
+				} else {
+					return $command.'-'.$vars[0].'['.(int) $vars[1].']'; break;
+				}
+				break;
+			case 'compare':
+				if ( isset( $vars[2] ) ) {
+					return $vars[0].$vars[1].$vars[2];
+				} else {
+					return $command;
+				}
+				break;
+			case 'math':
+				if ( isset( $vars[2] ) ) {
+					return $vars[0].$vars[1].$vars[2];
+				} else {
+					return $command;
+				}
+				break;
+			case 'randomstring':
+			case 'randomstring_alphanum':
+			case 'randomstring_alphanum_large':
+				return $command;
+				break;
+			case 'php_function':
+				return $command.'-'.$vars[0];
+			case 'php_method':
+				if ( isset( $vars[2] ) ) {
+					return $command.'-'.get_class($vars[0]).'::'. $vars[1].'[' . implode(',',$vars[2]) . ']';
+				} else {
+					return $command.'-'.get_class($vars[0]).'::'. $vars[1];
+				}
+				break;
+			default: return $command . ' is no command'; break;
+		}
+	}
+
 }
 
 class AECToolbox
