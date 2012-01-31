@@ -20103,6 +20103,18 @@ class aecExport extends serialParamDBTable
 				continue;
 			}
 
+			if ( !empty( $this->filter['planid'] ) ) {
+				if ( !in_array( $entry->plan_id, $this->filter['planid'] ) ) {
+					continue;
+				}
+			}
+
+			if ( !empty( $this->filter['method'] ) ) {
+				if ( !in_array( $entry->proc_id, $this->filter['method'] ) ) {
+					//continue;
+				}
+			}
+
 			$refund = false;
 			if ( is_array( $entry->response ) ) {
 				$filter = array( 'new_case', 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
@@ -20347,11 +20359,17 @@ class aecExport extends serialParamDBTable
 			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
 
+		$type = 0;
+
 		if ( isset( $this->type ) ) {
+			$type = $this->type;
+
 			unset( $this->type );
 		}
 
 		$this->storeload();
+
+		$this->type = $type;
 	}
 
 }

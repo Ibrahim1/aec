@@ -5797,7 +5797,7 @@ function exportData( $option, $type, $cmd=null )
 
 	// Always store the last ten calls, but only if something is happening
 	if ( $cmd_save || $cmd_apply || $cmd_export ) {
-		$autorow = new aecExport( $db );
+		$autorow = new aecExport( $db, ( $type == 'sales' ) );
 		$autorow->load(0);
 		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
 
