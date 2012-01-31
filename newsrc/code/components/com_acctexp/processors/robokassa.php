@@ -21,7 +21,7 @@ class processor_robokassa extends POSTprocessor
 		$info['statement']		= JText::_('CFG_ROBOKASSA_STATEMENT');
 		$info['description']	= JText::_('CFG_ROBOKASSA_DESCRIPTION');
 		$info['currencies']		= 'RUB,USD,EUR,GBP,CAD,AUD,BGN,CZK,DKK,EEK,HKD,HUF,LTL,MYR,NZD,NOK,PLN,ROL,SGD,ZAR,SEK,CHF';
-		$info['languages']		= AECToolbox::getISO639_1_codes();
+		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,maestro';
 		$info['recurring']		= 0;
 
@@ -69,7 +69,7 @@ class processor_robokassa extends POSTprocessor
 		$var['InvId']				= $request->invoice->id;
 		$var['Desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['SignatureValue']		= $this->getHash( $request->invoice );			
-		$var['IncCurrLabel']		= $this->settings['currency'];
+		//$var['IncCurrLabel']		= $this->settings['currency'];
 
 		return $var;
 	}
@@ -87,7 +87,7 @@ class processor_robokassa extends POSTprocessor
 	{
 		$response['valid'] = false;
 		
-		if ( $post['OKnInvId'] != 'OK'.$invoice->invoice_number ) {
+		if ( $post['OKnInvId'] != 'OK'.$invoice->id ) {
 			$response['error'] = 'Payment Failed';
 		} else  {
 			if ( $post['sSignatureValue'] != $this->getHash( $invoice ) ) {
@@ -105,7 +105,7 @@ class processor_robokassa extends POSTprocessor
 		// MD5 signature formed from the parameters, separated by ':' with sMerchantPass2 added at the end
 		// i.e. nOutSum:nInvId:sMerchantPass2[:sorted_merchant_parameters]
 
-		return md5( trim($this->settings['login']).':'.$invoice->amount.':'.$invoice->invoice_number.':'.trim($this->settings['pass']) );
+		return md5( trim($this->settings['login']).':'.$invoice->amount.':'.$invoice->id.':'.trim($this->settings['pass']) );
 	}
 }
 ?>
