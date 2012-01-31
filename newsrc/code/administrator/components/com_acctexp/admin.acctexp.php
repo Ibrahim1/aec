@@ -56,6 +56,10 @@ $db = &JFactory::getDBO();
 $heartbeat = new aecHeartbeat( $db );
 $heartbeat->backendping();
 
+if ( empty( $option ) ) {
+	$option = aecGetParam( 'option', '0' );
+}
+
 switch( strtolower( $task ) ) {
 	case 'heartbeat':
 	case 'beat':

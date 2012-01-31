@@ -32,6 +32,10 @@ $user = &JFactory::getUser();
 
 $task = trim( aecGetParam( 'view', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
 
+if ( empty( $option ) ) {
+	$option = aecGetParam( 'option', '0' );
+}
+
 if ( empty( $task ) ) {
 	// Regular mode - try to get the task
 	$task = trim( aecGetParam( 'task', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
