@@ -291,13 +291,14 @@ switch( strtolower( $task ) ) {
 
 	case 'readout': readout( $option ); break;
 
+	case 'testexportmembers': exportData( $option, 'members', 'export' ); break;
 	case 'exportmembers': exportData( $option, 'members' ); break;
 	case 'loadexportmembers': exportData( $option, 'members', 'load' ); break;
 	case 'applyexportmembers': exportData( $option, 'members', 'apply' ); break;
 	case 'exportexportmembers': exportData( $option, 'members', 'export' ); break;
 	case 'saveexportmembers': exportData( $option, 'members', 'save' ); break;
 
-	case 'testexport': exportData( $option, 'sales', 'export' ); break;
+	case 'testexportsales': exportData( $option, 'sales', 'export' ); break;
 	case 'exportsales': exportData( $option, 'sales' ); break;
 	case 'loadexportsales': exportData( $option, 'sales', 'load' ); break;
 	case 'applyexportsales': exportData( $option, 'sales', 'apply' ); break;

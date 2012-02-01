@@ -63,12 +63,12 @@ jQuery(document).ready(function($) {
 		    }
 		});
 
-		values.task = 'testexport';
+		values.task = 'testexport'+values.returnTask;
 		values.export_method = 'test';
 
 		jQuery('#export-result').html('<p>Loading...</p>');
 
-		jQuery.post("index.php?option=com_acctexp&task=testexport" , values, function(data) {
+		jQuery.post("index.php?option=com_acctexp" , values, function(data) {
 			jQuery('#export-result').html(data);
 		});
 	});

@@ -15328,18 +15328,17 @@ class reWriteEngine
 
 	function classicExplain( $subject )
 	{
-		$search = array();
-		$replace = array();
-		foreach ( $this->rewrite as $name => $replacement ) {
-			if ( is_array( $replacement ) ) {
-				$replacement = implode( $replacement );
-			}
+		$regex = "#\[\[(.*?)\]\]#s";
 
-			$search[]	= '[[' . $name . ']]';
-			$replace[]	= $name;
+		// find all instances of json code
+		$matches = array();
+		preg_match_all( $regex, $subject, $matches, PREG_SET_ORDER );
+
+		foreach ( $matches as $match ) {
+			$subject = str_replace( $match[0], $match[1], $subject );
 		}
 
-		return str_replace( $search, $replace, $subject );
+		return $subject;
 	}
 
 	function explainTags( $subject )
@@ -16835,6 +16834,13 @@ class AECToolbox
 		$rwEngine->resolveRequest( $request );
 
 		return $rwEngine->resolve( $content );
+	}
+
+	function rewriteEngineExplain( $content )
+	{
+		$rwEngine = new reWriteEngine();
+
+		return $rwEngine->explain( $content );
 	}
 
 	function compare( $eval, $check1, $check2 )
@@ -20022,6 +20028,19 @@ class aecExport extends serialParamDBTable
 		}
 	}
 
+	function load( $id )
+	{
+		parent::load($id);
+
+		$params = $this->declareParamFields();
+
+		foreach ( $params as $field ) {
+			if ( is_object( $this->$field ) ) {
+				$this->$field = get_object_vars( $this->$field );
+			}
+		}
+	}
+
 	function declareParamFields()
 	{
 		return array( 'filter', 'options', 'params'  );
@@ -20060,7 +20079,7 @@ class aecExport extends serialParamDBTable
 	function prepareExport()
 	{
 		$fname = 'aecexport_' . urlencode( stripslashes( $this->name ) ) . '_' . date( 'Y_m_d', ( (int) gmdate('U') ) );
-/*
+
 		// Send download header
 		header("Pragma: public");
 		header("Expires: 0");
@@ -20070,7 +20089,7 @@ class aecExport extends serialParamDBTable
 		header("Content-Type: application/octet-stream");
 
 		header("Content-Type: application/download");
-		header('Content-Disposition: inline; filename="' . $fname . '.csv"');*/
+		header('Content-Disposition: inline; filename="' . $fname . '.csv"');
 	}
 
 	function finishExport()
@@ -20338,6 +20357,12 @@ class aecExport extends serialParamDBTable
 		}
 
 		$db->setQuery( $query );
+
+		$line = AECToolbox::rewriteEngineExplain( $this->options['rewrite_rule'] );
+
+		$larray = explode( ';', $line );
+
+		$this->exphandler->putln( $larray );
 
 		// Fetch Userlist
 		$userlist = $db->loadObjectList();
