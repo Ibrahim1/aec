@@ -45,6 +45,34 @@ jQuery(document).ready(function($) {
 		jQuery("input#quicksearch").val( this.text ).focus();
 	});
 
+	jQuery('a#testexport').on("click", function(e) {
+		var values = {};
+		$.each($('#adminForm').serializeArray(), function(i, field) {
+		    if ( typeof values[field.name] != 'undefined' ) {
+		    	if ( typeof values[field.name] != 'object' ) {
+		    		var temparray = new Array();
+		    		temparray.push( values[field.name] );
+		    		temparray.push( field.value );
+
+		    		values[field.name] = temparray;
+		    	} else {
+		    		values[field.name].push( field.value );
+		    	}
+		    } else {
+		    	values[field.name] = field.value;
+		    }
+		});
+
+		values.task = 'testexport';
+		values.export_method = 'test';
+
+		jQuery('#export-result').html('<p>Loading...</p>');
+
+		jQuery.post("index.php?option=com_acctexp&task=testexport" , values, function(data) {
+			jQuery('#export-result').html(data);
+		});
+	});
+
 	jQuery('#aecmenu-help').popover({
 		trigger:'manual',
 		placement:'below'

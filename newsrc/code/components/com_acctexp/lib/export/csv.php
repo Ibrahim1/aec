@@ -1,29 +1,11 @@
 <?php
 class AECexport_csv extends AECexport
 {
-	function AECexport_csv()
+	function AECexport_csv(){}
+
+	function putln( $array )
 	{
-
-	}
-
-	function settings()
-	{
-
-	}
-
-	function settings_defaults()
-	{
-
-	}
-
-	function prepare_export()
-	{
-
-	}
-
-	function export_line( $array )
-	{
-		return $this->fputcsv( $array );
+		echo $this->fputcsv( $array );
 	}
 
 	function fputcsv( $fields = array(), $delimiter = ',', $enclosure = '"' )
@@ -60,11 +42,6 @@ class AECexport_csv extends AECexport
 		$str = substr($str,0,-1);
 		$str .= "\n";
 		return $str;
-	}
-
-	function finish_export()
-	{
-
 	}
 
 }

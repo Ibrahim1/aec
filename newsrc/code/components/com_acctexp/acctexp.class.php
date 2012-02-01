@@ -20031,16 +20031,36 @@ class aecExport extends serialParamDBTable
 	{
 		$app = JFactory::getApplication();
 
+		$this->getHandler();
+
+		if ( $this->type ) {
+			$this->exportSales();
+		} else {
+			$this->exportMembers();
+		}
+
+		$this->setUsedDate();
+
+		$this->exphandler->finishExport();
+	}
+
+	function getHandler()
+	{
 		// Load Exporting Class
 		$filename = JPATH_SITE . '/components/com_acctexp/lib/export/' . $this->params['export_method'] . '.php';
 		$classname = 'AECexport_' . $this->params['export_method'];
 
 		include_once( $filename );
 
-		$exphandler = new $classname();
+		$this->exphandler = new $classname();
 
+		$this->exphandler->prepareExport();
+	}
+
+	function prepareExport()
+	{
 		$fname = 'aecexport_' . urlencode( stripslashes( $this->name ) ) . '_' . date( 'Y_m_d', ( (int) gmdate('U') ) );
-
+/*
 		// Send download header
 		header("Pragma: public");
 		header("Expires: 0");
@@ -20050,19 +20070,15 @@ class aecExport extends serialParamDBTable
 		header("Content-Type: application/octet-stream");
 
 		header("Content-Type: application/download");
-		header('Content-Disposition: inline; filename="' . $fname . '.csv"');
+		header('Content-Disposition: inline; filename="' . $fname . '.csv"');*/
+	}
 
-		if ( $this->type ) {
-			$this->exportSales( $exphandler );
-		} else {
-			$this->exportMembers(  );
-		}
-
-		$this->setUsedDate();
+	function finishExport()
+	{
 		exit;
 	}
 
-	function exportSales( $exphandler )
+	function exportSales()
 	{
 		$db = &JFactory::getDBO();
 
@@ -20174,7 +20190,6 @@ class aecExport extends serialParamDBTable
 
 		$line = array( "date" => "Date" );
 
-
 		if ( $this->options['breakdown'] == 'plan' ) {
 			foreach ( $collators as $col => $colamount ) {
 				$line[] = "Plan $col";
@@ -20196,7 +20211,7 @@ class aecExport extends serialParamDBTable
 			}
 		}
 
-		echo $exphandler->export_line( $line );
+		$this->exphandler->putln( $line );
 
 		$totalsum = 0;
 		$collate_all = array();
@@ -20228,10 +20243,10 @@ class aecExport extends serialParamDBTable
 					if ( $pgroup ) {
 						$collatex[$pgroup] += $entry->amount;
 						$collate_all[$pgroup] += $entry->amount;
-
-						$linesum += $entry->amount;
-						$totalsum += $entry->amount;
 					}
+
+					$linesum += $entry->amount;
+					$totalsum += $entry->amount;
 				}
 			}
 
@@ -20255,7 +20270,7 @@ class aecExport extends serialParamDBTable
 				$i++;
 			}
 
-			echo $exphandler->export_line( $line );
+			$this->exphandler->putln( $line );
 		}
 
 		$line = array( "date" => "Grand Total" );
@@ -20275,10 +20290,10 @@ class aecExport extends serialParamDBTable
 			}
 		}
 
-		echo $exphandler->export_line( $line );
+		$this->exphandler->putln( $line );
 	}
 
-	function exportMembers( $exphandler )
+	function exportMembers()
 	{
 		$db = &JFactory::getDBO();
 
@@ -20368,7 +20383,7 @@ class aecExport extends serialParamDBTable
 					$larray[$larrid] = trim($larrval);
 				}
 
-				echo $exphandler->export_line( $larray );
+				$this->exphandler->putln( $larray );
 			}
 		}
 	}
@@ -20382,7 +20397,7 @@ class aecExport extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function save( $name, $filter, $options, $params, $system=false )
+	function save( $name, $filter, $options, $params, $system=false, $is_test=false )
 	{
 		$app = JFactory::getApplication();
 
@@ -20421,15 +20436,21 @@ class aecExport extends serialParamDBTable
 
 		$type = 0;
 
-		if ( isset( $this->type ) ) {
-			$type = $this->type;
+		if ( !$is_test ) {
+			if ( isset( $this->type ) ) {
+				$type = $this->type;
 
-			unset( $this->type );
+				unset( $this->type );
+			}
+
+			if ( isset( $this->lines ) ) {
+				unset( $this->lines );
+			}
+
+			$this->storeload();
+
+			$this->type = $type;
 		}
-
-		$this->storeload();
-
-		$this->type = $type;
 	}
 
 }

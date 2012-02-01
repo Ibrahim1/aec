@@ -297,6 +297,7 @@ switch( strtolower( $task ) ) {
 	case 'exportexportmembers': exportData( $option, 'members', 'export' ); break;
 	case 'saveexportmembers': exportData( $option, 'members', 'save' ); break;
 
+	case 'testexport': exportData( $option, 'sales', 'export' ); break;
 	case 'exportsales': exportData( $option, 'sales' ); break;
 	case 'loadexportsales': exportData( $option, 'sales', 'load' ); break;
 	case 'applyexportsales': exportData( $option, 'sales', 'apply' ); break;
@@ -5759,6 +5760,12 @@ function exportData( $option, $type, $cmd=null )
 		}
 	}
 
+	if ( !empty( $system_values['export_method'] ) ) {
+		$is_test = $system_values['export_method'] == 'test';
+	} else {
+		$is_test = false;
+	}
+
 	$lists = array();
 
 	$pname = "";
@@ -5781,12 +5788,14 @@ function exportData( $option, $type, $cmd=null )
 				$row->load( 0 );
 			}
 
-			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
+			if ( !$is_test ) {
+				$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
 
-			if ( $system_values['save'] ) {
-				$system_values['selected_export'] = $row->getMax();
+				if ( $system_values['save'] ) {
+					$system_values['selected_export'] = $row->getMax();
+				}
 			}
-		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) ) {
+		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) && !$is_test ) {
 			// User wants to save a new entry
 			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
 		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && $cmd_export )  ) {
@@ -5800,10 +5809,10 @@ function exportData( $option, $type, $cmd=null )
 	}
 
 	// Always store the last ten calls, but only if something is happening
-	if ( $cmd_save || $cmd_apply || $cmd_export ) {
+	if ( ( $cmd_save || $cmd_apply || $cmd_export ) ) {
 		$autorow = new aecExport( $db, ( $type == 'sales' ) );
 		$autorow->load(0);
-		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
+		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true, $is_test );
 
 		if ( isset( $row ) ) {
 			if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
@@ -5890,13 +5899,17 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'userinfobox', 49 );
 	$params[] = array( 'userinfobox_sub', 'Export' );
 	$params[] = array( 'div', '<div style="float: right">' );
-	$params[] = array( 'p', '<p><a class="btn info" onclick="javascript: submitbutton(\'simulateExport' . $type . '\')" href="#">Test Export</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn info" id="testexport" href="#export-result">Test Export</a></p>' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div style="float: right">' );
 	$params[] = array( 'p', '<p><a class="btn success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">Export Now</a></p>' );
 	$params[] = array( 'div_end', '' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'div_end', '' );
+	$params[] = array( '2div_end', '' );
+
+	$params[] = array( 'userinfobox', 49 );
+	$params[] = array( 'div', '<div class="aec_userinfobox_sub" id="export-result">' );
 	$params[] = array( '2div_end', '' );
 
 	if ( $type == 'members' ) {
