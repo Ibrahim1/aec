@@ -5761,8 +5761,8 @@ function exportData( $option, $type, $cmd=null )
 		}
 	}
 
-	if ( !empty( $system_values['export_method'] ) ) {
-		$is_test = $system_values['export_method'] == 'test';
+	if ( !empty( $params_values['export_method'] ) ) {
+		$is_test = $params_values['export_method'] == 'test';
 	} else {
 		$is_test = false;
 	}
@@ -5771,7 +5771,7 @@ function exportData( $option, $type, $cmd=null )
 
 	$pname = "";
 
-	if ( !empty( $system_values['selected_export'] ) || $cmd_save || $cmd_apply ) {
+	if ( !empty( $system_values['selected_export'] ) || $cmd_save || $cmd_apply || $is_test ) {
 		$row = new aecExport( $db, ( $type == 'sales' ) );
 		if ( isset( $system_values['selected_export'] ) ) {
 			$row->load( $system_values['selected_export'] );
@@ -5789,17 +5789,15 @@ function exportData( $option, $type, $cmd=null )
 				$row->load( 0 );
 			}
 
-			if ( !$is_test ) {
-				$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
+			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
 
-				if ( $system_values['save'] ) {
-					$system_values['selected_export'] = $row->getMax();
-				}
+			if ( $system_values['save'] ) {
+				$system_values['selected_export'] = $row->getMax();
 			}
 		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) && !$is_test ) {
 			// User wants to save a new entry
 			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
-		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && $cmd_export )  ) {
+		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && ( $cmd_export || $is_test ) )  ) {
 			// User wants to load an entry
 			$filter_values = $row->filter;
 			$options_values = $row->options;
@@ -5810,16 +5808,20 @@ function exportData( $option, $type, $cmd=null )
 	}
 
 	// Always store the last ten calls, but only if something is happening
-	if ( ( $cmd_save || $cmd_apply || $cmd_export ) ) {
+	if ( $cmd_save || $cmd_apply || $cmd_export ) {
 		$autorow = new aecExport( $db, ( $type == 'sales' ) );
 		$autorow->load(0);
-		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true, $is_test );
+		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
 
 		if ( isset( $row ) ) {
 			if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
 				$use_original = 1;
 			}
 		}
+	}
+
+	if ( $is_test ) {
+		$row->params['export_method'] = 'test';
 	}
 
 	// Create Parameters
@@ -6133,7 +6135,7 @@ function exportData( $option, $type, $cmd=null )
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	if ( $cmd_export && !empty( $params_values['export_method'] ) ) {
+	if ( ( $cmd_export ) && !empty( $params_values['export_method'] ) ) {
 		if ( $use_original ) {
 			$row->useExport();
 		} else {
