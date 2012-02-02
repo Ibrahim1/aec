@@ -88,7 +88,7 @@ jQuery(document).ready(function($) {
 	});
 
 	// fix sub nav on scroll - adapted, against better advice, from http://twitter.github.com/bootstrap/less.html
-	var isFixed = 0, navTop = 0;
+	var tbFixed = 0, btFixed = 0, navTop = 0, navBtn = 0;
 
 	processScroll();
 
@@ -96,16 +96,27 @@ jQuery(document).ready(function($) {
 
 	function processScroll() {
 		if ( navTop == 0 ) {
-			navTop = jQuery('.topbar').offset().top;
+			navTop = jQuery('.topbar-inner').offset().top;
+		}
+
+		if ( navBtn == 0 ) {
+			navBtn = jQuery('.aec-buttons').offset().top - 42;
 		}
 
 		var i, scrollTop = jQuery(window).scrollTop();
-		if (scrollTop >= navTop && !isFixed) {
-			isFixed = 1;
-			jQuery('.topbar').addClass('topbar-fixed');
-		} else if (scrollTop <= navTop && isFixed) {
-			isFixed = 0;
-			jQuery('.topbar').removeClass('topbar-fixed');
+		if (scrollTop >= navTop && !tbFixed) {
+			tbFixed = 1;
+			jQuery('.topbar-inner').addClass('topbar-fixed');
+		} else if (scrollTop <= navTop && tbFixed) {
+			tbFixed = 0;
+			jQuery('.topbar-inner').removeClass('topbar-fixed');
+		}
+		if (scrollTop >= navBtn && !btFixed) {
+			btFixed = 1;
+			jQuery('.aec-buttons').addClass('aec-buttons-fixed');
+		} else if (scrollTop <= navTop && btFixed) {
+			btFixed = 0;
+			jQuery('.aec-buttons').removeClass('aec-buttons-fixed');
 		}
 	}
 

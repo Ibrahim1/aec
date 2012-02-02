@@ -9,7 +9,7 @@ margin-right: -1px;
 
 .topbar {
 position: relative;
-z-index: 1;
+z-index: 500;
 }
 
 .topbar .container {
@@ -77,11 +77,12 @@ color: #eee;
 position: fixed;
 top: 0;
 z-index: 1030;
+width: 99%;
+margin: 0 auto;
 }
 
 .topbar-fixed .nav {
 margin: 0 auto;
-padding: 0 1px;
 }
 
 a.brand {
@@ -130,8 +131,23 @@ table.adminlist {
 
 .aec-buttons {
 float: right;
-margin-top: 44px;
-padding-right: 32px;
+margin-top: 20px;
+margin-right: 1px;
+padding: 24px;
+background: #fff;
+border-bottom-right-radius: 10px;
+-moz-border-radius-bottomright: 10px;
+border-bottom-left-radius: 10px;
+-moz-border-radius-bottomleft: 10px;
+}
+
+.aec-buttons-fixed {
+position: fixed;
+top: 20px;
+right: 10px;
+z-index: 430;
+box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
+background: #f9f9f9;
 }
 
 .btn-hl {
