@@ -7184,6 +7184,18 @@ class SubscriptionPlanHandler
 		return $plan->active && $plan->checkInventory();
 	}
 
+	function planName( $planid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT name'
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` = \'' . $planid . '\''
+				;
+		$db->setQuery( $query );
+		return $db->loadResult();
+	}
+
 	function listPlans()
 	{
 		$db = &JFactory::getDBO();
@@ -20075,6 +20087,12 @@ class aecExport extends serialParamDBTable
 		$this->exphandler->name = $this->name;
 		$this->exphandler->params = $this->params;
 
+		if ( $this->type ) {
+			$this->exphandler->type = array('sales', 'sale');
+		} else {
+			$this->exphandler->type = array('members', 'member');
+		}
+
 		$this->exphandler->prepareExport();
 	}
 
@@ -20092,6 +20110,21 @@ class aecExport extends serialParamDBTable
 
 		header("Content-Type: application/download");
 		header('Content-Disposition: inline; filename="' . $fname . '.' . $this->params['export_method'] . '"');
+	}
+
+	function putDescription( $array )
+	{
+		$this->description = $array;
+	}
+
+	function putSum( $array )
+	{
+		$this->sum = $array;
+	}
+
+	function putln( $array )
+	{
+		$this->lines[] = $array;
 	}
 
 	function finishExport()
@@ -20209,15 +20242,17 @@ class aecExport extends serialParamDBTable
 			$historylist[$date][] = $entry;
 		}
 
-		$line = array( "date" => "Date" );
+		$line = array( "line" => "Date" );
 
 		if ( $this->options['breakdown'] == 'plan' ) {
 			foreach ( $collators as $col => $colamount ) {
-				$line[] = "Plan $col";
+				$line['plan-'.$col] = "Plan #$col: ".SubscriptionPlanHandler::planName( $col );
 			}
 		} elseif ( $this->options['breakdown'] == 'group' ) {
+			$grouplist = ItemGroupHandler::getTree();
+
 			foreach ( $collators as $col => $colplans ) {
-				$line[] = "Group $col";
+				$line['group-'.$col] = "Group #$col:".ItemGroupHandler::groupName( $col );
 			}
 		}
 
@@ -20232,17 +20267,21 @@ class aecExport extends serialParamDBTable
 			}
 		}
 
-		$this->exphandler->putln( $line );
+		$this->exphandler->putDescription( $line );
 
 		$totalsum = 0;
 		$collate_all = array();
+
+		foreach ( $collators as $col => $colv ) {
+			$collate_all[$col] = 0;
+		}
+
 		foreach ( $historylist as $date => $collater ) {
 			$linesum = 0;
 			$collatex = array();
 
 			foreach ( $collators as $col => $colv ) {
 				$collatex[$col] = 0;
-				$collate_all[$col] = 0;
 			}
 
 			foreach ( $collater as $entry ) {
@@ -20274,7 +20313,11 @@ class aecExport extends serialParamDBTable
 			$line = array( "date" => $date );
 
 			foreach ( $collators as $col => $colamount ) {
-				$line[$col] = $collatex[$col];
+				if ( $this->options['breakdown'] == 'plan' ) {
+					$line['plan-'.$col] = $collatex[$col];
+				} else {
+					$line['group-'.$col] = $collatex[$col];
+				}
 			}
 
 			$line['total_sum'] = $linesum;
@@ -20294,10 +20337,14 @@ class aecExport extends serialParamDBTable
 			$this->exphandler->putln( $line );
 		}
 
-		$line = array( "date" => "Grand Total" );
+		$line = array( "line" => "Grand Total" );
 
 		foreach ( $collate_all as $col => $colamount ) {
-			$line[$col] = $colamount;
+			if ( $this->options['breakdown'] == 'plan' ) {
+				$line['plan-'.$col] = $colamount;
+			} else {
+				$line['group-'.$col] = $colamount;
+			}
 		}
 
 		$line['total_sum'] = $totalsum;
@@ -20311,12 +20358,18 @@ class aecExport extends serialParamDBTable
 			}
 		}
 
-		$this->exphandler->putln( $line );
+		$this->exphandler->putSum( $line );
 	}
 
 	function exportMembers()
 	{
 		$db = &JFactory::getDBO();
+
+		foreach ( $this->filter as $k => $v ) {
+			if ( empty( $v ) ) {
+				$this->filter[$k] = array();
+			}
+		}
 
 		// Assemble Database call
 		if ( !in_array( 'manual', $this->filter['status'] ) ) {
@@ -20360,11 +20413,11 @@ class aecExport extends serialParamDBTable
 
 		$db->setQuery( $query );
 
-		$line = AECToolbox::rewriteEngineExplain( $this->options['rewrite_rule'] );
+		$descriptions = AECToolbox::rewriteEngineExplain( $this->options['rewrite_rule'] );
 
-		$larray = explode( ';', $line );
+		$descarray = explode( ';', $descriptions );
 
-		$this->exphandler->putln( $larray );
+		$this->exphandler->putDescription( $descarray );
 
 		// Fetch Userlist
 		$userlist = $db->loadObjectList();
@@ -20407,7 +20460,9 @@ class aecExport extends serialParamDBTable
 
 				// Remove whitespaces and newlines
 				foreach( $larray as $larrid => $larrval ) {
-					$larray[$larrid] = trim($larrval);
+					$larray[$descarray[$larrid]] = trim($larrval);
+					
+					unset($larray[$larrid]);
 				}
 
 				$this->exphandler->putln( $larray );

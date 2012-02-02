@@ -3,6 +3,11 @@ class AECexport_csv extends AECexport
 {
 	function AECexport_csv(){}
 
+	function putDescription( $array )
+	{
+		echo $this->fputcsv( $array );
+	}
+
 	function putln( $array )
 	{
 		echo $this->fputcsv( $array );

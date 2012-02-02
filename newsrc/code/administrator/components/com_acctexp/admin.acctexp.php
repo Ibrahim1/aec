@@ -5881,6 +5881,15 @@ function exportData( $option, $type, $cmd=null )
 		$params[] = array( '2div_end', '' );
 	}
 
+	if ( $type == 'members' ) {
+		$params[] = array( 'userinfobox', 49 );
+		$params[] = array( 'userinfobox_sub' );
+		$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
+		$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+		$params[] = array( 'div_end', '' );
+		$params[] = array( '2div_end', '' );
+	}
+
 	$params[] = array( '2div_end', '' );
 
 	$params[] = array( 'userinfobox', 49 );
@@ -5915,15 +5924,6 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'div', '<div class="aec_userinfobox_sub" id="export-result">' );
 	$params[] = array( 'h4', '<h4>Preview</h4>' );
 	$params[] = array( '2div_end', '' );
-
-	if ( $type == 'members' ) {
-		$params[] = array( 'userinfobox', 49 );
-		$params[] = array( 'userinfobox_sub' );
-		$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
-		$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( '2div_end', '' );
-	}
 
 	// Create a list of export options
 	// First, only the non-autosaved entries
@@ -6115,7 +6115,7 @@ function exportData( $option, $type, $cmd=null )
 		}
 	}
 
-	$lists['export_method'] = JHTML::_('select.genericlist', $sel, 'export_method', 'class="inputbox" size="4"', 'value', 'text', 'csv' );
+	$lists['export_method'] = JHTML::_('select.genericlist', $sel, 'export_method', 'class="inputbox" size="4"', 'value', 'text', $params_values['export_method'] );
 
 	$settings = new aecSettings ( 'export', 'general' );
 
