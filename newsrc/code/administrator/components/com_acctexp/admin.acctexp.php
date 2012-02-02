@@ -5911,6 +5911,7 @@ function exportData( $option, $type, $cmd=null )
 
 	$params[] = array( 'userinfobox', 49 );
 	$params[] = array( 'div', '<div class="aec_userinfobox_sub" id="export-result">' );
+	$params[] = array( 'h4', '<h4>Preview</h4>' );
 	$params[] = array( '2div_end', '' );
 
 	if ( $type == 'members' ) {
