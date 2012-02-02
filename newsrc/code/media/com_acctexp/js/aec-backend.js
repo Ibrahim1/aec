@@ -87,6 +87,28 @@ jQuery(document).ready(function($) {
 		});
 	});
 
+	// fix sub nav on scroll - adapted, against better advice, from http://twitter.github.com/bootstrap/less.html
+	var isFixed = 0, navTop = 0;
+
+	processScroll();
+
+	jQuery(window).on('scroll', processScroll);
+
+	function processScroll() {
+		if ( navTop == 0 ) {
+			navTop = jQuery('.topbar').offset().top;
+		}
+
+		var i, scrollTop = jQuery(window).scrollTop();
+		if (scrollTop >= navTop && !isFixed) {
+			isFixed = 1;
+			jQuery('.topbar').addClass('topbar-fixed');
+		} else if (scrollTop <= navTop && isFixed) {
+			isFixed = 0;
+			jQuery('.topbar').removeClass('topbar-fixed');
+		}
+	}
+
 	function lookup() {
 		jQuery.post("index.php?option=com_acctexp&task=quicksearch&search="+inputString , {queryString: ""+inputString+""}, function(data) {
 			jQuery('.popover .content p').html(data);

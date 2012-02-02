@@ -73,6 +73,17 @@ background-image: linear-gradient(top, #850d0d, #c31313);
 color: #eee;
 }
 
+.topbar-fixed {
+position: fixed;
+top: 0;
+z-index: 1030;
+}
+
+.topbar-fixed .nav {
+margin: 0 auto;
+padding: 0 1px;
+}
+
 a.brand {
 background: url(../images/admin/icons/aec_logo_small_header.png) no-repeat scroll 50% 30% transparent;
 text-indent: 36px;
