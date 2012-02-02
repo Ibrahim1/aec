@@ -45,7 +45,7 @@ class mi_yourmembership_com
 		if ( !empty($params['temp_pw']) ) {
 			$request = $this->getCallXML( 'Session.Create', $id );
 
-			$result = $this->callYM( $request );
+			$result = $this->apiCall( $request );
 
 			$id = $this->XMLsubstring_tag( $result, 'SessionID' );
 
@@ -57,7 +57,7 @@ class mi_yourmembership_com
 																					'Password' => $credentials['password']
 																				)
 										);
-			$result = $this->callYM( $request );
+			$result = $this->apiCall( $request );
 		}
 
 		$this->apiUserSignup( $request );
@@ -149,7 +149,7 @@ class mi_yourmembership_com
 				$response = processor::doTheCurl( $url, $request );
 			}
 		}
-
+aecDebug($response);
 		return $response;
 	}
 }
