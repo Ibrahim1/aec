@@ -6105,8 +6105,15 @@ function exportData( $option, $type, $cmd=null )
 	}
 
 	// Export Method
+	$list = AECToolbox::getFileArray( JPATH_SITE . '/components/com_acctexp/lib/export', 'php', false, true );
+
 	$sel = array();
-	$sel[] = JHTML::_('select.option', 'csv', 'csv' );
+	foreach ( $list as $ltype ) {
+		$ltype = str_replace( '.php', '', $ltype );
+		if ( $ltype != 'test' ) {
+			$sel[] = JHTML::_('select.option', $ltype, $ltype );
+		}
+	}
 
 	$lists['export_method'] = JHTML::_('select.genericlist', $sel, 'export_method', 'class="inputbox" size="4"', 'value', 'text', 'csv' );
 

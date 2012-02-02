@@ -20069,9 +20069,11 @@ class aecExport extends serialParamDBTable
 		$filename = JPATH_SITE . '/components/com_acctexp/lib/export/' . $this->params['export_method'] . '.php';
 		$classname = 'AECexport_' . $this->params['export_method'];
 
-		include_once( $filename );
+		require_once( $filename );
 
 		$this->exphandler = new $classname();
+		$this->exphandler->name = $this->name;
+		$this->exphandler->params = $this->params;
 
 		$this->exphandler->prepareExport();
 	}
@@ -20089,7 +20091,7 @@ class aecExport extends serialParamDBTable
 		header("Content-Type: application/octet-stream");
 
 		header("Content-Type: application/download");
-		header('Content-Disposition: inline; filename="' . $fname . '.csv"');
+		header('Content-Disposition: inline; filename="' . $fname . '.' . $this->params['export_method'] . '"');
 	}
 
 	function finishExport()
