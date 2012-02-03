@@ -61,7 +61,20 @@ class processor_payments_gateway extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null )
+	{
+		$xvar = $this->createGatewayLink( $request, true );
+
+		$form = parent::checkoutAction( $request, $InvoiceFactory, $xvar, JText::_('Pay via Credit Card') );
+
+		$xvar = $this->createGatewayLink( $request, false );
+
+		$form .= parent::checkoutAction( $request, $InvoiceFactory, $xvar, JText::_('Pay via eCheck') );
+
+		return $form;
+	}
+
+	function createGatewayLink( $request, $type )
 	{
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://sandbox.paymentsgateway.net/swp/co/default.aspx';
@@ -75,7 +88,12 @@ class processor_payments_gateway extends POSTprocessor
 		$var['pg_billto_postal_name_last']	= $namearray['last'];
 
 		$var['pg_api_login_id']					= $this->settings['api_login_id'];
-		$var['pg_transaction_type']				= "10";
+		if ( $type ) {
+			$var['pg_transaction_type']				= "10";
+		} else {
+			$var['pg_transaction_type']				= "20";
+		}
+
 		$var['pg_consumerorderid']				= $request->invoice->invoice_number;
 
 		$var['pg_return_url']					= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payments_gatewaynotification' );
