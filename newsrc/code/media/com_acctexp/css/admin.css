@@ -45,9 +45,13 @@ border-bottom-left-radius: 10px;
 -moz-border-radius-bottomleft: 10px;
 }
 
-.topbar a {
+.topbar .nav > li > a {
 color: #f9f9f9;
 font-size: 110%;
+}
+
+.topbar form {
+margin: 5px 0 -5px;
 }
 
 .topbar div > ul, .nav {
@@ -70,14 +74,20 @@ background-image: linear-gradient(top, #850d0d, #c31313);
 .nav .menu-dropdown li a,
 .topbar div > ul .dropdown-menu li a,
 .nav .dropdown-menu li a {
-color: #eee;
+color: #fff;
+}
+
+.dropdown-menu li > a:hover, .dropdown-menu .active > a, .dropdown-menu .active > a:hover {
+color: #ffffff;
+text-decoration: none;
+background-color: #000;
 }
 
 .topbar-fixed {
 position: fixed;
 top: 0;
 z-index: 1030;
-width: 99%;
+width: 98.5%;
 margin: 0 auto;
 }
 
@@ -195,6 +205,30 @@ padding: 2px 8px;
 
 .aec-buttons .btn {
 margin-left: 6px;
+padding: 8px 14px;
+}
+
+.tooltip {
+font-size: 14px;
+padding: 4px;
+}
+
+a.btn,
+a.btn:link {
+color: #fff;
+text-decoration: none;
+}
+
+[class^="icon-"] {
+}
+
+a.btn span {
+display: none;
+}
+
+a.btn span.btnhover {
+margin-left: 8px;
+display: inline;
 }
 
 #aec_center {
@@ -312,8 +346,7 @@ width: 550px;
 clear: both;
 display: block;
 font-size: 24px;
-line-height: 0px;
-margin-top: 20px;
+margin: 20px 0;
 text-shadow: 0 1px 2px #bbb;
 }
 
@@ -496,7 +529,7 @@ width: 100%;
 
 .aecadminform_seamless {
 border-collapse: collapse;
-margin: -7px 0 15px -1px;
+margin: -26px 0 15px -1px;
 width: 100%;
 box-shadow: 0 4px 7px #aaa inset;
 float: left;

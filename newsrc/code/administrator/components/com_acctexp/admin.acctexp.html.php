@@ -82,10 +82,7 @@ class HTML_myCommon
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap-dropdown.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap-twipsy.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap-popover.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap-tabs.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/aec-backend.js' );
 	}
 
@@ -132,7 +129,7 @@ class HTML_myCommon
 			if ( !isset( $button['style'] ) ) {
 				echo '<span class="btn-hl"></span>';
 			} else {
-				echo '<a class="btn ' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#">' . $button['text'] . '</a>';
+				echo '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . $button['text'] . '"><i class="icon-' . $button['icon'] . ' icon-white"></i></a>';
 			}
 		}
 		?></div><?php
@@ -767,7 +764,7 @@ class HTML_AcctExp
 			<p><?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?></p>
 			<form action="<?php echo JURI::base(); ?>index.php?option=com_acctexp&amp;task=quicklookup" method="post">
 			<input type="text" size="80" name="search" class="inputbox" value="<?php echo htmlspecialchars($searchcontent); ?>" />
-			<input type="submit" class="btn primary"/>
+			<input type="submit" class="btn btn-primary"/>
 			</form>
 			<?php
 			if ( !empty( $display ) ) {
@@ -797,8 +794,8 @@ class HTML_AcctExp
 				<ul class="nav">
 				<?php foreach ( $menu as $m ) { ?>
 					<?php if ( isset( $m['items'] ) ) { ?>
-						<li class="dropdown" data-dropdown="dropdown">
-							<a class="dropdown-toggle" href="#"><?php echo $m['short'] ?></a>
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?></a>
 							<ul class="dropdown-menu">
 							<?php
 							foreach ( $m['items'] as $item ) {
@@ -815,7 +812,7 @@ class HTML_AcctExp
 				<?php } ?>
 				</ul>
 				<form action="#" class="pull-right">
-					<input type="text" rel="popover" class="span3" placeholder="Quicksearch" id="quicksearch" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
+					<input type="text" rel="popover" class="span2" placeholder="Quicksearch" id="quicksearch" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>
 	        </div>
 	      </div>
@@ -915,7 +912,7 @@ class HTML_AcctExp
 								$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
 								foreach( $notices as $notice ) {
 								?>
-									<div class="alert-message <?php echo $noticex[$notice->level]; ?>" id="alert-<?php echo $notice->id; ?>">
+									<div class="alert alert-<?php echo $noticex[$notice->level]; ?>" id="alert-<?php echo $notice->id; ?>">
 										<a class="close" href="#<?php echo $notice->id; ?>" onclick="readNotice(<?php echo $notice->id; ?>)">&times;</a>
 										<h5><strong><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ); ?>: <?php echo $notice->short; ?></strong></h5>
 										<p><?php echo substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ); ?></p>
@@ -1711,14 +1708,14 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'aec_symbol_plans' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
 								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true ),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'plus' ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
 								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'asterisk' )
 							);
 			HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
 			?>
@@ -3184,7 +3181,7 @@ class HTML_AcctExp
 							<input type="hidden" name="returnTask" value="readout" />
 							<input type="hidden" name="display" value="1" />
 							<br />
-							<input type="submit" class="btn primary" />
+							<input type="submit" class="btn btn-primary" />
 							<br />
 						</div>
 						</div>
@@ -3528,7 +3525,7 @@ class HTML_AcctExp
 							<div id="aec-toolbox-list">
 							<?php foreach ( $result as $x => $litem ) {
 								echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
-								echo '<p><a href="' . $litem['link'] . '" class="btn success pull-right" style="margin-top: -48px; margin-right: 48px;">use</a></p>';
+								echo '<p><a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: -48px; margin-right: 48px;">use</a></p>';
 								echo '<hr />';
 							} ?>
 							</div>

@@ -5,7 +5,7 @@ jQuery(document).ready(function($) {
 	jQuery("#system-message").fadeOut('slow', function() { jQuery(this).slideUp( 'slow' ); });
 	jQuery('#quicksearch').popover({
 		trigger:'manual',
-		placement:'below'
+		placement:'bottom'
 	});
 
 	jQuery("#quicksearch")
@@ -18,14 +18,14 @@ jQuery(document).ready(function($) {
 
 		typingTimer = setTimeout(lookup, "300");
 	}).on("keydown", function(e) {
-		jQuery('.popover .content p').html("Searching...");
+		jQuery('.popover .popover-content p').html("Searching...");
 	}).on("focusin", function(e) {
 		jQuery(this).popover('show');
 		
 		if ( this.value != "" ) {
 			inputString = this.value;
 
-			jQuery('.popover .content p').html("Searching...");
+			jQuery('.popover .popover-content p').html("Searching...");
 
 			typingTimer = setTimeout(lookup, "100");
 		}
@@ -83,7 +83,7 @@ jQuery(document).ready(function($) {
 		jQuery('#aecmenu-help').popover('show');
 
 		jQuery.post("index.php?option=com_acctexp&task=getHelp" , {queryString: ""}, function(data) {
-			jQuery('.popover .content p').html(data);
+			jQuery('.popover .popover-content p').html(data);
 		});
 	});
 
@@ -95,15 +95,12 @@ jQuery(document).ready(function($) {
 	jQuery(window).on('scroll', processScroll);
 
 	function processScroll() {
+		var i, scrollTop = jQuery(window).scrollTop();
+
 		if ( navTop == 0 ) {
 			navTop = jQuery('.topbar-inner').offset().top;
 		}
 
-		if ( navBtn == 0 ) {
-			navBtn = jQuery('.aec-buttons').offset().top - 42;
-		}
-
-		var i, scrollTop = jQuery(window).scrollTop();
 		if (scrollTop >= navTop && !tbFixed) {
 			tbFixed = 1;
 			jQuery('.topbar-inner').addClass('topbar-fixed');
@@ -111,20 +108,29 @@ jQuery(document).ready(function($) {
 			tbFixed = 0;
 			jQuery('.topbar-inner').removeClass('topbar-fixed');
 		}
-		if (scrollTop >= navBtn && !btFixed) {
-			btFixed = 1;
-			jQuery('.aec-buttons').addClass('aec-buttons-fixed');
-		} else if (scrollTop <= navTop && btFixed) {
-			btFixed = 0;
-			jQuery('.aec-buttons').removeClass('aec-buttons-fixed');
+
+		if ( jQuery('.aec-buttons').length ) {
+			if ( navBtn == 0 ) {
+				navBtn = jQuery('.aec-buttons').offset().top - 42;
+			}
+
+			if (scrollTop >= navBtn && !btFixed) {
+				btFixed = 1;
+				jQuery('.aec-buttons').addClass('aec-buttons-fixed');
+			} else if (scrollTop <= navTop && btFixed) {
+				btFixed = 0;
+				jQuery('.aec-buttons').removeClass('aec-buttons-fixed');
+			}
 		}
 	}
 
 	function lookup() {
 		jQuery.post("index.php?option=com_acctexp&task=quicksearch&search="+inputString , {queryString: ""+inputString+""}, function(data) {
-			jQuery('.popover .content p').html(data);
+			jQuery('.popover .popover-content p').html(data);
 		});
 	}
+
+	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 500, hide: 0 }})
 
 });
 

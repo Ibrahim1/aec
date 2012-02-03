@@ -5586,7 +5586,7 @@ class PROFILEprocessor extends XMLprocessor
 
 class POSTprocessor extends processor
 {
-	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null )
+	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null, $text=null )
 	{
 		if ( empty( $xvar ) ) {
 			$var = $this->createGatewayLink( $request );
@@ -5612,7 +5612,11 @@ class POSTprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . JText::_('BUTTON_CHECKOUT') . '" />' . "\n";
+		if ( empty( $text ) ) {
+			$text = JText::_('BUTTON_CHECKOUT'); 
+		}
+
+		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . $text . '" />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;

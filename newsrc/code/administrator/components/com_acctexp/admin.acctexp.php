@@ -5898,8 +5898,8 @@ function exportData( $option, $type, $cmd=null )
 	$params['selected_export']	= array( 'list', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div style="float: right">' );
-	$params[] = array( 'p', '<p><a class="btn primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">Load Preset</a></p>' );
-	$params[] = array( 'p', '<p><a class="btn success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">Store Preset</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">Load Preset</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">Store Preset</a></p>' );
 	$params[] = array( 'p', '<p><a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">Store Preset &amp; Exit</a></p>' );
 	$params[] = array( 'div_end', '' );
 	$params['delete']			= array( 'checkbox', 0 );
@@ -5911,10 +5911,10 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'userinfobox', 49 );
 	$params[] = array( 'userinfobox_sub', 'Export' );
 	$params[] = array( 'div', '<div style="float: right">' );
-	$params[] = array( 'p', '<p><a class="btn info" id="testexport" href="#export-result">Test Export</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn btn-info" id="testexport" href="#export-result">Test Export</a></p>' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div style="float: right">' );
-	$params[] = array( 'p', '<p><a class="btn success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">Export Now</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">Export Now</a></p>' );
 	$params[] = array( 'div_end', '' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'div_end', '' );
@@ -6230,7 +6230,7 @@ function toolBoxTool( $option, $cmd )
 						$return .= $aecHTML->createSettingsParticle( $n );
 					}
 
-					$return .= '<input type="submit" class="btn primary"/>';
+					$return .= '<input type="submit" class="btn btn-primary"/>';
 					$return .= '</div>';
 				}
 			}
