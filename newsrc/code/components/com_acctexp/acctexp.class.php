@@ -5942,21 +5942,21 @@ class aecHTML
 			}
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
-				$return = '<div class="clearfix">';
-				$return .= '<label for="' . $name . '"><span class="editlinktip hasTip" title="';
+				$return = '<div class="control-group">';
+				$return .= '<label class="control-label" for="' . $name . '"><div rel="tooltip" data-original-title="';
 
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
 					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
-					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . '</span>';
+					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . '</div>';
 				} else {
 					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8" );
-					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . '</span>';
+					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . '</div>';
 				}
 
 				$return .= '</label>';
 			} else {
-				$return = '<div class="clearfix">';
-				$return .= '<label for="' . $name . '"><span></span></label>';
+				$return = '<div class="control-group">';
+				$return .= '<label class="control-label" for="' . $name . '"><div class="controls"></div></label>';
 			}
 		} else {
 			if ( isset( $row[1] ) ) {
@@ -5968,39 +5968,39 @@ class aecHTML
 
 		switch ( $type ) {
 			case 'inputA':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" class="span2" name="' . $name . '" type="text" value="' . $value . '" />';
 				$return .= '</div></div>';
 				break;
 			case 'inputB':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" class="span3" type="text" name="' . $name . '" value="' . $value . '" />';
 				$return .= '</div></div>';
 				break;
 			case 'inputC':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" class="span6" type="text" name="' . $name . '" class="inputbox" value="' . $value . '" />';
 				$return .= '</div></div>';
 				break;
 			case 'inputD':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= '<textarea id="' . $name . '" class="span7" rows="5" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div></div>';
 				break;
 			case 'inputE':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= '<textarea id="' . $name . '" class="span11" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div></div>';
 				break;
 			case 'checkbox':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . ' value="1"/>';
 				$return .= '</div></div>';
 				break;
 			case 'toggle':
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= '<div class="toggleswitch">';
 				$return .= '<label class="toggleswitch" onclick="">';
 				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
@@ -6014,7 +6014,7 @@ class aecHTML
 				$return .= '</div></div>';
 				break;
 			case 'editor':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 
 				$editor = &JFactory::getEditor();
 
@@ -6026,12 +6026,12 @@ class aecHTML
 				$return .= '<textarea style="width:90%" cols="450" rows="10" name="' . $name . '" id="' . $name . '" >' . $value . '</textarea></div>';
 				break;
 			case 'list':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= $this->lists[$name];
 				$return .= '</div></div>';
 				break;
 			case 'file':
-				$return .= '<div class="input">';
+				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" name="' . $name . '" type="file" />';
 				$return .= '</div></div>';
 				break;
@@ -6076,7 +6076,7 @@ class aecHTML
 				$return = '<div class="aec_userinfobox_sub form-stacked">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
 			case 'fieldset':
-				$return = '<div class="input">' . "\n"
+				$return = '<div class="controls">' . "\n"
 				. '<fieldset><legend>' . $row[1] . '</legend>' . "\n"
 				. $row[2] . "\n"
 				. '</fieldset>' . "\n"

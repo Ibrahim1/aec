@@ -129,7 +129,7 @@ class HTML_myCommon
 			if ( !isset( $button['style'] ) ) {
 				echo '<span class="btn-hl"></span>';
 			} else {
-				echo '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . $button['text'] . '"><i class="icon-' . $button['icon'] . ' icon-white"></i></a>';
+				echo '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . $button['text'] . '"><i class="bsicon-' . $button['icon'] . ' bsicon-white"></i></a>';
 			}
 		}
 		?></div><?php
@@ -324,10 +324,10 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')' );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'refresh' ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
 							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, '' );
 
@@ -356,7 +356,7 @@ class HTML_AcctExp
 		</script>
 
 
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<?php
 			$tabs->startPanes();
 			$tabs->startPane( 'user', true );
@@ -795,7 +795,7 @@ class HTML_AcctExp
 				<?php foreach ( $menu as $m ) { ?>
 					<?php if ( isset( $m['items'] ) ) { ?>
 						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?></a>
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?><span class="caret"></span></a>
 							<ul class="dropdown-menu">
 							<?php
 							foreach ( $m['items'] as $item ) {
@@ -1120,15 +1120,15 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<?php
 		
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY') ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE') ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'refresh' ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
 							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Settings' );
 
@@ -1190,11 +1190,12 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'aec_symbol_settings' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
 								'hl1' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+								'hl2' => array(),
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
 			HTML_myCommon::getButtons( $buttons, 'Processor' );
 			?>
@@ -1260,10 +1261,10 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
 							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Processor' );
 
@@ -1277,7 +1278,7 @@ class HTML_AcctExp
 		}
 		
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
             <table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -1431,14 +1432,14 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'MI_TITLE', 'aec_symbol_microintegrations' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
 								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true ),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
 								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
 			HTML_myCommon::getButtons( $buttons, 'MicroIntegration' );
 			?>
@@ -1559,9 +1560,10 @@ class HTML_AcctExp
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
+							'hl1' => array(),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, 'MicroIntegration' );
 
@@ -1585,7 +1587,7 @@ class HTML_AcctExp
 		$tabs->endTabs();
 
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
 			<?php
 			$tabs->startPanes();
             $tabs->startPane( 'mi', true );
@@ -1712,10 +1714,10 @@ class HTML_AcctExp
 								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
 								'hl1' => array(),
 								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'plus' ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
 								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
 								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'asterisk' )
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
 			HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
 			?>
@@ -1845,9 +1847,10 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_PLAN_INFO', 'aec_symbol_plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
+							'hl1' => array(),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
 
@@ -1864,7 +1867,7 @@ class HTML_AcctExp
 		$tabs->endTabs();
 
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
 			<?php
 			$tabs->startPanes();
 			$tabs->startPane( 'plan', true );
@@ -2198,14 +2201,14 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'aec_symbol_itemgroups' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
 								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true ),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
 								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
 			HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
 			?>
@@ -2323,9 +2326,10 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
+							'hl1' => array(),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
 
@@ -2339,7 +2343,7 @@ class HTML_AcctExp
 
 		$tabs->startPanes();
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
 			<?php
 			$tabs->startPanes();
 			$tabs->startPane( 'group', true );
@@ -2525,14 +2529,14 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'aec_symbol_coupons' . ( $type ? '_static' : '' ) );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true ),
+			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
 								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true ),
+								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
+								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
 								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN') )
+								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
 			HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );?>
 
@@ -2608,10 +2612,10 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_COUPON', 'aec_symbol_coupons' . ($type ? '_static' : ''), ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
 		
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
 							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );
 
@@ -2624,7 +2628,7 @@ class HTML_AcctExp
 		$tabs->endTabs();
 
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
 			<?php
 			$tabs->startPanes();
             $tabs->startPane( 'coupon', true );
@@ -3395,7 +3399,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm">
+		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'aec_symbol_import' );
 
@@ -3473,7 +3477,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'aec_symbol_export' );
 
@@ -3516,7 +3520,7 @@ class HTML_AcctExp
 		} else {
 		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox' );
 		} ?>
-		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm">
+		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
             <table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -3553,13 +3557,13 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_CSS_EDITOR', 'aec_symbol_css' );
 
-		$buttons = array(	'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true ),
+		$buttons = array(	'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
 							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') )
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, 'CSS' );
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
+		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<div class="aec-filters">
 			<table cellpadding="1" cellspacing="1" border="0" width="100%">
 				<tr>
@@ -3634,11 +3638,11 @@ class bsPaneTabs
 		}
 	}
 
-	function startTabs() { echo '<ul class="pills">'; }
+	function startTabs() { echo '<ul class="nav nav-pills">'; }
 	function endTabs() { echo '</ul>'; }
-	function newTab( $handle, $title, $current=false ) { echo '<li' . ( $current ? ' class="active"' : '' ) . '><a href="#' . $handle . '">' . $title . '</a></li>'; }
+	function newTab( $handle, $title, $current=false ) { echo '<li' . ( $current ? ' class="active"' : '' ) . '><a href="#' . $handle . '" data-toggle="pill">' . $title . '</a></li>'; }
 
-	function startPanes() { echo '<div class="pill-content">'; }
+	function startPanes() { echo '<div class="tab-content">'; }
 	function endPanes() { echo '</div>'; }
 
 	function startPane( $id, $current=false ) { echo '<div id="' . $id . '" class="tab-pane' . ( $current ? ' active' : '' ) . '">'; }
@@ -3647,10 +3651,35 @@ class bsPaneTabs
 	function _loadBehavior($params = array())
 	{
 		$document =& JFactory::getDocument();
-		$document->addScript( '/media/com_acctexp/js/bootstrap/bootstrap-tabs.js' );
 		$document->addScriptDeclaration( 'jQuery(document).ready(function($) {
-			jQuery(\'.pills\').pills()
+			jQuery(\'.nav-pills\').tab()
 		});' );
+	}
+}
+
+jimport('joomla.html.pagination');
+
+class bsPagination extends JPagination
+{
+	function getListFooter()
+	{
+		$footer = parent::getListFooter();
+
+		$search = array( JText::_('Start'), JText::_('Prev'), JText::_('Next'), JText::_('End') );
+
+		foreach ( $search as $i => $s ) {
+			$search[$i] = '>'.$s.'<';
+		}
+
+		$replace = array(	'><i class="bsicon-fast-backward bsicon"></i><',
+							'><i class="bsicon-backward bsicon"></i><',
+							'><i class="bsicon-forward bsicon"></i><',
+							'><i class="bsicon-fast-forward bsicon"></i><'
+						);
+
+		$footer = str_replace( $search, $replace, $footer );
+
+		return $footer;
 	}
 }
 

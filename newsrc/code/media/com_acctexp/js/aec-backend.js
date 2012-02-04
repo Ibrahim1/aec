@@ -130,7 +130,7 @@ jQuery(document).ready(function($) {
 		});
 	}
 
-	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 500, hide: 0 }})
+	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 500, hide: 100 }})
 
 });
 

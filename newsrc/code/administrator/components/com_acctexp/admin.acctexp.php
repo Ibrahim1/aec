@@ -1162,8 +1162,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$db->setQuery( $query );
 	$total = $db->loadResult();
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 	// get the subset (based on limits) of required records
 	if ( $notconfig ) {
@@ -1922,8 +1921,7 @@ function listProcessors( $option )
  		$limitstart = 0;
  	}
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of records
  	$query = 'SELECT name'
@@ -2267,8 +2265,7 @@ function listSubscriptionPlans( $option )
  		$limitstart = 0;
  	}
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of records
 	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect );
@@ -3146,8 +3143,7 @@ function listItemGroups( $option )
  		$limitstart = 0;
  	}
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of records
  	$query = 'SELECT *'
@@ -3546,8 +3542,7 @@ function listMicroIntegrations( $option )
 		$limitstart = 0;
 	}
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 	$where = array();
 	$where[] = '`hidden` = \'0\'';
@@ -3889,8 +3884,7 @@ function listCoupons( $option, $type )
  		$limitstart = 0;
  	}
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of required records
  	$query = 'SELECT *'
@@ -4332,8 +4326,7 @@ function invoices( $option )
 	$total = $db->loadResult();
 	echo $db->getErrorMsg();
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
@@ -4496,8 +4489,7 @@ function history( $option )
 	$total = $db->loadResult();
 	echo $db->getErrorMsg();
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
@@ -4549,8 +4541,7 @@ function eventlog( $option )
 	$total = $db->loadResult();
 	echo $db->getErrorMsg();
 
-	jimport('joomla.html.pagination');
-	$pageNav = new JPagination( $total, $limitstart, $limit );
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 	// Lets grab the data and fill it in.
 	$query = 'SELECT id'

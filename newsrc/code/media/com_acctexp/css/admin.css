@@ -9,7 +9,7 @@ margin-right: -1px;
 
 .topbar {
 position: relative;
-z-index: 500;
+z-index: 50;
 }
 
 .topbar .container {
@@ -20,7 +20,7 @@ width: 820px;
 outline: 0 none !important;
 }
 
-.pills a {
+.nav-pills a {
 line-height: 12px;
 padding: 10px;
 }
@@ -100,13 +100,13 @@ background: url(../images/admin/icons/aec_logo_small_header.png) no-repeat scrol
 text-indent: 36px;
 }
 
-.tabs, .pills {
+.tabs, .nav-pills {
 font-size: 110%;
 }
 
 div.adminheading {
 float: left;
-padding: 20px 10px 0px;
+padding: 0 10px 0;
 }
 
 div.adminheading img {
@@ -117,12 +117,13 @@ padding-left: 10px;
 div.adminheading h2 {
 float: left;
 padding-left: 40px;
+line-height: 76px;
 }
 
-ul.pills {
+ul.nav-pills {
 margin: 0px auto;
 width: 600px;
-padding-top: 38px;
+padding-top: 22px;
 text-align: center;
 }
 
@@ -131,7 +132,7 @@ float: left;
 width: 100%;
 }
 
-.tabs > li, .pills > li {
+.tabs > li, .nav-pills > li {
 display: inline-block;
 float: none;
 }
@@ -141,9 +142,9 @@ table.adminlist {
 
 .aec-buttons {
 float: right;
-margin-top: 20px;
+margin-top: 0;
 margin-right: 1px;
-padding: 24px;
+padding: 23px;
 background: #fff;
 border-bottom-right-radius: 10px;
 -moz-border-radius-bottomright: 10px;
@@ -155,7 +156,7 @@ border-bottom-left-radius: 10px;
 position: fixed;
 top: 20px;
 right: 10px;
-z-index: 430;
+z-index: 30;
 box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
 background: #f9f9f9;
 }
@@ -246,21 +247,23 @@ padding-right: 12px;
 line-height: 16px;
 }
 
-div.clearfix form .input {
+div.control-group form .input {
 float: left;
 margin-left: 0;
 text-align: center;
 }
 
-div.clearfix .input {
+div.control-group .input {
 width: 100%;
 }
 
-form .clearfix {
+form .control-group {
+width: 90%;
+margin-left: 10%;
 margin-bottom: 16px;
 }
 
-.clearfix>div.input>span {
+.control-group>div.input>span {
 display: inline-block;
 font-size: 120%;
 font-weight: bold;
@@ -346,7 +349,7 @@ width: 550px;
 clear: both;
 display: block;
 font-size: 24px;
-margin: 20px 0;
+margin: 12px 0 16px;
 text-shadow: 0 1px 2px #bbb;
 }
 
@@ -410,7 +413,7 @@ margin: 12px auto;
 max-width: 840px;
 }
 
-div.central_notices .alert-message {
+div.central_notices .alert {
 text-align: left;
 }
 
@@ -427,17 +430,16 @@ text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 color: #fff;
 }
 
-div.central_notices .alert-message p {
+div.central_notices .alert p {
 margin-top: 2px;
 }
 
-div.central_notices .alert-message h5 {
+div.central_notices .alert h5 {
 margin: 4px 0;
-color: #fff;
 }
 
-div.central_notices .alert-message .help-block {
-color: #eee;
+div.central_notices .alert .help-block {
+color: #999;
 float: right;
 margin-top: -13px;
 max-width: 600px;
@@ -570,6 +572,7 @@ margin: 0px 12px 24px;
 text-align: center;
 font-size: 20px;
 text-shadow: 0 1px 2px #bbb;
+line-height: 36px;
 }
 
 table .span6 {
@@ -886,12 +889,36 @@ float: inherit !important;
 /* Overrides */
 
 table.adminlist .pagination {
-margin: 1px auto 0;
+margin: 3px auto -10px;
+}
+
+table.adminlist .pagination a {
+line-height: 22px;
+}
+
+table.adminlist .pagination i {
+margin-top: 4px;
+opacity: 0.8;
+filter: alpha(opacity=80);
+}
+
+table.adminlist .pagination .off i {
+opacity: 0.5;
+filter: alpha(opacity=50);
 }
 
 .pagination div.limit {
 height: inherit;
 line-height: 22px;
+margin: -4px 10px;
+}
+
+div.limit select {
+width: 48px;
+padding: 0;
+margin-left: 8px;
+background: #eee;
+margin-top: 6px;
 }
 
 #submenu-box {
@@ -1061,12 +1088,4 @@ background: #eee;
 box-shadow: none;
 border: none;
 margin: 1px;
-}
-
-div.limit select {
-width: 48px;
-padding: 0;
-margin-left: 8px;
-background: #eee;
-margin-top: 2px;
 }
