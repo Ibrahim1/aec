@@ -277,7 +277,7 @@ function saveOds($obj,$file) {
 	mkdir($tmp.'/'.$uid);
 	file_put_contents($tmp.'/'.$uid.'/content.xml',$obj->array2ods());
 	file_put_contents($tmp.'/'.$uid.'/mimetype','application/vnd.oasis.opendocument.spreadsheet');
-	file_put_contents($tmp.'/'.$uid.'/meta.xml',$obj->getMeta('es-ES'));
+	file_put_contents($tmp.'/'.$uid.'/meta.xml',$obj->getMeta('en-GB'));
 	file_put_contents($tmp.'/'.$uid.'/styles.xml',$obj->getStyle());
 	file_put_contents($tmp.'/'.$uid.'/settings.xml',$obj->getSettings());
 	mkdir($tmp.'/'.$uid.'/META-INF/');
