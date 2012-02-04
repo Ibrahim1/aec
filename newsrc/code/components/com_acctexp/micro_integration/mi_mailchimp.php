@@ -56,7 +56,7 @@ class mi_mailchimp
 		$settings['custom_details']	= array( 'inputD' );
 
 		$settings['lists']['list']				= JHTML::_( 'select.genericlist', $li, 'list', 'size="4"', 'value', 'text', $this->settings['list'] );
-		$settings['lists']['list_unsub']		= JHTML::_( 'select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_unsub'] );
+		$settings['lists']['list_unsub']		= JHTML::_( 'select.genericlist', $li, 'list_unsub', 'size="4"', 'value', 'text', $this->settings['list_unsub'] );
 		$settings['lists']['list_exp']			= JHTML::_( 'select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp'] );
 		$settings['lists']['list_exp_unsub']	= JHTML::_( 'select.genericlist', $li, 'list_exp_unsub', 'size="4"', 'value', 'text', $this->settings['list_exp_unsub'] );
 
