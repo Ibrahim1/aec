@@ -28,7 +28,7 @@ div.toggleswitch {
 }
 
 .toggleswitch > input {
-  display: none;
+  display: none !important;
 }
 
 .toggleswitch > input ~ .toggleswitch-inner {

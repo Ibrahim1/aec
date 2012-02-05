@@ -5984,7 +5984,7 @@ class aecHTML
 				break;
 			case 'inputD':
 				$return .= '<div class="controls">';
-				$return .= '<textarea id="' . $name . '" class="span7" rows="5" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="span6" rows="5" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div></div>';
 				break;
 			case 'inputE':

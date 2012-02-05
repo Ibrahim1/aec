@@ -20,6 +20,10 @@ width: 820px;
 outline: 0 none !important;
 }
 
+.topbar a.brand {
+outline: 0 none !important;
+}
+
 .nav-pills a {
 line-height: 12px;
 padding: 10px;
@@ -87,7 +91,7 @@ background-color: #000;
 position: fixed;
 top: 0;
 z-index: 1030;
-width: 98.5%;
+width: 96.8%;
 margin: 0 auto;
 }
 
@@ -154,7 +158,7 @@ border-bottom-left-radius: 10px;
 
 .aec-buttons-fixed {
 position: fixed;
-top: 20px;
+top: 34px;
 right: 10px;
 z-index: 30;
 box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
@@ -163,7 +167,6 @@ background: #f9f9f9;
 
 .btn-hl {
 border-left: 1px solid #999999;
-margin-left: 6px;
 }
 
 .aec-filters {
@@ -194,7 +197,7 @@ text-align: center !important;
 padding: 2px !important;
 }
 
-.aec-filters .inputs-list {
+.aec-filters .controlss-list {
 padding-left: 4px;
 }
 
@@ -205,8 +208,17 @@ padding: 2px 8px;
 }
 
 .aec-buttons .btn {
-margin-left: 6px;
+margin: 0 3px;
 padding: 8px 14px;
+}
+
+.btn-group {
+margin: 12px 3px -12px 3px;
+display: inline-block;
+}
+
+.btn-group .btn {
+margin: 0;
 }
 
 .tooltip {
@@ -218,6 +230,10 @@ a.btn,
 a.btn:link {
 color: #fff;
 text-decoration: none;
+}
+
+.btn.disabled, .btn[disabled] {
+    opacity: 0.35;
 }
 
 [class^="icon-"] {
@@ -247,13 +263,13 @@ padding-right: 12px;
 line-height: 16px;
 }
 
-div.control-group form .input {
+div.control-group form .controls {
 float: left;
 margin-left: 0;
 text-align: center;
 }
 
-div.control-group .input {
+div.control-group .controls {
 width: 100%;
 }
 
@@ -263,14 +279,14 @@ margin-left: 10%;
 margin-bottom: 16px;
 }
 
-.control-group>div.input>span {
+.control-group>div.controls>span {
 display: inline-block;
 font-size: 120%;
 font-weight: bold;
 padding-top: 6.5px;
 }
 
-div.input ul {
+div.controls ul {
 margin: 0;
 padding-left: 14px;
 list-style: circle;
@@ -284,7 +300,7 @@ vertical-align: top;
 width: 80px;
 }
 
-.form-slim .input {
+.form-slim .controls {
 margin-left: 100px;
 }
 
@@ -340,7 +356,7 @@ background: #fda;
 padding: 0 1px;
 }
 
-div.input>div>div {
+div.controls>div>div {
 margin: 0 auto;
 width: 550px;
 }
@@ -406,6 +422,10 @@ max-width: 840px;
 div.central_buttons {
 margin: 12px auto;
 max-width: 840px;
+}
+
+div.central_buttons a {
+outline: 0 none !important;
 }
 
 div.central_notices {

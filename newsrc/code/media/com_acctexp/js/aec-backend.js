@@ -130,7 +130,8 @@ jQuery(document).ready(function($) {
 		});
 	}
 
-	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 500, hide: 100 }})
+	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});
+	jQuery('table.aecadminform').tooltip({placement: "bottom", selector: 'a.btn'});
 
 });
 

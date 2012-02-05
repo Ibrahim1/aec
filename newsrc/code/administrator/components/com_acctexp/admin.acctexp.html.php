@@ -126,7 +126,11 @@ class HTML_myCommon
 		$v = new JVersion();
 		?><div class="aec-buttons"><?php
 		foreach ( $buttons as $action => $button ) {
-			if ( !isset( $button['style'] ) ) {
+			if ( isset( $button['groupstart'] ) ) {
+				echo '<div class="btn-group">';
+			} elseif ( isset( $button['groupend'] ) ) {
+				echo '</div>';
+			} elseif ( !isset( $button['style'] ) ) {
 				echo '<span class="btn-hl"></span>';
 			} else {
 				echo '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . $button['text'] . '"><i class="bsicon-' . $button['icon'] . ' bsicon-white"></i></a>';
@@ -324,7 +328,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')' );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'refresh' ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
 							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
@@ -367,28 +371,28 @@ class HTML_AcctExp
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
 							<?php if ( $metaUser->hasSubscription ) { ?>
-							<div class="clearfix">
-								<label for="expiration"><span><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></span></label>
-								<div class="input"><span><?php echo $metaUser->focusSubscription->id; ?></span></div>
+							<div class="control-group">
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></span></label>
+								<div class="controls"><span><?php echo $metaUser->focusSubscription->id; ?></span></div>
 							</div>
-							<div class="clearfix">
-								<label for="expiration"><span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></span></label>
-								<div class="input"><span>#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
+							<div class="control-group">
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></span></label>
+								<div class="controls"><span>#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
 							</div>
-							<div class="clearfix">
-								<label for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-								<div class="input"><span><?php echo aecHTML::Icon( $icon, $status ); ?>&nbsp;<?php echo $status; ?></span></div>
+							<div class="control-group">
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
+								<div class="controls"><span><?php echo aecHTML::Icon( $icon, $status ); ?>&nbsp;<?php echo $status; ?></span></div>
 							</div>
-							<div class="clearfix">
-								<label for="expiration"><span><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></span></label>
-								<div class="input"><span><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></span></div>
+							<div class="control-group">
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></span></label>
+								<div class="controls"><span><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></span></div>
 							</div>
-							<div class="clearfix">
-								<label for="ck_primary">
+							<div class="control-group">
+								<label class="control-label" for="ck_primary">
 									<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
 								</label>
 								<input type="hidden" value="0" name="ck_primary"/>
-								<div class="input">
+								<div class="controls">
 									<div class="toggleswitch">
 										<label onclick="" class="toggleswitch">
 											<input type="checkbox"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" disabled="disabled"" ' : ''; ?> name="ck_primary" id="ck_primary" value="1"/>
@@ -401,20 +405,20 @@ class HTML_AcctExp
 									</div>
 								</div>
 							</div>
-							<div class="clearfix">
-								<label for="expiration_current">
+							<div class="control-group">
+								<label class="control-label" for="expiration_current">
 									<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
 								</label>
-								<div class="input">
+								<div class="controls">
 									<span><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></span>
 								</div>
 							</div>
-							<div class="clearfix">
-								<label for="ck_lifetime">
+							<div class="control-group">
+								<label class="control-label" for="ck_lifetime">
 									<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
 								</label>
 								<input type="hidden" value="0" name="ck_lifetime"/>
-								<div class="input">
+								<div class="controls">
 									<div class="toggleswitch">
 										<label onclick="" class="toggleswitch">
 											<input type="checkbox"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> name="ck_lifetime" id="ck_lifetime" value="1"/>
@@ -427,30 +431,30 @@ class HTML_AcctExp
 									</div>
 								</div>
 							</div>
-							<div class="clearfix">
-								<label for="expiration">
+							<div class="control-group">
+								<label class="control-label" for="expiration">
 									<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
 								</label>
-								<div class="input">
+								<div class="controls">
 									<?php echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox span5', 'size'=>'25',  'maxlength'=>'19' )); ?>
 									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
 								</div>
 							</div>
-							<div class="clearfix">
-								<label for="set_status">
+							<div class="control-group">
+								<label class="control-label" for="set_status">
 									<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
 								</label>
-								<div class="input">
+								<div class="controls">
 									<?php echo $lists['set_status']; ?>
 								</div>
 							</div>
 							<?php } else { ?>
 							<?php } ?>
-							<div class="clearfix">
-								<label for="assignto_plan">
+							<div class="control-group">
+								<label class="control-label" for="assignto_plan">
 									<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
 								</label>
-								<div class="input">
+								<div class="controls">
 									<?php echo $lists['assignto_plan']; ?>
 								</div>
 							</div>
@@ -458,13 +462,13 @@ class HTML_AcctExp
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?> History</h4>
 								<?php if ( $metaUser->hasSubscription ) { ?>
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></span></label>
-									<div class="input"><span>#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></span></label>
+									<div class="controls"><span>#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
 								</div>
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_USED_PLANS'); ?></span></label>
-									<div class="input">
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USED_PLANS'); ?></span></label>
+									<div class="controls">
 										<span>
 											<?php if ( !empty( $metaUser->meta->plan_history->used_plans ) ) { ?>
 												<ul>
@@ -482,7 +486,7 @@ class HTML_AcctExp
 								<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
 									<br />
 									<p><strong><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS');?>:</strong></p>
-									<table class="infobox_table zebra-striped">
+									<table class="infobox_table table-striped">
 										<tr>
 											<th>&nbsp;</th>
 											<th>&nbsp;</th>
@@ -522,63 +526,63 @@ class HTML_AcctExp
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
 							<div class="aec_userinfobox_sub_inline form-slim" style="width:35%;padding:0 5%;">
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
-									<div class="input"><span><?php echo $metaUser->userid; ?></div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
+									<div class="controls"><span><?php echo $metaUser->userid; ?></div>
 								</div>
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-									<div class="input"><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', JText::_('AEC_USER_ACTIVE') ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'exclamation.png', JText::_('AEC_USER_BLOCKED') ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
+									<div class="controls"><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', JText::_('AEC_USER_ACTIVE') ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'exclamation.png', JText::_('AEC_USER_BLOCKED') ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
 								</div>
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_PROFILE'); ?></span></label>
-									<div class="input"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user.png', JText::_('AEC_USER_PROFILE_LINK') ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PROFILE'); ?></span></label>
+									<div class="controls"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user.png', JText::_('AEC_USER_PROFILE_LINK') ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
 								</div>
 								<?php if ( GeneralInfoRequester::detect_component('anyCB') ) { ?>
-									<div class="clearfix">
-										<label for="expiration"><span>CB Profile</span></label>
-										<div class="input"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_orange.png', JText::_('AEC_USER_PROFILE_LINK') ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+									<div class="control-group">
+										<label class="control-label" for="expiration"><span>CB Profile</span></label>
+										<div class="controls"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_orange.png', JText::_('AEC_USER_PROFILE_LINK') ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 									</div>
 								<?php } ?>
 								<?php if ( GeneralInfoRequester::detect_component('JOMSOCIAL') ) { ?>
-									<div class="clearfix">
-										<label for="expiration"><span>JomSocial Profile</span></label>
-										<div class="input"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_green.png', JText::_('AEC_USER_PROFILE_LINK') ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+									<div class="control-group">
+										<label class="control-label" for="expiration"><span>JomSocial Profile</span></label>
+										<div class="controls"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_green.png', JText::_('AEC_USER_PROFILE_LINK') ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 									</div>
 								<?php } ?>
 							</div>
 							<div class="aec_userinfobox_sub_inline form-slim" style="width:45%;padding: 0 2%;">
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
-									<div class="input"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
+									<div class="controls"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
 								</div>
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_NAME'); ?></span></label>
-									<div class="input"><span><?php echo $metaUser->cmsUser->name; ?></span></div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_NAME'); ?></span></label>
+									<div class="controls"><span><?php echo $metaUser->cmsUser->name; ?></span></div>
 								</div>
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_EMAIL'); ?></span></label>
-									<div class="input"><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'email.png', JText::_('AEC_USER_SEND_MAIL') ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_EMAIL'); ?></span></label>
+									<div class="controls"><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'email.png', JText::_('AEC_USER_SEND_MAIL') ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
 								</div>
 								<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
-									<div class="clearfix">
-										<label for="expiration"><span><?php echo JText::_('AEC_USER_TYPE'); ?></span></label>
-										<div class="input"><span><?php echo $metaUser->cmsUser->usertype; ?></span></div>
+									<div class="control-group">
+										<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_TYPE'); ?></span></label>
+										<div class="controls"><span><?php echo $metaUser->cmsUser->usertype; ?></span></div>
 									</div>
 								<?php } ?>
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_REGISTERED'); ?></span></label>
-									<div class="input"><span><?php echo aecHTML::Icon( 'date.png', JText::_('AEC_USER_REGISTERED') ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_REGISTERED'); ?></span></label>
+									<div class="controls"><span><?php echo aecHTML::Icon( 'date.png', JText::_('AEC_USER_REGISTERED') ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
 								</div>
-								<div class="clearfix">
-									<label for="expiration"><span><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></span></label>
-									<div class="input"><span><?php echo aecHTML::Icon( 'door_in.png', JText::_('AEC_USER_LAST_VISIT') ); ?><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></span></label>
+									<div class="controls"><span><?php echo aecHTML::Icon( 'door_in.png', JText::_('AEC_USER_LAST_VISIT') ); ?><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
 								</div>
 							</div>
 						</div>
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
-							<table class="infobox_table zebra-striped">
+							<table class="infobox_table table-striped">
 								<tr>
 									<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
 									<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
@@ -625,7 +629,7 @@ class HTML_AcctExp
 						</div>
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
-							<table class="infobox_table zebra-striped">
+							<table class="infobox_table table-striped">
 								<tr>
 									<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
 									<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
@@ -1125,7 +1129,7 @@ class HTML_AcctExp
 		
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'refresh' ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
 							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
@@ -1190,10 +1194,12 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'aec_symbol_settings' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
+			$buttons = array(	'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
 								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+								'pgs' => array( 'groupstart' => true ),
+								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
+								'pge' => array( 'groupend' => true ),
 								'hl2' => array(),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
@@ -1261,7 +1267,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
 							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
@@ -1432,12 +1438,16 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'MI_TITLE', 'aec_symbol_microintegrations' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+			$buttons = array(	'egs' => array( 'groupstart' => true ),
+								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
 								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
 								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
+								'ege' => array( 'groupend' => true ),
+								'hl1' => array(),
+								'pgs' => array( 'groupstart' => true ),
+								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
+								'pge' => array( 'groupend' => true ),
 								'hl2' => array(),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
@@ -1560,7 +1570,7 @@ class HTML_AcctExp
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
 							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
@@ -1710,12 +1720,16 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'aec_symbol_plans' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+			$buttons = array(	'egs' => array( 'groupstart' => true ),
+								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
 								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
 								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
+								'ege' => array( 'groupend' => true ),
+								'hl1' => array(),
+								'pgs' => array( 'groupstart' => true ),
+								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
+								'pge' => array( 'groupend' => true ),
 								'hl2' => array(),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
@@ -1847,7 +1861,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_PLAN_INFO', 'aec_symbol_plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
 							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
@@ -2126,7 +2140,7 @@ class HTML_AcctExp
 									</h5>
 								</td>
 								<td>
-									<div class="input">
+									<div class="controls">
 										<div class="toggleswitch">
 											<label class="toggleswitch" onclick="">
 												<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>"/>
@@ -2201,12 +2215,16 @@ class HTML_AcctExp
 			<?php
 			HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'aec_symbol_itemgroups' );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+			$buttons = array(	'egs' => array( 'groupstart' => true ),
+								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
 								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
 								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
+								'ege' => array( 'groupend' => true ),
+								'hl1' => array(),
+								'pgs' => array( 'groupstart' => true ),
+								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
+								'pge' => array( 'groupend' => true ),
 								'hl2' => array(),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
@@ -2326,7 +2344,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
 							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
@@ -2477,7 +2495,7 @@ class HTML_AcctExp
 								</td>
 								<td>
 									<input type="hidden" name="micro_integrations[]" value="0" />
-									<div class="input">
+									<div class="controls">
 										<div class="toggleswitch">
 											<label class="toggleswitch" onclick="">
 												<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="1"/>
@@ -2529,12 +2547,16 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'aec_symbol_coupons' . ( $type ? '_static' : '' ) );
 
-			$buttons = array(	'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'hl1' => array(),
-								'edit' => array( 'style' => 'primary', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'edit' ),
+			$buttons = array(	'egs' => array( 'groupstart' => true ),
+								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
 								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
 								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
+								'ege' => array( 'groupend' => true ),
+								'hl1' => array(),
+								'pgs' => array( 'groupstart' => true ),
+								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
+								'pge' => array( 'groupend' => true ),
 								'hl2' => array(),
 								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
 							);
@@ -2612,7 +2634,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_COUPON', 'aec_symbol_coupons' . ($type ? '_static' : ''), ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
 		
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'refresh' ),
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
 							'hl1' => array(),
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
@@ -3529,7 +3551,7 @@ class HTML_AcctExp
 							<div id="aec-toolbox-list">
 							<?php foreach ( $result as $x => $litem ) {
 								echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
-								echo '<p><a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: -48px; margin-right: 48px;">use</a></p>';
+								echo '<p><a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: -48px; margin-right: 48px;"><i class="bsicon-cog bsicon-white"></i> Use</a></p>';
 								echo '<hr />';
 							} ?>
 							</div>
