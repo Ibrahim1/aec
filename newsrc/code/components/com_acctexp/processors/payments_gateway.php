@@ -97,7 +97,7 @@ class processor_payments_gateway extends POSTprocessor
 		$var['pg_consumerorderid']				= $request->invoice->invoice_number;
 
 		$var['pg_return_url']					= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payments_gatewaynotification' );
-		$var['pg_return_method']				= 'AsyncPost';
+		$var['pg_return_method']				= 'Post';
 
 		$var['pg_version_number']				= '1.0';
 
