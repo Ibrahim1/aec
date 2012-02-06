@@ -2498,7 +2498,7 @@ class HTML_AcctExp
 									<div class="controls">
 										<div class="toggleswitch">
 											<label class="toggleswitch" onclick="">
-												<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="1"/>
+												<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>"/>
 												<span class="toggleswitch-inner">
 													<span class="toggleswitch-on"><?php echo JText::_( 'yes' ) ?></span>
 													<span class="toggleswitch-off"><?php echo JText::_( 'no' ) ?></span>
