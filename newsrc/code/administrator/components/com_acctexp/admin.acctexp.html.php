@@ -1328,10 +1328,10 @@ class HTML_AcctExp
 				</div>
 				<div class="filter-sub">
 					<?php if ( $action[0] != 'manual' ) { ?>
-						<label><span><?php echo JText::_('PLAN_FILTER'); ?></span><?php echo $lists['filterplanid']; ?></label>
+						<label><?php echo $lists['filterplanid']; ?></label>
 					<?php } ?>
 					<label><span><?php echo JText::_('ORDER_BY'); ?></span><?php echo $lists['orderNav']; ?></label>
-					<label><span><?php echo JText::_('AEC_CMN_SEARCH'); ?></span><input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" class="inputbox span3" /></label>
+					<label><span><?php echo JText::_('AEC_CMN_SEARCH'); ?></span><input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" class="inputbox span2" /></label>
 				</div>
 				<div class="filter-sub">
 						<p>With selected users:</p>
@@ -1339,7 +1339,7 @@ class HTML_AcctExp
 						<?php if ( $action[0] != 'manual' ) { ?>
 							<label><?php echo $lists['set_expiration']; ?></label>
 						<?php } ?>
-						<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+						<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
 				</div>
 				<a id="filter-button" href="#">&#94;&#94;&nbsp;<?php echo JText::_('more'); ?>&nbsp;&#94;&#94;</a>
 			</div>
@@ -3425,8 +3425,8 @@ class HTML_AcctExp
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'aec_symbol_import' );
 
-		$buttons = array(	'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') ),
-							'' => array( 'style' => 'success', 'text' => JText::_('Import'), 'actionable' => true )
+		$buttons = array(	'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ),
+							'' => array( 'style' => 'success', 'text' => JText::_('Import'), 'actionable' => true, 'icon' => 'ok' )
 							);
 		HTML_myCommon::getButtons( $buttons, 'Import' );
 		?>
@@ -3503,7 +3503,7 @@ class HTML_AcctExp
 		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'aec_symbol_export' );
 
-		$buttons = array( 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL') ) );
+		$buttons = array( 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ) );
 
 		HTML_myCommon::getButtons( $buttons, 'Settings' );
 		?>

@@ -1247,7 +1247,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('TYPE_DESC') );
 	}
 
-	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox span3" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -1257,17 +1257,17 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$db->setQuery( $query );
 	$db_plans = $db->loadObjectList();
 
-	$plans[] = JHTML::_('select.option', '0', JText::_('FILTER_PLAN'), 'id', 'name' );
+	$plans[] = JHTML::_('select.option', '0', ' - ' . JText::_('PLAN_FILTER') . ' - ', 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
-	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox span3" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
+	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
 	$plans2[] = JHTML::_('select.option', '0', JText::_('BIND_USER'), 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans2 = array_merge( $plans2, $db_plans );
 	}
-	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox span3" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
+	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
 /*
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('AEC_SEL_EXCLUDED') );
@@ -1301,10 +1301,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$group_selection = array();
 	foreach ( $status as $id => $txt ) {
-		$group_selection[] = '<label><input type="checkbox" name="groups[]" value="' . $id . '"' . ( in_array( $id, $groups ) ? 'checked="checked"' : '' ) . ' /><span>' . $txt . '</span></label>';
+		$group_selection[] = '<input type="checkbox" name="groups[]" value="' . $id . '"' . ( in_array( $id, $groups ) ? 'checked="checked"' : '' ) . ' />' . $txt . '';
 	}
 
-	$lists['groups'] = '<div><ul class="inputs-list"><li>' . implode( '</li><li>', $group_selection ) . '</li></ul></div>';
+	$lists['groups'] = '<div><ul class="input-list"><li>' . implode( '</li><li>', $group_selection ) . '</li></ul></div>';
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
@@ -1321,7 +1321,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = JHTML::_('select.option', 'set_3',		JText::_('EXPIRE_03MONTH') );
 	$group_selection[] = JHTML::_('select.option', 'set_12',	JText::_('EXPIRE_12MONTH') );
 
-	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox span3" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
+	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox span2" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
 	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
 }
@@ -3964,10 +3964,10 @@ function editCoupon( $id, $option, $new, $type )
 	$params['has_expiration']				= array( 'toggle',		0);
 	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', ( (int) gmdate('U') ) ) );
 	$params['has_max_reuse']				= array( 'toggle',		0 );
-	$params['max_reuse']					= array( 'inputB',			1 );
+	$params['max_reuse']					= array( 'inputA',			1 );
 	$params['has_max_peruser_reuse']		= array( 'toggle',		1 );
-	$params['max_peruser_reuse']			= array( 'inputB',			1 );
-	$params['usecount']						= array( 'inputB',			0 );
+	$params['max_peruser_reuse']			= array( 'inputA',			1 );
+	$params['usecount']						= array( 'inputA',			0 );
 
 	$params['usage_plans_enabled']			= array( 'toggle',		0 );
 	$params['usage_plans']					= array( 'list',			0 );
@@ -5654,7 +5654,7 @@ function importData( $option )
 
 					$params['convert_field_'.$i] = array( 'list', '', '', '' );
 
-					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="span4"', 'value', 'text', 0 );
+					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="span2"', 'value', 'text', 0 );
 				}
 
 				$rows_count = count( $import->rows );
@@ -5889,9 +5889,9 @@ function exportData( $option, $type, $cmd=null )
 	$params['selected_export']	= array( 'list', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div style="float: right">' );
-	$params[] = array( 'p', '<p><a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">Load Preset</a></p>' );
-	$params[] = array( 'p', '<p><a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">Store Preset</a></p>' );
-	$params[] = array( 'p', '<p><a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">Store Preset &amp; Exit</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#"><i class="bsicon-upload bsicon-white"></i>&nbsp;Load Preset</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#"><i class="bsicon-download bsicon-white"></i>&nbsp;Store Preset</a></p>' );
+	$params[] = array( 'p', '<p><a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#"><i class="bsicon-download-alt bsicon"></i>&nbsp;Store Preset &amp; Exit</a></p>' );
 	$params[] = array( 'div_end', '' );
 	$params['delete']			= array( 'checkbox', 0 );
 	$params['save']				= array( 'checkbox', 0 );
@@ -5901,11 +5901,9 @@ function exportData( $option, $type, $cmd=null )
 
 	$params[] = array( 'userinfobox', 49 );
 	$params[] = array( 'userinfobox_sub', 'Export' );
-	$params[] = array( 'div', '<div style="float: right">' );
-	$params[] = array( 'p', '<p><a class="btn btn-info" id="testexport" href="#export-result">Test Export</a></p>' );
-	$params[] = array( 'div_end', '' );
-	$params[] = array( 'div', '<div style="float: right">' );
-	$params[] = array( 'p', '<p><a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">Export Now</a></p>' );
+	$params[] = array( 'p', '<div class="btn-group" style="float: right">' );
+	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result"><i class="bsicon-print bsicon-white"></i>&nbsp;Test Export</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#"><i class="bsicon-refresh bsicon-white"></i>&nbsp;Export Now</a>' );
 	$params[] = array( 'div_end', '' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'div_end', '' );
@@ -5963,7 +5961,7 @@ function exportData( $option, $type, $cmd=null )
 		$listitems[] = JHTML::_('select.option', 0, " --- Autosaves --- ", 'value', 'text', true );
 	}
 
-	$lists['selected_export'] = JHTML::_('select.genericlist', $listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries+$m+2 ) ) . '" class="span12"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );
+	$lists['selected_export'] = JHTML::_('select.genericlist', $listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries+$m+2 ) ) . '" class="span7"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'

@@ -5904,7 +5904,7 @@ class aecSettings
 
 	function remap_list_date( $name, $value )
 	{
-		$this->lists[$name] = JHTML::_('calendar', $value, $name, $name, '%Y-%m-%d', array('class'=>'inputbox span5', 'size'=>'25',  'maxlength'=>'19' ));
+		$this->lists[$name] = JHTML::_('calendar', $value, $name, $name, '%Y-%m-%d', array('class'=>'inputbox span3', 'size'=>'25',  'maxlength'=>'19' ));
 
 		return 'list';
 	}
@@ -5989,7 +5989,7 @@ class aecHTML
 				break;
 			case 'inputE':
 				$return .= '<div class="controls">';
-				$return .= '<textarea id="' . $name . '" class="span11" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="span6" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= '</div></div>';
 				break;
 			case 'checkbox':
