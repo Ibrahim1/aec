@@ -429,6 +429,18 @@ margin: 0 auto;
 width: 550px;
 }
 
+.accordion-heading .accordion-toggle {
+background: #e5e5e5;
+outline: none;
+font-size: 120%;
+font-weight: bold;
+}
+
+.accordion-inner {
+padding: 14px 15px 2px;
+background: #f5f5f5;
+}
+
 #aec_center h3 {
 clear: both;
 display: block;
@@ -761,12 +773,9 @@ border-left: 3px solid #998;
 
 div.rewriteinfoblock {
 display: block;
-position: relative;
-float: left;
 color: #000;
-background-color: #e5f4ff;
 padding: 4px;
-margin: 4px;
+margin-bottom: 4px;
 }
 
 div.setting_desc {

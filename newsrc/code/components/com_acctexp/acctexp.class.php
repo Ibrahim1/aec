@@ -6037,28 +6037,23 @@ class aecHTML
 				break;
 			case 'accordion_start':
 				if ( !isset( $this->accordions ) ) {
+					$this->accordionitems = 1;
 					$this->accordions = 1;
 				} else {
 					$this->accordions++;
 				}
 
-				// small accordion code
-				$this->js[] = "window.addEvent('domready',function(){ var accordion" . $this->accordions . " = new Accordion($('accordion" . $this->accordions . "'), '#accordion" . $this->accordions . " h3.atStart', '#accordion" . $this->accordions . " div.atStart', {
-					duration: 200, alwaysHide: true,
-					onActive: function(toggler, element){
-						var activeFX = new Fx.Styles(toggler, {duration: 300, transition: Fx.Transitions.Expo.easeOut});
-						activeFX.start({ 'color':'#222', 'paddingLeft':'20px' });
-						toggler.setStyle('font-weight', 'bold');
-					},
-					onBackground: function(toggler, element){
-						var backFX = new Fx.Styles(toggler, {duration: 300, transition: Fx.Transitions.Expo.easeOut});
-						backFX.start({ 'color':'#444', 'paddingLeft':'10px' });
-						toggler.setStyle('font-weight', 'normal');
-					} } ); });";
 				$return = '<div id="accordion' . $this->accordions . '"' . ( !empty( $value ) ? ('class="'.$value.'"') : 'accordion') . '>';
 				break;
 			case 'accordion_itemstart':
-				$return = '<h3 class="aec_toggler atStart">' . $value . '</h3><div class="element atStart">';
+				$return = '<div class="accordion-group">';
+				$return .= '<div class="accordion-heading"><a href="#collapse' . $this->accordions+$this->accordionitems . '" data-parent="#accordion' . $this->accordions . '" data-toggle="collapse" class="accordion-toggle">' . $value . '</a></div>';
+				$return .= '<div class="accordion-body collapse" id="collapse' . $this->accordions+$this->accordionitems . '"><div class="accordion-inner">';
+				break;
+			case 'accordion_itemend':
+				$this->accordionitems++;
+
+				$return = '</div></div></div>';
 				break;
 			case 'div_end':
 				$return = '</div>';
@@ -14698,7 +14693,7 @@ class reWriteEngine
 			. '<p>' . JText::_('REWRITE_ENGINE_DESC') . '</p>' . "\n"
 			. '</div>' . "\n";
 			$params[] = array( 'literal', $list );
-			$params[] = array( 'div_end', '' );
+			$params[] = array( 'accordion_itemend', '' );
 
 			foreach ( $rewrite as $area => $keys ) {
 				$params[] = array( 'accordion_itemstart', JText::_( 'REWRITE_AREA_' . strtoupper( $area ) ) );
@@ -14717,7 +14712,7 @@ class reWriteEngine
 				. '</div>' . "\n";
 
 				$params[] = array( 'literal', $list );
-				$params[] = array( 'div_end', '' );
+				$params[] = array( 'accordion_itemend', '' );
 			}
 
 			$params[] = array( 'accordion_itemstart', JText::_('REWRITE_ENGINE_AECJSON_TITLE' ) );
@@ -14725,7 +14720,7 @@ class reWriteEngine
 			. '<p>' . JText::_('REWRITE_ENGINE_AECJSON_DESC') . '</p>' . "\n"
 			. '</div>' . "\n";
 			$params[] = array( 'literal', $list );
-			$params[] = array( 'div_end', '' );
+			$params[] = array( 'accordion_itemend', '' );
 
 			$params[] = array( 'div_end', '' );
 
