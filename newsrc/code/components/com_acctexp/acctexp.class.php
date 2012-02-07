@@ -5943,14 +5943,14 @@ class aecHTML
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
 				$return = '<div class="control-group">';
-				$return .= '<label class="control-label" for="' . $name . '"><div rel="tooltip" data-original-title="';
+				$return .= '<label class="control-label bstooltip" for="' . $name . '" rel="tooltip" class="bstooltip" data-original-title="';
 
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
-					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
-					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false ) . '</div>';
+					$return .= htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
+					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false );
 				} else {
-					$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . ( ( strpos( $row[1], ':' ) === false ) ? ':' : '' ) . ':' . htmlentities( $row[2], ENT_QUOTES, "UTF-8" );
-					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8" ) . '</div>';
+					$return .= htmlentities( $row[2], ENT_QUOTES, "UTF-8" );
+					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
 				}
 
 				$return .= '</label>';
@@ -6043,12 +6043,12 @@ class aecHTML
 					$this->accordions++;
 				}
 
-				$return = '<div id="accordion' . $this->accordions . '"' . ( !empty( $value ) ? ('class="'.$value.'"') : 'accordion') . '>';
+				$return = '<div id="accordion' . $this->accordions . '" class="accordion"' . '>';
 				break;
 			case 'accordion_itemstart':
 				$return = '<div class="accordion-group">';
-				$return .= '<div class="accordion-heading"><a href="#collapse' . $this->accordions+$this->accordionitems . '" data-parent="#accordion' . $this->accordions . '" data-toggle="collapse" class="accordion-toggle">' . $value . '</a></div>';
-				$return .= '<div class="accordion-body collapse" id="collapse' . $this->accordions+$this->accordionitems . '"><div class="accordion-inner">';
+				$return .= '<div class="accordion-heading"><a href="#collapse' . ($this->accordions+$this->accordionitems) . '" data-parent="#accordion' . $this->accordions . '" data-toggle="collapse" class="accordion-toggle">' . $value . '</a></div>';
+				$return .= '<div class="accordion-body collapse" id="collapse' . ($this->accordions+$this->accordionitems) . '"><div class="accordion-inner">';
 				break;
 			case 'accordion_itemend':
 				$this->accordionitems++;

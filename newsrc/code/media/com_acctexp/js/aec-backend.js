@@ -2,7 +2,9 @@ jQuery(document).ready(function($) {
 	var typingTimer;
 
 	jQuery('#topbar').dropdown();
-	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){ jQuery(".collapse").collapse('hide') });
+	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){
+		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
+	});
 	jQuery("#system-message").fadeOut('slow', function() { jQuery(this).slideUp( 'slow' ); });
 	jQuery('#quicksearch').popover({
 		trigger:'manual',
@@ -132,7 +134,7 @@ jQuery(document).ready(function($) {
 	}
 
 	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});
-	jQuery('table.aecadminform').tooltip({placement: "bottom", selector: '.control-label'});
+	jQuery('div.control-group').tooltip({placement: "bottom", selector: '.bstooltip'});
 
 });
 
