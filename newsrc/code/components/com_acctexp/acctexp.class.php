@@ -14137,6 +14137,34 @@ class AECfetchfromDB
 		return $db->loadResult();
 	}
 
+	function UnpaidInvoiceCountbyUserID( $userid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `active` = \'1\''
+				. ' AND `transaction_date` = \'0000-00-00 00:00:00\''
+				;
+		$db->setQuery( $query );
+		return $db->loadResult();
+	}
+
+	function PaidInvoiceCountbyUserID( $userid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `active` = \'1\''
+				. ' AND `transaction_date` != \'0000-00-00 00:00:00\''
+				;
+		$db->setQuery( $query );
+		return $db->loadResult();
+	}
+
 	function InvoiceNumberbyCartId( $userid, $cartid )
 	{
 		$db = &JFactory::getDBO();
@@ -15123,6 +15151,30 @@ class reWriteEngine
 				}
 
 				$result = $this->data['metaUser']->getProperty( $vars );
+				break;
+			case 'invoice_count':
+				if ( !is_object( $this->data['metaUser'] ) ) {
+					return false;
+				}
+
+				return AECfetchfromDB::InvoiceCountbyUserID( $this->data['metaUser']->userid );
+
+				break;
+			case 'invoice_count_paid':
+				if ( !is_object( $this->data['metaUser'] ) ) {
+					return false;
+				}
+
+				return AECfetchfromDB::PaidInvoiceCountbyUserID( $this->data['metaUser']->userid );
+
+				break;
+			case 'invoice_count_unpaid':
+				if ( !is_object( $this->data['metaUser'] ) ) {
+					return false;
+				}
+
+				return AECfetchfromDB::UnpaidInvoiceCountbyUserID( $this->data['metaUser']->userid );
+
 				break;
 			case 'jtext':
 				$result = JText::_( $vars );
