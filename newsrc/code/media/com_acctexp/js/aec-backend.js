@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 	var typingTimer;
 
 	jQuery('#topbar').dropdown();
-	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'});
+	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){ jQuery(".collapse").collapse('hide') });
 	jQuery("#system-message").fadeOut('slow', function() { jQuery(this).slideUp( 'slow' ); });
 	jQuery('#quicksearch').popover({
 		trigger:'manual',
