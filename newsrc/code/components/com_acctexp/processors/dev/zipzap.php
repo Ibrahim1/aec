@@ -20,7 +20,7 @@ class processor_zipzap extends XMLprocessor
 		$info['longname']		= JText::_('CFG_ZIPZAP_LONGNAME');
 		$info['statement']		= JText::_('CFG_ZIPZAP_STATEMENT');
 		$info['description']	= JText::_('CFG_ZIPZAP_DESCRIPTION');
-		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['currencies']		= 'AUD,CAD,CHF,DEM,FRF,GBP,HKD,JPY,NZD,SGD,USD,EUR,ZAR';
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 0;
 		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
@@ -45,10 +45,8 @@ class processor_zipzap extends XMLprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['login']				= "login";
-		$settings['transaction_key']	= "transaction_key";
 		$settings['testmode']			= 0;
-		$settings['dumpmode']			= 0;
+		$settings['merchantid']			= "your_merchant_id";
 		$settings['currency']			= "USD";
 		$settings['promptAddress']		= 0;
 		$settings['promptZipOnly']		= 0;
@@ -62,9 +60,7 @@ class processor_zipzap extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']			= array( "list_yesno" );
-		$settings['dumpmode']			= array( "list_yesno" );
-		$settings['login'] 				= array( "inputC" );
-		$settings['transaction_key']	= array( "inputC" );
+		$settings['merchantid']			= array( "inputC" );
 		$settings['currency']			= array( "list_currency" );
 		$settings['promptAddress']		= array( "list_yesno" );
 		$settings['promptZipOnly']		= array( "list_yesno" );
@@ -78,243 +74,51 @@ class processor_zipzap extends XMLprocessor
 
 	function checkoutform( $request )
 	{
-		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
+		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year' ) );
 
-		$namearray		= $request->metaUser->explodeName();
+		$var['params']['username'] = array( 'hidden', '', '', $this->settings['merchantid'] );
+		$var['params']['TYPE'] = array( 'hidden', '', '', 'P' );
 
-		$var['params']['billFirstName'] = array( 'inputC', JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME'), JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLFIRSTNAME_NAME'), $namearray['first_first'] );
-		$var['params']['billLastName'] = array( 'inputC', JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME'), JText::_('AEC_AUTHORIZE_AIM_PARAMS_BILLLASTNAME_NAME'), $namearray['last'] );
+		$rename = array(	'card_number' => 'CARDNUM',
+							'cart_exp_month' => 'cc_exp_month',
+							'cart_exp_year' => 'cc_exp_year',
+							);
 
-		if ( !empty( $this->settings['promptAddress'] ) || !empty( $this->settings['promptZipOnly'] ) ) {
-			if ( empty( $this->settings['promptZipOnly'] ) ) {
-				$var['params']['billAddress'] = array( 'inputC', JText::_('AEC_ZIPZAP_PARAMS_BILLADDRESS_NAME') );
-				$var['params']['billCity'] = array( 'inputC', JText::_('AEC_ZIPZAP_PARAMS_BILLCITY_NAME') );
-				$var['params']['billState'] = array( 'inputC', JText::_('AEC_ZIPZAP_PARAMS_BILLSTATE_NAME') );
-			}
+		foreach ( $var as $k => $v ) {
+			if ( isset( $var['params'][$k] ) ) {
+				$var['params'][$v] = $var['params'][$k];
 
-			$var['params']['billZip'] = array( 'inputC', JText::_('AEC_ZIPZAP_PARAMS_BILLZIP_NAME') );
-
-			if ( empty( $this->settings['promptZipOnly'] ) ) {
-				$var['params']['billCountry'] = array( 'inputC', JText::_('AEC_ZIPZAP_PARAMS_BILLCOUNTRY_NAME') );
+				unset( $var['params'][$k] );
 			}
 		}
+
+		$var['params']['TYPE'] = array( 'hidden', '', '', $this->settings['currency'] );
+		$var['params']['AMOUNT'] = array( 'hidden', '', '', $request->int_var['amount'] );
+		$var['params']['EMAIL'] = array( 'hidden', '', '', $request->metaUser->cmsUser->email );
+		$var['params']['reference1'] = array( 'hidden', '', '', substr( $request->int_var['invoice'], 1 ) );
+
+		$var['params']['success_url'] = array( 'hidden', '', '', AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks' ) );
+		$var['params']['error_url'] = array( 'hidden', '', '', AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' ) );
+		$var['params']['fail_url'] = array( 'hidden', '', '', AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' ) );
+		$var['params']['user_url'] = array( 'hidden', '', '', AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=zipzapnotification' ) );
+
+		$var['aec_alternate_checkout'] = 'https://secure.zipzap.biz/zipzap.php';
 
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	function parseNotification( $post )
 	{
-		$a = array();
+		$response = array();
 
-		$a['x_login']			= trim( substr( $this->settings['login'], 0, 25 ) );
-		$a['x_version']			= "3.1";
-		$a['x_delim_char']		= "|";
-		$a['x_delim_data']		= "TRUE";
-		$a['x_url']				= "FALSE";
-		$a['x_type']			= "AUTH_CAPTURE";
-		$a['x_method']			= "CC";
-		$a['x_tran_key']		= $this->settings['transaction_key'];
-		$a['x_currency_code']	= $this->settings['currency'];
-		$a['x_relay_response']	= "FALSE";
-		$a['x_card_num']		= trim( $request->int_var['params']['cardNumber'] );
-		$a['x_exp_date']		= str_pad( $request->int_var['params']['expirationMonth'], 2, '0', STR_PAD_LEFT ) . $request->int_var['params']['expirationYear'];
-		$a['x_card_code']		= trim( $request->int_var['params']['cardVV2'] );
-
-		if ( !empty( $request->cart ) ) {
-			$sid = 0;
-			foreach ( $request->cart as $ciid => $ci ) {
-				if ( !empty( $ci['is_total'] ) ) {
-					continue;
-				}
-
-				$lineitems = array();
-
-				// Item ID<|>
-				$lineitems[] = 'item'.substr( $sid, 0, 31 );
-				// <|>item name<|>
-				$lineitems[] = substr( $ci['name'], 0, 31 );
-				// <|>item description<|>
-				$lineitems[] = empty($ci['desc']) ? substr( $ci['name'], 0, 31 ) : substr( $ci['desc'], 0, 255);
-				// <|>itemX quantity<|>
-				$lineitems[] = $ci['quantity'];
-				// <|>item price (unit cost)<|>
-				$lineitems[] = $ci['cost'];
-				// <|>itemX taxable<|>
-				$lineitems[] = 0;
-
-				$sid++;
-
-				// TODO: trailing colon required? . '|'
-				$a['x_line_item'][] = implode( '<|>', $lineitems );
-			}
-		}
-
-		$a['x_description']		= trim( substr( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ), 0, 20 ) );
-		$a['x_invoice_num']		= $request->invoice->invoice_number;
-
-		if ( is_array( $request->int_var['amount'] ) ) {
-			$a['x_amount']			= $request->int_var['amount']['amount'];
-		} else {
-			$a['x_amount']			= $request->int_var['amount'];
-		}
-
-		$a['x_first_name']		= trim( $request->int_var['params']['billFirstName'] );
-		$a['x_last_name']		= trim( $request->int_var['params']['billLastName'] );
-
-		if ( isset( $request->int_var['params']['billZip'] ) ) {
-			if ( isset( $request->int_var['params']['billAddress'] ) ) {
-				$a['x_address']		= trim( $request->int_var['params']['billAddress'] );
-				$a['x_city']		= trim( $request->int_var['params']['billCity'] );
-				$a['x_state']		= trim( $request->int_var['params']['billState'] );
-			}
-
-			$a['x_zip']			= trim( $request->int_var['params']['billZip'] );
-
-			if ( isset( $request->int_var['params']['billAddress'] ) ) {
-				$a['x_country']			= trim( $request->int_var['params']['billCountry'] );
-			}
-		}
-
-		if ( $this->settings['testmode'] ) {
-			$a['x_test_request']		= "TRUE";
-		}
-
-		$a = $this->customParams( $this->settings['customparams'], $a, $request );
-
-		$stringarray = array();
-		foreach ( $a as $name => $value ) {
-			if ( is_array( $value ) ) {
-				foreach ( $value as $v ) {
-					$stringarray[] = $name . '=' . urlencode( stripslashes( $v ) );
-				}
-			} else {
-				$stringarray[] = $name . '=' . urlencode( stripslashes( $value ) );
-			}
-		}
-
-		$string = implode( '&', $stringarray );
-
-		return $string;
+		aecDebug($post);
+		
+		return $response;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	function validateNotification( $response, $post, $invoice )
 	{
-		$path = "/gateway/transact.dll";
-
-		if ( !empty( $this->settings['dumpmode'] ) ) {
-			$path = "/tools/datavalidation";
-			$url = "http://developer.authorize.net" . $path;
-		} elseif ( $this->settings['testmode'] ) {
-			$url = "https://test.authorize.net" . $path;
-		} else {
-			$url = "https://secure.authorize.net" . $path;
-		}
-
-		$response = $this->transmitRequest( $url, $path, $xml, 443 );
-
-		if ( !empty( $this->settings['dumpmode'] ) ) {
-			echo "<h1>Request:</h1>";
-			echo "<pre>";
-			echo print_r($request);
-			echo "</pre>";
-			echo "<h1>We send:</h1>";
-			echo "<pre>";
-			echo urldecode(str_replace( "&", "\n", $xml ));
-			echo "</pre>";
-			echo "<h1>Authorize.net reponds:</h1>";
-			echo $response;
-			exit;
-		}
-
-		$return['valid'] = false;
-		$return['raw'] = $response;
-
-		if ( $response ) {
-			$returnarray = explode( '|', $response );
-			$i = 0;
-			$responsearray = array();
-			foreach ( $returnarray as $content ) {
-				$i++;
-				$fval = $content;
-
-				switch( $i ) {
-					case 1:		$fname = 'response_code';		break;
-					case 2:		$fname = 'response_subcode';	break;
-					case 3:		$fname = 'response_reason_code';break;
-					case 4:		$fname = 'response_reason_text';break;
-					case 5:		$fname = 'approval_code';		break;
-					case 6:		$fname = 'avs_result_code';		break;
-					case 7:		$fname = 'transaction_id';		break;
-					case 8:		$fname = 'invoice_number';		break;
-					case 9:		$fname = 'description';			break;
-					case 10:	$fname = 'amount';				break;
-					case 11:	$fname = 'method';				break;
-					case 12:	$fname = 'transaction_type';	break;
-					case 13:	$fname = 'customer_id';			break;
-					case 14:	$fname = 'billFirstName';		break;
-					case 15:	$fname = 'billLastName';		break;
-					case 16:	$fname = 'company';				break;
-					case 17:	$fname = 'billAddress';			break;
-					case 18:	$fname = 'billCity';			break;
-					case 19:	$fname = 'billState';			break;
-					case 20:	$fname = 'billZip';				break;
-					case 21:	$fname = 'billCountry';			break;
-					case 22:	$fname = 'phone';				break;
-					case 23:	$fname = 'fax';					break;
-					case 24:	$fname = 'email';				break;
-					case 25:	$fname = 'shipToFirstName';		break;
-					case 26:	$fname = 'shipToLastName';		break;
-					case 27:	$fname = 'shipToCompany';		break;
-					case 28:	$fname = 'shipToAddress';		break;
-					case 29:	$fname = 'shipToCity';			break;
-					case 30:	$fname = 'shipToState';			break;
-					case 31:	$fname = 'shipToZip';			break;
-					case 32:	$fname = 'shipToCountry';		break;
-					case 33:	$fname = 'tax';					break;
-					case 34:	$fname = 'duty';				break;
-					case 35:	$fname = 'freight';				break;
-					case 36:	$fname = 'tax_exempt';			break;
-					case 37:	$fname = 'po_num';				break;
-					case 38:	$fname = 'md5';					break;
-					case 39:
-						$fname = 'card_response';
-
-						if ( $content == "M" ) {
-							$fval = "M - Match";
-						} elseif ( $content == "N" ) {
-							$fval = "N - No Match";
-						} elseif($content == "P" ) {
-							$fval = "P - Not Processed";
-						} elseif($content == "S" ) {
-							$fval = "S - Should have been present";
-						} elseif ( $content == "U" ) {
-							$fval = "U - Issuer unable to process request";
-						} else {
-							$fval = "NO VALUE RETURNED";
-						}
-						break;
-					default:
-						continue;
-						break;
-				}
-
-				$responsearray[$fname] = $fval;
-			}
-
-			$return['invoice'] = $responsearray['invoice_number'];
-
-			if ( ( $responsearray['response_code'] == 1 ) || ( strcmp( $responsearray['response_reason_text'], "This transaction has been approved." ) === 0 ) ) {
-				$return['valid'] = 1;
-			} else {
-				$return['error'] = $responsearray['response_reason_text'];
-			}
-
-			$return['invoiceparams'] = array( "transaction_id" => $responsearray['transaction_id'] );
-
-			$return['raw'] = $responsearray;
-		}
-
-		return $return;
+		
 	}
 }
 ?>
