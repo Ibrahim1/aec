@@ -116,7 +116,7 @@ class HTML_myCommon
 	{
 		?><div class="adminheading">
 			<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/<?php echo $image; ?>.png">
-			<h2><?php echo JText::_($page) . ( !empty( $extratext ) ? ' - ' . $extratext : '' ); ?></h2>
+			<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( !empty( $extratext ) ? ' - ' . $extratext : '' ); ?></h2>
 		</div>
 		<?php
 	}
@@ -1859,7 +1859,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_PLAN_INFO', 'aec_symbol_plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_CMN_NEW') );
+		HTML_myCommon::getHeader( '', 'aec_symbol_plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW') );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
