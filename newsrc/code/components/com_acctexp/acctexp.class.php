@@ -318,7 +318,7 @@ class metaUser
 	function temporaryRFIX()
 	{
 		if ( !empty( $this->meta->plan_history->used_plans ) ) {
-			$used_plans= $this->meta->plan_history->used_plans;
+			$used_plans = $this->meta->plan_history->used_plans;
 		} else {
 			$used_plans = array();
 		}
@@ -1217,7 +1217,7 @@ class metaUser
 
 	function getProperty( $key, $test=false )
 	{
-		return AECToolbox::getObjectProperty( $this, $key , $test);
+		return AECToolbox::getObjectProperty( $this, $key, $test );
 	}
 
 	function getPreviousPlan()
@@ -14922,7 +14922,19 @@ class reWriteEngine
 
 				if ( !empty( $this->data['metaUser']->meta->custom_params ) ) {
 					foreach ( $this->data['metaUser']->meta->custom_params as $k => $v ) {
-						$this->rewrite['user_' . $k] = $v;
+						if ( is_array( $v ) ) {
+							foreach ( $v as $xk => $xv ) {
+								if ( is_array( $xv ) ) {
+									foreach ( $xv as $xyk => $xyv ) {
+										$this->rewrite['user_'.$k.'_'.$xk.'_'.$xyk] = $xyv;
+									}
+								} else {
+									$this->rewrite['user_'.$k.'_'.$xk] = $xv;
+								}
+							}
+						} else {
+							$this->rewrite['user_' . $k] = $v;
+						}
 					}
 				}
 
@@ -15033,7 +15045,7 @@ class reWriteEngine
 		$search = array();
 		$replace = array();
 		foreach ( $this->rewrite as $name => $replacement ) {
-			if ( is_array( $replacement ) ) {
+			if ( is_array( $replacement ) ) {var_dump($name);var_dump($replacement);
 				$replacement = implode( $replacement );
 			}
 
