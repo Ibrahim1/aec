@@ -333,8 +333,9 @@ if ( !empty( $task ) ) {
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$pending	= aecGetParam( 'pending', 0 );
 			$userid		= aecGetParam( 'userid', 0 );
+			$return		= aecGetParam( 'return', 0 );
 
-			cancelInvoice( $option, $invoice, $pending, $userid );
+			cancelInvoice( $option, $invoice, $pending, $userid, $return );
 			break;
 
 		case 'planaction':
@@ -1301,7 +1302,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 	}
 }
 
-function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
+function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=null )
 {
 	$db = &JFactory::getDBO();
 
@@ -1336,7 +1337,11 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid )
 	if ( $pending ) {
 		pending( $option, $userid );
 	} else {
-		subscriptionDetails( $option, 'invoices' );
+		if ( !empty( $return ) ) {
+			aecRedirect( base64_decode( $return ) );
+		} else {
+			subscriptionDetails( $option, 'invoices' );
+		}
 	}
 
 }
@@ -1639,7 +1644,7 @@ function processNotification( $option, $processor )
 			break;
 	}
 
-	//aecDebug( "ResponseFunction:processNotification" );aecDebug( "GET:".json_encode( $_GET ) );aecDebug( "POST:".json_encode( $_POST ) );
+	//aecDebug( "ResponseFunction:processNotification" );aecDebug( $_GET );aecDebug( $_POST );
 
 	$response = array();
 	$response['fullresponse'] = aecPostParamClear( $_POST );

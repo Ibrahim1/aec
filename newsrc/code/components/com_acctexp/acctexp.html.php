@@ -18,6 +18,23 @@ class HTML_frontEnd
 		$this->aec_styling( 'com_acctexp' );
 	}
 
+	function page( $page )
+	{
+		global $aecConfig;
+
+		$files = array( 'aec_start', $page, 'aec_end' );
+
+		foreach ( $files as $file ) {
+			$override_path = JURI::root(true) . '/template/' . $template . '/html/com_acctexp/' . $file;
+
+			if ( file_exists( $override_path ) ) {
+				include( $override_path );
+			} else {
+				include( JURI::root(true) . '/components/com_acctexp/tmpl/' . $file );
+			}
+		}
+	}
+
 	function aec_styling( $option )
 	{
 		$document=& JFactory::getDocument();
@@ -26,8 +43,6 @@ class HTML_frontEnd
 
 	function expired( $option, $metaUser, $expiration, $invoice, $trial, $continue=0 )
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		$intro = "&intro=0";
@@ -98,8 +113,6 @@ class HTML_frontEnd
 
 	function hold( $option, $metaUser )
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		if ($aecConfig->cfg['customtext_hold_keeporiginal'] ) {?>
@@ -119,8 +132,6 @@ class HTML_frontEnd
 
 	function pending( $option, $objUser, $invoice, $reason=0 )
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		$actions =	JText::_('PENDING_OPENINVOICE')
@@ -176,8 +187,6 @@ class HTML_frontEnd
 
 	function subscriptionDetails( $option, $tabs, $sub, $invoices, $metaUser, $mi, $subscriptions = null, $custom = null, $properties )
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		$trial = false;
@@ -379,8 +388,6 @@ class HTML_frontEnd
 
 	function notAllowed( $option, $processors, $registerlink, $loggedin = 0 )
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		if ( !is_object( $this ) ) {
@@ -482,8 +489,6 @@ class HTML_frontEnd
 		if ( $SQLDate == '' ) {
 			return JText::_('AEC_EXPIRE_NOT_SET');
 		} else {
-			$db = &JFactory::getDBO();
-
 			$retVal = AECToolbox::formatDate( $SQLDate );
 
 			if ( $check ) {
