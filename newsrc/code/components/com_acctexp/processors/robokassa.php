@@ -77,8 +77,8 @@ class processor_robokassa extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['amount_paid']	= $post['nOutSum'];
-		$response['invoice'] 		= AECfetchfromDB::InvoiceNumberfromId( $post['nInvId'] );
+		$response['amount_paid']	= number_format( $post['OutSum'], 2 );
+		$response['invoice'] 		= AECfetchfromDB::InvoiceNumberfromId( $post['InvId'] );
 
 		return $response;
 	}
@@ -86,26 +86,34 @@ class processor_robokassa extends POSTprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
-		
-		if ( $post['OKnInvId'] != 'OK'.$invoice->id ) {
-			$response['error'] = 'Payment Failed';
-		} else  {
-			if ( $post['sSignatureValue'] != $this->getHash( $invoice ) ) {
-				$response['error'] = 'Security Code Mismatch';
-			} else {
-				$response['valid'] = true;
-			}
+
+		$invoice->amount = $post['OutSum'];
+
+		if ( $post['SignatureValue'] != $this->getHash( $invoice, false ) ) {
+			$response['error'] = 'Security Code Mismatch';
+		} else {
+			$response['valid'] = true;
 		}
-		
+
 		return $response;
 	}
 
-	function getHash( $invoice )
+	function getHash( $invoice, $send=true )
 	{
 		// MD5 signature formed from the parameters, separated by ':' with sMerchantPass2 added at the end
 		// i.e. nOutSum:nInvId:sMerchantPass2[:sorted_merchant_parameters]
 
-		return md5( trim($this->settings['login']).':'.$invoice->amount.':'.$invoice->id.':'.trim($this->settings['pass']) );
+		$vars = array();
+
+		if ( $send ) {
+			$vars[] = trim($this->settings['login']);
+		}
+
+		$vars[] = $invoice->amount;
+		$vars[] = $invoice->id;
+		$vars[] = trim($this->settings['pass']);
+
+		return md5( implode( ':', $vars ) );
 	}
 }
 ?>
