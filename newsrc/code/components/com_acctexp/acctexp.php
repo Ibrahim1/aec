@@ -552,6 +552,41 @@ class aecControl
 		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
 	}
 
+	function access_denied( $cfg, $metaUser )
+	{
+		
+	}
+
+	function cancel( $cfg, $metaUser )
+	{
+		
+	}
+
+	function cart( $cfg, $metaUser )
+	{
+		
+	}
+
+	function checkout( $cfg, $metaUser )
+	{
+		
+	}
+
+	function confirmation( $cfg, $metaUser )
+	{
+		
+	}
+
+	function error( $cfg, $metaUser )
+	{
+		
+	}
+
+	function exception( $cfg, $metaUser )
+	{
+		
+	}
+
 	function expired( $cfg, $metaUser )
 	{
 		$db = &JFactory::getDBO();
@@ -618,6 +653,22 @@ class aecControl
 			aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
 		}
 	}
+
+	function hold( $cfg, $metaUser )
+	{
+		
+	}
+
+	function pending( $cfg, $metaUser )
+	{
+		
+	}
+
+	function thanks( $cfg, $metaUser )
+	{
+		
+	}
+	
 }
 
 function hold( $option, $userid )
