@@ -1,5 +1,5 @@
 <?php
-global $aecConfig;
+
 
 HTML_frontend::aec_styling($option);
 

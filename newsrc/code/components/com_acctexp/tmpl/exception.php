@@ -1,5 +1,5 @@
 <?php
-global $aecConfig;
+
 
 HTML_frontend::aec_styling( $option );
 
@@ -7,15 +7,15 @@ HTML_frontend::aec_styling( $option );
 <div class="componentheading"><?php echo $hasform ? JText::_('EXCEPTION_TITLE') : JText::_('EXCEPTION_TITLE_NOFORM') ; ?></div>
 <div id="checkout">
 	<?php
-	if ( $aecConfig->cfg['customtext_exception_keeporiginal'] ) { ?>
+	if ( $cfg->cfg['customtext_exception_keeporiginal'] ) { ?>
 		<p><?php echo $hasform ? JText::_('EXCEPTION_INFO') : ""; ?></p>
 		<?php
 	}
-	if ( $aecConfig->cfg['customtext_exception'] ) { ?>
-		<p><?php echo $aecConfig->cfg['customtext_exception']; ?></p>
+	if ( $cfg->cfg['customtext_exception'] ) { ?>
+		<p><?php echo $cfg->cfg['customtext_exception']; ?></p>
 		<?php
 	} ?>
-	<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+	<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 	<table id="aec_checkout">
 	<?php
 		foreach ( $InvoiceFactory->exceptions as $eid => $ex ) {
@@ -66,7 +66,7 @@ HTML_frontend::aec_styling( $option );
 			<?php
 			if ( !empty( $InvoiceFactory->pp ) ) {
 				if ( is_object( $InvoiceFactory->pp ) ) {
-					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $cfg->cfg['displayccinfo'] );
 				}
 			}
 			?>

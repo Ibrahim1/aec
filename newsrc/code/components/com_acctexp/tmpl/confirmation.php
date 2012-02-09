@@ -1,5 +1,5 @@
 <?php
-global $aecConfig;
+
 
 if ( !empty( $user->id ) ) {
 	$userid = $user->id;
@@ -12,7 +12,7 @@ HTML_frontend::aec_styling( $option );
 
 <div class="componentheading"><?php echo JText::_('CONFIRM_TITLE'); ?></div>
 <?php
-if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
+if ( !empty( $cfg->cfg['tos'] ) ) { ?>
 	<script type="text/javascript">
 		/* <![CDATA[ */
 		function submitPayment() {
@@ -39,10 +39,10 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 				<td><p><?php echo $InvoiceFactory->plan->name; ?></p></td>
 				<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
 			</tr>
-			<?php if ( empty( $userid ) && $aecConfig->cfg['confirmation_changeusername'] ) { ?>
+			<?php if ( empty( $userid ) && $cfg->cfg['confirmation_changeusername'] ) { ?>
 			<tr>
 				<td>
-					<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $cfg->cfg['ssl_signup'] ); ?>" method="post">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
 						<input type="hidden" name="task" value="subscribe" />
@@ -57,9 +57,9 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 						<?php echo JHTML::_( 'form.token' ); ?>
 					</form>
 				</td>
-				<?php if ( empty( $userid ) && $aecConfig->cfg['confirmation_changeusage'] ) { ?>
+				<?php if ( empty( $userid ) && $cfg->cfg['confirmation_changeusage'] ) { ?>
 				<td colspan="2">
-					<form class="aectextright" name="backFormUserPlan" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<form class="aectextright" name="backFormUserPlan" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $cfg->cfg['ssl_signup'] ); ?>" method="post">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
 						<input type="hidden" name="task" value="subscribe" />
@@ -74,15 +74,15 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 				<?php } ?>
 			</tr>
 			<?php } ?>
-			<?php if ( !empty( $InvoiceFactory->plan->desc ) && $aecConfig->cfg['confirmation_display_descriptions'] ) { ?>
+			<?php if ( !empty( $InvoiceFactory->plan->desc ) && $cfg->cfg['confirmation_display_descriptions'] ) { ?>
 			<tr>
 				<td colspan="3" class="aec_left"><strong><?php echo JText::_('CONFIRM_YOU_HAVE_SELECTED'); ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
 			</tr>
 			<?php } ?>
-			<?php if ( $aecConfig->cfg['confirmation_changeusage'] && !( empty( $userid ) && $aecConfig->cfg['confirmation_changeusername'] ) ) { ?>
+			<?php if ( $cfg->cfg['confirmation_changeusage'] && !( empty( $userid ) && $cfg->cfg['confirmation_changeusername'] ) ) { ?>
 			<tr>
 				<td colspan="3" class="aec_left">
-					<form name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<form name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $cfg->cfg['ssl_signup'] ); ?>" method="post">
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
 						<input type="hidden" name="task" value="subscribe" />
@@ -98,7 +98,7 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 			<?php } ?>
 		</table>
 	</div>
-	<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=saveSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+	<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=saveSubscription', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 	<table>
 		<tr>
 			<td id="confirmation_extra">
@@ -113,22 +113,22 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 					echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
 				} ?>
 				<?php
-				if ( $aecConfig->cfg['customtext_confirm'] ) { ?>
-					<p><?php echo $aecConfig->cfg['customtext_confirm']; ?></p>
+				if ( $cfg->cfg['customtext_confirm'] ) { ?>
+					<p><?php echo $cfg->cfg['customtext_confirm']; ?></p>
 					<?php
 				}
-				if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
+				if ( $cfg->cfg['customtext_confirm_keeporiginal'] ) { ?>
 					<p><?php echo JText::_('CONFIRM_INFO'); ?></p>
 					<?php
 				}
 				if ( $InvoiceFactory->coupons['active'] ) {
-					if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) {
+					if ( !empty( $cfg->cfg['confirmation_coupons'] ) ) {
 						?><p><?php echo JText::_('CONFIRM_COUPON_INFO_BOTH'); ?></p><?php
 					} else {
 						?><p><?php echo JText::_('CONFIRM_COUPON_INFO'); ?></p><?php
 					}
 				} ?>
-				<?php if ( !empty( $aecConfig->cfg['confirmation_coupons'] ) ) { ?>
+				<?php if ( !empty( $cfg->cfg['confirmation_coupons'] ) ) { ?>
 					<strong><?php echo JText::_('CHECKOUT_COUPON_CODE'); ?></strong>
 					<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 				<?php } ?>
@@ -137,9 +137,9 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 		<?php
 		$makegift = false;
 
-		if ( !empty( $aecConfig->cfg['confirm_as_gift'] ) ) {
-			if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-				if ( $InvoiceFactory->metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+		if ( !empty( $cfg->cfg['confirm_as_gift'] ) ) {
+			if ( !empty( $cfg->cfg['checkout_as_gift_access'] ) ) {
+				if ( $InvoiceFactory->metaUser->hasGroup( $cfg->cfg['checkout_as_gift_access'] ) ) {
 					$makegift = true;
 				}
 			} else {
@@ -156,7 +156,7 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 				<tr>
 					<td class="giftdetails">
 						<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-							<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftConfirm&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+							<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftConfirm&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $cfg->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 							<input type="hidden" name="user_ident" value="<?php echo $InvoiceFactory->invoice->params['target_username']; ?>" />
 						<?php } else { ?>
 							<p><?php echo JText::_('CHECKOUT_GIFT_INFO'); ?></p>
@@ -177,13 +177,13 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 				<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
 				<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
 				<?php }
-				if ( !empty( $aecConfig->cfg['tos_iframe'] ) && !empty( $aecConfig->cfg['tos'] ) ) { ?>
-					<iframe src="<?php echo $aecConfig->cfg['tos']; ?>" width="100%" height="150px"></iframe>
+				if ( !empty( $cfg->cfg['tos_iframe'] ) && !empty( $cfg->cfg['tos'] ) ) { ?>
+					<iframe src="<?php echo $cfg->cfg['tos']; ?>" width="100%" height="150px"></iframe>
 					<p><input name="tos" type="checkbox" /><?php echo JText::_('CONFIRM_TOS_IFRAME'); ?></p>
 					<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
 					<?php
-				} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
-					<p><input name="tos" type="checkbox" /><?php echo JText::sprintf( 'CONFIRM_TOS', $aecConfig->cfg['tos'] ); ?></p>
+				} elseif ( !empty( $cfg->cfg['tos'] ) ) { ?>
+					<p><input name="tos" type="checkbox" /><?php echo JText::sprintf( 'CONFIRM_TOS', $cfg->cfg['tos'] ); ?></p>
 					<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
 					<?php
 				} else { ?>
@@ -199,7 +199,7 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 		<tr><td>
 			<table>
 				<?php if ( is_object( $InvoiceFactory->pp ) ) {
-					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $cfg->cfg['displayccinfo'] );
 				} ?>
 			</table>
 		</td></tr>

@@ -1,5 +1,5 @@
 <?php
-global $aecConfig;
+
 
 $actions =	JText::_('PENDING_OPENINVOICE')
 . ' <a href="'
@@ -19,14 +19,14 @@ if ( $reason !== 0 ) {
 	$actions .= ' ' . $reason;
 }
 
-if ( $aecConfig->cfg['customtext_pending_keeporiginal'] ) { ?>
+if ( $cfg->cfg['customtext_pending_keeporiginal'] ) { ?>
 	<div class="componentheading"><?php echo JText::_('PENDING_TITLE'); ?></div>
 	<p class="expired_dear"><?php echo sprintf( JText::_('DEAR'), $objUser->name ) . ','; ?></p>
 	<p class="expired_date"><?php echo JText::_('WARN_PENDING'); ?></p>
 	<?php
 }
-if ( $aecConfig->cfg['customtext_pending'] ) { ?>
-	<p><?php echo $aecConfig->cfg['customtext_pending']; ?></p>
+if ( $cfg->cfg['customtext_pending'] ) { ?>
+	<p><?php echo $cfg->cfg['customtext_pending']; ?></p>
 	<?php
 } ?>
 <div id="box_pending">
@@ -34,7 +34,7 @@ if ( $aecConfig->cfg['customtext_pending'] ) { ?>
 if ( strcmp($invoice, "none") === 0 ) { ?>
 	<p><?php echo JText::_('PENDING_NOINVOICE'); ?></p>
 	<div id="upgrade_button">
-		<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewSubscription', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+		<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewSubscription', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
 			<input type="hidden" name="userid" value="<?php echo $objUser->id; ?>" />
 			<input type="hidden" name="task" value="renewSubscription" />

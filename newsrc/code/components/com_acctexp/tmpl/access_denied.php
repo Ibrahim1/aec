@@ -1,10 +1,10 @@
 <?php
-global $aecConfig;
+
 
 if ( !is_object( $this ) ) {
 	HTML_frontEnd::aec_styling();
 } ?>
-<?php if ( $aecConfig->cfg['customtext_notallowed_keeporiginal'] ) { ?>
+<?php if ( $cfg->cfg['customtext_notallowed_keeporiginal'] ) { ?>
 	<div class="componentheading"><?php echo JText::_('NOT_ALLOWED_HEADLINE'); ?></div>
 	<p>
 		<?php
@@ -20,17 +20,17 @@ if ( !is_object( $this ) ) {
 	</p>
 	<?php
 }
-if ( $aecConfig->cfg['customtext_notallowed'] ) { ?>
-	<?php echo $aecConfig->cfg['customtext_notallowed']; ?>
+if ( $cfg->cfg['customtext_notallowed'] ) { ?>
+	<?php echo $cfg->cfg['customtext_notallowed']; ?>
 <?php } ?>
 <?php
-if ( !empty( $processors ) && !empty( $aecConfig->cfg['gwlist'] ) ) { ?>
+if ( !empty( $processors ) && !empty( $cfg->cfg['gwlist'] ) ) { ?>
 	<p>&nbsp;</p>
 	<p><?php echo JText::_('NOT_ALLOWED_SECONDPAR'); ?></p>
 	<table id="cc_list">
 		<?php
 		foreach ( $processors as $processor ) {
-			HTML_frontEnd::processorInfo( $option, $processor, $aecConfig->cfg['displayccinfo'] );
+			HTML_frontEnd::processorInfo( $option, $processor, $cfg->cfg['displayccinfo'] );
 		} ?>
 	</table>
 	<?php

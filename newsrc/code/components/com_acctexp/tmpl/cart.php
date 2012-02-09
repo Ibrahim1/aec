@@ -1,5 +1,5 @@
 <?php
-global $aecConfig;
+
 
 $user = &JFactory::getUser();
 
@@ -8,7 +8,7 @@ HTML_frontend::aec_styling( $option );
 
 <div class="componentheading"><?php echo JText::_('CART_TITLE'); ?></div>
 <?php
-if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
+if ( !empty( $cfg->cfg['tos'] ) ) { ?>
 	<script type="text/javascript">
 		/* <![CDATA[ */
 		function submitPayment() {
@@ -28,8 +28,8 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 		<p>Your Shopping Cart is empty!</p>
 		<?php } else { ?>
 		<p>&nbsp;</p>
-		<div id="clear_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo JText::_('CART_CLEAR_ALL'); ?></a></div>
-		<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+		<div id="clear_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart&'. JUtility::getToken() .'=1', $cfg->cfg['ssl_signup'] ); ?>"><?php echo JText::_('CART_CLEAR_ALL'); ?></a></div>
+		<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 		<table>
 			<tr>
 				<th>Item</th>
@@ -46,7 +46,7 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 						<td><?php echo $bitem['cost']; ?></td>
 						<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid; ?>" value="<?php echo $bitem['quantity']; ?>" /></td>
 						<td><?php echo $bitem['cost_total']; ?></td>
-						<td><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>"><?php echo JText::_('CART_DELETE_ITEM'); ?></a></td>
+						<td><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid.'&'. JUtility::getToken() .'=1', $cfg->cfg['ssl_signup'] ); ?>"><?php echo JText::_('CART_DELETE_ITEM'); ?></a></td>
 					</tr><?php
 				} else {
 					?><tr>
@@ -70,10 +70,10 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 		<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
 		<p>Save Registration to Continue Shopping:</p>
 		<?php } else {
-			if ( !empty( $aecConfig->cfg['customlink_continueshopping'] ) ) {
-				$continueurl = $aecConfig->cfg['customlink_continueshopping'];
+			if ( !empty( $cfg->cfg['customlink_continueshopping'] ) ) {
+				$continueurl = $cfg->cfg['customlink_continueshopping'];
 			} else {
-				$continueurl = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=subscribe', $aecConfig->cfg['ssl_signup'] );
+				$continueurl = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=subscribe', $cfg->cfg['ssl_signup'] );
 			}
 		?>
 		<div id="continue_button">
@@ -84,7 +84,7 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 		<?php } ?>
 	</div>
 	<?php if ( !empty( $InvoiceFactory->cart ) ) { ?>
-	<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=confirmCart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+	<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=confirmCart', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 	<table>
 		<tr>
 			<td id="confirmation_extra">
@@ -99,11 +99,11 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 					echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
 				} ?>
 				<?php
-				if ( $aecConfig->cfg['customtext_confirm'] ) { ?>
-					<p><?php echo $aecConfig->cfg['customtext_confirm']; ?></p>
+				if ( $cfg->cfg['customtext_confirm'] ) { ?>
+					<p><?php echo $cfg->cfg['customtext_confirm']; ?></p>
 					<?php
 				}
-				if ( $aecConfig->cfg['customtext_confirm_keeporiginal'] ) { ?>
+				if ( $cfg->cfg['customtext_confirm_keeporiginal'] ) { ?>
 					<p><?php echo JText::_('CART_INFO'); ?></p>
 					<?php
 				} ?>
@@ -112,9 +112,9 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 		<?php
 		$makegift = false;
 
-		if ( !empty( $aecConfig->cfg['confirm_as_gift'] ) ) {
-			if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-				if ( $InvoiceFactory->metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+		if ( !empty( $cfg->cfg['confirm_as_gift'] ) ) {
+			if ( !empty( $cfg->cfg['checkout_as_gift_access'] ) ) {
+				if ( $InvoiceFactory->metaUser->hasGroup( $cfg->cfg['checkout_as_gift_access'] ) ) {
 					$makegift = true;
 				}
 			} else {
@@ -131,7 +131,7 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 				<tr>
 					<td class="giftdetails">
 						<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-							<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGiftCart&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+							<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGiftCart&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $cfg->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 						<?php } else { ?>
 							<p><?php echo JText::_('CHECKOUT_GIFT_INFO'); ?></p>
 							<input type="text" size="20" name="user_ident" class="inputbox" value="" />
@@ -149,13 +149,13 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 				<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
 				<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
 				<?php }
-				if ( !empty( $aecConfig->cfg['tos_iframe'] ) && !empty( $aecConfig->cfg['tos'] ) ) { ?>
-					<iframe src="<?php echo $aecConfig->cfg['tos']; ?>" width="100%" height="150px"></iframe>
+				if ( !empty( $cfg->cfg['tos_iframe'] ) && !empty( $cfg->cfg['tos'] ) ) { ?>
+					<iframe src="<?php echo $cfg->cfg['tos']; ?>" width="100%" height="150px"></iframe>
 					<p><input name="tos" type="checkbox" /><?php echo JText::_('CONFIRM_TOS_IFRAME'); ?></p>
 					<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
 					<?php
-				} elseif ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
-					<p><input name="tos" type="checkbox" /><?php echo sprintf( JText::_('CONFIRM_TOS'), $aecConfig->cfg['tos'] ); ?></p>
+				} elseif ( !empty( $cfg->cfg['tos'] ) ) { ?>
+					<p><input name="tos" type="checkbox" /><?php echo sprintf( JText::_('CONFIRM_TOS'), $cfg->cfg['tos'] ); ?></p>
 					<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
 					<?php
 				} else { ?>
@@ -170,7 +170,7 @@ if ( !empty( $aecConfig->cfg['tos'] ) ) { ?>
 				<?php
 				if ( !empty( $InvoiceFactory->pp ) ) {
 					if ( is_object( $InvoiceFactory->pp ) ) {
-						HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+						HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $cfg->cfg['displayccinfo'] );
 					}
 				} ?>
 			</table>

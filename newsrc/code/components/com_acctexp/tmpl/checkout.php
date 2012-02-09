@@ -1,5 +1,5 @@
 <?php
-global $aecConfig;
+
 
 $user = &JFactory::getUser();
 
@@ -24,7 +24,7 @@ HTML_frontend::aec_styling( $option );
 	?>
 	<table id="aec_checkout">
 	<?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
-		<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+		<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 		<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
 		<?php echo JHTML::_( 'form.token' ); ?>
 		</form><br /><br />
@@ -105,10 +105,10 @@ HTML_frontend::aec_styling( $option );
 							$t = $ta;
 
 							// Strip out currency symbol and replace with blanks
-							if ( !$aecConfig->cfg['amount_currency_symbolfirst'] ) {
+							if ( !$cfg->cfg['amount_currency_symbolfirst'] ) {
 								$strlen = 2;
 
-								if ( !$aecConfig->cfg['amount_currency_symbol'] ) {
+								if ( !$cfg->cfg['amount_currency_symbol'] ) {
 									$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
 								}
 
@@ -242,7 +242,7 @@ HTML_frontend::aec_styling( $option );
 			<tr>
 				<td class="coupondetails">
 					<p><?php echo JText::_('CHECKOUT_COUPON_INFO'); ?></p>
-					<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 						<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="task" value="InvoiceAddCoupon" />
@@ -258,9 +258,9 @@ HTML_frontend::aec_styling( $option );
 
 	$makegift = false;
 
-	if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
-		if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-			if ( $InvoiceFactory->metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+	if ( !empty( $cfg->cfg['checkout_as_gift'] ) ) {
+		if ( !empty( $cfg->cfg['checkout_as_gift_access'] ) ) {
+			if ( $InvoiceFactory->metaUser->hasGroup( $cfg->cfg['checkout_as_gift_access'] ) ) {
 				$makegift = true;
 			}
 		} else {
@@ -278,10 +278,10 @@ HTML_frontend::aec_styling( $option );
 			<tr>
 				<td class="giftdetails">
 					<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-						<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGift&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $aecConfig->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
+						<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGift&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $cfg->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
 					<?php } else { ?>
 					<p><?php echo JText::_('CHECKOUT_GIFT_INFO'); ?></p>
-					<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 						<input type="text" size="20" name="user_ident" class="inputbox" value="" />
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="task" value="InvoiceMakeGift" />
@@ -300,7 +300,7 @@ HTML_frontend::aec_styling( $option );
 		<table width="100%" id="paramsbox">
 			<tr>
 				<td class="append_button">
-					<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddParams', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+					<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddParams', $cfg->cfg['ssl_signup'] ); ?>" method="post">
 						<?php echo $params; ?>
 						<input type="hidden" name="option" value="<?php echo $option; ?>" />
 						<input type="hidden" name="task" value="InvoiceAddParams" />
@@ -357,7 +357,7 @@ if ( !empty( $var ) ) { ?>
 		<?php
 		if ( !empty( $InvoiceFactory->pp ) ) {
 			if ( is_object( $InvoiceFactory->pp ) ) {
-				HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $aecConfig->cfg['displayccinfo'] );
+				HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $cfg->cfg['displayccinfo'] );
 			}
 		}
 		?>
