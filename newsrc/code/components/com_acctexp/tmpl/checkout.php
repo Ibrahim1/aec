@@ -1,9 +1,16 @@
 <?php
-$user = &JFactory::getUser();
+/**
+ * @version $Id: checkout.php
+ * @package AEC - Account Control Expiration - Membership Manager
+ * @subpackage Main Frontend
+ * @copyright 2012 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
+ */
 
-HTML_frontend::aec_styling( $option );
+// Dont allow direct linking
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
 
-?>
 <div class="componentheading"><?php echo $InvoiceFactory->checkout['checkout_title']; ?></div>
 <div id="checkout">
 	<?php
