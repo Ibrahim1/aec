@@ -526,9 +526,13 @@ function getPage( $page )
 
 	$ctrl = new aecControl();
 
+	$ctrl->cfg = $cfg;
+	$ctrl->option = $option;
+	$ctrl->metaUser = $metaUser;
+
 	// Get Variables
 	if ( method_exists( $ctrl, $page ) ) {
-		$vars = $ctrl->{$page}( $aecConfig, $metaUser );
+		$vars = $ctrl->{$page}();
 
 		if ( !empty( $vars ) ) {
 			foreach ( $vars as $k => $v ) {
@@ -552,42 +556,48 @@ class aecControl
 		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
 	}
 
-	function access_denied( $cfg, $metaUser )
+	function defaultCSS()
+	{
+		$document=& JFactory::getDocument();
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $this->option . '/css/site.css" />' );
+	}
+
+	function access_denied()
+	{
+		$this->defaultCSS();
+	}
+
+	function cancel()
 	{
 		
 	}
 
-	function cancel( $cfg, $metaUser )
+	function cart()
 	{
 		
 	}
 
-	function cart( $cfg, $metaUser )
+	function checkout()
 	{
 		
 	}
 
-	function checkout( $cfg, $metaUser )
+	function confirmation()
 	{
 		
 	}
 
-	function confirmation( $cfg, $metaUser )
+	function error()
 	{
 		
 	}
 
-	function error( $cfg, $metaUser )
+	function exception()
 	{
 		
 	}
 
-	function exception( $cfg, $metaUser )
-	{
-		
-	}
-
-	function expired( $cfg, $metaUser )
+	function expired()
 	{
 		$db = &JFactory::getDBO();
 
@@ -654,17 +664,17 @@ class aecControl
 		}
 	}
 
-	function hold( $cfg, $metaUser )
+	function hold()
 	{
 		
 	}
 
-	function pending( $cfg, $metaUser )
+	function pending()
 	{
 		
 	}
 
-	function thanks( $cfg, $metaUser )
+	function thanks()
 	{
 		
 	}
