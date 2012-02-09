@@ -1,6 +1,4 @@
 <?php
-
-
 HTML_frontend::aec_styling( $option );
 
 ?>
@@ -16,5 +14,3 @@ if ( $cfg->cfg['customtext_cancel_keeporiginal'] ) { ?>
 	</div>
 	<?php
 }
-?><div class="aec_clearfix"></div><?php
-?>

@@ -1,6 +1,4 @@
 <?php
-
-
 if ( !is_object( $this ) ) {
 	HTML_frontEnd::aec_styling();
 } ?>
@@ -35,5 +33,3 @@ if ( !empty( $processors ) && !empty( $cfg->cfg['gwlist'] ) ) { ?>
 	</table>
 	<?php
 }
-?><div class="aec_clearfix"></div><?php
-?>

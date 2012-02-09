@@ -1,6 +1,4 @@
 <?php
-
-
 if ( !empty( $user->id ) ) {
 	$userid = $user->id;
 } else {
@@ -207,6 +205,3 @@ if ( !empty( $cfg->cfg['tos'] ) ) { ?>
 	<?php echo JHTML::_( 'form.token' ); ?>
 	</form>
 </div>
-<div class="aec_clearfix"></div>
-<?php
-?>

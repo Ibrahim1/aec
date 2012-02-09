@@ -1,6 +1,4 @@
 <?php
-
-
 HTML_frontend::aec_styling($option);
 
 if ( !$suppressactions ) {
@@ -28,6 +26,3 @@ if ( !$suppressactions ) {
 	<p><?php echo JText::_('CHECKOUT_ERROR_EXPLANATION') . ( $error ? ( ': ' . $error ) : '' ); ?></p>
 	<p><?php echo $actions; ?></p>
 </div>
-<div class="aec_clearfix"></div>
-<?php
-?>

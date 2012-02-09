@@ -1,6 +1,4 @@
 <?php
-
-
 $user = &JFactory::getUser();
 
 HTML_frontend::aec_styling( $option );
@@ -180,6 +178,3 @@ if ( !empty( $cfg->cfg['tos'] ) ) { ?>
 	</form>
 	<?php } ?>
 </div>
-<div class="aec_clearfix"></div>
-<?php
-?>

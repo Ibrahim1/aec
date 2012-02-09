@@ -1,6 +1,4 @@
 <?php
-
-
 if ($cfg->cfg['customtext_hold_keeporiginal'] ) {?>
 	<div class="componentheading"><?php echo JText::_('HOLD_TITLE'); ?></div>
 	<div id="expired_greeting">

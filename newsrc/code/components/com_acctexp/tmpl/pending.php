@@ -1,6 +1,4 @@
 <?php
-
-
 $actions =	JText::_('PENDING_OPENINVOICE')
 . ' <a href="'
 .  AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice='

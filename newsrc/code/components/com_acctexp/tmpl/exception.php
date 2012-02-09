@@ -1,6 +1,4 @@
 <?php
-
-
 HTML_frontend::aec_styling( $option );
 
 ?>
@@ -73,6 +71,3 @@ HTML_frontend::aec_styling( $option );
 		</td></tr>
 	</table>
 </div>
-<div class="aec_clearfix"></div>
-<?php
-?>

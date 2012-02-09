@@ -1,6 +1,4 @@
 <?php
-
-
 $user = &JFactory::getUser();
 
 HTML_frontend::aec_styling( $option );
@@ -364,6 +362,3 @@ if ( !empty( $var ) ) { ?>
 	</td></tr>
 </table>
 </div>
-<div class="aec_clearfix"></div>
-<?php
-?>
