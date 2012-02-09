@@ -18,23 +18,6 @@ class HTML_frontEnd
 		$this->aec_styling( 'com_acctexp' );
 	}
 
-	function page( $page )
-	{
-		global $aecConfig;
-
-		$files = array( 'aec_start', $page, 'aec_end' );
-
-		foreach ( $files as $file ) {
-			$override_path = JURI::root(true) . '/template/' . $template . '/html/com_acctexp/' . $file;
-
-			if ( file_exists( $override_path ) ) {
-				include( $override_path );
-			} else {
-				include( JURI::root(true) . '/components/com_acctexp/tmpl/' . $file );
-			}
-		}
-	}
-
 	function aec_styling( $option )
 	{
 		$document=& JFactory::getDocument();

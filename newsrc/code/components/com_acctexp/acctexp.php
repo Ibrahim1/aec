@@ -415,6 +415,10 @@ if ( !empty( $task ) ) {
 			apiCall( $app, $key, $request );
 			break;
 
+		case 'testctrl':
+			getPage( 'expired' );
+			break;
+
 		default:
 			if ( strpos( $task, 'notification' ) > 0 ) {
 				$processor = str_replace( 'notification', '', $task );
@@ -498,6 +502,122 @@ function apiCall( $app, $key, $request )
 	}
 
 	header("HTTP/1.0 401 Unauthorized"); die; // die, die
+}
+
+function getPage( $page )
+{
+	global $aecConfig;
+
+	$user = &JFactory::getUser();
+
+	$metaUser = null;
+	if ( $user->id ) {
+		$metaUser = new metaUser( $user->id );
+	}
+
+	$app		= JFactory::getApplication();
+	$template	= $app->getTemplate();
+
+	$override_path = JPATH_SITE . '/templates/' . $template . '/html/com_acctexp/' . $page . '.php';
+
+	$option = 'com_acctexp';
+
+	$cfg = $aecConfig;
+
+	$ctrl = new aecControl();
+
+	// Get Variables
+	if ( method_exists( $ctrl, $page ) ) {
+		$vars = $ctrl->{$page}( $aecConfig, $metaUser );
+
+		if ( !empty( $vars ) ) {
+			foreach ( $vars as $k => $v ) {
+				$$k = $v;
+			}
+		}
+	}
+
+	if ( file_exists( $override_path ) ) {
+		include( $override_path );
+	} else {
+		include( JPATH_SITE . '/components/com_acctexp/tmpl/' . $page . '.php' );
+	}
+}
+
+class aecControl
+{
+	function setTitle( $title )
+	{
+		$document=& JFactory::getDocument();
+		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
+	}
+
+	function expired( $cfg, $metaUser )
+	{
+		$db = &JFactory::getDBO();
+
+		if ( !empty( $metaUser->userid ) ) {
+			$trial		= false;
+			$expired	= false;
+			$invoice	= false;
+
+			if ( $metaUser->hasSubscription ) {
+				// Make sure this really is expired
+				/*if ( !$metaUser->objSubscription->is_expired() ) {
+					return aecNotAuth();
+				}*/
+
+				$expired = strtotime( $metaUser->objSubscription->expiration );
+
+				$trial = ( strcmp($metaUser->objSubscription->status, 'Trial') === 0 );
+				if ( !$trial ) {
+					$params = $metaUser->objSubscription->params;
+					if ( isset( $params['trialflag'])) {
+						$trial = 1;
+					}
+				}
+			}
+
+			$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+
+			if ( $invoices ) {
+				$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
+			} else {
+				$invoice = null;
+			}
+
+			$expiration	= AECToolbox::formatDate( $expired );
+
+			$this->setTitle( JText::_('EXPIRED_TITLE') );
+
+			$continue = false;
+			if ( $cfg->cfg['continue_button'] && $metaUser->hasSubscription ) {
+				$status = SubscriptionPlanHandler::PlanStatus( $metaUser->focusSubscription->plan );
+				if ( !empty( $status ) ) {
+					$continue = true;
+				}
+			}
+
+			$intro = "&intro=0";
+
+			if ( $metaUser->hasSubscription ) {
+				if ( $metaUser->objSubscription->status == "Expired" ) {
+					$intro = "&intro=" . ( $aecConfig->cfg['intro_expired'] ? "0" : "1" );
+				}
+			}
+
+			return array(
+								'invoice' => $invoice,
+								'expiration' => $expiration,
+								'is_trial' => $trial,
+								'is_continue' => $continue,
+								'intro' => $intro
+			);
+			
+		} else {
+			aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
+		}
+	}
 }
 
 function hold( $option, $userid )
