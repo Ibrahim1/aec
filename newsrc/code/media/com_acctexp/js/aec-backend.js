@@ -134,7 +134,7 @@ jQuery(document).ready(function($) {
 	}
 
 	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});
-	jQuery('div.control-group').tooltip({placement: "bottom", selector: '.bstooltip'});
+	jQuery('div.control-group').tooltip({placement: "bottom", selector: '.bstooltip', delay: { show: 300, hide: 400 }});
 
 });
 
