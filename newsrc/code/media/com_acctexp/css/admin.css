@@ -232,9 +232,9 @@ display: inline-block;
 margin: 0;
 }
 
-.tooltip {
+.tooltip-inner {
 font-size: 14px;
-padding: 4px;
+padding: 6px 10px;
 text-align: left;
 }
 
