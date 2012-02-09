@@ -996,7 +996,7 @@ class HTML_AcctExp
 				<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>
 				<h1>Beta-Testers</h1>
 				<p>People who have helped to check releases before they went out:</p>
-				<p>Calum 'polc1410' Polwart, Aleksey Pikulik</p>
+				<p>Calum 'polc1410' Polwart, Aleksey Pikulik, Alex aka Sirooff</p>
 				<h1>Contributors</h1>
 				<p>People who have helped on our code by submitting additions and patches at one place or another:</p>
 				<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design, Carsten Engel, Joel Bassett, Emmanuel Danan, Rebekah Pitt, Daniel Lowhorn, berner, Mitchell Mink, Joshua Tan, Casey Eyring, Thailo van Ree, David Henry, Matthew Weeks, Francois Gagnon, Haris Agic</p>

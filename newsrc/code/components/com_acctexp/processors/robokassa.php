@@ -87,7 +87,7 @@ class processor_robokassa extends POSTprocessor
 	{
 		$response['valid'] = false;
 
-		$invoice->amount = $post['OutSum'];
+		$invoice->amount = number_format( $post['OutSum'], 2 );
 
 		if ( $post['SignatureValue'] != $this->getHash( $invoice, false ) ) {
 			$response['error'] = 'Security Code Mismatch';
