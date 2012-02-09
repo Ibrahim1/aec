@@ -569,32 +569,32 @@ class aecControl
 
 	function cancel()
 	{
-		
+		$this->defaultCSS();
 	}
 
 	function cart()
 	{
-		
+		$this->defaultCSS();
 	}
 
 	function checkout()
 	{
-		
+		$this->defaultCSS();
 	}
 
 	function confirmation()
 	{
-		
+		$this->defaultCSS();
 	}
 
 	function error()
 	{
-		
+		$this->defaultCSS();
 	}
 
 	function exception()
 	{
-		
+		$this->defaultCSS();
 	}
 
 	function expired()
