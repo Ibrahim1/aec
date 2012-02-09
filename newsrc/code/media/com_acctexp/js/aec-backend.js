@@ -36,8 +36,8 @@ jQuery(document).ready(function($) {
 		jQuery("div.popover").fadeOut();
 	});
 
-	jQuery('form#adminForm input, form#adminForm select').change(function() {
-	  jQuery('div.aec-buttons a[disabled="disabled"]').attr("disabled", false);
+	jQuery('form#adminForm').one('focusin', function() {
+	  jQuery('div.aec-buttons a.btn').attr("disabled", false);
 	});
 
 	jQuery('a.quicksearch').on("click", function(e) {

@@ -1568,7 +1568,7 @@ class HTML_AcctExp
 			/* ]]> */
 		</script>
 		<?php
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
