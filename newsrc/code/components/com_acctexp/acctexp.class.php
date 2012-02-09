@@ -16032,9 +16032,9 @@ class AECToolbox
 					$payment_plan = new SubscriptionPlan( $db );
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-					$metaUser->establishFocus( $payment_plan, 'Free', false );
+					$metaUser->establishFocus( $payment_plan, 'free', false );
 
-					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
+					$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'free', 1, 0 );
 
 					return AECToolbox::VerifyUserID( $userid );
 				} else {
@@ -16105,9 +16105,9 @@ class AECToolbox
 			$payment_plan = new SubscriptionPlan( $db );
 			$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
-			$metaUser->establishFocus( $payment_plan, 'Free', false );
+			$metaUser->establishFocus( $payment_plan, 'free', false );
 
-			$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'Free', 1, 0 );
+			$metaUser->focusSubscription->applyUsage( $payment_plan->id, 'free', 1, 0 );
 
 			return AECToolbox::VerifyUser( $metaUser->cmsUser->username );
 		} else {
