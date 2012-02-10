@@ -308,7 +308,6 @@ margin: 0 auto;
 
 form .control-group {
 width: 100%;
-margin-left: 10%;
 margin-bottom: 16px;
 }
 
@@ -326,7 +325,7 @@ list-style: circle;
 }
 
 div.controls select {
-width: 100%;
+width: 90%;
 }
 
 .form-slim {
@@ -696,7 +695,7 @@ line-height: 36px;
 }
 
 table .span6 {
-width: 45%;
+width: 90%;
 }
 
 .infobox_table {
