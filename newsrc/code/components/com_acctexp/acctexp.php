@@ -516,23 +516,26 @@ function getPage( $page )
 	}
 
 	$app		= JFactory::getApplication();
-	$template	= $app->getTemplate();
-
-	$override_path = JPATH_SITE . '/templates/' . $template . '/html/com_acctexp/' . $page . '.php';
 
 	$option = 'com_acctexp';
 
 	$cfg = $aecConfig;
 
-	$ctrl = new aecControl();
+	$tmpl = new aecTemplate();
 
-	$ctrl->cfg = $cfg;
-	$ctrl->option = $option;
-	$ctrl->metaUser = $metaUser;
+	$tmpl->cfg = $cfg;
+	$tmpl->option = 'com_acctexp';
+	$tmpl->metaUser = $metaUser;
+	$tmpl->system_template = $app->getTemplate();
+	$tmpl->paths = array(	'default' => JPATH_SITE . '/components/com_acctexp/tmpl/default/',
+							'current' => JPATH_SITE . '/components/com_acctexp/tmpl/' . $aecConfig->cfg['standard_template'],
+							'system' => JPATH_SITE . '/templates/' . $tmpl->system_template . '/html/com_acctexp/'
+						);
+
 
 	// Get Variables
-	if ( method_exists( $ctrl, $page ) ) {
-		$vars = $ctrl->{$page}();
+	if ( method_exists( $tmpl, $page ) ) {
+		$vars = $tmpl->{$page}();
 
 		if ( !empty( $vars ) ) {
 			foreach ( $vars as $k => $v ) {
@@ -541,14 +544,14 @@ function getPage( $page )
 		}
 	}
 
-	if ( file_exists( $override_path ) ) {
-		include( $override_path );
+	if ( file_exists( $tmpl->paths['system'] . $page . '.php' ) ) {
+		include( $tmpl->paths['system'] . $page . '.php' );
 	} else {
 		include( JPATH_SITE . '/components/com_acctexp/tmpl/' . $page . '.php' );
 	}
 }
 
-class aecControl
+class aecTemplate
 {
 	function setTitle( $title )
 	{
@@ -560,6 +563,17 @@ class aecControl
 	{
 		$document=& JFactory::getDocument();
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $this->option . '/css/site.css" />' );
+	}
+
+	function getTmpl( $file )
+	{
+		$override_path = JPATH_SITE . '/templates/' . $this->system_template . '/html/com_acctexp/' . $file . '.php';
+
+		if ( file_exists( $override_path ) ) {
+			include( $override_path );
+		} else {
+			include( JPATH_SITE . '/components/com_acctexp/tmpl/' . $file . '.php' );
+		}
 	}
 
 	function access_denied()
@@ -599,8 +613,6 @@ class aecControl
 
 	function expired()
 	{
-		$db = &JFactory::getDBO();
-
 		if ( !empty( $metaUser->userid ) ) {
 			$trial		= false;
 			$expired	= false;
@@ -608,9 +620,9 @@ class aecControl
 
 			if ( $metaUser->hasSubscription ) {
 				// Make sure this really is expired
-				/*if ( !$metaUser->objSubscription->is_expired() ) {
+				if ( !$metaUser->objSubscription->is_expired() ) {
 					return aecNotAuth();
-				}*/
+				}
 
 				$expired = strtotime( $metaUser->objSubscription->expiration );
 
