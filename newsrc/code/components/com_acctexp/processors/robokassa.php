@@ -21,9 +21,10 @@ class processor_robokassa extends POSTprocessor
 		$info['statement']		= JText::_('CFG_ROBOKASSA_STATEMENT');
 		$info['description']	= JText::_('CFG_ROBOKASSA_DESCRIPTION');
 		$info['currencies']		= 'RUB,USD,EUR,GBP,CAD,AUD,BGN,CZK,DKK,EEK,HKD,HUF,LTL,MYR,NZD,NOK,PLN,ROL,SGD,ZAR,SEK,CHF';
-		$info['languages']		= AECToolbox::getISO3166_1a2_codes();
+		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,maestro';
 		$info['recurring']		= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -35,6 +36,7 @@ class processor_robokassa extends POSTprocessor
 		$settings['login']			= 'Merchant Login ID';
 		$settings['pass']			= 'Merchant Password';
 		$settings['currency']		= 'EUR';
+		$settings['language']		= 'RU';
 		$settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
@@ -48,6 +50,7 @@ class processor_robokassa extends POSTprocessor
 		$settings['login']			= array( 'inputC' );
 		$settings['pass']			= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
+		$settings['language']		= array( 'list_language' );
 		$settings['item_name']		= array( 'inputE' );
 		$settings['customparams']	= array( 'inputD' );
 
@@ -69,7 +72,7 @@ class processor_robokassa extends POSTprocessor
 		$var['InvId']				= $request->invoice->id;
 		$var['Desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['SignatureValue']		= $this->getHash( $request->invoice );			
-		//$var['IncCurrLabel']		= $this->settings['currency'];
+		$var['Culture']				= $this->settings['language'];
 
 		return $var;
 	}
