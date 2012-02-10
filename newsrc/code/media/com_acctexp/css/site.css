@@ -532,7 +532,7 @@ button.aeclink span {
 }
 button.aeclink:hover span,
 button.aeclink:focus span {
-	color: black;
+color: black;
 }
 
 .aectextright {
@@ -742,20 +742,20 @@ text-align: center;
 }
 
 #checkoutbox label {
-	width:48%;
-	text-align:right;
-	padding-right:2%;
+width: 48%;
+text-align: right;
+padding-right: 2%;
 }
 
 #checkoutbox .inputbox, #checkoutbox select{
-	clear:right;
+clear: right;
 }
 
 #checkoutbox .button{
-	clear: both;
-	display:block;
-	float:right;
-	margin: 6px;
+clear: both;
+display: block;
+float: right;
+margin: 6px;
 }
 
 .cright .invalid {
