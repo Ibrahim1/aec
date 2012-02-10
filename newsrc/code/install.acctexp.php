@@ -359,23 +359,33 @@ function com_install()
 		margin-top: 14px;
 		}
 		div.packages_none {
-		padding: 0 10px 0 120px;
+		padding: 10px 10px 0 120px;
 		border-bottom: 3px solid #706100;
 		border-top: 3px solid #706100;
 		color: #fff;
 		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_2.png") no-repeat scroll 28px center #aa9900;
 		margin-bottom: 14px;
 		margin-top: 14px;
+		box-shadow: 0 0 10px #555555 inset;
 		}
 		div.packages_installed p, div.packages_none p {
-		font-size: 180%;
+		font-size: 18px;
 		}
 		div.packages_installed br, div.packages_none br {
 		margin-bottom: 20px;
 		}
+		div.installmain {
+		float: left;
+		width: 600px;
+		-webkit-box-shadow: 0 2px 2px #000;
+		-moz-box-shadow: 0 2px 2px #000;
+		box-shadow: 0 2px 2px #000;
+		background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx_1_0beta.png) no-repeat top right;
+		margin: 0 6px;
+		}
 		</style>
 	<div style="width: 1024px; margin: 0 auto;">
-	<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx_1_0beta.png) no-repeat top right; margin: 0 6px;">
+	<div class="installmain">
 		<div style="width: 100%; height: 290px;"></div>
 		<?php
 		if ( $errors ) {
