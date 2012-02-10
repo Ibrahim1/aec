@@ -940,9 +940,11 @@ class HTML_AcctExp
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
+						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_title.png" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 						<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
+						<p>Please post a rating and a review<br />at the <a href="http://bit.ly/yGSrZQ">Joomla! Extensions Directory.</a></p>
 						<div style="margin: 0 auto;text-align:center;">
-							<a href="http://www.valanx.org"> <img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx" /></a>
+							<a href="http://www.valanx.org"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx" /></a>
 							<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
 							<p><?php echo JText::_('AEC_FOOT_TX_SUBSCRIBE'); ?></p>
 							<p><?php printf( JText::_('AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', JText::_('AEC_FOOT_CREDIT_LTEXT') ) ); ?></p>

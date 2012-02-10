@@ -466,7 +466,7 @@ function getNotice()
 
 	$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
 
-	return '<div class="alert-message ' . $noticex[$notice->level] . '" id="alert-' . $notice->id . '">
+	return '<div class="alert alert-' . $noticex[$notice->level] . '" id="alert-' . $notice->id . '">
 			<a class="close" href="#' . $notice->id . '" onclick="readNotice(' . $notice->id . ')">&times;</a>
 			<h5><strong>' . JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ) . ': ' . $notice->short . '</strong></h5>
 			<p>' . substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ) . '</p>
