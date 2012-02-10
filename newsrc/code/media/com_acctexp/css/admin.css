@@ -288,18 +288,26 @@ padding-right: 12px;
 line-height: 16px;
 }
 
+.form-horizontal .control-group > label {
+width: 48%;
+}
+
 div.control-group form .controls {
 float: left;
-margin-left: 0;
 text-align: center;
 }
 
-div.control-group .controls {
-width: 100%;
+.form-horizontal .controls {
+margin-left: 54%;
+width: 48%;
+}
+
+div.control-group .controls>* {
+margin: 0 auto;
 }
 
 form .control-group {
-width: 90%;
+width: 100%;
 margin-left: 10%;
 margin-bottom: 16px;
 }
@@ -315,6 +323,10 @@ div.controls ul {
 margin: 0;
 padding-left: 14px;
 list-style: circle;
+}
+
+div.controls select {
+width: 100%;
 }
 
 .form-slim {
