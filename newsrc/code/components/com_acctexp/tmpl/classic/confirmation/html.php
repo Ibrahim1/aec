@@ -1,10 +1,4 @@
 <?php
-$user = &JFactory::getUser();
-
-$db = &JFactory::getDBO();
-
-global $aecConfig;
-
 $app = JFactory::getApplication();
 
 $userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );

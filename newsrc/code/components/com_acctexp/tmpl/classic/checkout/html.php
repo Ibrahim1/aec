@@ -1,8 +1,4 @@
 <?php
-$db = &JFactory::getDBO();
-
-$user = &JFactory::getUser();
-
 // Always rewrite to session userid
 if ( !empty( $user->id ) ) {
 	$userid = $user->id;

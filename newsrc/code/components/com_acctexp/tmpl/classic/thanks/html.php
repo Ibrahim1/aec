@@ -1,6 +1,4 @@
 <?php
-global $aecConfig;
-
 $app = JFactory::getApplication();
 
 if ( !empty( $plan ) ) {
@@ -61,10 +59,5 @@ if ( !empty( $up['customtext_thanks'] ) ) {
 } else {
 	$msg = $b;
 }
-
-$document=& JFactory::getDocument();
-
-$document->setTitle( html_entity_decode( JText::_('THANKYOU_TITLE'), ENT_COMPAT, 'UTF-8' ) );
-
-HTML_Results::thanks( $option, $msg );
+$tmpl->setTitle( JText::_('THANKYOU_TITLE') );
 ?>

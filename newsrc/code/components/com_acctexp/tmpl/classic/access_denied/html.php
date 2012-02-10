@@ -1,9 +1,4 @@
 <?php
-$db = &JFactory::getDBO();
-
-$user = &JFactory::getUser();
-
-global $aecConfig;
 
 if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
 	aecRedirect( $aecConfig->cfg['customnotallowed'] );
@@ -50,10 +45,6 @@ if ( $user->id ) {
 	}
 }
 
-$document=& JFactory::getDocument();
+$tmpl->setTitle( JText::_('NOT_ALLOWED_HEADLINE') );
 
-$document->setTitle( html_entity_decode( JText::_('NOT_ALLOWED_HEADLINE'), ENT_COMPAT, 'UTF-8' ) );
-
-$frontend = new HTML_frontEnd();
-$frontend->notAllowed( $option, $processors, $registerlink, $loggedin );
 ?>
