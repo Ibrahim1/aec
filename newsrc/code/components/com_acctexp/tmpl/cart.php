@@ -53,8 +53,7 @@ if ( !empty( $cfg->cfg['tos'] ) ) { ?>
 				<th>Total</th>
 				<th>&nbsp;</th>
 			</tr>
-			<?php
-			foreach ( $InvoiceFactory->cart as $bid => $bitem ) {
+			<?php foreach ( $InvoiceFactory->cart as $bid => $bitem ) {
 				if ( !empty( $bitem['name'] ) ) {
 					?><tr>
 						<td><?php echo $bitem['name']; ?></td>
@@ -72,8 +71,7 @@ if ( !empty( $cfg->cfg['tos'] ) ) { ?>
 						<td></td>
 					</tr><?php
 				}
-			}
-			?>
+			} ?>
 		</table>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0; ?>" />

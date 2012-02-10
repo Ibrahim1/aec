@@ -34,8 +34,7 @@
 		<?php echo JHTML::_( 'form.token' ); ?>
 		</form><br /><br />
 	<?php } ?>
-	<?php
-		foreach ( $InvoiceFactory->items->itemlist as $item ) {
+	<?php foreach ( $InvoiceFactory->items->itemlist as $item ) {
 			if ( !empty( $item['terms'] ) ) {
 				$terms = $item['terms']->getTerms();
 			} else {

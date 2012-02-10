@@ -169,6 +169,7 @@ if ( !empty( $cfg->cfg['tos'] ) ) { ?>
 		} ?>
 		<tr>
 			<td id="confirmation_button">
+			<?php @include( $this->getTmpl( 'confirmation_button' ) ); ?>
 			<div id="confirmation_button">
 				<input type="hidden" name="option" value="<?php echo $option; ?>" />
 				<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
