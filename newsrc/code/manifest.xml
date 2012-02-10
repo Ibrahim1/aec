@@ -27,6 +27,7 @@
 		<files folder="administrator/components/com_acctexp">
 			<file>index.html</file>
 			<file>admin.acctexp.php</file>
+			<file>admin.acctexp.class.php</file>
 			<file>admin.acctexp.html.php</file>
 			<file>toolbar.acctexp.php</file>
 			<file>toolbar.acctexp.html.php</file>

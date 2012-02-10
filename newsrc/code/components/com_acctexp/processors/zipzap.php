@@ -23,7 +23,6 @@ class processor_zipzap extends XMLprocessor
 		$info['currencies']		= 'AUD,CAD,CHF,DEM,FRF,GBP,HKD,JPY,NZD,SGD,USD,EUR,ZAR';
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
 		$info['recurring']		= 0;
-		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
 		$info['secure']			= 1;
 
 		return $info;
@@ -47,9 +46,7 @@ class processor_zipzap extends XMLprocessor
 		$settings = array();
 		$settings['testmode']			= 0;
 		$settings['merchantid']			= "your_merchant_id";
-		$settings['currency']			= "USD";
-		$settings['promptAddress']		= 0;
-		$settings['promptZipOnly']		= 0;
+		$settings['currency']			= "NZD";
 		$settings['item_name']			= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= '';
 
@@ -59,11 +56,9 @@ class processor_zipzap extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( "list_yesno" );
+		$settings['testmode']			= array( "toggle" );
 		$settings['merchantid']			= array( "inputC" );
 		$settings['currency']			= array( "list_currency" );
-		$settings['promptAddress']		= array( "list_yesno" );
-		$settings['promptZipOnly']		= array( "list_yesno" );
 		$settings['item_name']			= array( "inputE" );
 		$settings['customparams']		= array( 'inputD' );
 
