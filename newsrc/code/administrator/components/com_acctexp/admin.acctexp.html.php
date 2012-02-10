@@ -3540,9 +3540,9 @@ class HTML_AcctExp
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon();
 		if ( empty( $cmd ) ) {
-		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox', $title );
+			HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox', $title );
 		} else {
-		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox' );
+			HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox' );
 		} ?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
             <table width="100%" class="aecadminform">
