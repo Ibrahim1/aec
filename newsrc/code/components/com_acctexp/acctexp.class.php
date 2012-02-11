@@ -2403,8 +2403,6 @@ class Config_General extends serialParamDBTable
 		$def['adminaccess']						= 1;
 		$def['noemails']						= 0;
 		$def['nojoomlaregemails']				= 0;
-		// new 0.12.4.10
-		$def['debugmode']						= 0;
 		// new 0.12.4.12
 		$def['override_reqssl']					= 0;
 		// new 0.12.4.16

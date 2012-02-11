@@ -814,15 +814,4 @@ class eucaToolbox
 	}
 }
 
-class eucaDebug
-{
-	function eucaDebug()
-	{
-		include_once( _EUCA_APP_LIBDIR . '/krumo/class.krumo.php' );
-	}
-
-	function displayDebug()
-	{}
-}
-
 ?>

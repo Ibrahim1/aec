@@ -13,27 +13,6 @@
 
 class HTML_myCommon
 {
-	function ContentLegend()
-	{
-		?>
-		<div class="aeclegend">
-		<table cellspacing="0" cellpadding="4" border="0" align="center">
-			<tr align="center">
-				<td><?php echo aecHTML::Icon( 'accept.png', JText::_('AEC_CMN_PUBLISHED') ); ?></td>
-				<td><?php echo JText::_('AEC_CMN_PUBLISHED'); ?>&nbsp;|</td>
-				<td><?php echo aecHTML::Icon( 'cancel.png', JText::_('AEC_CMN_NOT_PUBLISHED') . '/' . JText::_('AEC_CMN_INVISIBLE') ); ?></td>
-				<td><?php echo JText::_('AEC_CMN_NOT_PUBLISHED') . '/' . JText::_('AEC_CMN_INVISIBLE'); ?>&nbsp;|</td>
-				<td><?php echo aecHTML::Icon( 'eye.png', JText::_('PAYPLAN_VISIBLE') ); ?></td>
-				<td><?php echo JText::_('PAYPLAN_VISIBLE'); ?></td>
-			</tr>
-			<tr>
-				<td colspan="6" align="center"><?php echo JText::_('AEC_CMN_CLICK_TO_CHANGE'); ?></td>
-			</tr>
-		</table>
-		</div>
-		<?php
-	}
-
 	function Valanx()
 	{
 		?>
@@ -59,12 +38,6 @@ class HTML_myCommon
 			</table>
 		</div>
 		<?php
-
-		if ( _EUCA_DEBUGMODE ) {
-			global $eucaDebug;
-
-			$eucaDebug->displayDebug();
-		}
 	}
 
 	function addBackendCSS()
@@ -525,7 +498,7 @@ class HTML_AcctExp
 					<td width="50%" style="vertical-align:top;">
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
-							<div class="aec_userinfobox_sub_inline form-slim" style="width:35%;padding:0 5%;">
+							<div class="aec_userinfobox_sub_inline form-slim" style="width:49%;">
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
 									<div class="controls"><span><?php echo $metaUser->userid; ?></div>
@@ -551,7 +524,7 @@ class HTML_AcctExp
 									</div>
 								<?php } ?>
 							</div>
-							<div class="aec_userinfobox_sub_inline form-slim" style="width:45%;padding: 0 2%;">
+							<div class="aec_userinfobox_sub_inline form-slim" style="width:49%">
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
 									<div class="controls"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
@@ -718,13 +691,7 @@ class HTML_AcctExp
 			<input type="hidden" name="task" value="" />
 			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
-
 		<?php
-
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $metaUser, $invoices, $lists, $nexttask );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -992,7 +959,7 @@ class HTML_AcctExp
 				<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
 				<h1>Libraries</h1>
 				<p>The import function uses a modified parsecsv library by Jim Myhrberg - <a href="http://code.google.com/p/parsecsv-for-php/">code.google.com/p/parsecsv-for-php</a>.</p>
-				<p>Furthermore, these libraries are used in one place or another: <a href="http://www.blueprintcss.org/">blueprint</a>, <a href="http://krumo.sourceforge.net/">krumo</a>, <a href="http://www.mootools.net/">mootools</a>, <a href="http://www.jquery.com/">jquery</a>, <a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>.</p>
+				<p>Furthermore, these libraries are used in one place or another: <a href="http://www.blueprintcss.org/">blueprint</a>, <a href="http://www.mootools.net/">mootools</a>, <a href="http://www.jquery.com/">jquery</a>, <a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>.</p>
 				<h1>Eternal Gratitude</h1>
 				<p>These are the people without whom I could not have kept up the pace:</p>
 				<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>
@@ -1113,10 +1080,6 @@ class HTML_AcctExp
 		</table>
 
  		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $hacks );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -1182,10 +1145,6 @@ class HTML_AcctExp
 		<?php
 		echo $aecHTML->loadJS();
 
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML, $tab_data, $editors );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -1248,7 +1207,6 @@ class HTML_AcctExp
 		</tfoot>
 		</table>
 		</div>
- 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showProcessors" />
 		<input type="hidden" name="returnTask" value="showProcessors" />
@@ -1256,10 +1214,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $rows, $pageNav, $option );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -1306,13 +1260,7 @@ class HTML_AcctExp
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>
 		<?php
-		// close pane and include footer
-
 		echo $aecHTML->loadJS();
-
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML );
-		}
 
  		HTML_myCommon::endCommon();
 	}
@@ -1424,12 +1372,7 @@ class HTML_AcctExp
 			<input type="hidden" name="returnTask" value="showActive" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
-
  		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $user, $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -1534,18 +1477,12 @@ class HTML_AcctExp
 		</tfoot>
 		</table>
 		</div>
- 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showMicroIntegrations" />
 		<input type="hidden" name="returnTask" value="showMicroIntegrations" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
-
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $rows, $pageNav, $option );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -1705,12 +1642,7 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-
 		echo $aecHTML->loadJS();
-
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $row, $lists, $aecHTML );
-		}
 
  		HTML_myCommon::endCommon();
 	}
@@ -1838,7 +1770,6 @@ class HTML_AcctExp
 		</tfoot>
 		</table>
 		</div>
- 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showSubscriptionPlans" />
 		<input type="hidden" name="returnTask" value="showSubscriptionPlans" />
@@ -1846,10 +1777,6 @@ class HTML_AcctExp
 	</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $rows, $pageNav, $option );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -2203,10 +2130,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML, $row, $hasrecusers );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -2323,18 +2246,13 @@ class HTML_AcctExp
 		</tfoot>
 		</table>
 		</div>
- 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showItemGroups" />
 		<input type="hidden" name="returnTask" value="showItemGroups" />
 		<input type="hidden" name="boxchecked" value="0" />
-	</form>
+		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $rows, $pageNav, $option );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -2536,10 +2454,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML, $row );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -2611,7 +2525,6 @@ class HTML_AcctExp
 		</tfoot>
 		</table>
 		</div>
- 		<?php HTML_myCommon::ContentLegend(); ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
 		<input type="hidden" name="returnTask" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
@@ -2619,10 +2532,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $rows, $pageNav, $option, $type );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -2773,10 +2682,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML, $row, $type );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -2844,10 +2749,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $rows, $search, $pageNav );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -2914,10 +2815,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $rows, $search, $pageNav );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -2975,10 +2872,6 @@ class HTML_AcctExp
 		</form>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $events, $search, $pageNav );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -3154,10 +3047,6 @@ class HTML_AcctExp
 		</div>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $stats );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -3176,10 +3065,6 @@ class HTML_AcctExp
 		<h1>Stats aren't done yet, please check back here in the stable release</h1>
 
 		<?php
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $stats );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -3220,10 +3105,6 @@ class HTML_AcctExp
 
 		<?php
 		echo $aecHTML->loadJS();
-
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML );
-		}
 
  		HTML_myCommon::endCommon();
 	}
@@ -3490,10 +3371,6 @@ class HTML_AcctExp
 		<?php
 		echo $aecHTML->loadJS();
 
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML );
-		}
-
  		HTML_myCommon::endCommon();
 	}
 
@@ -3527,10 +3404,6 @@ class HTML_AcctExp
 
 		<?php
 		echo $aecHTML->loadJS();
-
-		if ( _EUCA_DEBUGMODE ) {
-			krumo( $option, $aecHTML );
-		}
 
  		HTML_myCommon::endCommon();
 	}

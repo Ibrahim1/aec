@@ -208,7 +208,6 @@ function com_install()
 
 	// icons
 	$files = array(
-					array( 'lib/krumo/krumo.tar.gz',		'lib/krumo/',		0 ),
 					array( 'lib/mootools/mootools.tar.gz',	'lib/mootools/',	0 ),
 					array( 'processors/ideal_advanced/ideal_advanced.tar.gz',					'processors/ideal_advanced/',	0 )
 					);
@@ -237,11 +236,6 @@ function com_install()
 	}
 
 	$eucaInstall->unpackFileArray( $files );
-
-	$krumoabspath = JPATH_SITE . '/components/com_acctexp/lib/krumo/';
-	$krumourlpath = JURI::root() . '/components/com_acctexp/lib/krumo/';
-
-	$eucaInstallef->fileEdit( $krumoabspath . 'krumo.ini', 'http://www.example.com/Krumo/', $krumourlpath, "Krumor Debug Lib did not receive a proper url path, due to writing permission problems" );
 
 	// log installation
 	$short		= JText::_('AEC_LOG_SH_INST');
@@ -351,8 +345,7 @@ function com_install()
 		}
 		div.packages_installed {
 		padding: 0 10px 0 120px;
-		border-bottom: 3px solid #4c7000;
-		border-top: 3px solid #4c7000;
+		border: 3px solid #4c7000;
 		color: #fff;
 		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_1.png") no-repeat scroll 28px center #7caa00;
 		margin-bottom: 14px;
@@ -360,8 +353,7 @@ function com_install()
 		}
 		div.packages_none {
 		padding: 10px 10px 0 120px;
-		border-bottom: 3px solid #706100;
-		border-top: 3px solid #706100;
+		border: 3px solid #706100;
 		color: #fff;
 		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_2.png") no-repeat scroll 28px center #aa9900;
 		margin-bottom: 14px;
@@ -389,7 +381,7 @@ function com_install()
 		<div style="width: 100%; height: 290px;"></div>
 		<?php
 		if ( $errors ) {
-			echo '<div style="color: #FF0000; text-align: left; border: 1px solid #FF0000; background-color: #fff; margin: 12px; padding: 8px;">' . "\n"
+			echo '<div style="color: #f00; text-align: left; border: 1px solid #foo; background-color: #fff; margin: 12px; padding: 8px;">' . "\n"
 			. JText::_('AEC_INST_ERRORS')
 			. '<ul>' . "\n";
 			foreach ( $errors AS $error ) {

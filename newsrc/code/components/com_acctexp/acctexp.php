@@ -18,16 +18,6 @@ define( '_AEC_FRONTEND', 1 );
 require_once( JApplicationHelper::getPath( 'class',		'com_acctexp' ) );
 require_once( JApplicationHelper::getPath( 'front_html',	'com_acctexp' ) );
 
-if ( !defined( '_EUCA_DEBUGMODE' ) ) {
-	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
-}
-
-if ( _EUCA_DEBUGMODE ) {
-	global $eucaDebug;
-
-	$eucaDebug = new eucaDebug();
-}
-
 $user = &JFactory::getUser();
 
 $task = trim( aecGetParam( 'view', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );

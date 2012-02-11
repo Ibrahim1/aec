@@ -25,16 +25,6 @@ aecLanguageHandler::loadList( $langlist );
 
 JLoader::register('JPaneTabs',  JPATH_LIBRARIES.DS.'joomla'.DS.'html'.DS.'pane.php');
 
-if ( !defined( '_EUCA_DEBUGMODE' ) ) {
-	define( '_EUCA_DEBUGMODE', $aecConfig->cfg['debugmode'] );
-}
-
-if ( _EUCA_DEBUGMODE ) {
-	global $eucaDebug;
-
-	$eucaDebug = new eucaDebug();
-}
-
 aecACLhandler::adminBlock();
 
 $task			= trim( aecGetParam( 'task', null ) );
@@ -1539,10 +1529,10 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
 
 	foreach ( $itemidlist as $param => $xparams ) {
-		$params['itemid_'.$param]				= array( 'inputB', '' );
+		$params['itemid_'.$param]				= array( 'inputA', '' );
 	}
 
-	$params['itemid_cb']						= array( 'inputB', '' );
+	$params['itemid_cb']						= array( 'inputA', '' );
 
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
@@ -1656,7 +1646,6 @@ function editSettings( $option )
 	$params['bypassintegration']			= array( 'inputC', '' );
 
 	$params['breakon_mi_error']				= array( 'toggle', 0 );
-	$params['debugmode']					= array( 'toggle', 0 );
 	$params['email_default_admins']			= array( 'toggle', 1 );
 	$params['email_extra_admins']			= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
