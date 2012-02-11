@@ -3,7 +3,7 @@
  * @version $Id: admin.acctexp.html.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main HTML Backend
- * @copyright 2006-2011 Copyright (C) David Deutsch
+ * @copyright 2006-2012 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
@@ -948,14 +948,13 @@ class HTML_AcctExp
 			<div style="width: 100%; height: 290px;"></div>
 			<div class="installnote">
 				<h1>Leading Programmer</h1>
-				<p>David 'skOre' Deutsch</p>
+				<p>David Deutsch</p>
 				<h1>Contributing Programmers</h1>
-				<p>Calum 'polc1410' Polwart, William 'Jake' Jacobs, Anton 'crashedfx' Skvortsov</p>
+				<p>Calum Polwart, William Jacobs, Muriel Grabert</p>
 				<h1>Past Contributing Programmers</h1>
 				<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
 				<h1>Graphics</h1>
-				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2011 David 'skOre' Deutsch unless otherwise noted.</p>
-				<p>Additional icons are the silk icon set by Mark James (<a href="http://www.famfamfam.com/">famfamfam.com</a>).</p>
+				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2012 David 'skOre' Deutsch unless otherwise noted.</p>
 				<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
 				<h1>Libraries</h1>
 				<p>The import function uses a modified parsecsv library by Jim Myhrberg - <a href="http://code.google.com/p/parsecsv-for-php/">code.google.com/p/parsecsv-for-php</a>.</p>

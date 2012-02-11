@@ -3,7 +3,7 @@
  * @version $Id: acctexp.class.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Core Class
- * @copyright 2006-2011 Copyright (C) David Deutsch
+ * @copyright 2006-2012 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
@@ -2446,8 +2446,6 @@ class Config_General extends serialParamDBTable
 		$def['gethostbyaddr']					= 1;
 		$def['root_group']						= 1;
 		$def['root_group_rw']					= '';
-		// TODO: $def['show_groups_first']						= 1;
-		// TODO: $def['show_empty_groups']						= 1;
 		$def['integrate_registration']			= 1;
 		$def['customintro_userid']				= 0;
 		$def['enable_shoppingcart']				= 0;
