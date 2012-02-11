@@ -292,7 +292,7 @@ class HTML_AcctExp
 									<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
 								</label>
 								<div class="controls">
-									<?php echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox span5', 'size'=>'25',  'maxlength'=>'19' )); ?>
+									<?php echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox span3', 'size'=>'25',  'maxlength'=>'19' )); ?>
 									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
 								</div>
 							</div>
@@ -381,7 +381,7 @@ class HTML_AcctExp
 					<td width="50%" style="vertical-align:top;">
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
-							<div class="aec_userinfobox_sub_inline" style="width:49%;">
+							<div class="aec_userinfobox_sub_inline" style="width:42%; margin-left: -8%;">
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
 									<div class="controls"><span><?php echo $metaUser->userid; ?></div>
@@ -407,7 +407,7 @@ class HTML_AcctExp
 									</div>
 								<?php } ?>
 							</div>
-							<div class="aec_userinfobox_sub_inline" style="width:49%">
+							<div class="aec_userinfobox_sub_inline" style="width:38%; margin-left: -4%;">
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
 									<div class="controls"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
@@ -789,7 +789,7 @@ class HTML_AcctExp
 					<br />
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
-					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
+					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&szlig;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
 						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 						<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 						<p>Please post a rating and a review for AEC<br />at the <a href="http://bit.ly/yGSrZQ" target="_blank">Joomla! Extensions Directory.</a></p>
@@ -821,13 +821,14 @@ class HTML_AcctExp
 			.installnote h1 {
 				color: #ddd;
 				padding: 0;
+				font-size: 16px;
 			}
 			.installnote p {
 				color: #ddd;
 				padding: 0 12px;
 			}</style>
 		<div style="width: 1024px; margin: 0 auto;">
-		<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_gfx_0_14.png) no-repeat top right; margin: 0 6px;">
+		<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_gfx_1_0beta.jpg) no-repeat top right; margin: 0 6px;">
 			<div style="width: 100%; height: 290px;"></div>
 			<div class="installnote">
 				<h1>Leading Programmer</h1>
@@ -862,8 +863,10 @@ class HTML_AcctExp
 				<br />
 				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
 				<br /><br />
-				<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION ); ?></p>
+				<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'beta', '&szlig;', _AEC_VERSION ); ?></p>
+				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 				<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
+				<p>Please post a rating and a review for AEC<br />at the <a href="http://bit.ly/yGSrZQ" target="_blank">Joomla! Extensions Directory.</a></p>
 				<div style="margin: 0 auto;text-align:center;">
 					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx.org" /></a>
 					<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
