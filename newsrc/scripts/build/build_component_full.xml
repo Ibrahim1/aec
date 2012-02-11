@@ -14,6 +14,7 @@
 				<include name="uninstall.acctexp.php" />
 				<include name="*.xml" />
 				<include name="*.txt" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
@@ -22,6 +23,7 @@
 		<copy todir="${dir.tmp}/mod_acctexp">
 			<fileset dir="${dir.local}/modules/mod_acctexp">
 				<include name="**" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
@@ -30,6 +32,7 @@
 		<copy todir="${dir.tmp}/mod_acctexp_cart">
 			<fileset dir="${dir.local}/modules/mod_acctexp_cart">
 				<include name="**" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
@@ -38,6 +41,7 @@
 		<copy todir="${dir.tmp}/plg_aecaccess">
 			<fileset dir="${dir.local}/plugins">
 				<include name="aecaccess.*" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
@@ -46,6 +50,7 @@
 		<copy todir="${dir.tmp}/plg_aecerror">
 			<fileset dir="${dir.local}/plugins">
 				<include name="aecerrorhandler.*" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
@@ -54,6 +59,7 @@
 		<copy todir="${dir.tmp}/plg_aecrestriction">
 			<fileset dir="${dir.local}/plugins">
 				<include name="aecrestriction.*" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
@@ -62,6 +68,7 @@
 		<copy todir="${dir.tmp}/plg_aecrewrite">
 			<fileset dir="${dir.local}/plugins">
 				<include name="aecrewrite.*" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
@@ -70,6 +77,7 @@
 		<copy todir="${dir.tmp}/plg_aecrouting">
 			<fileset dir="${dir.local}/plugins">
 				<include name="aecrouting.*" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
@@ -78,6 +86,7 @@
 		<copy todir="${dir.tmp}/plg_aecuser">
 			<fileset dir="${dir.local}/plugins">
 				<include name="aecuser.*" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 

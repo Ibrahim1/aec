@@ -8,6 +8,7 @@
 			<fileset dir="${dir.local}/cbplugin">
 				<include name="cb*" />
 				<include name="index.html" />
+				<exclude name=".directory"/>
 			</fileset>
 		</copy>
 
