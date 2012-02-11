@@ -580,7 +580,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 			$rowstyle = ' style="background-color:#fee;"';
 		} else {
-			$status .= aecHTML::Icon( 'coins.png' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
+			$status .= aecHTML::Icon( 'shopping-cart' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
 		}
 
 		$actions[] = array( 'print', 'print', 'HISTORY_ACTION_PRINT', '', '" target="_blank' );

@@ -185,9 +185,6 @@ function com_install()
 
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---
 
-	// Create the Joomla Backend Menu
-	//require_once( $incpath . '/menusetup.inc.php' );
-
 	// Create root group
 	require_once( $incpath . '/create_rootgroup.inc.php' );
 

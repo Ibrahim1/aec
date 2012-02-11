@@ -330,18 +330,6 @@ div.controls select {
 width: 90%;
 }
 
-.form-slim {
-vertical-align: top;
-}
-
-.form-slim label {
-width: 80px;
-}
-
-.form-slim .controls {
-margin-left: 100px;
-}
-
 .form-stacked {
 padding-left: 20px;
 }
@@ -688,6 +676,7 @@ box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
 
 .aec_userinfobox_sub_inline {
 display: inline-block;
+vertical-align: top;
 }
 
 .aec_userinfobox_sub h4 {
@@ -1045,7 +1034,7 @@ background-position: -256px 0;
 background-position: -320px 0;
 }
 
-.aec-symbol-new {
+.aec-symbol-pending {
 background-position: -384px 0;
 }
 
