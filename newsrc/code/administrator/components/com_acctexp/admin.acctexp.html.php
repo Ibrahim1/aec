@@ -32,7 +32,7 @@ class HTML_myCommon
 					</div>
 				</td>
 				<td align="center">
-					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
+					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
 				</td>
 			</tr>
 			</table>
@@ -70,7 +70,6 @@ class HTML_myCommon
 	{
 		HTML_myCommon::addBackendCSS();
 		HTML_myCommon::addBackendJS();
-		JHTML::_('behavior.tooltip');
 
 		echo '<div id="' . $id . '">';
 		echo HTML_AcctExp::menuBar();
@@ -88,10 +87,15 @@ class HTML_myCommon
 	function getHeader( $page, $image, $extratext="" )
 	{
 		?><div class="adminheading">
-			<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/<?php echo $image; ?>.png">
+			<?php HTML_myCommon::getSymbol( $image ); ?>
 			<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( !empty( $extratext ) ? ' - ' . $extratext : '' ); ?></h2>
 		</div>
 		<?php
+	}
+
+	function getSymbol( $name )
+	{
+		?><div class="aec-symbol aec-symbol-<?php echo $name; ?>"></div><?php
 	}
 
 	function getButtons( $buttons, $object )
@@ -110,127 +114,6 @@ class HTML_myCommon
 			}
 		}
 		?></div><?php
-	}
-}
-
-class formParticles
-{
-	function formParticles()
-	{
-
-	}
-
-	function createSettingsParticle( $rows, $lists )
-	{
-		$thisrow_type	= $rows[0];
-		$thisrow_name	= $rows[1];
-		$thisrow_desc	= $rows[2];
-		$thisrow_var	= $rows[3];
-		$thisrow_extra	= $rows[4];
-
-		switch( $thisrow_type ) {
-			case 'subtitle': ?>
-				<tr align="center" valign="middle">
-					<th colspan="3" width="20%"><?php echo $thisrow_desc; ?></th>
-				</tr>
-				<?php
-				break;
-
-			case 'inputA': ?>
-				<tr align="left" valign="middle" >
-					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
-        			<td align="left">
-	        			<input name="<?php echo $thisrow_extra; ?>" type="text" size="4" maxlength="5" value="<?php echo $thisrow_var; ?>" />
-					</td>
-					<td><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'inputB': ?>
-				<tr>
-					<td width="10%"><?php echo $thisrow_name; ?></td>
-					<td width="10%"><input class="inputbox" type="text" name="<?php echo $thisrow_extra; ?>" size="2" maxlength="10" value="<?php echo $thisrow_var; ?>" /></td>
-					<td align="left"><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'inputC': ?>
-				<tr align="left" valign="middle" >
-					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
-					<td width="10%"><input type="text" size="20" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
-					<td><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'inputD': ?>
-				<tr align="left" valign="middle" >
-					<td width="10%" align="right"><?php echo $thisrow_name; ?></td>
-					<td width="10%"><textarea align="left" cols="60" rows="5" name="<?php echo $thisrow_extra; ?>" /><?php echo $thisrow_var; ?></textarea></td>
-					<td><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'inputE': ?>
-				<tr align="left" valign="middle" >
-					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
-					<td colspan="2" align="left"><input type="text" size="70" name="<?php echo $thisrow_extra; ?>" class="inputbox" value="<?php echo $thisrow_var; ?>" /></td>
-				</tr>
-				<?php
-				break;
-
-			case 'editor': ?>
-        		<tr align="left" valign="middle" >
-					<td width="10%" align="right">
-					<?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?>
-					<?php echo $thisrow_name; ?>
-					</td>
-					<td width="10%" colspan="2">
-					<!-- <textarea name="<?php echo $thisrow_extra; ?>" align="left" cols="60" maxlength="2048" rows="5"><?php echo $thisrow_var; ?></textarea> //-->
-					<?php
-					$editor = &JFactory::getEditor();
-
-					$return .= $editor->display( $thisrow_extra,  $thisrow_var , '100%', '250', '50', '20' );
-					?>
-					</td>
-				</tr>
-				<?php
-				break;
-
-			case 'list': ?>
-				<tr>
-					<td width="10%"><?php echo $thisrow_name; ?></td>
-					<td width="10%" align="left"><?php echo $lists[$thisrow_extra]; ?></td>
-					<td align="left"><?php echo $thisrow_desc; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'list_big': ?>
-				<tr>
-					<td><?php echo aecHTML::ToolTip( $thisrow_desc, $thisrow_name, null ); ?><?php echo $thisrow_name; ?></td>
-					<td colspan="2" align="left"><?php echo $lists[$thisrow_extra]; ?></td>
-				</tr>
-				<?php
-				break;
-
-			case 'fieldset': ?>
-				<tr><td colspan="3" >
-					<fieldset><legend><?php echo $thisrow_name; ?></legend>
-						<table cellpadding="1" cellspacing="1" border="0">
-							<tr align="left" valign="middle">
-								<td><?php echo $thisrow_desc; ?></td>
-							</tr>
-						</table>
-					</fieldset>
-					</td>
-				</tr>
-				<?php
-				break;
-		}
 	}
 }
 
@@ -261,45 +144,45 @@ class HTML_AcctExp
 
 			switch( $metaUser->focusSubscription->status ) {
 				case 'Excluded':
-					$icon = 'cut_red.png';
+					$icon = 'repeat';
 					$status	= JText::_('AEC_CMN_EXCLUDED');
 					break;
 				case 'Trial':
-					$icon 	= 'star.png';
+					$icon 	= 'star';
 					$status	= JText::_('AEC_CMN_TRIAL');
 					break;
 				case 'Pending':
-					$icon 	= 'star.png';
+					$icon 	= 'star';
 					$status	= JText::_('AEC_CMN_PENDING');
 					break;
 				case 'Active':
-					$icon	= 'tick.png';
+					$icon	= 'ok';
 					$status	= JText::_('AEC_CMN_ACTIVE');
 					break;
 				case 'Cancel':
-					$icon	= 'exclamation.png';
+					$icon	= 'warning-sign';
 					$status	= JText::_('AEC_CMN_CANCEL');
 					break;
 				case 'Hold':
-					$icon	= 'exclamation.png';
+					$icon	= 'warning-sign';
 					$status	= JText::_('AEC_CMN_HOLD');
 					break;
 				case 'Expired':
-					$icon	= 'cancel.png';
+					$icon	= 'remove';
 					$status	= JText::_('AEC_CMN_EXPIRED');
 					break;
 				case 'Closed':
-					$icon	= 'cancel.png';
+					$icon	= 'remove';
 					$status	= JText::_('AEC_CMN_CLOSED');
 					break;
 				default:
-					$icon	= 'thumb_down.png';
+					$icon	= 'remove-circle';
 					$status	= JText::_('AEC_CMN_NOT_SET');
 					break;
 			}
 		}
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')' );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
@@ -354,7 +237,7 @@ class HTML_AcctExp
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-								<div class="controls"><span><?php echo aecHTML::Icon( $icon, $status ); ?>&nbsp;<?php echo $status; ?></span></div>
+								<div class="controls"><span><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></span></div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></span></label>
@@ -472,7 +355,7 @@ class HTML_AcctExp
 										<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
 											<tr<?php echo isset( $subs->current_focus ) ? ' class="current-focus"' : ''; ?>>
 												<td><?php echo isset( $subs->current_focus ) ? '<strong>&rArr;</strong>' : '&nbsp;'; ?></td>
-												<td><?php echo $subs->primary ? aecHTML::Icon( 'star.png', JText::_('AEC_USER_SUBSCRIPTIONS_PRIMARY') ) : '&nbsp;'; ?></td>
+												<td><?php echo $subs->primary ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
 												<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
 												<td><?php echo $subs->status; ?></td>
 												<td><?php echo $subs->type; ?></td>
@@ -505,22 +388,22 @@ class HTML_AcctExp
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-									<div class="controls"><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'accept.png', JText::_('AEC_USER_ACTIVE') ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'exclamation.png', JText::_('AEC_USER_BLOCKED') ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
+									<div class="controls"><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'exclamation.png', JText::_('AEC_USER_BLOCKED') ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PROFILE'); ?></span></label>
-									<div class="controls"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user.png', JText::_('AEC_USER_PROFILE_LINK') ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
+									<div class="controls"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
 								</div>
 								<?php if ( GeneralInfoRequester::detect_component('anyCB') ) { ?>
 									<div class="control-group">
 										<label class="control-label" for="expiration"><span>CB Profile</span></label>
-										<div class="controls"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_orange.png', JText::_('AEC_USER_PROFILE_LINK') ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+										<div class="controls"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_orange.png' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 									</div>
 								<?php } ?>
 								<?php if ( GeneralInfoRequester::detect_component('JOMSOCIAL') ) { ?>
 									<div class="control-group">
 										<label class="control-label" for="expiration"><span>JomSocial Profile</span></label>
-										<div class="controls"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_green.png', JText::_('AEC_USER_PROFILE_LINK') ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+										<div class="controls"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user_green.png' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 									</div>
 								<?php } ?>
 							</div>
@@ -535,7 +418,7 @@ class HTML_AcctExp
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_EMAIL'); ?></span></label>
-									<div class="controls"><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'email.png', JText::_('AEC_USER_SEND_MAIL') ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
+									<div class="controls"><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'email.png' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
 								</div>
 								<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
 									<div class="control-group">
@@ -545,11 +428,11 @@ class HTML_AcctExp
 								<?php } ?>
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_REGISTERED'); ?></span></label>
-									<div class="controls"><span><?php echo aecHTML::Icon( 'date.png', JText::_('AEC_USER_REGISTERED') ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
+									<div class="controls"><span><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
 								</div>
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></span></label>
-									<div class="controls"><span><?php echo aecHTML::Icon( 'door_in.png', JText::_('AEC_USER_LAST_VISIT') ); ?><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
+									<div class="controls"><span><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
 								</div>
 							</div>
 						</div>
@@ -720,7 +603,7 @@ class HTML_AcctExp
 		} ?>
 		<div class="btn">
 			<a href="<?php echo $link . $hideMenu; ?>">
-				<img border="0" align="middle" alt="<?php echo $text; ?>" src="<?php echo JURI::root() . "media/com_acctexp/images/admin/icons/" . $image; ?>"/>
+				<?php HTML_myCommon::getSymbol( $image ); ?>
 				<span><?php echo $text; ?></span>
 			</a>
 		</div>
@@ -812,7 +695,7 @@ class HTML_AcctExp
 																	array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
 																	array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
 																	array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ),
-																	array( 'showCouponsStatic', 'coupons_static', JText::_('AEC_CENTR_COUPONS_STATIC') )
+																	array( 'showCouponsStatic', 'coupons-static', JText::_('AEC_CENTR_COUPONS_STATIC') )
 																	)
 												),
 						'settings' 		=> array(	'name'	=> JText::_('AEC_CENTR_AREA_SETTINGS'),
@@ -864,9 +747,9 @@ class HTML_AcctExp
 
 							foreach ( $m['items'] as $item ) {
 								if ( !empty( $item[3] ) ) {
-									HTML_AcctExp::quickiconButton( $linkroot.$item[0], 'aec_symbol_'.$item[1].'.png', $item[3] );
+									HTML_AcctExp::quickiconButton( $linkroot.$item[0], ''.$item[1], $item[3] );
 								} else {
-									HTML_AcctExp::quickiconButton( $linkroot.$item[0], 'aec_symbol_'.$item[1].'.png', $item[2] );
+									HTML_AcctExp::quickiconButton( $linkroot.$item[0], ''.$item[1], $item[2] );
 								}
 							}
 							?></div></div><?php
@@ -907,11 +790,11 @@ class HTML_AcctExp
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
-						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_dist_title.png" border="0" alt="eta carinae nebula" class="dist-title" /></p>
+						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 						<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
-						<p>Please post a rating and a review<br />at the <a href="http://bit.ly/yGSrZQ">Joomla! Extensions Directory.</a></p>
+						<p>Please post a rating and a review for AEC<br />at the <a href="http://bit.ly/yGSrZQ" target="_blank">Joomla! Extensions Directory.</a></p>
 						<div style="margin: 0 auto;text-align:center;">
-							<a href="http://www.valanx.org"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx" /></a>
+							<a href="http://www.valanx.org"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx" /></a>
 							<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
 							<p><?php echo JText::_('AEC_FOOT_TX_SUBSCRIBE'); ?></p>
 							<p><?php printf( JText::_('AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', JText::_('AEC_FOOT_CREDIT_LTEXT') ) ); ?></p>
@@ -982,7 +865,7 @@ class HTML_AcctExp
 				<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION ); ?></p>
 				<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 				<div style="margin: 0 auto;text-align:center;">
-					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/valanx_logo.png" border="0" alt="valanx.org" /></a>
+					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx.org" /></a>
 					<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
 					<p><?php echo JText::_('AEC_FOOT_TX_SUBSCRIBE'); ?></p>
 				</div>
@@ -1003,7 +886,7 @@ class HTML_AcctExp
 			<input type="hidden" name="returnTask" value="" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_HACKS', 'aec_symbol_hacks' ); ?>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_HACKS', 'settings' ); ?>
 		<table class="aecadminform">
 			<tr><td>
 				<div style="width:100%; float:left;">
@@ -1036,7 +919,7 @@ class HTML_AcctExp
 						<h3><?php echo $content['name']; ?></h3>
 						<div class="action">
 							<?php
-							echo aecHTML::Icon( $content['status'] ? 'tick.png' : 'stop.png' )
+							echo aecHTML::Icon( $content['status'] ? 'ok' : 'remove' )
 							. ' ' . ( $content['status'] ? JText::_('AEC_HACKS_ISHACKED') : JText::_('AEC_HACKS_NOTHACKED') ) ; ?>
 							&nbsp;|&nbsp;
 							 <a href="<?php echo 'index.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? JText::_('AEC_HACKS_UNDO') : JText::_('AEC_HACKS_COMMIT') ; ?></a>
@@ -1047,11 +930,6 @@ class HTML_AcctExp
 							<?php
 						} ?>
 						<p style="width:60%; padding:3px;">
-							<?php
-							if ( !empty( $content['legacy'] ) ) { ?>
-								<img src="<?php echo JURI::root();?>media/com_acctexp/images/admin/icons/aec_symbol_importance_3.png" title="<?php echo JText::_('AEC_HACKS_LEGACY'); ?>" alt="<?php echo JText::_('AEC_HACKS_LEGACY'); ?>" />
-								<?php
-							} ?>
 							<?php echo $content['desc']; ?>
 						</p>
 						<?php if ( isset( $content['filename'] ) ) { ?>
@@ -1091,7 +969,7 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<?php
 		
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings' );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
@@ -1152,7 +1030,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
-			HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'aec_symbol_settings' );
+			HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'settings' );
 
 			$buttons = array(	'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
 								'hl1' => array(),
@@ -1220,7 +1098,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
@@ -1270,7 +1148,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<?php HTML_myCommon::getHeader( $action[1], 'aec_symbol_' . $action[0] ); ?>
+			<?php HTML_myCommon::getHeader( $action[1], '' . $action[0] ); ?>
 			<div class="aec-filters">
 				<div class="filter-sub">
 					<?php echo $lists['groups'];?>
@@ -1337,7 +1215,7 @@ class HTML_AcctExp
 						<tr class="row<?php echo $k; ?>"<?php echo $rowstyle; ?>>
 							<td width="20" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 							<td width="20"><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
-							<td width="20"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star.png', JText::_('AEC_USER_SUBSCRIPTIONS_PRIMARY') ) : '&nbsp;'; ?></td>
+							<td width="20"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
 							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
 							<td width="10%" align="left"><?php echo $row->username; ?></td>
 							<td width="10%" align="left"><?php echo $row->status; ?></td>
@@ -1380,7 +1258,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
-			HTML_myCommon::getHeader( 'MI_TITLE', 'aec_symbol_microintegrations' );
+			HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations' );
 
 			$buttons = array(	'egs' => array( 'groupstart' => true ),
 								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
@@ -1506,7 +1384,7 @@ class HTML_AcctExp
 			/* ]]> */
 		</script>
 		<?php
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'aec_symbol_microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
@@ -1651,7 +1529,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
-			HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'aec_symbol_plans' );
+			HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
 
 			$buttons = array(	'egs' => array( 'groupstart' => true ),
 								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
@@ -1695,29 +1573,25 @@ class HTML_AcctExp
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
 				switch( $rows[$i]->visible ) {
 					case '1':
-						$vaction	= 'invisibleSubscriptionPlan';
-						$vicon		= 'eye.png';
-						$vtext		= JText::_('PAYPLAN_VISIBLE');
+						$vaction	= 'invisible';
+						$vicon		= 'eye-open';
 						break;
 
 					case '0':
-						$vaction	= 'visibleSubscriptionPlan';
-						$vicon		= 'cancel.png';
-						$vtext		= JText::_('AEC_CMN_INVISIBLE');
+						$vaction	= 'visible';
+						$vicon		= 'eye-close';
 						break;
 				}
 
 				switch( $rows[$i]->active ) {
 					case '1':
-						$aaction	= 'unpublishSubscriptionPlan';
-						$aicon		= 'accept.png';
-						$atext		= JText::_('AEC_CMN_PUBLISHED');
+						$aaction	= 'unpublish';
+						$aicon		= 'ok-circle';
 						break;
 
 					case '0':
-						$aaction	= 'publishSubscriptionPlan';
-						$aicon		= 'cancel.png';
-						$atext		= JText::_('AEC_CMN_NOT_PUBLISHED');
+						$aaction	= 'publish';
+						$aicon		= 'remove-circle';
 						break;
 				}
 
@@ -1742,13 +1616,13 @@ class HTML_AcctExp
 						echo stripslashes( $description ); ?>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>')">
-							<?php echo aecHTML::Icon( $aicon, $atext ); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>SubscriptionPlan')">
+							<?php echo aecHTML::Icon( $aicon ); ?>
 						</a>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $vaction; ?>')">
-							<?php echo aecHTML::Icon( $vicon, $vtext ); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $vaction; ?>SubscriptionPlan')">
+							<?php echo aecHTML::Icon( $vicon ); ?>
 						</a>
 					</td>
 					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'orderplanup' ); ?></td>
@@ -1787,7 +1661,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 
-		HTML_myCommon::getHeader( '', 'aec_symbol_plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW') );
+		HTML_myCommon::getHeader( '', 'plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW') );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
@@ -2137,7 +2011,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
-			HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'aec_symbol_itemgroups' );
+			HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups' );
 
 			$buttons = array(	'egs' => array( 'groupstart' => true ),
 								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
@@ -2174,29 +2048,25 @@ class HTML_AcctExp
 		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
 				switch( $rows[$i]->visible ) {
 					case '1':
-						$vaction	= 'invisibleItemGroup';
-						$vicon		= 'eye.png';
-						$vtext		= JText::_('AEC_CMN_VISIBLE');
+						$vaction	= 'invisible';
+						$vicon		= 'eye-open';
 						break;
 
 					case '0':
-						$vaction	= 'visibleItemGroup';
-						$vicon		= 'cancel.png';
-						$vtext		= JText::_('AEC_CMN_INVISIBLE');
+						$vaction	= 'visible';
+						$vicon		= 'eye-close';
 						break;
 				}
 
 				switch( $rows[$i]->active ) {
 					case '1':
-						$aaction	= 'unpublishItemGroup';
-						$aicon		= 'accept.png';
-						$atext		= JText::_('AEC_CMN_PUBLISHED');
+						$aaction	= 'unpublish';
+						$aicon		= 'ok-circle';
 						break;
 
 					case '0':
-						$aaction	= 'publishItemGroup';
-						$aicon		= 'cancel.png';
-						$atext		= JText::_('AEC_CMN_NOT_PUBLISHED');
+						$aaction	= 'publish';
+						$aicon		= 'remove-circle';
 						break;
 				}
 
@@ -2221,13 +2091,13 @@ class HTML_AcctExp
 						echo $description; ?>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>')">
-							<?php echo aecHTML::Icon( $aicon, $atext ); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>ItemGroup')">
+							<?php echo aecHTML::Icon( $aicon ); ?>
 						</a>
 					</td>
 					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $vaction; ?>')">
-							<?php echo aecHTML::Icon( $vicon, $vtext ); ?>
+						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $vaction; ?>ItemGroup')">
+							<?php echo aecHTML::Icon( $vicon ); ?>
 						</a>
 					</td>
 					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordergroupup' ); ?></td>
@@ -2261,7 +2131,7 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'aec_symbol_itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
+		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
@@ -2460,7 +2330,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'aec_symbol_coupons' . ( $type ? '_static' : '' ) );
+			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'coupons' . ( $type ? '_static' : '' ) );
 
 			$buttons = array(	'egs' => array( 'groupstart' => true ),
 								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
@@ -2505,7 +2375,7 @@ class HTML_AcctExp
 					</td>
 					<td align="center">
 						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ( ( $rows[$i]->active ? 'unpublishCoupon' : 'publishCoupon') . ( $type ? 'Static' : '' ) ); ?>')">
-							<?php echo aecHTML::Icon( ( $rows[$i]->active ) ? 'accept.png' : 'cancel.png' ); ?>
+							<?php echo aecHTML::Icon( ( $rows[$i]->active ) ? 'ok-circle' : 'remove-circle' ); ?>
 						</a>
 					</td>
 					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordercoupon' . ( $type ? 'static' : '' ) . 'up' ); ?></td>
@@ -2542,7 +2412,7 @@ class HTML_AcctExp
 
 		JHTML::_('behavior.calendar');
 
-		HTML_myCommon::getHeader( 'AEC_COUPON', 'aec_symbol_coupons' . ($type ? '_static' : ''), ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
+		HTML_myCommon::getHeader( 'AEC_COUPON', 'coupons' . ($type ? '_static' : ''), ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
 		
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
@@ -2691,7 +2561,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-		<?php HTML_myCommon::getHeader( 'INVOICE_TITLE', 'aec_symbol_invoices' ); ?>
+		<?php HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('INVOICE_SEARCH'); ?>: <br />
 			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
@@ -2758,7 +2628,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-		<?php HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'aec_symbol_history' ); ?>
+		<?php HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
 			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
@@ -2786,13 +2656,11 @@ class HTML_AcctExp
 				<td align="center"><?php echo $row->proc_name; ?></td>
 				<td align="center"><?php echo $row->amount; ?></td>
 				<td>
-					<?php
-						if ( !empty( $row->response ) && ( strlen( $row->response ) > 8) ) {
+					<?php if ( !empty( $row->response ) && ( strlen( $row->response ) > 8) ) {
 							$field = unserialize( base64_decode( $row->response ) );
 
 							echo '<pre class="prettyprint">'.print_r($field,true).'</pre>';
-						}
-					?>
+						} ?>
 				</td>
 			</tr>
 			<?php
@@ -2821,7 +2689,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon(); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'aec_symbol_eventlog' ); ?>
+		<?php HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
 			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
@@ -2845,7 +2713,7 @@ class HTML_AcctExp
 			<tr class="row<?php echo $k; ?>">
 				<td><?php echo $row->id; ?></td>
 				<td align="left" width="120"><?php echo $row->datetime; ?></td>
-				<td align="left"><?php echo $row->notify ? aecHTML::Icon( 'star.png', '' ) : '&nbsp;'; ?></td>
+				<td align="left"><?php echo $row->notify ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
 				<td class="notice_level_<?php echo $row->level; ?>"><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $row->level ); ?>
 				<td align="left"><?php echo $row->short; ?></td>
 	  			<td align="left"><?php echo $row->tags; ?></td>
@@ -2881,7 +2749,7 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<div id="stats">
 		<div id="statnav">
-			<?php HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'aec_symbol_stats' ); ?>
+			<?php HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' ); ?>
 			<ul>
 		<?php
 			$menus = array( 'overview' => "Overview",
@@ -3071,7 +2939,7 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		
-		HTML_myCommon::getHeader( 'AEC_READOUT', 'aec_symbol_export' );
+		HTML_myCommon::getHeader( 'AEC_READOUT', 'export' );
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
             <table width="100%" class="aecadminform">
@@ -3305,7 +3173,7 @@ class HTML_AcctExp
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<?php
-		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'aec_symbol_import' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'import' );
 
 		$buttons = array(	'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ),
 							'' => array( 'style' => 'success', 'text' => JText::_('Import'), 'actionable' => true, 'icon' => 'ok' )
@@ -3379,7 +3247,7 @@ class HTML_AcctExp
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<?php
-		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'aec_symbol_export' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'export' );
 
 		$buttons = array( 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ) );
 
@@ -3412,9 +3280,9 @@ class HTML_AcctExp
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon();
 		if ( empty( $cmd ) ) {
-			HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox', $title );
+			HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox', $title );
 		} else {
-			HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'aec_symbol_toolbox' );
+			HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox' );
 		} ?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
             <table width="100%" class="aecadminform">
@@ -3451,7 +3319,7 @@ class HTML_AcctExp
 		$file = JPATH_SITE . '/media/' . $option . '/css/site.css';
 		HTML_myCommon::startCommon();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_CSS_EDITOR', 'aec_symbol_css' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_CSS_EDITOR', 'css' );
 
 		$buttons = array(	'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
 							'hl1' => array(),

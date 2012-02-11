@@ -122,8 +122,8 @@ padding-left: 10px;
 
 div.adminheading h2 {
 float: left;
-padding-left: 40px;
-line-height: 76px;
+padding-left: 24px;
+line-height: 86px;
 }
 
 ul.nav-pills {
@@ -225,7 +225,7 @@ margin: 0 3px;
 padding: 8px 14px;
 }
 
-.btn-group {
+.aec-buttons .btn-group {
 margin: 12px 3px -12px 3px;
 display: inline-block;
 }
@@ -522,6 +522,10 @@ div.central_buttons a {
 outline: 0 none !important;
 }
 
+div.central_buttons .aec-symbol {
+margin: 12% 15% 2%;
+}
+
 div.central_notices {
 margin: 12px auto;
 max-width: 840px;
@@ -652,7 +656,7 @@ width: 100%;
 
 .aecadminform_seamless {
 border-collapse: collapse;
-margin: -26px 0 15px -1px;
+margin: -14px 0 15px -1px;
 width: 100%;
 box-shadow: 0 4px 7px #aaa inset;
 float: left;
@@ -1003,6 +1007,111 @@ float: inherit !important;
 #aec_colorlist_AA89BB { background: #AA89BB !important; }
 #aec_colorlist_B7B7B7 { background: #B7B7B7 !important; }
 #aec_colorlist_808080 { background: #808080 !important; }
+
+.aec-symbol {
+width: 64px;
+height: 64px;
+float: left;
+background-image: url(../images/admin/icons/aec_symbols_sprite.png);
+background-position: 0 0;
+background-repeat: no-repeat;
+*margin-right: .3em;
+}
+[class^="aec-symbol-"]:last-child {
+*margin-left: 0;
+}
+
+.aec-symbol-active {
+background-position: 0 0;
+}
+
+.aec-symbol-expired {
+background-position: -64px 0;
+}
+
+.aec-symbol-closed {
+background-position: -128px 0;
+}
+
+.aec-symbol-cancelled {
+background-position: -192px 0;
+}
+
+.aec-symbol-hold {
+background-position: -256px 0;
+}
+
+.aec-symbol-edit {
+background-position: -320px 0;
+}
+
+.aec-symbol-new {
+background-position: -384px 0;
+}
+
+.aec-symbol-excluded {
+background-position: -448px 0;
+}
+
+.aec-symbol-manual {
+background-position: 0 -64px;
+}
+
+.aec-symbol-plans {
+background-position: -64px -64px;
+}
+
+.aec-symbol-itemgroups {
+background-position: -128px -64px;
+}
+
+.aec-symbol-export {
+background-position: -192px -64px;
+}
+
+.aec-symbol-import {
+background-position: -256px -64px;
+}
+
+.aec-symbol-history {
+background-position: -320px -64px;
+}
+
+.aec-symbol-microintegrations {
+background-position: -384px -64px;
+}
+
+.aec-symbol-invoices {
+background-position: -448px -64px;
+}
+
+.aec-symbol-eventlog {
+background-position: 0 -128px;
+}
+
+.aec-symbol-settings {
+background-position: -64px -128px;
+}
+
+.aec-symbol-stats {
+background-position: -128px -128px;
+}
+
+.aec-symbol-toolbox {
+background-position: -192px -128px;
+}
+
+.aec-symbol-coupons {
+background-position: -256px -128px;
+}
+
+.aec-symbol-coupons-static {
+background-position: -320px -128px;
+}
+
+.aec-symbol-css {
+background-position: -384px -128px;
+}
 
 /* Overrides */
 

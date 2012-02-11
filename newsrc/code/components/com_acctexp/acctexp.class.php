@@ -6129,22 +6129,30 @@ class aecHTML
 		return $tip . '&nbsp;';
 	}
 
-	/**
-	 * displays an icon
-	 *
-	 * @param 	string	$image	image name
-	 * @param	string	$alt	optional alt/title text
-	 * @return html string
-	 */
-	function Icon( $image = 'error.png', $alt = '' )
+	function Icon( $icon='fire', $white=false )
 	{
-		if ( !$alt ) {
-			$name	= explode( '.', $image );
-			$alt	= $name[0];
-		}
-		$image 	= JURI::root() . 'media/com_acctexp/images/site/icons/'. $image;
+		return '<i class="bsicon-'. $icon .' bsicon'. ( $white ? '-white' : '' ) .'"></i>';
+	}
 
-		return '<img src="'. $image .'" border="0" alt="' . $alt . '" class="aec_icon" />';
+	function Button( $icon='fire', $text='', $style='', $link='', $js='' )
+	{
+		$white = true;
+
+		if ( empty( $style ) ) {
+			$white = false;
+		} else {
+			$style = ' btn-'.$style;
+		}
+
+		if ( empty( $link ) ) {
+			$link = '#';
+		}
+
+		if ( !empty( $js ) ) {
+			$js = 'onclick="javascript: submitbutton(\''.$js.'\')"';
+		}
+
+		return '<a data-original-title="'.JText::_($text).'" rel="tooltip" href="'.$link.'"'.$js.' class="btn'.$style.'">'.aecHTML::Icon( $icon, $white ).'</a>';
 	}
 
 }

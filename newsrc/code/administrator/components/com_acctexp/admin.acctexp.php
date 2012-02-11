@@ -92,17 +92,23 @@ switch( strtolower( $task ) ) {
 	case 'cancel': cancel( $option ); break;
 	case 'showcentral': aecCentral( $option ); break;
 
-	case 'clearpayment':
+	case 'clearinvoice':
 		$invoice	= trim( aecGetParam( 'invoice', '' ) );
 		$applyplan	= trim( aecGetParam( 'applyplan', '0' ) );
 
 		clearInvoice( $option, $invoice, $applyplan, $returnTask );
 		break;
 
-	case 'cancelpayment':
+	case 'cancelinvoice':
 		$invoice	= trim( aecGetParam( 'invoice', '' ) );
 
 		cancelInvoice( $option, $invoice, $returnTask );
+		break;
+
+	case 'printinvoice':
+		$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+		AdminInvoicePrintout( $option, $invoice );
 		break;
 
 	case 'showsubscriptions':
@@ -256,12 +262,6 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'invoices': invoices( $option ); break;
-
-	case 'invoiceprint':
-		$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-
-		AdminInvoicePrintout( $option, $invoice );
-		break;
 
 	case 'history': history( $option ); break;
 	case 'eventlog': eventlog( $option ); break;
@@ -551,60 +551,51 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 			$invoice_counter++;
 		}
 
-		$status = aecHTML::Icon( 'add.png' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->created_date ) . '<br />';
+		$status = aecHTML::Icon( 'plus' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->created_date ) . '<br />';
 
 		$current_status = 'uncleared';
 
 		if ( isset( $invoice->params['deactivated'] ) ) {
-			$status .= aecHTML::Icon( 'delete.png' ) . 'deactivated';
+			$status .= aecHTML::Icon( 'remove-circle' ) . 'deactivated';
 		} elseif ( isset( $invoice->params['pending_reason'] ) ) {
 			if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
-				$status .= aecHTML::Icon( 'error.png' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
+				$status .= aecHTML::Icon( 'warning-sign' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
 			} else {
-				$status .= aecHTML::Icon( 'error.png' ) . $invoice->params['pending_reason'];
+				$status .= aecHTML::Icon( 'warning-sign' ) . $invoice->params['pending_reason'];
 			}
 		} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-			$status .= aecHTML::Icon( 'hourglass.png' ) . 'uncleared';
+			$status .= aecHTML::Icon( 'time' ) . 'uncleared';
 		}
 
-		$actions	= '';
+		$actions	= array();
 		$rowstyle	= '';
 
 		if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-			$actions .= '<a href="'
-			. AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice='
-			. $invoice->invoice_number ) . '">'
-			. aecHTML::Icon( 'arrow_redo.png' ) . "&nbsp;"
-			. JText::_('USERINVOICE_ACTION_REPEAT') . '</a>'
-			. '<br />'
-			. '<a href="'
-			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=cancelpayment&invoice='
-			. $invoice->invoice_number . '&returnTask=edit&userid=' . $metaUser->userid ) . '">'
-			. aecHTML::Icon( 'delete.png' ) . '&nbsp;'
-			. JText::_('USERINVOICE_ACTION_CANCEL') . '</a>'
-			. '<br />'
-			. '<a href="'
-			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=clearpayment&invoice='
-			. $invoice->invoice_number . '&returnTask=edit&userid=' . $metaUser->userid ) . '">'
-			. aecHTML::Icon( 'coins.png' ) . '&nbsp;'
-			. JText::_('USERINVOICE_ACTION_CLEAR') . '</a>'
-			. '<br />'
-			. '<a href="'
-			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=clearpayment&invoice='
-			. $invoice->invoice_number . '&applyplan=1&returnTask=edit&userid=' . $metaUser->userid ) . '">'
-			. aecHTML::Icon( 'coins_add.png' ) . '&nbsp;'
-			. JText::_('USERINVOICE_ACTION_CLEAR_APPLY') . '</a>'
-			. '<br />';
+			$actions = array(
+								array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info' ),
+								array( 'cancel', 'remove', 'USERINVOICE_ACTION_CANCEL', 'danger' ),
+								array( 'clear', 'ok', 'USERINVOICE_ACTION_CLEAR_APPLY', 'success', '&applyplan=1' ),
+								array( 'clear', 'check', 'USERINVOICE_ACTION_CLEAR', 'warning' ),
+			);
+
 			$rowstyle = ' style="background-color:#fee;"';
 		} else {
 			$status .= aecHTML::Icon( 'coins.png' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
 		}
 
-		$actions	.= '<a href="'
-			. AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice='
-			. $invoice->invoice_number ) . '" target="_blank">'
-			. aecHTML::Icon( 'printer.png' ) . '&nbsp;'
-			. JText::_('HISTORY_ACTION_PRINT') . '</a>';
+		$actions[] = array( 'print', 'print', 'HISTORY_ACTION_PRINT', '', '" target="_blank' );
+
+		$actionlist = '<div class="btn-group">';
+		foreach ( $actions as $action ) {
+			$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&applyplan=1&returnTask=edit&userid=' . $metaUser->userid;
+
+			if ( isset( $action[4] ) ) {
+				$alink .= $action[4];
+			}
+
+			$actionlist .= aecHTML::Button( $action[1], $action[2], $action[3], $alink );
+		}
+		$actionlist .= '</div>';
 
 		$non_formatted = $invoice->invoice_number;
 		$invoice->formatInvoiceNumber();
@@ -621,7 +612,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		$invoices[$inv_id]['status']			= $status;
 		$invoices[$inv_id]['processor']			= $invoice->method;
 		$invoices[$inv_id]['usage']				= $invoice->usage;
-		$invoices[$inv_id]['actions']			= $actions;
+		$invoices[$inv_id]['actions']			= $actionlist;
 	}
 
 	$coupons = array();
