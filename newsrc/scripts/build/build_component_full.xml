@@ -15,6 +15,7 @@
 				<include name="*.xml" />
 				<include name="*.txt" />
 				<exclude name=".directory"/>
+				<exclude name="**/.directory"/>
 			</fileset>
 		</copy>
 
