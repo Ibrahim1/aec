@@ -156,3 +156,35 @@ function readNotice(id) {
 		}
 	});
 }
+
+function toggleProperty(type, property, id, callerid) {
+	jQuery('#'+callerid+' i').addClass('bsicon-refresh');
+	jQuery('#'+callerid+' i').removeClass('bsicon-remove').removeClass('bsicon-ok').removeClass('bsicon-eye-open');
+	jQuery('#'+callerid+' i').addClass('bsicon-rotate');
+
+	if ( jQuery('#'+callerid).hasClass('btn-toggle-danger') ) {
+		jQuery('#'+callerid).removeClass('btn-toggle-danger').addClass('btn-toggle-warning');
+	} else {
+		jQuery('#'+callerid).removeClass('btn-toggle-success').addClass('btn-toggle-warning');
+	}
+
+	jQuery('#'+callerid+' i').addClass('bsicon-refresh').removeClass('bsicon-eye-open');
+
+	jQuery.post("index.php?option=com_acctexp&task=toggleAjax&type="+type+"&property="+property+"&id="+id , {queryString: ""}, function(data) {
+		jQuery('#'+callerid).removeClass('btn-toggle-warning');
+
+		if ( data == "1" ) {
+			jQuery('#'+callerid).addClass('btn-toggle-success');
+
+			if ( property == 'visible' ) {
+				jQuery('#'+callerid+' i').addClass('bsicon-eye-open').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+			} else {
+				jQuery('#'+callerid+' i').addClass('bsicon-ok').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+			}
+		} else {
+			jQuery('#'+callerid).addClass('btn-toggle-danger');
+
+			jQuery('#'+callerid+' i').addClass('bsicon-remove').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+		}
+	});
+}

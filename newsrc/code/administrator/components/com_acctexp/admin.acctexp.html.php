@@ -100,6 +100,44 @@ class HTML_myCommon
 
 	function getButtons( $buttons, $object )
 	{
+		if ( !is_array( $buttons ) ) {
+			switch ( $buttons ) {
+				case 'list':
+					$buttons = array(	'egs' => array( 'groupstart' => true ),
+										'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
+										'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
+										'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
+										'ege' => array( 'groupend' => true ),
+										'hl1' => array(),
+										'pgs' => array( 'groupstart' => true ),
+										'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+										'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
+										'pge' => array( 'groupend' => true ),
+										'hl2' => array(),
+										'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
+									);
+					break;
+				case 'list_short':
+					$buttons = array(	'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
+										'hl1' => array(),
+										'pgs' => array( 'groupstart' => true ),
+										'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
+										'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
+										'pge' => array( 'groupend' => true ),
+										'hl2' => array(),
+										'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
+									);
+					break;
+				case 'edit':
+					$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
+										'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
+										'hl1' => array(),
+										'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
+									);
+					break;
+			}
+		}
+
 		$v = new JVersion();
 		?><div class="aec-buttons"><?php
 		foreach ( $buttons as $action => $button ) {
@@ -114,6 +152,22 @@ class HTML_myCommon
 			}
 		}
 		?></div><?php
+	}
+
+	function toggleBtn( $type, $property, $id, $state )
+	{
+		if ( $property == 'visible' ) {
+			$icons = array( 'remove', 'eye-open' );
+		} else {
+			$icons = array( 'remove', 'ok' );
+		}
+
+		$cssid = $type.'-'.$property.'-'.$id;
+
+		?><a class="btn btn-toggle-<?php echo $state ? 'success' : 'danger'; ?>" id="<?php echo $cssid;?>" href="#" onClick="toggleProperty('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>')">
+			<?php echo aecHTML::Icon( $icons[$state], true ); ?>
+		</a>
+		<?php
 	}
 }
 
@@ -217,10 +271,7 @@ class HTML_AcctExp
 
 
 		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-			<?php
-			$tabs->startPanes();
-			$tabs->startPane( 'user', true );
-			?>
+			<?php $tabs->nextPane( 'user', true ); ?>
 			<table class="aecadminform">
 				<tr>
 					<td width="50%" valign="top">
@@ -509,10 +560,7 @@ class HTML_AcctExp
 					</td>
 				</tr>
 			</table>
-			<?php
-			$tabs->endPane();
-			$tabs->startPane( 'mis' );
-			?>
+			<?php $tabs->nextPane( 'mis' ); ?>
 			<table class="aecadminform">
 				<tr>
 					<td>
@@ -882,6 +930,7 @@ class HTML_AcctExp
 	{
 		$infohandler	= new GeneralInfoRequester();
 		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'AEC_HEAD_HACKS', 'settings' );
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -889,7 +938,6 @@ class HTML_AcctExp
 			<input type="hidden" name="returnTask" value="" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_HACKS', 'settings' ); ?>
 		<table class="aecadminform">
 			<tr><td>
 				<div style="width:100%; float:left;">
@@ -996,7 +1044,7 @@ class HTML_AcctExp
 
 		$first = true;
 		foreach( $tab_data as $tab ) {
-			$tabs->startPane( strtolower( str_replace( ' ', '-', $tab[0] ) ), $first );
+			$tabs->nextPane( strtolower( str_replace( ' ', '-', $tab[0] ) ), $first );
 			$first = false;
 
 			echo '<table width="100%" class="aecadminform"><tr><td>';
@@ -1030,61 +1078,39 @@ class HTML_AcctExp
 
 	function listProcessors( $rows, $pageNav, $option )
 	{
-		HTML_myCommon::startCommon(); ?>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'settings' );
+		HTML_myCommon::getButtons( 'list_short', 'Processor' ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<?php
-			HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'settings' );
-
-			$buttons = array(	'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
-								'hl1' => array(),
-								'pgs' => array( 'groupstart' => true ),
-								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'pge' => array( 'groupend' => true ),
-								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
-							);
-			HTML_myCommon::getButtons( $buttons, 'Processor' );
-			?>
 			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%">id</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
+					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
 					<th align="left" nowrap="nowrap"><?php echo JText::_('PROCESSOR_INFO'); ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
+					<th width="1%" nowrap="nowrap"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 				</tr></thead>
-
-		<?php
-		$k = 0;
-		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i]; ?>
-				<tr class="row<?php echo $k; ?>">
-					<td width="1%" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td width="1%" align="center"><?php echo $row->processor->id; ?></td>
-					<td width="1%"><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
-					<td width="15%">
+			<?php foreach ( $rows as $i => $row ) { ?>
+				<tr>
+					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+					<td align="center"><?php echo $row->processor->id; ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
+					<td>
 						<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->processor->info['longname']; ?></a>
 					</td>
 					<td><?php echo $row->processor->info['statement']; ?></td>
-					<td width="3%" align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $row->processor->active ? 'unpublishProcessor' : 'publishProcessor'; ?>')">
-							<img src="<?php echo JURI::base(); ?>images/<?php echo $row->processor->active ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo $row->processor->active ? JText::_('AEC_CMN_YES') : JText::_('AEC_CMN_NO'); ?>" title="<?php echo $row->processor->active ? JText::_('AEC_CMN_YES') : JText::_('AEC_CMN_NO'); ?>" />
-						</a>
+					<td align="center"><td align="center"><?php echo HTML_myCommon::toggleBtn( 'processors', 'active', $row->id, $row->active ); ?></td></td>
+				</tr>
+			<?php } ?>
+			<tfoot>
+				<tr>
+					<td colspan="6">
+	 					<?php echo $pageNav->getListFooter(); ?>
 					</td>
 				</tr>
-			<?php
-			$k = 1 - $k;
-		} ?>
-		<tfoot>
-			<tr>
-				<td colspan="6">
- 					<?php echo $pageNav->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
+			</tfoot>
 		</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -1100,15 +1126,8 @@ class HTML_AcctExp
 	function editProcessor( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
-
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
-							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-						);
-		HTML_myCommon::getButtons( $buttons, 'Processor' );
+		HTML_myCommon::getButtons( 'edit', 'Processor' );
 
 		$id = 0;
 		if ( !empty( $aecHTML->pp ) ) {
@@ -1121,7 +1140,7 @@ class HTML_AcctExp
 		
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-            <table width="100%" class="aecadminform">
+			<table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
 						<div class="aec_userinfobox_sub">
@@ -1147,11 +1166,9 @@ class HTML_AcctExp
 
 	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
 	{
-		$user = &JFactory::getUser();
-
-		HTML_myCommon::startCommon(); ?>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( $action[1], '' . $action[0] ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<?php HTML_myCommon::getHeader( $action[1], '' . $action[0] ); ?>
 			<div class="aec-filters">
 				<div class="filter-sub">
 					<?php echo $lists['groups'];?>
@@ -1176,29 +1193,26 @@ class HTML_AcctExp
 			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
-					<th width="20">#</th>
-					<th width="20"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="20">&nbsp;</th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo JText::_('CNAME'); ?></th>
+					<th width="1%">#</th>
+					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="1%">&nbsp;</th>
+					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('CNAME'); ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('USERLOGIN'); ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo JText::_('SUBSCR_DATE'); ?></th>
+					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('SUBSCR_DATE'); ?></th>
 					<?php if ( $action[0] != 'manual' ) { ?>
-						<th width="15%" align="left" nowrap="nowrap"><?php echo JText::_('LASTPAY_DATE'); ?></th>
+						<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('LASTPAY_DATE'); ?></th>
 						<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('METHOD'); ?></th>
 						<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('USERPLAN'); ?></th>
 						<th width="27%" align="left" nowrap="nowrap"><?php echo JText::_('EXPIRATION'); ?></th>
 					<?php } else { ?>
-						<th width="15%" align="left" nowrap="nowrap"></th>
+						<th width="10%" align="left" nowrap="nowrap"></th>
 						<th width="10%" align="left" nowrap="nowrap"></th>
 						<th width="10%" align="left" nowrap="nowrap"></th>
 						<th width="27%" align="left" nowrap="nowrap"></th>
 					<?php } ?>
 				</tr></thead>
-				<?php
-				$k = 0;
-				for( $i=0; $i < count( $rows ); $i++ ) {
-					$row = &$rows[$i];
+				<?php foreach ( $rows as $i => $row ) {
 
 					if ( !isset( $row->status ) ) {
 						$row->status		= '-';
@@ -1215,29 +1229,27 @@ class HTML_AcctExp
 							$rowstyle = ' style="border: 2px solid #DD0;"';
 						}
 					} ?>
-						<tr class="row<?php echo $k; ?>"<?php echo $rowstyle; ?>>
-							<td width="20" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-							<td width="20"><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
-							<td width="20"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-							<td width="15%" align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
-							<td width="10%" align="left"><?php echo $row->username; ?></td>
-							<td width="10%" align="left"><?php echo $row->status; ?></td>
-							<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
+						<tr<?php echo $rowstyle; ?>>
+							<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
+							<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
+							<td align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
+							<td align="left"><?php echo $row->username; ?></td>
+							<td align="left"><?php echo $row->status; ?></td>
+							<td align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
 							<?php if ( $action[0] != 'manual' ) { ?>
-								<td width="15%" align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
-								<td width="10%" align="left"><?php echo $row->type; ?></td>
-								<td width="10%" align="left"><?php echo $row->plan_name; ?></td>
-								<td width="27%" align="left"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
+								<td align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
+								<td align="left"><?php echo $row->type; ?></td>
+								<td align="left"><?php echo $row->plan_name; ?></td>
+								<td align="left"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
 							<?php } else { ?>
-								<td width="15%" align="left"></td>
-								<td width="10%" align="left"></td>
-								<td width="10%" align="left"></td>
-								<td width="27%" align="left"></td>
+								<td align="left"></td>
+								<td align="left"></td>
+								<td align="left"></td>
+								<td align="left"></td>
 							<?php } ?>
 						</tr>
-					<?php
-					$k = 1 - $k;
-				} ?>
+					<?php } ?>
 		<tfoot>
 			<tr>
 				<td colspan="11">
@@ -1258,26 +1270,10 @@ class HTML_AcctExp
 
 	function listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering )
 	{
-		HTML_myCommon::startCommon(); ?>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations' );
+		HTML_myCommon::getButtons( 'list', 'MicroIntegration' ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<?php
-			HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations' );
-
-			$buttons = array(	'egs' => array( 'groupstart' => true ),
-								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
-								'ege' => array( 'groupend' => true ),
-								'hl1' => array(),
-								'pgs' => array( 'groupstart' => true ),
-								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'pge' => array( 'groupend' => true ),
-								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
-							);
-			HTML_myCommon::getButtons( $buttons, 'MicroIntegration' );
-			?>
 			<div class="aec-filters">
 			<table class="adminheading">
 				<tr>
@@ -1302,27 +1298,24 @@ class HTML_AcctExp
 			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
-					<th width="20">#</th>
-					<th width="20">id</th>
-					<th width="20"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo JText::_('MI_NAME'); ?></th>
-					<th width="20%" align="left" nowrap="nowrap" ><?php echo JText::_('MI_DESC'); ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo JText::_('MI_ACTIVE'); ?></th>
+					<th width="1%">#</th>
+					<th width="1%">id</th>
+					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('MI_NAME'); ?></th>
+					<th width="50%" align="left" nowrap="nowrap" ><?php echo JText::_('MI_DESC'); ?></th>
+					<th width="1%" nowrap="nowrap"><?php echo JText::_('MI_ACTIVE'); ?></th>
 					<?php if ( $ordering ) { ?>
-						<th width="5%" colspan="2" nowrap="nowrap"><?php echo JText::_('MI_REORDER'); ?></th>
+						<th width="1%" nowrap="nowrap"><?php echo JText::_('MI_REORDER'); ?></th>
 					<?php } ?>
-					<th width="5%" align="right" nowrap="nowrap"><?php echo JText::_('MI_FUNCTION'); ?></th>
+					<th width="10%" align="right" nowrap="nowrap"><?php echo JText::_('MI_FUNCTION'); ?></th>
 				</tr></thead>
 
-		<?php
-		$k = 0;
-		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			$row = &$rows[$i]; ?>
-				<tr class="row<?php echo $k; ?>">
-					<td width="20" align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td width="20" align="center"><?php echo $row->id; ?></td>
-					<td width="20"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-					<td width="15%">
+			<?php foreach ( $rows as $i => $row ) { ?>
+				<tr>
+					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+					<td align="center"><?php echo $row->id; ?></td>
+					<td align="center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td>
 						<?php
 						if (!isset($row->id)) {
 							echo $row->name;
@@ -1330,31 +1323,24 @@ class HTML_AcctExp
 							<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editMicroIntegration')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a> <?php
 						} ?>
 					</td>
-					<td width="20%" align="left">
+					<td align="left">
 						<?php
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 						</td>
-					<td width="3%" align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ($row->active) ? 'unpublishMicroIntegration' : 'publishMicroIntegration'; ?>')">
-							<img src="<?php echo JURI::base(); ?>images/<?php echo ( $row->active ) ? 'publish_g.png' : 'publish_x.png'; ?>" width="12" height="12" border="0" alt="<?php echo ( $row->active ) ? JText::_('AEC_CMN_YES') : JText::_('AEC_CMN_NO'); ?>" title="<?php echo ( $row->active ) ? JText::_('AEC_CMN_YES') : JText::_('AEC_CMN_NO'); ?>" />
-						</a>
-					</td>
+					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?></td>
 					<?php if ( $ordering ) { ?>
-						<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordermiup' ); ?></td>
-						<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordermidown' ); ?></td>
+						<td align="center"><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
 					<?php } ?>
-					<td width="45%" align="right"><?php echo $row->class_name; ?></td>
+					<td align="right"><?php echo $row->class_name; ?></td>
 				</tr>
-			<?php
-			$k = 1 - $k;
-		} ?>
-		<tfoot>
-			<tr>
-				<td colspan="9">
- 					<?php echo $pageNav->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
+			<?php } ?>
+			<tfoot>
+				<tr>
+					<td colspan="9">
+	 					<?php echo $pageNav->getListFooter(); ?>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -1369,32 +1355,8 @@ class HTML_AcctExp
 	function editMicroIntegration( $option, $row, $lists, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-		?>
-		<script type="text/javascript">
-			/* <![CDATA[ */
-			/*
-			function swap() {
-				lifechecked = document.adminForm.ck_lifetime.checked;
-				if (lifechecked==false) {
-					document.adminForm.expiration.disabled = false;
-					document.adminForm.reset.disabled = false;
-				} else {
-					document.adminForm.expiration.disabled = true;
-					document.adminForm.reset.disabled = true;
-				}
-			}
-			*/
-			/* ]]> */
-		</script>
-		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
-
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
-							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-						);
-		HTML_myCommon::getButtons( $buttons, 'MicroIntegration' );
+		HTML_myCommon::getButtons( 'edit', 'MicroIntegration' );
 
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
@@ -1417,11 +1379,8 @@ class HTML_AcctExp
 
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
-			<?php
-			$tabs->startPanes();
-            $tabs->startPane( 'mi', true );
-            ?>
-            <table width="100%" class="aecadminform">
+			<?php $tabs->nextPane( 'mi', true ); ?>
+			<table width="100%" class="aecadminform">
 				<tr>
 				<td valign="top">
 					<div class="aec_userinfobox_sub">
@@ -1468,15 +1427,13 @@ class HTML_AcctExp
 				</tr>
 			</table>
 			<?php
-            $tabs->endPane();
-
 			if ( $aecHTML->hasSettings ) {
-	            $tabs->startPane( 'settings' ); ?>
-	            <table width="100%" class="aecadminform">
+				$tabs->nextPane( 'settings' ); ?>
+				<table width="100%" class="aecadminform">
 					<tr>
 						<td valign="top">
-			            	<div class="aec_userinfobox_sub">
-			            	<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
+							<div class="aec_userinfobox_sub">
+							<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
 							<?php
 							foreach ( $aecHTML->customparams as $name ) {
 								if ( strpos( $name, 'aectab_' ) === 0 ) {
@@ -1485,36 +1442,33 @@ class HTML_AcctExp
 										</td>
 									</tr>
 									</table>
-									<?php
-									$tabs->endPane();
-									$tabs->startPane( $name ); ?>
-					                <table width="100%" class="aecadminform">
+									<?php $tabs->nextPane( $name ); ?>
+								    <table width="100%" class="aecadminform">
 										<tr>
 											<td valign="top">
-								            	<div class="aec_userinfobox_sub">
-								            	<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
+												<div class="aec_userinfobox_sub">
+												<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
 									<?php
 								} else {
 									if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
 										echo '<tr><td>';
 									}
 
-			                		echo $aecHTML->createSettingsParticle( $name );
+						    		echo $aecHTML->createSettingsParticle( $name );
 
-			                		if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+						    		if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
 										echo '</td></tr>';
 									}
-			            		}
+								}
 							} ?>
 							</div>
 						</td>
 					</tr>
 				</table>
 				<?php
-	            $tabs->endPane();
 			}
 
-            $tabs->endPanes(); ?>
+			$tabs->finishPanes(); ?>
 
 			<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 			<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -1529,26 +1483,10 @@ class HTML_AcctExp
 
 	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
 	{
-		HTML_myCommon::startCommon(); ?>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
+		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<?php
-			HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
-
-			$buttons = array(	'egs' => array( 'groupstart' => true ),
-								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
-								'ege' => array( 'groupend' => true ),
-								'hl1' => array(),
-								'pgs' => array( 'groupstart' => true ),
-								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'pge' => array( 'groupend' => true ),
-								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
-							);
-			HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
-			?>
 			<div class="aec-filters">
 			<?php echo $lists['filter_group'];?>
 			<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
@@ -1562,44 +1500,18 @@ class HTML_AcctExp
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="1%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-					<th width="20%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-					<th width="5%" colspan="2" nowrap="nowrap"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_USERCOUNT'); ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+					<th width="50%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
+					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
+					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_USERCOUNT'); ?></th>
+					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
+					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 				</tr></thead>
 
-		<?php
-		$k = 0;
-		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-				switch( $rows[$i]->visible ) {
-					case '1':
-						$vaction	= 'invisible';
-						$vicon		= 'eye-open';
-						break;
-
-					case '0':
-						$vaction	= 'visible';
-						$vicon		= 'eye-close';
-						break;
-				}
-
-				switch( $rows[$i]->active ) {
-					case '1':
-						$aaction	= 'unpublish';
-						$aicon		= 'ok-circle';
-						break;
-
-					case '0':
-						$aaction	= 'publish';
-						$aicon		= 'remove-circle';
-						break;
-				}
-
-				if ( !is_null( $rows[$i]->desc ) ) {
-					$description = strip_tags( $rows[$i]->desc );
+			<?php foreach ( $rows as $i => $row ) {
+				if ( !is_null( $row->desc ) ) {
+					$description = strip_tags( $row->desc );
 					if ( strlen( $description ) > 50 ) {
 						$description = substr( $description, 0, 50) . ' ...';
 					}
@@ -1608,42 +1520,28 @@ class HTML_AcctExp
 				}
 
 				?>
-				<tr class="row<?php echo $k; ?>">
+				<tr>
 					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td align="center"><?php echo $rows[$i]->id; ?></td>
-					<td align="center"><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
-					<td align="center" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo stripslashes( $rows[$i]->name ); ?></a></td>
-					<td  align="left">
-						<?php
-						echo stripslashes( $description ); ?>
-					</td>
-					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>SubscriptionPlan')">
-							<?php echo aecHTML::Icon( $aicon ); ?>
-						</a>
-					</td>
-					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $vaction; ?>SubscriptionPlan')">
-							<?php echo aecHTML::Icon( $vicon ); ?>
-						</a>
-					</td>
-					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'orderplanup' ); ?></td>
-					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'orderplandown' ); ?></td>
-					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $rows[$i]->id; ?>"><strong><?php echo $rows[$i]->usercount; ?></strong></a></td>
-					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showExpired&amp;plan=<?php echo $rows[$i]->id; ?>"><?php echo $rows[$i]->expiredcount; ?></a></td>
-					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $rows[$i]->id; ?>"><strong><?php echo $rows[$i]->usercount + $rows[$i]->expiredcount; ?></strong></a></td>
+					<td align="center"><?php echo $row->id; ?></td>
+					<td align="center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td align="center" style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo stripslashes( $row->name ); ?></a></td>
+					<td align="left"><?php echo stripslashes( $description ); ?></td>
+					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
+					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
+					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
+					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount; ?></strong></a></td>
+					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showExpired&amp;plan=<?php echo $row->id; ?>"><?php echo $row->expiredcount; ?></a></td>
+					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></td>
 				</tr>
-			<?php
-			$k = 1 - $k;
-		} ?>
-		<tfoot>
-			<tr>
-				<td colspan="13">
- 					<?php echo $pageNav->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
+			<?php } ?>
+			<tfoot>
+				<tr>
+					<td colspan="13">
+	 					<?php echo $pageNav->getListFooter(); ?>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -1663,7 +1561,6 @@ class HTML_AcctExp
 		$editor =& JFactory::getEditor();
 
 		HTML_myCommon::startCommon();
-
 		HTML_myCommon::getHeader( '', 'plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW') );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
@@ -1687,10 +1584,7 @@ class HTML_AcctExp
 
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
-			<?php
-			$tabs->startPanes();
-			$tabs->startPane( 'plan', true );
-			?>
+			<?php $tabs->nextPane( 'plan', true ); ?>
 			<table class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -1805,10 +1699,7 @@ class HTML_AcctExp
 					</td>
 				</tr>
 			</table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'processors' );
-			?>
+			<?php $tabs->nextPane( 'processors' ); ?>
 			<table width="100%" class="aecadminform"><tr><td>
 				<?php
 				if ( !empty( $aecHTML->customparams->pp ) ) {
@@ -1828,11 +1719,8 @@ class HTML_AcctExp
 				}
 				?>
 			</td></tr></table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'text' );
-            ?>
-            <table width="100%" class="aecadminform"><tr><td>
+			<?php $tabs->nextPane( 'text' ); ?>
+			<table width="100%" class="aecadminform"><tr><td>
 				<div class="aec_userinfobox_sub">
 					<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
@@ -1842,10 +1730,7 @@ class HTML_AcctExp
 					<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks' ); ?>
 				</div>
 			</td></tr></table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'restrictions' );
-            ?>
+			<?php $tabs->nextPane( 'restrictions' ); ?>
 			<table class="aecadminform">
 				<tr><td>
 					<div style="position:relative;float:left;width:49%;padding:4px;">
@@ -1874,10 +1759,7 @@ class HTML_AcctExp
 						</div>
 				</td></tr>
 			</table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'trial' );
-			?>
+			<?php $tabs->nextPane( 'trial' ); ?>
 			<table width="100%" class="aecadminform"><tr><td>
 				<div class="aec_userinfobox_sub">
 					<h4><?php echo JText::_('PAYPLAN_TRIAL_TITLE'); ?></h4>
@@ -1890,10 +1772,7 @@ class HTML_AcctExp
 					</div>
 				</div>
 			</td></tr></table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'relations' );
-			?>
+			<?php $tabs->nextPane( 'relations' ); ?>
 			<table width="100%" class="aecadminform"><tr><td>
 				<div class="aec_userinfobox_sub">
 					<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
@@ -1901,11 +1780,8 @@ class HTML_AcctExp
 					<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
 				</div>
 			</td></tr></table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'mis' );
-            ?>
-            <table width="100%" class="aecadminform"><tr><td>
+			<?php $tabs->nextPane( 'mis' ); ?>
+			<table width="100%" class="aecadminform"><tr><td>
 				<div class="aec_userinfobox_sub">
 					<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
 					<?php
@@ -1996,8 +1872,8 @@ class HTML_AcctExp
 				?>
 			</td></tr></table>
 			<?php
-            $tabs->endPane();
-            $tabs->endPanes();
+			$tabs->endPane();
+			$tabs->endPanes();
 			?>
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
@@ -2011,25 +1887,13 @@ class HTML_AcctExp
 
 	function listItemGroups( $rows, $pageNav, $option )
 	{
-		HTML_myCommon::startCommon(); ?>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups' );
+		HTML_myCommon::getButtons( 'list', 'ItemGroup' );
+		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<?php
-			HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups' );
 
-			$buttons = array(	'egs' => array( 'groupstart' => true ),
-								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
-								'ege' => array( 'groupend' => true ),
-								'hl1' => array(),
-								'pgs' => array( 'groupstart' => true ),
-								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'pge' => array( 'groupend' => true ),
-								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
-							);
-			HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
 			?>
 
 			<div class="aecadminform">
@@ -2038,43 +1902,17 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="5%"></th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
-					<th width="20%" align="left" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
+					<th width="10%"></th>
+					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+					<th width="50%" align="left" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
 					<th width="3%" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
-					<th width="5%" colspan="2" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
+					<th width="1%" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
 				</tr></thead>
 
-		<?php
-		$k = 0;
-		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-				switch( $rows[$i]->visible ) {
-					case '1':
-						$vaction	= 'invisible';
-						$vicon		= 'eye-open';
-						break;
-
-					case '0':
-						$vaction	= 'visible';
-						$vicon		= 'eye-close';
-						break;
-				}
-
-				switch( $rows[$i]->active ) {
-					case '1':
-						$aaction	= 'unpublish';
-						$aicon		= 'ok-circle';
-						break;
-
-					case '0':
-						$aaction	= 'publish';
-						$aicon		= 'remove-circle';
-						break;
-				}
-
-				if ( !is_null( $rows[$i]->desc ) ) {
-					$description = strip_tags( $rows[$i]->desc );
+		<?php foreach ( $rows as $i => $row ) {
+				if ( !is_null( $row->desc ) ) {
+					$description = strip_tags( $row->desc );
 					if ( strlen( $description ) > 50 ) {
 						$description = substr( $description, 0, 50) . ' ...';
 					}
@@ -2083,39 +1921,28 @@ class HTML_AcctExp
 				}
 
 				?>
-				<tr class="row<?php echo $k; ?>">
+				<tr>
 					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td align="right"><?php echo $rows[$i]->id; ?></td>
-					<td><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
-					<td align="right" style="background: #<?php echo $rows[$i]->color; ?>;"><?php echo $rows[$i]->group; ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $rows[$i]->name; ?></a></td>
+					<td align="center"><?php echo $row->id; ?></td>
+					<td align="center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td align="right" style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
 					<td  align="left">
 						<?php
 						echo $description; ?>
 					</td>
-					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $aaction; ?>ItemGroup')">
-							<?php echo aecHTML::Icon( $aicon ); ?>
-						</a>
-					</td>
-					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo $vaction; ?>ItemGroup')">
-							<?php echo aecHTML::Icon( $vicon ); ?>
-						</a>
-					</td>
-					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordergroupup' ); ?></td>
-					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordergroupdown' ); ?></td>
+					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
+					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
+					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
 				</tr>
-			<?php
-			$k = 1 - $k;
-		} ?>
-		<tfoot>
-			<tr>
-				<td colspan="10">
- 					<?php echo $pageNav->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
+			<?php } ?>
+			<tfoot>
+				<tr>
+					<td colspan="10">
+	 					<?php echo $pageNav->getListFooter(); ?>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -2130,18 +1957,9 @@ class HTML_AcctExp
 
 	function editItemGroup( $option, $aecHTML, $row )
 	{
-		$user = &JFactory::getUser();
-
 		HTML_myCommon::startCommon();
-
 		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
-
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
-							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-						);
-		HTML_myCommon::getButtons( $buttons, 'ItemGroup' );
+		HTML_myCommon::getButtons( 'edit', 'ItemGroup' );
 
 		$tabs = new bsPaneTabs;
 
@@ -2154,10 +1972,7 @@ class HTML_AcctExp
 		$tabs->startPanes();
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
-			<?php
-			$tabs->startPanes();
-			$tabs->startPane( 'group', true );
-			?>
+			<?php $tabs->nextPane( 'group', true ); ?>
 			<table class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -2226,10 +2041,7 @@ class HTML_AcctExp
 					</td>
 				</tr>
 			</table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'restrictions' );
-            ?>
+			<?php $tabs->nextPane( 'restrictions' ); ?>
 			<table class="aecadminform">
 				<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 			<tr><td>
@@ -2242,11 +2054,8 @@ class HTML_AcctExp
 				</div>
 			</td></tr>
 			</table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'mis' );
-            ?>
-            <table width="100%" class="aecadminform"><tr><td>
+			<?php $tabs->nextPane( 'mis' ); ?>
+			<table width="100%" class="aecadminform"><tr><td>
 				<div class="aec_userinfobox_sub">
 					<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
 					<?php if ( $row->id > 1 ) {
@@ -2316,8 +2125,8 @@ class HTML_AcctExp
 				</div>
 			</td></tr></table>
 			<?php
-            $tabs->endPane();
-            $tabs->endPanes();
+			$tabs->endPane();
+			$tabs->endPanes();
 			?>
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
@@ -2331,70 +2140,46 @@ class HTML_AcctExp
 
 	function listCoupons( $rows, $pageNav, $option, $type )
 	{
-		HTML_myCommon::startCommon(); ?>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'coupons' . ( $type ? '_static' : '' ) );
+		HTML_myCommon::getButtons( 'list', 'Coupon' . ($type ? 'Static' : '') );
+		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<?php HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'coupons' . ( $type ? '_static' : '' ) );
-
-			$buttons = array(	'egs' => array( 'groupstart' => true ),
-								'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
-								'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
-								'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
-								'ege' => array( 'groupend' => true ),
-								'hl1' => array(),
-								'pgs' => array( 'groupstart' => true ),
-								'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-								'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-								'pge' => array( 'groupend' => true ),
-								'hl2' => array(),
-								'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
-							);
-			HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );?>
-
 			<div class="aecadminform">
 			<table class="adminlist">
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="15%" align="left" nowrap="nowrap"><?php echo JText::_('COUPON_NAME'); ?></th>
-					<th width="20%" align="center" nowrap="nowrap" ><?php echo JText::_('COUPON_CODE'); ?></th>
-					<th width="20%" align="left" nowrap="nowrap" ><?php echo JText::_('COUPON_DESC'); ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
-					<th width="5%" colspan="2" nowrap="nowrap"><?php echo JText::_('COUPON_REORDER'); ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
+					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('COUPON_NAME'); ?></th>
+					<th width="10%" align="center" nowrap="nowrap" ><?php echo JText::_('COUPON_CODE'); ?></th>
+					<th width="50%" align="left" nowrap="nowrap" ><?php echo JText::_('COUPON_DESC'); ?></th>
+					<th width="1%" nowrap="nowrap"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
+					<th width="1%" nowrap="nowrap"><?php echo JText::_('COUPON_REORDER'); ?></th>
+					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 				</tr></thead>
 
-		<?php
-		$k = 0;
-		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			?>
-				<tr class="row<?php echo $k; ?>">
+			<?php foreach ( $rows as $i => $row ) { ?>
+				<tr>
 					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td><?php echo JHTML::_('grid.id', $i, $rows[$i]->id, false, 'id' ); ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $rows[$i]->name; ?></a></td>
-					<td align="center"><strong><?php echo $rows[$i]->coupon_code; ?></strong></td>
+					<td align="center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td align="center"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
+					<td align="center"><strong><?php echo $row->coupon_code; ?></strong></td>
 					<td align="left">
 						<?php
-						echo $rows[$i]->desc ? ( strlen( strip_tags( $rows[$i]->desc ) > 50 ) ? substr( strip_tags( $rows[$i]->desc ), 0, 50) . ' ...' : strip_tags( $rows[$i]->desc ) ) : ''; ?>
+						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 					</td>
-					<td align="center">
-						<a href="javascript:void(0);" onClick="return listItemTask('cb<?php echo $i;?>','<?php echo ( ( $rows[$i]->active ? 'unpublishCoupon' : 'publishCoupon') . ( $type ? 'Static' : '' ) ); ?>')">
-							<?php echo aecHTML::Icon( ( $rows[$i]->active ) ? 'ok-circle' : 'remove-circle' ); ?>
-						</a>
-					</td>
-					<td align="right"><?php echo $pageNav->orderUpIcon( $i, true, 'ordercoupon' . ( $type ? 'static' : '' ) . 'up' ); ?></td>
-					<td align="right"><?php echo $pageNav->orderDownIcon( $i, $n, true, 'ordercoupon' . ( $type ? 'static' : '' ) . 'down' ); ?></td>
-					<td align="center"><strong><?php echo $rows[$i]->usecount; ?></strong></td>
+					<td align="center"><td align="center"><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td></td>
+					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'coupon' . ( $type ? 'static' : '' ) ); ?></td>
+					<td align="center"><strong><?php echo $row->usecount; ?></strong></td>
 				</tr>
-			<?php
-			$k = 1 - $k;
-		} ?>
-		<tfoot>
-			<tr>
-				<td colspan="9">
- 					<?php echo $pageNav->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
+			<?php } ?>
+			<tfoot>
+				<tr>
+					<td colspan="9">
+	 					<?php echo $pageNav->getListFooter(); ?>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -2409,20 +2194,12 @@ class HTML_AcctExp
 
 	function editCoupon( $option, $aecHTML, $row, $type )
 	{
-		$user = &JFactory::getUser();
-
 		HTML_myCommon::startCommon();
 
 		JHTML::_('behavior.calendar');
 
 		HTML_myCommon::getHeader( 'AEC_COUPON', 'coupons' . ($type ? '_static' : ''), ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
-		
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
-							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-						);
-		HTML_myCommon::getButtons( $buttons, 'Coupon' . ($type ? 'Static' : '') );
+		HTML_myCommon::getButtons( 'edit', 'Coupon' . ($type ? 'Static' : '') );
 
 		$tabs = new bsPaneTabs;
 
@@ -2434,10 +2211,7 @@ class HTML_AcctExp
 
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
-			<?php
-			$tabs->startPanes();
-            $tabs->startPane( 'coupon', true );
-            ?>
+			<?php $tabs->nextPane( 'coupon', true ); ?>
 			<table class="aecadminform">
 				<tr>
 					<td>
@@ -2498,10 +2272,7 @@ class HTML_AcctExp
 					</td>
 				</tr>
 			</table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'restrictions' );
-            ?>
+			<?php $tabs->nextPane( 'restrictions' ); ?>
 			<table class="aecadminform">
 				<tr><td>
 					<div class="aec_userinfobox_sub">
@@ -2531,22 +2302,16 @@ class HTML_AcctExp
 				</td></tr>
 				<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 			</table>
-			<?php
-            $tabs->endPane();
-            $tabs->startPane( 'mis' );
-            ?>
-            <table width="100%" class="aecadminform">
-	            <tr><td>
+			<?php $tabs->nextPane( 'mis' ); ?>
+			<table width="100%" class="aecadminform">
+				<tr><td>
 					<div class="aec_userinfobox_sub">
 						<h4>Micro Integrations</h4>
 						<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 					</div>
 				</td></tr>
 			</table>
-			<?php
-            $tabs->endPane();
-            $tabs->endPanes();
-			?>
+			<?php $tabs->finishPanes(); ?>
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -2559,12 +2324,10 @@ class HTML_AcctExp
 
 	function viewinvoices( $option, $rows, $search, $pageNav )
 	{
-		$user = &JFactory::getUser();
-
 		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices' );
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-		<?php HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('INVOICE_SEARCH'); ?>: <br />
 			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
@@ -2573,45 +2336,40 @@ class HTML_AcctExp
 		<div class="aecadminform">
 		<table class="adminlist">
 		<thead><tr>
-			<th width="5%">#</th>
+			<th width="10%">#</th>
 			<th align="left" width="10%"><?php echo JText::_('INVOICE_USERID'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
-			<th align="center" width="30%"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
-			<th align="center" width="30%"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
+			<th align="center" width="10%"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
+			<th align="center" width="10%"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('USERPLAN'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('INVOICE_COUPONS'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('INVOICE_METHOD'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
 			<th width="10%"><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
-		  </tr></thead>
-		<?php
-		$k = 0;
-		for( $i=0, $n=count( $rows ); $i < $n; $i++ ) {
-			?>
-			<tr class="row<?php echo $k; ?>">
-				<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-				<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $rows[$i]->userid; ?>"><?php echo $rows[$i]->username; ?></a></td>
-				<td align="center"><a href="<?php echo AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice=' . $rows[$i]->invoice_number ); ?>" target="_blank"><?php echo $rows[$i]->invoice_number_formatted; ?></a></td>
-				<td align="center"><?php echo $rows[$i]->secondary_ident; ?></td>
-				<td align="center"><?php echo $rows[$i]->created_date; ?></td>
-				<td align="center"><?php echo $rows[$i]->transaction_date; ?></td>
-	  			<td align="center"><?php echo $rows[$i]->usage; ?></td>
-	  			<td align="center"><?php echo $rows[$i]->coupons; ?></td>
-	  			<td align="center"><?php echo $rows[$i]->method; ?></td>
-				<td align="center"><?php echo $rows[$i]->amount; ?></td>
-				<td align="center"><?php echo $rows[$i]->currency; ?></td>
-			</tr>
-			<?php
-			$k = 1 - $k;
-		} ?>
-		<tfoot>
+		</tr></thead>
+		<?php foreach ( $rows as $i => $row ) { ?>
 			<tr>
-				<td colspan="11">
- 					<?php echo $pageNav->getListFooter(); ?>
-				</td>
+				<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+				<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $row->userid; ?>"><?php echo $row->username; ?></a></td>
+				<td align="center"><a href="<?php echo AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice=' . $row->invoice_number ); ?>" target="_blank"><?php echo $row->invoice_number_formatted; ?></a></td>
+				<td align="center"><?php echo $row->secondary_ident; ?></td>
+				<td align="center"><?php echo $row->created_date; ?></td>
+				<td align="center"><?php echo $row->transaction_date; ?></td>
+	  			<td align="center"><?php echo $row->usage; ?></td>
+	  			<td align="center"><?php echo $row->coupons; ?></td>
+	  			<td align="center"><?php echo $row->method; ?></td>
+				<td align="center"><?php echo $row->amount; ?></td>
+				<td align="center"><?php echo $row->currency; ?></td>
 			</tr>
-		</tfoot>
+			<?php } ?>
+			<tfoot>
+				<tr>
+					<td colspan="11">
+	 					<?php echo $pageNav->getListFooter(); ?>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -2626,12 +2384,10 @@ class HTML_AcctExp
 
 	function viewhistory( $option, $rows, $search, $pageNav )
 	{
-		$user = &JFactory::getUser();
-
 		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history' );
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-		<?php HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
 			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
@@ -2647,11 +2403,9 @@ class HTML_AcctExp
 			<th><?php echo JText::_('HISTORY_METHOD'); ?></th>
 			<th><?php echo JText::_('HISTORY_AMOUNT'); ?></th>
 			<th><?php echo JText::_('HISTORY_RESPONSE'); ?></th>
-		  </tr></thead>
-		<?php
-		$k = 0;
-		foreach ( $rows as $row ) { ?>
-			<tr class="row<?php echo $k; ?>">
+		</tr></thead>
+		<?php foreach ( $rows as $i => $row ) { ?>
+			<tr>
 				<td align="center"><?php echo $row->user_name; ?></td>
 				<td align="center"><?php echo $row->invoice_number; ?></td>
 				<td align="center"><?php echo $row->plan_name; ?></td>
@@ -2666,9 +2420,7 @@ class HTML_AcctExp
 						} ?>
 				</td>
 			</tr>
-			<?php
-			$k = 1 - $k;
-		} ?>
+			<?php } ?>
 		<tfoot>
 			<tr>
 				<td colspan="7">
@@ -2690,9 +2442,10 @@ class HTML_AcctExp
 
 	function eventlog( $option, $events, $search, $pageNav )
 	{
-		HTML_myCommon::startCommon(); ?>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog' );
+		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-		<?php HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog' ); ?>
 		<div class="aec-filters">
 			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
 			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
@@ -2700,39 +2453,35 @@ class HTML_AcctExp
 
 		<div class="aecadminform">
 		<table class="adminlist">
-		<thead><tr>
-			<th align="left" width="30"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-			<th align="left" width="120"><?php echo JText::_('AEC_CMN_DATE'); ?></th>
-			<th align="left">&nbsp;</th>
-			<th align="left">&nbsp;</th>
-			<th align="left"><?php echo JText::_('AEC_CMN_EVENT'); ?></th>
-			<th align="left"><?php echo JText::_('AEC_CMN_TAGS'); ?></th>
-			<th align="left"><?php echo JText::_('AEC_CMN_ACTION'); ?></th>
-			<th align="left"><?php echo JText::_('AEC_CMN_PARAMETER'); ?></th>
-		  </tr></thead>
-		<?php
-		$k = 0;
-		foreach ( $events as $row ) { ?>
-			<tr class="row<?php echo $k; ?>">
-				<td><?php echo $row->id; ?></td>
-				<td align="left" width="120"><?php echo $row->datetime; ?></td>
-				<td align="left"><?php echo $row->notify ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-				<td class="notice_level_<?php echo $row->level; ?>"><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $row->level ); ?>
-				<td align="left"><?php echo $row->short; ?></td>
-	  			<td align="left"><?php echo $row->tags; ?></td>
-				<td align="left" class="aec_bigcell"><?php echo $row->event ?></td>
-				<td align="left"><?php echo ( $row->params ? $row->params : JText::_('AEC_CMN_NONE') ); ?></td>
-			</tr>
-			<?php
-			$k = 1 - $k;
-		} ?>
-		<tfoot>
-			<tr>
-				<td colspan="8">
- 					<?php echo $pageNav->getListFooter(); ?>
-				</td>
-			</tr>
-		</tfoot>
+			<thead><tr>
+				<th align="left" width="30"><?php echo JText::_('AEC_CMN_ID'); ?></th>
+				<th align="left" width="120"><?php echo JText::_('AEC_CMN_DATE'); ?></th>
+				<th align="left">&nbsp;</th>
+				<th align="left">&nbsp;</th>
+				<th align="left"><?php echo JText::_('AEC_CMN_EVENT'); ?></th>
+				<th align="left"><?php echo JText::_('AEC_CMN_TAGS'); ?></th>
+				<th align="left"><?php echo JText::_('AEC_CMN_ACTION'); ?></th>
+				<th align="left"><?php echo JText::_('AEC_CMN_PARAMETER'); ?></th>
+			</tr></thead>
+			<?php foreach ( $events as $row ) { ?>
+				<tr>
+					<td><?php echo $row->id; ?></td>
+					<td align="left" width="120"><?php echo $row->datetime; ?></td>
+					<td align="left"><?php echo $row->notify ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
+					<td class="notice_level_<?php echo $row->level; ?>"><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $row->level ); ?>
+					<td align="left"><?php echo $row->short; ?></td>
+		  			<td align="left"><?php echo $row->tags; ?></td>
+					<td align="left" class="aec_bigcell"><?php echo $row->event ?></td>
+					<td align="left"><?php echo ( $row->params ? $row->params : JText::_('AEC_CMN_NONE') ); ?></td>
+				</tr>
+			<?php } ?>
+			<tfoot>
+				<tr>
+					<td colspan="8">
+	 					<?php echo $pageNav->getListFooter(); ?>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -2740,19 +2489,18 @@ class HTML_AcctExp
 		<input type="hidden" name="returnTask" value="eventlog" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
-
 		<?php
  		HTML_myCommon::endCommon();
 	}
 
 	function stats( $option, $page, $stats )
 	{
-		HTML_myCommon::startCommon(); ?>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' ); ?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<div id="stats">
 		<div id="statnav">
-			<?php HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' ); ?>
 			<ul>
 		<?php
 			$menus = array( 'overview' => "Overview",
@@ -2941,36 +2689,27 @@ class HTML_AcctExp
 	function readoutSetup( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-		
-		HTML_myCommon::getHeader( 'AEC_READOUT', 'export' );
-		?>
+		HTML_myCommon::getHeader( 'AEC_READOUT', 'export' ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-            <table width="100%" class="aecadminform">
+			<table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
 						<div class="userinfobox">
-						<div class="aec_readout aec_userinfobox_sub">
-							<table style="width:320px;">
-								<tr>
-									<td valign="top">
-										<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-											echo $aecHTML->createSettingsParticle( $rowname );
-										} ?>
-									</td>
-								</tr>
-							</table>
-							<input type="hidden" name="option" value="<?php echo $option;?>" />
-							<input type="hidden" name="task" value="readout" />
-							<input type="hidden" name="returnTask" value="readout" />
-							<input type="hidden" name="display" value="1" />
-							<br />
-							<input type="submit" class="btn btn-primary" />
-							<br />
-						</div>
+							<div class="aec_readout aec_userinfobox_sub">
+								<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+									echo $aecHTML->createSettingsParticle( $rowname );
+								} ?>
+								<br />
+								<input type="submit" class="btn btn-primary pull-right" />
+							</div>
 						</div>
 					</td>
 				</tr>
 			</table>
+			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="task" value="readout" />
+			<input type="hidden" name="returnTask" value="readout" />
+			<input type="hidden" name="display" value="1" />
 		</form>
 
 		<?php
@@ -2991,7 +2730,6 @@ class HTML_AcctExp
 		}
 
 		?>
-
 		<table class="aec_bg aecadminform"><tr><td>
 			<?php foreach ( $readout as $part ) { ?>
 				<?php
@@ -3173,9 +2911,6 @@ class HTML_AcctExp
 	function import( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-		?>
-		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'import' );
 
 		$buttons = array(	'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ),
@@ -3183,6 +2918,7 @@ class HTML_AcctExp
 							);
 		HTML_myCommon::getButtons( $buttons, 'Import' );
 		?>
+		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<table class="aecadminform">
 			<tr>
 				<td valign="top">
@@ -3247,16 +2983,12 @@ class HTML_AcctExp
 	function export( $option, $task, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-		<?php
 		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'export' );
 
 		$buttons = array( 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ) );
 
-		HTML_myCommon::getButtons( $buttons, 'Settings' );
-		?>
-
+		HTML_myCommon::getButtons( $buttons, 'Settings' ); ?>
+		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<table class="aecadminform">
 			<tr>
 				<td valign="top">
@@ -3282,13 +3014,10 @@ class HTML_AcctExp
 	{
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon();
-		if ( empty( $cmd ) ) {
-			HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox', $title );
-		} else {
-			HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox' );
-		} ?>
+		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox', ( !empty( $cmd ) ? $title : '' ) );
+		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-            <table width="100%" class="aecadminform">
+			<table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
 						<div class="aec_userinfobox_sub">
@@ -3412,8 +3141,10 @@ class bsPaneTabs
 	function startPanes() { echo '<div class="tab-content">'; }
 	function endPanes() { echo '</div>'; }
 
+
 	function startPane( $id, $current=false ) { echo '<div id="' . $id . '" class="tab-pane' . ( $current ? ' active' : '' ) . '">'; }
 	function endPane() { echo "</div>"; }
+	function nextPane( $pane ) { $this->endPane(); $tabs->startPane( $pane ); }
 
 	function _loadBehavior($params = array())
 	{
@@ -3447,6 +3178,32 @@ class bsPagination extends JPagination
 		$footer = str_replace( $search, $replace, $footer );
 
 		return $footer;
+	}
+
+	function ordering( $i, $n, $type )
+	{
+		echo '<div class="btn-group btn-group-pagination">';
+		echo $this->orderUpIcon($i, true, 'order'.$type.'up', $i);
+		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', $i<($n-1));
+		echo '</div>';
+	}
+
+	function orderUpIcon($i, $condition=true, $task='orderup', $enabled=false)
+	{
+		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
+		$order .= '<i class="bsicon-chevron-up"></i>';
+		$order .= '</a>';
+
+		return $order;
+	}
+
+	function orderDownIcon($i, $n, $condition=true, $task='orderdown', $enabled=false)
+	{
+		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
+		$order .= '<i class="bsicon-chevron-down"></i>';
+		$order .= '</a>';
+
+		return $order;
 	}
 }
 

@@ -35,7 +35,8 @@ $id				= aecGetParam( 'id', null );
 
 if ( !is_null( $id ) ) {
 	if ( !is_array( $id ) ) {
-		$savid = $id;
+		$savid = (int) $id;
+
 		$id = array();
 		$id[0] = $savid;
 	}
@@ -364,6 +365,15 @@ switch( strtolower( $task ) ) {
 		aecCentral( $option );
 		break;
 
+	case 'toggleajax':
+		$type		= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
+		$property	= aecGetParam( 'property', '', true, array( 'word', 'string' ) );
+		$id			= aecGetParam( 'id', null );
+
+		toggleProperty( $id, $type, $property );
+		exit;
+		break;
+
 	case 'recallinstall':
 		include_once( JPATH_SITE . '/administrator/components/com_acctexp/install.acctexp.php' );
 		com_install();
@@ -375,6 +385,26 @@ switch( strtolower( $task ) ) {
 function getHelp()
 {
 	return 'test';
+}
+
+function toggleProperty( $id, $type, $property )
+{
+	$db = &JFactory::getDBO();
+
+	$query = 'SELECT `'.$property.'` FROM #__acctexp_' . $type
+			. ' WHERE `id` = ' . $id
+			;
+	$db->setQuery( $query );
+	$newstate = $db->loadResult() ? 0 : 1;
+
+	$query = 'UPDATE #__acctexp_' . $type
+			. ' SET `'.$property.'` = '.$newstate
+			. ' WHERE `id` = ' . $id
+			;
+	$db->setQuery( $query );
+	$db->query();
+
+	echo $newstate;
 }
 
 function orderObject( $option, $type, $id, $up, $customreturn=null )
