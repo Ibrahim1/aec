@@ -19,10 +19,10 @@ class HTML_myCommon
 		<div align="center" id="aec_footer">
 			<table width="500" border="0">
 			<tr>
-				<td align="center">
+				<td>
 					<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_small_footer.png" border="0" alt="aec" />
 				</td>
-				<td align="center">
+				<td>
 					<div align="center" class="smallgrey">
 						<p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION ); ?>, Revision <?php echo _AEC_REVISION ?><br />
 					</div>
@@ -31,7 +31,7 @@ class HTML_myCommon
 						<p><?php printf( JText::_('AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', htmlentities( JText::_('AEC_FOOT_CREDIT_LTEXT') ) ) ); ?></p>
 					</div>
 				</td>
-				<td align="center">
+				<td>
 					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
 				</td>
 			</tr>
@@ -248,7 +248,7 @@ class HTML_AcctExp
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
-		$tabs->newTab( 'user', JText::_('AEC_HEAD_PLAN_INFO'), true );
+		$tabs->newTab( 'user', JText::_('AEC_HEAD_PLAN_INFO') );
 		$tabs->newTab( 'mis', JText::_('AEC_USER_MICRO_INTEGRATION') );
 		$tabs->endTabs();
 
@@ -658,31 +658,6 @@ class HTML_AcctExp
 	<?php
 	}
 
-	function quickSearchBar( $display, $searchcontent=null )
-	{
-		?>
-		<div class="central_quicksearch aec_userinfobox_sub">
-			<h3><?php echo JText::_('AEC_QUICKSEARCH'); ?></h3>
-			<p><?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?></p>
-			<form action="<?php echo JURI::base(); ?>index.php?option=com_acctexp&amp;task=quicklookup" method="post">
-			<input type="text" size="80" name="search" class="inputbox" value="<?php echo htmlspecialchars($searchcontent); ?>" />
-			<input type="submit" class="btn btn-primary"/>
-			</form>
-			<?php
-			if ( !empty( $display ) ) {
-			?>
-				<?php if ( !strpos( $display, '</div>' ) ) { ?>
-				<h2><?php echo JText::_('AEC_QUICKSEARCH_MULTIRES'); ?></h2>
-				<p><?php echo JText::_('AEC_QUICKSEARCH_MULTIRES_DESC'); ?></p>
-				<?php } ?>
-				<p><?php echo $display; ?></p>
-			<?php
-			}
-			?>
-		</div>
-		<?php
-	}
-
 	function menuBar()
 	{
 		$menu = self::getMenu();
@@ -773,8 +748,6 @@ class HTML_AcctExp
 
 	function central( $display=null, $notices=null, $furthernotices=null, $searchcontent=null )
 	{
-		global $aecConfig;
-
 		HTML_myCommon::startCommon();
 		?>
 		<table class="aecadminform_seamless">
@@ -1032,20 +1005,15 @@ class HTML_AcctExp
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
 
-		$first = true;
 		foreach( $tab_data as $tab ) {
-			$tabs->newTab( strtolower( str_replace( ' ', '-', $tab[0] ) ), $tab[0], $first );
-
-			$first = false;
+			$tabs->newTab( strtolower( str_replace( ' ', '-', $tab[0] ) ), $tab[0] );
 		}
 
 		$tabs->endTabs();
 		$tabs->startPanes();
 
-		$first = true;
 		foreach( $tab_data as $tab ) {
-			$tabs->nextPane( strtolower( str_replace( ' ', '-', $tab[0] ) ), $first );
-			$first = false;
+			$tabs->nextPane( strtolower( str_replace( ' ', '-', $tab[0] ) ) );
 
 			echo '<table width="100%" class="aecadminform"><tr><td>';
 
@@ -1054,14 +1022,11 @@ class HTML_AcctExp
 				unset( $aecHTML->rows[$rowname] );
 				// Skip to next tab if last item in this one reached
 				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
-					echo '</td></tr></table>';
-					$tabs->endPane();
-					continue 2;
+					break;
 				}
 			}
 
 			echo '</td></tr></table>';
-			$tabs->endPane();
 		}
 
 		$tabs->endPanes();
@@ -1083,25 +1048,25 @@ class HTML_AcctExp
 		HTML_myCommon::getButtons( 'list_short', 'Processor' ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<div class="aecadminform">
-			<table class="adminlist">
+			<table class="adminlist table-striped">
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%">id</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
-					<th align="left" nowrap="nowrap"><?php echo JText::_('PROCESSOR_INFO'); ?></th>
+					<th nowrap="nowrap"><?php echo JText::_('PROCESSOR_INFO'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 				</tr></thead>
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
-					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td align="center"><?php echo $row->processor->id; ?></td>
+					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+					<td><?php echo $row->processor->id; ?></td>
 					<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
 					<td>
 						<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->processor->info['longname']; ?></a>
 					</td>
 					<td><?php echo $row->processor->info['statement']; ?></td>
-					<td align="center"><td align="center"><?php echo HTML_myCommon::toggleBtn( 'processors', 'active', $row->id, $row->active ); ?></td></td>
+					<td><?php echo HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
 				</tr>
 			<?php } ?>
 			<tfoot>
@@ -1191,7 +1156,7 @@ class HTML_AcctExp
 				<a id="filter-button" href="#">&#94;&#94;&nbsp;<?php echo JText::_('more'); ?>&nbsp;&#94;&#94;</a>
 			</div>
 			<div class="aecadminform">
-			<table class="adminlist">
+			<table class="adminlist table-striped">
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
@@ -1230,23 +1195,23 @@ class HTML_AcctExp
 						}
 					} ?>
 						<tr<?php echo $rowstyle; ?>>
-							<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 							<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-							<td align="left"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
-							<td align="left"><?php echo $row->username; ?></td>
-							<td align="left"><?php echo $row->status; ?></td>
-							<td align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
+							<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
+							<td class="leftalign"><?php echo $row->username; ?></td>
+							<td class="leftalign"><?php echo $row->status; ?></td>
+							<td class="leftalign"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
 							<?php if ( $action[0] != 'manual' ) { ?>
-								<td align="left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
-								<td align="left"><?php echo $row->type; ?></td>
-								<td align="left"><?php echo $row->plan_name; ?></td>
-								<td align="left"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
+								<td class="leftalign"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
+								<td class="leftalign"><?php echo $row->type; ?></td>
+								<td class="leftalign"><?php echo $row->plan_name; ?></td>
+								<td class="leftalign"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
 							<?php } else { ?>
-								<td align="left"></td>
-								<td align="left"></td>
-								<td align="left"></td>
-								<td align="left"></td>
+								<td class="leftalign"></td>
+								<td class="leftalign"></td>
+								<td class="leftalign"></td>
+								<td class="leftalign"></td>
 							<?php } ?>
 						</tr>
 					<?php } ?>
@@ -1296,7 +1261,7 @@ class HTML_AcctExp
 			</div>
 
 			<div class="aecadminform">
-			<table class="adminlist">
+			<table class="adminlist table-striped">
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%">id</th>
@@ -1312,9 +1277,9 @@ class HTML_AcctExp
 
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
-					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td align="center"><?php echo $row->id; ?></td>
-					<td align="center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+					<td><?php echo $row->id; ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 					<td>
 						<?php
 						if (!isset($row->id)) {
@@ -1323,13 +1288,13 @@ class HTML_AcctExp
 							<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editMicroIntegration')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a> <?php
 						} ?>
 					</td>
-					<td align="left">
+					<td class="leftalign">
 						<?php
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 						</td>
-					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?></td>
+					<td><?php echo HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?></td>
 					<?php if ( $ordering ) { ?>
-						<td align="center"><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
+						<td><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
 					<?php } ?>
 					<td align="right"><?php echo $row->class_name; ?></td>
 				</tr>
@@ -1361,7 +1326,7 @@ class HTML_AcctExp
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
 
-		$tabs->newTab( 'mi', JText::_('MI_E_TITLE'), true );
+		$tabs->newTab( 'mi', JText::_('MI_E_TITLE') );
 
 		if ( $aecHTML->hasSettings ) {
 			$tabs->newTab( 'settings', JText::_('MI_E_SETTINGS') );
@@ -1493,20 +1458,20 @@ class HTML_AcctExp
 			</div>
 
 			<div class="aecadminform">
-			<table class="adminlist">
+			<table class="adminlist table-striped">
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="1%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-					<th width="50%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+					<th nowrap="nowrap"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+					<th nowrap="nowrap"><?php echo JText::_('PAYPLAN_DESC'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_USERCOUNT'); ?></th>
-					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
-					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+					<th width="1%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_USERCOUNT'); ?></th>
+					<th width="1%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
+					<th width="1%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 				</tr></thead>
 
 			<?php foreach ( $rows as $i => $row ) {
@@ -1521,18 +1486,18 @@ class HTML_AcctExp
 
 				?>
 				<tr>
-					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td align="center"><?php echo $row->id; ?></td>
-					<td align="center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-					<td align="center" style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo stripslashes( $row->name ); ?></a></td>
-					<td align="left"><?php echo stripslashes( $description ); ?></td>
-					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
-					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
+					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+					<td><?php echo $row->id; ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
+					<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo stripslashes( $row->name ); ?></a></td>
+					<td class="leftalign"><?php echo stripslashes( $description ); ?></td>
+					<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
+					<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
 					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
-					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount; ?></strong></a></td>
-					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showExpired&amp;plan=<?php echo $row->id; ?>"><?php echo $row->expiredcount; ?></a></td>
-					<td align="center"><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></td>
+					<td><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount; ?></strong></a></td>
+					<td><a href="index.php?option=com_acctexp&amp;task=showExpired&amp;plan=<?php echo $row->id; ?>"><?php echo $row->expiredcount; ?></a></td>
+					<td><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></td>
 				</tr>
 			<?php } ?>
 			<tfoot>
@@ -1573,7 +1538,7 @@ class HTML_AcctExp
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
 
-		$tabs->newTab( 'plan', JText::_('PAYPLAN_DETAIL_TITLE'), true );
+		$tabs->newTab( 'plan', JText::_('PAYPLAN_DETAIL_TITLE') );
 		$tabs->newTab( 'processors', JText::_('PAYPLAN_PROCESSORS_TITLE') );
 		$tabs->newTab( 'text', JText::_('PAYPLAN_TEXT_TITLE') );
 		$tabs->newTab( 'restrictions', JText::_('PAYPLAN_RESTRICTIONS_TITLE') );
@@ -1897,7 +1862,7 @@ class HTML_AcctExp
 			?>
 
 			<div class="aecadminform">
-			<table class="adminlist">
+			<table class="adminlist table-striped">
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
@@ -1922,17 +1887,17 @@ class HTML_AcctExp
 
 				?>
 				<tr>
-					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td align="center"><?php echo $row->id; ?></td>
-					<td align="center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+					<td><?php echo $row->id; ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 					<td align="right" style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
 					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
 					<td  align="left">
 						<?php
 						echo $description; ?>
 					</td>
-					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
-					<td align="center"><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
+					<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
+					<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
 					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
 				</tr>
 			<?php } ?>
@@ -1964,7 +1929,7 @@ class HTML_AcctExp
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
-		$tabs->newTab( 'group', JText::_('ITEMGROUP_DETAIL_TITLE'), true );
+		$tabs->newTab( 'group', JText::_('ITEMGROUP_DETAIL_TITLE') );
 		$tabs->newTab( 'restrictions', JText::_('ITEMGROUP_RESTRICTIONS_TITLE') );
 		$tabs->newTab( 'mis', JText::_('AEC_USER_MICRO_INTEGRATION') );
 		$tabs->endTabs();
@@ -2146,7 +2111,7 @@ class HTML_AcctExp
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<div class="aecadminform">
-			<table class="adminlist">
+			<table class="adminlist table-striped">
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
@@ -2160,17 +2125,17 @@ class HTML_AcctExp
 
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
-					<td align="center"><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td align="center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-					<td align="center"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
-					<td align="center"><strong><?php echo $row->coupon_code; ?></strong></td>
-					<td align="left">
+					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
+					<td><strong><?php echo $row->coupon_code; ?></strong></td>
+					<td class="leftalign">
 						<?php
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 					</td>
-					<td align="center"><td align="center"><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td></td>
+					<td><td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td></td>
 					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'coupon' . ( $type ? 'static' : '' ) ); ?></td>
-					<td align="center"><strong><?php echo $row->usecount; ?></strong></td>
+					<td><strong><?php echo $row->usecount; ?></strong></td>
 				</tr>
 			<?php } ?>
 			<tfoot>
@@ -2204,7 +2169,7 @@ class HTML_AcctExp
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
-		$tabs->newTab( 'coupon', JText::_('COUPON_DETAIL_TITLE'), true );
+		$tabs->newTab( 'coupon', JText::_('COUPON_DETAIL_TITLE') );
 		$tabs->newTab( 'restrictions', JText::_('COUPON_RESTRICTIONS_TITLE') );
 		$tabs->newTab( 'mis', JText::_('COUPON_MI') );
 		$tabs->endTabs();
@@ -2334,10 +2299,10 @@ class HTML_AcctExp
 		</div>
 
 		<div class="aecadminform">
-		<table class="adminlist">
+		<table class="adminlist table-striped">
 		<thead><tr>
 			<th width="10%">#</th>
-			<th align="left" width="10%"><?php echo JText::_('INVOICE_USERID'); ?></th>
+			<th width="10%"><?php echo JText::_('INVOICE_USERID'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
 			<th align="center" width="10%"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
@@ -2352,15 +2317,15 @@ class HTML_AcctExp
 			<tr>
 				<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 				<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $row->userid; ?>"><?php echo $row->username; ?></a></td>
-				<td align="center"><a href="<?php echo AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice=' . $row->invoice_number ); ?>" target="_blank"><?php echo $row->invoice_number_formatted; ?></a></td>
-				<td align="center"><?php echo $row->secondary_ident; ?></td>
-				<td align="center"><?php echo $row->created_date; ?></td>
-				<td align="center"><?php echo $row->transaction_date; ?></td>
-	  			<td align="center"><?php echo $row->usage; ?></td>
-	  			<td align="center"><?php echo $row->coupons; ?></td>
-	  			<td align="center"><?php echo $row->method; ?></td>
-				<td align="center"><?php echo $row->amount; ?></td>
-				<td align="center"><?php echo $row->currency; ?></td>
+				<td><a href="<?php echo AECToolbox::deadsureURL( 'administrator/index.php?option=' . $option . '&task=invoiceprint&invoice=' . $row->invoice_number ); ?>" target="_blank"><?php echo $row->invoice_number_formatted; ?></a></td>
+				<td><?php echo $row->secondary_ident; ?></td>
+				<td><?php echo $row->created_date; ?></td>
+				<td><?php echo $row->transaction_date; ?></td>
+	  			<td><?php echo $row->usage; ?></td>
+	  			<td><?php echo $row->coupons; ?></td>
+	  			<td><?php echo $row->method; ?></td>
+				<td><?php echo $row->amount; ?></td>
+				<td><?php echo $row->currency; ?></td>
 			</tr>
 			<?php } ?>
 			<tfoot>
@@ -2394,7 +2359,7 @@ class HTML_AcctExp
 		</div>
 
 		<div class="aecadminform">
-		<table class="adminlist">
+		<table class="adminlist table-striped">
 		<thead><tr>
 			<th><?php echo JText::_('HISTORY_USERID'); ?></th>
 			<th><?php echo JText::_('HISTORY_INVOICE_NUMBER'); ?></th>
@@ -2406,12 +2371,12 @@ class HTML_AcctExp
 		</tr></thead>
 		<?php foreach ( $rows as $i => $row ) { ?>
 			<tr>
-				<td align="center"><?php echo $row->user_name; ?></td>
-				<td align="center"><?php echo $row->invoice_number; ?></td>
-				<td align="center"><?php echo $row->plan_name; ?></td>
-	  			<td align="center"><?php echo $row->transaction_date; ?></td>
-				<td align="center"><?php echo $row->proc_name; ?></td>
-				<td align="center"><?php echo $row->amount; ?></td>
+				<td><?php echo $row->user_name; ?></td>
+				<td><?php echo $row->invoice_number; ?></td>
+				<td><?php echo $row->plan_name; ?></td>
+	  			<td><?php echo $row->transaction_date; ?></td>
+				<td><?php echo $row->proc_name; ?></td>
+				<td><?php echo $row->amount; ?></td>
 				<td>
 					<?php if ( !empty( $row->response ) && ( strlen( $row->response ) > 8) ) {
 							$field = unserialize( base64_decode( $row->response ) );
@@ -2452,27 +2417,27 @@ class HTML_AcctExp
 		</div>
 
 		<div class="aecadminform">
-		<table class="adminlist">
+		<table class="adminlist table-striped">
 			<thead><tr>
-				<th align="left" width="30"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-				<th align="left" width="120"><?php echo JText::_('AEC_CMN_DATE'); ?></th>
-				<th align="left">&nbsp;</th>
-				<th align="left">&nbsp;</th>
-				<th align="left"><?php echo JText::_('AEC_CMN_EVENT'); ?></th>
-				<th align="left"><?php echo JText::_('AEC_CMN_TAGS'); ?></th>
-				<th align="left"><?php echo JText::_('AEC_CMN_ACTION'); ?></th>
-				<th align="left"><?php echo JText::_('AEC_CMN_PARAMETER'); ?></th>
+				<th width="30"><?php echo JText::_('AEC_CMN_ID'); ?></th>
+				<th width="120"><?php echo JText::_('AEC_CMN_DATE'); ?></th>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th><?php echo JText::_('AEC_CMN_EVENT'); ?></th>
+				<th><?php echo JText::_('AEC_CMN_TAGS'); ?></th>
+				<th><?php echo JText::_('AEC_CMN_ACTION'); ?></th>
+				<th><?php echo JText::_('AEC_CMN_PARAMETER'); ?></th>
 			</tr></thead>
 			<?php foreach ( $events as $row ) { ?>
 				<tr>
 					<td><?php echo $row->id; ?></td>
-					<td align="left" width="120"><?php echo $row->datetime; ?></td>
-					<td align="left"><?php echo $row->notify ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
+					<td><?php echo $row->datetime; ?></td>
+					<td><?php echo $row->notify ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
 					<td class="notice_level_<?php echo $row->level; ?>"><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $row->level ); ?>
-					<td align="left"><?php echo $row->short; ?></td>
-		  			<td align="left"><?php echo $row->tags; ?></td>
-					<td align="left" class="aec_bigcell"><?php echo $row->event ?></td>
-					<td align="left"><?php echo ( $row->params ? $row->params : JText::_('AEC_CMN_NONE') ); ?></td>
+					<td class="leftalign"><?php echo $row->short; ?></td>
+		  			<td class="leftalign"><?php echo $row->tags; ?></td>
+					<td class="leftalign" class="aec_bigcell"><?php echo $row->event ?></td>
+					<td class="leftalign"><?php echo ( $row->params ? $row->params : JText::_('AEC_CMN_NONE') ); ?></td>
 				</tr>
 			<?php } ?>
 			<tfoot>
@@ -3132,19 +3097,22 @@ class bsPaneTabs
 			self::_loadBehavior($params);
 			$loaded = true;
 		}
+
+		$this->panes_started = 0;
+		$this->panes_ended = 0;
+		$this->tabs_started = 0;
 	}
 
 	function startTabs() { echo '<ul class="nav nav-pills">'; }
 	function endTabs() { echo '</ul>'; }
-	function newTab( $handle, $title, $current=false ) { echo '<li' . ( $current ? ' class="active"' : '' ) . '><a href="#' . $handle . '" data-toggle="pill">' . $title . '</a></li>'; }
+	function newTab( $handle, $title, $current=false ) { echo '<li' . ( ( $this->tabs_started == 0 ) ? ' class="active"' : '' ) . '><a href="#' . $handle . '" data-toggle="pill">' . $title . '</a></li>'; $this->tabs_started++; }
 
 	function startPanes() { echo '<div class="tab-content">'; }
-	function endPanes() { echo '</div>'; }
+	function endPanes() { $this->panes_ended++; echo '</div>'; }
 
-
-	function startPane( $id, $current=false ) { echo '<div id="' . $id . '" class="tab-pane' . ( $current ? ' active' : '' ) . '">'; }
+	function startPane( $id, $current=false ) { echo '<div id="' . $id . '" class="tab-pane' . ( $current ? ' active' : '' ) . '">'; $this->panes_started++; }
 	function endPane() { echo "</div>"; }
-	function nextPane( $pane ) { $this->endPane(); $tabs->startPane( $pane ); }
+	function nextPane( $pane ) { if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) { $this->endPane(); } $this->startPane( $pane, ( $this->panes_started == 0 ) ); }
 
 	function _loadBehavior($params = array())
 	{
