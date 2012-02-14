@@ -383,6 +383,15 @@ switch( strtolower( $task ) ) {
 		exit;
 		break;
 
+	case 'removegroupajax':
+		$type		= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
+		$id			= aecGetParam( 'id', null );
+		$group		= aecGetParam( 'group', '', true, array( 'word', 'string' ) );
+
+		removeGroup( $type, $id, $group );
+		exit;
+		break;
+
 	case 'recallinstall':
 		include_once( JPATH_SITE . '/administrator/components/com_acctexp/install.acctexp.php' );
 		com_install();
@@ -420,7 +429,7 @@ function addGroup( $type, $id, $groupid )
 {
 	$db = &JFactory::getDBO();
 
-	ItemGroupHandler::setChildren( $groupid, array( $id ) );
+	ItemGroupHandler::setChildren( $groupid, array( $id ), $type );
 
 	$group = new ItemGroup( $db );
 	$group->load( $groupid );
@@ -434,6 +443,13 @@ function addGroup( $type, $id, $groupid )
 	$g['group']	= '<strong>' . $group->id . '</strong>';
 
 	HTML_AcctExp::groupRow( $type, $g );
+}
+
+function removeGroup( $type, $id, $groupid )
+{
+	ItemGroupHandler::removeChildren( $id, array( $groupid ), $type );
+
+	echo 1;
 }
 
 function orderObject( $option, $type, $id, $up, $customreturn=null )
@@ -2567,9 +2583,9 @@ function editSubscriptionPlan( $id, $option )
 	$groupids = array();
 	foreach ( $grouplist as $id => $glisti ) {
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
+			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', in_array($glisti[0], $groups) );
 		} else {
-			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
+			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', in_array($glisti[0], $groups) );
 		}
 
 		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );

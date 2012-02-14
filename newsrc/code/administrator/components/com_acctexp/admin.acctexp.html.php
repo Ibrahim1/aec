@@ -1880,10 +1880,10 @@ class HTML_AcctExp
 
 	function groupRow( $type, $group )
 	{ ?>
-		<tr>
+		<tr id="row-group-<?php echo $group['id'];?>">
 			<td align="center" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
 			<td><?php echo $group['name']; ?></td>
-			<td><a class="btn btn-danger" id="removegroup-btn-<?php echo $group['id'];?>" href="#" onClick="removeGroup('item','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove', true ); ?></a></td>
+			<td><a class="btn btn-danger" id="removegroup-btn-<?php echo $group['id'];?>" onClick="removeGroup('item','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove', true ); ?></a></td>
 		</tr>
 	<?php
 	}

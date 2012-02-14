@@ -6802,7 +6802,7 @@ class ItemGroupHandler
 		}
 
 		$db->setQuery( $query );
-		return $db->loadResultArray();
+		return $db->query();
 	}
 
 }

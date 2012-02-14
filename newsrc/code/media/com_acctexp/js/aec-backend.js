@@ -180,23 +180,47 @@ function toggleProperty(type, property, id, callerid) {
 }
 
 function addGroup(type, callerid) {
-	jQuery('#'+callerid+' i').attr('disabled','disabled').addClass('bsicon-rotate');
-
 	group = jQuery('select#add_group').val();
 	id = jQuery('input:hidden[name=id]').val();
 
-	jQuery.post("index.php?option=com_acctexp&task=addGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
-		alert(group);
+	if ( group > 0 ) {
+		jQuery('#'+callerid).attr('disabled','disabled');
+		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
 
-		if ( data == "0" ) {
-			
-		} else if ( data.length < 500 ) {
-			jQuery('#'+callerid+' i').removeAttr('disabled').removeClass('bsicon-rotate');
+		jQuery.post("index.php?option=com_acctexp&task=addGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
+			if ( data == "0" ) {
+	
+			} else if ( data.length < 500 ) {
+				jQuery('#'+callerid+' i').removeClass('bsicon-rotate');
 
-			jQuery('select#add_group option[value=\''+id+'\']').remove();
-			
-			jQuery('.aec-grouplist tbody tr:last').after(data);
-		} else {
-		}
-	});
+				jQuery('select#add_group option[value=\''+group+'\']').attr('disabled','disabled');
+
+				jQuery('.aec-grouplist tbody tr:last').after(data);
+			}
+
+			jQuery('#'+callerid).removeAttr('disabled');
+			jQuery('select#add_group').val("0")
+		});
+	}
+}
+
+function removeGroup(type, group, callerid) {
+	if ( group > 0 ) {
+		jQuery('#'+callerid).attr('disabled','disabled');
+		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
+
+		id = jQuery('input:hidden[name=id]').val();
+
+		jQuery.post("index.php?option=com_acctexp&task=removeGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
+			if ( data == "1" ) {
+				jQuery('#'+callerid+' i').removeAttr('disabled').removeClass('bsicon-rotate');
+
+				jQuery('select#add_group option[value=\''+group+'\']').removeAttr('disabled');
+
+				jQuery('#row-group-'+group).remove();
+			}
+
+			jQuery('select#add_group').val("0")
+		});
+	}
 }
