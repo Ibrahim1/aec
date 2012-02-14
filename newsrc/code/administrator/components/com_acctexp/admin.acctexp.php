@@ -3962,7 +3962,18 @@ function listCoupons( $option, $type )
  		return false;
  	}
 
-	HTML_AcctExp::listCoupons( $rows, $pageNav, $option, $type );
+ 	$query = 'SELECT SUM(usecount)'
+			. ' FROM ' . $table
+			;
+	$db->setQuery( $query );
+
+ 	$total = $db->loadResult();
+ 	if ( $db->getErrorNum() ) {
+ 		echo $db->stderr();
+ 		return false;
+ 	}
+
+	HTML_AcctExp::listCoupons( $rows, $total, $pageNav, $option, $type );
  }
 
 function editCoupon( $id, $option, $new, $type )

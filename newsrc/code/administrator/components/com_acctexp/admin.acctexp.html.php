@@ -1475,7 +1475,7 @@ class HTML_AcctExp
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('Subscriptions'); ?> | <?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
+					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?></th>
 					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 				</tr></thead>
 
@@ -1514,7 +1514,6 @@ class HTML_AcctExp
 						<div class="progress progress-info progress-striped">
 							<div class="bar" style="width: <?php echo ( ( $row->usercount + $row->expiredcount ) / ( ( $totals['active'] + $totals['expired'] ) / 100 ) ); ?>%;"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></div>
 						</div>
-					
 					</td>
 				</tr>
 			<?php } ?>
@@ -2120,7 +2119,7 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function listCoupons( $rows, $pageNav, $option, $type )
+	function listCoupons( $rows, $total, $pageNav, $option, $type )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'coupons' . ( $type ? '_static' : '' ) );
@@ -2153,7 +2152,11 @@ class HTML_AcctExp
 						</td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
 						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'coupon' . ( $type ? 'static' : '' ) ); ?></td>
-						<td><strong><?php echo $row->usecount; ?></strong></td>
+						<td>
+							<div class="progress progress-info progress-striped">
+								<div class="bar" style="width: <?php echo ( $row->usecount / ( $total / 100 ) ); ?>%;"><strong><?php echo $row->usecount; ?></strong></div>
+							</div>
+						</td>
 					</tr>
 				<?php } ?>
 				<tfoot>
