@@ -1883,7 +1883,7 @@ class HTML_AcctExp
 		<tr id="row-group-<?php echo $group['id'];?>">
 			<td align="center" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
 			<td><?php echo $group['name']; ?></td>
-			<td><a class="btn btn-danger" id="removegroup-btn-<?php echo $group['id'];?>" onClick="removeGroup('item','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove', true ); ?></a></td>
+			<td><a class="btn btn-danger" id="removegroup-btn-<?php echo $group['id'];?>" onClick="removeGroup('<?php echo $type;?>','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove', true ); ?></a></td>
 		</tr>
 	<?php
 	}
@@ -2002,34 +2002,31 @@ class HTML_AcctExp
 						</div>
 					</div>
 					<div style="position:relative;float:left;width:33.225%;">
-						<div class="aec_userinfobox_sub">
-							<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
-							<table style="width:100%;">
-								<tr>
-									<th>ID</td>
-									<th>Name</td>
-									<th>delete</td>
-								</tr>
-								<?php
-								if ( !empty( $aecHTML->customparams->groups ) ) {
-									foreach ( $aecHTML->customparams->groups as $id => $group ) {
-										?>
+							<div class="aec_userinfobox_sub">
+								<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
+								<table style="width:100%;" class="table-striped aec-grouplist">
+									<thead>
 										<tr>
-											<td align="right" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
-											<td><?php echo $group['name']; ?></td>
-											<td><?php echo $aecHTML->createSettingsParticle( 'group_delete_'.$id ); ?></td>
+											<th width="5%">ID</td>
+											<th>Name</td>
+											<th width="1%"></td>
 										</tr>
-										<?php
-									}
-								}
-								?>
-							<?php if ( $row->id > 1 ) { ?>
-								<tr>
-									<td><?php echo JText::_('NEW_ITEMGROUP'); ?>:</td>
-									<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-								</tr>
-							<?php } ?>
-							</table>
+									<thead>
+									<tbody>
+									<?php if ( !empty( $aecHTML->customparams->groups ) ) {
+										foreach ( $aecHTML->customparams->groups as $id => $group ) {
+											HTML_AcctExp::groupRow( 'group', $group );
+										}
+									} ?>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('group','addgroup-btn')"><?php echo aecHTML::Icon( 'plus', true ); ?></a></td>
+										</tr>
+									<tfoot>
+								</table>
+							</div>
 						</div>
 					</div>
 					<div style="position:relative;float:left;width:100%;">

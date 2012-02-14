@@ -3373,11 +3373,12 @@ function editItemGroup( $id, $option )
 			$group->load( $groupid );
 
 			$g = array();
+			$g['id']	= $group->id;
 			$g['name']	= $group->getProperty('name');
 			$g['color']	= $group->params['color'];
 			$g['icon']	= $group->params['icon'].'.png';
 
-			$g['group']	= aecHTML::Icon( $g['icon'], $groupid ) . '<strong>' . $groupid . '</strong>';
+			$g['group']	= '<strong>' . $groupid . '</strong>';
 
 			$gs[$groupid] = $g;
 		}
@@ -3394,14 +3395,16 @@ function editItemGroup( $id, $option )
 
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 	$groupids = array();
-	foreach ( $grouplist as $id => $glisti ) {
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ) );
-		} else {
-			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1] );
-		}
+	foreach ( $grouplist as $gid => $glisti ) {
+		if ( $id && ( $glisti[0] != $id ) ) { 
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', in_array($glisti[0], $groups) );
+			} else {
+				$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', in_array($glisti[0], $groups) );
+			}
 
-		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
+			$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
+		}
 	}
 
 	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
