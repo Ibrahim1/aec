@@ -1452,7 +1452,7 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function listSubscriptionPlans( $rows, $totals, $lists, $pageNav, $option )
+	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
@@ -1470,13 +1470,13 @@ class HTML_AcctExp
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="1%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
-					<th nowrap="nowrap"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-					<th nowrap="nowrap"><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+					<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+					<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
 					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 				</tr></thead>
 
 			<?php foreach ( $rows as $i => $row ) {
@@ -1502,17 +1502,32 @@ class HTML_AcctExp
 					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
 					<td>
 						<div class="progress-group">
-							<div class="progress progress-danger">
-								<div class="bar" style="width: <?php echo ( $row->expiredcount / ( $totals['expired'] / 100 ) ); ?>%;"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->expiredcount; ?></strong></a></div>
+							<div class="progress progress-short progress-danger">
+								<?php if ( $row->expiredcount ) { ?>
+									<div class="bar" style="width: <?php echo $row->expired_percentage; ?>%;">
+										<?php if ( !$row->expired_inner ) { echo '</div>'; } ?>
+										<div class="progress-content"><a href="<?php echo $row->link; ?>"><strong><?php echo $row->expiredcount; ?></strong></a></div>
+									<?php if ( $row->expired_inner ) { echo '</div>'; } ?>
+								<?php } ?>
 							</div>
-							<div class="progress progress-striped">
-								<div class="bar" style="width: <?php echo ( $row->usercount / ( $totals['active'] / 100 ) ); ?>%;"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount; ?></strong></a></div>
+							<div class="progress progress-short progress-striped">
+								<?php if ( $row->usercount ) { ?>
+									<div class="bar" style="width: <?php echo $row->active_percentage; ?>%;">
+										<?php if ( !$row->active_inner ) { echo '</div>'; } ?>
+										<div class="progress-content"><a href="<?php echo $row->link; ?>"><strong><?php echo $row->usercount; ?></strong></a></div>
+									<?php if ( $row->active_inner ) { echo '</div>'; } ?>
+								<?php } ?>
 							</div>
 						</div>
 					</td>
 					<td>
-						<div class="progress progress-info progress-striped">
-							<div class="bar" style="width: <?php echo ( ( $row->usercount + $row->expiredcount ) / ( ( $totals['active'] + $totals['expired'] ) / 100 ) ); ?>%;"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></div>
+						<div class="progress progress-short progress-info progress-striped">
+							<?php if ( $row->usercount + $row->expiredcount ) { ?>
+								<div class="bar" style="width: <?php echo $row->total_percentage; ?>%;">
+									<?php if ( !$row->total_inner ) { echo '</div>'; } ?>
+									<div class="progress-content"><a href="<?php echo $row->link; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></div>
+								<?php if ( $row->total_inner ) { echo '</div>'; } ?>
+							<?php } ?>
 						</div>
 					</td>
 				</tr>
@@ -2119,7 +2134,7 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function listCoupons( $rows, $total, $pageNav, $option, $type )
+	function listCoupons( $rows, $pageNav, $option, $type )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'coupons' . ( $type ? '_static' : '' ) );
@@ -2133,9 +2148,9 @@ class HTML_AcctExp
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('COUPON_NAME'); ?></th>
-					<th width="10%" align="center" nowrap="nowrap" ><?php echo JText::_('COUPON_CODE'); ?></th>
-					<th width="50%" align="left" nowrap="nowrap" ><?php echo JText::_('COUPON_DESC'); ?></th>
+					<th width="10%" class="leftalign"><?php echo JText::_('COUPON_NAME'); ?></th>
+					<th width="10%" class="leftalign"><?php echo JText::_('COUPON_CODE'); ?></th>
+					<th width="50%" class="leftalign"><?php echo JText::_('COUPON_DESC'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('COUPON_REORDER'); ?></th>
 					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
@@ -2145,8 +2160,8 @@ class HTML_AcctExp
 					<tr>
 						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-						<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
-						<td><strong><?php echo $row->coupon_code; ?></strong></td>
+						<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
+						<td class="leftalign"><strong><?php echo $row->coupon_code; ?></strong></td>
 						<td class="leftalign">
 							<?php echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 						</td>
@@ -2154,7 +2169,9 @@ class HTML_AcctExp
 						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'coupon' . ( $type ? 'static' : '' ) ); ?></td>
 						<td>
 							<div class="progress progress-info progress-striped">
-								<div class="bar" style="width: <?php echo ( $row->usecount / ( $total / 100 ) ); ?>%;"><strong><?php echo $row->usecount; ?></strong></div>
+								<?php if ( $row->usecount ) { ?>
+									<div class="bar" style="width: <?php echo $row->percentage; ?>%;"><?php if ( $row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?></div><?php if ( !$row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?>
+								<?php } ?>
 							</div>
 						</td>
 					</tr>

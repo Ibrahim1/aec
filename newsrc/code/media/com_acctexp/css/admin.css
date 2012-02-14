@@ -470,12 +470,31 @@ float: right;
 }
 
 .progress .bar {
-padding: 4px 10px 2px 4px;
+float: left;
 }
 
 .progress .bar a,
 .progress .bar a:hover {
 color: #fff;
+}
+
+.progress-content {
+float: left;
+padding: 4px;
+font-weight: bold;
+}
+
+.bar .progress-content {
+width: 90%;
+padding: 4px;
+}
+
+.progress-short .bar .progress-content {
+width: 80%;
+}
+
+.progress-group .progress:first-child .progress-content {
+float: right;
 }
 
 .form-stacked {

@@ -2411,7 +2411,32 @@ function listSubscriptionPlans( $option )
  		return false;
  	}
 
- 	HTML_AcctExp::listSubscriptionPlans( $rows, $totals, $lists, $pageNav, $option );
+	foreach ( $rows as $rid => $row ) {
+		$rows[$rid]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id;
+
+		$rows[$rid]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
+		
+		$rows[$rid]->expired_inner = false;
+		if ( $rows[$rid]->expired_percentage > 30 ) {
+			$rows[$rid]->expired_inner = true;
+		}
+
+		$rows[$rid]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
+		
+		$rows[$rid]->active_inner = false;
+		if ( $rows[$rid]->active_percentage > 30 ) {
+			$rows[$rid]->active_inner = true;
+		}
+
+		$rows[$rid]->total_percentage = ($row->expiredcount+$row->usercount) / ( ($totals['active']+$totals['expired']) / 100 );
+		
+		$rows[$rid]->total_inner = false;
+		if ( $rows[$rid]->total_percentage > 20 ) {
+			$rows[$rid]->total_inner = true;
+		}
+	}
+
+ 	HTML_AcctExp::listSubscriptionPlans( $rows, $lists, $pageNav, $option );
  }
 
 function editSubscriptionPlan( $id, $option )
@@ -3973,7 +3998,16 @@ function listCoupons( $option, $type )
  		return false;
  	}
 
-	HTML_AcctExp::listCoupons( $rows, $total, $pageNav, $option, $type );
+	foreach ( $rows as $rid => $row ) {
+		$rows[$rid]->percentage = $row->usecount / ( $total / 100 );
+		
+		$rows[$rid]->inner = false;
+		if ( $rows[$rid]->percentage > 15 ) {
+			$rows[$rid]->inner = true;
+		}
+	}
+
+	HTML_AcctExp::listCoupons( $rows, $pageNav, $option, $type );
  }
 
 function editCoupon( $id, $option, $new, $type )
