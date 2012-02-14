@@ -83,7 +83,7 @@ class HTML_myCommon
 		?><form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"><?php
 	}
 
-	function endForm( $id, $option, $task )
+	function endForm( $id, $option )
 	{
 		$options = array( 'id' => $id, 'option' => $option, 'task' => '' );
 
@@ -98,7 +98,7 @@ class HTML_myCommon
 	{
 		?><div class="adminheading">
 			<?php HTML_myCommon::getSymbol( $image ); ?>
-			<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( ( !empty( $page ) && !empty( $extratext ) ) ? ' - ' . $extratext : '' ) . ( !empty( $extratext ) ? $extratext : '' ); ?></h2>
+			<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( ( !empty( $page ) && !empty( $extratext ) ) ? ' - ' : '' ) . ( !empty( $extratext ) ? $extratext : '' ); ?></h2>
 		</div><?php
 	}
 
@@ -818,7 +818,7 @@ class HTML_AcctExp
 					<br />
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
-					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&szlig;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
+					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
 						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 						<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 						<p>Please post a rating and a review for AEC<br />at the <a href="http://bit.ly/yGSrZQ" target="_blank">Joomla! Extensions Directory.</a></p>
@@ -892,7 +892,7 @@ class HTML_AcctExp
 				<br />
 				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
 				<br /><br />
-				<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'beta', '&szlig;', _AEC_VERSION ); ?></p>
+				<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION ); ?></p>
 				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 				<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 				<p>Please post a rating and a review for AEC<br />at the <a href="http://bit.ly/yGSrZQ" target="_blank">Joomla! Extensions Directory.</a></p>
@@ -1128,7 +1128,7 @@ class HTML_AcctExp
 			</table>
 		<?php
 
-		HTML_myCommon::endForm( $option, $aecHTML->pp->id );
+		HTML_myCommon::endForm( $option, $id );
 
 		echo $aecHTML->loadJS();
 
@@ -2149,10 +2149,9 @@ class HTML_AcctExp
 						<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
 						<td><strong><?php echo $row->coupon_code; ?></strong></td>
 						<td class="leftalign">
-							<?php
-							echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
+							<?php echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 						</td>
-						<td><td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td></td>
+						<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
 						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'coupon' . ( $type ? 'static' : '' ) ); ?></td>
 						<td><strong><?php echo $row->usecount; ?></strong></td>
 					</tr>

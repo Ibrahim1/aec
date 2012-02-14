@@ -1,43 +1,37 @@
 jQuery(document).ready(function($) {
-	var typingTimer;
-
 	jQuery('#topbar').dropdown();
 	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){
 		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
 	});
 	jQuery("#system-message").fadeOut('slow', function() { jQuery(this).slideUp( 'slow' ); });
-	jQuery('#quicksearch').popover({
-		trigger:'manual',
-		placement:'bottom'
-	});
+	jQuery('#quicksearch').popover({ trigger:'manual', placement:'bottom' });
 
-	jQuery("#quicksearch")
-	.on("keypress", function(e) {
-		if (e.keyCode == 13) return false;
-	}).on("keyup", function(e) {
-		clearTimeout(typingTimer);
+	var typingTimer;
 
-		inputString = this.value;
+	jQuery("#quicksearch").on({
+		'keypress' : function(e) { if (e.keyCode == 13) return false; },
+		'keyup' : function(e) { clearTimeout(typingTimer); inputString = this.value; typingTimer = setTimeout(lookup, "300"); },
+		'keydown' : function(e) { jQuery('.popover .popover-content p').html("Searching..."); },
+		'focusin' : function(e) {
+			jQuery(this).popover('show');
+			
+			if ( this.value != "" ) {
+				inputString = this.value;
 
-		typingTimer = setTimeout(lookup, "300");
-	}).on("keydown", function(e) {
-		jQuery('.popover .popover-content p').html("Searching...");
-	}).on("focusin", function(e) {
-		jQuery(this).popover('show');
-		
-		if ( this.value != "" ) {
-			inputString = this.value;
+				jQuery('.popover .popover-content p').html("Searching...");
 
-			jQuery('.popover .popover-content p').html("Searching...");
-
-			typingTimer = setTimeout(lookup, "100");
-		}
-	}).on("focusout", function(e) {
-		jQuery("div.popover").fadeOut();
+				typingTimer = setTimeout(lookup, "100");
+			}
+		},
+		'focusout' : function(e) { jQuery("div.popover").fadeOut(); }
 	});
 
 	jQuery('form#adminForm').one('focusin', function() {
-	  jQuery('div.aec-buttons a.btn').attr("disabled", false);
+		jQuery('div.aec-buttons a.btn').attr("disabled", false);
+	});
+
+	jQuery('label.toggleswitch').one('click', function() {
+		jQuery('div.aec-buttons a.btn').attr("disabled", false);
 	});
 
 	jQuery('a.quicksearch').on("click", function(e) {
@@ -76,10 +70,7 @@ jQuery(document).ready(function($) {
 		});
 	});
 
-	jQuery('#aecmenu-help').popover({
-		trigger:'manual',
-		placement:'below'
-	});
+	jQuery('#aecmenu-help').popover({ trigger:'manual', placement:'below' });
 
 	jQuery("#aecmenu-help")
 	.on("click", function(e) {
@@ -136,7 +127,6 @@ jQuery(document).ready(function($) {
 	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});
 	jQuery('table.aecadminform').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});
 	jQuery('div.control-group').tooltip({placement: "right", selector: '.bstooltip', delay: { show: 300, hide: 400 }});
-
 });
 
 function readNotice(id) {
