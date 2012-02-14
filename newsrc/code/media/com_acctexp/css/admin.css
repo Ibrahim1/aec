@@ -439,6 +439,50 @@ padding-top: 19px;
 margin-top: 10px;
 }
 
+.progress {
+margin-bottom: 0;
+}
+
+.progress,
+.progress .bar {
+height: 20px;
+}
+
+.progress-group {
+width: 100%;
+}
+
+.progress-group .progress {
+width: 50%;
+display: inline-block;
+float: left;
+}
+
+.progress-group .progress:first-child {
+-webkit-border-radius: 4px 0 0 4px;
+-moz-border-radius: 4px 0 0 4px;
+border-radius: 4px 0 0 4px;
+}
+
+.progress-group .progress:last-child {
+-webkit-border-radius: 0 4px 4px 0;
+-moz-border-radius: 0 4px 4px 0;
+border-radius: 0 4px 4px 0;
+}
+
+.progress-group .progress:first-child .bar {
+float: right;
+}
+
+.progress .bar {
+padding: 4px 10px 2px 4px;
+}
+
+.progress .bar a,
+.progress .bar a:hover {
+color: #fff;
+}
+
 .form-stacked {
 padding-left: 20px;
 }

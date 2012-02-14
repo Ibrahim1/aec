@@ -1452,7 +1452,7 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
+	function listSubscriptionPlans( $rows, $totals, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
@@ -1475,9 +1475,8 @@ class HTML_AcctExp
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
 					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-					<th width="1%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_USERCOUNT'); ?></th>
-					<th width="1%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
-					<th width="1%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('Subscriptions'); ?> | <?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
+					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 				</tr></thead>
 
 			<?php foreach ( $rows as $i => $row ) {
@@ -1501,9 +1500,22 @@ class HTML_AcctExp
 					<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
 					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
-					<td><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount; ?></strong></a></td>
-					<td><a href="index.php?option=com_acctexp&amp;task=showExpired&amp;plan=<?php echo $row->id; ?>"><?php echo $row->expiredcount; ?></a></td>
-					<td><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></td>
+					<td>
+						<div class="progress-group">
+							<div class="progress progress-danger">
+								<div class="bar" style="width: <?php echo ( $row->expiredcount / ( $totals['expired'] / 100 ) ); ?>%;"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->expiredcount; ?></strong></a></div>
+							</div>
+							<div class="progress progress-striped">
+								<div class="bar" style="width: <?php echo ( $row->usercount / ( $totals['active'] / 100 ) ); ?>%;"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount; ?></strong></a></div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div class="progress progress-info progress-striped">
+							<div class="bar" style="width: <?php echo ( ( $row->usercount + $row->expiredcount ) / ( ( $totals['active'] + $totals['expired'] ) / 100 ) ); ?>%;"><a href="index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan=<?php echo $row->id; ?>"><a href="index.php?option=com_acctexp&amp;task=showAllSubscriptions&amp;plan=<?php echo $row->id; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></div>
+						</div>
+					
+					</td>
 				</tr>
 			<?php } ?>
 			<tfoot>

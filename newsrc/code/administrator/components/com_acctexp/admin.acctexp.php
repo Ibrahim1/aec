@@ -2314,12 +2314,11 @@ function listSubscriptionPlans( $option )
 
 	foreach ( $rows as $n => $row ) {
 		$query = 'SELECT count(*)'
-				. 'FROM #__users AS a'
-				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-				. ' WHERE b.plan = ' . $row->id
-				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE plan = ' . $row->id
+				. ' AND (status = \'Active\' OR status = \'Trial\')'
 				;
-		$db->setQuery( $query	);
+		$db->setQuery( $query );
 
 	 	$rows[$n]->usercount = $db->loadResult();
 	 	if ( $db->getErrorNum() ) {
@@ -2328,12 +2327,11 @@ function listSubscriptionPlans( $option )
 	 	}
 
 	 	$query = 'SELECT count(*)'
-				. ' FROM #__users AS a'
-				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-				. ' WHERE b.plan = ' . $row->id
-				. ' AND (b.status = \'Expired\')'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE plan = ' . $row->id
+				. ' AND (status = \'Expired\')'
 				;
-		$db->setQuery( $query	);
+		$db->setQuery( $query );
 
 	 	$rows[$n]->expiredcount = $db->loadResult();
 	 	if ( $db->getErrorNum() ) {
@@ -2360,7 +2358,6 @@ function listSubscriptionPlans( $option )
 		$rows[$n]->group = aecHTML::Icon( $gcolors[$group]['icon'], $group ) . '<strong>' . $group . '</strong>';
 		$rows[$n]->color = $gcolors[$group]['color'];
 	}
-
 
 	$grouplist = ItemGroupHandler::getTree();
 
@@ -2389,7 +2386,32 @@ function listSubscriptionPlans( $option )
 
 	$lists['filter_group'] = JHTML::_('select.genericlist', $glist, 'filter_group[]', 'size="' . min(8,count($glist)+1) . '" multiple="multiple"', 'value', 'text', $sel_groups );
 
- 	HTML_AcctExp::listSubscriptionPlans( $rows, $lists, $pageNav, $option );
+	$totals = array();
+	$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_subscr'
+			. ' WHERE (status = \'Active\' OR status = \'Trial\')'
+			;
+	$db->setQuery( $query );
+
+ 	$totals['active'] = $db->loadResult();
+ 	if ( $db->getErrorNum() ) {
+ 		echo $db->stderr();
+ 		return false;
+ 	}
+
+ 	$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_subscr'
+			. ' WHERE (status = \'Expired\')'
+			;
+	$db->setQuery( $query );
+
+ 	$totals['expired'] = $db->loadResult();
+ 	if ( $db->getErrorNum() ) {
+ 		echo $db->stderr();
+ 		return false;
+ 	}
+
+ 	HTML_AcctExp::listSubscriptionPlans( $rows, $totals, $lists, $pageNav, $option );
  }
 
 function editSubscriptionPlan( $id, $option )
