@@ -367,10 +367,19 @@ switch( strtolower( $task ) ) {
 
 	case 'toggleajax':
 		$type		= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
-		$property	= aecGetParam( 'property', '', true, array( 'word', 'string' ) );
 		$id			= aecGetParam( 'id', null );
+		$property	= aecGetParam( 'property', '', true, array( 'word', 'string' ) );
 
-		toggleProperty( $id, $type, $property );
+		toggleProperty( $type, $id, $property );
+		exit;
+		break;
+
+	case 'addgroupajax':
+		$type		= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
+		$id			= aecGetParam( 'id', null );
+		$group		= aecGetParam( 'group', '', true, array( 'word', 'string' ) );
+
+		addGroup( $type, $id, $group );
 		exit;
 		break;
 
@@ -387,7 +396,7 @@ function getHelp()
 	return 'test';
 }
 
-function toggleProperty( $id, $type, $property )
+function toggleProperty( $type, $id, $property )
 {
 	$db = &JFactory::getDBO();
 
@@ -405,6 +414,26 @@ function toggleProperty( $id, $type, $property )
 	$db->query();
 
 	echo $newstate;
+}
+
+function addGroup( $type, $id, $groupid )
+{
+	$db = &JFactory::getDBO();
+
+	ItemGroupHandler::setChildren( $groupid, array( $id ) );
+
+	$group = new ItemGroup( $db );
+	$group->load( $groupid );
+
+	$g = array();
+	$g['id']	= $group->id;
+	$g['name']	= $group->getProperty('name');
+	$g['color']	= $group->params['color'];
+	$g['icon']	= $group->params['icon'].'.png';
+
+	$g['group']	= '<strong>' . $group->id . '</strong>';
+
+	HTML_AcctExp::groupRow( $type, $g );
 }
 
 function orderObject( $option, $type, $id, $up, $customreturn=null )
@@ -2463,17 +2492,16 @@ function editSubscriptionPlan( $id, $option )
 	if ( !empty( $groups ) ) {
 		$gs = array();
 		foreach ( $groups as $groupid ) {
-			$params['group_delete_'.$groupid] = array( 'checkbox', '', '', '' );
-
 			$group = new ItemGroup( $db );
 			$group->load( $groupid );
 
 			$g = array();
+			$g['id']	= $group->id;
 			$g['name']	= $group->getProperty('name');
 			$g['color']	= $group->params['color'];
 			$g['icon']	= $group->params['icon'].'.png';
 
-			$g['group']	= aecHTML::Icon( $g['icon'], $groupid ) . '<strong>' . $groupid . '</strong>';
+			$g['group']	= '<strong>' . $groupid . '</strong>';
 
 			$gs[$groupid] = $g;
 		}

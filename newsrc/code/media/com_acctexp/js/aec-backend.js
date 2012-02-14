@@ -188,3 +188,25 @@ function toggleProperty(type, property, id, callerid) {
 		}
 	});
 }
+
+function addGroup(type, callerid) {
+	jQuery('#'+callerid+' i').attr('disabled','disabled').addClass('bsicon-rotate');
+
+	group = jQuery('select#add_group').val();
+	id = jQuery('input:hidden[name=id]').val();
+
+	jQuery.post("index.php?option=com_acctexp&task=addGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
+		alert(group);
+
+		if ( data == "0" ) {
+			
+		} else if ( data.length < 500 ) {
+			jQuery('#'+callerid+' i').removeAttr('disabled').removeClass('bsicon-rotate');
+
+			jQuery('select#add_group option[value=\''+id+'\']').remove();
+			
+			jQuery('.aec-grouplist tbody tr:last').after(data);
+		} else {
+		}
+	});
+}

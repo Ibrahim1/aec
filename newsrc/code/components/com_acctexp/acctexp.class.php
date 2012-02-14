@@ -5716,7 +5716,7 @@ class aecHTML
 		$this->js		= $js;
 	}
 
-	function createSettingsParticle( $name, $notooltip=false )
+	function createSettingsParticle( $name, $notooltip=false, $insertlabel=null, $insertctrl=null )
 	{
 		if ( !isset( $this->rows[$name] ) ) {
 			return;
@@ -5746,6 +5746,8 @@ class aecHTML
 					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
 				}
 
+				$return .= $insertlabel;
+
 				$return .= '</label>';
 			} else {
 				$return = '<div class="control-group">';
@@ -5763,32 +5765,38 @@ class aecHTML
 			case 'inputA':
 				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" class="span2" name="' . $name . '" type="text" value="' . $value . '" />';
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputB':
 				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" class="span3" type="text" name="' . $name . '" value="' . $value . '" />';
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputC':
 				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" class="span6" type="text" name="' . $name . '" class="inputbox" value="' . $value . '" />';
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputD':
 				$return .= '<div class="controls">';
 				$return .= '<textarea id="' . $name . '" class="span6" rows="5" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputE':
 				$return .= '<div class="controls">';
 				$return .= '<textarea id="' . $name . '" class="span6" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'checkbox':
 				$return .= '<div class="controls">';
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . ' value="1"/>';
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'toggle':
@@ -5804,6 +5812,7 @@ class aecHTML
 				$return .= '</span>';
 				$return .= '</label>';
 				$return .= '</div>';
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'editor':
@@ -5812,7 +5821,7 @@ class aecHTML
 				$editor = &JFactory::getEditor();
 
 				$return .= '<div>' . $editor->display( $name,  $value , '', '250', '50', '20' ) . '</div>';
-
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'textarea':
@@ -5821,11 +5830,13 @@ class aecHTML
 			case 'list':
 				$return .= '<div class="controls">';
 				$return .= $this->lists[$name];
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'file':
 				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" name="' . $name . '" type="file" />';
+				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'accordion_start':

@@ -247,7 +247,7 @@ text-align: left;
 
 a.btn,
 a.btn:link {
-color: #000;
+color: #333;
 text-decoration: none;
 }
 
@@ -373,6 +373,11 @@ transition: all 1s linear;
 transform: rotate(360deg);
 }
 
+.btn-after {
+margin-left: 8% !important;
+padding: 3px 8px;
+}
+
 #aec_center {
 text-align: center;
 padding: 12px;
@@ -404,6 +409,7 @@ width: 48%;
 
 div.control-group .controls>* {
 margin: 0 auto;
+vertical-align: middle;
 }
 
 form .control-group {
@@ -425,7 +431,12 @@ list-style: circle;
 }
 
 div.controls select {
-width: 90%;
+width: 70%;
+}
+
+.well {
+padding-top: 19px;
+margin-top: 10px;
 }
 
 .form-stacked {
@@ -453,6 +464,11 @@ g-top: 0;
 
 .form-stacked .control-group {
 margin-bottom: 9px;
+}
+
+td>.control-group {
+margin: 4px -14px !important;
+text-align: right !important;
 }
 
 .form-stacked .control-group div.controls {

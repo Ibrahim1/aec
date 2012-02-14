@@ -15,8 +15,7 @@ class HTML_myCommon
 {
 	function Valanx()
 	{
-		?>
-		<div align="center" id="aec_footer">
+		?><div align="center" id="aec_footer">
 			<table width="500" border="0">
 			<tr>
 				<td>
@@ -36,17 +35,14 @@ class HTML_myCommon
 				</td>
 			</tr>
 			</table>
-		</div>
-		<?php
+		</div><?php
 	}
 
 	function addBackendCSS()
 	{
-		?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/bootstrap.css" />
+		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/bootstrap.css" />
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/toggleswitch/toggleswitch.css" />
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css" />
-		<?php
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css" /><?php
 	}
 
 	function addBackendJS()
@@ -61,9 +57,7 @@ class HTML_myCommon
 
 	function addReadoutCSS()
 	{
-		?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/readout.css" />
-		<?php
+		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/readout.css" /><?php
 	}
 
 	function startCommon( $id='aec_wrap' )
@@ -84,13 +78,28 @@ class HTML_myCommon
 		echo '</div>';
 	}
 
+	function startForm()
+	{
+		?><form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"><?php
+	}
+
+	function endForm( $id, $option, $task )
+	{
+		$options = array( 'id' => $id, 'option' => $option, 'task' => '' );
+
+		foreach ( $options as $name => $value ) {
+			echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
+		}
+		
+		echo '</form>';
+	}
+
 	function getHeader( $page, $image, $extratext="" )
 	{
 		?><div class="adminheading">
 			<?php HTML_myCommon::getSymbol( $image ); ?>
-			<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( !empty( $extratext ) ? ' - ' . $extratext : '' ); ?></h2>
-		</div>
-		<?php
+			<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( ( !empty( $page ) && !empty( $extratext ) ) ? ' - ' . $extratext : '' ) . ( !empty( $extratext ) ? $extratext : '' ); ?></h2>
+		</div><?php
 	}
 
 	function getSymbol( $name )
@@ -166,8 +175,7 @@ class HTML_myCommon
 
 		?><a class="btn btn-toggle-<?php echo $state ? 'success' : 'danger'; ?>" id="<?php echo $cssid;?>" href="#" onClick="toggleProperty('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>')">
 			<?php echo aecHTML::Icon( $icons[$state], true ); ?>
-		</a>
-		<?php
+		</a><?php
 	}
 }
 
@@ -989,10 +997,6 @@ class HTML_AcctExp
 		jimport( 'joomla.html.editor' );
 
 		HTML_myCommon::startCommon();
-		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-		<?php
-		
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings' );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
@@ -1001,6 +1005,8 @@ class HTML_AcctExp
 							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, 'Settings' );
+
+		HTML_myCommon::startForm();
 
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
@@ -1094,6 +1100,8 @@ class HTML_AcctExp
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
 		HTML_myCommon::getButtons( 'edit', 'Processor' );
 
+		HTML_myCommon::startForm();
+
 		$id = 0;
 		if ( !empty( $aecHTML->pp ) ) {
 			echo '<div class="aec-filters">';
@@ -1104,7 +1112,6 @@ class HTML_AcctExp
 		}
 		
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<table width="100%" class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -1119,11 +1126,10 @@ class HTML_AcctExp
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="id" value="<?php echo $id; ?>" />
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		</form>
 		<?php
+
+		HTML_myCommon::endForm( $option, $aecHTML->pp->id );
+
 		echo $aecHTML->loadJS();
 
  		HTML_myCommon::endCommon();
@@ -1536,8 +1542,8 @@ class HTML_AcctExp
 		HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
 
 		$tabs = new bsPaneTabs;
-		$tabs->startTabs();
 
+		$tabs->startTabs();
 		$tabs->newTab( 'plan', JText::_('PAYPLAN_DETAIL_TITLE') );
 		$tabs->newTab( 'processors', JText::_('PAYPLAN_PROCESSORS_TITLE') );
 		$tabs->newTab( 'text', JText::_('PAYPLAN_TEXT_TITLE') );
@@ -1546,6 +1552,8 @@ class HTML_AcctExp
 		$tabs->newTab( 'relations', JText::_('PAYPLAN_RELATIONS_TITLE') );
 		$tabs->newTab( 'mis', JText::_('PAYPLAN_MI') );
 		$tabs->endTabs();
+
+		$tabs->startPanes();
 
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
@@ -1563,7 +1571,7 @@ class HTML_AcctExp
 									<div style="position:relative;width:100%;">
 										<?php
 										if ( $row->id ) { ?>
-											<p style="padding:8px;padding-left:80px;">
+											<p style="text-align: center;">
 												<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a>
 												&nbsp;|&nbsp;<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=addtocart&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?></a>
 											</p>
@@ -1584,29 +1592,27 @@ class HTML_AcctExp
 							<div class="userinfobox">
 								<div class="aec_userinfobox_sub">
 									<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
-									<table style="width:100%;">
-										<tr>
-											<th>ID</td>
-											<th>Name</td>
-											<th>delete</td>
-										</tr>
-										<?php
-										if ( !empty( $aecHTML->customparams->groups ) ) {
+									<table style="width:100%;" class="table-striped aec-grouplist">
+										<thead>
+											<tr>
+												<th width="5%">ID</td>
+												<th>Name</td>
+												<th width="1%"></td>
+											</tr>
+										<thead>
+										<tbody>
+										<?php if ( !empty( $aecHTML->customparams->groups ) ) {
 											foreach ( $aecHTML->customparams->groups as $id => $group ) {
-												?>
-												<tr>
-													<td align="right" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
-													<td><?php echo $group['name']; ?></td>
-													<td><?php echo $aecHTML->createSettingsParticle( 'group_delete_'.$id ); ?></td>
-												</tr>
-												<?php
+												HTML_AcctExp::groupRow( 'item', $group );
 											}
-										}
-										?>
-										<tr>
-											<td><?php echo JText::_('NEW_ITEMGROUP'); ?>:</td>
-											<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-										</tr>
+										} ?>
+										</tbody>
+										<tfoot>
+											<tr>
+												<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+												<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus', true ); ?></a></td>
+											</tr>
+										<tfoot>
 									</table>
 								</div>
 							</div>
@@ -1850,6 +1856,16 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	function groupRow( $type, $group )
+	{ ?>
+		<tr>
+			<td align="center" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
+			<td><?php echo $group['name']; ?></td>
+			<td><a class="btn btn-danger" id="removegroup-btn-<?php echo $group['id'];?>" href="#" onClick="removeGroup('item','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove', true ); ?></a></td>
+		</tr>
+	<?php
+	}
+
 	function listItemGroups( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
@@ -1937,7 +1953,7 @@ class HTML_AcctExp
 		$tabs->startPanes();
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
-			<?php $tabs->nextPane( 'group', true ); ?>
+			<?php $tabs->nextPane( 'group' ); ?>
 			<table class="aecadminform">
 				<tr>
 					<td valign="top">
@@ -2089,10 +2105,7 @@ class HTML_AcctExp
 					?>
 				</div>
 			</td></tr></table>
-			<?php
-			$tabs->endPane();
-			$tabs->endPanes();
-			?>
+			<?php $tabs->endPanes(); ?>
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -3108,10 +3121,10 @@ class bsPaneTabs
 	function newTab( $handle, $title, $current=false ) { echo '<li' . ( ( $this->tabs_started == 0 ) ? ' class="active"' : '' ) . '><a href="#' . $handle . '" data-toggle="pill">' . $title . '</a></li>'; $this->tabs_started++; }
 
 	function startPanes() { echo '<div class="tab-content">'; }
-	function endPanes() { $this->panes_ended++; echo '</div>'; }
+	function endPanes() { if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) { $this->endPane(); } echo '</div>'; }
 
 	function startPane( $id, $current=false ) { echo '<div id="' . $id . '" class="tab-pane' . ( $current ? ' active' : '' ) . '">'; $this->panes_started++; }
-	function endPane() { echo "</div>"; }
+	function endPane() { echo "</div>"; $this->panes_ended++; }
 	function nextPane( $pane ) { if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) { $this->endPane(); } $this->startPane( $pane, ( $this->panes_started == 0 ) ); }
 
 	function _loadBehavior($params = array())
