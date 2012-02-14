@@ -111,19 +111,13 @@ font-size: 110%;
 
 div.adminheading {
 float: left;
-padding: 0 10px 0;
-margin-top: 18px;
-}
-
-div.adminheading img {
-float: left;
-padding-left: 10px;
+padding: 18px;
 }
 
 div.adminheading h2 {
 float: left;
-padding-left: 24px;
-line-height: 86px;
+padding-left: 18px;
+line-height: 64px;
 }
 
 ul.nav-pills {
@@ -145,7 +139,7 @@ float: none;
 
 .aec-buttons {
 float: right;
-margin-top: 18px;
+margin-top: 6px;
 margin-right: 1px;
 padding: 23px;
 background: #fff;
@@ -157,8 +151,9 @@ border-bottom-left-radius: 10px;
 
 .aec-buttons-fixed {
 position: fixed;
-top: 18px;
+top: 24px;
 right: 10px;
+padding-top: 30px;
 z-index: 30;
 -webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
 -moz-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.35);
@@ -223,7 +218,7 @@ padding: 8px 14px;
 }
 
 .aec-buttons .btn-group {
-margin: 12px 3px -12px 3px;
+margin: 12px 3px -11px 3px;
 display: inline-block;
 }
 
@@ -789,7 +784,6 @@ padding-right: 4px;
 .aecadminform {
 background-color: #ddd;
 border-collapse: collapse;
-margin: 16px 0;
 width: 100%;
 box-shadow: 0 1px 7px #000 inset, 0 1px 4px #ccc;
 float: left;
@@ -1266,7 +1260,7 @@ margin: 3px auto -10px;
 }
 
 table.adminlist .pagination a {
-line-height: 22px;
+line-height: 24px;
 }
 
 table.adminlist .pagination i {
@@ -1282,16 +1276,16 @@ filter: alpha(opacity=50);
 
 .pagination div.limit {
 height: inherit;
-line-height: 22px;
+line-height: 31px;
 margin: -4px 10px;
 }
 
 div.limit select {
 width: 48px;
-padding: 0;
+padding: 1px;
 margin-left: 8px;
 background: #eee;
-margin-top: 6px;
+margin-top: 5px;
 }
 
 #submenu-box {
@@ -1407,6 +1401,17 @@ background-image: linear-gradient(top, #ee5f5b, #bd362f) !important;
 background-repeat: repeat-x !important;
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ee5f5b', endColorstr='#bd362f', GradientType=0) !important;
 color: #fff;
+}
+
+.button2-left .page a,
+.button2-right .page a,
+.button2-left .page span,
+.button2-right .page span,
+.button2-left .blank a,
+.button2-right .blank a,
+.button2-left .blank span,
+.button2-right .blank span {
+line-height: 25px;
 }
 
 .button2-left, .button2-right, .button2-left div, .button2-right div {
