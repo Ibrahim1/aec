@@ -1621,7 +1621,7 @@ class HTML_AcctExp
 								<table style="width:100%;" class="table-striped aec-grouplist">
 									<thead>
 										<tr>
-											<th width="5%">ID</td>
+											<th width="10%">ID</td>
 											<th>Name</td>
 											<th width="1%"></td>
 										</tr>
@@ -1730,7 +1730,7 @@ class HTML_AcctExp
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<table class="aecadminform">
 			<tr><td>
-				<div style="position:relative;float:left;width:49%;padding:4px;">
+				<div style="position:relative;float:left;width:49%;">
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('AEC_RESTRICTIONS_INVENTORY_HEADER'); ?></h4>
 						<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_enabled' ); ?>
@@ -1738,22 +1738,20 @@ class HTML_AcctExp
 						<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_used' ); ?>
 					</div>
 				</div>
-				<div style="position:relative;float:left;width:49%;padding:4px;">
+				<div style="position:relative;float:left;width:49%;">
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('AEC_RESTRICTIONS_REDIRECT_HEADER'); ?></h4>
 						<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 					</div>
 				</div>
-			</td></tr>
-			<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-			<tr><td>
-					<div class="aec_userinfobox_sub">
-						<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
-						<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-						<br />
-						<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-					</div>
+				<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+				<div class="aec_userinfobox_sub">
+					<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
+					<br />
+					<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
+				</div>
 			</td></tr>
 		</table>
 		<?php $tabs->nextPane( 'trial' ); ?>
@@ -2007,7 +2005,7 @@ class HTML_AcctExp
 								<table style="width:100%;" class="table-striped aec-grouplist">
 									<thead>
 										<tr>
-											<th width="5%">ID</td>
+											<th width="10%">ID</td>
 											<th>Name</td>
 											<th width="1%"></td>
 										</tr>
@@ -2039,8 +2037,8 @@ class HTML_AcctExp
 		</table>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<table class="aecadminform">
-			<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<tr><td>
+			<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 			<div class="aec_userinfobox_sub">
 				<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
@@ -2211,108 +2209,96 @@ class HTML_AcctExp
 		$tabs->newTab( 'mis', JText::_('COUPON_MI') );
 		$tabs->endTabs();
 
-		$tabs->nextPane( 'coupon', true ); ?>
-		<table class="aecadminform">
-			<tr>
-				<td>
-					<div style="position:relative;float:left;width:49%;padding:4px;">
-							<div class="aec_userinfobox_sub">
-								<h4>General</h4>
-								<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-							</div>
+		$tabs->startPanes();
+		$tabs->nextPane( 'coupon' ); ?>
+		<table class="aecadminform"><tr><td>
+			<div style="position:relative;float:left;width:49%;">
+				<div class="aec_userinfobox_sub">
+					<h4>General</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+				</div>
+			</div>
+			<div style="position:relative;float:left;width:49%;">
+				<div class="aec_userinfobox_sub">
+					<h4>Terms</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'amount_percent_use' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'amount_percent' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'percent_first' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'useon_trial' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'useon_full' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
+				</div>
+			</div>
+			<div style="position:relative;float:left;width:100%;">
+				<div class="aec_userinfobox_sub">
+					<h4>Date &amp; User Restrictions</h4>
+					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+						<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'has_expiration' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
 					</div>
-					<div style="position:relative;float:left;width:49%;padding:4px;">
-							<div class="aec_userinfobox_sub">
-								<h4>Terms</h4>
-								<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'amount_percent_use' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'amount_percent' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'percent_first' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'useon_trial' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'useon_full' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
-							</div>
+					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+						<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
 					</div>
-					<div style="position:relative;float:left;width:100%;padding:4px;">
-							<div class="aec_userinfobox_sub">
-								<h4>Date &amp; User Restrictions</h4>
-								<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-									<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
-								</div>
-								<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-									<?php echo $aecHTML->createSettingsParticle( 'has_expiration' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
-								</div>
-								<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-									<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
-								</div>
-								<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-									<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
-								</div>
-								<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-									<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
-								</div>
-								<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-									<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
-									<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
-								</div>
-							</div>
+					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+						<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
 					</div>
-				</td>
-			</tr>
-		</table>
+					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+						<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
+					</div>
+				</div>
+			</div>
+		</td></tr></table>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
-		<table class="aecadminform">
-			<tr><td>
-				<div class="aec_userinfobox_sub">
-					<h4>Restrict Combintations</h4>
-					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-						<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'allow_trial_depend_subscr' ); ?>
-					</div>
-					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-						<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
-					</div>
-					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-						<?php echo $aecHTML->createSettingsParticle( 'allow_combination' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'good_combinations' ); ?>
-					</div>
-					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-						<?php echo $aecHTML->createSettingsParticle( 'restrict_combination_cart' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'bad_combinations_cart' ); ?>
-					</div>
-					<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
-						<?php echo $aecHTML->createSettingsParticle( 'allow_combination_cart' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'good_combinations_cart' ); ?>
-					</div>
+		<table class="aecadminform"><tr><td>
+			<div class="aec_userinfobox_sub">
+				<h4>Restrict Combintations</h4>
+				<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+					<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'allow_trial_depend_subscr' ); ?>
 				</div>
-			</td></tr>
+				<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+					<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
+				</div>
+				<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+					<?php echo $aecHTML->createSettingsParticle( 'allow_combination' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'good_combinations' ); ?>
+				</div>
+				<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+					<?php echo $aecHTML->createSettingsParticle( 'restrict_combination_cart' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'bad_combinations_cart' ); ?>
+				</div>
+				<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">
+					<?php echo $aecHTML->createSettingsParticle( 'allow_combination_cart' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'good_combinations_cart' ); ?>
+				</div>
+			</div>
 			<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-		</table>
+		</td></tr></table>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<table width="100%" class="aecadminform">
-			<tr><td>
-				<div class="aec_userinfobox_sub">
-					<h4>Micro Integrations</h4>
-					<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
-				</div>
-			</td></tr>
-		</table>
+		<table width="100%" class="aecadminform"><tr><td>
+			<div class="aec_userinfobox_sub">
+				<h4>Micro Integrations</h4>
+				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
+			</div>
+		</td></tr></table>
 		<?php $tabs->endPanes(); ?>
-		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />

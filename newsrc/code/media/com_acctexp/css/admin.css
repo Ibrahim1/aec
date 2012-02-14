@@ -546,6 +546,14 @@ margin-left: -20px;
 padding-left: 20px;
 }
 
+.form-stacked .controls select {
+width: 220px;
+}
+
+.form-stacked .control-group > label {
+width: 100%;
+}
+
 div.liner {
 border-bottom: 1px dashed #999999;
 height: 16px;

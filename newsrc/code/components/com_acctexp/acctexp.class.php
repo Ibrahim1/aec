@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4416' );
+define( '_AEC_REVISION', '4444' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -20026,7 +20026,7 @@ class aecRestrictionHelper
 					continue;
 				}
 
-				echo '<tr><td><div class="aec_userinfobox_sub">';
+				echo '<div class="aec_userinfobox_sub">';
 
 				$firstitem = str_replace( '*', $type, $block[0][0] );
 				echo '<h4>' . JText::_( strtoupper( 'aec_restrictions_' . substr( $firstitem, 0, strpos( $firstitem, '_', strpos( $firstitem, '_' )+3 ) ) . '_header' ) )  . '</h4>';
@@ -20039,7 +20039,7 @@ class aecRestrictionHelper
 					}
 					echo '</div>';
 				}
-				echo '</div></td></tr>';
+				echo '</div>';
 			}
 		}
 	}
