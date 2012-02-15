@@ -6010,27 +6010,27 @@ function exportData( $option, $type, $cmd=null )
 
 	$params[] = array( 'userinfobox', 49 );
 	$params[] = array( 'userinfobox_sub', 'Save or Load Export Presets' );
-	$params[] = array( 'div', '<div class="form-stacked">' );
+	$params[] = array( 'div', '<div class="form-wide">' );
 	$params['selected_export']	= array( 'list', '' );
-	$params[] = array( 'div_end', '' );
-	$params[] = array( 'div', '<div style="float: right">' );
-	$params[] = array( 'p', '<p><a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#"><i class="bsicon-upload bsicon-white"></i>&nbsp;Load Preset</a></p>' );
-	$params[] = array( 'p', '<p><a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#"><i class="bsicon-download bsicon-white"></i>&nbsp;Store Preset</a></p>' );
-	$params[] = array( 'p', '<p><a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#"><i class="bsicon-download-alt bsicon"></i>&nbsp;Store Preset &amp; Exit</a></p>' );
-	$params[] = array( 'div_end', '' );
 	$params['delete']			= array( 'checkbox', 0 );
 	$params['save']				= array( 'checkbox', 0 );
 	$params['save_name']		= array( 'inputC', $pname );
+	$params[] = array( 'div_end', '' );
+	$params[] = array( 'div', '<div class="right-btns">' );
+	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#"><i class="bsicon-upload bsicon-white"></i>&nbsp;Load Preset</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#"><i class="bsicon-download bsicon-white"></i>&nbsp;Store Preset</a>' );
+	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#"><i class="bsicon-download-alt bsicon"></i>&nbsp;Store Preset &amp; Exit</a>' );
+	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
 
 	$params[] = array( 'userinfobox', 49 );
 	$params[] = array( 'userinfobox_sub', 'Export' );
-	$params[] = array( 'p', '<div class="btn-group" style="float: right">' );
+	$params['export_method']	= array( 'list', '' );
+	$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
 	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result"><i class="bsicon-print bsicon-white"></i>&nbsp;Test Export</a>' );
 	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#"><i class="bsicon-refresh bsicon-white"></i>&nbsp;Export Now</a>' );
-	$params[] = array( 'div_end', '' );
-	$params['export_method']	= array( 'list', '' );
+	$params[] = array( '2div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
 

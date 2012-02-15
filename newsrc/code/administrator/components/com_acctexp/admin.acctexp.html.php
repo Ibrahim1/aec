@@ -15,7 +15,7 @@ class HTML_myCommon
 {
 	function Valanx()
 	{
-		?><div align="center" id="aec_footer">
+		?><div align="center" id="aec-footer">
 			<table width="500" border="0">
 			<tr>
 				<td>
@@ -185,6 +185,22 @@ class HTML_AcctExp
 
 	function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
+		?><script type="text/javascript">
+		jQuery(document).ready(function() {
+			if ( jQuery("input#ck_lifetime").is(':checked') ) {
+				jQuery("input#expiration").attr("disabled", "disabled");
+			}
+
+			jQuery("input#ck_lifetime").on('click', function() {
+				if (jQuery(this).is(':checked')) {
+					jQuery("input#expiration").attr("disabled", "disabled");
+				} else {
+					jQuery("input#expiration").removeAttr("disabled");
+				}
+			});
+		});
+		</script><?php
+
 		HTML_myCommon::startCommon();
 
 		JHTML::_('behavior.calendar');
@@ -253,6 +269,8 @@ class HTML_AcctExp
 						);
 		HTML_myCommon::getButtons( $buttons, '' );
 
+		HTML_myCommon::startForm();
+
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
@@ -260,375 +278,355 @@ class HTML_AcctExp
 		$tabs->newTab( 'mis', JText::_('AEC_USER_MICRO_INTEGRATION') );
 		$tabs->endTabs();
 
-		?>
-		<script type="text/javascript">
-		jQuery(document).ready(function() {
-			if ( jQuery("input#ck_lifetime").is(':checked') ) {
-				jQuery("input#expiration").attr("disabled", "disabled");
-			}
+		$tabs->startPanes();
 
-			jQuery("input#ck_lifetime").on('click', function() {
-				if (jQuery(this).is(':checked')) {
-					jQuery("input#expiration").attr("disabled", "disabled");
-				} else {
-					jQuery("input#expiration").removeAttr("disabled");
-				}
-			});
-		});
-		</script>
-
-
-		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-			<?php $tabs->nextPane( 'user', true ); ?>
-			<table class="aecadminform">
-				<tr>
-					<td width="50%" valign="top">
-						<div class="aec_userinfobox_sub">
-							<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
+		$tabs->nextPane( 'user', true ); ?>
+		<table class="aecadminform">
+			<tr>
+				<td width="50%" valign="top">
+					<div class="aec_userinfobox_sub">
+						<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
+						<?php if ( $metaUser->hasSubscription ) { ?>
+						<div class="control-group">
+							<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></span></label>
+							<div class="controls"><span><?php echo $metaUser->focusSubscription->id; ?></span></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></span></label>
+							<div class="controls"><span>#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
+							<div class="controls"><span><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></span></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></span></label>
+							<div class="controls"><span><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></span></div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="ck_primary">
+								<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
+							</label>
+							<input type="hidden" value="0" name="ck_primary"/>
+							<div class="controls">
+								<div class="toggleswitch">
+									<label onclick="" class="toggleswitch">
+										<input type="checkbox"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" disabled="disabled"" ' : ''; ?> name="ck_primary" id="ck_primary" value="1"/>
+										<span class="toggleswitch-inner">
+											<span class="toggleswitch-on">Yes</span>
+											<span class="toggleswitch-off">No</span>
+											<span class="toggleswitch-handle"></span>
+										</span>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="expiration_current">
+								<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
+							</label>
+							<div class="controls">
+								<span><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></span>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="ck_lifetime">
+								<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
+							</label>
+							<input type="hidden" value="0" name="ck_lifetime"/>
+							<div class="controls">
+								<div class="toggleswitch">
+									<label onclick="" class="toggleswitch">
+										<input type="checkbox"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> name="ck_lifetime" id="ck_lifetime" value="1"/>
+										<span class="toggleswitch-inner">
+											<span class="toggleswitch-on">Yes</span>
+											<span class="toggleswitch-off">No</span>
+											<span class="toggleswitch-handle"></span>
+										</span>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="expiration">
+								<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
+							</label>
+							<div class="controls">
+								<?php echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox span3', 'size'=>'25',  'maxlength'=>'19' )); ?>
+								<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="set_status">
+								<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
+							</label>
+							<div class="controls">
+								<?php echo $lists['set_status']; ?>
+							</div>
+						</div>
+						<?php } else { ?>
+						<?php } ?>
+						<div class="control-group">
+							<label class="control-label" for="assignto_plan">
+								<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
+							</label>
+							<div class="controls">
+								<?php echo $lists['assignto_plan']; ?>
+							</div>
+						</div>
+					</div>
+					<div class="aec_userinfobox_sub">
+						<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?> History</h4>
 							<?php if ( $metaUser->hasSubscription ) { ?>
 							<div class="control-group">
-								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></span></label>
-								<div class="controls"><span><?php echo $metaUser->focusSubscription->id; ?></span></div>
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></span></label>
+								<div class="controls"><span>#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></span></label>
-								<div class="controls"><span>#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USED_PLANS'); ?></span></label>
+								<div class="controls">
+									<span>
+										<?php if ( !empty( $metaUser->meta->plan_history->used_plans ) ) { ?>
+											<ul>
+											<?php foreach ( $metaUser->meta->plan_history->used_plans as $used => $amount ) { ?>
+												<li>#<?php echo $used; ?> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? JText::_('AEC_USER_TIMES') : JText::_('AEC_USER_TIME') ); ?>)</li>
+											<?php } ?>
+											</ul>
+										<?php } else {
+											echo JText::_('AEC_USER_NO_PREV_PLANS');
+										} ?>
+									</span>
+								</div>
+							</div>
+							<?php } ?>
+							<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
+								<br />
+								<p><strong><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS');?>:</strong></p>
+								<table class="infobox_table table-striped">
+									<tr>
+										<th>&nbsp;</th>
+										<th>&nbsp;</th>
+										<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID');?></th>
+										<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_STATUS');?></th>
+										<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_PROCESSOR');?></th>
+										<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_SINGUP');?></th>
+										<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_EXPIRATION');?></th>
+									</tr>
+									<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
+										<tr<?php echo isset( $subs->current_focus ) ? ' class="current-focus"' : ''; ?>>
+											<td><?php echo isset( $subs->current_focus ) ? '<strong>&rArr;</strong>' : '&nbsp;'; ?></td>
+											<td><?php echo $subs->primary ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
+											<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
+											<td><?php echo $subs->status; ?></td>
+											<td><?php echo $subs->type; ?></td>
+											<td><?php echo $subs->signup_date; ?></td>
+											<td><?php echo $subs->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $subs->expiration ); ?></td>
+										</tr>
+										<?php
+									} ?>
+								</table>
+							<?php } elseif ( $metaUser->hasSubscription ) { ?>
+								<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NOPE');?></p>
+							<?php } else { ?>
+								<div class="alert-message block-message warning" style="width:200px;">
+									<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NONE');?></p>
+								</div>
+							<?php } ?>
+					</div>
+					<div class="aec_userinfobox_sub">
+						<h4><?php echo 'Notes'; ?></h4>
+						<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
+					</div>
+				</td>
+				<td width="50%" style="vertical-align:top;">
+					<div class="aec_userinfobox_sub">
+						<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
+						<div class="aec_userinfobox_sub_inline" style="width:42%; margin-left: -8%;">
+							<div class="control-group">
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
+								<div class="controls"><span><?php echo $metaUser->userid; ?></div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-								<div class="controls"><span><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></span></div>
+								<div class="controls"><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></span></label>
-								<div class="controls"><span><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></span></div>
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PROFILE'); ?></span></label>
+								<div class="controls"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
 							</div>
-							<div class="control-group">
-								<label class="control-label" for="ck_primary">
-									<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
-								</label>
-								<input type="hidden" value="0" name="ck_primary"/>
-								<div class="controls">
-									<div class="toggleswitch">
-										<label onclick="" class="toggleswitch">
-											<input type="checkbox"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" disabled="disabled"" ' : ''; ?> name="ck_primary" id="ck_primary" value="1"/>
-											<span class="toggleswitch-inner">
-												<span class="toggleswitch-on">Yes</span>
-												<span class="toggleswitch-off">No</span>
-												<span class="toggleswitch-handle"></span>
-											</span>
-										</label>
-									</div>
+							<?php if ( GeneralInfoRequester::detect_component('anyCB') ) { ?>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span>CB Profile</span></label>
+									<div class="controls"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 								</div>
+							<?php } ?>
+							<?php if ( GeneralInfoRequester::detect_component('JOMSOCIAL') ) { ?>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span>JomSocial Profile</span></label>
+									<div class="controls"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+								</div>
+							<?php } ?>
+						</div>
+						<div class="aec_userinfobox_sub_inline" style="width:38%; margin-left: -4%;">
+							<div class="control-group">
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
+								<div class="controls"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="expiration_current">
-									<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
-								</label>
-								<div class="controls">
-									<span><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></span>
-								</div>
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_NAME'); ?></span></label>
+								<div class="controls"><span><?php echo $metaUser->cmsUser->name; ?></span></div>
 							</div>
 							<div class="control-group">
-								<label class="control-label" for="ck_lifetime">
-									<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
-								</label>
-								<input type="hidden" value="0" name="ck_lifetime"/>
-								<div class="controls">
-									<div class="toggleswitch">
-										<label onclick="" class="toggleswitch">
-											<input type="checkbox"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> name="ck_lifetime" id="ck_lifetime" value="1"/>
-											<span class="toggleswitch-inner">
-												<span class="toggleswitch-on">Yes</span>
-												<span class="toggleswitch-off">No</span>
-												<span class="toggleswitch-handle"></span>
-											</span>
-										</label>
-									</div>
-								</div>
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_EMAIL'); ?></span></label>
+								<div class="controls"><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
 							</div>
-							<div class="control-group">
-								<label class="control-label" for="expiration">
-									<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
-								</label>
-								<div class="controls">
-									<?php echo JHTML::_('calendar', $exp, 'expiration', 'expiration', '%Y-%m-%d %H:%M:%S', array('class'=>'inputbox span3', 'size'=>'25',  'maxlength'=>'19' )); ?>
-									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
+							<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
+								<div class="control-group">
+									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_TYPE'); ?></span></label>
+									<div class="controls"><span><?php echo $metaUser->cmsUser->usertype; ?></span></div>
 								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="set_status">
-									<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
-								</label>
-								<div class="controls">
-									<?php echo $lists['set_status']; ?>
-								</div>
-							</div>
-							<?php } else { ?>
 							<?php } ?>
 							<div class="control-group">
-								<label class="control-label" for="assignto_plan">
-									<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
-								</label>
-								<div class="controls">
-									<?php echo $lists['assignto_plan']; ?>
-								</div>
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_REGISTERED'); ?></span></label>
+								<div class="controls"><span><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></span></label>
+								<div class="controls"><span><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
 							</div>
 						</div>
-						<div class="aec_userinfobox_sub">
-							<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?> History</h4>
-								<?php if ( $metaUser->hasSubscription ) { ?>
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></span></label>
-									<div class="controls"><span>#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USED_PLANS'); ?></span></label>
-									<div class="controls">
-										<span>
-											<?php if ( !empty( $metaUser->meta->plan_history->used_plans ) ) { ?>
-												<ul>
-												<?php foreach ( $metaUser->meta->plan_history->used_plans as $used => $amount ) { ?>
-													<li>#<?php echo $used; ?> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? JText::_('AEC_USER_TIMES') : JText::_('AEC_USER_TIME') ); ?>)</li>
-												<?php } ?>
-												</ul>
-											<?php } else {
-												echo JText::_('AEC_USER_NO_PREV_PLANS');
-											} ?>
-										</span>
-									</div>
-								</div>
-								<?php } ?>
-								<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
-									<br />
-									<p><strong><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS');?>:</strong></p>
-									<table class="infobox_table table-striped">
-										<tr>
-											<th>&nbsp;</th>
-											<th>&nbsp;</th>
-											<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID');?></th>
-											<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_STATUS');?></th>
-											<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_PROCESSOR');?></th>
-											<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_SINGUP');?></th>
-											<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_EXPIRATION');?></th>
-										</tr>
-										<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
-											<tr<?php echo isset( $subs->current_focus ) ? ' class="current-focus"' : ''; ?>>
-												<td><?php echo isset( $subs->current_focus ) ? '<strong>&rArr;</strong>' : '&nbsp;'; ?></td>
-												<td><?php echo $subs->primary ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-												<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
-												<td><?php echo $subs->status; ?></td>
-												<td><?php echo $subs->type; ?></td>
-												<td><?php echo $subs->signup_date; ?></td>
-												<td><?php echo $subs->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $subs->expiration ); ?></td>
-											</tr>
-											<?php
-										} ?>
-									</table>
-								<?php } elseif ( $metaUser->hasSubscription ) { ?>
-									<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NOPE');?></p>
-								<?php } else { ?>
-									<div class="alert-message block-message warning" style="width:200px;">
-										<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NONE');?></p>
-									</div>
-								<?php } ?>
-						</div>
-						<div class="aec_userinfobox_sub">
-							<h4><?php echo 'Notes'; ?></h4>
-							<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
-						</div>
-					</td>
-					<td width="50%" style="vertical-align:top;">
-						<div class="aec_userinfobox_sub">
-							<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
-							<div class="aec_userinfobox_sub_inline" style="width:42%; margin-left: -8%;">
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
-									<div class="controls"><span><?php echo $metaUser->userid; ?></div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-									<div class="controls"><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PROFILE'); ?></span></label>
-									<div class="controls"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
-								</div>
-								<?php if ( GeneralInfoRequester::detect_component('anyCB') ) { ?>
-									<div class="control-group">
-										<label class="control-label" for="expiration"><span>CB Profile</span></label>
-										<div class="controls"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
-									</div>
-								<?php } ?>
-								<?php if ( GeneralInfoRequester::detect_component('JOMSOCIAL') ) { ?>
-									<div class="control-group">
-										<label class="control-label" for="expiration"><span>JomSocial Profile</span></label>
-										<div class="controls"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
-									</div>
-								<?php } ?>
-							</div>
-							<div class="aec_userinfobox_sub_inline" style="width:38%; margin-left: -4%;">
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
-									<div class="controls"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_NAME'); ?></span></label>
-									<div class="controls"><span><?php echo $metaUser->cmsUser->name; ?></span></div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_EMAIL'); ?></span></label>
-									<div class="controls"><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
-								</div>
-								<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
-									<div class="control-group">
-										<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_TYPE'); ?></span></label>
-										<div class="controls"><span><?php echo $metaUser->cmsUser->usertype; ?></span></div>
-									</div>
-								<?php } ?>
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_REGISTERED'); ?></span></label>
-									<div class="controls"><span><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
-								</div>
-								<div class="control-group">
-									<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></span></label>
-									<div class="controls"><span><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
-								</div>
-							</div>
-						</div>
-						<div class="aec_userinfobox_sub">
-							<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
-							<table class="infobox_table table-striped">
-								<tr>
-									<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
-									<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
-									<th><?php echo JText::_('HISTORY_COL_DATE');?></th>
-									<th><?php echo JText::_('HISTORY_COL_METHOD');?></th>
-									<th><?php echo JText::_('HISTORY_COL_PLAN');?></th>
-									<th><?php echo JText::_('HISTORY_COL_ACTION');?></th>
-								</tr>
-								<?php
-								if ( !empty( $invoices ) ) {
-									foreach ( $invoices as $invoice ) { ?>
-										<tr<?php echo $invoice['rowstyle']; ?>>
-											<td><?php echo $invoice['invoice_number']; ?></td>
-											<td><?php echo $invoice['amount']; ?></td>
-											<td><?php echo $invoice['status']; ?></td>
-											<td><?php echo $invoice['processor']; ?></td>
-											<td><?php echo $invoice['usage']; ?></td>
-											<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
-										</tr>
-										<?php
-									}
+					</div>
+					<div class="aec_userinfobox_sub">
+						<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
+						<table class="infobox_table table-striped">
+							<tr>
+								<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
+								<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
+								<th><?php echo JText::_('HISTORY_COL_DATE');?></th>
+								<th><?php echo JText::_('HISTORY_COL_METHOD');?></th>
+								<th><?php echo JText::_('HISTORY_COL_PLAN');?></th>
+								<th><?php echo JText::_('HISTORY_COL_ACTION');?></th>
+							</tr>
+							<?php
+							if ( !empty( $invoices ) ) {
+								foreach ( $invoices as $invoice ) { ?>
+									<tr<?php echo $invoice['rowstyle']; ?>>
+										<td><?php echo $invoice['invoice_number']; ?></td>
+										<td><?php echo $invoice['amount']; ?></td>
+										<td><?php echo $invoice['status']; ?></td>
+										<td><?php echo $invoice['processor']; ?></td>
+										<td><?php echo $invoice['usage']; ?></td>
+										<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
+									</tr>
+									<?php
+								}
 
-									echo '</table>';
+								echo '</table>';
 
-									if ( $aecHTML->invoice_pages > 1 ) {
-										echo '<div class="aec-invoices-pagination"><p>';
-										$plist = array();
-										for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
-											if ( $i == $aecHTML->invoice_page ) {
-												$plist[] = ( $i + 1 );
-											} else {
-												$plist[] = '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
-											}
+								if ( $aecHTML->invoice_pages > 1 ) {
+									echo '<div class="aec-invoices-pagination"><p>';
+									$plist = array();
+									for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
+										if ( $i == $aecHTML->invoice_page ) {
+											$plist[] = ( $i + 1 );
+										} else {
+											$plist[] = '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
 										}
-										echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
 									}
-								} else {
-									echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
-									. JText::_('AEC_USER_NO_INVOICES')
-									. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+									echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
+								}
+							} else {
+								echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
+								. JText::_('AEC_USER_NO_INVOICES')
+								. '&nbsp;&lt;&lt;</td></tr>' . "\n";
 
-									echo '</table>';
-								} ?>
-						</div>
+								echo '</table>';
+							} ?>
+					</div>
+					<div class="aec_userinfobox_sub">
+						<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
+						<table class="infobox_table table-striped">
+							<tr>
+								<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
+								<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
+							</tr>
+							<?php
+							if ( !empty( $coupons ) ) {
+								foreach ( $coupons as $coupon ) { ?>
+									<tr>
+										<td><?php echo $coupon['coupon_code']; ?></td>
+										<td><?php echo $coupon['invoices']; ?></td>
+									</tr>
+									<?php
+								}
+							} else {
+								echo '<tr><td colspan="2" style="text-align:center;">&gt;&gt;&nbsp;'
+								. JText::_('AEC_USER_NO_COUPONS')
+								. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+							} ?>
+						</table>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<?php $tabs->nextPane( 'mis' ); ?>
+		<table class="aecadminform">
+			<tr>
+				<td>
+					<div class="aec_userinfobox_sub">
+					<?php if ( $metaUser->hasSubscription ) { ?>
+						<p><a href="index.php?"><?php echo JText::_('AEC_USER_QUICKFIRE_GO'); ?></a></p>
+					<?php } else { ?>
+						<p><?php echo JText::_('AEC_USER_QUICKFIRE_UNAVAILABLE'); ?></p>
+					<?php } ?>
+					</div>
+					<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
 						<div class="aec_userinfobox_sub">
-							<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
-							<table class="infobox_table table-striped">
-								<tr>
-									<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
-									<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
-								</tr>
-								<?php
-								if ( !empty( $coupons ) ) {
-									foreach ( $coupons as $coupon ) { ?>
-										<tr>
-											<td><?php echo $coupon['coupon_code']; ?></td>
-											<td><?php echo $coupon['invoices']; ?></td>
-										</tr>
-										<?php
-									}
-								} else {
-									echo '<tr><td colspan="2" style="text-align:center;">&gt;&gt;&nbsp;'
-									. JText::_('AEC_USER_NO_COUPONS')
-									. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-								} ?>
-							</table>
-						</div>
-					</td>
-				</tr>
-			</table>
-			<?php $tabs->nextPane( 'mis' ); ?>
-			<table class="aecadminform">
-				<tr>
-					<td>
-						<div class="aec_userinfobox_sub">
-						<?php if ( $metaUser->hasSubscription ) { ?>
-							<p><a href="index.php?"><?php echo JText::_('AEC_USER_QUICKFIRE_GO'); ?></a></p>
-						<?php } else { ?>
-							<p><?php echo JText::_('AEC_USER_QUICKFIRE_UNAVAILABLE'); ?></p>
-						<?php } ?>
-						</div>
-						<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
-							<div class="aec_userinfobox_sub">
-							<?php if ( !empty( $mi['profile'] ) ) { ?>
-								<?php foreach ( $mi['profile'] as $mix ) { ?>
-									<div class="profileinfobox">
-										<h4><?php echo $mix['name']; ?></h4>
-										<p><?php echo $mix['info']; ?></p>
-									</div>
-								<?php } ?>
-							<?php }
-							if ( !empty( $mi['profile_form'] ) ) { ?>
-								<?php foreach ( $mi['profile_form'] as $k ) { ?>
-										<?php echo $aecHTML->createSettingsParticle( $k ); ?>
-								<?php } ?>
+						<?php if ( !empty( $mi['profile'] ) ) { ?>
+							<?php foreach ( $mi['profile'] as $mix ) { ?>
+								<div class="profileinfobox">
+									<h4><?php echo $mix['name']; ?></h4>
+									<p><?php echo $mix['info']; ?></p>
+								</div>
 							<?php } ?>
-							</div>
-						<?php } ?>
-						<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
-							<div class="aec_userinfobox_sub">
-							<?php if ( !empty( $mi['admin'] ) ) { ?>
-								<?php foreach ( $mi['admin'] as $mix ) { ?>
-									<div class="admininfobox">
-										<h4><?php echo $mix['name']; ?></h4>
-										<p><?php echo $mix['info']; ?></p>
-									</div>
-								<?php } ?>
-							<?php }
-							if ( !empty( $mi['admin_form'] ) ) { ?>
-								<?php foreach ( $mi['admin_form'] as $k ) { ?>
-										<?php echo $aecHTML->createSettingsParticle( $k ); ?>
-								<?php } ?>
-							<?php } ?>
-							</div>
 						<?php }
-						if ( !empty( $metaUser->meta->params->mi ) ) { ?>
-									<pre><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+						if ( !empty( $mi['profile_form'] ) ) { ?>
+							<?php foreach ( $mi['profile_form'] as $k ) { ?>
+									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+							<?php } ?>
 						<?php } ?>
 						</div>
-					</td>
-				</tr>
-			</table>
-			<?php
-			$tabs->endPane();
-			$tabs->endPanes();
-			?>
-			<input type="hidden" name="option" value="<?php echo $option; ?>" />
-			<input type="hidden" name="id" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
-			<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
-			<input type="hidden" name="task" value="" />
-			<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
+					<?php } ?>
+					<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
+						<div class="aec_userinfobox_sub">
+						<?php if ( !empty( $mi['admin'] ) ) { ?>
+							<?php foreach ( $mi['admin'] as $mix ) { ?>
+								<div class="admininfobox">
+									<h4><?php echo $mix['name']; ?></h4>
+									<p><?php echo $mix['info']; ?></p>
+								</div>
+							<?php } ?>
+						<?php }
+						if ( !empty( $mi['admin_form'] ) ) { ?>
+							<?php foreach ( $mi['admin_form'] as $k ) { ?>
+									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+							<?php } ?>
+						<?php } ?>
+						</div>
+					<?php }
+					if ( !empty( $metaUser->meta->params->mi ) ) { ?>
+								<pre><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+					<?php } ?>
+					</div>
+				</td>
+			</tr>
+		</table>
+		<?php $tabs->endPanes(); ?>
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="id" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
+		<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
 		<?php
  		HTML_myCommon::endCommon();
