@@ -7,6 +7,11 @@ class AECexport_test extends AECexport
 		$this->lines = array();
 	}
 
+	function putDescription( $array )
+	{
+		$this->lines[] = $array;
+	}
+
 	function putln( $array )
 	{
 		$this->lines[] = $array;
