@@ -6028,8 +6028,8 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'userinfobox_sub', 'Export' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
-	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result"><i class="bsicon-print bsicon-white"></i>&nbsp;Test Export</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#"><i class="bsicon-refresh bsicon-white"></i>&nbsp;Export Now</a>' );
+	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result"><i class="bsicon-eye-open bsicon-white"></i>&nbsp;Test Export</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#"><i class="bsicon-file bsicon-white"></i>&nbsp;Export Now</a>' );
 	$params[] = array( '2div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
