@@ -887,6 +887,43 @@ class metaUser
 		}
 	}
 
+	function loadJProfile()
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT DISTINCT `profile_key`'
+				. ' FROM #__user_profiles';
+		$db->setQuery( $query );
+		$pkeys = $db->loadResultArray();
+
+		$query = 'SELECT `profile_key`, `profile_value`'
+				. ' FROM #__user_profiles'
+				. ' WHERE `user_id` = \'' . $this->data['metaUser']->userid . '\'';
+		$db->setQuery( $query );
+		$objects = $db->loadObjectList();
+
+		$fields = array();
+		foreach ( $pkeys as $k ) {
+			if ( !empty( $objects ) ) {
+				foreach ( $objects as $oid => $object ) {
+					if ( $k == $object->profile_key ) {
+						$fields[str_replace( ".", "_", $k )] = $object->profile_value;
+
+						unset( $objects[$oid] );
+					}
+				}
+			} else {
+				$fields[str_replace( ".", "_", $k )] = "";
+			}
+		}
+
+		$this->jProfile = $fields;
+
+		if ( !empty( $this->jProfile ) ) {
+			$this->hasJProfile = true;
+		}
+	}
+
 	function loadCBuser()
 	{
 		$db = &JFactory::getDBO();
@@ -14338,6 +14375,28 @@ class reWriteEngine
 			$rewrite['user'][] = 'activationcode';
 			$rewrite['user'][] = 'activationlink';
 
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$db = &JFactory::getDBO();
+
+				$query = 'SELECT DISTINCT `profile_key`'
+						. ' FROM #__user_profiles';
+				$db->setQuery( $query );
+				$pkeys = $db->loadResultArray();
+
+				if ( is_array( $pkeys ) ) {
+					foreach ( $pkeys as $pkey ) {
+						$content = str_replace( ".", "_", $pkey );
+
+						$rewrite['user'][] = $content;
+
+						$name = 'REWRITE_KEY_USER_' . strtoupper( $content );
+						if ( !$lang->hasKey( $name ) ) {
+							$newlang[$name] = $content;
+						}
+					}
+				}
+			}
+
 			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 				$db = &JFactory::getDBO();
 
@@ -14584,6 +14643,18 @@ class reWriteEngine
 					$this->rewrite['user_email']			= $this->data['metaUser']->cmsUser->email;
 				} else {
 					$this->rewrite['user_name']				= "";
+				}
+
+				if ( defined( 'JPATH_MANIFESTS' ) ) {
+					if ( !$this->data['metaUser']->hasJProfile ) {
+						$this->data['metaUser']->loadJProfile();
+					}
+
+					if ( !empty( $this->data['metaUser']->hasJProfile ) ) {
+						foreach ( $this->data['metaUser']->jProfile as $field => $value ) {
+							$this->rewrite['user_'.$field] = $value;
+						}
+					}
 				}
 
 				if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
