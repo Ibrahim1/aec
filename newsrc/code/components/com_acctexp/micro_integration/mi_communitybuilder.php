@@ -74,45 +74,7 @@ class mi_communitybuilder
 		}
 
 		if ( $this->settings['set_fields'] ) {
-			$query = 'SELECT `name`, `title`'
-					. ' FROM #__comprofiler_fields'
-					. ' WHERE `table` != \'#__users\''
-					. ' AND `name` != \'NA\''
-					;
-			$db->setQuery( $query );
-			$objects = $db->loadObjectList();
-
-			foreach ( $objects as $object ) {
-				if ( isset( $this->settings['cbfield_' . $object->name] ) ) {
-					if ( $this->settings['cbfield_' . $object->name] !== '' ) {
-						$changes[$object->name] = $this->settings['cbfield_' . $object->name];
-					}
-				}
-			}
-
-			if ( !empty( $changes ) ) {
-				$alterstring = array();
-				foreach ( $changes as $name => $value ) {
-					$v = AECToolbox::rewriteEngineRQ( $value, $request );
-
-					if ( ( $v === 0 ) || ( $v === "0" ) ) {
-						$alterstring[] = "`" . $name . "`" . ' = \'0\'';
-					} elseif ( ( $v === 1 ) || ( $v === "1" ) ) {
-						$alterstring[] = "`" . $name . "`" . ' = \'1\'';
-					} elseif ( strcmp( $v, 'NULL' ) === 0 ) {
-						$alterstring[] = "`" . $name . "`" . ' = NULL';
-					} elseif ( !empty( $v ) ) {
-						$alterstring[] = "`" . $name . "`" . ' = \'' . $v . '\'';
-					}
-				}
-
-				$query = 'UPDATE #__comprofiler'
-						. ' SET ' . implode( ', ', $alterstring )
-						. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
-						;
-				$db->setQuery( $query );
-				$db->query() or die( $db->stderr() );
-			}
+			$this->setFields( $request );
 		}
 	}
 
@@ -130,41 +92,47 @@ class mi_communitybuilder
 		}
 
 		if ( $this->settings['set_fields_exp'] ) {
-			$query = 'SELECT `name`, `title`'
-					. ' FROM #__comprofiler_fields'
-					. ' WHERE `table` != \'#__users\''
-					. ' AND `name` != \'NA\''
+			$this->setFields( $request, $request->metaUser->userid, '_exp' );
+		}
+	}
+
+	function setFields( $request, $stage="" )
+	{
+		$query = 'SELECT `name`, `title`'
+				. ' FROM #__comprofiler_fields'
+				. ' WHERE `table` != \'#__users\''
+				. ' AND `name` != \'NA\''
+				;
+		$db->setQuery( $query );
+		$objects = $db->loadObjectList();
+
+		$changes = array();
+		foreach ( $objects as $object ) {
+			if ( !empty( $this->settings['cbfield_' . $object->name . $stage ] ) ) {
+				$changes[$object->name] = $this->settings['cbfield_' . $object->name . $stage];
+			}
+		}
+
+		if ( !empty( $changes ) ) {
+			$alterstring = array();
+			foreach ( $changes as $name => $value ) {
+				if ( ( $value === 0 ) || ( $value === "0" ) ) {
+					$alterstring[] = "`" . $name . "`" . ' = \'0\'';
+				} elseif ( ( $value === 1 ) || ( $value === "1" ) ) {
+					$alterstring[] = "`" . $name . "`" . ' = \'1\'';
+				} elseif ( strcmp( $value, 'NULL' ) === 0 ) {
+					$alterstring[] = "`" . $name . "`" . ' = NULL';
+				} else {
+					$alterstring[] = "`" . $name . "`" . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
+				}
+			}
+
+			$query = 'UPDATE #__comprofiler'
+					. ' SET ' . implode( ', ', $alterstring )
+					. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
 					;
 			$db->setQuery( $query );
-			$objects = $db->loadObjectList();
-
-			foreach ( $objects as $object ) {
-				if ( !empty( $this->settings['cbfield_' . $object->name . '_exp' ] ) ) {
-					$changes[$object->name] = $this->settings['cbfield_' . $object->name . '_exp' ];
-				}
-			}
-
-			if ( !empty( $changes ) ) {
-				$alterstring = array();
-				foreach ( $changes as $name => $value ) {
-					if ( ( $value === 0 ) || ( $value === "0" ) ) {
-						$alterstring[] = "`" . $name . "`" . ' = \'0\'';
-					} elseif ( ( $value === 1 ) || ( $value === "1" ) ) {
-						$alterstring[] = "`" . $name . "`" . ' = \'1\'';
-					} elseif ( strcmp( $value, 'NULL' ) === 0 ) {
-						$alterstring[] = "`" . $name . "`" . ' = NULL';
-					} else {
-						$alterstring[] = "`" . $name . "`" . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
-					}
-				}
-
-				$query = 'UPDATE #__comprofiler'
-						. ' SET ' . implode( ', ', $alterstring )
-						. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
-						;
-				$db->setQuery( $query );
-				$db->query() or die( $db->stderr() );
-			}
+			$db->query() or die( $db->stderr() );
 		}
 	}
 

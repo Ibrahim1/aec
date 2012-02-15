@@ -31,6 +31,32 @@ class mi_joomlauser
 		$settings['username_rand']	= array( 'inputC' );
 		$settings['password']		= array( 'inputD' );
 
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$settings['set_fields']		= array( 'toggle' );
+			$settings['set_fields_exp']	= array( 'toggle' );
+
+			$db = &JFactory::getDBO();
+
+			$query = 'SELECT DISTINCT `profile_key`'
+					. ' FROM #__user_profiles';
+			$db->setQuery( $query );
+			$pkeys = $db->loadResultArray();
+
+			if ( !empty( $pkeys ) ) {
+				foreach ( $pkeys as $k ) {
+					if ( strpos( $object->title, '_' ) === 0 ) {
+						$title = $object->name;
+					} else {
+						$title = $object->title;
+					}
+
+					$settings['jprofile_' . str_replace( ".", "_", $k )] = array( 'inputE', $title, $title );
+					$expname = $title . " "  . JText::_('MI_MI_COMMUNITYBUILDER_EXPMARKER');
+					$settings['jprofile_' . str_replace( ".", "_", $k ) . '_exp' ] = array( 'inputE', $expname, $expname );
+				}
+			}
+		}
+
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
 		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
@@ -80,6 +106,10 @@ class mi_joomlauser
 			// Reloading metaUser object for other MIs
 			$request->metaUser = new metaUser( $userid );
 		}
+
+		if ( !empty( $this->settings['set_fields'] ) ) {
+			$this->setFields( $request->metaUser->userid );
+		}
 	}
 
 	function getUsername( $request )
@@ -119,7 +149,49 @@ class mi_joomlauser
 			$db->query() or die( $db->stderr() );
 		}
 
+		if ( !empty( $this->settings['set_fields_exp'] ) ) {
+			$this->setFields( $request->metaUser->userid, '_exp' );
+		}
 	}
+
+	function setFields( $request, $stage="" )
+	{
+		$query = 'SELECT `profile_key`, `profile_value`'
+				. ' FROM #__user_profiles'
+				. ' WHERE `user_id` = \'' . $this->data['metaUser']->userid . '\'';
+		$db->setQuery( $query );
+		$objects = $db->loadObjectList();
+
+		$changes = $additions = array();
+		foreach ( $objects as $object ) {
+			if ( !empty( $this->settings['jprofile_' . str_replace( ".", "_", $object->profile_key ) . $stage] ) ) {
+				$changes[$object->name] = $this->settings['jprofile_' . str_replace( ".", "_", $object->profile_key ) . $stage];
+			}
+		}
+
+		if ( !empty( $changes ) ) {
+			$alterstring = array();
+			foreach ( $changes as $name => $value ) {
+				if ( ( $value === 0 ) || ( $value === "0" ) ) {
+					$alterstring[] = "`" . $name . "`" . ' = \'0\'';
+				} elseif ( ( $value === 1 ) || ( $value === "1" ) ) {
+					$alterstring[] = "`" . $name . "`" . ' = \'1\'';
+				} elseif ( strcmp( $value, 'NULL' ) === 0 ) {
+					$alterstring[] = "`" . $name . "`" . ' = NULL';
+				} else {
+					$alterstring[] = "`" . $name . "`" . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
+				}
+			}
+
+			$query = 'UPDATE #__comprofiler'
+					. ' SET ' . implode( ', ', $alterstring )
+					. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
+					;
+			$db->setQuery( $query );
+			$db->query() or die( $db->stderr() );
+		}
+	}
+
 }
 
 ?>
