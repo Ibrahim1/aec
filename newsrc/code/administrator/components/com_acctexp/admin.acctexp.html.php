@@ -282,7 +282,7 @@ class HTML_AcctExp
 		$tabs->nextPane( 'user', true ); ?>
 		<table class="aecadminform">
 			<tr>
-				<td width="50%" valign="top">
+				<td width="50%">
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
 						<?php if ( $metaUser->hasSubscription ) { ?>
@@ -757,7 +757,7 @@ class HTML_AcctExp
 		?>
 		<table class="aecadminform_seamless">
 			<tr>
-				<td valign="top">
+				<td>
 					<div id="aec_center">
 						<?php
 						$linkroot = "index.php?option=com_acctexp&amp;task=";
@@ -811,7 +811,7 @@ class HTML_AcctExp
 						?>
 					</div>
 				</td>
-				<td valign="top" class="centerlogo">
+				<td class="centerlogo">
 					<br />
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
@@ -1109,7 +1109,7 @@ class HTML_AcctExp
 		?>
 			<table width="100%" class="aecadminform">
 				<tr>
-					<td valign="top">
+					<td>
 						<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
 							<?php
@@ -1341,7 +1341,7 @@ class HTML_AcctExp
 			<?php $tabs->nextPane( 'mi', true ); ?>
 			<table width="100%" class="aecadminform">
 				<tr>
-				<td valign="top">
+				<td>
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
 						<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
@@ -1355,7 +1355,7 @@ class HTML_AcctExp
 						<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
 					</div>
 				</td>
-				<td valign="top">
+				<td>
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('MI_E_DETAILS') . ' - ' . JText::_('MI_E_FUNCTION_NAME'); ?></h4>
 						<div style="position:relative;">
@@ -1390,7 +1390,7 @@ class HTML_AcctExp
 				$tabs->nextPane( 'settings' ); ?>
 				<table width="100%" class="aecadminform">
 					<tr>
-						<td valign="top">
+						<td>
 							<div class="aec_userinfobox_sub">
 							<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
 							<?php
@@ -1404,7 +1404,7 @@ class HTML_AcctExp
 									<?php $tabs->nextPane( $name ); ?>
 								    <table width="100%" class="aecadminform">
 										<tr>
-											<td valign="top">
+											<td>
 												<div class="aec_userinfobox_sub">
 												<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
 									<?php
@@ -1564,7 +1564,7 @@ class HTML_AcctExp
 		$tabs->nextPane( 'plan', true ); ?>
 		<table class="aecadminform">
 			<tr>
-				<td valign="top">
+				<td>
 					<div style="position:relative;float:left;width:33.225%;">
 						<div class="userinfobox">
 							<div class="aec_userinfobox_sub">
@@ -1939,7 +1939,7 @@ class HTML_AcctExp
 		$tabs->nextPane( 'group' ); ?>
 		<table class="aecadminform">
 			<tr>
-				<td valign="top">
+				<td>
 					<div style="position:relative;float:left;width:33.225%;">
 						<div class="aec_userinfobox_sub">
 							<h4>General</h4>
@@ -2648,7 +2648,7 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<table width="100%" class="aecadminform">
 				<tr>
-					<td valign="top">
+					<td>
 						<div class="userinfobox">
 							<div class="aec_readout aec_userinfobox_sub">
 								<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
@@ -2876,7 +2876,7 @@ class HTML_AcctExp
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<table class="aecadminform">
 			<tr>
-				<td valign="top">
+				<td>
 					<div class="userinfobox">
 						<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec_userinfobox_sub form-stacked">
 									<?php
@@ -2946,7 +2946,7 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 		<table class="aecadminform">
 			<tr>
-				<td valign="top">
+				<td>
 					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 						echo $aecHTML->createSettingsParticle( $rowname );
 					} ?>
@@ -2970,32 +2970,26 @@ class HTML_AcctExp
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox', ( !empty( $cmd ) ? $title : '' ) );
+
+		HTML_myCommon::startForm();
 		?>
-		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-			<table width="100%" class="aecadminform">
-				<tr>
-					<td valign="top">
-						<div class="aec_userinfobox_sub">
-						<?php if ( is_array( $result ) ) { ?>
-							<div id="aec-toolbox-list">
-							<?php foreach ( $result as $x => $litem ) {
-								echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
-								echo '<p><a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: -48px; margin-right: 48px;"><i class="bsicon-cog bsicon-white"></i> Use</a></p>';
-								echo '<hr />';
-							} ?>
-							</div>
-						<?php } else { ?>
-							<?php echo $result; ?>
-						<?php } ?>
-						</div>
-					</td>
-				</tr>
-			</table>
+		<table width="100%" class="aecadminform"><tr><td>
+			<div class="aec_userinfobox_sub">
+			<?php if ( is_array( $result ) ) { ?>
+				<div id="aec-toolbox-list">
+				<?php foreach ( $result as $x => $litem ) {
+					echo '<a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: 10px;"><i class="bsicon-cog bsicon-white"></i> Use</a>';
+					echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
+					echo '<hr />';
+				} ?>
+				</div>
+			<?php } else { echo $result; } ?>
+			</div>
+		</td></tr></table>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="toolbox" />
 		<input type="hidden" name="cmd" value="<?php echo $cmd;?>" />
 		</form>
-
 		<?php
 
  		HTML_myCommon::endCommon();

@@ -2433,14 +2433,14 @@ function listSubscriptionPlans( $option )
 		$rows[$rid]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
 		
 		$rows[$rid]->expired_inner = false;
-		if ( $rows[$rid]->expired_percentage > 30 ) {
+		if ( $rows[$rid]->expired_percentage > 45 ) {
 			$rows[$rid]->expired_inner = true;
 		}
 
 		$rows[$rid]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
 		
 		$rows[$rid]->active_inner = false;
-		if ( $rows[$rid]->active_percentage > 30 ) {
+		if ( $rows[$rid]->active_percentage > 45 ) {
 			$rows[$rid]->active_inner = true;
 		}
 
