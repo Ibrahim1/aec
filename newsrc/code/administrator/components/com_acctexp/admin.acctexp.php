@@ -2450,6 +2450,13 @@ function listSubscriptionPlans( $option )
 		if ( $rows[$rid]->total_percentage > 20 ) {
 			$rows[$rid]->total_inner = true;
 		}
+
+		if ( !empty( $row->desc ) ) {
+			$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
+			if ( strlen( $rows[$rid]->desc ) > 50 ) {
+				$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+			}
+		}
 	}
 
  	HTML_AcctExp::listSubscriptionPlans( $rows, $lists, $pageNav, $option );
@@ -3264,7 +3271,7 @@ function listItemGroups( $option )
 
 	$gcolors = array();
 
-	foreach ( $rows as $n => $row ) {
+	foreach ( $rows as $rid => $row ) {
 		$query = 'SELECT count(*)'
 				. 'FROM #__users AS a'
 				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
@@ -3273,7 +3280,7 @@ function listItemGroups( $option )
 				;
 		$db->setQuery( $query	);
 
-	 	$rows[$n]->usercount = $db->loadResult();
+	 	$rows[$rid]->usercount = $db->loadResult();
 	 	if ( $db->getErrorNum() ) {
 	 		echo $db->stderr();
 	 		return false;
@@ -3287,13 +3294,13 @@ function listItemGroups( $option )
 				;
 		$db->setQuery( $query	);
 
-	 	$rows[$n]->expiredcount = $db->loadResult();
+	 	$rows[$rid]->expiredcount = $db->loadResult();
 	 	if ( $db->getErrorNum() ) {
 	 		echo $db->stderr();
 	 		return false;
 	 	}
 
-		$group = $rows[$n]->id;
+		$group = $rows[$rid]->id;
 
 		if ( !isset( $gcolors[$group] ) ) {
 			$gcolors[$group] = array();
@@ -3301,8 +3308,15 @@ function listItemGroups( $option )
 			$gcolors[$group]['icon'] = ItemGroupHandler::groupIcon( $group ) . '.png';
 		}
 
-		$rows[$n]->group = aecHTML::Icon( $gcolors[$group]['icon'], $group );
-		$rows[$n]->color = $gcolors[$group]['color'];
+		$rows[$rid]->group = aecHTML::Icon( $gcolors[$group]['icon'], $group );
+		$rows[$rid]->color = $gcolors[$group]['color'];
+
+		if ( !empty( $row->desc ) ) {
+			$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
+			if ( strlen( $rows[$rid]->desc ) > 50 ) {
+				$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+			}
+		}
 	}
 
  	HTML_AcctExp::listItemGroups( $rows, $pageNav, $option );
@@ -3680,6 +3694,15 @@ function listMicroIntegrations( $option )
 	if ( $db->getErrorNum() ) {
 		echo $db->stderr();
 		return false;
+	}
+
+	foreach ( $rows as $rid => $row ) {
+		if ( !empty( $row->desc ) ) {
+			$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
+			if ( strlen( $rows[$rid]->desc ) > 50 ) {
+				$rows[$rid]->desc = substr( $rows[$rid]->desc, 0, 50) . ' ...';
+			}
+		}
 	}
 
 	$sel = array();

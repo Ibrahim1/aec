@@ -113,7 +113,6 @@ class HTML_myCommon
 			switch ( $buttons ) {
 				case 'list':
 					$buttons = array(	'egs' => array( 'groupstart' => true ),
-										'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
 										'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
 										'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
 										'ege' => array( 'groupend' => true ),
@@ -1057,18 +1056,16 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%">id</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
-					<th nowrap="nowrap"><?php echo JText::_('PROCESSOR_INFO'); ?></th>
-					<th width="1%" nowrap="nowrap"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
+					<th width="10%" align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
+					<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
+					<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 				</tr></thead>
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
 					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td><?php echo $row->processor->id; ?></td>
 					<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
-					<td>
-						<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->processor->info['longname']; ?></a>
-					</td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
 					<td><?php echo $row->processor->info['statement']; ?></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
 				</tr>
@@ -1165,20 +1162,20 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="1%">&nbsp;</th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('CNAME'); ?></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('USERLOGIN'); ?></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('SUBSCR_DATE'); ?></th>
+					<th width="10%" align="left"><?php echo JText::_('CNAME'); ?></th>
+					<th width="10%" align="left"><?php echo JText::_('USERLOGIN'); ?></th>
+					<th width="10%" align="left"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
+					<th width="10%" align="left"><?php echo JText::_('SUBSCR_DATE'); ?></th>
 					<?php if ( $action[0] != 'manual' ) { ?>
-						<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('LASTPAY_DATE'); ?></th>
-						<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('METHOD'); ?></th>
-						<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('USERPLAN'); ?></th>
-						<th width="27%" align="left" nowrap="nowrap"><?php echo JText::_('EXPIRATION'); ?></th>
+						<th width="10%" align="left"><?php echo JText::_('LASTPAY_DATE'); ?></th>
+						<th width="10%" align="left"><?php echo JText::_('METHOD'); ?></th>
+						<th width="10%" align="left"><?php echo JText::_('USERPLAN'); ?></th>
+						<th width="27%" align="left"><?php echo JText::_('EXPIRATION'); ?></th>
 					<?php } else { ?>
-						<th width="10%" align="left" nowrap="nowrap"></th>
-						<th width="10%" align="left" nowrap="nowrap"></th>
-						<th width="10%" align="left" nowrap="nowrap"></th>
-						<th width="27%" align="left" nowrap="nowrap"></th>
+						<th width="10%" align="left"></th>
+						<th width="10%" align="left"></th>
+						<th width="10%" align="left"></th>
+						<th width="27%" align="left"></th>
 					<?php } ?>
 				</tr></thead>
 				<?php foreach ( $rows as $i => $row ) {
@@ -1270,13 +1267,13 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%">id</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('MI_NAME'); ?></th>
-					<th width="50%" align="left" nowrap="nowrap" ><?php echo JText::_('MI_DESC'); ?></th>
-					<th width="1%" nowrap="nowrap"><?php echo JText::_('MI_ACTIVE'); ?></th>
+					<th width="10%" align="left"><?php echo JText::_('MI_NAME'); ?></th>
+					<th width="50%" align="left" ><?php echo JText::_('MI_DESC'); ?></th>
+					<th width="1%"><?php echo JText::_('MI_ACTIVE'); ?></th>
 					<?php if ( $ordering ) { ?>
-						<th width="1%" nowrap="nowrap"><?php echo JText::_('MI_REORDER'); ?></th>
+						<th width="1%"><?php echo JText::_('MI_REORDER'); ?></th>
 					<?php } ?>
-					<th width="10%" align="right" nowrap="nowrap"><?php echo JText::_('MI_FUNCTION'); ?></th>
+					<th width="10%" align="right"><?php echo JText::_('MI_FUNCTION'); ?></th>
 				</tr></thead>
 
 			<?php foreach ( $rows as $i => $row ) { ?>
@@ -1284,14 +1281,7 @@ class HTML_AcctExp
 					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td><?php echo $row->id; ?></td>
 					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-					<td>
-						<?php
-						if (!isset($row->id)) {
-							echo $row->name;
-						} else { ?>
-							<a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editMicroIntegration')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a> <?php
-						} ?>
-					</td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editMicroIntegration')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
 					<td class="leftalign">
 						<?php
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
@@ -1467,34 +1457,24 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="1%" align="left" nowrap="nowrap"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+					<th width="1%" align="left"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
 					<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
 					<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-					<th width="1%" nowrap="nowrap"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-					<th width="5%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?></th>
-					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+					<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
+					<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
+					<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+					<th width="5%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?></th>
+					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 				</tr></thead>
 
-			<?php foreach ( $rows as $i => $row ) {
-				if ( !is_null( $row->desc ) ) {
-					$description = strip_tags( $row->desc );
-					if ( strlen( $description ) > 50 ) {
-						$description = substr( $description, 0, 50) . ' ...';
-					}
-				} else {
-					$description = '';
-				}
-
-				?>
+			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
 					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td><?php echo $row->id; ?></td>
 					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 					<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
-					<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo stripslashes( $row->name ); ?></a></td>
-					<td class="leftalign"><?php echo stripslashes( $description ); ?></td>
+					<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+					<td class="leftalign"><?php echo $row->desc; ?></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
 					<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
@@ -1900,32 +1880,21 @@ class HTML_AcctExp
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="10%"></th>
-					<th width="10%" align="left" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
-					<th width="50%" align="left" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
-					<th width="3%" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
-					<th width="1%" nowrap="nowrap"><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
+					<th width="10%" align="left"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+					<th width="50%" align="left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
+					<th width="3%"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
+					<th width="3%"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
+					<th width="1%"><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
 				</tr></thead>
 
-				<?php foreach ( $rows as $i => $row ) {
-					if ( !is_null( $row->desc ) ) {
-						$description = strip_tags( $row->desc );
-						if ( strlen( $description ) > 50 ) {
-							$description = substr( $description, 0, 50) . ' ...';
-						}
-					} else {
-						$description = '';
-					} ?>
+				<?php foreach ( $rows as $i => $row ) { ?>
 					<tr>
 						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 						<td><?php echo $row->id; ?></td>
 						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 						<td align="right" style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
-						<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
-						<td  align="left">
-							<?php
-							echo $description; ?>
-						</td>
+						<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+						<td class="leftalign"><?php echo $row->desc; ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
 						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
@@ -2144,20 +2113,18 @@ class HTML_AcctExp
 					<th width="10%" class="leftalign"><?php echo JText::_('COUPON_NAME'); ?></th>
 					<th width="10%" class="leftalign"><?php echo JText::_('COUPON_CODE'); ?></th>
 					<th width="50%" class="leftalign"><?php echo JText::_('COUPON_DESC'); ?></th>
-					<th width="1%" nowrap="nowrap"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
-					<th width="1%" nowrap="nowrap"><?php echo JText::_('COUPON_REORDER'); ?></th>
-					<th width="10%" nowrap="nowrap" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
+					<th width="1%"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
+					<th width="1%"><?php echo JText::_('COUPON_REORDER'); ?></th>
+					<th width="10%" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 				</tr></thead>
 
 				<?php foreach ( $rows as $i => $row ) { ?>
 					<tr>
 						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-						<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
+						<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
 						<td class="leftalign"><strong><?php echo $row->coupon_code; ?></strong></td>
-						<td class="leftalign">
-							<?php echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
-						</td>
+						<td class="leftalign"><?php echo $row->desc; ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
 						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'coupon' . ( $type ? 'static' : '' ) ); ?></td>
 						<td>
@@ -2662,7 +2629,7 @@ class HTML_AcctExp
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<table class="adminheading">
 		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" rowspan="2" nowrap="nowrap">
+			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" rowspan="2">
 				<?php echo JText::_('AEC_HEAD_STATS'); ?>
 			</th>
 		</tr>
