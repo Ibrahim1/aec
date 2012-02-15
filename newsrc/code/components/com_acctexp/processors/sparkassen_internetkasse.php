@@ -3,7 +3,7 @@
 * @version $Id: sparkassen_internetkasse.php
 * @package AEC - Account Control Expiration - Membership Manager
 * @subpackage Processors - Sparkassen Internetkasse Formularservice
-* @copyright 2011 Copyright (C) David Deutsch
+* @copyright 2011-2012 Copyright (C) David Deutsch
 * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
 * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
 */

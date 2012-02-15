@@ -4873,42 +4873,6 @@ function quicklookup( $option )
 
 	$search = $db->getEscaped( strtolower( $searcc ) );
 
-	if ( strpos( $search, 'supercommand:' ) !== false ) {
-		$supercommand = new aecSuperCommand();
-
-		if ( $supercommand->parseString( $search ) ) {
-			if ( strpos( $search, '!' ) === 0 ) {
-				$armed = true;
-			} else {
-				$armed = false;
-			}
-
-			$return = $supercommand->query( $armed );
-
-			if ( $return > 1 ) {
-				$multiple = true;
-			} else {
-				$multiple = false;
-			}
-
-			if ( ( $return != false ) && !$armed ) {
-				$r['search'] = "!" . $search;
-
-				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">This supercommand would affect ' . $return . " user" . ($multiple ? "s":"") . ". Click the search button again to carry out the query.</div>";
-			} elseif ( $return != false ) {
-				$r['search'] = "";
-				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">If you\'re so clever, you tell us what <strong>colour</strong> it should be!? (Everything went fine. Really! It affected ' . $return . " user" . ($multiple ? "s":"") . ")</div>";
-			} else {
-				$r['search'] = "";
-				$r['return'] = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">Something went wrong. No users found.</div>';
-			}
-
-			return $r;
-		}
-
-		return "I think you ought to know I'm feeling very depressed. (Something was wrong with your query.)";
-	}
-
 	$s = AECToolbox::searchUser( $search );
 
 	if ( !empty( $s ) ) {
@@ -4932,57 +4896,6 @@ function quicklookup( $option )
 		} else {
 			return $s;
 		}
-	}
-
-	if ( strpos( $search, 'jsonserialencode' ) === 0 ) {
-		$s = trim( substr( $searcc, 16 ) );
-		if ( !empty( $s ) ) {
-			$return = base64_encode( serialize( jsoonHandler::decode( $s ) ) );
-			return '<div style="text-align:left;">' . $return . '</div>';
-		}
-	}
-
-	if ( strpos( $search, 'serialdecodejson' ) === 0 ) {
-		$s = trim( substr( $searcc, 16 ) );
-		if ( !empty( $s ) ) {
-			$return = jsoonHandler::encode( unserialize( base64_decode( $s ) ) );
-			return '<div style="text-align:left;">' . $return . '</div>';
-		}
-	}
-
-	if ( strpos( $search, 'serialdecode' ) === 0 ) {
-		$s = trim( substr( $searcc, 12 ) );
-		if ( !empty( $s ) ) {
-			$return = unserialize( base64_decode( $s ) );
-			return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
-		}
-	}
-
-	if ( strpos( $search, 'unserialize' ) === 0 ) {
-		$s = trim( substr( $searcc, 11 ) );
-		if ( !empty( $s ) ) {
-			$return = unserialize( $s );
-			return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
-		}
-	}
-
-	$maybe = array( '?', '??', '???', '????', 'what to do', 'need strategy', 'help', 'help me', 'huh?', 'AAAAH!' );
-
-	if ( in_array( $search, $maybe ) ) {
-		include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.add.php' );
-
-		$ed = ( rand( 1, 4 ) );
-		$edf = ${'edition_0' . $ed};
-		$maxed = count( ${'edition_0' . $ed} );
-
-		return $edf['quote_' . str_pad( rand( 1, ( $maxed + 1 ) ), 2, '0' )];
-	}
-
-	if ( strpos( $search, 'logthis:' ) === 0 ) {
-		$eventlog = new eventLog( $db );
-		$eventlog->issue( 'debug', 'debug', 'debug entry: '.str_replace( 'logthis:', '', $search ), 128 );
-
-		return 'alright, logged.';
 	}
 
 	return false;

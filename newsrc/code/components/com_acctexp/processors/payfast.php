@@ -3,7 +3,7 @@
  * @version $Id: payfast.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - PayFast Buy Now
- * @copyright 2011 Copyright (C) R Botha
+ * @copyright 2011-2012 Copyright (C) R Botha
  * @author Riekie Botha <riekie@jfundi.com> 
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */
