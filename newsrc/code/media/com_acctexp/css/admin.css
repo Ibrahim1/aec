@@ -852,6 +852,11 @@ box-shadow: 0 4px 7px #aaa inset;
 float: left;
 }
 
+.aecadminform td,
+.aecadminform_seamless td {
+vertical-align: top;
+}
+
 .userinfobox {
 position: relative;
 float: left;
@@ -1569,4 +1574,68 @@ background: #eee;
 box-shadow: none;
 border: none;
 margin: 1px;
+}
+
+// Install
+
+div.packages_installed {
+padding: 0 10px 0 120px;
+border: 3px solid #4c7000;
+color: #fff;
+background: url("../images/admin/icons/aec_symbol_importance_1.png") no-repeat scroll 28px center #7caa00;
+margin: 16px;
+-webkit-box-shadow: 0 0 7px rgba(0, 0, 0, 0.45) inset;
+-moz-box-shadow: 0 0 7px rgba(0, 0, 0, 0.45) inset;
+box-shadow: 0 0 7px rgba(0, 0, 0, 0.45) inset;
+}
+
+div.packages_none {
+padding: 0 10px 0 120px;
+border: 3px solid #706100;
+color: #fff;
+background: url("../images/admin/icons/aec_symbol_importance_2.png") no-repeat scroll 28px center #aa9900;
+margin: 16px;
+-webkit-box-shadow: 0 0 7px rgba(0, 0, 0, 0.45) inset;
+-moz-box-shadow: 0 0 7px rgba(0, 0, 0, 0.45) inset;
+box-shadow: 0 0 7px rgba(0, 0, 0, 0.45) inset;
+}
+
+div.packages_installed p, div.packages_none p {
+font-size: 18px;
+}
+
+div.packages_installed br, div.packages_none br {
+margin-bottom: 20px;
+}
+
+div.installmain {
+float: left;
+width: 600px;
+-webkit-box-shadow: 0 6px 14px #999;
+-moz-box-shadow: 0 6px 14px #999;
+box-shadow: 0 6px 14px #999;
+background: #000 url(../images/admin/gfx/aec_dist_gfx_1_0beta.jpg) no-repeat top right;
+margin: 0 6px 24px;
+}
+
+div.install-golink {
+padding: 12px;
+text-align: center;
+font-size: 24px;
+font-weight: bold;
+margin-bottom: 12px;
+}
+
+div.install-golink a,
+div.install-golink a:link {
+color: #fff !important;
+background: #333;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+padding: 12px;
+}
+
+div.install-golink a:hover {
+background: #555;
 }

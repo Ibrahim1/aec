@@ -41,9 +41,6 @@ function com_install()
 
 	$app = JFactory::getApplication();
 
-	$document=& JFactory::getDocument();
-	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . '/media/com_acctexp/css/admin.css" />' );
-
 	$is_j16 = defined( 'JPATH_MANIFESTS' );
 
 	// Tracking arrays
@@ -102,6 +99,9 @@ function com_install()
 	require_once( JApplicationHelper::getPath( 'class', 'com_acctexp' ) );
 
 	global $aecConfig;
+
+	$document=& JFactory::getDocument();
+	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . 'media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION .'" />' );
 
 	if ( isset( $aecConfig->cfg['aec_version'] ) ) {
 		$oldversion = $aecConfig->cfg['aec_version'];
@@ -325,55 +325,15 @@ function com_install()
 	}
 
 	?>
-
 	<style type="text/css">
-		.installnote {
-			width: 92%;
-			margin: 6px 24px;
-			color: #ddd;
+		dl#system-message {
+			display: none;
 		}
-		.installnote h1 {
-			color: #ddd;
-			padding: 0;
-		}
-		.installnote p {
-			color: #ddd;
-			padding: 0 12px;
-		}
-		div.packages_installed {
-		padding: 0 10px 0 120px;
-		border: 3px solid #4c7000;
-		color: #fff;
-		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_1.png") no-repeat scroll 28px center #7caa00;
-		margin-bottom: 14px;
-		margin-top: 14px;
-		}
-		div.packages_none {
-		padding: 10px 10px 0 120px;
-		border: 3px solid #706100;
-		color: #fff;
-		background: url("../media/com_acctexp/images/admin/icons/aec_symbol_importance_2.png") no-repeat scroll 28px center #aa9900;
-		margin-bottom: 14px;
-		margin-top: 14px;
-		box-shadow: 0 0 10px #555555 inset;
-		}
-		div.packages_installed p, div.packages_none p {
-		font-size: 18px;
-		}
-		div.packages_installed br, div.packages_none br {
-		margin-bottom: 20px;
-		}
-		div.installmain {
-		float: left;
-		width: 600px;
-		-webkit-box-shadow: 0 2px 2px #000;
-		-moz-box-shadow: 0 2px 2px #000;
-		box-shadow: 0 2px 2px #000;
-		background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_gfx_1_0beta.jpg) no-repeat top right;
-		margin: 0 6px;
+		table.adminform tr:first-child {
+			display: none;
 		}
 		</style>
-	<div style="width: 1024px; margin: 0 auto;">
+	<div style="width: 1024px; margin: 12px auto;">
 	<div class="installmain">
 		<div style="width: 100%; height: 290px;"></div>
 		<?php
@@ -395,26 +355,20 @@ function com_install()
 		<div class="<?php echo $pckgs ? 'packages_installed' : 'packages_none'; ?>">
 			<p><?php echo $pckgs ? JText::_('AEC_INST_PACKAGES_YES') : JText::_('AEC_INST_PACKAGES_NO'); ?></p>
 		</div>
-		<div class="installnote">
-			<h1><?php echo JText::_('AEC_INST_HINTS'); ?></h1>
-			<p><?php echo sprintf( JText::_('AEC_INST_HINT1'), 'http://valanx.org' ); ?></p>
-			<p><?php echo JText::_('AEC_INST_HINT2'); ?></p>
+		<div class="install-golink">
+			<p><a href="index.php?option=com_acctexp"><?php echo JText::_('Use AEC Now'); ?>!</a></p>
 		</div>
-		<div style="width: 100%; height: 60px;"></div>
 	</div>
 	<div style="float: left; width: 300px; margin: 0 50px;">
 		<div style="margin-left:auto;margin-right:auto;text-align:center;">
-			<br />
 			<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
-			<br /><br />
 			<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION ); ?> - Revision <?php echo _AEC_REVISION; ?></p>
 			<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 			<div style="margin: 0 auto;text-align:center;">
 				<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx.org" /></a>
 				<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
-				<p><?php echo JText::_('AEC_FOOT_TX_SUBSCRIBE'); ?></p>
-				<p><?php printf( JText::_('AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', JText::_('AEC_FOOT_CREDIT_LTEXT') ) ); ?></p>
 			</div>
+			<p><?php printf( JText::_('AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', JText::_('AEC_FOOT_CREDIT_LTEXT') ) ); ?></p>
 		</div>
 	</div>
 	</div>

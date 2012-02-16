@@ -40,9 +40,9 @@ class HTML_myCommon
 
 	function addBackendCSS()
 	{
-		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/toggleswitch/toggleswitch.css" />
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css" /><?php
+		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/bootstrap.css?rev=<?php echo _AEC_REVISION; ?>" />
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/toggleswitch/toggleswitch.css?rev=<?php echo _AEC_REVISION; ?>" />
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css?rev=<?php echo _AEC_REVISION; ?>" /><?php
 	}
 
 	function addBackendJS()
@@ -57,7 +57,7 @@ class HTML_myCommon
 
 	function addReadoutCSS()
 	{
-		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/readout.css" /><?php
+		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/readout.css&amp;rev=<?php echo _AEC_REVISION; ?>" /><?php
 	}
 
 	function startCommon( $id='aec_wrap' )
