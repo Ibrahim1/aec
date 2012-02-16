@@ -1480,7 +1480,7 @@ class HTML_AcctExp
 								<?php if ( $row->expiredcount ) { ?>
 									<div class="bar" style="width: <?php echo $row->expired_percentage; ?>%;">
 										<?php if ( !$row->expired_inner ) { echo '</div>'; } ?>
-										<div class="progress-content"><a href="<?php echo $row->link; ?>"><strong><?php echo $row->expiredcount; ?></strong></a></div>
+										<div class="progress-content"><a href="<?php echo $row->link_expired; ?>"><strong><?php echo $row->expiredcount; ?></strong></a></div>
 									<?php if ( $row->expired_inner ) { echo '</div>'; } ?>
 								<?php } ?>
 							</div>
@@ -1488,7 +1488,7 @@ class HTML_AcctExp
 								<?php if ( $row->usercount ) { ?>
 									<div class="bar" style="width: <?php echo $row->active_percentage; ?>%;">
 										<?php if ( !$row->active_inner ) { echo '</div>'; } ?>
-										<div class="progress-content"><a href="<?php echo $row->link; ?>"><strong><?php echo $row->usercount; ?></strong></a></div>
+										<div class="progress-content"><a href="<?php echo $row->link_active; ?>"><strong><?php echo $row->usercount; ?></strong></a></div>
 									<?php if ( $row->active_inner ) { echo '</div>'; } ?>
 								<?php } ?>
 							</div>

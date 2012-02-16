@@ -957,6 +957,12 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	if ( !empty( $_REQUEST['groups'] ) ) {
 		if ( is_array($_REQUEST['groups'] ) ) {
+			if ( count( $_REQUEST['groups'] ) == 1 ) {
+				if ( $_REQUEST['groups'][0] == 'all' ) {
+					$_REQUEST['groups'] = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
+				}
+			}
+
 			$groups 	= $_REQUEST['groups'];
 			$set_group	= $_REQUEST['groups'][0];
 		}
@@ -2437,7 +2443,9 @@ function listSubscriptionPlans( $option )
  	}
 
 	foreach ( $rows as $rid => $row ) {
-		$rows[$rid]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id;
+		$rows[$rid]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=all';
+		$rows[$rid]->link_active = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=active';
+		$rows[$rid]->link_expired = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=expired';
 
 		if ( $totals['expired'] ) {
 			$rows[$rid]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
