@@ -2413,6 +2413,7 @@ function listSubscriptionPlans( $option )
 	$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_subscr'
 			. ' WHERE (status = \'Active\' OR status = \'Trial\')'
+		 	. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
 			;
 	$db->setQuery( $query );
 
@@ -2425,6 +2426,7 @@ function listSubscriptionPlans( $option )
  	$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_subscr'
 			. ' WHERE (status = \'Expired\')'
+			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
 			;
 	$db->setQuery( $query );
 
@@ -2437,21 +2439,33 @@ function listSubscriptionPlans( $option )
 	foreach ( $rows as $rid => $row ) {
 		$rows[$rid]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id;
 
-		$rows[$rid]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
+		if ( $totals['expired'] ) {
+			$rows[$rid]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
+		} else {
+			$rows[$rid]->expired_percentage = 0;
+		}
 		
 		$rows[$rid]->expired_inner = false;
 		if ( $rows[$rid]->expired_percentage > 45 ) {
 			$rows[$rid]->expired_inner = true;
 		}
 
-		$rows[$rid]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
-		
+		if ( $totals['active'] ) {
+			$rows[$rid]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
+		} else {
+			$rows[$rid]->active_percentage = 0;
+		}
+
 		$rows[$rid]->active_inner = false;
 		if ( $rows[$rid]->active_percentage > 45 ) {
 			$rows[$rid]->active_inner = true;
 		}
 
-		$rows[$rid]->total_percentage = ($row->expiredcount+$row->usercount) / ( ($totals['active']+$totals['expired']) / 100 );
+		if ( $totals['active']+$totals['expired'] ) {
+			$rows[$rid]->total_percentage = ($row->expiredcount+$row->usercount) / ( ($totals['active']+$totals['expired']) / 100 );
+		} else {
+			$rows[$rid]->total_percentage = 0;
+		}
 		
 		$rows[$rid]->total_inner = false;
 		if ( $rows[$rid]->total_percentage > 20 ) {
