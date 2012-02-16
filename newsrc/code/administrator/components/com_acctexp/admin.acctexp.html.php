@@ -1457,7 +1457,7 @@ class HTML_AcctExp
 					<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
 					<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
 					<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-					<th width="5%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?></th>
+					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
 					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 				</tr></thead>
 
