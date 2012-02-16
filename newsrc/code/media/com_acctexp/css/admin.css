@@ -200,10 +200,21 @@ clear: both;
 
 .aec-filters label {
 text-align: left;
+width: inherit;
+margin-left: 10px;
+}
+
+.aec-filters input.search {
+width: 50%;
+margin: 6px 25%;
 }
 
 .aec-filters .controls-list {
 padding-left: 4px;
+}
+
+.aec-filters .btn {
+margin: 25px 22%;
 }
 
 .filter-sub {

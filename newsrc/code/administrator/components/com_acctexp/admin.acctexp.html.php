@@ -1244,17 +1244,13 @@ class HTML_AcctExp
 			<table class="adminheading">
 				<tr>
 					<td style="text-align:center;">
-						<?php echo JText::_('PLAN_FILTER'); ?>
-						&nbsp;
-						<?php echo $lists['filterplanid'] . '<br />' . JText::_('ORDER_BY') . $lists['orderNav']; ?>
-						<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
+						<div class="form-inline">
+							<label for="filter_planid"><?php echo JText::_('PLAN_FILTER'); ?></label>&nbsp;<?php echo $lists['filterplanid'] ?>&nbsp;<label for="orderby_mi"><?php echo JText::_('ORDER_BY') ?></label>&nbsp;<?php echo $lists['orderNav']; ?><br />
+							<input type="text" name="search" class="search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
+						</div>
 					</td>
-					<td style="white-space:nowrap; float:right; text-align:left; padding:3px; margin:3px;">
-						<br />
-						<br />
-						<?php echo JText::_('AEC_CMN_SEARCH'); ?>
-						<br />
-						<input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
+					<td>
+						<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 					</td>
 				</tr>
 				<tr><td></td></tr>
@@ -1447,8 +1443,10 @@ class HTML_AcctExp
 		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<div class="aec-filters">
-			<?php echo $lists['filter_group'];?>
-			<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" style="margin:2px;text-align:center;" />
+				<div class="form-inline">
+					<?php echo $lists['filter_group'];?>
+					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+				</div>
 			</div>
 
 			<div class="aecadminform">
