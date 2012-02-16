@@ -179,6 +179,11 @@ border-bottom-left-radius: 10px;
 -moz-border-radius-bottomleft: 10px;
 }
 
+.aec-filters-wide {
+width: 640px;
+height: 140px;
+}
+
 .aec-filters ul {
 list-style: none;
 }
@@ -204,6 +209,10 @@ width: inherit;
 margin-left: 10px;
 }
 
+.aec-filters-wide label {
+width: 100%;
+}
+
 .aec-filters input.search {
 width: 50%;
 margin: 6px 25%;
@@ -217,10 +226,29 @@ padding-left: 4px;
 margin: 25px 22%;
 }
 
+.aec-filters .filter-sub .btn {
+margin: 18px 30%;
+}
+
+.aec-filters .filter-sub .search {
+margin: 8px 0;
+width: 130px;
+}
+
+.aec-filters p .btn {
+margin: 0px 90%;
+}
+
+.aec-filters input,
+.aec-filters textarea,
+.aec-filters select,
+.aec-filters .uneditable-input {
+margin-bottom: 0;
+}
+
 .filter-sub {
 float: left;
-width: 30%;
-padding: 2px 8px;
+padding: 2px 2%;
 }
 
 .aec-buttons .btn {

@@ -113,7 +113,7 @@ class HTML_myCommon
 			switch ( $buttons ) {
 				case 'list':
 					$buttons = array(	'egs' => array( 'groupstart' => true ),
-										'copy' => array( 'style' => 'info', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
+										'copy' => array( 'style' => 'warning', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
 										'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
 										'ege' => array( 'groupend' => true ),
 										'hl1' => array(),
@@ -1135,26 +1135,24 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( $action[1], '' . $action[0] ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<div class="aec-filters">
+			<div class="aec-filters aec-filters-wide">
 				<div class="filter-sub">
 					<?php echo $lists['groups'];?>
 				</div>
 				<div class="filter-sub">
-					<?php if ( $action[0] != 'manual' ) { ?>
-						<label><?php echo $lists['filterplanid']; ?></label>
-					<?php } ?>
-					<label><span><?php echo JText::_('ORDER_BY'); ?></span><?php echo $lists['orderNav']; ?></label>
-					<label><span><?php echo JText::_('AEC_CMN_SEARCH'); ?></span><input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" class="inputbox span2" /></label>
+					<?php echo $lists['groups2'];?>
 				</div>
 				<div class="filter-sub">
-						<p>With selected users:</p>
-						<label><?php echo $lists['planid']; ?></label>
-						<?php if ( $action[0] != 'manual' ) { ?>
-							<label><?php echo $lists['set_expiration']; ?></label>
-						<?php } ?>
+					<label><?php echo JText::_('PLAN_FILTER'); ?></label><div class="control"><?php echo $lists['filterplanid']; ?></div>
+					<label><?php echo JText::_('ORDER_BY'); ?></label><div class="control"><?php echo $lists['orderNav']; ?></div>
+					<input type="text" name="search" class="inputbox span2 search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>" value="<?php echo htmlspecialchars($search); ?>" />
+				</div>
+				<div class="filter-sub">
+						<label>With selected users:</label>
+						<div class="control"><?php echo $lists['planid']; ?></div>
+						<div class="control"><?php echo $lists['set_expiration']; ?></div>
 						<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
 				</div>
-				<a id="filter-button" href="#">&#94;&#94;&nbsp;<?php echo JText::_('more'); ?>&nbsp;&#94;&#94;</a>
 			</div>
 			<div class="aecadminform">
 			<table class="adminlist table-striped">
@@ -2280,8 +2278,12 @@ class HTML_AcctExp
 
 		?>
 		<div class="aec-filters">
-			<?php echo JText::_('INVOICE_SEARCH'); ?>: <br />
-			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
+			<div class="form-inline">
+				<p>
+					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('INVOICE_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
+					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+				</p>
+			</div>
 		</div>
 
 		<div class="aecadminform">
@@ -2342,8 +2344,12 @@ class HTML_AcctExp
 
 		?>
 		<div class="aec-filters">
-			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
-			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
+			<div class="form-inline">
+				<p>
+					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
+					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+				</p>
+			</div>
 		</div>
 
 		<div class="aecadminform">
@@ -2400,8 +2406,12 @@ class HTML_AcctExp
 		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<div class="aec-filters">
-			<?php echo JText::_('HISTORY_SEARCH'); ?>: <br />
-			<input type="text" name="search" value="<?php echo htmlspecialchars($search);?>" class="text_area" onChange="document.adminForm.submit();" />
+			<div class="form-inline">
+				<p>
+					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
+					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+				</p>
+			</div>
 		</div>
 
 		<div class="aecadminform">

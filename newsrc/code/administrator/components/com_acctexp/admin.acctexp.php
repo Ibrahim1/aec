@@ -1346,22 +1346,29 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$lists['groups'] = JHTML::_('select.genericlist', $group_selection, 'groups[]', 'size="5" multiple="multiple"', 'value', 'text', $selected_groups);
 */
 
-	$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
-						'pending'	=> JText::_('AEC_SEL_PENDING'),
-						'active'	=> JText::_('AEC_SEL_ACTIVE'),
+	$status = array(	'active'	=> JText::_('AEC_SEL_ACTIVE'),
 						'expired'	=> JText::_('AEC_SEL_EXPIRED'),
 						'closed'	=> JText::_('AEC_SEL_CLOSED'),
-						'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
-						'hold'		=> JText::_('AEC_SEL_HOLD'),
 						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
 						);
 
-	$group_selection = array();
+	$lists['groups'] = '<div class="controls">';
 	foreach ( $status as $id => $txt ) {
-		$group_selection[] = '<input type="checkbox" name="groups[]" value="' . $id . '"' . ( in_array( $id, $groups ) ? 'checked="checked"' : '' ) . ' />' . $txt . '';
+		$lists['groups'] .= '<label class="checkbox"><input type="checkbox" name="groups[]" value="' . $id . '"' . ( in_array( $id, $groups ) ? 'checked="checked"' : '' ) . ' />' . $txt . '</label>';
 	}
+	$lists['groups'] .= '</div>';
 
-	$lists['groups'] = '<div><ul class="input-list"><li>' . implode( '</li><li>', $group_selection ) . '</li></ul></div>';
+	$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
+						'pending'	=> JText::_('AEC_SEL_PENDING'),
+						'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
+						'hold'		=> JText::_('AEC_SEL_HOLD'),
+						);
+
+	$lists['groups2'] = '<div class="controls">';
+	foreach ( $status as $id => $txt ) {
+		$lists['groups2'] .= '<label class="checkbox"><input type="checkbox" name="groups[]" value="' . $id . '"' . ( in_array( $id, $groups ) ? 'checked="checked"' : '' ) . ' />' . $txt . '</label>';
+	}
+	$lists['groups2'] .= '</div>';
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
