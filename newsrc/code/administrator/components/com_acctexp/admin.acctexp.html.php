@@ -112,10 +112,8 @@ class HTML_myCommon
 		if ( !is_array( $buttons ) ) {
 			switch ( $buttons ) {
 				case 'list':
-					$buttons = array(	'egs' => array( 'groupstart' => true ),
-										'copy' => array( 'style' => 'warning', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
+					$buttons = array(	'copy' => array( 'style' => 'warning', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
 										'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
-										'ege' => array( 'groupend' => true ),
 										'hl1' => array(),
 										'pgs' => array( 'groupstart' => true ),
 										'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
