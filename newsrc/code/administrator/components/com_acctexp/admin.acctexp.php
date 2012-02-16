@@ -4634,11 +4634,14 @@ function history( $option )
 	$where = array();
 	if ( $search ) {
 		$where[] = 'LOWER(`user_name`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`invoice_number`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`proc_name`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 	}
 
 	// get the total number of records
 	$query = 'SELECT count(*)'
 			. '  FROM #__acctexp_log_history'
+			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			;
 	$db->setQuery( $query );
 	$total = $db->loadResult();
@@ -4649,7 +4652,7 @@ function history( $option )
 	// Lets grab the data and fill it in.
 	$query = 'SELECT *'
 			. ' FROM #__acctexp_log_history'
-			. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			. ' GROUP BY `transaction_date`'
 			. ' ORDER BY `transaction_date` DESC'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
@@ -4677,20 +4680,15 @@ function eventlog( $option )
 
 	$where = array();
 	if ( $search ) {
+		$where[] = 'LOWER(`short`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 		$where[] = 'LOWER(`event`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
-	}
-
-	$tags = ( !empty( $_REQUEST['tags'] ) ? $_REQUEST['tags'] : null );
-
-	if ( is_array( $tags ) ) {
-		foreach ( $tags as $tag ) {
-			$where[] = 'LOWER(`tags`) LIKE \'%' . trim( strtolower( $tag ) ) . '%\'';
-		}
+		$where[] = 'LOWER(`tags`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
 	}
 
 	// get the total number of records
 	$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_eventlog'
+			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			;
 	$db->setQuery( $query );
 	$total = $db->loadResult();
@@ -4701,7 +4699,7 @@ function eventlog( $option )
 	// Lets grab the data and fill it in.
 	$query = 'SELECT id'
 			. ' FROM #__acctexp_eventlog'
-			. ( count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			. ' ORDER BY `id` DESC'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 			;

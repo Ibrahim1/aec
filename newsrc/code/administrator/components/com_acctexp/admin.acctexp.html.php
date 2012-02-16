@@ -2346,7 +2346,7 @@ class HTML_AcctExp
 		<div class="aec-filters">
 			<div class="form-inline">
 				<p>
-					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
+					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?> Users, Invoice Numbers, Processors" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
 					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 				</p>
 			</div>
@@ -2408,7 +2408,7 @@ class HTML_AcctExp
 		<div class="aec-filters">
 			<div class="form-inline">
 				<p>
-					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
+					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?> Events, Results, Tags, Invoice Numbers" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
 					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 				</p>
 			</div>
