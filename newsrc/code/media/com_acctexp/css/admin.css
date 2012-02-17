@@ -75,6 +75,12 @@ background-image: -o-linear-gradient(top, #850d0d, #c31313);
 background-image: linear-gradient(top, #850d0d, #c31313);
 }
 
+.typeahead {
+background-color: #fff;
+background-image: none;
+width: 400px;
+}
+
 .topbar div > ul .menu-dropdown li a,
 .nav .menu-dropdown li a,
 .topbar div > ul .dropdown-menu li a,
