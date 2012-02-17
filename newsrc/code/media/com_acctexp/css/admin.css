@@ -1199,9 +1199,11 @@ margin: 0 25%;
 div#aec-toolbox-result {
 margin: 0px 20px;
 margin-top: 20px;
-width: 98%;
+width: 93%;
 background: #fff;
 border: 2px solid #eee;
+font-size: 120%;
+padding: 2%;
 }
 
 div#aec-toolbox-form {
@@ -1210,6 +1212,10 @@ margin: 0 25%;
 text-align: center;
 width: 50%;
 padding: 20px;
+}
+
+div#aec-toolbox-form .controls {
+margin-left: 25%;
 }
 
 div#aec-toolbox-form submit {

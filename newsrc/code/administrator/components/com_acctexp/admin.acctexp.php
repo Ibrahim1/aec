@@ -6312,7 +6312,7 @@ function toolBoxTool( $option, $cmd )
 				}
 			}
 
-			$return .= '<div class="aec_userinfobox_sub"><div id="aec-toolbox-result">' . $tool->Action() . '</div></div>';
+			$return .= '</div><div class="aec_userinfobox_sub"><h4>' . JText::_('Response') . '</h4><div id="aec-toolbox-result">' . $tool->Action() . '</div></div>';
 		}
 
 		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );

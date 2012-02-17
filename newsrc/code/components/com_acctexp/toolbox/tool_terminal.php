@@ -62,11 +62,11 @@ class tool_terminal
 				}
 
 				if ( ( $return != false ) && !$armed ) {
-					$r = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">This supercommand would affect ' . $return . " user" . ($multiple ? "s":"") . ". Add a ! in front of supercommand to carry out the command.</div>";
+					$r = '<p>This supercommand would affect ' . $return . " user" . ($multiple ? "s":"") . ". Add a ! in front of supercommand to carry out the command.</p>";
 				} elseif ( $return != false ) {
-					$r = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">If you\'re so clever, you tell us what <strong>colour</strong> it should be!? (Everything went fine. Really! It affected ' . $return . " user" . ($multiple ? "s":"") . ")</div>";
+					$r = '<p>If you\'re so clever, you tell us what <strong>colour</strong> it should be!? (Everything went fine. Really! It affected ' . $return . " user" . ($multiple ? "s":"") . ")</p>";
 				} else {
-					$r = '<div style="font-size:110%;border: 2px solid #da5;padding:16px;">Something went wrong. No users found.</div>';
+					$r = '<p>Something went wrong. No users found.</p>';
 				}
 
 				return $r;
@@ -79,7 +79,7 @@ class tool_terminal
 			$s = trim( substr( $query, 16 ) );
 			if ( !empty( $s ) ) {
 				$return = base64_encode( serialize( jsoonHandler::decode( $s ) ) );
-				return '<div style="text-align:left;">' . $return . '</div>';
+				return '<p>' . $return . '</p>';
 			}
 		}
 
@@ -87,7 +87,7 @@ class tool_terminal
 			$s = trim( substr( $query, 16 ) );
 			if ( !empty( $s ) ) {
 				$return = jsoonHandler::encode( unserialize( base64_decode( $s ) ) );
-				return '<div style="text-align:left;">' . $return . '</div>';
+				return '<p>' . $return . '</p>';
 			}
 		}
 
@@ -95,7 +95,7 @@ class tool_terminal
 			$s = trim( substr( $query, 12 ) );
 			if ( !empty( $s ) ) {
 				$return = unserialize( base64_decode( $s ) );
-				return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
+				return '<p>' . obsafe_print_r( $return, true, true ) . '</p>';
 			}
 		}
 
@@ -103,7 +103,7 @@ class tool_terminal
 			$s = trim( substr( $query, 11 ) );
 			if ( !empty( $s ) ) {
 				$return = unserialize( $s );
-				return '<div style="text-align:left;">' . obsafe_print_r( $return, true, true ) . '</div>';
+				return '<p>' . obsafe_print_r( $return, true, true ) . '</p>';
 			}
 		}
 
