@@ -1246,7 +1246,7 @@ class HTML_AcctExp
 						</div>
 					</td>
 					<td>
-						<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+						<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 					</td>
 				</tr>
 				<tr><td></td></tr>
@@ -1441,7 +1441,7 @@ class HTML_AcctExp
 			<div class="aec-filters">
 				<div class="form-inline">
 					<?php echo $lists['filter_group'];?>
-					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 				</div>
 			</div>
 
@@ -2279,7 +2279,7 @@ class HTML_AcctExp
 			<div class="form-inline">
 				<p>
 					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('INVOICE_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
-					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 				</p>
 			</div>
 		</div>
@@ -2345,7 +2345,7 @@ class HTML_AcctExp
 			<div class="form-inline">
 				<p>
 					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?> Users, Invoice Numbers, Processors" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
-					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 				</p>
 			</div>
 		</div>
@@ -2407,7 +2407,7 @@ class HTML_AcctExp
 			<div class="form-inline">
 				<p>
 					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?> Events, Results, Tags, Invoice Numbers" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
-					<input type="button" class="btn" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 				</p>
 			</div>
 		</div>
@@ -3140,9 +3140,10 @@ class bsPagination extends JPagination
 
 	function ordering( $i, $n, $type )
 	{
+		$lastpage = $this->{"pages.total"} == $this->{"pages.current"};
 		echo '<div class="btn-group btn-group-pagination">';
-		echo $this->orderUpIcon($i, true, 'order'.$type.'up', $i);
-		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', $i<($n-1));
+		echo $this->orderUpIcon($i, true, 'order'.$type.'up', ( $i || ( $this->{"pages.current"} > 1 ) ) );
+		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', ( $i<($n-1) || !$lastpage ) );
 		echo '</div>';
 	}
 
