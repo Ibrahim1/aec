@@ -11,9 +11,30 @@
 $ktables = array('metauser', 'displaypipeline', 'invoices', 'cart', 'event', 'subscr', 'couponsxuser');
 
 foreach ( $ktables as $table ) {
-	$db->setQuery("ALTER TABLE #__acctexp_" . $table . " ADD KEY (`userid`)");
-	if ( !$db->query() ) {
-		$errors[] = array( $db->getErrorMsg(), $query );
+	$haskey = false;
+
+	$db->setQuery("SHOW INDEXES FROM #__acctexp_" . $table . "");
+	$kentries = $db->loadObjectList();
+	
+	foreach ( $kentries as $kentry ) {
+		// Whoopsie! Let's get rid of potentially dozens of entries
+		if ( strpos( $kentry->Key_name, 'userid' ) !== false ) {
+			if ( !$haskey ) {
+				$haskey = true;
+			} else {
+				$db->setQuery("ALTER TABLE #__acctexp_" . $table . " DROP KEY `" . $kentry->Key_name . "`");
+				if ( !$db->query() ) {
+					$errors[] = array( $db->getErrorMsg(), $query );
+				}
+			}
+		}
+	}
+
+	if ( !$haskey ) {
+		$db->setQuery("ALTER TABLE #__acctexp_" . $table . " ADD KEY (`userid`)");
+		if ( !$db->query() ) {
+			$errors[] = array( $db->getErrorMsg(), $query );
+		}
 	}
 }
 
