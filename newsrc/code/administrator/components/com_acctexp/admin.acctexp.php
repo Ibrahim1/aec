@@ -646,8 +646,10 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		$rowstyle	= '';
 
 		if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
+			$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number, $ssl );
+
 			$actions = array(
-								array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info' ),
+								array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info', '', $checkoutlink ),
 								array( 'cancel', 'remove', 'USERINVOICE_ACTION_CANCEL', 'danger' ),
 								array( 'clear', 'ok', 'USERINVOICE_ACTION_CLEAR_APPLY', 'success', '&applyplan=1' ),
 								array( 'clear', 'check', 'USERINVOICE_ACTION_CLEAR', 'warning' ),
@@ -662,10 +664,14 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 		$actionlist = '<div class="btn-group">';
 		foreach ( $actions as $action ) {
-			$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&applyplan=1&returnTask=edit&userid=' . $metaUser->userid;
+			if ( !empty( $action[5] ) ) {
+				$alink = $action[5];
+			} else {
+				$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=edit&userid=' . $metaUser->userid;
 
-			if ( isset( $action[4] ) ) {
-				$alink .= $action[4];
+				if ( !empty( $action[4] ) ) {
+					$alink .= $action[4];
+				}
 			}
 
 			$actionlist .= aecHTML::Button( $action[1], $action[2], $action[3], $alink );
