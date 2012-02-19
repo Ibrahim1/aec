@@ -26,6 +26,10 @@ class tool_terminal
 	{
 		$settings = array();
 
+		if ( !isset( $_POST['query'] ) ) {
+			$_POST['query'] = "";
+		}
+
 		$suggestions = array( 'supercommand: users|everybody|apply:plan:42', '!supercommand: users|has:plan:42|apply:mi:128', 'jsonserialencode JSON', 'serialdecodejson BASE64', 'serialdecode BASE64', 'unserialize PHP-SERIAL', '?', '??', '???', '????', 'what to do', 'need strategy', 'help', 'help me', 'huh?', 'AAAAH!', 'logthis: STUFF' );
 
 		$settings['input']	= array( 'p', '<input type="text" name="query" class="search span8 typeahead" autocomplete="off" data-source="[&quot;' . implode('&quot;,&quot;', $suggestions) . '&quot;]" data-items="4" data-provide="typeahead" placeholder="Type, if you dare!" value="' . $_POST['query'] . '" />' );
