@@ -33,18 +33,18 @@
 			<folder>install</folder>
 		</files>
 		<languages folder="administrator/language">
-			<language tag="da-DK">da-DK/da-DK.com_acctexp.admin.ini</language>
-			<language tag="de-DE">de-DE/de-DE.com_acctexp.admin.ini</language>
-			<language tag="el-GR">el-GR/el-GR.com_acctexp.admin.ini</language>
-			<language tag="en-GB">en-GB/en-GB.com_acctexp.admin.ini</language>
+			<language tag="da-DK">da-DK/da-DK.com_acctexp.ini</language>
+			<language tag="de-DE">de-DE/de-DE.com_acctexp.ini</language>
+			<language tag="el-GR">el-GR/el-GR.com_acctexp.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_acctexp.ini</language>
 			<language tag="en-GB">en-GB/en-GB.com_acctexp.menu.ini</language>
-			<language tag="es-ES">es-ES/es-ES.com_acctexp.admin.ini</language>
-			<language tag="fr-FR">fr-FR/fr-FR.com_acctexp.admin.ini</language>
-			<language tag="it-IT">it-IT/it-IT.com_acctexp.admin.ini</language>
-			<language tag="ja-JP">ja-JP/ja-JP.com_acctexp.admin.ini</language>
-			<language tag="nl-NL">nl-NL/nl-NL.com_acctexp.admin.ini</language>
-			<language tag="pt-BR">pt-BR/pt-BR.com_acctexp.admin.ini</language>
-			<language tag="zh-CN">zh-CN/zh-CN.com_acctexp.admin.ini</language>
+			<language tag="es-ES">es-ES/es-ES.com_acctexp.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.com_acctexp.ini</language>
+			<language tag="it-IT">it-IT/it-IT.com_acctexp.ini</language>
+			<language tag="ja-JP">ja-JP/ja-JP.com_acctexp.ini</language>
+			<language tag="nl-NL">nl-NL/nl-NL.com_acctexp.ini</language>
+			<language tag="pt-BR">pt-BR/pt-BR.com_acctexp.ini</language>
+			<language tag="zh-CN">zh-CN/zh-CN.com_acctexp.ini</language>
 		</languages>
 	</administration>
 	<languages folder="language">

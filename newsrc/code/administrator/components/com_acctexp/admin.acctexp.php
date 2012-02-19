@@ -19,7 +19,7 @@ require_once( JApplicationHelper::getPath( 'class' ) );
 require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.class.php' );
 require_once( JApplicationHelper::getPath( 'admin_html' ) );
 
-$langlist = array( 'com_acctexp.admin' => JPATH_ADMINISTRATOR );
+$langlist = array( 'com_acctexp' => JPATH_ADMINISTRATOR );
 
 aecLanguageHandler::loadList( $langlist );
 
@@ -646,7 +646,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		$rowstyle	= '';
 
 		if ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-			$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number, $ssl );
+			$checkoutlink = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&amp;task=repeatPayment&amp;invoice=' . $invoice->invoice_number );
 
 			$actions = array(
 								array( 'repeat', 'arrow-right', 'USERINVOICE_ACTION_REPEAT', 'info', '', $checkoutlink ),

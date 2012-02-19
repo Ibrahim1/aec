@@ -51,18 +51,18 @@ function com_install()
 	$newinstall = false;
 	$tables		= $db->getTableList();
 
-	$langlist = array(	'com_acctexp.admin' => JPATH_ADMINISTRATOR,
-					'com_acctexp' => JPATH_SITE,
-					'com_acctexp.microintegrations' => JPATH_SITE,
-					'com_acctexp.processors' => JPATH_SITE
+	$langlist = array(	array( 'com_acctexp.admin', JPATH_ADMINISTRATOR ),
+						array( 'com_acctexp', JPATH_SITE ),
+						array( 'com_acctexp.microintegrations', JPATH_SITE ),
+						array( 'com_acctexp.processors', JPATH_SITE )
 					);
 
 	$lang =& JFactory::getLanguage();
 
-	foreach ( $langlist as $name => $path ) {
-		$lang->load( $name, $path, 'en-GB', true );
-		$lang->load( $name, $path, $lang->getDefault(), true );
-		$lang->load( $name, $path, null, true );
+	foreach ( $langlist as $array ) {
+		$lang->load( $array[0], $array[1], 'en-GB', true );
+		$lang->load( $array[0], $array[1], $lang->getDefault(), true );
+		$lang->load( $array[0], $array[1], null, true );
 	}
 
 	if ( !defined( 'JPATH_MANIFESTS' ) ) {
