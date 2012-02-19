@@ -128,7 +128,7 @@ class processor_robokassa extends POSTprocessor
 
 	function notify_trail( $InvoiceFactory, $response )
 	{
-		echo $_POST['InvId'];exit;
+		echo "OK" . $_POST['InvId'];exit;
 	}
 
 }
