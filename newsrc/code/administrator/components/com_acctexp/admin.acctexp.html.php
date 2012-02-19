@@ -839,21 +839,6 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		?>
-		<style type="text/css">
-			.installnote {
-				width: 92%;
-				margin: 6px 24px;
-				color: #ddd;
-			}
-			.installnote h1 {
-				color: #ddd;
-				padding: 0;
-				font-size: 16px;
-			}
-			.installnote p {
-				color: #ddd;
-				padding: 0 12px;
-			}</style>
 		<div style="width: 1024px; margin: 0 auto;">
 		<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_gfx_1_0beta.jpg) no-repeat top right; margin: 0 6px;">
 			<div style="width: 100%; height: 290px;"></div>
@@ -1049,18 +1034,19 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'settings' );
-		HTML_myCommon::getButtons( 'list_short', 'Processor' ); ?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<div class="aecadminform">
-			<table class="adminlist table-striped">
-				<thead><tr>
-					<th width="1%">#</th>
-					<th width="1%">id</th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="10%" align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
-					<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
-					<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
-				</tr></thead>
+		HTML_myCommon::getButtons( 'list_short', 'Processor' );
+		HTML_myCommon::startForm();
+		?>
+		<div class="aecadminform">
+		<table class="adminlist table-striped">
+			<thead><tr>
+				<th width="1%">#</th>
+				<th width="1%">id</th>
+				<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+				<th width="10%" align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
+				<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
+				<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
+			</tr></thead>
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
 					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
@@ -1085,7 +1071,6 @@ class HTML_AcctExp
 		<input type="hidden" name="returnTask" value="showProcessors" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
-
 		<?php
  		HTML_myCommon::endCommon();
 	}
@@ -1108,20 +1093,14 @@ class HTML_AcctExp
 		}
 		
 		?>
-			<table width="100%" class="aecadminform">
-				<tr>
-					<td>
-						<div class="aec_userinfobox_sub">
-							<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
-							<?php
-							foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-								echo $aecHTML->createSettingsParticle( $rowname );
-							}
-							?>
-						</div>
-					</td>
-				</tr>
-			</table>
+		<table width="100%" class="aecadminform"><tr><td>
+			<div class="aec_userinfobox_sub">
+				<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
+				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+					echo $aecHTML->createSettingsParticle( $rowname );
+				} ?>
+			</div>
+		</td></tr></table>
 		<?php
 
 		HTML_myCommon::endForm( $option, $id );
@@ -1381,8 +1360,7 @@ class HTML_AcctExp
 				</td>
 			</tr>
 		</table>
-		<?php
-		if ( $aecHTML->hasSettings ) {
+		<?php if ( $aecHTML->hasSettings ) {
 			$tabs->nextPane( 'settings' ); ?>
 			<table width="100%" class="aecadminform">
 				<tr>
@@ -1420,8 +1398,7 @@ class HTML_AcctExp
 					</td>
 				</tr>
 			</table>
-			<?php
-		}
+		<?php }
 
 		$tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
@@ -1438,31 +1415,30 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
-		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
-			<div class="aec-filters">
-				<div class="form-inline">
-					<?php echo $lists['filter_group'];?>
-					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
-				</div>
+		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );
+		HTML_myCommon::startForm();
+		?>
+		<div class="aec-filters">
+			<div class="form-inline">
+				<?php echo $lists['filter_group'];?>
+				<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 			</div>
-
-			<div class="aecadminform">
-			<table class="adminlist table-striped">
-				<thead><tr>
-					<th width="1%">#</th>
-					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="1%" align="left"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
-					<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-					<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-					<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-					<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-					<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
-					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
-				</tr></thead>
-
+		</div>
+		<div class="aecadminform">
+		<table class="adminlist table-striped">
+			<thead><tr>
+				<th width="1%">#</th>
+				<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
+				<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+				<th width="1%" align="left"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+				<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+				<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+				<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
+				<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
+				<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+				<th width="10%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
+				<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+			</tr></thead>
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
 					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
@@ -1519,7 +1495,7 @@ class HTML_AcctExp
 		<input type="hidden" name="task" value="showSubscriptionPlans" />
 		<input type="hidden" name="returnTask" value="showSubscriptionPlans" />
 		<input type="hidden" name="boxchecked" value="0" />
-	</form>
+		</form>
 
 		<?php
  		HTML_myCommon::endCommon();
@@ -2403,8 +2379,10 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog' );
+
+		HTML_myCommon::startForm();
+
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
 		<div class="aec-filters">
 			<div class="form-inline">
 				<p>

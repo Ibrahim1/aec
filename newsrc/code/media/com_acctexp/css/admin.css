@@ -1708,3 +1708,18 @@ padding: 12px;
 div.install-golink a:hover {
 background: #555;
 }
+
+.installnote {
+	width: 92%;
+	margin: 6px 24px;
+	color: #ddd;
+}
+.installnote h1 {
+	color: #ddd;
+	padding: 0;
+	font-size: 16px;
+}
+.installnote p {
+	color: #ddd;
+	padding: 0 12px;
+}
