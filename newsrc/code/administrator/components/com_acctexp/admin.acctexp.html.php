@@ -1312,6 +1312,8 @@ class HTML_AcctExp
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 		HTML_myCommon::getButtons( 'edit', 'MicroIntegration' );
 
+		HTML_myCommon::startForm();
+
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
 
@@ -1330,105 +1332,102 @@ class HTML_AcctExp
 		}
 
 		$tabs->endTabs();
+		$tabs->startPanes();
 
-		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data" class="form-horizontal">
-			<?php $tabs->nextPane( 'mi', true ); ?>
+		$tabs->nextPane( 'mi', true ); ?>
+		<table width="100%" class="aecadminform">
+			<tr>
+			<td>
+				<div class="aec_userinfobox_sub">
+					<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
+				</div>
+			</td>
+			<td>
+				<div class="aec_userinfobox_sub">
+					<h4><?php echo JText::_('MI_E_DETAILS') . ' - ' . JText::_('MI_E_FUNCTION_NAME'); ?></h4>
+					<div style="position:relative;">
+					<?php if ( !$aecHTML->hasSettings ) {
+						if ( $lists['class_name'] ) {
+							echo $lists['class_name']; ?>
+							
+							<?php
+							echo "<p>" . JText::_('MI_E_FUNCTION_DESC') . "</p>";
+						} else {
+							echo "<p>" . JText::_('AEC_MSG_MIS_NOT_DEFINED') . "</p>";
+						}
+					} else {
+						echo "<p><strong>" . $row->class_name . "</p></strong>";
+					}
+					?>
+					</div>
+				</div>
+				<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
+					<div class="aec_userinfobox_sub">
+					<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
+						<div style="position:relative;">
+						<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
+						</div>
+					</div>
+				<?php } ?>
+				</td>
+			</tr>
+		</table>
+		<?php
+		if ( $aecHTML->hasSettings ) {
+			$tabs->nextPane( 'settings' ); ?>
 			<table width="100%" class="aecadminform">
 				<tr>
-				<td>
-					<div class="aec_userinfobox_sub">
-						<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
-						<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
-					</div>
-				</td>
-				<td>
-					<div class="aec_userinfobox_sub">
-						<h4><?php echo JText::_('MI_E_DETAILS') . ' - ' . JText::_('MI_E_FUNCTION_NAME'); ?></h4>
-						<div style="position:relative;">
-						<?php if ( !$aecHTML->hasSettings ) {
-							if ( $lists['class_name'] ) {
-								echo $lists['class_name']; ?>
-								
-								<?php
-								echo "<p>" . JText::_('MI_E_FUNCTION_DESC') . "</p>";
-							} else {
-								echo "<p>" . JText::_('AEC_MSG_MIS_NOT_DEFINED') . "</p>";
-							}
-						} else {
-							echo "<p><strong>" . $row->class_name . "</p></strong>";
-						}
-						?>
-						</div>
-					</div>
-					<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
+					<td>
 						<div class="aec_userinfobox_sub">
-						<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
-							<div style="position:relative;">
-							<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
-							</div>
+						<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
+						<?php
+						foreach ( $aecHTML->customparams as $name ) {
+							if ( strpos( $name, 'aectab_' ) === 0 ) {
+								?>
+										</div>
+									</td>
+								</tr>
+								</table>
+								<?php $tabs->nextPane( $name ); ?>
+							    <table width="100%" class="aecadminform">
+									<tr>
+										<td>
+											<div class="aec_userinfobox_sub">
+											<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
+								<?php
+							} else {
+								if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+									echo '<tr><td>';
+								}
+
+					    		echo $aecHTML->createSettingsParticle( $name );
+
+					    		if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+									echo '</td></tr>';
+								}
+							}
+						} ?>
 						</div>
-					<?php } ?>
 					</td>
 				</tr>
 			</table>
 			<?php
-			if ( $aecHTML->hasSettings ) {
-				$tabs->nextPane( 'settings' ); ?>
-				<table width="100%" class="aecadminform">
-					<tr>
-						<td>
-							<div class="aec_userinfobox_sub">
-							<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
-							<?php
-							foreach ( $aecHTML->customparams as $name ) {
-								if ( strpos( $name, 'aectab_' ) === 0 ) {
-									?>
-											</div>
-										</td>
-									</tr>
-									</table>
-									<?php $tabs->nextPane( $name ); ?>
-								    <table width="100%" class="aecadminform">
-										<tr>
-											<td>
-												<div class="aec_userinfobox_sub">
-												<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
-									<?php
-								} else {
-									if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
-										echo '<tr><td>';
-									}
+		}
 
-						    		echo $aecHTML->createSettingsParticle( $name );
-
-						    		if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
-										echo '</td></tr>';
-									}
-								}
-							} ?>
-							</div>
-						</td>
-					</tr>
-				</table>
-				<?php
-			}
-
-			$tabs->endPanes(); ?>
-
-			<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
-			<input type="hidden" name="option" value="<?php echo $option; ?>" />
-			<input type="hidden" name="task" value="" />
+		$tabs->endPanes(); ?>
+		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="task" value="" />
 		</form>
-
 		<?php
 		echo $aecHTML->loadJS();
 
