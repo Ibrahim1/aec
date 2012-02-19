@@ -457,6 +457,15 @@ width: 100%;
 margin-bottom: 16px;
 }
 
+.form-noindent .controls {
+margin-left: 18%;
+width: 80%;
+}
+
+.form-noindent  .control-group > label {
+width: 15%;
+}
+
 .control-group>div.controls>span {
 display: inline-block;
 font-size: 120%;

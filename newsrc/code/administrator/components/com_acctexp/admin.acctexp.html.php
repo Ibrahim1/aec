@@ -595,7 +595,7 @@ class HTML_AcctExp
 						</div>
 					<?php } ?>
 					<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
-						<div class="aec_userinfobox_sub">
+						<div class="aec_userinfobox_sub form-noindent">
 						<?php if ( !empty( $mi['admin'] ) ) { ?>
 							<?php foreach ( $mi['admin'] as $mix ) { ?>
 								<div class="admininfobox">
@@ -612,7 +612,10 @@ class HTML_AcctExp
 						</div>
 					<?php }
 					if ( !empty( $metaUser->meta->params->mi ) ) { ?>
-								<pre><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+						<div class="aec_userinfobox_sub">
+							<h4><?php echo JText::_('Database Records'); ?></h4>
+							<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+						</div>
 					<?php } ?>
 					</div>
 				</td>
