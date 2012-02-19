@@ -35,6 +35,7 @@ class processor_robokassa extends POSTprocessor
 		$settings['testmode']		= 0;
 		$settings['login']			= 'Merchant Login ID';
 		$settings['pass']			= 'Merchant Password';
+		$settings['notify_pass']	= 'Notification Password';
 		$settings['currency']		= 'EUR';
 		$settings['language']		= 'RU';
 		$settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
@@ -49,6 +50,7 @@ class processor_robokassa extends POSTprocessor
 		$settings['testmode']		= array( 'toggle' );
 		$settings['login']			= array( 'inputC' );
 		$settings['pass']			= array( 'inputC' );
+		$settings['notify_pass']			= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );
 		$settings['item_name']		= array( 'inputE' );
@@ -101,7 +103,7 @@ class processor_robokassa extends POSTprocessor
 		return $response;
 	}
 
-	function getHash( $invoice, $send=true )
+	function getHash( $invoice, $send=true, $notification=false )
 	{
 		// MD5 signature formed from the parameters, separated by ':' with sMerchantPass2 added at the end
 		// i.e. nOutSum:nInvId:sMerchantPass2[:sorted_merchant_parameters]
@@ -114,7 +116,12 @@ class processor_robokassa extends POSTprocessor
 
 		$vars[] = $invoice->amount;
 		$vars[] = $invoice->id;
-		$vars[] = trim($this->settings['pass']);
+
+		if ( $send ) {
+			$vars[] = trim($this->settings['notify_pass']);
+		} else {
+			$vars[] = trim($this->settings['pass']);
+		}
 
 		return md5( implode( ':', $vars ) );
 	}
