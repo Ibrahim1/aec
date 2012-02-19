@@ -31,9 +31,9 @@ class mi_joomlauser
 		$settings['username_rand']	= array( 'inputC' );
 		$settings['password']		= array( 'inputD' );
 
+		$xsettings = array();
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$settings['set_fields']		= array( 'toggle' );
-			$settings['set_fields_exp']	= array( 'toggle' );
 
 			$db = &JFactory::getDBO();
 
@@ -44,20 +44,24 @@ class mi_joomlauser
 
 			if ( !empty( $pkeys ) ) {
 				foreach ( $pkeys as $k ) {
-					if ( strpos( $object->title, '_' ) === 0 ) {
-						$title = $object->name;
-					} else {
-						$title = $object->title;
-					}
+					$title = ucfirst( str_replace( 'profile.', '', $k ) );
 
 					$settings['jprofile_' . str_replace( ".", "_", $k )] = array( 'inputE', $title, $title );
-					$expname = $title . " "  . JText::_('MI_MI_COMMUNITYBUILDER_EXPMARKER');
-					$settings['jprofile_' . str_replace( ".", "_", $k ) . '_exp' ] = array( 'inputE', $expname, $expname );
+					$expname = $title . " "  . JText::_('MI_MI_JOOMLAUSER_EXPMARKER');
+					$xsettings['jprofile_' . str_replace( ".", "_", $k ) . '_exp' ] = array( 'inputE', $expname, $expname );
 				}
 			}
 		}
 
-		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
+		$settings['aectab_reg']			= array( 'tab', 'Expiration', 'Expiration' );
+
+		$settings['set_fields_exp']	= array( 'toggle' );
+
+		$settings = array_merge( $settings, $xsettings );
 
 		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
