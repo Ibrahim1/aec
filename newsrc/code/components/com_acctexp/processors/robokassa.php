@@ -24,7 +24,7 @@ class processor_robokassa extends POSTprocessor
 		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,maestro';
 		$info['recurring']		= 0;
-		$info['notify_trail_thanks']	= 1;
+		$info['custom_notify_trail']	= 1;
 
 		return $info;
 	}
@@ -118,5 +118,11 @@ class processor_robokassa extends POSTprocessor
 
 		return md5( implode( ':', $vars ) );
 	}
+
+	function notify_trail( $InvoiceFactory, $response )
+	{
+		echo $_POST['InvId'];exit;
+	}
+
 }
 ?>
