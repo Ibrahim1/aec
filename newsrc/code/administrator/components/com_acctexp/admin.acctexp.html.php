@@ -89,7 +89,7 @@ class HTML_myCommon
 		?><form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"><?php
 	}
 
-	function endForm( $id, $option )
+	function endForm( $option, $id )
 	{
 		$options = array( 'id' => $id, 'option' => $option, 'task' => '' );
 
