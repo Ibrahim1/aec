@@ -51,7 +51,7 @@ class HTML_myCommon
 
 		$v = new JVersion();
 
-		if ( $v->isCompatible('2.5') ) {
+		if ( $v->isCompatible('1.6') ) {
 			$document->addScript( JURI::root(true).'/media/system/js/core.js' );
 		}
 
