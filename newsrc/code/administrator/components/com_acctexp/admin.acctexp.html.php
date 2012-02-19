@@ -49,6 +49,12 @@ class HTML_myCommon
 	{
 		$document=& JFactory::getDocument();
 
+		$v = new JVersion();
+
+		if ( $v->isCompatible('2.5') ) {
+			$document->addScript( JURI::root(true).'/media/system/js/core.js' );
+		}
+
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.js' );
