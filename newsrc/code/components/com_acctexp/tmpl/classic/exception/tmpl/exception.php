@@ -14,15 +14,15 @@
 <div class="componentheading"><?php echo $hasform ? JText::_('EXCEPTION_TITLE') : JText::_('EXCEPTION_TITLE_NOFORM') ; ?></div>
 <div id="checkout">
 	<?php
-	if ( $cfg->cfg['customtext_exception_keeporiginal'] ) { ?>
+	if ( $tmpl->cfg['customtext_exception_keeporiginal'] ) { ?>
 		<p><?php echo $hasform ? JText::_('EXCEPTION_INFO') : ""; ?></p>
 		<?php
 	}
-	if ( $cfg->cfg['customtext_exception'] ) { ?>
-		<p><?php echo $cfg->cfg['customtext_exception']; ?></p>
+	if ( $tmpl->cfg['customtext_exception'] ) { ?>
+		<p><?php echo $tmpl->cfg['customtext_exception']; ?></p>
 		<?php
 	} ?>
-	<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $cfg->cfg['ssl_signup'] ); ?>" method="post">
+	<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $tmpl->cfg['ssl_signup'] ); ?>" method="post">
 	<table id="aec_checkout">
 	<?php
 		foreach ( $InvoiceFactory->exceptions as $eid => $ex ) {
@@ -73,7 +73,7 @@
 			<?php
 			if ( !empty( $InvoiceFactory->pp ) ) {
 				if ( is_object( $InvoiceFactory->pp ) ) {
-					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $cfg->cfg['displayccinfo'] );
+					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $tmpl->cfg['displayccinfo'] );
 				}
 			}
 			?>

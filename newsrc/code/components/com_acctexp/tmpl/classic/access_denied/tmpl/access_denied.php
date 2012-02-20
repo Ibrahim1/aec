@@ -11,11 +11,10 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
 
-<?php if ( $cfg->cfg['customtext_notallowed_keeporiginal'] ) { ?>
+<?php if ( $tmpl->cfg['customtext_notallowed_keeporiginal'] ) { ?>
 	<div class="componentheading"><?php echo JText::_('NOT_ALLOWED_HEADLINE'); ?></div>
 	<p>
-		<?php
-		if ( $loggedin ) {
+		<?php if ( $loggedin ) {
 			echo JText::_('NOT_ALLOWED_FIRSTPAR_LOGGED'); ?>&nbsp;
 			<a href="<?php echo $registerlink; ?>" title="<?php echo JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED'); ?>"><?php echo JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED'); ?></a>
 			<?php
@@ -27,18 +26,18 @@
 	</p>
 	<?php
 }
-if ( $cfg->cfg['customtext_notallowed'] ) { ?>
-	<?php echo $cfg->cfg['customtext_notallowed']; ?>
+
+if ( $tmpl->cfg['customtext_notallowed'] ) { ?>
+	<?php echo $tmpl->cfg['customtext_notallowed']; ?>
 <?php } ?>
 <?php
-if ( !empty( $processors ) && !empty( $cfg->cfg['gwlist'] ) ) { ?>
+if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
 	<p>&nbsp;</p>
 	<p><?php echo JText::_('NOT_ALLOWED_SECONDPAR'); ?></p>
 	<table id="cc_list">
-		<?php
-		foreach ( $processors as $processor ) {
-			HTML_frontEnd::processorInfo( $option, $processor, $cfg->cfg['displayccinfo'] );
+		<?php foreach ( $processors as $processor ) {
+			HTML_frontEnd::processorInfo( $option, $processor, $tmpl->cfg['displayccinfo'] );
 		} ?>
 	</table>
-	<?php
+<?php
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: cancel.php
+ * @version $Id: plans.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Frontend
  * @copyright 2012 Copyright (C) David Deutsch
@@ -13,11 +13,11 @@
 
 <div class="componentheading"><?php echo JText::_('CANCEL_TITLE'); ?></div>
 <?php
-if ( $cfg->cfg['customtext_cancel'] ) { ?>
-	<p><?php echo $cfg->cfg['customtext_cancel']; ?></p>
+if ( $tmpl->cfg['customtext_cancel'] ) { ?>
+	<p><?php echo $tmpl->cfg['customtext_cancel']; ?></p>
 	<?php
 }
-if ( $cfg->cfg['customtext_cancel_keeporiginal'] ) { ?>
+if ( $tmpl->cfg['customtext_cancel_keeporiginal'] ) { ?>
 	<div id="cancel_page">
 	<p><?php echo JText::_('CANCEL_MSG'); ?></p>
 	</div>

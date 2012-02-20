@@ -109,4 +109,5 @@ if ( $standalone ) {
 <?php if ( $standalone ) { ?>
 </body>
 <?php
-exit;
+exit();
+}

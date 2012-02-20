@@ -11,8 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
 
-<?php
-if ($cfg->cfg['customtext_hold_keeporiginal'] ) {?>
+<?php if ($tmpl->cfg['customtext_hold_keeporiginal'] ) { ?>
 	<div class="componentheading"><?php echo JText::_('HOLD_TITLE'); ?></div>
 	<div id="expired_greeting">
 		<p><?php echo sprintf( JText::_('DEAR'), $metaUser->cmsUser->name ); ?></p>
@@ -20,7 +19,6 @@ if ($cfg->cfg['customtext_hold_keeporiginal'] ) {?>
 	</div>
 	<?php
 }
-if ( $cfg->cfg['customtext_hold'] ) { ?>
-	<p><?php echo AECToolbox::rewriteEngine( $cfg->cfg['customtext_hold'], $metaUser ); ?></p>
-	<?php
-} ?>
+if ( $tmpl->cfg['customtext_hold'] ) { ?>
+	<p><?php echo $tmpl->rw( $tmpl->cfg['customtext_hold'] ); ?></p>
+<?php } ?>

@@ -1,5 +1,4 @@
 <?php
-$reason = "";
 
 if ( $userid == 0 ) {
 	return aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
@@ -14,6 +13,7 @@ if ( $metaUser->hasSubscription ) {
 
 $invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
 
+$reason = "";
 if ( $invoices ) {
 	$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
 

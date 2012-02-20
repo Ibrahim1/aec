@@ -49,18 +49,18 @@ $expiration	= AECToolbox::formatDate( $expired );
 $tmpl->setTitle( JText::_('EXPIRED_TITLE') );
 
 $continue = false;
-if ( $cfg->cfg['continue_button'] && $metaUser->hasSubscription ) {
+if ( $tmpl->cfg['continue_button'] && $metaUser->hasSubscription ) {
 	$status = SubscriptionPlanHandler::PlanStatus( $metaUser->focusSubscription->plan );
 	if ( !empty( $status ) ) {
 		$continue = true;
 	}
 }
 
-$intro = "&intro=0";
+$intro = 0;
 
 if ( $metaUser->hasSubscription ) {
 	if ( $metaUser->objSubscription->status == "Expired" ) {
-		$intro = "&intro=" . ( $aecConfig->cfg['intro_expired'] ? "0" : "1" );
+		$intro = !$aecConfig->cfg['intro_expired'];
 	}
 }
 

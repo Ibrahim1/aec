@@ -505,15 +505,13 @@ function getPage( $page )
 		$metaUser = new metaUser( $user->id );
 	}
 
-	$app		= JFactory::getApplication();
+	$app = JFactory::getApplication();
 
 	$option = 'com_acctexp';
 
-	$cfg = $aecConfig;
-
 	$tmpl = new aecTemplate();
 
-	$tmpl->cfg = $cfg;
+	$tmpl->cfg = $aecConfig->cfg;
 	$tmpl->option = 'com_acctexp';
 	$tmpl->metaUser = $metaUser;
 	$tmpl->system_template = $app->getTemplate();
@@ -521,7 +519,6 @@ function getPage( $page )
 							'current' => JPATH_SITE . '/components/com_acctexp/tmpl/' . $aecConfig->cfg['standard_template'],
 							'system' => JPATH_SITE . '/templates/' . $tmpl->system_template . '/html/com_acctexp/'
 						);
-
 
 	// Get Variables
 	if ( method_exists( $tmpl, $page ) ) {
@@ -566,121 +563,54 @@ class aecTemplate
 		}
 	}
 
-	function access_denied()
+	function btn( $params, $value )
 	{
-		$this->defaultCSS();
-	}
-
-	function cancel()
-	{
-		$this->defaultCSS();
-	}
-
-	function cart()
-	{
-		$this->defaultCSS();
-	}
-
-	function checkout()
-	{
-		$this->defaultCSS();
-	}
-
-	function confirmation()
-	{
-		$this->defaultCSS();
-	}
-
-	function error()
-	{
-		$this->defaultCSS();
-	}
-
-	function exception()
-	{
-		$this->defaultCSS();
-	}
-
-	function expired()
-	{
-		if ( !empty( $metaUser->userid ) ) {
-			$trial		= false;
-			$expired	= false;
-			$invoice	= false;
-
-			if ( $metaUser->hasSubscription ) {
-				// Make sure this really is expired
-				if ( !$metaUser->objSubscription->is_expired() ) {
-					return aecNotAuth();
-				}
-
-				$expired = strtotime( $metaUser->objSubscription->expiration );
-
-				$trial = ( strcmp($metaUser->objSubscription->status, 'Trial') === 0 );
-				if ( !$trial ) {
-					$params = $metaUser->objSubscription->params;
-					if ( isset( $params['trialflag'])) {
-						$trial = 1;
-					}
-				}
-			}
-
-			$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
-
-			if ( $invoices ) {
-				$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
-			} else {
-				$invoice = null;
-			}
-
-			$expiration	= AECToolbox::formatDate( $expired );
-
-			$this->setTitle( JText::_('EXPIRED_TITLE') );
-
-			$continue = false;
-			if ( $cfg->cfg['continue_button'] && $metaUser->hasSubscription ) {
-				$status = SubscriptionPlanHandler::PlanStatus( $metaUser->focusSubscription->plan );
-				if ( !empty( $status ) ) {
-					$continue = true;
-				}
-			}
-
-			$intro = "&intro=0";
-
-			if ( $metaUser->hasSubscription ) {
-				if ( $metaUser->objSubscription->status == "Expired" ) {
-					$intro = "&intro=" . ( $aecConfig->cfg['intro_expired'] ? "0" : "1" );
-				}
-			}
-
-			return array(
-								'invoice' => $invoice,
-								'expiration' => $expiration,
-								'is_trial' => $trial,
-								'is_continue' => $continue,
-								'intro' => $intro
-			);
-			
+		if ( isset( $params['task'] ) ) {
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp', $this->cfg->cfg['ssl_signup'] );
 		} else {
-			aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task='.$params['task'], $this->cfg->cfg['ssl_signup'] );
 		}
+
+		if ( !isset( $params['option'] ) ) {
+			$params['option'] = 'com_acctexp';
+		}
+
+		$btn = '<form action="'.$url.'" method="post">';
+
+		foreach ( $params as $k => $v ) {
+			$btn .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
+		}
+
+		$btn .= '<input type="submit" class="button" value="'.$value.'" />';
+		$btn .= JHTML::_( 'form.token' );
+		$btn .= '</form>';
+
+		return $btn;
 	}
 
-	function hold()
+	function lnk( $params, $value )
+	{
+		$params[JUtility::getToken()] = '1';
+
+		$p = array();
+		foreach ( $params as $k => $v ) {
+			$p[] = $k.'='.$v;
+		}
+
+		$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $this->cfg->cfg['ssl_signup'] );
+
+		return '<a href="'.$url.'" title="'.$value.'">'.$value.'</a>';
+	}
+
+	function rw( $string )
+	{
+		return AECToolbox::rewriteEngine( $tmpl->cfg['customtext_hold'], $this->metaUser );
+	}
+
+	function template( $name )
 	{
 		
 	}
-
-	function pending()
-	{
-		
-	}
-
-	function thanks()
-	{
-		
-	}
-	
 }
 
 function hold( $option, $userid )

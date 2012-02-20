@@ -6,9 +6,13 @@ if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg[
 
 $gwnames = PaymentProcessorHandler::getInstalledNameList( true );
 
-if ( count( $gwnames ) && $gwnames[0] ) {
+if ( count( $gwnames ) && $gwnames[0] && !empty($tmpl->cfg['gwlist']) ) {
 	$processors = array();
 	foreach ( $gwnames as $procname ) {
+		if ( !in_array( $procname, $tmpl->cfg['gwlist'] ) ) {
+			continue;
+		}
+
 		$processor = trim( $procname );
 		$processors[$processor] = new PaymentProcessor();
 		if ( $processors[$processor]->loadName( $processor ) ) {
@@ -31,14 +35,12 @@ if ( count( $gwnames ) && $gwnames[0] ) {
 	$processors = false;
 }
 
-$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
-
 if ( $user->id ) {
 	$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription' );
 	$loggedin = 1;
 } else {
 	$loggedin = 0;
-	if ( $CB ) {
+	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&task=registers' );
 	} else {
 		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&view=register' );
