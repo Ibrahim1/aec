@@ -3607,6 +3607,14 @@ class PaymentProcessor
 
 			return true;
 		} else {
+			$short	= 'processor loading failure';
+			$event	= 'When composing processor info list, tried to load processor: ' . $name;
+			$tags	= 'processor,loading,error';
+			$params = array();
+
+			$eventlog = new eventLog( $db );
+			$eventlog->issue( $short, $tags, $event, 128, $params );
+
 			return false;
 		}
 	}

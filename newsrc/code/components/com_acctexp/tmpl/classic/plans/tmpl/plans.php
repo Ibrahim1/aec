@@ -11,15 +11,20 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
 
-<div class="componentheading"><?php echo JText::_('CANCEL_TITLE'); ?></div>
-<?php
-if ( $tmpl->cfg['customtext_cancel'] ) { ?>
-	<p><?php echo $tmpl->cfg['customtext_cancel']; ?></p>
+<div class="componentheading"><?php echo JText::_('PAYPLANS_HEADER'); ?></div>
+
+<?php if ( !empty( $cart ) ) { $tmpl->tmpl( 'backtocart' ); } ?>
+
+<div class="subscriptions">
 	<?php
-}
-if ( $tmpl->cfg['customtext_cancel_keeporiginal'] ) { ?>
-	<div id="cancel_page">
-	<p><?php echo JText::_('CANCEL_MSG'); ?></p>
-	</div>
-	<?php
-}
+	$tmpl->custom( 'customtext_plans' );
+
+	if ( isset( $list['group'] ) && $selected ) {
+		$tmpl->tmpl( 'groupheader' );
+		unset( $list['group'] );
+	}
+	
+	$tmpl->tmpl( 'planlist' );
+	?>
+</div>
+<div class="aec_clearfix"></div>

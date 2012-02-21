@@ -24,13 +24,12 @@
 			<?php
 		} ?>
 	</p>
-	<?php
+<?php }
+
+if ( $tmpl->cfg['customtext_notallowed'] ) {
+	echo $tmpl->cfg['customtext_notallowed'];
 }
 
-if ( $tmpl->cfg['customtext_notallowed'] ) { ?>
-	<?php echo $tmpl->cfg['customtext_notallowed']; ?>
-<?php } ?>
-<?php
 if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
 	<p>&nbsp;</p>
 	<p><?php echo JText::_('NOT_ALLOWED_SECONDPAR'); ?></p>
@@ -39,5 +38,4 @@ if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
 			HTML_frontEnd::processorInfo( $option, $processor, $tmpl->cfg['displayccinfo'] );
 		} ?>
 	</table>
-<?php
-}
+<?php }

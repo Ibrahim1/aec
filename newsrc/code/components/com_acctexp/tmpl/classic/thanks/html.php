@@ -5,8 +5,8 @@ if ( !empty( $plan ) ) {
 	if ( is_object( $plan ) ) {
 		if ( !empty( $plan->params['customthanks'] ) ) {
 			aecRedirect( $plan->params['customthanks'] );
-		} elseif ( $aecConfig->cfg['customthanks'] ) {
-			aecRedirect( $aecConfig->cfg['customthanks'] );
+		} elseif ( $tmpl->cfg['customthanks'] ) {
+			aecRedirect( $tmpl->cfg['customthanks'] );
 		}
 	} else {
 		return aecSimpleThanks( $option, $renew, $free );
@@ -31,15 +31,15 @@ if ( $renew ) {
 }
 
 $b = '';
-if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+if ( $tmpl->cfg['customtext_thanks_keeporiginal'] ) {
 	$b .= '<div class="componentheading">' . JText::_('THANKYOU_TITLE') . '</div>';
 }
 
-if ( $aecConfig->cfg['customtext_thanks'] ) {
-	$b .= $aecConfig->cfg['customtext_thanks'];
+if ( $tmpl->cfg['customtext_thanks'] ) {
+	$b .= $tmpl->cfg['customtext_thanks'];
 }
 
-if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
+if ( $tmpl->cfg['customtext_thanks_keeporiginal'] ) {
 	$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
 }
 

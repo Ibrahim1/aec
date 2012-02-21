@@ -16,7 +16,7 @@ if ( isset( $_POST['aec_passthrough'] ) ) {
 	}
 }
 
-if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && empty( $username ) && empty( $passthrough['username'] ) && !$userid && !$user->id ) {
+if ( $tmpl->cfg['plans_first'] && !empty( $usage ) && empty( $username ) && empty( $passthrough['username'] ) && !$userid && !$user->id ) {
 	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 		// This is a CB registration, borrowing their code to register the user
 		include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
@@ -35,4 +35,17 @@ if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && empty( $username ) &&
 		subscribe( $option );
 	}
 }
+
+$makegift = false;
+
+if ( !empty( $tmpl->cfg['confirm_as_gift'] ) ) {
+	if ( !empty( $tmpl->cfg['checkout_as_gift_access'] ) ) {
+		if ( $InvoiceFactory->metaUser->hasGroup( $tmpl->cfg['checkout_as_gift_access'] ) ) {
+			$makegift = true;
+		}
+	} else {
+		$makegift = true;
+	}
+}
+
 ?>

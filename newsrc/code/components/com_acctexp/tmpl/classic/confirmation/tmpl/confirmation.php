@@ -41,60 +41,24 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 				<td><p><?php echo $InvoiceFactory->payment->amount_format ?></p></td>
 			</tr>
 			<?php if ( empty( $userid ) && $tmpl->cfg['confirmation_changeusername'] ) { ?>
-			<tr>
-				<td>
-					<form class="aectextright" name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $tmpl->cfg['ssl_signup'] ); ?>" method="post">
-						<input type="hidden" name="option" value="<?php echo $option; ?>" />
-						<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
-						<input type="hidden" name="task" value="subscribe" />
-						<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
-						<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
-						<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
-						<input type="hidden" name="forget" value="userdetails" />
-						<?php if ( $passthrough != false ) { ?>
-							<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'userdetails' ); ?>" />
-						<?php } ?>
-						<button class="aeclink" type="submit"><span><?php echo JText::_('CONFIRM_DIFFERENT_USER_DETAILS'); ?></span></button>
-						<?php echo JHTML::_( 'form.token' ); ?>
-					</form>
-				</td>
-				<?php if ( empty( $userid ) && $tmpl->cfg['confirmation_changeusage'] ) { ?>
-				<td colspan="2">
-					<form class="aectextright" name="backFormUserPlan" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $tmpl->cfg['ssl_signup'] ); ?>" method="post">
-						<input type="hidden" name="option" value="<?php echo $option; ?>" />
-						<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
-						<input type="hidden" name="task" value="subscribe" />
-						<input type="hidden" name="forget" value="usage" />
-						<?php if ( $passthrough != false ) { ?>
-							<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
-						<?php } ?>
-						<button class="aeclink" type="submit"><span><?php echo JText::_('CONFIRM_DIFFERENT_ITEM'); ?></span></button>
-						<?php echo JHTML::_( 'form.token' ); ?>
-					</form>
-				</td>
-				<?php } ?>
-			</tr>
+				<tr>
+					<td><?php $this->tmpl( 'backdetailsbtn' ); ?></td>
+					<?php if ( empty( $userid ) && $tmpl->cfg['confirmation_changeusage'] ) { ?>
+						<td colspan="2"><?php $this->tmpl( 'backusagebtn' ); ?></td>
+					<?php } ?>
+				</tr>
 			<?php } ?>
 			<?php if ( !empty( $InvoiceFactory->plan->desc ) && $tmpl->cfg['confirmation_display_descriptions'] ) { ?>
 			<tr>
-				<td colspan="3" class="aec_left"><strong><?php echo JText::_('CONFIRM_YOU_HAVE_SELECTED'); ?>:</strong><br /><?php echo stripslashes( $InvoiceFactory->plan->desc ); ?></td>
+				<td colspan="3" class="aec_left">
+					<strong><?php echo JText::_('CONFIRM_YOU_HAVE_SELECTED'); ?>:</strong><br />
+					<?php echo stripslashes( $InvoiceFactory->plan->desc ); ?>
+				</td>
 			</tr>
 			<?php } ?>
 			<?php if ( $tmpl->cfg['confirmation_changeusage'] && !( empty( $userid ) && $tmpl->cfg['confirmation_changeusername'] ) ) { ?>
 			<tr>
-				<td colspan="3" class="aec_left">
-					<form name="backFormUserDetails" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $tmpl->cfg['ssl_signup'] ); ?>" method="post">
-						<input type="hidden" name="option" value="<?php echo $option; ?>" />
-						<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
-						<input type="hidden" name="task" value="subscribe" />
-						<input type="hidden" name="forget" value="usage" />
-						<?php if ( $passthrough != false ) { ?>
-							<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ); ?>" />
-						<?php } ?>
-
-						<button class="aeclink" type="submit"><span><?php echo JText::_('CONFIRM_DIFFERENT_ITEM'); ?></span></button>
-					</form>
-				</td>
+				<td colspan="3" class="aec_left"><?php $this->tmpl( 'backusagebtn' ); ?></td>
 			</tr>
 			<?php } ?>
 		</table>
@@ -103,100 +67,16 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 	<table>
 		<tr>
 			<td id="confirmation_extra">
-				<?php if ( !empty( $InvoiceFactory->mi_form ) ) {
-					if ( !empty( $InvoiceFactory->mi_error ) ) {
-						echo '<div id="confirmation_error">';
-						foreach ( $InvoiceFactory->mi_error as $error ) {
-							echo '<p>' . $error . '</p>';
-						}
-						echo '</div>';
-					}
-					echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
-				} ?>
 				<?php
-				if ( $tmpl->cfg['customtext_confirm'] ) { ?>
-					<p><?php echo $tmpl->cfg['customtext_confirm']; ?></p>
-					<?php
-				}
-				if ( $tmpl->cfg['customtext_confirm_keeporiginal'] ) { ?>
-					<p><?php echo JText::_('CONFIRM_INFO'); ?></p>
-					<?php
-				}
-				if ( $InvoiceFactory->coupons['active'] ) {
-					if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) {
-						?><p><?php echo JText::_('CONFIRM_COUPON_INFO_BOTH'); ?></p><?php
-					} else {
-						?><p><?php echo JText::_('CONFIRM_COUPON_INFO'); ?></p><?php
-					}
-				} ?>
-				<?php if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) { ?>
-					<strong><?php echo JText::_('CHECKOUT_COUPON_CODE'); ?></strong>
-					<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
-				<?php } ?>
+				$tmpl->tmpl( 'miform' );
+				$tmpl->custom( 'customtext_confirm' );
+				$tmpl->tmpl( 'couponform' );
+				?>
 			</td>
 		</tr>
-		<?php
-		$makegift = false;
-
-		if ( !empty( $tmpl->cfg['confirm_as_gift'] ) ) {
-			if ( !empty( $tmpl->cfg['checkout_as_gift_access'] ) ) {
-				if ( $InvoiceFactory->metaUser->hasGroup( $tmpl->cfg['checkout_as_gift_access'] ) ) {
-					$makegift = true;
-				}
-			} else {
-				$makegift = true;
-			}
-		}
-
-		if ( $makegift ) { ?>
-				<tr>
-					<td class="couponinfo">
-						<strong><?php echo JText::_('CHECKOUT_GIFT_HEAD'); ?></strong>
-					</td>
-				</tr>
-				<tr>
-					<td class="giftdetails">
-						<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-							<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username']; ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftConfirm&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $tmpl->cfg['ssl_signup'] ); ?>">undo?</a>)</p>
-							<input type="hidden" name="user_ident" value="<?php echo $InvoiceFactory->invoice->params['target_username']; ?>" />
-						<?php } else { ?>
-							<p><?php echo JText::_('CHECKOUT_GIFT_INFO'); ?></p>
-							<input type="text" size="20" name="user_ident" class="inputbox" value="" />
-						<?php } ?>
-					</td>
-				</tr>
-			<?php
-		} ?>
+		<?php $this->tmpl( 'giftform' ); ?>
 		<tr>
-			<td id="confirmation_button">
-			<?php @include( $this->getTmpl( 'confirmation_button' ) ); ?>
-			<div id="confirmation_button">
-				<input type="hidden" name="option" value="<?php echo $option; ?>" />
-				<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0; ?>" />
-				<input type="hidden" name="task" value="saveSubscription" />
-				<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage; ?>" />
-				<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor; ?>" />
-				<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
-				<input type="hidden" name="recurring" value="<?php echo $InvoiceFactory->recurring;?>" />
-				<?php }
-				if ( !empty( $tmpl->cfg['tos_iframe'] ) && !empty( $tmpl->cfg['tos'] ) ) { ?>
-					<iframe src="<?php echo $tmpl->cfg['tos']; ?>" width="100%" height="150px"></iframe>
-					<p><input name="tos" type="checkbox" /><?php echo JText::_('CONFIRM_TOS_IFRAME'); ?></p>
-					<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
-					<?php
-				} elseif ( !empty( $tmpl->cfg['tos'] ) ) { ?>
-					<p><input name="tos" type="checkbox" /><?php echo JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ); ?></p>
-					<input type="button" onClick="javascript:submitPayment()" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
-					<?php
-				} else { ?>
-					<input type="submit" class="button" value="<?php echo JText::_('BUTTON_CONFIRM'); ?>" />
-					<?php
-				} ?>
-				<?php if ( $passthrough != false ) { ?>
-					<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
-				<?php } ?>
-			</div>
-			</td>
+			<td id="confirmation_button"><?php $this->tmpl( 'confirmationbutton' ); ?></td>
 		</tr>
 		<tr><td>
 			<table>

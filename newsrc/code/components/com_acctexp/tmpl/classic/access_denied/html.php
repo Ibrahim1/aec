@@ -1,7 +1,7 @@
 <?php
 
-if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
-	aecRedirect( $aecConfig->cfg['customnotallowed'] );
+if ( ( $tmpl->cfg['customnotallowed'] != '' ) && !is_null( $tmpl->cfg['customnotallowed'] ) ) {
+	aecRedirect( $tmpl->cfg['customnotallowed'] );
 }
 
 $gwnames = PaymentProcessorHandler::getInstalledNameList( true );
@@ -20,14 +20,6 @@ if ( count( $gwnames ) && $gwnames[0] && !empty($tmpl->cfg['gwlist']) ) {
 			$processors[$processor]->getInfo();
 			$processors[$processor]->getSettings();
 		} else {
-			$short	= 'processor loading failure';
-			$event	= 'When composing processor info list, tried to load processor: ' . $procname;
-			$tags	= 'processor,loading,error';
-			$params = array();
-
-			$eventlog = new eventLog( $db );
-			$eventlog->issue( $short, $tags, $event, 128, $params );
-
 			unset( $processors[$processor] );
 		}
 	}

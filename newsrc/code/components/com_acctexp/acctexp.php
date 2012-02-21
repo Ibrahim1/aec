@@ -607,9 +607,24 @@ class aecTemplate
 		return AECToolbox::rewriteEngine( $tmpl->cfg['customtext_hold'], $this->metaUser );
 	}
 
-	function template( $name )
+	function custom( $setting )
 	{
-		
+		if ( !empty( $this->cfg[$setting] ) ) {
+			echo '<p>' . $this->cfg[$setting] . '</p>';
+		}
+	}
+
+	function tmpl( $name )
+	{
+		$t = explode( '.', $name );
+
+		if ( count($t) > 2 ) {
+			// Load from another template
+		} elseif ( count($t) == 2 ) {
+			// Load from another view
+		} else {
+			// Load within view
+		}
 	}
 }
 

@@ -20,7 +20,7 @@ if ( $standalone ) {
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option; ?>/css/invoice.css" type="text/css" media="screen, print" />
 	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option; ?>/css/invoice_print.css" type="text/css" media="print" />
-	<?php if ( !empty( $aecConfig->cfg['invoice_address_allow_edit'] ) ) { ?>
+	<?php if ( !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) { ?>
 	<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/jquery/jquery-1.3.2.min.js"></script>
 	<script type="text/javascript">
 	jQuery(document).ready(function() {
@@ -32,7 +32,7 @@ if ( $standalone ) {
 	<?php } ?>
 </head>
 <body>
-	<?php if ( !empty( $aecConfig->cfg['invoice_address_allow_edit'] ) ) { ?>
+	<?php if ( !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) { ?>
 		<div id="printbutton">
 			<div id="printbutton_inner">
 				<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['address']; ?></textarea>

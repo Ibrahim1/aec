@@ -60,7 +60,7 @@ $intro = 0;
 
 if ( $metaUser->hasSubscription ) {
 	if ( $metaUser->objSubscription->status == "Expired" ) {
-		$intro = !$aecConfig->cfg['intro_expired'];
+		$intro = !$tmpl->cfg['intro_expired'];
 	}
 }
 
