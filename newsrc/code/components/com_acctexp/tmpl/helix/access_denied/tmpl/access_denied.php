@@ -15,25 +15,17 @@
 	<div class="componentheading"><?php echo JText::_('NOT_ALLOWED_HEADLINE'); ?></div>
 	<p>
 		<?php if ( $loggedin ) {
-			echo JText::_('NOT_ALLOWED_FIRSTPAR_LOGGED'); ?>&nbsp;
-			<a href="<?php echo $registerlink; ?>" title="<?php echo JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED'); ?>"><?php echo JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED'); ?></a>
-			<?php
+			echo JText::_('NOT_ALLOWED_FIRSTPAR_LOGGED')
+				. '&nsbp;'
+				. $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED') );
 		} else {
-			echo JText::_('NOT_ALLOWED_FIRSTPAR'); ?>&nbsp;
-			<a href="<?php echo $registerlink; ?>" title="<?php echo JText::_('NOT_ALLOWED_REGISTERLINK'); ?>"><?php echo JText::_('NOT_ALLOWED_REGISTERLINK'); ?></a>
-			<?php
+			echo JText::_('NOT_ALLOWED_FIRSTPAR')
+				. '&nsbp;'
+				. $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK') );
 		} ?>
 	</p>
 <?php }
 
 $tmpl->custom( 'customtext_notallowed' );
 
-if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
-	<p>&nbsp;</p>
-	<p><?php echo JText::_('NOT_ALLOWED_SECONDPAR'); ?></p>
-	<table id="cc_list">
-		<?php foreach ( $processors as $processor ) {
-			HTML_frontEnd::processorInfo( $option, $processor, $tmpl->cfg['displayccinfo'] );
-		} ?>
-	</table>
-<?php }
+$tmpl->tmpl( 'plans.processor_list' );

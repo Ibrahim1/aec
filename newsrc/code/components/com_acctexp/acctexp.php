@@ -591,14 +591,18 @@ class aecTemplate
 
 	function lnk( $params, $value )
 	{
-		$params[JUtility::getToken()] = '1';
+		if ( is_array( $params ) ) {
+			$params[JUtility::getToken()] = '1';
 
-		$p = array();
-		foreach ( $params as $k => $v ) {
-			$p[] = $k.'='.$v;
+			$p = array();
+			foreach ( $params as $k => $v ) {
+				$p[] = $k.'='.$v;
+			}
+
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $this->cfg->cfg['ssl_signup'] );
+		} else {
+			$url = $params;
 		}
-
-		$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $this->cfg->cfg['ssl_signup'] );
 
 		return '<a href="'.$url.'" title="'.$value.'">'.$value.'</a>';
 	}
