@@ -64,4 +64,4 @@ if ( $metaUser->hasSubscription ) {
 	}
 }
 
-?>
+ ?>

@@ -12,4 +12,4 @@ if ( $metaUser->hasSubscription ) {
 
 $tmpl->setTitle( JText::_('HOLD_TITLE') );
 
-?>
+ ?>

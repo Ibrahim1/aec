@@ -48,4 +48,4 @@ if ( !empty( $tmpl->cfg['confirm_as_gift'] ) ) {
 	}
 }
 
-?>
+ ?>

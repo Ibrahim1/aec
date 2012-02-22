@@ -60,4 +60,4 @@ if ( !empty( $up['customtext_thanks'] ) ) {
 	$msg = $b;
 }
 $tmpl->setTitle( JText::_('THANKYOU_TITLE') );
-?>
+ ?>

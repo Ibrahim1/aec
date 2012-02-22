@@ -55,28 +55,28 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 			</tr>
 			<? foreach ( $InvoiceFactory->cart as $bid => $bitem ) {
 				if ( !empty( $bitem['name'] ) ) {
-					?><tr>
-						<td><?= $bitem['name']?></td>
-						<td><?= $bitem['cost']?></td>
-						<td><input type="inputbox" type="text" size="2" name="cartitem_<?= $bid?>" value="<?= $bitem['quantity']?>" /></td>
-						<td><?= $bitem['cost_total']?></td>
+					 ?><tr>
+						<td><?= $bitem['name'] ?></td>
+						<td><?= $bitem['cost'] ?></td>
+						<td><input type="inputbox" type="text" size="2" name="cartitem_<?= $bid ?>" value="<?= $bitem['quantity'] ?>" /></td>
+						<td><?= $bitem['cost_total'] ?></td>
 						<td><a href="<?= AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid.'&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] ) ?>"><?= JText::_('CART_DELETE_ITEM') ?></a></td>
 					</tr><?
 				} else {
-					?><tr>
+					 ?><tr>
 						<td><strong><?= JText::_('CART_ROW_TOTAL') ?></strong></td>
 						<td></td>
 						<td></td>
-						<td><strong><?= $bitem['cost']?></strong></td>
+						<td><strong><?= $bitem['cost'] ?></strong></td>
 						<td></td>
 					</tr><?
 				}
 			} ?>
 		</table>
-		<input type="hidden" name="option" value="<?= $option?>" />
-		<input type="hidden" name="userid" value="<?= $user->id ? $user->id : 0?>" />
+		<input type="hidden" name="option" value="<?= $option ?>" />
+		<input type="hidden" name="userid" value="<?= $user->id ? $user->id : 0 ?>" />
 		<input type="hidden" name="task" value="updateCart" />
-		<div id="update_button"><input type="image" src="<?= JURI::root(true) . '/media/com_acctexp/images/site/update_button.png'?>" border="0" name="submit" alt="submit" /></div>
+		<div id="update_button"><input type="image" src="<?= JURI::root(true) . '/media/com_acctexp/images/site/update_button.png' ?>" border="0" name="submit" alt="submit" /></div>
 		<?= JHTML::_( 'form.token' ) ?>
 		</form>
 		<? } ?>
@@ -88,10 +88,10 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 			} else {
 				$continueurl = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=subscribe', $tmpl->cfg['ssl_signup'] );
 			}
-		?>
+		 ?>
 		<div id="continue_button">
-			<form name="continueForm" action="<?= $continueurl?>" method="post">
-				<input type="image" src="<?= JURI::root(true) . '/media/com_acctexp/images/site/continue_shopping_button.png'?>" border="0" name="submit" alt="submit" />
+			<form name="continueForm" action="<?= $continueurl ?>" method="post">
+				<input type="image" src="<?= JURI::root(true) . '/media/com_acctexp/images/site/continue_shopping_button.png' ?>" border="0" name="submit" alt="submit" />
 			</form>
 		</div>
 		<? } ?>
@@ -113,7 +113,7 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 				} ?>
 				<?
 				if ( $tmpl->cfg['customtext_confirm'] ) { ?>
-					<p><?= $tmpl->cfg['customtext_confirm']?></p>
+					<p><?= $tmpl->cfg['customtext_confirm'] ?></p>
 					<?
 				}
 				if ( $tmpl->cfg['customtext_confirm_keeporiginal'] ) { ?>
@@ -144,7 +144,7 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 				<tr>
 					<td class="giftdetails">
 						<? if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-							<p>This purchase will be gifted to: <?= $InvoiceFactory->invoice->params['target_username']?> (<a href="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGiftCart&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] ) ?>">undo?</a>)</p>
+							<p>This purchase will be gifted to: <?= $InvoiceFactory->invoice->params['target_username'] ?> (<a href="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGiftCart&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] ) ?>">undo?</a>)</p>
 						<? } else { ?>
 							<p><?= JText::_('CHECKOUT_GIFT_INFO') ?></p>
 							<input type="text" size="20" name="user_ident" class="inputbox" value="" />
@@ -156,14 +156,14 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 		<tr>
 			<td id="confirmation_button">
 			<div id="confirmation_button">
-				<input type="hidden" name="option" value="<?= $option?>" />
-				<input type="hidden" name="userid" value="<?= $user->id ? $user->id : 0?>" />
+				<input type="hidden" name="option" value="<?= $option ?>" />
+				<input type="hidden" name="userid" value="<?= $user->id ? $user->id : 0 ?>" />
 				<input type="hidden" name="task" value="confirmCart" />
 				<? if ( isset( $InvoiceFactory->recurring ) ) { ?>
 				<input type="hidden" name="recurring" value="<?= $InvoiceFactory->recurring ?>" />
 				<? }
 				if ( !empty( $tmpl->cfg['tos_iframe'] ) && !empty( $tmpl->cfg['tos'] ) ) { ?>
-					<iframe src="<?= $tmpl->cfg['tos']?>" width="100%" height="150px"></iframe>
+					<iframe src="<?= $tmpl->cfg['tos'] ?>" width="100%" height="150px"></iframe>
 					<p><input name="tos" type="checkbox" /><?= JText::_('CONFIRM_TOS_IFRAME') ?></p>
 					<input type="button" onClick="javascript:submitPayment()" class="button" value="<?= JText::_('BUTTON_CONFIRM') ?>" />
 					<?

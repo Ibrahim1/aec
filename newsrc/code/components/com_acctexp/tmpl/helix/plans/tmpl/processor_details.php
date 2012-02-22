@@ -1,6 +1,6 @@
 <tr>
 	<td class="cc_gateway">
-		<p align="center"><img src="<?= JURI::root(true) . '/media/' . $option . '/images/site/gwlogo_' . $processor->processor_name . '.png" alt="' . $processor->processor_name . '" title="' . $processorObj->processor_name?>" /></p>
+		<p align="center"><img src="<?= JURI::root(true) . '/media/' . $option . '/images/site/gwlogo_' . $processor->processor_name . '.png" alt="' . $processor->processor_name . '" title="' . $processorObj->processor_name ?>" /></p>
 	</td>
 	<td class="cc_icons">
 		<p>
@@ -22,7 +22,7 @@
 			}
 
 			$tmpl->tmpl( 'cc_icons' );
-			?>
+			 ?>
 		</td>
 	</tr>
 	<?

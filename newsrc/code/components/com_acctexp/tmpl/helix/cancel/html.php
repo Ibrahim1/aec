@@ -33,4 +33,4 @@ if ( !$pending ) {
 		subscriptionDetails( $option, 'invoices' );
 	}
 }
-?>
+ ?>

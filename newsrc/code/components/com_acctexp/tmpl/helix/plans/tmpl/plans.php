@@ -25,6 +25,6 @@
 	}
 	
 	$tmpl->tmpl( 'planlist' );
-	?>
+	 ?>
 </div>
 <div class="aec_clearfix"></div>

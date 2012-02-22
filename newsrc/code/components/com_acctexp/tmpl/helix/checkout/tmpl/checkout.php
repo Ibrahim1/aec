@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
-<div class="componentheading"><?= $InvoiceFactory->checkout['checkout_title']?></div>
+<div class="componentheading"><?= $InvoiceFactory->checkout['checkout_title'] ?></div>
 <div id="checkout">
 	<?
 	if ( $InvoiceFactory->checkout['customtext_checkout_keeporiginal'] && !empty( $InvoiceFactory->checkout['introtext'] ) ) {
@@ -24,11 +24,11 @@
 
 	$InvoiceFactory->invoice->deformatInvoiceNumber();
 
-	?>
+	 ?>
 	<table id="aec_checkout">
 	<? if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
 		<form name="confirmForm" action="<?= AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-		<div id="update_button">You can always go back to: <input type="image" src="<?= JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png'?>" border="0" name="submit" alt="submit" /></div>
+		<div id="update_button">You can always go back to: <input type="image" src="<?= JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png' ?>" border="0" name="submit" alt="submit" /></div>
 		<?= JHTML::_( 'form.token' ) ?>
 		</form><br /><br />
 	<? } ?>
@@ -219,7 +219,7 @@
 
 			echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 		}
-	?>
+	 ?>
 	</table>
 
 	<?
@@ -235,7 +235,7 @@
 				foreach ( $InvoiceFactory->errors as $err ) { ?>
 				<tr>
 					<td class="couponerror">
-						<p><strong><?= JText::_('COUPON_ERROR_PRETEXT') ?></strong>&nbsp;<?= $err?></p>
+						<p><strong><?= JText::_('COUPON_ERROR_PRETEXT') ?></strong>&nbsp;<?= $err ?></p>
 					</td>
 				</tr>
 				<?
@@ -246,9 +246,9 @@
 					<p><?= JText::_('CHECKOUT_COUPON_INFO') ?></p>
 					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 						<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
-						<input type="hidden" name="option" value="<?= $option?>" />
+						<input type="hidden" name="option" value="<?= $option ?>" />
 						<input type="hidden" name="task" value="InvoiceAddCoupon" />
-						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number?>" />
+						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number ?>" />
 						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPLY') ?>" />
 						<?= JHTML::_( 'form.token' ) ?>
 					</form>
@@ -280,14 +280,14 @@
 			<tr>
 				<td class="giftdetails">
 					<? if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-						<p>This purchase will be gifted to: <?= $InvoiceFactory->invoice->params['target_username']?> (<a href="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGift&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] ) ?>">undo?</a>)</p>
+						<p>This purchase will be gifted to: <?= $InvoiceFactory->invoice->params['target_username'] ?> (<a href="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGift&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] ) ?>">undo?</a>)</p>
 					<? } else { ?>
 					<p><?= JText::_('CHECKOUT_GIFT_INFO') ?></p>
 					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 						<input type="text" size="20" name="user_ident" class="inputbox" value="" />
-						<input type="hidden" name="option" value="<?= $option?>" />
+						<input type="hidden" name="option" value="<?= $option ?>" />
 						<input type="hidden" name="task" value="InvoiceMakeGift" />
-						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number?>" />
+						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number ?>" />
 						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPLY') ?>" />
 						<?= JHTML::_( 'form.token' ) ?>
 					</form>
@@ -303,10 +303,10 @@
 			<tr>
 				<td class="append_button">
 					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddParams', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-						<?= $params?>
-						<input type="hidden" name="option" value="<?= $option?>" />
+						<?= $params ?>
+						<input type="hidden" name="option" value="<?= $option ?>" />
 						<input type="hidden" name="task" value="InvoiceAddParams" />
-						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number?>" />
+						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number ?>" />
 						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPEND') ?>" />
 						<?= JHTML::_( 'form.token' ) ?>
 					</form>
@@ -327,13 +327,13 @@ if ( is_string( $var ) ) {
 if ( !empty( $var ) ) { ?>
 <table width="100%" id="checkoutbox">
 	<? if ( ( strpos( $var, '<tr class="aec_formrow">' ) !== false ) || is_string( $InvoiceFactory->display_error ) ) { ?>
-		<tr><th class="checkout_head"><?= $InvoiceFactory->checkout['customtext_checkout_table']?></th></tr>
+		<tr><th class="checkout_head"><?= $InvoiceFactory->checkout['customtext_checkout_table'] ?></th></tr>
 	<? } ?>
 <? if ( is_string( $InvoiceFactory->display_error ) ) { ?>
 	<tr>
 		<td class="checkout_error">
-			<p><?= JText::_('CHECKOUT_ERROR_EXPLANATION') . ":"?></p>
-			<p><strong><?= $InvoiceFactory->display_error?></strong></p>
+			<p><?= JText::_('CHECKOUT_ERROR_EXPLANATION') . ":" ?></p>
+			<p><strong><?= $InvoiceFactory->display_error ?></strong></p>
 			<p><?= JText::_('CHECKOUT_ERROR_FURTHEREXPLANATION') ?></p>
 		</td>
 	</tr>
@@ -341,14 +341,14 @@ if ( !empty( $var ) ) { ?>
 <? if ( !empty( $InvoiceFactory->checkout['processor_addin'] ) ) { ?>
 	<tr>
 		<td class="checkout_processor_addin">
-			<?= $InvoiceFactory->checkout['processor_addin']?>
+			<?= $InvoiceFactory->checkout['processor_addin'] ?>
 		</td>
 	</tr>
 <? } ?>
 <? if ( is_string( $var ) ) { ?>
 	<tr>
 		<td class="checkout_action">
-			<? print $var?>
+			<? print $var ?>
 		</td>
 	</tr>
 <? } ?>
@@ -362,7 +362,7 @@ if ( !empty( $var ) ) { ?>
 				HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $tmpl->cfg['displayccinfo'] );
 			}
 		}
-		?>
+		 ?>
 	</td></tr>
 </table>
 </div>

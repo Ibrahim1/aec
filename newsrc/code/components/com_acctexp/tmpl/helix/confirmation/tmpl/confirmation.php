@@ -36,8 +36,8 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 				<th><?= JText::_('CONFIRM_COL3_TITLE') ?></th>
 			</tr>
 			<tr>
-				<td><?= $InvoiceFactory->userdetails?></td>
-				<td><p><?= $InvoiceFactory->plan->name?></p></td>
+				<td><?= $InvoiceFactory->userdetails ?></td>
+				<td><p><?= $InvoiceFactory->plan->name ?></p></td>
 				<td><p><?= $InvoiceFactory->payment->amount_format ?></p></td>
 			</tr>
 			<? if ( empty( $userid ) && $tmpl->cfg['confirmation_changeusername'] ) { ?>
@@ -71,7 +71,7 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 				$tmpl->tmpl( 'miform' );
 				$tmpl->custom( 'customtext_confirm' );
 				$tmpl->tmpl( 'couponform' );
-				?>
+				 ?>
 			</td>
 		</tr>
 		<? $this->tmpl( 'giftform' ) ?>

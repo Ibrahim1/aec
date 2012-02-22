@@ -9,4 +9,4 @@ if ( !empty( $InvoiceFactory->mi_form ) ) {
 	}
 	echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
 }
-?>
+ ?>

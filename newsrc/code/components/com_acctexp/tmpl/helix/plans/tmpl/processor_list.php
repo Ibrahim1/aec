@@ -32,4 +32,4 @@ if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
 	</table>
 <? }
 
-?>
+ ?>

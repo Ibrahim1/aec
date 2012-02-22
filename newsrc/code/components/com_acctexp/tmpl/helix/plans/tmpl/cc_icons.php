@@ -12,4 +12,4 @@ for ( $i = 0; $i < count( $cc_array ); $i++ ) {
 	. ' title="' . $cc_array[$i] . '"'
 	. ' class="cc_icon" />';
 }
-?>
+ ?>

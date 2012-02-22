@@ -15,11 +15,11 @@
 <div id="checkout">
 	<?
 	if ( $tmpl->cfg['customtext_exception_keeporiginal'] ) { ?>
-		<p><?= $hasform ? JText::_('EXCEPTION_INFO') : ""?></p>
+		<p><?= $hasform ? JText::_('EXCEPTION_INFO') : "" ?></p>
 		<?
 	}
 	if ( $tmpl->cfg['customtext_exception'] ) { ?>
-		<p><?= $tmpl->cfg['customtext_exception']?></p>
+		<p><?= $tmpl->cfg['customtext_exception'] ?></p>
 		<?
 	} ?>
 	<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
@@ -44,24 +44,24 @@
 			// Draw Separator Line
 			echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 		}
-	?>
+	 ?>
 	</table>
 
 	<table width="100%" id="checkoutbox">
 		<tr><th><?= JText::_('CONFIRM_TITLE') ?></th></tr>
 		<tr>
 			<td class="checkout_action">
-					<input type="hidden" name="option" value="<?= $option?>" />
+					<input type="hidden" name="option" value="<?= $option ?>" />
 					<input type="hidden" name="task" value="addressException" />
 					<?
 					if ( !empty( $InvoiceFactory->invoice->invoice_number ) ) {
-						?><input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number?>" /><?
+						 ?><input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number ?>" /><?
 					}
 					if ( !empty( $InvoiceFactory->cartobject->id ) ) {
-						?><input type="hidden" name="cart" value="<?= $InvoiceFactory->cartobject->id?>" /><?
+						 ?><input type="hidden" name="cart" value="<?= $InvoiceFactory->cartobject->id ?>" /><?
 					}
-					?>
-					<input type="hidden" name="userid" value="<?= $InvoiceFactory->metaUser->userid?>" />
+					 ?>
+					<input type="hidden" name="userid" value="<?= $InvoiceFactory->metaUser->userid ?>" />
 					<input type="submit" class="button" value="<?= JText::_('BUTTON_CONFIRM') ?>" />
 			</td>
 		</tr>
@@ -76,7 +76,7 @@
 					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $tmpl->cfg['displayccinfo'] );
 				}
 			}
-			?>
+			 ?>
 		</td></tr>
 	</table>
 </div>

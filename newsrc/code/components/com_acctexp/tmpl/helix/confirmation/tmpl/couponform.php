@@ -4,9 +4,9 @@
 
 if ( $InvoiceFactory->coupons['active'] ) {
 	if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) {
-		?><p><?= JText::_('CONFIRM_COUPON_INFO_BOTH') ?></p><?
+		 ?><p><?= JText::_('CONFIRM_COUPON_INFO_BOTH') ?></p><?
 	} else {
-		?><p><?= JText::_('CONFIRM_COUPON_INFO') ?></p><?
+		 ?><p><?= JText::_('CONFIRM_COUPON_INFO') ?></p><?
 	}
 } ?>
 <? if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) { ?>

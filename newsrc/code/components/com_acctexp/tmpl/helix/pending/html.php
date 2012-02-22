@@ -38,4 +38,4 @@ if ( $invoices ) {
 	$invoice = 'none';
 }
 $tmpl->setTitle( JText::_('PENDING_TITLE') );
-?>
+ ?>
