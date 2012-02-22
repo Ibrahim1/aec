@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @version $Id: pending.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -12,23 +12,23 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 if ( $tmpl->cfg['customtext_pending_keeporiginal'] ) { ?>
-	<div class="componentheading"><?php echo JText::_('PENDING_TITLE'); ?></div>
-	<p class="expired_dear"><?php echo sprintf( JText::_('DEAR'), $objUser->name ) . ','; ?></p>
-	<p class="expired_date"><?php echo JText::_('WARN_PENDING'); ?></p>
-<?php }
+	<div class="componentheading"><?= JText::_('PENDING_TITLE')?></div>
+	<p class="expired_dear"><?= sprintf( JText::_('DEAR'), $objUser->name ) . ','?></p>
+	<p class="expired_date"><?= JText::_('WARN_PENDING')?></p>
+<? }
 
 if ( $tmpl->cfg['customtext_pending'] ) { ?>
-	<p><?php echo $tmpl->cfg['customtext_pending']; ?></p>
-<?php } ?>
+	<p><?= $tmpl->cfg['customtext_pending']?></p>
+<? } ?>
 <div id="box_pending">
-	<?php if ( strcmp($invoice, "none") === 0 ) { ?>
-		<p><?php echo JText::_('PENDING_NOINVOICE'); ?></p>
-		<?php $tmpl->tmpl( 'upgrade_button' ); ?>
-	<?php } elseif ( $invoice ) { ?>
-		<p><?php	echo JText::_('PENDING_OPENINVOICE');
-					$tmpl->tmpl( 'invoice_links' );
-					echo ( !empty($reason) ? ' '.$reason : '' );
+	<? if ( strcmp($invoice, "none") === 0 ) { ?>
+		<p><?= JText::_('PENDING_NOINVOICE')?></p>
+		<? $tmpl->tmpl( 'upgrade_button' )?>
+	<? } elseif ( $invoice ) { ?>
+		<p><? echo JText::_('PENDING_OPENINVOICE');
+				$tmpl->tmpl( 'invoice_links' );
+				echo ( !empty($reason) ? ' '.$reason : '' );
 		?></p>
-	<?php } ?>
+	<? } ?>
 </div>
 <div style="clear:both"></div>

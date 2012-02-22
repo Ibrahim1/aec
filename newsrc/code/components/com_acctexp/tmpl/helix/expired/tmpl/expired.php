@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @version $Id: expired.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -9,51 +9,51 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
 
-<?php if ( $tmpl->cfg['customtext_expired_keeporiginal'] ) { ?>
-<div class="componentheading"><?php echo JText::_('EXPIRED_TITLE'); ?></div>
+<? if ( $tmpl->cfg['customtext_expired_keeporiginal'] ) { ?>
+<div class="componentheading"><?= JText::_('EXPIRED_TITLE')?></div>
 <div id="expired_greeting">
-	<p><?php echo sprintf( JText::_('DEAR'), $metaUser->cmsUser->name ); ?></p><p><?php
+	<p><?= sprintf( JText::_('DEAR'), $metaUser->cmsUser->name )?></p><p><?
 		if ( $is_trial ) {
 			echo JText::_('EXPIRED_TRIAL');
 		} else {
 			echo JText::_('EXPIRED');
 		}
-		echo $expiration; ?>
+		echo $expiration?>
 	</p>
 </div>
-<?php } ?>
+<? } ?>
 
-<?php if ( $tmpl->cfg['customtext_expired'] ) { ?>
-	<p><?php echo AECToolbox::rewriteEngine( $tmpl->cfg['customtext_expired'], $metaUser ); ?></p>
-<?php } ?>
+<? if ( $tmpl->cfg['customtext_expired'] ) { ?>
+	<p><?= AECToolbox::rewriteEngine( $tmpl->cfg['customtext_expired'], $metaUser )?></p>
+<? } ?>
 
 <div id="box_expired">
 	<div id="alert_level_1">
-		<?php if ( $invoice ) { ?>
-			<p><?php echo JText::_('PENDING_OPENINVOICE')
+		<? if ( $invoice ) { ?>
+			<p><?= JText::_('PENDING_OPENINVOICE')
 							. '&nbsp;'
 							. $tmpl->lnk( array(	'task' => 'repeatPayment',
 													'invoice' => $invoice,
 													'userid' => $metaUser->id
-													), JText::_('GOTO_CHECKOUT') ); ?>
+													), JText::_('GOTO_CHECKOUT') )?>
 			</p>
-		<?php } ?>
-		<?php if ( $is_continue ) { ?>
+		<? } ?>
+		<? if ( $is_continue ) { ?>
 			<div id="renew_button">
-				<?php echo $tmpl->btn( array(	'task' => 'renewSubscription',
+				<?= $tmpl->btn( array(	'task' => 'renewSubscription',
 												'userid' => $objUser->id,
 												'usage' => $metaUser->focusSubscription->plan,
 												'intro' => $intro
-												), JText::_('RENEW_BUTTON_CONTINUE') ); ?>
+												), JText::_('RENEW_BUTTON_CONTINUE') )?>
 			</div>
-		<?php } ?>
+		<? } ?>
 		<div id="renew_button">
-				<?php echo $tmpl->btn( array(	'task' => 'renewSubscription',
+				<?= $tmpl->btn( array(	'task' => 'renewSubscription',
 												'userid' => $objUser->id,
 												'intro' => $intro
-												), JText::_('RENEW_BUTTON') ); ?>
+												), JText::_('RENEW_BUTTON') )?>
 		</div>
 	</div>
 </div>

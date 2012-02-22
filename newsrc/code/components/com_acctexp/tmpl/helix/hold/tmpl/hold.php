@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @version $Id: hold.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -9,16 +9,16 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
 
-<?php if ($tmpl->cfg['customtext_hold_keeporiginal'] ) { ?>
-	<div class="componentheading"><?php echo JText::_('HOLD_TITLE'); ?></div>
+<? if ($tmpl->cfg['customtext_hold_keeporiginal'] ) { ?>
+	<div class="componentheading"><?= JText::_('HOLD_TITLE')?></div>
 	<div id="expired_greeting">
-		<p><?php echo sprintf( JText::_('DEAR'), $metaUser->cmsUser->name ); ?></p>
-		<p><?php echo JText::_('HOLD_EXPLANATION'); ?></p>
+		<p><?= sprintf( JText::_('DEAR'), $metaUser->cmsUser->name )?></p>
+		<p><?= JText::_('HOLD_EXPLANATION')?></p>
 	</div>
-	<?php
+	<?
 }
 if ( $tmpl->cfg['customtext_hold'] ) { ?>
-	<p><?php echo $tmpl->rw( $tmpl->cfg['customtext_hold'] ); ?></p>
-<?php } ?>
+	<p><?= $tmpl->rw( $tmpl->cfg['customtext_hold'] )?></p>
+<? } ?>

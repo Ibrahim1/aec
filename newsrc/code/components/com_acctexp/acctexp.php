@@ -623,6 +623,7 @@ class aecTemplate
 	{
 		$t = explode( '.', $name );
 
+		ob_start();
 		if ( count($t) > 2 ) {
 			// Load from another template
 			@include( $tmpl->paths . '/' );
@@ -631,6 +632,22 @@ class aecTemplate
 		} else {
 			// Load within view
 		}
+
+		$tmpl = ob_get_contents();
+
+    	// convert "<?=" to "<?php echo"
+   	 	$find = '/\<\?\s*=\s*(.*?)/';
+    	$replace = "<?php echo \$1";
+    	$tmpl = preg_replace($find, $replace, $tmpl);
+
+    	// convert "<?" to "<?php"
+    	$find = '/\<\?(?:php)?\s*(.*?)/';
+    	$replace = "<?php \$1";
+    	$tmpl = preg_replace($find, $replace, $tmpl);
+
+		ob_end_clean();
+
+		echo $tmpl;
 	}
 }
 

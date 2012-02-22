@@ -1,5 +1,4 @@
-<?php
-echo $tmpl->lnk( array(	'task' => 'repeatPayment',
+<?= $tmpl->lnk( array(	'task' => 'repeatPayment',
 							'invoice' => $invoice,
 							'userid' => $objUser->id
 							), JText::_('GOTO_CHECKOUT') )
@@ -8,5 +7,4 @@ echo $tmpl->lnk( array(	'task' => 'repeatPayment',
 							'invoice' => $invoice,
 							'userid' => $objUser->id,
 							'pending' => 1
-							), JText::_('HISTORY_ACTION_CANCEL') )
-?>
+							), JText::_('HISTORY_ACTION_CANCEL') ) ?>

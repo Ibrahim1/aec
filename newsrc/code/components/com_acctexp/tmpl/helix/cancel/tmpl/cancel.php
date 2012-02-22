@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @version $Id: cancel.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -9,14 +9,14 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
 
-<div class="componentheading"><?php echo JText::_('CANCEL_TITLE'); ?></div>
+<div class="componentheading"><?= JText::_('CANCEL_TITLE')?></div>
 
-<?php $tmpl->custom( 'customtext_cancel' ); ?>
+<? $tmpl->custom( 'customtext_cancel' )?>
 
-<?php if ( $tmpl->cfg['customtext_cancel_keeporiginal'] ) { ?>
+<? if ( $tmpl->cfg['customtext_cancel_keeporiginal'] ) { ?>
 	<div id="cancel_page">
-		<p><?php echo JText::_('CANCEL_MSG'); ?></p>
+		<p><?= JText::_('CANCEL_MSG')?></p>
 	</div>
-<?php }
+<? }

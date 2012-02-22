@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @version $Id: access_denied.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -9,12 +9,12 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
 
-<?php if ( $tmpl->cfg['customtext_notallowed_keeporiginal'] ) { ?>
-	<div class="componentheading"><?php echo JText::_('NOT_ALLOWED_HEADLINE'); ?></div>
+<? if ( $tmpl->cfg['customtext_notallowed_keeporiginal'] ) { ?>
+	<div class="componentheading"><?= JText::_('NOT_ALLOWED_HEADLINE')?></div>
 	<p>
-		<?php if ( $loggedin ) {
+		<? if ( $loggedin ) {
 			echo JText::_('NOT_ALLOWED_FIRSTPAR_LOGGED')
 				. '&nsbp;'
 				. $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED') );
@@ -24,7 +24,7 @@
 				. $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK') );
 		} ?>
 	</p>
-<?php }
+<? }
 
 $tmpl->custom( 'customtext_notallowed' );
 

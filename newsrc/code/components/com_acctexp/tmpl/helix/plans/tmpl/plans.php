@@ -1,4 +1,4 @@
-<?php
+<?
 /**
  * @version $Id: plans.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -9,14 +9,14 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
 
-<div class="componentheading"><?php echo JText::_('PAYPLANS_HEADER'); ?></div>
+<div class="componentheading"><?= JText::_('PAYPLANS_HEADER')?></div>
 
-<?php if ( !empty( $cart ) ) { $tmpl->tmpl( 'backtocart' ); } ?>
+<? if ( !empty( $cart ) ) { $tmpl->tmpl( 'backtocart' ); } ?>
 
 <div class="subscriptions">
-	<?php
+	<?
 	$tmpl->custom( 'customtext_plans' );
 
 	if ( isset( $list['group'] ) && $selected ) {
