@@ -19906,7 +19906,9 @@ class aecRestrictionHelper
 
 	function addGroupPlans( $source, $gkey, $pkey, $target=null )
 	{
-		if ( !is_array( $source[$pkey] ) ) {
+		$okey = str_replace( '_req', '_req_enabled', $pkey );
+
+		if ( !is_array( $source[$pkey] ) || empty($source[$okey]) ) {
 			$plans = array();
 		} else {
 			$plans = $source[$pkey];
