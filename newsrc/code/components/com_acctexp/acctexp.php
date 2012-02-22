@@ -515,9 +515,10 @@ function getPage( $page )
 	$tmpl->option = 'com_acctexp';
 	$tmpl->metaUser = $metaUser;
 	$tmpl->system_template = $app->getTemplate();
-	$tmpl->paths = array(	'default' => JPATH_SITE . '/components/com_acctexp/tmpl/default/',
-							'current' => JPATH_SITE . '/components/com_acctexp/tmpl/' . $aecConfig->cfg['standard_template'],
-							'system' => JPATH_SITE . '/templates/' . $tmpl->system_template . '/html/com_acctexp/'
+	$tmpl->paths['base'] = JPATH_SITE . '/components/com_acctexp/tmpl';
+	$tmpl->paths = array(	'default' => $tmpl->paths['base'] . '/default',
+							'current' => $tmpl->paths['base'] . '/' . $aecConfig->cfg['standard_template'],
+							'site' => JPATH_SITE . '/templates/' . $tmpl->system_template . '/html/com_acctexp'
 						);
 
 	// Get Variables
@@ -620,6 +621,7 @@ class aecTemplate
 
 		if ( count($t) > 2 ) {
 			// Load from another template
+			@include( $tmpl->paths . '/' );
 		} elseif ( count($t) == 2 ) {
 			// Load from another view
 		} else {

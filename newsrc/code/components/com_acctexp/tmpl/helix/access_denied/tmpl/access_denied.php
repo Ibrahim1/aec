@@ -26,9 +26,7 @@
 	</p>
 <?php }
 
-if ( $tmpl->cfg['customtext_notallowed'] ) {
-	echo $tmpl->cfg['customtext_notallowed'];
-}
+$tmpl->custom( 'customtext_notallowed' );
 
 if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
 	<p>&nbsp;</p>
