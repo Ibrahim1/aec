@@ -36,15 +36,15 @@ if ( $standalone ) {
 		<div id="printbutton">
 			<div id="printbutton_inner">
 				<textarea align="left" cols="40" rows="5" name="address" /><?= $data['address']?></textarea>
-				<button onClick="window.print()" id="printbutton"><?= JText::_('INVOICEPRINT_PRINT')?></button>
+				<button onClick="window.print()" id="printbutton"><?= JText::_('INVOICEPRINT_PRINT') ?></button>
 			</div>
-			<p><?= JText::_('INVOICEPRINT_BLOCKNOTICE')?></p>
+			<p><?= JText::_('INVOICEPRINT_BLOCKNOTICE') ?></p>
 		</div>
 	<? } else { ?>
 		<div id="printbutton">
 			<div id="printbutton_inner">
 				<textarea align="left" cols="40" rows="5" name="address" disabled="disabled" /><?= $data['address']?></textarea>
-				<button onClick="window.print()" id="printbutton"><?= JText::_('INVOICEPRINT_PRINT')?></button>
+				<button onClick="window.print()" id="printbutton"><?= JText::_('INVOICEPRINT_PRINT') ?></button>
 			</div>
 		</div>
 	<? } ?>
@@ -62,11 +62,11 @@ if ( $standalone ) {
 		<div id="address"><pre><?= $data['address']?></pre></div>
 		<div id="invoice_details">
 			<table id="invoice_details">
-				<tr><th><?= JText::_('INVOICEPRINT_DATE')?></th></tr>
+				<tr><th><?= JText::_('INVOICEPRINT_DATE') ?></th></tr>
 				<tr><td><?= $data['invoice_date']?></td></tr>
-				<tr><th><?= JText::_('INVOICEPRINT_ID')?></th></tr>
+				<tr><th><?= JText::_('INVOICEPRINT_ID') ?></th></tr>
 				<tr><td><?= $data['invoice_id']?></td></tr>
-				<tr><th><?= JText::_('INVOICEPRINT_REFERENCE_NUMBER')?></th></tr>
+				<tr><th><?= JText::_('INVOICEPRINT_REFERENCE_NUMBER') ?></th></tr>
 				<tr><td><?= $data['invoice_number']?></td></tr>
 			</table>
 		</div>
@@ -74,13 +74,13 @@ if ( $standalone ) {
 		<div id="invoice_content">
 			<table id="invoice_content">
 				<tr>
-					<th><?= JText::_('INVOICEPRINT_ITEM_NAME')?></th>
-					<th><?= JText::_('INVOICEPRINT_UNIT_PRICE')?></th>
-					<th><?= JText::_('INVOICEPRINT_QUANTITY')?></th>
-					<th><?= JText::_('INVOICEPRINT_TOTAL')?></th>
+					<th><?= JText::_('INVOICEPRINT_ITEM_NAME') ?></th>
+					<th><?= JText::_('INVOICEPRINT_UNIT_PRICE') ?></th>
+					<th><?= JText::_('INVOICEPRINT_QUANTITY') ?></th>
+					<th><?= JText::_('INVOICEPRINT_TOTAL') ?></th>
 				</tr>
-				<?= implode( "\r\n", $data['itemlist'] )?>
-				<?= implode( "\r\n", $data['totallist'] )?>
+				<?= implode( "\r\n", $data['itemlist'] ) ?>
+				<?= implode( "\r\n", $data['totallist'] ) ?>
 			</table>
 		</div>
 		<div id="text_after_content"><?= $data['after_content']?></div>
@@ -90,9 +90,9 @@ if ( $standalone ) {
 				<div id="invoice_billing_history">
 					<table id="invoice_billing_history">
 						<tr>
-							<th><?= JText::_('HISTORY_COL3_TITLE')?></th>
-							<th><?= JText::_('HISTORY_COL2_TITLE')?></th>
-							<th><?= JText::_('HISTORY_COL4_TITLE')?></th>
+							<th><?= JText::_('HISTORY_COL3_TITLE') ?></th>
+							<th><?= JText::_('HISTORY_COL2_TITLE') ?></th>
+							<th><?= JText::_('HISTORY_COL4_TITLE') ?></th>
 						</tr>
 						<?= $data['invoice_billing_history']?>
 					</table>

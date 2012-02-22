@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
 <div class="componentheading"><?= $InvoiceFactory->checkout['checkout_title']?></div>
 <div id="checkout">
@@ -27,9 +27,9 @@
 	?>
 	<table id="aec_checkout">
 	<? if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
-		<form name="confirmForm" action="<?= AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $tmpl->cfg['ssl_signup'] )?>" method="post">
+		<form name="confirmForm" action="<?= AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 		<div id="update_button">You can always go back to: <input type="image" src="<?= JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png'?>" border="0" name="submit" alt="submit" /></div>
-		<?= JHTML::_( 'form.token' )?>
+		<?= JHTML::_( 'form.token' ) ?>
 		</form><br /><br />
 	<? } ?>
 	<? foreach ( $InvoiceFactory->items->itemlist as $item ) {
@@ -141,7 +141,7 @@
 			}
 		}
 
-		if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
+		if ( count( $InvoiceFactory->items->itemlist ) ?> 1 ) {
 			echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 			echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . JText::_('CART_ROW_TOTAL') . '</th></tr>';
 
@@ -227,7 +227,7 @@
 		<table width="100%" id="couponsbox">
 			<tr>
 				<td class="couponinfo">
-					<strong><?= JText::_('CHECKOUT_COUPON_CODE')?></strong>
+					<strong><?= JText::_('CHECKOUT_COUPON_CODE') ?></strong>
 				</td>
 			</tr>
 			<?
@@ -235,7 +235,7 @@
 				foreach ( $InvoiceFactory->errors as $err ) { ?>
 				<tr>
 					<td class="couponerror">
-						<p><strong><?= JText::_('COUPON_ERROR_PRETEXT')?></strong>&nbsp;<?= $err?></p>
+						<p><strong><?= JText::_('COUPON_ERROR_PRETEXT') ?></strong>&nbsp;<?= $err?></p>
 					</td>
 				</tr>
 				<?
@@ -243,14 +243,14 @@
 			} ?>
 			<tr>
 				<td class="coupondetails">
-					<p><?= JText::_('CHECKOUT_COUPON_INFO')?></p>
-					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $tmpl->cfg['ssl_signup'] )?>" method="post">
+					<p><?= JText::_('CHECKOUT_COUPON_INFO') ?></p>
+					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddCoupon', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 						<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 						<input type="hidden" name="option" value="<?= $option?>" />
 						<input type="hidden" name="task" value="InvoiceAddCoupon" />
 						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number?>" />
-						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPLY')?>" />
-						<?= JHTML::_( 'form.token' )?>
+						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPLY') ?>" />
+						<?= JHTML::_( 'form.token' ) ?>
 					</form>
 				</td>
 			</tr>
@@ -274,22 +274,22 @@
 		<table width="100%" id="giftbox">
 			<tr>
 				<td class="couponinfo">
-					<strong><?= JText::_('CHECKOUT_GIFT_HEAD')?></strong>
+					<strong><?= JText::_('CHECKOUT_GIFT_HEAD') ?></strong>
 				</td>
 			</tr>
 			<tr>
 				<td class="giftdetails">
 					<? if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-						<p>This purchase will be gifted to: <?= $InvoiceFactory->invoice->params['target_username']?> (<a href="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGift&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] )?>">undo?</a>)</p>
+						<p>This purchase will be gifted to: <?= $InvoiceFactory->invoice->params['target_username']?> (<a href="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=InvoiceRemoveGift&invoice='.$InvoiceFactory->invoice->invoice_number.'&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] ) ?>">undo?</a>)</p>
 					<? } else { ?>
-					<p><?= JText::_('CHECKOUT_GIFT_INFO')?></p>
-					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $tmpl->cfg['ssl_signup'] )?>" method="post">
+					<p><?= JText::_('CHECKOUT_GIFT_INFO') ?></p>
+					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceMakeGift', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 						<input type="text" size="20" name="user_ident" class="inputbox" value="" />
 						<input type="hidden" name="option" value="<?= $option?>" />
 						<input type="hidden" name="task" value="InvoiceMakeGift" />
 						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number?>" />
-						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPLY')?>" />
-						<?= JHTML::_( 'form.token' )?>
+						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPLY') ?>" />
+						<?= JHTML::_( 'form.token' ) ?>
 					</form>
 					<? } ?>
 				</td>
@@ -302,13 +302,13 @@
 		<table width="100%" id="paramsbox">
 			<tr>
 				<td class="append_button">
-					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddParams', $tmpl->cfg['ssl_signup'] )?>" method="post">
+					<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceAddParams', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 						<?= $params?>
 						<input type="hidden" name="option" value="<?= $option?>" />
 						<input type="hidden" name="task" value="InvoiceAddParams" />
 						<input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number?>" />
-						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPEND')?>" />
-						<?= JHTML::_( 'form.token' )?>
+						<input type="submit" class="button" value="<?= JText::_('BUTTON_APPEND') ?>" />
+						<?= JHTML::_( 'form.token' ) ?>
 					</form>
 				</td>
 			</tr>
@@ -334,7 +334,7 @@ if ( !empty( $var ) ) { ?>
 		<td class="checkout_error">
 			<p><?= JText::_('CHECKOUT_ERROR_EXPLANATION') . ":"?></p>
 			<p><strong><?= $InvoiceFactory->display_error?></strong></p>
-			<p><?= JText::_('CHECKOUT_ERROR_FURTHEREXPLANATION')?></p>
+			<p><?= JText::_('CHECKOUT_ERROR_FURTHEREXPLANATION') ?></p>
 		</td>
 	</tr>
 <? } ?>

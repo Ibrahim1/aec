@@ -9,10 +9,10 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
 <? if ( $tmpl->cfg['customtext_notallowed_keeporiginal'] ) { ?>
-	<div class="componentheading"><?= JText::_('NOT_ALLOWED_HEADLINE')?></div>
+	<div class="componentheading"><?= JText::_('NOT_ALLOWED_HEADLINE') ?></div>
 	<p>
 		<? if ( $loggedin ) {
 			echo JText::_('NOT_ALLOWED_FIRSTPAR_LOGGED')

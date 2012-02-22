@@ -9,9 +9,9 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
-<div class="componentheading"><?= JText::_('CONFIRM_TITLE')?></div>
+<div class="componentheading"><?= JText::_('CONFIRM_TITLE') ?></div>
 <?
 if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 	<script type="text/javascript">
@@ -20,7 +20,7 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 			if ( document.confirmForm.tos.checked ) {
 				document.confirmForm.submit();
 			} else {
-				alert("<?= html_entity_decode( JText::_('CONFIRM_TOS_ERROR') )?>");
+				alert("<?= html_entity_decode( JText::_('CONFIRM_TOS_ERROR') ) ?>");
 			}
 		}
 		/* ]]> */
@@ -31,9 +31,9 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 	<div id="confirmation_info">
 		<table>
 			<tr>
-				<th><?= JText::_('CONFIRM_COL1_TITLE')?></th>
-				<th><?= JText::_('CONFIRM_COL2_TITLE')?></th>
-				<th><?= JText::_('CONFIRM_COL3_TITLE')?></th>
+				<th><?= JText::_('CONFIRM_COL1_TITLE') ?></th>
+				<th><?= JText::_('CONFIRM_COL2_TITLE') ?></th>
+				<th><?= JText::_('CONFIRM_COL3_TITLE') ?></th>
 			</tr>
 			<tr>
 				<td><?= $InvoiceFactory->userdetails?></td>
@@ -42,28 +42,28 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 			</tr>
 			<? if ( empty( $userid ) && $tmpl->cfg['confirmation_changeusername'] ) { ?>
 				<tr>
-					<td><? $this->tmpl( 'backdetailsbtn' )?></td>
+					<td><? $this->tmpl( 'backdetailsbtn' ) ?></td>
 					<? if ( empty( $userid ) && $tmpl->cfg['confirmation_changeusage'] ) { ?>
-						<td colspan="2"><? $this->tmpl( 'backusagebtn' )?></td>
+						<td colspan="2"><? $this->tmpl( 'backusagebtn' ) ?></td>
 					<? } ?>
 				</tr>
 			<? } ?>
 			<? if ( !empty( $InvoiceFactory->plan->desc ) && $tmpl->cfg['confirmation_display_descriptions'] ) { ?>
 			<tr>
 				<td colspan="3" class="aec_left">
-					<strong><?= JText::_('CONFIRM_YOU_HAVE_SELECTED')?>:</strong><br />
-					<?= stripslashes( $InvoiceFactory->plan->desc )?>
+					<strong><?= JText::_('CONFIRM_YOU_HAVE_SELECTED') ?>:</strong><br />
+					<?= stripslashes( $InvoiceFactory->plan->desc ) ?>
 				</td>
 			</tr>
 			<? } ?>
 			<? if ( $tmpl->cfg['confirmation_changeusage'] && !( empty( $userid ) && $tmpl->cfg['confirmation_changeusername'] ) ) { ?>
 			<tr>
-				<td colspan="3" class="aec_left"><? $this->tmpl( 'backusagebtn' )?></td>
+				<td colspan="3" class="aec_left"><? $this->tmpl( 'backusagebtn' ) ?></td>
 			</tr>
 			<? } ?>
 		</table>
 	</div>
-	<form name="confirmForm" action="<?= AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=saveSubscription', $tmpl->cfg['ssl_signup'] )?>" method="post">
+	<form name="confirmForm" action="<?= AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=saveSubscription', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 	<table>
 		<tr>
 			<td id="confirmation_extra">
@@ -74,9 +74,9 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 				?>
 			</td>
 		</tr>
-		<? $this->tmpl( 'giftform' )?>
+		<? $this->tmpl( 'giftform' ) ?>
 		<tr>
-			<td id="confirmation_button"><? $this->tmpl( 'confirmationbutton' )?></td>
+			<td id="confirmation_button"><? $this->tmpl( 'confirmationbutton' ) ?></td>
 		</tr>
 		<tr><td>
 			<table>
@@ -86,6 +86,6 @@ if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 			</table>
 		</td></tr>
 	</table>
-	<?= JHTML::_( 'form.token' )?>
+	<?= JHTML::_( 'form.token' ) ?>
 	</form>
 </div>

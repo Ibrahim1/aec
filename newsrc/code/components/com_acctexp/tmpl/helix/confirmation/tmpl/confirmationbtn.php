@@ -9,15 +9,15 @@
 	<? }
 	if ( !empty( $tmpl->cfg['tos_iframe'] ) && !empty( $tmpl->cfg['tos'] ) ) { ?>
 		<iframe src="<?= $tmpl->cfg['tos']?>" width="100%" height="150px"></iframe>
-		<p><input name="tos" type="checkbox" /><?= JText::_('CONFIRM_TOS_IFRAME')?></p>
-		<input type="button" onClick="javascript:submitPayment()" class="button" value="<?= JText::_('BUTTON_CONFIRM')?>" />
+		<p><input name="tos" type="checkbox" /><?= JText::_('CONFIRM_TOS_IFRAME') ?></p>
+		<input type="button" onClick="javascript:submitPayment()" class="button" value="<?= JText::_('BUTTON_CONFIRM') ?>" />
 		<?
 	} elseif ( !empty( $tmpl->cfg['tos'] ) ) { ?>
-		<p><input name="tos" type="checkbox" /><?= JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] )?></p>
-		<input type="button" onClick="javascript:submitPayment()" class="button" value="<?= JText::_('BUTTON_CONFIRM')?>" />
+		<p><input name="tos" type="checkbox" /><?= JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ) ?></p>
+		<input type="button" onClick="javascript:submitPayment()" class="button" value="<?= JText::_('BUTTON_CONFIRM') ?>" />
 		<?
 	} else { ?>
-		<input type="submit" class="button" value="<?= JText::_('BUTTON_CONFIRM')?>" />
+		<input type="submit" class="button" value="<?= JText::_('BUTTON_CONFIRM') ?>" />
 		<?
 	} ?>
 	<? if ( $passthrough != false ) { ?>

@@ -9,14 +9,14 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
-<div class="componentheading"><?= JText::_('CANCEL_TITLE')?></div>
+<div class="componentheading"><?= JText::_('CANCEL_TITLE') ?></div>
 
-<? $tmpl->custom( 'customtext_cancel' )?>
+<? $tmpl->custom( 'customtext_cancel' ) ?>
 
 <? if ( $tmpl->cfg['customtext_cancel_keeporiginal'] ) { ?>
 	<div id="cancel_page">
-		<p><?= JText::_('CANCEL_MSG')?></p>
+		<p><?= JText::_('CANCEL_MSG') ?></p>
 	</div>
 <? }

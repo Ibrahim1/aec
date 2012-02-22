@@ -9,24 +9,18 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
 <? if ( $tmpl->cfg['customtext_expired_keeporiginal'] ) { ?>
-<div class="componentheading"><?= JText::_('EXPIRED_TITLE')?></div>
-<div id="expired_greeting">
-	<p><?= sprintf( JText::_('DEAR'), $metaUser->cmsUser->name )?></p><p><?
-		if ( $is_trial ) {
-			echo JText::_('EXPIRED_TRIAL');
-		} else {
-			echo JText::_('EXPIRED');
-		}
-		echo $expiration?>
-	</p>
-</div>
+	<div class="componentheading"><?= JText::_('EXPIRED_TITLE') ?></div>
+	<div id="expired_greeting">
+		<p><?= sprintf( JText::_('DEAR'), $metaUser->cmsUser->name ) ?></p>
+		<p><?= JText::_( $is_trial ? 'EXPIRED_TRIAL' : 'EXPIRED' ) . $expiration ?></p>
+	</div>
 <? } ?>
 
 <? if ( $tmpl->cfg['customtext_expired'] ) { ?>
-	<p><?= AECToolbox::rewriteEngine( $tmpl->cfg['customtext_expired'], $metaUser )?></p>
+	<p><?= AECToolbox::rewriteEngine( $tmpl->cfg['customtext_expired'], $metaUser ) ?></p>
 <? } ?>
 
 <div id="box_expired">
@@ -37,23 +31,23 @@
 							. $tmpl->lnk( array(	'task' => 'repeatPayment',
 													'invoice' => $invoice,
 													'userid' => $metaUser->id
-													), JText::_('GOTO_CHECKOUT') )?>
+													), JText::_('GOTO_CHECKOUT') ) ?>
 			</p>
 		<? } ?>
 		<? if ( $is_continue ) { ?>
 			<div id="renew_button">
 				<?= $tmpl->btn( array(	'task' => 'renewSubscription',
-												'userid' => $objUser->id,
-												'usage' => $metaUser->focusSubscription->plan,
-												'intro' => $intro
-												), JText::_('RENEW_BUTTON_CONTINUE') )?>
+										'userid' => $objUser->id,
+										'usage' => $metaUser->focusSubscription->plan,
+										'intro' => $intro
+										), JText::_('RENEW_BUTTON_CONTINUE') ) ?>
 			</div>
 		<? } ?>
 		<div id="renew_button">
 				<?= $tmpl->btn( array(	'task' => 'renewSubscription',
-												'userid' => $objUser->id,
-												'intro' => $intro
-												), JText::_('RENEW_BUTTON') )?>
+										'userid' => $objUser->id,
+										'intro' => $intro
+										), JText::_('RENEW_BUTTON') ) ?>
 		</div>
 	</div>
 </div>

@@ -635,15 +635,18 @@ class aecTemplate
 
 		$tmpl = ob_get_contents();
 
-    	// convert "<?=" to "<?php echo"
-   	 	$find = '/\<\?\s*=\s*(.*?)/';
-    	$replace = "<?php echo \$1";
-    	$tmpl = preg_replace($find, $replace, $tmpl);
+        // Shamelessly stolen from Nooku FW
+        if ( !ini_get('short_open_tag') ) {
+	    	// convert "<?=" to "<?php echo"
+	   	 	$find = '/\<\?\s*=\s*(.*?)/';
+	    	$replace = "<?php echo \$1";
+	    	$tmpl = preg_replace($find, $replace, $tmpl);
 
-    	// convert "<?" to "<?php"
-    	$find = '/\<\?(?:php)?\s*(.*?)/';
-    	$replace = "<?php \$1";
-    	$tmpl = preg_replace($find, $replace, $tmpl);
+	    	// convert "<?" to "<?php"
+	    	$find = '/\<\?(?:php)?\s*(.*?)/';
+	    	$replace = "<?php \$1";
+	    	$tmpl = preg_replace($find, $replace, $tmpl);
+        }
 
 		ob_end_clean();
 

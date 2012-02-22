@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' )?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
 <div class="componentheading"><?= $hasform ? JText::_('EXCEPTION_TITLE') : JText::_('EXCEPTION_TITLE_NOFORM') ?></div>
 <div id="checkout">
@@ -22,7 +22,7 @@
 		<p><?= $tmpl->cfg['customtext_exception']?></p>
 		<?
 	} ?>
-	<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $tmpl->cfg['ssl_signup'] )?>" method="post">
+	<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 	<table id="aec_checkout">
 	<?
 		foreach ( $InvoiceFactory->exceptions as $eid => $ex ) {
@@ -48,7 +48,7 @@
 	</table>
 
 	<table width="100%" id="checkoutbox">
-		<tr><th><?= JText::_('CONFIRM_TITLE')?></th></tr>
+		<tr><th><?= JText::_('CONFIRM_TITLE') ?></th></tr>
 		<tr>
 			<td class="checkout_action">
 					<input type="hidden" name="option" value="<?= $option?>" />
@@ -62,11 +62,11 @@
 					}
 					?>
 					<input type="hidden" name="userid" value="<?= $InvoiceFactory->metaUser->userid?>" />
-					<input type="submit" class="button" value="<?= JText::_('BUTTON_CONFIRM')?>" />
+					<input type="submit" class="button" value="<?= JText::_('BUTTON_CONFIRM') ?>" />
 			</td>
 		</tr>
 	</table>
-	<?= JHTML::_( 'form.token' )?>
+	<?= JHTML::_( 'form.token' ) ?>
 	</form>
 	<table width="100%">
 		<tr><td>
