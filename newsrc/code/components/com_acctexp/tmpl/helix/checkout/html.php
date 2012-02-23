@@ -1,4 +1,16 @@
 <?php
+/**
+ * @version $Id: checkout/html.php
+ * @package AEC - Account Control Expiration - Membership Manager
+ * @subpackage Main Frontend
+ * @copyright 2012 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
+ */
+
+// Dont allow direct linking
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+
 // Always rewrite to session userid
 if ( !empty( $user->id ) ) {
 	$userid = $user->id;
@@ -15,4 +27,19 @@ if ( $invoiceid ) {
 	aecNotAuth();
 	return;
 }
- ?>
+
+$makegift = false;
+
+if ( !empty( $tmpl->cfg['checkout_as_gift'] ) ) {
+	if ( !empty( $tmpl->cfg['checkout_as_gift_access'] ) ) {
+		if ( $InvoiceFactory->metaUser->hasGroup( $tmpl->cfg['checkout_as_gift_access'] ) ) {
+			$makegift = true;
+		}
+	} else {
+		$makegift = true;
+	}
+}
+
+$tmpl->addDefaultCSS();
+
+@include( $tmpl->tmpl( 'checkout' ) );

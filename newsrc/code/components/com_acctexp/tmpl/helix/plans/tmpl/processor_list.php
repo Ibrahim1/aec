@@ -24,12 +24,12 @@ if ( count( $gwnames ) && $gwnames[0] && !empty($tmpl->cfg['gwlist']) ) {
 
 if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
 	<p>&nbsp;</p>
-	<p><?= JText::_('NOT_ALLOWED_SECONDPAR') ?></p>
+	<p><?php echo JText::_('NOT_ALLOWED_SECONDPAR') ?></p>
 	<table id="cc_list">
-		<? foreach ( $processors as $processor ) {
-			$tmpl->tmpl( 'processor_details' );
+		<?php foreach ( $processors as $processor ) {
+			@include( $tmpl->tmpl( 'processor_details' ) );
 		} ?>
 	</table>
-<? }
+<?php }
 
  ?>

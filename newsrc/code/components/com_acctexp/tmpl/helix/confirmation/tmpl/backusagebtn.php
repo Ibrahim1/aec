@@ -1,11 +1,11 @@
-<form class="aectextright" name="backFormUserPlan" action="<?= AECToolbox::deadsureURL( 'index.php?option=' . $option, $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-	<input type="hidden" name="option" value="<?= $option ?>" />
-	<input type="hidden" name="userid" value="<?= $userid ? $userid : 0 ?>" />
+<form class="aectextright" name="backFormUserPlan" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option, $tmpl->cfg['ssl_signup'] ) ?>" method="post">
+	<input type="hidden" name="option" value="<?php echo $option ?>" />
+	<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0 ?>" />
 	<input type="hidden" name="task" value="subscribe" />
 	<input type="hidden" name="forget" value="usage" />
-	<? if ( $passthrough != false ) { ?>
-		<input type="hidden" name="aec_passthrough" value="<?= $InvoiceFactory->getPassthrough( 'usage' ) ?>" />
-	<? } ?>
-	<button class="aeclink" type="submit"><span><?= JText::_('CONFIRM_DIFFERENT_ITEM') ?></span></button>
-	<?= JHTML::_( 'form.token' ) ?>
+	<?php if ( $passthrough != false ) { ?>
+		<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'usage' ) ?>" />
+	<?php } ?>
+	<button class="aeclink" type="submit"><span><?php echo JText::_('CONFIRM_DIFFERENT_ITEM') ?></span></button>
+	<?php echo JHTML::_( 'form.token' ) ?>
 </form>

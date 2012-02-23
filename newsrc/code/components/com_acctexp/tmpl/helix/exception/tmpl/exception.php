@@ -11,18 +11,18 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
-<div class="componentheading"><?= $hasform ? JText::_('EXCEPTION_TITLE') : JText::_('EXCEPTION_TITLE_NOFORM') ?></div>
+<div class="componentheading"><?php echo $hasform ? JText::_('EXCEPTION_TITLE') : JText::_('EXCEPTION_TITLE_NOFORM') ?></div>
 <div id="checkout">
 	<?
 	if ( $tmpl->cfg['customtext_exception_keeporiginal'] ) { ?>
-		<p><?= $hasform ? JText::_('EXCEPTION_INFO') : "" ?></p>
+		<p><?php echo $hasform ? JText::_('EXCEPTION_INFO') : "" ?></p>
 		<?
 	}
 	if ( $tmpl->cfg['customtext_exception'] ) { ?>
-		<p><?= $tmpl->cfg['customtext_exception'] ?></p>
+		<p><?php echo $tmpl->cfg['customtext_exception'] ?></p>
 		<?
 	} ?>
-	<form action="<?= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
+	<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 	<table id="aec_checkout">
 	<?
 		foreach ( $InvoiceFactory->exceptions as $eid => $ex ) {
@@ -44,29 +44,29 @@
 			// Draw Separator Line
 			echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 		}
-	 ?>
+	?>
 	</table>
 
 	<table width="100%" id="checkoutbox">
-		<tr><th><?= JText::_('CONFIRM_TITLE') ?></th></tr>
+		<tr><th><?php echo JText::_('CONFIRM_TITLE') ?></th></tr>
 		<tr>
 			<td class="checkout_action">
-					<input type="hidden" name="option" value="<?= $option ?>" />
+					<input type="hidden" name="option" value="<?php echo $option ?>" />
 					<input type="hidden" name="task" value="addressException" />
 					<?
 					if ( !empty( $InvoiceFactory->invoice->invoice_number ) ) {
-						 ?><input type="hidden" name="invoice" value="<?= $InvoiceFactory->invoice->invoice_number ?>" /><?
+						?><input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number ?>" /><?
 					}
 					if ( !empty( $InvoiceFactory->cartobject->id ) ) {
-						 ?><input type="hidden" name="cart" value="<?= $InvoiceFactory->cartobject->id ?>" /><?
+						?><input type="hidden" name="cart" value="<?php echo $InvoiceFactory->cartobject->id ?>" /><?
 					}
-					 ?>
-					<input type="hidden" name="userid" value="<?= $InvoiceFactory->metaUser->userid ?>" />
-					<input type="submit" class="button" value="<?= JText::_('BUTTON_CONFIRM') ?>" />
+					?>
+					<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid ?>" />
+					<input type="submit" class="button" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
 			</td>
 		</tr>
 	</table>
-	<?= JHTML::_( 'form.token' ) ?>
+	<?php echo JHTML::_( 'form.token' ) ?>
 	</form>
 	<table width="100%">
 		<tr><td>
@@ -76,7 +76,7 @@
 					HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $tmpl->cfg['displayccinfo'] );
 				}
 			}
-			 ?>
+			?>
 		</td></tr>
 	</table>
 </div>

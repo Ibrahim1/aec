@@ -1,5 +1,17 @@
 <?php
-$app = JFactory::getApplication();
+/**
+ * @version $Id: thanks/html.php
+ * @package AEC - Account Control Expiration - Membership Manager
+ * @subpackage Main Frontend
+ * @copyright 2012 Copyright (C) David Deutsch
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
+ * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
+ */
+
+// Dont allow direct linking
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+
+$tmpl->setTitle( JText::_('THANKYOU_TITLE') );
 
 if ( !empty( $plan ) ) {
 	if ( is_object( $plan ) ) {
@@ -23,6 +35,8 @@ if ( $renew ) {
 		$msg .= JText::_('SUB_FEPARTICLE_PROCESSPAY') . JText::_('SUB_FEPARTICLE_MAIL');
 	}
 } else {
+	$app = JFactory::getApplication();
+
 	$msg = JText::_('SUB_FEPARTICLE_HEAD') . '</p><p>' . JText::_('SUB_FEPARTICLE_THANKS');
 
 	$msg .=  $free ? JText::_('SUB_FEPARTICLE_PROCESS') : JText::_('SUB_FEPARTICLE_PROCESSPAY');
@@ -59,5 +73,7 @@ if ( !empty( $up['customtext_thanks'] ) ) {
 } else {
 	$msg = $b;
 }
-$tmpl->setTitle( JText::_('THANKYOU_TITLE') );
- ?>
+
+$tmpl->addDefaultCSS();
+
+@include( $tmpl->tmpl( 'thanks' ) );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: exception.php
+ * @version $Id: exception/html.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Frontend
  * @copyright 2012 Copyright (C) David Deutsch
@@ -11,5 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+$tmpl->addDefaultCSS();
 
- ?>
+@include( $tmpl->tmpl( 'plans' ) );

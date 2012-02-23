@@ -11,20 +11,20 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
-<div class="componentheading"><?= JText::_('PAYPLANS_HEADER') ?></div>
+<div class="componentheading"><?php echo JText::_('PAYPLANS_HEADER') ?></div>
 
-<? if ( !empty( $cart ) ) { $tmpl->tmpl( 'backtocart' ); } ?>
+<?php if ( !empty( $cart ) ) { @include( $tmpl->tmpl( 'backtocart' ) ); } ?>
 
 <div class="subscriptions">
 	<?
 	$tmpl->custom( 'customtext_plans' );
 
 	if ( isset( $list['group'] ) && $selected ) {
-		$tmpl->tmpl( 'groupheader' );
+		@include( $tmpl->tmpl( 'groupheader' ) );
 		unset( $list['group'] );
 	}
 	
-	$tmpl->tmpl( 'planlist' );
-	 ?>
+	@include( $tmpl->tmpl( 'planlist' ) );
+	?>
 </div>
 <div class="aec_clearfix"></div>

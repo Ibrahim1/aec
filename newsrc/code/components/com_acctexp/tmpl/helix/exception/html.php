@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: error/html.php
+ * @version $Id: exception/html.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Frontend
  * @copyright 2012 Copyright (C) David Deutsch
@@ -13,5 +13,4 @@
 
 $tmpl->addDefaultCSS();
 
-@include( $tmpl->tmpl( 'error' ) );
-
+@include( $tmpl->tmpl( 'exception' ) );
