@@ -273,6 +273,7 @@ margin: 0;
 
 .btn-group-pagination {
 width: 66px;
+margin-top: 3px;
 }
 
 .btn-group-pagination .btn {
@@ -329,6 +330,7 @@ display: inline;
 text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 color: #ffffff;
 padding: 2px 10px;
+margin-top: 1px;
 }
 .btn-toggle-warning {
 background-color: #faa732;
@@ -498,6 +500,7 @@ margin-top: 10px;
 }
 
 .progress {
+margin-top: 1px;
 margin-bottom: 0;
 }
 
