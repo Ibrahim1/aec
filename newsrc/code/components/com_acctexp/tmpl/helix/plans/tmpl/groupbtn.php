@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: groupbtn.php
  * @package AEC - Account Control Expiration - Membership Manager

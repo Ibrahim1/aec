@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: processor_list.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -10,7 +10,7 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<?
+<?php
 $gwnames = PaymentProcessorHandler::getInstalledNameList( true );
 
 if ( count( $gwnames ) && $gwnames[0] && !empty($tmpl->cfg['gwlist']) ) {
@@ -42,6 +42,4 @@ if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
 			@include( $tmpl->tmpl( 'processor_details' ) );
 		} ?>
 	</table>
-<?php }
-
- ?>
+<?php } ?>

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: backusagebtn.php
  * @package AEC - Account Control Expiration - Membership Manager

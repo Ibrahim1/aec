@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: invoice_links.php
  * @package AEC - Account Control Expiration - Membership Manager

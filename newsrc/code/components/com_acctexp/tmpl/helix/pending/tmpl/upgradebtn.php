@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: upgrade_button.php
  * @package AEC - Account Control Expiration - Membership Manager

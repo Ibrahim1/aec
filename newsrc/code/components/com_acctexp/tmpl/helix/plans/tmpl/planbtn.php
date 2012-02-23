@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: planbtn.php
  * @package AEC - Account Control Expiration - Membership Manager

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: cc_icons.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -10,7 +10,7 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<?
+<?php
 if ( is_array( $cc_list ) ) {
 	$cc_array = $cc_list;
 } else {
@@ -24,4 +24,3 @@ for ( $i = 0; $i < count( $cc_array ); $i++ ) {
 	. ' title="' . $cc_array[$i] . '"'
 	. ' class="cc_icon" />';
 }
- ?>

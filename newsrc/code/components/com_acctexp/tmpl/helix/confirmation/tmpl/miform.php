@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: miform.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -10,7 +10,7 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<?
+<?php
 if ( !empty( $InvoiceFactory->mi_form ) ) {
 	if ( !empty( $InvoiceFactory->mi_error ) ) {
 		echo '<div id="confirmation_error">';
@@ -21,4 +21,4 @@ if ( !empty( $InvoiceFactory->mi_form ) ) {
 	}
 	echo '<div id="confirmation_extra">' . $InvoiceFactory->mi_form . '</div>';
 }
- ?>
+?>

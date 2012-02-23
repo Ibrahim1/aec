@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: couponinfo.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -17,9 +17,9 @@
 
 if ( $InvoiceFactory->coupons['active'] ) {
 	if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) {
-		?><p><?php echo JText::_('CONFIRM_COUPON_INFO_BOTH') ?></p><?
+		?><p><?php echo JText::_('CONFIRM_COUPON_INFO_BOTH') ?></p><?php
 	} else {
-		?><p><?php echo JText::_('CONFIRM_COUPON_INFO') ?></p><?
+		?><p><?php echo JText::_('CONFIRM_COUPON_INFO') ?></p><?php
 	}
 } ?>
 <?php if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) { ?>

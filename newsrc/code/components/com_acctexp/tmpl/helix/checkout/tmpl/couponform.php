@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: couponform.php
  * @package AEC - Account Control Expiration - Membership Manager
