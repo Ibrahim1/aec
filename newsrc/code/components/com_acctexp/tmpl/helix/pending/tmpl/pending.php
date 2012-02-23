@@ -23,7 +23,7 @@ if ( $tmpl->cfg['customtext_pending'] ) { ?>
 <div id="box_pending">
 	<?php if ( strcmp($invoice, "none") === 0 ) { ?>
 		<p><?php echo JText::_('PENDING_NOINVOICE') ?></p>
-		<?php @include( $tmpl->tmpl( 'upgrade_button' ) ) ?>
+		<?php @include( $tmpl->tmpl( 'upgradebtn' ) ) ?>
 	<?php } elseif ( $invoice ) { ?>
 		<p><?php echo JText::_('PENDING_OPENINVOICE');
 				@include( $tmpl->tmpl( 'invoice_links' ) );

@@ -292,25 +292,6 @@ if ( !empty( $task ) ) {
 			}
 			break;
 
-		case 'expired':
-			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
-			$expiration = aecGetParam( 'expiration', 0, true, array( 'string' ) );
-
-			expired( $option, $userid, $expiration );
-			break;
-
-		case 'hold':
-			$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
-
-			hold( $option, $userid );
-			break;
-
-		case 'pending':
-			$userid		= aecGetParam( 'userid', true, array( 'word', 'int' ) );
-
-			pending( $option, $userid );
-			break;
-
 		case 'repeatpayment':
 			$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 			$userid		= aecGetParam( 'userid', 0 );
@@ -388,10 +369,6 @@ if ( !empty( $task ) ) {
 			InvoiceAddParams( $option );
 			break;
 
-		case 'notallowed':
-			notAllowed( $option );
-			break;
-
 		// Legacy - to be deprecated after thorough check
 		case 'ipn':
 			processNotification( $option, "paypal" );
@@ -405,9 +382,8 @@ if ( !empty( $task ) ) {
 			apiCall( $app, $key, $request );
 			break;
 
-		case 'testctrl':
-			getPage( 'expired' );
-			break;
+		case 'notallowed':
+			$task = 'access_denied';
 
 		default:
 			if ( strpos( $task, 'notification' ) > 0 ) {
@@ -415,16 +391,7 @@ if ( !empty( $task ) ) {
 
 				processNotification( $option, $processor );
 			} else {
-				$userid		= aecGetParam( 'userid', true, array( 'word', 'int' ) );
-				$expiration = aecGetParam( 'expiration', true, array( 'word', 'int' ) );
-
-				if ( !empty( $userid ) && empty( $user->id ) ) {
-					expired( $option, $userid, $expiration );
-				} elseif ( !empty( $user->id )) {
-					subscriptionDetails( $option );
-				} else {
-					subscribe( $option );
-				}
+				getView( $task );
 			}
 			break;
 	}
@@ -494,7 +461,7 @@ function apiCall( $app, $key, $request )
 	header("HTTP/1.0 401 Unauthorized"); die; // die, die
 }
 
-function getPage( $page )
+function getView( $view )
 {
 	global $aecConfig;
 
@@ -503,6 +470,10 @@ function getPage( $page )
 	$metaUser = null;
 	if ( $user->id ) {
 		$metaUser = new metaUser( $user->id );
+	} else {
+		$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+
+		$metaUser = new metaUser( $userid );
 	}
 
 	$app = JFactory::getApplication();
@@ -510,32 +481,36 @@ function getPage( $page )
 	$option = 'com_acctexp';
 
 	$tmpl = new aecTemplate();
-
+$aecConfig->cfg['standard_template'] = 'helix';
 	$tmpl->cfg = $aecConfig->cfg;
 	$tmpl->option = 'com_acctexp';
 	$tmpl->metaUser = $metaUser;
 	$tmpl->system_template = $app->getTemplate();
+
+	$tmpl->template = $aecConfig->cfg['standard_template'];
+	$tmpl->view = $view;
+
 	$tmpl->paths['base'] = JPATH_SITE . '/components/com_acctexp/tmpl';
 	$tmpl->paths = array(	'default' => $tmpl->paths['base'] . '/default',
-							'current' => $tmpl->paths['base'] . '/' . $aecConfig->cfg['standard_template'],
+							'current' => $tmpl->paths['base'] . '/' . $tmpl->template,
 							'site' => JPATH_SITE . '/templates/' . $tmpl->system_template . '/html/com_acctexp'
 						);
 
-	// Get Variables
-	if ( method_exists( $tmpl, $page ) ) {
-		$vars = $tmpl->{$page}();
+	$hphp = '/'.$view.'/html.php';
+	$tphp = '/'.$view.'/tmpl/'.$view.'.php';
 
-		if ( !empty( $vars ) ) {
-			foreach ( $vars as $k => $v ) {
-				$$k = $v;
-			}
-		}
-	}
-
-	if ( file_exists( $tmpl->paths['system'] . $page . '.php' ) ) {
-		include( $tmpl->paths['system'] . $page . '.php' );
-	} else {
-		include( JPATH_SITE . '/components/com_acctexp/tmpl/' . $page . '.php' );
+	if ( file_exists( $tmpl->paths['site'].$hphp ) ) {
+		include( $tmpl->paths['site'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['current'].$hphp ) ) {
+		include( $tmpl->paths['current'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['default'].$hphp ) ) {
+		include( $tmpl->paths['default'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['site'].$tphp ) ) {
+		include( $tmpl->paths['site'].$tphp );
+	} elseif ( file_exists( $tmpl->paths['current'].$tphp ) ) {
+		include( $tmpl->paths['current'].$tphp );
+	} elseif ( file_exists( $tmpl->paths['default'].$tphp ) ) {
+		include( $tmpl->paths['default'].$tphp );
 	}
 }
 
@@ -547,21 +522,21 @@ class aecTemplate
 		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
 	}
 
-	function defaultCSS()
+	function addDefaultCSS()
 	{
-		$document=& JFactory::getDocument();
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $this->option . '/css/site.css" />' );
+		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/' . $this->template . '.css' );
 	}
 
-	function getTmpl( $file )
+	function addCSS( $path )
 	{
-		$override_path = JPATH_SITE . '/templates/' . $this->system_template . '/html/com_acctexp/' . $file . '.php';
+		$document=& JFactory::getDocument();
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $path . '" />' );
+	}
 
-		if ( file_exists( $override_path ) ) {
-			include( $override_path );
-		} else {
-			include( JPATH_SITE . '/components/com_acctexp/tmpl/' . $file . '.php' );
-		}
+	function addScriptDeclaration( $js )
+	{
+		$document=& JFactory::getDocument();
+		$document->addScriptDeclaration( $js );
 	}
 
 	function btn( $params, $value )
@@ -612,10 +587,18 @@ class aecTemplate
 		return AECToolbox::rewriteEngine( $tmpl->cfg['customtext_hold'], $this->metaUser );
 	}
 
-	function custom( $setting )
+	function custom( $setting, $original=null, $obj=null )
 	{
-		if ( !empty( $this->cfg[$setting] ) ) {
-			echo '<p>' . $this->cfg[$setting] . '</p>';
+		if ( empty( $obj ) ) {
+			$obj = $this->cfg;
+		}
+
+		if ( !empty( $original ) && isset( $obj[$setting.'_keeporiginal'] ) ) {
+			echo '<p>' . $obj[$original] . '</p>';
+		}
+
+		if ( !empty( $obj[$setting] ) ) {
+			echo '<p>' . $obj[$setting] . '</p>';
 		}
 	}
 
@@ -623,114 +606,39 @@ class aecTemplate
 	{
 		$t = explode( '.', $name );
 
-		ob_start();
 		if ( count($t) > 2 ) {
 			// Load from another template
-			@include( $tmpl->paths . '/' );
+			return $this->tmplPath( $t[0], $t[1], $t[2] );
 		} elseif ( count($t) == 2 ) {
 			// Load from another view
+			return $this->tmplPath( $t[0], $t[1] );
 		} else {
 			// Load within view
+			return $this->tmplPath( $t[0] );
 		}
-
-		$tmpl = ob_get_contents();
-
-        // Shamelessly stolen from Nooku FW
-        if ( !ini_get('short_open_tag') ) {
-	    	// convert "<?=" to "<?php echo"
-	   	 	$find = '/\<\?\s*=\s*(.*?)/';
-	    	$replace = "<?php echo \$1";
-	    	$tmpl = preg_replace($find, $replace, $tmpl);
-
-	    	// convert "<?" to "<?php"
-	    	$find = '/\<\?(?:php)?\s*(.*?)/';
-	    	$replace = "<?php \$1";
-	    	$tmpl = preg_replace($find, $replace, $tmpl);
-        }
-
-		ob_end_clean();
-
-		echo $tmpl;
 	}
-}
 
-function hold( $option, $userid )
-{
-	if ( $userid > 0 ) {
-		$metaUser = new metaUser( $userid );
-
-		if ( $metaUser->hasSubscription ) {
-			// Make sure this really is pending
-			if ( strcmp($metaUser->objSubscription->status, 'Hold') !== 0 ) {
-				return aecNotAuth();
-			}
+	function tmplPath( $subview, $view=null, $template=null )
+	{
+		if ( empty( $view ) ) {
+			$view = $this->view;
 		}
 
-		$document=& JFactory::getDocument();
-
-		$document->setTitle( html_entity_decode( JText::_('HOLD_TITLE'), ENT_COMPAT, 'UTF-8' ) );
-
-		$frontend = new HTML_frontEnd();
-		$frontend->hold( $option, $metaUser );
-	} else {
-		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
-	}
-}
-
-function expired( $option, $userid, $expiration )
-{
-	global $aecConfig;
-
-	$db = &JFactory::getDBO();
-
-	if ( !empty( $userid ) ) {
-		$metaUser = new metaUser( $userid );
-
-		$trial		= false;
-		$expired	= false;
-		$invoice	= false;
-
-		if ( $metaUser->hasSubscription ) {
-			// Make sure this really is expired
-			if ( !$metaUser->objSubscription->is_expired() ) {
-				return aecNotAuth();
-			}
-
-			$expired = strtotime( $metaUser->objSubscription->expiration );
-
-			$trial = ( strcmp($metaUser->objSubscription->status, 'Trial') === 0 );
-			if ( !$trial ) {
-				$params = $metaUser->objSubscription->params;
-				if ( isset( $params['trialflag'])) {
-					$trial = 1;
-				}
-			}
+		if ( empty( $template ) ) {
+			$current = $this->paths['current'];
+		} else {
+			$current = $this->paths['base'].'/'.$this->template;
 		}
 
-		$invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
+		$t = '/'.$view.'/tmpl/'.$subview.'.php';
 
-		if ( $invoices ) {
-			$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
+		if ( file_exists( $this->paths['site'].$t ) ) {
+			return $this->paths['site'].$t;
+		} elseif ( file_exists( $current.$t ) ) {
+			return $current.$t;
+		} elseif ( file_exists( $this->paths['default'].$t ) ) {
+			return $this->paths['default'].$t;
 		}
-
-		$expiration	= AECToolbox::formatDate( $expired );
-
-		$document=& JFactory::getDocument();
-
-		$document->setTitle( html_entity_decode( JText::_('EXPIRED_TITLE'), ENT_COMPAT, 'UTF-8' ) );
-
-		$continue = false;
-		if ( $aecConfig->cfg['continue_button'] && $metaUser->hasSubscription ) {
-			$status = SubscriptionPlanHandler::PlanStatus( $metaUser->focusSubscription->plan );
-			if ( !empty( $status ) ) {
-				$continue = true;
-			}
-		}
-
-		$frontend = new HTML_frontEnd();
-		$frontend->expired( $option, $metaUser, $expiration, $invoice, $trial, $continue );
-	} else {
-		aecRedirect( AECToolbox::deadsureURL( 'index.php' ) );
 	}
 }
 
@@ -1026,8 +934,6 @@ function confirmSubscription( $option )
 {
 	$user = &JFactory::getUser();
 
-	$db = &JFactory::getDBO();
-
 	global $aecConfig;
 
 	$app = JFactory::getApplication();
@@ -1079,7 +985,7 @@ function subscriptionDetails( $option, $sub='overview', $page=0 )
 
 	global $aecConfig;
 
-	$ssl		= !empty( $aecConfig->cfg['ssl_profile'] );
+	$ssl = !empty( $aecConfig->cfg['ssl_profile'] );
 
 	// Redirect to SSL if the config requires it
 	if ( !empty( $aecConfig->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
