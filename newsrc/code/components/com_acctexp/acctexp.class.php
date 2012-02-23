@@ -6510,16 +6510,6 @@ class ItemGroupHandler
 		return $group->params['color'];
 	}
 
-	function groupIcon( $groupid )
-	{
-		$db = &JFactory::getDBO();
-
-		$group = new ItemGroup( $db );
-		$group->load( $groupid );
-
-		return $group->params['icon'];
-	}
-
 	function parentGroups( $item_id, $type='item' )
 	{
 		$db = &JFactory::getDBO();
