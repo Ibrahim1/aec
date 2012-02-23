@@ -437,6 +437,15 @@ line-height: 16px;
 width: 48%;
 }
 
+.form-horizontal .accordion-inner .control-group > label {
+width: 18%;
+}
+
+.form-horizontal .accordion-inner .controls {
+margin-left: 22%;
+width: 78%;
+}
+
 div.control-group form .controls {
 float: left;
 text-align: center;
