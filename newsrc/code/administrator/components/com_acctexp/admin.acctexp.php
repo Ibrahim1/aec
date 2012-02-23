@@ -2387,10 +2387,9 @@ function listSubscriptionPlans( $option )
 		if ( !isset( $gcolors[$group] ) ) {
 			$gcolors[$group] = array();
 			$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
-			$gcolors[$group]['icon'] = ItemGroupHandler::groupIcon( $group ) . '.png';
 		}
 
-		$rows[$n]->group = aecHTML::Icon( $gcolors[$group]['icon'], $group ) . '<strong>' . $group . '</strong>';
+		$rows[$n]->group = $group;
 		$rows[$n]->color = $gcolors[$group]['color'];
 	}
 
@@ -2495,7 +2494,7 @@ function listSubscriptionPlans( $option )
 	}
 
  	HTML_AcctExp::listSubscriptionPlans( $rows, $lists, $pageNav, $option );
- }
+}
 
 function editSubscriptionPlan( $id, $option )
 {
@@ -3340,10 +3339,9 @@ function listItemGroups( $option )
 		if ( !isset( $gcolors[$group] ) ) {
 			$gcolors[$group] = array();
 			$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
-			$gcolors[$group]['icon'] = ItemGroupHandler::groupIcon( $group ) . '.png';
 		}
 
-		$rows[$rid]->group = aecHTML::Icon( $gcolors[$group]['icon'], $group );
+		$rows[$rid]->group = $group;
 		$rows[$rid]->color = $gcolors[$group]['color'];
 
 		if ( !empty( $row->desc ) ) {

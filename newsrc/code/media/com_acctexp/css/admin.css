@@ -545,11 +545,13 @@ color: #fff;
 float: left;
 padding: 4px;
 font-weight: bold;
+line-height: 120%;
 }
 
 .bar .progress-content {
 width: 90%;
 padding: 4px;
+line-height: 100%;
 }
 
 .progress-short .bar .progress-content {
@@ -1471,6 +1473,7 @@ text-align: center;
 
 table.adminlist td {
 text-align: center;
+line-height: 200%;
 }
 
 table.adminlist .leftalign {
