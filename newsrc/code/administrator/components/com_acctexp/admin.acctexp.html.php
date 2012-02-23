@@ -444,7 +444,7 @@ class HTML_AcctExp
 				<td width="50%" style="vertical-align:top;">
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
-						<div class="aec_userinfobox_sub_inline" style="width:42%; margin-left: -8%;">
+						<div class="aec_userinfobox_sub_inline" style="width:50%; margin-left: -10%;">
 							<div class="control-group">
 								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
 								<div class="controls"><span><?php echo $metaUser->userid; ?></div>
@@ -470,7 +470,7 @@ class HTML_AcctExp
 								</div>
 							<?php } ?>
 						</div>
-						<div class="aec_userinfobox_sub_inline" style="width:38%; margin-left: -4%;">
+						<div class="aec_userinfobox_sub_inline" style="width:65%; margin-left: -5%;">
 							<div class="control-group">
 								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
 								<div class="controls"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
