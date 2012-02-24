@@ -40,13 +40,13 @@ if ( $tmpl->cfg['plans_first'] && !empty( $usage ) && empty( $username ) && empt
 		joomlaregisterForm( $option, $app->getCfg( 'useractivation' ) );
 	}
 } else {
-	if ( !empty( $usage ) ) {
-		$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
-		$iFactory->confirm( $option );
-	} else {
+	if ( empty( $usage ) ) {
 		subscribe( $option );
 	}
 }
+
+$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
+$iFactory->confirm( $option );
 
 $makegift = false;
 
@@ -71,6 +71,8 @@ if ( !empty( $tmpl->cfg['tos'] ) ) {
 
 	$tmpl->addScriptDeclaration( $js );
 }
+
+$tmpl->setTitle( JText::_('CONFIRM_TITLE') );
 
 $tmpl->addDefaultCSS();
 

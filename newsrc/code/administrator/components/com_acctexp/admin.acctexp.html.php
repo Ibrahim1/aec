@@ -736,7 +736,8 @@ class HTML_AcctExp
 						'settings' 		=> array(	'name'	=> JText::_('AEC_CENTR_AREA_SETTINGS'),
 													'short'	=> JText::_('AEC_CENTR_AREA_SETTINGS_SHORT'),
 													'items'	=> array(	array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
-																	array( 'showProcessors', 'settings', JText::_('AEC_CENTR_PROCESSORS') ),
+																	array( 'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ),
+																	array( 'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ),
 																	array( 'editCSS', 'css', JText::_('AEC_CENTR_EDIT_CSS') ),
 																	array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') )
 																	)
@@ -1039,7 +1040,7 @@ class HTML_AcctExp
 	function listProcessors( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'settings' );
+		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'processors' );
 		HTML_myCommon::getButtons( 'list_short', 'Processor' );
 		HTML_myCommon::startForm();
 		?>
@@ -2077,7 +2078,7 @@ class HTML_AcctExp
 	function listCoupons( $rows, $pageNav, $option, $type )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'coupons' . ( $type ? '_static' : '' ) );
+		HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'coupons' . ( $type ? '-static' : '' ) );
 		HTML_myCommon::getButtons( 'list', 'Coupon' . ($type ? 'Static' : '') );
 
 		HTML_myCommon::startForm();

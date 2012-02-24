@@ -84,7 +84,7 @@
 		</tr>
 		<?php if ( $makegift ) { @include( $tmpl->tmpl( 'confirmation.giftform' ) ); } ?>
 		<tr>
-			<td id="confirmation_button"><?php $tmpl->hijack( 'confirmation.confirmationbtn', 'saveSubscription', 'confirmCart' ) ?></td>
+			<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'confirmationbtn' ) ) ?></td>
 		</tr>
 		<tr><td>
 			<table>

@@ -33,8 +33,7 @@ if ( $invoiceid ) {
 
 	$objInvoice->cancel();
 } else {
-	aecNotAuth();
-	return;
+	return aecNotAuth();
 }
 
 if ( !$pending ) {

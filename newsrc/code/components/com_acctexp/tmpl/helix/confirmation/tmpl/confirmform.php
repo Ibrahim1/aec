@@ -25,13 +25,9 @@
 	<tr>
 		<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'confirmationbutton' ) ) ?></td>
 	</tr>
-	<tr><td>
-		<table>
-			<?php if ( is_object( $InvoiceFactory->pp ) ) {
-				HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $tmpl->cfg['displayccinfo'] );
-			} ?>
-		</table>
-	</td></tr>
+	<tr>
+		<td><table><?php @include( $tmpl->tmpl( 'plans.processor_details' ) ) ?></table></td>
+	</tr>
 </table>
 <?php echo JHTML::_( 'form.token' ) ?>
 </form>
