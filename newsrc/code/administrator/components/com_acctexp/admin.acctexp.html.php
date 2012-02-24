@@ -738,7 +738,6 @@ class HTML_AcctExp
 													'items'	=> array(	array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
 																	array( 'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ),
 																	array( 'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ),
-																	array( 'editCSS', 'css', JText::_('AEC_CENTR_EDIT_CSS') ),
 																	array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') )
 																	)
 												),
@@ -1114,6 +1113,49 @@ class HTML_AcctExp
 
 		echo $aecHTML->loadJS();
 
+ 		HTML_myCommon::endCommon();
+	}
+
+	function listTemplates( $rows, $pageNav, $option )
+	{
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'TEMPLATES_TITLE', 'templates' );
+		HTML_myCommon::getButtons( 'list_short', 'Template' );
+		HTML_myCommon::startForm();
+		?>
+		<div class="aecadminform">
+		<table class="adminlist table-striped">
+			<thead><tr>
+				<th width="1%">#</th>
+				<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+				<th width="10%" align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
+				<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
+				<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
+			</tr></thead>
+			<?php foreach ( $rows as $i => $row ) { ?>
+				<tr>
+					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
+					<td><?php echo $row->processor->info['statement']; ?></td>
+					<td><?php echo HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); ?></td>
+				</tr>
+			<?php } ?>
+			<tfoot>
+				<tr>
+					<td colspan="6">
+	 					<?php echo $pageNav->getListFooter(); ?>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+		</div>
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="task" value="showProcessors" />
+		<input type="hidden" name="returnTask" value="showProcessors" />
+		<input type="hidden" name="boxchecked" value="0" />
+		</form>
+		<?php
  		HTML_myCommon::endCommon();
 	}
 

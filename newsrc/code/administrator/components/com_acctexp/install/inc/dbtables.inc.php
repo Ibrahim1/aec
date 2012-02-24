@@ -315,4 +315,16 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_export_sales` ('
 . ' PRIMARY KEY (`id`)'
 . ') ENGINE=MyISAM;'
 ;
+
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config_templates` ('
+. '`id` int(11) NOT NULL AUTO_INCREMENT,'
+. '`name` varchar(60) NOT NULL,'
+. '`default` int(1) NOT NULL default \'1\','
+. '`info` text NULL,'
+. '`settings` text NULL,'
+. '`params` text NULL,'
+. ' PRIMARY KEY (`id`)'
+. ') ENGINE=MyISAM;'
+;
+
 ?>

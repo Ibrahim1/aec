@@ -2413,29 +2413,10 @@ class Config_General extends serialParamDBTable
 		$def['heartbeat_cycle_backend']			= 1;
 		$def['plans_first']						= 0;
 		$def['simpleurls']						= 0;
-		$def['display_date_frontend']			= "";
 		$def['display_date_backend']			= "";
-		//$def['enable_mimeta']					= 0;
 		$def['enable_coupons']					= 0;
-		$def['displayccinfo']					= 1;
-		$def['customtext_confirm_keeporiginal']	= 1;
-		$def['customtext_checkout_keeporiginal']	= 1;
-		$def['customtext_notallowed_keeporiginal']	= 1;
-		$def['customtext_pending_keeporiginal']	= 1;
-		$def['customtext_expired_keeporiginal']	= 1;
 		// new 0.12.4
 		$def['bypassintegration']				= '';
-		$def['customintro']						= '';
-		$def['customthanks']					= '';
-		$def['customcancel']					= '';
-		$def['customnotallowed']				= '';
-		$def['tos']								= '';
-		$def['customtext_plans']				= '';
-		$def['customtext_confirm']				= '';
-		$def['customtext_checkout']				= '';
-		$def['customtext_notallowed']			= '';
-		$def['customtext_pending']				= '';
-		$def['customtext_expired']				= '';
 		// new 0.12.4.2
 		$def['adminaccess']						= 1;
 		$def['noemails']						= 0;
@@ -2448,51 +2429,28 @@ class Config_General extends serialParamDBTable
 													. '"vars":"invoice_created_date"}]},"-",{"cmd":"rw_constant","vars":"invoice_id"}]}'
 													.'{/aecjson}';
 		$def['use_recaptcha']					= 0;
-		$def['recaptcha_privatekey']			= '';
-		$def['recaptcha_publickey']				= '';
 		$def['ssl_signup']						= 0;
 		$def['error_notification_level']		= 32;
 		$def['email_notification_level']		= 128;
 		$def['temp_auth_exp']					= 15;
-		$def['skip_confirmation']				= 0;
 		$def['show_fixeddecision']				= 0;
 		$def['confirmation_coupons']			= 0;
 		$def['breakon_mi_error']				= 0;
 		$def['curl_default']					= 1;
-		$def['amount_currency_symbol']			= 0;
-		$def['amount_currency_symbolfirst']		= 0;
-		$def['amount_use_comma']				= 0;
-		$def['tos_iframe']						= 0;
 		$def['use_proxy']						= 0;
 		$def['proxy']							= '';
 		$def['proxy_port']						= '';
 		$def['ssl_profile']						= 0;
-		$def['customtext_thanks_keeporiginal']	= 1;
-		$def['customtext_thanks']				= '';
-		$def['customtext_cancel_keeporiginal']	= 1;
-		$def['customtext_cancel']				= '';
-		$def['renew_button_never']				= 0;
-		$def['renew_button_nolifetimerecurring']= 1;
-		$def['continue_button']					= 1;
-		// new 0.12.6
 		$def['overrideJ15']						= 0;
-		$def['customtext_hold_keeporiginal']	= 1;
-		$def['customtext_hold']					= '';
 		$def['proxy_username']					= '';
 		$def['proxy_password']					= '';
 		$def['gethostbyaddr']					= 1;
 		$def['root_group']						= 1;
 		$def['root_group_rw']					= '';
 		$def['integrate_registration']			= 1;
-		$def['customintro_userid']				= 0;
 		$def['enable_shoppingcart']				= 0;
-		$def['customlink_continueshopping']		= '';
 		$def['additem_stayonpage']				= '';
-		$def['customintro_always']				= 1;
-		$def['customtext_exception_keeporiginal']	= 1;
-		$def['customtext_exception']			= '';
 		$def['gwlist']							= array();
-		$def['checkout_display_descriptions']	= 0;
 		$def['altsslurl']						= '';
 		$def['checkout_as_gift']				= 0;
 		$def['checkout_as_gift_access']			= 23;
@@ -2500,26 +2458,12 @@ class Config_General extends serialParamDBTable
 		$def['allow_frontend_heartbeat']		= 0;
 		$def['disable_regular_heartbeat']		= 0;
 		$def['custom_heartbeat_securehash']		= "";
-		$def['invoice_page_title']				= JText::_('AEC_CUSTOM_INVOICE_PAGE_TITLE');
-		$def['invoice_before_header']			= "";
-		$def['invoice_header']					= JText::_('AEC_CUSTOM_INVOICE_HEADER');
-		$def['invoice_after_header']			= "";
-		$def['invoice_before_content']			= JText::_('AEC_CUSTOM_INVOICE_BEFORE_CONTENT');
-		$def['invoice_after_content']			= JText::_('AEC_CUSTOM_INVOICE_AFTER_CONTENT');
-		$def['invoice_before_footer']			= "";
-		$def['invoice_footer']					= JText::_('AEC_CUSTOM_INVOICE_FOOTER');
-		$def['invoice_address']					= JText::_('INVOICEPRINT_ADDRESSFIELD');
-		$def['invoice_address_allow_edit']		= 1;
-		$def['invoice_after_footer']			= "";
 		$def['delete_tables']					= "";
 		$def['delete_tables_sure']				= "";
 		$def['standard_currency']				= "USD";
-		$def['confirmation_changeusername']		= 1;
-		$def['confirmation_changeusage']		= 1;
 		$def['manageraccess']					= 0;
 		$def['per_plan_mis']					= 0;
 		$def['intro_expired']					= 0;
-		$def['custom_confirm_userdetails']		= "";
 		$def['email_default_admins']			= 1;
 		$def['email_extra_admins']				= "";
 		$def['countries_available']				= "";
@@ -2538,8 +2482,6 @@ class Config_General extends serialParamDBTable
 		$def['itemid_notallowed']				= "";
 		$def['itemid_pending']					= "";
 		$def['itemid_subscriptiondetails']		= "";
-		$def['subscriptiondetails_menu']		= 1;
-		$def['confirmation_display_descriptions']	= 1;
 		$def['itemid_cb']						= "";
 		$def['checkout_coupons']				= 1;
 		$def['customAppAuth']					= "";
@@ -2641,6 +2583,52 @@ if ( !is_object( $aecConfig ) ) {
 		global $aecConfig;
 
 	$aecConfig = new Config_General( $db );
+}
+
+class configTemplate extends serialParamDBTable
+{
+	/** @var int Primary key */
+	var $id					= null;
+	/** @var int */
+	var $name				= null;
+	/** @var int */
+	var $default			= null;
+	/** @var text */
+	var $info				= null;
+	/** @var text */
+	var $settings			= null;
+	/** @var text */
+	var $params				= null;
+
+	/**
+	* @param database A database connector object
+	*/
+	function configTemplate( &$db )
+	{
+		parent::__construct( '#__acctexp_config_templates', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'info', 'settings', 'params' );
+	}
+
+	function loadName( $name )
+	{
+		$db = &JFactory::getDBO();
+
+		// See if the processor is installed & set id
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_config_templates'
+				. ' WHERE `name` = \'' . $name . '\''
+				;
+		$db->setQuery( $query );
+		$res = $db->loadResult();
+
+		if ( !empty( $res ) ) {
+			$this->id = $res;
+		}
+	}
 }
 
 class aecHeartbeat extends JTable
