@@ -51,6 +51,9 @@ class template_helix
 		$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
 		$params['customlink_continueshopping']	= array( 'inputC', '' );
 		$params[] = array( 'div_end', 0 );
+		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS') );
+		$params['subscriptiondetails_menu']		= array( 'toggle', 1 );
+		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
 		@end( $params );

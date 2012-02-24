@@ -1444,6 +1444,27 @@ function editSettings( $option )
 	$params['adminaccess']					= array( 'toggle', 0 );
 	$params['manageraccess']				= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
+	$params['plans_first']					= array( 'toggle', 0 );
+	$params['integrate_registration']		= array( 'toggle', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
+	$params['enable_shoppingcart']			= array( 'toggle', '' );
+	$params['additem_stayonpage']			= array( 'toggle', '' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
+	$params[] = array( 'userinfobox', 33.225 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
+	$params['root_group']					= array( 'list', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
+	$params['gwlist']						= array( 'list', 0 );
+	$params['standard_currency']			= array( 'list_currency', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
+	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SYSTEM') );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
 	$params[] = array( 'div_end', 0 );
@@ -1456,27 +1477,6 @@ function editSettings( $option )
 	$params['simpleurls']					= array( 'toggle', 0 );
 	$params['error_notification_level']		= array( 'list', 0 );
 	$params['email_notification_level']		= array( 'list', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
-
-	$params[] = array( 'userinfobox', 33.225 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
-	$params['plans_first']					= array( 'toggle', 0 );
-	$params['integrate_registration']		= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
-
-	$params[] = array( 'userinfobox', 33.225 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
-	$params['root_group']					= array( 'list', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
-	$params['gwlist']						= array( 'list', 0 );
-	$params['standard_currency']			= array( 'list_currency', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
-	$params['enable_shoppingcart']			= array( 'toggle', '' );
-	$params['additem_stayonpage']			= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -1496,9 +1496,6 @@ function editSettings( $option )
 	$params['gethostbyaddr']					= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
-
-	@end( $params );
-	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMIZATION_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMIZATION_SUBTITLE') . '</h2>' );
 
 	$itemidlist = array(	'cart' => array( 'view' => 'cart', 'params' => false ),
 							'checkout' => array( 'view' => 'checkout', 'params' => false ),
@@ -1529,7 +1526,7 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	@end( $params );
-	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMPAGES_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMPAGES_SUBTITLE') . '</h2>' );
+	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMIZATION_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMIZATION_SUBTITLE') . '</h2>' );
 
 	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SYSTEM') );
@@ -1564,9 +1561,6 @@ function editSettings( $option )
 	$params['checkout_as_gift']				= array( 'toggle', '' );
 	$params['checkout_as_gift_access']		= array( 'list', '' );
 	$params['confirm_as_gift']				= array( 'toggle', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS') );
-	$params['subscriptiondetails_menu']		= array( 'toggle', 1 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
 	$params['root_group_rw']				= array( 'inputD', 0 );
