@@ -61,19 +61,14 @@ switch( strtolower( $task ) ) {
 		echo "wolves teeth";
 		break;
 
-	case 'editMembership':
+	case 'editmembership':
 		if ( !empty( $userid ) && !is_array( $userid ) ) {
 			$temp = $userid;
 			$userid = array( 0 => $temp );
 		}
 
 		if ( !empty( $subscriptionid ) ) {
-			if ( !is_array( $subscriptionid ) ) {
-				$sid = $subscriptionid;
-				$subscriptionid = array( 0 => $sid );
-			}
-
-			$userid[0] = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid[0] );
+			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
 		}
 
 		$page	= trim( aecGetParam( 'page', '0' ) );
@@ -88,9 +83,9 @@ switch( strtolower( $task ) ) {
 		miQuickfire( $option, $subscriptionid, $mi, $action );
 		break;
 
-	case 'save': saveUser( $option ); break;
-	case 'apply': saveUser( $option, 1 ); break;
-	case 'cancel': cancel( $option ); break;
+	case 'savemembership': saveUser( $option ); break;
+	case 'applymembership': saveUser( $option, 1 ); break;
+	case 'cancelmembership': cancel( $option ); break;
 	case 'showcentral': aecCentral( $option ); break;
 
 	case 'clearinvoice':
@@ -570,15 +565,15 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 	$lang = JFactory::getLanguage();
 
-	if ( !empty( $subscriptionid[0] ) ) {
-		$sid = $subscriptionid[0];
+	if ( !empty( $subscriptionid ) ) {
+		$sid = $subscriptionid;
 	} else {
 		$sid = 0;
 	}
 
 	$lists = array();
 
-	$metaUser = new metaUser( $userid[0] );
+	$metaUser = new metaUser( $userid );
 
 	if ( !empty( $sid ) ) {
 		$metaUser->moveFocus( $sid );
@@ -796,8 +791,8 @@ function saveUser( $option, $apply=0 )
 
 	$metaUser = new metaUser( $post['userid'] );
 
-	if ( $metaUser->hasSubscription && !empty( $post['id'] ) ) {
-		$metaUser->moveFocus( $post['id'] );
+	if ( $metaUser->hasSubscription && !empty( $post['subscriptionid'] ) ) {
+		$metaUser->moveFocus( $post['subscriptionid'] );
 	}
 
 	$ck_primary = aecGetParam( 'ck_primary' );
@@ -931,8 +926,13 @@ function saveUser( $option, $apply=0 )
 
 	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
 	if ( $apply ) {
-		$subID = !empty($post['id']) ? $post['id'] : $metaUser->focusSubscription->id;
-		aecRedirect( 'index.php?option=' . $option . '&task=edit&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+		$subID = !empty($post['subscriptionid']) ? $post['subscriptionid'] : $metaUser->focusSubscription->id;
+
+		if ( empty( $subID ) ) {
+			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $metaUser->userid, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+		} else {
+			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&subscriptionid=' . $subID, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+		}
 	} else {
 		aecRedirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('SAVED') );
 	}

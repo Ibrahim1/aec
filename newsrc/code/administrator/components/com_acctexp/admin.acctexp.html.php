@@ -265,10 +265,10 @@ class HTML_AcctExp
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')' );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
+		$buttons = array(	'applyMembership' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
+							'saveMembership' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
 							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
+							'cancelMembership' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 						);
 		HTML_myCommon::getButtons( $buttons, '' );
 
@@ -419,7 +419,7 @@ class HTML_AcctExp
 										<tr<?php echo isset( $subs->current_focus ) ? ' class="current-focus"' : ''; ?>>
 											<td><?php echo isset( $subs->current_focus ) ? '<strong>&rArr;</strong>' : '&nbsp;'; ?></td>
 											<td><?php echo $subs->primary ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-											<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
+											<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=editMembership&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
 											<td><?php echo $subs->status; ?></td>
 											<td><?php echo $subs->type; ?></td>
 											<td><?php echo $subs->signup_date; ?></td>
@@ -470,7 +470,7 @@ class HTML_AcctExp
 								</div>
 							<?php } ?>
 						</div>
-						<div class="aec_userinfobox_sub_inline" style="width:65%; margin-left: -5%;">
+						<div class="aec_userinfobox_sub_inline" style="width:62%; margin-left: -5%;">
 							<div class="control-group">
 								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
 								<div class="controls"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
@@ -533,7 +533,7 @@ class HTML_AcctExp
 										if ( $i == $aecHTML->invoice_page ) {
 											$plist[] = ( $i + 1 );
 										} else {
-											$plist[] = '<a href="index.php?option=com_acctexp&amp;task=edit&subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
+											$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
 										}
 									}
 									echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
@@ -629,7 +629,7 @@ class HTML_AcctExp
 		</table>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="id" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
+		<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
 		<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
