@@ -1125,13 +1125,11 @@ class HTML_AcctExp
 		<div class="aecadminform">
 		<table class="adminlist table-striped">
 			<thead><tr>
-				<th width="1%">#</th>
-				<th width="10%" align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
+				<th align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
 				<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 			</tr></thead>
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
-					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->name, $row->default ); ?></td>
 				</tr>
