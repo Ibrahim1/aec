@@ -34,6 +34,17 @@ class template_helix
 		$params['skip_confirmation']			= array( 'toggle', 0 );
 		$params['displayccinfo']				= array( 'toggle', 0 );
 		$params[] = array( 'div_end', 0 );
+		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_BUTTONS_SUB') );
+		$params['renew_button_never']				= array( 'toggle', '' );
+		$params['renew_button_nolifetimerecurring']	= array( 'toggle', '' );
+		$params['continue_button']					= array( 'toggle', '' );
+		$params[] = array( 'div_end', 0 );
+		$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
+		$params['customlink_continueshopping']	= array( 'inputC', '' );
+		$params[] = array( 'div_end', 0 );
+		$params[] = array( '2div_end', 0 );
+
+		$params[] = array( 'userinfobox', 33.225 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
 		$params['confirmation_changeusername']	= array( 'toggle', '' );
 		$params['confirmation_changeusage']		= array( 'toggle', '' );
@@ -45,32 +56,15 @@ class template_helix
 		$params['enable_coupons']				= array( 'toggle', 0 );
 		$params['checkout_display_descriptions']	= array( 'toggle', '' );
 		$params[] = array( 'div_end', 0 );
-		$params[] = array( '2div_end', 0 );
-
-		$params[] = array( 'userinfobox', 33.225 );
-		$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
-		$params['customlink_continueshopping']	= array( 'inputC', '' );
-		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS') );
 		$params['subscriptiondetails_menu']		= array( 'toggle', 1 );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
-		@end( $params );
-		$tab_data[] = array( JText::_('CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB1_SUBTITLE') . '</h2>' );
-
-		$params[] = array( 'userinfobox', 49.8 );
+		$params[] = array( 'userinfobox', 33.225 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 		$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
 		$params[] = array( 'div_end', 0 );
-		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_BUTTONS_SUB') );
-		$params['renew_button_never']				= array( 'toggle', '' );
-		$params['renew_button_nolifetimerecurring']	= array( 'toggle', '' );
-		$params['continue_button']					= array( 'toggle', '' );
-		$params[] = array( 'div_end', 0 );
-		$params[] = array( '2div_end', 0 );
-
-		$params[] = array( 'userinfobox', 49.8 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
 		$params['amount_currency_symbol']			= array( 'toggle', 0 );
 		$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
@@ -86,45 +80,6 @@ class template_helix
 		@end( $params );
 		$tab_data[] = array( JText::_('CFG_TAB_CUSTOMIZATION_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMIZATION_SUBTITLE') . '</h2>' );
 
-		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS') );
-		$params[] = array( 'accordion_start', '' );
-		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_HEADER_NAME') );
-		$params['invoice_page_title']				= array( 'inputD', '' );
-		$params['invoice_header']					= array( 'editor', '' );
-		$params[] = array( 'accordion_itemend', '' );
-		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_AFTER_HEADER_NAME') );
-		$params['invoice_after_header']				= array( 'editor', '' );
-		$params[] = array( 'accordion_itemend', '' );
-		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_ADDRESS_NAME') );
-		$params['invoice_address_allow_edit']		= array( 'toggle', '' );
-		$params['invoice_address']					= array( 'inputD', '' );
-		$params[] = array( 'accordion_itemend', '' );
-		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME') );
-		$params['invoice_before_content']			= array( 'editor', '' );
-		$params[] = array( 'accordion_itemend', '' );
-		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME') );
-		$params['invoice_after_content']			= array( 'editor', '' );
-		$params[] = array( 'accordion_itemend', '' );
-		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_BEFORE_FOOTER_NAME') );
-		$params['invoice_before_footer']			= array( 'editor', '' );
-		$params[] = array( 'accordion_itemend', '' );
-		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_FOOTER_NAME') );
-		$params['invoice_footer']					= array( 'editor', '' );
-		$params[] = array( 'accordion_itemend', '' );
-		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_AFTER_FOOTER_NAME') );
-		$params['invoice_after_footer']				= array( 'editor', '' );
-		$params[] = array( 'accordion_itemend', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div_end', 0 );
-
-		$params[] = array( 'userinfobox_sub', "" );
-		$params = AECToolbox::rewriteEngineInfo( array(), $params );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( '2div_end', 0 );
-
-		@end( $params );
-		$tab_data[] = array( JText::_('CFG_TAB_CUSTOMINVOICE_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMINVOICE_SUBTITLE') . '</h2>' );
-
 		$params[] = array( 'userinfobox', 49.8 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CREDIRECT') );
 		$params['customintro']						= array( 'inputC', '' );
@@ -134,6 +89,9 @@ class template_helix
 		$params['customcancel']						= array( 'inputC', '' );
 		$params['customnotallowed']					= array( 'inputC', '' );
 		$params[] = array( 'div_end', 0 );
+		$params[] = array( '2div_end', 0 );
+
+		$params[] = array( 'userinfobox', 49.8 );
 		$params[] = array( 'userinfobox_sub', "" );
 		$rewriteswitches							= array( 'cms', 'invoice' );
 		$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
@@ -190,7 +148,46 @@ class template_helix
 		@end( $params );
 		$tab_data[] = array( JText::_('CFG_TAB_CUSTOMPAGES_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMPAGES_SUBTITLE') . '</h2>' );
 
-		return $settings;
+		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_INVOICE_PRINTOUT_DETAILS') );
+		$params[] = array( 'accordion_start', '' );
+		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_HEADER_NAME') );
+		$params['invoice_page_title']				= array( 'inputD', '' );
+		$params['invoice_header']					= array( 'editor', '' );
+		$params[] = array( 'accordion_itemend', '' );
+		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_AFTER_HEADER_NAME') );
+		$params['invoice_after_header']				= array( 'editor', '' );
+		$params[] = array( 'accordion_itemend', '' );
+		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_ADDRESS_NAME') );
+		$params['invoice_address_allow_edit']		= array( 'toggle', '' );
+		$params['invoice_address']					= array( 'inputD', '' );
+		$params[] = array( 'accordion_itemend', '' );
+		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME') );
+		$params['invoice_before_content']			= array( 'editor', '' );
+		$params[] = array( 'accordion_itemend', '' );
+		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_AFTER_CONTENT_NAME') );
+		$params['invoice_after_content']			= array( 'editor', '' );
+		$params[] = array( 'accordion_itemend', '' );
+		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_BEFORE_FOOTER_NAME') );
+		$params['invoice_before_footer']			= array( 'editor', '' );
+		$params[] = array( 'accordion_itemend', '' );
+		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_FOOTER_NAME') );
+		$params['invoice_footer']					= array( 'editor', '' );
+		$params[] = array( 'accordion_itemend', '' );
+		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_AFTER_FOOTER_NAME') );
+		$params['invoice_after_footer']				= array( 'editor', '' );
+		$params[] = array( 'accordion_itemend', '' );
+		$params[] = array( 'div_end', '' );
+		$params[] = array( 'div_end', 0 );
+
+		$params[] = array( 'userinfobox_sub', "" );
+		$params = AECToolbox::rewriteEngineInfo( array(), $params );
+		$params[] = array( 'div_end', '' );
+		$params[] = array( '2div_end', 0 );
+
+		@end( $params );
+		$tab_data[] = array( JText::_('CFG_TAB_CUSTOMINVOICE_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMINVOICE_SUBTITLE') . '</h2>' );
+
+		return array( 'params' => $params, 'tab_data' => $tab_data );
 	}
 
 }

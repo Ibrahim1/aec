@@ -2594,11 +2594,7 @@ class configTemplate extends serialParamDBTable
 	/** @var int */
 	var $default			= null;
 	/** @var text */
-	var $info				= null;
-	/** @var text */
 	var $settings			= null;
-	/** @var text */
-	var $params				= null;
 
 	/**
 	* @param database A database connector object
@@ -2610,12 +2606,14 @@ class configTemplate extends serialParamDBTable
 
 	function declareParamFields()
 	{
-		return array( 'info', 'settings', 'params' );
+		return array( 'settings' );
 	}
 
 	function loadName( $name )
 	{
 		$db = &JFactory::getDBO();
+
+		$this->name = $name;
 
 		// See if the processor is installed & set id
 		$query = 'SELECT id'
@@ -2626,7 +2624,22 @@ class configTemplate extends serialParamDBTable
 		$res = $db->loadResult();
 
 		if ( !empty( $res ) ) {
-			$this->id = $res;
+			$this->load($res);
+		} else {
+			$this->load(0);
+		}
+
+		$file = JPATH_SITE . '/components/com_acctexp/tmpl/' . $name . '/config.php';
+
+		if ( file_exists( $file ) ) {
+			// Call Integration file
+			include_once ( $file );
+
+			// Initiate Payment Processor Class
+			$class_name = 'template_' . $name;
+			$this->template = new $class_name();
+
+			$this->info = $this->template->info();
 		}
 	}
 }
@@ -16562,26 +16575,28 @@ class AECToolbox
 		}
 	}
 
-	function getFileArray( $dir, $extension=false, $listDirectories=false, $skipDots=true )
+	function getFileArray( $dir, $extension=false, $listDirectories=false, $keepDots=false )
 	{
 		$dirArray	= array();
 		$handle		= dir( $dir );
 
-		while ( false !== ( $file = $handle->read() ) ) {
-			if ( ( $file != '.' && $file != '..' ) || $skipDots === true ) {
-				if ( $listDirectories === false ) {
-					if ( is_dir( $file ) ) {
+		while ( ( $file = $handle->read() ) !== false ) {
+			if ( ( $file != '.' && $file != '..' ) || $keepDots ) {
+				if ( !$listDirectories ) {
+					if ( is_dir( $dir.'/'.$file ) ) {
 						continue;
 					}
 				}
-				if ( $extension !== false ) {
-					if ( strpos( basename( $file ), $extension ) === false ) {
-						continue;
+				if ( !empty( $extension ) ) {
+					if ( !is_dir( $dir.'/'.$file ) ) {
+						if ( strpos( basename( $file ), $extension ) === false ) {
+							continue;
+						}
 					}
 				}
 
 				array_push( $dirArray, basename( $file ) );
-				}
+			}
 		}
 		$handle->close();
 		return $dirArray;

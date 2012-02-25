@@ -981,7 +981,7 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function Settings( $option, $aecHTML, $tab_data, $editors )
+	function Settings( $option, $aecHTML, $tab_data )
 	{
 		jimport( 'joomla.html.editor' );
 
@@ -1058,7 +1058,7 @@ class HTML_AcctExp
 					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td><?php echo $row->processor->id; ?></td>
 					<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
+					<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
 					<td><?php echo $row->processor->info['statement']; ?></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
 				</tr>
@@ -1084,7 +1084,7 @@ class HTML_AcctExp
 	function editProcessor( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'processors', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
 		HTML_myCommon::getButtons( 'edit', 'Processor' );
 
 		HTML_myCommon::startForm();
@@ -1120,25 +1120,20 @@ class HTML_AcctExp
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'TEMPLATES_TITLE', 'templates' );
-		HTML_myCommon::getButtons( 'list_short', 'Template' );
 		HTML_myCommon::startForm();
 		?>
 		<div class="aecadminform">
 		<table class="adminlist table-striped">
 			<thead><tr>
 				<th width="1%">#</th>
-				<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 				<th width="10%" align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
-				<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
 				<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 			</tr></thead>
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
 					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editProcessor')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
-					<td><?php echo $row->processor->info['statement']; ?></td>
-					<td><?php echo HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); ?></td>
+					<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
+					<td><?php echo HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->name, $row->default ); ?></td>
 				</tr>
 			<?php } ?>
 			<tfoot>
@@ -1151,11 +1146,66 @@ class HTML_AcctExp
 		</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="showProcessors" />
-		<input type="hidden" name="returnTask" value="showProcessors" />
+		<input type="hidden" name="task" value="showTemplates" />
+		<input type="hidden" name="returnTask" value="showTemplates" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 		<?php
+ 		HTML_myCommon::endCommon();
+	}
+
+	function editTemplate( $option, $aecHTML, $tab_data )
+	{
+		jimport( 'joomla.html.editor' );
+
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'AEC_HEAD_TEMPLATE', 'templates' );
+
+		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
+							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
+							'hl1' => array(),
+							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
+						);
+		HTML_myCommon::getButtons( $buttons, 'Template' );
+
+		HTML_myCommon::startForm();
+
+		$tabs = new bsPaneTabs;
+		$tabs->startTabs();
+
+		foreach( $tab_data as $tab ) {
+			$tabs->newTab( strtolower( str_replace( ' ', '-', $tab[0] ) ), $tab[0] );
+		}
+
+		$tabs->endTabs();
+		$tabs->startPanes();
+
+		foreach( $tab_data as $tab ) {
+			$tabs->nextPane( strtolower( str_replace( ' ', '-', $tab[0] ) ) );
+
+			echo '<table width="100%" class="aecadminform"><tr><td>';
+
+			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+				echo $aecHTML->createSettingsParticle( $rowname );
+				unset( $aecHTML->rows[$rowname] );
+				// Skip to next tab if last item in this one reached
+				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
+					break;
+				}
+			}
+
+			echo '</td></tr></table>';
+		}
+
+		$tabs->endPanes();
+		?>
+		<input type="hidden" name="id" value="1" />
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		</form>
+		<?php
+		echo $aecHTML->loadJS();
+
  		HTML_myCommon::endCommon();
 	}
 
@@ -1226,7 +1276,7 @@ class HTML_AcctExp
 							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 							<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-							<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','edit')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->name; ?></a></td>
+							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 							<td class="leftalign"><?php echo $row->username; ?></td>
 							<td class="leftalign"><?php echo $row->status; ?></td>
 							<td class="leftalign"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
@@ -1304,7 +1354,7 @@ class HTML_AcctExp
 					<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 					<td><?php echo $row->id; ?></td>
 					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-					<td><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editMicroIntegration')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+					<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
 					<td class="leftalign">
 						<?php
 						echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
@@ -1494,7 +1544,7 @@ class HTML_AcctExp
 					<td><?php echo $row->id; ?></td>
 					<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 					<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
-					<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editSubscriptionPlan')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+					<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 					<td class="leftalign"><?php echo $row->desc; ?></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
@@ -1914,7 +1964,7 @@ class HTML_AcctExp
 						<td><?php echo $row->id; ?></td>
 						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 						<td align="right" style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
-						<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editItemGroup')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+						<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 						<td class="leftalign"><?php echo $row->desc; ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
@@ -2143,7 +2193,7 @@ class HTML_AcctExp
 					<tr>
 						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-						<td class="leftalign"><a href="#edit" onclick="return listItemTask('cb<?php echo $i; ?>','editCoupon<?php echo $type ? "Static" : ""; ?>')" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon'. $type ? "Static" : "" . '&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 						<td class="leftalign"><strong><?php echo $row->coupon_code; ?></strong></td>
 						<td class="leftalign"><?php echo $row->desc; ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>

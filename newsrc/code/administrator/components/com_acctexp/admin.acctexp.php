@@ -61,7 +61,7 @@ switch( strtolower( $task ) ) {
 		echo "wolves teeth";
 		break;
 
-	case 'edit':
+	case 'editMembership':
 		if ( !empty( $userid ) && !is_array( $userid ) ) {
 			$temp = $userid;
 			$userid = array( 0 => $temp );
@@ -145,6 +145,15 @@ switch( strtolower( $task ) ) {
 	case 'savesettings': saveSettings( $option ); break;
 	case 'applysettings': saveSettings( $option, 1 ); break;
 	case 'cancelsettings': aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_CANCELLED') ); break;
+
+	case 'showtemplates': listTemplates( $option ); break;
+	case 'edittemplate':
+		$name	= aecGetParam( 'name', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+		editTemplate( $option, $name );
+		break;
+	case 'savetemplate': saveTemplate( $option ); break;
+	case 'applytemplate': saveTemplate( $option, 1 ); break;
+	case 'canceltemplate': aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_CANCELLED') ); break;
 
 	case 'showprocessors': listProcessors( $option ); break;
 	case 'newprocessor': editProcessor( 0, $option ); break;
@@ -1664,15 +1673,6 @@ function editSettings( $option )
 
 	$lists['root_group'] 		= JHTML::_('select.genericlist', $glist, 'root_group', 'size="' . min(6,count($glist)+1) . '"', 'value', 'text', $aecConfig->cfg['root_group'] );
 
-	$editors = array();
-	foreach ( $tab_data as $tab ) {
-		foreach ( $tab as $st_content ) {
-			if ( strcmp( $st_content[0], 'editor' ) === 0 ) {
-				$editors[] = $st_content[4];
-			}
-		}
-	}
-
 	foreach ( $itemidlist as $idk => $idkp ) {
 		if ( empty( $aecConfig->cfg['itemid_' . $idk] ) ) {
 			$query = 'SELECT `id`'
@@ -1730,7 +1730,7 @@ function editSettings( $option )
 		$aecHTML->customparams = $customparamsarray;
 	}
 
-	HTML_AcctExp::Settings( $option, $aecHTML, $tab_data, $editors );
+	HTML_AcctExp::Settings( $option, $aecHTML, $tab_data );
 }
 
 function saveSettings( $option, $return=0 )
@@ -1830,6 +1830,91 @@ function saveSettings( $option, $return=0 )
 	}
 }
 
+function listTemplates( $option )
+{
+	$db = &JFactory::getDBO();
+
+	$app = JFactory::getApplication();
+
+ 	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+
+	$list = AECToolbox::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
+
+	foreach ( $list as $id => $name ) {
+		if ( ( $name == 'default' ) || ( $name == 'classic' ) ) {
+			unset( $list[$id] );
+		}
+	}
+
+ 	$total = count($list);
+
+ 	if ( $limitstart > $total ) {
+ 		$limitstart = 0;
+ 	}
+
+	$pageNav = new bsPagination( $total, $limitstart, $limit );
+
+	$names = array_slice( $list, $limitstart, $limit );
+
+	$rows = array();
+	foreach ( $names as $name ) {
+		$t = new configTemplate( $db );
+		$t->loadName( $name );
+
+		$rows[] = $t;
+	}
+
+ 	HTML_AcctExp::listTemplates( $rows, $pageNav, $option );
+}
+
+function editTemplate( $option, $name )
+{
+	global $aecConfig;
+
+	$db = &JFactory::getDBO();
+
+	$temp = new configTemplate( $db );
+	$temp->loadName( $name );
+
+	$tempsettings = $temp->template->settings();
+
+	$lists = array();
+
+	$settings = new aecSettings ( 'cfg', 'general' );
+	$settings->fullSettingsArray( $tempsettings['params'], $aecConfig->cfg, $lists ) ;
+
+	// Call HTML Class
+	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+	HTML_AcctExp::editTemplate( $option, $aecHTML, $tempsettings['tab_data'] );
+}
+
+function saveTemplate( $option, $return=0 )
+{
+	$db		= &JFactory::getDBO();
+	$user	= &JFactory::getUser();
+
+	global $aecConfig;
+
+	$app = JFactory::getApplication();
+
+	unset( $_POST['id'] );
+	unset( $_POST['task'] );
+	unset( $_POST['option'] );
+
+	$general_settings = $_POST;
+
+	$aecConfig->cfg = $general_settings;
+	$aecConfig->saveSettings();
+
+	if ( $return ) {
+		aecRedirect( 'index.php?option=' . $option . '&task=showTemplate', JText::_('AEC_CONFIG_SAVED') );
+	} else {
+		aecRedirect( 'index.php?option=' . $option . '&task=listTemplates', JText::_('AEC_CONFIG_SAVED') );
+	}
+}
+
 function listProcessors( $option )
 {
  	$db = &JFactory::getDBO();
@@ -1874,52 +1959,6 @@ function listProcessors( $option )
 
  	HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
 }
-
-function listTemplates( $option )
-{
-	$db = &JFactory::getDBO();
-
-	$app = JFactory::getApplication();
-
- 	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-
-	$list = AECToolbox::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', 'xyz', true );
-
-	foreach ( $list as $id => $name ) {
-		if ( $name == 'default' ) {
-			unset( $list[$id] );
-		}
-	}
-
- 	$total = count($list);
-
- 	if ( $limitstart > $total ) {
- 		$limitstart = 0;
- 	}
-
-	$pageNav = new bsPagination( $total, $limitstart, $limit );
-
- 	// get the subset (based on limits) of records
- 	$query = 'SELECT name'
-		 	. ' FROM #__acctexp_config_processors'
-		 	. ' GROUP BY `id`'
-		 	//. ' ORDER BY `ordering`'
-		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		 	;
-	$db->setQuery( $query );
-	$names = array_slice( $list, $limitstart, $limit );
-
-	$rows = array();
-	foreach ( $names as $name ) {
-		$t = new configTemplate( $db );
-		$t->loadName( $name );
-
-		$rows[] = $t;
-	}
-
- 	HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
- }
 
 function editProcessor( $id, $option )
 {
