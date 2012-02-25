@@ -211,7 +211,7 @@ XML;
 		$xml_step3_request .= 'Subscription Cost : ' . $request->items->total->cost['amount'] ."\n";
 
 		foreach ( $request->items->tax as $tax ) {
-			$xml_step3_request .= $tax['terms']->terms[0]->cost[0]->cost['details'] . ' : '. $tax['cost'] ."\n";
+			$xml_step3_request .= $tax['terms']->terms[0]->cost[0]->cost['details'] . ' : '. AECToolbox::correctAmount( $tax['cost'] ) ."\n";
 		}
 
 		$xml_step3_request .= 'Total : '. $request->items->grand_total->cost['amount'] ."\n";

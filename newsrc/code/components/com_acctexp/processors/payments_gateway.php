@@ -121,7 +121,7 @@ class processor_payments_gateway extends POSTprocessor
 				$tax += $itax['cost'];
 			}
 
-			$var['pg_sales_tax_amount']			= $tax;
+			$var['pg_sales_tax_amount']			= AECToolbox::correctAmount( $tax );
 
 			$var['pg_total_amount']		= $request->items->total->cost['amount'];
 		} elseif ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {

@@ -112,7 +112,7 @@ class processor_paypal extends POSTprocessor
 				$tax += $itax['cost'];
 			}
 
-			$var['tax']			= $tax;
+			$var['tax']			= AECToolbox::correctAmount( $tax );
 
 			$var['amount']		= $request->items->total->cost['amount'];
 		} elseif ( !empty( $this->settings['tax'] ) && $this->settings['tax'] > 0 ) {

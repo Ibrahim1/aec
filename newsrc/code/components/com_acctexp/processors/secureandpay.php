@@ -132,7 +132,7 @@ class processor_secureandpay extends POSTprocessor
 		$var['PaymentType']		= 'Direct';
 		//$var['Reccu_Num']		= ???;
 
-		$var['Tax']				= (int) $tax*100;
+		$var['Tax']				= (int) AECToolbox::correctAmount( $tax )*100;
 
 		$var['Signature']		= sha1( $var['NumSite'] . $var['Password'] . $var['orderID'] . $var['Amount'] . $var['Currency'] );
 

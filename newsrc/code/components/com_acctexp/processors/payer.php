@@ -149,6 +149,8 @@ class processor_payer extends POSTprocessor
 			$tax = $this->settings['tax'];
 		}
 
+		$tax = AECToolbox::correctAmount( $tax );
+
 		// Purchase list (freeform purchases)
 		$xml .= 		"<freeform_purchase>" .
 							"<line_number>"			.  htmlspecialchars(1)								. "</line_number>" .
