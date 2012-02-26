@@ -62,11 +62,6 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'editmembership':
-		if ( !empty( $userid ) && !is_array( $userid ) ) {
-			$temp = $userid;
-			$userid = array( 0 => $temp );
-		}
-
 		if ( !empty( $subscriptionid ) ) {
 			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
 		}
@@ -319,7 +314,7 @@ switch( strtolower( $task ) ) {
 		} elseif ( strpos( $return, '</a>' ) || strpos( $return, '</div>' ) ) {
 			aecCentral( $option, $return );
 		} elseif ( !empty( $return ) ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=edit&userid=' . $return, JText::_('AEC_QUICKSEARCH_THANKS') );
+			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid=' . $return, JText::_('AEC_QUICKSEARCH_THANKS') );
 		} else {
 			aecRedirect( 'index.php?option=' . $option . '&task=showcentral', JText::_('AEC_QUICKSEARCH_NOTFOUND') );
 		}
@@ -433,20 +428,20 @@ function addGroup( $type, $id, $groupid )
 {
 	$db = &JFactory::getDBO();
 
-	ItemGroupHandler::setChildren( $groupid, array( $id ), $type );
+	if ( ItemGroupHandler::setChildren( $groupid, array( $id ), $type ) ) {
+		$group = new ItemGroup( $db );
+		$group->load( $groupid );
 
-	$group = new ItemGroup( $db );
-	$group->load( $groupid );
+		$g = array();
+		$g['id']	= $group->id;
+		$g['name']	= $group->getProperty('name');
+		$g['color']	= $group->params['color'];
+		$g['icon']	= $group->params['icon'].'.png';
 
-	$g = array();
-	$g['id']	= $group->id;
-	$g['name']	= $group->getProperty('name');
-	$g['color']	= $group->params['color'];
-	$g['icon']	= $group->params['icon'].'.png';
+		$g['group']	= '<strong>' . $group->id . '</strong>';
 
-	$g['group']	= '<strong>' . $group->id . '</strong>';
-
-	HTML_AcctExp::groupRow( $type, $g );
+		HTML_AcctExp::groupRow( $type, $g );
+	}
 }
 
 function removeGroup( $type, $id, $groupid )
@@ -671,7 +666,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 			if ( !empty( $action[5] ) ) {
 				$alink = $action[5];
 			} else {
-				$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=edit&userid=' . $metaUser->userid;
+				$alink = 'index.php?option=' . $option . '&task='.$action[0].'Invoice&invoice='. $invoice->invoice_number . '&returnTask=editMembership&userid=' . $metaUser->userid;
 
 				if ( !empty( $action[4] ) ) {
 					$alink .= $action[4];
@@ -3382,15 +3377,24 @@ function editItemGroup( $id, $option )
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 	$groupids = array();
 	foreach ( $grouplist as $gid => $glisti ) {
-		if ( $id && ( $glisti[0] != $id ) ) { 
-			if ( defined( 'JPATH_MANIFESTS' ) ) {
-				$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', in_array($glisti[0], $groups) );
-			} else {
-				$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', in_array($glisti[0], $groups) );
-			}
+		$children = ItemGroupHandler::getChildren( $glisti[0], 'group' );
 
-			$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
+		$disabled = in_array( $id, $children );
+
+		if ( $id ) {
+			$self = ( $glisti[0] == $id );
+			$existing = in_array( $glisti[0], $groups );
+			
+			$disabled = ( $disabled || $self || $existing );
 		}
+
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$glist[] = JHTML::_('select.option', $glisti[0], str_replace( '&nbsp;', ' ', $glisti[1] ), 'value', 'text', $disabled );
+		} else {
+			$glist[] = JHTML::_('select.option', $glisti[0], $glisti[1], 'value', 'text', $disabled );
+		}
+
+		$groupids[$glisti[0]] = ItemGroupHandler::groupColor( $glisti[0] );
 	}
 
 	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
@@ -4503,7 +4507,7 @@ function invoices( $option )
 		$db->setQuery( $query );
 		$username = $db->loadResult();
 
-		$rows[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=edit&userid=' . $row->userid . '">';
+		$rows[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $row->userid . '">';
 
 		if ( !empty( $username ) ) {
 			$rows[$id]->username .= $username . '</a>';
@@ -4694,7 +4698,7 @@ function eventlog( $option )
 			foreach ( $row->params as $key => $value ) {
 				switch ( $key ) {
 					case 'userid':
-						$content = '<a href="index.php?option=com_acctexp&amp;task=edit&userid=' . $value . '">' . $value . '</a>';
+						$content = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $value . '">' . $value . '</a>';
 						break;
 					case 'invoice_number':
 						$content = '<a class="quicksearch" href="#">' . $value . '</a>';
@@ -4853,7 +4857,7 @@ function quicklookup( $option )
 				$JTableUser->load( $user );
 				$userlink = '<div class="lookupresult">';
 				$userlink .= '<a href="';
-				$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $JTableUser->id;
+				$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $JTableUser->id;
 				$userlink .= '">';
 				$userlink .= str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->name ) . ' (' . str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->username ) . ')';
 				$userlink .= '</a>';
