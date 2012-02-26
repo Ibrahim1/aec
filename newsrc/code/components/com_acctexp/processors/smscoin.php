@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - smscoin
  * @copyright 2007-2012 Copyright (C) smscoin.com
- * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
+ * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 
 // Dont allow direct linking

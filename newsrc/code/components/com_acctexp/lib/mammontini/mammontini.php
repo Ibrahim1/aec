@@ -4,7 +4,7 @@
  * @package Mammontini!: General purpose Payment-related functionality
  * @copyright Copyright (C) 2008 David Deutsch, All Rights Reserved
  * @author David Deutsch <skore@valanx.org>
- * @license GNU/GPL v.2 or later http://www.gnu.org/copyleft/gpl.html
+ * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  *
  *          _  _ ____ _  _ _  _ ____ __ _ ___ _ __ _ _  /
  *          |\/| |--| |\/| |\/| [__] | \|  |  | | \| | .  v1.0

@@ -4,7 +4,7 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - Ogone
  * @author Vijay Jawalapersad
- * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
+ * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 
 // Dont allow direct linking
