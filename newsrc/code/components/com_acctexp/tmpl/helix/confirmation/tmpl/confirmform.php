@@ -23,7 +23,7 @@
 	</tr>
 	<?php if ( $makegift ) { @include( $tmpl->tmpl( 'giftform' ) ); } ?>
 	<tr>
-		<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'confirmationbutton' ) ) ?></td>
+		<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'confirmationbtn' ) ) ?></td>
 	</tr>
 	<tr>
 		<td><table><?php @include( $tmpl->tmpl( 'plans.processor_details' ) ) ?></table></td>

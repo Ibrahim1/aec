@@ -10,8 +10,8 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<h2><?php echo $litem['name'] ?></h2>
-<p><?php echo $litem['desc'] ?></p>
-<div class="aec_groupbutton">
-	<?php echo Payment_HTML::planpageButton( $option, 'subscribe', '', JURI::root(true) . '/media/com_acctexp/images/site/select_button.png', array( array( 'group', $litem['id'] ) ), $userid, $passthrough ) ?>
+<h2><?php echo $litem['name']; ?></h2>
+<p><?php echo $litem['desc']; ?></p>
+<div class="aec_procbuttons">
+	<?php echo Payment_HTML::getPayButtonHTML( $litem['gw'], $litem['id'], $userid, $passthrough, $register, $group ); ?>
 </div>
