@@ -13,4 +13,6 @@
 
 $tmpl->addDefaultCSS();
 
+$tmpl->setTitle( JText::_('PAYPLANS_HEADER') );
+
 @include( $tmpl->tmpl( 'plans' ) );

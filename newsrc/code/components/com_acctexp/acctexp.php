@@ -456,7 +456,7 @@ function apiCall( $app, $key, $request )
 	header("HTTP/1.0 401 Unauthorized"); die; // die, die
 }
 
-function getView( $view )
+function getView( $view, $args=null )
 {
 	global $aecConfig;
 
@@ -494,6 +494,12 @@ $aecConfig->cfg['standard_template'] = 'helix';
 	$hphp = '/'.$view.'/html.php';
 	$tphp = '/'.$view.'/tmpl/'.$view.'.php';
 
+	if ( !empty( $args ) ) {
+		foreach ( $args as $n => $v ) {
+			$$n = $v;
+		}
+	}
+
 	if ( file_exists( $tmpl->paths['site'].$hphp ) ) {
 		include( $tmpl->paths['site'].$hphp );
 	} elseif ( file_exists( $tmpl->paths['current'].$hphp ) ) {
@@ -506,134 +512,6 @@ $aecConfig->cfg['standard_template'] = 'helix';
 		include( $tmpl->paths['current'].$tphp );
 	} elseif ( file_exists( $tmpl->paths['default'].$tphp ) ) {
 		include( $tmpl->paths['default'].$tphp );
-	}
-}
-
-class aecTemplate
-{
-	function setTitle( $title )
-	{
-		$document=& JFactory::getDocument();
-		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
-	}
-
-	function addDefaultCSS()
-	{
-		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/' . $this->template . '.css' );
-	}
-
-	function addCSS( $path )
-	{
-		$document=& JFactory::getDocument();
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $path . '" />' );
-	}
-
-	function addScriptDeclaration( $js )
-	{
-		$document=& JFactory::getDocument();
-		$document->addScriptDeclaration( $js );
-	}
-
-	function btn( $params, $value )
-	{
-		if ( isset( $params['task'] ) ) {
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp', $this->cfg->cfg['ssl_signup'] );
-		} else {
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task='.$params['task'], $this->cfg->cfg['ssl_signup'] );
-		}
-
-		if ( !isset( $params['option'] ) ) {
-			$params['option'] = 'com_acctexp';
-		}
-
-		$btn = '<form action="'.$url.'" method="post">';
-
-		foreach ( $params as $k => $v ) {
-			$btn .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
-		}
-
-		$btn .= '<input type="submit" class="button" value="'.$value.'" />';
-		$btn .= JHTML::_( 'form.token' );
-		$btn .= '</form>';
-
-		return $btn;
-	}
-
-	function lnk( $params, $value )
-	{
-		if ( is_array( $params ) ) {
-			$params[JUtility::getToken()] = '1';
-
-			$p = array();
-			foreach ( $params as $k => $v ) {
-				$p[] = $k.'='.$v;
-			}
-
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $this->cfg->cfg['ssl_signup'] );
-		} else {
-			$url = $params;
-		}
-
-		return '<a href="'.$url.'" title="'.$value.'">'.$value.'</a>';
-	}
-
-	function rw( $string )
-	{
-		return AECToolbox::rewriteEngine( $tmpl->cfg['customtext_hold'], $this->metaUser );
-	}
-
-	function custom( $setting, $original=null, $obj=null )
-	{
-		if ( empty( $obj ) ) {
-			$obj = $this->cfg;
-		}
-
-		if ( !empty( $original ) && isset( $obj[$setting.'_keeporiginal'] ) ) {
-			echo '<p>' . $obj[$original] . '</p>';
-		}
-
-		if ( !empty( $obj[$setting] ) ) {
-			echo '<p>' . $obj[$setting] . '</p>';
-		}
-	}
-
-	function tmpl( $name )
-	{
-		$t = explode( '.', $name );
-
-		if ( count($t) > 2 ) {
-			// Load from another template
-			return $this->tmplPath( $t[0], $t[1], $t[2] );
-		} elseif ( count($t) == 2 ) {
-			// Load from another view
-			return $this->tmplPath( $t[0], $t[1] );
-		} else {
-			// Load within view
-			return $this->tmplPath( $t[0] );
-		}
-	}
-
-	function tmplPath( $subview, $view=null, $template=null )
-	{
-		if ( empty( $view ) ) {
-			$view = $this->view;
-		}
-
-		if ( empty( $template ) ) {
-			$current = $this->paths['current'];
-		} else {
-			$current = $this->paths['base'].'/'.$this->template;
-		}
-
-		$t = '/'.$view.'/tmpl/'.$subview.'.php';
-
-		if ( file_exists( $this->paths['site'].$t ) ) {
-			return $this->paths['site'].$t;
-		} elseif ( file_exists( $current.$t ) ) {
-			return $current.$t;
-		} elseif ( file_exists( $this->paths['default'].$t ) ) {
-			return $this->paths['default'].$t;
-		}
 	}
 }
 

@@ -11,23 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-// Always rewrite to session userid
-if ( !empty( $user->id ) ) {
-	$userid = $user->id;
-}
-
-$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
-
-// Only allow a user to access existing and own invoices
-if ( $invoiceid ) {
-	$iFactory = new InvoiceFactory( $userid, null, null, $processor );
-	$iFactory->touchInvoice( $option, $invoice_number );
-	$iFactory->internalcheckout( $option );
-} else {
-	aecNotAuth();
-	return;
-}
-
 $makegift = false;
 
 if ( !empty( $tmpl->cfg['checkout_as_gift'] ) ) {
@@ -41,5 +24,11 @@ if ( !empty( $tmpl->cfg['checkout_as_gift'] ) ) {
 }
 
 $tmpl->addDefaultCSS();
+
+$tmpl->setTitle( $InvoiceFactory->checkout['checkout_title'] );
+
+if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
+	$tmpl->addScript( JURI::root(true) . '/media/com_acctexp/js/ccvalidate.js' );
+}
 
 @include( $tmpl->tmpl( 'checkout' ) );

@@ -576,13 +576,6 @@ class HTML_AcctExp
 		<table class="aecadminform">
 			<tr>
 				<td>
-					<div class="aec_userinfobox_sub">
-					<?php if ( $metaUser->hasSubscription ) { ?>
-						<p><a href="index.php?"><?php echo JText::_('AEC_USER_QUICKFIRE_GO'); ?></a></p>
-					<?php } else { ?>
-						<p><?php echo JText::_('AEC_USER_QUICKFIRE_UNAVAILABLE'); ?></p>
-					<?php } ?>
-					</div>
 					<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
 						<div class="aec_userinfobox_sub">
 						<?php if ( !empty( $mi['profile'] ) ) { ?>

@@ -8510,6 +8510,141 @@ class aecTempToken extends serialParamDBTable
 		return $this->storeload();
 	}
 }
+
+class aecTemplate
+{
+	function setTitle( $title )
+	{
+		$document=& JFactory::getDocument();
+		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
+	}
+
+	function addDefaultCSS()
+	{
+		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/' . $this->template . '.css' );
+	}
+
+	function addCSS( $path )
+	{
+		$document=& JFactory::getDocument();
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $path . '" />' );
+	}
+
+	function addScriptDeclaration( $js )
+	{
+		$document=& JFactory::getDocument();
+		$document->addScriptDeclaration( $js );
+	}
+
+	function addScript( $js )
+	{
+		$document=& JFactory::getDocument();
+		$document->addScript( $js );
+	}
+
+	function btn( $params, $value )
+	{
+		if ( isset( $params['task'] ) ) {
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp', $this->cfg->cfg['ssl_signup'] );
+		} else {
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task='.$params['task'], $this->cfg->cfg['ssl_signup'] );
+		}
+
+		if ( !isset( $params['option'] ) ) {
+			$params['option'] = 'com_acctexp';
+		}
+
+		$btn = '<form action="'.$url.'" method="post">';
+
+		foreach ( $params as $k => $v ) {
+			$btn .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
+		}
+
+		$btn .= '<input type="submit" class="button" value="'.$value.'" />';
+		$btn .= JHTML::_( 'form.token' );
+		$btn .= '</form>';
+
+		return $btn;
+	}
+
+	function lnk( $params, $value )
+	{
+		if ( is_array( $params ) ) {
+			$params[JUtility::getToken()] = '1';
+
+			$p = array();
+			foreach ( $params as $k => $v ) {
+				$p[] = $k.'='.$v;
+			}
+
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $this->cfg->cfg['ssl_signup'] );
+		} else {
+			$url = $params;
+		}
+
+		return '<a href="'.$url.'" title="'.$value.'">'.$value.'</a>';
+	}
+
+	function rw( $string )
+	{
+		return AECToolbox::rewriteEngine( $tmpl->cfg['customtext_hold'], $this->metaUser );
+	}
+
+	function custom( $setting, $original=null, $obj=null )
+	{
+		if ( empty( $obj ) ) {
+			$obj = $this->cfg;
+		}
+
+		if ( !empty( $original ) && isset( $obj[$setting.'_keeporiginal'] ) ) {
+			echo '<p>' . $obj[$original] . '</p>';
+		}
+
+		if ( !empty( $obj[$setting] ) ) {
+			echo '<p>' . $obj[$setting] . '</p>';
+		}
+	}
+
+	function tmpl( $name )
+	{
+		$t = explode( '.', $name );
+
+		if ( count($t) > 2 ) {
+			// Load from another template
+			return $this->tmplPath( $t[0], $t[1], $t[2] );
+		} elseif ( count($t) == 2 ) {
+			// Load from another view
+			return $this->tmplPath( $t[0], $t[1] );
+		} else {
+			// Load within view
+			return $this->tmplPath( $t[0] );
+		}
+	}
+
+	function tmplPath( $subview, $view=null, $template=null )
+	{
+		if ( empty( $view ) ) {
+			$view = $this->view;
+		}
+
+		if ( empty( $template ) ) {
+			$current = $this->paths['current'];
+		} else {
+			$current = $this->paths['base'].'/'.$this->template;
+		}
+
+		$t = '/'.$view.'/tmpl/'.$subview.'.php';
+
+		if ( file_exists( $this->paths['site'].$t ) ) {
+			return $this->paths['site'].$t;
+		} elseif ( file_exists( $current.$t ) ) {
+			return $current.$t;
+		} elseif ( file_exists( $this->paths['default'].$t ) ) {
+			return $this->paths['default'].$t;
+		}
+	}
+}
+
 class InvoiceFactory
 {
 	/** @var int */
@@ -8525,11 +8660,6 @@ class InvoiceFactory
 
 	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null, $alert=true, $forceinternal=false )
 	{
-		// If we have some kind of internal call, we need to load the HTML class
-		if ( !class_exists( 'Payment_HTML' ) ) {
-			require_once( JApplicationHelper::getPath( 'front_html', 'com_acctexp' ) );
-		}
-
 		$this->initUser( $userid, $alert, $forceinternal );
 
 		// Init variables
@@ -9194,15 +9324,7 @@ class InvoiceFactory
 
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-		$document=& JFactory::getDocument();
-
-		if ( $hasform ) {
-			$document->setTitle( html_entity_decode( JText::_('EXCEPTION_TITLE'), ENT_COMPAT, 'UTF-8' ) );
-		} else {
-			$document->setTitle( html_entity_decode( JText::_('EXCEPTION_TITLE_NOFORM'), ENT_COMPAT, 'UTF-8' ) );
-		}
-
-		Payment_HTML::exceptionForm( $option, $this, $aecHTML, $hasform );
+		getView( 'exception', array( 'InvoiceFactory' => $this, 'aecHTML' => $aecHTML, 'hasform' => $hasform ) );
 	}
 
 	function getCart()
@@ -9736,11 +9858,7 @@ class InvoiceFactory
 
 	function promptpassword( $option, $wrong=false )
 	{
-		$document=& JFactory::getDocument();
-
-		$document->setTitle( html_entity_decode( JText::_('AEC_PROMPT_PASSWORD'), ENT_COMPAT, 'UTF-8' ) );
-
-		Payment_HTML::promptpassword( $option, $this->getPassthrough(), $wrong );
+		getView( 'exception', array( 'passhtrough' => $this->getPassthrough(), 'wrong' => $wrong ) );
 	}
 
 	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
@@ -9860,8 +9978,8 @@ class InvoiceFactory
 				unset( $list['group'] );
 			}
 
-			// Of to the Subscription Plan Selection Page!
-			Payment_HTML::selectSubscriptionPlanForm( $option, $this->userid, $list, $this->getPassthrough(), $register, $cart, $selected, $group );
+			getView( 'plans', array(	'userid' => $this->userid, 'list' => $list, 'passthrough' => $this->getPassthrough(), 'register' => $register,
+										'cart' => $cart, 'selected' => $selected, 'group' => $group ) );
 		}
 	}
 
@@ -10264,12 +10382,6 @@ class InvoiceFactory
 		}
 
 		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
-			$document=& JFactory::getDocument();
-
-			$document->setTitle( html_entity_decode( JText::_('CONFIRM_TITLE'), ENT_COMPAT, 'UTF-8' ) );
-
-			$pt = $this->getPassthrough();
-
 			$custom = trim( $aecConfig->cfg['custom_confirm_userdetails'] );
 
 			if ( empty( $custom ) || ( $custom == '<p><br mce_bogus="1"></p>' )|| ( $custom == '<br mce_bogus="1">' ) ) {
@@ -10285,7 +10397,7 @@ class InvoiceFactory
 				$this->userdetails = AECToolbox::rewriteEngineRQ( $custom, $this );
 			}
 
-			Payment_HTML::confirmForm( $option, $this, $this->metaUser->cmsUser, $this->getPassthrough() );
+			getView( 'confirmation', array( 'InvoiceFactory' => $this, 'passthrough' => $this->getPassthrough() ) );
 		} else {
 			$this->getPassthrough();
 
@@ -10309,7 +10421,7 @@ class InvoiceFactory
 			$this->touchInvoice( $option );
 		}
 
-		Payment_HTML::cart( $option, $this );
+		getView( 'cart', array( 'InvoiceFactory' => $this ) );
 	}
 
 	function confirmcart( $option, $coupon=null, $testmi=false )
@@ -10623,15 +10735,7 @@ class InvoiceFactory
 
 		$this->triggerMIs( '_checkout_form', $exchange, $int_var, $silent );
 
-		$document=& JFactory::getDocument();
-
-		$document->setTitle( html_entity_decode( $this->checkout['checkout_title'], ENT_COMPAT, 'UTF-8' ) );
-
-		if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
-			JHTML::script( 'ccvalidate.js', $path = 'media/com_acctexp/js/' );
-		}
-
-		Payment_HTML::checkoutForm( $option, $int_var['var'], $int_var['params'], $this );
+		getView( 'checkout', array( 'var' => $int_var['var'], 'params' => $int_var['params'], 'InvoiceFactory' => $this ) );
 	}
 
 	function getObjUsage()
@@ -10866,7 +10970,7 @@ class InvoiceFactory
 			$response = $this->invoice->processorResponse( $this, $response, '', true );
 
 			if ( isset( $response['cancel'] ) ) {
-				HTML_Results::cancel( 'com_acctexp' );
+				getView( 'cancel' );
 			}
 		}
 	}
@@ -10903,7 +11007,7 @@ class InvoiceFactory
 
 		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
 
-		Payment_HTML::printInvoice( $option, $data, $standalone );
+		getView( 'invoice', array( 'data' => $data, 'standalone' => $standalone ) );
 	}
 
 	function thanks( $option, $renew=false, $free=false )
@@ -10935,7 +11039,7 @@ class InvoiceFactory
 
 		$document->setTitle( html_entity_decode( JText::_('CHECKOUT_ERROR_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
-		Payment_HTML::error( $option, $objUser, $invoice, $error );
+		getView( 'error', array( 'objUser' => $objUser, 'invoice' => $invoice, 'error' => $error ) );
 	}
 
 	function reCaptchaCheck()
