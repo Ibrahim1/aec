@@ -195,7 +195,7 @@ function addGroup(type, callerid) {
 
 				jQuery('select#add_group option[value=\''+group+'\']').attr('disabled','disabled');
 
-				jQuery('.aec-grouplist tbody tr:last').after(data);
+				jQuery('.aec-grouplist tbody').append(data);
 			}
 
 			jQuery('#'+callerid).removeAttr('disabled');

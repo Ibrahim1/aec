@@ -3377,7 +3377,7 @@ function editItemGroup( $id, $option )
 	$glist[] = JHTML::_('select.option', 0, '- - - - - -' );
 	$groupids = array();
 	foreach ( $grouplist as $gid => $glisti ) {
-		$children = ItemGroupHandler::getChildren( $glisti[0], 'group' );
+		$children = ItemGroupHandler::getParents( $glisti[0], 'group' );
 
 		$disabled = in_array( $id, $children );
 

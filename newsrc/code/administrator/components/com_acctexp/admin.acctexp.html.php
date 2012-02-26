@@ -1674,7 +1674,7 @@ class HTML_AcctExp
 											<th>Name</td>
 											<th width="1%"></td>
 										</tr>
-									<thead>
+									</thead>
 									<tbody>
 									<?php if ( !empty( $aecHTML->customparams->groups ) ) {
 										foreach ( $aecHTML->customparams->groups as $id => $group ) {
@@ -1687,7 +1687,7 @@ class HTML_AcctExp
 											<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
 											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus', true ); ?></a></td>
 										</tr>
-									<tfoot>
+									</tfoot>
 								</table>
 							</div>
 						</div>
@@ -2048,7 +2048,7 @@ class HTML_AcctExp
 											<th>Name</td>
 											<th width="1%"></td>
 										</tr>
-									<thead>
+									</thead>
 									<tbody>
 									<?php if ( !empty( $aecHTML->customparams->groups ) ) {
 										foreach ( $aecHTML->customparams->groups as $id => $group ) {
@@ -2061,7 +2061,7 @@ class HTML_AcctExp
 											<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
 											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('group','addgroup-btn')"><?php echo aecHTML::Icon( 'plus', true ); ?></a></td>
 										</tr>
-									<tfoot>
+									</tfoot>
 								</table>
 								<?php } else { ?>
 									<p>This is the Root Group.</p>
