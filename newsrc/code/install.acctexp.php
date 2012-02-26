@@ -60,6 +60,7 @@ function com_install()
 	$lang =& JFactory::getLanguage();
 
 	foreach ( $langlist as $array ) {
+		$lang->load( $array[0] );
 		$lang->load( $array[0], $array[1], 'en-GB', true );
 		$lang->load( $array[0], $array[1], $lang->getDefault(), true );
 		$lang->load( $array[0], $array[1], null, true );
@@ -324,6 +325,12 @@ function com_install()
 		}
 	}
 
+	$v = new JVersion();
+
+	if ( $v->isCompatible('2.5') ) {
+		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root() ?>media/com_acctexp/css/admin.css?rev=<?php echo _AEC_REVISION ?>" /><?php
+	}
+
 	?>
 	<style type="text/css">
 		dl#system-message {
@@ -332,7 +339,11 @@ function com_install()
 		table.adminform tr:first-child {
 			display: none;
 		}
-		</style>
+		table.adminform {
+			border: none;
+			background: none;
+		}
+	</style>
 	<div style="width: 1024px; margin: 12px auto;">
 	<div class="installmain">
 		<div style="width: 100%; height: 290px;"></div>
@@ -352,7 +363,7 @@ function com_install()
 			echo '</ul>' . "\n"
 			. '</div>' . "\n";
 		} ?>
-		<div class="<?php echo $pckgs ? 'packages_installed' : 'packages_none'; ?>">
+		<div class="<?php echo $pckgs ? 'packages-installed' : 'packages-none'; ?>">
 			<p><?php echo $pckgs ? JText::_('AEC_INST_PACKAGES_YES') : JText::_('AEC_INST_PACKAGES_NO'); ?></p>
 		</div>
 		<div class="install-golink">

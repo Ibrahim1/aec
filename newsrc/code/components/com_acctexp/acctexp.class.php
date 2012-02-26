@@ -34,12 +34,13 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4483' );
+define( '_AEC_REVISION', '4545' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 }
 
+// Load teh moniez
 include_once( JPATH_SITE . '/components/com_acctexp/lib/mammontini/mammontini.php' );
 
 function aecDebug( $text, $level = 128 )
@@ -4351,6 +4352,11 @@ class processor extends serialParamDBTable
 		return array( 'info', 'settings', 'params' );
 	}
 
+	function getLogoFilename()
+	{
+		return $this->name.'.png';
+	}
+
 	function loadName( $name )
 	{
 		$db = &JFactory::getDBO();
@@ -6566,6 +6572,7 @@ class ItemGroupHandler
 	{
 		$db = &JFactory::getDBO();
 
+		$success = false;
 		foreach ( $children as $child_id ) {
 			// Check bogus assignments
 			if ( $type == 'group' ) {
@@ -6586,10 +6593,12 @@ class ItemGroupHandler
 
 			if ( !$ig->createNew( $type, $child_id, $group_id ) ) {
 				return false;
+			} else {
+				$success = true;
 			}
 		}
 
-		return true;
+		return $success;
 	}
 
 	function getParents( $item_id, $type='item' )
