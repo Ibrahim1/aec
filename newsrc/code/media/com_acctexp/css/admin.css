@@ -1,5 +1,4 @@
-/* == AccountExpiration Backend Style by David 'skOre' Deutsch == */
-/* 2007.07.01 */
+/* == Valanx.org AEC Membership Management - admin.css == */
 
 #aec_wrap {
 overflow: hidden;
@@ -309,9 +308,6 @@ color: #fff;
     opacity: 0.35;
 }
 
-[class^="icon-"] {
-}
-
 a.btn span {
 display: none;
 }
@@ -585,8 +581,7 @@ width: auto;
 font-weight: bold;
 text-align: left !important;
 line-height: 20px;
-paddin
-g-top: 0;
+padding-top: 0;
 }
 
 .form-stacked .control-group {
@@ -1287,9 +1282,6 @@ background-position: 0 0;
 background-repeat: no-repeat;
 *margin-right: .3em;
 }
-[class^="aec-symbol-"]:last-child {
-*margin-left: 0;
-}
 
 .aec-symbol-active {
 background-position: 0 0;
@@ -1659,42 +1651,49 @@ border: none;
 margin: 1px;
 }
 
-// Install
+/* Install */
 
-div.packages_installed {
-border: 3px solid #4c7000;
-background: url("../images/admin/icons/aec_symbol_importance_1.png") no-repeat scroll 28px center #7caa00;
-padding: 0 10px 0 120px;
-color: #fff;
-margin: 16px;
--webkit-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
--moz-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
--webkit-border-radius: 10px;
--moz-border-radius: 10px;
-border-radius: 10px;
-}
-
-div.packages_none {
-border: 3px solid #706100;
-background: url("../images/admin/icons/aec_symbol_importance_2.png") no-repeat scroll 28px center #aa9900;
-padding: 0 10px 0 120px;
-color: #fff;
-margin: 16px;
--webkit-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
--moz-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
--webkit-border-radius: 10px;
--moz-border-radius: 10px;
-border-radius: 10px;
-}
-
-div.packages_installed p, div.packages_none p {
+div.doesnotexist {
 font-size: 18px;
 }
 
-div.packages_installed br, div.packages_none br {
+div.packages-installed p,
+div.packages-none p {
+font-size: 18px;
+margin: 0;
+}
+
+div.packages-installed br,
+div.packages-none br {
 margin-bottom: 20px;
+}
+
+div.packages-none {
+border: 3px solid #706100;
+background: #aa9900;
+padding: 24px;
+color: #fff;
+margin: 16px 16px 24px;
+-webkit-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
+-moz-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
+box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+}
+
+div.packages-installed {
+border: 3px solid #4c7000;
+background: #7caa00;
+padding: 24px;
+color: #fff;
+margin: 16px 16px 24px;
+-webkit-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
+-moz-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
+box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
 }
 
 div.installmain {
@@ -1720,29 +1719,52 @@ margin-bottom: 12px;
 
 div.install-golink a,
 div.install-golink a:link {
-color: #fff !important;
-background: #333;
--webkit-border-radius: 10px;
--moz-border-radius: 10px;
-border-radius: 10px;
 padding: 12px;
+color: #333;
+text-align: center;
+text-shadow: 0 2px 1px rgba(255, 255, 255, 0.75);
+background-color: #fafafa;
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(25%, #ffffff), to(#e6e6e6));
+background-image: -webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);
+background-image: -ms-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+background-image: -o-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+background-image: linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
+background-repeat: no-repeat;
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+border: 1px solid #ccc;
+border-bottom-color: #bbb;
+-webkit-border-radius: 12px;
+-moz-border-radius: 12px;
+border-radius: 12px;
+-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.05);
+-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.05);
+box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.5);
+cursor: pointer;
 }
 
 div.install-golink a:hover {
-background: #555;
+color: #333333;
+background-color: #e6e6e6;
+background-position: 0 -15px;
+-webkit-transition: background-position 0.1s linear;
+-moz-transition: background-position 0.1s linear;
+-ms-transition: background-position 0.1s linear;
+-o-transition: background-position 0.1s linear;
+transition: background-position 0.1s linear;
 }
 
 .installnote {
-	width: 92%;
-	margin: 6px 24px;
-	color: #ddd;
+width: 92%;
+margin: 6px 24px;
+color: #ddd;
 }
 .installnote h1 {
-	color: #ddd;
-	padding: 0;
-	font-size: 16px;
+color: #ddd;
+padding: 0;
+font-size: 16px;
 }
 .installnote p {
-	color: #ddd;
-	padding: 0 12px;
+color: #ddd;
+padding: 0 12px;
 }

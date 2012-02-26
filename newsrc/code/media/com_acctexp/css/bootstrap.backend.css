@@ -1376,7 +1376,7 @@ button.btn.small, input[type="submit"].btn.small {
   width: 14px;
   height: 14px;
   vertical-align: text-top;
-  background-image: url(../images/admin/icons/glyphicons-halflings.png);
+  background-image: url(../images/site/glyphicons-halflings.png);
   background-position: 14px 14px;
   background-repeat: no-repeat;
   *margin-right: .3em;
@@ -1385,7 +1385,7 @@ button.btn.small, input[type="submit"].btn.small {
   *margin-left: 0;
 }
 .bsicon-white {
-  background-image: url(../images/admin/icons/glyphicons-halflings-white.png);
+  background-image: url(../images/site/glyphicons-halflings-white.png);
 }
 .bsicon-glass {
   background-position: 0      0;
