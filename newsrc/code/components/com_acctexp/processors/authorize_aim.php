@@ -29,6 +29,11 @@ class processor_authorize_aim extends XMLprocessor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return 'authorize.png';
+	}
+
 	function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );

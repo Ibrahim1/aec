@@ -15,11 +15,19 @@
 		<tr>
 			<td>
 				<div class="aec_ilist_<?php echo $litem['type'] ?> aec_ilist_<?php echo $litem['type'] . '_' . $litem['id'] ?>">
-					<?php if ( $litem['type'] == 'group' ) {
-						@include( $tmpl->tmpl( 'groupbtn' ) );
-					} else {
-						@include( $tmpl->tmpl( 'planbtn' ) );
-					} ?>
+					<h2><?php echo $litem['name'] ?></h2>
+					<p><?php echo $litem['desc'] ?></p>
+					<?php if ( $litem['type'] == 'group' ) { ?>
+						<div class="aec_groupbutton">
+							<?php @include( $tmpl->tmpl( 'groupbtn' ) ); ?>
+						</div>
+					<?php } else { ?>
+						<div class="aec_procbuttons">
+							<?php foreach ( $litem['gw'] as $gwitem ) { ?>
+								<?php @include( $tmpl->tmpl( 'planbtn' ) ); ?>
+							<?php } ?>
+						</div>
+					<?php } ?>
 				</div>
 			</td>
 		</tr>

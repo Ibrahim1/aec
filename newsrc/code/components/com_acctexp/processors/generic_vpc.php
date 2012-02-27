@@ -1,4 +1,15 @@
 <?php
+/**
+ * @version $Id: generic_vpc.php
+ * @package AEC - Account Control Expiration - Membership Manager
+ * @subpackage Processors - Generic VPC
+ * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
+ * @copyright 2006-2012 Copyright (C) David Deutsch
+ * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
+ */
+
+// Dont allow direct linking
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 class processor_generic_vpc extends URLprocessor
 {
@@ -17,6 +28,12 @@ class processor_generic_vpc extends URLprocessor
 
 		return $info;
 	}
+
+	function getLogoFilename()
+	{
+		return '';
+	}
+
 	function settings()
 	{
 		$settings = array();
@@ -35,6 +52,7 @@ class processor_generic_vpc extends URLprocessor
 
 		return $settings;
 	}
+
 	function backend_settings()
 	{
 		$settings = array();

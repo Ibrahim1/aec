@@ -3807,6 +3807,11 @@ class PaymentProcessor
 		$this->exchangeSettings( $plan_params );
 	}
 
+	function getLogoPath()
+	{
+		return JURI::root(true) . '/media/com_acctexp/images/site/' . $this->processor->getLogoFilename();
+	}
+
 	function is_recurring( $choice=null, $test=false )
 	{
 		// Warning: Here be Voodoo
@@ -8530,6 +8535,12 @@ class aecTemplate
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $path . '" />' );
 	}
 
+	function addCSSDeclaration( $css )
+	{
+		$document=& JFactory::getDocument();
+		$document->addStyleDeclaration( $css );
+	}
+
 	function addScriptDeclaration( $js )
 	{
 		$document=& JFactory::getDocument();
@@ -8542,16 +8553,28 @@ class aecTemplate
 		$document->addScript( $js );
 	}
 
-	function btn( $params, $value )
+	function btn( $params, $value, $class='btn' )
 	{
-		if ( isset( $params['task'] ) ) {
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp', $this->cfg->cfg['ssl_signup'] );
-		} else {
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task='.$params['task'], $this->cfg->cfg['ssl_signup'] );
+		if ( isset( $params['class'] ) ) {
+			unset( $params['class'] );
 		}
 
-		if ( !isset( $params['option'] ) ) {
+		if ( isset( $params['content'] ) ) {
+			unset( $params['content'] );
+		}
+
+		if ( empty( $params['task'] ) ) {
+			unset( $params['task'] );
+		}
+
+		if ( empty( $params['option'] ) ) {
 			$params['option'] = 'com_acctexp';
+		}
+
+		if ( !empty( $params['task'] ) ) {
+			$url = AECToolbox::deadsureURL( 'index.php?option='.$params['option'].'&task='.$params['task'], $this->cfg->cfg['ssl_signup'] );
+		} else {
+			$url = AECToolbox::deadsureURL( 'index.php?option='.$params['option'], $this->cfg->cfg['ssl_signup'] );
 		}
 
 		$btn = '<form action="'.$url.'" method="post">';
@@ -8560,7 +8583,8 @@ class aecTemplate
 			$btn .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
 		}
 
-		$btn .= '<input type="submit" class="button" value="'.$value.'" />';
+		$btn .= '<button type="submit" class="'.$class.'">'.$value.'</button>';
+
 		$btn .= JHTML::_( 'form.token' );
 		$btn .= '</form>';
 

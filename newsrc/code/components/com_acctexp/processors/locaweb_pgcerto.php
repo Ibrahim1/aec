@@ -27,6 +27,11 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return '';
+	}
+
 	function settings()
 	{
 		$settings = array();

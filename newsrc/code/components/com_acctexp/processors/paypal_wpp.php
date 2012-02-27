@@ -31,6 +31,11 @@ class processor_paypal_wpp extends XMLprocessor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return 'paypal.png';
+	}
+
 	function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );

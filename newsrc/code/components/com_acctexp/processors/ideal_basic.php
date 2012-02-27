@@ -29,6 +29,11 @@ class processor_ideal_basic extends POSTprocessor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return 'ideal.png';
+	}
+
 	function settings()
 	{
 		$settings = array();

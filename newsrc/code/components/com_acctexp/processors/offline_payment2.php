@@ -28,6 +28,11 @@ class processor_offline_payment2 extends processor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return '';
+	}
+
 	function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );

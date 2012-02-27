@@ -28,6 +28,11 @@ class processor_ideal_advanced extends XMLprocessor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return 'ideal.png';
+	}
+
 	function settings()
 	{
 		$settings = array();

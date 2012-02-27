@@ -29,6 +29,11 @@ class processor_paypal_payflow_link extends POSTprocessor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return 'paypal.png';
+	}
+
 	function settings()
 	{
 		$settings = array();

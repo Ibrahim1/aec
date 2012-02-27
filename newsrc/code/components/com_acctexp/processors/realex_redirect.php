@@ -28,6 +28,11 @@ class processor_realex_redirect extends POSTprocessor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return 'realex.png';
+	}
+
 	function settings()
 	{
 		$settings = array();
