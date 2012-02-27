@@ -32,7 +32,7 @@ foreach ( $list as $li => $lv ) {
 			$task		= 'addtocart';
 			$urlbutton	= $imgroot . 'add_to_cart_button.png';
 
-			$btnarray['usage'] = $li;
+			$btnarray['usage'] = $lv['id'];
 
 			if ( $aecConfig->cfg['additem_stayonpage'] ) {
 				$btnarray['returngroup'] = $group;
@@ -69,6 +69,16 @@ foreach ( $list as $li => $lv ) {
 			} elseif( is_object($pp->processor) ) {
 				if ( $pp->processor->getLogoFilename() == '' ) {
 					$btnarray['content'] = '<span class="aec-btn-tallcontent">'.$pp->info['longname'].'</span>';
+				} else {
+					if ( !in_array($pp->processor_name, $csslist) ) {
+						$css = '.aec-btn-processor-' . $pp->processor_name . ' {
+							background-image: url(' . $pp->getLogoPath() .  ') !important;
+						}';
+
+						$tmpl->addCSSDeclaration( $css );
+
+						$csslist[] = $pp->processor_name;
+					}
 				}
 			}
 
@@ -97,19 +107,7 @@ foreach ( $list as $li => $lv ) {
 
 			$btnarray['processor'] = $pp->processor_name;
 
-			$btnarray['usage'] = $li;
-
-			if ( get_class( $pp ) == 'PaymentProcessor' ) {
-				if ( !in_array($pp->processor_name, $csslist) ) {
-					$css = '.aec-btn-processor-' . $pp->processor_name . ' {
-						background-image: url(' . $pp->getLogoPath() .  ') !important;
-					}';
-
-					$tmpl->addCSSDeclaration( $css );
-				
-					$csslist[] = $pp->processor_name;
-				}
-			}
+			$btnarray['usage'] = $lv['id'];
 		}
 
 		$btnarray['userid'] = ( $userid ? $userid : 0 );
