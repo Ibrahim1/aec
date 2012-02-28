@@ -11074,9 +11074,9 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $this->plan ) ) {
-			aecThanks( $option, $renew, $free, $this->plan );
+			getView( 'thanks', array( 'renew' => $renew, 'free' => $free, 'plan' => $this->plan ) );
 		} else {
-			aecThanks( $option, $renew, $free );
+			getView( 'thanks', array( 'renew' => $renew, 'free' => $free ) );
 		}
 	}
 

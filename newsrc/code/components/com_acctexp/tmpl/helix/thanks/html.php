@@ -20,11 +20,7 @@ if ( !empty( $plan ) ) {
 		} elseif ( $tmpl->cfg['customthanks'] ) {
 			aecRedirect( $tmpl->cfg['customthanks'] );
 		}
-	} else {
-		return aecSimpleThanks( $option, $renew, $free );
 	}
-} else {
-	return aecSimpleThanks( $option, $renew, $free );
 }
 
 if ( $renew ) {
