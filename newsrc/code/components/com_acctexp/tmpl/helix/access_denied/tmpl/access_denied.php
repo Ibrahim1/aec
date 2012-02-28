@@ -16,11 +16,11 @@
 	<p>
 		<?php if ( $loggedin ) {
 			echo JText::_('NOT_ALLOWED_FIRSTPAR_LOGGED')
-				. '&nsbp;'
+				. '&nbsp;'
 				. $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED') );
 		} else {
 			echo JText::_('NOT_ALLOWED_FIRSTPAR')
-				. '&nsbp;'
+				. '&nbsp;'
 				. $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK') );
 		} ?>
 	</p>

@@ -12,7 +12,7 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <tr>
 	<td class="cc_gateway">
-		<p align="center"><img src="<?php echo JURI::root(true) . '/media/' . $option . '/images/site/gwlogo_' . $processor->processor_name . '.png" alt="' . $processor->processor_name . '" title="' . $processorObj->processor_name ?>" /></p>
+		<p align="center"><img src="<?php echo JURI::root(true) . $processor->getLogoPath() . '" alt="' . $processor->info['longname'] . '" title="' . $processor->info['longname'] ?>" /></p>
 	</td>
 	<td class="cc_icons">
 		<p><?php if ( isset( $processor->info['description'] ) ) { echo $processor->info['description']; } ?></p>
@@ -20,7 +20,7 @@
 </tr>
 <?php if ( $tmpl->cfg['displayccinfo'] && !empty( $processor->info['cc_list'] ) ) { ?>
 	<tr>
-		<td class="cc_gateway"></td>
+		<td></td>
 		<td class="cc_icons">
 			<?php
 			if ( isset( $processor->settings['cc_icons'] ) ) {
@@ -29,7 +29,7 @@
 				$cc_list = $processor->info['cc_icons'];
 			}
 
-			@include( $tmpl->tmpl( 'cc_icons' ) );
+			@include( $tmpl->tmpl( 'plans.cc_icons' ) );
 			?>
 		</td>
 	</tr>

@@ -11,35 +11,35 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <?php
-$gwnames = PaymentProcessorHandler::getInstalledNameList( true );
+$processors = array();
+if ( !empty($tmpl->cfg['gwlist']) ) {
+	$gwnames = PaymentProcessorHandler::getInstalledNameList( true );
 
-if ( count( $gwnames ) && $gwnames[0] && !empty($tmpl->cfg['gwlist']) ) {
-	$processors = array();
-	foreach ( $gwnames as $procname ) {
-		if ( !in_array( $procname, $tmpl->cfg['gwlist'] ) ) {
-			continue;
-		}
+	if ( !empty( $gwnames ) ) {
+		foreach ( $gwnames as $procname ) {
+			if ( !in_array( $procname, $tmpl->cfg['gwlist'] ) ) {
+				continue;
+			}
 
-		$processor = trim( $procname );
-		$processors[$processor] = new PaymentProcessor();
-		if ( $processors[$processor]->loadName( $processor ) ) {
-			$processors[$processor]->init();
-			$processors[$processor]->getInfo();
-			$processors[$processor]->getSettings();
-		} else {
-			unset( $processors[$processor] );
+			$processor = trim( $procname );
+			$processors[$processor] = new PaymentProcessor();
+			if ( $processors[$processor]->loadName( $processor ) ) {
+				$processors[$processor]->init();
+				$processors[$processor]->getInfo();
+				$processors[$processor]->getSettings();
+			} else {
+				unset( $processors[$processor] );
+			}
 		}
 	}
-} else {
-	$processors = false;
 }
 
-if ( !empty( $processors ) && !empty( $tmpl->cfg['gwlist'] ) ) { ?>
+if ( !empty( $processors ) ) { ?>
 	<p>&nbsp;</p>
 	<p><?php echo JText::_('NOT_ALLOWED_SECONDPAR') ?></p>
 	<table id="cc_list">
 		<?php foreach ( $processors as $processor ) {
-			@include( $tmpl->tmpl( 'processor_details' ) );
+			@include( $tmpl->tmpl( 'plans.processor_details' ) );
 		} ?>
 	</table>
 <?php } ?>

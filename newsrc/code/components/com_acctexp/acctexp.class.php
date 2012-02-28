@@ -8658,10 +8658,10 @@ class aecTemplate
 
 		if ( count($t) > 2 ) {
 			// Load from another template
-			return $this->tmplPath( $t[0], $t[1], $t[2] );
+			return $this->tmplPath( $t[1], $t[0], $t[2] );
 		} elseif ( count($t) == 2 ) {
 			// Load from another view
-			return $this->tmplPath( $t[0], $t[1] );
+			return $this->tmplPath( $t[1], $t[0] );
 		} else {
 			// Load within view
 			return $this->tmplPath( $t[0] );
