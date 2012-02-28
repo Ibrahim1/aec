@@ -308,7 +308,11 @@ aecDebug($iatsReturn);
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
 		if ( empty( $ppParams['customer_id'] ) ) {
-			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
+			getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
+										'metaUser' => $request->metaUser,
+										'invoice' => $request->invoice,
+										'suppressactions' => true
+									) );
 		}
 
 		$var = array();
@@ -341,7 +345,11 @@ aecDebug($iatsReturn);
 
 			return $return;
 		} else {
-			Payment_HTML::error( 'com_acctexp', $request->metaUser->cmsUser, $request->invoice, "An error occured while cancelling your subscription. Please contact the system administrator!", true );
+			getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
+										'metaUser' => $request->metaUser,
+										'invoice' => $request->invoice,
+										'suppressactions' => true
+									) );
 		}
 	}
 

@@ -263,15 +263,11 @@ if ( !empty( $task ) ) {
 			$iFactory->thanks( $option, $renew, $free );
 			break;
 
-		case 'cancel':
-			cancelPayment( $option );
-			break;
-
 		case 'subscriptiondetails':
 			$sub		= aecGetParam( 'sub', 'overview', true, array( 'word', 'string' ) );
 			$page		= aecGetParam( 'page', '0', true, array( 'word', 'int' ) );
 
-			subscriptionDetails( $option, $sub, $page );
+			getView( 'subscriptiondetails', array( 'sub' => $sub, 'page' => $page ) );
 			break;
 
 		case 'renewsubscription':
@@ -923,7 +919,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 		if ( !empty( $return ) ) {
 			aecRedirect( base64_decode( $return ) );
 		} else {
-			subscriptionDetails( $option, 'invoices' );
+			getView( 'subscriptiondetails', array( 'sub' => 'invoices' ) );
 		}
 	}
 
@@ -941,7 +937,7 @@ function planaction( $option, $action, $subscr )
 		$iFactory = new InvoiceFactory( $userid );
 		$iFactory->planprocessoraction( $action, $subscr );
 
-		subscriptionDetails( $option, 'invoices' );
+		getView( 'subscriptiondetails', array( 'sub' => 'invoices' ) );
 	} else {
 		aecNotAuth();
 		return;
@@ -959,7 +955,7 @@ function invoiceAction( $option, $action, $invoice_number )
 		$iFactory->touchInvoice( $option, $invoice_number );
 		$iFactory->invoiceprocessoraction( $option, $action );
 
-		subscriptionDetails( $option, 'invoices' );
+		getView( 'subscriptiondetails', array( 'sub' => 'invoices' ) );
 	}
 }
 
@@ -1109,67 +1105,6 @@ function InvoiceRemoveCoupon( $option )
 	repeatInvoice( $option, $invoice, null, $objinvoice->userid );
 }
 
-function notAllowed( $option )
-{
-	$db = &JFactory::getDBO();
-
-	$user = &JFactory::getUser();
-
-	global $aecConfig;
-
-	if ( ( $aecConfig->cfg['customnotallowed'] != '' ) && !is_null( $aecConfig->cfg['customnotallowed'] ) ) {
-		aecRedirect( $aecConfig->cfg['customnotallowed'] );
-	}
-
-	$gwnames = PaymentProcessorHandler::getInstalledNameList( true );
-
-	if ( count( $gwnames ) && $gwnames[0] ) {
-		$processors = array();
-		foreach ( $gwnames as $procname ) {
-			$processor = trim( $procname );
-			$processors[$processor] = new PaymentProcessor();
-			if ( $processors[$processor]->loadName( $processor ) ) {
-				$processors[$processor]->init();
-				$processors[$processor]->getInfo();
-				$processors[$processor]->getSettings();
-			} else {
-				$short	= 'processor loading failure';
-				$event	= 'When composing processor info list, tried to load processor: ' . $procname;
-				$tags	= 'processor,loading,error';
-				$params = array();
-
-				$eventlog = new eventLog( $db );
-				$eventlog->issue( $short, $tags, $event, 128, $params );
-
-				unset( $processors[$processor] );
-			}
-		}
-	} else {
-		$processors = false;
-	}
-
-	$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
-
-	if ( $user->id ) {
-		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription' );
-		$loggedin = 1;
-	} else {
-		$loggedin = 0;
-		if ( $CB ) {
-			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&task=registers' );
-		} else {
-			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&view=register' );
-		}
-	}
-
-	$document=& JFactory::getDocument();
-
-	$document->setTitle( html_entity_decode( JText::_('NOT_ALLOWED_HEADLINE'), ENT_COMPAT, 'UTF-8' ) );
-
-	$frontend = new HTML_frontEnd();
-	$frontend->notAllowed( $option, $processors, $registerlink, $loggedin );
-}
-
 function processNotification( $option, $processor )
 {
 	$db = &JFactory::getDBO();
@@ -1264,142 +1199,6 @@ function processNotification( $option, $processor )
 		$iFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
 		$iFactory->processorResponse( $option, $response );
 	}
-}
-
-function cancelPayment( $option )
-{
-	$db = &JFactory::getDBO();
-
-	global $aecConfig;
-
-	// Look whether we have a custom Cancel page
-	if ( $aecConfig->cfg['customcancel'] ) {
-		aecRedirect( $aecConfig->cfg['customcancel'] );
-	} else {
-		$document=& JFactory::getDocument();
-
-		$document->setTitle( html_entity_decode( JText::_('CANCEL_TITLE'), ENT_COMPAT, 'UTF-8' ) );
-
-		HTML_Results::cancel( $option );
-	}
-}
-
-function aecThanks( $option, $renew, $free, $plan=null )
-{
-	global $aecConfig;
-
-	$app = JFactory::getApplication();
-
-	if ( !empty( $plan ) ) {
-		if ( is_object( $plan ) ) {
-			if ( !empty( $plan->params['customthanks'] ) ) {
-				aecRedirect( $plan->params['customthanks'] );
-			} elseif ( $aecConfig->cfg['customthanks'] ) {
-				aecRedirect( $aecConfig->cfg['customthanks'] );
-			}
-		} else {
-			return aecSimpleThanks( $option, $renew, $free );
-		}
-	} else {
-		return aecSimpleThanks( $option, $renew, $free );
-	}
-
-	if ( $renew ) {
-		$msg = JText::_('SUB_FEPARTICLE_HEAD_RENEW') . '</p><p>' . JText::_('SUB_FEPARTICLE_THANKSRENEW');
-		if ( $free ) {
-			$msg .= JText::_('SUB_FEPARTICLE_LOGIN');
-		} else {
-			$msg .= JText::_('SUB_FEPARTICLE_PROCESSPAY') . JText::_('SUB_FEPARTICLE_MAIL');
-		}
-	} else {
-		$msg = JText::_('SUB_FEPARTICLE_HEAD') . '</p><p>' . JText::_('SUB_FEPARTICLE_THANKS');
-
-		$msg .=  $free ? JText::_('SUB_FEPARTICLE_PROCESS') : JText::_('SUB_FEPARTICLE_PROCESSPAY');
-
-		$msg .= $app->getCfg( 'useractivation' ) ? JText::_('SUB_FEPARTICLE_ACTMAIL') : JText::_('SUB_FEPARTICLE_MAIL');
-	}
-
-	$b = '';
-	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-		$b .= '<div class="componentheading">' . JText::_('THANKYOU_TITLE') . '</div>';
-	}
-
-	if ( $aecConfig->cfg['customtext_thanks'] ) {
-		$b .= $aecConfig->cfg['customtext_thanks'];
-	}
-
-	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-		$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
-	}
-
-	$up =& $plan->params;
-
-	$msg = "";
-	if ( !empty( $up['customtext_thanks'] ) ) {
-		if ( isset( $up['customtext_thanks_keeporiginal'] ) ) {
-			if ( empty( $up['customtext_thanks_keeporiginal'] ) ) {
-				$msg = $up['customtext_thanks'];
-			} else {
-				$msg = $b . $up['customtext_thanks'];
-			}
-		} else {
-			$msg = $up['customtext_thanks'];
-		}
-	} else {
-		$msg = $b;
-	}
-
-	$document=& JFactory::getDocument();
-
-	$document->setTitle( html_entity_decode( JText::_('THANKYOU_TITLE'), ENT_COMPAT, 'UTF-8' ) );
-
-	HTML_Results::thanks( $option, $msg );
-}
-
-function aecSimpleThanks( $option, $renew, $free )
-{
-	global $aecConfig;
-
-	$app = JFactory::getApplication();
-
-	// Look whether we have a custom ThankYou page
-	if ( $aecConfig->cfg['customthanks'] ) {
-		aecRedirect( $aecConfig->cfg['customthanks'] );
-	}
-
-	if ( $renew ) {
-		$msg = JText::_('SUB_FEPARTICLE_HEAD_RENEW') . '</p><p>' . JText::_('SUB_FEPARTICLE_THANKSRENEW');
-		if ( $free ) {
-			$msg .= JText::_('SUB_FEPARTICLE_LOGIN');
-		} else {
-			$msg .= JText::_('SUB_FEPARTICLE_PROCESSPAY') . JText::_('SUB_FEPARTICLE_MAIL');
-		}
-	} else {
-		$msg = JText::_('SUB_FEPARTICLE_HEAD') . '</p><p>' . JText::_('SUB_FEPARTICLE_THANKS');
-
-		$msg .=  $free ? JText::_('SUB_FEPARTICLE_PROCESS') : JText::_('SUB_FEPARTICLE_PROCESSPAY');
-
-		$msg .= $app->getCfg( 'useractivation' ) ? JText::_('SUB_FEPARTICLE_ACTMAIL') : JText::_('SUB_FEPARTICLE_MAIL');
-	}
-
-	$b = '';
-	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-		$b .= '<div class="componentheading">' . JText::_('THANKYOU_TITLE') . '</div>';
-	}
-
-	if ( $aecConfig->cfg['customtext_thanks'] ) {
-		$b .= $aecConfig->cfg['customtext_thanks'];
-	}
-
-	if ( $aecConfig->cfg['customtext_thanks_keeporiginal'] ) {
-		$b .= '<div id="thankyou_page">' . '<p>' . $msg . '</p>' . '</div>';
-	}
-
-	$document=& JFactory::getDocument();
-
-	$document->setTitle( html_entity_decode( JText::_('THANKYOU_TITLE'), ENT_COMPAT, 'UTF-8' ) );
-
-	HTML_Results::thanks( $option, $b );
 }
 
 function aecErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )

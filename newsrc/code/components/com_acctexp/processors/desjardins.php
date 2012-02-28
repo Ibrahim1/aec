@@ -409,12 +409,15 @@ XML;
 	{
 		$db = &JFactory::getDBO();
 
-		$user = new JTableUser( $db );
-		$user->load( $invoice->userid );
+		$metaUser = new metaUser( $invoice->userid );
 
 		ob_start();
 
-		Payment_HTML::error( 'com_acctexp', $user, $invoice->invoice_number, $error );
+		getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
+									'metaUser' => $metaUser,
+									'invoice' => $invoice,
+									'suppressactions' => true
+								) );
 
 		$content = ob_get_contents();
 		ob_end_clean();

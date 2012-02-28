@@ -10921,7 +10921,7 @@ class InvoiceFactory
 				echo $response['customthanks'];
 				exit;
 			} else {
-				HTML_Results::thanks( $option, $response['customthanks'] );
+				getView( 'thanks', array( 'customthanks' => $response['customthanks'] ) );
 			}
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
@@ -10988,7 +10988,7 @@ class InvoiceFactory
 			$response = $this->invoice->processorResponse( $this, $response, '', true );
 
 			if ( isset( $response['cancel'] ) ) {
-				HTML_Results::cancel( 'com_acctexp' );
+				getView( 'cancel' );
 			}
 		} else {
 			return aecNotAuth();
