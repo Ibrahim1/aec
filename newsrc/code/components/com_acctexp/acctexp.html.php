@@ -11,55 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class HTML_frontEnd
-{
-	function HTML_frontEnd()
-	{
-		$this->aec_styling( 'com_acctexp' );
-	}
-
-	function aec_styling( $option )
-	{
-		$document=& JFactory::getDocument();
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $option . '/css/site.css" />' );
-	}
-
-	/**
-	 * Formats a given date
-	 *
-	 * @param string	$SQLDate
-	 * @param bool		$check		check time diference
-	 * @param bool		$display	out with text (only in combination with $check)
-	 * @return formatted date
-	 */
-	function DisplayDateInLocalTime( $SQLDate, $check = false, $display = false, $trial = false )
-	{
-		global $aecConfig;
-
-		$app = JFactory::getApplication();
-
-		if ( $SQLDate == '' ) {
-			return JText::_('AEC_EXPIRE_NOT_SET');
-		} else {
-			$retVal = AECToolbox::formatDate( $SQLDate );
-
-			if ( $check ) {
-				$timeDif = strtotime( $SQLDate ) - ( (int) gmdate('U') );
-				if ( $timeDif < 0 ) {
-					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_PAST') : JText::_('AEC_EXPIRE_PAST') ) . ':&nbsp;<strong>' . $retVal . '</strong>';
-				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
-					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_TODAY') : JText::_('AEC_EXPIRE_TODAY') );
-				} else {
-					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_FUTURE') : JText::_('AEC_EXPIRE_FUTURE') ) . ': ' . $retVal;
-				}
-			}
-
-			return $retVal;
-		}
-	}
-
-}
-
 function joomlaregisterForm($option, $useractivation)
 {
 	global $aecConfig;

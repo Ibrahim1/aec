@@ -12,7 +12,7 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 if ( !empty( $metaUser->objSubscription->signup_date ) ) {
-	echo '<p>' . JText::_('MEMBER_SINCE') . '&nbsp;' . HTML_frontend::DisplayDateInLocalTime( $metaUser->objSubscription->signup_date ) .'</p>';
+	echo '<p>' . JText::_('MEMBER_SINCE') . '&nbsp;' . $tmpl->date( $metaUser->objSubscription->signup_date ) .'</p>';
 }
 
 if ( $properties['hascart'] ) { ?>
@@ -56,9 +56,9 @@ if ( $metaUser->hasSubscription ) {
 				echo '<p>' . JText::_('AEC_ISLIFETIME') . '</p>';
 			} else {
 				if ( $subscription->recurring && ( in_array( $subscription->status, array( 'Active', 'Trial' ) ) ) ) {
-					echo '<p>' . JText::_('AEC_WILLRENEW') . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+					echo '<p>' . JText::_('AEC_WILLRENEW') . ': ' . $tmpl->date( $subscription->expiration ) . '</p>';
 				} else {
-					echo '<p>' . JText::_('AEC_WILLEXPIRE') . ': ' . HTML_frontend::DisplayDateInLocalTime( $subscription->expiration ) . '</p>';
+					echo '<p>' . JText::_('AEC_WILLEXPIRE') . ': ' . $tmpl->date( $subscription->expiration ) . '</p>';
 				}
 			}
 
@@ -79,7 +79,7 @@ if ( $metaUser->hasSubscription ) {
 				<p><strong><?php echo JText::_('RENEW_LIFETIME'); ?></strong></p><?php
 			} else { ?>
 				<p>
-					<?php echo HTML_frontend::DisplayDateInLocalTime( $metaUser->focusSubscription->expiration, true, true, $trial ); ?>
+					<?php echo $tmpl->date( $metaUser->focusSubscription->expiration, true, true, $trial ); ?>
 				</p>
 				<?php
 			}

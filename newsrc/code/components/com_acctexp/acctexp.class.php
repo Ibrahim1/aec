@@ -8651,7 +8651,27 @@ class aecTemplate
 			echo '<p>' . $obj[$setting] . '</p>';
 		}
 	}
+	function date( $SQLDate, $check = false, $display = false, $trial = false )
+	{
+		if ( $SQLDate == '' ) {
+			return JText::_('AEC_EXPIRE_NOT_SET');
+		} else {
+			$retVal = AECToolbox::formatDate( $SQLDate );
 
+			if ( $check ) {
+				$timeDif = strtotime( $SQLDate ) - ( (int) gmdate('U') );
+				if ( $timeDif < 0 ) {
+					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_PAST') : JText::_('AEC_EXPIRE_PAST') ) . ':&nbsp;<strong>' . $retVal . '</strong>';
+				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
+					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_TODAY') : JText::_('AEC_EXPIRE_TODAY') );
+				} else {
+					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_FUTURE') : JText::_('AEC_EXPIRE_FUTURE') ) . ': ' . $retVal;
+				}
+			}
+
+			return $retVal;
+		}
+	}
 	function tmpl( $name )
 	{
 		$t = explode( '.', $name );
@@ -12519,7 +12539,7 @@ class Invoice extends serialParamDBTable
 		$data['invoice_id'] = $this->id;
 		$data['invoice_number'] = $this->invoice_number;
 
-		$data['invoice_date'] = HTML_frontend::DisplayDateInLocalTime( $InvoiceFactory->invoice->created_date );
+		$data['invoice_date'] = aecTemplate::date( $InvoiceFactory->invoice->created_date );
 
 		$data['itemlist'] = array();
 		$total = 0;
@@ -12704,7 +12724,7 @@ class Invoice extends serialParamDBTable
 				$transactiondate = $row->params['pending_reason'];
 			}
 		} else {
-			$transactiondate = HTML_frontend::DisplayDateInLocalTime( $this->transaction_date );
+			$transactiondate = aecTemplate::date( $this->transaction_date );
 		}
 
 		return $transactiondate;

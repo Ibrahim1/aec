@@ -91,7 +91,8 @@
 				<?
 				if ( !empty( $InvoiceFactory->pp ) ) {
 					if ( is_object( $InvoiceFactory->pp ) ) {
-						HTML_frontEnd::processorInfo( $option, $InvoiceFactory->pp, $tmpl->cfg['displayccinfo'] );
+						$processor = $InvoiceFactory->pp;
+						@include( $tmpl->tmpl( 'plans.processor_details' ) );
 					}
 				} ?>
 			</table>
