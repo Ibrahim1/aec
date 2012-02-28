@@ -460,6 +460,8 @@ function getView( $view, $args=null )
 {
 	global $aecConfig;
 
+	$db = &JFactory::getDBO();
+
 	$user = &JFactory::getUser();
 
 	$metaUser = null;
@@ -475,14 +477,17 @@ function getView( $view, $args=null )
 
 	$option = 'com_acctexp';
 
+	$dbtmpl = new configTemplate($db);
+	$dbtmpl->loadDefault();
+
 	$tmpl = new aecTemplate();
-$aecConfig->cfg['standard_template'] = 'helix';
-	$tmpl->cfg = $aecConfig->cfg;
+
+	$tmpl->cfg = array_merge( $aecConfig->cfg, $dbtmpl->settings );
 	$tmpl->option = 'com_acctexp';
 	$tmpl->metaUser = $metaUser;
 	$tmpl->system_template = $app->getTemplate();
 
-	$tmpl->template = $aecConfig->cfg['standard_template'];
+	$tmpl->template = $dbtmpl->name;
 	$tmpl->view = $view;
 
 	$tmpl->paths['base'] = JPATH_SITE . '/components/com_acctexp/tmpl';

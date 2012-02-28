@@ -31,7 +31,6 @@ class template_helix
 
 		$params[] = array( 'userinfobox', 33.225 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
-		$params['skip_confirmation']			= array( 'toggle', 0 );
 		$params['displayccinfo']				= array( 'toggle', 0 );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_BUTTONS_SUB') );
@@ -62,14 +61,6 @@ class template_helix
 		$params[] = array( '2div_end', 0 );
 
 		$params[] = array( 'userinfobox', 33.225 );
-		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
-		$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
-		$params[] = array( 'div_end', 0 );
-		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
-		$params['amount_currency_symbol']			= array( 'toggle', 0 );
-		$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
-		$params['amount_use_comma']					= array( 'toggle', 0 );
-		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
 		$params['use_recaptcha']					= array( 'toggle', '' );
 		$params['recaptcha_privatekey']				= array( 'inputC', '' );

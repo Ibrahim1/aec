@@ -1192,7 +1192,7 @@ class HTML_AcctExp
 
 		$tabs->endPanes();
 		?>
-		<input type="hidden" name="id" value="1" />
+		<input type="hidden" name="name" value="<?php echo $aecHTML->tempname; ?>" />
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>

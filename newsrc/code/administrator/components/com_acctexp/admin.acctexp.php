@@ -141,8 +141,14 @@ switch( strtolower( $task ) ) {
 		$name	= aecGetParam( 'name', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 		editTemplate( $option, $name );
 		break;
-	case 'savetemplate': saveTemplate( $option ); break;
-	case 'applytemplate': saveTemplate( $option, 1 ); break;
+	case 'savetemplate':
+		$name	= aecGetParam( 'name', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+		saveTemplate( $option, $name );
+		break;
+	case 'applytemplate':
+		$name	= aecGetParam( 'name', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+		saveTemplate( $option, $name, 1 );
+		break;
 	case 'canceltemplate': aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_CANCELLED') ); break;
 
 	case 'showprocessors': listProcessors( $option ); break;
@@ -1451,6 +1457,7 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
 	$params['plans_first']					= array( 'toggle', 0 );
 	$params['integrate_registration']		= array( 'toggle', 0 );
+	$params['skip_confirmation']			= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
 	$params['enable_shoppingcart']			= array( 'toggle', '' );
@@ -1490,6 +1497,14 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox', 49.8 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
+	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
+	$params['amount_currency_symbol']			= array( 'toggle', 0 );
+	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
+	$params['amount_use_comma']					= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_PROXY') );
 	$params['use_proxy']						= array( 'toggle', '' );
@@ -1865,8 +1880,6 @@ function listTemplates( $option )
 
 function editTemplate( $option, $name )
 {
-	global $aecConfig;
-
 	$db = &JFactory::getDBO();
 
 	$temp = new configTemplate( $db );
@@ -1877,34 +1890,37 @@ function editTemplate( $option, $name )
 	$lists = array();
 
 	$settings = new aecSettings ( 'cfg', 'general' );
-	$settings->fullSettingsArray( $tempsettings['params'], $aecConfig->cfg, $lists ) ;
+	$settings->fullSettingsArray( $tempsettings['params'], $temp->settings, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
+	$aecHTML->tempname = $name;
+
 	HTML_AcctExp::editTemplate( $option, $aecHTML, $tempsettings['tab_data'] );
 }
 
-function saveTemplate( $option, $return=0 )
+function saveTemplate( $option, $name, $return=0 )
 {
 	$db		= &JFactory::getDBO();
-	$user	= &JFactory::getUser();
 
-	global $aecConfig;
+	$temp = new configTemplate( $db );
+	$temp->loadName( $name );
 
 	$app = JFactory::getApplication();
 
 	unset( $_POST['id'] );
 	unset( $_POST['task'] );
 	unset( $_POST['option'] );
+	unset( $_POST['name'] );
 
 	$general_settings = $_POST;
 
-	$aecConfig->cfg = $general_settings;
-	$aecConfig->saveSettings();
+	$temp->settings = $_POST;
+	$temp->storeload();
 
 	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=showTemplate', JText::_('AEC_CONFIG_SAVED') );
+		editTemplate( $option, $name );
 	} else {
 		aecRedirect( 'index.php?option=' . $option . '&task=listTemplates', JText::_('AEC_CONFIG_SAVED') );
 	}

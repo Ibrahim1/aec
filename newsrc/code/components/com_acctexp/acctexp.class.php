@@ -2416,6 +2416,7 @@ class Config_General extends serialParamDBTable
 		$def['simpleurls']						= 0;
 		$def['display_date_backend']			= "";
 		$def['enable_coupons']					= 0;
+		$def['skip_confirmation']				= 0;
 		// new 0.12.4
 		$def['bypassintegration']				= '';
 		// new 0.12.4.2
@@ -2438,6 +2439,9 @@ class Config_General extends serialParamDBTable
 		$def['confirmation_coupons']			= 0;
 		$def['breakon_mi_error']				= 0;
 		$def['curl_default']					= 1;
+		$def['amount_currency_symbol']			= 0;
+		$def['amount_currency_symbolfirst']		= 0;
+		$def['amount_use_comma']				= 0;
 		$def['use_proxy']						= 0;
 		$def['proxy']							= '';
 		$def['proxy_port']						= '';
@@ -2608,6 +2612,25 @@ class configTemplate extends serialParamDBTable
 	function declareParamFields()
 	{
 		return array( 'settings' );
+	}
+
+	function loadDefault()
+	{
+		$db = &JFactory::getDBO();
+
+		// See if the processor is installed & set id
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_config_templates'
+				. ' WHERE `default` = 1'
+				;
+		$db->setQuery( $query );
+		$res = $db->loadResult();
+
+		if ( !empty( $res ) ) {
+			$this->load($res);
+		} else {
+			$this->load(0);
+		}
 	}
 
 	function loadName( $name )

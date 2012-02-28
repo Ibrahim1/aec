@@ -145,12 +145,7 @@ function com_install()
 		}
 
 		$updates = array();
-
-
 	}
-
-	// Set Version
-	//$aecConfig->cfg['aec_version'] = _AEC_VERSION;
 
 	// --- [ END OF DATABASE UPGRADE ACTIONS ] ---
 
@@ -323,6 +318,17 @@ function com_install()
 
 			$pckgs++;
 		}
+	}
+
+	// Set up new template for new installs
+	$template = new configTemplate($db);
+	$template->loadDefault();
+
+	if ( empty( $template->id ) ) {
+		$template->name = 'etacarinae';
+		$template->default = 1;
+
+		$template->storeload();
 	}
 
 	$v = new JVersion();
