@@ -939,19 +939,6 @@ function saveUser( $option, $apply=0 )
 	}
 }
 
-function miQuickfire( $option, $subscriptionid, $mi, $action )
-{
-	if ( $mi ) {
-		if ( $action ) {
-			HTML_AcctExp::quickfireResult( $option, $milist, $aecHTML );
-		} else {
-			HTML_AcctExp::quickfireEdit( $option, $milist, $aecHTML );
-		}
-	} else {
-		HTML_AcctExp::quickfireSelect( $option, $milist, $aecHTML );
-	}
-}
-
 function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(), $planid=null )
 {
 	$db = &JFactory::getDBO();
@@ -4407,55 +4394,6 @@ function changeCoupon( $cid=null, $state=0, $option, $type )
 	}
 
 	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
-}
-
-function editCSS( $option ) {
-	$file = JPATH_SITE . '/media/' . $option . '/css/site.css';
-
-	if ( $fp = fopen( $file, 'r' ) ) {
-		$content = fread( $fp, filesize( $file ) );
-		$content = htmlspecialchars( $content );
-		HTML_AcctExp::editCSS( $content, $option );
-	} else {
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', sprintf( JText::_('AEC_MSG_OP_FAILED'), $file ) );
-	}
-}
-
-function saveCSS( $option )
-{
-	$filecontent = aecGetParam( 'filecontent' );
-
-	if ( !$filecontent ) {
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('AEC_MSG_OP_FAILED_EMPTY') );
-	}
-
-	$file			= JPATH_SITE .'/media/' . $option . '/css/site.css';
-	$enable_write	= aecGetParam( 'enable_write', 0 );
-	$oldperms		= fileperms( $file );
-
-	if ( $enable_write ) {
-		@chmod( $file, $oldperms | 0222 );
-	}
-
-	clearstatcache();
-	if ( is_writable( $file ) == false ) {
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('AEC_MSG_OP_FAILED_NOT_WRITEABLE') );
-	}
-
-	if ( $fp = fopen ($file, 'wb') ) {
-		fputs( $fp, stripslashes( $filecontent ) );
-		fclose( $fp );
-		if ( $enable_write ) {
-			@chmod( $file, $oldperms );
-		} elseif ( aecGetParam( 'disable_write', 0 ) ) {
-			@chmod( $file, $oldperms & 0777555 );
-		}
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('AEC_CMN_FILE_SAVED') );
-	} elseif ( $enable_write ) {
-		@chmod($file, $oldperms);
-		aecRedirect( 'index.php?option='. $option .'&task=editCSS', JText::_('AEC_MSG_OP_FAILED_NO_WRITE') );
-	}
-
 }
 
 function invoices( $option )

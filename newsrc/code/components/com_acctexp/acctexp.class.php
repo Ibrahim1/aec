@@ -10060,10 +10060,6 @@ class InvoiceFactory
 				$register = 0;
 			}
 
-			$document=& JFactory::getDocument();
-
-			$document->setTitle( html_entity_decode( JText::_('PAYPLANS_HEADER'), ENT_COMPAT, 'UTF-8' ) );
-
 			if ( $group ) {
 				$g = new ItemGroup( $db );
 				$g->load( $group );
@@ -10087,8 +10083,114 @@ class InvoiceFactory
 				unset( $list['group'] );
 			}
 
+			$csslist = array();
+			foreach ( $list as $li => $lv ) {
+				if ( $lv['type'] == 'group' ) {
+					continue;
+				}
+
+				foreach ( $lv['gw'] as $gwid => $pp ) {
+					$btnarray = array();
+
+					if ( strtolower( $pp->processor_name ) == 'add_to_cart' ) {
+						$btnarray['option']		= 'com_acctexp';
+						$btnarray['task']		= 'addtocart';
+						$btnarray['class'] = 'aec-btn aec-btn-processor';
+						$btnarray['content'] = JText::_('AEC_BTN_ADD_TO_CART');
+
+						$btnarray['usage'] = $lv['id'];
+
+						if ( $tmpl->cfg['additem_stayonpage'] ) {
+							$btnarray['returngroup'] = $group;
+						}
+					} else {
+						$btnarray['view'] = '';
+
+						if ( $register ) {
+							if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+								$btnarray['option']	= 'com_comprofiler';
+								$btnarray['task']	= 'registers';
+							} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+								$btnarray['option']	= 'com_community';
+								$btnarray['task']	= '';
+								$btnarray['view'] 	= 'register';
+							} else {
+								if ( defined( 'JPATH_MANIFESTS' ) ) {
+									$btnarray['option']	= 'com_users';
+									$btnarray['task']	= '';
+									$btnarray['view'] 	= 'registration';
+								} else {
+									$btnarray['option']	= 'com_user';
+									$btnarray['task']	= '';
+									$btnarray['view'] 	= 'register';
+								}
+							}
+						} else {
+							$btnarray['option']		= 'com_acctexp';
+							$btnarray['task']		= 'confirm';
+						}
+
+						$btnarray['class'] = 'aec-btn aec-btn-processor';
+
+						if ( $pp->processor_name == 'free' ) {
+							$btnarray['content'] = JText::_('AEC_PAYM_METHOD_FREE');
+						} elseif( is_object($pp->processor) ) {
+							if ( $pp->processor->getLogoFilename() == '' ) {
+								$btnarray['content'] = '<span class="aec-btn-tallcontent">'.$pp->info['longname'].'</span>';
+							} else {
+								if ( !array_key_exists($pp->processor_name, $csslist) ) {
+									$csslist[$pp->processor_name] = '.aec-btn-processor-' . $pp->processor_name
+																	. ' { background-image: url(' . $pp->getLogoPath() .  ') !important; }';
+								}
+							}
+						}
+
+						if ( !empty( $pp->settings['generic_buttons'] ) ) {
+							if ( !empty( $pp->recurring ) ) {
+								$btnarray['content'] = JText::_('AEC_PAYM_METHOD_SUBSCRIBE');
+							} else {
+								$btnarray['content'] = JText::_('AEC_PAYM_METHOD_BUYNOW');
+							}
+						} else {
+							$btnarray['class'] .= ' aec-btn-processor-'.$pp->processor_name;
+
+							if ( ( isset( $pp->recurring ) || isset( $pp->info['recurring'] ) ) && !empty( $pp->info['recurring'] ) ) {
+								if ( $pp->info['recurring'] == 2 ) {
+									if ( !empty( $pp->recurring ) ) {
+										$btnarray['content'] = '<i class="aec-btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
+									} else {
+										$btnarray['content'] = '<i class="aec-btn-overlay">' . JText::_('AEC_PAYM_METHOD_ONE_TIME_BILLING') . '</i>';
+									}
+								} elseif ( $pp->info['recurring'] == 1 ) {
+									$btnarray['content'] = '<i class="aec-btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
+								}
+							}
+						}
+
+						if ( !empty( $pp->recurring ) ) {
+							$btnarray['recurring'] = 1;
+						} else {
+							$btnarray['recurring'] = 0;
+						}
+
+						$btnarray['processor'] = $pp->processor_name;
+
+						$btnarray['usage'] = $lv['id'];
+					}
+
+					$btnarray['userid'] = ( $this->userid ? $this->userid : 0 );
+
+					// Rewrite Passthrough
+					if ( !empty( $passthrough ) ) {
+						$btnarray['aec_passthrough'] = $passthrough;
+					}
+
+					$list[$li]['gw'][$gwid]->btn = $btnarray;
+				}
+			}
+
 			getView( 'plans', array(	'userid' => $this->userid, 'list' => $list, 'passthrough' => $this->getPassthrough(), 'register' => $register,
-										'cart' => $cart, 'selected' => $selected, 'group' => $group ) );
+										'cart' => $cart, 'selected' => $selected, 'group' => $group, 'csslist' => $csslist ) );
 		}
 	}
 

@@ -3081,66 +3081,6 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function editCSS( &$content, $option )
-	{
-		$file = JPATH_SITE . '/media/' . $option . '/css/site.css';
-		HTML_myCommon::startCommon();
-
-		HTML_myCommon::getHeader( 'AEC_HEAD_CSS_EDITOR', 'css' );
-
-		$buttons = array(	'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
-							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-						);
-		HTML_myCommon::getButtons( $buttons, 'CSS' );
-		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-			<div class="aec-filters">
-			<table cellpadding="1" cellspacing="1" border="0" width="100%">
-				<tr>
-					<td>
-						<span class="componentheading"><?php echo $file; ?>:&nbsp;
-							<?php echo is_writable( $file ) ? '<span style="color:green;">' . JText::_('AEC_CMN_WRITEABLE') . '</span>' : '<span style="color:red;">' . JText::_('AEC_CMN_UNWRITEABLE') . '</span>'; ?>
-						</span>
-					</td>
-					<?php
-					jimport('joomla.filesystem.path');
-
-					$chmod = JPath::canChmod( $file );
-
-					if ( $chmod ) {
-						if ( is_writable( $file ) ) { ?>
-							<td>
-								<input type="checkbox" id="disable_write" name="disable_write" value="1" />
-								<label for="disable_write"><?php echo JText::_('AEC_CMN_UNWRITE_AFTER_SAVE'); ?></label>
-							</td>
-							<?php
-						} else {
-							?>
-							<td>
-								<input type="checkbox" id="enable_write" name="enable_write" value="1" />
-								<label for="enable_write"><?php echoJText::_('AEC_CMN_OVERRIDE_WRITE_PROT'); ?></label>
-							</td>
-							<?php
-						}
-					} ?>
-				</tr>
-			</table>
-			</div>
-			<table class="aecadminform">
-				<tr>
-					<td>
-						<textarea style="width:100%;height:500px" cols="110" rows="25" name="filecontent" class="inputbox"><?php echo $content; ?></textarea>
-					</td>
-				</tr>
-			</table>
-			<input type="hidden" name="option" value="<?php echo $option;?>" />
-			<input type="hidden" name="task" value="" />
-		</form>
-
-		<?php HTML_myCommon::endCommon();
-	}
-
 	/**
 	 * Formats a given date
 	 *
