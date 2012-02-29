@@ -14,8 +14,8 @@
 <div class="componentheading"><?php echo JText::_('CART_TITLE') ?></div>
 <div id="confirmation">
 	<?php
-	@include( $tmpl->tmpl( 'cartinfo' ) );
+	@include( $tmpl->tmpl( 'info' ) );
 	if ( !empty( $InvoiceFactory->cart ) ) {
-		@include( $tmpl->tmpl( 'cartform' ) );
+		@include( $tmpl->tmpl( 'form' ) );
 	} ?>
 </div>

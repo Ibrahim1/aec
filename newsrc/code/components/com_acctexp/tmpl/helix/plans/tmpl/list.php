@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: planlist.php
+ * @version $Id: list.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Frontend
  * @copyright 2012 Copyright (C) David Deutsch

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: cartinfo.php
+ * @version $Id: form.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Frontend
  * @copyright 2012 Copyright (C) David Deutsch
@@ -10,24 +10,23 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=confirmCart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
+<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=saveSubscription', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 <table>
 	<tr>
 		<td id="confirmation_extra">
-			<?
-			@include( $tmpl->tmpl( 'confirmation.miform' ) );
+			<?php
+			@include( $tmpl->tmpl( 'miform' ) );
 			$tmpl->custom( 'customtext_confirm' );
+			@include( $tmpl->tmpl( 'couponform' ) );
 			?>
 		</td>
 	</tr>
-	<?php if ( $makegift ) {
-		@include( $tmpl->tmpl( 'confirmation.giftform' ) );
-	} ?>
+	<?php if ( $makegift ) { @include( $tmpl->tmpl( 'giftform' ) ); } ?>
 	<tr>
-		<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'confirmationbtn' ) ) ?></td>
+		<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'btn' ) ) ?></td>
 	</tr>
 	<tr>
-		<td><?php @include( $tmpl->tmpl( 'confirmation.processorinfo' ) ) ?></td>
+		<td><?php @include( $tmpl->tmpl( 'processorinfo' ) ) ?></td>
 	</tr>
 </table>
 <?php echo JHTML::_( 'form.token' ) ?>

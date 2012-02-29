@@ -24,7 +24,7 @@
 		unset( $list['group'] );
 	}
 	
-	@include( $tmpl->tmpl( 'planlist' ) );
+	@include( $tmpl->tmpl( 'list' ) );
 	?>
 </div>
 <div class="aec_clearfix"></div>

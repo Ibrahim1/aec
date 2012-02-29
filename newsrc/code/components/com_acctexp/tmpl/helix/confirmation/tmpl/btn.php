@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: confirmationbtn.php
+ * @version $Id: btn.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Frontend
  * @copyright 2012 Copyright (C) David Deutsch
@@ -13,7 +13,7 @@
 <div id="confirmation_button">
 	<input type="hidden" name="option" value="<?php echo $option ?>" />
 	<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0 ?>" />
-	<input type="hidden" name="task" value="confirmCart" />
+	<input type="hidden" name="task" value="saveSubscription" />
 	<input type="hidden" name="usage" value="<?php echo $InvoiceFactory->usage ?>" />
 	<input type="hidden" name="processor" value="<?php echo $InvoiceFactory->processor ?>" />
 	<?php if ( isset( $InvoiceFactory->recurring ) ) { ?>
