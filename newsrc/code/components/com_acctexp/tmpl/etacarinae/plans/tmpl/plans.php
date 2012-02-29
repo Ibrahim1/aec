@@ -10,21 +10,21 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+<div id="aec">
+	<div id="aec-plans">
+		<div class="componentheading"><?php echo JText::_('PAYPLANS_HEADER') ?></div>
+		<?php if ( !empty( $cart ) ) { @include( $tmpl->tmpl( 'backtocart' ) ); } ?>
+		<div class="subscriptions">
+			<?
+			$tmpl->custom( 'customtext_plans' );
 
-<div class="componentheading"><?php echo JText::_('PAYPLANS_HEADER') ?></div>
+			if ( isset( $list['group'] ) && $selected ) {
+				@include( $tmpl->tmpl( 'groupheader' ) );
+				unset( $list['group'] );
+			}
 
-<?php if ( !empty( $cart ) ) { @include( $tmpl->tmpl( 'backtocart' ) ); } ?>
-
-<div class="subscriptions">
-	<?
-	$tmpl->custom( 'customtext_plans' );
-
-	if ( isset( $list['group'] ) && $selected ) {
-		@include( $tmpl->tmpl( 'groupheader' ) );
-		unset( $list['group'] );
-	}
-	
-	@include( $tmpl->tmpl( 'list' ) );
-	?>
+			@include( $tmpl->tmpl( 'list' ) );
+			?>
+		</div>
+	</div>
 </div>
-<div class="aec_clearfix"></div>

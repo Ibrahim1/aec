@@ -9,26 +9,22 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
-
-if ( $tmpl->cfg['customtext_pending_keeporiginal'] ) { ?>
-	<div class="componentheading"><?php echo JText::_('PENDING_TITLE') ?></div>
-	<p class="expired_dear"><?php echo sprintf( JText::_('DEAR'), $objUser->name ) . ',' ?></p>
-	<p class="expired_date"><?php echo JText::_('WARN_PENDING') ?></p>
-<?php }
-
-if ( $tmpl->cfg['customtext_pending'] ) { ?>
-	<p><?php echo $tmpl->cfg['customtext_pending'] ?></p>
-<?php } ?>
-<div id="box_pending">
-	<?php if ( strcmp($invoice, "none") === 0 ) { ?>
-		<p><?php echo JText::_('PENDING_NOINVOICE') ?></p>
-		<?php @include( $tmpl->tmpl( 'upgradebtn' ) ) ?>
-	<?php } elseif ( $invoice ) { ?>
-		<p><?php echo JText::_('PENDING_OPENINVOICE');
-				@include( $tmpl->tmpl( 'invoice_links' ) );
-				echo ( !empty($reason) ? ' '.$reason : '' );
-		?></p>
-	<?php } ?>
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
+<div id="aec">
+	<div id="aec-pending">
+		<div class="componentheading"><?php echo JText::_('PENDING_TITLE') ?></div>
+		<p class="expired_dear"><?php echo sprintf( JText::_('DEAR'), $objUser->name ) . ',' ?></p>
+		<p class="expired_date"><?php echo JText::_('WARN_PENDING') ?></p>
+		<div id="box-pending">
+			<?php if ( strcmp($invoice, "none") === 0 ) { ?>
+				<p><?php echo JText::_('PENDING_NOINVOICE') ?></p>
+				<?php @include( $tmpl->tmpl( 'upgradebtn' ) ) ?>
+			<?php } elseif ( $invoice ) { ?>
+				<p><?php echo JText::_('PENDING_OPENINVOICE');
+						@include( $tmpl->tmpl( 'invoice_links' ) );
+						echo ( !empty($reason) ? ' '.$reason : '' );
+				?></p>
+			<?php } ?>
+		</div>
+	</div>
 </div>
-<div style="clear:both"></div>

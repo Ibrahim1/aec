@@ -18,4 +18,4 @@
 		</form><br /><br />
 	</table>
 </div>
-<div class="aec_clearfix"></div>
+</div>

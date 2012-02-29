@@ -10,9 +10,10 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<div class="componentheading"><?php echo JText::_('CONFIRM_TITLE') ?></div>
-<div id="confirmation">
-	<?php @include( $tmpl->tmpl( 'info' ) ) ?>
-	<?php @include( $tmpl->tmpl( 'form' ) ) ?>
+<div id="aec">
+	<div id="aec-confirmation">
+		<div class="componentheading"><?php echo JText::_('CONFIRM_TITLE') ?></div>
+		<?php @include( $tmpl->tmpl( 'info' ) ) ?>
+		<?php @include( $tmpl->tmpl( 'form' ) ) ?>
+	</div>
 </div>
-<div class="aec_clearfix"></div>

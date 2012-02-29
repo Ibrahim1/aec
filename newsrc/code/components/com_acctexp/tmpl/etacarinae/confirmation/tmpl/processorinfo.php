@@ -10,7 +10,7 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<div class="processor_list">
+<div class="processor-list">
 	<table>
 		<?
 		if ( !empty( $InvoiceFactory->pp ) ) {

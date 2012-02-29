@@ -10,9 +10,10 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
-<div class="componentheading"><?php echo JText::_('CHECKOUT_ERROR_TITLE') ?></div>
-<div id="box_pending">
-	<p><?php echo JText::_('CHECKOUT_ERROR_EXPLANATION') . ( $error ? ( ': ' . $error ) : '' ) ?></p>
-	<p><?php if ( !$suppressactions ) { echo JText::_('CHECKOUT_ERROR_OPENINVOICE'); @include( $tmpl->tmpl( 'pending.invoice_links' ) ); } ?></p>
+<div id="aec">
+	<div id="aec-pending">
+		<div class="componentheading"><?php echo JText::_('CHECKOUT_ERROR_TITLE') ?></div>
+		<p><?php echo JText::_('CHECKOUT_ERROR_EXPLANATION') . ( $error ? ( ': ' . $error ) : '' ) ?></p>
+		<p><?php if ( !$suppressactions ) { echo JText::_('CHECKOUT_ERROR_OPENINVOICE'); @include( $tmpl->tmpl( 'pending.invoice_links' ) ); } ?></p>
+	</div>
 </div>
-<div class="aec_clearfix"></div>

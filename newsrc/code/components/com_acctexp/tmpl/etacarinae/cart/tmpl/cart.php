@@ -10,13 +10,13 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-
-<div class="componentheading"><?php echo JText::_('CART_TITLE') ?></div>
-<div id="confirmation">
-	<?php
-	@include( $tmpl->tmpl( 'info' ) );
-	if ( !empty( $InvoiceFactory->cart ) ) {
-		@include( $tmpl->tmpl( 'form' ) );
-	} ?>
+<div id="aec">
+	<div id="aec-confirmation">
+		<div class="componentheading"><?php echo JText::_('CART_TITLE') ?></div>
+		<?php
+		@include( $tmpl->tmpl( 'info' ) );
+		if ( !empty( $InvoiceFactory->cart ) ) {
+			@include( $tmpl->tmpl( 'form' ) );
+		} ?>
+	</div>
 </div>
-<div class="aec_clearfix"></div>

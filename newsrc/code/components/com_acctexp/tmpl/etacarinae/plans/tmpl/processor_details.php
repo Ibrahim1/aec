@@ -35,4 +35,4 @@
 	</tr>
 	<?php
 } ?>
-<div class="aec_clearfix"></div>
+</div>

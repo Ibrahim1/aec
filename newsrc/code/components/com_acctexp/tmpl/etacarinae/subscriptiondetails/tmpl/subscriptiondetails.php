@@ -10,28 +10,27 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<div class="componentheading"><?php echo JText::_('MYSUBSCRIPTION_TITLE');?></div>
-<div id="subscription_details">
-	<?php
-	if ( $tmpl->cfg['subscriptiondetails_menu'] ) {
-		@include( $tmpl->tmpl( 'nav' ) );
-	}
+<div id="aec">
+	<div id="aec-subscriptiondetails">
+		<div class="componentheading"><?php echo JText::_('MYSUBSCRIPTION_TITLE');?></div>
+		<?php
+		if ( $tmpl->cfg['subscriptiondetails_menu'] ) { @include( $tmpl->tmpl( 'nav' ) ); }
 
-	switch ( $sub ) {
-		case 'overview':
-			@include( $tmpl->tmpl( 'overview' ) );
-			break;
-		case 'invoices':
-			@include( $tmpl->tmpl( 'invoices' ) );
-			break;
-		case 'details':
-			if ( $mi ) {
-				echo $mi;
-			}
-			break;
-		default:
-			echo $custom;
-			break;
-	} ?>
+		switch ( $sub ) {
+			case 'overview':
+				@include( $tmpl->tmpl( 'overview' ) );
+				break;
+			case 'invoices':
+				@include( $tmpl->tmpl( 'invoices' ) );
+				break;
+			case 'details':
+				if ( $mi ) {
+					echo $mi;
+				}
+				break;
+			default:
+				echo $custom;
+				break;
+		} ?>
+	</div>
 </div>
-<div class="aec_clearfix"></div>
