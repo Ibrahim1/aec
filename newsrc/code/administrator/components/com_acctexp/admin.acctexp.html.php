@@ -879,7 +879,9 @@ class HTML_AcctExp
 				<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION ); ?></p>
 				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 				<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
-				<p>Please post a rating and a review for AEC<br />at the <a href="http://bit.ly/yGSrZQ" target="_blank">Joomla! Extensions Directory.</a></p>
+				<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
+					<p>If you use AEC, please post a rating and a review<br />at the Joomla! Extensions Directory:<br /><br /><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><i class="bsicon-heart bsicon-white"></i>&nbsp;Go there now</a></p>
+				</div>
 				<div style="margin: 0 auto;text-align:center;">
 					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx.org" /></a>
 					<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
@@ -1154,7 +1156,7 @@ class HTML_AcctExp
 		jimport( 'joomla.html.editor' );
 
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_TEMPLATE', 'templates' );
+		HTML_myCommon::getHeader( $aecHTML->name, 'templates' );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
 							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),

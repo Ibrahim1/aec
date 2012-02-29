@@ -31,16 +31,10 @@ class template_helix extends template_config
 
 		$params[] = array( 'userinfobox', 33.225 );
 		$params = array_merge( $params, $this->stdSettings() );
-		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
-		$params['displayccinfo']				= array( 'toggle', 0 );
-		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_BUTTONS_SUB') );
 		$params['renew_button_never']				= array( 'toggle', '' );
 		$params['renew_button_nolifetimerecurring']	= array( 'toggle', '' );
 		$params['continue_button']					= array( 'toggle', '' );
-		$params[] = array( 'div_end', 0 );
-		$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
-		$params['customlink_continueshopping']	= array( 'inputC', '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
@@ -61,6 +55,12 @@ class template_helix extends template_config
 		$params[] = array( '2div_end', 0 );
 
 		$params[] = array( 'userinfobox', 33.225 );
+		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
+		$params['displayccinfo']				= array( 'toggle', 0 );
+		$params[] = array( 'div_end', 0 );
+		$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
+		$params['customlink_continueshopping']	= array( 'inputC', '' );
+		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
 		$params['use_recaptcha']					= array( 'toggle', '' );
 		$params['recaptcha_privatekey']				= array( 'inputC', '' );

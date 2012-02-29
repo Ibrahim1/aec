@@ -18,7 +18,7 @@
 <tr>
 	<td class="giftdetails">
 		<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
-			<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username'] ?> (<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=InvoiceRemoveGiftConfirm&amp;invoice='.$InvoiceFactory->invoice->invoice_number, $tmpl->cfg['ssl_signup'] ) ?>">undo?</a>)</p>
+			<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username'] ?> (<?php echo $tmpl->lnk( array('task' => 'InvoiceRemoveGift','invoice' => $InvoiceFactory->invoice->invoice_number), "undo?" ) ?>)</p>
 			<input type="hidden" name="user_ident" value="<?php echo $InvoiceFactory->invoice->params['target_username'] ?>" />
 		<?php } else { ?>
 			<p><?php echo JText::_('CHECKOUT_GIFT_INFO') ?></p>

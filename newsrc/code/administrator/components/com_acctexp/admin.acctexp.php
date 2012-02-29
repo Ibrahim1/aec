@@ -1914,7 +1914,8 @@ function editTemplate( $option, $name )
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	$aecHTML->tempname = $name;
+	$aecHTML->tempname	= $name;
+	$aecHTML->name		= $temp->info['longname'];
 
 	HTML_AcctExp::editTemplate( $option, $aecHTML, $tempsettings['tab_data'] );
 }

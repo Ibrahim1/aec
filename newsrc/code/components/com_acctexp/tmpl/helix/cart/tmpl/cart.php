@@ -13,94 +13,9 @@
 
 <div class="componentheading"><?php echo JText::_('CART_TITLE') ?></div>
 <div id="confirmation">
-	<div id="confirmation_info">
-		<?php if ( empty( $InvoiceFactory->cart ) ) { ?>
-		<p>Your Shopping Cart is empty!</p>
-		<?php } else { ?>
-		<p>&nbsp;</p>
-		<div id="clear_button"><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCart&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] ) ?>"><?php echo JText::_('CART_CLEAR_ALL') ?></a></div>
-		<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-		<table>
-			<tr>
-				<th>Item</th>
-				<th>Cost</th>
-				<th>Amount</th>
-				<th>Total</th>
-				<th>&nbsp;</th>
-			</tr>
-			<?php foreach ( $InvoiceFactory->cart as $bid => $bitem ) {
-				if ( !empty( $bitem['name'] ) ) {
-					?><tr>
-						<td><?php echo $bitem['name'] ?></td>
-						<td><?php echo $bitem['cost'] ?></td>
-						<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
-						<td><?php echo $bitem['cost_total'] ?></td>
-						<td><a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=clearCartItem&item='.$bid.'&'. JUtility::getToken() .'=1', $tmpl->cfg['ssl_signup'] ) ?>"><?php echo JText::_('CART_DELETE_ITEM') ?></a></td>
-					</tr><?
-				} else {
-					?><tr>
-						<td><strong><?php echo JText::_('CART_ROW_TOTAL') ?></strong></td>
-						<td></td>
-						<td></td>
-						<td><strong><?php echo $bitem['cost'] ?></strong></td>
-						<td></td>
-					</tr><?
-				}
-			} ?>
-		</table>
-		<input type="hidden" name="option" value="<?php echo $option ?>" />
-		<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0 ?>" />
-		<input type="hidden" name="task" value="updateCart" />
-		<div id="update_button"><button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_UPDATE') ?></button></div>
-		<?php echo JHTML::_( 'form.token' ) ?>
-		</form>
-		<?php } ?>
-		<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
-		<p>Save Registration to Continue Shopping:</p>
-		<?php } else {
-			if ( !empty( $tmpl->cfg['customlink_continueshopping'] ) ) {
-				$continueurl = $tmpl->cfg['customlink_continueshopping'];
-			} else {
-				$continueurl = AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=subscribe', $tmpl->cfg['ssl_signup'] );
-			}
-		?>
-		<div id="continue_button">
-			<form name="continueForm" action="<?php echo $continueurl ?>" method="post">
-				<button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_CONTINUE_SHOPPING') ?></button>
-			</form>
-		</div>
-		<?php } ?>
-	</div>
-	<?php if ( !empty( $InvoiceFactory->cart ) ) { ?>
-	<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=confirmCart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-	<table>
-		<tr>
-			<td id="confirmation_extra">
-				<?
-				@include( $tmpl->tmpl( 'miform' ) );
-				$tmpl->custom( 'customtext_confirm' );
-				?>
-			</td>
-		</tr>
-		<?php if ( $makegift ) { @include( $tmpl->tmpl( 'confirmation.giftform' ) ); } ?>
-		<tr>
-			<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'confirmationbtn' ) ) ?></td>
-		</tr>
-		<tr><td>
-			<div class="processor_list">
-				<table>
-					<?
-					if ( !empty( $InvoiceFactory->pp ) ) {
-						if ( is_object( $InvoiceFactory->pp ) ) {
-							$processor = $InvoiceFactory->pp;
-							@include( $tmpl->tmpl( 'plans.processor_details' ) );
-						}
-					} ?>
-				</table>
-			</div
-		</td></tr>
-	</table>
-	<?php echo JHTML::_( 'form.token' ) ?>
-	</form>
-	<?php } ?>
+	<?php
+	@include( $tmpl->tmpl( 'cartinfo' ) );
+	if ( !empty( $InvoiceFactory->cart ) ) {
+		@include( $tmpl->tmpl( 'cartform' ) );
+	} ?>
 </div>

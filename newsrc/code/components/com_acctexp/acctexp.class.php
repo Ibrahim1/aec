@@ -2672,11 +2672,12 @@ class template_config
 {
 	function stdSettings()
 	{
+		$info = $this->info();
+
 		$params = array();
 		$params[] = array( 'userinfobox_sub', JText::_('TEMPLATE_TITLE') );
 		$params[] = array( 'div', '<div class="alert alert-info">' );
-		$params[] = array( 'h4', $this->info['longname'] );
-		$params[] = array( 'p', $this->info['description'] );
+		$params[] = array( 'p', '<p>'.$info['description'].'</p>' );
 		$params['default'] = array( 'toggle', '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'div_end', 0 );
@@ -8631,7 +8632,7 @@ class aecTemplate
 		return $btn;
 	}
 
-	function lnk( $params, $value )
+	function lnk( $params, $value, $profile=false )
 	{
 		if ( is_array( $params ) ) {
 			$params[JUtility::getToken()] = '1';
@@ -8641,7 +8642,13 @@ class aecTemplate
 				$p[] = $k.'='.$v;
 			}
 
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $this->cfg->cfg['ssl_signup'] );
+			if ( $profile ) {
+				$secure = $this->cfg['ssl_profile'];
+			} else {
+				$secure = $this->cfg['ssl_signup'];
+			}
+
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $secure );
 		} else {
 			$url = $params;
 		}

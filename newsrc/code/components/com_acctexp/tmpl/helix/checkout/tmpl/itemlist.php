@@ -82,12 +82,12 @@
 						}
 
 						if ( !empty( $citem->cost['coupon'] ) ) {
-							$ta .= '&nbsp;[<a href="'
-								. AECToolbox::deadsureURL( 'index.php?option=' . $option
-								. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice->invoice_number
-								. '&amp;coupon_code=' . $citem->cost['coupon'] )
-								. '" title="' . JText::_('CHECKOUT_INVOICE_COUPON_REMOVE') . '">'
-								. JText::_('CHECKOUT_INVOICE_COUPON_REMOVE') . '</a>]';
+							$ta .= '&nbsp;['
+									. $tmpl->lnk( array(	'task' => 'InvoiceRemoveCoupon',
+														'invoice' => $InvoiceFactory->invoice->invoice_number,
+														'coupon_code' => $citem->cost['coupon']
+														), JText::_('CHECKOUT_INVOICE_COUPON_REMOVE') )
+									. ']';
 						}
 
 						$t = $ta;
@@ -156,12 +156,12 @@
 							}
 
 							if ( !empty( $cost->cost['coupon'] ) ) {
-								$t .= '&nbsp;[<a href="'
-									. AECToolbox::deadsureURL( 'index.php?option=' . $option
-									. '&amp;task=InvoiceRemoveCoupon&amp;invoice=' . $InvoiceFactory->invoice->invoice_number
-									. '&amp;coupon_code=' . $cost->cost['coupon'] )
-									. '" title="' . JText::_('CHECKOUT_INVOICE_COUPON_REMOVE') . '">'
-									. JText::_('CHECKOUT_INVOICE_COUPON_REMOVE') . '</a>]';
+								$t .= '&nbsp;['
+										. $tmpl->lnk( array(	'task' => 'InvoiceRemoveCoupon',
+															'invoice' => $InvoiceFactory->invoice->invoice_number,
+															'coupon_code' => $citem->cost['coupon']
+															), JText::_('CHECKOUT_INVOICE_COUPON_REMOVE') )
+										. ']';
 							}
 
 							echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
