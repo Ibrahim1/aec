@@ -1044,7 +1044,7 @@ class HTML_AcctExp
 				<th width="1%">#</th>
 				<th width="1%">id</th>
 				<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-				<th width="10%" align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
+				<th width="10%" class="leftalign"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
 				<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
 				<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 			</tr></thead>
@@ -1120,13 +1120,15 @@ class HTML_AcctExp
 		<div class="aecadminform">
 		<table class="adminlist table-striped">
 			<thead><tr>
-				<th align="left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
-				<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
+				<th width="1%" class="leftalign"><?php echo JText::_('TEMPLATE_DEFAULT'); ?></th>
+				<th class="leftalign"><?php echo JText::_('TEMPLATE_NAME'); ?></th>
+				<th class="leftalign"><?php echo JText::_('TEMPLATE_DESC'); ?></th>
 			</tr></thead>
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
-					<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
 					<td><?php echo HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->name, $row->default ); ?></td>
+					<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
+					<td class="leftalign"><?php echo $row->info['description']; ?></td>
 				</tr>
 			<?php } ?>
 			<tfoot>
@@ -1232,20 +1234,20 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="1%">&nbsp;</th>
-					<th width="10%" align="left"><?php echo JText::_('CNAME'); ?></th>
-					<th width="10%" align="left"><?php echo JText::_('USERLOGIN'); ?></th>
-					<th width="10%" align="left"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
-					<th width="10%" align="left"><?php echo JText::_('SUBSCR_DATE'); ?></th>
+					<th width="10%" class="leftalign"><?php echo JText::_('CNAME'); ?></th>
+					<th width="10%" class="leftalign"><?php echo JText::_('USERLOGIN'); ?></th>
+					<th width="10%" class="leftalign"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
+					<th width="10%" class="leftalign"><?php echo JText::_('SUBSCR_DATE'); ?></th>
 					<?php if ( $action[0] != 'manual' ) { ?>
-						<th width="10%" align="left"><?php echo JText::_('LASTPAY_DATE'); ?></th>
-						<th width="10%" align="left"><?php echo JText::_('METHOD'); ?></th>
-						<th width="10%" align="left"><?php echo JText::_('USERPLAN'); ?></th>
-						<th width="27%" align="left"><?php echo JText::_('EXPIRATION'); ?></th>
+						<th width="10%" class="leftalign"><?php echo JText::_('LASTPAY_DATE'); ?></th>
+						<th width="10%" class="leftalign"><?php echo JText::_('METHOD'); ?></th>
+						<th width="10%" class="leftalign"><?php echo JText::_('USERPLAN'); ?></th>
+						<th width="27%" class="leftalign"><?php echo JText::_('EXPIRATION'); ?></th>
 					<?php } else { ?>
-						<th width="10%" align="left"></th>
-						<th width="10%" align="left"></th>
-						<th width="10%" align="left"></th>
-						<th width="27%" align="left"></th>
+						<th width="10%" class="leftalign"></th>
+						<th width="10%" class="leftalign"></th>
+						<th width="10%" class="leftalign"></th>
+						<th width="27%" class="leftalign"></th>
 					<?php } ?>
 				</tr></thead>
 				<?php foreach ( $rows as $i => $row ) {
@@ -1333,8 +1335,8 @@ class HTML_AcctExp
 					<th width="1%">#</th>
 					<th width="1%">id</th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="10%" align="left"><?php echo JText::_('MI_NAME'); ?></th>
-					<th width="50%" align="left" ><?php echo JText::_('MI_DESC'); ?></th>
+					<th width="10%" class="leftalign"><?php echo JText::_('MI_NAME'); ?></th>
+					<th width="50%" class="leftalign" ><?php echo JText::_('MI_DESC'); ?></th>
 					<th width="1%"><?php echo JText::_('MI_ACTIVE'); ?></th>
 					<?php if ( $ordering ) { ?>
 						<th width="1%"><?php echo JText::_('MI_REORDER'); ?></th>
@@ -1522,7 +1524,7 @@ class HTML_AcctExp
 				<th width="1%">#</th>
 				<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 				<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-				<th width="1%" align="left"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+				<th width="1%" class="leftalign"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
 				<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
 				<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
 				<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
@@ -1944,8 +1946,8 @@ class HTML_AcctExp
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="10%"></th>
-					<th width="10%" align="left"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
-					<th width="50%" align="left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
+					<th width="10%" class="leftalign"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+					<th width="50%" class="leftalign"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
 					<th width="3%"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
 					<th width="3%"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
 					<th width="1%"><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
