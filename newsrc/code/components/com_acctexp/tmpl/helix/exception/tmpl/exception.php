@@ -62,22 +62,24 @@
 					}
 					?>
 					<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid ?>" />
-					<input type="submit" class="button" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
+					<input type="submit" class="button aec-btn" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
 			</td>
 		</tr>
 	</table>
 	<?php echo JHTML::_( 'form.token' ) ?>
 	</form>
-	<table width="100%">
-		<tr><td>
-			<?
-			if ( !empty( $InvoiceFactory->pp ) ) {
-				if ( is_object( $InvoiceFactory->pp ) ) {
-					$processor = $InvoiceFactory->pp;
-					@include( $tmpl->tmpl( 'plans.processor_details' ) );
+	<div class="processor_list">
+		<table width="100%">
+			<tr><td>
+				<?
+				if ( !empty( $InvoiceFactory->pp ) ) {
+					if ( is_object( $InvoiceFactory->pp ) ) {
+						$processor = $InvoiceFactory->pp;
+						@include( $tmpl->tmpl( 'plans.processor_details' ) );
+					}
 				}
-			}
-			?>
-		</td></tr>
-	</table>
+				?>
+			</td></tr>
+		</table>
+	</div>
 </div>

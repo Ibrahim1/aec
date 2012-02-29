@@ -25,19 +25,21 @@ foreach ( $list as $li => $lv ) {
 
 	foreach ( $lv['gw'] as $gwid => $pp ) {
 		$btnarray = array();
-		$btnarray['view'] = '';
 
 		if ( strtolower( $pp->processor_name ) == 'add_to_cart' ) {
 			$btnarray['option']		= 'com_acctexp';
-			$task		= 'addtocart';
-			$urlbutton	= $imgroot . 'add_to_cart_button.png';
+			$btnarray['task']		= 'addtocart';
+			$btnarray['class'] = 'aec-btn aec-btn-processor';
+			$btnarray['content'] = JText::_('AEC_BTN_ADD_TO_CART');
 
 			$btnarray['usage'] = $lv['id'];
 
-			if ( $aecConfig->cfg['additem_stayonpage'] ) {
+			if ( $tmpl->cfg['additem_stayonpage'] ) {
 				$btnarray['returngroup'] = $group;
 			}
 		} else {
+			$btnarray['view'] = '';
+
 			if ( $register ) {
 				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 					$btnarray['option']	= 'com_comprofiler';

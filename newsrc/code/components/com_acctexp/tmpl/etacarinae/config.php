@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: helix/config.php
+ * @version $Id: etacarinae/config.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Template Config - Helix
+ * @subpackage Template Config - Eta Carinae
  * @copyright 2012 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
@@ -11,14 +11,14 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class template_helix extends template_config
+class template_etacarinae extends template_config
 {
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'helix';
-		$info['longname']		= "Helix";
-		$info['description']	= "The classic pre- AEC 1.0 template";
+		$info['name']			= 'etacarinae';
+		$info['longname']		= "Eta Carinae";
+		$info['description']	= "The standard AEC 1.0 template";
 
 		return $info;
 	}
@@ -53,6 +53,7 @@ class template_helix extends template_config
 		$params['tos_iframe']					= array( 'toggle', '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
+		$params['enable_coupons']				= array( 'toggle', 0 );
 		$params['checkout_display_descriptions']	= array( 'toggle', '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS') );

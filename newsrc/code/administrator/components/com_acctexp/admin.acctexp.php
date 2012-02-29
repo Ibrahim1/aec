@@ -1459,6 +1459,9 @@ function editSettings( $option )
 	$params['integrate_registration']		= array( 'toggle', 0 );
 	$params['skip_confirmation']			= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
+	$params['enable_coupons']				= array( 'toggle', 0 );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
 	$params['enable_shoppingcart']			= array( 'toggle', '' );
 	$params['additem_stayonpage']			= array( 'toggle', '' );
@@ -1495,16 +1498,19 @@ function editSettings( $option )
 	$tab_data[] = array( JText::_('CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB1_SUBTITLE') . '</h2>' );
 
 	$params[] = array( 'userinfobox', 49.8 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
-	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CREDIRECT') );
+	$params['customintro']						= array( 'inputC', '' );
+	$params['customintro_userid']				= array( 'toggle', '' );
+	$params['customintro_always']				= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
-	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_INUM') );
+	$params['invoicenum_doformat']				= array( 'toggle', '' );
+	$params['invoicenum_formatting']			= array( 'inputD', '' );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
-	$params['amount_currency_symbol']			= array( 'toggle', 0 );
-	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
-	$params['amount_use_comma']					= array( 'toggle', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
+	$params['use_recaptcha']					= array( 'toggle', '' );
+	$params['recaptcha_privatekey']				= array( 'inputC', '' );
+	$params['recaptcha_publickey']				= array( 'inputC', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_PROXY') );
 	$params['use_proxy']						= array( 'toggle', '' );
@@ -1533,6 +1539,15 @@ function editSettings( $option )
 
 
 	$params[] = array( 'userinfobox', 49.8 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
+	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
+	$params['amount_currency_symbol']			= array( 'toggle', 0 );
+	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
+	$params['amount_use_comma']					= array( 'toggle', 0 );
+	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
 
 	foreach ( $itemidlist as $param => $xparams ) {
@@ -1871,6 +1886,10 @@ function listTemplates( $option )
 	foreach ( $names as $name ) {
 		$t = new configTemplate( $db );
 		$t->loadName( $name );
+
+		if ( !$t->id ){
+			$t->default = 0;
+		}
 
 		$rows[] = $t;
 	}
@@ -5873,7 +5892,7 @@ function exportData( $option, $type, $cmd=null )
 	if ( $type == 'members' ) {
 		$params[] = array( 'userinfobox_sub', 'Compose Export' );
 		$params['params_remap']		= array( 'subarea_change', 'params' );
-		$params[] = array( 'div', '<div class="alert-message block-message info">' );
+		$params[] = array( 'div', '<div class="alert alert-info">' );
 		$params[] = array( 'p', '<p>Take users that fit these criteria:</p>' );
 		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
 		$params['groupid']			= array( 'list', '' );
@@ -5885,11 +5904,11 @@ function exportData( $option, $type, $cmd=null )
 		$params['status']			= array( 'list', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="alert-message block-message warning">' );
+		$params[] = array( 'div', '<div class="alert alert-warning">' );
 		$params[] = array( 'p', '<p>Order them like this:</p>' );
 		$params['orderby']			= array( 'list', '' );
 		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="alert-message block-message success">' );
+		$params[] = array( 'div', '<div class="alert alert-success">' );
 		$params[] = array( 'p', '<p>And use these details for each line of the export:</p>' );
 		$params['rewrite_rule']	= array( 'inputD', '[[user_id]];[[user_username]];[[subscription_expiration_date]]' );
 		$params[] = array( '2div_end', '' );
@@ -5898,7 +5917,7 @@ function exportData( $option, $type, $cmd=null )
 
 		$params[] = array( 'userinfobox_sub', 'Compose Export' );
 		$params['params_remap']		= array( 'subarea_change', 'params' );
-		$params[] = array( 'div', '<div class="alert-message block-message info">' );
+		$params[] = array( 'div', '<div class="alert alert-info">' );
 		$params[] = array( 'p', '<p>Collect Sales Data from this range:</p>' );
 		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
 		$params['date_start']		= array( 'list_date', date( 'Y-m-d', $monthago ) );
@@ -5912,11 +5931,11 @@ function exportData( $option, $type, $cmd=null )
 		$params['groupid']			= array( 'list', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="alert-message block-message warning">' );
+		$params[] = array( 'div', '<div class="alert alert-warning">' );
 		$params[] = array( 'p', '<p>Collate it like this:</p>' );
 		$params['collate']			= array( 'list', '' );
 		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="alert-message block-message success">' );
+		$params[] = array( 'div', '<div class="alert alert-success">' );
 		$params[] = array( 'p', '<p>Break down the data in each line like so:</p>' );
 		$params['breakdown']		= array( 'list', 'month' );
 		$params['breakdown_custom']	= array( 'inputD', '' );

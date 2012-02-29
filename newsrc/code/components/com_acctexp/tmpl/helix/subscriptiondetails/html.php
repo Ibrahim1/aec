@@ -12,13 +12,13 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 if ( !$metaUser->userid ) {
-	return notAllowed( $option );
+	return getView( 'access_denied' );
 }
 
 $db = &JFactory::getDBO();
 
 // Redirect to SSL if the config requires it
-if ( !empty( $aecConfig->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
+if ( !empty( $tmpl->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$tmpl->cfg['override_reqssl'] ) {
 	aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=subscriptiondetails", true, false ) );
 	exit();
 }
@@ -64,9 +64,9 @@ if ( !empty( $metaUser->objSubscription->type ) ) {
 
 // The upgrade button might only show on some occasions
 $properties['upgrade_button'] = true;
-if ( $aecConfig->cfg['renew_button_never'] ) {
+if ( $tmpl->cfg['renew_button_never'] ) {
 	$properties['upgrade_button'] = false;
-} elseif ( $aecConfig->cfg['renew_button_nolifetimerecurring'] ) {
+} elseif ( $tmpl->cfg['renew_button_nolifetimerecurring'] ) {
 	if ( !empty( $metaUser->objSubscription->lifetime ) ) {
 		$properties['upgrade_button'] = false;
 	} elseif ( $metaUser->isRecurring() ) {
@@ -181,24 +181,24 @@ if ( !empty( $subList ) ) {
 				if ( $info !== false ) {
 					$mi_info .= '<div class="' . $mi->class_name . ' mi_' . $mi->id . '">' . $info . '</div>';
 				}
-			}
 
-			$addtabs = $mi->registerProfileTabs();
+				$addtabs = $mi->registerProfileTabs();
 
-			if ( empty( $addtabs ) ) {
-				continue;
-			}
-
-			foreach ( $addtabs as $atk => $atv ) {
-				$action = $mi->class_name . '_' . $atk;
-				if ( isset( $subfields[$action] ) ) {
+				if ( empty( $addtabs ) ) {
 					continue;
 				}
 
-				$subfields[$action] = $atv;
+				foreach ( $addtabs as $atk => $atv ) {
+					$action = $mi->class_name . '_' . $atk;
+					if ( isset( $subfields[$action] ) ) {
+						continue;
+					}
 
-				if ( $action == $sub ) {
-					$custom = $mi->customProfileTab( $atk, $metaUser );
+					$subfields[$action] = $atv;
+
+					if ( $action == $sub ) {
+						$custom = $mi->customProfileTab( $atk, $metaUser );
+					}
 				}
 			}
 		}
@@ -266,7 +266,7 @@ foreach ( $invoiceList as $invoiceid ) {
 	if ( !empty( $actionsarray ) ) {
 		foreach ( $actionsarray as $aid => $a ) {
 			if ( is_array( $a ) ) {
-				$link = AECToolbox::deadsureURL( sprintf( $invoiceactionlink, $a['task'], $a['add'] ), !empty( $aecConfig->cfg['ssl_profile'] ) );
+				$link = AECToolbox::deadsureURL( sprintf( $invoiceactionlink, $a['task'], $a['add'] ), !empty( $tmpl->cfg['ssl_profile'] ) );
 
 				$insert = '';
 				if ( !empty( $a['insert'] ) ) {

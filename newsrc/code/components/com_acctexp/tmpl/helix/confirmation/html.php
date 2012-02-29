@@ -23,6 +23,12 @@ if ( !empty( $tmpl->cfg['confirm_as_gift'] ) ) {
 	}
 }
 
+$custom = trim( $tmpl->cfg['custom_confirm_userdetails'] );
+
+if ( ! (empty( $custom ) || ( $custom == '<p><br mce_bogus="1"></p>' )|| ( $custom == '<br mce_bogus="1">' ) ) ) {
+	$InvoiceFactory->userdetails = AECToolbox::rewriteEngineRQ( $custom, $InvoiceFactory );
+}
+
 if ( !empty( $tmpl->cfg['tos'] ) ) {
 	$js = 'function submitPayment() {
 		if ( document.confirmForm.tos.checked ) {

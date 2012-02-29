@@ -19,7 +19,7 @@
 		} else {
 			$id = '';
 		}
-		echo '<li><a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=' . $fieldlink, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '"'.$id.'>' . $fieldname . '</a></li>';
+		echo '<li><a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=' . $fieldlink, !empty( $tmpl->cfg['ssl_profile'] ) ) . '"'.$id.'>' . $fieldname . '</a></li>';
 	}
 	?>
 	</ul>

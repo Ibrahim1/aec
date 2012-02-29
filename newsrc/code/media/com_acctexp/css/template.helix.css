@@ -1000,7 +1000,7 @@ text-align: center;
 
 .aec_clearfix {
 clear: both;
-height: 20px;
+height: 0;
 }
 
 .aechidden {
@@ -1059,6 +1059,21 @@ display: block;
 .tabs_panel.selected {
 background-color: #e6e6e6;
 display: block;
+}
+
+.processor_list {
+border-color: #ddd #bbb #aaa #ddd;
+border-style: solid;
+border-width: 1px;
+float: left;
+margin: 24px 0;
+padding: 8px;
+width: 100%;
+background: #fff;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+box-shadow: 0 2px 2px #eee;
 }
 
 /* Some bootstrap.css inclusion */

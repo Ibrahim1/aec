@@ -35,7 +35,7 @@
 					<input type="hidden" name="option" value="<?php echo $option ?>" />
 					<input type="hidden" name="task" value="InvoiceAddCoupon" />
 					<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number ?>" />
-					<input type="submit" class="button" value="<?php echo JText::_('BUTTON_APPLY') ?>" />
+					<input type="submit" class="button aec-btn" value="<?php echo JText::_('BUTTON_APPLY') ?>" />
 					<?php echo JHTML::_( 'form.token' ) ?>
 				</form>
 			</td>

@@ -16,8 +16,8 @@ if ( !empty( $metaUser->objSubscription->signup_date ) ) {
 }
 
 if ( $properties['hascart'] ) { ?>
-<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
-<div id="update_button"><input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png'; ?>" border="0" name="submit" alt="submit" /></div>
+<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $tmpl->cfg['ssl_signup'] ); ?>" method="post">
+<div id="update_button"><button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_YOUR_CART') ?></button></div>
 <?php echo JHTML::_( 'form.token' ); ?>
 </form><br /><br />
 <?php }
@@ -108,11 +108,11 @@ if ( $metaUser->hasSubscription ) {
 		<?php
 		if ( !empty( $properties['upgrade_button'] ) ) { ?>
 			<div id="upgrade_button">
-				<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription', !empty( $aecConfig->cfg['ssl_signup'] ) ); ?>" method="post">
+				<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription', !empty( $tmpl->cfg['ssl_signup'] ) ); ?>" method="post">
 					<input type="hidden" name="option" value="<?php echo $option; ?>" />
 					<input type="hidden" name="task" value="renewsubscription" />
 					<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />
-					<input type="submit" class="button" value="<?php echo JText::_('RENEW_BUTTON_UPGRADE');?>" />
+					<input type="submit" class="button aec-btn" value="<?php echo JText::_('RENEW_BUTTON_UPGRADE');?>" />
 					<?php echo JHTML::_( 'form.token' ); ?>
 				</form>
 			</div>

@@ -13,7 +13,7 @@
 <div class="componentheading"><?php echo JText::_('MYSUBSCRIPTION_TITLE');?></div>
 <div id="subscription_details">
 	<?php
-	if ( $aecConfig->cfg['subscriptiondetails_menu'] ) {
+	if ( $tmpl->cfg['subscriptiondetails_menu'] ) {
 		@include( $tmpl->tmpl( 'nav' ) );
 	}
 

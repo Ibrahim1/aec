@@ -19,7 +19,7 @@
 		}
 	?>
 	<div id="upgrade_button">
-		<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe', $aecConfig->cfg['ssl_signup'] ); ?>" method="post">
+		<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe', $tmpl->cfg['ssl_signup'] ); ?>" method="post">
 			<input type="password" size="20" class="inputbox" id="password" name="password"/>
 			<?php if ( $passthrough != false ) {
 				$pt = unserialize( base64_decode( $passthrough ) );
@@ -33,7 +33,7 @@
 				} ?>
 				<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough; ?>" />
 			<?php } ?>
-			<input type="submit" class="button" value="<?php echo JText::_('AEC_PROMPT_PASSWORD_BUTTON');?>" />
+			<input type="submit" class="button aec-btn" value="<?php echo JText::_('AEC_PROMPT_PASSWORD_BUTTON');?>" />
 			<?php echo JHTML::_( 'form.token' ); ?>
 		</form>
 	</div>

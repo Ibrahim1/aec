@@ -61,16 +61,16 @@ if ( !empty( $var ) ) { ?>
 <?php } ?>
 <?php } ?>
 </table>
-<table width="100%">
-	<tr><td>
-		<?
-		if ( !empty( $InvoiceFactory->pp ) ) {
-			if ( is_object( $InvoiceFactory->pp ) ) {
-				$processor = $InvoiceFactory->pp;
-				@include( $tmpl->tmpl( 'plans.processor_details' ) );
-			}
-		}
-		?>
-	</td></tr>
-</table>
+<div class="processor_list">
+	<table width="100%">
+		<tr><td>
+			<? if ( !empty( $InvoiceFactory->pp ) ) {
+				if ( is_object( $InvoiceFactory->pp ) ) {
+					$processor = $InvoiceFactory->pp;
+					@include( $tmpl->tmpl( 'plans.processor_details' ) );
+				}
+			} ?>
+		</td></tr>
+	</table>
+</div>
 </div>

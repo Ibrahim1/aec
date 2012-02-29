@@ -26,7 +26,11 @@
 		<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'confirmationbtn' ) ) ?></td>
 	</tr>
 	<tr>
-		<td><table><?php @include( $tmpl->tmpl( 'plans.processor_details' ) ) ?></table></td>
+		<td>
+			<div class="processor_list">
+				<table><?php if ( is_object($InvoiceFactory->pp) ) { $processor = $InvoiceFactory->pp; @include( $tmpl->tmpl( 'plans.processor_details' ) ); } ?></table>
+			</div>
+		</td>
 	</tr>
 </table>
 <?php echo JHTML::_( 'form.token' ) ?>

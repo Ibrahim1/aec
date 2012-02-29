@@ -133,7 +133,7 @@ if ( !empty( $task ) ) {
 			}
 
 			if ( !$user->id ) {
-				notAllowed( $option );
+				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
 				$iFactory->addtoCart( $option, $usage, $returngroup );
@@ -144,7 +144,7 @@ if ( !empty( $task ) ) {
 			$user = &JFactory::getUser();
 
 			if ( !$user->id ) {
-				notAllowed( $option );
+				getView( 'access_denied' );
 			} else {
 				$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
@@ -167,7 +167,7 @@ if ( !empty( $task ) ) {
 			}
 
 			if ( !$user->id ) {
-				notAllowed( $option );
+				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
 				$iFactory->updateCart( $option, $_POST );
@@ -185,7 +185,7 @@ if ( !empty( $task ) ) {
 			}
 
 			if ( !$user->id ) {
-				notAllowed( $option );
+				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
 				$iFactory->clearCart( $option );
@@ -205,7 +205,7 @@ if ( !empty( $task ) ) {
 			}
 
 			if ( !$user->id ) {
-				notAllowed( $option );
+				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
 				$iFactory->clearCartItem( $option, $item );
@@ -226,7 +226,7 @@ if ( !empty( $task ) ) {
 			}
 
 			if ( !$user->id ) {
-				notAllowed( $option );
+				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
 				$iFactory->confirmcart( $option, $coupon );

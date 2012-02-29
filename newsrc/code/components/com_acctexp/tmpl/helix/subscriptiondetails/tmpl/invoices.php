@@ -38,7 +38,7 @@ if ( $properties['invoice_pages'] > 1 ) {
 		if ( $i == $properties['invoice_page'] ) {
 			$plist[] = ( $i + 1 );
 		} else {
-			$plist[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=invoices&page=' . $i, !empty( $aecConfig->cfg['ssl_profile'] ) ) . '">' . ( $i + 1 ) . '</a>';
+			$plist[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=invoices&page=' . $i, !empty( $tmpl->cfg['ssl_profile'] ) ) . '">' . ( $i + 1 ) . '</a>';
 		}
 	}
 	echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';

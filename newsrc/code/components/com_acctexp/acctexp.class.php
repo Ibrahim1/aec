@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4569' );
+define( '_AEC_REVISION', '4605' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2665,6 +2665,23 @@ class configTemplate extends serialParamDBTable
 
 			$this->info = $this->template->info();
 		}
+	}
+}
+
+class template_config
+{
+	function stdSettings()
+	{
+		$params = array();
+		$params[] = array( 'userinfobox_sub', JText::_('TEMPLATE_TITLE') );
+		$params[] = array( 'div', '<div class="alert alert-info">' );
+		$params[] = array( 'h4', $this->info['longname'] );
+		$params[] = array( 'p', $this->info['description'] );
+		$params['default'] = array( 'toggle', '' );
+		$params[] = array( 'div_end', 0 );
+		$params[] = array( 'div_end', 0 );
+
+		return $params;
 	}
 }
 
@@ -5692,7 +5709,7 @@ class POSTprocessor extends processor
 			$text = JText::_('BUTTON_CHECKOUT'); 
 		}
 
-		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . $text . '" />' . "\n";
+		$return .= '<input type="submit" class="button aec-btn" id="aec_checkout_btn" ' . $onclick . ' value="' . $text . '" />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5723,7 +5740,7 @@ class GETprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button"' . $onclick . ' value="' . JText::_('BUTTON_CHECKOUT') . '" />' . "\n";
+		$return .= '<input type="submit" class="button aec-btn"' . $onclick . ' value="' . JText::_('BUTTON_CHECKOUT') . '" />' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -8634,7 +8651,12 @@ class aecTemplate
 
 	function rw( $string )
 	{
-		return AECToolbox::rewriteEngine( $tmpl->cfg['customtext_hold'], $this->metaUser );
+		return AECToolbox::rewriteEngine( $string, $this->metaUser );
+	}
+
+	function rwrq( $string, $request )
+	{
+		return AECToolbox::rewriteEngine( $string, $request );
 	}
 
 	function custom( $setting, $original=null, $obj=null )
@@ -10449,20 +10471,14 @@ class InvoiceFactory
 		}
 
 		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
-			$custom = trim( $aecConfig->cfg['custom_confirm_userdetails'] );
+			$this->userdetails = "";
 
-			if ( empty( $custom ) || ( $custom == '<p><br mce_bogus="1"></p>' )|| ( $custom == '<br mce_bogus="1">' ) ) {
-				$this->userdetails = "";
-
-				if ( !empty( $this->metaUser->cmsUser->name ) ) {
-					$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_NAME') . "&nbsp;" . $this->metaUser->cmsUser->name . '</p>';
-				}
-
-				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_USERNAME') . "&nbsp;" . $this->metaUser->cmsUser->username . '</p>';
-				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_EMAIL') . "&nbsp;" . $this->metaUser->cmsUser->email . '</p>';
-			} else {
-				$this->userdetails = AECToolbox::rewriteEngineRQ( $custom, $this );
+			if ( !empty( $this->metaUser->cmsUser->name ) ) {
+				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_NAME') . "&nbsp;" . $this->metaUser->cmsUser->name . '</p>';
 			}
+
+			$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_USERNAME') . "&nbsp;" . $this->metaUser->cmsUser->username . '</p>';
+			$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_EMAIL') . "&nbsp;" . $this->metaUser->cmsUser->email . '</p>';
 
 			getView( 'confirmation', array( 'InvoiceFactory' => $this, 'passthrough' => $this->getPassthrough() ) );
 		} else {
@@ -10708,7 +10724,7 @@ class InvoiceFactory
 				}
 			}
 
-			return notAllowed( $option );
+			return getView( 'access_denied' );
 		} elseif ( in_array( strtolower( $this->processor ), $exceptproc ) ) {
 			if ( !empty( $this->invoice->made_free ) ) {
 				// mark paid
@@ -10717,10 +10733,10 @@ class InvoiceFactory
 				}
 			}
 
-			return notAllowed( $option );
+			return getView( 'access_denied' );
 		} elseif ( strcmp( strtolower( $this->processor ), 'error' ) === 0 ) {
 			// Nope, won't work buddy
-			return notAllowed( $option );
+			return getView( 'access_denied' );
 		}
 
 		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
@@ -10779,10 +10795,7 @@ class InvoiceFactory
 
 		$this->checkout = array();
 		$this->checkout['checkout_title']					= JText::_('CHECKOUT_TITLE');
-		$this->checkout['customtext_checkout_keeporiginal']	= $aecConfig->cfg['customtext_checkout_keeporiginal'];
-		$this->checkout['customtext_checkout']				= AECToolbox::rewriteEngineRQ( $aecConfig->cfg['customtext_checkout'], $this );
 		$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
-		$this->checkout['checkout_display_descriptions']	= $aecConfig->cfg['checkout_display_descriptions'];
 		
 		if ( isset( $aecConfig->cfg['checkout_coupons'] ) ) {
 			$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'] ? $aecConfig->cfg['checkout_coupons'] : false;

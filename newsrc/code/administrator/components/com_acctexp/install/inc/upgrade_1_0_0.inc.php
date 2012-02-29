@@ -17,7 +17,7 @@ if ( isset( $aecConfig->cfg['customtext_plans'] ) ) {
 							'confirmation_changeusername', 'confirmation_changeusage', 'invoice_before_header', 'invoice_page_title',
 							'invoice_header', 'invoice_after_header', 'invoice_address_allow_edit', 'invoice_address',
 							'invoice_before_content', 'invoice_after_content', 'invoice_before_footer', 'invoice_footer',
-							'invoice_after_footer', 'customintro', 'customintro_userid', 'customintro_always',
+							'invoice_after_footer',
 							'customthanks', 'customcancel', 'customnotallowed', ' confirmation_display_descriptions',
 							'tos', 'tos_iframe', 'customlink_continueshopping', ' renew_button_never',
 							'renew_button_nolifetimerecurring', 'continue_button', 'use_recaptcha', 'recaptcha_privatekey',
@@ -25,9 +25,13 @@ if ( isset( $aecConfig->cfg['customtext_plans'] ) ) {
 
 	$copysettings = array();
 	foreach ( $oldsettings as $k ) {
-		$copysettings[$k] = $aecConfig->cfg[$k];
+		if ( isset( $aecConfig->cfg[$k] ) ) {
+			$copysettings[$k] = $aecConfig->cfg[$k];
 
-		unset( $aecConfig->cfg[$k] );
+			unset( $aecConfig->cfg[$k] );
+		} else {
+			$copysettings[$k] = "";
+		}
 	}
 
 	$aecConfig->saveSettings();

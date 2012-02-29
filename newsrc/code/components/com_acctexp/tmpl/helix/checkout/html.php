@@ -23,11 +23,15 @@ if ( !empty( $tmpl->cfg['checkout_as_gift'] ) ) {
 	}
 }
 
+$InvoiceFactory->checkout['customtext_checkout_keeporiginal']	= $tmpl->cfg['customtext_checkout_keeporiginal'];
+$InvoiceFactory->checkout['customtext_checkout']				= $tmpl->rwrq( $tmpl->cfg['customtext_checkout'], $InvoiceFactory );
+$InvoiceFactory->checkout['checkout_display_descriptions']		= $tmpl->cfg['checkout_display_descriptions'];
+
 $tmpl->addDefaultCSS();
 
 $tmpl->setTitle( $InvoiceFactory->checkout['checkout_title'] );
 
-if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
+if ( $tmpl->cfg['checkoutform_jsvalidation'] ) {
 	$tmpl->addScript( JURI::root(true) . '/media/com_acctexp/js/ccvalidate.js' );
 }
 

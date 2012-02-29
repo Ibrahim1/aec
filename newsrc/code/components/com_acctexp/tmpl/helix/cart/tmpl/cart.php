@@ -51,7 +51,7 @@
 		<input type="hidden" name="option" value="<?php echo $option ?>" />
 		<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0 ?>" />
 		<input type="hidden" name="task" value="updateCart" />
-		<div id="update_button"><input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/update_button.png' ?>" border="0" name="submit" alt="submit" /></div>
+		<div id="update_button"><button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_UPDATE') ?></button></div>
 		<?php echo JHTML::_( 'form.token' ) ?>
 		</form>
 		<?php } ?>
@@ -66,7 +66,7 @@
 		?>
 		<div id="continue_button">
 			<form name="continueForm" action="<?php echo $continueurl ?>" method="post">
-				<input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/continue_shopping_button.png' ?>" border="0" name="submit" alt="submit" />
+				<button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_CONTINUE_SHOPPING') ?></button>
 			</form>
 		</div>
 		<?php } ?>
@@ -87,15 +87,17 @@
 			<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'confirmationbtn' ) ) ?></td>
 		</tr>
 		<tr><td>
-			<table>
-				<?
-				if ( !empty( $InvoiceFactory->pp ) ) {
-					if ( is_object( $InvoiceFactory->pp ) ) {
-						$processor = $InvoiceFactory->pp;
-						@include( $tmpl->tmpl( 'plans.processor_details' ) );
-					}
-				} ?>
-			</table>
+			<div class="processor_list">
+				<table>
+					<?
+					if ( !empty( $InvoiceFactory->pp ) ) {
+						if ( is_object( $InvoiceFactory->pp ) ) {
+							$processor = $InvoiceFactory->pp;
+							@include( $tmpl->tmpl( 'plans.processor_details' ) );
+						}
+					} ?>
+				</table>
+			</div
 		</td></tr>
 	</table>
 	<?php echo JHTML::_( 'form.token' ) ?>

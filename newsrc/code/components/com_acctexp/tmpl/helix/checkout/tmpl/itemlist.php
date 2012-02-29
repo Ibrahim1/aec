@@ -14,7 +14,7 @@
 <table id="aec_checkout">
 <?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
 	<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-	<div id="update_button">You can always go back to: <input type="image" src="<?php echo JURI::root(true) . '/media/com_acctexp/images/site/your_cart_button.png' ?>" border="0" name="submit" alt="submit" /></div>
+	<div id="update_button">You can always go back to: <button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_YOUR_CART') ?></button></div>
 	<?php echo JHTML::_( 'form.token' ) ?>
 	</form><br /><br />
 <?php } ?>
