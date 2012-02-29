@@ -22,3 +22,4 @@
 if ( $tmpl->cfg['customtext_hold'] ) { ?>
 	<p><?php echo $tmpl->rw( $tmpl->cfg['customtext_hold'] ) ?></p>
 <?php } ?>
+<div class="aec_clearfix"></div>

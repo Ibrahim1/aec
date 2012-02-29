@@ -15,3 +15,4 @@
 	<p><?php echo JText::_('CHECKOUT_ERROR_EXPLANATION') . ( $error ? ( ': ' . $error ) : '' ) ?></p>
 	<p><?php if ( !$suppressactions ) { echo JText::_('CHECKOUT_ERROR_OPENINVOICE'); @include( $tmpl->tmpl( 'pending.invoice_links' ) ); } ?></p>
 </div>
+<div class="aec_clearfix"></div>

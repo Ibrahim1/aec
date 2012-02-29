@@ -29,3 +29,5 @@
 $tmpl->custom( 'customtext_notallowed' );
 
 @include( $tmpl->tmpl( 'plans.processor_list' ) );
+?>
+<div class="aec_clearfix"></div>

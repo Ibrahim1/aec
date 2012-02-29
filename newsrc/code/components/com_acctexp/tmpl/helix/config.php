@@ -18,7 +18,7 @@ class template_helix extends template_config
 		$info = array();
 		$info['name']			= 'helix';
 		$info['longname']		= "Helix";
-		$info['description']	= "The classic pre- AEC 1.0 template";
+		$info['description']	= "The classic pre-1.0 template";
 
 		return $info;
 	}

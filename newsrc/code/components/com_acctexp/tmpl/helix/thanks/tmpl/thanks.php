@@ -12,3 +12,4 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
 <?php echo $msg ?>
+<div class="aec_clearfix"></div>

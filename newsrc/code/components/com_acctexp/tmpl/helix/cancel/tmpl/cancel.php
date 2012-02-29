@@ -19,4 +19,5 @@
 	<div id="cancel_page">
 		<p><?php echo JText::_('CANCEL_MSG') ?></p>
 	</div>
-<?php }
+<?php } ?>
+<div class="aec_clearfix"></div>

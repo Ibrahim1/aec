@@ -102,9 +102,9 @@ class plgSystemAECrouting extends JPlugin
 		$vars['joms_regp']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerProfile' );
 		$vars['joms_regs']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'registerSucess' );
 		$vars['joms_regsv']		= $vars['joms']		&& ( $vars['view'] == 'register' ) && ( $vars['task'] == 'register_save' );
+		$vars['joms_regsh']		= $vars['aec']		&& ( $vars['view'] == 'subscribe' ) && ( $vars['task'] == 'register_save' );
 
 		$vars['alpha_reg']		= $vars['alpha']	&& ( $vars['view'] == 'register' ) && empty( $vars['task'] );
-		$vars['alpha_regsv']	= $vars['alpha']	&& ( $vars['task'] == 'register_save' );
 
 		$vars['k2_regsv']		= $vars['k2']		&& ( ($vars['task'] == 'register_save') || ($vars['task'] == 'registration.register') );
 
@@ -114,6 +114,8 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['cbsreg']		= ( ( $vars['ccb'] && $vars['tsue'] ) || ( $vars['cu'] && $vars['tsu'] ) );
 		$vars['cb_sregsv']	= ( ( $vars['ccb'] && $vars['tcregs'] ) );
+
+		$vars['alpha_regsv'] = 0;
 
 		return $vars;
 	}
@@ -342,6 +344,24 @@ class plgSystemAECrouting extends JPlugin
 
 				$temptoken->storeload();
 			}
+		} elseif ( $vars['has_usage'] ) {
+			$db = &JFactory::getDBO();
+
+			$temptoken = new aecTempToken( $db );
+			$temptoken->getComposite();
+
+			$content = array();
+			$content['usage']		= $vars['usage'];
+			$content['processor']	= $vars['processor'];
+			$content['recurring']	= $vars['recurring'];
+
+			if ( empty( $temptoken->id ) ) {
+				$temptoken->create( $content );
+			} else {
+				$temptoken->content = array_merge( $temptoken->content, $content );
+			}
+
+			$temptoken->storeload();
 		} elseif ( $vars['cbsreg'] ) {
 			// Any kind of user profile edit = trigger MIs
 

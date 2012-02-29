@@ -15,3 +15,4 @@
 	<?php @include( $tmpl->tmpl( 'info' ) ) ?>
 	<?php @include( $tmpl->tmpl( 'form' ) ) ?>
 </div>
+<div class="aec_clearfix"></div>

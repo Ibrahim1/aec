@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4605' );
+define( '_AEC_REVISION', '4633' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -8596,6 +8596,31 @@ class aecTemplate
 
 	function btn( $params, $value, $class='btn' )
 	{
+		if ( empty( $params['option'] ) ) {
+			$params['option'] = 'com_acctexp';
+		}
+
+		$xurl = 'index.php?option='.$params['option'];
+
+		if ( !empty( $params['task'] ) ) {
+			$xurl .= '&task='.$params['task'];
+		}
+
+		if ( !empty( $params['view'] ) ) {
+			$xurl .= '&view='.$params['view'];
+		}
+
+		if ( $params['option'] == 'com_acctexp' ) {
+			$url = AECToolbox::deadsureURL( $xurl, $this->cfg['ssl_signup'] );
+		} else {
+			$uri    = JURI::getInstance();
+			$prefix = $uri->toString( array( 'scheme', 'host', 'port' ) );
+
+			$url = $prefix.JRoute::_( $xurl );
+		}
+
+		$btn = '<form action="'.$url.'" method="post">';
+
 		if ( isset( $params['class'] ) ) {
 			unset( $params['class'] );
 		}
@@ -8607,18 +8632,6 @@ class aecTemplate
 		if ( empty( $params['task'] ) ) {
 			unset( $params['task'] );
 		}
-
-		if ( empty( $params['option'] ) ) {
-			$params['option'] = 'com_acctexp';
-		}
-
-		if ( !empty( $params['task'] ) ) {
-			$url = AECToolbox::deadsureURL( 'index.php?option='.$params['option'].'&task='.$params['task'], $this->cfg->cfg['ssl_signup'] );
-		} else {
-			$url = AECToolbox::deadsureURL( 'index.php?option='.$params['option'], $this->cfg->cfg['ssl_signup'] );
-		}
-
-		$btn = '<form action="'.$url.'" method="post">';
 
 		foreach ( $params as $k => $v ) {
 			$btn .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';

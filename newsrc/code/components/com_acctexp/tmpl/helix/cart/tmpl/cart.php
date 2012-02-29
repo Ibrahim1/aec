@@ -19,3 +19,4 @@
 		@include( $tmpl->tmpl( 'form' ) );
 	} ?>
 </div>
+<div class="aec_clearfix"></div>
