@@ -84,6 +84,22 @@ class processor_clickbank extends URLprocessor
 		$response = array();
 		$response['invoice']			= aecGetParam( 'invoice', '', true, array( 'word' ) );
 
+		if ( empty( $response['invoice'] ) ) {
+			$cvendthru = aecGetParam( 'cvendthru', '', true, array( 'word' ) );
+
+			$carray = explode( "&", $cvendthru );
+
+			foreach ( $carray as $n ) {
+				$data = explode( "=", $n );
+
+				if ( $data[0] == 'invoice' ) {
+					$response['invoice'] = $data[1];
+
+					break;
+				}
+			}
+		}
+
 		$amount = aecGetParam( 'ctransamount', '', true, array( 'word' ) );
 
 		if ( !empty( $amount ) ) {
