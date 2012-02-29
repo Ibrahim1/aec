@@ -23,6 +23,12 @@ class template_etacarinae extends aecTemplate
 		return $info;
 	}
 
+	function addDefaultCSS()
+	{
+		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/bootstrap.frontend.css' );
+		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/template.' . $this->template . '.css' );
+	}
+
 	function settings()
 	{
 		$tab_data = array();
