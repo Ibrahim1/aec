@@ -310,7 +310,8 @@ if ( !empty( $task ) ) {
 		case 'invoiceprint':
 			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-			InvoicePrintout( $option, $invoice );
+			$iFactory = new InvoiceFactory( $user->id );
+			$iFactory->invoiceprint( $option, $invoice );
 			break;
 
 		case 'invoiceaction':
@@ -462,6 +463,8 @@ function getView( $view, $args=null )
 
 	$metaUser = null;
 	if ( $user->id ) {
+		$userid = $user->id;
+
 		$metaUser = new metaUser( $user->id );
 	} else {
 		$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );

@@ -22,7 +22,7 @@ $invoice	= false;
 if ( $metaUser->hasSubscription ) {
 	// Make sure this really is expired
 	if ( !$metaUser->objSubscription->is_expired() ) {
-		return aecNotAuth();
+		return getView( 'access_denied' );
 	}
 
 	$expired = strtotime( $metaUser->objSubscription->expiration );

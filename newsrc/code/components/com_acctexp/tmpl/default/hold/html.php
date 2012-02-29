@@ -18,7 +18,7 @@ if ( $userid == 0 ) {
 if ( $metaUser->hasSubscription ) {
 	// Make sure this really is pending
 	if ( strcmp($metaUser->objSubscription->status, 'Hold') !== 0 ) {
-		return aecNotAuth();
+		return getView( 'access_denied' );
 	}
 }
 

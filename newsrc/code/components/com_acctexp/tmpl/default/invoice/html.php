@@ -11,9 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-$iFactory = new InvoiceFactory( $user->id );
-$iFactory->invoiceprint( $option, $invoice );
-
 $tmpl->addDefaultCSS();
 
 if ( $standalone ) {

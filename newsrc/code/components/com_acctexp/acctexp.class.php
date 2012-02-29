@@ -2653,7 +2653,7 @@ class configTemplate extends serialParamDBTable
 			$this->load(0);
 		}
 
-		$file = JPATH_SITE . '/components/com_acctexp/tmpl/' . $name . '/config.php';
+		$file = JPATH_SITE . '/components/com_acctexp/tmpl/' . $name . '/template.php';
 
 		if ( file_exists( $file ) ) {
 			// Call Integration file
