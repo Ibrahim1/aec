@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: confirmform.php
+ * @version $Id: cartform.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Frontend
  * @copyright 2012 Copyright (C) David Deutsch

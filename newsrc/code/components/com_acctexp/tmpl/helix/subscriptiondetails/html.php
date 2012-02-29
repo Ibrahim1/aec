@@ -24,7 +24,6 @@ if ( !empty( $tmpl->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$tmpl
 }
 
 // Load metaUser and invoice data
-$metaUser	= new metaUser( $user->id );
 $invoiceno	= AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
 $properties	= array();
 

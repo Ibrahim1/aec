@@ -1,6 +1,6 @@
 <?
 /**
- * @version $Id: access_denied.php
+ * @version $Id: passwordprompt.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main Frontend
  * @copyright 2012 Copyright (C) David Deutsch
