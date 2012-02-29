@@ -16,4 +16,13 @@ $iFactory->invoiceprint( $option, $invoice );
 
 $tmpl->addDefaultCSS();
 
-@include( $tmpl->tmpl( 'invoice' ) );
+if ( $standalone ) {
+	@include( $tmpl->tmpl( 'invoice_standalone' ) );
+} else {
+	$document=& JFactory::getDocument();
+	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="screen, print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_embed.css" />' );
+	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_print.css" />' );
+
+	@include( $tmpl->tmpl( 'invoice' ) );
+}
+
