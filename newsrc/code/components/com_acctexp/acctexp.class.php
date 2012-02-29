@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4633' );
+define( '_AEC_REVISION', '4635' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2666,9 +2666,10 @@ class configTemplate extends serialParamDBTable
 			$this->info = $this->template->info();
 		}
 	}
+
 }
 
-class template_config
+class aecTemplate
 {
 	function stdSettings()
 	{
@@ -2683,6 +2684,202 @@ class template_config
 		$params[] = array( 'div_end', 0 );
 
 		return $params;
+	}
+
+	function setTitle( $title )
+	{
+		$document=& JFactory::getDocument();
+		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
+	}
+
+	function addDefaultCSS()
+	{
+		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/template.' . $this->template . '.css' );
+	}
+
+	function addCSS( $path )
+	{
+		$document=& JFactory::getDocument();
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $path . '" />' );
+	}
+
+	function addCSSDeclaration( $css )
+	{
+		$document=& JFactory::getDocument();
+		$document->addStyleDeclaration( $css );
+	}
+
+	function addScriptDeclaration( $js )
+	{
+		$document=& JFactory::getDocument();
+		$document->addScriptDeclaration( $js );
+	}
+
+	function addScript( $js )
+	{
+		$document=& JFactory::getDocument();
+		$document->addScript( $js );
+	}
+
+	function btn( $params, $value, $class='btn' )
+	{
+		if ( empty( $params['option'] ) ) {
+			$params['option'] = 'com_acctexp';
+		}
+
+		$xurl = 'index.php?option='.$params['option'];
+
+		if ( !empty( $params['task'] ) ) {
+			$xurl .= '&task='.$params['task'];
+		}
+
+		if ( !empty( $params['view'] ) ) {
+			$xurl .= '&view='.$params['view'];
+		}
+
+		if ( $params['option'] == 'com_acctexp' ) {
+			$url = AECToolbox::deadsureURL( $xurl, $this->cfg['ssl_signup'] );
+		} else {
+			$uri    = JURI::getInstance();
+			$prefix = $uri->toString( array( 'scheme', 'host', 'port' ) );
+
+			$url = $prefix.JRoute::_( $xurl );
+		}
+
+		$btn = '<form action="'.$url.'" method="post">';
+
+		if ( isset( $params['class'] ) ) {
+			unset( $params['class'] );
+		}
+
+		if ( isset( $params['content'] ) ) {
+			unset( $params['content'] );
+		}
+
+		if ( empty( $params['task'] ) ) {
+			unset( $params['task'] );
+		}
+
+		foreach ( $params as $k => $v ) {
+			$btn .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
+		}
+
+		$btn .= '<button type="submit" class="'.$class.'">'.$value.'</button>';
+
+		$btn .= JHTML::_( 'form.token' );
+		$btn .= '</form>';
+
+		return $btn;
+	}
+
+	function lnk( $params, $value, $profile=false )
+	{
+		if ( is_array( $params ) ) {
+			$params[JUtility::getToken()] = '1';
+
+			$p = array();
+			foreach ( $params as $k => $v ) {
+				$p[] = $k.'='.$v;
+			}
+
+			if ( $profile ) {
+				$secure = $this->cfg['ssl_profile'];
+			} else {
+				$secure = $this->cfg['ssl_signup'];
+			}
+
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $secure );
+		} else {
+			$url = $params;
+		}
+
+		return '<a href="'.$url.'" title="'.$value.'">'.$value.'</a>';
+	}
+
+	function rw( $string )
+	{
+		return AECToolbox::rewriteEngine( $string, $this->metaUser );
+	}
+
+	function rwrq( $string, $request )
+	{
+		return AECToolbox::rewriteEngine( $string, $request );
+	}
+
+	function custom( $setting, $original=null, $obj=null )
+	{
+		if ( empty( $obj ) ) {
+			$obj = $this->cfg;
+		}
+
+		if ( !empty( $original ) && isset( $obj[$setting.'_keeporiginal'] ) ) {
+			echo '<p>' . $obj[$original] . '</p>';
+		}
+
+		if ( !empty( $obj[$setting] ) ) {
+			echo '<p>' . $obj[$setting] . '</p>';
+		}
+	}
+
+	function date( $SQLDate, $check = false, $display = false, $trial = false )
+	{
+		if ( $SQLDate == '' ) {
+			return JText::_('AEC_EXPIRE_NOT_SET');
+		} else {
+			$retVal = AECToolbox::formatDate( $SQLDate );
+
+			if ( $check ) {
+				$timeDif = strtotime( $SQLDate ) - ( (int) gmdate('U') );
+				if ( $timeDif < 0 ) {
+					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_PAST') : JText::_('AEC_EXPIRE_PAST') ) . ':&nbsp;<strong>' . $retVal . '</strong>';
+				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
+					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_TODAY') : JText::_('AEC_EXPIRE_TODAY') );
+				} else {
+					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_FUTURE') : JText::_('AEC_EXPIRE_FUTURE') ) . ': ' . $retVal;
+				}
+			}
+
+			return $retVal;
+		}
+	}
+
+	function tmpl( $name )
+	{
+		$t = explode( '.', $name );
+
+		if ( count($t) > 2 ) {
+			// Load from another template
+			return $this->tmplPath( $t[1], $t[0], $t[2] );
+		} elseif ( count($t) == 2 ) {
+			// Load from another view
+			return $this->tmplPath( $t[1], $t[0] );
+		} else {
+			// Load within view
+			return $this->tmplPath( $t[0] );
+		}
+	}
+
+	function tmplPath( $subview, $view=null, $template=null )
+	{
+		if ( empty( $view ) ) {
+			$view = $this->view;
+		}
+
+		if ( empty( $template ) ) {
+			$current = $this->paths['current'];
+		} else {
+			$current = $this->paths['base'].'/'.$this->template;
+		}
+
+		$t = '/'.$view.'/tmpl/'.$subview.'.php';
+
+		if ( file_exists( $this->paths['site'].$t ) ) {
+			return $this->paths['site'].$t;
+		} elseif ( file_exists( $current.$t ) ) {
+			return $current.$t;
+		} elseif ( file_exists( $this->paths['default'].$t ) ) {
+			return $this->paths['default'].$t;
+		}
 	}
 }
 
@@ -8554,203 +8751,6 @@ class aecTempToken extends serialParamDBTable
 		setcookie( 'aec_token', $token, ( (int) gmdate('U') )+ 600 );
 
 		return $this->storeload();
-	}
-}
-
-class aecTemplate
-{
-	function setTitle( $title )
-	{
-		$document=& JFactory::getDocument();
-		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
-	}
-
-	function addDefaultCSS()
-	{
-		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/template.' . $this->template . '.css' );
-	}
-
-	function addCSS( $path )
-	{
-		$document=& JFactory::getDocument();
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $path . '" />' );
-	}
-
-	function addCSSDeclaration( $css )
-	{
-		$document=& JFactory::getDocument();
-		$document->addStyleDeclaration( $css );
-	}
-
-	function addScriptDeclaration( $js )
-	{
-		$document=& JFactory::getDocument();
-		$document->addScriptDeclaration( $js );
-	}
-
-	function addScript( $js )
-	{
-		$document=& JFactory::getDocument();
-		$document->addScript( $js );
-	}
-
-	function btn( $params, $value, $class='btn' )
-	{
-		if ( empty( $params['option'] ) ) {
-			$params['option'] = 'com_acctexp';
-		}
-
-		$xurl = 'index.php?option='.$params['option'];
-
-		if ( !empty( $params['task'] ) ) {
-			$xurl .= '&task='.$params['task'];
-		}
-
-		if ( !empty( $params['view'] ) ) {
-			$xurl .= '&view='.$params['view'];
-		}
-
-		if ( $params['option'] == 'com_acctexp' ) {
-			$url = AECToolbox::deadsureURL( $xurl, $this->cfg['ssl_signup'] );
-		} else {
-			$uri    = JURI::getInstance();
-			$prefix = $uri->toString( array( 'scheme', 'host', 'port' ) );
-
-			$url = $prefix.JRoute::_( $xurl );
-		}
-
-		$btn = '<form action="'.$url.'" method="post">';
-
-		if ( isset( $params['class'] ) ) {
-			unset( $params['class'] );
-		}
-
-		if ( isset( $params['content'] ) ) {
-			unset( $params['content'] );
-		}
-
-		if ( empty( $params['task'] ) ) {
-			unset( $params['task'] );
-		}
-
-		foreach ( $params as $k => $v ) {
-			$btn .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
-		}
-
-		$btn .= '<button type="submit" class="'.$class.'">'.$value.'</button>';
-
-		$btn .= JHTML::_( 'form.token' );
-		$btn .= '</form>';
-
-		return $btn;
-	}
-
-	function lnk( $params, $value, $profile=false )
-	{
-		if ( is_array( $params ) ) {
-			$params[JUtility::getToken()] = '1';
-
-			$p = array();
-			foreach ( $params as $k => $v ) {
-				$p[] = $k.'='.$v;
-			}
-
-			if ( $profile ) {
-				$secure = $this->cfg['ssl_profile'];
-			} else {
-				$secure = $this->cfg['ssl_signup'];
-			}
-
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $secure );
-		} else {
-			$url = $params;
-		}
-
-		return '<a href="'.$url.'" title="'.$value.'">'.$value.'</a>';
-	}
-
-	function rw( $string )
-	{
-		return AECToolbox::rewriteEngine( $string, $this->metaUser );
-	}
-
-	function rwrq( $string, $request )
-	{
-		return AECToolbox::rewriteEngine( $string, $request );
-	}
-
-	function custom( $setting, $original=null, $obj=null )
-	{
-		if ( empty( $obj ) ) {
-			$obj = $this->cfg;
-		}
-
-		if ( !empty( $original ) && isset( $obj[$setting.'_keeporiginal'] ) ) {
-			echo '<p>' . $obj[$original] . '</p>';
-		}
-
-		if ( !empty( $obj[$setting] ) ) {
-			echo '<p>' . $obj[$setting] . '</p>';
-		}
-	}
-	function date( $SQLDate, $check = false, $display = false, $trial = false )
-	{
-		if ( $SQLDate == '' ) {
-			return JText::_('AEC_EXPIRE_NOT_SET');
-		} else {
-			$retVal = AECToolbox::formatDate( $SQLDate );
-
-			if ( $check ) {
-				$timeDif = strtotime( $SQLDate ) - ( (int) gmdate('U') );
-				if ( $timeDif < 0 ) {
-					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_PAST') : JText::_('AEC_EXPIRE_PAST') ) . ':&nbsp;<strong>' . $retVal . '</strong>';
-				} elseif ( ( $timeDif >= 0 ) && ( $timeDif < 86400 ) ) {
-					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_TODAY') : JText::_('AEC_EXPIRE_TODAY') );
-				} else {
-					$retVal = ( $trial ? JText::_('AEC_EXPIRE_TRIAL_FUTURE') : JText::_('AEC_EXPIRE_FUTURE') ) . ': ' . $retVal;
-				}
-			}
-
-			return $retVal;
-		}
-	}
-	function tmpl( $name )
-	{
-		$t = explode( '.', $name );
-
-		if ( count($t) > 2 ) {
-			// Load from another template
-			return $this->tmplPath( $t[1], $t[0], $t[2] );
-		} elseif ( count($t) == 2 ) {
-			// Load from another view
-			return $this->tmplPath( $t[1], $t[0] );
-		} else {
-			// Load within view
-			return $this->tmplPath( $t[0] );
-		}
-	}
-
-	function tmplPath( $subview, $view=null, $template=null )
-	{
-		if ( empty( $view ) ) {
-			$view = $this->view;
-		}
-
-		if ( empty( $template ) ) {
-			$current = $this->paths['current'];
-		} else {
-			$current = $this->paths['base'].'/'.$this->template;
-		}
-
-		$t = '/'.$view.'/tmpl/'.$subview.'.php';
-
-		if ( file_exists( $this->paths['site'].$t ) ) {
-			return $this->paths['site'].$t;
-		} elseif ( file_exists( $current.$t ) ) {
-			return $current.$t;
-		} elseif ( file_exists( $this->paths['default'].$t ) ) {
-			return $this->paths['default'].$t;
-		}
 	}
 }
 

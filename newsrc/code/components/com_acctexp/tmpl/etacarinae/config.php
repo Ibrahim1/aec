@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class template_etacarinae extends template_config
+class template_etacarinae extends aecTemplate
 {
 	function info()
 	{

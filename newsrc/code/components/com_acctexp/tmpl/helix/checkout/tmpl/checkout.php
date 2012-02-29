@@ -32,39 +32,39 @@
 
 
 if ( !empty( $var ) ) { ?>
-<table width="100%" id="checkoutbox">
-	<?php if ( ( strpos( $var, '<tr class="aec_formrow">' ) !== false ) || is_string( $InvoiceFactory->display_error ) ) { ?>
-		<tr><th class="checkout_head"><?php echo $InvoiceFactory->checkout['customtext_checkout_table'] ?></th></tr>
+	<table width="100%" id="checkoutbox">
+		<?php if ( ( strpos( $var, '<tr class="aec_formrow">' ) !== false ) || is_string( $InvoiceFactory->display_error ) ) { ?>
+			<tr><th class="checkout_head"><?php echo $InvoiceFactory->checkout['customtext_checkout_table'] ?></th></tr>
+		<?php } ?>
+	<?php if ( is_string( $InvoiceFactory->display_error ) ) { ?>
+		<tr>
+			<td class="checkout_error">
+				<p><?php echo JText::_('CHECKOUT_ERROR_EXPLANATION') . ":" ?></p>
+				<p><strong><?php echo $InvoiceFactory->display_error ?></strong></p>
+				<p><?php echo JText::_('CHECKOUT_ERROR_FURTHEREXPLANATION') ?></p>
+			</td>
+		</tr>
 	<?php } ?>
-<?php if ( is_string( $InvoiceFactory->display_error ) ) { ?>
-	<tr>
-		<td class="checkout_error">
-			<p><?php echo JText::_('CHECKOUT_ERROR_EXPLANATION') . ":" ?></p>
-			<p><strong><?php echo $InvoiceFactory->display_error ?></strong></p>
-			<p><?php echo JText::_('CHECKOUT_ERROR_FURTHEREXPLANATION') ?></p>
-		</td>
-	</tr>
-<?php } ?>
-<?php if ( !empty( $InvoiceFactory->checkout['processor_addin'] ) ) { ?>
-	<tr>
-		<td class="checkout_processor_addin">
-			<?php echo $InvoiceFactory->checkout['processor_addin'] ?>
-		</td>
-	</tr>
-<?php } ?>
-<?php if ( is_string( $var ) ) { ?>
-	<tr>
-		<td class="checkout_action">
-			<?php print $var ?>
-		</td>
-	</tr>
-<?php } ?>
+	<?php if ( !empty( $InvoiceFactory->checkout['processor_addin'] ) ) { ?>
+		<tr>
+			<td class="checkout_processor_addin">
+				<?php echo $InvoiceFactory->checkout['processor_addin'] ?>
+			</td>
+		</tr>
+	<?php } ?>
+	<?php if ( is_string( $var ) ) { ?>
+		<tr>
+			<td class="checkout_action">
+				<?php print $var ?>
+			</td>
+		</tr>
+	<?php } ?>
 <?php } ?>
 </table>
 <div class="processor_list">
 	<table width="100%">
 		<tr><td>
-			<? if ( !empty( $InvoiceFactory->pp ) ) {
+			<?php if ( !empty( $InvoiceFactory->pp ) ) {
 				if ( is_object( $InvoiceFactory->pp ) ) {
 					$processor = $InvoiceFactory->pp;
 					@include( $tmpl->tmpl( 'plans.processor_details' ) );

@@ -476,7 +476,7 @@ function getView( $view, $args=null )
 	$dbtmpl = new configTemplate($db);
 	$dbtmpl->loadDefault();
 
-	$tmpl = new aecTemplate();
+	$tmpl = $dbtmpl->template;
 
 	$tmpl->cfg = array_merge( $aecConfig->cfg, $dbtmpl->settings );
 	$tmpl->option = 'com_acctexp';
