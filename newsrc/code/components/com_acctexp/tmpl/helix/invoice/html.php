@@ -18,6 +18,8 @@ $tmpl->addDefaultCSS();
 
 if ( $standalone ) {
 	@include( $tmpl->tmpl( 'invoice_standalone' ) );
+
+	exit;
 } else {
 	$document=& JFactory::getDocument();
 	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="screen, print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_embed.css" />' );
