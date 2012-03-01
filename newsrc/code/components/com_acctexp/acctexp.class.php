@@ -2787,7 +2787,7 @@ class aecTemplate
 	function url( $params, $profile=false )
 	{
 		if ( empty( $params['option'] ) ) {
-			$params['option'] = 'com_acctexp';
+			$params = array_merge( array( 'option' => 'com_acctexp' ), $params );
 		}
 
 		$params[JUtility::getToken()] = '1';

@@ -1169,6 +1169,7 @@ box-shadow: 0 2px 2px #eee;
   width: 120px;
   height: 40px;
   font-size: 120%;
+  padding: 0;
 }
 
 .aec-btn-processor:hover,
@@ -1194,19 +1195,20 @@ box-shadow: 0 2px 2px #eee;
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.aec-btn-overlay {
-background: #999;
-border-radius: 0 0 8px 8px;
+#aec .btn-overlay {
+background: #555;
+border-radius: 0 0 4px 4px;
+color: #fff;
 display: block;
+position: relative;
 font-size: 12px;
 height: 14px;
-line-height: 13px;
-margin-left: -4px;
-margin-top: 20px;
-opacity: 0.9;
+line-height: 14px;
+left: -1px;
+bottom: -13px;
+opacity: 0.7;
 text-shadow: none;
 width: 120px;
-color: #fff;
 }
 
 .aec-btn-tallcontent {
