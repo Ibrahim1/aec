@@ -110,7 +110,7 @@ foreach ( $InvoiceFactory->items->itemlist as $item ) {
 			$cost[] = array( 'type' => $citem->type, 'details' => $t, 'cost' => $c );
 		}
 
-		$i['terms'] = array( 'type' => $term->type, 'current' => ( $tid == $item['terms']->pointer ), 'applicable' => $applicable, 'duration' => $term->renderDuration(), 'cost' => $cost );
+		$i['terms'][] = array( 'type' => $term->type, 'current' => ( $tid == $item['terms']->pointer ), 'applicable' => $applicable, 'duration' => $term->renderDuration(), 'cost' => $cost );
 	}
 
 	$itemlist[] = $i;

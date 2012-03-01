@@ -32,12 +32,18 @@
 			<?php if ( !empty( $item['terms'] ) ) { ?>
 				<div class="checkout-list-item-terms">
 					<?php foreach ( $item['terms'] as $term ) { ?>
-						<div class="checkout-list-term list-term-<?php echo $term['type'] ?><?php echo $term['current'] ? 'list-termcurrent':'' ?>">
+						<div class="checkout-list-term list-term-<?php echo $term['type'] ?><?php echo $term['current'] ? 'list-term-current':'' ?>">
 							<h4><?php echo JText::_( strtoupper( $ttype ) ) . $term['applicable'] ?></h4>
 							<?php if ( !empty( $term['duration'] ) ) { ?>
 								<p><?php echo JText::_('AEC_CHECKOUT_DURATION') . ': ' . $term['duration'] ?></p>
 							<?php } ?>
-							
+							<div class="checkout-term-cost">
+								<?php foreach ( $term['cost'] as $cost ) { ?>
+									<div class="checkout-cost-<?php echo $cost['type'] ?>">
+										<p><?php echo $cost['details'] . ': ' . $cost['cost'] ?></p>
+									</div>
+								<?php } ?>
+							</div>
 						</div>
 					<?php } ?>
 				</div>
@@ -46,75 +52,7 @@
 <?php } ?>
 
 
-<?php foreach ( $InvoiceFactory->items->itemlist as $item ) {
-		foreach ( $terms as $tid => $term ) {
-
-			// Iterate through costs
-			foreach ( $term->renderCost() as $citem ) {
-				$t = JText::_( strtoupper( 'aec_checkout_' . $citem->type ) );
-
-				if ( isset( $item['quantity'] ) ) {
-					$amount = AECToolbox::correctAmount( $citem->cost['amount'] * $item['quantity'] );
-				} else {
-					$amount = AECToolbox::correctAmount( $citem->cost['amount'] );
-				}
-
-				$c = AECToolbox::formatAmount( $amount, $InvoiceFactory->payment->currency );
-
-				switch ( $citem->type ) {
-					case 'discount':
-						$ta = $t;
-						if ( !empty( $citem->cost['details'] ) ) {
-							$ta .= '&nbsp;(' . $citem->cost['details'] . ')';
-						}
-
-						if ( !empty( $citem->cost['coupon'] ) ) {
-							$ta .= '&nbsp;['
-									. $tmpl->lnk( array(	'task' => 'InvoiceRemoveCoupon',
-														'invoice' => $InvoiceFactory->invoice->invoice_number,
-														'coupon_code' => $citem->cost['coupon']
-														), JText::_('CHECKOUT_INVOICE_COUPON_REMOVE') )
-									. ']';
-						}
-
-						$t = $ta;
-
-						// Strip out currency symbol and replace with blanks
-						if ( !$tmpl->cfg['amount_currency_symbolfirst'] ) {
-							$strlen = 2;
-
-							if ( !$tmpl->cfg['amount_currency_symbol'] ) {
-								$strlen = 1 + strlen( $InvoiceFactory->payment->currency ) * 2;
-							}
-
-							for( $i=0; $i<=$strlen+1;$i++ ) {
-								//$c .= '&nbsp;';
-							}
-						}
-						break;
-					case 'tax':
-						if ( !empty( $citem->cost['details'] ) ) {
-							$t .= '&nbsp;( ' . $citem->cost['details'] . ' )';
-						}
-						break;
-					case 'cost':
-						if ( !empty( $citem->cost['details'] ) ) {
-							$t = $citem->cost['details'];
-						}
-					break;
-					case 'total': break;
-					default: break;
-				}
-
-				//echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
-			}
-
-			// Draw Separator Line
-			//echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
-		}
-	}
-
-	if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
+<?php if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
 		//echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 		//echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . JText::_('CART_ROW_TOTAL') . '</th></tr>';
 
