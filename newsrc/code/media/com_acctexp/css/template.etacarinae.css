@@ -22,6 +22,10 @@ font-weight: bold;
 line-height: 16px;
 }
 
+#aec .btn-mini {
+padding: 2px 6px;
+}
+
 #aec .btn i {
 margin-right: 6px;
 margin-top: 2px;
@@ -46,6 +50,15 @@ margin: 12px 3% 48px;
 #aec #confirmation-extra {
 margin: 0 5%;
 width: 86%;
+}
+
+#aec #cart-info {
+margin: 0 7%;
+width: 90%;
+}
+
+#aec table.cart-list {
+width: 100%;
 }
 
 #aec #confirmation-button,

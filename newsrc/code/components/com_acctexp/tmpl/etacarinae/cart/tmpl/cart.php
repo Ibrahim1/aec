@@ -14,8 +14,8 @@
 	<div id="aec-confirmation">
 		<div class="componentheading"><?php echo JText::_('CART_TITLE') ?></div>
 		<?php
-		@include( $tmpl->tmpl( 'info' ) );
 		@include( $tmpl->tmpl( 'form' ) );
+		@include( $tmpl->tmpl( 'info' ) );
 		?>
 	</div>
 </div>

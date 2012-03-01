@@ -1249,14 +1249,14 @@ class HTML_AcctExp
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
 					<th width="1%">&nbsp;</th>
 					<th width="10%" class="leftalign"><?php echo JText::_('CNAME'); ?></th>
-					<th width="10%" class="leftalign"><?php echo JText::_('USERLOGIN'); ?></th>
-					<th width="10%" class="leftalign"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
-					<th width="10%" class="leftalign"><?php echo JText::_('SUBSCR_DATE'); ?></th>
+					<th width="5%" class="leftalign"><?php echo JText::_('USERLOGIN'); ?></th>
+					<th width="5%"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
+					<th class="leftalign"><?php echo JText::_('SUBSCR_DATE'); ?></th>
 					<?php if ( $action[0] != 'manual' ) { ?>
-						<th width="10%" class="leftalign"><?php echo JText::_('LASTPAY_DATE'); ?></th>
-						<th width="10%" class="leftalign"><?php echo JText::_('METHOD'); ?></th>
+						<th class="leftalign"><?php echo JText::_('LASTPAY_DATE'); ?></th>
+						<th width="5%"><?php echo JText::_('METHOD'); ?></th>
 						<th width="10%" class="leftalign"><?php echo JText::_('USERPLAN'); ?></th>
-						<th width="27%" class="leftalign"><?php echo JText::_('EXPIRATION'); ?></th>
+						<th class="leftalign"><?php echo JText::_('EXPIRATION'); ?></th>
 					<?php } else { ?>
 						<th width="10%" class="leftalign"></th>
 						<th width="10%" class="leftalign"></th>
@@ -1287,11 +1287,11 @@ class HTML_AcctExp
 							<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
 							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 							<td class="leftalign"><?php echo $row->username; ?></td>
-							<td class="leftalign"><?php echo $row->status; ?></td>
+							<td><?php echo $row->status; ?></td>
 							<td class="leftalign"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
 							<?php if ( $action[0] != 'manual' ) { ?>
 								<td class="leftalign"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
-								<td class="leftalign"><?php echo $row->type; ?></td>
+								<td><?php echo $row->type; ?></td>
 								<td class="leftalign"><?php echo $row->plan_name; ?></td>
 								<td class="leftalign"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
 							<?php } else { ?>

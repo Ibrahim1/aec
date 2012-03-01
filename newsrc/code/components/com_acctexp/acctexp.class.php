@@ -2773,7 +2773,7 @@ class aecTemplate
 		return $btn;
 	}
 
-	function lnk( $params, $value, $profile=false )
+	function lnk( $params, $value, $class="", $profile=false )
 	{
 		if ( is_array( $params ) ) {
 			$url = $this->url( $params, $profile );
@@ -2781,7 +2781,7 @@ class aecTemplate
 			$url = $params;
 		}
 
-		return '<a href="'.$url.'" title="'.$value.'">'.$value.'</a>';
+		return '<a href="'.$url.'"'.( !empty($class) ? ' class="'.$class.'"':'').'>'.$value.'</a>';
 	}
 
 	function url( $params, $profile=false )
