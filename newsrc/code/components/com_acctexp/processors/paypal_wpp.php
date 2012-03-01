@@ -201,7 +201,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$return .= '<input type="hidden" name="express" value="1" />' . "\n";
 			$return .= '<input type="hidden" name="token" value="' . $_REQUEST['token'] . '" />' . "\n";
 			$return .= '<input type="hidden" name="PayerID" value="' . $_REQUEST['PayerID'] . '" />' . "\n";
-			$return .= '<input type="submit" class="button" id="aec_checkout_btn" value="' . JText::_('BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
+			$return .= '<input type="submit" class="button" id="aec-checkout-btn" value="' . JText::_('BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 			$return .= '</form>' . "\n";
 			$return .= '</td></tr></tbody></table>';
 		} else {
@@ -211,7 +211,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 				$return .= $this->getStdFormVars( $request );
 				$return .= '<input type="hidden" name="express" value="1" />' . "\n";
-				$return .= '<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class="button" id="aec_checkout_btn" value="' . JText::_('BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
+				$return .= '<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class="button" id="aec-checkout-btn" value="' . JText::_('BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 				$return .= '</form>' . "\n";
 				$return .= '</td></tr></tbody></table>';
 			}

@@ -22,5 +22,5 @@ for ( $i = 0; $i < count( $cc_array ); $i++ ) {
 	. '/images/site/cc_icons/ccicon_' . $cc_array[$i] . '.png"'
 	. ' alt="' . $cc_array[$i] . '"'
 	. ' title="' . $cc_array[$i] . '"'
-	. ' class="cc_icon" />';
+	. ' class="cc-icon" />';
 }

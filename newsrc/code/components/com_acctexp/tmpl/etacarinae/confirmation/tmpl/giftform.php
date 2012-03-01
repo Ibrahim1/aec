@@ -10,13 +10,9 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<tr>
-	<td class="giftinfo">
-		<strong><?php echo JText::_('CHECKOUT_GIFT_HEAD') ?></strong>
-	</td>
-</tr>
-<tr>
-	<td class="giftdetails">
+<div id="gift-box">
+	<h5><?php echo JText::_('CHECKOUT_GIFT_HEAD') ?></h5>
+	<div class="well gift-details">
 		<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
 			<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username'] ?> (<?php echo $tmpl->lnk( array('task' => 'InvoiceRemoveGift','invoice' => $InvoiceFactory->invoice->invoice_number), "undo?" ) ?>)</p>
 			<input type="hidden" name="user_ident" value="<?php echo $InvoiceFactory->invoice->params['target_username'] ?>" />
@@ -24,5 +20,5 @@
 			<p><?php echo JText::_('CHECKOUT_GIFT_INFO') ?></p>
 			<input type="text" size="20" name="user_ident" class="inputbox" value="" />
 		<?php } ?>
-	</td>
-</tr>
+	</div>
+</div>

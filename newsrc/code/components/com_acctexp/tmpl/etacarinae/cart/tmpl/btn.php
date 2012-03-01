@@ -10,7 +10,7 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<div id="confirmation_button">
+<div id="confirmation-button">
 	<input type="hidden" name="option" value="<?php echo $option ?>" />
 	<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0 ?>" />
 	<input type="hidden" name="task" value="confirmCart" />
@@ -22,14 +22,14 @@
 	if ( !empty( $tmpl->cfg['tos_iframe'] ) && !empty( $tmpl->cfg['tos'] ) ) { ?>
 		<iframe src="<?php echo $tmpl->cfg['tos'] ?>" width="100%" height="150px"></iframe>
 		<p><input name="tos" type="checkbox" /><?php echo JText::_('CONFIRM_TOS_IFRAME') ?></p>
-		<input type="button" onClick="javascript:submitPayment()" class="button aec-btn" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
+		<input type="button" onClick="javascript:submitPayment()" class="button btn" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
 		<?php
 	} elseif ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 		<p><input name="tos" type="checkbox" /><?php echo JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ) ?></p>
-		<input type="button" onClick="javascript:submitPayment()" class="button aec-btn" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
+		<input type="button" onClick="javascript:submitPayment()" class="button btn" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
 		<?php
 	} else { ?>
-		<input type="submit" class="button aec-btn" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
+		<input type="submit" class="button btn" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
 		<?php
 	} ?>
 	<?php if ( $passthrough != false ) { ?>

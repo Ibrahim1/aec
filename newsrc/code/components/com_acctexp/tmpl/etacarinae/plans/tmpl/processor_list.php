@@ -38,10 +38,8 @@ if ( !empty( $processors ) ) { ?>
 	<p>&nbsp;</p>
 	<p><?php echo JText::_('NOT_ALLOWED_SECONDPAR') ?></p>
 	<div class="processor-list">
-	<table id="cc_list">
 		<?php foreach ( $processors as $processor ) {
 			@include( $tmpl->tmpl( 'plans.processor_details' ) );
 		} ?>
-	</table>
 	</div>
 <?php } ?>

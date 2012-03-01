@@ -10,29 +10,20 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<tr>
-	<td class="cc_gateway">
-		<p align="center"><img src="<?php echo JURI::root(true) . $processor->getLogoPath() . '" alt="' . $processor->info['longname'] . '" title="' . $processor->info['longname'] ?>" /></p>
-	</td>
-	<td class="cc_icons">
-		<p><?php if ( isset( $processor->info['description'] ) ) { echo $processor->info['description']; } ?></p>
-	</td>
-</tr>
-<?php if ( $tmpl->cfg['displayccinfo'] && !empty( $processor->info['cc_list'] ) ) { ?>
-	<tr>
-		<td></td>
-		<td class="cc_icons">
+<div class="processor-details">
+	<img src="<?php echo JURI::root(true) . $processor->getLogoPath() . '" alt="' . $processor->info['longname'] . '" title="' . $processor->info['longname'] ?>" />
+	<p><?php if ( isset( $processor->info['description'] ) ) { echo $processor->info['description']; } ?></p>
+	<?php if ( $tmpl->cfg['displayccinfo'] && !empty( $processor->info['cc_list'] ) ) { ?>
+		<div class="processor-cc-icons">
 			<?php
 			if ( isset( $processor->settings['cc_icons'] ) ) {
 				$cc_list = $processor->settings['cc_icons'];
 			} else {
 				$cc_list = $processor->info['cc_icons'];
 			}
-
+	
 			@include( $tmpl->tmpl( 'plans.cc_icons' ) );
 			?>
-		</td>
-	</tr>
-	<?php
-} ?>
+		</div>
+	<?php } ?>
 </div>

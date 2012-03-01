@@ -11,56 +11,43 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
-<table id="aec_checkout">
-<?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) { ?>
-	<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-	<div id="update_button">You can always go back to: <button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_YOUR_CART') ?></button></div>
-	<?php echo JHTML::_( 'form.token' ) ?>
-	</form><br /><br />
+<div id="aec-checkout">
+<?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) {
+	@include( $tmpl->tmpl( 'plans.backtocart' ) );
+} ?>
+<?php foreach ( $itemlist as $item ) { ?>
+		<div class="checkout-list-item">
+			<div class="checkout-list-item-description">
+				<?php if ( !empty( $item['name'] ) ) {
+					if ( !empty( $item['quantity'] ) ) { ?>
+						<h4><?php echo $item['name'] . ( ( $item['quantity'] > 1 ) ? " (&times;" . $item['quantity'] . ")" : '' ) ?></h4>
+					<?php } else { ?>
+						<h4><?php echo $item['name'] ?></h4>
+					<?php } ?>
+				<?php } ?>
+				<?php if ( !empty( $item['desc'] ) ) { ?>
+					<p><?php echo $item['desc'] ?></p>
+				<?php } ?>
+			</div>
+			<?php if ( !empty( $item['terms'] ) ) { ?>
+				<div class="checkout-list-item-terms">
+					<?php foreach ( $item['terms'] as $term ) { ?>
+						<div class="checkout-list-term list-term-<?php echo $term['type'] ?><?php echo $term['current'] ? 'list-termcurrent':'' ?>">
+							<h4><?php echo JText::_( strtoupper( $ttype ) ) . $term['applicable'] ?></h4>
+							<?php if ( !empty( $term['duration'] ) ) { ?>
+								<p><?php echo JText::_('AEC_CHECKOUT_DURATION') . ': ' . $term['duration'] ?></p>
+							<?php } ?>
+							
+						</div>
+					<?php } ?>
+				</div>
+			<?php } ?>
+		</div>
 <?php } ?>
+
+
 <?php foreach ( $InvoiceFactory->items->itemlist as $item ) {
-		if ( !empty( $item['terms'] ) ) {
-			$terms = $item['terms']->getTerms();
-		} else {
-			continue;
-		}
-
-		$add = "";
-
-		if ( isset( $item['quantity'] ) ) {
-			if ( $item['quantity'] > 1 ) {
-				$add = " (x" . $item['quantity'] . ")";
-			}
-		}
-
-		if ( isset( $item['name'] ) ) {
-			// This is an item, show its name
-			echo '<tr><td><h4>' . $item['name'] . $add . '</h4></td></tr>';
-		}
-
-		if ( isset( $item['desc'] ) && $InvoiceFactory->checkout['checkout_display_descriptions'] ) {
-			// This is an item, show its description
-			echo '<tr><td>' . $item['desc'] . '</td></tr>';
-		}
-
 		foreach ( $terms as $tid => $term ) {
-			if ( !is_object( $term ) ) {
-				continue;
-			}
-
-			$ttype = 'aec_termtype_' . $term->type;
-
-			$applicable = ( $tid >= $item['terms']->pointer ) ? '' : '&nbsp;('.JText::_('AEC_CHECKOUT_NOTAPPLICABLE').')';
-
-			$current = ( $tid == $item['terms']->pointer ) ? ' current_period' : '';
-
-			// Headline - What type is this term
-			echo '<tr class="aec_term_typerow' . $current . '"><th colspan="2" class="' . $ttype . '">' . JText::_( strtoupper( $ttype ) ) . $applicable . '</th></tr>';
-
-			if ( !isset( $term->duration['none'] ) && empty( $item['params']['hide_duration_checkout'] ) ) {
-				// Subheadline - specify the details of this term
-				echo '<tr class="aec_term_durationrow' . $current . '"><td colspan="2" class="aec_term_duration">' . JText::_('AEC_CHECKOUT_DURATION') . ': ' . $term->renderDuration() . '</td></tr>';
-			}
 
 			// Iterate through costs
 			foreach ( $term->renderCost() as $citem ) {
@@ -119,22 +106,22 @@
 					default: break;
 				}
 
-				echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
+				//echo '<tr class="aec_term_' . $citem->type . 'row' . $current . '"><td class="aec_term_' . $citem->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $citem->type . 'amount">' . $c . '</td></tr>';
 			}
 
 			// Draw Separator Line
-			echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+			//echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 		}
 	}
 
 	if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
-		echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
-		echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . JText::_('CART_ROW_TOTAL') . '</th></tr>';
+		//echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+		//echo '<tr class="aec_term_totalhead current_period"><th colspan="2" class="' . $ttype . '">' . JText::_('CART_ROW_TOTAL') . '</th></tr>';
 
 		if ( !empty( $InvoiceFactory->items->total ) ) {
 			$c = AECToolbox::formatAmount( $InvoiceFactory->items->total->renderCost(), $InvoiceFactory->payment->currency );
 
-			echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . JText::_('AEC_CHECKOUT_TOTAL') . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
+			//echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . JText::_('AEC_CHECKOUT_TOTAL') . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
 		}
 
 		if ( !empty( $InvoiceFactory->items->discount ) ) {
@@ -164,7 +151,7 @@
 										. ']';
 							}
 
-							echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
+							//echo '<tr class="aec_term_' . $cost->type . ' current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
 						}
 					}
 				}
@@ -172,7 +159,6 @@
 		}
 
 		if ( !empty( $InvoiceFactory->items->tax ) ) {
-			// Iterate through taxes
 			foreach ( $InvoiceFactory->items->tax as $titems ) {
 				foreach ( $titems['terms']->terms as $titem ) {
 					$citem = $titem->renderCost();
@@ -189,7 +175,7 @@
 								$t .= '&nbsp;( ' . $cost->cost['details'] . ' )';
 							}
 
-							echo '<tr class="aec_term_' . $cost->type . 'row current_period"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
+							//echo '<tr class="aec_term_' . $cost->type . '"><td class="aec_term_' . $cost->type . 'title">' . $t . ':' . '</td><td class="aec_term_' . $cost->type . 'amount">' . $c . '</td></tr>';
 						}
 					}
 				}
@@ -200,10 +186,10 @@
 		if ( !empty( $InvoiceFactory->items->grand_total ) ) {
 			$c = AECToolbox::formatAmount( $InvoiceFactory->items->grand_total->renderCost(), $InvoiceFactory->payment->currency );
 
-			echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . JText::_('AEC_CHECKOUT_GRAND_TOTAL') . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
+			//echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . JText::_('AEC_CHECKOUT_GRAND_TOTAL') . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
 		}
 
-		echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
+		//echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 	}
 ?>
-</table>
+</div>

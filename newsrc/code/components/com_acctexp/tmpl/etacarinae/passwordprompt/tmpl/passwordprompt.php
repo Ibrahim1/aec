@@ -13,7 +13,11 @@
 <div id="aec">
 	<div id="aec-pending">
 		<p><?php echo JText::_('AEC_PROMPT_PASSWORD'); ?></p>
-		<?php if ( $wrong ) { echo '<p><strong>' . JText::_('AEC_PROMPT_PASSWORD_WRONG') . '</strong></p>'; } ?>
+		<?php if ( $wrong ) { ?>
+			<div class="alert">
+				<p><strong><?php echo JText::_('AEC_PROMPT_PASSWORD'); ?></strong></p>
+			</div>
+		<?php } ?>
 		<div id="btn-upgrade">
 			<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe', $tmpl->cfg['ssl_signup'] ); ?>" method="post">
 				<input type="password" size="20" class="inputbox" id="password" name="password"/>

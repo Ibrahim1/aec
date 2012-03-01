@@ -11,13 +11,10 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="processor-list">
-	<table>
-		<?
-		if ( !empty( $InvoiceFactory->pp ) ) {
-			if ( is_object( $InvoiceFactory->pp ) ) {
-				$processor = $InvoiceFactory->pp;
-				@include( $tmpl->tmpl( 'plans.processor_details' ) );
-			}
-		} ?>
-	</table>
+	<?php if ( !empty( $InvoiceFactory->pp ) ) {
+		if ( is_object( $InvoiceFactory->pp ) ) {
+			$processor = $InvoiceFactory->pp;
+			@include( $tmpl->tmpl( 'plans.processor_details' ) );
+		}
+	} ?>
 </div>

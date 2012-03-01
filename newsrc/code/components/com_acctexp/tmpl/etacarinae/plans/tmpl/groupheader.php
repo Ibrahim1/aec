@@ -10,14 +10,10 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<?php
-// Double check that it's not the root group
-if ( $list['group']['id'] > 1 ) { ?>
-	<div class="aec_group_backlink">
-		<?php echo $tmpl->btn( array( 'task' => 'subscribe', 'userid' => $userid, 'passthrough' => $passthrough ), JText::_('AEC_PAYM_METHOD_BACK'), 'aec-btn func_button' ) ?>
+<?php if ( $list['group']['id'] > 1 ) { ?>
+	<div class="group-backlink">
+		<?php echo $tmpl->btn( array( 'task' => 'subscribe', 'userid' => $userid, 'passthrough' => $passthrough ), JText::_('AEC_PAYM_METHOD_BACK'), 'btn func_button' ) ?>
 	</div>
 	<h2><?php echo $list['group']['name'] ?></h2>
 	<p><?php echo $list['group']['desc'] ?></p>
-	<?php
-}
-?>
+<?php } ?>

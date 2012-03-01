@@ -1283,7 +1283,7 @@ select,
   height: 14px;
   line-height: 14px;
   vertical-align: text-top;
-  background-image: url("../img/glyphicons-halflings.png");
+  background-image: url("../images/site/glyphicons-halflings.png");
   background-position: 14px 14px;
   background-repeat: no-repeat;
   *margin-right: .3em;
@@ -1292,7 +1292,7 @@ select,
   *margin-left: 0;
 }
 #aec .icon-white {
-  background-image: url("../img/glyphicons-halflings-white.png");
+  background-image: url("../images/site/glyphicons-halflings-white.png");
 }
 #aec .icon-glass {
   background-position: 0      0;

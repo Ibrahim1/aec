@@ -10,25 +10,17 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=confirmCart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-<table>
-	<tr>
-		<td id="confirmation_extra">
-			<?
-			@include( $tmpl->tmpl( 'confirmation.miform' ) );
-			$tmpl->custom( 'customtext_confirm' );
-			?>
-		</td>
-	</tr>
+<form name="form-confirm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=confirmCart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
+	<div id="confirmation-info">
+		<?
+		@include( $tmpl->tmpl( 'confirmation.miform' ) );
+		$tmpl->custom( 'customtext_confirm' );
+		?>
 	<?php if ( $makegift ) {
 		@include( $tmpl->tmpl( 'confirmation.giftform' ) );
 	} ?>
-	<tr>
-		<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'btn' ) ) ?></td>
-	</tr>
-	<tr>
-		<td><?php @include( $tmpl->tmpl( 'confirmation.processorinfo' ) ) ?></td>
-	</tr>
-</table>
-<?php echo JHTML::_( 'form.token' ) ?>
+	</div>
+	<?php @include( $tmpl->tmpl( 'btn' ) ) ?>
+	<?php @include( $tmpl->tmpl( 'confirmation.processorinfo' ) ) ?>
+	<?php echo JHTML::_( 'form.token' ) ?>
 </form>

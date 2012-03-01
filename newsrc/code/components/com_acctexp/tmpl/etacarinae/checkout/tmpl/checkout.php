@@ -16,52 +16,41 @@
 		<?
 
 		@include( $tmpl->tmpl( 'itemlist' ) );
-		@include( $tmpl->tmpl( 'couponform' ) );
+
+		if ( !empty( $InvoiceFactory->checkout['enable_coupons'] ) ) {
+			@include( $tmpl->tmpl( 'couponform' ) );
+		}
 
 		if ( $makegift ) { @include( $tmpl->tmpl( 'giftform' ) ); }
 		if ( !empty( $params ) ) { @include( $tmpl->tmpl( 'paramsform' ) ); }
 
 		if ( !empty( $var ) ) { ?>
-			<table width="100%" id="checkoutbox">
+			<div id="checkout-box">
 				<?php if ( ( strpos( $var, '<tr class="aec_formrow">' ) !== false ) || is_string( $InvoiceFactory->display_error ) ) { ?>
-					<tr><th class="checkout_head"><?php echo $InvoiceFactory->checkout['customtext_checkout_table'] ?></th></tr>
+					<h4><?php echo $InvoiceFactory->checkout['customtext_checkout_table'] ?></h4>
 				<?php } ?>
-			<?php if ( is_string( $InvoiceFactory->display_error ) ) { ?>
-				<tr>
-					<td class="checkout_error">
+				<?php if ( is_string( $InvoiceFactory->display_error ) ) { ?>
+					<div class="alert alert-error">
 						<p><?php echo JText::_('CHECKOUT_ERROR_EXPLANATION') . ":" ?></p>
 						<p><strong><?php echo $InvoiceFactory->display_error ?></strong></p>
 						<p><?php echo JText::_('CHECKOUT_ERROR_FURTHEREXPLANATION') ?></p>
-					</td>
-				</tr>
-			<?php } ?>
-			<?php if ( !empty( $InvoiceFactory->checkout['processor_addin'] ) ) { ?>
-				<tr>
-					<td class="checkout_processor_addin">
+					</div>
+				<?php } ?>
+				<?php if ( !empty( $InvoiceFactory->checkout['processor_addin'] ) ) { ?>
+					<div class="alert alert-info">
 						<?php echo $InvoiceFactory->checkout['processor_addin'] ?>
-					</td>
-				</tr>
-			<?php } ?>
-			<?php if ( is_string( $var ) ) { ?>
-				<tr>
-					<td class="checkout_action">
-						<?php print $var ?>
-					</td>
-				</tr>
-			<?php } ?>
-			</table>
+					</div>
+				<?php } ?>
+				<?php if ( is_string( $var ) ) { ?>
+					<div class="well">
+						<div id="checkout-button">
+							<p><?php echo JText::_('CHECKOUT_BTN_INFO') ?></p>
+							<?php print $var ?>
+						</div>
+					</div>
+				<?php } ?>
+			</div>
 		<?php } ?>
-		<div class="processor-list">
-			<table width="100%">
-				<tr><td>
-					<?php if ( !empty( $InvoiceFactory->pp ) ) {
-						if ( is_object( $InvoiceFactory->pp ) ) {
-							$processor = $InvoiceFactory->pp;
-							@include( $tmpl->tmpl( 'plans.processor_details' ) );
-						}
-					} ?>
-				</td></tr>
-			</table>
-		</div>
+		<?php @include( $tmpl->tmpl( 'confirmation.processorinfo' ) ) ?>
 	</div>
 </div>

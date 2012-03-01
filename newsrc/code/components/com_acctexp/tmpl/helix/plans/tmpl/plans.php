@@ -16,7 +16,7 @@
 <?php if ( !empty( $cart ) ) { @include( $tmpl->tmpl( 'backtocart' ) ); } ?>
 
 <div class="subscriptions">
-	<?
+	<?php
 	$tmpl->custom( 'customtext_plans' );
 
 	if ( isset( $list['group'] ) && $selected ) {

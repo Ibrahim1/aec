@@ -10,24 +10,24 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<form name="confirmForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=saveSubscription', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-<table>
-	<tr>
-		<td id="confirmation_extra">
-			<?php
-			@include( $tmpl->tmpl( 'miform' ) );
-			$tmpl->custom( 'customtext_confirm' );
-			@include( $tmpl->tmpl( 'couponform' ) );
-			?>
-		</td>
-	</tr>
-	<?php if ( $makegift ) { @include( $tmpl->tmpl( 'giftform' ) ); } ?>
-	<tr>
-		<td id="confirmation_button"><?php @include( $tmpl->tmpl( 'btn' ) ) ?></td>
-	</tr>
-	<tr>
-		<td><?php @include( $tmpl->tmpl( 'processorinfo' ) ) ?></td>
-	</tr>
-</table>
-<?php echo JHTML::_( 'form.token' ) ?>
+<form name="form-confirm" action="<?php echo $tmpl->url( array( 'task' => 'saveSubscription') ) ?>" method="post">
+	<div id="confirmation-extra">
+		<div class="alert alert-success">
+			<div id="confirmation-form">
+				<?php
+				@include( $tmpl->tmpl( 'miform' ) );
+
+				@include( $tmpl->tmpl( 'couponform' ) );
+
+				if ( $makegift ) { @include( $tmpl->tmpl( 'giftform' ) ); }
+				?>
+			</div>
+		</div>
+	</div>
+	<?php
+	@include( $tmpl->tmpl( 'btn' ) );
+
+	@include( $tmpl->tmpl( 'processorinfo' ) );
+	?>
+	<?php echo JHTML::_( 'form.token' ) ?>
 </form>

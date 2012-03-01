@@ -10,6 +10,6 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<div class="gateway_button">
+<div class="processor-button">
 	<?php echo $tmpl->btn( $gwitem->btn, $gwitem->btn['content'], $gwitem->btn['class'] ) ?>
 </div>

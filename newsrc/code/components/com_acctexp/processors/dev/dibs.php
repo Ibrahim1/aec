@@ -137,7 +137,7 @@ class processor_dibs extends POSTprocessor
 
 		$return .=  JText::_('CFG_MULTISAFEPAY_SELECT_COUNTRY') . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $code_list, 'delivery03.Country', 'size="1"', 'value', 'text', 'NL' );		
 		
-		$return .= '<input type="submit" class="button" id="aec_checkout_btn" ' . $onclick . ' value="' . JText::_('BUTTON_CHECKOUT') . '" />' . "\n";
+		$return .= '<input type="submit" class="button" id="aec-checkout-btn" ' . $onclick . ' value="' . JText::_('BUTTON_CHECKOUT') . '" />' . "\n";
 		$return .= '</form>' . "\n";
 aecdebug("checkoutAction");aecdebug($return);
 		return $return;

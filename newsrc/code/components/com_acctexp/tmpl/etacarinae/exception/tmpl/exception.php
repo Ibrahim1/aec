@@ -13,74 +13,12 @@
 <div id="aec">
 	<div id="aec-checkout">
 		<div class="componentheading"><?php echo $hasform ? JText::_('EXCEPTION_TITLE') : JText::_('EXCEPTION_TITLE_NOFORM') ?></div>
-		<?
-		if ( $tmpl->cfg['customtext_exception_keeporiginal'] ) { ?>
-			<p><?php echo $hasform ? JText::_('EXCEPTION_INFO') : "" ?></p>
-			<?
-		}
-		if ( $tmpl->cfg['customtext_exception'] ) { ?>
-			<p><?php echo $tmpl->cfg['customtext_exception'] ?></p>
-			<?
-		} ?>
-		<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
-		<table id="aec_checkout">
-		<?
-			foreach ( $InvoiceFactory->exceptions as $eid => $ex ) {
-				if ( !empty( $ex['head'] ) ) {
-					// Headline - What type is this term
-					echo '<tr><th colspan="2">' . $ex['head'] . '</th></tr>';
-				}
-
-				if ( !empty( $ex['desc'] ) ) {
-					// Subheadline - specify the details of this term
-					echo '<tr><td colspan="2">' . $ex['desc'] . '</td></tr>';
-				}
-
-				// Iterate through costs
-				foreach ( $ex['rows'] as $rid => $row ) {
-					echo '<tr><td colspan="2">' . $aecHTML->createFormParticle( $eid.'_'.$rid ) . '</td></tr>';
-				}
-
-				// Draw Separator Line
-				echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
-			}
-		?>
-		</table>
-
-		<table width="100%" id="checkoutbox">
-			<tr><th><?php echo JText::_('CONFIRM_TITLE') ?></th></tr>
-			<tr>
-				<td class="checkout_action">
-						<input type="hidden" name="option" value="<?php echo $option ?>" />
-						<input type="hidden" name="task" value="addressException" />
-						<?
-						if ( !empty( $InvoiceFactory->invoice->invoice_number ) ) {
-							?><input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number ?>" /><?
-						}
-						if ( !empty( $InvoiceFactory->cartobject->id ) ) {
-							?><input type="hidden" name="cart" value="<?php echo $InvoiceFactory->cartobject->id ?>" /><?
-						}
-						?>
-						<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid ?>" />
-						<input type="submit" class="button aec-btn" value="<?php echo JText::_('BUTTON_CONFIRM') ?>" />
-				</td>
-			</tr>
-		</table>
-		<?php echo JHTML::_( 'form.token' ) ?>
+		<p><?php echo $hasform ? JText::_('EXCEPTION_INFO') : "" ?></p>
+		<form name="form-exception" action="<?php echo $tmpl->url( array( 'task' => 'addressException') ) ?>" method="post">
+			<?php @include( $tmpl->tmpl( 'list' ) ) ?>
+			<?php @include( $tmpl->tmpl( 'form' ) ) ?>
+			<?php echo JHTML::_( 'form.token' ) ?>
 		</form>
-		<div class="processor-list">
-			<table width="100%">
-				<tr><td>
-					<?
-					if ( !empty( $InvoiceFactory->pp ) ) {
-						if ( is_object( $InvoiceFactory->pp ) ) {
-							$processor = $InvoiceFactory->pp;
-							@include( $tmpl->tmpl( 'plans.processor_details' ) );
-						}
-					}
-					?>
-				</td></tr>
-			</table>
-		</div>
+		<?php @include( $tmpl->tmpl( 'confirmation.processorinfo' ) ) ?>
 	</div>
 </div>

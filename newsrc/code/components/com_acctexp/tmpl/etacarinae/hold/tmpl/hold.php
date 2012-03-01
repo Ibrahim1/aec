@@ -14,5 +14,7 @@
 	<div id="aec-hold">
 		<div class="componentheading"><?php echo JText::_('HOLD_TITLE') ?></div>
 		<h4><?php echo sprintf( JText::_('DEAR'), $metaUser->cmsUser->name ) ?></h4>
-		<p><?php echo JText::_('HOLD_EXPLANATION') ?></p>
+		<div class="alert">
+			<p><?php echo JText::_('HOLD_EXPLANATION') ?></p>
+		</div>
 </div>

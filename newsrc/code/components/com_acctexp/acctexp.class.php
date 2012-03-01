@@ -2776,25 +2776,34 @@ class aecTemplate
 	function lnk( $params, $value, $profile=false )
 	{
 		if ( is_array( $params ) ) {
-			$params[JUtility::getToken()] = '1';
-
-			$p = array();
-			foreach ( $params as $k => $v ) {
-				$p[] = $k.'='.$v;
-			}
-
-			if ( $profile ) {
-				$secure = $this->cfg['ssl_profile'];
-			} else {
-				$secure = $this->cfg['ssl_signup'];
-			}
-
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp'.implode("&",$p), $secure );
+			$url = $this->url( $params, $profile );
 		} else {
 			$url = $params;
 		}
 
 		return '<a href="'.$url.'" title="'.$value.'">'.$value.'</a>';
+	}
+
+	function url( $params, $profile=false )
+	{
+		if ( empty( $params['option'] ) ) {
+			$params['option'] = 'com_acctexp';
+		}
+
+		$params[JUtility::getToken()] = '1';
+
+		$p = array();
+		foreach ( $params as $k => $v ) {
+			$p[] = $k.'='.$v;
+		}
+
+		if ( $profile ) {
+			$secure = $this->cfg['ssl_profile'];
+		} else {
+			$secure = $this->cfg['ssl_signup'];
+		}
+
+		return AECToolbox::deadsureURL( 'index.php?'.implode("&",$p), $secure );
 	}
 
 	function rw( $string )
@@ -5020,8 +5029,6 @@ class XMLprocessor extends processor
 			$stdvars = true;
 		}
 
-		// TODO:  onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"
-
 		$return = '<form action="' . $url . '" method="post"' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' class="form-validate"' : '' ) . '>' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 
@@ -5029,7 +5036,7 @@ class XMLprocessor extends processor
 			$return .= $this->getStdFormVars( $request );
 		}
 
-		$return .= '<input type="submit" class="button' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec_checkout_btn" value="' . JText::_('BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec-checkout-btn"><i class="icon-shopping-cart icon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5890,11 +5897,10 @@ class POSTprocessor extends processor
 			$var = $xvar;
 		}
 
+		$onclick = "";
 		if ( isset( $var['_aec_checkout_onclick'] ) ) {
 			$onclick = 'onclick="' . $var['_aec_checkout_onclick'] . '"';
 			unset( $var['_aec_checkout_onclick'] );
-		} else {
-			$onclick = ""; // TODO: 'onclick="javascript:document.getElementById(\'aec_checkout_btn\').disabled=true"';
 		}
 
 		$return = '<form action="' . $var['post_url'] . '" method="post">' . "\n";
@@ -5908,7 +5914,7 @@ class POSTprocessor extends processor
 			$text = JText::_('BUTTON_CHECKOUT'); 
 		}
 
-		$return .= '<input type="submit" class="button aec-btn" id="aec_checkout_btn" ' . $onclick . ' value="' . $text . '" />' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '><i class="icon-shopping-cart icon-white"></i>' . $text . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5925,11 +5931,10 @@ class GETprocessor extends processor
 			$var = $this->customParams( $this->settings['customparams'], $var, $request );
 		}
 
+		$onclick = "";
 		if ( isset( $var['_aec_checkout_onclick'] ) ) {
 			$onclick = ' onclick="' . $var['_aec_checkout_onclick'] . '"';
 			unset( $var['_aec_checkout_onclick'] );
-		} else {
-			$onclick = '';
 		}
 
 		$return = '<form action="' . $var['post_url'] . '" method="get">' . "\n";
@@ -5939,7 +5944,7 @@ class GETprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<input type="submit" class="button aec-btn"' . $onclick . ' value="' . JText::_('BUTTON_CHECKOUT') . '" />' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '><i class="icon-shopping-cart icon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5993,7 +5998,7 @@ class URLprocessor extends processor
 			$return .= implode( '&amp;', $vars );
 		}
 
-		$return .= '"' . $onclick . ' class="linkbutton" >' . JText::_('BUTTON_CHECKOUT') . '</a>' . "\n";
+		$return .= '"' . $onclick . ' class="button aec-btn btn btn-primary" ><i class="icon-shopping-cart icon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</a>' . "\n";
 
 		return $return;
 	}
@@ -6302,7 +6307,7 @@ class aecHTML
 		$noappend = false;
 		switch ( $row[0] ) {
 			case 'submit':
-				$return .= '<input type="submit" class="button aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" value="' . $value . '" title="' . $row[2] . '" />' . "\n";
+				$return .= '<input type="submit" class="button btn aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" value="' . $value . '" title="' . $row[2] . '" />' . "\n";
 				break;
 			case "inputA":
 				$return .= '<input type="text" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="4" maxlength="5" value="' . $value . '" title="' . $row[2] . '" />' . $sx;
@@ -10147,16 +10152,16 @@ class InvoiceFactory
 							$btnarray['task']		= 'confirm';
 						}
 
-						$btnarray['class'] = 'aec-btn aec-btn-processor';
+						$btnarray['class'] = 'btn btn-processor';
 
 						if ( $pp->processor_name == 'free' ) {
 							$btnarray['content'] = JText::_('AEC_PAYM_METHOD_FREE');
 						} elseif( is_object($pp->processor) ) {
 							if ( $pp->processor->getLogoFilename() == '' ) {
-								$btnarray['content'] = '<span class="aec-btn-tallcontent">'.$pp->info['longname'].'</span>';
+								$btnarray['content'] = '<span class="btn-tallcontent">'.$pp->info['longname'].'</span>';
 							} else {
 								if ( !array_key_exists($pp->processor_name, $csslist) ) {
-									$csslist[$pp->processor_name] = '.aec-btn-processor-' . $pp->processor_name
+									$csslist[$pp->processor_name] = '.btn-processor-' . $pp->processor_name
 																	. ' { background-image: url(' . $pp->getLogoPath() .  ') !important; }';
 								}
 							}
@@ -10169,17 +10174,17 @@ class InvoiceFactory
 								$btnarray['content'] = JText::_('AEC_PAYM_METHOD_BUYNOW');
 							}
 						} else {
-							$btnarray['class'] .= ' aec-btn-processor-'.$pp->processor_name;
+							$btnarray['class'] .= ' btn-processor-'.$pp->processor_name;
 
 							if ( ( isset( $pp->recurring ) || isset( $pp->info['recurring'] ) ) && !empty( $pp->info['recurring'] ) ) {
 								if ( $pp->info['recurring'] == 2 ) {
 									if ( !empty( $pp->recurring ) ) {
-										$btnarray['content'] = '<i class="aec-btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
+										$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
 									} else {
-										$btnarray['content'] = '<i class="aec-btn-overlay">' . JText::_('AEC_PAYM_METHOD_ONE_TIME_BILLING') . '</i>';
+										$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_ONE_TIME_BILLING') . '</i>';
 									}
 								} elseif ( $pp->info['recurring'] == 1 ) {
-									$btnarray['content'] = '<i class="aec-btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
+									$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
 								}
 							}
 						}

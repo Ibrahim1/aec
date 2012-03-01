@@ -10,26 +10,20 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<table class="aec_items">
+<div class="aec-planlist">
 	<?php foreach ( $list as $litem ) { ?>
-		<tr>
-			<td>
-				<div class="aec_ilist_<?php echo $litem['type'] ?> aec_ilist_<?php echo $litem['type'] . '_' . $litem['id'] ?>">
-					<h2><?php echo $litem['name'] ?></h2>
-					<p><?php echo $litem['desc'] ?></p>
-					<?php if ( $litem['type'] == 'group' ) { ?>
-						<div class="aec_groupbutton">
-							<?php @include( $tmpl->tmpl( 'groupbtn' ) ); ?>
-						</div>
-					<?php } else { ?>
-						<div class="aec_procbuttons">
-							<?php foreach ( $litem['gw'] as $gwitem ) { ?>
-								<?php @include( $tmpl->tmpl( 'planbtn' ) ); ?>
-							<?php } ?>
-						</div>
+		<div class="aec-planlist-<?php echo $litem['type'] ?>" id="aec-<?php echo $litem['type'] . '-' . $litem['id'] ?>">
+			<h2><?php echo $litem['name'] ?></h2>
+			<p><?php echo $litem['desc'] ?></p>
+			<?php if ( $litem['type'] == 'group' ) {
+				@include( $tmpl->tmpl( 'groupbtn' ) );
+			} else { ?>
+				<div class="aec-processor-buttons">
+					<?php foreach ( $litem['gw'] as $gwitem ) { ?>
+						<?php @include( $tmpl->tmpl( 'planbtn' ) ); ?>
 					<?php } ?>
 				</div>
-			</td>
-		</tr>
+			<?php } ?>
+		</div>
 	<?php } ?>
-</table>
+</div>
