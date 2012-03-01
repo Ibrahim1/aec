@@ -420,6 +420,22 @@ function toggleProperty( $type, $id, $property )
 	$db->setQuery( $query );
 	$newstate = $db->loadResult() ? 0 : 1;
 
+	if ( $property == 'default' ) {
+		if ( !$newstate ) {
+			echo !$newstate;
+
+			return;
+		}
+
+		// Reset all other items
+		$query = 'UPDATE #__acctexp_' . $type
+				. ' SET `'.$property.'` = '.($newstate ? 0 : 1)
+				. ' WHERE `id` != ' . $id
+				;
+		$db->setQuery( $query );
+		$db->query();
+	}
+
 	$query = 'UPDATE #__acctexp_' . $type
 			. ' SET `'.$property.'` = '.$newstate
 			. ' WHERE `id` = ' . $id
@@ -1892,6 +1908,7 @@ function editTemplate( $option, $name )
 	$temp->loadName( $name );
 
 	$tempsettings = $temp->template->settings();
+	$temp->settings['default'] = $temp->default;
 
 	$lists = array();
 
@@ -1909,19 +1926,36 @@ function editTemplate( $option, $name )
 
 function saveTemplate( $option, $name, $return=0 )
 {
-	$db		= &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$temp = new configTemplate( $db );
 	$temp->loadName( $name );
 
 	$app = JFactory::getApplication();
 
+	if ( $_POST['default'] ) {
+		if ( $temp->id ) {
+			if ( !$temp->default ) {
+				// Reset all other items
+				$query = 'UPDATE #__acctexp_config_templates'
+						. ' SET `default` = 0'
+						. ' WHERE `id` > 0'
+						;
+				$db->setQuery( $query );
+				$db->query();
+			}
+		}
+		
+		$temp->default = 1;
+	} else {
+		$temp->default = 0;
+	}
+
 	unset( $_POST['id'] );
 	unset( $_POST['task'] );
 	unset( $_POST['option'] );
 	unset( $_POST['name'] );
-
-	$general_settings = $_POST;
+	unset( $_POST['default'] );
 
 	$temp->settings = $_POST;
 	$temp->storeload();
@@ -1929,7 +1963,7 @@ function saveTemplate( $option, $name, $return=0 )
 	if ( $return ) {
 		editTemplate( $option, $name );
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=listTemplates', JText::_('AEC_CONFIG_SAVED') );
+		aecRedirect( 'index.php?option=' . $option . '&task=showTemplates', JText::_('AEC_CONFIG_SAVED') );
 	}
 }
 

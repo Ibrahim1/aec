@@ -168,7 +168,11 @@ class HTML_myCommon
 
 	function toggleBtn( $type, $property, $id, $state )
 	{
-		if ( $property == 'visible' ) {
+		$js = 'toggleProperty';
+
+		if ( $property == 'default' ) {
+			$icons = array( 'star-empty', 'star' );
+		} elseif ( $property == 'visible' ) {
 			$icons = array( 'remove', 'eye-open' );
 		} else {
 			$icons = array( 'remove', 'ok' );
@@ -176,9 +180,17 @@ class HTML_myCommon
 
 		$cssid = $type.'-'.$property.'-'.$id;
 
-		?><a class="btn btn-toggle-<?php echo $state ? 'success' : 'danger'; ?>" id="<?php echo $cssid;?>" href="#" onClick="toggleProperty('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>')">
-			<?php echo aecHTML::Icon( $icons[$state], true ); ?>
-		</a><?php
+		$csscl = $type.'-'.$property;
+
+		if ( ( $property == 'default' ) && $state ) {
+			?><a class="btn btn-toggle-<?php echo $state ? 'success' : 'danger'; ?> <?php echo $csscl;?> ui-disabled" id="<?php echo $cssid;?>" href="#" disabled="disabled" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
+				<?php echo aecHTML::Icon( $icons[$state], true ); ?>
+			</a><?php
+		} else {
+			?><a class="btn btn-toggle-<?php echo $state ? 'success' : 'danger'; ?> <?php echo $csscl;?>" id="<?php echo $cssid;?>" href="#" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
+				<?php echo aecHTML::Icon( $icons[$state], true ); ?>
+			</a><?php
+		}
 	}
 }
 
@@ -1128,7 +1140,7 @@ class HTML_AcctExp
 			</tr></thead>
 			<?php foreach ( $rows as $i => $row ) { ?>
 				<tr>
-					<td><?php echo HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->name, $row->default ); ?></td>
+					<td><?php if ( $row->id ) { echo HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); } ?></td>
 					<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
 					<td class="leftalign"><?php echo $row->info['description']; ?></td>
 				</tr>

@@ -147,10 +147,30 @@ function readNotice(id) {
 	});
 }
 
-function toggleProperty(type, property, id, callerid) {
-	jQuery('#'+callerid+' i').addClass('bsicon-refresh');
-	jQuery('#'+callerid+' i').removeClass('bsicon-remove').removeClass('bsicon-ok').removeClass('bsicon-eye-open');
-	jQuery('#'+callerid+' i').addClass('bsicon-rotate');
+function toggleProperty(type, property, id, callerid, callerclass) {
+	if ( jQuery('#'+callerid).hasClass('ui-disabled') ) { 
+		return;
+	}
+
+	if ( property == 'default' ) {
+		jQuery('.'+callerclass+' i').addClass('bsicon-refresh');
+		jQuery('.'+callerclass+' i')
+			.removeClass('bsicon-remove')
+			.removeClass('bsicon-star-empty')
+			.removeClass('bsicon-ok')
+			.removeClass('bsicon-eye-open')
+			.removeClass('bsicon-star');
+		jQuery('.'+callerclass+' i').addClass('bsicon-rotate');
+	} else {
+		jQuery('#'+callerid+' i').addClass('bsicon-refresh');
+		jQuery('#'+callerid+' i')
+			.removeClass('bsicon-remove')
+			.removeClass('bsicon-stop')
+			.removeClass('bsicon-ok')
+			.removeClass('bsicon-eye-open')
+			.removeClass('bsicon-star');
+		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
+	}
 
 	if ( jQuery('#'+callerid).hasClass('btn-toggle-danger') ) {
 		jQuery('#'+callerid).removeClass('btn-toggle-danger').addClass('btn-toggle-warning');
@@ -166,7 +186,12 @@ function toggleProperty(type, property, id, callerid) {
 		if ( data == "1" ) {
 			jQuery('#'+callerid).addClass('btn-toggle-success');
 
-			if ( property == 'visible' ) {
+			if ( property == 'default' ) {
+				jQuery('#'+callerid+' i').addClass('bsicon-star').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				jQuery('#'+callerid).attr('disabled','disabled').addClass('ui-disabled');
+				jQuery('.'+callerclass+':not(#'+callerid+') i').addClass('bsicon-star-empty').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				jQuery('.'+callerclass+':not(#'+callerid+')').removeAttr('disabled').removeClass('ui-disabled').removeClass('btn-toggle-success').addClass('btn-toggle-danger');
+			} else if ( property == 'visible' ) {
 				jQuery('#'+callerid+' i').addClass('bsicon-eye-open').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 			} else {
 				jQuery('#'+callerid+' i').addClass('bsicon-ok').removeClass('bsicon-refresh').removeClass('bsicon-rotate');

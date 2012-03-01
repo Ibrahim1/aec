@@ -2619,17 +2619,17 @@ class configTemplate extends serialParamDBTable
 		$db = &JFactory::getDBO();
 
 		// See if the processor is installed & set id
-		$query = 'SELECT id'
+		$query = 'SELECT name'
 				. ' FROM #__acctexp_config_templates'
 				. ' WHERE `default` = 1'
 				;
 		$db->setQuery( $query );
-		$res = $db->loadResult();
+		$name = $db->loadResult();
 
-		if ( !empty( $res ) ) {
-			$this->load($res);
+		if ( !empty( $name ) ) {
+			$this->loadName($name);
 		} else {
-			$this->load(0);
+			$this->loadName('etacarinae');
 		}
 	}
 
@@ -2662,6 +2662,7 @@ class configTemplate extends serialParamDBTable
 			// Initiate Payment Processor Class
 			$class_name = 'template_' . $name;
 			$this->template = new $class_name();
+			$this->template->default = $this->default;
 
 			$this->info = $this->template->info();
 		}
@@ -2679,7 +2680,7 @@ class aecTemplate
 		$params[] = array( 'userinfobox_sub', JText::_('TEMPLATE_TITLE') );
 		$params[] = array( 'div', '<div class="alert alert-info">' );
 		$params[] = array( 'p', '<p>'.$info['description'].'</p>' );
-		$params['default'] = array( 'toggle', '' );
+		$params['default'] = array( ($this->default ? 'toggle_disabled':'toggle'), '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'div_end', 0 );
 
@@ -6100,6 +6101,22 @@ class aecHTML
 				$return .= '<div class="toggleswitch">';
 				$return .= '<label class="toggleswitch" onclick="">';
 				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
+				$return .= '<span class="toggleswitch-inner">';
+				$return .= '<span class="toggleswitch-on">' . JText::_( 'yes' ) . '</span>';
+				$return .= '<span class="toggleswitch-off">' . JText::_( 'no' ) . '</span>';
+				$return .= '<span class="toggleswitch-handle"></span>';
+				$return .= '</span>';
+				$return .= '</label>';
+				$return .= '</div>';
+				$return .= $insertctrl;
+				$return .= '</div></div>';
+				break;
+			case 'toggle_disabled':
+				$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '"/>';
+				$return .= '<div class="controls">';
+				$return .= '<div class="toggleswitch">';
+				$return .= '<label class="toggleswitch" onclick="">';
+				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1"/>';
 				$return .= '<span class="toggleswitch-inner">';
 				$return .= '<span class="toggleswitch-on">' . JText::_( 'yes' ) . '</span>';
 				$return .= '<span class="toggleswitch-off">' . JText::_( 'no' ) . '</span>';
