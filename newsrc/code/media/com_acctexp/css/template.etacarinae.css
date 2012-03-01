@@ -22,9 +22,13 @@ font-weight: bold;
 line-height: 16px;
 }
 
-#aec i {
+#aec .btn i {
 margin-right: 6px;
-margin-top: 1px;
+margin-top: 2px;
+}
+
+#aec .btn i.narrow {
+margin-right: 0;
 }
 
 #aec .componentheading {
@@ -185,8 +189,8 @@ border-width: 1px;
 float: left;
 margin-bottom: 16px;
 margin-top: 6px;
-padding: 8px;
-width: 100%;
+padding: 12px 12px 12px 24px;
+width: 95%;
 background: #fff;
 -webkit-border-radius: 10px;
 -moz-border-radius: 10px;
@@ -197,5 +201,10 @@ box-shadow: 0 2px 2px #ddd;
 #aec .processor-details img {
 float: left;
 margin: 7px;
+}
+
+#aec .backtocart-button {
+text-align: right;
+padding: 8px 0px 8px;
 }
 

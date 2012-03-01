@@ -14,7 +14,7 @@
 	<?php if ( empty( $InvoiceFactory->cart ) ) { ?>
 		<p>Your Shopping Cart is empty!</p>
 	<?php } else { ?>
-		<p>&nbsp;</p>
+		<?php @include( $tmpl->tmpl( 'list' ) ); ?>
 		<div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), JText::_('CART_CLEAR_ALL') ) ?></div>
 		<form name="form-update" action="<?php echo $tmpl->url( array( 'task' => 'updateCart') ) ?>" method="post">
 			<input type="hidden" name="option" value="<?php echo $option ?>" />
@@ -26,7 +26,7 @@
 	<?php } ?>
 
 	<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
-	<p>Save Registration to Continue Shopping:</p>
+		<p>Save Registration to Continue Shopping:</p>
 	<?php } else {
 		if ( !empty( $tmpl->cfg['customlink_continueshopping'] ) ) {
 			$continueurl = $tmpl->cfg['customlink_continueshopping'];

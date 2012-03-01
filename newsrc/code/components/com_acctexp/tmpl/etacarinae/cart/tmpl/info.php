@@ -21,6 +21,5 @@
 	} ?>
 	</div>
 	<?php @include( $tmpl->tmpl( 'btn' ) ) ?>
-	<?php @include( $tmpl->tmpl( 'confirmation.processorinfo' ) ) ?>
 	<?php echo JHTML::_( 'form.token' ) ?>
 </form>

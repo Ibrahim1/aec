@@ -23,6 +23,8 @@ if ( !empty( $tmpl->cfg['tos'] ) ) {
 	$tmpl->addScriptDeclaration( $js );
 }
 
+$tmpl->setTitle( JText::_('CART_TITLE') );
+
 $tmpl->addDefaultCSS();
 
 @include( $tmpl->tmpl( 'cart' ) );

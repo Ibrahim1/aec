@@ -10117,12 +10117,12 @@ class InvoiceFactory
 					if ( strtolower( $pp->processor_name ) == 'add_to_cart' ) {
 						$btnarray['option']		= 'com_acctexp';
 						$btnarray['task']		= 'addtocart';
-						$btnarray['class'] = 'aec-btn aec-btn-processor';
-						$btnarray['content'] = JText::_('AEC_BTN_ADD_TO_CART');
+						$btnarray['class']		= 'btn btn-processor';
+						$btnarray['content']	= '<i class="icon-plus narrow"></i>' . JText::_('AEC_BTN_ADD_TO_CART');
 
 						$btnarray['usage'] = $lv['id'];
 
-						if ( $tmpl->cfg['additem_stayonpage'] ) {
+						if ( $aecConfig->cfg['additem_stayonpage'] ) {
 							$btnarray['returngroup'] = $group;
 						}
 					} else {
