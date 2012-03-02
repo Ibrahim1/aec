@@ -122,7 +122,7 @@ if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
 	if ( !empty( $InvoiceFactory->items->total ) ) {
 		$c = AECToolbox::formatAmount( $InvoiceFactory->items->total->renderCost(), $InvoiceFactory->payment->currency );
 
-		echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . JText::_('AEC_CHECKOUT_TOTAL') . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
+		//echo '<tr class="aec_term_costrow current_period"><td class="aec_term_totaltitle">' . JText::_('AEC_CHECKOUT_TOTAL') . ':' . '</td><td class="aec_term_costamount">' . $c . '</td></tr>';
 		
 		$itemlist[] = array( "name" => JText::_('AEC_CHECKOUT_TOTAL') );
 	}
@@ -192,7 +192,7 @@ if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
 	if ( !empty( $InvoiceFactory->items->grand_total ) ) {
 		$c = AECToolbox::formatAmount( $InvoiceFactory->items->grand_total->renderCost(), $InvoiceFactory->payment->currency );
 
-		echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . JText::_('AEC_CHECKOUT_GRAND_TOTAL') . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
+		//echo '<tr class="aec_term_totalrow current_period"><td class="aec_term_totaltitle">' . JText::_('AEC_CHECKOUT_GRAND_TOTAL') . ':' . '</td><td class="aec_term_totalamount">' . $c . '</td></tr>';
 	}
 
 

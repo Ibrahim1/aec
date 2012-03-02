@@ -11,45 +11,14 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
-<div id="aec-checkout">
 <?php if ( !empty( $InvoiceFactory->cartobject ) && !empty( $InvoiceFactory->cart ) ) {
 	@include( $tmpl->tmpl( 'plans.backtocart' ) );
 } ?>
-<?php foreach ( $itemlist as $item ) { ?>
-		<div class="checkout-list-item">
-			<div class="checkout-list-item-description">
-				<?php if ( !empty( $item['name'] ) ) {
-					if ( !empty( $item['quantity'] ) ) { ?>
-						<h4><?php echo $item['name'] . ( ( $item['quantity'] > 1 ) ? " (&times;" . $item['quantity'] . ")" : '' ) ?></h4>
-					<?php } else { ?>
-						<h4><?php echo $item['name'] ?></h4>
-					<?php } ?>
-				<?php } ?>
-				<?php if ( !empty( $item['desc'] ) ) { ?>
-					<p><?php echo $item['desc'] ?></p>
-				<?php } ?>
-			</div>
-			<?php if ( !empty( $item['terms'] ) ) { ?>
-				<div class="checkout-list-item-terms">
-					<?php foreach ( $item['terms'] as $term ) { ?>
-						<div class="checkout-list-term list-term-<?php echo $term['type'] ?><?php echo $term['current'] ? 'list-term-current':'' ?>">
-							<h4><?php echo JText::_( strtoupper( $ttype ) ) . $term['applicable'] ?></h4>
-							<?php if ( !empty( $term['duration'] ) ) { ?>
-								<p><?php echo JText::_('AEC_CHECKOUT_DURATION') . ': ' . $term['duration'] ?></p>
-							<?php } ?>
-							<div class="checkout-term-cost">
-								<?php foreach ( $term['cost'] as $cost ) { ?>
-									<div class="checkout-cost-<?php echo $cost['type'] ?>">
-										<p><?php echo $cost['details'] . ': ' . $cost['cost'] ?></p>
-									</div>
-								<?php } ?>
-							</div>
-						</div>
-					<?php } ?>
-				</div>
-			<?php } ?>
-		</div>
-<?php } ?>
+<div class="checkout-list">
+	<?php foreach ( $itemlist as $item ) { ?>
+		<?php @include( $tmpl->tmpl( 'listitem' ) ) ?>
+	<?php } ?>
+</div>
 
 
 <?php if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
@@ -130,4 +99,3 @@
 		//echo '<tr class="aec_term_row_sep"><td colspan="2"></td></tr>';
 	}
 ?>
-</div>
