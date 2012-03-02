@@ -65,13 +65,15 @@ width: 100%;
 
 #aec #confirmation-button,
 #aec #checkout-button,
-#aec #exception-button {
+#aec #exception-button,
+#aec #upgrade-button {
 text-align: right;
 }
 
 #aec #confirmation-button p,
 #aec #checkout-button p,
-#aec #exception-button p {
+#aec #exception-button p,
+#aec #upgrade-button p {
 display: inline;
 float: left;
 margin: 4px 0;

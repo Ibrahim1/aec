@@ -14,6 +14,10 @@
 	<div id="aec-subscriptiondetails">
 		<div class="componentheading"><?php echo JText::_('MYSUBSCRIPTION_TITLE');?></div>
 		<?php
+		if ( $properties['hascart'] ) {
+			@include( $tmpl->tmpl( 'plans.backtocart' ) );
+		}
+
 		if ( $tmpl->cfg['subscriptiondetails_menu'] ) { @include( $tmpl->tmpl( 'nav' ) ); }
 
 		switch ( $sub ) {
