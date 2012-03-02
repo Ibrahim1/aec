@@ -13,6 +13,15 @@
 
 $tmpl->addDefaultCSS();
 
+
+$otherfields = array( "page_title", "before_header", "header", "after_header", "address", "before_content", "after_content", "before_footer", "footer", "after_footer" );
+
+foreach ( $data as $k => $v ) {
+	if ( !empty( $tmpl->cfg["invoice_".$k] ) ) {
+		$data[$k] = $tmpl->rwrq( $tmpl->cfg["invoice_".$k], $InvoiceFactory );
+	}
+}
+
 if ( $standalone ) {
 	@include( $tmpl->tmpl( 'invoice_standalone' ) );
 

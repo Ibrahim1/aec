@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4635' );
+define( '_AEC_REVISION', '4712' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -200,6 +200,136 @@ function aecRedirect( $url, $msg=null, $class=null )
 	$app = JFactory::getApplication();
 
 	$app->redirect( $url, $msg, $class );
+}
+
+function apiCall( $app, $key, $request )
+{
+	global $aecConfig;
+
+	if ( empty( $aecConfig->cfg['apiapplist'] ) ) {
+		header("HTTP/1.0 401 Unauthorized"); die; // die, die
+	}
+
+	if ( isset( $aecConfig->cfg['apiapplist'][$app] ) ) {
+		if ( trim($key) == trim($aecConfig->cfg['apiapplist'][$app]) ) {
+			if ( empty( $request ) ) {
+				header( "HTTP/1.0 400 Bad Request" ); die;
+			}
+
+			if ( get_magic_quotes_gpc() ) {
+				$request = stripslashes( $request );
+			}
+
+			$req = json_decode( $request );
+
+			if ( is_null( $request ) ) {
+				header( "HTTP/1.0 415 Unsupported Media Type" ); die;
+			}
+
+			if ( !is_array($req) ) {
+				$req = array( $req );
+			}
+
+			header( "HTTP/1.0 200 OK" );
+
+			$api = new aecAPI();
+
+			$return = array();
+			foreach ( $req as $r ) {
+				$api->load( $r );
+
+				$r = new stdClass();
+				$r->response	= new stdClass();
+				$r->error		= null;
+
+				if ( empty( $api->error ) ) {
+					$api->resolve();
+
+					$r->response	= $api->response;
+				} else {
+					$r->response->result = false;
+				}
+
+				$r->error	= $api->error;
+
+				$return[] = $r;
+			}
+
+			if ( count( $return ) == 1 ) {
+				$return = $return[0];
+			}
+
+			echo json_encode( $return ); die; // regular die
+		}
+	}
+
+	header("HTTP/1.0 401 Unauthorized"); die; // die, die
+}
+
+function getView( $view, $args=null )
+{
+	global $aecConfig;
+
+	$db = &JFactory::getDBO();
+
+	$user = &JFactory::getUser();
+
+	$metaUser = null;
+	if ( $user->id ) {
+		$userid = $user->id;
+
+		$metaUser = new metaUser( $user->id );
+	} else {
+		$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+
+		$metaUser = new metaUser( $userid );
+	}
+
+	$app = JFactory::getApplication();
+
+	$option = 'com_acctexp';
+
+	$dbtmpl = new configTemplate($db);
+	$dbtmpl->loadDefault();
+
+	$tmpl = $dbtmpl->template;
+
+	$tmpl->cfg = array_merge( $aecConfig->cfg, $dbtmpl->settings );
+	$tmpl->option = 'com_acctexp';
+	$tmpl->metaUser = $metaUser;
+	$tmpl->system_template = $app->getTemplate();
+
+	$tmpl->template = $dbtmpl->name;
+	$tmpl->view = $view;
+
+	$tmpl->paths['base'] = JPATH_SITE . '/components/com_acctexp/tmpl';
+	$tmpl->paths = array(	'default' => $tmpl->paths['base'] . '/default',
+							'current' => $tmpl->paths['base'] . '/' . $tmpl->template,
+							'site' => JPATH_SITE . '/templates/' . $tmpl->system_template . '/html/com_acctexp'
+						);
+
+	$hphp = '/'.$view.'/html.php';
+	$tphp = '/'.$view.'/tmpl/'.$view.'.php';
+
+	if ( !empty( $args ) ) {
+		foreach ( $args as $n => $v ) {
+			$$n = $v;
+		}
+	}
+
+	if ( file_exists( $tmpl->paths['site'].$hphp ) ) {
+		include( $tmpl->paths['site'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['current'].$hphp ) ) {
+		include( $tmpl->paths['current'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['default'].$hphp ) ) {
+		include( $tmpl->paths['default'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['site'].$tphp ) ) {
+		include( $tmpl->paths['site'].$tphp );
+	} elseif ( file_exists( $tmpl->paths['current'].$tphp ) ) {
+		include( $tmpl->paths['current'].$tphp );
+	} elseif ( file_exists( $tmpl->paths['default'].$tphp ) ) {
+		include( $tmpl->paths['default'].$tphp );
+	}
 }
 
 class metaUser
@@ -2813,7 +2943,7 @@ class aecTemplate
 
 	function rwrq( $string, $request )
 	{
-		return AECToolbox::rewriteEngine( $string, $request );
+		return AECToolbox::rewriteEngineRQ( $string, $request );
 	}
 
 	function custom( $setting, $original=null, $obj=null )
@@ -11249,7 +11379,7 @@ class InvoiceFactory
 
 		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
 
-		getView( 'invoice', array( 'data' => $data, 'standalone' => $standalone ) );
+		getView( 'invoice', array( 'data' => $data, 'standalone' => $standalone, 'InvoiceFactory' => $this ) );
 	}
 
 	function thanks( $option, $renew=false, $free=false )

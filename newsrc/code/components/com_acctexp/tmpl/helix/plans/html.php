@@ -17,7 +17,7 @@ $tmpl->setTitle( JText::_('PAYPLANS_HEADER') );
 
 if ( !empty( $csslist ) ) {
 	foreach ( $csslist as $css ) {
-		$tmpl->addCSSDeclaration( $css );
+		$tmpl->addCSSDeclaration( str_replace( 'btn', 'aec-btn', $css ) );
 	}
 }
 
@@ -28,8 +28,8 @@ foreach ( $list as $li => $lv ) {
 	}
 
 	foreach ( $lv['gw'] as $gwid => $pp ) {
-		foreach ( $list[$li]['gw'][$gwid]->aec-btn as $k => $v ) {
-			$list[$li]['gw'][$gwid]->aec-btn[$k] = str_replace( 'btn', 'aec-aec-btn', $v );
+		foreach ( $list[$li]['gw'][$gwid]->btn as $k => $v ) {
+			$list[$li]['gw'][$gwid]->btn[$k] = str_replace( 'btn', 'aec-btn', $v );
 		}
 	}
 }
