@@ -122,23 +122,26 @@ foreach ( $invoiceList as $invoiceid ) {
 		$actionsarray[] = array( 	'task'	=> 'invoicePrint',
 									'add'	=> 'invoice=' . $invoice->invoice_number,
 									'text'	=> JText::_('HISTORY_ACTION_PRINT'),
-									'insert' => ' target="_blank" ' );
+									'insert' => ' target="_blank" ',
+									'class' => 'btn' );
 	}
 
 	if ( ( $invoice->transaction_date == '0000-00-00 00:00:00' ) || ( $invoice->subscr_id  ) ) {
 		if ( $invoice->transaction_date == '0000-00-00 00:00:00' ) {
 			$actionsarray[] = array( 	'task'	=> 'repeatPayment',
 										'add'	=> 'invoice=' . $invoice->invoice_number . '&'. JUtility::getToken() .'=1',
-										'text'	=> JText::_('HISTORY_ACTION_REPEAT') );
+										'text'	=> JText::_('HISTORY_ACTION_REPEAT'),
+										'class' => 'btn btn-success' );
 
 			if ( is_null( $invoice->fixed ) || !$invoice->fixed ) {
 				$actionsarray[] = array('task'	=> 'cancelPayment',
 										'add'	=> 'invoice=' . $invoice->invoice_number,
-										'text'	=> JText::_('HISTORY_ACTION_CANCEL') );
+										'text'	=> JText::_('HISTORY_ACTION_CANCEL'),
+										'class' => 'btn btn-danger'  );
 			}
 		}
 
-		$rowstyle = ' style="background-color:#fee;"';
+		$rowstyle = 'invoice-unpaid';
 	}
 
 	if ( !in_array( $invoice->method, $pplist ) ) {
@@ -152,7 +155,7 @@ foreach ( $invoiceList as $invoiceid ) {
 	$invoices[$invoiceid]['amount']				= $invoice->amount;
 	$invoices[$invoiceid]['currency_code']		= $invoice->currency;
 	$invoices[$invoiceid]['actions']			= $actionsarray;
-	$invoices[$invoiceid]['rowstyle']			= $rowstyle;
+	$invoices[$invoiceid]['class']				= $rowstyle;
 	$invoices[$invoiceid]['transactiondate']	= $invoice->getTransactionStatus();
 }
 
@@ -257,7 +260,8 @@ foreach ( $invoiceList as $invoiceid ) {
 				$actionsarray[] = array('task'		=> 'planaction',
 										'add'		=> 'action=' . $action['action'] . '&amp;subscr=' . $tempsubscription->id,
 										'insert'	=> $action['insert'],
-										'text'		=> $action['action'] );
+										'text'		=> $action['action'],
+										'class'		=> 'btn btn-info' );
 			}
 		}
 	}
@@ -272,16 +276,16 @@ foreach ( $invoiceList as $invoiceid ) {
 					$insert = $a['insert'];
 				}
 
-				$actionsarray[$aid] = '<a href="' . $link . '"' . $insert . '>' . $a['text'] . '</a>';
+				$actionsarray[$aid] = '<a href="' . $link . '"' . $insert . ' class="' . $a['class'] . '">' . $a['text'] . '</a>';
 			}
 		}
 
-		$actions = implode( ' | ', $actionsarray );
+		$actions = '<div class="btn-group">' . implode( $actionsarray ) . '</div>';
 	} else {
 		$actions = ' - - - ';
 	}
 
-	$invoices[$invoiceid]['actions']			= $actions;
+	$invoices[$invoiceid]['actions'] = $actions;
 }
 
 // Get Custom Processor Tabs
@@ -300,6 +304,22 @@ foreach ( $pps as $pp ) {
 $trial = false;
 if ( !empty( $metaUser->objSubscription->status ) ) {
 	$trial = $metaUser->objSubscription->status == 'Trial';
+}
+
+if ( strcmp( $properties['alert']['daysleft'], 'infinite' ) === 0 ) {
+	$daysleft			= JText::_('RENEW_DAYSLEFT_INFINITE');
+	$daysleft_append	= $trial ? JText::_('RENEW_DAYSLEFT_TRIAL') : JText::_('RENEW_DAYSLEFT');
+} elseif ( strcmp( $properties['alert']['daysleft'], 'excluded' ) === 0 ) {
+	$daysleft			= JText::_('RENEW_DAYSLEFT_EXCLUDED');
+	$daysleft_append	= '';
+} else {
+	if ( $properties['alert']['daysleft'] >= 0 ) {
+		$daysleft			= $properties['alert']['daysleft'];
+		$daysleft_append	= $trial ? JText::_('RENEW_DAYSLEFT_TRIAL') : JText::_('RENEW_DAYSLEFT');
+	} else {
+		$daysleft			= $properties['alert']['daysleft'];
+		$daysleft_append	= JText::_('AEC_DAYS_ELAPSED');
+	}
 }
 
 $tmpl->setTitle( JText::_('MYSUBSCRIPTION_TITLE') . ' - ' . $tabs[$sub] );

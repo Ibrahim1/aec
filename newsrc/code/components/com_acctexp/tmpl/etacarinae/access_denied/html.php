@@ -26,9 +26,9 @@ if ( $user->id ) {
 }
 
 if ( $loggedin ) {
-	$loginlink = JText::_('NOT_ALLOWED_FIRSTPAR_LOGGED') . '&nbsp;' . $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED') );
+	$loginlink = JText::_('NOT_ALLOWED_FIRSTPAR_LOGGED') . '&nbsp;' . $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK_LOGGED'), 'btn' );
 } else {
-	$loginlink = JText::_('NOT_ALLOWED_FIRSTPAR') . '&nbsp;' . $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK') );
+	$loginlink = JText::_('NOT_ALLOWED_FIRSTPAR') . '&nbsp;' . $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK'), 'btn' );
 }
 
 $tmpl->addDefaultCSS();

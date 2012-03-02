@@ -86,23 +86,6 @@ if ( $metaUser->hasSubscription ) {
 			?>
 		</div>
 		<div id="days_left">
-			<?php
-			if ( strcmp( $properties['alert']['daysleft'], 'infinite' ) === 0 ) {
-				$daysleft			= JText::_('RENEW_DAYSLEFT_INFINITE');
-				$daysleft_append	= $trial ? JText::_('RENEW_DAYSLEFT_TRIAL') : JText::_('RENEW_DAYSLEFT');
-			} elseif ( strcmp( $properties['alert']['daysleft'], 'excluded' ) === 0 ) {
-				$daysleft			= JText::_('RENEW_DAYSLEFT_EXCLUDED');
-				$daysleft_append	= '';
-			} else {
-				if ( $properties['alert']['daysleft'] >= 0 ) {
-					$daysleft			= $properties['alert']['daysleft'];
-					$daysleft_append	= $trial ? JText::_('RENEW_DAYSLEFT_TRIAL') : JText::_('RENEW_DAYSLEFT');
-				} else {
-					$daysleft			= $properties['alert']['daysleft'];
-					$daysleft_append	= JText::_('AEC_DAYS_ELAPSED');
-				}
-			}
-			?>
 			<p><strong><?php echo $daysleft; ?></strong>&nbsp;&nbsp;<?php echo $daysleft_append; ?></p>
 		</div>
 		<?php

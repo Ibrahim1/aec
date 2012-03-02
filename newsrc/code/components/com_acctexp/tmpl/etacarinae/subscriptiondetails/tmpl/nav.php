@@ -10,17 +10,12 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<div id="aec_navlist_profile">
-	<ul id="aec_navlist_profile">
-	<?php
-	foreach ( $tabs as $fieldlink => $fieldname ) {
-		if ( $fieldlink == $sub ) {
-			$id = ' id="current"';
-		} else {
-			$id = '';
-		}
-		echo '<li><a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=' . $fieldlink, !empty( $tmpl->cfg['ssl_profile'] ) ) . '"'.$id.'>' . $fieldname . '</a></li>';
-	}
-	?>
+<div id="aec-nav-profile">
+	<ul id="aec-nav-profile-list" class="nav nav-tabs">
+	<?php foreach ( $tabs as $fieldlink => $fieldname ) { ?>
+		<li<?php echo ($fieldlink == $sub) ? ' class="active"':'' ?>>
+			<?php echo $tmpl->lnk( array('task' => 'subscriptiondetails', 'sub' => $fieldlink), $fieldname, '', true ) ?>
+		</li>
+	<?php } ?>
 	</ul>
 </div>

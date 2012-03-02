@@ -10,36 +10,40 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<table>
-	<tr>
-		<th><?php echo JText::_('HISTORY_COL1_TITLE');?></th>
-		<th><?php echo JText::_('HISTORY_COL2_TITLE');?></th>
-		<th><?php echo JText::_('HISTORY_COL3_TITLE');?></th>
-		<th><?php echo JText::_('HISTORY_COL4_TITLE');?></th>
-		<th><?php echo JText::_('HISTORY_COL5_TITLE');?></th>
-	</tr>
-	<?php
-	foreach ( $invoices as $invoice ) { ?>
-		<tr<?php echo $invoice['rowstyle'] ?>>
-			<td><?php echo $invoice['invoice_number']; ?></td>
-			<td><?php echo $invoice['amount'] . '&nbsp;' . $invoice['currency_code']; ?></td>
-			<td><?php echo $invoice['transactiondate']; ?></td>
-			<td><?php echo $invoice['processor']; ?></td>
-			<td><?php echo $invoice['actions']; ?></td>
-		</tr>
-		<?php
-	} ?>
-</table>
-<?php
-if ( $properties['invoice_pages'] > 1 ) {
-	echo '<div class="aec-invoices-pagination"><p>';
-	$plist = array();
-	for ( $i=0; $i<$properties['invoice_pages']; $i++ ) {
-		if ( $i == $properties['invoice_page'] ) {
-			$plist[] = ( $i + 1 );
-		} else {
-			$plist[] = '<a href="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscriptiondetails&sub=invoices&page=' . $i, !empty( $tmpl->cfg['ssl_profile'] ) ) . '">' . ( $i + 1 ) . '</a>';
-		}
-	}
-	echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
-}
+<div id="aec-subscriptiondetails-invoices">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th><?php echo JText::_('HISTORY_COL1_TITLE');?></th>
+				<th><?php echo JText::_('HISTORY_COL2_TITLE');?></th>
+				<th><?php echo JText::_('HISTORY_COL3_TITLE');?></th>
+				<th><?php echo JText::_('HISTORY_COL4_TITLE');?></th>
+				<th><?php echo JText::_('HISTORY_COL5_TITLE');?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+			foreach ( $invoices as $invoice ) { ?>
+				<tr class="<?php echo $invoice['rowstyle'] ?>">
+					<td><?php echo $invoice['invoice_number']; ?></td>
+					<td><?php echo $invoice['amount'] . '&nbsp;' . $invoice['currency_code']; ?></td>
+					<td><?php echo $invoice['transactiondate']; ?></td>
+					<td><?php echo $invoice['processor']; ?></td>
+					<td><?php echo $invoice['actions']; ?></td>
+				</tr>
+				<?php
+			} ?>
+		</tbody>
+	</table>
+	<?php if ( $properties['invoice_pages'] > 1 ) { ?>
+		<div class="pagination pagination-centered">
+			<ul>
+				<?php for ( $i=0; $i<$properties['invoice_pages']; $i++ ) { ?>
+					<li<?php echo ($i == $properties['invoice_page']) ? ' class="active"':'' ?>>
+						<?php echo $tmpl->lnk( array('task' => 'subscriptiondetails', 'sub' => 'invoices', 'page' => $i), ( $i + 1 ), '', true ) ?>
+					</li>
+				<?php } ?>
+			</ul>
+		</div>
+	<?php } ?>
+</div>
