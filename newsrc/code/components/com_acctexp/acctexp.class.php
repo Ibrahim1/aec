@@ -9399,7 +9399,11 @@ class InvoiceFactory
 		if ( !empty( $this->plan ) ) {
 			$this->payment->amount_format = AECToolbox::formatAmountCustom( $this, $this->plan );
 		} else {
-			$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount, $this->payment->currency );
+			if ( !empty( $this->payment->currency ) ) {
+				$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount, $this->payment->currency );
+			} else {
+				$this->payment->amount_format = AECToolbox::formatAmount( $this->payment->amount );
+			}
 		}
 	}
 

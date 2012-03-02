@@ -20,5 +20,7 @@
 			<?php echo JHTML::_( 'form.token' ) ?>
 		</form>
 	</div>
-		<?php @include( $tmpl->tmpl( 'confirmation.processorinfo' ) ) ?>
+		<?php if ( !empty( $InvoiceFactory->pp ) ) {
+			@include( $tmpl->tmpl( 'confirmation.processorinfo' ) );
+		} ?>
 </div>

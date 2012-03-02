@@ -12,8 +12,10 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="checkout-list-item-terms">
 	<?php foreach ( $item['terms'] as $term ) { ?>
-		<div class="checkout-list-term list-term-<?php echo $term['type'] ?><?php echo $term['current'] ? 'list-term-current':'' ?>">
-			<h4><?php echo JText::_( strtoupper( 'aec_termtype_' . $term['type'] ) ) . $term['applicable'] ?></h4>
+		<div class="checkout-list-term list-term-<?php echo $term['type'] ?><?php echo $term['current'] ? 'list-term-current':'list-term-other' ?>">
+			<?php if ( !empty( $term['title'] ) ) { ?>
+				<h4><?php echo $term['title'] ?></h4>
+			<?php } ?>
 			<?php if ( !empty( $term['duration'] ) ) { ?>
 				<p><?php echo JText::_('AEC_CHECKOUT_DURATION') . ': ' . $term['duration'] ?></p>
 			<?php } ?>
@@ -21,8 +23,8 @@
 				<tbody>
 					<?php foreach ( $term['cost'] as $cost ) { ?>
 						<tr class="checkout-cost-<?php echo $cost['type'] ?>">
-							<td><?php echo $cost['details'] ?></td>
-							<td><?php echo $cost['cost'] ?></td>
+							<td class="cost-details"><?php echo $cost['details'] ?></td>
+							<td class="cost-cost"><?php echo $cost['cost'] ?></td>
 						</tr>
 					<?php } ?>
 				</tbody>

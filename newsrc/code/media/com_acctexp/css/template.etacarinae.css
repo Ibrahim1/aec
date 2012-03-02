@@ -37,20 +37,20 @@ text-align: center;
 
 #aec .well {
 width: 92%;
-margin: 12px 3% 48px;
+margin: 12px 1% 48px;
 }
 
 #aec #confirmation-info,
 #aec #confirmation-form,
 #aec #confirmation-extra,
 #aec #aec-exception {
-margin: 0 5%;
-width: 86%;
+margin: 0 3%;
+width: 94%;
 }
 
 #aec #cart-info,
 #aec .checkout-list {
-margin: 0 7%;
+margin: 0 4%;
 width: 90%;
 }
 
@@ -130,6 +130,14 @@ text-align: center !important;
 
 #aec td.cboth p {
 text-align: center !important;
+}
+
+#aec td.cost-cost {
+text-align: right;
+}
+
+#aec .list-term-other {
+opacity: 0.8;
 }
 
 #aec .btn-processor {
