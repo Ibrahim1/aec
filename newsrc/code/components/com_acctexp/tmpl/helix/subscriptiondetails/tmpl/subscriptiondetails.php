@@ -25,8 +25,8 @@
 			@include( $tmpl->tmpl( 'invoices' ) );
 			break;
 		case 'details':
-			if ( $mi ) {
-				echo $mi;
+			if ( $mi_info ) {
+				echo $mi_info;
 			}
 			break;
 		default:

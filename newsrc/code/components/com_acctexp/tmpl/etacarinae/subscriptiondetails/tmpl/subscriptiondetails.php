@@ -28,12 +28,18 @@
 				@include( $tmpl->tmpl( 'invoices' ) );
 				break;
 			case 'details':
-				if ( $mi ) {
-					echo $mi;
+				if ( $mi_info ) {
+					echo $mi_info;
+				} else {
+					@include( $tmpl->tmpl( 'overview' ) );
 				}
 				break;
 			default:
-				echo $custom;
+				if ( $custom ) {
+					echo $custom;
+				} else {
+					@include( $tmpl->tmpl( 'overview' ) );
+				}
 				break;
 		} ?>
 	</div>
