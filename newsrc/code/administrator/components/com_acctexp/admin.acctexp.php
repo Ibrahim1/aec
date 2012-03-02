@@ -1944,6 +1944,14 @@ function saveTemplate( $option, $name, $return=0 )
 				$db->setQuery( $query );
 				$db->query();
 			}
+		} else {
+			// Reset all other items
+			$query = 'UPDATE #__acctexp_config_templates'
+					. ' SET `default` = 0'
+					. ' WHERE `id` > 0'
+					;
+			$db->setQuery( $query );
+			$db->query();
 		}
 		
 		$temp->default = 1;

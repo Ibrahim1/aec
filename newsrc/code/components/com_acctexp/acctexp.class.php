@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4712' );
+define( '_AEC_REVISION', '4722' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -8699,7 +8699,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$parents = ItemGroupHandler::parentGroups( $pid, 'item' );
 
 		foreach ( $parents as $parentid ) {
-			ItemGroupHandler::setChild( $row->id, $parentid, 'item' );
+			ItemGroupHandler::setChild( $this->id, $parentid, 'item' );
 		}
 	}
 

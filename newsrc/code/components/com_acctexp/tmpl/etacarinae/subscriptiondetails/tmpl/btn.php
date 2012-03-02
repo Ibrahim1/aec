@@ -11,12 +11,13 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="well">
-<div id="upgrade-button">
-	<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription', !empty( $tmpl->cfg['ssl_signup'] ) ); ?>" method="post">
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="task" value="renewsubscription" />
-		<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />
-		<input type="submit" class="button btn btn-success" value="<?php echo JText::_('RENEW_BUTTON_UPGRADE');?>" />
-		<?php echo JHTML::_( 'form.token' ); ?>
-	</form>
+	<div id="upgrade-button">
+		<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription', !empty( $tmpl->cfg['ssl_signup'] ) ); ?>" method="post">
+			<input type="hidden" name="option" value="<?php echo $option; ?>" />
+			<input type="hidden" name="task" value="renewsubscription" />
+			<input type="hidden" name="userid" value="<?php echo $metaUser->cmsUser->id; ?>" />
+			<input type="submit" class="button btn btn-success" value="<?php echo JText::_('RENEW_BUTTON_UPGRADE');?>" />
+			<?php echo JHTML::_( 'form.token' ); ?>
+		</form>
+	</div>
 </div>
