@@ -149,7 +149,7 @@ switch( strtolower( $task ) ) {
 		$name	= aecGetParam( 'name', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 		saveTemplate( $option, $name, 1 );
 		break;
-	case 'canceltemplate': aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_CANCELLED') ); break;
+	case 'canceltemplate': aecRedirect( 'index.php?option=' . $option . '&task=showTemplates', JText::_('AEC_CONFIG_CANCELLED') ); break;
 
 	case 'showprocessors': listProcessors( $option ); break;
 	case 'newprocessor': editProcessor( 0, $option ); break;
