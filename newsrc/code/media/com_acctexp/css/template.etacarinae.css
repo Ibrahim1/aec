@@ -47,12 +47,13 @@ margin: 12px 3% 48px;
 
 #aec #confirmation-info,
 #aec #confirmation-form,
-#aec #confirmation-extra {
+#aec #confirmation-extra,
+#aec #aec-exception {
 margin: 0 5%;
 width: 86%;
 }
 
-#aec #cart-info {
+#aec #cart-info,
 #aec .checkout-list {
 margin: 0 7%;
 width: 90%;
@@ -63,12 +64,14 @@ width: 100%;
 }
 
 #aec #confirmation-button,
-#aec #checkout-button {
+#aec #checkout-button,
+#aec #exception-button {
 text-align: right;
 }
 
 #aec #confirmation-button p,
-#aec #checkout-button p {
+#aec #checkout-button p,
+#aec #exception-button p {
 display: inline;
 float: left;
 margin: 4px 0;
@@ -104,6 +107,10 @@ font-size: 180%;
 font-weight: bold;
 text-align: center;
 margin: 0;
+}
+
+#aec .form-exception-part table {
+width: 100%;
 }
 
 #aec td.cleft {

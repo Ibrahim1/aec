@@ -10687,9 +10687,23 @@ class InvoiceFactory
 		$this->loadMetaUser( true );
 		$this->metaUser->setTempAuth();
 
-		if ( $this->verifyMIForms( $this->plan ) === false ) {
-			$this->confirmed = 0;
-			return $this->confirm( $option );
+		if ( !empty( $this->plan ) ) {
+			if ( $this->verifyMIForms( $this->plan ) === false ) {
+				$this->confirmed = 0;
+				return $this->confirm( $option );
+			}
+		} elseif ( !empty( $this->cart ) ) {
+			$check = true;
+			foreach( $this->cart as $ci ) {
+				if ( $this->verifyMIForms( $ci['obj'] ) === false ) {
+					$check = false;
+				}
+			}
+
+			if ( !$check ) {
+				$this->confirmed = 0;
+				return $this->confirm( $option );
+			}
 		}
 
 		$this->checkout( $option, 0, null, $coupon );
