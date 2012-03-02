@@ -1,7 +1,6 @@
 /* == Valanx.org AEC Membership Management - etacarinae.css == */
 
 #aec {
-float: left;
 width: 100%;
 padding: 0 12px;
 }
@@ -36,8 +35,14 @@ text-align: center;
 }
 
 #aec .well {
+float: left;
 width: 92%;
 margin: 12px 1% 48px;
+}
+
+#aec .alert {
+float: left;
+width: 92%;
 }
 
 #aec #confirmation-info,
@@ -50,7 +55,7 @@ width: 94%;
 
 #aec #cart-info,
 #aec .checkout-list {
-margin: 0 4%;
+margin: 0 5%;
 width: 90%;
 }
 
