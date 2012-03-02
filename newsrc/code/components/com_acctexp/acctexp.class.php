@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4726' );
+define( '_AEC_REVISION', '4728' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -9097,6 +9097,45 @@ class InvoiceFactory
 			$this->plan = new SubscriptionPlan( $db );
 			$this->plan->load( $this->usage );
 
+			if ( empty( $this->processor ) ) {
+				// Recover from missing processor selection
+				if (
+					// If it is either made free through coupons
+					!empty( $this->invoice->made_free )
+					// Or a free full period that the user CAN use and no trial
+					|| ( $this->plan->params['full_free'] && empty( $this->invoice->counter ) && empty( $this->plan->params['trial_period'] ) )
+					// Or a free full period that the user CAN use and a skipped trial
+					|| ( $this->plan->params['full_free'] && $this->invoice->counter )
+					// Or a free trial that the user CAN use
+					|| ( $this->plan->params['trial_free'] && empty( $this->invoice->counter ) )
+				) {
+					if ( !isset( $this->recurring ) ) {
+						$this->recurring = 0;
+					}
+
+					// Only allow clearing while recurring if everything is free
+					if ( !( $this->recurring && ( empty( $this->plan->params['full_free'] ) || empty( $this->plan->params['trial_free'] ) ) ) ) {
+						$this->processor = 'free';
+					}
+				}
+
+				if ( empty( $this->processor ) ) {
+					// It's not free, so select the only processor we have available
+					if ( !empty( $this->plan->params['processors'] ) ) {
+						foreach ( $this->plan->params['processors'] as $proc ) {
+							$pp = new PaymentProcessor();
+
+							if ( !$pp->loadId( $proc ) ) {
+								continue;
+							}
+
+							$this->processor = $pp->processor_name;
+							break;
+						}
+					}
+				}
+			}
+
 			if ( !is_object( $this->plan ) ) {
 				return aecNotAuth();
 			}
@@ -9496,6 +9535,10 @@ class InvoiceFactory
 		$this->payment->amount = null;
 
 		if ( empty( $this->cart ) && !empty( $this->plan ) ) {
+			if ( !isset( $this->recurring ) ) {
+				$this->recurring = 0;
+			}
+
 			$terms = $this->plan->getTermsForUser( $this->recurring, $this->metaUser );
 
 			if ( !empty( $terms ) ) {
