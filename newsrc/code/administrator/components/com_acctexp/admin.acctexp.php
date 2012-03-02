@@ -4554,7 +4554,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 			$objInvoice->setTransactionDate();
 		}
 
-		if ( strcmp( $task, 'edit' ) == 0) {
+		if ( strcmp( $task, 'editMembership' ) == 0) {
 			$userid = '&userid=' . $objInvoice->userid;
 		} else {
 			$userid = '';
