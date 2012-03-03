@@ -2874,7 +2874,7 @@ class aecTemplate
 			$uri    = JURI::getInstance();
 			$prefix = $uri->toString( array( 'scheme', 'host', 'port' ) );
 
-			$url = $prefix.JRoute::_( $xurl );
+			$url = $prefix.'/'.$xurl;
 		}
 
 		$btn = '<form action="'.$url.'" method="post">';
@@ -8852,7 +8852,7 @@ class aecTempToken extends serialParamDBTable
 
 		if ( empty( $id ) ) {
 			$query = 'SELECT `id`'
-			. ' FROM #__accteplan_idmptoken'
+			. ' FROM #__acctexp_temptoken'
 			. ' WHERE `ip` = \'' . $_SERVER['REMOTE_ADDR'] . '\''
 			;
 			$db->setQuery( $query );
