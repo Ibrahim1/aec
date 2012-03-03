@@ -2205,7 +2205,7 @@ class HTML_AcctExp
 					<tr>
 						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon'. $type ? "Static" : "" . '&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon'. ($type ? "Static" : "") . '&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 						<td class="leftalign"><strong><?php echo $row->coupon_code; ?></strong></td>
 						<td class="leftalign"><?php echo $row->desc; ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
