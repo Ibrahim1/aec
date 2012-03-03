@@ -50,7 +50,7 @@ class processor_robokassa extends POSTprocessor
 		$settings['testmode']		= array( 'toggle' );
 		$settings['login']			= array( 'inputC' );
 		$settings['pass']			= array( 'inputC' );
-		$settings['notify_pass']			= array( 'inputC' );
+		$settings['notify_pass']	= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'list_language' );
 		$settings['item_name']		= array( 'inputE' );
@@ -118,9 +118,9 @@ class processor_robokassa extends POSTprocessor
 		$vars[] = $invoice->id;
 
 		if ( $send ) {
-			$vars[] = trim($this->settings['notify_pass']);
-		} else {
 			$vars[] = trim($this->settings['pass']);
+		} else {
+			$vars[] = trim($this->settings['notify_pass']);
 		}
 
 		return md5( implode( ':', $vars ) );

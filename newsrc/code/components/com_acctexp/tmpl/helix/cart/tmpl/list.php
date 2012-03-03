@@ -26,7 +26,7 @@
 				<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
 				<td><?php echo $bitem['cost_total'] ?></td>
 				<td><?php echo $tmpl->lnk( array('task' => 'clearCartItem','item' => $bid), JText::_('CART_DELETE_ITEM') ) ?></td>
-			</tr><?
+			</tr><?php
 		} else {
 			?><tr>
 				<td><strong><?php echo JText::_('CART_ROW_TOTAL') ?></strong></td>
@@ -34,7 +34,7 @@
 				<td></td>
 				<td><strong><?php echo $bitem['cost'] ?></strong></td>
 				<td></td>
-			</tr><?
+			</tr><?php
 		}
 	} ?>
 </table>

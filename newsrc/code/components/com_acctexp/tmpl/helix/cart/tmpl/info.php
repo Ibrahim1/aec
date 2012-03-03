@@ -14,7 +14,7 @@
 <table>
 	<tr>
 		<td id="confirmation_extra">
-			<?
+			<?php
 			@include( $tmpl->tmpl( 'confirmation.miform' ) );
 			$tmpl->custom( 'customtext_confirm' );
 			?>
