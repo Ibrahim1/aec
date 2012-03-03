@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4728' );
+define( '_AEC_REVISION', '4734' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -8750,6 +8750,44 @@ class logHistory extends serialParamDBTable
 		return array( 'response' );
 	}
 
+	function load( $id )
+	{
+		parent::load( $id );
+
+		if ( $this->cleanup() ) {
+			$this->storeload();
+		}
+	}
+
+	function cleanup()
+	{
+		if ( is_array( $this->response ) ) {
+			if ( count( $this->response ) == 1 ) {
+				foreach( $this->response as $k => $v ) {
+					if ( !is_array( $v ) ) {
+						$this->response = unserialize( base64_decode( $k ) );
+						
+						if ( !is_array( $this->response ) ) {
+							return false;
+						}
+
+						return true;
+					} elseif ( !is_array( $k ) ) {
+						$this->response = unserialize( base64_decode( $v ) );
+
+						if ( !is_array( $this->response ) ) {
+							return false;
+						}
+
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	function entryFromInvoice( $objInvoice, $response, $pp )
 	{
 		$db = &JFactory::getDBO();
@@ -8772,6 +8810,8 @@ class logHistory extends serialParamDBTable
 		$this->amount			= $objInvoice->amount;
 		$this->invoice_number	= $objInvoice->invoice_number;
 		$this->response			= $response;
+
+		$this->cleanup();
 
 		$short	= 'history entry';
 		$event	= 'Processor (' . $pp->processor_name . ') notification for ' . $objInvoice->invoice_number;

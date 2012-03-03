@@ -4635,7 +4635,7 @@ function history( $option )
 	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 	// Lets grab the data and fill it in.
-	$query = 'SELECT *'
+	$query = 'SELECT id'
 			. ' FROM #__acctexp_log_history'
 			. ( count( $where ) ? ' WHERE ' . implode( ' OR ', $where ) : '' )
 			. ' GROUP BY `transaction_date`'
@@ -4643,7 +4643,15 @@ function history( $option )
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 			;
 	$db->setQuery( $query );
-	$rows = $db->loadObjectList();
+	$rowids = $db->loadResultArray();
+
+	$rows = array();
+	foreach ( $rowids as $rid ) {
+		$entry = new logHistory( $db );
+		$entry->load( $rid );
+
+		$rows[] = $entry;
+	}
 
 	if ( $db->getErrorNum() ) {
 		echo $db->stderr();
@@ -4807,7 +4815,8 @@ function aec_statrequest( $option, $type, $start, $end )
 				$entry->load( $id );
 
 				$refund = false;
-				if ( is_array( $entry->response ) ) {
+
+				if ( is_array( $entry->response ) && !empty( $entry->response ) ) {
 					$filter = array( 'new_case', 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
 
 					$refund = false;

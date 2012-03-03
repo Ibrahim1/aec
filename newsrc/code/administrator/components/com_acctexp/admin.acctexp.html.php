@@ -2450,7 +2450,7 @@ class HTML_AcctExp
 			<th><?php echo JText::_('HISTORY_AMOUNT'); ?></th>
 			<th><?php echo JText::_('HISTORY_RESPONSE'); ?></th>
 		</tr></thead>
-		<?php foreach ( $rows as $i => $row ) { ?>
+		<?php foreach ( $rows as $row ) { ?>
 			<tr>
 				<td><?php echo $row->user_name; ?></td>
 				<td><?php echo $row->invoice_number; ?></td>
@@ -2459,11 +2459,9 @@ class HTML_AcctExp
 				<td><?php echo $row->proc_name; ?></td>
 				<td><?php echo $row->amount; ?></td>
 				<td class="leftalign">
-					<?php if ( !empty( $row->response ) && ( strlen( $row->response ) > 8) ) {
-							$field = unserialize( base64_decode( $row->response ) );
-
-							echo '<pre class="prettyprint">'.print_r($field,true).'</pre>';
-						} ?>
+					<?php if ( !empty( $row->response ) ) {
+						echo '<pre class="prettyprint">'.print_r($row->response, true).'</pre>';
+					} ?>
 				</td>
 			</tr>
 			<?php } ?>
