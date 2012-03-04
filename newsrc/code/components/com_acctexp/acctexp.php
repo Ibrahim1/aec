@@ -409,7 +409,6 @@ function subscribe( $option )
 		}
 	}
 
-	$task		= aecGetParam( 'task', 0, true, array( 'word', 'string' ) );
 	$intro		= aecGetParam( 'intro', 0, true, array( 'word', 'int' ) );
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );

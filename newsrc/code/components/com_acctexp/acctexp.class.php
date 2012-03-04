@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4740' );
+define( '_AEC_REVISION', '4742' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -1060,7 +1060,7 @@ class metaUser
 		$db = &JFactory::getDBO();
 
 		$query = 'SELECT *'
-			. ' FROM #__users u, #__comprofiler ue'
+			. ' FROM #__users AS u, #__comprofiler AS ue'
 			. ' WHERE `user_id` = \'' . (int) $this->userid . '\' AND u.id = ue.id';
 		$db->setQuery( $query );
 		$this->cbUser = $db->loadObject();
@@ -11318,12 +11318,16 @@ class InvoiceFactory
 		$response = $this->invoice->processorResponse( $this, $response, '', false );
 
 		if ( isset( $response['error'] ) ) {
-			unset( $this->cart );
-			unset( $this->cartobject );
-			unset( $this->items );
-			unset( $this->pp );
+			if ( !empty( $this->pp->info['custom_notify_trail'] ) ) {
+				$this->pp->notify_trail( $this, $response );
+			} else {
+				unset( $this->cart );
+				unset( $this->cartobject );
+				unset( $this->items );
+				unset( $this->pp );
 
-			$this->checkout( $option, true, $response['error'] );
+				$this->checkout( $option, true, $response['error'] );
+			}
 		} elseif ( isset( $response['customthanks'] ) ) {
 			if ( !empty( $response['customthanks_strict'] ) ) {
 				echo $response['customthanks'];

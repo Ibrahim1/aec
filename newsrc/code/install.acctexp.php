@@ -331,13 +331,8 @@ function com_install()
 		$template->storeload();
 	}
 
-	$v = new JVersion();
-
-	if ( $v->isCompatible('2.5') ) {
-		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root() ?>media/com_acctexp/css/admin.css?rev=<?php echo _AEC_REVISION ?>" /><?php
-	}
-
 	?>
+	<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root() ?>media/com_acctexp/css/admin.css?rev=<?php echo _AEC_REVISION ?>" />
 	<style type="text/css">
 		dl#system-message {
 			display: none;
