@@ -803,6 +803,8 @@ class processor_paypal_wpp extends XMLprocessor
 				$response['duplicate']	= 1;
 			} elseif ( strcmp( $payment_status, 'Reversed' ) == 0 ) {
 				$response['chargeback']			= 1;
+			} elseif ( strcmp( $payment_status, 'Canceled_Reversal' ) == 0 ) {
+				$response['chargeback_settle']	= 1;
 			}
 		} else {
 			$response['pending_reason']			= 'error: ' . $res;
