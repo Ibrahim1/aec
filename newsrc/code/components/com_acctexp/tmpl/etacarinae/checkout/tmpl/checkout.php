@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: checkout.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -13,7 +13,7 @@
 <div id="aec">
 	<div id="aec-checkout">
 		<div class="componentheading"><?php echo $InvoiceFactory->checkout['checkout_title'] ?></div>
-		<?
+		<?php
 
 		@include( $tmpl->tmpl( 'itemlist' ) );
 

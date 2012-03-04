@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: access_denied.php
  * @package AEC - Account Control Expiration - Membership Manager

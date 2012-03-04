@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: plans.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -15,7 +15,7 @@
 		<div class="componentheading"><?php echo JText::_('PAYPLANS_HEADER') ?></div>
 		<?php if ( !empty( $cart ) ) { @include( $tmpl->tmpl( 'backtocart' ) ); } ?>
 		<div class="subscriptions">
-			<?
+			<?php
 			$tmpl->custom( 'customtext_plans' );
 
 			if ( isset( $list['group'] ) && $selected ) {

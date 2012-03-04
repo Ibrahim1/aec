@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: error.php
  * @package AEC - Account Control Expiration - Membership Manager

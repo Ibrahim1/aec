@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: exception.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -13,18 +13,18 @@
 
 <div class="componentheading"><?php echo $hasform ? JText::_('EXCEPTION_TITLE') : JText::_('EXCEPTION_TITLE_NOFORM') ?></div>
 <div id="checkout">
-	<?
+	<?php
 	if ( $tmpl->cfg['customtext_exception_keeporiginal'] ) { ?>
 		<p><?php echo $hasform ? JText::_('EXCEPTION_INFO') : "" ?></p>
-		<?
+		<?php
 	}
 	if ( $tmpl->cfg['customtext_exception'] ) { ?>
 		<p><?php echo $tmpl->cfg['customtext_exception'] ?></p>
-		<?
+		<?php
 	} ?>
 	<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=addressException', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 	<table id="aec_checkout">
-	<?
+	<?php
 		foreach ( $InvoiceFactory->exceptions as $eid => $ex ) {
 			if ( !empty( $ex['head'] ) ) {
 				// Headline - What type is this term

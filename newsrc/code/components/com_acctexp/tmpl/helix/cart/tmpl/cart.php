@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: cart.php
  * @package AEC - Account Control Expiration - Membership Manager

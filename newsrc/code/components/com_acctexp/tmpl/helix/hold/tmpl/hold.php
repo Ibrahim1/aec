@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * @version $Id: hold.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -17,8 +17,7 @@
 		<p><?php echo sprintf( JText::_('DEAR'), $metaUser->cmsUser->name ) ?></p>
 		<p><?php echo JText::_('HOLD_EXPLANATION') ?></p>
 	</div>
-	<?
-}
+<?php }
 if ( $tmpl->cfg['customtext_hold'] ) { ?>
 	<p><?php echo $tmpl->rw( $tmpl->cfg['customtext_hold'] ) ?></p>
 <?php } ?>
