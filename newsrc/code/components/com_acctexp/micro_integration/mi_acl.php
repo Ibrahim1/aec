@@ -28,30 +28,43 @@ class mi_acl
 
 		$settings = array();
 
-		$settings['set_gid']			= array( 'toggle' );
-		$settings['gid']				= array( 'list' );
-		$settings['set_gid_exp']		= array( 'toggle' );
-		$settings['gid_exp']			= array( 'list' );
-		$settings['set_gid_pre_exp']	= array( 'toggle' );
-		$settings['gid_pre_exp']		= array( 'list' );
-
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$settings['set_gid']				= array( 'toggle' );
+			$settings['gid']					= array( 'list' );
 			$settings['set_removegid']			= array( 'toggle' );
 			$settings['removegid']				= array( 'list' );
+
+			$settings['aectab_exp']				= array( 'tab', 'Expiration Action', 'Expiration Action' );
+			$settings['set_gid_exp']			= array( 'toggle' );
+			$settings['gid_exp']				= array( 'list' );
 			$settings['set_removegid_exp']		= array( 'toggle' );
 			$settings['removegid_exp']			= array( 'list' );
+
+			$settings['aectab_preexp']			= array( 'tab', 'Pre-Expiration Action', 'Pre-Expiration Action' );
+			$settings['set_gid_pre_exp']		= array( 'toggle' );
+			$settings['gid_pre_exp']			= array( 'list' );
 			$settings['set_removegid_pre_exp']	= array( 'toggle' );
 			$settings['removegid_pre_exp']		= array( 'list' );
 		} else {
+			$settings['jaclpluspro']			= array( 'toggle' );
 			$settings['delete_subgroups']		= array( 'toggle' );
 
-			$settings['jaclpluspro']			= array( 'toggle' );
+			$settings['set_gid']				= array( 'toggle' );
+			$settings['gid']					= array( 'list' );
 			$settings['sub_set_gid']			= array( 'toggle' );
 			$settings['sub_gid_del']			= array( 'list' );
 			$settings['sub_gid']				= array( 'list' );
+
+			$settings['aectab_exp']				= array( 'tab', 'Expiration Action', 'Expiration Action' );
+			$settings['set_gid_exp']			= array( 'toggle' );
+			$settings['gid_exp']				= array( 'list' );
 			$settings['sub_set_gid_exp']		= array( 'toggle' );
 			$settings['sub_gid_exp_del']		= array( 'list' );
 			$settings['sub_gid_exp']			= array( 'list' );
+
+			$settings['aectab_preexp']			= array( 'tab', 'Pre-Expiration Action', 'Pre-Expiration Action' );
+			$settings['set_gid_pre_exp']		= array( 'toggle' );
+			$settings['gid_pre_exp']			= array( 'list' );
 			$settings['sub_set_gid_pre_exp']	= array( 'toggle' );
 			$settings['sub_gid_pre_exp_del']	= array( 'list' );
 			$settings['sub_gid_pre_exp']		= array( 'list' );
