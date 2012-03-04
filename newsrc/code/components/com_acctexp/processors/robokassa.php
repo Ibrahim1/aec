@@ -92,7 +92,7 @@ class processor_robokassa extends POSTprocessor
 	{
 		$response['valid'] = false;
 
-		$invoice->amount = $post['OutSum'];
+		$invoice->amount = number_format( $post['OutSum'], 2 );
 
 		if ( strtoupper( $post['SignatureValue'] ) != strtoupper( $this->getHash( $invoice, false ) ) ) {
 			$response['error'] = 'Security Code Mismatch';
@@ -128,7 +128,12 @@ class processor_robokassa extends POSTprocessor
 
 	function notify_trail( $InvoiceFactory, $response )
 	{
-		echo "OK" . $_POST['InvId'];exit;
+		if ( $response['valid'] ) {
+			header("HTTP/1.0 200 OK");
+			echo "OK" . $_POST['InvId']."\n";exit;
+		} else {
+			echo "NOK" . $_POST['InvId']."\n";exit;
+		}
 	}
 
 }
