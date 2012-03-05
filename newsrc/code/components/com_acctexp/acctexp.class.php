@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4747' );
+define( '_AEC_REVISION', '4757' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -7203,23 +7203,37 @@ class ItemGroupHandler
 
 	function getGroupListItem( $group )
 	{
-		return array(	'type'	=> 'group',
-						'id'	=> $group->id,
-						'name'	=> $group->getProperty( 'name' ),
-						'desc'	=> $group->getProperty( 'desc' )
-						);
+		$details = array(	'type'		=> 'group',
+							'id'		=> $group->id,
+							'name'		=> $group->getProperty( 'name' ),
+							'desc'		=> $group->getProperty( 'desc' ),
+							'meta'	=> array()
+							);
+
+		if ( !empty( $group->params['meta'] ) ) {
+			$details['meta'] = parameterHandler::decode( $group->params['meta'] );
+		}
+
+		return $details;
 	}
 
 	function getItemListItem( $plan )
 	{
-		return array(	'type'		=> 'item',
-						'id'		=> $plan->id,
-						'plan'		=> $plan,
-						'name'		=> $plan->getProperty( 'name' ),
-						'desc'		=> $plan->getProperty( 'desc' ),
-						'ordering'	=> $plan->ordering,
-						'lifetime'	=> $plan->params['lifetime']
-						);
+		$details = array(	'type'		=> 'item',
+							'id'		=> $plan->id,
+							'plan'		=> $plan,
+							'name'		=> $plan->getProperty( 'name' ),
+							'desc'		=> $plan->getProperty( 'desc' ),
+							'ordering'	=> $plan->ordering,
+							'lifetime'	=> $plan->params['lifetime'],
+							'meta'	=> array()
+							);
+
+		if ( !empty( $plan->params['meta'] ) ) {
+			$details['meta'] = parameterHandler::decode( $plan->params['meta'] );
+		}
+
+		return $details;
 	}
 
 	function removeChildren( $items, $groups, $type='item' )
@@ -7403,7 +7417,8 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		// Filter out params
-		$fixed = array( 'color', 'icon', 'reveal_child_items', 'symlink', 'symlink_userid', 'notauth_redirect', 'micro_integrations' );
+		$fixed = array(	'color', 'icon', 'reveal_child_items', 'symlink',
+						'symlink_userid', 'notauth_redirect', 'micro_integrations', 'meta' );
 
 		$params = array();
 		foreach ( $fixed as $varname ) {
@@ -8595,7 +8610,7 @@ class SubscriptionPlan extends serialParamDBTable
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
 						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
 						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout', 'addtocart_redirect',
-						'cart_behavior', 'notes'
+						'cart_behavior', 'notes', 'meta'
 						);
 
 		$params = array();

@@ -2584,6 +2584,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['customtext_thanks_keeporiginal']	= array( 'toggle', 1 );
 	$params['customtext_thanks']		= array( 'editor', '' );
 	$params['email_desc']				= array( 'inputD', '' );
+	$params['meta']						= array( 'inputD', '' );
 	$params['micro_integrations_inherited']		= array( 'list', '' );
 	$params['micro_integrations']		= array( 'list', '' );
 	$params['micro_integrations_plan']	= array( 'list', '' );
@@ -3405,6 +3406,7 @@ function editItemGroup( $id, $option )
 	$params['notauth_redirect']			= array( 'inputD', '' );
 
 	$params['micro_integrations']		= array( 'list', '' );
+	$params['meta']						= array( 'inputD', '' );
 
 	$params['params_remap']				= array( 'subarea_change', 'groups' );
 

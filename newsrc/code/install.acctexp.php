@@ -256,7 +256,7 @@ function com_install()
 							'plg_aecrouting' => array ( 'type' => 'system', 'element' => 'aecrouting' ),
 							'plg_aecuser' => array ( 'type' => 'user', 'element' => 'aecuser' ),
 							'plg_aecrewrite' => array ( 'type' => 'content', 'element' => 'aecrewrite' ),
-							'plg_aecrestriction' => array ( 'type' => 'content', 'element' => 'aecrestriction' ),
+							//'plg_aecrestriction' => array ( 'type' => 'content', 'element' => 'aecrestriction' ),
 							'mod_acctexp' => array ( 'position' => 'left' ),
 							'mod_acctexp_cart' => array ( 'position' => 'left' )
 	);
@@ -294,7 +294,7 @@ function com_install()
 		$result = $installer->install( $src.'/'.$name );
 
 		if ( $result ) {
-			if ( strpos( $name, 'plg' ) === 0 ) {
+			if ( ( strpos( $name, 'plg' ) === 0 ) && ( strpos( $name, 'plg_aecrewrite' ) !== 0 ) ) {
 				$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" ) . " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" ) . " WHERE element='".$details['element']."' AND folder='".$details['type']."'";
 
 				$db->setQuery( $query );
