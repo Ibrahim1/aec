@@ -10,6 +10,18 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+<?php if ( !empty( $tmpl->cfg['tos_iframe'] ) && !empty( $tmpl->cfg['tos'] ) ) { ?>
+	<div class="well">
+		<iframe src="<?php echo $tmpl->cfg['tos'] ?>" width="100%" height="150px"></iframe>
+		<p><input name="tos" type="checkbox" /><?php echo JText::_('CONFIRM_TOS_IFRAME') ?></p>
+		<button type="submit" onClick="javascript:submitPayment()" class="button btn btn-success"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
+	</div>
+<?php } elseif ( !empty( $tmpl->cfg['tos'] ) ) { ?>
+	<div class="well">
+		<p><input name="tos" type="checkbox" /><?php echo JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ) ?></p>
+	</div>
+<?php } ?>
+
 <div class="well">
 	<div id="confirmation-button">
 		<p><?php echo JText::_('CONFIRM_INFO') ?></p>
@@ -24,18 +36,10 @@
 		<?php if ( $passthrough != false ) { ?>
 			<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough ?>" />
 		<?php } ?>
-		<?php if ( !empty( $tmpl->cfg['tos_iframe'] ) && !empty( $tmpl->cfg['tos'] ) ) { ?>
-			<iframe src="<?php echo $tmpl->cfg['tos'] ?>" width="100%" height="150px"></iframe>
-			<p><input name="tos" type="checkbox" /><?php echo JText::_('CONFIRM_TOS_IFRAME') ?></p>
+		<?php if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 			<button type="submit" onClick="javascript:submitPayment()" class="button btn btn-success"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
-			<?php
-		} elseif ( !empty( $tmpl->cfg['tos'] ) ) { ?>
-			<p><input name="tos" type="checkbox" /><?php echo JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ) ?></p>
-			<button type="submit" onClick="javascript:submitPayment()" class="button btn btn-success"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
-			<?php
-		} else { ?>
+		<?php } else { ?>
 			<button type="submit" class="button btn btn-success"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
-			<?php
-		} ?>
+		<?php } ?>
 	</div>
 </div>
