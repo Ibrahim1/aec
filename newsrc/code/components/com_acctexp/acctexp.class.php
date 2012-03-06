@@ -16979,7 +16979,7 @@ class AECToolbox
 	{
 		if ( empty( $plan->params['customamountformat'] ) || $forcedefault ) {
 			$format = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
-						.'{"cmd":"concat","vars":[{"cmd":"constant","vars":"_CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
+						.'{"cmd":"concat","vars":[{"cmd":"constant","vars":"CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
 						.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;-&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
 						.']}{/aecjson}'
 						;

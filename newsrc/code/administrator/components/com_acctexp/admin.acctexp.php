@@ -2568,7 +2568,7 @@ function editSubscriptionPlan( $id, $option )
 	}
 
 	$stdformat = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
-				.'{"cmd":"concat","vars":[{"cmd":"jtext","vars":"_CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
+				.'{"cmd":"concat","vars":[{"cmd":"jtext","vars":"CONFIRM_FREETRIAL"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]},'
 				.'{"cmd":"concat","vars":[{"cmd":"data","vars":"payment.amount"},{"cmd":"data","vars":"payment.currency_symbol"},"&nbsp;",{"cmd":"data","vars":"payment.method_name"}]}'
 				.']}{/aecjson}'
 				;
