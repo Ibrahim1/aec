@@ -1,170 +1,180 @@
-var sunburst_color = d3.scale.category20();
+if (typeof d3.chart != "object") d3.chart = {};
 
-function vCharts() {
-	this.charts  = [];
-	this.p = 0;
-	this.data = [];
-	this.queue = [];
-	this.seeking = false;
-	this.datef = d3.time.format("%Y-%m-%d %X");
+d3.chart.factory = function () {
+	var factory = {},
+	p = 0,
+	data = [],
+	queue = [],
+	charts = [],
+	seeking = false,
+	datef = d3.time.format("%Y-%m-%d %X"),
+	s,e,
+	exstart,
+	exend,
+	source,
+	request,
+	selector,
+	w,h,d,m,
+	svg;
 
-	var exstart, exend;
+	factory.source = function(s){
+		request = request_url+"&type="+s;
 
-	this.source = function(type) {
-		this.request = request_url+"&type="+type;
-	}
+		return factory;
+	};
 
-	this.range = function(start, end) {
-		this.start = this.datef.parse(start);
-		this.end = this.datef.parse(end);
-	}
+	factory.range = function(start,end){
+		s = datef.parse(start);
+		e = datef.parse(end);
 
-	this.canvas = function(w, h, m) {
-		this.w = w;
-		this.h = h;
-		this.d = Math.min(w, h) / 2;
-		this.m = m;
-	}
+		return factory;
+	};
 
-	this.pushTarget = function(sel) {
-		this.selector = sel;
+	factory.canvas = function(width, height, margin){
+		w = width;
+		h = height;
+		m = margin;
 
+		return factory;
+	};
+
+	factory.target = function(sel){
+		selector = sel;
 		svg = d3.select(sel)
-			.append("svg:svg")
-				.attr("width", this.w + this.m*2)
-				.attr("height", this.h + this.m*2);
+		.append("svg:svg")
+			.attr("width", w + m*2)
+			.attr("height", h + m*2);
 
-		this.charts.push(svg);
+		charts.push(svg);
 
-		this.p = this.charts.length-1;
+		p = charts.length-1;
 
-		this.svg = this.charts[this.p];
-	}
+		svg = charts[p];
 
-	this.getData = function(callback, start, end, target, p) {
-		if ( !this.exstart ) {
-			this.exstart = start;
-			this.exend = end;
-		}
+		return factory;
+	};
 
-		that = this;
-
-		if ( ( this.exstart == start ) && ( this.exend == end ) ) {
-			if ( this.data.length < 1 ) {
-				this.pushData(function(data) {
-					that.acquireData(data, callback, start, end, target, p);
-				}, start, end);
-			} else {
-				this.doCallback(callback, start, end, target, p);
-			}
-		} else {
-			if ( ( start < this.exstart ) || ( end > this.exend ) ) {
-				if ( start < this.exstart ) {
-					this.pushData(function(data) {
-						that.acquireData(data, callback, start, end, target, p);
-					}, start, this.exstart);
-				} else if ( end > this.exend ) {
-					this.pushData(function(data) {
-						that.acquireData(data, callback, start, end, target, p);
-					}, this.exend, end);
-				}
-			} else {
-				this.doCallback(callback, start, end, target, p);
-			}
-		}
-	}
-
-	this.acquireData = function(json, callback, start, end, target, p) {
-		short = d3.time.format("%Y-%m-%d");
-
-		that = this
-
-		test = [json.forEach(function(entry){
-			if ( typeof entry != 'undefined' ) {
-				entry.date = short.parse(entry.date);
-				that.data = that.data.concat([entry]); }
-			})];
-
-		if ( test.length ) {
-			this.data = this.data.concat([test]);
-		}
-
-		this.doCallback(callback, start, end, target, p);
-	}
-
-	this.pushData = function(callback, start, end) {
-		if ( start < this.exstart ) {
-			this.exstart = start;
-		}
-
-		if ( end > this.exend ) {
-			this.exend = end;
-		}
-
-		this.json(this.request+"&start="+encodeURI(this.datef(start))+"&end="+encodeURI(this.datef(end)), callback);
-	}
-
-	this.doCallback = function(callback, start, end, target, p){
-		callback(start, end, target, p);
-	}
-
-	this.create = function(type, dim) {
-		that = this;
-
-		this.enqueue(function(start, end, target, p) {
+	factory.create = function(type, dim) {
+		enqueue(function(start, end, target, p) {
 			canvas = target
 			.append("svg:g")
 			.attr("class", type)
 			.attr("id", type+"-"+p);
 
-			chart = new window[type](canvas, dim, that.data.filter( function(e){ return (e.date >= start) && (e.date <= end); }));
-		})
+			chart = new window[type](canvas, dim, data.filter( function(e){ return (e.date >= start) && (e.date <= end); }));
+		});
+
+		return factory;
+	};
+
+	function getData(callback, start, end, target, p) {
+		if ( !exstart ) {
+			exstart = start;
+			exend = end;
+		}
+
+		if ( ( exstart == start ) && ( exend == end ) ) {
+			if ( data.length < 1 ) {
+				pushData(function(data) {
+					acquireData(data, callback, start, end, target, p);
+				}, start, end);
+			} else {
+				doCallback(callback, start, end, target, p);
+			}
+		} else {
+			if ( ( start < exstart ) || ( end > exend ) ) {
+				if ( start < exstart ) {
+					pushData(function(data) {
+						acquireData(data, callback, start, end, target, p);
+					}, start, exstart);
+				} else if ( end > exend ) {
+					pushData(function(data) {
+						acquireData(data, callback, start, end, target, p);
+					}, exend, end);
+				}
+			} else {
+				doCallback(callback, start, end, target, p);
+			}
+		}
 	}
 
-	this.json = function(url, callback) {
+	function acquireData(json, callback, start, end, target, p) {
+		short = d3.time.format("%Y-%m-%d");
+
+		test = [json.forEach(function(entry){
+			if ( typeof entry != 'undefined' ) {
+				entry.date = short.parse(entry.date);
+				data = data.concat([entry]); }
+			})];
+
+		if ( test.length ) {
+			data = data.concat([test]);
+		}
+
+		doCallback(callback, start, end, target, p);
+	}
+
+	function pushData(callback, start, end) {
+		if ( start < exstart ) {
+			exstart = start;
+		}
+
+		if ( end > exend ) {
+			exend = end;
+		}
+
+		json(request+"&start="+encodeURI(datef(start))+"&end="+encodeURI(datef(end)), callback);
+	}
+
+	function doCallback(callback, start, end, target, p){
+		callback(start, end, target, p);
+	}
+
+	function json(url, callback) {
 		var req = new XMLHttpRequest;
 
 		if (arguments.length < 2) callback = "application/json";
 		else if ("application/json" && req.overrideMimeType) req.overrideMimeType("application/json");
 
-		that = this;
-
 		req.open("GET", url, true);
 		req.onreadystatechange = function() {
 			if (req.readyState === 4) {
-				that.dequeue((req.status < 300 ? JSON.parse(req.responseText) : null), callback)
+				dequeue((req.status < 300 ? JSON.parse(req.responseText) : null), callback)
 			}
 		};
 
 		req.send(null);
-	};
+	}
 
-	this.enqueue = function(callback) {
-		this.queue.push({call:callback,start:this.start,end:this.end,target:this.svg,p:this.p});
+	function enqueue(callback) {
+		queue.push({call:callback,start:s,end:e,target:svg,p:p});
 
-		if ( !this.seeking ) {
-			this.seeking == true;
+		if ( !seeking ) {
+			seeking == true;
 
-			this.triggerqueue();
+			triggerqueue();
 		}
 	}
 
-	this.dequeue = function(data, callback) {
+	function dequeue(data, callback) {
 		callback(data);
 
-		this.seeking = false;
+		seeking = false;
 
-		this.triggerqueue();
+		triggerqueue();
 	}
 
-	this.triggerqueue = function() {
-		if ( this.queue.length ) {
-			item = this.queue.shift();
-			this.getData(item.call, item.start, item.end, item.target, item.p);
+	function triggerqueue() {
+		if ( queue.length ) {
+			item = queue.shift();
+			getData(item.call, item.start, item.end, item.target, item.p);
 		}
 	}
 
+	return factory;
 }
+
+var sunburst_color = d3.scale.category20();
 
 function Cellular(canvas, dim, dat) {
 	var z = dim,
@@ -401,167 +411,4 @@ function Sunburst(canvas, dim, dat) {
 	}
 
 	center_console();
-}
-
-function Stacked(canvas, dim, dat) {
-	var n = 2, // number of layers
-    m = 64, // number of samples per layer
-    color = d3.interpolateRgb("#aad", "#556");
-/*
-	var data = new Object;
-	data.key = 0;
-	data.values = d3.nest()
-		.key(function(d) { return d.date; })
-		.rollup(function(v) {
-			return d3.nest()
-			.key(function(d) { return d.group; })
-			.rollup(function(w) { return d3.nest()
-				.key(function(d) { return d.plan; })
-				.rollup(function(v) { return Math.max(d3.sum(w.map(function(d) { return d.amount; })), 0); })
-				.entries(w);
-				})
-			.entries(v);
-		})
-		.entries(dat);
-
-
-	var data = d3.layout.stack()(d3.range(n).map(function(dat) {
-	var a = [], i;
-	for (i = 0; i < m; i++) a[i] = .2 * Math.random();
-	for (i = 0; i < 5; i++) bump(a);
-	return a.map(stream_index);
-	}););
-*/
-	function stream_layers(n, m, o) {
-		  if (arguments.length < 3) o = 0;
-		  function bump(a) {
-		    var x = 1 / (.1 + Math.random()),
-		        y = 2 * Math.random() - .5,
-		        z = 10 / (.1 + Math.random());
-		    for (var i = 0; i < m; i++) {
-		      var w = (i / m - y) * z;
-		      a[i] += x * Math.exp(-w * w);
-		    }
-		  }
-		  return d3.range(n).map(function() {
-		      var a = [], i;
-		      for (i = 0; i < m; i++) a[i] = o + o * Math.random();
-		      for (i = 0; i < 5; i++) bump(a);
-		      return a.map(stream_index);
-		    });
-		}
-	function stream_index(d, i) {
-		  return {x: i, y: Math.max(0, d)};
-		}
-test = stream_layers(n,m);
-	var p = 20,
-    w = canvas.attr("width"),
-    h = canvas.attr("height") - .5 - p,
-    mx = m,
-    my = d3.max(data, function(d) {
-      return d3.max(d, function(d) {
-        return d.y0 + d.y;
-      });
-    }),
-    mz = d3.max(data, function(d) {
-      return d3.max(d, function(d) {
-        return d.y;
-      });
-    }),
-    x = function(d) { return d.x * w / mx; },
-    y0 = function(d) { return h - d.y0 * h / my; },
-    y1 = function(d) { return h - (d.y + d.y0) * h / my; },
-    y2 = function(d) { return d.y * h / mz; }; // or `my` to not rescale
-
-var layers = canvas.selectAll("g.layer")
-    .data(data)
-  .enter().append("g")
-    .style("fill", function(d, i) { return sunburst_color(i / (n - 1)); })
-    .attr("class", "layer");
-
-var bars = layers.selectAll("g.bar")
-    .data(function(d) { return d; })
-  .enter().append("g")
-    .attr("class", "bar")
-    .attr("transform", function(d) { return "translate(" + x(d) + ",0)"; });
-
-bars.append("rect")
-    .attr("width", x({x: .9}))
-    .attr("x", 0)
-    .attr("y", h)
-    .attr("height", 0)
-  .transition()
-    .delay(function(d, i) { return i * 10; })
-    .attr("y", y1)
-    .attr("height", function(d) { return y0(d) - y1(d); });
-/*
-var labels = canvas.selectAll("text.label")
-    .data(data[0])
-  .enter().append("text")
-    .attr("class", "label")
-    .attr("x", x)
-    .attr("y", h + 6)
-    .attr("dx", x({x: .45}))
-    .attr("dy", ".71em")
-    .attr("text-anchor", "middle")
-    .text(function(d, i) { return i; });
-*/
-canvas.append("line")
-    .attr("x1", 0)
-    .attr("x2", w - x({x: .1}))
-    .attr("y1", h)
-    .attr("y2", h);
-
-function transitionGroup() {
-  var group = d3.selectAll("#chart");
-
-  group.select("#group")
-      .attr("class", "first active");
-
-  group.select("#stack")
-      .attr("class", "last");
-
-  group.selectAll("g.layer rect")
-    .transition()
-      .duration(500)
-      .delay(function(d, i) { return (i % m) * 10; })
-      .attr("x", function(d, i) { return x({x: .9 * ~~(i / m) / n}); })
-      .attr("width", x({x: .9 / n}))
-      .each("end", transitionEnd);
-
-  function transitionEnd() {
-    d3.select(this)
-      .transition()
-        .duration(500)
-        .attr("y", function(d) { return h - y2(d); })
-        .attr("height", y2);
-  }
-}
-
-function transitionStack() {
-  var stack = d3.select("#chart");
-
-  stack.select("#group")
-      .attr("class", "first");
-
-  stack.select("#stack")
-      .attr("class", "last active");
-
-  stack.selectAll("g.layer rect")
-    .transition()
-      .duration(500)
-      .delay(function(d, i) { return (i % m) * 10; })
-      .attr("y", y1)
-      .attr("height", function(d) { return y0(d) - y1(d); })
-      .each("end", transitionEnd);
-
-  function transitionEnd() {
-    d3.select(this)
-      .transition()
-        .duration(500)
-        .attr("x", 0)
-        .attr("width", x({x: .9}));
-  }
-}
-
 }

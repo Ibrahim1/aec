@@ -2557,82 +2557,94 @@ class HTML_AcctExp
 
 	function stats( $option, $page, $stats )
 	{
-		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' ); ?>
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
-		<div id="stats">
-		<div id="statnav">
-			<ul>
-		<?php
-			$menus = array( 'overview' => "Overview",
-							'daily' => "Today",
-							'compare' => "Compare",
-							'users' => "Users",
-							'sales' => "Sales Graph",
-							'all_time' => "All Time Sales" 
-			);
 
-			foreach ( $menus as $menu => $menutext ) {
-				echo '<li' . ( ( $page == $menu ) ? ' class="current"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats2&page=' . $menu . '">' . $menutext . '</a></li>';
-			}
-		?>
-			</ul>
-		</div>
-			<div class="gallery" id="chart">
-				<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
-					<script type="text/javascript">
-						var	amount_format = d3.format(".2f"),
-							amount_currency = "€",
-							range_start=2007,
-							range_end=2012,
-							request_url="index.php?option=com_acctexp&task=statrequest",
-							max_sale = <?php echo $stats['max_sale']; ?>;
-					</script>
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' );
+
+		HTML_myCommon::startForm(); ?>
+		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
+		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/charts.js"></script>
+		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
+		<script type="text/javascript">
+			var	amount_format = d3.format(".2f"),
+				amount_currency = "€",
+				range_start=2007,
+				range_end=2012,
+				request_url="index.php?option=com_acctexp&task=statrequest",
+				max_sale = <?php echo $stats['max_sale']; ?>;
+		</script>
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
+
+		<ul class="nav nav-pills">
+			<?php
+				$menus = array( 'overview' => "Overview",
+								'daily' => "Today",
+								'compare' => "Compare",
+								'users' => "Users",
+								'sales' => "Sales Graph",
+								'all_time' => "All Time Sales" 
+				);
+	
+				foreach ( $menus as $menu => $menutext ) {
+					echo '<li' . ( ( $page == $menu ) ? ' class="active"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats2&page=' . $menu . '">' . $menutext . '</a></li>';
+				}
+			?>
+		</ul>
+
+		<table width="100%" class="aecadminform">
+			<tr><td>
+				<div class="aec_userinfobox_sub" id="chart">
 		<?php
 			switch ( $page ) {
 				case 'overview':
 					?>
-					<div id="overview-day" class="overview-container"><h3><?php echo gmdate('l, jS M Y'); ?></h3></div>
-					<div id="overview-week" class="overview-container"><h3><?php $w = gmdate('W'); $d = substr($w, -1, 1); $ds = array("th","st","nd","rd");echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week</h3></div>
-					<div id="overview-month" class="overview-container"><h3><?php echo gmdate('F'); ?></h3></div>
-					<div id="overview-year" class="overview-container"><h3><?php echo gmdate('Y'); ?></h3></div>
+					<div id="overview-day" class="overview-container"><h4><?php echo gmdate('l, jS M Y'); ?></h4></div>
+					<div id="overview-week" class="overview-container"><h4><?php $w = gmdate('W'); $d = substr($w, -1, 1); $ds = array("th","st","nd","rd");echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week</h4></div>
+					<div id="overview-month" class="overview-container"><h4><?php echo gmdate('F'); ?></h4></div>
+					<div id="overview-year" class="overview-container"><h4><?php echo gmdate('Y'); ?></h4></div>
 					<script type="text/javascript">
-						charts = new vCharts();
-						charts.source("sales");
-						charts.canvas(200, 200, 10);
-						charts.pushTarget("div#overview-day");
-						charts.range(	"<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>",
-										"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
-						charts.create("Sunburst", 200);
-
-						charts.pushTarget("div#overview-week");
-						charts.range(	"<?php echo gmdate('Y-m-d', (gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>",
-										"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>");
-						charts.create("Sunburst", 200);
+						var cf = d3.chart.factory()
+						.source("sales")
+						.canvas(200, 200, 10)
+						.target("div#overview-day")
+						.range(	"<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>",
+										"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("Sunburst", 200);
+						cf.target("div#overview-week")
+						.range(	"<?php echo gmdate('Y-m-d', (gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>",
+										"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
+						.create("Sunburst", 200);
 						//charts.create("Stacked", 55);
 
-						charts.pushTarget("div#overview-month");
-						charts.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
-										"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
-						charts.create("Sunburst", 200);
+						cf.target("div#overview-month")
+						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
+										"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("Sunburst", 200);
 						//charts.create("Stacked", 55);
 
-						charts.canvas(1000, 200, 10);
-						charts.pushTarget("div#overview-year");
-						charts.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-										"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>");
+						cf.canvas(1000, 200, 10)
+						.target("div#overview-year")
+						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+										"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
 						//charts.create("Sunburst", 200);
-						charts.create("Cellular", 14);
-
+						.create("Cellular", 14);
+/*
 						//cellular_years( "div#overview-year", <?php echo gmdate('Y') ?>,<?php echo gmdate('Y')+1 ?> );
+
+var barchart1 = d3.bio.barchart()
+   .parent("div#overview-day")
+   .margin([10, 10, 20, 10])
+   .gap(30)
+   .size([200, 200])
+   .data([1, 2, 5]);
+*/
 					</script>
 					<?php
 					break;
 				case 'daily':
 					?>
-					<div id="daily-yesterday" class="daily-container"><h3>Yesterday</h3></div>
-					<div id="daily-today" class="daily-container"><h3>Today</h3></div>
+					<div id="daily-yesterday" class="daily-container"><h4>Yesterday</h4></div>
+					<div id="daily-today" class="daily-container"><h4>Today</h4></div>
 					<script type="text/javascript">
 						//sunburst_sales( "div#daily-yesterday", "<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>" );
 						//sunburst_sales( "div#daily-today", "<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 00:00:00'; ?>", "<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 23:59:59'; ?>" );
@@ -2641,10 +2653,10 @@ class HTML_AcctExp
 					break;
 				case 'compare':
 					?>
-					<div id="overview-day" class="overview-container"><h3><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h3></div>
-					<div id="overview-week" class="overview-container"><h3><?php $w = gmdate('W', gmdate("U")-86400*7); $d = substr($w, -1, 1); echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week &rarr; <?php $w = gmdate('W'); $d = substr($w, -1, 1); $ds = array("th","st","nd","rd");echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week</h3></div>
-					<div id="overview-month" class="overview-container"><h3><?php echo gmdate('F', strtotime("last month",gmdate("U"))); ?> &rarr; <?php echo gmdate('F'); ?></h3></div>
-					<div id="overview-year" class="overview-container"><h3><?php echo gmdate('Y', strtotime("last year",gmdate("U"))); ?> &rarr; <?php echo gmdate('Y'); ?></h3></div>
+					<div id="overview-day" class="overview-container"><h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4></div>
+					<div id="overview-week" class="overview-container"><h4><?php $w = gmdate('W', gmdate("U")-86400*7); $d = substr($w, -1, 1); echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week &rarr; <?php $w = gmdate('W'); $d = substr($w, -1, 1); $ds = array("th","st","nd","rd");echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week</h4></div>
+					<div id="overview-month" class="overview-container"><h4><?php echo gmdate('F', strtotime("last month",gmdate("U"))); ?> &rarr; <?php echo gmdate('F'); ?></h4></div>
+					<div id="overview-year" class="overview-container"><h4><?php echo gmdate('Y', strtotime("last year",gmdate("U"))); ?> &rarr; <?php echo gmdate('Y'); ?></h4></div>
 					<script type="text/javascript">
 						charts = new vCharts();
 						charts.attach({	source:"sales",
@@ -2702,7 +2714,7 @@ class HTML_AcctExp
 					break;
 				case 'all_time':
 					?>
-					<div id="all-time-cells" class"all-time-container"><h3>Daily Cells</h3></div>
+					<div id="all-time-cells" class"all-time-container"><h4>Daily Cells</h4></div>
 					<script type="text/javascript">
 						charts = new vCharts();
 						charts.source("sales");
@@ -2718,13 +2730,14 @@ class HTML_AcctExp
 
 						//cellular_years( "div#chart", 2010, 2010 );
 					</script>
-					<div id="all-time-suns" class"all-time-container"><h3>Yearly Totals</h3></div>
+					<div id="all-time-suns" class"all-time-container"><h4>Yearly Totals</h4></div>
 					<?php
 					break;
 			}
 		?>
-		</div>
-		</div>
+				</div>
+			</td></tr>
+		</table>
 
 		<?php
  		HTML_myCommon::endCommon();
