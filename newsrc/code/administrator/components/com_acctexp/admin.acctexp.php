@@ -6217,6 +6217,8 @@ function toolBoxTool( $option, $cmd )
 
 		$files = AECToolbox::getFileArray( $path, 'php', false, true );
 
+		asort( $files );
+
 		foreach ( $files as $n => $name ) {
 			$file = $path . '/' . $name;
 
