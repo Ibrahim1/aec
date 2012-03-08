@@ -25,7 +25,7 @@
 														), JText::_('GOTO_CHECKOUT') ) ?>
 				</p>
 			<?php } ?>
-			<?php if ( $is_continue ) { ?>
+			<?php if ( $continue ) { ?>
 				<div id="renew_button">
 					<?php echo $tmpl->btn( array(	'task' => 'renewSubscription',
 											'userid' => $metaUser->userid,
