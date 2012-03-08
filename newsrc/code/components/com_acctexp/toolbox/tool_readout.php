@@ -24,8 +24,7 @@ class tool_readout
 
 	function options()
 	{
-		return array(
-							'show_settings' => 0,
+		return array(		'show_settings' => 0,
 							'show_extsettings' => 0,
 							'show_processors' => 0,
 							'show_plans' => 1,
@@ -137,115 +136,105 @@ class tool_readout
 		}
 
 		if ( !empty( $_POST['export_csv'] ) ) {
-			HTML_AcctExp::readoutCSV( $r );
+			return $this->readoutCSV( $r );
 		} else {
-			HTML_AcctExp::readout( $r );
+			return $this->readout( $r );
 		}
-
-		return $return;
 	}
 
-	function readout(  $readout )
+	function readout( $readout )
 	{
-		HTML_myCommon::addReadoutCSS();
-		HTML_myCommon::startCommon( 'aec_wrap_over' );
-
 		if ( isset( $_POST['column_headers'] ) ) {
 			$ch = $_POST['column_headers'];
 		} else {
 			$ch = 20;
 		}
 
-		?>
-		<table class="aec_bg aecadminform"><tr><td>
-			<?php foreach ( $readout as $part ) { ?>
-				<?php
-				echo '<div class="aec_userinfobox_sub">';
-
-				if ( !empty( $part['head'] ) ) {
-					if ( !empty( $part['sub'] ) ) {
-						echo "<h2>" . $part['head'] . "</h2>";
-					} else {
-						echo "<h1>" . $part['head'] . "</h1>";
-					}
+		$return = "";
+		foreach ( $readout as $part ) {
+			if ( !empty( $part['head'] ) ) {
+				if ( !empty( $part['sub'] ) ) {
+					$return .= "<h2>" . $part['head'] . "</h2>";
+				} else {
+					$return .= "<h1>" . $part['head'] . "</h1>";
 				}
+			}
 
-				if ( !empty( $part['type'] ) ) {
-				switch ( $part['type'] ) {
-					case 'table':
-						echo "<table class=\"aec_readout_bit\">";
+			if ( empty( $part['type'] ) ) {
+				continue;
+			}
 
-						$i = 0; $j = 0;
-						foreach ( $part['set'] as $entry ) {
-							if ( $j%$ch == 0 ) {
-								echo "<tr>";
-								$k = 0;
-								foreach ( $part['def'] as $def => $dc ) {
-									if ( is_array( $dc[0] ) ) {
-										$dn = $dc[0][0].'_'.$dc[0][1];
-									} else {
-										$dn = $dc[0];
-									}
+			if ( $part['type'] != 'table' ) {
+				continue;
+			}
 
-									echo "<th class=\"col".$k." ".$dn."\">" . $def . "</th>";
-									$k = $k ? 0 : 1;
-								}
-								echo "</tr>";
-							}
+			$return .= "<table class=\"aec_readout_bit\">";
 
-							echo "<tr class=\"row".$i."\">";
-
-							foreach ( $part['def'] as $def => $dc ) {
-								if ( is_array( $dc[0] ) ) {
-									$dn = $dc[0][0].'_'.$dc[0][1];
-								} else {
-									$dn = $dc[0];
-								}
-
-								$tdclass = $dn;
-
-								if ( isset( $entry[$dn] ) ) {
-									$dcc = $entry[$dn];
-								} else {
-									$dcc = "";
-								}
-
-								if ( isset( $dc[1] ) ) {
-									$types = explode( ' ', $dc[1] );
-
-									foreach ( $types as $tt ) {
-										switch ( $tt ) {
-											case 'bool';
-												$dcc = $dcc ? 'Yes' : 'No';
-												$tdclass .= " bool".$dcc;
-												break;
-										}
-									}
-								} else {
-									if ( is_array( $dcc ) ) {
-										$dcc = implode( ', ', $dcc );
-									}
-								}
-
-								echo "<td class=\"".$tdclass."\">" . $dcc . "</td>";
-							}
-
-							echo "</tr>";
-
-							$i = $i ? 0 : 1;
-							$j++;
+			$i = 0; $j = 0;
+			foreach ( $part['set'] as $entry ) {
+				if ( $j%$ch == 0 ) {
+					$return .= "<tr>";
+					$k = 0;
+					foreach ( $part['def'] as $def => $dc ) {
+						if ( is_array( $dc[0] ) ) {
+							$dn = $dc[0][0].'_'.$dc[0][1];
+						} else {
+							$dn = $dc[0];
 						}
 
-						echo "</table>";
-						break;
+						$return .= "<th class=\"col".$k." ".$dn."\">" . $def . "</th>";
+						$k = $k ? 0 : 1;
+					}
+					$return .= "</tr>";
 				}
-				} ?>
-				</div>
-			<?php } ?>
-		</td></tr></table>
-		<?php
 
- 		HTML_myCommon::endCommon();
+				$return .= "<tr class=\"row".$i."\">";
+
+				foreach ( $part['def'] as $def => $dc ) {
+					if ( is_array( $dc[0] ) ) {
+						$dn = $dc[0][0].'_'.$dc[0][1];
+					} else {
+						$dn = $dc[0];
+					}
+
+					$tdclass = $dn;
+
+					if ( isset( $entry[$dn] ) ) {
+						$dcc = $entry[$dn];
+					} else {
+						$dcc = "";
+					}
+
+					if ( isset( $dc[1] ) ) {
+						$types = explode( ' ', $dc[1] );
+
+						foreach ( $types as $tt ) {
+							switch ( $tt ) {
+								case 'bool';
+									$dcc = $dcc ? 'Yes' : 'No';
+									$tdclass .= " bool".$dcc;
+									break;
+							}
+						}
+					} else {
+						if ( is_array( $dcc ) ) {
+							$dcc = implode( ', ', $dcc );
+						}
+					}
+
+					$return .= "<td class=\"".$tdclass."\">" . $dcc . "</td>";
+				}
+
+				$return .= "</tr>";
+
+				$i = $i ? 0 : 1;
+				$j++;
+			}
+
+			$return .= "</table>";
+		 }
+
+ 		return $return;
 	}
 
 	function readoutCSV( $readout )
@@ -278,7 +267,7 @@ class tool_readout
 
 		foreach ( $readout as $part ) {
 			if ( !empty( $part['head'] ) ) {
-				echo $exphandler->export_line( array( $part['head'] ) );
+				$exphandler->putln( array( $part['head'] ) );
 			}
 
 			switch ( $part['type'] ) {
@@ -291,7 +280,7 @@ class tool_readout
 							foreach ( $part['def'] as $k => $v ) {
 								$array[] = $k;
 							}
-							echo $exphandler->export_line( $array );
+							$exphandler->putln( $array );
 						}
 
 						$array = array();
@@ -323,7 +312,7 @@ class tool_readout
 							$array[] = $dcc;
 						}
 
-						echo $exphandler->export_line( $array );
+						$exphandler->putln( $array );
 
 						$j++;
 					}
