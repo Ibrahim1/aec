@@ -16,8 +16,10 @@ class processor_ogone extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']					= 'Ogone';
-		$info['description']			= 'Ogone';
+		$info['name']					= 'ogone';
+		$info['longname']				= JText::_('CFG_OGONE_LONGNAME');
+		$info['statement']				= JText::_('CFG_OGONE_STATEMENT');
+		$info['description'] 			= JText::_('CFG_OGONE_DESCRIPTION');
 		$info['currencies']				= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']				= 'americanexpress';
 		$info['recurring']				= 0;
