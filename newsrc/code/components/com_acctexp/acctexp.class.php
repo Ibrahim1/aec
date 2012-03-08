@@ -294,7 +294,12 @@ function getView( $view, $args=null )
 
 	$tmpl = $dbtmpl->template;
 
-	$tmpl->cfg = array_merge( $aecConfig->cfg, $dbtmpl->settings );
+	if ( !empty( $dbtmpl->settings ) ) {
+		$tmpl->cfg = array_merge( $aecConfig->cfg, $dbtmpl->settings );
+	} else {
+		$tmpl->cfg = $aecConfig->cfg;
+	}
+
 	$tmpl->option = 'com_acctexp';
 	$tmpl->metaUser = $metaUser;
 	$tmpl->system_template = $app->getTemplate();
