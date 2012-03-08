@@ -64,6 +64,8 @@ d3.chart.factory = function () {
 	factory.triggerqueue = function() {
 		if ( queue.length ) {
 			factory.getData(queue.shift());
+		} else {
+			start = true;
 		}
 	};
 
