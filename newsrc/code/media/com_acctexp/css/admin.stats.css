@@ -61,6 +61,31 @@ width: 860px;
 -moz-border-radius: 10px;
 -webkit-border-radius: 10px;
 border-radius: 10px;
+overflow: hidden;
+}
+
+.chart-sunburst {
+width: 200px;
+height: 200px;
+float: left;
+}
+
+.chart-sunburstxl {
+width: 500px;
+height: 500px;
+float: left;
+}
+
+.chart-cellular {
+width: 600px;
+height: 200px;
+float: left;
+}
+
+.overview-container {
+float: left;
+clear: both;
+width: 98%;
 }
 
 #chart h3 {
