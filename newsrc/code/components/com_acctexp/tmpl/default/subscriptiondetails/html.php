@@ -79,7 +79,7 @@ if ( !empty( $metaUser->objSubscription->plan ) ) {
 	$sList = array_merge( array( $metaUser->objSubscription ), $sList );
 }
 
-$subList = array();
+$subscriptions = array();
 
 // Prepare Payment Processors attached to active subscriptions
 if ( !empty( $sList ) ) {
@@ -88,10 +88,10 @@ if ( !empty( $sList ) ) {
 			continue;
 		}
 
-		$subList[$usid] = $subscription;
+		$subscriptions[$usid] = $subscription;
 
-		$subList[$usid]->objPlan = new SubscriptionPlan( $db );
-		$subList[$usid]->objPlan->load( $subscription->plan );
+		$subscriptions[$usid]->objPlan = new SubscriptionPlan( $db );
+		$subscriptions[$usid]->objPlan->load( $subscription->plan );
 
 		if ( !empty( $subscription->type ) ) {
 			if ( !in_array( $subscription->type, $pplist ) ) {
@@ -162,8 +162,8 @@ foreach ( $invoiceList as $invoiceid ) {
 $pps = PaymentProcessorHandler::getObjectList( $pplist, true );
 
 // Get the tabs information from the plan
-if ( !empty( $subList ) ) {
-	foreach( $subList as $usid => $subscription ) {
+if ( !empty( $subscriptions ) ) {
+	foreach( $subscriptions as $usid => $subscription ) {
 		$mis = $subscription->objPlan->micro_integrations;
 
 		if ( !count( $mis ) ) {
@@ -239,8 +239,8 @@ foreach ( $invoiceList as $invoiceid ) {
 	}
 
 	$found = false;
-	if ( !in_array( $invoice->subscr_id, $handledsubs ) && !empty( $subList ) ) {
-		foreach ( $subList as $ssub ) {
+	if ( !in_array( $invoice->subscr_id, $handledsubs ) && !empty( $subscriptions ) ) {
+		foreach ( $subscriptions as $ssub ) {
 			if ( $ssub->id == $invoice->subscr_id ) {
 				$tempsubscription = $ssub;
 

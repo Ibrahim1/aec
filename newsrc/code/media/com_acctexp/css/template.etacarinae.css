@@ -1,8 +1,13 @@
 /* == Valanx.org AEC Membership Management - etacarinae.css == */
 
 #aec {
-width: 92%;
+width: 100%;
 padding: 0 12px;
+}
+
+div#aec > div {
+overflow: hidden;
+padding: 4px;
 }
 
 #aec form {
