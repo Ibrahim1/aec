@@ -3014,15 +3014,16 @@ class bsPagination extends JPagination
 			$search[$i] = '>'.$s.'<';
 		}
 
+		$search[] = 'class="container"';
+
 		$replace = array(	'><i class="bsicon-fast-backward bsicon"></i><',
 							'><i class="bsicon-backward bsicon"></i><',
 							'><i class="bsicon-forward bsicon"></i><',
-							'><i class="bsicon-fast-forward bsicon"></i><'
+							'><i class="bsicon-fast-forward bsicon"></i><',
+							'class="pagination-container"'
 						);
 
-		$footer = str_replace( $search, $replace, $footer );
-
-		return $footer;
+		return str_replace( $search, $replace, $footer );
 	}
 
 	function ordering( $i, $n, $type )
