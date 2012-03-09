@@ -16670,7 +16670,7 @@ class AECToolbox
 				$useractivation = $params->get('useractivation');
 
 				// Check if the user needs to activate their account.
-				if (($useractivation == 1) || ($useractivation == 2)) {
+				if ( (($useractivation == 1) || ($useractivation == 2)) && !$overrideActivation ) {
 					jimport('joomla.user.helper');
 					$data['activation'] = JUtility::getHash(JUserHelper::genRandomPassword());
 					$data['block'] = 1;
