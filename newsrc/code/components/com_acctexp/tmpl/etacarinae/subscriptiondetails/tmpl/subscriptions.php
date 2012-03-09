@@ -20,7 +20,7 @@
 				echo '<h2>' . JText::_('YOUR_FURTHER_SUBSCRIPTIONS') . '</h2>';
 				break;
 		} ?>
-		<div class="subscription_info">
+		<div class="subscription-info">
 			<p><strong><?php echo $subscription->objPlan->getProperty( 'name' ) ?></strong></p>
 			<p><?php echo $subscription->objPlan->getProperty( 'desc' ) ?></p>
 			<?php if ( !empty( $subscription->objPlan->proc_actions ) ) { ?>
