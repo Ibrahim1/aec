@@ -2879,7 +2879,7 @@ class aecTemplate
 			$uri    = JURI::getInstance();
 			$prefix = $uri->toString( array( 'scheme', 'host', 'port' ) );
 
-			$url = $prefix.'/'.$xurl;
+			$url = $prefix.JRoute::_( $xurl );
 		}
 
 		$btn = '<form action="'.$url.'" method="post">';
