@@ -942,6 +942,7 @@ border-radius: 4px;
 -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
 -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
 box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
+overflow: hidden;
 }
 
 .aec_userinfobox_sub_inline {
@@ -1215,21 +1216,14 @@ margin: 0 25%;
 }
 
 div#aec-toolbox-result {
-margin: 0px 20px;
-margin-top: 20px;
+margin: 0px auto;
 width: 93%;
 background: #fff;
 border: 2px solid #eee;
 font-size: 120%;
 padding: 2%;
-}
-
-div#aec-toolbox-form {
-background: none repeat scroll 0 0 #EEEEEE;
-margin: 0 25%;
-text-align: center;
-width: 50%;
-padding: 20px;
+max-width: 1024px;
+overflow-x: scroll;
 }
 
 div#aec-toolbox-form .controls {

@@ -84,7 +84,7 @@ class tool_readout
 		$readout = new aecReadout( $optionlist, $method );
 
 		foreach ( $optionlist as $opt => $odefault ) {
-			if ( !$_POST[$opt] ) {
+			if ( !isset( $_POST[$opt] ) ) {
 				continue;
 			}
 
@@ -154,9 +154,9 @@ class tool_readout
 		foreach ( $readout as $part ) {
 			if ( !empty( $part['head'] ) ) {
 				if ( !empty( $part['sub'] ) ) {
-					$return .= "<h2>" . $part['head'] . "</h2>";
+					$return .= "<h6>" . $part['head'] . "</h6>";
 				} else {
-					$return .= "<h1>" . $part['head'] . "</h1>";
+					$return .= "<h5>" . $part['head'] . "</h5>";
 				}
 			}
 

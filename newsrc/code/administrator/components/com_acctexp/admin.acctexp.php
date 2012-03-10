@@ -6134,7 +6134,6 @@ function toolBoxTool( $option, $cmd )
 				$tb_settings = $tool->Settings();
 
 				if ( !empty( $tb_settings ) ) {
-					$return .= '<div id="aec-toolbox-form">';
 
 					$lists = array();
 					if ( isset( $tb_settings['lists'] ) ) {
@@ -6160,8 +6159,7 @@ function toolBoxTool( $option, $cmd )
 						$return .= $aecHTML->createSettingsParticle( $n );
 					}
 
-					$return .= '<input type="submit" class="btn btn-primary"/>';
-					$return .= '</div>';
+					$return .= '<input type="submit" class="btn btn-primary pull-right"/>';
 				}
 			}
 
