@@ -68,20 +68,23 @@ width: 90%;
 width: 100%;
 }
 
-#aec #confirmation-button,
-#aec #checkout-button,
-#aec #exception-button,
-#aec #upgrade-button {
+#aec .well>div {
 text-align: right;
 }
 
-#aec #confirmation-button p,
-#aec #checkout-button p,
-#aec #exception-button p,
-#aec #upgrade-button p {
+#aec .well p {
 display: inline;
 float: left;
 margin: 4px 0;
+}
+
+#aec .alert {
+overflow: hidden;
+}
+
+#aec .alert .btn {
+float: right;
+margin-right: -26px;
 }
 
 #aec #confirmation-form table {
