@@ -112,7 +112,7 @@ class mi_joomlauser
 		}
 
 		if ( !empty( $this->settings['set_fields'] ) ) {
-			$this->setFields( $request->metaUser->userid );
+			$this->setFields( $request );
 		}
 	}
 
@@ -154,44 +154,90 @@ class mi_joomlauser
 		}
 
 		if ( !empty( $this->settings['set_fields_exp'] ) ) {
-			$this->setFields( $request->metaUser->userid, '_exp' );
+			$this->setFields( $request, '_exp' );
 		}
 	}
 
 	function setFields( $request, $stage="" )
 	{
+		$db = &JFactory::getDBO();
+
 		$query = 'SELECT `profile_key`, `profile_value`'
 				. ' FROM #__user_profiles'
-				. ' WHERE `user_id` = \'' . $this->data['metaUser']->userid . '\'';
+				. ' WHERE `user_id` = \'' . $request->metaUser->userid . '\'';
 		$db->setQuery( $query );
 		$objects = $db->loadObjectList();
 
 		$changes = $additions = array();
-		foreach ( $objects as $object ) {
-			if ( !empty( $this->settings['jprofile_' . str_replace( ".", "_", $object->profile_key ) . $stage] ) ) {
-				$changes[$object->name] = $this->settings['jprofile_' . str_replace( ".", "_", $object->profile_key ) . $stage];
+
+		foreach ( $this->settings as $k => $v ) {
+			if ( strpos($k, 'jprofile_') !== false ) {
+				if ( $stage == '_exp' ) {
+					if ( strpos($k, '_exp') === false ) {
+						continue;
+					}
+				} else {
+					if ( strpos($k, '_exp') !== false ) {
+						continue;
+					}
+				}
+
+				if ( empty( $v ) ) {
+					continue;
+				}
+
+				if ( ( $v === 0 ) || ( $v === "0" ) ) {
+					$v = '\'0\'';
+				} elseif ( ( $v === 1 ) || ( $v === "1" ) ) {
+					$v = '\'1\'';
+				} elseif ( strcmp( $v, 'NULL' ) === 0 ) {
+					$v = 'NULL';
+				} else {
+					$v = '\'' . AECToolbox::rewriteEngineRQ( $v, $request ) . '\'';
+				}
+
+				$f = false;
+				foreach ( $objects as $object ) {
+					if ( $k == 'jprofile_' . str_replace( ".", "_", $object->profile_key ) . $stage ) {
+						$changes[$object->profile_key] = $v;
+						$f = true;
+					}
+				}
+
+				if ( !$f ) {
+					$key = str_replace( array( "jprofile_", '_exp', "_" ), array( "", "", "." ), $k );
+					$additions[$key] = $v;
+				}
 			}
 		}
 
 		if ( !empty( $changes ) ) {
-			$alterstring = array();
 			foreach ( $changes as $name => $value ) {
-				if ( ( $value === 0 ) || ( $value === "0" ) ) {
-					$alterstring[] = "`" . $name . "`" . ' = \'0\'';
-				} elseif ( ( $value === 1 ) || ( $value === "1" ) ) {
-					$alterstring[] = "`" . $name . "`" . ' = \'1\'';
-				} elseif ( strcmp( $value, 'NULL' ) === 0 ) {
-					$alterstring[] = "`" . $name . "`" . ' = NULL';
-				} else {
-					$alterstring[] = "`" . $name . "`" . ' = \'' . AECToolbox::rewriteEngineRQ( $value, $request ) . '\'';
-				}
+				$query = 'UPDATE #__user_profiles'
+						. ' SET `profile_value` = ' . $value
+						. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
+						. ' AND `profile_key` = \'' . $name . '\''
+						;
+				$db->setQuery( $query );
+				$db->query() or die( $db->stderr() );
+			}
+		}
+
+		if ( !empty( $additions ) ) {
+			$query = 'SELECT MAX(ordering)'
+					. ' FROM #__user_profiles'
+					. ' WHERE `user_id` = \'' . $request->metaUser->userid . '\'';
+			$db->setQuery( $query );
+			$order = $db->loadResult();
+
+			$values = array();
+			foreach ( $additions as $name => $value ) {
+				$values[] = '('.((int) $request->metaUser->userid).', '.$db->quote($name).', '.$value.', '.$order++.')';
 			}
 
-			$query = 'UPDATE #__comprofiler'
-					. ' SET ' . implode( ', ', $alterstring )
-					. ' WHERE `user_id` = \'' . (int) $request->metaUser->userid . '\''
-					;
-			$db->setQuery( $query );
+			$query = 'INSERT INTO #__user_profiles VALUES '.implode(', ', $values);
+
+			$db->setQuery($query);
 			$db->query() or die( $db->stderr() );
 		}
 	}
