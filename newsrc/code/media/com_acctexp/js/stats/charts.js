@@ -290,9 +290,9 @@ d3.chart.cellular = function () {
 				.attr("preserveAspectRatio", "none");					  
 		}
 		group = parent.append("svg:g")
-			.attr("class", "group")
+			.attr("class", "group svg-crisp")
 			.attr("id", "group"+id);
-
+		
 		return chart;
 	};
 
@@ -393,13 +393,12 @@ d3.chart.cellular = function () {
 		week = d3.time.format("%U"),
 		format = d3.time.format("%Y-%m-%d");
 
-		group.attr("class", "svg-crisp")
-		.attr("transform", "translate("+z*2+","+z+")");
-
 		var numyear = 2012;
 
-		var year = group.append("svg:g")
+		var year = group.selectAll("g.year")
 			.data([numyear])
+			.enter()
+			.append("svg:g")
 			.attr("class", "year y-"+numyear+" RdYlGn")
 			.style("opacity", "1.0");
 
@@ -453,9 +452,10 @@ d3.chart.cellular = function () {
 
 			this.selectAll("rect.day")
 				.attr("class", function(d) { return "day q" + ccolor(nsales[d]) + "-9"; })
+				.attr("class", "bstooltip")
 				.attr("ry", z/3.33).attr("rx", z/3.33)
-				.append("svg:title")
-				.text(function(d) { return format(d) + (d in nsales ? ": " + amount_format(nsales[d]) + amount_currency : ""); })
+				.attr("rel", "tooltip")
+				.attr("data-original-title", function(d) { return format(d) + (d in nsales ? ": " + amount_format(nsales[d]) + amount_currency : ""); });
 
 			this.selectAll("rect.day")
 				.transition().ease("bounce")

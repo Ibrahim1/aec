@@ -2585,7 +2585,7 @@ class HTML_AcctExp
 				);
 	
 				foreach ( $menus as $menu => $menutext ) {
-					echo '<li' . ( ( $page == $menu ) ? ' class="active"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats2&page=' . $menu . '">' . $menutext . '</a></li>';
+					echo '<li' . ( ( $page == $menu ) ? ' class="active"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats&page=' . $menu . '">' . $menutext . '</a></li>';
 				}
 			?>
 		</ul>
@@ -2597,6 +2597,7 @@ class HTML_AcctExp
 			switch ( $page ) {
 				case 'overview':
 					?>
+					<h3>This is an unfinished feature, please check back in the final stable release</h3>
 					<div id="overview-day" class="overview-container">
 						<h4><?php echo gmdate('l, jS M Y'); ?></h4>
 						<div id="overview-day-this" class="chart-sunburst"></div>
@@ -2646,20 +2647,26 @@ class HTML_AcctExp
 					break;
 				case 'daily':
 					?>
-					<div id="daily-yesterday" class="daily-container"><h4>Yesterday</h4></div>
-					<div id="daily-today" class="daily-container"><h4>Today</h4></div>
+					<div id="daily-yesterday" class="overview-container">
+						<h4>Yesterday</h4>
+						<div id="overview-day-this" class="chart-sunburst"></div>
+					</div>
+					<div id="daily-today" class="overview-container">
+						<h4>Today</h4>
+						<div id="overview-day-last" class="chart-sunburst"></div>
+					</div>
 					<script type="text/javascript">
 						var cf = d3.chart.factory()
 						.source("sales")
 						.canvas(200, 200, 10)
-						.target("div#daily-yesterday")
+						.target("div#overview-day-this")
 						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 23:59:59'; ?>")
 						.create("sunburst");
 
 						cf.source("sales")
 						.canvas(200, 200, 10)
-						.target("div#daily-today")
+						.target("div#overview-day-last")
 						.range(	"<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
 						.create("sunburst");
@@ -2737,8 +2744,12 @@ class HTML_AcctExp
 					break;
 				case 'all_time':
 					?>
-					<div id="all-time-cells" class="all-time-container"><h4>Daily Cells</h4></div>
-					<div id="all-time-suns" class="all-time-container"><h4>Yearly Totals</h4></div>
+					<div id="all-time-cells" class="overview-container">
+						<h4>Daily Cells</h4>
+					</div>
+					<div id="all-time-suns" class="overview-container">
+						<h4>Yearly Totals</h4>
+					</div>
 					<script type="text/javascript">
 						var cf = d3.chart.factory()
 						.source("sales")
@@ -2760,24 +2771,6 @@ class HTML_AcctExp
 				</div>
 			</td></tr>
 		</table>
-
-		<?php
- 		HTML_myCommon::endCommon();
-	}
-
-	function stats2( $option, $stats )
-	{
-		HTML_myCommon::startCommon(); ?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
-		<table class="adminheading">
-		<tr>
-			<th width="100%" class="aec_backend_page_heading" style="background: url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_symbol_stats.png) no-repeat left;" rowspan="2">
-				<?php echo JText::_('AEC_HEAD_STATS'); ?>
-			</th>
-		</tr>
-		</table>
-
-		<h1>Stats aren't done yet, please check back here in the stable release</h1>
 
 		<?php
  		HTML_myCommon::endCommon();
