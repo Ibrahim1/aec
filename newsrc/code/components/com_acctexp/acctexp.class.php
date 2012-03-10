@@ -10230,7 +10230,7 @@ class InvoiceFactory
 
 	function promptpassword( $option, $wrong=false )
 	{
-		getView( 'exception', array( 'passhtrough' => $this->getPassthrough(), 'wrong' => $wrong ) );
+		getView( 'passwordprompt', array( 'passthrough' => $this->getPassthrough(), 'wrong' => $wrong ) );
 	}
 
 	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
