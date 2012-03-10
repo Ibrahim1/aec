@@ -16659,6 +16659,10 @@ class AECToolbox
 							'name' => $var['name'],
 							);
 
+			if ( isset( $var['jform']['profile'] ) ) {
+				$data['profile'] = $var['jform']['profile'];
+			}
+
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$params = JComponentHelper::getParams('com_users');
 
