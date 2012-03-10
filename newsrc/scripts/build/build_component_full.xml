@@ -54,7 +54,7 @@
 				<exclude name=".directory"/>
 			</fileset>
 		</copy>
-
+<!-- 
 		<mkdir dir="${dir.tmp}/plg_aecrestriction" />
 
 		<copy todir="${dir.tmp}/plg_aecrestriction">
@@ -63,7 +63,7 @@
 				<exclude name=".directory"/>
 			</fileset>
 		</copy>
-
+-->
 		<mkdir dir="${dir.tmp}/plg_aecrewrite" />
 
 		<copy todir="${dir.tmp}/plg_aecrewrite">

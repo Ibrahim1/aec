@@ -20,9 +20,9 @@
 		<phing phingfile="build_plugin_error.xml" inheritRefs="true">
 			<property file="properties/plugin_error.properties" override="true" />
 		</phing>
-		<phing phingfile="build_plugin_restriction.xml" inheritRefs="true">
+		<!--<phing phingfile="build_plugin_restriction.xml" inheritRefs="true">
 			<property file="properties/plugin_restriction.properties" override="true" />
-		</phing>
+		</phing>-->
 		<phing phingfile="build_plugin_rewrite.xml" inheritRefs="true">
 			<property file="properties/plugin_rewrite.properties" override="true" />
 		</phing>
