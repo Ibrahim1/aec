@@ -154,7 +154,8 @@ text-align: right;
 opacity: 0.8;
 }
 
-#aec .btn-processor {
+#aec .btn-processor,
+#aec .btn-plangroup {
   -webkit-box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -164,7 +165,8 @@ opacity: 0.8;
   padding: 0;
 }
 
-#aec .btn-processor:hover {
+#aec .btn-processor:hover,
+#aec .btn-plangroup:hover {
   color: #333333;
   text-decoration: none;
   background-color: #e6e6e6;
@@ -206,7 +208,7 @@ line-height: 12px;
 }
 
 #aec .processor-button,
-#aec .plangroup-button {
+#aec .group-button {
 display: inline-block;
 float: right;
 width: 120px;
