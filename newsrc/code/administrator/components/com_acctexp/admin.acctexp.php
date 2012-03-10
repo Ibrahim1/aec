@@ -271,8 +271,8 @@ switch( strtolower( $task ) ) {
 
 	case 'history': history( $option ); break;
 	case 'eventlog': eventlog( $option ); break;
-	case 'stats': aec_stats2( $option ); break;
-	case 'stats2':
+
+	case 'stats':
 		$page	= aecGetParam( 'page', 'overview', true, array( 'word', 'string' ) );
 
 		aec_stats( $option, $page );
@@ -285,8 +285,6 @@ switch( strtolower( $task ) ) {
 
 		aec_statrequest( $option, $type, $start, $end );
 		break;
-
-	case 'readout': readout( $option ); break;
 
 	case 'testexportmembers': exportData( $option, 'members', 'export' ); break;
 	case 'exportmembers': exportData( $option, 'members' ); break;
@@ -5496,127 +5494,6 @@ function backupFile( $file, $file_new )
 				return false;
 		}
 		return true;
-}
-
-function readout( $option )
-{
-	$db = &JFactory::getDBO();
-
-	$optionlist = array(
-							'show_settings' => 0,
-							'show_extsettings' => 0,
-							'show_processors' => 0,
-							'show_plans' => 1,
-							'show_mi_relations' => 1,
-							'show_mis' => 1,
-							'truncation_length' => 42,
-							'noformat_newlines' => 0,
-							'use_ordering' => 0,
-							'column_headers' => 20,
-							'export_csv' => 0,
-							'store_settings' => 1
-						);
-
-	if ( isset( $_POST['display'] ) ) {
-		if ( !empty( $_POST['export_csv'] ) ) {
-			$method = "csv";
-		} else {
-			$method = "html";
-		}
-
-		$r = array();
-		$readout = new aecReadout( $optionlist, $method );
-
-		foreach ( $optionlist as $opt => $odefault ) {
-			if ( !$_POST[$opt] ) {
-				continue;
-			}
-
-			switch ( $opt ) {
-				case 'show_settings':
-					$s = $readout->readSettings();
-					break;
-				case 'show_processors':
-					$s = $readout->readProcessors();
-					break;
-				case 'show_plans':
-					$s = $readout->readPlans();
-					break;
-				case 'show_mi_relations':
-					$s = $readout->readPlanMIrel();
-					break;
-				case 'show_mis':
-					$s = $readout->readMIs();
-					break;
-				case 'store_settings':
-					$user = &JFactory::getUser();
-
-					$settings = array();
-					foreach ( $optionlist as $opt => $optdefault ) {
-						if ( !empty( $_POST[$opt] ) ) {
-							$settings[$opt] = $_POST[$opt];
-						} else {
-							$settings[$opt] = 0;
-						}
-					}
-
-					$metaUser = new metaUser( $user->id );
-					$metaUser->meta->addCustomParams( array( 'aecadmin_readout' => $settings ) );
-					$metaUser->meta->storeload();
-					continue 2;
-					break;
-				default:
-					continue 2;
-					break;
-			}
-
-			if ( isset( $s['def'] ) ) {
-				$r[] = $s;
-			} elseif ( is_array( $s ) ) {
-				foreach ( $s as $i => $x ) {
-					$r[] = $x;
-				}
-			}
-		}
-
-		if ( !empty( $_POST['export_csv'] ) ) {
-			HTML_AcctExp::readoutCSV( $option, $r );
-		} else {
-			HTML_AcctExp::readout( $option, $r );
-		}
-	} else {
-		$user = &JFactory::getUser();
-
-		$metaUser = new metaUser( $user->id );
-		if ( isset( $metaUser->meta->custom_params['aecadmin_readout'] ) ) {
-			$prefs = $metaUser->meta->custom_params['aecadmin_readout'];
-		} else {
-			$prefs = array();
-		}
-
-		foreach ( $optionlist as $opt => $optdefault ) {
-			if ( isset( $prefs[$opt] ) ) {
-				$optval = $prefs[$opt];
-			} else {
-				$optval = $optdefault;
-			}
-
-			if ( ( $optdefault == 1 ) || ( $optdefault == 0 ) ) {
-				$params[$opt] = array( 'toggle', $optval );
-			} else {
-				$params[$opt] = array( 'inputB', $optval );
-			}
-		}
-
-		$settings = new aecSettings ( 'readout', 'general' );
-
-		$settings->fullSettingsArray( $params, $prefs, array() ) ;
-
-		// Call HTML Class
-		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-		HTML_AcctExp::readoutSetup( $option, $aecHTML );
-	}
 }
 
 function importData( $option )
