@@ -786,7 +786,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 	}
 
 	if ( $pending ) {
-		pending( $option, $userid );
+		getView( 'pending' );
 	} else {
 		if ( !empty( $return ) ) {
 			aecRedirect( base64_decode( $return ) );
