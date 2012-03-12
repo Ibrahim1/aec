@@ -104,6 +104,10 @@ width: 97%;
 shape-rendering: crispedges;
 }
 
+rect.panel {
+fill: none;
+}
+
 .day {
 fill: #fff;
 }

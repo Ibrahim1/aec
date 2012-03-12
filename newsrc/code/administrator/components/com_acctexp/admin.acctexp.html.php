@@ -2678,6 +2678,7 @@ class HTML_AcctExp
 					<div id="overview-day" class="overview-container">
 						<h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4>
 						<div id="overview-day-last" class="chart-sunburst"></div>
+						<div id="overview-day-compare" class="chart-sunburst"></div>
 						<div id="overview-day-this" class="chart-sunburst"></div>
 					</div>
 					<div id="overview-week" class="overview-container">
@@ -2704,6 +2705,8 @@ class HTML_AcctExp
 						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
 						.create("sunburst")
+						.target("div#overview-day-compare")
+						.create("bump")
 						.target("div#overview-day-this")
 						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
@@ -2740,7 +2743,22 @@ class HTML_AcctExp
 					break;
 				case 'users':
 					break;
-				case 'plans':
+				case 'sales':
+					?>
+					<div id="sales-graph" class="overview-container">
+						<h4>Sales Graph</h4>
+						<div id="overview-sales-graph" class="chart-stacked"></div>
+					</div>
+					<script type="text/javascript">
+						var cf = d3.chart.factory()
+						.source("sales")
+						.canvas(800, 400, 10)
+						.target("div#overview-sales-graph")
+						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("stacked")
+					</script>
+					<?php
 					break;
 				case 'all_time':
 					?>
@@ -2757,12 +2775,12 @@ class HTML_AcctExp
 						.target("div#all-time-suns")
 						.range(	"<?php echo gmdate('1960-01-01') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("Sunburst")
+						.create("sunburst")
 						.canvas(800, 900, 10)
 						.target("div#all-time-cells")
 						.range(	"<?php echo gmdate('2009-1-1') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("Cellular");
+						.create("cellular");
 					</script>
 					<?php
 					break;

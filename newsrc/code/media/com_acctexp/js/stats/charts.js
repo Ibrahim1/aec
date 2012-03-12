@@ -21,8 +21,8 @@ d3.chart.sunburst = function () {
 		parent = d3.select(p);
 		w = parent.node().clientWidth;
 		h = parent.node().clientHeight;
-		x = 0;
-		y = 0;
+		x = -w/2;
+		y = -h/2;
 		if(d3.ns.prefix.xhtml == parent.node().namespaceURI) {
 			parent = parent.append("svg:svg")
 				.attr("viewBox", "0 0 "+w+" "+h)
@@ -31,6 +31,9 @@ d3.chart.sunburst = function () {
 		group = parent.append("svg:g")
 			.attr("class", "group")
 			.attr("id", "group"+id);
+		group.append("svg:rect")
+		.attr("class", "panel")
+		.call(resize);
 
 		chart.console();
 
@@ -292,7 +295,10 @@ d3.chart.cellular = function () {
 		group = parent.append("svg:g")
 			.attr("class", "group svg-crisp")
 			.attr("id", "group"+id);
-		
+		group.append("svg:rect")
+		.attr("class", "panel")
+		.call(resize);
+
 		return chart;
 	};
 
@@ -493,9 +499,151 @@ d3.chart.cellular = function () {
 	return chart;
 };
 
-d3.chart.barchart = function () {
+d3.chart.bump = function () {
 
-	var barchart = {},
+	var chart = {},
+	data= [],
+	label= [],
+	parent,
+	group,
+	w, h,
+	x, y,
+	chartW, chartH,
+	duration = 1000,
+	margin = [20, 20, 20, 20],
+	gap = 30,
+	variant = "standard";
+
+	chart.parent = function(p,id) {
+		if (!arguments.length) return parent.node();	   
+		parent = d3.select(p);
+		w = parent.node().clientWidth;
+		h = parent.node().clientHeight;
+		x = 0;
+		y = 0;
+		if(d3.ns.prefix.xhtml == parent.node().namespaceURI) {
+			parent = parent.append("svg:svg")
+				.attr("viewBox", "0 0 "+w+" "+h)
+				.attr("preserveAspectRatio", "none");					  
+		}
+		group = parent.append("svg:g")
+			.attr("class", "group svg-crisp")
+			.attr("id", "group"+id);
+		group.append("svg:rect")
+			.attr("class", "panel")
+			.call(resize);
+		return chart;
+	};
+
+	chart.margin = function(m) {
+		if (!arguments.length) return margin;
+		margin = m;
+		group.select("rect.panel")
+			.call(resize);
+		return redraw();
+	};
+
+	chart.size = function(s) {
+		if (!arguments.length) return [w, h];
+		w = s[0];
+		h = s[1];
+		group.select("rect.panel")
+			.call(resize);
+		return redraw();
+	};
+
+	chart.position = function(p, other) {
+		if (!arguments.length) return [x, y];
+		if(typeof p == "string") {
+			var otherPos = other.position();
+			var otherSize = other.size();	
+			if(p == "after") {
+				x = otherPos[0]+otherSize[0];
+				y = otherPos[1]+otherSize[1]-h;
+			}else if(p == "under") {
+				x = otherPos[0];
+				y = otherPos[1]+otherSize[1];
+			}
+		}else{
+			x = p[0];
+			y = p[1];
+		}
+		group.select("rect.panel")
+			.call(resize);
+		return redraw();
+	};
+
+	chart.transition = function(d) {
+		if (!arguments.length) return duration;
+		duration = d;
+		return redraw();
+	};
+
+	chart.data = function(d) {
+		if (!arguments.length) return data;
+		data = d;
+		return redraw();
+	};
+
+	chart.gap = function(g) {
+		if (!arguments.length) return gap;
+		gap = g;
+		return redraw();
+	};
+
+	chart.variant = function(v) {
+		if (!arguments.length) return variant;
+		variant = v;
+		return redraw();
+	};
+
+	function resize() {
+		chartW = w - margin[1] - margin[3];
+		chartH = h - margin[0] - margin[2];
+		this.attr("width", chartW)
+			.attr("height", chartH)
+			.attr("x", x+margin[3])
+			.attr("y", y+margin[0]);
+		return chart;
+	}
+
+	function redraw() {
+		chart.tochart();		  
+		return chart;
+	};
+
+	chart.tochart = function() {
+		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
+		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
+		var gapW = chartW/data.length*(gap/100);
+		
+		var markX = function(d, i) {return x+xScale(i)+margin[3]+gapW/2;};
+		var markY = function(d, i) {return y+yScale(d)+margin[0];};
+		var markW = chartW/data.length-gapW;
+		var markH = function(d, i) {return chartH-yScale(d);};
+		drawSVG(markX, markY, markW, markH);
+
+		return chart;
+	};
+
+	function drawSVG(markX, markY, markW, markH) {
+		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
+
+		group.append("svg:g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + h + ")")
+		.call(xScale);
+
+
+
+	}
+
+	return chart;
+};
+
+d3.chart.stacked = function () {
+
+	var chart = {},
 	data= [],
 	label= [],
 	parent,
@@ -508,7 +656,7 @@ d3.chart.barchart = function () {
 	gap = 30
 	variant = "standard";
 
-	barchart.parent = function(p) {
+	chart.parent = function(p) {
 		if (!arguments.length) return parent.node();	   
 		parent = d3.select(p);
 		w = parent.node().clientWidth;
@@ -526,10 +674,10 @@ d3.chart.barchart = function () {
 		group.append("svg:rect")
 			.attr("class", "panel")
 			.call(resize);
-		return barchart;
+		return chart;
 	};
 	
-	barchart.margin = function(m) {
+	chart.margin = function(m) {
 		if (!arguments.length) return margin;
 		margin = m;
 		group.select("rect.panel")
@@ -537,7 +685,7 @@ d3.chart.barchart = function () {
 		return redraw();
 	};
 	
-	barchart.size = function(s) {
+	chart.size = function(s) {
 		if (!arguments.length) return [w, h];
 		w = s[0];
 		h = s[1];
@@ -546,7 +694,7 @@ d3.chart.barchart = function () {
 		return redraw();
 	};
 	
-	barchart.position = function(p, other) {
+	chart.position = function(p, other) {
 		if (!arguments.length) return [x, y];
 		if(typeof p == "string") {
 			var otherPos = other.position();
@@ -567,25 +715,25 @@ d3.chart.barchart = function () {
 		return redraw();
 	};
 	
-	barchart.transition = function(d) {
+	chart.transition = function(d) {
 		if (!arguments.length) return duration;
 		duration = d;
 		return redraw();
 	};
 	
-	barchart.data = function(d) {
+	chart.data = function(d) {
 		if (!arguments.length) return data;
 		data = d;
 		return redraw();
 	};
    
-	barchart.gap = function(g) {
+	chart.gap = function(g) {
 		if (!arguments.length) return gap;
 		gap = g;
 		return redraw();
 	};
 	
-	barchart.variant = function(v) {
+	chart.variant = function(v) {
 		if (!arguments.length) return variant;
 		variant = v;
 		return redraw();
@@ -598,16 +746,16 @@ d3.chart.barchart = function () {
 			.attr("height", chartH)
 			.attr("x", x+margin[3])
 			.attr("y", y+margin[0]);
-		return barchart;
+		return chart;
 	}
 
 	function redraw() {
-		if(variant == "stacked") barchart.toStackedBarchart();  
-		else barchart.toBarchart();		  
-		return barchart;
+		if(variant == "stacked") chart.toStackedBarchart();  
+		else chart.toBarchart();		  
+		return chart;
 	};
 	
-	barchart.toPCP = function() {
+	chart.toPCP = function() {
 		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
 		
 		var markX = x+margin[3];
@@ -615,10 +763,10 @@ d3.chart.barchart = function () {
 		var markW = 5;
 		var markH = 5;
 		drawSVG(markX, markY, markW, markH);
-		return barchart;
+		return chart;
 	};
 	
-	barchart.toBarchart = function() {
+	chart.toBarchart = function() {
 		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
 		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
 		var gapW = chartW/data.length*(gap/100);
@@ -628,10 +776,10 @@ d3.chart.barchart = function () {
 		var markW = chartW/data.length-gapW;
 		var markH = function(d, i) {return chartH-yScale(d);};
 		drawSVG(markX, markY, markW, markH);
-		return barchart;
+		return chart;
 	};
 	
-	barchart.toStackedBarchart = function() {
+	chart.toStackedBarchart = function() {
 		var yScale = d3.scale.linear().domain([0, d3.sum(data)+h/100]).range([chartH, 0]);		
 		var stackH = [];
 		var stackTopH = 0;
@@ -646,7 +794,7 @@ d3.chart.barchart = function () {
 		var markW = chartW-gapW;
 		var markH = function(d, i) {return chartH-yScale(d);};
 		drawSVG(markX, markY, markW, markH);
-		return barchart;
+		return chart;
 	};
 	
 	function drawSVG(markX, markY, markW, markH) {
@@ -659,7 +807,7 @@ d3.chart.barchart = function () {
 				.attr("y", markY)
 				.attr("width", 0)
 				.attr("height", markH)
-				 .attr("opacity", 1);
+				.attr("opacity", 1);
 				
 			marks.transition()		   
 				.attr("x", markX)
@@ -674,5 +822,5 @@ d3.chart.barchart = function () {
 				.remove();
 	}
 
-	return barchart;
+	return chart;
 };
