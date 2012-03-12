@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4814' );
+define( '_AEC_REVISION', '4817' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2876,10 +2876,19 @@ class aecTemplate
 		if ( $params['option'] == 'com_acctexp' ) {
 			$url = AECToolbox::deadsureURL( $xurl, $this->cfg['ssl_signup'] );
 		} else {
+			if ( !empty( $id ) ) {
+				$xurl	.= '&Itemid=' . $id;
+			}
+			
 			$uri    = JURI::getInstance();
 			$prefix = $uri->toString( array( 'scheme', 'host', 'port' ) );
 
 			$url = $prefix.JRoute::_( $xurl );
+
+			if ( $params['option'] == 'com_community' ) {
+				// Judge me all you want.
+				$url = str_replace( '/component/community/', '/jomsocial/', $url );
+			}
 		}
 
 		$btn = '<form action="'.$url.'" method="post">';
@@ -10375,7 +10384,6 @@ class InvoiceFactory
 								$btnarray['task']	= 'registers';
 							} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
 								$btnarray['option']	= 'com_community';
-								$btnarray['task']	= '';
 								$btnarray['view'] 	= 'register';
 							} else {
 								if ( defined( 'JPATH_MANIFESTS' ) ) {

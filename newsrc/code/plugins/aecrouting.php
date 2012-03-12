@@ -331,6 +331,11 @@ class plgSystemAECrouting extends JPlugin
 				$temptoken = new aecTempToken( $db );
 				$temptoken->getComposite();
 
+				$existing = false;
+				if ( !empty( $temptoken->content['usage'] ) ) {
+					$existing = true;
+				}
+
 				$content = array();
 				$content['usage']		= $vars['usage'];
 				$content['processor']	= $vars['processor'];
@@ -343,6 +348,15 @@ class plgSystemAECrouting extends JPlugin
 				}
 
 				$temptoken->storeload();
+
+				if ( $vars['joms_reg'] && !$existing ) {
+					// I have... seen things you people wouldn't believe
+					// Logic on fire on the shore of JomSocial
+					$uri = &JFactory::getURI();
+
+					$app = JFactory::getApplication();
+					$app->redirect( $uri->toString() );
+				}
 			}
 		} elseif ( $vars['has_usage'] ) {
 			$db = &JFactory::getDBO();
