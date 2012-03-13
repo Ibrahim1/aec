@@ -250,13 +250,14 @@ class plgSystemAECrouting extends JPlugin
 			// Joomla or CB registration...
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
 				// Plans first and not yet selected -> select!
+
+				$this->deleteToken();
+
 				$app = JFactory::getApplication();
 				$app->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe', false, true ) );
-			} elseif ( !$vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] && !$vars['pfirst'] ) {
+			} elseif ( !$vars['pfirst'] && $vars['joms_regs'] && !$vars['has_user'] && !$vars['has_usage'] ) {
 				$this->redirectToken();
-			} elseif ( $vars['has_user'] && !$vars['has_usage'] && $vars['joms_regs'] ) {
-				$this->redirectToken();
-			} elseif ( $vars['has_user'] && $vars['has_usage'] && $vars['joms_regs'] ) {
+			} elseif ( $vars['has_user'] && $vars['joms_regs'] ) {
 				$this->redirectToken();
 			} elseif ( $vars['has_user'] && ( $vars['alpha_regsv'] || $vars['joms_regsv'] || $vars['cb_sregsv'] || $vars['k2_regsv'] ) ) {
 				if ( $vars['joms_regsv'] ) {
@@ -310,7 +311,7 @@ class plgSystemAECrouting extends JPlugin
 					if ( $vars['k2_regsv'] ) {
 						$temptoken->content['handler']	= 'k2';
 					} elseif ( $vars['joms_regsv'] ) {
-						$temptoken->content['handler']	= 'joomla';
+						$temptoken->content['handler']	= 'jomsocial';
 					} elseif ( $vars['cb_sregsv'] ) {
 						$temptoken->content['handler']	= 'cb';
 					}
@@ -326,28 +327,7 @@ class plgSystemAECrouting extends JPlugin
 					$this->redirectToken();
 				}
 			} elseif ( $vars['has_usage'] ) {
-				$db = &JFactory::getDBO();
-
-				$temptoken = new aecTempToken( $db );
-				$temptoken->getComposite();
-
-				$existing = false;
-				if ( !empty( $temptoken->content['usage'] ) ) {
-					$existing = true;
-				}
-
-				$content = array();
-				$content['usage']		= $vars['usage'];
-				$content['processor']	= $vars['processor'];
-				$content['recurring']	= $vars['recurring'];
-
-				if ( empty( $temptoken->id ) ) {
-					$temptoken->create( $content );
-				} else {
-					$temptoken->content = array_merge( $temptoken->content, $content );
-				}
-
-				$temptoken->storeload();
+				$existing = $this->saveToToken( $vars );
 
 				if ( $vars['joms_reg'] && !$existing ) {
 					// I have... seen things you people wouldn't believe
@@ -359,23 +339,7 @@ class plgSystemAECrouting extends JPlugin
 				}
 			}
 		} elseif ( $vars['has_usage'] ) {
-			$db = &JFactory::getDBO();
-
-			$temptoken = new aecTempToken( $db );
-			$temptoken->getComposite();
-
-			$content = array();
-			$content['usage']		= $vars['usage'];
-			$content['processor']	= $vars['processor'];
-			$content['recurring']	= $vars['recurring'];
-
-			if ( empty( $temptoken->id ) ) {
-				$temptoken->create( $content );
-			} else {
-				$temptoken->content = array_merge( $temptoken->content, $content );
-			}
-
-			$temptoken->storeload();
+			$this->saveToToken( $vars );
 		} elseif ( $vars['cbsreg'] ) {
 			// Any kind of user profile edit = trigger MIs
 
@@ -536,6 +500,46 @@ class plgSystemAECrouting extends JPlugin
 		}
 
 		return str_replace( $search, $search.$add, $text );
+	}
+
+	function deleteToken()
+	{
+		$db = &JFactory::getDBO();
+
+		$temptoken = new aecTempToken( $db );
+		$temptoken->getComposite();
+
+		if ( $temptoken->id ) {
+			$temptoken->delete();
+		}
+	}
+
+	function saveToToken( $vars )
+	{
+		$db = &JFactory::getDBO();
+
+		$temptoken = new aecTempToken( $db );
+		$temptoken->getComposite();
+
+		$existing = false;
+		if ( !empty( $temptoken->content['usage'] ) ) {
+			$existing = true;
+		}
+
+		$content = array();
+		$content['usage']		= $vars['usage'];
+		$content['processor']	= $vars['processor'];
+		$content['recurring']	= $vars['recurring'];
+
+		if ( empty( $temptoken->id ) ) {
+			$temptoken->create( $content );
+		} else {
+			$temptoken->content = array_merge( $temptoken->content, $content );
+		}
+
+		$temptoken->storeload();
+
+		return $existing;
 	}
 
 	function redirectToken()
