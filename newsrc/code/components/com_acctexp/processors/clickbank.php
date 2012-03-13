@@ -161,7 +161,7 @@ class processor_clickbank extends URLprocessor
 
 			$params[] = $this->settings['secret_key'];
 
-			$verify = strtoupper( substr( implode( '|', $params ), 0, 8 ) );
+			$verify = strtoupper( substr( sha1( implode( '|', $params ) ), 0, 8 ) );
 
 			if ( $cverify == $verify ) {
 				switch ( $post['ctransaction'] ) {
@@ -179,11 +179,11 @@ class processor_clickbank extends URLprocessor
 						break;
 					// A chargeback for a standard or recurring product.
 					case 'CGBK':
-						$response['delete']	= 1;
+						$response['chargeback']	= 1;
 						break;
 					// A chargeback for a standard or recurring product.
 					case 'INSF':
-						$response['delete']	= 1;
+						$response['chargeback']	= 1;
 						break;
 					// The cancellation of a recurring billing product. Recurring billing products that are canceled do not result in any other action.
 					case 'CANCEL-REBILL':
