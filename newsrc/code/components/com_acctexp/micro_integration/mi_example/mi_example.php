@@ -81,14 +81,14 @@ class mi_example
 	{
 		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
 
-		// Here you can specify whatever you want to happen when the plan runs out.
+		// Here you can specify whatever you want to happen before the plan runs out.
 	}
 
 	function expiration_action( $request )
 	{
 		// THIS FUNCTION IS NOT OBLIGATORY - IF YOU DON'T NEED IT, DON'T USE IT
 
-		// Here you can specify whatever you want to happen before the plan runs out.
+		// Here you can specify whatever you want to happen when the plan runs out.
 	}
 
 	function action( $request )
