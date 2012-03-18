@@ -107,10 +107,6 @@ class processor_cardsave extends POSTprocessor
   		$var['ServerResultURL']		= $request->int_var['return_url'];
   		$var['PaymentFormDisplaysResult']	= 'false';
 
-		foreach ( $var as $k => $v ) {
-			$var[$k] = htmlentities($v);
-		}
-
 		return array_merge( array( 'post_url' => $url, 'HashDigest' => $this->createhash( $var ) ), $var );	
 	}
 
@@ -141,7 +137,7 @@ class processor_cardsave extends POSTprocessor
 		}
 
 		foreach ( $extra as $k ) {
-			$vales[$k] = $var[$k];
+			$values[$k] = $var[$k];
 		}
 
 		$str = array();
