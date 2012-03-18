@@ -1,5 +1,7 @@
 if (typeof d3.chart != "object") d3.chart = {};
-	
+
+var sunburst_color = d3.scale.category20();
+
 d3.chart.sunburst = function () {
 
 	var chart = {},
@@ -158,7 +160,10 @@ d3.chart.sunburst = function () {
 		var markY = function(d, i) {return y+yScale(d)+margin[0];};
 		var markW = chartW/data.length-gapW;
 		var markH = function(d, i) {return chartH-yScale(d);};
-		drawSVG(markX, markY, markW, markH);
+
+		if ( data.length > 0 ) {
+			drawSVG(markX, markY, markW, markH);
+		}
 
 		return chart;
 	};
@@ -212,10 +217,10 @@ d3.chart.sunburst = function () {
 
 		path.on("mouseover", function(d) {
 				if (typeof d.values != 'object') {
-					name = "Plan " + d.key + ": ";
+					name = plan_names[d.key] + ": ";
 					amount = amount_format(d.values) + amount_currency; 
 				} else {
-					name = "Group " + d.key + ": ";
+					name = group_names[d.key] + ": ";
 					amount = amount_format(d3.sum(d.values.map(function(v) { return v.values; }))) + amount_currency;
 				}
 				d3.select(this)
@@ -279,6 +284,10 @@ d3.chart.cellular = function () {
 	margin = [20, 20, 20, 20],
 	gap = 30,
 	variant = "standard";
+
+	var ccolor = d3.scale.quantize()
+		.domain([0, max_sale*0.8])
+		.range(d3.range(9));
 
 	chart.parent = function(p,id) {
 		if (!arguments.length) return parent.node();	   
@@ -388,7 +397,10 @@ d3.chart.cellular = function () {
 		var markY = function(d, i) {return y+yScale(d)+margin[0];};
 		var markW = chartW/data.length-gapW;
 		var markH = function(d, i) {return chartH-yScale(d);};
-		drawSVG(markX, markY, markW, markH);
+
+		if ( data.length > 0 ) {
+			drawSVG(markX, markY, markW, markH);
+		}
 
 		return chart;
 	};
@@ -399,30 +411,32 @@ d3.chart.cellular = function () {
 		week = d3.time.format("%U"),
 		format = d3.time.format("%Y-%m-%d");
 
-		var numyear = 2012;
+		var numyear = data[0].date.getFullYear();
 
 		var year = group.selectAll("g.year")
 			.data([numyear])
 			.enter()
 			.append("svg:g")
 			.attr("class", "year y-"+numyear+" RdYlGn")
+			.attr("transform", "translate(" + (x+margin[3]) + "," + (y+margin[0]) + ")")
 			.style("opacity", "1.0");
 
-		year.append("svg:text")
-			.attr("transform", "translate(-6," + z * 3.5 + ")rotate(-90)")
-			.attr("text-anchor", "middle")
-			.text(String);
+		var nsales = d3.nest()
+			.key(function(d) { return d.date; })
+			.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
+			.map(data);
 
 		year.selectAll("rect.day")
 			.data(d3.time.days(new Date(numyear, 0, 1), new Date(numyear + 1, 0, 1)))
 			.enter()
 			.append("svg:rect")
-			.attr("class", "day")
+			.attr("class", function(d) { return "day q" + ccolor(nsales[d]) + "-9 bstooltip"; })
+			.attr("ry", 0).attr("rx", 0)
+			.attr("rel", "tooltip")
+			.attr("data-original-title", function(d) { return format(d) + (d in nsales ? ": " + amount_format(nsales[d]) + amount_currency : ""); })
 			.attr("width", 1).attr("height", 1)
-			.attr("x", function(d) {
-				return (week(d) * z)+z/2;
-			})
-			.attr("y", function(d) { return (day(d) * z); })
+			.attr("x", function(d) { return (week(d) * z)+z/2; })
+			.attr("y", function(d) { return (day(d) * z)+z/2; })
 			.on("mouseover", function(){
 				d3.select(this)
 					.transition().ease("elastic").duration(500)
@@ -437,6 +451,16 @@ d3.chart.cellular = function () {
 						.attr("x", function(d) { return week(d) * z; })
 						.attr("y", function(d) { return day(d) * z; });
 			});
+		
+		// Eye-Candy fade-in
+		year.selectAll("rect.day")
+			.transition().ease("bounce")
+			.delay(function(d, i) { return nsales[d] ? (i * (8-ccolor(nsales[d])))+(Math.random()*8) : 0; })
+			.duration(600)
+			.attr("width", z).attr("height", z)
+			.attr("ry", 0).attr("rx", 0)
+			.attr("x", function(d) { return week(d) * z; })
+			.attr("y", function(d) { return day(d) * z; });
 
 		year.selectAll("path.month")
 			.data(d3.time.months(new Date(numyear, 0, 1), new Date(numyear+1, 0, 1)))
@@ -446,32 +470,7 @@ d3.chart.cellular = function () {
 				.attr("d", monthPath)
 				.style("stroke", "#555");
 
-		var ccolor = d3.scale.quantize()
-		.domain([0, max_sale*0.8])
-		.range(d3.range(9));
-
-		year.call( function(y) {
-			var nsales = d3.nest()
-				.key(function(d) { return d.date; })
-				.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
-				.map(data);
-
-			this.selectAll("rect.day")
-				.attr("class", function(d) { return "day q" + ccolor(nsales[d]) + "-9"; })
-				.attr("class", "bstooltip")
-				.attr("ry", z/3.33).attr("rx", z/3.33)
-				.attr("rel", "tooltip")
-				.attr("data-original-title", function(d) { return format(d) + (d in nsales ? ": " + amount_format(nsales[d]) + amount_currency : ""); });
-
-			this.selectAll("rect.day")
-				.transition().ease("bounce")
-				.delay(function(d, i) { return nsales[d] ? (i * (8-ccolor(nsales[d])))+(Math.random()*8) : 0; })
-				.duration(600)
-				.attr("width", z).attr("height", z)
-				.attr("ry", 0).attr("rx", 0)
-				.attr("x", function(d) { return week(d) * z; })
-				.attr("y", function(d) { return day(d) * z; });
-		});
+		jQuery('svg').tooltip({placement: "right", selector: '.bstooltip', delay: { show: 300, hide: 100 }});
 	}
 
 	function monthPath(t0) {
@@ -482,18 +481,7 @@ d3.chart.cellular = function () {
 			+ "H" + w0 * z + "V" + 7 * z
 			+ "H" + w1 * z + "V" + (d1 + 1) * z
 			+ "H" + (w1 + 1) * z + "V" + 0
-			+ "H" + (w0 + 1) * z + "z";
-	}
-
-	function monthPathMonday(t0) {
-		  var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
-		      d0 = +day(t0), w0 = +week(t0),
-		      d1 = +day(t1), w1 = +week(t1);
-		  return "M" + (w0 + 1) * size + "," + d0 * size
-		      + "H" + w0 * size + "V" + 7 * size
-		      + "H" + w1 * size + "V" + (d1 + 1) * size
-		      + "H" + (w1 + 1) * size + "V" + 0
-		      + "H" + (w0 + 1) * size + "Z";
+			+ "H" + (w0 + 1) * z + "Z";
 	}
 
 	return chart;
@@ -799,27 +787,27 @@ d3.chart.stacked = function () {
 	
 	function drawSVG(markX, markY, markW, markH) {
 		var marks = group.selectAll("rect.mark")
-			.data(data);
+		.data(data);
+		
+		marks.enter().append("svg:rect")
+			.attr("class", "mark")
+			.attr("x", chartW)
+			.attr("y", markY)
+			.attr("width", 0)
+			.attr("height", markH)
+			.attr("opacity", 1);
 			
-			marks.enter().append("svg:rect")
-				.attr("class", "mark")
-				.attr("x", chartW)
-				.attr("y", markY)
-				.attr("width", 0)
-				.attr("height", markH)
-				.attr("opacity", 1);
-				
-			marks.transition()		   
-				.attr("x", markX)
-				.attr("y", markY)
-				.attr("width", markW)
-				.attr("height", markH);
-				
-			marks.exit()
-				.transition()
-				.duration(duration/5)
-				.attr("opacity", 0)
-				.remove();
+		marks.transition()		   
+			.attr("x", markX)
+			.attr("y", markY)
+			.attr("width", markW)
+			.attr("height", markH);
+			
+		marks.exit()
+			.transition()
+			.duration(duration/5)
+			.attr("opacity", 0)
+			.remove();
 	}
 
 	return chart;

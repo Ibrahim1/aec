@@ -4761,15 +4761,9 @@ function aec_stats( $option, $page )
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.layout.min.js"></script>' );
 	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
-	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.csv.min.js"></script>' );
-	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.geo.min.js"></script>' );
-	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.geom.min.js"></script>' );
-
-	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
-
-	//$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/stats/test.js"></script>' );
 
 	$db = &JFactory::getDBO();
+
 	$query = 'SELECT amount'
 			. ' FROM #__acctexp_log_history'
 			. ' ORDER BY 0+`amount` DESC'
@@ -4777,6 +4771,57 @@ function aec_stats( $option, $page )
 	$db->setQuery( $query );
 
 	$stats['max_sale'] = $db->loadResult();
+
+	$query = 'SELECT MIN(transaction_date)'
+			. ' FROM #__acctexp_log_history'
+			;
+	$db->setQuery( $query );
+
+	$stats['first_sale'] = $db->loadResult();
+
+	$query = 'SELECT id, name'
+			. ' FROM #__acctexp_plans'
+			. ' ORDER BY `id`'
+		 	;
+
+	$db->setQuery( $query );
+
+	$rows = $db->loadObjectList();
+
+	$mrow = count( $rows )-1;
+
+	$i = 0;
+	$stats['plan_names'] = array();
+	for ( $i=0; $i<=$rows[$mrow]->id; $i++ ) {
+		$stats['plan_names'][$i] = "";
+		foreach ( $rows as $rid => $row ) {
+			if ( $row->id == $i ) {
+				$stats['plan_names'][$i] = $row->name;
+			}
+		}
+	}
+
+	$query = 'SELECT id, name'
+			. ' FROM #__acctexp_itemgroups'
+			. ' ORDER BY `id`'
+		 	;
+
+	$db->setQuery( $query );
+
+	$rows = $db->loadObjectList();
+
+	$mrow = count( $rows )-1;
+
+	$i = 0;
+	$stats['group_names'] = array();
+	for ( $i=0; $i<=$rows[$mrow]->id; $i++ ) {
+		$stats['group_names'][$i] = "";
+		foreach ( $rows as $rid => $row ) {
+			if ( $row->id == $i ) {
+				$stats['group_names'][$i] = $row->name;
+			}
+		}
+	}
 
 	HTML_AcctExp::stats( $option, $page, $stats );
 }
@@ -4830,6 +4875,10 @@ function aec_statrequest( $option, $type, $start, $end )
 				}
 
 				$pgroups = ItemGroupHandler::parentGroups( $entry->plan_id );
+
+				if ( empty( $pgroups[0] ) ) {
+					$pgroups[0] = 0;
+				}
 
 				if ( !in_array( $pgroups[0], $groups ) ) {
 					$groups[] = $pgroups[0];

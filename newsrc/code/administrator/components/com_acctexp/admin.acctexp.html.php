@@ -2570,14 +2570,16 @@ class HTML_AcctExp
 				range_start=2007,
 				range_end=2012,
 				request_url="index.php?option=com_acctexp&task=statrequest",
-				max_sale = <?php echo $stats['max_sale']; ?>;
+				max_sale = <?php echo $stats['max_sale']; ?>,
+				first_sale = "<?php echo $stats['first_sale']; ?>",
+				group_names = ["<?php echo implode( '","', $stats['group_names'] ); ?>"],
+				plan_names = ["<?php echo implode( '","', $stats['plan_names'] ); ?>"];
 		</script>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 
 		<ul class="nav nav-pills">
 			<?php
 				$menus = array( 'overview' => "Overview",
-								'daily' => "Today",
 								'compare' => "Compare",
 								'users' => "Users",
 								'sales' => "Sales Graph",
@@ -2603,7 +2605,7 @@ class HTML_AcctExp
 						<div id="overview-day-this" class="chart-sunburst"></div>
 					</div>
 					<div id="overview-week" class="overview-container">
-						<h4><?php $w = gmdate('W'); $d = substr($w, -1, 1); $ds = array("th","st","nd","rd");echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week</h4>
+						<h4>Week <?php echo gmdate('W'); ?></h4>
 						<div id="overview-week-this" class="chart-sunburst"></div>
 					</div>
 					<div id="overview-month" class="overview-container">
@@ -2639,37 +2641,11 @@ class HTML_AcctExp
 						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
 						.create("sunburst", 200)
-						.canvas(600, 200, 10)
+						.canvas(760, 120, 10)
 						.target("div#overview-year-cell")
-						.create("cellular");
-					</script>
-					<?php
-					break;
-				case 'daily':
-					?>
-					<div id="daily-yesterday" class="overview-container">
-						<h4>Yesterday</h4>
-						<div id="overview-day-this" class="chart-sunburst"></div>
-					</div>
-					<div id="daily-today" class="overview-container">
-						<h4>Today</h4>
-						<div id="overview-day-last" class="chart-sunburst"></div>
-					</div>
-					<script type="text/javascript">
-						var cf = d3.chart.factory()
-						.source("sales")
-						.canvas(200, 200, 10)
-						.target("div#overview-day-this")
-						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', gmdate("U")-86400) . ' 23:59:59'; ?>")
-						.create("sunburst");
-
-						cf.source("sales")
-						.canvas(200, 200, 10)
-						.target("div#overview-day-last")
-						.range(	"<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>",
+						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst");
+						.create("cellular");
 					</script>
 					<?php
 					break;
@@ -2682,7 +2658,7 @@ class HTML_AcctExp
 						<div id="overview-day-this" class="chart-sunburst"></div>
 					</div>
 					<div id="overview-week" class="overview-container">
-						<h4><?php $w = gmdate('W', gmdate("U")-86400*7); $d = substr($w, -1, 1); echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week &rarr; <?php $w = gmdate('W'); $d = substr($w, -1, 1); $ds = array("th","st","nd","rd");echo $w . ( $d > 3 ? 'th' : $ds[$d] ); ?> Week</h4>
+						<h4>Week <?php echo gmdate('W', gmdate("U")-86400*7); ?> &rarr; Week <?php echo gmdate('W'); ?></h4>
 						<div id="overview-week-last" class="chart-sunburst"></div>
 						<div id="overview-week-this" class="chart-sunburst"></div>
 					</div>
@@ -2761,26 +2737,44 @@ class HTML_AcctExp
 					<?php
 					break;
 				case 'all_time':
+					$start = date( "Y", strtotime( $stats['first_sale'] ) );
+					$end = date( "Y" );
+
+					$years = $start - $end;
 					?>
 					<div id="all-time-cells" class="overview-container">
-						<h4>Daily Cells</h4>
+						<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
+							<div id="overview-<?php echo $i; ?>" class="overview-container-full">
+								<h4><?php echo $i; ?></h4>
+								<div id="overview-year-<?php echo $i; ?>-sunburst" class="chart-sunburst"></div>
+								<div id="overview-year-<?php echo $i; ?>-cells" class="chart-cellular"></div>
+							</div>
+						<?php } ?>
 					</div>
-					<div id="all-time-suns" class="overview-container">
-						<h4>Yearly Totals</h4>
+					<div id="all-time-suns" class="overview-container-full">
+						<h4>All Time Total</h4>
+						<div id="all-suns" class="chart-sunburstxl"></div>
 					</div>
 					<script type="text/javascript">
 						var cf = d3.chart.factory()
 						.source("sales")
-						.canvas(400, 400, 10)
-						.target("div#all-time-suns")
+						<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
+						.canvas(200, 200, 10)
+						.target("div#overview-year-<?php echo $i; ?>-sunburst")
+						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+								"<?php echo $i . '-12-31 23:59:59'; ?>")
+						.create("sunburst")
+						.canvas(760, 120, 10)
+						.target("div#overview-year-<?php echo $i; ?>-cells")
+						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+								"<?php echo $i . '-12-31 23:59:59'; ?>")
+						.create("cellular")
+						<?php } ?>
+						.canvas(500, 500, 10)
+						.target("div#all-suns")
 						.range(	"<?php echo gmdate('1960-01-01') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.canvas(800, 900, 10)
-						.target("div#all-time-cells")
-						.range(	"<?php echo gmdate('2009-1-1') .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("cellular");
+						.create("sunburst");
 					</script>
 					<?php
 					break;

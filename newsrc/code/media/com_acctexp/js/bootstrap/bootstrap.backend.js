@@ -804,11 +804,24 @@
     }
 
   , getPosition: function (inside) {
-      return jQuery.extend({}, (inside ? {top: 0, left: 0} : this.$element.offset()), {
-        width: this.$element[0].offsetWidth
-      , height: this.$element[0].offsetHeight
-      })
-    }
+	  var e = this.$element[0];
+
+      var elementWidth, elementHeight;
+      
+      if ( e.getBoundingClientRect != undefined ) {
+        var rect = e.getBoundingClientRect();
+        elementWidth = rect.width;
+        elementHeight = rect.height;
+      } else {
+        elementWidth = e.offsetWidth;
+        elementHeight = e.offsetHeight;
+      }
+
+    return jQuery.extend({}, (inside ? {top: 0, left: 0} : this.$element.offset()), {
+      width: elementWidth
+    , height: elementHeight
+    })
+  }
 
   , getTitle: function () {
       var title

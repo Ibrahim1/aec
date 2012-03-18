@@ -164,5 +164,3 @@ d3.chart.factory = function () {
 
 	return factory;
 }
-
-var sunburst_color = d3.scale.category20();
