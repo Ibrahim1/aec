@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+jQuery(document).ready(function(jQuery) {
 	jQuery('#topbar').dropdown();
 	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){
 		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');

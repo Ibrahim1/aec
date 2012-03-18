@@ -44,8 +44,8 @@
 				<?php if ( is_string( $var ) ) { ?>
 					<div class="well">
 						<div id="checkout-button">
-							<p><?php echo JText::_('CHECKOUT_BTN_INFO') ?></p>
 							<?php print $var ?>
+							<p><?php echo JText::_('CHECKOUT_BTN_INFO') ?></p>
 						</div>
 					</div>
 				<?php } ?>

@@ -355,11 +355,6 @@ class processor_authorize_cim extends PROFILEprocessor
 				$vcontent = '';
 			}
 
-			$document=& JFactory::getDocument();
-			$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
-			$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
-			$document->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
-
 			if ( !empty( $vcontent ) ) {
 				if ( !empty( $updated ) ) {
 					$msg = JText::_('AEC_CCFORM_UPDATE2_DESC');
@@ -379,11 +374,11 @@ class processor_authorize_cim extends PROFILEprocessor
 				$var['params'][] = array( 'tabregister', 'echeckdetails', 'eCheck', false );
 				$var['params'][] = array( 'tabregisterend', '', '', '' );
 
-				$var['params'][] = array( 'tabstart', 'ccdetails', true, '' );
+				$var['params'][] = array( 'tabstart', 'ccdetails', true );
 				$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
 				$var['params'][] = array( 'tabend', '', '', '' );
 
-				$var['params'][] = array( 'tabstart', 'echeckdetails', true, '' );
+				$var['params'][] = array( 'tabstart', 'echeckdetails' );
 				$var = $this->getECHECKform( $var );
 				$var['params'][] = array( 'tabend', '', '', '' );
 
@@ -447,7 +442,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
 		$return .= $this->getStdFormVars( $request );
-		$return .= '<input type="submit" class="button" value="' . JText::_('BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec-checkout-btn"><i class="icon-shopping-cart icon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;

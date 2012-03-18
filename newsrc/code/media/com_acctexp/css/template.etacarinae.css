@@ -73,6 +73,12 @@ margin-bottom: 0;
 vertical-align: inherit;
 }
 
+#aec .well button {
+float: right;
+margin-bottom: 0;
+vertical-align: inherit;
+}
+
 #aec .well>div {
 text-align: right;
 }
@@ -254,3 +260,46 @@ text-align: right;
 padding: 8px 0px 8px;
 }
 
+#aec .nav {
+margin-bottom: 0;
+}
+
+#aec .tab-pane table {
+width: 100%;
+}
+
+#aec .aec-checkout-params table {
+width: 100%;
+}
+
+#aec .aec-checkout-params {
+float: left;
+width: 96%;
+background: #fff;
+border: 1px solid #ddd;
+box-shadow: 0 2px 2px #999999;
+margin-bottom: 24px;
+padding: 12px;
+-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+border-radius: 6px;
+}
+
+#aec .tab-content {
+background: #fff;
+border: 1px solid #ddd;
+border-top: none;
+box-shadow: 0 2px 2px #999999;
+margin-bottom: 12px;
+padding: 12px;
+-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+border-radius: 0 0 6px 6px;
+}
+
+#aec .checkout-tabs {
+float: left;
+width: 100%;
+}

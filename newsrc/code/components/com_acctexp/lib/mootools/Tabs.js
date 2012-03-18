@@ -16,8 +16,8 @@ var Tabs = new Class({
 	Implements: [Options, Events],
  
 	options: {
-		tabs: '.tabs_title li',
-		panels: '.tabs_panel',
+		tabs: '.nav-tabs li',
+		panels: '.tab-pane',
 		selectedClass: 'active',
 		elementSwapOptions: {
 			selectedClass: 'active',

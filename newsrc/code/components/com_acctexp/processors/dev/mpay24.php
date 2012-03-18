@@ -117,11 +117,6 @@ class processor_mpay24 extends XMLprocessor
 				$vcontent = '';
 			}
 
-			$document=& JFactory::getDocument();
-			$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
-			$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root() . 'components/com_acctexp/lib/mootools/mootabs.js"></script>' );
-			$document->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', init);function init() {myTabs1 = new mootabs(\'myTabs\');}</script>' );
-
 			if ( $this->settings['noechecks'] ) {
 				$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
 			} else {

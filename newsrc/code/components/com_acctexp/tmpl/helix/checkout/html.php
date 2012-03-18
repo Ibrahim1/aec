@@ -35,4 +35,13 @@ if ( $tmpl->cfg['checkoutform_jsvalidation'] ) {
 	$tmpl->addScript( JURI::root(true) . '/media/com_acctexp/js/ccvalidate.js' );
 }
 
+
+if ( strpos( $var, 'class="tab-content"' ) ) {
+	// Include Mootools tabber
+	$tmpl->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
+	$tmpl->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/Tabs.js"></script>' );
+	$tmpl->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/Fx.Tabs.js"></script>' );
+	$tmpl->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', function() {var fxTabs = new Fx.Tabs();});}</script>' );
+}
+
 @include( $tmpl->tmpl( 'checkout' ) );

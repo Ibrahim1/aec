@@ -5213,21 +5213,41 @@ class XMLprocessor extends processor
 				} else {
 					$lists = null;
 				}
+print_r($params);
+				$hastabs = false;
+				foreach ( $params['params'] as $entry ) {
+					if ( $entry[0] == 'tabberstart' ) {
+						$hastabs = true;
+					}
+				}
+
+				if ( !$hastabs ) {
+					$return .= '<div class="aec-checkout-params">';
+				}
 
 				if ( count( $params['params'] ) > 2 ) {
 					$table = 1;
-					$return .= '<table id="aec_checkout_params">';
+					$return .= '<table>';
 				} else {
 					$table = 0;
 				}
 
 				foreach ( $params['params'] as $name => $entry ) {
 					if ( !empty( $name ) || ( $name === 0 ) ) {
+						if ( $entry[0] == 'tabberstart' ) {
+							$return .= '</td></tr></table>';
+						}
+
 						$return .= aecHTML::createFormParticle( $name, $entry, $lists, $table ) . "\n";
+
+						if ( $entry[0] == 'tabberend' ) {
+							$return .= '<div class="aec-checkout-params"><table><tr><td>';
+						}
 					}
 				}
 
 				$return .= $table ? '</table>' : '';
+				$return .= '</div>';
 			}
 		}
 
@@ -5237,13 +5257,6 @@ class XMLprocessor extends processor
 	function getMULTIPAYform( $var, $array )
 	{
 		$app = JFactory::getApplication();
-
-		// Include Mootools tabber
-		$document=& JFactory::getDocument();
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/mootools.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/Tabs.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . 'components/com_acctexp/lib/mootools/Fx.Tabs.js"></script>' );
-		$document->addCustomTag( '<script type="text/javascript" charset="utf-8">window.addEvent(\'domready\', function() {var fxTabs = new Fx.Tabs();});}</script>' );
 
 		$nlist	= array();
 		$prefix	= array();
@@ -5866,7 +5879,7 @@ class PROFILEprocessor extends XMLprocessor
 
 	function payProfileSelect( $var, $ppParams, $select=false, $btn=true )
 	{
-		$var['params'][] = array( 'p', JText::_('AEC_USERFORM_BILLING_DETAILS_NAME'), '' );
+		$var['params'][] = array( 'p', '', JText::_('AEC_USERFORM_BILLING_DETAILS_NAME') );
 
 		if ( !empty( $ppParams->paymentProfiles ) ) {
 			// Single-Select Payment Option
@@ -5895,7 +5908,7 @@ class PROFILEprocessor extends XMLprocessor
 			}
 
 			if ( count( $ppParams->paymentProfiles ) < 10 ) {
-				$var['params'][] = array( 'radio', 'payprofileselect', "new", $ppParams->paymentprofileid, 'create new profile' );
+				$var['params'][] = array( 'radio', 'payprofileselect', "new", "", 'new billing details' );
 			}
 
 			if ( $btn ) {
@@ -5952,7 +5965,7 @@ class PROFILEprocessor extends XMLprocessor
 
 	function shipProfileSelect( $var, $ppParams, $select=false, $btn=true, $new=true )
 	{
-		$var['params'][] = array( 'p', JText::_('AEC_USERFORM_SHIPPING_DETAILS_DESC'), '' );
+		$var['params'][] = array( 'p', '', JText::_('AEC_USERFORM_SHIPPING_DETAILS_DESC') );
 
 		if ( !empty( $ppParams->shippingProfiles ) ) {
 			// Single-Select Shipment Data
@@ -5981,7 +5994,7 @@ class PROFILEprocessor extends XMLprocessor
 			}
 
 			if ( ( count( $ppParams->shippingProfiles ) < 10 ) && $new ) {
-				$var['params'][] = array( 'radio', 'shipprofileselect', "new", $ppParams->shippingprofileid, 'create new profile' );
+				$var['params'][] = array( 'radio', 'shipprofileselect', "new", "", 'new shipping details' );
 			}
 
 			if ( $btn ) {
@@ -6471,12 +6484,12 @@ class aecHTML
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . /*$row[2] .*/ '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>';
+				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" title="' . /*$row[2] .*/ '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>';
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case 'checkbox':
 				$return = '<tr><td class="cleft">';
-				$return .= '<input type="checkbox" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] === $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $sx;
+				$return .= '<input type="checkbox" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $sx;
 				$return .= '</td><td class="cright">' . $row[4];
 				break;
 			case "list":
@@ -6490,25 +6503,29 @@ class aecHTML
 				}
 				break;
 			case 'tabberstart':
-				$return = '<tr><td colspan="2"><div id="tabs">';
+				$return = '<div class="checkout-tabs">';
 				break;
 			case 'tabregisterstart':
-				$return = '<ul class="tabs_title">';
+				$return = '<ul class="nav nav-tabs">';
 				break;
 			case 'tabregister':
-				$return = '<li title="' . $row[1] . '">' . $row[2] . '</li> ';
+				$return = '<li' . ($row[3] ? ' class="active"': '') . '><a href="#' . $row[1] . '" data-toggle="tab">' . $row[2] . '</a></li> ';
 				break;
 			case 'tabregisterend':
-				$return = '</ul>';
+				$return = '</ul><div class="tab-content">';
 				break;
 			case 'tabstart':
-				$return = '<div id="' . $row[1] . '" class="tabs_panel"><table>';
+				$act = false;
+				if ( isset( $row[2] ) ) {
+					$act = $row[2];
+				}
+				$return = '<div id="' . $row[1] . '" class="tab-pane' . ($act ? ' active': '') . '"><table>';
 				break;
 			case 'tabend':
 				$return = '</table></div>';
 				break;
 			case 'tabberend':
-				$return = '</div></td></tr>';
+				$return = '</div></div>';
 				break;
 			case 'divstart':
 				if ( isset( $row[4] ) ) {
@@ -6546,7 +6563,11 @@ class aecHTML
 						if ( isset( $row[4] ) ) {
 							$return = '<' . $row[0] . $row[4] . '>' . $row[2] . $value . '</' . $row[0] . '>';
 						} else {
-							$return = '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
+							if ( empty( $row[2] ) ) {
+								$return = '<' . $row[0] . '>' . $row[1] . $value . '</' . $row[0] . '>';
+							} else {
+								$return = '<' . $row[0] . '>' . $row[2] . $value . '</' . $row[0] . '>';
+							}
 						}
 					}
 				} elseif ( empty( $row[0] ) && empty( $row[2] ) ) {
