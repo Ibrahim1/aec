@@ -276,7 +276,7 @@ class plgSystemAECrouting extends JPlugin
 
 					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonemail' ) );
 
-					if ( $vars['k2_regsv'] && empty( $username ) ) {
+					if ( empty( $username ) ) {
 						$username	= aecEscape( $_REQUEST['jform']['username'], array( 'string', 'clear_nonalnum' ) );
 						$password	= aecEscape( $_REQUEST['jform']['password1'], array( 'string', 'clear_nonalnum' ) );
 						$password2	= aecEscape( $_REQUEST['jform']['password2'], array( 'string', 'clear_nonalnum' ) );
