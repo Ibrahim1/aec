@@ -25,9 +25,10 @@
 		</div>
 	</div>
 	<?php
+
 	@include( $tmpl->tmpl( 'btn' ) );
 
 	@include( $tmpl->tmpl( 'processorinfo' ) );
-	?>
-	<?php echo JHTML::_( 'form.token' ) ?>
+	
+	echo JHTML::_( 'form.token' ) ?>
 </form>
