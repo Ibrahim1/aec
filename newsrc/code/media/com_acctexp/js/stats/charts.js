@@ -43,7 +43,7 @@ d3.chart.sunburst = function () {
 	};
 
 	chart.console = function() {
-		var r = w / 2;
+		var r = w / 2 - margin[0];
 
 		console = group
 			.append("svg:path")
@@ -62,7 +62,7 @@ d3.chart.sunburst = function () {
 			.attr("class", "console-amt")
 			.attr("text-anchor", "middle")
 			.attr("transform", "translate(0,-6)")
-			.text("---")
+			.text("Total:")
 			.style("opacity", "0.5");
 
 		cbody = group
@@ -70,7 +70,7 @@ d3.chart.sunburst = function () {
 			.attr("class", "console-val")
 			.attr("text-anchor", "middle")
 			.attr("transform", "translate(0,10)")
-			.text("-")
+			.text("0.00€")
 			.style("opacity", "0.5");
 	}
 
@@ -152,6 +152,8 @@ d3.chart.sunburst = function () {
 	};
 
 	chart.tochart = function() {
+		var r = w / 2 - margin[0];
+
 		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
 		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
 		var gapW = chartW/data.length*(gap/100);
@@ -160,6 +162,8 @@ d3.chart.sunburst = function () {
 		var markY = function(d, i) {return y+yScale(d)+margin[0];};
 		var markW = chartW/data.length-gapW;
 		var markH = function(d, i) {return chartH-yScale(d);};
+
+		group.attr("transform", "translate("+(r+margin[0])+","+(r+margin[1])+")");
 
 		if ( data.length > 0 ) {
 			drawSVG(markX, markY, markW, markH);
@@ -172,8 +176,6 @@ d3.chart.sunburst = function () {
 		var r = w / 2 - margin[0],
 		format = d3.time.format("%Y-%m-%d %X"),
 		selector = "#"+group.attr("id");
-
-		group.attr("transform", "translate("+(r+margin[0])+","+(r+margin[1])+")");
 
 		var partition = d3.layout.partition()
 			.sort(function(a,b) { return b.values-a.values; })
