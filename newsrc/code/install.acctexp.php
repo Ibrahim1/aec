@@ -51,7 +51,8 @@ function com_install()
 	$newinstall = false;
 	$tables		= $db->getTableList();
 
-	$langlist = array(	array( 'com_acctexp.admin', JPATH_ADMINISTRATOR ),
+	$langlist = array(	array( 'com_acctexp', JPATH_ADMINISTRATOR ),
+						array( 'com_acctexp.sys', JPATH_ADMINISTRATOR ),
 						array( 'com_acctexp', JPATH_SITE ),
 						array( 'com_acctexp.microintegrations', JPATH_SITE ),
 						array( 'com_acctexp.processors', JPATH_SITE )
