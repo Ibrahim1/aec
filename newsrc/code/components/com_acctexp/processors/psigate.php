@@ -55,7 +55,7 @@ class processor_psigate extends POSTprocessor
 	function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
-			$var['post_url']	= "https://dev.psigate.com/HTMLPost/HTMLMessenger";
+			$var['post_url']	= "https://devcheckout.psigate.com/HTMLPost/HTMLMessenger";
 		} else {
 			$var['post_url']	= "https://checkout.psigate.com/HTMLPost/HTMLMessenger";
 		}
