@@ -4581,12 +4581,11 @@ function cancelInvoice( $option, $invoice_number, $task )
 	if ( $invoiceid ) {
 		$objInvoice = new Invoice( $db );
 		$objInvoice->load( $invoiceid );
-		$uid = $objInvoice->userid;
 
 		$objInvoice->delete();
 
-		if ( strcmp( $task, 'edit' ) == 0 ) {
-			$userid = '&userid=' . $uid;
+		if ( strcmp( $task, 'editMembership' ) == 0 ) {
+			$userid = '&userid=' . $objInvoice->userid;
 		} else {
 			$userid = '';
 		}
