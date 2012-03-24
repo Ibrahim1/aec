@@ -230,6 +230,10 @@ class mi_joomlauser
 			$db->setQuery( $query );
 			$order = $db->loadResult();
 
+			if ( empty( $order ) ) {
+				$order = 0;
+			}
+
 			$values = array();
 			foreach ( $additions as $name => $value ) {
 				$values[] = '('.((int) $request->metaUser->userid).', '.$db->quote($name).', '.$value.', '.$order++.')';
