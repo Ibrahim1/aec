@@ -23,6 +23,7 @@ class processor_cardsave extends POSTprocessor
 		$info['currencies']			= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']			= 'visa,mastercard';
 		$info['recurring']			= 0;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -86,7 +87,7 @@ class processor_cardsave extends POSTprocessor
 		$var['OrderID']				= $request->invoice->id;
 		$var['TransactionType']		= 'SALE';
 		$var['TransactionDateTime']	= date("Y-m-d H:i:s P");		
-		$var['CallbackURL']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cardsavenotification' );
+		$var['CallbackURL']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cardsavenotification', false, true );
 		$var['OrderDescription']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['CustomerName']		=  '';
   		$var['Address1']			=  '';
@@ -98,13 +99,13 @@ class processor_cardsave extends POSTprocessor
   		$var['PostCode']			=  '';
   		$var['CountryCode']			= '826';
 		$var['CV2Mandatory']		= $this->settings['CV2Mandatory'] ? 'true' : 'false';
-		$var['Address1Mandatory']	= $this->settings['CV2Mandatory'] ? 'true' : 'false';
-		$var['CityMandatory']		= $this->settings['CV2Mandatory'] ? 'true' : 'false';
-		$var['PostCodeMandatory']	= $this->settings['CV2Mandatory'] ? 'true' : 'false';
-		$var['StateMandatory']		= $this->settings['CV2Mandatory'] ? 'true' : 'false';
-		$var['CountryMandatory']	= $this->settings['CV2Mandatory'] ? 'true' : 'false';
+		$var['Address1Mandatory']	= $this->settings['Address1Mandatory'] ? 'true' : 'false';
+		$var['CityMandatory']		= $this->settings['CityMandatory'] ? 'true' : 'false';
+		$var['PostCodeMandatory']	= $this->settings['PostCodeMandatory'] ? 'true' : 'false';
+		$var['StateMandatory']		= $this->settings['StateMandatory'] ? 'true' : 'false';
+		$var['CountryMandatory']	= $this->settings['CountryMandatory'] ? 'true' : 'false';
 		$var['ResultDeliveryMethod']= 'POST';
-  		$var['ServerResultURL']		= $request->int_var['return_url'];
+  		$var['ServerResultURL']		= str_replace( '&amp;', '&', $request->int_var['return_url'] );
   		$var['PaymentFormDisplaysResult']	= 'false';
 
 		return array_merge( array( 'post_url' => $url, 'HashDigest' => $this->createhash( $var ) ), $var );	
