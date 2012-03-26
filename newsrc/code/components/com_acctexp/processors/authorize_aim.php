@@ -220,7 +220,7 @@ class processor_authorize_aim extends XMLprocessor
 		if ( !empty( $this->settings['dumpmode'] ) ) {
 			echo "<h1>Request:</h1>";
 			echo "<pre>";
-			echo print_r($request);
+			print_r($request);
 			echo "</pre>";
 			echo "<h1>We send:</h1>";
 			echo "<pre>";
