@@ -267,7 +267,7 @@ class eucaInstallDB extends eucaObject
 		$result = $db->loadObject();
 
 		if( is_object( $result ) ) {
-			if ( strcmp($result->Field, $column) === 0 ) {
+			if ( $result->Field == $column ) {
 				return true;
 			} else {
 				return false;

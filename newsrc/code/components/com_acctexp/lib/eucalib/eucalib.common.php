@@ -496,7 +496,7 @@ class serialParamDBTable extends paramDBTable
 					}
 				}
 			}
-		} else if ( $overwrite ) {
+		} elseif ( $overwrite ) {
 			$subject = $subject2;
 		}
 

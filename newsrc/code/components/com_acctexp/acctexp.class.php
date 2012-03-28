@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4820' );
+define( '_AEC_REVISION', '4835' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -1628,18 +1628,24 @@ class metaUserDB extends serialParamDBTable
 
 			if ( isset( $this->plan_params[$usageid] ) ) {
 				if ( isset( $this->plan_params[$usageid][$miid] ) ) {
-					return $this->plan_params[$usageid][$miid];
+					$return = $this->plan_params[$usageid][$miid];
 				}
 			} elseif ( !$strict ) {
-				$this->getMIParams( $miid );
+				$return = $this->getMIParams( $miid );
 			}
 		} else {
 			if ( isset( $this->params->mi[$miid] ) ) {
-				return $this->params->mi[$miid];
+				$return = $this->params->mi[$miid];
 			}
 		}
 
-		return array();
+		if ( empty( $return ) ) {
+			return array();
+		} elseif( is_array( $return ) ) {
+			return $return;
+		} else {
+			return array();
+		}
 	}
 
 	function setMIParams( $miid, $usageid=false, $params, $replace=false )
@@ -1651,11 +1657,16 @@ class metaUserDB extends serialParamDBTable
 
 			if ( isset( $this->plan_params[$usageid] ) ) {
 				if ( isset( $this->plan_params[$usageid][$miid] ) && !$replace ) {
+					if ( is_object( $this->plan_params[$usageid][$miid] ) ) {
+						$this->plan_params[$usageid][$miid] = get_object_vars( $this->plan_params[$usageid][$miid] );
+					}
+
 					$this->plan_params[$usageid][$miid] = $this->mergeParams( $this->plan_params[$usageid][$miid], $params );
 				} else {
 					$this->plan_params[$usageid][$miid] = $params;
 				}
 			} else {
+				$this->plan_params[$usageid] = array();
 				$this->plan_params[$usageid][$miid] = $params;
 			}
 		}
@@ -5213,7 +5224,7 @@ class XMLprocessor extends processor
 				} else {
 					$lists = null;
 				}
-print_r($params);
+
 				$hastabs = false;
 				foreach ( $params['params'] as $entry ) {
 					if ( $entry[0] == 'tabberstart' ) {
@@ -9890,67 +9901,69 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 
-		if ( !empty( $aecConfig->cfg['enable_coupons'] ) && !empty( $this->invoice->coupons ) ) {
-			$coupons = $this->invoice->coupons;
+		if ( empty( $aecConfig->cfg['enable_coupons'] ) && empty( $this->invoice->coupons ) ) {
+			return null;
+		}
 
-			$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
+		$coupons = $this->invoice->coupons;
 
-			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+		$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
+
+		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+			$this->items->itemlist = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
+
+			if ( count( $cpsh->delete_list ) ) {
+				foreach ( $cpsh->delete_list as $couponcode ) {
+					$this->invoice->removeCoupon( $couponcode );
+				}
+
+				$this->invoice->storeload();
+			}
+
+			if ( $cpsh->affectedCart ) {
+				// Reload cart object and cart - was changed by $cpsh
+				$this->cartobject->reload();
+				$this->getCart();
+
+				$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
 				$this->items->itemlist = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
+			}
+		} else {
+			$this->items->itemlist = $cpsh->applyToItemList( $this->items->itemlist );
 
-				if ( count( $cpsh->delete_list ) ) {
-					foreach ( $cpsh->delete_list as $couponcode ) {
-						$this->invoice->removeCoupon( $couponcode );
-					}
-
-					$this->invoice->storeload();
+			if ( count( $cpsh->delete_list ) ) {
+				foreach ( $cpsh->delete_list as $couponcode ) {
+					$this->invoice->removeCoupon( $couponcode );
 				}
 
-				if ( $cpsh->affectedCart ) {
-					// Reload cart object and cart - was changed by $cpsh
-					$this->cartobject->reload();
-					$this->getCart();
-
-					$cpsh = new couponsHandler( $this->metaUser, $this, $coupons );
-					$this->items->itemlist = $cpsh->applyToCart( $this->items->itemlist, $this->cartobject, $this->cart );
-				}
-			} else {
-				$this->items->itemlist = $cpsh->applyToItemList( $this->items->itemlist );
-
-				if ( count( $cpsh->delete_list ) ) {
-					foreach ( $cpsh->delete_list as $couponcode ) {
-						$this->invoice->removeCoupon( $couponcode );
-					}
-
-					$this->invoice->storeload();
-				}
+				$this->invoice->storeload();
 			}
+		}
 
-			$cpsh_err = $cpsh->getErrors();
+		$cpsh_err = $cpsh->getErrors();
 
-			if ( !empty( $cpsh_err ) ) {
-				$this->errors = $cpsh_err;
-			}
+		if ( !empty( $cpsh_err ) ) {
+			$this->errors = $cpsh_err;
+		}
 
-			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
-				$cpsh_exc = $cpsh->getExceptions();
+		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+			$cpsh_exc = $cpsh->getExceptions();
 
-				if ( count( $cpsh_exc ) ) {
-					foreach ( $cpsh_exc as $exception ) {
-						$this->raiseException( $exception );
-					}
+			if ( count( $cpsh_exc ) ) {
+				foreach ( $cpsh_exc as $exception ) {
+					$this->raiseException( $exception );
 				}
 			}
+		}
 
-			if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
-				$this->items = $cpsh->applyToTotal( $this->items, $this->cartobject, $this->cart );
-			} else {
-				$this->items = $cpsh->applyToTotal( $this->items );
-			}
+		if ( !empty( $this->cartobject ) && !empty( $this->cart ) ) {
+			$this->items = $cpsh->applyToTotal( $this->items, $this->cartobject, $this->cart );
+		} else {
+			$this->items = $cpsh->applyToTotal( $this->items );
+		}
 
-			if ( !empty( $this->cart ) ) {
-				$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
-			}
+		if ( !empty( $this->cart ) ) {
+			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
 		}
 	}
 
@@ -18177,13 +18190,20 @@ class microIntegration extends serialParamDBTable
 						}
 					}
 				}
+
+				if ( isset( $userflags[$spca] ) ) {
+					if ( ( ( (int) gmdate('U') ) + 300 ) > $userflags[$spca] ) {
+						// There already was a trigger in the last 5 minutes
+						return false;
+					}
+				}
 			}
 
-			$newflags[$spc]		= $current_expiration;
-			$newflags[$spca]	= (int) gmdate('U');
+			$userflags[$spc]	= $current_expiration;
+			$userflags[$spca]	= (int) gmdate('U');
 
 			// Create the new flags
-			$metaUser->meta->setMIParams( $this->id, $objplan->id, $newflags );
+			$metaUser->meta->setMIParams( $this->id, $objplan->id, $userflags );
 
 			$metaUser->meta->storeload();
 
@@ -19397,9 +19417,8 @@ class couponHandler
 
 	function setError( $error )
 	{
-		// Status = NOT OK
 		$this->status = false;
-		// Set error message
+
 		$this->error = $error;
 	}
 
@@ -19548,22 +19567,19 @@ class couponHandler
 		$db = &JFactory::getDBO();
 
 		// Duplicate Coupon at other table
-		$newcoupon = new coupon( $db, !$this->type );
-		$newcoupon->createNew( $this->coupon->coupon_code, $this->coupon->created_date );
+		$coupon = new coupon( $db, !$this->coupon->type );
+		$coupon->createNew( $this->coupon->coupon_code, $this->coupon->created_date );
 
 		// Switch id over to new table max
 		$oldid = $this->coupon->id;
-		$newid = $newcoupon->getMax();
 
-		// Delete old coupon
 		$this->coupon->delete();
 
-		// Create new entry
-		$this->coupon = $newcoupon;
+		$this->coupon = $coupon;
 
 		// Migrate usage entries
 		$query = 'UPDATE #__acctexp_couponsxuser'
-				. ' SET `coupon_id` = \'' . $newid . '\''
+				. ' SET `coupon_id` = \'' . $this->coupon->id . '\''
 				. ' WHERE `coupon_id` = \'' . $oldid . '\''
 				;
 
@@ -20004,7 +20020,7 @@ class couponHandler
 	}
 }
 
-class coupon extends serialParamDBTable
+class Coupon extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -20031,13 +20047,31 @@ class coupon extends serialParamDBTable
 	/** @var text */
 	var $micro_integrations	= null;
 
-	function coupon( &$db, $type )
+	function Coupon( &$db, $type=0 )
 	{
 		if ( $type ) {
 			parent::__construct( '#__acctexp_coupons_static', 'id', $db );
 		} else {
 			parent::__construct( '#__acctexp_coupons', 'id', $db );
 		}
+	}
+
+	function load( $id )
+	{
+		parent::load( $id );
+
+		$this->getType();
+	}
+
+	function getType()
+	{
+		$this->type = 0;
+
+		if ( strpos( $this->getTableName(), 'acctexp_coupons_static' ) ) {
+			$this->type = 1;
+		}
+
+		return $this->type;
 	}
 
 	function declareParamFields()
@@ -20055,12 +20089,14 @@ class coupon extends serialParamDBTable
 	{
 		$this->id		= 0;
 		$this->active	= 1;
+
 		// Override creation of new Coupon Code if one is supplied
 		if ( is_null( $code ) ) {
 			$this->coupon_code = $this->generateCouponCode();
 		} else {
 			$this->coupon_code = $code;
 		}
+
 		// Set created date if supplied
 		if ( is_null( $created ) ) {
 			$app = JFactory::getApplication();
@@ -20069,7 +20105,14 @@ class coupon extends serialParamDBTable
 		} else {
 			$this->created_date = $created;
 		}
+
 		$this->usecount = 0;
+
+		$this->storeload();
+
+		$this->getType();
+
+		$this->id = $this->getMax();
 	}
 
 	function savePOSTsettings( $post )
