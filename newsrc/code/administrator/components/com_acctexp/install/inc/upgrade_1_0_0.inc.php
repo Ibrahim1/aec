@@ -44,4 +44,7 @@ if ( isset( $aecConfig->cfg['customtext_plans'] ) ) {
 	$template->storeload();
 }
 
+$eucaInstalldb->dropColifExists( 'ordering', 'coupons_static' );
+$eucaInstalldb->dropColifExists( 'ordering', 'coupons' );
+
 ?>

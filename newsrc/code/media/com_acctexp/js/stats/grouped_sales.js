@@ -49,8 +49,8 @@ d3.chart.factory = function () {
 		return factory;
 	};
 
-	factory.create = function(t) {
-		queue.push({start:s,end:e,width:w,height:h,margin:m,target:selector,pos:p,type:t});
+	factory.create = function(t, param) {
+		queue.push({start:s,end:e,width:w,height:h,margin:m,target:selector,pos:p,type:t,parameters:param});
 
 		if ( start ) {
 			start = false;
