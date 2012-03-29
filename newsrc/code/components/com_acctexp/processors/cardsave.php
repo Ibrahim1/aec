@@ -164,7 +164,35 @@ class processor_cardsave extends POSTprocessor
 		$response['valid'] = 0;
 
 		if ( $this->createhash($_POST, true) === $_POST['HashDigest'] ) {
-			$response['valid'] = 1;
+			
+			switch ( $post['StatusCode'] ) {
+				case 0:
+					$response['valid'] = 1;
+					break;
+				case 4:
+					$response['error']		= true;
+					$response['errormsg']	= "Card Referred";
+					break;
+				case 5:
+					$response['error']		= true;
+					$response['errormsg']	= "Card Declined";
+					break;
+				case 20:
+					$response['duplicate']	= true;
+					break;
+				default:
+					$response['error']		= true;
+					$response['errormsg']	= "Exception";
+					break;
+			}
+			if ( $post['StatusCode'] == 0 ) {
+				$response['valid'] = 1;
+			} else {
+				
+			}
+		} else {
+			$response['error']		= true;
+			$response['errormsg']	= "Hash Mismatch";
 		}
 
 		return $response;
