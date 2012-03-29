@@ -35,7 +35,7 @@ $id				= aecGetParam( 'id', null );
 
 if ( !is_null( $id ) ) {
 	if ( !is_array( $id ) ) {
-		$savid = (int) $id;
+		$savid = $id;
 
 		$id = array();
 		$id[0] = $savid;
@@ -203,7 +203,7 @@ switch( strtolower( $task ) ) {
 	case 'ordermiup': orderObject( $option, 'microIntegration', $id[0], 1 ); break;
 	case 'ordermidown': orderObject( $option, 'microIntegration', $id[0], 0 ); break;
 
-	case 'showcoupons': listCoupons( $option, 0); break;
+	case 'showcoupons': listCoupons( $option ); break;
 
 	case 'copycoupon':
 		$db = &JFactory::getDBO();
@@ -217,41 +217,14 @@ switch( strtolower( $task ) ) {
 		aecRedirect( 'index.php?option='. $option . '&task=showCoupons' );
 		break;
 
-	case 'newcoupon': editCoupon( 0, $option, 1, 0 ); break;
-	case 'editcoupon': editCoupon( $id[0], $option, 0, 0 ); break;
+	case 'newcoupon': editCoupon( 0, $option, 1 ); break;
+	case 'editcoupon': editCoupon( $id[0], $option, 0 ); break;
 	case 'savecoupon': saveCoupon( $option, 0 ); break;
-	case 'applycoupon': saveCoupon( $option, 0, 1 ); break;
-	case 'publishcoupon': changeCoupon( $id, 1, $option, 0 ); break;
-	case 'unpublishcoupon': changeCoupon( $id, 0, $option, 0 ); break;
-	case 'removecoupon': removeCoupon( $id, $option, $returnTask, 0 ); break;
+	case 'applycoupon': saveCoupon( $option, 1 ); break;
+	case 'publishcoupon': changeCoupon( $id, 1, $option ); break;
+	case 'unpublishcoupon': changeCoupon( $id, 0, $option ); break;
+	case 'removecoupon': removeCoupon( $id, $option, $returnTask ); break;
 	case 'cancelcoupon': aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-	case 'ordercouponup': orderObject( $option, 'coupon', $id[0], 1, 'showCoupons' ); break;
-	case 'ordercoupondown': orderObject( $option, 'coupon', $id[0], 0, 'showCoupons' ); break;
-
-	case 'showcouponsstatic': listCoupons( $option, 1); break;
-
-	case 'copycouponstatic':
-		$db = &JFactory::getDBO();
-
-		foreach ( $id as $pid ) {
-			$row = new Coupon( $db, 1 );
-			$row->load( $pid );
-			$row->copy();
-		}
-
-		aecRedirect( 'index.php?option='. $option . '&task=showCouponsStatic' );
-		break;
-
-	case 'newcouponstatic': editCoupon( 0, $option, 1, 1 ); break;
-	case 'editcouponstatic': editCoupon( $id[0], $option, 0, 1 ); break;
-	case 'savecouponstatic': saveCoupon( $option, 1 ); break;
-	case 'applycouponstatic': saveCoupon( $option, 1, 1 ); break;
-	case 'publishcouponstatic': changeCoupon( $id, 1, $option, 1 ); break;
-	case 'unpublishcouponstatic': changeCoupon( $id, 0, $option, 1 ); break;
-	case 'removecouponstatic': removeCoupon( $id, $option, $returnTask, 1 ); break;
-	case 'cancelcouponstatic': aecRedirect( 'index.php?option=' . $option . '&task=showCouponsStatic', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-	case 'ordercouponstaticup': orderObject( $option, 'coupon', $id[0], 1, 'showCouponsStatic' ); break;
-	case 'ordercouponstaticdown': orderObject( $option, 'coupon', $id[0], 0, 'showCouponsStatic' ); break;
 
 	case 'editcss': editCSS( $option ); break;
 	case 'savecss': saveCSS( $option ); break;
@@ -4026,7 +3999,7 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 	aecRedirect( 'index.php?option=' . $option . '&task=showMicroIntegrations', $msg );
 }
 
-function listCoupons( $option, $type )
+function listCoupons( $option )
 {
  	$db = &JFactory::getDBO();
 
@@ -4037,17 +4010,17 @@ function listCoupons( $option, $type )
 
 	$total = 0;
 
-	if ( !$type ) {
-	 	$table = '#__acctexp_coupons';
-	} else {
-	 	$table = '#__acctexp_coupons_static';
-	}
-
 	$query = 'SELECT count(*)'
-			. ' FROM ' . $table
+			. ' FROM #__acctexp_coupons'
 			;
  	$db->setQuery( $query );
- 	$total = $db->loadResult();
+ 	$total += $db->loadResult();
+
+	$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_coupons_static'
+			;
+ 	$db->setQuery( $query );
+ 	$total += $db->loadResult();
 
  	if ( $limitstart > $total ) {
  		$limitstart = 0;
@@ -4056,10 +4029,12 @@ function listCoupons( $option, $type )
 	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of required records
- 	$query = 'SELECT *'
-		 	. ' FROM ' . $table
-		 	. ' GROUP BY `id`'
-		 	. ' ORDER BY `ordering`'
+ 	$query = '(SELECT *, "0" as `type`'
+		 	. ' FROM #__acctexp_coupons)'
+		 	. ' UNION '
+		 	. '(SELECT *, "1" as `type`'
+		 	. ' FROM #__acctexp_coupons_static)'
+		 	. ' ORDER BY `coupon_code`'
 		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		 	;
  	$db->setQuery( $query	);
@@ -4071,18 +4046,33 @@ function listCoupons( $option, $type )
  	}
 
  	$query = 'SELECT SUM(usecount)'
-			. ' FROM ' . $table
+			. ' FROM #__acctexp_coupons'
 			;
 	$db->setQuery( $query );
 
- 	$total = $db->loadResult();
+ 	$total_usecount = $db->loadResult();
+ 	if ( $db->getErrorNum() ) {
+ 		echo $db->stderr();
+ 		return false;
+ 	}
+
+ 	$query = 'SELECT SUM(usecount)'
+			. ' FROM #__acctexp_coupons_static'
+			;
+	$db->setQuery( $query );
+
+ 	$total_usecount += $db->loadResult();
  	if ( $db->getErrorNum() ) {
  		echo $db->stderr();
  		return false;
  	}
 
 	foreach ( $rows as $rid => $row ) {
-		$rows[$rid]->percentage = $row->usecount / ( $total / 100 );
+		if ( $row->usecount ) {
+			$rows[$rid]->percentage = $row->usecount / ( $total_usecount / 100 );
+		} else {
+			$rows[$rid]->percentage = 0;
+		}
 		
 		$rows[$rid]->inner = false;
 		if ( $rows[$rid]->percentage > 15 ) {
@@ -4090,10 +4080,10 @@ function listCoupons( $option, $type )
 		}
 	}
 
-	HTML_AcctExp::listCoupons( $rows, $pageNav, $option, $type );
+	HTML_AcctExp::listCoupons( $rows, $pageNav, $option );
  }
 
-function editCoupon( $id, $option, $new, $type )
+function editCoupon( $id, $option, $new )
 {
 	$db = &JFactory::getDBO();
 
@@ -4106,14 +4096,16 @@ function editCoupon( $id, $option, $new, $type )
 	$cph = new couponHandler();
 
 	if ( !$new ) {
-		$cph->coupon = new Coupon( $db, $type );
-		$cph->coupon->load( $id );
+		$idx = explode( ".", $id );
+
+		$cph->coupon = new Coupon( $db, $idx[0] );
+		$cph->coupon->load( $idx[1] );
 
 		$params_values			= $cph->coupon->params;
 		$discount_values		= $cph->coupon->discount;
 		$restrictions_values	= $cph->coupon->restrictions;
 	} else {
-		$cph->coupon = new Coupon( $db, 1 );
+		$cph->coupon = new Coupon( $db );
 		$cph->coupon->createNew();
 
 		$discount_values		= array();
@@ -4122,7 +4114,7 @@ function editCoupon( $id, $option, $new, $type )
 
 	// We need to convert the values that are set as object properties
 	$params_values['active']				= $cph->coupon->active;
-	$params_values['type']					= $type;
+	$params_values['type']					= $cph->coupon->type;
 	$params_values['name']					= $cph->coupon->name;
 	$params_values['desc']					= $cph->coupon->desc;
 	$params_values['coupon_code']			= $cph->coupon->coupon_code;
@@ -4132,56 +4124,56 @@ function editCoupon( $id, $option, $new, $type )
 	// params and their type values
 	$params['active']						= array( 'toggle',		1 );
 	$params['type']							= array( 'toggle',		1 );
-	$params['name']							= array( 'inputC',			'' );
-	$params['desc']							= array( 'inputE',			'' );
-	$params['coupon_code']					= array( 'inputC',			'' );
-	$params['micro_integrations']			= array( 'list',			'' );
+	$params['name']							= array( 'inputC',		'' );
+	$params['desc']							= array( 'inputE',		'' );
+	$params['coupon_code']					= array( 'inputC',		'' );
+	$params['micro_integrations']			= array( 'list',		'' );
 
 	$params['params_remap']					= array( 'subarea_change',	'params' );
 
 	$params['amount_use']					= array( 'toggle',		'' );
-	$params['amount']						= array( 'inputB',			'' );
+	$params['amount']						= array( 'inputB',		'' );
 	$params['amount_percent_use']			= array( 'toggle',		'' );
-	$params['amount_percent']				= array( 'inputB',			'' );
+	$params['amount_percent']				= array( 'inputB',		'' );
 	$params['percent_first']				= array( 'toggle',		'' );
 	$params['useon_trial']					= array( 'toggle',		'' );
 	$params['useon_full']					= array( 'toggle',		'1' );
 	$params['useon_full_all']				= array( 'toggle',		'' );
 
 	$params['has_start_date']				= array( 'toggle',		1 );
-	$params['start_date']					= array( 'list_date',		date( 'Y-m-d', ( (int) gmdate('U') ) ) );
+	$params['start_date']					= array( 'list_date',	date( 'Y-m-d', ( (int) gmdate('U') ) ) );
 	$params['has_expiration']				= array( 'toggle',		0);
-	$params['expiration']					= array( 'list_date',		date( 'Y-m-d', ( (int) gmdate('U') ) ) );
+	$params['expiration']					= array( 'list_date',	date( 'Y-m-d', ( (int) gmdate('U') ) ) );
 	$params['has_max_reuse']				= array( 'toggle',		0 );
-	$params['max_reuse']					= array( 'inputA',			1 );
+	$params['max_reuse']					= array( 'inputA',		1 );
 	$params['has_max_peruser_reuse']		= array( 'toggle',		1 );
-	$params['max_peruser_reuse']			= array( 'inputA',			1 );
-	$params['usecount']						= array( 'inputA',			0 );
+	$params['max_peruser_reuse']			= array( 'inputA',		1 );
+	$params['usecount']						= array( 'inputA',		0 );
 
 	$params['usage_plans_enabled']			= array( 'toggle',		0 );
-	$params['usage_plans']					= array( 'list',			0 );
+	$params['usage_plans']					= array( 'list',		0 );
 
 	$params['usage_cart_full']				= array( 'toggle',		0 );
 	$params['cart_multiple_items']			= array( 'toggle',		0 );
-	$params['cart_multiple_items_amount']	= array( 'inputB',			'' );
+	$params['cart_multiple_items_amount']	= array( 'inputB',		'' );
 
 	$params['restr_remap']					= array( 'subarea_change',	'restrictions' );
 
 	$params['depend_on_subscr_id']			= array( 'toggle',		0 );
-	$params['subscr_id_dependency']			= array( 'inputB',			'' );
+	$params['subscr_id_dependency']			= array( 'inputB',		'' );
 	$params['allow_trial_depend_subscr']	= array( 'toggle',		0 );
 
 	$params['restrict_combination']			= array( 'toggle',		0 );
-	$params['bad_combinations']				= array( 'list',			'' );
+	$params['bad_combinations']				= array( 'list',		'' );
 
 	$params['allow_combination']			= array( 'toggle',		0 );
-	$params['good_combinations']			= array( 'list',			'' );
+	$params['good_combinations']			= array( 'list',		'' );
 
 	$params['restrict_combination_cart']	= array( 'toggle',		0 );
-	$params['bad_combinations_cart']		= array( 'list',			'' );
+	$params['bad_combinations_cart']		= array( 'list',		'' );
 
 	$params['allow_combination_cart']		= array( 'toggle',		0 );
-	$params['good_combinations_cart']		= array( 'list',			'' );
+	$params['good_combinations_cart']		= array( 'list',		'' );
 
 	$restrictionHelper = new aecRestrictionHelper();
 	$params = array_merge( $params, $restrictionHelper->getParams() );
@@ -4299,17 +4291,21 @@ function editCoupon( $id, $option, $new, $type )
 
 	$settings = new aecSettings( 'coupon', 'general' );
 
-	$settingsparams = array_merge( $params_values, $discount_values, $restrictions_values );
+	if ( is_array( $discount_values ) && is_array( $restrictions_values ) ) {
+		$settingsparams = array_merge( $params_values, $discount_values, $restrictions_values );
+	} else {
+		$settingsparams = $params_values;
+	}
 
 	$settings->fullSettingsArray( $params, $settingsparams, $lists );
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-	HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon, $type );
+	HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon );
 }
 
-function saveCoupon( $option, $type, $apply=0 )
+function saveCoupon( $option, $apply=0 )
 {
 	$db = &JFactory::getDBO();
 
@@ -4321,16 +4317,11 @@ function saveCoupon( $option, $type, $apply=0 )
 		$cph = new couponHandler();
 
 		if ( !empty( $_POST['id'] ) ) {
-			$cph->coupon = new Coupon( $db, $type );
+			$cph->coupon = new Coupon( $db, $_POST['oldtype'] );
 			$cph->coupon->load( $_POST['id'] );
-			$cph->type = $type;
-			if ( empty( $cph->coupon->id ) ) {
-				$cph->coupon = new Coupon( $db, !$type );
-				$cph->coupon->load( $_POST['id'] );
-				$cph->type = !$type;
-			}
+
 			if ( $cph->coupon->id ) {
-				$cph->status = 1;
+				$cph->status = true;
 			}
 		} else {
 			$cph->load( $_POST['coupon_code'] );
@@ -4345,13 +4336,15 @@ function saveCoupon( $option, $type, $apply=0 )
 
 		if ( $cph->status ) {
 			if ( !$new ) {
-				if ( $cph->type != $_POST['type'] ) {
+				if ( $cph->coupon->type != $_POST['type'] ) {
 					$cph->switchType();
 				}
 			}
 
 			unset( $_POST['type'] );
+			unset( $_POST['oldtype'] );
 			unset( $_POST['id'] );
+
 			$post = AECToolbox::cleanPOST( $_POST, false );
 
 			$cph->coupon->savePOSTsettings( $post );
@@ -4367,75 +4360,107 @@ function saveCoupon( $option, $type, $apply=0 )
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 		}
 
-		$cph->coupon->reorder();
-
-		if ( $cph->coupon->id ) {
-			$id = $cph->coupon->id;
-		} else {
-			$id = $cph->coupon->getMax();
-		}
-
 		if ( $apply ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editCoupon' . ( $type ? 'Static' : '' ) . '&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			aecRedirect( 'index.php?option=' . $option . '&task=editCoupon&id=' . $cph->coupon->type.'.'.$cph->coupon->id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 		} else {
-			aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
+			aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 		}
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), JText::_('AEC_MSG_NO_COUPON_CODE') );
+		aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_MSG_NO_COUPON_CODE') );
 	}
 
 }
 
-function removeCoupon( $id, $option, $returnTask, $type )
+function removeCoupon( $id, $option, $returnTask )
 {
 	$db = &JFactory::getDBO();
 
-	$ids = implode( ',', $id );
+	$idx = explode($id);
 
-	// Delete Coupons from table
-	$query = 'DELETE FROM #__acctexp_coupons'
-			. ( $type ? '_static' : '' )
-			. ' WHERE `id` IN (' . $ids . ')'
-			;
-	$db->setQuery( $query	);
+	$rids = $sids = array();
+	foreach ( $idx as $ctype => $cid ) {
+		if ( $ctype ) {
+			$sids[] = $cid;
+		} else {
+			$rids[] = $cid;
+		}
+	}
 
-	if ( !$db->query() ) {
-		echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-		exit();
+	if ( !empty( $sids ) ) {
+		$query = 'DELETE FROM #__acctexp_coupons_static'
+				. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
+				;
+		$db->setQuery( $query );
+
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
+	}
+
+	if ( !empty( $rids ) ) {
+		$query = 'DELETE FROM #__acctexp_coupons'
+				. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
+				;
+		$db->setQuery( $query );
+
+		if ( !$db->query() ) {
+			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
+			exit();
+		}
 	}
 
 	$msg = JText::_('AEC_MSG_ITEMS_DELETED');
 
-	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
+	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
 }
 
-function changeCoupon( $cid=null, $state=0, $option, $type )
+function changeCoupon( $id=null, $state=0, $option )
 {
 	$db = &JFactory::getDBO();
 
-	if ( count( $cid ) < 1 ) {
+	if ( count( $id ) < 1 ) {
 		$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH') : JText::_('AEC_CMN_TOUNPUBLISH');
 		echo "<script> alert('" . sprintf( html_entity_decode( JText::_('AEC_ALERT_SELECT_FIRST_TO') ) ), $action . "'); window.history.go(-1);</script>\n";
 		exit;
 	}
 
-	$total	= count( $cid );
-	$cids	= implode( ',', $cid );
+	$idx	= explode($id);
+	$total	= count( $id );
 
-	$query = 'UPDATE #__acctexp_coupons' . ( $type ? '_static' : '' )
-			. ' SET `active` = \'' . $state . '\''
-			. ' WHERE `id` IN (' . $cids . ')'
-			;
-	$db->setQuery( $query	);
-	$db->query();
-
-	if ( $state ) {
-		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_PUBLISHED');
-	} else {
-		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UNPUBLISHED');
+	$rids = $sids = array();
+	foreach ( $idx as $ctype => $cid ) {
+		if ( $ctype ) {
+			$sids[] = $cid;
+		} else {
+			$rids[] = $cid;
+		}
 	}
 
-	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons' . ( $type ? 'Static' : '' ), $msg );
+	$total	= count( $id );
+	$cids	= implode( ',', $cid );
+
+	if ( !empty( $sids ) ) {
+		$query = 'UPDATE #__acctexp_coupons_static'
+				. ' SET `active` = IF (`active` = 1, 0, 1)'
+				. ' WHERE `id` IN (' . implode( ',', $sids ) . ')'
+				;
+		$db->setQuery( $query );
+		$db->query();
+	}
+
+	if ( !empty( $rids ) ) {
+		$query = 'UPDATE #__acctexp_coupons'
+				. ' SET `active` = IF (`active` = 1, 0, 1)'
+				. ' WHERE `id` IN (' . implode( ',', $rids ) . ')'
+				;
+		$db->setQuery( $query );
+		$db->query();
+	}
+
+	$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UPDATED');
+
+	aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', $msg );
 }
 
 function invoices( $option )

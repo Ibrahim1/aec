@@ -734,8 +734,7 @@ class HTML_AcctExp
 																	array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
 																	array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
 																	array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
-																	array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ),
-																	array( 'showCouponsStatic', 'coupons-static', JText::_('AEC_CENTR_COUPONS_STATIC') )
+																	array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') )
 																	)
 												),
 						'settings' 		=> array(	'name'	=> JText::_('AEC_CENTR_AREA_SETTINGS'),
@@ -987,6 +986,18 @@ class HTML_AcctExp
 
  		<?php
  		HTML_myCommon::endCommon();
+	}
+
+	function help()
+	{
+		?>
+		<p>Hey there, this is David, chief developer of AEC</p>
+		<p>Alright - so you're stuck with AEC? No problem, me and my team are there to help you out.</p>
+		<p>First off - if you have any complaints about the software, our website or our support, please do not hesitate one second to get in touch with me. You can reach me here. I try my best to respond as quickly as possible and you should get a response within a workday. If not, maybe something about the request failed, please try sending it again.</p>
+		<p>I really care a lot about this software and you using it means a lot to me - so please give me a chance to clear things up if we have messed up somewhere.</p>
+		<p>Of course, you might just need help getting the software to work, but can't figure it out by yourself. In that case, we have</p>
+		<p>In case you got AEC from a friend (or, you know, "from a friend") I hope you will consider getting a memembership with us - the reason why AEC exists is because people support it's development with a membership. In return, you get </p> 
+		<?php
 	}
 
 	function Settings( $option, $aecHTML, $tab_data )
@@ -2190,11 +2201,11 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function listCoupons( $rows, $pageNav, $option, $type )
+	function listCoupons( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'COUPON_TITLE'. ( $type ? '_STATIC' : '' ), 'coupons' . ( $type ? '-static' : '' ) );
-		HTML_myCommon::getButtons( 'list', 'Coupon' . ($type ? 'Static' : '') );
+		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons' );
+		HTML_myCommon::getButtons( 'list', 'Coupon' );
 
 		HTML_myCommon::startForm();
 
@@ -2208,19 +2219,17 @@ class HTML_AcctExp
 					<th width="10%" class="leftalign"><?php echo JText::_('COUPON_CODE'); ?></th>
 					<th width="50%" class="leftalign"><?php echo JText::_('COUPON_DESC'); ?></th>
 					<th width="1%"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
-					<th width="1%"><?php echo JText::_('COUPON_REORDER'); ?></th>
 					<th width="10%" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 				</tr></thead>
 
 				<?php foreach ( $rows as $i => $row ) { ?>
 					<tr>
 						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon'. ($type ? "Static" : "") . '&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-						<td class="leftalign"><strong><?php echo $row->coupon_code; ?></strong></td>
+						<td><?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
+						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+						<td><strong><?php echo $row->coupon_code; ?></strong></td>
 						<td class="leftalign"><?php echo $row->desc; ?></td>
-						<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
-						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'coupon' . ( $type ? 'static' : '' ) ); ?></td>
+						<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
 						<td>
 							<div class="progress progress-info progress-striped">
 								<?php if ( $row->usecount ) { ?>
@@ -2240,8 +2249,8 @@ class HTML_AcctExp
 			</table>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
-		<input type="hidden" name="returnTask" value="showCoupons<?php echo $type ? 'Static' : ''; ?>" />
+		<input type="hidden" name="task" value="showCoupons" />
+		<input type="hidden" name="returnTask" value="showCoupons" />
 		<input type="hidden" name="boxchecked" value="0" />
 		</form>
 
@@ -2249,14 +2258,14 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function editCoupon( $option, $aecHTML, $row, $type )
+	function editCoupon( $option, $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon();
 
 		JHTML::_('behavior.calendar');
 
-		HTML_myCommon::getHeader( 'AEC_COUPON', 'coupons' . ($type ? '_static' : ''), ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
-		HTML_myCommon::getButtons( 'edit', 'Coupon' . ($type ? 'Static' : '') );
+		HTML_myCommon::getHeader( 'AEC_COUPON', 'coupons', ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
+		HTML_myCommon::getButtons( 'edit', 'Coupon' );
 
 		HTML_myCommon::startForm();
 
@@ -2359,6 +2368,7 @@ class HTML_AcctExp
 		</td></tr></table>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
+		<input type="hidden" name="oldtype" value="<?php echo $row->type; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />
 		</form>

@@ -19566,8 +19566,10 @@ class couponHandler
 	{
 		$db = &JFactory::getDBO();
 
+		$oldtype = $this->coupon->type;
+
 		// Duplicate Coupon at other table
-		$coupon = new coupon( $db, !$this->coupon->type );
+		$coupon = new coupon( $db, !$oldtype );
 		$coupon->createNew( $this->coupon->coupon_code, $this->coupon->created_date );
 
 		// Switch id over to new table max
@@ -19579,8 +19581,8 @@ class couponHandler
 
 		// Migrate usage entries
 		$query = 'UPDATE #__acctexp_couponsxuser'
-				. ' SET `coupon_id` = \'' . $this->coupon->id . '\''
-				. ' WHERE `coupon_id` = \'' . $oldid . '\''
+				. ' SET `coupon_id` = \'' . $this->coupon->id . '\', `coupon_type` = \'' . $this->coupon->type . '\''
+				. ' WHERE `coupon_id` = \'' . $oldid . '\' AND `coupon_type` = \'' . $oldtype . '\''
 				;
 
 		$db->setQuery( $query );
@@ -20026,8 +20028,6 @@ class Coupon extends serialParamDBTable
 	var $id					= null;
 	/** @var int */
 	var $active				= null;
-	/** @var int */
-	var $ordering			= null;
 	/** @var string */
 	var $coupon_code		= null;
 	/** @var datetime */
@@ -20145,8 +20145,12 @@ class Coupon extends serialParamDBTable
 		$fixed = array( 'active', 'name', 'desc', 'coupon_code', 'usecount', 'micro_integrations' );
 
 		foreach ( $fixed as $varname ) {
-			$this->$varname = $post[$varname];
-			unset( $post[$varname] );
+			if ( isset( $post[$varname] ) ) {
+				$this->$varname = $post[$varname];
+				unset( $post[$varname] );
+			} else {
+				$this->$varname = null;
+			}
 		}
 
 		// Filter out params
@@ -20233,6 +20237,15 @@ class Coupon extends serialParamDBTable
 		$this->coupon_code = $this->generateCouponCode();
 		$this->check();
 		$this->store();
+	}
+
+	function check()
+	{
+		if ( isset( $this->type ) ) {
+			unset( $this->type );
+		}
+
+		parent::check();
 	}
 }
 
