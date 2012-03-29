@@ -24,7 +24,7 @@
 		<folder>views</folder>
 	</files>
 	<administration>
-		<menu link="option=com_acctexp&amp;task=showCentral" img="../media/com_acctexp/images/admin/icons/aec_logo_tiny.png">COM_ACCTEXP</menu>
+		<menu link="option=com_acctexp&amp;task=showCentral" img="../media/com_acctexp/images/admin/icons/aec_logo_tiny.png">ACCTEXP_MENU</menu>
 		<files folder="administrator/components/com_acctexp">
 			<file>index.html</file>
 			<file>admin.acctexp.php</file>
