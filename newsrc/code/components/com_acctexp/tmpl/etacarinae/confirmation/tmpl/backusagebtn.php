@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <div id="backusage-button">
-	<form name="form-backusage" action="<?php echo $tmpl->url( array( 'task' => 'subscribe') ) ?>" method="post">
+	<form id="form-backusage" action="<?php echo $tmpl->url( array( 'task' => 'subscribe') ) ?>" method="post">
 		<input type="hidden" name="option" value="<?php echo $option ?>" />
 		<input type="hidden" name="userid" value="<?php echo $userid ? $userid : 0 ?>" />
 		<input type="hidden" name="task" value="subscribe" />

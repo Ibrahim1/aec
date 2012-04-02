@@ -17,7 +17,7 @@
 			<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username'] ?> (<?php echo $tmpl->lnk( array('task' => 'InvoiceRemoveGift','invoice' => $InvoiceFactory->invoice->invoice_number), "undo?" ) ?>)</p>
 		<?php } else { ?>
 		<p><?php echo JText::_('CHECKOUT_GIFT_INFO') ?></p>
-		<form name="form-gift" action="<?php echo $tmpl->url( array( 'task' => 'InvoiceMakeGift') ) ?>" method="post">
+		<form id="form-gift" action="<?php echo $tmpl->url( array( 'task' => 'InvoiceMakeGift') ) ?>" method="post">
 			<input type="text" size="20" name="user_ident" class="inputbox" value="" />
 			<input type="hidden" name="option" value="<?php echo $option ?>" />
 			<input type="hidden" name="task" value="InvoiceMakeGift" />

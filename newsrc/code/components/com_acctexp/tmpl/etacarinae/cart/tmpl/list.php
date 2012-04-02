@@ -10,7 +10,7 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<form name="form-update" action="<?php echo $tmpl->url( array( 'task' => 'updateCart') ) ?>" method="post">
+<form id="form-update" action="<?php echo $tmpl->url( array( 'task' => 'updateCart') ) ?>" method="post">
 	<table class="cart-list table table-striped">
 		<thead>
 			<tr>

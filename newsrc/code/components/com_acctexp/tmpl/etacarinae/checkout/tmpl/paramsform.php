@@ -12,7 +12,7 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 
 <div id="params-box">
-	<form name="form-params" action="<?php echo $tmpl->url( array( 'task' => 'InvoiceAddParams') ) ?>" method="post">
+	<form id="form-params" action="<?php echo $tmpl->url( array( 'task' => 'InvoiceAddParams') ) ?>" method="post">
 		<?php echo $params ?>
 		<input type="hidden" name="option" value="<?php echo $option ?>" />
 		<input type="hidden" name="task" value="InvoiceAddParams" />

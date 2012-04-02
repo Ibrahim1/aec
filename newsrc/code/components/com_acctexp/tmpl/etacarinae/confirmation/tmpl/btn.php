@@ -13,12 +13,11 @@
 <?php if ( !empty( $tmpl->cfg['tos_iframe'] ) && !empty( $tmpl->cfg['tos'] ) ) { ?>
 	<div class="well">
 		<iframe src="<?php echo $tmpl->cfg['tos'] ?>" width="100%" height="150px"></iframe>
-		<p><input name="tos" type="checkbox" /><?php echo JText::_('CONFIRM_TOS_IFRAME') ?></p>
-		<button type="submit" onClick="javascript:submitPayment()" class="button btn btn-success"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
+		<p><input name="tos" type="checkbox" id="aec-tos" />&nbsp;&nbsp;<?php echo JText::_('CONFIRM_TOS_IFRAME') ?></p>
 	</div>
 <?php } elseif ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 	<div class="well">
-		<p><input name="tos" type="checkbox" /><?php echo JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ) ?></p>
+		<p><input name="tos" type="checkbox" id="aec-tos" />&nbsp;&nbsp;<?php echo JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ) ?></p>
 	</div>
 <?php } ?>
 
@@ -36,10 +35,6 @@
 		<?php if ( $passthrough != false ) { ?>
 			<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough ?>" />
 		<?php } ?>
-		<?php if ( !empty( $tmpl->cfg['tos'] ) ) { ?>
-			<button type="submit" onClick="javascript:submitPayment()" class="button btn btn-success"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
-		<?php } else { ?>
-			<button type="submit" class="button btn btn-success"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
-		<?php } ?>
+		<button type="submit" class="button btn btn-success" id="confirmation"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
 	</div>
 </div>

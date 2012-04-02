@@ -156,7 +156,7 @@ class mi_aectax
 					$loc[] = JHTML::_('select.option', $locations[$id]['id'], $locations[$id]['text'] );
 				}
 
-				$settings['lists']['location']	= JHTML::_('select.genericlist', $loc, 'location', 'size="1"', 'value', 'text', 0 );
+				$settings['lists']['location']	= JHTML::_('select.genericlist', $loc, 'location', 'size="1" class="aec-tax"', 'value', 'text', 0 );
 			}
 
 		} else {

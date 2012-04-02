@@ -23,7 +23,7 @@
 	</div>
 	<div class="well coupons-info">
 		<p><?php echo JText::_('CHECKOUT_COUPON_INFO') ?></p>
-		<form name="form-coupons" action="<?php echo $tmpl->url( array( 'task' => 'InvoiceAddCoupon') ) ?>" method="post">
+		<form id="form-coupons" action="<?php echo $tmpl->url( array( 'task' => 'InvoiceAddCoupon') ) ?>" method="post">
 			<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
 			<input type="hidden" name="option" value="<?php echo $option ?>" />
 			<input type="hidden" name="task" value="InvoiceAddCoupon" />

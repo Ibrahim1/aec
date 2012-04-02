@@ -14,7 +14,7 @@
 	<div id="aec-exception">
 		<div class="componentheading"><?php echo $hasform ? JText::_('EXCEPTION_TITLE') : JText::_('EXCEPTION_TITLE_NOFORM') ?></div>
 		<p><?php echo $hasform ? JText::_('EXCEPTION_INFO') : "" ?></p>
-		<form name="form-exception" action="<?php echo $tmpl->url( array( 'task' => 'addressException') ) ?>" method="post">
+		<form id="form-exception" action="<?php echo $tmpl->url( array( 'task' => 'addressException') ) ?>" method="post">
 			<?php @include( $tmpl->tmpl( 'list' ) ) ?>
 			<?php @include( $tmpl->tmpl( 'form' ) ) ?>
 			<?php echo JHTML::_( 'form.token' ) ?>
