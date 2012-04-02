@@ -10,7 +10,7 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
-<div class="checkout-list-item-description">
+<div class="alert alert-info checkout-list-item-description">
 	<?php if ( !empty( $item['name'] ) ) {
 		if ( !empty( $item['quantity'] ) ) { ?>
 			<h4><?php echo $item['name'] . ( ( $item['quantity'] > 1 ) ? " (&times;" . $item['quantity'] . ")" : '' ) ?></h4>
