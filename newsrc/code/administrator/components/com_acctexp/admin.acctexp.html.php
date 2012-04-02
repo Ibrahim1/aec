@@ -2651,7 +2651,7 @@ class HTML_AcctExp
 						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
 						.create("sunburst", 200)
-						.canvas(760, 120, 10)
+						.canvas(760, 160, 10)
 						.target("div#overview-year-cell")
 						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
@@ -2774,7 +2774,7 @@ class HTML_AcctExp
 						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
 								"<?php echo $i . '-12-31 23:59:59'; ?>")
 						.create("sunburst")
-						.canvas(760, 120, 10)
+						.canvas(760, 160, 10)
 						.target("div#overview-year-<?php echo $i; ?>-cells")
 						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
 								"<?php echo $i . '-12-31 23:59:59'; ?>")

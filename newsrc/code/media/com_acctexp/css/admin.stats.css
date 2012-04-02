@@ -79,9 +79,9 @@ margin: 0 240px;
 
 .chart-cellular {
 width: 760px;
-height: 120px;
+height: 160px;
 float: left;
-margin: 26px 0 0;
+margin: 36px 0 0;
 }
 
 .overview-container-full {
@@ -119,9 +119,13 @@ fill: none;
 fill: #fff;
 }
 
-.month {
+rect.month {
+fill: #fff;
+}
+
+path.month {
 fill: none;
-stroke: #000000;
+stroke: #555;
 stroke-width: 2px;
 }
 

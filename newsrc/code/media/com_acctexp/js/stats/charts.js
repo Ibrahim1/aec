@@ -376,8 +376,8 @@ d3.chart.cellular = function () {
 	};
 
 	function resize() {
-		chartW = w - margin[1] - margin[3];
-		chartH = h - margin[0] - margin[2];
+		chartW = w - 4;
+		chartH = h - 4;
 		this.attr("width", chartW)
 			.attr("height", chartH)
 			.attr("x", x+margin[3])
@@ -411,6 +411,8 @@ d3.chart.cellular = function () {
 		z = 14,
 		day = d3.time.format("%w"),
 		week = d3.time.format("%U"),
+		month = d3.time.format("%m"),
+		mname = d3.time.format("%B"),
 		format = d3.time.format("%Y-%m-%d");
 
 		var numyear = data[0].date.getFullYear();
@@ -432,27 +434,27 @@ d3.chart.cellular = function () {
 			.data(d3.time.days(new Date(numyear, 0, 1), new Date(numyear + 1, 0, 1)))
 			.enter()
 			.append("svg:rect")
-			.attr("class", function(d) { return "day q" + ccolor(nsales[d]) + "-9 bstooltip"; })
-			.attr("ry", 0).attr("rx", 0)
-			.attr("rel", "tooltip")
-			.attr("data-original-title", function(d) { return format(d) + (d in nsales ? ": " + amount_format(nsales[d]) + amount_currency : ""); })
-			.attr("width", 1).attr("height", 1)
-			.attr("x", function(d) { return (week(d) * z)+z/2; })
-			.attr("y", function(d) { return (day(d) * z)+z/2; })
-			.on("mouseover", function(){
-				d3.select(this)
-					.transition().ease("elastic").duration(500)
-						.attr("ry", z/3.33).attr("rx", z/3.33).attr("width", z-2).attr("height", z-2)
-						.attr("x", function(d) { return (week(d) * z)+1; })
-						.attr("y", function(d) { return (day(d) * z)+1; });
-			})
-			.on("mouseout", function(){
-				d3.select(this)
-					.transition().ease("bounce").delay(100).duration(500)
-						.attr("ry", 0).attr("rx", 0).attr("width", z).attr("height", z)
-						.attr("x", function(d) { return week(d) * z; })
-						.attr("y", function(d) { return day(d) * z; });
-			});
+				.attr("class", function(d) { return "day q" + ccolor(nsales[d]) + "-9 bstooltip"; })
+				.attr("ry", 0).attr("rx", 0)
+				.attr("rel", "tooltip")
+				.attr("data-original-title", function(d) { return format(d) + (d in nsales ? ": " + amount_format(nsales[d]) + amount_currency : ""); })
+				.attr("width", 1).attr("height", 1)
+				.attr("x", function(d) { return (week(d) * z)+z/2; })
+				.attr("y", function(d) { return (day(d) * z)+z/2; })
+				.on("mouseover", function(){
+					d3.select(this)
+						.transition().ease("elastic").duration(500)
+							.attr("ry", z/3.33).attr("rx", z/3.33).attr("width", z-2).attr("height", z-2)
+							.attr("x", function(d) { return (week(d) * z)+1; })
+							.attr("y", function(d) { return (day(d) * z)+1; });
+				})
+				.on("mouseout", function(){
+					d3.select(this)
+						.transition().ease("bounce").delay(100).duration(500)
+							.attr("ry", 0).attr("rx", 0).attr("width", z).attr("height", z)
+							.attr("x", function(d) { return week(d) * z; })
+							.attr("y", function(d) { return day(d) * z; });
+				});
 		
 		// Eye-Candy fade-in
 		year.selectAll("rect.day")
@@ -469,10 +471,42 @@ d3.chart.cellular = function () {
 			.enter()
 			.append("svg:path")
 				.attr("class", "month")
-				.attr("d", monthPath)
-				.style("stroke", "#555");
+				.attr("d", monthPath);
 
-		jQuery('svg').tooltip({placement: "right", selector: '.bstooltip', delay: { show: 300, hide: 100 }});
+		var msales = d3.nest()
+			.key(function(d) { return month(d.date); })
+			.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
+			.map(data);
+
+		var mcolor = d3.scale.quantize()
+			.domain([0, max_sale*0.5*30])
+			.range(d3.range(9));
+
+		year.selectAll("rect.month")
+			.data(d3.time.months(new Date(numyear, 0, 1), new Date(numyear+1, 0, 1)))
+			.enter()
+			.append("svg:rect")
+				.attr("class", function(d) { return "month q" + mcolor(msales[month(d)]) + "-9 bstooltip"; })
+				.attr("ry", 0).attr("rx", 0)
+				.attr("x", function(d) { return ( week(d) * z ) + 1; })
+				.attr("y", 7*z+3)
+				.attr("width", monthWidth )
+				.attr("height", z)
+				.attr("rel", "tooltip")
+				.attr("stroke", "rgba(0, 0, 0, 0)").attr("stroke-width", "2px")
+				.attr("data-original-title", function(d) { return mname(d) + " " + numyear + (month(d) in msales ? ": " + amount_format(msales[month(d)]) + amount_currency : ": 0.00€"); })
+				.on("mouseover", function(){
+					d3.select(this)
+						.transition()
+							.attr("stroke", "rgba(0, 0, 0, 0.7)");
+				})
+				.on("mouseout", function(){
+					d3.select(this)
+						.transition()
+							.attr("stroke", "rgba(0, 0, 0, 0)");
+				});
+
+		jQuery('svg').tooltip({placement: "top", selector: '.bstooltip', delay: { show: 300, hide: 100 }});
 	}
 
 	function monthPath(t0) {
@@ -484,6 +518,18 @@ d3.chart.cellular = function () {
 			+ "H" + w1 * z + "V" + (d1 + 1) * z
 			+ "H" + (w1 + 1) * z + "V" + 0
 			+ "H" + (w0 + 1) * z + "Z";
+	}
+
+	function monthWidth(t0) {
+		var x = new Date(t0.getUTCFullYear(), t0.getUTCMonth()+2, 1);
+
+		if ( x.getUTCMonth() == 11 ) {
+			return ( 53 - week(t0) ) * z - 2;
+		} else {
+			var t1 = new Date(t0.getUTCFullYear(), t0.getUTCMonth() + 2, 1);
+
+			return ( week(t1) - week(t0) ) * z - 2;
+		}
 	}
 
 	return chart;
