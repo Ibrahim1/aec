@@ -4078,10 +4078,10 @@ class PaymentProcessor
 			$this->init();
 		} else {
 			// Initiate processor from db
-			if ( is_object( $this->processor ) ) {
+			if ( is_object( $this->processor ) && empty( $this->processor->id ) ) {
 				return $this->processor->load( $this->id );
 			} else {
-				return false;
+				return true;
 			}
 		}
 	}
@@ -4106,14 +4106,7 @@ class PaymentProcessor
 		$this->processor->settings = $this->settings;
 		$this->processor->storeload();
 
-		$query = 'SELECT `id`'
-				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $db->getEscaped( $this->processor_name ) . '\''
-				;
-		$db->setQuery( $query );
-		$result = $db->loadResult();
-
-		$this->id = $result ? $result : 0;
+		$this->id = $this->processor->id;
 	}
 
 	function getInfo()
@@ -4273,19 +4266,9 @@ class PaymentProcessor
 		return $return;
 	}
 
-	function setInfo()
-	{
-		$this->processor->storeload();
-	}
-
 	function storeload()
 	{
-		if ( $this->id ) {
-			$this->processor->storeload();
-		} else {
-			$this->id = $this->getMax();
-			$this->processor->storeload();
-		}
+		$this->processor->storeload();
 	}
 
 	function getBackendSettings()

@@ -2221,8 +2221,6 @@ function saveProcessor( $option, $return=0 )
 
 	$pp->fullInit();
 
-	$pp->storeload();
-
 	$active			= $procname . '_active';
 	$longname		= $procname . '_info_longname';
 	$description	= $procname . '_info_description';
