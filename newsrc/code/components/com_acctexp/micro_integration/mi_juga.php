@@ -53,6 +53,24 @@ class mi_juga
 			$selected_enroll_gps		= '';
 		}
 
+		if ( !empty( $this->settings['remove_selected'] ) ) {
+			$selected_remove_gps = array();
+			foreach ( $this->settings['remove_selected'] as $remove_selected) {
+				$selected_remove_gps[]->value = $remove_selected;
+			}
+		} else {
+			$selected_remove_gps		= '';
+		}
+
+		if ( !empty( $this->settings['remove_selected_exp'] ) ) {
+			$selected_remove_gps_exp = array();
+			foreach ( $this->settings['remove_selected_exp'] as $remove_selected_exp) {
+				$selected_remove_gps_exp[]->value = $remove_selected_exp;
+			}
+		} else {
+			$selected_remove_gps_exp		= '';
+		}
+
 		if ( !empty( $this->settings['enroll_group_exp'] ) ) {
 			$selected_enroll_gps_exp = array();
 			foreach ( $this->settings['enroll_group_exp'] as $enroll_group_exp) {
@@ -64,11 +82,17 @@ class mi_juga
 
 		$settings['lists']['enroll_group']		= JHTML::_( 'select.genericlist', $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps );
 		$settings['lists']['enroll_group_exp']	= JHTML::_( 'select.genericlist', $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps_exp );
+		$settings['lists']['remove_selected']		= JHTML::_( 'select.genericlist', $sg, 'remove_selected[]', 'size="4" multiple="true"', 'value', 'text', $selected_remove_gps ); 
+		$settings['lists']['remove_selected_exp']	= JHTML::_( 'select.genericlist', $sg, 'remove_selected_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_remove_gps_exp );
 
 		$settings['set_remove_group']			= array( 'toggle' );
+		$settings['set_remove_selected']		= array( 'toggle'	, 'Remove Selected Groups', 'Set to yes, to delete only selected groups');
+		$settings['remove_selected']			= array( 'list'			, 'Remove JUGA Groups', 'List of groups to be removed');
 		$settings['set_enroll_group']			= array( 'toggle' );
 		$settings['enroll_group']				= array( 'list' );
 		$settings['set_remove_group_exp']		= array( 'toggle' );
+		$settings['set_remove_selected_exp']	= array( 'list_yesno'	, 'Remove Selected Groups Exp', 'Set to yes, to delete only selected groups on expiration of plan');
+		$settings['remove_selected_exp']		= array( 'list'			, 'Remove JUGA Groups Exp', 'List of groups to be removed on expiration of plan');
 		$settings['set_enroll_group_exp']		= array( 'toggle' );
 		$settings['enroll_group_exp']			= array( 'list' );
 		$settings['rebuild']					= array( 'toggle' );
@@ -86,17 +110,21 @@ class mi_juga
 	{
 		$db = &JFactory::getDBO();
 
-		if ( $this->settings['set_remove_group_exp'] ) {
+		if ( $this->settings['set_remove_group_exp'] && !empty( $this->settings['enroll_group'] ) ) {
 			foreach ( $this->settings['enroll_group'] as $groupid ) {
 				$this->DeleteUserFromGroup( $request->metaUser->userid, $groupid );
 			}
 		}
 
-		if ( $this->settings['set_enroll_group_exp'] ) {
-			if ( !empty( $this->settings['enroll_group_exp'] ) ) {
-				foreach ( $this->settings['enroll_group_exp'] as $enroll_group_exp) {
-					$this->AddUserToGroup( $request->metaUser->userid, $enroll_group_exp );
-				}
+		if ( !empty( $this->settings['set_remove_selected_exp'] ) && !empty( $this->settings['remove_selected_exp'] ) ) {
+			foreach ( $this->settings['remove_selected_exp'] as $remove_group ) {
+				$this->DeleteUserFromGroup( $request->metaUser->userid, $remove_group );
+			}
+		}
+
+		if ( $this->settings['set_enroll_group_exp'] && !empty( $this->settings['enroll_group_exp'] ) ) {
+			foreach ( $this->settings['enroll_group_exp'] as $enroll_group_exp) {
+				$this->AddUserToGroup( $request->metaUser->userid, $enroll_group_exp );
 			}
 		}
 
@@ -107,15 +135,17 @@ class mi_juga
 	{
 		$db = &JFactory::getDBO();
 
-		if ( $this->settings['set_remove_group'] ) {
+		if ( $this->settings['set_remove_group'] && empty( $this->settings['set_remove_selected'] ) ) {
 			$this->DeleteUserFromGroup( $request->metaUser->userid );
+		} elseif ( !empty( $this->settings['set_remove_selected'] ) ) {
+			foreach ( $this->settings['remove_selected'] as $remove_group ) {
+				$this->DeleteUserFromGroup( $request->metaUser->userid, $remove_group );
+			}
 		}
 
-		if ( $this->settings['set_enroll_group'] ) {
-			if( !empty( $this->settings['enroll_group'] ) ) {
-				foreach( $this->settings['enroll_group'] as $enroll_group) {
-					$this->AddUserToGroup( $request->metaUser->userid, $enroll_group );
-				}
+		if ( $this->settings['set_enroll_group'] && !empty( $this->settings['enroll_group'] ) ) {
+			foreach( $this->settings['enroll_group'] as $enroll_group) {
+				$this->AddUserToGroup( $request->metaUser->userid, $enroll_group );
 			}
 		}
 	}
