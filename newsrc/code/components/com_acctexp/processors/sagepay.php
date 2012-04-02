@@ -137,7 +137,7 @@ class processor_sagepay extends XMLprocessor
 			$return['valid']	= 0;
 			$return['raw']		= $response;
 
-			if ( $response["Status"] == "OK" ) {
+			if ( trim($response["Status"]) == "OK" ) {
 				$return['valid']	= 1;
 			} else {
 				$return['error']	= $response['StatusDetail'];
