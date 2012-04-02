@@ -24,7 +24,7 @@ class processor_sagepay extends XMLprocessor
 			$info['languages']		= AECToolbox::getISO639_1_codes();
 			$info['cc_list']		= 'visa,mastercard';
 			$info['recurring']		= 0;
-			$info['secure']			= 0;
+			$info['secure']			= 1;
 
 			return $info;
 		}
@@ -131,6 +131,7 @@ class processor_sagepay extends XMLprocessor
 			}
 
 			$curlextra = array();
+			$curlextra[CURLOPT_HTTPHEADER] = 'application/x-www-form-urlencoded';
 
 			$response = $this->decodeResponse( $this->transmitRequest( $url, $path, $xml, 443, $curlextra ) );
 
