@@ -25,7 +25,7 @@ class tool_cleanup
 	function Settings()
 	{
 		$settings = array();
-		$settings['delete']				= array( 'checkbox', 'Delete', 'Do the cleanup (this can delete a lot of data - do a check first)' );
+		$settings['delete']				= array( 'toggle', 'Delete', 'Do the cleanup (this can delete a lot of data - do a check first)' );
 
 		return $settings;
 	}
