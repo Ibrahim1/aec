@@ -2943,7 +2943,9 @@ class HTML_AcctExp
 		?>
 		<table width="100%" class="aecadminform"><tr><td>
 			<div class="aec_userinfobox_sub">
-			<h4><?php echo JText::_('Challenge'); ?></h4>
+			<?php if ( !empty( $cmd ) ) { ?>
+				<h4><?php echo JText::_('Challenge'); ?></h4>
+			<?php } ?>
 			<?php if ( is_array( $result ) ) { ?>
 				<div id="aec-toolbox-list">
 				<?php foreach ( $result as $x => $litem ) {

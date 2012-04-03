@@ -17,7 +17,7 @@ class tool_supporthours
 	{
 		$info = array();
 		$info['name'] = "Support Hours";
-		$info['desc'] = "Counts and collates logged support hours for a given time period.";
+		$info['desc'] = "Counts and collates logged support hours (from the Support Time MI) for a given time period.";
 
 		return $info;
 	}
