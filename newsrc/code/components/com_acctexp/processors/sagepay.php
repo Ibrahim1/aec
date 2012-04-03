@@ -95,7 +95,7 @@ class processor_sagepay extends XMLprocessor
 			$vars['Currency']				= $this->settings['currency'];
 			$vars['CardHolder']				= $request->int_var['params']['billFirstName'] . ' ' . $request->int_var['params']['billLastName'];
 			$vars['CardNumber']				= $request->int_var['params']['cardNumber'];
-			$vars['CardType']				= $request->int_var['params']['cardType'];
+			$vars['CardType']				= $this->translateCardType( $request->int_var['params']['cardType'] );
 			$vars['ExpiryDate']				= $request->int_var['params']['expirationMonth'] . substr( $request->int_var['params']['expirationYear'], -2 );
 			$vars['CV2']					= $request->int_var['params']['cardVV2'];
 			$vars['ClientIPAddress']		= $_SERVER['REMOTE_ADDR'];
@@ -118,6 +118,21 @@ class processor_sagepay extends XMLprocessor
 			$vars['DeliveryCountry']		= $request->int_var['params']['billCountry'];			
 
 			return $this->arrayToNVP( $vars );
+		}
+
+		function translateCardType( $ct )
+		{
+			$cctlist = array(	'visa' => 'VISA',
+								'mastercard' => 'MC',
+								'discover' => 'DC',
+								'amex' => 'AMEX'
+								);
+
+			if ( isset( $cctlist[$ct] ) ) {
+				return ( $cctlist[$ct] );
+			} else {
+				return 'MC';
+			}
 		}
 
 		function transmitRequestXML( $xml, $request )
