@@ -44,7 +44,7 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery('a#testexport').on("click", function(e) {
 		var values = {};
-		$.each($('#adminForm').serializeArray(), function(i, field) {
+		jQuery.each(jQuery('#adminForm').serializeArray(), function(i, field) {
 		    if ( typeof values[field.name] != 'undefined' ) {
 		    	if ( typeof values[field.name] != 'object' ) {
 		    		var temparray = new Array();
