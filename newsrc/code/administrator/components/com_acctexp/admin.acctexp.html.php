@@ -827,9 +827,10 @@ class HTML_AcctExp
 					<br />
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
 						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
-						<p>Thank you for choosing the<br />Account Expiration Control Component!</p>
+						<p>Thank you for choosing the AEC!</p>
 						<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
-							<p>If you use AEC, please post a rating and a review<br />at the Joomla! Extensions Directory:<br /><br /><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><i class="bsicon-heart bsicon-white"></i>&nbsp;Go there now</a></p>
+							<p>If you use AEC, please post a rating and a review<br />at the Joomla! Extensions Directory:</p>
+							<p><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><i class="bsicon-heart bsicon-white"></i>&nbsp;Go there now</a></p>
 						</div>
 						<div style="margin: 0 auto;text-align:center;">
 							<a href="http://www.valanx.org"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx" /></a>
