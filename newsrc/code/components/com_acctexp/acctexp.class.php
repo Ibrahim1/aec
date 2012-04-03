@@ -10308,6 +10308,8 @@ class InvoiceFactory
 
 		$nochoice = false;
 
+		$passthrough = $this->getPassthrough();
+
 		// There is no choice if we have only one group or only one item with one payment option
 		if ( count( $list ) === 1 ) {
 			if ( $list[0]['type'] == 'item' ) {
