@@ -2274,7 +2274,7 @@ function saveProcessor( $option, $return=0 )
 	$pp->storeload();
 
 	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->id, JText::_('AEC_CONFIG_SAVED') );
+		aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->processor->id, JText::_('AEC_CONFIG_SAVED') );
 	} else {
 		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
 	}
