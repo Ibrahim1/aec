@@ -443,7 +443,7 @@ class HTML_AcctExp
 							<?php } elseif ( $metaUser->hasSubscription ) { ?>
 								<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NOPE');?></p>
 							<?php } else { ?>
-								<div class="alert-message block-message warning" style="width:200px;">
+								<div class="alert alert-danger">
 									<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NONE');?></p>
 								</div>
 							<?php } ?>
@@ -827,7 +827,7 @@ class HTML_AcctExp
 					<br />
 					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
 						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
-						<p>Thank you for choosing the AEC!</p>
+						<p>Thank you for choosing AEC!</p>
 						<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
 							<p>If you use AEC, please post a rating and a review<br />at the Joomla! Extensions Directory:</p>
 							<p><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><i class="bsicon-heart bsicon-white"></i>&nbsp;Go there now</a></p>
@@ -919,7 +919,7 @@ class HTML_AcctExp
 		<table class="aecadminform">
 			<tr><td>
 				<div style="width:100%; float:left;">
-					<div class="alert-message block-message warning" style="width:350px; margin:5px;">
+					<div class="alert alert-danger">
 						<h2 style="color: #FF0000;"><?php echo JText::_('AEC_HACKS_NOTICE'); ?>:</h2>
 						<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC'); ?></p>
 						<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC2'); ?></p>
@@ -1723,7 +1723,7 @@ class HTML_AcctExp
 								<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'hide_duration_checkout' ); ?>
 								<?php if ( $hasrecusers ) { ?>
-									<div class="alert-message block-message warning" style="width:200px;">
+									<div class="alert alert-danger">
 										<strong><?php echo JText::_('PAYPLAN_AMOUNT_EDITABLE_NOTICE'); ?></strong>
 									</div>
 								<?php } ?>
@@ -1843,7 +1843,7 @@ class HTML_AcctExp
 				<?php echo $aecHTML->createSettingsParticle( 'trial_amount' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'trial_period' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'trial_periodunit' ); ?>
-				<div class="alert-message block-message warning" style="width:200px;">
+				<div class="alert alert-danger">
 					<?php echo JText::_('PAYPLAN_AMOUNT_NOTICE_TEXT'); ?>
 				</div>
 			</div>

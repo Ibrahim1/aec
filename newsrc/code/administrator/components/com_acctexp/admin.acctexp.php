@@ -2615,12 +2615,12 @@ function editSubscriptionPlan( $id, $option )
 	$params['override_regmail']		= array( 'toggle', 0 );
 
 	$params['full_free']			= array( 'toggle', '' );
-	$params['full_amount']			= array( 'inputB', '' );
-	$params['full_period']			= array( 'inputB', '' );
+	$params['full_amount']			= array( 'inputA', '' );
+	$params['full_period']			= array( 'inputA', '' );
 	$params['full_periodunit']		= array( 'list', 'D' );
 	$params['trial_free']			= array( 'toggle', '' );
-	$params['trial_amount']			= array( 'inputB', '' );
-	$params['trial_period']			= array( 'inputB', '' );
+	$params['trial_amount']			= array( 'inputA', '' );
+	$params['trial_period']			= array( 'inputA', '' );
 	$params['trial_periodunit']		= array( 'list', 'D' );
 
 	$params['gid_enabled']			= array( 'toggle', 1 );
