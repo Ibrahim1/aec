@@ -133,8 +133,6 @@ class mi_aecmodifycost
 		$item['terms']->terms[0]->addCost( $extracost, array( 'details' => $option['extra'] ) );
 		$item['cost'] = $item['terms']->renderTotal();
 
-		$request->add->itemlist[] = $item;
-
 		return $request;
 	}
 
