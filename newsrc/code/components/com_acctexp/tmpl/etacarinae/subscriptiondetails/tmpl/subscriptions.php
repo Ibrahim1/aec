@@ -14,10 +14,10 @@
 	<?php foreach ( $subscriptions as $sid => $subscription ) {
 		switch ( $sid ) {
 			case 0:
-				echo '<h2>' . JText::_('YOUR_SUBSCRIPTION') . '</h2>';
+				echo '<h4>' . JText::_('YOUR_SUBSCRIPTION') . '</h4>';
 				break;
 			case 1:
-				echo '<h2>' . JText::_('YOUR_FURTHER_SUBSCRIPTIONS') . '</h2>';
+				echo '<h4>' . JText::_('YOUR_FURTHER_SUBSCRIPTIONS') . '</h4>';
 				break;
 		} ?>
 		<div class="subscription-info">
