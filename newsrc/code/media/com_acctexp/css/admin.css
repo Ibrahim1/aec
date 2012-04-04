@@ -43,6 +43,10 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#850d0d', endC
 -webkit-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
 -moz-box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
 box-shadow: 0 1px 3px rgba(1, 1, 1, 0.75), 0 -1px 5px rgba(1, 1, 1, 0.6) inset;
+border-top-right-radius: 0;
+-moz-border-radius-topright: 0;
+border-top-left-radius: 0;
+-moz-border-radius-topleft: 0;
 border-bottom-right-radius: 10px;
 -moz-border-radius-bottomright: 10px;
 border-bottom-left-radius: 10px;
