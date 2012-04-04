@@ -12717,7 +12717,11 @@ class Invoice extends serialParamDBTable
 					$int_var['objUsage'] = $InvoiceFactory->cartobject;
 				}
 
-				$int_var['amount'] = $InvoiceFactory->items->grand_total->renderCost();
+				if ( is_object( $InvoiceFactory->items->grand_total ) ) {
+					$int_var['amount'] = $InvoiceFactory->items->grand_total->renderCost();
+				} else {
+					$int_var['amount'] = $InvoiceFactory->items->grand_total;
+				}
 			}
 
 			if ( $doublecheck ) {
