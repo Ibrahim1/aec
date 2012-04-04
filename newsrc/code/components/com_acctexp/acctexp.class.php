@@ -6489,8 +6489,15 @@ class aecHTML
 				break;
 			case "list":
 				if ( $aecConfig->cfg['checkoutform_jsvalidation'] ) {
+					$title = "";
+					if ( isset( $row[2] ) ) {
+						$title = $row[2];
+					} elseif ( isset( $row[1] ) ) {
+						$title = $row[1];
+					}
+					
 					$search = 'class="';
-					$replace = 'title="' . $row[2] . '" class="' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? 'validate-'.$name.' ' : '' ) . ( $sxx ? 'required ' : '' );
+					$replace = 'title="' . $title . '" class="' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? 'validate-'.$name.' ' : '' ) . ( $sxx ? 'required ' : '' );
 
 					$return .= str_replace( $search, $replace, $lists[$value ? $value : $name] ) . $sx;
 				} else {
@@ -19270,18 +19277,20 @@ class couponsHandler extends eucaObject
 				}
 			}
 		} else {
-			foreach ( $this->coupons as $coupon_code ) {
-				if ( in_array( $coupon_code, $this->noapplylist ) ) {
-					continue;
-				}
+			if ( !empty( $this->coupons ) ) {
+				foreach ( $this->coupons as $coupon_code ) {
+					if ( in_array( $coupon_code, $this->noapplylist ) ) {
+						continue;
+					}
 
-				if ( $this->loadCoupon( $coupon_code ) ) {
-					if ( $cart != false ) {
-						if ( $cart->hasCoupon( $coupon_code, $id ) ) {
+					if ( $this->loadCoupon( $coupon_code ) ) {
+						if ( $cart != false ) {
+							if ( $cart->hasCoupon( $coupon_code, $id ) ) {
+								$item = $this->applyToItem( $id, $item, $coupon_code );
+							}
+						} else {
 							$item = $this->applyToItem( $id, $item, $coupon_code );
 						}
-					} else {
-						$item = $this->applyToItem( $id, $item, $coupon_code );
 					}
 				}
 			}
