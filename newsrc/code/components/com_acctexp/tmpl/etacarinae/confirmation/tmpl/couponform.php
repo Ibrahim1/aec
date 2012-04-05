@@ -16,8 +16,9 @@
 	} else {
 		?><p><?php echo JText::_('CONFIRM_COUPON_INFO') ?></p><?php
 	}
+
+	if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) { ?>
+		<strong><?php echo JText::_('CHECKOUT_COUPON_CODE') ?></strong>
+		<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
+	<?php }
 } ?>
-<?php if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) { ?>
-	<strong><?php echo JText::_('CHECKOUT_COUPON_CODE') ?></strong>
-	<input type="text" size="20" name="coupon_code" class="inputbox" value="" />
-<?php }

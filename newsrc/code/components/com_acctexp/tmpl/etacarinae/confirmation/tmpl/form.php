@@ -12,6 +12,8 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <form id="form-confirm" action="<?php echo $tmpl->url( array( 'task' => 'saveSubscription') ) ?>" method="post">
 	<div id="confirmation-extra">
+		<?php if ( !empty( $InvoiceFactory->mi_error ) || !empty( $InvoiceFactory->mi_form ) || $InvoiceFactory->coupons['active'] || $makegift ) { ?>
+		<?php @include( $tmpl->tmpl( 'mierror' ) ); ?>
 		<div class="alert alert-success">
 			<div id="confirmation-form">
 				<?php
@@ -23,6 +25,7 @@
 				?>
 			</div>
 		</div>
+		<?php } ?>
 	</div>
 	<?php
 
