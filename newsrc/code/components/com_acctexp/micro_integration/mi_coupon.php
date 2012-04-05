@@ -99,7 +99,7 @@ class mi_coupon
 						$cph->coupon->coupon_code = $newcode;
 						$cph->coupon->active = 1;
 
-						if ( !empty( $this->settings['create_new_coupons'] ) ) {
+						if ( !empty( $this->settings['max_reuse'] ) ) {
 							$cph->restrictions['max_reuse'] = $this->settings['max_reuse'];
 						} else {
 							$cph->restrictions['max_reuse'] = 1;
