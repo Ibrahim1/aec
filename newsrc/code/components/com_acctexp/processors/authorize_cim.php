@@ -859,6 +859,15 @@ class processor_authorize_cim extends PROFILEprocessor
 				}
 
 				return true;
+			} else {
+				$short	= 'Rebill Failed';
+				$event	= 'Authorize.net CIM Error: ' . $cim->code . ": " . $cim->text . " (" . $cim->directResponse . ")";
+				$tags	= 'invoice,processor,rebill,error';
+				$level	= 128;
+				$params = array( 'invoice_number' => $this->invoice_number );
+
+				$eventlog = new eventLog( $db );
+				$eventlog->issue( $short, $tags, $event, $level, $params );
 			}
 		}
 
