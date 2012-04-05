@@ -26,8 +26,23 @@ class tool_pretend
 	{
 		$settings = array();
 		$settings['plans']			= array( 'inputB', 'Plans', 'Number of Membership Plans', 10 );
+		$settings['groups']			= array( 'inputB', 'Groups', 'Number of Membership Plan Groups', 3 );
+		$settings['users']			= array( 'inputB', 'Users', 'Number of Users', 25000 );
+		
+		$settings['start']			= array( 'inputB', 'Start', 'Start of business', date('Y')-10 );
 
 		return $settings;
+	}
+
+	function Action()
+	{
+		$db = &JFactory::getDBO();
+
+		$grouplist = $this->createGroups( $_POST['groups'] );
+		
+		$planlist = $this->createPlans( $grouplist, $_POST['plans'] );
+
+		
 	}
 
 	function createPlans( $plans )
@@ -48,10 +63,97 @@ class tool_pretend
 		}
 	}
 
-	function Action()
+	function getRandomNames( $amount )
 	{
-		$db = &JFactory::getDBO();
+		$male = array(	"John","William","James","George","Charles",
+						"Frank","Joseph","Henry","Robert","Thomas",
+						"Edward","Harry","Walter","Arthur","Fred",
+						"Albert","Samuel","Clarence","Louis","David",
+						"Joe","Charlie","Richard","Ernest","Roy",
+						"Will","Andrew","Jesse","Oscar","Willie",
+						"Daniel","Benjamin","Carl","Sam","Alfred",
+						"Earl","Peter","Elmer","Frederick","Howard",
+						"Lewis","Ralph","Herbert","Paul","Lee",
+						"Tom","Herman","Martin","Jacob","Michael",
+						"Jim","Claude","Ben","Eugene","Francis",
+						"Grover","Raymond","Harvey","Clyde","Edwin",
+						"Edgar","Ed","Lawrence","Bert","Chester",
+						"Jack","Otto","Luther","Charley","Guy",
+						"Floyd","Ira","Ray","Hugh","Isaac",
+						"Oliver","Patrick","Homer","Theodore","Leonard",
+						"Leo","Alexander","August","Harold","Allen",
+						"Jessie","Archie","Philip","Stephen","Horace",
+						"Marion","Bernard","Anthony","Julius","Warren",
+						"Leroy","Clifford","Eddie","Sidney","Milton");
 
+		$female = array("Mary","Anna","Emma","Elizabeth","Margaret",
+						"Minnie","Ida","Bertha","Clara","Alice",
+						"Annie","Florence","Bessie","Grace","Ethel",
+						"Sarah","Ella","Martha","Nellie","Mabel",
+						"Laura","Carrie","Cora","Helen","Maude",
+						"Lillian","Gertrude","Rose","Edna","Pearl",
+						"Edith","Jennie","Hattie","Mattie","Eva",
+						"Julia","Myrtle","Louise","Lillie","Jessie",
+						"Frances","Catherine","Lula","Lena","Marie",
+						"Ada","Josephine","Fannie","Lucy","Dora",
+						"Agnes","Maggie","Blanche","Katherine","Elsie",
+						"Nora","Mamie","Rosa","Stella","Daisy",
+						"May","Effie","Mae","Ellen","Nettie",
+						"Ruth","Alma","Della","Lizzie","Sadie",
+						"Sallie","Nancy","Susie","Maud","Flora",
+						"Irene","Etta","Katie","Lydia","Lottie",
+						"Viola","Caroline","Addie","Hazel","Georgia",
+						"Esther","Mollie","Olive","Willie","Harriet",
+						"Emily","Charlotte","Amanda","Kathryn","Lulu",
+						"Susan","Kate","Nannie","Jane","Amelia");
+
+		$surnames = array("Smith","Johnson","Williams","Brown","Jones",
+						"Miller","Davis","García","Rodríguez","Wilson",
+						"Martínez","Anderson","Taylor","Thomas","Hernández",
+						"Moore","Martin","Jackson","Thompson","White",
+						"López","Lee","González","Harris","Clark",
+						"Lewis","Robinson","Walker","Pérez","Hall",
+						"Young","Allen","Sánchez","Wright","King",
+						"Scott","Green","Baker","Adams","Nelson",
+						"Hill","Ramírez","Campbell","Mitchell","Roberts",
+						"Carter","Phillips","Evans","Turner","Torres",
+						"Parker","Collins","Edwards","Stewart","Flores",
+						"Morris","Nguyen","Murphy","Rivera","Cook",
+						"Rogers","Morgan","Peterson","Cooper","Reed",
+						"Bailey","Bell","Gómez","Kelly","Howard",
+						"Ward","Cox","Díaz","Richardson","Wood",
+						"Watson","Brooks","Bennett","Gray","James",
+						"Reyes","Cruz","Hughes","Price","Myers",
+						"Long","Foster","Sanders","Ross","Morales",
+						"Powell","Sullivan","Russell","Ortiz","Jenkins",
+						"Gutiérrez","Perry","Butler","Barnes","Fisher");
+
+		$namelist = array();
+		for ( $i=0; $i<$amount; $i++ ) {
+			// Feminist code is feminist
+			$gender = rand(0, 1);
+
+			$sno = rand(1, 4);
+
+			$name = array();
+			for ( $j=0; $j<$sno; $j++ ) {
+				$rname = rand(0, 99);
+
+				if ( $gender ) {
+					$name[] = $female[$rname];
+				} else {
+					$name[] = $male[$rname];
+				}
+			}
+
+			$rname = rand(0, 99);
+	
+			$name[] = $surnames[$rname];
+
+			$namelist[] = implode( " ", $name );
+		}
+
+		return $namelist;
 	}
 
 }
