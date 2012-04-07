@@ -751,7 +751,7 @@ class HTML_AcctExp
 																	array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
 																	array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
 																	array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
-																	array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY') ),
+																	array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY'), JText::_('AEC_CENTR_M_VIEW_HISTORY') ),
 																	array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
 																	)
 												),
