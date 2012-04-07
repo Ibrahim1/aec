@@ -33,6 +33,11 @@ class processor_offline_payment2 extends processor
 		return '';
 	}
 
+	function checkoutText()
+	{
+		return "";
+	}
+
 	function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );

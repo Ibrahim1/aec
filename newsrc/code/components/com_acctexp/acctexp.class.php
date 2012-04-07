@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4879' );
+define( '_AEC_REVISION', '4885' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -4782,6 +4782,11 @@ class processor extends serialParamDBTable
 		$this->settings	= $settings;
 
 		$this->storeload();
+	}
+
+	function checkoutText()
+	{
+		return JText::_('CHECKOUT_BTN_INFO');
 	}
 
 	function checkoutAction( $request, $InvoiceFactory=null )

@@ -45,7 +45,7 @@
 					<div class="well">
 						<div id="checkout-button">
 							<?php print $var ?>
-							<p><?php echo JText::_('CHECKOUT_BTN_INFO') ?></p>
+							<p><?php echo $InvoiceFactory->pp->processor->checkoutText(); ?></p>
 						</div>
 					</div>
 				<?php } ?>
