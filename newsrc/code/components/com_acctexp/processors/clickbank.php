@@ -134,9 +134,7 @@ class processor_clickbank extends URLprocessor
 			$check[] = $post['time'];
 			$check[] = $post['item'];
 
-			$code = sha1( implode( '|', $check) );
-
-			$xxpop = strtoupper( substr( $code, 0 ,8 ) );
+			$xxpop = strtoupper( substr( sha1( mb_convert_encoding(implode( '|', $check ), "UTF-8") ), 0 ,8 ) );
 
 			if ( $post['cbpop'] == $xxpop ) {
 				$response['valid']	= 1;
@@ -144,24 +142,20 @@ class processor_clickbank extends URLprocessor
 				$response['pending_reason'] = 'verification error';
 			}
 		} else {
-			// Standard parameters that Clickbank will send back (leaving out 'cverify')
-			$postback = array( 'ccustname', 'ccuststate', 'ccustcc', 'ccustemail',
-								'cproditem', 'cprodtitle', 'cprodtype', 'ctransaction',
-								'ctransaffiliate', 'ctransamount', 'ctranspaymentmethod', 'ctranspublisher',
-								'ctransreceipt', 'caffitid', 'cvendthru', 'ctranstime' );
-
 			$params = array();
-			foreach ( $postback as $pb ) {
-				$post[$pb] = aecGetParam( $pb, '', true, array( 'word', 'string' ) );
-
-				$params[] = $post[$pb];
+			foreach ( $_POST as $field => $content ) {
+				if ( $field != 'cverify' ) {
+					if ( get_magic_quotes_gpc() ) {
+						$params[] = stripslashes( $_POST[$field] );
+					} else {
+						$params[] = $_POST[$field];
+					}
+				}
 			}
-
-			$post['cverify'] = $cverify;
 
 			$params[] = $this->settings['secret_key'];
 
-			$verify = strtoupper( substr( sha1( implode( '|', $params ) ), 0, 8 ) );
+			$verify = strtoupper( substr( sha1( mb_convert_encoding(implode( '|', $params ), "UTF-8") ), 0, 8 ) );
 
 			if ( $cverify == $verify ) {
 				switch ( $post['ctransaction'] ) {
