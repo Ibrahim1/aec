@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4865' );
+define( '_AEC_REVISION', '4879' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -4005,8 +4005,9 @@ class PaymentProcessor
 
 			// Initiate Payment Processor Class
 			$class_name = 'processor_' . $this->processor_name;
+
 			$this->processor = new $class_name( $db );
-			$this->processor->id = $this->id;
+			$this->processor->load( $this->id );
 			$this->processor->name = $this->processor_name;
 
 			if ( is_object( $res ) ) {
@@ -5187,8 +5188,6 @@ class XMLprocessor extends processor
 
 	function getStdFormVars( $request )
 	{
-		$return = "";
-
 		$return = '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="processor" value="' . $this->name . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";

@@ -89,9 +89,9 @@ class HTML_myCommon
 		?><form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"><?php
 	}
 
-	function endForm( $option, $id )
+	function endForm( $option, $id, $task='' )
 	{
-		$options = array( 'id' => $id, 'option' => $option, 'task' => '' );
+		$options = array( 'id' => $id, 'option' => $option, 'task' => $task );
 
 		foreach ( $options as $name => $value ) {
 			echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
@@ -1129,7 +1129,7 @@ class HTML_AcctExp
 		</td></tr></table>
 		<?php
 
-		HTML_myCommon::endForm( $option, $id );
+		HTML_myCommon::endForm( $option, $id, 'saveProcessor' );
 
 		echo $aecHTML->loadJS();
 
