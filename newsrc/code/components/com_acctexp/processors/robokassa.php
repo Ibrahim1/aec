@@ -69,11 +69,17 @@ class processor_robokassa extends POSTprocessor
 			$var['post_url']		= "https://merchant.roboxchange.com/Index.aspx";
 		}
 
+		$vars = array();
+		$vars[] = trim($this->settings['login']);
+		$vars[] = $invoice->amount;
+		$vars[] = $invoice->id;
+		$vars[] = trim($this->settings['pass']);
+
 		$var['MrchLogin']			= trim($this->settings['login']);
 		$var['OutSum']				= $request->int_var['amount'];
 		$var['InvId']				= $request->invoice->id;
 		$var['Desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['SignatureValue']		= $this->getHash( $request->invoice );			
+		$var['SignatureValue']		= $this->getHash( $vars );			
 		$var['Culture']				= $this->settings['language'];
 
 		return $var;
@@ -94,7 +100,12 @@ class processor_robokassa extends POSTprocessor
 
 		$invoice->amount = number_format( $post['OutSum'], 2 );
 
-		if ( strtoupper( $post['SignatureValue'] ) != strtoupper( $this->getHash( $invoice, false ) ) ) {
+		$vars = array();
+		$vars[] = $_REQUEST["OutSum"];
+		$vars[] = $_REQUEST["InvId"];
+		$vars[] = trim($this->settings['notify_pass']);
+
+		if ( strtoupper( $post['SignatureValue'] ) != strtoupper( $this->getHash( $vars ) ) ) {
 			$response['error'] = 'Security Code Mismatch';
 		} else {
 			$response['valid'] = true;
@@ -103,26 +114,8 @@ class processor_robokassa extends POSTprocessor
 		return $response;
 	}
 
-	function getHash( $invoice, $send=true, $notification=false )
+	function getHash( $vars )
 	{
-		// MD5 signature formed from the parameters, separated by ':' with sMerchantPass2 added at the end
-		// i.e. nOutSum:nInvId:sMerchantPass2[:sorted_merchant_parameters]
-
-		$vars = array();
-
-		if ( $send ) {
-			$vars[] = trim($this->settings['login']);
-		}
-
-		$vars[] = $invoice->amount;
-		$vars[] = $invoice->id;
-
-		if ( $send ) {
-			$vars[] = trim($this->settings['pass']);
-		} else {
-			$vars[] = trim($this->settings['notify_pass']);
-		}
-
 		return md5( implode( ':', $vars ) );
 	}
 
