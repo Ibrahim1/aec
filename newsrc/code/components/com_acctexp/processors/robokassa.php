@@ -71,8 +71,8 @@ class processor_robokassa extends POSTprocessor
 
 		$vars = array();
 		$vars[] = trim($this->settings['login']);
-		$vars[] = $invoice->amount;
-		$vars[] = $invoice->id;
+		$vars[] = $request->invoice->amount;
+		$vars[] = $request->invoice->id;
 		$vars[] = trim($this->settings['pass']);
 
 		$var['MrchLogin']			= trim($this->settings['login']);
