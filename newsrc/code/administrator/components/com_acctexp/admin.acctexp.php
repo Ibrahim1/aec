@@ -241,6 +241,8 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'invoices': invoices( $option ); break;
+	case 'newinvoice': editInvoice( 0, $option, $userid ); break;
+	case 'editinvoice': editInvoice( $id[0], $option ); break;
 
 	case 'history': history( $option ); break;
 	case 'eventlog': eventlog( $option ); break;
@@ -4557,7 +4559,256 @@ function invoices( $option )
 		$rows[$id]->username .= '</a>';
 	}
 
-	HTML_AcctExp::viewinvoices( $option, $rows, $search, $pageNav );
+	HTML_AcctExp::viewInvoices( $option, $rows, $search, $pageNav );
+}
+
+function editInvoice( $id, $option )
+{
+	$db = &JFactory::getDBO();
+
+	if ( $id ) {
+		$pp = new PaymentProcessor();
+
+		if ( !$pp->loadId( $id ) ) {
+			return false;
+		}
+
+		// Init Info and Settings
+		$pp->fullInit();
+
+		// Get Backend Settings
+		$settings_array		= $pp->getBackendSettings();
+		$original_settings	= $pp->processor->settings();
+
+		if ( isset( $settings_array['lists'] ) ) {
+			foreach ( $settings_array['lists'] as $lname => $lvalue ) {
+				$list_name = $pp->processor_name . '_' . $lname;
+
+				$lists[$list_name] = str_replace( 'name="' . $lname . '"', 'name="' . $list_name . '"', $lvalue );
+			}
+
+			unset( $settings_array['lists'] );
+		}
+
+		$available_plans = SubscriptionPlanHandler::getActivePlanList();
+		$total_plans = count( $available_plans );
+
+		// Iterate through settings form assigning the db settings
+		foreach ( $settings_array as $name => $values ) {
+			$setting_name = $pp->processor_name . '_' . $name;
+
+			switch( $settings_array[$name][0] ) {
+				case 'list_currency':
+					// Get currency list
+					if ( is_array( $pp->info['currencies'] ) ) {
+						$currency_array	= $pp->info['currencies'];
+					} else {
+						$currency_array	= explode( ',', $pp->info['currencies'] );
+					}
+
+					// Transform currencies into OptionArray
+					$currency_code_list = array();
+					foreach ( $currency_array as $currency ) {
+						if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
+							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
+						}
+					}
+
+					$size = min( count($currency_array), 10 );
+
+					// Create list
+					$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="' . $size . '"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+				case 'list_language':
+					// Get language list
+					if ( is_array( $pp->info['languages'] ) ) {
+						$language_array	= $pp->info['languages'];
+					} else {
+						$language_array	= explode( ',', $pp->info['languages'] );
+					}
+
+					// Transform languages into OptionArray
+					$language_code_list = array();
+					foreach ( $language_array as $language ) {
+						$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'LANGUAGECODE_' . $language ) );
+					}
+					// Create list
+					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+				case 'list_plan':
+					// Create list
+					$lists[$setting_name] = JHTML::_('select.genericlist', $available_plans, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
+					$settings_array[$name][0] = 'list';
+					break;
+				default:
+					break;
+			}
+
+			if ( !isset( $settings_array[$name][1] ) ) {
+				$settings_array[$name][1] = $pp->getParamLang( $name . '_NAME' );
+				$settings_array[$name][2] = $pp->getParamLang( $name . '_DESC' );
+			}
+
+			// It might be that the processor has got some new properties, so we need to double check here
+			if ( isset( $pp->settings[$name] ) ) {
+				$content = $pp->settings[$name];
+			} elseif ( isset( $original_settings[$name] ) ) {
+				$content = $original_settings[$name];
+			} else {
+				$content = null;
+			}
+
+			// Set the settings value
+			$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $content ) );
+
+			// unload the original value
+			unset( $settings_array[$name] );
+		}
+
+		$longname = $pp->processor_name . '_info_longname';
+		$description = $pp->processor_name . '_info_description';
+
+		$settingsparams = $pp->settings;
+
+		$params = array();
+		$params[$pp->processor_name.'_active'] = array( 'toggle', JText::_('PP_GENERAL_ACTIVE_NAME'), JText::_('PP_GENERAL_ACTIVE_DESC'), $pp->processor->active);
+
+		if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
+			$params = array_merge( $params, $settings_array );
+		}
+
+		$params[$longname] = array( 'inputC', JText::_('CFG_PROCESSOR_NAME_NAME'), JText::_('CFG_PROCESSOR_NAME_DESC'), $pp->info['longname'], $longname);
+		$params[$description] = array( 'editor', JText::_('CFG_PROCESSOR_DESC_NAME'), JText::_('CFG_PROCESSOR_DESC_DESC'), $pp->info['description'], $description);
+	} else {
+		// Create Processor Selection Screen
+		$pph					= new PaymentProcessorHandler();
+		$pplist					= $pph->getProcessorList();
+		$pp_installed_list		= $pph->getInstalledObjectList( false, true );
+
+		$pp_list_html			= array();
+
+		asort($pplist);
+
+		foreach ( $pplist as $ppname ) {
+			if ( in_array( $ppname, $pp_installed_list ) ) {
+				continue;
+			}
+
+			$readppname = ucwords( str_replace( '_', ' ', strtolower( $ppname ) ) );
+
+			// Load Payment Processor
+			$pp = new PaymentProcessor();
+			if ( $pp->loadName( $ppname ) ) {
+				$pp->getInfo();
+
+				// Add to general PP List
+				$pp_list_html[] = JHTML::_('select.option', $ppname, $readppname );
+			}
+		}
+
+		$lists['processor']	= JHTML::_('select.genericlist', $pp_list_html, 'processor', 'size="' . max(min(count($pplist), 24), 2) . '"', 'value', 'text' );
+
+		$params['processor'] = array( 'list' );
+		$settingsparams = array();
+
+		$pp = null;
+	}
+
+	$settings = new aecSettings ( 'invoice', 'general' );
+	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+
+	// Call HTML Class
+	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+	if ( !empty( $customparamsarray ) ) {
+		$aecHTML->customparams = $customparamsarray;
+	}
+
+	HTML_AcctExp::addInvoice( $option, $aecHTML );
+}
+
+function saveInvoice( $option, $return=0 )
+{
+	$db = &JFactory::getDBO();
+
+	$user = &JFactory::getUser();
+
+	$pp = new PaymentProcessor();
+
+	if ( !empty( $_POST['id'] ) ) {
+		$pp->loadId( $_POST['id'] );
+
+		if ( empty( $pp->id ) ) {
+			cancel();
+		}
+
+		$procname = $pp->processor_name;
+	} elseif ( isset( $_POST['processor'] ) ) {
+		$pp->loadName( $_POST['processor'] );
+
+		$procname = $_POST['processor'];
+	}
+
+	$pp->fullInit();
+
+	$active			= $procname . '_active';
+	$longname		= $procname . '_info_longname';
+	$description	= $procname . '_info_description';
+
+	if ( isset( $_POST[$longname] ) ) {
+		$pp->info['longname'] = $_POST[$longname];
+		unset( $_POST[$longname] );
+	}
+
+	if ( isset( $_POST[$description] ) ) {
+		$pp->info['description'] = $_POST[$description];
+		unset( $_POST[$description] );
+	}
+
+	if ( isset( $_POST[$active] ) ) {
+		$pp->processor->active = $_POST[$active];
+		unset( $_POST[$active] );
+	}
+
+	$settings = $pp->getBackendSettings();
+
+	if ( is_int( $pp->is_recurring() ) ) {
+		$settings['recurring'] = 2;
+	}
+
+	foreach ( $settings as $name => $value ) {
+		if ( $name == 'lists' ) {
+			continue;
+		}
+
+		$postname = $procname  . '_' . $name;
+
+		if ( isset( $_POST[$postname] ) ) {
+			$val = $_POST[$postname];
+
+			if ( empty( $val ) ) {
+				switch( $name ) {
+					case 'currency':
+						$val = 'USD';
+						break;
+					default:
+						break;
+				}
+			}
+
+			$pp->settings[$name] = $_POST[$postname];
+			unset( $_POST[$postname] );
+		}
+	}
+
+	$pp->storeload();
+
+	if ( $return ) {
+		aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->processor->id, JText::_('AEC_CONFIG_SAVED') );
+	} else {
+		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
+	}
 }
 
 function clearInvoice( $option, $invoice_number, $applyplan, $task )
@@ -4680,7 +4931,7 @@ function history( $option )
 		return false;
 	}
 
-	HTML_AcctExp::viewhistory( $option, $rows, $search, $pageNav );
+	HTML_AcctExp::viewHistory( $option, $rows, $search, $pageNav );
 }
 
 function eventlog( $option )

@@ -52,7 +52,7 @@ class HTML_myCommon
 
 	function addBackendJS()
 	{
-		$document=& JFactory::getDocument();
+		$document =& JFactory::getDocument();
 
 		$v = new JVersion();
 
@@ -514,71 +514,80 @@ class HTML_AcctExp
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
 						<table class="infobox_table table-striped">
-							<tr>
-								<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
-								<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
-								<th><?php echo JText::_('HISTORY_COL_DATE');?></th>
-								<th><?php echo JText::_('HISTORY_COL_METHOD');?></th>
-								<th><?php echo JText::_('HISTORY_COL_PLAN');?></th>
-								<th><?php echo JText::_('HISTORY_COL_ACTION');?></th>
-							</tr>
-							<?php
-							if ( !empty( $invoices ) ) {
-								foreach ( $invoices as $invoice ) { ?>
-									<tr<?php echo $invoice['rowstyle']; ?>>
-										<td><?php echo $invoice['invoice_number']; ?></td>
-										<td><?php echo $invoice['amount']; ?></td>
-										<td><?php echo $invoice['status']; ?></td>
-										<td><?php echo $invoice['processor']; ?></td>
-										<td><?php echo $invoice['usage']; ?></td>
-										<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
-									</tr>
-									<?php
-								}
-
-								echo '</table>';
-
-								if ( $aecHTML->invoice_pages > 1 ) {
-									echo '<div class="aec-invoices-pagination"><p>';
-									$plist = array();
-									for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
-										if ( $i == $aecHTML->invoice_page ) {
-											$plist[] = ( $i + 1 );
-										} else {
-											$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
-										}
+							<thead>
+								<tr>
+									<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
+									<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
+									<th><?php echo JText::_('HISTORY_COL_DATE');?></th>
+									<th><?php echo JText::_('HISTORY_COL_METHOD');?></th>
+									<th><?php echo JText::_('HISTORY_COL_PLAN');?></th>
+									<th><?php echo JText::_('HISTORY_COL_ACTION');?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								if ( !empty( $invoices ) ) {
+									foreach ( $invoices as $invoice ) { ?>
+										<tr<?php echo $invoice['rowstyle']; ?>>
+											<td><?php echo $invoice['invoice_number']; ?></td>
+											<td><?php echo $invoice['amount']; ?></td>
+											<td><?php echo $invoice['status']; ?></td>
+											<td><?php echo $invoice['processor']; ?></td>
+											<td><?php echo $invoice['usage']; ?></td>
+											<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
+										</tr>
+										<?php
 									}
-									echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
+	
+									if ( $aecHTML->invoice_pages > 1 ) {
+										echo '<div class="aec-invoices-pagination"><p>';
+										$plist = array();
+										for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
+											if ( $i == $aecHTML->invoice_page ) {
+												$plist[] = ( $i + 1 );
+											} else {
+												$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
+											}
+										}
+										echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
+									}
+								} else {
+									echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
+									. JText::_('AEC_USER_NO_INVOICES')
+									. '&nbsp;&lt;&lt;</td></tr>' . "\n";
 								}
-							} else {
-								echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
-								. JText::_('AEC_USER_NO_INVOICES')
-								. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-
-								echo '</table>';
-							} ?>
+								?>
+							</tbody>
+							<tfoot>
+								<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><i class="bsicon-plus bsicon-white"></i> Add Invoice</a></td></tr>
+							</tfoot>
+						</table>
 					</div>
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
 						<table class="infobox_table table-striped">
-							<tr>
-								<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
-								<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
-							</tr>
-							<?php
-							if ( !empty( $coupons ) ) {
-								foreach ( $coupons as $coupon ) { ?>
-									<tr>
-										<td><?php echo $coupon['coupon_code']; ?></td>
-										<td><?php echo $coupon['invoices']; ?></td>
-									</tr>
-									<?php
-								}
-							} else {
-								echo '<tr><td colspan="2" style="text-align:center;">&gt;&gt;&nbsp;'
-								. JText::_('AEC_USER_NO_COUPONS')
-								. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-							} ?>
+							<thead>
+								<tr>
+									<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
+									<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								if ( !empty( $coupons ) ) {
+									foreach ( $coupons as $coupon ) { ?>
+										<tr>
+											<td><?php echo $coupon['coupon_code']; ?></td>
+											<td><?php echo $coupon['invoices']; ?></td>
+										</tr>
+										<?php
+									}
+								} else {
+									echo '<tr><td colspan="2" style="text-align:center;">&gt;&gt;&nbsp;'
+									. JText::_('AEC_USER_NO_COUPONS')
+									. '&nbsp;&lt;&lt;</td></tr>' . "\n";
+								} ?>
+							</tbody>
 						</table>
 					</div>
 				</td>
@@ -2378,7 +2387,7 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function viewinvoices( $option, $rows, $search, $pageNav )
+	function viewInvoices( $option, $rows, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices' );
@@ -2444,7 +2453,42 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
-	function viewhistory( $option, $rows, $search, $pageNav )
+	function editInvoice( $option, $aecHTML )
+	{
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
+		HTML_myCommon::getButtons( 'edit', 'Invoice' );
+
+		HTML_myCommon::startForm();
+
+		$id = 0;
+		if ( !empty( $aecHTML->pp ) ) {
+			echo '<div class="aec-filters">';
+			echo '<p style="text-align: center;"><img src="' . JURI::root( true ) . '/media/' . $option . '/images/site/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" /></p>';
+			echo '</div>';
+
+			$id = $aecHTML->pp->id;
+		}
+		
+		?>
+		<table width="100%" class="aecadminform"><tr><td>
+			<div class="aec_userinfobox_sub">
+				<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
+				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+					echo $aecHTML->createSettingsParticle( $rowname );
+				} ?>
+			</div>
+		</td></tr></table>
+		<?php
+
+		HTML_myCommon::endForm( $option, $id, 'saveProcessor' );
+
+		echo $aecHTML->loadJS();
+
+ 		HTML_myCommon::endCommon();
+	}
+
+	function viewHistory( $option, $rows, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history' );

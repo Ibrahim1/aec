@@ -17,7 +17,7 @@ class tool_rawedit
 	{
 		$info = array();
 		$info['name'] = "Raw Data Edit";
-		$info['desc'] = "Some Item types (Metauser information, Processors and Invoices) lack a proper edit screen. With this, you can at least edit their raw data.";
+		$info['desc'] = "Some Item types (Metauser information, Processors and Invoices) lack a full edit screen. With this, you can at least edit their raw data.";
 
 		return $info;
 	}
