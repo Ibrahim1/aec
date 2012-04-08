@@ -449,21 +449,12 @@ class processor_hsbc extends XMLprocessor
 		return true;
 	}
 
-	function validateSubscription( $subscription_id )
+	function validateSubscription( $iFactory, $subscription )
 	{
-		$db = &JFactory::getDBO();
+		$return = array();
+		$return['valid'] = true;
 
-		$subscription = new Subscription( $db );
-		$subscription->load( $subscription_id );
-
-		$allowed = array( "Trial", "Active" );
-
-		if ( !in_array( $subscription->status, $allowed ) ) {
-			// Do not renew when the account has been canceled
-			return null;
-		}
-
-		return true;
+		return $return;
 	}
 
 	function convertPeriodUnit( $period, $unit )

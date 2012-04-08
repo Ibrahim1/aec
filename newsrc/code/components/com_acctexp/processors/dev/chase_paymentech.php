@@ -426,31 +426,5 @@ aecDebug( $response );
 		return $return;
 	}
 
-	function prepareValidation( $subscription_list )
-	{
-		return true;
-	}
-
-	function validateSubscription( $subscription_id )
-	{
-		$db = &JFactory::getDBO();
-
-		$invoice = new Invoice( $db );
-		$invoice->loadbySubscriptionId( $subscription_id );
-
-		$metaUser = new metaUser( $invoice->userid );
-		$ppParams = $metaUser->meta->getProcessorParams( $request->parent->id );
-
-		if ( !empty( $ppParams->profileid ) ) {
-
-			if ( true ) {
-				$invoice->pay();
-				return true;
-			}
-		}
-
-		return null;
-	}
-
 }
 ?>

@@ -341,32 +341,27 @@ class processor_ccbill extends POSTprocessor
 		}
 	}
 
-	function validateSubscription( $subscription_id )
+	function validateSubscription( $iFactory, $subscription )
 	{
-		$db = &JFactory::getDBO();
+		$return = array();
+		$return['valid'] = false;
 
 		if ( !empty( $this->datalink_rebill_temp ) ) {
-			// Now lets check for this subscription
-			if ( in_array( $subscription_id, $this->datalink_rebill_temp ) ) {
-				$invoice = new Invoice( $db );
-				$invoice->loadbySubscriptionId( $subscription_id );
+			if ( in_array( $subscription->id, $this->datalink_rebill_temp ) ) {
 
-				if ( $invoice->id ) {
-					$invoice->computeAmount();
-					$invoice->pay();
-					return true;
+				if ( $iFactory->invoice->id ) {
+					$return['valid'] = true;
 				}
 			}
 		}
 
 		if ( !empty( $this->datalink_expire_temp ) ) {
-			// Now lets check for this subscription
-			if ( !in_array( $subscription_id, $this->datalink_expire_temp ) ) {
-				return true;
+			if ( !in_array( $subscription->id, $this->datalink_expire_temp ) ) {
+				$return['valid'] = true;
 			}
 		}
 
-		return null;
+		return $return;
 	}
 
 	function fetchURL( $url ) {

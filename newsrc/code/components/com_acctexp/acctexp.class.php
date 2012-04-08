@@ -4635,8 +4635,61 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
+		$response = false;
 		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
-			$response = $this->processor->validateSubscription( $subscription_id );
+			$db = &JFactory::getDBO();
+
+			$subscription = new Subscription( $db );
+			$subscription->load( $subscription_id );
+
+			$allowed = array( "Trial", "Active" );
+
+			if ( !in_array( $subscription->status, $allowed ) ) {
+				return null;
+			}
+
+			$invoice = new Invoice( $db );
+			$invoice->loadbySubscriptionId( $subscription_id );
+
+			if ( empty( $invoice->id ) ) {
+				return null;
+			}
+
+			$option = 'com_acctexp';
+
+			$iFactory = new InvoiceFactory( null, null, null, $this->processor_name );
+
+			$iFactory->userid = $subscription->userid;
+			$iFactory->usage = $invoice->usage;
+			$iFactory->processor = $this->processor_name;
+
+			$iFactory->loadMetaUser();
+
+			$iFactory->touchInvoice( $option, $invoice->invoice_number );
+
+			$iFactory->puffer( $option );
+
+			$iFactory->loadItems();
+
+			$iFactory->loadItemTotal();
+
+			$result = $this->processor->validateSubscription( $iFactory, $subscription );
+
+			$resp = array();
+			if ( isset( $result['raw'] ) ) {
+				if ( is_array( $result['raw'] ) ) {
+					$resp = $result['raw'];
+				} else {
+					$resp['response'] = $result['raw'];
+				}
+				unset( $result['raw'] );
+			}
+
+			$iFactory->invoice->processorResponse( $iFactory, $result, $resp, true );
+
+			if ( !empty( $result['valid'] ) ) {
+				$response = true;
+			}
 		} else {
 			$response = null;
 		}
@@ -12115,6 +12168,10 @@ class Invoice extends serialParamDBTable
 		if ( isset( $response['fullresponse'] ) ) {
 			$resp = $response['fullresponse'];
 			unset( $response['fullresponse'] );
+		}
+
+		if ( empty( $resp ) && !empty( $response['raw'] ) ) {
+			$resp = $response['raw'];
 		}
 
 		if ( isset( $response['break_processing'] ) ) {

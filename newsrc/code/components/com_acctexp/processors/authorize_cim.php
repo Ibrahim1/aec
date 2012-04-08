@@ -455,6 +455,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
+		$return = array();
 		$return['valid'] = false;
 
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
@@ -753,43 +754,10 @@ class processor_authorize_cim extends PROFILEprocessor
 		return true;
 	}
 
-	function validateSubscription( $subscription_id )
+	function validateSubscription( $iFactory, $subscription )
 	{
-		$db = &JFactory::getDBO();
-
-		$subscription = new Subscription( $db );
-		$subscription->load( $subscription_id );
-
-		$allowed = array( "Trial", "Active" );
-
-		if ( !in_array( $subscription->status, $allowed ) ) {
-			return null;
-		}
-
-		$invoice = new Invoice( $db );
-		$invoice->loadbySubscriptionId( $subscription_id );
-
-		if ( empty( $invoice->id ) ) {
-			return null;
-		}
-
-		$option = 'com_acctexp';
-
-		$iFactory = new InvoiceFactory( null, null, null, 'authorize_cim' );
-
-		$iFactory->userid = $subscription->userid;
-		$iFactory->usage = $invoice->usage;
-		$iFactory->processor = 'authorize_cim';
-
-		$iFactory->loadMetaUser();
-
-		$iFactory->touchInvoice( $option, $invoice->invoice_number );
-
-		$iFactory->puffer( $option );
-
-		$iFactory->loadItems();
-
-		$iFactory->loadItemTotal();
+		$return = array();
+		$return['valid'] = false;
 
 		$var = $iFactory->invoice->getWorkingData( $iFactory );
 
@@ -836,8 +804,10 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			$cim->createCustomerProfileTransactionRequest( $this );
 
+			$return['raw'] = $cim->response;
+
 			if ( $cim->isSuccessful() ) {
-				$iFactory->invoice->pay();
+				$return['valid'] = true;
 
 				if ( empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
 					$iFactory->invoice->params['maxOccurrences'] = $this->settings['totalOccurrences'];
@@ -860,14 +830,8 @@ class processor_authorize_cim extends PROFILEprocessor
 
 				return true;
 			} else {
-				$short	= 'Rebill Failed';
-				$event	= 'Authorize.net CIM Error: ' . $cim->code . ": " . $cim->text . " (" . $cim->directResponse . ")";
-				$tags	= 'invoice,processor,rebill,error';
-				$level	= 128;
-				$params = array( 'invoice_number' => $this->invoice_number );
-
-				$eventlog = new eventLog( $db );
-				$eventlog->issue( $short, $tags, $event, $level, $params );
+				$return['error'] = true;
+				$return['errormsg'] = $cim->code . " - " . $cim->text . " (" . $cim->directResponse . ")";
 			}
 		}
 
