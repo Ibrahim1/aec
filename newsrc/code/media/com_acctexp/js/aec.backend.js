@@ -70,17 +70,6 @@ jQuery(document).ready(function(jQuery) {
 		});
 	});
 
-	jQuery('#aecmenu-help').popover({ trigger:'manual', placement:'below' });
-
-	jQuery("#aecmenu-help")
-	.on("click", function(e) {
-		jQuery('#aecmenu-help').popover('show');
-
-		jQuery.post("index.php?option=com_acctexp&task=getHelp" , {queryString: ""}, function(data) {
-			jQuery('.popover .popover-content p').html(data);
-		});
-	});
-
 	// fix sub nav on scroll - adapted, against better advice, from http://twitter.github.com/bootstrap/less.html
 	var tbFixed = 0, btFixed = 0, navTop = 0, navBtn = 0;
 

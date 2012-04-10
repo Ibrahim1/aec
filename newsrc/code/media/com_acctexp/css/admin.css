@@ -1766,3 +1766,39 @@ font-size: 16px;
 color: #ddd;
 padding: 0 12px;
 }
+
+.modal {
+max-height: inherit;
+margin: -300px 0 0 -280px;
+}
+
+.modal-body h4 {
+margin-bottom: 6px;
+margin-top: 12px;
+}
+
+.modal-body p {
+margin: 0 10px 8px 10px;
+text-align: justify;
+}
+
+.modal-overlay {
+background: none repeat scroll 0 0 #eee;
+-webkit-box-shadow: 0 0 4px #999 inset, 0 1px 4px #ddd;
+-moz-box-shadow: 0 0 4px #999 inset, 0 1px 4px #ddd;
+box-shadow: 0 0 4px #999 inset, 0 1px 4px #ddd;
+margin: 12px 10px 14px -16px;
+padding: 14px 0 6px;
+width: 106%;
+}
+
+.modal-overlay p {
+text-align: center;
+font-weight: bold;
+}
+
+.modal-overlay .btn {
+-webkit-box-shadow: 0 2px 4px #aaa;
+-moz-box-shadow: 0 2px 4px #aaa;
+box-shadow: 0 2px 4px #aaa;
+}

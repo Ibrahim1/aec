@@ -61,70 +61,26 @@ switch( strtolower( $task ) ) {
 		echo "wolves teeth";
 		break;
 
-	case 'editmembership':
-		if ( !empty( $subscriptionid ) ) {
-			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
-		}
+	case 'editmembership': editUser( $option, $userid, $subscriptionid, $returnTask, aecGetParam('page') ); break;
 
-		$page	= trim( aecGetParam( 'page', '0' ) );
-
-		editUser( $option, $userid, $subscriptionid, $returnTask, $page );
-		break;
-
-	case 'quickfire':
-		$mi			= trim( aecGetParam( 'mi', 0 ) );
-		$action		= trim( aecGetParam( 'action', 0 ) );
-
-		miQuickfire( $option, $subscriptionid, $mi, $action );
-		break;
+	case 'quickfire': miQuickfire( $option, $subscriptionid, aecGetParam('mi'), aecGetParam('action') ); break;
 
 	case 'savemembership': saveUser( $option ); break;
 	case 'applymembership': saveUser( $option, 1 ); break;
 	case 'cancelmembership': cancel( $option ); break;
 	case 'showcentral': aecCentral( $option ); break;
 
-	case 'clearinvoice':
-		$invoice	= trim( aecGetParam( 'invoice', '' ) );
-		$applyplan	= trim( aecGetParam( 'applyplan', '0' ) );
-
-		clearInvoice( $option, $invoice, $applyplan, $returnTask );
-		break;
-
-	case 'cancelinvoice':
-		$invoice	= trim( aecGetParam( 'invoice', '' ) );
-
-		cancelInvoice( $option, $invoice, $returnTask );
-		break;
-
-	case 'printinvoice':
-		$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-
-		AdminInvoicePrintout( $option, $invoice );
-		break;
-
-	case 'showsubscriptions':
-		$planid	= trim( aecGetParam( 'plan', null ) );
-
-		listSubscriptions( $option, 'active', $subscriptionid, $userid, $planid );
-		break;
+	case 'showsubscriptions': listSubscriptions( $option, 'active', $subscriptionid, $userid, aecGetParam('plan') ); break;
 
 	case 'showallsubscriptions':
-		$planid	= trim( aecGetParam( 'plan', null ) );
-
 		$groups = array( 'active', 'expired', 'pending', 'cancelled', 'hold', 'closed' );
 
-		listSubscriptions( $option, $groups, $subscriptionid, $userid, $planid );
+		listSubscriptions( $option, $groups, $subscriptionid, $userid, aecGetParam('plan') );
 		break;
 
 	case 'showexcluded': listSubscriptions( $option, 'excluded', $subscriptionid, $userid ); break;
 	case 'showactive': listSubscriptions( $option, 'active', $subscriptionid, $userid ); break;
-
-	case 'showexpired':
-		$planid	= trim( aecGetParam( 'plan', null ) );
-
-		listSubscriptions( $option, 'expired', $subscriptionid, $userid, $planid );
-		break;
-
+	case 'showexpired': listSubscriptions( $option, 'expired', $subscriptionid, $userid, aecGetParam('plan') ); break;
 	case 'showpending': listSubscriptions( $option, 'pending', $subscriptionid, $userid ); break;
 	case 'showcancelled': listSubscriptions( $option, 'cancelled', $subscriptionid, $userid ); break;
 	case 'showhold': listSubscriptions( $option, 'hold', $subscriptionid, $userid ); break;
@@ -137,18 +93,9 @@ switch( strtolower( $task ) ) {
 	case 'cancelsettings': aecRedirect( 'index.php?option=' . $option . '&task=showCentral', JText::_('AEC_CONFIG_CANCELLED') ); break;
 
 	case 'showtemplates': listTemplates( $option ); break;
-	case 'edittemplate':
-		$name	= aecGetParam( 'name', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-		editTemplate( $option, $name );
-		break;
-	case 'savetemplate':
-		$name	= aecGetParam( 'name', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-		saveTemplate( $option, $name );
-		break;
-	case 'applytemplate':
-		$name	= aecGetParam( 'name', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-		saveTemplate( $option, $name, 1 );
-		break;
+	case 'edittemplate': editTemplate( $option, aecGetParam('name') ); break;
+	case 'savetemplate': saveTemplate( $option, aecGetParam('name') ); break;
+	case 'applytemplate': saveTemplate( $option, aecGetParam('name'), 1 ); break;
 	case 'canceltemplate': aecRedirect( 'index.php?option=' . $option . '&task=showTemplates', JText::_('AEC_CONFIG_CANCELLED') ); break;
 
 	case 'showprocessors': listProcessors( $option ); break;
@@ -242,24 +189,21 @@ switch( strtolower( $task ) ) {
 
 	case 'invoices': invoices( $option ); break;
 	case 'newinvoice': editInvoice( 0, $option, $userid ); break;
-	case 'editinvoice': editInvoice( $id[0], $option ); break;
+	case 'editinvoice': editInvoice( $id[0], $option, $returnTask ); break;
+	case 'saveinvoice': saveInvoice( $id[0], $option, $returnTask ); break;
+
+	case 'clearinvoice': clearInvoice( $option, aecGetParam('invoice'), aecGetParam('applyplan'), $returnTask ); break;
+
+	case 'cancelinvoice': cancelInvoice( $option, aecGetParam('invoice'), $returnTask ); break;
+
+	case 'printinvoice': AdminInvoicePrintout( $option, aecGetParam('invoice') ); break;
 
 	case 'history': history( $option ); break;
 	case 'eventlog': eventlog( $option ); break;
 
-	case 'stats':
-		$page	= aecGetParam( 'page', 'overview', true, array( 'word', 'string' ) );
+	case 'stats': aec_stats( $option, aecGetParam('page') ); break;
 
-		aec_stats( $option, $page );
-		break;
-
-	case 'statrequest':
-		$type	= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
-		$start	= aecGetParam( 'start', '', true, array( 'string' ) );
-		$end	= aecGetParam( 'end', '', true, array( 'string' ) );
-
-		aec_statrequest( $option, $type, $start, $end );
-		break;
+	case 'statrequest': aec_statrequest( $option, aecGetParam('type'), aecGetParam('start'), aecGetParam('end') ); break;
 
 	case 'testexportmembers': exportData( $option, 'members', 'export' ); break;
 	case 'exportmembers': exportData( $option, 'members' ); break;
@@ -277,11 +221,7 @@ switch( strtolower( $task ) ) {
 
 	case 'import': importData( $option ); break;
 
-	case 'toolbox':
-		$cmd = trim( aecGetParam( 'cmd', null ) );
-
-		toolBoxTool( $option, $cmd );
-		break;
+	case 'toolbox': toolBoxTool( $option, aecGetParam('cmd') ); break;
 
 	case 'credits': HTML_AcctExp::credits(); break;
 
@@ -311,24 +251,13 @@ switch( strtolower( $task ) ) {
 		exit;
 		break;
 
-	case 'readnoticeajax':
-		readNotice($id[0]);
-		exit;
-		break;
+	case 'readnoticeajax': readNotice($id[0]); exit; break;
 
-	case 'readnotice':
-		readNotice($id[0]);
+	case 'readnotice': readNotice($id[0]); aecCentral( $option ); break;
 
-		aecCentral( $option );
-		break;
+	case 'getnotice': echo getNotice();exit; break;
 
-	case 'getnotice':
-		echo getNotice();exit;
-		break;
-
-	case 'gethelp':
-		echo getHelp();exit;
-		break;
+	case 'gethelp': echo getHelp();exit; break;
 
 	case 'readallnotices':
 		$db = &JFactory::getDBO();
@@ -343,32 +272,11 @@ switch( strtolower( $task ) ) {
 		aecCentral( $option );
 		break;
 
-	case 'toggleajax':
-		$type		= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
-		$id			= aecGetParam( 'id', null );
-		$property	= aecGetParam( 'property', '', true, array( 'word', 'string' ) );
+	case 'toggleajax': toggleProperty( aecGetParam('type'), aecGetParam('id'), aecGetParam('property') ); exit; break;
 
-		toggleProperty( $type, $id, $property );
-		exit;
-		break;
+	case 'addgroupajax': addGroup( aecGetParam('type'), aecGetParam('id'), aecGetParam('group') ); exit; break;
 
-	case 'addgroupajax':
-		$type		= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
-		$id			= aecGetParam( 'id', null );
-		$group		= aecGetParam( 'group', '', true, array( 'word', 'string' ) );
-
-		addGroup( $type, $id, $group );
-		exit;
-		break;
-
-	case 'removegroupajax':
-		$type		= aecGetParam( 'type', '', true, array( 'word', 'string' ) );
-		$id			= aecGetParam( 'id', null );
-		$group		= aecGetParam( 'group', '', true, array( 'word', 'string' ) );
-
-		removeGroup( $type, $id, $group );
-		exit;
-		break;
+	case 'removegroupajax': removeGroup( aecGetParam('type'), aecGetParam('id'), aecGetParam('group') ); exit; break;
 
 	case 'recallinstall':
 		include_once( JPATH_SITE . '/administrator/components/com_acctexp/install.acctexp.php' );
@@ -549,6 +457,10 @@ function cancel( $option )
 
 function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 {
+	if ( !empty( $subscriptionid ) ) {
+		$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
+	}
+
 	$db = &JFactory::getDBO();
 
 	$app = JFactory::getApplication();
@@ -1392,8 +1304,6 @@ function editSettings( $option )
 {
 	$db = &JFactory::getDBO();
 
-	$user = &JFactory::getUser();
-
 	global $aecConfig;
 
 	// See whether we have a duplication
@@ -1997,8 +1907,6 @@ function editProcessor( $id, $option )
 {
 	$db = &JFactory::getDBO();
 
-	$user = &JFactory::getUser();
-
 	$lang = JFactory::getLanguage();
 
 	if ( $id ) {
@@ -2202,8 +2110,6 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 function saveProcessor( $option, $return=0 )
 {
 	$db = &JFactory::getDBO();
-
-	$user = &JFactory::getUser();
 
 	$pp = new PaymentProcessor();
 
@@ -2471,8 +2377,6 @@ function editSubscriptionPlan( $id, $option )
 	global $aecConfig;
 
 	$db = &JFactory::getDBO();
-
-	$user = &JFactory::getUser();
 
 	$lang = JFactory::getLanguage();
 
@@ -4562,7 +4466,7 @@ function invoices( $option )
 	HTML_AcctExp::viewInvoices( $option, $rows, $search, $pageNav );
 }
 
-function editInvoice( $id, $option )
+function editInvoice( $id, $option, $returnTask )
 {
 	$db = &JFactory::getDBO();
 
@@ -4725,7 +4629,7 @@ function editInvoice( $id, $option )
 		$aecHTML->customparams = $customparamsarray;
 	}
 
-	HTML_AcctExp::addInvoice( $option, $aecHTML );
+	HTML_AcctExp::editInvoice( $option, $aecHTML, $id );
 }
 
 function saveInvoice( $option, $return=0 )
@@ -4734,80 +4638,24 @@ function saveInvoice( $option, $return=0 )
 
 	$user = &JFactory::getUser();
 
-	$pp = new PaymentProcessor();
+	$invoice = new PaymentProcessor();
+	$invoice->loadId( $_POST['id'] );
 
-	if ( !empty( $_POST['id'] ) ) {
-		$pp->loadId( $_POST['id'] );
+	$returnTask = $_POST['returnTask'];
 
-		if ( empty( $pp->id ) ) {
-			cancel();
-		}
+	unset( $_POST['id'] );
+	unset( $_POST['returnTask'] );
 
-		$procname = $pp->processor_name;
-	} elseif ( isset( $_POST['processor'] ) ) {
-		$pp->loadName( $_POST['processor'] );
-
-		$procname = $_POST['processor'];
-	}
-
-	$pp->fullInit();
-
-	$active			= $procname . '_active';
-	$longname		= $procname . '_info_longname';
-	$description	= $procname . '_info_description';
-
-	if ( isset( $_POST[$longname] ) ) {
-		$pp->info['longname'] = $_POST[$longname];
-		unset( $_POST[$longname] );
-	}
-
-	if ( isset( $_POST[$description] ) ) {
-		$pp->info['description'] = $_POST[$description];
-		unset( $_POST[$description] );
-	}
-
-	if ( isset( $_POST[$active] ) ) {
-		$pp->processor->active = $_POST[$active];
-		unset( $_POST[$active] );
-	}
-
-	$settings = $pp->getBackendSettings();
-
-	if ( is_int( $pp->is_recurring() ) ) {
-		$settings['recurring'] = 2;
-	}
-
-	foreach ( $settings as $name => $value ) {
-		if ( $name == 'lists' ) {
-			continue;
-		}
-
-		$postname = $procname  . '_' . $name;
-
-		if ( isset( $_POST[$postname] ) ) {
-			$val = $_POST[$postname];
-
-			if ( empty( $val ) ) {
-				switch( $name ) {
-					case 'currency':
-						$val = 'USD';
-						break;
-					default:
-						break;
-				}
-			}
-
-			$pp->settings[$name] = $_POST[$postname];
-			unset( $_POST[$postname] );
-		}
-	}
-
-	$pp->storeload();
+	$invoice->savePOSTsettings( $_POST );
 
 	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editProcessor&id=' . $pp->processor->id, JText::_('AEC_CONFIG_SAVED') );
+		aecRedirect( 'index.php?option=' . $option . '&task=editInvoice&id=' . $pp->processor->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
+		if ( $returnTask ) {
+			aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
+		} else {
+			
+		}
 	}
 }
 
@@ -5027,6 +4875,10 @@ function eventlog( $option )
 
 function aec_stats( $option, $page )
 {
+	if ( empty( $page ) ) {
+		$page = 'overview';
+	}
+
 	$stats = array();
 
 	$document=& JFactory::getDocument();
