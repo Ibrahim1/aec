@@ -3978,7 +3978,9 @@ class PaymentProcessorHandler
 			}
 		}
 
-		return JHTML::_('select.genericlist', $pp_list_html, 'processor', 'size="' . max(min(count($pplist), 24), 2) . '"', 'value', 'text', $selection );
+		$size = $installed ? 1 : max(min(count($pplist), 24), 2);
+
+		return JHTML::_('select.genericlist', $pp_list_html, 'processor', 'size="' . $size . '"', 'value', 'text', $selection );
 	}
 }
 
@@ -9223,8 +9225,10 @@ class InvoiceFactory
 			}
 
 			return true;
-		} else {
+		} elseif ( !empty( $this->usage ) ) {
 			return SubscriptionPlanHandler::PlanStatus( $this->usage );
+		} else {
+			return true;
 		}
 	}
 
@@ -9322,7 +9326,7 @@ class InvoiceFactory
 			if ( !is_object( $this->plan ) ) {
 				return aecNotAuth();
 			}
-		} else {
+		} elseif ( !empty( $this->usage ) ) {
 			if ( empty( $this->metaUser ) ) {
 				return aecNotAuth();
 			}
@@ -9741,9 +9745,15 @@ class InvoiceFactory
 			$this->getCart();
 
 			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
+		} else {
+			$this->payment->amount = $this->invoice->amount;
 		}
 
 		$this->payment->amount = AECToolbox::correctAmount( $this->payment->amount );
+
+		if ( empty( $this->payment->currency ) && !empty( $this->invoice->currency ) ) {
+			$this->payment->currency = $this->invoice->currency;
+		}
 
 		// Amend ->payment
 		if ( !empty( $this->payment->currency ) ) {
@@ -9873,7 +9883,7 @@ class InvoiceFactory
 
 			$this->cartobject = new aecCart( $db );
 			$this->cartobject->addItem( array(), $this->plan );
-		} else {
+		} elseif ( !empty( $this->usage ) ) {
 			$this->getCart();
 
 			foreach ( $this->cart as $cid => $citem ) {
@@ -9905,19 +9915,27 @@ class InvoiceFactory
 
 		$exchange = $silent = null;
 
-		foreach ( $this->items->itemlist as $cid => $citem ) {
-			$this->triggerMIs( 'invoice_item_cost', $exchange, $this->items->itemlist[$cid], $silent );
+		if ( !empty( $this->items->itemlist ) ) {
+			foreach ( $this->items->itemlist as $cid => $citem ) {
+				$this->triggerMIs( 'invoice_item_cost', $exchange, $this->items->itemlist[$cid], $silent );
+			}
 		}
 
 		$this->applyCoupons();
 
-		foreach ( $this->items->itemlist as $cid => $citem ) {
-			$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
+		if ( !empty( $this->items->itemlist ) ) {
+			foreach ( $this->items->itemlist as $cid => $citem ) {
+				$this->triggerMIs( 'invoice_item', $exchange, $this->items->itemlist[$cid], $silent );
+			}
 		}
 	}
 
 	function loadItemTotal()
 	{
+		if ( empty( $this->items->itemlist ) ) {
+			return null;
+		}
+
 		$cost = null;
 		foreach ( $this->items->itemlist as $cid => $citem ) {
 			if ( $citem['obj'] == false ) {
@@ -10199,7 +10217,7 @@ class InvoiceFactory
 			return true;
 		}
 
-		if ( empty( $this->usage ) && empty( $this->invoice->conditions ) ) {
+		if ( empty( $this->usage ) && empty( $this->invoice->conditions ) && empty( $this->invoice->amount ) ) {
 			return $this->create( $option, 0, 0, $this->invoice_number );
 		} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) === false ) ) {
 			return $this->create( $option, 0, $this->usage, $this->invoice_number );
@@ -11306,6 +11324,8 @@ class InvoiceFactory
 			} else {
 				$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
 			}
+		} else {
+			$int_var['var']		= $this->pp->checkoutAction( $int_var, $this->metaUser, null, $this, $int_var['objUsage'] );
 		}
 
 		$int_var['params']	= $this->pp->getParamsHTML( $int_var['params'], $this->pp->getParams( $int_var['params'] ) );
@@ -12841,6 +12861,8 @@ class Invoice extends serialParamDBTable
 					$int_var['amount'] = AECToolbox::correctAmount( $int_var['amount'] );
 				}
 			}
+		} else {
+			$int_var['amount'] = $this->amount;
 		}
 
 		if ( is_object( $InvoiceFactory->metaUser ) ) {
@@ -13283,32 +13305,12 @@ class Invoice extends serialParamDBTable
 	{
 		$db = &JFactory::getDBO();
 
-		if ( !empty( $post['id'] ) ) {
-			$planid = $post['id'];
-		} else {
-			// Fake knowing the planid if is zero.
-			$planid = $this->getMax() + 1;
-		}
-
 		if ( isset( $post['id'] ) ) {
 			unset( $post['id'] );
 		}
 
-		if ( isset( $post['inherited_micro_integrations'] ) ) {
-			unset( $post['inherited_micro_integrations'] );
-		}
-
-		if ( !empty( $post['add_group'] ) ) {
-			ItemGroupHandler::setChildren( $post['add_group'], array( $planid ) );
-			unset( $post['add_group'] );
-		}
-
-		if ( empty( $post['micro_integrations'] ) ) {
-			$post['micro_integrations'] = array();
-		}
-
 		// Filter out fixed variables
-		$fixed = array( 'active', 'visible', 'name', 'desc', 'email_desc', 'micro_integrations' );
+		$fixed = array( 'active', 'userid', 'fixed', 'method', 'created_date', 'amount' );
 
 		foreach ( $fixed as $varname ) {
 			if ( isset( $post[$varname] ) ) {
@@ -13320,46 +13322,15 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		// Get selected processors ( have to be filtered out )
-
-		$processors = array();
-		foreach ( $post as $key => $value ) {
-			if ( ( strpos( $key, 'processor_' ) === 0 ) && $value ) {
-				$ppid = str_replace( 'processor_', '', $key );
-
-				if ( !in_array( $ppid, $processors ) ) {
-					$processors[] = $ppid;
-					unset( $post[$key] );
-				}
-			}
+		if ( empty( $this->created_date ) ) {
+			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
 
-		// Filter out params
-		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit',
-						'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit',
-						'gid_enabled', 'gid', 'lifetime', 'standard_parent',
-						'fallback', 'fallback_req_parent', 'similarplans', 'equalplans', 'make_active',
-						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
-						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
-						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout', 'addtocart_redirect',
-						'cart_behavior', 'notes', 'meta'
-						);
-
-		$params = array();
-		foreach ( $fixed as $varname ) {
-			if ( !isset( $post[$varname] ) ) {
-				continue;
-			}
-
-			$params[$varname] = $post[$varname];
-
-			unset( $post[$varname] );
+		if ( empty( $this->invoice_number ) ) {
+			$this->invoice_number = $this->generateInvoiceNumber();
 		}
 
-		$params['processors'] = $processors;
-
-		$this->saveParams( $params );
-
+		//$this->saveParams( $params );
 	}
 
 }

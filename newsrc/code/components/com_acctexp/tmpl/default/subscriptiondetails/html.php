@@ -18,7 +18,7 @@ if ( !$metaUser->userid ) {
 $db = &JFactory::getDBO();
 
 // Redirect to SSL if the config requires it
-if ( !empty( $tmpl->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && !$tmpl->cfg['override_reqssl'] ) {
+if ( !empty( $tmpl->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && empty( $tmpl->cfg['override_reqssl'] ) ) {
 	aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=subscriptiondetails", true, false ) );
 	exit();
 }
@@ -63,9 +63,9 @@ if ( !empty( $metaUser->objSubscription->type ) ) {
 
 // The upgrade button might only show on some occasions
 $properties['upgrade_button'] = true;
-if ( $tmpl->cfg['renew_button_never'] ) {
+if ( !empty( $tmpl->cfg['renew_button_never'] ) ) {
 	$properties['upgrade_button'] = false;
-} elseif ( $tmpl->cfg['renew_button_nolifetimerecurring'] ) {
+} elseif ( !empty( $tmpl->cfg['renew_button_nolifetimerecurring'] ) ) {
 	if ( !empty( $metaUser->objSubscription->lifetime ) ) {
 		$properties['upgrade_button'] = false;
 	} elseif ( $metaUser->isRecurring() ) {
@@ -102,6 +102,10 @@ if ( !empty( $sList ) ) {
 }
 
 $pagesize = 15;
+
+if ( empty( $page ) ) {
+	$page = 0;
+}
 
 $invoiceList = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $page*$pagesize, $pagesize );
 

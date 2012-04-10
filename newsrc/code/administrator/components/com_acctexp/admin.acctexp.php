@@ -188,9 +188,10 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'invoices': invoices( $option ); break;
-	case 'newinvoice': editInvoice( 0, $option, $userid ); break;
+	case 'newinvoice': editInvoice( 0, $option, $returnTask, $userid ); break;
 	case 'editinvoice': editInvoice( $id[0], $option, $returnTask ); break;
-	case 'saveinvoice': saveInvoice( $id[0], $option, $returnTask ); break;
+	case 'applyinvoice': saveInvoice( $option, 1 ); break;
+	case 'saveinvoice': saveInvoice( $option ); break;
 
 	case 'clearinvoice': clearInvoice( $option, aecGetParam('invoice'), aecGetParam('applyplan'), $returnTask ); break;
 
@@ -4442,31 +4443,37 @@ function invoices( $option )
 	HTML_AcctExp::viewInvoices( $option, $rows, $search, $pageNav );
 }
 
-function editInvoice( $id, $option, $returnTask )
+function editInvoice( $id, $option, $returnTask, $userid )
 {
 	$db = &JFactory::getDBO();
 
-	$invoice = new Invoice( $db );
-	$invoice->load( $id );
+	$row = new Invoice( $db );
+	$row->load( $id );
 
 	$params['active']						= array( 'toggle',		1 );
-	$params['userid']						= array( 'hidden',		1 );
-	$params['created_date']					= array( 'list_date',	'' );
+	$params['fixed']						= array( 'toggle',		0 );
+	$params['userid']						= array( 'hidden',		$userid );
+	$params['returnTask']					= array( 'hidden',		$returnTask );
+	$params['created_date']					= array( 'list_date',	date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) );
 	$params['amount']						= array( 'inputB',		'' );
 	$params['usage']						= array( 'list', 		0 );
-	$params['processor']					= array( 'list', 		'' );
+	$params['method']						= array( 'list', 		'' );
 
 	$available_plans = SubscriptionPlanHandler::getActivePlanList();
 
-	$lists['usage'] = JHTML::_('select.genericlist', $available_plans, 'usage', 'size="10"', 'value', 'text', $invoice->usage );
+	$lists['usage'] = JHTML::_('select.genericlist', $available_plans, 'usage', 'size="1"', 'value', 'text', $row->usage );
 
 	$pph					= new PaymentProcessorHandler();
-	$lists['processor']		= $pph->getSelectList( $invoice->method, true );
+	$lists['method']		= str_replace( 'processor', 'method', $pph->getSelectList( $row->method, true ) );
 
-	$settingsparams = array();
+	$params_values = array();
+	$params_values['active']			= $row->active;
+	$params_values['fixed']				= $row->fixed;
+	$params_values['userid']			= $row->userid;
+	$params_values['created_date']		= $row->created_date;
 
 	$settings = new aecSettings ( 'invoice', 'general' );
-	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+	$settings->fullSettingsArray( $params, $params_values, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
@@ -4483,18 +4490,20 @@ function saveInvoice( $option, $return=0 )
 
 	$user = &JFactory::getUser();
 
-	$invoice = new Invoice( $db );
-	$invoice->load( $_POST['id'] );
+	$row = new Invoice( $db );
+	$row->load( $_POST['id'] );
 
 	$returnTask = $_POST['returnTask'];
 
 	unset( $_POST['id'] );
 	unset( $_POST['returnTask'] );
 
-	$invoice->savePOSTsettings( $_POST );
+	$row->savePOSTsettings( $_POST );
+
+	$row->storeload();
 
 	if ( $return ) {
-		aecRedirect( 'index.php?option=' . $option . '&task=editInvoice&id=' . $pp->processor->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
+		aecRedirect( 'index.php?option=' . $option . '&task=editInvoice&id=' . $row->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
 	} else {
 		if ( $returnTask ) {
 			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );

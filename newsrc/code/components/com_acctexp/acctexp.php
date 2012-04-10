@@ -726,6 +726,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 
 		$iFactory = new InvoiceFactory( $userid );
 		$iFactory->touchInvoice( $option, $invoice_number );
+		$iFactory->loadProcessorObject();
 
 		$status = $iFactory->usageStatus();
 
@@ -1101,6 +1102,7 @@ function aecNotAuth()
 	$user =& JFactory::getUser();
 
 	echo JText::_('ALERTNOTAUTH');
+
 	if ( $user->get('id') < 1 ) {
 		echo "<br />" . JText::_( 'You need to login.' );
 	}
