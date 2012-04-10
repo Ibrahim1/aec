@@ -59,13 +59,13 @@ class mi_jomsocialjspt
 		foreach ( $profiletypes as $profiletype ) {
 			$ptype[] = JHTML::_('select.option', $profiletype->id, $profiletype->name );
 			if ( !empty( $this->settings['profiletype'] ) ){
-				if ( in_array( $profiletype->id, $this->settings['profiletype'] ) ) {
+				if ( $profiletype->id == $this->settings['profiletype'] ) {
 					$spt[] = JHTML::_('select.option', $profiletype->id, $profiletype->name );
 				}
 			}
 
 			if ( !empty( $this->settings['profiletype_after_exp'] ) ) {
-				if ( in_array( $profiletype->id, $this->settings['profiletype_after_exp'] ) ) {
+				if ( $profiletype->id == $this->settings['profiletype_after_exp'] ) {
 					$spte[] = JHTML::_('select.option', $profiletype->id, $profiletype->name );
 				}
 			}
