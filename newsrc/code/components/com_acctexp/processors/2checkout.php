@@ -140,6 +140,8 @@ class processor_2checkout extends POSTprocessor
 			$response['invoice'] = $post['invoice_number'];
 		} elseif ( !empty( $post['merchant_order_id'] ) ) {
 			$response['invoice'] = $post['merchant_order_id'];
+		} elseif ( !empty( $post['vendor_order_id'] ) ) {
+			$response['invoice'] = $post['vendor_order_id'];
 		} else {
 			$response['invoice'] = $post['x_invoice_num'];
 		}
