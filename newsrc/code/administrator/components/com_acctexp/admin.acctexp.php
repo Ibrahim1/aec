@@ -2025,35 +2025,11 @@ function editProcessor( $id, $option )
 		$params[$longname] = array( 'inputC', JText::_('CFG_PROCESSOR_NAME_NAME'), JText::_('CFG_PROCESSOR_NAME_DESC'), $pp->info['longname'], $longname);
 		$params[$description] = array( 'editor', JText::_('CFG_PROCESSOR_DESC_NAME'), JText::_('CFG_PROCESSOR_DESC_DESC'), $pp->info['description'], $description);
 	} else {
-		// Create Processor Selection Screen
 		$pph					= new PaymentProcessorHandler();
-		$pplist					= $pph->getProcessorList();
-		$pp_installed_list		= $pph->getInstalledObjectList( false, true );
+		$lists['processor']		= $pph->getSelectList();
 
-		$pp_list_html			= array();
+		$params['processor']	= array( 'list' );
 
-		asort($pplist);
-
-		foreach ( $pplist as $ppname ) {
-			if ( in_array( $ppname, $pp_installed_list ) ) {
-				continue;
-			}
-
-			$readppname = ucwords( str_replace( '_', ' ', strtolower( $ppname ) ) );
-
-			// Load Payment Processor
-			$pp = new PaymentProcessor();
-			if ( $pp->loadName( $ppname ) ) {
-				$pp->getInfo();
-
-				// Add to general PP List
-				$pp_list_html[] = JHTML::_('select.option', $ppname, $readppname );
-			}
-		}
-
-		$lists['processor']	= JHTML::_('select.genericlist', $pp_list_html, 'processor', 'size="' . max(min(count($pplist), 24), 2) . '"', 'value', 'text' );
-
-		$params['processor'] = array( 'list' );
 		$settingsparams = array();
 
 		$pp = null;
@@ -4470,155 +4446,24 @@ function editInvoice( $id, $option, $returnTask )
 {
 	$db = &JFactory::getDBO();
 
-	if ( $id ) {
-		$pp = new PaymentProcessor();
+	$invoice = new Invoice( $db );
+	$invoice->load( $id );
 
-		if ( !$pp->loadId( $id ) ) {
-			return false;
-		}
+	$params['active']						= array( 'toggle',		1 );
+	$params['userid']						= array( 'hidden',		1 );
+	$params['created_date']					= array( 'list_date',	'' );
+	$params['amount']						= array( 'inputB',		'' );
+	$params['usage']						= array( 'list', 		0 );
+	$params['processor']					= array( 'list', 		'' );
 
-		// Init Info and Settings
-		$pp->fullInit();
+	$available_plans = SubscriptionPlanHandler::getActivePlanList();
 
-		// Get Backend Settings
-		$settings_array		= $pp->getBackendSettings();
-		$original_settings	= $pp->processor->settings();
+	$lists['usage'] = JHTML::_('select.genericlist', $available_plans, 'usage', 'size="10"', 'value', 'text', $invoice->usage );
 
-		if ( isset( $settings_array['lists'] ) ) {
-			foreach ( $settings_array['lists'] as $lname => $lvalue ) {
-				$list_name = $pp->processor_name . '_' . $lname;
+	$pph					= new PaymentProcessorHandler();
+	$lists['processor']		= $pph->getSelectList( $invoice->method, true );
 
-				$lists[$list_name] = str_replace( 'name="' . $lname . '"', 'name="' . $list_name . '"', $lvalue );
-			}
-
-			unset( $settings_array['lists'] );
-		}
-
-		$available_plans = SubscriptionPlanHandler::getActivePlanList();
-		$total_plans = count( $available_plans );
-
-		// Iterate through settings form assigning the db settings
-		foreach ( $settings_array as $name => $values ) {
-			$setting_name = $pp->processor_name . '_' . $name;
-
-			switch( $settings_array[$name][0] ) {
-				case 'list_currency':
-					// Get currency list
-					if ( is_array( $pp->info['currencies'] ) ) {
-						$currency_array	= $pp->info['currencies'];
-					} else {
-						$currency_array	= explode( ',', $pp->info['currencies'] );
-					}
-
-					// Transform currencies into OptionArray
-					$currency_code_list = array();
-					foreach ( $currency_array as $currency ) {
-						if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
-						}
-					}
-
-					$size = min( count($currency_array), 10 );
-
-					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="' . $size . '"', 'value', 'text', $pp->settings[$name] );
-					$settings_array[$name][0] = 'list';
-					break;
-				case 'list_language':
-					// Get language list
-					if ( is_array( $pp->info['languages'] ) ) {
-						$language_array	= $pp->info['languages'];
-					} else {
-						$language_array	= explode( ',', $pp->info['languages'] );
-					}
-
-					// Transform languages into OptionArray
-					$language_code_list = array();
-					foreach ( $language_array as $language ) {
-						$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'LANGUAGECODE_' . $language ) );
-					}
-					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-					$settings_array[$name][0] = 'list';
-					break;
-				case 'list_plan':
-					// Create list
-					$lists[$setting_name] = JHTML::_('select.genericlist', $available_plans, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );
-					$settings_array[$name][0] = 'list';
-					break;
-				default:
-					break;
-			}
-
-			if ( !isset( $settings_array[$name][1] ) ) {
-				$settings_array[$name][1] = $pp->getParamLang( $name . '_NAME' );
-				$settings_array[$name][2] = $pp->getParamLang( $name . '_DESC' );
-			}
-
-			// It might be that the processor has got some new properties, so we need to double check here
-			if ( isset( $pp->settings[$name] ) ) {
-				$content = $pp->settings[$name];
-			} elseif ( isset( $original_settings[$name] ) ) {
-				$content = $original_settings[$name];
-			} else {
-				$content = null;
-			}
-
-			// Set the settings value
-			$settings_array[$setting_name] = array_merge( (array) $settings_array[$name], array( $content ) );
-
-			// unload the original value
-			unset( $settings_array[$name] );
-		}
-
-		$longname = $pp->processor_name . '_info_longname';
-		$description = $pp->processor_name . '_info_description';
-
-		$settingsparams = $pp->settings;
-
-		$params = array();
-		$params[$pp->processor_name.'_active'] = array( 'toggle', JText::_('PP_GENERAL_ACTIVE_NAME'), JText::_('PP_GENERAL_ACTIVE_DESC'), $pp->processor->active);
-
-		if ( is_array( $settings_array ) && !empty( $settings_array ) ) {
-			$params = array_merge( $params, $settings_array );
-		}
-
-		$params[$longname] = array( 'inputC', JText::_('CFG_PROCESSOR_NAME_NAME'), JText::_('CFG_PROCESSOR_NAME_DESC'), $pp->info['longname'], $longname);
-		$params[$description] = array( 'editor', JText::_('CFG_PROCESSOR_DESC_NAME'), JText::_('CFG_PROCESSOR_DESC_DESC'), $pp->info['description'], $description);
-	} else {
-		// Create Processor Selection Screen
-		$pph					= new PaymentProcessorHandler();
-		$pplist					= $pph->getProcessorList();
-		$pp_installed_list		= $pph->getInstalledObjectList( false, true );
-
-		$pp_list_html			= array();
-
-		asort($pplist);
-
-		foreach ( $pplist as $ppname ) {
-			if ( in_array( $ppname, $pp_installed_list ) ) {
-				continue;
-			}
-
-			$readppname = ucwords( str_replace( '_', ' ', strtolower( $ppname ) ) );
-
-			// Load Payment Processor
-			$pp = new PaymentProcessor();
-			if ( $pp->loadName( $ppname ) ) {
-				$pp->getInfo();
-
-				// Add to general PP List
-				$pp_list_html[] = JHTML::_('select.option', $ppname, $readppname );
-			}
-		}
-
-		$lists['processor']	= JHTML::_('select.genericlist', $pp_list_html, 'processor', 'size="' . max(min(count($pplist), 24), 2) . '"', 'value', 'text' );
-
-		$params['processor'] = array( 'list' );
-		$settingsparams = array();
-
-		$pp = null;
-	}
+	$settingsparams = array();
 
 	$settings = new aecSettings ( 'invoice', 'general' );
 	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
@@ -4638,8 +4483,8 @@ function saveInvoice( $option, $return=0 )
 
 	$user = &JFactory::getUser();
 
-	$invoice = new PaymentProcessor();
-	$invoice->loadId( $_POST['id'] );
+	$invoice = new Invoice( $db );
+	$invoice->load( $_POST['id'] );
 
 	$returnTask = $_POST['returnTask'];
 
@@ -4652,9 +4497,9 @@ function saveInvoice( $option, $return=0 )
 		aecRedirect( 'index.php?option=' . $option . '&task=editInvoice&id=' . $pp->processor->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
 	} else {
 		if ( $returnTask ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
+			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );
 		} else {
-			
+			aecRedirect( 'index.php?option=' . $option . '&task=invoices', JText::_('AEC_CONFIG_SAVED') );
 		}
 	}
 }

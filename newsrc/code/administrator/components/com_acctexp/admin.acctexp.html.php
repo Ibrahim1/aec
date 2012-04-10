@@ -2484,7 +2484,7 @@ class HTML_AcctExp
 	function editInvoice( $option, $aecHTML, $id )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
+		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
 		HTML_myCommon::getButtons( 'edit', 'Invoice' );
 
 		HTML_myCommon::startForm();
@@ -2492,7 +2492,7 @@ class HTML_AcctExp
 		?>
 		<table width="100%" class="aecadminform"><tr><td>
 			<div class="aec_userinfobox_sub">
-				<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
+				<h4><?php echo JText::_('AEC_HEAD_INVOICE'); ?></h4>
 				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 					echo $aecHTML->createSettingsParticle( $rowname );
 				} ?>

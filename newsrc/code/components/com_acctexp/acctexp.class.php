@@ -3950,6 +3950,36 @@ class PaymentProcessorHandler
 
 		return $list;
 	}
+
+	function getSelectList( $selection="", $installed=false )
+	{
+		$pplist					= $this->getProcessorList();
+		$pp_installed_list		= $this->getInstalledObjectList( false, true );
+
+		asort($pplist);
+
+		$pp_list_html			= array();
+		foreach ( $pplist as $ppname ) {
+			if ( in_array( $ppname, $pp_installed_list ) && !$installed ) {
+				continue;
+			} elseif ( !in_array( $ppname, $pp_installed_list ) && $installed ) {
+				continue;
+			}
+
+			$readppname = ucwords( str_replace( '_', ' ', strtolower( $ppname ) ) );
+
+			// Load Payment Processor
+			$pp = new PaymentProcessor();
+			if ( $pp->loadName( $ppname ) ) {
+				$pp->getInfo();
+
+				// Add to general PP List
+				$pp_list_html[] = JHTML::_('select.option', $ppname, $readppname );
+			}
+		}
+
+		return JHTML::_('select.genericlist', $pp_list_html, 'processor', 'size="' . max(min(count($pplist), 24), 2) . '"', 'value', 'text', $selection );
+	}
 }
 
 class PaymentProcessor
@@ -12546,16 +12576,19 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		if ( !empty( $this->conditions ) ) {
-			$micro_integrations = false;
+		$micro_integrations = false;
 
+		if ( !empty( $this->conditions ) ) {
 			if ( strpos( $this->conditions, 'mi_attendevents' ) ) {
 				$micro_integration['name'] = 'mi_attendevents';
 				$micro_integration['parameters'] = array( 'registration_id' => $this->substring_between( $this->conditions, '<registration_id>', '</registration_id>' ) );
+
 				$micro_integrations = array();
 				$micro_integrations[] = $micro_integration;
 			}
+		}
 
+		if ( !empty( $micro_integrations ) ) {
 			if ( is_array( $micro_integrations ) ) {
 				foreach ( $micro_integrations as $micro_int ) {
 					$mi = new microIntegration( $db );
@@ -13245,6 +13278,90 @@ class Invoice extends serialParamDBTable
 
 		return $transactiondate;
 	}
+
+	function savePOSTsettings( $post )
+	{
+		$db = &JFactory::getDBO();
+
+		if ( !empty( $post['id'] ) ) {
+			$planid = $post['id'];
+		} else {
+			// Fake knowing the planid if is zero.
+			$planid = $this->getMax() + 1;
+		}
+
+		if ( isset( $post['id'] ) ) {
+			unset( $post['id'] );
+		}
+
+		if ( isset( $post['inherited_micro_integrations'] ) ) {
+			unset( $post['inherited_micro_integrations'] );
+		}
+
+		if ( !empty( $post['add_group'] ) ) {
+			ItemGroupHandler::setChildren( $post['add_group'], array( $planid ) );
+			unset( $post['add_group'] );
+		}
+
+		if ( empty( $post['micro_integrations'] ) ) {
+			$post['micro_integrations'] = array();
+		}
+
+		// Filter out fixed variables
+		$fixed = array( 'active', 'visible', 'name', 'desc', 'email_desc', 'micro_integrations' );
+
+		foreach ( $fixed as $varname ) {
+			if ( isset( $post[$varname] ) ) {
+				$this->$varname = $post[$varname];
+
+				unset( $post[$varname] );
+			} else {
+				$this->$varname = '';
+			}
+		}
+
+		// Get selected processors ( have to be filtered out )
+
+		$processors = array();
+		foreach ( $post as $key => $value ) {
+			if ( ( strpos( $key, 'processor_' ) === 0 ) && $value ) {
+				$ppid = str_replace( 'processor_', '', $key );
+
+				if ( !in_array( $ppid, $processors ) ) {
+					$processors[] = $ppid;
+					unset( $post[$key] );
+				}
+			}
+		}
+
+		// Filter out params
+		$fixed = array( 'full_free', 'full_amount', 'full_period', 'full_periodunit',
+						'trial_free', 'trial_amount', 'trial_period', 'trial_periodunit',
+						'gid_enabled', 'gid', 'lifetime', 'standard_parent',
+						'fallback', 'fallback_req_parent', 'similarplans', 'equalplans', 'make_active',
+						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
+						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
+						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout', 'addtocart_redirect',
+						'cart_behavior', 'notes', 'meta'
+						);
+
+		$params = array();
+		foreach ( $fixed as $varname ) {
+			if ( !isset( $post[$varname] ) ) {
+				continue;
+			}
+
+			$params[$varname] = $post[$varname];
+
+			unset( $post[$varname] );
+		}
+
+		$params['processors'] = $processors;
+
+		$this->saveParams( $params );
+
+	}
+
 }
 
 class aecCartHelper
