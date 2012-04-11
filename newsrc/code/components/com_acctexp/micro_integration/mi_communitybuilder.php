@@ -98,6 +98,8 @@ class mi_communitybuilder
 
 	function setFields( $request, $stage="" )
 	{
+		$db = &JFactory::getDBO();
+
 		$query = 'SELECT `name`, `title`'
 				. ' FROM #__comprofiler_fields'
 				. ' WHERE `table` != \'#__users\''

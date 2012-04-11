@@ -4530,7 +4530,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		$pp->processor_name = 'none';
 
 		$history = new logHistory( $db );
-		$history->entryFromInvoice( $this, null, $pp );
+		$history->entryFromInvoice( $objInvoice, null, $pp );
 
 		if ( $applyplan ) {
 			$objInvoice->pay();
