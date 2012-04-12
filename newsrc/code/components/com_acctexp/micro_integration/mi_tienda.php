@@ -16,8 +16,8 @@ class mi_tienda
 	function Info()
 	{
 		$info = array();
-		$info['name'] = JText::_('AEC_MI_NAME_VIRTM');
-		$info['desc'] = JText::_('AEC_MI_DESC_VIRTM');
+		$info['name'] = JText::_('AEC_MI_NAME_TIENDA');
+		$info['desc'] = JText::_('AEC_MI_DESC_TIENDA');
 
 		return $info;
 	}
