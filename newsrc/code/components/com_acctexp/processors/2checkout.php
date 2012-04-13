@@ -151,6 +151,13 @@ class processor_2checkout extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
+		$hash = "";
+		if ( !empty( $post['key'] ) ) {
+			$hash = $post['key'];
+		} elseif ( !empty( $post['md5_hash'] ) ) {
+			$hash = $post['md5_hash'];
+		}
+
 		if ( $this->settings['testmode'] ) {
 			$string_to_hash	= $this->settings['secret_word'].$this->settings['sid']."1".$post['total'];
 		} else {
@@ -159,7 +166,12 @@ class processor_2checkout extends POSTprocessor
 
 		$check_key = strtoupper(md5($string_to_hash));
 
-		$response['valid'] = (strcmp($check_key, $post['key']) == 0);
+		if ( $check_key == $hash ) {
+			$response['valid'] = 1;
+		} else {
+			$response['error'] = true;
+			$response['errormsg'] = 'hash mismatch';
+		}
 
 		return $response;
 	}
