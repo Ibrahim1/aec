@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4936' );
+define( '_AEC_REVISION', '4937' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -9741,7 +9741,7 @@ class InvoiceFactory
 			}
 
 			$this->items->itemlist[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
-		} elseif( !empty( $this->cart ) ) {
+		} elseif ( !empty( $this->cartobject->id ) || ( $this->passthrough['task'] == 'confirmCart' ) ) {
 			$this->getCart();
 
 			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
@@ -9842,6 +9842,10 @@ class InvoiceFactory
 
 		if ( !empty( $this->cartobject->id ) ) {
 			$this->cart = $this->cartobject->getCheckout( $this->metaUser, 0, $this );
+		}
+
+		if ( empty( $this->usage ) ) {
+			$this->usage = 'c.'.$this->cartobject->id;
 		}
 	}
 
