@@ -156,7 +156,11 @@ class processor_2checkout extends POSTprocessor
 			$hash = $post['key'];
 		} elseif ( !empty( $post['md5_hash'] ) ) {
 			$hash = $post['md5_hash'];
+		} elseif ( !empty( $post['md5hash'] ) ) {
+			$hash = $post['md5hash'];
 		}
+
+		$hash = strtoupper( $hash );
 
 		if ( $this->settings['testmode'] ) {
 			$string_to_hash	= $this->settings['secret_word'].$this->settings['sid']."1".$post['total'];
@@ -169,8 +173,20 @@ class processor_2checkout extends POSTprocessor
 		if ( $check_key == $hash ) {
 			$response['valid'] = 1;
 		} else {
-			$response['error'] = true;
-			$response['errormsg'] = 'hash mismatch';
+			// Might still be a rebill, where the hash is completely different
+			if ( !empty( $post['sale_id'] ) && !empty( $post['invoice_id'] ) ) {
+				$string_to_hash	= $post['sale_id'].$this->settings['sid'].$post['invoice_id'].$this->settings['secret_word'];
+				$check_key = strtoupper(md5($string_to_hash));
+
+				if ( $check_key == $hash ) {
+					$response['valid'] = 1;
+				}
+			}
+
+			if ( !$response['valid'] ) {
+				$response['error'] = true;
+				$response['errormsg'] = 'hash mismatch';
+			}
 		}
 
 		return $response;
