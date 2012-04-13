@@ -1398,7 +1398,7 @@ class metaUser
 		$current = $this->getAllCurrentSubscriptions();
 
 		if ( empty( $current ) ) {
-			return $this->focusSubscription->plan;
+			return null;
 		} else {
 			return $this->meta->getPreviousPlan();
 		}
