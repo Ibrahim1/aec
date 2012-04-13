@@ -49,6 +49,10 @@ if ( $invoices ) {
 	$invoice = 'none';
 }
 
+$namearray = $metaUser->explodeName();
+
+$name = $namearray['first'];
+
 $tmpl->addDefaultCSS();
 
 $tmpl->setTitle( JText::_('PENDING_TITLE') );
