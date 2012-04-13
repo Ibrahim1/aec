@@ -13,7 +13,7 @@
 
 if ( $tmpl->cfg['customtext_pending_keeporiginal'] ) { ?>
 	<div class="componentheading"><?php echo JText::_('PENDING_TITLE') ?></div>
-	<p class="expired_dear"><?php echo sprintf( JText::_('DEAR'), $objUser->name ) . ',' ?></p>
+	<p class="expired_dear"><?php echo sprintf( JText::_('DEAR'), $name ) . ',' ?></p>
 	<p class="expired_date"><?php echo JText::_('WARN_PENDING') ?></p>
 <?php }
 

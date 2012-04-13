@@ -13,7 +13,7 @@
 <div id="aec">
 	<div id="aec-pending">
 		<div class="componentheading"><?php echo JText::_('PENDING_TITLE') ?></div>
-		<p class="expired_dear"><?php echo sprintf( JText::_('DEAR'), $objUser->name ) . ',' ?></p>
+		<p class="expired_dear"><?php echo sprintf( JText::_('DEAR'), $name ) . ',' ?></p>
 		<p class="expired_date"><?php echo JText::_('WARN_PENDING') ?></p>
 		<div id="box-pending">
 			<?php if ( strcmp($invoice, "none") === 0 ) { ?>
