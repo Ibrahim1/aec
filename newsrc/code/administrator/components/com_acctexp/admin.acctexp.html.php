@@ -1822,7 +1822,7 @@ class HTML_AcctExp
 		<table width="100%" class="aecadminform">
 		<table class="aecadminform">
 			<tr><td>
-				<div style="position:relative;float:left;width:49%;">
+				<div style="position:relative;float:left;width:99%;">
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('Customize'); ?></h4>
 						<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
@@ -1830,8 +1830,6 @@ class HTML_AcctExp
 						<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'meta' ); ?>
 					</div>
-				</div>
-				<div style="position:relative;float:left;width:49%;">
 					<div class="aec_userinfobox_sub">
 						<h4><?php echo JText::_('Custom Thanks'); ?></h4>
 						<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
