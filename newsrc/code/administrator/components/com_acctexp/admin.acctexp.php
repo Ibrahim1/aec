@@ -855,9 +855,19 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$search			= $db->getEscaped( trim( strtolower( $search ) ) );
 
 	if ( empty( $planid ) ) {
-		$filter_planid	= intval( $app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
+		$filter_plan	= $app->getUserStateFromRequest( "filter_plan{$option}", 'filter_plan', 0 );
 	} else {
-		$filter_planid	= $planid;
+		$filter_plan	= $planid;
+	}
+
+	if ( !is_array( $filter_plan ) ) {
+		$filter_plan = array( $filter_plan );
+	}
+
+	$filter_group	= $app->getUserStateFromRequest( "filter_group{$option}", 'filter_group', 0 );
+
+	if ( !is_array( $filter_group ) ) {
+		$filter_group = array( $filter_group );
 	}
 
 	if ( !empty( $_REQUEST['groups'] ) ) {
@@ -870,6 +880,8 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 			$groups 	= $_REQUEST['groups'];
 			$set_group	= $_REQUEST['groups'][0];
+		} else {
+			$groups		= array( $_REQUEST['groups'] );
 		}
 	} else {
 		if ( is_array( $set_group ) ) {
@@ -1062,7 +1074,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 	}
 
-	if ( is_array(  $groups ) ) {
+	if ( is_array( $groups ) ) {
 		if ( in_array( 'notconfig', $groups ) ) {
  			$notconfig = true;
  			$groups = array( 'notconfig' );
@@ -1099,9 +1111,27 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 	}
 
-	if ( isset( $filter_planid ) && $filter_planid > 0 ) {
-		if ( !$notconfig ) {
-			$where[] = "(a.plan='$filter_planid')";
+	$group_plans = ItemGroupHandler::getChildren( $filter_group, 'item' );
+
+	if ( !empty( $filter_plan ) || !empty( $group_plans ) ) {
+		$plan_selection = array();
+
+		if ( !empty( $filter_plan ) ) {
+			$plan_selection = $filter_plan;
+		}
+
+		if ( !empty( $group_plans ) ) {
+			$plan_selection = array_merge( $plan_selection, $group_plans );
+		}
+
+		if ( empty( $plan_selection[0] ) ) {
+			unset( $plan_selection[0] );
+		}
+
+		$plan_selection = array_unique( $plan_selection );
+
+		if ( !$notconfig && !empty( $plan_selection ) ) {
+			$where[] = "a.plan IN (" . implode( ',', $plan_selection ) . ")";
 		}
 	}
 
@@ -1225,61 +1255,45 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$db->setQuery( $query );
 	$db_plans = $db->loadObjectList();
 
-	$plans[] = JHTML::_('select.option', '0', ' - ' . JText::_('PLAN_FILTER') . ' - ', 'id', 'name' );
-	if ( is_array( $db_plans ) ) {
-		$plans = array_merge( $plans, $db_plans );
-	}
-	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
-
 	$plans2[] = JHTML::_('select.option', '0', JText::_('BIND_USER'), 'id', 'name' );
 	if ( is_array( $db_plans ) ) {
 		$plans2 = array_merge( $plans2, $db_plans );
 	}
 	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
-/*
-	$group_selection = array();
-	$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('AEC_SEL_EXCLUDED') );
-	$group_selection[] = JHTML::_('select.option', 'pending',	JText::_('AEC_SEL_PENDING') );
-	$group_selection[] = JHTML::_('select.option', 'active',	JText::_('AEC_SEL_ACTIVE') );
-	$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('AEC_SEL_EXPIRED') );
-	$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('AEC_SEL_CLOSED') );
-	$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('AEC_SEL_CANCELLED') );
-	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('AEC_SEL_HOLD') );
-	$group_selection[] = JHTML::_('select.option', 'notconfig',	JText::_('AEC_SEL_NOT_CONFIGURED') );
 
-	$selected_groups = array();
-	if ( is_array( $groups ) ) {
-		foreach ($groups as $name ) {
-			$selected_groups[] = JHTML::_('select.option', $name, $name );
+	$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
+	foreach ( $db_plans as $plan ) {
+		$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $plan->name . '</option>';
+	}
+	$lists['filter_plan'] .= '</select>';
+
+	$grouplist = ItemGroupHandler::getTree();
+
+	$lists['filter_group'] = '<select id="group-filter-select" name="filter_group[]" multiple="multiple" size="5">';
+	foreach ( $grouplist as $glisti ) {
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
+		} else {
+			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $glisti[1] . '</option>';
 		}
 	}
-
-	$lists['groups'] = JHTML::_('select.genericlist', $group_selection, 'groups[]', 'size="5" multiple="multiple"', 'value', 'text', $selected_groups);
-*/
+	$lists['filter_group'] .= '</select>';
 
 	$status = array(	'active'	=> JText::_('AEC_SEL_ACTIVE'),
 						'expired'	=> JText::_('AEC_SEL_EXPIRED'),
 						'closed'	=> JText::_('AEC_SEL_CLOSED'),
-						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
-						);
-
-	$lists['groups'] = '<div class="controls">';
-	foreach ( $status as $id => $txt ) {
-		$lists['groups'] .= '<label class="checkbox"><input type="checkbox" name="groups[]" value="' . $id . '"' . ( in_array( $id, $groups ) ? 'checked="checked"' : '' ) . ' />' . $txt . '</label>';
-	}
-	$lists['groups'] .= '</div>';
-
-	$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
+						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED'),
+						'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
 						'pending'	=> JText::_('AEC_SEL_PENDING'),
 						'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
-						'hold'		=> JText::_('AEC_SEL_HOLD'),
+						'hold'		=> JText::_('AEC_SEL_HOLD')
 						);
 
-	$lists['groups2'] = '<div class="controls">';
+	$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';
 	foreach ( $status as $id => $txt ) {
-		$lists['groups2'] .= '<label class="checkbox"><input type="checkbox" name="groups[]" value="' . $id . '"' . ( in_array( $id, $groups ) ? 'checked="checked"' : '' ) . ' />' . $txt . '</label>';
+		$lists['groups'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $txt . '</option>';
 	}
-	$lists['groups2'] .= '</div>';
+	$lists['groups'] .= '</select>';
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );

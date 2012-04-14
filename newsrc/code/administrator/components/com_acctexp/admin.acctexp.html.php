@@ -40,17 +40,19 @@ class HTML_myCommon
 
 	function addBackendCSS()
 	{
-		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/bootstrap.backend.css?rev=<?php echo _AEC_REVISION; ?>" />
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/toggleswitch/toggleswitch.css?rev=<?php echo _AEC_REVISION; ?>" />
-		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.css?rev=<?php echo _AEC_REVISION; ?>" /><?php
+		$document =& JFactory::getDocument();
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/bootstrap.backend.css?rev=' . _AEC_REVISION . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/toggleswitch/toggleswitch.css?rev=' . _AEC_REVISION . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION . '" />' );
 	}
 
 	function addReadoutCSS()
 	{
-		?><link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/readout.css&amp;rev=<?php echo _AEC_REVISION; ?>" /><?php
+		$document =& JFactory::getDocument();
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/readout.css?rev=' . _AEC_REVISION . '" />' );
 	}
 
-	function addBackendJS()
+	function addBackendJS( $ui=false )
 	{
 		$document =& JFactory::getDocument();
 
@@ -61,15 +63,27 @@ class HTML_myCommon
 		}
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
+
+		if ( $ui ) {
+			$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.18.custom.min.js' );
+			$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/date.js' );
+			$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.compressed.js' );
+			$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
+
+			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery-ui-1.8.16.custom.css' . '" />' );
+			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/ui.daterangepicker.css' . '" />' );
+			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.multiselect.css' . '" />' );
+		}
+
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.backend.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/aec.backend.js' );
 	}
 
-	function startCommon( $id='aec_wrap' )
+	function startCommon( $id='aec_wrap', $ui=false )
 	{
 		HTML_myCommon::addBackendCSS();
-		HTML_myCommon::addBackendJS();
+		HTML_myCommon::addBackendJS( $ui );
 
 		echo '<div id="' . $id . '">';
 		echo HTML_AcctExp::menuBar();
@@ -1260,26 +1274,51 @@ class HTML_AcctExp
 
 	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon( 'aec_wrap', true );
+
+$js = '
+jQuery(document).ready(function(jQuery) {
+	jQuery("#status-group-select")
+	.multiselect({	noneSelectedText: \'Select Status\',
+      				selectedList: 8
+			});
+
+	jQuery("#plan-filter-select")
+	.multiselect({	noneSelectedText: \'' . JText::_('PLAN_FILTER') . '\',
+      				selectedList: 3
+			});
+
+	jQuery("#group-filter-select")
+	.multiselect({	noneSelectedText: \'' . JText::_('GROUP_FILTER') . '\',
+      				selectedList: 1
+			});
+});
+';
+		$document =& JFactory::getDocument();
+		$document->addScriptDeclaration( $js );
+
 		HTML_myCommon::getHeader( $action[1], '' . $action[0] ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<div class="aec-filters aec-filters-wide">
 				<div class="filter-sub">
-					<?php echo $lists['groups'];?>
+					<label>Filter:</label>
+					<div class="control"><?php echo $lists['groups'];?></div>
+					<input type="hidden" name="filter_plan" value="" />
+					<div class="control"><?php echo $lists['filter_plan']; ?></div>
+					<input type="hidden" name="filter_group" value="" />
+					<div class="control"><?php echo $lists['filter_group']; ?></div>
 				</div>
 				<div class="filter-sub">
-					<?php echo $lists['groups2'];?>
-				</div>
-				<div class="filter-sub">
-					<label><?php echo JText::_('PLAN_FILTER'); ?></label><div class="control"><?php echo $lists['filterplanid']; ?></div>
-					<label><?php echo JText::_('ORDER_BY'); ?></label><div class="control"><?php echo $lists['orderNav']; ?></div>
+					<label><?php echo JText::_('ORDER_BY'); ?>:</label><div class="control"><?php echo $lists['orderNav']; ?></div>
 					<input type="text" name="search" class="inputbox span2 search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>" value="<?php echo htmlspecialchars($search); ?>" />
 				</div>
 				<div class="filter-sub">
 						<label>With selected users:</label>
 						<div class="control"><?php echo $lists['planid']; ?></div>
 						<div class="control"><?php echo $lists['set_expiration']; ?></div>
-						<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
+				</div>
+				<div style="float: right; width: 40%;">
+					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
 				</div>
 			</div>
 			<div class="aecadminform">
