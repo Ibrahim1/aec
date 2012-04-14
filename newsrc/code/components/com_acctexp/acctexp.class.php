@@ -6942,7 +6942,7 @@ class aecSettings
 
 	function remap_list_date( $name, $value )
 	{
-		$this->lists[$name] = JHTML::_('calendar', $value, $name, $name, '%Y-%m-%d', array('class'=>'inputbox span3', 'size'=>'25',  'maxlength'=>'19' ));
+		$this->lists[$name] = '<input id="datepicker-' . $name . '" name="' . $name . '" class="jqui-datepicker" type="text" value="' . $value . '">';
 
 		return 'list';
 	}

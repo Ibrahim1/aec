@@ -5713,7 +5713,7 @@ function exportData( $option, $type, $cmd=null )
 		$pf = 8;
 	} else {
 		$getpost = array(	'system' => array( 'selected_export', 'delete', 'save', 'save_name' ),
-							'filter' => array( 'planid', 'status', 'orderby' ),
+							'filter' => array( 'planid', 'groupid', 'status', 'orderby' ),
 							'options' => array( 'rewrite_rule' ),
 							'params' => array( 'export_method' )
 						);
@@ -5724,10 +5724,12 @@ function exportData( $option, $type, $cmd=null )
 	$postfields = 0;
 	foreach( $getpost as $name => $array ) {
 		$field = $name . '_values';
-		${$field} = array();
+
 		foreach( $array as $vname ) {
-			 ${$field}[$vname] = aecGetParam( $vname, '' );
-			 if ( !( ${$field}[$vname] == '' ) ) {
+			$vvalue = aecGetParam( $vname, '' );
+			 if ( !empty( $vvalue ) ) {
+				 ${$field}[$vname] = $vvalue;
+
 			 	$postfields++;
 			 }
 		}
@@ -5747,6 +5749,8 @@ function exportData( $option, $type, $cmd=null )
 		$row = new aecExport( $db, ( $type == 'sales' ) );
 		if ( isset( $system_values['selected_export'] ) ) {
 			$row->load( $system_values['selected_export'] );
+
+			$pname = $row->name;
 		} else {
 			$row->load(0);
 		}
@@ -5756,26 +5760,29 @@ function exportData( $option, $type, $cmd=null )
 			$row->delete();
 		} elseif ( ( $cmd_save || $cmd_apply ) && ( !empty( $system_values['selected_export'] ) || !empty( $system_values['save_name'] ) ) ) {
 			// User wants to save an entry
-			if ( $system_values['save'] ) {
+			if ( !empty( $system_values['save'] ) ) {
 				// But as a copy of another entry
 				$row->load( 0 );
 			}
 
 			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
 
-			if ( $system_values['save'] ) {
+			if ( !empty( $system_values['save'] ) ) {
 				$system_values['selected_export'] = $row->getMax();
 			}
 		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) && !$is_test ) {
 			// User wants to save a new entry
 			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
 		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && ( $cmd_export || $is_test ) )  ) {
-			// User wants to load an entry
-			$filter_values = $row->filter;
-			$options_values = $row->options;
-			$params_values = $row->params;
-			$pname = $row->name;
-			$use_original = 1;
+			if ( $row->id ) {
+				// User wants to load an entry
+				$filter_values = $row->filter;
+				$options_values = $row->options;
+				$params_values = $row->params;
+				$pname = $row->name;
+
+				$use_original = 1;
+			}
 		}
 	}
 
@@ -5788,6 +5795,24 @@ function exportData( $option, $type, $cmd=null )
 		if ( isset( $row ) ) {
 			if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
 				$use_original = 1;
+			}
+		}
+	}
+
+	$filters = array( 'planid', 'groupid', 'status' );
+
+	foreach ( $filters as $filter ) {
+		if ( !isset( $filter_values[$filter] ) ) {
+			$filter_values[$filter] = array();
+
+			continue;
+		}
+
+		if ( !is_array( $filter_values[$filter] ) ) {
+			if ( !empty( $filter_values[$filter] ) ) {
+				$filter_values[$filter] = array( $filter_values[$filter] );
+			} else {
+				$filter_values[$filter] = array();
 			}
 		}
 	}
@@ -5844,7 +5869,7 @@ function exportData( $option, $type, $cmd=null )
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div', '<div class="alert alert-warning">' );
 		$params[] = array( 'p', '<p>Collate it like this:</p>' );
-		$params['collate']			= array( 'list', '' );
+		$params['collate']			= array( 'list', 'day' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div', '<div class="alert alert-success">' );
 		$params[] = array( 'p', '<p>Break down the data in each line like so:</p>' );
@@ -5952,58 +5977,40 @@ function exportData( $option, $type, $cmd=null )
 	$db->setQuery( $query );
 	$db_plans = $db->loadObjectList();
 
-	$selected_plans = array();
-	$plans = array();
-	foreach ( $db_plans as $dbplan ) {
-		$plans[] = JHTML::_('select.option', $dbplan->id, $dbplan->name );
+	$lists['planid'] = '<select id="plan-filter-select" name="planid[]" multiple="multiple" size="5">';
+	foreach ( $db_plans as $plan ) {
+		$lists['planid'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_values['planid'] ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $plan->name . '</option>';
+	}
+	$lists['planid'] .= '</select>';
 
-		if ( !empty( $filter_values['planid'] ) ) {
-			if ( in_array( $dbplan->id, $filter_values['planid'] ) ) {
-				$selected_plans[] = JHTML::_('select.option', $dbplan->id, $dbplan->name );
-			}
+	$grouplist = ItemGroupHandler::getTree();
+
+	$lists['groupid'] = '<select id="group-filter-select" name="groupid[]" multiple="multiple" size="5">';
+	foreach ( $grouplist as $glisti ) {
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
+		} else {
+			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $glisti[1] . '</option>';
 		}
 	}
-
-	// Fetch Item Groups
-	$query = 'SELECT `id`, `name`'
-			. ' FROM #__acctexp_itemgroups'
-			;
-	$db->setQuery( $query );
-	$groups = $db->loadObjectList();
-
-	$selected_groups = array();
-	foreach ( $groups as $dbgroup ) {
-		$all_groups[] = JHTML::_('select.option', $dbgroup->id, $dbgroup->name );
-
-		if ( !empty( $filter_values['groupid'] ) ) {
-			if ( in_array( $dbgroup->id, $filter_values['groupid'] ) ) {
-				$selected_groups[] = JHTML::_('select.option', $dbgroup->id, $dbgroup->name );
-			}
-		}
-	}
-
-	$lists['planid']	= JHTML::_('select.genericlist', $plans, 'planid[]', 'class="inputbox" size="' . min( 14, count( $plans ) ) . '" multiple="multiple"', 'value', 'text', $selected_plans );
-	$lists['groupid']	= JHTML::_('select.genericlist', $all_groups, 'groupid[]', 'class="inputbox" size="' . min( 14, count( $all_groups ) ) . '" multiple="multiple"', 'value', 'text', $selected_groups );
+	$lists['groupid'] .= '</select>';
 
 	if ( $type == 'members' ) {
-		$group_selection = array();
-		$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('AEC_SEL_EXCLUDED') );
-		$group_selection[] = JHTML::_('select.option', 'pending',	JText::_('AEC_SEL_PENDING') );
-		$group_selection[] = JHTML::_('select.option', 'trial',		JText::_('AEC_SEL_TRIAL') );
-		$group_selection[] = JHTML::_('select.option', 'active',	JText::_('AEC_SEL_ACTIVE') );
-		$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('AEC_SEL_EXPIRED') );
-		$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('AEC_SEL_CLOSED') );
-		$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('AEC_SEL_CANCELLED') );
-		$group_selection[] = JHTML::_('select.option', 'manual',	JText::_('AEC_SEL_NOT_CONFIGURED') );
+		$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
+							'pending'	=> JText::_('AEC_SEL_PENDING'),
+							'active'	=> JText::_('AEC_SEL_ACTIVE'),
+							'expired'	=> JText::_('AEC_SEL_EXPIRED'),
+							'closed'	=> JText::_('AEC_SEL_CLOSED'),
+							'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
+							'hold'		=> JText::_('AEC_SEL_HOLD'),
+							'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
+							);
 
-		$selected_status = array();
-		if ( !empty( $filter_values['status'] ) ) {
-			foreach ( $filter_values['status'] as $name ) {
-				$selected_status[] = JHTML::_('select.option', $name, $name );
-			}
+		$lists['status'] = '<select id="status-group-select" name="status[]" multiple="multiple" size="5">';
+		foreach ( $status as $id => $txt ) {
+			$lists['status'] .= '<option value="' . $id . '"' . ( in_array( $id, $filter_values['status'] ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $txt . '</option>';
 		}
-
-		$lists['status'] = JHTML::_('select.genericlist', $group_selection, 'status[]', 'size="8" multiple="multiple"', 'value', 'text', $selected_status);
+		$lists['status'] .= '</select>';
 
 		// Ordering
 		$sel = array();
@@ -6024,7 +6031,7 @@ function exportData( $option, $type, $cmd=null )
 		$sel[] = JHTML::_('select.option', 'type ASC',			JText::_('TYPE_ASC') );
 		$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('TYPE_DESC') );
 
-		$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="10"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
+		$lists['orderby'] = JHTML::_('select.genericlist', $sel, 'orderby', 'class="inputbox" size="1"', 'value', 'text', arrayValueDefault($filter_values, 'orderby', '') );
 	} else {
 		$collate_selection = array();
 		$collate_selection[] = JHTML::_('select.option', 'day',	JText::_('Day') );
@@ -6035,9 +6042,11 @@ function exportData( $option, $type, $cmd=null )
 		$selected_collate = 0;
 		if ( !empty( $options_values['collate'] ) ) {
 			$selected_collate = $options_values['collate'];
+		} else {
+			$selected_collate = 'day';
 		}
 
-		$lists['collate'] = JHTML::_('select.genericlist', $collate_selection, 'collate', 'size="4"', 'value', 'text', $selected_collate);
+		$lists['collate'] = JHTML::_('select.genericlist', $collate_selection, 'collate', 'size="1"', 'value', 'text', $selected_collate);
 
 		$breakdown_selection = array();
 		$breakdown_selection[] = JHTML::_('select.option', '0',	JText::_('None') );
@@ -6049,7 +6058,7 @@ function exportData( $option, $type, $cmd=null )
 			$selected_breakdown = $options_values['breakdown'];
 		}
 
-		$lists['breakdown'] = JHTML::_('select.genericlist', $breakdown_selection, 'breakdown', 'size="3"', 'value', 'text', $selected_breakdown);
+		$lists['breakdown'] = JHTML::_('select.genericlist', $breakdown_selection, 'breakdown', 'size="1"', 'value', 'text', $selected_breakdown);
 
 		$processors = PaymentProcessorHandler::getInstalledObjectList();
 
@@ -6085,7 +6094,11 @@ function exportData( $option, $type, $cmd=null )
 		}
 	}
 
-	$lists['export_method'] = JHTML::_('select.genericlist', $sel, 'export_method', 'class="inputbox" size="4"', 'value', 'text', $params_values['export_method'] );
+	if ( empty( $params_values['export_method'] ) ) {
+		$params_values['export_method'] = 'csv';
+	}
+
+	$lists['export_method'] = JHTML::_('select.genericlist', $sel, 'export_method', 'class="inputbox" size="1"', 'value', 'text', $params_values['export_method'] );
 
 	$settings = new aecSettings ( 'export', 'general' );
 

@@ -751,6 +751,23 @@ display: inline-block;
 margin-left: 6px;
 }
 
+.ui-widget {
+margin-top: 2px;
+-webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25);
+-moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25);
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25);
+}
+
+.tooltip-inner {
+-webkit-box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.15);
+-moz-box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.15);
+box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.15);
+}
+
+.ui-datepicker {
+margin-left: -4px;
+}
+
 #status-group-select,
 #plan-filter-select,
 #group-filter-select {
@@ -764,6 +781,19 @@ display: block;
 font-size: 24px;
 margin: 12px 0 16px;
 text-shadow: 0 1px 2px #bbb;
+}
+
+a.btn-primary,
+a.btn-primary:link,
+a.btn-info,
+a.btn-info:link,
+a.btn-success,
+a.btn-success:link,
+a.btn-warning,
+a.btn-warning:link,
+a.btn-danger,
+a.btn-danger:link {
+color: #fff !important;
 }
 
 #aec_center div.btn {

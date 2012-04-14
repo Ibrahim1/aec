@@ -64,26 +64,23 @@ class HTML_myCommon
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
 
-		if ( $ui ) {
-			$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.18.custom.min.js' );
-			$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/date.js' );
-			$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.compressed.js' );
-			$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.18.custom.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.compressed.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
 
-			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery-ui-1.8.16.custom.css' . '" />' );
-			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/ui.daterangepicker.css' . '" />' );
-			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.multiselect.css' . '" />' );
-		}
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery-ui-1.8.16.custom.css' . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/ui.daterangepicker.css' . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.multiselect.css' . '" />' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.backend.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/aec.backend.js' );
 	}
 
-	function startCommon( $id='aec_wrap', $ui=false )
+	function startCommon( $id='aec_wrap' )
 	{
 		HTML_myCommon::addBackendCSS();
-		HTML_myCommon::addBackendJS( $ui );
+		HTML_myCommon::addBackendJS();
 
 		echo '<div id="' . $id . '">';
 		echo HTML_AcctExp::menuBar();
@@ -1274,7 +1271,7 @@ class HTML_AcctExp
 
 	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
 	{
-		HTML_myCommon::startCommon( 'aec_wrap', true );
+		HTML_myCommon::startCommon();
 
 $js = '
 jQuery(document).ready(function(jQuery) {
@@ -2976,6 +2973,28 @@ jQuery(document).ready(function(jQuery) {
 	function export( $option, $task, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
+
+$js = '
+jQuery(document).ready(function(jQuery) {
+	jQuery("#status-group-select")
+	.multiselect({	noneSelectedText: \'Select Status\',
+      				selectedList: 8
+			});
+
+	jQuery("#plan-filter-select")
+	.multiselect({	noneSelectedText: \'' . JText::_('PLAN_FILTER') . '\',
+      				selectedList: 3
+			});
+
+	jQuery("#group-filter-select")
+	.multiselect({	noneSelectedText: \'' . JText::_('GROUP_FILTER') . '\',
+      				selectedList: 3
+			});
+});
+';
+		$document =& JFactory::getDocument();
+		$document->addScriptDeclaration( $js );
+
 		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'export' );
 
 		$buttons = array( 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ) );
