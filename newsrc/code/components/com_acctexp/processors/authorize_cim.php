@@ -827,15 +827,13 @@ class processor_authorize_cim extends PROFILEprocessor
 
 					$iFactory->invoice->storeload();
 				}
-
-				return true;
 			} else {
 				$return['error'] = true;
 				$return['errormsg'] = $cim->code . " - " . $cim->text . " (" . $cim->directResponse . ")";
 			}
 		}
 
-		return null;
+		return $return;
 	}
 
 }
