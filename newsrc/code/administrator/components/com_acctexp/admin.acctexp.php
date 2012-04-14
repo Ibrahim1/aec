@@ -1279,14 +1279,14 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	}
 	$lists['filter_group'] .= '</select>';
 
-	$status = array(	'active'	=> JText::_('AEC_SEL_ACTIVE'),
+	$status = array(	'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
+						'pending'	=> JText::_('AEC_SEL_PENDING'),
+						'active'	=> JText::_('AEC_SEL_ACTIVE'),
 						'expired'	=> JText::_('AEC_SEL_EXPIRED'),
 						'closed'	=> JText::_('AEC_SEL_CLOSED'),
-						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED'),
-						'excluded'	=> JText::_('AEC_SEL_EXCLUDED'),
-						'pending'	=> JText::_('AEC_SEL_PENDING'),
 						'cancelled'	=> JText::_('AEC_SEL_CANCELLED'),
-						'hold'		=> JText::_('AEC_SEL_HOLD')
+						'hold'		=> JText::_('AEC_SEL_HOLD'),
+						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
 						);
 
 	$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';

@@ -1310,7 +1310,7 @@ jQuery(document).ready(function(jQuery) {
 				</div>
 				<div class="filter-sub">
 					<label><?php echo JText::_('ORDER_BY'); ?>:</label><div class="control"><?php echo $lists['orderNav']; ?></div>
-					<input type="text" name="search" class="inputbox span2 search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>" value="<?php echo htmlspecialchars($search); ?>" />
+					<input type="text" name="search" class="inputbox span2 search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>..." value="<?php echo htmlspecialchars($search); ?>" />
 				</div>
 				<div class="filter-sub">
 						<label>With selected users:</label>
