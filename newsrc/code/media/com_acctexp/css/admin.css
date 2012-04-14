@@ -717,9 +717,20 @@ padding: 14px 15px 2px;
 background: #f5f5f5;
 }
 
-.ui-multiselect-menu label {
+.ui-multiselect {
+margin: 1px 0;
+}
+
+.ui-multiselect-checkboxes {
+overflow-y: auto !important;
+height: auto !important;
+max-height: 175px;
+}
+
+.ui-multiselect-checkboxes label {
 width: 99%;
-margin-bottom: -6px;
+padding: 2px 1px !important;
+margin-bottom: 0px;
 }
 
 .ui-multiselect-menu input {
