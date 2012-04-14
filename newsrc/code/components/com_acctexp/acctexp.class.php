@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4956' );
+define( '_AEC_REVISION', '4960' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -4714,7 +4714,6 @@ class PaymentProcessor
 				} else {
 					$resp['response'] = $result['raw'];
 				}
-				unset( $result['raw'] );
 			}
 
 			$iFactory->invoice->processorResponse( $iFactory, $result, $resp, true );
