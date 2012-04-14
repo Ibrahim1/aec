@@ -1,0 +1,139 @@
+div#stats {
+width: 1164px;
+margin: 24px auto;
+}
+
+div#statnav {
+float: left;
+width: 240px;
+background: #ccc;
+padding: 18px 0 24px 18px;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+margin: 24px 0;
+}
+
+.aec_backend_page_heading h1 {
+font-size: 120%;
+padding-top: 16px;
+padding-left: 16px;
+} 
+
+.aec_backend_page_heading {
+margin-left: -2px;
+} 
+
+div#statnav ul {
+float: right;
+width: 96%;
+list-style-type: none;
+}
+
+div#statnav ul li {
+text-align: center;
+font-size: 150%;
+padding: 10px 4px;
+background: #ccc;
+margin-bottom: 2px;
+margin-right: 12px;
+}
+
+div#statnav ul li:hover {
+background: #efefef;
+}
+
+div#statnav ul li.current {
+background: #eee;
+font-weight: bold;
+margin-right: 0px;
+}
+
+div#statnav ul li.current:hover {
+background: #ccc;
+}
+
+#chart {
+padding: 18px 0 24px 18px;
+font: 10px sans-serif;
+margin: 24px auto;
+width: 980px;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+overflow: hidden;
+}
+
+.chart-sunburst {
+width: 200px;
+height: 200px;
+float: left;
+}
+
+.chart-sunburstxl {
+width: 500px;
+height: 500px;
+float: left;
+margin: 0 240px;
+}
+
+.chart-cellular {
+width: 760px;
+height: 160px;
+float: left;
+margin: 36px 0 0;
+}
+
+.overview-container-full {
+float: left;
+clear: both;
+}
+
+.overview-container {
+float: left;
+clear: both;
+width: 98%;
+}
+
+#chart h3 {
+text-align: center;
+background: #ccc;
+-moz-border-radius: 8px;
+-webkit-border-radius: 8px;
+border-radius: 8px;
+margin: 16px 0;
+padding: 6px 0;
+text-align: center;
+width: 97%;
+}
+
+#chart .svg-crisp {
+shape-rendering: crispedges;
+}
+
+rect.panel {
+fill: none;
+}
+
+.day {
+fill: #fff;
+}
+
+rect.month {
+fill: #fff;
+}
+
+path.month {
+fill: none;
+stroke: #555;
+stroke-width: 2px;
+}
+
+.console-amt {
+font-size: 110%;
+}
+
+.console-val {
+font-size: 150%;
+font-weight: bold;
+}
