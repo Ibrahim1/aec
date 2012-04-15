@@ -2737,8 +2737,8 @@ function editSubscriptionPlan( $id, $option )
 	$customparamsarray->pp = $custompar;
 
 	// get available active plans
-	$available_plans = array();
-	$available_plans[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN') );
+	$fallback_plans = array( JHTML::_('select.option', '0', JText::_('PAYPLAN_NOFALLBACKPLAN') ) );
+	$parent_plans = array( JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPARENTPLAN') ) );
 
 	$query = 'SELECT `id` AS value, `name` AS text'
 			. ' FROM #__acctexp_plans'
@@ -2749,12 +2749,12 @@ function editSubscriptionPlan( $id, $option )
 	$payment_plans = $db->loadObjectList();
 
  	if ( is_array( $payment_plans ) ) {
- 		$active_plans	= array_merge( $available_plans, $payment_plans );
+ 		$fallback_plans	= array_merge( $fallback_plans, $payment_plans );
+ 		$parent_plans	= array_merge( $parent_plans, $payment_plans );
  	}
-	$total_plans	= min( max( (count( $active_plans ) + 1 ), 4 ), 15 );
 
-	$lists['fallback'] = JHTML::_('select.genericlist', $active_plans, 'fallback', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
-	$lists['standard_parent'] = JHTML::_('select.genericlist', $active_plans, 'standard_parent', 'size="' . $total_plans . '"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
+	$lists['fallback'] = JHTML::_('select.genericlist', $fallback_plans, 'fallback', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'fallback', 0));
+	$lists['standard_parent'] = JHTML::_('select.genericlist', $parent_plans, 'standard_parent', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'standard_parent', 0));
 
 	// get similar plans
 	if ( !empty( $params_values['similarplans'] ) ) {
@@ -2769,7 +2769,7 @@ function editSubscriptionPlan( $id, $option )
 		$sel_similar_plans = 0;
 	}
 
-	$lists['similarplans'] = JHTML::_('select.genericlist', $payment_plans, 'similarplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_similar_plans);
+	$lists['similarplans'] = JHTML::_('select.genericlist', $payment_plans, 'similarplans[]', 'size="1" multiple="multiple"', 'value', 'text', $sel_similar_plans);
 
 	// get equal plans
 	if ( !empty( $params_values['equalplans'] ) ) {
@@ -2784,7 +2784,7 @@ function editSubscriptionPlan( $id, $option )
 		$sel_equal_plans = 0;
 	}
 
-	$lists['equalplans'] = JHTML::_('select.genericlist', $payment_plans, 'equalplans[]', 'size="' . $total_plans . '" multiple="multiple"', 'value', 'text', $sel_equal_plans);
+	$lists['equalplans'] = JHTML::_('select.genericlist', $payment_plans, 'equalplans[]', 'size="1" multiple="multiple"', 'value', 'text', $sel_equal_plans);
 
 	$lists = array_merge( $lists, $restrictionHelper->getLists( $params_values, $restrictions_values ) );
 
@@ -2970,6 +2970,10 @@ function saveSubscriptionPlan( $option, $apply=0 )
 		$id = $_POST['id'];
 	} else {
 		$id = $row->getMax();
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		ItemGroupHandler::setChildren( 1, array( $id ), 'item' );
 	}
 
 	if ( !empty( $row->params['lifetime'] ) && !empty( $row->params['full_period'] ) ) {
@@ -3200,15 +3204,31 @@ function listItemGroups( $option )
 	 		return false;
 	 	}
 
-		$group = $rows[$rid]->id;
+		$gid = $rows[$rid]->id;
 
-		if ( !isset( $gcolors[$group] ) ) {
-			$gcolors[$group] = array();
-			$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
+		if ( !isset( $gcolors[$gid] ) ) {
+			$gcolors[$gid] = array();
+			$gcolors[$gid]['color'] = ItemGroupHandler::groupColor( $gid );
 		}
 
-		$rows[$rid]->group = $group;
-		$rows[$rid]->color = $gcolors[$group]['color'];
+		$rows[$rid]->color = $gcolors[$gid]['color'];
+
+		$parents = ItemGroupHandler::getParents( $gid, 'group' );
+
+		if ( !empty( $parents ) ) {
+			$parent_group = $parents[0];
+
+			if ( !isset( $gcolors[$parent_group] ) ) {
+				$gcolors[$parent_group] = array();
+				$gcolors[$parent_group]['color'] = ItemGroupHandler::groupColor( $parent_group );
+			}
+
+			$rows[$rid]->parent_group = $parent_group;
+			$rows[$rid]->parent_color = $gcolors[$parent_group]['color'];
+		} else {
+			$rows[$rid]->parent_group = $gid;
+			$rows[$rid]->parent_color = $gcolors[$gid]['color'];
+		}
 
 		if ( !empty( $row->desc ) ) {
 			$rows[$rid]->desc = stripslashes( strip_tags( $row->desc ) );
@@ -3452,6 +3472,10 @@ function saveItemGroup( $option, $apply=0 )
 		$id = $_POST['id'];
 	} else {
 		$id = $row->getMax();
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		ItemGroupHandler::setChildren( 1, array( $id ), 'group' );
 	}
 
 	if ( $apply ) {

@@ -1782,6 +1782,7 @@ jQuery(document).ready(function(jQuery) {
 						<div class="userinfobox">
 							<div class="aec_userinfobox_sub">
 								<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
+								<?php if ( $row->id ) { ?>
 								<table style="width:100%;" class="table-striped aec-grouplist">
 									<thead>
 										<tr>
@@ -1804,6 +1805,9 @@ jQuery(document).ready(function(jQuery) {
 										</tr>
 									</tfoot>
 								</table>
+								<?php } else { ?>
+									<p>You can select groups after saving this plan for the first time.</p>
+								<?php } ?>
 							</div>
 						</div>
 					</div>
@@ -2075,8 +2079,8 @@ jQuery(document).ready(function(jQuery) {
 					<th width="1%">#</th>
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="10%"></th>
-					<th width="10%" class="leftalign"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+					<th width="1%">Parent</th>
+					<th width="10%"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
 					<th width="50%" class="leftalign"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
 					<th width="3%"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
 					<th width="3%"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
@@ -2086,10 +2090,10 @@ jQuery(document).ready(function(jQuery) {
 				<?php foreach ( $rows as $i => $row ) { ?>
 					<tr>
 						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-						<td><?php echo $row->id; ?></td>
+						<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->id; ?></td>
 						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-						<td align="right" style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
-						<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+						<td align="right" style="background: #<?php echo $row->parent_color; ?>;"><?php echo $row->parent_group; ?></td>
+						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 						<td class="leftalign"><?php echo $row->desc; ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
 						<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
@@ -2189,8 +2193,10 @@ jQuery(document).ready(function(jQuery) {
 										</tr>
 									</tfoot>
 								</table>
-								<?php } else { ?>
+								<?php } elseif ( $row->id == 1 ) { ?>
 									<p>This is the Root Group.</p>
+								<?php } else { ?>
+									<p>You can select Parent Groups after you have saved this for the first time.</p>
 								<?php } ?>
 							</div>
 						</div>
