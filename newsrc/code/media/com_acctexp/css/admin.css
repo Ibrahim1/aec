@@ -783,6 +783,30 @@ box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.15);
 margin-left: -4px;
 }
 
+.ui-widget-header i {
+vertical-align: middle;
+}
+
+.ui-widget-header a {
+text-decoration: none;
+}
+
+.ui-widget-header a:hover,
+.ui-multiselect-header a:hover {
+text-decoration: none !important;
+}
+
+.ui-widget-header em {
+margin-left: 4px;
+margin-right: 4px;
+}
+
+.ui-widget-header .btn {
+height: 12px;
+line-height: 12px;
+padding: 3px 4px 5px;
+}
+
 #status-group-select,
 #plan-filter-select,
 #group-filter-select {
@@ -1641,7 +1665,7 @@ background: none;
 .button2-right.off .start,
 .button2-right .prev,
 .button2-right.off .prev {
-background: none;
+background: none !important;
 }
 
 .button2-left.off .end,
@@ -1650,7 +1674,7 @@ background: none;
 .button2-left .next,
 .button2-left .page,
 .button2-left .blank {
-background: none;
+background: none !important;
 }
 
 .button2-right a, .button2-right span,

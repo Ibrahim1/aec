@@ -4075,7 +4075,6 @@ function editCoupon( $id, $option, $new )
 
 	// get available plans
 	$available_plans = array();
-	$available_plans[]			= JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN') );
 
 	$query = 'SELECT `id` as value, `name` as text'
 			. ' FROM #__acctexp_plans'

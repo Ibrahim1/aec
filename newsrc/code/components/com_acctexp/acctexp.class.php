@@ -6390,7 +6390,14 @@ class aecHTML
 				break;
 			case 'list':
 				$return .= '<div class="controls">';
-				$return .= $this->lists[$name];
+
+				if ( strpos( $this->lists[$name], '[]"' ) ) {
+					$return .= '<input type="hidden" name="' . $name . '" value="0" />';
+					$return .= str_replace( '<select', '<select class="jqui-multiselect"', $this->lists[$name] );
+				} else {
+					$return .= $this->lists[$name];
+				}
+				
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -20858,7 +20865,7 @@ class aecRestrictionHelper
 		$lists['maxgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
 
 		$available_plans = array();
-		$available_plans[] = JHTML::_('select.option', '0', "- " . JText::_('PAYPLAN_NOPLAN') . " -" );
+		$available_plans[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN') );
 
 		// Fetch Payment Plans
 		$query = 'SELECT `id` AS value, `name` AS text'
