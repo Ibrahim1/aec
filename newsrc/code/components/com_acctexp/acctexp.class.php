@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4965' );
+define( '_AEC_REVISION', '4968' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -20865,7 +20865,6 @@ class aecRestrictionHelper
 		$lists['maxgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
 
 		$available_plans = array();
-		$available_plans[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN') );
 
 		// Fetch Payment Plans
 		$query = 'SELECT `id` AS value, `name` AS text'
@@ -20874,22 +20873,19 @@ class aecRestrictionHelper
 		$db->setQuery( $query );
 		$plans = $db->loadObjectList();
 
-	 	if ( is_array( $plans ) ) {
-	 		$all_plans	= array_merge( $available_plans, $plans );
+	 	if ( empty( $plans ) ) {
+	 		$plans = array();
 	 	} else {
 	 		$all_plans	= $available_plans;
 	 	}
 
-		$total_all_plans	= min( max( ( count( $all_plans ) + 1 ), 4 ), 20 );
-
 		$planrest = array( 'previousplan_req', 'currentplan_req', 'overallplan_req', 'used_plan_min', 'used_plan_max', 'previousplan_req_excluded', 'currentplan_req_excluded', 'overallplan_req_excluded'  );
 
 		foreach ( $planrest as $name ) {
-			$lists[$name] = JHTML::_( 'select.genericlist', $all_plans, $name.'[]', 'size="' . $total_all_plans . '" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
+			$lists[$name] = JHTML::_( 'select.genericlist', $plans, $name.'[]', 'size="1" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
 		}
 
 		$available_groups = array();
-		$available_groups[] = JHTML::_('select.option', '0', JText::_('PAYPLAN_NOGROUP') );
 
 		// Fetch Item Groups
 		$query = 'SELECT `id` AS value, `name` AS text'
@@ -20898,18 +20894,14 @@ class aecRestrictionHelper
 		$db->setQuery( $query );
 		$groups = $db->loadObjectList();
 
-	 	if ( is_array( $groups ) ) {
-	 		$all_groups	= array_merge( $available_groups, $groups );
-	 	} else {
-	 		$all_groups	= $available_groups;
+	 	if ( empty( $groups ) ) {
+	 		$groups = array();
 	 	}
-
-		$total_all_groups	= min( max( ( count( $all_groups ) + 1 ), 4 ), 20 );
 
 		$grouprest = array( 'previousgroup_req', 'currentgroup_req', 'overallgroup_req', 'used_group_min', 'used_group_max', 'previousgroup_req_excluded', 'currentgroup_req_excluded', 'overallgroup_req_excluded' );
 
 		foreach ( $grouprest as $name ) {
-			$lists[$name] = JHTML::_( 'select.genericlist', $all_groups, $name.'[]', 'size="' . $total_all_groups . '" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
+			$lists[$name] = JHTML::_( 'select.genericlist', $groups, $name.'[]', 'size="1" multiple="multiple"', 'value', 'text', arrayValueDefault($restrictions_values, $name, 0) );
 		}
 
 		return $lists;

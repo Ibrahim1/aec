@@ -1922,6 +1922,8 @@ jQuery(document).ready(function(jQuery) {
 						<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 					</div>
 				</div>
+			</td></tr>
+			<tr><td>
 				<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 				<div class="aec_userinfobox_sub">
 					<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
