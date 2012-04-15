@@ -3,7 +3,10 @@ jQuery(document).ready(function(jQuery) {
 	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){
 		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
 	});
-	jQuery("#system-message").fadeOut('slow', function() { jQuery(this).slideUp( 'slow' ); });
+	if ( jQuery("#system-message li").length != 0 ) {
+		jQuery("div.container").before('<span class="nav-msg">'+jQuery("#system-message li").html()+'</span>');
+	}
+
 	jQuery('#quicksearch').popover({ trigger:'manual', placement:'bottom' });
 
 	var typingTimer;

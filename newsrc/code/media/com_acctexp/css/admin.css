@@ -1497,6 +1497,33 @@ background-position: 0 -192px;
 
 /* Overrides */
 
+#system-message {
+display: none;
+}
+
+.nav-msg {
+float: left;
+position: absolute;
+margin-top: 6px;
+margin-left: 0;
+padding: 6px;
+background: #ddd;
+border-radius: 4px;
+opacity: 0;
+-webkit-transition: opacity 0.5s ease-out, margin-left 0.5s ease-out;
+-moz-transition: opacity 0.5s ease-out, margin-left 0.5s ease-out;
+-ms-transition: opacity 0.5s ease-out, margin-left 0.5s ease-out;
+-o-transition: opacity 0.5s ease-out, margin-left 0.5s ease-out;
+transition:opacity 0.5s ease-out, margin-left 0.5s ease-out;
+text-shadow: 0 1px 0px rgba(255, 255, 255, 0.95);
+box-shadow: -2px 1px 5px rgba(255, 255, 255, 0.75);
+}
+
+html:hover .nav-msg {
+opacity: 1;
+margin-left: 1%;
+}
+
 table.adminlist .pagination {
 margin: 3px auto -10px;
 }

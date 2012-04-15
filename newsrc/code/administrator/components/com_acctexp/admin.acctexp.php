@@ -70,7 +70,7 @@ switch( strtolower( $task ) ) {
 	case 'cancelmembership': cancel( $option ); break;
 	case 'showcentral': aecCentral( $option ); break;
 
-	case 'showsubscriptions': listSubscriptions( $option, 'active', $subscriptionid, $userid, aecGetParam('plan') ); break;
+	case 'showsubscriptions': listSubscriptions( $option, '', $subscriptionid, $userid, aecGetParam('plan') ); break;
 
 	case 'showallsubscriptions':
 		$groups = array( 'active', 'expired', 'pending', 'cancelled', 'hold', 'closed' );
@@ -827,7 +827,12 @@ function saveUser( $option, $apply=0 )
  	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart	= $app->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
 
-	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
+	$nexttask	= aecGetParam( 'nexttask', 'showSubscriptions' ) ;
+
+	if ( empty( $nexttask ) ) {
+		$nexttask = 'showSubscriptions';
+	}
+
 	if ( $apply ) {
 		$subID = !empty($post['subscriptionid']) ? $post['subscriptionid'] : $metaUser->focusSubscription->id;
 
@@ -851,6 +856,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
 	$orderby		= $app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
+	$groups			= $app->getUserStateFromRequest( "groups{$option}", 'groups', 'active' );
 	$search			= $app->getUserStateFromRequest( "search{$option}", 'search', '' );
 	$search			= $db->getEscaped( trim( strtolower( $search ) ) );
 
@@ -870,28 +876,29 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		$filter_group = array( $filter_group );
 	}
 
-	if ( !empty( $_REQUEST['groups'] ) ) {
-		if ( is_array($_REQUEST['groups'] ) ) {
-			if ( count( $_REQUEST['groups'] ) == 1 ) {
-				if ( $_REQUEST['groups'][0] == 'all' ) {
-					$_REQUEST['groups'] = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
+	if ( $groups ) {
+		if ( is_array($groups ) ) {
+			if ( count( $groups ) == 1 ) {
+				if ( $groups[0] == 'all' ) {
+					$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
 				}
 			}
 
-			$groups 	= $_REQUEST['groups'];
-			$set_group	= $_REQUEST['groups'][0];
+			$groups 	= $groups;
+			$set_group	= $groups[0];
 		} else {
-			$groups		= array( $_REQUEST['groups'] );
+			$groups		= array( $groups );
 		}
 	} else {
 		if ( is_array( $set_group ) ) {
 			$groups		= $set_group;
-			$set_group	= $groups[0];
 		} else {
 			$groups		= array();
 			$groups[]	= $set_group;
 		}
 	}
+
+	$set_group	= $groups[0];
 
 	if ( !empty( $orderby ) ) {
 		if ( $set_group == "manual" ) {
