@@ -1278,7 +1278,18 @@ $js = '
 jQuery(document).ready(function(jQuery) {
 	jQuery("#status-group-select")
 	.multiselect({	noneSelectedText: \'Select Status\',
-      				selectedList: 8
+      				selectedList: 8,
+      				checkAll: function(event, ui){
+	      							jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
+	      						},
+      				click: function(event, ui){
+							if( ui.value == "notconfig" && ui.checked ) {
+								jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
+								jQuery("#ui-multiselect-status-group-select-option-7").attr("checked", "checked");
+							} else {
+								jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
+							}
+						}
 			});
 
 	jQuery("#plan-filter-select")
@@ -1290,6 +1301,18 @@ jQuery(document).ready(function(jQuery) {
 	.multiselect({	noneSelectedText: \'' . JText::_('GROUP_FILTER') . '\',
       				selectedList: 1
 			});
+	jQuery(".ui-multiselect-checkboxes input").on("click", function(event){
+		if( jQuery(this).val() == "notconfig" ) {
+			if( jQuery(this).attr("checked") == "checked" ) {
+				jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
+				jQuery(this).attr("checked", "checked");
+			} else {
+				
+			}
+		} else {
+			jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
+		}
+	});
 });
 ';
 		$document =& JFactory::getDocument();
