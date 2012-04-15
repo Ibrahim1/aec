@@ -1280,7 +1280,9 @@ jQuery(document).ready(function(jQuery) {
 	.multiselect({	noneSelectedText: \'Select Status\',
       				selectedList: 8,
       				checkAll: function(event, ui){
-	      							jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
+	      							jQuery("#ui-multiselect-status-group-select-option-6").click().click();
+	      							jQuery(\'#status-group-select option[value="hold"]\').attr("selected", "selected");
+	      							jQuery(\'#status-group-select option[value="notconfig"]\').removeAttr("selected").removeAttr("aria-selected");
 	      						},
       				click: function(event, ui){
 							if( ui.value == "notconfig" && ui.checked ) {

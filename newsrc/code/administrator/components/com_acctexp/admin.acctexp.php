@@ -1263,7 +1263,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
 	foreach ( $db_plans as $plan ) {
-		$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $plan->name . '</option>';
+		$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected"' : '' ) . '/>' . $plan->name . '</option>';
 	}
 	$lists['filter_plan'] .= '</select>';
 
@@ -1272,9 +1272,9 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$lists['filter_group'] = '<select id="group-filter-select" name="filter_group[]" multiple="multiple" size="5">';
 	foreach ( $grouplist as $glisti ) {
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
+			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
 		} else {
-			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $glisti[1] . '</option>';
+			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '/>' . $glisti[1] . '</option>';
 		}
 	}
 	$lists['filter_group'] .= '</select>';
@@ -1291,7 +1291,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';
 	foreach ( $status as $id => $txt ) {
-		$lists['groups'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $txt . '</option>';
+		$lists['groups'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected"' : '' ) . '/>' . $txt . '</option>';
 	}
 	$lists['groups'] .= '</select>';
 
@@ -5978,7 +5978,7 @@ function exportData( $option, $type, $cmd=null )
 
 	$lists['planid'] = '<select id="plan-filter-select" name="planid[]" multiple="multiple" size="5">';
 	foreach ( $db_plans as $plan ) {
-		$lists['planid'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_values['planid'] ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $plan->name . '</option>';
+		$lists['planid'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_values['planid'] ) ? ' selected="selected"' : '' ) . '/>' . $plan->name . '</option>';
 	}
 	$lists['planid'] .= '</select>';
 
@@ -5987,9 +5987,9 @@ function exportData( $option, $type, $cmd=null )
 	$lists['groupid'] = '<select id="group-filter-select" name="groupid[]" multiple="multiple" size="5">';
 	foreach ( $grouplist as $glisti ) {
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
+			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
 		} else {
-			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $glisti[1] . '</option>';
+			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected"' : '' ) . '/>' . $glisti[1] . '</option>';
 		}
 	}
 	$lists['groupid'] .= '</select>';
@@ -6007,7 +6007,7 @@ function exportData( $option, $type, $cmd=null )
 
 		$lists['status'] = '<select id="status-group-select" name="status[]" multiple="multiple" size="5">';
 		foreach ( $status as $id => $txt ) {
-			$lists['status'] .= '<option value="' . $id . '"' . ( in_array( $id, $filter_values['status'] ) ? ' selected="selected" checked="checked"' : '' ) . '/>' . $txt . '</option>';
+			$lists['status'] .= '<option value="' . $id . '"' . ( in_array( $id, $filter_values['status'] ) ? ' selected="selected"' : '' ) . '/>' . $txt . '</option>';
 		}
 		$lists['status'] .= '</select>';
 
