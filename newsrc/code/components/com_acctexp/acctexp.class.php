@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4971' );
+define( '_AEC_REVISION', '4978' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );

@@ -26,30 +26,84 @@ class mi_affiliatepro
 	{
 		$settings = array();
 		$settings['url']		= array( 'inputC' );
+		$settings['cookie']		= array( 'toggle' );
 		$settings['path']		= array( 'inputC' );
+		$settings['merchant']	= array( 'inputC' );
+		$settings['password']	= array( 'inputC' );
 
 		return $settings;
 	}
 
 	function invoice_creation( $request )
 	{
-		if (array_key_exists('PAPCookie_Sale', $_COOKIE)) {
-			$clickTracker->getAffiliate()->getValue('userid');
-			$request->invoice->params['mi_amigos'] = $_COOKIE['amigosid'];
+		if ( empty( $this->settings['cookie'] ) ) {
+			return null;
+		}
+
+		if ( empty( $this->settings['path'] ) ) {
+			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', 'You need to provide a path to your Affiliate Pro Directory.', 32 );
+
+			return null;
+		}
+
+		if ( empty( $this->settings['merchant'] ) || empty( $this->settings['password'] ) ) {
+			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', 'You need to provide a merchant name and password in order to track cookies in Affiliate Pro.', 32 );
+
+			return null;
+		}
+
+		if ( substr( $this->settings['path'], -1, 1 ) != '/' ) {
+			$this->settings['path'] .= '/';
+		}
+
+		if ( !file_exists( $this->settings['path'] . 'PapApi.class.php' ) ) {
+			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', 'Could not locate the Affiliate Pro API at this Directory.', 32 );
+
+			return null;
+		}
+
+		include_once( $this->settings['path'] . 'PapApi.class.php' );
+
+		if ( strpos( $this->settings['url'], '/sales.js' ) ) {
+			$url = str_replace( '/sales.js', '/server.php', $this->settings['url'] );
+		} else {
+			if ( substr( $this->settings['url'], -1, 1 ) != '/' ) {
+				$url = $this->settings['url'] . '/server.php';
+			} else {
+				$url = $this->settings['url'] . 'server.php';
+			}
+		}
+
+		$session = new Gpf_Api_Session( $url ); 
+
+		if( !$session->login( $this->settings['merchant'], empty( $this->settings['password'] ) ) ) { 
+			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', "Cannot login. Message: ".$session->getMessage(), 32 );
+
+			return null;
+		}
+
+		if ( $clickTracker->getAffiliate() ) {
+			$request->invoice->params['mi_affiliatepro_referrer'] = $clickTracker->getUserid();
 			$request->invoice->storeload();
 		}
 	}
  
 	function CommonData()
 	{
-		return array( 'url' );
+		return array( 'url', 'path', 'cookie', 'merchant', 'password' );
 	}
 
 	function action( $request )
 	{
 		$db = &JFactory::getDBO();
 
-		$text = '<script id="pap_x2s6df8d" src="' . $this->settings['url'] . '" type="text/javascript"></script>'
+		if ( strpos( $this->settings['url'], '/sales.js' ) ) {
+			$url = $this->settings['url'];
+		} else {
+			$url = $this->settings['url'] . '/sales.js';
+		}
+
+		$text = '<script id="pap_x2s6df8d" src="' . $url . '" type="text/javascript"></script>'
 				. '<script type="text/javascript">'
 				;
 
