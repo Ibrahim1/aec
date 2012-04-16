@@ -3055,7 +3055,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 	if ( $apply ) {
 		aecRedirect( 'index.php?option=' . $option . '&task=editSubscriptionPlan&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans' );
+		aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', JText::_('SAVED') );
 	}
 }
 
@@ -3488,7 +3488,7 @@ function saveItemGroup( $option, $apply=0 )
 	if ( $apply ) {
 		aecRedirect( 'index.php?option=' . $option . '&task=editItemGroup&id=' . $id, JText::_('AEC_MSG_SUCESSFULLY_SAVED') );
 	} else {
-		aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups' );
+		aecRedirect( 'index.php?option=' . $option . '&task=showItemGroups', JText::_('SAVED') );
 	}
 }
 

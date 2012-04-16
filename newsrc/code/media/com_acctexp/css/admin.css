@@ -740,6 +740,17 @@ max-height: 215px;
 width: 99%;
 padding: 2px 1px !important;
 margin-bottom: 0px;
+border-radius: 2px;
+background: #fff;
+-webkit-transition: background 0.5s ease-out;
+-moz-transition: background 0.5s ease-out;
+-ms-transition: background 0.5s ease-out;
+-o-transition: background 0.5s ease-out;
+background 0.5s ease-out;
+}
+
+.ui-multiselect-menu label:hover {
+background: #eee;
 }
 
 .ui-multiselect-menu input {
@@ -749,6 +760,9 @@ display: inline-block;
 .ui-multiselect-menu label span {
 display: inline-block;
 margin-left: 6px;
+margin-top: 3px;
+width: 80%;
+vertical-align: top;
 }
 
 .ui-datepicker-title select {
