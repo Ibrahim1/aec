@@ -52,6 +52,7 @@ class mi_jnews
 		$settings['lists']['list_exp']	= JHTML::_('select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp'] );
 
 		$settings['list']			= array( 'list' );
+		$settings['list_overunsub']	= array( 'list' );
 		$settings['list_exp']		= array( 'list' );
 		$settings['user_checkbox']	= array( 'toggle' );
 		$settings['custominfo']		= array( 'inputD' );
@@ -170,6 +171,23 @@ class mi_jnews
 		}
 	}
 
+	function hasListUnsubscribed( $subscriber_id, $listid )
+	{
+		$db = &JFactory::getDBO();
+		$query = 'SELECT `list_id`'
+				. ' FROM #__jnews_listssubscribers'
+				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+				. ' AND `list_id` = \'' . $listid . '\''
+				. ' AND `unsubscribe` = \'1\''
+				;
+		$db->setQuery( $query );
+		if ( $db->loadResult() ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function getSubscriberID( $userid )
 	{
 		$db = &JFactory::getDBO();
@@ -199,6 +217,8 @@ class mi_jnews
 					;
 			$db->setQuery( $query );
 			$db->query();
+		} elseif ( !$this->hasListUnsubscribed( $subscriber_id, $list_id ) ) {
+			
 		}
 
 		return true;
@@ -231,10 +251,10 @@ class mi_jnews
 	 }
 
 	function deleteFromList( $subscriber_id, $list_id )
-	{
-		
+	{	
 		if ( $this->hasList( $subscriber_id, $list_id ) ) {
 			$db = &JFactory::getDBO();
+
 			$query = 'DELETE FROM #__jnews_queue'
 					. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
 					. ' AND `list_id` = \'' . $list_id . '\''

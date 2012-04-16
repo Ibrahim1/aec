@@ -1530,7 +1530,7 @@ opacity: 0;
 transition:opacity 0.5s ease-out, margin-left 0.5s ease-out;
 }
 
-html:hover .nav-msg {
+.nav-msg-transition {
 opacity: 1;
 margin-left: 1%;
 }
