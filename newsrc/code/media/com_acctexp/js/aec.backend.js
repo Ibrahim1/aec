@@ -4,7 +4,7 @@ jQuery(document).ready(function(jQuery) {
 		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
 	});
 	if ( jQuery("#system-message li").length != 0 ) {
-		jQuery("div.container").before('<span class="nav-msg">'+jQuery("#system-message li").html()+'</span>');
+		jQuery("div.container").before('<span class="nav-msg label label-warning">'+jQuery("#system-message li").html()+'</span>');
 	}
 
 	jQuery('#quicksearch').popover({ trigger:'manual', placement:'bottom' });

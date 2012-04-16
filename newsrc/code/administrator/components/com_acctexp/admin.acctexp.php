@@ -876,25 +876,27 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		$filter_group = array( $filter_group );
 	}
 
-	if ( $groups ) {
-		if ( is_array($groups ) ) {
-			if ( count( $groups ) == 1 ) {
-				if ( $groups[0] == 'all' ) {
-					$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
-				}
-			}
-
-			$groups 	= $groups;
-			$set_group	= $groups[0];
-		} else {
-			$groups		= array( $groups );
-		}
-	} else {
+	if ( !empty( $set_group ) && empty( $_REQUEST['groups'] ) ) {
 		if ( is_array( $set_group ) ) {
 			$groups		= $set_group;
 		} else {
 			$groups		= array();
 			$groups[]	= $set_group;
+		}
+	} else {
+		if ( $groups ) {
+			if ( is_array($groups ) ) {
+				if ( count( $groups ) == 1 ) {
+					if ( $groups[0] == 'all' ) {
+						$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
+					}
+				}
+
+				$groups 	= $groups;
+				$set_group	= $groups[0];
+			} else {
+				$groups		= array( $groups );
+			}
 		}
 	}
 
