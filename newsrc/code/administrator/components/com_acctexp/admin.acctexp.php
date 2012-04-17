@@ -4785,6 +4785,8 @@ function aec_stats( $option, $page )
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.min.js"></script>' );
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
 	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.layout.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/rickshaw/rickshaw.min.js"></script>' );
+	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
 	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 
 	$db = &JFactory::getDBO();
