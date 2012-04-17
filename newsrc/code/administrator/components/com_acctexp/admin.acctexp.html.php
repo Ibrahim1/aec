@@ -1142,20 +1142,20 @@ class HTML_AcctExp
 
 	function editProcessor( $option, $aecHTML )
 	{
+		$id = 0;
+		if ( !empty( $aecHTML->pp ) ) {
+			$add = '<img src="' . $aecHTML->pp->getLogoPath() . '" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
+
+			$id = $aecHTML->pp->id;
+		} else {
+			$add = "";
+		}
+
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'processors', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'processors', $add );
 		HTML_myCommon::getButtons( 'edit', 'Processor' );
 
 		HTML_myCommon::startForm();
-
-		$id = 0;
-		if ( !empty( $aecHTML->pp ) ) {
-			echo '<div class="aec-filters">';
-			echo '<p style="text-align: center;"><img src="' . JURI::root( true ) . '/media/' . $option . '/images/site/gwlogo_' . $aecHTML->pp->processor_name . '.png" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" /></p>';
-			echo '</div>';
-
-			$id = $aecHTML->pp->id;
-		}
 
 		?>
 		<table width="100%" class="aecadminform"><tr><td>
