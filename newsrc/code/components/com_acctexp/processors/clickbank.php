@@ -139,27 +139,14 @@ class processor_clickbank extends URLprocessor
 			if ( $post['cbpop'] == $xxpop ) {
 				$response['valid']	= 1;
 			} else {
-				$response['pending_reason'] = 'verification error';
-			}
-		} else {
-			$params = array();
-			foreach ( $_POST as $field => $content ) {
-				if ( $field != 'cverify' ) {
-					if ( get_magic_quotes_gpc() ) {
-						$params[] = stripslashes( $_POST[$field] );
-					} else {
-						$params[] = $_POST[$field];
-					}
+				if ( $cverify == $this->postToKey( $post ) ) {
+					$response['valid']	= 1;
+				} else {
+					$response['pending_reason'] = 'verification error';
 				}
 			}
-
-			sort($params);
-
-			$params[] = $this->settings['secret_key'];
-
-			$verify = strtoupper( substr( sha1( mb_convert_encoding(implode( '|', $params ), "UTF-8") ), 0, 8 ) );
-
-			if ( $cverify == $verify ) {
+		} else {
+			if ( $cverify == $this->postToKey( $post ) ) {
 				switch ( $post['ctransaction'] ) {
 					// The purchase of a standard product or the initial purchase of recurring billing product.
 					case 'SALE':
@@ -209,5 +196,24 @@ class processor_clickbank extends URLprocessor
 		return $response;
 	}
 
+	function postToKey( $post )
+	{
+		$params = array();
+		foreach ( $_POST as $field => $content ) {
+			if ( $field != 'cverify' ) {
+				if ( get_magic_quotes_gpc() ) {
+					$params[] = stripslashes( $_POST[$field] );
+				} else {
+					$params[] = $_POST[$field];
+				}
+			}
+		}
+
+		sort($params);
+
+		$params[] = $this->settings['secret_key'];
+
+		return strtoupper( substr( sha1( mb_convert_encoding(implode( '|', $params ), "UTF-8") ), 0, 8 ) );
+	}
 }
 ?>
