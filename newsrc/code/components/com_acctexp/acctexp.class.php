@@ -12156,31 +12156,6 @@ class Invoice extends serialParamDBTable
 
 		$db = &JFactory::getDBO();
 
-		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
-			$app = JFactory::getApplication();
-
-			if ( ( strtotime( $this->transaction_date ) + $aecConfig->cfg['invoice_cushion']*60 ) > ( (int) gmdate('U') ) ) {
-				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {
-					// Desjardins is the only exception so far... bad bad bad
-				} elseif ( $response['valid'] ) {
-					// The last notification has not been too long ago - skipping this one
-					// But only skip actual payment notifications - errors are OK
-
-					$short = JText::_('AEC_MSG_PROC_INVOICE_ACTION_SH');
-					$event = JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE') . "\n";
-
-					$tags	= 'invoice,processor,duplicate';
-					$level	= 2;
-					$params = array( 'invoice_number' => $this->invoice_number );
-
-					$eventlog = new eventLog( $db );
-					$eventlog->issue( $short, $tags, $event, $level, $params );
-
-					return $response;
-				}
-			}
-		}
-
 		if ( !is_array( $response ) ) {
 			$response = array( 'original_response' => $response );
 		}
@@ -12208,6 +12183,31 @@ class Invoice extends serialParamDBTable
 			$response = $InvoiceFactory->pp->instantvalidateNotification( $response, $post, $this );
 		} else {
 			$response = $InvoiceFactory->pp->validateNotification( $response, $post, $this );
+		}
+
+		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
+			$app = JFactory::getApplication();aecDebug($response);
+
+			if ( ( strtotime( $this->transaction_date ) + ( $aecConfig->cfg['invoice_cushion']*60 ) ) > ( (int) gmdate('U') ) ) {
+				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {
+					// Desjardins is the only exception so far... bad bad bad
+				} elseif ( $response['valid'] ) {
+					// The last notification has not been too long ago - skipping this one
+					// But only skip actual payment notifications - errors are OK
+
+					$short = JText::_('AEC_MSG_PROC_INVOICE_ACTION_SH');
+					$event = JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_DUPLICATE') . "\n";
+
+					$tags	= 'invoice,processor,duplicate';
+					$level	= 2;
+					$params = array( 'invoice_number' => $this->invoice_number );
+
+					$eventlog = new eventLog( $db );
+					$eventlog->issue( $short, $tags, $event, $level, $params );
+
+					return $response;
+				}
+			}aecDebug("after cushion!");
 		}
 
 		if ( isset( $response['userid'] ) ) {
