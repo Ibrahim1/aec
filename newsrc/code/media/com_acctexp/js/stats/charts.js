@@ -2,10 +2,22 @@ if (typeof d3.chart != "object") d3.chart = {};
 
 var sunburst_color = d3.scale.category20();
 
+Array.prototype.getUnique = function(){
+	var u = {}, a = [];
+	for(var i = 0, l = this.length; i < l; ++i){
+		if(this[i] in u)
+			continue;
+		a.push(this[i]);
+		u[this[i]] = 1;
+	}
+	return a;
+}
+
 d3.chart.sunburst = function () {
 
 	var chart = {},
 	data= [],
+	params= {},
 	label= [],
 	parent,
 	group,
@@ -121,6 +133,12 @@ d3.chart.sunburst = function () {
 	chart.data = function(d) {
 		if (!arguments.length) return data;
 		data = d;
+		return redraw();
+	};
+
+	chart.params = function(d) {
+		if (!arguments.length) return params;
+		params = d;
 		return redraw();
 	};
 
@@ -276,6 +294,7 @@ d3.chart.cellular = function () {
 
 	var chart = {},
 	data= [],
+	params= {},
 	label= [],
 	parent,
 	group,
@@ -290,6 +309,12 @@ d3.chart.cellular = function () {
 	var ccolor = d3.scale.quantize()
 		.domain([0, max_sale*0.8])
 		.range(d3.range(9));
+
+	var z = 14,
+		day = d3.time.format("%w"),
+		week = d3.time.format("%U"),
+		month = d3.time.format("%m"),
+		mname = d3.time.format("%B");
 
 	chart.parent = function(p,id) {
 		if (!arguments.length) return parent.node();	   
@@ -363,6 +388,12 @@ d3.chart.cellular = function () {
 		return redraw();
 	};
 
+	chart.params = function(d) {
+		if (!arguments.length) return params;
+		params = d;
+		return redraw();
+	};
+
 	chart.gap = function(g) {
 		if (!arguments.length) return gap;
 		gap = g;
@@ -408,12 +439,7 @@ d3.chart.cellular = function () {
 	};
 
 	function drawSVG(markX, markY, markW, markH) {
-		z = 14,
-		day = d3.time.format("%w"),
-		week = d3.time.format("%U"),
-		month = d3.time.format("%m"),
-		mname = d3.time.format("%B"),
-		format = d3.time.format("%Y-%m-%d");
+		var format = d3.time.format("%Y-%m-%d");
 
 		var numyear = data[0].date.getFullYear();
 
@@ -426,7 +452,7 @@ d3.chart.cellular = function () {
 			.style("opacity", "1.0");
 
 		var nsales = d3.nest()
-			.key(function(d) { return d.date; })
+			.key(function(d) { return format(d.date); })
 			.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
 			.map(data);
 
@@ -434,10 +460,10 @@ d3.chart.cellular = function () {
 			.data(d3.time.days(new Date(numyear, 0, 1), new Date(numyear + 1, 0, 1)))
 			.enter()
 			.append("svg:rect")
-				.attr("class", function(d) { return "day q" + ccolor(nsales[d]) + "-9 bstooltip"; })
+				.attr("class", function(d) { return "day q" + ccolor(nsales[format(d)]) + "-9 bstooltip"; })
 				.attr("ry", 0).attr("rx", 0)
 				.attr("rel", "tooltip")
-				.attr("data-original-title", function(d) { return format(d) + (d in nsales ? ": " + amount_format(nsales[d]) + amount_currency : ""); })
+				.attr("data-original-title", function(d) { return format(d) + (format(d) in nsales ? ": " + amount_format(nsales[format(d)]) + amount_currency : ""); })
 				.attr("width", 1).attr("height", 1)
 				.attr("x", function(d) { return (week(d) * z)+z/2; })
 				.attr("y", function(d) { return (day(d) * z)+z/2; })
@@ -459,7 +485,7 @@ d3.chart.cellular = function () {
 		// Eye-Candy fade-in
 		year.selectAll("rect.day")
 			.transition().ease("bounce")
-			.delay(function(d, i) { return nsales[d] ? (i * (8-ccolor(nsales[d])))+(Math.random()*8) : 0; })
+			.delay(function(d, i) { return nsales[format(d)] ? (i * (8-ccolor(nsales[format(d)])))+(Math.random()*8) : 0; })
 			.duration(600)
 			.attr("width", z).attr("height", z)
 			.attr("ry", 0).attr("rx", 0)
@@ -497,12 +523,12 @@ d3.chart.cellular = function () {
 				.attr("data-original-title", function(d) { return mname(d) + " " + numyear + (month(d) in msales ? ": " + amount_format(msales[month(d)]) + amount_currency : ": 0.00€"); })
 				.on("mouseover", function(){
 					d3.select(this)
-						.transition()
+						.transition().duration(200)
 							.attr("stroke", "rgba(0, 0, 0, 0.7)");
 				})
 				.on("mouseout", function(){
 					d3.select(this)
-						.transition()
+						.transition().duration(400)
 							.attr("stroke", "rgba(0, 0, 0, 0)");
 				});
 
@@ -535,12 +561,14 @@ d3.chart.cellular = function () {
 	return chart;
 };
 
-d3.chart.bump = function () {
+d3.chart.rickshaw = function () {
 
 	var chart = {},
 	data= [],
+	params= {},
 	label= [],
 	parent,
+	element,
 	group,
 	w, h,
 	x, y,
@@ -550,32 +578,25 @@ d3.chart.bump = function () {
 	gap = 30,
 	variant = "standard";
 
+	var ccolor = d3.scale.quantize()
+		.domain([0, max_sale*0.8])
+		.range(d3.range(9));
+
 	chart.parent = function(p,id) {
-		if (!arguments.length) return parent.node();	   
+		if (!arguments.length) return parent.node();
+		element = p;
 		parent = d3.select(p);
 		w = parent.node().clientWidth;
 		h = parent.node().clientHeight;
 		x = 0;
 		y = 0;
-		if(d3.ns.prefix.xhtml == parent.node().namespaceURI) {
-			parent = parent.append("svg:svg")
-				.attr("viewBox", "0 0 "+w+" "+h)
-				.attr("preserveAspectRatio", "none");					  
-		}
-		group = parent.append("svg:g")
-			.attr("class", "group svg-crisp")
-			.attr("id", "group"+id);
-		group.append("svg:rect")
-			.attr("class", "panel")
-			.call(resize);
+
 		return chart;
 	};
 
 	chart.margin = function(m) {
 		if (!arguments.length) return margin;
 		margin = m;
-		group.select("rect.panel")
-			.call(resize);
 		return redraw();
 	};
 
@@ -583,8 +604,6 @@ d3.chart.bump = function () {
 		if (!arguments.length) return [w, h];
 		w = s[0];
 		h = s[1];
-		group.select("rect.panel")
-			.call(resize);
 		return redraw();
 	};
 
@@ -604,8 +623,6 @@ d3.chart.bump = function () {
 			x = p[0];
 			y = p[1];
 		}
-		group.select("rect.panel")
-			.call(resize);
 		return redraw();
 	};
 
@@ -618,6 +635,12 @@ d3.chart.bump = function () {
 	chart.data = function(d) {
 		if (!arguments.length) return data;
 		data = d;
+		return redraw();
+	};
+
+	chart.params = function(pa) {
+		if (!arguments.length) return params;
+		params = pa;
 		return redraw();
 	};
 
@@ -634,8 +657,8 @@ d3.chart.bump = function () {
 	};
 
 	function resize() {
-		chartW = w - margin[1] - margin[3];
-		chartH = h - margin[0] - margin[2];
+		chartW = w - 4;
+		chartH = h - 4;
 		this.attr("width", chartW)
 			.attr("height", chartH)
 			.attr("x", x+margin[3])
@@ -649,213 +672,81 @@ d3.chart.bump = function () {
 	};
 
 	chart.tochart = function() {
-		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
-		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
-		var gapW = chartW/data.length*(gap/100);
-		
-		var markX = function(d, i) {return x+xScale(i)+margin[3]+gapW/2;};
-		var markY = function(d, i) {return y+yScale(d)+margin[0];};
-		var markW = chartW/data.length-gapW;
-		var markH = function(d, i) {return chartH-yScale(d);};
-		drawSVG(markX, markY, markW, markH);
-
-		return chart;
-	};
-
-	function drawSVG(markX, markY, markW, markH) {
-		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
-
-		group.append("svg:g")
-		.attr("class", "x axis")
-		.attr("transform", "translate(0," + h + ")")
-		.call(xScale);
-
-
-
-	}
-
-	return chart;
-};
-
-d3.chart.stacked = function () {
-
-	var chart = {},
-	data= [],
-	label= [],
-	parent,
-	group,
-	w, h,
-	x, y,
-	chartW, chartH,
-	duration = 1000,
-	margin = [20, 20, 20, 20],
-	gap = 30
-	variant = "standard";
-
-	chart.parent = function(p) {
-		if (!arguments.length) return parent.node();	   
-		parent = d3.select(p);
-		w = parent.node().clientWidth;
-		h = parent.node().clientHeight;
-		x = 0;
-		y = 0;
-		if(d3.ns.prefix.xhtml == parent.node().namespaceURI) {
-			parent = parent.append("svg:svg")
-				.attr("viewBox", "0 0 "+w+" "+h)
-				.attr("preserveAspectRatio", "none");					  
+		if ( data.length > 0 ) {
+			drawSVG();
 		}
-		group = parent.append("svg:g")
-			.attr("class", "group")
-			.attr("id", "group"+parent.node().childElementCount);
-		group.append("svg:rect")
-			.attr("class", "panel")
-			.call(resize);
-		return chart;
-	};
-	
-	chart.margin = function(m) {
-		if (!arguments.length) return margin;
-		margin = m;
-		group.select("rect.panel")
-			.call(resize);
-		return redraw();
-	};
-	
-	chart.size = function(s) {
-		if (!arguments.length) return [w, h];
-		w = s[0];
-		h = s[1];
-		group.select("rect.panel")
-			.call(resize);
-		return redraw();
-	};
-	
-	chart.position = function(p, other) {
-		if (!arguments.length) return [x, y];
-		if(typeof p == "string") {
-			var otherPos = other.position();
-			var otherSize = other.size();	
-			if(p == "after") {
-				x = otherPos[0]+otherSize[0];
-				y = otherPos[1]+otherSize[1]-h;
-			}else if(p == "under") {
-				x = otherPos[0];
-				y = otherPos[1]+otherSize[1];
-			}
-		}else{
-			x = p[0];
-			y = p[1];
-		}
-		group.select("rect.panel")
-			.call(resize);
-		return redraw();
-	};
-	
-	chart.transition = function(d) {
-		if (!arguments.length) return duration;
-		duration = d;
-		return redraw();
-	};
-	
-	chart.data = function(d) {
-		if (!arguments.length) return data;
-		data = d;
-		return redraw();
-	};
-   
-	chart.gap = function(g) {
-		if (!arguments.length) return gap;
-		gap = g;
-		return redraw();
-	};
-	
-	chart.variant = function(v) {
-		if (!arguments.length) return variant;
-		variant = v;
-		return redraw();
-	};
-	
-	function resize() {
-		chartW = w - margin[1] - margin[3];
-		chartH = h - margin[0] - margin[2];
-		this.attr("width", chartW)
-			.attr("height", chartH)
-			.attr("x", x+margin[3])
-			.attr("y", y+margin[0]);
-		return chart;
-	}
 
-	function redraw() {
-		if(variant == "stacked") chart.toStackedBarchart();  
-		else chart.toBarchart();		  
 		return chart;
 	};
-	
-	chart.toPCP = function() {
-		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
-		
-		var markX = x+margin[3];
-		var markY = function(d, i) {return y+yScale(d)+margin[0];};
-		var markW = 5;
-		var markH = 5;
-		drawSVG(markX, markY, markW, markH);
-		return chart;
-	};
-	
-	chart.toBarchart = function() {
-		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
-		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
-		var gapW = chartW/data.length*(gap/100);
-		
-		var markX = function(d, i) {return x+xScale(i)+margin[3]+gapW/2;};
-		var markY = function(d, i) {return y+yScale(d)+margin[0];};
-		var markW = chartW/data.length-gapW;
-		var markH = function(d, i) {return chartH-yScale(d);};
-		drawSVG(markX, markY, markW, markH);
-		return chart;
-	};
-	
-	chart.toStackedBarchart = function() {
-		var yScale = d3.scale.linear().domain([0, d3.sum(data)+h/100]).range([chartH, 0]);		
-		var stackH = [];
-		var stackTopH = 0;
-		for(var i=0; i<data.length; i++) {
-			stackTopH += chartH-yScale(data[i]);
-			stackH.push(stackTopH)
+
+	function drawSVG() {
+		var z = 14,
+		day = d3.time.format("%m-%w"),
+		week = d3.time.format("%U"),
+		month = d3.time.format("%m"),
+		mname = d3.time.format("%B"),
+		hour = d3.time.format("%H"),
+		format = d3.time.format("%Y-%m-%d");
+
+		var groups = data.map(function(d){ return Number( d.group ) } ).getUnique();
+
+		if ( params.unit == "day" ) {
+			var units = d3.time.days( 	d3.min(data, function(d){ return d.date } ),
+										d3.max(data, function(d){ return d.date } ));
+
+			var mdata = d3.nest()
+				.key(function(d) { return d.group; })
+				.rollup(function(v) {
+					return d3.nest()
+					.key(function(d) { return format(d.date); })
+					.rollup(function(d) { return d3.sum(d.map(function(di) { return di.amount; })); })
+					.map(v);
+				})
+				.map(data);
+
+			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][format(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][format(xdate)]  };
+		} else if ( params.unit == "month" ) {
+			var units = d3.time.months(0, 12);
+
+		} else if ( params.unit == "hour" ) {
+			var units = d3.time.hours(0, 24);
+
+			var mdata = d3.nest()
+			.key(function(d) { return hour(d.date); })
+			.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
+			.map(data);
+
+			var gety = function( mdata, xdate ){ return mdata[hour(xdate)] };
 		}
-		var gapW = chartW*(gap/100);
-		
-		var markX = x+margin[3]+gapW/2;
-		var markY = function(d, i) {return y+h-stackH[i]-margin[2];};
-		var markW = chartW-gapW;
-		var markH = function(d, i) {return chartH-yScale(d);};
-		drawSVG(markX, markY, markW, markH);
-		return chart;
-	};
-	
-	function drawSVG(markX, markY, markW, markH) {
-		var marks = group.selectAll("rect.mark")
-		.data(data);
-		
-		marks.enter().append("svg:rect")
-			.attr("class", "mark")
-			.attr("x", chartW)
-			.attr("y", markY)
-			.attr("width", 0)
-			.attr("height", markH)
-			.attr("opacity", 1);
-			
-		marks.transition()		   
-			.attr("x", markX)
-			.attr("y", markY)
-			.attr("width", markW)
-			.attr("height", markH);
-			
-		marks.exit()
-			.transition()
-			.duration(duration/5)
-			.attr("opacity", 0)
-			.remove();
+
+		var series = groups.map( function(v) { return {
+													groupid: v,
+													name: group_names[v],
+													color: sunburst_color(v),
+													data: units.map( function(dv) { return {x:dv.getTime()/1000,y:gety(mdata, dv, v)};	} )
+												};
+									}
+								);
+
+		var graph = new Rickshaw.Graph( {
+			element: document.querySelector(element),
+			renderer: 'bar',
+			series: series
+		} );
+
+		graph.render();
+
+		var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+			graph: graph,
+			xFormatter: function(d){ return format( new Date( d * 1000 ) );	}
+		} );
+
+		var axes = new Rickshaw.Graph.Axis.Time( {graph: graph} );
+
+		var y_ticks = new Rickshaw.Graph.Axis.Y( {graph: graph, ticks:5} );
+
+		axes.render();
+		y_ticks.render();
 	}
 
 	return chart;

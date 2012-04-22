@@ -2746,15 +2746,21 @@ jQuery(document).ready(function(jQuery) {
 					<h3>This is an unfinished feature, please check back in the final stable release</h3>
 					<div id="overview-day" class="overview-container">
 						<h4><?php echo gmdate('l, jS M Y'); ?></h4>
-						<div id="overview-day-this" class="chart-sunburst"></div>
+						<div id="overview-day-big-counter" class="overviewcontainer-sub">
+						</div>
+						<div id="overview-day-average" class="overviewcontainer-sub">
+						</div>
+						<div id="overview-day-sunburst" class="overviewcontainer-sub">
+							<div id="overview-day-this" class="chart-sunburst"></div>
+						</div>
 					</div>
-					<div id="overview-week" class="overview-container">
-						<h4>Week <?php echo gmdate('W'); ?></h4>
-						<div id="overview-week-this" class="chart-sunburst"></div>
+					<div id="overview-day-hourly" class="overview-container">
+						<div id="overview-day-hourly-graph" class="chart-rickshaw"></div>
 					</div>
 					<div id="overview-month" class="overview-container">
 						<h4><?php echo gmdate('F'); ?></h4>
 						<div id="overview-month-this" class="chart-sunburst"></div>
+						<div id="overview-month-graph" class="chart-rickshaw"></div>
 					</div>
 					<div id="overview-year" class="overview-container">
 						<h4><?php echo gmdate('Y'); ?></h4>
@@ -2766,19 +2772,23 @@ jQuery(document).ready(function(jQuery) {
 						.source("sales")
 						.canvas(200, 200, 10)
 						.target("div#overview-day-this")
-						.range(	"<?php echo gmdate('Y-m-d') .' 00:00:00'; ?>",
+						.range(	"<?php echo gmdate('Y-m-d') . ' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst");
-
-						cf.target("div#overview-week-this")
-						.range(	"<?php echo gmdate('Y-m-d', (gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
-						.create("sunburst");
+						.create("sunburst")
+						.target("div#overview-day-hourly-graph")
+						.range(	"<?php echo gmdate('Y-m-d') . ' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("rickshaw",{ unit:"hour" });
 
 						cf.target("div#overview-month-this")
 						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
 						.create("sunburst");
+
+						cf.target("div#overview-month-graph")
+						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+						.create("rickshaw",{ unit:"day" });
 
 						cf.canvas(200, 200, 10)
 						.target("div#overview-year-sun")
@@ -2892,6 +2902,7 @@ jQuery(document).ready(function(jQuery) {
 								<h4><?php echo $i; ?></h4>
 								<div id="overview-year-<?php echo $i; ?>-sunburst" class="chart-sunburst"></div>
 								<div id="overview-year-<?php echo $i; ?>-cells" class="chart-cellular"></div>
+								<div id="overview-year-<?php echo $i; ?>-graph" class="chart-rickshaw-slim"></div>
 							</div>
 						<?php } ?>
 					</div>
@@ -2913,6 +2924,10 @@ jQuery(document).ready(function(jQuery) {
 						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
 								"<?php echo $i . '-12-31 23:59:59'; ?>")
 						.create("cellular")
+						.target("div#overview-year-<?php echo $i; ?>-graph")
+						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+								"<?php echo $i . '-12-31 23:59:59'; ?>")
+						.create("rickshaw",{ unit:"day" })
 						<?php } ?>
 						.canvas(500, 500, 10)
 						.target("div#all-suns")

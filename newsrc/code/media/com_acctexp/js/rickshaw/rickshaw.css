@@ -169,7 +169,7 @@
 .rickshaw_graph .y_ticks .tick {
 	stroke: rgba(0, 0, 0, 0.16);
 	stroke-width: 2px;
-	shape-rendering: crisp-edges;
+	shape-rendering: crispedges;
 	pointer-events: none;
 }
 .rickshaw_graph .y_grid .tick {

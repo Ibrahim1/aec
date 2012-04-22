@@ -64,6 +64,46 @@ border-radius: 10px;
 overflow: hidden;
 }
 
+.chart-rickshaw-slim {
+float: left;
+width: 700px;
+height: 150px;
+margin-left: 25px;
+margin-bottom: 24px;
+}
+
+.chart-rickshaw {
+float: left;
+width: 700px;
+height: 300px;
+margin-left: 25px;
+margin-bottom: 24px;
+}
+
+.rickshaw_graph .x_tick {
+margin-left: -3px;
+bottom: -12px;
+}
+
+.rickshaw_graph .x_tick .title {
+bottom: -6px;
+}
+
+.rickshaw_graph .detail .x_label {
+opacity: 0.9;
+}
+
+.rickshaw_graph .y_ticks path {
+stroke: none;
+}
+
+.rickshaw_graph .y_ticks .tick {
+stroke: none;
+}
+.rickshaw_graph .y_grid .tick {
+shape-rendering: crispedges;
+}
+
 .chart-sunburst {
 width: 200px;
 height: 200px;

@@ -7,7 +7,6 @@ d3.chart.factory = function () {
 	queue = [],
 	start = true,
 	datef = d3.time.format("%Y-%m-%d %X"),
-	short = d3.time.format("%Y-%m-%d"),
 	s,e,
 	rangeStart,
 	rangeEnd,
@@ -79,12 +78,7 @@ d3.chart.factory = function () {
 
 				factory.requestData(
 						function(json) {
-							jsonx = json;
-							factory.requestData(
-									function(json) {
-										factory.acquireData(json.concat(jsonx), request);
-									}, rangeEnd, request.end
-							);
+							factory.requestData( function(jsonf) { factory.acquireData(json.concat(jsonf), request); }, rangeEnd, request.end );
 						}, request.start, rangeStart
 				);
 	
@@ -119,7 +113,8 @@ d3.chart.factory = function () {
 	factory.acquireData = function(json, request) {
 		for (i=0; i<json.length; i++) {
 			if ( typeof json[i] != 'undefined' ) {
-				json[i].date = short.parse(json[i].date);
+				json[i].date = datef.parse(json[i].date);
+				json[i].tstamp = json[i].date.getTime();
 				data.push(json[i]);
 			}
 		}
@@ -138,7 +133,8 @@ d3.chart.factory = function () {
 	factory.mergeData = function(json, callback) {
 		for (i=0; i<json.length; i++) {
 			if ( typeof json[i] != 'undefined' ) {
-				json[i].date = short.parse(json[i].date);
+				json[i].date = datef.parse(json[i].date);
+				json[i].tstamp = json[i].date.getTime();
 				data.push(json[i]);
 			}
 		}
@@ -153,6 +149,7 @@ d3.chart.factory = function () {
 			.parent(request.target, request.pos)
 			.margin([request.margin, request.margin, request.margin, request.margin])
 			.size([request.width, request.height])
+			.params(request.parameters)
 			.data(selection);
 
 		factory.triggerqueue();
