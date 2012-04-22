@@ -60,6 +60,8 @@ function aecQuickLog( $short, $tags, $text, $level = 128 )
 		$eventlog->issue( $short, $tags, @json_encode( $text ), $level );
 	} elseif ( is_string( $text ) || is_bool( $text ) || is_float( $text ) ) {
 		$eventlog->issue( $short, $tags, $text, $level );
+	} elseif ( is_numeric( $text ) ) {
+		$eventlog->issue( $short, $tags, $text, $level );
 	} else {
 		$eventlog->issue( $short, $tags, "[[UNSUPPORTED TYPE]]", $level );
 	}
