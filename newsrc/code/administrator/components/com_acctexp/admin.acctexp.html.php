@@ -1035,7 +1035,7 @@ class HTML_AcctExp
 				<h4>Suggestions? Complaints?</h4>
 				<p>If you have any suggestions or complaints about the software, our website or our support, please do not hesitate one second to get in touch with me. You can reach me here, <em>personally</em>:</p>
 				<div class="modal-overlay">
-					<p><a class="btn btn-large btn-warning" href="http://valanx.org/index.php?option=com_contact&amp;view=contact&amp;id=5&amp;Itemid=146" target="_blank">Contact David</a>&nbsp;&nbsp;&larr;keep in mind that this is not for support requests</p>
+					<p><a class="btn btn-large btn-warning" href="http://valanx.org/index.php?option=com_contact&amp;view=contact&amp;id=5&amp;Itemid=146" target="_blank">Contact David</a>&nbsp;&nbsp;&larr;keep in mind that this is <strong>not</strong> for support requests</p>
 				</div>
 				<p>I try my best to respond as quickly as possible and you should get a response within a workday. If not, maybe something about the request failed - please try sending it again.</p>
 				<p><strong>I really care a lot about this software and you using it means a lot to me</strong> - so please give me a chance to clear things up if we have messed up somewhere.</p>
@@ -2760,7 +2760,7 @@ jQuery(document).ready(function(jQuery) {
 						</div>
 					</div>
 					<div id="overview-day-hourly" class="overview-container">
-						<div id="overview-day-hourly-graph" class="chart-rickshaw"></div>
+						<div id="overview-day-hourly-graph" class="chart-rickshaw-wide"></div>
 					</div>
 					<div id="overview-month" class="overview-container">
 						<h4><?php echo gmdate('F'); ?></h4>
@@ -2840,8 +2840,8 @@ jQuery(document).ready(function(jQuery) {
 						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
 						.create("sunburst")
-						.target("div#overview-day-compare")
-						.create("bump")
+						//.target("div#overview-day-compare")
+						//.create("bump")
 						.target("div#overview-day-this")
 						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
@@ -2932,7 +2932,7 @@ jQuery(document).ready(function(jQuery) {
 						.target("div#overview-year-<?php echo $i; ?>-graph")
 						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
 								"<?php echo $i . '-12-31 23:59:59'; ?>")
-						.create("rickshaw",{ unit:"day" })
+						.create("rickshaw",{ unit:"week" })
 						<?php } ?>
 						.canvas(500, 500, 10)
 						.target("div#all-suns")

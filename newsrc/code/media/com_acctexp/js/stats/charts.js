@@ -687,6 +687,7 @@ d3.chart.rickshaw = function () {
 		mname = d3.time.format("%B"),
 		hour = d3.time.format("%H"),
 		format = d3.time.format("%Y-%m-%d");
+		formatw = d3.time.format("%Y-%m");
 
 		var groups = data.map(function(d){ return Number( d.group ) } ).getUnique();
 
@@ -705,18 +706,40 @@ d3.chart.rickshaw = function () {
 				.map(data);
 
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][format(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][format(xdate)]  };
-		} else if ( params.unit == "month" ) {
-			var units = d3.time.months(0, 12);
-
-		} else if ( params.unit == "hour" ) {
-			var units = d3.time.hours(0, 24);
+		} else if ( params.unit == "week" ) {
+			var units = d3.time.weeks( 	d3.min(data, function(d){ return d.date } ),
+										d3.max(data, function(d){ return d.date } ));
 
 			var mdata = d3.nest()
-			.key(function(d) { return hour(d.date); })
-			.rollup(function(v) { return d3.sum(v.map(function(d) { return d.amount; })); })
-			.map(data);
+				.key(function(d) { return d.group; })
+				.rollup(function(v) {
+				return d3.nest()
+					.key(function(d) { return week(d.date); })
+					.rollup(function(d) { return d3.sum(d.map(function(di) { return di.amount; })); })
+					.map(v);
+				})
+				.map(data);
 
-			var gety = function( mdata, xdate ){ return mdata[hour(xdate)] };
+			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][week(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][week(xdate)]  };
+		} else if ( params.unit == "hour" ) {
+			var xx1 = new Date();xx1.setHours(0,0,0,0);
+			var xx2 = new Date();xx2.setHours(23,59,59,999);
+			var units = d3.time.hours(xx1,xx2);
+
+			var mdata = d3.nest()
+				.key(function(d) { return d.group; })
+				.rollup(function(v) {
+					return d3.nest()
+					.key(function(d) { return hour(d.date); })
+					.rollup(function(d) { return d3.sum(d.map(function(di) { return di.amount; })); })
+					.map(v);
+				})
+				.map(data);
+
+			var gety = function( mdata, xdate, xgroup ){ var xx2 = new Date();
+			xx2.setHours(hour(xdate));
+			var test = hour(xdate);
+			return ( typeof mdata[xgroup][hour(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][hour(xdate)] };
 		}
 
 		var series = groups.map( function(v) { return {
@@ -736,14 +759,20 @@ d3.chart.rickshaw = function () {
 
 		graph.render();
 
+		if ( params.unit == "week" ) {
+			var xFormatter = function(d){ return "Week " + week( new Date( d * 1000 ) ); };
+		} else {
+			var xFormatter = function(d){ return format( new Date( d * 1000 ) ); };
+		}
+
 		var hoverDetail = new Rickshaw.Graph.HoverDetail( {
 			graph: graph,
-			xFormatter: function(d){ return format( new Date( d * 1000 ) );	}
+			xFormatter: xFormatter
 		} );
 
-		var axes = new Rickshaw.Graph.Axis.Time( {graph: graph} );
+		var axes = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:12} );
 
-		var y_ticks = new Rickshaw.Graph.Axis.Y( {graph: graph, ticks:5} );
+		var y_ticks = new Rickshaw.Graph.Axis.Y( {graph: graph, ticks:4} );
 
 		axes.render();
 		y_ticks.render();

@@ -64,12 +64,8 @@ border-radius: 10px;
 overflow: hidden;
 }
 
-.chart-rickshaw-slim {
-float: left;
-width: 700px;
-height: 150px;
-margin-left: 25px;
-margin-bottom: 24px;
+#overview-day-hourly {
+margin-top: 24px;
 }
 
 .chart-rickshaw {
@@ -80,8 +76,23 @@ margin-left: 25px;
 margin-bottom: 24px;
 }
 
+.chart-rickshaw-slim {
+float: left;
+width: 740px;
+height: 150px;
+margin-left: 12px;
+margin-bottom: 24px;
+}
+
+.chart-rickshaw-wide {
+float: left;
+width: 910px;
+height: 200px;
+margin-left: 25px;
+margin-bottom: 24px;
+}
+
 .rickshaw_graph .x_tick {
-margin-left: -2px;
 bottom: -12px;
 }
 
