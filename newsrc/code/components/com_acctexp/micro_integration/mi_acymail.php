@@ -18,6 +18,7 @@ class mi_acymail extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ACYMAIL');
 		$info['desc'] = JText::_('AEC_MI_DESC_ACYMAIL');
+		$info['type'] = array( 'sharing.newsletter' );
 
 		return $info;
 	}
