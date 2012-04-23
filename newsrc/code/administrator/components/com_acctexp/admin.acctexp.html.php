@@ -1021,20 +1021,24 @@ class HTML_AcctExp
 				<h3>Don't Panic!</h3>
 			</div>
 			<div class="modal-body">
-				<p><strong>Hey there, this is David, Chief Developer of AEC.</strong> No, I'm not actually in your comput... Oh well, you get the idea.</p>
+				<p><strong>Hey there, this is David, Chief Developer of AEC.</strong></p>
 				<p>So - you're stuck with AEC? No problem. My team and I are here to help you out.</p>
+				<h4>Need Support?</h4>
+				<p>If you have trouble getting the software to work the way you need it to work, you should check out our <strong>manual, FAQs, video tutorials, community forum</strong> and, last but not least,<strong> our ticket support system</strong>. Right here:</p>
+				<div class="modal-overlay">
+					<p><a class="btn btn-large btn-success" href="http://valanx.org/index.php?option=com_content&amp;view=article&amp;id=119&amp;Itemid=156" target="_blank">Get Support Now</a>&nbsp;&nbsp;&larr;the quickest way to get help for AEC</p>
+				</div>
+				<h4>Account Required</h4>
+				<p><strong>Yes, you will need an active account at valanx.org for that</strong>.</p>
+				<p>In case you got AEC from a friend (or, you know, <em>"from a friend"</em>), please get yourself a membership! AEC exists and I can continue to work on it is because people support its development with their membership. So please - help a guy out.</p>
+				<p>In return, you get tons of support, new stuff as soon as we have it done and a warm fuzzy feeling that you have done the right thing. Cheers to that!</p>
 				<h4>Suggestions? Complaints?</h4>
-				<p><strong>First off</strong> - if you have any suggestions or complaints about the software, our website or our support, please do not hesitate one second to get in touch with me. You can reach me <a href="http://valanx.org/index.php?option=com_contact&amp;view=contact&amp;id=5&amp;Itemid=146" target="_blank">here</a>. <em>Personally</em>.</p>
+				<p>If you have any suggestions or complaints about the software, our website or our support, please do not hesitate one second to get in touch with me. You can reach me here, <em>personally</em>:</p>
+				<div class="modal-overlay">
+					<p><a class="btn btn-large btn-warning" href="http://valanx.org/index.php?option=com_contact&amp;view=contact&amp;id=5&amp;Itemid=146" target="_blank">Contact David</a>&nbsp;&nbsp;&larr;keep in mind that this is not for support requests</p>
+				</div>
 				<p>I try my best to respond as quickly as possible and you should get a response within a workday. If not, maybe something about the request failed - please try sending it again.</p>
 				<p><strong>I really care a lot about this software and you using it means a lot to me</strong> - so please give me a chance to clear things up if we have messed up somewhere.</p>
-				<h4>So - Need Support?</h4>
-				<p>Of course, you probably just need help getting the software to work. In that case, we have our <strong>manual, FAQs, video tutorials, community forum and, last but not least, our ticket support system</strong>. Right here:</p>
-				<div class="modal-overlay">
-					<p><a class="btn btn-large btn-success" href="http://valanx.org/index.php?option=com_content&amp;view=article&amp;id=119&amp;Itemid=156" target="_blank">Get Support Now</a></p>
-				</div>
-				<p><strong>Yes, you will need an active account at valanx.org for that</strong>.</p>
-				<p>In case you got AEC from a friend (or, you know, <em>"from a friend"</em>) I hope you will consider getting a membership. The only reason why AEC exists and I can continue to work on it is because people support its development with their membership. So please - help a guy out.</p>
-				<p>In return, you get tons of support, new stuff as soon as we have it done and a warm fuzzy feeling that you have done the right thing. Cheers to that!</p>
 			</div>
 		</div> 
 		<?php
