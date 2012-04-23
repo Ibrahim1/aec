@@ -45,6 +45,11 @@ class mi_iproperty
 		$settings['create_agent']		= array( 'toggle' );
 		$settings['agent_fields']		= array( 'inputD' );
 
+		$settings['add_agentlistings']	= array( 'inputA' );
+		$settings['set_agentlistings']	= array( 'inputA' );
+		$settings['add_agentflistings']	= array( 'inputA' );
+		$settings['set_agentflistings']	= array( 'inputA' );
+
 		$settings['update_agent']		= array( 'toggle' );
 		$settings['update_afields']		= array( 'inputD' );
 
@@ -102,6 +107,72 @@ class mi_iproperty
 
 		return true;
 	}
+
+	function createCompany()
+	{
+		
+	}
+
+	function createAgent( $metaUser )
+	{
+		$fields = array();
+
+		return $this->createQuery( $fields, 'agents' );
+	}
+
+	function createQuery( $fields, $table )
+	{
+		if ( empty( $fields ) ) {
+			return false;
+		}
+
+		$db = &JFactory::getDBO();
+
+		$query  = 'INSERT INTO #__iproperty_' . $table
+				. ' (' . implode(', ', array_keys($fields) ) . ') '
+				. ' VALUES(\'' . implode('\', \'', array_keys($fields) ) . '\')'
+				;
+		$db->setQuery( $query );
+
+		return $db->query();
+	}
+
+	function getCompanyParams( $company_id )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `params`'
+				. ' FROM #__iproperty_companies'
+				. ' WHERE `id` = \'' . $company_id . '\''
+				;
+		$db->setQuery( $query );
+
+		return json_decode( $db->loadResult() );
+	}
+
+	function updateCompanyParams( $company_id, $params )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'UPDATE #__iproperty_companies'
+				. ' SET `params` = \'' . $db->escape( json_encode( $params ) ) . '\''
+				. ' WHERE `id` = \'' . $company_id . '\''
+				;
+		$db->setQuery( $query );
+
+		return $db->query();
+	}
+
+	function publishProperties()
+	{
+		
+	}
+
+	function unpublishProperties()
+	{
+		
+	}
+
 
 }
 
