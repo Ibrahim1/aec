@@ -4243,6 +4243,17 @@ class PaymentProcessor
 		$this->exchangeSettings( $plan_params );
 	}
 
+	function getLogoImg()
+	{
+		$fname = $this->processor->getLogoFilename();
+
+		if ( !empty( $fname ) ) {
+			return '<img src="' . $this->getLogoPath() . '" alt="' . $this->processor_name . '" title="' . $this->processor_name .'" class="plogo" />';
+		} else {
+			return $this->info['longname'];
+		}
+	}
+
 	function getLogoPath()
 	{
 		return JURI::root(true) . '/media/com_acctexp/images/site/' . $this->processor->getLogoFilename();

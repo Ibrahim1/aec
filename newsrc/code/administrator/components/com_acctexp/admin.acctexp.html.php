@@ -1148,7 +1148,7 @@ class HTML_AcctExp
 	{
 		$id = 0;
 		if ( !empty( $aecHTML->pp ) ) {
-			$add = '<img src="' . $aecHTML->pp->getLogoPath() . '" alt="' . $aecHTML->pp->processor_name . '" title="' . $aecHTML->pp->processor_name .'" class="plogo" />';
+			$add = $aecHTML->pp->getLogoImg();
 
 			$id = $aecHTML->pp->id;
 		} else {
