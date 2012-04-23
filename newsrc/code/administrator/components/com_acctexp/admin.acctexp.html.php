@@ -2704,6 +2704,7 @@ jQuery(document).ready(function(jQuery) {
 
 	function stats( $option, $page, $stats )
 	{
+		global $aecConfig;
 
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' );
@@ -2714,7 +2715,7 @@ jQuery(document).ready(function(jQuery) {
 		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
 		<script type="text/javascript">
 			var	amount_format = d3.format(".2f"),
-				amount_currency = "€",
+				amount_currency = "<?php echo html_entity_decode( AECToolbox::getCurrencySymbol( $aecConfig->cfg['standard_currency'] ), ENT_QUOTES, "UTF-8" ); ?>",
 				range_start=2007,
 				range_end=2012,
 				request_url="index.php?option=com_acctexp&task=statrequest",
