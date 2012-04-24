@@ -13,167 +13,135 @@
 
 class processor_paycific extends POSTprocessor
 {
-    function info() {
+	function info()
+	{
   		$info = array();
 		$info['name']					= 'paycific';
 		$info['longname']				= JText::_('AEC_PROC_INFO_PC_LNAME');
 		$info['statement']				= JText::_('AEC_PROC_INFO_PC_STMNT');
-        $info['description']			= JText::_('DESCRIPTION_PAYCIFIC');
-        $info['currencies']				= 'USD,EUR,GBP,CHF';
-        $info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
-        return $info;
-    }
-    
-    function settings() {
-        $settings = array();
-        $settings['testmode']		= 0;
-        $settings['merchantsecret']	= 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-        $settings['websiteid']      = '';
-        $settings['currency']		= 'EUR';
-        $settings['acceptpendingecheck'] = 0;
-        $settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-        
-        return $settings;
-    }
-    function backend_settings() {
-        $settings = array();
-        $settings['testmode']		= array( 'toggle' );
-        $settings['merchantsecret']	= str_replace(" ","",array( 'inputC' ));
-        $settings['websiteid']      = array( 'inputC' );
-        $settings['currency']		= array( 'list_currency' );
-        $settings['acceptpendingecheck']	= array( 'toggle' );
-        $settings['item_name']		= array( 'inputE' );
-        $settings['customparams']	= array( 'inputD' );
-        $settings					= AECToolbox::rewriteEngineInfo( null, $settings );
-        return $settings;
-    }
-    function createGatewayLink( $request ) {
-        
-        $paycific_url = 'https://www.paycific.com/en/shops/'.$this->settings['websiteid'].'/create_otp_code';
-        $p = array(
-            "userfield_1"       => $request->metaUser->cmsUser->id,
-            "userfield_2"       => $request->invoice->invoice_number,
-            "description"       => AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ),
-            "order_number"      => $request->invoice->invoice_number,
-            "amount"            => $request->int_var['amount']*100,
-            "currency_code"     => $this->settings['currency']
-        );
-        ksort($p);
-        $hash = md5(implode("",$p).$this->settings['merchantsecret']);
-        
-        $p_list = "";
-        foreach($p as $k => $v)	{
-            $p_list .= $k."=".$v."&";
-        }
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_POST,1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$p_list."hash=".$hash);
-        curl_setopt($ch, CURLOPT_URL, $paycific_url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,  2);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        
-        if(!$paycific_url = curl_exec ($ch))	{
-            die("Sorry, but the PayCific server is not reachable at the moment.");
-        }
-        curl_close ($ch);
-        
-        $secondaryident = substr($paycific_url,89,32);
-        $invoice_number = $request->invoice->invoice_number;
-        processor_paycific::updateSecondaryIdent($secondaryident,$invoice_number);
-        
-        $var['post_url']		= $paycific_url;
-        return $var;
-        
-    }
-    
-	function convertPeriodUnit( $unit, $period )
+		$info['description']			= JText::_('DESCRIPTION_PAYCIFIC');
+		$info['currencies']				= 'USD,EUR,GBP,CHF';
+		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
+		$info['notify_trail_thanks']	= 1;
+
+		return $info;
+	}
+
+	function settings()
 	{
-		$return = array();
-		$return['period'] = $period;
-		switch ( $unit ) {
-			case 'D':
-				$return['unit'] = 'Day';
-				break;
-			case 'W':
-				$return['unit'] = 'Week';
-				break;
-			case 'M':
-				$return['unit'] = 'Month';
-				break;
-			case 'Y':
-				$return['unit'] = 'Year';
-				break;
+		$settings = array();
+		$settings['testmode']				= 0;
+		$settings['merchantsecret']			= 'xxxxxxxxxxxx';
+		$settings['websiteid']				= '';
+		$settings['currency']				= 'EUR';
+		$settings['acceptpendingecheck']	= 0;
+		$settings['item_name']				= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+
+		return $settings;
+	}
+
+	function backend_settings()
+	{
+		$settings = array();
+		$settings['testmode']				= array( 'toggle' );
+		$settings['merchantsecret']			= str_replace(" ","",array( 'inputC' ));
+		$settings['websiteid']				= array( 'inputC' );
+		$settings['currency']				= array( 'list_currency' );
+		$settings['acceptpendingecheck']	= array( 'toggle' );
+		$settings['item_name']				= array( 'inputE' );
+		$settings['customparams']			= array( 'inputD' );
+
+		$settings							= AECToolbox::rewriteEngineInfo( null, $settings );
+
+		return $settings;
+	}
+
+	function createGatewayLink( $request )
+	{
+		if ( empty( $request->invoice->secondary_ident ) ) {
+			$paycific_path = '/en/shops/'.$this->settings['websiteid'].'/create_otp_code';
+
+			$paycific_url = 'https://www.paycific.com' . $paycific_path;
+
+			// Seems like these have to be sorted alphabetically
+			$p = array(
+				"amount"			=> $request->int_var['amount']*100,
+				"currency_code"		=> $this->settings['currency'],
+				"description"		=> AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ),
+				"order_number"		=> $request->invoice->invoice_number,
+				"userfield_1"		=> $request->metaUser->userid,
+				"userfield_2"		=> $request->invoice->invoice_number
+			);
+
+			$p["hash"] = md5( implode("", $p) . $this->settings['merchantsecret'] );
+
+			$header = array();
+			$header["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
+			$header["Content-Type"] = "multipart/form-data";
+
+			$var['post_url'] = $this->transmitRequest( $paycific_url, $paycific_path, XMLprocessor::arrayToNVP($p), 443, null, $header );
+
+			$orderid = substr( $var['post_url'], 89, 32 );
+
+			$request->invoice->secondary_ident = $orderid;
+			$request->invoice->addParams( array( 'paycific_url' => $var['post_url'] ) );
+
+			$request->invoice->storeload();
+		} else {
+			$var['post_url'] = $request->invoice->params['paycific_url'];
 		}
 
-		return $return;
+		return $var;
 	}
-    
-    function parseNotification( $post ) {
-        
-        $invoice_no     = $_GET['orderid'];
-        $response = array();
-        $response['invoice']        = $invoice_no;
-        
-        return $response;
-    }
 
+	function parseNotification( $post )
+	{
+		$response = array();
+		$response['invoice'] = $_GET['orderid'];
 
-    function validateNotification( $response, $post, $invoice ) {
-        
-        $checkhash      = $_GET['hash'];
-        $hashreport     = processor_paycific::isValidMd5($checkhash);
-        $paidreport     = intval($_GET['paid']);
-        $hash           = $request->invoice->secondary_ident;
-        
-        if ( strcmp($hashreport,$hash) == 0 || $paidreport == 1) {
-            if ( $this->settings['acceptpendingecheck'] ) {
-                if ( is_object( $invoice ) ) {
-                    $invoice->addParams( array( 'acceptedpendingecheck' => 1 ) );
-                    $invoice->storeload();
-                }            
-                $response['valid']			= 1;
-            } else {
-                $response['pending']		= 1;
-                $response['pending_reason'] = 'echeck';
-            }
-        } else {
-            $response['valid']      = 0;
-            $response['cancel']		= 1;
-        }
-        
-        return $response;
-    }
+		return $response;
+	}
 
+	function validateNotification( $response, $post, $invoice )
+	{
+		$response = array();
+		$response['valid'] = 0;
 
-    
-    function notificationError( $response, $error )
+		$checkhash	= $_GET['hash'];
+		$hashreport	= $this->isValidMd5($_GET['hash']);
+		$paidreport	= (int) $_GET['paid'];
+		$hash		= $request->invoice->secondary_ident;
+
+		if ( $this->isValidMd5($_GET['hash']) ) {
+			
+		} elseif ( strcmp($hashreport,$hash) == 0 || $paidreport == 1 ) {
+			if ( $this->settings['acceptpendingecheck'] ) {
+				if ( is_object( $invoice ) ) {
+					$invoice->addParams( array( 'acceptedpendingecheck' => 1 ) );
+					$invoice->storeload();
+				}
+
+				$response['valid']			= 1;
+			} else {
+				$response['pending']		= 1;
+				$response['pending_reason'] = 'echeck';
+			}
+		} else {
+			$response['valid'] = 0;
+			$response['cancel'] = 1;
+		}
+
+		return $response;
+	}
+
+	function notificationError( $response, $error )
 	{
 		echo 'OK=0 ERROR: ' . $error;
 	}
 
-
-
-	function notificationSuccess( $response )
+	function isValidMd5( $checkhask )
 	{
-		aecRedirect(AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks'));
+		return !empty($checkhask) && preg_match('/^[a-f0-9]{32}$/', $checkhask);
 	}
-    
-    function updateSecondaryIdent($secondaryident, $invoice_number) {
-        $db = &JFactory::getDBO();        
-        $query  =    'UPDATE #__acctexp_invoices '
-                    .' SET secondary_ident="'.$secondaryident.'"'
-                    .' WHERE invoice_number="'.$invoice_number.'"';
-        $db->setQuery( $query );
-        $db->query();
-    }
-    
-    function isValidMd5($checkhask) {
-        return !empty($checkhask) && preg_match('/^[a-f0-9]{32}$/', $checkhask);
-    }
-    
 }
-
 ?>
