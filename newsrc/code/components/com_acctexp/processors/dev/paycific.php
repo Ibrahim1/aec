@@ -17,9 +17,9 @@ class processor_paycific extends POSTprocessor
 	{
   		$info = array();
 		$info['name']					= 'paycific';
-		$info['longname']				= JText::_('AEC_PROC_INFO_PC_LNAME');
-		$info['statement']				= JText::_('AEC_PROC_INFO_PC_STMNT');
-		$info['description']			= JText::_('DESCRIPTION_PAYCIFIC');
+		$info['longname']				= JText::_('CFG_PAYCIFIC_LONGNAME');
+		$info['statement']				= JText::_('CFG_PAYCIFIC_STATEMENT');
+		$info['description']			= JText::_('CFG_PAYCIFIC_DESCRIPTION');
 		$info['currencies']				= 'USD,EUR,GBP,CHF';
 		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck';
 		$info['notify_trail_thanks']	= 1;
@@ -34,7 +34,6 @@ class processor_paycific extends POSTprocessor
 		$settings['merchantsecret']			= 'xxxxxxxxxxxx';
 		$settings['websiteid']				= '';
 		$settings['currency']				= 'EUR';
-		$settings['acceptpendingecheck']	= 0;
 		$settings['item_name']				= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
@@ -44,12 +43,10 @@ class processor_paycific extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']				= array( 'toggle' );
-		$settings['merchantsecret']			= str_replace(" ","",array( 'inputC' ));
+		$settings['merchantsecret']			= array( 'inputC' );
 		$settings['websiteid']				= array( 'inputC' );
 		$settings['currency']				= array( 'list_currency' );
-		$settings['acceptpendingecheck']	= array( 'toggle' );
 		$settings['item_name']				= array( 'inputE' );
-		$settings['customparams']			= array( 'inputD' );
 
 		$settings							= AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -73,7 +70,7 @@ class processor_paycific extends POSTprocessor
 				"userfield_2"		=> $request->invoice->invoice_number
 			);
 
-			$p["hash"] = md5( implode("", $p) . $this->settings['merchantsecret'] );
+			$p["hash"] = md5( implode("", $p) . trim($this->settings['merchantsecret']) );
 
 			$header = array();
 			$header["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)";
@@ -81,10 +78,12 @@ class processor_paycific extends POSTprocessor
 
 			$var['post_url'] = $this->transmitRequest( $paycific_url, $paycific_path, XMLprocessor::arrayToNVP($p), 443, null, $header );
 
-			$orderid = substr( $var['post_url'], 89, 32 );
+			$ex = explode( "?", $var['post_url'] );
 
-			$request->invoice->secondary_ident = $orderid;
-			$request->invoice->addParams( array( 'paycific_url' => $var['post_url'] ) );
+			$pparams = XMLprocessor::NVPtoArray( $ex[1] );
+
+			$request->invoice->secondary_ident = $pparams['otp_code'];
+			$request->invoice->addParams( array( 'paycific_url' => $var['post_url'], 'hash' => $pparams['hash'] ) );
 
 			$request->invoice->storeload();
 		} else {
@@ -96,8 +95,14 @@ class processor_paycific extends POSTprocessor
 
 	function parseNotification( $post )
 	{
+		if ( empty( $post ) ) {
+			$post = aecPostParamClear( $_GET );
+
+			$response['raw'] = $post;
+		}
+
 		$response = array();
-		$response['invoice'] = $_GET['orderid'];
+		$response['invoice'] = $post['userfield_2'];
 
 		return $response;
 	}
@@ -105,30 +110,16 @@ class processor_paycific extends POSTprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response = array();
-		$response['valid'] = 0;
-
-		$checkhash	= $_GET['hash'];
-		$hashreport	= $this->isValidMd5($_GET['hash']);
-		$paidreport	= (int) $_GET['paid'];
-		$hash		= $request->invoice->secondary_ident;
-
-		if ( $this->isValidMd5($_GET['hash']) ) {
-			
-		} elseif ( strcmp($hashreport,$hash) == 0 || $paidreport == 1 ) {
-			if ( $this->settings['acceptpendingecheck'] ) {
-				if ( is_object( $invoice ) ) {
-					$invoice->addParams( array( 'acceptedpendingecheck' => 1 ) );
-					$invoice->storeload();
-				}
-
-				$response['valid']			= 1;
-			} else {
-				$response['pending']		= 1;
-				$response['pending_reason'] = 'echeck';
-			}
+		$response['valid']	= 0;
+		
+		if ( $this->isValidMd5($post['hash']) ) {
+			$response['error']		= true;
+			$response['errormsg']	= "Hash Invalid";
+		} elseif ( $_GET['hash'] == $request->invoice->params['hash'] ) {
+			$response['valid']			= 1;
 		} else {
-			$response['valid'] = 0;
-			$response['cancel'] = 1;
+			$response['error']		= true;
+			$response['errormsg']	= "Hash Mismatch";
 		}
 
 		return $response;
@@ -139,9 +130,9 @@ class processor_paycific extends POSTprocessor
 		echo 'OK=0 ERROR: ' . $error;
 	}
 
-	function isValidMd5( $checkhask )
+	function isValidMd5( $hash )
 	{
-		return !empty($checkhask) && preg_match('/^[a-f0-9]{32}$/', $checkhask);
+		return !empty($hash) && preg_match('/^[a-f0-9]{32}$/', $hash);
 	}
 }
 ?>
