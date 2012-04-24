@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '4994' );
+define( '_AEC_REVISION', '5004' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -12479,7 +12479,7 @@ class Invoice extends serialParamDBTable
 		return $response;
 	}
 
-	function pay( $multiplicator=1 )
+	function pay( $multiplicator=1, $noclear=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -12688,7 +12688,9 @@ class Invoice extends serialParamDBTable
 			$eventlog->issue( $short, $tags, $event, 32, $params );
 		}
 
-		$this->setTransactionDate();
+		if ( !$noclear ) {
+			$this->setTransactionDate();
+		}			
 
 		return true;
 	}

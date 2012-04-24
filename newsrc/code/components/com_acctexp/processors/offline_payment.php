@@ -49,11 +49,24 @@ class processor_offline_payment extends processor
 		return $actions;
 	}
 
+	function modifyCheckout( &$int_var, &$InvoiceFactory )
+	{
+		if ( !empty( $this->settings['paylater'] ) ) {
+			$InvoiceFactory->invoice->pay( 1, true );
+
+			$InvoiceFactory->invoice->fixed = true;
+			$InvoiceFactory->invoice->storeload();
+
+			$InvoiceFactory->thanks( 'com_acctexp', false, true );exit;
+		}
+	}
+
 	function settings()
 	{
 		$settings = array();
 		$settings['info']			= '';
 		$settings['waitingplan']	= 0;
+		$settings['paylater']		= 0;
 		$settings['currency']		='';
 
 		$settings['email_info']		= 0;
@@ -73,6 +86,7 @@ class processor_offline_payment extends processor
 	{
 		$settings = array();
 		$settings['waitingplan']		= array( 'list_plan' );
+		$settings['paylater']			= array( 'toggle' );
 		$settings['info']				= array( 'editor' );
 		$settings['currency']			= array( 'list_currency' );
 
