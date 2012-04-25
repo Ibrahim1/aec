@@ -92,11 +92,13 @@ class mi_affiliatepro
 
 		$affiliate = $clickTracker->getAffiliate();
 
-		$affililate_id = $affiliate->getValue('userid');
+		if ( is_object( $affiliate ) ) {
+			$affililate_id = $affiliate->getValue('userid');
 
-		if ( $affililate_id ) {
-			$request->invoice->params['mi_affiliatepro_referrer'] = $affililate_id;
-			$request->invoice->storeload();
+			if ( $affililate_id ) {
+				$request->invoice->params['mi_affiliatepro_referrer'] = $affililate_id;
+				$request->invoice->storeload();
+			}
 		}
 	}
  
