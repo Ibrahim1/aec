@@ -723,7 +723,7 @@ d3.chart.rickshaw = function () {
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][week(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][week(xdate)]  };
 		} else if ( params.unit == "hour" ) {
 			var xx1 = new Date();xx1.setHours(0,0,0,0);
-			var xx2 = new Date();xx2.setHours(23,59,59,999);
+			var xx2 = new Date();xx2.setHours(24,15,15,0);
 			var units = d3.time.hours(xx1,xx2);
 
 			var mdata = d3.nest()
@@ -761,6 +761,8 @@ d3.chart.rickshaw = function () {
 
 		if ( params.unit == "week" ) {
 			var xFormatter = function(d){ return "Week " + week( new Date( d * 1000 ) ); };
+		} else if ( params.unit == "hour" ) {
+			var xFormatter = function(d){ return hour( new Date( d * 1000 ) ) + ":00"; };
 		} else {
 			var xFormatter = function(d){ return format( new Date( d * 1000 ) ); };
 		}
