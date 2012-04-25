@@ -3546,7 +3546,7 @@ class displayPipeline extends serialParamDBTable
 
 	function declareParamFields()
 	{
-		return array( 'params' );
+		return array( 'params', 'displaytext' );
 	}
 
 	function create( $userid, $only_user, $once_per_user, $expire, $expiration, $displaymax, $displaytext, $params=null )
@@ -3565,11 +3565,7 @@ class displayPipeline extends serialParamDBTable
 		$this->displaycount		= 0;
 		$this->displaymax		= $displaymax;
 
-		if ( !get_magic_quotes_gpc() ) {
-			$this->displaytext	= addslashes( $displaytext );
-		} else {
-			$this->displaytext	= $displaytext;
-		}
+		$this->displaytext		= $displaytext;
 
 		if ( is_array( $params ) ) {
 			$this->params = $params;

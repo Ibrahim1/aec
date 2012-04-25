@@ -95,10 +95,12 @@ class mi_jomsocial extends MI
 	{
 		$return = array();
 
-		$request->params['use_points'] = (int) $request->params['use_points'];
+		if ( !empty( $request->params['use_points'] ) ) {
+			$request->params['use_points'] = (int) $request->params['use_points'];
 
-		if ( $request->params['use_points'] > $this->getPoints( $request->metaUser->userid ) ) {
-			$return['error'] = "You don't have that many points";
+			if ( $request->params['use_points'] > $this->getPoints( $request->metaUser->userid ) ) {
+				$return['error'] = "You don't have that many points";
+			}
 		}
 
 		return $return;

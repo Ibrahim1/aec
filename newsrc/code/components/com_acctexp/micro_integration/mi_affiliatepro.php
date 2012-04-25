@@ -56,34 +56,46 @@ class mi_affiliatepro
 			$this->settings['path'] .= '/';
 		}
 
-		if ( !file_exists( $this->settings['path'] . 'PapApi.class.php' ) ) {
-			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', 'Could not locate the Affiliate Pro API at this Directory.', 32 );
+		if ( !file_exists( $this->settings['path'] . 'api/PapApi.class.php' ) ) {
+			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', 'Could not locate the Affiliate Pro API at this Directory. Please install the PHP API into the /api folder in your PAP directory.', 32 );
+
+			if ( is_dir( $this->settings['path'] . 'api/' ) ) {
+				$files = AECToolbox::getFileArray( $this->settings['path'] . 'api/', false, true );
+
+				aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', 'Directory exists, though.', 32 );aecDebug($files);
+			}
 
 			return null;
 		}
 
-		include_once( $this->settings['path'] . 'PapApi.class.php' );
+		include_once( $this->settings['path'] . 'api/PapApi.class.php' );
 
 		if ( strpos( $this->settings['url'], '/sales.js' ) ) {
-			$url = str_replace( '/sales.js', '/server.php', $this->settings['url'] );
+			$url = str_replace( '/sales.js', '/scripts/server.php', $this->settings['url'] );
 		} else {
 			if ( substr( $this->settings['url'], -1, 1 ) != '/' ) {
-				$url = $this->settings['url'] . '/server.php';
+				$url = $this->settings['url'] . '/scripts/server.php';
 			} else {
-				$url = $this->settings['url'] . 'server.php';
+				$url = $this->settings['url'] . 'scripts/server.php';
 			}
 		}
 
 		$session = new Gpf_Api_Session( $url ); 
 
-		if( !$session->login( $this->settings['merchant'], empty( $this->settings['password'] ) ) ) { 
+		if( !$session->login( $this->settings['merchant'], $this->settings['password'] ) ) { 
 			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', "Cannot login. Message: ".$session->getMessage(), 32 );
 
 			return null;
 		}
 
-		if ( $clickTracker->getAffiliate() ) {
-			$request->invoice->params['mi_affiliatepro_referrer'] = $clickTracker->getUserid();
+		$clickTracker = new Pap_Api_ClickTracker($session);
+
+		$affiliate = $clickTracker->getAffiliate();
+
+		$affililate_id = $affiliate->getValue('userid');
+
+		if ( $affililate_id ) {
+			$request->invoice->params['mi_affiliatepro_referrer'] = $affililate_id;
 			$request->invoice->storeload();
 		}
 	}
@@ -95,12 +107,14 @@ class mi_affiliatepro
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
-
-		if ( strpos( $this->settings['url'], '/sales.js' ) ) {
+		if ( strpos( $this->settings['url'], '/scripts/salejs.php' ) ) {
 			$url = $this->settings['url'];
 		} else {
-			$url = $this->settings['url'] . '/sales.js';
+			if ( substr( $this->settings['url'], -1, 1 ) != '/' ) {
+				$url = $this->settings['url'] . '/scripts/salejs.php';
+			} else {
+				$url = $this->settings['url'] . 'scripts/salejs.php';
+			}
 		}
 
 		$text = '<script id="pap_x2s6df8d" src="' . $url . '" type="text/javascript"></script>'
@@ -154,60 +168,21 @@ class mi_affiliatepro
 
 		$text .= 'PostAffTracker.register();'
 				. '</script>';
-// TODO:
-// sale.setAffiliateID('testaff'); - force Affiliate ID
-// sale.setCampaignID('11111111'); - campaign
-// sale.setCustomCommission('10.23'); - force Custom Commission
 
-// PostAffTracker.setChannel('testchannel'); - force channel
-// PostAffTracker.setCookieValue('testchannel'); - force to register commission with this cookie value. The cookie value saves affiliate ID and campaign ID. It is in format AFFILIATEID_CAMPAIGNID, for example e2r48sv3_d3425s9f.
+		// TODO:
+		// sale.setCampaignID('11111111'); - campaign
+		// sale.setCustomCommission('10.23'); - force Custom Commission
+
+		// PostAffTracker.setChannel('testchannel'); - force channel
+		// PostAffTracker.setCookieValue('testchannel'); - force to register commission with this cookie value. The cookie value saves affiliate ID and campaign ID. It is in format AFFILIATEID_CAMPAIGNID, for example e2r48sv3_d3425s9f.
+
+		$db = &JFactory::getDBO();
+
 		$displaypipeline = new displayPipeline( $db );
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;
 	}
 
-	function later()
-	{
-        //-------------PAP affiliate approval-----------------------------
-            if ( $response['valid'] ) {
-
-                include_once('/PATH_TO/PapApi.class.php');
-        
-                $session = new Gpf_Api_Session("http://merkacity.postaffiliatepro.com/scripts/server.php");
-                    if(!$session->login("USERNAME", "PASSWORD")) {
-                        //die("Cannot login. Message: ".$session->getMessage());
-                    }
-
-                    // loading affiliate by his ID
-                    $affiliate = new Pap_Api_Affiliate($session);
-                    $affiliate->setData(25, $response['userid']);
-                    //$affiliate->setUsername("infoweb@merkacity.com");
-                    try {
-                        if(!$affiliate->load()) {
-                            //die('Cannot load affiliate, error: '.$affiliate->getMessage());
-                        }
-                    } catch (Exception $e) {
-                        //die('Cannot load affiliate, error: '.$e->getMessage());
-                      }
-
-                   $affiliate->setStatus('A');  //A - Approved, D - Declined, P - Pending
-                   try {
-                       $affiliate->save();
-                   } catch (Exception $e) {
-                       //die('Failed to save affiliate: ' . $e->getMessage());
-                   }
-
-            }
-        //------------------ end PAP ------------------------------
-
-		/* PAN integration */
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "http://USERNAME.postaffiliatepro.com/plugins/PayPal/paypal.php");
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $_POST);
-		curl_exec($ch);
-		/* end of PAN integration */
-	}
 }
 ?>

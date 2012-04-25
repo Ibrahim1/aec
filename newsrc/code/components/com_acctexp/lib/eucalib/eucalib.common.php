@@ -404,7 +404,7 @@ class serialParamDBTable extends paramDBTable
 		if ( preg_match( '%^[a-zA-Z0-9/+]*={0,2}$%', $this->$field ) ) {
 			return unserialize( base64_decode( $this->$field ) );
 		} else {
-			return null;
+			return $this->$field;
 		}
 	}
 
