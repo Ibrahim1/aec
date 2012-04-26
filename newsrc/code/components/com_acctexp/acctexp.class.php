@@ -18808,7 +18808,7 @@ class microIntegration extends serialParamDBTable
 				$common = array();
 			}
 
-			if ( method_exists( $this->mi_class, 'Defaults' ) && empty( $this->settings ) ) {
+			if ( method_exists( $this->mi_class, 'Defaults' ) && ( count( $this->settings ) < 4 ) ) {
 				$defaults = $this->mi_class->Defaults();
 			} else {
 				$defaults = array();
