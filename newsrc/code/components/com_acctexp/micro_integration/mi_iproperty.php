@@ -61,6 +61,9 @@ class mi_iproperty
 		$settings['rebuild']			= array( 'toggle' );
 		$settings['remove']				= array( 'toggle' );
 
+		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
 		return $settings;
 	}
 
@@ -86,10 +89,10 @@ class mi_iproperty
 		}
 
 		if ( !empty( $this->settings['publish_all'] ) ) {
-			return $this->publishProperties( $agent->id );
+			$this->publishProperties( $agent->id );
 		}
 
-		$agent = $this->updateAgent( $agent );
+		$agent = $this->updateAgent( $agent, $request );
 
 		if ( !empty( $agent->company ) ) {
 			$company = $this->getCompany( $agent->company );
@@ -97,18 +100,20 @@ class mi_iproperty
 
 		if ( empty( $company->id ) && $this->settings['create_company'] && !empty( $this->settings['company_fields'] ) ) {
 			$company = $this->createCompany( $request, $agent );
+		}
 
+		if ( empty( $agent->company ) && !empty( $company->id ) ) {
 			$agent->company = $company->id;
 		}
 
 		if ( $company->id ) {
-			$this->updateCompany();
+			$company = $this->updateCompany( $company, $request );
 
-			$this->storeObject( $company );
+			$this->storeObject( $company, 'companies' );
 		}
 
 		if ( $agent->id ) {
-			$this->storeObject( $agent );
+			$this->storeObject( $agent, 'agents' );
 		}
 
 		return true;
@@ -123,11 +128,13 @@ class mi_iproperty
 				return $this->unpublishProperties( $agent->id );
 			}
 		}
+
+		return null;
 	}
 
 	function createAgent( $request )
 	{
-		$fields = $this->convertSettings( $this->settings['agent_fields'] );
+		$fields = $this->convertSettings( $this->settings['agent_fields'], $request );
 
 		$fields['user_id'] = $request->metaUser->userid;
 
@@ -149,22 +156,30 @@ class mi_iproperty
 		return $this->getAgent( $request->metaUser->userid );
 	}
 
-	function updateAgent( $agent )
+	function updateAgent( $agent, $request )
 	{
 		if ( !empty( $this->settings['update_agent'] ) && !empty( $this->settings['update_afields'] ) ) {
-			$agent = $this->mergeObject( $agent, $this->convertSettings( $this->settings['update_afields'] ) );
+			$agent = $this->mergeObject( $agent, $this->convertSettings( $this->settings['update_afields'], $request ) );
 		}
 
 		if ( !empty( $this->settings['set_agentlistings'] ) ) {
 			$agent->params['maxlistings'] = $this->settings['set_agentlistings'];
 		} elseif ( !empty( $this->settings['add_agentlistings'] ) ) {
-			$agent->params['maxlistings'] += $this->settings['add_agentlistings'];
+			if ( isset( $agent->params['maxlistings'] ) ) {
+				$agent->params['maxlistings'] += $this->settings['add_agentlistings'];
+			} else {
+				$agent->params['maxlistings'] = $this->settings['add_agentlistings'];
+			}
 		}
 
 		if ( !empty( $this->settings['set_agentflistings'] ) ) {
 			$agent->params['maxflistings'] = $this->settings['set_agentflistings'];
 		} elseif ( !empty( $this->settings['add_agentflistings'] ) ) {
-			$agent->params['maxflistings'] += $this->settings['add_agentflistings'];
+			if ( isset( $agent->params['maxlistings'] ) ) {
+				$agent->params['maxflistings'] += $this->settings['add_agentflistings'];
+			} else {
+				$agent->params['maxflistings'] = $this->settings['add_agentflistings'];
+			}
 		}
 
 		return $agent;
@@ -172,7 +187,7 @@ class mi_iproperty
 
 	function createCompany( $request )
 	{
-		$fields = $this->convertSettings( $this->settings['company_fields'] );
+		$fields = $this->convertSettings( $this->settings['company_fields'], $request );
 
 		if ( empty( $fields['name'] ) ) {
 			return false;
@@ -191,40 +206,56 @@ class mi_iproperty
 		return $this->getCompanyByName( $fields['name'] );
 	}
 
-	function updateCompany( $company )
+	function updateCompany( $company, $request )
 	{
-		if ( !empty( $this->settings['update_agent'] ) && !empty( $this->settings['update_afields'] ) ) {
-			$company = $this->mergeObject( $company, $this->convertSettings( $this->settings['update_afields'] ) );
+		if ( !empty( $this->settings['update_company'] ) && !empty( $this->settings['update_cfields'] ) ) {
+			$company = $this->mergeObject( $company, $this->convertSettings( $this->settings['update_cfields'], $request ) );
 		}
 
 		if ( !empty( $this->settings['set_listings'] ) ) {
 			$company->params['maxlistings'] = $this->settings['set_listings'];
 		} elseif ( !empty( $this->settings['add_listings'] ) ) {
-			$company->params['maxlistings'] += $this->settings['add_listings'];
+			if ( isset( $company->params['maxlistings'] ) ) {
+				$company->params['maxlistings'] += $this->settings['add_listings'];
+			} else {
+				$company->params['maxlistings'] = $this->settings['add_listings'];
+			}
 		}
 
 		if ( !empty( $this->settings['set_flistings'] ) ) {
 			$company->params['maxflistings'] = $this->settings['set_flistings'];
 		} elseif ( !empty( $this->settings['add_flistings'] ) ) {
-			$company->params['maxflistings'] += $this->settings['add_flistings'];
+			if ( isset( $company->params['maxlistings'] ) ) {
+				$company->params['maxflistings'] += $this->settings['add_flistings'];
+			} else {
+				$company->params['maxflistings'] = $this->settings['add_flistings'];
+			}
 		}
 
 		if ( !empty( $this->settings['set_agents'] ) ) {
 			$company->params['maxagents'] = $this->settings['set_agents'];
 		} elseif ( !empty( $this->settings['add_agents'] ) ) {
-			$company->params['maxagents'] += $this->settings['add_agents'];
+			if ( isset( $company->params['maxagents'] ) ) {
+				$company->params['maxagents'] += $this->settings['add_agents'];
+			} else {
+				$company->params['maxagents'] = $this->settings['add_agents'];
+			}
 		}
 
 		if ( !empty( $this->settings['set_fagents'] ) ) {
 			$company->params['maxfagents'] = $this->settings['set_fagents'];
 		} elseif ( !empty( $this->settings['add_fagents'] ) ) {
-			$company->params['maxfagents'] += $this->settings['add_fagents'];
+			if ( isset( $company->params['maxfagents'] ) ) {
+				$company->params['maxfagents'] += $this->settings['add_fagents'];
+			} else {
+				$company->params['maxfagents'] = $this->settings['add_fagents'];
+			}
 		}
 
 		return $company;
 	}
 
-	function convertSettings( $field )
+	function convertSettings( $field, $request )
 	{
 		$fieldlist = explode( "\n", $field );
 
@@ -234,7 +265,7 @@ class mi_iproperty
 
 			if ( !empty( $c[0] ) ) {
 				if ( !empty( $c[1] ) ) {
-					$array[$c[0]] = trim( $c[1] );
+					$array[$c[0]] = trim( AECToolbox::rewriteEngineRQ( $c[1], $request ) );
 				} else {
 					$array[$c[0]] = "";
 				}
@@ -328,9 +359,9 @@ class mi_iproperty
 
 		$fields = array();
 		$values = array();
-		foreach ( $vars as $k ) {
-			if ( $k != 'id' ) {
-				$updates[] = '`' . $k . '` = \'' .  $db->getEscaped( $object->$k ) . '\'';
+		foreach ( $vars as $k => $v ) {
+			if ( ( $k != 'id' ) && ( $k != 'ip_source' ) ) {
+				$updates[] = '`' . $k . '` = \'' .  $db->getEscaped( $v ) . '\'';
 			}
 		}
 

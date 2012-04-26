@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '5011' );
+define( '_AEC_REVISION', '5021' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -15450,7 +15450,7 @@ class reWriteEngine
 				}
 
 				if ( defined( 'JPATH_MANIFESTS' ) ) {
-					if ( !$this->data['metaUser']->hasJProfile ) {
+					if ( empty( $this->data['metaUser']->hasJProfile ) ) {
 						$this->data['metaUser']->loadJProfile();
 					}
 
