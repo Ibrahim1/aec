@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '5021' );
+define( '_AEC_REVISION', '5032' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5247,7 +5247,11 @@ class XMLprocessor extends processor
 	{
 		global $aecConfig;
 
-		$var = $this->checkoutform( $request );
+		if ( method_exists( $this, 'checkoutform' ) ) {
+			$var = $this->checkoutform( $request );
+		} else {
+			$var = array();
+		}
 
 		if ( isset( $var['aec_alternate_checkout'] ) ) {
 			$url = $var['aec_alternate_checkout'];

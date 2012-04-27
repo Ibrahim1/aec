@@ -848,7 +848,7 @@ class HTML_AcctExp
 					<br />
 					<center><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" /></center>
 					<br />
-					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION );; ?>, Revision <?php echo _AEC_REVISION ?></p>
+					<div style="margin-left:auto;margin-right:auto;width:400px;text-align:center;"><p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION ); ?>, Revision <?php echo _AEC_REVISION ?></p>
 						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 						<p>Thank you for choosing AEC!</p>
 						<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
