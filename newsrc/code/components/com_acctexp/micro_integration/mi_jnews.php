@@ -52,7 +52,6 @@ class mi_jnews
 		$settings['lists']['list_exp']	= JHTML::_('select.genericlist', $li, 'list_exp', 'size="4"', 'value', 'text', $this->settings['list_exp'] );
 
 		$settings['list']			= array( 'list' );
-		$settings['list_overunsub']	= array( 'list' );
 		$settings['list_exp']		= array( 'list' );
 		$settings['user_checkbox']	= array( 'toggle' );
 		$settings['custominfo']		= array( 'inputD' );
@@ -96,7 +95,7 @@ class mi_jnews
 			$acauser = $this->getSubscriberID( $request->metaUser->userid );
 		}
 
-		if ( !$acauser ) {
+		if ( empty( $acauser ) ) {
 			return null;
 		}
 
@@ -126,7 +125,7 @@ class mi_jnews
 			$acauser = $this->getSubscriberID( $request->metaUser->userid );
 		}
 
-		if ( !$acauser ) {
+		if ( empty( $acauser ) ) {
 			return null;
 		}
 
@@ -171,7 +170,7 @@ class mi_jnews
 		}
 	}
 
-	function hasListUnsubscribed( $subscriber_id, $listid )
+	function hasListUnsub( $subscriber_id, $listid )
 	{
 		$db = &JFactory::getDBO();
 		$query = 'SELECT `list_id`'
@@ -204,56 +203,46 @@ class mi_jnews
 		if ( !$this->hasList( $subscriber_id, $list_id ) ) {
 			$db = &JFactory::getDBO();
 
+			if ( $this->hasListUnsub( $subscriber_id, $list_id ) ) {
+				$query = 'UPDATE #__jnews_listssubscribers'
+						. ' SET `unsubscribe` = 0'
+						. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+						. ' AND `list_id` = \'' . $list_id . '\''
+						;
+				$db->setQuery( $query );
+				$db->query();
+			} else {
+				$query  = 'INSERT INTO #__jnews_listssubscribers'
+						. ' (list_id, subscriber_id, subdate)'
+						. ' VALUES(\'' . $list_id . '\', \'' . $subscriber_id . '\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\')'
+						;
+				$db->setQuery( $query );
+				$db->query();
+			}
+
 			$query  = 'INSERT INTO #__jnews_queue'
 					. ' (type, subscriber_id, list_id, mailing_id, issue_nb, send_date, suspend, delay, acc_level, published, params)'
 					. ' VALUES(\'1\', \'' . $subscriber_id . '\', \'' . $list_id . '\', \'0\', \'0\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\', \'0\', \'0\', \'0\', \'0\', \'\' )'
 					;
 			$db->setQuery( $query );
 			$db->query();
-
-			$query  = 'INSERT INTO #__jnews_listssubscribers'
-					. ' (list_id, subscriber_id, subdate)'
-					. ' VALUES(\'' . $list_id . '\', \'' . $subscriber_id . '\', \'' . date( 'Y-m-d H:i:s',  ( (int) gmdate('U') ) ) . '\')'
-					;
-			$db->setQuery( $query );
-			$db->query();
-		} elseif ( !$this->hasListUnsubscribed( $subscriber_id, $list_id ) ) {
-			
 		}
 
 		return true;
 	}
 
-	function _applyChangedSubscription($subscriberId, $subscribeA, $unsubscribeA){
-	 	$db=&JFactory::getDBO();
-		if ( !empty($unsubscribeA) ) {
-			$query = 'UPDATE `#__jnews_listssubscribers` SET ';
-			$query .= ' `unsubdate`='.time();
-			$query .= ' ,`unsubscribe`=1';
-			$query .=' WHERE `subscriber_id`= '.$subscriberId.' AND `list_id` IN ('.implode(',',$unsubscribeA).')';
-			$db->setQuery($query);
-			$db->query();
-		}
-
-		if ( !empty($subscribeA) ) {
-			$query = 'UPDATE `#__jnews_listssubscribers` SET ';
-			$query .= ' `unsubscribe`=0';
-			$query .=' WHERE `subscriber_id`= '.$subscriberId.' AND `list_id` IN ('.implode(',',$subscribeA).')';
-			$db->setQuery($query);
-			$db->query();
-
-	  		$query = 'INSERT IGNORE INTO `#__jnews_listssubscribers` (`list_id`,`subscriber_id`,`subdate`,`unsubdate`,`unsubscribe`)';
-			$query .=' VALUES ('.implode( ','.$subscriberId.','.time().','.'0,0),(', $subscribeA) .','.$subscriberId.','.time().','.'0,0)';
-			$db->setQuery($query);
-			$db->query();
-
-		}
-	 }
-
 	function deleteFromList( $subscriber_id, $list_id )
 	{	
 		if ( $this->hasList( $subscriber_id, $list_id ) ) {
 			$db = &JFactory::getDBO();
+
+			$query = 'UPDATE #__jnews_listssubscribers'
+					. ' SET `unsubscribe` = 1, `unsubdate` = ' . ( (int) gmdate('U') )
+					. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
+					. ' AND `list_id` = \'' . $list_id . '\''
+					;
+			$db->setQuery( $query );
+			$db->query();
 
 			$query = 'DELETE FROM #__jnews_queue'
 					. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
