@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '5032' );
+define( '_AEC_REVISION', '5037' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -8956,20 +8956,25 @@ class logHistory extends serialParamDBTable
 	{
 		$db = &JFactory::getDBO();
 
-		$app = JFactory::getApplication();
-
 		$user = new JTableUser( $db );
 		$user->load( $objInvoice->userid );
 
 		$plan = new SubscriptionPlan( $db );
 		$plan->load( $objInvoice->usage );
 
-		$this->proc_id			= $pp->id;
-		$this->proc_name		= $pp->processor_name;
+		if ( $pp->id ) {
+			$this->proc_id			= $pp->id;
+			$this->proc_name		= $pp->processor_name;
+		}
+
 		$this->user_id			= $user->id;
 		$this->user_name		= $user->username;
-		$this->plan_id			= $plan->id;
-		$this->plan_name		= $plan->name;
+
+		if ( $plan->id ) {
+			$this->plan_id			= $plan->id;
+			$this->plan_name		= $plan->name;
+		}
+
 		$this->transaction_date	= date( 'Y-m-d H:i:s', ( ( (int) gmdate('U') ) ) );
 		$this->amount			= $objInvoice->amount;
 		$this->invoice_number	= $objInvoice->invoice_number;
