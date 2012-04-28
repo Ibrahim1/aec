@@ -2639,6 +2639,9 @@ class Config_General extends serialParamDBTable
 		$def['itemid_joomlauser']				= "";
 		$def['checkout_coupons']				= 1;
 		$def['customAppAuth']					= "";
+		$def['user_checkout_prefill']			= "firstname=[[user_first_name]]\nlastname=[[user_last_name]]\naddress=\naddress2=\n"
+													. "city=\nstate=\nzip=\ncountry=\nphone=\nfax=\ncompany=";
+		$def['noemails_adminoverride']			= 1;
 
 		return $def;
 	}
@@ -8133,8 +8136,8 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$metaUser->focusSubscription->storeload();
 
-		if ( !( $silent || $aecConfig->cfg['noemails'] ) ) {
-			$adminonly = ( $this->id == $aecConfig->cfg['entry_plan'] );
+		if ( !( $silent || $aecConfig->cfg['noemails'] ) || $aecConfig->cfg['noemails_adminoverride'] ) {
+			$adminonly = ( $this->id == $aecConfig->cfg['entry_plan'] ) || ( $aecConfig->cfg['noemails'] && $aecConfig->cfg['noemails_adminoverride'] );
 
 			$metaUser->focusSubscription->sendEmailRegistered( $renew, $adminonly, $invoice );
 		}

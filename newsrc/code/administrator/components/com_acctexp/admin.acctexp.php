@@ -284,6 +284,13 @@ switch( strtolower( $task ) ) {
 		com_install();
 		break;
 
+	case 'initsettings':
+		$aecConfig = new Config_General( $db );
+		$aecConfig->initParams();
+
+		echo 'SPLINES RETICULATED.';
+		break;
+
 	default: aecCentral( $option ); break;
 }
 
@@ -1364,21 +1371,6 @@ function editSettings( $option )
 	$params['adminaccess']					= array( 'toggle', 0 );
 	$params['manageraccess']				= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
-	$params['plans_first']					= array( 'toggle', 0 );
-	$params['integrate_registration']		= array( 'toggle', 0 );
-	$params['skip_confirmation']			= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
-	$params['enable_coupons']				= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
-	$params['enable_shoppingcart']			= array( 'toggle', '' );
-	$params['additem_stayonpage']			= array( 'toggle', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
-
-	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
 	$params['root_group']					= array( 'list', 0 );
 	$params[] = array( 'div_end', 0 );
@@ -1389,11 +1381,28 @@ function editSettings( $option )
 	$params[] = array( '2div_end', 0 );
 
 	$params[] = array( 'userinfobox', 33.225 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
+	$params['plans_first']					= array( 'toggle', 0 );
+	$params['integrate_registration']		= array( 'toggle', 0 );
+	$params['skip_confirmation']			= array( 'toggle', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
+	$params['enable_shoppingcart']			= array( 'toggle', '' );
+	$params['additem_stayonpage']			= array( 'toggle', '' );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
+	$params['enable_coupons']				= array( 'toggle', 0 );
+	$params['user_checkout_prefill']		= array( 'inputD', 0 );
+	$params[] = array( 'div_end', 0 );
+	$params[] = array( '2div_end', 0 );
+
+	$params[] = array( 'userinfobox', 33.225 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SYSTEM') );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_EMAIL') );
 	$params['noemails']						= array( 'toggle', 0 );
+	$params['noemails_adminoverride']		= array( 'toggle', 0 );
 	$params['nojoomlaregemails']			= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_DEBUG') );
