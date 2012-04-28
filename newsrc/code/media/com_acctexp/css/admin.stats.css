@@ -71,9 +71,20 @@ margin-top: 24px;
 .chart-rickshaw {
 float: left;
 width: 700px;
-height: 300px;
+height: 200px;
 margin-left: 25px;
 margin-bottom: 24px;
+}
+
+.chart-rickshaw-bump {
+float: left;
+width: 180px;
+height: 160px;
+margin-top: 12px;
+}
+
+.chart-rickshaw-bump .y_ticks text {
+text-anchor: middle;
 }
 
 .chart-rickshaw-slim {
@@ -88,6 +99,14 @@ margin-bottom: 24px;
 float: left;
 width: 910px;
 height: 200px;
+margin-left: 25px;
+margin-bottom: 24px;
+}
+
+.chart-rickshaw-wide-slim {
+float: left;
+width: 910px;
+height: 80px;
 margin-left: 25px;
 margin-bottom: 24px;
 }
@@ -135,16 +154,28 @@ float: left;
 margin: 36px 0 0;
 }
 
-.overview-container-full {
+.overview-container-full,
+.compare-container-full
+.all-time-container-full {
 float: left;
 clear: both;
 }
 
-.overview-container {
+.overview-container,
+.compare-container,
+.all-time-container {
 float: left;
 clear: both;
 width: 98%;
 }
+
+#compare-day-last,
+#compare-week-last,
+#compare-month-last,
+#compare-year-last {
+margin-left: 168px;
+}
+
 
 #chart h3 {
 text-align: center;

@@ -684,6 +684,7 @@ d3.chart.rickshaw = function () {
 		day = d3.time.format("%m-%w"),
 		week = d3.time.format("%U"),
 		month = d3.time.format("%m"),
+		year = d3.time.format("%Y"),
 		mname = d3.time.format("%B"),
 		hour = d3.time.format("%H"),
 		format = d3.time.format("%Y-%m-%d");
@@ -692,8 +693,7 @@ d3.chart.rickshaw = function () {
 		var groups = data.map(function(d){ return Number( d.group ) } ).getUnique();
 
 		if ( params.unit == "day" ) {
-			var units = d3.time.days( 	d3.min(data, function(d){ return d.date } ),
-										d3.max(data, function(d){ return d.date } ));
+			var units = d3.time.days(params.start, params.end);
 
 			var mdata = d3.nest()
 				.key(function(d) { return d.group; })
@@ -707,8 +707,7 @@ d3.chart.rickshaw = function () {
 
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][format(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][format(xdate)]  };
 		} else if ( params.unit == "week" ) {
-			var units = d3.time.weeks( 	d3.min(data, function(d){ return d.date } ),
-										d3.max(data, function(d){ return d.date } ));
+			var units = d3.time.weeks(params.start, params.end);
 
 			var mdata = d3.nest()
 				.key(function(d) { return d.group; })
@@ -721,10 +720,38 @@ d3.chart.rickshaw = function () {
 				.map(data);
 
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][week(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][week(xdate)]  };
+		} else if ( params.unit == "month" ) {
+			var units = d3.time.months(params.start, params.end);
+
+			var mdata = d3.nest()
+				.key(function(d) { return d.group; })
+				.rollup(function(v) {
+				return d3.nest()
+					.key(function(d) { return month(d.date); })
+					.rollup(function(d) { return d3.sum(d.map(function(di) { return di.amount; })); })
+					.map(v);
+				})
+				.map(data);
+
+			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][month(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][month(xdate)]  };
+		} else if ( params.unit == "year" ) {
+			var units = d3.time.years(params.start, params.end);
+
+			var mdata = d3.nest()
+				.key(function(d) { return d.group; })
+				.rollup(function(v) {
+				return d3.nest()
+					.key(function(d) { return year(d.date); })
+					.rollup(function(d) { return d3.sum(d.map(function(di) { return di.amount; })); })
+					.map(v);
+				})
+				.map(data);
+
+			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][year(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][year(xdate)]  };
 		} else if ( params.unit == "hour" ) {
-			var xx1 = new Date();xx1.setHours(0,0,0,0);
-			var xx2 = new Date();xx2.setHours(24,15,15,0);
-			var units = d3.time.hours(xx1,xx2);
+			params.end.setHours(24,15,15,0);
+
+			var units = d3.time.hours(params.start, params.end);
 
 			var mdata = d3.nest()
 				.key(function(d) { return d.group; })
@@ -751,9 +778,13 @@ d3.chart.rickshaw = function () {
 									}
 								);
 
+		if ( typeof params.renderer == 'undefined' ) {
+			params.renderer = 'bar';
+		}
+
 		var graph = new Rickshaw.Graph( {
 			element: document.querySelector(element),
-			renderer: 'bar',
+			renderer: params.renderer,
 			series: series
 		} );
 
@@ -767,17 +798,28 @@ d3.chart.rickshaw = function () {
 			var xFormatter = function(d){ return format( new Date( d * 1000 ) ); };
 		}
 
-		var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-			graph: graph,
-			xFormatter: xFormatter
-		} );
+		if ( typeof params.axes_time == 'undefined' ) {
+			params.axes_time = true;
+		}
 
-		var axes = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:12} );
+		if ( params.axes_time ) {
+			var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+				graph: graph,
+				xFormatter: xFormatter
+			} );
+
+			var axes = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:12} );
+
+			axes.render();
+		}
 
 		var y_ticks = new Rickshaw.Graph.Axis.Y( {graph: graph, ticks:4} );
 
-		axes.render();
 		y_ticks.render();
+
+		if ( !params.axes_time ) {
+			d3.selectAll(element+" g.y_ticks").attr("transform", "translate(85,0)");
+		}
 	}
 
 	return chart;

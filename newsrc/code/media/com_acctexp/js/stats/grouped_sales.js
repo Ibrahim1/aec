@@ -145,6 +145,13 @@ d3.chart.factory = function () {
 	factory.doCallback = function(request) {
 		var selection = data.filter( function(x){ return (x.date >= request.start) && (x.date <= request.end); });
 
+		if ( typeof request.parameters == 'undefined' ) {
+			request.parameters = {};
+		}
+
+		request.parameters.start = request.start;
+		request.parameters.end = request.end;
+
 		var chart = d3.chart[request.type]()
 			.parent(request.target, request.pos)
 			.margin([request.margin, request.margin, request.margin, request.margin])
