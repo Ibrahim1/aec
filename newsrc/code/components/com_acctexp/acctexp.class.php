@@ -2636,6 +2636,7 @@ class Config_General extends serialParamDBTable
 		$def['itemid_pending']					= "";
 		$def['itemid_subscriptiondetails']		= "";
 		$def['itemid_cb']						= "";
+		$def['itemid_joomlauser']				= "";
 		$def['checkout_coupons']				= 1;
 		$def['customAppAuth']					= "";
 
