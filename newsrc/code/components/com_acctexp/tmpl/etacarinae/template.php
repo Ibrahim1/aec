@@ -48,6 +48,9 @@ class template_etacarinae extends aecTemplate
 		$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
 		$params['customlink_continueshopping']	= array( 'inputC', '' );
 		$params[] = array( 'div_end', 0 );
+		$params[] = array( 'userinfobox_sub', 'Invoice Printout' );
+		$params['invoice_address_allow_edit']		= array( 'toggle', '' );
+		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
 		$params[] = array( 'userinfobox', 33.225 );
