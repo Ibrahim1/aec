@@ -1465,6 +1465,7 @@ function editSettings( $option )
 	}
 
 	$params['itemid_cb']						= array( 'inputA', '' );
+	$params['itemid_joomlauser']				= array( 'inputA', '' );
 
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );

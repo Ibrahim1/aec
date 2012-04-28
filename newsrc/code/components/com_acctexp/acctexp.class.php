@@ -16541,6 +16541,8 @@ class AECToolbox
 						$url .= '&Itemid=' . $aecConfig->cfg['itemid_' . $task];
 					} elseif ( ( $option == 'com_comprofiler') && !empty( $aecConfig->cfg['itemid_cb'] ) ) {
 						$url .= '&Itemid=' . $aecConfig->cfg['itemid_cb'];
+					} elseif ( ( $option == 'com_user') && !empty( $aecConfig->cfg['itemid_joomlauser'] ) ) {
+						$url .= '&Itemid=' . $aecConfig->cfg['itemid_joomlauser'];
 					} elseif ( !empty( $aecConfig->cfg['itemid_default'] ) ) {
 						$url .= '&Itemid=' . $aecConfig->cfg['itemid_default'];
 					} else {
