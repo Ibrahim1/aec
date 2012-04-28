@@ -1393,6 +1393,10 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
 	$params['enable_coupons']				= array( 'toggle', 0 );
 	$params['user_checkout_prefill']		= array( 'inputD', 0 );
+
+	$rewriteswitches						= array( 'cms', 'user', 'expiration', 'subscription' );
+	$params									= AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( '2div_end', 0 );
 
@@ -1425,6 +1429,10 @@ function editSettings( $option )
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_INUM') );
 	$params['invoicenum_doformat']				= array( 'toggle', '' );
 	$params['invoicenum_formatting']			= array( 'inputD', '' );
+
+	$rewriteswitches							= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
+	$params										= AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
+
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
 	$params['use_recaptcha']					= array( 'toggle', '' );

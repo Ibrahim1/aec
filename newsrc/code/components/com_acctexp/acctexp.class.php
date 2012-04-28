@@ -5521,6 +5521,8 @@ class XMLprocessor extends processor
 	{
 		$lang = JFactory::getLanguage();
 
+		global $aecConfig;
+
 		if ( empty( $values ) ) {
 			$values = array( 'firstname', 'lastname' );
 		}
@@ -5541,6 +5543,47 @@ class XMLprocessor extends processor
 			}
 		}
 
+		$aecConfig->cfg['user_checkout_prefill'];
+
+		$fieldlist = explode( "\n", AECToolbox::rewriteEngine( $aecConfig->cfg['user_checkout_prefill'], $metaUser ) );
+
+		$cfgarray = array();
+		foreach ( $fieldlist as $content ) {
+			$c = explode( '=', $content, 2 );
+
+			if ( !empty( $c[0] ) ) {
+				if ( !empty( $c[1] ) ) {
+					$cfgarray[$c[0]] = trim( $c[1] );
+				} else {
+					$cfgarray[$c[0]] = "";
+				}
+			}
+		}
+
+		$translatelist = array( 'firstname' => 'billFirstName',
+								'lastname' => 'billLastName',
+								'address' => 'billAddress',
+								'address2' => 'billAddress2',
+								'city' => 'billCity',
+								'nonus' => 'billNonUs',
+								'state' => 'billState',
+								'state_us' => 'billState',
+								'state_usca' => 'billState',
+								'zip' => 'billZip',
+								'country_list' => 'billCountry',
+								'country3_list' => 'billCountry',
+								'country' => 'billCountry',
+								'phone' => 'billPhone',
+								'fax' => 'billFax',
+								'company' => 'billCompany'
+								);
+
+		$cfgtranslatelist = array( 'state_us' => 'state',
+								'state_usca' => 'state',
+								'country_list' => 'country',
+								'country3_list' => 'country'
+								);
+
 		foreach ( $values as $value ) {
 			if ( strpos( $value, '*' ) ) {
 				$pf = '*';
@@ -5550,30 +5593,24 @@ class XMLprocessor extends processor
 				$pf = '';
 			}
 
-			$translatelist = array( 'firstname' => 'billFirstName',
-									'lastname' => 'billLastName',
-									'address' => 'billAddress',
-									'address2' => 'billAddress2',
-									'city' => 'billCity',
-									'nonus' => 'billNonUs',
-									'state' => 'billState',
-									'state_us' => 'billState',
-									'state_usca' => 'billState',
-									'zip' => 'billZip',
-									'country_list' => 'billCountry',
-									'country3_list' => 'billCountry',
-									'country' => 'billCountry',
-									'phone' => 'billPhone',
-									'fax' => 'billFax',
-									'company' => 'billCompany'
-									);
-
 			$vcontent = '';
 			if ( isset( $content[$value] ) ) {
 				$vcontent = $content[$value];
 			} elseif( isset( $translatelist[$value] ) ) {
 				if ( isset( $content[$translatelist[$value]] ) ) {
 					$vcontent = $content[$translatelist[$value]];
+				}
+			}
+
+			if ( empty( $vcontent ) ) {
+				if ( isset( $cfgtranslatelist[$value] ) ) {
+					$xvalue = $cfgtranslatelist[$value];
+				} else {
+					$xvalue = $value;
+				}
+
+				if ( !empty( $cfgarray[$xvalue] ) ) {
+					$vcontent = $cfgarray[$xvalue];
 				}
 			}
 
