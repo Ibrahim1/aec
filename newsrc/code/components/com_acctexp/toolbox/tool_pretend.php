@@ -38,11 +38,14 @@ class tool_pretend
 	{
 		$db = &JFactory::getDBO();
 
+		// Create a number of groups
 		$grouplist = $this->createGroups( $_POST['groups'] );
 		
+		// Create a number of plans
 		$planlist = $this->createPlans( $grouplist, $_POST['plans'] );
 
-		
+		// Create Users
+		// Create Payments
 	}
 
 	function createPlans( $plans )
