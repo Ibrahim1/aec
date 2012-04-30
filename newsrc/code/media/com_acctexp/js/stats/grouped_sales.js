@@ -91,7 +91,11 @@ d3.chart.factory = function () {
 	};
 
 	factory.requestData = function(callback, start, end) {
-		factory.json(request_fullurl+"&start="+encodeURI(datef(start))+"&end="+encodeURI(datef(end)), callback);
+
+		var dstart = datef(start);
+
+		var dend = datef(end);
+		factory.json(request_fullurl+"&start="+encodeURI(dstart)+"&end="+encodeURI(dend), callback);
 	};
 
 	factory.json = function(url, callback) {
@@ -120,10 +124,12 @@ d3.chart.factory = function () {
 		}
 
 		if ( request.start < rangeStart ) {
+			request.start.setHours(0,0,0,0);
 			rangeStart = request.start;
 		}
 
 		if ( request.end > rangeEnd ) {
+			request.end.setHours(23,59,59,999);
 			rangeEnd = request.end;
 		}
 
