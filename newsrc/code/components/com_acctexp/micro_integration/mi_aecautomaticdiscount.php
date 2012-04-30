@@ -25,8 +25,6 @@ class mi_aecautomaticdiscount
 	function Settings()
 	{
 		$settings = array();
-		$settings['custominfo']	= array( 'inputD' );
-		$settings['options']	= array( 'inputB' );
 		$settings['amount']		= array( 'inputC' );
 		$settings['mode']		= array( 'list' );
 
