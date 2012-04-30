@@ -27,6 +27,7 @@ class mi_aecautomaticdiscount
 		$settings = array();
 		$settings['amount']		= array( 'inputC' );
 		$settings['mode']		= array( 'list' );
+		$settings['extra']		= array( 'inputD' );
 
 		$modes = array();
 		$modes[] = JHTML::_('select.option', 'basic', JText::_('MI_MI_AECAUTOMATICDISCOUNT_SET_MODE_BASIC') );
@@ -55,12 +56,12 @@ class mi_aecautomaticdiscount
 		$total = $item['terms']->terms[0]->renderTotal();
 
 		if ( $this->settings['mode'] == 'basic' ) {
-			$extracost = $this->settings['amount'];
+			$extracost = - $this->settings['amount'];
 		} else {
-			$extracost = AECToolbox::correctAmount( $total * ( $this->settings['amount']/100 ) );
+			$extracost = - AECToolbox::correctAmount( $total * ( $this->settings['amount']/100 ) );
 		}
 
-		$newtotal = AECToolbox::correctAmount( $total + $this->settings['amount'] );
+		$newtotal = AECToolbox::correctAmount( $total - $this->settings['amount'] );
 
 		$item['terms']->terms[0]->addCost( $extracost, array( 'details' => $this->settings['extra'] ) );
 		$item['cost'] = $item['terms']->renderTotal();
