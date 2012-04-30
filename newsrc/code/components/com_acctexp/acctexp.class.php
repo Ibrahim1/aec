@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '5057' );
+define( '_AEC_REVISION', '5065' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -7754,7 +7754,7 @@ class SubscriptionPlanHandler
 
 		$query = 'SELECT id'
 			 	. ' FROM #__acctexp_plans'
-			 	. ' GROUP BY ' . ( $use_order ? '`ordering`' : '`id`' )
+			 	. ' ORDER BY ' . ( $use_order ? '`ordering`' : '`id`' )
 			 	;
 
 		if ( !empty( $limitstart ) && !empty( $limit ) ) {
