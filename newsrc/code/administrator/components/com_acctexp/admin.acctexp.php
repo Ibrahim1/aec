@@ -907,10 +907,14 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 	}
 
-	$set_group	= $groups[0];
+	if ( array_search( 'notconfig', $groups ) ) {
+		$set_group	= 'notconfig';
+	} else {
+		$set_group	= $groups[0];
+	}
 
 	if ( !empty( $orderby ) ) {
-		if ( $set_group == "manual" ) {
+		if ( $set_group == "notconfig" ) {
 			$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
 								'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
 								);
@@ -3770,6 +3774,10 @@ function editMicroIntegration ( $id, $option )
 
 			$mi_gsettings = array_merge( $mi_gsettings, $restrictionHelper->getParams() );
 
+			if ( empty( $mi->restrictions ) ) {
+				$mi->restrictions = array();
+			}
+
 			$lists = array_merge( $lists, $restrictionHelper->getLists( $set, $mi->restrictions ) );
 
 			$mi_gsettings[$mi->id.'remap']	= array( 'area_change', 'MI' );
@@ -3784,7 +3792,7 @@ function editMicroIntegration ( $id, $option )
 			}
 
 			$gsettings = new aecSettings( 'MI', 'E' );
-			$gsettings->fullSettingsArray( $mi_gsettings, $set, $lists );
+			$gsettings->fullSettingsArray( $mi_gsettings, array_merge( $set, $mi->restrictions ), $lists );
 
 			$settings = new aecSettings( 'MI', $mi->class_name );
 			$settings->fullSettingsArray( $mi_settings, $set, $lists );

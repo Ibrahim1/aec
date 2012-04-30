@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '5049' );
+define( '_AEC_REVISION', '5057' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -18299,7 +18299,7 @@ class microIntegration extends serialParamDBTable
 
 	function declareParamFields()
 	{
-		return array( 'params' );
+		return array( 'params', 'restrictions' );
 	}
 
 	function functionProxy( $function, $data, $default=null )
@@ -18980,13 +18980,13 @@ class microIntegration extends serialParamDBTable
 
 		$restrictions = array();
 		foreach ( $fixed as $varname ) {
-			if ( !isset( $post[$varname] ) ) {
+			if ( !isset( $array[$varname] ) ) {
 				continue;
 			}
 
-			$restrictions[$varname] = $post[$varname];
+			$restrictions[$varname] = $array[$varname];
 
-			unset( $post[$varname] );
+			unset( $array[$varname] );
 		}
 
 		$this->restrictions = $restrictions;

@@ -310,6 +310,10 @@ if ( !empty( $metaUser->objSubscription->status ) ) {
 	$trial = $metaUser->objSubscription->status == 'Trial';
 }
 
+if ( empty( $properties['alert']['daysleft'] ) ) {
+	$properties['alert']['daysleft'] = null;
+}
+
 if ( strcmp( $properties['alert']['daysleft'], 'infinite' ) === 0 ) {
 	$daysleft			= JText::_('RENEW_DAYSLEFT_INFINITE');
 	$daysleft_append	= $trial ? JText::_('RENEW_DAYSLEFT_TRIAL') : JText::_('RENEW_DAYSLEFT');
