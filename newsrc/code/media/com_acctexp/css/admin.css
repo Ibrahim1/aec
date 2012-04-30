@@ -452,6 +452,10 @@ margin-left: 22%;
 width: 78%;
 }
 
+.form-stacked .control-group div.controls .span6 {
+width: inherit;
+}
+
 div.control-group form .controls {
 float: left;
 text-align: center;

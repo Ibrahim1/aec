@@ -3750,6 +3750,7 @@ function editMicroIntegration ( $id, $option )
 	if ( $mi->id ) {
 		// Call MI (override active check) and Settings
 		if ( $mi->callIntegration( true ) ) {
+
 			$set = array();
 			foreach ( $mi_gsettings as $n => $v ) {
 				if ( !isset( $mi->$n ) ) {
@@ -3762,6 +3763,14 @@ function editMicroIntegration ( $id, $option )
 					$set[$n] = $mi->$n;
 				}
 			}
+
+			$restrictionHelper = new aecRestrictionHelper();
+
+			$mi_gsettings['restr_remaps']	= array( 'subarea_change', 'restrictions' );
+
+			$mi_gsettings = array_merge( $mi_gsettings, $restrictionHelper->getParams() );
+
+			$lists = array_merge( $lists, $restrictionHelper->getLists( $set, $mi->restrictions ) );
 
 			$mi_gsettings[$mi->id.'remap']	= array( 'area_change', 'MI' );
 			$mi_gsettings[$mi->id.'remaps']	= array( 'subarea_change', $mi->class_name );
@@ -3783,8 +3792,6 @@ function editMicroIntegration ( $id, $option )
 			// Call HTML Class
 			$aecHTML = new aecHTML( array_merge( $gsettings->settings, $settings->settings ), array_merge( $gsettings->lists, $settings->lists ) );
 
-			$aecHTML->hasSettings = false;
-
 			$aecHTML->hasHacks = method_exists( $mi->mi_class, 'hacks' );
 
 			$aecHTML->customparams = array();
@@ -3793,6 +3800,8 @@ function editMicroIntegration ( $id, $option )
 			}
 
 			$aecHTML->hasSettings = true;
+
+			$aecHTML->hasRestrictions = !empty( $mi->settings['has_restrictions'] );
 		} else {
 			$short	= 'microIntegration loading failure';
 			$event	= 'When trying to load microIntegration: ' . $mi->id . ', callIntegration failed';
@@ -3810,6 +3819,8 @@ function editMicroIntegration ( $id, $option )
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
 		$aecHTML->hasSettings = false;
+
+		$aecHTML->hasRestrictions = false;
 	}
 
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
@@ -4800,12 +4811,12 @@ function aec_stats( $option, $page )
 	$stats = array();
 
 	$document=& JFactory::getDocument();
-	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.layout.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/rickshaw/rickshaw.js"></script>' );
-	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
-	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
+	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.time.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.layout.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.js"></script>' );
+	$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
+	$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 
 	$db = &JFactory::getDBO();
 

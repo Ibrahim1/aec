@@ -1518,6 +1518,10 @@ jQuery(document).ready(function(jQuery) {
 			$tabs->newTab( 'settings', JText::_('MI_E_SETTINGS') );
 		}
 
+		if ( $aecHTML->hasRestrictions ) {
+			$tabs->newTab( 'restrictions', JText::_('MI_E_RESTRICTIONS') );
+		}
+
 		if ( !empty( $aecHTML->customparams ) ) {
 			foreach ( $aecHTML->customparams as $name ) {
 				if ( strpos( $name, 'aectab_' ) === 0 ) {
@@ -1544,6 +1548,8 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'has_restrictions' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
 				</div>
 			</td>
 			<td>
@@ -1611,6 +1617,17 @@ jQuery(document).ready(function(jQuery) {
 							}
 						} ?>
 						</div>
+					</td>
+				</tr>
+			</table>
+		<?php }
+
+		if ( $aecHTML->hasRestrictions ) {
+			$tabs->nextPane( 'restrictions' ); ?>
+			<table width="100%" class="aecadminform">
+				<tr>
+					<td>
+						<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 					</td>
 				</tr>
 			</table>
@@ -1929,13 +1946,6 @@ jQuery(document).ready(function(jQuery) {
 			</td></tr>
 			<tr><td>
 				<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-				<div class="aec_userinfobox_sub">
-					<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
-					<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-					<br />
-					<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-				</div>
 			</td></tr>
 		</table>
 		<?php $tabs->nextPane( 'trial' ); ?>
@@ -2219,13 +2229,6 @@ jQuery(document).ready(function(jQuery) {
 		<table class="aecadminform">
 		<tr><td>
 			<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-			<div class="aec_userinfobox_sub">
-				<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-				<br />
-				<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-			</div>
 		</td></tr>
 		</table>
 		<?php $tabs->nextPane( 'mis' ); ?>
@@ -2833,7 +2836,7 @@ jQuery(document).ready(function(jQuery) {
 						.source("sales")
 						.canvas(200, 200, 10);
 
-						var day = cf.target("div#compare-day-last")
+						cf.target("div#compare-day-last")
 						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
 						.create("sunburst")
@@ -2851,7 +2854,7 @@ jQuery(document).ready(function(jQuery) {
 						.target("div#compare-day-compare")
 						.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
 
-						var week = cf.target("div#compare-week-last")
+						cf.target("div#compare-week-last")
 						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))-86400*7) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))-86400) . ' 23:59:59'; ?>")
 						.create("sunburst")
@@ -2868,7 +2871,7 @@ jQuery(document).ready(function(jQuery) {
 						.target("div#compare-week-compare")
 						.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
 
-						var month = cf.target("div#compare-month-last")
+						cf.target("div#compare-month-last")
 						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
 						.create("sunburst")
@@ -2885,7 +2888,7 @@ jQuery(document).ready(function(jQuery) {
 						.target("div#compare-month-compare")
 						.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
 
-						var year = cf.target("div#compare-year-last")
+						cf.target("div#compare-year-last")
 						.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
 						.create("sunburst")

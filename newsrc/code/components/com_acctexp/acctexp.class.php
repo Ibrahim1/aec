@@ -8560,8 +8560,6 @@ class SubscriptionPlan extends serialParamDBTable
 						}
 					}
 				}
-
-				unset( $mi );
 			}
 		} else {
 			return null;
@@ -17889,10 +17887,20 @@ class microIntegrationHandler
 					$mi = new microIntegration( $db );
 					$mi->load( $mi_id );
 					if ( $mi->callIntegration() ) {
-						$mi->expiration_action( $metaUser, $subscription_plan );
+						$invoice = null;
+						if ( !empty( $metaUser->focusSubscription->id ) ) {
+							$invoice = new Invoice( $db );
+							$invoice->loadbySubscriptionId( $metaUser->focusSubscription->id );
+							
+							if ( empty( $invoice->id ) ) {
+								$invoice = null;
+							}
+						}
+
+						$mi->expiration_action( $metaUser, $subscription_plan, $invoice );
 						
 						if ( !empty( $special ) ) {
-							$mi->relayAction( $metaUser, null, null, $subscription_plan, $special );
+							$mi->relayAction( $metaUser, null, $invoice, $subscription_plan, $special );
 						}
 					}
 				}
@@ -18275,6 +18283,8 @@ class microIntegration extends serialParamDBTable
 	var $class_name			= null;
 	/** @var text */
 	var $params				= null;
+	/** @var text */
+	var $restrictions		= null;
 	/** @var int */
 	var $auto_check			= null;
 	/** @var int */
@@ -18374,6 +18384,41 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
+	function checkPermission( $metaUser, $invoice )
+	{
+		$permission = true;
+
+		if ( !empty( $this->restrictions['has_restrictions'] ) ) {
+			if ( is_object( $invoice ) ) { 
+				if ( !empty( $invoice->params['stickyMIpermissions'][$this->id] ) ) {
+					return true;
+				}
+			}
+
+			$restrictions = $this->getRestrictionsArray();
+
+			$permission = aecRestrictionHelper::checkRestriction( $restrictions, $metaUser );
+
+			if ( !empty( $this->restrictions['sticky_permissions'] ) && is_object( $invoice ) ) {
+				if ( empty( $invoice->params['stickyMIpermissions'] ) ) {
+					$invoice->params['stickyMIpermissions'] = array();
+				}
+
+				$invoice->params['stickyMIpermissions'][$this->id] = $permission;
+				$invoice->storeload();
+			}
+
+			return $permission;
+		} else {
+			return true;
+		}
+	}
+
+	function getRestrictionsArray()
+	{
+		return aecRestrictionHelper::getRestrictionsArray( $this->restrictions );
+	}
+
 	function action( &$metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
 		$add = $params = false;
@@ -18434,7 +18479,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function expiration_action( &$metaUser, $objplan=null )
+	function expiration_action( &$metaUser, $objplan=null, $invoice=null )
 	{
 		// IF ExpireAllInstances=0 AND hasMoreThanOneInstance -> return null
 		if ( empty( $this->settings['_aec_global_exp_all'] ) ) {
@@ -18446,7 +18491,7 @@ class microIntegration extends serialParamDBTable
 
 		$add = $params = false;
 
-		return $this->relayAction( $metaUser, null, null, $objplan, 'expiration_action', $add, $params );
+		return $this->relayAction( $metaUser, null, $invoice, $objplan, 'expiration_action', $add, $params );
 	}
 
 	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add, &$params )
@@ -18463,6 +18508,10 @@ class microIntegration extends serialParamDBTable
 					return null;
 				}
 			}
+		}
+
+		if ( !$this->checkPermission( $metaUser, $invoice ) ) {
+			return null;
 		}
 
 		$db = &JFactory::getDBO();
@@ -18806,6 +18855,8 @@ class microIntegration extends serialParamDBTable
 		$settings['_aec_global_exp_all']	= array( 'toggle', 0 );
 		$settings['on_userchange']			= array( 'toggle', 1 );
 		$settings['pre_exp_check']			= array( 'inputB', '' );
+		$settings['has_restrictions']		= array( 'toggle', 0 );
+		$settings['sticky_permissions']		= array( 'toggle', 1 );
 
 		return $settings;
 	}
@@ -18920,6 +18971,25 @@ class microIntegration extends serialParamDBTable
 	{
 		// Strip out params that we don't need
 		$params = $this->stripNonParams( $array );
+
+		// Filter out restrictions
+		$fixed = aecRestrictionHelper::paramList();
+
+		$fixed[] = 'has_restrictions';
+		$fixed[] = 'sticky_permissions';
+
+		$restrictions = array();
+		foreach ( $fixed as $varname ) {
+			if ( !isset( $post[$varname] ) ) {
+				continue;
+			}
+
+			$restrictions[$varname] = $post[$varname];
+
+			unset( $post[$varname] );
+		}
+
+		$this->restrictions = $restrictions;
 
 		// Check whether there is a custom function for saving params
 		$new_params = $this->functionProxy( 'saveparams', $params, $params );
@@ -20793,7 +20863,7 @@ class aecRestrictionHelper
 			}
 		}
 
-		// Check for a directly previously used plan
+		// Check for custom restrictions
 		if ( !empty( $restrictions['custom_restrictions_enabled'] ) ) {
 			if ( !empty( $restrictions['custom_restrictions'] ) ) {
 				$newrest['custom_restrictions'] = aecRestrictionHelper::transformCustomRestrictions( $restrictions['custom_restrictions'] );
@@ -20975,17 +21045,20 @@ class aecRestrictionHelper
 		$stdvars =	array(	array(
 									array( 'mingid_enabled', 'mingid' ),
 									array( 'fixgid_enabled', 'fixgid' ),
-									array( 'maxgid_enabled', 'maxgid' ),
+									array( 'maxgid_enabled', 'maxgid' )
+							),
+							array(
+									array( 'custom_restrictions_enabled', 'custom_restrictions' )
 							),	array(
 									array( 'previous*_req_enabled', 'previous*_req' ),
 									array( 'previous*_req_enabled_excluded', 'previous*_req_excluded' ),
 									array( 'current*_req_enabled', 'current*_req' ),
 									array( 'current*_req_enabled_excluded', 'current*_req_excluded' ),
 									array( 'overall*_req_enabled', 'overall*_req' ),
-									array( 'overall*_req_enabled_excluded', 'overall*_req_excluded' ),
+									array( 'overall*_req_enabled_excluded', 'overall*_req_excluded' )
 							), array(
 									array( 'used_*_min_enabled', 'used_*_min_amount', 'used_*_min' ),
-									array( 'used_*_max_enabled', 'used_*_max_amount', 'used_*_max' ),
+									array( 'used_*_max_enabled', 'used_*_max_amount', 'used_*_max' )
 							)
 					);
 
@@ -21005,7 +21078,12 @@ class aecRestrictionHelper
 
 				foreach ( $block as $sblock ) {
 
-					echo '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">';
+					if ( count( $block ) < 2 ) {
+						echo '<div class="aec_userinfobox_sub_inline">';
+					} else {
+						echo '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">';
+					}
+
 					foreach ( $sblock as $vname ) {
 						echo $aecHTML->createSettingsParticle( str_replace( '*', $type, $vname ) );
 					}
