@@ -560,7 +560,7 @@ class HTML_AcctExp
 											if ( $i == $aecHTML->invoice_page ) {
 												$plist[] = ( $i + 1 );
 											} else {
-												$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
+												$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&amp;page=' . $i . '">' . ( $i + 1 ) . '</a>';
 											}
 										}
 										echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
@@ -573,7 +573,7 @@ class HTML_AcctExp
 								?>
 							</tbody>
 							<tfoot>
-								<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><i class="bsicon-plus bsicon-white"></i> Add Invoice</a></td></tr>
+								<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><i class="bsicon-plus bsicon-white"></i> Add Invoice</a></td></tr>
 							</tfoot>
 						</table>
 					</div>

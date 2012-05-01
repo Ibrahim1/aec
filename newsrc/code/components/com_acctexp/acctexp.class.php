@@ -13379,7 +13379,7 @@ class Invoice extends serialParamDBTable
 		}
 
 		// Filter out fixed variables
-		$fixed = array( 'active', 'userid', 'fixed', 'method', 'created_date', 'amount' );
+		$fixed = array( 'active', 'userid', 'usage', 'fixed', 'method', 'created_date', 'amount' );
 
 		foreach ( $fixed as $varname ) {
 			if ( isset( $post[$varname] ) ) {
@@ -13397,6 +13397,10 @@ class Invoice extends serialParamDBTable
 
 		if ( empty( $this->invoice_number ) ) {
 			$this->invoice_number = $this->generateInvoiceNumber();
+		}
+
+		if ( !empty( $this->usage ) ) {
+			$this->computeAmount();
 		}
 
 		//$this->saveParams( $params );
