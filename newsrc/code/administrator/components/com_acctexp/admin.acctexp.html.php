@@ -2855,19 +2855,19 @@ jQuery(document).ready(function(jQuery) {
 						.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
 
 						cf.target("div#compare-week-last")
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))-86400*7) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))-86400) . ' 23:59:59'; ?>")
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
 						.create("sunburst")
 						.target("div#compare-week-graph-last")
 						.create("rickshaw",{ unit:"day" })
 						.target("div#compare-week-this")
-						.range(	"<?php echo gmdate('Y-m-d', (gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))+86400*6) . ' 23:59:59'; ?>")
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
 						.create("sunburst")
 						.target("div#compare-week-graph-this")
 						.create("rickshaw",{ unit:"day" })
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))-86400*7) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))+86400*6) . ' 23:59:59'; ?>")
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
 						.target("div#compare-week-compare")
 						.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
 

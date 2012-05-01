@@ -761,7 +761,8 @@ d3.chart.rickshaw = function () {
 
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][year(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][year(xdate)]  };
 		} else if ( params.unit == "hour" ) {
-			params.end.setHours(24,15,15,0);
+			params.end.setDate(params.end.getDate()+1);
+			params.end.setHours(0,0,0,0);
 
 			var units = d3.time.hours(params.start, params.end);
 
@@ -820,7 +821,7 @@ d3.chart.rickshaw = function () {
 				xFormatter: xFormatter
 			} );
 
-			var axes = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:12} );
+			var axes = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:1, ticksTreatment:'xtick-shifted-'+params.unit } );
 
 			axes.render();
 		}
