@@ -58,6 +58,9 @@ class mi_iproperty
 		$settings['set_fagents']		= array( 'inputA' );
 		$settings['add_fagents']		= array( 'inputA' );
 
+		$settings['set_images']			= array( 'inputA' );
+		$settings['add_images']			= array( 'inputA' );
+
 		$settings['rebuild']			= array( 'toggle' );
 		$settings['remove']				= array( 'toggle' );
 
@@ -249,6 +252,16 @@ class mi_iproperty
 				$company->params['maxfagents'] += $this->settings['add_fagents'];
 			} else {
 				$company->params['maxfagents'] = $this->settings['add_fagents'];
+			}
+		}
+
+		if ( !empty( $this->settings['set_images'] ) ) {
+			$company->params['maximgs'] = $this->settings['set_images'];
+		} elseif ( !empty( $this->settings['add_images'] ) ) {
+			if ( isset( $company->params['maxagents'] ) ) {
+				$company->params['maximgs'] += $this->settings['add_images'];
+			} else {
+				$company->params['maximgs'] = $this->settings['add_images'];
 			}
 		}
 
