@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="processor-details">
-	<img src="<?php echo $processor->getLogoPath() . '" alt="' . $processor->info['longname'] . '" title="' . $processor->info['longname'] ?>" />
+	<?php echo $processor->getLogoImg() ?>
 	<p><?php if ( isset( $processor->info['description'] ) ) { echo $processor->info['description']; } ?></p>
 	<?php if ( $tmpl->cfg['displayccinfo'] && !empty( $processor->info['cc_list'] ) ) { ?>
 		<div class="processor-cc-icons">
