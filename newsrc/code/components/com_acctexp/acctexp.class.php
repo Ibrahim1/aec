@@ -6508,10 +6508,10 @@ class aecHTML
 				$return = '';
 				if ( is_array( $value ) ) {
 					foreach ( $value as $v ) {
-						$return .= '<input type="hidden" name="' . $name . '[]" value="' . $v . '" />';
+						$return .= '<input id="' . $name . '" type="hidden" name="' . $name . '[]" value="' . $v . '" />';
 					}
 				} else {
-					$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '" />';
+					$return .= '<input id="' . $name . '" type="hidden" name="' . $name . '" value="' . $value . '" />';
 				}
 				break;
 			default:

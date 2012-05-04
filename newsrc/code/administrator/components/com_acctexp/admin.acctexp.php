@@ -3717,44 +3717,72 @@ function editMicroIntegration ( $id, $option )
 		$mi_handler = new microIntegrationHandler();
 		$mi_list = $mi_handler->getIntegrationList();
 
-		$mi_htmllist	= array();
+		$drilldown = array( 'all' => array() );
+
+		$mi_gsettings['class_name']		= array( 'hidden' );
+		$mi_gsettings['class_list']		= array( 'list' );
+
 		if ( count( $mi_list ) > 0 ) {
 			foreach ( $mi_list as $name ) {
 				$mi_item = new microIntegration( $db );
 				$mi_item->class_name = $name;
 				if ( $mi_item->callIntegration() ) {
-					if ( strpos( $name, "mi_aec" ) === 0 ) {
-						$nname = "[AEC] " . $mi_item->name;
-					} else {
-						$nname = $mi_item->name;
+					if ( isset( $mi_item->info['type'] ) ) {
+						foreach ( $mi_item->info['type'] as $type ) {
+							$drill = explode( '.', $type );
+
+							$cursor =& $drilldown;
+
+							foreach ( $drill as $i => $k ) {
+								if ( !isset( $cursor[$k] ) ) {
+									$cursor[$k] = array();
+								}
+
+								if ( $i == count( $drill )-1 ) {
+									$cursor[$k][] = '<a href="#' . $mi_item->class_name . '"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
+								} else {
+									$cursor =& $cursor[$k]; 
+								}
+							}
+						}
 					}
 
-					$len = 60 - AECToolbox::visualstrlen( trim( $nname ) );
-					if ( defined( 'JPATH_MANIFESTS' ) ) {
-						// 1.6 blows up when you put in &nbps;s, so we change them later
-						$fullname = str_pad( $nname, $len, '#' ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
-					} else {
-						$fullname = str_replace( '#', '&nbsp;', str_pad( $nname, $len, '#' ) ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
-					}
-
-					$mi_htmllist[] = JHTML::_('select.option', $name, $fullname );
+					$drilldown['all'][] = '<a href="#' . $mi_item->class_name . '"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
 				}
 			}
 
-			$lists['class_name'] = JHTML::_('select.genericlist', $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" style="width:760px;"', 'value', 'text', '' );
+			$lists['class_list'] = '<a tabindex="0" href="#mi-select-list" class="btn btn-primary" id="drilldown">Select an Integration</a>';
 
-			if ( defined( 'JPATH_MANIFESTS' ) ) {
-				$lists['class_name'] = str_replace( '#', '&nbsp;', $lists['class_name'] );
+			$lists['class_list'] .= '<div id="mi-select-list" class="hidden"><ul>';
+			foreach ( $drilldown as $lin => $li ) {
+				$lists['class_list'] .= '<li><a href="#">' . $lin . '</a><ul>';
+
+				foreach ( $li as $lixn => $lix ) {
+					if ( is_array( $lix ) ) {
+						$lists['class_list'] .= '<li><a href="#">' . $lixn . '</a><ul>';
+
+						foreach ( $lix as $mix ) {
+							$lists['class_list'] .= '<li>' . $mix . '</li>';
+						}
+
+						$lists['class_list'] .= '</ul></li>';
+					} else {
+						$lists['class_list'] .= '<li>' . $lix . '</li>';
+					}
+				}
+
+				$lists['class_list'] .= '</ul></li>';
 			}
+			$lists['class_list'] .= '</ul></div>';
+
 		} else {
-			$lists['class_name'] = '';
+			$lists['class_list'] = '';
 		}
 	}
 
 	if ( $mi->id ) {
 		// Call MI (override active check) and Settings
 		if ( $mi->callIntegration( true ) ) {
-
 			$set = array();
 			foreach ( $mi_gsettings as $n => $v ) {
 				if ( !isset( $mi->$n ) ) {

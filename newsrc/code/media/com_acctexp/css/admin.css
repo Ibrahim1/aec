@@ -320,6 +320,24 @@ a.btn span {
 display: none;
 }
 
+a#drilldown {
+line-height: 160%;
+}
+
+a.btn span.label {
+display: inline-block;
+padding-bottom: 0;
+text-transform: none;
+position: relative;
+font-size: 105%;
+line-height: 150%;
+}
+
+.controls span.label {
+padding: 1px 8px 6px;
+text-transform: none;
+}
+
 a.btn span.btnhover {
 margin-left: 8px;
 display: inline;
@@ -796,6 +814,14 @@ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25);
 -webkit-box-shadow: none;
 -moz-box-shadow: none;
 box-shadow: none;
+}
+
+.mi-menu-mi-name {
+font-weight: bold;
+}
+
+.mi-menu-mi-desc {
+font-size: 80%;
 }
 
 .tooltip-inner {

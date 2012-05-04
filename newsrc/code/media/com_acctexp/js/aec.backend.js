@@ -125,6 +125,20 @@ jQuery(document).ready(function(jQuery) {
 	jQuery('.jqui-datetimepicker').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss', changeMonth: true, changeYear: true, showWeek: true, showOtherMonths: true, selectOtherMonths: true, showSecond: true, hourGrid: 6, minuteGrid: 10, secondGrid: 10  });
 
 	jQuery('.jqui-multiselect').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
+
+	jQuery('#drilldown').menu({
+		content: jQuery('#drilldown').next().html(),
+		backLink: false,
+		width: "260px",
+		maxHeight: 286,
+		select: function(item) {
+			jQuery('#name').val(jQuery(".mi-menu-mi-name", item).html());
+			jQuery('#desc').val(jQuery(".mi-menu-mi-desc", item).html());
+			jQuery('#class_name').val(item.hash.slice(1));
+			jQuery('a#drilldown').html("Selected: <span class=\"label label-important\">"+jQuery(".mi-menu-mi-name", item).html()+"</span>");
+		}
+	});
+
 });
 
 function readNotice(id) {

@@ -24,7 +24,7 @@ if ( !empty( $tmpl->cfg['confirm_as_gift'] ) ) {
 }
 
 if ( !empty( $tmpl->cfg['tos'] ) ) {
-	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
+	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
 	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 
 	$js = '

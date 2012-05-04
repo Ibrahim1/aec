@@ -62,16 +62,18 @@ class HTML_myCommon
 			$document->addScript( JURI::root(true).'/media/system/js/core.js' );
 		}
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.18.custom.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.compressed.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
 
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery-ui-1.8.16.custom.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/ui.daterangepicker.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.multiselect.css' . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/fg.menu.css' . '" />' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.backend.js' );
@@ -1540,6 +1542,15 @@ jQuery(document).ready(function(jQuery) {
 				<div class="aec_userinfobox_sub">
 					<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
 					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
+						<?php echo $aecHTML->createSettingsParticle( 'class_name' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'class_list' ); ?>
+					<?php } else { ?>
+						<div class="control-group">
+							<label class="control-label" for="class_name">Integration Type</label>
+							<div class="controls"><span class="label label-important">Test</span></div>
+						</div>
+					<?php } ?>
 					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
@@ -1550,26 +1561,6 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'has_restrictions' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
-				</div>
-			</td>
-			<td>
-				<div class="aec_userinfobox_sub">
-					<h4><?php echo JText::_('MI_E_DETAILS') . ' - ' . JText::_('MI_E_FUNCTION_NAME'); ?></h4>
-					<div style="position:relative;">
-					<?php if ( !$aecHTML->hasSettings ) {
-						if ( $lists['class_name'] ) {
-							echo $lists['class_name']; ?>
-							
-							<?php
-							echo "<p>" . JText::_('MI_E_FUNCTION_DESC') . "</p>";
-						} else {
-							echo "<p>" . JText::_('AEC_MSG_MIS_NOT_DEFINED') . "</p>";
-						}
-					} else {
-						echo "<p><strong>" . $row->class_name . "</p></strong>";
-					}
-					?>
-					</div>
 				</div>
 				<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
 					<div class="aec_userinfobox_sub">
