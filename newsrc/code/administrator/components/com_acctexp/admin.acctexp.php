@@ -4396,14 +4396,14 @@ function removeCoupon( $id, $option, $returnTask )
 {
 	$db = &JFactory::getDBO();
 
-	$idx = explode($id);
-
 	$rids = $sids = array();
-	foreach ( $idx as $ctype => $cid ) {
-		if ( $ctype ) {
-			$sids[] = $cid;
+	foreach ( $id as $i ) {
+		$ex = explode( '.', $i );
+
+		if ( $ex[0] ) {
+			$sids[] = $ex[1];
 		} else {
-			$rids[] = $cid;
+			$rids[] = $ex[1];
 		}
 	}
 
