@@ -198,9 +198,6 @@ function Menu(caller, options){
 		// aria roles & attributes
 		container.find('ul').attr('role', 'menu').eq(0).attr('aria-activedescendant','active-menuitem').attr('aria-labelledby', caller.attr('id'));
 		container.find('li').attr('role', 'menuitem');
-		jQuery('.fg-menu-container>ul>li>ul').scroll(function(e){
-			//jQuery(e.currentTarget).scrollTop(0);
-		});
 		container.find('li:has(ul)').attr('aria-haspopup', 'true').find('ul').attr('aria-expanded', 'false');
 		container.find('a').attr('tabindex', '-1');
 		
