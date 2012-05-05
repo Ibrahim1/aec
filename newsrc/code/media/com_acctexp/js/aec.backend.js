@@ -131,6 +131,7 @@ jQuery(document).ready(function(jQuery) {
 		backLink: false,
 		width: "260px",
 		maxHeight: 286,
+		topLinkText: 'Root',
 		select: function(item) {
 			jQuery('#name').val(jQuery(".mi-menu-mi-name", item).html());
 			jQuery('#desc').val(jQuery(".mi-menu-mi-desc", item).html());

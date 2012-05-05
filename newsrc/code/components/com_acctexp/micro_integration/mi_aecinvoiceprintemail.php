@@ -18,6 +18,7 @@ class mi_aecinvoiceprintemail
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECINVOICEPRINTEMAIL');
 		$info['desc'] = JText::_('AEC_MI_DESC_AECINVOICEPRINTEMAIL');
+		$info['type'] = array( 'aec.invoice', 'vendor.valanx' );
 
 		return $info;
 	}

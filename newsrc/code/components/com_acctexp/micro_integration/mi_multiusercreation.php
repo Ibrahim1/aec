@@ -17,6 +17,7 @@ class mi_multiusercreation
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MULTIUSERCREATION');
 		$info['desc'] = JText::_('AEC_MI_DESC_MULTIUSERCREATION');
+		$info['type'] = array( 'aec.membership', 'vendor.valanx' );
 
 		return $info;
 	}

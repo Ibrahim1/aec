@@ -20,6 +20,7 @@ class mi_juga
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JUGA');
 		$info['desc'] = JText::_('AEC_MI_DESC_JUGA');
+		$info['type'] = array( 'directory_documentation.directory', 'vendor.dioscouri' );
 
 		return $info;
 	}

@@ -18,6 +18,7 @@ class mi_redshop
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_REDSHOP');
 		$info['desc'] = JText::_('AEC_MI_DESC_REDSHOP');
+		$info['type'] = array( 'ecommerce.shopping_cart', 'vendor.redcomponent' );
 
 		return $info;
 	}

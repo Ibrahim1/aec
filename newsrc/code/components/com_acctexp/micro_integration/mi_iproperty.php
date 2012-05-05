@@ -18,6 +18,7 @@ class mi_iproperty
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_IPROPERTY_NAME');
 		$info['desc'] = JText::_('AEC_MI_IPROPERTY_DESC');
+		$info['type'] = array( 'vertical_markets.real_estate', 'vendor.the_thinkery' );
 
 		return $info;
 	}

@@ -18,6 +18,7 @@ class mi_jobs
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JOBS');
 		$info['desc'] = JText::_('AEC_MI_DESC_JOBS');
+		$info['type'] = array( 'vendor.instant_php' );
 
 		return $info;
 	}

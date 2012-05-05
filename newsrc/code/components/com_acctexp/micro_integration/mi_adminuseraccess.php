@@ -18,7 +18,7 @@ class mi_adminuseraccess
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ADMINUSERACCESS');
 		$info['desc'] = JText::_('AEC_MI_DESC_ADMINUSERACCESS');
-		$info['type'] = array( 'user.access_restriction' );
+		$info['type'] = array( 'user.access_restriction', 'vendor.pages-and-items' );
 
 		return $info;
 	}

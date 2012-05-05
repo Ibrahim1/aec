@@ -18,6 +18,7 @@ class mi_aecmodifycost
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AECMODIFYCOST_NAME');
 		$info['desc'] = JText::_('AEC_MI_AECMODIFYCOST_DESC');
+		$info['type'] = array( 'aec.checkout', 'vendor.valanx' );
 
 		return $info;
 	}

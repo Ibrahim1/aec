@@ -18,6 +18,7 @@ class mi_webex
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_WEBEX_NAME');
 		$info['desc'] = JText::_('AEC_MI_WEBEX_DESC');
+		$info['type'] = array( 'services.external' );
 
 		return $info;
 	}

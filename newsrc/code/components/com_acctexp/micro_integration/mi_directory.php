@@ -18,6 +18,7 @@ class mi_directory
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_DIRECTORY');
 		$info['desc'] = JText::_('AEC_MI_DESC_DIRECTORY');
+		$info['type'] = array( 'basic.filesystem', 'system', 'vendor.valanx' );
 
 		return $info;
 	}

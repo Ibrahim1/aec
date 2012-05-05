@@ -18,6 +18,7 @@ class mi_aecuserdetails
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECUSERDETAILS');
 		$info['desc'] = JText::_('AEC_MI_DESC_AECUSERDETAILS');
+		$info['type'] = array( 'aec.membership', 'vendor.valanx' );
 
 		return $info;
 	}

@@ -18,6 +18,7 @@ class mi_email extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_EMAIL');
 		$info['desc'] = JText::_('AEC_MI_DESC_EMAIL');
+		$info['type'] = array( 'communication.email', 'basic.email', 'system', 'vendor.valanx' );
 
 		return $info;
 	}

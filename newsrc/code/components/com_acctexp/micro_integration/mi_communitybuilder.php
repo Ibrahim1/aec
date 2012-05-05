@@ -17,6 +17,7 @@ class mi_communitybuilder
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_COMMUNITYBUILDER');
 		$info['desc'] = JText::_('AEC_MI_DESC_COMMUNITYBUILDER');
+		$info['type'] = array( 'communtity.social', 'vendor.joomlapolis' );
 
 		return $info;
 	}

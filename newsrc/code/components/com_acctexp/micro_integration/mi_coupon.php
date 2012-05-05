@@ -18,6 +18,7 @@ class mi_coupon
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_COUPON');
 		$info['desc'] = JText::_('AEC_MI_DESC_COUPON');
+		$info['type'] = array( 'aec.invoice', 'aec.tools', 'vendor.valanx' );
 
 		return $info;
 	}

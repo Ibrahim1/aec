@@ -20,6 +20,7 @@ class mi_phpbb3
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PHPBB3');
 		$info['desc'] = JText::_('AEC_MI_DESC_PHPBB3');
+		$info['type'] = array( 'communication.forum', 'vendor.phpbb' );
 
 		return $info;
 	}

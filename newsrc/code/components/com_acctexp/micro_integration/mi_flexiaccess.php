@@ -20,6 +20,7 @@ class mi_flexiaccess
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_FLEXIACCESS');
 		$info['desc'] = JText::_('AEC_MI_DESC_FLEXIACCESS');
+		$info['type'] = array( 'user.access_restriction', 'vendor.flexicontent' );
 
 		return $info;
 	}

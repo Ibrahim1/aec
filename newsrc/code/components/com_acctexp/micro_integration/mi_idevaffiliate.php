@@ -18,6 +18,7 @@ class mi_idevaffiliate
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_IDEV');
 		$info['desc'] = JText::_('AEC_MI_DESC_IDEV');
+		$info['type'] = array( 'tracking.affiliate', 'vendor.idevdirect' );
 
 		return $info;
 	}

@@ -18,6 +18,7 @@ class mi_http_query extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_HTTP_QUERY');
 		$info['desc'] = JText::_('AEC_MI_DESC_HTTP_QUERY');
+		$info['type'] = array( 'basic.server', 'system', 'vendor.valanx' );
 
 		return $info;
 	}

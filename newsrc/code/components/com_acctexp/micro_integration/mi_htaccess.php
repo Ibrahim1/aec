@@ -17,6 +17,7 @@ class mi_htaccess
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_HTACCESS');
 		$info['desc'] = JText::_('AEC_MI_DESC_HTACCESS');
+		$info['type'] = array( 'basic.server', 'system', 'vendor.valanx' );
 
 		return $info;
 	}

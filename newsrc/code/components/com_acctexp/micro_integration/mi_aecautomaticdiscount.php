@@ -18,6 +18,7 @@ class mi_aecautomaticdiscount
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AECAUTOMATICDISCOUNT_NAME');
 		$info['desc'] = JText::_('AEC_MI_AECAUTOMATICDISCOUNT_DESC');
+		$info['type'] = array( 'aec.checkout', 'vendor.valanx' );
 
 		return $info;
 	}

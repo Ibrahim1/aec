@@ -18,6 +18,7 @@ class mi_googleadsenseconversion
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_GOOGLEADSENSECONVERSION');
 		$info['desc'] = JText::_('AEC_MI_DESC_GOOGLEADSENSECONVERSION');
+		$info['type'] = array( 'tracking.analytics', 'vendor.google' );
 
 		return $info;
 	}

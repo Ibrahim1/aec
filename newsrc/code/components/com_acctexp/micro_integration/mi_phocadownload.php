@@ -18,6 +18,7 @@ class mi_phocadownload extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PHOCADOWNLOAD');
 		$info['desc'] = JText::_('AEC_MI_DESC_PHOCADOWNLOAD');
+		$info['type'] = array( 'directory_documentation.downloads', 'vendor.phoca' );
 
 		return $info;
 	}

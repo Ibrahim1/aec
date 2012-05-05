@@ -18,6 +18,7 @@ class mi_rstickets extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_RSTICKETS');
 		$info['desc'] = JText::_('AEC_MI_DESC_RSTICKETS');
+		$info['type'] = array( 'service.tickets', 'vendor.rsjoomla' );
 
 		return $info;
 	}

@@ -18,6 +18,7 @@ class mi_yourmembership_com
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_YOURMEMBERSHIP_COM_NAME');
 		$info['desc'] = JText::_('AEC_MI_YOURMEMBERSHIP_COM_DESC');
+		$info['type'] = array( 'services.external' );
 
 		return $info;
 	}

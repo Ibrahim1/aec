@@ -3713,6 +3713,8 @@ function editMicroIntegration ( $id, $option )
 	$mi_gsettings = $mi->getGeneralSettings();
 
 	if ( !$mi->id ) {
+		$lang = JFactory::getLanguage();
+
 		// Create MI Selection List
 		$mi_handler = new microIntegrationHandler();
 		$mi_list = $mi_handler->getIntegrationList();
@@ -3733,13 +3735,15 @@ function editMicroIntegration ( $id, $option )
 
 							$cursor =& $drilldown;
 
+							$mi_item->name = str_replace( array(' AEC ', ' MI '), ' ', $mi_item->name );
+
 							foreach ( $drill as $i => $k ) {
 								if ( !isset( $cursor[$k] ) ) {
 									$cursor[$k] = array();
 								}
 
 								if ( $i == count( $drill )-1 ) {
-									$cursor[$k][] = '<a href="#' . $mi_item->class_name . '"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
+									$cursor[$k][] = '<a href="#' . $mi_item->class_name . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
 								} else {
 									$cursor =& $cursor[$k]; 
 								}
@@ -3747,19 +3751,33 @@ function editMicroIntegration ( $id, $option )
 						}
 					}
 
-					$drilldown['all'][] = '<a href="#' . $mi_item->class_name . '"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
+					$drilldown['all'][] = '<a href="#' . $mi_item->class_name . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
 				}
 			}
+
+			deep_ksort( $drilldown );
 
 			$lists['class_list'] = '<a tabindex="0" href="#mi-select-list" class="btn btn-primary" id="drilldown">Select an Integration</a>';
 
 			$lists['class_list'] .= '<div id="mi-select-list" class="hidden"><ul>';
 			foreach ( $drilldown as $lin => $li ) {
-				$lists['class_list'] .= '<li><a href="#">' . $lin . '</a><ul>';
+				if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lin ) ) ) {
+					$kkey = JText::_('AEC_MI_LIST_' . strtoupper( $lin ) );
+				} else {
+					$kkey = ucwords( str_replace('_', ' ', $lin) );
+				}
+
+				$lists['class_list'] .= '<li><a href="#">' . $kkey . '</a><ul>';
 
 				foreach ( $li as $lixn => $lix ) {
 					if ( is_array( $lix ) ) {
-						$lists['class_list'] .= '<li><a href="#">' . $lixn . '</a><ul>';
+						if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lixn ) ) ) {
+							$xkey = JText::_('AEC_MI_LIST_' . strtoupper( $lixn ) );
+						} else {
+							$xkey = ucwords( str_replace('_', ' ', $lixn) );
+						}
+	
+						$lists['class_list'] .= '<li><a href="#">' . $xkey . '</a><ul>';
 
 						foreach ( $lix as $mix ) {
 							$lists['class_list'] .= '<li>' . $mix . '</li>';
@@ -3860,6 +3878,17 @@ function editMicroIntegration ( $id, $option )
 	}
 
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
+}
+
+function deep_ksort( &$arr )
+{
+	ksort($arr);
+
+	foreach ( $arr as &$a ) {
+		if ( is_array($a) && !empty($a) ) {
+			deep_ksort($a);
+		}
+	}
 }
 
 function saveMicroIntegration( $option, $apply=0 )

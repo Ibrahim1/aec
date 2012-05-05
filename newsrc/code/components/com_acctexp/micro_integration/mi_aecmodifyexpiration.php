@@ -18,6 +18,7 @@ class mi_aecmodifyexpiration
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECMODIFYEXPIRATION');
 		$info['desc'] = JText::_('AEC_MI_DESC_AECMODIFYEXPIRATION');
+		$info['type'] = array( 'aec.membership', 'vendor.valanx' );
 
 		return $info;
 	}

@@ -18,7 +18,7 @@ class mi_acajoom
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ACAJOOM');
 		$info['desc'] = JText::_('AEC_MI_DESC_ACAJOOM');
-		$info['type'] = array( 'sharing.newsletter' );
+		$info['type'] = array( 'sharing.newsletter', 'vendor.joobi' );
 
 		return $info;
 	}

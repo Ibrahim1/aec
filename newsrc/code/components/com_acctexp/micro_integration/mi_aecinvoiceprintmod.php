@@ -18,6 +18,7 @@ class mi_aecinvoiceprintmod
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECINVOICEPRINTMOD');
 		$info['desc'] = JText::_('AEC_MI_DESC_AECINVOICEPRINTMOD');
+		$info['type'] = array( 'aec.invoice', 'vendor.valanx' );
 
 		return $info;
 	}

@@ -18,6 +18,7 @@ class mi_supporttimetracker extends MI
 		$info = array();
 		$info['name'] = 'Support Time Tracker';
 		$info['desc'] = 'Simple time tracker that can be used to keep track of support hours';
+		$info['type'] = array( 'aec.membership', 'service.tickets', 'vendor.valanx' );
 
 		return $info;
 	}

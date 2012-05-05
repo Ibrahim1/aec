@@ -19,6 +19,7 @@ class mi_fireboard
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_FIREBOARD');
 		$info['desc'] = JText::_('AEC_MI_DESC_FIREBOARD');
+		$info['type'] = array( 'communication.forum' );
 
 		return $info;
 	}

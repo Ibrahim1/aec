@@ -198,6 +198,9 @@ function Menu(caller, options){
 		// aria roles & attributes
 		container.find('ul').attr('role', 'menu').eq(0).attr('aria-activedescendant','active-menuitem').attr('aria-labelledby', caller.attr('id'));
 		container.find('li').attr('role', 'menuitem');
+		jQuery('.fg-menu-container>ul>li>ul').scroll(function(e){
+			//jQuery(e.currentTarget).scrollTop(0);
+		});
 		container.find('li:has(ul)').attr('aria-haspopup', 'true').find('ul').attr('aria-expanded', 'false');
 		container.find('a').attr('tabindex', '-1');
 		
@@ -205,8 +208,7 @@ function Menu(caller, options){
 		if (container.find('ul').size() > 1) {
 			if (options.flyOut) { menu.flyout(container, options); }
 			else { menu.drilldown(container, options); }	
-		}
-		else {
+		} else {
 			container.find('a').click(function(){
 				menu.chooseItem(this);
 				return false;
@@ -323,7 +325,7 @@ Menu.prototype.drilldown = function(container, options) {
 	breadcrumb.append(crumbDefaultHeader);
 	
 	var checkMenuHeight = function(el){
-		if (el.height() > options.maxHeight) { el.addClass('fg-menu-scroll') };	
+		if (el.height() > options.maxHeight) { el.addClass('fg-menu-scroll'); }
 		el.css({ height: options.maxHeight });
 	};
 	
@@ -365,12 +367,14 @@ Menu.prototype.drilldown = function(container, options) {
 		    		var parentLeft = (parentUl.is('.fg-menu-content')) ? 0 : parseFloat(topList.css('left'));    		
 		    		var nextLeftVal = Math.round(parentLeft - parseFloat(container.width()));
 		    		var footer = jQuery('.fg-menu-footer');
+		    		jQuery('.ui-widget-content').scrollTop(0);
 		    		
 		    		// show next menu   		
 		    		resetChildMenu(parentUl);
 		    		checkMenuHeight(nextList);
 					topList.animate({ left: nextLeftVal }, options.crossSpeed);						
-		    		nextList.show().addClass('fg-menu-current').attr('aria-expanded', 'true');    
+		    		nextList.show().addClass('fg-menu-current').attr('aria-expanded', 'true');
+		    		jQuery('.fg-menu-current').animate({ scrollTop: 0 }, 100);
 		    		
 		    		var setPrevMenu = function(backlink){
 		    			var b = backlink;
@@ -414,11 +418,8 @@ Menu.prototype.drilldown = function(container, options) {
 						newCrumb
 							.appendTo(breadcrumb)
 							.find('a').click(function(){
-								if (jQuery(this).parent().is('.fg-menu-current-crumb')){
-									menu.chooseItem(this);
-								}
-								else {
-									var newLeftVal = - (jQuery('.fg-menu-current').parents('ul').size() - 1) * 180;
+								if (!jQuery(this).parent().is('.fg-menu-current-crumb')){
+									var newLeftVal = - (jQuery('.fg-menu-current').parents('ul').size() - 1) * options.width.slice(0, options.width.length-2);
 									topList.animate({ left: newLeftVal }, options.crossSpeed, function(){
 										setPrevMenu();
 									});
