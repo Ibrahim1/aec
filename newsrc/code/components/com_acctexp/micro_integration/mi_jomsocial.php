@@ -17,6 +17,7 @@ class mi_jomsocial extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JOMSOCIAL');
 		$info['desc'] = JText::_('AEC_MI_DESC_JOMSOCIAL');
+		$info['type'] = array( 'communtity.social', 'vendor.azrul' );
 
 		return $info;
 	}

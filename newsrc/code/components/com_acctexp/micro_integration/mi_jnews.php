@@ -18,6 +18,7 @@ class mi_jnews
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JNEWS');
 		$info['desc'] = JText::_('AEC_MI_DESC_JNEWS');
+		$info['type'] = array( 'sharing.newsletter', 'vendor.joobi' );
 
 		return $info;
 	}

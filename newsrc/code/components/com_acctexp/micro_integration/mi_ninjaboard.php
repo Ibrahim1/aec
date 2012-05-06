@@ -18,6 +18,7 @@ class mi_ninjaboard
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_NINJABOARD');
 		$info['desc'] = JText::_('AEC_MI_DESC_NINJABOARD');
+		$info['type'] = array( 'communication.forum', 'vendor.ninjaforge' );
 
 		return $info;
 	}

@@ -19,6 +19,7 @@ class mi_vbulletin
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_VBULLETIN');
 		$info['desc'] = JText::_('AEC_MI_DESC_VBULLETIN');
+		$info['type'] = array( 'communication.forum', 'vendor.vbulletin' );
 
 		return $info;
 	}

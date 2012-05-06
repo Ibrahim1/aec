@@ -18,6 +18,7 @@ class mi_adsmanager extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_ADSMANAGER_NAME');
 		$info['desc'] = JText::_('AEC_MI_ADSMANAGER_DESC');
+		$info['type'] = array( 'user.access_restriction', 'vendor.joomprod' );
 
 		return $info;
 	}

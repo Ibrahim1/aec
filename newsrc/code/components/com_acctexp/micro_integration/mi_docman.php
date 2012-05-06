@@ -18,6 +18,7 @@ class mi_docman
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_DOCMAN');
 		$info['desc'] = JText::_('AEC_MI_DESC_DOCMAN');
+		$info['type'] = array( 'directory_documentation.downloads', 'vendor.joomlatools' );
 
 		return $info;
 	}

@@ -18,6 +18,7 @@ class mi_eventlist extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_EVENTLIST');
 		$info['desc'] = JText::_('AEC_MI_DESC_EVENTLIST');
+		$info['type'] = array( 'calendar_events.events' );
 
 		return $info;
 	}

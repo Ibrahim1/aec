@@ -18,6 +18,7 @@ class mi_pardot_marketing extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PARDOT_MARKETING');
 		$info['desc'] = JText::_('AEC_MI_DESC_PARDOT_MARKETING');
+		$info['type'] = array( 'services.external' );
 
 		return $info;
 	}

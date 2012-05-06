@@ -18,6 +18,7 @@ class mi_shareasale
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_SHAREASALE');
 		$info['desc'] = JText::_('AEC_MI_DESC_SHAREASALE');
+		$info['type'] = array( 'tracking.affiliate', 'vendor.shareasale' );
 
 		return $info;
 	}

@@ -94,34 +94,7 @@ class processor_realex_redirect extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
-
-		$response = array();
-		$response['invoice'] = $post['invoice'];
-		$response['amount_currency'] = $post['mc_currency'];
-
-		switch ( $post['txn_type'] ) {
-			case "web_accept":
-			case "subscr_payment":
-				$response['amount_paid'] = $post['mc_gross'];
-				break;
-			case "subscr_signup":
-			case "subscr_cancel":
-			case "subscr_modify":
-				// Docs suggest mc_amount1 is set with signup, cancel or modify
-				// Testing shows otherwise
-				$response['amount_paid'] = isset($post['mc_amount1']) ? $post['mc_amount1'] : null;
-			break;
-			case "subscr_failed":
-			case "subscr_eot":
-				// May create a problem somewhere donw the line, but NULL
-				// is a more representative value
-			break;
-			default:
-			// Either a fraud attempt, or PayPal has changed its API
-			// TODO: Raise Error
-			$response['amount_paid'] = null;
-		}
+		aecDebug($post);aecDebug($_GET);
 
 		return $response;
 	}

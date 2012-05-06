@@ -907,10 +907,14 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		}
 	}
 
-	$set_group	= $groups[0];
+	if ( array_search( 'notconfig', $groups ) ) {
+		$set_group	= 'notconfig';
+	} else {
+		$set_group	= $groups[0];
+	}
 
 	if ( !empty( $orderby ) ) {
-		if ( $set_group == "manual" ) {
+		if ( $set_group == "notconfig" ) {
 			$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
 								'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
 								);
@@ -3709,41 +3713,88 @@ function editMicroIntegration ( $id, $option )
 	$mi_gsettings = $mi->getGeneralSettings();
 
 	if ( !$mi->id ) {
+		$lang = JFactory::getLanguage();
+
 		// Create MI Selection List
 		$mi_handler = new microIntegrationHandler();
 		$mi_list = $mi_handler->getIntegrationList();
 
-		$mi_htmllist	= array();
+		$drilldown = array( 'all' => array() );
+
+		$mi_gsettings['class_name']		= array( 'hidden' );
+		$mi_gsettings['class_list']		= array( 'list' );
+
 		if ( count( $mi_list ) > 0 ) {
 			foreach ( $mi_list as $name ) {
 				$mi_item = new microIntegration( $db );
 				$mi_item->class_name = $name;
 				if ( $mi_item->callIntegration() ) {
-					if ( strpos( $name, "mi_aec" ) === 0 ) {
-						$nname = "[AEC] " . $mi_item->name;
-					} else {
-						$nname = $mi_item->name;
+					if ( isset( $mi_item->info['type'] ) ) {
+						foreach ( $mi_item->info['type'] as $type ) {
+							$drill = explode( '.', $type );
+
+							$cursor =& $drilldown;
+
+							$mi_item->name = str_replace( array(' AEC ', ' MI '), ' ', $mi_item->name );
+
+							foreach ( $drill as $i => $k ) {
+								if ( !isset( $cursor[$k] ) ) {
+									$cursor[$k] = array();
+								}
+
+								if ( $i == count( $drill )-1 ) {
+									$cursor[$k][] = '<a href="#' . $mi_item->class_name . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
+								} else {
+									$cursor =& $cursor[$k]; 
+								}
+							}
+						}
 					}
 
-					$len = 60 - AECToolbox::visualstrlen( trim( $nname ) );
-					if ( defined( 'JPATH_MANIFESTS' ) ) {
-						// 1.6 blows up when you put in &nbps;s, so we change them later
-						$fullname = str_pad( $nname, $len, '#' ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
-					} else {
-						$fullname = str_replace( '#', '&nbsp;', str_pad( $nname, $len, '#' ) ) . ' - ' . substr( $mi_item->desc, 0, 80 ) . ( strlen( $mi_item->desc ) > 80 ? '...' : '');
-					}
-
-					$mi_htmllist[] = JHTML::_('select.option', $name, $fullname );
+					$drilldown['all'][] = '<a href="#' . $mi_item->class_name . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
 				}
 			}
 
-			$lists['class_name'] = JHTML::_('select.genericlist', $mi_htmllist, 'class_name', 'size="' . min( ( count( $mi_list ) + 1 ), 25 ) . '" style="width:760px;"', 'value', 'text', '' );
+			deep_ksort( $drilldown );
 
-			if ( defined( 'JPATH_MANIFESTS' ) ) {
-				$lists['class_name'] = str_replace( '#', '&nbsp;', $lists['class_name'] );
+			$lists['class_list'] = '<a tabindex="0" href="#mi-select-list" class="btn btn-primary" id="drilldown">Select an Integration</a>';
+
+			$lists['class_list'] .= '<div id="mi-select-list" class="hidden"><ul>';
+			foreach ( $drilldown as $lin => $li ) {
+				if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lin ) ) ) {
+					$kkey = JText::_('AEC_MI_LIST_' . strtoupper( $lin ) );
+				} else {
+					$kkey = ucwords( str_replace('_', ' ', $lin) );
+				}
+
+				$lists['class_list'] .= '<li><a href="#">' . $kkey . '</a><ul>';
+
+				foreach ( $li as $lixn => $lix ) {
+					if ( is_array( $lix ) ) {
+						if ( $lang->hasKey( 'AEC_MI_LIST_' . strtoupper( $lixn ) ) ) {
+							$xkey = JText::_('AEC_MI_LIST_' . strtoupper( $lixn ) );
+						} else {
+							$xkey = ucwords( str_replace('_', ' ', $lixn) );
+						}
+	
+						$lists['class_list'] .= '<li><a href="#">' . $xkey . '</a><ul>';
+
+						foreach ( $lix as $mix ) {
+							$lists['class_list'] .= '<li>' . $mix . '</li>';
+						}
+
+						$lists['class_list'] .= '</ul></li>';
+					} else {
+						$lists['class_list'] .= '<li>' . $lix . '</li>';
+					}
+				}
+
+				$lists['class_list'] .= '</ul></li>';
 			}
+			$lists['class_list'] .= '</ul></div>';
+
 		} else {
-			$lists['class_name'] = '';
+			$lists['class_list'] = '';
 		}
 	}
 
@@ -3763,6 +3814,18 @@ function editMicroIntegration ( $id, $option )
 				}
 			}
 
+			$restrictionHelper = new aecRestrictionHelper();
+
+			$mi_gsettings['restr_remaps']	= array( 'subarea_change', 'restrictions' );
+
+			$mi_gsettings = array_merge( $mi_gsettings, $restrictionHelper->getParams() );
+
+			if ( empty( $mi->restrictions ) ) {
+				$mi->restrictions = array();
+			}
+
+			$lists = array_merge( $lists, $restrictionHelper->getLists( $set, $mi->restrictions ) );
+
 			$mi_gsettings[$mi->id.'remap']	= array( 'area_change', 'MI' );
 			$mi_gsettings[$mi->id.'remaps']	= array( 'subarea_change', $mi->class_name );
 
@@ -3775,15 +3838,13 @@ function editMicroIntegration ( $id, $option )
 			}
 
 			$gsettings = new aecSettings( 'MI', 'E' );
-			$gsettings->fullSettingsArray( $mi_gsettings, $set, $lists );
+			$gsettings->fullSettingsArray( $mi_gsettings, array_merge( $set, $mi->restrictions ), $lists );
 
 			$settings = new aecSettings( 'MI', $mi->class_name );
 			$settings->fullSettingsArray( $mi_settings, $set, $lists );
 
 			// Call HTML Class
 			$aecHTML = new aecHTML( array_merge( $gsettings->settings, $settings->settings ), array_merge( $gsettings->lists, $settings->lists ) );
-
-			$aecHTML->hasSettings = false;
 
 			$aecHTML->hasHacks = method_exists( $mi->mi_class, 'hacks' );
 
@@ -3793,6 +3854,8 @@ function editMicroIntegration ( $id, $option )
 			}
 
 			$aecHTML->hasSettings = true;
+
+			$aecHTML->hasRestrictions = !empty( $mi->settings['has_restrictions'] );
 		} else {
 			$short	= 'microIntegration loading failure';
 			$event	= 'When trying to load microIntegration: ' . $mi->id . ', callIntegration failed';
@@ -3810,6 +3873,8 @@ function editMicroIntegration ( $id, $option )
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
 		$aecHTML->hasSettings = false;
+
+		$aecHTML->hasRestrictions = false;
 	}
 
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
@@ -4320,14 +4385,14 @@ function removeCoupon( $id, $option, $returnTask )
 {
 	$db = &JFactory::getDBO();
 
-	$idx = explode($id);
-
 	$rids = $sids = array();
-	foreach ( $idx as $ctype => $cid ) {
-		if ( $ctype ) {
-			$sids[] = $cid;
+	foreach ( $id as $i ) {
+		$ex = explode( '.', $i );
+
+		if ( $ex[0] ) {
+			$sids[] = $ex[1];
 		} else {
-			$rids[] = $cid;
+			$rids[] = $ex[1];
 		}
 	}
 
@@ -4800,12 +4865,12 @@ function aec_stats( $option, $page )
 	$stats = array();
 
 	$document=& JFactory::getDocument();
-	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.time.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/d3/d3.layout.min.js"></script>' );
-	$document->addCustomTag( '<script type="text/javascript" src="/media/com_acctexp/js/rickshaw/rickshaw.js"></script>' );
-	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
-	$document->addCustomTag( '<link type="text/css" href="/media/com_acctexp/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
+	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.time.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.layout.min.js"></script>' );
+	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.js"></script>' );
+	$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
+	$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 
 	$db = &JFactory::getDBO();
 
@@ -4992,37 +5057,6 @@ function quicklookup( $option )
 	}
 
 	return false;
-}
-
-function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
-    $spaces = "";
-    $space = $html ? "&nbsp;" : " ";
-    $newline = $html ? "<br />\n" : "\n";
-    for ($i = 1; $i <= 6; $i++) {
-        $spaces .= $space;
-    }
-    $tabs = $spaces;
-    for ($i = 1; $i <= $level; $i++) {
-        $tabs .= $spaces;
-    }
-    if (is_array($var)) {
-        $title = "Array";
-    } elseif (is_object($var)) {
-        $title = get_class($var)." Object";
-    }
-    $output = $title . $newline . $newline;
-    if ( !empty( $var ) ) {
-	    foreach($var as $key => $value) {
-	        if (is_array($value) || is_object($value)) {
-	            $level++;
-	            $value = obsafe_print_r($value, true, $html, $level);
-	            $level--;
-	        }
-	        $output .= $tabs . "[" . $key . "] => " . $value . $newline;
-	    }
-    }
-    if ($return) return $output;
-      else echo $output;
 }
 
 function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=false )
@@ -6274,41 +6308,6 @@ function toolBoxTool( $option, $cmd )
 		}
 
 		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );
-	}
-}
-
-function arrayValueDefault( $array, $name, $default )
-{
-	if ( is_object( $array ) ) {
-		if ( isset( $array->$name ) ) {
-			return $array->$name;
-		} else {
-			return $default;
-		}
-	}
-
-	if ( isset( $array[$name] ) ) {
-		if ( is_array( $array[$name] ) ) {
-			$selected = array();
-			foreach ( $array[$name] as $value ) {
-				$selected[]->value = $value;
-			}
-
-			return $selected;
-		} elseif ( strpos( $array[$name], ';' ) !== false ) {
-			$list = explode( ';', $array[$name] );
-
-			$selected = array();
-			foreach ( $list as $value ) {
-				$selected[]->value = $value;
-			}
-
-			return $selected;
-		} else {
-			return $array[$name];
-		}
-	} else {
-		return $default;
 	}
 }
 

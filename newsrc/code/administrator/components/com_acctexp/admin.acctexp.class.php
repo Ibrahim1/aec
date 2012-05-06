@@ -1020,627 +1020,80 @@ class aecExport extends serialParamDBTable
 
 }
 
-class aecReadout
+function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
+    $spaces = "";
+    $space = $html ? "&nbsp;" : " ";
+    $newline = $html ? "<br />\n" : "\n";
+    for ($i = 1; $i <= 6; $i++) {
+        $spaces .= $space;
+    }
+    $tabs = $spaces;
+    for ($i = 1; $i <= $level; $i++) {
+        $tabs .= $spaces;
+    }
+    if (is_array($var)) {
+        $title = "Array";
+    } elseif (is_object($var)) {
+        $title = get_class($var)." Object";
+    }
+    $output = $title . $newline . $newline;
+    if ( !empty( $var ) ) {
+	    foreach($var as $key => $value) {
+	        if (is_array($value) || is_object($value)) {
+	            $level++;
+	            $value = obsafe_print_r($value, true, $html, $level);
+	            $level--;
+	        }
+	        $output .= $tabs . "[" . $key . "] => " . $value . $newline;
+	    }
+    }
+    if ($return) return $output;
+      else echo $output;
+}
+
+function deep_ksort( &$arr )
 {
+	ksort($arr);
 
-	function aecReadout( $optionlist, $method )
-	{
-		$this->optionlist = $optionlist;
-		$this->method = "conversionHelper" . strtoupper( $method );
-
-		$this->lists = array();
-
-		$this->acllist = aecACLhandler::aclList();
-
-		foreach ( $this->acllist as $aclitem ) {
-			$this->lists['gid'][$aclitem->group_id] = $aclitem->name;
-		}
-
-		$this->planlist = SubscriptionPlanHandler::getFullPlanList();
-
-		foreach ( $this->planlist as $planitem ) {
-			$this->lists['plan'][$planitem->id] = $planitem->name;
-		}
-
-		$this->milist = microIntegrationHandler::getMIList( null, null, isset( $_POST['use_ordering'] ), true );
-
-		foreach ( $this->milist as $miitem ) {
-			$this->lists['mi'][$miitem->id] = $miitem->name;
+	foreach ( $arr as &$a ) {
+		if ( is_array($a) && !empty($a) ) {
+			deep_ksort($a);
 		}
 	}
-
-	function conversionHelper( $content, $obj )
-	{
-		return $this->{$this->method}( $content, $obj );
-	}
-
-	function readSettings()
-	{
-		global $aecConfig;
-
-		$r = array();
-		$r['head'] = "Settings";
-		$r['type'] = "table";
-
-		$setdef = Config_General::paramsList();
-
-		$r['def'] = array();
-		foreach ( $setdef as $sd => $sdd ) {
-			if ( ( $sdd === 0 ) || ( $sdd === 1 ) ) {
-				$tname = str_replace( ':', '', JText::_( 'CFG_GENERAL_' . strtoupper( $sd ) . '_NAME' ) );
-
-				$r['def'][$tname] = array( $sd, 'bool' );
-			}
-		}
-
-		$r['set'][] = $aecConfig->cfg;
-
-		if ( !empty( $_POST['show_extsettings'] ) ) {
-			$readout[] = $r;
-
-			unset($r);
-
-			$r['head'] = "";
-			$r['type'] = "table";
-
-			$setdef = Config_General::paramsList();
-
-			$r['def'] = array();
-			foreach ( $setdef as $sd => $sdd ) {
-				if ( ( $sdd !== 0 ) && ( $sdd !== 1 ) ) {
-					$reg = array( 'GENERAL', 'MI' );
-
-					foreach ( $reg as $regg ) {
-						$cname = 'CFG_' . $regg . '_' . strtoupper( $sd ) . '_NAME';
-
-						if ( defined( $cname ) )  {
-							$tname = str_replace( ':', '', JText::_( $cname ) );
-						}
-					}
-
-					$r['def'][$tname] = array( $sd );
-				}
-			}
-
-			$r['set'][] = $aecConfig->cfg;
-		}
-
-		$readout[] = $r;
-
-		return $readout;
-	}
-
-	function readProcessors()
-	{
-		$db = &JFactory::getDBO();
-
-		$lang = JFactory::getLanguage();
-
-		$readout = array();
-
-		$r = array();
-		$r['head'] = "Processors";
-
-		$processors = PaymentProcessorHandler::getInstalledNameList();
-
-		foreach ( $processors as $procname ) {
-			$pp = null;
-			$pp = new PaymentProcessor( $db );
-
-			if ( !$pp->loadName( $procname ) ) {
-				continue;
-			}
-
-			$pp->fullInit();
-
-			$readout[] = $r;
-
-			$r = array();
-
-			$r['head'] = $pp->info['longname'];
-			$r['type'] = "table";
-			$r['sub'] = true;
-
-			$r['def'] = array (
-				"ID" => array( 'id' ),
-				"Published" => array( 'active', 'bool' )
-			);
-
-			foreach ( $pp->info as $iname => $ic ) {
-				if ( empty( $iname ) ) {
-					continue;
-				}
-
-				$cname = 'CFG_' . strtoupper( $procname ) . '_' . strtoupper($iname) . '_NAME';
-				$gname = 'CFG_PROCESSOR_' . strtoupper($iname) . '_NAME';
-
-				if ( $lang->hasKey( $cname ) ) {
-					$tname = JText::_( $cname );
-				} elseif ( $lang->hasKey( $gname ) )  {
-					$tname = JText::_( $gname );
-				} else {
-					$tname = $iname;
-				}
-
-				$r['def'][$tname] = array( array( 'info', $iname ), 'smartlimit' );
-			}
-
-			$bsettings = $pp->getBackendSettings();
-
-			foreach ( $bsettings as $psname => $sc ) {
-				if ( empty( $psname ) || is_numeric( $psname ) || ( $psname == 'lists') ) {
-					continue;
-				}
-
-				$cname = 'CFG_' . strtoupper( $procname ) . '_' . strtoupper($psname) . '_NAME';
-				$gname = 'CFG_PROCESSOR_' . strtoupper($psname) . '_NAME';
-
-				if ( $lang->hasKey( $cname ) )  {
-					$tname = JText::_( $cname );
-				} elseif ( $lang->hasKey( $gname ) )  {
-					$tname = JText::_( $gname );
-				} else {
-					$tname = $psname;
-				}
-
-				if ( $sc[0] == 'list_yesno' ) {
-					$stype = 'bool';
-				} else {
-					$stype = 'smartlimit';
-				}
-
-				$r['def'][$tname] = array( array( 'settings', $psname ), $stype );
-			}
-
-			$ps = array();
-			foreach ( $r['def'] as $nn => $def ) {
-				$ps = array_merge( $ps, $this->conversionHelper( $def, $pp ) );
-			}
-
-			$r['set'] = array( 0 => $ps );
-		}
-
-		$readout[] = $r;
-
-		return $readout;
-	}
-
-	function readPlans()
-	{
-		$db = &JFactory::getDBO();
-
-		$r = array();
-		$r['head'] = "Payment Plans";
-		$r['type'] = "table";
-
-		$r['def'] = array (
-			"ID" => array( 'id' ),
-			"Published" => array( 'active', 'bool' ),
-			"Visible" => array( 'visible', 'bool' ),
-			"Name" => array( 'name', 'smartlimit haslink', 'editSubscriptionPlan', 'id' ),
-			"Desc" => array( 'desc', 'notags smartlimit' ),
-			"Primary" => array( array( 'params', 'make_primary' ), 'bool' ),
-			"Activate" => array( array( 'params', 'make_active' ), 'bool' ),
-			"Update Exist." => array( array( 'params', 'update_existing' ), 'bool' ),
-			"Override Activat." => array( array( 'params', 'override_activation' ), 'bool' ),
-			"Override Reg. Email" => array( array( 'params', 'override_regmail' ), 'bool' ),
-			"Set GID" => array( array( 'params', 'gid_enabled' ), 'bool' ),
-			"GID" => array( array( 'params', 'gid' ), 'list', 'gid' ),
-
-			"Standard Parent Plan" => array( array( 'params', 'standard_parent' ), 'list', 'plan' ),
-			"Fallback Plan" => array( array( 'params', 'fallback' ), 'list', 'plan' ),
-
-			"Free" => array( array( 'params', 'full_free' ), 'bool' ),
-			"Cost" => array( array( 'params', 'full_amount' ) ),
-			"Lifetime" => array( array( 'params', 'lifetime' ), 'bool' ),
-			"Period" => array( array( 'params', 'full_period' ) ),
-			"Unit" => array( array( 'params', 'full_periodunit' ) ),
-
-			"Free Trial" => array( array( 'params', 'trial_free' ), 'bool' ),
-			"Trial Cost" => array( array( 'params', 'trial_amount' ) ),
-			"Trial Period" => array( array( 'params', 'trial_period' ) ),
-			"Trial Unit" => array( array( 'params', 'trial_periodunit' ) ),
-
-			"Has MinGID" => array( array( 'restrictions', 'mingid_enabled' ), 'bool' ),
-			"MinGID" => array( array( 'restrictions', 'mingid' ), 'list', 'gid' ),
-			"Has FixGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
-			"FixGID" => array( array( 'restrictions', 'fixgid' ), 'list', 'gid' ),
-			"Has MaxGID" => array( array( 'restrictions', 'fixgid_enabled' ), 'bool' ),
-			"MaxGID" => array( array( 'restrictions', 'fixgid' ), 'list', 'gid' ),
-
-			"Requires Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled' ), 'bool' ),
-			"Prev. Plan" => array( array( 'restrictions', 'previousplan_req' ), 'list', 'plan' ),
-			"Excluding Prev. Plan" => array( array( 'restrictions', 'previousplan_req_enabled_excluded' ), 'bool' ),
-			"Excl. Prev. Plan" => array( array( 'restrictions', 'previousplan_req_excluded' ), 'list', 'plan' ),
-			"Requires Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled' ), 'bool' ),
-			"Curr. Plan" => array( array( 'restrictions', 'currentplan_req' ), 'list', 'plan' ),
-			"Excluding Curr. Plan" => array( array( 'restrictions', 'currentplan_req_enabled_excluded' ), 'bool' ),
-			"Excl. Curr. Plan" => array( array( 'restrictions', 'currentplan_req_excluded' ), 'list', 'plan' ),
-			"Requires Overall Plan" => array( array( 'restrictions', 'overallplan_req_enabled' ), 'bool' ),
-			"Overall Plan" => array( array( 'restrictions', 'overallplan_req' ), 'list', 'plan' ),
-			"Excluding Overall. Plan" => array( array( 'restrictions', 'overallplan_req_enabled_excluded' ), 'bool' ),
-			"Excl. Overall. Plan" => array( array( 'restrictions', 'overallplan_req_excluded' ), 'list', 'plan' ),
-
-			"Min Used Plan" => array( array( 'restrictions', 'used_plan_min_enabled' ), 'bool' ),
-			"Min Used Plan Amount" => array( array( 'restrictions', 'used_plan_min_amount' ) ),
-			"Min Used Plans" => array( array( 'restrictions', 'used_plan_min' ), 'list', 'plan' ),
-			"Max Used Plan" => array( array( 'restrictions', 'used_plan_max_enabled' ), 'bool' ),
-			"Max Used Plan Amount" => array( array( 'restrictions', 'used_plan_max_amount' ) ),
-			"Max Used Plans" => array( array( 'restrictions', 'used_plan_max' ), 'list', 'plan' ),
-
-			"Custom Restrictions" => array( array( 'restrictions', 'custom_restrictions_enabled' ), 'bool' ),
-			"Restrictions" => array( array( 'restrictions', 'custom_restrictions' ) )
-		);
-
-		$plans = SubscriptionPlanHandler::getPlanList( null, null, isset( $_POST['use_ordering'] ) );
-
-		$r['set'] = array();
-		foreach ( $plans as $planid ) {
-			$plan = new SubscriptionPlan( $db );
-			$plan->load( $planid );
-
-			$ps = array();
-			foreach ( $r['def'] as $nn => $def ) {
-				$ps = array_merge( $ps, $this->conversionHelper( $def, $plan ) );
-			}
-
-			$r['set'][] = $ps;
-		}
-
-		return $r;
-	}
-
-	function readPlanMIrel()
-	{
-		$db = &JFactory::getDBO();
-
-		$r = array();
-		$r['head'] = "Payment Plan - MicroIntegration relationships";
-		$r['type'] = "table";
-
-		$r['def'] = array (
-			"ID" => array( 'id' ),
-			"Published" => array( 'active', 'bool' ),
-			"Visible" => array( 'visible', 'bool' ),
-			"Name" => array( 'name', 'smartlimit' )
-		);
-
-		$micursor = '';
-		$mis = array();
-		foreach ( $this->milist as $miobj ) {
-			$mi = new microIntegration( $db );
-			$mi->load( $miobj->id );
-			if ( !$mi->callIntegration() ) {
-				continue;
-			}
-
-			if ( $miobj->class_name != $micursor ) {
-				if ( !empty( $mi->info ) ) {
-					$miname = $mi->info['name'];
-				} else {
-					$miname = $miobj->class_name;
-				}
-				$r['def'][$miname] = array( $miobj->class_name, 'list', 'mi' );
-
-				$micursor = $miobj->class_name;
-			}
-
-			$mis[$mi->id] = array( $miobj->class_name, $mi->name );
-		}
-
-		$r['set'] = array();
-		foreach ( $this->planlist as $planid => $planobj ) {
-			$plan = new SubscriptionPlan( $db );
-			$plan->load( $planobj->id );
-
-			if ( !empty( $plan->micro_integrations ) ) {
-				foreach ( $plan->micro_integrations as $pmi ) {
-					if ( isset( $mis[$pmi] ) ) {
-						$plan->{$mis[$pmi][0]}[] = $pmi;
-					}
-				}
-			}
-
-			$ps = array();
-			foreach ( $r['def'] as $nn => $def ) {
-				$ps = array_merge( $ps, $this->conversionHelper( $def, $plan ) );
-			}
-
-			$r['set'][] = $ps;
-		}
-
-		return $r;
-	}
-
-	function readMIs()
-	{
-		$db = &JFactory::getDBO();
-
-		$lang = JFactory::getLanguage();
-
-		$r = array();
-		$r['head'] = "Micro Integration";
-		$r['type'] = "";
-
-		$micursor = '';
-		foreach ( $this->milist as $miobj ) {
-			$mi = new microIntegration( $db );
-			$mi->load( $miobj->id );
-			$mi->callIntegration(true);
-
-			if ( $miobj->class_name != $micursor ) {
-				$readout[] = $r;
-				unset($r);
-				$r = array();
-				if ( !empty( $mi->info ) ) {
-					$r['head'] = $mi->info['name'];
-				} else {
-					$r['head'] = $miobj->class_name;
-				}
-				$r['type'] = "table";
-				$r['sub'] = true;
-				$r['set'] = array();
-
-				$r['def'] = array (
-					"ID" => array( 'id' ),
-					"Published" => array( 'active', 'bool' ),
-					"Visible" => array( 'visible', 'bool' ),
-					"Name" => array( 'name', 'smartlimit haslink', 'editMicroIntegration', 'id' ),
-					"Desc" => array( 'desc', 'notags smartlimit' ),
-					"Exp Action" => array( 'auto_check', 'bool' ),
-					"PreExp Action" => array( 'pre_exp_check' ),
-					"UserChange Action" => array( 'on_userchange', 'bool' )
-					);
-
-				$settings = $mi->getSettings();
-
-				if ( isset( $settings['lists'] ) ) {
-					unset( $settings['lists'] );
-				}
-
-				if ( !empty( $settings ) ) {
-					foreach ( $settings as $sname => $setting ) {
-						if ( is_numeric( $sname ) || ( strpos( $sname, 'aectab_' ) !== false ) ) {
-							continue;
-						}
-
-						$name =  'MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
-				
-						if ( $lang->hasKey( $name ) ) {
-							$r['def'][JText::_($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
-						} else {
-							$r['def'][$sname] = array( array( 'settings', $sname ), 'notags smartlimit' );
-						}
-					}
-				}
-			}
-
-			$ps = array();
-			foreach ( $r['def'] as $nn => $def ) {
-				$ps = array_merge( $ps, $this->conversionHelper( $def, $mi ) );
-			}
-
-			$r['set'][] = $ps;
-
-			$micursor = $miobj->class_name;
-		}
-
-		$readout[] = $r;
-
-		return $readout;
-	}
-
-	function conversionHelperHTML( $content, $obj )
-	{
-		$cc = $content[0];
-
-		if ( is_array( $cc ) ) {
-			$dname = $cc[0].'_'.$cc[1];
-			if ( !isset( $obj->{$cc[0]}[$cc[1]] ) ) {
-				return array( $dname => '' );
-			}
-			$dvalue = $obj->{$cc[0]}[$cc[1]];
+}
+
+function arrayValueDefault( $array, $name, $default )
+{
+	if ( is_object( $array ) ) {
+		if ( isset( $array->$name ) ) {
+			return $array->$name;
 		} else {
-			$dname = $cc;
-			if ( !isset( $obj->{$cc} ) ) {
-				return array( $dname => '' );
-			}
-			$dvalue = $obj->{$cc};
+			return $default;
 		}
-
-		if ( isset( $content[1] ) ) {
-			$type = $content[1];
-		} else {
-			$type = null;
-		}
-
-		if ( isset( $_POST['noformat_newlines'] ) ) {
-			$nnl = ', ';
-		} else {
-			$nnl = ',<br />';
-		}
-
-		if ( !empty( $type ) ) {
-			$types = explode( ' ', $type );
-
-			if ( is_array( $dvalue ) ) {
-				foreach ( $dvalue as $dv ) {
-					if ( is_array( $dv ) ) {
-						return array( $dname => '' );
-					}
-				}
-
-				$dvalue = implode( ',', $dvalue );
-			}
-
-			foreach ( $types as $tt ) {
-				switch ( $tt ) {
-					case 'notags':
-						$dvalue = strip_tags( $dvalue );
-						break;
-					case 'limit32':
-						$dvalue = substr( $dvalue, 0, 32 );
-						break;
-					case 'smartlimit':
-						if ( isset( $_POST['truncation_length'] ) ) {
-							$truncation = $_POST['truncation_length'];
-						} else {
-							$truncation = 42;
-						}
-
-						if ( $truncation > 12 ) {
-							$tls = 12;
-						} else {
-							$tls = $truncation/2;
-						}
-
-						if ( is_array( $dvalue ) ) {
-							$vv = array();
-							foreach ( $dvalue as $val ) {
-								if ( strlen( $val ) > $truncation ) {
-									$vv[] = substr( $val, 0, $truncation-$tls ) . '<strong title="' . htmlentities($val) . '">[...]</strong>' . substr( $val, -$tls, $tls );
-								} else {
-									$vv[] = $val;
-								}
-							}
-							$dvalue = implode( $nnl, $vv );
-						} else {
-							if ( strlen( $dvalue ) > $truncation ) {
-								$dvalue = substr( $dvalue, 0, $truncation-$tls ) . '<strong title="' . htmlentities($dvalue) . '">[...]</strong>' . substr( $dvalue, -$tls, $tls );
-							}
-						}
-						break;
-					case 'list':
-						if ( is_array( $dvalue ) ) {
-							$vv = array();
-							foreach ( $dvalue as $val ) {
-								if ( $val == 0 ) {
-									$vv[] = '--';
-								} else {
-									$vv[] = "#" . $val . ":&nbsp;<strong>" . $this->lists[$content[2]][$val] . "</strong>";
-								}
-							}
-							$dvalue = implode( $nnl, $vv );
-						} else {
-							if ( $dvalue == 0 ) {
-								$dvalue = '--';
-							} else {
-								$dvalue = "#" . $dvalue . ":&nbsp;<strong>" . $this->lists[$content[2]][$dvalue] . "</strong>";
-							}
-						}
-						break;
-					case 'haslink':
-						if ( isset( $content[3] ) ) {
-							$tasklink = $content[2] . "&amp;" . $content[3] . "=" . $obj->{$content[3]};
-							$dvalue = AECToolbox::backendTaskLink( $tasklink, $dvalue );
-						} else {
-							$dvalue = AECToolbox::backendTaskLink( $content[2], $dvalue );
-						}
-						break;
-				}
-			}
-		}
-
-		return array( $dname => $dvalue );
 	}
 
-	function conversionHelperCSV( $content, $obj )
-	{
-		$cc = $content[0];
-
-		if ( is_array( $cc ) ) {
-			$dname = $cc[0].'_'.$cc[1];
-			if ( !isset( $obj->{$cc[0]}[$cc[1]] ) ) {
-				return array( $dname => '' );
+	if ( isset( $array[$name] ) ) {
+		if ( is_array( $array[$name] ) ) {
+			$selected = array();
+			foreach ( $array[$name] as $value ) {
+				$selected[]->value = $value;
 			}
-			$dvalue = $obj->{$cc[0]}[$cc[1]];
-		} else {
-			$dname = $cc;
-			if ( !isset( $obj->{$cc} ) ) {
-				return array( $dname => '' );
+
+			return $selected;
+		} elseif ( strpos( $array[$name], ';' ) !== false ) {
+			$list = explode( ';', $array[$name] );
+
+			$selected = array();
+			foreach ( $list as $value ) {
+				$selected[]->value = $value;
 			}
-			$dvalue = $obj->{$cc};
-		}
 
-		if ( isset( $content[1] ) ) {
-			$type = $content[1];
+			return $selected;
 		} else {
-			$type = null;
+			return $array[$name];
 		}
-
-		if ( isset( $_POST['noformat_newlines'] ) ) {
-			$nnl = ', ';
-		} else {
-			$nnl = ',' . "\n";
-		}
-
-		if ( !empty( $type ) ) {
-			$types = explode( ' ', $type );
-
-			foreach ( $types as $tt ) {
-				switch ( $tt ) {
-					case 'notags':
-						$dvalue = strip_tags( $dvalue );
-						break;
-					case 'limit32':
-						$dvalue = substr( $dvalue, 0, 32 );
-						break;
-					case 'smartlimit':
-						if ( isset( $_POST['truncation_length'] ) ) {
-							$truncation = $_POST['truncation_length'];
-						} else {
-							$truncation = 42;
-						}
-
-						if ( $truncation > 12 ) {
-							$tls = 12;
-						} else {
-							$tls = $truncation/2;
-						}
-
-						if ( is_array( $dvalue ) ) {
-							$vv = array();
-							foreach ( $dvalue as $val ) {
-								if ( strlen( $val ) > $truncation ) {
-									$vv[] = substr( $val, 0, $truncation-$tls ) . '[...]' . substr( $val, -$tls, $tls );
-								} else {
-									$vv[] = $val;
-								}
-							}
-							$dvalue = implode( $nnl, $vv );
-						} else {
-							if ( strlen( $dvalue ) > $truncation ) {
-								$dvalue = substr( $dvalue, 0, $truncation-$tls ) . '[...]' . substr( $dvalue, -$tls, $tls );
-							}
-						}
-						break;
-					case 'list':
-						if ( is_array( $dvalue ) ) {
-							$vv = array();
-							foreach ( $dvalue as $val ) {
-								if ( $dvalue == 0 ) {
-									$vv[] = '--';
-								} else {
-									$vv[] = "#" . $val . ": " . $this->lists[$content[2]][$val];
-								}
-							}
-							$dvalue = implode( $nnl, $vv );
-						} else {
-							if ( $dvalue == 0 ) {
-								$dvalue = '--';
-							} else {
-								$dvalue = "#" . $dvalue . ": " . $this->lists[$content[2]][$dvalue];
-							}
-						}
-						break;
-					case 'haslink':
-						$dvalue = $dvalue;
-						break;
-				}
-			}
-		}
-
-		return array( $dname => $dvalue );
+	} else {
+		return $default;
 	}
 }
 

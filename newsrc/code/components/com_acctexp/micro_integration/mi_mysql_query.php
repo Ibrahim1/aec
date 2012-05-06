@@ -18,6 +18,7 @@ class mi_mysql_query
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MYSQL');
 		$info['desc'] = JText::_('AEC_MI_DESC_MYSQL');
+		$info['type'] = array( 'basic.database', 'system', 'vendor.valanx' );
 
 		return $info;
 	}

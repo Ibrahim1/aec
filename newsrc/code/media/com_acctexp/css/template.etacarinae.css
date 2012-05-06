@@ -308,3 +308,7 @@ width: 100%;
 #aec #aec-nav-profile {
 margin-bottom: 12px;
 }
+
+#aec .list-term-termlist-term-other {
+opacity: 0.6;
+}

@@ -18,6 +18,7 @@ class mi_email_files
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_EMAIL_FILES');
 		$info['desc'] = JText::_('AEC_MI_DESC_EMAIL_FILES');
+		$info['type'] = array( 'communication.email', 'basic.email', 'system', 'vendor.valanx' );
 
 		return $info;
 	}

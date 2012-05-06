@@ -18,6 +18,7 @@ class mi_k2
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_K2');
 		$info['desc'] = JText::_('AEC_MI_DESC_K2');
+		$info['type'] = array( 'content', 'vendor.joomlaworks' );
 
 		return $info;
 	}

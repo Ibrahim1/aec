@@ -18,6 +18,7 @@ class mi_agora extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AGORA');
 		$info['desc'] = JText::_('AEC_MI_DESC_AGORA');
+		$info['type'] = array( 'communication.forum', 'vendor.anythingdigital' );
 
 		return $info;
 	}

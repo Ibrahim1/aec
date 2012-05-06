@@ -18,6 +18,7 @@ class mi_joomlaplugin
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JOOMLAPLUGIN');
 		$info['desc'] = JText::_('AEC_MI_DESC_JOOMLAPLUGIN');
+		$info['type'] = array( 'basic.joomla', 'system', 'vendor.valanx' );
 
 		return $info;
 	}

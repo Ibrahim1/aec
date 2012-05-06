@@ -18,6 +18,7 @@ class mi_pepperjam
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PEPPERJAM');
 		$info['desc'] = JText::_('AEC_MI_DESC_PEPPERJAM');
+		$info['type'] = array( 'tracking.affiliate', 'vendor.pepperjam' );
 
 		return $info;
 	}

@@ -18,6 +18,7 @@ class mi_kunena extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_KUNENA');
 		$info['desc'] = JText::_('AEC_MI_DESC_KUNENA');
+		$info['type'] = array( 'communication.forum' );
 
 		return $info;
 	}

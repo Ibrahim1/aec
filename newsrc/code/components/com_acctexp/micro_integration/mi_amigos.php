@@ -18,6 +18,7 @@ class mi_amigos
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AMIGOS');
 		$info['desc'] = JText::_('AEC_MI_DESC_AMIGOS');
+		$info['type'] = array( 'tracking.affiliate', 'vendor.dioscouri' );
 
 		return $info;
 	}

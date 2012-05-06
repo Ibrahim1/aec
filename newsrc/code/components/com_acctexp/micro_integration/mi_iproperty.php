@@ -18,6 +18,7 @@ class mi_iproperty
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_IPROPERTY_NAME');
 		$info['desc'] = JText::_('AEC_MI_IPROPERTY_DESC');
+		$info['type'] = array( 'vertical_markets.real_estate', 'vendor.the_thinkery' );
 
 		return $info;
 	}
@@ -57,6 +58,9 @@ class mi_iproperty
 		$settings['add_agents']			= array( 'inputA' );
 		$settings['set_fagents']		= array( 'inputA' );
 		$settings['add_fagents']		= array( 'inputA' );
+
+		$settings['set_images']			= array( 'inputA' );
+		$settings['add_images']			= array( 'inputA' );
 
 		$settings['rebuild']			= array( 'toggle' );
 		$settings['remove']				= array( 'toggle' );
@@ -249,6 +253,16 @@ class mi_iproperty
 				$company->params['maxfagents'] += $this->settings['add_fagents'];
 			} else {
 				$company->params['maxfagents'] = $this->settings['add_fagents'];
+			}
+		}
+
+		if ( !empty( $this->settings['set_images'] ) ) {
+			$company->params['maximgs'] = $this->settings['set_images'];
+		} elseif ( !empty( $this->settings['add_images'] ) ) {
+			if ( isset( $company->params['maxagents'] ) ) {
+				$company->params['maximgs'] += $this->settings['add_images'];
+			} else {
+				$company->params['maximgs'] = $this->settings['add_images'];
 			}
 		}
 

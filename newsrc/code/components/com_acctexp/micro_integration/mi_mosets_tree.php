@@ -18,6 +18,7 @@ class mi_mosets_tree extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MOSETS');
 		$info['desc'] = JText::_('AEC_MI_DESC_MOSETS');
+		$info['type'] = array( 'directory_documentation.directory', 'vendor.mosets' );
 
 		return $info;
 	}

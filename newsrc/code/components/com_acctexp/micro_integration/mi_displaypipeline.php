@@ -19,6 +19,7 @@ class mi_displaypipeline
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_DISPLAYPIPELINE');
 		$info['desc'] = JText::_('AEC_MI_DESC_DISPLAYPIPELINE');
+		$info['type'] = array( 'tracking.affiliate', 'system', 'aec.tools', 'vendor.valanx' );
 
 		return $info;
 	}

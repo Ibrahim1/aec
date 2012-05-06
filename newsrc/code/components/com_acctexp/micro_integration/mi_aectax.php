@@ -18,6 +18,7 @@ class mi_aectax
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECTAX');
 		$info['desc'] = JText::_('AEC_MI_DESC_AECTAX');
+		$info['type'] = array( 'aec.invoice', 'vendor.valanx' );
 
 		return $info;
 	}

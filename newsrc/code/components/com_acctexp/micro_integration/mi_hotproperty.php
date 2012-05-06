@@ -18,6 +18,7 @@ class mi_hotproperty extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_HOTPROPERTY_NAME');
 		$info['desc'] = JText::_('AEC_MI_HOTPROPERTY_DESC');
+		$info['type'] = array( 'vertical_markets.real_estate', 'vendor.mosets' );
 
 		return $info;
 	}

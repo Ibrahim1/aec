@@ -17,6 +17,7 @@ class mi_jarc
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JARC');
 		$info['desc'] = JText::_('AEC_MI_DESC_JARC');
+		$info['type'] = array( 'tracking.affiliate' );
 
 		return $info;
 	}

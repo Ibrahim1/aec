@@ -18,6 +18,7 @@ class mi_file extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_FILE_NAME');
 		$info['desc'] = JText::_('AEC_MI_FILE_DESC');
+		$info['type'] = array( 'basic.filesystem', 'system', 'vendor.valanx' );
 
 		return $info;
 	}

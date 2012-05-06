@@ -18,6 +18,7 @@ class mi_alphauserpoints extends MI
 		$info = array();
 		$info['name'] = "Alpha User Points";
 		$info['desc'] = "Granting or Charging points, as well as giving the user the option to 'pay' with points.";
+		$info['type'] = array( 'ecommerce.gifts', 'vendor.alphaplug' );
 
 		return $info;
 	}

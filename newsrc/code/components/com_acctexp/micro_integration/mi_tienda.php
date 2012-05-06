@@ -18,6 +18,7 @@ class mi_tienda
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_TIENDA');
 		$info['desc'] = JText::_('AEC_MI_DESC_TIENDA');
+		$info['type'] = array( 'ecommerce.shopping_cart', 'vendor.dioscouri' );
 
 		return $info;
 	}

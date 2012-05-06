@@ -18,7 +18,7 @@ class mi_acl
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ACL');
 		$info['desc'] = JText::_('AEC_MI_DESC_ACL');
-		$info['type'] = array( 'user.access_restriction' );
+		$info['type'] = array( 'user.access_restriction', 'joomla.acl' );
 
 		return $info;
 	}

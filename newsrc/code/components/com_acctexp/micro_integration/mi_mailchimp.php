@@ -18,6 +18,7 @@ class mi_mailchimp
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MAILCHIMP');
 		$info['desc'] = JText::_('AEC_MI_DESC_MAILCHIMP');
+		$info['type'] = array( 'sharing.newsletter', 'vendor.mailchimp' );
 
 		return $info;
 	}

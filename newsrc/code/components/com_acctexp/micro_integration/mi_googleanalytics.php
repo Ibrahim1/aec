@@ -18,6 +18,7 @@ class mi_googleanalytics
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_GOOGLEANALYTICS');
 		$info['desc'] = JText::_('AEC_MI_DESC_GOOGLEANALYTICS');
+		$info['type'] = array( 'tracking.analytics', 'vendor.google' );
 
 		return $info;
 	}

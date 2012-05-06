@@ -18,6 +18,7 @@ class mi_frontenduseraccess
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_FRONTENDUSERACCESS');
 		$info['desc'] = JText::_('AEC_MI_DESC_FRONTENDUSERACCESS');
+		$info['type'] = array( 'user.access_restriction', 'vendor.pages-and-items' );
 
 		return $info;
 	}

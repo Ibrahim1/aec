@@ -87,6 +87,22 @@ margin-top: 12px;
 text-anchor: middle;
 }
 
+.chart-rickshaw .xtick-shifted-hour {
+margin-left: -56px;
+}
+
+.chart-rickshaw-wide-slim .xtick-shifted-hour {
+margin-left: -72px;
+}
+
+.chart-rickshaw-wide-slim .xtick-shifted-day {
+margin-left: -6px;
+}
+
+.xtick-shifted-week {
+margin-left: -10px;
+}
+
 .chart-rickshaw-slim {
 float: left;
 width: 740px;

@@ -18,6 +18,7 @@ class mi_yourmembership_com
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_YOURMEMBERSHIP_COM_NAME');
 		$info['desc'] = JText::_('AEC_MI_YOURMEMBERSHIP_COM_DESC');
+		$info['type'] = array( 'services.external' );
 
 		return $info;
 	}
@@ -54,13 +55,11 @@ class mi_yourmembership_com
 			$request = $this->getCallXML( 'Sa.Members.Profile.Create', $id, array(	'FirstName' => $name['first'],
 																					'LastName' => $name['last'],
 																					'EmailAddr' => $request->metaUser->cmsUser->email,
-																					'Password' => $credentials['password']
+																					'Password' => $params['temp_pw']
 																				)
 										);
 			$result = $this->apiCall( $request );
 		}
-
-		$this->apiUserSignup( $request );
 
 		return true;
 	}

@@ -62,16 +62,18 @@ class HTML_myCommon
 			$document->addScript( JURI::root(true).'/media/system/js/core.js' );
 		}
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.1.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.18.custom.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.compressed.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
 
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery-ui-1.8.16.custom.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/ui.daterangepicker.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.multiselect.css' . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/fg.menu.css' . '" />' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.backend.js' );
@@ -560,7 +562,7 @@ class HTML_AcctExp
 											if ( $i == $aecHTML->invoice_page ) {
 												$plist[] = ( $i + 1 );
 											} else {
-												$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&page=' . $i . '">' . ( $i + 1 ) . '</a>';
+												$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&amp;page=' . $i . '">' . ( $i + 1 ) . '</a>';
 											}
 										}
 										echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
@@ -573,7 +575,7 @@ class HTML_AcctExp
 								?>
 							</tbody>
 							<tfoot>
-								<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><i class="bsicon-plus bsicon-white"></i> Add Invoice</a></td></tr>
+								<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><i class="bsicon-plus bsicon-white"></i> Add Invoice</a></td></tr>
 							</tfoot>
 						</table>
 					</div>
@@ -1518,6 +1520,10 @@ jQuery(document).ready(function(jQuery) {
 			$tabs->newTab( 'settings', JText::_('MI_E_SETTINGS') );
 		}
 
+		if ( $aecHTML->hasRestrictions ) {
+			$tabs->newTab( 'restrictions', JText::_('MI_E_RESTRICTIONS') );
+		}
+
 		if ( !empty( $aecHTML->customparams ) ) {
 			foreach ( $aecHTML->customparams as $name ) {
 				if ( strpos( $name, 'aectab_' ) === 0 ) {
@@ -1536,6 +1542,15 @@ jQuery(document).ready(function(jQuery) {
 				<div class="aec_userinfobox_sub">
 					<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
 					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
+						<?php echo $aecHTML->createSettingsParticle( 'class_name' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'class_list' ); ?>
+					<?php } else { ?>
+						<div class="control-group">
+							<label class="control-label" for="class_name">Integration Type</label>
+							<div class="controls"><span class="label label-important"><?php echo $row->name; ?></span></div>
+						</div>
+					<?php } ?>
 					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
@@ -1544,26 +1559,8 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
-				</div>
-			</td>
-			<td>
-				<div class="aec_userinfobox_sub">
-					<h4><?php echo JText::_('MI_E_DETAILS') . ' - ' . JText::_('MI_E_FUNCTION_NAME'); ?></h4>
-					<div style="position:relative;">
-					<?php if ( !$aecHTML->hasSettings ) {
-						if ( $lists['class_name'] ) {
-							echo $lists['class_name']; ?>
-							
-							<?php
-							echo "<p>" . JText::_('MI_E_FUNCTION_DESC') . "</p>";
-						} else {
-							echo "<p>" . JText::_('AEC_MSG_MIS_NOT_DEFINED') . "</p>";
-						}
-					} else {
-						echo "<p><strong>" . $row->class_name . "</p></strong>";
-					}
-					?>
-					</div>
+					<?php echo $aecHTML->createSettingsParticle( 'has_restrictions' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
 				</div>
 				<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
 					<div class="aec_userinfobox_sub">
@@ -1611,6 +1608,17 @@ jQuery(document).ready(function(jQuery) {
 							}
 						} ?>
 						</div>
+					</td>
+				</tr>
+			</table>
+		<?php }
+
+		if ( $aecHTML->hasRestrictions ) {
+			$tabs->nextPane( 'restrictions' ); ?>
+			<table width="100%" class="aecadminform">
+				<tr>
+					<td>
+						<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 					</td>
 				</tr>
 			</table>
@@ -1929,13 +1937,6 @@ jQuery(document).ready(function(jQuery) {
 			</td></tr>
 			<tr><td>
 				<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-				<div class="aec_userinfobox_sub">
-					<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
-					<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-					<br />
-					<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-				</div>
 			</td></tr>
 		</table>
 		<?php $tabs->nextPane( 'trial' ); ?>
@@ -2219,13 +2220,6 @@ jQuery(document).ready(function(jQuery) {
 		<table class="aecadminform">
 		<tr><td>
 			<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-			<div class="aec_userinfobox_sub">
-				<h4><?php echo JText::_('AEC_RESTRICTIONS_CUSTOM_HEADER'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions_enabled' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'custom_restrictions' ); ?>
-				<br />
-				<?php echo $aecHTML->createSettingsParticle( 'rewriteInfo' ); ?>
-			</div>
 		</td></tr>
 		</table>
 		<?php $tabs->nextPane( 'mis' ); ?>
@@ -2833,7 +2827,7 @@ jQuery(document).ready(function(jQuery) {
 						.source("sales")
 						.canvas(200, 200, 10);
 
-						var day = cf.target("div#compare-day-last")
+						cf.target("div#compare-day-last")
 						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
 						.create("sunburst")
@@ -2851,24 +2845,24 @@ jQuery(document).ready(function(jQuery) {
 						.target("div#compare-day-compare")
 						.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
 
-						var week = cf.target("div#compare-week-last")
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))-86400*7) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))-86400) . ' 23:59:59'; ?>")
+						cf.target("div#compare-week-last")
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
 						.create("sunburst")
 						.target("div#compare-week-graph-last")
 						.create("rickshaw",{ unit:"day" })
 						.target("div#compare-week-this")
-						.range(	"<?php echo gmdate('Y-m-d', (gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U"))) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))+86400*6) . ' 23:59:59'; ?>")
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
 						.create("sunburst")
 						.target("div#compare-week-graph-this")
 						.create("rickshaw",{ unit:"day" })
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))-86400*7) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 1) ? gmdate("U") : strtotime("last Monday",gmdate("U")))+86400*6) . ' 23:59:59'; ?>")
+						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
 						.target("div#compare-week-compare")
 						.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
 
-						var month = cf.target("div#compare-month-last")
+						cf.target("div#compare-month-last")
 						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
 						.create("sunburst")
@@ -2885,7 +2879,7 @@ jQuery(document).ready(function(jQuery) {
 						.target("div#compare-month-compare")
 						.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
 
-						var year = cf.target("div#compare-year-last")
+						cf.target("div#compare-year-last")
 						.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
 								"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
 						.create("sunburst")

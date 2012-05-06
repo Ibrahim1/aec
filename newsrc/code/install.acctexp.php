@@ -300,7 +300,7 @@ function com_install()
 
 				$db->setQuery( $query );
 				$db->query();
-			} else {
+			} elseif ( strpos( $name, 'plg' ) !== 0 ) {
 				if ( empty( $details['menuid'] ) ) {
 					$query = "UPDATE #__modules SET position='".$details['position']."', published=".$details['published']." WHERE module='".$name."'";
 					$db->setQuery( $query );

@@ -18,6 +18,7 @@ class mi_interspireem
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_INTERSPIREEM');
 		$info['desc'] = JText::_('AEC_MI_DESC_INTERSPIREEM');
+		$info['type'] = array( 'sharing.newsletter', 'vendor.interspire' );
 
 		return $info;
 	}

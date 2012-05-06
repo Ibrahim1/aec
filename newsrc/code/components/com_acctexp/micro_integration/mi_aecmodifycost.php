@@ -18,6 +18,7 @@ class mi_aecmodifycost
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AECMODIFYCOST_NAME');
 		$info['desc'] = JText::_('AEC_MI_AECMODIFYCOST_DESC');
+		$info['type'] = array( 'aec.checkout', 'vendor.valanx' );
 
 		return $info;
 	}
@@ -25,8 +26,12 @@ class mi_aecmodifycost
 	function Settings()
 	{
 		$settings = array();
-		$settings['custominfo']		= array( 'inputD' );
-		$settings['options']		= array( 'inputB' );
+		$settings['custominfo']			= array( 'inputD' );
+		$settings['options']			= array( 'inputB' );
+		$settings['allow_empty']		= array( 'toggle' );
+		$settings['multi_select']		= array( 'toggle' );
+		$settings['multi_amount_max']	= array( 'inputB' );
+		$settings['multi_amount_min']	= array( 'inputB' );
 
 		$modes = array();
 		$modes[] = JHTML::_('select.option', 'basic', JText::_('MI_MI_AECMODIFYCOST_SET_MODE_BASIC') );
@@ -69,23 +74,29 @@ class mi_aecmodifycost
 				$settings['exp'] = array( 'p', "", JText::_('MI_MI_AECMODIFYCOST_DEFAULT_NOTICE') );
 			}
 
-			if ( count( $options ) < 5 ) {
-				$settings['option'] = array( 'hidden', null, 'mi_'.$this->id.'_option' );
-
+			if ( !empty( $this->settings['multi_select'] ) ) {
 				foreach ( $options as $id => $choice ) {
-					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_option', $choice['id'], true, $choice['text'] );
+					$settings['option_'.$choice['id']] = array( 'checkbox', 'mi_'.$this->id.'_option[]', $choice['id'], 0, $choice['text'] );
 				}
 			} else {
-				$settings['option'] = array( 'list', "", "" );
+				if ( count( $options ) < 5 ) {
+					$settings['option'] = array( 'hidden', null, 'mi_'.$this->id.'_option' );
 
-				$loc = array();
-				$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
+					foreach ( $options as $id => $choice ) {
+						$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_option', $choice['id'], true, $choice['text'] );
+					}
+				} else {
+					$settings['option'] = array( 'list', "", "" );
 
-				foreach ( $options as $id => $choice ) {
-					$loc[] = JHTML::_('select.option', $choice['id'], $choice['text'] );
+					$loc = array();
+					$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
+
+					foreach ( $options as $id => $choice ) {
+						$loc[] = JHTML::_('select.option', $choice['id'], $choice['text'] );
+					}
+
+					$settings['lists']['option']	= JHTML::_('select.genericlist', $loc, 'option', 'size="1"', 'value', 'text', 0 );
 				}
-
-				$settings['lists']['option']	= JHTML::_('select.genericlist', $loc, 'option', 'size="1"', 'value', 'text', 0 );
 			}
 
 		} else {
@@ -99,9 +110,27 @@ class mi_aecmodifycost
 	{
 		$return = array();
 
-		if ( empty( $request->params['option'] ) || ( $request->params['option'] == "" ) ) {
-			$return['error'] = "Please make a selection";
-			return $return;
+		if ( is_array( $request->params['option'] ) ) {
+			if ( count( $request->params['option'] ) > $this->settings['multi_amount_max'] ) {
+				$return['error'] = "You cannot select more than " . $this->settings['multi_amount_max'] . " options.";
+				return $return;
+			}
+
+			if ( count( $request->params['option'] ) < $this->settings['multi_amount_min'] ) {
+				$return['error'] = "You cannot select less than " . $this->settings['multi_amount_min'] . " options.";
+				return $return;
+			}
+
+			if ( !count( $request->params['option'] ) && empty( $this->settings['allow_empty'] ) ) {
+				$return['error'] = "Please make a selection";
+				return $return;
+			}
+
+		} else {
+			if ( ( empty( $request->params['option'] ) || ( $request->params['option'] == "" ) ) && empty( $this->settings['allow_empty'] ) ) {
+				$return['error'] = "Please make a selection";
+				return $return;
+			}
 		}
 
 		return $return;
@@ -109,10 +138,12 @@ class mi_aecmodifycost
 
 	function invoice_item_cost( $request )
 	{
-		$option = $this->getOption( $request );
+		$options = $this->getOption( $request );
 
-		if ( !empty( $option ) ) {
-			$request = $this->addCost( $request, $request->add, $option );
+		foreach ( $options as $option ) {
+			if ( !empty( $option ) ) {
+				$request = $this->addCost( $request, $request->add, $option );
+			}
 		}
 
 		return true;
@@ -136,40 +167,38 @@ class mi_aecmodifycost
 		return $request;
 	}
 
-	function action( $request )
-	{
-
-	}
 	function relayAction( $request )
 	{
 		if ( !( $request->area == 'afteraction' ) ) {
 			return null;
 		}
 
-		$option = $this->getOption( $request );
+		$options = $this->getOption( $request );
 
-		if ( empty( $option['mi'] ) ) {
-			return true;
-		}
+		foreach ( $options as $option ) {
+			if ( empty( $option['mi'] ) ) {
+				continue;
+			}
 
-		$db = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-		$mi = new microIntegration( $db );
+			$mi = new microIntegration( $db );
 
-		if ( !$mi->mi_exists( $option['mi'] ) ) {
-			return true;
-		}
+			if ( !$mi->mi_exists( $option['mi'] ) ) {
+				return true;
+			}
 
-		$mi->load( $option['mi'] );
+			$mi->load( $option['mi'] );
 
-		if ( $mi->callIntegration() ) {
-			$exchange = $params = null;
+			if ( $mi->callIntegration() ) {
+				$exchange = $params = null;
 
-			if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, 'action', $request->add, $params ) === false ) {
-				global $aecConfig;
+				if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, 'action', $request->add, $params ) === false ) {
+					global $aecConfig;
 
-				if ( $aecConfig->cfg['breakon_mi_error'] ) {
-					return false;
+					if ( $aecConfig->cfg['breakon_mi_error'] ) {
+						return false;
+					}
 				}
 			}
 		}
@@ -181,13 +210,20 @@ class mi_aecmodifycost
 	{
 		$options = $this->getOptionList();
 
+		if ( !is_array( $request->params['option'] ) ) {
+			$request->params['option'] = array( $request->params['option'] );
+		}
+
+		$result = array();
 		foreach ( $options as $option ) {
-			if ( $option['id'] == $request->params['option'] ) {
-				return $option;
+			foreach ( $request->params['option'] as $soption ) {
+				if ( $option['id'] == $soption ) {
+					$result[] = $option;
+				}
 			}
 		}
 
-		return null;
+		return $result;
 	}
 
 	function getOptionList()

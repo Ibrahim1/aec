@@ -18,6 +18,7 @@ class mi_affiliatepro
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AFFPRO');
 		$info['desc'] = JText::_('AEC_MI_DESC_AFFPRO');
+		$info['type'] = array( 'tracking.affiliate', 'vendor.qualityunit' );
 
 		return $info;
 	}

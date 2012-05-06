@@ -17,6 +17,7 @@ class mi_sobi extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_SOBI_NAME');
 		$info['desc'] = JText::_('AEC_MI_SOBI_DESC');
+		$info['type'] = array( 'directory_documentation.directory', 'vendor.sigsiu' );
 
 		return $info;
 	}

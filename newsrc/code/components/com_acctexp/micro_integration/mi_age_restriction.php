@@ -18,6 +18,7 @@ class mi_age_restriction extends MI
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AGE_RESTRICTION_NAME');
 		$info['desc'] = JText::_('AEC_MI_AGE_RESTRICTION_DESC');
+		$info['type'] = array( 'aec.checkout', 'vendor.valanx' );
 
 		return $info;
 	}

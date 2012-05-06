@@ -26,6 +26,7 @@ class mi_virtuemart
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_VIRTM');
 		$info['desc'] = JText::_('AEC_MI_DESC_VIRTM');
+		$info['type'] = array( 'ecommerce.shopping_cart', 'vendor.virtuemart' );
 
 		return $info;
 	}

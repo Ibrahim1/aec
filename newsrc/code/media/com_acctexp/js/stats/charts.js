@@ -693,6 +693,9 @@ d3.chart.rickshaw = function () {
 		var groups = data.map(function(d){ return Number( d.group ) } ).getUnique();
 
 		if ( params.unit == "day" ) {
+			params.end.setDate(params.end.getDate()+1);
+			params.end.setHours(0,0,0,0);
+
 			var units = d3.time.days(params.start, params.end);
 
 			var mdata = d3.nest()
@@ -707,6 +710,9 @@ d3.chart.rickshaw = function () {
 
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][format(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][format(xdate)]  };
 		} else if ( params.unit == "week" ) {
+			params.end.setDate(params.end.getDate()+1);
+			params.end.setHours(0,0,0,0);
+
 			var units = d3.time.weeks(params.start, params.end);
 
 			var mdata = d3.nest()
@@ -721,6 +727,9 @@ d3.chart.rickshaw = function () {
 
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][week(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][week(xdate)]  };
 		} else if ( params.unit == "month" ) {
+			params.end.setDate(params.end.getDate()+1);
+			params.end.setHours(0,0,0,0);
+
 			var units = d3.time.months(params.start, params.end);
 
 			var mdata = d3.nest()
@@ -735,6 +744,9 @@ d3.chart.rickshaw = function () {
 
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][month(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][month(xdate)]  };
 		} else if ( params.unit == "year" ) {
+			params.end.setDate(params.end.getDate()+1);
+			params.end.setHours(0,0,0,0);
+
 			var units = d3.time.years(params.start, params.end);
 
 			var mdata = d3.nest()
@@ -749,7 +761,8 @@ d3.chart.rickshaw = function () {
 
 			var gety = function( mdata, xdate, xgroup ){ return ( typeof mdata[xgroup][year(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][year(xdate)]  };
 		} else if ( params.unit == "hour" ) {
-			params.end.setHours(24,15,15,0);
+			params.end.setDate(params.end.getDate()+1);
+			params.end.setHours(0,0,0,0);
 
 			var units = d3.time.hours(params.start, params.end);
 
@@ -808,7 +821,7 @@ d3.chart.rickshaw = function () {
 				xFormatter: xFormatter
 			} );
 
-			var axes = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:12} );
+			var axes = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:1, ticksTreatment:'xtick-shifted-'+params.unit } );
 
 			axes.render();
 		}

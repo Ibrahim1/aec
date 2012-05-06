@@ -12,7 +12,7 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <tr>
 	<td class="cc_gateway">
-		<p align="center"><img src="<?php echo $processor->getLogoPath() . '" alt="' . $processor->info['longname'] . '" title="' . $processor->info['longname'] ?>" /></p>
+		<p align="center"><?php echo $processor->getLogoImg() ?></p>
 	</td>
 	<td class="cc_icons">
 		<p><?php if ( isset( $processor->info['description'] ) ) { echo $processor->info['description']; } ?></p>

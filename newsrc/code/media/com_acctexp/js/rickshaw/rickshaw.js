@@ -527,8 +527,8 @@ Rickshaw.Graph = function(args) {
 			
 			var isInRange = true;
 			
-			if (this.window.xMin && d.x <= this.window.xMin) isInRange = false;
-			if (this.window.xMax && d.x >= this.window.xMax) isInRange = false;
+			if (this.window.xMin && d.x < this.window.xMin) isInRange = false;
+			if (this.window.xMax && d.x > this.window.xMax) isInRange = false;
 			
 			return isInRange;
 		}
@@ -946,7 +946,7 @@ Rickshaw.Graph.Annotate = function(args) {
 
 	this.update = function() {
 
-		for (var time in self.data) {
+		Rickshaw.keys(self.data).forEach( function(time) {
 
 			var annotation = self.data[time];
 			var left = self.graph.x(time);
@@ -955,7 +955,7 @@ Rickshaw.Graph.Annotate = function(args) {
 				if (annotation.element) {
 					annotation.element.style.display = 'none';
 				}
-				continue;
+				return;
 			}
 
 			if (!annotation.element) {
@@ -989,7 +989,7 @@ Rickshaw.Graph.Annotate = function(args) {
 
 				annotation.line.style.left = left + 'px';
 			} );
-		}
+		}, this );
 	};
 
 	this.graph.onUpdate( function() { self.update(); } );
@@ -1257,9 +1257,69 @@ Rickshaw.Graph.Behavior.Series.Toggle = function(args) {
 				line.element.classList.add('disabled');
 			}
 		}
+		
+                var label = line.element.getElementsByTagName('span')[0];
+                label.onclick = function(e){
+
+                        var disableAllOtherLines = line.series.disabled;
+                        if ( ! disableAllOtherLines ) {
+                                for ( var i = 0; i < self.legend.lines.length; i++ ) {
+                                        var l = self.legend.lines[i];
+                                        if ( line.series === l.series ) {
+                                                // noop
+                                        } else if ( l.series.disabled ) {
+                                                // noop
+                                        } else {
+                                                disableAllOtherLines = true;
+                                                break;
+                                        }
+                                }
+                        }
+
+                        // show all or none
+                        if ( disableAllOtherLines ) {
+
+                                // these must happen first or else we try ( and probably fail ) to make a no line graph
+                                line.series.enable();
+                                line.element.classList.remove('disabled');
+
+                                self.legend.lines.forEach(function(l){
+                                        if ( line.series === l.series ) {
+                                                // noop
+                                        } else {
+                                                l.series.disable();
+                                                l.element.classList.add('disabled');
+                                        }
+                                });
+
+                        } else {
+
+                                self.legend.lines.forEach(function(l){
+                                        l.series.enable();
+                                        l.element.classList.remove('disabled');
+                                });
+
+                        }
+                };
+
 	};
 
 	if (this.legend) {
+
+                $(this.legend.list).sortable( {
+                        start: function(event, ui) {
+                                ui.item.bind('no.onclick',
+                                        function(event) {
+                                                event.preventDefault();
+                                        }
+                                );
+                        },
+                        stop: function(event, ui) {
+                                setTimeout(function(){
+                                        ui.item.unbind('no.onclick');
+                                }, 250);
+                        }
+                })
 
 		this.legend.lines.forEach( function(l) {
 			self.addAnchor(l);
@@ -1655,11 +1715,11 @@ Rickshaw.Graph.Renderer = Rickshaw.Class.create( {
 		var xMin = stackedData[0][0].x;
 		var xMax = stackedData[0][ stackedData[0].length - 1 ].x;
 
-		xMin -= (xMax - xMin) * (this.padding.left);
-		xMax += (xMax - xMin) * (this.padding.right);
+		xMin -= (xMax - xMin) * this.padding.left;
+		xMax += (xMax - xMin) * this.padding.right;
 
-		var yMin = ( this.graph.min === 'auto' ? d3.min( values ) : this.graph.min || 0 );
-		var yMax = this.graph.max || d3.max( values ) * (1 + this.padding.top);
+		var yMin = this.graph.min === 'auto' ? d3.min( values ) : this.graph.min || 0;
+		var yMax = this.graph.max || d3.max( values );
 
 		return { x: [xMin, xMax], y: [yMin, yMax] };
 	},
@@ -1764,41 +1824,24 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 	},
 
 	domain: function($super) {
-		this._barWidth = null;
-		return $super();
+
+		var domain = $super();
+
+		var frequentInterval = this._frequentInterval();
+		domain.x[1] += parseInt(frequentInterval.magnitude);
+
+		return domain;
 	},
 
 	barWidth: function() {
 
-		if (this._barWidth) return this._barWidth;
-
 		var stackedData = this.graph.stackedData || this.graph.stackData();
 		var data = stackedData.slice(-1).shift();
 
-		var intervalCounts = {};
+		var frequentInterval = this._frequentInterval();
+		var barWidth = this.graph.x(data[0].x + frequentInterval.magnitude * (1 - this.gapSize)); 
 
-		for (var i = 0; i < data.length - 1; i++) {
-			var interval = data[i + 1].x - data[i].x;
-			intervalCounts[interval] = intervalCounts[interval] || 0;
-			intervalCounts[interval]++;
-		}
-
-		var frequentInterval = { count: 0 };
-
-		d3.keys(intervalCounts).forEach( function(i) {
-			if (frequentInterval.count < intervalCounts[i]) {
-
-				frequentInterval = {
-					count: intervalCounts[i],
-					magnitude: i
-				};
-			}
-		} );
-
-
-		this._barWidth = this.graph.x(data[0].x + frequentInterval.magnitude * (1 - this.gapSize));
-
-		return this._barWidth;
+		return barWidth;
 	},
 
 	render: function() {
@@ -1839,6 +1882,36 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 		}, this );
 
 		jQuery('svg').tooltip({placement: "right", selector: '.bstooltip', delay: { show: 100, hide: 50 }});
+	},
+
+	_frequentInterval: function() {
+
+		var stackedData = this.graph.stackedData || this.graph.stackData();
+		var data = stackedData.slice(-1).shift();
+
+		var intervalCounts = {};
+
+		for (var i = 0; i < data.length - 1; i++) {
+			var interval = data[i + 1].x - data[i].x;
+			intervalCounts[interval] = intervalCounts[interval] || 0;
+			intervalCounts[interval]++;
+		}
+
+		var frequentInterval = { count: 0 };
+
+		Rickshaw.keys(intervalCounts).forEach( function(i) {
+			if (frequentInterval.count < intervalCounts[i]) {
+
+				frequentInterval = {
+					count: intervalCounts[i],
+					magnitude: i
+				};
+			}
+		} );
+
+		this._frequentInterval = function() { return frequentInterval };
+
+		return frequentInterval;
 	}
 } );
 

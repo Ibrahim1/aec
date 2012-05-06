@@ -18,6 +18,7 @@ class mi_uddeim
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_UDDEIM');
 		$info['desc'] = JText::_('AEC_MI_DESC_UDDEIM');
+		$info['type'] = array( 'communication.instantmessenging', 'vendor.stephan_slabihoud' );
 
 		return $info;
 	}

@@ -160,20 +160,11 @@ class processor_realex_remote extends XMLprocessor
 			$i++;
 		}
 
-/* To do?
-if($md5hash1 != $md5hash)
-{
-	The hashes do not match - response not authenticated!
-	$_SESSION['REALEX_ERROR_MSG'] = $result_mesg.'<br>Click Payment Method and Check the Values';
-	return false;
-}
-*/
-
 		if ( $result_code == '00' ) {
 			$response1['valid'] = 1;
 		} else {
 			$response['valid'] = 0;
-			$response1['error']  = $result_msg.'<br>Please Check the Values';
+			$response1['error']  = $result_msg . ' - please check the values';
 		}
 
 		return $response1;
