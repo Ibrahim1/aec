@@ -55,13 +55,11 @@ class mi_yourmembership_com
 			$request = $this->getCallXML( 'Sa.Members.Profile.Create', $id, array(	'FirstName' => $name['first'],
 																					'LastName' => $name['last'],
 																					'EmailAddr' => $request->metaUser->cmsUser->email,
-																					'Password' => $credentials['password']
+																					'Password' => $params['temp_pw']
 																				)
 										);
 			$result = $this->apiCall( $request );
 		}
-
-		$this->apiUserSignup( $request );
 
 		return true;
 	}
