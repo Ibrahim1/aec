@@ -28,6 +28,8 @@ class tool_pretend
 		$settings['plans']			= array( 'inputB', 'Plans', 'Number of Membership Plans', 10 );
 		$settings['groups']			= array( 'inputB', 'Groups', 'Number of Membership Plan Groups', 3 );
 		$settings['users']			= array( 'inputB', 'Users', 'Number of Users', 25000 );
+		$settings['min_payments']	= array( 'inputB', 'Min Payments per User', 'Every user has at least this many payments', 1 );
+		$settings['max_payments']	= array( 'inputB', 'Max Payments per User', 'Every user has at most this many payments', 10 );
 		
 		$settings['start']			= array( 'inputB', 'Start', 'Start of business', date('Y')-10 );
 
@@ -45,7 +47,16 @@ class tool_pretend
 		$planlist = $this->createPlans( $grouplist, $_POST['plans'] );
 
 		// Create Users
+		$userlist = $this->createUsers( $grouplist, $_POST['users'] );
+
 		// Create Payments
+		$paymentlist = $this->createPayments( $grouplist, $_POST['min_payments'], $_POST['max_payments'] );
+
+		// Store some data so we can delete fake entries later on
+		$data = array();
+
+		$bucket = new aecBucket( $db );
+		$bucket->stuff( 'tool_pretend', $data );
 	}
 
 	function createPlans( $plans )

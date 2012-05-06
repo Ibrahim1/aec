@@ -324,4 +324,14 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config_templates` ('
 . ') ENGINE=MyISAM;'
 ;
 
+$queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_bucket` ('
+. '`id` int(11) NOT NULL auto_increment,'
+. '`subject` varchar(255) NULL,'
+. '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
+. '`data` text NULL,'
+. ' PRIMARY KEY (`id`),'
+. ' KEY (`userid`)'
+. ') ENGINE=MyISAM;'
+;
+
 ?>
