@@ -31,14 +31,15 @@ class processor_secureandpay extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['aec_insecure']	= 1;
-		$settings['numsite']		= 'your NumSite';
-		$settings['password']		= 'your***password';
-		$settings['testmode']		= 0;
-		$settings['invoice_tax']	= 0;
-		$settings['currency']		= 'USD';
-		$settings['language']		= 'en';
-		$settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['aec_insecure']		= 1;
+		$settings['aec_experimental']	= array( 'p' );
+		$settings['numsite']			= 'your NumSite';
+		$settings['password']			= 'your***password';
+		$settings['testmode']			= 0;
+		$settings['invoice_tax']		= 0;
+		$settings['currency']			= 'USD';
+		$settings['language']			= 'en';
+		$settings['item_name']			= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		return $settings;
 	}
@@ -73,7 +74,7 @@ class processor_secureandpay extends POSTprocessor
 		$var['orderID']			= $request->invoice->invoice_number;
 
 		$tax = 0;
-		if ( !empty( $this->settings['invoice_tax'] ) && isset( $request->items->tax ) ) {
+		if ( isset( $request->items->tax ) ) {
 			foreach ( $request->items->tax as $itax ) {
 				$tax += $itax['cost'];
 			}
@@ -86,7 +87,7 @@ class processor_secureandpay extends POSTprocessor
 		$var['Currency']		= $this->settings['currency'];
 
 		$var['Language']		= $this->settings['language'];
-
+/*
 		if ( !empty( $this->settings['user_email'] ) ) {
 			$var['EMAIL']		= AECToolbox::rewriteEngineRQ( $this->settings['user_email'], $request );
 		} else {
@@ -126,7 +127,7 @@ class processor_secureandpay extends POSTprocessor
 		if ( !empty( $this->settings['user_tel'] ) ) {
 			$var['CustTel']		= AECToolbox::rewriteEngineRQ( $this->settings['user_tel'], $request );
 		}
-
+*/
 		$var['orderProducts']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		//$var['MerchantSession']		= ???;
 		$var['PaymentType']		= 'Direct';
