@@ -3880,17 +3880,6 @@ function editMicroIntegration ( $id, $option )
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
 }
 
-function deep_ksort( &$arr )
-{
-	ksort($arr);
-
-	foreach ( $arr as &$a ) {
-		if ( is_array($a) && !empty($a) ) {
-			deep_ksort($a);
-		}
-	}
-}
-
 function saveMicroIntegration( $option, $apply=0 )
 {
 	$db = &JFactory::getDBO();
@@ -5068,37 +5057,6 @@ function quicklookup( $option )
 	}
 
 	return false;
-}
-
-function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
-    $spaces = "";
-    $space = $html ? "&nbsp;" : " ";
-    $newline = $html ? "<br />\n" : "\n";
-    for ($i = 1; $i <= 6; $i++) {
-        $spaces .= $space;
-    }
-    $tabs = $spaces;
-    for ($i = 1; $i <= $level; $i++) {
-        $tabs .= $spaces;
-    }
-    if (is_array($var)) {
-        $title = "Array";
-    } elseif (is_object($var)) {
-        $title = get_class($var)." Object";
-    }
-    $output = $title . $newline . $newline;
-    if ( !empty( $var ) ) {
-	    foreach($var as $key => $value) {
-	        if (is_array($value) || is_object($value)) {
-	            $level++;
-	            $value = obsafe_print_r($value, true, $html, $level);
-	            $level--;
-	        }
-	        $output .= $tabs . "[" . $key . "] => " . $value . $newline;
-	    }
-    }
-    if ($return) return $output;
-      else echo $output;
 }
 
 function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=false )
@@ -6350,41 +6308,6 @@ function toolBoxTool( $option, $cmd )
 		}
 
 		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );
-	}
-}
-
-function arrayValueDefault( $array, $name, $default )
-{
-	if ( is_object( $array ) ) {
-		if ( isset( $array->$name ) ) {
-			return $array->$name;
-		} else {
-			return $default;
-		}
-	}
-
-	if ( isset( $array[$name] ) ) {
-		if ( is_array( $array[$name] ) ) {
-			$selected = array();
-			foreach ( $array[$name] as $value ) {
-				$selected[]->value = $value;
-			}
-
-			return $selected;
-		} elseif ( strpos( $array[$name], ';' ) !== false ) {
-			$list = explode( ';', $array[$name] );
-
-			$selected = array();
-			foreach ( $list as $value ) {
-				$selected[]->value = $value;
-			}
-
-			return $selected;
-		} else {
-			return $array[$name];
-		}
-	} else {
-		return $default;
 	}
 }
 
