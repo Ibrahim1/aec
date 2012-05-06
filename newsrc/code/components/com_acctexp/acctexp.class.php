@@ -3691,6 +3691,81 @@ class eventLog extends serialParamDBTable
 
 }
 
+class aecBucketHandler
+{
+	function aecBucketHandler()
+	{
+
+	}
+
+	function getListForSubject( $subject )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_displaypipeline'
+				. ' WHERE `subject` = \'' . $subject . '\''
+				;
+		$db->setQuery( $query );
+		$buckets = $db->loadResultArray();
+
+		return $buckets;
+	}
+
+	function getFullListForSubject( $subject )
+	{
+		$db = &JFactory::getDBO();
+
+		$buckets = $this->getListForSubject( $subject );
+
+		$array = array();
+		foreach ( $buckets as $bid ) {
+			$bucket = new aecBucket( $db );
+			$bucket->load( $bid );
+
+			$array[] = $bucket;
+		}
+
+		return $array;
+	}
+}
+
+class aecBucket extends serialParamDBTable
+{
+	/** @var int Primary key */
+	var $id				= null;
+	/** @var string */
+	var $subject 		= null;
+	/** @var datetime */
+	var $created_date	= null;
+	/** @var text */
+	var $data 			= null;
+
+	/**
+	 * @param database A database connector object
+	 */
+	function aecBucket( &$db )
+	{
+	 	parent::__construct( '#__acctexp_bucket', 'id', $db );
+	}
+
+	function declareParamFields()
+	{
+		return array( 'params' );
+	}
+
+	function stuff( $subject, $data )
+	{
+		$this->created_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
+		$this->subject		= $subject;
+		$this->data		= $data;
+
+		$this->check();
+		$this->store();
+	}
+
+}
+
 class aecEventHandler
 {
 	function pingEvents()

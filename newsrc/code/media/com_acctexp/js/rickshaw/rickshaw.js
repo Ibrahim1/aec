@@ -955,7 +955,7 @@ Rickshaw.Graph.Annotate = function(args) {
 				if (annotation.element) {
 					annotation.element.style.display = 'none';
 				}
-				continue;
+				return;
 			}
 
 			if (!annotation.element) {
