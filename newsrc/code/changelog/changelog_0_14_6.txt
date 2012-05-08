@@ -1,0 +1,246 @@
+Processor Additions [4 items]
+297	SMScoin Integration (Thanks to the SMScoin team!)
+307	Mollie.nl Integration (Wallie & iDeal) (Thanks to Thailo van Ree!)
+446	Sofortüberweisung.de Integration
+492	Payfast.co.za Integration
+
+included, but still beta [5 items]
+424	Realex Integration (Redirect & Remote) (Thanks to David Henry!)
+425	Sage Pay Integration (Thanks to David Henry!)
+443	Robokassa Integration
+460	Sparkasse Internetkasse Integration
+267	Google Checkout Recurring Billing (caution - claimed to be "experimental" by Google, help us beta test this!)
+
+[+3 items]
+477	Add Currencies to Verotel
+497	Add UK currency in Paycom
+499	WPP Express Checkout Recurring Payments + Trials for both regular and express checkouts
+
+MI Additions [4 items]
+305	Tip MI - Add a tip to a payment
+323	Pepperjam Affiliate Tracking MI
+350	Phoca Download MI - manage upload permissions
+485	Pardot Marketing MI
+
+[+13 items]
+313	Jnews Mi to use both the subscribers and the queue table
+319	CC and BCC Recipients Option for Email MIs
+339	ACL MI: Removal of ACL groups in J!1.6
+347	vBulletin MI - further group settings
+381	Invoice Email MI - CC and BCC fields
+383	Tax MI: VAT Number as default next checkout
+412	RSTickets MI to show latest tickets in backend
+414	"Refund" action in MicroIntegrations
+494	Pardot Marketing MI: Dynamic field for prospect details
+495	Tax MI: Seller Country option (to correctly add tax on b2b transactions within an EU country)
+502	Ninjaboard MI: Option to remove thread subscriptions or mute them (NB 1.2+ required)
+536	FUA MI: "Remove Groups" feature for Action and Expiration - to specifically remove certain groups, if present
+522	Mailchimp MI to update user account details on joomla user profile change (Thanks to Jon Martin!)
+
+Frontend Additions [8 items]
+277	Various frontend notices still carried out J!1.0 style
+335	Thousands separator in Amounts
+352	Pagination on MySubscription->Invoices
+418	Option to hide plan description on confirmation
+471	Session changing in Joomla 1.6
+514	Option to not show coupons on checkout
+524	auto_complete=off for all sensitive fields like CC details
+533	Pending page should only be accessible if really pending
+
+Backend Additions [19 items]
+274	Notes on Plan Feature
+279	Backend User Profile - link to Jomsocial profile
+306	Automatic formatting for json encoded and xml fields in Eventlog
+357	Increase Plan Name character limit
+359	CB ItemID Setting
+363	Invoice Printout from User Edit screen
+380	Invoice Printing from Backend Invoices List
+379	Better Invoice Dates in Backend Subscriber screen
+382	Pagination on Backend Subscription Invoice list
+389	Show full text when hover truncation mark ([...]) in AEC Readout
+405	Server Time Offset Settings
+413	Refactor MI Selection list
+432	Export: Notes Field
+435	text search (for use in conditionals) for ReWrite Engine (use 'hastext' function with haystack and then needle)
+438	Export: Last Invoice data
+440	Support for Akeeba System Restore Points (wait, it already does!)
+458	AEC Import tells how many imports failed
+527	subscription_expiration_daysleft in RWengine + days_distance & date_distance_days calls in aecJSON
+506	Multi-Select plans to be applied from Edit User screen
+
+System Additions [6 items]
+288	Joomla 1.6 (Authentication, Backend Profile Links, Menu items)
+318	Convert old J!1.0 language files to J!1.5/1.6 ini files
+490	Joomla 1.7 compatibililty
+504	Brand new, spanking fresh and not at all overdue router.php
+513	AEC Membership Tab - Plugin for CommunityBuilder (Thanks to Anton 'crashedfx' Skvortsov)
+521	AEC API (data readout for on-site or external integration via JSON Request)
+
+Toolbox Additions [3 items]
+286	Toolbox: Support Hours tool to show total unused hours
+488	Toolbox: Cleanup tool should remove debug messages from Eventlog
+489	Toolbox: Mini Report to properly show week fractions
+
+MI Bugfixes [27 items]
+278	MI ACL Change session not working
+287	Updated Frontend-User-Access MI, again (Thanks, Carsten Engel!)
+289	ReWrite Engine not working on HTML Invoice Mailout MI
+293	PHPBB3 MI - Problem with finding existing users
+295	Amigos MI - not working again
+298	HTML Invoice Mailout breaks process
+310	Event List MI Settings not appearing
+311	phpbb3 MI Fatal Error
+322	Google Analytics Asynchronous Tracking broken (fix thanks to Matthew Weeks)
+341	Expire all Instances set to No, only works 1 time
+348	Modify Cost Mi fails with more than 4 options
+353	Coupon MI error sending out coupon codes in HTML format (Fix thanks to Francois Gagnon)
+373	ACY Mailing List MI fatal error in new version of acy
+376	Modify Cost MI does not work with apply plan MI
+387	mi_ninjaboard.php on line 14
+390	JNews MI files wrong subscription date (Thanks to Francois Gagnon!)
+394	MU MI sets receive system emails to YES
+397	MI ACL Fails
+399	MI ACL Change session not working for JACLplus
+400	JomSocial MI to write to field if "Overwrite Existing" is disabled, yet field empty
+401	Tax MI problem with only one location
+426	PAP MI advises to use outdate link
+461	Pepperjam MI - Language variables missing
+479	Modify Cost MI does not work with apply plan MI
+507	New JSPT, JSPT Mi does not assign on expiration
+510	Mosets Tree Mi not giving unlimited
+535	Raffle MI: Failed to include Recipients in the email send
+539	Modify cost MI not triggering other MI
+
+Processor Bugfixes [18 items]
+137	PayPal Verification fails when posting back non-standard characters
+173	Des Jardins Integration
+330	Payapl WPP fails in new version?
+366	No Waiting Plan is applied in Offline
+367	Eway XML logo missing
+370	PayPal WPP Express Checkout fails with some SSL redirects
+388	Zombaio Broken
+410	WPP non recurring clearing invoice twice
+470	WorldPay test URL is wrong
+475	2Checkout - shouldn't send cart_order_id when we have a product_id (recurring)
+500	Fatal Error in Paypal WPP on Billing Details Screen
+534	Authorize.net CIM applying coupons twice
+531	PayPal when shipping address is required Line 2 breaks the IPN
+529	Odd characters in username breaks CIM
+481	Authorize.net ARB - AB missing from Canadian provinces
+317	WPP Updating profile
+276	CIM Updating Profile does not display an "updated!" notice
+541	PayPal WPP double billing on express checkout
+
+Frontend Bugfixes [16 items]
+263	Invoice showing empty transaction history on recurring billing
+270	Redirect on custom plans page failing
+280	Chinese Translation fails to load
+290	Invoice printout encoding missing
+315	Coupon Using "Amount" discounts do not calculate correctly in a Cart with multiple items and quantities
+364	Checkout page language not really sensible with Offline Processor
+378	Invoice Trial Period not showing correct Amount
+384	Privacy Issue when using userid in subscribe link
+403	use RWengine on Custom Checkout, Expired, Hold Page Text
+433	Entering an invalid Coupon code still goes to thank you page
+447	When following Login -> Registration -> Signup, compound call is not picked up by AEC for confirmation
+448	ACEsef breaks subscription
+449	Invoice Billing history sometimes only showing last entry (Thanks Haris Agic!)
+457	With SEO Turned on do not get Membership required page
+515	K2 Registration breaks AEC
+537	Make sure free plan checkout always check restrictions (to prevent fraudulend double "purchases")
+540	Tabbed payment details have bad layout on My Subscriptions/Billing Details Tab
+
+Backend Bugfixes [14 items]
+338	Settings Names too wide
+349	Eventlog on Central page - main text missing
+371	Override Global settings on Processor does not turn off
+385	Group Colors in select boxes (Thanks to Francois Gagnon)
+395	Language Variables Missing on Override Processor Settings
+429	Blank screen when adding a new plan or a New Mi
+434	Joomal 1.6 Error on AEC readout
+436	Parent Group Selection broken in Joomla 1.6
+439	AEC Readout: Display of GIDs broken
+442	AEC Settings should not pick up disabled menu items for ItemId assignment
+445	Group selection list broken in J!1.6
+453	Group Assignment other than registered no longer working in Joomal 1.5
+469	JomSocial field names are not showing in re-write engine
+473	Printing a 0.00 invoice from the back end gives a fatal error
+478	Joomla 1.6+ Menu Items missing page specific settings
+
+System Bugfixes [36 items]
+272	Some Settings lost when updating
+291	Notice: Array to string conversion acctexp.class.php on line 14287 on checkout page
+301	Standard Parent Plan not being applied on existing, yet expired primary membership
+324	Joomla 1.6 Plan does not clear on any subsequent purchase
+325	PHP Warning showing with Error reporting set to MAX in 1.6
+327	MI listing when adding new MI missing in Joomla 1.6
+329	vSession Plugin- AEC Plan Specifications not working
+336	Joomla 1.6 user email activation email contains wrong link
+340	Invoice Cushion should not prevent non-clearing notifications
+345	Restrictions - Min&Max Used Group not working
+358	Sessions not updated on usergroup change in J!1.6
+360	% encoding in sprintf() usage
+362	ReWrite Engine assigns first name as last name (found by artifex)
+365	TYPE=MyISAM in Install SQL should be updated to ENGINE=MyISAM
+368	registerRedirectJomSocial/TempTokenFromPlan issue (found by andrewp1)
+369	Bug: missing argument 2 for plgUserAECaccess::onUserLoginFailure (thanks, donmarvin!)
+374	Docman issues fatal error when AEC Routing plugin is enabled on download
+392	Prevent AEC Routing Pluging from interfering with components it isn't concerned with
+393	SQL Injection issue when modifying the session
+404	Restrictions on Min/Max Group doesn't work with Root Group
+417	Call 1.6 groups by id instead of name (i18n issue)
+422	Redoing content of a Cart does not change invoice processor, breaks IPNs
+423	Admin Email Notification not using user IP on clearing of invoice
+428	Jooomla 1.6 - Warning on $_lang->_strings
+437	Querying the usergroups for one user broken in J!1.6
+459	Invoices and Subscriptions with a zero User ID being created
+465	Warnings in 1.6 when using the user plugin to extend registration
+476	aecEscape chokes on Arrays
+484	multiple reports of _NOT_AUTH and Invalid argument supplied for foreach()
+496	Rare bug with notifications where AEC assigns an itemid to a notification URL
+498	Restrict Combinations on Coupons not working.
+501	Backend buttons missing in J!1.6
+503	VsessionControl settings not working in Joomla 1.6+
+516	AEC Module and Cart module not showing parameters in Joomla 1.6/1.7
+523	Notify_redirect.php and php 5.3
+532	File [...]/cbaecmembershiptab does not exist!
+271	Alpha Registration Validation broken
+
+Toolbox Bugfixes [1 item]
+450	System Cleanup in Toolbox does not work
+
+Language [9 items]
+343	More french language file fixes (thanks to Francois Gagnon)
+344	Danish Backend Translation (Thanks to Ronny Buelund!)
+372	Greek translation (with help from Alexandros Seitaridis)
+386	Language Files
+406	Swedish Translation (HUGE thanks to Kristian from JOKR Solutions)
+420	Japanese Translation (Thanks to Masato Sato!)
+427	Language variable on AEC Settings
+431	make up for _QQ_ not being provided in .ini files 1.5 (working in 1.6)
+463	Updated Czech Translation (Thanks to David Mara!)
+466	Spanish Frontend Translation (Thanks to Christian Trujillo)
+
+[Total: 168 items]
+
+Revision 3879
+
+Revision 3879 UPDATE! [18 items]
+564	Notice: Undefined property: InvoiceFactory::$checkout in /components/com_acctexp/acctexp.html.php on line 897
+572	Group selection in subscribe URL broken when using menu item and custom call combined
+573	Groups not showing up in Plans List
+570	AEC Error plugin causes logout from menu item to fail
+578	Load language files on install properly
+577	Better error reporting when failing to expire memberships on heartbeat
+576	Back end heartbeat breaking on recurring memberships instead of skipping
+570	AEC Error plugin causes logout from menu item to fail
+584	AECaccess should never block a login when Require Subscription is disabled
+579	Proper Error message for PayPal status pending_reason=intl
+580	Finish Use Invoice Tax switch in the PayPal processor
+582	Update ALL the version numbers
+581	Update credits listing
+568	Offline Processor 2 & Offline Processor 3 (for offering different custom hand-processed checkouts)
+583	Stats Placeholder
+558	Generic VPC Processor
+587	Danish language is da-DK, not da-DA ("Like everything in life, Da-da is useless.")
+480	Integration with JomSocial points (Grant/Take away points and give users discounts for "paying" with them)

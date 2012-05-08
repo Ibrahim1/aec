@@ -891,7 +891,7 @@ class HTML_AcctExp
 				<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
 				<h1>Libraries</h1>
 				<p>The import function uses a modified parsecsv library by Jim Myhrberg - <a href="http://code.google.com/p/parsecsv-for-php/">code.google.com/p/parsecsv-for-php</a>.</p>
-				<p>Furthermore, these libraries are used in one place or another: <a href="http://www.blueprintcss.org/">blueprint</a>, <a href="http://www.mootools.net/">mootools</a>, <a href="http://www.jquery.com/">jquery</a>, <a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>.</p>
+				<p>Furthermore, these libraries are used in one place or another: <a href="http://twitter.github.com/bootstrap/">bootstrap</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://colorbrewer2.org/">colorbrewer</a>, <a href="https://github.com/shutterstock/rickshaw">rickshaw</a>, <a href="http://www.blueprintcss.org/">blueprint</a>, <a href="http://www.mootools.net/">mootools</a>, <a href="http://www.jquery.com/">jQuery &amp; jQuery UI</a>, <a href="http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/">erichynds jQuery UI MultiSelect</a>,<a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>.</p>
 				<h1>Eternal Gratitude</h1>
 				<p>These are the people without whom I could not have kept up the pace:</p>
 				<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>
@@ -900,9 +900,9 @@ class HTML_AcctExp
 				<p>Calum 'polc1410' Polwart, Aleksey Pikulik, Alex aka Sirooff</p>
 				<h1>Contributors</h1>
 				<p>People who have helped on our code by submitting additions and patches at one place or another:</p>
-				<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design, Carsten Engel, Joel Bassett, Emmanuel Danan, Rebekah Pitt, Daniel Lowhorn, berner, Mitchell Mink, Joshua Tan, Casey Eyring, Thailo van Ree, David Henry, Matthew Weeks, Francois Gagnon, Haris Agic, Pete Lindley</p>
+				<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design, Carsten Engel, Joel Bassett, Emmanuel Danan, Rebekah Pitt, Daniel Lowhorn, berner, Mitchell Mink, Joshua Tan, Casey Eyring, Thailo van Ree, David Henry, Matthew Weeks, Francois Gagnon, Haris Agic, Pete Lindley, John Greenbury, P.Gasiorowski, Vijay Jawalapersad, Jan Payman Ameli</p>
 				<h1>Translators</h1>
-				<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on Dutch translation), anderscarlen (Swedish translation), David Mara (Czech translation), Francois Gagnon (French translation), Ronny Buelund (Danish translation), Alexandros Seitaridis (Greek translation), Kristian from JOKR Solutions (Swedish translation), Masato Sato (Japanese translation), Christian Trujillo (Spanish Translation)</p>
+				<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on Dutch translation), anderscarlen (Swedish translation), David Mara (Czech translation), Francois Gagnon (French translation), Ronny Buelund (Danish translation), Alexandros Seitaridis (Greek translation), Kristian from JOKR Solutions (Swedish translation), Masato Sato (Japanese translation), Christian Trujillo (Spanish Translation), Gabor Mag (Hungarian Translation), Waldemar Taube (Russian Translation)</p>
 				<p>Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky</p>
 			</div>
 			<div style="width: 100%; height: 60px;"></div>

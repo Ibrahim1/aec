@@ -1,0 +1,196 @@
+Changelog for AEC 1.0 revision 5105
+
+Features
+
+General
+548: Feature Request: Clear the tempory token of a user when the go to the plans page if they have one
+554: Inventory Amount for payment plans (maximum number of sales on a plan)
+555: One-File Installer Package
+577: Better error reporting when failing to expire memberships on heartbeat
+585: JomSocial 2.4 Compatibility
+589: Retain position and publish status for modules with auto installer (or leave unpublished if new)
+591: Install Package - Filesize Reduction to less than 2MB
+614: Cleanly delete plan from itemgroups when deleting plan
+619: Speed up all user related database queries, sometimes by an order of magnitude (Thanks to John Greenbury)
+620: Clearing an invoice in the backend now correctly logs to History
+622: AEC Export: Support exporting sales data (plain sales and different accumulates)
+634: Finally fixing metauser->is_renewing()
+638: RWengine to support [[subscription_id]]
+642: Switch Mootabs -> FX.Tabs for cross mootools compatibility
+646: Remove 'Hacks' central icon in favor of MI->Hacks page link
+651: Backend Revamp: Cleanup, Injecting Bootstrap
+655: Export Page Layout that actually makes sense
+656: Complete Backend Revamp (break up J! Layout for more space, Toolbar, jQuery)
+664: Joomla 2.5 Compatibility
+672: .json, .xml and .ods options for sales&member export
+674: Frontend rewrite
+676: RWengine to report on the number of paid/unpaid invoices (cmds: 'invoice_count', 'invoice_count_paid', 'invoice_count_unpaid')
+678: Support Joomla 1.6/1.7/2.5 extended profiles in RWengine + Support for it in the Joomla User MI
+682: Migrate Quickstart Secret Functionality to toolbox tool 'Terminal'
+683: Feature Request - Populate our own checkout forms
+690: Custom Plan params that are available in the template plans list ($listitem['meta'])
+719: Merge Coupons and Static Coupons into a single view. Static will from now on be called 'Popular'
+734: Log AEC-initiated recurring (re-)bills to the history
+736: Direct creation and editing of Invoices from the Backend
+739: Help Screen (Just an overlay that links to our Support - Conversions! Ka-ching!)
+740: Filter Memberships by multiple plans / plan groups
+749: Drilldown Selection of MIs (at 80+ MIs to choose from, this was long overdue)
+751: Switching to jQuery UI Date(/Time)-Picker
+757: System messages now show nicely in the top navbar
+765: Dedicated switch for allowing admin emails if No Emails is active
+766: Restrictions on MIs (that, plus the Discount/Coupon MI equals flexible Upgrades between plans)
+
+MIs
+560: Webex MI
+613: MultiUser MI - Create user accounts
+623: YourMembership.com SSO Integration
+707: Automatic Coupon MI
+708: Automatic Discount MI
+711: Interspire Email Marketer Integration 
+712: iProperty MI
+743: Tienda Integration
+744: RedShop Integration
+
+632: Share a Sale MI - Support cURL calls
+645: VirtueMart 2 Compatibility
+723: Improved JUGA MI (Thanks to P.Gasiorowski!)
+725: PAP MI to support reading of PAP cookie
+746: Jnews 7.5.1 compatibility
+768: Modify Cost MI: Support multi-selection (with limits) and non-selection
+
+Processor Integrations
+505: SofortGateway Integration
+525: Ogone Processor Integration (Thanks to Vijay Jawalapersad!)
+552: MoIP HTML Integration
+559: SecureAndPay.com Integration
+621: Payments Gateway Checkout Integration
+653: ZipZap Integration
+688: CardSave Integration
+745: Skrill Integration (used to be Moneybookers)
+750: Mobio Integration
+755: Billsafe Integration
+760: Paystation integration
+762: Paycific integration (Thanks to Jan from deutsche-internetagentur.de !)
+
+551: PayPal integration to handle "payment_status = Reversed" to automatically put memberships on Hold
+579: Proper Error message for PayPal status pending_reason=intl
+580: Finish Use Invoice Tax switch in the PayPal processor
+549: Proper instantcapture support in ePay integration
+588: Offline Processors: Use RWengine on checkout info text
+599: Worldpay Test Mode URL
+659: PayOS Type Setting
+661: CCBill now supports Euros as a currency
+689: Correctly handle PayPal Dispute Settlements
+714: PSIGate Test mode
+761: "Pay later" Option for Offline Payment Processors ("Pay by Invoice")
+
+Toolbox
+695: Invoice Cleanup Tool
+727: Coupon Generator Tool
+
+633: Support Hours Tool to collect and display support hour debt
+694: Move readout to toolbox
+
+Translations
+763: Hungarian Translation (supplied by Gabor Mag - Thanks!)
+603: Russian Frontend Translation (Thanks Waldemar Taube!)
+
+595: Clean up language and country codes in translation files
+
+Plugins
+526: AEC Rewrite Engine Plugin
+
+Bugfixes
+
+General
+605: Restrictions cause Renewal IPNs to fail 
+609: Problem in checkUsernameEmail() function
+641: TinyMCE broken with Firefox 9 on tabbed pages
+686: SSL Full encryption broken by our mootools
+699: non-AEC links on frontend messed up when in a subdirectory
+758: Invoice Cushion is not working right
+564: Notice: Undefined property: InvoiceFactory::$checkout in .../public_html/components/com_acctexp/acctexp.html.php on line 897
+572: Group selection in subscribe URL broken when using menu item and custom call combined
+573: Groups not showing up in Plans List
+576: Back end heartbeat breaking on recurring memberships instead of skipping
+578: Load language files on install properly
+586: is_renewing() function off by one
+587: Danish language is da-DK, not da-DA ("Like everything in life, Da-da is useless.")
+592: Shopping Cart expiring memberships prematurely when subsequent, secondary plans are applied
+594: Secondary plans with parent attached go to pending
+600: Coupon Error not showing and redirecting
+601: Issue with "efine('_" strings inside some language files
+606: Menu item to Invoice tab does not work
+607: Invoice on Recurring billing not formatted correctly
+617: Plans List -> Show Users -> Try to edit user = broken
+626: Getting rid of nuSoap (i.e. PHP5 is required if you want to use a SOAP processor)
+627: VALID_AZ09 error
+629: Language file errors breaking PHP 5.3+
+635: Backend Ordering on various objects (Plans, MIs...) partly broken
+636: Rounding error in alpha user points causes a full discount not to be free on non-recurring
+652: Fatal error: Call to a member function registerEvent() on a non-object in .../plugins/content/aecrewrite/aecrewrite.php on line 16
+654: Backend Pagination breaks when switching from long to short list
+658: If Javascript is disabled, CB Registration errors look weird
+685: Excluded Group Restrictions included Zero Membership Users (failed to work as expected with Non-Members)
+691: Any Template - Continue Button Not showing on Expired page
+697: List Views in Backend - Setting of list length broken
+698: My Subscriptions not showing the plans the person has on the main tab
+700: Error when clicking on cancel from the account pending screen
+703: Jomsocial second page of Registration not appearing with SEO turned on
+709: Canceling an invoice in the back end redirects wrong
+713: Processor images missing on confirmation and checkout when in subdirectory
+717: Call to a member function renderCost() on a non-object in {snip}..{/snip}/components/com_acctexp/acctexp.class.php on line 12921
+720: Rare bug where broken data caused pre-expiration calls to be redone every heartbeat
+721: Can Not deselect ALL CC Icons
+722: ToS on Eta Carinae Template not checking to see if agreed to
+726: CB Plans second broken
+729: Plans second broken - Joomla Registration
+730: Test Export not working
+741: metaUser->getPreviousPlan() and plan_previous in permissionResponse() produce errors
+742: Username not showing when account is pending
+748: Shopping cart not working in new package
+752: Plans / Restriction Tab in Chrome
+754: list selection state broken on user list - also broken return from subscription edit save
+759: Missing option to allow user editing of invoice address in ETA template
+769: Can not delete any coupons
+574: Coupon error when using 2 coupons as one-time discount on a recurring payment setup
+
+Joomla 1.6/1.7/2.5 Compatibility
+602: vSession not working in 1.7+
+610: Direct front end links in 1.7 are wrong
+615: Joomla 1.6/1.7 when entering mis-matched passwords at registration throws a 500 error
+650: Joomla 1.6/1.7 Admin Approval - AEC sends out wrong email
+693: Joomla 1.6+ - Override Activation Email in plan settings broken
+710: Jomsocial reg failing on 2.5.x
+
+MI
+643: Multi User MI not working
+543: Tip MI does not show any text on the confirmation page and is discounted with coupon (it shouldn't)
+544: JSPT MI throws some errors
+569: [[invoice_amount]] does not reflect updated amount from mi_aecdonate
+624: Alpha user points discount shows as TAX on the checkout page
+625: No alpha user point trace into invoice. Adding them as a discount line?
+647: K2 Integration
+648: Google Analytics tracking
+660: Mailchip MI - unsubscribe link fixed to 'valanx' (d'oh!)
+673: Mail Chimp MI - Unsubscribe from list not saving
+684: Tax MI not rounding when passing tax in paypal
+704: mi_aecmodifycost.php Warning: Attempt to modify property of non-object...
+731: Max Reuse not working in Coupon MI
+738: JSPT MI not saving changes
+764: function Default() never called in MicroIntegration Settings
+
+Processors
+618: Paypal WPP Express Check out - Error 8110
+637: payOS - wrong period/unit values on non-recurring
+732: Loading of Processor Settings broken
+561: Sofortüberweisung.de - Missing Notification Password
+666: CIM Billing Profile on My Subscriptions Screen doesn't show
+728: SagePay fixes (Thanks to P.Gasiorowski!)
+733: Offline payment checkout page
+756: Offline Processor Image Missing
+767: Processors without image lack text based sign in processor list
+
+Plugins
+570: AEC Error plugin causes logout from menu item to fail
+584: AECaccess should never block a login when Require Subscription is disabled
