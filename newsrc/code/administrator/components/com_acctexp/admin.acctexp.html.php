@@ -67,7 +67,7 @@ class HTML_myCommon
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.18.custom.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.compressed.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
 
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery-ui-1.8.16.custom.css' . '" />' );
@@ -883,15 +883,15 @@ class HTML_AcctExp
 				<h1>Leading Programmer</h1>
 				<p>David Deutsch</p>
 				<h1>Contributing Programmers</h1>
-				<p>Calum Polwart, William Jacobs, Muriel Grabert</p>
+				<p>William Jacobs, Muriel Grabert</p>
 				<h1>Past Contributing Programmers</h1>
-				<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
+				<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Calum Polwart, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
 				<h1>Graphics</h1>
 				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2012 David 'skOre' Deutsch unless otherwise noted.</p>
 				<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
 				<h1>Libraries</h1>
-				<p>The import function uses a modified parsecsv library by Jim Myhrberg - <a href="http://code.google.com/p/parsecsv-for-php/">code.google.com/p/parsecsv-for-php</a>.</p>
-				<p>Furthermore, these libraries are used in one place or another: <a href="http://twitter.github.com/bootstrap/">bootstrap</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://colorbrewer2.org/">colorbrewer</a>, <a href="https://github.com/shutterstock/rickshaw">rickshaw</a>, <a href="http://www.blueprintcss.org/">blueprint</a>, <a href="http://www.mootools.net/">mootools</a>, <a href="http://www.jquery.com/">jQuery &amp; jQuery UI</a>, <a href="http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/">erichynds jQuery UI MultiSelect</a>,<a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>.</p>
+				<p>The following libraries are used, either in their original or in a modified form:</p>
+				<p>Furthermore, these libraries are used in one place or another: <a href="http://twitter.github.com/bootstrap/">bootstrap</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://colorbrewer2.org/">colorbrewer</a>, <a href="https://github.com/shutterstock/rickshaw">rickshaw</a>, <a href="http://www.blueprintcss.org/">blueprint</a>, <a href="http://www.mootools.net/">mootools</a>, <a href="http://www.jquery.com/">jQuery &amp; jQuery UI</a>, <a href="http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/">erichynds jQuery UI MultiSelect</a>, <a href="http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/">erichynds jQuery UI MultiSelect</a>,<a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>, <a href="http://code.google.com/p/parsecsv-for-php/">parsecsv library by Jim Myhrberg</a>.</p>
 				<h1>Eternal Gratitude</h1>
 				<p>These are the people without whom I could not have kept up the pace:</p>
 				<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>
@@ -2737,185 +2737,249 @@ jQuery(document).ready(function(jQuery) {
 
 		<table width="100%" class="aecadminform">
 			<tr><td>
-				<div class="aec_userinfobox_sub" id="chart">
+				
 		<?php
 			switch ( $page ) {
 				case 'overview':
 					?>
-					<div id="overview-day" class="overview-container">
-						<h4><?php echo gmdate('l, jS M Y'); ?></h4>
-						<div id="overview-day-this" class="chart-sunburst"></div>
-						<div id="overview-day-hourly-graph" class="chart-rickshaw"></div>
+					<div class="aec_userinfobox_sub" id="chart">
+						<div id="overview-day" class="overview-container">
+							<h4><?php echo gmdate('l, jS M Y'); ?></h4>
+							<div id="overview-day-this" class="chart-sunburst"></div>
+							<div id="overview-day-hourly-graph" class="chart-rickshaw"></div>
+						</div>
+						<div id="overview-month" class="overview-container">
+							<h4><?php echo gmdate('F'); ?></h4>
+							<div id="overview-month-this" class="chart-sunburst"></div>
+							<div id="overview-month-graph" class="chart-rickshaw"></div>
+						</div>
+						<div id="overview-year" class="overview-container">
+							<h4><?php echo gmdate('Y'); ?></h4>
+							<div id="overview-year-sun" class="chart-sunburst"></div>
+							<div id="overview-year-cell" class="chart-cellular"></div>
+						</div>
+						<script type="text/javascript">
+							var cf = d3.chart.factory()
+							.source("sales")
+							.canvas(200, 200, 10)
+							.target("div#overview-day-this")
+							.range(	"<?php echo gmdate('Y-m-d') . ' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#overview-day-hourly-graph")
+							.create("rickshaw",{ unit:"hour" });
+	
+							cf.target("div#overview-month-this")
+							.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#overview-month-graph")
+							.create("rickshaw",{ unit:"day" });
+	
+							cf.canvas(200, 200, 10)
+							.target("div#overview-year-sun")
+							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("sunburst", 200)
+							.canvas(760, 160, 10)
+							.target("div#overview-year-cell")
+							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("cellular");
+						</script>
 					</div>
-					<div id="overview-month" class="overview-container">
-						<h4><?php echo gmdate('F'); ?></h4>
-						<div id="overview-month-this" class="chart-sunburst"></div>
-						<div id="overview-month-graph" class="chart-rickshaw"></div>
-					</div>
-					<div id="overview-year" class="overview-container">
-						<h4><?php echo gmdate('Y'); ?></h4>
-						<div id="overview-year-sun" class="chart-sunburst"></div>
-						<div id="overview-year-cell" class="chart-cellular"></div>
-					</div>
-					<script type="text/javascript">
-						var cf = d3.chart.factory()
-						.source("sales")
-						.canvas(200, 200, 10)
-						.target("div#overview-day-this")
-						.range(	"<?php echo gmdate('Y-m-d') . ' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#overview-day-hourly-graph")
-						.create("rickshaw",{ unit:"hour" });
-
-						cf.target("div#overview-month-this")
-						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#overview-month-graph")
-						.create("rickshaw",{ unit:"day" });
-
-						cf.canvas(200, 200, 10)
-						.target("div#overview-year-sun")
-						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst", 200)
-						.canvas(760, 160, 10)
-						.target("div#overview-year-cell")
-						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("cellular");
-					</script>
 					<?php
 					break;
 				case 'compare':
 					?>
-					<div id="compare-day" class="compare-container">
-						<h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4>
-						<div id="compare-day-last" class="chart-sunburst"></div>
-						<div id="compare-day-compare" class="chart-rickshaw-bump"></div>
-						<div id="compare-day-this" class="chart-sunburst"></div>
-						<div id="compare-day-graph-last" class="chart-rickshaw-wide-slim"></div>
-						<div id="compare-day-graph-this" class="chart-rickshaw-wide-slim"></div>
+					<div class="aec_userinfobox_sub" id="chart">
+						<div id="compare-day" class="compare-container">
+							<h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4>
+							<div id="compare-day-last" class="chart-sunburst"></div>
+							<div id="compare-day-compare" class="chart-rickshaw-bump"></div>
+							<div id="compare-day-this" class="chart-sunburst"></div>
+							<div id="compare-day-graph-last" class="chart-rickshaw-wide-slim"></div>
+							<div id="compare-day-graph-this" class="chart-rickshaw-wide-slim"></div>
+						</div>
+						<div id="compare-week" class="compare-container">
+							<h4>Week <?php echo gmdate('W', gmdate("U")-86400*7); ?> &rarr; Week <?php echo gmdate('W'); ?></h4>
+							<div id="compare-week-last" class="chart-sunburst"></div>
+							<div id="compare-week-compare" class="chart-rickshaw-bump"></div>
+							<div id="compare-week-this" class="chart-sunburst"></div>
+							<div id="compare-week-graph-last" class="chart-rickshaw-wide-slim"></div>
+							<div id="compare-week-graph-this" class="chart-rickshaw-wide-slim"></div>
+						</div>
+						<div id="compare-month" class="compare-container">
+							<h4><?php echo gmdate('F', strtotime("last month",gmdate("U"))); ?> &rarr; <?php echo gmdate('F'); ?></h4>
+							<div id="compare-month-last" class="chart-sunburst"></div>
+							<div id="compare-month-compare" class="chart-rickshaw-bump"></div>
+							<div id="compare-month-this" class="chart-sunburst"></div>
+							<div id="compare-month-graph-last" class="chart-rickshaw-wide-slim"></div>
+							<div id="compare-month-graph-this" class="chart-rickshaw-wide-slim"></div>
+						</div>
+						<div id="compare-year" class="compare-container">
+							<h4><?php echo gmdate('Y', strtotime("last year",gmdate("U"))); ?> &rarr; <?php echo gmdate('Y'); ?></h4>
+							<div id="compare-year-last" class="chart-sunburst"></div>
+							<div id="compare-year-compare" class="chart-rickshaw-bump"></div>
+							<div id="compare-year-this" class="chart-sunburst"></div>
+							<div id="compare-year-graph-last" class="chart-rickshaw-wide-slim"></div>
+							<div id="compare-year-graph-this" class="chart-rickshaw-wide-slim"></div>
+						</div>
+						<script type="text/javascript">
+							var cf = d3.chart.factory()
+							.source("sales")
+							.canvas(200, 200, 10);
+	
+							cf.target("div#compare-day-last")
+							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-day-graph-last")
+							.create("rickshaw",{ unit:"hour" })
+							.target("div#compare-day-this")
+							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-day-graph-this")
+							.create("rickshaw",{ unit:"hour" })
+							.target("div#compare-day-last")
+							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
+							.target("div#compare-day-compare")
+							.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
+	
+							cf.target("div#compare-week-last")
+							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-week-graph-last")
+							.create("rickshaw",{ unit:"day" })
+							.target("div#compare-week-this")
+							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-week-graph-this")
+							.create("rickshaw",{ unit:"day" })
+							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
+							.target("div#compare-week-compare")
+							.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
+	
+							cf.target("div#compare-month-last")
+							.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-month-graph-last")
+							.create("rickshaw",{ unit:"day" })
+							.target("div#compare-month-this")
+							.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-month-graph-this")
+							.create("rickshaw",{ unit:"day" })
+							.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
+							.target("div#compare-month-compare")
+							.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
+	
+							cf.target("div#compare-year-last")
+							.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-year-graph-last")
+							.create("rickshaw",{ unit:"week" })
+							.target("div#compare-year-this")
+							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
+							.create("sunburst")
+							.target("div#compare-year-graph-this")
+							.create("rickshaw",{ unit:"week" })
+							.target("div#compare-year-last")
+							.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
+							.target("div#compare-year-compare")
+							.create("rickshaw",{ unit:"year", renderer:"line", axes_time:false });
+						</script>
 					</div>
-					<div id="compare-week" class="compare-container">
-						<h4>Week <?php echo gmdate('W', gmdate("U")-86400*7); ?> &rarr; Week <?php echo gmdate('W'); ?></h4>
-						<div id="compare-week-last" class="chart-sunburst"></div>
-						<div id="compare-week-compare" class="chart-rickshaw-bump"></div>
-						<div id="compare-week-this" class="chart-sunburst"></div>
-						<div id="compare-week-graph-last" class="chart-rickshaw-wide-slim"></div>
-						<div id="compare-week-graph-this" class="chart-rickshaw-wide-slim"></div>
-					</div>
-					<div id="compare-month" class="compare-container">
-						<h4><?php echo gmdate('F', strtotime("last month",gmdate("U"))); ?> &rarr; <?php echo gmdate('F'); ?></h4>
-						<div id="compare-month-last" class="chart-sunburst"></div>
-						<div id="compare-month-compare" class="chart-rickshaw-bump"></div>
-						<div id="compare-month-this" class="chart-sunburst"></div>
-						<div id="compare-month-graph-last" class="chart-rickshaw-wide-slim"></div>
-						<div id="compare-month-graph-this" class="chart-rickshaw-wide-slim"></div>
-					</div>
-					<div id="compare-year" class="compare-container">
-						<h4><?php echo gmdate('Y', strtotime("last year",gmdate("U"))); ?> &rarr; <?php echo gmdate('Y'); ?></h4>
-						<div id="compare-year-last" class="chart-sunburst"></div>
-						<div id="compare-year-compare" class="chart-rickshaw-bump"></div>
-						<div id="compare-year-this" class="chart-sunburst"></div>
-						<div id="compare-year-graph-last" class="chart-rickshaw-wide-slim"></div>
-						<div id="compare-year-graph-this" class="chart-rickshaw-wide-slim"></div>
-					</div>
-					<script type="text/javascript">
-						var cf = d3.chart.factory()
-						.source("sales")
-						.canvas(200, 200, 10);
-
-						cf.target("div#compare-day-last")
-						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-day-graph-last")
-						.create("rickshaw",{ unit:"hour" })
-						.target("div#compare-day-this")
-						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-day-graph-this")
-						.create("rickshaw",{ unit:"hour" })
-						.target("div#compare-day-last")
-						.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
-						.target("div#compare-day-compare")
-						.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
-
-						cf.target("div#compare-week-last")
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-week-graph-last")
-						.create("rickshaw",{ unit:"day" })
-						.target("div#compare-week-this")
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-week-graph-this")
-						.create("rickshaw",{ unit:"day" })
-						.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
-						.target("div#compare-week-compare")
-						.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
-
-						cf.target("div#compare-month-last")
-						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-month-graph-last")
-						.create("rickshaw",{ unit:"day" })
-						.target("div#compare-month-this")
-						.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-month-graph-this")
-						.create("rickshaw",{ unit:"day" })
-						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
-						.target("div#compare-month-compare")
-						.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
-
-						cf.target("div#compare-year-last")
-						.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-year-graph-last")
-						.create("rickshaw",{ unit:"week" })
-						.target("div#compare-year-this")
-						.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
-						.create("sunburst")
-						.target("div#compare-year-graph-this")
-						.create("rickshaw",{ unit:"week" })
-						.target("div#compare-year-last")
-						.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d', mktime(0, 0, 0, 12, 32, gmdate('Y'))) . ' 23:59:59'; ?>")
-						.target("div#compare-year-compare")
-						.create("rickshaw",{ unit:"year", renderer:"line", axes_time:false });
-					</script>
 					<?php
 					break;
 				case 'users':
 					break;
 				case 'sales':
 					?>
-					<div id="sales-graph" class="overview-container">
+					<div class="aec_userinfobox_sub">
 						<h4>Sales Graph</h4>
-						<div id="overview-sales-graph" class="chart-stacked"></div>
+						<div id="sales-graph" class="overview-container">
+							<div id="overview-sales-graph" class="chart-rickshaw-huge"></div>
+							<div class="chart-controls-box">
+								<div id="legend" class="chart-controls">
+									<p><strong>hover</strong> to highlight, <strong>click</strong> to toggle, <strong>drag</strong> to sort groups</p>
+								</div>
+								<div id="renderer_form" class="toggler chart-controls">
+									<input type="radio" name="renderer" id="area" value="area" checked="checked">
+									<label for="area"><i class="graph-control-area"></i>area</label>
+									<input type="radio" name="renderer" id="bar" value="bar">
+									<label for="bar"><i class="graph-control-bar"></i>bar</label>
+									<input type="radio" name="renderer" id="line" value="line">
+									<label for="line"><i class="graph-control-line"></i>line</label>
+									<input type="radio" name="renderer" id="scatter" value="scatterplot">
+									<label for="scatter"><i class="graph-control-scatter"></i>scatter</label>
+								</div>
+								<div id="offset_form" class="chart-controls">
+									<label for="value">
+										<input type="radio" name="offset" id="value" value="value">
+										<span><i class="graph-control-value"></i>value</span>
+									</label>
+									<label for="stack">
+										<input type="radio" name="offset" id="stack" value="zero" checked="checked">
+										<span><i class="graph-control-stack"></i>stack</span>
+									</label>
+									<label for="stream">
+										<input type="radio" name="offset" id="stream" value="wiggle">
+										<span><i class="graph-control-stream"></i>stream</span>
+									</label>
+									<label for="pct">
+										<input type="radio" name="offset" id="pct" value="expand">
+										<span><i class="graph-control-pct"></i>percent</span>
+									</label>
+								</div>
+								<div id="unit_form" class="chart-controls">
+									<label for="day">
+										<input type="radio" name="unit" id="day" value="day" checked="checked">
+										<span><i class="graph-control-day"></i>days</span>
+									</label>
+									<label for="week">
+										<input type="radio" name="unit" id="week" value="week">
+										<span><i class="graph-control-week"></i>weeks</span>
+									</label>
+									<label for="month">
+										<input type="radio" name="unit" id="month" value="month">
+										<span><i class="graph-control-bar"></i>months</span>
+									</label>
+									<label for="year">
+										<input type="radio" name="unit" id="year" value="year">
+										<span><i class="graph-control-year"></i>years</span>
+									</label>
+								</div>
+								<div id="range_form" class="chart-controls">
+									<label for="rangepicker">
+										<span>Select Range:</span>
+										<input class="jqui-daterangepicker" type="text" value="<?php echo gmdate('Y-01-01') . " - " . gmdate('Y-m-d'); ?>"/>
+										<span class="jqui-loading"></span>
+									</label>
+								</div>
+							</div>
+						</div>
+						<script type="text/javascript">
+							var cf = d3.chart.factory()
+							.source("sales")
+							.canvas(200, 200, 10)
+							.target("div#overview-sales-graph")
+							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("rickshaw",{ unit:"day", renderer:"area", legend:true });
+						</script>
 					</div>
-					<script type="text/javascript">
-						var cf = d3.chart.factory()
-						.source("sales")
-						.canvas(800, 400, 10)
-						.target("div#overview-sales-graph")
-						.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("stacked")
-					</script>
 					<?php
 					break;
 				case 'all_time':
@@ -2924,45 +2988,47 @@ jQuery(document).ready(function(jQuery) {
 
 					$years = $start - $end;
 					?>
-					<div id="all-time-cells" class="all-time-container">
-						<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
-							<div id="all-time-<?php echo $i; ?>" class="all-time-container-full">
-								<h4><?php echo $i; ?></h4>
-								<div id="all-time-year-<?php echo $i; ?>-sunburst" class="chart-sunburst"></div>
-								<div id="all-time-year-<?php echo $i; ?>-cells" class="chart-cellular"></div>
-								<div id="all-time-year-<?php echo $i; ?>-graph" class="chart-rickshaw-slim"></div>
-							</div>
-						<?php } ?>
+					<div class="aec_userinfobox_sub" id="chart">
+						<div id="all-time-cells" class="all-time-container">
+							<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
+								<div id="all-time-<?php echo $i; ?>" class="all-time-container-full">
+									<h4><?php echo $i; ?></h4>
+									<div id="all-time-year-<?php echo $i; ?>-sunburst" class="chart-sunburst"></div>
+									<div id="all-time-year-<?php echo $i; ?>-cells" class="chart-cellular"></div>
+									<div id="all-time-year-<?php echo $i; ?>-graph" class="chart-rickshaw-slim"></div>
+								</div>
+							<?php } ?>
+						</div>
+						<div id="all-time-suns" class="all-time-container-full">
+							<h4>All Time Total</h4>
+							<div id="all-suns" class="chart-sunburstxl"></div>
+						</div>
+						<script type="text/javascript">
+							var cf = d3.chart.factory()
+							.source("sales")
+							<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
+							.canvas(200, 200, 10)
+							.target("div#all-time-year-<?php echo $i; ?>-sunburst")
+							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+									"<?php echo $i . '-12-31 23:59:59'; ?>")
+							.create("sunburst")
+							.canvas(760, 160, 10)
+							.target("div#all-time-year-<?php echo $i; ?>-cells")
+							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+									"<?php echo $i . '-12-31 23:59:59'; ?>")
+							.create("cellular")
+							.target("div#all-time-year-<?php echo $i; ?>-graph")
+							.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
+									"<?php echo $i . '-12-31 23:59:59'; ?>")
+							.create("rickshaw",{ unit:"week" })
+							<?php } ?>
+							.canvas(500, 500, 10)
+							.target("div#all-suns")
+							.range(	"<?php echo gmdate('1960-01-01') .' 00:00:00'; ?>",
+									"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
+							.create("sunburst");
+						</script>
 					</div>
-					<div id="all-time-suns" class="all-time-container-full">
-						<h4>All Time Total</h4>
-						<div id="all-suns" class="chart-sunburstxl"></div>
-					</div>
-					<script type="text/javascript">
-						var cf = d3.chart.factory()
-						.source("sales")
-						<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
-						.canvas(200, 200, 10)
-						.target("div#all-time-year-<?php echo $i; ?>-sunburst")
-						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-								"<?php echo $i . '-12-31 23:59:59'; ?>")
-						.create("sunburst")
-						.canvas(760, 160, 10)
-						.target("div#all-time-year-<?php echo $i; ?>-cells")
-						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-								"<?php echo $i . '-12-31 23:59:59'; ?>")
-						.create("cellular")
-						.target("div#all-time-year-<?php echo $i; ?>-graph")
-						.range(	"<?php echo $i . '-1-1 00:00:00'; ?>",
-								"<?php echo $i . '-12-31 23:59:59'; ?>")
-						.create("rickshaw",{ unit:"week" })
-						<?php } ?>
-						.canvas(500, 500, 10)
-						.target("div#all-suns")
-						.range(	"<?php echo gmdate('1960-01-01') .' 00:00:00'; ?>",
-								"<?php echo gmdate('Y-m-d') . ' 23:59:59'; ?>")
-						.create("sunburst");
-					</script>
 					<?php
 					break;
 			}

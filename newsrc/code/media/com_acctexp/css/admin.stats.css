@@ -68,6 +68,11 @@ overflow: hidden;
 margin-top: 24px;
 }
 
+.chart-rickshaw-huge {
+height: 400px;
+width: 96%;
+}
+
 .chart-rickshaw {
 float: left;
 width: 700px;
@@ -192,6 +197,9 @@ width: 98%;
 margin-left: 168px;
 }
 
+#sales-graph {
+margin: 0 3%;
+}
 
 #chart h3 {
 text-align: center;
@@ -234,4 +242,99 @@ font-size: 110%;
 .console-val {
 font-size: 150%;
 font-weight: bold;
+}
+
+.chart-controls-box {
+margin: 0 auto;
+width: 860px;
+padding: 12px 0;
+}
+
+.chart-controls-box .rickshaw_legend {
+width: 180px;
+height: auto !important;
+}
+
+.chart-controls-box .rickshaw_legend .label {
+vertical-align: text-bottom;
+line-height: 191%;
+}
+
+.chart-controls-box #legend p {
+color: #999;
+margin-left: 16px;
+margin-top: 4px;
+}
+
+.chart-controls {
+float: left;
+padding: 24px 10px;
+}
+
+.chart-controls input {
+float: left;
+margin-right: 8px;
+}
+
+.chart-controls label {
+width: 100px;
+}
+
+.chart-controls label.disabled {
+opacity: 0.4;
+}
+
+[class^="graph-control-"] {
+  display: inline-block;
+  width: 28px;
+  height: 14px;
+  vertical-align: text-top;
+  background-image: url(../images/admin/icons/graph-controls-sprites.png);
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  margin-right: 8px;
+}
+
+.graph-control-area {
+  background-position: 0 0;
+}
+
+.graph-control-bar {
+  background-position: 0 -14px;
+}
+
+.graph-control-line {
+  background-position: 0 -28px;
+}
+
+.graph-control-scatter {
+  background-position: 0 -42px;
+}
+
+.graph-control-stack {
+  background-position: 0 -56px;
+}
+
+.graph-control-stream {
+  background-position: 0 -70px;
+}
+
+.graph-control-pct {
+  background-position: 0 -84px;
+}
+
+.graph-control-value {
+  background-position: 0 -98px;
+}
+
+.graph-control-day {
+  background-position: 0 -112px;
+}
+
+.graph-control-week {
+  background-position: 0 -126px;
+}
+
+.graph-control-year {
+  background-position: 0 -140px;
 }

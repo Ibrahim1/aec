@@ -7,6 +7,8 @@ Array.prototype.getUnique = function(){
 	for(var i = 0, l = this.length; i < l; ++i){
 		if(this[i] in u)
 			continue;
+		if(this[i] == 0)
+			continue;
 		a.push(this[i]);
 		u[this[i]] = 1;
 	}
@@ -564,9 +566,10 @@ d3.chart.cellular = function () {
 d3.chart.rickshaw = function () {
 
 	var chart = {},
-	data= [],
-	params= {},
-	label= [],
+	has_graph = false,
+	data = [],
+	params = {},
+	label = [],
 	parent,
 	element,
 	group,
@@ -681,9 +684,10 @@ d3.chart.rickshaw = function () {
 
 	function drawSVG() {
 		var z = 14,
-		day = d3.time.format("%m-%w"),
-		week = d3.time.format("%U"),
-		month = d3.time.format("%m"),
+		day = d3.time.format("%Y-%m-%w"),
+		week = d3.time.format("%Y-%U"),
+		month = d3.time.format("%Y-%m"),
+		monthn = d3.time.format("%b %Y"),
 		year = d3.time.format("%Y"),
 		mname = d3.time.format("%B"),
 		hour = d3.time.format("%H"),
@@ -777,8 +781,7 @@ d3.chart.rickshaw = function () {
 				.map(data);
 
 			var gety = function( mdata, xdate, xgroup ){ var xx2 = new Date();
-			xx2.setHours(hour(xdate));
-			var test = hour(xdate);
+
 			return ( typeof mdata[xgroup][hour(xdate)] == 'undefined' ) ? 0 : mdata[xgroup][hour(xdate)] };
 		}
 
@@ -795,16 +798,70 @@ d3.chart.rickshaw = function () {
 			params.renderer = 'bar';
 		}
 
+		if ( has_graph ) {
+			jQuery(element).children().remove();
+			jQuery("#legend ul").remove();
+		}
+
 		var graph = new Rickshaw.Graph( {
 			element: document.querySelector(element),
 			renderer: params.renderer,
 			series: series
 		} );
 
+		if ( typeof params.offset != 'undefined' ) {
+			var config = {
+					renderer: params.renderer,
+					interpolation: params.interpolation
+				};
+
+			if (params.offset == 'value') {
+				config.unstack = true;
+				config.offset = 'zero';
+			} else {
+				config.unstack = false;
+				config.offset = params.offset;
+			}
+
+			graph.configure(config);
+		}
+
 		graph.render();
+
+		has_graph = true;
+
+		if ( typeof params.legend == 'undefined' ) {
+			params.legend = false;
+		}
+
+		if ( params.legend ) {
+			var legend = new Rickshaw.Graph.Legend( {
+				graph: graph,
+				element: document.getElementById('legend')
+			} );
+
+			var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+				graph: graph,
+				legend: legend
+			} );
+
+			var order = new Rickshaw.Graph.Behavior.Series.Order( {
+				graph: graph,
+				legend: legend
+			} );
+
+			var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
+				graph: graph,
+				legend: legend
+			} );
+		}
 
 		if ( params.unit == "week" ) {
 			var xFormatter = function(d){ return "Week " + week( new Date( d * 1000 ) ); };
+		} else if ( params.unit == "month" ) {
+			var xFormatter = function(d){ return monthn( new Date( d * 1000 ) ); };
+		} else if ( params.unit == "year" ) {
+			var xFormatter = function(d){ return + year( new Date( d * 1000 ) ); };
 		} else if ( params.unit == "hour" ) {
 			var xFormatter = function(d){ return hour( new Date( d * 1000 ) ) + ":00"; };
 		} else {
@@ -821,19 +878,169 @@ d3.chart.rickshaw = function () {
 				xFormatter: xFormatter
 			} );
 
-			var axes = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:1, ticksTreatment:'xtick-shifted-'+params.unit } );
+			var xAxis = new Rickshaw.Graph.Axis.Time( {graph: graph, ticks:1, ticksTreatment:'xtick-shifted-'+params.unit } );
 
-			axes.render();
+			xAxis.render();
 		}
 
-		var y_ticks = new Rickshaw.Graph.Axis.Y( {graph: graph, ticks:4} );
+		var yAxis = new Rickshaw.Graph.Axis.Y( {graph: graph} );
 
-		y_ticks.render();
+		yAxis.render();
 
 		if ( !params.axes_time ) {
 			d3.selectAll(element+" g.y_ticks").attr("transform", "translate(85,0)");
+		}
+
+		if ( params.legend ) {
+			var controls = new RenderControls( {
+				element: document.querySelector('#adminForm'),
+				graph: graph
+				} ); 
 		}
 	}
 
 	return chart;
 };
+
+var RenderControls = function(args) {
+
+	this.initialize = function() {
+
+		this.element = args.element;
+		this.graph = args.graph;
+		this.settings = this.serialize();
+
+		this.inputs = {
+			renderer: this.element.elements.renderer,
+			interpolation: false,
+			offset: this.element.elements.offset
+		};
+
+		that = this;
+
+		jQuery("#adminForm input").change( function(e) {
+			e.stopImmediatePropagation();
+
+			that.settings = that.serialize();
+
+			if ( ( e.srcElement.name == 'unit' ) || ( ( e.srcElement.name == 'offset' ) && ( that.graph.offset == 'expand' ) && ( that.settings.offset != 'expand' ) ) ) {
+				cf.update({	unit: that.settings.unit,
+							renderer: that.settings.renderer,
+							interpolation: that.settings.interpolation,
+							offset: that.settings.offset });
+
+				return;
+			}
+
+			if (e.target.name == 'renderer') {
+				that.setDefaultOffset(e.target.value);
+			}
+
+			that.syncOptions();
+			that.settings = that.serialize();
+
+			var config = {
+				renderer: that.settings.renderer,
+				interpolation: that.settings.interpolation
+			};
+
+			if (that.settings.offset == 'value') {
+				config.unstack = true;
+				config.offset = 'zero';
+			} else {
+				config.unstack = false;
+				config.offset = that.settings.offset;
+			}
+
+			that.graph.configure(config);
+			that.graph.render();
+
+		});
+	}
+
+	this.serialize = function() {
+
+		var values = {};
+		var pairs = jQuery(this.element).serializeArray();
+
+		pairs.forEach( function(pair) {
+			values[pair.name] = pair.value;
+		} );
+
+		return values;
+	};
+
+	this.syncOptions = function() {
+
+		var options = this.rendererOptions[this.settings.renderer];	
+
+		Array.prototype.forEach.call(this.inputs.interpolation, function(input) {
+
+			if (options.interpolation) {
+				input.disabled = false;
+				input.parentNode.classList.remove('disabled');
+			} else {
+				input.disabled = true;
+				input.parentNode.classList.add('disabled');
+			}
+		});
+
+		Array.prototype.forEach.call(this.inputs.offset, function(input) {
+
+			if (options.offset.filter( function(o) { return o == input.value } ).length) {
+				input.disabled = false;
+				input.parentNode.classList.remove('disabled');
+
+			} else {
+				input.disabled = true;
+				input.parentNode.classList.add('disabled');
+			}
+
+		}.bind(this));
+
+	};
+
+	this.setDefaultOffset = function(renderer) {
+
+		var options = this.rendererOptions[renderer];	
+
+		if (options.defaults && options.defaults.offset) {
+
+			Array.prototype.forEach.call(this.inputs.offset, function(input) {
+				if (input.value == options.defaults.offset) {
+					input.checked = true;
+				} else {
+					input.checked = false;
+				}
+
+			}.bind(this));
+		}
+	};
+
+	this.rendererOptions = {
+
+		area: {
+			interpolation: true,
+			offset: ['zero', 'wiggle', 'expand', 'value'],
+			defaults: { offset: 'zero' }
+		},
+		line: {
+			interpolation: true,
+			offset: ['value'],
+			defaults: { offset: 'value' }
+		},
+		bar: {
+			interpolation: false,
+			offset: ['zero', 'expand', 'value'],
+			defaults: { offset: 'zero' }
+		},
+		scatterplot: {
+			interpolation: false,
+			offset: ['value'],
+			defaults: { offset: 'value' }
+		}
+	};
+
+	this.initialize();
+};
+

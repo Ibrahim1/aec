@@ -5,6 +5,7 @@ d3.chart.factory = function () {
 	p = 0,
 	data = [],
 	queue = [],
+	charts = [],
 	start = true,
 	datef = d3.time.format("%Y-%m-%d %X"),
 	s,e,
@@ -60,11 +61,53 @@ d3.chart.factory = function () {
 		return factory;
 	};
 
+	factory.update = function(param) {
+		if ( typeof param == 'undefined' ) {
+			param = {};
+		}
+
+		if ( typeof param.start != 'undefined' ) {
+			param.start = datef.parse(param.start);
+			param.end = datef.parse(param.end);
+		} else {
+			var range = jQuery('.jqui-daterangepicker').val();
+
+			if ( range.indexOf(" - ") === false ) {
+				var rangestart = range;
+				var rangeend = range;
+			} else {
+				var rangestart = range.slice(0, 10);
+				var rangeend = range.slice(13);
+			}
+
+			param.start = datef.parse(rangestart+" 00:00:00");
+			param.end = datef.parse(rangeend+" 23:59:59");
+		}
+
+		newparams = charts[selector].params();
+
+		for (var attrname in param) { newparams[attrname] = param[attrname]; }
+
+		newparams.update = selector;
+
+		queue.push({start:s,end:e,width:w,height:h,margin:m,target:selector,pos:p,parameters:newparams});
+
+		jQuery(".jqui-loading").html("Loading Data...");
+		if ( start ) {
+			start = false;
+
+			factory.triggerqueue();
+		}
+
+		return factory;
+	};
+
 	factory.triggerqueue = function() {
 		if ( queue.length ) {
 			factory.getData(queue.shift());
 		} else {
 			start = true;
+			jQuery(".jqui-loading").html("");
 		}
 	};
 
@@ -155,15 +198,21 @@ d3.chart.factory = function () {
 			request.parameters = {};
 		}
 
-		request.parameters.start = request.start;
-		request.parameters.end = request.end;
+		if ( typeof request.parameters.start == 'undefined' ) {
+			request.parameters.start = request.start;
+			request.parameters.end = request.end;
+		}
 
-		var chart = d3.chart[request.type]()
+		if ( typeof request.parameters.update == 'undefined' ) {
+			charts[request.target] = d3.chart[request.type]()
 			.parent(request.target, request.pos)
 			.margin([request.margin, request.margin, request.margin, request.margin])
 			.size([request.width, request.height])
 			.params(request.parameters)
 			.data(selection);
+		} else {
+			charts[request.parameters.update].params(request.parameters).data(selection);
+		}
 
 		factory.triggerqueue();
 	};

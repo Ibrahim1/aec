@@ -140,6 +140,34 @@ jQuery(document).ready(function(jQuery) {
 		}
 	});
 
+	jQuery('.jqui-daterangepicker').daterangepicker({
+		latestDate: Date.parse('today'),
+		dateFormat: "yy-mm-dd",
+		constrainDates: true,
+		datepickerOptions: {	dateFormat: 'yy-mm-dd',
+								changeMonth: true,
+								changeYear: true,
+								showWeek: true,
+								showOtherMonths: true,
+								selectOtherMonths: true,
+								maxDate: Date.parse('today'),
+								defaultDate: Date.parse('today'),
+								gotoCurrent: true
+							},
+		onClose:function(){
+		var range = jQuery('.jqui-daterangepicker').val();
+		if ( range.indexOf(" - ") === -1 ) {
+			var rangestart = range;
+			var rangeend = range;
+		} else {
+			var rangestart = range.slice(0, 10);
+			var rangeend = range.slice(13);
+		}
+
+		cf.range( rangestart+" 00:00:00", rangeend+" 23:59:59")
+		.update({ start: rangestart+" 00:00:00", end: rangeend+" 23:59:59"});
+	}
+	}); 
 });
 
 function readNotice(id) {

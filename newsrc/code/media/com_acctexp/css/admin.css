@@ -803,6 +803,10 @@ padding: 1px;
 margin-top: -4px !important;
 }
 
+.ui-datepicker td .ui-state-default {
+color: #555;
+}
+
 .ui-widget {
 margin-top: 2px;
 -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25);
@@ -878,6 +882,20 @@ margin-right: 4px;
 height: 12px;
 line-height: 12px;
 padding: 3px 4px 5px;
+}
+
+.jqui-loading {
+margin: 12px 60%;
+font-weight: bold;
+color: #555;
+display: block;
+float: left;
+width: 100%;
+text-shadow: 1px 1px 1px #fff;
+}
+
+div.ranges {
+border: none !important;
 }
 
 #status-group-select,
