@@ -923,17 +923,24 @@ var RenderControls = function(args) {
 
 			that.settings = that.serialize();
 
-			if ( ( e.srcElement.name == 'unit' ) || ( ( e.srcElement.name == 'offset' ) && ( that.graph.offset == 'expand' ) && ( that.settings.offset != 'expand' ) ) ) {
+			var fallback = false;
+			if (e.target.name == 'renderer' ) {
+				fallback = that.setDefaultOffset(e.target.value);
+			}
+
+			if ( ( e.target.name == 'unit' ) || 
+					( ( e.target.name == 'offset' ) && ( that.graph.offset == 'expand' ) && ( that.settings.offset != 'expand' ) ) ||
+					( ( e.target.name == 'renderer' ) && ( that.graph.offset == 'expand' ) && fallback )
+				) {
+
+				var options = that.rendererOptions[that.settings.renderer];
+
 				cf.update({	unit: that.settings.unit,
 							renderer: that.settings.renderer,
 							interpolation: that.settings.interpolation,
-							offset: that.settings.offset });
+							offset: fallback ? options.defaults.offset : that.settings.offset });
 
 				return;
-			}
-
-			if (e.target.name == 'renderer') {
-				that.setDefaultOffset(e.target.value);
 			}
 
 			that.syncOptions();
@@ -972,7 +979,7 @@ var RenderControls = function(args) {
 
 	this.syncOptions = function() {
 
-		var options = this.rendererOptions[this.settings.renderer];	
+		var options = this.rendererOptions[this.settings.renderer];
 
 		Array.prototype.forEach.call(this.inputs.interpolation, function(input) {
 
@@ -1004,7 +1011,8 @@ var RenderControls = function(args) {
 
 		var options = this.rendererOptions[renderer];	
 
-		if (options.defaults && options.defaults.offset) {
+		var ret = false;
+		if (options.defaults && options.defaults.offset && ( jQuery.inArray( this.settings.offset, options.offset ) == -1 )) {
 
 			Array.prototype.forEach.call(this.inputs.offset, function(input) {
 				if (input.value == options.defaults.offset) {
@@ -1014,7 +1022,11 @@ var RenderControls = function(args) {
 				}
 
 			}.bind(this));
+			
+			ret = true;
 		}
+
+		return ret;
 	};
 
 	this.rendererOptions = {

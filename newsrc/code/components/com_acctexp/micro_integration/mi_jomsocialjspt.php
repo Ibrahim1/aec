@@ -8,17 +8,6 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-define( 'AEC_MI_NAME_JOMSOCIALJSPT',		'JomSocial-JSPT' );
-define( 'AEC_MI_DESC_JOMSOCIALJSPT',		'Choose the default profile type for a user.' );
-define( 'MI_MI_JOMSOCIALJSPT_SET_PROFILETYPE_NAME',				'Set JSPT Profiletype' );
-define( 'MI_MI_JOMSOCIALJSPT_SET_PROFILETYPE_DESC',				'Choose Yes if you want this MI to set the profiletype when it is called.' );
-define( 'MI_MI_JOMSOCIALJSPT_PROFILETYPE_NAME',					'Select Profile Type Name' );
-define( 'MI_MI_JOMSOCIALJSPT_PROFILETYPE_DESC',					'The Profile type name that you want the user to be in.' );
-define( 'MI_MI_JOMSOCIALJSPT_SET_PROFILETYPE_AFTER_EXP_NAME',			'Set Expiration profiletype.' );
-define( 'MI_MI_JOMSOCIALJSPT_PROFILETYPE_AFTER_EXP_NAME',			'Expiration profiletype' );
-define( 'MI_MI_JOMSOCIALJSPT_SET_PROFILETYPE_AFTER_EXP_DESC',			'Choose Yes if you want this MI to set the profile type when the calling payment plan expires.' );
-define( 'MI_MI_JOMSOCIALJSPT_PROFILETYPE_AFTER_EXP_DESC',			'The Profile type name that you want the user to be in when plan expires.' );
-
 class mi_jomsocialjspt
 {
 	function Info()

@@ -2963,7 +2963,7 @@ jQuery(document).ready(function(jQuery) {
 								</div>
 								<div id="range_form" class="chart-controls">
 									<label for="rangepicker">
-										<span>Select Range:</span>
+										<span class="jqui-daterangepicker-text">Select Range:</span>
 										<input class="jqui-daterangepicker" type="text" value="<?php echo gmdate('Y-01-01') . " - " . gmdate('Y-m-d'); ?>"/>
 										<span class="jqui-loading"></span>
 									</label>

@@ -1,29 +1,32 @@
 Changelog for AEC 1.0 revision 5105
 
-Features
+FEATURES
 
-General
+General - Major
+656: Complete Backend Revamp (break up J! Layout for more space, Toolbar, jQuery, Bootstrap)
+674: Frontend rewrite with templating and support for template overrides
+664: Joomla 2.5 Compatibility
+331: Advanced Backend Reporting ("Sales and User Statistics")
+555: One-File Installer Package
+591: Install Package - Filesize Reduction to less than 2MB
+619: Speed up all user related database queries, sometimes by an order of magnitude (Thanks to John Greenbury)
+766: Restrictions on MIs (that, plus the Discount/Coupon MI == adjusting plan cost on upgrades between plans)
+
+General - Minor
 548: Feature Request: Clear the tempory token of a user when the go to the plans page if they have one
 554: Inventory Amount for payment plans (maximum number of sales on a plan)
-555: One-File Installer Package
 577: Better error reporting when failing to expire memberships on heartbeat
 585: JomSocial 2.4 Compatibility
 589: Retain position and publish status for modules with auto installer (or leave unpublished if new)
-591: Install Package - Filesize Reduction to less than 2MB
 614: Cleanly delete plan from itemgroups when deleting plan
-619: Speed up all user related database queries, sometimes by an order of magnitude (Thanks to John Greenbury)
 620: Clearing an invoice in the backend now correctly logs to History
 622: AEC Export: Support exporting sales data (plain sales and different accumulates)
 634: Finally fixing metauser->is_renewing()
 638: RWengine to support [[subscription_id]]
 642: Switch Mootabs -> FX.Tabs for cross mootools compatibility
 646: Remove 'Hacks' central icon in favor of MI->Hacks page link
-651: Backend Revamp: Cleanup, Injecting Bootstrap
 655: Export Page Layout that actually makes sense
-656: Complete Backend Revamp (break up J! Layout for more space, Toolbar, jQuery)
-664: Joomla 2.5 Compatibility
 672: .json, .xml and .ods options for sales&member export
-674: Frontend rewrite
 676: RWengine to report on the number of paid/unpaid invoices (cmds: 'invoice_count', 'invoice_count_paid', 'invoice_count_unpaid')
 678: Support Joomla 1.6/1.7/2.5 extended profiles in RWengine + Support for it in the Joomla User MI
 682: Migrate Quickstart Secret Functionality to toolbox tool 'Terminal'
@@ -38,19 +41,19 @@ General
 751: Switching to jQuery UI Date(/Time)-Picker
 757: System messages now show nicely in the top navbar
 765: Dedicated switch for allowing admin emails if No Emails is active
-766: Restrictions on MIs (that, plus the Discount/Coupon MI equals flexible Upgrades between plans)
 
-MIs
-560: Webex MI
+MIs - new ones
+560: Webex
 613: MultiUser MI - Create user accounts
 623: YourMembership.com SSO Integration
-707: Automatic Coupon MI
-708: Automatic Discount MI
-711: Interspire Email Marketer Integration 
-712: iProperty MI
-743: Tienda Integration
-744: RedShop Integration
+707: Automatic Coupon
+708: Automatic Discount
+711: Interspire Email Marketer
+712: iProperty
+743: Tienda
+744: RedShop
 
+MIs - updated functionality
 632: Share a Sale MI - Support cURL calls
 645: VirtueMart 2 Compatibility
 723: Improved JUGA MI (Thanks to P.Gasiorowski!)
@@ -58,20 +61,21 @@ MIs
 746: Jnews 7.5.1 compatibility
 768: Modify Cost MI: Support multi-selection (with limits) and non-selection
 
-Processor Integrations
-505: SofortGateway Integration
-525: Ogone Processor Integration (Thanks to Vijay Jawalapersad!)
-552: MoIP HTML Integration
-559: SecureAndPay.com Integration
-621: Payments Gateway Checkout Integration
-653: ZipZap Integration
-688: CardSave Integration
-745: Skrill Integration (used to be Moneybookers)
-750: Mobio Integration
-755: Billsafe Integration
-760: Paystation integration
-762: Paycific integration (Thanks to Jan from deutsche-internetagentur.de !)
+Processors - new ones
+505: SofortGateway
+525: Ogone Processor (Thanks to Vijay Jawalapersad!)
+552: MoIP HTML
+559: SecureAndPay.com
+621: Payments Gateway Checkout
+653: ZipZap
+688: CardSave
+745: Skrill (used to be Moneybookers)
+750: Mobio
+755: Billsafe
+760: Paystation
+762: Paycific (Thanks to Jan from deutsche-internetagentur.de !)
 
+Processors - updated functionality
 551: PayPal integration to handle "payment_status = Reversed" to automatically put memberships on Hold
 579: Proper Error message for PayPal status pending_reason=intl
 580: Finish Use Invoice Tax switch in the PayPal processor
@@ -100,7 +104,7 @@ Translations
 Plugins
 526: AEC Rewrite Engine Plugin
 
-Bugfixes
+BUGFIXES
 
 General
 605: Restrictions cause Renewal IPNs to fail 

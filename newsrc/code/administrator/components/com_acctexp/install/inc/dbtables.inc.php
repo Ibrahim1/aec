@@ -329,7 +329,7 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_bucket` ('
 . '`subject` varchar(255) NULL,'
 . '`created_date` datetime NULL default \'0000-00-00 00:00:00\','
 . '`data` text NULL,'
-. ' PRIMARY KEY (`id`),'
+. ' PRIMARY KEY (`id`)'
 . ') ENGINE=MyISAM;'
 ;
 
