@@ -877,7 +877,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 		?>
 		<div style="width: 1024px; margin: 0 auto;">
-		<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_gfx_1_0beta.jpg) no-repeat top right; margin: 0 6px;">
+		<div style="float: left; width: 600px; background: #000 url(<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_gfx_1_0.jpg) no-repeat top right; margin: 0 6px;">
 			<div style="width: 100%; height: 290px;"></div>
 			<div class="installnote">
 				<h1>Leading Programmer</h1>
