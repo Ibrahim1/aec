@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0beta' );
-define( '_AEC_REVISION', '5119' );
+define( '_AEC_REVISION', '5124' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -7682,7 +7682,7 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		// Filter out params
-		$fixed = array(	'color', 'icon', 'reveal_child_items', 'symlink',
+		$fixed = array(	'color', 'reveal_child_items', 'symlink',
 						'symlink_userid', 'notauth_redirect', 'micro_integrations', 'meta' );
 
 		$params = array();

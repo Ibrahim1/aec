@@ -25,63 +25,231 @@ class tool_pretend
 	function Settings()
 	{
 		$settings = array();
-		$settings['plans']			= array( 'inputB', 'Plans', 'Number of Membership Plans', 10 );
-		$settings['groups']			= array( 'inputB', 'Groups', 'Number of Membership Plan Groups', 3 );
-		$settings['users']			= array( 'inputB', 'Users', 'Number of Users', 25000 );
-		
-		$settings['start']			= array( 'inputB', 'Start', 'Start of business', date('Y')-6 );
+		$settings['create_groups']		= array( 'toggle', 'Create Groups', 'Create new groups (or just use the ones already in the system)', 0 );
+		$settings['groups']				= array( 'inputB', 'Groups', 'Number of Membership Plan Groups', 3 );
+		$settings['create_plans']		= array( 'toggle', 'Create Plans', 'Create new plans (or just use the ones already in the system)', 0 );
+		$settings['plans']				= array( 'inputB', 'Plans', 'Number of Membership Plans', 10 );
+		$settings['create_users']		= array( 'toggle', 'Create Users', 'Create new users (or just use the ones already in the system)', 0 );
+		$settings['users']				= array( 'inputB', 'Users', 'Number of Users', 25000 );
+		$settings['mincost']			= array( 'inputB', 'Min Cost', 'Plans will have a random cost assigned, with this as the smallest possible amount', '5.00' );
+		$settings['maxcost']			= array( 'inputB', 'Max Cost', 'Plans will have a random cost assigned, with this as the largest possible amount', '100.00' );
+		$settings['create_payments']	= array( 'toggle', 'Create Payments', 'Create new payments', 0 );
+		$settings['start']				= array( 'inputB', 'Start', 'Start of business (Year)', date('Y')-6 );
 
 		return $settings;
 	}
 
 	function Action()
 	{
-		$db = &JFactory::getDBO();
+		if ( empty( $_POST['groups'] ) ) {
+			return null;
+		}
 
 		// Create a number of groups
 		$grouplist = $this->createGroups( $_POST['groups'] );
 		
 		// Create a number of plans
-		$planlist = $this->createPlans( $grouplist, $_POST['plans'] );
+		$this->createPlans( $grouplist, $_POST['plans'] );
 
 		// Create Users
-		$userlist = $this->createUsers( $_POST['users'] );
+		$this->createUsers( $_POST['users'] );
 
 		// Create Payments
-		$paymentlist = $this->createPayments( $grouplist );
+		$this->createPayments();
+
+		$h = 0;
 
 		// Store some data so we can delete fake entries later on, if needed
-		$data = array(
-						'range_group' => array( $this->range['groups']['start'], $this->range['groups']['end'] ),
-						'range_plans' => array( $this->range['plans']['start'], $this->range['plans']['end'] ),
-						'range_users' => array( $this->range['users']['start'], $this->range['users']['end'] ),
-						'range_payments' => array( $this->range['payments']['start'], $this->range['payments']['end'] )
-		);
+		if ( $_POST['create_users'] ) {
+			$h++;
+			$data['range_users'] = array( $this->range['users']['start'], $this->range['users']['end'] );
+		} else {
+			$data['range_users'] = array( 0, 0 );
+		}
 
-		$bucket = new aecBucket( $db );
-		$bucket->stuff( 'tool_pretend', $data );
+		if ( $_POST['create_plans'] ) {
+			$h++;
+			$data['range_plans'] = array( $this->range['plans']['start'], $this->range['plans']['end'] );
+		} else {
+			$data['range_plans'] = array( 0, 0 );
+		}
+
+		if ( $_POST['create_groups'] ) {
+			$h++;
+			$data['range_groups'] = array( $this->range['groups']['start'], $this->range['groups']['end'] );
+		} else {
+			$data['range_groups'] = array( 0, 0 );
+		}
+
+		if ( $_POST['create_payments'] ) {
+			$h++;
+			$data['range_payments'] = array( $this->range['payments']['start'], $this->range['payments']['end'] );
+		} else {
+			$data['range_payments'] = array( 0, 0 );
+		}
+
+		if ( $h ) {
+			$db = &JFactory::getDBO();
+
+			$bucket = new aecBucket( $db );
+			$bucket->stuff( 'tool_pretend', $data );
+
+			return "<p>Alright!</p>";
+		} else {
+			return "<p>Seems like nothing happened...</p>";
+		}
 	}
 
-	function createPayments( $planrange, $userrange )
+	function createPayments()
 	{
-		
+		if ( !$_POST['create_payments'] ) {
+			return;
+		}
+
+		$db = &JFactory::getDBO();
+
+		$amountlist = array();
+
+		for( $i=$this->range['plans']['start']; $i<=$this->range['plans']['end']; $i++ ) {
+			$amountlist[$i] = array();
+
+			$modlist[$i]['sin'] = rand(0, 360);
+			$modlist[$i]['speed'] = rand(0, 1000)/100;
+			$modlist[$i]['multi'] = rand(0, 100)/50;
+		}
+
+		$start_date = strtotime( $_POST['start'].'-01-01 00:00:00' );
+
+		$years = (int) date('Y')-$_POST['start'];
+
+		$days = ($years*365)+date('z')+1;
+
+		$saleslist = $this->stream_layers( $amountlist, $days+2, 1 );
+
+		$plandetails = array();
+
+		$query = 'SELECT MIN(id)'
+				. ' FROM #__acctexp_log_history'
+				;
+		$db->setQuery( $query );
+
+		$this->range['payments']['start'] = $db->loadResult()+1;
+
+		for( $i=1; $i<=$days; $i++ ) {
+			$dtime = strtotime( "+".$i." days", $start_date );
+
+			foreach ( $modlist as $k => $v ) {
+				$modlist[$k]['sin'] += $modlist[$k]['speed'];
+
+				$modlist[$k]['sin'] = $modlist[$k]%360;
+			}
+
+			foreach ( $saleslist as $plan => $dayslist ) {
+				if ( !isset( $plandetails[$plan] ) ) {
+					$splan = new SubscriptionPlan( $db );
+					$splan->load( $plan );
+
+					$plandetails[$plan] = array( 'name' => $splan->name, 'cost' => $splan->params['full_amount'] );
+				}
+
+				// Add some sine modification
+				$dsales = (int) ( $dayslist[$i] * ( ( 1 + sin( $modlist[$plan]['sin'] ) ) * $modlist[$plan]['multi'] ) );
+
+				// Less sales on the weekends
+				if ( date('N',$dtime) > 5 ) {
+					$dsales = (int) ( $dsales/rand(1,4) );
+				}
+
+				for( $j=0; $j<$dsales; $j++ ) {
+					$log = new logHistory( $db );
+
+					$userid = rand($this->range['users']['start'], $this->range['users']['end']);
+
+					//$user = new JTableUser( $db );
+					//$user->load( $userid );
+
+					$log->plan_id				= $plan;
+					$log->plan_name				= $plandetails[$plan]['name'];
+					$log->proc_id				= 0;
+					$log->proc_name				= 'none';
+					$log->user_id				= $userid;
+					$log->user_name				= '';
+					$log->transaction_date		= date( 'Y-m-d H:i:s', $dtime+rand(0,86400) );
+					$log->amount				= $plandetails[$plan]['cost'];
+					$log->invoice_number		= "";
+					$log->response				= "";
+
+					$log->check();
+					$log->store();
+				}
+			}
+		}
+
+		$query = 'SELECT MAX(id)'
+				. ' FROM #__acctexp_log_history'
+				;
+		$db->setQuery( $query );
+
+		$this->range['payments']['end'] = $db->loadResult();
 	}
 
 	function createPlans( $grouplist, $plans )
 	{
-		$class = array( 'copper', 'silver', 'titanium', 'gold', 'platinum', 'diamond' );
-		$color = array( 'azure', 'scarlet', 'jade', 'lavender', 'mustard' );
+		$db = &JFactory::getDBO();
 
-		$offset = ( rand(0, (count($class)+count($color))) );
+		if ( !$_POST['create_plans'] ) {
+			$query = 'SELECT MIN(id)'
+					. ' FROM #__acctexp_plans'
+					;
+			$db->setQuery( $query );
 
-		for ( $i=0; $i<$plans; $i++ ) {
-			if ( $plans > count($class) ) {
-				
+			$this->range['plans']['start'] = $db->loadResult();
+
+			$query = 'SELECT MAX(id)'
+					. ' FROM #__acctexp_plans'
+					;
+			$db->setQuery( $query );
+
+			$this->range['plans']['end'] = $db->loadResult();
+
+			return;
+		}
+
+		$class = array( 'diamond', 'copper', 'silver', 'titanium', 'gold', 'platinum' );
+		$color = array( '', 'azure ', 'scarlet ', 'jade ', 'lavender ', 'mustard ' );
+
+		$pricerange = array( ( (int) $_POST['mincost']*100 ), ( (int) $_POST['maxcost']*100 ) );
+
+		for ( $i=1; $i<=$plans; $i++ ) {
+			if ( isset( $color[floor($i/6)] ) && isset( $class[$i%6] ) ) {
+				$name = ucfirst( $color[floor($i/6)] ) . ucfirst( $class[$i%6] ) . " Plan";
+			} else {
+				$name = "Plan " . $i;
 			}
 
-			$name = "Membership";
+			$row = new SubscriptionPlan( $db );
 
-			$offset++;
+			$post = array(	'active' => 1,
+							'visible' => 0,
+							'name' => $name,
+							'desc' => "Buy " . $name . " now!",
+							'processors' => '',
+							'full_amount' => round( rand( $pricerange[0], $pricerange[1] ) / 100, 2 ),
+							'full_free' => 0,
+							'trial_free' => 0,
+							'trial_amount' => 0
+			);
+
+			$row->savePOSTsettings( $post );
+			$row->storeload();
+
+			ItemGroupHandler::setChildren( rand($this->range['groups']['start'], $this->range['groups']['end']), array($row->id), $type='item' );
+
+			if ( $i == 1 ) {
+				$this->range['plans']['start'] = $row->id;
+			} elseif ( $i == $plans ) {
+				$this->range['plans']['end'] = $row->id;
+			}
 		}
 	}
 
@@ -89,19 +257,46 @@ class tool_pretend
 	{
 		$db = &JFactory::getDBO();
 
+		if ( !$_POST['create_groups'] ) {
+			$query = 'SELECT MIN(id)'
+					. ' FROM #__acctexp_itemgroups'
+					. ' WHERE `id` > 1'
+					;
+			$db->setQuery( $query );
+
+			$this->range['groups']['start'] = $db->loadResult();
+
+			$query = 'SELECT MAX(id)'
+					. ' FROM #__acctexp_itemgroups'
+					;
+			$db->setQuery( $query );
+
+			$this->range['groups']['end'] = $db->loadResult();
+
+			return;
+		}
+
+		$colors = array(	'1f77b4', 'aec7e8', 'ff7f0e', 'ffbb78', '2ca02c', '98df8a', 'd62728', 'ff9896',
+							'9467bd', 'c5b0d5', '8c564b', 'c49c94', 'e377c2', 'f7b6d2', '7f7f7f', 'c7c7c7',
+							'bcbd22', 'dbdb8d', '17becf', '9edae5', 'BBDDFF', '5F8BC4', 'A2BE72', 'DDFF99',
+							'D07C30', 'C43C42', 'AA89BB', 'B7B7B7', '808080' );
+
 		$grouplist = array();
 		for ( $i=0; $i<=$amount; $i++ ) {
 			$row = new ItemGroup( $db );
 
 			$post = array(
+							'active' => 1,
+							'visible' => 0,
 							'name' => 'Group '.($i+1),
-							'desc' => 'Group '.($i+1)
+							'desc' => 'Group '.($i+1),
+							'color' => $colors[$i%29]
 			);
 
 			$row->savePOSTsettings( $post );
 			$row->storeload();
 
-			ItemGroupHandler::setChildren( 1, array($row->id), $type='item' );
+			ItemGroupHandler::setChildren( 1, array($row->id), $type='group' );
 
 			if ( $i == 0 ) {
 				$this->range['groups']['start'] = $row->id;
@@ -119,7 +314,25 @@ class tool_pretend
 	{
 		$db = &JFactory::getDBO();
 
-		$userlist = array();
+		if ( !$_POST['create_users'] ) {
+			$query = 'SELECT MIN(id)'
+					. ' FROM #__users'
+					. ' WHERE `id` > 64'
+					;
+			$db->setQuery( $query );
+
+			$this->range['users']['start'] = $db->loadResult();
+
+			$query = 'SELECT MAX(id)'
+					. ' FROM #__users'
+					;
+			$db->setQuery( $query );
+
+			$this->range['users']['end'] = $db->loadResult();
+
+			return;
+		}
+
 		for ( $i=0; $i<=$amount; $i++ ) {
 			$rname = $this->getRandomName();
 
@@ -130,34 +343,19 @@ class tool_pretend
 							'name' => $rname,
 							);
 
-
 			$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $var, true, true, true, true );
 
-			$userlist[] = $userid;
-
-			$row = new JTableUser( $db );
-
-			$post = array(
-							'name' => 'Group '.($i+1),
-							'desc' => 'Group '.($i+1)
-			);
-
-			$row->savePOSTsettings( $post );
-			$row->storeload();
-
-			ItemGroupHandler::setChildren( 1, array($row->id), $type='item' );
-
 			if ( $i == 0 ) {
-				$this->range['groups']['start'] = $row->id;
+				$this->range['users']['start'] = $userid;
 			} elseif ( $i == $amount ) {
-				$this->range['groups']['end'] = $row->id;
+				$this->range['users']['end'] = $userid;
 			}
 		}
 	}
 
 	function getRandomName()
 	{
-		$male = array(	"John","William","James","George","Charles",
+		static $male = array(	"John","William","James","George","Charles",
 						"Frank","Joseph","Henry","Robert","Thomas",
 						"Edward","Harry","Walter","Arthur","Fred",
 						"Albert","Samuel","Clarence","Louis","David",
@@ -178,7 +376,7 @@ class tool_pretend
 						"Marion","Bernard","Anthony","Julius","Warren",
 						"Leroy","Clifford","Eddie","Sidney","Milton");
 
-		$female = array("Mary","Anna","Emma","Elizabeth","Margaret",
+		static $female = array("Mary","Anna","Emma","Elizabeth","Margaret",
 						"Minnie","Ida","Bertha","Clara","Alice",
 						"Annie","Florence","Bessie","Grace","Ethel",
 						"Sarah","Ella","Martha","Nellie","Mabel",
@@ -199,7 +397,7 @@ class tool_pretend
 						"Emily","Charlotte","Amanda","Kathryn","Lulu",
 						"Susan","Kate","Nannie","Jane","Amelia");
 
-		$surnames = array("Smith","Johnson","Williams","Brown","Jones",
+		static $surnames = array("Smith","Johnson","Williams","Brown","Jones",
 						"Miller","Davis","Garcia","Rodriguez","Wilson",
 						"Martinez","Anderson","Taylor","Thomas","Hernandez",
 						"Moore","Martin","Jackson","Thompson","White",
@@ -289,7 +487,7 @@ class tool_pretend
 	/* Inspired by d3 examples, in turn inspired by Lee Byron's test data generator. */
 	function stream_layers( $layers, $samples, $step )
 	{
-		foreach ( $layers as $lid ) {
+		foreach ( $layers as $lid => $lc ) {
 			$a = array();
 
 			for ( $i=0; $i<$samples; $i++ ) {
@@ -300,7 +498,11 @@ class tool_pretend
 				$a = $this->bump( $a, $samples );
 			}
 
-			return a.map(stream_index);
+			foreach ( $a as $k => $v ) {
+				$a[$k] = (int) ($v/((rand(15,65)*10000000)));
+			}
+
+			$layers[$lid] = $a;
 		}
 
 		return $layers;

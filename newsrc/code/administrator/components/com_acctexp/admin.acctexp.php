@@ -2432,6 +2432,10 @@ function editSubscriptionPlan( $id, $option )
 		$params_values = $row->params;
 		$restrictions_values = $row->restrictions;
 
+		if ( empty( $restrictions_values ) ) {
+			$restrictions_values = array();
+		}
+
 		// Clean up custom params
 		if ( !empty( $row->customparams ) ) {
 			foreach ( $row->customparams as $n => $v ) {
@@ -2500,7 +2504,6 @@ function editSubscriptionPlan( $id, $option )
 			$g['id']	= $group->id;
 			$g['name']	= $group->getProperty('name');
 			$g['color']	= $group->params['color'];
-			$g['icon']	= $group->params['icon'].'.png';
 
 			$g['group']	= '<strong>' . $groupid . '</strong>';
 
@@ -3314,7 +3317,6 @@ function editItemGroup( $id, $option )
 	$params['desc']						= array( 'editor', '' );
 
 	$params['color']					= array( 'list', '' );
-	$params['icon']						= array( 'list', '' );
 
 	$params['reveal_child_items']		= array( 'toggle', 0 );
 	$params['symlink']					= array( 'inputC', '' );
@@ -3397,8 +3399,10 @@ function editItemGroup( $id, $option )
 	$params['rewriteInfo']	= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 
-	// light blue, another blue, brown, green, another green, reddish gray, yellowish, purpleish, red
-	$colors = array( 'BBDDFF', '5F8BC4', 'A2BE72', 'DDFF99', 'D07C30', 'C43C42', 'AA89BB', 'B7B7B7', '808080' );
+	$colors = array(	'1f77b4', 'aec7e8', 'ff7f0e', 'ffbb78', '2ca02c', '98df8a', 'd62728', 'ff9896',
+						'9467bd', 'c5b0d5', '8c564b', 'c49c94', 'e377c2', 'f7b6d2', '7f7f7f', 'c7c7c7',
+						'bcbd22', 'dbdb8d', '17becf', '9edae5', 'BBDDFF', '5F8BC4', 'A2BE72', 'DDFF99',
+						'D07C30', 'C43C42', 'AA89BB', 'B7B7B7', '808080' );
 
 	$colorlist = array();
 	foreach ( $colors as $color ) {
@@ -3415,20 +3419,6 @@ function editItemGroup( $id, $option )
 	foreach ( $colors as $color ) {
 		$lists['color'] = str_replace( 'value="'.$color.'"', 'value="'.$color.'"style="background-color:#'.$color.';"', $lists['color'] );
 	}
-
-	$icons = array( 'blue', 'green', 'orange', 'pink', 'purple', 'red', 'yellow' );
-
-	$iconlist = array();
-	foreach ( $icons as $iconname ) {
-		$obj = new stdClass;
-		$obj->value = 'flag_'.$iconname;
-		$obj->text = $iconname.' '.'flag';
-		$obj->id = 'aec_iconlist_flag_'.$iconname;
-
-		$iconlist[] = $obj;
-	}
-
-	$lists['icon'] = JHTML::_('select.genericlist', $iconlist, 'icon', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'icon', 'blue'));
 
 	$mi_list = microIntegrationHandler::getDetailedList();
 
@@ -4874,13 +4864,53 @@ function aec_stats( $option, $page )
 
 	$db = &JFactory::getDBO();
 
+	$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_log_history'
+			;
+	$db->setQuery( $query );
+
+	$stats['sale_count'] = $db->loadResult();
+
+	$query = 'SELECT DISTINCT(date(transaction_date)) AS date, count( * ) AS count' .
+			' FROM #__acctexp_log_history' .
+			' GROUP BY date' .
+			' ORDER BY count ASC';
+	$db->setQuery( $query );
+	$sales_count = $db->loadObjectList();
+	$stats['min_sale_count'] = $sales_count[0]->count;
+	$stats['max_sale_count'] = $sales_count[count($sales_count)-1]->count;
+	$stats['avg_sale_count'] = $sales_count[count($sales_count)/2]->count;
+
 	$query = 'SELECT amount'
 			. ' FROM #__acctexp_log_history'
 			. ' ORDER BY 0+`amount` DESC'
 			;
 	$db->setQuery( $query );
 
-	$stats['max_sale'] = $db->loadResult();
+	$stats['max_sale_value'] = $db->loadResult();
+
+	$query = 'SELECT MIN(amount)'
+			. ' FROM #__acctexp_log_history'
+			. ' WHERE amount > 0'
+			;
+	$db->setQuery( $query );
+
+	$stats['min_sale_value'] = $db->loadResult();
+
+	$query = 'SELECT SUM(amount)'
+			. ' FROM #__acctexp_log_history'
+			;
+	$db->setQuery( $query );
+
+	$stats['avg_sale_value'] = round( $db->loadResult() / $stats['sale_count'], 2 );
+
+	$average = $stats['avg_sale_count'] * $stats['avg_sale_value'];
+	$good = $stats['avg_sale_count']*$stats['avg_sale_value']*1.6;
+
+	$y1 = max( ($stats['min_sale_count']*$stats['min_sale_value']), ($stats['max_sale_count']*$stats['max_sale_value']) );
+	$y2 = min( ($stats['min_sale_count']*$stats['min_sale_value']), ($stats['max_sale_count']*$stats['max_sale_value']) );
+
+	$stats['avg_sale'] = $average + ( $good - $average );
 
 	$query = 'SELECT MIN(transaction_date)'
 			. ' FROM #__acctexp_log_history'

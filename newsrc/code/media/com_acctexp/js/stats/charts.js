@@ -309,7 +309,7 @@ d3.chart.cellular = function () {
 	variant = "standard";
 
 	var ccolor = d3.scale.quantize()
-		.domain([0, max_sale*0.8])
+		.domain([0, avg_sale])
 		.range(d3.range(9));
 
 	var z = 14,
@@ -507,7 +507,7 @@ d3.chart.cellular = function () {
 			.map(data);
 
 		var mcolor = d3.scale.quantize()
-			.domain([0, max_sale*0.5*30])
+			.domain([0, avg_sale*30])
 			.range(d3.range(9));
 
 		year.selectAll("rect.month")
@@ -582,7 +582,7 @@ d3.chart.rickshaw = function () {
 	variant = "standard";
 
 	var ccolor = d3.scale.quantize()
-		.domain([0, max_sale*0.8])
+		.domain([0, avg_sale])
 		.range(d3.range(9));
 
 	chart.parent = function(p,id) {

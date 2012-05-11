@@ -2154,7 +2154,6 @@ jQuery(document).ready(function(jQuery) {
 							<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 							<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
 							<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'icon' ); ?>
 							<div style="position:relative;width:100%;">
 								<?php
 								echo $aecHTML->createSettingsParticle( 'name' );
@@ -2713,7 +2712,7 @@ jQuery(document).ready(function(jQuery) {
 				range_start=2007,
 				range_end=2012,
 				request_url="index.php?option=com_acctexp&task=statrequest",
-				max_sale = <?php echo $stats['max_sale']; ?>,
+				avg_sale = <?php echo $stats['avg_sale']; ?>,
 				first_sale = "<?php echo $stats['first_sale']; ?>",
 				group_names = ["<?php echo implode( '","', $stats['group_names'] ); ?>"],
 				plan_names = ["<?php echo implode( '","', $stats['plan_names'] ); ?>"];
