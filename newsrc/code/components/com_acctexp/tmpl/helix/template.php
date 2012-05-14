@@ -146,7 +146,7 @@ class template_helix extends aecTemplate
 		$params['invoice_after_header']				= array( 'editor', '' );
 		$params[] = array( 'accordion_itemend', '' );
 		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_ADDRESS_NAME') );
-		$params['invoice_address_allow_edit']		= array( 'toggle', '' );
+		$params['invoice_address_allow_edit']		= array( 'toggle', 1 );
 		$params['invoice_address']					= array( 'inputD', '' );
 		$params[] = array( 'accordion_itemend', '' );
 		$params[] = array( 'accordion_itemstart', JText::_('CFG_GENERAL_INVOICE_BEFORE_CONTENT_NAME') );
