@@ -1548,7 +1548,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php } else { ?>
 						<div class="control-group">
 							<label class="control-label" for="class_name">Integration Type</label>
-							<div class="controls"><span class="label label-important"><?php echo $row->name; ?></span></div>
+							<div class="controls"><span class="label label-important"><?php echo $row->mi_class->info['name']; ?></span></div>
 						</div>
 					<?php } ?>
 					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
