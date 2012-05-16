@@ -1576,7 +1576,6 @@ function editSettings( $option )
 
 	$gw_list_enabled		= array();
 	$gw_list_enabled_html	= array();
-	$gw_list_enabled_html[] = JHTML::_('select.option', 'none', JText::_('AEC_CMN_NONE_SELECTED') );
 
 	// Display Processor descriptions?
 	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
@@ -4139,7 +4138,7 @@ function editCoupon( $id, $option, $new )
 	$params['percent_first']				= array( 'toggle',		'' );
 	$params['useon_trial']					= array( 'toggle',		'' );
 	$params['useon_full']					= array( 'toggle',		'1' );
-	$params['useon_full_all']				= array( 'toggle',		'' );
+	$params['useon_full_all']				= array( 'toggle',		'1' );
 
 	$params['has_start_date']				= array( 'toggle',		1 );
 	$params['start_date']					= array( 'list_date',	date( 'Y-m-d', ( (int) gmdate('U') ) ) );
@@ -4904,13 +4903,7 @@ function aec_stats( $option, $page )
 
 	$stats['avg_sale_value'] = round( $db->loadResult() / $stats['sale_count'], 2 );
 
-	$average = $stats['avg_sale_count'] * $stats['avg_sale_value'];
-	$good = $stats['avg_sale_count']*$stats['avg_sale_value']*1.6;
-
-	$y1 = max( ($stats['min_sale_count']*$stats['min_sale_value']), ($stats['max_sale_count']*$stats['max_sale_value']) );
-	$y2 = min( ($stats['min_sale_count']*$stats['min_sale_value']), ($stats['max_sale_count']*$stats['max_sale_value']) );
-
-	$stats['avg_sale'] = $average + ( $good - $average );
+	$stats['avg_sale'] = $stats['avg_sale_count']*$stats['avg_sale_value']*1.8;
 
 	$query = 'SELECT MIN(transaction_date)'
 			. ' FROM #__acctexp_log_history'
