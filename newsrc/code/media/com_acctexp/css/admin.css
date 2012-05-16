@@ -1638,7 +1638,7 @@ margin-left: 1%;
 }
 
 table.adminlist .pagination {
-margin: 3px auto -10px;
+margin: 3px auto -10px !important;
 }
 
 table.adminlist .pagination a {
@@ -1657,9 +1657,9 @@ filter: alpha(opacity=50);
 }
 
 .pagination div.limit {
-height: inherit;
-line-height: 31px;
-margin: -4px 10px;
+height: inherit !important;
+line-height: 28px !important;
+margin: -2px 10px 0 !important;
 }
 
 div.limit select {
@@ -1798,7 +1798,7 @@ line-height: 25px;
 }
 
 .button2-left, .button2-right, .button2-left div, .button2-right div {
-background: none;
+background: none !important;
 }
 
 .button2-right .start,
