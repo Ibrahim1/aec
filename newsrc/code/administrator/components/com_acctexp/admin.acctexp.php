@@ -4901,7 +4901,11 @@ function aec_stats( $option, $page )
 			;
 	$db->setQuery( $query );
 
-	$stats['avg_sale_value'] = round( $db->loadResult() / $stats['sale_count'], 2 );
+	if ( $stats['sale_count'] ) {
+		$stats['avg_sale_value'] = round( $db->loadResult() / $stats['sale_count'], 2 );
+	} else {
+		$stats['avg_sale_value'] = 0;
+	}
 
 	$stats['avg_sale'] = $stats['avg_sale_count']*$stats['avg_sale_value']*1.8;
 
