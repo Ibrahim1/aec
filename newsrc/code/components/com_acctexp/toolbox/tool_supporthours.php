@@ -224,7 +224,7 @@ class tool_supporthours
 		$minordebtlist = $this->debtSort( $minordebtlist );
 
 		foreach ( $minordebtlist as  $user ) {
-			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a> ';
+			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a> ';
 		}
 
 		$return .= '<p>' . $minordebtthresh . ' Users below the -15 minute threshhold, total debt: ' . $minordebtth . ' (' . round( $majordebt/60, 2 ) . ' hours)</p>';
@@ -234,7 +234,7 @@ class tool_supporthours
 		$majordebtlist = $this->debtSort( $majordebtlist );
 
 		foreach ( $majordebtlist as  $user ) {
-			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=edit&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a> ';
+			$return .= '<a href="'. JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $user['userid'] . '">' . $user['username'] . ' (' . $user['debt'] . ' minutes)</a> ';
 		}
 
 		return $return;
