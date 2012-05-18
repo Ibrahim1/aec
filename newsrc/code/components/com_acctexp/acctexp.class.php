@@ -4388,6 +4388,15 @@ class PaymentProcessor
 		return $return;
 	}
 
+	function requireSSLcheckout()
+	{
+		if ( isset( $this->info['secure'] ) ) {
+			return $this->info['secure'];
+		} else {
+			return false;
+		}
+	}
+
 	function storeload()
 	{
 		$this->processor->storeload();
@@ -4688,7 +4697,6 @@ class PaymentProcessor
 
 		// Always amend secondary ident codes
 		if ( !empty( $return['secondary_ident'] )&& !empty( $return['invoice'] ) ) {
-
 			$invoice = new Invoice( $db );
 			$invoice->loadInvoiceNumber( $return['invoice'] );
 			$invoice->secondary_ident = $return['secondary_ident'];
@@ -5337,13 +5345,7 @@ class XMLprocessor extends processor
 
 			unset( $var['aec_alternate_checkout'] );
 		} else {
-			if ( isset( $this->info['secure'] ) ) {
-				$secure = $this->info['secure'];
-			} else {
-				$secure = false;
-			}
-			
-			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=checkout', $secure );
+			$url = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=checkout', $this->requireSSLcheckout() );
 		}
 
 		if ( isset( $var['aec_remove_std_vars'] ) ) {
@@ -10824,7 +10826,7 @@ class InvoiceFactory
 		if ( !is_array( $list ) ) {
 			if ( $list ) {
 				if ( is_bool( $list ) ) {
-					return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_AUTHERROR') );
+					return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
 				} else {
 					if ( strpos( $list, 'option=com_acctexp' ) ) {
 						$list .= '&userid=' . $this->userid;
@@ -11420,7 +11422,7 @@ class InvoiceFactory
 			return getView( 'access_denied' );
 		}
 
-		if ( !empty( $this->pp->info['secure'] ) && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
+		if ( $this->pp->requireSSLcheckout() && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
 			aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ) . '&'. JUtility::getToken() .'=1', true, true ) );
 			exit();
 		}
@@ -11587,7 +11589,13 @@ class InvoiceFactory
 			unset( $this->items );
 			unset( $this->pp );
 
-			$this->checkout( $option, true, $response['error'] );
+			if ( isset( $response['errormsg'] ) ) {
+				$error = $response['errormsg'];
+			} else {
+				$error = $response['error'];
+			}
+
+			$this->checkout( $option, true, $error );
 		} elseif ( isset( $response['doublecheckout'] ) ) {
 			$exchange = $silent = null;
 
@@ -12316,7 +12324,7 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
-			$app = JFactory::getApplication();aecDebug($response);
+			$app = JFactory::getApplication();
 
 			if ( ( strtotime( $this->transaction_date ) + ( $aecConfig->cfg['invoice_cushion']*60 ) ) > ( (int) gmdate('U') ) ) {
 				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {
@@ -12337,7 +12345,7 @@ class Invoice extends serialParamDBTable
 
 					return $response;
 				}
-			}aecDebug("after cushion!");
+			}
 		}
 
 		if ( isset( $response['userid'] ) ) {
@@ -16668,8 +16676,6 @@ class AECToolbox
 						global $Itemid;
 						if ( $Itemid ) {
 							$url .= '&Itemid=' . $Itemid;
-						} else {
-							$url .= '&Itemid=';
 						}
 					}
 				}
