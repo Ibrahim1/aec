@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5150' );
+define( '_AEC_REVISION', '5151' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -7642,16 +7642,20 @@ class ItemGroup extends serialParamDBTable
 			return array( 'group' => array(), 'inherited' => array() );
 		}
 
-		// Remove entries from the group MIs that are already inherited
-		if ( !empty( $gmilist ) && !empty( $milist ) && $strip_inherited ) {
-			$theintersect = array_intersect( $gmilist, $milist );
-
-			if ( !empty( $theintersect ) ) {
-				foreach ( $theintersect as $value ) {
-					// STAY IN THE CAR
-					unset( $milist[array_search( $value, $milist )] );
+		if ( $this->id > 1 ) {
+			// Remove entries from the group MIs that are already inherited
+			if ( !empty( $gmilist ) && !empty( $milist ) && $strip_inherited ) {
+				$theintersect = array_intersect( $gmilist, $milist );
+	
+				if ( !empty( $theintersect ) ) {
+					foreach ( $theintersect as $value ) {
+						// STAY IN THE CAR
+						unset( $milist[array_search( $value, $milist )] );
+					}
 				}
 			}
+		} else {
+			$gmilist = array();
 		}
 
 		return array( 'group' => $milist, 'inherited' => $gmilist );
