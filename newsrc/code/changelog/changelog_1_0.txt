@@ -1,8 +1,8 @@
-Changelog for AEC 1.0 revision 5105
+Changelog for AEC 1.0
 
 FEATURES
 
-General - Major
+Major Features
 656: Complete Backend Revamp (break up J! Layout for more space, Toolbar, jQuery, Bootstrap)
 674: Frontend rewrite with templating and support for template overrides
 664: Joomla 2.5 Compatibility
@@ -12,7 +12,7 @@ General - Major
 619: Speed up all user related database queries, sometimes by an order of magnitude (Thanks to John Greenbury)
 766: Restrictions on MIs (that, plus the Discount/Coupon MI == adjusting plan cost on upgrades between plans)
 
-General - Minor
+Minor Features
 548: Feature Request: Clear the tempory token of a user when the go to the plans page if they have one
 554: Inventory Amount for payment plans (maximum number of sales on a plan)
 577: Better error reporting when failing to expire memberships on heartbeat
@@ -96,7 +96,7 @@ Toolbox
 694: Move readout to toolbox
 
 Translations
-763: Hungarian Translation (supplied by Gabor Mag - Thanks!)
+763: Hungarian Translation (supplied by Timea Rataj & Tamas Kepesi & Gabor Mag - Thanks!)
 603: Russian Frontend Translation (Thanks Waldemar Taube!)
 
 595: Clean up language and country codes in translation files

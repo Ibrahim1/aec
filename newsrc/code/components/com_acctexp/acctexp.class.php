@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5137' );
+define( '_AEC_REVISION', '5150' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -4390,10 +4390,14 @@ class PaymentProcessor
 
 	function requireSSLcheckout()
 	{
-		if ( isset( $this->info['secure'] ) ) {
-			return $this->info['secure'];
+		if ( method_exists( $this->processor, 'requireSSLcheckout' ) ) {
+			return $this->processor->requireSSLcheckout();
 		} else {
-			return false;
+			if ( isset( $this->info['secure'] ) ) {
+				return $this->info['secure'];
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -4972,6 +4976,15 @@ class processor extends serialParamDBTable
 	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		return '<p>' . AECToolbox::rewriteEngineRQ( $this->settings['info'], $request ) . '</p>';
+	}
+
+	function requireSSLcheckout()
+	{
+		if ( isset( $this->info['secure'] ) ) {
+			return $this->info['secure'];
+		} else {
+			return false;
+		}
 	}
 
 	function fileError( $text, $level=128, $tags="", $params=array() )

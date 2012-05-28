@@ -168,7 +168,6 @@ class mi_affiliatepro
 				}
 		}
 
-
 		$text .= 'PostAffTracker.register();'
 				. '</script>';
 
