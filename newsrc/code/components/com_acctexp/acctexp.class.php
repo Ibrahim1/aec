@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5151' );
+define( '_AEC_REVISION', '5153' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5633,20 +5633,24 @@ class XMLprocessor extends processor
 			}
 		}
 
-		$aecConfig->cfg['user_checkout_prefill'];
-
 		$fieldlist = explode( "\n", AECToolbox::rewriteEngine( $aecConfig->cfg['user_checkout_prefill'], $metaUser ) );
 
 		$cfgarray = array();
-		foreach ( $fieldlist as $content ) {
-			$c = explode( '=', $content, 2 );
+		foreach ( $fieldlist as $fcontent ) {
+			$c = explode( '=', $fcontent, 2 );
 
-			if ( !empty( $c[0] ) ) {
-				if ( !empty( $c[1] ) ) {
-					$cfgarray[$c[0]] = trim( $c[1] );
-				} else {
-					$cfgarray[$c[0]] = "";
-				}
+			if ( !is_array( $c ) ) {
+				continue;
+			}
+
+			if ( empty( $c[0] ) ) {
+				continue;
+			}
+
+			if ( !empty( $c[1] ) ) {
+				$cfgarray[$c[0]] = trim( $c[1] );
+			} else {
+				$cfgarray[$c[0]] = "";
 			}
 		}
 
@@ -5699,8 +5703,8 @@ class XMLprocessor extends processor
 					$xvalue = $value;
 				}
 
-				if ( !empty( $cfgarray[$xvalue] ) ) {
-					$vcontent = $cfgarray[$xvalue];
+				if ( !empty( $cfgarray[strtolower($xvalue)] ) ) {
+					$vcontent = $cfgarray[strtolower($xvalue)];
 				}
 			}
 
@@ -15792,7 +15796,7 @@ class reWriteEngine
 		$search = array();
 		$replace = array();
 		foreach ( $this->rewrite as $name => $replacement ) {
-			if ( is_array( $replacement ) ) {var_dump($name);var_dump($replacement);
+			if ( is_array( $replacement ) ) {
 				$replacement = implode( $replacement );
 			}
 
