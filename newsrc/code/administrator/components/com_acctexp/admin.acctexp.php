@@ -189,7 +189,7 @@ switch( strtolower( $task ) ) {
 
 	case 'invoices': invoices( $option ); break;
 	case 'newinvoice': editInvoice( 0, $option, $returnTask, $userid ); break;
-	case 'editinvoice': editInvoice( $id[0], $option, $returnTask ); break;
+	case 'editinvoice': editInvoice( $id[0], $option, $returnTask, $userid ); break;
 	case 'applyinvoice': saveInvoice( $option, 1 ); break;
 	case 'saveinvoice': saveInvoice( $option ); break;
 
