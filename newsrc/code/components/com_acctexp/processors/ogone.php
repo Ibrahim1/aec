@@ -62,7 +62,7 @@ class processor_ogone extends POSTprocessor
 
 		$var['SHASign']		= $this->getHash($var);
 
-		$var['accepturl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=ogoneeurnotification', false, true );
+		$var['accepturl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=ogonenotification', false, true );
 		$var['language']	= 'en_US';
 		$var['PMLIST']		= 'iDEAL;American Express';
 
@@ -111,7 +111,7 @@ class processor_ogone extends POSTprocessor
 			$return .= $v;
 		}
 
-		return sha1( $return.$this->settings['secure'] );
+		return sha1( $return.$this->settings['secret'] );
 	}
 }
 
