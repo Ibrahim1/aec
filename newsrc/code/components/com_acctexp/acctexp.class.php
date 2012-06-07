@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5153' );
+define( '_AEC_REVISION', '5162' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -3200,6 +3200,7 @@ class aecHeartbeat extends JTable
 
 					if ( $validate === false ) {
 						// There was some fatal error, return.
+						aecDebug("Fatal Error while validating during Heartbeat.");
 						return;
 					} elseif ( $validate !== true ) {
 						if ( $subscription->expire() ) {
