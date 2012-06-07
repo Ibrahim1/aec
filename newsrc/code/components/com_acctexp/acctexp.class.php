@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5162' );
+define( '_AEC_REVISION', '5164' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -3282,9 +3282,11 @@ class aecHeartbeat extends JTable
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
 				. ' WHERE `expiration` <= \'' . $expiration_limit . '\''
+				. ' AND `expiration` != \'0000-00-00 00:00:00\''
 				. ' AND `status` != \'Expired\''
 				. ' AND `status` != \'Closed\''
 				. ' AND `status` != \'Excluded\''
+				. ' AND `status` != \'Pending\''
 				. ' ORDER BY `expiration` ASC'
 				;
 		$db->setQuery( $query );
