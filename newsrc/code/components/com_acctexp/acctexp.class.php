@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5164' );
+define( '_AEC_REVISION', '5166' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -11130,7 +11130,9 @@ class InvoiceFactory
 			}
 		}
 
-		$this->reCaptchaCheck();
+		if ( !$this->reCaptchaCheck() ) {
+			return false;
+		}
 
 		$this->puffer( $option );
 
@@ -11854,7 +11856,7 @@ class InvoiceFactory
 			if ( !isset( $_POST["recaptcha_challenge_field"] ) || !isset( $_POST["recaptcha_response_field"] ) ) {
 				echo "<script> alert('The reCAPTCHA was not correct. Please try again.'); window.history.go(-1);</script>\n";
 
-				return;
+				return false;
 			}
 
 			// finally chack with reCAPTCHA if the entry was correct
@@ -11864,9 +11866,11 @@ class InvoiceFactory
 			if (!$resp->is_valid) {
 				echo "<script> alert('The reCAPTCHA was not correct. Please try again.'); window.history.go(-1);</script>\n";
 
-				return;
+				return false;
 			}
 		}
+
+		return true;
 	}
 }
 
