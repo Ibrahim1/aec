@@ -4280,7 +4280,7 @@ class PaymentProcessor
 	{
 		 if ( !empty( $exchange ) ) {
 			 foreach ( $exchange as $key => $value ) {
-				if( is_string( $value ) ) {
+				if ( is_string( $value ) ) {
 					if ( strcmp( $value, '[[SET_TO_NULL]]' ) === 0 ) {
 						// Exception for NULL case
 						$this->settings[$key] = null;
@@ -4290,7 +4290,9 @@ class PaymentProcessor
 						}
 					}
 				} else {
-					$this->settings[$key] = $value;
+					if ( !empty( $value ) ) {
+						$this->settings[$key] = $value;
+					}
 				}
 			 }
 		 }

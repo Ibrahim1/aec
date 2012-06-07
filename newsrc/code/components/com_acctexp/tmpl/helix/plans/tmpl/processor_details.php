@@ -23,10 +23,10 @@
 		<td></td>
 		<td class="cc_icons">
 			<?php
-			if ( isset( $processor->settings['cc_icons'] ) ) {
+			if ( !empty( $processor->settings['cc_icons'] ) ) {
 				$cc_list = $processor->settings['cc_icons'];
 			} else {
-				$cc_list = $processor->info['cc_icons'];
+				$cc_list = $processor->info['cc_list'];
 			}
 
 			@include( $tmpl->tmpl( 'plans.cc_icons' ) );

@@ -11,17 +11,17 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="processor-details">
-	<?php echo $processor->getLogoImg() ?>
+	<?php echo $processor->getLogoImg(); ?>
 	<p><?php if ( isset( $processor->info['description'] ) ) { echo $processor->info['description']; } ?></p>
 	<?php if ( $tmpl->cfg['displayccinfo'] && !empty( $processor->info['cc_list'] ) ) { ?>
 		<div class="processor-cc-icons">
 			<?php
-			if ( isset( $processor->settings['cc_icons'] ) ) {
+			if ( !empty( $processor->settings['cc_icons'] ) ) {
 				$cc_list = $processor->settings['cc_icons'];
 			} else {
-				$cc_list = $processor->info['cc_icons'];
+				$cc_list = $processor->info['cc_list'];
 			}
-	
+
 			@include( $tmpl->tmpl( 'plans.cc_icons' ) );
 			?>
 		</div>

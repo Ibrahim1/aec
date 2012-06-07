@@ -256,6 +256,10 @@ float: left;
 margin: 7px;
 }
 
+#aec .processor-cc-icons {
+float: right;
+}
+
 #aec .backtocart-button {
 text-align: right;
 padding: 8px 0px 8px;
