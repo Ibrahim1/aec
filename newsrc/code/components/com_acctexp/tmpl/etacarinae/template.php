@@ -35,7 +35,7 @@ class template_etacarinae extends aecTemplate
 
 		$params = array();
 
-		$params[] = array( 'userinfobox', 33.225 );
+		$params[] = array( 'userinfobox', 49.8 );
 		$params = array_merge( $params, $this->stdSettings() );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
 		$params['displayccinfo']				= array( 'toggle', 0 );
@@ -53,7 +53,7 @@ class template_etacarinae extends aecTemplate
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
-		$params[] = array( 'userinfobox', 33.225 );
+		$params[] = array( 'userinfobox', 49.8 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
 		$params['confirmation_changeusername']	= array( 'toggle', '' );
 		$params['confirmation_changeusage']		= array( 'toggle', '' );
@@ -70,12 +70,6 @@ class template_etacarinae extends aecTemplate
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
-		$params[] = array( 'userinfobox', 33.225 );
-		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
-		$params['use_recaptcha']					= array( 'toggle', '' );
-		$params['recaptcha_privatekey']				= array( 'inputC', '' );
-		$params['recaptcha_publickey']				= array( 'inputC', '' );
-		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
 		@end( $params );

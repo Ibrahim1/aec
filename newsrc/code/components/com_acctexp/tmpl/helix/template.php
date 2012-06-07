@@ -61,11 +61,6 @@ class template_helix extends aecTemplate
 		$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
 		$params['customlink_continueshopping']	= array( 'inputC', '' );
 		$params[] = array( 'div_end', 0 );
-		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
-		$params['use_recaptcha']					= array( 'toggle', '' );
-		$params['recaptcha_privatekey']				= array( 'inputC', '' );
-		$params['recaptcha_publickey']				= array( 'inputC', '' );
-		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
 		@end( $params );
