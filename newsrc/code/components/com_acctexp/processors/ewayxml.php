@@ -99,9 +99,9 @@ class processor_ewayxml extends XMLprocessor
 	function transmitRequestXML( $xml, $request )
 	{
 		if ( $this->settings['testmode'] ) {
-			$url = 'https://www.eway.com.au/gateway/xmltest/testpage.asp';
+			$url = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
 		} else {
-			$url = 'https://www.eway.com.au/gateway/xmlpayment.asp';
+			$url = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
 		}
 		$response = array();
 
