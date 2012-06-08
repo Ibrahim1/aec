@@ -63,6 +63,11 @@ width: 90%;
 width: 100%;
 }
 
+#aec tr.aec_formrow,
+#aec tr.aec_formrow td {
+border: none;
+}
+
 #aec .well {
 float: left;
 width: 92%;

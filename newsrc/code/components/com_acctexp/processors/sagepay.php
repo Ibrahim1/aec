@@ -70,7 +70,7 @@ class processor_sagepay extends XMLprocessor
 
 		function checkoutform()
 		{
-			$var = $this->getUserform();
+			$var = array();
 
 			$values = array( 'firstname', 'lastname', 'address', 'city', 'zip', 'country_list' );
 

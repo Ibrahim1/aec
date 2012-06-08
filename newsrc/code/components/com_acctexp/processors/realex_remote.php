@@ -59,9 +59,10 @@ class processor_realex_remote extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform()
+	function checkoutform( $request )
 	{
 		$var = $this->getUserform();
+
 		$var = $this->getCCform( $var, array( 'card_type','card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), null );
 		
 		return $var;

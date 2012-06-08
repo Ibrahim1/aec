@@ -27,6 +27,11 @@ class processor_ewayxml extends XMLprocessor
 		return $info;
 	}
 
+	function getLogoFilename()
+	{
+		return 'eway.png';
+	}
+
 	function settings()
 	{
 		$settings = array();
@@ -119,9 +124,10 @@ class processor_ewayxml extends XMLprocessor
 		return $response;
 	}
 
-	function checkoutform()
+	function checkoutform( $request )
 	{
-		$var = $this->getUserform();
+		$var = $this->getUserform( array(), array(), $request->metaUser );
+
 		$var = $this->getCCform( $var );
 
 		return $var;
