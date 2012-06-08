@@ -206,6 +206,8 @@ class processor_clickbank extends URLprocessor
 				} else {
 					$params[] = $_POST[$field];
 				}
+			} else {
+				break;
 			}
 		}
 
