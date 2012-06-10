@@ -102,7 +102,7 @@ class mi_affiliatepro
 			}
 		}
 	}
- 
+
 	function CommonData()
 	{
 		return array( 'url', 'path', 'cookie', 'merchant', 'password' );
