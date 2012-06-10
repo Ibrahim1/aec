@@ -85,8 +85,6 @@ class mi_pardot_marketing extends MI
 
 	function on_userchange_action( $request )
 	{
-		$request->metaUser = new metaUser( $request->row->id );
-
 		$db = &JFactory::getDBO();
 
 		$pc = new PardotConnector( $db );

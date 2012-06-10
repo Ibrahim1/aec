@@ -92,10 +92,12 @@ class mi_htaccess
 		$newparams['mi_folder_fullpath']		= $newparams['mi_folder'] . "/.htaccess";
 		$newparams['mi_folder_user_fullpath']	= $newparams['mi_passwordfolder'] . "/.htuser" . str_replace( "/", "_", str_replace( ".", "/", $newparams['mi_folder'] ) );
 
-		if ( !file_exists( $newparams['mi_folder_fullpath'] ) && !$params['rebuild'] ) {
+		if ( ( !file_exists( $newparams['mi_folder_fullpath'] ) || !file_exists( $newparams['mi_folder_user_fullpath'] ) ) || $params['rebuild'] ) {
 			$ht = $this->getHTAccess( $newparams );
 
 			$ht->addLogin();
+
+			$newparams['rebuild'] = 0;
 		}
 
 		return $newparams;
@@ -132,7 +134,7 @@ class mi_htaccess
 	{
 		$apachepw = $this->getApachePW( $request->row->id );
 
-		$password = $this->getPWrequest( $request, $apachepw );
+		$password = $this->getPWrequest( $request );
 
 		$apachepw->apachepw = $this->makePassword( $password );
 
@@ -160,7 +162,7 @@ class mi_htaccess
 		return true;
 	}
 
-	function getPWrequest( $request, $apachepw )
+	function getPWrequest( $request )
 	{
 		if ( isset( $request->post['password_clear'] ) ) {
 			return $request->post['password_clear'];

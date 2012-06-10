@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5169' );
+define( '_AEC_REVISION', '5176' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -14705,8 +14705,8 @@ class Subscription extends serialParamDBTable
 
 		$actions = 0;
 
-		// No actions on expired or recurring
-		if ( ( strcmp( $this->status, 'Expired' ) === 0 ) || $this->recurring ) {
+		// No actions on expired, trial or recurring
+		if ( ( strcmp( $this->status, 'Expired' ) === 0 ) || ( $this->status != 'Trial' ) || $this->recurring ) {
 			return $actions;
 		}
 
@@ -14736,13 +14736,11 @@ class Subscription extends serialParamDBTable
 				continue;
 			}
 
-				// Do the actual pre expiration check on this MI
-			if ( $this->status != 'Trial' ) {
-				if ( $this->is_expired( $mi->pre_exp_check ) ) {
-					$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
-					if ( $result ) {
-						$actions++;
-					}
+			// Do the actual pre expiration check on this MI
+			if ( $this->is_expired( $mi->pre_exp_check ) ) {
+				$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
+				if ( $result ) {
+					$actions++;
 				}
 			}
 
@@ -17133,9 +17131,6 @@ class AECToolbox
 
 			$row = $user;
 
-			$mih = new microIntegrationHandler();
-			$mih->userchange($row, $_POST, 'registration');
-
 			$name 		= $row->name;
 			$email 		= $row->email;
 			$username 	= $row->username;
@@ -18854,6 +18849,13 @@ class microIntegration extends serialParamDBTable
 		$request->row				=& $row;
 		$request->post				=& $post;
 		$request->trace				=& $trace;
+		$request->metaUser			= null;
+
+		if ( !empty( $row->id ) ) {
+			$metaUser = new metaUser( $row->id );
+
+			$request->metaUser		=& $metaUser;
+		}
 
 		return $this->functionProxy( 'on_userchange_action', $request );
 	}
