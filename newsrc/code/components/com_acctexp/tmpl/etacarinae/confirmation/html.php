@@ -29,11 +29,26 @@ if ( !empty( $tmpl->cfg['tos'] ) ) {
 
 	$js = '
 jQuery(document).ready(function(jQuery) {
+	jQuery("button#confirmation").attr("disabled", "disabled");
+
+	jQuery("input#aec-tos").click( function(event) {
+		if ( this.checked ) {
+			jQuery("button#confirmation").removeAttr("disabled");
+		} else {
+			jQuery("button#confirmation").attr("disabled", "disabled");
+		}
+	});
+
+	jQuery("div#confirmation-button").hover( function(event) {
+		if ( !jQuery("input#aec-tos").is(":checked") ) {
+			jQuery("div#confirmation-tos").toggleClass("well-highlight");
+		}
+	});
+
 	jQuery("form#form-confirm :submit").click( function(event) {
 			event.preventDefault();
 
 			if ( jQuery("form#form-confirm .aec-tax").length > 0) {
-				test = jQuery("select.aec-tax").val();
 				if ( jQuery("select.aec-tax").val() == "0" ) {
 					jQuery("div#confirmation-extra>div").addClass("alert-danger").removeClass("alert-success");
 
@@ -41,7 +56,7 @@ jQuery(document).ready(function(jQuery) {
 				}
 			}
 
-			if ( jQuery("#aec-tos").is(\':checked\') ) {
+			if ( jQuery("input#aec-tos").is(\':checked\') ) {
 				jQuery("form#form-confirm").submit();
 			} else {
 				alert("' . html_entity_decode( JText::_('CONFIRM_TOS_ERROR') ) . '");

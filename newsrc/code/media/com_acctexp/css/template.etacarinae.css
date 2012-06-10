@@ -72,6 +72,19 @@ border: none;
 float: left;
 width: 92%;
 margin: 12px 1% 48px;
+-webkit-transition: background 0.5s ease-in, -webkit-box-shadow 0.5s ease-in;
+-moz-transition: background 0.5s ease-in;
+-ms-transition: background 0.5s ease-in;
+-o-transition: background 0.5s ease-in;
+transition: background 0.5s ease-in, box-shadow 0.5s ease-in;
+}
+
+#aec .well-highlight {
+background-color: #f09696 !important;
+
+-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
+-moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
+box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
 }
 
 #aec .well input {
