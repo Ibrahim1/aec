@@ -73,9 +73,9 @@ float: left;
 width: 92%;
 margin: 12px 1% 48px;
 -webkit-transition: background 0.5s ease-in, -webkit-box-shadow 0.5s ease-in;
--moz-transition: background 0.5s ease-in;
--ms-transition: background 0.5s ease-in;
--o-transition: background 0.5s ease-in;
+-moz-transition: background 0.5s ease-in, -moz-box-shadow 0.5s ease-in;
+-ms-transition: background 0.5s ease-in, -ms-box-shadow 0.5s ease-in;
+-o-transition: background 0.5s ease-in, -o-box-shadow 0.5s ease-in;
 transition: background 0.5s ease-in, box-shadow 0.5s ease-in;
 }
 

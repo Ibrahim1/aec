@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5178' );
+define( '_AEC_REVISION', '5180' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -11296,6 +11296,12 @@ class InvoiceFactory
 			foreach ( $mi_form as $key => $value ) {
 				if ( strpos( $key, '[]' ) ) {
 					$key = str_replace( '[]', '', $key );
+				}
+
+				if ( !empty( $value ) ) {
+					if ( strpos( $value[1], '[]' ) ) {
+						$key = str_replace( '[]', '', $value[1] );
+					}
 				}
 
 				$value = aecGetParam( $prefix.$key, '__DEL' );
