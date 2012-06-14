@@ -775,13 +775,16 @@ class processor_authorize_cim extends PROFILEprocessor
 			// Free, so no billing neccessary
 			$return['valid']	= true;
 
-			return null;
+			return $return;
 		}
 
-		if ( !empty( $iFactory->invoice->params['totalOccurrences'] ) && !empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
+		if ( !empty( $iFactory->invoice->params['maxOccurrences'] ) ) {
 			// Only restrict rebill if we have all the info, otherwise fix below (d'oh)
-			if ( $iFactory->invoice->params['totalOccurrences'] >= $iFactory->invoice->params['maxOccurrences'] ) {
-				return null;
+			if ( $iFactory->invoice->counter >= $iFactory->invoice->params['maxOccurrences'] ) {
+				$return['cancel']			= 1;
+				$return['cancel_expire']	= 1;
+
+				return $return;
 			}
 		}
 
@@ -820,11 +823,16 @@ class processor_authorize_cim extends PROFILEprocessor
 						// Reset old bug
 						$iFactory->invoice->params['totalOccurrences'] = 1;
 					}
+				} else {
+					if ( $iFactory->invoice->params['totalOccurrences'] > $iFactory->invoice->counter ) {
+						// another old bug
+						$iFactory->invoice->params['totalOccurrences'] = $iFactory->invoice->counter;
+					}
+
+					$iFactory->invoice->params['totalOccurrences']++;
 				}
 
 				if ( !empty( $iFactory->invoice->params['maxOccurrences'] ) && !empty( $iFactory->invoice->params['totalOccurrences'] ) ) {
-					$iFactory->invoice->params['totalOccurrences']++;
-
 					$iFactory->invoice->storeload();
 				}
 			} else {
