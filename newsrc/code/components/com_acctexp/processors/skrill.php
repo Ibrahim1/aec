@@ -142,7 +142,13 @@ class processor_skrill extends POSTprocessor
 		$var['status_url']				= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=skrillnotification' );
 
 		$var['language']				= $this->settings['language'];
-		$var['payment_methods']			= implode( ',', $this->settings['payment_methods'] );
+
+		if ( empty( $this->settings['payment_methods'] ) ) {
+			$var['payment_methods']		= "";
+		} else {
+			$var['payment_methods']		= implode( ',', $this->settings['payment_methods'] );
+		}
+
 		$var['hide_login']				= $this->settings['hide_login'];
 		$var['pay_from_email']			= $request->metaUser->cmsUser->email;
 		$var['amount']					= $request->int_var['amount'];
