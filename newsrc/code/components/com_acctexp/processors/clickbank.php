@@ -139,7 +139,7 @@ class processor_clickbank extends URLprocessor
 			if ( $post['cbpop'] == $xxpop ) {
 				$response['valid']	= 1;
 			} else {
-				if ( $cverify == $this->postToKey( $post ) ) {
+				if ( $post['cbpop'] == $this->postToKey( $post ) ) {
 					$response['valid']	= 1;
 				} else {
 					$response['pending_reason'] = 'verification error';
@@ -198,20 +198,23 @@ class processor_clickbank extends URLprocessor
 
 	function postToKey( $post )
 	{
-		$params = array();
-		foreach ( $_POST as $field => $content ) {
-			if ( $field != 'cverify' ) {
-				if ( get_magic_quotes_gpc() ) {
-					$params[] = stripslashes( $_POST[$field] );
-				} else {
-					$params[] = $_POST[$field];
-				}
-			} else {
-				break;
+		$fields = array();
+		foreach ( $post as $key => $value ) {
+			if ( $key != "cverify" ) {
+				$fields[] = $key;
 			}
 		}
 
-		sort($params);
+		sort( $fields );
+
+		$params = array();
+		foreach ( $fields as $field ) {
+			if ( get_magic_quotes_gpc() ) {
+				$params[] = stripslashes( $post[$field] );
+			} else {
+				$params[] = $post[$field];
+			}
+		}
 
 		$params[] = $this->settings['secret_key'];
 
