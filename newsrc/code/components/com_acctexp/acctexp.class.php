@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5183' );
+define( '_AEC_REVISION', '5186' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -11818,6 +11818,8 @@ class InvoiceFactory
 
 		$this->triggerMIs( 'invoice_printout', $exchange, $data, $silent );
 
+		$data = AECToolbox::rewriteEngineRQ( $data, $this );
+
 		getView( 'invoice', array( 'data' => $data, 'standalone' => $standalone, 'InvoiceFactory' => $this ) );
 	}
 
@@ -13452,16 +13454,6 @@ class Invoice extends serialParamDBTable
 
 					$data['invoice_billing_history'] .= '<tr><td>' . AECToolbox::formatDate( $transaction->timestamp ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $pplist[$transaction->processor]->info['longname'] . '</td></tr>';
 				}
-			}
-		}
-
-		$otherfields = array( "page_title", "before_header", "header", "after_header", "address", "before_content", "after_content", "before_footer", "footer", "after_footer" );
-
-		foreach ( $otherfields as $field ) {
-			if ( !empty( $aecConfig->cfg["invoice_".$field] ) ) {
-				$data[$field] = AECToolbox::rewriteEngineRQ( $aecConfig->cfg["invoice_".$field], $InvoiceFactory );
-			} else {
-				$data[$field] = "";
 			}
 		}
 
@@ -17677,7 +17669,15 @@ class AECToolbox
 		$rwEngine = new reWriteEngine();
 		$rwEngine->resolveRequest( $request );
 
-		return $rwEngine->resolve( $content );
+		if ( is_array( $content ) ) {
+			foreach ( $content as $k => $v ) {
+				return $content[$k] = $rwEngine->resolve( $v );
+			}
+
+			return $content;
+		} else {
+			return $rwEngine->resolve( $content );
+		}
 	}
 
 	function rewriteEngineExplain( $content )
