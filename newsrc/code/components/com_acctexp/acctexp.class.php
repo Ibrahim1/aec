@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5193' );
+define( '_AEC_REVISION', '5194' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -14721,7 +14721,7 @@ class Subscription extends serialParamDBTable
 		$actions = 0;
 
 		// No actions on expired, trial or recurring
-		if ( ( strcmp( $this->status, 'Expired' ) === 0 ) || ( $this->status != 'Trial' ) || $this->recurring ) {
+		if ( ( strcmp( $this->status, 'Expired' ) === 0 ) || ( $this->status == 'Trial' ) || $this->recurring ) {
 			return $actions;
 		}
 
@@ -18589,7 +18589,7 @@ class microIntegration extends serialParamDBTable
 				}
 
 				if ( isset( $userflags[$spca] ) ) {
-					if ( ( ( (int) gmdate('U') ) + 300 ) > $userflags[$spca] ) {
+					if ( ( ( (int) gmdate('U') ) ) < ( $userflags[$spca] + 300 ) ) {
 						// There already was a trigger in the last 5 minutes
 						return false;
 					}
