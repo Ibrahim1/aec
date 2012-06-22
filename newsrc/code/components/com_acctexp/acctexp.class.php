@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5190' );
+define( '_AEC_REVISION', '5193' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -12130,27 +12130,31 @@ class Invoice extends serialParamDBTable
 					case 'free':
 						break;
 					default:
-						$pp = new PaymentProcessor();
-						if ( $pp->loadName( $this->method ) ) {
+						if ( empty( $InvoiceFactory->pp ) ) {
+							$pp = new PaymentProcessor();
+							if ( !$pp->loadName( $this->method ) ) {
+								$short	= 'processor loading failure';
+								$event	= 'When computing invoice amount, tried to load processor: ' . $this->method;
+								$tags	= 'processor,loading,error';
+								$params = array();
+
+								$eventlog = new eventLog( $db );
+								$eventlog->issue( $short, $tags, $event, 128, $params );
+
+								return;
+							}
+
 							$pp->fullInit();
-
-							if ( $pp->is_recurring( $recurring_choice ) ) {
-								$recurring = $pp->is_recurring( $recurring_choice );
-							}
-
-							if ( empty( $this->currency ) ) {
-								$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
-							}
 						} else {
-							$short	= 'processor loading failure';
-							$event	= 'When computing invoice amount, tried to load processor: ' . $this->method;
-							$tags	= 'processor,loading,error';
-							$params = array();
+							$pp = $InvoiceFactory->pp;
+						}
 
-							$eventlog = new eventLog( $db );
-							$eventlog->issue( $short, $tags, $event, 128, $params );
+						if ( $pp->is_recurring( $recurring_choice ) ) {
+							$recurring = $pp->is_recurring( $recurring_choice );
+						}
 
-							return;
+						if ( empty( $this->currency ) ) {
+							$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
 						}
 				}
 			}
@@ -13454,6 +13458,17 @@ class Invoice extends serialParamDBTable
 
 					$data['invoice_billing_history'] .= '<tr><td>' . AECToolbox::formatDate( $transaction->timestamp ) . '</td><td>' . $transaction->amount . '&nbsp;' . $transaction->currency . '</td><td>' . $pplist[$transaction->processor]->info['longname'] . '</td></tr>';
 				}
+			}
+		}
+
+		$s = array( "before_header", "header", "after_header", "address",
+					"before_content", "after_content",
+					"before_footer", "footer", "after_footer",
+					);
+
+		foreach ( $s as $k ) {
+			if ( empty( $data[$k] ) ) {
+				$data[$k] = "";
 			}
 		}
 
@@ -17671,7 +17686,7 @@ class AECToolbox
 
 		if ( is_array( $content ) ) {
 			foreach ( $content as $k => $v ) {
-				return $content[$k] = $rwEngine->resolve( $v );
+				$content[$k] = $rwEngine->resolve( $v );
 			}
 
 			return $content;
