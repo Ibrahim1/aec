@@ -3,7 +3,7 @@
  * @version $Id: mi_email_multi.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - Multi Email
- * @copyright 2006-2009 Copyright (C) David Deutsch
+ * @copyright 2006-2012 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
