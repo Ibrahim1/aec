@@ -115,6 +115,8 @@ class processor_clickbank extends URLprocessor
 
 		$cverify = aecGetParam( 'cverify', '', true, array( 'word' ) );
 
+		$post = $_POST;
+
 		if ( empty( $cverify ) ) {
 			$postback = array( 'item', 'cbreceipt', 'time', 'cbpop', 'cbaffi', 'cname', 'czip', 'ccountry', 'allowedTypes', 'invoice' );
 
