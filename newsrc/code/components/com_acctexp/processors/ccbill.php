@@ -252,7 +252,7 @@ class processor_ccbill extends POSTprocessor
 		}
 
 		if ( !empty( $response['valid'] ) ) {
-			if ( !empty( $post['planparams']['recurring'] ) ) {
+			if ( !empty( $response['planparams']['recurring'] ) ) {
 				$response['multiplicator'] = 'lifetime';
 			}
 		}

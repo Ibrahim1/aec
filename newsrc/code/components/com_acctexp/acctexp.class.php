@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5196' );
+define( '_AEC_REVISION', '5197' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -12354,8 +12354,9 @@ class Invoice extends serialParamDBTable
 			$plan = $objUsage->getTopPlan();
 		}
 
+		$response['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp );
+
 		$post = aecPostParamClear( $_POST );
-		$post['planparams'] = $plan->getProcessorParameters( $InvoiceFactory->pp );
 
 		$response['userid'] = $this->userid;
 
@@ -12394,6 +12395,10 @@ class Invoice extends serialParamDBTable
 
 		if ( isset( $response['userid'] ) ) {
 			unset( $response['userid'] );
+		}
+
+		if ( isset( $response['planparams'] ) ) {
+			unset( $response['planparams'] );
 		}
 
 		if ( isset( $response['invoiceparams'] ) ) {

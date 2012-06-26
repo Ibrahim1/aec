@@ -430,10 +430,6 @@ class processor_fastcharge extends XMLprocessor
 
 		$req = 'cmd=_notify-validate';
 
-		if ( isset( $post['planparams'] ) ) {
-			unset( $post['planparams'] );
-		}
-
 		foreach ( $post as $key => $value ) {
 			$value = urlencode( stripslashes( $value ) );
 			$req .= "&$key=$value";

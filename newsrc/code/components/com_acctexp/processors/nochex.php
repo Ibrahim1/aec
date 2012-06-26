@@ -99,7 +99,9 @@ class processor_nochex extends POSTprocessor
 			$req .= "&$key=$value";
 		}
 
-		$result = $this->transmitRequest( $url, $path, $req );
+		$header = array( 'Content-Type' => 'application/x-www-form-urlencoded' );
+
+		$result = $this->transmitRequest( $url, $path, $req, 80, null, $header );
 
 		$response['valid'] = 0;
 

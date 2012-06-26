@@ -16,14 +16,15 @@ class processor_paystation extends XMLprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'paystation';
-		$info['longname']		= JText::_('CFG_PAYSTATION_LONGNAME');
-		$info['statement']		= JText::_('CFG_PAYSTATION_STATEMENT');
-		$info['description']	= JText::_('CFG_PAYSTATION_DESCRIPTION');
-		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
-		$info['languages']		= AECToolbox::getISO639_1_codes();
-		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
-		$info['secure']			= 1;
+		$info['name']					= 'paystation';
+		$info['longname']				= JText::_('CFG_PAYSTATION_LONGNAME');
+		$info['statement']				= JText::_('CFG_PAYSTATION_STATEMENT');
+		$info['description']			= JText::_('CFG_PAYSTATION_DESCRIPTION');
+		$info['currencies']				= AECToolbox::aecCurrencyField( true, true, true, true );
+		$info['languages']				= AECToolbox::getISO639_1_codes();
+		$info['cc_list']				= "visa,mastercard,discover,americanexpress,echeck,jcb,dinersclub";
+		$info['secure']					= 1;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -32,7 +33,7 @@ class processor_paystation extends XMLprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
-		$settings['3party']		= 1;
+		$settings['3party']			= 1;
 		$settings['paystation_id'] 	= 'paystationID';
 		$settings['gateway_id']		= 'gatewayID';
 		$settings['currency']		= 'NZD';
@@ -110,11 +111,11 @@ class processor_paystation extends XMLprocessor
 		$url = 'https://www.paystation.co.nz' . $path;
 		$response = $this->transmitRequest( $url, $path, $xml );
 
-		if ( empty( $this->settings['3party'] ) ) {
+		if ( !empty( $this->settings['3party'] ) ) {
 			$redirect = $this->XMLsubstring_tag( $response, 'DigitalOrder' );
 
 			if ( !empty( $redirect ) ) {
-				aecRedirect( $redirect );
+				aecRedirect( $redirect );exit;
 			}
 		}
 

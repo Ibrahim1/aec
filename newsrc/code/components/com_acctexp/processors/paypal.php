@@ -207,10 +207,6 @@ class processor_paypal extends POSTprocessor
 
 		$req = 'cmd=_notify-validate';
 
-		if ( isset( $post['planparams'] ) ) {
-			unset( $post['planparams'] );
-		}
-
 		foreach ( $post as $key => $value ) {
 			$value = str_replace('\r\n', "QQLINEBREAKQQ", $value);
 
