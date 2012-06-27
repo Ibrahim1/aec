@@ -162,19 +162,6 @@ class mi_htaccess
 		return true;
 	}
 
-	function getPWrequest( $request )
-	{
-		if ( isset( $request->post['password_clear'] ) ) {
-			return $request->post['password_clear'];
-		} elseif ( !empty( $request->post['password'] ) ) {
-			return $request->post['password'];
-		} elseif ( !empty( $request->post['password2'] ) ) {
-			return $request->post['password2'];
-		} else {
-			return "";
-		}
-	}
-
 	function getHTAccess( $settings )
 	{
 		$htaccess = new htaccess();

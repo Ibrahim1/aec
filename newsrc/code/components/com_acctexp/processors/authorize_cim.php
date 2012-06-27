@@ -836,8 +836,13 @@ class processor_authorize_cim extends PROFILEprocessor
 					$iFactory->invoice->storeload();
 				}
 			} else {
-				$return['error'] = true;
-				$return['errormsg'] = $cim->code . " - " . $cim->text . " (" . $cim->directResponse . ")";
+				if ( $cim->code == 'E00027' ) {
+					$response['pending'] = true;
+					$response['pending_reason'] = "The last transaction failed. The processor response was: " . $cim->code . " - " . $cim->text . " (" . $cim->directResponse . ")";
+				} else {
+					$return['error'] = true;
+					$return['errormsg'] = $cim->code . " - " . $cim->text . " (" . $cim->directResponse . ")";
+				}
 			}
 		}
 

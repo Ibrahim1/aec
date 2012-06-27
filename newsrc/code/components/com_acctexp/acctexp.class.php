@@ -15681,7 +15681,9 @@ class reWriteEngine
 						if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
 							$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
 
-							if ( defined( 'JPATH_MANIFESTS' ) ) {
+							$v = new JVersion();
+
+							if ( $v->isCompatible('1.6') ) {
 								$this->rewrite['user_activationlink']	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $this->data['metaUser']->cmsUser->activation;
 							} else {
 								$this->rewrite['user_activationlink']	= 'index.php?option=com_user&amp;task=activate&amp;activation=' . $this->data['metaUser']->cmsUser->activation;
@@ -18398,6 +18400,23 @@ class MI
 		}
 
 		return $this->$method( $request );
+	}
+
+	function getPWrequest( $request )
+	{
+		if ( isset( $request->post['password_clear'] ) ) {
+			return $request->post['password_clear'];
+		} elseif ( !empty( $request->post['password'] ) ) {
+			return $request->post['password'];
+		} elseif ( !empty( $request->post['password2'] ) ) {
+			return $request->post['password2'];
+		} elseif ( !empty( $request->post['jform']['password'] ) ) {
+			return $request->post['jform']['password'];
+		} elseif ( !empty( $request->post['jform']['password2'] ) ) {
+			return $request->post['jform']['password2'];
+		} else {
+			return "";
+		}
 	}
 }
 
