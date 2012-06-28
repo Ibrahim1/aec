@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5205' );
+define( '_AEC_REVISION', '5206' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -15686,9 +15686,9 @@ class reWriteEngine
 							$v = new JVersion();
 
 							if ( $v->isCompatible('1.6') ) {
-								$this->rewrite['user_activationlink']	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $this->data['metaUser']->cmsUser->activation;
+								$this->rewrite['user_activationlink']	= JURI::root().'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $this->data['metaUser']->cmsUser->activation;
 							} else {
-								$this->rewrite['user_activationlink']	= 'index.php?option=com_user&amp;task=activate&amp;activation=' . $this->data['metaUser']->cmsUser->activation;
+								$this->rewrite['user_activationlink']	= JURI::root().'index.php?option=com_user&amp;task=activate&amp;activation=' . $this->data['metaUser']->cmsUser->activation;
 							}
 						} else {
 							$this->rewrite['user_activationcode']		= "";
@@ -15697,8 +15697,15 @@ class reWriteEngine
 					}
 				} else {
 					if ( isset( $this->data['metaUser']->cmsUser->activation ) ) {
-						$this->rewrite['user_activationcode']			= $this->data['metaUser']->cmsUser->activation;
-						$this->rewrite['user_activationlink']		= JURI::root()."index.php?option=com_user&task=activate&activation=" . $this->data['metaUser']->cmsUser->activation;
+						$this->rewrite['user_activationcode']		= $this->data['metaUser']->cmsUser->activation;
+
+						$v = new JVersion();
+
+						if ( $v->isCompatible('1.6') ) {
+							$this->rewrite['user_activationlink']	= JURI::root().'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $this->data['metaUser']->cmsUser->activation;
+						} else {
+							$this->rewrite['user_activationlink']	= JURI::root().'index.php?option=com_user&amp;task=activate&amp;activation=' . $this->data['metaUser']->cmsUser->activation;
+						}
 					}
 				}
 
