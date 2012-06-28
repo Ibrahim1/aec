@@ -4995,6 +4995,7 @@ function aec_statrequest( $option, $type, $start, $end )
 			foreach ( $entries as $id ) {
 				$entry = new logHistory( $db );
 				$entry->load( $id );
+				$entry->amount = AECToolbox::correctAmount( $entry->amount );
 
 				$refund = false;
 
@@ -5028,7 +5029,7 @@ function aec_statrequest( $option, $type, $start, $end )
 				//$sale->datejs	= date( 'F d, Y H:i:s', strtotime( $entry->transaction_date ) );
 				$sale->plan		= $entry->plan_id;
 				$sale->group	= $pgroups[0];
-				$sale->amount	= $refund ? -$entry->amount : $entry->amount;
+				$sale->amount	= $refund ? (-$entry->amount) : $entry->amount;
 
 				$tree[] = $sale;
 			}

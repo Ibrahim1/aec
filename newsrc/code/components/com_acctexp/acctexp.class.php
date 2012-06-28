@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5197' );
+define( '_AEC_REVISION', '5199' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -11969,6 +11969,8 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
+		$this->amount = AECToolbox::correctAmount( $this->amount );
+
 		parent::check();
 
 		return true;
@@ -17446,6 +17448,8 @@ class AECToolbox
 			} else {
 				$amount = $amount . '.00';
 			}
+		} else {
+			$amount = str_replace( ',', '', $amount );
 		}
 
 		if ( $round ) {
