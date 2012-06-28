@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5199' );
+define( '_AEC_REVISION', '5201' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -17697,7 +17697,9 @@ class AECToolbox
 
 		if ( is_array( $content ) ) {
 			foreach ( $content as $k => $v ) {
-				$content[$k] = $rwEngine->resolve( $v );
+				if ( is_string( $v ) ) {
+					$content[$k] = $rwEngine->resolve( $v );
+				}
 			}
 
 			return $content;
