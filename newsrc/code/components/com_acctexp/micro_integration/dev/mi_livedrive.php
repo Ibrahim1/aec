@@ -2,7 +2,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_livedrive
+class mi_livedrive extends MI
 {
 
 	function Info()
@@ -94,20 +94,6 @@ class mi_livedrive
     		}
 		}
 	}
-
-	function getPWrequest( $request )
-	{
-		if ( !empty( $request->post['password_clear'] ) ) {
-			return $request->post['password_clear'];
-		} elseif ( !empty( $request->post['password'] ) ) {
-			return $request->post['password'];
-		} elseif ( !empty( $request->post['password2'] ) ) {
-			return $request->post['password2'];
-		} else {
-			return "";
-		}
-	}
-
 
 }
 
