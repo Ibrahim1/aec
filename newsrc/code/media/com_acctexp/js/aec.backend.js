@@ -3,6 +3,7 @@ jQuery(document).ready(function(jQuery) {
 	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){
 		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
 	});
+
 	if ( jQuery("#system-message li").length != 0 ) {
 		jQuery("div.container").before('<span class="nav-msg label label-warning">'+jQuery("#system-message li").html()+'</span>')
 			.parent().children(".nav-msg").fadeIn(500,function(){jQuery(".nav-msg").addClass("nav-msg-transition");});
@@ -72,7 +73,20 @@ jQuery(document).ready(function(jQuery) {
 		jQuery.post("index.php?option=com_acctexp" , values, function(data) {
 			jQuery('#export-result').html(data);
 		});
+
 	});
+
+	// JCE is rather large
+	if ( typeof(WFEditor) !== undefined ) {
+		if ( jQuery(document).width() < 1350 ) {
+			if ( jQuery(document).width() < 1000 ) {
+				jQuery(".form-horizontal .control-group > label").css("width","30%");
+				jQuery(".form-horizontal .controls").css("margin-left","34%");
+			} else {
+				jQuery(".form-horizontal .controls").css("margin-left","50%");
+			}
+		}
+	}
 
 	// fix sub nav on scroll - adapted, against better advice, from http://twitter.github.com/bootstrap/less.html
 	var tbFixed = 0, btFixed = 0, navTop = 0, navBtn = 0;
