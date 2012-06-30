@@ -144,6 +144,8 @@ class mi_aecuserdetails
 
 				if ( !empty( $request->params[$p.'name'] ) ) {
 					$content = $request->params[$p.'name'];
+				} elseif ( !empty( $_POST[$p.'name'] ) ) {
+					$content = aecGetParam( $p.'name', true, array( 'string', 'badchars' ) );
 				} else {
 					$content = $this->settings[$p.'default'];
 				}
