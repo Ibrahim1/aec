@@ -26,11 +26,13 @@ class mi_affiliatepro
 	function Settings()
 	{
 		$settings = array();
-		$settings['url']		= array( 'inputC' );
-		$settings['cookie']		= array( 'toggle' );
-		$settings['path']		= array( 'inputC' );
-		$settings['merchant']	= array( 'inputC' );
-		$settings['password']	= array( 'inputC' );
+		$settings['cookie']			= array( 'toggle' );
+		$settings['path']			= array( 'inputC' );
+		$settings['merchant']		= array( 'inputC' );
+		$settings['password']		= array( 'inputC' );
+		$settings['accountid']		= array( 'inputC' );
+		$settings['js_tracking']	= array( 'toggle' );
+		$settings['url']			= array( 'inputC' );
 
 		return $settings;
 	}
@@ -69,17 +71,7 @@ class mi_affiliatepro
 			return null;
 		}
 
-		include_once( $this->settings['path'] . 'api/PapApi.class.php' );
-
-		if ( strpos( $this->settings['url'], '/sales.js' ) ) {
-			$url = str_replace( '/sales.js', '/scripts/server.php', $this->settings['url'] );
-		} else {
-			if ( substr( $this->settings['url'], -1, 1 ) != '/' ) {
-				$url = $this->settings['url'] . '/scripts/server.php';
-			} else {
-				$url = $this->settings['url'] . 'scripts/server.php';
-			}
-		}
+		$url = $this->loadAPI();
 
 		$session = new Gpf_Api_Session( $url ); 
 
@@ -109,6 +101,62 @@ class mi_affiliatepro
 	}
 
 	function action( $request )
+	{
+		if ( empty( $this->settings['js_tracking'] ) ) {
+			$this->apiTrack( $request );
+		} else {
+			$this->jsTrack( $request );
+		}
+
+		return true;
+	}
+
+	function apiTrack( $request )
+	{
+		$url = $this->loadAPI();
+
+		$saleTracker = new Pap_Api_ClickTracker($url);
+
+		if ( !empty( $this->settings['accountid'] ) ) {
+			$saleTracker->setAccountId($this->settings['accountid']);
+		}
+
+		if ( !empty( $request->invoice->params['mi_affiliatepro_referrer'] ) ) {
+			$referrer = $request->invoice->params['mi_affiliatepro_referrer'];
+		}
+
+		if ( !empty( $request->cart ) ) {
+			foreach ( $request->cart as $ciid => $ci ) {
+				if ( !empty( $ci['is_total'] ) ) {
+					continue;
+				}
+
+				$sale = $saleTracker->createSale();
+				$sale->setTotalCost($request->invoice->amount);
+				$sale->setOrderID($request->invoice->invoice_number);
+				$sale->setProductID($request->plan->id);
+				$sale->setStatus('A');
+
+				if ( !empty( $referrer ) ) {
+					$sale->setAffiliateID($referrer);
+				}
+			}
+		} else {
+			$sale = $saleTracker->createSale();
+			$sale->setTotalCost($request->invoice->amount);
+			$sale->setOrderID($request->invoice->invoice_number);
+			$sale->setProductID($request->plan->id);
+			$sale->setStatus('A');
+
+			if ( !empty( $referrer ) ) {
+				$sale->setAffiliateID($referrer);
+			}
+		}
+
+		$saleTracker->register();
+	}
+
+	function jsTrack( $request )
 	{
 		if ( strpos( $this->settings['url'], '/scripts/salejs.php' ) ) {
 			$url = $this->settings['url'];
@@ -163,28 +211,36 @@ class mi_affiliatepro
 				. "sale.setStatus('A');"
 				;
 
-				if ( !empty( $referrer ) ) {
-					$text .= "sale.setAffiliateID('".$referrer."');";
-				}
+			if ( !empty( $referrer ) ) {
+				$text .= "sale.setAffiliateID('".$referrer."');";
+			}
 		}
 
 		$text .= 'PostAffTracker.register();'
 				. '</script>';
 
-		// TODO:
-		// sale.setCampaignID('11111111'); - campaign
-		// sale.setCustomCommission('10.23'); - force Custom Commission
-
-		// PostAffTracker.setChannel('testchannel'); - force channel
-		// PostAffTracker.setCookieValue('testchannel'); - force to register commission with this cookie value. The cookie value saves affiliate ID and campaign ID. It is in format AFFILIATEID_CAMPAIGNID, for example e2r48sv3_d3425s9f.
-
 		$db = &JFactory::getDBO();
 
 		$displaypipeline = new displayPipeline( $db );
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
-
-		return true;
 	}
 
+	function loadAPI()
+	{
+		include_once( $this->settings['path'] . 'api/PapApi.class.php' );
+
+		if ( strpos( $this->settings['url'], '/sales.js' ) ) {
+			$url = str_replace( '/sales.js', '/scripts/server.php', $this->settings['url'] );
+		} else {
+			if ( substr( $this->settings['url'], -1, 1 ) != '/' ) {
+				$url = $this->settings['url'] . '/scripts/server.php';
+			} else {
+				$url = $this->settings['url'] . 'scripts/server.php';
+			}
+		}
+
+
+		return $url;
+	}
 }
 ?>
