@@ -115,7 +115,7 @@ class mi_affiliatepro
 	{
 		$url = $this->loadAPI();
 
-		$saleTracker = new Pap_Api_ClickTracker($url);
+		$saleTracker = new Pap_Api_SaleTracker($url);
 
 		if ( !empty( $this->settings['accountid'] ) ) {
 			$saleTracker->setAccountId($this->settings['accountid']);
