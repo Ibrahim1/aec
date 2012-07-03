@@ -150,7 +150,6 @@ class processor_secureandpay extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$response = array();
 		$response['valid'] = 0;
 
 		if ( $post['PAYID'] == 'WT' ) {

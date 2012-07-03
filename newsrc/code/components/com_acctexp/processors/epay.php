@@ -178,7 +178,6 @@ class processor_epay extends POSTprocessor
 
 		$response['fullresponse'] = $post;
 
-		$response = array();
 		$response['valid'] = 0;
 
 		$minlen = array( 'tid', 'orderid', 'amount', 'cur', 'date' );

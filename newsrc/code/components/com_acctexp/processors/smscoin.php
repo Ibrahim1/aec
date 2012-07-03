@@ -88,7 +88,6 @@ class processor_smscoin extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$response = array();
 		$response['valid'] = 0;
 
 		$hash = $this->ref_sign(	$this->settings['password'],

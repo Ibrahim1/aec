@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5211' );
+define( '_AEC_REVISION', '5214' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -8399,7 +8399,15 @@ class SubscriptionPlan extends serialParamDBTable
 			$this->params['similarplans'] = array();
 		}
 
+		if ( empty( $this->params['similarplans'] ) ) {
+			$this->params['similarplans'] = array();
+		}
+
 		if ( !isset( $plan->params['similarplans'] ) ) {
+			$plan->params['similarplans'] = array();
+		}
+
+		if ( empty( $plan->params['similarplans'] ) ) {
 			$plan->params['similarplans'] = array();
 		}
 
@@ -8407,7 +8415,15 @@ class SubscriptionPlan extends serialParamDBTable
 			$this->params['equalplans'] = array();
 		}
 
+		if ( empty( $this->params['equalplans'] ) ) {
+			$this->params['equalplans'] = array();
+		}
+
 		if ( !isset( $plan->params['equalplans'] ) ) {
+			$plan->params['equalplans'] = array();
+		}
+
+		if ( empty( $plan->params['equalplans'] ) ) {
 			$plan->params['equalplans'] = array();
 		}
 

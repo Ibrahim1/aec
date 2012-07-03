@@ -147,7 +147,6 @@ class processor_paystation extends XMLprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$response = array();
 		$response['valid'] = 1;
 
 		return $response;

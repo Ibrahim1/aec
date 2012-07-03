@@ -91,7 +91,6 @@ class processor_moip extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$response = array();
 		$response['valid'] = 0;
 
 		// Check the payment_status
