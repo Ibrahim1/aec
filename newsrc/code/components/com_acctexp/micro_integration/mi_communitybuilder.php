@@ -93,7 +93,7 @@ class mi_communitybuilder
 		}
 
 		if ( $this->settings['set_fields_exp'] ) {
-			$this->setFields( $request, $request->metaUser->userid, '_exp' );
+			$this->setFields( $request, '_exp' );
 		}
 	}
 
@@ -111,8 +111,10 @@ class mi_communitybuilder
 
 		$changes = array();
 		foreach ( $objects as $object ) {
-			if ( !empty( $this->settings['cbfield_' . $object->name . $stage ] ) ) {
-				$changes[$object->name] = $this->settings['cbfield_' . $object->name . $stage];
+			$key = 'cbfield_' . $object->name . $stage;
+
+			if ( !empty( $this->settings[$key] ) ) {
+				$changes[$object->name] = $this->settings[$key];
 			}
 		}
 
