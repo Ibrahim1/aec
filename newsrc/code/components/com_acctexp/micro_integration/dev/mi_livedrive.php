@@ -78,9 +78,9 @@ class mi_livedrive extends MI
 			$password = $this->getPWrequest( $request );
 
 			if ( !empty( $request->metaUser->meta->id ) ) {
-				$meta &= $request->metaUser->meta;
+				$meta =& $request->metaUser->meta;
 			} else {
-				$db = &JFactory::getDBO();
+				$db =& JFactory::getDBO();
 
 				$meta = new metaUserDB( $db );
 				$meta->createNew( $request->row->id );

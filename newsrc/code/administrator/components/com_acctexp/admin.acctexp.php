@@ -5010,6 +5010,8 @@ function aec_statrequest( $option, $type, $start, $end )
 							$refund = true;
 						}
 					}
+				} else {
+					continue;
 				}
 
 				$pgroups = ItemGroupHandler::parentGroups( $entry->plan_id );
