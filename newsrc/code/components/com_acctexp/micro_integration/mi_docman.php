@@ -64,6 +64,15 @@ class mi_docman
 	{
 		$db = &JFactory::getDBO();
 
+		$db->setQuery( "SHOW COLUMNS FROM #__docman_groups LIKE 'groups_members'" );
+		$result = $db->loadObject();
+
+		if ( (strcmp($result->Field, '`groups_members`') === 0) && (strcmp($result->Type, 'text') === 0) ) {
+			// Give extra space for the "too many users to hold all these feels" problem
+			$db->setQuery("ALTER TABLE #__docman_groups CHANGE `groups_members` `groups_members` longtext NULL");
+			$db->query();
+		}
+
         $settings = array();
 		$settings['add_downloads']		= array( 'inputA' );
 		$settings['set_downloads']		= array( 'inputA' );
