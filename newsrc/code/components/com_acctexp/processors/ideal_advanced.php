@@ -99,15 +99,7 @@ class processor_ideal_advanced extends XMLprocessor
 		$issuerList = $idealRequest->doRequest();
 
 		if( $idealRequest->hasErrors() ) {
-			$db = &JFactory::getDBO();
-
-			$short	= 'issuer list error';
-			$event	= 'Could not retrieve Issuer list. Error(s): ' . implode( ', ', $idealRequest->getErrorsDesc() );
-			$tags	= 'processor,ideal_advanced';
-			$params = array();
-
-			$eventlog = new eventLog( $db );
-			$eventlog->issue( $short, $tags, $event, 128, $params );
+			$this->fileError( 'Could not retrieve Issuer list. Error(s): ' . implode( ', ', $idealRequest->getErrorsDesc() ) );
 		} else {		
 			foreach ( $issuerList as $key => $name ) {
 				$options[]	= JHTML::_('select.option', $key, $name );

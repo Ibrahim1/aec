@@ -80,18 +80,12 @@ class mi_webex extends MI
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );
 
-			if ( !empty( $request->metaUser->meta->id ) ) {
-				$meta &= $request->metaUser->meta;
-			} else {
-				$db = &JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-				$meta = new metaUserDB( $db );
-				$meta->createNew( $request->row->id );
-			}
+			$meta = new metaUserDB( $db );
+			$meta->loadUserid( $request->row->id );
 
-			$params = $meta->custom_params;
-
-			if ( empty( $params['is_stored'] ) && empty( $params['temp_pw']) && !empty( $request->row->password ) ) {
+			if ( empty( $meta->custom_params['is_stored'] ) && empty( $meta->custom_params['temp_pw']) && !empty( $request->row->password ) ) {
 				$meta->custom_params['temp_pw'] = $password;
 		        $meta->storeload();
     		}

@@ -144,15 +144,7 @@ class processor_mollie_wallie extends XMLprocessor
 	
 	function ___logError( $shortdesc, $errorcode, $errordesc )
 	{
-		$db = &JFactory::getDBO();
-
-		$short	= $shortdesc;
-		$event	= $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc;
-		$tags	= 'processor,mollie wallie';
-		$params = array();
-
-		$eventlog = new eventLog( $db );
-		$eventlog->issue( $short, $tags, $event, 128, $params );		
+		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );			
 	}
 }
 ?>

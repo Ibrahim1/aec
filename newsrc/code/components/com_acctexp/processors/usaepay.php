@@ -106,7 +106,7 @@ class processor_usaepay extends XMLprocessor
 
 		$var = $this->customParams( $this->settings['customparams'], $var, $request );
 
-		return $this->getNVPstring( $var );
+		return $this->arrayToNVP( $var );
 	}
 
 	function transmitRequestXML( $xml, $request )

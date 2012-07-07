@@ -132,9 +132,13 @@ class mi_htaccess extends MI
 
 	function on_userchange_action( $request )
 	{
-		$apachepw = $this->getApachePW( $request->row->id );
-
 		$password = $this->getPWrequest( $request );
+
+		if ( empty( $password ) ) {
+			return null;
+		}
+
+		$apachepw = $this->getApachePW( $request->row->id );
 
 		$apachepw->apachepw = $this->makePassword( $password );
 

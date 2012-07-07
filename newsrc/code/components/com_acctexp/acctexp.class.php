@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5216' );
+define( '_AEC_REVISION', '5226' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5000,13 +5000,20 @@ class processor extends serialParamDBTable
 
 		$eventlog = new eventLog( $db );
 
-		$t = explode( ',', $tags );
+		$t = array();
+		$t[] = 'processor';
 		$t[] = $this->name;
 
-		if ( !is_string( $text ) ) {
-			$eventlog->issue( 'processor error', implode( ',', $t ), json_encode( $text ), $level );
+		if ( is_array( $tags ) ) {
+			$x = $tags;
 		} else {
-			$eventlog->issue( 'processor error', implode( ',', $t ), $text, $level, $params );
+			$x = explode( ',', $tags );
+		}
+
+		if ( !is_string( $text ) ) {
+			$eventlog->issue( 'processor error', implode( ',', array_merge( $t, $x ) ), json_encode( $text ), $level );
+		} else {
+			$eventlog->issue( 'processor error', implode( ',', array_merge( $t, $x ) ), $text, $level, $params );
 		}
 	}
 

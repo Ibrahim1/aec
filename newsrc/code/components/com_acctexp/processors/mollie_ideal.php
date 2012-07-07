@@ -82,8 +82,6 @@ class processor_mollie_ideal extends XMLprocessor
 			$var['params']['bank_id'] = array( 'list', 'Kies uw bank', null );			
 
 		} else {		
-		
-			// error handling
 			$this->___logError( "iDEAL_Payment::getBanks failed", 
 								$mollieIdeal->getErrorCode(), 
 								$mollieIdeal->getErrorMessage() 
@@ -181,15 +179,7 @@ class processor_mollie_ideal extends XMLprocessor
 	
 	function ___logError( $shortdesc, $errorcode, $errordesc )
 	{
-		$db = &JFactory::getDBO();
-
-		$short	= $shortdesc;
-		$event	= $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc;
-		$tags	= 'processor,mollie ideal';
-		$params = array();
-
-		$eventlog = new eventLog( $db );
-		$eventlog->issue( $short, $tags, $event, 128, $params );		
+		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );	
 	}
 }
 ?>

@@ -18,12 +18,12 @@ class mi_livedrive extends MI
 	{
 		$database = &JFactory::getDBO();
 
-		global $mainframe;
+		$app = JFactory::getApplication();
 
 		$tables	= array();
 		$tables	= $database->getTableList();
 
-		return in_array($mainframe->getCfg( 'dbprefix' )."_acctexp_mi_livedrive", $tables);
+		return in_array($app->getCfg( 'dbprefix' )."_acctexp_mi_livedrive", $tables);
 	}
 
 	
@@ -58,7 +58,7 @@ class mi_livedrive extends MI
 	}
 
 	function action( $request )
-	{
+	{aecDebug( "livedrive_mi action function" );
 		$params = $request->metaUser->meta->custom_params;
 
 		if ( !empty($params['temp_pw']) ) {
@@ -69,6 +69,8 @@ class mi_livedrive extends MI
 			unset( $request->metaUser->meta->custom_params['temp_pw'] );
 
 			$request->metaUser->meta->storeload();
+		} else {
+			aecDebug( "could not find temp_pw" );
 		}
 	}
 
@@ -77,18 +79,14 @@ class mi_livedrive extends MI
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );
 
-			if ( !empty( $request->metaUser->meta->id ) ) {
-				$meta =& $request->metaUser->meta;
-			} else {
-				$db =& JFactory::getDBO();
+			$db = &JFactory::getDBO();
 
-				$meta = new metaUserDB( $db );
-				$meta->createNew( $request->row->id );
-			}
+			$meta = new metaUserDB( $db );
+			$meta->loadUserid( $request->row->id );
 
 			$params = $meta->custom_params;
 
-			if ( empty( $params['is_stored'] ) && empty( $params['temp_pw']) && !empty( $request->row->password ) ) {
+			if ( empty( $meta->custom_params['is_stored'] ) && empty( $meta->custom_params['temp_pw']) && !empty( $request->row->password ) ) {
 				$meta->custom_params['temp_pw'] = $password;aecDebug( "Storing password: ".$password );
 		        $meta->storeload();
     		}

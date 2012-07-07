@@ -51,6 +51,7 @@ class processor_payone extends POSTprocessor
 		$settings['mid']					= array( 'inputC' );
 		$settings['aid']					= array( 'inputC' );
 		$settings['key']					= array( 'inputC' );
+		$settings['portalid']				= array( 'inputC' );
 		$settings['language']				= array( 'list_language' );
 		$settings['currency']				= array( 'list_currency' );
 		$settings['item_name']				= array( 'inputE' );
@@ -82,7 +83,15 @@ class processor_payone extends POSTprocessor
 		} else {
 			$var['request']		= 'authorization';
 
-			$var['amount']		= (int) ( $request->int_var['amount']*100 );
+			if ( is_array( $request->int_var['amount'] ) ) {
+				$this->fileError( 'Recurring billing selected, but no productid provided' );
+
+				$amount = $request->int_var['amount']['amount3'] * 100;
+			} else {
+				$amount = $request->int_var['amount'] * 100;
+			}
+
+			$var['amount']		= round( $amount );
 			$var['currency']	= $this->settings['currency'];
 
 			$var['id[1]']		= $this->settings['currency'];
@@ -102,6 +111,29 @@ class processor_payone extends POSTprocessor
 		$var['hash']			= $this->getHash( $var );
 
 		return $var;
+	}
+
+	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null, $text=null )
+	{
+		$parent = parent::checkoutAction( $request, $InvoiceFactory, $xvar, $text );
+
+		$options = array(
+						'elv' => 'Lastschrift',
+						'cc' => 'Kreditkarte',
+						'vor' => 'Vorkasse',
+						'rec' => 'Rechnung',
+						'sb' => 'Online-Überweisung',
+						'wlt' => 'e-Wallet'
+		);
+
+ 		$payment_types = array();
+ 		foreach ( $options as $k => $v ) {
+ 			$payment_types[] = JHTML::_('select.option', $k, $v );
+ 		}
+		
+		$select	= JHTML::_('select.genericlist', $payment_types, 'clearingtype', 'size="6"', 'value', 'text', 'cc' );
+
+		return str_replace( '<button', $select.'<br /><button', $parent );
 	}
 
 	function parseNotification( $post )
