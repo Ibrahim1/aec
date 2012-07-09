@@ -58,19 +58,17 @@ class mi_livedrive extends MI
 	}
 
 	function action( $request )
-	{aecDebug( "livedrive_mi action function" );
+	{
 		$params = $request->metaUser->meta->custom_params;
 
 		if ( !empty($params['temp_pw']) ) {
-			$password = $params['temp_pw'];aecDebug( "Retrieving password: ".$password );
+			$password = $params['temp_pw'];
 
 			$request->metaUser->meta->custom_params['is_stored'] = true;
 
 			unset( $request->metaUser->meta->custom_params['temp_pw'] );
 
 			$request->metaUser->meta->storeload();
-		} else {
-			aecDebug( "could not find temp_pw" );
 		}
 	}
 
@@ -87,7 +85,7 @@ class mi_livedrive extends MI
 			$params = $meta->custom_params;
 
 			if ( empty( $meta->custom_params['is_stored'] ) && empty( $meta->custom_params['temp_pw']) && !empty( $request->row->password ) ) {
-				$meta->custom_params['temp_pw'] = $password;aecDebug( "Storing password: ".$password );
+				$meta->custom_params['temp_pw'] = $password;
 		        $meta->storeload();
     		}
 		}
