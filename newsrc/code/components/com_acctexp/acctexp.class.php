@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5226' );
+define( '_AEC_REVISION', '5232' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -9939,9 +9939,9 @@ class InvoiceFactory
 		} else {
 			$this->payment->amount = $this->invoice->amount;
 		}
-
+aecDebug($this->payment);
 		$this->payment->amount = AECToolbox::correctAmount( $this->payment->amount );
-
+aecDebug($this->payment);
 		if ( empty( $this->payment->currency ) && !empty( $this->invoice->currency ) ) {
 			$this->payment->currency = $this->invoice->currency;
 		}
@@ -17423,6 +17423,8 @@ class AECToolbox
 			$format = $plan->params['customamountformat'];
 		}
 
+		$request->payment->amount = AECToolbox::formatAmount( $request->payment->amount );
+
 		$rwEngine = new reWriteEngine();
 		$rwEngine->resolveRequest( $request );
 
@@ -17486,6 +17488,11 @@ class AECToolbox
 			$amount = (string) AECToolbox::roundAmount( $amount );
 		} else {
 			$amount = (string) $amount;
+		}
+
+		// You wouldn't believe me if I told you. Localization is a dark place.
+		if ( strpos( $amount, ',' ) !== false ) {
+			$amount = str_replace( ',', '.', $amount );
 		}
 
 		$a = explode( '.', $amount );
