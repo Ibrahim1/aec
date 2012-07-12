@@ -221,13 +221,13 @@ class mi_interspireem
 
 		$return = $tempprocessor->transmitRequest( $url, $path, $xml );
 
-		$result = simplexml_load_string( $result );
+		$result = simplexml_load_string( $return );
 
 		if ( $result->status == 'ERROR' ) {
 			aecDebug( $result->errormessage );
 		}
 		
-		return $xml_doc->data;
+		return $result->data;
 	}
 }
 
