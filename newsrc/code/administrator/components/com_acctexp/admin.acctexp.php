@@ -4647,14 +4647,14 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		$pp->id = 0;
 		$pp->processor_name = 'none';
 
-		$history = new logHistory( $db );
-		$history->entryFromInvoice( $objInvoice, null, $pp );
-
 		if ( $applyplan ) {
 			$objInvoice->pay();
 		} else {
 			$objInvoice->setTransactionDate();
 		}
+
+		$history = new logHistory( $db );
+		$history->entryFromInvoice( $objInvoice, null, $pp );
 
 		if ( strcmp( $task, 'editMembership' ) == 0) {
 			$userid = '&userid=' . $objInvoice->userid;
