@@ -28,7 +28,6 @@ class mi_aecuserdetails
 		$db = &JFactory::getDBO();
 
 		$settings = array();
-		$settings['lists']		= array();
 		$settings['settings']	= array( 'inputB' );
 
 		$types = array( "p", "inputA", "inputB", "inputC", "inputD", "list", "list_language", "checkbox" );
@@ -39,6 +38,8 @@ class mi_aecuserdetails
  		}
 
 		if ( !empty( $this->settings['settings'] ) ) {
+			$settings['lists']		= array();
+
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
@@ -144,8 +145,8 @@ class mi_aecuserdetails
 
 				if ( !empty( $request->params[$p.'name'] ) ) {
 					$content = $request->params[$p.'name'];
-				} elseif ( !empty( $_POST[$p.'name'] ) ) {
-					$content = aecGetParam( $p.'name', true, array( 'string', 'badchars' ) );
+				} elseif ( !empty( $_POST['mi_'.$request->parent->id.'_'.$this->settings[$p.'short']] ) ) {
+					$content = aecGetParam( 'mi_'.$request->parent->id.'_'.$this->settings[$p.'short'], true, array( 'string', 'badchars' ) );
 				} else {
 					$content = $this->settings[$p.'default'];
 				}
