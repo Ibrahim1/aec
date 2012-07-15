@@ -679,6 +679,14 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $return;
 	}
 
+	function transmitRequest( $url, $path, $xml, $port )
+	{
+		//aecDebug( $xml );
+
+		return parent::transmitRequest( $url, $path, $xml, $port );
+	}
+
+
 	function customaction_cancel( $request )
 	{
 		$return['valid']	= 0;
