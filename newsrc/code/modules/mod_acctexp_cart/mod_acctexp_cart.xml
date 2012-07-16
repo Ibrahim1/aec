@@ -7,11 +7,13 @@
 	<license>GNU/GPL 3.0</license>
 	<authorEmail>skore@valanx.org</authorEmail>
 	<authorUrl>www.valanx.org</authorUrl>
-	<version>0.14.6</version>
+	<version>1.2</version>
 	<description>Module to show the cart from the Account Expiration Control Component.</description>
 	<files folder="modules/mod_acctexp_cart">
-		<filename module="mod_acctexp_cart">mod_acctexp_cart.php</filename>
-		<filename module="mod_acctexp_cart">index.html</filename>
+		<filename module="mod_acctexp_cart">mod_acctexp_cart</filename>
+		<folder>tmpl</folder>
+		<filename>index.html</filename>
+		<filename>mod_acctexp_cart</filename>
 	</files>
 	<languages folder="language">
 		<language tag="de-DE">de-DE/de-DE.mod_acctexp_cart.ini</language>
