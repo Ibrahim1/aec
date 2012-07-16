@@ -44,8 +44,8 @@
 				<?php if ( is_string( $var ) ) { ?>
 					<div class="well">
 						<div id="checkout-button">
-							<?php print $var ?>
 							<p><?php echo $InvoiceFactory->pp->processor->checkoutText(); ?></p>
+							<?php print $var ?>
 						</div>
 					</div>
 				<?php } ?>
