@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5244' );
+define( '_AEC_REVISION', '5245' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -20231,7 +20231,7 @@ class couponHandler
 									);
 
 					if ( isset( $errors[$name] ) ) {
-						$this->setError( JText::_( strtoupper( '_coupon_error_' . $errors[$name] ) ) );
+						$this->setError( JText::_( strtoupper( 'coupon_error_' . $errors[$name] ) ) );
 					} else {
 						$this->status = false;
 					}
