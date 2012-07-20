@@ -3200,7 +3200,7 @@ class aecHeartbeat extends JTable
 
 					if ( $validate === false ) {
 						// There was some fatal error, return.
-						aecDebug("Fatal Error while validating during Heartbeat.");
+
 						return;
 					} elseif ( $validate !== true ) {
 						if ( $subscription->expire() ) {
@@ -3313,26 +3313,12 @@ class aecHeartbeat extends JTable
 		$pp = $this->getProcessor( $subscription->type );
 
 		if ( $pp != false ) {
-			$prepval = null;
-
 			if ( !isset( $this->proc_prepare[$subscription->type] ) ) {
 				// Prepare validation function
-				$prepval = $pp->prepareValidation( $subscription_list );
+				$pp->prepareValidation( $subscription_list );
 			
 				// But only once
 				$this->proc_prepare[$subscription->type] = true;
-			}
-
-			if ( $prepval === null ) {
-				// This Processor has no such function, set to false to ignore later calls
-				$this->processors[$subscription->type] = false;
-			} elseif ( $prepval === false ) {
-				$db = &JFactory::getDBO();
-
-				// Break - we have a problem with one processor
-				$eventlog = new eventLog( $db );
-				$eventlog->issue( 'heartbeat failed - processor', 'heartbeat, failure,'.$subscription->type, 'The payment processor failed to respond to validation request - waiting for next turn', 128 );
-				return false;
 			}
 
 			$validation = null;
@@ -9939,9 +9925,9 @@ class InvoiceFactory
 		} else {
 			$this->payment->amount = $this->invoice->amount;
 		}
-aecDebug($this->payment);
+
 		$this->payment->amount = AECToolbox::correctAmount( $this->payment->amount );
-aecDebug($this->payment);
+
 		if ( empty( $this->payment->currency ) && !empty( $this->invoice->currency ) ) {
 			$this->payment->currency = $this->invoice->currency;
 		}
@@ -12904,6 +12890,14 @@ class Invoice extends serialParamDBTable
 
 		$db = &JFactory::getDBO();
 
+		if ( !empty( $this->coupons ) ) {
+			foreach ( $this->coupons as $cid ) {
+				$this->removeCoupon( $cid );
+			}
+
+			$this->coupons = array();
+		}
+
 		$this->active = 0;
 		$this->params['deactivated'] = 'cancel';
 		$this->storeload();
@@ -13562,6 +13556,17 @@ class Invoice extends serialParamDBTable
 		}
 
 		//$this->saveParams( $params );
+	}
+
+	function delete()
+	{
+		if ( !empty( $this->coupons ) ) {
+			foreach ( $this->coupons as $cid ) {
+				$this->removeCoupon( $cid );
+			}
+		}
+
+		return parent::delete();
 	}
 
 }
