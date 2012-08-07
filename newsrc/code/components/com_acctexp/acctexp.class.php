@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5246' );
+define( '_AEC_REVISION', '5250' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -12224,6 +12224,10 @@ class Invoice extends serialParamDBTable
 
 					if ( is_object( $pp ) ) {
 						$pp->exchangeSettingsByPlan( $plan );
+
+						if ( ( $this->currency != $pp->settings['currency'] ) && !empty( $pp->settings['currency'] ) ) {
+							$this->currency = $pp->settings['currency'];
+						}
 
 						if ( $pp->is_recurring( $recurring_choice ) ) {
 							$recurring = $pp->is_recurring( $recurring_choice );

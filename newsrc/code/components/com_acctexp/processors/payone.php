@@ -24,6 +24,7 @@ class processor_payone extends XMLprocessor
 		$info['languages']		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']		= 2;
+		$info['secure']			= 0;
 
 		return $info;
 	}
@@ -67,21 +68,23 @@ class processor_payone extends XMLprocessor
 		return array( 'productid' => array( 'inputC' ) );
 	}
 
-	function createGatewayLink( $request )
+	function checkoutProcess( $request )
 	{
-		$var['post_url']	= 'https://secure.pay1.de/frontend/';
-
 		$var['portalid']	= $this->settings['portalid'];
 		$var['aid']			= $this->settings['aid'];
 
 		$var['mode']		= $this->settings['testmode'] ? 'test' : 'live';
 
 		if ( is_array( $request->int_var['amount'] ) && !empty( $request->int_var['planparams']['productid'] ) ) {
-			$var['request']		= 'createaccess';
+			$var['request']			= 'createaccess';
 
-			$var['productid'] = $request->int_var['planparams']['productid'];
+			$var['clearingtype']	= $request->int_var['params']['clearingtype'];
+
+			$var['productid'] 		= $request->int_var['planparams']['productid'];
 		} else {
-			$var['request']		= 'authorization';
+			$var['request']			= 'authorization';
+
+			$var['clearingtype']	= $request->int_var['params']['clearingtype'];
 
 			if ( is_array( $request->int_var['amount'] ) ) {
 				$this->fileError( 'Recurring billing selected, but no productid provided' );
@@ -94,7 +97,7 @@ class processor_payone extends XMLprocessor
 			$var['amount']		= round( $amount );
 			$var['currency']	= $this->settings['currency'];
 
-			$var['id[1]']		= $this->settings['currency'];
+			$var['id[1]']		= $request->plan->id;
 			$var['pr[1]']		= $var['amount'];
 			$var['no[1]']		= '1';
 			$var['de[1]']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
@@ -110,12 +113,12 @@ class processor_payone extends XMLprocessor
 
 		$var['hash']			= $this->getHash( $var );
 
-		return $var;
+		aecRedirect( 'https://secure.pay1.de/frontend/?'.$this->arrayToNVP($var) );
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null, $text=null )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
-		$parent = parent::checkoutAction( $request, $InvoiceFactory, $xvar, $text );
+		global $aecConfig;
 
 		$options = array(
 						'elv' => 'Lastschrift',
@@ -130,10 +133,15 @@ class processor_payone extends XMLprocessor
  		foreach ( $options as $k => $v ) {
  			$payment_types[] = JHTML::_('select.option', $k, $v );
  		}
-		
-		$select	= JHTML::_('select.genericlist', $payment_types, 'clearingtype', 'size="6"', 'value', 'text', 'cc' );
+		$return = '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', false ) . '" method="post">' . "\n";
 
-		return str_replace( '<button', $select.'<br /><button', $parent );
+		$return .= $this->getStdFormVars( $request );
+
+		$return .= JHTML::_('select.genericlist', $payment_types, 'clearingtype', 'size="6"', 'value', 'text', 'cc' );
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec-checkout-btn"><i class="icon-shopping-cart icon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '</form>' . "\n";
+
+		return $return;
 	}
 
 	function parseNotification( $post )
@@ -150,7 +158,7 @@ class processor_payone extends XMLprocessor
 	{
 		$response['valid'] = 0;
 
-		switch ( $post['txaction'] ) {
+		switch ( strtolower($post['txaction']) ) {
 			case 'paid':
 				$response['valid'] = 1;
 				break;
@@ -160,11 +168,25 @@ class processor_payone extends XMLprocessor
 			case 'cancelation':
 				$response['chargeback'] = 1;
 				break;
+			case 'appointed':
+				$response['pending'] = 1;
+				$response['pending_reason'] = "Initiating payment";
+				break;
 			default:
 				$response['pending_reason'] = ucfirst( $post['txaction'] );
 		}
 
 		return $response;
+	}
+
+	function notificationError( $response, $error )
+	{
+		echo 'SSOK';
+	}
+
+	function notificationSuccess( $response )
+	{
+		echo 'SSOK';
 	}
 
 	function getHash( $var )
@@ -185,12 +207,12 @@ class processor_payone extends XMLprocessor
 
 		$data = array();
 		foreach ( $var as $k => $v ) {
-			if ( in_array( $k, $params ) || in_array( substr( $k, 0, 2 ), $params ) ) {
+			if ( in_array( $k, $params ) || in_array( substr( $k, 0, 2 ), $xparams ) ) {
 				$data[$k] = $v;
 			}
 		}
 
-		asort( $data );
+		ksort( $data );
 
 		return md5( implode( '', $data ) . $this->settings['key'] );
 	}

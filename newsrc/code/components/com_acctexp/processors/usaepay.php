@@ -126,7 +126,7 @@ class processor_usaepay extends XMLprocessor
 
 		if ( !empty( $response ) ) {
 			$result = parse_str( $response );
-			
+aecDebug($response);aecDebug($result);exit;
 			if ( $result['result'] == 'Approved' ) {
 				$return['valid'] = true;
 			} else {
