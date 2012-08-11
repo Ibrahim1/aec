@@ -852,6 +852,8 @@ class processor_authorize_cim extends PROFILEprocessor
 					$return['errormsg'] = $cim->code . " - " . $cim->text . " (" . $cim->directResponse . ")";
 				}
 			}
+		} else {
+			aecDebug("Trying to bill empty user profile");aecDebug($request->metaUser);
 		}
 
 		return $return;
