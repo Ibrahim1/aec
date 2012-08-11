@@ -546,14 +546,16 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 		if ( isset( $invoice->params['deactivated'] ) ) {
 			$status .= aecHTML::Icon( 'remove-circle' ) . 'deactivated';
-		} elseif ( isset( $invoice->params['pending_reason'] ) ) {
-			if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
-				$status .= aecHTML::Icon( 'warning-sign' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
-			} else {
-				$status .= aecHTML::Icon( 'warning-sign' ) . $invoice->params['pending_reason'];
-			}
 		} elseif ( strcmp( $invoice->transaction_date, '0000-00-00 00:00:00' ) === 0 ) {
-			$status .= aecHTML::Icon( 'time' ) . 'uncleared';
+			if ( isset( $invoice->params['pending_reason'] ) ) {
+				if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $invoice->params['pending_reason'] ) ) ) {
+					$status .= aecHTML::Icon( 'warning-sign' ) . JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper($invoice->params['pending_reason'] ) );
+				} else {
+					$status .= aecHTML::Icon( 'warning-sign' ) . $invoice->params['pending_reason'];
+				}
+			} else {
+				$status .= aecHTML::Icon( 'time' ) . 'uncleared';
+			}
 		}
 
 		$actions	= array();
