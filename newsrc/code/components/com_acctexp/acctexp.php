@@ -22,6 +22,12 @@ $user = &JFactory::getUser();
 
 $task = trim( aecGetParam( 'view', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
 
+$testtask = trim( aecGetParam( 'task', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
+
+if ( !empty( $task ) && ( $testtask != $task ) ) {
+	$task = $testtask;
+}
+
 if ( empty( $option ) ) {
 	$option = aecGetParam( 'option', '0' );
 }
