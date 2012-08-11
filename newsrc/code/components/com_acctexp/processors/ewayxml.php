@@ -75,6 +75,7 @@ class processor_ewayxml extends XMLprocessor
 						"ewayCustomerInvoiceRef" => $request->invoice->invoice_number,
 						"ewayOption1" => $request->metaUser->cmsUser->id, //Send in option1, the id of the user
 						"ewayOption2" => $request->invoice->invoice_number, //Send in option2, the invoice number
+						"ewayOption3" => '',
 						"ewayTrxnNumber" => $my_trxn_number,
 						"ewaySiteTitle" => $this->settings['SiteTitle'],
 						"ewayCardHoldersName" => $request->int_var['params']['billFirstName'] . ' ' . $request->int_var['params']['billLastName'],
@@ -83,8 +84,7 @@ class processor_ewayxml extends XMLprocessor
 						"ewayCardExpiryYear" => $request->int_var['params']['expirationYear'],
 						"ewayCustomerEmail" => $request->metaUser->cmsUser->email,
 						"ewayCustomerAddress" => '',
-						"ewayCustomerPostcode" => '',
-						"ewayOption3" => ''
+						"ewayCustomerPostcode" => ''
 						);
 		$xml = '<ewaygateway>';
 
@@ -103,18 +103,20 @@ class processor_ewayxml extends XMLprocessor
 		} else {
 			$url = 'https://www.eway.com.au/gateway_cvn/xmlpayment.asp';
 		}
+
 		$response = array();
 
-		if ( $objResponse = simplexml_load_string( $this->transmitRequest( $url, '', $xml ) ) ) {
-			$response['amount_paid'] = $objResponse->ewayReturnAmount / 100;
-			$response['invoice'] = $objResponse->ewayTrxnOption2;
-			//$response['raw'] = $objResponse->ewayTrxnError;
+		$respxml = $this->transmitRequest( $url, '', $xml );
 
-			if ( $objResponse->ewayTrxnStatus == 'True' ) {
+		if ( !empty( $respxml ) ) {
+			$response['amount_paid'] = $this->XMLsubstring_tag( $respxml, 'ewayReturnAmount' ) / 100;
+			$response['invoice'] = $this->XMLsubstring_tag( $respxml, 'ewayTrxnOption2' );
+
+			if ( $this->XMLsubstring_tag( $respxml, 'ewayTrxnStatus' ) == 'True' ) {
 				$response['valid'] = 1;
 			} else {
 				$response['valid'] = 0;
-				$response['error'] = $objResponse->ewayTrxnError;
+				$response['error'] = $this->XMLsubstring_tag( $respxml, 'ewayTrxnError' );
 			}
 		} else {
 			$response['valid'] = 0;
