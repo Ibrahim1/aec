@@ -14,16 +14,17 @@
 	<?php if ( empty( $InvoiceFactory->cart ) ) { ?>
 	<p>Your Shopping Cart is empty!</p>
 	<?php } else { ?>
-	<p>&nbsp;</p>
-	<div id="clear_button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), JText::_('CART_CLEAR_ALL') ) ?></div>
-	<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
+		<?php @include( $tmpl->tmpl( 'list' ) ); ?>
+		<p>&nbsp;</p>
+		<div id="clear_button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), JText::_('CART_CLEAR_ALL') ) ?></div>
+		<form name="updateForm" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=updateCart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 
-	<input type="hidden" name="option" value="<?php echo $option ?>" />
-	<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0 ?>" />
-	<input type="hidden" name="task" value="updateCart" />
-	<div id="update_button"><button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_UPDATE') ?></button></div>
-	<?php echo JHTML::_( 'form.token' ) ?>
-	</form>
+		<input type="hidden" name="option" value="<?php echo $option ?>" />
+		<input type="hidden" name="userid" value="<?php echo $user->id ? $user->id : 0 ?>" />
+		<input type="hidden" name="task" value="updateCart" />
+		<div id="update_button"><button type="submit" class="aec-btn"><?php echo JText::_('AEC_BTN_UPDATE') ?></button></div>
+		<?php echo JHTML::_( 'form.token' ) ?>
+		</form>
 	<?php } ?>
 	<?php if ( empty( $InvoiceFactory->userid ) ) { ?>
 	<p>Save Registration to Continue Shopping:</p>

@@ -14,9 +14,8 @@
 <div class="componentheading"><?php echo JText::_('CART_TITLE') ?></div>
 <div id="confirmation">
 	<?php
+	@include( $tmpl->tmpl( 'form' ) );
 	@include( $tmpl->tmpl( 'info' ) );
-	if ( !empty( $InvoiceFactory->cart ) ) {
-		@include( $tmpl->tmpl( 'form' ) );
-	} ?>
+	?>
 </div>
 <div class="aec_clearfix"></div>
