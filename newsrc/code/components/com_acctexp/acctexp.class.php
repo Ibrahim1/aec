@@ -1096,7 +1096,20 @@ class metaUser
 		$db->setQuery( $query );
 		$fields = $db->loadObjectList();
 
-		$this->jsUser = $fields;
+		$this->jsUser = array();
+		foreach ( $ids as $fid ) {
+			foreach ( $fields as $field ) {
+				if ( $field->field_id == $fid ) {
+					$this->jsUser[$fid] = $field->value;
+				}
+			}
+
+			if ( !isset( $this->jsUser[$fid] ) ) {
+				$this->jsUser[$fid] = null;
+			}
+
+			$this->rewrite['user_js_' . $field->field_id] = $field->value;
+		}
 
 		if ( !empty( $this->jsUser ) ) {
 			$this->hasJSprofile = true;
@@ -15688,8 +15701,8 @@ class reWriteEngine
 					}
 
 					if ( !empty( $this->data['metaUser']->hasJSprofile ) ) {
-						foreach ( $this->data['metaUser']->jsUser as $field ) {
-							$this->rewrite['user_js_' . $field->field_id] = $field->value;
+						foreach ( $this->data['metaUser']->jsUser as $k => $v ) {
+							$this->rewrite['user_js_' . $k] = $v;
 						}
 					}
 				}
