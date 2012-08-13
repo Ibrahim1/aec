@@ -15,7 +15,7 @@ class mi_jomsocialjspt
 		$info = array();
 		$info['name'] = JText::_("AEC_MI_NAME_JOMSOCIALJSPT");
 		$info['desc'] = JText::_("AEC_MI_DESC_JOMSOCIALJSPT");
-		$info['type'] = array( 'communtity.social', 'vendor.joomlaxi' );
+		$info['type'] = array( 'community.social', 'vendor.joomlaxi' );
 
 		return $info;
 	}

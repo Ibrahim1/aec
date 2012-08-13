@@ -17,7 +17,7 @@ class mi_apc
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_APC');
 		$info['desc'] = JText::_('AEC_MI_DESC_APC');
-		$info['type'] = array( 'communtity.social' );
+		$info['type'] = array( 'community.social' );
 
 		return $info;
 	}

@@ -18,7 +18,7 @@ class mi_joomlauser
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JOOMLAUSER');
 		$info['desc'] = JText::_('AEC_MI_DESC_JOOMLAUSER');
-		$info['type'] = array( 'joomla.user', 'communtity.profile', 'vendor.valanx' );
+		$info['type'] = array( 'joomla.user', 'community.profile', 'vendor.valanx' );
 
 		return $info;
 	}
