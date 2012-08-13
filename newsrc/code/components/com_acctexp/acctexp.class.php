@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5261' );
+define( '_AEC_REVISION', '5263' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -15486,7 +15486,9 @@ class reWriteEngine
 			$rewrite['subscription'][] = 'type';
 			$rewrite['subscription'][] = 'status';
 			$rewrite['subscription'][] = 'signup_date';
+			$rewrite['subscription'][] = 'signup_date_backend';
 			$rewrite['subscription'][] = 'lastpay_date';
+			$rewrite['subscription'][] = 'lastpay_date_backend';
 			$rewrite['subscription'][] = 'plan';
 			$rewrite['subscription'][] = 'previous_plan';
 			$rewrite['subscription'][] = 'recurring';
@@ -15765,8 +15767,13 @@ class reWriteEngine
 					$this->rewrite['subscription_id']				= $this->data['metaUser']->focusSubscription->id;
 					$this->rewrite['subscription_type']				= $this->data['metaUser']->focusSubscription->type;
 					$this->rewrite['subscription_status']			= $this->data['metaUser']->focusSubscription->status;
-					$this->rewrite['subscription_signup_date']		= $this->data['metaUser']->focusSubscription->signup_date;
-					$this->rewrite['subscription_lastpay_date']		= $this->data['metaUser']->focusSubscription->lastpay_date;
+
+					$this->rewrite['subscription_signup_date']			= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->signup_date );
+					$this->rewrite['subscription_signup_date_backend']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->signup_date, true );
+
+					$this->rewrite['subscription_lastpay_date']			= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->lastpay_date );
+					$this->rewrite['subscription_lastpay_date_backend']	= AECToolbox::formatDate( $this->data['metaUser']->focusSubscription->lastpay_date, true );
+
 					$this->rewrite['subscription_plan']				= $this->data['metaUser']->focusSubscription->plan;
 
 					if ( !empty( $this->data['metaUser']->focusSubscription->previous_plan ) ) {
