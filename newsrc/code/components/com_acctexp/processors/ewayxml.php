@@ -82,6 +82,7 @@ class processor_ewayxml extends XMLprocessor
 						"ewayCardNumber" => $request->int_var['params']['cardNumber'],
 						"ewayCardExpiryMonth" => $request->int_var['params']['expirationMonth'],
 						"ewayCardExpiryYear" => $request->int_var['params']['expirationYear'],
+						"ewayCVN" => $request->int_var['params']['cardVV2'],
 						"ewayCustomerEmail" => $request->metaUser->cmsUser->email,
 						"ewayCustomerAddress" => '',
 						"ewayCustomerPostcode" => ''
@@ -130,7 +131,7 @@ class processor_ewayxml extends XMLprocessor
 	{
 		$var = $this->getUserform( array(), array(), $request->metaUser );
 
-		$var = $this->getCCform( $var );
+		$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
 
 		return $var;
 	}
