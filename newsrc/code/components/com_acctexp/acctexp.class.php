@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5264' );
+define( '_AEC_REVISION', '5266' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -12952,6 +12952,11 @@ class Invoice extends serialParamDBTable
 			$end_position = strpos( $haystack, $end );
 			return substr( $haystack, $start_position, $end_position - $start_position );
 		}
+	}
+
+	function spawnNew()
+	{
+		
 	}
 
 	function setTransactionDate()

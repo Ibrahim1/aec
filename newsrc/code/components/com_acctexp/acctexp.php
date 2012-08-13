@@ -24,7 +24,7 @@ $task = trim( aecGetParam( 'view', '', true, array( 'word', 'string', 'clear_non
 
 $testtask = trim( aecGetParam( 'task', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
 
-if ( !empty( $task ) && ( $testtask != $task ) ) {
+if ( !empty( $task ) && !empty( $testtask ) && ( $testtask != $task ) ) {
 	$task = $testtask;
 }
 
