@@ -13,7 +13,6 @@
 		<filename module="mod_acctexp">mod_acctexp.php</filename>
 		<folder>tmpl</folder>
 		<filename>index.html</filename>
-		<filename>mod_acctexp.xml</filename>
 	</files>
 	<languages folder="language">
 		<language tag="de-DE">de-DE/de-DE.mod_acctexp.ini</language>
