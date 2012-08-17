@@ -15,7 +15,6 @@ $user = &JFactory::getUser();
 
 if ( $user->id ) {
 	require_once( JApplicationHelper::getPath( 'class', 'com_acctexp' ) );
-	require_once dirname(__FILE__).'/helper.php';
 
 	$class_sfx				= $params->get( 'moduleclass_sfx', "");
 	$pretext 				= $params->get( 'pretext' );
@@ -27,7 +26,7 @@ if ( $user->id ) {
 
 	$lang->load( 'mod_acctexp', JPATH_SITE );
 
-	require JModuleHelper::getLayoutPath('mod_acctexp', $params->get('layout', 'default'));
+	require ( JModuleHelper::getLayoutPath('mod_acctexp', $params->get('layout', 'default')) );
 }
 
 

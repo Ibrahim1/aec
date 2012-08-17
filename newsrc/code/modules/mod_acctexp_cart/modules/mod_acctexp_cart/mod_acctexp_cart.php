@@ -33,7 +33,7 @@ if ( $user->id ) {
 	$cart = $c->getCheckout( $metaUser );
 
 	if ( empty( $c->content ) ) {
-		require JModuleHelper::getLayoutPath('mod_acctexp', $params->get('layout', 'empty'));
+		require ( JModuleHelper::getLayoutPath('mod_acctexp_cart', $params->get('layout', 'empty')) );
 	} else {
 		switch ( $mode ) {
 			default:
@@ -48,10 +48,10 @@ if ( $user->id ) {
 					}
 				}
 
-				require JModuleHelper::getLayoutPath('mod_acctexp', $params->get('layout', 'default'));
+				require ( JModuleHelper::getLayoutPath('mod_acctexp_cart', $params->get('layout', 'default')) );
 				break;
 			case 'full':
-				require JModuleHelper::getLayoutPath('mod_acctexp', $params->get('layout', 'full'));
+				require ( JModuleHelper::getLayoutPath('mod_acctexp_cart', $params->get('layout', 'full')) );
 				break;
 		}
 	}
