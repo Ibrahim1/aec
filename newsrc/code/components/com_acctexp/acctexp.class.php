@@ -2515,7 +2515,11 @@ class aecSessionHandler
 	{
 		$se = explode( "|", $data, 2 );
 
-		return array( $se[0] => unserialize( $se[1] ) );
+		if ( isset( $se[1] ) ) {
+			return array( $se[0] => unserialize( $se[1] ) );
+		} else {
+			return array( $se[0] => array() );
+		}
 	}
 
 	function joomserializesession( $data )
@@ -9534,15 +9538,19 @@ class InvoiceFactory
 					if ( isset( $procs[0] ) ) {
 						$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
 
-						$proc = $pgroups[0]['processors'][0];
+						if ( isset( $pgroups[0]['processors'][0] ) ) {
+							$proc = $pgroups[0]['processors'][0];
 
-						if ( strpos( $proc, '_recurring' ) ) {
-							$this->recurring = 1;
+							if ( strpos( $proc, '_recurring' ) ) {
+								$this->recurring = 1;
 
-							$proc = str_replace( '_recurring', '', $proc );
+								$proc = str_replace( '_recurring', '', $proc );
+							}
+
+							$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
+						} else {
+							$procname = 'Free';
 						}
-
-						$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
 
 						if ( !empty( $procname ) ) {
 							$this->processor = $procname;
