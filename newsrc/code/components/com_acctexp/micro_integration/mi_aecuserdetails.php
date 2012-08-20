@@ -37,6 +37,13 @@ class mi_aecuserdetails
  			$typelist[] = JHTML::_('select.option', $type, $type );
  		}
 
+		$types = array( 0 => "No Skipping", 1 => "Skip if already existing", 2 => "Skip if existing, or default not empty" );
+
+ 		$typelist = array();
+ 		foreach ( $types as $type ) {
+ 			$typelist[] = JHTML::_('select.option', $type, $type );
+ 		}
+
 		if ( !empty( $this->settings['settings'] ) ) {
 			$settings['lists']		= array();
 
@@ -148,7 +155,7 @@ class mi_aecuserdetails
 				} elseif ( !empty( $_POST['mi_'.$request->parent->id.'_'.$this->settings[$p.'short']] ) ) {
 					$content = aecGetParam( 'mi_'.$request->parent->id.'_'.$this->settings[$p.'short'], true, array( 'string', 'badchars' ) );
 				} else {
-					$content = $this->settings[$p.'default'];
+					$content = AECToolbox::rewriteEngineRQ( $this->settings[$p.'default'], $request );
 				}
 
 				if ( !empty( $this->settings[$p.'short'] ) ) {

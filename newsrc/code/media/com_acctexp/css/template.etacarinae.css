@@ -59,6 +59,10 @@ margin: 0 5%;
 width: 90%;
 }
 
+#aec .checkout-list-item-terms {
+clear: both;
+}
+
 #aec table.cart-list {
 width: 100%;
 }

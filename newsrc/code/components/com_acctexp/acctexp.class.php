@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5273' );
+define( '_AEC_REVISION', '5277' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2517,8 +2517,10 @@ class aecSessionHandler
 
 		if ( isset( $se[1] ) ) {
 			return array( $se[0] => unserialize( $se[1] ) );
-		} else {
+		} elseif ( isset( $se[0] ) ) {
 			return array( $se[0] => array() );
+		} else {
+			return array();
 		}
 	}
 
@@ -6699,6 +6701,8 @@ class aecHTML
 			$return .= $table ? '<tr class="aec_formrow"><td class="cleft">' : '<p>';
 		} else {
 			$return .= $table ? '<tr class="aec_formrow"><td class="cleft">' : '<p>';
+
+			$row[2] = "";
 		}
 
 		$return .= '<label id="' . $name . 'msg" for="' . $name . '">';
@@ -9538,19 +9542,15 @@ class InvoiceFactory
 					if ( isset( $procs[0] ) ) {
 						$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
 
-						if ( isset( $pgroups[0]['processors'][0] ) ) {
-							$proc = $pgroups[0]['processors'][0];
+						$proc = $pgroups[0]['processors'][0];
 
-							if ( strpos( $proc, '_recurring' ) ) {
-								$this->recurring = 1;
+						if ( strpos( $proc, '_recurring' ) ) {
+							$this->recurring = 1;
 
-								$proc = str_replace( '_recurring', '', $proc );
-							}
-
-							$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
-						} else {
-							$procname = 'Free';
+							$proc = str_replace( '_recurring', '', $proc );
 						}
+
+						$procname = PaymentProcessorHandler::getProcessorNamefromId( $proc );
 
 						if ( !empty( $procname ) ) {
 							$this->processor = $procname;
@@ -13763,6 +13763,10 @@ class aecCartHelper
 						$pplist_names[]	= $pp->info['longname'];
 					}
 				}
+			}
+
+			if ( empty( $pplist ) ) {
+				continue;
 			}
 
 			if ( empty( $pgroups ) ) {
