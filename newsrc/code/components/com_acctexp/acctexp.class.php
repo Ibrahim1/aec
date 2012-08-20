@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5277' );
+define( '_AEC_REVISION', '5280' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -7306,15 +7306,19 @@ class ItemGroupHandler
 		if ( ( $item_id == 1 ) && ( $type == 'group' ) ) {
 			return array();
 		}
-		
+
 		$itemParents = ItemGroupHandler::parentGroups( $item_id, $type );
 
 		$allParents = $itemParents;
 		foreach ( $itemParents as $parentid ) {
 			$parentParents = ItemGroupHandler::getParents( $parentid, 'group' );
 
-			$allParents = array_merge( $allParents, $parentParents );
+			if ( !empty( $parentParents ) ) {
+				$allParents = array_merge( $allParents, $parentParents );
+			}
 		}
+
+		$allParents = array_unique( $allParents );
 
 		return $allParents;
 	}
@@ -7642,7 +7646,7 @@ class ItemGroup extends serialParamDBTable
 		}
 
 		// Find parent ItemGroups to attach their MIs
-		$parents = ItemGroupHandler::getParents( $this->id );
+		$parents = ItemGroupHandler::getParents( $this->id, 'group' );
 
 		$gmilist = array();
 		if ( !empty( $parents ) ) {
@@ -7723,6 +7727,14 @@ class ItemGroup extends serialParamDBTable
 		foreach ( $fixed as $varname ) {
 			$this->$varname = $post[$varname];
 			unset( $post[$varname] );
+		}
+
+		foreach ( $post['micro_integrations'] as $k => $v ) {
+			if ( $v ) {
+				$post['micro_integrations'][$k] = $v;
+			} else {
+				unset( $post['micro_integrations'][$k] );
+			}
 		}
 
 		// Filter out params
@@ -8611,7 +8623,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		// Find parent ItemGroups to attach their MIs
 		$parents = ItemGroupHandler::getParents( $this->id );
-
+print_r($parents);exit;
 		$pmilist = array();
 		foreach ( $parents as $parent ) {
 			$g = new ItemGroup( $db );

@@ -1798,9 +1798,9 @@ jQuery(document).ready(function(jQuery) {
 								<table style="width:100%;" class="table-striped aec-grouplist">
 									<thead>
 										<tr>
-											<th width="10%">ID</td>
-											<th>Name</td>
-											<th width="1%"></td>
+											<th width="10%">ID</th>
+											<th>Name</th>
+											<th width="1%"></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -2180,9 +2180,9 @@ jQuery(document).ready(function(jQuery) {
 								<table style="width:100%;" class="table-striped aec-grouplist">
 									<thead>
 										<tr>
-											<th width="10%">ID</td>
-											<th>Name</td>
-											<th width="1%"></td>
+											<th width="10%">ID</th>
+											<th>Name</th>
+											<th width="1%"></th>
 										</tr>
 									</thead>
 									<tbody>

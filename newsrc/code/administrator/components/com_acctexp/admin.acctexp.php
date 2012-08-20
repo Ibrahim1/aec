@@ -2536,7 +2536,7 @@ function editSubscriptionPlan( $id, $option )
 	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
 	foreach ( $groupids as $groupid => $groupcolor ) {
-		$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'"style="background-color:#'.$groupcolor.';"', $lists['add_group'] );
+		$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'" style="background-color:#'.$groupcolor.';"', $lists['add_group'] );
 	}
 
 	$params['add_group']			= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
@@ -3344,7 +3344,6 @@ function editItemGroup( $id, $option )
 			$g['id']	= $group->id;
 			$g['name']	= $group->getProperty('name');
 			$g['color']	= $group->params['color'];
-			$g['icon']	= $group->params['icon'].'.png';
 
 			$g['group']	= '<strong>' . $groupid . '</strong>';
 
@@ -3387,7 +3386,7 @@ function editItemGroup( $id, $option )
 	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
 	foreach ( $groupids as $groupid => $groupcolor ) {
-		$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'"style="background-color:#'.$groupcolor.';"', $lists['add_group'] );
+		$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'" style="background-color:#'.$groupcolor.';"', $lists['add_group'] );
 	}
 
 	$params['add_group']	= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
@@ -3418,7 +3417,7 @@ function editItemGroup( $id, $option )
 	$lists['color'] = JHTML::_('select.genericlist', $colorlist, 'color', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'color', 'BBDDFF'));
 
 	foreach ( $colors as $color ) {
-		$lists['color'] = str_replace( 'value="'.$color.'"', 'value="'.$color.'"style="background-color:#'.$color.';"', $lists['color'] );
+		$lists['color'] = str_replace( 'value="'.$color.'"', 'value="'.$color.'" style="background-color:#'.$color.';"', $lists['color'] );
 	}
 
 	$mi_list = microIntegrationHandler::getDetailedList();
