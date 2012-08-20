@@ -41,6 +41,12 @@ foreach ( $InvoiceFactory->items->itemlist as $item ) {
 		$i['quantity'] = 1;
 	}
 
+	if ( isset( $item['params'] ) ) {
+		$i['params'] = $item['params'];
+	} else {
+		$i['params'] = array();
+	}
+
 	if ( isset( $item['name'] ) ) {
 		$i['name'] = $item['name'];
 	} else {
@@ -111,7 +117,11 @@ foreach ( $InvoiceFactory->items->itemlist as $item ) {
 			$cost[] = array( 'type' => $citem->type, 'details' => $t, 'cost' => $c );
 		}
 
-		$i['terms'][] = array( 'title' => JText::_( strtoupper( 'aec_termtype_' . $term->type ) ).$applicable, 'type' => $term->type, 'current' => ( $tid == $item['terms']->pointer ), 'duration' => $term->renderDuration(), 'cost' => $cost );
+		$i['terms'][] = array(	'title' => JText::_( strtoupper( 'aec_termtype_' . $term->type ) ).$applicable,
+								'type' => $term->type,
+								'current' => ( $tid == $item['terms']->pointer ),
+								'duration' => $term->renderDuration(),
+								'cost' => $cost );
 	}
 
 	$itemlist[] = $i;

@@ -16,8 +16,10 @@
 			<?php if ( !empty( $term['title'] ) ) { ?>
 				<h4><?php echo $term['title'] ?></h4>
 			<?php } ?>
-			<?php if ( !empty( $term['duration'] ) ) { ?>
-				<p><?php echo JText::_('AEC_CHECKOUT_DURATION') . ': ' . $term['duration'] ?></p>
+			<?php if ( empty( $item['params']['hide_duration_checkout'] ) ) { ?>
+				<?php if ( !empty( $term['duration'] ) ) { ?>
+					<p><?php echo JText::_('AEC_CHECKOUT_DURATION') . ': ' . $term['duration'] ?></p>
+				<?php } ?>
 			<?php } ?>
 			<table class="checkout-term-cost table table-striped">
 				<tbody>
