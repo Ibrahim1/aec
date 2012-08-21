@@ -670,10 +670,12 @@ class processor_authorize_cim extends PROFILEprocessor
 
 				$return['valid']	= true;
 			} else {
-				$return['error']	= $cim->code . ": " . $cim->text . " (" . $cim->directResponse . ")";
+				$return['error']	= true;
+				$return['errormsg'] = $cim->code . ": " . $cim->text . " (" . $cim->directResponse . ")";
 			}
 		} else {
-			$return['error']		= $cim->code . ": " . $cim->text . " (" . $cim->directResponse . ")";
+			$return['error']	= true;
+			$return['errormsg'] = $cim->code . ": " . $cim->text . " (" . $cim->directResponse . ")";
 		}
 
 		return $return;

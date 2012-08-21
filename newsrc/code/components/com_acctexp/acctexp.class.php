@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5286' );
+define( '_AEC_REVISION', '5288' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -12668,7 +12668,7 @@ class Invoice extends serialParamDBTable
 			} elseif ( isset( $response['error'] ) && isset( $response['errormsg'] ) ) {
 				$mi_event = '_payment_error';
 
-				$event	.= JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_U_ERROR') . ' Error:' . $response['errormsg'] ;
+				$event	.= 'Error:' . $response['errormsg'];
 				$tags	.= ',error';
 				$level = 128;
 
