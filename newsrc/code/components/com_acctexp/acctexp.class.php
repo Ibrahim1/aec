@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5281' );
+define( '_AEC_REVISION', '5284' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -8623,7 +8623,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		// Find parent ItemGroups to attach their MIs
 		$parents = ItemGroupHandler::getParents( $this->id );
-print_r($parents);exit;
+
 		$pmilist = array();
 		foreach ( $parents as $parent ) {
 			$g = new ItemGroup( $db );
@@ -8634,15 +8634,17 @@ print_r($parents);exit;
 			}
 		}
 
+		$return = array( 'plan' => array(), 'inherited' => array() );
+
 		if ( empty( $milist ) && empty( $pmilist ) ) {
-			return array( 'plan' => array(), 'inherited' => array() );
+			return $return;
 		}
 
 		$milist = microIntegrationHandler::getActiveListbyList( $milist );
 		$pmilist = microIntegrationHandler::getActiveListbyList( $pmilist );
 
 		if ( empty( $milist ) && empty( $pmilist ) ) {
-			return array( 'plan' => array(), 'inherited' => array() );
+			return $return;
 		}
 
 		// Remove entries from the plan MIs that are already inherited
@@ -8945,7 +8947,7 @@ print_r($parents);exit;
 						'make_primary', 'update_existing', 'customthanks', 'customtext_thanks_keeporiginal',
 						'customamountformat', 'customtext_thanks', 'override_activation', 'override_regmail',
 						'notauth_redirect', 'fixed_redirect', 'hide_duration_checkout', 'addtocart_redirect',
-						'cart_behavior', 'notes', 'meta'
+						'addtocart_max', 'cart_behavior', 'notes', 'meta'
 						);
 
 		$params = array();
@@ -13933,19 +13935,30 @@ class aecCart extends serialParamDBTable
 		}
 
 		if ( !empty( $id ) ) {
-			$element			= array();
-			$element['type']	= 'plan';
-			$element['id']		= $id;
+			$element = array();
+			$element['type']		= 'plan';
+			$element['id']			= $id;
 			$element['quantity']	= 1;
 
 			$return['details'] = array( 'type' => 'plan', 'id' => $id );
 
 			$update = false;
 			if ( !empty( $this->content ) ) {
-				foreach ( $this->content as $iid => $item ) {
-					if ( ( $item['type'] == $element['type'] ) && ( $item['id'] == $element['id'] ) ) {
-						$return['event'] = 'updateItem';
-						$this->content[$iid]['quantity']++;
+				foreach ( $this->content as $iid => $plan ) {
+					if ( ( $plan['type'] == $element['type'] ) && ( $plan['id'] == $element['id'] ) ) {
+						if ( !empty( $item->settings['addtocart_max'] ) ) {
+							if ( $this->content[$iid]['quantity'] < $item->settings['addtocart_max'] ) {
+								$return['event'] = 'updateItem';
+								$this->content[$iid]['quantity']++;
+							} else {
+								$return['action']	= 'error';
+								$return['event']	= 'item_qty_maxed_out';
+							}
+						} else {
+							$return['event'] = 'updateItem';
+							$this->content[$iid]['quantity']++;
+						}
+
 						$update = true;
 						break;
 					}
@@ -14073,7 +14086,16 @@ class aecCart extends serialParamDBTable
 				if ( empty( $count ) ) {
 					unset( $this->content[$uid] );
 				} else {
-					$this->content[$uid]['quantity'] = $count;
+					$item = aecCartHelper::getCartItemObject( $this, $uid );
+					if ( !empty( $item->params['addtocart_max'] ) ) {
+						if ( $count <= $item->params['addtocart_max'] ) {
+							$this->content[$uid]['quantity'] = $count;
+						} else {
+							$this->content[$uid]['quantity'] = $item->params['addtocart_max'];
+						}
+					} else {
+						$this->content[$uid]['quantity'] = $count;
+					}
 				}
 			}
 		}

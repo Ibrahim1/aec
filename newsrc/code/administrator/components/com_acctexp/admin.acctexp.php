@@ -2574,6 +2574,7 @@ function editSubscriptionPlan( $id, $option )
 	$params['hide_duration_checkout']	= array( 'toggle', 0 );
 	$params['cart_behavior']		= array( 'list', 0 );
 	$params['addtocart_redirect']	= array( 'inputC', '' );
+	$params['addtocart_max']		= array( 'inputA', '' );
 	$params['notes']				= array( 'textarea', '' );
 
 	$params['restr_remap']			= array( 'subarea_change', 'restrictions' );

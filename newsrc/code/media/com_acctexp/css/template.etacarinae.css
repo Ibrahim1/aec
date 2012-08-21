@@ -67,6 +67,10 @@ clear: both;
 width: 100%;
 }
 
+#aec table.cart-list td.center-cell {
+text-align: center;
+}
+
 #aec tr.aec_formrow,
 #aec tr.aec_formrow td {
 border: none;
@@ -110,6 +114,12 @@ text-align: right;
 display: inline;
 float: left;
 margin: 4px 0;
+clear: both;
+}
+
+#aec .well p>input {
+margin: 0 6px;
+vertical-align: middle;
 }
 
 #aec .alert {

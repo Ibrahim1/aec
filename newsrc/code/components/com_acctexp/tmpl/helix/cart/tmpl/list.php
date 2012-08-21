@@ -23,7 +23,11 @@
 			?><tr>
 				<td><?php echo $bitem['name'] ?></td>
 				<td><?php echo $bitem['cost'] ?></td>
-				<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
+				<?php if ( $bitem['obj']->params['addtocart_max'] < 2 ) { ?>
+					<td>1</td>
+				<?php } else { ?>
+					<td><input type="inputbox" type="text" size="2" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
+				<?php } ?>
 				<td><?php echo $bitem['cost_total'] ?></td>
 				<td><?php echo $tmpl->lnk( array('task' => 'clearCartItem','item' => $bid), JText::_('CART_DELETE_ITEM') ) ?></td>
 			</tr><?php

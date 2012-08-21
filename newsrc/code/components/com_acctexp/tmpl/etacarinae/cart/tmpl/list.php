@@ -27,17 +27,21 @@
 					?><tr>
 						<td><?php echo $bitem['name'] ?></td>
 						<td><?php echo $bitem['cost'] ?></td>
-						<td><input type="inputbox" type="text" class="span1" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
+						<?php if ( $bitem['obj']->params['addtocart_max'] < 2 ) { ?>
+							<td class="center-cell">1</td>
+						<?php } else { ?>
+							<td><input type="inputbox" type="text" class="span1" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
+						<?php } ?>
 						<td><?php echo $bitem['cost_total'] ?></td>
-						<td><?php echo $tmpl->lnk( array('task' => 'clearCartItem','item' => $bid), '&times;', 'btn btn-mini btn-danger' ) ?></td>
+						<td class="center-cell"><?php echo $tmpl->lnk( array('task' => 'clearCartItem','item' => $bid), '&times;', 'btn btn-mini btn-danger' ) ?></td>
 					</tr>
-				<?php } else {?>
+				<?php } else { ?>
 					<tr>
 						<td></td>
 						<td></td>
-						<td><button type="submit" class="btn btn-info pull-right"><i class="icon-refresh icon-white narrow"></i></button></td>
+						<td class="center-cell"><button type="submit" class="btn btn-info pull-right"><i class="icon-refresh icon-white narrow"></i></button></td>
 						<td></td>
-						<td><div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), '<i class="icon-trash icon-white narrow"></i>', 'btn btn-danger' ) ?></div></td>
+						<td class="center-cell"><div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), '<i class="icon-trash icon-white narrow"></i>', 'btn btn-danger' ) ?></div></td>
 					</tr>
 					<tr>
 						<td><strong><?php echo JText::_('CART_ROW_TOTAL') ?></strong></td>

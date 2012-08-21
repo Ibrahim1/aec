@@ -1861,6 +1861,7 @@ jQuery(document).ready(function(jQuery) {
 							<div class="aec_userinfobox_sub">
 								<h4>Shopping Cart</h4>
 								<?php echo $aecHTML->createSettingsParticle( 'cart_behavior' ); ?>
+								<?php echo $aecHTML->createSettingsParticle( 'addtocart_max' ); ?>
 								<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
 							</div>
 						</div>
