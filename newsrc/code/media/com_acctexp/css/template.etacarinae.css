@@ -45,6 +45,11 @@ float: left;
 width: 92%;
 }
 
+#aec #confirmation-tos {
+margin: 3% 3% 1% 2%;
+width: 90%;
+}
+
 #aec #confirmation-info,
 #aec #confirmation-form,
 #aec #confirmation-extra,
