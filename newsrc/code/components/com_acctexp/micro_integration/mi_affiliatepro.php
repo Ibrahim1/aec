@@ -39,7 +39,7 @@ class mi_affiliatepro
 
 	function invoice_creation( $request )
 	{
-		if ( empty( $this->settings['cookie'] ) ) {
+		if ( empty( $this->settings['cookie'] ) || !empty( $this->settings['js_tracking'] ) ) {
 			return null;
 		}
 
