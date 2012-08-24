@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <?php if ( !empty( $InvoiceFactory->mi_error ) ) { ?>
-	<div id="alert alert-error">
+	<div class="alert alert-error">
 		<?php foreach ( $InvoiceFactory->mi_error as $error ) {
 			echo '<p>' . $error . '</p>';
 		} ?>
