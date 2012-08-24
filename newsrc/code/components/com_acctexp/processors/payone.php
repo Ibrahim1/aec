@@ -159,6 +159,7 @@ class processor_payone extends XMLprocessor
 		$response['valid'] = 0;
 
 		switch ( strtolower($post['txaction']) ) {
+			case 'appointed':
 			case 'paid':
 				$response['valid'] = 1;
 				break;
@@ -168,9 +169,6 @@ class processor_payone extends XMLprocessor
 			case 'cancelation':
 				$response['chargeback'] = 1;
 				break;
-			case 'appointed':
-				$response['pending'] = 1;
-				$response['pending_reason'] = "Initiating payment";
 				break;
 			default:
 				$response['pending_reason'] = ucfirst( $post['txaction'] );
