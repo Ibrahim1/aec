@@ -26,6 +26,8 @@ $testtask = trim( aecGetParam( 'task', '', true, array( 'word', 'string', 'clear
 
 if ( !empty( $task ) && !empty( $testtask ) && ( $testtask != $task ) ) {
 	$task = $testtask;
+} elseif ( empty( $task ) && !empty( $testtask ) ) {
+	$task = $testtask;
 }
 
 if ( empty( $option ) ) {
