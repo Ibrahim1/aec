@@ -39,9 +39,9 @@ class mi_aecuserdetails
 
 		$types = array( 0 => "No Skipping", 1 => "Skip if already existing", 2 => "Skip if existing, or default not empty" );
 
- 		$typelist = array();
+ 		$xtypelist = array();
  		foreach ( $types as $type ) {
- 			$typelist[] = JHTML::_('select.option', $type, $type );
+ 			$xtypelist[] = JHTML::_('select.option', $type, $type );
  		}
 
 		if ( !empty( $this->settings['settings'] ) ) {
@@ -132,6 +132,11 @@ class mi_aecuserdetails
 		$request->metaUser->meta->storeload();
 
 		return $return;
+	}
+
+	function admin_form( $request )
+	{
+		return $this->getMIform( $request );
 	}
 
 	function getMIform( $request )

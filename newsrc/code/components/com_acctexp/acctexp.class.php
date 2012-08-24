@@ -11206,8 +11206,10 @@ class InvoiceFactory
 						continue;
 					}
 
-					if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
-						unset($this->passthrough[$pid]);
+					if ( !empty( $pk[0] ) ) {
+						if ( ( $pk[0] == $mik ) || ( $pk[0] == $mik.'[]' ) ) {
+							unset($this->passthrough[$pid]);
+						}
 					}
 				}
 			}
@@ -12711,8 +12713,6 @@ class Invoice extends serialParamDBTable
 	{
 		$db = &JFactory::getDBO();
 
-		global $aecConfig;
-
 		$metaUser	= false;
 		$new_plan	= false;
 		$plans		= array();
@@ -12976,11 +12976,6 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function spawnNew()
-	{
-		
-	}
-
 	function setTransactionDate()
 	{
 		$db = &JFactory::getDBO();
@@ -13000,19 +12995,33 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( $time_passed > $cushion ) {
-			$this->counter += 1;
-			$this->transaction_date	= $transaction_date;
+			if ( !empty( $aecConfig->cfg['invoice_spawn_new'] ) && $this->counter ) {
+				$invoice = clone( $this );
+				$invoice->id = 0;
+				$invoice->counter = 0;
+
+				$invoice->invoice_number = $invoice->generateInvoiceNumber();
+				$invoice->created_date		= $transaction_date;
+				$invoice->transaction_date	= $transaction_date;
+
+				$invoice->addParams( array( 'spawned_from_invoice' => $this->invoice_number ) );
+			} else {exit;
+				$invoice =& $this;
+			}
+
+			$invoice->counter += 1;
+			$invoice->transaction_date	= $transaction_date;
 
 			$c = new stdClass();
 
 			$c->timestamp	= $transaction_date;
-			$c->amount		= $this->amount;
-			$c->currency	= $this->currency;
-			$c->processor	= $this->method;
+			$c->amount		= $invoice->amount;
+			$c->currency	= $invoice->currency;
+			$c->processor	= $invoice->method;
 
-			$this->transactions[] = $c;
+			$invoice->transactions[] = $c;
 
-			$this->storeload();
+			$invoice->storeload();
 		} else {
 			return;
 		}

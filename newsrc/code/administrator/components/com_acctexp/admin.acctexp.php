@@ -1502,6 +1502,7 @@ function editSettings( $option )
 	$params['alertlevel1']					= array( 'inputA', 0 );
 	$params['expiration_cushion']			= array( 'inputA', 0 );
 	$params['invoice_cushion']				= array( 'inputA', 0 );
+	$params['invoice_spawn_new']			= array( 'toggle', 0 );
 	$params['heartbeat_cycle_backend']		= array( 'inputA', 0 );
 	$params['allow_frontend_heartbeat']		= array( 'toggle', 0 );
 	$params['disable_regular_heartbeat']	= array( 'toggle', 0 );
@@ -4654,7 +4655,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		} else {
 			$objInvoice->setTransactionDate();
 		}
-
+exit;
 		$history = new logHistory( $db );
 		$history->entryFromInvoice( $objInvoice, null, $pp );
 
