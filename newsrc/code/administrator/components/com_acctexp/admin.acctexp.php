@@ -4655,7 +4655,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 		} else {
 			$objInvoice->setTransactionDate();
 		}
-exit;
+
 		$history = new logHistory( $db );
 		$history->entryFromInvoice( $objInvoice, null, $pp );
 
