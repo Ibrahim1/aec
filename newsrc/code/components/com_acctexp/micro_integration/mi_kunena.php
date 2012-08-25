@@ -27,13 +27,7 @@ class mi_kunena extends MI
 	{
 		$settings = array();
 
-		if ( $this->is16() ) {
-			$checkpath = rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_kunena' . DS . 'libraries' . DS . 'tables' . DS . 'kunenauser.php';
-		} else {
-			$checkpath = rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_kunena' . DS . 'lib' . DS . 'kunena.user.class.php';
-		}
-
-		if ( !@include_once( $checkpath ) ) {
+		if ( !$this->isInstalled() ) {
 			echo 'This module can not work without the Kunena Forum Component';
 			return $settings;
 		}
@@ -70,6 +64,18 @@ class mi_kunena extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
+	function isInstalled()
+	{
+		$app = JFactory::getApplication();
+
+		$db = &JFactory::getDBO();
+
+		$tables = $db->getTableList();
+		
+		return	in_array( $app->getCfg( 'dbprefix' ) . "kunena_users", $tables ) ||
+				in_array( $app->getCfg( 'dbprefix' ) . "fb_users", $tables );
+	}
+
 	function is16()
 	{
 		static $is;
@@ -81,7 +87,9 @@ class mi_kunena extends MI
 
 			$tables = $db->getTableList();
 
-			return in_array( $app->getCfg( 'dbprefix' ) . "kunena_ranks", $tables );
+			$is = in_array( $app->getCfg( 'dbprefix' ) . "kunena_ranks", $tables );
+
+			return $is;
 		} else {
 			return $is;
 		}
