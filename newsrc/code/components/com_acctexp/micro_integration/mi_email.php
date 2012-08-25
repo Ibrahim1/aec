@@ -101,7 +101,9 @@ class mi_email extends MI
 		        $$setting = array();
 
 		        foreach ( $recipient_array as $k => $email ) {
-		            ${$setting}[] = trim( $email );
+		            if ( !empty( $email ) ) {
+		            	${$setting}[] = trim( $email );
+		            }
 		        }
 	        }
 		}

@@ -151,7 +151,9 @@ class mi_email_files
 		        $$setting = array();
 
 		        foreach ( $recipient_array as $k => $email ) {
-		            ${$setting}[] = trim( $email );
+		            if ( !empty( $email ) ) {
+		            	${$setting}[] = trim( $email );
+		            }
 		        }
 	        }
 		}
