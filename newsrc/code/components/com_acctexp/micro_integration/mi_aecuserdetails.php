@@ -100,7 +100,7 @@ class mi_aecuserdetails
 
 				if ( !empty( $this->settings[$p.'mandatory'] ) ) {
 					if ( empty( $request->params[$this->settings[$p.'short']] ) && ( $this->settings[$p.'type'] != 'checkbox' ) ) {
-						$return['error'] = "Please fill in the required fields";
+						$return['error'] = JText::_('MI_MI_AECUSERDETAILS_PLEASE_FILL_REQUIRED');
 					} else {
 						$request->params[$this->settings[$p.'name']] = 0;
 					}
