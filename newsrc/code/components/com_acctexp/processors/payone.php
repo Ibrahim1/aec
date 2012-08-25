@@ -58,6 +58,15 @@ class processor_payone extends XMLprocessor
 		$settings['item_name']				= array( 'inputE' );
 		$settings['customparams']			= array( 'inputD' );
 
+		$options = array(
+						'elv' => 'Lastschrift',
+						'cc' => 'Kreditkarte',
+						'vor' => 'Vorkasse',
+						'rec' => 'Rechnung',
+						'sb' => 'Online-Überweisung',
+						'wlt' => 'e-Wallet'
+		);
+
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
@@ -122,11 +131,11 @@ class processor_payone extends XMLprocessor
 
 		$options = array(
 						'elv' => 'Lastschrift',
-						'cc' => 'Kreditkarte',
-						'vor' => 'Vorkasse',
-						'rec' => 'Rechnung',
-						'sb' => 'Online-Überweisung',
-						'wlt' => 'e-Wallet'
+						'cc' => 'Kreditkarte'//,
+						//'vor' => 'Vorkasse',
+						//'rec' => 'Rechnung',
+						//'sb' => 'Online-Überweisung',
+						//'wlt' => 'e-Wallet'
 		);
 
  		$payment_types = array();
@@ -149,19 +158,28 @@ class processor_payone extends XMLprocessor
 		$response = array();
 		$response['invoice']			= $post['reference'];
 		$response['amount_currency']	= $post['currency'];
-		$response['amount_paid']		= $post['receiveable'];
+		$response['amount_paid']		= $post['price'];
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
+		$db = &JFactory::getDBO();
+
 		$response['valid'] = 0;
+
+		$invoice = new Invoice( $db );
+		$invoice->loadInvoiceNumber( $response['invoice'] );
 
 		switch ( strtolower($post['txaction']) ) {
 			case 'appointed':
 			case 'paid':
-				$response['valid'] = 1;
+				if ( $invoice->counter ) {
+					$response['duplicate']	= 1;
+				} else {
+					$response['valid'] = 1;
+				}
 				break;
 			case 'refund':
 				$response['delete'] = 1;
@@ -179,12 +197,12 @@ class processor_payone extends XMLprocessor
 
 	function notificationError( $response, $error )
 	{
-		echo 'SSOK';
+		echo 'TSOK';exit;
 	}
 
 	function notificationSuccess( $response )
 	{
-		echo 'SSOK';
+		echo 'TSOK';exit;
 	}
 
 	function getHash( $var )
