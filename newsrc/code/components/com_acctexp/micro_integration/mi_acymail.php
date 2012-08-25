@@ -150,7 +150,7 @@ class mi_acymail extends MI
 				$joomUser->confirmed = 1;
 			}
 
-			$joomUser->enabled = $config->get('require_confirmation',false) ? (1 - (int)$user->block) : 1;
+			$joomUser->enabled = 1;
 			$joomUser->userid = $request->metaUser->userid;
 
 			$userClass = acymailing::get('class.subscriber');
