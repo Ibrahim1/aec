@@ -13005,7 +13005,7 @@ class Invoice extends serialParamDBTable
 				$invoice->transaction_date	= $transaction_date;
 
 				$invoice->addParams( array( 'spawned_from_invoice' => $this->invoice_number ) );
-			} else {exit;
+			} else {
 				$invoice =& $this;
 			}
 
