@@ -33,7 +33,7 @@ class mi_kunena extends MI
 		}
 
 		$db = &JFactory::getDBO();
-		$db->setQuery( 'SELECT * FROM #__' . $this->dbTable() . '_ranks WHERE `rank_special` = 1 ' );
+		$db->setQuery( 'SELECT * FROM #__' . $this->dbTable() . '_ranks' );
 
 		$ranks = $db->loadObjectList();
 
