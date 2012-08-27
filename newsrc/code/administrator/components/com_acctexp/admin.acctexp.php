@@ -1520,6 +1520,7 @@ function editSettings( $option )
 	$params['show_fixeddecision']			= array( 'toggle', 0 );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
 	$params['intro_expired']				= array( 'toggle', 0 );
+	$params['skip_registration']			= array( 'toggle', 0 );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
 	$params['confirmation_coupons']			= array( 'toggle', 0 );

@@ -11,17 +11,19 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
 <div id="confirmation-info">
-	<div class="alert alert-info">
-		<div class="confirmation-info-header">
-			<h4 class="alert-heading"><?php echo JText::_('CONFIRM_COL1_TITLE') ?></h4>
+	<?php if ( !empty( $InvoiceFactory->userdetails ) ) { ?>
+		<div class="alert alert-info">
+			<div class="confirmation-info-header">
+				<h4 class="alert-heading"><?php echo JText::_('CONFIRM_COL1_TITLE') ?></h4>
+			</div>
+			<div class="confirmation-info-content">
+					<?php echo $InvoiceFactory->userdetails ?>
+				<?php if ( empty( $userid ) && $tmpl->cfg['confirmation_changeusername'] ) { ?>
+					<?php @include( $tmpl->tmpl( 'backdetailsbtn' ) ) ?>
+				<?php } ?>
+			</div>
 		</div>
-		<div class="confirmation-info-content">
-			<?php echo $InvoiceFactory->userdetails ?>
-			<?php if ( empty( $userid ) && $tmpl->cfg['confirmation_changeusername'] ) { ?>
-				<?php @include( $tmpl->tmpl( 'backdetailsbtn' ) ) ?>
-			<?php } ?>
-		</div>
-	</div>
+	<?php } ?>
 	<div class="alert alert-info">
 		<div class="confirmation-info-header">
 			<h4 class="alert-heading"><?php echo JText::_('CONFIRM_YOU_HAVE_SELECTED') ?></h4>

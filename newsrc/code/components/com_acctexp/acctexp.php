@@ -654,7 +654,7 @@ function confirmSubscription( $option )
 		}
 	}
 
-	if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && empty( $username ) && empty( $passthrough['username'] ) && !$userid && !$user->id ) {
+	if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && empty( $username ) && empty( $passthrough['username'] ) && !$userid && !$user->id  && empty( $aecConfig->cfg['skip_registration'] ) ) {
 		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to register the user
 			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );

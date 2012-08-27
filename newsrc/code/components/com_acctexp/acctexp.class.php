@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5288' );
+define( '_AEC_REVISION', '5300' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -10654,7 +10654,7 @@ class InvoiceFactory
 		// If we have only one processor on one plan, there is no need for a decision
 		if ( $nochoice && !( $aecConfig->cfg['show_fixeddecision'] && empty( $processor ) ) ) {
 			// If the user also needs to register, we need to guide him there after the selection has now been made
-			if ( $register ) {
+			if ( $register && empty( $aecConfig->cfg['skip_registration'] ) ) {
 				$this->registerRedirect( $option, $intro, $list[0] );
 			} else {
 				// Existing user account - so we need to move on to the confirmation page with the details
@@ -10676,7 +10676,7 @@ class InvoiceFactory
 			}
 		} else {
 			// Reset $register if we seem to have all data
-			if ( $register && !empty( $this->passthrough['username'] ) ) {
+			if ( ( $register && !empty( $this->passthrough['username'] ) ) || empty( $aecConfig->cfg['skipregistration'] ) ) {
 				$register = 0;
 			}
 
@@ -11222,8 +11222,13 @@ class InvoiceFactory
 				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_NAME') . "&nbsp;" . $this->metaUser->cmsUser->name . '</p>';
 			}
 
-			$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_USERNAME') . "&nbsp;" . $this->metaUser->cmsUser->username . '</p>';
-			$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_EMAIL') . "&nbsp;" . $this->metaUser->cmsUser->email . '</p>';
+			if ( !empty( $this->metaUser->cmsUser->username ) ) {
+				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_USERNAME') . "&nbsp;" . $this->metaUser->cmsUser->username . '</p>';
+			}
+
+			if ( !empty( $this->metaUser->cmsUser->email ) ) {
+				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_EMAIL') . "&nbsp;" . $this->metaUser->cmsUser->email . '</p>';
+			}
 
 			getView( 'confirmation', array( 'InvoiceFactory' => $this, 'passthrough' => $this->getPassthrough() ) );
 		} else {
