@@ -194,7 +194,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$return = "";
 
 		if ( !empty( $_REQUEST['PayerID'] ) && !empty( $_REQUEST['token'] ) && $this->settings['allow_express_checkout'] ) {
-			$return .= '<table id="aec_checkout_params"><tbody><tr><td>';
+			$return .= '<table id="aec-checkout-params"><tbody><tr><td>';
 			$return .= '<p style="float:left;text-align:left;"><strong>' . JText::_('CFG_PAYPAL_WPP_CHECKOUT_NOTE_RETURN') . '</strong></p>';
 			$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 			$return .= $this->getStdFormVars( $request );
@@ -206,7 +206,7 @@ class processor_paypal_wpp extends XMLprocessor
 			$return .= '</td></tr></tbody></table>';
 		} else {
 			if ( $this->settings['allow_express_checkout'] ) {
-				$return .= '<table id="aec_checkout_params"><tbody><tr><td>';
+				$return .= '<table id="aec-checkout-params"><tbody><tr><td>';
 				$return .= '<p style="float:left;text-align:left;"><strong>' . JText::_('CFG_PAYPAL_WPP_CHECKOUT_NOTE_HEADLINE') . '</strong></p><p style="float:left;text-align:left;">' . JText::_('CFG_PAYPAL_WPP_CHECKOUT_NOTE_NOTE') . '</p>';
 				$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 				$return .= $this->getStdFormVars( $request );
