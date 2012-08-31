@@ -78,6 +78,19 @@ class mi_aecmodifycost
 				foreach ( $options as $id => $choice ) {
 					$settings['option_'.$choice['id']] = array( 'checkbox', 'mi_'.$this->id.'_option[]', $choice['id'], 1, $choice['text'] );
 				}
+
+				if ( !empty( $this->settings['multi_amount_min'] ) || !empty( $this->settings['multi_amount_max'] ) ) {
+					$settings['validation']['rules'] = array();
+					$settings['validation']['rules']['mi_'.$this->id.'_option'] = array();
+
+					if ( !empty( $this->settings['multi_amount_min'] ) ) {
+						$settings['validation']['rules']['mi_'.$this->id.'_option']['minlength'] = $this->settings['multi_amount_min'];
+					}
+
+					if ( !empty( $this->settings['multi_amount_max'] ) ) {
+						$settings['validation']['rules']['mi_'.$this->id.'_option']['maxlength'] = $this->settings['multi_amount_max'];
+					}
+				}
 			} else {
 				if ( count( $options ) < 5 ) {
 					$settings['option'] = array( 'hidden', null, 'mi_'.$this->id.'_option' );
@@ -111,14 +124,18 @@ class mi_aecmodifycost
 		$return = array();
 
 		if ( is_array( $request->params['option'] ) ) {
-			if ( count( $request->params['option'] ) > $this->settings['multi_amount_max'] ) {
-				$return['error'] = "You cannot select more than " . $this->settings['multi_amount_max'] . " options.";
-				return $return;
+			if ( !empty( $this->settings['multi_amount_max'] ) ) {
+				if ( count( $request->params['option'] ) > $this->settings['multi_amount_max'] ) {
+					$return['error'] = "You cannot select more than " . $this->settings['multi_amount_max'] . " options.";
+					return $return;
+				}
 			}
 
-			if ( count( $request->params['option'] ) < $this->settings['multi_amount_min'] ) {
-				$return['error'] = "You cannot select less than " . $this->settings['multi_amount_min'] . " options.";
-				return $return;
+			if ( !empty( $this->settings['multi_amount_min'] ) ) {
+				if ( count( $request->params['option'] ) < $this->settings['multi_amount_min'] ) {
+					$return['error'] = "You cannot select less than " . $this->settings['multi_amount_min'] . " options.";
+					return $return;
+				}
 			}
 
 			if ( !count( $request->params['option'] ) && empty( $this->settings['allow_empty'] ) ) {

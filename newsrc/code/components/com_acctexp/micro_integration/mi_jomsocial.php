@@ -87,6 +87,9 @@ class mi_jomsocial extends MI
 
 			$settings['vat_desc'] = array( 'p', "", sprintf( JText::_('MI_MI_JOMSOCIALUSERPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
 			$settings['use_points'] = array( 'inputC', JText::_('MI_MI_JOMSOCIALPOINTS_USE_POINTS_NAME'), JText::_('MI_MI_JOMSOCIALPOINTS_USE_POINTS_DESC'), '' );
+
+			$settings['validation']['rules'] = array();
+			$settings['validation']['rules']['use_points'] = array( 'max' => $this->getPoints( $request->metaUser->userid ) );
 		}
 
 		return $settings;

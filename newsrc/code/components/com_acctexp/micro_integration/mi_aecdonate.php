@@ -57,6 +57,19 @@ class mi_aecdonate
 			$settings['amt'] = array( 'inputC', JText::_('MI_MI_AECDONATE_USERSELECT_AMT_NAME'), JText::_('MI_MI_AECDONATE_USERSELECT_AMT_DESC'), '' );
 		}
 
+		if ( !empty( $this->settings['min'] ) || !empty( $this->settings['max'] ) ) {
+			$settings['validation']['rules'] = array();
+			$settings['validation']['rules']['amt'] = array();
+
+			if ( !empty( $this->settings['min'] ) ) {
+				$settings['validation']['rules']['amt']['min'] = $this->settings['min'];
+			}
+
+			if ( !empty( $this->settings['max'] ) ) {
+				$settings['validation']['rules']['amt']['max'] = $this->settings['max'];
+			}
+		}
+
 		return $settings;
 	}
 

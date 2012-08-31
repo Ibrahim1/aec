@@ -61,6 +61,11 @@ class mi_aectip
 
 		$settings['amt'] = array( 'inputC', $this->settings['confirm_name'], '', '' );
 
+		if ( !empty( $this->settings['max'] ) ) {
+			$settings['validation']['rules'] = array();
+			$settings['validation']['rules']['amt'] = array( 'max' => $this->settings['max'] );
+		}
+
 		return $settings;
 	}
 

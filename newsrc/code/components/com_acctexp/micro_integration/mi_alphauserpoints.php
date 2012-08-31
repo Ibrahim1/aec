@@ -58,6 +58,9 @@ class mi_alphauserpoints extends MI
 
 			$settings['vat_desc'] = array( 'p', "", sprintf( JText::_('MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
 			$settings['use_points'] = array( 'inputC', JText::_('MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME'), JText::_('MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC'), '' );
+
+			$settings['validation']['rules'] = array();
+			$settings['validation']['rules']['use_points'] = array( 'max' => $this->getPoints( $request->metaUser->userid ) );
 		}
 
 		return $settings;
