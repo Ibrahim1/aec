@@ -134,30 +134,35 @@ class mi_aectax
 
 			if ( count( $locations ) == 1 ) {
 				// Only one location, nothing to do here
-			} elseif ( count( $locations ) < 5 ) {
-				$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
-
-				foreach ( $locations as $id => $choice ) {
-					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_location', $choice['id'], true, $choice['text'] );
-				}
 			} else {
-				$settings['location'] = array( 'list', "", "" );
+				if ( count( $locations ) < 5 ) {
+					$settings['location'] = array( 'hidden', null, 'mi_'.$this->id.'_location' );
 
-				$loc = array();
-				$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
+					foreach ( $locations as $id => $choice ) {
+						$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_location', $choice['id'], true, $choice['text'] );
+					}
+				} else {
+					$settings['location'] = array( 'list', "", "" );
 
-				$llist = array();
-				foreach ( $locations as $id => $choice ) {
-					$llist[$choice['text']] = $id;
+					$loc = array();
+					$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
+
+					$llist = array();
+					foreach ( $locations as $id => $choice ) {
+						$llist[$choice['text']] = $id;
+					}
+
+					asort( $llist );
+
+					foreach ( $llist as $id ) {
+						$loc[] = JHTML::_('select.option', $locations[$id]['id'], $locations[$id]['text'] );
+					}
+
+					$settings['lists']['location']	= JHTML::_('select.genericlist', $loc, 'location', 'size="1"', 'value', 'text', 0 );
 				}
 
-				asort( $llist );
-
-				foreach ( $llist as $id ) {
-					$loc[] = JHTML::_('select.option', $locations[$id]['id'], $locations[$id]['text'] );
-				}
-
-				$settings['lists']['location']	= JHTML::_('select.genericlist', $loc, 'location', 'size="1" class="aec-tax"', 'value', 'text', 0 );
+				$settings['validation']['rules'] = array();
+				$settings['validation']['rules']['location'] = array( 'required' => true );
 			}
 
 		} else {
