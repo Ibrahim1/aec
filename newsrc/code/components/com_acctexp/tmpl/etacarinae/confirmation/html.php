@@ -24,46 +24,54 @@ if ( !empty( $tmpl->cfg['confirm_as_gift'] ) ) {
 }
 
 if ( !empty( $tmpl->cfg['tos'] ) ) {
+	$InvoiceFactory->jsvalidation['rules']['tos'] = array( 'required' => true );
+}
+
+if ( !empty( $InvoiceFactory->jsvalidation ) ) {
 	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.validate.js' );
+	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.validate.additional-methods.js' );
 	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 
-	$js = '
-jQuery(document).ready(function(jQuery) {
-	jQuery("button#confirmation").attr("disabled", "disabled");
-
-	jQuery("input#aec-tos").click( function(event) {
-		if ( this.checked ) {
-			jQuery("button#confirmation").removeAttr("disabled");
+	$js = "
+jQuery(document).ready(function(){
+	jQuery('#form-confirm').validate(
+	{
+	rules: " . json_encode( $InvoiceFactory->jsvalidation['rules'] ) . ",
+	highlight: function(label) {
+		jQuery(label).closest('.well').addClass('well-highlight');
+		jQuery(label).closest('.control-group').addClass('error');
+		jQuery(label).closest('.label-important').prepend('<i class=\"icon-ban-circle icon-white\"></i>');
+		jQuery('#form-confirm button#confirmation').attr('disabled','disabled');
+	},
+	unhighlight: function(label) {
+		jQuery(label).closest('.well').removeClass('well-highlight');
+		jQuery(label).closest('.control-group').removeClass('error');
+		if ( jQuery(\"form#form-confirm .label-important\").length > 0) {
+			jQuery('#form-confirm button#confirmation').attr('disabled','disabled');
 		} else {
-			jQuery("button#confirmation").attr("disabled", "disabled");
+			jQuery('#form-confirm button#confirmation').attr(\"disabled\", false);
 		}
-	});
+	},
+	success: function(label) {
+		label.remove();
 
-	jQuery("div#confirmation-button").hover( function(event) {
-		if ( !jQuery("input#aec-tos").is(":checked") ) {
-			jQuery("div#confirmation-tos").toggleClass("well-highlight");
+		jQuery('#form-confirm button#confirmation').attr(\"disabled\", false);
+	},
+	errorClass: 'label label-important',
+	submitHandler: function(form) {
+		if ( jQuery('#form-confirm').valid() ) {
+			form.submit();
+		} else {
+			jQuery('#form-confirm button#confirmation').attr('disabled','disabled');
 		}
+	}
 	});
 
-	jQuery("form#form-confirm :submit").click( function(event) {
-			event.preventDefault();
-
-			if ( jQuery("form#form-confirm .aec-tax").length > 0) {
-				if ( jQuery("select.aec-tax").val() == "0" ) {
-					jQuery("div#confirmation-extra>div").addClass("alert-danger").removeClass("alert-success");
-
-					return;
-				}
-			}
-
-			if ( jQuery("input#aec-tos").is(\':checked\') ) {
-				jQuery("form#form-confirm").submit();
-			} else {
-				alert("' . html_entity_decode( JText::_('CONFIRM_TOS_ERROR') ) . '");
-			}
-	});
+	
+	
 });
-';
+	";
 
 	$tmpl->addScriptDeclaration( $js );
 }

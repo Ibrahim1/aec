@@ -13,11 +13,11 @@
 <?php if ( !empty( $tmpl->cfg['tos_iframe'] ) && !empty( $tmpl->cfg['tos'] ) ) { ?>
 	<div class="well" id="confirmation-tos">
 		<iframe src="<?php echo $tmpl->cfg['tos'] ?>" width="100%" height="150px"></iframe>
-		<p><input name="tos" type="checkbox" id="aec-tos" />&nbsp;&nbsp;<?php echo JText::_('CONFIRM_TOS_IFRAME') ?></p>
+		<p><input name="tos" type="checkbox" id="tos" />&nbsp;&nbsp;<?php echo JText::_('CONFIRM_TOS_IFRAME') ?></p>
 	</div>
 <?php } elseif ( !empty( $tmpl->cfg['tos'] ) ) { ?>
 	<div class="well" id="confirmation-tos">
-		<p><input name="tos" type="checkbox" id="aec-tos" />&nbsp;&nbsp;<?php echo JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ) ?></p>
+		<p><input name="tos" type="checkbox" id="tos" />&nbsp;&nbsp;<?php echo JText::sprintf( 'CONFIRM_TOS', $tmpl->cfg['tos'] ) ?></p>
 	</div>
 <?php } ?>
 

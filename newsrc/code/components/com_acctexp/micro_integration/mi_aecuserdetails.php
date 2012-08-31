@@ -28,7 +28,8 @@ class mi_aecuserdetails
 		$db = &JFactory::getDBO();
 
 		$settings = array();
-		$settings['settings']	= array( 'inputB' );
+		$settings['emulate_reg']	= array( 'toggle' );
+		$settings['settings']		= array( 'inputB' );
 
 		$types = array( "p", "inputA", "inputB", "inputC", "inputD", "list", "list_language", "checkbox" );
 
@@ -151,6 +152,45 @@ class mi_aecuserdetails
 		$settings	= array();
 		$lists		= array();
 
+		if ( !empty( $this->settings['emulate_reg'] ) ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				// Joomla 1.6+ Registration
+				$lang =& JFactory::getLanguage();
+
+				$lang->load( 'com_users', JPATH_SITE, 'en-GB', true );
+				$lang->load( 'com_users', JPATH_SITE, $lang->get('tag'), true );
+
+				$settings['name'] = array( 'inputC', JText::_( 'COM_USERS_PROFILE_NAME_LABEL' ), 'name', '' );
+				$settings['username'] = array( 'inputC', JText::_( 'COM_USERS_PROFILE_USERNAME_LABEL' ), 'username', '' );
+				$settings['email'] = array( 'inputC', JText::_( 'COM_USERS_PROFILE_EMAIL1_LABEL' ), 'email', '' );
+				$settings['email2'] = array( 'inputC', JText::_( 'COM_USERS_PROFILE_EMAIL2_LABEL' ), 'email', '' );
+				$settings['password'] = array( 'password', JText::_( 'COM_USERS_REGISTER_PASSWORD1_LABEL' ), 'password', '' );
+				$settings['password2'] = array( 'password', JText::_( 'COM_USERS_REGISTER_PASSWORD2_LABEL' ), 'password2', '' );
+
+				$settings['validation']['rules'] = array();
+				$settings['validation']['rules']['name'] = array( 'minlength' => 2, 'alphanumericwithbasicpunc' => true, 'required' => true );
+				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'alphanumeric' => true, 'required' => true );
+				$settings['validation']['rules']['email'] = array( 'email' => true, 'required' => true );
+				$settings['validation']['rules']['email2'] = array( 'email' => true, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_email' );
+				$settings['validation']['rules']['password'] = array( 'minlength' => 6, 'maxlength' => 98, 'required' => true );
+				$settings['validation']['rules']['password2'] = array( 'minlength' => 6, 'maxlength' => 98, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_password' );
+			} else {
+				// Joomla 1.5 Registration
+				$settings['name'] = array( 'inputC', JText::_( 'Name' ), 'name', '' );
+				$settings['username'] = array( 'inputC', JText::_( 'User name' ), 'username', '' );
+				$settings['email'] = array( 'inputC', JText::_( 'Email' ), 'email', '' );
+				$settings['password'] = array( 'password', JText::_( 'Password' ), 'password', '' );
+				$settings['password2'] = array( 'password', JText::_( 'Verify Password' ), 'password2', '' );
+
+				$settings['validation']['rules'] = array();
+				$settings['validation']['rules']['name'] = array( 'minlength' => 2, 'required' => true );
+				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'required' => true );
+				$settings['validation']['rules']['email'] = array( 'email' => true, 'required' => true );
+				$settings['validation']['rules']['password'] = array( 'minlength' => 2, 'required' => true );
+				$settings['validation']['rules']['password2'] = array( 'minlength' => 2, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_password' );
+			}
+		}
+
 		if ( !empty( $this->settings['settings'] ) ) {
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
@@ -224,5 +264,35 @@ class mi_aecuserdetails
 		return $settings;
 	}
 
+	function before_invoice_confirm( $request )
+	{
+		if ( !empty( $this->settings['emulate_reg'] ) ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$vars = array( 'username' => 'username', 'name' => 'name', 'email' => 'email', 'email2' => 'email2', 'password' => 'password', 'password2' => 'password2' );
+				
+				foreach ( $vars as $k => $v ) {
+					if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
+						$request->add->passthrough[$v] = $request->add->passthrough['mi_'.$this->id.'_'.$k];
+						
+
+						unset( $request->add->passthrough['mi_'.$this->id.'_'.$k] );
+					}
+				}
+			} else {
+				$vars = array( 'username', 'name', 'email', 'password', 'password2' );
+				
+				foreach ( $vars as $k ) {
+					if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
+						$request->add->passthrough[$k] = $request->add->passthrough['mi_'.$this->id.'_'.$k];
+						
+
+						unset( $request->add->passthrough['mi_'.$this->id.'_'.$k] );
+					}
+				}
+			}
+		}
+
+		checkUsernameEmail( $request->add->passthrough['username'], $request->add->passthrough['email'] );
+	}
 }
 ?>

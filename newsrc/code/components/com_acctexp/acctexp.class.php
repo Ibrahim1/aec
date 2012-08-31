@@ -6476,19 +6476,19 @@ class aecHTML
 		switch ( $type ) {
 			case 'inputA':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span2" name="' . $name . '" type="text" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="span1" name="' . $name . '" type="text" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputB':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span3" type="text" name="' . $name . '" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="span2" type="text" name="' . $name . '" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputC':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span6" type="text" name="' . $name . '" class="inputbox" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="span3" type="text" name="' . $name . '" class="inputbox" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -6501,6 +6501,12 @@ class aecHTML
 			case 'inputE':
 				$return .= '<div class="controls">';
 				$return .= '<textarea id="' . $name . '" class="span6" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= $insertctrl;
+				$return .= '</div></div>';
+				break;
+			case 'password':
+				$return .= '<div class="controls">';
+				$return .= '<input id="' . $name . '" class="span3" type="password" name="' . $name . '" class="inputbox" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -6740,6 +6746,9 @@ class aecHTML
 				break;
 			case "inputD":
 				$return .= '<textarea align="left" cols="60" rows="5" id="' . $name . '" name="' . $name . '" title="' . $row[2] . '" class="aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . '' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' form-validate' : '' ) . ( $sxx ? " required" : "" ) . '"/>' . $value . '</textarea>' . $sx;
+				break;
+			case "password":
+				$return .= '<input type="password" class="inputbox aec_formfield' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate-'.$name : '' ) . ( $sxx ? " required" : "" ) . '" id="' . $name . '" name="' . $name . '" size="30" value="' . $value . '" title="' . $row[2] . '"/>' . $sx;
 				break;
 			case 'radio':
 				$return = '<tr><td class="cleft">';
@@ -8561,15 +8570,24 @@ class SubscriptionPlan extends serialParamDBTable
 		if ( empty( $params ) ) {
 			return false;
 		} else {
-			$lists = $params['lists'];
-			unset( $params['lists'] );
+			if ( isset( $params['lists'] ) ) {
+				$lists = $params['lists'];
+				unset( $params['lists'] );
+			} else {
+				$lists = array();
+			}
+
+			if ( isset( $params['validation'] ) ) {
+				unset( $params['validation'] );
+			}
 
 			if ( !empty( $params ) ) {
 				$settings = new aecSettings ( 'mi', 'frontend_forms' );
 				$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
 
 				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-				return "<table>" . $aecHTML->returnFull( true, true, true ) . "</table>";
+
+				return $aecHTML->returnFull( false, false, true );
 			} else {
 				return null;
 			}
@@ -11193,11 +11211,18 @@ class InvoiceFactory
 			$this->mi_form = $this->plan->getMIforms( $this->metaUser, $this->mi_error );
 		}
 
+		$this->jsvalidation = array();
 		if ( !empty( $this->mi_form ) && is_array( $this->passthrough ) ) {
 			$params = $this->plan->getMIformParams( $this->metaUser );
 
 			foreach ( $params as $mik => $miv ) {
 				if ( $mik == 'lists' ) {
+					continue;
+				} elseif ( $mik == 'validation' ) {
+					if ( !empty( $miv ) ) {
+						$this->jsvalidation = array_merge( $this->jsvalidation, $miv );
+					}
+
 					continue;
 				}
 
@@ -11286,6 +11311,12 @@ class InvoiceFactory
 
 		$this->loadPlanObject( $option );
 
+		$add =& $this;
+
+		$exchange = $silent = null;
+
+		$this->triggerMIs( 'before_invoice_confirm', $exchange, $add, $silent );
+
 		if ( empty( $this->userid ) ) {
 			$this->saveUserRegistration( $option );
 		}
@@ -11330,6 +11361,12 @@ class InvoiceFactory
 		} else {
 			$this->userid = AECToolbox::saveUserRegistration( $option, $this->passthrough );
 		}
+
+		if ( !$this->userid ) {
+			$errors = JError::getErrors();
+
+			print_r($errors);exit;
+		}
 	}
 
 	function verifyMIForms( $plan, $mi_form=null, $prefix="" )
@@ -11351,7 +11388,7 @@ class InvoiceFactory
 					$key = str_replace( '[]', '', $key );
 				}
 
-				if ( !empty( $value ) ) {
+				if ( !empty( $value[1] ) ) {
 					if ( strpos( $value[1], '[]' ) ) {
 						$key = str_replace( '[]', '', $value[1] );
 					}
@@ -17202,9 +17239,15 @@ class AECToolbox
 					$data['block'] = 1;
 				}
 
+				$usersConfig = &JComponentHelper::getParams( 'com_users' );
+
+				$system	= $usersConfig->get('new_usertype', 2);
+
+				$data['groups'][] = $system;
+
 				// Bind the data.
 				if (!$user->bind($data)) {
-					JError::raiseError( 500, JText::sprintf('COM_USERS_REGISTRATION_BIND_FAILED', $user->getError()));
+					JError::raiseWarning( 500, JText::sprintf('COM_USERS_REGISTRATION_BIND_FAILED', $user->getError()));
 					return false;
 				}
 
@@ -17213,7 +17256,7 @@ class AECToolbox
 
 				// Store the data.
 				if (!$user->save()) {
-					JError::raiseError( 500, JText::sprintf('COM_USERS_REGISTRATION_SAVE_FAILED', $user->getError()));
+					JError::raiseWarning( 500, JText::sprintf('COM_USERS_REGISTRATION_SAVE_FAILED', $user->getError()));
 					return false;
 				}
 			} else {
@@ -18946,8 +18989,9 @@ class microIntegration extends serialParamDBTable
 	{
 		$mi_form = $this->getMIform( $plan, $metaUser );
 
-		$params	= array();
-		$lists	= array();
+		$params		= array();
+		$lists		= array();
+		$validation	= array();
 		if ( !empty( $mi_form ) ) {
 			$pref = 'mi_'.$this->id.'_';
 
@@ -18958,6 +19002,18 @@ class microIntegration extends serialParamDBTable
 				}
 
 				unset( $mi_form['lists'] );
+			}
+
+			if ( !empty( $mi_form['validation'] ) ) {
+				foreach ( $mi_form['validation'] as $k => $v ) {
+
+					foreach ( $v as $lname => $lcontent ) {
+						$tempname = $pref.$lname;
+						$validation[$k][$tempname] = str_replace( '"'.$lname.'"', '"'.$tempname.'"', $lcontent );
+					}
+				}
+
+				unset( $mi_form['validation'] );
 			}
 
 			$params[$pref.'remap_area'] = array( 'subarea_change', $this->class_name );
@@ -18977,6 +19033,7 @@ class microIntegration extends serialParamDBTable
 		}
 
 		$params['lists'] = $lists;
+		$params['validation'] = $validation;
 
 		return $params;
 	}
@@ -21295,10 +21352,10 @@ class aecRestrictionHelper
 		$gtree = aecACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
 		// Create GID related Lists
-		$lists['gid'] 		= JHTML::_( 'select.genericlist', $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', 18) );
-		$lists['mingid'] 	= JHTML::_( 'select.genericlist', $gtree, 'mingid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'mingid', 18) );
-		$lists['fixgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'fixgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'fixgid', 19) );
-		$lists['maxgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', 21) );
+		$lists['gid'] 		= JHTML::_( 'select.genericlist', $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 )) );
+		$lists['mingid'] 	= JHTML::_( 'select.genericlist', $gtree, 'mingid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'mingid', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 )) );
+		$lists['fixgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'fixgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'fixgid', ( defined( 'JPATH_MANIFESTS' ) ? 3 : 19 )) );
+		$lists['maxgid'] 	= JHTML::_( 'select.genericlist', $gtree, 'maxgid', 'size="6"', 'value', 'text', arrayValueDefault($restrictions_values, 'maxgid', ( defined( 'JPATH_MANIFESTS' ) ? 4 : 21 )) );
 
 		$available_plans = array();
 

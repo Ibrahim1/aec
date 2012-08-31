@@ -100,6 +100,10 @@ background-color: #f09696 !important;
 box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
 }
 
+#aec .well-highlight .label {
+display: none !important;
+}
+
 #aec .well input {
 margin-bottom: 0;
 vertical-align: inherit;
@@ -310,6 +314,14 @@ margin-bottom: 0;
 width: 100%;
 }
 
+#aec #aec-checkout-params {
+float: left;
+}
+
+#aec tr, #aec td {
+border: none;
+}
+
 #aec .aec-checkout-params table {
 width: 100%;
 }
@@ -352,4 +364,36 @@ margin-bottom: 12px;
 
 #aec .list-term-termlist-term-other {
 opacity: 0.6;
+}
+
+#aec label.control-label {
+display: inline-block;
+width: 35%;
+padding-right: 12px;
+line-height: 16px;
+padding-top: 8px;
+vertical-align: top;
+text-align: right;
+}
+
+#aec div.control-group .controls>* {
+margin: 0 auto;
+vertical-align: middle;
+}
+
+#aec div.control-group .controls label {
+margin-top: 6px;
+}
+
+#aec form .control-group {
+width: 100%;
+margin-bottom: 16px;
+}
+
+#aec div.control-group .controls {
+display: inline-block;
+}
+
+#aec div.control-group .span6 {
+width: 40%;
 }
