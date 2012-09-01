@@ -28,7 +28,7 @@ if ( !empty( $tmpl->cfg['tos'] ) ) {
 }
 
 if ( !empty( $InvoiceFactory->jsvalidation ) ) {
-	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.8.1.min.js' );
 	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.validate.js' );
 	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.validate.additional-methods.js' );
 	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );

@@ -62,7 +62,7 @@ class HTML_myCommon
 			$document->addScript( JURI::root(true).'/media/system/js/core.js' );
 		}
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.8.1.min.js' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.18.custom.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
