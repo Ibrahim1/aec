@@ -1529,7 +1529,7 @@ function editSettings( $option )
 	$params['checkoutform_jsvalidation']	= array( 'toggle', '' );
 	$params['checkout_coupons']				= array( 'toggle', 1 );
 	$params['checkout_as_gift']				= array( 'toggle', '' );
-	$params['checkout_as_gift_access']		= array( 'list', '' );
+	$params['checkout_as_gift_access']		= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
 	$params['confirm_as_gift']				= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
