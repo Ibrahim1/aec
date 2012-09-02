@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/invoice.css" type="text/css" media="screen, print" />
 	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/invoice_print.css" type="text/css" media="print" />
 	<?php if ( !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) { ?>
-	<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option ?>/js/jquery/jquery-1.8.1.min.js"></script>
+	<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option ?>/js/jquery/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript">
 	jQuery(document).ready(function() {
 		jQuery('textarea[name=address]').keyup(function() {
