@@ -18731,7 +18731,7 @@ class microIntegration extends serialParamDBTable
 	{
 		$permission = true;
 
-		if ( !empty( $this->restrictions['has_restrictions'] ) ) {
+		if ( !empty( $this->restrictions['has_restrictions'] ) ) {print_r($this);print_r($metaUser);print_r($invoice);
 			if ( is_object( $invoice ) ) { 
 				if ( !empty( $invoice->params['stickyMIpermissions'][$this->id] ) ) {
 					return true;

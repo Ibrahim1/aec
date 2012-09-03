@@ -6,6 +6,11 @@ margin-left: -1px;
 margin-right: -1px;
 }
 
+#aec_wrap p {
+font-size: 1.2em;
+line-height: 1.5em;
+}
+
 .navbar {
 position: relative;
 z-index: 50;
@@ -62,6 +67,8 @@ border: none;
 .navbar .nav > li > a {
 color: #f9f9f9;
 font-size: 110%;
+font-weight: bold;
+padding: 12px 15px;
 }
 
 .navbar form {
