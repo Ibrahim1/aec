@@ -1,5 +1,5 @@
 jQuery(document).ready(function(jQuery) {
-	jQuery('#topbar').dropdown();
+	jQuery('#navbar').dropdown();
 	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){
 		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
 	});
@@ -99,15 +99,15 @@ jQuery(document).ready(function(jQuery) {
 		var i, scrollTop = jQuery(window).scrollTop();
 
 		if ( navTop == 0 ) {
-			navTop = jQuery('.topbar-inner').offset().top;
+			navTop = jQuery('.navbar-inner').offset().top;
 		}
 
 		if (scrollTop >= navTop && !tbFixed) {
 			tbFixed = 1;
-			jQuery('.topbar-inner').addClass('topbar-fixed');
+			jQuery('.navbar-inner').addClass('navbar-fixed');
 		} else if (scrollTop <= navTop && tbFixed) {
 			tbFixed = 0;
-			jQuery('.topbar-inner').removeClass('topbar-fixed');
+			jQuery('.navbar-inner').removeClass('navbar-fixed');
 		}
 
 		if ( jQuery('.aec-buttons').length ) {
