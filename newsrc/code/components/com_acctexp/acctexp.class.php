@@ -7750,6 +7750,12 @@ class ItemGroup extends serialParamDBTable
 				continue;
 			}
 
+			if ( $varname == 'color' ) {
+				if ( strpos( $post[$varname], '#' ) !== false ) {
+					$post[$varname] = substr( $post[$varname], 1 );
+				} 
+			}
+
 			$params[$varname] = $post[$varname];
 
 			unset( $post[$varname] );

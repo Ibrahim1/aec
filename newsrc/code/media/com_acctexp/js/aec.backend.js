@@ -47,6 +47,8 @@ jQuery(document).ready(function(jQuery) {
 		jQuery("input#quicksearch").val( this.text ).focus();
 	});
 
+	jQuery('select[name="color"]').simplecolorpicker();
+
 	jQuery('a#testexport').on("click", function(e) {
 		var values = {};
 		jQuery.each(jQuery('#adminForm').serializeArray(), function(i, field) {

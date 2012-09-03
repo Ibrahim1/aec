@@ -3406,26 +3406,24 @@ function editItemGroup( $id, $option )
 	$params['rewriteInfo']	= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
 
-	$colors = array(	'1f77b4', 'aec7e8', 'ff7f0e', 'ffbb78', '2ca02c', '98df8a', 'd62728', 'ff9896',
+	$colors = array(	'3182bd', '6baed6', '9ecae1', 'c6dbef', 'e6550d', 'fd8d3c', 'fdae6b', 'fdd0a2',
+						'31a354', '74c476', 'a1d99b', 'c7e9c0', '756bb1', '9e9ac8', 'bcbddc', 'dadaeb',
+						'636363', '969696', 'bdbdbd', 'd9d9d9',
+						'1f77b4', 'aec7e8', 'ff7f0e', 'ffbb78', '2ca02c', '98df8a', 'd62728', 'ff9896',
 						'9467bd', 'c5b0d5', '8c564b', 'c49c94', 'e377c2', 'f7b6d2', '7f7f7f', 'c7c7c7',
 						'bcbd22', 'dbdb8d', '17becf', '9edae5', 'BBDDFF', '5F8BC4', 'A2BE72', 'DDFF99',
-						'D07C30', 'C43C42', 'AA89BB', 'B7B7B7', '808080' );
+						'D07C30', 'C43C42', 'AA89BB', 'B7B7B7' );
 
 	$colorlist = array();
 	foreach ( $colors as $color ) {
 		$obj = new stdClass;
-		$obj->value = $color;
-		$obj->text = '- - ' . $color . ' - -';
-		$obj->id = 'aec_colorlist_'.$color;
+		$obj->value = '#'.$color;
+		$obj->text = $color;
 
 		$colorlist[] = $obj;
 	}
 
-	$lists['color'] = JHTML::_('select.genericlist', $colorlist, 'color', 'size="1"', 'value', 'text', arrayValueDefault($params_values, 'color', 'BBDDFF'));
-
-	foreach ( $colors as $color ) {
-		$lists['color'] = str_replace( 'value="'.$color.'"', 'value="'.$color.'" style="background-color: #'.$color.' !important;"', $lists['color'] );
-	}
+	$lists['color'] = JHTML::_('select.genericlist', $colorlist, 'color', 'size="1"', 'value', 'text', '#'.arrayValueDefault($params_values, 'color', 'BBDDFF'));
 
 	$mi_list = microIntegrationHandler::getDetailedList();
 
