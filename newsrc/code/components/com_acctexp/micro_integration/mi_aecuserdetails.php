@@ -29,6 +29,7 @@ class mi_aecuserdetails
 
 		$settings = array();
 		$settings['emulate_reg']	= array( 'toggle' );
+		$settings['display_emul']	= array( 'toggle' );
 		$settings['settings']		= array( 'inputB' );
 
 		$types = array( "p", "inputA", "inputB", "inputC", "inputD", "list", "list_language", "checkbox" );
@@ -142,6 +143,8 @@ class mi_aecuserdetails
 
 	function getMIform( $request )
 	{
+		global $aecConfig;
+
 		$language_array = AECToolbox::getISO3166_1a2_codes();
 
 		$language_code_list = array();
@@ -152,7 +155,7 @@ class mi_aecuserdetails
 		$settings	= array();
 		$lists		= array();
 
-		if ( !empty( $this->settings['emulate_reg'] ) ) {
+		if ( !empty( $this->settings['emulate_reg'] ) && empty( $request->metaUser->userid ) ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				// Joomla 1.6+ Registration
 				$lang =& JFactory::getLanguage();
@@ -169,8 +172,8 @@ class mi_aecuserdetails
 
 				$settings['validation']['rules'] = array();
 				$settings['validation']['rules']['name'] = array( 'minlength' => 2, 'alphanumericwithbasicpunc' => true, 'required' => true );
-				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'alphanumeric' => true, 'required' => true );
-				$settings['validation']['rules']['email'] = array( 'email' => true, 'required' => true );
+				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'alphanumeric' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=usernameexists" );
+				$settings['validation']['rules']['email'] = array( 'email' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=emailexists" );
 				$settings['validation']['rules']['email2'] = array( 'email' => true, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_email' );
 				$settings['validation']['rules']['password'] = array( 'minlength' => 6, 'maxlength' => 98, 'required' => true );
 				$settings['validation']['rules']['password2'] = array( 'minlength' => 6, 'maxlength' => 98, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_password' );
@@ -184,11 +187,21 @@ class mi_aecuserdetails
 
 				$settings['validation']['rules'] = array();
 				$settings['validation']['rules']['name'] = array( 'minlength' => 2, 'required' => true );
-				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'required' => true );
-				$settings['validation']['rules']['email'] = array( 'email' => true, 'required' => true );
+				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=usernameexists" );
+				$settings['validation']['rules']['email'] = array( 'email' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=emailexists" );
 				$settings['validation']['rules']['password'] = array( 'minlength' => 2, 'required' => true );
 				$settings['validation']['rules']['password2'] = array( 'minlength' => 2, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_password' );
 			}
+
+			if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
+				require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
+
+				$settings['recaptcha'] = array( 'passthrough', 'ReCAPTCHA', 'recaptcha', recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) );
+			}
+		} elseif ( !empty( $this->settings['emulate_reg'] ) && !empty( $this->settings['display_emul'] ) ) {
+			$settings['name'] = array( 'passthrough', JText::_( 'Name' ), 'name', '<p><strong>'.$request->metaUser->cmsUser->name.'</strong></p>' );
+			$settings['username'] = array( 'passthrough', JText::_( 'User name' ), 'username', '<p><strong>'.$request->metaUser->cmsUser->username.'</strong></p>' );
+			$settings['email'] = array( 'passthrough', JText::_( 'Email' ), 'email', '<p><strong>'.$request->metaUser->cmsUser->email.'</strong></p>' );
 		}
 
 		if ( !empty( $this->settings['settings'] ) ) {
@@ -266,28 +279,30 @@ class mi_aecuserdetails
 
 	function before_invoice_confirm( $request )
 	{
-		if ( !empty( $this->settings['emulate_reg'] ) ) {
-			if ( defined( 'JPATH_MANIFESTS' ) ) {
-				$vars = array( 'username' => 'username', 'name' => 'name', 'email' => 'email', 'email2' => 'email2', 'password' => 'password', 'password2' => 'password2' );
-				
-				foreach ( $vars as $k => $v ) {
-					if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
-						$request->add->passthrough[$v] = $request->add->passthrough['mi_'.$this->id.'_'.$k];
-						
+		if ( empty( $this->settings['emulate_reg'] ) || empty( $request->metaUser->userid ) ) {
+			return null;
+		}
 
-						unset( $request->add->passthrough['mi_'.$this->id.'_'.$k] );
-					}
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$vars = array( 'username' => 'username', 'name' => 'name', 'email' => 'email', 'email2' => 'email2', 'password' => 'password', 'password2' => 'password2' );
+			
+			foreach ( $vars as $k => $v ) {
+				if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
+					$request->add->passthrough[$v] = $request->add->passthrough['mi_'.$this->id.'_'.$k];
+					
+
+					unset( $request->add->passthrough['mi_'.$this->id.'_'.$k] );
 				}
-			} else {
-				$vars = array( 'username', 'name', 'email', 'password', 'password2' );
-				
-				foreach ( $vars as $k ) {
-					if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
-						$request->add->passthrough[$k] = $request->add->passthrough['mi_'.$this->id.'_'.$k];
-						
+			}
+		} else {
+			$vars = array( 'username', 'name', 'email', 'password', 'password2' );
+			
+			foreach ( $vars as $k ) {
+				if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
+					$request->add->passthrough[$k] = $request->add->passthrough['mi_'.$this->id.'_'.$k];
+					
 
-						unset( $request->add->passthrough['mi_'.$this->id.'_'.$k] );
-					}
+					unset( $request->add->passthrough['mi_'.$this->id.'_'.$k] );
 				}
 			}
 		}

@@ -392,6 +392,8 @@ vertical-align: middle;
 margin-top: 6px;
 padding: 4px 8px;
 display: inline-block !important;
+width: 254px;
+white-space: normal;
 }
 
 #aec form .control-group {
@@ -402,6 +404,10 @@ margin-bottom: 16px;
 #aec div.control-group .controls {
 display: inline-block;
 width: 60%;
+}
+
+#aec div.control-group .controls p {
+padding-top: 4px;
 }
 
 #aec div.control-group .span6 {

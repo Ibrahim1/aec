@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5325' );
+define( '_AEC_REVISION', '5357' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -4612,20 +4612,14 @@ class PaymentProcessor
 					$lists = null;
 				}
 
-				if ( count( $params['params'] ) > 2 ) {
-					$table = 1;
-					$return .= '<table>';
-				} else {
-					$table = 0;
-				}
+				$settings = new aecSettings ( 'aec', 'ccform' );
+				$settings->fullSettingsArray( $params['params'], array(), $lists, array(), false ) ;
 
-				foreach ( $values['params'] as $name => $entry ) {
-					if ( !is_null( $name ) && !( $name == '' ) ) {
-						$return .= aecHTML::createFormParticle( $name, $entry, $lists, $table ) . "\n";
-					}
-				}
+				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-				$return .= $table ? '</table>' : '';
+				$return .= $aecHTML->returnFull( false, false, true );
+
+				$return .= '</div>';
 			}
 		}
 
@@ -6626,6 +6620,12 @@ class aecHTML
 				} else {
 					$return .= '<input id="' . $name . '" type="hidden" name="' . $name . '" value="' . $value . '" />';
 				}
+				break;
+			case 'passthrough':
+				$return .= '<div class="controls">';
+				$return .= $value;
+				$return .= $insertctrl;
+				$return .= '</div></div>';
 				break;
 			default:
 				$return = $value;
@@ -11188,8 +11188,10 @@ class InvoiceFactory
 			}
 		}
 
-		if ( !$this->reCaptchaCheck() ) {
-			return false;
+		if ( empty( $aecConfig->cfg['skip_registration'] ) ) {
+			if ( !$this->reCaptchaCheck() ) {
+				return false;
+			}
 		}
 
 		$this->puffer( $option );
@@ -11301,6 +11303,8 @@ class InvoiceFactory
 
 	function save( $option, $coupon=null )
 	{
+		global $aecConfig;
+
 		$this->confirmed = 1;
 
 		$this->loadPlanObject( $option );
@@ -11312,6 +11316,12 @@ class InvoiceFactory
 		$this->triggerMIs( 'before_invoice_confirm', $exchange, $add, $silent );
 
 		if ( empty( $this->userid ) ) {
+			if ( !empty( $aecConfig->cfg['skip_registration'] ) ) {
+				if ( !$this->reCaptchaCheck() ) {
+					return false;
+				}
+			}
+
 			$this->saveUserRegistration( $option );
 		}
 

@@ -100,6 +100,36 @@ if ( !empty( $task ) ) {
 			subscribe( $option );
 			break;
 
+		case 'usernameexists':
+			$username = null;
+			foreach ( $_REQUEST as $k => $v ) {
+				if ( strpos( $k, '_username' ) ) {
+					$username = aecGetParam( $k, 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+				}
+			}
+
+			if ( checkUsernameExists( $username ) ) {
+				echo json_encode( JText::_( 'AEC_VALIDATE_USERNAME_EXISTS' ) );exit;
+			} else {
+				echo json_encode( true );exit;
+			}
+			break;
+
+		case 'emailexists':
+			$username = null;
+			foreach ( $_REQUEST as $k => $v ) {
+				if ( strpos( $k, '_email' ) ) {
+					$email = aecGetParam( $k, 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+				}
+			}
+
+			if ( checkEmailExists( $email ) ) {
+				echo json_encode( JText::_( 'AEC_VALIDATE_EMAIL_EXISTS' ) );exit;
+			} else {
+				echo json_encode( true );exit;
+			}
+			break;
+
 		case 'confirm':
 			confirmSubscription($option);
 			break;
@@ -598,10 +628,27 @@ function checkUsernameEmail( $username, $email )
 	$regex = preg_match( "#[<>\"'%;()&]#i", $username );
 
 	if ( ( strlen( $username ) < 2 ) || $regex ) {
-		aecErrorAlert( JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 ) );
-		return JText::sprintf( 'VALID_AZ09', JText::_( 'Username' ), 2 );
+		aecErrorAlert( JText::_( 'AEC_VALIDATE_ALPHANUMERIC' ) );
+		return JText::_( 'AEC_VALIDATE_ALPHANUMERIC' );
 	}
 
+	if ( !checkUsernameExists( $username ) ) {
+		aecErrorAlert( JText::_( 'AEC_VALIDATE_USERNAME_EXISTS' ) );
+		return JText::_( 'AEC_VALIDATE_USERNAME_EXISTS' );
+	}
+
+	if ( !empty( $email ) ) {
+		if ( !checkEmailExists( $email ) ) {
+			aecErrorAlert( JText::_( 'AEC_VALIDATE_EMAIL_EXISTS' ) );
+			return JText::_( 'AEC_VALIDATE_EMAIL_EXISTS' );
+		}
+	}
+
+	return true;
+}
+
+function checkUsernameExists( $username )
+{
 	$db = &JFactory::getDBO();
 
 	$query = 'SELECT `id`'
@@ -610,25 +657,20 @@ function checkUsernameEmail( $username, $email )
 			;
 	$db->setQuery( $query );
 
-	if ( $db->loadResult() ) {
-		aecErrorAlert( JText::_( 'AEC_WARNREG_INUSE_USERNAME' ) );
-		return JText::_( 'AEC_WARNREG_INUSE_USERNAME' );
-	}
+	return $db->loadResult() ? true : false;
+}
 
-	if ( !empty( $email ) ) {
-		$query = 'SELECT `id`'
-				. ' FROM #__users'
-				. ' WHERE `email` = \'' . $email . '\''
-				;
-		$db->setQuery( $query );
+function checkEmailExists( $email )
+{
+	$db = &JFactory::getDBO();
 
-		if ( $db->loadResult() ) {
-			aecErrorAlert( JText::_( 'AEC_WARNREG_INUSE_EMAIL' ) );
-			return JText::_( 'AEC_WARNREG_INUSE_EMAIL' );
-		}
-	}
+	$query = 'SELECT `id`'
+			. ' FROM #__users'
+			. ' WHERE `email` = \'' . $email . '\''
+			;
+	$db->setQuery( $query );
 
-	return true;
+	return $db->loadResult() ? true : false;
 }
 
 function confirmSubscription( $option )
