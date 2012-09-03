@@ -338,6 +338,13 @@ padding: 12px;
 -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 border-radius: 6px;
+text-align: left;
+}
+
+#aec .aec-checkout-params form .button {
+background: none;
+border: none;
+float: right;
 }
 
 #aec .tab-content {
@@ -383,6 +390,8 @@ vertical-align: middle;
 
 #aec div.control-group .controls label {
 margin-top: 6px;
+padding: 4px 8px;
+display: inline-block !important;
 }
 
 #aec form .control-group {
@@ -392,6 +401,7 @@ margin-bottom: 16px;
 
 #aec div.control-group .controls {
 display: inline-block;
+width: 60%;
 }
 
 #aec div.control-group .span6 {
