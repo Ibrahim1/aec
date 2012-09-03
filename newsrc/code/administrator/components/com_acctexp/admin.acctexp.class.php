@@ -1020,6 +1020,80 @@ class aecExport extends serialParamDBTable
 
 }
 
+class templateOverrideParser
+{
+	function templateOverrideParser( /*$file*/ )
+	{
+		$filepath = '/var/www/joomla25/components/com_acctexp/tmpl/etacarinae/confirmation/tmpl/confirmation.php';
+
+		$filebuffer = "";
+
+		$handle = @fopen($filepath, "r");
+		if ( $handle ) {
+			while ( ($buffer = fgets($handle, 4096)) !== false ) {
+				$filebuffer .= $buffer;
+			}
+
+			if ( !feof($handle) ) {
+				die( 'Error reading file: ' . $filepath );
+			}
+			fclose( $handle );
+		}
+$original = $filebuffer;
+		$filebuffer = str_replace( array( '<?php ', '<?php', '<? ', ' ?>' ), array( '<php_literal>', '<php_literal>', '<php_literal>', '</php_literal>' ), $filebuffer );
+
+		//$filebuffer = preg_replace('#<php_literal>(.*?)</php_literal>#s', '', $filebuffer);
+
+		$regex = "#<php_literal>(.*?)</php_literal>#s";
+
+		// find all instances of json code
+		$matches = array();
+		preg_match_all( $regex, $filebuffer, $matches, PREG_SET_ORDER );
+
+		$literals = array();
+		if ( count( $matches ) > 0 ) {
+			$rescount = 0;
+			foreach ( $matches as $match ) {
+				$literals[$rescount] = str_replace( array( "<php_literal>\n", '<php_literal>', '</php_literal>' ), '', $match );
+				$literals[$rescount] = $literals[$rescount][0];
+
+				$filebuffer = str_replace( $match, '<php_literal>'.$rescount.'</php_literal>', $filebuffer );
+
+				$rescount++;
+			}
+		}
+print_r($original."\n\n");
+print_r($filebuffer);
+		$trans2 = $this->xml2array('<xml>'.$filebuffer.'</xml>');
+print_r($trans2);print_r($literals);
+exit;
+	}
+
+
+	function xml2array( $xml ) {
+		$sxi = new SimpleXmlIterator( $xml );
+
+		return $this->sxiToArray($sxi);
+	}
+
+	function sxiToArray($sxi){
+		$a = array();
+		for( $sxi->rewind(); $sxi->valid(); $sxi->next() ) {
+			if ( !array_key_exists($sxi->key(), $a) ) {
+				$a[$sxi->key()] = array();
+			}
+
+			if ( $sxi->hasChildren() ) {
+				$a[$sxi->key()]['children'] = $this->sxiToArray($sxi->current());
+			} else {
+				$a[$sxi->key()][] = strval($sxi->current());
+			}
+		}
+
+		return $a;
+	}
+}
+
 function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
     $spaces = "";
     $space = $html ? "&nbsp;" : " ";
