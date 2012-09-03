@@ -194,7 +194,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$return = "";
 
 		if ( !empty( $_REQUEST['PayerID'] ) && !empty( $_REQUEST['token'] ) && $this->settings['allow_express_checkout'] ) {
-			$return .= '<table id="aec-checkout-params"><tbody><tr><td>';
+			$return .= '<div class="aec-checkout-params">';
 			$return .= '<p style="float:left;text-align:left;"><strong>' . JText::_('CFG_PAYPAL_WPP_CHECKOUT_NOTE_RETURN') . '</strong></p>';
 			$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 			$return .= $this->getStdFormVars( $request );
@@ -203,17 +203,17 @@ class processor_paypal_wpp extends XMLprocessor
 			$return .= '<input type="hidden" name="PayerID" value="' . $_REQUEST['PayerID'] . '" />' . "\n";
 			$return .= '<input type="submit" class="button" id="aec-checkout-btn" value="' . JText::_('BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 			$return .= '</form>' . "\n";
-			$return .= '</td></tr></tbody></table>';
+			$return .= '</div>';
 		} else {
 			if ( $this->settings['allow_express_checkout'] ) {
-				$return .= '<table id="aec-checkout-params"><tbody><tr><td>';
+				$return .= '<div class="aec-checkout-params">';
 				$return .= '<p style="float:left;text-align:left;"><strong>' . JText::_('CFG_PAYPAL_WPP_CHECKOUT_NOTE_HEADLINE') . '</strong></p><p style="float:left;text-align:left;">' . JText::_('CFG_PAYPAL_WPP_CHECKOUT_NOTE_NOTE') . '</p>';
 				$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
 				$return .= $this->getStdFormVars( $request );
 				$return .= '<input type="hidden" name="express" value="1" />' . "\n";
 				$return .= '<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class="button" id="aec-checkout-btn" value="' . JText::_('BUTTON_CHECKOUT') . '" /><br /><br />' . "\n";
 				$return .= '</form>' . "\n";
-				$return .= '</td></tr></tbody></table>';
+				$return .= '</div>';
 			}
 
 			$return .= parent::checkoutAction( $request, $InvoiceFactory );

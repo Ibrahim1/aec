@@ -292,7 +292,9 @@ class mi_aecuserdetails
 			}
 		}
 
-		checkUsernameEmail( $request->add->passthrough['username'], $request->add->passthrough['email'] );
+		if ( !empty( $request->add->passthrough['username'] ) && !empty( $request->add->passthrough['email'] ) ) {
+			checkUsernameEmail( $request->add->passthrough['username'], $request->add->passthrough['email'] );
+		}
 	}
 }
 ?>

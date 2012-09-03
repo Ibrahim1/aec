@@ -25,7 +25,7 @@ class template_etacarinae extends aecTemplate
 
 	function addDefaultCSS()
 	{
-		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/bootstrap.frontend.css' );
+		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/bootstrap.css' );
 		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/template.' . $this->template . '.css' );
 	}
 
@@ -78,5 +78,122 @@ class template_etacarinae extends aecTemplate
 		return array( 'params' => $params, 'tab_data' => $tab_data );
 	}
 
+	function defaultHeader()
+	{
+		if ( !empty( $this->validation ) ) {
+			$this->addValidation();
+		}
+
+		if ( !empty( $this->jQueryCode ) ) {
+			$this->loadJS();
+		}
+
+		$this->addDefaultCSS();
+	}
+
+	function loadJS()
+	{
+		$this->loadJQuery();
+
+		$js = "jQuery(document).ready(function(){\n\n" . implode( "\n", $this->jQueryCode ) . "\n\n});";
+
+		$this->addScriptDeclaration( $js );
+	}
+
+	function loadJQuery()
+	{
+		$this->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+
+		foreach ( $this->jqueryExtensions as $ext ) {
+			$this->addScript( JURI::root(true).'/media/com_acctexp/js/' . $ext . '.js' );
+		}
+
+		$this->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
+	}
+
+	function enqueueJQueryExtension( $name )
+	{
+		$this->jqueryExtensions[] = $name;
+	}
+
+	function enqueueJQueryCode( $js )
+	{
+		$this->jQueryCode[] = $js;
+	}
+
+	function enqueueValidation( $validation )
+	{
+		if ( !empty( $this->validation ) ) {
+			$this->validation = array_merge( $this->validation, $validation );
+		} else {
+			$this->validation = $validation;
+		}
+	}
+
+	function addValidation()
+	{
+		$this->enqueueJQueryExtension( 'jquery/jquery.validate' );
+		$this->enqueueJQueryExtension( 'jquery/jquery.validate.additional-methods' );
+
+		$msgs = array(	'required' => 0, 'remote' => 0, 'email' => 0, 'url' => 0, 'date' => 0,
+						'dateISO' => 0, 'number' => 0, 'digits' => 0, 'creditcard' => 0, 'equalTo' => 0,
+						'maxlength' => 1, 'minlength' => 1, 'rangelength' => 2, 'range' => 2, 'max' => 1,
+						'min' => 1, 'maxwords' => 1, 'minwords' => 1, 'rangewords' => 2, 'letterswithbasicpunc' => 0,
+						'alphanumeric' => 0, 'alphanumericwithbasicpunc' => 0, 'lettersonly' => 0, 'nowhitespace' => 0, 'ziprange' => 0,
+						'zipcodeus' => 0, 'integer' => 0, 'vinus' => 0, 'dateita' => 0, 'datenl' => 0,
+						'time' => 0, 'time12h' => 0, 'phoneus' => 0, 'phoneuk' => 0, 'mobileuk' => 0,
+						'phonesuk' => 0, 'postcodeuk' => 0, 'strippedminlength' => 1, 'email2' => 0, 'url2' => 0,
+						'creditcardtypes' => 0, 'ipv4' => 0, 'ipv6' => 0, 'pattern' => 0, 'require_from_group' => 1,
+						'skip_or_fill_minimum' => 1, 'accept' => 0, 'extension' => 0 );
+
+		$messages = array();
+		foreach( $msgs as $k => $i ) {
+			if ( $i ) {
+				$messages[] = $k . ': ' . 'jQuery.validator.format("' . JText::_( strtoupper( 'aec_validate_' . $k ) ) . '")';
+			} else {
+				$messages[] = $k . ': ' . '"' . JText::_( strtoupper( 'aec_validate_' . $k ) ) . '"';
+			}
+		}
+
+		$js = "
+		jQuery(document).ready(function(){
+			jQuery('#aec form:last').validate(
+			{debug: true,
+			rules: " . json_encode( $this->validation['rules'] ) . ",
+			highlight: function(label) {
+				jQuery(label).closest('.well').addClass('well-highlight');
+				jQuery(label).closest('.control-group').addClass('error');
+				jQuery(label).closest('.label-important').prepend('<i class=\"icon-ban-circle icon-white\"></i>');
+				jQuery('#aec form button#confirmation').attr('disabled','disabled');
+			},
+			unhighlight: function(label) {
+				jQuery(label).closest('.well').removeClass('well-highlight');
+				jQuery(label).closest('.control-group').removeClass('error');
+				if ( jQuery(\"#aec form .label-important\").length > 0) {
+					jQuery('#aec form button').attr('disabled','disabled');
+				} else {
+					jQuery('#aec form button').attr(\"disabled\", false);
+				}
+			},
+			success: function(label) {
+				label.remove();
+		
+				jQuery('#aec form button').attr(\"disabled\", false);
+			},
+			errorClass: 'label label-important',
+			submitHandler: function(form) {
+				if ( jQuery('#aec form').valid() ) {
+					form.submit();
+				} else {
+					jQuery('#aec form button').attr('disabled','disabled');
+				}
+			},
+			messages: {" . implode( ",\n", $messages ) . "}
+			})
+		});
+		";
+
+		$this->enqueueJQueryCode( $js );
+	}
 }
 ?>

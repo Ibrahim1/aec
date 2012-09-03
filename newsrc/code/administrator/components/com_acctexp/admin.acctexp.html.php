@@ -41,7 +41,7 @@ class HTML_myCommon
 	function addBackendCSS()
 	{
 		$document =& JFactory::getDocument();
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/bootstrap.backend.css?rev=' . _AEC_REVISION . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/bootstrap.min.css?rev=' . _AEC_REVISION . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/toggleswitch/toggleswitch.css?rev=' . _AEC_REVISION . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION . '" />' );
 	}
@@ -62,9 +62,9 @@ class HTML_myCommon
 			$document->addScript( JURI::root(true).'/media/system/js/core.js' );
 		}
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.8.1.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.18.custom.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.23.custom.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.js' );
@@ -75,8 +75,8 @@ class HTML_myCommon
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.multiselect.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/fg.menu.css' . '" />' );
 
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.backend.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/aec.backend.js' );
 	}
 
@@ -706,30 +706,36 @@ class HTML_AcctExp
 
 		$linkroot = "index.php?option=com_acctexp&amp;task=";
 		?>
-		<div class="topbar">
-			<div class="topbar-inner">
+		<div class="navbar navbar-inverse">
+			<div class="navbar-inner">
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
-				<ul class="nav">
-				<?php foreach ( $menu as $m ) { ?>
-					<?php if ( isset( $m['items'] ) ) { ?>
-						<li class="dropdown">
-							<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?><span class="caret"></span></a>
-							<ul class="dropdown-menu">
-							<?php
-							foreach ( $m['items'] as $item ) {
-								echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
-							}
-							?>
-							</ul>
-						</li>
-					<?php } else { ?>
-						<li>
-							<a href="#help" id="aecmenu-<?php echo str_replace( " ", "-", strtolower( $m['short'] ) ) ?>" data-toggle="modal"><?php echo $m['short'] ?></a>
-						</li>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+					<?php foreach ( $menu as $m ) { ?>
+						<?php if ( isset( $m['items'] ) ) { ?>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?><span class="caret"></span></a>
+								<ul class="dropdown-menu">
+								<?php
+								foreach ( $m['items'] as $item ) {
+									if ( is_array( $item ) ) {
+										echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
+									} else {
+										echo '<li class="divider"></li>';
+									}
+								}
+								?>
+								</ul>
+							</li>
+						<?php } else { ?>
+							<li>
+								<a href="#help" id="aecmenu-<?php echo str_replace( " ", "-", strtolower( $m['short'] ) ) ?>" data-toggle="modal"><?php echo $m['short'] ?></a>
+							</li>
+						<?php } ?>
 					<?php } ?>
-				<?php } ?>
-				</ul>
+					</ul>
+				</div>
 				<form action="#" class="pull-right">
 					<input type="text" rel="popover" class="span2" placeholder="Quicksearch" id="quicksearch" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>
@@ -744,12 +750,14 @@ class HTML_AcctExp
 		return array(	'memberships'	=> array(	'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
 													'short'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
 													'items'	=> array(	array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
+																	'div',
 																	array( 'showPending', 'pending', JText::_('AEC_CENTR_PENDING') ),
 																	array( 'showActive', 'active', JText::_('AEC_CENTR_ACTIVE') ),
 																	array( 'showExpired', 'expired', JText::_('AEC_CENTR_EXPIRED') ),
 																	array( 'showCancelled', 'cancelled', JText::_('AEC_CENTR_CANCELLED') ),
 																	array( 'showHold', 'hold', JText::_('AEC_CENTR_HOLD') ),
 																	array( 'showClosed', 'closed', JText::_('AEC_CENTR_CLOSED') ),
+																	'div',
 																	array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') )
 																	)
 												),
@@ -757,7 +765,9 @@ class HTML_AcctExp
 													'short'	=> JText::_('AEC_CENTR_AREA_PAYMENT_SHORT'),
 													'items'	=> array(	array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
 																	array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
+																	'div',
 																	array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
+																	'div',
 																	array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
 																	array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') )
 																	)
@@ -765,17 +775,21 @@ class HTML_AcctExp
 						'settings' 		=> array(	'name'	=> JText::_('AEC_CENTR_AREA_SETTINGS'),
 													'short'	=> JText::_('AEC_CENTR_AREA_SETTINGS_SHORT'),
 													'items'	=> array(	array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
+																	'div',
 																	array( 'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ),
 																	array( 'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ),
+																	'div',
 																	array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') )
 																	)
 												),
 						'data' 			=> array(	'name'	=> JText::_('AEC_CENTR_AREA_DATA'),
 													'short'	=> JText::_('AEC_CENTR_AREA_DATA_SHORT'),
 													'items'	=> array(	array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
+																	'div',
 																	array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
 																	array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
 																	array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
+																	'div',
 																	array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY'), JText::_('AEC_CENTR_M_VIEW_HISTORY') ),
 																	array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
 																	)
@@ -807,6 +821,10 @@ class HTML_AcctExp
 							?><div class="central_buttons aec_userinfobox_sub"><h3><?php echo $m['name']; ?></h3><div class="central_group"><?php
 
 							foreach ( $m['items'] as $item ) {
+								if ( !is_array( $item ) ) {
+									continue;
+								}
+
 								if ( !empty( $item[3] ) ) {
 									HTML_AcctExp::quickiconButton( $linkroot.$item[0], ''.$item[1], $item[3] );
 								} else {

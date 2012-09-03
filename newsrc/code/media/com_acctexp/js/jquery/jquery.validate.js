@@ -684,7 +684,7 @@ $.extend($.validator, {
 
 				// check if we have a generated label, replace the message then
 				if ( label.attr("generated") ) {
-					label.html(message);
+					label.html(message).fadeIn();
 				}
 			} else {
 				// create label
@@ -701,7 +701,7 @@ $.extend($.validator, {
 					if ( this.settings.errorPlacement ) {
 						this.settings.errorPlacement(label, $(element) );
 					} else {
-					label.insertAfter(element);
+					label.hide().insertAfter(element).fadeIn();
 					}
 				}
 			}
@@ -764,7 +764,12 @@ $.extend($.validator, {
 				return param;
 			},
 			"string": function(param, element) {
-				return !!$(param, element.form).length;
+				// Check if the string is numeric, to fix boolean -> numeric string problem
+				if ( !isNaN(parseFloat(param)) && isFinite(param) ){
+					return param;
+				} else {
+					return !!$(param, element.form).length;
+				}
 			},
 			"function": function(param, element) {
 				return param(element);

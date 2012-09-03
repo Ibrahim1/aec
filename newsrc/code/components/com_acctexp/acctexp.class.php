@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5300' );
+define( '_AEC_REVISION', '5325' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2858,6 +2858,15 @@ class aecTemplate
 		return $params;
 	}
 
+	function defaultHeader()
+	{
+		$this->addDefaultCSS();
+
+		if ( !empty( $this->js ) ) {
+			$this->loadJS();
+		}
+	}
+
 	function setTitle( $title )
 	{
 		$document=& JFactory::getDocument();
@@ -5388,14 +5397,14 @@ class XMLprocessor extends processor
 			$stdvars = true;
 		}
 
-		$return = '<form action="' . $url . '" method="post"' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' class="form-validate"' : '' ) . '>' . "\n";
+		$return = '<form action="' . $url . '" method="post">' . "\n";
 		$return .= $this->getParamsHTML( $var ) . '<br /><br />';
 
 		if ( $stdvars ) {
 			$return .= $this->getStdFormVars( $request );
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec-checkout-btn"><i class="icon-shopping-cart icon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn"><i class="icon-shopping-cart icon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5434,28 +5443,13 @@ class XMLprocessor extends processor
 					$return .= '<div class="aec-checkout-params">';
 				}
 
-				if ( count( $params['params'] ) > 2 ) {
-					$table = 1;
-					$return .= '<table>';
-				} else {
-					$table = 0;
-				}
+				$settings = new aecSettings ( 'aec', 'ccform' );
+				$settings->fullSettingsArray( $params['params'], array(), $lists, array(), false ) ;
 
-				foreach ( $params['params'] as $name => $entry ) {
-					if ( !empty( $name ) || ( $name === 0 ) ) {
-						if ( $entry[0] == 'tabberstart' ) {
-							$return .= '</td></tr></table>';
-						}
+				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-						$return .= aecHTML::createFormParticle( $name, $entry, $lists, $table ) . "\n";
+				$return .= $aecHTML->returnFull( false, false, true );
 
-						if ( $entry[0] == 'tabberend' ) {
-							$return .= '<div class="aec-checkout-params"><table><tr><td>';
-						}
-					}
-				}
-
-				$return .= $table ? '</table>' : '';
 				$return .= '</div>';
 			}
 		}
@@ -19701,84 +19695,88 @@ class couponsHandler extends eucaObject
 			}
 		}
 
-		if ( !empty( $this->fullcartlist ) ) {
-			foreach ( $this->fullcartlist as $coupon_code ) {
-				if ( $this->loadCoupon( $coupon_code ) ) {
-					if ( $this->cph->discount['amount_use'] ) {
-						$this->cph->discount['amount'] = $this->cph->discount['amount'] / $itemcount;
-					}
+		if ( empty( $this->fullcartlist ) ) {
+			return $items;
+		}
 
-					$cost = null;
-					$costarray = array();
-					foreach ( $items->itemlist as $cid => $citem ) {
-						if ( $citem['obj'] == false ) {
-							continue;
-						}
-
-						$citem['terms']->nextterm->computeTotal();
-
-						if ( empty( $cost ) ) {
-							$cost = clone( $citem['terms']->nextterm->getBaseCostObject() );
-
-							$costarray[$cid] = $cost->cost['amount'];
-						} else {
-							$ccost = $citem['terms']->nextterm->getBaseCostObject();
-
-							$cost->cost['amount'] = $cost->cost['amount'] + ( $ccost->cost['amount'] * $citem['quantity'] );
-
-							$costarray[$cid] = $ccost->cost['amount'];
-						}
-
-						$items->itemlist[$cid]['terms'] = $this->cph->applyToTerms( $items->itemlist[$cid]['terms'], true );
-					}
-
-				}
+		foreach ( $this->fullcartlist as $coupon_code ) {
+			if ( !$this->loadCoupon( $coupon_code ) ) {
+				continue;
 			}
 
-			$discounttypes = array();
-			$discount_col = array();
-			foreach ( $items->itemlist as $item ) {
-				foreach ( $item['terms']->nextterm->cost as $cost ) {
-					if ( $cost->type == 'discount' ) {
-						$cc = $cost->cost['coupon'] . ' - ' . $cost->cost['details'];
-
-						if ( in_array( $cc, $discounttypes ) ) {
-							$typeid = array_search( $cc, $discounttypes );
-						} else {
-							$discounttypes[] = $cc;
-
-							$typeid = count( $discounttypes ) - 1;
-						}
-
-						if ( !isset( $discount_col[$typeid] ) ) {
-							$discount_col[$typeid] = 0;
-						}
-
-						$discount_col[$typeid] += $cost->renderCost();
-					}
-				}
+			if ( $this->cph->discount['amount_use'] ) {
+				$this->cph->discount['amount'] = $this->cph->discount['amount'] / $itemcount;
 			}
 
-			if ( !empty( $discount_col ) ) {
-				// Dummy terms
-				$terms = new mammonTerms();
-				$term = new mammonTerm();
-
-				foreach ( $discount_col as $cid => $discount ) {
-					$cce = explode( ' - ', $discounttypes[$cid], 2 );
-
-					$term->addCost( $discount, array( 'amount' => $discount, 'coupon' => $cce[0], 'details' => $cce[1] ) );
+			$cost = null;
+			$costarray = array();
+			foreach ( $items->itemlist as $cid => $citem ) {
+				if ( $citem['obj'] == false ) {
+					continue;
 				}
 
-				$terms->addTerm( $term );
+				$citem['terms']->nextterm->computeTotal();
 
-				if ( empty( $items->discount ) ) {
-					$items->discount = array();
+				if ( empty( $cost ) ) {
+					$cost = clone( $citem['terms']->nextterm->getBaseCostObject() );
+
+					$costarray[$cid] = $cost->cost['amount'];
+				} else {
+					$ccost = $citem['terms']->nextterm->getBaseCostObject();
+
+					$cost->cost['amount'] = $cost->cost['amount'] + ( $ccost->cost['amount'] * $citem['quantity'] );
+
+					$costarray[$cid] = $ccost->cost['amount'];
 				}
 
-				$items->discount[] = $terms->terms;
+				$items->itemlist[$cid]['terms'] = $this->cph->applyToTerms( $items->itemlist[$cid]['terms'], true );
+			}
+		}
+
+		$discounttypes = array();
+		$discount_col = array();
+		foreach ( $items->itemlist as $item ) {
+			foreach ( $item['terms']->nextterm->cost as $cost ) {
+				if ( $cost->type != 'discount' ) {
+					continue;
+				}
+
+				$cc = $cost->cost['coupon'] . ' - ' . $cost->cost['details'];
+
+				if ( in_array( $cc, $discounttypes ) ) {
+					$typeid = array_search( $cc, $discounttypes );
+				} else {
+					$discounttypes[] = $cc;
+
+					$typeid = count( $discounttypes ) - 1;
+				}
+
+				if ( !isset( $discount_col[$typeid] ) ) {
+					$discount_col[$typeid] = 0;
+				}
+
+				$discount_col[$typeid] += $cost->renderCost();
+			}
+		}
+
+		if ( !empty( $discount_col ) ) {
+			// Dummy terms
+			$terms = new mammonTerms();
+			$term = new mammonTerm();
+
+			foreach ( $discount_col as $cid => $discount ) {
+				$cce = explode( ' - ', $discounttypes[$cid], 2 );
+
+				$term->addCost( $discount, array( 'amount' => $discount, 'coupon' => $cce[0], 'details' => $cce[1] ) );
 			}
 
+			$terms->addTerm( $term );
+
+			if ( empty( $items->discount ) ) {
+				$items->discount = array();
+			}
+
+			$items->discount[] = $terms->terms;
 		}
 
 		return $items;

@@ -28,56 +28,11 @@ if ( !empty( $tmpl->cfg['tos'] ) ) {
 }
 
 if ( !empty( $InvoiceFactory->jsvalidation ) ) {
-	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
-	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.validate.js' );
-	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.validate.additional-methods.js' );
-	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
-
-	$js = "
-jQuery(document).ready(function(){
-	jQuery('#form-confirm').validate(
-	{
-	rules: " . json_encode( $InvoiceFactory->jsvalidation['rules'] ) . ",
-	highlight: function(label) {
-		jQuery(label).closest('.well').addClass('well-highlight');
-		jQuery(label).closest('.control-group').addClass('error');
-		jQuery(label).closest('.label-important').prepend('<i class=\"icon-ban-circle icon-white\"></i>');
-		jQuery('#form-confirm button#confirmation').attr('disabled','disabled');
-	},
-	unhighlight: function(label) {
-		jQuery(label).closest('.well').removeClass('well-highlight');
-		jQuery(label).closest('.control-group').removeClass('error');
-		if ( jQuery(\"form#form-confirm .label-important\").length > 0) {
-			jQuery('#form-confirm button#confirmation').attr('disabled','disabled');
-		} else {
-			jQuery('#form-confirm button#confirmation').attr(\"disabled\", false);
-		}
-	},
-	success: function(label) {
-		label.remove();
-
-		jQuery('#form-confirm button#confirmation').attr(\"disabled\", false);
-	},
-	errorClass: 'label label-important',
-	submitHandler: function(form) {
-		if ( jQuery('#form-confirm').valid() ) {
-			form.submit();
-		} else {
-			jQuery('#form-confirm button#confirmation').attr('disabled','disabled');
-		}
-	}
-	});
-
-	
-	
-});
-	";
-
-	$tmpl->addScriptDeclaration( $js );
+	$tmpl->enqueueValidation( $InvoiceFactory->jsvalidation );
 }
 
 $tmpl->setTitle( JText::_('CONFIRM_TITLE') );
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'confirmation' ) );

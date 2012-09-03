@@ -13,7 +13,7 @@
 <div id="gift-box">
 	<h5><?php echo JText::_('CHECKOUT_GIFT_HEAD') ?></h5>
 	<div class="well gift-details">
-		<?php if ( !empty( $InvoiceFactory->invoice->params['target_user'] ) ) { ?>
+		<?php if ( !empty( $InvoiceFactory->invoice->params['target_username'] ) ) { ?>
 			<p>This purchase will be gifted to: <?php echo $InvoiceFactory->invoice->params['target_username'] ?> (<?php echo $tmpl->lnk( array('task' => 'InvoiceRemoveGift','invoice' => $InvoiceFactory->invoice->invoice_number), "undo?" ) ?>)</p>
 		<?php } else { ?>
 		<p><?php echo JText::_('CHECKOUT_GIFT_INFO') ?></p>

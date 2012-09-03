@@ -291,6 +291,10 @@ switch( strtolower( $task ) ) {
 		echo 'SPLINES RETICULATED.';
 		break;
 
+	case 'parsertest':
+		$top = new templateOverrideParser();
+		break;
+
 	default: aecCentral( $option ); break;
 }
 

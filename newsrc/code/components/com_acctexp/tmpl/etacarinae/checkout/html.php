@@ -206,20 +206,23 @@ if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
 	}
 }
 
-$tmpl->addDefaultCSS();
-
-$tmpl->setTitle( $InvoiceFactory->checkout['checkout_title'] );
-
 if ( $tmpl->cfg['checkoutform_jsvalidation'] ) {
-	$tmpl->addScript( JURI::root(true) . '/media/com_acctexp/js/ccvalidate.js' );
+	$tmpl->enqueueValidation( array( 'rules' => array(
+														'cardNumber' => array( 'creditcard' => true, 'required' => true ),
+														'cardVV2' => array( 'required' => true )
+													) ) );
 }
 
 if ( strpos( $var, 'class="tab-content"' ) ) {
-	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
-	$tmpl->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
-	$tmpl->addScript( JURI::root(true) . '/media/com_acctexp/js/bootstrap/bootstrap.frontend.js' );
+	$tmpl->enqueueJQueryExtension( 'bootstrap/bootstrap.min' );
 
-	$tmpl->addScriptDeclaration( "jQuery(document).ready(function(jQuery) { jQuery('.nav-tabs a:first').tab('show'); });" );
+	$js = "jQuery(document).ready(function(jQuery) { jQuery('.nav-tabs a:first').tab('show'); });";
+
+	$tmpl->enqueueJQueryCode( $js );
 }
+
+$tmpl->setTitle( $InvoiceFactory->checkout['checkout_title'] );
+
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'checkout' ) );
