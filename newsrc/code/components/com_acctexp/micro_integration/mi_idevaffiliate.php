@@ -61,6 +61,10 @@ class mi_idevaffiliate
 			return null;
 		}
 
+		if ( $request->invoice->amount == '0.00' ) {
+			return null;
+		}
+
 		$getparams[] = 'idev_saleamt=' . $request->invoice->amount;
 		$getparams[] = 'idev_ordernum=' . $request->invoice->invoice_number;
 
