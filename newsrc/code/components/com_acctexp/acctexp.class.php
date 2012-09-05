@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5357' );
+define( '_AEC_REVISION', '5372' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -18737,8 +18737,8 @@ class microIntegration extends serialParamDBTable
 	{
 		$permission = true;
 
-		if ( !empty( $this->restrictions['has_restrictions'] ) ) {print_r($this);print_r($metaUser);print_r($invoice);
-			if ( is_object( $invoice ) ) { 
+		if ( !empty( $this->restrictions['has_restrictions'] ) ) {
+			if ( is_object( $invoice ) ) {
 				if ( !empty( $invoice->params['stickyMIpermissions'][$this->id] ) ) {
 					return true;
 				}
