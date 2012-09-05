@@ -1481,6 +1481,7 @@ font-size: 85%;
 
 #aec-footer>div {
 width: 10%;
+min-width: 180px;
 padding: 1px;
 display: inline-block;
 vertical-align: middle;
@@ -1488,10 +1489,12 @@ vertical-align: middle;
 
 #aec-footer>div.aec-footer-half {
 width: 5%;
+min-width: 120px;
 }
 
 div#aec-footer img {
 float: right;
+margin-top: -12px;
 }
 
 .aec_toggler {
