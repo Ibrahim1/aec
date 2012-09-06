@@ -463,9 +463,16 @@ margin: 0 20px;
 vertical-align: top;
 }
 
-#aec-center .aec-center-block hr {
+#aec-center .aec-center-block hr.topslim {
 padding: 2px 0 0;
 margin-top: -6px;
+}
+
+#aec-center .aec-center-block br {
+display: block;
+margin: 10px 0;
+content: " ";
+line-height: 22px;;
 }
 
 #aec-center .aec-center-block-half {

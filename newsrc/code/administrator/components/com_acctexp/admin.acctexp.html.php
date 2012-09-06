@@ -813,7 +813,7 @@ class HTML_AcctExp
 				<tr>
 					<td colspan="13">
 						<h2>Welcome to AEC!</h2>
-						<hr />
+						<hr class="topslim" />
 						<p>So here is how this works:</p>
 					</td>
 				</tr>
@@ -891,24 +891,24 @@ class HTML_AcctExp
 				<tr>
 					<td colspan="3" style="vertical-align: top; padding-top: 12px;">
 						<h6>Payment Plans</h6>
-						<p>In AEC, what you sell to your users is called <strong>Payment Plans</strong>. You can put them into <strong>Plans Groups</strong> for easy access and administration.</p><hr /><p>Both plans and plan groups can have <strong>Micro Integrations</strong> attached, which are pretty much like joomla plugins for your memberships, just more versatile.</p>
+						<p>In AEC, what you sell to your users is called <strong>Payment Plans</strong>.<br />You can put them into <strong>Plans Groups</strong> for easy access and administration.</p><hr /><p>Both plans and plan groups can have <strong>Micro Integrations</strong> attached, which are pretty much like joomla plugins for your memberships, just more versatile.</p>
 					</td>
 					<td></td>
 					<td colspan="3" style="vertical-align: top; padding-top: 12px;">
 						<h6>Invoices &amp; Payment</h6>
-						<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it. That invoice can then be paid using a <strong>Payment Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.</p>
+						<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it - during registration, or afterwards. That invoice can then be paid using a <strong>Payment Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.<br />If a user has no membership record in AEC, the account shows up under <strong>Non Members</strong>.</p>
 					</td>
 					<td></td>
 					<td colspan="4" style="vertical-align: top; padding-top: 12px;">
 						<h6>Transactions &amp; Memberships</h6>
-						<p>Successful <strong>Transactions</strong> apply memberships to users. You can look them up in the <strong>Statistics</strong> or <strong>Export</strong> them.</p><hr /><p>Likewise, you can track <strong>Members</strong> and modify their accounts or <strong>Export</strong> them as well .</p>
+						<p>Successful <strong>Transactions</strong> apply memberships to users. You can look them up in the list or as <strong>Statistics</strong>. Or you can <strong>Export</strong> them.</p><hr /><p>Likewise, you can track <strong>Members</strong> and modify their accounts or <strong>Export</strong> them as well.<br />If a member should not be subject to expiration of their account, you can <strong>exclude</strong> them from expiring.</p>
 					</td>
 				</tr>
 			</table>
 		</div>
 		<div class="aec-center-block aec-center-block-half">
 			<h2>Template &amp; Settings</h2>
-			<hr />
+			<hr class="topslim" />
 			<div>
 				<?php echo HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
 				<p>Change the way AEC behaves.</p>
@@ -928,7 +928,7 @@ class HTML_AcctExp
 		</div>
 		<div class="aec-center-block aec-center-block-half">
 			<h2><?php echo JText::_('AEC_NOTICES_FOUND'); ?></h2>
-			<hr />
+			<hr class="topslim" />
 			<?php if ( !empty( $notices ) ) { ?>
 				<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
 				<p><a href="index.php?option=com_acctexp&amp;task=readAllNotices" class="btn btn-small"><i class="bsicon-ok"></i> <?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a></p>
