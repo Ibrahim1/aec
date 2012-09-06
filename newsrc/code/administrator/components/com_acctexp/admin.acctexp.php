@@ -627,7 +627,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		}
 
 		$cc = array();
-		$cc['coupon_code']	= '<a href="index.php?option=com_acctexp&amp;task=' . ( $coupon['type'] ? 'editcouponstatic' : 'editcoupon' ) . '&amp;id=' . $coupon['id'] . '">' . $coupon_code . '</a>';
+		$cc['coupon_code']	= '<a href="index.php?option=com_acctexp&amp;task=editCoupon&id=' . $coupon['type'].'.'.$coupon['id'] . '">' . $coupon_code . '</a>';
 		$cc['invoices']		= implode( ", ", $coupon['invoices'] );
 
 		$coupons[] = $cc;
