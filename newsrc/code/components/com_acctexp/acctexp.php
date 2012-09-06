@@ -632,13 +632,13 @@ function checkUsernameEmail( $username, $email )
 		return JText::_( 'AEC_VALIDATE_ALPHANUMERIC' );
 	}
 
-	if ( !checkUsernameExists( $username ) ) {
+	if ( checkUsernameExists( $username ) ) {
 		aecErrorAlert( JText::_( 'AEC_VALIDATE_USERNAME_EXISTS' ) );
 		return JText::_( 'AEC_VALIDATE_USERNAME_EXISTS' );
 	}
 
 	if ( !empty( $email ) ) {
-		if ( !checkEmailExists( $email ) ) {
+		if ( checkEmailExists( $email ) ) {
 			aecErrorAlert( JText::_( 'AEC_VALIDATE_EMAIL_EXISTS' ) );
 			return JText::_( 'AEC_VALIDATE_EMAIL_EXISTS' );
 		}
@@ -685,7 +685,7 @@ function confirmSubscription( $option )
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
+	$username	= aecGetParam( 'username', '', true, array( 'word', 'int' ) );
 
 	$passthrough = array();
 	if ( isset( $_POST['aec_passthrough'] ) ) {

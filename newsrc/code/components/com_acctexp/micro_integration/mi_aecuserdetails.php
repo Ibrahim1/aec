@@ -155,7 +155,15 @@ class mi_aecuserdetails
 		$settings	= array();
 		$lists		= array();
 
-		if ( !empty( $this->settings['emulate_reg'] ) && empty( $request->metaUser->userid ) ) {
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$regvars = array( 'username', 'name', 'email', 'email2', 'password', 'password2' );
+		} else {
+			$regvars = array( 'username', 'name', 'email', 'password', 'password2' );
+		}
+
+		$hasregistration = !empty( $request->metaUser->cmsUser );
+
+		if ( !empty( $this->settings['emulate_reg'] ) && empty( $request->metaUser->userid ) && !$hasregistration ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				// Joomla 1.6+ Registration
 				$lang =& JFactory::getLanguage();
@@ -289,18 +297,16 @@ class mi_aecuserdetails
 			foreach ( $vars as $k => $v ) {
 				if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
 					$request->add->passthrough[$v] = $request->add->passthrough['mi_'.$this->id.'_'.$k];
-					
 
 					unset( $request->add->passthrough['mi_'.$this->id.'_'.$k] );
 				}
 			}
 		} else {
 			$vars = array( 'username', 'name', 'email', 'password', 'password2' );
-			
+
 			foreach ( $vars as $k ) {
 				if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
 					$request->add->passthrough[$k] = $request->add->passthrough['mi_'.$this->id.'_'.$k];
-					
 
 					unset( $request->add->passthrough['mi_'.$this->id.'_'.$k] );
 				}

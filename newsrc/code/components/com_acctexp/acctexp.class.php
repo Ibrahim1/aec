@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5383' );
+define( '_AEC_REVISION', '5386' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -2658,6 +2658,7 @@ class Config_General extends serialParamDBTable
 		$def['itemid_joomlauser']				= "";
 		$def['checkout_coupons']				= 1;
 		$def['customAppAuth']					= "";
+		$def['skip_registration']				= 0;
 		$def['user_checkout_prefill']			= "firstname=[[user_first_name]]\nlastname=[[user_last_name]]\naddress=\naddress2=\n"
 													. "city=\nstate=\nzip=\ncountry=\nphone=\nfax=\ncompany=";
 		$def['noemails_adminoverride']			= 1;
@@ -10694,7 +10695,7 @@ class InvoiceFactory
 			}
 		} else {
 			// Reset $register if we seem to have all data
-			if ( ( $register && !empty( $this->passthrough['username'] ) ) || empty( $aecConfig->cfg['skipregistration'] ) ) {
+			if ( ( $register && !empty( $this->passthrough['username'] ) ) || !empty( $aecConfig->cfg['skipregistration'] ) ) {
 				$register = 0;
 			}
 
