@@ -845,7 +845,7 @@ class HTML_AcctExp
 					<td><div class="cell-wrapper-slim-bar"><i class="bsicon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
 				</tr>
 				<tr>
-					<td><div class="cell-wrapper"><div class="dioarama-corner-n-s"></div></div></td>
+					<td><div class="cell-wrapper"><div class="dioarama-corner-n-s-f"></div></div></td>
 					<td></td>
 					<td class="important"><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="bsicon-chevron-right diorama-icon-e"></i></div></td>
@@ -860,7 +860,7 @@ class HTML_AcctExp
 					<td></td>
 				</tr>
 				<tr>
-					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div></div></td>
+					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s-f"></div></div></td>
 					<td></td>
 					<td><div class="cell-wrapper-slim-bar"><i class="bsicon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
 					<td></td>

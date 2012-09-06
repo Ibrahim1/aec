@@ -1081,6 +1081,10 @@ table.diorama {
 max-width: 840px;
 }
 
+table.diorama td {
+padding: 0;
+}
+
 .cell-wrapper {
 position: relative;
 width: 100px;
@@ -1163,14 +1167,19 @@ border-bottom: 1px solid #999;
 width: 100%;
 min-width: 20px;
 height: 50%;
-margin-left: -3px;
 }
 
 div.dioarama-corner-n-s {
 border-right: 1px solid #999;
 width: 50%;
-height: 100%;
-margin-top: -1px;
+height: 50%;
+margin-bottom: 9px;
+}
+
+div.dioarama-corner-n-s-f {
+border-right: 1px solid #999;
+width: 50%;
+height: 101%;
 }
 
 div.dioarama-corner-e-n {
@@ -1195,7 +1204,7 @@ position: relative;
 margin-top: -8px;
 margin-bottom: -10px;
 opacity: 0.6;
-margin-left: -2px;
+margin-left: -5px;
 }
 
 i.diorama-icon-s {
