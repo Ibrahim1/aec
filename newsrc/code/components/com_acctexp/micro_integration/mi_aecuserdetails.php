@@ -161,7 +161,14 @@ class mi_aecuserdetails
 			$regvars = array( 'username', 'name', 'email', 'password', 'password2' );
 		}
 
-		$hasregistration = !empty( $request->metaUser->cmsUser );
+		$hasregistration = true;
+		if ( !empty( $request->metaUser->cmsUser ) ) {
+			if ( count( $request->metaUser->cmsUser ) < 4 ) {
+				$hasregistration = false;
+			}
+		} else {
+			$hasregistration = false;
+		}
 
 		if ( !empty( $this->settings['emulate_reg'] ) && empty( $request->metaUser->userid ) && !$hasregistration ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
