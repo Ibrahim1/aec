@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5401' );
+define( '_AEC_REVISION', '5404' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -12565,7 +12565,11 @@ class Invoice extends serialParamDBTable
 			// If not in Testmode, check for amount and currency
 			if ( empty( $InvoiceFactory->pp->settings['testmode'] ) ) {
 				if ( isset( $response['amount_paid'] ) ) {
-					if ( $response['amount_paid'] != $this->amount ) {
+					// In some cases, a straight up != can still come out as an error, so forcing INT
+					$ampaid = (int) ( $response['amount_paid'] * 100 );
+					$amasked = (int) ( $this->amount * 100 );
+
+					if ( $ampaid != $amasked ) {
 						// Amount Fraud, cancel payment and create error log addition
 						$event	.= sprintf( JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_FRAUD'), $response['amount_paid'], $this->amount );
 						$tags	.= ',fraud_attempt,amount_fraud';
