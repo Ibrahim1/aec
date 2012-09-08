@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5400' );
+define( '_AEC_REVISION', '5401' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -12446,7 +12446,7 @@ class Invoice extends serialParamDBTable
 
 		$db = &JFactory::getDBO();
 
-		$this->amount = $InvoiceFactory->items->grand_total->cost['amount'];
+		$this->computeAmount( $InvoiceFactory, false );
 
 		$objUsage = $this->getObjUsage();
 
