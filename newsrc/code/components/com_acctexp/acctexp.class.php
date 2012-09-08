@@ -2582,7 +2582,6 @@ class Config_General extends serialParamDBTable
 		$def['plans_first']						= 0;
 		$def['simpleurls']						= 0;
 		$def['display_date_backend']			= "";
-		$def['enable_coupons']					= 0;
 		$def['skip_confirmation']				= 0;
 		// new 0.12.4
 		$def['bypassintegration']				= '';
@@ -10232,7 +10231,7 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 
-		if ( empty( $aecConfig->cfg['enable_coupons'] ) && empty( $this->invoice->coupons ) ) {
+		if ( empty( $aecConfig->cfg['checkout_coupons'] ) && empty( $aecConfig->cfg['confirmation_coupons'] ) && empty( $this->invoice->coupons ) ) {
 			return null;
 		}
 
@@ -11204,7 +11203,7 @@ class InvoiceFactory
 		$this->puffer( $option );
 
 		$this->coupons = array();
-		$this->coupons['active'] = $aecConfig->cfg['enable_coupons'];
+		$this->coupons['active'] = !empty( $aecConfig->cfg['confirmation_coupons'] );
 
 		if ( empty( $this->mi_error ) ) {
 			$this->mi_error = array();
@@ -11272,7 +11271,7 @@ class InvoiceFactory
 
 		$this->getCart();
 
-		$this->coupons = array( 'active' => $aecConfig->cfg['enable_coupons'] );
+		$this->coupons = array( 'active' => !empty( $aecConfig->cfg['confirmation_coupons'] ) );
 
 		$in = AECfetchfromDB::InvoiceNumberbyCartId( $this->userid, $this->cartobject->id );
 
@@ -11618,12 +11617,8 @@ class InvoiceFactory
 		$this->checkout = array();
 		$this->checkout['checkout_title']					= JText::_('CHECKOUT_TITLE');
 		$this->checkout['introtext']						= sprintf( $introtext, $this->invoice->invoice_number );
-		
-		if ( isset( $aecConfig->cfg['checkout_coupons'] ) ) {
-			$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'] ? $aecConfig->cfg['checkout_coupons'] : false;
-		} else {
-			$this->checkout['enable_coupons']					= $aecConfig->cfg['enable_coupons'];
-		}
+
+		$this->checkout['enable_coupons']					= !empty( $aecConfig->cfg['checkout_coupons'] );
 
 		$this->checkout['customtext_checkout_table']		= JText::_('CHECKOUT_TITLE');
 

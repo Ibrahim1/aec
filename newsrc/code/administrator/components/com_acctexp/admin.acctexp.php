@@ -1401,7 +1401,7 @@ function editSettings( $option )
 	$params['additem_stayonpage']			= array( 'toggle', '' );
 	$params[] = array( 'div_end', 0 );
 	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
-	$params['enable_coupons']				= array( 'toggle', 0 );
+	$params['checkout_coupons']				= array( 'toggle', 0 );
 	$params['user_checkout_prefill']		= array( 'inputD', 0 );
 
 	$rewriteswitches						= array( 'cms', 'user', 'expiration', 'subscription' );
