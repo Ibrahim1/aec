@@ -294,7 +294,7 @@ class mi_aecuserdetails
 
 	function before_invoice_confirm( $request )
 	{
-		if ( empty( $this->settings['emulate_reg'] ) || empty( $request->metaUser->userid ) ) {
+		if ( empty( $this->settings['emulate_reg'] ) || !empty( $request->metaUser->userid ) ) {
 			return null;
 		}
 

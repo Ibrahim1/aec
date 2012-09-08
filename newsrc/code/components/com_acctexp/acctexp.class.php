@@ -11376,7 +11376,7 @@ class InvoiceFactory
 		if ( !$this->userid ) {
 			$errors = JError::getErrors();
 
-			print_r($errors);exit;
+			aecErrorAlert( JText::_( 'COM_USERS_REGISTRATION_SAVE_FAILED' ) );
 		}
 	}
 
