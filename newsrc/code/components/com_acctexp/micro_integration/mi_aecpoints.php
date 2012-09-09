@@ -1,9 +1,9 @@
 <?php
 /**
- * @version $Id: mi_alphauserpoints.php
+ * @version $Id: mi_aecpoints.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Micro Integrations - Alpha User Points
- * @copyright 2006-2012 Copyright (C) David Deutsch
+ * @subpackage Micro Integrations - AEC Points
+ * @copyright 2012 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -11,14 +11,14 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class mi_alphauserpoints extends MI
+class mi_aecpoints extends MI
 {
 	function Info()
 	{
 		$info = array();
-		$info['name'] = JText::_('AEC_MI_NAME_ALPHAUSERPOINTS');
-		$info['desc'] = JText::_('AEC_MI_DESC_ALPHAUSERPOINTS');
-		$info['type'] = array( 'ecommerce.credits', 'vendor.alphaplug' );
+		$info['name'] = JText::_('AEC_MI_NAME_AECPOINTS');
+		$info['desc'] = JText::_('AEC_MI_DESC_AECPOINTS');
+		$info['type'] = array( 'ecommerce.credits', 'vendor.valanx' );
 
 		return $info;
 	}
@@ -42,7 +42,7 @@ class mi_alphauserpoints extends MI
 	{
 		$settings = array();
 
-		$points = $this->getPoints( $request->metaUser->userid );
+		$points = $this->getPoints( $request );
 
 		if ( $this->settings['checkout_discount'] && $points ) {
 			if ( !empty( $request->invoice->currency ) ) {
@@ -56,11 +56,11 @@ class mi_alphauserpoints extends MI
 			$value = AECToolbox::formatAmount( $this->settings['checkout_conversion'], $currency, false );
 			$total = AECToolbox::formatAmount( ( $points * $this->settings['checkout_conversion'] ), $currency );
 
-			$settings['vat_desc'] = array( 'p', "", sprintf( JText::_('MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
-			$settings['use_points'] = array( 'inputC', JText::_('MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME'), JText::_('MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC'), '' );
+			$settings['vat_desc'] = array( 'p', "", sprintf( JText::_('MI_MI_AECPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
+			$settings['use_points'] = array( 'inputC', JText::_('MI_MI_AECPOINTS_USE_POINTS_NAME'), JText::_('MI_MI_AECPOINTS_USE_POINTS_DESC'), '' );
 
 			$settings['validation']['rules'] = array();
-			$settings['validation']['rules']['use_points'] = array( 'max' => $this->getPoints( $request->metaUser->userid ) );
+			$settings['validation']['rules']['use_points'] = array( 'number' => true, 'min' => 0, 'max' => $this->getPoints( $request ) );
 		}
 
 		return $settings;
@@ -73,7 +73,7 @@ class mi_alphauserpoints extends MI
 		if ( !empty( $request->params['use_points'] ) ) {
 			$request->params['use_points'] = (int) $request->params['use_points'];
 
-			if ( $request->params['use_points'] > $this->getPoints( $request->metaUser->userid ) ) {
+			if ( $request->params['use_points'] > $this->getPoints( $request ) ) {
 				$return['error'] = "You don't have that many points";
 			}
 		}
@@ -91,13 +91,18 @@ class mi_alphauserpoints extends MI
 			}
 		}
 
+		$invoice = "";
+		if ( !empty( $request->invoice->invoice_number ) ) {
+			$invoice = $request->invoice->invoice_number;
+		}
+
 		if ( $request->action == 'action' ) {
 			$params = $request->metaUser->meta->getMIParams( $request->parent->id, $request->plan->id );
 
 			if ( $params['use_points'] > 0 ) {
 				$points = -$params['use_points'];
 
-				$this->updatePoints( $request->metaUser->userid, $points, $request->invoice->invoice_number );
+				$this->updatePoints( $request, $points, 'mi_action_'.$request->action, $invoice );
 
 				unset( $params['use_points'] );
 
@@ -111,7 +116,7 @@ class mi_alphauserpoints extends MI
 			return null;
 		}
 
-		$this->updatePoints( $request->metaUser->userid, $this->settings['change_points'.$request->area], $request->invoice->invoice_number );
+		$this->updatePoints( $request, $this->settings['change_points'.$request->area], 'mi_action_'.$request->action, $invoice );
 
 		return true;
 	}
@@ -146,38 +151,40 @@ class mi_alphauserpoints extends MI
 		return true;
 	}
 
-	function getPoints( $userid )
+	function getPoints( $request )
 	{
-		$db	   =& JFactory::getDBO();
+		$uparams = $request->metaUser->meta->getCustomParams();
 
-		$query = "SELECT points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
-		$db->setQuery( $query );
+		if ( isset( $uparams['mi_aecpoints']['points'] ) ) {
+			return $uparams['mi_aecpoints']['points'];
+		}
 
-		return $db->loadResult();
+		return 0;
 	}
 
-	function updatePoints( $userid, $points, $comment )
+	function updatePoints( $request, $points, $event="", $invoice="" )
 	{
-		$db	   =& JFactory::getDBO();
+		if ( empty( $points ) ) {
+			return;
+		}
 
-		$query = "SELECT id, userid, referreid, points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
-		$db->setQuery( $query );
+		$uparams = $request->metaUser->meta->getCustomParams();
 
-		$aupUser = $db->loadObject();
+		if ( !isset( $uparams['mi_aecpoints']['points'] ) ) {
+			$uparams['mi_aecpoints'] = array( 'points' => 0, 'history' => array() );
+		}
 
-		$query = 'UPDATE #__alpha_userpoints'
-				. ' SET `points` = \'' . ( $aupUser->points + $points ) . '\''
-				. ' WHERE `userid` = \'' . $aupUser->userid . '\''
-				;
-		$db->setQuery( $query );
-		$db->query();
+		$uparams['mi_aecpoints']['points'] = $uparams['mi_aecpoints']['points'] + $points;
 
-		$query  = 'INSERT INTO #__alpha_userpoints_details'
-				. ' (referreid, points, insert_date, status, rule, approved, datareference)'
-				. ' VALUES(\'' . $aupUser->referreid . '\', \'' . $points . '\', \'' . date( 'Y-m-d H:i:s' ) . '\', \'1\', \'1\', \'1\', \'' . $comment . '\' )'
-				;
-		$db->setQuery( $query );
-		$db->query();
+		$history = array(	'time' => (int) gmdate('U'),
+							'event' => $event,
+							'invoice' => $invoice  );
+
+		$uparams['mi_aecpoints']['history'][] = $history;
+
+		$request->metaUser->meta->setCustomParams( $uparams );
+
+		$request->metaUser->meta->storeload();
 	}
 }
 ?>
