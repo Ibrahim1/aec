@@ -39,12 +39,24 @@ jQuery.validator.addMethod("letterswithbasicpunc", function(value, element) {
 	return this.optional(element) || /^[a-z\-.,()'\"\s]+$/i.test(value);
 }, "Letters or punctuation only please");
 
+jQuery.validator.addMethod("letterswithreducedpunc", function(value, element) {
+	return this.optional(element) || /^[a-z\-.,()\s]+$/i.test(value);
+}, "Letters or punctuation only please");
+
 jQuery.validator.addMethod("alphanumeric", function(value, element) {
 	return this.optional(element) || /^\w+$/i.test(value);
 }, "Letters, numbers, and underscores only please");
 
+jQuery.validator.addMethod("alphanumericwhitespace", function(value, element) {
+	return this.optional(element) || /^[\w\s]+$/i.test(value);
+}, "Letters, numbers, whitespace and underscores only please");
+
 jQuery.validator.addMethod("alphanumericwithbasicpunc", function(value, element) {
 	return this.optional(element) || /^[\wa-z\-.,()'\"\s]+$/i.test(value);
+}, "Letters, numbers, and punctuation only please");
+
+jQuery.validator.addMethod("alphanumericwithreducedpunc", function(value, element) {
+	return this.optional(element) || /^[\wa-z\-.,()]+$/i.test(value);
 }, "Letters, numbers, and punctuation only please");
 
 jQuery.validator.addMethod("lettersonly", function(value, element) {

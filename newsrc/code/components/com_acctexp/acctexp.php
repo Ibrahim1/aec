@@ -108,7 +108,7 @@ if ( !empty( $task ) ) {
 			$username = null;
 			foreach ( $_REQUEST as $k => $v ) {
 				if ( strpos( $k, '_username' ) ) {
-					$username = aecGetParam( $k, 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+					$username = aecGetParam( $k, 0, true, array( 'string', 'clear_nonalnumwhitespace' ) );
 				}
 			}
 

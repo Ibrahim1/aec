@@ -186,10 +186,10 @@ class mi_aecuserdetails
 				$settings['password2'] = array( 'password', JText::_( 'COM_USERS_REGISTER_PASSWORD2_LABEL' ), 'password2', '' );
 
 				$settings['validation']['rules'] = array();
-				$settings['validation']['rules']['name'] = array( 'minlength' => 2, 'alphanumericwithbasicpunc' => true, 'required' => true );
-				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'alphanumeric' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=usernameexists" );
-				$settings['validation']['rules']['email'] = array( 'email' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=emailexists" );
-				$settings['validation']['rules']['email2'] = array( 'email' => true, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_email' );
+				$settings['validation']['rules']['name'] = array( 'minlength' => 2, 'required' => true );
+				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'alphanumericwhitespace' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=usernameexists" );
+				$settings['validation']['rules']['email'] = array( 'nowhitespace' => true, 'email' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=emailexists" );
+				$settings['validation']['rules']['email2'] = array( 'nowhitespace' => true, 'email' => true, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_email' );
 				$settings['validation']['rules']['password'] = array( 'minlength' => 6, 'maxlength' => 98, 'required' => true );
 				$settings['validation']['rules']['password2'] = array( 'minlength' => 6, 'maxlength' => 98, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_password' );
 			} else {

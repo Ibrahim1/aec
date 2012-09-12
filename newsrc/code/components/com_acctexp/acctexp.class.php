@@ -150,6 +150,10 @@ function aecEscape( $value, $safe_params )
 		}
 	}
 
+	if ( in_array( 'clear_nonalnumwhitespace', $safe_params ) ) {
+		$return = preg_replace( "/[^a-z0-9@._+-\s]/i", '', $return );
+	}
+
 	if ( in_array( 'clear_nonalnum', $safe_params ) ) {
 		$return = preg_replace( "/[^a-z0-9@._+-]/i", '', $return );
 	}
