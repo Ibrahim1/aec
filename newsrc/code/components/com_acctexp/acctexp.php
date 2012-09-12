@@ -120,7 +120,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'emailexists':
-			$username = null;
+			$email = null;
 			foreach ( $_REQUEST as $k => $v ) {
 				if ( strpos( $k, '_email' ) ) {
 					$email = aecGetParam( $k, 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -456,7 +456,7 @@ function subscribe( $option )
 	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
-	$username	= aecGetParam( 'username', '', true, array( 'string' ) );
+	$username	= aecGetParam( 'username', '', true, array( 'string', 'clear_nonalnumwhitespace' ) );
 	$email		= aecGetParam( 'email', '', true, array( 'string', 'clear_nonemail' ) );
 
 	$token		= aecGetParam( 'aectoken', 0, true, array( 'string' ) );
@@ -689,7 +689,7 @@ function confirmSubscription( $option )
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-	$username	= aecGetParam( 'username', '', true, array( 'word', 'int' ) );
+	$username	= aecGetParam( 'username', '', true, array( 'string', 'clear_nonalnumwhitespace' ) );
 
 	$passthrough = array();
 	if ( isset( $_POST['aec_passthrough'] ) ) {
@@ -964,7 +964,7 @@ function InvoiceRemoveGiftConfirm( $option )
 	$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$group		= aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-	$username	= aecGetParam( 'username', 0, true, array( 'word', 'int' ) );
+	$username	= aecGetParam( 'username', 0, true, array( 'string', 'clear_nonalnumwhitespace' ) );
 
 	$objinvoice = new Invoice( $db );
 	$objinvoice->loadInvoiceNumber( $invoice );
