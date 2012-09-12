@@ -118,13 +118,19 @@ class mi_easydiscuss extends MI
 
 		if ( !empty( $remove ) && !empty( $ranks ) ) {
 			foreach ( $remove as $rank_id ) {
-				$query = 'REMOVE FROM #__discuss_ranks_users'
-						. ' WHERE `rank_id` = \'' . $rank_id . '\''
-						. ' WHERE `user_id` = \'' . $userid . '\''
-						;
+				foreach ( $ranks as $rk => $rank ) {
+					if ( $rank->rank_id == $rank_id ) {
+						$query = 'REMOVE FROM #__discuss_ranks_users'
+								. ' WHERE `rank_id` = \'' . $rank_id . '\''
+								. ' WHERE `user_id` = \'' . $userid . '\''
+								;
 
-				$db->setQuery( $query );
-				$db->query();
+						$db->setQuery( $query );
+						$db->query();
+
+						unset( $ranks[$rk] );
+					}
+				}
 			}
 		}
 
@@ -145,7 +151,7 @@ class mi_easydiscuss extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT `user_id`, `rank_id`'
+		$query = 'SELECT `user_id`, `badge_id`'
 				. ' FROM #__discuss_badges_users'
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				;
@@ -156,13 +162,19 @@ class mi_easydiscuss extends MI
 
 		if ( !empty( $remove ) && !empty( $badges ) ) {
 			foreach ( $remove as $badge_id ) {
-				$query = 'REMOVE FROM #__discuss_badges_users'
-						. ' WHERE `badge_id` = \'' . $badge_id . '\''
-						. ' WHERE `user_id` = \'' . $userid . '\''
-						;
+				foreach ( $badges as $bk => $badge ) {
+					if ( $badge->badge_id == $badge_id ) {
+						$query = 'REMOVE FROM #__discuss_badges_users'
+								. ' WHERE `badge_id` = \'' . $badge_id . '\''
+								. ' WHERE `user_id` = \'' . $userid . '\''
+								;
 
-				$db->setQuery( $query );
-				$db->query();
+						$db->setQuery( $query );
+						$db->query();
+
+						unset( $badges[$bk] );
+					}
+				}
 			}
 		}
 
