@@ -8494,6 +8494,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 			$params = array();
 			$lists = array();
+			$validation = array();
 			foreach ( $mis as $mi_id ) {
 
 				$mi = new MicroIntegration( $db );
@@ -8513,12 +8514,21 @@ class SubscriptionPlan extends serialParamDBTable
 					unset( $miform_params['lists'] );
 				}
 
+				if ( !empty( $miform_params['validation'] ) ) {
+					foreach ( $miform_params['validation'] as $lname => $lcontent ) {
+						$validation[$lname] = $lcontent;
+					}
+
+					unset( $miform_params['validation'] );
+				}
+
 				foreach ( $miform_params as $pk => $pv ) {
 					$params[$pk] = $pv;
 				}
 			}
 
 			$params['lists'] = $lists;
+			$params['validation'] = $validation;
 
 			return $params;
 		} else {

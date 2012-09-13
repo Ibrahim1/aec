@@ -157,8 +157,11 @@ class template_etacarinae extends aecTemplate
 
 		$js = "
 		jQuery(document).ready(function(){
+
+			jQuery.extend(jQuery.validator.messages, {" . implode( ",\n", $messages ) . "} );
+
 			jQuery('#aec form:last').validate(
-			{debug: true,
+			{
 			rules: " . json_encode( $this->validation['rules'] ) . ",
 			highlight: function(label) {
 				jQuery(label).closest('.well').addClass('well-highlight');
@@ -187,9 +190,8 @@ class template_etacarinae extends aecTemplate
 				} else {
 					jQuery('#aec form button').attr('disabled','disabled');
 				}
-			},
-			messages: {" . implode( ",\n", $messages ) . "}
-			})
+			}
+			});
 		});
 		";
 

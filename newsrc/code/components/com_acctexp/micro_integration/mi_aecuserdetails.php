@@ -170,6 +170,8 @@ class mi_aecuserdetails
 			$hasregistration = false;
 		}
 
+		$settings['validation']['rules'] = array();
+
 		if ( !empty( $this->settings['emulate_reg'] ) && empty( $request->metaUser->userid ) && !$hasregistration ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				// Joomla 1.6+ Registration
@@ -185,7 +187,6 @@ class mi_aecuserdetails
 				$settings['password'] = array( 'password', JText::_( 'COM_USERS_REGISTER_PASSWORD1_LABEL' ), 'password', '' );
 				$settings['password2'] = array( 'password', JText::_( 'COM_USERS_REGISTER_PASSWORD2_LABEL' ), 'password2', '' );
 
-				$settings['validation']['rules'] = array();
 				$settings['validation']['rules']['name'] = array( 'minlength' => 2, 'required' => true );
 				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'alphanumericwhitespace' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=usernameexists" );
 				$settings['validation']['rules']['email'] = array( 'nowhitespace' => true, 'email' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=emailexists" );
@@ -200,7 +201,6 @@ class mi_aecuserdetails
 				$settings['password'] = array( 'password', JText::_( 'Password' ), 'password', '' );
 				$settings['password2'] = array( 'password', JText::_( 'Verify Password' ), 'password2', '' );
 
-				$settings['validation']['rules'] = array();
 				$settings['validation']['rules']['name'] = array( 'minlength' => 2, 'required' => true );
 				$settings['validation']['rules']['username'] = array( 'minlength' => 3, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=usernameexists" );
 				$settings['validation']['rules']['email'] = array( 'email' => true, 'required' => true, 'remote' => "index.php?option=com_acctexp&task=emailexists" );
@@ -266,6 +266,10 @@ class mi_aecuserdetails
 
 							$lists[$this->settings[$p.'short']]	= JHTML::_('select.genericlist', $options, $this->settings[$p.'short'], 'size="1"', 'value', 'text', 0 );
 						}
+					}
+
+					if ( !empty( $this->settings[$p.'mandatory'] ) ) {
+						$settings['validation']['rules'][$this->settings[$p.'short']] = array( 'required' => true );
 					}
 
 					if ( $this->settings[$p.'type'] == 'list_language' ) {
