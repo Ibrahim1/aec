@@ -39,7 +39,6 @@ class mi_acymail extends MI
 		$lists = $db->loadObjectList();
 
 		$listslist = array();
-		$listslist[] = JHTML::_('select.option', 0, "--- --- ---" );
 
 		foreach ( $lists as $id => $row ) {
 			$listslist[] = JHTML::_('select.option', $row->listid, $row->listid . ': ' . $row->name );
