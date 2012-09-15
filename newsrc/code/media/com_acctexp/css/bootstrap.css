@@ -5535,7 +5535,7 @@ a.thumbnail:hover {
 @media (max-width: 979px) {
   .navbar-fixed-top,
   #aec .navbar-fixed-bottom {
-    position: static;
+    position: fixed;
   }
   #aec .navbar-fixed-top {
     margin-bottom: 20px;

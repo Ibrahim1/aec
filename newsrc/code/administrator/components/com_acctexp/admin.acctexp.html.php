@@ -711,32 +711,30 @@ class HTML_AcctExp
 			<div class="navbar-inner">
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
-				<div class="nav-collapse collapse">
-					<ul class="nav">
-					<?php foreach ( $menu as $m ) { ?>
-						<?php if ( isset( $m['items'] ) ) { ?>
-							<li class="dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?><span class="caret"></span></a>
-								<ul class="dropdown-menu">
-								<?php
-								foreach ( $m['items'] as $item ) {
-									if ( is_array( $item ) ) {
-										echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
-									} else {
-										echo '<li class="divider"></li>';
-									}
+				<ul class="nav">
+				<?php foreach ( $menu as $mid => $m ) { ?>
+					<?php if ( isset( $m['items'] ) ) { ?>
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo $m['short'] ?><span class="caret"></span></a>
+							<ul class="dropdown-menu">
+							<?php
+							foreach ( $m['items'] as $item ) {
+								if ( is_array( $item ) ) {
+									echo '<li><a id="aecmenu-' . str_replace( " ", "-", strtolower( $item[2] ) ) . '" href="' . $linkroot.$item[0] . '">' . $item[2] . '</a></li>';
+								} else {
+									echo '<li class="divider"></li>';
 								}
-								?>
-								</ul>
-							</li>
-						<?php } else { ?>
-							<li>
-								<a href="#help" id="aecmenu-<?php echo str_replace( " ", "-", strtolower( $m['short'] ) ) ?>" data-toggle="modal"><?php echo $m['short'] ?></a>
-							</li>
-						<?php } ?>
+							}
+							?>
+							</ul>
+						</li>
+					<?php } else { ?>
+						<li>
+							<a href="#help" id="aecmenu-<?php echo str_replace( " ", "-", strtolower( $m['short'] ) ) ?>" data-toggle="modal"><?php echo $m['short'] ?></a>
+						</li>
 					<?php } ?>
-					</ul>
-				</div>
+				<?php } ?>
+				</ul>
 				<form action="#" class="pull-right">
 					<input type="text" rel="popover" class="span2" placeholder="Quicksearch" id="quicksearch" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>

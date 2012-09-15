@@ -2005,8 +2005,9 @@ function editProcessor( $id, $option )
 					// Transform currencies into OptionArray
 					$currency_code_list = array();
 					foreach ( $currency_array as $currency ) {
+						$currency_code_list[] = JHTML::_('select.option', $currency, $currency . ' - ' . JText::_( 'CURRENCY_' . $currency ) );
 						if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
+							
 						}
 					}
 
