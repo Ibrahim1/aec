@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5414' );
+define( '_AEC_REVISION', '5428' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -16563,33 +16563,48 @@ class AECToolbox
 		}
 
 		if ( $currOth ) {
-			$currencies[]	= 'AFA,DZD,ARS,AMD,AWG,AZM,'
-			. 'BSD,BHD,THB,PAB,BBD,BYB,BZD,BMD,VEB,BOB,'
-			. 'BRL,BND,BIF,CVE,KYD,GHC,XOF,XAF,XPF,CLP,'
-			. 'COP,KMF,BAM,NIO,CRC,CUP,GMD,MKD,AED,DJF,'
-			. 'STD,DOP,VND,XCD,SVC,ETB,FKP,FJD,CDF,FRF,'
-			. 'HTG,PYG,GNF,GWP,GYD,HKD,UAH,INR,IRR,IQD,'
-			. 'JMD,JOD,KES,PGK,LAK,KWD,MWK,ZMK,AOR,MMK,'
-			. 'LBP,ALL,HNL,SLL,LRD,LYD,SZL,LSL,MGF,MYR,'
-			. 'TMM,MUR,MZM,MXN,MXV,MAD,ERN,NAD,NPR,ANG,'
-			. 'AON,TWD,ZRN,BTN,KPW,PEN,MRO,TOP,PKR,XPD,'
-			. 'MOP,UYU,PHP,XPT,BWP,QAR,GTQ,ZAL,OMR,KHR,'
-			. 'MVR,IDR,RWF,SAR,SCR,XAG,SGD,SBD,KGS,SOS,'
-			. 'LKR,SHP,ECS,SDD,SRG,SYP,TJR,BDT,WST,TZS,'
-			. 'KZT,TPE,TTD,MNT,TND,UGX,ECV,CLF,USN,USS,'
-			. 'UZS,VUV,KRW,YER,CNY,ZWD'
+			$currencies[]	= 'AFN,ALL,DZD,AOA,ARS,AMD,AWG,AUD,AZN,BSD,'
+					. 'BHD,BDT,BBD,BYR,BZD,BMD,BTN,BOV,BOB,BAM,'
+					. 'BWP,BRL,BND,BGN,BIF,KHR,CAD,CVE,KYD,XOF,'
+					. 'XAF,XPF,CLP,CNY,XTS,COP,KMF,CDF,CRC,HRK,'
+					. 'CUC,CUP,CZK,DKK,DJF,DOP,XCD,EGP,ERN,ETB,'
+					. 'EUR,XBA,XBB,XBD,XBC,FKP,FJD,GMD,GEL,GHS,'
+					. 'GIP,XAU,GTQ,GNF,GYD,HTG,HNL,HKD,HUF,ISK,'
+					. 'INR,IDR,IRR,IQD,ILS,JMD,JPY,JOD,KZT,KES,'
+					. 'KWD,KGS,LAK,LVL,LBP,LSL,LRD,LYD,LTL,MOP,'
+					. 'MKD,MGA,MWK,MYR,MVR,MRO,MUR,MXN,MXV,MDL,'
+					. 'MNT,MAD,MZN,MMK,NAD,NPR,ANG,TWD,NZD,NIO,'
+					. 'NGN,XXX,KPW,NOK,OMR,PKR,XPD,PAB,PGK,PYG,'
+					. 'PEN,PHP,XPT,PLN,GBP,QAR,RON,RUB,RWF,SHP,'
+					. 'WST,SAR,RSD,SCR,SLL,XAG,SGD,SBD,SOS,ZAR,'
+					. 'KRW,SSP,XDR,LKR,SDG,SRD,SZL,SEK,CHF,SYP,'
+					. 'STD,TJS,TZS,THB,TOP,TTD,TND,TRY,TMT,UGX,'
+					. 'XFU,UAH,CLF,COU,AED,USD,USN,USS,UYI,UYU,'
+					. 'UZS,VUV,VEF,VND,CHE,CHW,YER,ZMK,ZWL'
 			;
 		}
 
 		if ( $list_only ) {
 			$currency_code_list = implode( ',', $currencies);
+
+			$full_list = explode( ',', $currency_code_list );
+
+			$full_list = array_unique( $full_list );
+			
+			$currency_code_list = implode( ',', array_values( $full_list ) );
 		} else {
 			$currency_code_list = array();
 
+			$currencies = array();
 			foreach ( $currencies as $currencyfield ) {
 				$currency_array = explode( ',', $currencyfield );
+
 				foreach ( $currency_array as $currency ) {
-					$currency_code_list[] = JHTML::_('select.option', $currency, JText::_( 'CURRENCY_' . $currency ) );
+					if ( !in_array( $currency, $currencies ) ) {
+						$currency_code_list[] = JHTML::_('select.option', $currency, $currency . ' - ' . JText::_( 'CURRENCY_' . $currency ) );
+
+						$currencies[] = $currency;
+					}
 				}
 
 				$currency_code_list[] = JHTML::_('select.option', '" disabled="disabled', '- - - - - - - - - - - - - -' );
