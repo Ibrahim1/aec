@@ -99,7 +99,7 @@ class mi_easydiscuss extends MI
 		}
 
 		if ( !empty( $this->settings['badge' . $request->area] ) || !empty( $this->settings['unbadge' . $request->area] ) ) {
-			$this->changeRank( $request->metaUser->userid, $this->settings['badge' . $request->area], $this->settings['unbadge' . $request->area] );
+			$this->changeBadge( $request->metaUser->userid, $this->settings['badge' . $request->area], $this->settings['unbadge' . $request->area] );
 		}
 	}
 
@@ -136,9 +136,13 @@ class mi_easydiscuss extends MI
 
 		if ( !empty( $add ) ) {
 			foreach ( $add as $rank_id ) {
+				if ( in_array( $rank_id, $ranks ) ) {
+					continue;
+				}
+
 				$query = 'INSERT INTO #__discuss_ranks_users'
 						. ' ( `rank_id` , `user_id`, `created` )'
-						. ' VALUES (\'' . $rank_id . '\', \'' . $userid . '\, \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\')'
+						. ' VALUES (\'' . $rank_id . '\', \'' . $userid . '\', \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\')'
 						;
 
 				$db->setQuery( $query );
@@ -180,9 +184,13 @@ class mi_easydiscuss extends MI
 
 		if ( !empty( $add ) ) {
 			foreach ( $add as $badge_id ) {
+				if ( in_array( $badge_id, $badges ) ) {
+					continue;
+				}
+
 				$query = 'INSERT INTO #__discuss_badges_users'
 						. ' ( `badge_id` , `user_id`, `created` )'
-						. ' VALUES (\'' . $badge_id . '\', \'' . $userid . '\, \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\')'
+						. ' VALUES (\'' . $badge_id . '\', \'' . $userid . '\', \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\')'
 						;
 
 				$db->setQuery( $query );
