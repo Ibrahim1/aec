@@ -38,7 +38,7 @@
 
 			// Iterate through costs
 			foreach ( $ex['rows'] as $rid => $row ) {
-				echo '<tr><td colspan="2">' . $aecHTML->createFormParticle( $eid.'_'.$rid ) . '</td></tr>';
+				echo '<tr><td colspan="2">' . $aecHTML->createSettingsParticle( $eid.'_'.$rid ) . '</td></tr>';
 			}
 
 			// Draw Separator Line

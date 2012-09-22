@@ -122,7 +122,7 @@ class mi_easydiscuss extends MI
 					if ( $rank->rank_id == $rank_id ) {
 						$query = 'REMOVE FROM #__discuss_ranks_users'
 								. ' WHERE `rank_id` = \'' . $rank_id . '\''
-								. ' WHERE `user_id` = \'' . $userid . '\''
+								. ' AND `user_id` = \'' . $userid . '\''
 								;
 
 						$db->setQuery( $query );
@@ -170,7 +170,7 @@ class mi_easydiscuss extends MI
 					if ( $badge->badge_id == $badge_id ) {
 						$query = 'REMOVE FROM #__discuss_badges_users'
 								. ' WHERE `badge_id` = \'' . $badge_id . '\''
-								. ' WHERE `user_id` = \'' . $userid . '\''
+								. ' AND `user_id` = \'' . $userid . '\''
 								;
 
 						$db->setQuery( $query );

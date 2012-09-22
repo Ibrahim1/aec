@@ -120,6 +120,10 @@ class processor_payone extends XMLprocessor
 
 		$var['language']		= strtolower( $this->settings['language'] );
 
+		if ( !empty( $this->settings['customparams'] ) ) {
+			$var = $this->customParams( $this->settings['customparams'], $var, $request );
+		}
+
 		$var['hash']			= $this->getHash( $var );
 
 		aecRedirect( 'https://secure.pay1.de/frontend/?'.$this->arrayToNVP($var) );

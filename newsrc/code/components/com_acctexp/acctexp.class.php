@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5428' );
+define( '_AEC_REVISION', '5432' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -4621,7 +4621,7 @@ class PaymentProcessor
 
 				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-				$return .= $aecHTML->returnFull( false, false, true );
+				$return .= $aecHTML->returnFull( false, true );
 
 				$return .= '</div>';
 			}
@@ -5071,7 +5071,7 @@ class processor extends serialParamDBTable
 				$paramsarray = explode( '=', $custom, 2 );
 
 				if ( !empty( $paramsarray[0] ) && isset( $paramsarray[1] ) ) {
-					$var[$paramsarray[0]] = $paramsarray[1];
+					$var[trim($paramsarray[0])] = trim($paramsarray[1]);
 				}
 			}
 		}
@@ -5446,7 +5446,7 @@ class XMLprocessor extends processor
 
 				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-				$return .= $aecHTML->returnFull( false, false, true );
+				$return .= $aecHTML->returnFull( false, true );
 
 				$return .= '</div>';
 			}
@@ -6503,9 +6503,18 @@ class aecHTML
 				$return .= '</div></div>';
 				break;
 			case 'checkbox':
+				$return = '<div class="control-group">';
+				$return .= '<label class="control-label" for="' . $name . '"><div class="controls"></div></label>';
 				$return .= '<div class="controls">';
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . ' value="1"/>';
+
+				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
+					$return .= " " . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false );
+				} else {
+					$return .= " " . htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
+				}
+
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -6659,27 +6668,25 @@ class aecHTML
 		return $return;
 	}
 
-	function returnFull( $notooltip=false, $formsonly=false, $table=false )
+	function returnFull( $notooltip=false, $table=false )
 	{
 		$return = '';
 		foreach ( $this->rows as $rowname => $rowcontent ) {
-			if ( $formsonly ) {
-				$return .= $this->createFormParticle( $rowname, $this->rows[$rowname], $this->lists, $table );
-			} else {
-				$return .= $this->createSettingsParticle( $rowname, $notooltip );
-			}
+			$return .= $this->createSettingsParticle( $rowname, $notooltip );
 		}
 
 		return $return;
 	}
 
-	function printFull( $notooltip=false, $formsonly=false )
+	function printFull( $notooltip=false )
 	{
-		echo $this->returnFull( $notooltip, $formsonly );
+		echo $this->returnFull( $notooltip );
 	}
 
 	function createFormParticle( $name, $row=null, $lists=array(), $table=0 )
 	{
+		// Currently abandoning this function, leaving a couple of things for further reference as I move
+		// stuff to createSettingsParticle
 		if ( is_null( $row ) && !empty( $this->rows ) ) {
 			if ( isset( $this->rows[$name] ) ) {
 				$row = $this->rows[$name];
@@ -8601,7 +8608,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
-				return $aecHTML->returnFull( false, false, true );
+				return $aecHTML->returnFull( false, true );
 			} else {
 				return null;
 			}

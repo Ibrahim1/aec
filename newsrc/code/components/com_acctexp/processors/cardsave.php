@@ -31,7 +31,7 @@ class processor_cardsave extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode'] 			= 1;
+		$settings['testmode'] 			= 0;
 		$settings['MerchantID']			= 'MerchantID';
 		$settings['Password'] 			= '';
 		$settings['PreSharedKey']		= '';
@@ -75,7 +75,7 @@ class processor_cardsave extends POSTprocessor
 	function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
-			$url = 'http://www.test.thehonbu.com/PaymentFormHostedProcess.php';
+			$url = 'https://test.cardsaveonlinepayments.com/Pages/PublicPages/PaymentForm.aspx';
 		} else {
 			$url = 'https://mms.cardsaveonlinepayments.com/Pages/PublicPages/PaymentForm.aspx';
 		}

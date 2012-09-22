@@ -20,7 +20,7 @@
 					<div class="form-exception-part">
 						<table>
 							<?php foreach ( $ex['rows'] as $rid => $row ) { ?>
-								<?php echo $aecHTML->createFormParticle( $eid.'_'.$rid ) ?>
+								<?php echo $aecHTML->createSettingsParticle( $eid.'_'.$rid ) ?>
 							<?php } ?>
 						</table>
 					</div>
