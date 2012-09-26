@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5432' );
+define( '_AEC_REVISION', '5459' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5570,7 +5570,7 @@ class XMLprocessor extends processor
 					$var['params']['expirationYear'] = array( 'list', JText::_('AEC_CCFORM_EXPIRATIONYEAR_NAME').$pf, JText::_('AEC_CCFORM_EXPIRATIONYEAR_DESC') );
 					break;
 				case 'card_cvv2':
-					$var['params']['cardVV2'] = array( 'inputC', JText::_('AEC_CCFORM_CARDVV2_NAME').$pf, JText::_('AEC_CCFORM_CARDVV2_DESC') . '" autocomplete="off', null );
+					$var['params']['cardVV2'] = array( 'inputB', JText::_('AEC_CCFORM_CARDVV2_NAME').$pf, JText::_('AEC_CCFORM_CARDVV2_DESC') . '" autocomplete="off', null );
 					break;
 			}
 		}
@@ -5753,7 +5753,7 @@ class XMLprocessor extends processor
 					$statelist = array();
 					foreach ( $states as $state ) {
 						if ( strpos( $state, '---' ) !== false ) {
-							$statelist[] = JHTML::_('select.option', '" disabled="disabled', $state );
+							$statelist[] = JHTML::_('select.option', 'NONSELECT', $state, 'value', 'text', true );
 						} else {
 							$statelist[] = JHTML::_('select.option', $state, $state );
 						}
@@ -5775,7 +5775,7 @@ class XMLprocessor extends processor
 					$statelist = array();
 					foreach ( $states as $state ) {
 						if ( strpos( $state, '---' ) !== false ) {
-							$statelist[] = JHTML::_('select.option', '" disabled="disabled', $state );
+							$statelist[] = JHTML::_('select.option', 'NONSELECT', $state, 'value', 'text', true );
 						} else {
 							$statelist[] = JHTML::_('select.option', $state, $state );
 						}
@@ -5790,7 +5790,7 @@ class XMLprocessor extends processor
 				case 'country_list':
 					$countries = AECToolbox::getCountryCodeList();
 
-					$countrylist[] = JHTML::_('select.option', '" disabled="disabled', JText::_('COUNTRYCODE_SELECT') );
+					$countrylist[] = JHTML::_('select.option', '', JText::_('COUNTRYCODE_SELECT'), 'value', 'text', true );
 
 					if ( empty( $vcontent ) ) {
 						$vcontent = 'US';
@@ -5822,7 +5822,7 @@ class XMLprocessor extends processor
 					$conversion = AECToolbox::ISO3166_conversiontable( 'num', 'a2' );
 
 					$countrylist = array();
-					$countrylist[] = JHTML::_('select.option', '" disabled="disabled', JText::_('COUNTRYCODE_SELECT') );
+					$countrylist[] = JHTML::_('select.option', '', JText::_('COUNTRYCODE_SELECT'), 'value', 'text', true );
 
 					foreach ( $countries as $country ) {
 						if ( $lang->hasKey( 'COUNTRYCODE_' . $conversion[$country] ) ) {
@@ -5834,7 +5834,7 @@ class XMLprocessor extends processor
 
 							$countrylist[] = JHTML::_('select.option', $country, $cname );
 						} elseif ( is_null( $country ) ) {
-							$countrylist[] = JHTML::_('select.option', '" disabled="disabled', " -- -- -- -- -- -- " );
+							$countrylist[] = JHTML::_('select.option', '', " -- -- -- -- -- -- ", 'value', 'text', true );
 						}
 					}
 
@@ -6121,7 +6121,7 @@ class PROFILEprocessor extends XMLprocessor
 
 	function payProfileSelect( $var, $ppParams, $select=false, $btn=true )
 	{
-		$var['params'][] = array( 'p', '', JText::_('AEC_USERFORM_BILLING_DETAILS_NAME') );
+		$var['params'][] = array( 'p', JText::_('AEC_USERFORM_BILLING_DETAILS_NAME') );
 
 		if ( !empty( $ppParams->paymentProfiles ) ) {
 			// Single-Select Payment Option
@@ -6146,11 +6146,11 @@ class PROFILEprocessor extends XMLprocessor
 					$text = implode( '<br />', $info );
 				}
 
-				$var['params'][] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, $text );
+				$var['params']['payprofileselect_'.$pid] = array( 'radio', 'payprofileselect', $pid, $ppParams->paymentprofileid, $text );
 			}
 
 			if ( count( $ppParams->paymentProfiles ) < 10 ) {
-				$var['params'][] = array( 'radio', 'payprofileselect', "new", "", 'new billing details' );
+				$var['params']['payprofileselect_new'] = array( 'radio', 'payprofileselect', "new", "", 'new billing details' );
 			}
 
 			if ( $btn ) {
@@ -6207,7 +6207,7 @@ class PROFILEprocessor extends XMLprocessor
 
 	function shipProfileSelect( $var, $ppParams, $select=false, $btn=true, $new=true )
 	{
-		$var['params'][] = array( 'p', '', JText::_('AEC_USERFORM_SHIPPING_DETAILS_DESC') );
+		$var['params'][] = array( 'p', JText::_('AEC_USERFORM_SHIPPING_DETAILS_NAME') );
 
 		if ( !empty( $ppParams->shippingProfiles ) ) {
 			// Single-Select Shipment Data
@@ -6232,11 +6232,11 @@ class PROFILEprocessor extends XMLprocessor
 					$text = implode( '<br />', $info );
 				}
 
-				$var['params'][] = array( 'radio', 'shipprofileselect', $pid, $ppParams->shippingprofileid, $text );
+				$var['params']['shipprofileselect_'.$pid] = array( 'radio', 'shipprofileselect', $pid, $ppParams->shippingprofileid, $text );
 			}
 
 			if ( ( count( $ppParams->shippingProfiles ) < 10 ) && $new ) {
-				$var['params'][] = array( 'radio', 'shipprofileselect', "new", "", 'new shipping details' );
+				$var['params']['shipprofileselect_new'] = array( 'radio', 'shipprofileselect', "new", "", 'new shipping details' );
 			}
 
 			if ( $btn ) {
@@ -6440,15 +6440,18 @@ class aecHTML
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
 				$return = '<div class="control-group">';
-				$return .= '<label class="control-label bstooltip" for="' . $name . '" rel="tooltip" class="bstooltip" data-original-title="';
 
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
-					$return .= htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
-					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false );
+					$xtitle = htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
+					$xlabel = htmlentities( $row[1], ENT_QUOTES, "UTF-8", false );
 				} else {
-					$return .= htmlentities( $row[2], ENT_QUOTES, "UTF-8" );
-					$return .= '">' . htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
+					$xtitle = htmlentities( $row[2], ENT_QUOTES, "UTF-8" );
+					$xlabel = htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
 				}
+
+				$return .= '<label class="control-label bstooltip" for="' . $name . '" rel="tooltip" class="bstooltip" data-original-title="' . $xtitle . '">';
+
+				$return .= $xlabel;
 
 				$return .= $insertlabel;
 
@@ -6504,16 +6507,12 @@ class aecHTML
 				break;
 			case 'checkbox':
 				$return = '<div class="control-group">';
-				$return .= '<label class="control-label" for="' . $name . '"><div class="controls"></div></label>';
+				$return .= '<label class="control-label" for="' . $name . '"></label>';
 				$return .= '<div class="controls">';
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . ' value="1"/>';
 
-				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
-					$return .= " " . htmlentities( $row[1], ENT_QUOTES, "UTF-8", false );
-				} else {
-					$return .= " " . htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
-				}
+				$return .= $xlabel;
 
 				$return .= $insertctrl;
 				$return .= '</div></div>';
@@ -6575,6 +6574,16 @@ class aecHTML
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
+			case 'radio':
+				$return = '<div class="control-group">';
+				$return .= '<label class="control-label" for="' . $name . '">';
+				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '"' . '"/>';
+				$return .= '</label>';
+				$return .= '<div class="controls">';
+				$return .= $row[4];
+				$return .= $insertctrl;
+				$return .= '</div></div>';
+				break;
 			case 'file':
 				$return .= '<div class="controls">';
 				$return .= '<input id="' . $name . '" name="' . $name . '" type="file" />';
@@ -6606,6 +6615,31 @@ class aecHTML
 				break;
 			case '2div_end':
 				$return = '</div></div>';
+				break;
+			case 'tabberstart':
+				$return = '';
+				break;
+			case 'tabregisterstart':
+				$return = '<ul class="nav nav-tabs">';
+				break;
+			case 'tabregister':
+				$return = '<li' . ($row[3] ? ' class="active"': '') . '><a href="#' . $row[1] . '" data-toggle="tab">' . $row[2] . '</a></li> ';
+				break;
+			case 'tabregisterend':
+				$return = '</ul><div class="tab-content">';
+				break;
+			case 'tabstart':
+				$act = false;
+				if ( isset( $row[2] ) ) {
+					$act = $row[2];
+				}
+				$return = '<div id="' . $row[1] . '" class="tab-pane' . ($act ? ' active': '') . '">';
+				break;
+			case 'tabend':
+				$return = '</div>';
+				break;
+			case 'tabberend':
+				$return = '</div>';
 				break;
 			case 'userinfobox':
 				$return = '<div style="position:relative;float:left;width:' . $value . '%;"><div class="userinfobox">';
@@ -7001,7 +7035,7 @@ class aecSettings
 				continue;
 			}
 
-			if ( !isset( $content[2] ) || ( ( $content[2] === false ) && ( $content[2] !== '' ) ) ) {
+			if ( !isset( $content[2] ) ) {
 				// Create constant names
 				$constant_generic	= strtoupper($this->area)
 										. '_' . strtoupper( $this->original_subarea )
@@ -16614,7 +16648,7 @@ class AECToolbox
 					}
 				}
 
-				$currency_code_list[] = JHTML::_('select.option', '" disabled="disabled', '- - - - - - - - - - - - - -' );
+				$currency_code_list[] = JHTML::_('select.option', '', '- - - - - - - - - - - - - -', 'value', 'text', true );
 			}
 		}
 

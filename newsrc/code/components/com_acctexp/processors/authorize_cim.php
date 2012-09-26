@@ -95,7 +95,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		$tab['details']	= JText::_('AEC_USERFORM_BILLING_DETAILS_NAME');
 
 		if ( $this->settings['dedicatedShipping'] ) {
-			$tab['shipping_details'] = _AEC_USERFORM_SHIPPING_DETAILS_NAME;
+			$tab['shipping_details'] = JText::_('AEC_USERFORM_SHIPPING_DETAILS_NAME');
 		}
 
 		return $tab;
@@ -366,7 +366,16 @@ class processor_authorize_cim extends PROFILEprocessor
 			}
 
 			if ( $this->settings['noechecks'] ) {
+				$var['params'][] = array( 'tabberstart', '', '', '' );
+				$var['params'][] = array( 'tabregisterstart', '', '', '' );
+				$var['params'][] = array( 'tabregister', 'ccdetails', 'Credit Card', true );
+				$var['params'][] = array( 'tabregisterend', '', '', '' );
+
+				$var['params'][] = array( 'tabstart', 'ccdetails', true );
 				$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
+				$var['params'][] = array( 'tabend', '', '', '' );
+
+				$var['params'][] = array( 'tabberend', '', '', '' );
 			} else {
 				$var['params'][] = array( 'tabberstart', '', '', '' );
 				$var['params'][] = array( 'tabregisterstart', '', '', '' );
@@ -378,7 +387,7 @@ class processor_authorize_cim extends PROFILEprocessor
 				$var = $this->getCCform( $var, array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), $vcontent );
 				$var['params'][] = array( 'tabend', '', '', '' );
 
-				$var['params'][] = array( 'tabstart', 'echeckdetails' );
+				$var['params'][] = array( 'tabstart', 'echeckdetails', false );
 				$var = $this->getECHECKform( $var );
 				$var['params'][] = array( 'tabend', '', '', '' );
 
@@ -405,6 +414,8 @@ class processor_authorize_cim extends PROFILEprocessor
 					} else {
 						if ( $nobill && ( $uv == 'address' ) ) {
 							$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . '>','</' . $uv . '>', 1 );
+						} elseif ( $uv == 'state_usca' ) {
+							$content[$uv] = $cim->substring_between( $cim->response,'<state>','</state>' );
 						} else {
 							$content[$uv] = $cim->substring_between( $cim->response,'<' . $uv . '>','</' . $uv . '>' );
 						}
@@ -412,7 +423,17 @@ class processor_authorize_cim extends PROFILEprocessor
 				}
 			}
 
+			$var['params'][] = array( 'tabberstart', '', '', '' );
+			$var['params'][] = array( 'tabregisterstart', '', '', '' );
+			$var['params'][] = array( 'tabregister', 'billingaddress', 'Billing Address', true );
+			$var['params'][] = array( 'tabregisterend', '', '', '' );
+
+			$var['params'][] = array( 'tabstart', 'billingaddress', true );
 			$var = $this->getUserform( $var, $uservalues, $request->metaUser, $content );
+			$var['params'][] = array( 'tabend', '', '', '' );
+
+			$var['params'][] = array( 'tabberend', '', '', '' );
+
 		}
 
 		return $var;

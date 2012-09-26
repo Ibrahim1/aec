@@ -206,17 +206,15 @@ if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
 	}
 }
 
-if ( $tmpl->cfg['checkoutform_jsvalidation'] ) {
-	$tmpl->enqueueValidation( array( 'rules' => array(
-														'cardNumber' => array( 'creditcard' => true, 'required' => true ),
-														'cardVV2' => array( 'required' => true )
-													) ) );
-}
-
 if ( strpos( $var, 'class="tab-content"' ) ) {
+	/*$tmpl->enqueueValidation( array( 'rules' => array(
+													'cardNumber' => array( 'creditcard' => true, 'required' => true ),
+													'cardVV2' => array( 'required' => true )
+												) ) );*/
+
 	$tmpl->enqueueJQueryExtension( 'bootstrap/bootstrap.min' );
 
-	$js = "jQuery(document).ready(function(jQuery) { jQuery('.nav-tabs a:first').tab('show'); });";
+	$js = "jQuery('.nav-tabs a:first').tab('show');";
 
 	$tmpl->enqueueJQueryCode( $js );
 }
