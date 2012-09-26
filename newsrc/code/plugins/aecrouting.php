@@ -139,7 +139,7 @@ class plgSystemAECrouting extends JPlugin
 		$vars['processor']	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 		$vars['recurring']	= aecGetParam( 'recurring', 0, true, array( 'word', 'int' ) );
 
-		$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
+		$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnumwhitespace' ) );
 
 		$vars['has_usage']	= !empty( $vars['usage'] );
 
@@ -147,13 +147,13 @@ class plgSystemAECrouting extends JPlugin
 			$db = &JFactory::getDBO();
 
 			if ( $vars['joms_any'] ) {
-				$vars['username']	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
+				$vars['username']	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnumwhitespace' ) );
 			} else {
-				$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
+				$vars['username']	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnumwhitespace' ) );
 			}
 
 			if ( empty( $vars['username'] ) && $vars['k2_regsv'] ) {
-				$vars['username']	= aecEscape( $_REQUEST['jform']['username'], array( 'string', 'clear_nonalnum' ) );
+				$vars['username']	= aecEscape( $_REQUEST['jform']['username'], array( 'string', 'clear_nonalnumwhitespace' ) );
 			}
 
 			$temptoken = new aecTempToken( $db );
@@ -261,17 +261,17 @@ class plgSystemAECrouting extends JPlugin
 				$this->redirectToken();
 			} elseif ( $vars['has_user'] && ( $vars['alpha_regsv'] || $vars['joms_regsv'] || $vars['cb_sregsv'] || $vars['k2_regsv'] ) ) {
 				if ( $vars['joms_regsv'] ) {
-					$username	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnum' ) );
-					$password	= aecGetParam( 'jspassword', "", true, array( 'string', 'clear_nonalnum' ) );
-					$password2	= aecGetParam( 'jspassword2', "", true, array( 'string', 'clear_nonalnum' ) );
+					$username	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnumwhitespace' ) );
+					$password	= aecGetParam( 'jspassword', "", true, array( 'string' ) );
+					$password2	= aecGetParam( 'jspassword2', "", true, array( 'string' ) );
 					$email		= aecGetParam( 'jsemail', "", true, array( 'string', 'clear_nonemail' ) );
 				} else {
-					$username	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnum' ) );
-					$password	= aecGetParam( 'password', "", true, array( 'string', 'clear_nonalnum' ) );
-					$password2	= aecGetParam( 'password2', "", true, array( 'string', 'clear_nonalnum' ) );
+					$username	= aecGetParam( 'username', "", true, array( 'string', 'clear_nonalnumwhitespace' ) );
+					$password	= aecGetParam( 'password', "", true, array( 'string' ) );
+					$password2	= aecGetParam( 'password2', "", true, array( 'string' ) );
 
 					if ( empty( $password2 ) ) {
-						$password2	= aecGetParam( 'password__verify', "", true, array( 'string', 'clear_nonalnum' ) );
+						$password2	= aecGetParam( 'password__verify', "", true, array( 'string' ) );
 					}
 
 					$email		= aecGetParam( 'email', "", true, array( 'string', 'clear_nonemail' ) );
