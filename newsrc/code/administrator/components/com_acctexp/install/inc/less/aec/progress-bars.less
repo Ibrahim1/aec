@@ -1,0 +1,65 @@
+.progress {
+margin-top: 1px;
+margin-bottom: 0;
+}
+
+.progress,
+.progress .bar {
+height: 20px;
+}
+
+.progress-group {
+width: 100%;
+}
+
+.progress-group .progress {
+width: 50%;
+display: inline-block;
+float: left;
+}
+
+.progress-group .progress:first-child {
+-webkit-border-radius: 4px 0 0 4px;
+-moz-border-radius: 4px 0 0 4px;
+border-radius: 4px 0 0 4px;
+}
+
+.progress-group .progress:last-child {
+-webkit-border-radius: 0 4px 4px 0;
+-moz-border-radius: 0 4px 4px 0;
+border-radius: 0 4px 4px 0;
+}
+
+.progress-group .progress:first-child .bar {
+float: right;
+}
+
+.progress .bar {
+float: left;
+}
+
+.progress .bar a,
+.progress .bar a:hover {
+color: #fff;
+}
+
+.progress-content {
+float: left;
+padding: 4px;
+font-weight: bold;
+line-height: 120%;
+}
+
+.bar .progress-content {
+width: 90%;
+padding: 4px;
+line-height: 100%;
+}
+
+.progress-short .bar .progress-content {
+width: 80%;
+}
+
+.progress-group .progress:first-child .progress-content {
+float: right;
+}
