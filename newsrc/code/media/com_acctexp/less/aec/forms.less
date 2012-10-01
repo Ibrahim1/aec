@@ -46,11 +46,9 @@
 
 
 td > .control-group {
-margin: 4px -14px !important;
-text-align: right !important;
+	margin: 4px -14px !important;
+	text-align: right !important;
 }
-
-
 
 .form-wide {
 	.control-group > label {
@@ -66,9 +64,9 @@ text-align: right !important;
 }
 
 label {
-width: 48%;
-padding-right: 12px;
-line-height: 16px;
+	width: 48%;
+	padding-right: 12px;
+	line-height: 16px;
 }
 
 .form-horizontal {
@@ -90,43 +88,46 @@ line-height: 16px;
 	}
 }
 
-div.control-group form .controls {
-float: left;
-text-align: center;
+div.control-group {
+	form .controls {
+		float: left;
+		text-align: center;
+	}
+	.controls>* {
+		margin: 0 auto;
+		vertical-align: middle;
+	}
 }
 
-div.control-group .controls>* {
-margin: 0 auto;
-vertical-align: middle;
+form.control-group {
+	width: 100%;
+	margin-bottom: 16px;
 }
 
-form .control-group {
-width: 100%;
-margin-bottom: 16px;
-}
-
-.form-noindent .controls {
-margin-left: 18%;
-width: 80%;
-}
-
-.form-noindent .control-group > label {
-width: 15%;
+.form-noindent {
+	.controls {
+		margin-left: 18%;
+		width: 80%;
+	}
+	.control-group > label {
+		width: 15%;
+	}
 }
 
 .control-group > div.controls > span {
-display: inline-block;
-font-size: 120%;
-font-weight: bold;
-padding-top: 6.5px;
+	display: inline-block;
+	font-size: 120%;
+	font-weight: bold;
+	padding-top: 6.5px;
 }
 
-div.controls ul {
-margin: 0;
-padding-left: 14px;
-list-style: circle;
-}
-
-div.controls select {
-width: 70%;
+div.controls {
+	ul {
+		margin: 0;
+		padding-left: 14px;
+		list-style: circle;
+	}
+	select {
+		width: 70%;
+	}
 }
