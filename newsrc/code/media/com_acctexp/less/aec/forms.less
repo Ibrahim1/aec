@@ -1,12 +1,8 @@
 .form-stacked {
 	padding-left: 20px;
 	vertical-align: top;
-	fieldset {
-		padding-top: 9px;
-	}
-	legend {
-		padding-left: 0;
-	}
+	fieldset { padding-top: 9px; }
+	legend { padding-left: 0; }
 	label {
 		display: block;
 		float: none;
@@ -31,19 +27,14 @@
 			margin-top: 0;
 			margin-left: -10px;
 		}
+		> label { width: 100%; }
 	}
 	.actions {
 		margin-left: -20px;
 		padding-left: 20px;
 	}
-	.controls select {
-		width: 220px;
-	}
-	.control-group > label {
-		width: 100%;
-	}
+	.controls select { width: 220px; }
 }
-
 
 td > .control-group {
 	margin: 4px -14px !important;
@@ -51,16 +42,12 @@ td > .control-group {
 }
 
 .form-wide {
-	.control-group > label {
-		width: 30%;
-	}
+	.control-group > label { width: 30%; }
 	.controls {
 		width: 66%;
 		margin-left: 34%;
 	}
-	.controls select {
-		width: 100%;
-	}
+	.controls select { width: 100%; }
 }
 
 label {
@@ -74,17 +61,13 @@ label {
 		margin-left: 54%;
 		width: 48%;
 	}
-	.control-group > label {
-		width: 48%;
-	}
+	.control-group > label { width: 48%; }
 	.accordion-inner {
 		.controls {
 			margin-left: 22%;
 			width: 78%;
 		}
-		.control-group > label {
-			width: 18%;
-		}
+		.control-group > label { width: 18%; }
 	}
 }
 
@@ -109,9 +92,7 @@ form.control-group {
 		margin-left: 18%;
 		width: 80%;
 	}
-	.control-group > label {
-		width: 15%;
-	}
+	.control-group > label { width: 15%; }
 }
 
 .control-group > div.controls > span {
@@ -121,13 +102,32 @@ form.control-group {
 	padding-top: 6.5px;
 }
 
-div.controls {
+.controls {
 	ul {
 		margin: 0;
 		padding-left: 14px;
 		list-style: circle;
 	}
-	select {
-		width: 70%;
+	select { width: 70%; }
+	span.label {
+		padding: 1px 8px 6px;
+		text-transform: none;
 	}
+	&>div>div {
+		margin: 0 auto;
+		width: 550px;
+	}
+}
+
+ul.input-list li {
+	text-align: left;
+	text-indent: 14px;
+	margin-bottom: -2px;
+	input { margin-right: 6px; }
+}
+
+div.current {
+	input,
+	textarea,
+	select { float: inherit !important; }
 }

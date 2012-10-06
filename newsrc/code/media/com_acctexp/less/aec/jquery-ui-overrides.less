@@ -1,10 +1,6 @@
 .ui-widget-header {
-	i {
-		vertical-align: middle;
-	}
-	a {
-		text-decoration: none;
-	}
+	i { vertical-align: middle; }
+	a { text-decoration: none; }
 	em {
 		margin-left: 4px;
 		margin-right: 4px;
@@ -14,11 +10,10 @@
 		line-height: 12px;
 		padding: 3px 4px 5px;
 	}
-}
-
-.ui-widget-header a:hover,
-.ui-multiselect-header a:hover {
-	text-decoration: none !important;
+	&,
+	.ui-multiselect-header {
+		a:hover { text-decoration: none !important; }
+	}
 }
 
 .jqui-loading {
