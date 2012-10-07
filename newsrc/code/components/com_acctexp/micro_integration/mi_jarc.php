@@ -119,7 +119,7 @@ class mi_jarc
 		$affiliate->findById( intval($cookie_aid) );
 
 		$query = 'INSERT INTO #__jarc_payments' .
-				' SET `date` = \'' . gmstrftime ( '%Y-%m-%d %H:%M:%S', ( (int) gmdate('U') ) ) . '\','
+				' SET `date` = \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\','
 				. ' `user_id` = \'' . $invoice->userid . '\','
 				. ' `payment_type` = \''.$invoice->method.'\','
 				. ' `payment_status` = \'2\','
