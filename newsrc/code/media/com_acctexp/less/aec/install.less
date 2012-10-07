@@ -15,12 +15,8 @@ div.packages-none {
 	padding: 24px;
 	color: #fff;
 	margin: 16px 16px 24px;
-	-webkit-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
-	-moz-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
-	box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+	box-shadow( inset 0 0 7px rgba(0, 0, 0, 0.45) );
+	border-radius( 10px );
 }
 
 div.packages-installed {
@@ -29,25 +25,17 @@ div.packages-installed {
 	padding: 24px;
 	color: #fff;
 	margin: 16px 16px 24px;
-	-webkit-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
-	-moz-box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
-	box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.45);
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
+	box-shadow( inset 0 0 7px rgba(0, 0, 0, 0.45) );
+	border-radius( 10px );
 }
 
 div.installmain {
 	float: left;
 	width: 600px;
-	-webkit-box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
-	-moz-box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
-	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+	box-shadow( 0 6px 14px rgba(0, 0, 0, 0.45) );
 	background: #000 url(../images/admin/gfx/aec_dist_gfx_1_0.jpg) no-repeat top right;
 	margin: 0 6px 24px;
-	-webkit-border-radius: 20px;
-	-moz-border-radius: 20px;
-	border-radius: 20px;
+	border-radius( 20px );
 }
 
 div.install-golink {
@@ -63,28 +51,18 @@ div.install-golink {
 			color: #333;
 			text-align: center;
 			text-shadow: 0 2px 1px rgba(255, 255, 255, 0.75);
-			background-color: #fafafa;
-			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(25%, #ffffff), to(#e6e6e6));
-			background-image: -webkit-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
-			background-image: -moz-linear-gradient(top, #ffffff, #ffffff 25%, #e6e6e6);
-			background-image: -ms-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
-			background-image: -o-linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
-			background-image: linear-gradient(#ffffff, #ffffff 25%, #e6e6e6);
-			background-repeat: no-repeat;
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e6e6e6', GradientType=0);
+			#gradient > .vertical(#ffffff, #e6e6e6);
 			border: 1px solid #ccc;
 			border-bottom-color: #bbb;
-			-webkit-border-radius: 12px;
-			-moz-border-radius: 12px;
-			border-radius: 12px;
-			.box-shadow(inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.05));
+			border-radius( 12px );
+			.box-shadow( inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0 15px rgba(255, 255, 255, 0.05) );
 			cursor: pointer;
 		}
 		&:hover {
 			color: #333333;
 			background-color: #e6e6e6;
 			background-position: 0 -15px;
-			.transition(background-position 0.1s linear);
+			.transition( background-position 0.1s linear );
 		}
 	}
 }

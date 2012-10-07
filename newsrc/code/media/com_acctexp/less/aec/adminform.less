@@ -2,7 +2,7 @@
 	background-color: #ddd;
 	border-collapse: collapse;
 	width: 100%;
-	box-shadow: 0 1px 7px #000 inset, 0 1px 4px #ccc;
+	box-shadow( 0 1px 7px #000 inset, 0 1px 4px #ccc );
 	float: left;
 	th { color: #586c79; }
 	h2 {
@@ -13,7 +13,7 @@
 		border-collapse: collapse;
 		margin: -14px 0 15px -1px;
 		width: 100%;
-		box-shadow: 0 4px 7px #aaa inset;
+		box-shadow( 0 4px 7px #aaa inset );
 		float: left;
 	}
 	td,
@@ -92,12 +92,8 @@
 	background-color: #f9f9e9;
 	margin: 1%;
 	padding: 4px 16px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
-	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
+	border-radius( 4px );
+	box-shadow( 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25) );
 	overflow: hidden;
 	&_inline {
 		display: inline-block;

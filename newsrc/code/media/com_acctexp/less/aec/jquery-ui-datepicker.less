@@ -1,14 +1,8 @@
 .ui {
 	&-widget {
 		margin-top: 2px;
-		-webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25);
-		-moz-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25);
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25);
-		& & {
-			-webkit-box-shadow: none;
-			-moz-box-shadow: none;
-			box-shadow: none;
-		}
+		box-shadow( 0 4px 8px rgba(0, 0, 0, 0.35), 0 4px 1px rgba(255, 255, 255, 0.25) );
+		& & { box-shadow ( none; ) }
 	}
 	&-datepicker {
 		margin-left: -4px;
