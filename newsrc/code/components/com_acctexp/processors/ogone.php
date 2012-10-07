@@ -55,16 +55,16 @@ class processor_ogone extends POSTprocessor
 	function createGatewayLink( $request )
 	{
 		$var = array();
-		$var['orderID']		= $request->invoice->invoice_number;
-		$var['amount']		= (int) $request->int_var['amount']*100;
-		$var['currency']	= $this->settings['currency'];
-		$var['psid']		= $this->settings['psid'];
+		$var['PSPID']		= $this->settings['psid'];
+		$var['ORDERID']		= $request->invoice->id;
+		$var['AMOUNT']		= (int) $request->int_var['amount']*100;
+		$var['CURRENCY']	= $this->settings['currency'];
 
 		$var['SHASign']		= $this->getHash($var);
 
-		$var['accepturl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=ogonenotification', false, true );
-		$var['language']	= 'en_US';
-		$var['PMLIST']		= 'iDEAL;American Express';
+		//$var['accepturl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=ogonenotification', false, true );
+		//$var['language']	= 'en_US';
+		//$var['PMLIST']		= 'iDEAL;American Express';
 
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://secure.ogone.com/ncol/test/orderstandard.asp';
@@ -106,12 +106,14 @@ class processor_ogone extends POSTprocessor
 
 	function getHash( $source )
 	{
-		$return = '';
-		foreach ( $source as $k => $v ) {
-			$return .= $v;
+		$vars = array( 'ORDERID', 'PSPID', 'CURRENCY', 'AMOUNT' );
+
+		$string = '';
+		foreach ( $vars as $var ) {
+			$string .= $var.'='.$source[$var] . $this->settings['secret'];
 		}
 
-		return sha1( $return.$this->settings['secret'] );
+		return sha1( $string );
 	}
 }
 
