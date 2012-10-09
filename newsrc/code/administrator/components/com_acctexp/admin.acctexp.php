@@ -512,10 +512,11 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
-	$group_selection[] = JHTML::_('select.option', 'now',		JText::_('EXPIRE_NOW') );
-	$group_selection[] = JHTML::_('select.option', 'exclude',	JText::_('EXPIRE_EXCLUDE') );
-	$group_selection[] = JHTML::_('select.option', 'include',	JText::_('EXPIRE_INCLUDE') );
-	$group_selection[] = JHTML::_('select.option', 'close',		JText::_('EXPIRE_CLOSE') );
+	$group_selection[] = JHTML::_('select.option', 'expired',	JText::_('EXPIRE_NOW') );
+	$group_selection[] = JHTML::_('select.option', 'excluded',	JText::_('EXPIRE_EXCLUDE') );
+	$group_selection[] = JHTML::_('select.option', 'active',	JText::_('EXPIRE_INCLUDE') );
+	$group_selection[] = JHTML::_('select.option', 'closed',	JText::_('EXPIRE_CLOSE') );
+	$group_selection[] = JHTML::_('select.option', 'cancelled',	JText::_('EXPIRE_CANCEL') );
 	$group_selection[] = JHTML::_('select.option', 'hold',		JText::_('EXPIRE_HOLD') );
 
 	$lists['set_status'] = JHTML::_('select.genericlist', $group_selection, 'set_status', 'class="inputbox" size="1"', 'value', 'text', '' );
@@ -738,7 +739,7 @@ function saveUser( $option, $apply=0 )
 	$set_status = trim( aecGetParam( 'set_status', null ) );
 
 	if ( !$metaUser->hasSubscription ) {
-		if ( $set_status == 'exclude' ) {
+		if ( $set_status == 'excluded' ) {
 			$metaUser->focusSubscription = new Subscription( $db );
 			$metaUser->focusSubscription->createNew( $metaUser->userid, 'none', 0 );
 
@@ -774,14 +775,16 @@ function saveUser( $option, $apply=0 )
 	}
 
 	if ( !is_null( $set_status ) ) {
-		if ( strcmp( $set_status, 'now' ) === 0 ) {
-			$metaUser->focusSubscription->expire();
-		} else {
-			$statusstatus = array( 'exclude' => 'Excluded', 'close' => 'Closed', 'include' => 'Active', 'hold' => 'Hold' );
-
-			if ( isset( $statusstatus[$set_status] ) ) {
-				$metaUser->focusSubscription->setStatus( $statusstatus[$set_status] );
-			}
+		switch ( $set_status ) {
+			case 'expired':
+				$metaUser->focusSubscription->expire();
+				break;
+			case 'cancelled':
+				$metaUser->focusSubscription->cancel();
+				break;
+			default:
+				$metaUser->focusSubscription->setStatus( ucfirst( $set_status ) );
+				break;
 		}
 	}
 
