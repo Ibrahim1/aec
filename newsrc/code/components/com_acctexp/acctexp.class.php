@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5493' );
+define( '_AEC_REVISION', '5494' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -16636,15 +16636,15 @@ class AECToolbox
 		} else {
 			$currency_code_list = array();
 
-			$currencies = array();
+			$done = array();
 			foreach ( $currencies as $currencyfield ) {
 				$currency_array = explode( ',', $currencyfield );
 
 				foreach ( $currency_array as $currency ) {
-					if ( !in_array( $currency, $currencies ) ) {
+					if ( !in_array( $currency, $done ) ) {
 						$currency_code_list[] = JHTML::_('select.option', $currency, $currency . ' - ' . JText::_( 'CURRENCY_' . $currency ) );
 
-						$currencies[] = $currency;
+						$done[] = $currency;
 					}
 				}
 
