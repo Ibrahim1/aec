@@ -161,8 +161,8 @@ class processor_epay extends POSTprocessor
 
 			$response = array();
 			$response['invoice']			= $inum;
-			$response['amount_currency']	= $post['cur'];
-			$response['amount_paid']		= $post['amount'];
+			$response['amount_currency']	= AECToolbox::aecNumCurrency( $post['cur'], true );
+			$response['amount_paid']		= $post['amount'] / 100;
 
 			return $response;
 		} else {
