@@ -7,7 +7,7 @@
 	<copyright>Copyright (C) 2004-2012 David Deutsch</copyright>
 	<license>GNU/GPL 3.0</license>
 	<authorUrl>http://valanx.org</authorUrl>
-	<version>1.0</version>
+	<version>1.1</version>
 	<description>A complete Membership Management System. By David Deutsch and the team at Valanx.org</description>
 	<files folder="components/com_acctexp">
 		<file>acctexp.class.php</file>

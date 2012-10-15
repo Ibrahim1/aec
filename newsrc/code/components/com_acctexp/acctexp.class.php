@@ -33,8 +33,8 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 
 aecLanguageHandler::loadList( $langlist );
 
-define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5484' );
+define( '_AEC_VERSION', '1.1' );
+define( '_AEC_REVISION', '5493' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -16655,7 +16655,7 @@ class AECToolbox
 		return $currency_code_list;
 	}
 
-	function aecNumCurrency( $string )
+	function aecNumCurrency( $string, $backwards=false )
 	{
 		$iso4217num = array( 'AED' => '784', 'AFN' => '971', 'ALL' => '008' ,'AMD' => '051', 'ANG' => '532',
 							'AOA' => '973', 'ARS' => '032', 'AUD' => '036', 'AWG' => '533', 'AZN' => '944',
@@ -16695,11 +16695,19 @@ class AECToolbox
 							'ZMK' => '894', 'ZWD' => '716'
 							);
 
-		if ( isset( $iso4217num[$string] ) ) {
-			return $iso4217num[$string];
+		if ( $backwards ) {
+			$search = array_search( $string, $iso4217num );
+
+			if ( !empty( $search ) ) {
+				return $search;
+			}
 		} else {
-			return '';
+			if ( isset( $iso4217num[$string] ) ) {
+				return $iso4217num[$string];
+			}
 		}
+
+		return '';
 	}
 
 	function aecCurrencyExp( $string )
