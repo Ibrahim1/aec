@@ -325,14 +325,6 @@ class paramDBTable extends JTable
 		$this->store();
 	}
 
-	function getMax( $field='id' )
-	{
-		$query = "SELECT max($field) FROM $this->_tbl";
-		$this->_db->setQuery( $query );
-
-		return $this->_db->loadResult();
-	}
-
 	function move( $dir )
 	{
 		parent::move( $dir );
@@ -356,10 +348,6 @@ class serialParamDBTable extends paramDBTable
 	{
 		$this->check();
 		$this->store( true );
-
-		if ( empty( $this->id ) ) {
-			$this->id = $this->getMax();
-		}
 
 		return $this->load( $this->id );
 	}
@@ -519,17 +507,56 @@ class serialParamDBTable extends paramDBTable
 
 	}
 
-	function load( $id, $fields=array() )
+	function load( $id, $fields=array(), $langfields=array() )
 	{
-		if ( method_exists( $this, 'declareParamFields' ) ) {
-			$fields = array_merge( $fields, $this->declareParamFields() );
-		}
-
 		parent::load( $id );
 
-		if ( !empty( $fields ) ) {
-			foreach ( $fields as $fieldname ) {
-				$this->$fieldname = $this->getParams( $fieldname );
+		if ( ( !method_exists( $this, 'declareParamFields' ) && !method_exists( $this, 'declareLangFields' ) ) || empty( $this->id ) ) {
+			return true;
+		}
+
+		if ( method_exists( $this, 'declareParamFields' ) ) {
+			$fields = array_merge( $fields, $this->declareParamFields() );
+
+			if ( !empty( $fields ) ) {
+				foreach ( $fields as $fieldname ) {
+					$this->$fieldname = $this->getParams( $fieldname );
+				}
+			}
+		}
+
+		if ( method_exists( $this, 'declareMultiLangFields' ) ) {
+			$langfields = array_merge( $langfields, $this->declareMultiLangFields() );
+
+			if ( !empty( $langfields ) ) {
+				$lang = JFactory::getLanguage();
+
+				foreach ( $fields as $fieldname ) {
+					$langname = $this->langfieldname( $fieldname );
+
+					if ( $lang->hasKey( $langname ) ) {
+						$this->$fieldname = JText::_( $langname );
+
+						$key = explode( '.', $fieldname );
+
+						$target =& $this;
+						foreach ( $key as $k ) {
+							if ( is_object( $target ) ) {
+								if ( property_exists( $target, $k ) ) {
+									$target =& $target->$k;
+								}
+							} elseif ( is_array( $target ) ) {
+								if ( isset( $target[$k] ) ) {
+									$target =& $target[$k];
+								}			
+							}
+						}
+
+						if ( isset( $target ) && is_scalar( $target ) ) {
+							$target = JText::_( $langname );
+						}
+					}
+				}
 			}
 		}
 
@@ -557,9 +584,11 @@ class serialParamDBTable extends paramDBTable
 
 	function check( $fields=array() )
 	{
-		if ( method_exists( $this, 'declareParamFields' ) ) {
-			$fields = array_merge( $fields, $this->declareParamFields() );
+		if ( !method_exists( $this, 'declareParamFields' ) || empty( $this->id ) ) {
+			return true;
 		}
+
+		$fields = array_merge( $fields, $this->declareParamFields() );
 
 		if ( !empty( $fields ) ) {
 			foreach ( $fields as $fieldname ) {
@@ -574,6 +603,82 @@ class serialParamDBTable extends paramDBTable
 		return true;
 	}
 
+	function store()
+	{
+		/*$langfields = array_merge( $langfields, $this->declareMultiLangFields() );
+
+		if ( !empty( $langfields ) ) {
+			$lang = JFactory::getLanguage();
+
+			$write = array();
+			foreach ( $langfields as $fieldname ) {
+				$langname = $this->langfieldname( $fieldname );
+
+				if ( !$lang->hasKey( $langname ) ) {
+					$write[$langname] = JText::_( $langname );
+					
+					if ( $lang->get('tag') != $lang->getDefault() ) {
+						if ( !empty( $this->id ) ) {
+							unset( $this->$fieldname );
+						}
+					}
+				}
+			}
+		}*/
+
+		$store = parent::store();
+
+		/*if ( $store ) {
+			if ( empty( $this->id ) ) {
+				$this->id = $this->getMax();
+			}
+
+			if ( !empty( $write ) ) {
+				$dir = JPATH_SITE . '/language/' . $lang->get('tag');
+
+				if ( is_dir() ) {
+					$langpath = $dir . $lang->get('tag') . '.com_acctexp.custom.ini';
+
+					$current = eucaToolbox::getLangIni( $langpath );
+
+					if ( !empty( $current ) ) {
+						$start = 
+						foreach ( $current as $k => $v ) {
+							if ( strpos( ))
+						}
+					} else {
+						$langarray = $write;
+					}
+
+					foreach ( $langarray as $k => $v ) {
+						$string .= $k . '="' . str_replace( '"', '"_QQ_"', $v ) . '"' . "\n";
+					}
+
+					eucaToolbox::putLangIni( $langpath, $string );
+				}
+			}
+		}*/
+
+		return $store;
+	}
+
+	function getMax( $field='id' )
+	{
+		$query = "SELECT max($field) FROM $this->_tbl";
+		$this->_db->setQuery( $query );
+
+		return $this->_db->loadResult();
+	}
+
+	function langfieldname( $key )
+	{
+		return $this->langfieldroot() . '_' . strtoupper( str_replace( '.', '_', $key ) );
+	}
+
+	function langfieldroot()
+	{
+		return "AEC_" . strtoupper( get_class( $this ) ) . '_' . $this->id;
+	}
 }
 
 class jsoonHandler
@@ -811,6 +916,34 @@ class eucaToolbox
 		}
 
 		$arrIn=$arrOut;
+	}
+
+	function getLangIni( $filename )
+	{
+		if ( phpversion() >= '5.3.1' ) {
+			$contents = file_get_contents($filename);
+			$contents = str_replace('_QQ_', '"\""', $contents);
+			$strings = @parse_ini_string($contents);
+		} else {
+			$strings = @parse_ini_file($filename);
+
+			if ( phpversion() == '5.3.0' && is_array($strings) ) {
+				foreach ($strings as $key => $string) {
+					$strings[$key] = str_replace('_QQ_', '"', $string);
+				}
+			}
+		}
+
+		if ( !is_array($strings) ) {
+			$strings = array();
+		}
+
+		return $strings;
+	}
+
+	function putLangIni( $filename, $content )
+	{
+		return file_get_contents( $filename, $content );
 	}
 }
 

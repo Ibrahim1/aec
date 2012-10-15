@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.0' );
-define( '_AEC_REVISION', '5460' );
+define( '_AEC_REVISION', '5484' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -18721,10 +18721,19 @@ class microIntegration extends serialParamDBTable
 		return array( 'params', 'restrictions' );
 	}
 
-	function functionProxy( $function, $data, $default=null )
+	function declareMultiLangFields()
+	{
+		return $this->functionProxy( 'declareMultiLangFields' );
+	}
+
+	function functionProxy( $function, $data=null, $default=null )
 	{
 		if ( method_exists( $this->mi_class, $function ) ) {
-			return $this->mi_class->$function( $data );
+			if ( !is_null( $data ) ) {
+				return $this->mi_class->$function( $data );
+			} else {
+				return $this->mi_class->$function();
+			}
 		} else {
 			return $default;
 		}
