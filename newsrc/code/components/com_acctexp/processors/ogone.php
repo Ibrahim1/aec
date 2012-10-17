@@ -106,7 +106,7 @@ class processor_ogone extends POSTprocessor
 
 	function getHash( $source )
 	{
-		$vars = array( 'ORDERID', 'PSPID', 'CURRENCY', 'AMOUNT' );
+		$vars = array( 'AMOUNT', 'CURRENCY', 'ORDERID', 'PSPID' );
 
 		$string = '';
 		foreach ( $vars as $var ) {
