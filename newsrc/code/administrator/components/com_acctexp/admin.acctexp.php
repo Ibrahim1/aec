@@ -774,7 +774,7 @@ function saveUser( $option, $apply=0 )
 		}
 	}
 
-	if ( !is_null( $set_status ) ) {
+	if ( !empty( $set_status ) ) {
 		switch ( $set_status ) {
 			case 'expired':
 				$metaUser->focusSubscription->expire();

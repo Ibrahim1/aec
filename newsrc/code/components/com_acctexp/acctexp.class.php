@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5494' );
+define( '_AEC_REVISION', '5500' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -18736,6 +18736,10 @@ class microIntegration extends serialParamDBTable
 
 	function functionProxy( $function, $data=null, $default=null )
 	{
+		if ( !isset( $this->mi_class ) ) {
+			return $default;
+		}
+
 		if ( method_exists( $this->mi_class, $function ) ) {
 			if ( !is_null( $data ) ) {
 				return $this->mi_class->$function( $data );
@@ -18836,12 +18840,14 @@ class microIntegration extends serialParamDBTable
 			$permission = aecRestrictionHelper::checkRestriction( $restrictions, $metaUser );
 
 			if ( !empty( $this->restrictions['sticky_permissions'] ) && is_object( $invoice ) ) {
-				if ( empty( $invoice->params['stickyMIpermissions'] ) ) {
-					$invoice->params['stickyMIpermissions'] = array();
-				}
+				if ( is_a( $invoice, 'Invoice' ) ) {
+					if ( empty( $invoice->params['stickyMIpermissions'] ) ) {
+						$invoice->params['stickyMIpermissions'] = array();
+					}
 
-				$invoice->params['stickyMIpermissions'][$this->id] = $permission;
-				$invoice->storeload();
+					$invoice->params['stickyMIpermissions'][$this->id] = $permission;
+					$invoice->storeload();
+				}
 			}
 
 			return $permission;

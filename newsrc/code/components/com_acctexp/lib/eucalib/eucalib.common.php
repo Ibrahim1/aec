@@ -325,6 +325,14 @@ class paramDBTable extends JTable
 		$this->store();
 	}
 
+	function getMax( $field='id' )
+	{
+		$query = "SELECT max($field) FROM $this->_tbl";
+		$this->_db->setQuery( $query );
+
+		return $this->_db->loadResult();
+	}
+
 	function move( $dir )
 	{
 		parent::move( $dir );
@@ -628,12 +636,13 @@ class serialParamDBTable extends paramDBTable
 
 		$store = parent::store();
 
-		/*if ( $store ) {
+		if ( $store ) {
 			if ( empty( $this->id ) ) {
 				$this->id = $this->getMax();
 			}
+		}
 
-			if ( !empty( $write ) ) {
+		/*if ( !empty( $write ) ) {
 				$dir = JPATH_SITE . '/language/' . $lang->get('tag');
 
 				if ( is_dir() ) {
@@ -660,14 +669,6 @@ class serialParamDBTable extends paramDBTable
 		}*/
 
 		return $store;
-	}
-
-	function getMax( $field='id' )
-	{
-		$query = "SELECT max($field) FROM $this->_tbl";
-		$this->_db->setQuery( $query );
-
-		return $this->_db->loadResult();
 	}
 
 	function langfieldname( $key )
