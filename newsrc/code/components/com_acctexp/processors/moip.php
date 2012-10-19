@@ -63,7 +63,7 @@ class processor_moip extends POSTprocessor
 			$var['post_url']	= 'https://www.moip.com.br/PagamentoMoIP.do';
 		}
 
-		$var['valor']			= (int) $request->int_var['amount'] * 100;
+		$var['valor']			= (int) ( $request->int_var['amount'] * 100 );
 
 		$var['id_carteira']		= $this->settings['business'];
 		$var['id_transacao']	= $request->invoice->invoice_number;

@@ -22,6 +22,7 @@ class processor_ogone extends POSTprocessor
 		$info['description'] 			= JText::_('CFG_OGONE_DESCRIPTION');
 		$info['currencies']				= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['cc_list']				= 'americanexpress';
+		//$info['languages']			= AECToolbox::getISO639_1_codes();
 		$info['recurring']				= 0;
 		$info['notify_trail_thanks']	= 1;
 
@@ -35,6 +36,7 @@ class processor_ogone extends POSTprocessor
 		$settings['psid']			= 'PS ID';
 		$settings['secret']			= 'PS Secret';
 		$settings['currency']		= 'EUR';
+		$settings['currency']		= 'EUR';
 		$settings['customparams']	= "";
 
 		return $settings;
@@ -47,6 +49,7 @@ class processor_ogone extends POSTprocessor
 		$settings['psid']			= array( 'inputC' );
 		$settings['secret']			= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
+		//$settings['language']		= array( 'list_language' );
 		$settings['customparams']	= array( 'inputD' );
 		
 		return $settings;
@@ -57,14 +60,12 @@ class processor_ogone extends POSTprocessor
 		$var = array();
 		$var['PSPID']		= $this->settings['psid'];
 		$var['ORDERID']		= $request->invoice->id;
-		$var['AMOUNT']		= (int) $request->int_var['amount']*100;
+		$var['AMOUNT']		= (int) ( $request->int_var['amount']*100 );
 		$var['CURRENCY']	= $this->settings['currency'];
 
 		$var['SHASign']		= $this->getHash($var);
 
-		//$var['accepturl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=ogonenotification', false, true );
-		//$var['language']	= 'en_US';
-		//$var['PMLIST']		= 'iDEAL;American Express';
+		$var['language']	= 'en_US';
 
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://secure.ogone.com/ncol/test/orderstandard.asp';
@@ -106,7 +107,7 @@ class processor_ogone extends POSTprocessor
 
 	function getHash( $source )
 	{
-		$vars = array( 'AMOUNT', 'CURRENCY', 'ORDERID', 'PSPID' );
+		$vars = array( 'AMOUNT', 'CURRENCY', 'LANGUAGE', 'ORDERID', 'PSPID' );
 
 		$string = '';
 		foreach ( $vars as $var ) {

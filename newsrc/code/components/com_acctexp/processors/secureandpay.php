@@ -79,9 +79,9 @@ class processor_secureandpay extends POSTprocessor
 				$tax += $itax['cost'];
 			}
 
-			$var['Amount']		= (int) $request->items->total->cost['amount']*100;
+			$var['Amount']		= (int) ( $request->items->total->cost['amount']*100 );
 		} else {
-			$var['Amount']		= (int) $request->int_var['amount']*100;
+			$var['Amount']		= (int) ( $request->int_var['amount']*100 );
 		}
 
 		$var['Currency']		= $this->settings['currency'];

@@ -103,7 +103,7 @@ class processor_ideal_basic extends POSTprocessor
 
 			$var['amount']			= max( 1, min( 7, (int) $this->settings['testmodestage'] ) ) . '00';
 		} else {
-			$var['amount']			= (int) $request->int_var['amount'] * 100;
+			$var['amount']			= (int) ( $request->int_var['amount'] * 100 );
 		}
 
 		$var['currency']			= $this->settings['currency'];
