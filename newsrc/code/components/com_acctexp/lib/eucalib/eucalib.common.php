@@ -592,7 +592,7 @@ class serialParamDBTable extends paramDBTable
 
 	function check( $fields=array() )
 	{
-		if ( !method_exists( $this, 'declareParamFields' ) || empty( $this->id ) ) {
+		if ( !method_exists( $this, 'declareParamFields' ) ) {
 			return true;
 		}
 
