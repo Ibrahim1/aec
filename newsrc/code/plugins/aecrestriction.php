@@ -40,7 +40,7 @@ class plgContentAECRestriction extends JPlugin
 			// component check
 		}
 
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+		if ( file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
 			$regex = "#{aecrestriction(.*?)}(.*?){/aecrestriction}#s";
 
 			$article->text = preg_replace_callback( $regex, array(&$this, '_replace'), $article->text );
@@ -61,7 +61,7 @@ class plgContentAECRestriction extends JPlugin
 
 		jimport('joomla.utilities.utility');
 
-		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+		include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
 
 		$user = &JFactory::getUser();
 

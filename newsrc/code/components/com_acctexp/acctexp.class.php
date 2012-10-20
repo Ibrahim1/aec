@@ -24,7 +24,7 @@ if (  ( version_compare( phpversion(), '5.0') >= 0 )  && ( version_compare( phpv
 }
 
 // Get old language file names
-JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
+JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
 
 $langlist = array(	'com_acctexp' => JPATH_SITE,
 					'com_acctexp.microintegrations' => JPATH_SITE,

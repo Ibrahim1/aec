@@ -45,7 +45,7 @@ class plgSystemAECerrorhandler extends JPlugin
 			return true;
 		}
 
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+		if ( file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
 			// handle login redirect
 			$this->handleLoginRedirect();
 		}

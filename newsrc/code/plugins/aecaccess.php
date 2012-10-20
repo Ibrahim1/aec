@@ -58,8 +58,8 @@ class plgUserAECaccess extends JPlugin
 			return true;
 		}
 
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+		if ( file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
+			include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
 
 			// process AEC verifications
 			return $this->verify( $credentials );

@@ -22,7 +22,7 @@ class mi_jomsocialjspt
 
 	function detect_application()
 	{
-		if ( !is_dir( JPATH_ROOT. DS . 'components'. DS .'com_community' ) || !is_dir( JPATH_ROOT. DS . 'components'. DS .'com_xipt' ) ) {
+		if ( !is_dir( JPATH_ROOT.'/components/com_community' ) || !is_dir( JPATH_ROOT.'/components/com_xipt' ) ) {
 			return false;
 		}
 
@@ -31,7 +31,7 @@ class mi_jomsocialjspt
 
 	function Settings()
 	{
-		require_once ( JPATH_ROOT.DS.'components'.DS.'com_xipt'.DS.'api.xipt.php');
+		require_once ( JPATH_ROOT.'/components/com_xipt/api.xipt.php');
 		
 		$database	=& JFactory::getDBO();
         $settings = array();
@@ -100,7 +100,7 @@ class mi_jomsocialjspt
 			return null;
 		}
 
-		require_once ( JPATH_ROOT.DS.'components'.DS.'com_xipt'.DS.'api.xipt.php');
+		require_once ( JPATH_ROOT.'/components/com_xipt/api.xipt.php');
 
 		$subscription_message = XiptAPI::getGlobalConfig('subscription_message');	
 

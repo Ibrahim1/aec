@@ -81,7 +81,7 @@ class mi_joomdle
 
 	function loadHelper()
 	{
-		require_once(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_joomdle'.DS.'helpers'.DS.'content.php');
+		require_once(JPATH_ADMINISTRATOR.'/components/com_joomdle/helpers/content.php');
 	}
 }
 

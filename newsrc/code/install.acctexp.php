@@ -15,12 +15,12 @@
 // Trying to buy us some time
 @set_time_limit( 240 );
 
-if ( !defined( '_JEXEC' ) && !defined( 'JPATH_SITE' ) ) {
+if ( !defined( '_JEXEC' ) && !defined( 'JPATH_SITE.' ) ) {
 	global $mosConfig_absolute_path;
 
-	define( 'JPATH_SITE', $mosConfig_absolute_path );
+	define( 'JPATH_SITE.', $mosConfig_absolute_path );
 } elseif ( defined( '_JEXEC' ) ) {
-	JLoader::register('JTableUser', JPATH_LIBRARIES.DS.'joomla'.DS.'database'.DS.'table'.DS.'user.php');
+	JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
 }
 
 // Make sure we are compatible with php4

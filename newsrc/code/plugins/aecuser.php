@@ -32,8 +32,8 @@ class plgUserAECuser extends JPlugin
 
 	function onBeforeStoreUser( $user, $isnew )
 	{
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+		if ( file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
+			include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
 
 			if ( !$isnew ) {
 				$mih = new microIntegrationHandler();
@@ -49,8 +49,8 @@ class plgUserAECuser extends JPlugin
 
 	function onAfterStoreUser( $user, $isnew, $success, $msg )
 	{
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
-			include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+		if ( file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
+			include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
 
 			if ( $isnew ) {
 				$mih = new microIntegrationHandler();

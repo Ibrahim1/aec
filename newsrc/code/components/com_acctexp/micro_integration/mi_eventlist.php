@@ -27,7 +27,7 @@ class mi_eventlist extends MI
 	{
 		$settings = array();
 
-		$path = rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_eventlist' . DS . 'helpers' . DS . 'helper.php';
+		$path = rtrim( JPATH_ROOT, '/' ) . '/components/com_eventlist/helpers/helper.php';
 
 		if ( !file_exists( $path ) ) {
 			echo 'This module can not work without the Event List Component';
@@ -68,7 +68,7 @@ class mi_eventlist extends MI
 
 	function detect_application()
 	{
-		$path = rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_eventlist' . DS . 'helpers' . DS . 'helper.php';
+		$path = rtrim( JPATH_ROOT, '/' ) . '/components/com_eventlist/helpers/helper.php';
 
 		return file_exists( $path );
 	}

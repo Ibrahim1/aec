@@ -23,7 +23,7 @@ $langlist = array( 'com_acctexp' => JPATH_ADMINISTRATOR );
 
 aecLanguageHandler::loadList( $langlist );
 
-JLoader::register('JPaneTabs',  JPATH_LIBRARIES.DS.'joomla'.DS.'html'.DS.'pane.php');
+JLoader::register('JPaneTabs',  JPATH_LIBRARIES.'/joomla/html/pane.php');
 
 aecACLhandler::adminBlock();
 
@@ -5107,7 +5107,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	$aec_hack_start				= "// AEC HACK %s START" . "\n";
 	$aec_hack_end				= "// AEC HACK %s END" . "\n";
 
-	$aec_condition_start		= 'if (file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" )) {' . "\n";
+	$aec_condition_start		= 'if (file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" )) {' . "\n";
 
 	$aec_condition_end			= '}' . "\n";
 

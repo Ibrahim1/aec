@@ -42,7 +42,7 @@ class plgContentAECRewrite extends JPlugin
 
 		$regex = "#{aecrewrite}(.*?){/aecrewrite}#s";
 
-		if ( file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+		if ( file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
 			$article->text = preg_replace_callback( $regex, array(&$this, '_replace'), $article->text );
 		} else {
 			$article->text = preg_replace( $regex, "", $article->text );
@@ -61,7 +61,7 @@ class plgContentAECRewrite extends JPlugin
 	{
 		static $rwEngine;
 
-		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+		include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
 
 		if ( empty( $rwEngine->rewrite ) ) {
 			$user = &JFactory::getUser();

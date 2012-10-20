@@ -122,11 +122,11 @@ class plgSystemAECrouting extends JPlugin
 
 	function getAdditionalVars( $vars )
 	{
-		if ( !file_exists( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" ) ) {
+		if ( !file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
 			return;
 		}
 
-		include_once( JPATH_ROOT.DS."components".DS."com_acctexp".DS."acctexp.class.php" );
+		include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
 
 		global $aecConfig;
 

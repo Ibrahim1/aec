@@ -42,7 +42,7 @@ class cbaecmembershipTab extends cbTabHandler
 	{
 		$db = &JFactory::getDBO();
 
-		include_once( JPATH_SITE . DS . 'components' . DS . 'com_acctexp' . DS . 'acctexp.class.php');
+		include_once( JPATH_SITE.'/components/com_acctexp/acctexp.class.php');
 
 		$dateFormat = $this->params->get('dateFormat', "m/d/Y");
 

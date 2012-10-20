@@ -27,7 +27,7 @@ class mi_phocadownload extends MI
 	{
 		$settings = array();
 
-		$path = rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_phocadownload' . DS . 'tables' . DS . 'phocadownloadcat.php';
+		$path = rtrim( JPATH_ROOT, DS )'/administrator/components/com_phocadownload/tables/phocadownloadcat.php';
 
 		if ( !file_exists( $path ) ) {
 			echo 'This module can not work without the Phoca Download Component';
