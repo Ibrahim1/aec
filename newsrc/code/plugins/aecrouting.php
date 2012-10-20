@@ -543,7 +543,11 @@ class plgSystemAECrouting extends JPlugin
 		if ( empty( $temptoken->id ) ) {
 			$temptoken->create( $content );
 		} else {
-			$temptoken->content = array_merge( $temptoken->content, $content );
+			if ( is_array( $temptoken->content ) ) {
+				$temptoken->content = array_merge( $temptoken->content, $content );
+			} else {
+				$temptoken->content = $content;
+			}
 		}
 
 		$temptoken->storeload();
