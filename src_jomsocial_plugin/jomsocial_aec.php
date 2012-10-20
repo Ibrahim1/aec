@@ -1,7 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-require_once( JPATH_BASE'/components/com_community/libraries/core.php');
+require_once( JPATH_BASE.'/components/com_community/libraries/core.php');
 
 class plgCommunityAEC extends CApplications {
 
@@ -36,7 +36,7 @@ class plgCommunityAEC extends CApplications {
 
 	function _getOriginalHTML()
 	{
-			if ( defined( 'JPATH_ROOT.' ) ) {
+			if ( defined( 'JPATH_ROOT' ) ) {
 				$path = JPATH_ROOT;
 			} else {
 				global $mosConfig_absolute_path;
