@@ -93,11 +93,11 @@ class processor_eway extends POSTprocessor
 		$eWAYResponseCode	= $post['eWAYresponseCode'];
 		$ewayTrxnReference	= $post['ewayTrxnReference'];
 		$eWAYAuthCode		= $post['eWAYAuthCode'];
-		$total				= $post['eWAYReturnAmount'];
 		$userid				= $post['eWAYoption1'];
 
 		$response = array();
-		$response['invoice'] = $post['eWAYoption2'];
+		$response['invoice']		= $post['eWAYoption2'];
+		$response['amount_paid']	= $post['eWAYReturnAmount'] / 100;
 
 		return $response;
 	}
