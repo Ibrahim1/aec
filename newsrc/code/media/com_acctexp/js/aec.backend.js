@@ -1,17 +1,16 @@
 jQuery(document).ready(function(jQuery) {
-	jQuery('#navbar').dropdown();
 	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){
 		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
 	});
 
-	jQuery('.navbar').hover(function(){
+	jQuery('#aec-nav').hover(function(){
 		if ( jQuery(".navbar-hover-helper").length == 0 ) {
-			jQuery('.navbar').addClass("navbar-hover-helper");
+			jQuery('#aec-nav').addClass("navbar-hover-helper");
 			jQuery('.aec-buttons-fixed').addClass("aec-buttons-fixed-extended");
 
 			jQuery('.navbar-fixed-top').addClass("navbar-fixed-top-override").prepend("<div class=\"head-minify btn btn-inverse\"><i class=\"bsicon-chevron-left bsicon-white\"></i></div>");
 
-			jQuery(".navbar").on( "click", ".head-minify", function(){
+			jQuery("#aec-nav").on( "click", ".head-minify", function(){
 				jQuery('.head-minify').remove();
 				jQuery('.navbar-fixed-top').removeClass('navbar-fixed-top-override');
 				jQuery('.aec-buttons-fixed').removeClass("aec-buttons-fixed-extended");
@@ -19,7 +18,7 @@ jQuery(document).ready(function(jQuery) {
 		}
 
 		}, function(){
-			jQuery('.navbar').removeClass("navbar-hover-helper");
+			jQuery('#aec-nav').removeClass("navbar-hover-helper");
 		}
 	);
 
@@ -120,15 +119,15 @@ jQuery(document).ready(function(jQuery) {
 		var i, scrollTop = jQuery(window).scrollTop();
 
 		if ( navTop == 0 ) {
-			navTop = jQuery('.navbar-inner').offset().top;
+			navTop = jQuery('#aec-nav .navbar-inner').offset().top;
 		}
 
 		if (scrollTop >= navTop && !tbFixed) {
 			tbFixed = 1;
-			jQuery('.navbar').addClass('navbar-fixed-top');
+			jQuery('#aec-nav .navbar').addClass('navbar-fixed-top');
 		} else if (scrollTop <= navTop && tbFixed) {
 			tbFixed = 0;
-			jQuery('.navbar').removeClass('navbar-fixed-top').removeClass('navbar-fixed-top-override');
+			jQuery('#aec-nav .navbar').removeClass('navbar-fixed-top').removeClass('navbar-fixed-top-override');
 			jQuery('div.head-minify').remove();
 			jQuery('.aec-buttons-fixed').removeClass("aec-buttons-fixed-extended");
 		}

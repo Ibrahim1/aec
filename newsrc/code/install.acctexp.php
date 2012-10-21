@@ -98,7 +98,7 @@ function com_install()
 	include_once( $incpath . '/settings_0_12_6_upgrade.inc.php' );
 
 	// Load Class (and thus aecConfig)
-	require_once( JApplicationHelper::getPath( 'class', 'com_acctexp' ) );
+	require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 
 	global $aecConfig;
 
@@ -388,4 +388,14 @@ function com_install()
 	<?php
 }
 
-} ?>
+}
+
+class Com_AcctexpInstallerScript
+{
+	function postflight( $type, $parent )
+	{
+		com_install();
+	}
+}
+
+?>

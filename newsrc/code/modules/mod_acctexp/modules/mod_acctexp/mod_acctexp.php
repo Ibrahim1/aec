@@ -14,7 +14,7 @@
 $user = &JFactory::getUser();
 
 if ( $user->id ) {
-	require_once( JApplicationHelper::getPath( 'class', 'com_acctexp' ) );
+	require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 
 	$class_sfx				= $params->get( 'moduleclass_sfx', "");
 	$pretext 				= $params->get( 'pretext' );

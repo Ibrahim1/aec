@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<install type="component" version="1.6" method="upgrade">
+<extension type="component" version="3.0.0" method="upgrade">
 	<name>AcctExp</name>
 	<creationDate>2010.11.17</creationDate>
 	<author>David Deutsch, Team AEC, Helder Garcia</author>
@@ -52,6 +52,7 @@
 			<language tag="zh-CN">zh-CN/zh-CN.com_acctexp.ini</language>
 		</languages>
 	</administration>
+	<scriptfile>install.acctexp.php</scriptfile>
 	<languages folder="language">
 		<language tag="cz-CZ">cz-CZ/cz-CZ.com_acctexp.ini</language>
 		<language tag="da-DK">da-DK/da-DK.com_acctexp.ini</language>
@@ -95,4 +96,4 @@
 	<installfile>install.acctexp.php</installfile>
 	<scriptfile>install.acctexp.php</scriptfile>
 	<uninstallfile>uninstall.acctexp.php</uninstallfile>
-</install>
+</extension>

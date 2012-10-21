@@ -15,9 +15,9 @@ global $aecConfig;
 
 $app = JFactory::getApplication();
 
-require_once( JApplicationHelper::getPath( 'class' ) );
+require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.class.php' );
-require_once( JApplicationHelper::getPath( 'admin_html' ) );
+require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.html.php' );
 
 $langlist = array( 'com_acctexp' => JPATH_ADMINISTRATOR );
 

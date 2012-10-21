@@ -707,7 +707,7 @@ class HTML_AcctExp
 
 		$linkroot = "index.php?option=com_acctexp&amp;task=";
 		?>
-		<div class="navbar navbar-inverse">
+		<div class="navbar navbar-inverse" id="aec-nav">
 			<div class="navbar-inner">
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>

@@ -15,8 +15,8 @@ global $aecConfig;
 
 define( '_AEC_FRONTEND', 1 );
 
-require_once( JApplicationHelper::getPath( 'class',		'com_acctexp' ) );
-require_once( JApplicationHelper::getPath( 'front_html',	'com_acctexp' ) );
+require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
+require_once( JPATH_SITE . '/components/com_acctexp/acctexp.html.php' );
 
 $user = &JFactory::getUser();
 

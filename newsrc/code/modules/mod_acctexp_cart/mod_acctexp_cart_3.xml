@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.0.0" method="upgrade">
+<install type="module" version="2.5.0" method="upgrade">
 	<name>AEC Cart Module</name>
 	<creationDate>21.05.2010</creationDate>
 	<author>David Deutsch</author>
@@ -56,4 +56,4 @@
 			</fieldset>
 		</fields>
 	</config>
-</extension>
+</install>
