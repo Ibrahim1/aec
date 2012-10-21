@@ -269,10 +269,12 @@ class HTML_AcctExp
 					$icon	= 'ok';
 					$status	= JText::_('AEC_CMN_ACTIVE');
 					break;
+				case 'Cancelled':
 				case 'Cancel':
 					$icon	= 'warning-sign';
 					$status	= JText::_('AEC_CMN_CANCEL');
 					break;
+				case 'Held':
 				case 'Hold':
 					$icon	= 'warning-sign';
 					$status	= JText::_('AEC_CMN_HOLD');
