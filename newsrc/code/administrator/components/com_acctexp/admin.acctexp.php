@@ -1831,6 +1831,10 @@ function listTemplates( $option )
 
 		if ( !$t->id ){
 			$t->default = 0;
+
+			if ( $name == 'helix' ) {
+				continue;
+			}
 		}
 
 		$rows[] = $t;
