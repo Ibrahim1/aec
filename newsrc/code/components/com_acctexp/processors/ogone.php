@@ -36,7 +36,7 @@ class processor_ogone extends POSTprocessor
 		$settings['psid']			= 'PS ID';
 		$settings['secret']			= 'PS Secret';
 		$settings['currency']		= 'EUR';
-		$settings['currency']		= 'EUR';
+		$settings['language']		= 'en_US';
 		$settings['customparams']	= "";
 
 		return $settings;
@@ -49,7 +49,7 @@ class processor_ogone extends POSTprocessor
 		$settings['psid']			= array( 'inputC' );
 		$settings['secret']			= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
-		//$settings['language']		= array( 'list_language' );
+		$settings['language']		= array( 'inputC' );
 		$settings['customparams']	= array( 'inputD' );
 		
 		return $settings;
@@ -65,7 +65,7 @@ class processor_ogone extends POSTprocessor
 
 		$var['SHASign']		= $this->getHash($var);
 
-		$var['language']	= 'en_US';
+		$var['language']	= $this->settings['language'];
 
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://secure.ogone.com/ncol/test/orderstandard.asp';
