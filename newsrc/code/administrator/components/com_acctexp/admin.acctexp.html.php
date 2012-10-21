@@ -1833,6 +1833,8 @@ jQuery(document).ready(function(jQuery) {
 
 	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
 	{
+		global $aecConfig;
+
 		jimport( 'joomla.html.editor' );
 
 		$editor =& JFactory::getEditor();
@@ -1878,10 +1880,18 @@ jQuery(document).ready(function(jQuery) {
 									<?php
 									if ( $row->id ) { ?>
 										<p style="text-align: center;">
-											<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a>
-											&nbsp;|&nbsp;<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=addtocart&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?></a>
+											<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank">
+												<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>
+											</a>
+											&nbsp;|&nbsp;<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=addtocart&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>" target="_blank">
+												<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>
+											</a>
 										</p>
-										<?php
+										<?php if ( !$aecConfig->cfg['plans_first'] ) { ?>
+											<div class="alert alert-info">
+												<p><span class="label label-info"><?php echo JText::_('Please Note'); ?>:</span> <?php echo JText::_('A direct frontend link only works for existing users who are logged in, or with the Plans First setting'); ?>.</p>
+											</div>
+										<?php }
 									}
 									?>
 								</div>

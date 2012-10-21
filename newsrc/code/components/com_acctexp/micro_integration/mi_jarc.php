@@ -114,7 +114,7 @@ class mi_jarc
 		$sessioncookie = JRequest::getVar( $cookie_name, null, $_COOKIE );
 		list($cookie_aid, $cookie_count) = split(':',$sessioncookie,2);
 
-		require_once( JPATH_BASE'/components/com_jarc/jarc.class.php' );
+		require_once( JPATH_BASE.'/components/com_jarc/jarc.class.php' );
 		$affiliate = new jarc_affiliate($db);
 		$affiliate->findById( intval($cookie_aid) );
 
