@@ -6,7 +6,7 @@
 
 		<copy todir="${dir.tmp}">
 			<fileset dir="${dir.local}/plugins">
-				<include name="aecrestriction.*" />
+				<include name="aecrestriction*" />
 				<exclude name=".directory"/>
 			</fileset>
 		</copy>
