@@ -90,7 +90,7 @@ if ( $jsonconversion ) {
 		}
 	}
 
-} elseif ( $serialupdate ) {
+} elseif ( !empty( $serialupdate ) ) {
 	// Update database fields to serialized fields
 
 	$updates = array(	0 => array( 'displayPipeline', 'displaypipeline', array( 'params' => array('displayedto') ) ),

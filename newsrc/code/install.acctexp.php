@@ -390,11 +390,17 @@ function com_install()
 
 }
 
-class Com_AcctexpInstallerScript
-{
-	function postflight( $type, $parent )
+if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
+	class Com_AcctexpInstallerScript
 	{
-		com_install();
+		function postflight( $type, $parent )
+		{
+			$v = new JVersion();
+
+			if ( $v->isCompatible('3.0') ) {
+				com_install();
+			}
+		}
 	}
 }
 
