@@ -6658,6 +6658,15 @@ class aecHTML
 				. '</div>'
 				;
 				break;
+			case 'section':
+				$return = '<section>';
+				break;
+			case 'section-head':
+				$return = '<div class="aec_userinfobox_sub">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
+				break;
+			case 'section-end':
+				$return = '<section>';
+				break;
 			case 'hidden':
 				$return = '';
 				if ( is_array( $value ) ) {

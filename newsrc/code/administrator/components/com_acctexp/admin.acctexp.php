@@ -108,6 +108,8 @@ switch( strtolower( $task ) ) {
 	case 'unpublishprocessor': changeProcessor( $id, 0, 'active', $option ); break;
 
 	case 'showsubscriptionplans': listSubscriptionPlans( $option ); break;
+	case 'showsubscriptionplans2': listSubscriptionPlans2( $option ); break;
+	case 'getsubscriptionplans': getSubscriptionPlans(); break;
 	case 'newsubscriptionplan': editSubscriptionPlan( 0, $option ); break;
 	case 'editsubscriptionplan': editSubscriptionPlan( $id[0], $option ); break;
 	case 'copysubscriptionplan': copyObject( $option, 'SubscriptionPlan', $id ); break;
@@ -1378,16 +1380,17 @@ function editSettings( $option )
 	$tab_data = array();
 
 	$params = array();
-	$params[] = array( 'userinfobox', 33.225 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_ACCESS') );
+	$params[] = array( 'pagehead', JText::_('CFG_TAB1_SUBTITLE') );
+	$params[] = array( 'section', 'access' );
+	$params[] = array( 'section_head', JText::_('CFG_GENERAL_SUB_ACCESS') );
 	$params['require_subscription']			= array( 'toggle', 0 );
 	$params['adminaccess']					= array( 'toggle', 0 );
 	$params['manageraccess']				= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
+	$params[] = array( 'section_end', 0 );
+	$params[] = array( 'section_head', JText::_('CFG_GENERAL_SUB_PLANS') );
 	$params['root_group']					= array( 'list', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
+	$params[] = array( 'section_end', 0 );
+	$params[] = array( 'section_head', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
 	$params['gwlist']						= array( 'list', 0 );
 	$params['standard_currency']			= array( 'list_currency', 0 );
 	$params[] = array( 'div_end', 0 );
@@ -2222,6 +2225,146 @@ function saveProcessor( $option, $return=0 )
 	} else {
 		aecRedirect( 'index.php?option=' . $option . '&task=showProcessors', JText::_('AEC_CONFIG_SAVED') );
 	}
+}
+
+function listSubscriptionPlans2( $option )
+{
+	HTML_AcctExp::listSubscriptionPlans2( $option );
+}
+
+function getSubscriptionPlans()
+{
+	$db = &JFactory::getDBO();
+
+	$rows = SubscriptionPlanHandler::getFullPlanList();
+
+	$totals = array();
+	$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_subscr'
+			. ' WHERE (status = \'Active\' OR status = \'Trial\')'
+		 	. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
+			;
+	$db->setQuery( $query );
+
+ 	$totals['active'] = $db->loadResult();
+ 	if ( $db->getErrorNum() ) {
+ 		echo $db->stderr();
+ 		return false;
+ 	}
+
+ 	$query = 'SELECT count(*)'
+			. ' FROM #__acctexp_subscr'
+			. ' WHERE (status = \'Expired\')'
+			. ( empty( $subselect ) ? '' : ' AND plan IN (' . implode( ',', $subselect ) . ')' )
+			;
+	$db->setQuery( $query );
+
+ 	$totals['expired'] = $db->loadResult();
+ 	if ( $db->getErrorNum() ) {
+ 		echo $db->stderr();
+ 		return false;
+ 	}
+
+	$gcolors = array();
+
+	foreach ( $rows as $n => $row ) {
+		$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE plan = ' . $row->id
+				. ' AND (status = \'Active\' OR status = \'Trial\')'
+				;
+		$db->setQuery( $query );
+
+	 	$rows[$n]->usercount = $db->loadResult();
+	 	if ( $db->getErrorNum() ) {
+	 		echo $db->stderr();
+	 		return false;
+	 	}
+
+	 	$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE plan = ' . $row->id
+				. ' AND (status = \'Expired\')'
+				;
+		$db->setQuery( $query );
+
+	 	$rows[$n]->expiredcount = $db->loadResult();
+	 	if ( $db->getErrorNum() ) {
+	 		echo $db->stderr();
+	 		return false;
+	 	}
+
+	 	$query = 'SELECT group_id'
+				. ' FROM #__acctexp_itemxgroup'
+				. ' WHERE type = \'item\''
+				. ' AND item_id = \'' . $rows[$n]->id . '\''
+				;
+		$db->setQuery( $query	);
+		$g = (int) $db->loadResult();
+
+		$group = empty( $g ) ? 0 : $g;
+
+		if ( !isset( $gcolors[$group] ) ) {
+			$gcolors[$group] = array();
+			$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
+		}
+
+		$rows[$n]->group = $group;
+		$rows[$n]->color = $gcolors[$group]['color'];
+
+		$rows[$n]->link = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=all';
+		$rows[$n]->link_active = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=active';
+		$rows[$n]->link_expired = 'index.php?option=com_acctexp&amp;task=showSubscriptions&amp;plan='.$row->id.'&amp;groups[]=expired';
+
+		if ( $totals['expired'] ) {
+			$rows[$n]->expired_percentage = $row->expiredcount / ( $totals['expired'] / 100 );
+		} else {
+			$rows[$n]->expired_percentage = 0;
+		}
+
+		$rows[$n]->expired_inner = false;
+		if ( $rows[$n]->expired_percentage > 45 ) {
+			$rows[$n]->expired_inner = true;
+		}
+
+		$row->activecount = $row->usercount;
+
+		if ( $totals['active'] ) {
+			$rows[$n]->active_percentage = $row->usercount / ( $totals['active'] / 100 );
+		} else {
+			$rows[$n]->active_percentage = 0;
+		}
+
+		$rows[$n]->active_inner = false;
+		if ( $rows[$n]->active_percentage > 45 ) {
+			$rows[$n]->active_inner = true;
+		}
+
+		$row->totalcount = $row->expiredcount+$row->usercount;
+
+		if ( $totals['active']+$totals['expired'] ) {
+			$rows[$n]->total_percentage = ($row->expiredcount+$row->usercount) / ( ($totals['active']+$totals['expired']) / 100 );
+		} else {
+			$rows[$n]->total_percentage = 0;
+		}
+
+		$rows[$n]->total_inner = false;
+		if ( $rows[$n]->total_percentage > 20 ) {
+			$rows[$n]->total_inner = true;
+		}
+
+		if ( !empty( $row->desc ) ) {
+			$rows[$n]->desc = stripslashes( strip_tags( $row->desc ) );
+			if ( strlen( $rows[$n]->desc ) > 50 ) {
+				$rows[$n]->desc = substr( $rows[$n]->desc, 0, 50) . ' ...';
+			}
+		}
+	}
+
+	$ret = new stdClass();
+	$ret->aaData = $rows;
+
+	echo json_encode( $ret );exit;
 }
 
 function listSubscriptionPlans( $option )

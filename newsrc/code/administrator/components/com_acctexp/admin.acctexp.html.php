@@ -68,7 +68,14 @@ class HTML_myCommon
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
+
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/TableTools.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowReordering.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowGrouping.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/paging.js' );
 
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery-ui-1.8.16.custom.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/ui.daterangepicker.css' . '" />' );
@@ -1168,21 +1175,9 @@ class HTML_AcctExp
 
 		HTML_myCommon::startForm();
 
-		$tabs = new bsPaneTabs;
-		$tabs->startTabs();
+		echo '<div class="container">';
 
 		foreach( $tab_data as $tab ) {
-			$tabs->newTab( strtolower( str_replace( ' ', '-', $tab[0] ) ), $tab[0] );
-		}
-
-		$tabs->endTabs();
-		$tabs->startPanes();
-
-		foreach( $tab_data as $tab ) {
-			$tabs->nextPane( strtolower( str_replace( ' ', '-', $tab[0] ) ) );
-
-			echo '<table width="100%" class="aecadminform"><tr><td>';
-
 			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 				echo $aecHTML->createSettingsParticle( $rowname );
 				unset( $aecHTML->rows[$rowname] );
@@ -1192,15 +1187,13 @@ class HTML_AcctExp
 				}
 			}
 
-			echo '</td></tr></table>';
 		}
-
-		$tabs->endPanes();
 		?>
 		<input type="hidden" name="id" value="1" />
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>
+		</div>
 		<?php
 		echo $aecHTML->loadJS();
 
@@ -1738,6 +1731,81 @@ jQuery(document).ready(function(jQuery) {
 		<?php
 		echo $aecHTML->loadJS();
 
+ 		HTML_myCommon::endCommon();
+	}
+
+	function listSubscriptionPlans2( $option )
+	{
+		HTML_myCommon::startCommon();
+
+$js = '
+jQuery.extend( jQuery.fn.dataTableExt.oStdClasses, {
+	"sWrapper": "dataTables_wrapper form-inline",
+	"sSortAsc": "header headerSortDown",
+	"sSortDesc": "header headerSortUp",
+	"sSortable": "header"
+} );
+jQuery(document).ready(function() {
+    jQuery("table.table").dataTable( {
+        "sDom": "<\'row\'<\'span6\'l><\'span6\'f>r>t<\'row\'<\'span6\'i><\'span6\'p>>",
+        "sPaginationType": "bootstrap",
+        "aaSorting": [[ 6, "desc" ]],
+        "bProcessing": true,
+        "sAjaxSource": "index.php?option=com_acctexp&task=getSubscriptionPlans",
+        "aoColumns": [
+            { "mData": "ordering", "bVisible": false, "sType": "numeric", "bSortable": true, "asSorting": [ "desc", "asc", "asc" ] },
+            { "mData": "group", "bVisible": false },
+            { "mData": "id" },
+            { "mData": "name", "bSearchable": true, "bSortable": true, "asSorting": [ "desc", "asc", "asc" ] },
+            { "mData": "desc" },
+            { "mData": "active" },
+            { "mData": "visible" },
+            { "mData": "expiredcount" },
+            { "mData": "activecount" },
+            { "mData": "totalcount" }
+        ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+			jQuery(nRow).attr("id", aData.id);
+
+			return nRow;
+		},
+        "oTableTools": {
+            "sRowSelect": "multi"
+        },
+    } )
+    .rowGrouping({ "iGroupingColumnIndex": 1 })
+    .rowReordering( { "sURL": "index.php?option=com_acctexp&task=sortSubscriptionPlans" });
+} );
+';
+		$document =& JFactory::getDocument();
+		$document->addScriptDeclaration( $js );
+
+		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
+		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );
+		?>
+
+		<div class="dataTables-wrapper span12">
+		<table class="table table-striped">
+			<thead><tr>
+				<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+				<th width="1%" class="leftalign"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+				<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
+				<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+				<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+				<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
+				<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
+				<th width="10%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
+				<th width="10%" align="center"><?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
+				<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+			</tr></thead>
+			<tbody>
+			</tbody>
+			<tfoot>
+			</tfoot>
+		</table>
+		</div>
+
+		<?php
  		HTML_myCommon::endCommon();
 	}
 
