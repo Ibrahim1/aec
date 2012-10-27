@@ -6505,6 +6505,9 @@ class aecHTML
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
+			case 'p':
+				$return = ( !empty( $value ) ? '<p>' . $value . '</p>' : '' ) . ( !empty( $row[2] ) ? '<p>' . $row[2] . '</p>' : '' );
+				break;
 			case 'checkbox':
 				$return = '<div class="control-group">';
 				$return .= '<label class="control-label" for="' . $name . '"></label>';
