@@ -6601,7 +6601,7 @@ class aecHTML
 					$this->accordions++;
 				}
 
-				$return = '<div id="accordion' . $this->accordions . '" class="accordion"' . '>';
+				$return = '<div id="accordion' . $this->accordions . '" class="accordion' . ( !empty( $value ) ? ' ' . $value : '' ) . '"' . '>';
 				break;
 			case 'accordion_itemstart':
 				$return = '<div class="accordion-group">';
@@ -6661,14 +6661,17 @@ class aecHTML
 				. '</div>'
 				;
 				break;
+			case 'page-head':
+				$return = '<div class="page-header"><h1>' . $value . '</h1></div>';
+				break;
 			case 'section':
-				$return = '<section>';
+				$return = '<section' . ( !empty( $value ) ? ' id="' . $value . '"' : '' ) . '>';
 				break;
 			case 'section-head':
-				$return = '<div class="aec_userinfobox_sub">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
+				$return = '<h2>' . $value . '</h2>';
 				break;
 			case 'section-end':
-				$return = '<section>';
+				$return = '</section>';
 				break;
 			case 'hidden':
 				$return = '';

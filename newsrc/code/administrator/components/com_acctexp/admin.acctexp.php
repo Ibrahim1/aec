@@ -297,6 +297,15 @@ switch( strtolower( $task ) ) {
 		$top = new templateOverrideParser();
 		break;
 
+	case 'lessen':
+		require JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php';
+		$less = new lessc();
+		$less->setImportDir( array(JPATH_SITE . '/media/com_acctexp/less/') );
+		$less->setFormatter("compressed");
+		$less->setPreserveComments(true);
+		echo $less->compileFile(JPATH_SITE . '/media/com_acctexp/less/admin.less');exit;
+		break;
+
 	default: aecCentral( $option ); break;
 }
 
@@ -1380,90 +1389,96 @@ function editSettings( $option )
 	$tab_data = array();
 
 	$params = array();
-	$params[] = array( 'pagehead', JText::_('CFG_TAB1_SUBTITLE') );
+	$params[] = array( 'page-head', JText::_('General Configuration') );
 	$params[] = array( 'section', 'access' );
-	$params[] = array( 'section_head', JText::_('CFG_GENERAL_SUB_ACCESS') );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_ACCESS') );
 	$params['require_subscription']			= array( 'toggle', 0 );
 	$params['adminaccess']					= array( 'toggle', 0 );
 	$params['manageraccess']				= array( 'toggle', 0 );
-	$params[] = array( 'section_end', 0 );
-	$params[] = array( 'section_head', JText::_('CFG_GENERAL_SUB_PLANS') );
-	$params['root_group']					= array( 'list', 0 );
-	$params[] = array( 'section_end', 0 );
-	$params[] = array( 'section_head', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_PROCESSORS') );
 	$params['gwlist']						= array( 'list', 0 );
 	$params['standard_currency']			= array( 'list_currency', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
+	$params[] = array( 'section-end' );
 
-	$params[] = array( 'userinfobox', 33.225 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
+	$params[] = array( 'page-head', JText::_('Registration Flow') );
+	$params[] = array( 'section', 'plans' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_REGFLOW') );
 	$params['plans_first']					= array( 'toggle', 0 );
 	$params['integrate_registration']		= array( 'toggle', 0 );
 	$params['skip_confirmation']			= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'plans' );
+	$params[] = array( 'section-head', JText::_('Plan List') );
+	$params['root_group']					= array( 'list', 0 );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'cart' );
+	$params[] = array( 'section-head', 'Shopping Cart' );
 	$params['enable_shoppingcart']			= array( 'toggle', '' );
 	$params['additem_stayonpage']			= array( 'toggle', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'checkout' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
 	$params['checkout_coupons']				= array( 'toggle', 0 );
 	$params['user_checkout_prefill']		= array( 'inputD', 0 );
 
 	$rewriteswitches						= array( 'cms', 'user', 'expiration', 'subscription' );
 	$params									= AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
+	$params[] = array( 'section-end' );
 
-	$params[] = array( 'userinfobox', 33.225 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SYSTEM') );
+	$params[] = array( 'page-head', JText::_('Inner workings') );
+	$params[] = array( 'section', 'heartbeat' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SYSTEM') );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_EMAIL') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'email' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_EMAIL') );
 	$params['noemails']						= array( 'toggle', 0 );
 	$params['noemails_adminoverride']		= array( 'toggle', 0 );
 	$params['nojoomlaregemails']			= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_DEBUG') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'debug' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_DEBUG') );
 	$params['curl_default']					= array( 'toggle', 0 );
 	$params['simpleurls']					= array( 'toggle', 0 );
 	$params['error_notification_level']		= array( 'list', 0 );
 	$params['email_notification_level']		= array( 'list', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
+	$params[] = array( 'section-end' );
 
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB1_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB1_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox', 49.8 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CREDIRECT') );
+	$params[] = array( 'page-head', JText::_('CFG_TAB_CUSTOMIZATION_TITLE') );
+	$params[] = array( 'section', 'customredirect' );
+	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_CREDIRECT') );
 	$params['customintro']						= array( 'inputC', '' );
 	$params['customintro_userid']				= array( 'toggle', '' );
 	$params['customintro_always']				= array( 'toggle', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_INUM') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'invoice-number' );
+	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_INUM') );
 	$params['invoicenum_doformat']				= array( 'toggle', '' );
 	$params['invoicenum_formatting']			= array( 'inputD', '' );
 
 	$rewriteswitches							= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 	$params										= AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
 
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'captcha' );
+	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_CAPTCHA') );
 	$params['use_recaptcha']					= array( 'toggle', '' );
 	$params['recaptcha_privatekey']				= array( 'inputC', '' );
 	$params['recaptcha_publickey']				= array( 'inputC', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_PROXY') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'proxy' );
+	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_PROXY') );
 	$params['use_proxy']						= array( 'toggle', '' );
 	$params['proxy']							= array( 'inputC', '' );
 	$params['proxy_port']						= array( 'inputC', '' );
 	$params['proxy_username']					= array( 'inputC', '' );
 	$params['proxy_password']					= array( 'inputC', '' );
 	$params['gethostbyaddr']					= array( 'toggle', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
+	$params[] = array( 'section-end' );
 
 	$itemidlist = array(	'cart' => array( 'view' => 'cart', 'params' => false ),
 							'checkout' => array( 'view' => 'checkout', 'params' => false ),
@@ -1481,17 +1496,19 @@ function editSettings( $option )
 							);
 
 
-	$params[] = array( 'userinfobox', 49.8 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
+	$params[] = array( 'section', 'date' );
+	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'price-formatting' );
+	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
 	$params['amount_currency_symbol']			= array( 'toggle', 0 );
 	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
 	$params['amount_use_comma']					= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'itemid' );
+	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
 
 	foreach ( $itemidlist as $param => $xparams ) {
 		$params['itemid_'.$param]				= array( 'inputA', '' );
@@ -1500,14 +1517,14 @@ function editSettings( $option )
 	$params['itemid_cb']						= array( 'inputA', '' );
 	$params['itemid_joomlauser']				= array( 'inputA', '' );
 
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
+	$params[] = array( 'section-end' );
 
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB_CUSTOMIZATION_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_CUSTOMIZATION_SUBTITLE') . '</h2>' );
 
-	$params[] = array( 'userinfobox', 33.225 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SYSTEM') );
+	$params[] = array( 'page-head', JText::_('CFG_TAB_EXPERT_SUBTITLE') );
+	$params[] = array( 'section', 'system' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SYSTEM') );
 	$params['alertlevel2']					= array( 'inputA', 0 );
 	$params['alertlevel1']					= array( 'inputA', 0 );
 	$params['expiration_cushion']			= array( 'inputA', 0 );
@@ -1519,38 +1536,40 @@ function editSettings( $option )
 	$params['custom_heartbeat_securehash']	= array( 'inputC', '' );
 	$params['countries_available']			= array( 'list_country_full', 0 );
 	$params['countries_top']				= array( 'list_country_full', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_API') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'api' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_API') );
 	$params['apiapplist']					= array( 'inputD', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
+	$params[] = array( 'section-end' );
 
-	$params[] = array( 'userinfobox', 33.225 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
+	$params[] = array( 'section', 'registration' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_REGFLOW') );
 	$params['show_fixeddecision']			= array( 'toggle', 0 );
 	$params['temp_auth_exp']				= array( 'inputC', '' );
 	$params['intro_expired']				= array( 'toggle', 0 );
 	$params['skip_registration']			= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'confirmation' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
 	$params['confirmation_coupons']			= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'checkout' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
 	$params['checkoutform_jsvalidation']	= array( 'toggle', '' );
 	$params['checkout_coupons']				= array( 'toggle', 1 );
 	$params['checkout_as_gift']				= array( 'toggle', '' );
 	$params['checkout_as_gift_access']		= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
 	$params['confirm_as_gift']				= array( 'toggle', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_PLANS') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'plans' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_PLANS') );
 	$params['root_group_rw']				= array( 'inputD', 0 );
 	$params['entry_plan']					= array( 'list', 0 );
 	$params['per_plan_mis']					= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
+	$params[] = array( 'section-end' );
 
-	$params[] = array( 'userinfobox', 33.225 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SECURITY') );
+	$params[] = array( 'section', 'security' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SECURITY') );
 	$params['ssl_signup']					= array( 'toggle', 0 );
 	$params['ssl_profile']					= array( 'toggle', 0 );
 	$params['override_reqssl']				= array( 'toggle', 0 );
@@ -1560,19 +1579,19 @@ function editSettings( $option )
 	$params['ssl_cainfo']					= array( 'inputC', '' );
 	$params['ssl_capath']					= array( 'inputC', '' );
 	$params['allow_invoice_unpublished_item']				= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_DEBUG') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'debug' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_DEBUG') );
 	$params['bypassintegration']			= array( 'inputC', '' );
-
 	$params['breakon_mi_error']				= array( 'toggle', 0 );
 	$params['email_default_admins']			= array( 'toggle', 1 );
 	$params['email_extra_admins']			= array( 'inputD', '' );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_UNINSTALL') );
+	$params[] = array( 'section-end' );
+	$params[] = array( 'section', 'uninstall' );
+	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_UNINSTALL') );
 	$params['delete_tables']				= array( 'toggle', 0 );
 	$params['delete_tables_sure']			= array( 'toggle', 0 );
-	$params[] = array( 'div_end', 0 );
-	$params[] = array( '2div_end', 0 );
+	$params[] = array( 'section-end' );
 
 	@end( $params );
 	$tab_data[] = array( JText::_('CFG_TAB_EXPERT_TITLE'), key( $params ), '<h2>' . JText::_('CFG_TAB_EXPERT_SUBTITLE') . '</h2>' );
@@ -1700,7 +1719,7 @@ function editSettings( $option )
 		$aecHTML->customparams = $customparamsarray;
 	}
 
-	HTML_AcctExp::Settings( $option, $aecHTML, $tab_data );
+	HTML_AcctExp::Settings( $option, $aecHTML, $params, $tab_data );
 }
 
 function saveSettings( $option, $return=0 )

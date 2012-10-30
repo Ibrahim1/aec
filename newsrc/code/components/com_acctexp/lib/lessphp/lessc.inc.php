@@ -123,13 +123,15 @@ class lessc {
 		// copy mixins into scope, set their parents
 		// bring blocks from import into current block
 		// TODO: need to mark the source parser	these came from this file
-		foreach ($root->children as $childName => $child) {
-			if (isset($parentBlock->children[$childName])) {
-				$parentBlock->children[$childName] = array_merge(
-					$parentBlock->children[$childName],
-					$child);
-			} else {
-				$parentBlock->children[$childName] = $child;
+		if ( !empty( $root->children ) ) {
+			foreach ($root->children as $childName => $child) {
+				if (isset($parentBlock->children[$childName])) {
+					$parentBlock->children[$childName] = array_merge(
+						$parentBlock->children[$childName],
+						$child);
+				} else {
+					$parentBlock->children[$childName] = $child;
+				}
 			}
 		}
 
@@ -814,6 +816,10 @@ class lessc {
 		return $this->toBool($value[0] == "number" && $value[2] == "em");
 	}
 
+	protected function lib_isrem($value) {
+		return $this->toBool($value[0] == "number" && $value[2] == "rem");
+	}
+
 	protected function lib_rgbahex($color) {
 		$color = $this->coerceColor($color);
 		if (is_null($color))
@@ -1027,6 +1033,25 @@ class lessc {
 		}
 
 		return $this->fixColor($new);
+	}
+
+	protected function lib_contrast($args) {
+		if ($args[0] != 'list' || count($args[2]) < 3) {
+			return array(array('color', 0, 0, 0), 0);
+		}
+
+		list($inputColor, $darkColor, $lightColor) = $args[2];
+
+		$inputColor = $this->assertColor($inputColor);
+		$darkColor = $this->assertColor($darkColor);
+		$lightColor = $this->assertColor($lightColor);
+		$hsl = $this->toHSL($inputColor);
+
+		if ($hsl[3] > 50) {
+			return $darkColor;
+		}
+
+		return $lightColor;
 	}
 
 	protected function assertColor($value, $error = "expected color value") {
@@ -1299,8 +1324,12 @@ class lessc {
 			case 'keyword':
 				$name = $value[1];
 				if (isset(self::$cssColors[$name])) {
-					list($r, $g, $b) = explode(',', self::$cssColors[$name]);
-					return array('color', $r, $g, $b);
+					$rgba = explode(',', self::$cssColors[$name]);
+
+					if(isset($rgba[3]))
+						return array('color', $rgba[0], $rgba[1], $rgba[2], $rgba[3]);
+
+					return array('color', $rgba[0], $rgba[1], $rgba[2]);
 				}
 				return null;
 		}
@@ -1444,6 +1473,34 @@ class lessc {
 		}
 		return $this->fixColor($out);
 	}
+
+	function lib_red($color){
+		$color = $this->coerceColor($color);
+		if (is_null($color)) {
+			$this->throwError('color expected for red()');
+		}
+		
+		return $color[1];
+	}
+
+	function lib_green($color){
+		$color = $this->coerceColor($color);
+		if (is_null($color)) {
+			$this->throwError('color expected for green()');
+		}
+		
+		return $color[2];
+	}
+
+	function lib_blue($color){
+		$color = $this->coerceColor($color);
+		if (is_null($color)) {
+			$this->throwError('color expected for blue()');
+		}
+		
+		return $color[3];
+	}
+
 
 	// operator on two numbers
 	protected function op_number_number($op, $left, $right) {
@@ -1945,6 +2002,7 @@ class lessc {
 		'teal' => '0,128,128',
 		'thistle' => '216,191,216',
 		'tomato' => '255,99,71',
+		'transparent' => '0,0,0,0',
 		'turquoise' => '64,224,208',
 		'violet' => '238,130,238',
 		'wheat' => '245,222,179',
@@ -2053,8 +2111,10 @@ class lessc_parser {
 			$this->throwError();
 
 		// TODO report where the block was opened
-		if (!is_null($this->env->parent))
-			throw new exception('parse error: unclosed block');
+		if ( isset( $this->env->parent) ) {
+			if (!is_null($this->env->parent))
+				throw new exception('parse error: unclosed block');
+		}
 
 		return $this->env;
 	}

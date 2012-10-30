@@ -558,72 +558,72 @@ vertical-align: top;
 padding-bottom: 18px;
 }
 
-label {
+.userinfobox label {
 width: 48%;
 padding-right: 12px;
 line-height: 16px;
 }
 
-.form-horizontal .control-group > label {
+.userinfobox .form-horizontal .control-group > label {
 width: 48%;
 }
 
-.form-horizontal .accordion-inner .control-group > label {
+.userinfobox .form-horizontal .accordion-inner .control-group > label {
 width: 18%;
 }
 
-.form-horizontal .accordion-inner .controls {
+.userinfobox .form-horizontal .accordion-inner .controls {
 margin-left: 22%;
 width: 78%;
 }
 
-.form-stacked .control-group div.controls .span6 {
+.userinfobox .form-stacked .control-group div.controls .span6 {
 width: inherit;
 }
 
-div.control-group form .controls {
+.userinfobox div.control-group form .controls {
 float: left;
 text-align: center;
 }
 
-.form-horizontal .controls {
+.userinfobox .form-horizontal .controls {
 margin-left: 54%;
 width: 48%;
 }
 
-div.control-group .controls>* {
+.userinfobox div.control-group .controls>* {
 margin: 0 auto;
 vertical-align: middle;
 }
 
-form .control-group {
+.userinfobox form .control-group {
 width: 100%;
 margin-bottom: 16px;
 }
 
-.form-noindent .controls {
+.userinfobox .form-noindent .controls {
 margin-left: 18%;
 width: 80%;
 }
 
-.form-noindent  .control-group > label {
+.userinfobox .form-noindent  .control-group > label {
 width: 15%;
 }
 
-.control-group>div.controls>span {
+.userinfobox .control-group>div.controls>span {
 display: inline-block;
 font-size: 120%;
 font-weight: bold;
 padding-top: 6.5px;
 }
 
-div.controls ul {
+.userinfobox div.controls ul {
 margin: 0;
 padding-left: 14px;
 list-style: circle;
 }
 
-div.controls select {
+.userinfobox div.controls select {
 width: 70%;
 }
 
@@ -1711,7 +1711,7 @@ overflow-x: auto;
 max-width: 1000px;
 }
 
-.icon-32-extensions {
+.bsicon-32-extensions {
 background-image:url(../images/admin/icons/aec_central_icon.png);
 }
 
@@ -2296,6 +2296,12 @@ font-weight: bold;
 color: #555;
 }
 
+/* To be converted to LESS */
+
+.container {
+text-align: left;
+}
+
 div.dataTables-wrapper {
 	float: left;
 	margin: 12px;
@@ -2383,4 +2389,137 @@ table.table thead .sorting_desc_disabled { background: url('images/sort_desc_dis
   margin: 2px;
   border: none !important;
   background: inherit !important;
+}
+
+
+section {
+  margin: 30px 0 0;
+  padding: 12px 12px 12px 36px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-bottom-color: #bbb;
+  border-right-color: #bbb;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+  -webkit-box-shadow: inset -2px -2px 30px rgba(0,0,0,.02), inset -1px 0 1px rgba(0,0,0,.1),0 2px 3px rgba(0,0,0,.1), 0 7px 14px rgba(127,127,127,.08);
+     -moz-box-shadow: inset -2px -2px 30px rgba(0,0,0,.02), inset -1px 0 1px rgba(0,0,0,.1),0 2px 3px rgba(0,0,0,.1), 0 7px 14px rgba(127,127,127,.08);
+          box-shadow: inset -2px -2px 30px rgba(0,0,0,.02), inset -1px 0 1px rgba(0,0,0,.1),0 2px 3px rgba(0,0,0,.1), 0 7px 14px rgba(127,127,127,.08);
+}
+
+/* Sidenav for Docs
+-------------------------------------------------- */
+
+.affix-sidebar {
+  min-height: 1px;
+}
+
+.affixnav {
+  width: 228px;
+  margin: 30px 0 0;
+  padding: 0;
+  background-color: #fff;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+     -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+          box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+
+.affixnav > li > a {
+  display: block;
+  *width: 190px;
+  margin: 0 0 -1px;
+  padding: 8px 14px;
+  border: 1px solid #e5e5e5;
+  text-align: left;
+  font-size: 130%;
+}
+.affixnav > li > a:link,
+.affixnav > li > a:visited {
+  color: #08C !important;
+}
+.affixnav > li:first-child > a {
+  -webkit-border-radius: 6px 6px 0 0;
+     -moz-border-radius: 6px 6px 0 0;
+          border-radius: 6px 6px 0 0;
+}
+.affixnav > li:last-child > a {
+  -webkit-border-radius: 0 0 6px 6px;
+     -moz-border-radius: 0 0 6px 6px;
+          border-radius: 0 0 6px 6px;
+}
+.affixnav > .active > a {
+  position: relative;
+  z-index: 2;
+  padding: 9px 15px;
+  border: 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+     -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+          box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+}
+
+/* Chevrons */
+.affixnav .bsicon-chevron-right {
+  float: right;
+  margin-top: 2px;
+  margin-right: -6px;
+  opacity: .25;
+}
+.affixnav > li > a:hover {
+  background-color: #f5f5f5;
+}
+.affixnav a:hover .bsicon-chevron-right {
+  opacity: .5;
+}
+.affixnav .active .bsicon-chevron-right,
+.affixnav .active a:hover .bsicon-chevron-right {
+  background-image: url(../images/site/glyphicons-halflings-white.png);
+  opacity: 1;
+}
+.affixnav.affix {
+  top: 40px;
+}
+.affixnav.affix-bottom {
+  position: absolute;
+  top: auto;
+  bottom: 270px;
+}
+
+@media (min-width: 1200px) {
+  .affixnav {
+    width: 258px;
+  }
+}
+
+@media (max-width: 980px) {
+  .affixnav {
+    top: 0;
+    margin-top: 30px;
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 980px) {
+  .affixnav {
+    width: 166px;
+    margin-top: 20px;
+  }
+  .affixnav.affix {
+    top: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .affixnav {
+    width: auto;
+    margin-bottom: 20px;
+  }
+  .affixnav.affix {
+    position: static;
+    width: auto;
+    top: 0;
+  }
 }

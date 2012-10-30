@@ -3,14 +3,14 @@ jQuery(document).ready(function(jQuery) {
 		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
 	});
 
-	jQuery('#aec-nav').hover(function(){
+	jQuery('.aec-navbar').hover(function(){
 		if ( jQuery(".navbar-hover-helper").length == 0 ) {
-			jQuery('#aec-nav').addClass("navbar-hover-helper");
+			jQuery('.aec-navbar').addClass("navbar-hover-helper");
 			jQuery('.aec-buttons-fixed').addClass("aec-buttons-fixed-extended");
 
 			jQuery('.navbar-fixed-top').addClass("navbar-fixed-top-override").prepend("<div class=\"head-minify btn btn-inverse\"><i class=\"bsicon-chevron-left bsicon-white\"></i></div>");
 
-			jQuery("#aec-nav").on( "click", ".head-minify", function(){
+			jQuery(".aec-navbar").on( "click", ".head-minify", function(){
 				jQuery('.head-minify').remove();
 				jQuery('.navbar-fixed-top').removeClass('navbar-fixed-top-override');
 				jQuery('.aec-buttons-fixed').removeClass("aec-buttons-fixed-extended");
@@ -18,9 +18,16 @@ jQuery(document).ready(function(jQuery) {
 		}
 
 		}, function(){
-			jQuery('#aec-nav').removeClass("navbar-hover-helper");
+			jQuery('.aec-navbar').removeClass("navbar-hover-helper");
 		}
 	);
+
+	jQuery('.affix').affix({
+		offset: {
+			top: function () { return jQuery(window).width() <= 980 ? 290 : 210 },
+			bottom: 270
+		}
+	})
 
 	if ( jQuery("#system-message li").length != 0 ) {
 		jQuery("div.container").before('<span class="nav-msg label label-warning">'+jQuery("#system-message li").html()+'</span>')
@@ -119,15 +126,15 @@ jQuery(document).ready(function(jQuery) {
 		var i, scrollTop = jQuery(window).scrollTop();
 
 		if ( navTop == 0 ) {
-			navTop = jQuery('#aec-nav .navbar-inner').offset().top;
+			navTop = jQuery('.aec-navbar .navbar-inner').offset().top;
 		}
 
 		if (scrollTop >= navTop && !tbFixed) {
 			tbFixed = 1;
-			jQuery('#aec-nav .navbar').addClass('navbar-fixed-top');
+			jQuery('.aec-navbar').addClass('navbar-fixed-top');
 		} else if (scrollTop <= navTop && tbFixed) {
 			tbFixed = 0;
-			jQuery('#aec-nav .navbar').removeClass('navbar-fixed-top').removeClass('navbar-fixed-top-override');
+			jQuery('.aec-navbar').removeClass('navbar-fixed-top').removeClass('navbar-fixed-top-override');
 			jQuery('div.head-minify').remove();
 			jQuery('.aec-buttons-fixed').removeClass("aec-buttons-fixed-extended");
 		}

@@ -81,6 +81,9 @@ class HTML_myCommon
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/ui.daterangepicker.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.multiselect.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.simplecolorpicker.css' . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.dataTables_themeroller.css' . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.dataTables.css' . '" />' );
+		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.dataTables.extras.css' . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/fg.menu.css' . '" />' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.min.js' );
@@ -716,7 +719,7 @@ class HTML_AcctExp
 
 		$linkroot = "index.php?option=com_acctexp&amp;task=";
 		?>
-		<div class="navbar navbar-inverse" id="aec-nav">
+		<div class="navbar aec-navbar navbar-inverse">
 			<div class="navbar-inner">
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
@@ -1159,7 +1162,7 @@ class HTML_AcctExp
 		<?php
 	}
 
-	function Settings( $option, $aecHTML, $tab_data )
+	function Settings( $option, $aecHTML, $params, $tab_data )
 	{
 		jimport( 'joomla.html.editor' );
 
@@ -1173,26 +1176,43 @@ class HTML_AcctExp
 						);
 		HTML_myCommon::getButtons( $buttons, 'Settings' );
 
-		HTML_myCommon::startForm();
+		HTML_myCommon::startForm(); ?>
 
-		echo '<div class="container">';
-
-		foreach( $tab_data as $tab ) {
-			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-				echo $aecHTML->createSettingsParticle( $rowname );
-				unset( $aecHTML->rows[$rowname] );
-				// Skip to next tab if last item in this one reached
-				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
-					break;
-				}
-			}
-
-		}
-		?>
-		<input type="hidden" name="id" value="1" />
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		</form>
+		<div class="container" data-spy="scroll" data-target=".affix-sidebar">
+			<div class="row">
+				<div class="span3 affix-sidebar">
+					<ul class="nav nav-list affixnav affix" data-spy="affix">
+					<?php
+					$section = "";
+					foreach ( $params as $rowname => $rowcontent ) {
+							if ( $rowcontent[0] == 'page-head' ) {
+								echo '<li><a href="#' . $section . '"><i class="bsicon-chevron-right"></i> ' . $rowcontent[1] . '</a></li>';
+							} elseif ( $rowcontent[0] == 'section' ) {
+								$section = $rowcontent[1];
+							}
+					}
+					?>
+					</ul>
+				</div>
+				<div class="span9">
+					<?php foreach( $tab_data as $tab ) {
+						foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+							echo $aecHTML->createSettingsParticle( $rowname );
+							unset( $aecHTML->rows[$rowname] );
+							// Skip to next tab if last item in this one reached
+							if ( strcmp( $rowname, $tab[1] ) === 0 ) {
+								break;
+							}
+						}
+			
+					}
+					?>
+					<input type="hidden" name="id" value="1" />
+					<input type="hidden" name="task" value="" />
+					<input type="hidden" name="option" value="<?php echo $option; ?>" />
+					</form>
+				</div>
+			</div>
 		</div>
 		<?php
 		echo $aecHTML->loadJS();
