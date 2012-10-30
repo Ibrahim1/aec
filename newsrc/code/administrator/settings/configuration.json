@@ -1,0 +1,37 @@
+{
+	"name":"PayPal",
+	"description":"Bla Bla",
+	"type":"redirect",
+	"supports":
+	{
+		"testmode":true,
+		"currencies":["eur","usd","gbp","aud","cad","jpy","nzd","chf","hkd","sgd","sek","dkk","pln","nok","huf","czk","mxn","ils","brl","myr","php","twd","thb","zar"],
+		"languages":"iso639",
+		"creditcards":["visa","mastercard","discover","americanexpress","echeck","giropay"],
+		"recurring-billing":true,
+		"taxes":true
+	},
+	"settings":
+	{
+		"require_subscription":
+		{
+			"name":"Require Subscription",
+			"desc":"When enabled, a user MUST have a subscription. If disabled, users will be able to log in without one.",
+			"type":"bool",
+			"default":false
+		}
+	},
+	"settings-layout":
+	[
+		{ "type":"page-head", "content":"General Configuration" },
+		{
+			"type":"section",
+			"content": [
+				{ "type":"section-head", "content":"Access" },
+				"require_subscription","adminaccess","manageraccess",
+				{ "type":"section-head", "content":"Processors" },
+				"gwlist","standard_currency"
+			]
+		},
+	]
+}
