@@ -13,7 +13,6 @@
 
 $tmpl->addDefaultCSS();
 
-
 $otherfields = array( "page_title", "before_header", "header", "after_header", "address", "before_content", "after_content", "before_footer", "footer", "after_footer" );
 
 foreach ( $data as $k => $v ) {

@@ -45,12 +45,6 @@ class HTML_myCommon
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION . '" />' );
 	}
 
-	function addReadoutCSS()
-	{
-		$document =& JFactory::getDocument();
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/readout.css?rev=' . _AEC_REVISION . '" />' );
-	}
-
 	function addBackendJS( $ui=false )
 	{
 		$document =& JFactory::getDocument();
