@@ -167,22 +167,22 @@ class mi_iproperty
 		}
 
 		if ( !empty( $this->settings['set_agentlistings'] ) ) {
-			$agent->params['maxlistings'] = $this->settings['set_agentlistings'];
+			$agent->params->maxlistings = $this->settings['set_agentlistings'];
 		} elseif ( !empty( $this->settings['add_agentlistings'] ) ) {
-			if ( isset( $agent->params['maxlistings'] ) ) {
-				$agent->params['maxlistings'] += $this->settings['add_agentlistings'];
+			if ( isset( $agent->params->maxlistings ) ) {
+				$agent->params->maxlistings += $this->settings['add_agentlistings'];
 			} else {
-				$agent->params['maxlistings'] = $this->settings['add_agentlistings'];
+				$agent->params->maxlistings = $this->settings['add_agentlistings'];
 			}
 		}
 
 		if ( !empty( $this->settings['set_agentflistings'] ) ) {
-			$agent->params['maxflistings'] = $this->settings['set_agentflistings'];
+			$agent->params->maxflistings = $this->settings['set_agentflistings'];
 		} elseif ( !empty( $this->settings['add_agentflistings'] ) ) {
-			if ( isset( $agent->params['maxlistings'] ) ) {
-				$agent->params['maxflistings'] += $this->settings['add_agentflistings'];
+			if ( isset( $agent->params->maxlistings ) ) {
+				$agent->params->maxflistings += $this->settings['add_agentflistings'];
 			} else {
-				$agent->params['maxflistings'] = $this->settings['add_agentflistings'];
+				$agent->params->maxflistings = $this->settings['add_agentflistings'];
 			}
 		}
 
@@ -217,52 +217,52 @@ class mi_iproperty
 		}
 
 		if ( !empty( $this->settings['set_listings'] ) ) {
-			$company->params['maxlistings'] = $this->settings['set_listings'];
+			$company->params->maxlistings = $this->settings['set_listings'];
 		} elseif ( !empty( $this->settings['add_listings'] ) ) {
-			if ( isset( $company->params['maxlistings'] ) ) {
-				$company->params['maxlistings'] += $this->settings['add_listings'];
+			if ( isset( $company->params->maxlistings ) ) {
+				$company->params->maxlistings += $this->settings['add_listings'];
 			} else {
-				$company->params['maxlistings'] = $this->settings['add_listings'];
+				$company->params->maxlistings = $this->settings['add_listings'];
 			}
 		}
 
 		if ( !empty( $this->settings['set_flistings'] ) ) {
-			$company->params['maxflistings'] = $this->settings['set_flistings'];
+			$company->params->maxflistings = $this->settings['set_flistings'];
 		} elseif ( !empty( $this->settings['add_flistings'] ) ) {
-			if ( isset( $company->params['maxlistings'] ) ) {
-				$company->params['maxflistings'] += $this->settings['add_flistings'];
+			if ( isset( $company->params->maxlistings ) ) {
+				$company->params->maxflistings += $this->settings['add_flistings'];
 			} else {
-				$company->params['maxflistings'] = $this->settings['add_flistings'];
+				$company->params->maxflistings = $this->settings['add_flistings'];
 			}
 		}
 
 		if ( !empty( $this->settings['set_agents'] ) ) {
-			$company->params['maxagents'] = $this->settings['set_agents'];
+			$company->params->maxagents = $this->settings['set_agents'];
 		} elseif ( !empty( $this->settings['add_agents'] ) ) {
-			if ( isset( $company->params['maxagents'] ) ) {
-				$company->params['maxagents'] += $this->settings['add_agents'];
+			if ( isset( $company->params->maxagents ) ) {
+				$company->params->maxagents += $this->settings['add_agents'];
 			} else {
-				$company->params['maxagents'] = $this->settings['add_agents'];
+				$company->params->maxagents = $this->settings['add_agents'];
 			}
 		}
 
 		if ( !empty( $this->settings['set_fagents'] ) ) {
-			$company->params['maxfagents'] = $this->settings['set_fagents'];
+			$company->params->maxfagents = $this->settings['set_fagents'];
 		} elseif ( !empty( $this->settings['add_fagents'] ) ) {
-			if ( isset( $company->params['maxfagents'] ) ) {
-				$company->params['maxfagents'] += $this->settings['add_fagents'];
+			if ( isset( $company->params->maxfagents ) ) {
+				$company->params->maxfagents += $this->settings['add_fagents'];
 			} else {
-				$company->params['maxfagents'] = $this->settings['add_fagents'];
+				$company->params->maxfagents = $this->settings['add_fagents'];
 			}
 		}
 
 		if ( !empty( $this->settings['set_images'] ) ) {
-			$company->params['maximgs'] = $this->settings['set_images'];
+			$company->params->maximgs = $this->settings['set_images'];
 		} elseif ( !empty( $this->settings['add_images'] ) ) {
-			if ( isset( $company->params['maxagents'] ) ) {
-				$company->params['maximgs'] += $this->settings['add_images'];
+			if ( isset( $company->params->maxagents ) ) {
+				$company->params->maximgs += $this->settings['add_images'];
 			} else {
-				$company->params['maximgs'] = $this->settings['add_images'];
+				$company->params->maximgs = $this->settings['add_images'];
 			}
 		}
 
@@ -353,8 +353,8 @@ class mi_iproperty
 		if ( isset( $object->params ) ) {
 			$object->params = json_decode( $object->params );
 
-			if ( !is_array( $object->params ) ) {
-				$object->params = array();
+			if ( empty( $object->params ) ) {
+				$object->params = new stdClass();
 			}
 		}
 
@@ -365,7 +365,7 @@ class mi_iproperty
 	{
 		$db = &JFactory::getDBO();
 
-		if ( is_array( $object->params ) ) {
+		if ( is_object( $object->params ) ) {
 			$object->params = json_encode( $object->params );
 		}
 
