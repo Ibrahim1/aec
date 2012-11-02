@@ -90,6 +90,7 @@
 		<folder>css</folder>
 		<folder>images</folder>
 		<folder>js</folder>
+		<folder>less</folder>
 	</media>
 	<installfile>install.acctexp.php</installfile>
 	<scriptfile>install.acctexp.php</scriptfile>

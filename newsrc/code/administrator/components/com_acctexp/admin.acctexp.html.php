@@ -40,8 +40,6 @@ class HTML_myCommon
 	function addBackendCSS()
 	{
 		$document =& JFactory::getDocument();
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/bootstrap.min.css?rev=' . _AEC_REVISION . '" />' );
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/toggleswitch/toggleswitch.css?rev=' . _AEC_REVISION . '" />' );
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION . '" />' );
 	}
 
@@ -70,15 +68,6 @@ class HTML_myCommon
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowReordering.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowGrouping.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/paging.js' );
-
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery-ui-1.8.16.custom.css' . '" />' );
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/ui.daterangepicker.css' . '" />' );
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.multiselect.css' . '" />' );
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.simplecolorpicker.css' . '" />' );
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.dataTables_themeroller.css' . '" />' );
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.dataTables.css' . '" />' );
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/jquery.dataTables.extras.css' . '" />' );
-		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/fg.menu.css' . '" />' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );

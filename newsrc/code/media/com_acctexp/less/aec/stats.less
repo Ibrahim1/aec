@@ -8,7 +8,7 @@
 	width: 240px;
 	background: #ccc;
 	padding: 18px 0 24px 18px;
-	border-radius( 10px );
+	.border-radius( 10px );
 	margin: 24px 0;
 	ul {
 		float: right;
@@ -50,12 +50,12 @@
 	font: 10px sans-serif;
 	margin: 24px auto;
 	width: 980px;
-	border-radius( 10px );
+	.border-radius( 10px );
 	overflow: hidden;
 	h3 {
 		text-align: center;
 		background: #ccc;
-		border-radius( 8px );
+		.border-radius( 8px );
 		margin: 16px 0;
 		padding: 6px 0;
 		text-align: center;
@@ -264,17 +264,17 @@ path.month {
 }
 
 [class^="graph-control-"] {
-  display: inline-block;
-  width: 28px;
-  height: 14px;
-  vertical-align: text-top;
-  background-image: url(../images/admin/icons/graph-controls-sprites.png);
-  background-position: 0 0;
-  background-repeat: no-repeat;
-  margin-right: 8px;
+	display: inline-block;
+	width: 28px;
+	height: 14px;
+	vertical-align: text-top;
+	background-image: url(../images/admin/icons/graph-controls-sprites.png);
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	margin-right: 8px;
 }
 
-.graph-control
+.graph-control {
 	&-area { background-position: 0 0; }
 	&-bar { background-position: 0 -14px; }
 	&-line { background-position: 0 -28px; }

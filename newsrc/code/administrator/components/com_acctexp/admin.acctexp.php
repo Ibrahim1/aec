@@ -303,7 +303,14 @@ switch( strtolower( $task ) ) {
 		$less->setImportDir( array(JPATH_SITE . '/media/com_acctexp/less/') );
 		$less->setFormatter("compressed");
 		$less->setPreserveComments(true);
-		echo $less->compileFile(JPATH_SITE . '/media/com_acctexp/less/admin.less');exit;
+
+		//echo $less->compileFile(JPATH_SITE . '/media/com_acctexp/less/admin.less');exit;
+
+		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
+		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
+		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.helix.less", JPATH_SITE . '/media/com_acctexp/css/template.helix.css' );
+		exit;
+		
 		break;
 
 	default: aecCentral( $option ); break;

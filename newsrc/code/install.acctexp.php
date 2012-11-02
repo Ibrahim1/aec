@@ -332,6 +332,17 @@ function com_install()
 		$template->storeload();
 	}
 
+	// Convert LESS files
+	require JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php';
+	$less = new lessc();
+	$less->setImportDir( array(JPATH_SITE . '/media/com_acctexp/less/') );
+	$less->setFormatter("compressed");
+	$less->setPreserveComments(true);
+
+	$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
+	$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
+	$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.helix.less", JPATH_SITE . '/media/com_acctexp/css/template.helix.css' );
+
 	?>
 	<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root() ?>media/com_acctexp/css/admin.css?rev=<?php echo _AEC_REVISION ?>" />
 	<style type="text/css">

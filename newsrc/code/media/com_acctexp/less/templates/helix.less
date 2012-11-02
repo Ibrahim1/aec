@@ -26,44 +26,39 @@ width: 40%
 /* == Subscription Plans Page == */
 
 .subscriptions {
-padding: 0 12px;
-}
-
-.subscriptions table {
-width: 100%;
-padding-top: 4px;
-}
-
-.subscriptions th {
-padding: 2px;
-font-family: Georgia, "Times New Roman", serif;
-font-size: 160%;
-font-weight: normal;
-text-align: left;
-color: #000;
-border-bottom: 1px solid #003e56;
-width: 100%;
-}
-
-.subscriptions td {
-margin: 6px;
-font-family: Tahoma, Verdana, Helvetica, sans-serif;
-font-size: 110%;
-color: #222;
-}
-
-.subscriptions p,
-.subscriptions h2 {
-padding-left: 20px;
-margin-bottom: 24px;
-}
-
-.subscriptions td.buttons {
-padding: 0px 12px;
-border: none;
-background: #b0efff;
-text-align: right;
-text-indent: 0px;
+	padding: 0 12px;
+	table {
+		width: 100%;
+		padding-top: 4px;
+	}
+	th {
+		padding: 2px;
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 160%;
+		font-weight: normal;
+		text-align: left;
+		color: #000;
+		border-bottom: 1px solid #003e56;
+		width: 100%;
+	}
+	td {
+		margin: 6px;
+		font-family: Tahoma, Verdana, Helvetica, sans-serif;
+		font-size: 110%;
+		color: #222;
+	}
+	p,
+	h2 {
+		padding-left: 20px;
+		margin-bottom: 24px;
+	}
+	td.buttons {
+		padding: 0px 12px;
+		border: none;
+		background: #b0efff;
+		text-align: right;
+		text-indent: 0px;
+	}
 }
 
 .gateway_button,
@@ -316,28 +311,27 @@ text-align: center;
 padding-bottom: 40px;
 }
 
-#alert_level_3 {
-width: 100%;
-height: 100%;
-background-color: #bfb;
-}
-
-#alert_level_1 {
-width: 100%;
-height: 100%;
-background-color: #fcc;
-}
-
-#alert_level_-1 {
-width: 100%;
-height: 100%;
-background-color: #fcc;
-}
-
-#alert_level_2 {
-width: 100%;
-height: 100%;
-background-color: #ffb;
+#alert_level {
+	&_3 {
+		width: 100%;
+		height: 100%;
+		background-color: #bfb;
+	}
+	&_1 {
+		width: 100%;
+		height: 100%;
+		background-color: #fcc;
+	}
+	&_-1 {
+		width: 100%;
+		height: 100%;
+		background-color: #fcc;
+	}
+	&_2 {
+		width: 100%;
+		height: 100%;
+		background-color: #ffb;
+	}
 }
 
 #expired_greeting {
@@ -345,38 +339,33 @@ padding-top: 14px;
 border: 2px solid #fff;
 }
 
-#box_expired p {
-text-align: center;
+#box_expired {
+	p {
+		text-align: center;
+	}
+	strong {
+		font-weight: bold;
+	}
 }
 
-#box_expired strong {
-font-weight: bold;
-}
-
-#days_left{
-padding-top: 14px;
-border: 2px solid #fff;
-}
-
-* html #days_left{
-}
-
-#days_left h1 {
-font-weight: bold;
-font-size: 130%;
-text-align: center;
-}
-
-#days_left p {
-font-weight: bold;
-font-size: 110%;
-text-align: center;
-}
-
-#days_left strong {
-font-weight: bold;
-font-size: 110%;
-text-align: center;
+#days_left {
+	padding-top: 14px;
+	border: 2px solid #fff;
+	h1 {
+		font-weight: bold;
+		font-size: 130%;
+		text-align: center;
+	}
+	p {
+		font-weight: bold;
+		font-size: 110%;
+		text-align: center;
+	}
+	strong {
+		font-weight: bold;
+		font-size: 110%;
+		text-align: center;
+	}
 }
 
 #renew_button {

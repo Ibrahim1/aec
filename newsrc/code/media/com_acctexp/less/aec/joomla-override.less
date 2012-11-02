@@ -22,9 +22,8 @@
 
 #toolbar-box { display: none !important; }
 
-#submenu-box {
-	display: none !important;
-	&, div.m { background: #fff; }
+#submenu-box, div.m {
+	background: none !important;
 }
 
 #content-box {
@@ -61,9 +60,9 @@ table.table-striped tr:hover td { background: #ffd; }
 	margin-top: 8px;
 	margin-left: 0;
 	padding: 6px;
-	border-radius( 4px );
+	.border-radius( 4px );
 	opacity: 0;
-	transition( opacity 0.5s ease-out, margin-left 0.5s ease-out );
+	.transition( opacity 0.5s ease-out, margin-left 0.5s ease-out );
 }
 
 .nav-msg-transition {
