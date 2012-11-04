@@ -254,13 +254,13 @@ switch( strtolower( $task ) ) {
 		exit;
 		break;
 
+	case 'noticesmodal': getNotices();exit; break;
+
 	case 'readnoticeajax': readNotice($id[0]); exit; break;
 
 	case 'readnotice': readNotice($id[0]); aecCentral( $option ); break;
 
 	case 'getnotice': echo getNotice();exit; break;
-
-	case 'gethelp': echo getHelp();exit; break;
 
 	case 'readallnotices':
 		$db = &JFactory::getDBO();
@@ -314,11 +314,6 @@ switch( strtolower( $task ) ) {
 		break;
 
 	default: aecCentral( $option ); break;
-}
-
-function getHelp()
-{
-	return 'test';
 }
 
 function toggleProperty( $type, $id, $property )
@@ -431,6 +426,31 @@ function aecCentral( $option, $searchresult=null, $searchcontent=null )
 	$notices = $db->loadObjectList();
 
  	HTML_AcctExp::central( $searchresult, $notices, $furthernotices, $searchcontent );
+}
+
+function getNotices()
+{
+	$db = &JFactory::getDBO();
+
+	$app = JFactory::getApplication();
+
+	$query = 'SELECT COUNT(*)'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			;
+	$db->setQuery( $query );
+	$furthernotices = $db->loadResult() - 10;
+
+	$query = 'SELECT *'
+			. ' FROM #__acctexp_eventlog'
+			. ' WHERE `notify` = \'1\''
+			. ' ORDER BY `datetime` DESC'
+			. ' LIMIT 0, 10'
+			;
+	$db->setQuery( $query	);
+	$notices = $db->loadObjectList();
+
+ 	HTML_AcctExp::eventlogModal( $notices, $furthernotices );
 }
 
 function readNotice( $id )

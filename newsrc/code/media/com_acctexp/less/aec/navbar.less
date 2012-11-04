@@ -1,3 +1,21 @@
+@-webkit-keyframes glow {.mixin-glow;}
+@-moz-keyframes glow {.mixin-glow;}
+@-ms-keyframes glow {.mixin-glow;}
+@-o-keyframes glow {.mixin-glow;}
+@keyframes glow {.mixin-glow;}
+
+.mixin-glow() {
+	from {
+		text-shadow: 0 0 9px #fff, 0 0 9px #fff, 0 0 9px #fff;
+	}
+	to {
+		text-shadow: 0 0 9px #fff, 0 0 9px #fff, 0 0 9px #fff;
+	}
+	80% {
+		text-shadow: 0 0 9px #fff, 0 0 9px #fff, 0 0 9px #fff, 0 0 9px #fff, 0 0 9px #fff, 0 0 9px #fff, 0 0 9px #fff;
+	}
+}
+
 .navbar {
 	z-index: 50;
 	margin-bottom: 0;
@@ -9,6 +27,20 @@
 		outline: 0 none !important;
 		height: 18px;
 		margin-top: 0;
+	}
+	a.toolbar-notify {
+		float: left;
+		display: box;
+		color: #fff;
+		padding: 12px 0;
+		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+		-moz-animation: glow 2s infinite;
+		-webkit-animation: glow 2s infinite;
+		animation: glow 2s infinite;
+		&:hover {
+			text-shadow: 0 0 9px #fff, 0 0 9px #fff, 0 0 12px #fff, 0 0 16px #fff, 0 0 18px #fff, 0 0 9px #fff, 0 0 9px #fff, 0 0 12px #fff, 0 0 16px #fff, 0 0 18px #fff;
+			text-decoration: none;
+		}
 	}
 	form { margin: 6px 0 -5px; }
 	.nav {
