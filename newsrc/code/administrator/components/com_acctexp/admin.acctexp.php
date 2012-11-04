@@ -439,13 +439,13 @@ function getNotices()
 			. ' WHERE `notify` = \'1\''
 			;
 	$db->setQuery( $query );
-	$furthernotices = $db->loadResult() - 10;
+	$furthernotices = $db->loadResult() - 5;
 
 	$query = 'SELECT *'
 			. ' FROM #__acctexp_eventlog'
 			. ' WHERE `notify` = \'1\''
 			. ' ORDER BY `datetime` DESC'
-			. ' LIMIT 0, 10'
+			. ' LIMIT 0, 5'
 			;
 	$db->setQuery( $query	);
 	$notices = $db->loadObjectList();

@@ -719,6 +719,10 @@ class HTML_AcctExp
 		$db->setQuery( $query );
 		$notices = $db->loadResult();
 
+		if ( $notices > 9 ) {
+			$notices = '9+';
+		}
+
 		$menu = self::getMenu();
 
 		$linkroot = "index.php?option=com_acctexp&amp;task=";
@@ -727,7 +731,7 @@ class HTML_AcctExp
 			<div class="navbar-inner">
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
-				<?php if ( $notices ) { ?>
+				<?php if ( !empty( $notices ) ) { ?>
 					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" data-remote="index.php?option=com_acctexp&amp;task=noticesModal" class="toolbar-notify"><i class="bsicon-envelope bsicon-white"></i> <?php echo $notices ?></a>
 				<?php } ?>
 				<ul class="nav">
