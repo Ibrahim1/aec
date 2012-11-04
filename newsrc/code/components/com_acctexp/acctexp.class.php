@@ -6489,13 +6489,13 @@ class aecHTML
 				break;
 			case 'inputD':
 				$return .= '<div class="controls">';
-				$return .= '<textarea id="' . $name . '" class="span6" rows="5" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="span4" rows="5" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputE':
 				$return .= '<div class="controls">';
-				$return .= '<textarea id="' . $name . '" class="span6" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="span4" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;

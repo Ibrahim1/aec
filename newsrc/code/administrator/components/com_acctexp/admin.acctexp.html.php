@@ -16,7 +16,7 @@ class HTML_myCommon
 	function Valanx()
 	{
 		?>
-		<br style="clear:both;"/><hr />
+		<br style="clear:both;"/>
 		<div id="aec-footer">
 			<div class="aec-footer-half">
 				<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_small_footer.png" border="0" alt="aec" />
@@ -64,17 +64,18 @@ class HTML_myCommon
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.min.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/TableTools.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowReordering.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowGrouping.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/dataTables.scroller.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/paging.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/TableTools.min.js' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/aec.backend.js' );
 	}
 
-	function startCommon( $id='aec_wrap' )
+	function startCommon( $id='aec-wrap' )
 	{
 		HTML_myCommon::addBackendCSS();
 		HTML_myCommon::addBackendJS();
@@ -1131,8 +1132,7 @@ class HTML_AcctExp
 				</div>
 				<h4>Account Required</h4>
 				<p><strong>Yes, you will need an active account at valanx.org for that</strong>.</p>
-				<p>In case you got AEC from a friend (or, you know, <em>"from a friend"</em>), please get yourself a membership! AEC exists and I can continue to work on it is because people support its development with their membership. So please - help a guy out.</p>
-				<p>In return, you get tons of support, new stuff as soon as we have it done and a warm fuzzy feeling that you have done the right thing. Cheers to that!</p>
+				<p>In case you got AEC from a friend (or, you know, <em>"from a friend"</em>), please get yourself a membership! Help us help you out.</p>
 				<h4>Suggestions? Complaints?</h4>
 				<p>If you have any suggestions or complaints about the software, our website or our support, please do not hesitate one second to get in touch with me. You can reach me here, <em>personally</em>:</p>
 				<div class="modal-overlay">
@@ -1149,7 +1149,7 @@ class HTML_AcctExp
 	{
 		jimport( 'joomla.html.editor' );
 
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon( 'aec-wrap-settings' );
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings' );
 
 		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
@@ -1164,7 +1164,7 @@ class HTML_AcctExp
 		<div class="container" data-spy="scroll" data-target=".affix-sidebar">
 			<div class="row">
 				<div class="span3 affix-sidebar">
-					<ul class="nav nav-list affixnav affix" data-spy="affix">
+					<ul class="nav nav-list affixnav affix span3" data-spy="affix">
 					<?php
 					$section = "";
 					foreach ( $params as $rowname => $rowcontent ) {
@@ -1754,7 +1754,10 @@ jQuery(document).ready(function() {
         "sPaginationType": "bootstrap",
         "aaSorting": [[ 6, "desc" ]],
         "bProcessing": true,
+        "sScrollY": "500px",
         "sAjaxSource": "index.php?option=com_acctexp&task=getSubscriptionPlans",
+        "bDeferRender": true,
+        "sDom": "frtiS",
         "aoColumns": [
             { "mData": "ordering", "bVisible": false, "sType": "numeric", "bSortable": true, "asSorting": [ "desc", "asc", "asc" ] },
             { "mData": "group", "bVisible": false },
@@ -1767,14 +1770,10 @@ jQuery(document).ready(function() {
             { "mData": "activecount" },
             { "mData": "totalcount" }
         ],
-        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-			jQuery(nRow).attr("id", aData.id);
-
-			return nRow;
-		},
         "oTableTools": {
-            "sRowSelect": "multi"
-        },
+            "sRowSelect": "multi",
+            "aButtons": []
+        }
     } )
     .rowGrouping({ "iGroupingColumnIndex": 1 })
     .rowReordering( { "sURL": "index.php?option=com_acctexp&task=sortSubscriptionPlans" });

@@ -1,12 +1,5 @@
-/* Sidenav for Docs
--------------------------------------------------- */
-
-.affix-sidebar {
-  min-height: 1px;
-}
-
 .affixnav {
-  margin: 30px 0 0;
+  margin: 120px 0 0;
   padding: 0;
   background-color: #fff;
   -webkit-border-radius: 6px;
@@ -28,7 +21,7 @@
 }
 .affixnav > li > a:link,
 .affixnav > li > a:visited {
-  color: #08C !important;
+  //color: #08C !important;
 }
 .affixnav > li:first-child > a {
   -webkit-border-radius: 6px 6px 0 0;
@@ -39,6 +32,9 @@
   -webkit-border-radius: 0 0 6px 6px;
      -moz-border-radius: 0 0 6px 6px;
           border-radius: 0 0 6px 6px;
+}
+.affixnav > .active {
+  color: #fff;
 }
 .affixnav > .active > a {
   @foo = inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);

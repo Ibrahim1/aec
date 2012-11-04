@@ -27,7 +27,7 @@ jQuery(document).ready(function(jQuery) {
 			top: function () { return jQuery(window).width() <= 980 ? 290 : 210 },
 			bottom: 270
 		}
-	})
+	});
 
 	if ( jQuery("#system-message li").length != 0 ) {
 		jQuery("div.container").before('<span class="nav-msg label label-warning">'+jQuery("#system-message li").html()+'</span>')
