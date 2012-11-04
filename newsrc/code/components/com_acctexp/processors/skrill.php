@@ -20,7 +20,7 @@ class processor_skrill extends POSTprocessor
 		$info['longname']			= JText::_('CFG_SKRILL_LONGNAME');
 		$info['statement']			= JText::_('CFG_SKRILL_STATEMENT');
 		$info['description']		= JText::_('CFG_SKRILL_DESCRIPTION');
-		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
+		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,ZAR';
 		$info['languages']			= 'EN,DE,ES,FR,IT,PL,GR,RO,RU,TR,CN,CZ,NL.';
 		$info['cc_list']			= 'visa,mastercard';
 		$info['recurring']			= 0;

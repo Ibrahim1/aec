@@ -20,7 +20,7 @@ class processor_moneybookers extends POSTprocessor
 		$info['longname']			= JText::_('CFG_MONEYBOOKERS_LONGNAME');
 		$info['statement']			= JText::_('CFG_MONEYBOOKERS_STATEMENT');
 		$info['description']		= JText::_('CFG_MONEYBOOKERS_DESCRIPTION');
-		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK';
+		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,ZAR';
 		$info['languages']			= 'EN,DE,ES,FR,IT,PL,GR,RO,RU,TR,CN,CZ,NL.';
 		$info['cc_list']			= 'visa,mastercard';
 		$info['recurring']			= 0;
