@@ -540,8 +540,6 @@ class metaUser
 
 		// Only authorize if user IP is matching and the grant is not expired
 		if ( isset( $this->meta->custom_params['tempauth_exptime'] ) && isset( $this->meta->custom_params['tempauth_ip'] ) ) {
-			$app = JFactory::getApplication();
-
 			if ( ( $this->meta->custom_params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->meta->custom_params['tempauth_exptime'] >= ( (int) gmdate('U') ) ) ) {
 				return true;
 			}
@@ -553,8 +551,6 @@ class metaUser
 	function setTempAuth( $password=false )
 	{
 		global $aecConfig;
-
-		$app = JFactory::getApplication();
 
 		if ( !empty( $this->cmsUser->password ) ) {
 			// Make sure we catch traditional and new joomla passwords
@@ -713,8 +709,6 @@ class metaUser
 		$db = &JFactory::getDBO();
 
 		global $aecConfig;
-
-		$app = JFactory::getApplication();
 
 		// Create a new cmsUser from user details - only allowing basic details so far
 		// Try different types of usernames to make sure we have a unique one
@@ -1597,8 +1591,6 @@ class metaUserDB extends serialParamDBTable
 
 	function createNew( $userid )
 	{
-		$app = JFactory::getApplication();
-
 		$this->userid			= $userid;
 		$this->created_date		= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
@@ -1623,8 +1615,6 @@ class metaUserDB extends serialParamDBTable
 
 	function setProcessorParams( $processorid, $params )
 	{
-		$app = JFactory::getApplication();
-
 		if ( empty( $this->processor_params ) ) {
 			$this->processor_params = array();
 		}
@@ -1708,8 +1698,6 @@ class metaUserDB extends serialParamDBTable
 
 	function addCustomParams( $params )
 	{
-		$app = JFactory::getApplication();
-
 		$this->addParams( $params, 'custom_params' );
 
 		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
@@ -1717,8 +1705,6 @@ class metaUserDB extends serialParamDBTable
 
 	function setCustomParams( $params )
 	{
-		$app = JFactory::getApplication();
-
 		$this->addParams( $params, 'custom_params', true );
 
 		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
@@ -1726,8 +1712,6 @@ class metaUserDB extends serialParamDBTable
 
 	function addPreparedMIParams( $plan_mi, $mi=false )
 	{
-		$app = JFactory::getApplication();
-
 		$this->addParams( $plan_mi, 'plan_params' );
 
 		if ( $mi === false ) {
@@ -1747,8 +1731,6 @@ class metaUserDB extends serialParamDBTable
 
 	function addPlanID( $id )
 	{
-		$app = JFactory::getApplication();
-
 		$this->plan_history->plan_history[] = $id;
 
 		if ( isset( $this->plan_history->used_plans[$id] ) ) {
@@ -3163,8 +3145,6 @@ class aecHeartbeat extends JTable
 
 	function ping( $configCycle )
 	{
-		$app = JFactory::getApplication();
-
 		if ( empty( $this->last_beat ) ) {
 			$this->load(1);
 		}
@@ -3327,8 +3307,6 @@ class aecHeartbeat extends JTable
 
 	function getExpirationLimit( $pre_expiration )
 	{
-		$app = JFactory::getApplication();
-
 		if ( $pre_expiration ) {
 			// pre-expiration found, search limit set to the maximum pre-expiration time
 			return AECToolbox::computeExpiration( ( $pre_expiration + 1 ), 'D', ( (int) gmdate('U') ) );
@@ -3432,8 +3410,6 @@ class aecHeartbeat extends JTable
 
 	function deleteTempTokens()
 	{
-		$app = JFactory::getApplication();
-
 		$db = &JFactory::getDBO();
 
 		// Delete old token entries
@@ -3457,8 +3433,6 @@ class displayPipelineHandler
 	function getUserPipelineEvents( $userid )
 	{
 		$db = &JFactory::getDBO();
-
-		$app = JFactory::getApplication();
 
 		// Entries for this user only
 		$query = 'SELECT `id`'
@@ -3576,8 +3550,6 @@ class displayPipeline extends serialParamDBTable
 
 	function create( $userid, $only_user, $once_per_user, $expire, $expiration, $displaymax, $displaytext, $params=null )
 	{
-		$app = JFactory::getApplication();
-
 		$this->id				= 0;
 		$this->userid			= $userid;
 		$this->only_user		= $only_user;
@@ -3875,8 +3847,6 @@ class aecEvent extends serialParamDBTable
 
 	function issue( $type, $subtype, $appid, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		$app = JFactory::getApplication();
-
 		$this->userid			= $userid;
 		$this->status			= 'waiting';
 
@@ -5457,8 +5427,6 @@ class XMLprocessor extends processor
 
 	function getMULTIPAYform( $var, $array )
 	{
-		$app = JFactory::getApplication();
-
 		$nlist	= array();
 		$prefix	= array();
 		$main	= array();
@@ -8185,8 +8153,6 @@ class SubscriptionPlan extends serialParamDBTable
 
 		global $aecConfig;
 
-		$app = JFactory::getApplication();
-
 		$forcelifetime = false;
 
 		if ( is_string( $multiplicator ) ) {
@@ -9317,8 +9283,6 @@ class aecTempToken extends serialParamDBTable
 		}
 
 		if ( empty( $this->ip ) ) {
-			$app = JFactory::getApplication();
-
 			$this->created_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 			$this->ip			= $_SERVER['REMOTE_ADDR'];
 		}
@@ -9356,8 +9320,6 @@ class aecTempToken extends serialParamDBTable
 	function create( $content, $token=null )
 	{
 		$db = &JFactory::getDBO();
-
-		$app = JFactory::getApplication();
 
 		if ( empty( $token ) ) {
 			$session =& JFactory::getSession();
@@ -11358,8 +11320,6 @@ class InvoiceFactory
 	{
 		global $task;
 
-		$app = JFactory::getApplication();
-
 		$this->confirmed = 1;
 
 		$this->loadMetaUser( false, true );
@@ -11993,8 +11953,6 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 
-		$app = JFactory::getApplication();
-
 		if ( $this->userid ) {
 			$this->loadMetaUser();
 
@@ -12455,8 +12413,6 @@ class Invoice extends serialParamDBTable
 			return false;
 		}
 
-		$app = JFactory::getApplication();
-
 		$invoice_number			= $this->generateInvoiceNumber();
 
 		$this->load(0);
@@ -12541,8 +12497,6 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
-			$app = JFactory::getApplication();
-
 			if ( ( strtotime( $this->transaction_date ) + ( $aecConfig->cfg['invoice_cushion']*60 ) ) > ( (int) gmdate('U') ) ) {
 				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {
 					// Desjardins is the only exception so far... bad bad bad
@@ -13104,8 +13058,6 @@ class Invoice extends serialParamDBTable
 
 		global $aecConfig;
 
-		$app = JFactory::getApplication();
-
 		$tdate				= strtotime( $this->transaction_date );
 		$time_passed		= ( ( ( (int) gmdate('U') ) ) - $tdate ) / 3600;
 		$transaction_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
@@ -13497,8 +13449,6 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( ( $this->transaction_date == '0000-00-00 00:00:00' ) && $forcecleared ) {
-			$app = JFactory::getApplication();
-
 			$this->transaction_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
 
@@ -14017,8 +13967,6 @@ class aecCart extends serialParamDBTable
 
 	function save()
 	{
-		$app = JFactory::getApplication();
-
 		if ( !$this->id || ( strcmp( $user_subscription->created_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
@@ -14388,8 +14336,6 @@ class aecCart extends serialParamDBTable
 
 	function issueHistoryEvent( $class, $event, $details )
 	{
-		$app = JFactory::getApplication();
-
 		if ( $class == 'error' ) {
 			$this->_error = $event;
 		}
@@ -14583,8 +14529,6 @@ class Subscription extends serialParamDBTable
 			return false;
 		}
 
-		$app = JFactory::getApplication();
-
 		$this->userid		= $userid;
 		$this->primary		= $primary;
 		$this->signup_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
@@ -14602,8 +14546,6 @@ class Subscription extends serialParamDBTable
 	function is_expired( $offset=false )
 	{
 		global $aecConfig;
-
-		$app = JFactory::getApplication();
 
 		if ( $this->status == 'Expired' ) {
 			return true;
@@ -14641,8 +14583,6 @@ class Subscription extends serialParamDBTable
 
 	function setExpiration( $unit, $value, $extend )
 	{
-		$app = JFactory::getApplication();
-
 		$now = (int) gmdate('U');
 
 		if ( $extend ) {
@@ -14674,8 +14614,6 @@ class Subscription extends serialParamDBTable
 		$db = &JFactory::getDBO();
 
 		global $aecConfig;
-
-		$app = JFactory::getApplication();
 
 		if ( $this->expiration ) {
 			$alert['level']		= -1;
@@ -15124,6 +15062,11 @@ class Subscription extends serialParamDBTable
 				JUTility::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
 			}
 		}
+	}
+
+	function addCustomParams( $params )
+	{
+		$this->addParams( $params, 'customparams' );
 	}
 
 	function getMIflags( $usage, $mi )
@@ -15814,8 +15757,6 @@ class reWriteEngine
 	function armRewrite()
 	{
 		$db = &JFactory::getDBO();
-
-		$app = JFactory::getApplication();
 
 		global $aecConfig;
 
@@ -17328,8 +17269,6 @@ class AECToolbox
 		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) && !$overrideJS ) {
 
 		} else {
-			$app = JFactory::getApplication();
-
 			$data = array(	'username' => $var['username'],
 							'password' => $var['password'],
 							'password2' => $var['password2'],
@@ -18188,8 +18127,6 @@ class microIntegrationHandler
 {
 	function microIntegrationHandler()
 	{
-		$app = JFactory::getApplication();
-
 		$this->mi_dir = JPATH_SITE . '/components/com_acctexp/micro_integration';
 	}
 
@@ -18902,8 +18839,6 @@ class microIntegration extends serialParamDBTable
 	function pre_expiration_action( &$metaUser, $objplan=null )
 	{
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) || method_exists( $this->mi_class, 'relayAction' ) ) {
-			$app = JFactory::getApplication();
-
 			$userflags = $metaUser->meta->getMIParams( $this->id, $objplan->id );
 
 			// We need the standard variables and their uppercase pendants
@@ -20248,8 +20183,6 @@ class couponHandler
 
 	function load( $coupon_code )
 	{
-		$app = JFactory::getApplication();
-
 		$db = &JFactory::getDBO();
 
 		$cc = $this->idFromCode( $coupon_code );
@@ -20397,8 +20330,6 @@ class couponHandler
 
 		if ( !empty( $id ) ) {
 			// Relation exists, update count
-			$app = JFactory::getApplication();
-
 			$couponxuser->load( $id );
 			$couponxuser->usecount += 1;
 			$couponxuser->addInvoice( $invoice->invoice_number );
@@ -20433,8 +20364,6 @@ class couponHandler
 
 		// Only do something if a relation exists
 		if ( $id ) {
-			$app = JFactory::getApplication();
-
 			// Decrement use count
 			$couponxuser->load( $id );
 			$couponxuser->usecount -= 1;
@@ -20888,8 +20817,6 @@ class Coupon extends serialParamDBTable
 
 		// Set created date if supplied
 		if ( is_null( $created ) ) {
-			$app = JFactory::getApplication();
-
 			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		} else {
 			$this->created_date = $created;
@@ -21073,8 +21000,6 @@ class couponXuser extends serialParamDBTable
 
 	function createNew( $userid, $coupon, $type, $params=null )
 	{
-		$app = JFactory::getApplication();
-
 		$this->id = 0;
 		$this->coupon_id = $coupon->id;
 		$this->coupon_type = $type;

@@ -2,7 +2,7 @@
 /**
  * @version $Id: mi_aecuserdetails.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Micro Integrations - AEC Donations
+ * @subpackage Micro Integrations - User Details
  * @copyright 2006-2012 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
@@ -130,10 +130,15 @@ class mi_aecuserdetails
 			}
 		}
 
-		$request->metaUser->meta->addCustomParams( $params );
-		$request->metaUser->meta->storeload();
+		$this->storeParams( $request, $params );
 
 		return $return;
+	}
+
+	function storeParams( $request, $params )
+	{
+		$request->metaUser->meta->addCustomParams( $params );
+		$request->metaUser->meta->storeload();
 	}
 
 	function admin_form( $request )
