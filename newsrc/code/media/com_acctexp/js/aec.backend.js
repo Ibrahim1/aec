@@ -234,6 +234,13 @@ function readNotice(id) {
 	});
 }
 
+function readNotices() {
+	jQuery.post("index.php?option=com_acctexp&task=readNoticesAjax" , {queryString: ""}, function(data) {
+		jQuery('#notifications').modal('hide');
+		jQuery('a#aecmenu-notifications').remove();
+	});
+}
+
 function toggleProperty(type, property, id, callerid, callerclass) {
 	if ( jQuery('#'+callerid).hasClass('ui-disabled') ) { 
 		return;

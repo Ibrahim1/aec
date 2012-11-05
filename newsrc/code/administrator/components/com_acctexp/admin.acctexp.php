@@ -258,6 +258,18 @@ switch( strtolower( $task ) ) {
 
 	case 'readnoticeajax': readNotice($id[0]); exit; break;
 
+	case 'readnoticesajax':
+		$db = &JFactory::getDBO();
+
+		$query = 'UPDATE #__acctexp_eventlog'
+				. ' SET `notify` = \'0\''
+				. ' WHERE `notify` = \'1\''
+				;
+		$db->setQuery( $query	);
+		$db->query();
+		exit;
+		break;
+
 	case 'readnotice': readNotice($id[0]); aecCentral( $option ); break;
 
 	case 'getnotice': echo getNotice();exit; break;
@@ -473,7 +485,7 @@ function getNotice()
 			. ' FROM #__acctexp_eventlog'
 			. ' WHERE `notify` = \'1\''
 			. ' ORDER BY `datetime` DESC'
-			. ' LIMIT 10, 1'
+			. ' LIMIT 5, 1'
 			;
 	$db->setQuery( $query	);
 	$notice = $db->loadObject();
