@@ -23,7 +23,7 @@ class processor_skrill extends POSTprocessor
 		$info['currencies']			= 'EUR,USD,GBP,AUD,CAD,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,ZAR';
 		$info['languages']			= 'EN,DE,ES,FR,IT,PL,GR,RO,RU,TR,CN,CZ,NL.';
 		$info['cc_list']			= 'visa,mastercard';
-		$info['recurring']			= 0;
+		$info['recurring']			= 2;
 
 		return $info;
 	}
@@ -151,7 +151,16 @@ class processor_skrill extends POSTprocessor
 
 		$var['hide_login']				= $this->settings['hide_login'];
 		$var['pay_from_email']			= $request->metaUser->cmsUser->email;
-		$var['amount']					= $request->int_var['amount'];
+
+		if ( is_array( $request->int_var['amount'] ) ) {
+			$puf = $this->convertPeriodUnit( $request->int_var['amount']['unit3'], $request->int_var['amount']['period3'] );
+
+			$var['rec_amount']					= $request->int_var['amount'];
+			$var['rec_period']					= $puf['period'];
+			$var['rec_cycle']					= $puf['unit'];
+		} else {
+			$var['amount']					= $request->int_var['amount'];
+		}
 
 		$var['detail1_description']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['detail1_text']			= $request->metaUser->cmsUser->id;
@@ -159,6 +168,29 @@ class processor_skrill extends POSTprocessor
 		$var['confirmation_note']		= $this->settings['confirmation_note'];
 
 		return $var;
+	}
+
+	function convertPeriodUnit( $unit, $period )
+	{
+		$return = array();
+		$return['period'] = $period;
+		switch ( $unit ) {
+			case 'D':
+				$return['unit'] = 'day';
+				break;
+			case 'W':
+				$return['unit'] = 'day';
+				$return['period'] = $period*7;
+				break;
+			case 'M':
+				$return['unit'] = 'month';
+				break;
+			case 'Y':
+				$return['unit'] = 'Year';
+				break;
+		}
+
+		return $return;
 	}
 
 	function parseNotification( $post )
