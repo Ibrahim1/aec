@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5586' );
+define( '_AEC_REVISION', '5588' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -19026,6 +19026,10 @@ class microIntegration extends serialParamDBTable
 
 	function getMIform( $plan, $metaUser )
 	{
+		if ( !$this->checkPermission( $metaUser, null ) ) {
+			return null;
+		}
+
 		$params	= $metaUser->meta->getMIParams( $this->id, $plan->id, false );
 
 		$request = new stdClass();
@@ -19040,6 +19044,10 @@ class microIntegration extends serialParamDBTable
 
 	function verifyMIform( $plan, $metaUser, $params=null )
 	{
+		if ( !$this->checkPermission( $metaUser, null ) ) {
+			return null;
+		}
+
 		if ( is_null( $params ) ) {
 			$params	= $metaUser->meta->getMIParams( $this->id, $plan->id, false );
 		}
