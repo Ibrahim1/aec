@@ -25,7 +25,6 @@ class template_etacarinae extends aecTemplate
 
 	function addDefaultCSS()
 	{
-		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/bootstrap.css' );
 		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/template.' . $this->template . '.css' );
 	}
 
