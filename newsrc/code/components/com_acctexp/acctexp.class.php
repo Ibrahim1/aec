@@ -6569,7 +6569,7 @@ class aecHTML
 			case 'radio':
 				$return = '<div class="control-group">';
 				$return .= '<label class="control-label" for="' . $name . '">';
-				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '"' . '"/>';
+				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '"/>';
 				$return .= '</label>';
 				$return .= '<div class="controls">';
 				$return .= $row[4];
