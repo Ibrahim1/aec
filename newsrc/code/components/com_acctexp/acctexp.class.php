@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5590' );
+define( '_AEC_REVISION', '5600' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -6495,7 +6495,7 @@ class aecHTML
 				$return .= '</div></div>';
 				break;
 			case 'p':
-				$return = ( !empty( $value ) ? '<p>' . $value . '</p>' : '' ) . ( !empty( $row[2] ) ? '<p>' . $row[2] . '</p>' : '' );
+				$return = ( !empty( $value ) ? '<p>' . $value . '</p>' : '' );
 				break;
 			case 'checkbox':
 				$return = '<div class="control-group">';
@@ -6679,7 +6679,7 @@ class aecHTML
 				$return .= '</div></div>';
 				break;
 			default:
-				$return = $value;
+				//$return = $value;
 				break;
 		}
 		return $return;
