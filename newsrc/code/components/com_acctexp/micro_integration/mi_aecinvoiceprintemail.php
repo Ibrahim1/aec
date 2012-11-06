@@ -38,6 +38,12 @@ class mi_aecinvoiceprintemail
 		$settings['customcss']			= array( 'inputD' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
+		$settings['aectab_pdf']			= array( 'tab', 'PDF Invoice', 'PDF Invoice' );
+		$settings['make_pdf']			= array( 'toggle' );
+		$settings['text_html']			= array( 'toggle' );
+		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
 		$settings['aectab_reg']			= array( 'tab', 'Modify Invoice', 'Modify Invoice' );
 
 		$s = array( "before_header", "header", "after_header", "address",
@@ -122,6 +128,29 @@ class mi_aecinvoiceprintemail
 			return null;
 		}
 
+		$attachment = null;
+		$html_mode = true;
+		if ( !empty( $this->settings['make_pdf'] ) ) {
+			require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
+			require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
+
+			$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+			$pdf->AddPage();
+			$pdf->writeHTML($message, true, false, true, false, '');
+
+			if ( !empty( $request->invoice->invoice_number_format ) ) {
+				$name = $request->invoice->invoice_number_format;
+			} else {
+				$name = $request->invoice->invoice_number;
+			}
+
+			$attachment = $pdf->Output( urlencode( $name ) . '.pdf', 'E');
+
+			$message = $this->settings['text'];
+			
+			$html_mode = $this->settings['text_html'];
+		}
+
 		$recipient = $cc = $bcc = null;
 
 		$rec_groups = array( "recipient", "cc", "bcc" );
@@ -142,7 +171,7 @@ class mi_aecinvoiceprintemail
 	        }
 		}
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, true, $cc, $bcc );
+		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $html_mode, $cc, $bcc, $attachment );
 
 		$request->invoice->params['mi_aecinvoiceprintemail'] = (int) gmdate('U');
 		$request->invoice->storeload();
@@ -157,8 +186,11 @@ class mi_aecinvoiceprintemail
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
 		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ), true );
 
-		$content = AECToolbox::rewriteEngineRQ( ob_get_contents(), $iFactory );
+		$content = ob_get_contents();
+
 		ob_end_clean();
+
+		$content = AECToolbox::rewriteEngineRQ( $content, $iFactory );
 
 		return $content;
 	}

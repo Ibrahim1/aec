@@ -131,7 +131,7 @@ class mi_coupon
 
 		$newflags['coupons'] = implode( ',', $total_coupons );
 
-		$request->metaUser->objSubscription->setMIflags( $plan->id, $this->id, $newflags );
+		$request->metaUser->objSubscription->setMIflags( $request->plan->id, $this->id, $newflags );
 
 		return true;
 	}
