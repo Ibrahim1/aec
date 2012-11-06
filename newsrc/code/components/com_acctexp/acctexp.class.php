@@ -1125,7 +1125,7 @@ class metaUser
 				$this->jsUser[$fid] = null;
 			}
 
-			$this->rewrite['user_js_' . $field->field_id] = $field->value;
+			$this->rewrite['user_js_' . $fid] = $this->jsUser[$fid];
 		}
 
 		if ( !empty( $this->jsUser ) ) {
