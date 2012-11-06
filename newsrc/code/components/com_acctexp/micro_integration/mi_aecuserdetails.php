@@ -250,7 +250,7 @@ class mi_aecuserdetails
 						}
 
 						if ( $this->settings[$p.'ltype'] ) {
-							$settings[$this->settings[$p.'short'].'_desc'] = array( 'p', "", $this->settings[$p.'name'] );
+							$settings[$this->settings[$p.'short'].'_desc'] = array( 'p', $this->settings[$p.'name'] );
 
 							$settings[$this->settings[$p.'short']] = array( 'hidden', null, 'mi_'.$this->id.'_'.$this->settings[$p.'short'] );
 

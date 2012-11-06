@@ -126,9 +126,9 @@ class mi_aectax
 		if ( !empty( $locations ) ) {
 			if ( ( count( $locations ) > 1 ) || !empty( $this->settings['vat_no_request'] ) ) {
 				if ( !empty( $this->settings['custominfo'] ) ) {
-					$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+					$settings['exp'] = array( 'p', $this->settings['custominfo'] );
 				} else {
-					$settings['exp'] = array( 'p', "", JText::_('MI_MI_AECTAX_DEFAULT_NOTICE') );
+					$settings['exp'] = array( 'p', JText::_('MI_MI_AECTAX_DEFAULT_NOTICE') );
 				}
 			}
 
@@ -179,7 +179,7 @@ class mi_aectax
 				}
 			}
 
-			$settings['vat_desc'] = array( 'p', "", JText::_('MI_MI_AECTAX_VAT_DESC_NAME') );
+			$settings['vat_desc'] = array( 'p', JText::_('MI_MI_AECTAX_VAT_DESC_NAME') );
 			$settings['vat_number'] = array( 'inputC', JText::_('MI_MI_AECTAX_VAT_NUMBER_NAME'), JText::_('MI_MI_AECTAX_VAT_NUMBER_DESC'), $vat_no );
 		}
 

@@ -85,7 +85,7 @@ class mi_jomsocial extends MI
 			$value = AECToolbox::formatAmount( $this->settings['checkout_conversion'], $currency );
 			$total = AECToolbox::formatAmount( ( $points * $this->settings['checkout_conversion'] ), $currency );
 
-			$settings['vat_desc'] = array( 'p', "", sprintf( JText::_('MI_MI_JOMSOCIALUSERPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
+			$settings['vat_desc'] = array( 'p', sprintf( JText::_('MI_MI_JOMSOCIALUSERPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
 			$settings['use_points'] = array( 'inputC', JText::_('MI_MI_JOMSOCIALPOINTS_USE_POINTS_NAME'), JText::_('MI_MI_JOMSOCIALPOINTS_USE_POINTS_DESC'), '' );
 
 			$settings['validation']['rules'] = array();

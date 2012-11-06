@@ -69,9 +69,9 @@ class mi_jnews
 		}
 
 		if ( !empty( $this->settings['custominfo'] ) ) {
-			$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+			$settings['exp'] = array( 'p', $this->settings['custominfo'] );
 		} else {
-			$settings['exp'] = array( 'p', "", JText::_('MI_MI_JNEWS_DEFAULT_NOTICE') );
+			$settings['exp'] = array( 'p', JText::_('MI_MI_JNEWS_DEFAULT_NOTICE') );
 		}
 
 		$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_JNEWS_NEWSLETTER_SIGNUP'), 'mi_'.$this->id.'_get_newsletter', 0 );
