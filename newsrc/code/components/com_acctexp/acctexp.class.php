@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5588' );
+define( '_AEC_REVISION', '5590' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -308,7 +308,26 @@ function getView( $view, $args=null )
 
 	$tmpl->option = 'com_acctexp';
 	$tmpl->metaUser = $metaUser;
-	$tmpl->system_template = $app->getTemplate();
+	
+	if ( strpos( JPATH_BASE, '/administrator' ) ) {
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$query = 'SELECT `template`'
+					. ' FROM #__template_styles'
+					. ' WHERE `home` = 1 AND `client_id` = 0'
+					;
+			$db->setQuery( $query );
+			$tmpl->system_template = $db->loadResult();
+		} else {
+			$query = 'SELECT `template`'
+					. ' FROM #__templates_menu'
+					. ' WHERE `menu_id` = 0 AND `client_id` = 0'
+					;
+			$db->setQuery( $query );
+			$tmpl->system_template = $db->loadResult();
+		}
+	} else {
+		$tmpl->system_template = $app->getTemplate();
+	}
 
 	$tmpl->template = $dbtmpl->name;
 	$tmpl->view = $view;
@@ -5602,12 +5621,14 @@ class XMLprocessor extends processor
 			if ( isset( $metaUser->cmsUser->name ) ) {
 				$name = explode( ' ', $metaUser->cmsUser->name );
 
-				if ( empty( $vcontent['firstname'] ) ) {
-					$vcontent['firstname'] = $name[0];
+				if ( empty( $content['firstname'] ) ) {
+					$content['firstname'] = $name[0];
 				}
 
-				if ( empty( $vcontent['lastname'] ) && isset( $name[1] ) ) {
-					$vcontent['lastname'] = $name[1];
+				if ( empty( $content['lastname'] ) && isset( $name[1] ) ) {
+					$content['lastname'] = $name[1];
+				} else {
+					$content['lastname'] = '';
 				}
 			}
 		}
