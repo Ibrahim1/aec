@@ -2937,7 +2937,20 @@ class aecTemplate
 
 			if ( $params['option'] == 'com_community' ) {
 				// Judge me all you want.
-				$url = str_replace( '/component/community/', '/jomsocial/', $url );
+				$db = &JFactory::getDBO();
+
+				$query = 'SELECT `alias`'
+						. ' FROM #__menu'
+						. ' WHERE `link` = \'index.php?option=com_community&view=frontpage\'';
+				$db->setQuery( $query );
+
+				$replacement = $db->loadResult();
+
+				if ( empty( $replacement ) ) {
+					$replacement = 'jomsocial';
+				}
+
+				$url = str_replace( '/component/community/', '/'.$replacement.'/', $url );
 			}
 		}
 
