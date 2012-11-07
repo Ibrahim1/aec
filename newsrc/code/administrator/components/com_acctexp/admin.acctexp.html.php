@@ -1638,7 +1638,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function editMicroIntegration( $option, $row, $lists, $aecHTML )
+	function editMicroIntegration( $option, $row, $lists, $aecHTML, $attached )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
@@ -1665,6 +1665,10 @@ jQuery(document).ready(function(jQuery) {
 					$tabs->newTab( $name, $aecHTML->rows[$name][1] );
 				}
 			}
+		}
+
+		if ( $aecHTML->hasSettings ) {
+			$tabs->newTab( 'attachedto', JText::_('Attached to') );
 		}
 
 		$tabs->endTabs();
@@ -1708,7 +1712,18 @@ jQuery(document).ready(function(jQuery) {
 				</td>
 			</tr>
 		</table>
-		<?php if ( $aecHTML->hasSettings ) {
+		<?php if ( $aecHTML->hasRestrictions ) {
+			$tabs->nextPane( 'restrictions' ); ?>
+			<table width="100%" class="aecadminform">
+				<tr>
+					<td>
+						<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+					</td>
+				</tr>
+			</table>
+		<?php }
+
+		if ( $aecHTML->hasSettings ) {
 			$tabs->nextPane( 'settings' ); ?>
 			<table width="100%" class="aecadminform">
 				<tr>
@@ -1746,14 +1761,33 @@ jQuery(document).ready(function(jQuery) {
 					</td>
 				</tr>
 			</table>
-		<?php }
-
-		if ( $aecHTML->hasRestrictions ) {
-			$tabs->nextPane( 'restrictions' ); ?>
+		<?php $tabs->nextPane( 'attachedto' ); ?>
 			<table width="100%" class="aecadminform">
 				<tr>
 					<td>
-						<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+						<div class="aec_userinfobox_sub">
+						<?php
+						if ( !empty( $attached['groups'] ) ) {
+							echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
+
+							echo '<ul>';
+							foreach ( $attached['groups'] as $group ) {
+								echo '<li>#' . $group->id . ' - <a href="index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $group->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $group->getProperty('name') . '</a></li>';
+							}
+							echo '</ul>';
+						}
+
+						if ( !empty( $attached['plans'] ) ) {
+							echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
+
+							echo '<ul>';
+							foreach ( $attached['plans'] as $plan ) {
+								echo '<li>#' . $plan->id . ' - <a href="index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $plan->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $plan->getProperty('name') . '</a></li>';
+							}
+							echo '</ul>';
+						}
+						?>
+						</div>
 					</td>
 				</tr>
 			</table>

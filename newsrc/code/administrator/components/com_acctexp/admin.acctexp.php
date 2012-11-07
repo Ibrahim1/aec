@@ -3912,6 +3912,7 @@ function editMicroIntegration ( $id, $option )
 	$mi->load( $id );
 
 	$aecHTML = null;
+	$attached = array();
 
 	$mi_gsettings = $mi->getGeneralSettings();
 
@@ -4059,6 +4060,9 @@ function editMicroIntegration ( $id, $option )
 			$aecHTML->hasSettings = true;
 
 			$aecHTML->hasRestrictions = !empty( $mi->settings['has_restrictions'] );
+			
+			$attached['plans'] = microIntegrationHandler::getPlansbyMI( $mi->id, false, true );
+			$attached['groups'] = microIntegrationHandler::getGroupsbyMI( $mi->id, false, true );
 		} else {
 			$short	= 'microIntegration loading failure';
 			$event	= 'When trying to load microIntegration: ' . $mi->id . ', callIntegration failed';
@@ -4080,7 +4084,7 @@ function editMicroIntegration ( $id, $option )
 		$aecHTML->hasRestrictions = false;
 	}
 
-	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML );
+	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML, $attached );
 }
 
 function saveMicroIntegration( $option, $apply=0 )

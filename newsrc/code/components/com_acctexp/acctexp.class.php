@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5604' );
+define( '_AEC_REVISION', '5617' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -18247,7 +18247,7 @@ class microIntegrationHandler
 		return $plan->getMicroIntegrations();
 	}
 
-	function getPlansbyMI( $mi_id )
+	function getPlansbyMI( $mi_id, $inherited=true, $extended=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -18262,21 +18262,83 @@ class microIntegrationHandler
 			$plan = new SubscriptionPlan( $db );
 			$plan->load( $planid );
 
-			$mis = $plan->getMicroIntegrations();
+			if ( $inherited ) {
+				$mis = $plan->getMicroIntegrations();
+			} else {
+				$misx = $plan->getMicroIntegrationsSeparate();
+
+				$mis = $misx['plan'];
+			}
+
 			if ( !empty( $mis ) ) {
 				if ( is_array( $mi_id ) ) {
 					if ( array_intersect( $mi_id, $mis ) ) {
-						$plan_list[] = $planid;
+						if ( $extended ) {
+							$plan_list[] = $plan;
+						} else {
+							$plan_list[] = $planid;
+						}
 					}
 				} else {
 					if ( in_array( $mi_id, $mis ) ) {
-						$plan_list[] = $planid;
+						if ( $extended ) {
+							$plan_list[] = $plan;
+						} else {
+							$plan_list[] = $planid;
+						}
 					}
 				}
 			}
 		}
 
 		return $plan_list;
+	}
+
+	function getGroupsbyMI( $mi_id, $inherited=true, $extended=false )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_itemgroups'
+				;
+		$db->setQuery( $query );
+		$groups = $db->loadResultArray();
+
+		$group_list = array();
+		foreach ( $groups as $groupid ) {
+			$group = new ItemGroup( $db );
+			$group->load( $groupid );
+
+			if ( $inherited ) {
+				$mis = $group->getMicroIntegrations();
+			} else {
+				$misx = $group->getMicroIntegrationsSeparate();
+
+				$mis = $misx['group'];
+			}
+
+			if ( !empty( $mis ) ) {
+				if ( is_array( $mi_id ) ) {
+					if ( array_intersect( $mi_id, $mis ) ) {
+						if ( $extended ) {
+							$group_list[] = $group;
+						} else {
+							$group_list[] = $groupid;
+						}
+					}
+				} else {
+					if ( in_array( $mi_id, $mis ) ) {
+						if ( $extended ) {
+							$group_list[] = $group;
+						} else {
+							$group_list[] = $groupid;
+						}
+					}
+				}
+			}
+		}
+
+		return $group_list;
 	}
 
 	function userPlanExpireActions( $metaUser, $subscription_plan, $special=null )
