@@ -28,9 +28,9 @@
 						<?php if ( empty( $subscription->expiration ) || $subscription->lifetime ) {
 							echo JText::_('ACCOUNT_UNLIMIT');
 						} elseif ( $recurring ) {
-							echo JText::_('ACCOUNT_RENEWAL') . ": " . AECToolbox::formatDate( ( strtotime( $expiration ) ) );
+							echo JText::_('ACCOUNT_RENEWAL') . ": " . AECToolbox::formatDate( ( strtotime( $subscription->expiration ) ) );
 						} else {
-							echo JText::_('ACCOUNT_EXPIRES') . ": " . AECToolbox::formatDate( ( strtotime( $expiration ) ) );
+							echo JText::_('ACCOUNT_EXPIRES') . ": " . AECToolbox::formatDate( ( strtotime( $subscription->expiration ) ) );
 						} ?>
 					</p>
 				<?php } ?>
