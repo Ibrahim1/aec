@@ -83,14 +83,19 @@
 		.border-radius( 0 10px 10px 0 );
 	}
 	.container { width: 940px; }
-}
-
-.navbar-fixed-top-override {
-	width: 100% !important;
-	overflow: visible !important;
-	.transition( width 0.2s ease );
-	.navbar-inner {
-		.border-radius( 0 );
+	a.toolbar-notify {
+		margin-left: -10px;
+	}
+	&-override {
+		width: 100% !important;
+		overflow: visible !important;
+		.transition( width 0.2s ease );
+		.navbar-inner {
+			.border-radius( 0 );
+		}
+		a.toolbar-notify {
+			margin-left: inherit;
+		}
 	}
 }
 
