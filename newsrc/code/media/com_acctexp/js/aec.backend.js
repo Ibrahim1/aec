@@ -1,8 +1,4 @@
 jQuery(document).ready(function(jQuery) {
-	jQuery(".collapse").collapse({toggle: false, selector: '.aecadminform'}).on('show', function(e){
-		jQuery(this).parent('.accordion-group').parent('.accordion').children('.accordion-group').children('.collapse').collapse('hide');
-	});
-
 	jQuery('.aec-navbar').hover(function(){
 		if ( jQuery(".navbar-hover-helper").length == 0 ) {
 			jQuery('.aec-navbar').addClass("navbar-hover-helper");
@@ -214,6 +210,8 @@ jQuery(document).ready(function(jQuery) {
 			}
 		});
 	}
+
+	jQuery(".collapse").collapse({toggle: false});
 });
 
 function readNotice(id) {
