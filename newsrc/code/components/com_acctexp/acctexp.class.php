@@ -6692,7 +6692,7 @@ class aecHTML
 				$return .= '</div></div>';
 				break;
 			default:
-				//$return = $value;
+				$return = $value;
 				break;
 		}
 		return $return;
@@ -15690,7 +15690,7 @@ class reWriteEngine
 		}
 
 		if ( !empty( $params ) ) {
-			$params[] = array( 'accordion_start', 'small_accordion' );
+			$params[] = array( 'accordion_start', 'accordion-small' );
 
 			$params[] = array( 'accordion_itemstart', JText::_('REWRITE_ENGINE_TITLE') );
 			$list = '<div class="rewriteinfoblock">' . "\n"
