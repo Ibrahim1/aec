@@ -35,13 +35,17 @@ class mi_multiusercreation
 
 		$settings['recipient']				= array( 'inputE' );
 
+		if ( !isset( $this->settings['text_html'] ) ) {
+			$this->settings['text_html'] = false;
+		}
+
 		$settings['subject']				= array( 'inputE' );
 		$settings['text_html']				= array( 'toggle' );
 		$settings['text']					= array( $this->settings['text_html'] ? 'editor' : 'inputD' );
 		$settings['text_userlistitem']		= array( $this->settings['text_html'] ? 'editor' : 'inputD' );
 
 		$rewriteswitches					= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		$settings['rewriteInfo']			= array( 'fieldset', JText::_( 'AEC_MI_SET11_EMAIL'), AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
+		$settings							= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		$settings['users_amount']			= array( 'inputC' );
 
