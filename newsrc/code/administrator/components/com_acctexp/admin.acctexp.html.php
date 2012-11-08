@@ -62,6 +62,7 @@ class HTML_myCommon
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/select2.min.js' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowReordering.js' );

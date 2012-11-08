@@ -1155,7 +1155,7 @@ function aecNotAuth()
 {
 	$user =& JFactory::getUser();
 
-	echo JText::_('ALERTNOTAUTH');
+	echo JText::_('Not Authorized');
 
 	if ( $user->get('id') < 1 ) {
 		echo "<br />" . JText::_( 'You need to login.' );

@@ -316,7 +316,7 @@ switch( strtolower( $task ) ) {
 		$less->setFormatter("compressed");
 		$less->setPreserveComments(true);
 
-		//echo $less->compileFile(JPATH_SITE . '/media/com_acctexp/less/admin.less');exit;
+		//echo $less->compileFile(JPATH_SITE . '/media/com_acctexp/less/test.less');exit;
 
 		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );

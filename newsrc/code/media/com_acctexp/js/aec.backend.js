@@ -18,6 +18,8 @@ jQuery(document).ready(function(jQuery) {
 		}
 	);
 
+	//jQuery("select[class!=\"jqui-multiselect\"]").select2();
+
 	jQuery('.affix').affix({
 		offset: {
 			top: function () { return jQuery(window).width() <= 980 ? 290 : 210 },
