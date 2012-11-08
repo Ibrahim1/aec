@@ -6573,7 +6573,7 @@ class aecHTML
 					$return .= '<input type="hidden" name="' . $name . '" value="0" />';
 					$return .= str_replace( '<select', '<select class="jqui-multiselect"', $this->lists[$name] );
 				} else {
-					$return .= $this->lists[$name];
+					$return .= str_replace( '<select', '<select class="span3"', $this->lists[$name] );
 				}
 				
 				$return .= $insertctrl;

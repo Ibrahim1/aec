@@ -18,7 +18,7 @@ jQuery(document).ready(function(jQuery) {
 		}
 	);
 
-	//jQuery("select[class!=\"jqui-multiselect\"]").select2();
+	jQuery("select[class!=\"jqui-multiselect\"]").select2();
 
 	jQuery('.affix').affix({
 		offset: {

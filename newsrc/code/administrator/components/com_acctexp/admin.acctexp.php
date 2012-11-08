@@ -313,7 +313,7 @@ switch( strtolower( $task ) ) {
 		require JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php';
 		$less = new lessc();
 		$less->setImportDir( array(JPATH_SITE . '/media/com_acctexp/less/') );
-		$less->setFormatter("compressed");
+		//$less->setFormatter("compressed");
 		$less->setPreserveComments(true);
 
 		//echo $less->compileFile(JPATH_SITE . '/media/com_acctexp/less/test.less');exit;
