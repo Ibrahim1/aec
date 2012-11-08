@@ -24,6 +24,6 @@
 		}
 		?>
 		<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid ?>" />
-		<button type="submit" class="button btn btn-success"><i class="icon-ok icon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
+		<button type="submit" class="button btn btn-success"><i class="bsicon-ok bsiconwhite"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
 	</div>
 </div>
