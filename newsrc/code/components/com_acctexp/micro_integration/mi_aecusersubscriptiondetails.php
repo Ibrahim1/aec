@@ -48,14 +48,29 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 
 	function storeParams( $request, $params )
 	{
-		// TODO: This aint working on a new subscription, probably best to store it with the metaUser for a while and pull it out on action
-		$request->metaUser->focusSubscription->addCustomParams( $params );
-		$request->metaUser->focusSubscription->storeload();
+		$request->metaUser->meta->addCustomParams( array( 'MI_'.$this->id.'_TEMP_PARAMS' => $params ) );
+		$request->metaUser->meta->storeload();
 	}
 
 	function before_invoice_confirm( $request )
 	{
 		return true;
+	}
+
+	function action( $request )
+	{
+		$custom = $request->metaUser->meta->getCustomParams();
+
+		if ( isset( $custom['MI_'.$this->id.'_TEMP_PARAMS'] ) ) {
+			$request->metaUser->focusSubscription->addCustomParams( $custom['MI_'.$this->id.'_TEMP_PARAMS'] );
+			$request->metaUser->focusSubscription->storeload();
+
+			unset( $custom['MI_'.$this->id.'_TEMP_PARAMS'] );
+
+			$request->metaUser->meta->setCustomParams( $custom );
+		}
+
+
 	}
 }
 ?>
