@@ -19822,14 +19822,14 @@ class couponsHandler extends eucaObject
 		$cph->load( $coupon_code );
 
 		if ( empty( $cph->coupon->id ) ) {
-			$this->setError( "The code entered is not valid" );
+			$this->setError( JText::_( 'COUPON_ERROR_INVALID' ) );
 
 			$this->delete_list[] = $coupon_code;
 			return false;
 		}
 
 		if ( $cph->coupon->coupon_code !== $coupon_code ) {
-			$this->setError( "The code entered is not valid" );
+			$this->setError( JText::_( 'COUPON_ERROR_INVALID' ) );
 
 			$this->delete_list[] = $coupon_code;
 			return false;
