@@ -298,11 +298,13 @@ if ( !empty( $task ) ) {
 			if ( !empty( $usage ) ) {
 				$db = &JFactory::getDBO();
 
-				$iFactory->plan = new SubscriptionPlan( $db );
-				$iFactory->plan->load( $usage );
+				$plan = new SubscriptionPlan( $db );
+				$plan->load( $usage );
+				
+				getView( 'thanks', array( 'renew' => $renew, 'free' => $free, 'plan' => $plan ) );
+			} else {
+				getView( 'thanks', array( 'renew' => $renew, 'free' => $free ) );
 			}
-
-			$iFactory->thanks( $option, $renew, $free );
 			break;
 
 		case 'subscriptiondetails':

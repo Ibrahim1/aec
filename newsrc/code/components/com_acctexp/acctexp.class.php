@@ -34,7 +34,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5631' );
+define( '_AEC_REVISION', '5632' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -11997,11 +11997,14 @@ class InvoiceFactory
 			}
 		}
 
+		$url = 'index.php?option=com_acctexp&task=thanks&userid=' . ((int) $this->userid) . '&free=' . $free . '&renew=' . $renew;
+
 		if ( !empty( $this->plan ) ) {
-			getView( 'thanks', array( 'renew' => $renew, 'free' => $free, 'plan' => $this->plan ) );
+			aecRedirect( AECToolbox::deadsureURL( $url. '&usage=' . $this->plan->id ), false, true );
 		} else {
-			getView( 'thanks', array( 'renew' => $renew, 'free' => $free ) );
+			aecRedirect( AECToolbox::deadsureURL( $url ), false, true );
 		}
+		
 	}
 
 	function error( $option, $objUser, $invoice, $error )
