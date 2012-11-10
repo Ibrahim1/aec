@@ -1441,7 +1441,6 @@ function editSettings( $option )
 
 	$params[] = array( 'page-head', JText::_('Registration Flow') );
 	$params[] = array( 'section', 'plans' );
-	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_REGFLOW') );
 	$params['plans_first']					= array( 'toggle', 0 );
 	$params['integrate_registration']		= array( 'toggle', 0 );
 	$params['skip_confirmation']			= array( 'toggle', 0 );
@@ -1469,14 +1468,10 @@ function editSettings( $option )
 	$params[] = array( 'section', 'heartbeat' );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SYSTEM') );
 	$params['heartbeat_cycle']				= array( 'inputA', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'email' );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_EMAIL') );
 	$params['noemails']						= array( 'toggle', 0 );
 	$params['noemails_adminoverride']		= array( 'toggle', 0 );
 	$params['nojoomlaregemails']			= array( 'toggle', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'debug' );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_DEBUG') );
 	$params['curl_default']					= array( 'toggle', 0 );
 	$params['simpleurls']					= array( 'toggle', 0 );
@@ -1539,8 +1534,6 @@ function editSettings( $option )
 	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'price-formatting' );
 	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
 	$params['amount_currency_symbol']			= array( 'toggle', 0 );
 	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
@@ -1587,20 +1580,14 @@ function editSettings( $option )
 	$params['temp_auth_exp']				= array( 'inputC', '' );
 	$params['intro_expired']				= array( 'toggle', 0 );
 	$params['skip_registration']			= array( 'toggle', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'confirmation' );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
 	$params['confirmation_coupons']			= array( 'toggle', 0 );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'checkout' );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
 	$params['checkoutform_jsvalidation']	= array( 'toggle', '' );
 	$params['checkout_coupons']				= array( 'toggle', 1 );
 	$params['checkout_as_gift']				= array( 'toggle', '' );
 	$params['checkout_as_gift_access']		= array( 'list', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 ) );
 	$params['confirm_as_gift']				= array( 'toggle', '' );
-	$params[] = array( 'section-end' );
-	$params[] = array( 'section', 'plans' );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_PLANS') );
 	$params['root_group_rw']				= array( 'inputD', 0 );
 	$params['entry_plan']					= array( 'list', 0 );
@@ -6164,15 +6151,9 @@ function exportData( $option, $type, $cmd=null )
 		$params['params_remap']		= array( 'subarea_change', 'params' );
 		$params[] = array( 'div', '<div class="alert alert-info">' );
 		$params[] = array( 'p', '<p>Take users that fit these criteria:</p>' );
-		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
 		$params['groupid']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
 		$params['planid']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
 		$params['status']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div', '<div class="alert alert-warning">' );
 		$params[] = array( 'p', '<p>Order them like this:</p>' );
@@ -6189,17 +6170,11 @@ function exportData( $option, $type, $cmd=null )
 		$params['params_remap']		= array( 'subarea_change', 'params' );
 		$params[] = array( 'div', '<div class="alert alert-info">' );
 		$params[] = array( 'p', '<p>Collect Sales Data from this range:</p>' );
-		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
 		$params['date_start']		= array( 'list_date', date( 'Y-m-d', $monthago ) );
 		$params['date_end']			= array( 'list_date', date( 'Y-m-d' ) );
 		$params['method']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
 		$params['planid']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
-		$params[] = array( 'div', '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">' );
 		$params['groupid']			= array( 'list', '' );
-		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div_end', '' );
 		$params[] = array( 'div', '<div class="alert alert-warning">' );
 		$params[] = array( 'p', '<p>Collate it like this:</p>' );
@@ -6311,7 +6286,7 @@ function exportData( $option, $type, $cmd=null )
 	$db->setQuery( $query );
 	$db_plans = $db->loadObjectList();
 
-	$lists['planid'] = '<select id="plan-filter-select" name="planid[]" multiple="multiple" size="5">';
+	$lists['planid'] = '<select id="plan-filter-select" class="span3" name="planid[]" multiple="multiple" size="5">';
 	foreach ( $db_plans as $plan ) {
 		$lists['planid'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_values['planid'] ) ? ' selected="selected"' : '' ) . '/>' . $plan->name . '</option>';
 	}
@@ -6319,7 +6294,7 @@ function exportData( $option, $type, $cmd=null )
 
 	$grouplist = ItemGroupHandler::getTree();
 
-	$lists['groupid'] = '<select id="group-filter-select" name="groupid[]" multiple="multiple" size="5">';
+	$lists['groupid'] = '<select id="group-filter-select" class="span3" name="groupid[]" multiple="multiple" size="5">';
 	foreach ( $grouplist as $glisti ) {
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';

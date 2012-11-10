@@ -62,7 +62,7 @@ class HTML_myCommon
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/select2.min.js' );
+		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/select2-bootstrap.js' );
 
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowReordering.js' );
@@ -1195,17 +1195,14 @@ class HTML_AcctExp
 
 		HTML_myCommon::startForm(); ?>
 
-		<div class="container" data-spy="scroll" data-target=".affix-sidebar">
+		<div class="container">
 			<div class="row">
 				<div class="span3 affix-sidebar">
-					<ul class="nav nav-list affixnav affix span3" data-spy="affix">
+					<ul class="nav nav-list affixnav span3" data-spy="affix" data-offset-top="148">
 					<?php
-					$section = "";
 					foreach ( $params as $rowname => $rowcontent ) {
 							if ( $rowcontent[0] == 'page-head' ) {
-								echo '<li><a href="#' . $section . '"><i class="bsicon-chevron-right"></i> ' . $rowcontent[1] . '</a></li>';
-							} elseif ( $rowcontent[0] == 'section' ) {
-								$section = $rowcontent[1];
+								echo '<li><a href="#' . str_replace(" ", "_", strtolower($rowcontent[1]) ) . '"><i class="bsicon-chevron-right"></i> ' . $rowcontent[1] . '</a></li>';
 							}
 					}
 					?>
