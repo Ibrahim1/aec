@@ -22,6 +22,8 @@
 }
 
 .select2 {
+	&-container,
+	&-drop { .box-sizing(border-box); }
 	&-container {
 		position: relative;
 		display: inline-block;
@@ -35,6 +37,7 @@
 			white-space: nowrap;
 			position: relative;
 			padding-left: 8px;
+			min-height: 18px;
 			span {
 				margin-right: 26px;
 				display: block;
@@ -60,7 +63,16 @@
 				}
 			}
 		}
-		.select2-drop-above .select2-choice {
+		.disabled div {
+			cursor: default;
+			&:hover {
+				cursor: default;
+			}
+			.caret {
+			   opacity: 0.3 !important;
+			}
+		}
+		&.select2-drop-above .select2-choice {
 			border-bottom-color: #aaa;
 			.border-radius(0px 0px 4px 4px);
 			#gradient > .vertical-stopped(#eee, 0%, #fff, 90%);
@@ -78,8 +90,15 @@
 		}
 		&-multi {
 			.select2-choices {
-				#gradient > .vertical-stopped(#eee, 1%, #fff, 15%);
-				border: 1px solid #aaa;
+				height: @baseLineHeight;
+				font-size: @baseFontSize;
+				line-height: @baseLineHeight;
+				color: @gray;
+				.border-radius(@inputBorderRadius);
+				background-color: @inputBackground;
+				border: 1px solid @inputBorder;
+				.box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+				.transition(~"border linear .2s, box-shadow linear .2s");
 				margin: 0;
 				padding: 0;
 				cursor: text;
@@ -100,7 +119,6 @@
 						input {
 							color: #666;
 							background: transparent !important;
-							font-family: sans-serif;
 							font-size: 100%;
 							height: 15px;
 							padding: 5px;
@@ -108,36 +126,18 @@
 							outline: 0;
 							border: 0;
 							.box-shadow(none);
-							.select2-active { background: #fff !important; }
+							&.select2-active { background: #fff !important; }
 						}
 					}
 					&-choice {
-						.border-radius(3px);
-						.background-clip(padding-box);
-						#gradient > .vertical-4stop(#f4f4f4, 20%, #f0f0f0, 50%, #e8e8e8, 52%, #eeeeee, 100%);
-						.box-shadow(0 0 2px #ffffff inset, 0 1px 0 rgba(0,0,0,0.05));
-						color: #333;
-						border: 1px solid #aaaaaa;
 						line-height: 13px;
-						padding: 3px 5px 3px 18px;
-						margin: 3px 0 3px 5px;
+						padding: 1px 5px;
+						margin: 3px 2px;
 						position: relative;
-						cursor: default;
-						span { cursor: default; }
-						&-focus {
-							background: #d4d4d4;
-							.select2-search-choice-close {
-								background-position: right -11px;
-							}
-						}
-						&-close {
-							left: 3px;
-							&:hover { background-position: right -11px; }
-						}
 					}
 				}
 			}
-			.select2-container {
+			&.select2-container {
 				&-active .select2-choices {
 					.box-shadow(0 0 5px rgba(0,0,0,.3));
 					border: 1px solid #5897fb;
@@ -176,16 +176,21 @@
 		top: 100%;
 		.box-shadow(0 4px 5px rgba(0,0,0,.15));
 		z-index: 9999;
-		width:100%;
-		margin-top:-1px;
+		width: 100%;
+		margin-top: -2px;
 		.border-radius(0 0 4px 4px);
-		.select2-drop-above {
+		&.select2-drop-above {
 			.border-radius(4px 4px 0px 0px);
 			margin-top:1px;
 			border-top: 1px solid #aaa;
 			border-bottom: 0;
 			.box-shadow(0 -4px 5px rgba(0, 0, 0, .15));
-			.select2-search input { margin-top:4px; }
+			.select2-search input {
+				margin-top:4px;
+			}
+			span.add-on {
+				margin-top: 4px;
+			}
 		}
 		&down-open .select2-choice {
 			border: 1px solid #aaa;
@@ -194,6 +199,10 @@
 			#gradient > .vertical-stopped(#fff, 0%, #eee, 50%);
 			.border-bottom-left-radius(0);
 			.border-bottom-right-radius(0);
+			&:hover {
+				#gradient > .vertical-stopped(#fff, 0%, #eee, 50%) !important;
+				background-position: 0;
+			}
 			div {
 				background: transparent;
 				border-left: none;
@@ -208,28 +217,37 @@
 	&-search {
 		white-space: nowrap;
 		z-index: 10000;
-		width: 100%;
-		padding: 4px;
+		width: 97%;
+		margin: 0 1.5%;
 		input {
-			width: 70%;
+			width: 96%;
+			z-index: 5;
 		}
 		span.add-on {
-			padding: 5px 4px 1px 4px;
+			margin-top: 0;
+			padding: 5px 4px 3px 4px;
+			position: absolute;
+			top: 0px;
+			right: 1.5%;
+			z-index: 6;
 		}
 		&-hidden {
 			display: block;
 			position: absolute;
 			left: -10000px;
 		}
-		&-choice-close {
-			display: block;
-			position: absolute;
-			right: 3px;
-			top: 4px;
-			width: 12px;
-			height: 13px;
-			font-size: 1px;
-			outline: none;
+		&-choice {
+			&-close {
+				display: inline-block;
+				float: left;
+				font-size: 18px;
+				padding-top: 1px;
+				line-height: 16px;
+			}
+			div {
+				padding: 2px;
+				display: inline-block;
+			}
 		}
 	}
 	&-default {
@@ -238,7 +256,7 @@
 	&-more-results {
 		background: #f4f4f4;
 		display: list-item;
-		.select2-active { background: #f4f4f4; }
+		&.select2-active { background: #f4f4f4; }
 	}
 	&-results {
 		margin: 4px 2px 4px 0;
@@ -272,14 +290,17 @@
 				background: #feffde;
 				font-style: normal;
 			}
-			&:hover,
-			&:focus {
-			  text-decoration: none;
-			  color: @dropdownLinkColorHover;
-			  background-color: @dropdownLinkBackgroundHover;
-			  #gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
+			&.select2-result-selectable {
+				cursor: pointer;
+				&:hover,
+				&:focus {
+				  text-decoration: none;
+				  color: @dropdownLinkColorHover;
+				  background-color: @dropdownLinkBackgroundHover;
+				  #gradient > .vertical(@dropdownLinkBackgroundHover, darken(@dropdownLinkBackgroundHover, 5%));
+				}
 			}
-			.select2-result-with-children > .select2-result-label { font-weight: bold; }
+			&.select2-result-with-children > .select2-result-label { font-weight: bold; }
 		}
 		.select2 {
 			&-no-results,
@@ -291,8 +312,10 @@
 			&-result-label {
 				padding: 3px 7px 4px;
 				margin: 0;
-				cursor: pointer;
 			}
+			&-disabled { display: none; }
+		}
+		&.select2 {
 			&-disabled { display: none; }
 		}
 	}
