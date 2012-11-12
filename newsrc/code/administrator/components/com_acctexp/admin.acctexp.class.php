@@ -855,7 +855,7 @@ class aecExport extends serialParamDBTable
 		}
 
 		// Assemble Database call
-		if ( !in_array( 'manual', $this->filter['status'] ) ) {
+		if ( !in_array( 'notconfig', $this->filter['status'] ) ) {
 			$where = array();
 			if ( !empty( $this->filter['planid'] ) ) {
 				$where[] = '`plan` IN (' . implode( ',', $this->filter['planid'] ) . ')';
