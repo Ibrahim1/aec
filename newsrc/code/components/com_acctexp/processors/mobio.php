@@ -52,7 +52,7 @@ class processor_mobio extends XMLprocessor {
 		$return .= '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="userid" value="' . $request->metaUser->userid . '" />' . "\n";
 		$return .= '<input type="text" name="smscode" value="" />' . "\n";
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn"><i class="bsicon-shopping-cart bsiconwhite"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>';
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn"><i class="icon-shopping-cart iconwhite"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>';
 		$return .= '</form>';
 
 		return $return;

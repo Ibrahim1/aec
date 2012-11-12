@@ -19,7 +19,8 @@ require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.class.php' );
 require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.html.php' );
 
-$langlist = array( 'com_acctexp' => JPATH_ADMINISTRATOR );
+$langlist = array(	'com_acctexp' => JPATH_ADMINISTRATOR,
+					'com_acctexp.iso4217' => JPATH_ADMINISTRATOR );
 
 aecLanguageHandler::loadList( $langlist );
 
@@ -6207,9 +6208,9 @@ function exportData( $option, $type, $cmd=null )
 	$params['save_name']		= array( 'inputC', $pname );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div class="right-btns">' );
-	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#"><i class="bsicon-upload bsicon-white"></i>&nbsp;Load Preset</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#"><i class="bsicon-download bsicon-white"></i>&nbsp;Store Preset</a>' );
-	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#"><i class="bsicon-download-alt bsicon"></i>&nbsp;Store Preset &amp; Exit</a>' );
+	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#"><i class="icon-upload icon-white"></i>&nbsp;Load Preset</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#"><i class="icon-download icon-white"></i>&nbsp;Store Preset</a>' );
+	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#"><i class="icon-download-alt icon"></i>&nbsp;Store Preset &amp; Exit</a>' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
@@ -6218,8 +6219,8 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'userinfobox_sub', 'Export' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
-	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result"><i class="bsicon-eye-open bsicon-white"></i>&nbsp;Test Export</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#"><i class="bsicon-file bsicon-white"></i>&nbsp;Export Now</a>' );
+	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result"><i class="icon-eye-open icon-white"></i>&nbsp;Test Export</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#"><i class="icon-file icon-white"></i>&nbsp;Export Now</a>' );
 	$params[] = array( '2div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );

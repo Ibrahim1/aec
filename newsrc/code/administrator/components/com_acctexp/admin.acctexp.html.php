@@ -183,7 +183,7 @@ class HTML_myCommon
 			} elseif ( !isset( $button['style'] ) ) {
 				echo '<span class="btn-hl"></span>';
 			} else {
-				echo '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . $button['text'] . '"><i class="bsicon-' . $button['icon'] . ' bsicon-white"></i></a>';
+				echo '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . $button['text'] . '"><i class="icon-' . $button['icon'] . ' icon-white"></i></a>';
 			}
 		}
 		?></div><?php
@@ -584,7 +584,7 @@ class HTML_AcctExp
 								?>
 							</tbody>
 							<tfoot>
-								<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><i class="bsicon-plus bsicon-white"></i> Add Invoice</a></td></tr>
+								<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><i class="icon-plus icon-white"></i> Add Invoice</a></td></tr>
 							</tfoot>
 						</table>
 					</div>
@@ -733,7 +733,7 @@ class HTML_AcctExp
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
 				<?php if ( !empty( $notices ) ) { ?>
-					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" data-remote="index.php?option=com_acctexp&amp;task=noticesModal" class="toolbar-notify"><i class="bsicon-envelope bsicon-white"></i> <?php echo $notices ?></a>
+					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" data-remote="index.php?option=com_acctexp&amp;task=noticesModal" class="toolbar-notify"><i class="icon-envelope icon-white"></i> <?php echo $notices ?></a>
 				<?php } ?>
 				<ul class="nav">
 				<?php foreach ( $menu as $mid => $m ) { ?>
@@ -841,7 +841,7 @@ class HTML_AcctExp
 				</tr>
 				<tr>
 					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
-					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="bsicon-chevron-left diorama-icon-w"></i></div></td>
+					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="icon-chevron-left diorama-icon-w"></i></div></td>
 					<td><div class="cell-wrapper"><div class="dioarama-corner-w-s"></div></div></td>
 					<td></td>
 					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ) ?></div></td>
@@ -855,43 +855,43 @@ class HTML_AcctExp
 					<td></td>
 				</tr>
 				<tr>
-					<td><div class="cell-wrapper-slim-bar"><i class="bsicon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
+					<td><div class="cell-wrapper-slim-bar"><i class="icon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
 					<td></td>
 					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div></div></td>
 					<td></td>
-					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><i class="bsicon-chevron-down diorama-icon-s"></i></div></td>
+					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><i class="icon-chevron-down diorama-icon-s"></i></div></td>
 					<td colspan="3"></td>
-					<td><div class="cell-wrapper-slim-bar"><i class="bsicon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
+					<td><div class="cell-wrapper-slim-bar"><i class="icon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
 					<td></td>
 					<td></td>
-					<td><div class="cell-wrapper-slim-bar"><i class="bsicon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
+					<td><div class="cell-wrapper-slim-bar"><i class="icon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
 				</tr>
 				<tr>
 					<td><div class="cell-wrapper"><div class="dioarama-corner-n-s-f"></div></div></td>
 					<td></td>
 					<td class="important"><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
-					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="bsicon-chevron-right diorama-icon-e"></i></div></td>
+					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="icon-chevron-right diorama-icon-e"></i></div></td>
 					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ) ?></div></td>
-					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="bsicon-chevron-right diorama-icon-e"></i></div></td>
+					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="icon-chevron-right diorama-icon-e"></i></div></td>
 					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ) ?></div></td>
-					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="bsicon-chevron-right diorama-icon-e"></i></div></td>
+					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="icon-chevron-right diorama-icon-e"></i></div></td>
 					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'history', 'history', JText::_('AEC_CENTR_M_VIEW_HISTORY') ) ?></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
-					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="bsicon-chevron-right diorama-icon-e"></i></div></td>
+					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><i class="icon-chevron-right diorama-icon-e"></i></div></td>
 					<td class="important"><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showActive', 'active', JText::_('Members') ) ?></div></td>
 					<td></td>
 				</tr>
 				<tr>
 					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s-f"></div></div></td>
 					<td></td>
-					<td><div class="cell-wrapper-slim-bar"><i class="bsicon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
+					<td><div class="cell-wrapper-slim-bar"><i class="icon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
 					<td></td>
-					<td><div class="cell-wrapper-slim-bar"><i class="bsicon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
+					<td><div class="cell-wrapper-slim-bar"><i class="icon-chevron-up diorama-icon-n"></i><div class="dioarama-corner-n-s"></div></div></td>
 					<td colspan="3"></td>
-					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><i class="bsicon-chevron-down diorama-icon-s"></i></div></td>
+					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><i class="icon-chevron-down diorama-icon-s"></i></div></td>
 					<td></td>
 					<td></td>
-					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><i class="bsicon-chevron-down diorama-icon-s"></i></div></td>
+					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><i class="icon-chevron-down diorama-icon-s"></i></div></td>
 				</tr>
 				<tr>
 					<td class="important"><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ) ?></div></td>
@@ -959,7 +959,7 @@ class HTML_AcctExp
 			<p>Thank you for choosing AEC!</p>
 			<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
 				<p>If you use AEC, please post a rating and a review at the Joomla! Extensions Directory:</p>
-				<p><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><i class="bsicon-heart bsicon-white"></i>&nbsp;Go there now</a></p>
+				<p><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><i class="icon-heart icon-white"></i>&nbsp;Go there now</a></p>
 			</div>
 		</div>
 		<div>
@@ -1019,7 +1019,7 @@ class HTML_AcctExp
 				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
 				<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
 				<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
-					<p>If you use AEC, please post a rating and a review<br />at the Joomla! Extensions Directory:<br /><br /><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><i class="bsicon-heart bsicon-white"></i>&nbsp;Go there now</a></p>
+					<p>If you use AEC, please post a rating and a review<br />at the Joomla! Extensions Directory:<br /><br /><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><i class="icon-heart icon-white"></i>&nbsp;Go there now</a></p>
 				</div>
 				<div style="margin: 0 auto;text-align:center;">
 					<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx.org" /></a>
@@ -1154,8 +1154,8 @@ class HTML_AcctExp
 		<div class="aec-center-block aec-center-block-half">
 			<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
 			<p>
-				<a href="#" class="btn btn-small" onclick="readNotices()"><i class="bsicon-ok"></i> <?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a>
-				<a href="index.php?option=com_acctexp&amp;task=eventlog" class="btn btn-success btn-small pull-right" onclick="readNotices()"><?php echo JText::_('Go to the Eventlog'); ?><i class="bsicon-chevron-right bsicon-white"></i></a>
+				<a href="#" class="btn btn-small" onclick="readNotices()"><i class="icon-ok"></i> <?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a>
+				<a href="index.php?option=com_acctexp&amp;task=eventlog" class="btn btn-success btn-small pull-right" onclick="readNotices()"><?php echo JText::_('Go to the Eventlog'); ?><i class="icon-chevron-right icon-white"></i></a>
 			</p>
 			<div id="aec-alertlist">
 				<?php
@@ -1202,7 +1202,7 @@ class HTML_AcctExp
 					<?php
 					foreach ( $params as $rowname => $rowcontent ) {
 							if ( $rowcontent[0] == 'page-head' ) {
-								echo '<li><a href="#' . str_replace(" ", "_", strtolower($rowcontent[1]) ) . '"><i class="bsicon-chevron-right"></i> ' . $rowcontent[1] . '</a></li>';
+								echo '<li><a href="#' . str_replace(" ", "_", strtolower($rowcontent[1]) ) . '"><i class="icon-chevron-right"></i> ' . $rowcontent[1] . '</a></li>';
 							}
 					}
 					?>
@@ -3432,7 +3432,7 @@ jQuery(document).ready(function(jQuery) {
 			<?php if ( is_array( $result ) ) { ?>
 				<div id="aec-toolbox-list">
 				<?php foreach ( $result as $x => $litem ) {
-					echo '<a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: 10px;"><i class="bsicon-cog bsicon-white"></i> Use</a>';
+					echo '<a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: 10px;"><i class="icon-cog icon-white"></i> Use</a>';
 					echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
 					echo '<hr />';
 				} ?>
@@ -3517,10 +3517,10 @@ class bsPagination extends JPagination
 
 		$search[] = 'class="container"';
 
-		$replace = array(	'><i class="bsicon-fast-backward bsicon"></i><',
-							'><i class="bsicon-backward bsicon"></i><',
-							'><i class="bsicon-forward bsicon"></i><',
-							'><i class="bsicon-fast-forward bsicon"></i><',
+		$replace = array(	'><i class="icon-fast-backward icon"></i><',
+							'><i class="icon-backward icon"></i><',
+							'><i class="icon-forward icon"></i><',
+							'><i class="icon-fast-forward icon"></i><',
 							'class="pagination-container"'
 						);
 
@@ -3539,7 +3539,7 @@ class bsPagination extends JPagination
 	function orderUpIcon($i, $condition=true, $task='orderup', $enabled=false)
 	{
 		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
-		$order .= '<i class="bsicon-chevron-up"></i>';
+		$order .= '<i class="icon-chevron-up"></i>';
 		$order .= '</a>';
 
 		return $order;
@@ -3548,7 +3548,7 @@ class bsPagination extends JPagination
 	function orderDownIcon($i, $n, $condition=true, $task='orderdown', $enabled=false)
 	{
 		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
-		$order .= '<i class="bsicon-chevron-down"></i>';
+		$order .= '<i class="icon-chevron-down"></i>';
 		$order .= '</a>';
 
 		return $order;
