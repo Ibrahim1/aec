@@ -39,9 +39,9 @@
 					<tr>
 						<td></td>
 						<td></td>
-						<td class="center-cell"><button type="submit" class="btn btn-info pull-right"><i class="icon-refresh iconwhite narrow"></i></button></td>
+						<td class="center-cell"><button type="submit" class="btn btn-info pull-right"><i class="bsicon-refresh iconwhite narrow"></i></button></td>
 						<td></td>
-						<td class="center-cell"><div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), '<i class="icon-trash iconwhite narrow"></i>', 'btn btn-danger' ) ?></div></td>
+						<td class="center-cell"><div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), '<i class="bsicon-trash iconwhite narrow"></i>', 'btn btn-danger' ) ?></div></td>
 					</tr>
 					<tr>
 						<td><strong><?php echo JText::_('CART_ROW_TOTAL') ?></strong></td>
