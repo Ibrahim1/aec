@@ -1,0 +1,134 @@
+{
+	"name":"PayPal",
+	"description":"Bla Bla",
+	"type":"redirect",
+	"supports":
+	{
+		"testmode":true,
+		"currencies":["eur","usd","gbp","aud","cad","jpy","nzd","chf","hkd","sgd","sek","dkk","pln","nok","huf","czk","mxn","ils","brl","myr","php","twd","thb","zar"],
+		"languages":"iso639",
+		"creditcards":["visa","mastercard","discover","americanexpress","echeck","giropay"],
+		"recurring-billing":true,
+		"taxes":true
+	},
+	"settings":
+	{
+		"business":
+		{
+			"name":"PayPal Business ID",
+			"desc":"Your PayPal Business ID",
+			"type":"string"
+		},
+		"brokenipnmode":
+		{
+			"name":"Broken IPN Mode",
+			"desc":"If the PayPal Servers fail to get back a proper response, you can manually override IPN authentication with this switch - JUST MAKE SURE TO PUT IT BACK ON AGAIN! These Problems usually go away within 24 hours.",
+			"type":bool
+		}
+	},
+	"checkout-form":
+	{
+		"post-url":{"ternary":["settings.testmode","https://www.sandbox.paypal.com/cgi-bin/webscr","https://www.paypal.com/cgi-bin/webscr"]},
+		"post-data":
+		{
+			"cmd":"_xclick",
+			"tax":"invoice.total.tax",
+			"amount":"invoice.total.total",
+			"business":"settings.business",
+			"invoice":"invoice.identification",
+			"cancel_return":"route.cancel",
+			"notify_url":"route.notify",
+			"item_number":"invoice.item.number",
+			"item_name":"invoice.item.name",
+			"currency_code":"invoice.total.currency",
+			
+			"lc":"settings.language"
+		}
+	}
+	"notification-parse":
+	{
+		"identification":"post.invoice",
+		"currency":"post.currency",
+		"amount":
+		{
+			"depends":
+			{
+				"post.txn_type":
+				{
+					"web_accept||subscr_payment":"post.mc_gross",
+					"subscr_signup||subscr_cancel||subscr_modify":"post.mc_amount1"
+				}
+			}
+		}
+	}
+	"notification-validate":
+	{
+		"validate":
+		{
+			"postback":
+			{
+				"mode":"postback",
+				"expecting:"VERIFIED",
+				"success":"Verification of notification data with PayPal successful",
+				"failure":"Verification of notification data with PayPal failed"
+			}
+			
+		},
+		"status":
+		{
+			"depends":
+			{
+				"post.txn_type":
+				{
+					"subscr_signup":
+					{
+						"status":"pending",
+						"explain":"subscription signup, no payment has been cleared yet."
+					},
+					"paymentreview":
+					{
+						"status":"payment-review"
+					},
+					"subscr_eot":
+					{
+						"status":"eot"
+					},
+					"subscr_failed":
+					{
+						"status":"error",
+						"explain":"subscription payment failed"
+					},
+					"subscr_cancel":
+					{
+						"status":"cancel"
+					}
+				},
+				"post.pending_reason":
+				{
+					"paymentreview":
+					{
+						"status":"payment-review"
+					}
+				},
+				"post.reason_code":
+				{
+					"refund":
+					{
+						"status":"refund"
+					}
+				},
+				"post.payment_status":
+				{
+					"Reversed":
+					{
+						"status":"chargeback"
+					},
+					"Canceled_Reversal":
+					{
+						"status":"chargeback-settle"
+					}
+				}
+			}
+		}
+	}
+}

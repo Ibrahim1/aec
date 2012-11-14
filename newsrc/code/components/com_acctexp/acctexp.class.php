@@ -36,7 +36,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 aecLanguageHandler::loadList( $langlist );
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5651' );
+define( '_AEC_REVISION', '5655' );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -5406,7 +5406,7 @@ class XMLprocessor extends processor
 			$return .= $this->getStdFormVars( $request );
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn"><i class="bsicon-shopping-cart iconwhite"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn"><i class="bsicon-shopping-cart bsicon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -6321,7 +6321,7 @@ class POSTprocessor extends processor
 			$text = JText::_('BUTTON_CHECKOUT'); 
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '><i class="bsicon-shopping-cart iconwhite"></i>' . $text . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '><i class="bsicon-shopping-cart bsicon-white"></i>' . $text . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -6351,7 +6351,7 @@ class GETprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '><i class="bsicon-shopping-cart iconwhite"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '><i class="bsicon-shopping-cart bsicon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -6405,7 +6405,7 @@ class URLprocessor extends processor
 			$return .= implode( '&amp;', $vars );
 		}
 
-		$return .= '"' . $onclick . ' class="button aec-btn btn btn-primary" ><i class="bsicon-shopping-cart iconwhite"></i>' . JText::_('BUTTON_CHECKOUT') . '</a>' . "\n";
+		$return .= '"' . $onclick . ' class="button aec-btn btn btn-primary" ><i class="bsicon-shopping-cart bsicon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</a>' . "\n";
 
 		return $return;
 	}
