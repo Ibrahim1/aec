@@ -224,6 +224,35 @@ class eucaInstall extends eucaObject
 		}
 	}
 
+	function popIndex( $paths )
+	{
+		foreach ( $paths as $path ) {
+			if ( !is_dir( $path ) ) {
+				continue;
+			}
+
+			$allsub = scandir( $path );
+
+			$subdirs = array();
+			foreach ( $allsub as $subdir ) {
+				if ( strpos( $subdir, '.' ) === false ) {
+					$subdirs[] = $path . '/' . $subdir;
+				}
+			}
+
+			if ( count( $subdirs ) ) {
+				$this->popIndex( $subdirs );
+			}
+
+			$fpath = $path . '/index.html';
+			if ( !file_exists( $fpath ) ) {
+				$fp = fopen( $fpath, 'w' );
+				fwrite( $fp, '<!DOCTYPE html><title></title>' );
+				fclose( $fp );
+			}
+		}
+	}
+
 }
 
 class eucaInstallDB extends eucaObject

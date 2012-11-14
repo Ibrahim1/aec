@@ -343,6 +343,18 @@ function com_install()
 	$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 	$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.helix.less", JPATH_SITE . '/media/com_acctexp/css/template.helix.css' );
 
+	$eucaInstall->popIndex(	array(JPATH_ADMINISTRATOR . '/components/com_acctexp',
+							JPATH_SITE . '/components/com_acctexp',
+							JPATH_SITE . '/plugins/system/aecerrorhandler',
+							JPATH_SITE . '/plugins/system/aecrouting',
+							JPATH_SITE . '/plugins/content/aecrewrite',
+							JPATH_SITE . '/plugins/user/aecaccess',
+							JPATH_SITE . '/plugins/user/aecuser',
+							JPATH_SITE . '/modules/mod_acctexp',
+							JPATH_SITE . '/modules/mod_acctexp_cart',
+							JPATH_SITE . '/media/mod_acctexp' )
+						);
+
 	?>
 	<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root() ?>media/com_acctexp/css/admin.css?rev=<?php echo _AEC_REVISION ?>" />
 	<style type="text/css">

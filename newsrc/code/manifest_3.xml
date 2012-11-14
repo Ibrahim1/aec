@@ -13,9 +13,7 @@
 		<file>acctexp.class.php</file>
 		<file>acctexp.html.php</file>
 		<file>acctexp.php</file>
-		<file>index.html</file>
 		<file>router.php</file>
-
 		<folder>lib</folder>
 		<folder>micro_integration</folder>
 		<folder>processors</folder>
@@ -26,7 +24,6 @@
 	<administration>
 		<menu link="option=com_acctexp&amp;task=showCentral" img="../media/com_acctexp/images/admin/icons/aec_logo_tiny.png">ACCTEXP_MENU</menu>
 		<files folder="administrator/components/com_acctexp">
-			<file>index.html</file>
 			<file>acctexp.php</file>
 			<file>admin.acctexp.php</file>
 			<file>admin.acctexp.class.php</file>
