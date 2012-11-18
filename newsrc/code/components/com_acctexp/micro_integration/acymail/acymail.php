@@ -167,13 +167,13 @@ class mi_acymail extends MI
 
 	function loadACY()
 	{
-		if ( !file_exists( rtrim( JPATH_ROOT, DS ) . DS . 'administrator' . DS . 'components' . DS . 'com_acymailing' . DS . 'helpers' . DS . 'list.php' ) ) {
+		if ( !file_exists( rtrim( JPATH_ROOT, '/' ) . '/administrator/components/com_acymailing/helpers/list.php' ) ) {
 			echo 'This module can not work without the ACY Mailing Component';
 
 			return false;
 		} else {
 			if ( !class_exists( 'acymailing' ) ) {
-				@include_once( rtrim( JPATH_ADMINISTRATOR, DS ).DS.'components'.DS.'com_acymailing'.DS.'helpers'.DS.'helper.php' );
+				@include_once( rtrim( JPATH_ADMINISTRATOR, '/' ).'/components/com_acymailing/helpers/helper.php' );
 			}
 
 			return true;

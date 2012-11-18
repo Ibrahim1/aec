@@ -24,8 +24,6 @@ class mi_jarc
 
 	function Settings( $params=null )
 	{
-		$app = JFactory::getApplication();
-
 		$settings = array();
 		$settings['create_affiliates']	= array( 'toggle' );
 		$settings['log_payments']		= array( 'toggle' );
@@ -47,11 +45,8 @@ class mi_jarc
 			return null;
 		}
 
-		// Only do something on registration
 		if ( strcmp( $request->trace, 'registration' ) === 0 ) {
-			// Make sure that we do not create a double entry
 			if ( !$this->checkaffiliate( $request->row->id ) ) {
-				// Create the affiliate
 				return $this->createaffiliate( $request->row->id );
 			} else {
 				return null;
@@ -64,7 +59,6 @@ class mi_jarc
 
 	function checkaffiliate( $userid )
 	{
-		$app = JFactory::getApplication();
 		$db = &JFactory::getDBO();
 
 		$query = 'SELECT affiliate_id'
@@ -82,15 +76,13 @@ class mi_jarc
 
 	function createaffiliate( $userid )
 	{
-		$app = JFactory::getApplication();
 		$db = &JFactory::getDBO();
-		$session = &JFactory::getSession();
-		// Get affiliate ID from cookie.
-		//$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
-		$cookie_name   = $session->getName() . '_JARC';
-		$sessioncookie = JRequest::getVar( $cookie_name, null,$_COOKIE );
 
-		list($cookie_aid, $cookie_count) = split(':',$sessioncookie,2);
+		$session = &JFactory::getSession();
+
+		$sessioncookie = JRequest::getVar( $session->getName() . '_JARC', null, $_COOKIE );
+
+		list($cookie_aid, $cookie_count) = split(':', $sessioncookie, 2);
 		$query = 'INSERT INTO #__jarc_affiliate_network'
 		. ' SET `affiliate_id` = \'' . $userid . '\','
 		. ' `parent_id` = \'' . $cookie_aid . '\''
@@ -107,14 +99,13 @@ class mi_jarc
 	function logpayment( $invoice )
 	{
 		$db = &JFactory::getDBO();
-		$session = &JFactory::getSession();
-		// Get affiliate ID from cookie.
-		//$cookie_name   = mosMainframe::sessionCookieName() . '_JARC';
-		$cookie_name   = $session->getName() . '_JARC';
-		$sessioncookie = JRequest::getVar( $cookie_name, null, $_COOKIE );
-		list($cookie_aid, $cookie_count) = split(':',$sessioncookie,2);
 
-		require_once( JPATH_BASE.DS.'components'.DS.'com_jarc'.DS.'jarc.class.php' );
+		$session = &JFactory::getSession();
+
+		$sessioncookie = JRequest::getVar( $session->getName() . '_JARC', null, $_COOKIE );
+		list($cookie_aid, $cookie_count) = split(':', $sessioncookie, 2);
+
+		require_once( JPATH_BASE.'/components/com_jarc/jarc.class.php' );
 		$affiliate = new jarc_affiliate($db);
 		$affiliate->findById( intval($cookie_aid) );
 
@@ -130,7 +121,6 @@ class mi_jarc
 		$db->setQuery( $query );
 
 		if ( !$db->query() ) {
-				var_dump( $db );exit();
 				return false;
 		} else {
 				return true;

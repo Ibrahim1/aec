@@ -227,9 +227,9 @@ class AECMI_rafflelist extends serialParamDBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function AECMI_rafflelist( &$db )
+	function AECMI_rafflelist()
 	{
-		parent::__construct( '#__acctexp_mi_rafflelist', 'id', $db );
+		parent::__construct( '#__acctexp_mi_rafflelist', 'id' );
 	}
 
 	function declareParamFields()
@@ -302,9 +302,9 @@ class AECMI_raffleuser extends serialParamDBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function AECMI_raffleuser( &$db )
+	function AECMI_raffleuser()
 	{
-		parent::__construct( '#__acctexp_mi_raffleuser', 'id', $db );
+		parent::__construct( '#__acctexp_mi_raffleuser', 'id' );
 	}
 
 	function declareParamFields()

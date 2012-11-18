@@ -395,7 +395,7 @@ class mi_docman
 	}
 }
 
-class docman_restriction extends JTable {
+class docman_restriction extends serialParamDBTable {
 	/** @var int Primary key */
 	var $id						= null;
 	/** @var int */
@@ -422,8 +422,8 @@ class docman_restriction extends JTable {
 		return $db->loadResult();
 	}
 
-	function docman_restriction( &$db ) {
-		parent::__construct( '#__acctexp_mi_docman', 'id', $db );
+	function docman_restriction() {
+		parent::__construct( '#__acctexp_mi_docman', 'id' );
 	}
 
 	function is_active()

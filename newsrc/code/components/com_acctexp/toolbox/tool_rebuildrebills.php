@@ -84,7 +84,7 @@ class tool_rebuildrebills
 				if ( !empty( $_POST['create'] ) ) {
 					$entry = new logHistory( $db );
 
-					$user = new JTableUser( $db );
+					$user = new cmsUser();
 					$user->load( $invoice->userid );
 
 					if ( !isset( $planlist[$invoice->usage] ) ) {

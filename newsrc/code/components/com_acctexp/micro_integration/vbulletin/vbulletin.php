@@ -508,7 +508,7 @@ class mi_vbulletin
 
 }
 
-class vbulletinpw extends JTable
+class vbulletinpw extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -519,9 +519,9 @@ class vbulletinpw extends JTable
 	/** @var string */
 	var $vbulletinsalt		= null;
 
-	function vbulletinpw( &$db )
+	function vbulletinpw()
 	{
-		parent::__construct( '#__acctexp_mi_vbulletinpw', 'id', $db );
+		parent::__construct( '#__acctexp_mi_vbulletinpw', 'id' );
 	}
 
 	function loadUserID( $userid )

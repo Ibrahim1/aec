@@ -5273,7 +5273,7 @@ function quicklookup( $option )
 		if ( is_array( $s ) ) {
 			$return = array();
 			foreach ( $s as $user ) {
-				$JTableUser = new JTableUser( $db );
+				$JTableUser = new cmsUser();
 				$JTableUser->load( $user );
 				$userlink = '<div class="lookupresult">';
 				$userlink .= '<a href="';

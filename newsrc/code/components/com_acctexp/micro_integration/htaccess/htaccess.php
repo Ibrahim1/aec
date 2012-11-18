@@ -254,7 +254,7 @@ class mi_htaccess extends MI
 
 }
 
-class apachepw extends JTable
+class apachepw extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -263,9 +263,9 @@ class apachepw extends JTable
 	/** @var string */
 	var $apachepw			= null;
 
-	function apachepw( &$db )
+	function apachepw()
 	{
-		parent::__construct( '#__acctexp_mi_htaccess_apachepw', 'id', $db );
+		parent::__construct( '#__acctexp_mi_htaccess_apachepw', 'id' );
 	}
 
 	function getIDbyUserID( $userid )

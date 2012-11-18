@@ -143,7 +143,7 @@ class mi_jnews
 	{
 		$db = &JFactory::getDBO();
 
-		$user = new JTableUser( $db );
+		$user = new cmsUser();
 		$user->load( $userid );
 
 		$query  = 'INSERT INTO #__jnews_subscribers'

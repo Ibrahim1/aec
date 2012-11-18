@@ -530,7 +530,7 @@ class mi_phpbb3
 
 }
 
-class phpbb3pw extends JTable
+class phpbb3pw extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -539,9 +539,9 @@ class phpbb3pw extends JTable
 	/** @var string */
 	var $phpbb3pw			= null;
 
-	function phpbb3pw( &$db )
+	function phpbb3pw()
 	{
-		parent::__construct( '#__acctexp_mi_phpbb3pw', 'id', $db );
+		parent::__construct( '#__acctexp_mi_phpbb3pw', 'id' );
 	}
 
 	function loadUserID( $userid )

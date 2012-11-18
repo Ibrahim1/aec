@@ -363,6 +363,15 @@ function getView( $view, $args=null )
 		include( $tmpl->paths['default'].$tphp );
 	}
 }
+class cmsUser extends JTableUser
+{
+	function __construct()
+	{
+		$db = &JFactory::getDBO();
+
+		parent::__construct($db);
+	}
+}
 
 class metaUser
 {
@@ -396,7 +405,7 @@ class metaUser
 		$this->focusSubscription = null;
 
 		if ( $userid ) {
-			$this->cmsUser = new JTableUser( $db );
+			$this->cmsUser = new cmsUser();
 			$this->cmsUser->load( $userid );
 
 			$this->userid = $userid;
@@ -2124,7 +2133,7 @@ class aecACLhandler
 		} else {
 			$db = &JFactory::getDBO();
 
-			$obj = new JTableUser( $db );
+			$obj = new cmsUser();
 
 			if ( !$obj->delete( $userid ) ) {
 				return $obj->getError();
@@ -3122,7 +3131,7 @@ class aecTemplate
 	}
 }
 
-class aecHeartbeat extends JTable
+class aecHeartbeat extends serialParamDBTable
 {
  	/** @var int Primary key */
 	var $id				= null;
@@ -7984,7 +7993,7 @@ class ItemGroup extends serialParamDBTable
 	}
 }
 
-class itemXgroup extends JTable
+class itemXgroup extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id					= null;
@@ -9299,7 +9308,7 @@ class logHistory extends serialParamDBTable
 	{
 		$db = &JFactory::getDBO();
 
-		$user = new JTableUser( $db );
+		$user = new cmsUser();
 		$user->load( $objInvoice->userid );
 
 		$plan = new SubscriptionPlan( $db );
@@ -15056,7 +15065,7 @@ class Subscription extends serialParamDBTable
 
 		$free = ( strcmp( strtolower( $this->type ), 'none' ) == 0 || strcmp( strtolower( $this->type ), 'free' ) == 0 );
 
-		$urow = new JTableUser( $db );
+		$urow = new cmsUser();
 		$urow->load( $this->userid );
 
 		$plan = new SubscriptionPlan( $db );
@@ -18542,7 +18551,7 @@ class microIntegrationHandler
 		}
 
 		if ( !is_object( $row ) ) {
-			$row = new JTableUser( $db );
+			$row = new cmsUser();
 			$row->load( $userid );
 		}
 

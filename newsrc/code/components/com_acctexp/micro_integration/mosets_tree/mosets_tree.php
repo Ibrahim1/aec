@@ -351,13 +351,13 @@ class mosetstree extends serialParamDBTable
 	/** @var text */
 	var $params				= null;
 
-	function mosetstree( &$db )
+	function mosetstree()
 	{
 		$lang =& JFactory::getLanguage();
 
 		$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 
-		parent::__construct( '#__acctexp_mi_mosetstree', 'id', $db );
+		parent::__construct( '#__acctexp_mi_mosetstree', 'id' );
 	}
 
 	function declareParamFields()

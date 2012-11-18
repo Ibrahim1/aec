@@ -31,7 +31,7 @@ class mi_jomsocialjspt
 
 	function Settings()
 	{
-		require_once ( JPATH_ROOT.DS.'components'.DS.'com_xipt'.DS.'api.xipt.php');
+		require_once ( JPATH_ROOT.'/components/com_xipt/api.xipt.php');
 		
 		$database	=& JFactory::getDBO();
         $settings = array();
@@ -100,7 +100,7 @@ class mi_jomsocialjspt
 			return null;
 		}
 
-		require_once ( JPATH_ROOT.DS.'components'.DS.'com_xipt'.DS.'api.xipt.php');
+		require_once ( JPATH_ROOT.'/components/com_xipt/api.xipt.php');
 
 		$subscription_message = XiptAPI::getGlobalConfig('subscription_message');	
 
@@ -136,7 +136,7 @@ class mi_jomsocialjspt
 }
 
 
-class jomsocialjspt_restriction extends JTable {
+class jomsocialjspt_restriction extends serialParamDBTable {
 	/** @var int Primary key */
 	var $id						= null;
 	/** @var int */
@@ -145,8 +145,8 @@ class jomsocialjspt_restriction extends JTable {
 	var $profiletype 			= null;
 	/** @var int */
 
-	function jomsocialjspt_restriction( &$db ) {
-		parent::__construct( '#__xipt_aec', 'id', $db );
+	function jomsocialjspt_restriction() {
+		parent::__construct( '#__xipt_aec', 'id' );
 	}
 
 	function getIDbyPlanId( $planid ) {

@@ -238,7 +238,7 @@ class mi_uddeim
 
 }
 
-class uddeim_restriction extends JTable {
+class uddeim_restriction extends serialParamDBTable {
 	/** @var int Primary key */
 	var $id						= null;
 	/** @var int */
@@ -265,8 +265,8 @@ class uddeim_restriction extends JTable {
 		return $db->loadResult();
 	}
 
-	function uddeim_restriction( &$db ) {
-		parent::__construct( '#__acctexp_mi_uddeim', 'id', $db );
+	function uddeim_restriction() {
+		parent::__construct( '#__acctexp_mi_uddeim', 'id' );
 	}
 
 	function is_active()
