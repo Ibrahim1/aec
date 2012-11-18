@@ -118,8 +118,6 @@ function aecEscape( $value, $safe_params )
 		return $array;
 	}
 
-	$db = &JFactory::getDBO();
-
 	$regex = "#{aecjson}(.*?){/aecjson}#s";
 
 	// find all instances of json code
@@ -189,6 +187,8 @@ function aecEscape( $value, $safe_params )
 		}
 
 	}
+
+	$db = &JFactory::getDBO();
 
 	return $db->getEscaped( $return );
 }
@@ -1571,9 +1571,9 @@ class metaUserDB extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function metaUserDB( &$db )
+	function metaUserDB()
 	{
-		parent::__construct( '#__acctexp_metauser', 'id', $db );
+		parent::__construct( '#__acctexp_metauser', 'id' );
 	}
 
 	function declareParamFields()
@@ -1821,6 +1821,26 @@ class aecLanguageHandler
 		}
 
 		return;
+	}
+
+	function getSystemLanguages()
+	{
+		$fdir = JPATH_SITE . '/language';
+
+		$list = AECToolbox::getFileArray( $fdir, null, true, true );
+
+		$adir = JPATH_SITE . '/administrator/language';
+
+		$list = array_merge( $list, AECToolbox::getFileArray( $fdir, null, true, true ) );
+
+		$languages = array();
+		foreach ( $list as $li ) {
+			if ( ( strpos( $li, '-' ) !== false ) && !in_array( $li, $languages ) ) {
+				$languages[] = $li;
+			}
+		}
+
+		return $languages;
 	}
 }
 
@@ -2546,9 +2566,9 @@ class Config_General extends serialParamDBTable
 	/** @var text */
 	var $settings 			= null;
 
-	function Config_General( &$db )
+	function Config_General()
 	{
-		parent::__construct( '#__acctexp_config', 'id', $db );
+		parent::__construct( '#__acctexp_config', 'id' );
 
 		$this->load(1);
 
@@ -2782,9 +2802,9 @@ class configTemplate extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function configTemplate( &$db )
+	function configTemplate()
 	{
-		parent::__construct( '#__acctexp_config_templates', 'id', $db );
+		parent::__construct( '#__acctexp_config_templates', 'id' );
 	}
 
 	function declareParamFields()
@@ -3112,11 +3132,11 @@ class aecHeartbeat extends JTable
 	/**
 	 * @param database A database connector object
 	 */
-	function aecHeartbeat( &$db )
+	function aecHeartbeat()
 	{
 	 	$db = &JFactory::getDBO();
 
-	 	parent::__construct( '#__acctexp_heartbeat', 'id', $db );
+	 	parent::__construct( '#__acctexp_heartbeat', 'id' );
 	 	$this->load(1);
 
 		if ( empty( $this->last_beat ) ) {
@@ -3572,9 +3592,9 @@ class displayPipeline extends serialParamDBTable
 	/**
 	 * @param database A database connector object
 	 */
-	function displayPipeline( &$db )
+	function displayPipeline()
 	{
-	 	parent::__construct( '#__acctexp_displaypipeline', 'id', $db );
+	 	parent::__construct( '#__acctexp_displaypipeline', 'id' );
 	}
 
 	function declareParamFields()
@@ -3634,9 +3654,9 @@ class eventLog extends serialParamDBTable
 	/**
 	 * @param database A database connector object
 	 */
-	function eventLog( &$db )
+	function eventLog()
 	{
-	 	parent::__construct( '#__acctexp_eventlog', 'id', $db );
+	 	parent::__construct( '#__acctexp_eventlog', 'id' );
 	}
 
 	function declareParamFields()
@@ -3771,9 +3791,9 @@ class aecBucket extends serialParamDBTable
 	/**
 	 * @param database A database connector object
 	 */
-	function aecBucket( &$db )
+	function aecBucket()
 	{
-	 	parent::__construct( '#__acctexp_bucket', 'id', $db );
+	 	parent::__construct( '#__acctexp_bucket', 'id' );
 	}
 
 	function declareParamFields()
@@ -3869,9 +3889,9 @@ class aecEvent extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function aecEvent( &$db )
+	function aecEvent()
 	{
-		parent::__construct( '#__acctexp_event', 'id', $db );
+		parent::__construct( '#__acctexp_event', 'id' );
 	}
 
 	function declareParamFields()
@@ -3948,12 +3968,13 @@ class PaymentProcessorHandler
 
 	function getProcessorList()
 	{
-		$list = AECToolbox::getFileArray( $this->pp_dir, 'php', false, true );
+		$list = AECToolbox::getFileArray( $this->pp_dir, null, true, true );
 
 		$pp_list = array();
 		foreach ( $list as $name ) {
-			$parts		= explode( '.', $name );
-			$pp_list[] = $parts[0];
+			if ( is_dir( $this->pp_dir . '/' . $name ) ) {
+				$pp_list[] = $name;
+			}
 		}
 
 		return $pp_list;
@@ -4094,6 +4115,8 @@ class PaymentProcessor
 	var $id = null;
 	/** var string **/
 	var $processor_name = null;
+	/** var string **/
+	var $path = null;
 	/** var object **/
 	var $processor = null;
 	/** var array **/
@@ -4104,7 +4127,7 @@ class PaymentProcessor
 	function PaymentProcessor()
 	{
 		// Init Payment Processor Handler
-		$this->pph = new PaymentProcessorHandler ();
+		$this->pph = new PaymentProcessorHandler();
 	}
 
 	function loadName( $name )
@@ -4130,12 +4153,14 @@ class PaymentProcessor
 			$this->id = $res->id ? $res->id : 0;
 		}
 
-		$file = $this->pph->pp_dir . '/' . $this->processor_name . '.php';
+		$this->path = $this->pph->pp_dir . '/' . $this->processor_name . '/';
+
+		$file = $this->path . $this->processor_name . '.php';
 
 		// Check whether processor exists
 		if ( file_exists( $file ) ) {
 			// Call Integration file
-			include_once $this->pph->pp_dir . '/' . $this->processor_name . '.php';
+			include_once $this->path . '/' . $this->processor_name . '.php';
 
 			// Initiate Payment Processor Class
 			$class_name = 'processor_' . $this->processor_name;
@@ -4148,6 +4173,10 @@ class PaymentProcessor
 				$this->processor->active = $res->active;
 			} else {
 				$this->processor->active = 0;
+			}
+
+			if ( empty( $this->id ) ) {
+				$this->processor->install();
 			}
 
 			return true;
@@ -4229,6 +4258,8 @@ class PaymentProcessor
 		// Create new db entry
 		$this->processor->load( 0 );
 
+		$this->copyAssets();
+
 		// Call default values for Info and Settings
 		$this->getInfo();
 		$this->getSettings();
@@ -4243,6 +4274,40 @@ class PaymentProcessor
 		$this->processor->storeload();
 
 		$this->id = $this->processor->id;
+	}
+
+	function copyAssets()
+	{
+		$png = $this->processor_name . '.png';
+
+		$source = $this->path . '/media/images/' . $png;
+
+		if ( file_exists( $source ) ) {
+			$dest = JPATH_SITE . '/media/com_acctexp/images/site/' . $png;
+			if ( !file_exists( $dest ) ) {
+				copy( $source, $dest );
+			}
+		}
+
+		$syslangpath = JPATH_SITE . '/language';
+
+		$languages = aecLanguageHandler::getSystemLanguages();
+
+		$langpath = $this->path . '/lang';
+
+		foreach ( $languages as $l ) {
+			$lpath = $langpath . '/' . $l;
+
+			if ( is_dir( $lpath ) && is_dir( $syslangpath . '/' . $l ) ) {
+				$filename = $l . '.com_acctexp.processors.' . $this->processor_name . '.ini';
+
+				$source = $lpath . '/' . $filename;
+
+				$dest = $syslangpath . '/' . $l . '/' . $filename;
+
+				copy( $source, $dest );
+			}
+		}
 	}
 
 	function getInfo()
@@ -4946,9 +5011,9 @@ class processor extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function processor( &$db )
+	function processor()
 	{
-		parent::__construct( '#__acctexp_config_processors', 'id', $db );
+		parent::__construct( '#__acctexp_config_processors', 'id' );
 	}
 
 	function declareParamFields()
@@ -7658,9 +7723,9 @@ class ItemGroup extends serialParamDBTable
 	/** @var text */
 	var $restrictions		= null;
 
-	function ItemGroup( &$db )
+	function ItemGroup()
 	{
-		parent::__construct( '#__acctexp_itemgroups', 'id', $db );
+		parent::__construct( '#__acctexp_itemgroups', 'id' );
 	}
 
 	function getProperty( $name )
@@ -7930,9 +7995,9 @@ class itemXgroup extends JTable
 	/** @var int */
 	var $group_id			= null;
 
-	function itemXgroup( &$db )
+	function itemXgroup()
 	{
-		parent::__construct( '#__acctexp_itemxgroup', 'id', $db );
+		parent::__construct( '#__acctexp_itemxgroup', 'id' );
 	}
 
 	function createNew( $type, $item_id, $group_id )
@@ -8097,9 +8162,9 @@ class SubscriptionPlan extends serialParamDBTable
 	/** @var text */
 	var $micro_integrations	= null;
 
-	function SubscriptionPlan( &$db )
+	function SubscriptionPlan()
 	{
-		parent::__construct( '#__acctexp_plans', 'id', $db );
+		parent::__construct( '#__acctexp_plans', 'id' );
 	}
 
 	function declareParamFields()
@@ -9182,9 +9247,9 @@ class logHistory extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function logHistory( &$db )
+	function logHistory()
 	{
-		parent::__construct( '#__acctexp_log_history', 'id', $db );
+		parent::__construct( '#__acctexp_log_history', 'id' );
 	}
 
 	function declareParamFields()
@@ -9288,7 +9353,7 @@ class aecTempToken extends serialParamDBTable
 
 	function aecTempToken(&$db)
 	{
-		parent::__construct( '#__acctexp_temptoken', 'id', $db );
+		parent::__construct( '#__acctexp_temptoken', 'id' );
 	}
 
 	function declareParamFields()
@@ -12090,7 +12155,7 @@ class Invoice extends serialParamDBTable
 
 	function Invoice(&$db)
 	{
-		parent::__construct( '#__acctexp_invoices', 'id', $db );
+		parent::__construct( '#__acctexp_invoices', 'id' );
 	}
 
 	function load( $id )
@@ -13980,9 +14045,9 @@ class aecCart extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function aecCart( &$db )
+	function aecCart()
 	{
-		parent::__construct( '#__acctexp_cart', 'id', $db );
+		parent::__construct( '#__acctexp_cart', 'id' );
 	}
 
 	function declareParamFields()
@@ -14432,9 +14497,9 @@ class Subscription extends serialParamDBTable
 	/**
 	* @param database A database connector object
 	*/
-	function Subscription( &$db )
+	function Subscription()
 	{
-		parent::__construct( '#__acctexp_subscr', 'id', $db );
+		parent::__construct( '#__acctexp_subscr', 'id' );
 	}
 
 	function declareParamFields()
@@ -18790,7 +18855,7 @@ class microIntegration extends serialParamDBTable
 
 	function microIntegration(&$db)
 	{
-		parent::__construct( '#__acctexp_microintegrations', 'id', $db );
+		parent::__construct( '#__acctexp_microintegrations', 'id' );
 	}
 
 	function declareParamFields()
@@ -20876,12 +20941,12 @@ class Coupon extends serialParamDBTable
 	/** @var text */
 	var $micro_integrations	= null;
 
-	function Coupon( &$db, $type=0 )
+	function Coupon( $type=0 )
 	{
 		if ( $type ) {
-			parent::__construct( '#__acctexp_coupons_static', 'id', $db );
+			parent::__construct( '#__acctexp_coupons_static', 'id' );
 		} else {
-			parent::__construct( '#__acctexp_coupons', 'id', $db );
+			parent::__construct( '#__acctexp_coupons', 'id' );
 		}
 	}
 
@@ -21099,9 +21164,9 @@ class couponXuser extends serialParamDBTable
 	/** @var int */
 	var $usecount			= null;
 
-	function couponXuser( &$db )
+	function couponXuser()
 	{
-		parent::__construct( '#__acctexp_couponsxuser', 'id', $db );
+		parent::__construct( '#__acctexp_couponsxuser', 'id' );
 	}
 
 	function declareParamFields()

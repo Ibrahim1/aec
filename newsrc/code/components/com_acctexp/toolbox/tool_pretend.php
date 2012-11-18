@@ -165,9 +165,6 @@ class tool_pretend
 
 					$userid = rand($this->range['users']['start'], $this->range['users']['end']);
 
-					//$user = new JTableUser( $db );
-					//$user->load( $userid );
-
 					$log->plan_id				= $plan;
 					$log->plan_name				= $plandetails[$plan]['name'];
 					$log->proc_id				= 0;

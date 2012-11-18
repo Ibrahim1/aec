@@ -512,14 +512,14 @@ class aecExport extends serialParamDBTable
 	/** @var text */
 	var $params				= null;
 
-	function aecExport( &$db, $type=false )
+	function aecExport( $type=false )
 	{
 		$this->type = $type;
 
 		if ( $type ) {
-			parent::__construct( '#__acctexp_export_sales', 'id', $db );
+			parent::__construct( '#__acctexp_export_sales', 'id' );
 		} else {
-			parent::__construct( '#__acctexp_export', 'id', $db );
+			parent::__construct( '#__acctexp_export', 'id' );
 		}
 	}
 

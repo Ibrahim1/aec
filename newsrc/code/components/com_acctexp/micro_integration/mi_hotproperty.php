@@ -805,13 +805,13 @@ class aec_hotproperty extends serialParamDBTable
 
 	function declareParamFields(){ return array( 'params' ); }
 
-	function aec_hotproperty( &$db )
+	function aec_hotproperty()
 	{
 		$lang =& JFactory::getLanguage();
 
 		$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 
-		parent::__construct( '#__acctexp_mi_hotproperty', 'id', $db );
+		parent::__construct( '#__acctexp_mi_hotproperty', 'id' );
 	}
 
 	function getIDbyUserID( $userid )

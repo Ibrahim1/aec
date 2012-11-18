@@ -190,9 +190,9 @@ class AECMI_pinstore extends serialParamDBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function AECMI_pinstore( &$db, $table )
+	function AECMI_pinstore( $table )
 	{
-		parent::__construct( '#__' . $table, 'id', $db );
+		parent::__construct( '#__' . $table, 'id' );
 	}
 
 	function loadPin( $pin )

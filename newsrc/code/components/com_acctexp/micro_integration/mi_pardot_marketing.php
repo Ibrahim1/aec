@@ -248,7 +248,7 @@ class PardotConnector extends serialParamDBTable
 
 	function PardotConnector( &$db )
 	{
-		parent::__construct( '#__acctexp_mi_pardot_marketing', 'id', $db );
+		parent::__construct( '#__acctexp_mi_pardot_marketing', 'id' );
 	}
 
 	function get( $settings, $force=false )

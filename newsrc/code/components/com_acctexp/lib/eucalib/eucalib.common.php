@@ -113,6 +113,13 @@ class eucaObject extends JObject {}
 */
 class paramDBTable extends JTable
 {
+	function paramDBTable( $table, $id )
+	{
+		$db = &JFactory::getDBO();
+
+		parent::__construct( $table, $id, $db );
+	}
+
 	/**
 	 * Dummy function to be overridden by calling class
 	 * @return array
