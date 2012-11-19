@@ -12,7 +12,7 @@ $query = 'SELECT `id`'
 		. ' FROM #__acctexp_metauser'
 		;
 $db->setQuery( $query );
-$entries = $db->loadResultArray();
+$entries = xCMS::getDBArray( $db );
 
 /*
  * This may seem odd, but due to unforseen consequences, json encoding and decoding
@@ -22,7 +22,7 @@ $entries = $db->loadResultArray();
  */
 
 foreach ( $entries as $eid ) {
-	$meta = new metaUserDB( $db );
+	$meta = new metaUserDB();
 	$meta->load( $eid );
 
 	if ( !empty( $meta->params ) ) {

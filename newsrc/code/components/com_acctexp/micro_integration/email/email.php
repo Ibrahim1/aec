@@ -108,7 +108,7 @@ class mi_email extends MI
 	        }
 		}
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings['text' . $request->area . '_html'], $cc, $bcc );
+		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings['text' . $request->area . '_html'], $cc, $bcc );
 
 		return true;
 	}

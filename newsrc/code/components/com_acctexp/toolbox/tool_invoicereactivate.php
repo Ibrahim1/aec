@@ -42,7 +42,7 @@ class tool_invoicereactivate
 
 			$list = explode( "\n", $_POST['invoices'] );
 			foreach ( $list as $li ) {
-				$invoice = new Invoice( $db );
+				$invoice = new Invoice();
 				$invoice->loadInvoiceNumber( trim( $li ) );
 
 				if ( empty( $invoice->id ) ) {

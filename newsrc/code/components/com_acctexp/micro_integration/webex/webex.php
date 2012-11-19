@@ -82,7 +82,7 @@ class mi_webex extends MI
 
 			$db = &JFactory::getDBO();
 
-			$meta = new metaUserDB( $db );
+			$meta = new metaUserDB();
 			$meta->loadUserid( $request->row->id );
 
 			if ( empty( $meta->custom_params['is_stored'] ) && empty( $meta->custom_params['temp_pw']) && !empty( $request->row->password ) ) {

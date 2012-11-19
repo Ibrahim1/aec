@@ -681,7 +681,7 @@ class HTML_AcctExp
 	{
 		$db = &JFactory::getDBO();
 
-		$subscription = new SubscriptionPlan($db);
+		$subscription = new SubscriptionPlan();
 		$subscription->load($subscriptionid);
 
 		return $subscription->name;

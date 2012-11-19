@@ -79,7 +79,7 @@ class mi_livedrive extends MI
 
 			$db = &JFactory::getDBO();
 
-			$meta = new metaUserDB( $db );
+			$meta = new metaUserDB();
 			$meta->loadUserid( $request->row->id );
 
 			$params = $meta->custom_params;

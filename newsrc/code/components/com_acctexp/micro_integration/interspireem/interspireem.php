@@ -217,7 +217,7 @@ class mi_interspireem
 
 		$url = $url['scheme'] . '://' . $url['host'] . $path;
 
-		$tempprocessor = new processor($db);
+		$tempprocessor = new processor();
 
 		$return = $tempprocessor->transmitRequest( $url, $path, $xml );
 

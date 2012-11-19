@@ -340,7 +340,7 @@ class mi_aectax
 
 		$db = &JFactory::getDBO();
 
-		$mi = new microIntegration( $db );
+		$mi = new microIntegration();
 
 		if ( !$mi->mi_exists( $location['mi'] ) ) {
 			return true;
@@ -619,7 +619,7 @@ class mi_aectax
 
 		$url = 'http://ec.europa.eu' . $path;
 
-		$tempprocessor = new processor($db);
+		$tempprocessor = new processor();
 
 		$result = $tempprocessor->transmitRequest( $url, $path );
 

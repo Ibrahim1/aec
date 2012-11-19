@@ -96,7 +96,7 @@ class mi_amigos
 					. ' border="0" width="1" height="1" />';
 
 			$db = &JFactory::getDBO();
-			$displaypipeline = new displayPipeline($db);
+			$displaypipeline = new displayPipeline();
 			$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 		}
 

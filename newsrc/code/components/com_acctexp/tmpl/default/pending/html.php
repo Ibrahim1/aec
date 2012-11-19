@@ -28,7 +28,7 @@ $reason = "";
 if ( $invoices ) {
 	$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
 
-	$objInvoice = new Invoice( $db );
+	$objInvoice = new Invoice();
 	$objInvoice->loadInvoiceNumber( $invoice );
 
 	$params = $objInvoice->params;

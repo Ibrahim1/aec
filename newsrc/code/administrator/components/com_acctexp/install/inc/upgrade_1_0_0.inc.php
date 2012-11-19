@@ -36,7 +36,7 @@ if ( isset( $aecConfig->cfg['customtext_plans'] ) ) {
 
 	$aecConfig->saveSettings();
 
-	$template = new configTemplate($db);
+	$template = new configTemplate();
 	$template->name = 'helix';
 	$template->default = 1;
 	$template->settings = $copysettings;

@@ -18,7 +18,7 @@ $query = 'SELECT `id`'
 		. ' FROM #__acctexp_metauser'
 		;
 $db->setQuery( $query );
-$entries = $db->loadResultArray();
+$entries = xCMS::getDBArray( $db );
 
 /*
  * Again using the same method from RC2m to fix the processor params fields here:
@@ -29,7 +29,7 @@ $entries = $db->loadResultArray();
  */
 
 foreach ( $entries as $eid ) {
-	$meta = new metaUserDB( $db );
+	$meta = new metaUserDB();
 	$meta->load( $eid );
 
 	if ( !empty( $meta->processor_params ) ) {
@@ -74,10 +74,10 @@ if ( ( $procnum > 20 ) && ( $plannum > 0 ) ) {
 	$query = 'SELECT id FROM #__acctexp_plans';
 	$db->setQuery( $query );
 
-	$plans = $db->loadResultArray();
+	$plans = xCMS::getDBArray( $db );
 
 	foreach ( $plans as $planid ) {
-		$plan = new SubscriptionPlan( $db );
+		$plan = new SubscriptionPlan();
 		$plan->load( $planid );
 
 		if ( !empty( $plan->params['processors'] ) ) {
@@ -92,7 +92,7 @@ if ( ( $procnum > 20 ) && ( $plannum > 0 ) ) {
 	$query = 'SELECT id FROM #__acctexp_config_processors';
 	$db->setQuery( $query );
 
-	$procs = $db->loadResultArray();
+	$procs = xCMS::getDBArray( $db );
 
 	foreach ( $procs as $procid ) {
 		// Check whether the processor has a plan it is applied to

@@ -79,7 +79,7 @@ if ( !empty( $task ) ) {
 
 			$db = &JFactory::getDBO();
 
-			$heartbeat = new aecHeartbeat( $db );
+			$heartbeat = new aecHeartbeat();
 			$heartbeat->frontendping( true, $hash );
 			break;
 
@@ -298,7 +298,7 @@ if ( !empty( $task ) ) {
 			if ( !empty( $usage ) ) {
 				$db = &JFactory::getDBO();
 
-				$plan = new SubscriptionPlan( $db );
+				$plan = new SubscriptionPlan();
 				$plan->load( $usage );
 				
 				getView( 'thanks', array( 'renew' => $renew, 'free' => $free, 'plan' => $plan ) );
@@ -468,7 +468,7 @@ function subscribe( $option )
 	$k2mode		= false;
 
 	if ( $token ) {
-		$temptoken = new aecTempToken( $db );
+		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
 
 		if ( !empty( $temptoken->content['handler'] ) ) {
@@ -833,7 +833,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
-		$objInvoice = new Invoice( $db );
+		$objInvoice = new Invoice();
 		$objInvoice->load( $invoiceid );
 
 		$objInvoice->cancel();
@@ -906,7 +906,7 @@ function InvoiceAddParams( $option )
 
 	$invoice = aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-	$objinvoice = new Invoice( $db );
+	$objinvoice = new Invoice();
 	$objinvoice->loadInvoiceNumber( $invoice );
 	$objinvoice->savePostParams( $_POST );
 	$objinvoice->check();
@@ -925,7 +925,7 @@ function InvoiceMakeGift( $option )
 	unset( $_POST['user_ident'] );
 	unset( $_REQUEST['user_ident'] );
 
-	$objinvoice = new Invoice( $db );
+	$objinvoice = new Invoice();
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$iFactory = new InvoiceFactory( $objinvoice->userid );
@@ -944,7 +944,7 @@ function InvoiceRemoveGift( $option )
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-	$objinvoice = new Invoice( $db );
+	$objinvoice = new Invoice();
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$iFactory = new InvoiceFactory( $objinvoice->userid );
@@ -968,7 +968,7 @@ function InvoiceRemoveGiftConfirm( $option )
 	$processor	= aecGetParam( 'processor', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$username	= aecGetParam( 'username', 0, true, array( 'string', 'clear_nonalnumwhitespace' ) );
 
-	$objinvoice = new Invoice( $db );
+	$objinvoice = new Invoice();
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	if ( $objinvoice->removeTargetUser() ) {
@@ -986,7 +986,7 @@ function InvoiceRemoveGiftCart( $option )
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
 
-	$objinvoice = new Invoice( $db );
+	$objinvoice = new Invoice();
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$iFactory = new InvoiceFactory( $objinvoice->userid );
@@ -1007,7 +1007,7 @@ function InvoiceAddCoupon( $option )
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-	$objinvoice = new Invoice( $db );
+	$objinvoice = new Invoice();
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$objinvoice->addCoupon( $coupon_code );
@@ -1024,7 +1024,7 @@ function InvoiceRemoveCoupon( $option )
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
-	$objinvoice = new Invoice( $db );
+	$objinvoice = new Invoice();
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$objinvoice->removeCoupon( $coupon_code );
@@ -1071,7 +1071,7 @@ function processNotification( $option, $processor )
 		$tags	= 'processor,loading,error';
 		$params = array();
 
-		$eventlog = new eventLog( $db );
+		$eventlog = new eventLog();
 		$eventlog->issue( $short, $tags, $event, 128, $params );
 
 		return;
@@ -1107,7 +1107,7 @@ function processNotification( $option, $processor )
 
 		$params = array();
 
-		$eventlog = new eventLog( $db );
+		$eventlog = new eventLog();
 
 		if ( isset( $response['null'] ) ) {
 			if ( isset( $response['error'] ) ) {

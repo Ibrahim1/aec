@@ -173,7 +173,7 @@ class processor_payone extends XMLprocessor
 
 		$response['valid'] = 0;
 
-		$invoice = new Invoice( $db );
+		$invoice = new Invoice();
 		$invoice->loadInvoiceNumber( $response['invoice'] );
 
 		switch ( strtolower($post['txaction']) ) {

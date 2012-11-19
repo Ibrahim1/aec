@@ -91,7 +91,7 @@ class tool_pretend
 		if ( $h ) {
 			$db = &JFactory::getDBO();
 
-			$bucket = new aecBucket( $db );
+			$bucket = new aecBucket();
 			$bucket->stuff( 'tool_pretend', $data );
 
 			return "<p>Alright!</p>";
@@ -146,7 +146,7 @@ class tool_pretend
 
 			foreach ( $saleslist as $plan => $dayslist ) {
 				if ( !isset( $plandetails[$plan] ) ) {
-					$splan = new SubscriptionPlan( $db );
+					$splan = new SubscriptionPlan();
 					$splan->load( $plan );
 
 					$plandetails[$plan] = array( 'name' => $splan->name, 'cost' => $splan->params['full_amount'] );
@@ -161,7 +161,7 @@ class tool_pretend
 				}
 
 				for( $j=0; $j<$dsales; $j++ ) {
-					$log = new logHistory( $db );
+					$log = new logHistory();
 
 					$userid = rand($this->range['users']['start'], $this->range['users']['end']);
 
@@ -224,7 +224,7 @@ class tool_pretend
 				$name = "Plan " . $i;
 			}
 
-			$row = new SubscriptionPlan( $db );
+			$row = new SubscriptionPlan();
 
 			$post = array(	'active' => 1,
 							'visible' => 0,
@@ -280,7 +280,7 @@ class tool_pretend
 
 		$grouplist = array();
 		for ( $i=0; $i<=$amount; $i++ ) {
-			$row = new ItemGroup( $db );
+			$row = new ItemGroup();
 
 			$post = array(
 							'active' => 1,

@@ -62,7 +62,7 @@ class cbaecmembershipTab extends cbTabHandler
 		$subscr_info	= $this->getAllCurrentSubscriptionsInfoComplete( $user->id );
 
 		foreach ( $subscriptions as $i => $subscriptionid ) {
-			$subscription = new Subscription( $db );
+			$subscription = new Subscription();
 			$subscription->load( $subscriptionid );
 
 			$plan_name = ($subscr_info[$i]->name == '') ? "Excluded" : $subscr_info[$i]->name;

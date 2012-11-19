@@ -143,7 +143,7 @@ class mi_googleanalytics
 				break;
 		}
 
-		$displaypipeline = new displayPipeline($db);
+		$displaypipeline = new displayPipeline();
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;

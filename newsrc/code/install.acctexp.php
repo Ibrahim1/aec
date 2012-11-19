@@ -125,7 +125,7 @@ function com_install()
 			}
 		}
 
-		$incfiles = AECToolbox::getFileArray( $incpath, 'inc.php', false, true );
+		$incfiles = xCMSUtility::getFileArray( $incpath, 'inc.php', false, true );
 
 		$versions = array();
 		foreach ( $incfiles as $filename ) {
@@ -136,11 +136,11 @@ function com_install()
 			}
 		}
 
-		$incf = AECToolbox::versionSort( $versions );
+		$incf = xCMSUtility::versionSort( $versions );
 
 		$versions = array();
 		foreach ( $incf as $version ) {
-			if ( version_compare( AECToolbox::normVersionName( $version ), AECToolbox::normVersionName( $oldversion ), '>=' ) ) {
+			if ( version_compare( xCMSUtility::normVersionName( $version ), xCMSUtility::normVersionName( $oldversion ), '>=' ) ) {
 				require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
 			}
 		}
@@ -177,7 +177,7 @@ function com_install()
 	}
 
 	// Force Init Params
-	$aecConfig = new Config_General( $db );
+	$aecConfig = new Config_General();
 	$aecConfig->initParams();
 
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---
@@ -186,14 +186,14 @@ function com_install()
 	require_once( $incpath . '/create_rootgroup.inc.php' );
 
 	// Make all Superadmins excluded by default
-	$administrators = aecACLhandler::getSuperAdmins();
+	$administrators = xCMSACLhandler::getSuperAdmins();
 
 	if ( !empty( $administrators ) ) {
 		foreach ( $administrators as $admin ) {
 			$metaUser = new metaUser( $admin->id );
 
 			if ( !$metaUser->hasSubscription ) {
-				$metaUser->objSubscription = new Subscription( $db );
+				$metaUser->objSubscription = new Subscription();
 				$metaUser->objSubscription->createNew( $admin->id, 'free', 0 );
 				$metaUser->objSubscription->setStatus( 'Excluded' );
 			}
@@ -236,7 +236,7 @@ function com_install()
 	$event		= sprintf( JText::_('AEC_LOG_LO_INST'), _AEC_VERSION." Revision "._AEC_REVISION );
 	$tags		= 'install,system';
 
-	$eventlog	= new eventLog( $db );
+	$eventlog	= new eventLog();
 	$params		= array( 'userid' => $user->id );
 	$eventlog->issue( $short, $tags, $event, 2, $params, 1 );
 
@@ -244,7 +244,7 @@ function com_install()
 
 	if ( !empty( $errors ) ) {
 		foreach ( $errors as $error ) {
-			$eventlog	= new eventLog( $db );
+			$eventlog	= new eventLog();
 			$eventlog->issue( '', $tags, $error );
 		}
 	}
@@ -322,7 +322,7 @@ function com_install()
 	}
 
 	// Set up new template for new installs
-	$template = new configTemplate($db);
+	$template = new configTemplate();
 	$template->loadDefault();
 
 	if ( empty( $template->id ) ) {

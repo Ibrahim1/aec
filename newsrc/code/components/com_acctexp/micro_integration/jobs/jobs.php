@@ -117,7 +117,7 @@ class mi_jobs
 
 		$db->setQuery( $query );
 
-		return $db->loadResultArray();
+		return xCMS::getDBArray( $db );
 	}
 
 	function createDummyCompany( $request )
@@ -214,7 +214,7 @@ class mi_jobs
 
 		$db->setQuery( $query );
 
-		return $db->loadResultArray();
+		return xCMS::getDBArray( $db );
 	}
 
 	function createDummyResume( $request )

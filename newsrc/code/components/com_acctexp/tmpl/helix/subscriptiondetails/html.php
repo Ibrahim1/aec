@@ -90,7 +90,7 @@ if ( !empty( $sList ) ) {
 
 		$subscriptions[$usid] = $subscription;
 
-		$subscriptions[$usid]->objPlan = new SubscriptionPlan( $db );
+		$subscriptions[$usid]->objPlan = new SubscriptionPlan();
 		$subscriptions[$usid]->objPlan->load( $subscription->plan );
 
 		if ( !empty( $subscription->type ) ) {
@@ -112,7 +112,7 @@ $invoices = array();
 foreach ( $invoiceList as $invoiceid ) {
 	$invoices[$invoiceid] = array();
 
-	$invoice = new Invoice( $db );
+	$invoice = new Invoice();
 	$invoice->load( $invoiceid );
 
 	$rowstyle		= '';
@@ -169,7 +169,7 @@ if ( !empty( $subscriptions ) ) {
 
 		foreach ( $mis as $mi_id ) {
 			if ( $mi_id ) {
-				$mi = new MicroIntegration( $db );
+				$mi = new MicroIntegration();
 				$mi->load( $mi_id );
 
 				if ( !$mi->callIntegration() ) {

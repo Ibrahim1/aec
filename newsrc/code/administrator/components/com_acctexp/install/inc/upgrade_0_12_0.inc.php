@@ -235,11 +235,11 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
 			. ' FROM #__acctexp_plans'
 			;
 	$db->setQuery( $query );
-	$pplans = $db->loadResultArray();
+	$pplans = xCMS::getDBArray( $db );
 
 	// Assign new make_primary flag to all old plans
 	foreach ( $pplans as $planid ) {
-		$subscription_plan = new SubscriptionPlan( $db );
+		$subscription_plan = new SubscriptionPlan();
 
 		$subscription_plan->addParams( array( 'make_primary' => 1 ) );
 	}

@@ -322,7 +322,7 @@ class processor_ccbill extends POSTprocessor
 									if ( !in_array( $subscription_id, $subscription_list ) ) {
 										// But if that is not the case, expire and set to cancel
 
-										$subscription = new Subscription( $db );
+										$subscription = new Subscription();
 										$subscription->load( $subscription_id );
 										$subscription->cancel();
 									}

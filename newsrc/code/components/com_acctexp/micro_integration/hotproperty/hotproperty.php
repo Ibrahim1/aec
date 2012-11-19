@@ -282,7 +282,7 @@ class mi_hotproperty extends MI
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 			. '$db = &JFactory::getDBO();'
-			. '$mi_hphandler = new aec_hotproperty( $db );' . "\n"
+			. '$mi_hphandler = new aec_hotproperty();' . "\n"
 			. '$mi_hphandler->loadUserID( $user->id );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
 			. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
@@ -316,7 +316,7 @@ class mi_hotproperty extends MI
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 			. '$db = &JFactory::getDBO();'
-			. '$mi_hphandler = new aec_hotproperty( $db );' . "\n"
+			. '$mi_hphandler = new aec_hotproperty();' . "\n"
 			. '$mi_hphandler->loadLinkID( $_REQUEST[\'id\'][0] );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
 			. '$mi_hphandler->removeListing();' . "\n"
@@ -338,7 +338,7 @@ class mi_hotproperty extends MI
 			. ( defined( '_JEXEC' ) ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
-			. '$mi_hphandler = new aec_hotproperty( $db );' . "\n"
+			. '$mi_hphandler = new aec_hotproperty();' . "\n"
 			. '$mi_hphandler->loadUserID( $user->id );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
 			. 'if( !$mi_hphandler->hasListingsLeft() ) {' . "\n"
@@ -356,7 +356,7 @@ class mi_hotproperty extends MI
 			. ( defined( '_JEXEC' ) ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
-			. '$mi_hphandler = new aec_hotproperty( $db );' . "\n"
+			. '$mi_hphandler = new aec_hotproperty();' . "\n"
 			. '$mi_hphandler->loadUserID( $user->id );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
 			. 'if( $mi_hphandler->hasListingsLeft() ) {' . "\n"
@@ -376,7 +376,7 @@ class mi_hotproperty extends MI
 			. 'global JPATH_SITE;' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
-			. '$mi_hphandler = new aec_hotproperty( $db );' . "\n"
+			. '$mi_hphandler = new aec_hotproperty();' . "\n"
 			. '$mi_hphandler->loadUserID( $mtLinks->user_id );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
 			. 'if( $mi_hphandler->hasListingsLeft() ) {' . "\n"
@@ -395,7 +395,7 @@ class mi_hotproperty extends MI
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_hotproperty.php\' );' . "\n"
 			. '$cid = array_keys( $datas[$this->getName()] );' . "\n"
-			. '$mi_hphandler = new aec_hotproperty( $db );' . "\n"
+			. '$mi_hphandler = new aec_hotproperty();' . "\n"
 			. '$mi_hphandler->loadLinkID( $cid[0] );' . "\n"
 			. 'if( $mi_hphandler->id ) {' . "\n"
 			. '$mi_hphandler->removeListing();' . "\n"
@@ -465,7 +465,7 @@ class mi_hotproperty extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$mi_hphandler = new aec_hotproperty( $db );
+		$mi_hphandler = new aec_hotproperty();
 		$id = $mi_hphandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
@@ -552,7 +552,7 @@ class mi_hotproperty extends MI
 		if ( !empty( $this->settings['set_listings'.$request->area] ) || !empty( $this->settings['add_listings'.$request->area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
 			$db = &JFactory::getDBO();
 
-			$mi_hphandler = new aec_hotproperty( $db );
+			$mi_hphandler = new aec_hotproperty();
 			$id = $mi_hphandler->getIDbyUserID( $request->metaUser->userid );
 			$mi_id = $id ? $id : 0;
 			$mi_hphandler->load( $mi_id );

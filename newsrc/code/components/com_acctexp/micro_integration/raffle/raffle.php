@@ -105,7 +105,7 @@ class mi_raffle
 	{
 		$db = &JFactory::getDBO();
 
-		$raffleuser = new AECMI_raffleuser( $db );
+		$raffleuser = new AECMI_raffleuser();
 		$raffleuser->loadUserid( $request->metaUser->userid );
 
 		if ( empty( $raffleuser->id ) ) {
@@ -123,7 +123,7 @@ class mi_raffle
 
 		$list_group = empty( $this->settings['list_group'] ) ? 0 : $this->settings['list_group'];
 
-		$rafflelist = new AECMI_rafflelist( $db );
+		$rafflelist = new AECMI_rafflelist();
 
 		if ( $rafflelist->loadMax( $list_group ) === false ) {
 			$rafflelist->id = 0;
@@ -187,7 +187,7 @@ class mi_raffle
 				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
-				$rows = aecACLhandler::getSuperAdmins();
+				$rows = xCMSACLhandler::getSuperAdmins();
 
 				$adminName2 	= $rows[0]->name;
 				$adminEmail2 	= $rows[0]->email;
@@ -203,7 +203,7 @@ class mi_raffle
 
 			$subject = 'Raffle Drawing Results for ' . $app->getCfg( 'sitename' );
 
-			JUTility::sendMail( $adminEmail2, $adminEmail2, $recipients, $subject, $colET );
+			xCMS::sendMail( $adminEmail2, $adminEmail2, $recipients, $subject, $colET );
 		}
 
 		$rafflelist->check();
@@ -265,7 +265,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 		$participants = array();
 		$winners = array();
 		foreach ( $this->params->participants as $rid ) {
-			$raffleuser = new AECMI_raffleuser( $db );
+			$raffleuser = new AECMI_raffleuser();
 			$raffleuser->load( $rid );
 
 			$raffleuser->runs += 1;

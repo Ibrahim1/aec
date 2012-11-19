@@ -183,7 +183,7 @@ class mi_htaccess extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$apachepw = new apachepw( $db );
+		$apachepw = new apachepw();
 		$apwid = $apachepw->getIDbyUserID( $userid );
 
 		if ( $apwid ) {

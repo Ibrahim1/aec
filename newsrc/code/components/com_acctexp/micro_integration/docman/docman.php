@@ -149,7 +149,7 @@ class mi_docman
 	function profile_info( $request )
 	{
 		$db = &JFactory::getDBO();
-		$mi_docmanhandler = new docman_restriction( $db );
+		$mi_docmanhandler = new docman_restriction();
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
@@ -183,7 +183,7 @@ class mi_docman
 		. '$user =& JFactory::getUser();' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_docman.php\');' . "\n\n"
-		. '$restrictionhandler = new docman_restriction( $db );' . "\n"
+		. '$restrictionhandler = new docman_restriction();' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $user->id );' . "\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
 		. 'if (!$restrictionhandler->hasDownloadsLeft()) {' . "\n"
@@ -233,7 +233,7 @@ class mi_docman
 			}
 		}
 
-		$mi_docmanhandler = new docman_restriction( $db );
+		$mi_docmanhandler = new docman_restriction();
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
@@ -269,7 +269,7 @@ class mi_docman
 			}
 		}
 
-		$mi_docmanhandler = new docman_restriction( $db );
+		$mi_docmanhandler = new docman_restriction();
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 		$mi_id = $id ? $id : 0;
 		$mi_docmanhandler->load( $mi_id );
@@ -302,7 +302,7 @@ class mi_docman
 				. ' FROM #__docman_groups'
 				;
 		$db->setQuery( $query );
-		$ids = $db->loadResultArray();
+		$ids = xCMS::getDBArray( $db );
 
 		$groups = array();
 		foreach ( $ids as $groupid ) {

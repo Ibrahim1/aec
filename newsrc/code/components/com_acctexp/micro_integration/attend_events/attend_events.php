@@ -38,7 +38,7 @@ class mi_attend_events
 		$transaction_id = $db->loadResult();
 
 		// mark ae invoice as cleared
-		$transaction = new comAETransaction( $db );
+		$transaction = new comAETransaction();
 		$transaction->load( $transaction_id );
 		$transaction->bind( $_POST );
 		$transaction->gateway = 'Cybermut';

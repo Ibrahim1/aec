@@ -47,10 +47,10 @@ class tool_rebuildrebills
 		. ' WHERE `method` IN (' . implode( ',', $processors ) . ')'
 		;
 		$db->setQuery( $query );
-		$invoices = $db->loadResultArray();
+		$invoices = xCMS::getDBArray( $db );
 
 		foreach ( $invoices as $id ) {
-			$invoice = new Invoice( $db );
+			$invoice = new Invoice();
 			$invoice->load( $id );
 
 			// Skip non-rebilled
@@ -82,20 +82,20 @@ class tool_rebuildrebills
 				$entries++;
 
 				if ( !empty( $_POST['create'] ) ) {
-					$entry = new logHistory( $db );
+					$entry = new logHistory();
 
 					$user = new cmsUser();
 					$user->load( $invoice->userid );
 
 					if ( !isset( $planlist[$invoice->usage] ) ) {
-						$plan = new SubscriptionPlan( $db );
+						$plan = new SubscriptionPlan();
 						$plan->load( $invoice->usage );
 
 						$planlist[$invoice->usage] = $plan;
 					}
 
 					if ( !isset( $pplist[$invoice->method] ) ) {
-						$pp = new SubscriptionPlan( $db );
+						$pp = new SubscriptionPlan();
 						$pp->load( $invoice->method );
 
 						$pplist[$invoice->method] = $pp;

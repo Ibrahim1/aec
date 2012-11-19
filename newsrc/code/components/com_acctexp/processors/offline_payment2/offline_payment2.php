@@ -127,7 +127,7 @@ class processor_offline_payment2 extends processor
         }
         $recipients = $recipients2;
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 
 		return true;
 	}
@@ -170,7 +170,7 @@ class processor_offline_payment2 extends processor
 					$bcc = null;
 				}
 
-				JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
+				xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
 			}
 
 		}
@@ -182,7 +182,7 @@ class processor_offline_payment2 extends processor
 
 			if ( !$metaUser->hasSubscription || in_array( $metaUser->objSubscription->status, array( 'Expired', 'Closed' ) ) ) {
 				if ( !$metaUser->hasSubscription ) {
-					$payment_plan = new SubscriptionPlan( $db );
+					$payment_plan = new SubscriptionPlan();
 					$payment_plan->load( $this->settings['waitingplan'] );
 
 					$metaUser->establishFocus( $payment_plan, 'offline_payment2', false );
@@ -195,7 +195,7 @@ class processor_offline_payment2 extends processor
 				$tags	= 'processor,waitingplan';
 				$params = array( 'invoice_number' => $objInvoice->invoice_number );
 
-				$eventlog = new eventLog( $db );
+				$eventlog = new eventLog();
 				$eventlog->issue( $short, $tags, $event, 2, $params );
 			}
 		}

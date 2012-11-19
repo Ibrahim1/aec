@@ -123,7 +123,7 @@ class processor_airtoy extends XMLprocessor
 			$sms = explode( '+', $smscode );
 		}
 
-		$invoice = new Invoice( $db );
+		$invoice = new Invoice();
 		$invoice->load( $sms[1] );
 
 		if ( $invoice->id ) {

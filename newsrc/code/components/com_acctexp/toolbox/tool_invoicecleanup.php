@@ -52,7 +52,7 @@ class tool_invoicecleanup
 				. ' WHERE `active` = \'0\''
 				;
 		$db->setQuery( $query );
-		$dbaplans = $db->loadResultArray();
+		$dbaplans = xCMS::getDBArray( $db );
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -67,7 +67,7 @@ class tool_invoicecleanup
 				. ' WHERE `visible` = \'0\''
 				;
 		$db->setQuery( $query );
-		$dbxplans = $db->loadResultArray();
+		$dbxplans = xCMS::getDBArray( $db );
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'

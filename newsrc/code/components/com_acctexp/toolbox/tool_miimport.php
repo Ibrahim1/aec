@@ -63,7 +63,7 @@ class tool_miimport
 
 				$src->clear();
 
-				$mi = new microIntegration( $db );
+				$mi = new microIntegration();
 				$mi->mergeParams( $mi, $src );
 
 				$mi->check();

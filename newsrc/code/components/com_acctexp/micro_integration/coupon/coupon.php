@@ -162,7 +162,7 @@ class mi_coupon
 			$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
 		}
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 
 		return true;
 	}

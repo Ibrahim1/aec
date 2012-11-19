@@ -156,7 +156,7 @@ class plgSystemAECrouting extends JPlugin
 				$vars['username']	= aecEscape( $_REQUEST['jform']['username'], array( 'string', 'clear_nonalnumwhitespace' ) );
 			}
 
-			$temptoken = new aecTempToken( $db );
+			$temptoken = new aecTempToken();
 			$temptoken->getComposite();
 
 			if ( !empty( $temptoken->content['usage'] ) ) {
@@ -179,7 +179,7 @@ class plgSystemAECrouting extends JPlugin
 					&& empty( $temptoken->content['username'] ) && empty( $temptoken->content['password'] ) && empty( $temptoken->content['email'] ) ) {
 					$db = &JFactory::getDBO();
 
-					$temptoken = new aecTempToken( $db );
+					$temptoken = new aecTempToken();
 					$temptoken->getComposite();
 
 					$content = array();
@@ -292,7 +292,7 @@ class plgSystemAECrouting extends JPlugin
 				if ( !empty( $username ) && !empty( $password ) && !empty( $email ) ) {
 					$db = &JFactory::getDBO();
 
-					$temptoken = new aecTempToken( $db );
+					$temptoken = new aecTempToken();
 					$temptoken->getComposite();
 
 					$skip = array( 'coupon_code', 'task', 'option' );
@@ -389,7 +389,7 @@ class plgSystemAECrouting extends JPlugin
 		if ( ( strpos( $body, '<dt class="message">Message</dt>' ) !== false ) && !$vars['aec'] ) {
 			$db = &JFactory::getDBO();
 
-			$temptoken = new aecTempToken( $db );
+			$temptoken = new aecTempToken();
 			$temptoken->getComposite();
 
 			if ( !empty( $temptoken->content['password2'] ) ) {
@@ -473,7 +473,7 @@ class plgSystemAECrouting extends JPlugin
 			$content['processor']	= $vars['processor'];
 			$content['recurring']	= $vars['recurring'];
 
-			$temptoken = new aecTempToken( $db );
+			$temptoken = new aecTempToken();
 			$temptoken->create( $content );
 		}
 
@@ -515,7 +515,7 @@ class plgSystemAECrouting extends JPlugin
 	{
 		$db = &JFactory::getDBO();
 
-		$temptoken = new aecTempToken( $db );
+		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
 
 		if ( $temptoken->id ) {
@@ -527,7 +527,7 @@ class plgSystemAECrouting extends JPlugin
 	{
 		$db = &JFactory::getDBO();
 
-		$temptoken = new aecTempToken( $db );
+		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
 
 		$existing = false;

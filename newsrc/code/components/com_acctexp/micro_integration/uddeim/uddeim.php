@@ -91,7 +91,7 @@ class mi_uddeim
 	function profile_info( $request )
 	{
 		$db = &JFactory::getDBO();
-		$mi_uddeimhandler = new uddeim_restriction( $db );
+		$mi_uddeimhandler = new uddeim_restriction();
 		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {
@@ -124,7 +124,7 @@ class mi_uddeim
 		$messagehack =	'// AEC HACK %s START' . "\n"
 		. '$user = &JFactory::getUser();' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_uddeim.php\');' . "\n\n"
-		. '$restrictionhandler = new uddeim_restriction( $db );' . "\n"
+		. '$restrictionhandler = new uddeim_restriction();' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $user->id );' . "\n"
 		. 'if($restrictionhandler->active){'. "\n\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"
@@ -161,7 +161,7 @@ class mi_uddeim
 		if ( !empty( $this->settings['unset_unlimited'] ) ) {
 			$db = &JFactory::getDBO();
 
-			$mi_uddeimhandler = new uddeim_restriction( $db );
+			$mi_uddeimhandler = new uddeim_restriction();
 			$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 			$mi_id = $id ? $id : 0;
 			$mi_uddeimhandler->load( $mi_id );
@@ -189,7 +189,7 @@ class mi_uddeim
 		if ( !empty( $this->settings['set_messages'] ) || !empty( $this->settings['add_messages'] ) || !empty( $this->settings['set_unlimited'] ) ) {
 			$db = &JFactory::getDBO();
 
-			$mi_uddeimhandler = new uddeim_restriction( $db );
+			$mi_uddeimhandler = new uddeim_restriction();
 			$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 			$mi_id = $id ? $id : 0;
 			$mi_uddeimhandler->load( $mi_id );

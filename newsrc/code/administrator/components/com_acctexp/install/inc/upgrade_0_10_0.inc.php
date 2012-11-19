@@ -115,7 +115,7 @@ $oldplans = ( $db->loadResult() == 0 && in_array( $app->getCfg( 'dbprefix' ) . '
 
 if ( $oldplans || in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_config_paypal', $tables ) ) {
 	$db->setQuery( "SELECT proc_id FROM #__acctexp_processors_plans" );
-	$db_processors = $db->loadResultArray();
+	$db_processors = xCMS::getDBArray( $db );
 
 	if ( is_array( $db_processors ) ) {
 		$used_processors = array_unique($db_processors);

@@ -106,7 +106,7 @@ class mi_jarc
 		list($cookie_aid, $cookie_count) = split(':', $sessioncookie, 2);
 
 		require_once( JPATH_BASE.'/components/com_jarc/jarc.class.php' );
-		$affiliate = new jarc_affiliate($db);
+		$affiliate = new jarc_affiliate();
 		$affiliate->findById( intval($cookie_aid) );
 
 		$query = 'INSERT INTO #__jarc_payments' .

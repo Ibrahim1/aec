@@ -499,7 +499,7 @@ class MCAPI {
 	{
 		$db = &JFactory::getDBO();
 
-		$tempprocessor = new processor($db);
+		$tempprocessor = new processor();
 
 		$dc = "us1";
 	    if (strstr($this->api_key,"-")){

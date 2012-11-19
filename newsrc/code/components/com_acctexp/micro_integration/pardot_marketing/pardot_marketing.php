@@ -40,7 +40,7 @@ class mi_pardot_marketing extends MI
 		if ( !empty( $this->settings['email'] ) && !empty( $this->settings['password'] ) && !empty( $this->settings['user_key'] ) ) {
 			$db = &JFactory::getDBO();
 
-			$pc = new PardotConnector( $db );
+			$pc = new PardotConnector();
 			$pc->get( $this->settings );
 
         	$settings['api_key']		= array( 'p', null, null, "API Key currently in use: ".$pc->api_key );
@@ -87,7 +87,7 @@ class mi_pardot_marketing extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$pc = new PardotConnector( $db );
+		$pc = new PardotConnector();
 		$pc->get( $this->settings );
 
 		$lists = array( 'add' => array(), 'remove' => array() );
@@ -155,7 +155,7 @@ class mi_pardot_marketing extends MI
 
 		$db = &JFactory::getDBO();
 
-		$pc = new PardotConnector( $db );
+		$pc = new PardotConnector();
 		$pc->get( $this->settings );
 
 		$lists = array( 'add' => array(), 'remove' => array() );

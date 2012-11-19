@@ -124,7 +124,7 @@ class tool_terminal
 		}
 
 		if ( strpos( $query, 'logthis:' ) === 0 ) {
-			$eventlog = new eventLog( $db );
+			$eventlog = new eventLog();
 			$eventlog->issue( 'debug', 'debug', 'debug entry: '.str_replace( 'logthis:', '', $query ), 128 );
 
 			return 'alright, logged.';

@@ -56,7 +56,7 @@ class tool_miexport
 		}
 
 		foreach ( $_POST['micro_integrations'] as $mi_id ) {
-			$mi = new microIntegration( $db );
+			$mi = new microIntegration();
 			$mi->load( $mi_id );
 
 			$mi->id = 0;

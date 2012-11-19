@@ -358,7 +358,7 @@ class processor_paypal_wpp extends XMLprocessor
 			}
 
 			if ( $request->invoice->invoice_number != $response['invoice'] ) {
-				$request->invoice = new Invoice( $db );
+				$request->invoice = new Invoice();
 				$request->invoice->loadInvoiceNumber( $response['invoice'] );
 			}
 

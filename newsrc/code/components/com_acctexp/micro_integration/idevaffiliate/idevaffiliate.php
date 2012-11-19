@@ -122,7 +122,7 @@ class mi_idevaffiliate
 					.'src="' . $rooturl .'/sale.php?' . implode( '&amp;', $newget ) . '" '
 					.'width="1" height="1" />';
 
-			$displaypipeline = new displayPipeline($db);
+			$displaypipeline = new displayPipeline();
 			$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 		}
 

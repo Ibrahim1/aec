@@ -94,7 +94,7 @@ class aecSuperCommand
 						. ' FROM #__users'
 						;
 				$db->setQuery( $query );
-				$userlist = $db->loadResultArray();
+				$userlist = xCMS::getDBArray( $db );
 				break;
 			case 'orphans':
 				/*$this->focus == 'subscriptions';
@@ -112,7 +112,7 @@ class aecSuperCommand
 						. ' WHERE `userid` IN (' . $params[1] . ')'
 						;
 				$db->setQuery( $query );*/
-				return $db->loadResultArray();
+				return xCMS::getDBArray( $db );
 				break;
 			case 'subscribers':
 				$db = &JFactory::getDBO();
@@ -138,7 +138,7 @@ class aecSuperCommand
 				}
 
 				$db->setQuery( $query );
-				return $db->loadResultArray();
+				return xCMS::getDBArray( $db );
 			default:
 				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
 
@@ -198,7 +198,7 @@ class aecSuperCommand
 						. ' WHERE `userid` IN (' . $params[1] . ')'
 						;
 				$db->setQuery( $query );
-				return $db->loadResultArray();
+				return xCMS::getDBArray( $db );
 				break;
 			case 'username':
 				$db = &JFactory::getDBO();
@@ -208,7 +208,7 @@ class aecSuperCommand
 						. ' WHERE LOWER( `username` ) LIKE \'%' . $params[1] . '%\''
 						;
 				$db->setQuery( $query );
-				$ids = $db->loadResultArray();
+				$ids = xCMS::getDBArray( $db );
 
 				$p = array();
 				$p[0] = 'userid';
@@ -227,7 +227,7 @@ class aecSuperCommand
 						. ' AND `status` != \'Hold\''
 						;
 				$db->setQuery( $query );
-				return $db->loadResultArray();
+				return xCMS::getDBArray( $db );
 				break;
 			case 'mi':
 				$db = &JFactory::getDBO();
@@ -259,7 +259,7 @@ class aecSuperCommand
 				$plans = explode( ',', $params[1] );
 
 				foreach ( $plans as $planid ) {
-					$plan = new SubscriptionPlan( $db );
+					$plan = new SubscriptionPlan();
 					$plan->load( $planid );
 
 					$metaUser->establishFocus( $plan );
@@ -272,7 +272,7 @@ class aecSuperCommand
 
 				if ( is_array( $micro_integrations ) ) {
 					foreach ( $micro_integrations as $mi_id ) {
-						$mi = new microIntegration( $db );
+						$mi = new microIntegration();
 
 						if ( !$mi->mi_exists( $mi_id ) ) {
 							continue;
@@ -446,7 +446,7 @@ class aecImport
 			$subscr_action = false;
 
 			if ( !empty( $pid ) ) {
-				$plan = new SubscriptionPlan( $db );
+				$plan = new SubscriptionPlan();
 				$plan->load( $pid );
 
 				$d = $metaUser->establishFocus( $plan, 'none', true );
@@ -474,7 +474,7 @@ class aecImport
 
 			if ( !empty( $user['invoice_number'] ) && !empty( $pid ) ) {
 				// Create Invoice
-				$invoice = new Invoice( $db );
+				$invoice = new Invoice();
 				$invoice->create( $userid, $pid, 'none', $user['invoice_number'] );
 
 				if ( $subscr_action ) {
@@ -626,7 +626,7 @@ class aecExport extends serialParamDBTable
 				. ' ORDER BY transaction_date ASC'
 				;
 		$db->setQuery( $query );
-		$entries = $db->loadResultArray();
+		$entries = xCMS::getDBArray( $db );
 
 		switch ( $this->options['collate'] ) {
 			default:
@@ -663,7 +663,7 @@ class aecExport extends serialParamDBTable
 		$historylist = array();
 		$groups = array();
 		foreach ( $entries as $id ) {
-			$entry = new logHistory( $db );
+			$entry = new logHistory();
 			$entry->load( $id );
 
 			if ( empty( $entry->plan_id ) || empty( $entry->amount ) ) {
@@ -921,14 +921,14 @@ class aecExport extends serialParamDBTable
 					$planid = $metaUser->focusSubscription->plan;
 
 					if ( !isset( $plans[$planid] ) ) {
-						$plans[$planid] = new SubscriptionPlan( $db );
+						$plans[$planid] = new SubscriptionPlan();
 						$plans[$planid]->load( $planid );
 					}
 
 					$invoiceid = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->userid, $planid );
 
 					if ( $invoiceid ) {
-						$invoice = new Invoice( $db );
+						$invoice = new Invoice();
 						$invoice->load( $invoiceid );
 
 						$line = AECToolbox::rewriteEngine( $this->options['rewrite_rule'], $metaUser, $plans[$planid], $invoice );

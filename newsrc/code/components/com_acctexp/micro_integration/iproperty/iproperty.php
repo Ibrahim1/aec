@@ -428,7 +428,7 @@ class mi_iproperty
 				. ' WHERE `agent_id` = \'' . (int) $agentid . '\''
 				;
 		$db->setQuery( $query );
-		return $db->loadResultArray();
+		return xCMS::getDBArray( $db );
 	}
 
 }

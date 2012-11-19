@@ -336,7 +336,7 @@ class aecReadout
 
 		$this->lists = array();
 
-		$this->acllist = aecACLhandler::aclList();
+		$this->acllist = xCMSACLhandler::aclList();
 
 		foreach ( $this->acllist as $aclitem ) {
 			$this->lists['gid'][$aclitem->group_id] = $aclitem->name;
@@ -431,7 +431,7 @@ class aecReadout
 
 		foreach ( $processors as $procname ) {
 			$pp = null;
-			$pp = new PaymentProcessor( $db );
+			$pp = new PaymentProcessor();
 
 			if ( !$pp->loadName( $procname ) ) {
 				continue;
@@ -582,7 +582,7 @@ class aecReadout
 
 		$r['set'] = array();
 		foreach ( $plans as $planid ) {
-			$plan = new SubscriptionPlan( $db );
+			$plan = new SubscriptionPlan();
 			$plan->load( $planid );
 
 			$ps = array();
@@ -614,7 +614,7 @@ class aecReadout
 		$micursor = '';
 		$mis = array();
 		foreach ( $this->milist as $miobj ) {
-			$mi = new microIntegration( $db );
+			$mi = new microIntegration();
 			$mi->load( $miobj->id );
 			if ( !$mi->callIntegration() ) {
 				continue;
@@ -636,7 +636,7 @@ class aecReadout
 
 		$r['set'] = array();
 		foreach ( $this->planlist as $planid => $planobj ) {
-			$plan = new SubscriptionPlan( $db );
+			$plan = new SubscriptionPlan();
 			$plan->load( $planobj->id );
 
 			if ( !empty( $plan->micro_integrations ) ) {
@@ -670,7 +670,7 @@ class aecReadout
 
 		$micursor = '';
 		foreach ( $this->milist as $miobj ) {
-			$mi = new microIntegration( $db );
+			$mi = new microIntegration();
 			$mi->load( $miobj->id );
 			$mi->callIntegration(true);
 

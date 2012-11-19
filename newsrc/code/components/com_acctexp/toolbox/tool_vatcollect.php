@@ -58,7 +58,7 @@ class tool_vatcollect
 				. ' ORDER BY transaction_date ASC'
 				;
 		$db->setQuery( $query );
-		$entries = $db->loadResultArray();
+		$entries = xCMS::getDBArray( $db );
 
 		if ( empty( $entries ) ) {
 			return "nothing to list";
@@ -67,7 +67,7 @@ class tool_vatcollect
 		$historylist = array();
 		$groups = array();
 		foreach ( $entries as $id ) {
-			$entry = new logHistory( $db );
+			$entry = new logHistory();
 			$entry->load( $id );
 
 			$refund = false;

@@ -40,7 +40,7 @@ class tool_rawedit
 				case 'metauser':
 					$fixed = array( 'userid' );
 
-					$object = new metaUserDB( $db );
+					$object = new metaUserDB();
 
 					$_POST['id'] = $object->getIDbyUserid( $_POST['id'] );
 					break;
@@ -55,14 +55,14 @@ class tool_rawedit
 						$_POST['id'] = $db->loadResult();
 					}
 
-					$object = new processor( $db );
+					$object = new processor();
 					break;
 				case 'invoice':
 					if ( !is_numeric( $_POST['id'] ) )  {
 						$_POST['id'] = AECfetchfromDB::InvoiceIDfromNumber( $_POST['id'] );
 					}
 
-					$object = new Invoice( $db );
+					$object = new Invoice();
 					break;
 			}
 
@@ -120,13 +120,13 @@ class tool_rawedit
 
 		switch ( $_POST['type'] ) {
 			case 'metauser':
-				$object = new metaUserDB( $db );
+				$object = new metaUserDB();
 				break;
 			case 'processor':
-				$object = new processor( $db );
+				$object = new processor();
 				break;
 			case 'invoice':
-				$object = new Invoice( $db );
+				$object = new Invoice();
 				break;
 		}
 

@@ -71,7 +71,7 @@ class mi_acl
 			$settings['sub_gid_pre_exp']		= array( 'list' );
 		}
 
-		$gtree = aecACLhandler::getGroupTree( array( 28, 29, 30 ) );
+		$gtree = xCMSACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
 		$gidlists = array( 'gid', 'gid_exp', 'gid_pre_exp', 'removegid', 'removegid_exp', 'removegid_pre_exp' );
 
@@ -187,7 +187,7 @@ class mi_acl
 					. ' AND `group_type` = \'sub\''
 					;
 			$db->setQuery( $query );
-			$groups = $db->loadResultArray();
+			$groups = xCMS::getDBArray( $db );
 		}
 
 		if ( !empty( $this->settings[$section.'_del'] ) ) {
@@ -267,14 +267,14 @@ class mi_acl
 					. ' WHERE `id` = \'' . (int) $metaUser->userid . '\''
 					;
 			$db->setQuery( $query );
-			$groups = $db->loadResultArray();
+			$groups = xCMS::getDBArray( $db );
 
 			$query = 'SELECT `value`'
 					. ' FROM #__core_acl_aro_groups'
 					. ' WHERE `id` IN (' . implode( ',', $groups ) . ')'
 					;
 			$db->setQuery( $query );
-			$valuelist = $db->loadResultArray();
+			$valuelist = xCMS::getDBArray( $db );
 
 			$sessiongroups = array();
 			foreach ( $valuelist as $vlist ) {

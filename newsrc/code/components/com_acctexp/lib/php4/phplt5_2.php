@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: php4.php
+ * @version $Id: phplt5_2.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage PHP5.0 <= 5.2 Compatibility Layer
  * @copyright 2006-2012 Copyright (C) David Deutsch

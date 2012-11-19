@@ -203,7 +203,7 @@ class mi_phpbb3
 		if ( empty( $phpbbUserId ) && empty( $this->settings['create_user'] ) ) {
 			return null;
 		} elseif ( empty( $phpbbUserId ) ) {
-			$phpbb3pw = new phpbb3pw( $db );
+			$phpbb3pw = new phpbb3pw();
 			$phpbb3pw->loadUserID( $request->metaUser->userid );
 
 			$password = $phpbb3pw->phpbb3pw;
@@ -393,7 +393,7 @@ class mi_phpbb3
 		$query = 'SHOW COLUMNS FROM #__users';
 		$db->setQuery( $query );
 
-		$fields = $db->loadResultArray();
+		$fields = xCMS::getDBArray( $db );
 
 		$return = array();
 		foreach ( $fields as $key ) {
@@ -413,7 +413,7 @@ class mi_phpbb3
 				;
 		$db->setQuery( $query );
 
-		return $db->loadResultArray();
+		return xCMS::getDBArray( $db );
 	}
 
 	function assignGroup( $db, $userid, $groupid )
@@ -498,7 +498,7 @@ class mi_phpbb3
 	{
 		$db = &JFactory::getDBO();
 
-		$phpbb3pw = new phpbb3pw( $db );
+		$phpbb3pw = new phpbb3pw();
 		$apwid = $phpbb3pw->getIDbyUserID( $request->row->id );
 
 		if ( $apwid ) {

@@ -13,7 +13,7 @@ $db->setQuery("SELECT id FROM  #__acctexp_itemgroups WHERE id='1'");
 
 // Create root group completely out of thin air (tadaa!)
 if ( $db->loadResult() != 1 ) {
-	$rootgroup = new ItemGroup( $db );
+	$rootgroup = new ItemGroup();
 
 	$rootgroup->id = 0;
 	$rootgroup->active = 1;

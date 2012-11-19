@@ -33,7 +33,7 @@ if ( $jsonconversion ) {
 				. ' FROM #__acctexp_' . $dbtable
 				;
 		$db->setQuery( $query );
-		$entries = $db->loadResultArray();
+		$entries = xCMS::getDBArray( $db );
 
 		if ( empty( $entries ) ) {
 			continue;
@@ -123,7 +123,7 @@ if ( $jsonconversion ) {
 					. ' FROM #__acctexp_subscr'
 					;
 			$db->setQuery( $query );
-			$entries = $db->loadResultArray();
+			$entries = xCMS::getDBArray( $db );
 
 			$unsetdec[] = 'userid';
 			$unsetdec[] = 'plan';
@@ -141,7 +141,7 @@ if ( $jsonconversion ) {
 				. ' FROM #__acctexp_' . $dbtable
 				;
 		$db->setQuery( $query );
-		$entries = $db->loadResultArray();
+		$entries = xCMS::getDBArray( $db );
 
 		if ( empty( $entries ) ) {
 			continue;
@@ -199,7 +199,7 @@ if ( $jsonconversion ) {
 				// Make sure to capture exceptions
 				if ( ( $dbtable == 'subscr' ) && ( $fieldname == 'params' ) ) {
 					if ( isset( $object->userid ) ) {
-						$metaUserDB = new metaUserDB( $db );
+						$metaUserDB = new metaUserDB();
 						$metaUserDB->loadUserid( $object->userid );
 
 						if ( !empty( $temp ) ) {

@@ -199,7 +199,7 @@ class mi_email_files
 			}
 		}
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings['text_html'], $cc, $bcc, $attach );
+		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings['text_html'], $cc, $bcc, $attach );
 
 		return true;
 	}

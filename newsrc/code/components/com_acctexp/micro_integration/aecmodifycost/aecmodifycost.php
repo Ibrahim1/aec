@@ -199,7 +199,7 @@ class mi_aecmodifycost
 
 			$db = &JFactory::getDBO();
 
-			$mi = new microIntegration( $db );
+			$mi = new microIntegration();
 
 			if ( !$mi->mi_exists( $option['mi'] ) ) {
 				return true;

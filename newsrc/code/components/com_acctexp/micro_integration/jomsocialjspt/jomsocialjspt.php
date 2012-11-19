@@ -117,7 +117,7 @@ class mi_jomsocialjspt
 		$db =& JFactory::getDBO();
 
 		$planid = $this->id;
-		$mi_jspthandler = new jomsocialjspt_restriction( $db );
+		$mi_jspthandler = new jomsocialjspt_restriction();
 
 		$id = $mi_jspthandler->getIDbyPlanId( $planid );
 

@@ -126,7 +126,7 @@ class mi_aecplan
 
 		$db = &JFactory::getDBO();
 
-		$new_plan = new SubscriptionPlan( $db );
+		$new_plan = new SubscriptionPlan();
 		$new_plan->load( $this->settings['plan_apply'.$request->area] );
 
 		$request->metaUser->establishFocus( $new_plan, 'none', false );

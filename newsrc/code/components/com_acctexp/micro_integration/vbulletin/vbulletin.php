@@ -184,7 +184,7 @@ class mi_vbulletin
 		if ( empty( $vbUserId ) && empty( $this->settings['create_user'] ) ) {
 			return null;
 		} elseif ( empty( $vbUserId ) ) {
-			$vbulletinpw = new vbulletinpw( $db );
+			$vbulletinpw = new vbulletinpw();
 			$vbulletinpw->loadUserID( $request->metaUser->userid );
 
 			$password = $vbulletinpw->vbulletinpw;
@@ -436,7 +436,7 @@ class mi_vbulletin
 		$query = 'SHOW COLUMNS FROM #__user';
 		$db->setQuery( $query );
 
-		$fields = $db->loadResultArray();
+		$fields = xCMS::getDBArray( $db );
 
 		$return = array();
 		if ( !empty( $fields ) ) {
@@ -473,7 +473,7 @@ class mi_vbulletin
 	{
 		$db = &JFactory::getDBO();
 
-		$vbulletinpw = new vbulletinpw( $db );
+		$vbulletinpw = new vbulletinpw();
 		$apwid = $vbulletinpw->getIDbyUserID( $request->row->id );
 
 		if ( $apwid ) {

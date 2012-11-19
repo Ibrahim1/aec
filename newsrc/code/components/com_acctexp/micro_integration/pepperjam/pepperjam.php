@@ -112,7 +112,7 @@ class mi_pepperjam
 				.' src="https://t.pepperjamnetwork.com/track?' . implode( '&amp;', $newget ) . '"'
 				.' width="1" height="1" frameborder="0"></iframe>';
 
-		$displaypipeline = new displayPipeline($db);
+		$displaypipeline = new displayPipeline();
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;

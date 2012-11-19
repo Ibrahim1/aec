@@ -123,7 +123,7 @@ class mi_email_multi extends MI
 	        }
 		}
 
-		JUTility::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings[$pf.'text_html'], $cc, $bcc );
+		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings[$pf.'text_html'], $cc, $bcc );
 	}
 }
 ?>

@@ -87,7 +87,7 @@ class mi_shareasale
 					.'src="' . $rooturl . implode( '&amp;', $newget ) . '" '
 					.'width="1" height="1" />';
 
-			$displaypipeline = new displayPipeline($db);
+			$displaypipeline = new displayPipeline();
 			$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 
 		return true;

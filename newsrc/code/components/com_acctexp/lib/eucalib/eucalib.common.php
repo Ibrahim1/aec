@@ -24,7 +24,7 @@ function eucaInclude( $string )
 	return JLoader::import( $string, _EUCA_APP_COMPDIR, 'lib.');
 }
 
-function resolveProxy ( $task, $returntask=null, $admin=false )
+function resolveProxy( $task, $returntask=null, $admin=false )
 {
 	if ( empty( $task ) ) {
 		$task = 'self_notask';

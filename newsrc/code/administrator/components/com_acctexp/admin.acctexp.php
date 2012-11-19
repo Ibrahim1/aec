@@ -22,11 +22,11 @@ require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.
 $langlist = array(	'com_acctexp' => JPATH_ADMINISTRATOR,
 					'com_acctexp.iso4217' => JPATH_ADMINISTRATOR );
 
-aecLanguageHandler::loadList( $langlist );
+xCMSLanguageHandler::loadList( $langlist );
 
 JLoader::register('JPaneTabs',  JPATH_LIBRARIES.'/joomla/html/pane.php');
 
-aecACLhandler::adminBlock();
+xCMSACLhandler::adminBlock( $aecConfig->cfg['adminaccess'], $aecConfig->cfg['manageraccess'] );
 
 $task			= trim( aecGetParam( 'task', null ) );
 $returnTask 	= trim( aecGetParam( 'returnTask', null ) );
@@ -46,7 +46,7 @@ if ( !is_null( $id ) ) {
 $db = &JFactory::getDBO();
 
 // Auto Heartbeat renew every one hour to make sure that the admin gets a view as recent as possible
-$heartbeat = new aecHeartbeat( $db );
+$heartbeat = new aecHeartbeat();
 $heartbeat->backendping();
 
 if ( empty( $option ) ) {
@@ -57,7 +57,7 @@ switch( strtolower( $task ) ) {
 	case 'heartbeat':
 	case 'beat':
 		// Manual Heartbeat
-		$heartbeat = new aecHeartbeat( $db );
+		$heartbeat = new aecHeartbeat();
 		$heartbeat->beat();
 		echo "wolves teeth";
 		break;
@@ -271,8 +271,6 @@ switch( strtolower( $task ) ) {
 		exit;
 		break;
 
-	case 'readnotice': readNotice($id[0]); aecCentral( $option ); break;
-
 	case 'getnotice': echo getNotice();exit; break;
 
 	case 'readallnotices':
@@ -300,7 +298,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'initsettings':
-		$aecConfig = new Config_General( $db );
+		$aecConfig = new Config_General();
 		$aecConfig->initParams();
 
 		echo 'SPLINES RETICULATED.';
@@ -370,7 +368,7 @@ function addGroup( $type, $id, $groupid )
 	$db = &JFactory::getDBO();
 
 	if ( ItemGroupHandler::setChildren( $groupid, array( $id ), $type ) ) {
-		$group = new ItemGroup( $db );
+		$group = new ItemGroup();
 		$group->load( $groupid );
 
 		$g = array();
@@ -396,7 +394,7 @@ function orderObject( $option, $type, $id, $up, $customreturn=null )
 {
 	$db = &JFactory::getDBO();
 
-	$row = new $type( $db );
+	$row = new $type();
 	$row->load( $id );
 	$row->move( $up ? -1 : 1 );
 
@@ -475,7 +473,7 @@ function readNotice( $id )
 			. ' WHERE `id` = \'' . $id . '\''
 			;
 	$db->setQuery( $query	);
-	$db->query();print_r($db);exit;
+	$db->query(); echo 1;exit;
 }
 
 function getNotice()
@@ -577,7 +575,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 	$invoice_counter = 0;
 
 	foreach ( $invoice_ids as $inv_id ) {
-		$invoice = new Invoice( $db );
+		$invoice = new Invoice();
 		$invoice->load ($inv_id );
 
 		if ( !empty( $invoice->coupons ) ) {
@@ -771,7 +769,7 @@ function saveUser( $option, $apply=0 )
 
 	if ( !empty( $post['assignto_plan'] ) && is_array( $post['assignto_plan'] ) ) {
 		foreach ( $post['assignto_plan'] as $assign_planid ) {
-			$plan = new SubscriptionPlan( $db );
+			$plan = new SubscriptionPlan();
 			$plan->load( $assign_planid );
 
 			$metaUser->establishFocus( $plan );
@@ -791,7 +789,7 @@ function saveUser( $option, $apply=0 )
 
 	if ( !$metaUser->hasSubscription ) {
 		if ( $set_status == 'excluded' ) {
-			$metaUser->focusSubscription = new Subscription( $db );
+			$metaUser->focusSubscription = new Subscription();
 			$metaUser->focusSubscription->createNew( $metaUser->userid, 'none', 0 );
 
 			$metaUser->hasSubscription = true;
@@ -1045,7 +1043,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$users_selected = ( ( is_array( $subscriptionid ) && count( $subscriptionid ) ) || ( is_array( $userid ) && count( $userid ) ) );
 
 	if ( !empty( $planid ) && $users_selected ) {
-		$plan = new SubscriptionPlan( $db );
+		$plan = new SubscriptionPlan();
 		$plan->load( $planid );
 
 		if ( !empty( $subscriptionid ) ) {
@@ -1079,7 +1077,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$expire = trim( aecGetParam( 'set_expiration', null ) );
 	if ( !is_null( $expire ) && is_array( $subscriptionid ) && count( $subscriptionid ) > 0 ) {
 		foreach ( $subscriptionid as $k ) {
-			$subscriptionHandler = new Subscription( $db );
+			$subscriptionHandler = new Subscription();
 
 			if ( !empty( $k ) ) {
 				$subscriptionHandler->load( $k );
@@ -1405,7 +1403,7 @@ function editSettings( $option )
 	if ( $aecConfig->RowDuplicationCheck() ) {
 		// Clean out duplication and reload settings
 		$aecConfig->CleanDuplicatedRows();
-		$aecConfig = new Config_General( $db );
+		$aecConfig = new Config_General();
 	}
 
 	$lists = array();
@@ -1421,7 +1419,7 @@ function editSettings( $option )
 
 	$lists['entry_plan'] = JHTML::_('select.genericlist', $available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $aecConfig->cfg['entry_plan'] );
 
-	$gtree = aecACLhandler::getGroupTree( array( 28, 29, 30 ) );
+	$gtree = xCMSACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
 	// Create GID related Lists
 	$lists['checkout_as_gift_access'] 		= JHTML::_('select.genericlist', $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
@@ -1703,7 +1701,7 @@ function editSettings( $option )
 			if ( empty( $idkp['params'] ) ) {
 				$mid = $db->loadResult();
 			} else {
-				$mids = $db->loadResultArray();
+				$mids = xCMS::getDBArray( $db );
 
 				if ( !empty( $mids ) ) {
 					$query = 'SELECT `id`'
@@ -1814,11 +1812,11 @@ function saveSettings( $option, $return=0 )
 						'ip' => $ip['ip'],
 						'isp' => $ip['isp'] );
 
-	$eventlog = new eventLog( $db );
+	$eventlog = new eventLog();
 	$eventlog->issue( $short, $tags, $event, 2, $params );
 
 	if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
-		$plan = new SubscriptionPlan( $db );
+		$plan = new SubscriptionPlan();
 		$plan->load( $aecConfig->cfg['entry_plan'] );
 
 		$terms = $plan->getTerms();
@@ -1834,7 +1832,7 @@ function saveSettings( $option, $return=0 )
 								'ip' => $ip['ip'],
 								'isp' => $ip['isp'] );
 
-			$eventlog = new eventLog( $db );
+			$eventlog = new eventLog();
 			$eventlog->issue( $short, $tags, $event, 32, $params );
 		}
 	}
@@ -1855,7 +1853,7 @@ function listTemplates( $option )
  	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$list = AECToolbox::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
+	$list = xCMSUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
 	foreach ( $list as $id => $name ) {
 		if ( ( $name == 'default' ) || ( $name == 'classic' ) ) {
@@ -1875,7 +1873,7 @@ function listTemplates( $option )
 
 	$rows = array();
 	foreach ( $names as $name ) {
-		$t = new configTemplate( $db );
+		$t = new configTemplate();
 		$t->loadName( $name );
 
 		if ( !$t->id ){
@@ -1896,7 +1894,7 @@ function editTemplate( $option, $name )
 {
 	$db = &JFactory::getDBO();
 
-	$temp = new configTemplate( $db );
+	$temp = new configTemplate();
 	$temp->loadName( $name );
 
 	$tempsettings = $temp->template->settings();
@@ -1920,7 +1918,7 @@ function saveTemplate( $option, $name, $return=0 )
 {
 	$db = &JFactory::getDBO();
 
-	$temp = new configTemplate( $db );
+	$temp = new configTemplate();
 	$temp->loadName( $name );
 
 	$app = JFactory::getApplication();
@@ -1997,11 +1995,11 @@ function listProcessors( $option )
 		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		 	;
 	$db->setQuery( $query );
-	$names = $db->loadResultArray();
+	$names = xCMS::getDBArray( $db );
 
 	$rows = array();
 	foreach ( $names as $name ) {
-		$pp = new PaymentProcessor( $db );
+		$pp = new PaymentProcessor();
 		$pp->loadName( $name );
 
 		if ( $pp->fullInit() ) {
@@ -2612,7 +2610,7 @@ function editSubscriptionPlan( $id, $option )
 
 	$customparamsarray = new stdClass();
 
-	$row = new SubscriptionPlan( $db );
+	$row = new SubscriptionPlan();
 	$row->load( $id );
 
 	$restrictionHelper = new aecRestrictionHelper();
@@ -2700,7 +2698,7 @@ function editSubscriptionPlan( $id, $option )
 	if ( !empty( $groups ) ) {
 		$gs = array();
 		foreach ( $groups as $groupid ) {
-			$group = new ItemGroup( $db );
+			$group = new ItemGroup();
 			$group->load( $groupid );
 
 			$g = array();
@@ -3062,7 +3060,7 @@ function editSubscriptionPlan( $id, $option )
 	$mi_htmllist[]	= JHTML::_('select.option', '', JText::_('AEC_CMN_NONE_SELECTED') );
 
 	foreach ( $mi_list as $name ) {
-		$mi = new microIntegration( $db );
+		$mi = new microIntegration();
 		$mi->class_name = $name;
 		if ( $mi->callIntegration() ){
 			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
@@ -3104,7 +3102,7 @@ function editSubscriptionPlan( $id, $option )
 
 		if ( !empty( $hidden_mi ) ) {
 			foreach ( $hidden_mi as $miobj ) {
-				$mi = new microIntegration( $db );
+				$mi = new microIntegration();
 
 				if ( !$mi->load( $miobj->id ) ) {
 					continue;
@@ -3195,7 +3193,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 {
 	$db = &JFactory::getDBO();
 
-	$row = new SubscriptionPlan( $db );
+	$row = new SubscriptionPlan();
 	$row->load( $_POST['id'] );
 
 	$post = AECToolbox::cleanPOST( $_POST, false );
@@ -3223,7 +3221,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 		$tags	= 'settings,plan';
 		$params = array();
 
-		$eventlog = new eventLog( $db );
+		$eventlog = new eventLog();
 		$eventlog->issue( $short, $tags, $event, 32, $params );
 	}
 
@@ -3236,7 +3234,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 		$tags	= 'settings,plan';
 		$params = array();
 
-		$eventlog = new eventLog( $db );
+		$eventlog = new eventLog();
 		$eventlog->issue( $short, $tags, $event, 32, $params );
 	}
 
@@ -3254,7 +3252,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 					$fcount++;
 				}
 			} else {
-				$pp = new PaymentProcessor( $db );
+				$pp = new PaymentProcessor();
 				if ( ( 0 < $pp->is_recurring() ) && ( $pp->is_recurring() < 2 ) ) {
 					$found++;
 				} elseif ( $pp->is_recurring() == 2 ) {
@@ -3278,7 +3276,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 			$tags	= 'settings,plan';
 			$params = array();
 
-			$eventlog = new eventLog( $db );
+			$eventlog = new eventLog();
 			$eventlog->issue( $short, $tags, $event, 32, $params );
 		}
 	}
@@ -3488,7 +3486,7 @@ function editItemGroup( $id, $option )
 	$restrictions_values = array();
 	$customparams_values = array();
 
-	$row = new ItemGroup( $db );
+	$row = new ItemGroup();
 	$row->load( $id );
 
 	$restrictionHelper = new aecRestrictionHelper();
@@ -3540,7 +3538,7 @@ function editItemGroup( $id, $option )
 		foreach ( $groups as $groupid ) {
 			$params['group_delete_'.$groupid] = array( 'checkbox', '', '', '' );
 
-			$group = new ItemGroup( $db );
+			$group = new ItemGroup();
 			$group->load( $groupid );
 
 			$g = array();
@@ -3672,7 +3670,7 @@ function saveItemGroup( $option, $apply=0 )
 {
 	$db = &JFactory::getDBO();
 
-	$row = new ItemGroup( $db );
+	$row = new ItemGroup();
 	$row->load( $_POST['id'] );
 
 	$post = AECToolbox::cleanPOST( $_POST, false );
@@ -3728,7 +3726,7 @@ function removeItemGroup( $id, $option )
 	$total = 0;
 
 	foreach ( $id as $i ) {
-		$ig = new ItemGroup( $db );
+		$ig = new ItemGroup();
 		$ig->load( $i );
 
 		if ( $ig->delete() !== false ) {
@@ -3896,7 +3894,7 @@ function editMicroIntegration ( $id, $option )
 	$user = &JFactory::getUser();
 
 	$lists	= array();
-	$mi		= new microIntegration( $db );
+	$mi		= new microIntegration();
 	$mi->load( $id );
 
 	$aecHTML = null;
@@ -3918,7 +3916,7 @@ function editMicroIntegration ( $id, $option )
 
 		if ( count( $mi_list ) > 0 ) {
 			foreach ( $mi_list as $name ) {
-				$mi_item = new microIntegration( $db );
+				$mi_item = new microIntegration();
 				$mi_item->class_name = $name;
 				if ( $mi_item->callIntegration() ) {
 					if ( isset( $mi_item->info['type'] ) ) {
@@ -4057,7 +4055,7 @@ function editMicroIntegration ( $id, $option )
 			$tags	= 'microintegration,loading,error';
 			$params = array();
 
-			$eventlog = new eventLog( $db );
+			$eventlog = new eventLog();
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 		}
 	} else {
@@ -4084,7 +4082,7 @@ function saveMicroIntegration( $option, $apply=0 )
 
 	$id = $_POST['id'] ? $_POST['id'] : 0;
 
-	$mi = new microIntegration( $db );
+	$mi = new microIntegration();
 	$mi->load( $id );
 
 	if ( !empty( $_POST['class_name'] ) ) {
@@ -4107,7 +4105,7 @@ function saveMicroIntegration( $option, $apply=0 )
 		$tags	= 'microintegration,loading,error';
 		$params = array();
 
-		$eventlog = new eventLog( $db );
+		$eventlog = new eventLog();
 		$eventlog->issue( $short, $tags, $event, 128, $params );
 	}
 
@@ -4145,7 +4143,7 @@ function removeMicroIntegration( $id, $option )
 
 	// Call On-Deletion function
 	foreach ( $id as $k ) {
-		$mi = new microIntegration($db);
+		$mi = new microIntegration();
 		$mi->load($k);
 		if ( $mi->callIntegration() ) {
 			$mi->delete();
@@ -4311,7 +4309,7 @@ function editCoupon( $id, $option, $new )
 		$discount_values		= $cph->coupon->discount;
 		$restrictions_values	= $cph->coupon->restrictions;
 	} else {
-		$cph->coupon = new Coupon( $db );
+		$cph->coupon = new Coupon();
 		$cph->coupon->createNew();
 
 		$discount_values		= array();
@@ -4561,7 +4559,7 @@ function saveCoupon( $option, $apply=0 )
 			$tags	= 'coupon,loading,error';
 			$params = array();
 
-			$eventlog = new eventLog( $db );
+			$eventlog = new eventLog();
 			$eventlog->issue( $short, $tags, $event, 128, $params );
 		}
 
@@ -4771,7 +4769,7 @@ function editInvoice( $id, $option, $returnTask, $userid )
 {
 	$db = &JFactory::getDBO();
 
-	$row = new Invoice( $db );
+	$row = new Invoice();
 	$row->load( $id );
 
 	$params['active']						= array( 'toggle',		1 );
@@ -4814,7 +4812,7 @@ function saveInvoice( $option, $return=0 )
 
 	$user = &JFactory::getUser();
 
-	$row = new Invoice( $db );
+	$row = new Invoice();
 	$row->load( $_POST['id'] );
 
 	$returnTask = $_POST['returnTask'];
@@ -4846,7 +4844,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 	if ( $invoiceid ) {
 		$db = &JFactory::getDBO();
 
-		$objInvoice = new Invoice( $db );
+		$objInvoice = new Invoice();
 		$objInvoice->load( $invoiceid );
 
 		$pp = new stdClass();
@@ -4859,7 +4857,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 			$objInvoice->setTransactionDate();
 		}
 
-		$history = new logHistory( $db );
+		$history = new logHistory();
 		$history->entryFromInvoice( $objInvoice, null, $pp );
 
 		if ( strcmp( $task, 'editMembership' ) == 0) {
@@ -4879,7 +4877,7 @@ function cancelInvoice( $option, $invoice_number, $task )
 	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, 0, true );
 
 	if ( $invoiceid ) {
-		$objInvoice = new Invoice( $db );
+		$objInvoice = new Invoice();
 		$objInvoice->load( $invoiceid );
 
 		$objInvoice->delete();
@@ -4898,7 +4896,7 @@ function AdminInvoicePrintout( $option, $invoice_number )
 {
 	$db = &JFactory::getDBO();
 
-	$invoice = new Invoice( $db );
+	$invoice = new Invoice();
 	$invoice->loadInvoiceNumber( $invoice_number );
 
 	$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
@@ -4942,11 +4940,11 @@ function history( $option )
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 			;
 	$db->setQuery( $query );
-	$rowids = $db->loadResultArray();
+	$rowids = xCMS::getDBArray( $db );
 
 	$rows = array();
 	foreach ( $rowids as $rid ) {
-		$entry = new logHistory( $db );
+		$entry = new logHistory();
 		$entry->load( $rid );
 
 		$rows[] = $entry;
@@ -4996,7 +4994,7 @@ function eventlog( $option )
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 			;
 	$db->setQuery( $query );
-	$rows = $db->loadResultArray();
+	$rows = xCMS::getDBArray( $db );
 
 	if ( $db->getErrorNum() ) {
 		echo $db->stderr();
@@ -5005,7 +5003,7 @@ function eventlog( $option )
 
 	$events = array();
 	foreach ( $rows as $id ) {
-		$row = new EventLog( $db );
+		$row = new EventLog();
 		$row->load( $id );
 
 		$events[$id]->id		= $row->id;
@@ -5190,7 +5188,7 @@ function aec_statrequest( $option, $type, $start, $end )
 					. ' ORDER BY transaction_date ASC'
 					;
 			$db->setQuery( $query );
-			$entries = $db->loadResultArray();
+			$entries = xCMS::getDBArray( $db );
 
 			if ( empty( $entries ) ) {
 				echo json_encode( $tree );exit;
@@ -5199,7 +5197,7 @@ function aec_statrequest( $option, $type, $start, $end )
 			$historylist = array();
 			$groups = array();
 			foreach ( $entries as $id ) {
-				$entry = new logHistory( $db );
+				$entry = new logHistory();
 				$entry->load( $id );
 				$entry->amount = AECToolbox::correctAmount( $entry->amount );
 
@@ -5867,7 +5865,7 @@ function importData( $option )
 
 	$temp_dir = JPATH_SITE . '/tmp';
 
-	$file_list = AECToolbox::getFileArray( $temp_dir, 'csv', false, true );
+	$file_list = xCMSUtility::getFileArray( $temp_dir, 'csv', false, true );
 
 	$params = array();
 	$lists = array();
@@ -6394,7 +6392,7 @@ function exportData( $option, $type, $cmd=null )
 	}
 
 	// Export Method
-	$list = AECToolbox::getFileArray( JPATH_SITE . '/components/com_acctexp/lib/export', 'php', false, true );
+	$list = xCMSUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/lib/export', 'php', false, true );
 
 	$sel = array();
 	foreach ( $list as $ltype ) {
@@ -6457,7 +6455,7 @@ function toolBoxTool( $option, $cmd )
 	if ( empty( $cmd ) ) {
 		$list = array();
 
-		$files = AECToolbox::getFileArray( $path, 'php', false, true );
+		$files = xCMSUtility::getFileArray( $path, 'php', false, true );
 
 		asort( $files );
 

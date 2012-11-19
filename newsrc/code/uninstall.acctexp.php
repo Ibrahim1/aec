@@ -66,7 +66,7 @@ function com_uninstall()
 		$event = "AEC has been removed";
 		$tags = "uninstall,system";
 
-		$eventlog = new eventLog($db);
+		$eventlog = new eventLog();
 		$params = array("userid" => $user->id);
 		$eventlog->issue( $short, $tags, $event, 2, $params );
 

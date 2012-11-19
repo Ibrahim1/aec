@@ -77,7 +77,7 @@ class mi_mosets_tree extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$mi_mosetshandler = new mosetstree( $db );
+		$mi_mosetshandler = new mosetstree();
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 
 		$mi_mosetshandler->load( $id );
@@ -113,7 +113,7 @@ class mi_mosets_tree extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$mi_mosetshandler = new mosetstree( $db );
+		$mi_mosetshandler = new mosetstree();
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 
 		$mi_id = $id ? $id : 0;
@@ -255,7 +255,7 @@ class mi_mosets_tree extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$mi_mosetshandler = new mosetstree( $db );
+		$mi_mosetshandler = new mosetstree();
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
 
 		if ( $id ) {

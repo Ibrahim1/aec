@@ -2,7 +2,7 @@ jQuery(document).ready(function(jQuery) {
 	jQuery('.aec-navbar').hover(function(){
 		if ( jQuery(".navbar-hover-helper").length == 0 ) {
 			jQuery('.aec-navbar').addClass("navbar-hover-helper");
-			jQuery('.aec-buttons-fixed').addClass("aec-buttons-fixed-extended");
+			jQuery('.aec-navbar.aec-buttons-fixed').addClass("aec-buttons-fixed-extended");
 
 			jQuery('.navbar-fixed-top').addClass("navbar-fixed-top-override").prepend("<div class=\"head-minify btn btn-inverse\"><i class=\"icon-chevron-left bsicon-white\"></i></div>");
 
