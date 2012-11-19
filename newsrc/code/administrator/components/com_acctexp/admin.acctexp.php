@@ -4531,7 +4531,7 @@ function saveCoupon( $option, $apply=0 )
 		}
 
 		if ( !$cph->status ) {
-			$cph->coupon = new coupon( $db, $type );
+			$cph->coupon = new coupon( $type );
 			$cph->coupon->createNew( $_POST['coupon_code'] );
 			$cph->status = true;
 			$new = 1;

@@ -18,9 +18,6 @@ define( '_AEC_REVISION', '5655' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
-// Get old language file names
-JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
-
 $langlist = array(	'com_acctexp' => JPATH_SITE,
 					'com_acctexp.iso3166-1a2' => JPATH_SITE,
 					'com_acctexp.iso639-1' => JPATH_SITE,
@@ -200,159 +197,7 @@ function aecRedirect( $url, $msg=null, $class=null )
 	$app->redirect( $url, $msg, $class );
 }
 
-function apiCall( $app, $key, $request )
-{
-	global $aecConfig;
-
-	if ( empty( $aecConfig->cfg['apiapplist'] ) ) {
-		header("HTTP/1.0 401 Unauthorized"); die; // die, die
-	}
-
-	if ( isset( $aecConfig->cfg['apiapplist'][$app] ) ) {
-		if ( trim($key) == trim($aecConfig->cfg['apiapplist'][$app]) ) {
-			if ( empty( $request ) ) {
-				header( "HTTP/1.0 400 Bad Request" ); die;
-			}
-
-			if ( get_magic_quotes_gpc() ) {
-				$request = stripslashes( $request );
-			}
-
-			$req = json_decode( $request );
-
-			if ( is_null( $request ) ) {
-				header( "HTTP/1.0 415 Unsupported Media Type" ); die;
-			}
-
-			if ( !is_array($req) ) {
-				$req = array( $req );
-			}
-
-			header( "HTTP/1.0 200 OK" );
-
-			$api = new aecAPI();
-
-			$return = array();
-			foreach ( $req as $r ) {
-				$api->load( $r );
-
-				$r = new stdClass();
-				$r->response	= new stdClass();
-				$r->error		= null;
-
-				if ( empty( $api->error ) ) {
-					$api->resolve();
-
-					$r->response	= $api->response;
-				} else {
-					$r->response->result = false;
-				}
-
-				$r->error	= $api->error;
-
-				$return[] = $r;
-			}
-
-			if ( count( $return ) == 1 ) {
-				$return = $return[0];
-			}
-
-			echo json_encode( $return ); die; // regular die
-		}
-	}
-
-	header("HTTP/1.0 401 Unauthorized"); die; // die, die
-}
-
-function getView( $view, $args=null )
-{
-	global $aecConfig;
-
-	$db = &JFactory::getDBO();
-
-	$user = &JFactory::getUser();
-
-	$metaUser = null;
-	if ( $user->id ) {
-		$userid = $user->id;
-
-		$metaUser = new metaUser( $user->id );
-	} else {
-		$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
-
-		$metaUser = new metaUser( $userid );
-	}
-
-	$app = JFactory::getApplication();
-
-	$option = 'com_acctexp';
-
-	$dbtmpl = new configTemplate();
-	$dbtmpl->loadDefault();
-
-	$tmpl = $dbtmpl->template;
-
-	if ( !empty( $dbtmpl->settings ) ) {
-		$tmpl->cfg = array_merge( $aecConfig->cfg, $dbtmpl->settings );
-	} else {
-		$tmpl->cfg = $aecConfig->cfg;
-	}
-
-	$tmpl->option = 'com_acctexp';
-	$tmpl->metaUser = $metaUser;
-	
-	if ( strpos( JPATH_BASE, '/administrator' ) ) {
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$query = 'SELECT `template`'
-					. ' FROM #__template_styles'
-					. ' WHERE `home` = 1 AND `client_id` = 0'
-					;
-			$db->setQuery( $query );
-			$tmpl->system_template = $db->loadResult();
-		} else {
-			$query = 'SELECT `template`'
-					. ' FROM #__templates_menu'
-					. ' WHERE `menu_id` = 0 AND `client_id` = 0'
-					;
-			$db->setQuery( $query );
-			$tmpl->system_template = $db->loadResult();
-		}
-	} else {
-		$tmpl->system_template = $app->getTemplate();
-	}
-
-	$tmpl->template = $dbtmpl->name;
-	$tmpl->view = $view;
-
-	$tmpl->paths['base'] = JPATH_SITE . '/components/com_acctexp/tmpl';
-	$tmpl->paths = array(	'default' => $tmpl->paths['base'] . '/default',
-							'current' => $tmpl->paths['base'] . '/' . $tmpl->template,
-							'site' => JPATH_SITE . '/templates/' . $tmpl->system_template . '/html/com_acctexp'
-						);
-
-	$hphp = '/'.$view.'/html.php';
-	$tphp = '/'.$view.'/tmpl/'.$view.'.php';
-
-	if ( !empty( $args ) ) {
-		foreach ( $args as $n => $v ) {
-			$$n = $v;
-		}
-	}
-
-	if ( file_exists( $tmpl->paths['site'].$hphp ) ) {
-		include( $tmpl->paths['site'].$hphp );
-	} elseif ( file_exists( $tmpl->paths['current'].$hphp ) ) {
-		include( $tmpl->paths['current'].$hphp );
-	} elseif ( file_exists( $tmpl->paths['default'].$hphp ) ) {
-		include( $tmpl->paths['default'].$hphp );
-	} elseif ( file_exists( $tmpl->paths['site'].$tphp ) ) {
-		include( $tmpl->paths['site'].$tphp );
-	} elseif ( file_exists( $tmpl->paths['current'].$tphp ) ) {
-		include( $tmpl->paths['current'].$tphp );
-	} elseif ( file_exists( $tmpl->paths['default'].$tphp ) ) {
-		include( $tmpl->paths['default'].$tphp );
-	}
-}
+JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
 
 class cmsUser extends JTableUser
 {
@@ -377,8 +222,6 @@ class metaUser
 
 	function metaUser( $userid, $subscriptionid=null )
 	{
-		$db = &JFactory::getDBO();
-
 		if ( empty( $userid ) && !empty( $subscriptionid ) ) {
 			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
 		}
@@ -513,8 +356,6 @@ class metaUser
 
 	function setCMSparams( $array )
 	{
-		$db = &JFactory::getDBO();
-
 		$params = explode( "\n", $this->cmsUser->params );
 
 		$oldarray = array();
@@ -773,8 +614,6 @@ class metaUser
 
 	function establishFocus( $payment_plan, $processor='none', $silent=false, $bias=null )
 	{
-		$db = &JFactory::getDBO();
-
 		if ( !is_object( $payment_plan ) ) {
 			$planid = $payment_plan;
 
@@ -828,11 +667,14 @@ class metaUser
 			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, $plan_params['make_primary'], false, $bias );
 
 			if ( !empty( $existing_record ) ) {
+				$db = &JFactory::getDBO();
+
 				$query = 'SELECT `status`'
 						. ' FROM #__acctexp_subscr'
 						. ' WHERE `id` = \'' . (int) $existing_record . '\''
 						;
 				$db->setQuery( $query );
+
 				$existing_status = $db->loadResult();
 			}
 		} else {
@@ -901,8 +743,6 @@ class metaUser
 
 	function moveFocus( $subscrid )
 	{
-		$db = &JFactory::getDBO();
-
 		$subscription = new Subscription();
 		$subscription->load( $subscrid );
 
@@ -1440,8 +1280,6 @@ class metaUser
 
 	function getUserMIs()
 	{
-		$db = &JFactory::getDBO();
-
 		if ( empty( $this->focusSubscription->id ) ) {
 			return array();
 		}
@@ -2010,11 +1848,99 @@ class Config_General extends serialParamDBTable
 }
 
 if ( !is_object( $aecConfig ) ) {
-	$db = &JFactory::getDBO();
-
-		global $aecConfig;
+	global $aecConfig;
 
 	$aecConfig = new Config_General();
+}
+
+function getView( $view, $args=null )
+{
+	global $aecConfig;
+
+	$db = &JFactory::getDBO();
+
+	$user = &JFactory::getUser();
+
+	$metaUser = null;
+	if ( $user->id ) {
+		$userid = $user->id;
+
+		$metaUser = new metaUser( $user->id );
+	} else {
+		$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
+
+		$metaUser = new metaUser( $userid );
+	}
+
+	$app = JFactory::getApplication();
+
+	$option = 'com_acctexp';
+
+	$dbtmpl = new configTemplate();
+	$dbtmpl->loadDefault();
+
+	$tmpl = $dbtmpl->template;
+
+	if ( !empty( $dbtmpl->settings ) ) {
+		$tmpl->cfg = array_merge( $aecConfig->cfg, $dbtmpl->settings );
+	} else {
+		$tmpl->cfg = $aecConfig->cfg;
+	}
+
+	$tmpl->option = 'com_acctexp';
+	$tmpl->metaUser = $metaUser;
+	
+	if ( strpos( JPATH_BASE, '/administrator' ) ) {
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$query = 'SELECT `template`'
+					. ' FROM #__template_styles'
+					. ' WHERE `home` = 1 AND `client_id` = 0'
+					;
+			$db->setQuery( $query );
+			$tmpl->system_template = $db->loadResult();
+		} else {
+			$query = 'SELECT `template`'
+					. ' FROM #__templates_menu'
+					. ' WHERE `menu_id` = 0 AND `client_id` = 0'
+					;
+			$db->setQuery( $query );
+			$tmpl->system_template = $db->loadResult();
+		}
+	} else {
+		$tmpl->system_template = $app->getTemplate();
+	}
+
+	$tmpl->template = $dbtmpl->name;
+	$tmpl->view = $view;
+
+	$tmpl->paths['base'] = JPATH_SITE . '/components/com_acctexp/tmpl';
+	$tmpl->paths = array(	'default' => $tmpl->paths['base'] . '/default',
+							'current' => $tmpl->paths['base'] . '/' . $tmpl->template,
+							'site' => JPATH_SITE . '/templates/' . $tmpl->system_template . '/html/com_acctexp'
+						);
+
+	$hphp = '/'.$view.'/html.php';
+	$tphp = '/'.$view.'/tmpl/'.$view.'.php';
+
+	if ( !empty( $args ) ) {
+		foreach ( $args as $n => $v ) {
+			$$n = $v;
+		}
+	}
+
+	if ( file_exists( $tmpl->paths['site'].$hphp ) ) {
+		include( $tmpl->paths['site'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['current'].$hphp ) ) {
+		include( $tmpl->paths['current'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['default'].$hphp ) ) {
+		include( $tmpl->paths['default'].$hphp );
+	} elseif ( file_exists( $tmpl->paths['site'].$tphp ) ) {
+		include( $tmpl->paths['site'].$tphp );
+	} elseif ( file_exists( $tmpl->paths['current'].$tphp ) ) {
+		include( $tmpl->paths['current'].$tphp );
+	} elseif ( file_exists( $tmpl->paths['default'].$tphp ) ) {
+		include( $tmpl->paths['default'].$tphp );
+	}
 }
 
 class configTemplate extends serialParamDBTable
@@ -2713,7 +2639,7 @@ class displayPipelineHandler
 				. ' WHERE `only_user` = \'0\''
 				;
 		$db->setQuery( $query );
-		$events = array_merge( $events, $db->loadResultArray() );
+		$events = array_merge( $events, xJ::getDBArray( $db ) );
 
 		$return = '';
 		if ( empty( $events ) ) {
@@ -2971,8 +2897,6 @@ class aecBucketHandler
 
 	function getFullListForSubject( $subject )
 	{
-		$db = &JFactory::getDBO();
-
 		$buckets = $this->getListForSubject( $subject );
 
 		$array = array();
@@ -3458,8 +3382,6 @@ class PaymentProcessor
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
-
 		// Create new db entry
 		$this->processor->load( 0 );
 
@@ -3860,8 +3782,6 @@ class PaymentProcessor
 		$method = 'customtab_' . $action;
 
 		if ( method_exists( $this->processor, $method ) ) {
-			$db = &JFactory::getDBO();
-
 			$request = new stdClass();
 			$request->parent			=& $this;
 			$request->metaUser			=& $metaUser;
@@ -3965,8 +3885,6 @@ class PaymentProcessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
-
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
 		}
@@ -4060,8 +3978,6 @@ class PaymentProcessor
 
 		$response = false;
 		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
-			$db = &JFactory::getDBO();
-
 			$subscription = new Subscription();
 			$subscription->load( $subscription_id );
 
@@ -6579,8 +6495,6 @@ class ItemGroupHandler
 
 	function setChild( $child_id, $group_id, $type='item' )
 	{
-		$db = &JFactory::getDBO();
-
 		if ( $type == 'group' ) {
 			// Don't let a group be assigned to itself
 			if ( ( $group_id == $child_id ) ) {
@@ -6601,8 +6515,6 @@ class ItemGroupHandler
 
 	function setChildren( $group_id, $children, $type='item' )
 	{
-		$db = &JFactory::getDBO();
-
 		$success = false;
 		foreach ( $children as $child_id ) {
 			// Check bogus assignments
@@ -6727,8 +6639,6 @@ class ItemGroupHandler
 
 	function checkParentRestrictions( $item, $type, $metaUser )
 	{
-		$db = &JFactory::getDBO();
-
 		$parents = ItemGroupHandler::parentGroups( $item->id, $type );
 
 		if ( !empty( $parents ) ) {
@@ -6752,8 +6662,6 @@ class ItemGroupHandler
 
 	function hasVisibleChildren( $group, $metaUser )
 	{
-		$db = &JFactory::getDBO();
-
 		$children = ItemGroupHandler::getChildren( $group->id, 'item' );
 		if ( !empty( $children ) ) {
 			$i = 0;
@@ -6801,8 +6709,6 @@ class ItemGroupHandler
 
 	function getTotalAllowedChildItems( $gids, $metaUser, $list=array() )
 	{
-		$db = &JFactory::getDBO();
-
 		$groups = ItemGroupHandler::getChildren( $gids, 'group' );
 
 		if ( !empty( $groups ) ) {
@@ -8734,8 +8640,6 @@ class InvoiceFactory
 
 		$this->loadMetaUser();
 
-		$db = &JFactory::getDBO();
-
 		$plan = new SubscriptionPlan();
 		$plan->load( $this->usage );
 
@@ -8816,8 +8720,6 @@ class InvoiceFactory
 
 	function loadPlanObject( $option, $testmi=false, $quick=false )
 	{
-		$db = &JFactory::getDBO();
-
 		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
 			// get the payment plan
 			$this->plan = new SubscriptionPlan();
@@ -9105,8 +9007,6 @@ class InvoiceFactory
 				$this->processor = PaymentProcessor::getNameById( str_replace( '_recurring', '', $selection ) );
 			}
 		} else {
-			$db = &JFactory::getDBO();
-
 			// We have different processors selected for this cart
 			$prelg = array();
 			foreach ( $pgroups as $pgid => $pgroup ) {
@@ -9219,8 +9119,6 @@ class InvoiceFactory
 
 						$this->payment->currency	= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
 					} else {
-						$db = &JFactory::getDBO();
-
 						$short	= 'processor loading failure';
 						$event	= 'Tried to load processor: ' . $this->processor;
 						$tags	= 'processor,loading,error';
@@ -9243,8 +9141,6 @@ class InvoiceFactory
 			if ( !empty( $this->metaUser ) ) {
 				$this->renew = $this->metaUser->meta->is_renewing();
 			} elseif ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
-				$db = &JFactory::getDBO();
-
 				$user_subscription = new Subscription();
 				$user_subscription->loadUserID( $this->userid );
 
@@ -9394,8 +9290,6 @@ class InvoiceFactory
 		$this->items->itemlist = array();
 
 		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
-			$db = &JFactory::getDBO();
-
 			$terms = $this->plan->getTermsForUser( $this->recurring, $this->metaUser );
 
 			if ( !empty( $this->plan ) ) {
@@ -9610,8 +9504,6 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 		
-		$db = &JFactory::getDBO();
-
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
@@ -9734,7 +9626,6 @@ class InvoiceFactory
 		}
 
 		if ( !is_object( $this->invoice ) ) {
-			$db = &JFactory::getDBO();
 			$this->invoice = new Invoice();
 		}
 
@@ -9771,8 +9662,6 @@ class InvoiceFactory
 
 	function createInvoice( $storenew=false )
 	{
-		$db = &JFactory::getDBO();
-
 		$this->invoice = new Invoice();
 
 		$id = 0;
@@ -9823,8 +9712,6 @@ class InvoiceFactory
 
 	function storeInvoice()
 	{
-		$db = &JFactory::getDBO();
-
 		$this->invoice->computeAmount( $this, true );
 
 		if ( is_object( $this->pp ) ) {
@@ -9917,8 +9804,6 @@ class InvoiceFactory
 
 	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		$register = !$this->loadMetaUser( true );
@@ -10144,11 +10029,11 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 
-		$db = &JFactory::getDBO();
-
 		$auth_problem = null;
 
 		if ( !empty( $usage ) ) {
+			$db = &JFactory::getDBO();
+
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_plans'
 					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
@@ -10468,8 +10353,6 @@ class InvoiceFactory
 
 	function TempTokenFromPlan( $plan )
 	{
-		$db = &JFactory::getDBO();
-
 		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
 
@@ -11104,8 +10987,6 @@ class InvoiceFactory
 
 	function planprocessoraction( $action, $subscr=null )
 	{
-		$db = &JFactory::getDBO();
-
 		$this->loadMetaUser();
 
 		$this->invoice = new Invoice();
@@ -11164,8 +11045,6 @@ class InvoiceFactory
 
 	function invoiceprocessoraction( $option, $action, $invoiceNum=null )
 	{
-		$db = &JFactory::getDBO();
-
 		$this->loadMetaUser();
 
 		$this->puffer( $option );
@@ -12976,8 +12855,6 @@ class aecCartHelper
 
 	function getCartbyUserid( $userid )
 	{
-		$db = &JFactory::getDBO();
-
 		$id = aecCartHelper::getCartidbyUserid( $userid );
 
 		$cart = new aecCart();
@@ -12994,8 +12871,6 @@ class aecCartHelper
 	{
 		$item = $cart->getItem( $id );
 		if ( !empty( $item ) ) {
-			$db = &JFactory::getDBO();
-
 			$plan = new SubscriptionPlan();
 			$plan->load( $item['id'] );
 
@@ -13175,6 +13050,7 @@ class aecCartHelper
 		. ' AND active = \'1\''
 		;
 		$db->setQuery( $query );
+
 		return $db->loadResult();
 	}
 }
@@ -15003,8 +14879,6 @@ class reWriteEngine
 
 	function armRewrite()
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		$this->rewrite = array();
@@ -16136,8 +16010,6 @@ class AECToolbox
 	 */
 	function deadsureURL( $url, $secure=false, $internal=false )
 	{
-		$db = &JFactory::getDBO();
-
 		global $aecConfig;
 
 		$base = JURI::root();
@@ -16263,8 +16135,6 @@ class AECToolbox
 	 */
 	function VerifyUsername( $username )
 	{
-		$db = &JFactory::getDBO();
-
 		$heartbeat = new aecHeartbeat();
 		$heartbeat->frontendping();
 
@@ -16279,8 +16149,6 @@ class AECToolbox
 
 			if ( $aecConfig->cfg['require_subscription'] ) {
 				if ( $aecConfig->cfg['entry_plan'] ) {
-					$db = &JFactory::getDBO();
-
 					$payment_plan = new SubscriptionPlan();
 					$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
@@ -16312,8 +16180,6 @@ class AECToolbox
 
 	function VerifyUser( $username )
 	{
-		$db = &JFactory::getDBO();
-
 		$heartbeat = new aecHeartbeat();
 		$heartbeat->frontendping();
 
@@ -16352,8 +16218,6 @@ class AECToolbox
 		}
 
 		if ( !empty( $aecConfig->cfg['entry_plan'] ) ) {
-			$db = &JFactory::getDBO();
-
 			$payment_plan = new SubscriptionPlan();
 			$payment_plan->load( $aecConfig->cfg['entry_plan'] );
 
@@ -16704,6 +16568,7 @@ class AECToolbox
 				. ' WHERE `username` = \'' . $var['username'] . '\''
 				;
 		$db->setQuery( $query );
+
 		return $db->loadResult();
 	}
 
@@ -17214,8 +17079,6 @@ class AECToolbox
 			if ( empty( $key ) ) {
 				$erx .= 'No Key Found';
 
-				$db = &JFactory::getDBO();
-
 				$eventlog = new eventLog();
 				$eventlog->issue( $err, $erp, $erx, 128, array() );
 				return false;
@@ -17235,8 +17098,6 @@ class AECToolbox
 					} elseif ( $test ) {
 						return false;
 					} else {
-						$db = &JFactory::getDBO();
-
 						$props = array_keys( get_object_vars( $subject ) );
 
 						$event = $erx . $k . ' does not exist! Possible object values are: ' . implode( ';', $props );
@@ -17254,8 +17115,6 @@ class AECToolbox
 					} elseif ( $test ) {
 						return false;
 					} else {
-						$db = &JFactory::getDBO();
-
 						$props = array_keys( $subject );
 
 						$event = $erx . $k . ' does not exist! Possible array values are: ' . implode( ';', $props );
@@ -17267,8 +17126,6 @@ class AECToolbox
 				} elseif ( $test ) {
 					return false;
 				} else {
-					$db = &JFactory::getDBO();
-
 					$event = $erx . $k . '; neither property nor array field';
 
 					$eventlog = new eventLog();
@@ -17388,8 +17245,6 @@ class microIntegrationHandler
 
 	function getMIsbyPlan( $plan_id )
 	{
-		$db = &JFactory::getDBO();
-
 		$plan = new SubscriptionPlan();
 		$plan->load( $plan_id );
 
@@ -17492,8 +17347,6 @@ class microIntegrationHandler
 
 	function userPlanExpireActions( $metaUser, $subscription_plan, $special=null )
 	{
-		$db = &JFactory::getDBO();
-
 		$mi_autointegrations = $this->getAutoIntegrations();
 
 		if ( is_array( $mi_autointegrations ) || ( $subscription_plan !== false ) ) {
@@ -17822,8 +17675,6 @@ class MI
 
 	function issueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		$db = &JFactory::getDBO();
-
 		if ( !empty( $request->metaUser ) ) {
 			$context['user_id']	= $request->metaUser->userid;
 			$userid				= $request->metaUser->userid;
@@ -17851,8 +17702,6 @@ class MI
 
 	function aecEventHook( $event )
 	{
-		$db = &JFactory::getDBO();
-
 		$method = 'aecEventHook' . $event->event;
 
 		if ( !method_exists( $this, $method ) ) {
@@ -19445,7 +19294,7 @@ class couponHandler
 			$this->status = true;
 
 			// establish coupon object
-			$this->coupon = new coupon( $db, $this->type );
+			$this->coupon = new coupon( $this->type );
 			$this->coupon->load( $cc['id'] );
 
 			// Check whether coupon is active
@@ -19516,8 +19365,6 @@ class couponHandler
 
 	function forceload( $coupon_code )
 	{
-		$db = &JFactory::getDBO();
-
 		$cc = $this->idFromCode( $coupon_code );
 
 		$this->type = $cc['type'];
@@ -19527,7 +19374,7 @@ class couponHandler
 			$this->status = true;
 
 			// establish coupon object
-			$this->coupon = new coupon( $db, $this->type );
+			$this->coupon = new coupon( $this->type );
 			$this->coupon->load( $cc['id'] );
 			return true;
 		} else {
@@ -19542,7 +19389,7 @@ class couponHandler
 		$oldtype = $this->coupon->type;
 
 		// Duplicate Coupon at other table
-		$coupon = new coupon( $db, !$oldtype );
+		$coupon = new coupon( !$oldtype );
 		$coupon->createNew( $this->coupon->coupon_code, $this->coupon->created_date );
 
 		// Switch id over to new table max
@@ -19951,8 +19798,6 @@ class couponHandler
 	function triggerMIs( $metaUser, $invoice, $new_plan )
 	{
 		global $aecConfig;
-
-		$db = &JFactory::getDBO();
 
 		// See whether this coupon has micro integrations
 		if ( empty( $this->coupon->micro_integrations ) ) {
@@ -20767,6 +20612,70 @@ class aecRestrictionHelper
 	}
 }
 
+function apiCall( $app, $key, $request )
+{
+	global $aecConfig;
+
+	if ( empty( $aecConfig->cfg['apiapplist'] ) ) {
+		header("HTTP/1.0 401 Unauthorized"); die; // die, die
+	}
+
+	if ( isset( $aecConfig->cfg['apiapplist'][$app] ) ) {
+		if ( trim($key) == trim($aecConfig->cfg['apiapplist'][$app]) ) {
+			if ( empty( $request ) ) {
+				header( "HTTP/1.0 400 Bad Request" ); die;
+			}
+
+			if ( get_magic_quotes_gpc() ) {
+				$request = stripslashes( $request );
+			}
+
+			$req = json_decode( $request );
+
+			if ( is_null( $request ) ) {
+				header( "HTTP/1.0 415 Unsupported Media Type" ); die;
+			}
+
+			if ( !is_array($req) ) {
+				$req = array( $req );
+			}
+
+			header( "HTTP/1.0 200 OK" );
+
+			$api = new aecAPI();
+
+			$return = array();
+			foreach ( $req as $r ) {
+				$api->load( $r );
+
+				$r = new stdClass();
+				$r->response	= new stdClass();
+				$r->error		= null;
+
+				if ( empty( $api->error ) ) {
+					$api->resolve();
+
+					$r->response	= $api->response;
+				} else {
+					$r->response->result = false;
+				}
+
+				$r->error	= $api->error;
+
+				$return[] = $r;
+			}
+
+			if ( count( $return ) == 1 ) {
+				$return = $return[0];
+			}
+
+			echo json_encode( $return ); die; // regular die
+		}
+	}
+
+	header("HTTP/1.0 401 Unauthorized"); die; // die, die
+}
+
 class aecAPI
 {
 	var $request	= '';
@@ -20948,8 +20857,6 @@ class aecAPI
 
 	function actionRestrictionCheck()
 	{
-		$db = &JFactory::getDBO();
-
 		$this->response->result = false;
 
 		if ( !empty( $this->request->details->plan ) ) {
