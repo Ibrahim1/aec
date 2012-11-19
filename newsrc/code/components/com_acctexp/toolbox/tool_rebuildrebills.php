@@ -47,7 +47,7 @@ class tool_rebuildrebills
 		. ' WHERE `method` IN (' . implode( ',', $processors ) . ')'
 		;
 		$db->setQuery( $query );
-		$invoices = xCMS::getDBArray( $db );
+		$invoices = xJ::getDBArray( $db );
 
 		foreach ( $invoices as $id ) {
 			$invoice = new Invoice();

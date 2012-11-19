@@ -7,7 +7,7 @@
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
-
+print_r("hier");exit;
 $oldprocs = array(	"2checkout","airtoy","alertpay","allopass","authorize","authorize_aim","authorize_arb","authorize_cim",
 					"billsafe","cardsave","ccbill","clickbank","cybermut","desjardins","dibs","epay",
 					"epsnetpay","eway","ewayxml","generic_vpc","google_checkout","hsbc","iats","ideal_advanced",
@@ -17,7 +17,16 @@ $oldprocs = array(	"2checkout","airtoy","alertpay","allopass","authorize","autho
 					"payments_gateway","payone","payos","paypal","paypal_payflow_link","paypal_subscription","paypal_wpp","paysignet",
 					"paysite_cash","paystation","payza","psigate","realex_redirect","realex_remote","robokassa","sagepay",
 					"secureandpay","skrill","smscoin","sofort","sofortueberweisung","sparkassen_internetkasse","suncorp_migs","usaepay",
-					"vcs","verotel","viaklix","virtualmerchant","worldpay","worldpay_futurepay","zipzap");
+					"vcs","verotel","viaklix","virtualmerchant","worldpay","worldpay_futurepay","zipzap" );
+
+$images = array(	"2checkout","airtoy","alertpay","authorize","beanstream","cardsave","ccbill","chase_paymentech",
+					"clickbank","cybermut","desjardins","dibs","epsnetpay","eway","fastcharge","google_checkout",
+					"hsbc","ideal","ipayment","mobio","moip","mollie_ideal","mollie","moneybookers",
+					"moneyproxy","mpay24","multisafepay","netdebit","nochex","ogone","onebip","payboxat",
+					"payboxfr","paycific","paycom","payer","payfast","payments_gateway","payone","payos",
+					"paypal","paysite_cash","payson","paystation","payza","psigate","realex","sagepay",
+					"secureandpay","siamcb","skrill","smscoin","sofort_dauerauftrag","sofortueberweisung","sparkasse_internetkasse","ticketmaster",
+					"verotel","wepay","worldpay","zipzap","zombaio" );
 
 $pph = new PaymentProcessorHandler;
 
@@ -25,6 +34,7 @@ $pph = new PaymentProcessorHandler;
 $iprocs = $pph->getInstalledObjectList( false, true );
 
 // Remove all assets of non-existing processors
+
 
 // Copy possible ideal_advanced certificates in /processors
 

@@ -70,7 +70,7 @@ class tool_cleanup
 							. ' WHERE b.id is null'
 							;
 					$db->setQuery( $query );
-					$ids = xCMS::getDBArray( $db );
+					$ids = xJ::getDBArray( $db );
 
 					$query = 'DELETE'
 							. ' FROM #__acctexp_' . $table

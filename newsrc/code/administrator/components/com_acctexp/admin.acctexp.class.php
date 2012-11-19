@@ -94,7 +94,7 @@ class aecSuperCommand
 						. ' FROM #__users'
 						;
 				$db->setQuery( $query );
-				$userlist = xCMS::getDBArray( $db );
+				$userlist = xJ::getDBArray( $db );
 				break;
 			case 'orphans':
 				/*$this->focus == 'subscriptions';
@@ -112,7 +112,7 @@ class aecSuperCommand
 						. ' WHERE `userid` IN (' . $params[1] . ')'
 						;
 				$db->setQuery( $query );*/
-				return xCMS::getDBArray( $db );
+				return xJ::getDBArray( $db );
 				break;
 			case 'subscribers':
 				$db = &JFactory::getDBO();
@@ -138,7 +138,7 @@ class aecSuperCommand
 				}
 
 				$db->setQuery( $query );
-				return xCMS::getDBArray( $db );
+				return xJ::getDBArray( $db );
 			default:
 				$cmd = 'cmd' . ucfirst( strtolower( $this->audience['command'] ) );
 
@@ -198,7 +198,7 @@ class aecSuperCommand
 						. ' WHERE `userid` IN (' . $params[1] . ')'
 						;
 				$db->setQuery( $query );
-				return xCMS::getDBArray( $db );
+				return xJ::getDBArray( $db );
 				break;
 			case 'username':
 				$db = &JFactory::getDBO();
@@ -208,7 +208,7 @@ class aecSuperCommand
 						. ' WHERE LOWER( `username` ) LIKE \'%' . $params[1] . '%\''
 						;
 				$db->setQuery( $query );
-				$ids = xCMS::getDBArray( $db );
+				$ids = xJ::getDBArray( $db );
 
 				$p = array();
 				$p[0] = 'userid';
@@ -227,7 +227,7 @@ class aecSuperCommand
 						. ' AND `status` != \'Hold\''
 						;
 				$db->setQuery( $query );
-				return xCMS::getDBArray( $db );
+				return xJ::getDBArray( $db );
 				break;
 			case 'mi':
 				$db = &JFactory::getDBO();
@@ -626,7 +626,7 @@ class aecExport extends serialParamDBTable
 				. ' ORDER BY transaction_date ASC'
 				;
 		$db->setQuery( $query );
-		$entries = xCMS::getDBArray( $db );
+		$entries = xJ::getDBArray( $db );
 
 		switch ( $this->options['collate'] ) {
 			default:

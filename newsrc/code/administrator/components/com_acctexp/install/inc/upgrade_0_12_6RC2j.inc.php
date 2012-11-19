@@ -33,7 +33,7 @@ if ( $jsonconversion ) {
 				. ' FROM #__acctexp_' . $dbtable
 				;
 		$db->setQuery( $query );
-		$entries = xCMS::getDBArray( $db );
+		$entries = xJ::getDBArray( $db );
 
 		if ( empty( $entries ) ) {
 			continue;
@@ -123,7 +123,7 @@ if ( $jsonconversion ) {
 					. ' FROM #__acctexp_subscr'
 					;
 			$db->setQuery( $query );
-			$entries = xCMS::getDBArray( $db );
+			$entries = xJ::getDBArray( $db );
 
 			$unsetdec[] = 'userid';
 			$unsetdec[] = 'plan';
@@ -141,7 +141,7 @@ if ( $jsonconversion ) {
 				. ' FROM #__acctexp_' . $dbtable
 				;
 		$db->setQuery( $query );
-		$entries = xCMS::getDBArray( $db );
+		$entries = xJ::getDBArray( $db );
 
 		if ( empty( $entries ) ) {
 			continue;

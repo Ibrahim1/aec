@@ -1,15 +1,15 @@
 <?php
-class xCMSLanguageHandlerCommon
+class xJLanguageHandlerCommon
 {
 	function getSystemLanguages()
 	{
 		$fdir = JPATH_SITE . '/language';
 
-		$list = xCMSUtility::getFileArray( $fdir, null, true, true );
+		$list = xJUtility::getFileArray( $fdir, null, true, true );
 
 		$adir = JPATH_SITE . '/administrator/language';
 
-		$list = array_merge( $list, xCMSUtility::getFileArray( $fdir, null, true, true ) );
+		$list = array_merge( $list, xJUtility::getFileArray( $fdir, null, true, true ) );
 
 		$languages = array();
 		foreach ( $list as $li ) {
@@ -22,7 +22,7 @@ class xCMSLanguageHandlerCommon
 	}
 }
 
-class xCMSACLhandlerCommon
+class xJACLhandlerCommon
 {
 	function getAdminGroups( $regular_admins=true )
 	{
@@ -35,7 +35,7 @@ class xCMSACLhandlerCommon
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getManagerGroups()
@@ -94,16 +94,16 @@ class xCMSACLhandlerCommon
 	{
 		$info = array();
 		foreach ( $gids as $gid ) {
-			$info[$gid] = xCMSACLhandler::setGIDsTakeNames( $userid, $gid );
+			$info[$gid] = xJACLhandler::setGIDsTakeNames( $userid, $gid );
 
-			xCMSACLhandler::setGID( $userid, $gid, $info[$gid] );
+			xJACLhandler::setGID( $userid, $gid, $info[$gid] );
 		}
 
 		return $info;
 	}
 }
 
-class xCMSSessionHandlerCommon
+class xJSessionHandlerCommon
 {
 	// The following two functions copied from joomla to circle around their hardcoded caching
 
@@ -125,7 +125,7 @@ class xCMSSessionHandlerCommon
 
 		// Execute the query and load the rules from the result.
 		$db->setQuery($query);
-		$result	= xCMS::getDBArray( $db );
+		$result	= xJ::getDBArray( $db );
 
 		// Clean up any NULL or duplicate values, just in case
 		JArrayHelper::toInteger($result);

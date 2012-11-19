@@ -75,7 +75,7 @@ class tool_supporthours
 				. ' WHERE `class_name` LIKE \'%mi_supporttimetracker%\''
 				;
 		$db->setQuery( $query );
-		$mis = xCMS::getDBArray( $db );
+		$mis = xJ::getDBArray( $db );
 
 		$planlist = array();
 		foreach ( $mis as $mi ) {

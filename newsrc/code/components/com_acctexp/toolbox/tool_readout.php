@@ -336,7 +336,7 @@ class aecReadout
 
 		$this->lists = array();
 
-		$this->acllist = xCMSACLhandler::aclList();
+		$this->acllist = xJACLhandler::aclList();
 
 		foreach ( $this->acllist as $aclitem ) {
 			$this->lists['gid'][$aclitem->group_id] = $aclitem->name;

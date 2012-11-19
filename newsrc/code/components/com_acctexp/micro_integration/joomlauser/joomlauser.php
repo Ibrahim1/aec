@@ -41,7 +41,7 @@ class mi_joomlauser
 			$query = 'SELECT DISTINCT `profile_key`'
 					. ' FROM #__user_profiles';
 			$db->setQuery( $query );
-			$pkeys = xCMS::getDBArray( $db );
+			$pkeys = xJ::getDBArray( $db );
 
 			if ( !empty( $pkeys ) ) {
 				foreach ( $pkeys as $k ) {

@@ -18,8 +18,6 @@ define( '_AEC_REVISION', '5655' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
-include_once( JPATH_SITE . '/components/com_acctexp/lib/xcms/xcms.php' );
-
 // Get old language file names
 JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
 
@@ -30,7 +28,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 					'com_acctexp.processors' => JPATH_SITE
 					);
 
-xCMSLanguageHandler::loadList( $langlist );
+xJLanguageHandler::loadList( $langlist );
 
 if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
@@ -613,7 +611,7 @@ class metaUser
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				;
 		$db->setQuery( $query );
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getAllCurrentSubscriptionsInfo()
@@ -646,7 +644,7 @@ class metaUser
 				. ' ORDER BY `lastpay_date` DESC'
 				;
 		$db->setQuery( $query );
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getAllCurrentSubscriptionPlans()
@@ -662,7 +660,7 @@ class metaUser
 				. ' ORDER BY `lastpay_date` DESC'
 				;
 		$db->setQuery( $query );
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getSecondarySubscriptions( $simple=false )
@@ -679,7 +677,7 @@ class metaUser
 				;
 		$db->setQuery( $query );
 		if ( $simple ) {
-			return xCMS::getDBArray( $db );
+			return xJ::getDBArray( $db );
 		} else {
 			return $db->loadObjectList();
 		}
@@ -934,7 +932,7 @@ class metaUser
 				. ' WHERE `userid` = \'' . (int) $this->userid . '\''
 				;
 		$db->setQuery( $query );
-		$subscrids = xCMS::getDBArray( $db );
+		$subscrids = xJ::getDBArray( $db );
 
 		if ( count( $subscrids ) > 1 ) {
 			$this->allSubscriptions = array();
@@ -962,12 +960,12 @@ class metaUser
 
 		// Always protect last administrator
 		if ( $this->isAdmin() ) {
-			if ( xCMSACLhandler::countAdmins() < 2 ) {
+			if ( xJACLhandler::countAdmins() < 2 ) {
 				return false;
 			}
 		}
 
-		$shandler = new xCMSSessionHandler();
+		$shandler = new xJSessionHandler();
 
 		$shandler->instantGIDchange( $this->userid, $gid, $removegid, $sessionextra );
 	}
@@ -977,7 +975,7 @@ class metaUser
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$acl = &JFactory::getACL();
 
-			$allowed_groups = xCMSACLhandler::getAdminGroups( true );
+			$allowed_groups = xJACLhandler::getAdminGroups( true );
 
 			$usergroups = $acl->getGroupsByUser( $this->cmsUser->id );
 
@@ -1022,18 +1020,18 @@ class metaUser
 					;
 			$db->setQuery( $query );
 
-			$groups = xCMS::getDBArray( $db );
+			$groups = xJ::getDBArray( $db );
 
 			$lower = array();
 			foreach ( $groups as $group ) {
-				$lower = array_merge( $lower, xCMSACLhandler::getLowerACLGroups( $group ) );
+				$lower = array_merge( $lower, xJACLhandler::getLowerACLGroups( $group ) );
 			}
 
 			$groups = array_merge( $groups, $lower );
 
 			return array_unique( $groups );
 		} else {
-			return array_merge( xCMSACLhandler::getLowerACLGroups( $this->cmsUser->gid ), array( $this->cmsUser->gid ) );
+			return array_merge( xJACLhandler::getLowerACLGroups( $this->cmsUser->gid ), array( $this->cmsUser->gid ) );
 		}
 	}
 
@@ -1053,7 +1051,7 @@ class metaUser
 		$query = 'SELECT DISTINCT `profile_key`'
 				. ' FROM #__user_profiles';
 		$db->setQuery( $query );
-		$pkeys = xCMS::getDBArray( $db );
+		$pkeys = xJ::getDBArray( $db );
 
 		$query = 'SELECT `profile_key`, `profile_value`'
 				. ' FROM #__user_profiles'
@@ -1107,7 +1105,7 @@ class metaUser
 				. ' WHERE `type` != \'group\''
 				;
 		$db->setQuery( $query );
-		$ids = xCMS::getDBArray( $db );
+		$ids = xJ::getDBArray( $db );
 
 		$query = 'SELECT `field_id`, `value`'
 				. ' FROM #__community_fields_values'
@@ -1259,7 +1257,7 @@ class metaUser
 						// Check for Maximum GID
 						case 'maxgid':
 							if ( is_object( $this->cmsUser ) ) {
-								$groups = xCMSACLhandler::getHigherACLGroups( $value );
+								$groups = xJACLhandler::getHigherACLGroups( $value );
 								if ( !$this->hasGroup( $groups ) ) {
 									$status = true;
 								}
@@ -2575,7 +2573,7 @@ class aecHeartbeat extends serialParamDBTable
 				. ' ORDER BY `expiration` ASC'
 				;
 		$this->_db->setQuery( $query );
-		return xCMS::getDBArray( $this->_db );
+		return xJ::getDBArray( $this->_db );
 	}
 
 	function getExpirationLimit( $pre_expiration )
@@ -2622,7 +2620,7 @@ class aecHeartbeat extends serialParamDBTable
 		// Make sure we have all the language stuff loaded
 		$langlist = array( 'com_acctexp.admin' => JPATH_ADMINISTRATOR );
 
-		xCMSLanguageHandler::loadList( $langlist );
+		xJLanguageHandler::loadList( $langlist );
 
 		$short	= JText::_('AEC_LOG_SH_HEARTBEAT');
 		$event	= JText::_('AEC_LOG_LO_HEARTBEAT') . ' ';
@@ -2707,7 +2705,7 @@ class displayPipelineHandler
 				. ' WHERE `userid` = \'' . $userid . '\' AND `only_user` = \'1\''
 				;
 		$db->setQuery( $query );
-		$events = xCMS::getDBArray( $db );
+		$events = xJ::getDBArray( $db );
 
 		// Entries for all users
 		$query = 'SELECT `id`'
@@ -2772,7 +2770,6 @@ class displayPipelineHandler
 			}
 		}
 
-		// Return the string
 		return $return;
 	}
 }
@@ -2912,7 +2909,7 @@ class eventLog extends serialParamDBTable
 				$adminName2 	= $app->getCfg( 'fromname' );
 				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
-				$rows = xCMSACLhandler::getSuperAdmins();
+				$rows = xJACLhandler::getSuperAdmins();
 
 				$adminName2 	= $rows[0]->name;
 				$adminEmail2 	= $rows[0]->email;
@@ -2936,7 +2933,7 @@ class eventLog extends serialParamDBTable
 
 			foreach ( $admins as $adminemail ) {
 				if ( !empty( $adminemail ) ) {
-					xCMS::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
+					xJ::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
 				}
 			}
 		}
@@ -2967,7 +2964,7 @@ class aecBucketHandler
 				. ' WHERE `subject` = \'' . $subject . '\''
 				;
 		$db->setQuery( $query );
-		$buckets = xCMS::getDBArray( $db );
+		$buckets = xJ::getDBArray( $db );
 
 		return $buckets;
 	}
@@ -3039,7 +3036,7 @@ class aecEventHandler
 	 			. ' AND `status` = \'waiting\''
 				;
 		$db->setQuery( $query );
-		$events = xCMS::getDBArray( $db );
+		$events = xJ::getDBArray( $db );
 
 		// Call each event individually
 		foreach ( $events as $evid ) {
@@ -3061,7 +3058,7 @@ class aecEventHandler
 	 			. ' AND `status` = \'waiting\''
 				;
 		$db->setQuery( $query );
-		$events = xCMS::getDBArray( $db );
+		$events = xJ::getDBArray( $db );
 
 		// Call each event individually
 		foreach ( $events as $evid ) {
@@ -3176,7 +3173,7 @@ class PaymentProcessorHandler
 
 	function getProcessorList()
 	{
-		$list = xCMSUtility::getFileArray( $this->pp_dir, null, true, true );
+		$list = xJUtility::getFileArray( $this->pp_dir, null, true, true );
 
 		$pp_list = array();
 		foreach ( $list as $name ) {
@@ -3231,7 +3228,7 @@ class PaymentProcessorHandler
 		$db->setQuery( $query );
 
 		if ( $simple ) {
-			return xCMS::getDBArray( $db );
+			return xJ::getDBArray( $db );
 		} else {
 			return $db->loadObjectList();
 		}
@@ -3249,7 +3246,7 @@ class PaymentProcessorHandler
 		}
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getObjectList( $array, $getinfo=false, $getsettings=false )
@@ -3499,7 +3496,7 @@ class PaymentProcessor
 
 		$syslangpath = JPATH_SITE . '/language';
 
-		$languages = xCMSLanguageHandler::getSystemLanguages();
+		$languages = xJLanguageHandler::getSystemLanguages();
 
 		$langpath = $this->path . '/lang';
 
@@ -6467,7 +6464,7 @@ class ItemGroupHandler
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getTree()
@@ -6480,14 +6477,14 @@ class ItemGroupHandler
 				. ' WHERE `type` = \'group\''
 				;
 		$db->setQuery( $query );
-		$nitems = xCMS::getDBArray( $db );
+		$nitems = xJ::getDBArray( $db );
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_itemgroups'
 				. ( !empty( $nitems ) ? ' WHERE `id` NOT IN (' . implode( ',', $nitems ) . ')' : '' )
 				;
 		$db->setQuery( $query );
-		$items = xCMS::getDBArray( $db );
+		$items = xJ::getDBArray( $db );
 
 		$list = array();
 		$tree = ItemGroupHandler::resolveTreeItem( 1 );
@@ -6561,7 +6558,7 @@ class ItemGroupHandler
 				. ' AND `item_id` = \'' . $item_id . '\''
 				;
 		$db->setQuery( $query );
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function updateChildRelation( $item_id, $groups, $type='item' )
@@ -6683,7 +6680,7 @@ class ItemGroupHandler
 
 		$db->setQuery( $query );
 
-		$result = xCMS::getDBArray( $db );
+		$result = xJ::getDBArray( $db );
 
 		if ( !empty( $result ) ) {
 			foreach ( $result as $k => $v ) {
@@ -6700,7 +6697,7 @@ class ItemGroupHandler
 					;
 			$db->setQuery( $query );
 
-			return xCMS::getDBArray( $db );
+			return xJ::getDBArray( $db );
 		} else {
 			return $result;
 		}
@@ -7229,7 +7226,7 @@ class SubscriptionPlanHandler
 
 		$db->setQuery( $query );
 
-		$rows = xCMS::getDBArray( $db );
+		$rows = xJ::getDBArray( $db );
 
 		if ( $db->getErrorNum() ) {
 			echo $db->stderr();
@@ -7297,7 +7294,7 @@ class SubscriptionPlanHandler
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function PlanStatus( $planid )
@@ -7331,7 +7328,7 @@ class SubscriptionPlanHandler
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 }
 
@@ -13726,7 +13723,7 @@ class Subscription extends serialParamDBTable
 		$this->_db->setQuery( $query );
 
 		if ( !empty( $bias ) ) {
-			$subscriptionids = xCMS::getDBArray( $this->_db );
+			$subscriptionids = xJ::getDBArray( $this->_db );
 
 			if ( in_array( $bias, $subscriptionids ) ) {
 				$subscriptionid = $bias;
@@ -14249,7 +14246,7 @@ class Subscription extends serialParamDBTable
 			$adminName2		= $app->getCfg( 'fromname' );
 			$adminEmail2	= $app->getCfg( 'mailfrom' );
 		} else {
-			$rows = xCMSACLhandler::getSuperAdmins();
+			$rows = xJACLhandler::getSuperAdmins();
 			$row2 			= $rows[0];
 
 			$adminName2		= $row2->name;
@@ -14257,7 +14254,7 @@ class Subscription extends serialParamDBTable
 		}
 
 		if ( !$adminonly ) {
-			xCMS::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
+			xJ::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 		}
 
 		$aecUser = array();
@@ -14295,7 +14292,7 @@ class Subscription extends serialParamDBTable
 
 		foreach ( $admins as $adminemail ) {
 			if ( !empty( $adminemail ) ) {
-				xCMS::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
+				xJ::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
 			}
 		}
 	}
@@ -14649,7 +14646,7 @@ class AECfetchfromDB
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function SubscriptionIDfromUserID( $userid )
@@ -14792,7 +14789,7 @@ class reWriteEngine
 				$query = 'SELECT DISTINCT `profile_key`'
 						. ' FROM #__user_profiles';
 				$db->setQuery( $query );
-				$pkeys = xCMS::getDBArray( $db );
+				$pkeys = xJ::getDBArray( $db );
 
 				if ( is_array( $pkeys ) ) {
 					foreach ( $pkeys as $pkey ) {
@@ -16668,7 +16665,7 @@ class AECToolbox
 				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
-				$rows = xCMSACLhandler::getSuperAdmins();
+				$rows = xJACLhandler::getSuperAdmins();
 				$row2 			= $rows[0];
 
 				$adminName2 	= $row2->name;
@@ -16677,7 +16674,7 @@ class AECToolbox
 
 			// Send email to user
 			if ( !( $aecConfig->cfg['nojoomlaregemails'] || $overrideEmails ) ) {
-				xCMS::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
+				xJ::sendMail( $adminEmail2, $adminEmail2, $email, $subject, $message );
 			}
 
 			// Send notification to all administrators
@@ -16694,7 +16691,7 @@ class AECToolbox
 
 			foreach ( $admins as $adminemail ) {
 				if ( !empty( $adminemail ) ) {
-					xCMS::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
+					xJ::sendMail( $adminEmail2, $adminEmail2, $adminemail, $subject2, $message2 );
 				}
 			}
 		}
@@ -16770,7 +16767,7 @@ class AECToolbox
 				$query = 'SELECT `' . $qfields[$qid] . '` ' . $base_query;
 				$db->setQuery( $query );
 
-				return xCMS::getDBArray( $db );
+				return xJ::getDBArray( $db );
 			}
 		}
 
@@ -17290,7 +17287,7 @@ class AECToolbox
 
 		$adminlist = array();
 		if ( $aecConfig->cfg['email_default_admins'] ) {
-			$admins = xCMSACLhandler::getSuperAdmins();
+			$admins = xJACLhandler::getSuperAdmins();
 
 			foreach ( $admins as $admin ) {
 				if ( !empty( $admin->sendEmail ) ) {
@@ -17376,7 +17373,7 @@ class microIntegrationHandler
 
 	function getIntegrationList()
 	{
-		$list = xCMSUtility::getFileArray( $this->mi_dir, 'php', false, true );
+		$list = xJUtility::getFileArray( $this->mi_dir, 'php', false, true );
 
 		asort( $list );
 
@@ -17407,7 +17404,7 @@ class microIntegrationHandler
 				. ' FROM #__acctexp_plans'
 				;
 		$db->setQuery( $query );
-		$plans = xCMS::getDBArray( $db );
+		$plans = xJ::getDBArray( $db );
 
 		$plan_list = array();
 		foreach ( $plans as $planid ) {
@@ -17454,7 +17451,7 @@ class microIntegrationHandler
 				. ' FROM #__acctexp_itemgroups'
 				;
 		$db->setQuery( $query );
-		$groups = xCMS::getDBArray( $db );
+		$groups = xJ::getDBArray( $db );
 
 		$group_list = array();
 		foreach ( $groups as $groupid ) {
@@ -17573,7 +17570,7 @@ class microIntegrationHandler
 				. ' AND `pre_exp_check` > 0'
 				;
 		$db->setQuery( $query );
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getAutoIntegrations()
@@ -17586,7 +17583,7 @@ class microIntegrationHandler
 				. ' AND `auto_check` = \'1\''
 				;
 		$db->setQuery( $query );
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getUserChangeIntegrations()
@@ -17599,7 +17596,7 @@ class microIntegrationHandler
 				. ' AND `on_userchange` = \'1\''
 				;
 		$db->setQuery( $query );
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function userchange( $row, $post, $trace = '' )
@@ -17658,7 +17655,7 @@ class microIntegrationHandler
 				. ' ORDER BY `ordering` ASC'
 				;
 		$db->setQuery( $query );
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getMaxPreExpirationTime()
@@ -20664,7 +20661,7 @@ class aecRestrictionHelper
 
 		$user = &JFactory::getUser();
 
-		$gtree = xCMSACLhandler::getGroupTree( array( 28, 29, 30 ) );
+		$gtree = xJACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
 		// Create GID related Lists
 		$lists['gid'] 		= JHTML::_( 'select.genericlist', $gtree, 'gid', 'size="6"', 'value', 'text', arrayValueDefault($params_values, 'gid', ( defined( 'JPATH_MANIFESTS' ) ? 2 : 18 )) );
@@ -20811,7 +20808,7 @@ class aecAPI
 						;
 				$db->setQuery( $query );
 
-				$users = xCMS::getDBArray( $db );
+				$users = xJ::getDBArray( $db );
 			}
 
 			if ( empty( $users ) && isset( $this->request->user->name ) ) {
@@ -20821,7 +20818,7 @@ class aecAPI
 						;
 				$db->setQuery( $query );
 
-				$users = xCMS::getDBArray( $db );
+				$users = xJ::getDBArray( $db );
 			}
 
 			if ( empty( $users ) && isset( $this->request->user->email ) ) {
@@ -20831,7 +20828,7 @@ class aecAPI
 						;
 				$db->setQuery( $query );
 
-				$users = xCMS::getDBArray( $db );
+				$users = xJ::getDBArray( $db );
 			}
 
 			if ( empty( $users ) && isset( $this->request->user->userid ) ) {
@@ -20841,7 +20838,7 @@ class aecAPI
 						;
 				$db->setQuery( $query );
 
-				$users = xCMS::getDBArray( $db );
+				$users = xJ::getDBArray( $db );
 			}
 
 			if ( empty( $users ) && isset( $this->request->user->invoice_number ) ) {
@@ -20852,7 +20849,7 @@ class aecAPI
 						;
 				$db->setQuery( $query );
 
-				$users = xCMS::getDBArray( $db );
+				$users = xJ::getDBArray( $db );
 			}
 		} else {
 			$users = AECToolbox::searchUser( $this->request->user );

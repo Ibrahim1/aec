@@ -108,7 +108,7 @@ class mi_email extends MI
 	        }
 		}
 
-		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings['text' . $request->area . '_html'], $cc, $bcc );
+		xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings['text' . $request->area . '_html'], $cc, $bcc );
 
 		return true;
 	}

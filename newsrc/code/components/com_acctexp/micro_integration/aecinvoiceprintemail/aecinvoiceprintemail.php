@@ -142,7 +142,7 @@ class mi_aecinvoiceprintemail
 	        }
 		}
 
-		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, true, $cc, $bcc );
+		xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, true, $cc, $bcc );
 
 		$request->invoice->params['mi_aecinvoiceprintemail'] = (int) gmdate('U');
 		$request->invoice->storeload();

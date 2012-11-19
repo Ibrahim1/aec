@@ -127,7 +127,7 @@ class processor_offline_payment extends processor
         }
         $recipients = $recipients2;
 
-		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 
 		return true;
 	}
@@ -170,7 +170,7 @@ class processor_offline_payment extends processor
 					$bcc = null;
 				}
 
-				xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
+				xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'], null, $bcc );
 			}
 
 		}

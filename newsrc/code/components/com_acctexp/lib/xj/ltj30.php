@@ -1,5 +1,5 @@
 <?php
-class xCMS
+class xJ
 {
 	function getDBArray( $db )
 	{

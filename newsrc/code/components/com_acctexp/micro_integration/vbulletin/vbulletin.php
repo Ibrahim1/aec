@@ -436,7 +436,7 @@ class mi_vbulletin
 		$query = 'SHOW COLUMNS FROM #__user';
 		$db->setQuery( $query );
 
-		$fields = xCMS::getDBArray( $db );
+		$fields = xJ::getDBArray( $db );
 
 		$return = array();
 		if ( !empty( $fields ) ) {

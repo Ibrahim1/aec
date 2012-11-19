@@ -275,7 +275,7 @@ class mi_multiusercreation
 			$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
 		}
 
-		xCMS::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
+		xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 
 		return true;
 	}

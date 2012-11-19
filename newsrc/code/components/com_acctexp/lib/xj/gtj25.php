@@ -1,5 +1,5 @@
 <?php
-class xCMSLanguageHandler extends xCMSLanguageHandlerCommon
+class xJLanguageHandler extends xJLanguageHandlerCommon
 {
 	function loadList( $list )
 	{
@@ -21,11 +21,11 @@ class xCMSLanguageHandler extends xCMSLanguageHandlerCommon
 	{
 		$fdir = JPATH_SITE . '/language';
 
-		$list = xCMSUtility::getFileArray( $fdir, null, true, true );
+		$list = xJUtility::getFileArray( $fdir, null, true, true );
 
 		$adir = JPATH_SITE . '/administrator/language';
 
-		$list = array_merge( $list, xCMSUtility::getFileArray( $fdir, null, true, true ) );
+		$list = array_merge( $list, xJUtility::getFileArray( $fdir, null, true, true ) );
 
 		$languages = array();
 		foreach ( $list as $li ) {
@@ -38,15 +38,15 @@ class xCMSLanguageHandler extends xCMSLanguageHandlerCommon
 	}
 }
 
-class xCMSACLhandler extends xCMSACLhandlerCommon
+class xJACLhandler extends xJACLhandlerCommon
 {
 	function getSuperAdmins()
 	{
-		$groups = xCMSACLhandler::getAdminGroups();
+		$groups = xJACLhandler::getAdminGroups();
 
-		$users = xCMSACLhandler::getUsersByGroup( $groups );
+		$users = xJACLhandler::getUsersByGroup( $groups );
 
-		return xCMSACLhandler::getUserObjects( $users );
+		return xJACLhandler::getUserObjects( $users );
 	}
 
 	function setGID( $userid, $gid, $gid_name )
@@ -121,10 +121,10 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 
 		$block = false;
 
-		$allowed_groups = xCMSACLhandler::getAdminGroups( $admin );
+		$allowed_groups = xJACLhandler::getAdminGroups( $admin );
 
 		if ( $manager ) {
-			$allowed_groups = array_merge( $allowed_groups, xCMSACLhandler::getManagerGroups() );
+			$allowed_groups = array_merge( $allowed_groups, xJACLhandler::getManagerGroups() );
 		}
 
 		$usergroups = $acl->getGroupsByUser( $user->id );
@@ -150,9 +150,9 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 
 		$user = &JFactory::getUser();
 
-		$superadmins = xCMSACLhandler::getAdminGroups( false );
+		$superadmins = xJACLhandler::getAdminGroups( false );
 
-		$alladmins = xCMSACLhandler::getAdminGroups();
+		$alladmins = xJACLhandler::getAdminGroups();
 
 		$groups = $acl->getGroupsByUser( $userid );
 
@@ -212,9 +212,9 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 
 		$usergroups = $acl->getGroupsByUser( $user->id );
 
-		$superadmins = xCMSACLhandler::getAdminGroups( false );
+		$superadmins = xJACLhandler::getAdminGroups( false );
 
-		$alladmins = xCMSACLhandler::getAdminGroups();
+		$alladmins = xJACLhandler::getAdminGroups();
 
 		if ( !count( array_intersect( $usergroups, $superadmins ) ) ) {
 			$ex_groups = array_merge( $ex_groups, $superadmins );
@@ -237,7 +237,7 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 
 	function countAdmins()
 	{
-		return count( xCMSACLhandler::getUsersByGroup( xCMSACLhandler::getAdminGroups() ) );
+		return count( xJACLhandler::getUsersByGroup( xJACLhandler::getAdminGroups() ) );
 	}
 
 	function aclList()
@@ -278,7 +278,7 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getHigherACLGroups( $group_id )
@@ -294,11 +294,11 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 }
 
-class xCMSSessionHandler extends xCMSSessionHandlerCommon
+class xJSessionHandler extends xJSessionHandlerCommon
 {
 	function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
 	{
@@ -315,12 +315,12 @@ class xCMSSessionHandler extends xCMSSessionHandlerCommon
 		}
 
 		if ( !empty( $removegid ) ) {
-			xCMSACLhandler::removeGIDs( (int) $userid, $removegid );
+			xJACLhandler::removeGIDs( (int) $userid, $removegid );
 		}
 
 		// Set GID and usertype
 		if ( !empty( $gid ) ) {
-			$info = xCMSACLhandler::setGIDs( (int) $userid, $gid );
+			$info = xJACLhandler::setGIDs( (int) $userid, $gid );
 		}
 
 		$session = $this->getSession( $userid );
@@ -382,14 +382,14 @@ class xCMSSessionHandler extends xCMSSessionHandlerCommon
 			if ( $userid == $user->id ) {
 				$user->set( 'groups', $sgs );
 				
-				$user->set( '_authLevels', xCMSSessionHandler::getAuthorisedViewLevels($userid) );
-				$user->set( '_authGroups', xCMSSessionHandler::getGroupsByUser($userid) );
+				$user->set( '_authLevels', xJSessionHandler::getAuthorisedViewLevels($userid) );
+				$user->set( '_authGroups', xJSessionHandler::getGroupsByUser($userid) );
 			}
 
 			$session['user']->set( 'groups', $sgs );
 
-			$session['user']->set( '_authLevels', xCMSSessionHandler::getAuthorisedViewLevels($userid) );
-			$session['user']->set( '_authGroups', xCMSSessionHandler::getGroupsByUser($userid) );
+			$session['user']->set( '_authLevels', xJSessionHandler::getAuthorisedViewLevels($userid) );
+			$session['user']->set( '_authGroups', xJSessionHandler::getGroupsByUser($userid) );
 		}
 
 		$this->putSession( $userid, $session, $gid[0], $info[$gid[0]] );

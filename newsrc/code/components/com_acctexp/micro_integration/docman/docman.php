@@ -302,7 +302,7 @@ class mi_docman
 				. ' FROM #__docman_groups'
 				;
 		$db->setQuery( $query );
-		$ids = xCMS::getDBArray( $db );
+		$ids = xJ::getDBArray( $db );
 
 		$groups = array();
 		foreach ( $ids as $groupid ) {

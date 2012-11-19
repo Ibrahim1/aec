@@ -63,7 +63,7 @@ class mi_affiliatepro
 			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', 'Could not locate the Affiliate Pro API at this Directory. Please install the PHP API into the /api folder in your PAP directory.', 32 );
 
 			if ( is_dir( $this->settings['path'] . 'api/' ) ) {
-				$files = xCMSUtility::getFileArray( $this->settings['path'] . 'api/', false, true );
+				$files = xJUtility::getFileArray( $this->settings['path'] . 'api/', false, true );
 
 				aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', 'Directory exists, though.', 32 );aecDebug($files);
 			}

@@ -1,5 +1,5 @@
 <?php
-class xCMSUtility
+class xJUtility
 {
 	function getFileArray( $dir, $extension=false, $listDirectories=false, $keepDots=false )
 	{
@@ -41,7 +41,7 @@ class xCMSUtility
 		$i = 1;
 
 		while ( $i < $len ) {
-			if ( version_compare( xCMSUtility::normVersionName( $array[$i] ), xCMSUtility::normVersionName( $piv ), '<' ) ) {
+			if ( version_compare( xJUtility::normVersionName( $array[$i] ), xJUtility::normVersionName( $piv ), '<' ) ) {
 				$x[] = $array[$i];
 			} else {
 				$y[] = $array[$i];
@@ -49,7 +49,7 @@ class xCMSUtility
 			++$i;
 		}
 
-		return array_merge( xCMSUtility::versionSort($x), array($piv), xCMSUtility::versionSort($y) );
+		return array_merge( xJUtility::versionSort($x), array($piv), xJUtility::versionSort($y) );
 	}
 
 	function normVersionName( $name )

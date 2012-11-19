@@ -1,5 +1,5 @@
 <?php
-class xCMSLanguageHandler extends xCMSLanguageHandlerCommon
+class xJLanguageHandler extends xJLanguageHandlerCommon
 {
 	function loadList( $list )
 	{
@@ -25,11 +25,11 @@ class xCMSLanguageHandler extends xCMSLanguageHandlerCommon
 	{
 		$fdir = JPATH_SITE . '/language';
 
-		$list = xCMSUtility::getFileArray( $fdir, null, true, true );
+		$list = xJUtility::getFileArray( $fdir, null, true, true );
 
 		$adir = JPATH_SITE . '/administrator/language';
 
-		$list = array_merge( $list, xCMSUtility::getFileArray( $fdir, null, true, true ) );
+		$list = array_merge( $list, xJUtility::getFileArray( $fdir, null, true, true ) );
 
 		$languages = array();
 		foreach ( $list as $li ) {
@@ -42,7 +42,7 @@ class xCMSLanguageHandler extends xCMSLanguageHandlerCommon
 	}
 }
 
-class xCMSACLhandler extends xCMSACLhandlerCommon
+class xJACLhandler extends xJACLhandlerCommon
 {
 	function getSuperAdmins()
 	{
@@ -85,7 +85,7 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 
 	function adminBlock()
 	{
-		global $xCMSConfig;
+		global $xJConfig;
 
 		$user = &JFactory::getUser();
 
@@ -99,8 +99,8 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 
 		if ( !$acpermission ) {
 			if (
-				!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $xCMSConfig->cfg['adminaccess'] )
-				&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $xCMSConfig->cfg['manageraccess'] )
+				!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $xJConfig->cfg['adminaccess'] )
+				&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $xJConfig->cfg['manageraccess'] )
 			 ) {
 				$block = true;
 			}
@@ -226,7 +226,7 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function getHigherACLGroups( $group_id )
@@ -242,11 +242,11 @@ class xCMSACLhandler extends xCMSACLhandlerCommon
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 }
 
-class xCMSSessionHandler extends xCMSSessionHandlerCommon
+class xJSessionHandler extends xJSessionHandlerCommon
 {
 	function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
 	{
@@ -263,12 +263,12 @@ class xCMSSessionHandler extends xCMSSessionHandlerCommon
 		}
 
 		if ( !empty( $removegid ) ) {
-			xCMSACLhandler::removeGIDs( (int) $userid, $removegid );
+			xJACLhandler::removeGIDs( (int) $userid, $removegid );
 		}
 
 		// Set GID and usertype
 		if ( !empty( $gid ) ) {
-			$info = xCMSACLhandler::setGIDs( (int) $userid, $gid );
+			$info = xJACLhandler::setGIDs( (int) $userid, $gid );
 		}
 
 		$session = $this->getSession( $userid );

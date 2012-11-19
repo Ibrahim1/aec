@@ -24,7 +24,7 @@ if ( $ccid ) {
 	$query = 'SELECT id FROM #__acctexp_log_history WHERE proc_id = \'' . $ccid . '\'';
 	$db->setQuery( $query );
 
-	$list = xCMS::getDBArray( $db );
+	$list = xJ::getDBArray( $db );
 
 	if ( !empty( $list ) ) {
 		foreach ( $list as $hid ) {
@@ -47,7 +47,7 @@ if ( $ccid ) {
 $query = 'SELECT `id` FROM #__acctexp_subscr WHERE `params` LIKE \'%_jsoon%\'';
 $db->setQuery( $query );
 
-$list = xCMS::getDBArray( $db );
+$list = xJ::getDBArray( $db );
 
 if ( !empty( $list ) ) {
 	foreach ( $list as $sid ) {
@@ -76,7 +76,7 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_mi_hotproperty", $tables ) 
 				. ' FROM #__acctexp_mi_hotproperty'
 				;
 		$db->setQuery( $query );
-		$entries = xCMS::getDBArray( $db );
+		$entries = xJ::getDBArray( $db );
 
 		if ( !empty( $entries ) ) {
 			foreach ( $entries as $id ) {

@@ -235,7 +235,7 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
 			. ' FROM #__acctexp_plans'
 			;
 	$db->setQuery( $query );
-	$pplans = xCMS::getDBArray( $db );
+	$pplans = xJ::getDBArray( $db );
 
 	// Assign new make_primary flag to all old plans
 	foreach ( $pplans as $planid ) {

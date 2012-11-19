@@ -12,7 +12,7 @@ $query = 'SELECT `id`'
 		. ' FROM #__acctexp_metauser'
 		;
 $db->setQuery( $query );
-$entries = xCMS::getDBArray( $db );
+$entries = xJ::getDBArray( $db );
 
 /*
  * This may seem odd, but due to unforseen consequences, json encoding and decoding

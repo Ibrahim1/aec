@@ -393,7 +393,7 @@ class mi_phpbb3
 		$query = 'SHOW COLUMNS FROM #__users';
 		$db->setQuery( $query );
 
-		$fields = xCMS::getDBArray( $db );
+		$fields = xJ::getDBArray( $db );
 
 		$return = array();
 		foreach ( $fields as $key ) {
@@ -413,7 +413,7 @@ class mi_phpbb3
 				;
 		$db->setQuery( $query );
 
-		return xCMS::getDBArray( $db );
+		return xJ::getDBArray( $db );
 	}
 
 	function assignGroup( $db, $userid, $groupid )

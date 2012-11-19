@@ -22,11 +22,11 @@ require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.
 $langlist = array(	'com_acctexp' => JPATH_ADMINISTRATOR,
 					'com_acctexp.iso4217' => JPATH_ADMINISTRATOR );
 
-xCMSLanguageHandler::loadList( $langlist );
+xJLanguageHandler::loadList( $langlist );
 
 JLoader::register('JPaneTabs',  JPATH_LIBRARIES.'/joomla/html/pane.php');
 
-xCMSACLhandler::adminBlock( $aecConfig->cfg['adminaccess'], $aecConfig->cfg['manageraccess'] );
+xJACLhandler::adminBlock( $aecConfig->cfg['adminaccess'], $aecConfig->cfg['manageraccess'] );
 
 $task			= trim( aecGetParam( 'task', null ) );
 $returnTask 	= trim( aecGetParam( 'returnTask', null ) );
@@ -1419,7 +1419,7 @@ function editSettings( $option )
 
 	$lists['entry_plan'] = JHTML::_('select.genericlist', $available_plans, 'entry_plan', 'size="' . min( 10, count( $available_plans ) + 2 ) . '"', 'value', 'text', $aecConfig->cfg['entry_plan'] );
 
-	$gtree = xCMSACLhandler::getGroupTree( array( 28, 29, 30 ) );
+	$gtree = xJACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
 	// Create GID related Lists
 	$lists['checkout_as_gift_access'] 		= JHTML::_('select.genericlist', $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
@@ -1701,7 +1701,7 @@ function editSettings( $option )
 			if ( empty( $idkp['params'] ) ) {
 				$mid = $db->loadResult();
 			} else {
-				$mids = xCMS::getDBArray( $db );
+				$mids = xJ::getDBArray( $db );
 
 				if ( !empty( $mids ) ) {
 					$query = 'SELECT `id`'
@@ -1853,7 +1853,7 @@ function listTemplates( $option )
  	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$list = xCMSUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
+	$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
 	foreach ( $list as $id => $name ) {
 		if ( ( $name == 'default' ) || ( $name == 'classic' ) ) {
@@ -1995,7 +1995,7 @@ function listProcessors( $option )
 		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		 	;
 	$db->setQuery( $query );
-	$names = xCMS::getDBArray( $db );
+	$names = xJ::getDBArray( $db );
 
 	$rows = array();
 	foreach ( $names as $name ) {
@@ -4940,7 +4940,7 @@ function history( $option )
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 			;
 	$db->setQuery( $query );
-	$rowids = xCMS::getDBArray( $db );
+	$rowids = xJ::getDBArray( $db );
 
 	$rows = array();
 	foreach ( $rowids as $rid ) {
@@ -4994,7 +4994,7 @@ function eventlog( $option )
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 			;
 	$db->setQuery( $query );
-	$rows = xCMS::getDBArray( $db );
+	$rows = xJ::getDBArray( $db );
 
 	if ( $db->getErrorNum() ) {
 		echo $db->stderr();
@@ -5188,7 +5188,7 @@ function aec_statrequest( $option, $type, $start, $end )
 					. ' ORDER BY transaction_date ASC'
 					;
 			$db->setQuery( $query );
-			$entries = xCMS::getDBArray( $db );
+			$entries = xJ::getDBArray( $db );
 
 			if ( empty( $entries ) ) {
 				echo json_encode( $tree );exit;
@@ -5865,7 +5865,7 @@ function importData( $option )
 
 	$temp_dir = JPATH_SITE . '/tmp';
 
-	$file_list = xCMSUtility::getFileArray( $temp_dir, 'csv', false, true );
+	$file_list = xJUtility::getFileArray( $temp_dir, 'csv', false, true );
 
 	$params = array();
 	$lists = array();
@@ -6392,7 +6392,7 @@ function exportData( $option, $type, $cmd=null )
 	}
 
 	// Export Method
-	$list = xCMSUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/lib/export', 'php', false, true );
+	$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/lib/export', 'php', false, true );
 
 	$sel = array();
 	foreach ( $list as $ltype ) {
@@ -6455,7 +6455,7 @@ function toolBoxTool( $option, $cmd )
 	if ( empty( $cmd ) ) {
 		$list = array();
 
-		$files = xCMSUtility::getFileArray( $path, 'php', false, true );
+		$files = xJUtility::getFileArray( $path, 'php', false, true );
 
 		asort( $files );
 

@@ -58,7 +58,7 @@ class tool_vatcollect
 				. ' ORDER BY transaction_date ASC'
 				;
 		$db->setQuery( $query );
-		$entries = xCMS::getDBArray( $db );
+		$entries = xJ::getDBArray( $db );
 
 		if ( empty( $entries ) ) {
 			return "nothing to list";

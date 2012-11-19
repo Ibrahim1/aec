@@ -187,7 +187,7 @@ class mi_raffle
 				$adminEmail2 	= $app->getCfg( 'mailfrom' );
 			} else {
 				// use email address and name of first superadmin for use in email sent to user
-				$rows = xCMSACLhandler::getSuperAdmins();
+				$rows = xJACLhandler::getSuperAdmins();
 
 				$adminName2 	= $rows[0]->name;
 				$adminEmail2 	= $rows[0]->email;
@@ -203,7 +203,7 @@ class mi_raffle
 
 			$subject = 'Raffle Drawing Results for ' . $app->getCfg( 'sitename' );
 
-			xCMS::sendMail( $adminEmail2, $adminEmail2, $recipients, $subject, $colET );
+			xJ::sendMail( $adminEmail2, $adminEmail2, $recipients, $subject, $colET );
 		}
 
 		$rafflelist->check();
