@@ -178,6 +178,24 @@ function com_install()
 		$pp = null;
 	}
 
+	// Make sure mi language files are updated
+	$milist = microIntegrationHandler::getMIList();
+
+	$midone = array();
+	foreach ( $milist as $miobj ) {
+		if ( in_array( $miobj->class_name, $midone ) ) {
+			continue;
+		}
+
+		$mifobj = new microIntegration();
+
+		if ( $mifobj->load( $miobj->id ) ) {
+			$mifobj->copyAssets();
+
+			$midone[] = $miobj->class_name;
+		}
+	}
+
 	// Force Init Params
 	$aecConfig = new Config_General();
 	$aecConfig->initParams();
@@ -349,7 +367,6 @@ function com_install()
 	}
 
 	$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
-	$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.helix.less", JPATH_SITE . '/media/com_acctexp/css/template.helix.css' );
 
 	$eucaInstall->popIndex(	array(JPATH_ADMINISTRATOR . '/components/com_acctexp',
 							JPATH_SITE . '/components/com_acctexp',
