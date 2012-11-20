@@ -14,7 +14,7 @@
 global $aecConfig;
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5713' );
+define( '_AEC_REVISION', '5715' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
@@ -3378,10 +3378,10 @@ class PaymentProcessor
 			$this->install();
 			$this->init();
 		} else {
+			xJLanguageHandler::loadList( array(	'com_acctexp.processors.' . $this->processor_name => JPATH_SITE ) );
+
 			// Initiate processor from db
 			if ( is_object( $this->processor ) && empty( $this->processor->id ) ) {
-				xJLanguageHandler::loadList( array(	'com_acctexp.processors.' . $this->processor_name => JPATH_SITE ) );
-
 				return $this->processor->load( $this->id );
 			} else {
 				return true;

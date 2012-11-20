@@ -4509,6 +4509,55 @@ function editCoupon( $id, $option, $new )
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
+	// Lets grab the data and fill it in.
+	$query = 'SELECT id'
+			. ' FROM #__acctexp_invoices'
+			. ' WHERE `coupons` <> \'\''
+			. ' ORDER BY `created_date` DESC'
+			;
+	$db->setQuery( $query );
+	$rows = $db->loadObjectList();
+
+	if ( $db->getErrorNum() ) {
+		echo $db->stderr();
+		return false;
+	}
+
+	$aecHTML->invoices = array();
+	foreach ( $rows as $row ) {
+		$invoice = new Invoice();
+		$invoice->load( $row->id );
+
+		if ( !in_array( $cph->coupon->coupon_code, $invoice->coupons ) ) {
+			continue;
+		}
+
+		$in_formatted = $invoice->formatInvoiceNumber();
+
+		$invoice->invoice_number_formatted = $invoice->invoice_number . ( ($in_formatted != $invoice->invoice_number) ? "\n" . '(' . $in_formatted . ')' : '' );
+
+		$invoice->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoice->usage . '">' . $invoice->usage . '</a>';
+
+		$query = 'SELECT username'
+				. ' FROM #__users'
+				. ' WHERE `id` = \'' . $invoice->userid . '\''
+				;
+		$db->setQuery( $query );
+		$username = $db->loadResult();
+
+		$invoice->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoice->userid . '">';
+
+		if ( !empty( $username ) ) {
+			$invoice->username .= $username . '</a>';
+		} else {
+			$invoice->username .= $invoice->userid;
+		}
+
+		$invoice->username .= '</a>';
+
+		$aecHTML->invoices[] = $invoice;
+	}
+
 	HTML_AcctExp::editCoupon( $option, $aecHTML, $cph->coupon );
 }
 
