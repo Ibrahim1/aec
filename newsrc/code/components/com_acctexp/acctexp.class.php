@@ -5671,7 +5671,7 @@ class aecHTML
 				break;
 			case 'inputC':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span3" type="text" name="' . $name . '" class="inputbox" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="span3" type="text" name="' . $name . '" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -5689,7 +5689,7 @@ class aecHTML
 				break;
 			case 'password':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span3" type="password" name="' . $name . '" class="inputbox" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="span3" type="password" name="' . $name . '" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
