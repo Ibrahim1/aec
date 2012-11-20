@@ -315,11 +315,15 @@ switch( strtolower( $task ) ) {
 		//$less->setFormatter("compressed");
 		$less->setPreserveComments(true);
 
-		//echo $less->compileFile(JPATH_SITE . '/media/com_acctexp/less/test.less');exit;
+		$v = new JVersion();
 
-		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
+		if ( $v->isCompatible('3.0') ) {
+			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin-j3.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
+		} else {
+			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
+		}
+
 		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
-		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.helix.less", JPATH_SITE . '/media/com_acctexp/css/template.helix.css' );
 		exit;
 		
 		break;
@@ -3061,7 +3065,7 @@ function editSubscriptionPlan( $id, $option )
 
 	foreach ( $mi_list as $name ) {
 		$mi = new microIntegration();
-		$mi->class_name = $name;
+		$mi->class_name = 'mi_'.$name;
 		if ( $mi->callIntegration() ){
 			$len = 30 - AECToolbox::visualstrlen( trim( $mi->name ) );
 			$fullname = str_replace( '#', '&nbsp;', str_pad( $mi->name, $len, '#' ) ) . ' - ' . substr($mi->desc, 0, 120);
@@ -3917,7 +3921,7 @@ function editMicroIntegration ( $id, $option )
 		if ( count( $mi_list ) > 0 ) {
 			foreach ( $mi_list as $name ) {
 				$mi_item = new microIntegration();
-				$mi_item->class_name = $name;
+				$mi_item->class_name = 'mi_'.$name;
 				if ( $mi_item->callIntegration() ) {
 					if ( isset( $mi_item->info['type'] ) ) {
 						foreach ( $mi_item->info['type'] as $type ) {

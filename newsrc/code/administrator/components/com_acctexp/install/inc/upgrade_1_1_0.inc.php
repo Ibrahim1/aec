@@ -13,7 +13,7 @@
 
 $pph = new PaymentProcessorHandler;
 
-$testprocs = scandir( $pph->pp_dir, false, true );
+$testprocs = xJUtility::getFileArray( $pph->pp_dir, false, true );
 
 // Check if there are old processor files
 if ( count( $testprocs ) > 5 ) {
@@ -69,7 +69,7 @@ if ( count( $testprocs ) > 5 ) {
 		$ibase = $pph->pp_dir . '/' . $ccproc;
 
 		if ( is_dir( $ibase ) ) {
-			$idir = scandir( $ibase, true, true );
+			$idir = xJUtility::getFileArray( $ibase, true, true );
 
 			$protect = array( 'index.html', $ccproc.'.php', 'lib', 'lang', 'media' );
 
@@ -105,7 +105,7 @@ if ( count( $testprocs ) > 5 ) {
 		}
 	}
 
-	$customprocs = scandir( $pph->pp_dir, false, true );
+	$customprocs = xJUtility::getFileArray( $pph->pp_dir, false, true );
 
 	foreach( $customprocs as $cproc ) {
 		if ( strpos( $cproc, '.php' ) ) {
@@ -121,7 +121,7 @@ if ( count( $testprocs ) > 5 ) {
 
 $mih = new microIntegrationHandler;
 
-$testmis = scandir( $mih->mi_dir, false, true );
+$testmis = xJUtility::getFileArray( $mih->mi_dir, false, true );
 
 // Check if there are old mi files
 if ( count( $testmis ) > 5 ) {

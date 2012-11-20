@@ -3221,15 +3221,23 @@ class PaymentProcessorHandler
 				continue;
 			}
 
-			$readppname = ucwords( str_replace( '_', ' ', strtolower( $ppname ) ) );
-
 			// Load Payment Processor
 			$pp = new PaymentProcessor();
 			if ( $pp->loadName( $ppname ) ) {
+				$pp->copyAssets();
+
+				xJLanguageHandler::loadList( array(	'com_acctexp.processors.' . $ppname => JPATH_SITE ) );
+
 				$pp->getInfo();
 
+				if ( !empty( $pp->info['longname'] ) ) {
+					$name = $pp->info['longname'];
+				} else {
+					$name = ucwords( str_replace( '_', ' ', strtolower( $ppname ) ) );
+				}
+
 				// Add to general PP List
-				$pp_list_html[] = JHTML::_('select.option', $ppname, $readppname );
+				$pp_list_html[] = JHTML::_('select.option', $ppname, $name );
 			}
 		}
 
@@ -3305,10 +3313,6 @@ class PaymentProcessor
 				$this->processor->active = $res->active;
 			} else {
 				$this->processor->active = 0;
-			}
-
-			if ( empty( $this->id ) ) {
-				$this->install();
 			}
 
 			return true;
@@ -3416,7 +3420,7 @@ class PaymentProcessor
 
 		if ( file_exists( $source ) ) {
 			$dest = JPATH_SITE . '/media/com_acctexp/images/site/' . $png;
-			if ( !file_exists( $dest ) ) {
+			if ( !file_exists( $dest ) && file_exists( $source ) ) {
 				copy( $source, $dest );
 			}
 		}
@@ -3434,6 +3438,10 @@ class PaymentProcessor
 				$filename = $l . '.com_acctexp.processors.' . $this->processor_name . '.ini';
 
 				$source = $lpath . '/' . $filename;
+
+				if ( !file_exists( $source ) ) {
+					continue;
+				}
 
 				$dest = $syslangpath . '/' . $l . '/' . $filename;
 
@@ -3627,7 +3635,11 @@ class PaymentProcessor
 
 	function storeload()
 	{
-		$this->processor->storeload();
+		if ( empty( $this->id ) ) {
+			$this->install();
+		} else {
+			$this->processor->storeload();
+		}
 	}
 
 	function getBackendSettings()
@@ -17235,14 +17247,16 @@ class microIntegrationHandler
 
 	function getIntegrationList()
 	{
-		$list = xJUtility::getFileArray( $this->mi_dir, 'php', false, true );
-
-		asort( $list );
+		$list = xJUtility::getFileArray( $this->mi_dir, '', true, true );
 
 		$integration_list = array();
 		foreach ( $list as $name ) {
-			$parts = explode( '.', $name );
-			$integration_list[] = $parts[0];
+			if ( is_dir( $this->mi_dir . '/' . $name ) ) {
+				// Only add directories with the proper structure
+				if ( file_exists( $this->mi_dir . '/' . $name . '/' . $name . '.php' ) ) {
+					$integration_list[] = $name;
+				}
+			}
 		}
 
 		return $integration_list;
@@ -17847,14 +17861,16 @@ class microIntegration extends serialParamDBTable
 
 	function callDry( $mi_name )
 	{
-		$this->class_name = $mi_name;
+		$this->class_name = 'mi_' . $mi_name;
 
 		return $this->callIntegration( true );
 	}
 
 	function callIntegration( $override = 0 )
 	{
-		$filename = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $this->class_name . '.php';
+		$handle = str_replace( 'mi_', '', $this->class_name );
+
+		$filename = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $handle . '/' . $handle . '.php';
 
 		$file_exists = file_exists( $filename );
 
@@ -17863,6 +17879,12 @@ class microIntegration extends serialParamDBTable
 			return false;
 		} elseif ( $file_exists ) {
 			include_once $filename;
+
+			if ( empty( $this->id ) ) {
+				$this->copyAssets();
+			}
+
+			xJLanguageHandler::loadList( array(	'com_acctexp.mi.' . $handle => JPATH_SITE ) );
 
 			$class = $this->class_name;
 
@@ -17886,6 +17908,35 @@ class microIntegration extends serialParamDBTable
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	function copyAssets()
+	{
+		$handle = str_replace( 'mi_', '', $this->class_name );
+
+		$syslangpath = JPATH_SITE . '/language';
+
+		$languages = xJLanguageHandler::getSystemLanguages();
+
+		$langpath = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $handle . '/lang';
+
+		foreach ( $languages as $l ) {
+			$lpath = $langpath . '/' . $l;
+
+			if ( is_dir( $lpath ) && is_dir( $syslangpath . '/' . $l ) ) {
+				$filename = $l . '.com_acctexp.mi.' . $handle . '.ini';
+
+				$source = $lpath . '/' . $filename;
+				
+				if ( !file_exists( $source ) ) {
+					continue;
+				}
+
+				$dest = $syslangpath . '/' . $l . '/' . $filename;
+
+				copy( $source, $dest );
+			}
 		}
 	}
 
