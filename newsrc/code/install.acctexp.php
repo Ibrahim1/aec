@@ -157,6 +157,8 @@ function com_install()
 		$pp = new PaymentProcessor();
 
 		if ( $pp->loadName( $ppname ) ) {
+			$pp->copyAssets();
+
 			$pp->fullInit();
 
 			// Infos often change, so we protect the name and description and so on, but replace everything else
@@ -202,8 +204,8 @@ function com_install()
 
 	// icons
 	$files = array(
-					array( 'lib/mootools/mootools.tar.gz',	'lib/mootools/',	0 ),
-					array( 'processors/ideal_advanced/ideal_advanced.tar.gz',					'processors/ideal_advanced/',	0 )
+					array( 'lib/mootools/mootools.tar.gz', 'lib/mootools/', 0 ),
+					array( 'processors/ideal_advanced/lib/ideal_advanced.tar.gz', 'processors/ideal_advanced/lib/', 0 )
 					);
 
 	// check if joomfish (joomla) or nokkaew (mambo) exists)

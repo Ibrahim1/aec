@@ -3102,7 +3102,10 @@ class PaymentProcessorHandler
 		$pp_list = array();
 		foreach ( $list as $name ) {
 			if ( is_dir( $this->pp_dir . '/' . $name ) ) {
-				$pp_list[] = $name;
+				// Only add directories with the proper structure
+				if ( file_exists( $this->pp_dir . '/' . $name . '/' . $name . '.php' ) ) {
+					$pp_list[] = $name;
+				}
 			}
 		}
 
@@ -3284,7 +3287,7 @@ class PaymentProcessor
 
 		$this->path = $this->pph->pp_dir . '/' . $this->processor_name;
 
-		$file = $this->path . $this->processor_name . '.php';
+		$file = $this->path . '/' . $this->processor_name . '.php';
 
 		// Check whether processor exists
 		if ( file_exists( $file ) ) {
@@ -3373,6 +3376,8 @@ class PaymentProcessor
 		} else {
 			// Initiate processor from db
 			if ( is_object( $this->processor ) && empty( $this->processor->id ) ) {
+				xJLanguageHandler::loadList( array(	'com_acctexp.processors.' . $this->processor_name => JPATH_SITE ) );
+
 				return $this->processor->load( $this->id );
 			} else {
 				return true;

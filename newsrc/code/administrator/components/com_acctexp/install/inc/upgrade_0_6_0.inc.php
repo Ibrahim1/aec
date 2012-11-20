@@ -8,6 +8,9 @@
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 
+// Dont allow direct linking
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+
 // Update routine 0.3.0 -> 0.6.0
 if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_payplans", $tables ) ) {
 	// Check for existence of 'gid' column on table #__acctexp_payplans

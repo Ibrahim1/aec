@@ -67,8 +67,8 @@ class processor_google_checkout extends XMLprocessor
 	
 	function checkoutAction( $request, $InvoiceFactory=null )
 	{
-		require_once( dirname(__FILE__) . '/lib/library/googlecart.php' );
-		require_once( dirname(__FILE__) . '/lib/library/googleitem.php' );
+		require_once( dirname(__FILE__) . '/lib/googlecart.php' );
+		require_once( dirname(__FILE__) . '/lib/googleitem.php' );
 
 		if ( $this->settings['testmode'] ) {
 			$server_type = "sandbox";
@@ -83,7 +83,7 @@ class processor_google_checkout extends XMLprocessor
 		$cart	= new GoogleCart( $this->settings['merchant_id'], $this->settings['merchant_key'], $server_type, $currency );
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			require_once( dirname(__FILE__) . '/lib/library/googlesubscription.php' );
+			require_once( dirname(__FILE__) . '/lib/liary/googlesubscription.php' );
 
 			$item_1 = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount']['amount3'] );
 
@@ -183,7 +183,7 @@ class processor_google_checkout extends XMLprocessor
 
 	function parseNotification( $post )
 	{
-		require_once( dirname(__FILE__) . '/lib/library/googlerequest.php' );
+		require_once( dirname(__FILE__) . '/lib/googlerequest.php' );
 
 		$response			= array();
 		$response['valid'] = false;

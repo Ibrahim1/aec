@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-require( s/authorizenet.cim.class.php' );
+require_once( dirname(__FILE__) . '/lib/authorizenet.cim.class.php' );
 
 class processor_authorize_cim extends PROFILEprocessor
 {

@@ -70,7 +70,7 @@ class processor_mollie_wallie extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		require_once( JPATH_SITE . '/components/com_acctexp/processors/mollie/cls.wallie.php' );
+		require_once( dirname(__FILE__) . '/lib/cls.wallie.php' );
 
 		$response			= array();
 		$response['valid']	= false;
@@ -114,7 +114,7 @@ class processor_mollie_wallie extends XMLprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		require_once( JPATH_SITE . '/components/com_acctexp/processors/mollie/cls.wallie.php' );
+		require_once( dirname(__FILE__) . '/lib/cls.wallie.php' );
 
 		$response				= array();
 		$response['valid']		= false;

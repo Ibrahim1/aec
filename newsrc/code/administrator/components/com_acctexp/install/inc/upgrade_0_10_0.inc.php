@@ -8,6 +8,9 @@
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 
+// Dont allow direct linking
+( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+
 // Update routine 0.8.0x -> 0.10.0
 
 if ( $eucaInstalldb->columnintable( 'entry', 'plans' ) ) {
