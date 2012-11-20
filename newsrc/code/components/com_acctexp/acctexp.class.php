@@ -14,7 +14,7 @@
 global $aecConfig;
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5715' );
+define( '_AEC_REVISION', '5718' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
@@ -4602,7 +4602,7 @@ class XMLprocessor extends processor
 			$return .= $this->getStdFormVars( $request );
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn"><i class="bsicon-shopping-cart bsicon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn">' . aecHTML::Icon( 'shopping-cart', true ) . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5517,7 +5517,7 @@ class POSTprocessor extends processor
 			$text = JText::_('BUTTON_CHECKOUT'); 
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '><i class="bsicon-shopping-cart bsicon-white"></i>' . $text . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '>' . aecHTML::Icon( 'shopping-cart', true ) . $text . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5547,7 +5547,7 @@ class GETprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '><i class="bsicon-shopping-cart bsicon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '>' . aecHTML::Icon( 'shopping-cart', true ) . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -5601,7 +5601,7 @@ class URLprocessor extends processor
 			$return .= implode( '&amp;', $vars );
 		}
 
-		$return .= '"' . $onclick . ' class="button aec-btn btn btn-primary" ><i class="bsicon-shopping-cart bsicon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</a>' . "\n";
+		$return .= '"' . $onclick . ' class="button aec-btn btn btn-primary" >' . aecHTML::Icon( 'shopping-cart', true ) . JText::_('BUTTON_CHECKOUT') . '</a>' . "\n";
 
 		return $return;
 	}
@@ -6155,9 +6155,15 @@ class aecHTML
 		return $tip . '&nbsp;';
 	}
 
-	function Icon( $icon='fire', $white=false )
+	function Icon( $icon='fire', $white=false, $addin=null )
 	{
-		return '<i class="bsicon-'. $icon .' icon'. ( $white ? '-white' : '' ) .'"></i>';
+		$v = new JVersion();
+
+		if ( $v->isCompatible('3.0') ) {
+			return '<i class="icon-'. $icon . ( $white ? ' icon-white' : '' ) . $addin .'"></i>';
+		} else {
+			return '<i class="bsicon-'. $icon . ( $white ? ' bsicon-white' : '' ) . $addin .'"></i>';
+		}
 	}
 
 	function Button( $icon='fire', $text='', $style='', $link='', $js='' )
@@ -9945,7 +9951,7 @@ class InvoiceFactory
 						$btnarray['option']		= 'com_acctexp';
 						$btnarray['task']		= 'addtocart';
 						$btnarray['class']		= 'btn btn-processor';
-						$btnarray['content']	= '<i class="bsicon-plus narrow"></i>' . JText::_('AEC_BTN_ADD_TO_CART');
+						$btnarray['content']	= aecHTML::Icon( 'plus', false, ' narrow' ) . JText::_('AEC_BTN_ADD_TO_CART');
 
 						$btnarray['usage'] = $lv['id'];
 

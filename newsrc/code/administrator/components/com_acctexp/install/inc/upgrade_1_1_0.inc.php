@@ -13,7 +13,7 @@
 
 $pph = new PaymentProcessorHandler;
 
-$testprocs = xJUtility::getFileArray( $pph->pp_dir, false, true );
+$testprocs = xJUtility::getFileArray( $pph->pp_dir, false, false );
 
 // Check if there are old processor files
 if ( count( $testprocs ) > 5 ) {
@@ -63,15 +63,19 @@ if ( count( $testprocs ) > 5 ) {
 	}
 
 	// Clear up other old crap - we're keeping some processor dirs, so we need to be careful
-	$crappy = array( 'cybermut', 'dibs', 'ideal_advanced', 'google_checkout', 'vcs' );
+	$crappy = array( 'cybermut', 'ideal_advanced', 'google_checkout', 'vcs' );
 
 	foreach ( $crappy as $ccproc ) {
 		$ibase = $pph->pp_dir . '/' . $ccproc;
 
 		if ( is_dir( $ibase ) ) {
-			$idir = xJUtility::getFileArray( $ibase, true, true );
+			$idir = xJUtility::getFileArray( $ibase, false, true );
 
-			$protect = array( 'index.html', $ccproc.'.php', 'lib', 'lang', 'media' );
+			if ( empty( $idir ) ) {
+				continue;
+			}
+
+			$protect = array( 'index.html', $ccproc.'.php', 'fail.php', 'success.php', 'lib', 'lang', 'media' );
 
 			foreach ( $idir as $di ) {
 				$die = $ibase . '/' . $di;
@@ -97,7 +101,7 @@ if ( count( $testprocs ) > 5 ) {
 	}
 
 	// Remove old processor integrations
-	foreach ( $iprocs as $proc ) {
+	foreach ( $oldprocs as $proc ) {
 		$ppath = $pph->pp_dir . '/' . $proc . '.php';
 
 		if ( file_exists( $ppath ) ) {
@@ -105,15 +109,15 @@ if ( count( $testprocs ) > 5 ) {
 		}
 	}
 
-	$customprocs = xJUtility::getFileArray( $pph->pp_dir, false, true );
+	$customprocs = xJUtility::getFileArray( $pph->pp_dir, false, false );
 
 	foreach( $customprocs as $cproc ) {
 		if ( strpos( $cproc, '.php' ) ) {
 			$newdir = $pph->pp_dir . '/' . str_replace( '.php', '', $cproc );
 
-			mkdir( $newdir, 755 );
+			mkdir( $newdir );
 		
-			copy( $pph->pp_dir . '/' . $cproc, $newdir . '/' . $cproc );
+			rename( $pph->pp_dir . '/' . $cproc, $newdir . '/' . $cproc );
 		}
 	}
 
@@ -121,7 +125,7 @@ if ( count( $testprocs ) > 5 ) {
 
 $mih = new microIntegrationHandler;
 
-$testmis = xJUtility::getFileArray( $mih->mi_dir, false, true );
+$testmis = xJUtility::getFileArray( $mih->mi_dir, false, false );
 
 // Check if there are old mi files
 if ( count( $testmis ) > 5 ) {
@@ -148,11 +152,9 @@ if ( count( $testmis ) > 5 ) {
 
 		$newdir = $mih->mi_dir . '/' . $handle;
 
-		mkdir( $newdir, 755 );
+		mkdir( $newdir );
 
-		copy( $mih->mi_dir . '/' . $mik, $newdir . '/' . $handle . '.php' );
-
-		unlink( $mih->mi_dir . '/' . $mik );
+		rename( $mih->mi_dir . '/' . $mik, $newdir . '/' . $handle . '.php' );
 	}
 }
 

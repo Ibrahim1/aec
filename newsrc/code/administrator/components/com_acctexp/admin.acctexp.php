@@ -318,14 +318,13 @@ switch( strtolower( $task ) ) {
 		$v = new JVersion();
 
 		if ( $v->isCompatible('3.0') ) {
+			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin-j3.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 		} else {
+			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 		}
 
-		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
-		exit;
-		
 		break;
 
 	default: aecCentral( $option ); break;
@@ -6259,9 +6258,9 @@ function exportData( $option, $type, $cmd=null )
 	$params['save_name']		= array( 'inputC', $pname );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div class="right-btns">' );
-	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#"><i class="bsicon-upload bsicon-white"></i>&nbsp;Load Preset</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#"><i class="bsicon-download bsicon-white"></i>&nbsp;Store Preset</a>' );
-	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#"><i class="bsicon-download-alt icon"></i>&nbsp;Store Preset &amp; Exit</a>' );
+	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">' . aecHTML::Icon( 'bsicon-upload', true ) . '&nbsp;Load Preset</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">' . aecHTML::Icon( 'bsicon-download', true ) . '<&nbsp;Store Preset</a>' );
+	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">' . aecHTML::Icon( 'bsicon-download-alt', true ) . '&nbsp;Store Preset &amp; Exit</a>' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
@@ -6270,8 +6269,8 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'userinfobox_sub', 'Export' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
-	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result"><i class="bsicon-eye-open bsicon-white"></i>&nbsp;Test Export</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#"><i class="bsicon-file bsicon-white"></i>&nbsp;Export Now</a>' );
+	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result">' . aecHTML::Icon( 'bsicon-eye-open', true ) . '&nbsp;Test Export</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">' . aecHTML::Icon( 'bsicon-file', true ) . '&nbsp;Export Now</a>' );
 	$params[] = array( '2div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );

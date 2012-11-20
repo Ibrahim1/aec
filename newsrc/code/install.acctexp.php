@@ -361,12 +361,12 @@ function com_install()
 	$v = new JVersion();
 
 	if ( $v->isCompatible('3.0') ) {
+		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin-j3.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 	} else {
+		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 		$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 	}
-
-	$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 
 	$eucaInstall->popIndex(	array(JPATH_ADMINISTRATOR . '/components/com_acctexp',
 							JPATH_SITE . '/components/com_acctexp',

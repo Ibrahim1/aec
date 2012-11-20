@@ -88,7 +88,7 @@ class processor_generic_vpc extends URLprocessor
 		$var['vpc_MerchTxnRef']	= $request->invoice->invoice_number;
 		$var['vpc_OrderInfo']	= $this->settings['vpc_OrderInfo'];
 
-		$var['vpc_ReturnURL']	= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=migsnotification");
+		$var['vpc_ReturnURL']	= AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=generic_vpcnotification");
 
 		if ( !empty( $this->settings['vpc_TicketNo'] ) ) {
 			$var['vpc_Locale']		= $this->settings['vpc_Locale'];

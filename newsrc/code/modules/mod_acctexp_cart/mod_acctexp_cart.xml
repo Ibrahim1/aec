@@ -12,7 +12,6 @@
 	<files folder="modules/mod_acctexp_cart">
 		<filename module="mod_acctexp_cart">mod_acctexp_cart.php</filename>
 		<folder>tmpl</folder>
-		<filename>index.html</filename>
 	</files>
 	<languages folder="language">
 		<language tag="de-DE">de-DE/de-DE.mod_acctexp_cart.ini</language>

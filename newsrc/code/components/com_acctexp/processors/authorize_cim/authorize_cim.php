@@ -463,7 +463,7 @@ class processor_authorize_cim extends PROFILEprocessor
 
 		$return .= $this->getParamsHTML( $this->checkoutform( $request, $cim ) ) . '<br /><br />';
 		$return .= $this->getStdFormVars( $request );
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec-checkout-btn"><i class="bsicon-shopping-cart bsicon-white"></i>' . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary' . ( $aecConfig->cfg['checkoutform_jsvalidation'] ? ' validate' : '' ) . '" id="aec-checkout-btn">' . aecHTML::Icon( 'shopping-cart' ) . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;

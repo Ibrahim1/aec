@@ -38,6 +38,12 @@ class mi_aecinvoiceprintemail
 		$settings['customcss']			= array( 'inputD' );
 		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
+		$settings['aectab_pdf']			= array( 'tab', 'PDF Invoice', 'PDF Invoice' );
+		$settings['make_pdf']			= array( 'toggle' );
+		$settings['text_html']			= array( 'toggle' );
+		$settings['text']				= array( !empty( $this->settings['text_html'] ) ? 'editor' : 'inputD' );
+		$settings						= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+
 		$settings['aectab_reg']			= array( 'tab', 'Modify Invoice', 'Modify Invoice' );
 
 		$s = array( "before_header", "header", "after_header", "address",
@@ -73,7 +79,7 @@ class mi_aecinvoiceprintemail
 	}
 
 	function relayAction( $request )
-	{
+	{print_r($request);print_r($this);exit;
 		if ( $request->action != 'action' ) {
 			return null;
 		}
@@ -122,6 +128,39 @@ class mi_aecinvoiceprintemail
 			return null;
 		}
 
+		$attachment = null;
+		$html_mode = true;
+		if ( !empty( $this->settings['make_pdf'] ) ) {
+			$app = JFactory::getApplication();
+
+			require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
+			require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
+
+			$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+			$pdf->AddPage();
+			$pdf->writeHTML($message, true, false, true, false, '');
+
+			if ( !empty( $request->invoice->invoice_number_format ) ) {
+				$name = $request->invoice->invoice_number_format;
+			} else {
+				$name = $request->invoice->invoice_number;
+			}
+
+			$fname = preg_replace("/[^a-z0-9@._+-]/i", '', $name) . '.pdf';
+
+			$content = $pdf->Output( $fname, 'S');
+
+			$attachment = $app->getCfg( 'tmp_path' ) . '/' . $fname;
+
+			$fp = fopen( $attachment, 'w' );
+			fwrite( $fp, $content );
+			fclose( $fp );
+
+			$message = $this->settings['text'];
+			
+			$html_mode = $this->settings['text_html'];
+		}
+
 		$recipient = $cc = $bcc = null;
 
 		$rec_groups = array( "recipient", "cc", "bcc" );
@@ -142,8 +181,12 @@ class mi_aecinvoiceprintemail
 	        }
 		}
 
-		xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, true, $cc, $bcc );
+		xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $html_mode, $cc, $bcc, $attachment );
 
+		if ( !empty( $attachment ) ) {
+			unlink( $attachment );
+		}
+exit;
 		$request->invoice->params['mi_aecinvoiceprintemail'] = (int) gmdate('U');
 		$request->invoice->storeload();
 

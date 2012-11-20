@@ -34,5 +34,5 @@
 	<?php if ( $passthrough != false ) { ?>
 		<input type="hidden" name="aec_passthrough" value="<?php echo $passthrough ?>" />
 	<?php } ?>
-	<button type="submit" class="button btn btn-success" id="confirmation"><i class="bsicon-ok bsicon-white"></i><?php echo JText::_('BUTTON_CONFIRM') ?></button>
+	<button type="submit" class="button btn btn-success" id="confirmation"><?php echo aecHTML::Icon( 'ok', true ); ?><?php echo JText::_('BUTTON_CONFIRM') ?></button>
 </div>

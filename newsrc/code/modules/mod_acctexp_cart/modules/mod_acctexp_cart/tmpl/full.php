@@ -44,7 +44,7 @@
 		global $aecConfig; ?>
 		<form id="form-backtocart" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cart', $aecConfig->cfg['ssl_signup'] ) ?>" method="post">
 			<div class="backtocart-button">
-				<button type="submit" class="btn"><i class="bsicon-shopping-cart"></i><?php echo JText::_('AEC_BTN_YOUR_CART') ?></button>
+				<button type="submit" class="btn"><?php echo aecHTML::Icon( 'shopping-cart' ) . JText::_('AEC_BTN_YOUR_CART') ?></button>
 			</div>
 			<?php echo JHTML::_( 'form.token' ) ?>
 		</form>
