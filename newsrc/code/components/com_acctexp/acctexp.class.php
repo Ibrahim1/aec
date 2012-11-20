@@ -14,7 +14,7 @@
 global $aecConfig;
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5698' );
+define( '_AEC_REVISION', '5713' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
@@ -11139,11 +11139,10 @@ class InvoiceFactory
 		$url = 'index.php?option=com_acctexp&task=thanks&userid=' . ((int) $this->userid) . '&free=' . $free . '&renew=' . $renew;
 
 		if ( !empty( $this->plan ) ) {
-			aecRedirect( AECToolbox::deadsureURL( $url. '&usage=' . $this->plan->id ), false, true );
+			aecRedirect( $url. '&usage=' . $this->plan->id );
 		} else {
-			aecRedirect( AECToolbox::deadsureURL( $url ), false, true );
+			aecRedirect( $url );
 		}
-		
 	}
 
 	function error( $option, $objUser, $invoice, $error )
@@ -13652,7 +13651,7 @@ class Subscription extends serialParamDBTable
 	function manualVerify()
 	{
 		if ( $this->is_expired() ) {
-			aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=expired&userid=' . (int) $this->userid ), false, true );
+			aecRedirect( 'index.php?option=com_acctexp&task=expired&userid=' . ((int) $this->userid) );
 			return false;
 		} else {
 			return true;
@@ -16182,12 +16181,12 @@ class AECToolbox
 
 						if ( $invoice ) {
 							$metaUser->setTempAuth();
-							return aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=pending&userid=' . $userid ), false, true );
+							return aecRedirect( 'index.php?option=com_acctexp&task=pending&userid=' . $userid );
 						}
 					}
 
 					$metaUser->setTempAuth();
-					return aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&userid=' . $userid . '&intro=1' ), false, true );
+					return aecRedirect( 'index.php?option=com_acctexp&task=subscribe&userid=' . $userid . '&intro=1' );
 				}
 			}
 		}
