@@ -3554,10 +3554,10 @@ class bsPagination extends JPagination
 
 		$search[] = 'class="container"';
 
-		$replace = array(	'>' . aecHTML::Icon( 'bsicon-fast-backward' ) . '<',
-							'>' . aecHTML::Icon( 'bsicon-backward' ) . '<',
-							'>' . aecHTML::Icon( 'bsicon-forward' ) . '<',
-							'>' . aecHTML::Icon( 'bsicon-fast-forward' ) . '<',
+		$replace = array(	'>' . aecHTML::Icon( 'fast-backward' ) . '<',
+							'>' . aecHTML::Icon( 'backward' ) . '<',
+							'>' . aecHTML::Icon( 'forward' ) . '<',
+							'>' . aecHTML::Icon( 'fast-forward' ) . '<',
 							'class="pagination-container"'
 						);
 
@@ -3576,7 +3576,7 @@ class bsPagination extends JPagination
 	function orderUpIcon($i, $condition=true, $task='orderup', $enabled=false)
 	{
 		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
-		$order .= aecHTML::Icon( 'bsicon-chevron-up' );
+		$order .= aecHTML::Icon( 'chevron-up' );
 		$order .= '</a>';
 
 		return $order;
@@ -3585,7 +3585,7 @@ class bsPagination extends JPagination
 	function orderDownIcon($i, $n, $condition=true, $task='orderdown', $enabled=false)
 	{
 		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
-		$order .= aecHTML::Icon( 'bsicon-chevron-down' );
+		$order .= aecHTML::Icon( 'chevron-down' );
 		$order .= '</a>';
 
 		return $order;
