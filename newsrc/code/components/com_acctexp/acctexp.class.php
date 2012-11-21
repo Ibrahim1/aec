@@ -14,7 +14,7 @@
 global $aecConfig;
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5724' );
+define( '_AEC_REVISION', '5730' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 

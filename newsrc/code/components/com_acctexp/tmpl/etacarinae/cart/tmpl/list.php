@@ -27,7 +27,7 @@
 					?><tr>
 						<td><?php echo $bitem['name'] ?></td>
 						<td><?php echo $bitem['cost'] ?></td>
-						<?php if ( $bitem['obj']->params['addtocart_max'] < 2 ) { ?>
+						<?php if ( !empty( $bitem['obj']->params['addtocart_max'] ) && ( $bitem['obj']->params['addtocart_max'] < 2 ) ) { ?>
 							<td class="center-cell">1</td>
 						<?php } else { ?>
 							<td><input type="inputbox" type="text" class="span1" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
@@ -41,7 +41,7 @@
 						<td></td>
 						<td class="center-cell"><button type="submit" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'refresh', true, ' narrow' ); ?></button></td>
 						<td></td>
-						<td class="center-cell"><div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), aecHTML::Icon( 'refresh', true, ' narrow' ), 'btn btn-danger' ) ?></div></td>
+						<td class="center-cell"><div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), aecHTML::Icon( 'trash', true, ' narrow' ), 'btn btn-danger' ) ?></div></td>
 					</tr>
 					<tr>
 						<td><strong><?php echo JText::_('CART_ROW_TOTAL') ?></strong></td>
