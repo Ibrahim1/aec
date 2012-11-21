@@ -6261,8 +6261,8 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div class="right-btns">' );
 	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">' . aecHTML::Icon( 'upload', true ) . '&nbsp;Load Preset</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download', true ) . '<&nbsp;Store Preset</a>' );
-	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download-alt', true ) . '&nbsp;Store Preset &amp; Exit</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download', true ) . '&nbsp;Save Preset</a>' );
+	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download-alt' ) . '&nbsp;Save Preset &amp; Exit</a>' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
