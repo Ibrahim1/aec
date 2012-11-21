@@ -3920,8 +3920,10 @@ function editMicroIntegration ( $id, $option )
 		if ( count( $mi_list ) > 0 ) {
 			foreach ( $mi_list as $name ) {
 				$mi_item = new microIntegration();
-				$mi_item->class_name = 'mi_'.$name;
-				if ( $mi_item->callIntegration() ) {
+
+				if ( $mi_item->callDry( $name ) ) {
+					$handle = str_replace( 'mi_', '', $mi_item->class_name );
+
 					if ( isset( $mi_item->info['type'] ) ) {
 						foreach ( $mi_item->info['type'] as $type ) {
 							$drill = explode( '.', $type );
@@ -3936,7 +3938,7 @@ function editMicroIntegration ( $id, $option )
 								}
 
 								if ( $i == count( $drill )-1 ) {
-									$cursor[$k][] = '<a href="#' . $mi_item->class_name . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
+									$cursor[$k][] = '<a href="#' . $handle . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
 								} else {
 									$cursor =& $cursor[$k]; 
 								}
@@ -3944,7 +3946,7 @@ function editMicroIntegration ( $id, $option )
 						}
 					}
 
-					$drilldown['all'][] = '<a href="#' . $mi_item->class_name . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
+					$drilldown['all'][] = '<a href="#' . $handle . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
 				}
 			}
 
