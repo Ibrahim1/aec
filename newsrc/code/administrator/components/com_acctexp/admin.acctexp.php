@@ -159,8 +159,10 @@ switch( strtolower( $task ) ) {
 		$db = &JFactory::getDBO();
 
 		foreach ( $id as $pid ) {
-			$row = new Coupon( $db, 0 );
-			$row->load( $pid );
+			$c = explode( '.', $pid );
+
+			$row = new Coupon( $c[0] );
+			$row->load( $c[1] );
 			$row->copy();
 		}
 
@@ -4243,10 +4245,10 @@ function listCoupons( $option )
 		 	. ' UNION '
 		 	. '(SELECT *, "1" as `type`'
 		 	. ' FROM #__acctexp_coupons_static)'
-		 	. ' ORDER BY `coupon_code`'
+		 	. ' ORDER BY `id` DESC'
 		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		 	;
- 	$db->setQuery( $query	);
+ 	$db->setQuery( $query );
 
  	$rows = $db->loadObjectList();
  	if ( $db->getErrorNum() ) {
@@ -4307,7 +4309,7 @@ function editCoupon( $id, $option, $new )
 	if ( !$new ) {
 		$idx = explode( ".", $id );
 
-		$cph->coupon = new Coupon( $db, $idx[0] );
+		$cph->coupon = new Coupon( $idx[0] );
 		$cph->coupon->load( $idx[1] );
 
 		$params_values			= $cph->coupon->params;
@@ -4574,7 +4576,7 @@ function saveCoupon( $option, $apply=0 )
 		$cph = new couponHandler();
 
 		if ( !empty( $_POST['id'] ) ) {
-			$cph->coupon = new Coupon( $db, $_POST['oldtype'] );
+			$cph->coupon = new Coupon( $_POST['oldtype'] );
 			$cph->coupon->load( $_POST['id'] );
 
 			if ( $cph->coupon->id ) {
@@ -4585,7 +4587,7 @@ function saveCoupon( $option, $apply=0 )
 		}
 
 		if ( !$cph->status ) {
-			$cph->coupon = new coupon( $type );
+			$cph->coupon = new Coupon( $type );
 			$cph->coupon->createNew( $_POST['coupon_code'] );
 			$cph->status = true;
 			$new = 1;

@@ -14,7 +14,7 @@
 global $aecConfig;
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5730' );
+define( '_AEC_REVISION', '5734' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
@@ -20106,6 +20106,7 @@ class Coupon extends serialParamDBTable
 	{
 		$this->id = 0;
 		$this->coupon_code = $this->generateCouponCode();
+		$this->usecount = 0;
 		$this->check();
 		$this->store();
 	}
