@@ -143,10 +143,7 @@ class processor_generic_pin extends XMLprocessor
 
 	function usePIN( $pin )
 	{
-		// Look up PIN in DB
-		$db = $this->getDB();
-
-		$ps = new AECMI_pinstore( $db, $this->settings['table_name'] );
+		$ps = new AECMI_pinstore( $this->settings['table_name'] );
 
 		if ( $ps->loadPin( $pin ) ) {
 			return false;

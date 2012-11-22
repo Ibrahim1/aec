@@ -6122,7 +6122,7 @@ function exportData( $option, $type, $cmd=null )
 	$pname = "";
 
 	if ( !empty( $system_values['selected_export'] ) || $cmd_save || $cmd_apply || $is_test ) {
-		$row = new aecExport( $db, ( $type == 'sales' ) );
+		$row = new aecExport( ( $type == 'sales' ) );
 		if ( isset( $system_values['selected_export'] ) ) {
 			$row->load( $system_values['selected_export'] );
 
@@ -6164,7 +6164,7 @@ function exportData( $option, $type, $cmd=null )
 
 	// Always store the last ten calls, but only if something is happening
 	if ( $cmd_save || $cmd_apply || $cmd_export ) {
-		$autorow = new aecExport( $db, ( $type == 'sales' ) );
+		$autorow = new aecExport( ( $type == 'sales' ) );
 		$autorow->load(0);
 		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
 
