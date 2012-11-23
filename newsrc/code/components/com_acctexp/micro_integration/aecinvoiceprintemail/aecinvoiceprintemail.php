@@ -79,7 +79,7 @@ class mi_aecinvoiceprintemail
 	}
 
 	function relayAction( $request )
-	{print_r($request);print_r($this);exit;
+	{
 		if ( $request->action != 'action' ) {
 			return null;
 		}
@@ -186,7 +186,7 @@ class mi_aecinvoiceprintemail
 		if ( !empty( $attachment ) ) {
 			unlink( $attachment );
 		}
-exit;
+
 		$request->invoice->params['mi_aecinvoiceprintemail'] = (int) gmdate('U');
 		$request->invoice->storeload();
 
