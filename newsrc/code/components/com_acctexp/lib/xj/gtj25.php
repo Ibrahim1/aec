@@ -75,40 +75,12 @@ class xJACLhandler extends xJACLhandlerCommon
 	{
 		$db = &JFactory::getDBO();
 
-		$acl = &JFactory::getACL();
-
-		// Get ARO ID for user
-		$query = 'SELECT `id`'
-				. ' FROM #__core_acl_aro'
-				. ' WHERE `value` = \'' . (int) $userid . '\''
+		$query = 'SELECT `title`'
+				. ' FROM #__usergroups'
+				. ' WHERE `id` = \'' . $gid . '\''
 				;
 		$db->setQuery( $query );
-		$aro_id = $db->loadResult();
-
-		// If we have no aro id, something went wrong and we need to create it
-		if ( empty( $aro_id ) ) {
-			$metaUser = new metaUser( $userid );
-
-			$query2 = 'INSERT INTO #__core_acl_aro'
-					. ' (`section_value`, `value`, `order_value`, `name`, `hidden` )'
-					. ' VALUES ( \'users\', \'' . $userid . '\', \'0\', \'' . $metaUser->cmsUser->name . '\', \'0\' )'
-					;
-			$db->setQuery( $query2 );
-			$db->query();
-
-			$db->setQuery( $query );
-			$aro_id = $db->loadResult();
-		}
-
-		// Carry out ARO ID -> ACL group mapping
-		$query = 'UPDATE #__core_acl_groups_aro_map'
-				. ' SET `group_id` = \'' . (int) $gid . '\''
-				. ' WHERE `aro_id` = \'' . $aro_id . '\''
-				;
-		$db->setQuery( $query );
-		$db->query() or die( $db->stderr() );
-
-		$gid_name = $acl->get_group_name( $gid, 'ARO' );
+		$gid_name = $db->loadResult();
 
 		return $gid_name;
 	}

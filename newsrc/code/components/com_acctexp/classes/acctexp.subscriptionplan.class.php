@@ -13,7 +13,7 @@
 
 class SubscriptionPlanList
 {
-	function __construct( $usage, $group, $metaUser )
+	function __construct( $usage, $group, $metaUser, $recurring )
 	{
 		$this->metaUser = $metaUser;
 
@@ -31,7 +31,7 @@ class SubscriptionPlanList
 
 		$this->checkListProblems();
 
-		$this->explodePlanList();
+		$this->explodePlanList( $recurring );
 	}
 
 	function getPlanList( $usage, $group )
@@ -57,7 +57,7 @@ class SubscriptionPlanList
 				$authorized = $plan->checkAuthorized( $this->metaUser );
 
 				if ( $authorized === true ) {
-					$planlist->list[] = ItemGroupHandler::getItemListItem( $plan );
+					$this->list[] = ItemGroupHandler::getItemListItem( $plan );
 				} elseif ( $authorized === false ) {
 					$auth_problem = true;
 				} else {
@@ -87,14 +87,14 @@ class SubscriptionPlanList
 
 			if ( $g->checkPermission( $this->metaUser ) ) {
 				if ( !empty( $g->params['symlink_userid'] ) && !empty( $g->params['symlink'] ) ) {
-					aecRedirect( $g->params['symlink'], $this->userid, "aechidden" );
+					aecRedirect( $g->params['symlink'], $this->metaUser->userid, "aechidden" );
 				} elseif ( !empty( $g->params['symlink'] ) ) {
 					return $g->params['symlink'];
 				}
 
-				$planlist->list = ItemGroupHandler::getTotalAllowedChildItems( array( $gid ), $this->metaUser );
+				$this->list = ItemGroupHandler::getTotalAllowedChildItems( array( $gid ), $this->metaUser );
 
-				if ( count( $planlist->list ) == 0 ) {
+				if ( count( $this->list ) == 0 ) {
 					$auth_problem = true;
 				}
 			} else {
@@ -107,23 +107,23 @@ class SubscriptionPlanList
 		}
 
 		if ( !is_null( $auth_problem ) ) {
-			$planlist->list = $auth_problem;
+			$this->list = $auth_problem;
 		}
 	}
 
 	function checkListProblems()
 	{
 		// If we run into an Authorization problem, or no plans are available, redirect.
-		if ( !is_array( $planlist->list ) ) {
-			if ( $planlist->list ) {
-				if ( is_bool( $planlist->list ) ) {
+		if ( !is_array( $this->list ) ) {
+			if ( $this->list ) {
+				if ( is_bool( $this->list ) ) {
 					return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
 				} else {
-					if ( strpos( $planlist->list, 'option=com_acctexp' ) ) {
-						$planlist->list .= '&userid=' . $this->userid;
+					if ( strpos( $this->list, 'option=com_acctexp' ) ) {
+						$this->list .= '&userid=' . $this->metaUser->userid;
 					}
 
-					return aecRedirect( $planlist->list );
+					return aecRedirect( $this->list );
 				}
 			} else {
 				return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
@@ -131,12 +131,12 @@ class SubscriptionPlanList
 		}
 
 		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
-		if ( count( $planlist->list ) == 0 ) {
+		if ( count( $this->list ) == 0 ) {
 			return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
 		}
 	}
 
-	function explodePlanList()
+	function explodePlanList( $recurring )
 	{
 		global $aecConfig;
 
@@ -146,7 +146,7 @@ class SubscriptionPlanList
 		$gs = array();
 		$ps = array();
 		// Break apart groups and items, make sure we have no duplicates
-		foreach ( $planlist->list as $litem ) {
+		foreach ( $this->list as $litem ) {
 			if ( $litem['type'] == 'group' ) {
 				if ( !in_array( $litem['id'], $gs ) ) {
 					$gs[] = $litem['id'];
@@ -168,7 +168,7 @@ class SubscriptionPlanList
 				$plan['plan']->params['cart_behavior'] = 0;
 			}
 
-			if ( $this->userid && !$this->expired && ( $aecConfig->cfg['enable_shoppingcart'] || ( $plan['plan']->params['cart_behavior'] == 1 ) ) && ( $plan['plan']->params['cart_behavior'] != 2 ) ) {
+			if ( $this->metaUser->userid && !$this->expired && ( $aecConfig->cfg['enable_shoppingcart'] || ( $plan['plan']->params['cart_behavior'] == 1 ) ) && ( $plan['plan']->params['cart_behavior'] != 2 ) ) {
 				// We have a shopping cart situation, care about processors later
 
 				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
@@ -224,7 +224,7 @@ class SubscriptionPlanList
 
 							$pp->exchangeSettingsByPlan( $plan['plan'] );
 
-							$recurring = $pp->is_recurring( $this->recurring, true );
+							$recurring = $pp->is_recurring( $recurring, true );
 
 							if ( $recurring > 1 ) {
 								$pp->recurring = 0;
@@ -259,7 +259,7 @@ class SubscriptionPlanList
 			}
 		}
 
-		return array_merge( $groups, $plans );
+		$this->list = array_merge( $groups, $plans );
 	}
 
 }

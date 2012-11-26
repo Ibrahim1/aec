@@ -1036,8 +1036,6 @@ function InvoiceRemoveCoupon( $option )
 
 function processNotification( $option, $processor )
 {
-	$db = &JFactory::getDBO();
-
 	// Legacy naming support
 	switch ( $processor ) {
 		case 'vklix':
@@ -1055,8 +1053,75 @@ function processNotification( $option, $processor )
 	}
 
 	//aecDebug( "ResponseFunction:processNotification" );aecDebug( $_GET );aecDebug( $_POST );
+	$response = array();
+	$response['fullresponse'] = aecPostParamClear( $_POST );
 
+	// parse processor notification
+	$pp = new PaymentProcessor();
+	if ( $pp->loadName( $processor ) ) {
+		$pp->init();
+		$response = array_merge( $response, $pp->parseNotification( $response['fullresponse'] ) );
+	} else {
+		$eventlog = new eventLog();
+		$eventlog->issue(	'processor loading failure',
+							'processor,loading,error',
+							'When receiving payment notification, tried to load processor: ' . $processor,
+							128
+						);
 
+		return;
+	}
+
+	// Get Invoice record
+	if ( !empty( $response['invoice'] ) ) {
+		$id = AECfetchfromDB::InvoiceIDfromNumber( $response['invoice'] );
+	} else {
+		$id = false;
+
+		$response['invoice'] = 'empty';
+	}
+
+	if ( !$id ) {
+		$short	= JText::_('AEC_MSG_PROC_INVOICE_FAILED_SH');
+
+		if ( isset( $response['null'] ) ) {
+			if ( isset( $response['explanation'] ) ) {
+				$short	= JText::_('AEC_MSG_PROC_INVOICE_ACTION_SH');
+
+				$event .= $response['explanation'];
+			} else {
+				$event	.= JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_NULL');
+			}
+
+			$tags	.= 'invoice,processor,payment,null';
+		} else {
+			$event	= sprintf( JText::_('AEC_MSG_PROC_INVOICE_FAILED_EV'), $processor, $response['invoice'] );
+			$tags	= 'invoice,processor,payment,error';
+		}
+
+		$params = array();
+
+		$eventlog = new eventLog();
+
+		if ( isset( $response['null'] ) ) {
+			if ( isset( $response['error'] ) ) {
+				$eventlog->issue( $short, $tags, $response['error'], 128, $params );
+			} else {
+				$eventlog->issue( $short, $tags, $event, 8, $params );
+			}
+		} else {
+			$eventlog->issue( $short, $tags, $event, 128, $params );
+
+			$error = 'Invoice Number not found. Invoice number provided: "' . $response['invoice'] . '"';
+
+			$pp->notificationError( $response, $error );
+		}
+
+		return;
+	} else {
+		$iFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
+		$iFactory->processorResponse( $option, $response );
+	}
 }
 
 function aecErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )

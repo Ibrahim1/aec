@@ -2086,7 +2086,7 @@ function editProcessor( $id, $option )
 					// Transform languages into OptionArray
 					$language_code_list = array();
 					foreach ( $language_array as $language ) {
-						$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'LANGUAGECODE_' . $language ) );
+						$language_code_list[] = JHTML::_('select.option', $language, JText::_( 'LANGUAGECODE_' . strtoupper( $language ) ) );
 					}
 					// Create list
 					$lists[$setting_name] = JHTML::_('select.genericlist', $language_code_list, $setting_name, 'size="10"', 'value', 'text', $pp->settings[$name] );

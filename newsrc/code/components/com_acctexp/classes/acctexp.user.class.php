@@ -11,6 +11,8 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
+
 class cmsUser extends JTableUser
 {
 	function __construct()

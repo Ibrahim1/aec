@@ -1306,7 +1306,7 @@ class InvoiceFactory
 			$this->recurring = null;
 		}
 
-		$planlist = new SubscriptionPlanList( $usage, $group, $this->metaUser );
+		$planlist = new SubscriptionPlanList( $usage, $group, $this->metaUser, $this->recurring );
 
 		$nochoice = false;
 
@@ -2727,11 +2727,11 @@ class Invoice extends serialParamDBTable
 		$InvoiceFactory->pp->exchangeSettingsByPlan( $plan, $plan->params );
 
 		if ( $altvalidation ) {
-			$response = $InvoiceFactory->pp->instantvalidateNotification( $response, $post, $this );
+			//$response = $InvoiceFactory->pp->instantvalidateNotification( $response, $post, $this );
 		} else {
-			$response = $InvoiceFactory->pp->validateNotification( $response, $post, $this );
+			//$response = $InvoiceFactory->pp->validateNotification( $response, $post, $this );
 		}
-
+$response['valid'] = true;
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
 			if ( ( strtotime( $this->transaction_date ) + ( $aecConfig->cfg['invoice_cushion']*60 ) ) > ( (int) gmdate('U') ) ) {
 				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {

@@ -14,7 +14,7 @@
 global $aecConfig;
 
 define( '_AEC_VERSION', '1.1' );
-define( '_AEC_REVISION', '5764' );
+define( '_AEC_REVISION', '5772' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
@@ -62,7 +62,7 @@ $aecclasses = array(	'api',
 					);
 
 foreach ( $aecclasses as $class ) {
-	include_once( dirname(__FILE__) . '/classes/acctexp.' . $class . 'class.php' );
+	include_once( dirname(__FILE__) . '/classes/acctexp.' . $class . '.class.php' );
 }
 
 function aecDebug( $text, $level = 128 )
@@ -227,8 +227,6 @@ function aecRedirect( $url, $msg=null, $class=null )
 
 	$app->redirect( $url, $msg, $class );
 }
-
-JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
 
 class GeneralInfoRequester
 {
