@@ -255,8 +255,6 @@ class Subscription extends serialParamDBTable
 	*/
 	function GetAlertLevel()
 	{
-		
-
 		global $aecConfig;
 
 		if ( $this->expiration ) {
@@ -290,8 +288,6 @@ class Subscription extends serialParamDBTable
 
 	function verifylogin( $block, $metaUser=false )
 	{
-		
-
 		global $aecConfig;
 
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
@@ -336,8 +332,6 @@ class Subscription extends serialParamDBTable
 
 	function verify( $block, $metaUser=false )
 	{
-		
-
 		global $aecConfig;
 
 		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {

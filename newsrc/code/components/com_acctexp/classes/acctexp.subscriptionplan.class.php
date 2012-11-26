@@ -810,8 +810,6 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		global $aecConfig;
 
-		
-
 		$micro_integrations = $this->getMicroIntegrations();
 
 		if ( is_array( $micro_integrations ) ) {

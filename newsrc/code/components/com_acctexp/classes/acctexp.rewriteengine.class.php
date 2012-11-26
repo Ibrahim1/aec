@@ -13,11 +13,6 @@
 
 class reWriteEngine
 {
-	function reWriteEngine()
-	{
-
-	}
-
 	function isRWEstring( $string )
 	{
 		if ( ( strpos( $string, '[[' ) !== false ) && ( strpos( $string, ']]' ) !== false ) ) {
