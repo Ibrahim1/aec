@@ -197,7 +197,7 @@ function com_install()
 	}
 
 	// Force Init Params
-	$aecConfig = new Config_General();
+	$aecConfig = new aecConfig();
 	$aecConfig->initParams();
 
 	// --- [ END OF STANDARD UPGRADE ACTIONS ] ---

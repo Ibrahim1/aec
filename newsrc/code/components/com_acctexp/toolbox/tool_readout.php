@@ -368,7 +368,7 @@ class aecReadout
 		$r['head'] = "Settings";
 		$r['type'] = "table";
 
-		$setdef = Config_General::paramsList();
+		$setdef = aecConfig::paramsList();
 
 		$r['def'] = array();
 		foreach ( $setdef as $sd => $sdd ) {
@@ -389,7 +389,7 @@ class aecReadout
 			$r['head'] = "";
 			$r['type'] = "table";
 
-			$setdef = Config_General::paramsList();
+			$setdef = aecConfig::paramsList();
 
 			$r['def'] = array();
 			foreach ( $setdef as $sd => $sdd ) {

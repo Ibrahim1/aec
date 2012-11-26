@@ -300,7 +300,7 @@ switch( strtolower( $task ) ) {
 		break;
 
 	case 'initsettings':
-		$aecConfig = new Config_General();
+		$aecConfig = new aecConfig();
 		$aecConfig->initParams();
 
 		echo 'SPLINES RETICULATED.';
@@ -1408,7 +1408,7 @@ function editSettings( $option )
 	if ( $aecConfig->RowDuplicationCheck() ) {
 		// Clean out duplication and reload settings
 		$aecConfig->CleanDuplicatedRows();
-		$aecConfig = new Config_General();
+		$aecConfig = new aecConfig();
 	}
 
 	$lists = array();

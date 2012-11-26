@@ -11,14 +11,14 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-class Config_General extends serialParamDBTable
+class aecConfig extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id 				= null;
 	/** @var text */
 	var $settings 			= null;
 
-	function Config_General()
+	function aecConfig()
 	{
 		parent::__construct( '#__acctexp_config', 'id' );
 
@@ -229,7 +229,7 @@ class Config_General extends serialParamDBTable
 if ( !is_object( $aecConfig ) ) {
 	global $aecConfig;
 
-	$aecConfig = new Config_General();
+	$aecConfig = new aecConfig();
 }
 
 ?>

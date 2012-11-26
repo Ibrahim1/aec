@@ -11,6 +11,34 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+class TempTokenHandler
+{
+	function TempTokenFromPlan( $plan )
+	{
+		$temptoken = new aecTempToken();
+		$temptoken->getComposite();
+
+		if ( empty( $temptoken->content ) ) {
+			$content = array();
+			$content['usage']		= $plan['id'];
+			$content['processor']	= $plan['gw'][0]->processor_name;
+			if ( isset( $plan['gw'][0]->recurring ) ) {
+				$content['recurring']	= $plan['gw'][0]->recurring;
+			}
+
+			$temptoken->create( $content );
+		} elseif ( empty( $temptoken->content['usage'] ) || ( $temptoken->content['usage'] !== $plan['id'] ) ) {
+			$temptoken->content['usage']		= $plan['id'];
+			$temptoken->content['processor']	= $plan['gw'][0]->processor_name;
+			if ( isset( $plan['gw'][0]->recurring ) ) {
+				$temptoken->content['recurring']	= $plan['gw'][0]->recurring;
+			}
+
+			$temptoken->storeload();
+		}
+	}
+}
+
 class aecTempToken extends serialParamDBTable
 {
 	/** @var int Primary key */

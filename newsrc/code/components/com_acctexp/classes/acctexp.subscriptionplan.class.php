@@ -11,6 +11,259 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+class SubscriptionPlanList
+{
+	function __construct( $usage, $group, $metaUser )
+	{
+		$this->metaUser = $metaUser;
+
+		if ( !empty( $this->metaUser->userid ) ) {
+			if ( $this->metaUser->hasSubscription ) {
+				$this->expired = $this->metaUser->objSubscription->is_expired();
+			} else {
+				$this->expired = false;
+			}
+		} else {
+			$this->expired = true;
+		}
+
+		$this->getPlanList( $usage, $group );
+
+		$this->checkListProblems();
+
+		$this->explodePlanList();
+	}
+
+	function getPlanList( $usage, $group )
+	{
+		global $aecConfig;
+
+		$auth_problem = null;
+
+		if ( !empty( $usage ) ) {
+			$db = &JFactory::getDBO();
+
+			$query = 'SELECT `id`'
+					. ' FROM #__acctexp_plans'
+					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
+					;
+			$db->setQuery( $query );
+			$id = $db->loadResult();
+
+			if ( $id ) {
+				$plan = new SubscriptionPlan();
+				$plan->load( $id );
+
+				$authorized = $plan->checkAuthorized( $this->metaUser );
+
+				if ( $authorized === true ) {
+					$planlist->list[] = ItemGroupHandler::getItemListItem( $plan );
+				} elseif ( $authorized === false ) {
+					$auth_problem = true;
+				} else {
+					$auth_problem = $authorized;
+				}
+			} else {
+				// Plan does not exist
+				$auth_problem = true;
+			}
+		} else {
+			if ( !empty( $group ) ) {
+				$gid = $group;
+			} else {
+				if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
+					$gid = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
+				} else {
+					$gid = array( $aecConfig->cfg['root_group'] );
+				}
+			}
+
+			if ( is_array( $gid ) ) {
+				$gid = $gid[0];
+			}
+
+			$g = new ItemGroup();
+			$g->load( $gid );
+
+			if ( $g->checkPermission( $this->metaUser ) ) {
+				if ( !empty( $g->params['symlink_userid'] ) && !empty( $g->params['symlink'] ) ) {
+					aecRedirect( $g->params['symlink'], $this->userid, "aechidden" );
+				} elseif ( !empty( $g->params['symlink'] ) ) {
+					return $g->params['symlink'];
+				}
+
+				$planlist->list = ItemGroupHandler::getTotalAllowedChildItems( array( $gid ), $this->metaUser );
+
+				if ( count( $planlist->list ) == 0 ) {
+					$auth_problem = true;
+				}
+			} else {
+				$auth_problem = true;
+			}
+
+			if ( $auth_problem && !empty( $g->params['notauth_redirect'] ) ) {
+				$auth_problem = $g->params['notauth_redirect'];
+			}
+		}
+
+		if ( !is_null( $auth_problem ) ) {
+			$planlist->list = $auth_problem;
+		}
+	}
+
+	function checkListProblems()
+	{
+		// If we run into an Authorization problem, or no plans are available, redirect.
+		if ( !is_array( $planlist->list ) ) {
+			if ( $planlist->list ) {
+				if ( is_bool( $planlist->list ) ) {
+					return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
+				} else {
+					if ( strpos( $planlist->list, 'option=com_acctexp' ) ) {
+						$planlist->list .= '&userid=' . $this->userid;
+					}
+
+					return aecRedirect( $planlist->list );
+				}
+			} else {
+				return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
+			}
+		}
+
+		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
+		if ( count( $planlist->list ) == 0 ) {
+			return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
+		}
+	}
+
+	function explodePlanList()
+	{
+		global $aecConfig;
+
+		$groups	= array();
+		$plans	= array();
+
+		$gs = array();
+		$ps = array();
+		// Break apart groups and items, make sure we have no duplicates
+		foreach ( $planlist->list as $litem ) {
+			if ( $litem['type'] == 'group' ) {
+				if ( !in_array( $litem['id'], $gs ) ) {
+					$gs[] = $litem['id'];
+					$groups[] = $litem;
+				}
+			} else {
+				if ( !in_array( $litem['id'], $ps ) ) {
+
+					if ( ItemGroupHandler::checkParentRestrictions( $litem['plan'], 'item', $this->metaUser ) ) {
+						$ps[] = $litem['id'];
+						$plans[] = $litem;
+					}
+				}
+			}
+		}
+
+		foreach ( $plans as $pid => $plan ) {
+			if ( !isset( $plan['plan']->params['cart_behavior'] ) ) {
+				$plan['plan']->params['cart_behavior'] = 0;
+			}
+
+			if ( $this->userid && !$this->expired && ( $aecConfig->cfg['enable_shoppingcart'] || ( $plan['plan']->params['cart_behavior'] == 1 ) ) && ( $plan['plan']->params['cart_behavior'] != 2 ) ) {
+				// We have a shopping cart situation, care about processors later
+
+				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
+					if ( !$plan['plan']->params['full_free'] ) {
+						continue;
+					}
+				}
+
+				$plans[$pid]['gw'][0]						= new stdClass();
+				$plans[$pid]['gw'][0]->processor_name		= 'add_to_cart';
+				$plans[$pid]['gw'][0]->info['statement']	= '';
+				$plans[$pid]['gw'][0]->recurring			= 0;
+
+				continue;
+			}
+
+			if ( $plan['plan']->params['full_free'] ) {
+				$plans[$pid]['gw'][0]						= new stdClass();
+				$plans[$pid]['gw'][0]->processor_name		= 'free';
+				$plans[$pid]['gw'][0]->info['statement']	= '';
+				$plans[$pid]['gw'][0]->recurring			= 0;
+			} else {
+				if ( ( $plan['plan']->params['processors'] != '' ) && !is_null( $plan['plan']->params['processors'] ) ) {
+					$processors = $plan['plan']->params['processors'];
+
+					// Restrict to pre-chosen processor (if set)
+					if ( !empty( $this->processor ) ) {
+						$processorid = PaymentProcessorHandler::getProcessorIdfromName( $this->processor );
+						if ( in_array( $processorid, $processors ) ) {
+							$processors = array( $processorid );
+						}
+					}
+
+					$plan_gw = array();
+					if ( count( $processors ) ) {
+						foreach ( $processors as $n ) {
+							if ( empty( $n ) ) {
+								continue;
+							}
+
+							$pp = new PaymentProcessor();
+
+							if ( !$pp->loadId( $n ) ) {
+								continue;
+							}
+
+							if ( !$pp->processor->active ) {
+								continue;
+							}
+
+							$pp->init();
+							$pp->getInfo();
+
+							$pp->exchangeSettingsByPlan( $plan['plan'] );
+
+							$recurring = $pp->is_recurring( $this->recurring, true );
+
+							if ( $recurring > 1 ) {
+								$pp->recurring = 0;
+								$plan_gw[] = $pp;
+
+								if ( !$plan['plan']->params['lifetime'] ) {
+									$pp = new PaymentProcessor();
+
+									$pp->loadId( $n );
+									$pp->init();
+									$pp->getInfo();
+									$pp->exchangeSettingsByPlan( $plan['plan'] );
+
+									$pp->recurring = 1;
+									$plan_gw[] = $pp;
+								}
+							} elseif ( !( $plan['plan']->params['lifetime'] && $recurring ) ) {
+								if ( is_int( $recurring ) ) {
+									$pp->recurring	= $recurring;
+								}
+								$plan_gw[] = $pp;
+							}
+						}
+					}
+
+					if ( !empty( $plan_gw ) ) {
+						$plans[$pid]['gw'] = $plan_gw;
+					} else {
+						unset( $plans[$pid] );
+					}
+				}
+			}
+		}
+
+		return array_merge( $groups, $plans );
+	}
+
+}
+
 class SubscriptionPlanHandler
 {
 	function getPlanList( $limitstart=false, $limit=false, $use_order=false )
