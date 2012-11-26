@@ -742,7 +742,7 @@ function internalCheckout( $option, $invoice_number, $processor, $userid )
 		$iFactory->touchInvoice( $option, $invoice_number );
 		$iFactory->internalcheckout( $option );
 	} else {
-		aecNotAuth();
+		getView( 'access_denied' );
 		return;
 	}
 }
@@ -758,7 +758,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 		$userid = $user->id;
 	} elseif ( AECToolbox::quickVerifyUserID( $userid ) === true ) {
 			// This user is not expired, so he could log in...
-			return aecNotAuth();
+			return getView( 'access_denied' );
 	} else {
 		$userid = AECfetchfromDB::UserIDfromInvoiceNumber( $invoice_number );
 	}
@@ -788,10 +788,10 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 
 		if ( $status || ( !$status && $aecConfig->cfg['allow_invoice_unpublished_item'] ) ) {
 			if ( !$iFactory->checkAuth( $option ) ) {
-				return aecNotAuth();
+				return getView( 'access_denied' );
 			}
 		} else {
-			return aecNotAuth();
+			return getView( 'access_denied' );
 		}
 
 		return $iFactory->save( $option, null );
@@ -806,7 +806,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 
 		return $iFactory->confirmcart( $option, null, true );
 	} else {
-		return aecNotAuth();
+		return getView( 'access_denied' );
 	}
 }
 
@@ -820,10 +820,10 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 		if ( $userid ) {
 			if ( AECToolbox::quickVerifyUserID( $userid ) === true ) {
 				// This user is not expired, so he could log in...
-				return aecNotAuth();
+				return getView( 'access_denied' );
 			}
 		} else {
-			return aecNotAuth();
+			return getView( 'access_denied' );
 		}
 	} else {
 		$userid = $user->id;
@@ -838,7 +838,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 
 		$objInvoice->cancel();
 	} else {
-		aecNotAuth();
+		getView( 'access_denied' );
 		return;
 	}
 
@@ -868,7 +868,7 @@ function planaction( $option, $action, $subscr )
 
 		getView( 'subscriptiondetails', array( 'sub' => 'invoices' ) );
 	} else {
-		aecNotAuth();
+		getView( 'access_denied' );
 		return;
 	}
 }
@@ -878,7 +878,7 @@ function invoiceAction( $option, $action, $invoice_number )
 	$user = &JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
-		return aecNotAuth();
+		return getView( 'access_denied' );
 	} else {
 		$iFactory = new InvoiceFactory( $user->id );
 		$iFactory->touchInvoice( $option, $invoice_number );
@@ -893,7 +893,7 @@ function InvoicePrintout( $option, $invoice )
 	$user = &JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
-		return aecNotAuth();
+		return getView( 'access_denied' );
 	} else {
 		$iFactory = new InvoiceFactory( $user->id );
 		$iFactory->invoiceprint( $option, $invoice );
@@ -1056,78 +1056,7 @@ function processNotification( $option, $processor )
 
 	//aecDebug( "ResponseFunction:processNotification" );aecDebug( $_GET );aecDebug( $_POST );
 
-	$response = array();
-	$response['fullresponse'] = aecPostParamClear( $_POST );
 
-	// parse processor notification
-	$pp = new PaymentProcessor();
-	if ( $pp->loadName( $processor ) ) {
-		$pp->init();
-		$response = array_merge( $response, $pp->parseNotification( $response['fullresponse'] ) );
-	} else {
-		$db = &JFactory::getDBO();
-		$short	= 'processor loading failure';
-		$event	= 'When receiving payment notification, tried to load processor: ' . $processor;
-		$tags	= 'processor,loading,error';
-		$params = array();
-
-		$eventlog = new eventLog();
-		$eventlog->issue( $short, $tags, $event, 128, $params );
-
-		return;
-	}
-
-	// Get Invoice record
-	if ( !empty( $response['invoice'] ) ) {
-		$id = AECfetchfromDB::InvoiceIDfromNumber( $response['invoice'] );
-	} else {
-		$id = false;
-
-		$response['invoice'] = 'empty';
-	}
-
-	if ( !$id ) {
-		$short	= JText::_('AEC_MSG_PROC_INVOICE_FAILED_SH');
-
-		if ( isset( $response['null'] ) ) {
-			if ( isset( $response['explanation'] ) ) {
-				$short	= JText::_('AEC_MSG_PROC_INVOICE_ACTION_SH');
-
-				$event .= $response['explanation'];
-			} else {
-				$event	.= JText::_('AEC_MSG_PROC_INVOICE_ACTION_EV_NULL');
-			}
-
-			$tags	.= 'invoice,processor,payment,null';
-		} else {
-			$event	= sprintf( JText::_('AEC_MSG_PROC_INVOICE_FAILED_EV'), $processor, $response['invoice'] )
-					. ' ' . $db->getErrorMsg();
-			$tags	= 'invoice,processor,payment,error';
-		}
-
-		$params = array();
-
-		$eventlog = new eventLog();
-
-		if ( isset( $response['null'] ) ) {
-			if ( isset( $response['error'] ) ) {
-				$eventlog->issue( $short, $tags, $response['error'], 128, $params );
-			} else {
-				$eventlog->issue( $short, $tags, $event, 8, $params );
-			}
-		} else {
-			$eventlog->issue( $short, $tags, $event, 128, $params );
-
-			$error = 'Invoice Number not found. Invoice number provided: "' . $response['invoice'] . '"';
-
-			$pp->notificationError( $response, $error );
-		}
-
-		return;
-	} else {
-		$iFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
-		$iFactory->processorResponse( $option, $response );
-	}
 }
 
 function aecErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )
@@ -1153,15 +1082,6 @@ function aecErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )
 	$app->close();
 }
 
-function aecNotAuth()
-{
-	$user =& JFactory::getUser();
-
-	echo JText::_('Not Authorized');
-
-	if ( $user->get('id') < 1 ) {
-		echo "<br />" . JText::_( 'You need to login.' );
-	}
-}
+function aecNotAuth() { getView( 'access_denied' ); }
 
 ?>
