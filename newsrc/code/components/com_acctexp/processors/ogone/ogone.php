@@ -97,11 +97,16 @@ class processor_ogone extends POSTprocessor
 			$source[$v] = $_GET[$v];
 		}
 		
-		if ( ($_GET['STATUS'] == 9) && ($this->getHash($source) == $_GET['SHASIGN']) ) {
-			$response['valid'] = 1;
+		if ( $this->getHash($source) != $_GET['SHASIGN'] ) {
+			$response['error'] = "Hash Mismatch";
 		} else {
-			$response['valid'] = 0;
+			if ( $_GET['STATUS'] == 9 ) {
+				$response['valid'] = 1;
+			} else {
+				$response['duplicate'] = 1;
+			}
 		}
+
 		return $response;
 	}
 
