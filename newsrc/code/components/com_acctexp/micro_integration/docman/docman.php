@@ -182,7 +182,7 @@ class mi_docman
 		$downloadhack =	'// AEC HACK docmandownloadphp START' . "\n"
 		. '$user =& JFactory::getUser();' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
-		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/mi_docman.php\');' . "\n\n"
+		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/docman/docman.php\');' . "\n\n"
 		. '$restrictionhandler = new docman_restriction();' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $user->id );' . "\n"
 		. '$restrictionhandler->load( $restrict_id );' . "\n\n"

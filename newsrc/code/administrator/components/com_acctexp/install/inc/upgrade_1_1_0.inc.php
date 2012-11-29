@@ -156,6 +156,23 @@ if ( count( $testmis ) > 5 ) {
 
 		rename( $mih->mi_dir . '/' . $mik, $newdir . '/' . $handle . '.php' );
 	}
+
+	$milist = microIntegrationHandler::getDetailedList();
+
+	$mixsearch = array( 'mi_hotproperty', 'docman', 'uddeim' );
+
+	$mixhits = array();
+	foreach ( $milist as $mix ) {
+		if ( in_array( $mix->class_name, $mixsearch ) && !in_array( $mix->class_name, $mixhits ) ) {
+			$mixhits[] = $mix->class_name;
+		}
+	}
+
+	if ( !empty( $mixhits ) ) {
+		foreach ( $mixhits as $mixclass ) {
+			$errors[] = array( "The directory structure for the MicroIntegrations has changed. Please update the hacks for the following MI: " . $mixclass );
+		}
+	}
 }
 
 ?>
