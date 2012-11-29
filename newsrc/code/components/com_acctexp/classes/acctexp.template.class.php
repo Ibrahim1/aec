@@ -269,10 +269,19 @@ class aecTemplate
 
 				$query = 'SELECT `alias`'
 						. ' FROM #__menu'
-						. ' WHERE `link` = \'index.php?option=com_community&view=frontpage\'';
+						. ' WHERE `link` = \'index.php?option=com_community&view=register\'';
 				$db->setQuery( $query );
 
 				$replacement = $db->loadResult();
+
+				if ( empty( $replacement ) ) {
+					$query = 'SELECT `alias`'
+							. ' FROM #__menu'
+							. ' WHERE `link` = \'index.php?option=com_community&view=frontpage\'';
+					$db->setQuery( $query );
+
+					$replacement = $db->loadResult();
+				}
 
 				if ( empty( $replacement ) ) {
 					$replacement = 'jomsocial';
