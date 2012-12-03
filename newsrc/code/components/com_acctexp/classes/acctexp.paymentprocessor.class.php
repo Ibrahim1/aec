@@ -320,6 +320,8 @@ class PaymentProcessor
 
 		$this->copyAssets();
 
+		xJLanguageHandler::loadList( array(	'com_acctexp.processors.' . $this->processor_name => JPATH_SITE ) );
+
 		// Call default values for Info and Settings
 		$this->getInfo();
 		$this->getSettings();
