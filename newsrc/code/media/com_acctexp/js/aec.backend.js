@@ -1,4 +1,8 @@
 jQuery(document).ready(function(jQuery) {
+	jQuery.expr[':'].Contains = function(a,i,m){
+		return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
+	};
+
 	jQuery('.aec-navbar').hover(function(){
 		if ( jQuery(".navbar-hover-helper").length == 0 ) {
 			jQuery('.aec-navbar').addClass("navbar-hover-helper");
@@ -45,6 +49,11 @@ jQuery(document).ready(function(jQuery) {
 			}
 		},
 		'focusout' : function(e) { jQuery("div.popover").fadeOut(); }
+	});
+
+	jQuery("#settings-filter").on({
+		'keypress' : function(e) { if (e.keyCode == 13) return false; },
+		'keyup' : function(e) { clearTimeout(typingTimer); inputString = this.value; typingTimer = setTimeout(settingsfilter, "100"); }
 	});
 
 	jQuery('form#adminForm').one('click', function() {
@@ -149,6 +158,33 @@ jQuery(document).ready(function(jQuery) {
 		jQuery.post("index.php?option=com_acctexp&task=quicksearch&search="+inputString , {queryString: ""+inputString+""}, function(data) {
 			jQuery('.popover .popover-content p').html(data);
 		});
+	}
+
+	function settingsfilter() {
+		if ( inputString == "" ) {
+			jQuery(".setting-filtered, .setting-filter-override, .setting-filter-section, .setting-filter-header, .setting-filter-section-override").removeClass("setting-filtered setting-filter-override setting-filter-section setting-filter-header setting-filter-section-override");
+			return;
+		}
+
+		jQuery(".control-group, section h2, section .accordion, .page-header, section").removeClass("setting-filtered setting-filter-override setting-filter-section setting-filter-section-override setting-filter-header");
+
+		jQuery(".control-group, section h2, section .accordion, .page-header").addClass("setting-filtered");
+
+		jQuery("section").addClass("setting-filter-section");
+
+		jQuery(".control-group *:Contains(\""+inputString+"\"), .control-group *[name*=\""+inputString+"\"]").parent(".control-group").addClass("setting-filter-override").prev("h2").addClass("setting-filter-override").parent("section").addClass("setting-filter-section-override");
+
+		jQuery("section.setting-filter-section").prev(".page-header").addClass("setting-filter-override");
+
+		jQuery("section:not('.setting-filter-section-override')").prev(".page-header").addClass("setting-filter-section");
+
+		jQuery("section").filter(function() {
+			return jQuery(this).find('.setting-filter-override').length !== 0;
+		}).prev(".page-header").addClass("setting-filter-override");
+
+		jQuery("section h2").filter( function() {
+			return jQuery(this).nextUntil("h2").filter(".setting-filter-override").length === 0;
+		}).addClass("setting-filter-section").nextUntil("h2").addClass("setting-filter-section");
 	}
 
 	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});

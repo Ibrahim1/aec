@@ -1198,7 +1198,9 @@ class HTML_AcctExp
 		<div class="container">
 			<div class="row">
 				<div class="span3 affix-sidebar">
+					
 					<ul class="nav nav-list affixnav span3" data-spy="affix" data-offset-top="148">
+					<input type="text" placeholder="filter settings here" id="settings-filter" style="margin-bottom:8px">
 					<?php
 					foreach ( $params as $rowname => $rowcontent ) {
 							if ( $rowcontent[0] == 'page-head' ) {
