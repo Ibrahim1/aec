@@ -2073,6 +2073,7 @@ function editProcessor( $id, $option )
 
 					// Create list
 					$lists[$setting_name] = JHTML::_('select.genericlist', $currency_code_list, $setting_name, 'size="' . $size . '"', 'value', 'text', $pp->settings[$name] );
+
 					$settings_array[$name][0] = 'list';
 					break;
 				case 'list_language':
