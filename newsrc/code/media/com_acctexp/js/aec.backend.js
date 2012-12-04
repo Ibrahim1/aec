@@ -1,6 +1,6 @@
 jQuery(document).ready(function(jQuery) {
 	jQuery.expr[':'].Contains = function(a,i,m){
-		return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase())>=0;
+		return jQuery(a).text().toLowerCase().indexOf(m[3].toLowerCase())>=0;
 	};
 
 	jQuery('.aec-navbar').hover(function(){
@@ -168,11 +168,15 @@ jQuery(document).ready(function(jQuery) {
 
 		jQuery(".control-group, section h2, section .accordion, .page-header, section").removeClass("setting-filtered setting-filter-override setting-filter-section setting-filter-section-override setting-filter-header");
 
-		jQuery(".control-group, section h2, section .accordion, .page-header").addClass("setting-filtered");
+		//jQuery(".control-group, section h2, section .accordion, .page-header").addClass("setting-filtered");
 
-		jQuery("section").addClass("setting-filter-section");
+		//jQuery("section").addClass("setting-filter-section");
 
-		jQuery(".control-group *:Contains(\""+inputString+"\"), .control-group *[name*=\""+inputString+"\"]").parent(".control-group").addClass("setting-filter-override").prev("h2").addClass("setting-filter-override").parent("section").addClass("setting-filter-section-override");
+		jQuery('.control-group *:not(":Contains(\""+inputString+"\")"), .control-group *:not("[name*=\""+inputString+"\"]")').each( function() {
+			jQuery(this).parent(".control-group").addClass("setting-filtered");
+			jQuery(this).parent("section").addClass("setting-filter-section")
+			jQuery(this).prev("h2").addClass("setting-filter");
+		});
 
 		jQuery("section.setting-filter-section").prev(".page-header").addClass("setting-filter-override");
 
