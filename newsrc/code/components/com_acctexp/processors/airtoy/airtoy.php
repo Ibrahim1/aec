@@ -42,7 +42,7 @@ class processor_airtoy extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( "list_yesno" );
+		$settings['testmode']		= array( "toggle" );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['phone_number']	= array( "inputC" );
 		$settings['response']		= array( "inputE" );

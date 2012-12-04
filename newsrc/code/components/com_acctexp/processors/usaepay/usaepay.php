@@ -47,7 +47,7 @@ class processor_usaepay extends XMLprocessor
 	{
 		$settings = array();
 
-		$settings['testmode']		= array( "list_yesno" );
+		$settings['testmode']		= array( "toggle" );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['StoreKey']		= array( "inputC" );
 		$settings['StorePin']		= array( "inputC" );

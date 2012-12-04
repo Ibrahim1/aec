@@ -66,13 +66,13 @@ class processor_authorize_aim extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( "list_yesno" );
-		$settings['dumpmode']			= array( "list_yesno" );
+		$settings['testmode']			= array( "toggle" );
+		$settings['dumpmode']			= array( "toggle" );
 		$settings['login'] 				= array( "inputC" );
 		$settings['transaction_key']	= array( "inputC" );
 		$settings['currency']			= array( "list_currency" );
-		$settings['promptAddress']		= array( "list_yesno" );
-		$settings['promptZipOnly']		= array( "list_yesno" );
+		$settings['promptAddress']		= array( "toggle" );
+		$settings['promptZipOnly']		= array( "toggle" );
 		$settings['item_name']			= array( "inputE" );
 		$settings['customparams']		= array( 'inputD' );
 

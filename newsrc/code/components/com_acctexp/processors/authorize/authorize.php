@@ -54,7 +54,7 @@ class processor_authorize extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( "list_yesno" );
+		$settings['testmode']			= array( "toggle" );
 		$settings['login'] 				= array( "inputC" );
 		$settings['transaction_key']	= array( "inputC" );
 		$settings['currency']			= array( "list_currency" );

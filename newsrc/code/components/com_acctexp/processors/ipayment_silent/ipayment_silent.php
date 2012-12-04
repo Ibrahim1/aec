@@ -49,13 +49,13 @@ class processor_ipayment_silent extends XMLprocessor
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( "p" );
-		$settings['testmode']			= array( "list_yesno" );
-		$settings['fake_account']		= array( "list_yesno" );
+		$settings['testmode']			= array( "toggle" );
+		$settings['fake_account']		= array( "toggle" );
 		$settings['user_id'] 			= array( "inputC" );
 		$settings['account_id']			= array( "inputC" );
 		$settings['password']			= array( "inputC" );
 		$settings['currency']			= array( "list_currency" );
-		$settings['promptAddress']		= array( "list_yesno" );
+		$settings['promptAddress']		= array( "toggle" );
 		$settings['item_name']			= array( "inputE" );
 
  		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan');

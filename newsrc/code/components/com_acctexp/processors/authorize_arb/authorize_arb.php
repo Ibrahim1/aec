@@ -67,15 +67,15 @@ class processor_authorize_arb extends XMLprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']				= array( "list_yesno" );
-		$settings['ignore_empty_invoices']	= array( "list_yesno" );
+		$settings['testmode']				= array( "toggle" );
+		$settings['ignore_empty_invoices']	= array( "toggle" );
 		$settings['login'] 					= array( "inputC" );
 		$settings['transaction_key']		= array( "inputC" );
 		$settings['currency']				= array( "list_currency" );
-		$settings['promptAddress']			= array( "list_yesno" );
+		$settings['promptAddress']			= array( "toggle" );
 		$settings['totalOccurrences']		= array( "inputA" );
 		$settings['trialOccurrences']		= array( "inputA" );
-		$settings['useSilentPostResponse']	= array( "list_yesno" );
+		$settings['useSilentPostResponse']	= array( "toggle" );
 		$settings['SilentPost_info']		= array( "fieldset" );
 		$settings['item_name']				= array( "inputE" );
 

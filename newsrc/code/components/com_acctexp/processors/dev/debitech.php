@@ -81,10 +81,10 @@ class processor_debitech extends POSTprocessor
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 		
-		$settings['testmode']		= array( 'list_yesno' );
+		$settings['testmode']		= array( 'toggle' );
 		$settings['pageSet']		= array( 'inputC', 'PageSet *', 'PageSet' );;
 		$settings['accountName']	= array( 'inputC', 'Account Name *', 'Account Name' );;
-		$settings['uses3dsecure'] 	= array( 'list_yesno', '3-D Secure', '3-D Secure is MasterCard\'s and VISA\'s way of securing e-commerce credit card payment' );		
+		$settings['uses3dsecure'] 	= array( 'toggle', '3-D Secure', '3-D Secure is MasterCard\'s and VISA\'s way of securing e-commerce credit card payment' );		
 		$settings['method']			= array( "inputC", 'Payment method (option)', 'Default cc.nw: American Express via TNS/American Express. Reference information at DebiTech Web Solution Manual - page 8');
 
 

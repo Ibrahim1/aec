@@ -66,8 +66,8 @@ class processor_epsnetpay extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array("list_yesno");
-		$settings['acceptvok']		= array("list_yesno");
+		$settings['testmode']		= array("toggle");
+		$settings['acceptvok']		= array("toggle");
 		$settings['customparams']	= array( 'inputD' );
 
 		$vars = $this->settings();
@@ -77,7 +77,7 @@ class processor_epsnetpay extends POSTprocessor
 
 				$bankname = $vars["merchantname_" . $id];
 
-				$settings["merchantactive_" . $id] = array("list_yesno", JText::_('CFG_EPSNETPAY_ACTIVATE_NAME'), JText::_('CFG_EPSNETPAY_ACTIVATE_DESC'));
+				$settings["merchantactive_" . $id] = array("toggle", JText::_('CFG_EPSNETPAY_ACTIVATE_NAME'), JText::_('CFG_EPSNETPAY_ACTIVATE_DESC'));
 				$settings["merchantname_" . $id] = array("inputC", "Name:", $bankname);
 
 				$idfieldname = $bankname . ": " . JText::_('CFG_EPSNETPAY_MERCHANTID_NAME');

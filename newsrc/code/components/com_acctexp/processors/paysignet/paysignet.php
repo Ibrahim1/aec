@@ -42,7 +42,7 @@ class processor_paysignet extends POSTprocessor
 		$settings = array();
 		$settings['aec_experimental']	= array( "p" );
 		$settings['aec_insecure']		= array( "p" );
-		$settings['testmode']		= array( "list_yesno" );
+		$settings['testmode']		= array( "toggle" );
 		$settings['merchant'] 		= array( "inputC" );
 		$settings['customparams']	= array( 'inputD' );
 

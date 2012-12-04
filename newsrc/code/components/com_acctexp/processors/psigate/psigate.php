@@ -44,7 +44,7 @@ class processor_psigate extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['testmode']		= array( "list_yesno", "Test Mode", "Operate in PSIGate TEST mode" );
+		$settings['testmode']		= array( "toggle", "Test Mode", "Operate in PSIGate TEST mode" );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['StoreKey']		= array( "inputC","Store Key","Your Alphanumeric ID assigned by PSIGate" );
 		$settings['secretWord']		= array( "inputC","Secret Word","Used to encrypt and protect transactions" );

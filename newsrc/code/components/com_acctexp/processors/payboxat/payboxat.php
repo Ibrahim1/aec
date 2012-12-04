@@ -46,7 +46,7 @@ class processor_payboxat extends SOAPprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']			= array( "list_yesno" );
+		$settings['testmode']			= array( "toggle" );
 		$settings['username'] 			= array( "inputC" );
 		$settings['password'] 			= array( "inputC" );
 		$settings['merchant_phone']		= array( "inputC" );
