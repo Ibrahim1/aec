@@ -240,12 +240,14 @@ class microIntegrationHandler
 
 		$hacks = array();
 		foreach ( $integrations as $n => $name ) {
-			$file = $this->mi_dir . '/' . $name . '.php';
+			$file = $this->mi_dir . '/' . $name . '/' . $name . '.php';
 
 			if ( file_exists( $file ) ) {
-				include_once $file;
+				include_once( $file );
 
-				$mi = new $name();
+				$class = 'mi_'.$name;
+
+				$mi = new $class();
 
 				if ( method_exists( $mi, 'hacks' ) ) {
 					if ( method_exists( $mi, 'detect_application' ) ) {

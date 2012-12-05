@@ -1048,7 +1048,7 @@ class HTML_AcctExp
 			<tr><td>
 				<div style="width:100%; float:left;">
 					<div class="alert alert-danger">
-						<h2 style="color: #FF0000;"><?php echo JText::_('AEC_HACKS_NOTICE'); ?>:</h2>
+						<h2><?php echo JText::_('AEC_HACKS_NOTICE'); ?>:</h2>
 						<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC'); ?></p>
 						<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC2'); ?></p>
 						<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC3'); ?></p>
