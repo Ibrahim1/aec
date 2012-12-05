@@ -23,7 +23,7 @@ class processor_dwolla_redirect extends POSTprocessor
 		$info['currencies']				= 'USD';
 		$info['cc_list']				= '';
 		$info['notify_trail_thanks']	= 1;
-		$info['recurring_buttons']		= 2;
+		$info['recurring']				= 0;
 
 		return $info;
 	}
@@ -60,38 +60,29 @@ class processor_dwolla_redirect extends POSTprocessor
 	function createGatewayLink( $request )
 	{
 		$var['post_url']	= 'https://www.dwolla.com/payment/pay';
+
+		$var['key']			= $this->settings['application_key'];
+
+		$timestamp = time();
+		$order_id = time();
+
+		$var['signature']	= hash_hmac('sha1', "{".$var['key']."}&{".$timestamp."}&{".$order_id."}", $this->settings['application_secret']);
+
+		$var['callback']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=dwolla_redirectnotification" );
+		$var['redirect']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=thanks" );
+
 		if ( $this->settings['testmode'] ) {
-			$var['ap_test'] = '1';
+			$var['test'] = '1';
 		}
 
-		$var['key']		= $this->settings['application_key'];
-
-		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['ap_purchasetype']	= 'Subscription';
-
-			if ( isset( $request->int_var['amount']['amount1'] ) ) {
-				$var['ap_trialamount'] 		= $request->int_var['amount']['amount1'];
-				$put = $this->convertPeriodUnit( $request->int_var['amount']['unit1'], $request->int_var['amount']['period1'] );
-				$var['ap_trialtimeunit'] 		= $put['unit'];
-				$var['ap_trialperiodlength'] 	= $put['period'];
-			}
-
-			$var['ap_amount'] 	= $request->int_var['amount']['amount3'];
-
-			$puf = $this->convertPeriodUnit( $request->int_var['amount']['unit3'], $request->int_var['amount']['period3'] );
-			$var['ap_timeunit'] 		= $puf['unit'];
-			$var['ap_periodlength'] 	= $puf['period'];
-		} else {
-			$var['ap_purchasetype']	= 'Item';
-
-			$var['ap_amount'] 	= $request->int_var['amount'];
-		}
+		$var['amount'] 		= $request->int_var['amount'];
+		$var['name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+		$var['description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request );
 
 		$var['ap_merchant']		= $this->settings['merchant'];
 		$var['ap_itemname']		= $request->invoice->invoice_number;
 		$var['ap_currency']		= $this->settings['currency'];
-		$var['ap_returnurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=thanks" );
-		$var['ap_description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
+		
 
 		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=cancel" );
 
