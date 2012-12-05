@@ -16,13 +16,12 @@ class processor_dwolla_redirect extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']					= 'dwolla-redirect';
+		$info['name']					= 'dwolla_redirect';
 		$info['longname']				= JText::_('CFG_DWOLLA_REDIRECT_LONGNAME');
 		$info['statement']				= JText::_('CFG_DWOLLA_REDIRECT_STATEMENT');
 		$info['description']			= JText::_('CFG_DWOLLA_REDIRECT_DESCRIPTION');
 		$info['currencies']				= 'USD';
 		$info['cc_list']				= '';
-		$info['notify_trail_thanks']	= 1;
 		$info['recurring']				= 0;
 
 		return $info;
@@ -31,13 +30,14 @@ class processor_dwolla_redirect extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode']		= 0;
-		$settings['merchant']		= 'merchant';
-		$settings['securitycode']	= 'security code';
-		$settings['currency']		= 'EUR';
-		$settings['testmode']		= 0;
-		$settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		$settings['customparams']	= "";
+		$settings['testmode']			= 0;
+		$settings['application_key']	= 'key';
+		$settings['application_secret']	= 'secret code';
+		$settings['destination_id']		= 'dwolla id';
+		$settings['currency']			= 'USD';
+		$settings['item_name']			= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['item_desc']			= sprintf( JText::_('CFG_PROCESSOR_ITEM_DESC_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+		$settings['customparams']		= "";
 
 		return $settings;
 	}
@@ -45,14 +45,16 @@ class processor_dwolla_redirect extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['testmode']		= array( 'toggle' );
-		$settings['merchant']		= array( 'inputC' );
-		$settings['securitycode']	= array( 'inputC' );
-		$settings['currency']		= array( 'list_currency' );
-		$settings['item_name']		= array( 'inputE' );
-		$settings['customparams']	= array( 'inputD' );
+		$settings['testmode']			= array( 'toggle' );
+		$settings['application_key']	= array( 'inputC' );
+		$settings['application_secret']	= array( 'inputC' );
+		$settings['destination_id']		= array( 'inputC' );
+		$settings['currency']			= array( 'list_currency' );
+		$settings['item_name']			= array( 'inputE' );
+		$settings['item_desc']			= array( 'inputE' );
+		$settings['customparams']		= array( 'inputD' );
 
-		$settings					= AECToolbox::rewriteEngineInfo( null, $settings );
+		$settings						= AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}
@@ -64,68 +66,50 @@ class processor_dwolla_redirect extends POSTprocessor
 		$var['key']			= $this->settings['application_key'];
 
 		$timestamp = time();
-		$order_id = time();
+		$orderid = $request->invoice->id;
 
-		$var['signature']	= hash_hmac('sha1', "{".$var['key']."}&{".$timestamp."}&{".$order_id."}", $this->settings['application_secret']);
+		$var['signature']	= hash_hmac('sha1', "{".$var['key']."}&{".$timestamp."}&{".$orderid."}", $this->settings['application_secret']);
+		$var['timestamp']	= $timestamp;
 
 		$var['callback']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=dwolla_redirectnotification" );
 		$var['redirect']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=thanks" );
 
+		$var['orderId']		= $orderid;
+
 		if ( $this->settings['testmode'] ) {
-			$var['test'] = '1';
+			$var['test']	= '1';
 		}
+		
+		$var['destinationId']	= $this->settings['destination_id'];
 
 		$var['amount'] 		= $request->int_var['amount'];
+		$var['shipping']	= '0.00';
+
+		if ( isset( $request->items->tax ) ) {
+			$tax = 0;
+
+			foreach ( $request->items->tax as $itax ) {
+				$tax += $itax['cost'];
+			}
+
+			$var['tax']			= AECToolbox::correctAmount( $tax );
+		} else {
+			$var['tax']			= '0.00';
+		}
+
+		$var['notes']		= $request->invoice->invoice_number;
+
 		$var['name']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['description']	= AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request );
-
-		$var['ap_merchant']		= $this->settings['merchant'];
-		$var['ap_itemname']		= $request->invoice->invoice_number;
-		$var['ap_currency']		= $this->settings['currency'];
-		
-
-		$var['ap_cancelurl']	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=cancel" );
-
-		$var['apc_1']			= $request->metaUser->cmsUser->id;
-		$var['apc_2']			= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['apc_3']			= $request->int_var['usage'];
 
 		return $var;
 	}
 
-	function convertPeriodUnit( $unit, $period )
-	{
-		$return = array();
-		$return['period'] = $period;
-		switch ( $unit ) {
-			case 'D':
-				$return['unit'] = 'Day';
-				break;
-			case 'W':
-				$return['unit'] = 'Week';
-				break;
-			case 'M':
-				$return['unit'] = 'Month';
-				break;
-			case 'Y':
-				$return['unit'] = 'Year';
-				break;
-		}
-
-		return $return;
-	}
-
 	function parseNotification( $post )
 	{
-		$security_code			= $post['ap_securitycode'];
-		$description			= $post['ap_description'];
-		$total					= $post['ap_amount'];
-		$userid					= $post['apc_1'];
-		$invoice_number			= $post['ap_itemname'];
-		$planid					= $post['apc_3'];
-
 		$response = array();
-		$response['invoice'] = $invoice_number;
+		$response['invoice']		= AECfetchfromDB::InvoiceNumberfromId( $post['OrderId'] );
+		$response['amount_paid']	= $post['Amount'];
 
 		return $response;
 	}
@@ -134,19 +118,16 @@ class processor_dwolla_redirect extends POSTprocessor
 	{
 		$response['valid'] = false;
 
-		if ( ( $post['ap_status'] == "Success" && $post['ap_purchasetype'] != "subscription" ) || ( $post['ap_status'] == "Subscription-Payment-Success" ) )  {
-			if ( $post['ap_securitycode'] != $this->settings['securitycode'] ) {
-				$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'];
+		if ( $post['Status'] == "Completed" )  {
+			$signature = hash_hmac("sha1", "{" . $post['CheckoutId'] . "}&{" . $post['Amount'] . "}", $this->settings['application_secret']);
+
+			if ( $post['Signature'] != $signature ) {
+				$response['error'] = 'Security Code Mismatch: ' . $post['Signature'];
 			} else {
 				$response['valid'] = true;
 			}
-		} elseif ( $post['ap_status'] == "Success" && $post['ap_purchasetype'] == "subscription" ) {
-			$response['null']				= 1;
-			$response['explanation']		= 'Duplicate Notification';
-		} elseif ( $post['ap_status'] == "Subscription-Payment-Canceled" ) {
-			$response['cancel'] = 1;
 		} else {
-			$response['error'] = 'ap_status: ' . $post['ap_status'];
+			$response['error'] = 'dwolla status: ' . $post['Status'];
 		}
 
 		return $response;
