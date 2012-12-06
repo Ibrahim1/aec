@@ -162,33 +162,45 @@ jQuery(document).ready(function(jQuery) {
 
 	function settingsfilter() {
 		if ( inputString == "" ) {
-			jQuery(".setting-filtered, .setting-filter-override, .setting-filter-section, .setting-filter-header, .setting-filter-section-override").removeClass("setting-filtered setting-filter-override setting-filter-section setting-filter-header setting-filter-section-override");
+			jQuery(".setting-filter-mute, .setting-filter-hide, .setting-filter-hide-override, .affixnav a").removeClass("setting-filter-mute setting-filter-hide setting-filter-hide-override");
 			return;
 		}
 
-		jQuery(".control-group, section h2, section .accordion, .page-header, section").removeClass("setting-filtered setting-filter-override setting-filter-section setting-filter-section-override setting-filter-header");
+		jQuery(".control-group, section h2, section .accordion, .page-header, section").removeClass("setting-filter-mute setting-filter-hide setting-filter-hide-override");
 
-		//jQuery(".control-group, section h2, section .accordion, .page-header").addClass("setting-filtered");
-
-		//jQuery("section").addClass("setting-filter-section");
-
-		jQuery('.control-group *:not(":Contains(\""+inputString+"\")"), .control-group *:not("[name*=\""+inputString+"\"]")').each( function() {
-			jQuery(this).parent(".control-group").addClass("setting-filtered");
-			jQuery(this).parent("section").addClass("setting-filter-section")
-			jQuery(this).prev("h2").addClass("setting-filter");
+		jQuery('.control-group').filter( function() {
+			var matches = jQuery('label.control-label:Contains("'+inputString+'"), label.control-label[name*="'+inputString+'"]', this).length;
+			return matches < 1;
+		}).each( function() {
+			jQuery(this).addClass("setting-filter-mute");
+			jQuery(this).parent("section").addClass("setting-filter-hide");
+			jQuery(this).prevAll("h2").first().addClass("setting-filter-hide");
 		});
 
-		jQuery("section.setting-filter-section").prev(".page-header").addClass("setting-filter-override");
+		jQuery('.control-group').filter( function() {
+			var matches = jQuery('label.control-label:Contains("'+inputString+'"), label.control-label[name*="'+inputString+'"]', this).length;
+			return matches > 0;
+		}).each( function() {
+			jQuery(this).parent("section").addClass("setting-filter-hide-override")
+			jQuery(this).prevAll("h2").first().addClass("setting-filter-hide-override");
+		});
 
-		jQuery("section:not('.setting-filter-section-override')").prev(".page-header").addClass("setting-filter-section");
+		jQuery("section h2:not(.setting-filter-hide-override)").nextUntil("h2", ".control-group").addClass("setting-filter-hide");
 
-		jQuery("section").filter(function() {
-			return jQuery(this).find('.setting-filter-override').length !== 0;
-		}).prev(".page-header").addClass("setting-filter-override");
+		jQuery('.page-header').filter( function() {
+			return jQuery(this).nextUntil( '.page-header', 'section.setting-filter-hide-override' ).length < 1;
+		}).each( function() {
+			jQuery(".affixnav a[href$=\""+this.id+"\"]").addClass("setting-filter-mute");
+			jQuery(this).addClass("setting-filter-hide");
+		});
 
-		jQuery("section h2").filter( function() {
-			return jQuery(this).nextUntil("h2").filter(".setting-filter-override").length === 0;
-		}).addClass("setting-filter-section").nextUntil("h2").addClass("setting-filter-section");
+		jQuery('.page-header').filter( function() {
+			return jQuery(this).nextUntil( '.page-header', 'section.setting-filter-hide-override' ).length > 0;
+		}).each( function() {
+			jQuery(".affixnav a[href$=\""+this.id+"\"]").removeClass("setting-filter-mute");
+			jQuery(this).addClass("setting-filter-hide-override");
+		});
+
 	}
 
 	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});
