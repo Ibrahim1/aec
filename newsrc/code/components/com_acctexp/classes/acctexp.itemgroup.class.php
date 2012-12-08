@@ -13,16 +13,29 @@
 
 class ItemGroupHandler
 {
-	function getGroups()
+	function getGroups( $filter=null, $select=false )
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT id'
-				. ' FROM #__acctexp_itemgroups'
-				;
+		if ( $select ) {
+			$query = 'SELECT `id` AS value, `name` AS text FROM #__acctexp_itemgroups';
+		} else {
+			$query = 'SELECT id FROM #__acctexp_itemgroups';
+		}
+
+		if ( !empty( $filter ) ) {
+			$query .= ' WHERE `id` NOT IN (' . implode( ',', $filter ) . ')';
+		}
+
 		$db->setQuery( $query );
 
-		return xJ::getDBArray( $db );
+		if ( $select ) {
+			$rows = $db->loadObjectList();
+		} else {
+			$rows = xJ::getDBArray( $db );
+		}
+
+		return $rows;
 	}
 
 	function getTree()

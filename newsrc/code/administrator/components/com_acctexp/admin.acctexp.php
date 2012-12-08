@@ -3605,7 +3605,6 @@ function editItemGroup( $id, $option )
 	$rewriteswitches		= array( 'cms', 'user' );
 	$params['rewriteInfo']	= array( 'fieldset', '', AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
-
 	$colors = array(	'3182bd', '6baed6', '9ecae1', 'c6dbef', 'e6550d', 'fd8d3c', 'fdae6b', 'fdd0a2',
 						'31a354', '74c476', 'a1d99b', 'c7e9c0', '756bb1', '9e9ac8', 'bcbddc', 'dadaeb',
 						'636363', '969696', 'bdbdbd', 'd9d9d9',
@@ -3999,6 +3998,9 @@ function editMicroIntegration ( $id, $option )
 	if ( $mi->id ) {
 		// Call MI (override active check) and Settings
 		if ( $mi->callIntegration( true ) ) {
+			$attached['plans'] = microIntegrationHandler::getPlansbyMI( $mi->id, false, true );
+			$attached['groups'] = microIntegrationHandler::getGroupsbyMI( $mi->id, false, true );
+
 			$set = array();
 			foreach ( $mi_gsettings as $n => $v ) {
 				if ( !isset( $mi->$n ) ) {
@@ -4035,6 +4037,24 @@ function editMicroIntegration ( $id, $option )
 				unset( $mi_settings['lists'] );
 			}
 
+			$available_plans = SubscriptionPlanHandler::getPlanList( false, false, true, null, true );
+
+			$selected_plans = array();
+			foreach ( $attached['plans'] as $p ) {
+				$selected_plans[] = (object) array( 'value' => $p->id, 'text' => $p->name );
+			}
+
+			$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple"', 'value', 'text', $selected_plans );
+
+			$available_groups = ItemGroupHandler::getGroups( null, true );
+
+			$selected_groups = array();
+			foreach ( $attached['groups'] as $g ) {
+				$selected_groups[] = (object) array( 'value' => $g->id, 'text' => $g->name );
+			}
+
+			$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple"', 'value', 'text', $selected_groups );
+
 			$gsettings = new aecSettings( 'MI', 'E' );
 			$gsettings->fullSettingsArray( $mi_gsettings, array_merge( $set, $mi->restrictions ), $lists );
 
@@ -4054,9 +4074,6 @@ function editMicroIntegration ( $id, $option )
 			$aecHTML->hasSettings = true;
 
 			$aecHTML->hasRestrictions = !empty( $mi->settings['has_restrictions'] );
-			
-			$attached['plans'] = microIntegrationHandler::getPlansbyMI( $mi->id, false, true );
-			$attached['groups'] = microIntegrationHandler::getGroupsbyMI( $mi->id, false, true );
 		} else {
 			$short	= 'microIntegration loading failure';
 			$event	= 'When trying to load microIntegration: ' . $mi->id . ', callIntegration failed';
@@ -4076,6 +4093,12 @@ function editMicroIntegration ( $id, $option )
 		$aecHTML->hasSettings = false;
 
 		$aecHTML->hasRestrictions = false;
+
+		$available_plans = SubscriptionPlanHandler::getPlanList( false, false, true, null, true );
+		$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple"', 'value', 'text', null );
+
+		$available_groups = ItemGroupHandler::getGroups( null, true );
+		$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple"', 'value', 'text', null );
 	}
 
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML, $attached );
@@ -4100,9 +4123,66 @@ function saveMicroIntegration( $option, $apply=0 )
 	}
 
 	if ( $load ) {
+		$save = array( 'attach_to_plans' => array(), 'attached_to_plans' => array(), 'attach_to_groups' => array(), 'attached_to_groups' => array() );
+		
+		foreach ( $save as $pid => $v ) {
+			if ( isset( $_POST[$pid] ) ) {
+				$save[$pid] = $_POST[$pid];
+
+				unset( $_POST[$pid] );
+			} else {
+				$save[$pid] = array();
+			}
+		}
+
+		$group_attach = array();
+		if ( isset( $_POST['attach_to_groups'] ) ) {
+			$group_attach = $_POST['attach_to_groups'];
+
+			unset( $_POST['attach_to_groups'] );
+		}
+
 		$mi->savePostParams( $_POST );
 
 		$mi->storeload();
+
+		$all_groups = array_unique( array_merge( $save['attach_to_groups'], $save['attached_to_groups'] ) );
+
+		if ( !empty( $all_groups ) ) {
+			foreach ( $all_groups as $groupid ) {
+				$group = new ItemGroup();
+				$group->load( $groupid );
+
+				if ( in_array( $groupid, $save['attach_to_groups'] ) && !in_array( $groupid, $save['attached_to_groups'] ) ) {
+					$group->params['micro_integrations'][] = $mi->id;
+
+					$group->storeload();
+				} elseif ( !in_array( $groupid, $save['attach_to_groups'] ) && in_array( $groupid, $save['attached_to_groups'] ) ) {
+					unset( $group->params['micro_integrations'][array_search( $mi->id, $group->params['micro_integrations'] )] );
+
+					$group->storeload();
+				}
+			}
+		}
+
+		$all_plans = array_unique( array_merge( $save['attach_to_plans'], $save['attached_to_plans'] ) );
+
+		if ( !empty( $all_plans ) ) {
+			foreach ( $all_plans as $planid ) {
+				$plan = new SubscriptionPlan();
+				$plan->load( $planid );
+
+				if ( in_array( $planid, $save['attach_to_plans'] ) && !in_array( $planid, $save['attached_to_plans'] ) ) {
+					$plan->micro_integrations[] = $mi->id;
+
+					$plan->storeload();
+				} elseif ( !in_array( $planid, $save['attach_to_plans'] ) && in_array( $planid, $save['attached_to_plans'] ) ) {
+					unset( $plan->micro_integrations[array_search( $mi->id, $plan->micro_integrations )] );
+
+					$plan->storeload();
+				}
+			}
+		}
 	} else {
 		$short	= 'microIntegration storing failure';
 		if ( !empty( $_POST['class_name'] ) ) {

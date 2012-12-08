@@ -1641,6 +1641,23 @@ jQuery(document).ready(function(jQuery) {
 	function editMicroIntegration( $option, $row, $lists, $aecHTML, $attached )
 	{
 		HTML_myCommon::startCommon();
+
+$js = '
+jQuery(document).ready(function(jQuery) {
+	jQuery("#attach_to_groups")
+	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Group') . '\',
+      				selectedList: 1
+			});
+
+	jQuery("#attach_to_plans")
+	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Plan') . '\',
+      				selectedList: 1
+			});
+});
+';
+		$document =& JFactory::getDocument();
+		$document->addScriptDeclaration( $js );
+
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
 		HTML_myCommon::getButtons( 'edit', 'MicroIntegration' );
 
@@ -1667,9 +1684,7 @@ jQuery(document).ready(function(jQuery) {
 			}
 		}
 
-		if ( $aecHTML->hasSettings ) {
-			$tabs->newTab( 'attachedto', JText::_('Attached to') );
-		}
+		$tabs->newTab( 'attachedto', JText::_('Attached to') );
 
 		$tabs->endTabs();
 		$tabs->startPanes();
@@ -1761,39 +1776,46 @@ jQuery(document).ready(function(jQuery) {
 					</td>
 				</tr>
 			</table>
+		<?php } ?>
 		<?php $tabs->nextPane( 'attachedto' ); ?>
-			<table width="100%" class="aecadminform">
-				<tr>
-					<td>
-						<div class="aec_userinfobox_sub">
-						<?php
-						if ( !empty( $attached['groups'] ) ) {
-							echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
+		<table width="100%" class="aecadminform">
+			<tr>
+				<td>
+					<div class="aec_userinfobox_sub">
+					<?php
+					echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
 
-							echo '<ul>';
-							foreach ( $attached['groups'] as $group ) {
-								echo '<li>#' . $group->id . ' - <a href="index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $group->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $group->getProperty('name') . '</a></li>';
-							}
-							echo '</ul>';
+					if ( !empty( $attached['groups'] ) ) {
+						echo '<ul>';
+						foreach ( $attached['groups'] as $group ) {
+							echo '<li>#' . $group->id . ' - <a href="index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $group->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $group->getProperty('name') . '</a>';
+							echo '<input type="hidden" name="attached_to_groups[]" value="' . $group->id . '" /></li>';
 						}
+						echo '</ul>';
+					}
 
-						if ( !empty( $attached['plans'] ) ) {
-							echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
+					echo $lists['attach_to_groups'];
 
-							echo '<ul>';
-							foreach ( $attached['plans'] as $plan ) {
-								echo '<li>#' . $plan->id . ' - <a href="index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $plan->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $plan->getProperty('name') . '</a></li>';
-							}
-							echo '</ul>';
+					echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
+
+					if ( !empty( $attached['plans'] ) ) {
+						echo '<ul>';
+						foreach ( $attached['plans'] as $plan ) {
+							echo '<li>#' . $plan->id . ' - <a href="index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $plan->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $plan->getProperty('name') . '</a>';
+							echo '<input type="hidden" name="attached_to_plans[]" value="' . $plan->id . '" /></li>';
 						}
-						?>
-						</div>
-					</td>
-				</tr>
-			</table>
-		<?php }
+						echo '</ul>';
+					}
 
-		$tabs->endPanes(); ?>
+					echo $lists['attach_to_plans'];
+					?>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+
+		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />

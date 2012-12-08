@@ -266,14 +266,21 @@ class SubscriptionPlanList
 
 class SubscriptionPlanHandler
 {
-	function getPlanList( $limitstart=false, $limit=false, $use_order=false )
+	function getPlanList( $limitstart=false, $limit=false, $use_order=false, $filter=null, $select=false )
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT id'
-			 	. ' FROM #__acctexp_plans'
-			 	. ' ORDER BY ' . ( $use_order ? '`ordering`' : '`id`' )
-			 	;
+		if ( $select ) {
+			$query = 'SELECT `id` AS value, `name` AS text FROM #__acctexp_plans';
+		} else {
+			$query = 'SELECT id FROM #__acctexp_plans';
+		}
+
+		if ( !empty( $filter ) ) {
+			$query .= ' WHERE `id` NOT IN (' . implode( ',', $filter ) . ')';
+		}
+
+		$query .= ' ORDER BY ' . ( $use_order ? '`ordering`' : '`id`' );
 
 		if ( !empty( $limitstart ) && !empty( $limit ) ) {
 			$query .= 'LIMIT ' . $limitstart . ',' . $limit;
@@ -281,7 +288,11 @@ class SubscriptionPlanHandler
 
 		$db->setQuery( $query );
 
-		$rows = xJ::getDBArray( $db );
+		if ( $select ) {
+			$rows = $db->loadObjectList();
+		} else {
+			$rows = xJ::getDBArray( $db );
+		}
 
 		if ( $db->getErrorNum() ) {
 			echo $db->stderr();
@@ -303,6 +314,7 @@ class SubscriptionPlanHandler
 				. ' FROM #__acctexp_plans'
 				. ' WHERE `active` = \'1\''
 				;
+
 		$db->setQuery( $query );
 		$dbaplans = $db->loadObjectList();
 
