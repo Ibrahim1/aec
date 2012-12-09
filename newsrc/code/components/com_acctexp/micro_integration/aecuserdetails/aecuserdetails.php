@@ -138,10 +138,19 @@ class mi_aecuserdetails
 
 	function admin_form( $request )
 	{
-		return $this->getMIform( $request );
+		return $this->getMIform( $request, true );
 	}
 
-	function getMIform( $request )
+	function admin_form_save( $request )
+	{
+		if ( !empty( $this->settings['usename'] ) ) {
+			$request->params['usename'];
+		}
+
+		return true;
+	}
+
+	function getMIform( $request, $edit=false )
 	{
 		global $aecConfig;
 
@@ -172,7 +181,7 @@ class mi_aecuserdetails
 
 		$settings['validation']['rules'] = array();
 
-		if ( !empty( $this->settings['emulate_reg'] ) && empty( $request->metaUser->userid ) && !$hasregistration ) {
+		if ( !empty( $this->settings['emulate_reg'] ) && ( ( empty( $request->metaUser->userid ) && !$hasregistration ) || $edit ) ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				// Joomla 1.6+ Registration
 				$lang =& JFactory::getLanguage();
@@ -208,7 +217,19 @@ class mi_aecuserdetails
 				$settings['validation']['rules']['password2'] = array( 'minlength' => 2, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_password' );
 			}
 
-			if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) ) {
+			if ( $edit ) {
+				foreach ( $settings as $s => $v ) {
+					if ( $s == 'validation' || (strpos($s,'password') !== false ) ) {
+						continue;
+					}
+
+					$v[3] = $request->metaUser->cmsUser->{str_replace("2", "", $s)};
+
+					$settings[$s] = $v;
+				}
+			}
+
+			if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) && !$edit ) {
 				require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
 				$settings['recaptcha'] = array( 'passthrough', 'ReCAPTCHA', 'recaptcha', recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) );

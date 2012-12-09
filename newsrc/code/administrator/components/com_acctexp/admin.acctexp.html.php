@@ -1204,7 +1204,7 @@ class HTML_AcctExp
 					<?php
 					foreach ( $params as $rowname => $rowcontent ) {
 							if ( $rowcontent[0] == 'page-head' ) {
-								echo '<li><a href="#' . str_replace(" ", "_", strtolower($rowcontent[1]) ) . '">' . aecHTML::Icon( 'chevron-right', true ) . $rowcontent[1] . '</a></li>';
+								echo '<li><a href="#' . str_replace(" ", "_", strtolower($rowcontent[1]) ) . '">' . aecHTML::Icon( 'chevron-right' ) . $rowcontent[1] . '</a></li>';
 							}
 					}
 					?>

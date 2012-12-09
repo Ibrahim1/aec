@@ -1226,7 +1226,7 @@ class microIntegration extends serialParamDBTable
 				}
 			}
 		}
-
+//print_r($settings);print_r($this);exit;
 		return $settings;
 	}
 
