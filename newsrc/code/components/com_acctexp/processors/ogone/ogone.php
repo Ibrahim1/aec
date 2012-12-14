@@ -79,6 +79,9 @@ class processor_ogone extends POSTprocessor
 	function parseNotification( $post )	
 	{	
 		$response = array();
+
+		$response['raw'] = $_GET;
+
 		$response['invoice']			= $_GET['orderID'];
 		$response['amount_paid']		= (float) $_GET['amount']/100;
 		$response['amount_currency']	= $_GET['currency'];
@@ -89,14 +92,14 @@ class processor_ogone extends POSTprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
-		
+
 		$vars = array( 'ORDERID', 'CURRENCY', 'AMOUNT', 'PM', 'ACCEPTANCE', 'STATUS', 'CARDNO', 'ALIAS', 'PAYID', 'NCERROR', 'BRAND' );
-		
+
 		$source = array();
 		foreach ( $vars as $v ) {
 			$source[$v] = $_GET[$v];
 		}
-		
+
 		if ( $this->getHash($source) != $_GET['SHASIGN'] ) {
 			$response['error'] = "Hash Mismatch";
 		} else {
