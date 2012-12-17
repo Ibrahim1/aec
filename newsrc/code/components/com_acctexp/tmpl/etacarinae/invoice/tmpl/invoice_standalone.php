@@ -15,7 +15,8 @@
 <head>
 	<title><?php echo $data['page_title'] ?></title>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/invoice.css" type="text/css" media="screen, print" />
+	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/template.etacarinae.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/invoice.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/invoice_print.css" type="text/css" media="print" />
 	<?php if ( !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) { ?>
 	<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option ?>/js/jquery/jquery-1.7.2.min.js"></script>
@@ -29,6 +30,7 @@
 	<?php } ?>
 </head>
 <body>
+	<div id="aec">
 	<?php if ( !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) { ?>
 		<div id="printbutton">
 			<div id="printbutton_inner">
@@ -46,4 +48,5 @@
 		</div>
 	<?php } ?>
 	<?php @include( $tmpl->tmpl( 'invoice' ) ) ?>
+	</div>
 </body>

@@ -26,8 +26,10 @@ if ( $standalone ) {
 
 	exit;
 } else {
+	$tmpl->addDefaultCSS();
+
 	$document=& JFactory::getDocument();
-	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="screen, print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_embed.css" />' );
+	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_embed.css" />' );
 	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_print.css" />' );
 
 	@include( $tmpl->tmpl( 'invoice' ) );
