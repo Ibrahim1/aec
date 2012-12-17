@@ -244,6 +244,10 @@ class mi_aecuserdetails
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
 				$p = $i . '_';
 
+				if ( !isset( $this->settings[$p.'short'] ) ) {
+					continue;
+				}
+
 				if ( !empty( $request->params[$p.'name'] ) ) {
 					$content = $request->params[$p.'name'];
 				} elseif ( !empty( $_POST['mi_'.$request->parent->id.'_'.$this->settings[$p.'short']] ) ) {
