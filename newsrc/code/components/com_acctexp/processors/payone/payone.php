@@ -191,9 +191,9 @@ class processor_payone extends XMLprocessor
 			case 'cancelation':
 				$response['chargeback'] = 1;
 				break;
-				break;
 			default:
 				$response['pending_reason'] = ucfirst( $post['txaction'] );
+				break;
 		}
 
 		return $response;

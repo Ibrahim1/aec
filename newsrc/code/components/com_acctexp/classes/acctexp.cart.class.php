@@ -11,6 +11,29 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+class CartFactory
+{
+	function CartFactory()
+	{
+		
+	}
+
+	function addItem( $type )
+	{
+		
+	}
+
+	function addCoupon( $coupon, $id )
+	{
+		
+	}
+
+	function removeItem( $id )
+	{
+		
+	}
+}
+
 class aecCartHelper
 {
 	function getCartidbyUserid( $userid )
@@ -286,8 +309,6 @@ class aecCart extends serialParamDBTable
 	function action( $action, $details=null )
 	{
 		if ( $action == "clearCart" ) {
-			
-
 			// Delete Invoices referencing this Cart as well
 			$query = 'DELETE FROM #__acctexp_invoices WHERE `usage` = \'c.' . $this->id . '\'';
 			$this->_db->setQuery( $query );
@@ -657,6 +678,115 @@ class aecCart extends serialParamDBTable
 							);
 
 		return true;
+	}
+}
+
+class LineItemList
+{
+	var $list = array();
+
+	function addItem( $type, $args )
+	{
+		$itemclass = 'LineItem'.ucfirst($type);
+
+		if ( !class_exists( $itemclass ) ) {
+			$classpath = dirname(__FILE__) . '../itemtypes/acctexp.lineitem.' . strtolower($type) . '.php';
+
+			if ( file_exists( $classpath ) ) {
+				include( $classpath );
+			} else {
+				return false;
+			}
+		}
+
+		$item = new $itemclass( $args );
+	}
+
+	function add( $item )
+	{
+		$this->list[] = $item;
+	}
+
+	function remove( $id )
+	{
+		if ( isset( $this->list[$id] ) ) {
+			unset( $this->list[$id] );
+
+			return true;
+		}
+
+		return null;
+	}
+
+	function checkCoherence()
+	{
+		// Test whether this cart can be paid in a single invoice or has to be split up
+	}
+}
+
+class LineItem
+{
+	var $obj = null;
+	var $qty = null;
+	var $amt = null;
+
+	function LineItem( $args )
+	{
+		if ( isset( $args['id'] ) ) {
+			$this->loadObject( $args['id'] );
+		}
+
+		if ( isset( $args['qty'] ) ) {
+			$this->qty = $args['qty'];
+		} elseif( empty( $this->qty ) ) {
+			$this->qty = 1;
+		}
+
+		$this->getAmount();
+	}
+
+	function loadObject( $id )
+	{
+		return null;
+	}
+
+	function updateQuantity( $qty )
+	{
+		$this->qty = $qty;		
+	}
+
+	function getAmount()
+	{
+		$this->amt = 0.00;
+	}
+
+	function getItemName()
+	{
+		return "StdItem";
+	}
+}
+
+class LineItemCustom extends LineItem
+{
+	
+}
+
+class LineItemSubscriptionPlan extends LineItem
+{
+	function loadObject( $id )
+	{
+		$this->obj = new SubscriptionPlan();
+		$this->obj->load( $id );
+	}
+
+	function getItemName()
+	{
+		return $this->obj->getProperty( 'name' );
+	}
+
+	function getItemTerms()
+	{
+		
 	}
 }
 

@@ -1935,8 +1935,6 @@ class InvoiceFactory
 		if ( isset( $this->invoice->usage ) ) {
 			return $this->invoice->getObjUsage();
 		} elseif ( !empty( $this->usage ) ) {
-			$db = &JFactory::getDBO();
-
 			$u = explode( '.', $this->usage );
 
 			switch ( strtolower( $u[0] ) ) {
@@ -2317,6 +2315,11 @@ class Invoice extends serialParamDBTable
 		parent::__construct( '#__acctexp_invoices', 'id' );
 	}
 
+	function declareParamFields()
+	{
+		return array( 'coupons', 'transactions', 'params', 'conditions' );
+	}
+
 	function load( $id )
 	{
 		parent::load( $id );
@@ -2339,28 +2342,6 @@ class Invoice extends serialParamDBTable
 		if ( empty( $this->id ) ) {
 			$this->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid, $plan ) );
 		}
-	}
-
-	function declareParamFields()
-	{
-		return array( 'coupons', 'transactions', 'params', 'conditions' );
-	}
-
-	function check()
-	{
-		$unset = array( 'made_free' );
-
-		foreach ( $unset as $varname ) {
-			if ( isset( $this->$varname ) ) {
-				unset( $this->$varname );
-			}
-		}
-
-		$this->amount = AECToolbox::correctAmount( $this->amount );
-
-		parent::check();
-
-		return true;
 	}
 
 	function loadInvoiceNumber( $invoiceNum )
@@ -2727,11 +2708,11 @@ class Invoice extends serialParamDBTable
 		$InvoiceFactory->pp->exchangeSettingsByPlan( $plan, $plan->params );
 
 		if ( $altvalidation ) {
-			//$response = $InvoiceFactory->pp->instantvalidateNotification( $response, $post, $this );
+			$response = $InvoiceFactory->pp->instantvalidateNotification( $response, $post, $this );
 		} else {
-			//$response = $InvoiceFactory->pp->validateNotification( $response, $post, $this );
+			$response = $InvoiceFactory->pp->validateNotification( $response, $post, $this );
 		}
-$response['valid'] = true;
+
 		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
 			if ( ( strtotime( $this->transaction_date ) + ( $aecConfig->cfg['invoice_cushion']*60 ) ) > ( (int) gmdate('U') ) ) {
 				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {
@@ -3161,8 +3142,11 @@ $response['valid'] = true;
 
 		if ( !empty( $this->conditions ) ) {
 			if ( strpos( $this->conditions, 'mi_attendevents' ) ) {
+				$start_position = strpos( $this->conditions, '<registration_id>' ) + strlen( '<registration_id>' );
+				$end_position = strpos( $this->conditions, '</registration_id>' );
+
 				$micro_integration['name'] = 'mi_attendevents';
-				$micro_integration['parameters'] = array( 'registration_id' => $this->substring_between( $this->conditions, '<registration_id>', '</registration_id>' ) );
+				$micro_integration['parameters'] = array( 'registration_id' => substr( $this->conditions, $start_position, $end_position - $start_position ) );
 
 				$micro_integrations = array();
 				$micro_integrations[] = $micro_integration;
@@ -3271,17 +3255,6 @@ $response['valid'] = true;
 		}
 
 		return true;
-	}
-
-	function substring_between( $haystack, $start, $end )
-	{
-		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
-			return false;
-		} else {
-			$start_position = strpos( $haystack, $start ) + strlen( $start );
-			$end_position = strpos( $haystack, $end );
-			return substr( $haystack, $start_position, $end_position - $start_position );
-		}
 	}
 
 	function setTransactionDate()
@@ -3529,8 +3502,6 @@ $response['valid'] = true;
 					. ' WHERE LOWER( `name` ) LIKE \'%' . $user_ident . '%\''
 					;
 
-		
-
 		foreach ( $queries as $base_query ) {
 			$query = 'SELECT `id`, `username`, `email` ' . $base_query;
 			$this->_db->setQuery( $query );
@@ -3648,20 +3619,6 @@ $response['valid'] = true;
 		$this->addParams( $array );
 
 		$this->storeload();
-	}
-
-	function savePostParams( $array )
-	{
-		$delete = array( 'task', 'option', 'invoice' );
-
-		foreach ( $delete as $key ) {
-			if ( isset( $array[$key] ) ) {
-				unset( $array[$key] );
-			}
-		}
-
-		$this->addParams( $array );
-		return true;
 	}
 
 	function getPrintout( $InvoiceFactory, $forcecleared=false, $forcecounter=null )
@@ -3905,6 +3862,37 @@ $response['valid'] = true;
 		}
 
 		//$this->saveParams( $params );
+	}
+
+	function savePostParams( $array )
+	{
+		$delete = array( 'task', 'option', 'invoice' );
+
+		foreach ( $delete as $key ) {
+			if ( isset( $array[$key] ) ) {
+				unset( $array[$key] );
+			}
+		}
+
+		$this->addParams( $array );
+		return true;
+	}
+
+	function check()
+	{
+		$unset = array( 'made_free' );
+
+		foreach ( $unset as $varname ) {
+			if ( isset( $this->$varname ) ) {
+				unset( $this->$varname );
+			}
+		}
+
+		$this->amount = AECToolbox::correctAmount( $this->amount );
+
+		parent::check();
+
+		return true;
 	}
 
 	function delete()
