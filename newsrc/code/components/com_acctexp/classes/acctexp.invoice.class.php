@@ -3114,8 +3114,6 @@ class Invoice extends serialParamDBTable
 				}
 
 				$metaUser->meta->storeload();
-
-				unset( $this->params['userMIParams'] );
 			}
 		}
 
