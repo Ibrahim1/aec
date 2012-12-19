@@ -99,8 +99,13 @@ class plgSystemAECerrorhandler extends JPlugin
 		}
 
 		if (
-				( $option == 'com_user' ) && ( $view == 'login' )
+				// If we are in a com_user(s) call
+				( ( $option == 'com_user' ) || ( $option == 'com_users' ) )
+				// And this is a login
+				&& ( ( $view == 'login' ) || ( strpos( $task, 'login' ) != false ) )
+				// And we have a blank return 
 				&& !empty( $return ) && ( $return != 'index.php' )
+				// With no username or password
 				&& ( empty( $_REQUEST['username'] ) && empty( $_REQUEST['password'] ) )
 		) {
 			$uri = new JURI( $return );
