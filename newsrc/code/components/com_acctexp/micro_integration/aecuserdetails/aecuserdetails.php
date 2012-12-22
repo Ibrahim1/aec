@@ -34,9 +34,11 @@ class mi_aecuserdetails
 
 		$types = array( "p", "inputA", "inputB", "inputC", "inputD", "list", "list_language", "checkbox" );
 
+		$typetypes = count( $types );
+
  		$typelist = array();
  		foreach ( $types as $type ) {
- 			$typelist[] = JHTML::_('select.option', $type, $type );
+ 			$typelist[] = JHTML::_('select.option', $type, JText::_('AEC_MI_CUSTOMFIELD_TYPE_'.strtoupper($type)) );
  		}
 
 		$types = array( 0 => "No Skipping", 1 => "Skip if already existing", 2 => "Skip if existing, or default not empty" );
@@ -44,6 +46,15 @@ class mi_aecuserdetails
  		$xtypelist = array();
  		foreach ( $types as $type ) {
  			$xtypelist[] = JHTML::_('select.option', $type, $type );
+ 		}
+
+		$types = array(	"required", "email", "url", "date", "dateISO", "number", "digits", "creditcard",
+						"letterswithbasicpunc", "letterswithreducedpunc", "alphanumeric", "alphanumericwhitespace", "alphanumericwithbasicpunc", "alphanumericwithreducedpunc", "lettersonly", "nowhitespace",
+						"ziprange", "zipcodeUS", "integer" );
+
+ 		$validationlist = array();
+ 		foreach ( $types as $type ) {
+ 			$validationlist[] = JHTML::_('select.option', $type, strtoupper($type).': '.JText::_('AEC_MI_CUSTOMFIELD_VALIDATION_'.strtoupper($type)) );
  		}
 
 		if ( !empty( $this->settings['settings'] ) ) {
@@ -56,7 +67,7 @@ class mi_aecuserdetails
 					$this->settings[$p.'type'] = null;
 				}
 
-				$settings['lists'][$p.'type']	= JHTML::_('select.genericlist', $typelist, $p.'type', 'size="' . max( 10, min( 20, count( $types ) ) ) . '"', 'value', 'text', $this->settings[$p.'type'] );
+				$settings['lists'][$p.'type']	= JHTML::_('select.genericlist', $typelist, $p.'type', 'size="' . $typetypes . '"', 'value', 'text', $this->settings[$p.'type'] );
 
 				$settings[$p.'short']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_SHORT_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_SHORT_DESC') );
 
@@ -75,6 +86,14 @@ class mi_aecuserdetails
 				}
 
 				$settings[$p.'default']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC') );
+
+				if ( empty( $this->settings[$p.'validationtype'] ) ) {
+					$this->settings[$p.'validationtype'] = array();
+				}
+
+				$settings['lists'][$p.'validationtype']	= JHTML::_('select.genericlist', $validationlist, $p.'validationtype[]', 'size="1" multiple="multiple"', 'value', 'text', $this->settings[$p.'validationtype'] );
+
+				$settings[$p.'validationtype']		= array( 'list', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_VALIDATIONTYPE_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_VALIDATIONTYPE_DESC') );
 			}
 		}
 
@@ -309,6 +328,14 @@ class mi_aecuserdetails
 						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'name'], 'mi_'.$this->id.'_'.$this->settings[$p.'short'] );
 					} else {
 						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'name'], $content );
+					}
+
+					if ( !empty( $this->settings[$p.'validationtype'] ) ) {
+						$settings['validation']['rules'][$this->settings[$p.'short']] = array();
+
+						foreach ( $this->settings[$p.'validationtype'] as $vtype ) {
+							$settings['validation']['rules'][$this->settings[$p.'short']][$vtype] = true;
+						}
 					}
 				}
 			}

@@ -1653,6 +1653,11 @@ jQuery(document).ready(function(jQuery) {
 	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Plan') . '\',
       				selectedList: 1
 			});
+
+	jQuery("[id~="validationtype"]")
+	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Plan') . '\',
+      				selectedList: 1
+			});
 });
 ';
 		$document =& JFactory::getDocument();
