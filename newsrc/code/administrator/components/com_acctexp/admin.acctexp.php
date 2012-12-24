@@ -2277,11 +2277,6 @@ function saveProcessor( $option, $return=0 )
 	}
 }
 
-function listSubscriptionPlans2( $option )
-{
-	HTML_AcctExp::listSubscriptionPlans2( $option );
-}
-
 function getSubscriptionPlans()
 {
 	$db = &JFactory::getDBO();

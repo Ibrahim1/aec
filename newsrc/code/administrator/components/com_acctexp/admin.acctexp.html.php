@@ -64,13 +64,6 @@ class HTML_myCommon
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/select2-bootstrap.js' );
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.min.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowReordering.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/jquery.dataTables.rowGrouping.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/dataTables.scroller.min.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/paging.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/datatables/TableTools.min.js' );
-
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.min.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 		$document->addScript( JURI::root(true).'/media/com_acctexp/js/aec.backend.js' );
@@ -1654,8 +1647,8 @@ jQuery(document).ready(function(jQuery) {
       				selectedList: 1
 			});
 
-	jQuery("[id~="validationtype"]")
-	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Plan') . '\',
+	jQuery("[id~=\"validationtype\"]")
+	.multiselect({	noneSelectedText: \'' . JText::_('No Validation') . '\',
       				selectedList: 1
 			});
 });
@@ -1828,80 +1821,6 @@ jQuery(document).ready(function(jQuery) {
 		<?php
 		echo $aecHTML->loadJS();
 
- 		HTML_myCommon::endCommon();
-	}
-
-	function listSubscriptionPlans2( $option )
-	{
-		HTML_myCommon::startCommon();
-
-$js = '
-jQuery.extend( jQuery.fn.dataTableExt.oStdClasses, {
-	"sWrapper": "dataTables_wrapper form-inline",
-	"sSortAsc": "header headerSortDown",
-	"sSortDesc": "header headerSortUp",
-	"sSortable": "header"
-} );
-jQuery(document).ready(function() {
-    jQuery("table.table").dataTable( {
-        "sDom": "<\'row\'<\'span6\'l><\'span6\'f>r>t<\'row\'<\'span6\'i><\'span6\'p>>",
-        "sPaginationType": "bootstrap",
-        "aaSorting": [[ 6, "desc" ]],
-        "bProcessing": true,
-        "sScrollY": "500px",
-        "sAjaxSource": "index.php?option=com_acctexp&task=getSubscriptionPlans",
-        "bDeferRender": true,
-        "sDom": "frtiS",
-        "aoColumns": [
-            { "mData": "ordering", "bVisible": false, "sType": "numeric", "bSortable": true, "asSorting": [ "desc", "asc", "asc" ] },
-            { "mData": "group", "bVisible": false },
-            { "mData": "id" },
-            { "mData": "name", "bSearchable": true, "bSortable": true, "asSorting": [ "desc", "asc", "asc" ] },
-            { "mData": "desc" },
-            { "mData": "active" },
-            { "mData": "visible" },
-            { "mData": "expiredcount" },
-            { "mData": "activecount" },
-            { "mData": "totalcount" }
-        ],
-        "oTableTools": {
-            "sRowSelect": "multi",
-            "aButtons": []
-        }
-    } )
-    .rowGrouping({ "iGroupingColumnIndex": 1 })
-    .rowReordering( { "sURL": "index.php?option=com_acctexp&task=sortSubscriptionPlans" });
-} );
-';
-		$document =& JFactory::getDocument();
-		$document->addScriptDeclaration( $js );
-
-		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
-		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );
-		?>
-
-		<div class="dataTables-wrapper span12">
-		<table class="table table-striped">
-			<thead><tr>
-				<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-				<th width="1%" class="leftalign"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
-				<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-				<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-				<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-				<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-				<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-				<th width="10%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?></th>
-				<th width="10%" align="center"><?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
-				<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
-			</tr></thead>
-			<tbody>
-			</tbody>
-			<tfoot>
-			</tfoot>
-		</table>
-		</div>
-
-		<?php
  		HTML_myCommon::endCommon();
 	}
 
