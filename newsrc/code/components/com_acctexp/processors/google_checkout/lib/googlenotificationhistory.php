@@ -58,7 +58,7 @@
     * @param string @et string of end time in format YYYY-MM-DD[T]HH:MM:SS[Timezone] ie
     *        2010-05-02T05:00:00Z
     */
-    function SendNotificationHistoryRequest($sn = null, $npt = null, $orders = array(), $nt = array(), $st = null, $et = null){
+    function SendNotificationHistoryRequest($sn = null, $npt = null, $orders = array(), $nt = array(), $st = null, $et = null, $cp = null){
      $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
      $postargs .= "<notification-history-request xmlns=\"".$this->schema_url."\">";
      if(isset($sn)){
@@ -83,12 +83,13 @@
        }
        if(isset($st) && isset($et)){
          $postargs .= "<start-time>".$st."</start-time>";
-         $postargs .= "<end-time".$et."</end-time>";
+         $postargs .= "<end-time>".$et."</end-time>";
        }
      }
      $postargs .= "</notification-history-request>";
 
      $Grequest = new GoogleRequest($this->merchant_id, $this->merchant_key, $this->server_type);
+     $GRequest->SetCertificatePath($cp);
      return $Grequest->SendReq($Grequest->GetReportUrl(), $Grequest->GetAuthenticationHeaders(), $postargs);
     }
   }

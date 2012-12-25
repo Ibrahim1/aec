@@ -46,11 +46,12 @@
 	 * Inputs are: merchant id, merchant key, environment (default 'sandbox')
 	 * and a continue-token (from a ContinueTokenRequest)
 	 */
-	function GooglePoll ($id, $key, $env, $contToken) {
+	function GooglePoll ($id, $key, $env, $contToken, $cp = null) {
 		$this->merchant_id = $id;
 		$this->merchant_key = $key;
 		$this->environment = $env;
 		$this->continue_token = $contToken;
+		$this->certificate_path = $cp;
 		switch ($env) {
 			case "production":
 				$this->server_url = $this->prod_base_server_url .$id;
@@ -65,7 +66,7 @@
 	 * will stop after one request.
 	 */
 	function GetAllNotifications ( $get_all) {
-		switch ($get_more) {
+		switch ($get_all) {
 			case false:
 				$this->get_all_notifications = false;
 				break;
@@ -84,6 +85,7 @@
 		//create GRequest object + post xml (googlecart.php line: 962)
 		require_once('library/googlerequest.php');
 		$GRequest = new GoogleRequest($this->merchant_id, $this->merchant_key);
+		$GRequest->SetCertificatePath($this->certificate_path);
 
 		while($this->has_more_notifications == "true") {
 			$this->poll_request_xml = $this->GetPollRequestXML();
@@ -115,7 +117,7 @@
 	 * and more notifications value
 	 */
 	function ExtractNotifications () {
-		require_once('xml-processing/gc_XmlParser.php');
+		require_once('xml-processing/gc_xmlparser.php');
 		$GXmlParser = new gc_XmlParser($this->poll_result[1]);
 			$data = $GXmlParser->GetData();
 			//Get the actual notifications
@@ -160,11 +162,14 @@
 	var $sandbox_base_server_url = "https://sandbox.google.com/checkout/api/checkout/v2/reports/Merchant/";
 	var $server_url;
 	var $xml_data;
+	var $certificate_path;
 	
-	function ContinueTokenRequest ($id, $key, $env) {
+	function ContinueTokenRequest ($id, $key, $env, $cp = null) {
 		$this->merchant_id = $id;
 		$this->merchant_key = $key;
 		$this->environment = $env;
+		$this->certificate_path = $cp;
+
 		switch ($env) {
 			case "production":
 				$this->server_url = $this->prod_base_server_url .$id;
@@ -188,14 +193,15 @@
 		//create GRequest object + post xml (googlecart.php line: 962)
 		require_once('library/googlerequest.php');
 		$GRequest = new GoogleRequest($this->merchant_id, $this->merchant_key);
-		/*---------------------------------------------------------------------------------------------------*/$GRequest->SetCertificatePath("/etc/ssl/certs/ca-certificates.crt");
+		/*---------------------------------------------------------------------------------------------------*/
+		$GRequest->SetCertificatePath($this->certificate_path);
 
 		$this->token_response_xml = $GRequest->SendReq($this->server_url,
 			$GRequest->GetAuthenticationHeaders(), $this->request_token_xml);
 
 		//Check response code
 		if($this->token_response_xml[0] == "200") {
-			require_once('xml-processing/gc_XmlParser.php');
+			require_once('xml-processing/gc_xmlparser.php');
 			$GXmlParser = new gc_XmlParser($this->token_response_xml[1]);
 			$data = $GXmlParser->GetData();
 
