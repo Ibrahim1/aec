@@ -8,7 +8,7 @@ jQuery(document).ready(function(jQuery) {
 			jQuery('.aec-navbar').addClass("navbar-hover-helper");
 			jQuery('.aec-navbar.aec-buttons-fixed').addClass("aec-buttons-fixed-extended");
 
-			jQuery('.navbar-fixed-top').addClass("navbar-fixed-top-override").prepend("<div class=\"head-minify btn btn-inverse\"><i class=\"icon-chevron-left icon-white bsicon-chevron-left bsicon-white\"></i></div>");
+			jQuery('div.navbar-fixed-top').addClass("navbar-fixed-top-override").prepend("<div class=\"head-minify btn btn-inverse\"><i class=\"icon-chevron-left icon-white bsicon-chevron-left bsicon-white\"></i></div>");
 
 			jQuery(".aec-navbar").on( "click", ".head-minify", function(){
 				jQuery('.head-minify').remove();
@@ -132,8 +132,10 @@ jQuery(document).ready(function(jQuery) {
 		if (scrollTop >= navTop && !tbFixed) {
 			tbFixed = 1;
 			jQuery('.aec-navbar').addClass('navbar-fixed-top');
+			jQuery('nav.navbar').addClass('navbar-fixed-top-minified');
 		} else if (scrollTop <= navTop && tbFixed) {
 			tbFixed = 0;
+			jQuery('nav.navbar').removeClass('navbar-fixed-top-minified');
 			jQuery('.aec-navbar').removeClass('navbar-fixed-top').removeClass('navbar-fixed-top-override');
 			jQuery('div.head-minify').remove();
 			jQuery('.aec-buttons-fixed').removeClass("aec-buttons-fixed-extended");

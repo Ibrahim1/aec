@@ -94,6 +94,11 @@ class mi_aecuserdetails
 				$settings['lists'][$p.'validationtype']	= JHTML::_('select.genericlist', $validationlist, $p.'validationtype[]', 'size="1" multiple="multiple"', 'value', 'text', $this->settings[$p.'validationtype'] );
 
 				$settings[$p.'validationtype']		= array( 'list', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_VALIDATIONTYPE_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_VALIDATIONTYPE_DESC') );
+
+
+				if ( $i < $this->settings['settings'] ) {
+					$settings[] = array( 'hr' );
+				}
 			}
 		}
 

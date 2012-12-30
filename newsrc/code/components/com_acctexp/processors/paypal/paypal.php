@@ -188,7 +188,6 @@ class processor_paypal extends POSTprocessor
 				break;
 				default:
 				// Either a fraud attempt, or PayPal has changed its API
-				// TODO: Raise Error
 				$response['amount_paid'] = null;
 			}
 		}
