@@ -45,28 +45,39 @@ class HTML_myCommon
 
 	function addBackendJS( $ui=false )
 	{
-		$document =& JFactory::getDocument();
+		//$document =& JFactory::getDocument();
 
 		$v = new JVersion();
 
 		if ( $v->isCompatible('1.6') ) {
-			$document->addScript( JURI::root(true).'/media/system/js/core.js' );
+			HTML_myCommon::addScript( JURI::root(true).'/media/system/js/core.js' );
 		}
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+		if ( !$v->isCompatible('3.0') ) {
+			HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+		}
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.23.custom.min.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/select2-bootstrap.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.23.custom.min.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/select2-bootstrap.js' );
 
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.min.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
-		$document->addScript( JURI::root(true).'/media/com_acctexp/js/aec.backend.js' );
+		if ( !$v->isCompatible('3.0') ) {
+			HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.min.js' );
+		} else {
+			HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
+		}
+
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/aec.backend.js' );
+	}
+
+	function addScript( $rel )
+	{
+		echo '<script type="text/javascript" src="' . $rel . '"></script>';
 	}
 
 	function startCommon( $id='aec-wrap' )

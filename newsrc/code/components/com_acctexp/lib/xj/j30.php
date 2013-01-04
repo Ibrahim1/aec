@@ -4,18 +4,18 @@ class xJ
 	function getDBArray( $db )
 	{
 		$list = $db->loadObjectList();
-
+	
 		$return = array();
 		if ( count( $list ) ) {
 			$obj = array_keys( get_object_vars( $list[0] ) );
-
+	
 			$k = $obj[0];
-
+	
 			foreach ( $list as $li ) {
 				$return[] = $li->$k;
 			}
 		}
-
+	
 		return $return;
 	}
 

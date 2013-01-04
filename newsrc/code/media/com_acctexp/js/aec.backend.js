@@ -6,14 +6,14 @@ jQuery(document).ready(function(jQuery) {
 	jQuery('.aec-navbar').hover(function(){
 		if ( jQuery(".navbar-hover-helper").length == 0 ) {
 			jQuery('.aec-navbar').addClass("navbar-hover-helper");
-			jQuery('.aec-navbar.aec-buttons-fixed').addClass("aec-buttons-fixed-extended");
+			jQuery('.aec-buttons-fixed').addClass("aec-buttons-fixed-extended");
 
 			jQuery('div.navbar-fixed-top').addClass("navbar-fixed-top-override").prepend("<div class=\"head-minify btn btn-inverse\"><i class=\"icon-chevron-left icon-white bsicon-chevron-left bsicon-white\"></i></div>");
 
 			jQuery(".aec-navbar").on( "click", ".head-minify", function(){
 				jQuery('.head-minify').remove();
 				jQuery('.navbar-fixed-top').removeClass('navbar-fixed-top-override');
-				jQuery('.aec-buttons-fixed').removeClass("aec-buttons-fixed-extended");
+				jQuery('.aec-buttons-fixed').removeClass('aec-buttons-fixed-extended');
 			});
 		}
 
@@ -22,14 +22,14 @@ jQuery(document).ready(function(jQuery) {
 		}
 	);
 
-	jQuery(".select2").select2();
-
 	if ( jQuery("#system-message li").length != 0 ) {
 		jQuery("div.container").before('<span class="nav-msg label label-warning">'+jQuery("#system-message li").html()+'</span>')
 			.parent().children(".nav-msg").fadeIn(500,function(){jQuery(".nav-msg").addClass("nav-msg-transition");});
 	}
 
-	jQuery('#quicksearch').popover({ trigger:'manual', placement:'bottom' });
+	jQuery('#quicksearch').focus(function() {
+		jQuery('#quicksearch').popover({ trigger:'manual', placement:'bottom' });
+	})
 
 	var typingTimer;
 

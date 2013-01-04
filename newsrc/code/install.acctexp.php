@@ -73,8 +73,7 @@ function com_install()
 		}
 	}
 
-	// Make sure we are compatible with php4
-	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
+	include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
 	require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 	require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
@@ -289,11 +288,13 @@ function com_install()
 		$src = $componentInstaller->getPath('source');
 	}
 
+	$db = &JFactory::getDBO();
+
 	$pckgs = 0;
 	foreach ( $install_list as $name => $details ) {
 		if ( !is_dir( $src.'/'.$name ) ) {
 			continue;
-		}		
+		}
 
 		if ( !strpos( $name, 'plg' ) === 0 ) {
 			$query = "SELECT id, position, published FROM #__modules WHERE module = '".$name."'";
@@ -321,6 +322,10 @@ function com_install()
 				$db->query();
 			} elseif ( strpos( $name, 'plg' ) !== 0 ) {
 				if ( empty( $details['menuid'] ) ) {
+					if ( empty( $details['published'] ) ) {
+						$details['published'] = "0";
+					}
+
 					$query = "UPDATE #__modules SET position='".$details['position']."', published=".$details['published']." WHERE module='".$name."'";
 					$db->setQuery( $query );
 					$db->query();

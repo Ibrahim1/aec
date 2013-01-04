@@ -31,7 +31,7 @@ class displayPipelineHandler
 				. ' WHERE `only_user` = \'0\''
 				;
 		$db->setQuery( $query );
-		$events = array_merge( $events, xJ::getDBArray( $db ) );
+		$events = array_merge( $events, $db->loadResultArray() );
 
 		$return = '';
 		if ( empty( $events ) ) {
