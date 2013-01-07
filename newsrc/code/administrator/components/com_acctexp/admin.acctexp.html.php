@@ -61,7 +61,7 @@ class HTML_myCommon
 		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
 		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
 		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.js' );
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.min.js' );
+		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.js' );
 		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js' );
 		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
 		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/select2-bootstrap.js' );
