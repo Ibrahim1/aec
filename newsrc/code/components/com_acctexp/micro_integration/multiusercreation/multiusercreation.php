@@ -239,6 +239,29 @@ class mi_multiusercreation
 		return true;
 	}
 
+	function admin_form( $request )
+	{
+		$db = &JFactory::getDBO();
+
+		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
+		
+		$list = "<ul>";
+		if ( isset( $userflags['child_list'] ) ) {
+			if ( !empty( $userflags['child_list'] ) ) {
+				foreach ( $userflags['child_list'] as $subscr_id ) {
+					$metaUser = new metaUser( null, $subscr_id );
+
+					$list .= '<li><a href="index.php?option=com_acctexp&amp;task=editMembership&subscriptionid=' . $subscr_id . '">#' . $subscr_id . ' - ' . $metaUser->cmsUser->name . ' (' . $metaUser->cmsUser->username . ')</a></li>';
+				}
+			} else {
+				$list .= "<li>No Child Subscriptions</li>";
+			}
+		}
+		$list .= "</ul>";
+
+		$settings['history']	= array( 'fieldset', 'Child Subscriptions', $list );
+	}
+	
 	function createUser( $fields )
 	{
 		return AECToolbox::saveUserRegistration( 'com_acctexp', $fields, true, true, true, true );

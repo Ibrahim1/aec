@@ -1010,25 +1010,25 @@ class reWriteEngine
 			case 'date_distance_days': return $command.'-'.$vars; break;
 			case 'crop':
 				if ( isset( $vars[2] ) ) {
-					return $command.'-'.$vars[0].'['.(int) $vars[1].'-'.(int) $vars[2].']'; break;
+					return $command.'-'.$vars[0].'['.((int) $vars[1]).'-'.((int) $vars[2]).']'; break;
 				} else {
-					return $command.'-'.$vars[0].'['.(int) $vars[1].']'; break;
+					return $command.'-'.$vars[0].'['.((int) $vars[1]).']'; break;
 				}
 				break;
 			case 'pad':
 				if ( isset( $vars[3] ) ) {
-					return $command.'-'.$vars[0].'['.(int) $vars[1].'-'.(int) $vars[2].'-'.(int) $vars[3].']'; break;
+					return $command.'-'.$vars[0].'['.((int) $vars[1]).'-'.((int) $vars[2]).'-'.((int) $vars[3]).']'; break;
 				} elseif ( isset( $vars[2] ) ) {
-					return $command.'-'.$vars[0].'['.(int) $vars[1].'-'.(int) $vars[2].']'; break;
+					return $command.'-'.$vars[0].'['.((int) $vars[1]).'-'.((int) $vars[2]).']'; break;
 				} else {
-					return $command.'-'.$vars[0].'['.(int) $vars[1].']'; break;
+					return $command.'-'.$vars[0].'['.((int) $vars[1]).']'; break;
 				}
 				break;
 			case 'chunk':
 				if ( isset( $vars[2] ) ) {
-					return $command.'-'.$vars[0].'['.(int) $vars[1].'-'.(int) $vars[2].']'; break;
+					return $command.'-'.$vars[0].'['.((int) $vars[1]).'-'.((int) $vars[2]).']'; break;
 				} else {
-					return $command.'-'.$vars[0].'['.(int) $vars[1].']'; break;
+					return $command.'-'.$vars[0].'['.((int) $vars[1]).']'; break;
 				}
 				break;
 			case 'compare':
@@ -1054,9 +1054,9 @@ class reWriteEngine
 				return $command.'-'.$vars[0];
 			case 'php_method':
 				if ( isset( $vars[2] ) ) {
-					return $command.'-'.get_class($vars[0]).'::'. $vars[1].'[' . implode(',',$vars[2]) . ']';
+					return $command.'-'.get_class($vars[0]).'::'.$vars[1].'[' . implode(',',$vars[2]) . ']';
 				} else {
-					return $command.'-'.get_class($vars[0]).'::'. $vars[1];
+					return $command.'-'.get_class($vars[0]).'::'.$vars[1];
 				}
 				break;
 			default: return $command . ' is no command'; break;
