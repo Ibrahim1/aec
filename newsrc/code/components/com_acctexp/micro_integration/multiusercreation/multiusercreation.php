@@ -239,10 +239,8 @@ class mi_multiusercreation
 		return true;
 	}
 
-	function admin_form( $request )
+	function admin_info( $request )
 	{
-		$db = &JFactory::getDBO();
-
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
 		
 		$list = "<ul>";
@@ -256,12 +254,37 @@ class mi_multiusercreation
 			} else {
 				$list .= "<li>No Child Subscriptions</li>";
 			}
+		} else {
+			$list .= "<li>No Child Subscriptions</li>";
 		}
 		$list .= "</ul>";
 
 		$settings['history']	= array( 'fieldset', 'Child Subscriptions', $list );
 	}
-	
+
+	function profile_info( $request )
+	{
+		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
+		
+		$list = "<ul>";
+		if ( isset( $userflags['child_list'] ) ) {
+			if ( !empty( $userflags['child_list'] ) ) {
+				foreach ( $userflags['child_list'] as $subscr_id ) {
+					$metaUser = new metaUser( null, $subscr_id );
+
+					$list .= '<li>#' . $subscr_id . ' - ' . $metaUser->cmsUser->name . ' (' . $metaUser->cmsUser->username . ')</li>';
+				}
+			} else {
+				$list .= "<li>No Child Subscriptions</li>";
+			}
+		} else {
+			$list .= "<li>No Child Subscriptions</li>";
+		}
+		$list .= "</ul>";
+
+		$settings['history']	= array( 'fieldset', 'Child Subscriptions', $list );
+	}
+
 	function createUser( $fields )
 	{
 		return AECToolbox::saveUserRegistration( 'com_acctexp', $fields, true, true, true, true );
