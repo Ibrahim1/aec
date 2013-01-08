@@ -2,8 +2,8 @@
 /**
  * @version $Id: tool_dbsearchreplace.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Toolbox - Readout
- * @copyright 2011-2012 Copyright (C) David Deutsch
+ * @subpackage Toolbox - DB Search & Replace
+ * @copyright 2012 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -28,137 +28,90 @@ class tool_dbsearchreplace
 
 		$settings = array();
 
-		if ( !empty( $_POST['type'] ) && !empty( $_POST['id'] ) && empty( $_POST['edit'] ) ) {
-			$db = &JFactory::getDBO();
+		$settings['type']	= array( 'list', 'Table', 'The tables you want to run the search&replace on' );
 
-			$settings['edit']	= array( 'hidden', 1 );
-			$settings['type']	= array( 'hidden', $_POST['type'] );
+		$types = array(	'config' => 'Main Configuration',
+						'processor' => 'Payment Processors',
+						'coupons' => 'Coupons',
+						'displaypipeline' => 'Display Pipeline',
+						'eventlog' => 'Event Log',
+						'invoice' => 'Invoice',
+						'itemgroups' => 'Payment Plan Groups',
+						'history' => 'History',
+						'metauser' => 'MetaUser Information Table',
+						'mi' => 'Micro Integrations',
+						'plans' => 'Payment Plans',
+						'subscr' => 'Subscriptions'
+				);
 
-			$fixed = array();
-
-			switch ( $_POST['type'] ) {
-				case 'metauser':
-					$fixed = array( 'userid' );
-
-					$object = new metaUserDB();
-
-					$_POST['id'] = $object->getIDbyUserid( $_POST['id'] );
-					break;
-				case 'processor':
-					if ( !is_numeric( $_POST['id'] ) )  {
-						$query = 'SELECT `id`'
-								. ' FROM #__acctexp_config_processors'
-								. ' WHERE `name` = \'' . $db->getEscaped( $_POST['id'] ) . '\''
-								;
-						$db->setQuery( $query );
-
-						$_POST['id'] = $db->loadResult();
-					}
-
-					$object = new processor();
-					break;
-				case 'invoice':
-					if ( !is_numeric( $_POST['id'] ) )  {
-						$_POST['id'] = AECfetchfromDB::InvoiceIDfromNumber( $_POST['id'] );
-					}
-
-					$object = new Invoice();
-					break;
-			}
-
-			$object->load( $_POST['id'] );
-
-			$vars = get_object_vars( $object );
-
-			$encoded = $object->declareParamFields();
-
-			foreach ( $vars as $k => $v ) {
-				if ( is_null( $k ) ) {
-					$k = "";
-				}
-
-				if ( $k == 'id' ) {
-					$settings['id']	= array( 'hidden', $v );
-				} elseif ( in_array( $k, $fixed ) ) {
-					$settings[$k]	= array( 'p', $k, $k, $v );
-				} elseif ( in_array( $k, $encoded ) ) {
-					$v = jsoonHandler::encode( $v );
-
-					if ( $v === "null" ) {
-						$v = "";
-					}
-
-					$settings[$k]	= array( 'inputD', $k, $k, $v );
-				} elseif ( strpos( $k, '_' ) !== 0 ) {
-					$settings[$k]	= array( 'inputD', $k, $k, $v );
-				}
-			}
-		} else {
-			$settings['type']	= array( 'list', 'Item Type', 'The type of Item you want to edit' );
-			$settings['id']		= array( 'inputC', 'Item ID', 'Identification for your Item' );
-
-			$types = array( 'metauser' => 'MetaUser Information', 'processor' => 'Payment Processor', 'invoice' => 'Invoice' );
-
-			$typelist = array();
-			foreach ( $types as $type => $typename ) {
-				$typelist[] = JHTML::_('select.option', $type, $typename );
-			}
-
-			$settings['lists']['type'] = JHTML::_('select.genericlist', $typelist, 'type', 'size="3"', 'value', 'text', array());
+		$typelist = array();
+		foreach ( $types as $type => $typename ) {
+			$typelist[] = JHTML::_('select.option', $type, $typename );
 		}
+
+		$settings['lists']['type'] = JHTML::_('select.genericlist', $typelist, 'type[]', 'size="1"', 'value', 'text', array());
 
 		return $settings;
 	}
 
 	function Action()
 	{
-		if ( empty( $_POST['edit'] ) ) {
-			return null;
+		if ( empty( $_POST['type'] ) || empty( $_POST['search'] ) ) ) {
+			return "<h3>Incomplete Query.</h3>";
 		}
 
 		$db = &JFactory::getDBO();
 
-		switch ( $_POST['type'] ) {
-			case 'metauser':
-				$object = new metaUserDB();
-				break;
-			case 'processor':
-				$object = new processor();
-				break;
-			case 'invoice':
-				$object = new Invoice();
-				break;
-		}
+		$types = array(	'config' => array( 'config', 'aecConfig' ),
+				'processor' => array( 'config_processors', 'PaymentProcessor' ),
+				'coupons' => array( 'coupons', 'Coupon' ),
+				'displaypipeline' => array( 'displaypipeline', 'displayPipeline' ),
+				'eventlog' => array( 'eventlog', 'eventLog' ),
+				'invoice' => array( 'invoices', 'Invoice' ),
+				'itemgroups' => array( 'itemgroups', 'ItemGroup' ),
+				'history' => array( 'log_history', 'logHistory' ),
+				'metauser' => array( 'metauser', 'metaUserDB' ),
+				'mi' => array( 'microintegrations', 'microIntegration' ),
+				'plans' => array( 'plans', 'SubscriptionPlan' ),
+				'subscr' => array( 'subscr', 'Subscription' )
+		);
 
-		$object->load( $_POST['id'] );
+		$changes = 0;
+		foreach ( $_POST['type'] as $type ) {
+			$query = 'SELECT `id` FROM `#__acctexp_' . $types[$type][0];
 
-		if ( $object->id != $_POST['id'] ) {
-			return "<h3>Error - could not find item.</h3>";
-		}
+			$result = $db->query( $query );
 
-		$vars = get_object_vars( $object );
+			while ( $row = $db->loadAssoc($result) ) {
+				$obj = new {$types[$type][1]}();
+				$obj->load( $row[0] );
 
-		$encoded = $object->declareParamFields();
+				if ( !empty( $_POST['armed'] ) && !empty( $_POST['replace'] ) {
+					$mod = AECToolbox::searchreplaceObjectProperties( $obj, $_POST['search'], $_POST['replace'] );
+					if ( $mod != $obj ) {
+						$mod->check();
+						$mod->store();
 
-		foreach ( $vars as $k => $v ) {
-			if ( in_array( $k, $encoded ) ) {
-				if ( get_magic_quotes_gpc() ) {
-					$object->$k	= jsoonHandler::decode( stripslashes( $_POST[$k] ) );
+						$changes++;
+					}
 				} else {
-					$object->$k	= jsoonHandler::decode( $_POST[$k] );
+					if ( AECToolbox::searchObjectProperties( $obj, $_POST['search'] ) ) {
+						$changes++;
+					}
 				}
-			} elseif ( strpos( $k, '_' ) !== 0 ) {
-				$object->$k	= $_POST[$k];
-			}
 		}
 
-		$object->check();
+		$return = '';
+		$return .= "<h3>Query Result:</h3>";
+		$return .= "<p>Searching for <strong>" . $_POST['search'] . "</strong></p>";
+		$return .= "<p>Replacing it with <strong>" . $_POST['replace'] . "</strong></p>";
 
-		if ( $object->store() ) {
-			return "<h3>Success! Item updated.</h3>";
-		} else {
-			return "<h3>Error - could not store item.</h3>";
+		$return .= "<p>Found <strong>" . $changes . "</strong> database entries.</p>";
+		if ( $_POST['armed'] ) {
+			$return .= "<p>Modified <strong>" . $changes . "</strong> database entries.</p>";
 		}
+
+		return $return;
 	}
 
 }
