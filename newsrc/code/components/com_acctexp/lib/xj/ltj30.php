@@ -3,7 +3,7 @@ class xJ
 {
 	function getDBArray( $db )
 	{
-		return xJ::getDBArray( $db );
+		return $db->loadResultArray();
 	}
 
 	function sendMail( $sender, $sender_name, $recipient, $subject, $message, $html=null, $cc=null, $bcc=null, $attach=null )

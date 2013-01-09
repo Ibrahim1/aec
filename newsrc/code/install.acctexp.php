@@ -75,7 +75,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->logInstall();
 			$this->logErrors( $errors, $eucaInstall, $eucaInstalldb );
 
-			$this->splash( $pckgs, $errors );
+			$this->splash( $pkgs, $errors );
 		}
 
 		function reunpack()
