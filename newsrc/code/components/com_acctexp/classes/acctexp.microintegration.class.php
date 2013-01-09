@@ -699,11 +699,13 @@ class microIntegration extends serialParamDBTable
 		return $this->callIntegration( true );
 	}
 
-	function callIntegration( $override = 0 )
+	function callIntegration( $override=false )
 	{
 		$handle = str_replace( 'mi_', '', $this->class_name );
 
-		$filename = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $handle . '/' . $handle . '.php';
+		$basepath = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $handle;
+
+		$filename = $basepath . '/' . $handle . '.php';
 
 		$file_exists = file_exists( $filename );
 
@@ -713,11 +715,15 @@ class microIntegration extends serialParamDBTable
 		} elseif ( $file_exists ) {
 			include_once $filename;
 
-			if ( empty( $this->id ) ) {
+			if ( empty( $this->id ) && !$override ) {
 				$this->copyAssets();
+			} elseif ( $override ) {
+				xJLanguageHandler::loadList( array( 'com_acctexp.mi.' . $handle => $basepath ) );
 			}
 
-			xJLanguageHandler::loadList( array(	'com_acctexp.mi.' . $handle => JPATH_SITE ) );
+			if ( !$override ) {
+				xJLanguageHandler::loadList( array(	'com_acctexp.mi.' . $handle => JPATH_SITE ) );
+			}
 
 			$class = $this->class_name;
 
@@ -752,7 +758,7 @@ class microIntegration extends serialParamDBTable
 
 		$languages = xJLanguageHandler::getSystemLanguages();
 
-		$langpath = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $handle . '/lang';
+		$langpath = JPATH_SITE . '/components/com_acctexp/micro_integration/' . $handle . '/language';
 
 		foreach ( $languages as $l ) {
 			$lpath = $langpath . '/' . $l;

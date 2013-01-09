@@ -148,9 +148,7 @@ class PaymentProcessorHandler
 			// Load Payment Processor
 			$pp = new PaymentProcessor();
 			if ( $pp->loadName( $ppname ) ) {
-				$pp->copyAssets();
-
-				xJLanguageHandler::loadList( array(	'com_acctexp.processors.' . $ppname => JPATH_SITE ) );
+				xJLanguageHandler::loadList( array(	'com_acctexp.processors.' . $ppname => JPATH_SITE . '/components/com_acctexp/processors/' . $ppname ) );
 
 				$pp->getInfo();
 
@@ -355,7 +353,7 @@ class PaymentProcessor
 
 		$languages = xJLanguageHandler::getSystemLanguages();
 
-		$langpath = $this->path . '/lang';
+		$langpath = $this->path . '/language';
 
 		foreach ( $languages as $l ) {
 			$lpath = $langpath . '/' . $l;

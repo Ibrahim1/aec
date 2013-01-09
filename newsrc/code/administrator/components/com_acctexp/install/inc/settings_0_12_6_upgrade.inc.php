@@ -12,7 +12,6 @@
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
 $serialupdate	= false;
-$newinstall 	= false;
 $jsonconversion = false;
 
 // Check whether the config is on 0.12.6 status
@@ -51,7 +50,5 @@ if ( ( ( strpos( $res, '{' ) === 0 ) || ( strpos( $res, "\n" ) !== false ) ) && 
 	;
 	$db->setQuery( $query );
 	$db->query();
-} elseif ( empty( $res ) ) {
-	$newinstall = true;
 }
 ?>

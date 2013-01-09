@@ -3885,7 +3885,7 @@ function listMicroIntegrations( $option )
 	HTML_AcctExp::listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering );
 }
 
-function editMicroIntegration ( $id, $option )
+function editMicroIntegration( $id, $option )
 {
 	$db = &JFactory::getDBO();
 
