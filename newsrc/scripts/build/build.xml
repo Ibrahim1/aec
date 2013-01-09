@@ -8,10 +8,6 @@
 		<property name="file.dist_version" value="${file.version}" />
 
 		<phing phingfile="build_packages.xml" inheritRefs="true">
-			<property file="properties/allpackages_compression_targz.properties" override="true" />
-			<property file="properties/allpackages_packing.properties" override="true" />
-		</phing>
-		<phing phingfile="build_packages.xml" inheritRefs="true">
 			<property file="properties/allpackages_compression_zip.properties" override="true" />
 			<property file="properties/allpackages_packing.properties" override="true" />
 		</phing>
