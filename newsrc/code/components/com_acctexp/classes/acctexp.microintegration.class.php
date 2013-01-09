@@ -236,26 +236,20 @@ class microIntegrationHandler
 
 	function getHacks()
 	{
-		$integrations = $this->getIntegrationList();
+		$integrations = $this->getMIList();
 
 		$hacks = array();
-		foreach ( $integrations as $n => $name ) {
-			$file = $this->mi_dir . '/' . $name . '/' . $name . '.php';
+		foreach ( $integrations as $n => $mix ) {
+			$mi = new microIntegration();
+			$mi->load( $mix->id );
+			$mi->callIntegration();
 
-			if ( file_exists( $file ) ) {
-				include_once( $file );
-
-				$class = 'mi_'.$name;
-
-				$mi = new $class();
-
-				if ( method_exists( $mi, 'hacks' ) ) {
-					if ( method_exists( $mi, 'detect_application' ) ) {
-						if ( $mi->detect_application() ) {
-							$mihacks = $mi->hacks();
-							if ( is_array( $mihacks ) ) {
-								$hacks = array_merge( $hacks, $mihacks );
-							}
+			if ( method_exists( $mi->mi_class, 'hacks' ) ) {
+				if ( method_exists( $mi->mi_class, 'detect_application' ) ) {
+					if ( $mi->mi_class->detect_application() ) {
+						$mihacks = $mi->mi_class->hacks();
+						if ( is_array( $mihacks ) ) {
+							$hacks = array_merge( $hacks, $mihacks );
 						}
 					}
 				}
