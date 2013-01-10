@@ -34,10 +34,14 @@ class template_etacarinae extends aecTemplate
 
 		$params = array();
 
+		$v = new JVersion();
+
 		$params[] = array( 'userinfobox', 49.8 );
 		$params = array_merge( $params, $this->stdSettings() );
+		$params['jquery']							= array( 'toggle', 1 );
+		$params['bootstrap']						= array( 'toggle', !$v->isCompatible('3.0') );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
-		$params['displayccinfo']				= array( 'toggle', 0 );
+		$params['displayccinfo']					= array( 'toggle', 0 );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_CUSTOMIZATION_SUB_BUTTONS_SUB') );
 		$params['renew_button_never']				= array( 'toggle', '' );
@@ -45,7 +49,7 @@ class template_etacarinae extends aecTemplate
 		$params['continue_button']					= array( 'toggle', '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', 'Shopping Cart' );
-		$params['customlink_continueshopping']	= array( 'inputC', '' );
+		$params['customlink_continueshopping']		= array( 'inputC', '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', 'Invoice Printout' );
 		$params['invoice_address_allow_edit']		= array( 'toggle', 1 );
@@ -54,18 +58,18 @@ class template_etacarinae extends aecTemplate
 
 		$params[] = array( 'userinfobox', 49.8 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
-		$params['confirmation_changeusername']	= array( 'toggle', '' );
-		$params['confirmation_changeusage']		= array( 'toggle', '' );
+		$params['confirmation_changeusername']		= array( 'toggle', '' );
+		$params['confirmation_changeusage']			= array( 'toggle', '' );
 		$params['confirmation_display_descriptions']	= array( 'toggle', '' );
-		$params['tos']							= array( 'inputC', '' );
-		$params['tos_iframe']					= array( 'toggle', '' );
+		$params['tos']								= array( 'inputC', '' );
+		$params['tos_iframe']						= array( 'toggle', '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
-		$params['enable_coupons']				= array( 'toggle', 0 );
+		$params['enable_coupons']					= array( 'toggle', 0 );
 		$params['checkout_display_descriptions']	= array( 'toggle', '' );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_SUBSCRIPTIONDETAILS') );
-		$params['subscriptiondetails_menu']		= array( 'toggle', 1 );
+		$params['subscriptiondetails_menu']			= array( 'toggle', 1 );
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
@@ -77,6 +81,28 @@ class template_etacarinae extends aecTemplate
 		return array( 'params' => $params, 'tab_data' => $tab_data );
 	}
 
+	function beforesave()
+	{
+		require JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php';
+
+		$less = new lessc();
+		$less->setImportDir( array(JPATH_SITE . '/media/com_acctexp/less/') );
+		//$less->setFormatter("compressed");
+		$less->setPreserveComments(true);
+
+		if ( !isset( $this->settings['bootstrap'] ) ) {
+			$v = new JVersion();
+			
+			$this->settings['bootstrap'] = !$v->isCompatible('3.0');
+		}
+		
+
+		if ( $this->settings['bootstrap'] ) {
+			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
+		} else {
+			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css');			
+		}
+	}
 	function defaultHeader()
 	{
 		if ( !empty( $this->validation ) ) {
@@ -92,7 +118,15 @@ class template_etacarinae extends aecTemplate
 
 	function loadJS()
 	{
-		$this->loadJQuery();
+		if ( !isset( $this->settings['jquery'] ) ) {
+			$v = new JVersion();
+			
+			$this->settings['jquery'] = !$v->isCompatible('3.0');
+		}
+
+		if ( $this->settings['jquery'] ) {
+			$this->loadJQuery();
+		}
 
 		$js = "jQuery(document).ready(function(){\n\n" . implode( "\n", $this->jQueryCode ) . "\n\n});";
 

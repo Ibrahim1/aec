@@ -320,10 +320,8 @@ switch( strtolower( $task ) ) {
 		$v = new JVersion();
 
 		if ( $v->isCompatible('3.0') ) {
-			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin-j3.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 		} else {
-			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 		}
 
@@ -1959,6 +1957,7 @@ function saveTemplate( $option, $name, $return=0 )
 	unset( $_POST['default'] );
 
 	$temp->settings = $_POST;
+
 	$temp->storeload();
 
 	if ( $return ) {

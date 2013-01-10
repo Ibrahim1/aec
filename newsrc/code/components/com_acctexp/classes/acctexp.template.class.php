@@ -166,12 +166,21 @@ class configTemplate extends serialParamDBTable
 			// Initiate Payment Processor Class
 			$class_name = 'template_' . $name;
 			$this->template = new $class_name();
+			$this->template->id = $this->id;
 			$this->template->default = $this->default;
 
 			$this->info = $this->template->info();
 		}
 	}
 
+	function storeload()
+	{
+		if ( method_exists( $this->template, 'beforesave' ) ) {
+			$this->template->beforesave();
+		}
+
+		parent::storeload();
+	}
 }
 
 class aecTemplate
