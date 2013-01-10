@@ -56,6 +56,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$settings['allow_express_checkout'] = 1;
 		$settings['brokenipnmode']		= 0;
 		$settings['currency']			= 'USD';
+		$settings['totalOccurrences']	= 0;
 
 		$settings['api_user']			= '';
 		$settings['api_password']		= '';
@@ -76,6 +77,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$settings['brokenipnmode']			= array( 'toggle' );
 		$settings['allow_express_checkout']	= array( 'toggle' );
 		$settings['currency']				= array( 'list_currency' );
+		$settings['totalOccurrences']		= array( 'inputA' );
 
 		$settings['api_user']				= array( 'inputC' );
 		$settings['api_password']			= array( 'inputC' );
@@ -472,6 +474,10 @@ class processor_paypal_wpp extends XMLprocessor
 			$var['BillingPeriod']		= $full['unit'];
 			$var['BillingFrequency']	= $full['period'];
 			$var['amt']					= $request->int_var['amount']['amount3'];
+
+			if ( !empty( $this->settings['totalOccurrences'] ) ) {
+				$var['TotalBillingCycles'] = $this->settings['totalOccurrences'];
+			}
 		} else {
 			$var['amt']					= $request->int_var['amount'];
 		}
