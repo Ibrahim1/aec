@@ -46,12 +46,6 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 		return $params;
 	}
 
-	function storeParams( $request, $params )
-	{
-		$request->metaUser->meta->addCustomParams( array( 'MI_'.$this->id.'_TEMP_PARAMS' => $params ) );
-		$request->metaUser->meta->storeload();
-	}
-
 	function before_invoice_confirm( $request )
 	{
 		return true;
@@ -59,18 +53,8 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 
 	function action( $request )
 	{
-		$custom = $request->metaUser->meta->getCustomParams();
-
-		if ( isset( $custom['MI_'.$this->id.'_TEMP_PARAMS'] ) ) {
-			$request->metaUser->focusSubscription->addCustomParams( $custom['MI_'.$this->id.'_TEMP_PARAMS'] );
+			$request->metaUser->focusSubscription->addCustomParams( $request->params );
 			$request->metaUser->focusSubscription->storeload();
-
-			unset( $custom['MI_'.$this->id.'_TEMP_PARAMS'] );
-
-			$request->metaUser->meta->setCustomParams( $custom );
-		}
-
-
 	}
 }
 ?>

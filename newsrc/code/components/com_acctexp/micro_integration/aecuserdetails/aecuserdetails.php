@@ -86,6 +86,7 @@ class mi_aecuserdetails
 				}
 
 				$settings[$p.'default']		= array( 'inputC', sprintf( JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_NAME'), $i+1 ), JText::_('MI_MI_AECUSERDETAILS_SET_DEFAULT_DESC') );
+				$settings[$p.'fixed']		= array( 'toggle', "Fixed", "Fix this settings once it's filled in by the user - it will no longer show up as being editable afterwards." );
 
 				if ( empty( $this->settings[$p.'validationtype'] ) ) {
 					$this->settings[$p.'validationtype'] = array();
@@ -116,65 +117,48 @@ class mi_aecuserdetails
 		return $params;
 	}
 
-	function verifyMIform( $request )
-	{
-		$return = array();
-
-		if ( !empty( $this->settings['settings'] ) ) {
-			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
-				$p = $i . '_';
-
-				if ( !empty( $this->settings[$p.'mandatory'] ) ) {
-					if ( empty( $request->params[$this->settings[$p.'short']] ) && ( $this->settings[$p.'type'] != 'checkbox' ) ) {
-						$return['error'] = JText::_('MI_MI_AECUSERDETAILS_PLEASE_FILL_REQUIRED');
-					} else {
-						$request->params[$this->settings[$p.'name']] = 0;
-					}
-				}
-
-			}
-		}
-
-		if ( !empty( $return['error'] ) ) {
-			return $return;
-		}
-
-		$params = array();
-		if ( !empty( $this->settings['settings'] ) ) {
-			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
-				$p = $i . '_';
-
-				if ( !empty( $this->settings[$p.'short'] ) ) {
-					if ( empty( $request->params[$this->settings[$p.'short']] ) && ( $this->settings[$p.'type'] == 'checkbox' ) ) {
-						$params[$this->settings[$p.'short']] = 'null';
-					} else {
-						$params[$this->settings[$p.'short']] = $request->params[$this->settings[$p.'short']];
-					}
-				}
-			}
-		}
-
-		$request->metaUser->meta->addCustomParams( $params );
-		$request->metaUser->meta->storeload();
-
-		return $return;
-	}
-
 	function admin_form( $request )
 	{
-		return $this->getMIform( $request, true );
+		return $this->getMIform( $request, false, true );
 	}
 
 	function admin_form_save( $request )
 	{
-		if ( !empty( $this->settings['usename'] ) ) {
-			$request->params['usename'];
-		}
+		$this->action( $request );
 
 		return true;
 	}
 
-	function getMIform( $request, $edit=false )
+	function profile_form( $request )
+	{
+		if ( !empty( $request->backend ) ) {
+			return null;
+		}
+
+		return $this->getMIform( $request, false );
+	}
+
+	function profile_form_save( $request )
+	{
+		if ( !empty( $this->settings['settings'] ) ) {
+			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
+				$p = $i . '_';
+
+				if ( !empty( $this->settings[$p.'fixed'] ) ) {
+					if ( isset( $request->params[$this->settings[$p.'short']] ) ) {
+						unset( $request->params[$this->settings[$p.'short']] );
+					}
+				}
+
+			}
+		}
+
+		$this->action( $request );
+
+		return true;
+	}
+
+	function getMIform( $request, $checkout=true, $alwayspermit=false )
 	{
 		global $aecConfig;
 
@@ -205,7 +189,7 @@ class mi_aecuserdetails
 
 		$settings['validation']['rules'] = array();
 
-		if ( !empty( $this->settings['emulate_reg'] ) && ( ( empty( $request->metaUser->userid ) && !$hasregistration ) || $edit ) ) {
+		if ( !empty( $this->settings['emulate_reg'] ) && ( ( empty( $request->metaUser->userid ) && !$hasregistration ) || !$checkout ) ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				// Joomla 1.6+ Registration
 				$lang =& JFactory::getLanguage();
@@ -241,7 +225,7 @@ class mi_aecuserdetails
 				$settings['validation']['rules']['password2'] = array( 'minlength' => 2, 'required' => true, 'equalTo' => '#mi_'.$this->id.'_password' );
 			}
 
-			if ( $edit ) {
+			if ( !$checkout ) {
 				foreach ( $settings as $s => $v ) {
 					if ( $s == 'validation' || (strpos($s,'password') !== false ) ) {
 						continue;
@@ -253,7 +237,7 @@ class mi_aecuserdetails
 				}
 			}
 
-			if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) && !$edit ) {
+			if ( $aecConfig->cfg['use_recaptcha'] && !empty( $aecConfig->cfg['recaptcha_publickey'] ) && $checkout ) {
 				require_once( JPATH_SITE . '/components/com_acctexp/lib/recaptcha/recaptchalib.php' );
 
 				$settings['recaptcha'] = array( 'passthrough', 'ReCAPTCHA', 'recaptcha', recaptcha_get_html( $aecConfig->cfg['recaptcha_publickey'] ) );
@@ -272,12 +256,18 @@ class mi_aecuserdetails
 					continue;
 				}
 
-				if ( !empty( $request->params[$p.'name'] ) ) {
-					$content = $request->params[$p.'name'];
+				if ( !empty( $request->params[$this->settings[$p.'short']] ) ) {
+					$content = $request->params[$this->settings[$p.'short']];
 				} elseif ( !empty( $_POST['mi_'.$request->parent->id.'_'.$this->settings[$p.'short']] ) ) {
 					$content = aecGetParam( 'mi_'.$request->parent->id.'_'.$this->settings[$p.'short'], true, array( 'string', 'badchars' ) );
 				} else {
 					$content = AECToolbox::rewriteEngineRQ( $this->settings[$p.'default'], $request );
+				}
+
+				if ( !empty( $this->settings[$p.'fixed'] ) && !$checkout && !$alwayspermit ) {
+					$settings[$this->settings[$p.'name']] = array( 'passthrough', $this->settings[$p.'name'], $this->settings[$p.'short'], '<p><strong>'.$content.'</strong></p>' );
+
+					continue;
 				}
 
 				if ( !empty( $this->settings[$p.'short'] ) ) {
@@ -353,6 +343,40 @@ class mi_aecuserdetails
 		return $settings;
 	}
 
+	function verifyMIform( $request )
+	{
+		$return = array();
+
+		if ( !empty( $this->settings['settings'] ) ) {
+			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
+				$p = $i . '_';
+
+				if ( !empty( $this->settings[$p.'mandatory'] ) ) {
+					if ( empty( $request->params[$this->settings[$p.'short']] ) && ( $this->settings[$p.'type'] != 'checkbox' ) ) {
+						$return['error'] = JText::_('MI_MI_AECUSERDETAILS_PLEASE_FILL_REQUIRED');
+					}
+				}
+
+			}
+		}
+
+		return $return;
+	}
+
+	function action( $request )
+	{
+		if ( isset( $request->invoice ) ) {
+			if ( $request->invoice->counter > 1 ) {
+				return null;
+			}
+		}
+
+		$request->metaUser->meta->addCustomParams( $request->params );
+		$request->metaUser->meta->storeload();
+
+		return true;
+	}
+	
 	function before_invoice_confirm( $request )
 	{
 		if ( empty( $this->settings['emulate_reg'] ) || !empty( $request->metaUser->userid ) ) {
