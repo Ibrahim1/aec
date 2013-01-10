@@ -60,12 +60,12 @@ class PaymentProcessorHandler
 
 					// Add to selected Description List if existing in db entry
 					if ( !empty( $selected ) ) {
-						if ( $multiple || is_array( $selected  ) {
+						if ( $multiple || is_array( $selected ) ) {
 							if ( in_array( $gwname, $selected ) ) {
 								$gwlist_selected[]->value = $gwname;
 							}
 						} else {
-							if ( $gwname == $selected ) ) {
+							if ( $gwname == $selected ) {
 								$gwlist_selected = new stdClass();
 								$gwlist_selected->value = $gwname;
 							}

@@ -687,7 +687,7 @@ class SubscriptionPlan extends serialParamDBTable
 	
 		if ( isset( $invoice->params['userMIParams'][$new_plan->id][$mi->id] ) ) {
 			$mi->storeMIform( $metaUser, $exchange, $this, $new_plan );
-			$params = $request->invoice->['userMIParams'][$request->plan->id][$request->parent->id];
+			$params = $request->invoice->params['userMIParams'][$request->plan->id][$request->parent->id];
 
 			$this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
 		}

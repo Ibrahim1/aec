@@ -442,7 +442,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 		function lessen( &$errors )
 		{
 			// Convert LESS files
-			require JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php';
+			include_once( JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php' );
 
 			$less = new lessc();
 			$less->setImportDir( array(JPATH_SITE . '/media/com_acctexp/less/') );
