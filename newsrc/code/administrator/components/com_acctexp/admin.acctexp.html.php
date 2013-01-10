@@ -628,6 +628,8 @@ class HTML_AcctExp
 				<td>
 					<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
 						<div class="aec_userinfobox_sub">
+						<h4><?php echo JText::_('Profile Form'); ?></h4>
+						<p>(This is what the user sees on the frontend.)</p>
 						<?php if ( !empty( $mi['profile'] ) ) { ?>
 							<?php foreach ( $mi['profile'] as $mix ) { ?>
 								<div class="profileinfobox">
@@ -644,7 +646,8 @@ class HTML_AcctExp
 						</div>
 					<?php } ?>
 					<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
-						<div class="aec_userinfobox_sub form-noindent">
+						<div class="aec_userinfobox_sub">
+						<h4><?php echo JText::_('Admin Form'); ?></h4>
 						<?php if ( !empty( $mi['admin'] ) ) { ?>
 							<?php foreach ( $mi['admin'] as $mix ) { ?>
 								<div class="admininfobox">

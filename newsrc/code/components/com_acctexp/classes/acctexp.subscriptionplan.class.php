@@ -684,6 +684,13 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		$exchange = $add = null;
+	
+		if ( isset( $invoice->params['userMIParams'][$new_plan->id][$mi->id] ) ) {
+			$mi->storeMIform( $metaUser, $exchange, $this, $new_plan );
+			$params = $request->invoice->['userMIParams'][$request->plan->id][$request->parent->id];
+
+			$this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
+		}
 
 		$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
 
@@ -917,12 +924,42 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
+	function getMIforms( $metaUser, $errors=array() )
+	{
+		$params = $this->getMIformParams( $metaUser, $errors );
+
+		if ( empty( $params ) ) {
+			return false;
+		} else {
+			if ( isset( $params['lists'] ) ) {
+				$lists = $params['lists'];
+				unset( $params['lists'] );
+			} else {
+				$lists = array();
+			}
+
+			if ( isset( $params['validation'] ) ) {
+				unset( $params['validation'] );
+			}
+
+			if ( !empty( $params ) ) {
+				$settings = new aecSettings ( 'mi', 'frontend_forms' );
+				$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
+
+				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+				return $aecHTML->returnFull( false, true );
+			} else {
+				return null;
+			}
+		}
+	}
+
 	function verifyMIformParams( $metaUser, $params=null )
 	{
 		$mis = $this->getMicroIntegrations();
 
 		if ( !empty( $mis ) ) {
-			
 
 			$v = array();
 			foreach ( $mis as $mi_id ) {
@@ -958,34 +995,43 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMIforms( $metaUser, $errors=array() )
+	function storeMIformParams( $metaUser, $params=null )
 	{
-		$params = $this->getMIformParams( $metaUser, $errors );
+		$mis = $this->getMicroIntegrations();
 
-		if ( empty( $params ) ) {
-			return false;
+		if ( !empty( $mis ) ) {
+
+			$v = array();
+			foreach ( $mis as $mi_id ) {
+				$mi = new MicroIntegration();
+				$mi->load( $mi_id );
+
+				if ( !$mi->callIntegration() ) {
+					continue;
+				}
+
+				if ( !is_null( $params ) ) {
+					if ( !empty( $params[$this->id][$mi->id] ) ) {
+						$verify = $mi->verifyMIform( $this, $metaUser, $params[$this->id][$mi->id] );
+					} else {
+						$verify = $mi->verifyMIform( $this, $metaUser, array() );
+					}
+				} else {
+					$verify = $mi->verifyMIform( $this, $metaUser );
+				}
+
+				if ( !empty( $verify ) && is_array( $verify ) ) {
+					$v[] = array_merge( array( 'id' => $mi->id ), $verify );
+				}
+			}
+
+			if ( empty( $v ) ) {
+				return true;
+			} else {
+				return $v;
+			}
 		} else {
-			if ( isset( $params['lists'] ) ) {
-				$lists = $params['lists'];
-				unset( $params['lists'] );
-			} else {
-				$lists = array();
-			}
-
-			if ( isset( $params['validation'] ) ) {
-				unset( $params['validation'] );
-			}
-
-			if ( !empty( $params ) ) {
-				$settings = new aecSettings ( 'mi', 'frontend_forms' );
-				$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
-
-				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-				return $aecHTML->returnFull( false, true );
-			} else {
-				return null;
-			}
+			return true;
 		}
 	}
 

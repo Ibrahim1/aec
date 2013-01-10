@@ -707,7 +707,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 			$mi['profile'][] = array( 'name' => $m->info['name'] . ' - ' . $m->name, 'info' => $ui );
 		}
 
-		$uf = $m->profile_form( $metaUser );
+		$uf = $m->profile_form( $metaUser, true );
 		if ( !empty( $uf ) ) {
 			foreach ( $uf as $k => $v ) {
 				$mi['profile_form'][] = $pref.$k;

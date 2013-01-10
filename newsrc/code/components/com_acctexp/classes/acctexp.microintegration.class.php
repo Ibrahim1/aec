@@ -1179,12 +1179,13 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'admin_info', $request );
 	}
 
-	function profile_form( $metaUser )
+	function profile_form( $metaUser, $backend=false )
 	{
 		$request = new stdClass();
 		$request->parent	=&	$this;
 		$request->metaUser	=&	$metaUser;
 		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+		$request->backend	=	$backend;
 
 		$settings = $this->functionProxy( 'profile_form', $request, array() );
 
