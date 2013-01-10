@@ -36,6 +36,59 @@ class PaymentProcessorHandler
 		return $pp_list;
 	}
 
+	function getProcessorSelectList( $multiple=true, $selected=array() )
+	{
+		$gwlist					= $this->getProcessorList();
+
+		$gw_list_enabled		= array();
+		$gw_list_enabled_html	= array();
+
+		$gwlist_selected = array();
+
+		asort($gwlist);
+
+		$ppsettings = array();
+
+		foreach ( $gwlist as $gwname ) {
+			$pp = new PaymentProcessor();
+			if ( $pp->loadName( $gwname ) ) {
+				$pp->getInfo();
+
+				if ( $pp->processor->active ) {
+					// Add to Active List
+					$gw_list_enabled[]->value = $gwname;
+
+					// Add to selected Description List if existing in db entry
+					if ( !empty( $selected ) ) {
+						if ( $multiple || is_array( $selected  ) {
+							if ( in_array( $gwname, $selected ) ) {
+								$gwlist_selected[]->value = $gwname;
+							}
+						} else {
+							if ( $gwname == $selected ) ) {
+								$gwlist_selected = new stdClass();
+								$gwlist_selected->value = $gwname;
+							}
+						}
+						
+					}
+
+					// Add to Description List
+					$gw_list_enabled_html[] = JHTML::_('select.option', $gwname, $pp->info['longname'] );
+
+				}
+			}
+		}
+
+		if ( !$multiple && is_array( $gwlist_selected ) ) {
+			$gwlist_selected = $gwlist_selected[0];
+		} elseif ( $multiple && !is_array( $gwlist_selected ) ) {
+			$gwlist_selected = array( $gwlist_selected );
+		}
+
+		return JHTML::_('select.genericlist', $gw_list_enabled_html, 'gwlist'.($multiple ? '[]' : ''), 'size="' . max(min(count($gw_list_enabled), 12), 3) . '"'.($multiple ? ' multiple="multiple"' : ''), 'value', 'text', $gwlist_selected);
+	}
+
 	function getProcessorIdfromName( $name )
 	{
 		$db = &JFactory::getDBO();

@@ -1630,12 +1630,6 @@ function editSettings( $option )
 	$lists['error_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'error_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['error_notification_level'] );
 	$lists['email_notification_level']			= JHTML::_('select.genericlist', $error_reporting_notices, 'email_notification_level', 'size="5"', 'value', 'text', $aecConfig->cfg['email_notification_level'] );
 
-	$pph					= new PaymentProcessorHandler();
-	$gwlist					= $pph->getProcessorList();
-
-	$gw_list_enabled		= array();
-	$gw_list_enabled_html	= array();
-
 	// Display Processor descriptions?
 	if ( !empty( $aecConfig->cfg['gwlist'] ) ) {
 		$desc_list = $aecConfig->cfg['gwlist'];
@@ -1643,36 +1637,8 @@ function editSettings( $option )
 		$desc_list = array();
 	}
 
-	$gwlist_selected = array();
-
-	asort($gwlist);
-
-	$ppsettings = array();
-
-	foreach ( $gwlist as $gwname ) {
-		$pp = new PaymentProcessor();
-		if ( $pp->loadName( $gwname ) ) {
-			$pp->getInfo();
-
-			if ( $pp->processor->active ) {
-				// Add to Active List
-				$gw_list_enabled[]->value = $gwname;
-
-				// Add to selected Description List if existing in db entry
-				if ( !empty( $desc_list ) ) {
-					if ( in_array( $gwname, $desc_list ) ) {
-						$gwlist_selected[]->value = $gwname;
-					}
-				}
-
-				// Add to Description List
-				$gw_list_enabled_html[] = JHTML::_('select.option', $gwname, $pp->info['longname'] );
-
-			}
-		}
-	}
-
-	$lists['gwlist']			= JHTML::_('select.genericlist', $gw_list_enabled_html, 'gwlist[]', 'size="' . max(min(count($gw_list_enabled), 12), 3) . '" multiple="multiple"', 'value', 'text', $gwlist_selected);
+	$pph = new PaymentProcessorHandler();
+	$lists['gwlist'] = $pph->getProcessorSelectList( true, $desc_list );
 
 	$grouplist = ItemGroupHandler::getTree();
 
