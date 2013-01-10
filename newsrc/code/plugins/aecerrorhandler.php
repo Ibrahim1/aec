@@ -103,6 +103,8 @@ class plgSystemAECerrorhandler extends JPlugin
 				( ( $option == 'com_user' ) || ( $option == 'com_users' ) )
 				// And this is a login
 				&& ( ( $view == 'login' ) || ( strpos( $task, 'login' ) != false ) )
+				// Not a logout (yeah, really)
+				&& ( strpos( $task, 'logout' ) == false )
 				// And we have a blank return 
 				&& !empty( $return ) && ( $return != 'index.php' )
 				// With no username or password
