@@ -351,6 +351,21 @@ class SubscriptionPlanHandler
 		}
 	}
 
+	function getPlanUserCount( $planid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT count(*)'
+				. ' FROM #__users AS a'
+				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+				. ' WHERE b.plan = ' . $planid
+				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+	
 	function getPlanUserlist( $planid )
 	{
 		$db = &JFactory::getDBO();

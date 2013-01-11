@@ -3270,34 +3270,21 @@ function removeSubscriptionPlan( $id, $option )
 		exit;
 	}
 
-	// See if we have registered users on this plan.
-	// If we have it, the plan(s) cannot be removed
-	$query = 'SELECT count(*)'
-			. ' FROM #__users AS a'
-			. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-			. ' WHERE b.plan = ' . $row->id
-			. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
-			;
-	$db->setQuery( $query );
-	$subscribers = $db->loadResult();
+	foreach ( $ids as $planid ) {
+		if ( SubscriptionPlanHandler::getPlanUserCount( $planid ) > 0 ) {
+			$msg = JText::_('AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER');
 
-	if ( $subscribers > 0 ) {
-		$msg = JText::_('AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER');
-	} else {
-		// Delete plans
-		$query = 'DELETE FROM #__acctexp_plans'
-				. ' WHERE `id` IN (' . $ids . ')'
-				;
-		$db->setQuery( $query );
-		if ( !$db->query() ) {
-			echo "<script> alert('".$db->getErrorMsg()."'); window.history.go(-1); </script>\n";
-			exit();
+			aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
+		} else {
+			$plan = new SubscriptionPlan();
+			$plan->load( $planid );
+
+			$plan->delete();
 		}
-
-		ItemGroupHandler::removeChildren( $id, false, 'item' );
-
-		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
 	}
+
+	$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_DELETED');
+
 	aecRedirect( 'index.php?option=' . $option . '&task=showSubscriptionPlans', $msg );
 }
 

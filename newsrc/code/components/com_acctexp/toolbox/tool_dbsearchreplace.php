@@ -56,7 +56,7 @@ class tool_dbsearchreplace
 
 	function Action()
 	{
-		if ( empty( $_POST['type'] ) || empty( $_POST['search'] ) ) ) {
+		if ( empty( $_POST['type'] ) || empty( $_POST['search'] ) ) {
 			return "<h3>Incomplete Query.</h3>";
 		}
 
@@ -83,10 +83,12 @@ class tool_dbsearchreplace
 			$result = $db->query( $query );
 
 			while ( $row = $db->loadAssoc($result) ) {
-				$obj = new {$types[$type][1]}();
+				$objclass = $types[$type][1];
+
+				$obj = new $objclass();
 				$obj->load( $row[0] );
 
-				if ( !empty( $_POST['armed'] ) && !empty( $_POST['replace'] ) {
+				if ( !empty( $_POST['armed'] ) && !empty( $_POST['replace'] ) ) {
 					$mod = AECToolbox::searchreplaceObjectProperties( $obj, $_POST['search'], $_POST['replace'] );
 					if ( $mod != $obj ) {
 						$mod->check();
@@ -99,6 +101,7 @@ class tool_dbsearchreplace
 						$changes++;
 					}
 				}
+			}
 		}
 
 		$return = '';
