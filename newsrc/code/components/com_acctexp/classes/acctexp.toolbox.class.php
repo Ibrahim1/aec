@@ -723,6 +723,10 @@ class AECToolbox
 	{
 		global $aecConfig;
 
+		if ( ( $date == '0000-00-00 00:00:00' ) || ( $date == '1970-01-01 00:00:00' ) ) {
+			return '---';
+		}
+
 		if ( is_string( $date ) ) {
 			$date = strtotime( $date );
 		}
