@@ -198,7 +198,7 @@ class metaUser
 					$value = stripslashes( $value );
 				}
 
-				$value = $db->getEscaped( $value );
+				$value = xJ::escape( $db, $value );
 
 				$params[] = $key . '=' . $value;
 			}

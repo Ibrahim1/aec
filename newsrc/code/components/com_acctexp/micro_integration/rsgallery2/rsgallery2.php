@@ -203,7 +203,7 @@ class mi_rsgallery2 extends MI
 				. ' FROM #__rsgallery2_galleries'
 				. ' WHERE `uid` = \'' . $userid . '\''
 				. ' AND `parent` = \'' . $parentid . '\''
-				. ' AND `name` = \'' . $db->getEscaped( $name ) . '\''
+				. ' AND `name` = \'' . xJ::escape( $db, $name ) . '\''
 				;
 		$db->setQuery( $query );
 		$tentries = $db->loadResult();
@@ -226,7 +226,7 @@ class mi_rsgallery2 extends MI
 
 		$query = 'INSERT INTO #__rsgallery2_galleries'
 				. ' ( `parent`, `name`, `description`, `published`, `date`, `uid` )'
-				. ' VALUES ( \'' . $parentid . '\', \'' . $db->getEscaped( $name ) . '\', \'' . $db->getEscaped( $desc ) . '\', \'1\', \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\', \'' . $userid . '\' )'
+				. ' VALUES ( \'' . $parentid . '\', \'' . xJ::escape( $db, $name ) . '\', \'' . xJ::escape( $db, $desc ) . '\', \'1\', \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\', \'' . $userid . '\' )'
 				;
 		$db->setQuery( $query );
 

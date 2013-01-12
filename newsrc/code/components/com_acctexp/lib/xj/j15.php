@@ -341,12 +341,12 @@ class xJSessionHandler extends xJSessionHandlerCommon
 		if ( isset( $data['user'] ) ) {
 			if ( empty( $gid ) ) {
 				$query = 'UPDATE #__session'
-						. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
+						. ' SET `data` = \'' . xJ::escape( $db, $sdata ) . '\''
 						. ' WHERE `userid` = \'' . (int) $userid . '\''
 						;
 			} else {
 				$query = 'UPDATE #__session'
-						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . $db->getEscaped( $sdata ) . '\''
+						. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\', `data` = \'' . xJ::escape( $db, $sdata ) . '\''
 						. ' WHERE `userid` = \'' . (int) $userid . '\''
 						;
 			}

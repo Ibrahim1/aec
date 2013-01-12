@@ -208,7 +208,7 @@ function aecEscape( $value, $safe_params )
 
 	$db = &JFactory::getDBO();
 
-	return $db->getEscaped( $return );
+	return xJ::escape( $db, $return );
 }
 
 function aecPostParamClear( $array, $safe=false, $safe_params=array( 'string', 'badchars' ) )

@@ -133,7 +133,7 @@ foreach ( $invoiceList as $invoiceid ) {
 	if ( ( $invoice->transaction_date == '0000-00-00 00:00:00' ) || ( $invoice->subscr_id  ) ) {
 		if ( $invoice->transaction_date == '0000-00-00 00:00:00' ) {
 			$actionsarray[] = array( 	'task'	=> 'repeatPayment',
-										'add'	=> 'invoice=' . $invoice->invoice_number . '&'. JUtility::getToken() .'=1',
+										'add'	=> 'invoice=' . $invoice->invoice_number . '&'. xJ::token() .'=1',
 										'text'	=> JText::_('HISTORY_ACTION_REPEAT'),
 										'class' => 'btn btn-success' );
 

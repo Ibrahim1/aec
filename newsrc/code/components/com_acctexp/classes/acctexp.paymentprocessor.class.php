@@ -95,7 +95,7 @@ class PaymentProcessorHandler
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $db->getEscaped( $name ) . '\'';
+				. ' WHERE `name` = \'' . xJ::escape( $db, $name ) . '\'';
 		$db->setQuery( $query );
 
 		return $db->loadResult();
@@ -107,7 +107,7 @@ class PaymentProcessorHandler
 
 		$query = 'SELECT `name`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `id` = \'' . $db->getEscaped( $id ) . '\'';
+				. ' WHERE `id` = \'' . xJ::escape( $db, $id ) . '\'';
 		$db->setQuery( $query );
 
 		return $db->loadResult();
@@ -1142,7 +1142,7 @@ class processor extends serialParamDBTable
 	{
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
-				. ' WHERE `name` = \'' . $this->_db->getEscaped( $name ) . '\''
+				. ' WHERE `name` = \'' . xJ::escape( $this->_db, $name ) . '\''
 				;
 		$this->_db->setQuery( $query );
 		

@@ -375,7 +375,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$query = 'UPDATE #__session'
-					. ' SET `data` = \'' . $db->getEscaped( $sdata ) . '\''
+					. ' SET `data` = \'' . xJ::escape( $db, $sdata ) . '\''
 					. ' WHERE `userid` = \'' . (int) $userid . '\''
 					;
 		}

@@ -349,7 +349,7 @@ class microIntegrationHandler
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
-				. ' WHERE `id` IN (' . $db->getEscaped( implode( ',', $milist ) ) . ')'
+				. ' WHERE `id` IN (' . xJ::escape( $db, implode( ',', $milist ) ) . ')'
 	 			. ' AND `active` = \'1\''
 				. ' ORDER BY `ordering` ASC'
 				;

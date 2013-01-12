@@ -48,7 +48,7 @@ class tool_rawedit
 					if ( !is_numeric( $_POST['id'] ) )  {
 						$query = 'SELECT `id`'
 								. ' FROM #__acctexp_config_processors'
-								. ' WHERE `name` = \'' . $db->getEscaped( $_POST['id'] ) . '\''
+								. ' WHERE `name` = \'' . ( (int) $_POST['id'] ) . '\''
 								;
 						$db->setQuery( $query );
 

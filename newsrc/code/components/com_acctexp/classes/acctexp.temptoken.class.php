@@ -108,12 +108,16 @@ class aecTempToken extends serialParamDBTable
 			$id = $this->_db->loadResult();
 		}
 
-		$this->load( $id );
-
-		if ( $this->ip != $_SERVER['REMOTE_ADDR'] ) {
-			$this->delete();
-
+		if ( empty( $id ) ) {
 			$this->load(0);
+		} else {
+			$this->load( $id );
+
+			if ( ( $this->ip != $_SERVER['REMOTE_ADDR'] ) ) {
+				$this->delete();
+
+				$this->load(0);
+			}
 		}
 	}
 

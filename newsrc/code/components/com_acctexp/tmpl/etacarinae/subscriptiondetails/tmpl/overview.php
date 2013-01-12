@@ -19,7 +19,7 @@ if ( !empty( $properties['showcheckout'] ) ) { ?>
 	<div class="details-openinvoice">
 	<p>
 		<?php echo JText::_('PENDING_OPENINVOICE'); ?>&nbsp;
-		<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $properties['showcheckout'] . '&userid=' . $metaUser->userid.'&'. JUtility::getToken() .'=1' ); ?>" title="<?php echo JText::_('GOTO_CHECKOUT'); ?>"><?php echo JText::_('GOTO_CHECKOUT'); ?></a>
+		<a href="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=repeatPayment&invoice=' . $properties['showcheckout'] . '&userid=' . $metaUser->userid.'&'. xJ::token() .'=1' ); ?>" title="<?php echo JText::_('GOTO_CHECKOUT'); ?>"><?php echo JText::_('GOTO_CHECKOUT'); ?></a>
 	</p>
 	</div>
 <?php }

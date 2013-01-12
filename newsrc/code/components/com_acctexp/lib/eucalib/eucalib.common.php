@@ -174,7 +174,7 @@ class paramDBTable extends JTable
 					$value = stripslashes( $value );
 				}
 
-				$value = $this->_db->getEscaped( $value );
+				$value = xJ::escape( $this->_db, $value );
 
 				$params[] = $key . '=' . $value;
 			}
@@ -872,7 +872,7 @@ class parameterHandler
 					$value = stripslashes( $value );
 				}
 
-				$value = $db->getEscaped( $value );
+				$value = xJ::escape( $db, $value );
 
 				$params[] = $key . '=' . $value;
 			}

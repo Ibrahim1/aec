@@ -112,7 +112,7 @@ class aecAPI
 			if ( isset( $this->request->user->username ) ) {
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
-						. ' WHERE LOWER( `username` ) LIKE \'%' . $db->getEscaped( strtolower( $this->request->user->username ) ) . '%\''
+						. ' WHERE LOWER( `username` ) LIKE \'%' . xJ::escape( $db, strtolower( $this->request->user->username ) ) . '%\''
 						;
 				$db->setQuery( $query );
 
@@ -122,7 +122,7 @@ class aecAPI
 			if ( empty( $users ) && isset( $this->request->user->name ) ) {
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
-						. ' WHERE LOWER( `name` ) LIKE \'%' . $db->getEscaped( strtolower( $this->request->user->name ) ) . '%\''
+						. ' WHERE LOWER( `name` ) LIKE \'%' . xJ::escape( $db, strtolower( $this->request->user->name ) ) . '%\''
 						;
 				$db->setQuery( $query );
 
@@ -132,7 +132,7 @@ class aecAPI
 			if ( empty( $users ) && isset( $this->request->user->email ) ) {
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
-						. ' WHERE LOWER( `email` ) = \'' . $db->getEscaped( $this->request->user->email ) . '\''
+						. ' WHERE LOWER( `email` ) = \'' . xJ::escape( $db, $this->request->user->email ) . '\''
 						;
 				$db->setQuery( $query );
 
@@ -142,7 +142,7 @@ class aecAPI
 			if ( empty( $users ) && isset( $this->request->user->userid ) ) {
 				$query = 'SELECT `id`'
 						. '  FROM #__users'
-						. ' WHERE `id` = \'' . $db->getEscaped( $this->request->user->userid ) . '\''
+						. ' WHERE `id` = \'' . xJ::escape( $db, $this->request->user->userid ) . '\''
 						;
 				$db->setQuery( $query );
 
@@ -152,8 +152,8 @@ class aecAPI
 			if ( empty( $users ) && isset( $this->request->user->invoice_number ) ) {
 				$query = 'SELECT `userid`'
 						. 'FROM #__acctexp_invoices'
-						. ' WHERE LOWER( `invoice_number` ) = \'' . $db->getEscaped( $this->request->user->invoice_number ) . '\''
-						. ' OR LOWER( `secondary_ident` ) = \'' . $db->getEscaped( $this->request->user->invoice_number ) . '\''
+						. ' WHERE LOWER( `invoice_number` ) = \'' . xJ::escape( $db, $this->request->user->invoice_number ) . '\''
+						. ' OR LOWER( `secondary_ident` ) = \'' . xJ::escape( $db, $this->request->user->invoice_number ) . '\''
 						;
 				$db->setQuery( $query );
 

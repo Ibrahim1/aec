@@ -343,7 +343,7 @@ class aecTemplate
 			$params = array_merge( array( 'option' => 'com_acctexp' ), $params );
 		}
 
-		$params[JUtility::getToken()] = '1';
+		$params[xJ::token()] = '1';
 
 		$p = array();
 		foreach ( $params as $k => $v ) {

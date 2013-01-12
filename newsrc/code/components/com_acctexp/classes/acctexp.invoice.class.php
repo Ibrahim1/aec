@@ -60,7 +60,7 @@ class InvoiceFactory
 				} else {
 					$db = &JFactory::getDBO();
 
-					$this->userid = $db->getEscaped( $userid );
+					$this->userid = xJ::escape( $db, $userid );
 
 					// Delete set userid if it doesn't exist
 					if ( !is_null( $this->userid ) ) {
@@ -564,6 +564,11 @@ class InvoiceFactory
 	{
 		if ( !empty( $this->processor ) ) {
 			$this->pp					= false;
+
+			if ( !isset( $this->payment ) ) {
+				$this->payment = new stdClass();
+			}
+
 			$this->payment->method_name = JText::_('AEC_PAYM_METHOD_NONE');
 			$this->payment->currency	= '';
 
@@ -1854,7 +1859,7 @@ class InvoiceFactory
 		}
 
 		if ( $this->pp->requireSSLcheckout() && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
-			aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ) . '&'. JUtility::getToken() .'=1', true, true ) );
+			aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ) . '&'. xJ::token() .'=1', true, true ) );
 			exit();
 		}
 
@@ -2395,8 +2400,8 @@ class Invoice extends serialParamDBTable
 
 		$query = 'SELECT invoice_number'
 		. ' FROM #__acctexp_invoices'
-		. ' WHERE id = \'' . $this->_db->getEscaped( $this->id ) . '\''
-		. ' OR secondary_ident = \'' . $this->_db->getEscaped( $this->invoice_number ) . '\''
+		. ' WHERE id = \'' . xJ::escape( $this->_db, $this->id ) . '\''
+		. ' OR secondary_ident = \'' . xJ::escape( $this->_db, $this->invoice_number ) . '\''
 		;
 		$this->_db->setQuery( $query );
 

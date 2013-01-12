@@ -294,23 +294,23 @@ function toggleProperty(type, property, id, callerid, callerclass) {
 	}
 
 	if ( property == 'default' ) {
-		jQuery('.'+callerclass+' i').addClass('icon-refresh');
+		jQuery('.'+callerclass+' i').addClass('bsicon-refresh');
 		jQuery('.'+callerclass+' i')
-			.removeClass('icon-remove')
-			.removeClass('icon-star-empty')
-			.removeClass('icon-ok')
-			.removeClass('icon-eye-open')
-			.removeClass('icon-star');
-		jQuery('.'+callerclass+' i').addClass('icon-rotate');
+			.removeClass('bsicon-remove')
+			.removeClass('bsicon-star-empty')
+			.removeClass('bsicon-ok')
+			.removeClass('bsicon-eye-open')
+			.removeClass('bsicon-star');
+		jQuery('.'+callerclass+' i').addClass('bsicon-rotate');
 	} else {
-		jQuery('#'+callerid+' i').addClass('icon-refresh');
+		jQuery('#'+callerid+' i').addClass('bsicon-refresh');
 		jQuery('#'+callerid+' i')
-			.removeClass('icon-remove')
-			.removeClass('icon-stop')
-			.removeClass('icon-ok')
-			.removeClass('icon-eye-open')
-			.removeClass('icon-star');
-		jQuery('#'+callerid+' i').addClass('icon-rotate');
+			.removeClass('bsicon-remove')
+			.removeClass('bsicon-stop')
+			.removeClass('bsicon-ok')
+			.removeClass('bsicon-eye-open')
+			.removeClass('bsicon-star');
+		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
 	}
 
 	if ( jQuery('#'+callerid).hasClass('btn-toggle-danger') ) {
@@ -319,7 +319,7 @@ function toggleProperty(type, property, id, callerid, callerclass) {
 		jQuery('#'+callerid).removeClass('btn-toggle-success').addClass('btn-toggle-warning');
 	}
 
-	jQuery('#'+callerid+' i').addClass('icon-refresh').removeClass('icon-eye-open');
+	jQuery('#'+callerid+' i').addClass('bsicon-refresh').removeClass('bsicon-eye-open');
 
 	jQuery.post("index.php?option=com_acctexp&task=toggleAjax&type="+type+"&property="+property+"&id="+id , {queryString: ""}, function(data) {
 		jQuery('#'+callerid).removeClass('btn-toggle-warning');
@@ -328,19 +328,19 @@ function toggleProperty(type, property, id, callerid, callerclass) {
 			jQuery('#'+callerid).addClass('btn-toggle-success');
 
 			if ( property == 'default' ) {
-				jQuery('#'+callerid+' i').addClass('icon-star').removeClass('icon-refresh').removeClass('icon-rotate');
+				jQuery('#'+callerid+' i').addClass('bsicon-star').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 				jQuery('#'+callerid).attr('disabled','disabled').addClass('ui-disabled');
-				jQuery('.'+callerclass+':not(#'+callerid+') i').addClass('icon-star-empty').removeClass('icon-refresh').removeClass('icon-rotate');
+				jQuery('.'+callerclass+':not(#'+callerid+') i').addClass('bsicon-star-empty').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 				jQuery('.'+callerclass+':not(#'+callerid+')').removeAttr('disabled').removeClass('ui-disabled').removeClass('btn-toggle-success').addClass('btn-toggle-danger');
 			} else if ( property == 'visible' ) {
-				jQuery('#'+callerid+' i').addClass('icon-eye-open').removeClass('icon-refresh').removeClass('icon-rotate');
+				jQuery('#'+callerid+' i').addClass('bsicon-eye-open').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 			} else {
-				jQuery('#'+callerid+' i').addClass('icon-ok').removeClass('icon-refresh').removeClass('icon-rotate');
+				jQuery('#'+callerid+' i').addClass('bsicon-ok').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 			}
 		} else {
 			jQuery('#'+callerid).addClass('btn-toggle-danger');
 
-			jQuery('#'+callerid+' i').addClass('icon-remove').removeClass('icon-refresh').removeClass('icon-rotate');
+			jQuery('#'+callerid+' i').addClass('bsicon-remove').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 		}
 	});
 }
@@ -351,13 +351,13 @@ function addGroup(type, callerid) {
 
 	if ( group > 0 ) {
 		jQuery('#'+callerid).attr('disabled','disabled');
-		jQuery('#'+callerid+' i').addClass('icon-rotate');
+		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
 
 		jQuery.post("index.php?option=com_acctexp&task=addGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
 			if ( data == "0" ) {
 	
 			} else if ( data.length < 500 ) {
-				jQuery('#'+callerid+' i').removeClass('icon-rotate');
+				jQuery('#'+callerid+' i').removeClass('bsicon-rotate');
 
 				jQuery('select#add_group option[value=\''+group+'\']').attr('disabled','disabled');
 
@@ -373,13 +373,13 @@ function addGroup(type, callerid) {
 function removeGroup(type, group, callerid) {
 	if ( group > 0 ) {
 		jQuery('#'+callerid).attr('disabled','disabled');
-		jQuery('#'+callerid+' i').addClass('icon-rotate');
+		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
 
 		id = jQuery('input:hidden[name=id]').val();
 
 		jQuery.post("index.php?option=com_acctexp&task=removeGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
 			if ( data == "1" ) {
-				jQuery('#'+callerid+' i').removeAttr('disabled').removeClass('icon-rotate');
+				jQuery('#'+callerid+' i').removeAttr('disabled').removeClass('bsicon-rotate');
 
 				jQuery('select#add_group option[value=\''+group+'\']').removeAttr('disabled');
 

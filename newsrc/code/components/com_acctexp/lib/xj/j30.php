@@ -19,6 +19,21 @@ class xJ
 		return $return;
 	}
 
+	function escape( $db, $value )
+	{
+		return $db->escape( $value );
+	}
+
+	function token()
+	{
+		return JSession::getFormToken();
+	}
+
+	function getHash()
+	{
+		return JApplication::getHash(JUserHelper::genRandomPassword());
+	}
+	
 	function sendMail( $sender, $sender_name, $recipient, $subject, $message, $html=null, $cc=null, $bcc=null, $attach=null )
 	{
 		$mailer = JFactory::getMailer();

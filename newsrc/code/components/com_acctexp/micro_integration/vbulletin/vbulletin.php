@@ -496,7 +496,7 @@ class mi_vbulletin
 		}
 
 		if ( !empty( $password ) ) {
-			$vbulletinpw->vbulletinsalt	= $db->getEscaped( $vbulletinpw->saltgen() );
+			$vbulletinpw->vbulletinsalt	= xJ::escape( $db, $vbulletinpw->saltgen() );
 			$vbulletinpw->vbulletinpw	= $vbulletinpw->hash( $password, $vbulletinpw->vbulletinsalt );
 
 			$vbulletinpw->check();

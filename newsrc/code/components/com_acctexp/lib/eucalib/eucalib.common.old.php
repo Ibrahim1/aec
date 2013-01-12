@@ -39,7 +39,7 @@ class jsonDBTable extends paramDBTable
 			} else {
 				$store = $input;
 			}
-			$this->$field = $this->_db->getEscaped( jsoonHandler::encode( $store ) );
+			$this->$field = xJ::escape( $this->_db, jsoonHandler::encode( $store ) );
 		} else {
 			$this->$field = null;
 		}

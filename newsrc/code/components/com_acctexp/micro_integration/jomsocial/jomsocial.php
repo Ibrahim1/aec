@@ -220,14 +220,14 @@ class mi_jomsocial extends MI
 			$query = null;
 			if ( $existingfield && ( !$hasvalue || $this->settings['overwrite_existing'] ) ) {
 				$query	= 'UPDATE #__community_fields_values SET '
-						. ' `value` = \'' . $db->getEscaped( $value ) . '\''
+						. ' `value` = \'' . xJ::escape( $db, $value ) . '\''
 						. ' WHERE `user_id` = \'' . (int) $userid . '\''
 						. ' AND `field_id` = \'' . (int) $id . '\''
 						;
 			} elseif ( !$existingfield ) {
 				$query	= 'INSERT INTO #__community_fields_values'
 						. ' (`user_id`, `field_id`, `value` )'
-						. ' VALUES ( \'' . (int) $userid . '\', \'' . (int) $id . '\', \'' . $db->getEscaped( $value ) . '\' )'
+						. ' VALUES ( \'' . (int) $userid . '\', \'' . (int) $id . '\', \'' . xJ::escape( $db, $value ) . '\' )'
 						;
 			}
 

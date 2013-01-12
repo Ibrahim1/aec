@@ -924,7 +924,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$orderby		= $app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
 	$groups			= $app->getUserStateFromRequest( "groups{$option}", 'groups', 'active' );
 	$search			= $app->getUserStateFromRequest( "search{$option}", 'search', '' );
-	$search			= $db->getEscaped( trim( strtolower( $search ) ) );
+	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	if ( empty( $planid ) ) {
 		$filter_plan	= $app->getUserStateFromRequest( "filter_plan{$option}", 'filter_plan', 0 );
@@ -1702,8 +1702,7 @@ function editSettings( $option )
 	}
 
 	$settings = new aecSettings ( 'cfg', 'general' );
-	$settingsparams = array_merge( $aecConfig->cfg, $ppsettings );
-	$settings->fullSettingsArray( $params, $settingsparams, $lists ) ;
+	$settings->fullSettingsArray( $params, $aecConfig->cfg, $lists ) ;
 
 	// Call HTML Class
 	$aecHTML = new aecHTML( $settings->settings, $settings->lists );
@@ -3741,7 +3740,7 @@ function listMicroIntegrations( $option )
 
 	$orderby		= $app->getUserStateFromRequest( "orderby_mi{$option}", 'orderby_mi', 'ordering ASC' );
 	$search			= $app->getUserStateFromRequest( "search{$option}", 'search', '' );
-	$search			= $db->getEscaped( trim( strtolower( $search ) ) );
+	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	$filter_planid	= intval( $app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
 
@@ -4759,7 +4758,7 @@ function invoices( $option )
 	$search 	= $app->getUserStateFromRequest( "search{$option}_invoices", 'search', '' );
 
 	if ( $search ) {
-		$unformatted = $db->getEscaped( trim( strtolower( $search ) ) );
+		$unformatted = xJ::escape( $db, trim( strtolower( $search ) ) );
 
 		$where = 'LOWER(`invoice_number`) LIKE \'%' . $unformatted . '%\''
 				. ' OR LOWER(`secondary_ident`) LIKE \'%' . $unformatted . '%\''
@@ -4997,9 +4996,9 @@ function history( $option )
 
 	$where = array();
 	if ( $search ) {
-		$where[] = 'LOWER(`user_name`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
-		$where[] = 'LOWER(`invoice_number`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
-		$where[] = 'LOWER(`proc_name`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`user_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`invoice_number`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`proc_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
 	}
 
 	// get the total number of records
@@ -5052,9 +5051,9 @@ function eventlog( $option )
 
 	$where = array();
 	if ( $search ) {
-		$where[] = 'LOWER(`short`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
-		$where[] = 'LOWER(`event`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
-		$where[] = 'LOWER(`tags`) LIKE \'%' . $db->getEscaped( trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`short`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`event`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
+		$where[] = 'LOWER(`tags`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
 	}
 
 	// get the total number of records
@@ -5345,7 +5344,7 @@ function quicklookup( $option )
 		return false;
 	}
 
-	$search = $db->getEscaped( strtolower( $searcc ) );
+	$search = xJ::escape( $db, strtolower( $searcc ) );
 
 	$s = AECToolbox::searchUser( $search );
 

@@ -332,7 +332,7 @@ class mi_iproperty
 		$db = &JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__iproperty_companies'
-		. ' WHERE `name` = \'' . $db->getEscaped( $name ) . '\''
+		. ' WHERE `name` = \'' . xJ::escape( $db, $name ) . '\''
 		;
 		$db->setQuery( $query );
 		
@@ -344,7 +344,7 @@ class mi_iproperty
 		$db = &JFactory::getDBO();
 
 		$query = 'SELECT * FROM #__iproperty_' . $table
-		. ' WHERE `' . $field . '` = \'' . $db->getEscaped( $id ) . '\''
+		. ' WHERE `' . $field . '` = \'' . xJ::escape( $db, $id ) . '\''
 		;
 		$db->setQuery( $query );
 
@@ -375,13 +375,13 @@ class mi_iproperty
 		$values = array();
 		foreach ( $vars as $k => $v ) {
 			if ( ( $k != 'id' ) && ( $k != 'ip_source' ) ) {
-				$updates[] = '`' . $k . '` = \'' .  $db->getEscaped( $v ) . '\'';
+				$updates[] = '`' . $k . '` = \'' .  xJ::escape( $db, $v ) . '\'';
 			}
 		}
 
 		$query  = 'UPDATE #__iproperty_' . $table
 				. ' SET ' . implode(', ', $updates ) . ' '
-				. ' WHERE id = \'' .  $db->getEscaped( $object->id ) . '\''
+				. ' WHERE id = \'' .  xJ::escape( $db, $object->id ) . '\''
 				;
 		$db->setQuery( $query );
 		return $db->query();
