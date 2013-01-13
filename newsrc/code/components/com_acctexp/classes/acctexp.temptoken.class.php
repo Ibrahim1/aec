@@ -153,6 +153,13 @@ class aecTempToken extends serialParamDBTable
 
 		return $this->storeload();
 	}
+	
+	function delete()
+	{
+		setcookie( 'aec_token', "", ( (int) gmdate('U') ) - 3600);
+
+		return parent::delete();
+	}
 }
 
 ?>

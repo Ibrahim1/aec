@@ -1201,14 +1201,6 @@ class InvoiceFactory
 		$exchange = $add = $silent = null;
 
 		$this->triggerMIs( 'invoice_creation', $exchange, $add, $silent );
-
-		// Delete TempToken - the data is now safe with the invoice
-		$temptoken = new aecTempToken();
-		$temptoken->getComposite();
-
-		if ( $temptoken->id ) {
-			$temptoken->delete();
-		}
 	}
 
 	function triggerMIs( $action, &$exchange, &$add, &$silent )
@@ -1787,6 +1779,14 @@ class InvoiceFactory
 			$this->invoice->method = $this->processor;
 
 			$this->invoice->storeload();
+		}
+
+		// Delete TempToken - the data is now safe with the invoice
+		$temptoken = new aecTempToken();
+		$temptoken->getComposite();
+
+		if ( $temptoken->id ) {
+			$temptoken->delete();
 		}
 
 		if ( !empty( $coupon ) ) {

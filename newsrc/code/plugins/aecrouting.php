@@ -73,6 +73,11 @@ class plgSystemAECrouting extends JPlugin
 		$vars['tsu']			= $vars['task'] == 'save';
 		$vars['lostpw']			= $vars['task'] == 'lostPassword';
 
+		$vars['checkout']		= ( ( $vars['task'] == 'checkout' )
+									|| ( $vars['task'] == 'saveSubscription' )
+									|| ( $vars['task'] == 'thanks' )
+									);
+
 		$vars['forget']		= JRequest::getVar( 'forget', '' );
 
 		$vars['submit']		= JRequest::getVar( 'submit', '' );
@@ -338,7 +343,7 @@ class plgSystemAECrouting extends JPlugin
 					$app->redirect( $uri->toString() );
 				}
 			}
-		} elseif ( $vars['has_usage'] ) {
+		} elseif ( $vars['has_usage'] && !$vars['checkout'] ) {aecDebug("yeah, still this");
 			$this->saveToToken( $vars );
 		} elseif ( $vars['cbsreg'] ) {
 			// Any kind of user profile edit = trigger MIs
