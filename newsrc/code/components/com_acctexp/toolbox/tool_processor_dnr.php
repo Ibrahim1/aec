@@ -37,8 +37,8 @@ class tool_processor_dnr
 		}
 		
 		$pph = new PaymentProcessorHandler();
-		$lists['delete'] = $pph->getProcessorSelectList( false, $_POST['delete'] );
-		$lists['replace'] = $pph->getProcessorSelectList( false, $_POST['replace'] );
+		$settings['lists']['delete'] = $pph->getProcessorSelectList( false, $_POST['delete'] );
+		$settings['lists']['replace'] = $pph->getProcessorSelectList( false, $_POST['replace'] );
 
 		return $settings;
 	}
