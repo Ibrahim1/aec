@@ -49,41 +49,48 @@ class HTML_myCommon
 
 		$v = new JVersion();
 
+		$head = !$v->isCompatible('3.0');
+
 		if ( $v->isCompatible('1.6') ) {
-			HTML_myCommon::addScript( JURI::root(true).'/media/system/js/core.js' );
+			HTML_myCommon::addScript( '/system/js/core.js', $head );
 		}
 
 		if ( !$v->isCompatible('3.0') ) {
-			HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+			HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-1.7.2.min.js', $head );
 		}
 
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-1.8.23.custom.min.js' );
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/fg.menu.js' );
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/daterangepicker.jQuery.js' );
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.multiselect.js' );
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js' );
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/select2-bootstrap.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-ui-1.8.23.custom.min.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/fg.menu.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/daterangepicker.jQuery.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.multiselect.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.simplecolorpicker.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/select2-bootstrap.js', $head );
 
 		if ( !$v->isCompatible('3.0') ) {
-			HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/bootstrap/bootstrap.min.js' );
-		} else {
-			HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
+			HTML_myCommon::addScript( '/com_acctexp/js/bootstrap/bootstrap.min.js', $head );
 		}
 
-		HTML_myCommon::addScript( JURI::root(true).'/media/com_acctexp/js/aec.backend.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquerync.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/aec.backend.js', $head );
 	}
 
-	function addScript( $rel )
+	function addScript( $rel, $head=false )
 	{
-		echo '<script type="text/javascript" src="' . $rel . '"></script>';
+		$rel = JURI::root(true).'/media/' . $rel;
+
+		if ( $head ) {
+			$document =& JFactory::getDocument();
+			$document->addScript($rel);
+		} else {
+			echo '<script type="text/javascript" src="' . $rel . '"></script>';
+		}
 	}
 
 	function startCommon( $id='aec-wrap' )
 	{
 		HTML_myCommon::addBackendCSS();
-		HTML_myCommon::addBackendJS();
 
 		echo '<div id="' . $id . '">';
 		echo HTML_AcctExp::menuBar();
@@ -107,6 +114,8 @@ class HTML_myCommon
 		if ( $footer ) {
 			HTML_myCommon::Valanx();
 		}
+
+		HTML_myCommon::addBackendJS();
 
 		echo '</div>';
 	}
@@ -774,7 +783,7 @@ class HTML_AcctExp
 				<?php } ?>
 				</ul>
 				<form action="#" class="pull-right">
-					<input type="text" rel="popover" class="span2" placeholder="Quicksearch" id="quicksearch" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
+					<input type="text" class="span2" placeholder="Quicksearch" id="quicksearch" data-placement="bottom" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>
 	        </div>
 	      </div>

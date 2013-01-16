@@ -40,8 +40,8 @@ jQuery(document).ready(function(jQuery) {
 		'keyup' : function(e) { clearTimeout(typingTimer); inputString = this.value; typingTimer = setTimeout(lookup, "300"); },
 		'keydown' : function(e) { jQuery('.popover .popover-content p').html("Searching..."); },
 		'focusin' : function(e) {
-			jQuery(this).popover('show');
-			
+			jQuery("#quicksearch").popover();
+
 			if ( this.value != "" ) {
 				inputString = this.value;
 
@@ -50,7 +50,9 @@ jQuery(document).ready(function(jQuery) {
 				typingTimer = setTimeout(lookup, "100");
 			}
 		},
-		'focusout' : function(e) { jQuery("div.popover").fadeOut(); }
+		'focusout' : function(e) {
+			jQuery(this).popover('hide');
+		}
 	});
 
 	jQuery("#settings-filter").on({
