@@ -343,7 +343,7 @@ class plgSystemAECrouting extends JPlugin
 					$app->redirect( $uri->toString() );
 				}
 			}
-		} elseif ( $vars['has_usage'] && !$vars['checkout'] ) {aecDebug("yeah, still this");
+		} elseif ( $vars['has_usage'] && !$vars['checkout'] ) {
 			$this->saveToToken( $vars );
 		} elseif ( $vars['cbsreg'] ) {
 			// Any kind of user profile edit = trigger MIs

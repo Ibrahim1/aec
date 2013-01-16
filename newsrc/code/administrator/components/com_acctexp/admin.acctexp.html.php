@@ -177,7 +177,7 @@ class HTML_myCommon
 			}
 		}
 
-		$v = new JVersion();
+
 		?><div class="aec-buttons"><?php
 		foreach ( $buttons as $action => $button ) {
 			if ( isset( $button['groupstart'] ) ) {
@@ -187,10 +187,17 @@ class HTML_myCommon
 			} elseif ( !isset( $button['style'] ) ) {
 				echo '<span class="btn-hl"></span>';
 			} else {
-				echo '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . $button['text'] . '">' . aecHTML::Icon( $button['icon'], true ) .  '</a>';
+				echo HTML_mycommon::getButton( $action, $object, $button );
 			}
 		}
 		?></div><?php
+	}
+
+	function getButton( $action, $object, $button, $fulltext=false )
+	{
+		$v = new JVersion();
+
+		return '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . ( $fulltext ? '' : $button['text'] ) . '">' . aecHTML::Icon( $button['icon'], true ) . ( $fulltext ? ' ' . $button['text'] : '' ) .  '</a>';
 	}
 
 	function toggleBtn( $type, $property, $id, $state )
@@ -1250,35 +1257,42 @@ class HTML_AcctExp
 		HTML_myCommon::getButtons( 'list_short', 'Processor' );
 		HTML_myCommon::startForm();
 		?>
-		<div class="aecadminform">
-			<table class="adminlist table-striped">
-				<thead><tr>
-					<th width="1%">#</th>
-					<th width="1%">id</th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="10%" class="leftalign"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
-					<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
-					<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
-				</tr></thead>
-				<?php foreach ( $rows as $i => $row ) { ?>
-					<tr>
-						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-						<td><?php echo $row->processor->id; ?></td>
-						<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
-						<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
-						<td><?php echo $row->processor->info['statement']; ?></td>
-						<td><?php echo HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
-					</tr>
-				<?php } ?>
-				<tfoot>
-					<tr>
-						<td colspan="6">
-		 					<?php echo $pageNav->getListFooter(); ?>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
+		<?php if ( empty( $rows ) ) { ?>
+			<div class="clearfix"></div>
+			<div class="container" style="min-height: 50%; padding: 10% 0;">
+				<p style="text-align: center">There is no processor set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Processor', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new processor' ), true )?></p>
+			</div>
+		<?php } else { ?>
+			<div class="aecadminform">
+				<table class="adminlist table-striped">
+					<thead><tr>
+						<th width="1%">#</th>
+						<th width="1%">id</th>
+						<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+						<th width="10%" class="leftalign"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
+						<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
+						<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
+					</tr></thead>
+					<?php foreach ( $rows as $i => $row ) { ?>
+						<tr>
+							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+							<td><?php echo $row->processor->id; ?></td>
+							<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
+							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
+							<td><?php echo $row->processor->info['statement']; ?></td>
+							<td><?php echo HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
+						</tr>
+					<?php } ?>
+					<tfoot>
+						<tr>
+							<td colspan="6">
+			 					<?php echo $pageNav->getListFooter(); ?>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showProcessors" />
 		<input type="hidden" name="returnTask" value="showProcessors" />
@@ -1577,21 +1591,27 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations' );
 		HTML_myCommon::getButtons( 'list', 'MicroIntegration' ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
+		<?php if ( empty( $rows ) ) { ?>
+			<div class="clearfix"></div>
+			<div class="container" style="min-height: 50%; padding: 10% 0;">
+				<p style="text-align: center">There is no micro integration plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'MicroIntegration', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new micro integration' ), true )?></p>
+			</div>
+		<?php } else { ?>
 			<div class="aec-filters">
-			<table class="adminheading">
-				<tr>
-					<td style="text-align:center;">
-						<div class="form-inline">
-							<label for="filter_planid"><?php echo JText::_('PLAN_FILTER'); ?></label>&nbsp;<?php echo $lists['filterplanid'] ?>&nbsp;<label for="orderby_mi"><?php echo JText::_('ORDER_BY') ?></label>&nbsp;<?php echo $lists['orderNav']; ?><br />
-							<input type="text" name="search" class="search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
-						</div>
-					</td>
-					<td>
-						<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
-					</td>
-				</tr>
-				<tr><td></td></tr>
-			</table>
+				<table class="adminheading">
+					<tr>
+						<td style="text-align:center;">
+							<div class="form-inline">
+								<label for="filter_planid"><?php echo JText::_('PLAN_FILTER'); ?></label>&nbsp;<?php echo $lists['filterplanid'] ?>&nbsp;<label for="orderby_mi"><?php echo JText::_('ORDER_BY') ?></label>&nbsp;<?php echo $lists['orderNav']; ?><br />
+								<input type="text" name="search" class="search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
+							</div>
+						</td>
+						<td>
+							<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+						</td>
+					</tr>
+					<tr><td></td></tr>
+				</table>
 			</div>
 
 			<div class="aecadminform">
@@ -1636,6 +1656,7 @@ jQuery(document).ready(function(jQuery) {
 				</tfoot>
 			</table>
 			</div>
+		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showMicroIntegrations" />
 		<input type="hidden" name="returnTask" value="showMicroIntegrations" />
@@ -1845,81 +1866,88 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );
 		HTML_myCommon::startForm();
 		?>
-		<div class="aec-filters">
-			<div class="form-inline">
-				<?php echo $lists['filter_group'];?>
-				<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+		<?php if ( empty( $rows ) ) { ?>
+			<div class="clearfix"></div>
+			<div class="container" style="min-height: 50%; padding: 10% 0;">
+				<p style="text-align: center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
 			</div>
-		</div>
-		<div class="aecadminform">
-		<table class="adminlist table-striped">
-			<thead><tr>
-				<th width="1%">#</th>
-				<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-				<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-				<th width="1%" class="leftalign"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
-				<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-				<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-				<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-				<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-				<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-				<th width="10%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
-				<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
-			</tr></thead>
-			<tbody>
-				<?php foreach ( $rows as $i => $row ) { ?>
+		<?php } else { ?>
+			<div class="aec-filters">
+				<div class="form-inline">
+					<?php echo $lists['filter_group'];?>
+					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+				</div>
+			</div>
+			<div class="aecadminform">
+			<table class="adminlist table-striped">
+				<thead><tr>
+					<th width="1%">#</th>
+					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
+					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="1%" class="leftalign"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+					<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+					<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+					<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
+					<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
+					<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
+					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+				</tr></thead>
+				<tbody>
+					<?php foreach ( $rows as $i => $row ) { ?>
+						<tr>
+							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+							<td><?php echo $row->id; ?></td>
+							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+							<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
+							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+							<td class="leftalign"><?php echo $row->desc; ?></td>
+							<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
+							<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
+							<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
+							<td>
+								<div class="progress-group">
+									<div class="progress progress-short progress-danger">
+										<?php if ( $row->expiredcount ) { ?>
+											<div class="bar" style="width: <?php echo $row->expired_percentage; ?>%;">
+												<?php if ( !$row->expired_inner ) { echo '</div>'; } ?>
+												<div class="progress-content"><a href="<?php echo $row->link_expired; ?>"><strong><?php echo $row->expiredcount; ?></strong></a></div>
+											<?php if ( $row->expired_inner ) { echo '</div>'; } ?>
+										<?php } ?>
+									</div>
+									<div class="progress progress-short progress-striped">
+										<?php if ( $row->usercount ) { ?>
+											<div class="bar" style="width: <?php echo $row->active_percentage; ?>%;">
+												<?php if ( !$row->active_inner ) { echo '</div>'; } ?>
+												<div class="progress-content"><a href="<?php echo $row->link_active; ?>"><strong><?php echo $row->usercount; ?></strong></a></div>
+											<?php if ( $row->active_inner ) { echo '</div>'; } ?>
+										<?php } ?>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="progress progress-short progress-info progress-striped">
+									<?php if ( $row->usercount + $row->expiredcount ) { ?>
+										<div class="bar" style="width: <?php echo $row->total_percentage; ?>%;">
+											<?php if ( !$row->total_inner ) { echo '</div>'; } ?>
+											<div class="progress-content"><a href="<?php echo $row->link; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></div>
+										<?php if ( $row->total_inner ) { echo '</div>'; } ?>
+									<?php } ?>
+								</div>
+							</td>
+						</tr>
+					<?php } ?>
+				</tbody>
+				<tfoot>
 					<tr>
-						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-						<td><?php echo $row->id; ?></td>
-						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-						<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
-						<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-						<td class="leftalign"><?php echo $row->desc; ?></td>
-						<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
-						<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
-						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
-						<td>
-							<div class="progress-group">
-								<div class="progress progress-short progress-danger">
-									<?php if ( $row->expiredcount ) { ?>
-										<div class="bar" style="width: <?php echo $row->expired_percentage; ?>%;">
-											<?php if ( !$row->expired_inner ) { echo '</div>'; } ?>
-											<div class="progress-content"><a href="<?php echo $row->link_expired; ?>"><strong><?php echo $row->expiredcount; ?></strong></a></div>
-										<?php if ( $row->expired_inner ) { echo '</div>'; } ?>
-									<?php } ?>
-								</div>
-								<div class="progress progress-short progress-striped">
-									<?php if ( $row->usercount ) { ?>
-										<div class="bar" style="width: <?php echo $row->active_percentage; ?>%;">
-											<?php if ( !$row->active_inner ) { echo '</div>'; } ?>
-											<div class="progress-content"><a href="<?php echo $row->link_active; ?>"><strong><?php echo $row->usercount; ?></strong></a></div>
-										<?php if ( $row->active_inner ) { echo '</div>'; } ?>
-									<?php } ?>
-								</div>
-							</div>
-						</td>
-						<td>
-							<div class="progress progress-short progress-info progress-striped">
-								<?php if ( $row->usercount + $row->expiredcount ) { ?>
-									<div class="bar" style="width: <?php echo $row->total_percentage; ?>%;">
-										<?php if ( !$row->total_inner ) { echo '</div>'; } ?>
-										<div class="progress-content"><a href="<?php echo $row->link; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></div>
-									<?php if ( $row->total_inner ) { echo '</div>'; } ?>
-								<?php } ?>
-							</div>
+						<td colspan="13">
+		 					<?php echo $pageNav->getListFooter(); ?>
 						</td>
 					</tr>
-				<?php } ?>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="13">
-	 					<?php echo $pageNav->getListFooter(); ?>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
-		</div>
+				</tfoot>
+			</table>
+			</div>
+		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showSubscriptionPlans" />
 		<input type="hidden" name="returnTask" value="showSubscriptionPlans" />
@@ -2524,45 +2552,52 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startForm();
 
 		?>
-		<div class="aecadminform">
-			<table class="adminlist table-striped">
-				<thead><tr>
-					<th width="1%">#</th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
-					<th width="10%" class="leftalign"><?php echo JText::_('COUPON_NAME'); ?></th>
-					<th width="10%" class="leftalign"><?php echo JText::_('COUPON_CODE'); ?></th>
-					<th width="50%" class="leftalign"><?php echo JText::_('COUPON_DESC'); ?></th>
-					<th width="1%"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
-					<th width="10%" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
-				</tr></thead>
-				<tbody>
-					<?php foreach ( $rows as $i => $row ) { ?>
+		<?php if ( empty( $rows ) ) { ?>
+			<div class="clearfix"></div>
+			<div class="container" style="min-height: 50%; padding: 10% 0;">
+				<p style="text-align: center">There is no coupon set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Coupon', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new coupon' ), true )?></p>
+			</div>
+		<?php } else { ?>
+			<div class="aecadminform">
+				<table class="adminlist table-striped">
+					<thead><tr>
+						<th width="1%">#</th>
+						<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+						<th width="10%" class="leftalign"><?php echo JText::_('COUPON_NAME'); ?></th>
+						<th width="10%" class="leftalign"><?php echo JText::_('COUPON_CODE'); ?></th>
+						<th width="50%" class="leftalign"><?php echo JText::_('COUPON_DESC'); ?></th>
+						<th width="1%"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
+						<th width="10%" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
+					</tr></thead>
+					<tbody>
+						<?php foreach ( $rows as $i => $row ) { ?>
+							<tr>
+								<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+								<td><?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
+								<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+								<td><strong><?php echo $row->coupon_code; ?></strong></td>
+								<td class="leftalign"><?php echo $row->desc; ?></td>
+								<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
+								<td>
+									<div class="progress progress-info progress-striped">
+										<?php if ( $row->usecount ) { ?>
+											<div class="bar" style="width: <?php echo $row->percentage; ?>%;"><?php if ( $row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?></div><?php if ( !$row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?>
+										<?php } ?>
+									</div>
+								</td>
+							</tr>
+						<?php } ?>
+					</tbody>
+					<tfoot>
 						<tr>
-							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-							<td><?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
-							<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-							<td><strong><?php echo $row->coupon_code; ?></strong></td>
-							<td class="leftalign"><?php echo $row->desc; ?></td>
-							<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
-							<td>
-								<div class="progress progress-info progress-striped">
-									<?php if ( $row->usecount ) { ?>
-										<div class="bar" style="width: <?php echo $row->percentage; ?>%;"><?php if ( $row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?></div><?php if ( !$row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?>
-									<?php } ?>
-								</div>
+							<td colspan="9">
+			 					<?php echo $pageNav->getListFooter(); ?>
 							</td>
 						</tr>
-					<?php } ?>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="9">
-		 					<?php echo $pageNav->getListFooter(); ?>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
+					</tfoot>
+				</table>
+			</div>
+		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showCoupons" />
 		<input type="hidden" name="returnTask" value="showCoupons" />
