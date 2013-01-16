@@ -28,7 +28,10 @@ class tool_dbsearchreplace
 
 		$settings = array();
 
-		$settings['type']	= array( 'list', 'Table', 'The tables you want to run the search&replace on' );
+		$settings['type']		= array( 'list', 'Table', 'The tables you want to run the search&replace on' );
+		$settings['search']		= array( 'inputC', "Search", "The string of text you want to search for." );
+		$settings['replace']	= array( 'inputC', "Replace", "What you want to replace it with." );
+		$settings['armed']		= array( 'toggle', 'Arm Rewrite', 'Actually carry out the database changes.' );
 
 		$types = array(	'config' => 'Main Configuration',
 						'processor' => 'Payment Processors',
@@ -44,12 +47,17 @@ class tool_dbsearchreplace
 						'subscr' => 'Subscriptions'
 				);
 
-		$typelist = array();
-		foreach ( $types as $type => $typename ) {
-			$typelist[] = JHTML::_('select.option', $type, $typename );
+		if ( !empty( $_POST['type'] ) ) {
+			$stype = $_POST['type'];
+		} else {
+			$stype = array( 'plans' );
 		}
 
-		$settings['lists']['type'] = JHTML::_('select.genericlist', $typelist, 'type[]', 'size="1"', 'value', 'text', array());
+		$settings['lists']['type'] = '<select name="type[]" multiple="multiple" size="1">';
+		foreach ( $types as $type => $tname ) {
+			$settings['lists']['type'] .= '<option value="' . $type . '"' . ( in_array( $type, $stype ) ? ' selected="selected"' : '' ) . '/>' . $tname . '</option>';
+		}
+		$settings['lists']['type'] .= '</select>';
 
 		return $settings;
 	}
@@ -78,26 +86,29 @@ class tool_dbsearchreplace
 
 		$changes = 0;
 		foreach ( $_POST['type'] as $type ) {
-			$query = 'SELECT `id` FROM `#__acctexp_' . $types[$type][0];
+			$query = 'SELECT `id` FROM `#__acctexp_' . $types[$type][0] . '`';
 
-			$result = $db->query( $query );
+			$db->setQuery( $query );
 
-			while ( $row = $db->loadAssoc($result) ) {
+			$ids = xJ::getDBArray( $db );
+
+			foreach ( $ids as $id ) {
 				$objclass = $types[$type][1];
 
 				$obj = new $objclass();
-				$obj->load( $row[0] );
+				$obj->load( $id );
 
 				if ( !empty( $_POST['armed'] ) && !empty( $_POST['replace'] ) ) {
-					$mod = AECToolbox::searchreplaceObjectProperties( $obj, $_POST['search'], $_POST['replace'] );
-					if ( $mod != $obj ) {
+					if ( AECToolbox::searchinObjectProperties( $obj, $_POST['search'] ) ) {
+						$mod = AECToolbox::searchreplaceinObjectProperties( $obj, $_POST['search'], $_POST['replace'] );
+
 						$mod->check();
 						$mod->store();
 
 						$changes++;
 					}
 				} else {
-					if ( AECToolbox::searchObjectProperties( $obj, $_POST['search'] ) ) {
+					if ( AECToolbox::searchinObjectProperties( $obj, $_POST['search'] ) ) {
 						$changes++;
 					}
 				}

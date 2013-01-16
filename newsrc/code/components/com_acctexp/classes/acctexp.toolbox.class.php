@@ -1081,6 +1081,46 @@ class AECToolbox
 		return $result;
 	}
 
+	function searchinObjectProperties( $object, $search )
+	{
+		$found = false;
+
+		if ( is_array( $object ) ) {
+			foreach ( $object as $k => $v ) {
+				$found += AECToolbox::searchinObjectProperties( $v, $search );
+			}
+		} elseif ( is_object( $object ) ) {
+			foreach ( get_object_vars( $object ) as $field => $v ) {
+				if ( strpos( $field, '_' ) !== 0 ) {
+					$found += AECToolbox::searchinObjectProperties( $object->$field, $search );
+				}
+			}
+		} else {
+			$found += substr_count( $object, $search );
+		}
+
+		return $found;
+	}
+
+	function searchreplaceinObjectProperties( $object, $search, $replace )
+	{
+		if ( is_array( $object ) ) {
+			foreach ( $object as $k => $v ) {
+				$object[$k] = AECToolbox::searchreplaceinObjectProperties( $v, $search, $replace );
+			}
+		} elseif ( is_object( $object ) ) {
+			foreach ( get_object_vars( $object ) as $field => $v ) {
+				if ( strpos( $field, '_' ) !== 0 ) {
+					$object->$field = AECToolbox::searchreplaceinObjectProperties( $object->$field, $search, $replace );
+				}
+			}
+		} else {
+			$object = str_replace( $search, $replace, $object );
+		}
+
+		return $object;
+	}
+	
 	function getObjectProperty( $object, $key, $test=false )
 	{
 		if ( !is_array( $key ) ) {
