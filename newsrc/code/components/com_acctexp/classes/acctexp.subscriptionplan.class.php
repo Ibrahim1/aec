@@ -756,7 +756,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$plans_comparison_total	= false;
 
 		if ( is_object( $metaUser ) ) {
-			if ( is_object( $metaUser->objSubscription ) ) {
+			if ( is_object( $metaUser->focusSubscription ) ) {
 				$comparison				= $this->doPlanComparison( $metaUser->focusSubscription );
 				$plans_comparison		= $comparison['comparison'];
 				$plans_comparison_total	= $comparison['total_comparison'];

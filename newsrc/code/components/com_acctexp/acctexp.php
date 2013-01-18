@@ -888,7 +888,7 @@ function invoiceAction( $option, $action, $invoice_number )
 	}
 }
 
-function InvoicePrintout( $option, $invoice )
+function InvoicePrintout( $option, $invoice, $standalone=true )
 {
 	$user = &JFactory::getUser();
 
@@ -896,7 +896,43 @@ function InvoicePrintout( $option, $invoice )
 		return getView( 'access_denied' );
 	} else {
 		$iFactory = new InvoiceFactory( $user->id );
-		$iFactory->invoiceprint( $option, $invoice );
+		$iFactory->invoiceprint( $option, $invoice, $standalone );
+	}
+}
+
+function InvoicePDF( $option, $invoice )
+{
+	$user = &JFactory::getUser();
+
+	if ( empty( $user->id ) ) {
+		return getView( 'access_denied' );
+	} else {
+		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
+		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
+
+		ob_start();
+
+		InvoicePrintout( $option, $invoice, false );
+
+		$content = ob_get_contents();
+
+		ob_end_clean();
+
+		$document=& JFactory::getDocument();
+		$document->_type="html";
+		$renderer = $document->loadRenderer("head");
+
+		$content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+					.'<html xmlns="http://www.w3.org/1999/xhtml">'
+					.'<head>' . $renderer->render() . '</head><body>'.$content.'</body>'
+					.'</html>';
+
+		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+		$pdf->AddPage();
+		$pdf->writeHTML($content, true, false, true, false, '');
+
+		$pdf->Output( $invoice_number.'.pdf', 'I');exit;
 	}
 }
 

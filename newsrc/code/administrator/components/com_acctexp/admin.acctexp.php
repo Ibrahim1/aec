@@ -203,6 +203,7 @@ switch( strtolower( $task ) ) {
 	case 'cancelinvoice': cancelInvoice( $option, aecGetParam('invoice'), $returnTask ); break;
 
 	case 'printinvoice': AdminInvoicePrintout( $option, aecGetParam('invoice') ); break;
+	case 'pdfinvoice': AdminInvoicePDF( $option, aecGetParam('invoice') ); break;
 
 	case 'history': history( $option ); break;
 	case 'eventlog': eventlog( $option ); break;
@@ -631,7 +632,8 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 			$status .= aecHTML::Icon( 'shopping-cart' ) . HTML_AcctExp::DisplayDateInLocalTime( $invoice->transaction_date );
 		}
 
-		$actions[] = array( 'print', 'print', 'HISTORY_ACTION_PRINT', '', '" target="_blank' );
+		$actions[] = array( 'print', 'print', 'HISTORY_ACTION_PRINT', '', '&tmpl=component" target="_blank' );
+		$actions[] = array( 'pdf', 'file', 'PDF', '', '' );
 
 		$actionlist = '<div class="btn-group">';
 		foreach ( $actions as $action ) {
@@ -4973,15 +4975,43 @@ function cancelInvoice( $option, $invoice_number, $task )
 	aecRedirect( 'index.php?option=' . $option . '&task=' . $task . $userid, JText::_('REMOVED') );
 }
 
-function AdminInvoicePrintout( $option, $invoice_number )
+function AdminInvoicePrintout( $option, $invoice_number, $standalone=true )
 {
-	$db = &JFactory::getDBO();
-
 	$invoice = new Invoice();
 	$invoice->loadInvoiceNumber( $invoice_number );
 
 	$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
-	$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number );
+	$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, $standalone );
+}
+
+function AdminInvoicePDF( $option, $invoice_number )
+{
+	require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
+	require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
+
+	ob_start();
+
+	AdminInvoicePrintout( $option, $invoice_number, false );
+
+	$buffer = ob_get_contents();
+
+	ob_end_clean();
+
+	$document=& JFactory::getDocument();
+	$document->_type="html";
+	$renderer = $document->loadRenderer("head");
+
+	$content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
+				.'<html xmlns="http://www.w3.org/1999/xhtml">'
+				.'<head>' . $renderer->render() . '</head><body>'.$buffer.'</body>'
+				.'</html>';
+
+	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+	$pdf->AddPage();
+	$pdf->writeHTML($content, true, false, true, false, '');
+
+	$pdf->Output( $invoice_number.'.pdf', 'I');exit;
 }
 
 function history( $option )

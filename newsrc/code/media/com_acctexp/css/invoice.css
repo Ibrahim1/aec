@@ -127,7 +127,7 @@ text-align: center;
 margin-top: 14px;
 }
 
-button#printbutton {
+div#printbutton button  {
 margin: 34px;
 position: absolute;
 }

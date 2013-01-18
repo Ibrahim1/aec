@@ -10,43 +10,22 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<title><?php echo $data['page_title'] ?></title>
-	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/template.etacarinae.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/invoice.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="<?php echo JURI::root(true) . '/media/' . $option ?>/css/invoice_print.css" type="text/css" media="print" />
-	<?php if ( !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) { ?>
-	<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option ?>/js/jquery/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript">
-	jQuery(document).ready(function() {
-		jQuery('textarea[name=address]').keyup(function() {
-			jQuery('#address pre').text($(this).val());
-		});
-	 });
-	</script>
-	<?php } ?>
-</head>
-<body>
-	<div id="aec">
-	<?php if ( !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) { ?>
-		<div id="printbutton">
-			<div id="printbutton_inner">
-				<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['address'] ?></textarea>
-				<button onClick="window.print()" id="printbutton"><?php echo JText::_('INVOICEPRINT_PRINT') ?></button>
-			</div>
-			<p><?php echo JText::_('INVOICEPRINT_BLOCKNOTICE') ?></p>
+<div id="aec">
+<?php if ( !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) { ?>
+	<div id="printbutton">
+		<div id="printbutton_inner">
+			<textarea align="left" cols="40" rows="5" name="address" /><?php echo $data['address'] ?></textarea>
+			<button onClick="window.print()"><?php echo JText::_('INVOICEPRINT_PRINT') ?></button>
 		</div>
-	<?php } else { ?>
-		<div id="printbutton">
-			<div id="printbutton_inner">
-				<textarea align="left" cols="40" rows="5" name="address" disabled="disabled" /><?php echo $data['address'] ?></textarea>
-				<button onClick="window.print()" id="printbutton"><?php echo JText::_('INVOICEPRINT_PRINT') ?></button>
-			</div>
-		</div>
-	<?php } ?>
-	<?php @include( $tmpl->tmpl( 'invoice' ) ) ?>
+		<p><?php echo JText::_('INVOICEPRINT_BLOCKNOTICE') ?></p>
 	</div>
-</body>
+<?php } else { ?>
+	<div id="printbutton">
+		<div id="printbutton_inner">
+			<textarea align="left" cols="40" rows="5" name="address" disabled="disabled" /><?php echo $data['address'] ?></textarea>
+			<button onClick="window.print()" id="printbutton"><?php echo JText::_('INVOICEPRINT_PRINT') ?></button>
+		</div>
+	</div>
+<?php } ?>
+<?php @include( $tmpl->tmpl( 'invoice' ) ) ?>
+</div>

@@ -11,8 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-$tmpl->addDefaultCSS();
-
 $otherfields = array( "page_title", "before_header", "header", "after_header", "address", "before_content", "after_content", "before_footer", "footer", "after_footer" );
 
 foreach ( $data as $k => $v ) {
@@ -21,17 +19,23 @@ foreach ( $data as $k => $v ) {
 	}
 }
 
+if ( $standalone && !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) {
+	$js = "jQuery('textarea[name=address]').keyup(function() {
+			jQuery('#address pre').text($(this).val());
+		});";
+	$tmpl->enqueueJQueryCode( $js );
+}
+
+$tmpl->defaultHeader();
+
+$document=& JFactory::getDocument();
+$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice.css" />' );
+$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_embed.css" />' );
+$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_print.css" />' );
+
 if ( $standalone ) {
 	@include( $tmpl->tmpl( 'invoice_standalone' ) );
-
-	exit;
 } else {
-	$tmpl->addDefaultCSS();
-
-	$document=& JFactory::getDocument();
-	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_embed.css" />' );
-	$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_print.css" />' );
-
 	@include( $tmpl->tmpl( 'invoice' ) );
 }
 

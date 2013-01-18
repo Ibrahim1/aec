@@ -128,6 +128,11 @@ foreach ( $invoiceList as $invoiceid ) {
 									'text'	=> JText::_('HISTORY_ACTION_PRINT'),
 									'insert' => ' target="_blank" ',
 									'class' => 'btn' );
+		$actionsarray[] = array( 	'task'	=> 'invoicePDF',
+									'add'	=> 'invoice=' . $invoice->invoice_number,
+									'text'	=> 'PDF',
+									'insert' => '',
+									'class' => 'btn' );
 	}
 
 	if ( ( $invoice->transaction_date == '0000-00-00 00:00:00' ) || ( $invoice->subscr_id  ) ) {
