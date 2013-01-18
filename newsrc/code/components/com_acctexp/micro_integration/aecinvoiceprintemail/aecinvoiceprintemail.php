@@ -201,6 +201,7 @@ class mi_aecinvoiceprintemail
 		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ), true );
 
 		$content = AECToolbox::rewriteEngineRQ( ob_get_contents(), $iFactory );
+
 		ob_end_clean();
 
 		return $content;
