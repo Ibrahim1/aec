@@ -26,7 +26,12 @@ class mi_agora extends MI
 	function Settings()
 	{
 		$db = &JFactory::getDBO();
-		$db->setQuery( 'SELECT `id`, `name` FROM #__agora_group' );
+
+		if ( !isset( $this->settings['agorapro'] ) ) {
+			$this->settings['agorapro'] = $this->checkifpro();
+		}
+
+		$db->setQuery( 'SELECT `id`, `name` FROM #__' . $this->dbtable() . '_group' );
 
 		$groups = $db->loadObjectList();
 
@@ -40,7 +45,7 @@ class mi_agora extends MI
 		}
 
 		$db = &JFactory::getDBO();
-		$db->setQuery( 'SELECT `id`, `name` FROM #__agora_roles' );
+		$db->setQuery( 'SELECT `id`, `name` FROM #__' . $this->dbtable() . '_roles' );
 
 		$roles = $db->loadObjectList();
 
@@ -75,10 +80,37 @@ class mi_agora extends MI
 		}
 
 		$xsettings = array();
+		$xsettings['agorapro']	= array( 'toggle' );
 		$xsettings['rebuild']	= array( 'toggle' );
 		$xsettings['remove']	= array( 'toggle' );
 
 		return array_merge( $settings, $xsettings );
+	}
+
+	function Defaults()
+	{
+		$settings = array();
+		$settings['agorapro']	= $this->checkifpro();
+
+		return $settings;
+	}
+
+	function checkifpro()
+	{
+		$db = &JFactory::getDBO();
+
+		$tables = $db->getTableList();
+
+		return in_array( $app->getCfg( 'dbprefix' ) . "agorapro_config", $tables );
+	}
+
+	function dbtable()
+	{
+		if ( !empty( $this->settings['agorapro'] ) ) {
+			return 'agorapro';
+		} else {
+			return 'agora';
+		}
 	}
 
 	function relayAction( $request )
@@ -116,7 +148,7 @@ class mi_agora extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT id FROM #__agora_users'
+		$query = 'SELECT id FROM #__' . $this->dbtable() . '_users'
 				. ' WHERE `jos_id` = \'' . $userid . '\''
 				;
 		$db->setQuery( $query );
@@ -128,7 +160,7 @@ class mi_agora extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'SELECT `role` FROM #__agora_user_group'
+		$query = 'SELECT `role` FROM #__' . $this->dbtable() . '_user_group'
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				. ' AND `group_id` = \'' . $groupid . '\''
 				;
@@ -141,12 +173,20 @@ class mi_agora extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'INSERT INTO #__agora_users'
-				. ' (`jos_id`,  `username`, `email`, `registered`, `last_visit` )'
-				. ' VALUES (\'' . $metaUser->userid . '\', \'' . $metaUser->cmsUser->username . '\', \''
-				. $metaUser->cmsUser->email . '\', \'' . intval( strtotime( $metaUser->cmsUser->registerDate )) . '\', \''
-				. intval( strtotime( $metaUser->cmsUser->lastvisitDate )) . '\', )'
-				;
+		if ( !empty( $this->settings['agorapro'] ) ) {
+			$query = 'INSERT INTO #__agorapro_users'
+					. ' (`id`)'
+					. ' VALUES (\'' . $metaUser->userid . '\')'
+					;
+		} else {
+			$query = 'INSERT INTO #__agora_users'
+					. ' (`jos_id`,  `username`, `email`, `registered`, `last_visit` )'
+					. ' VALUES (\'' . $metaUser->userid . '\', \'' . $metaUser->cmsUser->username . '\', \''
+					. $metaUser->cmsUser->email . '\', \'' . intval( strtotime( $metaUser->cmsUser->registerDate )) . '\', \''
+					. intval( strtotime( $metaUser->cmsUser->lastvisitDate )) . '\')'
+					;
+		}
+
 		$db->setQuery( $query );
 
 		return $db->query();
@@ -156,7 +196,7 @@ class mi_agora extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'DELETE FROM #__agora_user_group'
+		$query = 'DELETE FROM #__' . $this->dbtable() . '_user_group'
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				. ' AND `group_id` = \'' . $groupid . '\''
 				;
@@ -174,7 +214,7 @@ class mi_agora extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'INSERT INTO #__agora_user_group'
+		$query = 'INSERT INTO #__' . $this->dbtable() . '_user_group'
 				. ' (`user_id`,  `group_id`, `role_id` )'
 				. ' VALUES (\'' . $userid . '\', \'' . $groupid . '\', \'' . $roleid . '\' )'
 				;
@@ -187,7 +227,7 @@ class mi_agora extends MI
 	{
 		$db = &JFactory::getDBO();
 
-		$query = 'UPDATE #__agora_user_group'
+		$query = 'UPDATE #__' . $this->dbtable() . '_user_group'
 				. ' SET `role_id` = \'' . $roleid . '\''
 				. ' WHERE `user_id` = \'' . $userid . '\''
 				. ' AND `group_id` = \'' . $groupid . '\''
