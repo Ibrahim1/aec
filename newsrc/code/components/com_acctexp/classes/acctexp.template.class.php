@@ -240,8 +240,14 @@ class aecTemplate
 
 	function addScript( $js )
 	{
-		$document=& JFactory::getDocument();
-		$document->addScript( $js );
+		$v = new JVersion();
+
+		if ( $v->isCompatible('3.0') && ( strpos( $js, '/' ) === false ) ) {
+			JHtml::_( $js, false );
+		} else {
+			$document =& JFactory::getDocument();
+			$document->addScript( $js );
+		}
 	}
 
 	function btn( $params, $value, $class='btn' )

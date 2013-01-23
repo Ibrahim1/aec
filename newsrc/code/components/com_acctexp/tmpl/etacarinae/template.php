@@ -38,8 +38,10 @@ class template_etacarinae extends aecTemplate
 
 		$params[] = array( 'userinfobox', 49.8 );
 		$params = array_merge( $params, $this->stdSettings() );
-		$params['jquery']							= array( 'toggle', 1 );
+		$params[] = array( 'userinfobox_sub', JText::_('Javascript Loading') );
+		$params['jquery']							= array( 'toggle', !$v->isCompatible('3.0') );
 		$params['bootstrap']						= array( 'toggle', !$v->isCompatible('3.0') );
+		$params[] = array( 'div_end', 0 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_REGFLOW') );
 		$params['displayccinfo']					= array( 'toggle', 0 );
 		$params[] = array( 'div_end', 0 );
@@ -83,24 +85,34 @@ class template_etacarinae extends aecTemplate
 
 	function beforesave()
 	{
-		include_once( JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php' );
+		$change = true;
 
-		$less = new lessc();
-		$less->setImportDir( array(JPATH_SITE . '/media/com_acctexp/less/') );
-		//$less->setFormatter("compressed");
-		$less->setPreserveComments(true);
-
-		if ( !isset( $this->settings['bootstrap'] ) ) {
-			$v = new JVersion();
-			
-			$this->settings['bootstrap'] = !$v->isCompatible('3.0');
+		if ( !empty( $_POST['bootstrap'] ) ) {
+			$change = $this->cfg['bootstrap'] != $_POST['bootstrap'];
 		}
+
+		if ( $change ) {
+			include_once( JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php' );
+
+			$less = new lessc();
+			$less->setImportDir( array(JPATH_SITE . '/media/com_acctexp/less/') );
+			//$less->setFormatter("compressed");
+			$less->setPreserveComments(true);
+
+			if ( !isset( $_POST['bootstrap'] ) ) {
+				$v = new JVersion();
+			
+				$this->cfg['bootstrap'] = !$v->isCompatible('3.0');
+			} else {
+				$this->cfg['bootstrap'] = $_POST['bootstrap'];
+			}
 		
 
-		if ( $this->settings['bootstrap'] ) {
-			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
-		} else {
-			$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css');			
+			if ( $this->cfg['bootstrap'] ) {
+				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
+			} else {
+				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css');			
+			}
 		}
 	}
 	function defaultHeader()
@@ -118,15 +130,13 @@ class template_etacarinae extends aecTemplate
 
 	function loadJS()
 	{
-		if ( !isset( $this->settings['jquery'] ) ) {
+		if ( !isset( $this->cfg['jquery'] ) ) {
 			$v = new JVersion();
 			
-			$this->settings['jquery'] = !$v->isCompatible('3.0');
+			$this->cfg['jquery'] = !$v->isCompatible('3.0');
 		}
 
-		if ( $this->settings['jquery'] ) {
-			$this->loadJQuery();
-		}
+		$this->loadJQuery();
 
 		$js = "jQuery(document).ready(function(){\n\n" . implode( "\n", $this->jQueryCode ) . "\n\n});";
 
@@ -135,15 +145,28 @@ class template_etacarinae extends aecTemplate
 
 	function loadJQuery()
 	{
-		$this->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+		$v = new JVersion();
 
-		foreach ( $this->jqueryExtensions as $ext ) {
-			$this->addScript( JURI::root(true).'/media/com_acctexp/js/' . $ext . '.js' );
+		if ( $this->cfg['jquery'] ) {
+			$this->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+		} else {
+			$this->addScript( 'jquery.framework' );
 		}
+
+		$this->loadJQueryExtensions();
 
 		$this->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 	}
 
+	function loadJQueryExtensions()
+	{
+		if ( !empty( $this->jqueryExtensions ) ) {
+			foreach ( $this->jqueryExtensions as $ext ) {
+				$this->addScript( JURI::root(true).'/media/com_acctexp/js/' . $ext . '.js' );
+			}
+		}
+	}
+	
 	function enqueueJQueryExtension( $name )
 	{
 		$this->jqueryExtensions[] = $name;

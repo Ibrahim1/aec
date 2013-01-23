@@ -45,46 +45,45 @@ class HTML_myCommon
 
 	function addBackendJS( $ui=false )
 	{
-		//$document =& JFactory::getDocument();
-
 		$v = new JVersion();
 
-		$head = !$v->isCompatible('3.0');
-
+		if ( !$v->isCompatible('3.0') ) {
+			HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-1.7.2.min.js' );
+		} else {
+			HTML_myCommon::addScript( 'jquery.framework' );
+		}
+	
 		if ( $v->isCompatible('1.6') ) {
-			HTML_myCommon::addScript( '/system/js/core.js', $head );
+			HTML_myCommon::addScript( '/system/js/core.js' );
 		}
+
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-ui-1.8.23.custom.min.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/fg.menu.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/daterangepicker.jQuery.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.multiselect.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.simplecolorpicker.js' );
 
 		if ( !$v->isCompatible('3.0') ) {
-			HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-1.7.2.min.js', $head );
+			HTML_myCommon::addScript( '/com_acctexp/js/bootstrap/bootstrap.min.js' );
 		}
 
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-ui-1.8.23.custom.min.js', $head );
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery-ui-timepicker-addon.js', $head );
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/fg.menu.js', $head );
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/daterangepicker.jQuery.js', $head );
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.multiselect.js', $head );
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.mjs.nestedSortable.js', $head );
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquery.simplecolorpicker.js', $head );
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/select2-bootstrap.js', $head );
-
-		if ( !$v->isCompatible('3.0') ) {
-			HTML_myCommon::addScript( '/com_acctexp/js/bootstrap/bootstrap.min.js', $head );
-		}
-
-		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquerync.js', $head );
-		HTML_myCommon::addScript( '/com_acctexp/js/aec.backend.js', $head );
+		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquerync.js' );
+		HTML_myCommon::addScript( '/com_acctexp/js/aec.backend.js' );
 	}
 
-	function addScript( $rel, $head=false )
+	function addScript( $rel )
 	{
-		$rel = JURI::root(true).'/media/' . $rel;
+		$v = new JVersion();
 
-		if ( $head ) {
-			$document =& JFactory::getDocument();
-			$document->addScript($rel);
+		if ( $v->isCompatible('3.0') && ( strpos( $rel, '/' ) === false ) ) {
+			JHtml::_( $rel, false );
 		} else {
-			echo '<script type="text/javascript" src="' . $rel . '"></script>';
+			$rel = JURI::root(true).'/media' . $rel;
+
+			$document =& JFactory::getDocument();
+			$document->addScript( $rel );
 		}
 	}
 
@@ -92,6 +91,8 @@ class HTML_myCommon
 	{
 		HTML_myCommon::addBackendCSS();
 
+		HTML_myCommon::addBackendJS();
+		
 		echo '<div id="' . $id . '">';
 		echo HTML_AcctExp::menuBar();
 
@@ -114,8 +115,6 @@ class HTML_myCommon
 		if ( $footer ) {
 			HTML_myCommon::Valanx();
 		}
-
-		HTML_myCommon::addBackendJS();
 
 		echo '</div>';
 	}

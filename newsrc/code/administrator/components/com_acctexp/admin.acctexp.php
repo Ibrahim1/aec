@@ -1923,6 +1923,8 @@ function saveTemplate( $option, $name, $return=0 )
 	unset( $_POST['name'] );
 	unset( $_POST['default'] );
 
+	$temp->template->cfg = $temp->settings;
+
 	$temp->settings = $_POST;
 
 	$temp->storeload();

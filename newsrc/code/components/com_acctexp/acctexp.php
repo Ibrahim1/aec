@@ -358,6 +358,12 @@ if ( !empty( $task ) ) {
 			$iFactory->invoiceprint( $option, $invoice );
 			break;
 
+		case 'invoicepdf':
+			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
+
+			InvoicePDF( $option, $invoice );
+			break;
+			
 		case 'invoiceaction':
 			$action		= aecGetParam( 'action', 0, true, array( 'word', 'string' ) );
 			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -932,7 +938,7 @@ function InvoicePDF( $option, $invoice )
 		$pdf->AddPage();
 		$pdf->writeHTML($content, true, false, true, false, '');
 
-		$pdf->Output( $invoice_number.'.pdf', 'I');exit;
+		$pdf->Output( $invoice.'.pdf', 'I');exit;
 	}
 }
 

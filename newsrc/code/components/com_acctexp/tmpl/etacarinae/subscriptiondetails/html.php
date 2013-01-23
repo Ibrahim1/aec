@@ -124,9 +124,14 @@ foreach ( $invoiceList as $invoiceid ) {
 
 	if ( !in_array( $invoice->method, $excludedprocs ) ) {
 		$actionsarray[] = array( 	'task'	=> 'invoicePrint',
-									'add'	=> 'invoice=' . $invoice->invoice_number,
+									'add'	=> 'invoice=' . $invoice->invoice_number . '&tmpl=component',
 									'text'	=> JText::_('HISTORY_ACTION_PRINT'),
 									'insert' => ' target="_blank" ',
+									'class' => 'btn' );
+		$actionsarray[] = array( 	'task'	=> 'invoicePDF',
+									'add'	=> 'invoice=' . $invoice->invoice_number,
+									'text'	=> 'PDF',
+									'insert' => '',
 									'class' => 'btn' );
 	}
 
