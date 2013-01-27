@@ -1424,6 +1424,10 @@ function editSettings( $option )
 
 	$gtree = xJACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
+	if ( !isset( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+		$aecConfig->cfg['checkout_as_gift_access'] = 0;
+	}
+	
 	// Create GID related Lists
 	$lists['checkout_as_gift_access'] 		= JHTML::_('select.genericlist', $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
 

@@ -3571,9 +3571,18 @@ class bsPagination extends JPagination
 
 	function ordering( $i, $n, $type )
 	{
-		$lastpage = $this->{"pages.total"} == $this->{"pages.current"};
+		$v = new JVersion();
+
+		if ( $v->isCompatible('1.6') ) {
+			$total = $this->pagesTotal;
+			$current = $this->pagesCurrent;
+		} else {
+			$total = $this->{"pages.total"};
+			$current = $this->{"pages.current"};
+		}
+		$lastpage = $total == $current;
 		echo '<div class="btn-group btn-group-pagination">';
-		echo $this->orderUpIcon($i, true, 'order'.$type.'up', ( $i || ( $this->{"pages.current"} > 1 ) ) );
+		echo $this->orderUpIcon($i, true, 'order'.$type.'up', ( $i || ( $current > 1 ) ) );
 		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', ( $i<($n-1) || !$lastpage ) );
 		echo '</div>';
 	}
