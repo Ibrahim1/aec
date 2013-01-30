@@ -287,7 +287,7 @@ class mi_multiusercreation
 
 	function createUser( $fields )
 	{
-		return AECToolbox::saveUserRegistration( 'com_acctexp', $fields, true, true, true, true );
+		return aecRegistration::saveUserRegistration( 'com_acctexp', $fields, true, true, true, true );
 	}
 
 	function mailOut( $request, $userlist )
