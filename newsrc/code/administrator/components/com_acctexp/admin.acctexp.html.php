@@ -3573,7 +3573,7 @@ class bsPagination extends JPagination
 	{
 		$v = new JVersion();
 
-		if ( $v->isCompatible('1.6') ) {
+		if ( $v->isCompatible('3.0') ) {
 			$total = $this->pagesTotal;
 			$current = $this->pagesCurrent;
 		} else {

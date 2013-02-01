@@ -109,7 +109,6 @@ switch( strtolower( $task ) ) {
 	case 'unpublishprocessor': changeProcessor( $id, 0, 'active', $option ); break;
 
 	case 'showsubscriptionplans': listSubscriptionPlans( $option ); break;
-	case 'showsubscriptionplans2': listSubscriptionPlans2( $option ); break;
 	case 'getsubscriptionplans': getSubscriptionPlans(); break;
 	case 'newsubscriptionplan': editSubscriptionPlan( 0, $option ); break;
 	case 'editsubscriptionplan': editSubscriptionPlan( $id[0], $option ); break;
@@ -3277,7 +3276,7 @@ function removeSubscriptionPlan( $id, $option )
 		exit;
 	}
 
-	foreach ( $ids as $planid ) {
+	foreach ( $id as $planid ) {
 		if ( SubscriptionPlanHandler::getPlanUserCount( $planid ) > 0 ) {
 			$msg = JText::_('AEC_MSG_NO_DEL_W_ACTIVE_SUBSCRIBER');
 
