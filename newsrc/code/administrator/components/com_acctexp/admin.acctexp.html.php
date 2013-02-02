@@ -260,8 +260,18 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon();
 
-		JHTML::_('behavior.calendar');
-
+$js = '
+jQuery(document).ready(function(jQuery) {
+	jQuery("#assignto_plan")
+	.multiselect({	noneSelectedText: \'' . JText::_('PAYPLAN_NOPLAN') . '\',
+					selectedList: 3,
+ 					maxWidth: 300
+			});
+});
+';
+		$document =& JFactory::getDocument();
+		$document->addScriptDeclaration( $js );
+		
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$edituserlink		= 'index.php?option=com_users&amp;task=user.edit&amp;id=' . $metaUser->userid;
 			$activateuserlink	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $metaUser->cmsUser->activation;
@@ -1294,7 +1304,7 @@ class HTML_AcctExp
 					<tfoot>
 						<tr>
 							<td colspan="6">
-			 					<?php echo $pageNav->getListFooter(); ?>
+								<?php echo $pageNav->getListFooter(); ?>
 							</td>
 						</tr>
 					</tfoot>
@@ -1448,13 +1458,13 @@ $js = '
 jQuery(document).ready(function(jQuery) {
 	jQuery("#status-group-select")
 	.multiselect({	noneSelectedText: \'Select Status\',
-      				selectedList: 8,
-      				checkAll: function(event, ui){
-	      							jQuery("#ui-multiselect-status-group-select-option-6").click().click();
-	      							jQuery(\'#status-group-select option[value="hold"]\').attr("selected", "selected");
-	      							jQuery(\'#status-group-select option[value="notconfig"]\').removeAttr("selected").removeAttr("aria-selected");
-	      						},
-      				click: function(event, ui){
+					selectedList: 8,
+					checkAll: function(event, ui){
+									jQuery("#ui-multiselect-status-group-select-option-6").click().click();
+									jQuery(\'#status-group-select option[value="hold"]\').attr("selected", "selected");
+									jQuery(\'#status-group-select option[value="notconfig"]\').removeAttr("selected").removeAttr("aria-selected");
+								},
+					click: function(event, ui){
 							if( ui.value == "notconfig" && ui.checked ) {
 								jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
 								jQuery("#ui-multiselect-status-group-select-option-7").attr("checked", "checked");
@@ -1466,7 +1476,7 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery("#plan-filter-select")
 	.multiselect({	noneSelectedText: \'' . JText::_('PLAN_FILTER') . '\',
-      				selectedList: 3
+					selectedList: 3
 			});
 
 	jQuery("#group-filter-select")

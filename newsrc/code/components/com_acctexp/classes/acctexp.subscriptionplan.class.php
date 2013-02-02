@@ -308,7 +308,7 @@ class SubscriptionPlanHandler
 
 		// get entry Plan selection
 		$available_plans	= array();
-		$available_plans[]	= JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN') );
+		$available_plans[]	= JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN'), 'value', 'text', true );
 
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'

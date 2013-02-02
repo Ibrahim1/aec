@@ -30,6 +30,7 @@
       header: true,
       height: 175,
       minWidth: 225,
+      maxWidth: 1024,
       classes: '',
       checkAllText: 'Check all',
       uncheckAllText: 'Uncheck all',
@@ -78,7 +79,7 @@
           .addClass('ui-helper-reset')
           .html(function() {
             if(o.header === true) {
-              return '<li><a class="ui-multiselect-all btn btn-success" href="#"><i class="bsicon-ok bsicon-white"></i><span>check all</span></a></li><li><a class="ui-multiselect-none btn btn-danger" href="#"><i class="bsicon-remove bsicon-white"></i><span>check none</span></a></li>';
+              return '<li><a class="ui-multiselect-all btn btn-success" href="#"><i class="bsicon-ok bsicon-white"></i><span>&nbsp;all</span></a></li><li><a class="ui-multiselect-none btn btn-danger" href="#"><i class="bsicon-remove bsicon-white"></i><span>&nbsp;none</span></a></li>';
             } else if(typeof o.header === "string") {
               return '<li>' + o.header + '</li>';
             } else {
@@ -421,6 +422,10 @@
 
       if(/\d/.test(o.minWidth) && width < o.minWidth) {
         width = o.minWidth;
+      }
+
+      if(/\d/.test(o.maxWidth) && width > o.maxWidth) {
+        width = o.maxWidth;
       }
 
       // set widths
