@@ -83,7 +83,7 @@ class processor_google_checkout extends XMLprocessor
 		$cart	= new GoogleCart( $this->settings['merchant_id'], $this->settings['merchant_key'], $server_type, $currency );
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			require_once( dirname(__FILE__) . '/lib/liary/googlesubscription.php' );
+			require_once( dirname(__FILE__) . '/lib/googlesubscription.php' );
 
 			$item_1 = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount']['amount3'] );
 
