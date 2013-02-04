@@ -60,11 +60,8 @@ class processor_payza extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= "https://sandbox.payza.com/sandbox/payprocess.aspx";
-
-			$var['ap_test'] = '1';
 		} else {
 			$var['post_url']	= "https://secure.payza.com/checkout";
 		}
