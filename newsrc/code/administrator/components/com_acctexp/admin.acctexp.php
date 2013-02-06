@@ -5008,7 +5008,7 @@ function AdminInvoicePDF( $option, $invoice_number )
 
 	$content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
 				.'<html xmlns="http://www.w3.org/1999/xhtml">'
-				.'<head>' . $renderer->render() . '</head><body>'.$buffer.'</body>'
+				.'<head>' . $renderer->render("head") . '</head><body>'.$buffer.'</body>'
 				.'</html>';
 
 	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
