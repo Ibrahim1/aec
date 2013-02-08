@@ -58,7 +58,7 @@ class tool_vatcollect
 				. ' ORDER BY transaction_date ASC'
 				;
 		$db->setQuery( $query );
-		$entries = xJ::getDBArray( $db );
+		$entries = $db->loadResultArray();
 
 		if ( empty( $entries ) ) {
 			return "nothing to list";
@@ -67,7 +67,7 @@ class tool_vatcollect
 		$historylist = array();
 		$groups = array();
 		foreach ( $entries as $id ) {
-			$entry = new logHistory();
+			$entry = new logHistory($db);
 			$entry->load( $id );
 
 			$refund = false;
@@ -140,8 +140,11 @@ class tool_vatcollect
 
 		$return .= '<table style="background-color: fff; width: 30%; margin: 0 auto; text-align: center !important; font-size: 180%;">';
 
+		$i = 0;
 		foreach ( $historylist as $date => $history ) {
-			if ( date( 'j', strtotime( $date ) ) == 1 ) {
+			$i++;
+
+			if ( ( date( 'j', strtotime( $date ) ) == 1 ) || ( $i === 1 ) ) {
 				$month = array();
 			}
 
@@ -180,7 +183,7 @@ class tool_vatcollect
 				$month['untaxed'] += $history['untaxed'];
 			}
 
-			if ( isset( $month ) && ( date( 'j', strtotime( $date ) ) == date( 't', strtotime( $date ) ) ) ) {
+			if ( isset( $month ) && ( ( date( 'j', strtotime( $date ) ) == date( 't', strtotime( $date ) ) ) || ( $i == count($historylist) ) ) ) {
 				$return .= '<tr style="border-bottom: 2px solid #999 !important; height: 2em; background-color: #ddd;">';
 
 				$return .= '<td title="Date" style="text-align: left !important; color: #aaa;">Month</td>';
