@@ -31,5 +31,6 @@
 			<button type="submit" class="btn"><?php echo aecHTML::Icon( 'arrow-left' ) . JText::_('AEC_BTN_CONTINUE_SHOPPING') ?></button>
 		</form>
 	</div>
+	<br />
 	<?php } ?>
 </div>
