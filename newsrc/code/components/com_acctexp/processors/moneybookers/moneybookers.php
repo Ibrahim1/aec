@@ -170,6 +170,29 @@ class processor_moneybookers extends POSTprocessor
 		return $var;
 	}
 
+	function convertPeriodUnit( $unit, $period )
+	{
+		$return = array();
+		$return['period'] = $period;
+		switch ( $unit ) {
+			case 'D':
+				$return['unit'] = 'day';
+				break;
+			case 'W':
+				$return['unit'] = 'day';
+				$return['period'] = $period*7;
+				break;
+			case 'M':
+				$return['unit'] = 'month';
+				break;
+			case 'Y':
+				$return['unit'] = 'Year';
+				break;
+		}
+
+		return $return;
+	}
+
 	function parseNotification( $post )
 	{
 		$response = array();
