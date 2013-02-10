@@ -451,6 +451,8 @@ class processor_paypal_wpp extends XMLprocessor
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
 				$trial = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
 
+				$var['InitAmt']					= $request->int_var['amount']['amount1'];
+
 				$var['TrialBillingPeriod']		= $trial['unit'];
 				$var['TrialBillingFrequency']	= $trial['period'];
 				$var['TrialAmt']				= $request->int_var['amount']['amount1'];
@@ -458,6 +460,8 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$offset = AECToolbox::offsetTime( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'], gmdate('U') );
 			} else {
+				$var['InitAmt']					= $request->int_var['amount']['amount3'];
+
 				$offset = AECToolbox::offsetTime( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'], gmdate('U') );
 			}
 
@@ -476,7 +480,12 @@ class processor_paypal_wpp extends XMLprocessor
 			$var['amt']					= $request->int_var['amount']['amount3'];
 
 			if ( !empty( $this->settings['totalOccurrences'] ) ) {
-				$var['TotalBillingCycles'] = $this->settings['totalOccurrences'];
+				if ( $this->settings['totalOccurrences'] < 2 ) {
+					$var['TotalBillingCycles'] = 1;
+				} else {
+					// Compensate for Initial Amount set above
+					$var['TotalBillingCycles'] = $this->settings['totalOccurrences'] - 1;
+				}
 			}
 		} else {
 			$var['amt']					= $request->int_var['amount'];
