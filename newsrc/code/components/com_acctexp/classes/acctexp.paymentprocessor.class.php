@@ -516,7 +516,7 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
-		if ( empty( $plan_params ) ) {
+		if ( empty( $plan_params ) && is_object( $plan ) ) {
 			$plan_params = $plan->getProcessorParameters( $this );
 		}
 
