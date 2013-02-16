@@ -71,7 +71,7 @@ class aecRegistration
 
 			aecRedirect( 'index.php?option=com_comprofiler&task=registers' );
 		} else {
-			global $task, $_PLUGINS, $ueConfig, $_CB_database;;
+			global $task, $_PLUGINS, $ueConfig, $_CB_database;
 
 			$app = JFactory::getApplication();
 
