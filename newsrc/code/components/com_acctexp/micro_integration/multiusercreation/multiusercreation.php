@@ -241,7 +241,7 @@ class mi_multiusercreation
 
 	function admin_info( $request )
 	{
-		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
+		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->metaUser->focusSubscription->plan, $this->id );
 		
 		$list = "<ul>";
 		if ( isset( $userflags['child_list'] ) ) {
@@ -260,11 +260,13 @@ class mi_multiusercreation
 		$list .= "</ul>";
 
 		$settings['history']	= array( 'fieldset', 'Child Subscriptions', $list );
+
+		return $list;
 	}
 
 	function profile_info( $request )
 	{
-		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
+		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->metaUser->focusSubscription->plan, $this->id );
 		
 		$list = "<ul>";
 		if ( isset( $userflags['child_list'] ) ) {
@@ -283,6 +285,8 @@ class mi_multiusercreation
 		$list .= "</ul>";
 
 		$settings['history']	= array( 'fieldset', 'Child Subscriptions', $list );
+
+		return $list;
 	}
 
 	function createUser( $fields )

@@ -90,7 +90,7 @@ class processor_eyowo extends POSTprocessor
 		$vars = array(	'format' => 'json',
 						'walletcode' => $this->settings['walletcode'],
 						'transactionref' => $invoice->invoice_number
-				)
+				);
 
 		$array = array();
 		foreach ( $post as $k => $v ) {
