@@ -906,7 +906,7 @@ function InvoicePrintout( $option, $invoice, $standalone=true )
 	}
 }
 
-function InvoicePDF( $option, $invoice )
+function InvoicePDF( $option, $invoice_number )
 {
 	$user = &JFactory::getUser();
 
@@ -916,29 +916,42 @@ function InvoicePDF( $option, $invoice )
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/config/lang/eng.php' );
 		require_once( JPATH_SITE . '/components/com_acctexp/lib/tcpdf/tcpdf.php' );
 
+		$invoice = new Invoice();
+		$invoice->loadInvoiceNumber( $invoice_number );
+
 		ob_start();
 
-		InvoicePrintout( $option, $invoice, false );
+		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
+		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array(), true );
 
 		$content = ob_get_contents();
 
 		ob_end_clean();
 
-		$document=& JFactory::getDocument();
-		$document->_type="html";
-		$renderer = $document->loadRenderer("head");
+		$cssfile = JPATH_SITE . '/media/com_acctexp/css/invoice.css';
 
-		$content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
-					.'<html xmlns="http://www.w3.org/1999/xhtml">'
-					.'<head>' . $renderer->render() . '</head><body>'.$content.'</body>'
-					.'</html>';
+		if ( file_exists( $cssfile ) ) {
+			$css = file_get_contents( $cssfile );
+		} else {
+			$css = "";
+		}
+
+		$html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;" />
+	<style type="text/css">' . $css . '</style>
+</head>
+<body style="padding:0;margin:0;background-color:#fff;" >';
+
+		$html .= $content . '</body></html>';
 
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 		$pdf->AddPage();
-		$pdf->writeHTML($content, true, false, true, false, '');
+		$pdf->writeHTML($html, true, false, true, false, '');
 
-		$pdf->Output( $invoice.'.pdf', 'I');exit;
+		$pdf->Output( $invoice_number.'.pdf', 'I');exit;
 	}
 }
 

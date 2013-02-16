@@ -636,6 +636,12 @@ class InvoiceFactory
 		$this->payment->freetrial = 0;
 		$this->payment->amount = null;
 
+		if ( !empty( $this->passthrough['task'] ) ) {
+			$task = $this->passthrough['task'];
+		} else {
+			$task = "";
+		}
+
 		if ( empty( $this->cart ) && !empty( $this->plan ) ) {
 			if ( !isset( $this->recurring ) ) {
 				$this->recurring = 0;
@@ -656,7 +662,7 @@ class InvoiceFactory
 			}
 
 			$this->items->itemlist[] = array( 'item' => array( 'obj' => $this->plan ), 'terms' => $terms );
-		} elseif ( !empty( $this->cartobject->id ) || ( $this->passthrough['task'] == 'confirmCart' ) ) {
+		} elseif ( !empty( $this->cartobject->id ) || ( $task == 'confirmCart' ) ) {
 			$this->getCart();
 
 			$this->payment->amount = $this->cartobject->getAmount( $this->metaUser, 0, $this );
