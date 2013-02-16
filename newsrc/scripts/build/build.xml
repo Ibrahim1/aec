@@ -14,7 +14,7 @@
 	</target>
 
 	<target name="git_lastrevision">
-		<property name="git.lastrevision" value="5982" />
+		<property name="git.lastrevision" value="5984" />
 	</target>
 
 	<target name="config" description="Load configuration file">

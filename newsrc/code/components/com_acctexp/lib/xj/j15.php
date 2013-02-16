@@ -111,10 +111,8 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $gid_name;
 	}
 
-	function adminBlock()
+	function adminBlock( $admin, $manager )
 	{
-		global $xJConfig;
-
 		$user = &JFactory::getUser();
 
 		$acl = &JFactory::getACL();
@@ -127,8 +125,8 @@ class xJACLhandler extends xJACLhandlerCommon
 
 		if ( !$acpermission ) {
 			if (
-				!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $xJConfig->cfg['adminaccess'] )
-				&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $xJConfig->cfg['manageraccess'] )
+				!( ( strcmp( $user->usertype, 'Administrator' ) === 0 ) && $admin )
+				&& !( ( strcmp( $user->usertype, 'Manager' ) === 0 ) && $manager )
 			 ) {
 				$block = true;
 			}
