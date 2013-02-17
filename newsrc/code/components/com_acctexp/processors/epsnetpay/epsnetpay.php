@@ -237,7 +237,7 @@ class processor_epsnetpay extends POSTprocessor
 			if ($this->settings['acceptvok']) {
 				$response['valid'] = ( ($sapPopStsReturnStatus == 'OK') || ($sapPopStsReturnStatus == 'VOK'));
 			} else {
-	    		$response['valid'] = ($sapPopStsReturnStatus == 'OK');
+				$response['valid'] = ($sapPopStsReturnStatus == 'OK');
 			}
 		} else {
 			$response['valid'] = false;

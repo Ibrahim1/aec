@@ -34,7 +34,7 @@ class mi_jomsocialjspt
 		require_once ( JPATH_ROOT.'/components/com_xipt/api.xipt.php');
 		
 		$database	=& JFactory::getDBO();
-        $settings = array();
+		$settings = array();
 		$settings['profiletype']				= array( 'list' );
 		$settings['profiletype_after_exp'] 		= array( 'list' );
 

@@ -87,7 +87,7 @@ if ( $jsonconversion ) {
 				;
 				$db->setQuery( $query );
 				if ( !$db->query() ) {
-			    	$errors[] = array( $db->getErrorMsg(), $query );
+					$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}
@@ -382,7 +382,7 @@ if ( $jsonconversion ) {
 				;
 				$db->setQuery( $query );
 				if ( !$db->query() ) {
-			    	$errors[] = array( $db->getErrorMsg(), $query );
+					$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}

@@ -39,7 +39,7 @@ class mi_apc
 			}
 		}
 
-        $settings = array();
+		$settings = array();
 		$settings['set_group']			= array( 'toggle' );
 		$settings['set_default']		= array( 'toggle' );
 		$settings['group']				= array( 'list' );

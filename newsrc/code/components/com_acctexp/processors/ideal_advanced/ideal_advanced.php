@@ -45,8 +45,8 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings['private_key']				= "Password";
 		$settings['private_key_file']			= "private.key";
 		
-		$settings['cache_path']    	= dirname(__FILE__) . '/lib/cache/';
-		$settings['ssl_path']    	= dirname(__FILE__) . '/lib/ssl/';
+		$settings['cache_path']		= dirname(__FILE__) . '/lib/cache/';
+		$settings['ssl_path']		= dirname(__FILE__) . '/lib/ssl/';
 		
 		$settings['currency']		= 'EUR';
 
@@ -69,8 +69,8 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings['private_key']				= array( 'inputC' );
 		$settings['private_key_file']			= array( 'inputC' );
 		
-		$settings['cache_path']    	= array( 'inputD' );
-		$settings['ssl_path']   	= array( 'inputD' );
+		$settings['cache_path']		= array( 'inputD' );
+		$settings['ssl_path']		= array( 'inputD' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['description']	= array( 'inputE' );
 		

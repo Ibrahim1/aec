@@ -53,7 +53,7 @@ class processor_desjardins extends XMLprocessor
 		$settings['SiteTitle']		= array( 'inputC' );
 		$settings['item_name']		= array( 'inputE' );
 
-        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}

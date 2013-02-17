@@ -108,7 +108,7 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_mi_hotproperty", $tables ) 
 				;
 				$db->setQuery( $query );
 				if ( !$db->query() ) {
-			    	$errors[] = array( $db->getErrorMsg(), $query );
+					$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}

@@ -27,7 +27,7 @@ class mi_iproperty
 	{
 		$db = &JFactory::getDBO();
 
-        $settings = array();
+		$settings = array();
 
 		$settings['create_agent']		= array( 'toggle' );
 		$settings['agent_fields']		= array( 'inputD' );
@@ -153,7 +153,7 @@ class mi_iproperty
 		$fields['alias'] = JApplication::stringURLSafe( $fields['alias'] );
 
 		$fields['fname'] = htmlspecialchars_decode($fields['fname'], ENT_QUOTES);
-        $fields['lname'] = htmlspecialchars_decode($fields['lname'], ENT_QUOTES);
+		$fields['lname'] = htmlspecialchars_decode($fields['lname'], ENT_QUOTES);
 
 		$this->createQuery( $fields, 'agents' );
 

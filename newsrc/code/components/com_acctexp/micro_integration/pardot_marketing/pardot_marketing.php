@@ -25,15 +25,15 @@ class mi_pardot_marketing extends MI
 
 	function Settings()
 	{
-        $settings = array();
-        $settings['email']					= array( 'inputC' );
-        $settings['password']				= array( 'inputC' );
-        $settings['user_key']				= array( 'inputC' );
-        $settings['prospect_details']		= array( 'inputD' );
-        $settings['pardot_lists']			= array( 'inputD' );
-        $settings['pardot_lists_del']		= array( 'inputD' );
-        $settings['pardot_lists_exp']		= array( 'inputD' );
-        $settings['pardot_lists_exp_del']	= array( 'inputD' );
+		$settings = array();
+		$settings['email']					= array( 'inputC' );
+		$settings['password']				= array( 'inputC' );
+		$settings['user_key']				= array( 'inputC' );
+		$settings['prospect_details']		= array( 'inputD' );
+		$settings['pardot_lists']			= array( 'inputD' );
+		$settings['pardot_lists_del']		= array( 'inputD' );
+		$settings['pardot_lists_exp']		= array( 'inputD' );
+		$settings['pardot_lists_exp_del']	= array( 'inputD' );
 		$settings['rebuild']				= array( 'toggle' );
 		$settings['remove']					= array( 'toggle' );
 
@@ -43,7 +43,7 @@ class mi_pardot_marketing extends MI
 			$pc = new PardotConnector();
 			$pc->get( $this->settings );
 
-        	$settings['api_key']		= array( 'p', null, null, "API Key currently in use: ".$pc->api_key );
+			$settings['api_key']		= array( 'p', null, null, "API Key currently in use: ".$pc->api_key );
 		} else {
 			$settings['api_key']		= array( 'p', null, null, "API Key currently in use: Please fill in the above details to request an API key" );
 		}

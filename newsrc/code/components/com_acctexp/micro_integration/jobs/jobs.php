@@ -25,17 +25,17 @@ class mi_jobs
 
 	function Settings()
 	{
-		$settings          = array();
+		$settings  = array();
 
 		$settings['subscription_type']			= array( 'list' );
 		$settings['default_resume_title']		= array( 'inputC' );
 		$settings['default_resume_status']		= array( 'list' );
-    	$settings['default_resume_language']	= array( 'inputC' );
+		$settings['default_resume_language']	= array( 'inputC' );
 		$settings['default_company_title']		= array( 'inputC' );
-        $settings['default_company_country']	= array( 'inputC' );
+		$settings['default_company_country']	= array( 'inputC' );
 		$settings['default_company_status']		= array( 'list' );
 
-        $settings['lists'] = array();
+		$settings['lists'] = array();
 
 		$typelist = array();
 		$typelist[] = JHTML::_('select.option', 'job_seeker' , 'Job Seeker' );

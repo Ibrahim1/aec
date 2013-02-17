@@ -86,7 +86,7 @@ class processor_payer extends POSTprocessor
 
 		$settings['lists']['payment_method'] = JHTML::_( 'select.genericlist', $payment_method, 'payer_payment_method', 'size="5" multiple="multiple"', 'value', 'text', $selected_methods );
 
-        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}

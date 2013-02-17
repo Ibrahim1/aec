@@ -112,7 +112,7 @@ class mi_phocadownload extends MI
 		$praccess = $db->loadResult();
 
 		$rpos = strpos( $praccess, $userid );
-                 
+
 		if ( $remove !== '0' && $rpos !== false ) {
 			$query = 'UPDATE #__phocadownload_categories'
 			. ' SET `accessuserid` = TRIM(BOTH \',\' FROM REPLACE(CONCAT(",",`accessuserid`,",") , CONCAT(",",\''. $userid . '\',",") , \',\'))'
@@ -156,7 +156,7 @@ class mi_phocadownload extends MI
 		$praccess = $db->loadResult();
 
 		$rpos = strpos( $praccess, $userid );
-                 
+
 		if ( $remove !== '0' && $rpos !== false ) {
 			$query = 'UPDATE #__phocadownload_categories'
 			. ' SET `uploaduserid` = TRIM(BOTH \',\' FROM REPLACE(CONCAT(",",`uploaduserid`,",") , CONCAT(",",\''. $userid . '\',",") , \',\'))'

@@ -27,7 +27,7 @@ class mi_k2
 	{
 		$db = &JFactory::getDBO();
 
-        $settings = array();
+		$settings = array();
 		$settings['set_group']		= array( 'toggle' );
 		$settings['group']			= array( 'list' );
 		$settings['set_group_exp']	= array( 'toggle' );

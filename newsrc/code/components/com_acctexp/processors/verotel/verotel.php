@@ -103,9 +103,9 @@ class processor_verotel extends URLprocessor
 
 		$username	= $res[0];
 		$secret		= $res[2];
-		$action     = $res[3];
-		$amount     = $res[4];
-		$payment_id = $res[5];
+		$action	 	= $res[3];
+		$amount		= $res[4];
+		$payment_id	= $res[5];
 
 		$response = array();
 		$response['invoice'] = null;

@@ -64,7 +64,7 @@ class mi_uddeim
 	{
 		$db = &JFactory::getDBO();
 
-        $settings = array();
+		$settings = array();
 		$settings['add_messages']		= array( 'inputA' );
 		$settings['set_messages']		= array( 'inputA' );
 		$settings['set_unlimited']		= array( 'toggle' );

@@ -1095,34 +1095,34 @@ exit;
 }
 
 function obsafe_print_r($var, $return = false, $html = false, $level = 0) {
-    $spaces = "";
-    $space = $html ? "&nbsp;" : " ";
-    $newline = $html ? "<br />\n" : "\n";
-    for ($i = 1; $i <= 6; $i++) {
-        $spaces .= $space;
-    }
-    $tabs = $spaces;
-    for ($i = 1; $i <= $level; $i++) {
-        $tabs .= $spaces;
-    }
-    if (is_array($var)) {
-        $title = "Array";
-    } elseif (is_object($var)) {
-        $title = get_class($var)." Object";
-    }
-    $output = $title . $newline . $newline;
-    if ( !empty( $var ) ) {
-	    foreach($var as $key => $value) {
-	        if (is_array($value) || is_object($value)) {
-	            $level++;
-	            $value = obsafe_print_r($value, true, $html, $level);
-	            $level--;
-	        }
-	        $output .= $tabs . "[" . $key . "] => " . $value . $newline;
-	    }
-    }
-    if ($return) return $output;
-      else echo $output;
+	$spaces = "";
+	$space = $html ? "&nbsp;" : " ";
+	$newline = $html ? "<br />\n" : "\n";
+	for ($i = 1; $i <= 6; $i++) {
+		$spaces .= $space;
+	}
+	$tabs = $spaces;
+	for ($i = 1; $i <= $level; $i++) {
+		$tabs .= $spaces;
+	}
+	if (is_array($var)) {
+		$title = "Array";
+	} elseif (is_object($var)) {
+		$title = get_class($var)." Object";
+	}
+	$output = $title . $newline . $newline;
+	if ( !empty( $var ) ) {
+		foreach($var as $key => $value) {
+			if (is_array($value) || is_object($value)) {
+				$level++;
+				$value = obsafe_print_r($value, true, $html, $level);
+				$level--;
+			}
+			$output .= $tabs . "[" . $key . "] => " . $value . $newline;
+		}
+	}
+	if ($return) return $output;
+	  else echo $output;
 }
 
 function deep_ksort( &$arr )

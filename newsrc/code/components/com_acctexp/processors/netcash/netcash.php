@@ -22,7 +22,7 @@ class processor_netcash extends POSTprocessor
 		$info['currencies']				= 'ZAR';
 		$info['cc_list'] 				= "visa,mastercard";
 		$info['recurring'] 				= 0;
-		$info['languages']			    = 'EN';
+		$info['languages']				= 'EN';
 		$info['notify_trail_thanks']	= 1;
 
 		return $info;
@@ -34,9 +34,9 @@ class processor_netcash extends POSTprocessor
 
 		$settings = array();
 
-		$settings['user_name']			    = '';
-		$settings['password']    			= '';
-		$settings['pin']		        	= '';
+		$settings['user_name']				= '';
+		$settings['password']				= '';
+		$settings['pin']					= '';
 		$settings['terminal_id']			= '';
 		$settings['recipient_description']	= $app->getCfg( 'sitename' );
 		$settings['language'] 				= 'EN';
@@ -53,9 +53,9 @@ class processor_netcash extends POSTprocessor
 		$settings = array();
 
 		$settings['aec_insecure']			= array( "p" );
-		$settings['user_name']			    = array( 'inputC');
-		$settings['password']			    = array( 'inputC');
-		$settings['pin']		        	= array( 'inputC');
+		$settings['user_name']				= array( 'inputC');
+		$settings['password']				= array( 'inputC');
+		$settings['pin']					= array( 'inputC');
 		$settings['terminal_id']			= array( 'inputC');
 		$settings['recipient_description']	= array( 'inputE');
 		$settings['language'] 				= array( 'list_language' );
@@ -71,19 +71,19 @@ class processor_netcash extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		$var['post_url']				= 'https://gateway.netcash.co.za/vvonline/ccnetcash.asp';
+		$var['post_url']	= 'https://gateway.netcash.co.za/vvonline/ccnetcash.asp';
 
-		$var['m_1']                     = $this->settings['user_name'];
-		$var['m_2']                     = $this->settings['password'];
-		$var['m_3']                     = $this->settings['pin'];
-		$var['p1']                      = $this->settings['terminal_id'];
-		$var['p2']                      = $request->invoice->invoice_number;
-		$var['p3']                      = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
-		$var['p4']                      = $request->int_var['amount'];
-		$var['p10']                     = AECToolbox::deadsureURL( 'index.php?task=cancel' );
-		//$var['p10']                     = AECToolbox::deadsureURL( 'index.php?cancel=cancel&option=com_acctexp' );//Works
-		$var['m_9']                     = $request->metaUser->cmsUser->email;
-		$var['m_10']                    = 'task=netcashnotification&amp;option=com_acctexp';
+		$var['m_1']		= $this->settings['user_name'];
+		$var['m_2']		= $this->settings['password'];
+		$var['m_3']		= $this->settings['pin'];
+		$var['p1']		= $this->settings['terminal_id'];
+		$var['p2']		= $request->invoice->invoice_number;
+		$var['p3']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['p4']		= $request->int_var['amount'];
+		$var['p10']		= AECToolbox::deadsureURL( 'index.php?task=cancel' );
+		//$var['p10']		= AECToolbox::deadsureURL( 'index.php?cancel=cancel&option=com_acctexp' );//Works
+		$var['m_9']		= $request->metaUser->cmsUser->email;
+		$var['m_10']		= 'task=netcashnotification&amp;option=com_acctexp';
 
 		return $var;
 	}
@@ -93,9 +93,9 @@ class processor_netcash extends POSTprocessor
 		$response = array();
 		$get = aecPostParamClear( $_GET );
 
-		$response['invoice']			= $get['Reference'];
-		$response['amount_paid']		= $get['Amount'];
-		$response['reason']             = $get['Reason'];
+		$response['invoice']		= $get['Reference'];
+		$response['amount_paid']	= $get['Amount'];
+		$response['reason']			= $get['Reason'];
 
 		return $response;
 	}
@@ -105,12 +105,12 @@ class processor_netcash extends POSTprocessor
 		$response['valid'] = 0;
 		$get = aecPostParamClear( $_GET );
 
-		if($get['TransactionAccepted'] == 'true'){
+		if ( $get['TransactionAccepted'] == 'true' ) {
 			$response['valid'] = 1;
-		}else{
-		    $response['valid'] = 0;
-		    $response['error'] = 1;
-		    $response['errormsg'] = $get['Reason'];
+		} else {
+			$response['valid'] = 0;
+			$response['error'] = 1;
+			$response['errormsg'] = $get['Reason'];
 		}
 
 		return $response;

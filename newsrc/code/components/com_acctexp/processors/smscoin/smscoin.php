@@ -100,7 +100,7 @@ class processor_smscoin extends POSTprocessor
 								);
 
 		if ( $post['s_sign_v2'] == $hash ) {
-			$response['valid'] = 1;    
+			$response['valid'] = 1;
 		}
 
 		return $response;

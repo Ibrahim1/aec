@@ -96,7 +96,7 @@ class eucaInstall extends eucaObject
 		$db->setQuery( $query );
 
 		if ( !$db->query() ) {
-	    	$this->setError( array( $db->getErrorMsg(), $query ) );
+			$this->setError( array( $db->getErrorMsg(), $query ) );
 		}
 	}
 
@@ -196,8 +196,8 @@ class eucaInstall extends eucaObject
 			$db->setQuery( $query );
 
 			if ( !$db->query() ) {
-		    	$this->setError( array( $db->getErrorMsg(), $query ) );
-		    	return false;
+				$this->setError( array( $db->getErrorMsg(), $query ) );
+				return false;
 			} else {
 				return true;
 			}
@@ -266,9 +266,9 @@ class eucaInstallDB extends eucaObject
 
 		foreach ( $queri as $query ) {
 			$db->setQuery( $query );
-		    if ( !$db->query() ) {
-		        $this->setError( array( $db->getErrorMsg(), $query ) );
-		    }
+			if ( !$db->query() ) {
+				$this->setError( array( $db->getErrorMsg(), $query ) );
+			}
 		}
 	}
 
@@ -333,8 +333,8 @@ class eucaInstallDB extends eucaObject
 		$result = $db->query();
 
 		if ( !$result ) {
-	    	$this->setError( array( $db->getErrorMsg(), $query ) );
-	    	return false;
+			$this->setError( array( $db->getErrorMsg(), $query ) );
+			return false;
 		} else {
 			return true;
 		}
@@ -360,8 +360,8 @@ class eucaInstallDB extends eucaObject
 		$result = $db->query();
 
 		if ( !$result ) {
-	    	$this->setError( array( $db->getErrorMsg(), $query ) );
-	    	return false;
+			$this->setError( array( $db->getErrorMsg(), $query ) );
+			return false;
 		} else {
 			return true;
 		}
@@ -380,8 +380,8 @@ class eucaInstallDB extends eucaObject
 		$result = $db->query();
 
 		if ( !$result ) {
-	    	$this->setError( array( $db->getErrorMsg(), $query ) );
-	    	return false;
+			$this->setError( array( $db->getErrorMsg(), $query ) );
+			return false;
 		} else {
 			return true;
 		}
@@ -414,7 +414,7 @@ class eucaInstalleditfile extends eucaObject
 					@chmod( $path, $oldperms );
 					return true;
 				}
-		    }
+			}
 		}
 
 		$this->setError( $throwerror );

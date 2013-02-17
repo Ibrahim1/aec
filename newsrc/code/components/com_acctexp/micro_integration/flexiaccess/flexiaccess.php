@@ -43,7 +43,7 @@ class mi_flexiaccess
 			}
 		}
 
-        $settings = array();
+		$settings = array();
 
 		// Explode the selected groups
 		if ( !empty( $this->settings['enroll_group'] ) ) {

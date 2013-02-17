@@ -41,7 +41,7 @@ class mi_fireboard
 			}	
 		}
 
-        $settings = array();
+		$settings = array();
 
 		if ( !isset( $this->settings['group'] ) ) {
 			$this->settings['group'] = 0;

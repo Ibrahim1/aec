@@ -56,7 +56,7 @@ class processor_moneyproxy extends POSTprocessor
 		$settings['item_name']				= array( 'inputE' );
 		$settings['customparams']			= array( 'inputD' );
 
-        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}

@@ -67,13 +67,13 @@ class processor_vcs extends POSTprocessor
 			$var['p4']		= $request->int_var['amount'];
 		}
 
-		$var['m_1']		= $request->int_var['return_url'];
-		$var['m_2']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
-		$var['m_3']		= AECToolbox::deadsureURL( 'vcsnotification' );
-		$var['m_4']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
-		$var['m_5']	    = $request->metaUser->cmsUser->name;
-		$var['m_6']		= $request->metaUser->cmsUser->email;
-		$var['m_7']		= AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+		$var['m_1'] = $request->int_var['return_url'];
+		$var['m_2'] = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
+		$var['m_3'] = AECToolbox::deadsureURL( 'vcsnotification' );
+		$var['m_4'] = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
+		$var['m_5'] = $request->metaUser->cmsUser->name;
+		$var['m_6'] = $request->metaUser->cmsUser->email;
+		$var['m_7'] = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
 		return $var;
 	}

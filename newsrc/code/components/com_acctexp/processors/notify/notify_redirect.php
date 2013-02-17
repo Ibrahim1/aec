@@ -182,7 +182,7 @@ class bootstrapLoader
 		if ( $connection === false ) {
 			return false;
 		} else {
-		    $hosturl = $url_info['host'];
+			$hosturl = $url_info['host'];
 
 			$header_array["Host"] = $hosturl;
 
@@ -229,11 +229,11 @@ class bootstrapLoader
 					$res = fgets( $connection, 8192 );
 				}
 
-		        if ( $info["timed_out"] ) {
+				if ( $info["timed_out"] ) {
 					fclose( $connection );
 
 					return false;
-		        }
+				}
 			} else {
 				while ( !feof( $connection ) ) {
 					$res = fgets( $connection, 1024 );

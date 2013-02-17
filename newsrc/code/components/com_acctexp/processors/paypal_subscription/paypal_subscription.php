@@ -94,7 +94,7 @@ class processor_paypal_subscription extends POSTprocessor
 		$settings['image_url']				= array( 'inputE' );
 		$settings['page_style']				= array( 'inputE' );
 
-        $settings = AECToolbox::rewriteEngineInfo( null, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
 	}

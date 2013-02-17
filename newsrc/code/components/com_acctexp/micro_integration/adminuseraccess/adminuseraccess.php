@@ -52,7 +52,7 @@ class mi_adminuseraccess
 			$this->settings['group_exp'] = 0;
 		}
 
-        $settings = array();
+		$settings = array();
 
 		$settings['lists']['group']		= JHTML::_('select.genericlist', $auagroups, 'group', 'size="4"', 'value', 'text', $this->settings['group'] );
 		$settings['lists']['group_exp'] = JHTML::_('select.genericlist', $auagroups, 'group_exp', 'size="4"', 'value', 'text', $this->settings['group_exp'] );

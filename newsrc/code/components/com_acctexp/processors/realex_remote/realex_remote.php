@@ -136,7 +136,7 @@ class processor_realex_remote extends XMLprocessor
 				$elements[$index]['attributes'] = $tag['attributes'];
 				$elements[$index]['content'] = $tag['value'];
 
-				if ( $tag['type'] == "open" ) {    # push
+				if ( $tag['type'] == "open" ) {	# push
 					$elements[$index]['children'] = array();
 					$stack[count($stack)] = &$elements;
 					$elements = &$elements[$index]['children'];
@@ -146,8 +146,8 @@ class processor_realex_remote extends XMLprocessor
 			if ( $tag['type'] == "close" ) {
 				$elements = &$stack[count($stack) - 1];
 				unset($stack[count($stack) - 1]);
-	        }
-    	}
+			}
+		}
 
 		$i=0;
 		while ( $elements[0]['children'][$i]['name'] ) {

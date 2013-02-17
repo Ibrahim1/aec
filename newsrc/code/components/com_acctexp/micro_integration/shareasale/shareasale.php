@@ -49,9 +49,9 @@ class mi_shareasale
 
 		$getparams = array();
 
-        $user		= JFactory::getUser($invoice->userid);
-        $SSAID		= $user->getParam('SSAID');
-        $SSAIDDATA	= $user->getParam('SSAIDDATA');
+		$user		= JFactory::getUser($invoice->userid);
+		$SSAID		= $user->getParam('SSAID');
+		$SSAIDDATA	= $user->getParam('SSAIDDATA');
 
 		$getparams[] = 'amount='		. $request->invoice->amount;
 		$getparams[] = 'tracking='		. $request->invoice->invoice_number;

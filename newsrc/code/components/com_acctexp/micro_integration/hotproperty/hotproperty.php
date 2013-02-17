@@ -58,7 +58,7 @@ class mi_hotproperty extends MI
 	{
 		$db = &JFactory::getDBO();
 
-        $settings = array();
+		$settings = array();
 		$settings['create_agent']	= array( 'toggle' );
 		$settings['agent_fields']	= array( 'inputD' );
 		$settings['update_agent']	= array( 'toggle' );

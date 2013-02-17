@@ -59,8 +59,8 @@ class mi_pepperjam
 
 	function Defaults()
 	{
-        $defaults = array();
-        $defaults['type']			= '1';
+		$defaults = array();
+		$defaults['type']			= '1';
 
 		return $defaults;
 	}

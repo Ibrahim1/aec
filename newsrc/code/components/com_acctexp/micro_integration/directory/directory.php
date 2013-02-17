@@ -25,13 +25,13 @@ class mi_directory
 
 	function Settings()
 	{
-        $settings = array();
-        $settings['mkdir']			= array( 'inputD' );
-        $settings['mkdir_mode']		= array( 'inputC' );
-        $settings['mkdir_exp']		= array( 'inputD' );
-        $settings['mkdir_mode_exp']	= array( 'inputC' );
-        $settings['mkdir_pre_exp']	= array( 'inputD' );
-        $settings['mkdir_mode_pre_exp']		= array( 'inputC' );
+		$settings = array();
+		$settings['mkdir']			= array( 'inputD' );
+		$settings['mkdir_mode']		= array( 'inputC' );
+		$settings['mkdir_exp']		= array( 'inputD' );
+		$settings['mkdir_mode_exp']	= array( 'inputC' );
+		$settings['mkdir_pre_exp']	= array( 'inputD' );
+		$settings['mkdir_mode_pre_exp']		= array( 'inputC' );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
@@ -42,10 +42,10 @@ class mi_directory
 
 	function Defaults()
 	{
-        $defaults = array();
-        $defaults['mkdir_mode']			= '0644';
-        $defaults['mkdir_mode_exp']		= '0644';
-        $defaults['mkdir_mode_pre_exp']	= '0644';
+		$defaults = array();
+		$defaults['mkdir_mode']			= '0644';
+		$defaults['mkdir_mode_exp']		= '0644';
+		$defaults['mkdir_mode_pre_exp']	= '0644';
 
 		return $defaults;
 	}

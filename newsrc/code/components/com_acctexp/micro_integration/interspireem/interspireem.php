@@ -91,9 +91,9 @@ class mi_interspireem
 
 	function Defaults()
 	{
-        $defaults = array();
-        $defaults['url']			= JURI::root() . 'members/xml.php';
-        $defaults['custom_details']	= '1=[[user_name]]';
+		$defaults = array();
+		$defaults['url']			= JURI::root() . 'members/xml.php';
+		$defaults['custom_details']	= '1=[[user_name]]';
 
 		return $defaults;
 	}

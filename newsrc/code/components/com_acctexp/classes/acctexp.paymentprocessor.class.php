@@ -1365,11 +1365,11 @@ class processor extends serialParamDBTable
 
 			return false;
 		} else {
-		    if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
+			if ( !empty( $aecConfig->cfg['use_proxy'] ) && !empty( $aecConfig->cfg['proxy'] ) ) {
 				$hosturl = $aecConfig->cfg['proxy'];
-		    } else {
-		    	$hosturl = $url_info['host'];
-		    }
+			} else {
+				$hosturl = $url_info['host'];
+			}
 
 			$header_array["Host"] = $hosturl;
 
@@ -1422,7 +1422,7 @@ class processor extends serialParamDBTable
 					$res = fgets( $connection, 8192 );
 				}
 
-		        if ( $info["timed_out"] ) {
+				if ( $info["timed_out"] ) {
 					
 
 					$short	= 'fsockopen failure';
@@ -1432,7 +1432,7 @@ class processor extends serialParamDBTable
 
 					$eventlog = new eventLog();
 					$eventlog->issue( $short, $tags, $event, 128, $params );
-		        }
+				}
 			} else {
 				while ( !feof( $connection ) ) {
 					$res = fgets( $connection, 1024 );

@@ -452,8 +452,8 @@ class mi_vbulletin
 
 	function getDB()
 	{
-        if ( !empty( $this->settings['use_altdb'] ) ) {
-	        $options = array(	'driver'	=> $this->settings['dbms'],
+		if ( !empty( $this->settings['use_altdb'] ) ) {
+			$options = array(	'driver'	=> $this->settings['dbms'],
 								'host'		=> $this->settings['dbhost'],
 								'user'		=> $this->settings['dbuser'],
 								'password'	=> $this->settings['dbpasswd'],
@@ -461,10 +461,10 @@ class mi_vbulletin
 								'prefix'	=> $this->settings['table_prefix']
 								);
 
-	        $db = &JDatabase::getInstance($options);
-        } else {
-        	$db = &JFactory::getDBO();
-        }
+			$db = &JDatabase::getInstance($options);
+		} else {
+			$db = &JFactory::getDBO();
+		}
 
 		return $db;
 	}

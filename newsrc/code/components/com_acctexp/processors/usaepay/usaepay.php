@@ -117,7 +117,6 @@ class processor_usaepay extends XMLprocessor
 
 		if ( $this->settings['testmode'] ) {
 			$url	= "https://sandbox.usaepay.com" . $path;
-			                        
 		} else {
 			$url	= "https://secure.usaepay.com" . $path;
 		}
@@ -126,7 +125,7 @@ class processor_usaepay extends XMLprocessor
 
 		if ( !empty( $response ) ) {
 			$result = parse_str( $response );
-aecDebug($response);aecDebug($result);exit;
+
 			if ( $result['result'] == 'Approved' ) {
 				$return['valid'] = true;
 			} else {

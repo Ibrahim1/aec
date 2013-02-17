@@ -112,15 +112,15 @@ class mi_email_multi extends MI
 
 			$recipient_array = explode( ',', $list );
 
-	        if ( !empty( $recipient_array ) ) {
-		        $$setting = array();
+			if ( !empty( $recipient_array ) ) {
+				$$setting = array();
 
-		        foreach ( $recipient_array as $k => $email ) {
-		            if ( !empty( $email ) ) {
-		            	${$setting}[] = trim( $email );
-		            }
-		        }
-	        }
+				foreach ( $recipient_array as $k => $email ) {
+					if ( !empty( $email ) ) {
+						${$setting}[] = trim( $email );
+					}
+				}
+			}
 		}
 
 		xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipient, $subject, $message, $this->settings[$pf.'text_html'], $cc, $bcc );

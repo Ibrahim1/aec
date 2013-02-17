@@ -25,11 +25,11 @@ class mi_http_query extends MI
 
 	function Settings()
 	{
-        $settings = array();
-        $settings['url']			= array( 'inputE' );
-        $settings['query']			= array( 'inputD' );
+		$settings = array();
+		$settings['url']	= array( 'inputE' );
+		$settings['query']	= array( 'inputD' );
 
-        $settings					= $this->autoduplicatesettings( $settings, array(), true, true );
+		$settings			= $this->autoduplicatesettings( $settings, array(), true, true );
 
 		return $settings;
 	}

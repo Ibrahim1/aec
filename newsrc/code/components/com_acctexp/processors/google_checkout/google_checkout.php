@@ -108,7 +108,7 @@ class processor_google_checkout extends XMLprocessor
 
 		$cart->SetContinueShoppingUrl( $request->int_var['return_url'] );
 
-	    $cart->SetMerchantPrivateData( new MerchantPrivateData( array("invoice" => $request->invoice->invoice_number) ) );
+		$cart->SetMerchantPrivateData( new MerchantPrivateData( array("invoice" => $request->invoice->invoice_number) ) );
 
 		// Display the Google Checkout button instead of the normal checkout button.
 		$return = '<p style="float:right;text-align:right;">' . $cart->CheckoutButtonCode("SMALL") . '</p>';

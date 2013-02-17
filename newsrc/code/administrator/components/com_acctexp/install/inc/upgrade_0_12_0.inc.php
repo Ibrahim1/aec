@@ -65,12 +65,12 @@ if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 	if ( strcmp( $result->Field, 'mingid' ) === 0 ) {
 		$db->setQuery("ALTER TABLE #__acctexp_plans ADD `restrictions` text NULL");
 		if ( !$db->query() ) {
-	    	$errors[] = array( $db->getErrorMsg(), $query );
+			$errors[] = array( $db->getErrorMsg(), $query );
 		}
 
 		$db->setQuery("ALTER TABLE #__acctexp_plans ADD `params` text NULL");
 		if ( !$db->query() ) {
-	    	$errors[] = array( $db->getErrorMsg(), $query );
+			$errors[] = array( $db->getErrorMsg(), $query );
 		}
 
 		$remap_params = array();
@@ -106,7 +106,7 @@ if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 
 			$db->setQuery("ALTER TABLE #__acctexp_plans DROP COLUMN `" . $field . "`");
 			if ( !$db->query() ) {
-		    	$errors[] = array( $db->getErrorMsg(), $query );
+				$errors[] = array( $db->getErrorMsg(), $query );
 			}
 		}
 
@@ -155,7 +155,7 @@ if ( !( strcmp( $result->Field, 'params' ) === 0 ) ) {
 
 			$db->setQuery("UPDATE #__acctexp_plans SET params='" . $params . "', restrictions='" . $restrictions . "' WHERE id='" . $id . "'");
 			if ( !$db->query() ) {
-		    	$errors[] = array( $db->getErrorMsg(), $query );
+				$errors[] = array( $db->getErrorMsg(), $query );
 			}
 		}
 
@@ -178,7 +178,7 @@ if ( $eucaInstalldb->ColumninTable( 'customparams', 'plans' ) ) {
 	if ( !$eucaInstalldb->ColumninTable( 'custom_params', 'plans' ) ) {
 		$db->setQuery("ALTER TABLE #__acctexp_plans CHANGE `customparams` `custom_params` text NULL");
 		if ( !$db->query() ) {
-	    	$errors[] = array( $db->getErrorMsg(), $query );
+			$errors[] = array( $db->getErrorMsg(), $query );
 		}
 	}
 }
@@ -200,7 +200,7 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp", $tables ) ) {
 			// Give extra space for plan description
 			$db->setQuery("ALTER TABLE #__acctexp CHANGE `expiration` `expiration` datetime NOT NULL default '0000-00-00 00:00:00'");
 			if ( !$db->query() ) {
-		    	$errors[] = array( $db->getErrorMsg(), $query );
+				$errors[] = array( $db->getErrorMsg(), $query );
 			}
 		}
 	}

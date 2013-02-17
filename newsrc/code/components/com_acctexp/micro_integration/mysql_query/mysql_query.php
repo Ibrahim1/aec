@@ -25,7 +25,7 @@ class mi_mysql_query
 
 	function Settings()
 	{
-        $settings = array();
+		$settings = array();
 		$settings['use_altdb']		= array( 'toggle' );
 		$settings['dbms']			= array( 'inputC' );
 		$settings['dbhost']			= array( 'inputC' );
@@ -34,9 +34,9 @@ class mi_mysql_query
 		$settings['dbname']			= array( 'inputC' );
 		$settings['table_prefix']	= array( 'inputC' );
 
-        $settings['query']			= array( 'inputD' );
-        $settings['query_exp']		= array( 'inputD' );
-        $settings['query_pre_exp']	= array( 'inputD' );
+		$settings['query']			= array( 'inputD' );
+		$settings['query_exp']		= array( 'inputD' );
+		$settings['query_pre_exp']	= array( 'inputD' );
 
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
@@ -48,8 +48,8 @@ class mi_mysql_query
 	function relayAction( $request )
 	{
 		if ( isset( $this->settings['query'.$request->area] ) ) {
-	        if ( $this->settings['use_altdb'] ) {
-		        $options = array(	'driver'	=> $this->settings['dbms'],
+			if ( $this->settings['use_altdb'] ) {
+				$options = array(	'driver'	=> $this->settings['dbms'],
 									'host'		=> $this->settings['dbhost'],
 									'user'		=> $this->settings['dbuser'],
 									'password'	=> $this->settings['dbpasswd'],
@@ -57,10 +57,10 @@ class mi_mysql_query
 									'prefix'	=> $this->settings['table_prefix']
 									);
 
-		        $db =& JDatabase::getInstance($options);
-	        } else {
-	        	$db = &JFactory::getDBO();
-	        }
+				$db =& JDatabase::getInstance($options);
+			} else {
+				$db = &JFactory::getDBO();
+			}
 
 			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 

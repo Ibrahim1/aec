@@ -27,7 +27,7 @@ class mi_adsmanager extends MI
 	{
 		$db = &JFactory::getDBO();
 
-        $settings = array();
+		$settings = array();
 		$settings['publish_all']	= array( 'toggle' );
 		$settings['unpublish_all']	= array( 'toggle' );
 

@@ -147,15 +147,15 @@ class mi_email_files
 
 			$recipient_array = explode( ',', $list );
 
-	        if ( !empty( $recipient_array ) ) {
-		        $$setting = array();
+			if ( !empty( $recipient_array ) ) {
+				$$setting = array();
 
-		        foreach ( $recipient_array as $k => $email ) {
-		            if ( !empty( $email ) ) {
-		            	${$setting}[] = trim( $email );
-		            }
-		        }
-	        }
+				foreach ( $recipient_array as $k => $email ) {
+					if ( !empty( $email ) ) {
+						${$setting}[] = trim( $email );
+					}
+				}
+			}
 		}
 
 		$f = explode( "\n", $this->settings['file_list'] );

@@ -91,7 +91,7 @@ class processor_netpay extends POSTprocessor
 		$response['invoice'] = $post['orderid'];
 
 		if ( $post['status'] == "00" && !empty( $appcode ) ) {
-			$response['valid'] = 1;    // Means Status is OK and there is a value in the Approval Code, then update 1
+			$response['valid'] = 1; // Means Status is OK and there is a value in the Approval Code, then update 1
 		} else {
 			$response['valid'] = 0;
 		}

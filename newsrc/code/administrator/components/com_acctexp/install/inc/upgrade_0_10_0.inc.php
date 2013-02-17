@@ -16,12 +16,12 @@
 if ( $eucaInstalldb->columnintable( 'entry', 'plans' ) ) {
 	$db->setQuery("ALTER TABLE #__acctexp_plans DROP `entry`");
 	if ( !$db->query() ) {
-    	$errors[] = array( $db->getErrorMsg(), $query );
+		$errors[] = array( $db->getErrorMsg(), $query );
 	}
 } else {
 	$db->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `invoice_number` `invoice_number` varchar(64) NULL");
 	if ( !$db->query() ) {
-    	$errors[] = array( $db->getErrorMsg(), $query );
+		$errors[] = array( $db->getErrorMsg(), $query );
 	}
 }
 
@@ -32,7 +32,7 @@ if ( (strcmp($result->Field, 'desc') === 0) && (strcmp($result->Type, 'varchar(2
 	// Give extra space for plan description
 	$db->setQuery("ALTER TABLE #__acctexp_plans CHANGE `desc` `desc` text NULL");
 	if ( !$db->query() ) {
-    	$errors[] = array( $db->getErrorMsg(), $query );
+		$errors[] = array( $db->getErrorMsg(), $query );
 	}
 }
 
@@ -41,7 +41,7 @@ $eucaInstalldb->addColifNotExists( 'lifetime', "int(4) default '0'",  'plans' );
 if ( !$eucaInstalldb->columnintable( 'lifetime', 'subscr' ) ) {
 	$db->setQuery("ALTER TABLE #__acctexp_subscr CHANGE `extra05` `lifetime` int(1) default '0'");
 	if ( !$db->query() ) {
-    	$errors[] = array( $db->getErrorMsg(), $query );
+		$errors[] = array( $db->getErrorMsg(), $query );
 	}
 }
 
@@ -79,7 +79,7 @@ if ( $eucaInstalldb->columnintable( 'planid', 'invoices' ) ) {
 
 	$db->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `planid` `usage` varchar(255) NULL");
 	if ( !$db->query() ) {
-    	$errors[] = array( $db->getErrorMsg(), $query );
+		$errors[] = array( $db->getErrorMsg(), $query );
 	}
 } else {
 	$db->setQuery("SHOW COLUMNS FROM #__acctexp_invoices LIKE 'usage'");
@@ -88,7 +88,7 @@ if ( $eucaInstalldb->columnintable( 'planid', 'invoices' ) ) {
 	if ( !$eucaInstalldb->columnintable( 'usage', 'invoices' ) ) {
 		$db->setQuery("ALTER TABLE #__acctexp_invoices ADD `usage` varchar(255) NULL");
 		if ( !$db->query() ) {
-	    	$errors[] = array( $db->getErrorMsg(), $query );
+			$errors[] = array( $db->getErrorMsg(), $query );
 		}
 	}
 }
@@ -236,7 +236,7 @@ if ( $oldplans || in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_config_paypal'
 			if (count($plan_procs)) {
 				$db->setQuery( "UPDATE #__acctexp_plans SET processors='" . implode(";", $plan_procs) . "' WHERE id='" . $planentry->plan_id . "'" );
 				if ( !$db->query() ) {
-			    	$errors[] = array( $db->getErrorMsg(), $query );
+					$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}

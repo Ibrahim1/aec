@@ -471,7 +471,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$timestamp = (int) gmdate('U');
 			}
 
-			$var['ProfileStartDate']    = date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
+			$var['ProfileStartDate']	= date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
 
 			$full = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 

@@ -32,12 +32,12 @@ class processor_payfast extends POSTprocessor
 	function settings()
 	{
 		$settings = array();
-		$settings['testmode']		= 1;		
-		$settings['merchant_id']	= '';		
+		$settings['testmode']		= 1;
+		$settings['merchant_id']	= '';
 		$settings['merchant_key']	= '';
 		$settings['merchant_email_confirmation'] = 0;
 		$settings['merchant_email'] = '';
-		$settings['pdt_key']		= '';		
+		$settings['pdt_key']		= '';
 		$settings['currency']		= 'ZAR';
 		$settings['item_name']		='[[user_id]]';
 		$settings['item_desc']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );							
@@ -54,14 +54,14 @@ class processor_payfast extends POSTprocessor
 	{
 		$settings = array();
 
-		$settings['testmode']						= array( 'toggle' );		
-		$settings['merchant_id']					= array( 'inputC' );	
+		$settings['testmode']						= array( 'toggle' );
+		$settings['merchant_id']					= array( 'inputC' );
 		$settings['merchant_key']					= array( 'inputC' );
 		$settings['merchant_email_confirmation']	= array( 'toggle' );
 		$settings['merchant_email']					= array( 'inputC' );
 
 		$settings['pdt_key']		= array( 'inputD' );
-		$settings['currency']		= array( 'list_currency' );		
+		$settings['currency']		= array( 'list_currency' );
 		$settings['item_name']		= array( 'inputE' );
 		$settings['item_desc']		= array( 'inputE' );
 
@@ -92,7 +92,7 @@ class processor_payfast extends POSTprocessor
 
 		// Payer details
 		$var['name_first']		= $name['first'];
-		$var['name_last']		= $name['last'];					
+		$var['name_last']		= $name['last'];
 		$var['email_address']	= $request->metaUser->cmsUser->email;
 
 		// Transaction details		
@@ -101,7 +101,7 @@ class processor_payfast extends POSTprocessor
 		$var['item_name']		= trim( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) );
 
 		if ( !empty($this->settings['item_desc']) ) {
-		    $var['item_description']	= trim( AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request ) );
+			$var['item_description']	= trim( AECToolbox::rewriteEngineRQ( $this->settings['item_desc'], $request ) );
 		}
 
 		// Custom variables
@@ -112,7 +112,7 @@ class processor_payfast extends POSTprocessor
 		}
 
 		for ( $i=1; $i<6; $i++ ) { //order is important
-		        if ( !empty( $this->settings['custom_int'.$i] ) ) {
+				if ( !empty( $this->settings['custom_int'.$i] ) ) {
 				$var['custom_int'.$i] = $this->settings['custom_int'.$i];
 			}
 		}
@@ -155,7 +155,7 @@ class processor_payfast extends POSTprocessor
 		$response['valid'] = 0;
 
 		if ( !$this->pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
-			$response['pending_reason'] = "Bad Notification Source IP";					
+			$response['pending_reason'] = "Bad Notification Source IP";
 
 			return $response; 
 		}
@@ -163,9 +163,9 @@ class processor_payfast extends POSTprocessor
 		$param_string = null;
 
 		$sig = $this->getSignature( $post, $param_string);
-         
+		 
 		if ( $sig != $post['signature'] ) {
-			$response['pending_reason'] = "Signature mismatch";					
+			$response['pending_reason'] = "Signature mismatch";
 			return $response; 
 		}
 		
@@ -196,7 +196,7 @@ class processor_payfast extends POSTprocessor
 		return md5( $param_string );
 	}
 
-        
+		
 	function pfValidIP( $sourceIP )
 	{
 		$validHosts = array( 'www.payfast.co.za', 'sandbox.payfast.co.za', 'w1w.payfast.co.za', 'w2w.payfast.co.za' );
@@ -219,9 +219,9 @@ class processor_payfast extends POSTprocessor
 	{
 		$path = '/eng/query/validate';
 		if ( $this->settings['testmode'] ) {
-			$url = 'https://sandbox.payfast.co.za' . $path;			
+			$url = 'https://sandbox.payfast.co.za' . $path;
 		} else {
-			$url = 'https://www.payfast.co.za' . $path;			
+			$url = 'https://www.payfast.co.za' . $path;
 		}
 
 		$agent = 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)';
@@ -231,12 +231,12 @@ class processor_payfast extends POSTprocessor
 								CURLOPT_USERAGENT => $agent,
 								CURLOPT_TIMEOUT => 15
 							);
-		    
+			
 		$res = $this->transmitRequest( $url, $path, $data, 443, $extra_header);
 
 		$lines = explode( "\r\n", $res );
 
-		$verifyResult = trim( $lines[0] );	    
+		$verifyResult = trim( $lines[0] );
 
 		return ( strcasecmp( $verifyResult, 'VALID' ) == 0 );
 	}

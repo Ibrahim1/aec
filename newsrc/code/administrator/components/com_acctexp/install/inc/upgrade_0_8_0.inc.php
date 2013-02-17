@@ -30,9 +30,9 @@ if ( is_object( $result ) ) {
 
 			foreach ( $queri AS $query ) {
 				$db->setQuery( $query );
-			    if ( !$db->query() ) {
-			        $errors[] = array( $db->getErrorMsg(), $query );
-			    }
+				if ( !$db->query() ) {
+					$errors[] = array( $db->getErrorMsg(), $query );
+				}
 			}
 		}
 
@@ -74,9 +74,9 @@ if ( is_object( $result ) ) {
 
 			foreach ( $queri as $query ) {
 				$db->setQuery( $query );
-			    if ( !$db->query() ) {
-			        $errors[] = array( $db->getErrorMsg(), $query );
-			    }
+				if ( !$db->query() ) {
+					$errors[] = array( $db->getErrorMsg(), $query );
+				}
 			}
 
 			// Associate all those old plans with PayPal processors.
@@ -86,7 +86,7 @@ if ( is_object( $result ) ) {
 				$row = &$rows[$i];
 				$db->setQuery("INSERT INTO `#__acctexp_processors_plans` VALUES ($row->id, '1')");
 				if ( !$db->query() ) {
-			    	$errors[] = array( $db->getErrorMsg(), $query );
+					$errors[] = array( $db->getErrorMsg(), $query );
 				}
 			}
 		}
@@ -94,7 +94,7 @@ if ( is_object( $result ) ) {
 		// Configure extra01 field indicating recurring subscriptions...
 		$db->setQuery("UPDATE #__acctexp_subscr SET extra01='1' WHERE extra01 is NULL");
 		if ( !$db->query() ) {
-	    	$errors[] = array( $db->getErrorMsg(), $query );
+			$errors[] = array( $db->getErrorMsg(), $query );
 		}
 
 	} else {

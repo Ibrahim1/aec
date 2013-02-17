@@ -121,11 +121,11 @@ class processor_offline_payment2 extends processor
 		$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
 		$recips = explode( ',', $recipients );
 
-        $recipients2 = array();
-        foreach ( $recips as $k => $email ) {
-            $recipients2[$k] = trim( $email );
-        }
-        $recipients = $recipients2;
+		$recipients2 = array();
+		foreach ( $recips as $k => $email ) {
+			$recipients2[$k] = trim( $email );
+		}
+		$recipients = $recipients2;
 
 		xJ::sendMail( $this->settings['sender'], $this->settings['sender_name'], $recipients, $subject, $message, $this->settings['text_html'] );
 
@@ -149,20 +149,20 @@ class processor_offline_payment2 extends processor
 				$recipients = AECToolbox::rewriteEngineRQ( $this->settings['recipient'], $request );
 				$recips = explode( ',', $recipients );
 
-		        $recipients2 = array();
-		        foreach ( $recips as $k => $email ) {
-		            $recipients2[$k] = trim( $email );
-		        }
-		        $recipients = $recipients2;
+				$recipients2 = array();
+				foreach ( $recips as $k => $email ) {
+					$recipients2[$k] = trim( $email );
+				}
+				$recipients = $recipients2;
 
 				$bccipients = AECToolbox::rewriteEngineRQ( $this->settings['bcc'], $request );
 				$bccips = explode( ',', $bccipients );
 
-		        $bccipients2 = array();
-		        foreach ( $bccips as $k => $email ) {
-		            $bccipients2[$k] = trim( $email );
-		        }
-		        $bccipients = $bccipients2;
+				$bccipients2 = array();
+				foreach ( $bccips as $k => $email ) {
+					$bccipients2[$k] = trim( $email );
+				}
+				$bccipients = $bccipients2;
 
 				if ( !empty( $bccipients2 ) ) {
 					$bcc = $bccipients;

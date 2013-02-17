@@ -68,7 +68,7 @@ class mi_raffle
 	{
 		$db = &JFactory::getDBO();
 
-        $settings = array();
+		$settings = array();
 		$settings['list_group']			= array( 'inputA' );
 		$settings['draw_range']			= array( 'inputA' );
 		$settings['max_participations']	= array( 'inputA' );

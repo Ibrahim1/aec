@@ -438,8 +438,8 @@ class AECToolbox
 			if ( substr( strtolower( $xurl ), 0, 9 ) != "index.php" ) {
 				 $new_url = $xurl;
 			} else {
-				$uri    = JURI::getInstance();
-				$prefix = $uri->toString( array( 'scheme', 'host', 'port' ) );
+				$uri	= JURI::getInstance();
+				$prefix	= $uri->toString( array( 'scheme', 'host', 'port' ) );
 
 				$new_url = $prefix.JRoute::_( $xurl );
 			}

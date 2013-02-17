@@ -37,7 +37,7 @@ class processor_multisafepay extends XMLprocessor
 		$settings['testmode']			= "0";
 		$settings['currency']			= "EUR";
 		$settings['language']			= "NL";
-		$settings['customparams']        = "";
+		$settings['customparams']		= "";
 
 		$settings['gateway']			= array( 'IDEAL,DIRDEB,VISA,WALLET,IDEAL,BANKTRANS,MAESTRO,MASTERCARD' );
 		$settings['item_name']			= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );

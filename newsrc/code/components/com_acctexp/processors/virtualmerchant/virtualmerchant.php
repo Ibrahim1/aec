@@ -64,12 +64,12 @@ class processor_virtualmerchant extends POSTprocessor
 	{
 		$var['post_url']				= "https://www.myvirtualmerchant.com/VirtualMerchant/process.do";
 		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
-        $var['ssl_transaction_type']	= "ccsale";
+		$var['ssl_transaction_type']	= "ccsale";
 		$var['ssl_merchant_id']			= $this->settings['accountid'];
 		$var['ssl_user_id']				= $this->settings['userid'];
 		$var['ssl_pin']					= $this->settings['pin'];
 		$var['ssl_invoice_number']		= $request->invoice->invoice_number;
-        $var['ssl_customer_code']		= $request->metaUser->cmsUser->username;
+		$var['ssl_customer_code']		= $request->metaUser->cmsUser->username;
 		$var['ssl_salestax']			= "0";
 		$var['ssl_result_format']		= "HTML";
 		$var['ssl_receipt_link_method']	= "POST";

@@ -794,10 +794,10 @@ jQuery(document).ready(function(jQuery) {
 				<form action="#" class="pull-right">
 					<input type="text" class="span2" placeholder="Quicksearch" id="quicksearch" data-placement="bottom" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>
-	        </div>
-	      </div>
-	    </div>
-    <?php
+			</div>
+		</div>
+		</div>
+	<?php
 	}
 
 	function getMenu()
@@ -1481,7 +1481,7 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery("#group-filter-select")
 	.multiselect({	noneSelectedText: \'' . JText::_('GROUP_FILTER') . '\',
-      				selectedList: 1
+					selectedList: 1
 			});
 	jQuery(".ui-multiselect-checkboxes input").on("click", function(event){
 		if( jQuery(this).val() == "notconfig" ) {
@@ -1692,17 +1692,17 @@ $js = '
 jQuery(document).ready(function(jQuery) {
 	jQuery("#attach_to_groups")
 	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Group') . '\',
-      				selectedList: 1
+					selectedList: 1
 			});
 
 	jQuery("#attach_to_plans")
 	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Plan') . '\',
-      				selectedList: 1
+					selectedList: 1
 			});
 
 	jQuery("[id~=\"validationtype\"]")
 	.multiselect({	noneSelectedText: \'' . JText::_('No Validation') . '\',
-      				selectedList: 1
+					selectedList: 1
 			});
 });
 ';
@@ -1805,7 +1805,7 @@ jQuery(document).ready(function(jQuery) {
 								</tr>
 								</table>
 								<?php $tabs->nextPane( $name ); ?>
-							    <table width="100%" class="aecadminform">
+								<table width="100%" class="aecadminform">
 									<tr>
 										<td>
 											<div class="aec_userinfobox_sub">
@@ -1816,9 +1816,9 @@ jQuery(document).ready(function(jQuery) {
 									echo '<tr><td>';
 								}
 
-					    		echo $aecHTML->createSettingsParticle( $name );
+								echo $aecHTML->createSettingsParticle( $name );
 
-					    		if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+								if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
 									echo '</td></tr>';
 								}
 							}
@@ -3424,17 +3424,17 @@ $js = '
 jQuery(document).ready(function(jQuery) {
 	jQuery("#status-group-select")
 	.multiselect({	noneSelectedText: \'Select Status\',
-      				selectedList: 8
+					selectedList: 8
 			});
 
 	jQuery("#plan-filter-select")
 	.multiselect({	noneSelectedText: \'' . JText::_('PLAN_FILTER') . '\',
-      				selectedList: 3
+					selectedList: 3
 			});
 
 	jQuery("#group-filter-select")
 	.multiselect({	noneSelectedText: \'' . JText::_('GROUP_FILTER') . '\',
-      				selectedList: 3
+					selectedList: 3
 			});
 });
 ';

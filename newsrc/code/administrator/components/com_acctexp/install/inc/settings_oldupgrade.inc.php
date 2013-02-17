@@ -34,19 +34,19 @@ if ( strcmp( $result->Field, 'settings' ) !== 0 ) {
 
 			$db->setQuery("ALTER TABLE #__acctexp_config DROP COLUMN " . $column);
 			if ( !$db->query() ) {
-		    	$errors[] = array( $db->getErrorMsg(), $query );
+				$errors[] = array( $db->getErrorMsg(), $query );
 			}
 		}
 	}
 
 	$db->setQuery("ALTER TABLE #__acctexp_config ADD `settings` text");
 	if ( !$db->query() ) {
-    	$errors[] = array( $db->getErrorMsg(), $query );
+		$errors[] = array( $db->getErrorMsg(), $query );
 	}
 
 	$db->setQuery("UPDATE #__acctexp_config SET `settings` = '" . parameterHandler::encode( $settings ) . "' WHERE id = '1'");
 	if ( !$db->query() ) {
-    	$errors[] = array( $db->getErrorMsg(), $query );
+		$errors[] = array( $db->getErrorMsg(), $query );
 	}
 }
 ?>

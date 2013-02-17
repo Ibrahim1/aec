@@ -51,7 +51,7 @@ class processor_debitech extends POSTprocessor
 		$info['languages']				= 'SE,GB,DE,FR,IT,ES,US';
 		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck,giropay';
 		$info['recurring']				= 1;
-       	$info['notify_trail_thanks']	= 1; // insert this line
+		$info['notify_trail_thanks']	= 1; // insert this line
 
 		return $info;
 	}

@@ -73,7 +73,7 @@ class mi_docman
 			$db->query();
 		}
 
-        $settings = array();
+		$settings = array();
 		$settings['add_downloads']		= array( 'inputA' );
 		$settings['set_downloads']		= array( 'inputA' );
 		$settings['set_unlimited']		= array( 'toggle' );
@@ -447,19 +447,19 @@ class docman_restriction extends serialParamDBTable {
 
 	function hasDownloadsLeft()
 	{
-                $check = $this->getDownloadsLeft();
+		$check = $this->getDownloadsLeft();
 
-                if ( empty ( $check ) ) {
-                        return false;
-                } elseif  (  is_numeric ($check)  )  {
-                        if ( $check > 0 ) {
-                                return true;
-                        } else {
-                                return false;
-                        }
-                } elseif ( $check == "unlimited" ) {
-                        return true;
-                }
+		if ( empty ( $check ) ) {
+				return false;
+		} elseif ( is_numeric ($check) ) {
+			if ( $check > 0 ) {
+				return true;
+			} else {
+				return false;
+			}
+		} elseif ( $check == "unlimited" ) {
+				return true;
+		}
 
 	}
 

@@ -129,8 +129,8 @@ class processor_2checkout extends POSTprocessor
 		$key			= $post['key'];
 		$total			= $post['total'];
 		$userid			= $post['cust_id'];
-	    $invoice_number	= $post['invoice_number'];
-	    $order_number	= $post['order_number'];
+		$invoice_number	= $post['invoice_number'];
+		$order_number	= $post['order_number'];
 		$username		= $post['username'];
 		$name			= $post['name'];
 		$planid			= $post['planid'];

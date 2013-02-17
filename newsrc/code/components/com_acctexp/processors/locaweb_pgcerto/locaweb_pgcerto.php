@@ -180,10 +180,10 @@ class processor_locaweb_pgcerto extends XMLprocessor
 
 		// Inicializa o cliente SOAP
 		$soap = @new SoapClient($wsPagamentoCertoLocaweb, array(
-		        'trace' => true,
-		        'exceptions' => true,
-		        'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
-		        'connection_timeout' => 1000
+				'trace' => true,
+				'exceptions' => true,
+				'compression' => SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP,
+				'connection_timeout' => 1000
 		));
 
 		// Postagem dos parâmetros
@@ -228,8 +228,8 @@ class processor_locaweb_pgcerto extends XMLprocessor
 			// Em caso de erro no proceesso
 		} else {
 
-		    // Exibe a mensagem de erro
-		    $return['error'] =	'(' . utf8_decode($CodRetornoInicio) . ') ' . utf8_decode($MensagemRetorno);
+			// Exibe a mensagem de erro
+			$return['error'] =	'(' . utf8_decode($CodRetornoInicio) . ') ' . utf8_decode($MensagemRetorno);
 
 		}
 
@@ -403,8 +403,8 @@ class processor_locaweb_pgcerto extends XMLprocessor
 				}
 			}
 		} else {
-		    // Monta os dados de resposta para o componente AEC
-		    $response['responsestring']							= 	'Erro: ID da transação não informado.';
+			// Monta os dados de resposta para o componente AEC
+			$response['responsestring']							= 	'Erro: ID da transação não informado.';
 			$response['valid']											= false;
 			$response['pending']										= true;
 			$response['pending_reason']							= $response['responsestring'];

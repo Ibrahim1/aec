@@ -87,8 +87,8 @@ class mi_webex extends MI
 
 			if ( empty( $meta->custom_params['is_stored'] ) && empty( $meta->custom_params['temp_pw']) && !empty( $request->row->password ) ) {
 				$meta->custom_params['temp_pw'] = $password;
-		        $meta->storeload();
-    		}
+				$meta->storeload();
+			}
 		}
 	}
 
