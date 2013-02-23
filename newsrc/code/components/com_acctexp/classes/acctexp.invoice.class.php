@@ -3566,16 +3566,14 @@ class Invoice extends serialParamDBTable
 
 	function removeCoupon( $coupon_code )
 	{
-		$oldcoupons = $this->coupons;
-
-		if ( !is_array( $oldcoupons ) ) {
-			$oldcoupons = array();
+		if ( !is_array( $this->coupons ) ) {
+			return null;
 		}
 
-		if ( in_array( $coupon_code, $oldcoupons ) ) {
-			foreach ( $oldcoupons as $id => $cc ) {
+		if ( in_array( $coupon_code, $this->coupons ) ) {
+			foreach ( $this->coupons as $id => $cc ) {
 				if ( $cc == $coupon_code ) {
-					unset( $oldcoupons[$id] );
+					unset( $this->coupons[$id] );
 				}
 			}
 
@@ -3608,8 +3606,6 @@ class Invoice extends serialParamDBTable
 
 			}
 		}
-
-		$this->coupons = $oldcoupons;
 	}
 
 	function preparePickup( $array )
@@ -3884,6 +3880,7 @@ class Invoice extends serialParamDBTable
 		}
 
 		$this->addParams( $array );
+
 		return true;
 	}
 

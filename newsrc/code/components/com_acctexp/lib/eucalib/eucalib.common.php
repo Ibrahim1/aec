@@ -340,6 +340,11 @@ class paramDBTable extends JTable
 		return $this->_db->loadResult();
 	}
 
+	function store()
+	{
+		return parent::store(true);
+	}
+
 	function move( $dir )
 	{
 		parent::move( $dir );
