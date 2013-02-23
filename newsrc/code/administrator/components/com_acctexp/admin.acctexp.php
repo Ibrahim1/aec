@@ -4517,12 +4517,16 @@ function editCoupon( $id, $option, $new )
 		$cur = array();
 
 		if ( !empty( $restrictions_values[$cpn] ) ) {
-			$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-					. ' FROM #__acctexp_coupons'
-					. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
-					;
-			$db->setQuery( $query );
-			$cur = $db->loadObjectList();
+			if ( $ccount > 50 ) {
+				$cur = array();
+			} else {
+				$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+						. ' FROM #__acctexp_coupons'
+						. ' WHERE `coupon_code` IN (\'' . implode( '\',\'', $restrictions_values[$cpn] ) . '\')'
+						;
+				$db->setQuery( $query );
+				$cur = $db->loadObjectList();
+			}
 
 			$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
 					. ' FROM #__acctexp_coupons_static'
