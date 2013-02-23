@@ -60,7 +60,8 @@ class aecConfig extends serialParamDBTable
 		$def['heartbeat_cycle_backend']			= 1;
 		$def['plans_first']						= 0;
 		$def['simpleurls']						= 0;
-		$def['display_date_backend']			= "";
+		$def['display_date_backend']			= "%a, %d %b %Y %T %Z";
+		$def['display_date_frontend']			= "%a, %d %b %Y %T %Z";
 		$def['skip_confirmation']				= 0;
 		// new 0.12.4
 		$def['bypassintegration']				= '';
