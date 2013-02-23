@@ -4487,12 +4487,22 @@ function editCoupon( $id, $option, $new )
 
 	$lists['micro_integrations'] = JHTML::_('select.genericlist', $mi_list, 'micro_integrations[]', 'size="' . min((count( $mi_list ) + 1), 25) . '" multiple="multiple"', 'value', 'text', $selected_mi );
 
-	$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
-			. ' FROM #__acctexp_coupons'
-			. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
-			;
+	$query = 'SELECT count(*)'
+		. ' FROM #__acctexp_coupons'
+		;
 	$db->setQuery( $query );
-	$coupons = $db->loadObjectList();
+	$ccount = $db->loadResult();
+
+	if ( $ccount > 50 ) {
+		$coupons = array();
+	} else {
+		$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
+				. ' FROM #__acctexp_coupons'
+				. ' WHERE `coupon_code` != \'' . $cph->coupon->coupon_code . '\''
+				;
+		$db->setQuery( $query );
+		$coupons = $db->loadObjectList();
+	}
 
 	$query = 'SELECT `coupon_code` as value, `coupon_code` as text'
 			. ' FROM #__acctexp_coupons_static'
