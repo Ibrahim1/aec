@@ -273,7 +273,7 @@ class aecTemplate
 				$xurl	.= '&Itemid=' . $id;
 			}
 			
-			$ur		= JURI::getInstance();
+			$uri	= JURI::getInstance();
 			$prefix	= $uri->toString( array( 'scheme', 'host', 'port' ) );
 
 			$url = $prefix.JRoute::_( $xurl );
