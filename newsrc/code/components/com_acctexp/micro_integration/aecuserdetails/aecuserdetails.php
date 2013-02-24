@@ -318,7 +318,7 @@ class mi_aecuserdetails
 					}
 
 					if ( $this->settings[$p.'type'] == 'checkbox' ) {
-						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], 'mi_'.$this->id.$this->settings[$p.'short'], 1, $content, $this->settings[$p.'name'] );
+						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'desc'], $content, $this->settings[$p.'default'] );
 					} elseif ( ( $this->settings[$p.'type'] == 'list' ) ) {
 						$settings[$this->settings[$p.'short']] = array( $this->settings[$p.'type'], $this->settings[$p.'name'], $this->settings[$p.'name'], 'mi_'.$this->id.'_'.$this->settings[$p.'short'] );
 					} else {

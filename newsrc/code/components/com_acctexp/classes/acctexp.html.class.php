@@ -112,13 +112,33 @@ class aecHTML
 				$return = '<hr />';
 				break;
 			case 'checkbox':
+				$id = $name;
+
+				if ( !empty( $row[5] ) ) {
+					$name = $row[5];
+				}
+
+				if ( !empty( $value ) && !empty( $row[4] ) ) {
+					$enabled = $value == $row[4];
+				} elseif ( !empty( $value ) ) {
+					$enabled = $value;
+				} else {
+					$value = 1;
+
+					$enabled = false;
+				}
+
 				$return = '<div class="control-group">';
 				$return .= '<label class="control-label" for="' . $name . '"></label>';
 				$return .= '<div class="controls">';
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
-				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '" ' . ( $value ? 'checked="checked" ' : '' ) . ' value="1"/>';
+				$return .= '<input id="' . $id . '" type="checkbox" name="' . $name . '" ' . ( $enabled ? 'checked="checked" ' : '' ) . ' value="' . $value . '"/>';
 
-				$return .= $xlabel;
+				if ( !empty( $xlabel ) ) {
+					$return .= $xlabel;
+				} else {
+					$return .= $xtitle;
+				}
 
 				$return .= $insertctrl;
 				$return .= '</div></div>';

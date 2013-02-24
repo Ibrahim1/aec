@@ -37,7 +37,7 @@ class tool_miimport
 
 			foreach ( $content as $id => $mi ) {
 				$settings[]						= array( 'fieldset', 'Import #'.$id, '<h3>'.$mi->name.'</h3><p>'.$mi->desc.'</p>' );
-				$settings[$id.'_data_import']	= array( 'checkbox', 'Import this', 1, 1, "Sign up to our Newsletter" );
+				$settings[$id.'_data_import']	= array( 'checkbox', 'Import this', '', 1 );
 				$settings[$id.'_data']			= array( 'hidden', base64_encode( serialize( $mi ) ) );
 			}
 		} else {

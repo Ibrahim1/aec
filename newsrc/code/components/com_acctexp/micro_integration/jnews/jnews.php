@@ -74,7 +74,7 @@ class mi_jnews
 			$settings['exp'] = array( 'p', "", JText::_('MI_MI_JNEWS_DEFAULT_NOTICE') );
 		}
 
-		$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_JNEWS_NEWSLETTER_SIGNUP'), 'mi_'.$this->id.'_get_newsletter', 0 );
+		$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_JNEWS_NEWSLETTER_SIGNUP') );
 
 		return $settings;
 	}

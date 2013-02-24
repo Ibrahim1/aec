@@ -3493,7 +3493,7 @@ function editItemGroup( $id, $option )
 	if ( !empty( $groups ) ) {
 		$gs = array();
 		foreach ( $groups as $groupid ) {
-			$params['group_delete_'.$groupid] = array( 'checkbox', '', '', '' );
+			$params['group_delete_'.$groupid] = array( 'checkbox' );
 
 			$group = new ItemGroup();
 			$group->load( $groupid );
@@ -6331,8 +6331,8 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'userinfobox_sub', 'Save or Load Export Presets' );
 	$params[] = array( 'div', '<div class="form-wide">' );
 	$params['selected_export']	= array( 'list', '' );
-	$params['delete']			= array( 'checkbox', 0 );
-	$params['save']				= array( 'checkbox', 0 );
+	$params['delete']			= array( 'checkbox' );
+	$params['save']				= array( 'checkbox' );
 	$params['save_name']		= array( 'inputC', $pname );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div class="right-btns">' );

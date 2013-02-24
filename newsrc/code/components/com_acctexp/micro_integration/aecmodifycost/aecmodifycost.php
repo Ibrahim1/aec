@@ -76,7 +76,7 @@ class mi_aecmodifycost
 
 			if ( !empty( $this->settings['multi_select'] ) ) {
 				foreach ( $options as $id => $choice ) {
-					$settings['option_'.$choice['id']] = array( 'checkbox', 'mi_'.$this->id.'_option[]', $choice['id'], 1, $choice['text'] );
+					$settings['option_'.$choice['id']] = array( 'checkbox', $choice['text'], '', $choice['id'], 1, 'mi_'.$this->id.'_option[]' );
 				}
 
 				if ( !empty( $this->settings['multi_amount_min'] ) || !empty( $this->settings['multi_amount_max'] ) ) {

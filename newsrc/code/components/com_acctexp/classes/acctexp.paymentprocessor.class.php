@@ -1913,7 +1913,7 @@ class XMLprocessor extends processor
 					$var['params']['billCity'] = array( 'inputC', JText::_('AEC_USERFORM_BILLCITY_NAME').$pf, JText::_('AEC_USERFORM_BILLCITY_DESC'), $vcontent );
 					break;
 				case 'nonus':
-					$var['params']['billNonUs'] = array( 'checkbox', JText::_('AEC_USERFORM_BILLNONUS_NAME').$pf, 1, $vcontent, JText::_('AEC_USERFORM_BILLNONUS_DESC') );
+					$var['params']['billNonUs'] = array( 'checkbox', JText::_('AEC_USERFORM_BILLNONUS_NAME').$pf, JText::_('AEC_USERFORM_BILLNONUS_DESC'), $vcontent, 1 );
 					break;
 				case 'state':
 					$var['params']['billState'] = array( 'inputC', JText::_('AEC_USERFORM_BILLSTATE_NAME').$pf, JText::_('AEC_USERFORM_BILLSTATE_DESC'), $vcontent );
