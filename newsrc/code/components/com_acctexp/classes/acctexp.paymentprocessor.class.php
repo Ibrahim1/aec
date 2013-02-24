@@ -60,14 +60,19 @@ class PaymentProcessorHandler
 
 					// Add to selected Description List if existing in db entry
 					if ( !empty( $selected ) ) {
-						if ( $multiple || is_array( $selected ) ) {
+						if ( $multiple && is_array( $selected ) ) {
 							if ( in_array( $gwname, $selected ) ) {
-								$gwlist_selected[]->value = $gwname;
+								$gwlist_sel = new stdClass();
+								$gwlist_sel->value = $gwname;
+
+								$gwlist_selected[] = $gwlist_sel;
 							}
 						} else {
 							if ( $gwname == $selected ) {
-								$gwlist_selected = new stdClass();
-								$gwlist_selected->value = $gwname;
+								$gwlist_sel = new stdClass();
+								$gwlist_sel->value = $gwname;
+
+								$gwlist_selected[] = $gwlist_sel;
 							}
 						}
 						
@@ -75,12 +80,11 @@ class PaymentProcessorHandler
 
 					// Add to Description List
 					$gw_list_enabled_html[] = JHTML::_('select.option', $gwname, $pp->info['longname'] );
-
 				}
 			}
 		}
 
-		if ( !$multiple && is_array( $gwlist_selected ) ) {
+		if ( !$multiple && !empty( $gwlist_selected ) ) {
 			$gwlist_selected = $gwlist_selected[0];
 		} elseif ( $multiple && !is_array( $gwlist_selected ) ) {
 			$gwlist_selected = array( $gwlist_selected );
