@@ -6623,6 +6623,8 @@ function toolBoxTool( $option, $cmd )
 		if ( !method_exists( $tool, 'Action' ) ) {
 			$return .= '<div id="aec-toolbox-result">' . '<p>Tool doesn\'t have an action to carry out!</p>' . '</div>';
 		} else {
+			$response = '</div><div class="aec_userinfobox_sub"><h4>' . JText::_('Response') . '</h4><div id="aec-toolbox-result">' . $tool->Action() . '</div></div>';
+
 			if ( method_exists( $tool, 'Settings' ) ) {
 				$tb_settings = $tool->Settings();
 
@@ -6656,7 +6658,7 @@ function toolBoxTool( $option, $cmd )
 				}
 			}
 
-			$return .= '</div><div class="aec_userinfobox_sub"><h4>' . JText::_('Response') . '</h4><div id="aec-toolbox-result">' . $tool->Action() . '</div></div>';
+			$return .= $response;
 		}
 
 		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );

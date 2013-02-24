@@ -36,7 +36,7 @@ class PaymentProcessorHandler
 		return $pp_list;
 	}
 
-	function getProcessorSelectList( $multiple=true, $selected=array() )
+	function getProcessorSelectList( $multiple=true, $selected=array(), $name='gwlist' )
 	{
 		$gwlist					= $this->getProcessorList();
 
@@ -67,12 +67,16 @@ class PaymentProcessorHandler
 
 								$gwlist_selected[] = $gwlist_sel;
 							}
-						} else {
+						} elseif ( $multiple && is_array( $selected ) ) {
 							if ( $gwname == $selected ) {
 								$gwlist_sel = new stdClass();
 								$gwlist_sel->value = $gwname;
 
 								$gwlist_selected[] = $gwlist_sel;
+							}
+						} else {
+							if ( $gwname == $selected ) {
+								$gwlist_selected[] = $gwname;
 							}
 						}
 						
@@ -90,7 +94,7 @@ class PaymentProcessorHandler
 			$gwlist_selected = array( $gwlist_selected );
 		}
 
-		return JHTML::_('select.genericlist', $gw_list_enabled_html, 'gwlist'.($multiple ? '[]' : ''), 'size="' . max(min(count($gw_list_enabled), 12), 3) . '"'.($multiple ? ' multiple="multiple"' : ''), 'value', 'text', $gwlist_selected);
+		return JHTML::_('select.genericlist', $gw_list_enabled_html, $name.($multiple ? '[]' : ''), 'size="' . max(min(count($gw_list_enabled), 12), 3) . '"'.($multiple ? ' multiple="multiple"' : ''), 'value', 'text', $gwlist_selected);
 	}
 
 	function getProcessorIdfromName( $name )

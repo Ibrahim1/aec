@@ -37,8 +37,8 @@ class tool_processor_dnr
 		}
 		
 		$pph = new PaymentProcessorHandler();
-		$settings['lists']['delete'] = $pph->getProcessorSelectList( false, $_POST['delete'] );
-		$settings['lists']['replace'] = $pph->getProcessorSelectList( false, $_POST['replace'] );
+		$settings['lists']['delete'] = $pph->getProcessorSelectList( false, $_POST['delete'], 'delete' );
+		$settings['lists']['replace'] = $pph->getProcessorSelectList( false, $_POST['replace'], 'replace' );
 
 		return $settings;
 	}
@@ -56,10 +56,10 @@ class tool_processor_dnr
 		$db = &JFactory::getDBO();
 
 		$replacepp = new PaymentProcessor();
-		$replacepp->loadName( $gwname );
+		$replacepp->loadName( $_POST['replace'] );
 
 		$deletepp = new PaymentProcessor();
-		$deletepp->loadName( $gwname );
+		$deletepp->loadName( $_POST['delete'] );
 
 		$query = 'UPDATE #__acctexp_invoices'
 		. ' SET `method` = \'' . $replacepp->processor_name . '\''
@@ -86,6 +86,10 @@ class tool_processor_dnr
 		foreach ( $planlist as $planid ) {
 			$plan = new SubscriptionPlan();
 			$plan->load( $planid );
+
+			if ( empty( $plan->params['processors'] ) ) {
+				continue;
+			}
 
 			if ( in_array( $deletepp->id, $plan->params['processors'] ) ) {
 				unset( $plan->params['processors'][array_search( $deletepp->id, $plan->params['processors'] )] );
