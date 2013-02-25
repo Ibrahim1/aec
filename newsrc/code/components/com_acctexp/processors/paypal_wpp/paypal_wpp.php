@@ -465,11 +465,7 @@ class processor_paypal_wpp extends XMLprocessor
 				$offset = AECToolbox::offsetTime( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'], gmdate('U') );
 			}
 
-			if ( $express ) {
-				$timestamp = $offset;
-			} else {
-				$timestamp = (int) gmdate('U');
-			}
+			$timestamp = $offset;
 
 			$var['ProfileStartDate']	= date( 'Y-m-d', $timestamp ) . 'T' . date( 'H:i:s', $timestamp ) . 'Z';
 
