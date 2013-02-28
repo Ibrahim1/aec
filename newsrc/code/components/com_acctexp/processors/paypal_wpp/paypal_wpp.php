@@ -501,7 +501,7 @@ class processor_paypal_wpp extends XMLprocessor
 		$curlextra = array();
 		$curlextra[CURLOPT_VERBOSE] = 1;
 		$curlextra[CURLOPT_HEADER]	= true;
-aecDebug($xml);
+
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 	}
 
