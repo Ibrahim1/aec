@@ -68,20 +68,58 @@ class processor_eyowo extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$security_code			= $post['ap_securitycode'];
-		$description			= $post['ap_description'];
-		$total					= $post['ap_amount'];
-		$userid					= $post['apc_1'];
-		$invoice_number			= $post['ap_itemname'];
-		$planid					= $post['apc_3'];
+		$invoice_number			= $post['transactionref'];
 
 		$response = array();
-		$response['invoice'] = $invoice_number;
+		if ( !empty( $post['transactionref'] ) ) {
+			$response['invoice'] = $post['transactionref'];
+		} else {
+			$response['invoice'] = aecGetParam( 'transactionref', '', true, array( 'clear_nonalnum', 'word', 'string' ) );
+		}
+
+		if ( !empty( $response['invoice'] ) ) {
+			$response['raw'] = $this->apiGetTransactionStatus( $response['invoice'] );
+
+			$response['amount_paid']		= $response['raw']['AMOUNT'];
+			$response['amount_currency']	= $response['raw']['CURRENCY'];
+		}
 
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
+	{
+		$response['valid'] = false;
+
+		switch( $response['raw']['STATUS'] ) {
+			case 'Approved':
+				$response['valid'] = true;
+				break;
+			case 'Denied':
+				$response['error'] = true;
+				$response['errormsg'] = 'Transaction was denied.';
+				break;
+			case 'Pending':
+				$response['pending'] = true;
+				$response['pending_reason'] = 'Transaction could not be confirmed. You can try making the webservice call later.';
+				break;
+			case 'Aborted':
+				$response['cancel'] = true;
+				break;
+			case 'Failed':
+				$response['pending'] = true;
+				$response['pending_reason'] = 'There was an error initialising the transaction. This was most likely caused by an error on Eyowo\'s payment gateway.';
+				break;
+			case 'Error':
+				$response['error'] = true;
+				$response['errormsg'] = $response['raw']['STATUSREASON'];
+				break;
+		}
+
+		return $response;
+	}
+
+	function apiGetTransactionStatus( $transactionref )
 	{
 		$path = '/api/gettransactionstatus';
 
@@ -99,27 +137,7 @@ class processor_eyowo extends POSTprocessor
 
 		$path .= '?' . implode( "&", $array );
 
-		$res = (array) json_decode( $this->transmitRequest( $url, $path ) );
-
-		$response['valid'] = false;
-
-		if ( ( $post['ap_status'] == "Success" && $post['ap_purchasetype'] != "subscription" ) || ( $post['ap_status'] == "Subscription-Payment-Success" ) )  {
-			if ( $post['ap_securitycode'] != $this->settings['securitycode'] ) {
-				$response['error'] = 'Security Code Mismatch: ' . $post['ap_securitycode'];
-			} else {
-				$response['valid'] = true;
-			}
-		} elseif ( $post['ap_status'] == "Success" && $post['ap_purchasetype'] == "subscription" ) {
-			$response['null']				= 1;
-			$response['explanation']		= 'Duplicate Notification';
-		} elseif ( $post['ap_status'] == "Subscription-Payment-Canceled" ) {
-			$response['cancel'] = 1;
-		} else {
-			$response['error'] = 'ap_status: ' . $post['ap_status'];
-		}
-
-		return $response;
+		return (array) json_decode( $this->transmitRequest( $url, $path ) );
 	}
-
 }
 ?>
