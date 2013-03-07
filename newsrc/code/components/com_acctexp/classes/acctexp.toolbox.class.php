@@ -65,7 +65,7 @@ class AECToolbox
 			$full_list = explode( ',', $currency_code_list );
 
 			$full_list = array_unique( $full_list );
-			
+
 			$currency_code_list = implode( ',', array_values( $full_list ) );
 		} else {
 			$currency_code_list = array();
@@ -146,13 +146,16 @@ class AECToolbox
 
 	function aecCurrencyExp( $string )
 	{
-		$iso4217exp3 = array( 'BHD', 'IQD', 'JOD', 'KRW', 'LYD', 'OMR', 'TND'  );
+		$iso4217exp8 = array( 'BTC' );
+		$iso4217exp3 = array( 'BHD', 'IQD', 'JOD', 'KRW', 'LYD', 'OMR', 'TND' );
 		$iso4217exp0 = array( 'BIF', 'BYR', 'CLF', 'CLP', 'DJF', 'GNF', 'ISK', 'JPY', 'KMF', 'KRW',
 								'PYG', 'RWF', 'VUV', 'XAF', 'XAG', 'XAU', 'XBA', 'XBB', 'XBC', 'XBD',
 								'XDR', 'XFU', 'XOF', 'XPD', 'XPF', 'XPT', 'XTS', 'XXX' );
 		$iso4217exp07 = array( 'MGA', 'MRO' );
 
-		if ( in_array( $string, $iso4217exp0 ) ) {
+		if ( in_array( $string, $iso4217exp8 ) ) {
+			return 8;
+		} elseif ( in_array( $string, $iso4217exp0 ) ) {
 			return 0;
 		} elseif ( in_array( $string, $iso4217exp3 ) ) {
 			return 3;
@@ -889,7 +892,7 @@ class AECToolbox
 							'RUB' => '&#1088;&#1091;&#1073;', 'SCR' => '&#8360;', 'SEK' => 'kr', 'SGD' => 'S$',
 							'SRC' => '&#8353;', 'THB' => '&#3647;', 'TOP' => 'T$', 'TRY' => 'TL',
 							'USD' => '$', 'UAH' => '&#8372;', 'VND' => '&#8363;', 'VEF' => 'Bs. F',
-							'ZAR' => 'R',
+							'ZAR' => 'R', 'BTC' => '&#3647;'
 							);
 
 		if ( array_key_exists( $currency, $cursym ) ) {
@@ -1120,7 +1123,7 @@ class AECToolbox
 
 		return $object;
 	}
-	
+
 	function getObjectProperty( $object, $key, $test=false )
 	{
 		if ( !is_array( $key ) ) {
