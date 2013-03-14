@@ -2063,6 +2063,12 @@ class XMLprocessor extends processor
 
 	function sanitizeRequest( &$request )
 	{
+		if ( !empty( $request->int_var['params'] ) ) {
+			foreach ( $request->int_var['params'] as $k => $v ) {
+				$request->int_var['params'][$k] = trim($v);
+			}
+		}
+
 		if ( isset( $request->int_var['params']['cardNumber'] ) ) {
 			$pfx = "";
 			if ( strpos( $request->int_var['params']['cardNumber'], 'XXXX' ) !== false ) {
