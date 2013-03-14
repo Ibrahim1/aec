@@ -633,7 +633,7 @@ class AECToolbox
 
 			// If its not that, how about the user email?
 			$queries[$k] = 'FROM #__users'
-						. ' WHERE LOWER( `email` ) = \'' . $search . '\''
+						. ' WHERE LOWER( `email` ) LIKE \'%' . $search . '%\''
 						;
 			$qfields[$k] = 'id';
 			$k++;
