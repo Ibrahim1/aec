@@ -1426,7 +1426,7 @@ function editSettings( $option )
 	if ( !isset( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
 		$aecConfig->cfg['checkout_as_gift_access'] = 0;
 	}
-	
+
 	// Create GID related Lists
 	$lists['checkout_as_gift_access'] 		= JHTML::_('select.genericlist', $gtree, 'checkout_as_gift_access', 'size="6"', 'value', 'text', $aecConfig->cfg['checkout_as_gift_access'] );
 
@@ -1739,7 +1739,7 @@ function saveSettings( $option, $return=0 )
 		$array = array();
 		foreach ( $list as $item ) {
 			$li = explode( "=", $item, 2 );
-			
+
 			$k = $li[0];
 
 			if ( !empty( $k ) ) {
@@ -1914,7 +1914,7 @@ function saveTemplate( $option, $name, $return=0 )
 			$db->setQuery( $query );
 			$db->query();
 		}
-		
+
 		$temp->default = 1;
 	} else {
 		$temp->default = 0;
@@ -2034,7 +2034,7 @@ function editProcessor( $id, $option )
 					$currency_code_list = array();
 					foreach ( $currency_array as $currency ) {
 						if ( $lang->hasKey( 'CURRENCY_' . $currency )) {
-							$currency_code_list[] = JHTML::_('select.option', $currency, $currency . ' - ' . JText::_( 'CURRENCY_' . $currency ) );							
+							$currency_code_list[] = JHTML::_('select.option', $currency, $currency . ' - ' . JText::_( 'CURRENCY_' . $currency ) );
 						}
 					}
 
@@ -2526,7 +2526,7 @@ function listSubscriptionPlans( $option )
 		} else {
 			$rows[$rid]->expired_percentage = 0;
 		}
-		
+
 		$rows[$rid]->expired_inner = false;
 		if ( $rows[$rid]->expired_percentage > 45 ) {
 			$rows[$rid]->expired_inner = true;
@@ -2548,7 +2548,7 @@ function listSubscriptionPlans( $option )
 		} else {
 			$rows[$rid]->total_percentage = 0;
 		}
-		
+
 		$rows[$rid]->total_inner = false;
 		if ( $rows[$rid]->total_percentage > 20 ) {
 			$rows[$rid]->total_inner = true;
@@ -3528,7 +3528,7 @@ function editItemGroup( $id, $option )
 		if ( $id ) {
 			$self = ( $glisti[0] == $id );
 			$existing = in_array( $glisti[0], $groups );
-			
+
 			$disabled = ( $disabled || $self || $existing );
 		}
 
@@ -3893,7 +3893,7 @@ function editMicroIntegration( $id, $option )
 								if ( $i == count( $drill )-1 ) {
 									$cursor[$k][] = '<a href="#' . $handle . '" class="mi-menu-mi"><span class="mi-menu-mi-name">' . $mi_item->name . '</span><span class="mi-menu-mi-desc">' . $mi_item->desc . '</span></a>';
 								} else {
-									$cursor =& $cursor[$k]; 
+									$cursor =& $cursor[$k];
 								}
 							}
 						}
@@ -3924,7 +3924,7 @@ function editMicroIntegration( $id, $option )
 						} else {
 							$xkey = ucwords( str_replace('_', ' ', $lixn) );
 						}
-	
+
 						$lists['class_list'] .= '<li><a href="#">' . $xkey . '</a><ul>';
 
 						foreach ( $lix as $mix ) {
@@ -4075,7 +4075,7 @@ function saveMicroIntegration( $option, $apply=0 )
 
 	if ( $load ) {
 		$save = array( 'attach_to_plans' => array(), 'attached_to_plans' => array(), 'attach_to_groups' => array(), 'attached_to_groups' => array() );
-		
+
 		foreach ( $save as $pid => $v ) {
 			if ( isset( $_POST[$pid] ) ) {
 				$save[$pid] = $_POST[$pid];
@@ -4244,71 +4244,83 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 
 function listCoupons( $option )
 {
- 	$db = &JFactory::getDBO();
+	$db = &JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
- 	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
+	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+	$search			= $app->getUserStateFromRequest( "search{$option}", 'search', '' );
+	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	$total = 0;
 
 	$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_coupons'
 			;
- 	$db->setQuery( $query );
- 	$total += $db->loadResult();
+	$db->setQuery( $query );
+	$total += $db->loadResult();
 
 	$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_coupons_static'
 			;
- 	$db->setQuery( $query );
- 	$total += $db->loadResult();
+	$db->setQuery( $query );
+	$total += $db->loadResult();
 
- 	if ( $limitstart > $total ) {
- 		$limitstart = 0;
- 	}
+	if ( $limitstart > $total ) {
+		$limitstart = 0;
+	}
 
 	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
- 	// get the subset (based on limits) of required records
- 	$query = '(SELECT *, "0" as `type`'
-		 	. ' FROM #__acctexp_coupons)'
+	$where = array();
+	if ( isset( $search ) && $search!= '' ) {
+		$where[] = "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')";
+	}
+
+	// get the subset (based on limits) of required records
+	$query = '(SELECT *, "0" as `type`'
+		 	. ' FROM #__acctexp_coupons'
+		 	. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+		 	. ')'
 		 	. ' UNION '
 		 	. '(SELECT *, "1" as `type`'
-		 	. ' FROM #__acctexp_coupons_static)'
+		 	. ' FROM #__acctexp_coupons_static'
+		 	. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
+		 	. ')'
 		 	. ' ORDER BY `id` DESC'
 		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		 	;
- 	$db->setQuery( $query );
 
- 	$rows = $db->loadObjectList();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
+	$db->setQuery( $query );
 
- 	$query = 'SELECT SUM(usecount)'
+	$rows = $db->loadObjectList();
+	if ( $db->getErrorNum() ) {
+		echo $db->stderr();
+		return false;
+	}
+
+	$query = 'SELECT SUM(usecount)'
 			. ' FROM #__acctexp_coupons'
 			;
 	$db->setQuery( $query );
 
- 	$total_usecount = $db->loadResult();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
+	$total_usecount = $db->loadResult();
+	if ( $db->getErrorNum() ) {
+		echo $db->stderr();
+		return false;
+	}
 
- 	$query = 'SELECT SUM(usecount)'
+	$query = 'SELECT SUM(usecount)'
 			. ' FROM #__acctexp_coupons_static'
 			;
 	$db->setQuery( $query );
 
- 	$total_usecount += $db->loadResult();
- 	if ( $db->getErrorNum() ) {
- 		echo $db->stderr();
- 		return false;
- 	}
+	$total_usecount += $db->loadResult();
+	if ( $db->getErrorNum() ) {
+		echo $db->stderr();
+		return false;
+	}
 
 	foreach ( $rows as $rid => $row ) {
 		if ( $row->usecount ) {
@@ -4316,15 +4328,15 @@ function listCoupons( $option )
 		} else {
 			$rows[$rid]->percentage = 0;
 		}
-		
+
 		$rows[$rid]->inner = false;
 		if ( $rows[$rid]->percentage > 15 ) {
 			$rows[$rid]->inner = true;
 		}
 	}
 
-	HTML_AcctExp::listCoupons( $rows, $pageNav, $option );
- }
+	HTML_AcctExp::listCoupons( $rows, $pageNav, $option, $search );
+}
 
 function editCoupon( $id, $option, $new )
 {

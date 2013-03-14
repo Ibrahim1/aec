@@ -52,7 +52,7 @@ class HTML_myCommon
 		} else {
 			HTML_myCommon::addScript( 'jquery.framework' );
 		}
-	
+
 		if ( $v->isCompatible('1.6') ) {
 			HTML_myCommon::addScript( '/system/js/core.js' );
 		}
@@ -92,7 +92,7 @@ class HTML_myCommon
 		HTML_myCommon::addBackendCSS();
 
 		HTML_myCommon::addBackendJS();
-		
+
 		echo '<div id="' . $id . '">';
 		echo HTML_AcctExp::menuBar();
 
@@ -105,7 +105,7 @@ class HTML_myCommon
 				<h3>Eventlog</h3>
 			</div>
 			<div class="modal-body"></div>
-		</div> 
+		</div>
 		<?php
 
 	}
@@ -131,7 +131,7 @@ class HTML_myCommon
 		foreach ( $options as $name => $value ) {
 			echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
 		}
-		
+
 		echo '</form>';
 	}
 
@@ -271,7 +271,7 @@ jQuery(document).ready(function(jQuery) {
 ';
 		$document =& JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
-		
+
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$edituserlink		= 'index.php?option=com_users&amp;task=user.edit&amp;id=' . $metaUser->userid;
 			$activateuserlink	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $metaUser->cmsUser->activation;
@@ -592,7 +592,7 @@ jQuery(document).ready(function(jQuery) {
 										</tr>
 										<?php
 									}
-	
+
 									if ( $aecHTML->invoice_pages > 1 ) {
 										echo '<div class="aec-invoices-pagination"><p>';
 										$plist = array();
@@ -1176,7 +1176,7 @@ jQuery(document).ready(function(jQuery) {
 				<p>I try my best to respond as quickly as possible and you should get a response within a workday. If not, maybe something about the request failed - please try sending it again.</p>
 				<p><strong>I really care a lot about this software and you using it means a lot to me</strong> - so please give me a chance to clear things up if we have messed up somewhere.</p>
 			</div>
-		</div> 
+		</div>
 		<?php
 	}
 
@@ -1230,7 +1230,7 @@ jQuery(document).ready(function(jQuery) {
 		<div class="container">
 			<div class="row">
 				<div class="span3 affix-sidebar">
-					
+
 					<ul class="nav nav-list affixnav span3" data-spy="affix" data-offset-top="148">
 					<input type="text" placeholder="filter settings here" id="settings-filter">
 					<?php
@@ -1252,7 +1252,7 @@ jQuery(document).ready(function(jQuery) {
 								break;
 							}
 						}
-			
+
 					}
 					?>
 					<input type="hidden" name="id" value="1" />
@@ -1489,7 +1489,7 @@ jQuery(document).ready(function(jQuery) {
 				jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
 				jQuery(this).attr("checked", "checked");
 			} else {
-				
+
 			}
 		} else {
 			jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
@@ -2561,7 +2561,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function listCoupons( $rows, $pageNav, $option )
+	function listCoupons( $rows, $pageNav, $option, $search )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons' );
@@ -2576,6 +2576,15 @@ jQuery(document).ready(function(jQuery) {
 				<p style="text-align: center">There is no coupon set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Coupon', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new coupon' ), true )?></p>
 			</div>
 		<?php } else { ?>
+			<div class="aec-filters">
+				<div class="form-inline">
+					<p>
+						<input type="text" name="search" class="search" placeholder="<?php echo JText::_('INVOICE_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
+						<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('INVOICE_SEARCH'); ?>" />
+					</p>
+				</div>
+			</div>
+
 			<div class="aecadminform">
 				<table class="adminlist table-striped">
 					<thead><tr>
@@ -3029,9 +3038,9 @@ jQuery(document).ready(function(jQuery) {
 								'compare' => "Compare",
 								//'users' => "Users",
 								'sales' => "Sales Graph",
-								'all_time' => "All Time Sales" 
+								'all_time' => "All Time Sales"
 				);
-	
+
 				foreach ( $menus as $menu => $menutext ) {
 					echo '<li' . ( ( $page == $menu ) ? ' class="active"' : '' ) . '><a href="index.php?option=com_acctexp&task=stats&page=' . $menu . '">' . $menutext . '</a></li>';
 				}
@@ -3040,7 +3049,7 @@ jQuery(document).ready(function(jQuery) {
 
 		<table width="100%" class="aecadminform">
 			<tr><td>
-				
+
 		<?php
 			switch ( $page ) {
 				case 'overview':
@@ -3071,14 +3080,14 @@ jQuery(document).ready(function(jQuery) {
 							.create("sunburst")
 							.target("div#overview-day-hourly-graph")
 							.create("rickshaw",{ unit:"hour" });
-	
+
 							cf.target("div#overview-month-this")
 							.range(	"<?php echo gmdate('Y-m-01') .' 00:00:00'; ?>",
 									"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
 							.create("sunburst")
 							.target("div#overview-month-graph")
 							.create("rickshaw",{ unit:"day" });
-	
+
 							cf.canvas(200, 200, 10)
 							.target("div#overview-year-sun")
 							.range(	"<?php echo gmdate('Y-01-01') .' 00:00:00'; ?>",
@@ -3132,7 +3141,7 @@ jQuery(document).ready(function(jQuery) {
 							var cf = d3.chart.factory()
 							.source("sales")
 							.canvas(200, 200, 10);
-	
+
 							cf.target("div#compare-day-last")
 							.range(	"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) .' 00:00:00'; ?>",
 									"<?php echo gmdate('Y-m-d', gmdate("U")-86400*7) . ' 23:59:59'; ?>")
@@ -3150,7 +3159,7 @@ jQuery(document).ready(function(jQuery) {
 									"<?php echo gmdate('Y-m-d', gmdate("U")) . ' 23:59:59'; ?>")
 							.target("div#compare-day-compare")
 							.create("rickshaw",{ unit:"day", renderer:"line", axes_time:false });
-	
+
 							cf.target("div#compare-week-last")
 							.range(	"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))-86400*6) .' 00:00:00'; ?>",
 									"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))) . ' 23:59:59'; ?>")
@@ -3167,7 +3176,7 @@ jQuery(document).ready(function(jQuery) {
 									"<?php echo gmdate('Y-m-d', ((gmdate("N") == 7) ? gmdate("U") : strtotime("last Sunday",gmdate("U")))+86400*7) . ' 23:59:59'; ?>")
 							.target("div#compare-week-compare")
 							.create("rickshaw",{ unit:"week", renderer:"line", axes_time:false });
-	
+
 							cf.target("div#compare-month-last")
 							.range(	"<?php echo gmdate('Y-m-01', strtotime("-1 month",gmdate("U")) ) .' 00:00:00'; ?>",
 									"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-m-01', gmdate("U")))-86400) . ' 23:59:59'; ?>")
@@ -3184,7 +3193,7 @@ jQuery(document).ready(function(jQuery) {
 									"<?php echo gmdate('Y-m-t') . ' 23:59:59'; ?>")
 							.target("div#compare-month-compare")
 							.create("rickshaw",{ unit:"month", renderer:"line", axes_time:false });
-	
+
 							cf.target("div#compare-year-last")
 							.range(	"<?php echo gmdate('Y-01-01', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) .' 00:00:00'; ?>",
 									"<?php echo gmdate('Y-m-t', strtotime(gmdate('Y-01-01', gmdate("U")))-56400) . ' 23:59:59'; ?>")
@@ -3372,30 +3381,30 @@ jQuery(document).ready(function(jQuery) {
 										}
 									} else {
 										echo $aecHTML->createSettingsParticle( 'file_select' );
-			
+
 										echo '<p>Please let us know what the columns in your .csv file mean:</p><p></p>';
-			
+
 										echo '<table id="aec_import_table">';
-			
+
 										echo '<tr>';
 										foreach ( $aecHTML->columns as $column ) {
 											echo '<th>' . $aecHTML->createSettingsParticle( $column ) . '</th>';
 										}
 										echo '</tr>';
-			
+
 										foreach ( $aecHTML->user_rows as $row ) {
 											echo '<tr>';
-			
+
 											foreach ( $row as $k => $v ) {
 												echo '<td>' . $v . '</td>';
 											}
-			
+
 											echo '</tr>';
 										}
-			
+
 										echo '</table>';
 										echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
-			
+
 										echo $aecHTML->createSettingsParticle( 'assign_plan' );
 									}
 									?>
