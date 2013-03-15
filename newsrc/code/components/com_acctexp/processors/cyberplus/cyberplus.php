@@ -17,9 +17,9 @@ class processor_cyberplus extends POSTprocessor
 	{
 		$info = array();
 		$info['name']			= 'cyberplus';
-		$info['longname']		= 'Cyberplus';
-		$info['statement']		= 'Paiement avec Cyberplus';
-		$info['description']	= 'Descriptif de cyberplus';
+		$info['longname']		= JText::_('CFG_CYBERPLUS_LONGNAME');
+		$info['statement']		= JText::_('CFG_CYBERPLUS_STATEMENT');
+		$info['description']	= JText::_('CFG_CYBERPLUS_DESCRIPTION');
 		$info['currencies']		= 'EUR';
 		$info['languages']		= "FR,EN,DE,IT,ES,NL";
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck";
@@ -84,7 +84,7 @@ class processor_cyberplus extends POSTprocessor
 		$var['vads_capture_delay']	= '0';
 		$var['vads_order_id']		= $request->invoice->invoice_number;
 		$var['vads_cust_id']		= $request->metaUser->userid;
-	    $var['vads_cust_name']		= $request->metaUser->cmsUser->name;
+		$var['vads_cust_name']		= $request->metaUser->cmsUser->name;
 		$var['vads_cust_email']		= $request->metaUser->cmsUser->email;
 		$var['vads_cust_country']	= $this->settings['language'];
 		$var['societe']				= $this->settings['soc'];
@@ -94,7 +94,7 @@ class processor_cyberplus extends POSTprocessor
 		$var['vads_redirect_error_timeout'] 	= '5';
 		$var['vads_redirect_error_message'] 	= 'Redirection vers la boutique dans quelques instants';
 
-		$var['vads_trans_id']		= str_pad($request->invoice->id, 6, "0", STR_PAD_LEFT);		
+		$var['vads_trans_id']		= str_pad($request->invoice->id, 6, "0", STR_PAD_LEFT);
 		$var['vads_trans_date']		= gmdate("YmdHis",time());
 		$var['vads_url_return']		= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=thanks" );
 		$var['url_refused']			= AECToolbox::deadsureURL( "index.php?option=com_acctexp&amp;task=cancel" );
@@ -193,7 +193,7 @@ class processor_cyberplus extends POSTprocessor
 
 			$glue = '*';
 		}
-	
+
 		foreach ( $keys as $key ) {
 			if ( isset( $array[$key] ) ) {
 				$check[] = $array[$key];
