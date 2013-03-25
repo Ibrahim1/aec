@@ -129,7 +129,6 @@ class processor_sofortueberweisung extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-
 		$values = array(	'transaction','user_id','project_id',
 							'sender_holder','sender_account_number','sender_bank_code','sender_bank_name','sender_bank_bic','sender_iban','sender_country_id',
 							'recipient_holder','recipient_account_number','recipient_bank_code','recipient_bank_name','recipient_bank_bic',
