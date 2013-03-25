@@ -1,4 +1,4 @@
- 	<?php
+<?php
 /**
  * @version $Id: securepayxml.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -123,7 +123,6 @@ class processor_securepay extends XMLprocessor
 			$response['amount_paid'] = $objResponse->amount / 100;
 			$response['invoice'] = $objResponse->purchaseOrderNo;
 
-			 	<?php
 /**
  * @version $Id: securepayxml.php
  * @package AEC - Account Control Expiration - Membership Manager
@@ -290,4 +289,5 @@ SimpleXMLElement Object ( ) [txnID] =>  SimpleXMLElement Object ( )
 	}
 
 }
+
 ?>
