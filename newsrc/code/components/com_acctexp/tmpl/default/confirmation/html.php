@@ -37,6 +37,6 @@ if ( !empty( $tmpl->cfg['tos'] ) ) {
 
 $tmpl->setTitle( JText::_('CONFIRM_TITLE') );
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'confirmation' ) );

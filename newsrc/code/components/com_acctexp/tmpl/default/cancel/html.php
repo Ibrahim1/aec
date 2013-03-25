@@ -13,6 +13,6 @@
 
 $tmpl->setTitle( JText::_('CANCEL_TITLE') );
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'cancel' ) );

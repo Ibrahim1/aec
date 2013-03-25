@@ -24,6 +24,6 @@ if ( $metaUser->hasSubscription ) {
 
 $tmpl->setTitle( JText::_('HOLD_TITLE') );
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'hold' ) );

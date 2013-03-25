@@ -300,7 +300,7 @@ if ( !empty( $task ) ) {
 
 				$plan = new SubscriptionPlan();
 				$plan->load( $usage );
-				
+
 				getView( 'thanks', array( 'renew' => $renew, 'free' => $free, 'plan' => $plan ) );
 			} else {
 				getView( 'thanks', array( 'renew' => $renew, 'free' => $free ) );
@@ -363,7 +363,7 @@ if ( !empty( $task ) ) {
 
 			InvoicePDF( $option, $invoice );
 			break;
-			
+
 		case 'invoiceaction':
 			$action		= aecGetParam( 'action', 0, true, array( 'word', 'string' ) );
 			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -450,7 +450,7 @@ function subscribe( $option )
 	if ( defined( 'JPATH_MANIFESTS' ) && !empty( $_REQUEST['jform'] ) ) {
 		foreach ( $_REQUEST['jform'] as $k => $v ) {
 			$map = array( 'password1' => 'password', 'email1' => 'email' );
-			
+
 			if ( isset( $map[$k] ) ) {
 				$_POST[$map[$k]] = $v;
 			} else {

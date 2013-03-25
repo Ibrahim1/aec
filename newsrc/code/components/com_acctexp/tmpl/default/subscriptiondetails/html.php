@@ -337,7 +337,7 @@ if ( strcmp( $properties['alert']['daysleft'], 'infinite' ) === 0 ) {
 
 $tmpl->setTitle( JText::_('MYSUBSCRIPTION_TITLE') . ' - ' . $tabs[$sub] );
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'subscriptiondetails' ) );
 

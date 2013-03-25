@@ -64,6 +64,6 @@ if ( $metaUser->hasSubscription ) {
 	}
 }
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'expired' ) );

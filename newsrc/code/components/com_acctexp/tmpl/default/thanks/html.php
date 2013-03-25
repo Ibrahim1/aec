@@ -52,6 +52,6 @@ if ( !empty( $up['customtext_thanks'] ) ) {
 	}
 }
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'thanks' ) );

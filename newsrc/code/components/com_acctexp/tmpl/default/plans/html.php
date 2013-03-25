@@ -11,7 +11,7 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 $tmpl->setTitle( JText::_('PAYPLANS_HEADER') );
 

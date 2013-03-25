@@ -25,6 +25,6 @@ if ( !empty( $tmpl->cfg['tos'] ) ) {
 
 $tmpl->setTitle( JText::_('CART_TITLE') );
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'cart' ) );

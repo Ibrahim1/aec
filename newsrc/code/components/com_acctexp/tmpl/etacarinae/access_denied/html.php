@@ -31,6 +31,6 @@ if ( $loggedin ) {
 	$loginlink = JText::_('NOT_ALLOWED_FIRSTPAR') . '&nbsp;' . $tmpl->lnk( $registerlink, JText::_('NOT_ALLOWED_REGISTERLINK'), 'btn' );
 }
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'access_denied' ) );

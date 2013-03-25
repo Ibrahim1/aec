@@ -53,7 +53,7 @@ $namearray = $metaUser->explodeName();
 
 $name = $namearray['first'];
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 $tmpl->setTitle( JText::_('PENDING_TITLE') );
 

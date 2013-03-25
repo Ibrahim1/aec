@@ -25,6 +25,6 @@ if ( $user->id ) {
 	}
 }
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'access_denied' ) );

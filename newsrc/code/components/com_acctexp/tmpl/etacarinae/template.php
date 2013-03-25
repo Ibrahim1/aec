@@ -101,17 +101,17 @@ class template_etacarinae extends aecTemplate
 
 			if ( !isset( $_POST['bootstrap'] ) ) {
 				$v = new JVersion();
-			
+
 				$this->cfg['bootstrap'] = !$v->isCompatible('3.0');
 			} else {
 				$this->cfg['bootstrap'] = $_POST['bootstrap'];
 			}
-		
+
 
 			if ( $this->cfg['bootstrap'] ) {
 				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 			} else {
-				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css');			
+				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css');
 			}
 		}
 	}
@@ -121,18 +121,18 @@ class template_etacarinae extends aecTemplate
 			$this->addValidation();
 		}
 
-		if ( !empty( $this->jQueryCode ) ) {
-			$this->loadJS();
-		}
-
-		$this->addDefaultCSS();
+		parent::defaultHeader();
 	}
 
 	function loadJS()
 	{
+		if ( empty( $this->jQueryCode )) {
+			return null;
+		}
+
 		if ( !isset( $this->cfg['jquery'] ) ) {
 			$v = new JVersion();
-			
+
 			$this->cfg['jquery'] = !$v->isCompatible('3.0');
 		}
 
@@ -166,7 +166,7 @@ class template_etacarinae extends aecTemplate
 			}
 		}
 	}
-	
+
 	function enqueueJQueryExtension( $name )
 	{
 		$this->jqueryExtensions[] = $name;
@@ -236,7 +236,7 @@ class template_etacarinae extends aecTemplate
 			},
 			success: function(label) {
 				label.remove();
-		
+
 				jQuery('#aec form button').attr(\"disabled\", false);
 			},
 			errorClass: 'label label-important',

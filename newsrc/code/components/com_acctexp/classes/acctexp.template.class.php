@@ -47,7 +47,7 @@ function getView( $view, $args=null )
 
 	$tmpl->option = 'com_acctexp';
 	$tmpl->metaUser = $metaUser;
-	
+
 	if ( strpos( JPATH_BASE, '/administrator' ) ) {
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$query = 'SELECT `template`'
@@ -207,6 +207,8 @@ class aecTemplate
 		if ( !empty( $this->js ) ) {
 			$this->loadJS();
 		}
+
+		$this->addMetaData();
 	}
 
 	function setTitle( $title )
@@ -250,6 +252,31 @@ class aecTemplate
 		}
 	}
 
+	function addMetaData()
+	{
+		$menuitemid = JRequest::getInt( 'Itemid' );
+		if ( empty( $menuitemid ) ) {
+			return null;
+		}
+
+		$document=& JFactory::getDocument();
+
+		$params = &JComponentHelper::getParams( 'com_acctexp' );
+
+		$menu = JSite::getMenu();
+		$menuparams = $menu->getParams( $menuitemid );
+
+		$params->merge( $menuparams );
+
+		if ( $params->get('menu-meta_description') ) {
+			$document->setDescription($params->get('menu-meta_description'));
+		}
+
+		if ( $params->get('menu-meta_keywords') ) {
+			$document->setMetadata('keywords', $params->get('menu-meta_keywords'));
+		}
+	}
+
 	function btn( $params, $value, $class='btn' )
 	{
 		if ( empty( $params['option'] ) ) {
@@ -272,7 +299,7 @@ class aecTemplate
 			if ( !empty( $id ) ) {
 				$xurl	.= '&Itemid=' . $id;
 			}
-			
+
 			$uri	= JURI::getInstance();
 			$prefix	= $uri->toString( array( 'scheme', 'host', 'port' ) );
 

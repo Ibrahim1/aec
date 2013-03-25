@@ -25,7 +25,7 @@ if ( !empty( $tmpl->cfg['checkout_as_gift'] ) ) {
 
 $InvoiceFactory->invoice->deformatInvoiceNumber();
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 $tmpl->setTitle( $InvoiceFactory->checkout['checkout_title'] );
 

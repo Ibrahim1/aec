@@ -13,6 +13,6 @@
 
 $tmpl->setTitle( JText::_('AEC_PROMPT_PASSWORD') );
 
-$tmpl->addDefaultCSS();
+$tmpl->defaultHeader();
 
 @include( $tmpl->tmpl( 'passwordprompt' ) );
