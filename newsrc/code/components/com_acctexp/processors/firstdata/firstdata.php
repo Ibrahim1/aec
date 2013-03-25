@@ -82,7 +82,7 @@ $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/env
 					</a1:RecurringPaymentInformation>
 					<a1:TransactionDataType>
 						<a1:CreditCardData>
-							<v1:CardNumber>".$request->int_var['params']['cardNumber'] )."</v1:CardNumber>
+							<v1:CardNumber>".$request->int_var['params']['cardNumber']."</v1:CardNumber>
 							<v1:ExpMonth>".$request->int_var['params']['expirationMonth']."</v1:ExpMonth>
 							<v1:ExpYear>".substr($request->int_var['params']['expirationYear'],-2)."</v1:ExpYear>
 						</a1:CreditCardData>
@@ -115,7 +115,7 @@ $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/env
 						<v1:Type>Sale</v1:Type>
 					</v1:CreditCardTxType>
 					<v1:CreditCardData>
-						<v1:CardNumber>".$request->int_var['params']['cardNumber'] )."</v1:CardNumber>
+						<v1:CardNumber>".$request->int_var['params']['cardNumber']."</v1:CardNumber>
 						<v1:ExpMonth>".$request->int_var['params']['expirationMonth']."</v1:ExpMonth>
 						<v1:ExpYear>".substr($request->int_var['params']['expirationYear'],-2)."</v1:ExpYear>
 					</v1:CreditCardData>
