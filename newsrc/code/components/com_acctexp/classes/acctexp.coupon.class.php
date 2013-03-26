@@ -532,7 +532,7 @@ class couponsHandler extends eucaObject
 
 		if ( !empty( $item['obj']->id ) ) {
 			$this->InvoiceFactory->usage = $item['obj']->id;
-			
+
 			$usage = $item['obj']->id;
 		} elseif ( !empty( $this->InvoiceFactory->usage ) ) {
 			$usage = $this->InvoiceFactory->usage;
@@ -608,8 +608,6 @@ class couponHandler
 	var $error				= null;
 	/** @var object */
 	var $coupon				= null;
-
-	function couponHandler(){}
 
 	function setError( $error )
 	{

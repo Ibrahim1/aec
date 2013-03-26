@@ -2762,18 +2762,18 @@ jQuery(document).ready(function(jQuery) {
 						<th width="10%"><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
 					</tr></thead>
 					<tbody>
-						<?php foreach ( $aecHTML->invoices as $i => $row ) { ?>
+						<?php foreach ( $aecHTML->invoices as $i => $invoice ) { ?>
 							<tr>
 								<td><?php echo $i + 1; ?></td>
-								<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $row->userid; ?>"><?php echo $row->username; ?></a></td>
-								<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editInvoice&amp;id=' . $row->id ?>" target="_blank" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
-								<td><?php echo $row->secondary_ident; ?></td>
-								<td><?php echo $row->created_date; ?></td>
-								<td><?php echo $row->transaction_date; ?></td>
-					  			<td><?php echo $row->usage; ?></td>
-					  			<td><?php echo $row->method; ?></td>
-								<td><?php echo $row->amount; ?></td>
-								<td><?php echo $row->currency; ?></td>
+								<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $invoice->userid; ?>"><?php echo $invoice->username; ?></a></td>
+								<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editInvoice&amp;id=' . $invoice->id ?>" target="_blank" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
+								<td><?php echo $invoice->secondary_ident; ?></td>
+								<td><?php echo $invoice->created_date; ?></td>
+								<td><?php echo $invoice->transaction_date; ?></td>
+					  			<td><?php echo $invoice->usage; ?></td>
+					  			<td><?php echo $invoice->method; ?></td>
+								<td><?php echo $invoice->amount; ?></td>
+								<td><?php echo $invoice->currency; ?></td>
 							</tr>
 						<?php } ?>
 					</tbody>
