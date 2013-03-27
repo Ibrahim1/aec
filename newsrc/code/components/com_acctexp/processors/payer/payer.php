@@ -100,7 +100,7 @@ class processor_payer extends POSTprocessor
 		$Shop_url		= JURI::root() . "index.php";
 
 			// Explode Name
-			$namearray		= explode( " ", $metaUser->cmsUser->name );
+			$namearray		= explode( " ", $request->metaUser->cmsUser->name );
 			$firstfirstname	= $namearray[0];
 			$maxname		= count($namearray) - 1;
 			$lastname		= $namearray[$maxname];
