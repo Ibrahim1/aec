@@ -168,7 +168,14 @@ class processor_netdebit extends URLprocessor
 		$db = &JFactory::getDBO();
 
 		$response = array();
-		$response['invoice']		= $post['VAR1'];
+		if ( empty( $post['VAR1'] ) ) {
+			$response['invoice']			= $post['BUNR'];
+		} else {
+			$response['invoice']			= $post['VAR1'];
+
+			$response['secondary_ident']	= $post['BUNR'];
+		}
+
 		$response['amount_paid']	= str_replace( ",", ".", $post['pay_amount'] );
 
 		return $response;

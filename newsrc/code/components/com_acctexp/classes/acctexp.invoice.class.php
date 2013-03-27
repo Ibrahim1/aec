@@ -989,7 +989,7 @@ class InvoiceFactory
 	function addtoCart( $option, $usage, $returngroup=null )
 	{
 		global $aecConfig;
-		
+
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
 		}
@@ -1635,7 +1635,7 @@ class InvoiceFactory
 				if ( !isset( $this->plan->params['override_activation'] ) ) {
 					$this->plan->params['override_activation'] = false;
 				}
-	
+
 				if ( !isset( $this->plan->params['override_regmail'] ) ) {
 					$this->plan->params['override_regmail'] = false;
 				}
@@ -1647,7 +1647,7 @@ class InvoiceFactory
 
 			if ( !$this->userid ) {
 				$errors = JError::getErrors();
-	
+
 				aecErrorAlert( JText::_( 'COM_USERS_REGISTRATION_SAVE_FAILED' ) );
 			}
 		}
@@ -2434,7 +2434,7 @@ class Invoice extends serialParamDBTable
 	function isRecurring()
 	{
 		if ( !empty( $this->subscr_id ) ) {
-			
+
 
 			$query = 'SELECT `recurring`'
 					. ' FROM #__acctexp_subscr'
@@ -2755,14 +2755,23 @@ class Invoice extends serialParamDBTable
 			unset( $response['planparams'] );
 		}
 
+		if ( isset( $response['secondary_ident'] ) ) {
+			$this->secondary_ident = $response['secondary_ident'];
+			$this->storeload();
+
+			unset( $response['secondary_ident'] );
+		}
+
 		if ( isset( $response['invoiceparams'] ) ) {
 			$this->addParams( $response['invoiceparams'] );
 			$this->storeload();
+
 			unset( $response['invoiceparams'] );
 		}
 
 		if ( isset( $response['multiplicator'] ) ) {
 			$multiplicator = $response['multiplicator'];
+
 			unset( $response['multiplicator'] );
 		} else {
 			$multiplicator = 1;
@@ -3041,7 +3050,7 @@ class Invoice extends serialParamDBTable
 			unset( $this->params['aec_pickup'] );
 		}
 
-		$override_permissioncheck = $this->isRecurring() && ( $this->counter > 1 ); 
+		$override_permissioncheck = $this->isRecurring() && ( $this->counter > 1 );
 
 		if ( !empty( $this->usage ) ) {
 			$usage = explode( '.', $this->usage );
@@ -3221,7 +3230,7 @@ class Invoice extends serialParamDBTable
 
 		if ( !$noclear ) {
 			$this->setTransactionDate();
-		}			
+		}
 
 		return true;
 	}

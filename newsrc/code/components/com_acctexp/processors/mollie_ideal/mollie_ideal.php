@@ -36,9 +36,9 @@ class processor_mollie_ideal extends XMLprocessor
 		$settings['partner_id']		= "00000";
 		$settings['currency']		= 'EUR';
 		$settings['description']	= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		
+
 		$settings['customparams']	= "";
-		
+
 		return $settings;
 	}
 
@@ -50,7 +50,7 @@ class processor_mollie_ideal extends XMLprocessor
 		$settings['partner_id']		= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['description']	= array( 'inputE' );
-		
+
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
@@ -59,32 +59,32 @@ class processor_mollie_ideal extends XMLprocessor
 	function checkoutform( $request )
 	{
 		require_once( dirname(__FILE__) . '/lib/cls.ideal.php' );
-		
+
 		$var = array();
-		
+
 		$mollieIdeal = new iDEAL_Payment( $this->settings['partner_id'] );
-		
+
 		if ( $this->settings['testmode'] ) {
 			$mollieIdeal->setTestmode( true );
 		} else {
 			$mollieIdeal->setTestmode( false );
-		}		
-	
+		}
+
 		$bankList = $mollieIdeal->getBanks();
 
 		if( $bankList ) {
-		
+
 			foreach ( $bankList as $key => $name ) {
 				$options[]	= JHTML::_('select.option', $key, $name );
 			}
-	
-			$var['params']['lists']['bank_id'] = JHTML::_( 'select.genericlist', $options, 'bank_id', 'size="1"', 'value', 'text', null );
-			$var['params']['bank_id'] = array( 'list', 'Kies uw bank', null );			
 
-		} else {		
-			$this->___logError( "iDEAL_Payment::getBanks failed", 
-								$mollieIdeal->getErrorCode(), 
-								$mollieIdeal->getErrorMessage() 
+			$var['params']['lists']['bank_id'] = JHTML::_( 'select.genericlist', $options, 'bank_id', 'size="1"', 'value', 'text', null );
+			$var['params']['bank_id'] = array( 'list', 'Kies uw bank', null );
+
+		} else {
+			$this->___logError( "iDEAL_Payment::getBanks failed",
+								$mollieIdeal->getErrorCode(),
+								$mollieIdeal->getErrorMessage()
 								);
 		}
 
@@ -107,32 +107,32 @@ class processor_mollie_ideal extends XMLprocessor
 		$report_url		= AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=mollie_idealnotification" );
 		$return_url		= $request->int_var['return_url'];
 		$amount			= $request->int_var['amount']*100;
-		
+
 		$mollieIdeal = new iDEAL_Payment( $this->settings['partner_id'] );
 
 		if ( $this->settings['testmode'] ) {
 			$mollieIdeal->setTestmode( true );
 		} else {
 			$mollieIdeal->setTestmode( false );
-		}		
+		}
 
 		if ( $mollieIdeal->createPayment( $request->int_var['params']['bank_id'], $amount, $description, $return_url, $report_url ) ) {
-			
+
 			// ...Request valid transaction id from Mollie and store it...
 			$request->invoice->secondary_ident = $mollieIdeal->getTransactionId();
 			$request->invoice->storeload();
-			
+
 			// Redirect to issuer bank
 			return aecRedirect( $mollieIdeal->getBankURL() );
-			
+
 		} else {
-		
+
 			// error handling
-			$this->___logError( "iDEAL_Payment::createPayment failed", 
-								$mollieIdeal->getErrorCode(), 
-								$mollieIdeal->getErrorMessage() 
+			$this->___logError( "iDEAL_Payment::createPayment failed",
+								$mollieIdeal->getErrorCode(),
+								$mollieIdeal->getErrorMessage()
 								);
-			
+
 			return $response;
 		}
 	}
@@ -142,7 +142,7 @@ class processor_mollie_ideal extends XMLprocessor
 		$response				= array();
 		$response['valid']		= false;
 		$response['invoice']	= aecGetParam( 'transaction_id', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-		
+
 		return $response;
 	}
 
@@ -154,32 +154,32 @@ class processor_mollie_ideal extends XMLprocessor
 		$response['valid']		= false;
 
 		$transaction_id = aecGetParam( 'transaction_id', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-		
+
 		if ( strlen( $transaction_id ) ) {
-			
-			$mollieIdeal = new iDEAL_Payment( $this->settings['partner_id'] );	
+
+			$mollieIdeal = new iDEAL_Payment( $this->settings['partner_id'] );
 			$mollieIdeal->checkPayment( $transaction_id );
-			
-			if ( $mollieIdeal->getPaidStatus() ) {				
-				$response['valid'] = true;				
+
+			if ( $mollieIdeal->getPaidStatus() ) {
+				$response['valid'] = true;
 			} else {
 				// error handling
 				$response['error']		= true;
-				$response['errormsg']	= 'iDEAL_Payment::checkPayment failed';			
-				
-				$this->___logError( "iDEAL_Payment::checkPayment failed", 
-									$mollieIdeal->getErrorCode(), 
-									$mollieIdeal->getErrorMessage() 
+				$response['errormsg']	= 'iDEAL_Payment::checkPayment failed';
+
+				$this->___logError( "iDEAL_Payment::checkPayment failed",
+									$mollieIdeal->getErrorCode(),
+									$mollieIdeal->getErrorMessage()
 									);
 			}
 		}
-		
+
 		return $response;
 	}
-	
+
 	function ___logError( $shortdesc, $errorcode, $errordesc )
 	{
-		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );	
+		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );
 	}
 }
 ?>

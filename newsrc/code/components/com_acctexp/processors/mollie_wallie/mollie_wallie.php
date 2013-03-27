@@ -36,9 +36,9 @@ class processor_mollie_wallie extends XMLprocessor
 		$settings['partner_id']		= "00000";
 		$settings['currency']		= 'EUR';
 		$settings['description']	= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
-		
+
 		$settings['customparams']	= "";
-		
+
 		return $settings;
 	}
 
@@ -50,7 +50,7 @@ class processor_mollie_wallie extends XMLprocessor
 		$settings['partner_id']		= array( 'inputC' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['description']	= array( 'inputE' );
-		
+
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
@@ -78,26 +78,26 @@ class processor_mollie_wallie extends XMLprocessor
 		$report_url		= AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=mollie_wallienotification" );
 		$return_url		= $request->int_var['return_url'];
 		$amount			= $request->int_var['amount']*100;
-		
+
 		$mollieWallie = new Mollie_Wallie( $this->settings['partner_id'] );
 
 		if ( $mollieWallie->createPayment( $amount, $report_url, $return_url ) ) {
-			
+
 			// ...Request valid transaction id from Mollie and store it...
 			$request->invoice->secondary_ident = $mollieWallie->getTransactionId();
 			$request->invoice->storeload();
-			
+
 			// Redirect to Wallie platform
 			return aecRedirect( $mollieWallie->getWallieUrl() );
-			
+
 		} else {
-		
+
 			// error handling
-			$this->___logError( "Mollie_Wallie::createPayment failed", 
-								$mollieWallie->getErrorCode(), 
-								$mollieWallie->getErrorMessage() 
+			$this->___logError( "Mollie_Wallie::createPayment failed",
+								$mollieWallie->getErrorCode(),
+								$mollieWallie->getErrorMessage()
 								);
-			
+
 			return $response;
 		}
 	}
@@ -108,7 +108,7 @@ class processor_mollie_wallie extends XMLprocessor
 		$response['valid']		= false;
 		$response['invoice']	= aecGetParam( 'transaction_id', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 		$response['amount_paid']= aecGetParam( 'amount', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-		
+
 		return $response;
 	}
 
@@ -120,31 +120,31 @@ class processor_mollie_wallie extends XMLprocessor
 		$response['valid']		= false;
 		$transaction_id 		= aecGetParam( 'transaction_id', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 		$amount 				= aecGetParam( 'amount', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
-		
+
 		if ( strlen( $transaction_id ) ) {
-			
-			$mollieWallie = new Mollie_Wallie( $this->settings['partner_id'] );	
-			
-			if ( $mollieWallie->checkPayment( $transaction_id, $amount ) ) {				
-				$response['valid'] = true;				
+
+			$mollieWallie = new Mollie_Wallie( $this->settings['partner_id'] );
+
+			if ( $mollieWallie->checkPayment( $transaction_id, $amount ) ) {
+				$response['valid'] = true;
 			} else {
 				// error handling
 				$response['error']		= true;
-				$response['errormsg']	= 'Mollie_Wallie::checkPayment failed';			
-				
-				$this->___logError( "Mollie_Wallie::checkPayment failed", 
-									$mollieWallie->getErrorCode(), 
-									$mollieWallie->getErrorMessage() 
-									);				
+				$response['errormsg']	= 'Mollie_Wallie::checkPayment failed';
+
+				$this->___logError( "Mollie_Wallie::checkPayment failed",
+									$mollieWallie->getErrorCode(),
+									$mollieWallie->getErrorMessage()
+									);
 			}
 		}
-		
+
 		return $response;
 	}
-	
+
 	function ___logError( $shortdesc, $errorcode, $errordesc )
 	{
-		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );			
+		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );
 	}
 }
 ?>
