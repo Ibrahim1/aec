@@ -65,7 +65,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 	function createGatewayLink( $request )
 	{
 		$var['post_url']	= 'https://select.worldpay.com/wcc/purchase';
-		if ( $this->settings->testmode ) {
+		if ( $this->settings['testmode'] ) {
 			$var['testMode'] = '100';
 		}
 
