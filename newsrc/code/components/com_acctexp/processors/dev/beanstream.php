@@ -3,7 +3,7 @@
  * @version $Id: beanstream.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - Beanstream
- * @copyright 2007-2008 Copyright (C) David Deutsch
+ * @copyright 2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -149,7 +149,7 @@ class processor_beanstream extends POSTprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
-		
+
 		if ( !empty($post['errorMessage']) || !empty($post['errorFields'] ) ) {
 			$messages= ($post['errorMessage']) ? html_entity_decode($post['errorMessage']) : '';
 			$messages .= ($post['errorFields']) ? html_entity_decode($post['errorFields']) : '';
