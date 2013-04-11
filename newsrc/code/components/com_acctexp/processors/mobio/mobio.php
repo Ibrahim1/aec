@@ -3,7 +3,7 @@
  * @version $Id: mobio.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - Mobio.bg
- * @copyright 2004-2012 Copyright (C) David Deutsch
+ * @copyright 2004-2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
  */

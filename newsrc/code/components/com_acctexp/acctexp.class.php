@@ -3,7 +3,7 @@
  * @version $Id: acctexp.class.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Core Class
- * @copyright 2006-2012 Copyright (C) David Deutsch
+ * @copyright 2006-2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -14,7 +14,7 @@
 global $aecConfig;
 
 define( '_AEC_VERSION', '1.2RC' );
-define( '_AEC_REVISION', '6089' );
+define( '_AEC_REVISION', '6100' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
@@ -42,6 +42,12 @@ $aecclasses = array(	'api',				'bucket',			'cart',				'component',
 
 foreach ( $aecclasses as $class ) {
 	include_once( dirname(__FILE__) . '/classes/acctexp.' . $class . '.class.php' );
+}
+
+global $aecConfig;
+
+if ( !is_object( $aecConfig ) ) {
+	$aecConfig = new aecConfig();
 }
 
 ?>

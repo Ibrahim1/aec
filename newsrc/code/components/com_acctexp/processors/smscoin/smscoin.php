@@ -3,7 +3,7 @@
  * @version $Id: smscoin.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - smscoin
- * @copyright 2007-2012 Copyright (C) smscoin.com
+ * @copyright 2007-2013 Copyright (C) smscoin.com
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 

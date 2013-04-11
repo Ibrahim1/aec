@@ -3,7 +3,7 @@
  * @version $Id: admin.acctexp.html.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Main HTML Backend
- * @copyright 2006-2012 Copyright (C) David Deutsch
+ * @copyright 2006-2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -1022,7 +1022,7 @@ jQuery(document).ready(function(jQuery) {
 				<h1>Past Contributing Programmers</h1>
 				<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Calum Polwart, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong</p>
 				<h1>Graphics</h1>
-				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2012 David 'skOre' Deutsch unless otherwise noted.</p>
+				<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2013 David 'skOre' Deutsch unless otherwise noted.</p>
 				<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
 				<h1>Libraries</h1>
 				<p>The following libraries are used, either in their original or in a modified form:</p>

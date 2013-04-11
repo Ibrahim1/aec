@@ -3,7 +3,7 @@
  * @version $Id: securepayxml.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - eWay XML
- * @copyright 2006-2012 Copyright (C) David Deutsch
+ * @copyright 2006-2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -15,7 +15,7 @@
 * AcctExp Component
 * @package AEC - Account Control Expiration - Membership Manager
 * @subpackage processor
-* @copyright 2006-2012 Copyright (C) David Deutsch
+* @copyright 2006-2013 Copyright (C) David Deutsch
 * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
 * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
 **/
@@ -127,7 +127,7 @@ class processor_securepay extends XMLprocessor
  * @version $Id: securepayxml.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - eWay XML
- * @copyright 2006-2012 Copyright (C) David Deutsch
+ * @copyright 2006-2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
@@ -139,7 +139,7 @@ class processor_securepay extends XMLprocessor
 * AcctExp Component
 * @package AEC - Account Control Expiration - Membership Manager
 * @subpackage processor
-* @copyright 2006-2012 Copyright (C) David Deutsch
+* @copyright 2006-2013 Copyright (C) David Deutsch
 * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
 * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
 **/

@@ -12,7 +12,7 @@ Version: 5.9.196
 Release date: 2012-11-02
 Author:	Nicola Asuni
 
-Copyright (c) 2002-2012:
+Copyright (c) 2002-2013:
 	Nicola Asuni
 	Tecnick.com LTD
 	Manor Coach House, Church Hill
@@ -68,7 +68,7 @@ Additional Documentation:
 	http://www.tcpdf.org
 
 License
-	Copyright (C) 2002-2012  Nicola Asuni - Tecnick.com LTD
+	Copyright (C) 2002-2013  Nicola Asuni - Tecnick.com LTD
 
 	TCPDF is free software: you can redistribute it and/or modify it
 	under the terms of the GNU Lesser General Public License as

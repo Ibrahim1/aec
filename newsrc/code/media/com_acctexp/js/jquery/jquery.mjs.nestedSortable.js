@@ -6,7 +6,7 @@
  * Depends on:
  *	 jquery.ui.sortable.js 1.8+
  *
- * Copyright (c) 2010-2012 Manuele J Sarfatti
+ * Copyright (c) 2010-2013 Manuele J Sarfatti
  * Licensed under the MIT License
  * http://www.opensource.org/licenses/mit-license.php
  */

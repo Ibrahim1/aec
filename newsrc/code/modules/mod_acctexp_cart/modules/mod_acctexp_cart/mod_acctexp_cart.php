@@ -3,7 +3,7 @@
  * @version $Id: mod_acctexp_cart.php
  * @package AEC - Account Control Expiration - Subscription component for Joomla! OS CMS
  * @subpackage Cart Module
- * @copyright 2011-2012 Copyright (C) David Deutsch
+ * @copyright 2011-2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */

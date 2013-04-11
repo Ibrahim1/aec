@@ -2,7 +2,7 @@
 /**
 * AcctExp Uninstallation
 * @package AEC - Account Control Expiration - Membership Manager
-* @copyright 2006-2012 Copyright (C) David Deutsch
+* @copyright 2006-2013 Copyright (C) David Deutsch
 * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
 * @version $Revision: 1.2 $
 * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
