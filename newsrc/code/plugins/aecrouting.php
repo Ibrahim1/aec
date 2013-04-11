@@ -135,7 +135,7 @@ class plgSystemAECrouting extends JPlugin
 
 		global $aecConfig;
 
-		$vars['ccb12']		= GeneralInfoRequester::detect_component( 'CB1.2' );
+		$vars['ccb12']		= aecComponentHelper::detect_component( 'CB1.2' );
 
 		$vars['pfirst']		= $aecConfig->cfg['plans_first'];
 		$vars['int_reg']	= $aecConfig->cfg['integrate_registration'];

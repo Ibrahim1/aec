@@ -638,10 +638,10 @@ class aecExport extends serialParamDBTable
 				break;
 			case 'month':
 				$collation = 'Y-m';
-				break;				
+				break;
 			case 'year':
 				$collation = 'Y';
-				break;				
+				break;
 		}
 
 		$collators = array();
@@ -925,7 +925,7 @@ class aecExport extends serialParamDBTable
 						$plans[$planid]->load( $planid );
 					}
 
-					$invoiceid = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $metaUser->userid, $planid );
+					$invoiceid = aecInvoiceHelper::lastClearedInvoiceIDbyUserID( $metaUser->userid, $planid );
 
 					if ( $invoiceid ) {
 						$invoice = new Invoice();
@@ -944,7 +944,7 @@ class aecExport extends serialParamDBTable
 				// Remove whitespaces and newlines
 				foreach( $larray as $larrid => $larrval ) {
 					$larray[$descarray[$larrid]] = trim($larrval);
-					
+
 					unset($larray[$larrid]);
 				}
 

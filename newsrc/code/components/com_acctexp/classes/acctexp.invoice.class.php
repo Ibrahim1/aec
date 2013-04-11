@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: acctexp.dummy.class.php
+ * @version $Id: acctexp.invoice.class.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Core Class
  * @copyright 2006-2012 Copyright (C) David Deutsch
@@ -10,6 +10,208 @@
 
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+
+class aecInvoiceHelper
+{
+	function UserIDfromInvoiceNumber( $invoice_number )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `userid`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `invoice_number` = \'' . $invoice_number . '\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function InvoiceIDfromNumber( $invoice_number, $userid = 0, $override_active = false )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_invoices'
+				;
+
+		if ( $override_active ) {
+			$query .= ' WHERE';
+		} else {
+			$query .= ' WHERE `active` = \'1\' AND';
+		}
+
+		$query .= ' ( `invoice_number` LIKE \'' . $invoice_number . '\''
+				. ' OR `secondary_ident` LIKE \'' . $invoice_number . '\' )'
+				;
+
+		if ( $userid ) {
+			$query .= ' AND `userid` = \'' . ( (int) $userid ) . '\'';
+		}
+
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function InvoiceNumberfromId( $id, $override_active = false )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `invoice_number`'
+				. ' FROM #__acctexp_invoices'
+				;
+
+		if ( $override_active ) {
+			$query .= ' WHERE';
+		} else {
+			$query .= ' WHERE `active` = \'1\' AND';
+		}
+
+		$query .= ' `id` = \'' . ( (int) $id ) . '\'';
+
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function lastUnclearedInvoiceIDbyUserID( $userid, $excludedusage=null )
+	{
+		global $aecConfig;
+
+		if ( empty( $excludedusage ) ) {
+			$excludedusage = array();
+		}
+
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`, `invoice_number`, `usage`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . ( (int) $userid ) . '\''
+				. ' AND `transaction_date` = \'0000-00-00 00:00:00\''
+				. ' AND `active` = \'1\''
+				. ' ORDER BY `id` DESC'
+				;
+		$db->setQuery( $query );
+		$invoice_list = $db->loadObjectList();
+
+		if ( empty( $invoice_list ) ) {
+			return false;
+		}
+
+		foreach ( $invoice_list as $invoice ) {
+			if ( strpos( $invoice->usage, '.' ) ) {
+				return $invoice->invoice_number;
+			} elseif ( !in_array( $invoice->usage, $excludedusage ) ) {
+				$status = SubscriptionPlanHandler::PlanStatus( $invoice->usage );
+				if ( $status || ( !$status && $aecConfig->cfg['allow_invoice_unpublished_item'] ) ) {
+					return $invoice->invoice_number;
+				} else {
+					// Plan is not active anymore, try the next invoice.
+					$excludedusage[] = $invoice->usage;
+
+					return aecInvoiceHelper::lastUnclearedInvoiceIDbyUserID( $userid, $excludedusage );
+				}
+			}
+		}
+
+		return false;
+	}
+
+	function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT id'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				;
+
+		if ( $planid ) {
+			$query .= ' AND `usage` = \'' . (int) $planid . '\'';
+		}
+
+		$query .= ' ORDER BY `transaction_date` DESC';
+
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function InvoiceCountbyUserID( $userid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `active` = \'1\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function UnpaidInvoiceCountbyUserID( $userid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `active` = \'1\''
+				. ' AND `transaction_date` = \'0000-00-00 00:00:00\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function PaidInvoiceCountbyUserID( $userid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT count(*)'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' AND `active` = \'1\''
+				. ' AND `transaction_date` != \'0000-00-00 00:00:00\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function InvoiceNumberbyCartId( $userid, $cartid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `invoice_number`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				. ' AND `usage` = \'c.' . $cartid . '\''
+				;
+
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function InvoiceIdList( $userid, $start, $limit, $sort='`transaction_date` DESC' )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_invoices'
+				. ' WHERE `userid` = \'' . $userid . '\''
+				. ' AND `active` = \'1\''
+				. ' ORDER BY ' . $sort . ', `id` DESC'
+				. ' LIMIT ' . $start . ',' . $limit
+				;
+		$db->setQuery( $query );
+
+		return xJ::getDBArray( $db );
+	}
+}
 
 class InvoiceFactory
 {
@@ -620,7 +822,7 @@ class InvoiceFactory
 		if ( !empty( $this->userid ) ) {
 			if ( !empty( $this->metaUser ) ) {
 				$this->renew = $this->metaUser->meta->is_renewing();
-			} elseif ( AECfetchfromDB::SubscriptionIDfromUserID( $this->userid ) ) {
+			} elseif ( aecUserHelper::SubscriptionIDfromUserID( $this->userid ) ) {
 				$user_subscription = new Subscription();
 				$user_subscription->loadUserID( $this->userid );
 
@@ -1061,7 +1263,7 @@ class InvoiceFactory
 		// Checking whether we are trying to repeat an invoice
 		if ( !empty( $invoice_number ) ) {
 			// Make sure the invoice really exists and that its the correct user carrying out this action
-			if ( AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $this->userid, $anystatus ) ) {
+			if ( aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, $this->userid, $anystatus ) ) {
 				$this->invoice_number = $invoice_number;
 			}
 		}
@@ -1399,10 +1601,10 @@ class InvoiceFactory
 						$btnarray['view'] = '';
 
 						if ( $register ) {
-							if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+							if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 								$btnarray['option']	= 'com_comprofiler';
 								$btnarray['task']	= 'registers';
-							} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+							} elseif ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) ) {
 								$btnarray['option']	= 'com_community';
 								$btnarray['view'] 	= 'register';
 							} else {
@@ -1576,7 +1778,7 @@ class InvoiceFactory
 
 		$this->coupons = array( 'active' => !empty( $aecConfig->cfg['confirmation_coupons'] ) );
 
-		$in = AECfetchfromDB::InvoiceNumberbyCartId( $this->userid, $this->cartobject->id );
+		$in = aecInvoiceHelper::InvoiceNumberbyCartId( $this->userid, $this->cartobject->id );
 
 		if ( !empty( $in ) ) {
 			$this->invoice_number = $in;
@@ -2345,11 +2547,11 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( empty( $this->id ) ) {
-			$this->load( AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid, $plan ) );
+			$this->load( aecInvoiceHelper::lastClearedInvoiceIDbyUserID( $userid, $plan ) );
 		}
 
 		if ( empty( $this->id ) ) {
-			$this->load( AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid, $plan ) );
+			$this->load( aecInvoiceHelper::lastUnclearedInvoiceIDbyUserID( $userid, $plan ) );
 		}
 	}
 

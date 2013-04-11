@@ -24,7 +24,7 @@ if ( !empty( $tmpl->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && empty(
 }
 
 // Load metaUser and invoice data
-$invoiceno	= AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+$invoiceno	= aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid );
 $properties	= array();
 
 $properties['showcheckout'] = false;
@@ -34,7 +34,7 @@ if ( !$metaUser->hasSubscription && empty( $invoiceno ) ) {
 	subscribe( $option );
 	return;
 } elseif ( !$metaUser->hasSubscription && !empty( $invoiceno ) ) {
-	$properties['showcheckout'] = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
+	$properties['showcheckout'] = aecInvoiceHelper::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 }
 
 // Prepare Main Tabs
@@ -107,7 +107,7 @@ if ( empty( $page ) ) {
 	$page = 0;
 }
 
-$invoiceList = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $page*$pagesize, $pagesize );
+$invoiceList = aecInvoiceHelper::InvoiceIdList( $metaUser->userid, $page*$pagesize, $pagesize );
 
 $properties['invoice_pages'] = (int) ( $invoiceno / $pagesize );
 $properties['invoice_page'] = $page;

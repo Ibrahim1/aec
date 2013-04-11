@@ -92,7 +92,7 @@ class reWriteEngine
 				}
 			}
 
-			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+			if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 				$db = &JFactory::getDBO();
 
 				$query = 'SELECT name, title'
@@ -120,7 +120,7 @@ class reWriteEngine
 				}
 			}
 
-			if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+			if ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) ) {
 				$db = &JFactory::getDBO();
 
 				$query = 'SELECT `id`, `name`'
@@ -350,7 +350,7 @@ class reWriteEngine
 					}
 				}
 
-				if ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+				if ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) ) {
 					if ( !$this->data['metaUser']->hasJSprofile ) {
 						$this->data['metaUser']->loadJSuser();
 					}
@@ -362,7 +362,7 @@ class reWriteEngine
 					}
 				}
 
-				if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+				if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 					if ( !$this->data['metaUser']->hasCBprofile ) {
 						$this->data['metaUser']->loadCBuser();
 					}
@@ -465,7 +465,7 @@ class reWriteEngine
 				}
 
 				if ( empty( $this->data['invoice'] ) && !empty( $this->data['metaUser']->cmsUser->id ) ) {
-					$lastinvoice = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $this->data['metaUser']->cmsUser->id );
+					$lastinvoice = aecInvoiceHelper::lastClearedInvoiceIDbyUserID( $this->data['metaUser']->cmsUser->id );
 
 					$this->data['invoice'] = new Invoice();
 					$this->data['invoice']->load( $lastinvoice );
@@ -667,7 +667,7 @@ class reWriteEngine
 					return false;
 				}
 
-				return AECfetchfromDB::InvoiceCountbyUserID( $this->data['metaUser']->userid );
+				return aecInvoiceHelper::InvoiceCountbyUserID( $this->data['metaUser']->userid );
 
 				break;
 			case 'invoice_count_paid':
@@ -675,7 +675,7 @@ class reWriteEngine
 					return false;
 				}
 
-				return AECfetchfromDB::PaidInvoiceCountbyUserID( $this->data['metaUser']->userid );
+				return aecInvoiceHelper::PaidInvoiceCountbyUserID( $this->data['metaUser']->userid );
 
 				break;
 			case 'invoice_count_unpaid':
@@ -683,7 +683,7 @@ class reWriteEngine
 					return false;
 				}
 
-				return AECfetchfromDB::UnpaidInvoiceCountbyUserID( $this->data['metaUser']->userid );
+				return aecInvoiceHelper::UnpaidInvoiceCountbyUserID( $this->data['metaUser']->userid );
 
 				break;
 			case 'jtext':
@@ -857,7 +857,7 @@ class reWriteEngine
 						}
 					} else {
 						$callback = array( $vars[0], $vars[1] );
-	
+
 						if ( isset( $vars[2] ) ) {
 							$result = call_user_func_array( $callback, $vars[2] );
 						} else {

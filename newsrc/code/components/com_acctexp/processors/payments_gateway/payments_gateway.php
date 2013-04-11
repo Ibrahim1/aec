@@ -142,7 +142,7 @@ class processor_payments_gateway extends POSTprocessor
 																	$var['pg_transaction_order_number']
 																)
 											)
-										); 
+										);
 
 		return $var;
 	}
@@ -151,7 +151,7 @@ class processor_payments_gateway extends POSTprocessor
 	{
 		$response = array();
 		$response['amount']		= $post['pg_total_amount'];
-		$response['invoice']	= AECfetchfromDB::InvoiceNumberfromId( $post['pg_transaction_order_number'] );
+		$response['invoice']	= aecInvoiceHelper::InvoiceNumberfromId( $post['pg_transaction_order_number'] );
 
 		return $response;
 	}
@@ -167,7 +167,7 @@ class processor_payments_gateway extends POSTprocessor
 													$post['pg_utc_time']
 												)
 								)
-							); 
+							);
 
 		if ( $post['pg_ts_hash_response'] != $hash ) {
 			$response['error'] = 'hash mismatch';

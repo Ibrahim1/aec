@@ -528,9 +528,9 @@ function subscribe( $option )
 	}
 
 	if ( !empty( $username ) && $usage ) {
-		$CB = ( GeneralInfoRequester::detect_component( 'anyCB' ) );
-		$AL = ( GeneralInfoRequester::detect_component( 'ALPHA' ) );
-		$JS = ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) );
+		$CB = ( aecComponentHelper::detect_component( 'anyCB' ) );
+		$AL = ( aecComponentHelper::detect_component( 'ALPHA' ) );
+		$JS = ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) );
 
 		if ( !$AL && !$CB && !$JS && !$k2mode ) {
 			// Joomla 1.6+ Sanity Check
@@ -709,7 +709,7 @@ function confirmSubscription( $option )
 	}
 
 	if ( $aecConfig->cfg['plans_first'] && !empty( $usage ) && empty( $username ) && empty( $passthrough['username'] ) && !$userid && !$user->id  && empty( $aecConfig->cfg['skip_registration'] ) ) {
-		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+		if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to register the user
 			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php' );
 			include_once( JPATH_SITE . '/components/com_comprofiler/comprofiler.php' );
@@ -740,7 +740,7 @@ function internalCheckout( $option, $invoice_number, $processor, $userid )
 		$userid = $user->id;
 	}
 
-	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
+	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, $userid );
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
@@ -766,13 +766,13 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 			// This user is not expired, so he could log in...
 			return getView( 'access_denied' );
 	} else {
-		$userid = AECfetchfromDB::UserIDfromInvoiceNumber( $invoice_number );
+		$userid = aecInvoiceHelper::UserIDfromInvoiceNumber( $invoice_number );
 	}
 
 	$invoiceid = null;
 
 	if ( empty( $cart ) ) {
-		$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
+		$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, $userid );
 	}
 
 	// Only allow a user to access existing and own invoices
@@ -835,7 +835,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 		$userid = $user->id;
 	}
 
-	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, $userid );
+	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, $userid );
 
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
@@ -1129,7 +1129,7 @@ function processNotification( $option, $processor )
 
 	// Get Invoice record
 	if ( !empty( $response['invoice'] ) ) {
-		$id = AECfetchfromDB::InvoiceIDfromNumber( $response['invoice'] );
+		$id = aecInvoiceHelper::InvoiceIDfromNumber( $response['invoice'] );
 	} else {
 		$id = false;
 

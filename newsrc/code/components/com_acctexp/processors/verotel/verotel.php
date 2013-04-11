@@ -121,7 +121,7 @@ class processor_verotel extends URLprocessor
 			$userid = $db->loadResult();
 
 			if ( $userid ) {
-				$id = AECfetchfromDB::lastClearedInvoiceIDbyUserID( $userid );
+				$id = aecInvoiceHelper::lastClearedInvoiceIDbyUserID( $userid );
 
 				$query = 'SELECT `invoice_number` FROM #__acctexp_invoices WHERE `id` = \'' . $id . '\'';
 				$db->setQuery( $query );

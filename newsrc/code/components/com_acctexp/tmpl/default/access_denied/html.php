@@ -18,7 +18,7 @@ if ( $user->id ) {
 	$loggedin = 1;
 } else {
 	$loggedin = 0;
-	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+	if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&task=registers' );
 	} else {
 		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&view=register' );

@@ -498,7 +498,7 @@ class AECToolbox
 		$heartbeat = new aecHeartbeat();
 		$heartbeat->frontendping();
 
-		$userid = AECfetchfromDB::UserIDfromUsername( $username );
+		$userid = aecUserHelper::UserIDfromUsername( $username );
 
 		$metaUser = new metaUser( $userid );
 
@@ -518,10 +518,10 @@ class AECToolbox
 
 					return AECToolbox::VerifyUserID( $userid );
 				} else {
-					$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+					$invoices = aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid );
 
 					if ( $invoices ) {
-						$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
+						$invoice = aecInvoiceHelper::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 
 						if ( $invoice ) {
 							$metaUser->setTempAuth();
@@ -543,7 +543,7 @@ class AECToolbox
 		$heartbeat = new aecHeartbeat();
 		$heartbeat->frontendping();
 
-		$id = AECfetchfromDB::UserIDfromUsername( $username );
+		$id = aecUserHelper::UserIDfromUsername( $username );
 
 		return AECToolbox::VerifyUserID( $id );
 	}
@@ -587,12 +587,12 @@ class AECToolbox
 
 			return AECToolbox::VerifyUser( $metaUser->cmsUser->username );
 		} else {
-			$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+			$invoices = aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid );
 
 			$metaUser->setTempAuth();
 
 			if ( $invoices ) {
-				$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
+				$invoice = aecInvoiceHelper::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 
 				if ( $invoice ) {
 					return 'open_invoice';

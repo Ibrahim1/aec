@@ -36,10 +36,10 @@ if ( $metaUser->hasSubscription ) {
 	}
 }
 
-$invoices = AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid );
+$invoices = aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid );
 
 if ( $invoices ) {
-	$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
+	$invoice = aecInvoiceHelper::lastUnclearedInvoiceIDbyUserID( $metaUser->userid );
 } else {
 	$invoice = null;
 }

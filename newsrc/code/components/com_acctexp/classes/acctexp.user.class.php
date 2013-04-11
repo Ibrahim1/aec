@@ -13,6 +13,64 @@
 
 JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
 
+class aecUserHelper
+{
+	function SubscriptionIDfromUserID( $userid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `userid` = \'' . (int) $userid . '\''
+				. ' ORDER BY `primary` DESC'
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function UserIDfromUsername( $username )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT id'
+		. ' FROM #__users'
+		. ' WHERE username = \'' . aecEscape( $username, array( 'string', 'badchars' ) ) . '\''
+		;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function UserIDfromSubscriptionID( $susbcriptionid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `userid`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `id` = \'' . (int) $susbcriptionid . '\''
+				. ' ORDER BY `primary` DESC'
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+	function UserExists( $userid )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT `id`'
+				. ' FROM #__users'
+				. ' WHERE `id` = \'' . $userid . '\''
+				;
+		$db->setQuery( $query );
+
+		return $db->loadResult();
+	}
+
+}
+
 class cmsUser extends JTableUser
 {
 	function __construct()
@@ -37,7 +95,7 @@ class metaUser
 	function metaUser( $userid, $subscriptionid=null )
 	{
 		if ( empty( $userid ) && !empty( $subscriptionid ) ) {
-			$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
+			$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
 		}
 
 		$this->meta = new metaUserDB();
@@ -61,7 +119,7 @@ class metaUser
 			if ( !empty( $subscriptionid ) ) {
 				$aecid = $subscriptionid;
 			} else {
-				$aecid = AECfetchfromDB::SubscriptionIDfromUserID( $userid );
+				$aecid = aecUserHelper::SubscriptionIDfromUserID( $userid );
 			}
 
 			if ( $aecid ) {
@@ -112,7 +170,7 @@ class metaUser
 			}
 
 			// Create dummy CB/CBE user
-			if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+			if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 				$this->hasCBprofile = 1;
 				$this->cbUser = new stdClass();
 

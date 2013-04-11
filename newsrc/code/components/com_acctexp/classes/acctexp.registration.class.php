@@ -28,11 +28,11 @@ class aecRegistration
 		}
 
 		// Send to registration handler
-		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+		if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 			aecRegistration::registerRedirectCB( $plan );
-		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+		} elseif ( aecComponentHelper::detect_component( 'JUSER' ) ) {
 			aecRegistration::registerRedirectJUser();
-		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+		} elseif ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) ) {
 			aecRegistration::registerRedirectJomSocial( $plan );
 		} else {
 			aecRegistration::registerRedirectJoomla( $plan );
@@ -58,7 +58,7 @@ class aecRegistration
 
 	function registerRedirectCB( $plan )
 	{
-		if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+		if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
 			TempTokenHandler::TempTokenFromPlan( $plan );
 
 			if ( !empty( $_GET['fname'] ) ) {
@@ -120,8 +120,8 @@ class aecRegistration
 		ob_start();
 
 		// Let CB/JUSER think that everything is going fine
-		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-			if ( GeneralInfoRequester::detect_component( 'CBE' ) || $overrideActivation ) {
+		if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
+			if ( aecComponentHelper::detect_component( 'CBE' ) || $overrideActivation ) {
 				global $ueConfig;
 			}
 
@@ -142,13 +142,13 @@ class aecRegistration
 					$ueConfig['reg_pend_appr_sub'] = '';
 				}
 			}
-		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+		} elseif ( aecComponentHelper::detect_component( 'JUSER' ) ) {
 			$savetask	= $task;
 			$task		= 'blind';
 			include_once( JPATH_SITE . '/components/com_juser/juser.php' );
 			include_once( JPATH_SITE .'/administrator/components/com_juser/juser.class.php' );
 			$task		= $savetask;
-		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) ) {
+		} elseif ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) ) {
 
 		}
 
@@ -173,9 +173,9 @@ class aecRegistration
 
 		$savepwd = aecEscape( $var['password'], array( 'string', 'badchars' ) );
 
-		if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
+		if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 			// This is a CB registration, borrowing their code to save the user
-			if ( $internal && !GeneralInfoRequester::detect_component( 'CBE' ) ) {
+			if ( $internal && !aecComponentHelper::detect_component( 'CBE' ) ) {
 				include_once( JPATH_SITE . '/components/com_acctexp/lib/codeofshame/cbregister.php' );
 
 				if ( empty( $_POST['firstname'] ) && !empty( $_POST['name'] ) ) {
@@ -219,7 +219,7 @@ class aecRegistration
 					}
 				}
 			}
-		} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+		} elseif ( aecComponentHelper::detect_component( 'JUSER' ) ) {
 			// This is a JUSER registration, borrowing their code to save the user
 			saveRegistration( 'com_acctexp' );
 
@@ -243,7 +243,7 @@ class aecRegistration
 					$synchronize->synchronizeFrom( $uid );
 				}
 			}
-		} elseif ( GeneralInfoRequester::detect_component( 'JOMSOCIAL' ) && !$overrideJS ) {
+		} elseif ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) && !$overrideJS ) {
 
 		} else {
 			$data = array(	'username' => $var['username'],

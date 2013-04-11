@@ -51,7 +51,7 @@ class processor_multisafepay extends XMLprocessor
 		$settings['account']			= array( 'inputC' );
 		$settings['site_id']			= array( 'inputC' );
 		$settings['site_secure_code']	= array( 'inputC' );
-		
+
 		$settings['testmode']			= array( 'toggle' );
 		$settings['currency']			= array( 'list_currency' );
 		$settings['language']			= array( 'list_language' );
@@ -66,9 +66,9 @@ class processor_multisafepay extends XMLprocessor
 							'MultiSafepay' => 'WALLET',
 							'Bank Transfer' => 'BANKTRANS',
 							'Direct Debit (Germany)' => 'DIRDEB',
-							'iDEAL (Netherlands)' => 'IDEAL'							
+							'iDEAL (Netherlands)' => 'IDEAL'
 							);
-		
+
 		$pmethods = array();
 		$pmethodssel = array();
 		foreach ( $methods as $name => $key ) {
@@ -82,7 +82,7 @@ class processor_multisafepay extends XMLprocessor
 		}
 
 		$settings['lists']['gateway'] = JHTML::_( 'select.genericlist', $pmethods, 'gateway[]', 'size="8" multiple="multiple"', 'value', 'text', $pmethodssel );
-		
+
 		return $settings;
 	}
 
@@ -94,10 +94,10 @@ class processor_multisafepay extends XMLprocessor
 		$var['params']['country'] = array( 'list', JText::_('CFG_MULTISAFEPAY_SELECT_COUNTRY'), null );
 
 		$gateways = $this->getGateways( $request );
-		
+
 		foreach ( $gateways as $id => $description ) {
 			$options[]	= JHTML::_('select.option', htmlspecialchars($id), htmlspecialchars($description) );
-		}		
+		}
 
 		$var['params']['lists']['gateway'] = JHTML::_( 'select.genericlist', $options, 'gateway', 'size="1"', 'value', 'text', 'IDEAL' );
 
@@ -190,7 +190,7 @@ class processor_multisafepay extends XMLprocessor
 	function parseNotification ( $post )
 	{
 		$response = array();
-		$response['invoice'] = AECfetchfromDB::InvoiceNumberfromId( aecGetParam( 'transactionid', 0, true, array( 'word', 'int' ) ) );
+		$response['invoice'] = aecInvoiceHelper::InvoiceNumberfromId( aecGetParam( 'transactionid', 0, true, array( 'word', 'int' ) ) );
 
 		return $response;
 	}
@@ -292,7 +292,7 @@ class processor_multisafepay extends XMLprocessor
 		} else {
 			$country = 'NL';
 		}
-		
+
 		$user = array(	'firstname'	=> $request->metaUser->cmsUser->username,
 						'lastname'	=> $request->metaUser->cmsUser->name,
 						'email'		=> $request->metaUser->cmsUser->email,

@@ -523,13 +523,13 @@ jQuery(document).ready(function(jQuery) {
 								<label class="control-label" for="expiration"><span><?php echo JText::_('AEC_USER_PROFILE'); ?></span></label>
 								<div class="controls"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
 							</div>
-							<?php if ( GeneralInfoRequester::detect_component('anyCB') ) { ?>
+							<?php if ( aecComponentHelper::detect_component('anyCB') ) { ?>
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span>CB Profile</span></label>
 									<div class="controls"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 								</div>
 							<?php } ?>
-							<?php if ( GeneralInfoRequester::detect_component('JOMSOCIAL') ) { ?>
+							<?php if ( aecComponentHelper::detect_component('JOMSOCIAL') ) { ?>
 								<div class="control-group">
 									<label class="control-label" for="expiration"><span>JomSocial Profile</span></label>
 									<div class="controls"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
@@ -1066,7 +1066,7 @@ jQuery(document).ready(function(jQuery) {
 
 	function hacks ( $option, $hacks )
 	{
-		$infohandler	= new GeneralInfoRequester();
+		$infohandler	= new aecComponentHelper();
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_HACKS', 'settings' );
 		?>

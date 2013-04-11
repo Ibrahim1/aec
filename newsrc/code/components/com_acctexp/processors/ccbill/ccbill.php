@@ -163,7 +163,7 @@ class processor_ccbill extends POSTprocessor
 			$invoice = $subscription_id;
 
 			// Make sure that we have not set this up before
-			$exists = AECfetchfromDB::InvoiceIDfromNumber( $subscription_id );
+			$exists = aecInvoiceHelper::InvoiceIDfromNumber( $subscription_id );
 			if ( empty( $exists ) ) {
 				if ( ( $password == 'xxxxxx' ) || empty( $password ) ) {
 					$password = strtoupper( substr( base64_encode( md5( rand() ) ), 0, 6 ) );

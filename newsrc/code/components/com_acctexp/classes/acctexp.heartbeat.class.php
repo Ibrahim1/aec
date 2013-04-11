@@ -138,7 +138,7 @@ class aecHeartbeat extends serialParamDBTable
 				$subscription = new Subscription();
 				$subscription->load( $sub_id );
 
-				if ( !AECfetchfromDB::UserExists( $subscription->userid ) ) {
+				if ( !aecUserHelper::UserExists( $subscription->userid ) ) {
 					unset( $subscription_list[$sid] );
 
 					continue;

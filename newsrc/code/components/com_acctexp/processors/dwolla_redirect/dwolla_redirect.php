@@ -79,7 +79,7 @@ class processor_dwolla_redirect extends POSTprocessor
 		if ( $this->settings['testmode'] ) {
 			$var['test']	= '1';
 		}
-		
+
 		$var['destinationId']	= $this->settings['destination_id'];
 
 		$var['amount'] 		= $request->int_var['amount'];
@@ -108,7 +108,7 @@ class processor_dwolla_redirect extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice']		= AECfetchfromDB::InvoiceNumberfromId( $post['OrderId'] );
+		$response['invoice']		= aecInvoiceHelper::InvoiceNumberfromId( $post['OrderId'] );
 		$response['amount_paid']	= $post['Amount'];
 
 		return $response;

@@ -44,7 +44,7 @@ class processor_cardsave extends POSTprocessor
 		$settings['PostCodeMandatory']	= '';
 		$settings['StateMandatory'] 	= '';
 		$settings['CountryMandatory'] 	= '';
-		
+
 
 		return $settings;
 	}
@@ -65,7 +65,7 @@ class processor_cardsave extends POSTprocessor
 		$settings['PostCodeMandatory']	= array( 'toggle');
 		$settings['StateMandatory'] 	= array( 'toggle');
 		$settings['CountryMandatory'] 	= array( 'toggle');
-		
+
  		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan');
 		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
@@ -86,7 +86,7 @@ class processor_cardsave extends POSTprocessor
 		$var['CurrencyCode']		= AECToolbox::aecNumCurrency( $this->settings['currency'] );
 		$var['OrderID']				= $request->invoice->id;
 		$var['TransactionType']		= 'SALE';
-		$var['TransactionDateTime']	= date("Y-m-d H:i:s P");		
+		$var['TransactionDateTime']	= date("Y-m-d H:i:s P");
 		$var['CallbackURL']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cardsavenotification', false, true );
 		$var['OrderDescription']	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['CustomerName']		=  '';
@@ -108,7 +108,7 @@ class processor_cardsave extends POSTprocessor
   		$var['ServerResultURL']		= str_replace( '&amp;', '&', $request->int_var['return_url'] );
   		$var['PaymentFormDisplaysResult']	= 'false';
 
-		return array_merge( array( 'post_url' => $url, 'HashDigest' => $this->createhash( $var ) ), $var );	
+		return array_merge( array( 'post_url' => $url, 'HashDigest' => $this->createhash( $var ) ), $var );
 	}
 
 	function createhash( $var, $response=false )
@@ -119,7 +119,7 @@ class processor_cardsave extends POSTprocessor
 						);
 
 		if ( $response ) {
-			$extra = array( 
+			$extra = array(
 							'StatusCode', 'Message', 'PreviousStatusCode', 'PreviousMessage',
 							'CrossReference', 'Amount', 'CurrencyCode', 'OrderID',
 							'TransactionType', 'TransactionDateTime', 'OrderDescription', 'CustomerName',
@@ -153,9 +153,9 @@ class processor_cardsave extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice']		= AECfetchfromDB::InvoiceNumberfromId( $post['OrderID'] );
+		$response['invoice']		= aecInvoiceHelper::InvoiceNumberfromId( $post['OrderID'] );
 		$response['amount_paid']	= $post['Amount']/100;
-		
+
 		return $response;
 	}
 
@@ -164,7 +164,7 @@ class processor_cardsave extends POSTprocessor
 		$response['valid'] = 0;
 
 		if ( $this->createhash($_POST, true) === $_POST['HashDigest'] ) {
-			
+
 			switch ( $post['StatusCode'] ) {
 				case 0:
 					$response['valid'] = 1;
@@ -188,7 +188,7 @@ class processor_cardsave extends POSTprocessor
 			if ( $post['StatusCode'] == 0 ) {
 				$response['valid'] = 1;
 			} else {
-				
+
 			}
 		} else {
 			$response['error']		= true;

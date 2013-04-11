@@ -116,7 +116,7 @@ class mi_multiusercreation
 
 		if ( !empty( $child_list ) && !empty( $this->settings['renew_child_subscr'] ) ) {
 			foreach ( $child_list as $subscr_id ) {
-				$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscr_id );
+				$userid = aecUserHelper::UserIDfromSubscriptionID( $subscr_id );
 
 				$metaUser = new metaUser( $userid );
 

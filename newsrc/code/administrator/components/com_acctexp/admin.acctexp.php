@@ -520,7 +520,7 @@ function cancel( $option )
 function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 {
 	if ( !empty( $subscriptionid ) ) {
-		$userid = AECfetchfromDB::UserIDfromSubscriptionID( $subscriptionid );
+		$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
 	}
 
 	$db = &JFactory::getDBO();
@@ -558,7 +558,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 	$invoices_limit = 15;
 
-	$invoice_ids = AECfetchfromDB::InvoiceIdList( $metaUser->userid, $page*$invoices_limit, $invoices_limit );
+	$invoice_ids = aecInvoiceHelper::InvoiceIdList( $metaUser->userid, $page*$invoices_limit, $invoices_limit );
 
 	$group_selection = array();
 	$group_selection[] = JHTML::_('select.option', '',			JText::_('EXPIRE_SET') );
@@ -738,7 +738,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		$aecHTML = new stdClass();
 	}
 
-	$aecHTML->invoice_pages	= (int) ( AECfetchfromDB::InvoiceCountbyUserID( $metaUser->userid ) / $invoices_limit );
+	$aecHTML->invoice_pages	= (int) ( aecInvoiceHelper::InvoiceCountbyUserID( $metaUser->userid ) / $invoices_limit );
 	$aecHTML->invoice_page	= $page;
 	$aecHTML->sid			= $sid;
 
@@ -4953,7 +4953,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 {
 	$db = &JFactory::getDBO();
 
-	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, 0, true );
+	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
 	if ( $invoiceid ) {
 		$db = &JFactory::getDBO();
@@ -4988,7 +4988,7 @@ function cancelInvoice( $option, $invoice_number, $task )
 {
 	$db = &JFactory::getDBO();
 
-	$invoiceid = AECfetchfromDB::InvoiceIDfromNumber( $invoice_number, 0, true );
+	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
 	if ( $invoiceid ) {
 		$objInvoice = new Invoice();
@@ -5637,7 +5637,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	$hacks[$n]['insert']		=	sprintf($aec_jhack3, $n, $n) . "\n" . $hacks[$n]['read'];
 	$hacks[$n]['legacy']		=	1;
 
-	if ( GeneralInfoRequester::detect_component( 'UHP2' ) ) {
+	if ( aecComponentHelper::detect_component( 'UHP2' ) ) {
 		$n = 'uhp2menuentry';
 		$hacks[$n]['name']			=	JText::_('AEC_HACKS_UHP2');
 		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_UHP2_DESC');
@@ -5651,7 +5651,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		. JText::_('AEC_SPEC_MENU_ENTRY') . '</a>'."\n<?php ".$aec_hack_end."?>", $n, $n );
 	}
 
-	if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+	if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
 		$n = 'comprofilerphp2';
 		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
 		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
@@ -5680,7 +5680,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_LEGACY');
 		$hacks[$n]['legacy']		=	1;
 
-	} elseif ( GeneralInfoRequester::detect_component( 'CB' ) ) {
+	} elseif ( aecComponentHelper::detect_component( 'CB' ) ) {
 		$n = 'comprofilerphp2';
 		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
 		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
@@ -5708,7 +5708,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveregisters" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
 
-	} elseif ( GeneralInfoRequester::detect_component( 'CBE' ) ) {
+	} elseif ( aecComponentHelper::detect_component( 'CBE' ) ) {
 		$n = 'comprofilerphp2';
 		$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #2';
 		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CB2');
@@ -5734,7 +5734,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['filename']		=	JPATH_SITE . '/components/com_comprofiler/comprofiler.html.php';
 		$hacks[$n]['read']			=	'<input type="hidden" name="task" value="saveRegistration" />';
 		$hacks[$n]['insert']		=	$hacks[$n]['read'] . "\n" . sprintf($aec_regvarshack_fix, $n, $n);
-	} elseif ( GeneralInfoRequester::detect_component( 'JUSER' ) ) {
+	} elseif ( aecComponentHelper::detect_component( 'JUSER' ) ) {
 		$n = 'juserhtml1';
 		$hacks[$n]['name']			=	'juser.html.php ' . JText::_('AEC_HACK_HACK') . ' #1';
 		$hacks[$n]['desc']			=	JText::_('AEC_HACKS_JUSER_HTML1');
@@ -5782,8 +5782,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 		$hacks[$n]['legacy']		=	1;
 	}
 
-	if ( GeneralInfoRequester::detect_component( 'anyCB' ) ) {
-		if ( GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+	if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
+		if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
 			$n = 'comprofilerphp7';
 			$hacks[$n]['name']			=	'comprofiler.php ' . JText::_('AEC_HACK_HACK') . ' #7';
 			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_MI1');
@@ -5867,8 +5867,8 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	$hacks[$n]['insert']		=	sprintf( $aec_uchangehack15, $n, 'adminuser', $n ) . "\n" . $hacks[$n]['read'];
 	$hacks[$n]['legacy']	=	1;
 
-	if ( GeneralInfoRequester::detect_component( 'CBM' ) ) {
-		if ( !GeneralInfoRequester::detect_component( 'CB1.2' ) ) {
+	if ( aecComponentHelper::detect_component( 'CBM' ) ) {
+		if ( !aecComponentHelper::detect_component( 'CB1.2' ) ) {
 			$n = 'comprofilermoderator';
 			$hacks[$n]['name']			=	'comprofilermoderator.php';
 			$hacks[$n]['desc']			=	JText::_('AEC_HACKS_CBM');

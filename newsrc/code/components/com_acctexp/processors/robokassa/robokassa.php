@@ -79,7 +79,7 @@ class processor_robokassa extends POSTprocessor
 		$var['OutSum']				= $request->int_var['amount'];
 		$var['InvId']				= $request->invoice->id;
 		$var['Desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
-		$var['SignatureValue']		= $this->getHash( $vars );			
+		$var['SignatureValue']		= $this->getHash( $vars );
 		$var['Culture']				= $this->settings['language'];
 
 		return $var;
@@ -89,7 +89,7 @@ class processor_robokassa extends POSTprocessor
 	{
 		$response = array();
 		$response['amount_paid']	= number_format( $post['OutSum'], 2 );
-		$response['invoice'] 		= AECfetchfromDB::InvoiceNumberfromId( $post['InvId'] );
+		$response['invoice'] 		= aecInvoiceHelper::InvoiceNumberfromId( $post['InvId'] );
 
 		return $response;
 	}

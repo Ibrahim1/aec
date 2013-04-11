@@ -157,7 +157,7 @@ class processor_epay extends POSTprocessor
 		$iid = $post['orderid'];
 
 		if ( $iid ) {
-			$inum = AECfetchfromDB::InvoiceNumberfromId( $iid );
+			$inum = aecInvoiceHelper::InvoiceNumberfromId( $iid );
 
 			$response = array();
 			$response['invoice']			= $inum;

@@ -22,11 +22,11 @@ if ( $metaUser->hasSubscription ) {
 	}
 }
 
-$invoices = AECfetchfromDB::InvoiceCountbyUserID( $userid );
+$invoices = aecInvoiceHelper::InvoiceCountbyUserID( $userid );
 
 $reason = "";
 if ( $invoices ) {
-	$invoice = AECfetchfromDB::lastUnclearedInvoiceIDbyUserID( $userid );
+	$invoice = aecInvoiceHelper::lastUnclearedInvoiceIDbyUserID( $userid );
 
 	$objInvoice = new Invoice();
 	$objInvoice->loadInvoiceNumber( $invoice );
