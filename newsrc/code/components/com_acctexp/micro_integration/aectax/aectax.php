@@ -286,7 +286,7 @@ class mi_aectax
 		// Add tax items to total
 		foreach ( $taxcollections as $tid => $amount ) {
 			// Create tax
-			$term = new mammonTerm();
+			$term = new itemTerm();
 
 			if ( !empty( $taxtypes[$tid] ) ) {
 				$term->addCost( $amount, array( 'details' => $taxtypes[$tid], 'tax' => true ) );
@@ -294,7 +294,7 @@ class mi_aectax
 				$term->addCost( $amount, array( 'tax' => true ) );
 			}
 
-			$terms = new mammonTerms();
+			$terms = new itemTerms();
 			$terms->addTerm( $term );
 
 			// Add the "Tax" row

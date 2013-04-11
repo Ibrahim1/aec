@@ -308,8 +308,8 @@ class couponsHandler extends eucaObject
 
 		if ( !empty( $discount_col ) ) {
 			// Dummy terms
-			$terms = new mammonTerms();
-			$term = new mammonTerm();
+			$terms = new itemTerms();
+			$term = new itemTerm();
 
 			foreach ( $discount_col as $cid => $discount ) {
 				$cce = explode( ' - ', $discounttypes[$cid], 2 );

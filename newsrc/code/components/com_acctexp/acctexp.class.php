@@ -31,7 +31,6 @@ if ( !class_exists( 'paramDBTable' ) ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 }
 
-// Load teh moniez
 include_once( JPATH_SITE . '/components/com_acctexp/lib/mammontini/mammontini.php' );
 
 $aecclasses = array(	'api',
@@ -47,6 +46,7 @@ $aecclasses = array(	'api',
 						'html',
 						'invoice',
 						'itemgroup',
+						'itemterms',
 						'microintegration',
 						'paymentprocessor',
 						'registration',

@@ -766,7 +766,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$allow_trial = ( $plans_comparison === false ) && ( $plans_comparison_total === false );
 
-		$terms = new mammonTerms();
+		$terms = new itemTerms();
 		$terms->readParams( $this->params, $allow_trial );
 
 		if ( !$allow_trial && ( count( $terms->terms ) > 1 ) ) {
