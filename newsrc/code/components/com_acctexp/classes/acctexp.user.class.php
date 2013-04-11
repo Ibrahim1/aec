@@ -128,10 +128,12 @@ class metaUser
 			if ( isset( $this->_incomplete ) ) {
 				unset( $this->_incomplete );
 			}
+
+			return true;
 		} else {
 			$this->_incomplete = true;
 
-			return true;
+			return null;
 		}
 	}
 
@@ -660,7 +662,7 @@ class metaUser
 		} else {
 			return in_array( $group, $this->getGroups() );
 		}
-		
+
 	}
 
 	function getGroups()

@@ -301,7 +301,7 @@ class plgSystemAECrouting extends JPlugin
 					$temptoken->getComposite();
 
 					$skip = array( 'coupon_code', 'task', 'option' );
-					
+
 					foreach ( $_POST as $k => $v ) {
 						if ( !in_array( $k, $skip ) ) {
 							$temptoken->content[$k]	= aecGetParam( $k, "", true, array( 'string' ) );

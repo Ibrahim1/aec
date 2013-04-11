@@ -1222,21 +1222,18 @@ class InvoiceFactory
 	{
 		if ( isset( $this->metaUser ) ) {
 			if ( is_object( $this->metaUser ) && !$force ) {
-				if ( !isset( $this->metaUser->_incomplete ) ) {
-					return true;
-				}
+				return empty( $this->metaUser->_incomplete );
 			}
 		}
 
 		if ( empty( $this->userid ) ) {
 			// Creating a dummy user object
 			$this->metaUser = new metaUser( 0 );
-			$this->metaUser->dummyUser( $this->passthrough );
-
-			return false;
+			return $this->metaUser->dummyUser( $this->passthrough );
 		} else {
 			// Loading the actual user
 			$this->metaUser = new metaUser( $this->userid );
+
 			return true;
 		}
 	}
@@ -1313,7 +1310,6 @@ class InvoiceFactory
 
 		$nochoice = false;
 
-		$passthrough = $this->getPassthrough();
 
 		// There is no choice if we have only one group or only one item with one payment option
 		if ( count( $planlist->list ) === 1 ) {
@@ -1474,6 +1470,8 @@ class InvoiceFactory
 					}
 
 					$btnarray['userid'] = ( $this->userid ? $this->userid : 0 );
+
+					$passthrough = $this->getPassthrough();
 
 					// Rewrite Passthrough
 					if ( !empty( $passthrough ) ) {
