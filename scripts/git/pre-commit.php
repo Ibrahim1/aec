@@ -1,5 +1,7 @@
 <?php
 
+include 'common.php';
+
 // And HE told me the count of the git
 $count = trim( shell_exec( 'git rev-list HEAD --count' ) );
 
@@ -21,26 +23,3 @@ fsnr( __DIR__.'/../../newsrc/code/components/com_acctexp/acctexp.class.php', "de
 
 // And changeth be the xml file
 fsnr( __DIR__.'/../build/build.xml', '<property name="git.lastrevision" value="', $count );
-
-file_put_contents( '/home/skore/test.txt', $count.' '.time()."\n", FILE_APPEND );
-
-function fsnr( $path, $search, $count )
-{
-	$content = file_get_contents( $path );
-
-	$start = strpos( $content, $search )+strlen($search);
-
-	$delim = substr( $search, -1, 1 );
-
-	$length = strpos( $content, $delim, $start ) - $start;
-
-	$old = substr( $content, $start, $length );
-
-	if ( $old != $count ) {
-		$content = str_replace( $search.$old.$delim, $search.$count.$delim, $content );
-
-		return file_put_contents( $path, $content );
-	} else {
-		return null;
-	}
-}
