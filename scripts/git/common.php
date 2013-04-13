@@ -35,9 +35,5 @@ function versionGet()
 
 	$count += 1204;
 
-	// And since we knoweth that we shall be incrementing the counter, we shall do so
-
-	$count++;
-
 	return $count;
 }
