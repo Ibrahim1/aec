@@ -6,7 +6,7 @@
 
 		<property file="./scripts/build/properties/allpackages.properties" override="true" />
 
-		<exec command="php version.php" dir="/home/skore/workspace/aec/scripts/git" outputProperty="git.lastrevision" />
+		<property name="git.lastrevision" value="1205" />
 		<exec command="git rev-parse --abbrev-ref HEAD" outputProperty="git.branch" />
 
 		<property file="./scripts/build/properties/com.properties" override="true" />
