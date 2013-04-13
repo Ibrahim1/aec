@@ -10,3 +10,5 @@ $count++;
 
 // And changeth be the class file
 fsnr( __DIR__.'/../../newsrc/code/components/com_acctexp/acctexp.class.php', "define( '_AEC_REVISION', '", $count );
+
+shell_exec( 'git add newsrc/code/components/com_acctexp/acctexp.class.php' );
