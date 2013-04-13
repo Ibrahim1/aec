@@ -11,10 +11,6 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
-global $aecConfig;
-
-define( '_AEC_FRONTEND', 1 );
-
 require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 require_once( JPATH_SITE . '/components/com_acctexp/acctexp.html.php' );
 
