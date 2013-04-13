@@ -21,7 +21,7 @@ $langlist = array(	'com_acctexp' => JPATH_SITE,
 					'com_acctexp.iso639-1' => JPATH_SITE,
 					'com_acctexp.microintegrations' => JPATH_SITE,
 					'com_acctexp.processors' => JPATH_SITE
-					);
+				);
 
 xJLanguageHandler::loadList( $langlist );
 
