@@ -24,7 +24,7 @@ function fsnr( $path, $search, $count )
 function versionGet()
 {
 	// And HE told me the count of the git
-	$count = trim( shell_exec( 'git --exec-path='.__DIR__.'rev-list HEAD --count' ) );
+	$count = trim( shell_exec( 'git --exec-path='.__DIR__.' rev-list HEAD --count' ) );
 
 	// And on the thirteenth day of the fourth month of the year two thousand and thirteen,
 	// The hardware counter stood at six thousand one hundred and two,
