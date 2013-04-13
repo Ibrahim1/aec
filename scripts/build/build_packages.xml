@@ -64,8 +64,8 @@
 			<property file="${self.root}/properties/com.properties" override="true" />
 		</phing>
 
-		<delete dir="${dir.dropbox}" />
-		<mkdir dir="${dir.dropbox}" />
+		<delete dir="${dir.dropbox}/${git.branch}" />
+		<mkdir dir="${dir.dropbox}/${git.branch}" />
 
 		<copy todir="${dir.dropbox}/${git.branch}" includeemptydirs="false">
 			<fileset dir="${dir.packages}">
