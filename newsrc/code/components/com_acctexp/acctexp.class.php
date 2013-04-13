@@ -11,6 +11,8 @@
 // Dont allow direct linking
 ( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
 
+global $aecConfig;
+
 define( '_AEC_VERSION', '1.2RC' );
 define( '_AEC_REVISION', '6106' );
 
