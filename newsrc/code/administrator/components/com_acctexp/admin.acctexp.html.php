@@ -3477,6 +3477,85 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
+	function aecExtensions( $focus )
+	{
+		global $aecConfig;
+
+		HTML_myCommon::startCommon();
+		HTML_myCommon::getHeader( 'AEC_HEAD_UPDATEEXTEND', 'extensions' );
+
+		HTML_myCommon::startForm();
+
+		$vaccount = !empty( $aecConfig->cfg['vaccount_apikey'] ) && !empty( $aecConfig->cfg['vaccount_apicode'] );
+
+		$tabs = new bsPaneTabs;
+
+		$tabs->startTabs();
+		$tabs->newTab( 'system', 'AEC' );
+		$tabs->newTab( 'mis', JText::_('AEC_USER_MICRO_INTEGRATION'), ($focus=='mis'), !$vaccount );
+		$tabs->newTab( 'processors', JText::_('AEC_CENTR_PROCESSORS'), ($focus=='processors'), !$vaccount );
+		$tabs->endTabs();
+
+		$tabs->startPanes();
+
+		$tabs->nextPane( 'user', true ); ?>
+		<table class="aecadminform">
+			<tr>
+				<td>
+				<?php if ( !$vaccount ) { ?>
+					<h3>Valanx Uplink</h3>
+					<p>You haven't connected this copy of AEC to your account at Valanx.org yet.</p>
+					<p><strong>No worries</strong> - that's just fine. You're fine. Everything is cool. You're cool.</p>
+					<p>If you don't want to connect this copy, you can simply head over to Valanx.org and download updates and extensions there.</p>
+					<h3>Setting up a connection</h3>
+					<p>If you want to, however, you can connect this copy to your account and get the full benefits of updates and extensions right from this screen.</p>
+					<p>Here is what's cool about that:</p>
+					<ul>
+						<li>
+							<strong>One-click full system updates of AEC and its extensions</strong><br />
+							We like to keep things up to date, you don't like a lot of hassle. Perfect - that's what the one-click updater is for.
+						</li>
+						<li>
+							<strong>One-click installation of extensions</strong><br />
+							There are a lot of extensions for AEC. Instead of handing you a huge package that nobody could possibly need, simply install the extensions you want with a single click.
+						</li>
+						<li>
+							<strong>Completely anonymous api connections to Valanx.org</strong><br />
+							That's right - if you're using this for your own clients, they don't get your login details. The connection is established via a custom API key and code combination for this install. And nope - we don't track the domain name or any other sensitive information.<br /> (We do, however, ask you to help us run metrics on which extensions you use, but if you don't want to, that's fine, too.)
+						</li>
+						<li>
+							<strong>As many connections as you need</strong><br />
+							Even though we put certain... conditions on the amount of connections you make via Valanx Uplink (we charge for more than a certain number, there, we said it), you can get as many as you need.
+						<li>
+					</ul>
+
+				<?php } else { ?>
+
+				<?php } ?>
+				</td>
+			</tr>
+		</table>
+		<?php $tabs->nextPane( 'mis' ); ?>
+		<table class="aecadminform">
+			<tr>
+				<td>
+
+				</td>
+			</tr>
+		</table>
+		<?php $tabs->endPanes(); ?>
+		<input type="hidden" name="option" value="<?php echo $option; ?>" />
+		<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
+		<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
+		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
+		</form>
+
+		<?php
+
+ 		HTML_myCommon::endCommon();
+	}
+
 	function toolBox( $option, $cmd, $result, $title=null )
 	{
 		JHTML::_('behavior.calendar');
@@ -3544,7 +3623,21 @@ class bsPaneTabs
 
 	function startTabs() { echo '<ul class="nav nav-pills">'; }
 	function endTabs() { echo '</ul>'; }
-	function newTab( $handle, $title, $current=false ) { echo '<li' . ( ( $this->tabs_started == 0 ) ? ' class="active"' : '' ) . '><a href="#' . $handle . '" data-toggle="pill">' . $title . '</a></li>'; $this->tabs_started++; }
+	function newTab( $handle, $title, $current=false, $disabled=false ) {
+		$classes = array();
+
+		if ( $current || ( $this->tabs_started == 0 ) ) {
+			$classes[] = 'active';
+		}
+
+		if ( $disabled ) {
+			$classes[] = 'disabled';
+		}
+
+		echo '<li' . ( !empty( $classes ) ? ' class="' . implode( ' ', $classes ) . '"' : '' ) . '><a href="#' . $handle . '" data-toggle="pill">' . $title . '</a></li>';
+
+		$this->tabs_started++;
+	}
 
 	function startPanes() { echo '<div class="tab-content">'; }
 	function endPanes() { if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) { $this->endPane(); } echo '</div>'; }
