@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!-- $Id$ -->
-<project name="AEC" basedir="." default="build">
+<project name="AEC" default="build">
 	<target name="build" description="Build installable package">
 		<mkdir dir="${dir.tmp}" />
 

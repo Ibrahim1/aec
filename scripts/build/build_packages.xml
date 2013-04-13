@@ -1,39 +1,39 @@
 <?xml version="1.0" ?>
 <!-- $Id$ -->
-<project name="AEC" basedir="." default="build">
+<project name="AEC" default="build">
 	<target name="build">
 		<delete dir="${dir.packages}" />
 		<mkdir dir="${dir.packages}" />
 
-		<phing phingfile="build_component.xml" inheritRefs="true">
-			<property file="properties/com.properties" override="true" />
+		<phing phingfile="${self.root}/build_component.xml" inheritRefs="true">
+			<property file="${self.root}/properties/com.properties" override="true" />
 		</phing>
-		<phing phingfile="build_module.xml" inheritRefs="true">
-			<property file="properties/module.properties" override="true" />
+		<phing phingfile="${self.root}/build_module.xml" inheritRefs="true">
+			<property file="${self.root}/properties/module.properties" override="true" />
 		</phing>
-		<phing phingfile="build_module_cart.xml" inheritRefs="true">
-			<property file="properties/module_cart.properties" override="true" />
+		<phing phingfile="${self.root}/build_module_cart.xml" inheritRefs="true">
+			<property file="${self.root}/properties/module_cart.properties" override="true" />
 		</phing>
-		<phing phingfile="build_plugin_access.xml" inheritRefs="true">
-			<property file="properties/plugin_access.properties" override="true" />
+		<phing phingfile="${self.root}/build_plugin_access.xml" inheritRefs="true">
+			<property file="${self.root}/properties/plugin_access.properties" override="true" />
 		</phing>
-		<phing phingfile="build_plugin_error.xml" inheritRefs="true">
-			<property file="properties/plugin_error.properties" override="true" />
+		<phing phingfile="${self.root}/build_plugin_error.xml" inheritRefs="true">
+			<property file="${self.root}/properties/plugin_error.properties" override="true" />
 		</phing>
-		<!--<phing phingfile="build_plugin_restriction.xml" inheritRefs="true">
-			<property file="properties/plugin_restriction.properties" override="true" />
+		<!--<phing phingfile="${self.root}/build_plugin_restriction.xml" inheritRefs="true">
+			<property file="${self.root}/properties/plugin_restriction.properties" override="true" />
 		</phing>-->
-		<phing phingfile="build_plugin_rewrite.xml" inheritRefs="true">
-			<property file="properties/plugin_rewrite.properties" override="true" />
+		<phing phingfile="${self.root}/build_plugin_rewrite.xml" inheritRefs="true">
+			<property file="${self.root}/properties/plugin_rewrite.properties" override="true" />
 		</phing>
-		<phing phingfile="build_plugin_routing.xml" inheritRefs="true">
-			<property file="properties/plugin_routing.properties" override="true" />
+		<phing phingfile="${self.root}/build_plugin_routing.xml" inheritRefs="true">
+			<property file="${self.root}/properties/plugin_routing.properties" override="true" />
 		</phing>
-		<phing phingfile="build_plugin_user.xml" inheritRefs="true">
-			<property file="properties/plugin_user.properties" override="true" />
+		<phing phingfile="${self.root}/build_plugin_user.xml" inheritRefs="true">
+			<property file="${self.root}/properties/plugin_user.properties" override="true" />
 		</phing>
-		<phing phingfile="build_plugin_cb.xml" inheritRefs="true">
-			<property file="properties/plugin_cb.properties" override="true" />
+		<phing phingfile="${self.root}/build_plugin_cb.xml" inheritRefs="true">
+			<property file="${self.root}/properties/plugin_cb.properties" override="true" />
 		</phing>
 
 		<mkdir dir="${dir.packages}/packages" />
@@ -60,8 +60,8 @@
 
 		<delete dir="${dir.packages}/fullpack" />
 
-		<phing phingfile="build_component_full.xml" inheritRefs="true">
-			<property file="properties/com.properties" override="true" />
+		<phing phingfile="${self.root}/build_component_full.xml" inheritRefs="true">
+			<property file="${self.root}/properties/com.properties" override="true" />
 		</phing>
 
 		<delete dir="${dir.dropbox}" />

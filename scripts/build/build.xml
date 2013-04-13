@@ -1,25 +1,22 @@
 <?xml version="1.0" ?>
 <!-- $Id$ -->
-<project name="AEC" basedir="../build" default="build">
-	<target name="build" description="Build all installable packages" depends="config, git_stuff">
-		<property file="properties/com.properties" override="true" />
+<project name="AEC" basedir="/home/skore/workspace/aec" default="build">
+	<target name="build" description="Build all installable packages">
+		<property name="self.root" value="/home/skore/workspace/aec/scripts/build" />
+
+		<property file="./scripts/build/properties/allpackages.properties" override="true" />
+
+		<exec command="php version.php" dir="/home/skore/workspace/aec/scripts/git" outputProperty="git.lastrevision" />
+		<exec command="git rev-parse --abbrev-ref HEAD" outputProperty="git.branch" />
+
+		<property file="./scripts/build/properties/com.properties" override="true" />
 
 		<property name="file.dist_package" value="AEC" />
 		<property name="file.dist_version" value="${file.version}" />
 
-		<phing phingfile="build_packages.xml" inheritRefs="true">
-			<property file="properties/allpackages_compression_zip.properties" override="true" />
-			<property file="properties/allpackages_packing.properties" override="true" />
+		<phing phingfile="./scripts/build/build_packages.xml" inheritRefs="true">
+			<property file="./scripts/build/properties/allpackages_compression_zip.properties" override="true" />
+			<property file="./scripts/build/properties/allpackages_packing.properties" override="true" />
 		</phing>
 	</target>
-
-	<target name="git_stuff">
-		<exec command="php version.php" dir="../git" outputProperty="git.lastrevision" />
-		<exec command="git rev-parse --abbrev-ref HEAD" dir=".." outputProperty="git.branch" />
-	</target>
-
-	<target name="config" description="Load configuration file">
-		<property file="properties/allpackages.properties" override="true" />
-	</target>
-
 </project>
