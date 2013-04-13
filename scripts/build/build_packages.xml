@@ -64,10 +64,10 @@
 			<property file="properties/com.properties" override="true" />
 		</phing>
 
-		<delete dir="${dir.dropbox}/${file.extension}" />
-		<mkdir dir="${dir.dropbox}/${file.extension}" />
+		<delete dir="${dir.dropbox}" />
+		<mkdir dir="${dir.dropbox}" />
 
-		<copy todir="${dir.dropbox}/${file.extension}" includeemptydirs="false">
+		<copy todir="${dir.dropbox}/${git.branch}" includeemptydirs="false">
 			<fileset dir="${dir.packages}">
 				<include name="*.*" />
 			</fileset>
