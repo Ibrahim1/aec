@@ -16,5 +16,5 @@ shell_exec( 'git add newsrc/code/components/com_acctexp/acctexp.class.php' );
 // And the xml file
 fsnr( __DIR__.'/../build/build.xml', '<property name="git.lastrevision" value="', $count );
 
-shell_exec( 'git add /build/build.xml' );
+shell_exec( 'git add build/build.xml' );
 
