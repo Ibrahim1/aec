@@ -388,7 +388,7 @@ class Subscription extends serialParamDBTable
 
 		$metaUser = new metaUser( $this->userid );
 
-		// Move the focus Subscription		
+		// Move the focus Subscription
 		if ( !$metaUser->moveFocus( $this->id ) ) {
 			return null;
 		}
@@ -464,14 +464,9 @@ class Subscription extends serialParamDBTable
 			$newexpiration = strtotime( $this->expiration );
 			$now = (int) gmdate('U');
 
-			// ...cut away blocks until we are in the past
-			while ( $newexpiration > $now ) {
+			// ...cut away blocks until we are in the past, but not too much
+			while ( ($newexpiration+$periodlength) > $now ) {
 				$newexpiration -= $periodlength;
-			}
-
-			// Be extra sure that we did not overachieve
-			if ( $newexpiration < $now ) {
-				$newexpiration += $periodlength;
 			}
 
 			// And we get the bare expiration date
