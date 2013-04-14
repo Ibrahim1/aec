@@ -448,15 +448,9 @@ class Subscription extends serialParamDBTable
 			// Resolve blocks that we are going to substract from the set expiration date
 			$unit = 60*60*24;
 			switch ( $subscription_plan->params['full_periodunit'] ) {
-				case 'W':
-					$unit *= 7;
-					break;
-				case 'M':
-					$unit *= 31;
-					break;
-				case 'Y':
-					$unit *= 365;
-					break;
+				case 'W': $unit *= 7; break;
+				case 'M': $unit *= 31; break;
+				case 'Y': $unit *= 365; break;
 			}
 
 			$periodlength = $subscription_plan->params['full_period'] * $unit;
