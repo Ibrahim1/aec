@@ -586,7 +586,7 @@ class metaUser
 					$this->objSubscription = new Subscription();
 					$this->objSubscription->load( $existing_parent );
 
-					if ( $this->objSubscription->is_expired() ) {
+					if ( $this->objSubscription->isExpired() ) {
 						$this->objSubscription->applyUsage( $plan_params['standard_parent'], 'none', $silent, 0 );
 					}
 				}
@@ -615,10 +615,16 @@ class metaUser
 		return $return;
 	}
 
-	function moveFocus( $subscrid )
+	function moveFocus( $id )
 	{
+		if ( !empty( $this->focusSubscription->id ) ) {
+			if ( $this->focusSubscription->id == $id ) {
+				return true;
+			}
+		}
+
 		$subscription = new Subscription();
-		$subscription->load( $subscrid );
+		$subscription->load( $id );
 
 		// If Subscription exists, move the focus to that one
 		if ( $subscription->id ) {
@@ -630,10 +636,9 @@ class metaUser
 				// This subscription does not belong to the user!
 				return false;
 			}
-		} else {
-			// This subscription does not exist
-			return false;
 		}
+
+		return false;
 	}
 
 	function loadSubscriptions()

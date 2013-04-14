@@ -170,3 +170,16 @@ function aecRedirect( $url, $msg=null, $class=null )
 
 	$app->redirect( $url, $msg, $class );
 }
+
+function aecSelfRedirect( $task, $addparams )
+{
+	$params = array( 'option=com_acctexp', 'task='.$task );
+
+	foreach ( $addparams as $k => $v ) {
+		$params[] = $k.'='.$v;
+	}
+
+	$url = 'index.php?option=com_acctexp&'.implode('&',$params);
+
+	return aecRedirect( AECToolbox::deadsureURL( $url ), false, true );
+}

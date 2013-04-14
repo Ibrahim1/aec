@@ -86,25 +86,9 @@ class Subscription extends serialParamDBTable
 			$plan = new SubscriptionPlan();
 			$plan->load( $usage );
 
-			if ( ( !empty( $plan->params['similarplans'] ) && $similar ) || !empty( $plan->params['equalplans'] ) ) {
-				$allplans = array( $usage );
+			$allplans = array( $usage, $plan->getSimilarPlans() );
 
-				if ( !empty( $plan->params['similarplans'] ) || !empty( $plan->params['equalplans'] ) ) {
-					if ( empty( $plan->params['similarplans'] ) ) {
-						$plan->params['similarplans'] = array();
-					}
-
-					if ( empty( $plan->params['equalplans'] ) ) {
-						$plan->params['equalplans'] = array();
-					}
-
-					if ( $similar ) {
-						$allplans = array_merge( $plan->params['similarplans'], $plan->params['equalplans'], $allplans );
-					} else {
-						$allplans = array_merge( $plan->params['equalplans'], $allplans );
-					}
-				}
-
+			if ( count( $allplans ) > 1 ) {
 				foreach ( $allplans as $apid => $pid ) {
 					$allplans[$apid] = '`plan` = \'' . $pid . '\'';
 				}
@@ -159,9 +143,8 @@ class Subscription extends serialParamDBTable
 
 	function manualVerify()
 	{
-		if ( $this->is_expired() ) {
-			aecRedirect( 'index.php?option=com_acctexp&task=expired&userid=' . ((int) $this->userid) );
-			return false;
+		if ( $this->isExpired() ) {
+			return aecSelfRedirect( 'expired', array('userid'=>((int) $this->userid)) );
 		} else {
 			return true;
 		}
@@ -187,17 +170,36 @@ class Subscription extends serialParamDBTable
 		return $this->storeload();
 	}
 
-	function is_expired( $offset=false )
+	function isStatus( $status )
 	{
+		return ( strcmp( $this->status, ucfirst($status) ) === 0 );
+	}
+
+	function isExcluded() { return $this->isStatus('Excluded'); }
+	function isTrial() { return $this->isStatus('Active'); }
+	function isActive() { return $this->isStatus('Active'); }
+	function isPending() { return $this->isStatus('Pending'); }
+	function isHold() { return $this->isStatus('Hold'); }
+	function isClosed() { return $this->isStatus('Closed'); }
+	function isCancelled() { return $this->isStatus('Cancelled'); }
+
+	function isExpired( $offset=false )
+	{
+		if ( $this->isExcluded() ) {
+			return false;
+		} elseif ( $this->isStatus('Expired') ) {
+			return true;
+		}
+
 		global $aecConfig;
 
-		if ( $this->status == 'Expired' ) {
-			return true;
-		} elseif ( !$this->is_lifetime() ) {
+		if ( !$this->isLifetime() ) {
+			$expiration = strtotime( $this->expiration );
+
 			if ( $offset ) {
-				$expstamp = strtotime( ( '-' . $offset . ' days' ), strtotime( $this->expiration ) );
+				$expstamp = strtotime( ( '-' . $offset . ' days' ), $expiration );
 			} else {
-				$expstamp = strtotime( ( '+' . $aecConfig->cfg['expiration_cushion'] . ' hours' ), strtotime( $this->expiration ) );
+				$expstamp = strtotime( ( '+' . $aecConfig->cfg['expiration_cushion'] . ' hours' ), $expiration );
 			}
 
 			$localtime = (int) gmdate('U');
@@ -216,13 +218,43 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function is_lifetime()
+	function hasExpiration()
 	{
-		if ( ( $this->expiration === '9999-12-31 00:00:00' ) || ( $this->expiration === '0000-00-00 00:00:00' ) ) {
+		if ( empty( $this->expiration )
+			|| ( $this->expiration === '9999-12-31 00:00:00' )
+			|| ( $this->expiration === '0000-00-00 00:00:00' ) ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	function isLifetime()
+	{
+		if ( !$this->hasExpiration() || $this->lifetime ) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	function isPrimary()
+	{
+		return $this->primary;
+	}
+
+	function getPlan( $id=null )
+	{
+		$id = empty($usage) ? $this->plan : $id;
+
+		if ( !$id ) {
+			return false;
+		}
+
+		$plan = new SubscriptionPlan();
+		$plan->load( $id );
+
+		return $plan;
 	}
 
 	function setExpiration( $unit, $value, $extend )
@@ -241,7 +273,6 @@ class Subscription extends serialParamDBTable
 
 		$this->expiration = AECToolbox::computeExpiration( $value, $unit, $current );
 	}
-
 
 	/**
 	* Get alert level for a subscription
@@ -268,13 +299,14 @@ class Subscription extends serialParamDBTable
 
 			if ( $alert['daysleft'] < 0 ) {
 				// Subscription already expired. Alert Level 0!
-				$alert['level']	= 1;
+				$alert['level']			= 1;
 			} else {
 				// Get alert levels
 				if ( $alert['daysleft'] <= $aecConfig->cfg['alertlevel1'] ) {
 					// Less than $numberofdays to expire! This is a level 1
 					$alert['level']		= 1;
-				} elseif ( ( $alert['daysleft'] > $aecConfig->cfg['alertlevel1'] ) && ( $alert['daysleft'] <= $aecConfig->cfg['alertlevel2'] ) ) {
+				} elseif ( ( $alert['daysleft'] > $aecConfig->cfg['alertlevel1'] )
+						&& ( $alert['daysleft'] <= $aecConfig->cfg['alertlevel2'] ) ) {
 					$alert['level']		= 2;
 				} elseif ( $alert['daysleft'] > $aecConfig->cfg['alertlevel2'] ) {
 					// Everything is ok. Level 3 means no threshold was reached
@@ -288,45 +320,12 @@ class Subscription extends serialParamDBTable
 
 	function verifylogin( $block, $metaUser=false )
 	{
-		global $aecConfig;
+		$verify = $this->verify();
 
-		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
-			$expired = false;
-		} elseif ( strcmp( $this->status, 'Expired' ) === 0 ) {
-			$expired = true;
+		if ( $verify !== true ) {
+			aecSelfRedirect($verify, array('userid'=>$this->userid));
 		} else {
-			$expired = $this->is_expired();
-		}
-
-		if ( $expired ) {
-			$pp = new PaymentProcessor();
-
-			if ( $pp->loadName( $subscription->type ) ) {
-				$validation = $pp->validateSubscription();
-			} else {
-				$validation = false;
-			}
-		}
-
-		if ( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $aecConfig->cfg['require_subscription'] ) {
-			if ( $metaUser !== false ) {
-				$metaUser->setTempAuth();
-			}
-
-			if ( strcmp( $this->status, 'Expired' ) === 0 ) {
-				aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=expired&userid=' . $this->userid ), false, true );
-			} else {
-				if ( $this->expire() ) {
-					aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=expired&userid=' . $this->userid ), false, true );
-				}
-			}
-		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
-			if ( $metaUser !== false ) {
-				$metaUser->setTempAuth();
-			}
-			aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=pending&userid=' . $this->userid ), false, true );
-		} elseif ( ( strcmp( $this->status, 'Hold' ) === 0 ) || $block ) {
-			aecRedirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=hold&userid=' . $this->userid ), false, true );
+			return true;
 		}
 	}
 
@@ -334,13 +333,7 @@ class Subscription extends serialParamDBTable
 	{
 		global $aecConfig;
 
-		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
-			$expired = false;
-		} elseif ( strcmp( $this->status, 'Expired' ) === 0 ) {
-			$expired = true;
-		} else {
-			$expired = $this->is_expired();
-		}
+		$expired = $this->isExpired();
 
 		if ( $expired ) {
 			$pp = new PaymentProcessor();
@@ -350,21 +343,20 @@ class Subscription extends serialParamDBTable
 			}
 		}
 
-		if ( ( $expired || ( strcmp( $this->status, 'Closed' ) === 0 ) ) && $aecConfig->cfg['require_subscription'] ) {
+		if ( ( $expired || $this->isClosed() )
+			&& $aecConfig->cfg['require_subscription'] ) {
 			if ( $metaUser !== false ) {
 				$metaUser->setTempAuth();
 			}
 
-			if ( strcmp( $this->status, 'Expired' ) === 0 ) {
-				return 'expired';
-			} else {
-				if ( $this->expire() ) {
-					return 'expired';
-				}
+			if ( !$expired ) {
+				$this->expire();
 			}
-		} elseif ( ( strcmp( $this->status, 'Pending' ) === 0 ) || $block ) {
+
+			return 'expired';
+		} elseif ( $this->isPending() ) {
 			return 'pending';
-		} elseif ( ( strcmp( $this->status, 'Hold' ) === 0 ) || $block ) {
+		} elseif ( $this->isHold() || $block ) {
 			return 'hold';
 		}
 
@@ -374,136 +366,119 @@ class Subscription extends serialParamDBTable
 	function expire( $overridefallback=false, $special=null )
 	{
 		// Users who are excluded cannot expire
-		if ( strcmp( $this->status, 'Excluded' ) === 0 ) {
+		if ( $this->isExcluded() ) {
 			return false;
 		}
 
-		// Load plan variables, otherwise load dummies
-		if ( $this->plan ) {
-			$subscription_plan = new SubscriptionPlan();
-			$subscription_plan->load( $this->plan );
-		} else {
-			$subscription_plan = false;
+		$plan = $this->getPlan();
+
+		if ( empty( $plan ) ) {
+			return $this->setStatus( 'Expired' );
 		}
 
-		$metaUser = new metaUser( $this->userid );
-
-		// Move the focus Subscription
-		if ( !$metaUser->moveFocus( $this->id ) ) {
-			return null;
-		}
+		$expired = true;
 
 		// Recognize the fallback plan, if not overridden
-		if ( !empty( $subscription_plan->params['fallback'] ) && !$overridefallback ) {
-			if ( !$subscription_plan->params['make_primary'] && !empty( $subscription_plan->params['fallback_req_parent'] ) ) {
-				if ( $metaUser->focusSubscription->id != $metaUser->objSubscription->id ) {
-					if ( $metaUser->objSubscription->is_expired() ) {
-						$overridefallback = true;
-					}
-				}
+		if ( !empty( $plan->params['fallback'] ) && !$overridefallback ) {
+			// Prevent fallback if an active parent is required, but not this or not present
+			if ( !$this->isPrimary()
+				&& !$plan->params['make_primary']
+				&& !empty( $plan->params['fallback_req_parent'] )
+				) {
+
+				$metaUser = new metaUser( $this->userid );
+
+				$overridefallback = $metaUser->objSubscription->isExpired();
 			}
 
 			if ( !$overridefallback ) {
-				$metaUser->focusSubscription->applyUsage( $subscription_plan->params['fallback'], 'none', 1 );
-				$this->reload();
-				return false;
+				$this->applyUsage( $plan->params['fallback'], 'none', 1 );
+
+				$expired = false;
 			}
 		} else {
 			// Set a Trial flag if this is an expired Trial for further reference
-			if ( strcmp( $this->status, 'Trial' ) === 0 ) {
-				$metaUser->focusSubscription->addParams( array( 'trialflag' => 1 ) );
+			if ( $this->isTrial() ) {
+				$this->addParams( array( 'trialflag' => 1 ) );
 			} elseif ( is_array( $this->params ) ) {
 				if ( in_array( 'trialflag', $this->params ) ) {
-					$metaUser->focusSubscription->delParams( array( 'trialflag' ) );
+					$this->delParams( array( 'trialflag' ) );
 				}
 			}
 
-			if ( !( strcmp( $metaUser->focusSubscription->status, 'Expired' ) === 0 ) && !( strcmp( $metaUser->focusSubscription->status, 'Closed' ) === 0 ) ) {
-				$metaUser->focusSubscription->setStatus( 'Expired' );
+			if ( !$this->isExpired() && !$this->isClosed() ) {
+				$this->setStatus( 'Expired' );
 			}
 
-			// Call Expiration MIs
-			if ( $subscription_plan !== false ) {
+			$metaUser = new metaUser( $this->userid );
+
+			if ( $metaUser->moveFocus( $this->id ) ) {
+				// Call Expiration MIs
 				$mih = new microIntegrationHandler();
-				$mih->userPlanExpireActions( $metaUser, $subscription_plan, $special );
+				$mih->userPlanExpireActions( $metaUser, $plan, $special );
 			}
 		}
 
 		$this->reload();
 
-		return true;
+		return $expired;
 	}
 
 	function cancel( $invoice=null )
 	{
+		$this->setStatus( 'Cancelled' );
+
+		$plan = $this->getPlan();
+
+		if ( empty( $plan ) ) {
+			return true;
+		}
+
 		// Since some processors do not notify each period, we need to check whether the expiration
 		// lies too far in the future and cut it down to the end of the period the user has paid
 
-		if ( $this->plan ) {
-			$app = JFactory::getApplication();
-
-			$subscription_plan = new SubscriptionPlan();
-			$subscription_plan->load( $this->plan );
-
-			// Resolve blocks that we are going to substract from the set expiration date
-			$unit = 60*60*24;
-			switch ( $subscription_plan->params['full_periodunit'] ) {
-				case 'W': $unit *= 7; break;
-				case 'M': $unit *= 31; break;
-				case 'Y': $unit *= 365; break;
-			}
-
-			$periodlength = $subscription_plan->params['full_period'] * $unit;
-
-			$newexpiration = strtotime( $this->expiration );
-			$now = (int) gmdate('U');
-
-			// ...cut away blocks until we are in the past, but not too much
-			while ( ($newexpiration+$periodlength) > $now ) {
-				$newexpiration -= $periodlength;
-			}
-
-			// And we get the bare expiration date
-			$this->expiration = date( 'Y-m-d H:i:s', $newexpiration );
+		switch ( $plan->params['full_periodunit'] ) {
+			case 'W': $period = $plan->params['full_period']*86400*7; break;
+			case 'M': $period = $plan->params['full_period']*86400*31; break;
+			case 'Y': $period = $plan->params['full_period']*86400*365; break;
+			default: $period = $plan->params['full_period']*86400; break;
 		}
 
-		$this->setStatus( 'Cancelled' );
+		$newexpiration = strtotime( $this->expiration );
+
+		// cut away blocks until we are in the past, but not too much
+		while ( ($newexpiration+$period) > gmdate('U') ) {
+			$newexpiration -= $period;
+		}
+
+		$this->expiration = date( 'Y-m-d H:i:s', $newexpiration );
 
 		return true;
 	}
 
 	function hold( $invoice=null )
 	{
-		$this->setStatus( 'Hold' );
-
-		return true;
+		return $this->setStatus( 'Hold' );
 	}
 
 	function hold_settle( $invoice=null )
 	{
-		$this->setStatus( 'Active' );
-
-		return true;
+		return $this->setStatus( 'Active' );
 	}
 
 	function setStatus( $status )
 	{
 		$this->status = $status;
 
-		$this->storeload();
+		return $this->storeload();
 	}
 
-	function applyUsage( $usage = 0, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice=null )
+	function applyUsage( $usage=0, $processor='none', $silent=0, $multiplicator=1, $invoice=null )
 	{
-		if ( !$usage ) {
-			$usage = $this->plan;
-		}
+		$plan = $this->getPlan($usage);
 
-		$new_plan = new SubscriptionPlan();
-		$new_plan->load( $usage );
-
-		if ( $new_plan->id ) {
-			return $new_plan->applyPlan( $this, $processor, $silent, $multiplicator, $invoice );
+		if ( $plan->id ) {
+			return $plan->applyPlan( $this, $processor, $silent, $multiplicator, $invoice );
 		} else {
 			return false;
 		}
@@ -511,22 +486,20 @@ class Subscription extends serialParamDBTable
 
 	function triggerPreExpiration( $metaUser, $mi_pexp )
 	{
-		$actions = 0;
-
 		// No actions on expired, trial or recurring
-		if ( ( strcmp( $this->status, 'Expired' ) === 0 ) || ( $this->status == 'Trial' ) || $this->recurring ) {
-			return $actions;
+		if ( ( $this->isExpired() || $this->isTrial() ) || $this->recurring ) {
+			return false;
 		}
 
-		$subscription_plan = new SubscriptionPlan();
-		$subscription_plan->load( $this->plan );
+		$plan = $this->getPlan();
 
-		$micro_integrations = $subscription_plan->getMicroIntegrations();
+		$micro_integrations = $plan->getMicroIntegrations();
 
 		if ( empty( $micro_integrations ) ) {
 			return $actions;
 		}
 
+		$actions = 0;
 		foreach ( $micro_integrations as $mi_id ) {
 			if ( !in_array( $mi_id, $mi_pexp ) ) {
 				continue;
@@ -545,8 +518,8 @@ class Subscription extends serialParamDBTable
 			}
 
 			// Do the actual pre expiration check on this MI
-			if ( $this->is_expired( $mi->pre_exp_check ) ) {
-				$result = $mi->pre_expiration_action( $metaUser, $subscription_plan );
+			if ( $this->isExpired( $mi->pre_exp_check ) ) {
+				$result = $mi->pre_expiration_action( $metaUser, $plan );
 				if ( $result ) {
 					$actions++;
 				}
@@ -561,11 +534,9 @@ class Subscription extends serialParamDBTable
 
 	function sendEmailRegistered( $renew, $adminonly=false, $invoice=null )
 	{
-		$app = JFactory::getApplication();
-
-		$lang =& JFactory::getLanguage();
-
 		global $aecConfig;
+
+		$app = JFactory::getApplication();
 
 		$free = ( strcmp( strtolower( $this->type ), 'none' ) == 0 || strcmp( strtolower( $this->type ), 'free' ) == 0 );
 

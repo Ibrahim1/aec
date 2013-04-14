@@ -1118,7 +1118,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 					$groups[] = 'active';
 				}
 			} elseif ( strcmp( $expire, 'lifetime' ) === 0 ) {
-				if ( !$subscriptionHandler->is_lifetime() ) {
+				if ( !$subscriptionHandler->isLifetime() ) {
 					$subscriptionHandler->expiration = '9999-12-31 00:00:00';
 					$subscriptionHandler->lifetime = 1;
 				}

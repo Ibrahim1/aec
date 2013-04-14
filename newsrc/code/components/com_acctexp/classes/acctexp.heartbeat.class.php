@@ -146,7 +146,7 @@ class aecHeartbeat extends serialParamDBTable
 
 				// Check whether this user really is expired
 				// If this check fails, the following subscriptions might still be pre-expiration events
-				if ( $subscription->is_expired() ) {
+				if ( $subscription->isExpired() ) {
 					// If we don't have any validation response, expire
 					$validate = $this->processorValidation( $subscription, $subscription_list );
 

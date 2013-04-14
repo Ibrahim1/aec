@@ -21,7 +21,7 @@ $invoice	= false;
 
 if ( $metaUser->hasSubscription ) {
 	// Make sure this really is expired
-	if ( !$metaUser->objSubscription->is_expired() ) {
+	if ( !$metaUser->objSubscription->isExpired() ) {
 		return getView( 'access_denied' );
 	}
 

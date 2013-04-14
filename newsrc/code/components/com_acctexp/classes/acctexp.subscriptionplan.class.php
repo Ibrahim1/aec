@@ -19,7 +19,7 @@ class SubscriptionPlanList
 
 		if ( !empty( $this->metaUser->userid ) ) {
 			if ( $this->metaUser->hasSubscription ) {
-				$this->expired = $this->metaUser->objSubscription->is_expired();
+				$this->expired = $this->metaUser->objSubscription->isExpired();
 			} else {
 				$this->expired = false;
 			}
@@ -36,8 +36,6 @@ class SubscriptionPlanList
 
 	function getPlanList( $usage, $group )
 	{
-		global $aecConfig;
-
 		$auth_problem = null;
 
 		if ( !empty( $usage ) ) {
@@ -71,6 +69,8 @@ class SubscriptionPlanList
 			if ( !empty( $group ) ) {
 				$gid = $group;
 			} else {
+				global $aecConfig;
+
 				if ( !empty( $aecConfig->cfg['root_group_rw'] ) ) {
 					$gid = AECToolbox::rewriteEngine( $aecConfig->cfg['root_group_rw'], $this->metaUser );
 				} else {
@@ -114,26 +114,17 @@ class SubscriptionPlanList
 	function checkListProblems()
 	{
 		// If we run into an Authorization problem, or no plans are available, redirect.
-		if ( !is_array( $this->list ) ) {
-			if ( $this->list ) {
-				if ( is_bool( $this->list ) ) {
-					return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
-				} else {
-					if ( strpos( $this->list, 'option=com_acctexp' ) ) {
-						$this->list .= '&userid=' . $this->metaUser->userid;
-					}
-
-					return aecRedirect( $this->list );
-				}
-			} else {
-				return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
-			}
-		}
-
-		// After filtering out the processors, no plan or group can be used, so we have to again issue an error
-		if ( count( $this->list ) == 0 ) {
+		if ( empty( $this->list ) || is_bool( $this->list ) ) {
 			return aecRedirect( AECToolbox::deadsureURL( 'index.php', false, true ), JText::_('NOPLANS_ERROR') );
+		} elseif ( is_array( $this->list ) ) {
+			return true;
 		}
+
+		if ( strpos( $this->list, 'option=com_acctexp' ) ) {
+			$this->list .= '&userid=' . $this->metaUser->userid;
+		}
+
+		return aecRedirect( $this->list );
 	}
 
 	function explodePlanList( $recurring )
@@ -365,7 +356,7 @@ class SubscriptionPlanHandler
 
 		return $db->loadResult();
 	}
-	
+
 	function getPlanUserlist( $planid )
 	{
 		$db = &JFactory::getDBO();
@@ -484,7 +475,7 @@ class SubscriptionPlan extends serialParamDBTable
 			return $this->params['fixed_redirect'];
 		} else {
 			$authorized = $this->checkInventory();
-				
+
 			if ( $authorized ) {
 				$restrictions = $this->getRestrictionsArray();
 
@@ -699,7 +690,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		$exchange = $add = null;
-	
+
 		$result = $this->triggerMIs( 'action', $metaUser, $exchange, $invoice, $add, $silent );
 
 		if ( $result === false ) {
@@ -776,6 +767,24 @@ class SubscriptionPlan extends serialParamDBTable
 		return $terms;
 	}
 
+	function getSimilarPlans()
+	{
+		if ( empty( $this->params['similarplans'] ) ) {
+			return $this->getEqualPlans();
+		} else {
+			return array_merge( $this->params['similarplans'], $this->getEqualPlans() );
+		}
+	}
+
+	function getEqualPlans()
+	{
+		if ( empty( $this->params['equalplans'] ) ) {
+			return array();
+		} else {
+			return $this->params['equalplans'];
+		}
+	}
+
 	function doPlanComparison( $user_subscription )
 	{
 		$return['total_comparison']	= false;
@@ -830,36 +839,16 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function compareToPlan( $plan )
 	{
-		if ( !isset( $this->params['similarplans'] ) ) {
-			$this->params['similarplans'] = array();
-		}
+		$check = array( 'similar', 'equal' );
 
-		if ( empty( $this->params['similarplans'] ) ) {
-			$this->params['similarplans'] = array();
-		}
+		foreach ( $check as $c ) {
+			if ( empty( $this->params[$c.'plans'] ) ) {
+				$this->params[$c.'plans'] = array();
+			}
 
-		if ( !isset( $plan->params['similarplans'] ) ) {
-			$plan->params['similarplans'] = array();
-		}
-
-		if ( empty( $plan->params['similarplans'] ) ) {
-			$plan->params['similarplans'] = array();
-		}
-
-		if ( !isset( $this->params['equalplans'] ) ) {
-			$this->params['equalplans'] = array();
-		}
-
-		if ( empty( $this->params['equalplans'] ) ) {
-			$this->params['equalplans'] = array();
-		}
-
-		if ( !isset( $plan->params['equalplans'] ) ) {
-			$plan->params['equalplans'] = array();
-		}
-
-		if ( empty( $plan->params['equalplans'] ) ) {
-			$plan->params['equalplans'] = array();
+			if ( empty( $plan->params[$c.'plans'] ) ) {
+				$plan->params[$c.'plans'] = array();
+			}
 		}
 
 		$spg1	= $this->params['similarplans'];
@@ -886,7 +875,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$mis = $this->getMicroIntegrations();
 
 		if ( !empty( $mis ) ) {
-			
+
 
 			$params = array();
 			$lists = array();
