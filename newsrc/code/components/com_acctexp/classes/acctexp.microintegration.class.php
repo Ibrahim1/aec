@@ -199,36 +199,38 @@ class microIntegrationHandler
 	{
 		$mi_autointegrations = $this->getAutoIntegrations();
 
-		if ( is_array( $mi_autointegrations ) || ( $subscription_plan !== false ) ) {
-			$mis = $subscription_plan->getMicroIntegrations();
+		if ( empty( $mi_autointegrations ) && empty( $subscription_plan ) ) {
+			return null;
+		}
 
-			if ( is_array( $mis ) ) {
-				$user_auto_integrations = array_intersect( $mis, $mi_autointegrations );
-			} else {
-				return null;
-			}
+		$mis = $subscription_plan->getMicroIntegrations();
 
-			if ( count( $user_auto_integrations ) ) {
-				foreach ( $user_auto_integrations as $mi_id ) {
-					$mi = new microIntegration();
-					$mi->load( $mi_id );
-					if ( $mi->callIntegration() ) {
+		if ( is_array( $mis ) ) {
+			$user_auto_integrations = array_intersect( $mis, $mi_autointegrations );
+		}
+
+		if ( empty( $user_auto_integrations ) ) {
+			return null;
+		}
+
+		foreach ( $user_auto_integrations as $mi_id ) {
+			$mi = new microIntegration();
+			$mi->load( $mi_id );
+			if ( $mi->callIntegration() ) {
+				$invoice = null;
+				if ( !empty( $metaUser->focusSubscription->id ) ) {
+					$invoice = new Invoice();
+					$invoice->loadbySubscriptionId( $metaUser->focusSubscription->id );
+
+					if ( empty( $invoice->id ) ) {
 						$invoice = null;
-						if ( !empty( $metaUser->focusSubscription->id ) ) {
-							$invoice = new Invoice();
-							$invoice->loadbySubscriptionId( $metaUser->focusSubscription->id );
-							
-							if ( empty( $invoice->id ) ) {
-								$invoice = null;
-							}
-						}
-
-						$mi->expiration_action( $metaUser, $subscription_plan, $invoice );
-						
-						if ( !empty( $special ) ) {
-							$mi->relayAction( $metaUser, null, $invoice, $subscription_plan, $special );
-						}
 					}
+				}
+
+				$mi->expiration_action( $metaUser, $subscription_plan, $invoice );
+
+				if ( !empty( $special ) ) {
+					$mi->relayAction( $metaUser, null, $invoice, $subscription_plan, $special );
 				}
 			}
 		}
@@ -342,7 +344,7 @@ class microIntegrationHandler
 		if ( empty( $milist ) ) {
 			return array();
 		}
-		
+
 		$db = &JFactory::getDBO();
 
 		$milist = array_unique( $milist );
@@ -761,7 +763,7 @@ class microIntegration extends serialParamDBTable
 				$filename = $l . '.com_acctexp.mi.' . $handle . '.ini';
 
 				$source = $lpath . '/' . $filename;
-				
+
 				if ( !file_exists( $source ) ) {
 					continue;
 				}
@@ -983,7 +985,7 @@ class microIntegration extends serialParamDBTable
 
 		// If returning fatal error, issue additional entry
 		if ( $return === false ) {
-			
+
 
 			$error = 'The MI "' . $this->name . '" ('.$this->class_name.') could not be carried out due to errors, plan application was halted';
 
@@ -1287,7 +1289,7 @@ class microIntegration extends serialParamDBTable
 			$common_data = $this->mi_class->CommonData();
 
 			if ( !empty( $common_data ) ) {
-					
+
 
 					$query = 'SELECT id'
 						 	. ' FROM #__acctexp_microintegrations'
@@ -1421,7 +1423,7 @@ class microIntegration extends serialParamDBTable
 		$this->pre_exp_check	= $array['pre_exp_check'];
 
 		if ( !empty( $new_params['rebuild'] ) ) {
-			
+
 
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
 
@@ -1443,7 +1445,7 @@ class microIntegration extends serialParamDBTable
 		}
 
 		if ( !empty( $new_params['remove'] ) ) {
-			
+
 
 			$planlist = MicroIntegrationHandler::getPlansbyMI( $this->id );
 
@@ -1501,7 +1503,7 @@ class microIntegration extends serialParamDBTable
 		$method = 'customtab_' . $action;
 
 		if ( method_exists( $this->mi_class, $method ) ) {
-			
+
 
 			$request = new stdClass();
 			$request->parent			=& $this;

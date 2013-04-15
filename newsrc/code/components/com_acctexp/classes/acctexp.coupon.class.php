@@ -1189,14 +1189,28 @@ class couponHandler
 				continue;
 			}
 
+			$add = $params = false;
+
 			if ( is_object( $metaUser ) ) {
 				if ( $mi->action( $metaUser, null, $invoice, $new_plan ) === false ) {
 					if ( $aecConfig->cfg['breakon_mi_error'] ) {
 						return false;
 					}
 				}
+
+				if ( $mi->relayAction( $metaUser, null, $invoice, $this, 'afteraction', $add, $params ) === false ) {
+					if ( $aecConfig->cfg['breakon_mi_error'] ) {
+						return false;
+					}
+				}
 			} else {
 				if ( $mi->action( false, null, $invoice, $new_plan ) === false ) {
+					if ( $aecConfig->cfg['breakon_mi_error'] ) {
+						return false;
+					}
+				}
+
+				if ( $mi->relayAction( false, null, $invoice, $this, 'afteraction', $add, $params ) === false ) {
 					if ( $aecConfig->cfg['breakon_mi_error'] ) {
 						return false;
 					}

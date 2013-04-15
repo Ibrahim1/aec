@@ -3413,7 +3413,7 @@ class Invoice extends serialParamDBTable
 				$cph = new couponHandler();
 				$cph->load( $coupon_code );
 
-				$cph->triggerMIs( $metaUser, $this, $metaUser );
+				$cph->triggerMIs( $metaUser, $this, $plans[0] );
 			}
 		}
 
