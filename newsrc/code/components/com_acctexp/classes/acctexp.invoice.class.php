@@ -3330,10 +3330,18 @@ class Invoice extends serialParamDBTable
 				foreach ( $this->params['userMIParams'] as $plan => $mis ) {
 					foreach ( $mis as $mi_id => $content ) {
 						$metaUser->meta->setMIParams( $mi_id, $plan, $content );
+
+						if ( $metaUser->userid !== $targetUser->userid ) {
+							$targetUser->meta->setMIParams( $mi_id, $plan, $content );
+						}
 					}
 				}
 
 				$metaUser->meta->storeload();
+
+				if ( $metaUser->userid !== $targetUser->userid ) {
+					$targetUser->meta->storeload();
+				}
 			}
 		}
 
@@ -3371,6 +3379,17 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
+		// Reload the meta- & targetUser since they have been updated
+		if ( !empty( $this->userid ) ) {
+			$metaUser = new metaUser( $this->userid );
+		}
+
+		if ( !empty( $this->params['target_user'] ) ) {
+			$targetUser = new metaUser( $this->params['target_user'] );
+		} else {
+			$targetUser =& $metaUser;
+		}
+
 		if ( !empty( $micro_integrations ) ) {
 			if ( is_array( $micro_integrations ) ) {
 				foreach ( $micro_integrations as $micro_int ) {
@@ -3384,7 +3403,7 @@ class Invoice extends serialParamDBTable
 
 					if ( isset( $micro_int['name'] ) ) {
 						if ( $mi->callDry( $micro_int['name'] ) ) {
-							if ( is_object( $metaUser ) ) {
+							if ( is_object( $targetUser ) ) {
 								$mi->action( $metaUser, $exchange, $this, $new_plan );
 							} else {
 								$mi->action( false, $exchange, $this, $new_plan );
@@ -3395,7 +3414,7 @@ class Invoice extends serialParamDBTable
 							$mi->load( $micro_int['id'] );
 							if ( $mi->callIntegration() ) {
 								if ( is_object( $metaUser ) ) {
-									$mi->action( $metaUser, $exchange, $this, $new_plan );
+									$mi->action( $targetUser, $exchange, $this, $new_plan );
 								} else {
 									$mi->action( false, $exchange, $this, $new_plan );
 								}
@@ -3413,7 +3432,7 @@ class Invoice extends serialParamDBTable
 				$cph = new couponHandler();
 				$cph->load( $coupon_code );
 
-				$cph->triggerMIs( $metaUser, $this, $plans[0] );
+				$cph->triggerMIs( $targetUser, $this, $plans[0] );
 			}
 		}
 
