@@ -57,27 +57,27 @@ class logHistory extends serialParamDBTable
 
 	function cleanup()
 	{
-		if ( is_array( $this->response ) ) {
-			if ( count( $this->response ) == 1 ) {
-				foreach( $this->response as $k => $v ) {
-					if ( !is_array( $v ) ) {
-						$this->response = unserialize( base64_decode( $k ) );
-						
-						if ( !is_array( $this->response ) ) {
-							return false;
-						}
+		if ( empty( $this->response ) ) {
+			return false;
+		}
 
-						return true;
-					} elseif ( !is_array( $k ) ) {
-						$this->response = unserialize( base64_decode( $v ) );
+		foreach( $this->response as $k => $v ) {
+			if ( !is_array( $v ) ) {
+				$this->response = unserialize( base64_decode( $k ) );
 
-						if ( !is_array( $this->response ) ) {
-							return false;
-						}
-
-						return true;
-					}
+				if ( !is_array( $this->response ) ) {
+					return false;
 				}
+
+				return true;
+			} elseif ( !is_array( $k ) ) {
+				$this->response = unserialize( base64_decode( $v ) );
+
+				if ( !is_array( $this->response ) ) {
+					return false;
+				}
+
+				return true;
 			}
 		}
 
