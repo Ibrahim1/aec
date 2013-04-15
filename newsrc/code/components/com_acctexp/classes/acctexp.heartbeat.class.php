@@ -56,7 +56,7 @@ class aecHeartbeat extends serialParamDBTable
 			if ( empty( $hash ) ) {
 				return;
 			} elseif( $hash != $aecConfig->cfg['custom_heartbeat_securehash'] ) {
-				
+
 				$short	= 'custom heartbeat failure';
 				$event	= 'Custom Frontend Heartbeat attempted, but faile due to false hashcode: "' . $hash . '"';
 				$tags	= 'heartbeat, failure';
@@ -133,78 +133,89 @@ class aecHeartbeat extends serialParamDBTable
 		$subscription_list = $this->getSubscribers( $pre_expiration );
 
 		// Efficient way to check for expired users without checking on each one
-		if ( !empty( $subscription_list ) ) {
-			foreach ( $subscription_list as $sid => $sub_id ) {
-				$subscription = new Subscription();
-				$subscription->load( $sub_id );
+		if ( empty( $subscription_list ) ) {
+			return $this->endBeat();
+		}
 
-				if ( !aecUserHelper::UserExists( $subscription->userid ) ) {
-					unset( $subscription_list[$sid] );
+		foreach ( $subscription_list as $sid => $sub_id ) {
+			$subscription = new Subscription();
+			$subscription->load( $sub_id );
 
-					continue;
-				}
+			if ( !aecUserHelper::UserExists( $subscription->userid ) ) {
+				unset( $subscription_list[$sid] );
 
-				// Check whether this user really is expired
-				// If this check fails, the following subscriptions might still be pre-expiration events
-				if ( $subscription->isExpired() ) {
-					// If we don't have any validation response, expire
-					$validate = $this->processorValidation( $subscription, $subscription_list );
-
-					if ( $validate === false ) {
-						// There was some fatal error, return.
-
-						return;
-					} elseif ( $validate !== true ) {
-						if ( $subscription->expire() ) {
-							$this->result['expired']++;
-						} else {
-							$this->result['fail_expired']++;
-						}
-					}
-					
-					unset( $subscription_list[$sid] );
-				} elseif ( !$subscription->recurring ) {
-					break;
-				}
+				continue;
 			}
 
-			// Only go for pre expiration action if we have at least one user for it
-			if ( $pre_expiration && !empty( $subscription_list ) ) {
-				// Get all the MIs which have a pre expiration check
-				$mi_pexp = microIntegrationHandler::getPreExpIntegrations();
+			// Check whether this user really is expired
+			// If this check fails, the following subscriptions might still be pre-expiration events
+			if ( $subscription->isExpired() ) {
+				// If we don't have any validation response, expire
+				$validate = $this->processorValidation( $subscription, $subscription_list );
 
-				// Find plans which have the MIs assigned
-				$expmi_plans = microIntegrationHandler::getPlansbyMI( $mi_pexp );
+				if ( $validate === false ) {
+					// There was some kind of fatal error, return.
 
-				// Filter out the users which dont have the correct plan
-				$query = 'SELECT `id`, `userid`'
-						. ' FROM #__acctexp_subscr'
-						. ' WHERE `id` IN (' . implode( ',', $subscription_list ) . ')'
-						. ' AND `plan` IN (' . implode( ',', $expmi_plans ) . ')'
-						;
-				$this->_db->setQuery( $query );
-				$sub_list = $this->_db->loadObjectList();
-
-				if ( !empty( $sub_list ) ) {
-					foreach ( $sub_list as $sl ) {
-						$metaUser = new metaUser( $sl->userid );
-						$metaUser->moveFocus( $sl->id );
-
-						$res = $metaUser->focusSubscription->triggerPreExpiration( $metaUser, $mi_pexp );
-
-						if ( $res ) {
-							$this->result['pre_exp_actions'] += $res;
-							$this->result['pre_expired']++;
-						}
+					return false;
+				} elseif ( $validate !== true ) {
+					if ( $subscription->expire() ) {
+						$this->result['expired']++;
+					} else {
+						$this->result['fail_expired']++;
 					}
+				}
+
+				unset( $subscription_list[$sid] );
+			} elseif ( !$subscription->recurring ) {
+				break;
+			}
+		}
+
+		// Only go for pre expiration action if we have at least one user for it
+		if ( empty( $pre_expiration ) || empty( $subscription_list ) ) {
+			return $this->endBeat();
+		}
+
+		// Get all the MIs which have a pre expiration check
+		$mi_pexp = microIntegrationHandler::getPreExpIntegrations();
+
+		// Find plans which have the MIs assigned
+		$expmi_plans = microIntegrationHandler::getPlansbyMI( $mi_pexp );
+
+		// Filter out the users which dont have the correct plan
+		$query = 'SELECT `id`, `userid`'
+				. ' FROM #__acctexp_subscr'
+				. ' WHERE `id` IN (' . implode( ',', $subscription_list ) . ')'
+				. ' AND `plan` IN (' . implode( ',', $expmi_plans ) . ')'
+				;
+		$this->_db->setQuery( $query );
+		$sub_list = $this->_db->loadObjectList();
+
+		if ( !empty( $sub_list ) ) {
+			foreach ( $sub_list as $sl ) {
+				$metaUser = new metaUser( $sl->userid );
+				$metaUser->moveFocus( $sl->id );
+
+				$res = $metaUser->focusSubscription->triggerPreExpiration( $metaUser, $mi_pexp );
+
+				if ( $res ) {
+					$this->result['pre_exp_actions'] += $res;
+					$this->result['pre_expired']++;
 				}
 			}
 		}
 
+		return $this->endBeat();
+	}
+
+	function endBeat()
+	{
 		aecEventHandler::pingEvents();
 
 		// And we're done.
 		$this->fileEventlog();
+
+		return true;
 	}
 
 	function getProcessor( $name )
@@ -262,7 +273,7 @@ class aecHeartbeat extends serialParamDBTable
 			if ( !isset( $this->proc_prepare[$subscription->type] ) ) {
 				// Prepare validation function
 				$pp->prepareValidation( $subscription_list );
-			
+
 				// But only once
 				$this->proc_prepare[$subscription->type] = true;
 			}
