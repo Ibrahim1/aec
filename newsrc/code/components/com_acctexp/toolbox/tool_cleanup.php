@@ -26,6 +26,7 @@ class tool_cleanup
 	{
 		$settings = array();
 		$settings['delete']				= array( 'toggle', 'Delete', 'Do the cleanup (this can delete a lot of data - do a check first)' );
+		$settings['alltemp']			= array( 'toggle', 'All Temptokens', 'Instead of clearing just tokens that are older than an hour, clear all of them' );
 
 		return $settings;
 	}
@@ -83,12 +84,57 @@ class tool_cleanup
 				}
 			}
 
-			$query = 'DELETE'
+			$query = 'SELECT count(*)'
 					. ' FROM #__acctexp_eventlog'
 					. ' WHERE tags = \'debug\''
 					;
 			$db->setQuery( $query );
-			$db->query();
+			$dcount = $db->loadResult();
+
+			if ( $dcount ) {
+				$query = 'DELETE'
+						. ' FROM #__acctexp_eventlog'
+						. ' WHERE tags = \'debug\''
+						;
+				$db->setQuery( $query );
+				$db->query();
+
+				$return .= '<li>removed ' . $dcount . ' debug entries in the eventlog</li>';
+			}
+
+			if ( !empty( $_POST['alltemp'] ) ) {
+				$query = 'SELECT count(*)'
+						. ' FROM #__acctexp_temptoken'
+						;
+				$db->setQuery( $query );
+				$dcount = $db->loadResult();
+
+				if ( $dcount ) {
+					$query = 'TRUNCATE TABLE#__acctexp_temptoken';
+					$db->setQuery( $query );
+					$db->query();
+
+					$return .= '<li>removed ' . $dcount . ' temptokens (full cleanup)</li>';
+				}
+			} else {
+				$query = 'SELECT count(*)'
+						. ' FROM #__acctexp_temptoken'
+						. ' WHERE date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
+						;
+				$db->setQuery( $query );
+				$dcount = $db->loadResult();
+
+				if ( $dcount ) {
+					$query = 'DELETE'
+							. ' FROM #__acctexp_temptoken'
+							. ' WHERE date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
+							;
+					$db->setQuery( $query );
+					$db->query();
+
+					$return .= '<li>removed ' . $dcount . ' temptokens</li>';
+				}
+			}
 
 			return $return;
 		} else {
@@ -110,7 +156,18 @@ class tool_cleanup
 			$count = $db->loadResult();
 
 			if ( $count ) {
-				$return .= '<li>Also found ' . $count . ' debug entries in the eventlog</li>';
+				$return .= '<li>' . $count . ' debug entries in the eventlog</li>';
+			}
+
+			$query = 'SELECT count(*)'
+					. ' FROM #__acctexp_temptoken'
+					. ' WHERE date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
+					;
+			$db->setQuery( $query );
+			$count = $db->loadResult();
+
+			if ( $count ) {
+				$return .= '<li>' . $count . ' temptokens older than an hour</li>';
 			}
 
 			return $return;

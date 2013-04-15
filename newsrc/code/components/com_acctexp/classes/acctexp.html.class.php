@@ -196,7 +196,7 @@ class aecHTML
 				} else {
 					$return .= str_replace( '<select', '<select class="span3"', $this->lists[$name] );
 				}
-				
+
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -358,18 +358,6 @@ class aecHTML
 	function Icon( $icon='fire', $white=false, $addin=null )
 	{
 		return '<i class="bsicon-'. $icon . ( $white ? ' bsicon-white' : '' ) . $addin .'"></i>';
-		/* So, yeah, IcoMoon deployment and sticking with Bootstrap conventions
-		 * is a huge failure in J3.0
-
-		$v = new JVersion();
-
-		if ( $v->isCompatible('3.0') ) {
-			$icon = str_replace( '-sign', '', $icon );
-
-			return '<i class="bsicon-'. $icon . ( $white ? ' bsicon-white' : '' ) . $addin .'"></i>';
-		} else {
-			return '<i class="bsicon-'. $icon . ( $white ? ' bsicon-white' : '' ) . $addin .'"></i>';
-		}*/
 	}
 
 	function Button( $icon='fire', $text='', $style='', $link='', $js='' )
