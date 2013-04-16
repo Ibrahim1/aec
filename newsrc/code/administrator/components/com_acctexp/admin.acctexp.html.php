@@ -587,7 +587,7 @@ jQuery(document).ready(function(jQuery) {
 											<td><?php echo $invoice['amount']; ?></td>
 											<td><?php echo $invoice['status']; ?></td>
 											<td><?php echo $invoice['processor']; ?></td>
-											<td><?php echo $invoice['usage']; ?></td>
+											<td><a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=<?php echo $invoice['usage']; ?>" target="_blank"><?php echo $invoice['usage']; ?></a></td>
 											<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
 										</tr>
 										<?php
