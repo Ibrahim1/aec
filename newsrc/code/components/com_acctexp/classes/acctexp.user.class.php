@@ -156,7 +156,11 @@ class metaUser
 				}
 			}
 
-			if ( empty( $this->cmsUser->name ) && ( !empty( $cpass['firstname'] ) || !empty( $cpass['middlename'] ) || !empty( $cpass['lastname'] ) ) ) {
+			if ( empty( $this->cmsUser->name )
+				&& ( !empty( $cpass['firstname'] )
+					|| !empty( $cpass['middlename'] )
+					|| !empty( $cpass['lastname'] ) )
+				) {
 				$names = array( 'firstname', 'middlename', 'lastname' );
 
 				$namearray = array();
@@ -272,13 +276,15 @@ class metaUser
 
 	function getTempAuth()
 	{
-		$return = false;
-
 		// Only authorize if user IP is matching and the grant is not expired
-		if ( isset( $this->meta->custom_params['tempauth_exptime'] ) && isset( $this->meta->custom_params['tempauth_ip'] ) ) {
-			if ( ( $this->meta->custom_params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] ) && ( $this->meta->custom_params['tempauth_exptime'] >= ( (int) gmdate('U') ) ) ) {
-				return true;
-			}
+		if ( !isset( $this->meta->custom_params['tempauth_exptime'] )
+			|| !isset( $this->meta->custom_params['tempauth_ip'] ) ) {
+			return false;
+		}
+
+		if ( ( $this->meta->custom_params['tempauth_ip'] == $_SERVER['REMOTE_ADDR'] )
+			&& ( $this->meta->custom_params['tempauth_exptime'] >= ( (int) gmdate('U') ) ) ) {
+			return true;
 		}
 
 		return false;

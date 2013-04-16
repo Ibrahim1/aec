@@ -727,8 +727,6 @@ function confirmSubscription( $option )
 
 function internalCheckout( $option, $invoice_number, $processor, $userid )
 {
-	$db = &JFactory::getDBO();
-
 	$user = &JFactory::getUser();
 
 	// Always rewrite to session userid
@@ -1089,18 +1087,10 @@ function processNotification( $option, $processor )
 {
 	// Legacy naming support
 	switch ( $processor ) {
-		case 'vklix':
-			$processor = 'viaklix';
-			break;
-		case 'auth':
-			$processor = 'authorize';
-			break;
-		case '2co':
-			$processor = '2checkout';
-			break;
-		case 'eps':
-			$processor = 'epsnetpay';
-			break;
+		case 'vklix': $processor = 'viaklix'; break;
+		case 'auth': $processor = 'authorize'; break;
+		case '2co': $processor = '2checkout'; break;
+		case 'eps': $processor = 'epsnetpay'; break;
 	}
 
 	//aecDebug( "ResponseFunction:processNotification" );aecDebug( $_GET );aecDebug( $_POST );
