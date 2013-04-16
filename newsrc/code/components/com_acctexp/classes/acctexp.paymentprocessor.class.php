@@ -79,7 +79,7 @@ class PaymentProcessorHandler
 								$gwlist_selected[] = $gwname;
 							}
 						}
-						
+
 					}
 
 					// Add to Description List
@@ -1153,7 +1153,7 @@ class processor extends serialParamDBTable
 				. ' WHERE `name` = \'' . xJ::escape( $this->_db, $name ) . '\''
 				;
 		$this->_db->setQuery( $query );
-		
+
 		$id = $this->_db->loadResult();
 
 		if ( $id ) {
@@ -1278,7 +1278,7 @@ class processor extends serialParamDBTable
 		return $response;
 	}
 
-	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
+	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=array(), $header=array() )
 	{
 		global $aecConfig;
 
@@ -1301,7 +1301,7 @@ class processor extends serialParamDBTable
 		return $response;
 	}
 
-	function doTheHttp( $url, $path, $content, $port=443, $extra_header=null, $curlextra=null )
+	function doTheHttp( $url, $path, $content, $port=443, $extra_header=array(), $curlextra=array() )
 	{
 		global $aecConfig;
 
@@ -1319,6 +1319,17 @@ class processor extends serialParamDBTable
 
 		if ( empty( $url_info ) ) {
 				return false;
+		}
+
+		if ( is_array( $content ) ) {
+			$extra_header['Content-Type'] = 'application/x-www-form-urlencoded';
+
+			$req = array();
+			foreach ( $content as $key => $value ) {
+				$req[] = urlencode( $key )."=".urlencode( $value );
+			}
+
+			$content = implode( '&', $req );
 		}
 
 		switch ( $url_info['scheme'] ) {
@@ -1357,8 +1368,6 @@ class processor extends serialParamDBTable
 		}
 
 		if ( $connection === false ) {
-			
-
 			if ( $errno == 0 ) {
 				$errstr .= " This is usually an SSL error.  Check if your server supports fsocket open via SSL.";
 			}
@@ -1431,7 +1440,7 @@ class processor extends serialParamDBTable
 				}
 
 				if ( $info["timed_out"] ) {
-					
+
 
 					$short	= 'fsockopen failure';
 					$event	= 'Trying to establish connection with ' . $url . ' timed out - will try cURL instead. If Error persists and cURL works, please permanently switch to using that!';
@@ -1460,7 +1469,7 @@ class processor extends serialParamDBTable
 		if ( !function_exists( 'curl_init' ) ) {
 			$response = false;
 
-			
+
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed - curl_init is not available - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 			$tags	= 'processor,payment,phperror';
@@ -1534,7 +1543,7 @@ class processor extends serialParamDBTable
 		$response = curl_exec( $ch );
 
 		if ( $response === false ) {
-			
+
 
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
@@ -2096,7 +2105,7 @@ class XMLprocessor extends processor
 		}
 
 		if ( $request->invoice->invoice_number != $response['invoice'] ) {
-			
+
 
 			$request->invoice = new Invoice();
 			$request->invoice->loadInvoiceNumber( $response['invoice'] );
@@ -2243,7 +2252,7 @@ class SOAPprocessor extends XMLprocessor
 		global $aecConfig;
 
 		$this->soapclient = new SoapClient( $url, $options );
-		
+
 		if ( method_exist( $this->soapclient, '__soapCall' ) ) {
 			$response['raw'] = $this->soapclient->__soapCall( $command, $content );
 		} elseif ( method_exist( $this->soapclient, 'soapCall' ) ) {
@@ -2505,7 +2514,7 @@ class POSTprocessor extends processor
 		}
 
 		if ( empty( $text ) ) {
-			$text = JText::_('BUTTON_CHECKOUT'); 
+			$text = JText::_('BUTTON_CHECKOUT');
 		}
 
 		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '>' . aecHTML::Icon( 'shopping-cart', true ) . $text . '</button>' . "\n";

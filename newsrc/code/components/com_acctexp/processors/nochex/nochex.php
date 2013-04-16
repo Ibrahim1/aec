@@ -94,14 +94,16 @@ class processor_nochex extends POSTprocessor
 
 		$url = 'www.nochex.com' . $path;
 
+		$data = array( 'to_email', 'from_email', 'transaction_id', 'transaction_date',
+						'order_id', 'amount', 'security key', 'status' );
+
 		foreach ( $post as $key => $value ) {
-			$value = urlencode( stripslashes( $value ) );
-			$req .= "&$key=$value";
+			if ( !in_array( $key, $data ) ) {
+				unset( $post[$key] );
+			}
 		}
 
-		$header = array( 'Content-Type' => 'application/x-www-form-urlencoded' );
-
-		$result = $this->transmitRequest( $url, $path, $req, 80, null, $header );
+		$result = $this->transmitRequest( $url, $path, $post, 80, null, $header );
 
 		$response['valid'] = 0;
 
