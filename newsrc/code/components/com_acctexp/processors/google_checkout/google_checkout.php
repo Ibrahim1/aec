@@ -58,13 +58,12 @@ class processor_google_checkout extends XMLprocessor
 
 		return $settings;
 	}
-	
+
 	function checkoutform( $request )
 	{
-		$var = array();
-		return $var;
+		return array();
 	}
-	
+
 	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		require_once( dirname(__FILE__) . '/lib/googlecart.php' );
@@ -73,7 +72,7 @@ class processor_google_checkout extends XMLprocessor
 		if ( $this->settings['testmode'] ) {
 			$server_type = "sandbox";
 		} else {
-			$server_type = "Production";
+			$server_type = "production";
 		}
 
 		$item_name			= $request->plan->name;
@@ -85,22 +84,16 @@ class processor_google_checkout extends XMLprocessor
 		if ( is_array( $request->int_var['amount'] ) ) {
 			require_once( dirname(__FILE__) . '/lib/googlesubscription.php' );
 
+			$subscription = new GoogleSubscription( "google",
+													$this->convertPU( $request->int_var['amount'] ),
+													$request->int_var['amount']['amount3'],
+													empty( $this->settings['maximum_recur'] ) ? 12 : $this->settings['maximum_recur'],
+													new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount']['amount3'] )
+												);
+
 			$item_1 = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount']['amount3'] );
-
-			$item_s = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount']['amount3'] );
-
-			if ( empty( $this->settings['maximum_recur'] ) ) {
-				$maximum = 12;
-			} else {
-				$maximum = $this->settings['maximum_recur'];
-			}
-
-			$period = $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
-
-			$subscription = new GoogleSubscription( "google", $period, $request->int_var['amount']['amount3'], $maximum, $item_s );
-			
 			$item_1->SetSubscription( $subscription );
-		} else {	
+		} else {
 			$item_1 = new GoogleItem( $item_name, $item_description, 1, $request->int_var['amount'] );
 		}
 
@@ -114,6 +107,11 @@ class processor_google_checkout extends XMLprocessor
 		$return = '<p style="float:right;text-align:right;">' . $cart->CheckoutButtonCode("SMALL") . '</p>';
 
 		return $return;
+	}
+
+	function convertPU( $amount )
+	{
+		return $this->convertPeriodUnit( $amount['period3'], $amount['unit3'] );
 	}
 
 	function convertPeriodUnit( $period, $unit )
@@ -172,13 +170,13 @@ class processor_google_checkout extends XMLprocessor
 	{
 		return "";
 	}
-	
+
 	function transmitRequestXML( $xml, $request )
 	{
 		$response 				= array();
 		$response['valid'] 		= true;
 
-		return $response;	
+		return $response;
 	}
 
 	function parseNotification( $post )
@@ -201,7 +199,7 @@ class processor_google_checkout extends XMLprocessor
 		}
 
 		$googleRequest = new GoogleRequest( $merchant_id, $merchant_key, $server_type, $currency, $serial_number );
-		
+
 		$googleRequest->SendAcknowledgementRequest();
 
 		list( $res, $xml_response ) = $googleRequest->SendHistoryRequest();
