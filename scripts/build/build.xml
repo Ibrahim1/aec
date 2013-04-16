@@ -6,7 +6,7 @@
 
 		<property file="./scripts/build/properties/allpackages.properties" override="true" />
 
-		<property name="git.lastrevision" value="6138" />
+		<property name="git.lastrevision" value="6139" />
 		<exec command="git rev-parse --abbrev-ref HEAD" outputProperty="git.branch" />
 
 		<property file="./scripts/build/properties/com.properties" override="true" />
