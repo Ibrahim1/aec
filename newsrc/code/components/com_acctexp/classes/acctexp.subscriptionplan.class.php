@@ -159,7 +159,13 @@ class SubscriptionPlanList
 				$plan['plan']->params['cart_behavior'] = 0;
 			}
 
-			if ( $this->metaUser->userid && !$this->expired && ( $aecConfig->cfg['enable_shoppingcart'] || ( $plan['plan']->params['cart_behavior'] == 1 ) ) && ( $plan['plan']->params['cart_behavior'] != 2 ) ) {
+			if ( $this->metaUser->userid
+				&& !$this->expired
+				&& ( $aecConfig->cfg['enable_shoppingcart']
+					|| ( $plan['plan']->params['cart_behavior'] == 1 )
+				)
+				&& ( $plan['plan']->params['cart_behavior'] != 2 )
+				) {
 				// We have a shopping cart situation, care about processors later
 
 				if ( ( $plan['plan']->params['processors'] == '' ) || is_null( $plan['plan']->params['processors'] ) ) {
@@ -469,28 +475,26 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function checkAuthorized( $metaUser )
 	{
-		$authorized = true;
-
 		if ( !empty( $this->params['fixed_redirect'] ) ) {
 			return $this->params['fixed_redirect'];
-		} else {
-			$authorized = $this->checkInventory();
+		}
 
-			if ( $authorized ) {
-				$restrictions = $this->getRestrictionsArray();
+		$authorized = $this->checkInventory();
 
-				if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) !== false ) {
-					if ( !ItemGroupHandler::checkParentRestrictions( $this, 'item', $metaUser ) ) {
-						$authorized = false;
-					}
-				} else {
+		if ( $authorized ) {
+			$restrictions = $this->getRestrictionsArray();
+
+			if ( aecRestrictionHelper::checkRestriction( $restrictions, $metaUser ) !== false ) {
+				if ( !ItemGroupHandler::checkParentRestrictions( $this, 'item', $metaUser ) ) {
 					$authorized = false;
 				}
+			} else {
+				$authorized = false;
 			}
+		}
 
-			if ( !$authorized && !empty( $this->params['notauth_redirect'] ) ) {
-				return $this->params['notauth_redirect'];
-			}
+		if ( !$authorized && !empty( $this->params['notauth_redirect'] ) ) {
+			return $this->params['notauth_redirect'];
 		}
 
 		return $authorized;
@@ -787,49 +791,56 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function doPlanComparison( $user_subscription )
 	{
+		if ( !empty( $user_subscription->plan ) ) {
+			return false;
+		}
+
 		$return['total_comparison']	= false;
 		$return['comparison']		= false;
 
-		if ( !empty( $user_subscription->plan ) ) {
-			if ( !empty( $user_subscription->used_plans ) ) {
-				$plans_comparison	= false;
+		if ( !empty( $user_subscription->used_plans ) ) {
+			$plans_comparison	= false;
 
-				if ( is_array( $user_subscription->used_plans ) ) {
-					foreach ( $user_subscription->used_plans as $planid => $pusage ) {
-						if ( $planid ) {
-							if ( empty( $planid ) ){
-								continue;
-							}
+			if ( !is_array( $user_subscription->used_plans ) ) {
+				continue;
+			}
 
-							$used_subscription = new SubscriptionPlan();
-							$used_subscription->load( $planid );
-
-							if ( $this->id === $used_subscription->id ) {
-								$used_comparison = 2;
-							} elseif ( empty( $this->params['similarplans'] ) && empty( $this->params['equalplans'] ) ) {
-								$used_comparison = false;
-							} else {
-								$used_comparison = $this->compareToPlan( $used_subscription );
-							}
-
-							if ( $used_comparison > $plans_comparison ) {
-								$plans_comparison = $used_comparison;
-							}
-							unset( $used_subscription );
-						}
-					}
-					$return['total_comparison'] = $plans_comparison;
+			foreach ( $user_subscription->used_plans as $planid => $pusage ) {
+				if ( !$planid ) {
+					continue;
 				}
+
+				if ( empty( $planid ) ){
+					continue;
+				}
+
+				$used_subscription = new SubscriptionPlan();
+				$used_subscription->load( $planid );
+
+				if ( $this->id === $used_subscription->id ) {
+					$used_comparison = 2;
+				} elseif ( empty( $this->params['similarplans'] ) && empty( $this->params['equalplans'] ) ) {
+					$used_comparison = false;
+				} else {
+					$used_comparison = $this->compareToPlan( $used_subscription );
+				}
+
+				if ( $used_comparison > $plans_comparison ) {
+					$plans_comparison = $used_comparison;
+				}
+				unset( $used_subscription );
 			}
 
-			$last_subscription = new SubscriptionPlan();
-			$last_subscription->load( $user_subscription->plan );
+			$return['total_comparison'] = $plans_comparison;
+		}
 
-			if ( $this->id === $last_subscription->id ) {
-				$return['comparison'] = 2;
-			} else {
-				$return['comparison'] = $this->compareToPlan( $last_subscription );
-			}
+		$last_subscription = new SubscriptionPlan();
+		$last_subscription->load( $user_subscription->plan );
+
+		if ( $this->id === $last_subscription->id ) {
+			$return['comparison'] = 2;
+		} else {
+			$return['comparison'] = $this->compareToPlan( $last_subscription );
 		}
 
 		$return['full_comparison'] = ( ( $return['comparison'] === false ) && ( $return['total_comparison'] === false ) );
@@ -874,51 +885,49 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		$mis = $this->getMicroIntegrations();
 
-		if ( !empty( $mis ) ) {
+		if ( empty( $mis ) ) {
+			return null;
+		}
 
+		$params = array();
+		$lists = array();
+		$validation = array();
 
-			$params = array();
-			$lists = array();
-			$validation = array();
-			foreach ( $mis as $mi_id ) {
+		foreach ( $mis as $mi_id ) {
+			$mi = new MicroIntegration();
+			$mi->load( $mi_id );
 
-				$mi = new MicroIntegration();
-				$mi->load( $mi_id );
-
-				if ( !$mi->callIntegration() ) {
-					continue;
-				}
-
-				$miform_params = $mi->getMIformParams( $this, $metaUser, $errors );
-
-				if ( !empty( $miform_params['lists'] ) ) {
-					foreach ( $miform_params['lists'] as $lname => $lcontent ) {
-						$lists[$lname] = $lcontent;
-					}
-
-					unset( $miform_params['lists'] );
-				}
-
-				if ( !empty( $miform_params['validation'] ) ) {
-					foreach ( $miform_params['validation'] as $lname => $lcontent ) {
-						$validation[$lname] = $lcontent;
-					}
-
-					unset( $miform_params['validation'] );
-				}
-
-				foreach ( $miform_params as $pk => $pv ) {
-					$params[$pk] = $pv;
-				}
+			if ( !$mi->callIntegration() ) {
+				continue;
 			}
 
-			$params['lists'] = $lists;
-			$params['validation'] = $validation;
+			$miform_params = $mi->getMIformParams( $this, $metaUser, $errors );
 
-			return $params;
-		} else {
-			return false;
+			if ( !empty( $miform_params['lists'] ) ) {
+				foreach ( $miform_params['lists'] as $lname => $lcontent ) {
+					$lists[$lname] = $lcontent;
+				}
+
+				unset( $miform_params['lists'] );
+			}
+
+			if ( !empty( $miform_params['validation'] ) ) {
+				foreach ( $miform_params['validation'] as $lname => $lcontent ) {
+					$validation[$lname] = $lcontent;
+				}
+
+				unset( $miform_params['validation'] );
+			}
+
+			foreach ( $miform_params as $pk => $pv ) {
+				$params[$pk] = $pv;
+			}
 		}
+
+		$params['lists'] = $lists;
+		$params['validation'] = $validation;
+
+		return $params;
 	}
 
 	function getMIforms( $metaUser, $errors=array() )
@@ -927,68 +936,67 @@ class SubscriptionPlan extends serialParamDBTable
 
 		if ( empty( $params ) ) {
 			return false;
-		} else {
-			if ( isset( $params['lists'] ) ) {
-				$lists = $params['lists'];
-				unset( $params['lists'] );
-			} else {
-				$lists = array();
-			}
-
-			if ( isset( $params['validation'] ) ) {
-				unset( $params['validation'] );
-			}
-
-			if ( !empty( $params ) ) {
-				$settings = new aecSettings ( 'mi', 'frontend_forms' );
-				$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
-
-				$aecHTML = new aecHTML( $settings->settings, $settings->lists );
-
-				return $aecHTML->returnFull( false, true );
-			} else {
-				return null;
-			}
 		}
+
+		if ( isset( $params['lists'] ) ) {
+			$lists = $params['lists'];
+			unset( $params['lists'] );
+		} else {
+			$lists = array();
+		}
+
+		if ( isset( $params['validation'] ) ) {
+			unset( $params['validation'] );
+		}
+
+		if ( empty( $params ) ) {
+			return null;
+		}
+
+		$settings = new aecSettings ( 'mi', 'frontend_forms' );
+		$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
+
+		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+		return $aecHTML->returnFull( false, true );
 	}
 
 	function verifyMIformParams( $metaUser, $params=null )
 	{
 		$mis = $this->getMicroIntegrations();
 
-		if ( !empty( $mis ) ) {
-
-			$v = array();
-			foreach ( $mis as $mi_id ) {
-				$mi = new MicroIntegration();
-				$mi->load( $mi_id );
-
-				if ( !$mi->callIntegration() ) {
-					continue;
-				}
-
-				if ( !is_null( $params ) ) {
-					if ( !empty( $params[$this->id][$mi->id] ) ) {
-						$verify = $mi->verifyMIform( $this, $metaUser, $params[$this->id][$mi->id] );
-					} else {
-						$verify = $mi->verifyMIform( $this, $metaUser, array() );
-					}
-				} else {
-					$verify = $mi->verifyMIform( $this, $metaUser );
-				}
-
-				if ( !empty( $verify ) && is_array( $verify ) ) {
-					$v[] = array_merge( array( 'id' => $mi->id ), $verify );
-				}
-			}
-
-			if ( empty( $v ) ) {
-				return true;
-			} else {
-				return $v;
-			}
-		} else {
+		if ( empty( $mis ) ) {
 			return true;
+		}
+
+		$v = array();
+		foreach ( $mis as $mi_id ) {
+			$mi = new MicroIntegration();
+			$mi->load( $mi_id );
+
+			if ( !$mi->callIntegration() ) {
+				continue;
+			}
+
+			if ( !is_null( $params ) ) {
+				if ( !empty( $params[$this->id][$mi->id] ) ) {
+					$verify = $mi->verifyMIform( $this, $metaUser, $params[$this->id][$mi->id] );
+				} else {
+					$verify = $mi->verifyMIform( $this, $metaUser, array() );
+				}
+			} else {
+				$verify = $mi->verifyMIform( $this, $metaUser );
+			}
+
+			if ( !empty( $verify ) && is_array( $verify ) ) {
+				$v[] = array_merge( array( 'id' => $mi->id ), $verify );
+			}
+		}
+
+		if ( empty( $v ) ) {
+			return true;
+		} else {
+			return $v;
 		}
 	}
 
@@ -996,39 +1004,38 @@ class SubscriptionPlan extends serialParamDBTable
 	{
 		$mis = $this->getMicroIntegrations();
 
-		if ( !empty( $mis ) ) {
-
-			$v = array();
-			foreach ( $mis as $mi_id ) {
-				$mi = new MicroIntegration();
-				$mi->load( $mi_id );
-
-				if ( !$mi->callIntegration() ) {
-					continue;
-				}
-
-				if ( !is_null( $params ) ) {
-					if ( !empty( $params[$this->id][$mi->id] ) ) {
-						$verify = $mi->verifyMIform( $this, $metaUser, $params[$this->id][$mi->id] );
-					} else {
-						$verify = $mi->verifyMIform( $this, $metaUser, array() );
-					}
-				} else {
-					$verify = $mi->verifyMIform( $this, $metaUser );
-				}
-
-				if ( !empty( $verify ) && is_array( $verify ) ) {
-					$v[] = array_merge( array( 'id' => $mi->id ), $verify );
-				}
-			}
-
-			if ( empty( $v ) ) {
-				return true;
-			} else {
-				return $v;
-			}
-		} else {
+		if ( empty( $mis ) ) {
 			return true;
+		}
+
+		$v = array();
+		foreach ( $mis as $mi_id ) {
+			$mi = new MicroIntegration();
+			$mi->load( $mi_id );
+
+			if ( !$mi->callIntegration() ) {
+				continue;
+			}
+
+			if ( !is_null( $params ) ) {
+				if ( !empty( $params[$this->id][$mi->id] ) ) {
+					$verify = $mi->verifyMIform( $this, $metaUser, $params[$this->id][$mi->id] );
+				} else {
+					$verify = $mi->verifyMIform( $this, $metaUser, array() );
+				}
+			} else {
+				$verify = $mi->verifyMIform( $this, $metaUser );
+			}
+
+			if ( !empty( $verify ) && is_array( $verify ) ) {
+				$v[] = array_merge( array( 'id' => $mi->id ), $verify );
+			}
+		}
+
+		if ( empty( $v ) ) {
+			return true;
+		} else {
+			return $v;
 		}
 	}
 
@@ -1120,48 +1127,48 @@ class SubscriptionPlan extends serialParamDBTable
 
 		$micro_integrations = $this->getMicroIntegrations();
 
-		if ( is_array( $micro_integrations ) ) {
-			foreach ( $micro_integrations as $mi_id ) {
-				$mi = new microIntegration();
+		if ( !is_array( $micro_integrations ) ) {
+			return null;
+		}
 
-				if ( !$mi->mi_exists( $mi_id ) ) {
-					continue;
+		foreach ( $micro_integrations as $mi_id ) {
+			$mi = new microIntegration();
+
+			if ( !$mi->mi_exists( $mi_id ) ) {
+				continue;
+			}
+
+			$mi->load( $mi_id );
+
+			if ( !$mi->callIntegration() ) {
+				continue;
+			}
+
+			$is_email = strcmp( $mi->class_name, 'mi_email' ) === 0;
+
+			// TODO: Only trigger if this is not email or made not silent
+			if ( method_exists( $metaUser, $action ) ) {
+				if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
+					if ( $aecConfig->cfg['breakon_mi_error'] ) {
+						return false;
+					}
 				}
-
-				$mi->load( $mi_id );
-
-				if ( !$mi->callIntegration() ) {
-					continue;
-				}
-
-				$is_email = strcmp( $mi->class_name, 'mi_email' ) === 0;
-
-				// TODO: Only trigger if this is not email or made not silent
-				if ( method_exists( $metaUser, $action ) ) {
-					if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
-						if ( $aecConfig->cfg['breakon_mi_error'] ) {
-							return false;
+			} else {
+				$params = array();
+				if ( isset( $invoice->params['userMIParams'] ) ) {
+					if ( is_array( $invoice->params['userMIParams'] ) ) {
+						if ( isset( $invoice->params['userMIParams'][$this->id][$mi->id] ) ) {
+							$params = $invoice->params['userMIParams'][$this->id][$mi->id];
 						}
 					}
-				} else {
-					$params = array();
-					if ( isset( $invoice->params['userMIParams'] ) ) {
-						if ( is_array( $invoice->params['userMIParams'] ) ) {
-							if ( isset( $invoice->params['userMIParams'][$this->id][$mi->id] ) ) {
-								$params = $invoice->params['userMIParams'][$this->id][$mi->id];
-							}
-						}
-					}
+				}
 
-					if ( $mi->relayAction( $metaUser, $exchange, $invoice, $this, $action, $add, $params ) === false ) {
-						if ( $aecConfig->cfg['breakon_mi_error'] ) {
-							return false;
-						}
+				if ( $mi->relayAction( $metaUser, $exchange, $invoice, $this, $action, $add, $params ) === false ) {
+					if ( $aecConfig->cfg['breakon_mi_error'] ) {
+						return false;
 					}
 				}
 			}
-		} else {
-			return null;
 		}
 
 		return true;
@@ -1169,31 +1176,34 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function getProcessorParameters( $processor )
 	{
+		if ( !empty( $this->custom_params ) ) {
+			return array();
+		}
+
 		$procparams = array();
 		$filter = array();
-		if ( !empty( $this->custom_params ) ) {
-			if ( empty( $this->custom_params[$processor->id.'_aec_overwrite_settings'] ) ) {
-				if ( method_exists( $processor->processor, 'CustomPlanParams' ) ) {
-					$filter = $processor->processor->CustomPlanParams();
-				}
 
-				if ( empty( $filter ) ) {
-					return $procparams;
+		if ( empty( $this->custom_params[$processor->id.'_aec_overwrite_settings'] ) ) {
+			if ( method_exists( $processor->processor, 'CustomPlanParams' ) ) {
+				$filter = $processor->processor->CustomPlanParams();
+			}
+
+			if ( empty( $filter ) ) {
+				return $procparams;
+			}
+		}
+
+		foreach ( $this->custom_params as $name => $value ) {
+			$realname = explode( '_', $name, 2 );
+
+			if ( !empty( $filter ) ) {
+				if ( !array_key_exists( $realname[1], $filter ) ) {
+					continue;
 				}
 			}
 
-			foreach ( $this->custom_params as $name => $value ) {
-				$realname = explode( '_', $name, 2 );
-
-				if ( !empty( $filter ) ) {
-					if ( !array_key_exists( $realname[1], $filter ) ) {
-						continue;
-					}
-				}
-
-				if ( ( $realname[0] == $processor->id ) && isset( $realname[1] ) ) {
-					$procparams[$realname[1]] = $value;
-				}
+			if ( ( $realname[0] == $processor->id ) && isset( $realname[1] ) ) {
+				$procparams[$realname[1]] = $value;
 			}
 		}
 
@@ -1291,71 +1301,73 @@ class SubscriptionPlan extends serialParamDBTable
 			}
 
 			// If we indeed HAVE settings, more to come here
-			if ( !empty( $settings ) ) {
-				$mi->savePostParams( $settings );
+			if ( empty( $settings ) ) {
+				continue;
+			}
 
-				// First, check whether there is already an MI with the exact same settings
-				$similarmis = microIntegrationHandler::getMIList( false, false, true, false, $mi->classname );
+			$mi->savePostParams( $settings );
 
-				$similarmi = false;
-				if ( !empty( $similarmis ) ) {
-					foreach ( $similarmis as $miobj ) {
-						if ( $miobj->id == $mi->id ) {
-							continue;
-						}
+			// First, check whether there is already an MI with the exact same settings
+			$similarmis = microIntegrationHandler::getMIList( false, false, true, false, $mi->classname );
 
-						if ( microIntegrationHandler::compareMIs( $mi, $miobj->id ) ) {
-							$similarmi = $miobj->id;
-						}
+			$similarmi = false;
+			if ( !empty( $similarmis ) ) {
+				foreach ( $similarmis as $miobj ) {
+					if ( $miobj->id == $mi->id ) {
+						continue;
+					}
+
+					if ( microIntegrationHandler::compareMIs( $mi, $miobj->id ) ) {
+						$similarmi = $miobj->id;
+					}
+				}
+			}
+
+			if ( $similarmi ) {
+				// We have a similar MI - unset old reference
+				$ref = array_search( $mi->id, $post['micro_integrations'] );
+				unset( $post['micro_integrations'][$ref] );
+
+				// No MI is similar, lets check for other plans
+				$plans = microIntegrationHandler::getPlansbyMI( $mi->id );
+
+				foreach ( $plans as $cid => $pid ) {
+					if ( $pid == $this->id ) {
+						unset( $plans[$cid] );
 					}
 				}
 
-				if ( $similarmi ) {
-					// We have a similar MI - unset old reference
+				if ( count( $plans ) <= 1 ) {
+					// No other plan depends on this MI, just delete it
+					$mi->delete;
+				}
+
+				// Set new MI
+				$post['micro_integrations'][] = $similarmi;
+			} else {
+				// No MI is similar, lets check for other plans
+				$plans = microIntegrationHandler::getPlansbyMI( $mi->id );
+
+				foreach ( $plans as $cid => $pid ) {
+					if ( $pid == $this->id ) {
+						unset( $plans[$cid] );
+					}
+				}
+
+				if ( count( $plans ) > 1 ) {
+					// We have other plans depending on THIS setup of the MI, unset original reference
 					$ref = array_search( $mi->id, $post['micro_integrations'] );
 					unset( $post['micro_integrations'][$ref] );
 
-					// No MI is similar, lets check for other plans
-					$plans = microIntegrationHandler::getPlansbyMI( $mi->id );
+					// And create new MI
+					$mi->id = 0;
 
-					foreach ( $plans as $cid => $pid ) {
-						if ( $pid == $this->id ) {
-							unset( $plans[$cid] );
-						}
-					}
-
-					if ( count( $plans ) <= 1 ) {
-						// No other plan depends on this MI, just delete it
-						$mi->delete;
-					}
+					$mi->storeload();
 
 					// Set new MI
-					$post['micro_integrations'][] = $similarmi;
+					$post['micro_integrations'][] = $mi->id;
 				} else {
-					// No MI is similar, lets check for other plans
-					$plans = microIntegrationHandler::getPlansbyMI( $mi->id );
-
-					foreach ( $plans as $cid => $pid ) {
-						if ( $pid == $this->id ) {
-							unset( $plans[$cid] );
-						}
-					}
-
-					if ( count( $plans ) > 1 ) {
-						// We have other plans depending on THIS setup of the MI, unset original reference
-						$ref = array_search( $mi->id, $post['micro_integrations'] );
-						unset( $post['micro_integrations'][$ref] );
-
-						// And create new MI
-						$mi->id = 0;
-
-						$mi->storeload();
-
-						// Set new MI
-						$post['micro_integrations'][] = $mi->id;
-					} else {
-						$mi->storeload();
-					}
+					$mi->storeload();
 				}
 			}
 		}

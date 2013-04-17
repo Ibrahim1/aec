@@ -249,38 +249,46 @@ class InvoiceFactory
 		$this->authed = false;
 
 		// Check whether this call is legitimate
-		if ( empty( $user->id ) || $forceinternal ) {
-			if ( empty( $this->userid ) || $forceinternal ) {
-				// setup hybrid or internal call
-				$this->authed = null;
-			} elseif ( $this->userid ) {
-				if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
-					// This user is not expired, so she could log in...
-					if ( $alert ) {
-						return getView( 'access_denied' );
-					}
-				} else {
-					$db = &JFactory::getDBO();
-
-					$this->userid = xJ::escape( $db, $userid );
-
-					// Delete set userid if it doesn't exist
-					if ( !is_null( $this->userid ) ) {
-						$query = 'SELECT `id`'
-								. ' FROM #__users'
-								. ' WHERE `id` = \'' . $this->userid . '\'';
-						$db->setQuery( $query );
-
-						if ( !$db->loadResult() ) {
-							$this->userid = null;
-						}
-					}
-				}
-			}
-		} else {
+		if ( !empty( $user->id ) && !$forceinternal ) {
 			// Overwrite the given userid when user is logged in
 			$this->userid = $user->id;
 			$this->authed = true;
+
+			return;
+		}
+
+		if ( empty( $this->userid ) || $forceinternal ) {
+			// setup hybrid or internal call
+			$this->authed = null;
+
+			return;
+		}
+
+		if ( !$this->userid ) {
+			return;
+		}
+
+		if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
+			// This user is not expired, so she could log in...
+			if ( $alert ) {
+				return getView( 'access_denied' );
+			}
+		} else {
+			$db = &JFactory::getDBO();
+
+			$this->userid = xJ::escape( $db, $userid );
+
+			// Delete set userid if it doesn't exist
+			if ( !is_null( $this->userid ) ) {
+				$query = 'SELECT `id`'
+						. ' FROM #__users'
+						. ' WHERE `id` = \'' . $this->userid . '\'';
+				$db->setQuery( $query );
+
+				if ( !$db->loadResult() ) {
+					$this->userid = null;
+				}
+			}
 		}
 	}
 
@@ -290,22 +298,22 @@ class InvoiceFactory
 			$passthrough = aecPostParamClear( $_POST, '', true );
 		}
 
-		if ( isset( $passthrough['aec_passthrough'] ) ) {
-			if ( is_array( $passthrough['aec_passthrough'] ) ) {
-				$this->passthrough = $passthrough['aec_passthrough'];
-			} else {
-				$this->passthrough = unserialize( base64_decode( $passthrough['aec_passthrough'] ) );
-			}
-
-			unset( $passthrough['aec_passthrough'] );
-
-			if ( !empty( $passthrough ) ) {
-				foreach ( $passthrough as $k => $v ) {
-					$this->passthrough[$k] = $v;
-				}
-			}
-		} else {
+		if ( !isset( $passthrough['aec_passthrough'] ) ) {
 			$this->passthrough = $passthrough;
+		}
+
+		if ( is_array( $passthrough['aec_passthrough'] ) ) {
+			$this->passthrough = $passthrough['aec_passthrough'];
+		} else {
+			$this->passthrough = unserialize( base64_decode( $passthrough['aec_passthrough'] ) );
+		}
+
+		unset( $passthrough['aec_passthrough'] );
+
+		if ( !empty( $passthrough ) ) {
+			foreach ( $passthrough as $k => $v ) {
+				$this->passthrough[$k] = $v;
+			}
 		}
 	}
 
@@ -333,7 +341,7 @@ class InvoiceFactory
 
 	function usageStatus()
 	{
-		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) !== false ) ) {
+		if ( $this->isCart() ) {
 			$this->getCart();
 
 			foreach ( $this->cart as $citem ) {
@@ -345,41 +353,43 @@ class InvoiceFactory
 			}
 
 			return true;
-		} elseif ( !empty( $this->usage ) ) {
-			return SubscriptionPlanHandler::PlanStatus( $this->usage );
-		} else {
-			return true;
 		}
+
+		if ( !empty( $this->usage ) ) {
+			return SubscriptionPlanHandler::PlanStatus( $this->usage );
+		}
+
+		return true;
 	}
 
 	function getPassthrough( $unset=null )
 	{
-		if ( !empty( $this->passthrough ) ) {
-			$passthrough = $this->passthrough;
-
-			$unsets = array( 'id', 'gid', 'forget', 'task', 'option' );
-
-			switch ( $unset ) {
-				case 'userdetails':
-					$unsets = array_merge( $unsets, array( 'name', 'username', 'password', 'password2', 'email' ) );
-					break;
-				case 'usage':
-					$unsets = array_merge( $unsets, array( 'usage', 'processor', 'recurring' ) );
-					break;
-				default:
-					break;
-			}
-
-			foreach ( $unsets as $n ) {
-				if ( isset( $passthrough[$n] ) ) {
-					unset( $passthrough[$n] );
-				}
-			}
-
-			return base64_encode( serialize( $passthrough ) );
-		} else {
-			return "";
+		if ( empty( $this->passthrough ) ) {
+			return '';
 		}
+
+		$passthrough = $this->passthrough;
+
+		$unsets = array( 'id', 'gid', 'forget', 'task', 'option' );
+
+		switch ( $unset ) {
+			case 'userdetails':
+				$unsets = array_merge( $unsets, array( 'name', 'username', 'password', 'password2', 'email' ) );
+				break;
+			case 'usage':
+				$unsets = array_merge( $unsets, array( 'usage', 'processor', 'recurring' ) );
+				break;
+			default:
+				break;
+		}
+
+		foreach ( $unsets as $n ) {
+			if ( isset( $passthrough[$n] ) ) {
+				unset( $passthrough[$n] );
+			}
+		}
+
+		return base64_encode( serialize( $passthrough ) );
 	}
 
 	function puffer( $option, $testmi=false )
@@ -397,7 +407,7 @@ class InvoiceFactory
 
 	function loadPlanObject( $option, $testmi=false, $quick=false )
 	{
-		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
+		if ( !$this->isCart() ) {
 			// get the payment plan
 			$this->plan = new SubscriptionPlan();
 			$this->plan->load( $this->usage );
@@ -764,53 +774,55 @@ class InvoiceFactory
 
 	function loadProcessorObject()
 	{
-		if ( !empty( $this->processor ) ) {
-			$this->pp					= false;
+		if ( empty( $this->processor ) ) {
+			return;
+		}
 
-			if ( !isset( $this->payment ) ) {
-				$this->payment = new stdClass();
-			}
+		$this->pp					= false;
 
-			$this->payment->method_name = JText::_('AEC_PAYM_METHOD_NONE');
-			$this->payment->currency	= '';
+		if ( !isset( $this->payment ) ) {
+			$this->payment = new stdClass();
+		}
 
-			if ( !isset( $this->recurring ) ) {
-				$this->recurring		= 0;
-			}
+		$this->payment->method_name = JText::_('AEC_PAYM_METHOD_NONE');
+		$this->payment->currency	= '';
 
-			switch ( $this->processor ) {
-				case 'free': $this->payment->method_name = JText::_('AEC_PAYM_METHOD_FREE'); break;
-				case 'none': break;
-				default:
-					$this->pp = new PaymentProcessor();
-					if ( $this->pp->loadName( $this->processor ) ) {
-						$this->pp->fullInit();
-						if ( !empty( $this->plan ) ) {
-							$this->pp->exchangeSettingsByPlan( $this->plan );
-						}
+		if ( !isset( $this->recurring ) ) {
+			$this->recurring		= 0;
+		}
 
-						$this->payment->method_name	= $this->pp->info['longname'];
-
-						// Check whether we have a recurring payment
-						// If it has been selected just now, or earlier, check whether that is still permitted
-						if ( isset( $_POST['recurring'] ) ) {
-							$this->recurring	= $this->pp->is_recurring( $_POST['recurring'] );
-						} else {
-							$this->recurring	= $this->pp->is_recurring( $this->recurring );
-						}
-
-						$this->payment->currency	= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
-					} else {
-						$short	= 'processor loading failure';
-						$event	= 'Tried to load processor: ' . $this->processor;
-						$tags	= 'processor,loading,error';
-						$params = array();
-
-						$eventlog = new eventLog();
-						$eventlog->issue( $short, $tags, $event, 128, $params );
+		switch ( $this->processor ) {
+			case 'free': $this->payment->method_name = JText::_('AEC_PAYM_METHOD_FREE'); break;
+			case 'none': break;
+			default:
+				$this->pp = new PaymentProcessor();
+				if ( $this->pp->loadName( $this->processor ) ) {
+					$this->pp->fullInit();
+					if ( !empty( $this->plan ) ) {
+						$this->pp->exchangeSettingsByPlan( $this->plan );
 					}
-					break;
-			}
+
+					$this->payment->method_name	= $this->pp->info['longname'];
+
+					// Check whether we have a recurring payment
+					// If it has been selected just now, or earlier, check whether that is still permitted
+					if ( isset( $_POST['recurring'] ) ) {
+						$this->recurring	= $this->pp->is_recurring( $_POST['recurring'] );
+					} else {
+						$this->recurring	= $this->pp->is_recurring( $this->recurring );
+					}
+
+					$this->payment->currency	= isset( $this->pp->settings['currency'] ) ? $this->pp->settings['currency'] : '';
+				} else {
+					$short	= 'processor loading failure';
+					$event	= 'Tried to load processor: ' . $this->processor;
+					$tags	= 'processor,loading,error';
+					$params = array();
+
+					$eventlog = new eventLog();
+					$eventlog->issue( $short, $tags, $event, 128, $params );
+				}
+				break;
 		}
 	}
 
@@ -819,16 +831,18 @@ class InvoiceFactory
 		$user_subscription = false;
 		$this->renew = 0;
 
-		if ( !empty( $this->userid ) ) {
-			if ( !empty( $this->metaUser ) ) {
-				$this->renew = $this->metaUser->meta->is_renewing();
-			} elseif ( aecUserHelper::SubscriptionIDfromUserID( $this->userid ) ) {
-				$user_subscription = new Subscription();
-				$user_subscription->loadUserID( $this->userid );
+		if ( empty( $this->userid ) ) {
+			return;
+		}
 
-				if ( ( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) !== 0 )  ) {
-					$this->renew = true;
-				}
+		if ( !empty( $this->metaUser ) ) {
+			$this->renew = $this->metaUser->meta->is_renewing();
+		} elseif ( aecUserHelper::SubscriptionIDfromUserID( $this->userid ) ) {
+			$user_subscription = new Subscription();
+			$user_subscription->loadUserID( $this->userid );
+
+			if ( ( strcmp( $user_subscription->lastpay_date, '0000-00-00 00:00:00' ) !== 0 )  ) {
+				$this->renew = true;
 			}
 		}
 	}
@@ -951,6 +965,11 @@ class InvoiceFactory
 		getView( 'exception', array( 'InvoiceFactory' => $this, 'aecHTML' => $aecHTML, 'hasform' => $hasform ) );
 	}
 
+	function isCart()
+	{
+		return ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) !== false ) );
+	}
+
 	function getCart()
 	{
 		if ( empty( $this->cartobject ) ) {
@@ -977,7 +996,7 @@ class InvoiceFactory
 		$this->items = new stdClass();
 		$this->items->itemlist = array();
 
-		if ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) === false ) ) {
+		if ( !$this->isCart() ) {
 			$terms = $this->plan->getTermsForUser( $this->recurring, $this->metaUser );
 
 			if ( !empty( $this->plan ) ) {
@@ -1211,14 +1230,16 @@ class InvoiceFactory
 
 		if ( !empty( $plan->params['addtocart_redirect'] ) ) {
 			return aecRedirect( $plan->params['addtocart_redirect'] );
-		} elseif ( $aecConfig->cfg['additem_stayonpage'] ) {
+		}
+
+		if ( $aecConfig->cfg['additem_stayonpage'] ) {
 			if ( !empty( $returngroup ) ) {
 				return $this->create( $option, 0, 0, $returngroup );
 			} else {
 				return $this->create( $option );
 			}
 		} else {
-			$this->cart( $option );
+			return $this->cart( $option );
 		}
 	}
 
@@ -1353,7 +1374,7 @@ class InvoiceFactory
 		$this->invoice = new Invoice();
 
 		$id = 0;
-		if ( !empty( $this->usage ) && strpos( $this->usage, 'c' ) !== false ) {
+		if ( $this->isCart() ) {
 			$id = aecCartHelper::getInvoiceIdByCart( $this->cartobject );
 		}
 
@@ -1889,81 +1910,83 @@ class InvoiceFactory
 			$mi_form = $plan->getMIformParams( $this->metaUser );
 		}
 
-		if ( !empty( $mi_form ) ) {
-			$params = array();
-			foreach ( $mi_form as $key => $value ) {
-				if ( strpos( $key, '[]' ) ) {
-					$key = str_replace( '[]', '', $key );
-				}
+		if ( empty( $mi_form ) ) {
+			return null;
+		}
 
-				if ( !empty( $value[1] ) ) {
-					if ( strpos( $value[1], '[]' ) ) {
-						$key = str_replace( '[]', '', $value[1] );
-					}
-				}
+		$params = array();
+		foreach ( $mi_form as $key => $value ) {
+			if ( strpos( $key, '[]' ) ) {
+				$key = str_replace( '[]', '', $key );
+			}
 
-				$value = aecGetParam( $prefix.$key, '__DEL' );
-
-				if ( !empty( $prefix ) ) {
-					if ( strpos( $key, $prefix ) !== false ) {
-						$key = str_replace( $prefix, '', $key );
-					}
-				}
-
-				if ( $value !== '__DEL' ) {
-					$k = explode( '_', $key, 3 );
-
-					if ( !isset( $params[$k[1]] ) ) {
-						$params[$k[1]] = array();
-					}
-
-					$params[$k[1]][$k[2]] = $value;
+			if ( !empty( $value[1] ) ) {
+				if ( strpos( $value[1], '[]' ) ) {
+					$key = str_replace( '[]', '', $value[1] );
 				}
 			}
 
-			if ( !empty( $params ) ) {
-				foreach ( $params as $mi_id => $content ) {
-					if ( is_object( $this->invoice ) ) {
-						$this->invoice->params['userMIParams'][$plan->id][$mi_id] = $content;
-					} else {
-						$this->userMIParams[$plan->id][$mi_id] = $content;
-					}
+			$value = aecGetParam( $prefix.$key, '__DEL' );
+
+			if ( !empty( $prefix ) ) {
+				if ( strpos( $key, $prefix ) !== false ) {
+					$key = str_replace( $prefix, '', $key );
+				}
+			}
+
+			if ( $value !== '__DEL' ) {
+				$k = explode( '_', $key, 3 );
+
+				if ( !isset( $params[$k[1]] ) ) {
+					$params[$k[1]] = array();
 				}
 
+				$params[$k[1]][$k[2]] = $value;
+			}
+		}
+
+		if ( !empty( $params ) ) {
+			foreach ( $params as $mi_id => $content ) {
 				if ( is_object( $this->invoice ) ) {
-					$userMIParams = $this->invoice->params['userMIParams'];
-
-					$this->invoice->storeload();
+					$this->invoice->params['userMIParams'][$plan->id][$mi_id] = $content;
 				} else {
-					$userMIParams = $this->userMIParams;
+					$this->userMIParams[$plan->id][$mi_id] = $content;
 				}
-			} elseif ( !empty( $this->invoice->params['userMIParams'] ) ) {
+			}
+
+			if ( is_object( $this->invoice ) ) {
 				$userMIParams = $this->invoice->params['userMIParams'];
+
+				$this->invoice->storeload();
+			} else {
+				$userMIParams = $this->userMIParams;
 			}
+		} elseif ( !empty( $this->invoice->params['userMIParams'] ) ) {
+			$userMIParams = $this->invoice->params['userMIParams'];
+		}
 
-			if ( empty( $userMIParams ) ) {
-				$userMIParams = array();
-			}
+		if ( empty( $userMIParams ) ) {
+			$userMIParams = array();
+		}
 
-			$verifymi = $plan->verifyMIformParams( $this->metaUser, $userMIParams );
+		$verifymi = $plan->verifyMIformParams( $this->metaUser, $userMIParams );
 
-			$this->mi_error = array();
-			if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
-				foreach ( $verifymi as $vmi ) {
-					if ( !is_array( $vmi ) ) {
-						continue;
-					}
+		$this->mi_error = array();
+		if ( is_array( $verifymi ) && !empty( $verifymi ) ) {
+			foreach ( $verifymi as $vmi ) {
+				if ( !is_array( $vmi ) ) {
+					continue;
+				}
 
-					if ( !empty( $vmi['error'] ) ) {
-						$this->mi_error[$vmi['id']] = $vmi['error'];
-					}
+				if ( !empty( $vmi['error'] ) ) {
+					$this->mi_error[$vmi['id']] = $vmi['error'];
 				}
 			}
+		}
 
-			if ( !empty( $this->mi_error ) ) {
-				$this->confirmed = 0;
-				return false;
-			}
+		if ( !empty( $this->mi_error ) ) {
+			$this->confirmed = 0;
+			return false;
 		}
 
 		return true;
@@ -2145,7 +2168,9 @@ class InvoiceFactory
 	{
 		if ( isset( $this->invoice->usage ) ) {
 			return $this->invoice->getObjUsage();
-		} elseif ( !empty( $this->usage ) ) {
+		}
+
+		if ( !empty( $this->usage ) ) {
 			$u = explode( '.', $this->usage );
 
 			switch ( strtolower( $u[0] ) ) {
@@ -2167,9 +2192,9 @@ class InvoiceFactory
 			}
 
 			return $objUsage;
-		} else {
-			return null;
 		}
+
+		return null;
 	}
 
 	function internalcheckout( $option )
@@ -2327,33 +2352,33 @@ class InvoiceFactory
 
 		$this->loadItemTotal();
 
-		if ( $this->pp->id ) {
-			$this->pp->fullInit();
+		if ( !$this->pp->id ) {
+			return getView( 'access_denied' );
+		}
 
-			$usage = $this->getObjUsage();
+		$this->pp->fullInit();
 
-			if ( is_a( $usage, 'aecCart' ) ) {
-				foreach ( $usage->content as $c ) {
-					$new_plan = new SubscriptionPlan();
-					$new_plan->load( $c['id'] );
+		$usage = $this->getObjUsage();
 
-					$this->pp->exchangeSettingsByPlan( $new_plan );
-				}
-			} elseif ( is_a( $usage, 'SubscriptionPlan' ) ) {
-				$this->pp->exchangeSettingsByPlan( $usage );
-			} else {
-				return getView( 'access_denied' );
+		if ( is_a( $usage, 'aecCart' ) ) {
+			foreach ( $usage->content as $c ) {
+				$new_plan = new SubscriptionPlan();
+				$new_plan->load( $c['id'] );
+
+				$this->pp->exchangeSettingsByPlan( $new_plan );
 			}
-
-			$response = $this->pp->customAction( $action, $this->invoice, $this->metaUser );
-
-			$response = $this->invoice->processorResponse( $this, $response, '', true );
-
-			if ( isset( $response['cancel'] ) ) {
-				getView( 'cancel' );
-			}
+		} elseif ( is_a( $usage, 'SubscriptionPlan' ) ) {
+			$this->pp->exchangeSettingsByPlan( $usage );
 		} else {
 			return getView( 'access_denied' );
+		}
+
+		$response = $this->pp->customAction( $action, $this->invoice, $this->metaUser );
+
+		$response = $this->invoice->processorResponse( $this, $response, '', true );
+
+		if ( isset( $response['cancel'] ) ) {
+			getView( 'cancel' );
 		}
 	}
 
@@ -2584,20 +2609,20 @@ class Invoice extends serialParamDBTable
 			$invoice_number = $subject->invoice_number_format;
 		}
 
-		if ( empty( $invoice ) ) {
-			if ( $aecConfig->cfg['invoicenum_doformat'] && empty( $this->invoice_number_format ) && !empty( $invoice_number ) && !$nostore ) {
-				if ( $invoice_number != "JSON PARSE ERROR - Malformed String!" ) {
-					$this->invoice_number_format = $invoice_number;
-					$this->storeload();
-				}
-			}
-
-			$this->invoice_number = $invoice_number;
-			return true;
-		} else {
+		if ( !empty( $invoice ) ) {
 			return $invoice_number;
 		}
 
+		if ( $aecConfig->cfg['invoicenum_doformat'] && empty( $this->invoice_number_format ) && !empty( $invoice_number ) && !$nostore ) {
+			if ( $invoice_number != "JSON PARSE ERROR - Malformed String!" ) {
+				$this->invoice_number_format = $invoice_number;
+				$this->storeload();
+			}
+		}
+
+		$this->invoice_number = $invoice_number;
+
+		return true;
 	}
 
 	function deformatInvoiceNumber()
@@ -2679,165 +2704,167 @@ class Invoice extends serialParamDBTable
 			$recurring_choice = $this->params['userselect_recurring'];
 		}
 
-		if ( !is_null( $this->usage ) && !( $this->usage == '' ) ) {
-			$recurring = 0;
+		if ( empty( $this->usage ) ) {
+			return null;
+		}
 
-			$original_amount = $this->amount;
+		$recurring = 0;
 
-			if ( !empty( $this->method ) ) {
-				switch ( $this->method ) {
-					case 'none':
-					case 'free':
-						break;
-					default:
-						if ( empty( $InvoiceFactory->pp ) ) {
-							$pp = new PaymentProcessor();
-							if ( !$pp->loadName( $this->method ) ) {
-								$short	= 'processor loading failure';
-								$event	= 'When computing invoice amount, tried to load processor: ' . $this->method;
-								$tags	= 'processor,loading,error';
-								$params = array();
+		$original_amount = $this->amount;
 
-								$eventlog = new eventLog();
-								$eventlog->issue( $short, $tags, $event, 128, $params );
-
-								return;
-							}
-
-							$pp->fullInit();
-						} else {
-							$pp = $InvoiceFactory->pp;
-						}
-
-						if ( $pp->is_recurring( $recurring_choice ) ) {
-							$recurring = $pp->is_recurring( $recurring_choice );
-						}
-
-						if ( empty( $this->currency ) ) {
-							$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
-						}
-				}
-			}
-
-			$usage = explode( '.', $this->usage );
-
-			// Update old notation
-			if ( !isset( $usage[1] ) ) {
-				$temp = $usage[0];
-				$usage[0] = 'p';
-				$usage[1] = $temp;
-			}
-
-			$allfree = false;
-
-			switch ( strtolower( $usage[0] ) ) {
-				case 'c':
-				case 'cart':
-					$cart = $this->getObjUsage();
-
-					if ( $cart->id ) {
-						if ( !empty( $this->coupons ) ) {
-							foreach ( $this->coupons as $coupon ) {
-								if ( !$cart->hasCoupon( $coupon ) ) {
-									$cart->addCoupon( $coupon );
-								}
-							}
-						}
-
-						$return = $cart->getAmount( $metaUser, $this->counter, $this );
-
-						$allfree = $cart->checkAllFree( $metaUser, $this->counter, $this );
-
-						$this->amount = $return;
-					} elseif ( isset( $this->params['cart'] ) ) {
-						// Cart has been deleted, use copied data
-						$vars = get_object_vars( $this->params['cart'] );
-						foreach ( $vars as $v => $c ) {
-							// Make extra sure we don't put through any _properties
-							if ( strpos( $v, '_' ) !== 0 ) {
-								$cart->$v = $c;
-							}
-						}
-
-						$return = $cart->getAmount( $metaUser, $this->counter, $this );
-
-						$this->amount = $return;
-					} else {
-						$this->amount = '0.00';
-					}
+		if ( !empty( $this->method ) ) {
+			switch ( $this->method ) {
+				case 'none':
+				case 'free':
 					break;
-				case 'p':
-				case 'plan':
 				default:
-					$plan = $this->getObjUsage();
+					if ( empty( $InvoiceFactory->pp ) ) {
+						$pp = new PaymentProcessor();
+						if ( !$pp->loadName( $this->method ) ) {
+							$short	= 'processor loading failure';
+							$event	= 'When computing invoice amount, tried to load processor: ' . $this->method;
+							$tags	= 'processor,loading,error';
+							$params = array();
 
-					if ( is_object( $pp ) ) {
-						$pp->exchangeSettingsByPlan( $plan );
+							$eventlog = new eventLog();
+							$eventlog->issue( $short, $tags, $event, 128, $params );
 
-						if ( ( $this->currency != $pp->settings['currency'] ) && !empty( $pp->settings['currency'] ) ) {
-							$this->currency = $pp->settings['currency'];
+							return;
 						}
 
-						if ( $pp->is_recurring( $recurring_choice ) ) {
-							$recurring = $pp->is_recurring( $recurring_choice );
-						} else {
-							$recurring = 0;
-						}
-					}
-
-					$terms = $plan->getTermsForUser( $recurring, $metaUser );
-
-					$terms->incrementPointer( $this->counter );
-
-					$item = array( 'item' => array( 'obj' => $plan ), 'terms' => $terms );
-
-					if ( $this->coupons ) {
-						$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
-
-						$item = $cpsh->applyAllToItems( 0, $item );
-
-						$terms = $item['terms'];
-					}
-
-					// Coupons might have changed the terms - reset pointer
-					$terms->setPointer( $this->counter );
-
-					$allfree = $terms->checkFree();
-
-					if ( is_object( $terms->nextterm ) ) {
-						$this->amount = $terms->nextterm->renderTotal();
+						$pp->fullInit();
 					} else {
-						$this->amount = '0.00';
+						$pp = $InvoiceFactory->pp;
 					}
-				break;
+
+					if ( $pp->is_recurring( $recurring_choice ) ) {
+						$recurring = $pp->is_recurring( $recurring_choice );
+					}
+
+					if ( empty( $this->currency ) ) {
+						$this->currency = isset( $pp->settings['currency'] ) ? $pp->settings['currency'] : '';
+					}
 			}
+		}
 
-			$this->amount = AECToolbox::correctAmount( $this->amount );
+		$usage = explode( '.', $this->usage );
 
-			if ( !$recurring || $allfree ) {
-				if ( ( strcmp( $this->amount, '0.00' ) === 0 ) ) {
-					$this->method = 'free';
-					$madefree = true;
-				} elseif ( ( strcmp( $this->amount, '0.00' ) === 0 ) && ( strcmp( $this->method, 'free' ) !== 0 ) ) {
-					$short	= 'invoice amount error';
-					$event	= 'When computing invoice amount: Method error, amount 0.00, but method = ' . $this->method;
-					$tags	= 'processor,loading,error';
-					$params = array();
+		// Update old notation
+		if ( !isset( $usage[1] ) ) {
+			$temp = $usage[0];
+			$usage[0] = 'p';
+			$usage[1] = $temp;
+		}
 
-					$eventlog = new eventLog();
-					$eventlog->issue( $short, $tags, $event, 128, $params );
+		$allfree = false;
 
-					$this->method = 'error';
+		switch ( strtolower( $usage[0] ) ) {
+			case 'c':
+			case 'cart':
+				$cart = $this->getObjUsage();
+
+				if ( $cart->id ) {
+					if ( !empty( $this->coupons ) ) {
+						foreach ( $this->coupons as $coupon ) {
+							if ( !$cart->hasCoupon( $coupon ) ) {
+								$cart->addCoupon( $coupon );
+							}
+						}
+					}
+
+					$return = $cart->getAmount( $metaUser, $this->counter, $this );
+
+					$allfree = $cart->checkAllFree( $metaUser, $this->counter, $this );
+
+					$this->amount = $return;
+				} elseif ( isset( $this->params['cart'] ) ) {
+					// Cart has been deleted, use copied data
+					$vars = get_object_vars( $this->params['cart'] );
+					foreach ( $vars as $v => $c ) {
+						// Make extra sure we don't put through any _properties
+						if ( strpos( $v, '_' ) !== 0 ) {
+							$cart->$v = $c;
+						}
+					}
+
+					$return = $cart->getAmount( $metaUser, $this->counter, $this );
+
+					$this->amount = $return;
+				} else {
+					$this->amount = '0.00';
 				}
-			}
+				break;
+			case 'p':
+			case 'plan':
+			default:
+				$plan = $this->getObjUsage();
 
-			if ( $save ) {
-				$this->storeload();
-			}
+				if ( is_object( $pp ) ) {
+					$pp->exchangeSettingsByPlan( $plan );
 
-			if ( $madefree ) {
-				$this->made_free = true;
+					if ( ( $this->currency != $pp->settings['currency'] ) && !empty( $pp->settings['currency'] ) ) {
+						$this->currency = $pp->settings['currency'];
+					}
+
+					if ( $pp->is_recurring( $recurring_choice ) ) {
+						$recurring = $pp->is_recurring( $recurring_choice );
+					} else {
+						$recurring = 0;
+					}
+				}
+
+				$terms = $plan->getTermsForUser( $recurring, $metaUser );
+
+				$terms->incrementPointer( $this->counter );
+
+				$item = array( 'item' => array( 'obj' => $plan ), 'terms' => $terms );
+
+				if ( $this->coupons ) {
+					$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
+
+					$item = $cpsh->applyAllToItems( 0, $item );
+
+					$terms = $item['terms'];
+				}
+
+				// Coupons might have changed the terms - reset pointer
+				$terms->setPointer( $this->counter );
+
+				$allfree = $terms->checkFree();
+
+				if ( is_object( $terms->nextterm ) ) {
+					$this->amount = $terms->nextterm->renderTotal();
+				} else {
+					$this->amount = '0.00';
+				}
+			break;
+		}
+
+		$this->amount = AECToolbox::correctAmount( $this->amount );
+
+		if ( !$recurring || $allfree ) {
+			if ( ( strcmp( $this->amount, '0.00' ) === 0 ) ) {
+				$this->method = 'free';
+				$madefree = true;
+			} elseif ( ( strcmp( $this->amount, '0.00' ) === 0 ) && ( strcmp( $this->method, 'free' ) !== 0 ) ) {
+				$short	= 'invoice amount error';
+				$event	= 'When computing invoice amount: Method error, amount 0.00, but method = ' . $this->method;
+				$tags	= 'processor,loading,error';
+				$params = array();
+
+				$eventlog = new eventLog();
+				$eventlog->issue( $short, $tags, $event, 128, $params );
+
+				$this->method = 'error';
 			}
+		}
+
+		if ( $save ) {
+			$this->storeload();
+		}
+
+		if ( $madefree ) {
+			$this->made_free = true;
 		}
 	}
 
@@ -2924,7 +2951,9 @@ class Invoice extends serialParamDBTable
 			$response = $InvoiceFactory->pp->validateNotification( $response, $post, $this );
 		}
 
-		if ( !empty( $aecConfig->cfg['invoice_cushion'] ) && ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
+		if ( !empty( $aecConfig->cfg['invoice_cushion'] )
+			&& ( $this->transaction_date !== '0000-00-00 00:00:00' ) ) {
+
 			if ( ( strtotime( $this->transaction_date ) + ( $aecConfig->cfg['invoice_cushion']*60 ) ) > ( (int) gmdate('U') ) ) {
 				if ( $InvoiceFactory->pp->processor_name == 'desjardins' ) {
 					// Desjardins is the only exception so far... bad bad bad
@@ -3508,37 +3537,37 @@ class Invoice extends serialParamDBTable
 			$cushion = 0;
 		}
 
-		if ( $time_passed > $cushion ) {
-			if ( !empty( $aecConfig->cfg['invoice_spawn_new'] ) && $this->counter ) {
-				$invoice = clone( $this );
-				$invoice->id = 0;
-				$invoice->counter = 0;
-
-				$invoice->invoice_number = $invoice->generateInvoiceNumber();
-				$invoice->created_date		= $transaction_date;
-				$invoice->transaction_date	= $transaction_date;
-
-				$invoice->addParams( array( 'spawned_from_invoice' => $this->invoice_number ) );
-			} else {
-				$invoice =& $this;
-			}
-
-			$invoice->counter += 1;
-			$invoice->transaction_date	= $transaction_date;
-
-			$c = new stdClass();
-
-			$c->timestamp	= $transaction_date;
-			$c->amount		= $invoice->amount;
-			$c->currency	= $invoice->currency;
-			$c->processor	= $invoice->method;
-
-			$invoice->transactions[] = $c;
-
-			$invoice->storeload();
-		} else {
+		if ( $time_passed <= $cushion ) {
 			return;
 		}
+
+		if ( !empty( $aecConfig->cfg['invoice_spawn_new'] ) && $this->counter ) {
+			$invoice = clone( $this );
+			$invoice->id = 0;
+			$invoice->counter = 0;
+
+			$invoice->invoice_number = $invoice->generateInvoiceNumber();
+			$invoice->created_date		= $transaction_date;
+			$invoice->transaction_date	= $transaction_date;
+
+			$invoice->addParams( array( 'spawned_from_invoice' => $this->invoice_number ) );
+		} else {
+			$invoice =& $this;
+		}
+
+		$invoice->counter += 1;
+		$invoice->transaction_date	= $transaction_date;
+
+		$c = new stdClass();
+
+		$c->timestamp	= $transaction_date;
+		$c->amount		= $invoice->amount;
+		$c->currency	= $invoice->currency;
+		$c->processor	= $invoice->method;
+
+		$invoice->transactions[] = $c;
+
+		$invoice->storeload();
 	}
 
 	function getWorkingData( $InvoiceFactory )
@@ -3670,51 +3699,51 @@ class Invoice extends serialParamDBTable
 			$usage = $this->usage;
 		}
 
-		if ( !empty( $usage ) ) {
-			$u = explode( '.', $usage );
-
-			switch ( strtolower( $u[0] ) ) {
-				case 'c':
-				case 'cart':
-					if ( isset( $this->params['cart'] ) ) {
-						$objUsage = $this->params['cart'];
-					} else {
-						$objUsage = new aecCart();
-						$objUsage->load( $u[1] );
-					}
-					break;
-				case 'p':
-				case 'plan':
-				default:
-					if ( !isset( $u[1] ) ) {
-						$u[1] = $u[0];
-					}
-
-					$objUsage = new SubscriptionPlan();
-					$objUsage->load( $u[1] );
-					break;
-			}
-
-			return $objUsage;
-		} else {
+		if ( empty( $usage ) ) {
 			return null;
 		}
+
+		$u = explode( '.', $usage );
+
+		switch ( strtolower( $u[0] ) ) {
+			case 'c':
+			case 'cart':
+				if ( isset( $this->params['cart'] ) ) {
+					$objUsage = $this->params['cart'];
+				} else {
+					$objUsage = new aecCart();
+					$objUsage->load( $u[1] );
+				}
+				break;
+			case 'p':
+			case 'plan':
+			default:
+				if ( !isset( $u[1] ) ) {
+					$u[1] = $u[0];
+				}
+
+				$objUsage = new SubscriptionPlan();
+				$objUsage->load( $u[1] );
+				break;
+		}
+
+		return $objUsage;
 	}
 
 	function addTargetUser( $user_ident )
 	{
 		global $aecConfig;
 
-		if ( !empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
-			if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-				$metaUser = new metaUser( $this->userid );
-
-				if ( !$metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
-					return false;
-				}
-			}
-		} else {
+		if ( empty( $aecConfig->cfg['checkout_as_gift'] ) ) {
 			return false;
+		}
+
+		if ( !empty( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+			$metaUser = new metaUser( $this->userid );
+
+			if ( !$metaUser->hasGroup( $aecConfig->cfg['checkout_as_gift_access'] ) ) {
+				return false;
+			}
 		}
 
 		$queries = array();
@@ -3799,40 +3828,44 @@ class Invoice extends serialParamDBTable
 		}
 
 		if ( in_array( $coupon_code, $this->coupons ) ) {
-			foreach ( $this->coupons as $id => $cc ) {
-				if ( $cc == $coupon_code ) {
-					unset( $this->coupons[$id] );
-				}
+			return null;
+		}
+
+		foreach ( $this->coupons as $id => $cc ) {
+			if ( $cc == $coupon_code ) {
+				unset( $this->coupons[$id] );
 			}
+		}
 
-			$cph = new couponHandler();
-			$cph->load( $coupon_code );
-			if ( !empty( $cph->coupon->id ) ) {
-				$cph->decrementCount( $this );
-			}
+		$cph = new couponHandler();
+		$cph->load( $coupon_code );
 
-			if ( !empty( $this->usage ) ) {
-				$usage = explode( '.', $this->usage );
+		if ( !empty( $cph->coupon->id ) ) {
+			$cph->decrementCount( $this );
+		}
 
-				// Update old notation
-				if ( !isset( $usage[1] ) ) {
-					$temp = $usage[0];
-					$usage[0] = 'p';
-					$usage[1] = $temp;
-				}
+		if ( empty( $this->usage ) ) {
+			return;
+		}
 
-				switch ( strtolower( $usage[0] ) ) {
-					case 'c':
-					case 'cart':
-						$cart = new aecCart();
-						$cart->load( $usage[1] );
+		$usage = explode( '.', $this->usage );
 
-						$cart->removeCoupon( $coupon_code );
-						$cart->storeload();
-						break;
-				}
+		// Update old notation
+		if ( !isset( $usage[1] ) ) {
+			$temp = $usage[0];
+			$usage[0] = 'p';
+			$usage[1] = $temp;
+		}
 
-			}
+		switch ( strtolower( $usage[0] ) ) {
+			case 'c':
+			case 'cart':
+				$cart = new aecCart();
+				$cart->load( $usage[1] );
+
+				$cart->removeCoupon( $coupon_code );
+				$cart->storeload();
+				break;
 		}
 	}
 
@@ -4093,8 +4126,6 @@ class Invoice extends serialParamDBTable
 		if ( !empty( $this->usage ) ) {
 			$this->computeAmount();
 		}
-
-		//$this->saveParams( $params );
 	}
 
 	function savePostParams( $array )
