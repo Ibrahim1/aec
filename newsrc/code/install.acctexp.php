@@ -17,7 +17,7 @@
 if ( !defined( '_JEXEC' ) && !defined( 'JPATH_SITE.' ) ) {
 	global $mosConfig_absolute_path;
 
-	define( 'JPATH_SITE.', $mosConfig_absolute_path );
+	define( 'JPATH_SITE', $mosConfig_absolute_path );
 } elseif ( defined( '_JEXEC' ) ) {
 	JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php');
 }
@@ -76,16 +76,6 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->logErrors( $errors, $eucaInstall, $eucaInstalldb );
 
 			$this->splash( $pkgs, $errors );
-		}
-
-		function reunpack()
-		{
-			if ( class_exists( 'ZipArchive' ) ) {
-				
-			}
-			$tmppath = dirname( __FILE__ );
-
-			
 		}
 
 		function bootstrap( &$errors )
@@ -162,7 +152,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			// Load Class (and thus aecConfig)
 			require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
-
+$v = new JVersion();aecDebug($v);
 			global $aecConfig;
 
 			$document=& JFactory::getDocument();
@@ -214,7 +204,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function touchProcessors()
 		{
-			// Make sure settings & info = updated
+			// Make sure settings & info are updated
 			$pplist = PaymentProcessorHandler::getInstalledNameList();
 
 			foreach ( $pplist as $ppname ) {
@@ -313,35 +303,37 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				$installer = new JInstaller();
 				$result = $installer->install( $src.'/'.$name );
 
-				if ( $result ) {
-					if ( ( strpos( $name, 'plg' ) === 0 ) && ( strpos( $name, 'plg_aecrewrite' ) !== 0 ) ) {
-						$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" ) . " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" ) . " WHERE element='".$details['element']."' AND folder='".$details['type']."'";
+				if ( !$result ) {
+					continue;
+				}
+
+				if ( ( strpos( $name, 'plg' ) === 0 ) && ( strpos( $name, 'plg_aecrewrite' ) !== 0 ) ) {
+					$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" ) . " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" ) . " WHERE element='".$details['element']."' AND folder='".$details['type']."'";
+
+					$db->setQuery( $query );
+					$db->query();
+				} elseif ( strpos( $name, 'plg' ) !== 0 ) {
+					if ( empty( $details['menuid'] ) ) {
+						if ( empty( $details['published'] ) ) {
+							$details['published'] = "0";
+						}
+
+						$query = "UPDATE #__modules SET position='".$details['position']."', published=".$details['published']." WHERE module='".$name."'";
+						$db->setQuery( $query );
+						$db->query();
+
+						$query = "SELECT id FROM #__modules WHERE module = '".$name."'";
+						$db->setQuery( $query );
+						$module_id = $db->loadResult();
+
+						$query = "REPLACE INTO #__modules_menu (moduleid,menuid) VALUES (" . $module_id . ", 0)";
 
 						$db->setQuery( $query );
 						$db->query();
-					} elseif ( strpos( $name, 'plg' ) !== 0 ) {
-						if ( empty( $details['menuid'] ) ) {
-							if ( empty( $details['published'] ) ) {
-								$details['published'] = "0";
-							}
-
-							$query = "UPDATE #__modules SET position='".$details['position']."', published=".$details['published']." WHERE module='".$name."'";
-							$db->setQuery( $query );
-							$db->query();
-
-							$query = "SELECT id FROM #__modules WHERE module = '".$name."'";
-							$db->setQuery( $query );
-							$module_id = $db->loadResult();
-	
-							$query = "REPLACE INTO #__modules_menu (moduleid,menuid) VALUES (" . $module_id . ", 0)";
-
-							$db->setQuery( $query );
-							$db->query();
-						}
 					}
-
-					$pckgs++;
 				}
+
+				$pckgs++;
 			}
 
 			return $pckgs;
