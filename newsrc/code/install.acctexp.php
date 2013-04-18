@@ -152,7 +152,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			// Load Class (and thus aecConfig)
 			require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
-$v = new JVersion();aecDebug($v);
+$v = new JVersion();aecDebug($v);aecDebug($v->isCompatible('3.0'));
 			global $aecConfig;
 
 			$document=& JFactory::getDocument();
