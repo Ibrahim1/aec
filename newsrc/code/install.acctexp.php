@@ -95,27 +95,27 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 		function checkJinstall()
 		{
 			$engbpath = $this->src.'/../../language/en-GB';
-aecDebug('searching '.$engbpath.'/en-GB.com_acctexp.ini');
+
 			// So Joomla sometimes fails to install our en-GB...
 			if ( !file_exists( $engbpath.'/en-GB.com_acctexp.ini' ) ) {
 				$files = array( '', '.iso3166-1a2', '.iso639-1', '.microintegrations', '.processors' );
-aecDebug('not found, trying to install');
+
 				foreach ( $files as $file ) {
-aecDebug('copying '.$this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini'.' to '.$engbpath.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini');
+
 					copy( $this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
-							$engbpath.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini'
+							$engbpath.'/en-GB.com_acctexp' . $file . '.ini'
 						 );
 				}
 			}
 
 			$engbpath = $this->src.'/../../administrator/language/en-GB';
-aecDebug('searching '.$engbpath.'/en-GB.com_acctexp.ini');
+
 			if ( !file_exists( $engbpath.'/en-GB.com_acctexp.ini' ) ) {
 				$files = array( '', '.iso4217', '.menu', '.sys' );
-aecDebug('not found, trying to install');
+
 				foreach ( $files as $file ) {
 					copy( $this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
-							$engbpath.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini'
+							$engbpath.'/en-GB.com_acctexp' . $file . '.ini'
 						 );
 				}
 			}
