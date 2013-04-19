@@ -35,19 +35,20 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 	{
 		function postflight( $type, $parent )
 		{
-			// Simple, stupid check for double install
-			if ( !defined('AEC_INSTALLED') ) {
-				$this->install();
-			}
+			$this->install();
 		}
 
 		function install()
 		{
+			if ( !defined('AEC_INSTALLER_CALLED') ) {
+				define( 'AEC_INSTALLER_CALLED', true );
+			} else {
+				return true;
+			}
+
 			$errors = array();
 
 			$this->prepare();
-
-			$this->checkJinstall();
 
 			$this->bootstrap( $errors );
 
@@ -57,6 +58,8 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			$this->initDB( $errors, $eucaInstalldb );
 			$this->upgrade( $errors, $eucaInstall, $eucaInstalldb );
+
+			$this->checkJinstall();
 
 			$this->touchProcessors();
 			$this->touchMIs();
@@ -77,8 +80,6 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->logErrors( $errors, $eucaInstall, $eucaInstalldb );
 
 			$this->splash( $pkgs, $errors );
-
-			define( 'AEC_INSTALLED', true );
 		}
 
 		function prepare()
@@ -94,13 +95,13 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 		function checkJinstall()
 		{
 			$engbpath = $this->src.'/../../language/en-GB';
-
+aecDebug('searching '.$engbpath.'/en-GB.com_acctexp.ini');
 			// So Joomla sometimes fails to install our en-GB...
 			if ( file_exists( $engbpath.'/en-GB.com_acctexp.ini' ) ) {
 				$files = array( '', '.iso3166-1a2', '.iso639-1', '.microintegrations', '.processors' );
-
-
+aecDebug('not found, trying to install');
 				foreach ( $files as $file ) {
+aecDebug('copying '.$this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini'.' to '.$engbpath.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini');
 					copy( $this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
 							$engbpath.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini'
 						 );
@@ -108,11 +109,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 
 			$engbpath = $this->src.'/../../administrator/language/en-GB';
-
+aecDebug('searching '.$engbpath.'/en-GB.com_acctexp.ini');
 			if ( file_exists( $engbpath.'/en-GB.com_acctexp.ini' ) ) {
 				$files = array( '', '.iso4217', '.menu', '.sys' );
-
-
+aecDebug('not found, trying to install');
 				foreach ( $files as $file ) {
 					copy( $this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
 							$engbpath.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini'
@@ -197,7 +197,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 
 			global $aecConfig;
-aecDebug($this->src);
+
 			$document=& JFactory::getDocument();
 			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . 'media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION .'" />' );
 
@@ -572,10 +572,8 @@ aecDebug($this->src);
 if ( !function_exists( 'com_install' ) ) {
 	function com_install()
 	{
-		if ( !defined('AEC_INSTALLED') ) {
-			$installer = new Com_AcctexpInstallerScript;
-			$installer->install();
-		}
+		$installer = new Com_AcctexpInstallerScript;
+		$installer->install();
 	}
 }
 
