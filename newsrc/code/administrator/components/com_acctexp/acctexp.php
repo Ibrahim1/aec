@@ -9,7 +9,7 @@
  */
 
 // no direct access
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Restricted access' );
+defined('_JEXEC') or die( 'Restricted access' );
 
 require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.php' );
 

@@ -9,10 +9,10 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 define( '_AEC_VERSION', '1.2RC' );
-define( '_AEC_REVISION', '6145' );
+define( '_AEC_REVISION', '6146' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 

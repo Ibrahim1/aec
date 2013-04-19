@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 // Trying to buy us some time
 @set_time_limit( 240 );
@@ -27,7 +27,7 @@ if ( version_compare(phpversion(), '5.0') < 0 ) {
 	include_once( JPATH_SITE . '/components/com_acctexp/lib/php4/php4.php' );
 }
 
-// Joomla 1.7 - throwing errors like there's no tomorrow
+// Joomla 1.7 - throwing errors like there's /no/ tomorrow
 ini_set('display_errors', 'off');
 
 if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
@@ -35,11 +35,8 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 	{
 		function postflight( $type, $parent )
 		{
-			$v = new JVersion();
-
-			// 1.7-2.5 sometimes call both the function AND class
-			// We only need it called once, thanksverymuch
-			if ( $v->isCompatible('3.0') ) {
+			// Simple, stupid check for double install
+			if ( !defined('AEC_INSTALLED') ) {
 				$this->install();
 			}
 		}
@@ -47,6 +44,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 		function install()
 		{
 			$errors = array();
+
+			$this->prepare();
+
+			$this->checkJinstall();
 
 			$this->bootstrap( $errors );
 
@@ -76,6 +77,48 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->logErrors( $errors, $eucaInstall, $eucaInstalldb );
 
 			$this->splash( $pkgs, $errors );
+
+			define( 'AEC_INSTALLED', true );
+		}
+
+		function prepare()
+		{
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$this->src = dirname(__FILE__);
+			} else {
+				$componentInstaller =& JInstaller::getInstance();
+
+				$this->src = $componentInstaller->getPath('source');
+			}
+		}
+		function checkJinstall()
+		{
+			$engbpath = $this->src.'/../../language/en-GB';
+
+			// So Joomla sometimes fails to install our en-GB...
+			if ( file_exists( $engbpath.'/en-GB.com_acctexp.ini' ) ) {
+				$files = array( '', '.iso3166-1a2', '.iso639-1', '.microintegrations', '.processors' );
+
+
+				foreach ( $files as $file ) {
+					copy( $this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
+							$engbpath.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini'
+						 );
+				}
+			}
+
+			$engbpath = $this->src.'/../../administrator/language/en-GB';
+
+			if ( file_exists( $engbpath.'/en-GB.com_acctexp.ini' ) ) {
+				$files = array( '', '.iso4217', '.menu', '.sys' );
+
+
+				foreach ( $files as $file ) {
+					copy( $this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
+							$engbpath.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini'
+						 );
+				}
+			}
 		}
 
 		function bootstrap( &$errors )
@@ -152,7 +195,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			// Load Class (and thus aecConfig)
 			require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
-$v = new JVersion();aecDebug($v);aecDebug($v->isCompatible('3.0'));
+
 			global $aecConfig;
 
 			$document=& JFactory::getDocument();
@@ -269,19 +312,11 @@ $v = new JVersion();aecDebug($v);aecDebug($v->isCompatible('3.0'));
 									'mod_acctexp_cart' => array ( 'position' => 'left' )
 			);
 
-			$componentInstaller =& JInstaller::getInstance();
-
-			if ( defined( 'JPATH_MANIFESTS' ) ) {
-				$src = dirname(__FILE__);
-			} else {
-				$src = $componentInstaller->getPath('source');
-			}
-
 			$db = &JFactory::getDBO();
 
 			$pckgs = 0;
 			foreach ( $install_list as $name => $details ) {
-				if ( !is_dir( $src.'/'.$name ) ) {
+				if ( !is_dir( $this->src.'/'.$name ) ) {
 					continue;
 				}
 
@@ -301,7 +336,7 @@ $v = new JVersion();aecDebug($v);aecDebug($v->isCompatible('3.0'));
 				}
 
 				$installer = new JInstaller();
-				$result = $installer->install( $src.'/'.$name );
+				$result = $installer->install( $this->src.'/'.$name );
 
 				if ( !$result ) {
 					continue;

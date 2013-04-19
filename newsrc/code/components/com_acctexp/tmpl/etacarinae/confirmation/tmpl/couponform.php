@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <?php if ( $InvoiceFactory->coupons['active'] ) {
 	if ( !empty( $tmpl->cfg['confirmation_coupons'] ) ) {
 		?><p><?php echo JText::_('CONFIRM_COUPON_INFO_BOTH') ?></p><?php

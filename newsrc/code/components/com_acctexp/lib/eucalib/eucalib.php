@@ -17,7 +17,7 @@
  * The Extremely Useful Component LIBrary will rock your socks. Seriously. Reuse it!
  */
 
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Restricted access' );
+defined('_JEXEC') or die( 'Restricted access' );
 
 if ( !defined( '_EUCA_CFG_LOADED' ) ){
 	$require_file = dirname( __FILE__ ).'/eucalib.config.php';

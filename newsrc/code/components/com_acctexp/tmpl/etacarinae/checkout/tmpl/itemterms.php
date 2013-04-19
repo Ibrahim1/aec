@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="checkout-list-item-terms">
 	<?php foreach ( $item['terms'] as $term ) { ?>
 		<div class="checkout-list-term list-term-<?php echo $term['type'] ?><?php echo $term['current'] ? 'list-term-current':'list-term-other' ?>">

@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="processor-list">
 	<?php if ( !empty( $InvoiceFactory->pp ) ) {
 		if ( is_object( $InvoiceFactory->pp ) ) {

@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <div id="cart-info">
 	<?php if ( empty( $InvoiceFactory->cart ) ) { ?>
 		<p>Your Shopping Cart is empty!</p>

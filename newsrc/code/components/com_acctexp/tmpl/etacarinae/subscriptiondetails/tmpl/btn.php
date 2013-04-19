@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="well">
 	<div id="upgrade-button">
 		<form action="<?php echo AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=renewsubscription', !empty( $tmpl->cfg['ssl_signup'] ) ); ?>" method="post">

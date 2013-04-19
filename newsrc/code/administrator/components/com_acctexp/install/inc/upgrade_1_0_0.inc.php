@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 if ( isset( $aecConfig->cfg['customtext_plans'] ) ) {
 	$oldsettings = array(	'customtext_plans', 'custom_confirm_userdetails', 'customtext_confirm_keeporiginal', 'customtext_confirm',

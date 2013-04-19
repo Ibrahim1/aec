@@ -8,7 +8,7 @@
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_communitybuilder
 {

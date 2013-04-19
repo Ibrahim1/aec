@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_config` ('
 . '`id` int(11) NOT NULL auto_increment,'

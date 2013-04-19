@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <?php if ( $list['group']['id'] > 1 ) { ?>
 	<div class="group-backlink">
 		<?php echo $tmpl->btn( array( 'task' => 'subscribe', 'userid' => $userid, 'passthrough' => $passthrough ), JText::_('AEC_PAYM_METHOD_BACK'), 'btn func_button' ) ?>

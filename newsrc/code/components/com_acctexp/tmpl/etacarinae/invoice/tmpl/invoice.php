@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ); ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ); ?>
 
 <div id="invoice_wrap">
 	<div id="before_invoice_header"><?php echo $data['before_header'] ?></div>

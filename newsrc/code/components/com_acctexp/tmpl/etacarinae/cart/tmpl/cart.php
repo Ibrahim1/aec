@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <div id="aec">
 	<div id="aec-confirmation">
 		<div class="componentheading"><?php echo JText::_('CART_TITLE') ?></div>

@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <div class="group-button">
 	<?php echo $tmpl->btn( array( 'task' => 'subscribe', 'group' => $litem['id'], 'userid' => $userid, 'passthrough' => $passthrough ), JText::_('Select'), 'btn btn-plangroup' ) ?>
 </div>

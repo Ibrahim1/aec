@@ -8,7 +8,7 @@
  //updated for AEC releases > 0.12.4.11 which no longer have #__acctexp table
 
 // ensure this file is being included by a parent file
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct access not allowed' );
+defined('_JEXEC') or die( 'Direct access not allowed' );
 
 /**
  * Reporting class

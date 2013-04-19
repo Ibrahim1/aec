@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' ) ?>
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <div id="gift-box">
 	<h5><?php echo JText::_('CHECKOUT_GIFT_HEAD') ?></h5>
 	<div class="well gift-details">

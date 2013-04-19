@@ -9,7 +9,7 @@
  */
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 ?>
 <div class="aec_module_inner<?php echo $class_sfx; ?>">
 	<p><?php echo JText::_('AEC_CART_MODULE_CART_EMPTY'); ?></p>

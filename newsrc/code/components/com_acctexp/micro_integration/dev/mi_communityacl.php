@@ -1,7 +1,7 @@
 <?php
 
 // Dont allow direct linking
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Direct Access to this location is not allowed.' );
+defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 define('_MI_MI_COMMUNITYACL_CACL_GROUP_LIST_NAME','Community ACL Groups');
 define('_MI_MI_COMMUNITYACL_CACL_ROLE_LIST_NAME','Community ACL Roles');

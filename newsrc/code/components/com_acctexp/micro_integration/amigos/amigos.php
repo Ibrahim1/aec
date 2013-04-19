@@ -9,7 +9,7 @@
 */
 
 /** ensure this file is being included by a parent file */
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Restricted Access' );
+defined('_JEXEC') or die( 'Restricted Access' );
 
 class mi_amigos
 {

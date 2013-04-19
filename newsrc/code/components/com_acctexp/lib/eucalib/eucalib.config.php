@@ -17,7 +17,7 @@
  * The Extremely Useful Component LIBrary will rock your socks. Seriously. Reuse it!
  */
 
-( defined('_JEXEC') || defined( '_VALID_MOS' ) ) or die( 'Restricted access' );
+defined('_JEXEC') or die( 'Restricted access' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 
