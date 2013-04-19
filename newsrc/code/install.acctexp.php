@@ -197,7 +197,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 
 			global $aecConfig;
-
+aecDebug($this->src);
 			$document=& JFactory::getDocument();
 			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . 'media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION .'" />' );
 
@@ -572,8 +572,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 if ( !function_exists( 'com_install' ) ) {
 	function com_install()
 	{
-		$installer = new Com_AcctexpInstallerScript;
-		$installer->install();
+		if ( !defined('AEC_INSTALLED') ) {
+			$installer = new Com_AcctexpInstallerScript;
+			$installer->install();
+		}
 	}
 }
 
