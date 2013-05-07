@@ -61,7 +61,7 @@ class mi_email_files
 				return $settings;
 			}
 
-			$settings['exp'] = array( 'p', JText::_('MI_MI_USER_CHOICE_FILES_NAME'), JText::_('MI_MI_USER_CHOICE_FILES_DESC') );
+			$settings['exp'] = array( 'p', JText::_('MI_MI_USER_CHOICE_FILES_DESC') );
 
 			$gr = array();
 			foreach ( $list as $id => $choice ) {

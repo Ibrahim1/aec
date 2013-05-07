@@ -43,9 +43,9 @@ class mi_pardot_marketing extends MI
 			$pc = new PardotConnector();
 			$pc->get( $this->settings );
 
-			$settings['api_key']		= array( 'p', null, null, "API Key currently in use: ".$pc->api_key );
+			$settings['api_key']		= array( 'p', "API Key currently in use: ".$pc->api_key );
 		} else {
-			$settings['api_key']		= array( 'p', null, null, "API Key currently in use: Please fill in the above details to request an API key" );
+			$settings['api_key']		= array( 'p', "API Key currently in use: Please fill in the above details to request an API key" );
 		}
 
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
@@ -94,7 +94,7 @@ class mi_pardot_marketing extends MI
 
 		if ( !empty( $this->settings['pardot_lists'.$request->area] ) ) {
 			$li = explode( "\n", $this->settings['pardot_lists'.$request->area] );
-			
+
 			foreach ( $li as $k ) {
 				$lists['add'][] = $k;
 			}
@@ -162,7 +162,7 @@ class mi_pardot_marketing extends MI
 
 		if ( !empty( $this->settings['pardot_lists'.$request->area] ) ) {
 			$li = explode( "\n", $this->settings['pardot_lists'.$request->area] );
-			
+
 			foreach ( $li as $k ) {
 				$lists['add'][] = $k;
 			}

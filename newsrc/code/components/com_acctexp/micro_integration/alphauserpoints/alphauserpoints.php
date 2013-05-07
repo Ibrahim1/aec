@@ -52,11 +52,11 @@ class mi_alphauserpoints extends MI
 
 				$currency = $aecConfig->cfg['standard_currency'];
 			}
-			
+
 			$value = AECToolbox::formatAmount( $this->settings['checkout_conversion'], $currency, false );
 			$total = AECToolbox::formatAmount( ( $points * $this->settings['checkout_conversion'] ), $currency );
 
-			$settings['vat_desc'] = array( 'p', "", sprintf( JText::_('MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
+			$settings['vat_desc'] = array( 'p', sprintf( JText::_('MI_MI_ALPHAUSERPOINTS_CONVERSION_INFO'), $points, $value, $total ) );
 			$settings['use_points'] = array( 'inputC', JText::_('MI_MI_ALPHAUSERPOINTS_USE_POINTS_NAME'), JText::_('MI_MI_ALPHAUSERPOINTS_USE_POINTS_DESC'), '' );
 
 			$settings['validation']['rules'] = array();

@@ -56,7 +56,7 @@ class mi_aectip
 		$settings = array();
 
 		if ( !empty( $this->settings['confirm_desc'] ) ) {
-			$settings['confirm_desc'] = array( 'p', "", $this->settings['confirm_desc'] );
+			$settings['confirm_desc'] = array( 'p', $this->settings['confirm_desc'] );
 		}
 
 		$settings['amt'] = array( 'inputC', $this->settings['confirm_name'], '', '' );

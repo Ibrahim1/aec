@@ -69,9 +69,9 @@ class mi_aecmodifycost
 
 		if ( !empty( $options ) ) {
 			if ( !empty( $this->settings['custominfo'] ) ) {
-				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+				$settings['exp'] = array( 'p', $this->settings['custominfo'] );
 			} else {
-				$settings['exp'] = array( 'p', "", JText::_('MI_MI_AECMODIFYCOST_DEFAULT_NOTICE') );
+				$settings['exp'] = array( 'p', JText::_('MI_MI_AECMODIFYCOST_DEFAULT_NOTICE') );
 			}
 
 			if ( !empty( $this->settings['multi_select'] ) ) {
@@ -115,7 +115,7 @@ class mi_aecmodifycost
 		} else {
 			return false;
 		}
-
+aecDebug($settings);
 		return $settings;
 	}
 

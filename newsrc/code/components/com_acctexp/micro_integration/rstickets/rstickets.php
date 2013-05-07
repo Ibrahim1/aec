@@ -50,7 +50,7 @@ class mi_rstickets extends MI
 		}
 
 		if ( !function_exists( 'rst_get_departments' ) ) {
-			$settings['info']				= array( 'p', 'Notice', 'You need to have RStickets installed to use this MI!' );
+			$settings['info']				= array( 'p', 'You need to have RStickets installed to use this MI!' );
 		} else {
 			$departments = rst_get_departments();
 

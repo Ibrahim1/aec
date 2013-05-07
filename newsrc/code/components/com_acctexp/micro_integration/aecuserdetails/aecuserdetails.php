@@ -284,7 +284,7 @@ class mi_aecuserdetails
 						}
 
 						if ( $this->settings[$p.'ltype'] ) {
-							$settings[$this->settings[$p.'short'].'_desc'] = array( 'p', "", $this->settings[$p.'name'] );
+							$settings[$this->settings[$p.'short'].'_desc'] = array( 'p', $this->settings[$p.'name'] );
 
 							$settings[$this->settings[$p.'short']] = array( 'hidden', null, 'mi_'.$this->id.'_'.$this->settings[$p.'short'] );
 
@@ -376,7 +376,7 @@ class mi_aecuserdetails
 
 		return true;
 	}
-	
+
 	function before_invoice_confirm( $request )
 	{
 		if ( empty( $this->settings['emulate_reg'] ) || !empty( $request->metaUser->userid ) ) {
@@ -385,7 +385,7 @@ class mi_aecuserdetails
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$vars = array( 'username' => 'username', 'name' => 'name', 'email' => 'email', 'email2' => 'email2', 'password' => 'password', 'password2' => 'password2' );
-			
+
 			foreach ( $vars as $k => $v ) {
 				if ( isset( $request->add->passthrough['mi_'.$this->id.'_'.$k] ) ) {
 					$request->add->passthrough[$v] = $request->add->passthrough['mi_'.$this->id.'_'.$k];

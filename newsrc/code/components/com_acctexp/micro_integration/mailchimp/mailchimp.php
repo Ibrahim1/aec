@@ -128,9 +128,9 @@ class mi_mailchimp
 			}
 
 			if ( !empty( $this->settings['custominfo'] ) ) {
-				$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+				$settings['exp'] = array( 'p', $this->settings['custominfo'] );
 			} else {
-				$settings['exp'] = array( 'p', "", JText::_('MI_MI_MAILCHIMP_DEFAULT_NOTICE') );
+				$settings['exp'] = array( 'p', JText::_('MI_MI_MAILCHIMP_DEFAULT_NOTICE') );
 			}
 
 			$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_MAILCHIMP_NEWSLETTER_SIGNUP') );
@@ -225,7 +225,7 @@ class mi_mailchimp
 
 			$merge_vars = processor::customParams( $this->settings['custom_details'], $merge_vars, $request );
 
-			$result = $MCAPI->listUpdateMember( $this->settings['list'], $email, $merge_vars, '', false );			
+			$result = $MCAPI->listUpdateMember( $this->settings['list'], $email, $merge_vars, '', false );
 		}
 	}
 
