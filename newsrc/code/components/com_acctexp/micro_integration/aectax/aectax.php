@@ -126,9 +126,9 @@ class mi_aectax
 		if ( !empty( $locations ) ) {
 			if ( ( count( $locations ) > 1 ) || !empty( $this->settings['vat_no_request'] ) ) {
 				if ( !empty( $this->settings['custominfo'] ) ) {
-					$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+					$settings['exp'] = array( 'p', $this->settings['custominfo'] );
 				} else {
-					$settings['exp'] = array( 'p', "", JText::_('MI_MI_AECTAX_DEFAULT_NOTICE') );
+					$settings['exp'] = array( 'p', JText::_('MI_MI_AECTAX_DEFAULT_NOTICE') );
 				}
 			}
 
@@ -173,7 +173,7 @@ class mi_aectax
 			$vat_no = '';
 			if ( $request->metaUser->userid ) {
 				$uparams = $request->metaUser->meta->getCustomParams();
-				
+
 				if ( isset( $uparams['vat_no'] ) ) {
 					$vat_no = $uparams['vat_no'];
 				}
@@ -323,7 +323,7 @@ class mi_aectax
 
 		// Modify grand total according to tax
 		$request->add->grand_total->set( 'cost', array( 'amount' => $grand_total ) );
-		
+
 		// Formatting for total
 		$request->add->total->cost['amount'] = AECToolbox::correctAmount( $request->add->total->cost['amount'] );
 

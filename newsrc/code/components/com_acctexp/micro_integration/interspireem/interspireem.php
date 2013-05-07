@@ -26,7 +26,7 @@ class mi_interspireem
 	function Settings()
 	{
 		$settings = array();
-		
+
 		$settings['url']			= array( 'inputC' );
 
 		$settings['user_name']		= array( 'inputC' );
@@ -56,7 +56,7 @@ class mi_interspireem
 			}
 			$d .= '</tbody></table><br /></div>';
 
-			$settings['details_exp']	= array( 'p', '', '', $d );
+			$settings['details_exp']	= array( 'p', $d );
 		}
 
 		$li = array();
@@ -136,7 +136,7 @@ class mi_interspireem
 
 		return $this->sendRequest( $xml );
 	}
-	
+
 	function GetLists()
 	{
 		$xml = $this->getRequest( 'user' ,'GetLists' , "\n" );
@@ -226,7 +226,7 @@ class mi_interspireem
 		if ( $result->status == 'ERROR' ) {
 			aecDebug( $result->errormessage );
 		}
-		
+
 		return $result->data;
 	}
 }

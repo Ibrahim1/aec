@@ -69,9 +69,9 @@ class mi_jnews
 		}
 
 		if ( !empty( $this->settings['custominfo'] ) ) {
-			$settings['exp'] = array( 'p', "", $this->settings['custominfo'] );
+			$settings['exp'] = array( 'p', $this->settings['custominfo'] );
 		} else {
-			$settings['exp'] = array( 'p', "", JText::_('MI_MI_JNEWS_DEFAULT_NOTICE') );
+			$settings['exp'] = array( 'p', JText::_('MI_MI_JNEWS_DEFAULT_NOTICE') );
 		}
 
 		$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_JNEWS_NEWSLETTER_SIGNUP') );
@@ -233,7 +233,7 @@ class mi_jnews
 	}
 
 	function deleteFromList( $subscriber_id, $list_id )
-	{	
+	{
 		if ( $this->hasList( $subscriber_id, $list_id ) ) {
 			$db = &JFactory::getDBO();
 
