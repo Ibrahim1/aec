@@ -78,7 +78,23 @@ class reWriteEngine
 				$db->setQuery( $query );
 				$pkeys = xJ::getDBArray( $db );
 
-				if ( is_array( $pkeys ) ) {
+				if ( empty( $pkeys ) ) {
+					// Try to reconstruct this from the plugin
+					$query = 'SELECT params'
+							. ' FROM #__extensions'
+							. ' WHERE `name` = \'plg_user_profile\''
+							. ' AND enabled = 1';
+					$db->setQuery( $query );
+					$params = (array) json_decode( $db->loadResult() );
+
+					foreach ( $params as $k => $x ) {
+						if ( strpos( $k, 'profile-' ) !== false ) {
+							$pkeys[] = str_replace( "profile-require_", "", $k );
+						}
+					}
+				}
+
+				if ( !empty( $pkeys ) ) {
 					foreach ( $pkeys as $pkey ) {
 						$content = str_replace( ".", "_", $pkey );
 
