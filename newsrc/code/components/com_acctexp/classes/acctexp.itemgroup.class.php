@@ -227,9 +227,9 @@ class ItemGroupHandler
 
 		$where = array();
 
-		if ( is_array( $groups ) ) {
+		if ( is_array( $groups ) && !empty( $groups ) ) {
 			$where[] = '`group_id` IN (' . implode( ',', $groups ) . ')';
-		} else {
+		} elseif ( !empty( $groups ) ) {
 			$where[] = '`group_id` = ' . $groups . '';
 		}
 
@@ -566,7 +566,7 @@ class ItemGroup extends serialParamDBTable
 			// Remove entries from the group MIs that are already inherited
 			if ( !empty( $gmilist ) && !empty( $milist ) && $strip_inherited ) {
 				$theintersect = array_intersect( $gmilist, $milist );
-	
+
 				if ( !empty( $theintersect ) ) {
 					foreach ( $theintersect as $value ) {
 						// STAY IN THE CAR
@@ -639,7 +639,7 @@ class ItemGroup extends serialParamDBTable
 			if ( $varname == 'color' ) {
 				if ( strpos( $post[$varname], '#' ) !== false ) {
 					$post[$varname] = substr( $post[$varname], 1 );
-				} 
+				}
 			}
 
 			$params[$varname] = $post[$varname];
