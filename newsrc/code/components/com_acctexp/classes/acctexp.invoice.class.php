@@ -1539,6 +1539,30 @@ class InvoiceFactory
 			if ( $planlist->list[0]['type'] == 'item' ) {
 				if ( count( $planlist->list[0]['gw'] ) === 1 ) {
 					$nochoice = true;
+				} elseif ( !empty( $processor ) ) {
+					foreach ( $planlist->list[0]['gw'] as $gw ) {
+						if ( $gw->processor_name == $processor ) {
+							$nochoice = true;
+						}
+					}
+
+					if ( $nochoice ) {
+						$first = 0;
+						foreach ( $planlist->list[0]['gw'] as $gwid => $gw ) {
+
+							if ( $gw->processor_name != $processor ) {
+								unset( $planlist->list[0]['gw'][$gwid] );
+							} else {
+								$first == $gwid;
+							}
+						}
+
+						if ( !empty( $first ) ) {
+							$planlist->list[0]['gw'][0] = $planlist->list[0]['gw'][$first];
+
+							unset( $planlist->list[0]['gw'][$first] );
+						}
+					}
 				}
 			} else {
 				// Jump back and use the only group we've found
