@@ -939,8 +939,10 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$filter_group	= $app->getUserStateFromRequest( "filter_group{$option}", 'filter_group', 0 );
 
-	if ( !is_array( $filter_group ) ) {
+	if ( !is_array( $filter_group ) && !empty( $filter_group ) ) {
 		$filter_group = array( $filter_group );
+	} elseif ( empty( $filter_group ) ) {
+		$filter_group = array();
 	}
 
 	if ( !empty( $set_group ) && empty( $_REQUEST['groups'] ) ) {
