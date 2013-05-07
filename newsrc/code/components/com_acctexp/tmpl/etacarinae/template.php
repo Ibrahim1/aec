@@ -115,13 +115,20 @@ class template_etacarinae extends aecTemplate
 			}
 		}
 	}
+
 	function defaultHeader()
 	{
+		$this->addDefaultCSS();
+
 		if ( !empty( $this->validation ) ) {
 			$this->addValidation();
 		}
 
-		parent::defaultHeader();
+		if ( !empty( $this->js ) || !empty( $this->jQueryCode ) ) {
+			$this->loadJS();
+		}
+
+		$this->addMetaData();
 	}
 
 	function loadJS()
