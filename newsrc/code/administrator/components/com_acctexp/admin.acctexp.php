@@ -1773,6 +1773,23 @@ function saveSettings( $option, $return=0 )
 		$difference = 'none';
 	}
 
+	if ( defined( 'JPATH_MANIFESTS' ) ) {
+		if ( $aecConfig->cfg['manageraccess'] !== $general_settings['manageraccess'] ) {
+			if ( $general_settings['manageraccess'] ) {
+				$set = '{"core.admin":{"7":1},"core.manage":{"6":1},"core.create":[],"core.delete":[],"core.edit":[],"core.edit.state":[]}';
+			} else {
+				$set = '{}';
+			}
+
+			$query = 'UPDATE #__assets'
+					. ' SET `rules` = \'' . xJ::escape( $db, $set ) . '\''
+					. ' WHERE `name` = \'com_acctexp\''
+					;
+			$db->setQuery( $query );
+			$db->query();
+		}
+	}
+
 	$aecConfig->cfg = $general_settings;
 	$aecConfig->saveSettings();
 
