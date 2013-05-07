@@ -217,6 +217,14 @@ class mi_aecmodifycost
 						return false;
 					}
 				}
+
+				if ( $mi->relayAction( $request->metaUser, $exchange, $request->invoice, null, 'afteraction', $request->add, $params ) === false ) {
+					global $aecConfig;
+
+					if ( $aecConfig->cfg['breakon_mi_error'] ) {
+						return false;
+					}
+				}
 			}
 		}
 
