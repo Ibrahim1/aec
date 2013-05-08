@@ -172,7 +172,7 @@ class mi_interspireem
 				foreach ( $list as $li ) {
 					$k = explode( '=', $li, 2 );
 
-					$data .= '<item><fieldid>' . $k[0] . '</fieldid><value>' . $k[1] . '</value></item>';
+					$data .= '<item><fieldid>' . trim($k[0]) . '</fieldid><value>' . trim($k[1]) . '</value></item>';
 				}
 
 				$data .= '</customfields>';
@@ -223,8 +223,8 @@ class mi_interspireem
 
 		$result = simplexml_load_string( $return );
 
-		if ( $result->status == 'ERROR' ) {
-			aecDebug( $result->errormessage );
+		if ( strpos( $return, '<status>FAILED</status>' ) !== false ) {
+			aecDebug( $return );
 		}
 
 		return $result->data;
