@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: cyberplus.php
+ * @version $Id: systempay.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Payment Processors
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
@@ -11,15 +11,15 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-class processor_cyberplus extends POSTprocessor
+class processor_systempay extends POSTprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'cyberplus';
-		$info['longname']		= JText::_('CFG_CYBERPLUS_LONGNAME');
-		$info['statement']		= JText::_('CFG_CYBERPLUS_STATEMENT');
-		$info['description']	= JText::_('CFG_CYBERPLUS_DESCRIPTION');
+		$info['name']			= 'systempay';
+		$info['longname']		= JText::_('CFG_SYSTEMPAY_LONGNAME');
+		$info['statement']		= JText::_('CFG_SYSTEMPAY_STATEMENT');
+		$info['description']	= JText::_('CFG_SYSTEMPAY_DESCRIPTION');
 		$info['currencies']		= AECToolbox::aecCurrencyField( true, true, true, true );
 		$info['languages']		= "DE,EN,ZH,ES,FR,IT,JP";
 		$info['cc_list']		= "visa,mastercard,discover,americanexpress,echeck";
