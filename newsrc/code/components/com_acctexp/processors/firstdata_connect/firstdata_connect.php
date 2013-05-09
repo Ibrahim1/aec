@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: firstdata_linkpoint.php
+ * @version $Id: firstdata_connect.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Processors - FirstData Linkpoint
+ * @subpackage Processors - FirstData Connect
  * @copyright 2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
@@ -11,16 +11,16 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-class processor_firstdata_linkpoint extends POSTprocessor
+class processor_firstdata_connect extends POSTprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'firstdata_linkpoint';
-		$info['longname'] 		= JText::_('CFG_FIRSTDATA_LINKPOINT_LONGNAME');
+		$info['name']			= 'firstdata_connect';
+		$info['longname'] 		= JText::_('CFG_FIRSTDATA_CONNECT_LONGNAME');
 
-		$info['statement'] 		= JText::_('CFG_FIRSTDATA_LINKPOINT_STATEMENT');
-		$info['description'] 	= JText::_('CFG_FIRSTDATA_LINKPOINT_DESCRIPTION');
+		$info['statement'] 		= JText::_('CFG_FIRSTDATA_CONNECT_STATEMENT');
+		$info['description'] 	= JText::_('CFG_FIRSTDATA_CONNECT_DESCRIPTION');
 		$info['currencies'] 	= 'EUR,USD,AUD,CAD,GBP,JPY,NZD,CHF,HKD,SGD,SEK,DKK,PLN,NOK,HUF,CZK,MXN,ILS,BRL,MYR,PHP,TWD,THB,ZAR';
 		$info['languages'] 		= AECToolbox::getISO639_1_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
@@ -72,7 +72,7 @@ class processor_firstdata_linkpoint extends POSTprocessor
 		$var['storename']			= $this->settings['password'];
 		$var['invoice']				= $request->invoice->invoice_number;
 		$var['responseFailURL']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
-    	$var['responseSuccessURL']	=AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=firstdata_linkpointnotification' );
+    	$var['responseSuccessURL']	=AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=firstdata_connectnotification' );
 		$var['oid']					= AECToolbox::rewriteEngineRQ( $this->settings['item_number'], $request );
 		$var['item_name']			= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['return_url']			= $request->int_var['return_url'];
