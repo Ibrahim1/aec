@@ -49,7 +49,7 @@ class aecHTML
 					$xlabel = htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
 				}
 
-				$return .= '<label class="control-label bstooltip" for="' . $name . '" rel="tooltip" class="bstooltip" data-original-title="' . $xtitle . '">';
+				$return .= '<label class="control-label bstooltip" for="' . $name . '" rel="tooltip" data-original-title="' . $xtitle . '">';
 
 				$return .= $xlabel;
 

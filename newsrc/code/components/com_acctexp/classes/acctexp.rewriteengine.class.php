@@ -85,9 +85,9 @@ class reWriteEngine
 							. ' WHERE `name` = \'plg_user_profile\''
 							. ' AND enabled = 1';
 					$db->setQuery( $query );
-					$params = (array) json_decode( $db->loadResult() );
+					$jparams = (array) json_decode( $db->loadResult() );
 
-					foreach ( $params as $k => $x ) {
+					foreach ( $jparams as $k => $x ) {
 						if ( strpos( $k, 'profile-' ) !== false ) {
 							$pkeys[] = str_replace( "profile-require_", "", $k );
 						}
