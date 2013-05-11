@@ -299,13 +299,15 @@ class SubscriptionPlanHandler
 		}
 	}
 
-	function getActivePlanList()
+	function getActivePlanList( $noplan=true )
 	{
 		$db = &JFactory::getDBO();
 
 		// get entry Plan selection
 		$available_plans	= array();
-		$available_plans[]	= JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN'), 'value', 'text', true );
+		if ( $noplan ) {
+			$available_plans[]	= JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN'), 'value', 'text', true );
+		}
 
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'

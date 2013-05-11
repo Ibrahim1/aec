@@ -686,7 +686,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 	}
 
 	// get available plans
-	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
+	$available_plans	= SubscriptionPlanHandler::getActivePlanList(false);
 
 	$lists['assignto_plan'] = JHTML::_('select.genericlist', $available_plans, 'assignto_plan[]', 'size="1" multiple="multiple"', 'value', 'text', 0 );
 
