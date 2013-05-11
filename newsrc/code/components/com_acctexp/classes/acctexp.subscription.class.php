@@ -176,7 +176,7 @@ class Subscription extends serialParamDBTable
 	}
 
 	function isExcluded() { return $this->isStatus('Excluded'); }
-	function isTrial() { return $this->isStatus('Active'); }
+	function isTrial() { return $this->isStatus('Trial'); }
 	function isActive() { return $this->isStatus('Active'); }
 	function isPending() { return $this->isStatus('Pending'); }
 	function isHold() { return $this->isStatus('Hold'); }
@@ -245,7 +245,7 @@ class Subscription extends serialParamDBTable
 
 	function getPlan( $id=null )
 	{
-		$id = empty($usage) ? $this->plan : $id;
+		$id = empty($id) ? $this->plan : $id;
 
 		if ( !$id ) {
 			return false;

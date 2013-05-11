@@ -561,11 +561,11 @@ class SubscriptionPlan extends serialParamDBTable
 		// TODO: Figure out why $status returns 'existing' - even on a completely fresh subscr
 
 		if ( $fstatus != 'existing' ) {
-			$is_pending	= ( strcmp( $metaUser->focusSubscription->status, 'Pending' ) === 0 );
-			$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
+			$is_pending	= $metaUser->focusSubscription->isPending();
+			$is_trial	= $metaUser->focusSubscription->isTrial();
 		} else {
 			$is_pending	= false;
-			$is_trial	= ( strcmp( $metaUser->focusSubscription->status, 'Trial' ) === 0 );
+			$is_trial	= $metaUser->focusSubscription->isTrial();
 		}
 
 		$comparison		= $this->doPlanComparison( $metaUser->focusSubscription );

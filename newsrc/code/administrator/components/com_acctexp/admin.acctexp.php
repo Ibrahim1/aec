@@ -780,8 +780,6 @@ function saveUser( $option, $apply=0 )
 
 			// We have to reload the metaUser object because of the changes
 			$metaUser = new metaUser( $post['userid'] );
-
-			$metaUser->hasSubscription = true;
 		}
 	}
 
