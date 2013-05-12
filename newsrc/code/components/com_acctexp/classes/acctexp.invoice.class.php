@@ -392,9 +392,9 @@ class InvoiceFactory
 		return base64_encode( serialize( $passthrough ) );
 	}
 
-	function puffer( $option, $testmi=false )
+	function puffer( $testmi=false )
 	{
-		$this->loadPlanObject( $option, $testmi );
+		$this->loadPlanObject( $testmi );
 
 		$this->loadProcessorObject();
 
@@ -405,7 +405,7 @@ class InvoiceFactory
 		return;
 	}
 
-	function loadPlanObject( $option, $testmi=false, $quick=false )
+	function loadPlanObject( $testmi=false, $quick=false )
 	{
 		if ( !$this->isCart() ) {
 			// get the payment plan
@@ -467,7 +467,7 @@ class InvoiceFactory
 				$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
 
 				if ( count( $procs ) > 1 ) {
-					$this->cartItemsPPselectForm( $option );
+					$this->cartItemsPPselectForm();
 				} else {
 					if ( isset( $procs[0] ) ) {
 						$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
@@ -583,7 +583,7 @@ class InvoiceFactory
 		}
 	}
 
-	function cartItemsPPselectForm( $option )
+	function cartItemsPPselectForm()
 	{
 		$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
 
@@ -758,7 +758,7 @@ class InvoiceFactory
 			$this->invoice_number = $finalinvoice->invoice_number;
 			$this->invoice = $finalinvoice;
 
-			$this->touchInvoice( $option );
+			$this->touchInvoice();
 
 			$objUsage = $this->invoice->getObjUsage();
 
@@ -924,7 +924,7 @@ class InvoiceFactory
 		return !empty( $this->exceptions );
 	}
 
-	function addressExceptions( $option )
+	function addressExceptions()
 	{
 		$hasform = false;
 
@@ -1207,7 +1207,7 @@ class InvoiceFactory
 		}
 	}
 
-	function addtoCart( $option, $usage, $returngroup=null )
+	function addtoCart( $usage, $returngroup=null )
 	{
 		global $aecConfig;
 
@@ -1234,16 +1234,16 @@ class InvoiceFactory
 
 		if ( $aecConfig->cfg['additem_stayonpage'] ) {
 			if ( !empty( $returngroup ) ) {
-				return $this->create( $option, 0, 0, $returngroup );
+				return $this->create( 0, 0, $returngroup );
 			} else {
-				return $this->create( $option );
+				return $this->create();
 			}
 		} else {
-			return $this->cart( $option );
+			return $this->cart();
 		}
 	}
 
-	function updateCart( $option, $data )
+	function updateCart( $data )
 	{
 		$update = array();
 		foreach ( $data as $dn => $dv ) {
@@ -1261,7 +1261,7 @@ class InvoiceFactory
 		$this->cartobject->action( 'updateItems', $update );
 	}
 
-	function clearCart( $option )
+	function clearCart()
 	{
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
@@ -1270,7 +1270,7 @@ class InvoiceFactory
 		$this->cartobject->action( 'clearCart' );
 	}
 
-	function clearCartItem( $option, $item )
+	function clearCartItem( $item )
 	{
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
@@ -1279,7 +1279,7 @@ class InvoiceFactory
 		$this->cartobject->action( 'updateItems', array( $item => 0 ) );
 	}
 
-	function touchInvoice( $option, $invoice_number=false, $storenew=false, $anystatus=false )
+	function touchInvoice( $invoice_number=false, $storenew=false, $anystatus=false )
 	{
 		// Checking whether we are trying to repeat an invoice
 		if ( !empty( $invoice_number ) ) {
@@ -1291,7 +1291,7 @@ class InvoiceFactory
 
 		$recurring = null;
 		if ( !empty( $this->invoice_number ) ) {
-			if ( $this->loadInvoice( $option ) === false ) {
+			if ( $this->loadInvoice() === false ) {
 				$recurring = $this->createInvoice( $storenew );
 			}
 		} else {
@@ -1328,7 +1328,7 @@ class InvoiceFactory
 		return true;
 	}
 
-	function loadInvoice( $option, $redirect=true )
+	function loadInvoice( $redirect=true )
 	{
 		if ( !isset( $this->invoice ) ) {
 			$this->invoice = null;
@@ -1361,9 +1361,9 @@ class InvoiceFactory
 		}
 
 		if ( empty( $this->usage ) && empty( $this->invoice->conditions ) && empty( $this->invoice->amount ) ) {
-			return $this->create( $option, 0, 0, $this->invoice_number );
+			return $this->create( 0, 0, $this->invoice_number );
 		} elseif ( empty( $this->processor ) && ( strpos( $this->usage, 'c' ) === false ) ) {
-			return $this->create( $option, 0, $this->usage, $this->invoice_number );
+			return $this->create( 0, $this->usage, $this->invoice_number );
 		}
 
 		return true;
@@ -1461,7 +1461,7 @@ class InvoiceFactory
 		}
 	}
 
-	function checkAuth( $option )
+	function checkAuth()
 	{
 		$return = true;
 
@@ -1482,11 +1482,11 @@ class InvoiceFactory
 				if ( isset( $this->passthrough['password'] ) ) {
 					if ( !$this->metaUser->setTempAuth( $this->passthrough['password'] ) ) {
 						unset( $this->passthrough['password'] );
-						$this->promptpassword( $option, true );
+						$this->promptpassword( true );
 						$return = false;
 					}
 				} elseif ( !empty( $this->metaUser->cmsUser->password ) ) {
-					$this->promptpassword( $option );
+					$this->promptpassword();
 					$return = false;
 				}
 			}
@@ -1495,44 +1495,46 @@ class InvoiceFactory
 		return $return;
 	}
 
-	function promptpassword( $option, $wrong=false )
+	function promptpassword( $wrong=false )
 	{
 		getView( 'passwordprompt', array( 'passthrough' => $this->getPassthrough(), 'wrong' => $wrong ) );
 	}
 
-	function create( $option, $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
+	function create( $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
 	{
 		global $aecConfig;
 
 		$register = !$this->loadMetaUser( true );
 
-		if ( empty( $this->usage ) && empty( $group ) ) {
-			// Check if the user has already subscribed once, if not - link to intro
-			if ( $this->metaUser->hasSubscription && !$aecConfig->cfg['customintro_always'] ) {
-				$intro = false;
-			}
+		$this->getPassthrough();
 
-			if ( !$intro && !empty( $aecConfig->cfg['customintro'] ) ) {
-				if ( !empty( $aecConfig->cfg['customintro_userid'] ) ) {
-					aecRedirect( $aecConfig->cfg['customintro'], $this->userid, "aechidden" );
-				} else {
-					aecRedirect( $aecConfig->cfg['customintro'] );
-				}
+		// Reset $register if we seem to have all data
+		if ( ( $register && !empty( $this->passthrough['username'] ) )
+			|| !empty( $aecConfig->cfg['skip_registration'] ) ) {
+			$register = 0;
+		}
+
+		if ( $intro && $this->metaUser->hasSubscription && !$aecConfig->cfg['customintro_always'] ) {
+			$intro = false;
+		}
+
+		if ( empty( $this->usage )
+			&& empty( $group )
+			&& !$intro
+			&& !empty( $aecConfig->cfg['customintro'] ) ) {
+
+			if ( !empty( $aecConfig->cfg['customintro_userid'] ) ) {
+				aecRedirect( $aecConfig->cfg['customintro'], $this->userid, "aechidden" );
+			} else {
+				aecRedirect( $aecConfig->cfg['customintro'] );
 			}
 		}
 
-		$recurring = aecGetParam( 'recurring', null );
-
-		if ( !is_null( $recurring ) ) {
-			$this->recurring = $recurring;
-		} else {
-			$this->recurring = null;
-		}
+		$this->recurring = aecGetParam( 'recurring', null );
 
 		$planlist = new SubscriptionPlanList( $usage, $group, $this->metaUser, $this->recurring );
 
 		$nochoice = false;
-
 
 		// There is no choice if we have only one group or only one item with one payment option
 		if ( count( $planlist->list ) === 1 ) {
@@ -1549,7 +1551,6 @@ class InvoiceFactory
 					if ( $nochoice ) {
 						$first = 0;
 						foreach ( $planlist->list[0]['gw'] as $gwid => $gw ) {
-
 							if ( $gw->processor_name != $processor ) {
 								unset( $planlist->list[0]['gw'][$gwid] );
 							} else {
@@ -1566,7 +1567,7 @@ class InvoiceFactory
 				}
 			} else {
 				// Jump back and use the only group we've found
-				return $this->create( $option, $intro, 0, $planlist->list[0]['id'], null, 0, true );
+				return $this->create( $intro, 0, $planlist->list[0]['id'], null, 0, true );
 			}
 		}
 
@@ -1591,155 +1592,47 @@ class InvoiceFactory
 					$this->invoice_number	= $invoice;
 				}
 
-				$this->confirm( $option );
+				return $this->confirm();
 			}
-		} else {
-			// Reset $register if we seem to have all data
-			if ( ( $register && !empty( $this->passthrough['username'] ) ) || !empty( $aecConfig->cfg['skip_registration'] ) ) {
-				$register = 0;
-			}
-
-			if ( $group ) {
-				$g = new ItemGroup();
-				$g->load( $group );
-
-				$planlist->list['group'] = ItemGroupHandler::getGroupListItem( $g );
-			}
-
-			if ( $this->userid ) {
-				$cart = aecCartHelper::getCartidbyUserid( $this->userid );
-			} else {
-				$cart = false;
-			}
-
-			if ( ( !empty( $group ) || !empty( $usage ) ) && !$autoselect ) {
-				$selected = true;
-			} else {
-				$selected = false;
-			}
-
-			if ( !$selected && !empty( $planlist->list['group'] ) ) {
-				unset( $planlist->list['group'] );
-			}
-
-			$csslist = array();
-			foreach ( $planlist->list as $li => $lv ) {
-				if ( $lv['type'] == 'group' ) {
-					continue;
-				}
-
-				foreach ( $lv['gw'] as $gwid => $pp ) {
-					$btnarray = array();
-
-					if ( strtolower( $pp->processor_name ) == 'add_to_cart' ) {
-						$btnarray['option']		= 'com_acctexp';
-						$btnarray['task']		= 'addtocart';
-						$btnarray['class']		= 'btn btn-processor';
-						$btnarray['content']	= aecHTML::Icon( 'plus', false, ' narrow' ) . JText::_('AEC_BTN_ADD_TO_CART');
-
-						$btnarray['usage'] = $lv['id'];
-
-						if ( $aecConfig->cfg['additem_stayonpage'] ) {
-							$btnarray['returngroup'] = $group;
-						}
-					} else {
-						$btnarray['view'] = '';
-
-						if ( $register ) {
-							if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
-								$btnarray['option']	= 'com_comprofiler';
-								$btnarray['task']	= 'registers';
-							} elseif ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) ) {
-								$btnarray['option']	= 'com_community';
-								$btnarray['view'] 	= 'register';
-							} else {
-								if ( defined( 'JPATH_MANIFESTS' ) ) {
-									$btnarray['option']	= 'com_users';
-									$btnarray['task']	= '';
-									$btnarray['view'] 	= 'registration';
-								} else {
-									$btnarray['option']	= 'com_user';
-									$btnarray['task']	= '';
-									$btnarray['view'] 	= 'register';
-								}
-							}
-						} else {
-							$btnarray['option']		= 'com_acctexp';
-							$btnarray['task']		= 'confirm';
-						}
-
-						$btnarray['class'] = 'btn btn-processor';
-
-						if ( $pp->processor_name == 'free' ) {
-							$btnarray['content'] = JText::_('AEC_PAYM_METHOD_FREE');
-						} elseif( is_object($pp->processor) ) {
-							if ( $pp->processor->getLogoFilename() == '' ) {
-								$btnarray['content'] = '<span class="btn-tallcontent">'.$pp->info['longname'].'</span>';
-							} else {
-								if ( !array_key_exists($pp->processor_name, $csslist) ) {
-									$csslist[$pp->processor_name] = '.btn-processor-' . $pp->processor_name
-																	. ' { background-image: url(' . $pp->getLogoPath() .  ') !important; }';
-								}
-							}
-						}
-
-						if ( !empty( $pp->settings['generic_buttons'] ) ) {
-							if ( !empty( $pp->recurring ) ) {
-								$btnarray['content'] = JText::_('AEC_PAYM_METHOD_SUBSCRIBE');
-							} else {
-								$btnarray['content'] = JText::_('AEC_PAYM_METHOD_BUYNOW');
-							}
-						} else {
-							$btnarray['class'] .= ' btn-processor-'.$pp->processor_name;
-
-							if ( ( isset( $pp->recurring ) || isset( $pp->info['recurring'] ) ) && !empty( $pp->info['recurring'] ) ) {
-								if ( $pp->info['recurring'] == 2 ) {
-									if ( !empty( $pp->recurring ) ) {
-										$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
-									} else {
-										$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_ONE_TIME_BILLING') . '</i>';
-									}
-								} elseif ( $pp->info['recurring'] == 1 ) {
-									$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
-								}
-							}
-						}
-
-						if ( !empty( $pp->recurring ) ) {
-							$btnarray['recurring'] = 1;
-						} else {
-							$btnarray['recurring'] = 0;
-						}
-
-						$btnarray['processor'] = $pp->processor_name;
-
-						$btnarray['usage'] = $lv['id'];
-					}
-
-					$btnarray['userid'] = ( $this->userid ? $this->userid : 0 );
-
-					$passthrough = $this->getPassthrough();
-
-					// Rewrite Passthrough
-					if ( !empty( $passthrough ) ) {
-						$btnarray['aec_passthrough'] = $passthrough;
-					}
-
-					$planlist->list[$li]['gw'][$gwid]->btn = $btnarray;
-				}
-			}
-
-			getView( 'plans', array(	'userid' => $this->userid, 'list' => $planlist->list, 'passthrough' => $this->getPassthrough(), 'register' => $register,
-										'cart' => $cart, 'selected' => $selected, 'group' => $group, 'csslist' => $csslist ) );
 		}
+
+		if ( $group ) {
+			$g = new ItemGroup();
+			$g->load( $group );
+
+			$planlist->list['group'] = ItemGroupHandler::getGroupListItem( $g );
+		}
+
+		$cart = $this->userid ? aecCartHelper::getCartidbyUserid( $this->userid ) : false;
+
+		$selected = ( !empty( $group ) || !empty( $usage ) ) && !$autoselect;
+
+		if ( !$selected && !empty( $planlist->list['group'] ) ) {
+			unset( $planlist->list['group'] );
+		}
+
+		$csslist = $planlist->addButtons( $register, $this->passthrough );
+
+		getView( 'plans',
+				array(
+					'userid' => $this->userid,
+					'list' => $planlist->list,
+					'passthrough' => $this->getPassthrough(),
+					'register' => $register,
+					'cart' => $cart,
+					'selected' => $selected,
+					'group' => $group,
+					'csslist' => $csslist
+				)
+		);
 	}
 
-	function confirm( $option )
+	function confirm()
 	{
 		global $aecConfig;
 
 		if ( empty( $this->passthrough ) ) {
-			if ( !$this->checkAuth( $option ) ) {
+			if ( !$this->checkAuth() ) {
 				return false;
 			}
 		}
@@ -1750,7 +1643,7 @@ class InvoiceFactory
 			}
 		}
 
-		$this->puffer( $option );
+		$this->puffer();
 
 		$this->coupons = array();
 		$this->coupons['active'] = !empty( $aecConfig->cfg['confirmation_coupons'] );
@@ -1792,30 +1685,24 @@ class InvoiceFactory
 			}
 		}
 
-		if ( !( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
-			$this->userdetails = "";
-
-			if ( !empty( $this->metaUser->cmsUser->name ) ) {
-				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_NAME') . "&nbsp;" . $this->metaUser->cmsUser->name . '</p>';
-			}
-
-			if ( !empty( $this->metaUser->cmsUser->username ) ) {
-				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_USERNAME') . "&nbsp;" . $this->metaUser->cmsUser->username . '</p>';
-			}
-
-			if ( !empty( $this->metaUser->cmsUser->email ) ) {
-				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_EMAIL') . "&nbsp;" . $this->metaUser->cmsUser->email . '</p>';
-			}
-
-			getView( 'confirmation', array( 'InvoiceFactory' => $this, 'passthrough' => $this->getPassthrough() ) );
-		} else {
+		if ( ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
 			$this->getPassthrough();
 
-			$this->save( $option );
+			$this->save();
 		}
+
+		$this->userdetails = "";
+		foreach ( array( 'name', 'username', 'email' ) as $k ) {
+			if ( !empty( $this->metaUser->cmsUser->$k ) ) {
+				$this->userdetails .= '<p>' . JText::_('CONFIRM_ROW_'.strtoupper($k))
+									. "&nbsp;" . $this->metaUser->cmsUser->$k . '</p>';
+			}
+		}
+
+		getView( 'confirmation', array( 'InvoiceFactory' => $this, 'passthrough' => $this->getPassthrough() ) );
 	}
 
-	function cart( $option )
+	function cart()
 	{
 		global $aecConfig;
 
@@ -1828,13 +1715,13 @@ class InvoiceFactory
 		if ( !empty( $in ) ) {
 			$this->invoice_number = $in;
 
-			$this->touchInvoice( $option );
+			$this->touchInvoice();
 		}
 
 		getView( 'cart', array( 'InvoiceFactory' => $this ) );
 	}
 
-	function confirmcart( $option, $coupon=null, $testmi=false )
+	function confirmcart( $coupon=null, $testmi=false )
 	{
 		global $task;
 
@@ -1844,24 +1731,24 @@ class InvoiceFactory
 
 		$this->metaUser->setTempAuth();
 
-		$this->puffer( $option );
+		$this->puffer();
 
-		$this->touchInvoice( $option );
+		$this->touchInvoice();
 
 		if ( $this->hasExceptions() ) {
-			return $this->addressExceptions( $option );
+			return $this->addressExceptions();
 		} else {
-			$this->checkout( $option, 0, null, $coupon );
+			$this->checkout( 0, null, $coupon );
 		}
 	}
 
-	function save( $option, $coupon=null )
+	function save( $coupon=null )
 	{
 		global $aecConfig;
 
 		$this->confirmed = 1;
 
-		$this->loadPlanObject( $option );
+		$this->loadPlanObject();
 
 		$add =& $this;
 
@@ -1903,7 +1790,7 @@ class InvoiceFactory
 		if ( !empty( $this->plan ) ) {
 			if ( $this->verifyMIForms( $this->plan ) === false ) {
 				$this->confirmed = 0;
-				return $this->confirm( $option );
+				return $this->confirm();
 			}
 		} elseif ( !empty( $this->cart ) ) {
 			$check = true;
@@ -1915,11 +1802,11 @@ class InvoiceFactory
 
 			if ( !$check ) {
 				$this->confirmed = 0;
-				return $this->confirm( $option );
+				return $this->confirm();
 			}
 		}
 
-		$this->checkout( $option, 0, null, $coupon );
+		$this->checkout( 0, null, $coupon );
 	}
 
 	function verifyMIForms( $plan, $mi_form=null, $prefix="" )
@@ -2016,17 +1903,17 @@ class InvoiceFactory
 		return true;
 	}
 
-	function checkout( $option, $repeat=0, $error=null, $coupon=null )
+	function checkout( $repeat=0, $error=null, $coupon=null )
 	{
 		global $aecConfig;
 
-		if ( !$this->checkAuth( $option ) ) {
+		if ( !$this->checkAuth() ) {
 			return false;
 		}
 
-		$this->puffer( $option );
+		$this->puffer();
 
-		$this->touchInvoice( $option, false, true );
+		$this->touchInvoice( false, true );
 
 		if ( $this->invoice->method != $this->processor ) {
 			$this->invoice->method = $this->processor;
@@ -2091,7 +1978,7 @@ class InvoiceFactory
 				if ( !( $recurring && ( empty( $this->plan->params['full_free'] ) || empty( $this->plan->params['trial_free'] ) ) ) ) {
 					// mark paid
 					if ( $this->invoice->pay() !== false ) {
-						return $this->thanks( $option, false, true );
+						return $this->thanks( false, true );
 					}
 				}
 			}
@@ -2101,7 +1988,7 @@ class InvoiceFactory
 			if ( !empty( $this->invoice->made_free ) ) {
 				// mark paid
 				if ( $this->invoice->pay() !== false ) {
-					return $this->thanks( $option, false, true );
+					return $this->thanks( false, true );
 				}
 			}
 
@@ -2112,7 +1999,7 @@ class InvoiceFactory
 		}
 
 		if ( $this->pp->requireSSLcheckout() && empty( $_SERVER['HTTPS'] ) && !$aecConfig->cfg['override_reqssl'] ) {
-			aecRedirect( AECToolbox::deadsureURL( "index.php?option=" . $option . "&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ) . '&'. xJ::token() .'=1', true, true ) );
+			aecRedirect( AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=repeatPayment&invoice=" . $this->invoice->invoice_number . "&first=" . ( $repeat ? 0 : 1 ) . '&'. xJ::token() .'=1', true, true ) );
 			exit();
 		}
 
@@ -2129,19 +2016,19 @@ class InvoiceFactory
 			if ( $this->items->grand_total->isFree() && !$recurring ) {
 				$this->invoice->pay();
 
-				return $this->thanks( $option, false, true );
+				return $this->thanks( false, true );
 			}
 		}
 
-		$this->InvoiceToCheckout( $option, $repeat, $error );
+		$this->InvoiceToCheckout( $repeat, $error );
 	}
 
-	function InvoiceToCheckout( $option, $repeat=0, $error=null, $data=null )
+	function InvoiceToCheckout( $repeat=0, $error=null, $data=null )
 	{
 		global $aecConfig;
 
 		if ( $this->hasExceptions() ) {
-			return $this->addressExceptions( $option );
+			return $this->addressExceptions();
 		}
 
 		if ( !empty( $data ) ) {
@@ -2221,13 +2108,13 @@ class InvoiceFactory
 		return null;
 	}
 
-	function internalcheckout( $option )
+	function internalcheckout()
 	{
 		$this->metaUser = new metaUser( $this->userid );
 
-		$this->touchInvoice( $option );
+		$this->touchInvoice();
 
-		$this->puffer( $option );
+		$this->puffer();
 
 		$objUsage = $this->getObjUsage();
 
@@ -2280,21 +2167,21 @@ class InvoiceFactory
 				$error = $response['error'];
 			}
 
-			$this->checkout( $option, true, $error );
+			$this->checkout( true, $error );
 		} elseif ( isset( $response['doublecheckout'] ) ) {
 			$exchange = $silent = null;
 
 			$this->triggerMIs( 'invoice_items_checkout', $exchange, $this->items, $silent );
 
-			$this->InvoiceToCheckout( $option, true, null, $var );
+			$this->InvoiceToCheckout( true, null, $var );
 		} else {
-			$this->thanks( $option );
+			$this->thanks();
 		}
 	}
 
-	function processorResponse( $option, $response )
+	function processorResponse( $response )
 	{
-		$this->touchInvoice( $option );
+		$this->touchInvoice();
 
 		$this->userid = $this->invoice->userid;
 		$this->loadMetaUser();
@@ -2310,7 +2197,7 @@ class InvoiceFactory
 			}
 		}
 
-		$this->puffer( $option );
+		$this->puffer();
 
 		$this->loadItems();
 
@@ -2327,7 +2214,7 @@ class InvoiceFactory
 				unset( $this->items );
 				unset( $this->pp );
 
-				$this->checkout( $option, true, $response['error'] );
+				$this->checkout( true, $response['error'] );
 			}
 		} elseif ( isset( $response['customthanks'] ) ) {
 			if ( !empty( $response['customthanks_strict'] ) ) {
@@ -2338,7 +2225,7 @@ class InvoiceFactory
 			}
 		} else {
 			if ( !empty( $this->pp->info['notify_trail_thanks'] ) ) {
-				$this->thanks( $option );
+				$this->thanks();
 			} elseif ( !empty( $this->pp->info['custom_notify_trail'] ) ) {
 				$this->pp->notify_trail( $this, $response );
 			} else {
@@ -2406,11 +2293,11 @@ class InvoiceFactory
 		}
 	}
 
-	function invoiceprocessoraction( $option, $action, $invoiceNum=null )
+	function invoiceprocessoraction( $action, $invoiceNum=null )
 	{
 		$this->loadMetaUser();
 
-		$this->puffer( $option );
+		$this->puffer();
 
 		$this->loadItems();
 
@@ -2431,17 +2318,17 @@ class InvoiceFactory
 		}
 	}
 
-	function invoiceprint( $option, $invoice_number, $standalone=true, $extradata=null, $forcecleared=false, $forcecounter=null )
+	function invoiceprint( $invoice_number, $standalone=true, $extradata=null, $forcecleared=false, $forcecounter=null )
 	{
 		$this->loadMetaUser();
 
-		$this->touchInvoice( $option, $invoice_number, false, true );
+		$this->touchInvoice( $invoice_number, false, true );
 
 		if ( $this->invoice->invoice_number != $invoice_number ) {
 			return getView( 'access_denied' );
 		}
 
-		$this->puffer( $option );
+		$this->puffer();
 
 		$this->loadItems();
 
@@ -2468,7 +2355,7 @@ class InvoiceFactory
 		getView( 'invoice', array( 'data' => $data, 'standalone' => $standalone, 'InvoiceFactory' => $this ) );
 	}
 
-	function thanks( $option, $renew=false, $free=false )
+	function thanks( $renew=false, $free=false )
 	{
 		global $aecConfig;
 
@@ -2491,7 +2378,7 @@ class InvoiceFactory
 		}
 	}
 
-	function error( $option, $objUser, $invoice, $error )
+	function error( $objUser, $invoice, $error )
 	{
 		$document=& JFactory::getDocument();
 

@@ -996,8 +996,6 @@ class PaymentProcessor
 				return null;
 			}
 
-			$option = 'com_acctexp';
-
 			$iFactory = new InvoiceFactory( null, null, null, $this->processor_name );
 
 			$iFactory->userid = $subscription->userid;
@@ -1006,9 +1004,9 @@ class PaymentProcessor
 
 			$iFactory->loadMetaUser();
 
-			$iFactory->touchInvoice( $option, $invoice->invoice_number );
+			$iFactory->touchInvoice( $invoice->invoice_number );
 
-			$iFactory->puffer( $option );
+			$iFactory->puffer();
 
 			$iFactory->loadItems();
 

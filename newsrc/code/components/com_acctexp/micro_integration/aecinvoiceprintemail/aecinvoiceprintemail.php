@@ -157,7 +157,7 @@ class mi_aecinvoiceprintemail
 			fclose( $fp );
 
 			$message = $this->settings['text'];
-			
+
 			$html_mode = $this->settings['text_html'];
 		}
 
@@ -198,7 +198,7 @@ class mi_aecinvoiceprintemail
 		ob_start();
 
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
-		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ), true );
+		$iFactory->invoiceprint( $invoice->invoice_number, false, array( 'mi_aecinvoiceprintemail' => true ), true );
 
 		$content = AECToolbox::rewriteEngineRQ( ob_get_contents(), $iFactory );
 

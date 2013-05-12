@@ -84,7 +84,7 @@ XML;
 
 		$trx = $login->addChild( 'trx' );
 		$trx->addAttribute( 'id', $request->invoice->invoice_number.$suffix );
-		
+
 		return $xml_step1_request->asXML();
 	}
 
@@ -108,7 +108,7 @@ XML;
 	function transmitRequestXML( $xml, $request )
 	{
 		$app = JFactory::getApplication();
-		
+
 		$path = '/catch';
 		$url = 'https://www.labdevtrx3.com' . $path;
 
@@ -149,7 +149,7 @@ XML;
 
 		// Step #5 - Redirecting the user to Desjardins
 		$app->redirect($url);
-			
+
 		return true;
 	}
 
@@ -397,7 +397,7 @@ XML;
 		ob_start();
 
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false );
-		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false );
+		$iFactory->invoiceprint( $invoice->invoice_number, false );
 
 		$content = ob_get_contents();
 		ob_end_clean();

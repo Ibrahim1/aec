@@ -93,13 +93,13 @@ class tool_vatcollect
 			}
 
 			$iFactory->loadMetaUser();
-			$iFactory->touchInvoice( 'com_acctexp', $entry->invoice_number, false, true );
+			$iFactory->touchInvoice( $entry->invoice_number, false, true );
 
 			if ( $iFactory->invoice_number != $entry->invoice_number ) {
 				continue;
 			}
 
-			$iFactory->puffer( 'com_acctexp' );
+			$iFactory->puffer();
 
 			$iFactory->loadItems();
 
@@ -127,7 +127,7 @@ class tool_vatcollect
 				}
 			} else {
 				$historylist[$date]['amount'] += $amount;
-				
+
 				if ( $tax ) {
 					$historylist[$date]['taxed'] += $amount;
 					$historylist[$date]['tax'] += $tax;

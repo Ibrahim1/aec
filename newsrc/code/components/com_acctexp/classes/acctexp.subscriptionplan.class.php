@@ -17,6 +17,10 @@ class SubscriptionPlanList
 	{
 		$this->metaUser = $metaUser;
 
+		$this->usage = $usage;
+
+		$this->group = $group;
+
 		if ( !empty( $this->metaUser->userid ) ) {
 			if ( $this->metaUser->hasSubscription ) {
 				$this->expired = $this->metaUser->objSubscription->isExpired();
@@ -27,23 +31,23 @@ class SubscriptionPlanList
 			$this->expired = true;
 		}
 
-		$this->getPlanList( $usage, $group );
+		$this->getPlanList();
 
 		$this->checkListProblems();
 
 		$this->explodePlanList( $recurring );
 	}
 
-	function getPlanList( $usage, $group )
+	function getPlanList()
 	{
 		$auth_problem = null;
 
-		if ( !empty( $usage ) ) {
+		if ( !empty( $this->usage ) ) {
 			$db = &JFactory::getDBO();
 
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_plans'
-					. ' WHERE `id` = \'' . $usage . '\' AND `active` = \'1\''
+					. ' WHERE `id` = \'' . $this->usage . '\' AND `active` = \'1\''
 					;
 			$db->setQuery( $query );
 			$id = $db->loadResult();
@@ -66,8 +70,8 @@ class SubscriptionPlanList
 				$auth_problem = true;
 			}
 		} else {
-			if ( !empty( $group ) ) {
-				$gid = $group;
+			if ( !empty( $this->group ) ) {
+				$gid = $this->group;
 			} else {
 				global $aecConfig;
 
@@ -109,6 +113,134 @@ class SubscriptionPlanList
 		if ( !is_null( $auth_problem ) ) {
 			$this->list = $auth_problem;
 		}
+	}
+
+	function addButtons( $register, $passthrough )
+	{
+		if ( $register ) {
+			$iscb = aecComponentHelper::detect_component( 'anyCB' );
+			$isjs = aecComponentHelper::detect_component( 'JOMSOCIAL' );
+		}
+
+		$return = '';
+		if ( $this->group ) {
+			if ( $aecConfig->cfg['additem_stayonpage'] ) {
+				$return = $group;
+			}
+		}
+
+			$csslist = array();
+		foreach ( $this->list as $li => $lv ) {
+			if ( $lv['type'] == 'group' ) {
+				continue;
+			}
+
+			foreach ( $lv['gw'] as $gwid => $pp ) {
+				$this->list[$li]['gw'][$gwid]->btn = $this->getButton( $pp, $this->metaUser->userid, $lv['id'], $passthrough, $return );
+			}
+		}
+
+		return $csslist;
+	}
+
+	function getButton( $pp, $userid, $usage, $passthrough, $return )
+	{
+		global $aecConfig;
+
+		$btnarray = array();
+
+		$btnarray['usage'] = $lv['id'];
+
+		$btnarray['userid'] = $userid;
+
+		// Rewrite Passthrough
+		if ( !empty( $passthrough ) ) {
+			$btnarray['aec_passthrough'] = $passthrough;
+		}
+
+		if ( strtolower( $pp->processor_name ) == 'add_to_cart' ) {
+			return array_merge( $btnarray, array(
+					'option' => 'com_acctexp',
+					'task' => 'addtocart',
+					'class' => 'btn btn-processor',
+					'content' => aecHTML::Icon( 'plus', false, ' narrow' ) . JText::_('AEC_BTN_ADD_TO_CART'),
+					'usage' => $lv['id'],
+					'returngroup' => $return,
+					)
+			);
+		}
+
+		$btnarray['view'] = '';
+
+		if ( $register ) {
+			if ( $iscb ) {
+				$btnarray['option']	= 'com_comprofiler';
+				$btnarray['task']	= 'registers';
+			} elseif ( $isjs ) {
+				$btnarray['option']	= 'com_community';
+				$btnarray['view'] 	= 'register';
+			} else {
+				if ( defined( 'JPATH_MANIFESTS' ) ) {
+					$btnarray['option']	= 'com_users';
+					$btnarray['task']	= '';
+					$btnarray['view'] 	= 'registration';
+				} else {
+					$btnarray['option']	= 'com_user';
+					$btnarray['task']	= '';
+					$btnarray['view'] 	= 'register';
+				}
+			}
+		} else {
+			$btnarray['option']		= 'com_acctexp';
+			$btnarray['task']		= 'confirm';
+		}
+
+		$btnarray['class'] = 'btn btn-processor';
+
+		if ( $pp->processor_name == 'free' ) {
+			$btnarray['content'] = JText::_('AEC_PAYM_METHOD_FREE');
+		} elseif( is_object($pp->processor) ) {
+			if ( $pp->processor->getLogoFilename() == '' ) {
+				$btnarray['content'] = '<span class="btn-tallcontent">'.$pp->info['longname'].'</span>';
+			} else {
+				if ( !array_key_exists($pp->processor_name, $csslist) ) {
+					$csslist[$pp->processor_name] = '.btn-processor-' . $pp->processor_name
+													. ' { background-image: url(' . $pp->getLogoPath() .  ') !important; }';
+				}
+			}
+		}
+
+		if ( !empty( $pp->settings['generic_buttons'] ) ) {
+			if ( !empty( $pp->recurring ) ) {
+				$btnarray['content'] = JText::_('AEC_PAYM_METHOD_SUBSCRIBE');
+			} else {
+				$btnarray['content'] = JText::_('AEC_PAYM_METHOD_BUYNOW');
+			}
+		} else {
+			$btnarray['class'] .= ' btn-processor-'.$pp->processor_name;
+
+			if ( ( isset( $pp->recurring ) || isset( $pp->info['recurring'] ) ) && !empty( $pp->info['recurring'] ) ) {
+				if ( $pp->info['recurring'] == 2 ) {
+					if ( !empty( $pp->recurring ) ) {
+						$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
+					} else {
+						$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_ONE_TIME_BILLING') . '</i>';
+					}
+				} elseif ( $pp->info['recurring'] == 1 ) {
+					$btnarray['content'] = '<i class="btn-overlay">' . JText::_('AEC_PAYM_METHOD_RECURRING_BILLING') . '</i>';
+				}
+			}
+		}
+
+		if ( !empty( $pp->recurring ) ) {
+			$btnarray['recurring'] = 1;
+		} else {
+			$btnarray['recurring'] = 0;
+		}
+
+		$btnarray['processor'] = $pp->processor_name;
+
+		return $btnarray;
 	}
 
 	function checkListProblems()
