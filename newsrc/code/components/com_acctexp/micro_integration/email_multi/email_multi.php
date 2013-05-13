@@ -82,7 +82,7 @@ class mi_email_multi extends MI
 						$time = $timing;
 					}
 
-					$due_date = strtotime( $time, $tstamp );
+					$due_date = date( 'Y-m-d H:i:s', ( (int) strtotime( $time, $tstamp ) ) );
 
 					$this->issueEvent( $request, 'email', $due_date, array(), array( 'emailid' => $i ) );
 				}
