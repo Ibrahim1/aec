@@ -136,6 +136,9 @@ function aecEscape( $value, $safe_params )
 				case 'int':
 					$r = (int) $return;
 					break;
+				case 'bool':
+					$r = (bool) $return;
+					break;
 				case 'string':
 					$r = (string) $return;
 					break;

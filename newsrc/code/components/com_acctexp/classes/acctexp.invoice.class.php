@@ -1723,8 +1723,6 @@ class InvoiceFactory
 
 	function confirmcart( $coupon=null, $testmi=false )
 	{
-		global $task;
-
 		$this->confirmed = 1;
 
 		$this->loadMetaUser( false, true );
@@ -1780,7 +1778,7 @@ class InvoiceFactory
 			if ( !$this->userid ) {
 				$errors = JError::getErrors();
 
-				aecErrorAlert( JText::_( 'COM_USERS_REGISTRATION_SAVE_FAILED' ) );
+				return aecErrorAlert( JText::_( 'COM_USERS_REGISTRATION_SAVE_FAILED' ) );
 			}
 		}
 
@@ -1790,6 +1788,7 @@ class InvoiceFactory
 		if ( !empty( $this->plan ) ) {
 			if ( $this->verifyMIForms( $this->plan ) === false ) {
 				$this->confirmed = 0;
+
 				return $this->confirm();
 			}
 		} elseif ( !empty( $this->cart ) ) {
@@ -1802,6 +1801,19 @@ class InvoiceFactory
 
 			if ( !$check ) {
 				$this->confirmed = 0;
+
+				return $this->confirm();
+			}
+		}
+
+		$dbtmpl = new configTemplate();
+		$dbtmpl->loadDefault();
+		if ( !empty( $dbtmpl->settings['tos'] ) ) {
+			$tos = aecGetParam( 'tos', 0, true, array( 'bool' ) );
+
+			if ( !$tos ) {
+				$this->confirmed = 0;
+
 				return $this->confirm();
 			}
 		}

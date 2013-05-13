@@ -718,7 +718,7 @@ function confirmSubscription( $option )
 	} else {
 		if ( !empty( $usage ) ) {
 			$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
-			$iFactory->confirm( $option );
+			$iFactory->confirm();
 		} else {
 			subscribe( $option );
 		}
