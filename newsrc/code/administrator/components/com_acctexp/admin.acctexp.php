@@ -5029,7 +5029,7 @@ function AdminInvoicePrintout( $option, $invoice_number, $standalone=true )
 	$invoice->loadInvoiceNumber( $invoice_number );
 
 	$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
-	$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, $standalone );
+	$iFactory->invoiceprint( $invoice->invoice_number, $standalone );
 }
 
 function AdminInvoicePDF( $option, $invoice_number )

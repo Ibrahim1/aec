@@ -85,7 +85,7 @@ if ( !empty( $task ) ) {
 			$group = aecGetParam( 'group', 0, true, array( 'word', 'int' ) );
 
 			$iFactory = new InvoiceFactory();
-			$iFactory->create( $option, $intro, $usage, $group );
+			$iFactory->create( $intro, $usage, $group );
 			break;
 
 		// Catch hybrid CB registration
@@ -158,7 +158,7 @@ if ( !empty( $task ) ) {
 			$coupon		= aecGetParam( 'coupon_code', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 			$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
-			$iFactory->save( $option, $coupon );
+			$iFactory->save( $coupon );
 			break;
 
 		case 'addtocart':
@@ -174,7 +174,7 @@ if ( !empty( $task ) ) {
 				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->addtoCart( $option, $usage, $returngroup );
+				$iFactory->addtoCart( $usage, $returngroup );
 			}
 			break;
 
@@ -191,7 +191,7 @@ if ( !empty( $task ) ) {
 				}
 
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->cart( $option );
+				$iFactory->cart();
 			}
 			break;
 
@@ -208,8 +208,8 @@ if ( !empty( $task ) ) {
 				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->updateCart( $option, $_POST );
-				$iFactory->cart( $option );
+				$iFactory->updateCart( $_POST );
+				$iFactory->cart();
 			}
 			break;
 
@@ -226,10 +226,10 @@ if ( !empty( $task ) ) {
 				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->clearCart( $option );
+				$iFactory->clearCart();
 
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->cart( $option );
+				$iFactory->cart();
 			}
 			break;
 
@@ -246,10 +246,10 @@ if ( !empty( $task ) ) {
 				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->clearCartItem( $option, $item );
+				$iFactory->clearCartItem( $item );
 
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->cart( $option );
+				$iFactory->cart();
 			}
 			break;
 
@@ -267,7 +267,7 @@ if ( !empty( $task ) ) {
 				getView( 'access_denied' );
 			} else {
 				$iFactory = new InvoiceFactory( $userid );
-				$iFactory->confirmcart( $option, $coupon );
+				$iFactory->confirmcart( $coupon );
 			}
 			break;
 
@@ -318,8 +318,8 @@ if ( !empty( $task ) ) {
 			$usage		= aecGetParam( 'usage', 0, true, array( 'word', 'int' ) );
 
 			$iFactory = new InvoiceFactory( $userid );
-			if ( $iFactory->checkAuth( $option ) ) {
-				$iFactory->create( $option, $intro, $usage );
+			if ( $iFactory->checkAuth() ) {
+				$iFactory->create( $intro, $usage );
 			}
 			break;
 
@@ -351,7 +351,7 @@ if ( !empty( $task ) ) {
 			$invoice	= aecGetParam( 'invoice', '', true, array( 'word', 'string', 'clear_nonalnum' ) );
 
 			$iFactory = new InvoiceFactory( $user->id );
-			$iFactory->invoiceprint( $option, $invoice );
+			$iFactory->invoiceprint( $invoice );
 			break;
 
 		case 'invoicepdf':
@@ -577,7 +577,7 @@ function subscribe( $option )
 		}
 
 		$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
-		$iFactory->confirm( $option );
+		$iFactory->confirm();
 	} else {
 		if ( $user->id ) {
 			$userid			= $user->id;
@@ -617,7 +617,7 @@ function subscribe( $option )
 		$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor, null, $passthrough, false );
 
 		if ( !$iFactory->authed ) {
-			if ( !$iFactory->checkAuth( $option ) ) {
+			if ( !$iFactory->checkAuth() ) {
 				return;
 			}
 		}
@@ -625,7 +625,7 @@ function subscribe( $option )
 		if ( !empty( $iFactory->passthrough['invoice'] ) ) {
 			repeatInvoice( $option, $iFactory->passthrough['invoice'], null, $userid );
 		} else {
-			$iFactory->create( $option, $intro, $usage, $group, $processor, 0 );
+			$iFactory->create( $intro, $usage, $group, $processor, 0 );
 		}
 	}
 }
@@ -718,7 +718,7 @@ function confirmSubscription( $option )
 	} else {
 		if ( !empty( $usage ) ) {
 			$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor );
-			$iFactory->confirm( $option );
+			$iFactory->confirm();
 		} else {
 			subscribe( $option );
 		}
@@ -739,8 +739,8 @@ function internalCheckout( $option, $invoice_number, $processor, $userid )
 	// Only allow a user to access existing and own invoices
 	if ( $invoiceid ) {
 		$iFactory = new InvoiceFactory( $userid, null, null, $processor );
-		$iFactory->touchInvoice( $option, $invoice_number );
-		$iFactory->internalcheckout( $option );
+		$iFactory->touchInvoice( $invoice_number );
+		$iFactory->internalcheckout();
 	} else {
 		getView( 'access_denied' );
 		return;
@@ -781,7 +781,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 		}
 
 		$iFactory = new InvoiceFactory( $userid );
-		$iFactory->touchInvoice( $option, $invoice_number );
+		$iFactory->touchInvoice( $invoice_number );
 		$iFactory->loadProcessorObject();
 
 		$status = $iFactory->usageStatus();
@@ -794,7 +794,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 			return getView( 'access_denied' );
 		}
 
-		return $iFactory->save( $option, null );
+		return $iFactory->save( null );
 	} elseif ( $cart ) {
 		$iFactory = new InvoiceFactory( $userid );
 
@@ -804,7 +804,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 			$iFactory->invoice_number = $invoice_number;
 		}
 
-		return $iFactory->confirmcart( $option, null, true );
+		return $iFactory->confirmcart( null, true );
 	} else {
 		return getView( 'access_denied' );
 	}
@@ -881,8 +881,8 @@ function invoiceAction( $option, $action, $invoice_number )
 		return getView( 'access_denied' );
 	} else {
 		$iFactory = new InvoiceFactory( $user->id );
-		$iFactory->touchInvoice( $option, $invoice_number );
-		$iFactory->invoiceprocessoraction( $option, $action );
+		$iFactory->touchInvoice( $invoice_number );
+		$iFactory->invoiceprocessoraction( $action );
 
 		getView( 'subscriptiondetails', array( 'sub' => 'invoices' ) );
 	}
@@ -896,7 +896,7 @@ function InvoicePrintout( $option, $invoice, $standalone=true )
 		return getView( 'access_denied' );
 	} else {
 		$iFactory = new InvoiceFactory( $user->id );
-		$iFactory->invoiceprint( $option, $invoice, $standalone );
+		$iFactory->invoiceprint( $invoice, $standalone );
 	}
 }
 
@@ -978,7 +978,7 @@ function InvoiceMakeGift( $option )
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$iFactory = new InvoiceFactory( $objinvoice->userid );
-	$iFactory->touchInvoice( $option, $objinvoice->invoice_number );
+	$iFactory->touchInvoice( $objinvoice->invoice_number );
 
 	if ( $iFactory->invoice->addTargetUser( strtolower( $user_ident ) ) ) {
 		$iFactory->invoice->storeload();
@@ -997,7 +997,7 @@ function InvoiceRemoveGift( $option )
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$iFactory = new InvoiceFactory( $objinvoice->userid );
-	$iFactory->touchInvoice( $option, $objinvoice->invoice_number );
+	$iFactory->touchInvoice( $objinvoice->invoice_number );
 
 	if ( $iFactory->invoice->removeTargetUser() ) {
 		$iFactory->invoice->storeload();
@@ -1025,7 +1025,7 @@ function InvoiceRemoveGiftConfirm( $option )
 	}
 
 	$iFactory = new InvoiceFactory( $userid, $usage, $group, $processor, $invoice );
-	$iFactory->confirm( $option, $_POST );
+	$iFactory->confirm( $_POST );
 }
 
 function InvoiceRemoveGiftCart( $option )
@@ -1039,14 +1039,14 @@ function InvoiceRemoveGiftCart( $option )
 	$objinvoice->loadInvoiceNumber( $invoice );
 
 	$iFactory = new InvoiceFactory( $objinvoice->userid );
-	$iFactory->touchInvoice( $option, $objinvoice->invoice_number );
+	$iFactory->touchInvoice( $objinvoice->invoice_number );
 
 	if ( $iFactory->invoice->removeTargetUser() ) {
 		$iFactory->invoice->storeload();
 	}
 
 	$iFactory = new InvoiceFactory( $userid );
-	$iFactory->cart( $option );
+	$iFactory->cart();
 }
 
 function InvoiceAddCoupon( $option )
@@ -1161,7 +1161,7 @@ function processNotification( $option, $processor )
 		return;
 	} else {
 		$iFactory = new InvoiceFactory( null, null, null, null, $response['invoice'] );
-		$iFactory->processorResponse( $option, $response );
+		$iFactory->processorResponse( $response );
 	}
 }
 
