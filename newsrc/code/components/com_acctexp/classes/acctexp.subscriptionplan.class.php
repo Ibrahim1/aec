@@ -149,7 +149,7 @@ class SubscriptionPlanList
 
 		$btnarray = array();
 
-		$btnarray['usage'] = $lv['id'];
+		$btnarray['usage'] = $usage;
 
 		$btnarray['userid'] = $userid;
 
@@ -164,7 +164,6 @@ class SubscriptionPlanList
 					'task' => 'addtocart',
 					'class' => 'btn btn-processor',
 					'content' => aecHTML::Icon( 'plus', false, ' narrow' ) . JText::_('AEC_BTN_ADD_TO_CART'),
-					'usage' => $lv['id'],
 					'returngroup' => $return,
 					)
 			);
