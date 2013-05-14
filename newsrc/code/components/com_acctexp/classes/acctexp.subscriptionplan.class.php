@@ -117,10 +117,6 @@ class SubscriptionPlanList
 
 	function addButtons( $register, $passthrough )
 	{
-		if ( $register ) {
-			$iscb = aecComponentHelper::detect_component( 'anyCB' );
-			$isjs = aecComponentHelper::detect_component( 'JOMSOCIAL' );
-		}
 
 		$return = '';
 		if ( $this->group ) {
@@ -136,14 +132,14 @@ class SubscriptionPlanList
 			}
 
 			foreach ( $lv['gw'] as $gwid => $pp ) {
-				$this->list[$li]['gw'][$gwid]->btn = $this->getButton( $pp, $this->metaUser->userid, $lv['id'], $passthrough, $return );
+				$this->list[$li]['gw'][$gwid]->btn = $this->getButton( $pp, $lv['id'], $register, $passthrough, $return );
 			}
 		}
 
 		return $csslist;
 	}
 
-	function getButton( $pp, $userid, $usage, $passthrough, $return )
+	function getButton( $pp, $usage, $register, $passthrough, $return )
 	{
 		global $aecConfig;
 
@@ -151,7 +147,7 @@ class SubscriptionPlanList
 
 		$btnarray['usage'] = $usage;
 
-		$btnarray['userid'] = $userid;
+		$btnarray['userid'] = $this->metaUser->userid;
 
 		// Rewrite Passthrough
 		if ( !empty( $passthrough ) ) {
@@ -167,6 +163,11 @@ class SubscriptionPlanList
 					'returngroup' => $return,
 					)
 			);
+		}
+
+		if ( $register ) {
+			$iscb = aecComponentHelper::detect_component( 'anyCB' );
+			$isjs = aecComponentHelper::detect_component( 'JOMSOCIAL' );
 		}
 
 		$btnarray['view'] = '';
