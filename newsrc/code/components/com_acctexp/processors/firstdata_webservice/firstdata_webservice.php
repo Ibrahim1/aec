@@ -1,8 +1,8 @@
 <?php
 /**
- * @version $Id: firstdata.php
+ * @version $Id: firstdata_webservice.php
  * @package AEC - Account Control Expiration - Membership Manager
- * @subpackage Processors - First Data Subscription
+ * @subpackage Processors - First Data Webservice
  * @copyright 2013 Copyright (C) David Deutsch
  * @author David Deutsch <skore@skore.de> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html or, at your option, any later version
@@ -11,15 +11,15 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-class processor_firstdata extends SOAPprocessor
+class processor_firstdata_webservice extends SOAPprocessor
 {
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'firstdata';
-		$info['longname'] 		= JText::_('CFG_FIRSTDATA_LONGNAME');
-		$info['statement'] 		= JText::_('CFG_FIRSTDATA_STATEMENT');
-		$info['description'] 	= JText::_('CFG_FIRSTDATA_DESCRIPTION');
+		$info['name']			= 'firstdata_webservice';
+		$info['longname'] 		= JText::_('CFG_FIRSTDATA_WEBSERVICE_LONGNAME');
+		$info['statement'] 		= JText::_('CFG_FIRSTDATA_WEBSERVICE_STATEMENT');
+		$info['description'] 	= JText::_('CFG_FIRSTDATA_WEBSERVICE_DESCRIPTION');
 		$info['currencies'] 	= 'USD';
 		$info['languages'] 		= AECToolbox::getISO3166_1a2_codes();
 		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
@@ -146,9 +146,9 @@ $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/env
 	function transmitRequestXML( $content, $request )
 	{
 		if ( $this->settings['testmode'] ) {
-			$url	= 'https://ws.merchanttest.firstdataglobalgateway.com';
+			$url	= 'https://ws.merchanttest.firstdata_webserviceglobalgateway.com';
 		} else {
-			$url	= 'https://ws.firstdataglobalgateway.com';
+			$url	= 'https://ws.firstdata_webserviceglobalgateway.com';
 		}
 
 		$path = '/fdggwsapi/services/order.wsdl';
