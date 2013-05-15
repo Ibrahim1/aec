@@ -16,16 +16,16 @@ class processor_firstdata_connect extends POSTprocessor
 	function info()
 	{
 		$info = array();
-		$info['name']			= 'firstdata_connect';
-		$info['longname'] 		= JText::_('CFG_FIRSTDATA_CONNECT_LONGNAME');
+		$info['name']					= 'firstdata_connect';
+		$info['longname']				= JText::_('CFG_FIRSTDATA_CONNECT_LONGNAME');
 
-		$info['statement'] 		= JText::_('CFG_FIRSTDATA_CONNECT_STATEMENT');
-		$info['description'] 	= JText::_('CFG_FIRSTDATA_CONNECT_DESCRIPTION');
-		$info['currencies'] 	= 'USD';
-		$info['languages'] 		= AECToolbox::getISO639_1_codes();
-		$info['cc_list']		= 'visa,mastercard,discover,americanexpress,echeck,giropay';
-		$info['recurring']		= 2;
-		$info['actions']		= array( 'cancel' => array( 'confirm' ) );
+		$info['statement']				= JText::_('CFG_FIRSTDATA_CONNECT_STATEMENT');
+		$info['description']			= JText::_('CFG_FIRSTDATA_CONNECT_DESCRIPTION');
+		$info['currencies']				= 'USD';
+		$info['languages']				= AECToolbox::getISO639_1_codes();
+		$info['cc_list']				= 'visa,mastercard,discover,americanexpress,echeck,giropay';
+		$info['recurring']				= 2;
+		$info['actions']				= array( 'cancel' => array( 'confirm' ) );
 		$info['notify_trail_thanks']	= 1;
 
 		return $info;
@@ -35,9 +35,12 @@ class processor_firstdata_connect extends POSTprocessor
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
-		$settings['password']		= '';
+		$settings['version2']		= 1;
+
+		$settings['storename']		= '';
+		$settings['secret']			= '';
+
 		$settings['currency']		= 'USD';
-		$settings['item_number']	= '[[invoice_id]]';
 		$settings['customparams']	= "bname=\nbaddr1=\nbaddr2=\nbcity=\nbstate=\nbzip=\nbemail=\n";
 
 		return $settings;
@@ -46,12 +49,14 @@ class processor_firstdata_connect extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['password']				= array( 'inputC' );
-		$settings['testmode']				= array( 'toggle' );
+		$settings['testmode']		= array( 'toggle' );
+		$settings['version2']		= array( 'toggle' );
 
-		$settings['currency']				= array( 'list_currency' );
-		$settings['item_number']			= array( 'inputE' );
-		$settings['customparams']			= array( 'inputD' );
+		$settings['storename']		= array( 'inputC' );
+		$settings['secret']			= array( 'inputC' );
+
+		$settings['currency']		= array( 'list_currency' );
+		$settings['customparams']	= array( 'inputD' );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -60,10 +65,20 @@ class processor_firstdata_connect extends POSTprocessor
 
 	function createGatewayLink( $request )
 	{
-		if ( $this->settings['testmode'] ) {
-			$var['post_url']	= 'https://www.staging.linkpointcentral.com/lpc/servlet/lppay';
+		$v2 = $this->settings['version2'];
+
+		if ( $v2 ) {
+			if ( $this->settings['testmode'] ) {
+				$var['post_url']	= 'https://www.staging.linkpointcentral.com/lpc/servlet/lppay';
+			} else {
+				$var['post_url']	= 'https://www.linkpointcentral.com/lpc/servlet/lppay';
+			}
 		} else {
-			$var['post_url']	= 'https://www.linkpointcentral.com/lpc/servlet/lppay';
+			if ( $this->settings['testmode'] ) {
+				$var['post_url']	= 'https://connect.merchanttest.firstdataglobalgateway.com/IPGConnect/gateway/processing';
+			} else {
+				$var['post_url']	= 'https://connect.firstdataglobalgateway.com/IPGConnect/gateway/processing';
+			}
 		}
 
 		if ( is_array( $request->int_var['amount'] ) ) {
@@ -72,10 +87,18 @@ class processor_firstdata_connect extends POSTprocessor
 			$var['chargetotal']		= $request->int_var['amount'];
 		}
 
-		$var['storename']			= $this->settings['password'];
 		$var['txntype']				= 'sale';
 
-		$var['oid']					= AECToolbox::rewriteEngineRQ( $this->settings['item_number'], $request );
+		if ( $v2 ) {
+			$var['timezone']		= 'sale';
+			$var['txndatetime']		= date( "Y:m:d-H:i:s", strtotime( $invoice->created_date ) );
+
+			$var['hash']			= $this->createHash( $var['chargetotal'], $var['txndatetime'] );
+		}
+
+		$var['storename']			= $this->settings['storename'];
+
+		$var['oid']					= $invoice->id;
 
 		if ( isset( $request->items->tax ) ) {
 			$tax = 0;
@@ -88,16 +111,15 @@ class processor_firstdata_connect extends POSTprocessor
 		}
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['subchargetotal']	= $request->int_var['amount']['amount3'];
+			$var[$v2?'subtotal':'subchargetotal']	= $request->int_var['amount']['amount3'];
 		} else {
-			$var['subchargetotal']	= $request->int_var['amount'];
+			$var[$v2?'subtotal':'subchargetotal']	= $request->int_var['amount'];
 		}
 
-		$var['responseURL']			= $request->int_var['return_url'];
 		$var['responseFailURL']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
 		$var['responseSuccessURL']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=firstdata_connectnotification' );
 
-		$var['invoice_number']		= $request->invoice->invoice_number;
+		$var[$v2?'invoicenumber':'invoice_number']		= $request->invoice->invoice_number;
 
 		$custom = $this->customParams( $this->settings['customparams'], array(), $request );
 
@@ -119,9 +141,12 @@ class processor_firstdata_connect extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		if ( !empty( $post['invoice'] ) ) {
+		if ( !empty( $post['oid'] ) ) {
+			$return['invoice'] = aecInvoiceHelper::InvoiceIDfromNumber( $post['oid'] );
+		} elseif ( !empty( $post['invoicenumber'] ) ) {
+			$return['invoice'] = $post['invoicenumber'];
+		} elseif ( !empty( $post['invoice_number'] ) ) {
 			$return['invoice'] = $post['invoice_number'];
-			$return['secondary_ident'] = $post['approval_code'];
 		}
 
 		return $return;
@@ -130,10 +155,54 @@ class processor_firstdata_connect extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
+		$return = array();
+		$return['valid'] = false;
 
-		$return['valid'] = true;
+		if ( $this->settings['version2'] ) {
+			$hash = $this->receiveHash( $invoice->amount,
+										date( "Y:m:d-H:i:s", strtotime( $invoice->created_date ) ),
+										$post['approval_code']
+									);
+
+			if ( $this->settings['response_hash'] != $hash ) {
+				$return['error'] = true;
+				$return['errormsh'] = 'Hash Mismatch';
+			} else {
+				$return['valid'] = strtolower($post['status']) == 'approved';
+			}
+		} else {
+			// Version < 2.0 has no validation
+			$return['valid'] = strtolower($post['status']) == 'approved';
+		}
+
+		if ( !$return['valid'] && !empty( $post['r-error'] ) ) {
+			$return['error'] = true;
+			$return['errormsh'] = $post['r-error'];
+		}
+
 		return $response;
 	}
 
+	function sendHash( $amount, $datetime )
+	{
+		return $this->hash( $this->settings['storename'] . $datetime . $amount . $this->settings['secret'] );
+	}
+
+	function receiveHash( $amount, $datetime, $approval )
+	{
+		// TODO: This is possibly missing an occurance of storename at the end, documentation has typos
+		return $this->hash( $this->settings['secret'] . $approval . $amount . $this->settings['currency'] . $datetime );
+	}
+
+	function hash( $string )
+	{
+		$hex_str = '';
+		for ( $i=0; $i<strlen($string); $i++ ) {
+			$hex_str .= dechex( ord($string[$i]) );
+		}
+
+		return hash( 'sha256', $hex_str );
+	}
 }
+
 ?>
