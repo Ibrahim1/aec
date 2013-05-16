@@ -239,8 +239,6 @@ class HTML_myCommon
 
 class HTML_AcctExp
 {
-	static function HTML_AcctExp() {}
-
 	static function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
 		?><script type="text/javascript">
