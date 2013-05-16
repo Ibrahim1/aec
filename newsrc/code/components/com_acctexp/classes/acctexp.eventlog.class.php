@@ -19,21 +19,18 @@ class eventLog extends serialParamDBTable
 	var $datetime	= null;
 	/** @var string */
 	var $short 		= null;
-	/** @var text */
+	/** @var string */
 	var $tags 		= null;
-	/** @var text */
+	/** @var string */
 	var $event 		= null;
 	/** @var int */
 	var $level		= null;
 	/** @var int */
 	var $notify		= null;
-	/** @var text */
+	/** @var string */
 	var $params		= null;
 
-	/**
-	 * @param database A database connector object
-	 */
-	function eventLog()
+	function __construct()
 	{
 	 	parent::__construct( '#__acctexp_eventlog', 'id' );
 	}

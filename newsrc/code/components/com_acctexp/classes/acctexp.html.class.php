@@ -23,13 +23,15 @@ class aecHTML
 	function createSettingsParticle( $name, $notooltip=false, $insertlabel=null, $insertctrl=null )
 	{
 		if ( !isset( $this->rows[$name] ) ) {
-			return;
+			return null;
 		}
 
 		$row	= $this->rows[$name];
 		$type	= $row[0];
 
 		$return = '';
+
+		$xtitle = $xlabel = '';
 
 		if ( isset( $row[2] ) ) {
 			if ( isset( $row[3] ) ) {
@@ -355,12 +357,12 @@ class aecHTML
 		echo $this->returnFull( $notooltip );
 	}
 
-	function Icon( $icon='fire', $white=false, $addin=null )
+	static function Icon( $icon='fire', $white=false, $addin=null )
 	{
 		return '<i class="bsicon-'. $icon . ( $white ? ' bsicon-white' : '' ) . $addin .'"></i>';
 	}
 
-	function Button( $icon='fire', $text='', $style='', $link='', $js='' )
+	static function Button( $icon='fire', $text='', $style='', $link='', $js='' )
 	{
 		$white = true;
 

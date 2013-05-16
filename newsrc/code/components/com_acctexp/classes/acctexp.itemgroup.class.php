@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class ItemGroupHandler
 {
-	function getGroups( $filter=null, $select=false )
+	static function getGroups( $filter=null, $select=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -38,7 +38,7 @@ class ItemGroupHandler
 		return $rows;
 	}
 
-	function getTree()
+	static function getTree()
 	{
 		$db = &JFactory::getDBO();
 
@@ -65,7 +65,7 @@ class ItemGroupHandler
 		return $list;
 	}
 
-	function indentList( $tree, &$list, $indent=0 )
+	static function indentList( $tree, &$list, $indent=0 )
 	{
 		$list[] = array( $tree['id'], str_repeat( '&nbsp;', $indent ) . ( ( $indent > 0 ) ? '-' : '' ) . $tree['name'] . ' (#' . $tree['id'] . ')' );
 
@@ -78,7 +78,7 @@ class ItemGroupHandler
 		return $list;
 	}
 
-	function resolveTreeItem( $id )
+	static function resolveTreeItem( $id )
 	{
 		$tree = array();
 		$tree['id']		= $id;
@@ -97,7 +97,7 @@ class ItemGroupHandler
 		return $tree;
 	}
 
-	function groupName( $groupid )
+	static function groupName( $groupid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -109,7 +109,7 @@ class ItemGroupHandler
 		return $db->loadResult();
 	}
 
-	function groupColor( $groupid )
+	static function groupColor( $groupid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -119,7 +119,7 @@ class ItemGroupHandler
 		return $group->params['color'];
 	}
 
-	function parentGroups( $item_id, $type='item' )
+	static function parentGroups( $item_id, $type='item' )
 	{
 		$db = &JFactory::getDBO();
 
@@ -132,7 +132,7 @@ class ItemGroupHandler
 		return xJ::getDBArray( $db );
 	}
 
-	function updateChildRelation( $item_id, $groups, $type='item' )
+	static function updateChildRelation( $item_id, $groups, $type='item' )
 	{
 		$currentParents	= ItemGroupHandler::parentGroups( $item_id, $type );
 
@@ -148,19 +148,19 @@ class ItemGroupHandler
 		ItemGroupHandler::removeChildren( $item_id, $delGroups, $type );
 	}
 
-	function setChild( $child_id, $group_id, $type='item' )
+	static function setChild( $child_id, $group_id, $type='item' )
 	{
 		if ( $type == 'group' ) {
 			// Don't let a group be assigned to itself
 			if ( ( $group_id == $child_id ) ) {
-				continue;
+				return null;
 			}
 
 			$children = ItemGroupHandler::getChildren( $child_id, 'group' );
 
 			// Don't allow circular assignment
 			if ( in_array( $group_id, $children ) ) {
-				continue;
+				return null;
 			}
 		}
 
@@ -168,7 +168,7 @@ class ItemGroupHandler
 		return $ig->createNew( $type, $child_id, $group_id );
 	}
 
-	function setChildren( $group_id, $children, $type='item' )
+	static function setChildren( $group_id, $children, $type='item' )
 	{
 		$success = false;
 		foreach ( $children as $child_id ) {
@@ -199,7 +199,7 @@ class ItemGroupHandler
 		return $success;
 	}
 
-	function getParents( $item_id, $type='item' )
+	static function getParents( $item_id, $type='item' )
 	{
 		if ( ( $item_id == 1 ) && ( $type == 'group' ) ) {
 			return array();
@@ -221,7 +221,7 @@ class ItemGroupHandler
 		return $allParents;
 	}
 
-	function getChildren( $groups, $type )
+	static function getChildren( $groups, $type )
 	{
 		$db = &JFactory::getDBO();
 
@@ -270,7 +270,7 @@ class ItemGroupHandler
 		}
 	}
 
-	function getGroupsPlans( $groups )
+	static function getGroupsPlans( $groups )
 	{
 		static $groupstore;
 
@@ -292,7 +292,7 @@ class ItemGroupHandler
 		}
 	}
 
-	function checkParentRestrictions( $item, $type, $metaUser )
+	static function checkParentRestrictions( $item, $type, $metaUser )
 	{
 		$parents = ItemGroupHandler::parentGroups( $item->id, $type );
 
@@ -315,7 +315,7 @@ class ItemGroupHandler
 		return true;
 	}
 
-	function hasVisibleChildren( $group, $metaUser )
+	static function hasVisibleChildren( $group, $metaUser )
 	{
 		$children = ItemGroupHandler::getChildren( $group->id, 'item' );
 		if ( !empty( $children ) ) {
@@ -349,7 +349,7 @@ class ItemGroupHandler
 		return false;
 	}
 
-	function getTotalChildItems( $gids, $list=array() )
+	static function getTotalChildItems( $gids, $list=array() )
 	{
 		$groups = ItemGroupHandler::getChildren( $gids, 'group' );
 
@@ -362,7 +362,7 @@ class ItemGroupHandler
 		return array_merge( $list, $items );
 	}
 
-	function getTotalAllowedChildItems( $gids, $metaUser, $list=array() )
+	static function getTotalAllowedChildItems( $gids, $metaUser, $list=array() )
 	{
 		$groups = ItemGroupHandler::getChildren( $gids, 'group' );
 
@@ -403,7 +403,7 @@ class ItemGroupHandler
 		return $list;
 	}
 
-	function getGroupListItem( $group )
+	static function getGroupListItem( $group )
 	{
 		$details = array(	'type'		=> 'group',
 							'id'		=> $group->id,
@@ -419,7 +419,7 @@ class ItemGroupHandler
 		return $details;
 	}
 
-	function getItemListItem( $plan )
+	static function getItemListItem( $plan )
 	{
 		$details = array(	'type'		=> 'item',
 							'id'		=> $plan->id,
@@ -438,7 +438,7 @@ class ItemGroupHandler
 		return $details;
 	}
 
-	function removeChildren( $items, $groups, $type='item' )
+	static function removeChildren( $items, $groups=array(), $type='item' )
 	{
 		$db = &JFactory::getDBO();
 
@@ -477,11 +477,11 @@ class ItemGroup extends serialParamDBTable
 	var $name				= null;
 	/** @var string */
 	var $desc				= null;
-	/** @var text */
+	/** @var string */
 	var $params 			= null;
-	/** @var text */
+	/** @var string */
 	var $custom_params		= null;
-	/** @var text */
+	/** @var string */
 	var $restrictions		= null;
 
 	function ItemGroup()

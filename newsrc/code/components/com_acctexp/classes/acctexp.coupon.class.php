@@ -405,7 +405,7 @@ class couponsHandler extends eucaObject
 			}
 
 			if ( !is_null( $pgsel ) ) {
-				$items[$pgsel] == $this->applyToItem( $pgsel, $items[$pgsel], $coupon_code );
+				$items[$pgsel] = $this->applyToItem( $pgsel, $items[$pgsel], $coupon_code );
 
 				if ( !$cart->hasCoupon( $coupon_code, $pgsel ) ) {
 					$cart->addCoupon( $coupon_code, $pgsel );
@@ -417,7 +417,7 @@ class couponsHandler extends eucaObject
 				$found = false;
 				foreach ( $cart->content as $cid => $content ) {
 					if ( $cart->hasCoupon( $coupon_code, $cid ) ) {
-						$items[$cid] == $this->applyToItem( $cid, $items[$cid], $coupon_code );
+						$items[$cid] = $this->applyToItem( $cid, $items[$cid], $coupon_code );
 						$found = true;
 
 						$this->noapplylist[] = $coupon_code;
@@ -616,7 +616,7 @@ class couponHandler
 		$this->error = $error;
 	}
 
-	function idFromCode( $coupon_code )
+	static function idFromCode( $coupon_code )
 	{
 		$db = &JFactory::getDBO();
 
@@ -1204,13 +1204,15 @@ class couponHandler
 					}
 				}
 			} else {
-				if ( $mi->action( false, null, $invoice, $new_plan ) === false ) {
+				$metaUser = false;
+
+				if ( $mi->action( $metaUser, null, $invoice, $new_plan ) === false ) {
 					if ( $aecConfig->cfg['breakon_mi_error'] ) {
 						return false;
 					}
 				}
 
-				if ( $mi->relayAction( false, null, $invoice, $this, 'afteraction', $add, $params ) === false ) {
+				if ( $mi->relayAction( $metaUser, null, $invoice, $this, 'afteraction', $add, $params ) === false ) {
 					if ( $aecConfig->cfg['breakon_mi_error'] ) {
 						return false;
 					}
@@ -1234,15 +1236,15 @@ class Coupon extends serialParamDBTable
 	var $name				= null;
 	/** @var string */
 	var $desc				= null;
-	/** @var text */
+	/** @var string */
 	var $discount			= null;
-	/** @var text */
+	/** @var string */
 	var $restrictions		= null;
-	/** @var text */
+	/** @var string */
 	var $params				= null;
 	/** @var int */
 	var $usecount			= null;
-	/** @var text */
+	/** @var string */
 	var $micro_integrations	= null;
 
 	function Coupon( $type=0 )
@@ -1460,7 +1462,7 @@ class couponXuser extends serialParamDBTable
 	var $created_date 		= null;
 	/** @var datetime */
 	var $last_updated		= null;
-	/** @var text */
+	/** @var string */
 	var $params				= null;
 	/** @var int */
 	var $usecount			= null;

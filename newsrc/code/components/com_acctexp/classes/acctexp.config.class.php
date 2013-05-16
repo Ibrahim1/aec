@@ -15,7 +15,7 @@ class aecConfig extends serialParamDBTable
 {
 	/** @var int Primary key */
 	var $id 				= null;
-	/** @var text */
+	/** @var string */
 	var $settings 			= null;
 
 	function aecConfig()

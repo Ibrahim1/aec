@@ -121,13 +121,12 @@ function aecEscape( $value, $safe_params )
 
 	if ( !empty( $safe_params ) ) {
 		foreach ( $safe_params as $param ) {
+			$r = $return;
 			switch ( $param ) {
 				case 'word':
 					$e = strpos( $return, ' ' );
 					if ( $e !== false ) {
 						$r = substr( $return, 0, $e );
-					} else {
-						$r = $return;
 					}
 					break;
 				case 'badchars':
@@ -184,5 +183,5 @@ function aecSelfRedirect( $task, $addparams )
 
 	$url = 'index.php?option=com_acctexp&'.implode('&',$params);
 
-	return aecRedirect( AECToolbox::deadsureURL( $url ), false, true );
+	aecRedirect( AECToolbox::deadsureURL( $url ), false, true );
 }

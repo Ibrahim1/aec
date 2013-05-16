@@ -42,6 +42,8 @@ class SubscriptionPlanList
 	{
 		$auth_problem = null;
 
+		$this->list = array();
+
 		if ( !empty( $this->usage ) ) {
 			$db = &JFactory::getDBO();
 
@@ -117,22 +119,29 @@ class SubscriptionPlanList
 
 	function addButtons( $register, $passthrough )
 	{
+		global $aecConfig;
 
 		$return = '';
 		if ( $this->group ) {
 			if ( $aecConfig->cfg['additem_stayonpage'] ) {
-				$return = $group;
+				$return = $this->group;
 			}
 		}
 
-			$csslist = array();
+		$csslist = array();
 		foreach ( $this->list as $li => $lv ) {
 			if ( $lv['type'] == 'group' ) {
 				continue;
 			}
 
 			foreach ( $lv['gw'] as $gwid => $pp ) {
-				$this->list[$li]['gw'][$gwid]->btn = $this->getButton( $pp, $lv['id'], $register, $passthrough, $return );
+				$btn = $this->getButton( $pp, $lv['id'], $register, $passthrough, $return );
+
+				if ( !empty( $btn['css'] ) && !isset( $csslist[$btn['processor']] ) ) {
+					$csslist[$btn['processor']] = $btn['css'];
+				}
+
+				$this->list[$li]['gw'][$gwid]->btn = $btn;
 			}
 		}
 
@@ -203,10 +212,8 @@ class SubscriptionPlanList
 			if ( $pp->processor->getLogoFilename() == '' ) {
 				$btnarray['content'] = '<span class="btn-tallcontent">'.$pp->info['longname'].'</span>';
 			} else {
-				if ( !array_key_exists($pp->processor_name, $csslist) ) {
-					$csslist[$pp->processor_name] = '.btn-processor-' . $pp->processor_name
-													. ' { background-image: url(' . $pp->getLogoPath() .  ') !important; }';
-				}
+				$btnarray['css'] = '.btn-processor-' . $pp->processor_name
+												. ' { background-image: url(' . $pp->getLogoPath() .  ') !important; }';
 			}
 		}
 
@@ -395,7 +402,7 @@ class SubscriptionPlanList
 
 class SubscriptionPlanHandler
 {
-	function getPlanList( $limitstart=false, $limit=false, $use_order=false, $filter=null, $select=false )
+	static function getPlanList( $limitstart=false, $limit=false, $use_order=false, $filter=null, $select=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -431,7 +438,7 @@ class SubscriptionPlanHandler
 		}
 	}
 
-	function getActivePlanList( $noplan=true )
+	static function getActivePlanList( $noplan=true )
 	{
 		$db = &JFactory::getDBO();
 
@@ -456,7 +463,7 @@ class SubscriptionPlanHandler
 		return $available_plans;
 	}
 
-	function getFullPlanList( $limitstart=false, $limit=false, $subselect=array() )
+	static function getFullPlanList( $limitstart=false, $limit=false, $subselect=array() )
 	{
 		$db = &JFactory::getDBO();
 
@@ -482,7 +489,7 @@ class SubscriptionPlanHandler
 		}
 	}
 
-	function getPlanUserCount( $planid )
+	static function getPlanUserCount( $planid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -497,7 +504,7 @@ class SubscriptionPlanHandler
 		return $db->loadResult();
 	}
 
-	function getPlanUserlist( $planid )
+	static function getPlanUserlist( $planid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -510,7 +517,7 @@ class SubscriptionPlanHandler
 		return xJ::getDBArray( $db );
 	}
 
-	function PlanStatus( $planid )
+	static function PlanStatus( $planid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -561,13 +568,13 @@ class SubscriptionPlan extends serialParamDBTable
 	var $desc				= null;
 	/** @var string */
 	var $email_desc			= null;
-	/** @var text */
+	/** @var string */
 	var $params 			= null;
-	/** @var text */
+	/** @var string */
 	var $custom_params		= null;
-	/** @var text */
+	/** @var string */
 	var $restrictions		= null;
-	/** @var text */
+	/** @var string */
 	var $micro_integrations	= null;
 
 	function SubscriptionPlan()
@@ -932,12 +939,8 @@ class SubscriptionPlan extends serialParamDBTable
 		$return['total_comparison']	= false;
 		$return['comparison']		= false;
 
-		if ( !empty( $user_subscription->used_plans ) ) {
+		if ( !empty( $user_subscription->used_plans ) && is_array( $user_subscription->used_plans ) ) {
 			$plans_comparison	= false;
-
-			if ( !is_array( $user_subscription->used_plans ) ) {
-				continue;
-			}
 
 			foreach ( $user_subscription->used_plans as $planid => $pusage ) {
 				if ( !$planid ) {
@@ -1473,7 +1476,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 				if ( count( $plans ) <= 1 ) {
 					// No other plan depends on this MI, just delete it
-					$mi->delete;
+					$mi->delete();
 				}
 
 				// Set new MI

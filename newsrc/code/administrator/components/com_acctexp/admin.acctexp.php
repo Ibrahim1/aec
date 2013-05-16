@@ -64,8 +64,6 @@ switch( strtolower( $task ) ) {
 
 	case 'editmembership': editUser( $option, $userid, $subscriptionid, $returnTask, aecGetParam('page') ); break;
 
-	case 'quickfire': miQuickfire( $option, $subscriptionid, aecGetParam('mi'), aecGetParam('action') ); break;
-
 	case 'savemembership': saveUser( $option ); break;
 	case 'applymembership': saveUser( $option, 1 ); break;
 	case 'cancelmembership': cancel( $option ); break;
@@ -176,10 +174,6 @@ switch( strtolower( $task ) ) {
 	case 'unpublishcoupon': changeCoupon( $id, 0, $option ); break;
 	case 'removecoupon': removeCoupon( $id, $option, $returnTask ); break;
 	case 'cancelcoupon': aecRedirect( 'index.php?option=' . $option . '&task=showCoupons', JText::_('AEC_CMN_EDIT_CANCELLED') ); break;
-
-	case 'editcss': editCSS( $option ); break;
-	case 'savecss': saveCSS( $option ); break;
-	case 'cancelcss': aecRedirect( 'index.php?option='. $option ); break;
 
 	case 'hacks':
 		$undohack	= aecGetParam( 'undohack', 0 );
@@ -402,7 +396,7 @@ function orderObject( $option, $type, $id, $up, $customreturn=null )
 	aecRedirect( 'index.php?option='. $option . '&task=' . ( empty( $customreturn ) ? 'show' . $type . 's' : $customreturn ) );
 }
 
-function copyObject( $option, $type, $id, $up, $customreturn=null )
+function copyObject( $option, $type, $id, $customreturn=null )
 {
 	$db = &JFactory::getDBO();
 
@@ -958,9 +952,6 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 						$groups = array('active', 'excluded', 'expired', 'pending', 'cancelled', 'hold', 'closed');
 					}
 				}
-
-				$groups 	= $groups;
-				$set_group	= $groups[0];
 			} else {
 				$groups		= array( $groups );
 			}
@@ -2171,9 +2162,9 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 		exit();
 	}
 
-	if ( $state == '1' ) {
+	if ( $state ) {
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
-	} elseif ( $state == '0' ) {
+	} else {
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
 	}
 
@@ -2192,7 +2183,7 @@ function saveProcessor( $option, $return=0 )
 		$pp->loadId( $_POST['id'] );
 
 		if ( empty( $pp->id ) ) {
-			cancel();
+			cancel($option);
 		}
 
 		$procname = $pp->processor_name;
@@ -3334,9 +3325,9 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 		exit();
 	}
 
-	if ( $state == '1' ) {
+	if ( $state ) {
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
-	} elseif ( $state == '0' ) {
+	} else {
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
 	}
 
@@ -3507,6 +3498,7 @@ function editItemGroup( $id, $option )
 
 	$groups = ItemGroupHandler::parentGroups( $row->id, 'group' );
 
+	$customparamsarray = new stdClass();
 	if ( !empty( $groups ) ) {
 		$gs = array();
 		foreach ( $groups as $groupid ) {
@@ -3742,9 +3734,9 @@ function changeItemGroup( $cid=null, $state=0, $type, $option )
 		exit();
 	}
 
-	if ( $state == '1' ) {
+	if ( $state ) {
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_PUBLISHED') : JText::_('AEC_CMN_MADE_VISIBLE') );
-	} elseif ( $state == '0' ) {
+	} else {
 		$msg = ( ( strcmp( $type, 'active' ) === 0 ) ? JText::_('AEC_CMN_NOT_PUBLISHED') : JText::_('AEC_CMN_MADE_INVISIBLE') );
 	}
 
@@ -4250,9 +4242,9 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 		exit();
 	}
 
-	if ( $state == '1' ) {
+	if ( $state ) {
 		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_PUBLISHED');
-	} elseif ( $state == '0' ) {
+	} else {
 		$msg = $total . ' ' . JText::_('AEC_MSG_ITEMS_SUCC_UNPUBLISHED');
 	}
 
@@ -4759,7 +4751,7 @@ function changeCoupon( $id=null, $state=0, $option )
 		exit;
 	}
 
-	$idx	= explode($id);
+	$idx	= explode( ',', $id );
 	$total	= count( $id );
 
 	$rids = $sids = array();
@@ -4828,14 +4820,14 @@ function invoices( $option )
 	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
 	// Lets grab the data and fill it in.
-	$query = 'SELECT *'
+	$query = 'SELECT id'
 			. ' FROM #__acctexp_invoices'
 			. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
 			. ' ORDER BY `created_date` DESC'
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 			;
 	$db->setQuery( $query );
-	$rows = $db->loadObjectList();
+	$rows = xJ::getDBArray( $db );
 
 	if ( $db->getErrorNum() ) {
 		echo $db->stderr();
@@ -4843,13 +4835,16 @@ function invoices( $option )
 	}
 
 	$cclist = array();
-	foreach ( $rows as $id => $row ) {
-		$in_formatted = Invoice::formatInvoiceNumber( $row );
+	foreach ( $rows as $id => $c ) {
+		$rows[$id] = new Invoice();
+		$rows[$id]->load( $id );
 
-		$rows[$id]->invoice_number_formatted = $row->invoice_number . ( ($in_formatted != $row->invoice_number) ? "\n" . '(' . $in_formatted . ')' : '' );
+		$rows[$id]->formatInvoiceNumber();
 
-		if ( !empty( $row->coupons ) ) {
-			$coupons = unserialize( base64_decode( $row->coupons ) );
+		$rows[$id]->invoice_number_formatted = $rows[$id]->invoice_number . ( ($rows[$id]->invoice_number_formatted != $rows[$id]->invoice_number) ? "\n" . '(' . $rows[$id]->invoice_number_formatted . ')' : '' );
+
+		if ( !empty( $rows[$id]->coupons ) ) {
+			$coupons = unserialize( base64_decode( $rows[$id]->coupons ) );
 		} else {
 			$coupons = null;
 		}
@@ -4877,17 +4872,17 @@ function invoices( $option )
 
 		$query = 'SELECT username'
 				. ' FROM #__users'
-				. ' WHERE `id` = \'' . $row->userid . '\''
+				. ' WHERE `id` = \'' . $rows[$id]->userid . '\''
 				;
 		$db->setQuery( $query );
 		$username = $db->loadResult();
 
-		$rows[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $row->userid . '">';
+		$rows[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $rows[$id]->userid . '">';
 
 		if ( !empty( $username ) ) {
 			$rows[$id]->username .= $username . '</a>';
 		} else {
-			$rows[$id]->username .= $row->userid;
+			$rows[$id]->username .= $rows[$id]->userid;
 		}
 
 		$rows[$id]->username .= '</a>';
@@ -5241,7 +5236,7 @@ function aec_stats( $option, $page )
 	$sales_count = $db->loadObjectList();
 	$stats['min_sale_count'] = $sales_count[0]->count;
 	$stats['max_sale_count'] = $sales_count[count($sales_count)-1]->count;
-	$stats['avg_sale_count'] = $sales_count[count($sales_count)/2]->count;
+	$stats['avg_sale_count'] = $sales_count[((int) (count($sales_count)/2) )]->count;
 
 	$query = 'SELECT amount'
 			. ' FROM #__acctexp_log_history'
@@ -5403,13 +5398,6 @@ function aec_statrequest( $option, $type, $start, $end )
 	}
 
 	echo json_encode( $tree );exit;
-}
-
-function aec_stats2( $option )
-{
-	$stats = null;
-
-	HTML_AcctExp::stats2( $option, $stats );
 }
 
 function quicklookup( $option )
@@ -5964,7 +5952,7 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 			case 'file':
 				// mic: fix if CMS is not Joomla or Mambo
 				if ( $hack['filename'] != 'UNKNOWN' ) {
-					$originalFileHandle = fopen( $hacks[$filename]['filename'], 'r' ) or die ("Cannot open $originalFile<br>");
+					$originalFileHandle = fopen( $hacks[$filename]['filename'], 'r' ) or die ("Cannot open ".$hacks[$filename]['filename']);
 					// Transfer File into variable $oldData
 					$oldData = fread( $originalFileHandle, filesize( $hacks[$filename]['filename'] ) );
 					fclose( $originalFileHandle );

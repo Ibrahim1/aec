@@ -18,10 +18,7 @@ class aecHeartbeat extends serialParamDBTable
  	/** @var datetime */
 	var $last_beat 		= null;
 
-	/**
-	 * @param database A database connector object
-	 */
-	function aecHeartbeat()
+	function __construct()
 	{
 	 	parent::__construct( '#__acctexp_heartbeat', 'id' );
 

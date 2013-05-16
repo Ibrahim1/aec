@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class reWriteEngine
 {
-	function isRWEstring( $string )
+	static function isRWEstring( $string )
 	{
 		if ( ( strpos( $string, '[[' ) !== false ) && ( strpos( $string, ']]' ) !== false ) ) {
 			return true;
@@ -859,26 +859,18 @@ class reWriteEngine
 					if ( isset( $vars[1] ) ) {
 						$result = call_user_func_array( $vars[0], $vars[1] );
 					} else {
-						$result = call_user_func_array( $vars[0] );
+						$result = call_user_func_array( $vars[0], array() );
 					}
 				}
 				break;
 			case 'php_method':
 				if ( !$safe ) {
-					if ( function_exists( 'call_user_method_array' ) ) {
-						if ( isset( $vars[2] ) ) {
-							$result = call_user_method_array( $vars[0], $vars[1], $vars[2] );
-						} else {
-							$result = call_user_method_array( $vars[0], $vars[1] );
-						}
-					} else {
-						$callback = array( $vars[0], $vars[1] );
+					$callback = array( $vars[0], $vars[1] );
 
-						if ( isset( $vars[2] ) ) {
-							$result = call_user_func_array( $callback, $vars[2] );
-						} else {
-							$result = call_user_func_array( $callback );
-						}
+					if ( isset( $vars[2] ) ) {
+						$result = call_user_func_array( $callback, $vars[2] );
+					} else {
+						$result = call_user_func_array( $callback, array() );
 					}
 				}
 				break;
@@ -1075,8 +1067,9 @@ class reWriteEngine
 					return $command.'-'.get_class($vars[0]).'::'.$vars[1];
 				}
 				break;
-			default: return $command . ' is no command'; break;
 		}
+
+		return $command . ' is no command';
 	}
 
 }

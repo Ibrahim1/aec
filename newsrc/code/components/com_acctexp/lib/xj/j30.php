@@ -1,7 +1,7 @@
 <?php
 class xJ
 {
-	function getDBArray( $db )
+	static function getDBArray( $db )
 	{
 		$list = $db->loadObjectList();
 	
@@ -19,22 +19,22 @@ class xJ
 		return $return;
 	}
 
-	function escape( $db, $value )
+	static function escape( $db, $value )
 	{
 		return $db->escape( $value );
 	}
 
-	function token()
+	static function token()
 	{
 		return JSession::getFormToken();
 	}
 
-	function getHash()
+	static function getHash()
 	{
 		return JApplication::getHash(JUserHelper::genRandomPassword());
 	}
-	
-	function sendMail( $sender, $sender_name, $recipient, $subject, $message, $html=null, $cc=null, $bcc=null, $attach=null )
+
+	static function sendMail( $sender, $sender_name, $recipient, $subject, $message, $html=null, $cc=null, $bcc=null, $attach=null )
 	{
 		$mailer = JFactory::getMailer();
 

@@ -113,7 +113,7 @@ class eucaObject extends JObject {}
 */
 class paramDBTable extends JTable
 {
-	function paramDBTable( $table, $id )
+	function __construct( $table, $id )
 	{
 		$db = &JFactory::getDBO();
 
@@ -696,7 +696,7 @@ class serialParamDBTable extends paramDBTable
 
 class jsoonHandler
 {
-	function decode( $input )
+	static function decode( $input )
 	{
 		if ( strpos( $input, '_jsoon' ) !== false ) {
 			return jsoonHandler::decoder( json_decode( $input ) );
@@ -705,10 +705,7 @@ class jsoonHandler
 		}
 	}
 
-	/**
-	 * Encode
-	 */
-	function encode( $input )
+	static function encode( $input )
 	{
 		return json_encode( jsoonHandler::encoder( $input ) );
 	}
@@ -832,7 +829,7 @@ class parameterHandler
 	 * Decode Parameters into an array
 	 * @return array
 	 */
-	function decode( $params )
+	static function decode( $params )
 	{
 		$par = explode( "\n", $params );
 
@@ -861,7 +858,7 @@ class parameterHandler
 	 * Encode array to newline separated string
 	 * @return string
 	 */
-	function encode( $array )
+	static function encode( $array )
 	{
 		$db = &JFactory::getDBO();
 
@@ -890,11 +887,6 @@ class parameterHandler
 
 class eucaToolbox
 {
-	function eucaToolbox()
-	{
-
-	}
-
 	function makeIcon( $name, $alt=false )
 	{
 		if ( !$alt ) {

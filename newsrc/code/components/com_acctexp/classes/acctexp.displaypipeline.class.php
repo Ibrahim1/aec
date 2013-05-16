@@ -31,7 +31,7 @@ class displayPipelineHandler
 				. ' WHERE `only_user` = \'0\''
 				;
 		$db->setQuery( $query );
-		$events = array_merge( $events, $db->loadResultArray() );
+		$events = array_merge( $events, xJ::getDBArray($db) );
 
 		$return = '';
 		if ( empty( $events ) ) {
@@ -112,15 +112,12 @@ class displayPipeline extends serialParamDBTable
 	var $displaycount	= null;
 	/** @var int */
 	var $displaymax		= null;
-	/** @var text */
+	/** @var string */
 	var $displaytext	= null;
-	/** @var text */
+	/** @var string */
 	var $params			= null;
 
-	/**
-	 * @param database A database connector object
-	 */
-	function displayPipeline()
+	function __construct()
 	{
 	 	parent::__construct( '#__acctexp_displaypipeline', 'id' );
 	}

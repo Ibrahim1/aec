@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecEventHandler
 {
-	function pingEvents()
+	static function pingEvents()
 	{
 		$db = &JFactory::getDBO();
 
@@ -77,11 +77,11 @@ class aecEvent extends serialParamDBTable
 	var $created_date		= null;
 	/** @var datetime */
 	var $due_date			= null;
-	/** @var text */
+	/** @var string */
 	var $context 			= array();
-	/** @var text */
+	/** @var string */
 	var $params 			= array();
-	/** @var text */
+	/** @var string */
 	var $customparams		= array();
 
 	function aecEvent()
@@ -148,7 +148,10 @@ class aecEvent extends serialParamDBTable
 
 			return $this->storeload();
 		}
+
+		return true;
 	}
+
 }
 
 ?>

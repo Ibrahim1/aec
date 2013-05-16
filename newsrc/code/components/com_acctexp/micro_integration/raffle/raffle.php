@@ -219,7 +219,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 	var $id						= null;
 	/** @var int */
 	var $group					= null;
-	/** @var text */
+	/** @var string */
 	var $params					= null;
 	/** @var int */
 	var $finished				= null;
@@ -296,7 +296,7 @@ class AECMI_raffleuser extends serialParamDBTable {
 	var $wins					= null;
 	/** @var int */
 	var $runs					= null;
-	/** @var text */
+	/** @var string */
 	var $params					= null;
 
 	/**

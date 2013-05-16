@@ -13,11 +13,6 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecSuperCommand
 {
-	function aecSuperCommand()
-	{
-
-	}
-
 	function parseString( $string )
 	{
 		$particles = explode( '|', str_replace( 'supercommand:', '', str_replace( '!supercommand:', '', $string ) ) );
@@ -97,9 +92,8 @@ class aecSuperCommand
 				$userlist = xJ::getDBArray( $db );
 				break;
 			case 'orphans':
-				/*$this->focus == 'subscriptions';
-
 				$db = &JFactory::getDBO();
+				/*$this->focus == 'subscriptions';
 
 				$query = 'SELECT id'
 						. ' FROM #__acctexp_subscr AS subs'
@@ -252,6 +246,8 @@ class aecSuperCommand
 
 	function cmdApply( $metaUser, $params )
 	{
+		global $aecConfig;
+
 		$db = &JFactory::getDBO();
 
 		switch ( strtolower( $params[0] ) ) {
@@ -488,7 +484,7 @@ class aecImport
 
 	function createUser( $fields )
 	{
-		return AECToolbox::saveUserRegistration( 'com_acctexp', $fields, true, true, true, true );
+		return aecRegistration::saveUserRegistration( 'com_acctexp', $fields, true, true, true, true );
 	}
 
 }
@@ -505,14 +501,14 @@ class aecExport extends serialParamDBTable
 	var $created_date 		= null;
 	/** @var datetime */
 	var $lastused_date 		= null;
-	/** @var text */
+	/** @var string */
 	var $filter				= null;
-	/** @var text */
+	/** @var string */
 	var $options			= null;
-	/** @var text */
+	/** @var string */
 	var $params				= null;
 
-	function aecExport( $type=false )
+	function __construct( $type=false )
 	{
 		$this->type = $type;
 

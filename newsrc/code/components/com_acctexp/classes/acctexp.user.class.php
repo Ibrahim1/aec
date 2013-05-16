@@ -15,7 +15,7 @@ JLoader::register('JTableUser', JPATH_LIBRARIES.'/joomla/database/table/user.php
 
 class aecUserHelper
 {
-	function SubscriptionIDfromUserID( $userid )
+	static function SubscriptionIDfromUserID( $userid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -29,7 +29,7 @@ class aecUserHelper
 		return $db->loadResult();
 	}
 
-	function UserIDfromUsername( $username )
+	static function UserIDfromUsername( $username )
 	{
 		$db = &JFactory::getDBO();
 
@@ -42,7 +42,7 @@ class aecUserHelper
 		return $db->loadResult();
 	}
 
-	function UserIDfromSubscriptionID( $susbcriptionid )
+	static function UserIDfromSubscriptionID( $susbcriptionid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -56,7 +56,7 @@ class aecUserHelper
 		return $db->loadResult();
 	}
 
-	function UserExists( $userid )
+	static function UserExists( $userid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -234,6 +234,8 @@ class metaUser
 
 	function setCMSparams( $array )
 	{
+		$db = &JFactory::getDBO();
+
 		$params = explode( "\n", $this->cmsUser->params );
 
 		$oldarray = array();
@@ -482,7 +484,7 @@ class metaUser
 		$var['email']		= $user['email'];
 		$var['password']	= $user['password'];
 
-		$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $var, true );
+		$userid = aecRegistration::saveUserRegistration( 'com_acctexp', $var, true );
 
 		// Create a new invoice with $invoiceid as secondary ident
 		$invoice = new Invoice();
@@ -869,7 +871,7 @@ class metaUser
 		}
 	}
 
-	function _explodeName( $name )
+	static function _explodeName( $name )
 	{
 		$return = array();
 		$return['first_first']	= "";
@@ -931,14 +933,15 @@ class metaUser
 		if ( is_array( $restrictions ) && !empty( $restrictions ) ) {
 			$return = array();
 			foreach ( $restrictions as $name => $value ) {
+				$invert = false;
+				$status = false;
+
 				// Might be zero, so do an expensive check
 				if ( !is_null( $value ) && !( $value === "" ) ) {
 					// Switch flag for inverted call
 					if ( strpos( $name, '_excluded' ) !== false ) {
 						$invert = true;
 						$name = str_replace( '_excluded', '', $name );
-					} else {
-						$invert = false;
 					}
 
 					// Convert values to array or explode to array if none
@@ -951,8 +954,6 @@ class metaUser
 					} else {
 						$check = $value;
 					}
-
-					$status = false;
 
 					switch ( $name ) {
 						// Check for set userid
@@ -1340,7 +1341,7 @@ class metaUserDB extends serialParamDBTable
 	{
 		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
-		parent::storeload();
+		return parent::storeload();
 	}
 
 	function getProcessorParams( $processorid )

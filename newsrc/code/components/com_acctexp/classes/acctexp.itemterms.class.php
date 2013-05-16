@@ -420,11 +420,9 @@ class itemTerm extends eucaObject
 		}
 
 		$return = null;
-		foreach ( $this->cost as $id => $cost ) {
+		foreach ( $this->cost as $cost ) {
 			if ( in_array( $cost->type, $filter ) || ( isset( $cost->cost['temp_coupon'] ) && $filter_temp_coupons ) ) {
 				if ( isset( $return->cost['amount'] ) ) {
-					$return->cost['amount'] = $return->cost['amount'];
-
 					return $return;
 				} else {
 					return $cost;

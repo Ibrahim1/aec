@@ -406,9 +406,9 @@ class docman_restriction extends serialParamDBTable {
 	var $granted_downloads		= null;
 	/** @var int */
 	var $unlimited_downloads	= null;
-	/** @var text */
+	/** @var string */
 	var $used_downloads			= null;
-	/** @var text */
+	/** @var string */
 	var $params					= null;
 
 	function getIDbyUserID( $userid ) {

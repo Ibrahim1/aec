@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecRegistration
 {
-	function registerRedirect( $intro, $plan )
+	static function registerRedirect( $intro, $plan )
 	{
 		$_POST['intro'] = $intro;
 
@@ -39,7 +39,7 @@ class aecRegistration
 		}
 	}
 
-	function registerRedirectJoomla( $plan )
+	static function registerRedirectJoomla( $plan )
 	{
 		$app = JFactory::getApplication();
 
@@ -56,7 +56,7 @@ class aecRegistration
 		}
 	}
 
-	function registerRedirectCB( $plan )
+	static function registerRedirectCB( $plan )
 	{
 		if ( aecComponentHelper::detect_component( 'CB1.2' ) ) {
 			TempTokenHandler::TempTokenFromPlan( $plan );
@@ -87,7 +87,7 @@ class aecRegistration
 		}
 	}
 
-	function registerRedirectJUser()
+	static function registerRedirectJUser()
 	{
 		global $task;
 
@@ -102,14 +102,14 @@ class aecRegistration
 		userRegistration( 'com_acctexp', null );
 	}
 
-	function registerRedirectJomSocial( $plan )
+	static function registerRedirectJomSocial( $plan )
 	{
 		TempTokenHandler::TempTokenFromPlan( $plan );
 
 		aecRedirect( 'index.php?option=com_community&view=register' );
 	}
 
-	function saveUserRegistration( $var, $internal=false, $overrideActivation=false, $overrideEmails=false, $overrideJS=false )
+	static function saveUserRegistration( $var, $internal=false, $overrideActivation=false, $overrideEmails=false, $overrideJS=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -213,9 +213,9 @@ class aecRegistration
 					$alert = substr( $cbreply, $alertstart+strlen($indicator), $alertend-$alertstart-strlen($indicator) );
 
 					if ( $aecConfig->cfg['plans_first'] ) {
-						return aecErrorAlert( $alert, $action='window.history.go(-2);' );
+						aecErrorAlert( $alert, $action='window.history.go(-2);' );
 					} else {
-						return aecErrorAlert( $alert, $action='window.history.go(-3);' );
+						aecErrorAlert( $alert, $action='window.history.go(-3);' );
 					}
 				}
 			}
@@ -327,7 +327,7 @@ class aecRegistration
 					JError::raiseError( 500, $user->getError());
 
 					unset($_POST);
-					subscribe();
+					subscribe('com_acctexp');
 					return false;
 				}
 

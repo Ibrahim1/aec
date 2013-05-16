@@ -51,13 +51,10 @@ class aecBucket extends serialParamDBTable
 	var $subject 		= null;
 	/** @var datetime */
 	var $created_date	= null;
-	/** @var text */
+	/** @var string */
 	var $data 			= null;
 
-	/**
-	 * @param database A database connector object
-	 */
-	function aecBucket()
+	function __construct()
 	{
 	 	parent::__construct( '#__acctexp_bucket', 'id' );
 	}

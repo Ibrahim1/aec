@@ -97,7 +97,7 @@ class PaymentProcessorHandler
 		return JHTML::_('select.genericlist', $gw_list_enabled_html, $name.($multiple ? '[]' : ''), 'size="' . max(min(count($gw_list_enabled), 12), 3) . '"'.($multiple ? ' multiple="multiple"' : ''), 'value', 'text', $gwlist_selected);
 	}
 
-	function getProcessorIdfromName( $name )
+	static function getProcessorIdfromName( $name )
 	{
 		$db = &JFactory::getDBO();
 
@@ -109,7 +109,7 @@ class PaymentProcessorHandler
 		return $db->loadResult();
 	}
 
-	function getProcessorNamefromId( $id )
+	static function getProcessorNamefromId( $id )
 	{
 		$db = &JFactory::getDBO();
 
@@ -127,7 +127,7 @@ class PaymentProcessorHandler
 	 * @param bool	$active		get only active objects
 	 * @return array of (active) payment processors
 	 */
-	function getInstalledObjectList( $active = false, $simple = false )
+	static function getInstalledObjectList( $active = false, $simple = false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -312,7 +312,7 @@ class PaymentProcessor
 		}
 	}
 
-	function getNameById( $ppid )
+	static function getNameById( $ppid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -899,7 +899,7 @@ class PaymentProcessor
 			$usage = 1;
 
 			// Create new user account and fetch id
-			$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $return['_aec_createuser'], true, true, false );
+			$userid = aecRegistration::saveUserRegistration( 'com_acctexp', $return['_aec_createuser'], true, true, false );
 
 			// Create Invoice
 			$invoice = new Invoice();
@@ -1072,6 +1072,7 @@ class PaymentProcessor
 			return array();
 		}
 
+		$tabs = array();
 		foreach ( $addtabs as $atk => $atv ) {
 			$action = $this->processor_name . '_' . $atk;
 			if ( isset( $tabs[$action] ) ) {
@@ -1090,20 +1091,24 @@ class PaymentProcessor
 
 		$actionarray = $this->processor->getActions( $invoice, $subscription );
 
-		if ( !empty( $actionarray ) ) {
-			foreach ( $actionarray as $action => $aoptions ) {
-				$action = array( 'action' => $action, 'insert' => '' );
+		if ( empty( $actionarray ) ) {
+			return $actions;
+		}
 
-				if ( !empty( $aoptions ) ) {
-					foreach ( $aoptions as $opt ) {
-						switch ( $opt ) {
-							case 'confirm':
-								$action['insert'] .= ' onclick="return show_confirm(\'' . JText::_('AEC_YOUSURE') . '\')" ';
-								break;
-							default:
-								break;
-						}
-					}
+		foreach ( $actionarray as $actionid => $aoptions ) {
+			if ( empty( $aoptions ) ) {
+				continue;
+			}
+
+			$action = array( 'action' => $actionid, 'insert' => '' );
+
+			foreach ( $aoptions as $opt ) {
+				switch ( $opt ) {
+					case 'confirm':
+						$action['insert'] .= ' onclick="return show_confirm(\'' . JText::_('AEC_YOUSURE') . '\')" ';
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -1122,11 +1127,11 @@ class processor extends serialParamDBTable
 	var $name				= null;
 	/** @var int */
 	var $active				= null;
-	/** @var text */
+	/** @var string */
 	var $info				= null;
-	/** @var text */
+	/** @var string */
 	var $settings			= null;
-	/** @var text */
+	/** @var string */
 	var $params				= null;
 
 	function processor()
@@ -2251,9 +2256,9 @@ class SOAPprocessor extends XMLprocessor
 
 		$this->soapclient = new SoapClient( $url, $options );
 
-		if ( method_exist( $this->soapclient, '__soapCall' ) ) {
+		if ( method_exists( $this->soapclient, '__soapCall' ) ) {
 			$response['raw'] = $this->soapclient->__soapCall( $command, $content );
-		} elseif ( method_exist( $this->soapclient, 'soapCall' ) ) {
+		} elseif ( method_exists( $this->soapclient, 'soapCall' ) ) {
 			$response['raw'] = $this->soapclient->soapCall( $command, $content );
 		} else {
 			$response['raw'] = $this->soapclient->call( $command, $content );
@@ -2281,8 +2286,8 @@ class SOAPprocessor extends XMLprocessor
 		if ( is_a( $this->soapclient, 'SoapClient' ) ) {
 			$response['raw'] = $this->soapclient->__soapCall( $command, $content );
 
-			if ( $return_val->error != 0 ) {
-				$response['error'] = "Error calling SOAP function: " . $return_val->error;
+			if ( is_object( $response['raw'] ) ) {
+				$response['error'] = "Error calling SOAP function: " . ( (string) $response['raw'] );
 			}
 
 			return $response;

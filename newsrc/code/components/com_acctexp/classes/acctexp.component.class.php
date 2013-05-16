@@ -14,7 +14,7 @@ class aecComponentHelper
 	 * Check whether a component is installed
 	 * @return Bool
 	 */
-	function detect_component( $component )
+	static function detect_component( $component )
 	{
 		$db = &JFactory::getDBO();
 

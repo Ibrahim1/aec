@@ -41,9 +41,9 @@ class Subscription extends serialParamDBTable
 	var $lifetime			= null;
 	/** @var datetime */
 	var $expiration			= null;
-	/** @var text */
+	/** @var string */
 	var $params 			= null;
-	/** @var text */
+	/** @var string */
 	var $customparams		= null;
 
 	function Subscription()
@@ -144,7 +144,7 @@ class Subscription extends serialParamDBTable
 	function manualVerify()
 	{
 		if ( $this->isExpired() ) {
-			return aecSelfRedirect( 'expired', array('userid'=>((int) $this->userid)) );
+			aecSelfRedirect( 'expired', array('userid'=>((int) $this->userid)) );
 		} else {
 			return true;
 		}
@@ -276,7 +276,7 @@ class Subscription extends serialParamDBTable
 
 	/**
 	* Get alert level for a subscription
-	* @param int user id
+	* @param int
 	* @return Object alert
 	* alert['level'] = -1 means no threshold has been reached
 	* alert['level'] =  0 means subscription expired
@@ -318,7 +318,7 @@ class Subscription extends serialParamDBTable
 		return $alert;
 	}
 
-	function verifylogin( $block, $metaUser=false )
+	function verifylogin( $metaUser=false )
 	{
 		$verify = $this->verify();
 
@@ -329,7 +329,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function verify( $block, $metaUser=false )
+	function verify( $metaUser=false )
 	{
 		global $aecConfig;
 
@@ -343,6 +343,12 @@ class Subscription extends serialParamDBTable
 			}
 		}
 
+		$block = false;
+		if ( $metaUser !== false ) {
+			if ( !empty( $metaUser->cmsUser->block ) ) {
+				$block = $metaUser->cmsUser->block;
+			}
+		}
 		if ( ( $expired || $this->isClosed() )
 			&& $aecConfig->cfg['require_subscription'] ) {
 			if ( $metaUser !== false ) {
@@ -356,7 +362,7 @@ class Subscription extends serialParamDBTable
 			return 'expired';
 		} elseif ( $this->isPending() ) {
 			return 'pending';
-		} elseif ( $this->isHold() || $block ) {
+		} elseif ( $this->isHold() || !empty( $block ) ) {
 			return 'hold';
 		}
 
@@ -495,11 +501,12 @@ class Subscription extends serialParamDBTable
 
 		$micro_integrations = $plan->getMicroIntegrations();
 
+		$actions = 0;
+
 		if ( empty( $micro_integrations ) ) {
 			return $actions;
 		}
 
-		$actions = 0;
 		foreach ( $micro_integrations as $mi_id ) {
 			if ( !in_array( $mi_id, $mi_pexp ) ) {
 				continue;

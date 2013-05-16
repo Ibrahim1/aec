@@ -340,7 +340,7 @@ class tool_pretend
 							'name' => $rname,
 							);
 
-			$userid = AECToolbox::saveUserRegistration( 'com_acctexp', $var, true, true, true, true );
+			$userid = aecRegistration::saveUserRegistration( 'com_acctexp', $var, true, true, true, true );
 
 			if ( $i == 0 ) {
 				$this->range['users']['start'] = $userid;

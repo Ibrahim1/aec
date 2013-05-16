@@ -22,7 +22,7 @@ class AECToolbox
 	 * @since 0.12.4
 	 * @return array
 	 */
-	function aecCurrencyField( $currMain = false, $currGen = false, $currOth = false, $list_only = false )
+	static function aecCurrencyField( $currMain = false, $currGen = false, $currOth = false, $list_only = false )
 	{
 		$currencies = array();
 
@@ -89,7 +89,7 @@ class AECToolbox
 		return $currency_code_list;
 	}
 
-	function aecNumCurrency( $string, $backwards=false )
+	static function aecNumCurrency( $string, $backwards=false )
 	{
 		$iso4217num = array( 'AED' => '784', 'AFN' => '971', 'ALL' => '008' ,'AMD' => '051', 'ANG' => '532',
 							'AOA' => '973', 'ARS' => '032', 'AUD' => '036', 'AWG' => '533', 'AZN' => '944',
@@ -144,7 +144,7 @@ class AECToolbox
 		return '';
 	}
 
-	function aecCurrencyExp( $string )
+	static function aecCurrencyExp( $string )
 	{
 		$iso4217exp8 = array( 'BTC' );
 		$iso4217exp3 = array( 'BHD', 'IQD', 'JOD', 'KRW', 'LYD', 'OMR', 'TND' );
@@ -166,7 +166,7 @@ class AECToolbox
 		}
 	}
 
-	function getCountryCodeList( $format=null )
+	static function getCountryCodeList( $format=null )
 	{
 		global $aecConfig;
 
@@ -204,7 +204,7 @@ class AECToolbox
 		}
 	}
 
-	function ISO3166_conversiontable( $type1, $type2 )
+	static function ISO3166_conversiontable( $type1, $type2 )
 	{
 		$list1 = call_user_func( array( 'AECToolbox', 'getISO3166_1' . $type1 . '_codes' ) );
 		$list2 = call_user_func( array( 'AECToolbox', 'getISO3166_1' . $type2 . '_codes' ) );
@@ -212,7 +212,7 @@ class AECToolbox
 		return array_combine( $list1, $list2 );
 	}
 
-	function getISO3166_1a2_codes()
+	static function getISO3166_1a2_codes()
 	{
 		return array(	'AF','AX','AL','DZ','AS','AD','AO','AI','AQ','AG','AR','AM','AW','AU',
 						'AT','AZ','BS','BH','BD','BB','BY','BE','BZ','BJ','BM','BT','BO','BA',
@@ -235,7 +235,7 @@ class AECToolbox
 					);
 	}
 
-	function getISO3166_1a3_codes()
+	static function getISO3166_1a3_codes()
 	{
 		return array(	'AFG','ALA','ALB','DZA','ASM','AND','AGO','AIA','ATA','ATG','ARG','ARM','ABW','AUS',
 						'AUT','AZE','BHS','BHR','BGD','BRB','BLR','BEL','BLZ','BEN','BMU','BTN','BOL','BIH',
@@ -258,7 +258,7 @@ class AECToolbox
 					);
 	}
 
-	function getISO3166_1num_codes()
+	static function getISO3166_1num_codes()
 	{
 		return array(	'004','248','008','012','016','020','024','660','010','028','032','051','533','036',
 						'040','031','044','048','050','052','112','056','084','204','060','064','068','070',
@@ -281,7 +281,7 @@ class AECToolbox
 					);
 	}
 
-	function getISO639_1_codes()
+	static function getISO639_1_codes()
 	{
 		return array(	'ab','aa','af','ak','sq','am','ar','an','hy','as','av','ae','ay','az','bm','ba','eu',
 						'be','bn','bh','bi','bs','br','bg','my','ca','ch','ce','ny','zh','cv','kw','co','cr',
@@ -297,7 +297,7 @@ class AECToolbox
 					);
 	}
 
-	function getIETF_lang()
+	static function getIETF_lang()
 	{
 		return array(	'ab','aa','af','ak','sq','am','ar','an','hy','as','av','ae','ay','az','bm','ba','eu',
 						'be','bn','bh','bi','bs','br','bg','my','ca','ch','ce','ny','zh','cv','kw','co','cr',
@@ -318,7 +318,7 @@ class AECToolbox
 	 *
 	 * @return array w/ values
 	 */
-	function aecIP()
+	static function aecIP()
 	{
 		global $aecConfig;
 
@@ -335,7 +335,7 @@ class AECToolbox
 		return $aecUser;
 	}
 
-	function in_ip_range( $ip_one, $ip_two=false )
+	static function in_ip_range( $ip_one, $ip_two=false )
 	{
 		if ( $ip_two === false ) {
 			if ( $ip_one == $_SERVER['REMOTE_ADDR'] ) {
@@ -358,7 +358,7 @@ class AECToolbox
 	 * @parameter url
 	 * @return string
 	 */
-	function backendTaskLink( $task, $text )
+	static function backendTaskLink( $task, $text )
 	{
 		return '<a href="' .  JURI::root() . 'administrator/index.php?option=com_acctexp&amp;task=' . $task . '" title="' . $text . '">' . $text . '</a>';
 	}
@@ -368,7 +368,7 @@ class AECToolbox
 	 * @parameter url
 	 * @return string
 	 */
-	function deadsureURL( $url, $secure=false, $internal=false )
+	static function deadsureURL( $url, $secure=false, $internal=false )
 	{
 		global $aecConfig;
 
@@ -452,7 +452,7 @@ class AECToolbox
 				if ( strpos( $base, '/' ) === strlen( $base ) ) {
 					$new_url = substr( $base, 0, -1 ) . $new_url;
 				} else {
-					// It seems we have a problem malfunction - subdirectory is not appended
+					// It seems we have a problem malstatic function - subdirectory is not appended
 					$metaurl = explode( '/', $base );
 					$rooturl = $metaurl[0] . '//' . $metaurl[2];
 
@@ -493,7 +493,7 @@ class AECToolbox
 	 * @parameter username
 	 * @return bool
 	 */
-	function VerifyUsername( $username )
+	static function VerifyUsername( $username )
 	{
 		$heartbeat = new aecHeartbeat();
 		$heartbeat->frontendping();
@@ -538,7 +538,7 @@ class AECToolbox
 		return true;
 	}
 
-	function VerifyUser( $username )
+	static function VerifyUser( $username )
 	{
 		$heartbeat = new aecHeartbeat();
 		$heartbeat->frontendping();
@@ -548,7 +548,7 @@ class AECToolbox
 		return AECToolbox::VerifyUserID( $id );
 	}
 
-	function VerifyUserID( $userid )
+	static function VerifyUserID( $userid )
 	{
 		if ( empty( $userid ) ) {
 			return false;
@@ -559,7 +559,7 @@ class AECToolbox
 		return AECToolbox::VerifyMetaUser( $metaUser );
 	}
 
-	function VerifyMetaUser( $metaUser )
+	static function VerifyMetaUser( $metaUser )
 	{
 		global $aecConfig;
 
@@ -603,7 +603,7 @@ class AECToolbox
 		}
 	}
 
-	function searchUser( $search )
+	static function searchUser( $search )
 	{
 		$db = &JFactory::getDBO();
 
@@ -670,7 +670,7 @@ class AECToolbox
 		return array();
 	}
 
-	function randomstring( $length=16, $alphanum_only=false, $uppercase=false )
+	static function randomstring( $length=16, $alphanum_only=false, $uppercase=false )
 	{
 		$random = "";
 		for ( $i=0; $i<$length; $i++ ) {
@@ -695,7 +695,7 @@ class AECToolbox
 		return $random;
 	}
 
-	function quickVerifyUserID( $userid )
+	static function quickVerifyUserID( $userid )
 	{
 		if ( empty( $userid ) ) {
 			return null;
@@ -722,7 +722,7 @@ class AECToolbox
 		}
 	}
 
-	function formatDate( $date, $backend=false, $offset=true )
+	static function formatDate( $date, $backend=false, $offset=true )
 	{
 		global $aecConfig;
 
@@ -755,7 +755,7 @@ class AECToolbox
 		}
 	}
 
-	function formatAmountCustom( $request, $plan, $forcedefault=false, $proposed=null )
+	static function formatAmountCustom( $request, $plan, $forcedefault=false, $proposed=null )
 	{
 		if ( empty( $plan->params['customamountformat'] ) || $forcedefault ) {
 			$format = '{aecjson}{"cmd":"condition","vars":[{"cmd":"data","vars":"payment.freetrial"},'
@@ -785,7 +785,7 @@ class AECToolbox
 		return $amount;
 	}
 
-	function formatAmount( $amount, $currency=null, $round=true )
+	static function formatAmount( $amount, $currency=null, $round=true )
 	{
 		global $aecConfig;
 
@@ -814,7 +814,7 @@ class AECToolbox
 		return $amount;
 	}
 
-	function correctAmount( $amount, $round=true )
+	static function correctAmount( $amount, $round=true )
 	{
 		if ( strpos( $amount, '.' ) === 0 ) {
 			$amount = '0' . $amount;
@@ -854,7 +854,7 @@ class AECToolbox
 		return $amount;
 	}
 
-	function roundAmount( $amount )
+	static function roundAmount( $amount )
 	{
 		$pow = pow( 10, 2 );
 
@@ -873,7 +873,7 @@ class AECToolbox
 		}
 	}
 
-	function getCurrencySymbol( $currency )
+	static function getCurrencySymbol( $currency )
 	{
 		global $aecConfig;
 
@@ -904,12 +904,12 @@ class AECToolbox
 		}
 	}
 
-	function computeExpiration( $value, $unit, $timestamp )
+	static function computeExpiration( $value, $unit, $timestamp )
 	{
 		return date( 'Y-m-d H:i:s', AECToolbox::offsetTime( $value, $unit, $timestamp ) );
 	}
 
-	function offsetTime( $value, $unit, $timestamp )
+	static function offsetTime( $value, $unit, $timestamp )
 	{
 		$sign = strpos( $value, '-' ) ? '-' : '+';
 
@@ -934,7 +934,7 @@ class AECToolbox
 		return strtotime( $add, $timestamp );
 	}
 
-	function cleanPOST( $post, $safe=true )
+	static function cleanPOST( $post, $safe=true )
 	{
 		$badparams = array( 'option', 'task' );
 
@@ -951,7 +951,7 @@ class AECToolbox
 		}
 	}
 
-	function visualstrlen( $string )
+	static function visualstrlen( $string )
 	{
 		// Narrow Chars
 		$srt = array( 'I', 'J', 'i', 'j', 'l', 'r', 't', '(', ')', '[', ']', ',', '.', '-' );
@@ -980,18 +980,18 @@ class AECToolbox
 		return (int) $vlen;
 	}
 
-	function rewriteEngineInfo( $switches=array(), $params=null )
+	static function rewriteEngineInfo( $switches=array(), $params=null )
 	{
 		$rwEngine = new reWriteEngine();
 		return $rwEngine->info( $switches, $params );
 	}
 
-	function rewriteEngine( $content, $metaUser=null, $subscriptionPlan=null, $invoice=null )
+	static function rewriteEngine( $content, $metaUser=null, $subscriptionPlan=null, $invoice=null )
 	{
 		return AECToolbox::rewriteEngineRQ( $content, null, $metaUser, $subscriptionPlan, $invoice );
 	}
 
-	function rewriteEngineRQ( $content, $request, $metaUser=null, $subscriptionPlan=null, $invoice=null )
+	static function rewriteEngineRQ( $content, $request, $metaUser=null, $subscriptionPlan=null, $invoice=null )
 	{
 		if ( !is_object( $request ) ) {
 			$request = new stdClass();
@@ -1025,14 +1025,14 @@ class AECToolbox
 		}
 	}
 
-	function rewriteEngineExplain( $content )
+	static function rewriteEngineExplain( $content )
 	{
 		$rwEngine = new reWriteEngine();
 
 		return $rwEngine->explain( $content );
 	}
 
-	function compare( $eval, $check1, $check2 )
+	static function compare( $eval, $check1, $check2 )
 	{
 		$status = false;
 		switch ( $eval ) {
@@ -1060,7 +1060,7 @@ class AECToolbox
 		return $status;
 	}
 
-	function math( $sign, $val1, $val2 )
+	static function math( $sign, $val1, $val2 )
 	{
 		$result = false;
 		switch ( $sign ) {
@@ -1084,7 +1084,7 @@ class AECToolbox
 		return $result;
 	}
 
-	function searchinObjectProperties( $object, $search )
+	static function searchinObjectProperties( $object, $search )
 	{
 		$found = false;
 
@@ -1105,7 +1105,7 @@ class AECToolbox
 		return $found;
 	}
 
-	function searchreplaceinObjectProperties( $object, $search, $replace )
+	static function searchreplaceinObjectProperties( $object, $search, $replace )
 	{
 		if ( is_array( $object ) ) {
 			foreach ( $object as $k => $v ) {
@@ -1124,7 +1124,7 @@ class AECToolbox
 		return $object;
 	}
 
-	function getObjectProperty( $object, $key, $test=false )
+	static function getObjectProperty( $object, $key, $test=false )
 	{
 		if ( !is_array( $key ) ) {
 			if ( strpos( $key, '.' ) !== false ) {
@@ -1213,7 +1213,7 @@ class AECToolbox
 		}
 	}
 
-	function getAdminEmailList()
+	static function getAdminEmailList()
 	{
 		global $aecConfig;
 

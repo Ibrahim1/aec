@@ -11,32 +11,9 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-class CartFactory
-{
-	function CartFactory()
-	{
-		
-	}
-
-	function addItem( $type )
-	{
-		
-	}
-
-	function addCoupon( $coupon, $id )
-	{
-		
-	}
-
-	function removeItem( $id )
-	{
-		
-	}
-}
-
 class aecCartHelper
 {
-	function getCartidbyUserid( $userid )
+	static function getCartidbyUserid( $userid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -50,7 +27,7 @@ class aecCartHelper
 
 	}
 
-	function getCartbyUserid( $userid )
+	static function getCartbyUserid( $userid )
 	{
 		$id = aecCartHelper::getCartidbyUserid( $userid );
 
@@ -64,7 +41,7 @@ class aecCartHelper
 		return $cart;
 	}
 
-	function getCartItemObject( $cart, $id )
+	static function getCartItemObject( $cart, $id )
 	{
 		$item = $cart->getItem( $id );
 		if ( !empty( $item ) ) {
@@ -75,7 +52,7 @@ class aecCartHelper
 		}
 	}
 
-	function getFirstCartItemObject( $cart )
+	static function getFirstCartItemObject( $cart )
 	{
 		if ( !empty( $cart->content ) ) {
 			foreach ( $cart->content as $cid => $c ) {
@@ -86,7 +63,7 @@ class aecCartHelper
 		return null;
 	}
 
-	function getFirstSortedCartItemObject( $cart )
+	static function getFirstSortedCartItemObject( $cart )
 	{
 		$db = &JFactory::getDBO();
 
@@ -110,7 +87,7 @@ class aecCartHelper
 		return aecCartHelper::getCartItemObject( $cart, $highest );
 	}
 
-	function getCartProcessorList( $cart, $nofree=true )
+	static function getCartProcessorList( $cart, $nofree=true )
 	{
 		$proclist = array();
 
@@ -147,7 +124,7 @@ class aecCartHelper
 		return $proclist;
 	}
 
-	function getCartProcessorGroups( $cart )
+	static function getCartProcessorGroups( $cart, $recurring=false )
 	{
 		$pgroups	= array();
 
@@ -168,8 +145,8 @@ class aecCartHelper
 					$pp->getInfo();
 					$pp->exchangeSettingsByPlan( $cartitem );
 
-					if ( isset( $this->recurring ) ) {
-						$recurring = $pp->is_recurring( $this->recurring );
+					if ( isset( $recurring ) ) {
+						$recurring = $pp->is_recurring( $recurring );
 					} else {
 						$recurring = $pp->is_recurring();
 					}
@@ -237,7 +214,7 @@ class aecCartHelper
 		return $pgroups;
 	}
 
-	function getInvoiceIdByCart( $cart )
+	static function getInvoiceIdByCart( $cart )
 	{
 		$db = &JFactory::getDBO();
 
@@ -262,13 +239,13 @@ class aecCart extends serialParamDBTable
 	var $created_date		= null;
 	/** @var datetime */
 	var $last_updated		= null;
-	/** @var text */
+	/** @var string */
 	var $content 			= array();
-	/** @var text */
+	/** @var string */
 	var $history 			= array();
-	/** @var text */
+	/** @var string */
 	var $params 			= array();
-	/** @var text */
+	/** @var string */
 	var $customparams		= array();
 
 	function aecCart()
@@ -295,15 +272,15 @@ class aecCart extends serialParamDBTable
 		return parent::check();
 	}
 
-	function save()
+	function store()
 	{
-		if ( !$this->id || ( strcmp( $user_subscription->created_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
+		if ( !$this->id || ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		}
 
 		$this->last_updated = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
-		return parent::save();
+		return parent::store();
 	}
 
 	function action( $action, $details=null )

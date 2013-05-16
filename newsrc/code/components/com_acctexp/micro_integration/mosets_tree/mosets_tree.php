@@ -346,9 +346,9 @@ class mosetstree extends serialParamDBTable
 	var $active				= null;
 	/** @var int */
 	var $granted_listings	= null;
-	/** @var text */
+	/** @var string */
 	var $used_listings		= null;
-	/** @var text */
+	/** @var string */
 	var $params				= null;
 
 	function mosetstree()

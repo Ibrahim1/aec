@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecInvoiceHelper
 {
-	function UserIDfromInvoiceNumber( $invoice_number )
+	static function UserIDfromInvoiceNumber( $invoice_number )
 	{
 		$db = &JFactory::getDBO();
 
@@ -26,7 +26,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	function InvoiceIDfromNumber( $invoice_number, $userid = 0, $override_active = false )
+	static function InvoiceIDfromNumber( $invoice_number, $userid = 0, $override_active = false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -53,7 +53,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	function InvoiceNumberfromId( $id, $override_active = false )
+	static function InvoiceNumberfromId( $id, $override_active = false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -74,7 +74,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	function lastUnclearedInvoiceIDbyUserID( $userid, $excludedusage=null )
+	static function lastUnclearedInvoiceIDbyUserID( $userid, $excludedusage=null )
 	{
 		global $aecConfig;
 
@@ -117,7 +117,7 @@ class aecInvoiceHelper
 		return false;
 	}
 
-	function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
+	static function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
 	{
 		$db = &JFactory::getDBO();
 
@@ -137,7 +137,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	function InvoiceCountbyUserID( $userid )
+	static function InvoiceCountbyUserID( $userid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -151,7 +151,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	function UnpaidInvoiceCountbyUserID( $userid )
+	static function UnpaidInvoiceCountbyUserID( $userid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -166,7 +166,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	function PaidInvoiceCountbyUserID( $userid )
+	static function PaidInvoiceCountbyUserID( $userid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -181,7 +181,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	function InvoiceNumberbyCartId( $userid, $cartid )
+	static function InvoiceNumberbyCartId( $userid, $cartid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -196,7 +196,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	function InvoiceIdList( $userid, $start, $limit, $sort='`transaction_date` DESC' )
+	static function InvoiceIdList( $userid, $start, $limit, $sort='`transaction_date` DESC' )
 	{
 		$db = &JFactory::getDBO();
 
@@ -226,7 +226,7 @@ class InvoiceFactory
 	/** @var int */
 	var $confirmed		= null;
 
-	function InvoiceFactory( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null, $alert=true, $forceinternal=false )
+	function __construct( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null, $alert=true, $forceinternal=false )
 	{
 		$this->initUser( $userid, $alert, $forceinternal );
 
@@ -254,18 +254,18 @@ class InvoiceFactory
 			$this->userid = $user->id;
 			$this->authed = true;
 
-			return;
+			return null;
 		}
 
 		if ( empty( $this->userid ) || $forceinternal ) {
 			// setup hybrid or internal call
 			$this->authed = null;
 
-			return;
+			return null;
 		}
 
 		if ( !$this->userid ) {
-			return;
+			return null;
 		}
 
 		if ( AECToolbox::quickVerifyUserID( $this->userid ) === true ) {
@@ -470,7 +470,7 @@ class InvoiceFactory
 					$this->cartItemsPPselectForm();
 				} else {
 					if ( isset( $procs[0] ) ) {
-						$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
+						$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject, $this->recurring );
 
 						$proc = $pgroups[0]['processors'][0];
 
@@ -512,7 +512,7 @@ class InvoiceFactory
 			}
 
 			if ( empty( $this->cart ) || $quick ) {
-				return;
+				return null;
 			}
 
 			foreach ( $this->cart as $cid => $cartitem ) {
@@ -585,7 +585,7 @@ class InvoiceFactory
 
 	function cartItemsPPselectForm()
 	{
-		$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject );
+		$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject, $this->recurring );
 
 		$c				= false;
 		$exception		= false;
@@ -1229,7 +1229,7 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $plan->params['addtocart_redirect'] ) ) {
-			return aecRedirect( $plan->params['addtocart_redirect'] );
+			aecRedirect( $plan->params['addtocart_redirect'] );
 		}
 
 		if ( $aecConfig->cfg['additem_stayonpage'] ) {
@@ -1239,8 +1239,10 @@ class InvoiceFactory
 				return $this->create();
 			}
 		} else {
-			return $this->cart();
+			$this->cart();
 		}
+
+		return true;
 	}
 
 	function updateCart( $data )
@@ -1497,7 +1499,7 @@ class InvoiceFactory
 
 	function promptpassword( $wrong=false )
 	{
-		getView( 'passwordprompt', array( 'passthrough' => $this->getPassthrough(), 'wrong' => $wrong ) );
+		return getView( 'passwordprompt', array( 'passthrough' => $this->getPassthrough(), 'wrong' => $wrong ) );
 	}
 
 	function create( $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
@@ -1554,7 +1556,7 @@ class InvoiceFactory
 							if ( $gw->processor_name != $processor ) {
 								unset( $planlist->list[0]['gw'][$gwid] );
 							} else {
-								$first == $gwid;
+								$first = $gwid;
 							}
 						}
 
@@ -1613,17 +1615,17 @@ class InvoiceFactory
 
 		$csslist = $planlist->addButtons( $register, $this->passthrough );
 
-		getView( 'plans',
-				array(
-					'userid' => $this->userid,
-					'list' => $planlist->list,
-					'passthrough' => $this->getPassthrough(),
-					'register' => $register,
-					'cart' => $cart,
-					'selected' => $selected,
-					'group' => $group,
-					'csslist' => $csslist
-				)
+		return getView( 'plans',
+						array(
+							'userid' => $this->userid,
+							'list' => $planlist->list,
+							'passthrough' => $this->getPassthrough(),
+							'register' => $register,
+							'cart' => $cart,
+							'selected' => $selected,
+							'group' => $group,
+							'csslist' => $csslist
+						)
 		);
 	}
 
@@ -1699,7 +1701,7 @@ class InvoiceFactory
 			}
 		}
 
-		getView( 'confirmation', array( 'InvoiceFactory' => $this, 'passthrough' => $this->getPassthrough() ) );
+		return getView( 'confirmation', array( 'InvoiceFactory' => $this, 'passthrough' => $this->getPassthrough() ) );
 	}
 
 	function cart()
@@ -1718,7 +1720,7 @@ class InvoiceFactory
 			$this->touchInvoice();
 		}
 
-		getView( 'cart', array( 'InvoiceFactory' => $this ) );
+		return getView( 'cart', array( 'InvoiceFactory' => $this ) );
 	}
 
 	function confirmcart( $coupon=null, $testmi=false )
@@ -1734,7 +1736,7 @@ class InvoiceFactory
 		$this->touchInvoice();
 
 		if ( $this->hasExceptions() ) {
-			return $this->addressExceptions();
+			$this->addressExceptions();
 		} else {
 			$this->checkout( 0, null, $coupon );
 		}
@@ -1778,7 +1780,7 @@ class InvoiceFactory
 			if ( !$this->userid ) {
 				$errors = JError::getErrors();
 
-				return aecErrorAlert( JText::_( 'COM_USERS_REGISTRATION_SAVE_FAILED' ) );
+				aecErrorAlert( JText::_( 'COM_USERS_REGISTRATION_SAVE_FAILED' ) );
 			}
 		}
 
@@ -1818,7 +1820,7 @@ class InvoiceFactory
 			}
 		}
 
-		$this->checkout( 0, null, $coupon );
+		return $this->checkout( 0, null, $coupon );
 	}
 
 	function verifyMIForms( $plan, $mi_form=null, $prefix="" )
@@ -2032,7 +2034,7 @@ class InvoiceFactory
 			}
 		}
 
-		$this->InvoiceToCheckout( $repeat, $error );
+		return $this->InvoiceToCheckout( $repeat, $error );
 	}
 
 	function InvoiceToCheckout( $repeat=0, $error=null, $data=null )
@@ -2084,7 +2086,7 @@ class InvoiceFactory
 
 		$this->triggerMIs( '_checkout_form', $exchange, $int_var, $silent );
 
-		getView( 'checkout', array( 'var' => $int_var['var'], 'params' => $int_var['params'], 'InvoiceFactory' => $this ) );
+		return getView( 'checkout', array( 'var' => $int_var['var'], 'params' => $int_var['params'], 'InvoiceFactory' => $this ) );
 	}
 
 	function getObjUsage()
@@ -2301,7 +2303,9 @@ class InvoiceFactory
 		$response = $this->invoice->processorResponse( $this, $response, '', true );
 
 		if ( isset( $response['cancel'] ) ) {
-			getView( 'cancel' );
+			return getView( 'cancel' );
+		} else {
+			return true;
 		}
 	}
 
@@ -2320,14 +2324,16 @@ class InvoiceFactory
 		$response = $this->pp->customAction( $action, $this->invoice, $this->metaUser, $var );
 
 		if ( isset( $response['InvoiceToCheckout'] ) ) {
-			$this->InvoiceToCheckout( 'com_acctexp', true, false );
+			return $this->InvoiceToCheckout( 'com_acctexp', true, false );
 		} else {
 			$response = $this->invoice->processorResponse( $this, $response, '', true );
 
 			if ( isset( $response['cancel'] ) ) {
-				getView( 'cancel' );
+				return getView( 'cancel' );
 			}
 		}
+
+		return null;
 	}
 
 	function invoiceprint( $invoice_number, $standalone=true, $extradata=null, $forcecleared=false, $forcecounter=null )
@@ -2364,7 +2370,7 @@ class InvoiceFactory
 
 		$data = AECToolbox::rewriteEngineRQ( $data, $this );
 
-		getView( 'invoice', array( 'data' => $data, 'standalone' => $standalone, 'InvoiceFactory' => $this ) );
+		return getView( 'invoice', array( 'data' => $data, 'standalone' => $standalone, 'InvoiceFactory' => $this ) );
 	}
 
 	function thanks( $renew=false, $free=false )
@@ -2460,16 +2466,16 @@ class Invoice extends serialParamDBTable
 	var $usage				= null;
 	/** @var int */
 	var $fixed	 			= null;
-	/** @var text */
+	/** @var string */
 	var $coupons 			= null;
-	/** @var text */
+	/** @var string */
 	var $transactions		= null;
-	/** @var text */
+	/** @var string */
 	var $params 			= null;
-	/** @var text */
+	/** @var string */
 	var $conditions			= null;
 
-	function Invoice()
+	function __construct()
 	{
 		parent::__construct( '#__acctexp_invoices', 'id' );
 	}
@@ -3356,9 +3362,9 @@ class Invoice extends serialParamDBTable
 					if ( isset( $micro_int['name'] ) ) {
 						if ( $mi->callDry( $micro_int['name'] ) ) {
 							if ( is_object( $targetUser ) ) {
-								$mi->action( $metaUser, $exchange, $this, $new_plan );
+								$mi->action( $targetUser, $exchange, $this, $new_plan );
 							} else {
-								$mi->action( false, $exchange, $this, $new_plan );
+								$mi->action( $targetUser, $exchange, $this, $new_plan );
 							}
 						}
 					} elseif ( isset( $micro_int['id'] ) ) {
@@ -3368,7 +3374,7 @@ class Invoice extends serialParamDBTable
 								if ( is_object( $metaUser ) ) {
 									$mi->action( $targetUser, $exchange, $this, $new_plan );
 								} else {
-									$mi->action( false, $exchange, $this, $new_plan );
+									$mi->action( $targetUser, $exchange, $this, $new_plan );
 								}
 							}
 						}
@@ -4003,14 +4009,14 @@ class Invoice extends serialParamDBTable
 		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
 			$transactiondate = 'uncleared';
 
-			if ( empty( $this->params ) || empty( $row->params['pending_reason'] ) ) {
+			if ( empty( $this->params ) || empty( $this->params['pending_reason'] ) ) {
 				return $transactiondate;
 			}
 
-			if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $row->params['pending_reason'] ) ) ) {
-				$transactiondate = JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper( $row->params['pending_reason'] ) );
+			if ( $lang->hasKey( 'PAYMENT_PENDING_REASON_' . strtoupper( $this->params['pending_reason'] ) ) ) {
+				$transactiondate = JText::_( 'PAYMENT_PENDING_REASON_' . strtoupper( $this->params['pending_reason'] ) );
 			} else {
-				$transactiondate = $row->params['pending_reason'];
+				$transactiondate = $this->params['pending_reason'];
 			}
 		} else {
 			$transactiondate = aecTemplate::date( $this->transaction_date );

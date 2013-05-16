@@ -99,6 +99,8 @@ function getView( $view, $args=null )
 	} elseif ( file_exists( $tmpl->paths['default'].$tphp ) ) {
 		include( $tmpl->paths['default'].$tphp );
 	}
+
+	return true;
 }
 
 class configTemplate extends serialParamDBTable
@@ -109,7 +111,7 @@ class configTemplate extends serialParamDBTable
 	var $name				= null;
 	/** @var int */
 	var $default			= null;
-	/** @var text */
+	/** @var string */
 	var $settings			= null;
 
 	function configTemplate()
@@ -347,6 +349,10 @@ class aecTemplate
 			unset( $params['task'] );
 		}
 
+		if ( empty( $params['css'] ) ) {
+			unset( $params['css'] );
+		}
+
 		foreach ( $params as $k => $v ) {
 			$btn .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
 		}
@@ -417,7 +423,7 @@ class aecTemplate
 		}
 	}
 
-	function date( $SQLDate, $check = false, $display = false, $trial = false )
+	static function date( $SQLDate, $check = false, $display = false, $trial = false )
 	{
 		if ( $SQLDate == '' ) {
 			return JText::_('AEC_EXPIRE_NOT_SET');
@@ -476,6 +482,8 @@ class aecTemplate
 		} elseif ( file_exists( $this->paths['default'].$t ) ) {
 			return $this->paths['default'].$t;
 		}
+
+		return null;
 	}
 }
 

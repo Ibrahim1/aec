@@ -18,7 +18,7 @@ class microIntegrationHandler
 		$this->mi_dir = JPATH_SITE . '/components/com_acctexp/micro_integration';
 	}
 
-	function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false, $classname=false )
+	static function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false, $classname=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -45,7 +45,7 @@ class microIntegrationHandler
 		}
 	}
 
-	function compareMIs( $mi, $cmi_id )
+	static function compareMIs( $mi, $cmi_id )
 	{
 		$db = &JFactory::getDBO();
 
@@ -93,7 +93,7 @@ class microIntegrationHandler
 		return $integration_list;
 	}
 
-	function getMIsbyPlan( $plan_id )
+	static function getMIsbyPlan( $plan_id )
 	{
 		$plan = new SubscriptionPlan();
 		$plan->load( $plan_id );
@@ -101,7 +101,7 @@ class microIntegrationHandler
 		return $plan->getMicroIntegrations();
 	}
 
-	function getPlansbyMI( $mi_id, $inherited=true, $extended=false )
+	static function getPlansbyMI( $mi_id, $inherited=true, $extended=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -148,7 +148,7 @@ class microIntegrationHandler
 		return $plan_list;
 	}
 
-	function getGroupsbyMI( $mi_id, $inherited=true, $extended=false )
+	static function getGroupsbyMI( $mi_id, $inherited=true, $extended=false )
 	{
 		$db = &JFactory::getDBO();
 
@@ -261,7 +261,7 @@ class microIntegrationHandler
 		return $hacks;
 	}
 
-	function getPreExpIntegrations()
+	static function getPreExpIntegrations()
 	{
 		$db = &JFactory::getDBO();
 
@@ -339,7 +339,7 @@ class microIntegrationHandler
 		}
 	}
 
-	function getActiveListbyList( $milist )
+	static function getActiveListbyList( $milist )
 	{
 		if ( empty( $milist ) ) {
 			return array();
@@ -359,7 +359,7 @@ class microIntegrationHandler
 		return xJ::getDBArray( $db );
 	}
 
-	function getMaxPreExpirationTime()
+	static function getMaxPreExpirationTime()
 	{
 		$db = &JFactory::getDBO();
 
@@ -371,7 +371,7 @@ class microIntegrationHandler
 		return $db->loadResult();
 	}
 
-	function getDetailedList()
+	static function getDetailedList()
 	{
 		$db = &JFactory::getDBO();
 
@@ -614,13 +614,13 @@ class microIntegration extends serialParamDBTable
 	var $ordering			= null;
 	/** @var string */
 	var $name				= null;
-	/** @var text */
+	/** @var string */
 	var $desc				= null;
 	/** @var string */
 	var $class_name			= null;
-	/** @var text */
+	/** @var string */
 	var $params				= null;
-	/** @var text */
+	/** @var string */
 	var $restrictions		= null;
 	/** @var int */
 	var $auto_check			= null;

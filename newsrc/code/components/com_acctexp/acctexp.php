@@ -240,6 +240,8 @@ if ( !empty( $task ) ) {
 
 			if ( !empty( $user->id ) ) {
 				$userid = $user->id;
+			} else {
+				$userid = 0;
 			}
 
 			if ( !$user->id ) {
@@ -421,7 +423,8 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'notallowed':
-			$task = 'access_denied';
+			aecNotAuth();
+			break;
 
 		default:
 			if ( strpos( $task, 'notification' ) > 0 ) {
@@ -562,7 +565,7 @@ function subscribe( $option )
 				}
 
 				unset($_POST);
-				subscribe();
+				subscribe($option);
 				return false;
 			}
 
@@ -807,7 +810,7 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 			$iFactory->invoice_number = $invoice_number;
 		}
 
-		return $iFactory->confirmcart( null, true );
+		$iFactory->confirmcart( null, true );
 	} else {
 		return getView( 'access_denied' );
 	}
@@ -841,8 +844,7 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 
 		$objInvoice->cancel();
 	} else {
-		getView( 'access_denied' );
-		return;
+		return getView( 'access_denied' );
 	}
 
 	if ( $pending ) {
@@ -1128,6 +1130,8 @@ function processNotification( $option, $processor )
 	if ( !$id ) {
 		$short	= JText::_('AEC_MSG_PROC_INVOICE_FAILED_SH');
 
+		$event = '';
+		$tags = '';
 		if ( isset( $response['null'] ) ) {
 			if ( isset( $response['explanation'] ) ) {
 				$short	= JText::_('AEC_MSG_PROC_INVOICE_ACTION_SH');

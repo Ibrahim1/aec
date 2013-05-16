@@ -249,9 +249,9 @@ class uddeim_restriction extends serialParamDBTable {
 	var $granted_messages		= null;
 	/** @var int */
 	var $unlimited_messages	= null;
-	/** @var text */
+	/** @var string */
 	var $used_messages			= null;
-	/** @var text */
+	/** @var string */
 	var $params					= null;
 
 	function getIDbyUserID( $userid ) {

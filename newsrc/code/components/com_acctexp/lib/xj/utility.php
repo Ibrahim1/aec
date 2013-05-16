@@ -1,7 +1,7 @@
 <?php
 class xJUtility
 {
-	function getFileArray( $dir, $extension=false, $listDirectories=false, $keepDots=false )
+	static function getFileArray( $dir, $extension=false, $listDirectories=false, $keepDots=false )
 	{
 		$dirArray	= array();
 		$handle		= dir( $dir );
@@ -28,7 +28,7 @@ class xJUtility
 		return $dirArray;
 	}
 
-	function versionSort( $array )
+	static function versionSort( $array )
 	{
 		// Bastardized Quicksort
 		if ( !isset( $array[2] ) ) {
@@ -52,7 +52,7 @@ class xJUtility
 		return array_merge( xJUtility::versionSort($x), array($piv), xJUtility::versionSort($y) );
 	}
 
-	function normVersionName( $name )
+	static function normVersionName( $name )
 	{
 		$str = str_replace( "RC", "_", $name );
 

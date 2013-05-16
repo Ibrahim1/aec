@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class HTML_myCommon
 {
-	function Valanx()
+	static function Valanx()
 	{
 		?>
 		<br style="clear:both;"/>
@@ -37,13 +37,13 @@ class HTML_myCommon
 		<?php
 	}
 
-	function addBackendCSS()
+	static function addBackendCSS()
 	{
 		$document =& JFactory::getDocument();
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION . '" />' );
 	}
 
-	function addBackendJS( $ui=false )
+	static function addBackendJS( $ui=false )
 	{
 		$v = new JVersion();
 
@@ -73,7 +73,7 @@ class HTML_myCommon
 		HTML_myCommon::addScript( '/com_acctexp/js/aec.backend.js' );
 	}
 
-	function addScript( $rel )
+	static function addScript( $rel )
 	{
 		$v = new JVersion();
 
@@ -87,16 +87,17 @@ class HTML_myCommon
 		}
 	}
 
-	function startCommon( $id='aec-wrap' )
+	static function startCommon( $id='aec-wrap' )
 	{
 		HTML_myCommon::addBackendCSS();
 
 		HTML_myCommon::addBackendJS();
 
 		echo '<div id="' . $id . '">';
-		echo HTML_AcctExp::menuBar();
 
-		echo HTML_AcctExp::help();
+		HTML_AcctExp::menuBar();
+
+		HTML_AcctExp::help();
 
 		?>
 		<div class="modal hide fade" id="notifications">
@@ -110,7 +111,7 @@ class HTML_myCommon
 
 	}
 
-	function endCommon( $footer=true )
+	static function endCommon( $footer=true )
 	{
 		if ( $footer ) {
 			HTML_myCommon::Valanx();
@@ -119,12 +120,12 @@ class HTML_myCommon
 		echo '</div>';
 	}
 
-	function startForm()
+	static function startForm()
 	{
 		?><form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"><?php
 	}
 
-	function endForm( $option, $id, $task='' )
+	static function endForm( $option, $id, $task='' )
 	{
 		$options = array( 'id' => $id, 'option' => $option, 'task' => $task );
 
@@ -135,7 +136,7 @@ class HTML_myCommon
 		echo '</form>';
 	}
 
-	function getHeader( $page, $image, $extratext="" )
+	static function getHeader( $page, $image, $extratext="" )
 	{
 		?><div class="adminheading">
 			<?php HTML_myCommon::getSymbol( $image ); ?>
@@ -143,12 +144,12 @@ class HTML_myCommon
 		</div><?php
 	}
 
-	function getSymbol( $name )
+	static function getSymbol( $name )
 	{
 		?><div class="aec-symbol aec-symbol-<?php echo $name; ?>"></div><?php
 	}
 
-	function getButtons( $buttons, $object )
+	static function getButtons( $buttons, $object )
 	{
 		if ( !is_array( $buttons ) ) {
 			switch ( $buttons ) {
@@ -201,14 +202,14 @@ class HTML_myCommon
 		?></div><?php
 	}
 
-	function getButton( $action, $object, $button, $fulltext=false )
+	static function getButton( $action, $object, $button, $fulltext=false )
 	{
 		$v = new JVersion();
 
 		return '<a class="btn btn-' . $button['style'] . '" onclick="javascript: ' . ( $v->isCompatible('2.5') ? 'Joomla.' : '' ) . 'submitbutton(\'' . $action . $object . '\')"' . ( !empty($button['actionable']) ? ' disabled="disabled"' : '' ) . ' href="#" rel="tooltip" data-original-title="' . ( $fulltext ? '' : $button['text'] ) . '">' . aecHTML::Icon( $button['icon'], true ) . ( $fulltext ? ' ' . $button['text'] : '' ) .  '</a>';
 	}
 
-	function toggleBtn( $type, $property, $id, $state )
+	static function toggleBtn( $type, $property, $id, $state )
 	{
 		$js = 'toggleProperty';
 
@@ -238,9 +239,9 @@ class HTML_myCommon
 
 class HTML_AcctExp
 {
-	function HTML_AcctExp() {}
+	static function HTML_AcctExp() {}
 
-	function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
+	static function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
 		?><script type="text/javascript">
 		jQuery(document).ready(function() {
@@ -261,7 +262,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 
 $js = '
-jQuery(document).ready(function(jQuery) {
+jQuery(document).ready(static function(jQuery) {
 	jQuery("#assignto_plan")
 	.multiselect({	noneSelectedText: \'' . JText::_('PAYPLAN_NOPLAN') . '\',
 					selectedList: 3,
@@ -694,7 +695,6 @@ jQuery(document).ready(function(jQuery) {
 							<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
 						</div>
 					<?php } ?>
-					</div>
 				</td>
 			</tr>
 		</table>
@@ -709,7 +709,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function SubscriptionName( $subscriptionid )
+	static function SubscriptionName( $subscriptionid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -727,7 +727,7 @@ jQuery(document).ready(function(jQuery) {
 	 * @param string	$text
 	 * @param bool		$hideMenu
 	 */
-	function quickiconButton( $link, $image, $text, $hideMenu = false )
+	static function quickiconButton( $link, $image, $text, $hideMenu = false )
 	{
 		if ( $hideMenu ) {
 			$hideMenu = '&amp;hidemainmenu=1';
@@ -741,7 +741,7 @@ jQuery(document).ready(function(jQuery) {
 	<?php
 	}
 
-	function menuBar()
+	static function menuBar()
 	{
 		$db = &JFactory::getDBO();
 
@@ -800,7 +800,7 @@ jQuery(document).ready(function(jQuery) {
 	<?php
 	}
 
-	function getMenu()
+	static function getMenu()
 	{
 		return array(	'memberships'	=> array(	'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
 													'short'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
@@ -855,7 +855,7 @@ jQuery(document).ready(function(jQuery) {
 		);
 	}
 
-	function central( $display=null, $searchcontent=null )
+	static function central( $display=null, $searchcontent=null )
 	{
 		HTML_myCommon::startCommon();
 
@@ -872,18 +872,18 @@ jQuery(document).ready(function(jQuery) {
 					</td>
 				</tr>
 				<tr>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-left', false, ' diorama-icon-w' ); ?></div></td>
 					<td><div class="cell-wrapper"><div class="dioarama-corner-w-s"></div></div></td>
 					<td></td>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ) ?></div></td>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td class="important"><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'stats', 'stats', JText::_('AEC_CENTR_STATS') ) ?></div></td>
+					<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'stats', 'stats', JText::_('AEC_CENTR_STATS') ) ?></div></td>
 					<td></td>
 					<td></td>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ) ?></div></td>
 					<td></td>
 				</tr>
 				<tr>
@@ -901,16 +901,16 @@ jQuery(document).ready(function(jQuery) {
 				<tr>
 					<td><div class="cell-wrapper"><div class="dioarama-corner-n-s-f"></div></div></td>
 					<td></td>
-					<td class="important"><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
+					<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', false, ' diorama-icon-e' ); ?></div></td>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ) ?></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', false, ' diorama-icon-e' ); ?></div></td>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ) ?></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', false, ' diorama-icon-e' ); ?></div></td>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'history', 'history', JText::_('AEC_CENTR_M_VIEW_HISTORY') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'history', 'history', JText::_('AEC_CENTR_M_VIEW_HISTORY') ) ?></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', false, ' diorama-icon-e' ); ?></div></td>
-					<td class="important"><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showActive', 'active', JText::_('Members') ) ?></div></td>
+					<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showActive', 'active', JText::_('Members') ) ?></div></td>
 					<td></td>
 				</tr>
 				<tr>
@@ -926,20 +926,19 @@ jQuery(document).ready(function(jQuery) {
 					<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', false, ' diorama-icon-s' ); ?></div></td>
 				</tr>
 				<tr>
-					<td class="important"><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ) ?></div></td>
+					<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ) ?></div></td>
 					<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
 					<td><div class="cell-wrapper"><div class="dioarama-corner-e-n"></div></div></td>
 					<td></td>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ) ?></div></td>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ) ?></div></td>
 					<td></td>
 					<td></td>
-					<td><div class="cell-wrapper"><?php echo HTML_AcctExp::quickiconButton( $linkroot.'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ) ?></div></td>
+					<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ) ?></div></td>
 					<td></td>
-				</tr>
 				</tr>
 				<tr><td colspan="12"></td></tr>
 				<tr>
@@ -964,19 +963,19 @@ jQuery(document).ready(function(jQuery) {
 			<h2>Template &amp; Settings</h2>
 			<hr class="topslim" />
 			<div>
-				<?php echo HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
+				<?php HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
 				<p>Change the way AEC behaves.</p>
 			</div>
 			<div>
-				<?php echo HTML_AcctExp::quickiconButton( $linkroot.'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ) ?>
+				<?php HTML_AcctExp::quickiconButton( $linkroot.'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ) ?>
 				<p>Change what AEC looks like.</p>
 			</div>
 			<div>
-				<?php echo HTML_AcctExp::quickiconButton( $linkroot.'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ) ?>
+				<?php HTML_AcctExp::quickiconButton( $linkroot.'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ) ?>
 				<p>Nifty tools for AEC Experts.</p>
 			</div>
 			<div>
-				<?php echo HTML_AcctExp::quickiconButton( $linkroot.'import', 'import', JText::_('AEC_CENTR_IMPORT') ) ?>
+				<?php HTML_AcctExp::quickiconButton( $linkroot.'import', 'import', JText::_('AEC_CENTR_IMPORT') ) ?>
 				<p>Import Users into AEC.</p>
 			</div>
 		</div>
@@ -1007,7 +1006,7 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::endCommon(false);
 	}
 
-	function credits()
+	static function credits()
 	{
 		HTML_myCommon::startCommon();
 		?>
@@ -1064,7 +1063,7 @@ jQuery(document).ready(function(jQuery) {
 		<?php
 	}
 
-	function hacks ( $option, $hacks )
+	static function hacks ( $option, $hacks )
 	{
 		$infohandler	= new aecComponentHelper();
 		HTML_myCommon::startCommon();
@@ -1149,7 +1148,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function help()
+	static function help()
 	{
 		?>
 		<div class="modal hide fade" id="help">
@@ -1180,7 +1179,7 @@ jQuery(document).ready(function(jQuery) {
 		<?php
 	}
 
-	function eventlogModal( $notices, $furthernotices )
+	static function eventlogModal( $notices, $furthernotices )
 	{
 		?>
 		<div class="aec-center-block aec-center-block-half">
@@ -1211,7 +1210,7 @@ jQuery(document).ready(function(jQuery) {
 		<?php
 	}
 
-	function Settings( $option, $aecHTML, $params, $tab_data )
+	static function Settings( $option, $aecHTML, $params, $tab_data )
 	{
 		jimport( 'joomla.html.editor' );
 
@@ -1268,7 +1267,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function listProcessors( $rows, $pageNav, $option )
+	static function listProcessors( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'processors' );
@@ -1298,7 +1297,7 @@ jQuery(document).ready(function(jQuery) {
 							<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
 							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
 							<td><?php echo $row->processor->info['statement']; ?></td>
-							<td><?php echo HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
+							<td><?php HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
 						</tr>
 					<?php } ?>
 					<tfoot>
@@ -1320,7 +1319,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function editProcessor( $option, $aecHTML )
+	static function editProcessor( $option, $aecHTML )
 	{
 		$id = 0;
 		if ( !empty( $aecHTML->pp ) ) {
@@ -1355,7 +1354,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function listTemplates( $rows, $pageNav, $option )
+	static function listTemplates( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'TEMPLATES_TITLE', 'templates' );
@@ -1371,7 +1370,7 @@ jQuery(document).ready(function(jQuery) {
 			<tbody>
 				<?php foreach ( $rows as $i => $row ) { ?>
 					<tr>
-						<td><?php if ( $row->id ) { echo HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); } ?></td>
+						<td><?php if ( $row->id ) { HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); } ?></td>
 						<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
 						<td class="leftalign"><?php echo $row->info['description']; ?></td>
 					</tr>
@@ -1395,7 +1394,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function editTemplate( $option, $aecHTML, $tab_data )
+	static function editTemplate( $option, $aecHTML, $tab_data )
 	{
 		jimport( 'joomla.html.editor' );
 
@@ -1450,7 +1449,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
+	static function listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action )
 	{
 		HTML_myCommon::startCommon();
 
@@ -1603,7 +1602,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering )
+	static function listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations' );
@@ -1657,14 +1656,14 @@ jQuery(document).ready(function(jQuery) {
 								<?php
 								echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 								</td>
-							<td><?php echo HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?></td>
+							<td><?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?></td>
 							<?php if ( $ordering ) { ?>
 								<td><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
 							<?php } ?>
 							<td align="right"><?php echo $row->class_name; ?></td>
 						</tr>
 					<?php } ?>
-				<tbody>
+				</tbody>
 				<tfoot>
 					<tr>
 						<td colspan="9">
@@ -1684,7 +1683,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function editMicroIntegration( $option, $row, $lists, $aecHTML, $attached )
+	static function editMicroIntegration( $option, $row, $lists, $aecHTML, $attached )
 	{
 		HTML_myCommon::startCommon();
 
@@ -1783,7 +1782,7 @@ jQuery(document).ready(function(jQuery) {
 			<table width="100%" class="aecadminform">
 				<tr>
 					<td>
-						<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+						<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 					</td>
 				</tr>
 			</table>
@@ -1877,7 +1876,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
+	static function listSubscriptionPlans( $rows, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
@@ -1920,8 +1919,8 @@ jQuery(document).ready(function(jQuery) {
 							<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
 							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 							<td class="leftalign"><?php echo $row->desc; ?></td>
-							<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
-							<td><?php echo HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
+							<td><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
+							<td><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
 							<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
 							<td>
 								<div class="progress-group">
@@ -1976,7 +1975,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
+	static function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
 	{
 		global $aecConfig;
 
@@ -2158,7 +2157,6 @@ jQuery(document).ready(function(jQuery) {
 		</td></tr></table>
 		<?php $tabs->nextPane( 'text' ); ?>
 		<table width="100%" class="aecadminform">
-		<table class="aecadminform">
 			<tr><td>
 				<div style="position:relative;float:left;width:99%;">
 					<div class="aec_userinfobox_sub">
@@ -2196,7 +2194,7 @@ jQuery(document).ready(function(jQuery) {
 				</div>
 			</td></tr>
 			<tr><td>
-				<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+				<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 			</td></tr>
 		</table>
 		<?php $tabs->nextPane( 'trial' ); ?>
@@ -2321,7 +2319,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function groupRow( $type, $group )
+	static function groupRow( $type, $group )
 	{ ?>
 		<tr id="row-group-<?php echo $group['id'];?>">
 			<td align="center" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
@@ -2331,7 +2329,7 @@ jQuery(document).ready(function(jQuery) {
 	<?php
 	}
 
-	function listItemGroups( $rows, $pageNav, $option )
+	static function listItemGroups( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups' );
@@ -2362,8 +2360,8 @@ jQuery(document).ready(function(jQuery) {
 						<td align="right" style="background: #<?php echo $row->parent_color; ?>;"><?php echo $row->parent_group; ?></td>
 						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 						<td class="leftalign"><?php echo $row->desc; ?></td>
-						<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
-						<td><?php echo HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
+						<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
+						<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
 						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
 					</tr>
 				<?php } ?>
@@ -2387,7 +2385,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function editItemGroup( $option, $aecHTML, $row )
+	static function editItemGroup( $option, $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
@@ -2561,7 +2559,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function listCoupons( $rows, $pageNav, $option, $search )
+	static function listCoupons( $rows, $pageNav, $option, $search )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons' );
@@ -2604,7 +2602,7 @@ jQuery(document).ready(function(jQuery) {
 								<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 								<td><strong><?php echo $row->coupon_code; ?></strong></td>
 								<td class="leftalign"><?php echo $row->desc; ?></td>
-								<td><?php echo HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
+								<td><?php HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
 								<td>
 									<div class="progress progress-info progress-striped">
 										<?php if ( $row->usecount ) { ?>
@@ -2635,7 +2633,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function editCoupon( $option, $aecHTML, $row )
+	static function editCoupon( $option, $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon();
 
@@ -2735,7 +2733,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'good_combinations_cart' ); ?>
 				</div>
 			</div>
-			<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+			<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		</td></tr></table>
 		<?php $tabs->nextPane( 'mis' ); ?>
 		<table width="100%" class="aecadminform"><tr><td>
@@ -2791,7 +2789,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function viewInvoices( $option, $rows, $search, $pageNav )
+	static function viewInvoices( $option, $rows, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices' );
@@ -2859,7 +2857,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function editInvoice( $option, $aecHTML, $id )
+	static function editInvoice( $option, $aecHTML, $id )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
@@ -2885,7 +2883,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function viewHistory( $option, $rows, $search, $pageNav )
+	static function viewHistory( $option, $rows, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history' );
@@ -2949,7 +2947,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function eventlog( $option, $events, $search, $pageNav )
+	static function eventlog( $option, $events, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog' );
@@ -3008,7 +3006,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function stats( $option, $page, $stats )
+	static function stats( $option, $page, $stats )
 	{
 		global $aecConfig;
 
@@ -3353,7 +3351,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function import( $option, $aecHTML )
+	static function import( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'import' );
@@ -3425,7 +3423,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function export( $option, $task, $aecHTML )
+	static function export( $option, $task, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
 
@@ -3477,7 +3475,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function aecExtensions( $focus )
+	static function aecExtensions( $focus )
 	{
 		global $aecConfig;
 
@@ -3544,11 +3542,7 @@ jQuery(document).ready(function(jQuery) {
 			</tr>
 		</table>
 		<?php $tabs->endPanes(); ?>
-		<input type="hidden" name="option" value="<?php echo $option; ?>" />
-		<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
-		<input type="hidden" name="userid" value="<?php echo $metaUser->userid; ?>" />
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
+		<input type="hidden" name="option" value="com_acctexp" />
 		</form>
 
 		<?php
@@ -3556,7 +3550,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	function toolBox( $option, $cmd, $result, $title=null )
+	static function toolBox( $option, $cmd, $result, $title=null )
 	{
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon();
@@ -3595,7 +3589,7 @@ jQuery(document).ready(function(jQuery) {
 	 * @param string	$SQLDate
 	 * @return string	formatted date
 	 */
-	function DisplayDateInLocalTime( $SQLDate )
+	static function DisplayDateInLocalTime( $SQLDate )
 	{
 		if ( $SQLDate == '' || $SQLDate == '-' || $SQLDate == '0000-00-00 00:00:00')  {
 			return JText::_('AEC_CMN_NOT_SET');

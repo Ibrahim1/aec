@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class TempTokenHandler
 {
-	function TempTokenFromPlan( $plan )
+	static function TempTokenFromPlan( $plan )
 	{
 		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
@@ -45,7 +45,7 @@ class aecTempToken extends serialParamDBTable
 	var $id					= null;
 	/** @var string */
 	var $token 				= null;
-	/** @var text */
+	/** @var string */
 	var $content 			= null;
 	/** @var datetime */
 	var $created_date	 	= null;

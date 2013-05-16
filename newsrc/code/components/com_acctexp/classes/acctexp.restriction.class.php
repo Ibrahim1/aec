@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecRestrictionHelper
 {
-	function checkRestriction( $restrictions, $metaUser )
+	static function checkRestriction( $restrictions, $metaUser )
 	{
 		if ( count( $restrictions ) ) {
 			$status = array();
@@ -37,7 +37,7 @@ class aecRestrictionHelper
 		return true;
 	}
 
-	function getRestrictionsArray( $restrictions )
+	static function getRestrictionsArray( $restrictions )
 	{
 		$newrest = array();
 
@@ -230,7 +230,7 @@ class aecRestrictionHelper
 		return $newrest;
 	}
 
-	function addGroupPlans( $source, $gkey, $pkey, $target=null )
+	static function addGroupPlans( $source, $gkey, $pkey, $target=null )
 	{
 		$okey = str_replace( '_req', '_req_enabled', $pkey );
 
@@ -257,7 +257,7 @@ class aecRestrictionHelper
 		}
 	}
 
-	function transformCustomRestrictions( $customrestrictions )
+	static function transformCustomRestrictions( $customrestrictions )
 	{
 		$cr = explode( "\n", $customrestrictions);
 
@@ -274,7 +274,7 @@ class aecRestrictionHelper
 		return $custom;
 	}
 
-	function paramList()
+	static function paramList()
 	{
 		return array( 'mingid_enabled', 'mingid', 'fixgid_enabled', 'fixgid',
 						'maxgid_enabled', 'maxgid', 'previousplan_req_enabled', 'previousplan_req',
@@ -289,7 +289,7 @@ class aecRestrictionHelper
 						'used_group_min', 'used_group_max_enabled', 'used_group_max_amount', 'used_group_max' );
 	}
 
-	function getParams()
+	static function getParams()
 	{
 		$params = array();
 		$params['mingid_enabled']					= array( 'toggle', 0 );
@@ -340,7 +340,7 @@ class aecRestrictionHelper
 		return $params;
 	}
 
-	function getLists( $params_values, $restrictions_values )
+	static function getLists( $params_values, $restrictions_values )
 	{
 		$db = &JFactory::getDBO();
 
@@ -397,7 +397,7 @@ class aecRestrictionHelper
 		return $lists;
 	}
 
-	function echoSettings( $aecHTML )
+	static function echoSettings( $aecHTML )
 	{
 		$stdvars =	array(	array(
 									array( 'mingid_enabled', 'mingid' ),

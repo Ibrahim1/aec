@@ -24,7 +24,7 @@ class xJLanguageHandlerCommon
 
 class xJACLhandlerCommon
 {
-	function getAdminGroups( $regular_admins=true )
+	static function getAdminGroups( $regular_admins=true )
 	{
 		$db = &JFactory::getDBO();
 
