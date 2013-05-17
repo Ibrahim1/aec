@@ -26,7 +26,7 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
-	static function InvoiceIDfromNumber( $invoice_number, $userid = 0, $override_active = false )
+	static function InvoiceIDfromNumber( $invoice_number, $userid=0, $override_active=false )
 	{
 		$db = &JFactory::getDBO();
 
