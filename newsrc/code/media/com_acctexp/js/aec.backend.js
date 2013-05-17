@@ -68,6 +68,10 @@ jQuery(document).ready(function(jQuery) {
 		jQuery('div.aec-buttons a.btn').attr("disabled", false);
 	});
 
+    jQuery('table.adminlist thead input').click('click', function() {
+        jQuery('table.adminlist tbody input[type="checkbox"]').trigger('click');
+    });
+
 	jQuery('a.quicksearch').on("click", function(e) {
 		e.preventDefault();
 

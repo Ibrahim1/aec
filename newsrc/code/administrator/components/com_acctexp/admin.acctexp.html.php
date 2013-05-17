@@ -1283,7 +1283,7 @@ jQuery(document).ready(static function(jQuery) {
 					<thead><tr>
 						<th width="1%">#</th>
 						<th width="1%">id</th>
-						<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+						<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
 						<th width="10%" class="leftalign"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
 						<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
 						<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
@@ -1525,7 +1525,7 @@ jQuery(document).ready(function(jQuery) {
 			<table class="adminlist table-striped">
 				<thead><tr>
 					<th width="1%">#</th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
 					<th width="1%">&nbsp;</th>
 					<th width="10%" class="leftalign"><?php echo JText::_('CNAME'); ?></th>
 					<th width="5%" class="leftalign"><?php echo JText::_('USERLOGIN'); ?></th>
@@ -1634,7 +1634,7 @@ jQuery(document).ready(function(jQuery) {
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%">id</th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
 					<th width="10%" class="leftalign"><?php echo JText::_('MI_NAME'); ?></th>
 					<th width="50%" class="leftalign" ><?php echo JText::_('MI_DESC'); ?></th>
 					<th width="1%"><?php echo JText::_('MI_ACTIVE'); ?></th>
@@ -1898,7 +1898,7 @@ jQuery(document).ready(function(jQuery) {
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
 					<th width="1%" class="leftalign"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
 					<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
 					<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
@@ -2341,7 +2341,7 @@ jQuery(document).ready(function(jQuery) {
 				<thead><tr>
 					<th width="1%">#</th>
 					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+					<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
 					<th width="1%">Parent</th>
 					<th width="10%"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
 					<th width="50%" class="leftalign"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
@@ -2585,7 +2585,7 @@ jQuery(document).ready(function(jQuery) {
 				<table class="adminlist table-striped">
 					<thead><tr>
 						<th width="1%">#</th>
-						<th width="1%"><input type="checkbox" name="toggle" value="" onClick="checkAll(<?php echo count( $rows ); ?>);" /></th>
+						<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
 						<th width="10%" class="leftalign"><?php echo JText::_('COUPON_NAME'); ?></th>
 						<th width="10%" class="leftalign"><?php echo JText::_('COUPON_CODE'); ?></th>
 						<th width="50%" class="leftalign"><?php echo JText::_('COUPON_DESC'); ?></th>
