@@ -71,7 +71,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 		$var['AMOUNT']			= $request->int_var['amount'];
 		$var['TYPE']			= "S";
 
-		$var['INVOICE']			= $request->invoice->invoice_number;
+		$var['INVOICE']			= $request->invoice->id;
 		$var['DESCRIPTION']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		return $var;
@@ -80,7 +80,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 	function parseNotification( $post )
 	{
 		$response = array();
-		$response['invoice']		= $post['INVOICE'];
+		$response['invoice']		= aecInvoiceHelper::InvoiceIDfromNumber( $post['INVOICE'] );
 		$response['amount_paid']	= $post['AMOUNT'];
 
 		return $response;
