@@ -4898,27 +4898,27 @@ function editInvoice( $id, $option, $returnTask, $userid )
 	$row = new Invoice();
 	$row->load( $id );
 
-	$params['active']						= array( 'toggle',		1 );
-	$params['fixed']						= array( 'toggle',		0 );
-	$params['userid']						= array( 'hidden',		$userid );
-	$params['returnTask']					= array( 'hidden',		$returnTask );
-	$params['created_date']					= array( 'list_date',	date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) );
-	$params['amount']						= array( 'inputB',		'' );
-	$params['usage']						= array( 'list', 		0 );
-	$params['method']						= array( 'list', 		'' );
+	$params['fixed']				= array( 'toggle',		0 );
+	$params['userid']				= array( 'hidden',		$userid );
+	$params['active']				= array( 'toggle',		1 );
+	$params['returnTask']			= array( 'hidden',		$returnTask );
+	$params['created_date']			= array( 'list_date',	date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) );
+	$params['amount']				= array( 'inputB',		'' );
+	$params['usage']				= array( 'list', 		0 );
+	$params['method']				= array( 'list', 		'' );
 
 	$available_plans = SubscriptionPlanHandler::getActivePlanList();
 
 	$lists['usage'] = JHTML::_('select.genericlist', $available_plans, 'usage', 'size="1"', 'value', 'text', $row->usage );
 
-	$pph					= new PaymentProcessorHandler();
-	$lists['method']		= str_replace( 'processor', 'method', $pph->getSelectList( $row->method, true ) );
+	$pph							= new PaymentProcessorHandler();
+	$lists['method']				= str_replace( 'processor', 'method', $pph->getSelectList( $row->method, true ) );
 
 	$params_values = array();
-	$params_values['active']			= $row->active;
-	$params_values['fixed']				= $row->fixed;
-	$params_values['userid']			= $row->userid;
-	$params_values['created_date']		= $row->created_date;
+	$params_values['active']		= $row->active;
+	$params_values['fixed']			= $row->fixed;
+	$params_values['userid']		= $row->userid;
+	$params_values['created_date']	= $row->created_date;
 
 	$settings = new aecSettings ( 'invoice', 'general' );
 	$settings->fullSettingsArray( $params, $params_values, $lists ) ;
