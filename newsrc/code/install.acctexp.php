@@ -325,7 +325,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 					$db->setQuery( $query );
 					$lemodule = $db->loadObject();
 
-					if ( $menu->id ) {
+					if ( $lemodule->id ) {
 						$details['menuid']		= $lemodule->id;
 						$details['position']	= $lemodule->position;
 						$details['published']	= $lemodule->published;
@@ -500,6 +500,8 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 		function logErrors( $errors, $eucaInstall, $eucaInstalldb )
 		{
 			$errors = array_merge( $errors, $eucaInstall->getErrors(), $eucaInstalldb->getErrors() );
+
+			$tags = array();
 
 			if ( !empty( $errors ) ) {
 				foreach ( $errors as $error ) {

@@ -1,7 +1,7 @@
 <?php
 class xJLanguageHandler extends xJLanguageHandlerCommon
 {
-	function loadList( $list )
+	static function loadList( $list )
 	{
 		if ( empty( $list ) ) {
 			return;
@@ -17,7 +17,7 @@ class xJLanguageHandler extends xJLanguageHandlerCommon
 		return;
 	}
 
-	function getSystemLanguages()
+	static function getSystemLanguages()
 	{
 		$fdir = JPATH_SITE . '/language';
 
@@ -108,15 +108,17 @@ class xJACLhandler extends xJACLhandlerCommon
 		if ( $block ) {
 			$app = JFactory::getApplication();
 
-			$app->redirect( 'index.php', _NOT_AUTH );
+			$app->redirect( 'index.php', "Not Authorized" );
 		}
 	}
 
 	function userDelete( $userid, $msg )
 	{
+		$user = &JFactory::getUser();
+
 		if ( $userid == $user->id ) {
 			return JText::_('You cannot delete yourself');
-		} 
+		}
 
 		$acl = &JFactory::getACL();
 
@@ -230,7 +232,7 @@ class xJACLhandler extends xJACLhandlerCommon
 
 			$acll->group_id	= $aclli->id;
 			$acll->name		= $aclli->title;
-			
+
 			$list[] = $acll;
 		}
 
@@ -353,7 +355,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 
 			if ( $userid == $user->id ) {
 				$user->set( 'groups', $sgs );
-				
+
 				$user->set( '_authLevels', xJSessionHandler::getAuthorisedViewLevels($userid) );
 				$user->set( '_authGroups', xJSessionHandler::getGroupsByUser($userid) );
 			}

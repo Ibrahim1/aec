@@ -1,7 +1,7 @@
 <?php
 class xJLanguageHandlerCommon
 {
-	function getSystemLanguages()
+	static function getSystemLanguages()
 	{
 		$fdir = JPATH_SITE . '/language';
 
@@ -38,13 +38,13 @@ class xJACLhandlerCommon
 		return xJ::getDBArray( $db );
 	}
 
-	function getManagerGroups()
+	static function getManagerGroups()
 	{
 		// Thank you, I hate myself /quite/ enough
 		return array(6);
 	}
 
-	function getUsersByGroup( $group )
+	static function getUsersByGroup( $group )
 	{
 		$acl = &JFactory::getACL();
 
@@ -62,7 +62,7 @@ class xJACLhandlerCommon
 		return array_unique( $users );
 	}
 
-	function getUserObjects( $users )
+	static function getUserObjects( $users )
 	{
 		$db = &JFactory::getDBO();
 
@@ -75,7 +75,7 @@ class xJACLhandlerCommon
 		return $db->loadObjectList();
 	}
 
-	function removeGIDs( $userid, $gids )
+	static function removeGIDs( $userid, $gids )
 	{
 		$db = &JFactory::getDBO();
 
@@ -90,7 +90,7 @@ class xJACLhandlerCommon
 		}
 	}
 
-	function setGIDs( $userid, $gids )
+	static function setGIDs( $userid, $gids )
 	{
 		$info = array();
 		foreach ( $gids as $gid ) {

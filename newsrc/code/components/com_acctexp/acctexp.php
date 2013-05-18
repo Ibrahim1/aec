@@ -621,7 +621,7 @@ function subscribe( $option )
 
 		if ( !$iFactory->authed ) {
 			if ( !$iFactory->checkAuth() ) {
-				return;
+				return false;
 			}
 		}
 

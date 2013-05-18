@@ -1,7 +1,7 @@
 <?php
 class xJLanguageHandler extends xJLanguageHandlerCommon
 {
-	function loadList( $list )
+	static function loadList( $list )
 	{
 		if ( empty( $list ) ) {
 			return;
@@ -21,7 +21,7 @@ class xJLanguageHandler extends xJLanguageHandlerCommon
 		return;
 	}
 
-	function getSystemLanguages()
+	static function getSystemLanguages()
 	{
 		$fdir = JPATH_SITE . '/language';
 
@@ -44,7 +44,7 @@ class xJLanguageHandler extends xJLanguageHandlerCommon
 
 class xJACLhandler extends xJACLhandlerCommon
 {
-	function getSuperAdmins()
+	static function getSuperAdmins()
 	{
 		$db = &JFactory::getDBO();
 
@@ -57,7 +57,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $db->loadObjectList();
 	}
 
-	function setGID( $userid, $gid, $gid_name )
+	static function setGID( $userid, $gid, $gid_name )
 	{
 		$db = &JFactory::getDBO();
 
@@ -69,7 +69,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		$db->query() or die( $db->stderr() );
 	}
 
-	function setGIDsTakeNames( $userid, $gid )
+	static function setGIDsTakeNames( $userid, $gid )
 	{
 		$db = &JFactory::getDBO();
 
@@ -111,7 +111,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $gid_name;
 	}
 
-	function adminBlock( $admin, $manager )
+	static function adminBlock( $admin, $manager )
 	{
 		$user = &JFactory::getUser();
 
@@ -139,11 +139,13 @@ class xJACLhandler extends xJACLhandlerCommon
 		}
 	}
 
-	function userDelete( $userid, $msg )
+	static function userDelete( $userid, $msg )
 	{
+		$user = &JFactory::getUser();
+
 		if ( $userid == $user->id ) {
 			return JText::_('You cannot delete yourself');
-		} 
+		}
 
 		$acl = &JFactory::getACL();
 
@@ -152,9 +154,9 @@ class xJACLhandler extends xJACLhandlerCommon
 		$groups		= $acl->get_object_groups( 'users', $userid, 'ARO' );
 
 		$this_group	= strtolower( $acl->get_group_name( $groups[0], 'ARO' ) );
-		
+
 		$deletor_admin = $user->gid == 24;
-		
+
 		if( $this_group == 'super administrator' ) {
 			return JText::_('You cannot delete a Superadmin');
 		}
@@ -172,9 +174,11 @@ class xJACLhandler extends xJACLhandlerCommon
 				return $obj->getError();
 			}
 		}
+
+		return null;
 	}
 
-	function getGroupTree( $ex=array() )
+	static function getGroupTree( $ex=array() )
 	{
 		$acl = &JFactory::getACL();
 
@@ -207,7 +211,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $gtree;
 	}
 
-	function countAdmins()
+	static function countAdmins()
 	{
 		$db = &JFactory::getDBO();
 
@@ -219,7 +223,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $db->loadResult();
 	}
 
-	function aclList()
+	static function aclList()
 	{
 		$list = array();
 
@@ -239,7 +243,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $list;
 	}
 
-	function getLowerACLGroups( $group_id )
+	static function getLowerACLGroups( $group_id )
 	{
 		$db = &JFactory::getDBO();
 
@@ -255,7 +259,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		return xJ::getDBArray( $db );
 	}
 
-	function getHigherACLGroups( $group_id )
+	static function getHigherACLGroups( $group_id )
 	{
 		$db = &JFactory::getDBO();
 
@@ -327,7 +331,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 			}
 		}
 
-		$this->putSession( $userid, $session, $gid[0], $info[$gid[0]] );
+		return $this->putSession( $userid, $session, $gid[0], $info[$gid[0]] );
 	}
 
 	function putSession( $userid, $data, $gid=null, $gid_name=null )
@@ -351,7 +355,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 		}
 
 		$db->setQuery( $query );
-		$db->query() or die( $db->stderr() );
+		return $db->query() or die( $db->stderr() );
 	}
 
 }

@@ -108,11 +108,11 @@ class tool_readout
 					$user = &JFactory::getUser();
 
 					$settings = array();
-					foreach ( $optionlist as $opt => $optdefault ) {
-						if ( !empty( $_POST[$opt] ) ) {
-							$settings[$opt] = $_POST[$opt];
+					foreach ( $optionlist as $option => $optdefault ) {
+						if ( !empty( $_POST[$option] ) ) {
+							$settings[$option] = $_POST[$option];
 						} else {
-							$settings[$opt] = 0;
+							$settings[$option] = 0;
 						}
 					}
 
@@ -321,7 +321,7 @@ class tool_readout
 					break;
 			}
 		}
- 		exit;
+ 		return exit;
 	}
 
 }
@@ -711,7 +711,7 @@ class aecReadout
 						}
 
 						$name =  'MI_' . strtoupper( $miobj->class_name ) . '_' . strtoupper( $sname ) .'_NAME';
-				
+
 						if ( $lang->hasKey( $name ) ) {
 							$r['def'][JText::_($name)] = array( array( 'settings', $sname ), 'notags smartlimit' );
 						} else {
@@ -939,9 +939,7 @@ class aecReadout
 							}
 						}
 						break;
-					case 'haslink':
-						$dvalue = $dvalue;
-						break;
+					case 'haslink': break;
 				}
 			}
 		}

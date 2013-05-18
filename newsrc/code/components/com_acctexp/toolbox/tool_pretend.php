@@ -47,7 +47,7 @@ class tool_pretend
 
 		// Create a number of groups
 		$grouplist = $this->createGroups( $_POST['groups'] );
-		
+
 		// Create a number of plans
 		$this->createPlans( $grouplist, $_POST['plans'] );
 
@@ -218,8 +218,8 @@ class tool_pretend
 		$pricerange = array( ( (int) $_POST['mincost']*100 ), ( (int) $_POST['maxcost']*100 ) );
 
 		for ( $i=1; $i<=$plans; $i++ ) {
-			if ( isset( $color[floor($i/6)] ) && isset( $class[$i%6] ) ) {
-				$name = ucfirst( $color[floor($i/6)] ) . ucfirst( $class[$i%6] ) . " Plan";
+			if ( isset( $color[(int) floor($i/6)] ) && isset( $class[$i%6] ) ) {
+				$name = ucfirst( $color[(int) floor($i/6)] ) . ucfirst( $class[$i%6] ) . " Plan";
 			} else {
 				$name = "Plan " . $i;
 			}
@@ -270,7 +270,7 @@ class tool_pretend
 
 			$this->range['groups']['end'] = $db->loadResult();
 
-			return;
+			return array();
 		}
 
 		$colors = array(	'1f77b4', 'aec7e8', 'ff7f0e', 'ffbb78', '2ca02c', '98df8a', 'd62728', 'ff9896',

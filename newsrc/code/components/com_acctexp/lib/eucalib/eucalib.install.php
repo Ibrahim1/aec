@@ -141,7 +141,7 @@ class eucaInstall extends eucaObject
 					;
 			$db->setQuery( $query );
 			$details['component_id'] = $db->loadResult();
-	
+
 			$k = 0;
 			$errors = array();
 			foreach ( $array as $entry ) {
@@ -170,7 +170,7 @@ class eucaInstall extends eucaObject
 
 			$table = JTable::getInstance('menu');
 
-			if (!$table->setLocation($parent_id, 'last-child') || !$table->bind($insert) || !$table->check() || !$table->store()) {
+			if (!$table->setLocation($details['parent_id'], 'last-child') || !$table->bind($insert) || !$table->check() || !$table->store()) {
 				// Install failed, rollback changes
 				return false;
 			}

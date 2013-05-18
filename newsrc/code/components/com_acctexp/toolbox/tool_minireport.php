@@ -95,10 +95,10 @@ class tool_minireport
 			}
 
 			if ( $refund ) {
-				$historylist[$date]['amount'] -= $entry->amount;
+				$historylist[$date]['amount'] -= (float) $entry->amount;
 				$historylist[$date]['groups'][$pgroups[0]]--;
 			} else {
-				$historylist[$date]['amount'] += $entry->amount;
+				$historylist[$date]['amount'] += (float) $entry->amount;
 				$historylist[$date]['groups'][$pgroups[0]]++;
 			}
 		}
@@ -115,6 +115,8 @@ class tool_minireport
 		foreach ( $groups as $group ) {
 			$groupnames[$group] = ItemGroupHandler::groupName( $group );
 		}
+
+		$closer = 0;
 
 		$incomplete = false;
 		foreach ( $historylist as $date => $history ) {

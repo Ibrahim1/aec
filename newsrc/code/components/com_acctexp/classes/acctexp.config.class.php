@@ -49,7 +49,7 @@ class aecConfig extends serialParamDBTable
 		return parent::check();
 	}
 
-	function paramsList()
+	static function paramsList()
 	{
 		$def = array();
 		$def['require_subscription']			= 0;
