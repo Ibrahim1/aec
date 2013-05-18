@@ -323,7 +323,7 @@ class Subscription extends serialParamDBTable
 		$verify = $this->verify();
 
 		if ( $verify !== true ) {
-			aecSelfRedirect($verify, array('userid'=>$this->userid));
+			return aecSelfRedirect($verify, array('userid'=>$this->userid));
 		} else {
 			return true;
 		}

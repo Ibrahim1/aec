@@ -171,6 +171,8 @@ function aecRedirect( $url, $msg=null, $class=null )
 	$app = JFactory::getApplication();
 
 	$app->redirect( $url, $msg, $class );
+
+	return exit;
 }
 
 function aecSelfRedirect( $task, $addparams )
@@ -183,5 +185,5 @@ function aecSelfRedirect( $task, $addparams )
 
 	$url = 'index.php?option=com_acctexp&'.implode('&',$params);
 
-	aecRedirect( AECToolbox::deadsureURL( $url ), false, true );
+	return aecRedirect( AECToolbox::deadsureURL( $url ), false, true );
 }
