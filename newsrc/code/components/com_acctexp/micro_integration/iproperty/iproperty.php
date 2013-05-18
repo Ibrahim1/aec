@@ -129,7 +129,7 @@ class mi_iproperty
 			$agent = $this->getAgent( $request->metaUser->userid );
 
 			if ( !empty( $agent->id ) ) {
-				return $this->unpublishProperties( $agent->id );
+				$this->unpublishProperties( $agent->id );
 			}
 		}
 
@@ -335,7 +335,7 @@ class mi_iproperty
 		. ' WHERE `name` = \'' . xJ::escape( $db, $name ) . '\''
 		;
 		$db->setQuery( $query );
-		
+
 		return $this->getCompany( $db->loadResult() );
 	}
 
@@ -373,6 +373,7 @@ class mi_iproperty
 
 		$fields = array();
 		$values = array();
+		$updates = array();
 		foreach ( $vars as $k => $v ) {
 			if ( ( $k != 'id' ) && ( $k != 'ip_source' ) ) {
 				$updates[] = '`' . $k . '` = \'' .  xJ::escape( $db, $v ) . '\'';

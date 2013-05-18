@@ -70,6 +70,8 @@ class mi_apc
 		if ( $this->settings['set_group_exp'] ) {
 			return $this->setGroupId( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['set_default_exp'] );
 		}
+
+		return null;
 	}
 
 	function action( $request )
@@ -77,6 +79,8 @@ class mi_apc
 		if ( $this->settings['set_group'] ) {
 			return $this->setGroupId( $request->metaUser->userid, $this->settings['group'], $this->settings['set_default'] );
 		}
+
+		return null;
 	}
 
 	function setGroupId( $userid, $groupid, $default = false )

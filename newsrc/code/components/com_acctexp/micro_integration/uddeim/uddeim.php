@@ -303,6 +303,8 @@ class uddeim_restriction extends serialParamDBTable {
 		} elseif ( $check == "unlimited" ) {
 				return true;
 		}
+
+		return null;
 	}
 
 	function useMessage()

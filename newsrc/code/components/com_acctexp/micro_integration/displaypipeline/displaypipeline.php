@@ -50,7 +50,7 @@ class mi_displaypipeline
 		$text = AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
 
 		$displaypipeline = new displayPipeline();
-		$displaypipeline->create( $metaUser->userid, $this->settings['only_user'], $this->settings['once_per_user'], $this->settings['expire'], $this->settings['expiration'], $this->settings['displaymax'], $text );
+		$displaypipeline->create( $request->metaUser->userid, $this->settings['only_user'], $this->settings['once_per_user'], $this->settings['expire'], $this->settings['expiration'], $this->settings['displaymax'], $text );
 		return true;
 	}
 

@@ -36,7 +36,7 @@ class mi_joomlaplugin
 			. ' LEFT JOIN #__groups AS g ON g.id = p.access'
 			. ' GROUP BY p.id'
 			;
-		$db->setQuery( $query, $pagination->limitstart, $pagination->limit );
+		$db->setQuery( $query );
 		$rows = $db->loadObjectList();
 
 		$pl = array();
@@ -63,11 +63,7 @@ class mi_joomlaplugin
 
 		$p = explode( "_", $this->settings['plugin'], 2 );
 
-		$plug = new stdClass();
-		$plug->type = $p[0];
-		$plug->name = $p[1];
-
-		JPluginHelper::_import( $plug );
+		JPluginHelper::importPlugin( $p[0], $p[1] );
 
 		$query = 'SELECT folder AS type, element AS name, params'
 			. ' FROM #__plugins'
@@ -85,7 +81,7 @@ class mi_joomlaplugin
 		$credentials['username'] = $request->metaUser->cmsUser->name;
 		$credentials['password'] = $request->metaUser->cmsUser->password;
 
-		$className = 'plg'.$plug->type.$plug->name;
+		$className = 'plg'.$p[0].$p[1];
 		if (class_exists( $className )) {
 			$plugin = new $className($this, (array)$plugin);
 

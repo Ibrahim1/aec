@@ -199,8 +199,6 @@ class mi_raffle
 				$recipients[$current] = AECToolbox::rewriteEngineRQ( trim( $email ), $request );
 			}
 
-			$recipients[] = $admin->email;
-
 			$subject = 'Raffle Drawing Results for ' . $app->getCfg( 'sitename' );
 
 			xJ::sendMail( $adminEmail2, $adminEmail2, $recipients, $subject, $colET );

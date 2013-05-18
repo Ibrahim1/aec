@@ -349,8 +349,10 @@ class mi_aectax
 		$mi->load( $location['mi'] );
 
 		if ( !$mi->callIntegration() ) {
-			continue;
+			return null;
 		}
+
+		global $aecConfig;
 
 		$action = 'action';
 

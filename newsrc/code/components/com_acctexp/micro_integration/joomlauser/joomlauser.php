@@ -60,11 +60,11 @@ class mi_joomlauser
 
 		$settings['aectab_reg']			= array( 'tab', 'Expiration', 'Expiration' );
 
-		$settings['set_fields_exp']	= array( 'toggle' );
+		$settings['set_fields_exp']		= array( 'toggle' );
 
 		$settings = array_merge( $settings, $xsettings );
 
-		$settings					= AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
+		$settings = AECToolbox::rewriteEngineInfo( $rewriteswitches, $settings );
 
 		return $settings;
 	}
@@ -124,7 +124,7 @@ class mi_joomlauser
 
 			$numberofrows	= 1;
 			while ( $numberofrows ) {
-				$uname =	strtolower( substr( base64_encode( md5( rand() ) ), 0, $this->settings['username_rand'] ) );
+				$uname = strtolower( substr( base64_encode( md5( rand() ) ), 0, $this->settings['username_rand'] ) );
 				// Check if already exists
 				$query = 'SELECT count(*)'
 						. ' FROM #__users'

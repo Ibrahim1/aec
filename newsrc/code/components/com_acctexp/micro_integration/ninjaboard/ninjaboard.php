@@ -128,7 +128,7 @@ class mi_ninjaboard
 
 		if ( !empty( $this->settings['subsc_action'] ) ) {
 			if ( $this->settings['subsc_action'] === 2 ) {
-				KFactory::get('com://site/ninjaboard.controller.person')->id($user->id)->read()->setData(array('notify_enabled' => true))->save();
+				KFactory::get('com://site/ninjaboard.controller.person')->id($request->metaUser->userid)->read()->setData(array('notify_enabled' => true))->save();
 			}
 		}
 
@@ -191,7 +191,7 @@ class mi_ninjaboard
 					$query->where('created_by', '=', $id)
 				)->delete();
 			} else {
-				KFactory::get('com://site/ninjaboard.controller.person')->id($user->id)->read()->setData(array('notify_enabled' => false))->save();
+				KFactory::get('com://site/ninjaboard.controller.person')->id($request->metaUser->userid)->read()->setData(array('notify_enabled' => false))->save();
 			}
 		}
 

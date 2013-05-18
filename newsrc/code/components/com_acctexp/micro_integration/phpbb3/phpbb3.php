@@ -154,7 +154,7 @@ class mi_phpbb3
 
 		foreach ( $userfields as $key ) {
 			$ndesc = JText::_('MI_MI_PHPBB3_CREATE_FIELD') . ": " . $key;
-			
+
 			$settings['create_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
 
@@ -162,7 +162,7 @@ class mi_phpbb3
 
 		foreach ( $userfields as $key ) {
 			$ndesc = JText::_('MI_MI_PHPBB3_UPDATE_FIELD') . ": " . $key;
-			
+
 			$settings['update_user_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
 
@@ -170,7 +170,7 @@ class mi_phpbb3
 
 		foreach ( $userfields as $key ) {
 			$ndesc = JText::_('MI_MI_PHPBB3_UPDATE_FIELD_EXP') . ": " . $key;
-			
+
 			$settings['update_user_exp_'.$key]	= array( 'inputC', $ndesc, $ndesc );
 		}
 
@@ -227,7 +227,7 @@ class mi_phpbb3
 			$content['user_password']	= $phpbb3pw->phpbb3pw;
 			$content['user_email']		= $request->metaUser->cmsUser->email;
 
-			$this->createUser( $phpbbdb, $content );
+			$this->createUser( $phpbbdb, $phpbbUserId, $content );
 
 			$phpbbUserId = $this->phpbbUserid( $phpbbdb, $request->metaUser->cmsUser->email );
 		} elseif ( $this->settings['update_user'] ) {
@@ -240,7 +240,7 @@ class mi_phpbb3
 				}
 			}
 
-			$this->updateUser( $phpbbdb, $content );
+			$this->updateUser( $phpbbdb, $phpbbUserId, $content );
 		}
 
 		if ( $phpbbUserId ) {
@@ -293,7 +293,7 @@ class mi_phpbb3
 				}
 			}
 
-			$this->updateUser( $phpbbdb, $content );
+			$this->updateUser( $phpbbdb, $phpbbUserId, $content );
 		}
 
 		$groups = $this->userGroups( $phpbbdb, $phpbbUserId );
@@ -309,7 +309,7 @@ class mi_phpbb3
 				foreach ( $this->settings['remove_group_exp'] as $groupid ) {
 					if ( in_array( $groupid, $groups ) ) {
 						$this->removeGroup( $phpbbdb, $phpbbUserId, $groupid );
-						
+
 						$unset = array_search( $groupid, $groups );
 						if ( isset( $groups[$unset] ) ) {
 							unset( $groups[$unset] );

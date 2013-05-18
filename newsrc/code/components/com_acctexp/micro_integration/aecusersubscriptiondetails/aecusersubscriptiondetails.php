@@ -11,7 +11,7 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-require_once( JPATH_SITE . '/components/com_acctexp/micro_integration/aecuserdetails/aecuserdetails.php' );
+require_once( dirname(__FILE__) . '/../aecuserdetails/aecuserdetails.php' );
 
 class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 {
@@ -28,7 +28,7 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 	function Settings()
 	{
 		$settings = parent::Settings();
-		
+
 		unset( $settings['emulate_reg'] );
 		unset( $settings['display_emul'] );
 

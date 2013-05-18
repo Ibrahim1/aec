@@ -24,7 +24,7 @@ class mi_htaccess extends MI
 
 	function mi_htaccess()
 	{
-		include_once( JPATH_SITE . '/components/com_acctexp/micro_integration/htaccess/lib/htaccess.class.php' );
+		include_once( dirname(__FILE__) . '/lib/htaccess.class.php' );
 	}
 
 	function checkInstallation()

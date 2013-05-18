@@ -225,7 +225,7 @@ class mi_vbulletin
 				}
 			}
 
-			$this->updateUser( $vbdb, $content );
+			$this->updateUser( $vbdb, $vbUserId, $content );
 		}
 
 		if ( $vbUserId ) {
@@ -286,7 +286,7 @@ class mi_vbulletin
 						if ( is_array( $this->settings[$set] ) ) {
 							if ( !is_array( $this->settings['add_secondarygroups'.$suffix] ) ) {
 								$this->settings['add_secondarygroups'.$suffix] = array();
-							} 
+							}
 
 							$this->settings['set_add_secondarygroups'.$suffix] = true;
 

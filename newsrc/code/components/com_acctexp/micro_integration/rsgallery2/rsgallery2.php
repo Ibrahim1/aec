@@ -167,6 +167,8 @@ class mi_rsgallery2 extends MI
 
 	function expiration_action( $request )
 	{
+		$db = &JFactory::getDBO();
+
 		if ( !empty( $this->settings['unpublish_all'] ) ) {
 			$query = 'SELECT `id`'
 				 	. ' FROM #__rsgallery2_galleries'

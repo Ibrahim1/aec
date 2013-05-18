@@ -49,7 +49,7 @@ class mi_shareasale
 
 		$getparams = array();
 
-		$user		= JFactory::getUser($invoice->userid);
+		$user		= JFactory::getUser($request->invoice->userid);
 		$SSAID		= $user->getParam('SSAID');
 		$SSAIDDATA	= $user->getParam('SSAIDDATA');
 
@@ -57,7 +57,7 @@ class mi_shareasale
 		$getparams[] = 'tracking='		. $request->invoice->invoice_number;
 		$getparams[] = 'transtype='		. 'sale';
 		$getparams[] = 'merchantID='	. $this->settings['merchantID'];
-		
+
 		if ( !empty( $this->settings['onlycustomparams'] ) && !empty( $this->settings['customparams'] ) ) {
 			$getparams = array();
 		}

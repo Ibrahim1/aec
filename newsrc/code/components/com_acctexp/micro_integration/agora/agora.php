@@ -99,6 +99,8 @@ class mi_agora extends MI
 	{
 		$db = &JFactory::getDBO();
 
+		$app = JFactory::getApplication();
+
 		$tables = $db->getTableList();
 
 		return in_array( $app->getCfg( 'dbprefix' ) . "agorapro_config", $tables );
