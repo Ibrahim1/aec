@@ -92,10 +92,11 @@ class processor_hsbc extends XMLprocessor
 				$check = aecGetParam( 'CcpaResultsCode', null, true, array( 'int' ) );
 			}
 
+			$addin = '';
 			if ( !empty( $request->int_var['params']['billFirstName'] ) && !empty( $request->int_var['params']['cardNumber'] ) ) {
 				$redourl = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=invoiceAction&amp;action=clearccdetails&amp;invoice='.$request->invoice->invoice_number, true );
 
-				$addin = '<p>Please review the Credit Card details you have supplied:</p>';
+				$addin .= '<p>Please review the Credit Card details you have supplied:</p>';
 				$addin .= '<p><strong>Cardholder Name:</strong>&nbsp;' . $request->int_var['params']['billFirstName'] . "&nbsp;" . $request->int_var['params']['billLastName'];
 				$addin .= '<p><strong>Credit Card:</strong>&nbsp;' . $request->int_var['params']['cardNumber'];
 				$addin .= '<p><strong>Expiration:</strong>&nbsp;' . $request->int_var['params']['expirationMonth'] . '&nbsp;/&nbsp;' . $request->int_var['params']['expirationYear'];
@@ -124,7 +125,7 @@ class processor_hsbc extends XMLprocessor
 					$this->simpleCheckoutMod( $mod );
 
 					// Display final checkout
-					return parent::checkoutProcess( $request );
+					return parent::checkoutProcess( $request, $InvoiceFactory );
 				} else {
 					$var = $this->createGatewayLink( $request );
 

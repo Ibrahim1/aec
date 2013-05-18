@@ -88,8 +88,7 @@ class processor_mollie_wallie extends XMLprocessor
 			$request->invoice->storeload();
 
 			// Redirect to Wallie platform
-			return aecRedirect( $mollieWallie->getWallieUrl() );
-
+			aecRedirect( $mollieWallie->getWallieUrl() );
 		} else {
 
 			// error handling
@@ -100,6 +99,8 @@ class processor_mollie_wallie extends XMLprocessor
 
 			return $response;
 		}
+
+		return null;
 	}
 
 	function parseNotification( $post )

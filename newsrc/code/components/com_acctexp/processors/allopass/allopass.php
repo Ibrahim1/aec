@@ -119,7 +119,6 @@ class processor_allopass extends XMLprocessor
 
 		if ( $test_ap == "OK" ) {
 			$response['valid'] = true;
-			return;
 		} else {
 			$response['valid'] = false;
 

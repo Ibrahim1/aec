@@ -110,11 +110,11 @@ class processor_paycific extends POSTprocessor
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid']	= 0;
-		
-		if ( $this->isValidMd5($post['hash']) ) {
+
+		if ( !$this->isValidMd5($post['hash']) ) {
 			$response['error']		= true;
 			$response['errormsg']	= "Hash Invalid";
-		} elseif ( $_GET['hash'] == $request->invoice->params['hash'] ) {
+		} elseif ( $_GET['hash'] == $invoice->params['hash'] ) {
 			$response['valid']			= 1;
 		} else {
 			$response['error']		= true;

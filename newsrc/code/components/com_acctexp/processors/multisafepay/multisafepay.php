@@ -224,9 +224,6 @@ class processor_multisafepay extends XMLprocessor
 				}
 			} else {
 				$response['valid'] = 1;
-
-				// A link for getting back to the AEC Thanks page
-				echo '<a href="' . $request->int_var['return_url'] . '">' . JText::_('CFG_MULTISAFEPAY_RETURN_TO_SHOP') . '</a>';
 			}
 		} else {
 			$response['error'] = "Cannot connect to MultiSafepay";

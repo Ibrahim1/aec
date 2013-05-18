@@ -53,7 +53,7 @@ class processor_usaepay extends XMLprocessor
 		$settings['StorePin']		= array( "inputC" );
 		$settings['item_name']		= array( 'inputE' );
 		$settings['customparams']	= array( 'inputD' );
-		
+
 
 		return $settings;
 	}
@@ -72,11 +72,11 @@ class processor_usaepay extends XMLprocessor
 	function createRequestXML( $request )
 	{
 		$var = array(
-					"UMkey" => $this->settings['StoreKey'], 
+					"UMkey" => $this->settings['StoreKey'],
 					"UMcommand" => 'sale',
 					"UMcard" => trim( $request->int_var['params']['cardNumber'] ),
 					"UMexpir" => $request->int_var['params']['expirationMonth'] . $request->int_var['params']['expirationYear'],
-					"UMinvoice" => $request->invoice->invoice_number, 
+					"UMinvoice" => $request->invoice->invoice_number,
 					"UMorderid" => $request->invoice->id,
 					"UMtax" => '',
 					"UMcurrency" => $request->invoice->currency,
@@ -124,7 +124,7 @@ class processor_usaepay extends XMLprocessor
 		$response = $this->transmitRequest( $url, $path, $xml );
 
 		if ( !empty( $response ) ) {
-			$result = parse_str( $response );
+			parse_str( $response, $result );
 
 			if ( $result['result'] == 'Approved' ) {
 				$return['valid'] = true;

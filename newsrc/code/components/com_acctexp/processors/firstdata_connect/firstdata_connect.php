@@ -91,14 +91,14 @@ class processor_firstdata_connect extends POSTprocessor
 
 		if ( $v2 ) {
 			$var['timezone']		= 'sale';
-			$var['txndatetime']		= date( "Y:m:d-H:i:s", strtotime( $invoice->created_date ) );
+			$var['txndatetime']		= date( "Y:m:d-H:i:s", strtotime( $request->invoice->created_date ) );
 
-			$var['hash']			= $this->createHash( $var['chargetotal'], $var['txndatetime'] );
+			$var['hash']			= $this->sendHash( $var['chargetotal'], $var['txndatetime'] );
 		}
 
 		$var['storename']			= $this->settings['storename'];
 
-		$var['oid']					= $invoice->id;
+		$var['oid']					= $request->invoice->id;
 
 		if ( isset( $request->items->tax ) ) {
 			$tax = 0;
@@ -141,6 +141,7 @@ class processor_firstdata_connect extends POSTprocessor
 
 	function parseNotification( $post )
 	{
+		$return = array();
 		if ( !empty( $post['oid'] ) ) {
 			$return['invoice'] = aecInvoiceHelper::InvoiceIDfromNumber( $post['oid'] );
 		} elseif ( !empty( $post['invoicenumber'] ) ) {
@@ -150,7 +151,6 @@ class processor_firstdata_connect extends POSTprocessor
 		}
 
 		return $return;
-
 	}
 
 	function validateNotification( $response, $post, $invoice )

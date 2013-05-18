@@ -206,38 +206,15 @@ class processor_ipayment_silent extends XMLprocessor
 		}
 
 		$url = "https://ipayment.de" . $path;
-echo "<p><strong>&Uuml;bertragung - " . date('Y-m-d H:i:s') . " (Serverzeit)- " . date('Y-m-d H:i:s', ( (int) gmdate('U') )+(60*60*6)) . " (tats&auml;chliche Zeit)</strong></p>";
-echo "<h1>Senden der Daten:</h1>";
-echo '<p>';
-echo $xml;
-echo '</p>';
-echo '<p><strong>oder:</strong><br /><br />';
-echo str_replace( '&', '<br />&', $xml );
-echo '</p>';
-echo '<h1>';
-echo "an:";
-echo '</h1>';
-echo '<p>';
-echo $url;
-echo '</p>';
+
+
 		$curl_calls[CURLOPT_HEADER]		= false;
 		$curl_calls[CURLOPT_HTTPHEADER]	= '[[unset]]';
 
 		// This will not turn up a response (why, that would be, like, logial and all)
 		$response = $this->transmitRequest( $url, $path, $xml, 443, $curl_calls );
 		$response2 = $this->transmitRequest( "https://[domain].com/components/com_acctexp/postback.php", $path, $xml, 443, $curl_calls );
-echo '<h1>R&uuml;ckmeldung:</h1>';
-echo '<div style="margin:12px;padding:24px;background-color:#bbb;color:#555;">';
-echo '<p>';
-echo $response;
-echo '</p>';
-echo '</div>';
-echo '<h1>R&uuml;ckmeldung, Gegencheck:</h1>';
-echo '<div style="margin:12px;padding:24px;background-color:#bbb;color:#555;">';
-echo '<p>';
-echo $response2;
-echo '</p>';
-echo '</div>';
+
 		// Instead we wait a short moment
 		//sleep( 10 );
 
@@ -259,23 +236,11 @@ echo '</div>';
 			$return['duplicate']		= true;
 		}
 
-echo '<h1>Formular:</h1>';
-echo '<form action="' . "https://ipayment.de" . $path . '" method="post" >Formular:</h1>';
-
-$p = explode( '&', $xml );
-
-foreach ( $p as $c ) {
-	$cc = explode( '=', $c );
-	echo '<input type="hidden" name="' . $cc[0] . '" value="' . $cc[1] . '" />';
-}
-echo '<input type="submit">';
-echo '</form>';
-exit;
 		return $return;
 	}
 
 	function parseNotification( $post )
-	{aecDebug( "ResponseFunction:parseNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) );
+	{
 		$allowed_ips= array( "212.227.34.218", 	"212.227.34.219", "212.227.34.220", "195.20.224.139" );
 		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowed_ips ) ) {
 			$response['error']		= true;
@@ -295,7 +260,7 @@ exit;
 	function instantvalidateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
-aecDebug( "ResponseFunction:instantvalidateNotification" . "\n" . "GET:".json_encode( $_GET ) . "\n" . "POST:".json_encode( $_POST ) . "\n" . "Response:".json_encode( $response ) . "\n" . "Invoice:".json_encode( $invoice ) );
+
 		if ( aecGetParam('event') == 'error' ) {
 			return $response;
 		} elseif ( aecGetParam('event') == 'success' ) {

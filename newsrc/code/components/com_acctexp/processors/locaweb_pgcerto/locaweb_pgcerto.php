@@ -80,7 +80,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		$paymentOptions[]				= JHTML::_('select.option', 'Boleto', 'Boleto Bancário' );
 
 		$var['params']['lists']['modulo']	= JHTML::_( 'select.genericlist', $paymentOptions, 'modulo', 'size="2"', 'value', 'text', 0 );
-		$var['params']['modulo']		= array( 'list', JText::_('CFG_LOCAWEB_PGCERTO_MODULE_NAME'), _CFG_LOCAWEB_PGCERTO_MODULE_DESC);
+		$var['params']['modulo']		= array( 'list', JText::_('CFG_LOCAWEB_PGCERTO_MODULE_NAME'), JText::_('CFG_LOCAWEB_PGCERTO_MODULE_DESC'));
 
 		// Create a selection box with type of buyer
 		$tipoPessoa						= array();
@@ -388,9 +388,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 						$response['amount_paid'] 					= $ValorTotal;
 				}
 				// We will need this info later to provide the option to reissue boleto
-				$request->invoice->addParams( array( 'IdTransacao' => $IdTransacao ) );
-				$request->invoice->check();
-				$request->invoice->store();
+				$response['secondary_ident'] = $IdTransacao;
 			} else {
 				// Monta os dados de resposta para o componente AEC
 				$response['fullresponse']['erro'] = '(' . utf8_decode($CodRetornoConsulta) . ') ' . utf8_decode($MensagemRetornoConsulta);

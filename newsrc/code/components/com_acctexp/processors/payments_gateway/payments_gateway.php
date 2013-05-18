@@ -130,7 +130,7 @@ class processor_payments_gateway extends POSTprocessor
 			$var['pg_total_amount']		= AECToolbox::correctAmount( $amount, 2 );
 		}
 
-		$var['pg_utc_time']						= number_format((gmdate('U')*10000000 + 621355968000000000), 0, '', '');
+		$var['pg_utc_time']						= number_format(( ( (int) gmdate('U') ) * 10000000 + 621355968000000000), 0, '', '');
 		$var['pg_transaction_order_number']		= $request->invoice->id;
 
 		$var['pg_ts_hash']	= $this->hmac(	$this->settings['api_key'],

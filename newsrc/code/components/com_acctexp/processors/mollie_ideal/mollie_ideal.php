@@ -73,7 +73,6 @@ class processor_mollie_ideal extends XMLprocessor
 		$bankList = $mollieIdeal->getBanks();
 
 		if( $bankList ) {
-
 			foreach ( $bankList as $key => $name ) {
 				$options[]	= JHTML::_('select.option', $key, $name );
 			}
@@ -123,8 +122,7 @@ class processor_mollie_ideal extends XMLprocessor
 			$request->invoice->storeload();
 
 			// Redirect to issuer bank
-			return aecRedirect( $mollieIdeal->getBankURL() );
-
+			aecRedirect( $mollieIdeal->getBankURL() );
 		} else {
 
 			// error handling
@@ -135,6 +133,8 @@ class processor_mollie_ideal extends XMLprocessor
 
 			return $response;
 		}
+
+		return null;
 	}
 
 	function parseNotification( $post )

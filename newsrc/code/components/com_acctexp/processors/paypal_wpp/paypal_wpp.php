@@ -286,9 +286,9 @@ class processor_paypal_wpp extends XMLprocessor
 					$get = $this->arrayToNVP( $var );
 
 					if ( $this->settings['testmode'] ) {
-						return aecRedirect( 'https://www.sandbox.paypal.com/webscr?' . $get );
+						aecRedirect( 'https://www.sandbox.paypal.com/webscr?' . $get );
 					} else {
-						return aecRedirect( 'https://www.paypal.com/webscr?' . $get );
+						aecRedirect( 'https://www.paypal.com/webscr?' . $get );
 					}
 				} elseif ( !empty( $response['error'] ) ) {
 					$response['error'] .= " - Could not retrieve token";
@@ -641,7 +641,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 			return $return;
 		} else {
-			getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
+			return getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
 										'metaUser' => $request->metaUser,
 										'invoice' => $request->invoice,
 										'suppressactions' => true

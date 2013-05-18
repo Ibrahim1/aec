@@ -103,7 +103,7 @@ class processor_nochex extends POSTprocessor
 			}
 		}
 
-		$result = $this->transmitRequest( $url, $path, $post, 80, null, $header );
+		$result = $this->transmitRequest( $url, $path, $post, 80, null );
 
 		$response['valid'] = 0;
 

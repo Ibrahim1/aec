@@ -139,7 +139,7 @@ class processor_cybermut extends POSTprocessor
 					.$post['ipclient']."*".$post['originetr']."*".$post['veres']."*".$post['pares']."*"
 					;
 
-		if ( $post['MAC'] !== $this->CMIC_hmac( $HMAC ) ) {
+		if ( $post['MAC'] !== $this->CMCIC_hmac( $HMAC ) ) {
 			$response['pending_reason'] = 'invalid HMAC';
 			$response['valid'] = false;
 		}

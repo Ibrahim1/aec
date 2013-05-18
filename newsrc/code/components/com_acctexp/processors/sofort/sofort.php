@@ -132,7 +132,7 @@ class processor_sofort extends XMLprocessor
 		$transaction = $this->XMLsubstring_tag( $response, 'transaction' );
 
 		if ( empty( $transaction ) ) {
-			$return['error']	= "Invalid Response by Sofort Gateway";			
+			$return['error']	= "Invalid Response by Sofort Gateway";
 
 			return $return;
 		} else {
@@ -141,7 +141,7 @@ class processor_sofort extends XMLprocessor
 			$request->invoice->secondary_ident = $transaction;
 			$request->invoice->storeload();
 
-			return aecRedirect( $redirect );
+			aecRedirect( $redirect );
 		}
 	}
 
@@ -200,9 +200,9 @@ class processor_sofort extends XMLprocessor
 		$redirect = $this->XMLsubstring_tag( $response, 'cancel_url' );
 
 		if ( !empty( $redirect ) ) {
-			return aecRedirect( $redirect );
+			aecRedirect( $redirect );
 		} else {
-			getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
+			return getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
 										'metaUser' => $request->metaUser,
 										'invoice' => $request->invoice,
 										'suppressactions' => true

@@ -71,7 +71,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 			if ( !empty( $error ) ) {
 				return array( 'error' => $error );
 			} else {
-				return array( 'error' => 'Unknown Error ' . $_GET['error'] );				
+				return array( 'error' => 'Unknown Error ' . $_GET['error'] );
 			}
 		}
 
@@ -93,14 +93,14 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 				$response = $this->transmitRequest( $url, $path, $this->arrayToNVP($var), 443, $curlextra );
 
 				$result = $this->parseNotification( $response );
-				
+
 				$result = $this->validateNotification( $result, $response, $InvoiceFactory->invoice, false );
 
 				return $result;
 			}
 		}
 
-		$var = $this->getSIFvars( $request );
+		$var = $this->getSIFvars( $request, false );
 
 		$url	= $var['post_url'];
 
@@ -112,7 +112,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 
 	function createRequestXML( $request )
 	{
-		$var = $this->getSIFvars( $request );
+		$var = $this->getSIFvars( $request, false );
 
 		return $this->arrayToNVP( $var );
 	}
@@ -190,7 +190,9 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 			$response['valid'] = true;
 
 			if ( $this->settings['pseudocreditcard'] && !empty( $post['ppan'] ) ) {
-				$this->setPPAN( $request->metaUser, $post['ppan'] );
+				$metaUser = new metaUser( $invoice->userid );
+
+				$this->setPPAN( $metaUser, $post['ppan'] );
 			}
 
 			if ( $echo ) {
@@ -249,7 +251,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 	function getPPAN( $metaUser )
 	{
 		$uparams = $metaUser->meta->getCustomParams();
-		
+
 		if ( !empty( $uparams['ppan'] ) ) {
 			return $uparams['ppan'];
 		}

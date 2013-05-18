@@ -7,7 +7,7 @@
  * @author David Deutsch <skore@valanx.org> & Team AEC - http://www.valanx.org
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
- 
+
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
@@ -42,7 +42,7 @@ class processor_realex_remote extends XMLprocessor
 		$settings['secret']		= 'yoursecret';
 		$settings['testmode']	= 1;
 		$settings['currency']	= 'EUR';
-	
+
 		return $settings;
 	}
 
@@ -64,7 +64,7 @@ class processor_realex_remote extends XMLprocessor
 		$var = $this->getUserform();
 
 		$var = $this->getCCform( $var, array( 'card_type','card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ), null );
-		
+
 		return $var;
 	}
 
@@ -79,15 +79,15 @@ class processor_realex_remote extends XMLprocessor
 				<account>' . $this->settings['account'] . '</account>
 				<orderid>' . $request->invoice->id . '</orderid>
 				<amount currency="' . $this->settings['currency'] . '">' . $amount . '</amount>
-				<card> 
+				<card>
 					<number>' . $request->int_var['params']['cardNumber'] . '</number>
 					<expdate>' . $request->int_var['params']['expirationMonth'] . substr( $request->int_var['params']['expirationYear'], -2 ) . '</expdate>
-					<type>' . $request->int_var['params']['cardType'] . '</type> 
+					<type>' . $request->int_var['params']['cardType'] . '</type>
 					<chname>' . $request->int_var['params']['billFirstName'] . ' ' .  $request->int_var['params']['billLastName'] . '</chname>
 					<cvn>
 						<number>' . $request->int_var['params']['cardVV2'] . '</number>
 					</cvn>
-				</card> 
+				</card>
 				<autosettle flag="1"/>
 				<md5hash>' . $this->getHash( $request, $timestamp, $amount ) . '</md5hash>
 				<tssinfo>
@@ -111,7 +111,7 @@ class processor_realex_remote extends XMLprocessor
 
 		$response1 = array();
 		$response = $this->transmitRequest( $url, '', $xml );
-		
+
 		// Tidy it up
 		$response = eregi_replace ( "[[:space:]]+", " ", $response );
 		$response = eregi_replace ( "[\n\r]", "", $response );
@@ -149,6 +149,9 @@ class processor_realex_remote extends XMLprocessor
 			}
 		}
 
+		$result_code = false;
+		$result_msg = '';
+
 		$i=0;
 		while ( $elements[0]['children'][$i]['name'] ) {
 			switch ( $elements[0]['children'][$i]['name'] ) {
@@ -161,7 +164,7 @@ class processor_realex_remote extends XMLprocessor
 			$i++;
 		}
 
-		if ( $result_code == '00' ) {
+		if ( $result_code === '00' ) {
 			$response1['valid'] = 1;
 		} else {
 			$response['valid'] = 0;

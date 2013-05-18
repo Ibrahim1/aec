@@ -586,9 +586,10 @@ class processor_authorize_cim extends PROFILEprocessor
 						if ( !empty( $profileid ) ) {
 							$ppParams = $this->payProfileAdd( $request, $profileid, $request->int_var['params'], $ppParams );
 						}
+
+						$cim->setParameter( 'customerPaymentProfileId', (int) $profileid );
 					}
 
-					$cim->setParameter( 'customerPaymentProfileId', (int) $profileid );
 				} else {
 					$stored_ppid = $ppParams->paymentProfiles[$request->int_var['params']['payprofileselect']]->profileid;
 					$cim->setParameter( 'customerPaymentProfileId', (int) $stored_ppid );
@@ -664,13 +665,13 @@ class processor_authorize_cim extends PROFILEprocessor
 
 			$cim->setParameter( 'transaction_amount',	AECToolbox::correctAmount( $amount ) );
 			$cim->setParameter( 'transactionType',		'profileTransAuthCapture' );
-			
+
 			if ( is_array( $request->int_var['amount'] ) ) {
 				$cim->setParameter( 'refId',			$request->invoice->id . '_r_' . $request->invoice->counter );
 			} else {
 				$cim->setParameter( 'refId',			$request->invoice->id );
 			}
-			
+
 			$cim->setParameter( 'order_description',	preg_replace( '`[\<|\>|\&]`Di', '', AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) ) );
 
 			$cim->setParameter( 'order_invoiceNumber',	$request->invoice->invoice_number);
@@ -876,7 +877,7 @@ class processor_authorize_cim extends PROFILEprocessor
 				}
 			}
 		} else {
-			aecDebug("Trying to bill empty user profile");aecDebug($request->metaUser);
+			aecDebug("Trying to bill empty user profile");aecDebug($iFactory->metaUser);
 		}
 
 		return $return;

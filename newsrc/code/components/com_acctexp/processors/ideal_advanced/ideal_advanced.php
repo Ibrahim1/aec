@@ -44,16 +44,16 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings['private_certificate_file']	= "private.cer";
 		$settings['private_key']				= "Password";
 		$settings['private_key_file']			= "private.key";
-		
+
 		$settings['cache_path']		= dirname(__FILE__) . '/lib/cache/';
 		$settings['ssl_path']		= dirname(__FILE__) . '/lib/ssl/';
-		
+
 		$settings['currency']		= 'EUR';
 
-		$settings['description']	= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );		
-		
+		$settings['description']	= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
+
 		$settings['customparams']	= "";
-		
+
 		return $settings;
 	}
 
@@ -68,20 +68,20 @@ class processor_ideal_advanced extends XMLprocessor
 		$settings['private_certificate_file']	= array( 'inputC' );
 		$settings['private_key']				= array( 'inputC' );
 		$settings['private_key_file']			= array( 'inputC' );
-		
+
 		$settings['cache_path']		= array( 'inputD' );
 		$settings['ssl_path']		= array( 'inputD' );
 		$settings['currency']		= array( 'list_currency' );
 		$settings['description']	= array( 'inputE' );
-		
+
 		$acquirers = array(	'sim' => 'Simulator',
 							'rabo' => 'Rabobank',
 							'ing' => 'ING Bank',
-							'abn' => 'ABN Amro' );	
-					
+							'abn' => 'ABN Amro' );
+
 		foreach ( $acquirers as $key => $name ) {
 			$options[]	= JHTML::_('select.option', $key, $name );
-		}		
+		}
 
 		$settings['lists']['acquirer'] = JHTML::_( 'select.genericlist', $options, 'acquirer', 'size="1"', 'value', 'text', $this->settings['acquirer'] );
 
@@ -98,15 +98,16 @@ class processor_ideal_advanced extends XMLprocessor
 
 		$issuerList = $idealRequest->doRequest();
 
+		$var = array();
 		if( $idealRequest->hasErrors() ) {
 			$this->fileError( 'Could not retrieve Issuer list. Error(s): ' . implode( ', ', $idealRequest->getErrorsDesc() ) );
-		} else {		
+		} else {
 			foreach ( $issuerList as $key => $name ) {
 				$options[]	= JHTML::_('select.option', $key, $name );
 			}
-	
+
 			$var['params']['lists']['issuerId'] = JHTML::_( 'select.genericlist', $options, 'issuerId', 'size="1"', 'value', 'text', null );
-			$var['params']['issuerId'] = array( 'list', 'Kies uw bank', null );			
+			$var['params']['issuerId'] = array( 'list', 'Kies uw bank', null );
 		}
 
 		return $var;
@@ -124,13 +125,13 @@ class processor_ideal_advanced extends XMLprocessor
 
 		$description 		= substr( AECToolbox::rewriteEngineRQ( $this->settings['description'], $request ), 0, 32 );
 		$merchantReturnURL	= AECToolbox::deadsureURL( "index.php?option=com_acctexp&task=ideal_advancednotification" );
-		
+
 		$idealRequest = new TransactionRequest();
-		$idealRequest->initMerchant( $this->settings );	
+		$idealRequest->initMerchant( $this->settings );
 
 		$idealRequest->setOrderId			( $request->invoice->invoice_number );
 		$idealRequest->setOrderDescription	( $description );
-		$idealRequest->setOrderAmount		( $request->int_var['amount'] );	
+		$idealRequest->setOrderAmount		( $request->int_var['amount'] );
 		$idealRequest->setIssuerId			( $request->int_var['params']['issuerId'] );
 		$idealRequest->setEntranceCode		( $request->invoice->invoice_number );
 		$idealRequest->setReturnUrl			( $merchantReturnURL );
@@ -161,7 +162,7 @@ class processor_ideal_advanced extends XMLprocessor
 		$idealRequest = new StatusRequest();
 		$idealRequest->initMerchant( $this->settings );
 
-		$idealRequest->setTransactionId( trim( aecGetParam( 'trxid', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) ) ); 
+		$idealRequest->setTransactionId( trim( aecGetParam( 'trxid', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) ) );
 
 		$status = $idealRequest->doRequest();
 
@@ -184,7 +185,7 @@ class processor_ideal_advanced extends XMLprocessor
 class IdealRequest
 {
 	protected $aErrors = array();
-	
+
 	// Security settings
 	protected $sSecurePath;
 	protected $sCachePath;
@@ -192,7 +193,7 @@ class IdealRequest
 	protected $sPrivateKeyFile;
 	protected $sPrivateCertificateFile;
 	protected $sPublicCertificateFile;
-	
+
 	// Account settings
 	protected $bABNAMRO = false; // ABN has some issues
 	protected $sAcquirerName;
@@ -200,11 +201,11 @@ class IdealRequest
 	protected $bTestMode = false;
 	protected $sMerchantId;
 	protected $sSubId;
-	
+
 	// Constants
 	protected $LF = "\n";
 	protected $CRLF = "\r\n";
-	
+
 	public function __construct()
 	{
 	}
@@ -223,42 +224,42 @@ class IdealRequest
 	{
 		$this->sSecurePath = $sPath;
 	}
-	
+
 	// Should point to directory where cache is stored
 	public function setCachePath($sPath = false)
 	{
 		$this->sCachePath = $sPath;
 	}
-	
+
 	// Set password to generate signatures
 	public function setPrivateKey($sPrivateKeyPass, $sPrivateKeyFile = false, $sPrivateCertificateFile = false)
 	{
 		$this->sPrivateKeyPass = $sPrivateKeyPass;
-	
+
 		if($sPrivateKeyFile)
 		{
 			$this->sPrivateKeyFile = $sPrivateKeyFile;
 		}
-	
+
 		if($sPrivateCertificateFile)
 		{
 			$this->sPrivateCertificateFile = $sPrivateCertificateFile;
 		}
 	}
-	
+
 	// Set MerchantID id and SubID
 	public function setMerchant($sMerchantId, $sSubId = 0)
 	{
 		$this->sMerchantId = $sMerchantId;
 		$this->sSubId = $sSubId;
 	}
-	
+
 	// Set Acquirer (Use: Rabobank, ING Bank or ABN Amro)
 	public function setAcquirer($sAcquirer, $bTestMode = false)
 	{
 		$this->sAcquirerName = $sAcquirer;
 		$this->bTestMode = $bTestMode;
-	
+
 		if(stripos($sAcquirer, 'rabo') !== false) // Rabobank
 		{
 			$this->sPublicCertificateFile = 'rabobank.cer';
@@ -274,10 +275,10 @@ class IdealRequest
 			$this->bABNAMRO = true;
 			$this->sPublicCertificateFile = 'abnamro' . ($bTestMode ? '.test' : '') . '.cer';
 			$this->sAcquirerUrl = '';
-			
+
 			// With ABN AMRO, the AcquirerUrl depends on the request type
 			$sClass = get_class($this);
-	
+
 			if(strcasecmp($sClass, 'issuerrequest') === 0)
 			{
 				if($bTestMode)
@@ -323,13 +324,13 @@ class IdealRequest
 			return false;
 		}
 	}
-	
+
 	// Error functions
 	protected function setError($sDesc, $sCode = false, $sFile = 0, $sLine = 0)
 	{
 		$this->aErrors[] = array('desc' => $sDesc, 'code' => $sCode, 'file' => $sFile, 'line' => $sLine);
 	}
-	
+
 	public function getErrors()
 	{
 		return $this->aErrors;
@@ -351,12 +352,12 @@ class IdealRequest
 	{
 		return (count($this->aErrors) ? true : false);
 	}
-	
+
 	// Validate configuration
 	protected function checkConfiguration($aSettings = array('sSecurePath', 'sPrivateKeyPass', 'sPrivateKeyFile', 'sPrivateCertificateFile', 'sPublicCertificateFile', 'sAcquirerUrl', 'sMerchantId'))
 	{
 		$bOk = true;
-	
+
 		for($i = 0; $i < count($aSettings); $i++)
 		{
 			if(empty($this->$aSettings[$i]))
@@ -365,10 +366,10 @@ class IdealRequest
 				$this->setError('Setting ' . $aSettings[$i] . ' is not configured.', false, __FILE__, __LINE__);
 			}
 		}
-	
+
 		return $bOk;
 	}
-	
+
 	// Send GET/POST data through sockets
 	protected function postToHost($url, $data, $timeout = 30)
 	{
@@ -379,10 +380,10 @@ class IdealRequest
 		$idx = strpos($url, '/');
 		$port = substr($url, 0, $idx);
 		$path = substr($url, $idx);
-	
+
 		$fsp = fsockopen($host, $port, $errno, $errstr, $timeout);
 		$res = '';
-		
+
 		if($fsp)
 		{
 			fputs($fsp, 'POST ' . $path . ' HTTP/1.0' . $this->CRLF);
@@ -392,46 +393,46 @@ class IdealRequest
 			fputs($fsp, 'Content-Length:' . strlen($data) . $this->CRLF);
 			fputs($fsp, 'Content-Type: text/html; charset=ISO-8859-1' . $this->CRLF . $this->CRLF);
 			fputs($fsp, $data, strlen($data));
-	
+
 			while(!feof($fsp))
 			{
 				$res .= @fgets($fsp, 128);
 			}
-	
+
 			fclose($fsp);
 		}
 		else
 		{
 			$this->setError('Error while connecting to ' . $__url, false, __FILE__, __LINE__);
 		}
-	
+
 		return $res;
 	}
-	
+
 	// Get value within given XML tag
 	protected function parseFromXml($key, $xml)
 	{
 		$begin = 0;
 		$end = 0;
 		$begin = strpos($xml, '<' . $key . '>');
-		
+
 		if($begin === false)
 		{
 			return false;
 		}
-	
+
 		$begin += strlen($key) + 2;
 		$end = strpos($xml, '</' . $key . '>');
-	
+
 		if($end === false)
 		{
 			return false;
 		}
-	
+
 		$result = substr($xml, $begin, $end - $begin);
 		return $this->unescapeXml($result);
 	}
-	
+
 	// Remove space characters from string
 	protected function removeSpaceCharacters($string)
 	{
@@ -444,29 +445,29 @@ class IdealRequest
 			return preg_replace('/\s/', '', $string);
 		}
 	}
-	
+
 	// Escape (replace/remove) special characters in string
 	protected function escapeSpecialChars($string)
 	{
 		$string = str_replace(array('à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ð', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', '§', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', '€', 'Ð', 'Ì', 'Í', 'Î', 'Ï', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', '§', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'Ÿ'), array('a', 'a', 'a', 'a', 'a', 'a', 'ae', 'c', 'e', 'e', 'e', 'e', 'ed', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 's', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'A', 'A', 'A', 'A', 'A', 'AE', 'C', 'E', 'E', 'E', 'E', 'EUR', 'ED', 'I', 'I', 'I', 'I', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'S', 'U', 'U', 'U', 'U', 'Y', 'Y'), $string);
 		$string = preg_replace('/[^a-zA-Z0-9\-\.\,\(\)_]+/', ' ', $string);
 		$string = preg_replace('/[\s]+/', ' ', $string);
-	
+
 		return $string;
 	}
-	
+
 	// Escape special XML characters
 	protected function escapeXml($string)
 	{
 		return utf8_encode(str_replace(array('&', '"', '<', '>'), array('&amp;', '&quot;', '&lt;', '&gt;'), $string));
 	}
-	
+
 	// Unescape special XML characters
 	protected function unescapeXml($string)
 	{
 		return str_replace(array('&lt;', '&gt;', '&quot;', '&amp;'), array('<', '>', '"', '&'), utf8_decode($string));
 	}
-	
+
 	// Security functions
 	protected function getCertificateFingerprint($bPublicCertificate = false)
 	{
@@ -474,88 +475,69 @@ class IdealRequest
 		{
 			$sRawData = fread($fp, 8192);
 			fclose($fp);
-	
+
 			$sData = openssl_x509_read($sRawData);
-	
+
 			if(!openssl_x509_export($sData, $sData))
 			{
 				$this->setError('Error in certificate ' . $this->sSecurePath . ($bPublicCertificate ? $this->sPublicCertificateFile : $this->sPrivateCertificateFile), false, __FILE__, __LINE__);
 				return false;
 			}
-		
+
 			$sData = str_replace('-----BEGIN CERTIFICATE-----', '', $sData);
 			$sData = str_replace('-----END CERTIFICATE-----', '', $sData);
-	
+
 			return strtoupper(sha1(base64_decode($sData)));
 		}
 		else
 		{
 			$this->setError('Cannot open certificate file: ' . ($bPublicCertificate ? $this->sPublicCertificateFile : $this->sPrivateCertificateFile), false, __FILE__, __LINE__);
 		}
+
+		return null;
 	}
-	
+
 	// Calculate signature of the given message
 	protected function getSignature($sMessage)
 	{
 		$sMessage = $this->removeSpaceCharacters($sMessage);
-	
-		if($fp = fopen($this->sSecurePath . $this->sPrivateKeyFile, 'r'))
-		{
-			$sRawData = fread($fp, 8192);
-			fclose($fp);
-	
-			$sSignature = '';
-	
-			if($sPrivateKey = openssl_get_privatekey($sRawData, $this->sPrivateKeyPass))
-			{
-				if(openssl_sign($sMessage, $sSignature, $sPrivateKey))
-				{
-					openssl_free_key($sPrivateKey);
-					$sSignature = base64_encode($sSignature);
-				}
-				else
-				{
-					$this->setError('Error while signing message.', false, __FILE__, __LINE__);
-				}
+
+		$kp = openssl_pkey_get_private($this->sSecurePath . $this->sPrivateKeyFile, $this->sPrivateKeyPass);
+
+		if ( $kp ) {
+			if ( openssl_sign($sMessage, $sSignature, $kp) ) {
+				openssl_free_key($kp);
+				$sSignature = base64_encode($sSignature);
+			} else {
+				$this->setError('Error while signing message.', false, __FILE__, __LINE__);
 			}
-			else
-			{
-				$this->setError('Invalid password for ' . $this->sPrivateKeyFile . ' file.', false, __FILE__, __LINE__);
-			}
-	
+
 			return $sSignature;
-		}
-		else
-		{
+		} else {
 			$this->setError('Cannot open private key file: ' . $this->sPrivateKeyFile, false, __FILE__, __LINE__);
+
+			return false;
 		}
 	}
-	
+
 	// Validate signature for the given data
 	protected function verifySignature($sData, $sSignature)
 	{
 		$bOk = false;
-	
-		if($fp = fopen($this->sSecurePath . $this->sPublicCertificateFile, 'r'))
-		{
-			$sRawData = fread($fp, 8192);
-			fclose($fp);
-	
-			if($sPublicKey = openssl_get_publickey($sRawData))
-			{
-				$bOk = (openssl_verify($sData, $sSignature, $sPublicKey) ? true : false);
-				openssl_free_key($sPublicKey);
-			}
-			else
-			{
+
+		$kp = openssl_pkey_get_private($this->sSecurePath . $this->sPublicCertificateFile);
+
+		if( $kp ) {
+			if ( openssl_verify($sData, $sSignature, $kp) ) {
+				$bOk = (openssl_verify($sData, $sSignature, $kp) ? true : false);
+				openssl_free_key($kp);
+			} else {
 				$this->setError('Cannot retrieve key from public certificate file: ' . $this->sPublicCertificateFile, false, __FILE__, __LINE__);
 			}
-		}
-		else
-		{
+		} else {
 			$this->setError('Cannot open public certificate file: ' . $this->sPublicCertificateFile, false, __FILE__, __LINE__);
 		}
-	
+
 		return $bOk;
 	}
 }
@@ -759,7 +741,7 @@ class TransactionRequest extends IdealRequest
 			. '<Issuer>' . $this->LF
 			. '<issuerID>' . $this->escapeXml($this->sIssuerId) . '</issuerID>' . $this->LF
 			. '</Issuer>' . $this->LF
-			. '<Merchant>' . $this->LF 
+			. '<Merchant>' . $this->LF
 			. '<merchantID>' . $this->escapeXml($this->sMerchantId) . '</merchantID>' . $this->LF
 			. '<subID>' . $this->escapeXml($this->sSubId) . '</subID>' . $this->LF
 			. '<authentication>SHA1_RSA</authentication>' . $this->LF
@@ -775,7 +757,7 @@ class TransactionRequest extends IdealRequest
 			. '<language>nl</language>' . $this->LF
 			. '<description>' . $this->escapeXml($this->sOrderDescription) . '</description>' . $this->LF
 			. '<entranceCode>' . $this->escapeXml($this->sEntranceCode) . '</entranceCode>' . $this->LF
-			. '</Transaction>' . $this->LF 
+			. '</Transaction>' . $this->LF
 			. '</AcquirerTrxReq>';
 
 			$sXmlReply = $this->postToHost($this->sAcquirerUrl, $sXmlMessage, 10);
@@ -882,16 +864,16 @@ class StatusRequest extends IdealRequest
 			$sXmlMessage = '<?xml version="1.0" encoding="UTF-8" ?>' . $this->LF
 			. '<AcquirerStatusReq xmlns="http://www.idealdesk.com/Message" version="1.1.0">' . $this->LF
 			. '<createDateTimeStamp>' . $this->escapeXml($sTimestamp) . '</createDateTimeStamp>' . $this->LF
-			. '<Merchant>' 
+			. '<Merchant>'
 			. '<merchantID>' . $this->escapeXml($this->sMerchantId) . '</merchantID>' . $this->LF
 			. '<subID>' . $this->escapeXml($this->sSubId) . '</subID>' . $this->LF
 			. '<authentication>SHA1_RSA</authentication>' . $this->LF
 			. '<token>' . $this->escapeXml($sToken) . '</token>' . $this->LF
 			. '<tokenCode>' . $this->escapeXml($sTokenCode) . '</tokenCode>' . $this->LF
 			. '</Merchant>' . $this->LF
-			. '<Transaction>' 
+			. '<Transaction>'
 			. '<transactionID>' . $this->escapeXml($this->sTransactionId) . '</transactionID>' . $this->LF
-			. '</Transaction>' 
+			. '</Transaction>'
 			. '</AcquirerStatusReq>';
 
 			$sXmlReply = $this->postToHost($this->sAcquirerUrl, $sXmlMessage, 10);

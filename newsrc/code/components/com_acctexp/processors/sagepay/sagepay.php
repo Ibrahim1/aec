@@ -14,7 +14,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class processor_sagepay extends XMLprocessor
 	{
 		function info()
-		{	
+		{
 			$info = array();
 			$info['name']			= 'sagepay';
 			$info['longname']		= JText::_('CFG_SAGEPAY_LONGNAME');
@@ -68,7 +68,7 @@ class processor_sagepay extends XMLprocessor
 			return $settings;
 		}
 
-		function checkoutform()
+		function checkoutform( $request )
 		{
 			$var = array();
 
@@ -83,7 +83,7 @@ class processor_sagepay extends XMLprocessor
 			return $var;
 		}
 
-		function createRequestXML( $request )	
+		function createRequestXML( $request )
 		{
 			$vars['VPSProtocol']			= "2.23";
 			$vars['TxType']					= "PAYMENT"; // AUTHORISE
@@ -115,7 +115,7 @@ class processor_sagepay extends XMLprocessor
 			$vars['DeliveryCity']			= $request->int_var['params']['billCity'];
 			$vars['DeliveryPostCode']		= $request->int_var['params']['billZip'];
 			$vars['DeliveryState']			= $request->int_var['params']['billState'];
-			$vars['DeliveryCountry']		= $request->int_var['params']['billCountry'];			
+			$vars['DeliveryCountry']		= $request->int_var['params']['billCountry'];
 
 			return $this->arrayToNVP( $vars );
 		}

@@ -78,7 +78,7 @@ class processor_virtualmerchant extends POSTprocessor
 		$var['ssl_amount']				= $request->int_var['amount'];
 		$var['currency_code']			= $this->settings['currency_code'];
 
-		$var['item_number']				= $row->id;
+		$var['item_number']				= $request->invoice->id;
 		$var['item_name']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$var['custom']					= $request->int_var['usage'];
 

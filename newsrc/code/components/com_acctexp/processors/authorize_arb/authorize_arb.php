@@ -318,7 +318,7 @@ class processor_authorize_arb extends XMLprocessor
 
 			return $return;
 		} else {
-			getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
+			return getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
 										'metaUser' => $request->metaUser,
 										'invoice' => $request->invoice,
 										'suppressactions' => true

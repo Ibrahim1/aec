@@ -201,14 +201,14 @@ class processor_2checkout extends POSTprocessor
 
 		$header	= array( "Accept" => "application/json" );
 
-		$curlextra[URLOPT_HTTPHEADER] = array ( "Accept: application/json" );
+		$curlextra[CURLOPT_HTTPHEADER] = array ( "Accept: application/json" );
 
 		$return = json_decode( $this->transmitRequest( $url, $path, $content, 443, $curlextra, $header ) );
 
 		if ( !empty( $response ) ) {
 			return $return;
 		} else {
-			getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
+			return getView( 'error', array(	'error' => "An error occured while cancelling your subscription. Please contact the system administrator!",
 										'metaUser' => $request->metaUser,
 										'invoice' => $request->invoice,
 										'suppressactions' => true

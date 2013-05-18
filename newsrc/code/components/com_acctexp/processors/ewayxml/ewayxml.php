@@ -121,7 +121,8 @@ class processor_ewayxml extends XMLprocessor
 			}
 		} else {
 			$response['valid'] = 0;
-			$response['error'] = _CFG_EWAYXML_CONNECTION_ERROR;
+			$response['error'] = true;
+			$response['errormsg'] = "Connection Error";
 		}
 
 		return $response;

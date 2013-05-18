@@ -62,7 +62,7 @@ class processor_billsafe extends XMLprocessor
 		$var['desc']				= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 
 		$var['order_number']		= $request->invoice->invoice_number;
-		
+
 		if ( isset( $request->items->tax ) ) {
 			$tax = 0;
 
@@ -102,13 +102,13 @@ class processor_billsafe extends XMLprocessor
 	function transmitToBillsafe( $xml )
 	{
 		$path = "/V207";
-		
+
 		if ( $this->settings['testmode'] ) {
 			$url	= 'https://sandbox-nvp.billsafe.de'. $path;
 		} else {
 			$url	= 'https://nvp.billsafe.de'. $path;
 		}
-		
+
 		return $this->transmitRequest( $url, $path, $xml );
 	}
 
@@ -121,9 +121,9 @@ class processor_billsafe extends XMLprocessor
 
 		if ( !empty( $response['token'] ) ) {
 			if ( $this->settings['testmode'] ) {
-				return aecRedirect('https://sandbox-nvp.billsafe.de/V207?token='.$response['token']);
+				aecRedirect('https://sandbox-nvp.billsafe.de/V207?token='.$response['token']);
 			} else {
-				return aecRedirect('https://nvp.billsafe.de/V207?token='.$response['token']);
+				aecRedirect('https://nvp.billsafe.de/V207?token='.$response['token']);
 			}
 		} else {
 			$return = array();

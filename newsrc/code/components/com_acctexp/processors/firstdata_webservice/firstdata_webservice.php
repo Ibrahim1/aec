@@ -160,11 +160,11 @@ $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/env
 							CURLOPT_SSLKEY => $this->settings['ssl_key'],
 							CURLOPT_SSLKEYPASSWD => $this->settings['ssl_key_password']
 					);
-		$this->transmitRequest( $url, $path, $content, 443, $curlextra );
+		$result = $this->transmitRequest( $url, $path, $content, 443, $curlextra );
 
 		$return['valid'] = false;
 
-		$status = XMLsubstring_tag( $result, 'fdggwsapi:TransactionResult' );
+		$status = $this->XMLsubstring_tag( $result, 'fdggwsapi:TransactionResult' );
 		if ( $status == 'APPROVED' ) {
 			$return['valid'] = true;
 		}

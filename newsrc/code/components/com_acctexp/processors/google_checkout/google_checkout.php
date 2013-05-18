@@ -182,6 +182,7 @@ class processor_google_checkout extends XMLprocessor
 	function parseNotification( $post )
 	{
 		require_once( dirname(__FILE__) . '/lib/googlerequest.php' );
+		require_once( dirname(__FILE__) . '/lib/googlenotificationhistory.php' );
 
 		$response			= array();
 		$response['valid'] = false;
@@ -195,14 +196,16 @@ class processor_google_checkout extends XMLprocessor
 		if ( $this->settings['testmode'] ) {
 			$server_type = "sandbox";
 		} else {
-			$server_type = "Production";
+			$server_type = "production";
 		}
 
-		$googleRequest = new GoogleRequest( $merchant_id, $merchant_key, $server_type, $currency, $serial_number );
+		$Response = new GoogleResponse( $merchant_id, $merchant_key );
 
-		$googleRequest->SendAcknowledgementRequest();
+		$Response->SendAck();
 
-		list( $res, $xml_response ) = $googleRequest->SendHistoryRequest();
+		$historyRequest = new GoogleNotificationHistoryRequest( $merchant_id, $merchant_key, $server_type );
+
+		list( $res, $xml_response ) = $historyRequest->SendNotificationHistoryRequest( $serial_number );
 
 		if ( $res != 200 ) {
 			return $response;

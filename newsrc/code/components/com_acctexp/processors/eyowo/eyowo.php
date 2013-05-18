@@ -78,7 +78,7 @@ class processor_eyowo extends POSTprocessor
 		}
 
 		if ( !empty( $response['invoice'] ) ) {
-			$response['raw'] = $this->apiGetTransactionStatus( $response['invoice'] );
+			$response['raw'] = $this->apiGetTransactionStatus( $response['invoice'], $post );
 
 			$response['amount_paid']		= $response['raw']['AMOUNT'];
 			$response['amount_currency']	= $response['raw']['CURRENCY'];
@@ -119,7 +119,7 @@ class processor_eyowo extends POSTprocessor
 		return $response;
 	}
 
-	function apiGetTransactionStatus( $transactionref )
+	function apiGetTransactionStatus( $transactionref, $post )
 	{
 		$path = '/api/gettransactionstatus';
 
@@ -127,7 +127,7 @@ class processor_eyowo extends POSTprocessor
 
 		$vars = array(	'format' => 'json',
 						'walletcode' => $this->settings['walletcode'],
-						'transactionref' => $invoice->invoice_number
+						'transactionref' => $transactionref
 				);
 
 		$array = array();

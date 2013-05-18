@@ -41,7 +41,7 @@ class processor_realex_redirect extends POSTprocessor
 		$settings['secret']		= 'yoursecret';
 		$settings['testmode']	= 1;
 		$settings['currency']	= 'EUR';
-		
+
 		return $settings;
 	}
 
@@ -78,8 +78,8 @@ class processor_realex_redirect extends POSTprocessor
 								.$this->settings['currency']
 							)
 						.$this->settings['secret']
-					);	
-		
+					);
+
 		$var['MERCHANT_ID']			= $this->settings['merchantid'];
 		$var['ORDER_ID']			= $request->invoice->id;
 		$var['ACCOUNT']				= $this->settings['account'];
@@ -96,7 +96,7 @@ class processor_realex_redirect extends POSTprocessor
 	{
 		aecDebug($post);aecDebug($_GET);
 
-		return $response;
+		return array();
 	}
 
 }

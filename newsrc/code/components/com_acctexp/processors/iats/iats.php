@@ -129,6 +129,7 @@ class processor_iats extends XMLprocessor
 
 			$hastrial = false;
 
+			$offset = 0;
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
 				$t = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
 

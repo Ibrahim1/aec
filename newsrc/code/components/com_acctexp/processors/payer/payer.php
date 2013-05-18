@@ -164,7 +164,7 @@ class processor_payer extends POSTprocessor
 				"</purchase>";
 		//Processing control
 		$xml .=	"<processing_control>" .
-					"<success_redirect_url>"		. htmlspecialchars($this->mySuccessRedirectUrl)			. "</success_redirect_url>";
+					"<success_redirect_url>"		. htmlspecialchars($this->mySuccessRedirectUrl)			. "</success_redirect_url>" .
 					"<authorize_notification_url>"	.  htmlspecialchars($this->myAuthorizeNotificationUrl)	. "</authorize_notification_url>" .
 					"<settle_notification_url>"		.  htmlspecialchars($this->mySettleNotificationUrl)		. "</settle_notification_url>" .
 					"<redirect_back_to_shop_url>" 	.  htmlspecialchars($this->myRedirectBackToShopUrl)		. "</redirect_back_to_shop_url>" .

@@ -317,7 +317,7 @@ XML;
 		$invoice->storeload();
 
 		if ( $post['status'] == 'error' ) {
-			$invoice->transaction_date == '0000-00-00 00:00:00';
+			$invoice->transaction_date = '0000-00-00 00:00:00';
 			$invoice->storeload();
 
 			$error = "Erreur de procession de vos d&eacute;tails de paiement: Nous ne pouvons effectuer votre transaction par carte de cr&eacute;dit";
