@@ -300,12 +300,12 @@ class InvoiceFactory
 
 		if ( !isset( $passthrough['aec_passthrough'] ) ) {
 			$this->passthrough = $passthrough;
-		}
-
-		if ( is_array( $passthrough['aec_passthrough'] ) ) {
-			$this->passthrough = $passthrough['aec_passthrough'];
 		} else {
-			$this->passthrough = unserialize( base64_decode( $passthrough['aec_passthrough'] ) );
+			if ( is_array( $passthrough['aec_passthrough'] ) ) {
+				$this->passthrough = $passthrough['aec_passthrough'];
+			} else {
+				$this->passthrough = unserialize( base64_decode( $passthrough['aec_passthrough'] ) );
+			}
 		}
 
 		unset( $passthrough['aec_passthrough'] );
@@ -1613,13 +1613,15 @@ class InvoiceFactory
 			unset( $planlist->list['group'] );
 		}
 
-		$csslist = $planlist->addButtons( $register, $this->passthrough );
+		$passthrough = $this->getPassthrough();
+
+		$csslist = $planlist->addButtons( $register, $passthrough );
 
 		return getView( 'plans',
 						array(
 							'userid' => $this->userid,
 							'list' => $planlist->list,
-							'passthrough' => $this->getPassthrough(),
+							'passthrough' => $passthrough,
 							'register' => $register,
 							'cart' => $cart,
 							'selected' => $selected,

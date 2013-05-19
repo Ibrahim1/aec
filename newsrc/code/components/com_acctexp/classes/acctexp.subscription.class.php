@@ -320,7 +320,7 @@ class Subscription extends serialParamDBTable
 
 	function verifylogin( $metaUser=false )
 	{
-		$verify = $this->verify();
+		$verify = $this->verify( $metaUser );
 
 		if ( $verify !== true ) {
 			return aecSelfRedirect($verify, array('userid'=>$this->userid));
@@ -349,6 +349,7 @@ class Subscription extends serialParamDBTable
 				$block = $metaUser->cmsUser->block;
 			}
 		}
+
 		if ( ( $expired || $this->isClosed() )
 			&& $aecConfig->cfg['require_subscription'] ) {
 			if ( $metaUser !== false ) {

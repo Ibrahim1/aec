@@ -568,7 +568,7 @@ class AECToolbox
 		}
 
 		if ( $metaUser->hasSubscription ) {
-				$result = $metaUser->objSubscription->verify( $metaUser->cmsUser->block, $metaUser );
+				$result = $metaUser->objSubscription->verify( $metaUser );
 
 				if ( ( $result == 'expired' ) || ( $result == 'pending' ) ) {
 					$metaUser->setTempAuth();
