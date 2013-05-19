@@ -342,6 +342,10 @@ class couponsHandler extends eucaObject
 
 	function prefilter( $items, $cart=false, $fullcart=false )
 	{
+		if ( empty( $this->coupons ) ) {
+			return null;
+		}
+
 		foreach ( $this->coupons as $ccid => $coupon_code ) {
 			if ( !$this->loadCoupon( $coupon_code ) ) {
 				continue;
@@ -365,7 +369,7 @@ class couponsHandler extends eucaObject
 			}
 
 			if ( empty( $cart ) && empty( $fullcart ) ) {
-				return;
+				return null;
 			}
 
 			$plans = $cart->getItemIdArray();

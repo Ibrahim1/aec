@@ -407,6 +407,10 @@ class InvoiceFactory
 
 	function loadPlanObject( $testmi=false, $quick=false )
 	{
+		if ( empty( $this->usage ) && !empty( $this->passthrough['usage'] ) ) {
+			$this->usage = $this->passthrough['usage'];
+		}
+
 		if ( !$this->isCart() ) {
 			// get the payment plan
 			$this->plan = new SubscriptionPlan();
@@ -467,6 +471,8 @@ class InvoiceFactory
 				$procs = aecCartHelper::getCartProcessorList( $this->cartobject );
 
 				if ( count( $procs ) > 1 ) {
+					$this->recurring = null;
+
 					$this->cartItemsPPselectForm();
 				} else {
 					if ( isset( $procs[0] ) ) {
@@ -774,11 +780,11 @@ class InvoiceFactory
 
 	function loadProcessorObject()
 	{
+		$this->pp					= false;
+
 		if ( empty( $this->processor ) ) {
 			return;
 		}
-
-		$this->pp					= false;
 
 		if ( !isset( $this->payment ) ) {
 			$this->payment = new stdClass();
@@ -851,6 +857,7 @@ class InvoiceFactory
 	{
 		$this->payment->freetrial = 0;
 		$this->payment->amount = null;
+		$this->payment->method_name = null;
 
 		if ( !empty( $this->passthrough['task'] ) ) {
 			$task = $this->passthrough['task'];
