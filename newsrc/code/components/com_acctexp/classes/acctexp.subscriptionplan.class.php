@@ -1313,7 +1313,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function getProcessorParameters( $processor )
 	{
-		if ( !empty( $this->custom_params ) ) {
+		if ( empty( $this->custom_params ) ) {
 			return array();
 		}
 
