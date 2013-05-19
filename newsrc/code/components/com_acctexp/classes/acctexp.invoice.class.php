@@ -1699,7 +1699,7 @@ class InvoiceFactory
 		if ( ( $aecConfig->cfg['skip_confirmation'] && empty( $this->mi_form ) ) ) {
 			$this->getPassthrough();
 
-			$this->save();
+			return $this->save();
 		}
 
 		$this->userdetails = "";
