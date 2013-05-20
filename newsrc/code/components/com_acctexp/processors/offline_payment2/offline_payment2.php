@@ -57,7 +57,7 @@ class processor_offline_payment2 extends processor
 			$InvoiceFactory->invoice->fixed = true;
 			$InvoiceFactory->invoice->storeload();
 
-			$InvoiceFactory->thanks( 'com_acctexp', false, true );exit;
+			$InvoiceFactory->thanks( false, true );exit;
 		}
 	}
 

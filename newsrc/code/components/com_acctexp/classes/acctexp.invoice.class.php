@@ -2280,7 +2280,7 @@ class InvoiceFactory
 			$this->processor = $this->invoice->method;
 		}
 
-		$this->puffer( 'com_acctexp' );
+		$this->puffer();
 
 		$this->loadItems();
 
@@ -2333,7 +2333,7 @@ class InvoiceFactory
 		$response = $this->pp->customAction( $action, $this->invoice, $this->metaUser, $var );
 
 		if ( isset( $response['InvoiceToCheckout'] ) ) {
-			return $this->InvoiceToCheckout( 'com_acctexp', true, false );
+			return $this->InvoiceToCheckout( true, false );
 		} else {
 			$response = $this->invoice->processorResponse( $this, $response, '', true );
 

@@ -921,7 +921,7 @@ function InvoicePDF( $option, $invoice_number )
 		ob_start();
 
 		$iFactory = new InvoiceFactory( $invoice->userid, null, null, null, null, null, false, true );
-		$iFactory->invoiceprint( 'com_acctexp', $invoice->invoice_number, false, array(), true );
+		$iFactory->invoiceprint( $invoice->invoice_number, false, array(), true );
 
 		$content = ob_get_contents();
 
