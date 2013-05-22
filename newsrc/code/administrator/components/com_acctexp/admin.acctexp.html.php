@@ -260,7 +260,7 @@ class HTML_AcctExp
 		HTML_myCommon::startCommon();
 
 $js = '
-jQuery(document).ready(static function(jQuery) {
+jQuery(document).ready(function(jQuery) {
 	jQuery("#assignto_plan")
 	.multiselect({	noneSelectedText: \'' . JText::_('PAYPLAN_NOPLAN') . '\',
 					selectedList: 3,

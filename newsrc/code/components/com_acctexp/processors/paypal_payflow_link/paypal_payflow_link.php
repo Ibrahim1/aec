@@ -78,11 +78,11 @@ class processor_paypal_payflow_link extends POSTprocessor
 	}
 
 	function parseNotification( $post )
-	{aecDebug('parseNotification:Challenge');aecDebug($post);
+	{
 		$response = array();
-		$response['invoice']		= aecInvoiceHelper::InvoiceIDfromNumber( $post['INVOICE'] );
+		$response['invoice']		= aecInvoiceHelper::InvoiceNumberfromId( $post['INVOICE'] );
 		$response['amount_paid']	= $post['AMOUNT'];
-		aecDebug('parseNotification:Response');aecDebug($response);
+
 		return $response;
 	}
 
