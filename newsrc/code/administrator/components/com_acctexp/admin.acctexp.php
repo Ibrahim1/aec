@@ -4827,7 +4827,7 @@ function invoices( $option )
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 			;
 	$db->setQuery( $query );
-	$rows = xJ::getDBArray( $db );
+	$ids = xJ::getDBArray( $db );
 
 	if ( $db->getErrorNum() ) {
 		echo $db->stderr();
@@ -4835,22 +4835,24 @@ function invoices( $option )
 	}
 
 	$cclist = array();
-	foreach ( $rows as $id => $c ) {
-		$rows[$id] = new Invoice();
-		$rows[$id]->load( $id );
 
-		$rows[$id]->formatInvoiceNumber();
+	$invoices = array();
+	foreach ( $ids as $id ) {
+		$invoices[$id] = new Invoice();
+		$invoices[$id]->load( $id );
 
-		$rows[$id]->invoice_number_formatted = $rows[$id]->invoice_number . ( ($rows[$id]->invoice_number_formatted != $rows[$id]->invoice_number) ? "\n" . '(' . $rows[$id]->invoice_number_formatted . ')' : '' );
+		$invoices[$id]->formatInvoiceNumber();
 
-		if ( !empty( $rows[$id]->coupons ) ) {
-			$coupons = unserialize( base64_decode( $rows[$id]->coupons ) );
+		$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number . ( ($invoices[$id]->invoice_number_formatted != $invoices[$id]->invoice_number) ? "\n" . '(' . $invoices[$id]->invoice_number_formatted . ')' : '' );
+
+		if ( !empty( $invoices[$id]->coupons ) ) {
+			$coupons = unserialize( base64_decode( $invoices[$id]->coupons ) );
 		} else {
 			$coupons = null;
 		}
 
 		if ( !empty( $coupons ) ) {
-			$rows[$id]->coupons = "";
+			$invoices[$id]->coupons = "";
 
 			$couponslist = array();
 			foreach ( $coupons as $coupon_code ) {
@@ -4863,32 +4865,32 @@ function invoices( $option )
 				}
 			}
 
-			$rows[$id]->coupons = implode( ", ", $couponslist );
+			$invoices[$id]->coupons = implode( ", ", $couponslist );
 		} else {
-			$rows[$id]->coupons = null;
+			$invoices[$id]->coupons = null;
 		}
 
-		$rows[$id]->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $rows[$id]->usage . '">' . $rows[$id]->usage . '</a>';
+		$invoices[$id]->usage = '<a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=' . $invoices[$id]->usage . '">' . $invoices[$id]->usage . '</a>';
 
 		$query = 'SELECT username'
 				. ' FROM #__users'
-				. ' WHERE `id` = \'' . $rows[$id]->userid . '\''
+				. ' WHERE `id` = \'' . $invoices[$id]->userid . '\''
 				;
 		$db->setQuery( $query );
 		$username = $db->loadResult();
 
-		$rows[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $rows[$id]->userid . '">';
+		$invoices[$id]->username = '<a href="index.php?option=com_acctexp&amp;task=editMembership&userid=' . $invoices[$id]->userid . '">';
 
 		if ( !empty( $username ) ) {
-			$rows[$id]->username .= $username . '</a>';
+			$invoices[$id]->username .= $username . '</a>';
 		} else {
-			$rows[$id]->username .= $rows[$id]->userid;
+			$invoices[$id]->username .= $invoices[$id]->userid;
 		}
 
-		$rows[$id]->username .= '</a>';
+		$invoices[$id]->username .= '</a>';
 	}
 
-	HTML_AcctExp::viewInvoices( $option, $rows, $search, $pageNav );
+	HTML_AcctExp::viewInvoices( $option, $invoices, $search, $pageNav );
 }
 
 function editInvoice( $id, $option, $returnTask, $userid )
