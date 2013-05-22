@@ -27,11 +27,6 @@ class processor_worldpay_futurepay extends POSTprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
-	{
-		return 'worldpay.png';
-	}
-
 	function settings()
 	{
 		$settings = array();

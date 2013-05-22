@@ -29,11 +29,6 @@ class processor_realex_remote extends XMLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
-	{
-		return 'realex.png';
-	}
-
 	function settings()
 	{
 		$settings = array();

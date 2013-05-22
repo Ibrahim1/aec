@@ -30,11 +30,6 @@ class processor_paypal_subscription extends POSTprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
-	{
-		return 'paypal.png';
-	}
-
 	function settings()
 	{
 		$settings = array();
