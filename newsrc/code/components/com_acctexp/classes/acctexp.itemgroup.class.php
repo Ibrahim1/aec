@@ -223,6 +223,10 @@ class ItemGroupHandler
 
 	static function getChildren( $groups, $type )
 	{
+		if ( empty( $groups ) ) {
+			return array();
+		}
+
 		$db = &JFactory::getDBO();
 
 		$where = array();
