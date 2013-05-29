@@ -413,7 +413,7 @@ class Subscription extends serialParamDBTable
 				}
 			}
 
-			if ( !$this->isExpired() && !$this->isClosed() ) {
+			if ( !$this->isStatus('Expired') && !$this->isClosed() ) {
 				$this->setStatus( 'Expired' );
 			}
 
