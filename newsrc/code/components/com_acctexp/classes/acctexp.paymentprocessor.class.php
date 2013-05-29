@@ -978,7 +978,6 @@ class PaymentProcessor
 			$this->getSettings();
 		}
 
-		$response = false;
 		if ( method_exists( $this->processor, 'validateSubscription' ) ) {
 			$subscription = new Subscription();
 			$subscription->load( $subscription_id );
@@ -1026,15 +1025,13 @@ class PaymentProcessor
 			$iFactory->invoice->processorResponse( $iFactory, $result, $resp, true );
 
 			if ( !empty( $result['valid'] ) ) {
-				$response = true;
+				return true;
 			} elseif ( empty( $result['error'] ) ) {
-				$response = null;
+				return null;
 			}
 		} else {
-			$response = null;
+			return null;
 		}
-
-		return $response;
 	}
 
 	function registerProfileTabs()
