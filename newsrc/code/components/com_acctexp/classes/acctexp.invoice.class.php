@@ -306,13 +306,13 @@ class InvoiceFactory
 			} else {
 				$this->passthrough = unserialize( base64_decode( $passthrough['aec_passthrough'] ) );
 			}
-		}
 
-		unset( $passthrough['aec_passthrough'] );
+			unset( $passthrough['aec_passthrough'] );
 
-		if ( !empty( $passthrough ) ) {
-			foreach ( $passthrough as $k => $v ) {
-				$this->passthrough[$k] = $v;
+			if ( !empty( $passthrough ) ) {
+				foreach ( $passthrough as $k => $v ) {
+					$this->passthrough[$k] = $v;
+				}
 			}
 		}
 	}
