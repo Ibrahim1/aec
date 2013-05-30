@@ -932,12 +932,13 @@ class SubscriptionPlan extends serialParamDBTable
 
 	function doPlanComparison( $user_subscription )
 	{
-		if ( !empty( $user_subscription->plan ) ) {
-			return false;
-		}
-
 		$return['total_comparison']	= false;
 		$return['comparison']		= false;
+		$return['full_comparison']	= true;
+
+		if ( empty( $user_subscription->plan ) ) {
+			return $return;
+		}
 
 		if ( !empty( $user_subscription->used_plans ) && is_array( $user_subscription->used_plans ) ) {
 			$plans_comparison	= false;
@@ -947,7 +948,7 @@ class SubscriptionPlan extends serialParamDBTable
 					continue;
 				}
 
-				if ( empty( $planid ) ){
+				if ( empty( $planid ) ) {
 					continue;
 				}
 
