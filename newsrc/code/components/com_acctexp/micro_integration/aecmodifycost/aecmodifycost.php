@@ -115,7 +115,7 @@ class mi_aecmodifycost
 		} else {
 			return false;
 		}
-aecDebug($settings);
+
 		return $settings;
 	}
 
