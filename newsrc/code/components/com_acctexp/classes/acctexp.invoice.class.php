@@ -1424,13 +1424,13 @@ class InvoiceFactory
 		if ( !empty( $coupon ) ) {
 			$this->invoice->addCoupon( $coupon );
 
-			$this->invoice->computeAmount( $this, true );
+			$this->invoice->computeAmount( $this );
 		}
 	}
 
 	function storeInvoice()
 	{
-		$this->invoice->computeAmount( $this, true );
+		$this->invoice->computeAmount( $this );
 
 		if ( is_object( $this->pp ) ) {
 			$this->pp->invoiceCreationAction( $this->invoice );
@@ -2777,8 +2777,8 @@ class Invoice extends serialParamDBTable
 		}
 
 		// TODO: This is just a bandaid. We really need to move stuff from the factory over to the invoice class
-		if ( $this->amount != $InvoiceFactory->items->grand_total ) {
-			$this->amount = $InvoiceFactory->items->grand_total;
+		if ( !empty( $InvoiceFactory->items->grand_total->cost['amount'] ) ) {
+			$this->amount = $InvoiceFactory->items->grand_total->cost['amount'];
 		}
 
 		$this->amount = AECToolbox::correctAmount( $this->amount );
@@ -2868,7 +2868,7 @@ class Invoice extends serialParamDBTable
 			$response = array( 'original_response' => $response );
 		}
 
-		$this->computeAmount( $InvoiceFactory, false );
+		$this->computeAmount( $InvoiceFactory );
 
 		$objUsage = $this->getObjUsage();
 
