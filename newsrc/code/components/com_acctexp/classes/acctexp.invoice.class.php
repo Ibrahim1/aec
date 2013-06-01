@@ -2648,8 +2648,6 @@ class Invoice extends serialParamDBTable
 
 		$recurring = 0;
 
-		$original_amount = $this->amount;
-
 		if ( !empty( $this->method ) ) {
 			switch ( $this->method ) {
 				case 'none':
@@ -2776,6 +2774,11 @@ class Invoice extends serialParamDBTable
 					$this->amount = '0.00';
 				}
 			break;
+		}
+
+		// TODO: This is just a bandaid. We really need to move stuff from the factory over to the invoice class
+		if ( $this->amount != $InvoiceFactory->items->grand_total ) {
+			$this->amount = $InvoiceFactory->items->grand_total;
 		}
 
 		$this->amount = AECToolbox::correctAmount( $this->amount );

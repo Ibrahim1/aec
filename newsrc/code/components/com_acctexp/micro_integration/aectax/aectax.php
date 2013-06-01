@@ -252,8 +252,6 @@ class mi_aectax
 			$request->add->tax = array();
 		}
 
-		$location = $this->getLocation( $request );
-
 		$taxtypes		= array();
 		$taxcollections	= array();
 
@@ -363,6 +361,8 @@ class mi_aectax
 				return false;
 			}
 		}
+
+		return true;
 	}
 
 	function prepareTax( $request, $item, $location )
