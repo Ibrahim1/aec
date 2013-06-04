@@ -4,14 +4,14 @@
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Processors - PayFast Buy Now
  * @copyright 2011-2013 Copyright (C) R Botha
- * @author Riekie Botha <riekie@jfundi.com> 
+ * @author Riekie Botha <riekie@jfundi.com>
  * @license GNU/GPL v.3 http://www.gnu.org/licenses/gpl.html or, at your option, any later version
  */
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_payfast extends POSTprocessor
-{	
+{
 
 	function info()
 	{
@@ -40,13 +40,13 @@ class processor_payfast extends POSTprocessor
 		$settings['pdt_key']		= '';
 		$settings['currency']		= 'ZAR';
 		$settings['item_name']		='[[user_id]]';
-		$settings['item_desc']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );							
+		$settings['item_desc']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 
 		for ( $i=1; $i<6; $i++ ) {
 			$settings['custom_str'.$i]	= "";
 			$settings['custom_int'.$i]	= "";
 		}
-  
+
 		return $settings;
 	}
 
@@ -72,7 +72,7 @@ class processor_payfast extends POSTprocessor
 		for ( $i=1; $i<6; $i++ ) {
 			$settings['custom_str'.$i]	= array( 'inputC' );
 		}
-		
+
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
 		return $settings;
@@ -84,8 +84,8 @@ class processor_payfast extends POSTprocessor
 		$var['merchant_id']		= $this->settings['merchant_id'];
 		$var['merchant_key']	= $this->settings['merchant_key'];
 
-		$var['return_url']		= str_replace( '&amp;', '&' , $request->int_var['return_url'] );		
-		$var['cancel_url']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );	
+		$var['return_url']		= str_replace( '&amp;', '&' , $request->int_var['return_url'] );
+		$var['cancel_url']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=cancel', false, true );
 		$var['notify_url']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=payfastnotification', false, true );
 
 		$name = $request->metaUser->explodeName();
@@ -95,7 +95,7 @@ class processor_payfast extends POSTprocessor
 		$var['name_last']		= $name['last'];
 		$var['email_address']	= $request->metaUser->cmsUser->email;
 
-		// Transaction details		
+		// Transaction details
 		$var['m_payment_id']	= $request->invoice->invoice_number;
 		$var['amount']			= $request->int_var['amount'];
 		$var['item_name']		= trim( AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) );
@@ -108,7 +108,7 @@ class processor_payfast extends POSTprocessor
 		for ( $i=1; $i<6; $i++ ) {
 			if ( !empty( $this->settings['custom_str'.$i] ) ) {
 				$var['custom_str'.$i] = $this->settings['custom_str'.$i];
-			}			
+			}
 		}
 
 		for ( $i=1; $i<6; $i++ ) { //order is important
@@ -124,12 +124,12 @@ class processor_payfast extends POSTprocessor
 			if ( $var['email_confirmation'] ) {
 				$var['confirmation_address'] = $this->settings['merchant_email'];
 			}
-		}		 
+		}
 
 		// Security
-		$strParam = null;	
+		$strParam = null;
 
-		$var['signature'] = $this->getSignature( $var , $strParam);
+		$var['signature'] = $this->getSignature( $var , $strParam );
 
 		//post_url must not be part of the signature calculation
 		if ( $this->settings['testmode'] ) {
@@ -146,7 +146,7 @@ class processor_payfast extends POSTprocessor
 		$response = array();
 		$response['invoice'] = $post['m_payment_id'];
 		$response['amount_paid'] = $post['amount_gross'];
-		
+
 	   return $response;
    }
 
@@ -154,23 +154,33 @@ class processor_payfast extends POSTprocessor
 	{
 		$response['valid'] = 0;
 
-		if ( !$this->pfValidIP( $_SERVER['REMOTE_ADDR'] ) ) {
+		if ( !$this->validIP( $_SERVER['REMOTE_ADDR'] ) ) {
 			$response['pending_reason'] = "Bad Notification Source IP";
 
-			return $response; 
+			return $response;
 		}
 
-		$param_string = null;
+		$data = $post;
 
-		$sig = $this->getSignature( $post, $param_string);
-		 
+		if ( isset( $data['signature'] ) ) {
+			unset( $data['signature'] );
+		}
+
+		if ( isset( $data['planparams'] ) ) {
+			unset( $data['planparams'] );
+		}
+
+		$sig = $this->getSignature( $data );
+
 		if ( $sig != $post['signature'] ) {
 			$response['pending_reason'] = "Signature mismatch";
-			return $response; 
+
+			return $response;
 		}
-		
-		if ( !$this->pfValidate( $param_string ) ) {
+
+		if ( !$this->validate( $data ) ) {
 		  $response['pending_reason'] = "Validation failed";
+
 		  return $response;
 		}
 
@@ -181,41 +191,31 @@ class processor_payfast extends POSTprocessor
 		return $response;
 	}
 
-	function getSignature( $data , &$param_string )
+	function getSignature( $data )
 	{
-		if ( isset( $data['signature'] ) ) {
-			unset( $data['signature'] );
-		}
-
-		if ( isset( $data['planparams'] ) ) {
-			unset( $data['planparams'] );
-		}
-
-		$param_string = XMLprocessor::arrayToNVP( $data );
-
-		return md5( $param_string );
+		return md5( XMLprocessor::arrayToNVP( $data ) );
 	}
 
-		
-	function pfValidIP( $sourceIP )
+
+	function validIP( $sourceIP )
 	{
 		$validHosts = array( 'www.payfast.co.za', 'sandbox.payfast.co.za', 'w1w.payfast.co.za', 'w2w.payfast.co.za' );
 
 		$validIps = array();
 		foreach ( $validHosts as $pfHostname ) {
 			$ips = gethostbynamel( $pfHostname );
-	
+
 			if ( $ips !== false ) {
 				$validIps = array_merge( $validIps, $ips );
 			}
 		}
-	
+
 		$validIps = array_unique( $validIps );
-	
+
 		return in_array( $sourceIP, $validIps );
 	}
 
-	function pfValidate( $data )
+	function validate( $data )
 	{
 		$path = '/eng/query/validate';
 		if ( $this->settings['testmode'] ) {
@@ -231,7 +231,7 @@ class processor_payfast extends POSTprocessor
 								CURLOPT_USERAGENT => $agent,
 								CURLOPT_TIMEOUT => 15
 							);
-			
+
 		$res = $this->transmitRequest( $url, $path, $data, 443, $extra_header);
 
 		$lines = explode( "\r\n", $res );
