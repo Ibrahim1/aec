@@ -1068,7 +1068,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $params;
 	}
 
-	function getMIforms( $metaUser, $errors=array() )
+	function getMIforms( $metaUser, $errors=array(), $values=array() )
 	{
 		$params = $this->getMIformParams( $metaUser, $errors );
 
@@ -1092,7 +1092,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		$settings = new aecSettings ( 'mi', 'frontend_forms' );
-		$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
+		$settings->fullSettingsArray( $params, $values, $lists, array(), false ) ;
 
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 

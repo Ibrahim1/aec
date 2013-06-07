@@ -290,12 +290,14 @@ class InvoiceFactory
 				}
 			}
 		}
+
+		return null;
 	}
 
 	function initPassthrough( $passthrough )
 	{
 		if ( empty( $passthrough ) ) {
-			$passthrough = aecPostParamClear( $_POST, '', true );
+			$passthrough = aecPostParamClear( $_REQUEST, '', true );
 		}
 
 		if ( !isset( $passthrough['aec_passthrough'] ) ) {
@@ -1664,7 +1666,7 @@ class InvoiceFactory
 		}
 
 		if ( !empty( $this->plan ) ) {
-			$this->mi_form = $this->plan->getMIforms( $this->metaUser, $this->mi_error );
+			$this->mi_form = $this->plan->getMIforms( $this->metaUser, $this->mi_error, $this->passthrough );
 		}
 
 		$this->jsvalidation = array();
