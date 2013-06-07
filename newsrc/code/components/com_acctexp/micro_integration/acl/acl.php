@@ -32,26 +32,32 @@ class mi_acl
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$settings['set_gid']				= array( 'toggle' );
 			$settings['gid']					= array( 'list' );
+			$settings['gid_rw']					= array( 'inputD' );
 			$settings['set_removegid']			= array( 'toggle' );
 			$settings['removegid']				= array( 'list' );
+			$settings['removegid_rw']			= array( 'inputD' );
 
 			$settings['aectab_exp']				= array( 'tab', 'Expiration Action', 'Expiration Action' );
 			$settings['set_gid_exp']			= array( 'toggle' );
 			$settings['gid_exp']				= array( 'list' );
+			$settings['gid_rw_exp']				= array( 'list' );
 			$settings['set_removegid_exp']		= array( 'toggle' );
 			$settings['removegid_exp']			= array( 'list' );
 
 			$settings['aectab_preexp']			= array( 'tab', 'Pre-Expiration Action', 'Pre-Expiration Action' );
 			$settings['set_gid_pre_exp']		= array( 'toggle' );
 			$settings['gid_pre_exp']			= array( 'list' );
+			$settings['gid_rw_pre_exp']			= array( 'inputD' );
 			$settings['set_removegid_pre_exp']	= array( 'toggle' );
 			$settings['removegid_pre_exp']		= array( 'list' );
+			$settings['removegid_rw_pre_exp']	= array( 'inputD' );
 		} else {
 			$settings['jaclpluspro']			= array( 'toggle' );
 			$settings['delete_subgroups']		= array( 'toggle' );
 
 			$settings['set_gid']				= array( 'toggle' );
 			$settings['gid']					= array( 'list' );
+			$settings['gid_rw']					= array( 'inputD' );
 			$settings['sub_set_gid']			= array( 'toggle' );
 			$settings['sub_gid_del']			= array( 'list' );
 			$settings['sub_gid']				= array( 'list' );
@@ -59,6 +65,7 @@ class mi_acl
 			$settings['aectab_exp']				= array( 'tab', 'Expiration Action', 'Expiration Action' );
 			$settings['set_gid_exp']			= array( 'toggle' );
 			$settings['gid_exp']				= array( 'list' );
+			$settings['gid_rw_exp']				= array( 'inputD' );
 			$settings['sub_set_gid_exp']		= array( 'toggle' );
 			$settings['sub_gid_exp_del']		= array( 'list' );
 			$settings['sub_gid_exp']			= array( 'list' );
@@ -66,6 +73,7 @@ class mi_acl
 			$settings['aectab_preexp']			= array( 'tab', 'Pre-Expiration Action', 'Pre-Expiration Action' );
 			$settings['set_gid_pre_exp']		= array( 'toggle' );
 			$settings['gid_pre_exp']			= array( 'list' );
+			$settings['gid_rw_pre_exp']			= array( 'inputD' );
 			$settings['sub_set_gid_pre_exp']	= array( 'toggle' );
 			$settings['sub_gid_pre_exp_del']	= array( 'list' );
 			$settings['sub_gid_pre_exp']		= array( 'list' );
@@ -95,7 +103,7 @@ class mi_acl
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$settings['lists'][$name] = JHTML::_('select.genericlist', $gtree, $name.'[]', 'size="6" multiple="multiple"', 'value', 'text', $selected );
 			} else {
-				$settings['lists'][$name] = JHTML::_('select.genericlist', $gtree, $name, 'size="6"', 'value', 'text', $selected );				
+				$settings['lists'][$name] = JHTML::_('select.genericlist', $gtree, $name, 'size="6"', 'value', 'text', $selected );
 			}
 		}
 
@@ -121,15 +129,27 @@ class mi_acl
 			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
 		}
 
-		if ( !empty( $this->settings['set_gid' . $request->area] ) || !empty( $this->settings['set_removegid' . $request->area] ) ) {
+		if ( !empty( $this->settings['set_gid' . $request->area] )
+			||  !empty( $this->settings['set_gid_rw' . $request->area] )
+			|| !empty( $this->settings['set_removegid' . $request->area] )
+			|| !empty( $this->settings['set_removegid_rw' . $request->area] )
+		) {
 			$add = $remove = array();
 
-			if ( !empty( $this->settings['set_gid' . $request->area] ) && !empty( $this->settings['gid' . $request->area] ) ) {
-				$add = $this->settings['gid' . $request->area];
+			if ( !empty( $this->settings['set_gid' . $request->area] ) ) {
+				if ( !empty( $this->settings['gid_rw' . $request->area] ) ) {
+					$add = $this->gidRW( $this->settings['gid_rw' . $request->area], $request );
+				} elseif ( !empty( $this->settings['gid' . $request->area] ) ) {
+					$add = $this->settings['gid' . $request->area];
+				}
 			}
 
-			if ( !empty( $this->settings['set_removegid' . $request->area] ) && !empty( $this->settings['removegid' . $request->area] ) ) {
-				$remove = $this->settings['removegid' . $request->area];
+			if ( !empty( $this->settings['set_removegid' . $request->area] ) ) {
+				if ( !empty( $this->settings['removegid_rw' . $request->area] ) ) {
+					$remove = $this->gidRW( $this->settings['removegid_rw' . $request->area], $request );
+				} elseif ( !empty( $this->settings['removegid' . $request->area] ) ) {
+					$remove = $this->settings['removegid' . $request->area];
+				}
 			}
 
 			if ( !empty( $add ) || !empty( $remove ) ) {
@@ -141,10 +161,29 @@ class mi_acl
 				}
 			}
 		} elseif ( !empty( $this->settings['sub_set_gid' . $request->area] ) ) {
-			
+
 		}
 
 		return true;
+	}
+
+	function gidRW( $string, $request )
+	{
+		$id = AECToolbox::rewriteEngineRQ( $string, $request );
+
+		if ( !is_numeric( $id ) ) {
+			$list = xJ::aclList();
+
+			foreach ( $list as $li ) {
+				if ( $li->name == $id ) {
+					return $li->group_id;
+				}
+			}
+
+			return null;
+		}
+
+		return $id;
 	}
 
 	function instantGIDchange( $metaUser, $add, $remove )
@@ -156,7 +195,7 @@ class mi_acl
 			} else {
 				$gid = $add;
 			}
-			
+
 			$sessionextra = $this->jaclSessionExtra( $metaUser, $gid );
 		}
 
