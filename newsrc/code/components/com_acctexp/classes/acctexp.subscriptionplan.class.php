@@ -438,14 +438,14 @@ class SubscriptionPlanHandler
 		}
 	}
 
-	static function getActivePlanList( $noplan=true )
+	static function getActivePlanList( $noplan=true, $prevent_null=true )
 	{
 		$db = &JFactory::getDBO();
 
 		// get entry Plan selection
 		$available_plans	= array();
 		if ( $noplan ) {
-			$available_plans[]	= JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN'), 'value', 'text', true );
+			$available_plans[]	= JHTML::_('select.option', '0', JText::_('PAYPLAN_NOPLAN'), 'value', 'text', $prevent_null );
 		}
 
 		$query = 'SELECT `id` AS value, `name` AS text'

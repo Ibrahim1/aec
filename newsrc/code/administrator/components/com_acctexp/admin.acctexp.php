@@ -1404,7 +1404,7 @@ function editSettings( $option )
 	$currency_code_list	= AECToolbox::aecCurrencyField( true, true, true );
 	$lists['currency_code_general'] = JHTML::_('select.genericlist', $currency_code_list, ( 'currency_code_general' ), 'size="10"', 'value', 'text', ( !empty( $aecConfig->cfg['currency_code_general'] ) ? $aecConfig->cfg['currency_code_general'] : '' ) );
 
-	$available_plans	= SubscriptionPlanHandler::getActivePlanList();
+	$available_plans = SubscriptionPlanHandler::getActivePlanList( true, false );
 
 	if ( !isset( $aecConfig->cfg['entry_plan'] ) ) {
 		$aecConfig->cfg['entry_plan'] = 0;
