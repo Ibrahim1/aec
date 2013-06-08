@@ -1286,7 +1286,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 			// TODO: Only trigger if this is not email or made not silent
 			if ( method_exists( $metaUser, $action ) ) {
-				if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
+				if ( $mi->$action( $metaUser, $exchange, $invoice, $this ) === false ) {
 					if ( $aecConfig->cfg['breakon_mi_error'] ) {
 						return false;
 					}
