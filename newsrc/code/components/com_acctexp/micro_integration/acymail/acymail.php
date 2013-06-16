@@ -78,7 +78,7 @@ class mi_acymail extends MI
 			$settings['exp'] = array( 'p', JText::_('MI_MI_ACAJOOM_DEFAULT_NOTICE') );
 		}
 
-		$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_ACYMAIL_NEWSLETTER_SIGNUP') );
+		$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_ACYMAIL_NEWSLETTER_SIGNUP'), '' );
 
 		return $settings;
 	}

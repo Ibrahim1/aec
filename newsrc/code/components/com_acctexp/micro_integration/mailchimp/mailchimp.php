@@ -133,7 +133,7 @@ class mi_mailchimp
 				$settings['exp'] = array( 'p', JText::_('MI_MI_MAILCHIMP_DEFAULT_NOTICE') );
 			}
 
-			$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_MAILCHIMP_NEWSLETTER_SIGNUP') );
+			$settings['get_newsletter'] = array( 'checkbox', JText::_('MI_MI_MAILCHIMP_NEWSLETTER_SIGNUP'), '' );
 		}
 
 		return $settings;
