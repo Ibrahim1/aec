@@ -451,7 +451,9 @@ class processor_paypal_wpp extends XMLprocessor
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
 				$trial = $this->convertPeriodUnit( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'] );
 
-				$var['InitAmt']					= $request->int_var['amount']['amount1'];
+				if ( !$express ) {
+					$var['InitAmt']					= $request->int_var['amount']['amount1'];
+				}
 
 				$var['TrialBillingPeriod']		= $trial['unit'];
 				$var['TrialBillingFrequency']	= $trial['period'];
@@ -460,7 +462,9 @@ class processor_paypal_wpp extends XMLprocessor
 
 				$offset = AECToolbox::offsetTime( $request->int_var['amount']['period1'], $request->int_var['amount']['unit1'], gmdate('U') );
 			} else {
-				$var['InitAmt']					= $request->int_var['amount']['amount3'];
+				if ( !$express ) {
+					$var['InitAmt']					= $request->int_var['amount']['amount3'];
+				}
 
 				$offset = AECToolbox::offsetTime( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'], gmdate('U') );
 			}
@@ -492,7 +496,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function transmitToPayPal( $xml, $request )
+	function transmitToPayPal( $xml )
 	{
 		$path = "/nvp";
 
@@ -518,7 +522,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 	function transmitRequestXML( $xml, $request )
 	{
-		$response = trim( $this->transmitToPayPal( $xml, $request ) );
+		$response = trim( $this->transmitToPayPal( $xml ) );
 
 		$return = array();
 		$return['valid'] = false;
@@ -664,7 +668,7 @@ class processor_paypal_wpp extends XMLprocessor
 
 		$xml = implode( '&', $content );
 
-		$response = $this->transmitToPayPal( $xml, $request );
+		$response = $this->transmitToPayPal( $xml );
 
 		return $this->NVPtoArray( $response );
 	}
