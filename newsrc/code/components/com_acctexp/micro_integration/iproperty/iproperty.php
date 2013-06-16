@@ -259,7 +259,7 @@ class mi_iproperty
 		if ( !empty( $this->settings['set_images'] ) ) {
 			$company->params['maximgs'] = $this->settings['set_images'];
 		} elseif ( !empty( $this->settings['add_images'] ) ) {
-			if ( isset( $company->params['maxagents'] ) ) {
+			if ( isset( $company->params['maximgs'] ) ) {
 				$company->params['maximgs'] += $this->settings['add_images'];
 			} else {
 				$company->params['maximgs'] = $this->settings['add_images'];
