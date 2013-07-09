@@ -173,7 +173,7 @@ $pps = PaymentProcessorHandler::getObjectList( $pplist, true );
 // Get the tabs information from the plan
 if ( !empty( $subscriptions ) ) {
 	foreach( $subscriptions as $usid => $subscription ) {
-		$mis = $subscription->objPlan->micro_integrations;
+		$mis = $subscription->objPlan->getMicroIntegrations();
 
 		if ( !count( $mis ) ) {
 			continue;
@@ -337,6 +337,10 @@ if ( strcmp( $properties['alert']['daysleft'], 'infinite' ) === 0 ) {
 		$daysleft			= $properties['alert']['daysleft'];
 		$daysleft_append	= JText::_('AEC_DAYS_ELAPSED');
 	}
+}
+
+if ( !isset( $tabs[$sub] ) ) {
+	$sub = 'overview';
 }
 
 $tmpl->setTitle( JText::_('MYSUBSCRIPTION_TITLE') . ' - ' . $tabs[$sub] );
