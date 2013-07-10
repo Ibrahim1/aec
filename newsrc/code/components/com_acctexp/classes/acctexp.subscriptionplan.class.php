@@ -1068,7 +1068,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $params;
 	}
 
-	function getMIforms( $metaUser, $errors=array() )
+	function getMIforms( $metaUser, $errors=array(), $values=array() )
 	{
 		$params = $this->getMIformParams( $metaUser, $errors );
 
@@ -1092,7 +1092,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 
 		$settings = new aecSettings ( 'mi', 'frontend_forms' );
-		$settings->fullSettingsArray( $params, array(), $lists, array(), false ) ;
+		$settings->fullSettingsArray( $params, $values, $lists, array(), false ) ;
 
 		$aecHTML = new aecHTML( $settings->settings, $settings->lists );
 
@@ -1286,7 +1286,7 @@ class SubscriptionPlan extends serialParamDBTable
 
 			// TODO: Only trigger if this is not email or made not silent
 			if ( method_exists( $metaUser, $action ) ) {
-				if ( $mi->$action( $metaUser, null, $invoice, $this ) === false ) {
+				if ( $mi->$action( $metaUser, $exchange, $invoice, $this ) === false ) {
 					if ( $aecConfig->cfg['breakon_mi_error'] ) {
 						return false;
 					}
