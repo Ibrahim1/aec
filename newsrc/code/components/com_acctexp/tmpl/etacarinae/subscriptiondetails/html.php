@@ -170,6 +170,8 @@ foreach ( $invoiceList as $invoiceid ) {
 
 $pps = PaymentProcessorHandler::getObjectList( $pplist, true );
 
+$hasforms = false;
+
 // Get the tabs information from the plan
 if ( !empty( $subscriptions ) ) {
 	foreach( $subscriptions as $usid => $subscription ) {
@@ -189,8 +191,45 @@ if ( !empty( $subscriptions ) ) {
 				}
 
 				$info = $mi->profile_info( $metaUser );
+
 				if ( $info !== false ) {
-					$mi_info .= '<div class="' . $mi->class_name . ' mi_' . $mi->id . '">' . $info . '</div>';
+					$mi_info .= '<div class="' . $mi->class_name . ' mi_' . $mi->id . ' mi-info">' . $info . '</div>';
+				}
+
+				$form = $mi->profile_form( $metaUser );
+
+				if ( !empty( $form ) ) {
+					$pref = 'mi_'.$mi->id.'_';
+
+					$params = array();
+					foreach ( $form as $k => $v ) {
+						if ( isset( $_POST[$k] ) ) {
+							$params[str_replace($pref,'',$k)] = $_POST[$k];
+						}
+					}
+
+					$mi->profile_form_save( $metaUser, $params );
+
+					// Reload the user
+					$metaUser = new metaUser( $metaUser->userid );
+
+					$form = $mi->profile_form( $metaUser );
+				}
+
+				if ( !empty( $form ) ) {
+					$hasforms = true;
+
+					$settings = new aecSettings ( 'userForm', 'mi' );
+					$settings->fullSettingsArray( $form, array(), array() ) ;
+
+					$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+					$html = '';
+					foreach ( $form as $k => $f ) {
+						$html .= $aecHTML->createSettingsParticle( $k );
+					}
+
+					$mi_info .= '<div class="' . $mi->class_name . ' mi_' . $mi->id . ' mi-form">' .  $html . '</div>';
 				}
 
 				$addtabs = $mi->registerProfileTabs();
@@ -219,6 +258,15 @@ if ( !empty( $subscriptions ) ) {
 // Add Details tab for MI Stuff
 if ( !empty( $mi_info ) ) {
 	$tabs['details'] = JText::_('AEC_SUBDETAILS_TAB_DETAILS');
+
+	if ( $hasforms ) {
+		$mi_info =
+			'<form action="'.AECToolbox::deadsureURL( 'index.php?option=com_acctexp&view=user&layout=subscriptiondetails&sub=details' ).'" method="post">'
+			. $mi_info
+			.'<input type="submit" class="button btn btn-success" value="'.JText::_('BUTTON_APPLY').'" />'
+			.JHTML::_( 'form.token' )
+			.'</form>';
+	}
 }
 
 $invoiceactionlink = 'index.php?option=' . $option . '&amp;task=%s&amp;%s';

@@ -189,8 +189,28 @@ if ( !empty( $subscriptions ) ) {
 				}
 
 				$info = $mi->profile_info( $metaUser );
+
 				if ( $info !== false ) {
-					$mi_info .= '<div class="' . $mi->class_name . ' mi_' . $mi->id . '">' . $info . '</div>';
+					$mi_info .= '<div class="' . $mi->class_name . ' mi_' . $mi->id . ' mi-info">' . $info . '</div>';
+				}
+
+				$form = $mi->profile_form( $metaUser );
+
+				if ( empty( $form ) ) {
+					if ( isset( $form['validation'] ) ) {
+						unset( $form['validation'] ) ;
+					}
+
+					$settings = new aecSettings ( 'userForm', 'mi' );
+					$settings->fullSettingsArray( $form, array(), array() ) ;
+
+					$aecHTML = new aecHTML( $settings->settings, $settings->lists );
+
+					foreach ( $form as $k => $f ) {
+						$html .= $aecHTML->createSettingsParticle( $k );
+					}
+
+					$mi_info .= '<div class="' . $mi->class_name . ' mi_' . $mi->id . ' mi-form">' .  $html . '</div>';
 				}
 
 				$addtabs = $mi->registerProfileTabs();

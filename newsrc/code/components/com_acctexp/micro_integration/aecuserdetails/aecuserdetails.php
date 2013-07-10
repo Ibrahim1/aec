@@ -11,7 +11,7 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-class mi_aecuserdetails
+class mi_aecuserdetails extends MI
 {
 	function Info()
 	{
@@ -124,7 +124,7 @@ class mi_aecuserdetails
 
 	function admin_form_save( $request )
 	{
-		$this->action( $request );
+		$this->action( $request, true );
 
 		return true;
 	}
@@ -135,7 +135,7 @@ class mi_aecuserdetails
 			return null;
 		}
 
-		return $this->getMIform( $request, false );
+		return $this->getMIform( $request, false, false, true );
 	}
 
 	function profile_form_save( $request )
@@ -153,12 +153,12 @@ class mi_aecuserdetails
 			}
 		}
 
-		$this->action( $request );
+		$this->action( $request, true );
 
 		return true;
 	}
 
-	function getMIform( $request, $checkout=true, $alwayspermit=false )
+	function getMIform( $request, $checkout=true, $alwayspermit=false, $useredit=false )
 	{
 		global $aecConfig;
 
@@ -171,12 +171,6 @@ class mi_aecuserdetails
 
 		$settings	= array();
 		$lists		= array();
-
-		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$regvars = array( 'username', 'name', 'email', 'email2', 'password', 'password2' );
-		} else {
-			$regvars = array( 'username', 'name', 'email', 'password', 'password2' );
-		}
 
 		$hasregistration = true;
 		if ( !empty( $request->metaUser->cmsUser ) ) {
@@ -336,6 +330,24 @@ class mi_aecuserdetails
 			}
 		}
 
+		if ( $useredit ) {
+			$unset = array( 'validation', 'username' );
+
+			foreach ( $unset as $k ) {
+				if ( isset( $settings[$k] ) ) {
+					unset( $settings[$k] );
+				}
+			}
+
+			$pref = 'mi_'.$this->id.'_';
+
+			foreach ( $settings as $k => $v ) {
+				$settings[$pref.$k] = $v;
+
+				unset ( $settings[$k] );
+			}
+		}
+
 		if ( !empty( $lists ) ) {
 			$settings['lists'] = $lists;
 		}
@@ -363,11 +375,43 @@ class mi_aecuserdetails
 		return $return;
 	}
 
-	function action( $request )
+	function action( $request, $jprofile=false )
 	{
-		if ( isset( $request->invoice ) ) {
+		if ( isset( $request->invoice ) && !$jprofile ) {
 			if ( $request->invoice->counter > 1 ) {
 				return null;
+			}
+		}
+
+		if ( $jprofile ) {
+			if ( defined( 'JPATH_MANIFESTS' ) ) {
+				$regvars = array( 'username', 'name', 'email', 'email2', 'password', 'password2' );
+			} else {
+				$regvars = array( 'username', 'name', 'email', 'password', 'password2' );
+			}
+
+
+			$data = array();
+			foreach ( $request->params as $k => $v ) {
+				if ( in_array( $k, $regvars ) ) {
+					$data[$k] = $v;
+
+					unset( $request->params[$k] );
+				}
+			}
+
+			if ( !empty( $data ) ) {
+				// Bind the data.
+				if (!$request->metaUser->cmsUser->bind($data)) {
+					$this->setError($request->metaUser->cmsUser->getError());
+					return false;
+				}
+
+				// Store the data.
+				if (!$request->metaUser->cmsUser->store()) {
+					$this->setError($request->metaUser->cmsUser->getError());
+					return false;
+				}
 			}
 		}
 
