@@ -2847,7 +2847,7 @@ class Invoice extends serialParamDBTable
 
 	function generateInvoiceNumber( $maxlength = 16 )
 	{
-		$numberofrows	= 1;
+		$numberofrows = 1;
 		while ( $numberofrows ) {
 			$inum =	'I' . substr( base64_encode( md5( rand() ) ), 0, $maxlength );
 			// Check if already exists
@@ -2859,6 +2859,7 @@ class Invoice extends serialParamDBTable
 			$this->_db->setQuery( $query );
 			$numberofrows = $this->_db->loadResult();
 		}
+
 		return $inum;
 	}
 
