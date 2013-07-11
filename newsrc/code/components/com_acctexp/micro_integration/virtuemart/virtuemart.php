@@ -42,22 +42,48 @@ class mi_virtuemart
 			}
 		}
 
-		if ( !isset( $this->settings['shopper_group'] ) ) {
-			$this->settings['shopper_group'] = 0;
+		if ( $this->isv2 ) {
+			$check = array( 'shopper_group', 'shopper_group_exp', 'remove_shopper_group', 'remove_shopper_group_exp' );
+		} else {
+			$check = array( 'shopper_group', 'shopper_group_exp' );
 		}
 
-		if ( !isset( $this->settings['shopper_group_exp'] ) ) {
-			$this->settings['shopper_group_exp'] = 0;
+		foreach ( $check as $k ) {
+			if ( !isset( $this->settings[$k] ) ) {
+				$this->settings[$k] = 0;
+			}
 		}
 
 		$settings = array();
-		$settings['lists']['shopper_group']		= JHTML::_( 'select.genericlist', $sg, 'shopper_group', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
-		$settings['lists']['shopper_group_exp'] = JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
 
-		$settings['set_shopper_group']		= array( 'toggle' );
-		$settings['shopper_group']			= array( 'list' );
-		$settings['set_shopper_group_exp']	= array( 'toggle' );
-		$settings['shopper_group_exp']		= array( 'list' );
+		if ( $this->isv2 ) {
+			$settings['lists']['shopper_group']				= JHTML::_( 'select.genericlist', $sg, 'shopper_group[]', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
+			$settings['lists']['shopper_group_exp']			= JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp[]', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
+			$settings['lists']['remove_shopper_group']		= JHTML::_( 'select.genericlist', $sg, 'shopper_group[]', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
+			$settings['lists']['remove_shopper_group_exp']	= JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp[]', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
+
+			$settings['set_shopper_group']				= array( 'toggle' );
+			$settings['shopper_group']					= array( 'list' );
+			$settings['set_remove_shopper_group']		= array( 'toggle' );
+			$settings['remove_shopper_group']			= array( 'list' );
+
+			$settings['aectab_exp']						= array( 'tab', 'Expiration Action', 'Expiration Action' );
+			$settings['set_shopper_group_exp']			= array( 'toggle' );
+			$settings['shopper_group_exp']				= array( 'list' );
+			$settings['set_remove_shopper_group_exp']	= array( 'toggle' );
+			$settings['remove_shopper_group_exp']		= array( 'list' );
+		} else {
+			$settings['lists']['shopper_group']		= JHTML::_( 'select.genericlist', $sg, 'shopper_group', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
+			$settings['lists']['shopper_group_exp'] = JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
+
+			$settings['set_shopper_group']		= array( 'toggle' );
+			$settings['shopper_group']			= array( 'list' );
+
+			$settings['aectab_exp']				= array( 'tab', 'Expiration Action', 'Expiration Action' );
+			$settings['set_shopper_group_exp']	= array( 'toggle' );
+			$settings['shopper_group_exp']		= array( 'list' );
+		}
+
 		$settings['create_account']			= array( 'toggle' );
 		$settings['rebuild']				= array( 'toggle' );
 		$settings['remove']					= array( 'toggle' );
@@ -67,33 +93,31 @@ class mi_virtuemart
 
 	function expiration_action( $request )
 	{
-		if ( $this->settings['set_shopper_group_exp'] ) {
-			if ( $this->checkVMuserexists( $request->metaUser->userid ) ) {
-				$this->updateVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group_exp'] );
-			} elseif ( $this->settings['create_account'] ) {
-				$this->createVMuser( $request->metaUser, $this->settings['shopper_group_exp'] );
-			}
+		if ( !$this->checkVMuserexists( $request->metaUser->userid ) && $this->settings['create_account'] ) {
+			$this->createVMuser( $request->metaUser, $this->settings['shopper_group_exp'] );
+		}
 
-			return true;
-		} else {
-			return false;
+		if ( !empty($this->settings['set_shopper_group_exp']) ) {
+			$this->addVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group_exp'] );
+		}
+
+		if ( !empty($this->settings['set_remove_shopper_group_exp']) ) {
+			$this->addVMuserSgroup( $request->metaUser->userid, $this->settings['remove_shopper_group_exp'] );
 		}
 	}
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		if ( !$this->checkVMuserexists( $request->metaUser->userid ) && $this->settings['create_account'] ) {
+			$this->createVMuser( $request->metaUser, $this->settings['shopper_group'] );
+		}
 
-		if ( $this->settings['set_shopper_group'] ) {
-			if ( $this->checkVMuserexists( $request->metaUser->userid ) ) {
-				$this->updateVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group'] );
-			} elseif ( $this->settings['create_account'] ) {
-				$this->createVMuser( $request->metaUser, $this->settings['shopper_group'] );
-			}
+		if ( !empty($this->settings['set_shopper_group']) ) {
+			$this->addVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group'] );
+		}
 
-			return true;
-		} else {
-			return false;
+		if ( !empty($this->settings['set_remove_shopper_group']) ) {
+			$this->addVMuserSgroup( $request->metaUser->userid, $this->settings['remove_shopper_group'] );
 		}
 	}
 
@@ -118,14 +142,13 @@ class mi_virtuemart
 	{
 		$db = &JFactory::getDBO();
 
-
 		if ( $this->isv2 ) {
 			$query = 'SELECT `virtuemart_user_id`'
 					. ' FROM #__virtuemart_userinfos'
 					. ' WHERE `virtuemart_user_id` = \'' . $userid . '\''
 					;
 		} else {
-			$query = 'SELECT `user_id`' // Jonathan Appleton changed this from id to user_id - good find indeed!
+			$query = 'SELECT `user_id`'
 					. ' FROM #__vm_user_info'
 					. ' WHERE `user_id` = \'' . $userid . '\''
 					;
@@ -135,12 +158,16 @@ class mi_virtuemart
 		return $db->loadResult();
 	}
 
-	function updateVMuserSgroup( $userid, $shoppergroup )
+	function addVMuserSgroup( $userid, $shoppergroup )
 	{
 		$db = &JFactory::getDBO();
 
 		if ( $this->isv2 ) {
-			$query = 'UPDATE #__virtuemart_vmuser_shoppergroups'
+			if ( $this->hasVMuserSgroup( $userid, $shoppergroup ) ) {
+				return null;
+			}
+
+			$query = 'INSERT INTO #__virtuemart_vmuser_shoppergroups'
 					. ' SET `virtuemart_shoppergroup_id` = \'' . $shoppergroup . '\''
 					. ' WHERE `virtuemart_user_id` = \'' . $userid . '\''
 					;
@@ -152,6 +179,36 @@ class mi_virtuemart
 		}
 		$db->setQuery( $query );
 		$db->query();
+	}
+
+	function removeVMuserSgroup( $userid, $shoppergroup )
+	{
+		if ( $this->hasVMuserSgroup( $userid, $shoppergroup ) ) {
+			return null;
+		}
+
+		$db = &JFactory::getDBO();
+
+		$query = 'DELETE FROM #__virtuemart_vmuser_shoppergroups'
+			. ' WHERE `virtuemart_shoppergroup_id` = \'' . $shoppergroup . '\''
+			. ' AND `virtuemart_user_id` = \'' . $userid . '\''
+		;
+
+		$db->setQuery( $query );
+		$db->query();
+	}
+
+	function hasVMuserSgroup( $userid, $shoppergroup )
+	{
+		$db = &JFactory::getDBO();
+
+		$query = 'SELECT id FROM #__virtuemart_vmuser_shoppergroups'
+			. ' WHERE `virtuemart_shoppergroup_id` = \'' . $shoppergroup . '\''
+			. ' AND `virtuemart_user_id` = \'' . $userid . '\''
+		;
+
+		$db->setQuery( $query );
+		return $db->loadResult() ? true : false;
 	}
 
 	function createVMuser( $metaUser, $shoppergroup )
@@ -181,29 +238,6 @@ class mi_virtuemart
 			$lastname = '';
 		}
 
-		$numberofrows	= 1;
-		while ( $numberofrows ) {
-			// seed random number generator
-			srand( (double) microtime() * 10000 );
-			$inum =	strtolower( substr( base64_encode( md5( rand() ) ), 0, 32 ) );
-			// Check if already exists
-
-			if ( $this->isv2 ) {
-				$query = 'SELECT count(*)'
-						. ' FROM #__virtuemart_userinfos'
-						. ' WHERE `virtuemart_userinfo_id` = \'' . $inum . '\''
-						;
-			} else {
-				$query = 'SELECT count(*)'
-						. ' FROM #__vm_user_info'
-						. ' WHERE `user_info_id` = \'' . $inum . '\''
-						;
-			}
-
-			$db->setQuery( $query );
-			$numberofrows = $db->loadResult();
-		}
-
 		// Create Useraccount
 		if ( $this->isv2 ) {
 			$query  = 'INSERT INTO #__virtuemart_vmusers'
@@ -214,34 +248,48 @@ class mi_virtuemart
 			$db->query();
 
 			$query  = 'INSERT INTO #__virtuemart_userinfos'
-					. ' (virtuemart_userinfo_id, virtuemart_user_id, address_type, last_name, first_name, middle_name, created_on, modified_on) '
-					. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\')'
+					. ' ( virtuemart_user_id, address_type, last_name, first_name, middle_name, created_on, modified_on) '
+					. ' VALUES(\'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\')'
 					;
 		} else {
 			$query  = 'INSERT INTO #__vm_user_info'
 					. ' (user_info_id, user_id, address_type, last_name, first_name, middle_name, user_email, cdate, mdate, perms, bank_account_type)'
-					. ' VALUES(\'' . $inum . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\', \'shopper\', \'Checking\')'
+					. ' VALUES(\'' . $this->uniqueID() . '\', \'' . $metaUser->userid . '\', \'BT\', \'' . $lastname . '\', \'' . $firstname . '\', \'' . $middlename . '\', \'' . $metaUser->cmsUser->email . '\', \'' . ( (int) gmdate('U') ) . '\', \'' . ( (int) gmdate('U') ) . '\', \'shopper\', \'Checking\')'
 					;
 		}
 
 		$db->setQuery( $query );
 		$db->query();
 
-		// Create Shopper -ShopperGroup - Relationship
-		if ( $this->isv2 ) {
-			$query  = 'INSERT INTO #__virtuemart_vmuser_shoppergroups'
-					. ' (virtuemart_user_id, virtuemart_shoppergroup_id)'
-					. ' VALUES(\'' . $metaUser->userid . '\', \'' . $shoppergroup . '\')'
-					;
-		} else {
-			$query  = 'INSERT INTO #__vm_shopper_vendor_xref'
-					. ' (user_id, shopper_group_id)'
-					. ' VALUES(\'' . $metaUser->userid . '\', \'' . $shoppergroup . '\')'
-					;
-		}
+		$this->addVMuserSgroup( $metaUser->userid, $shoppergroup );
 
 		$db->setQuery( $query );
 		$db->query();
+	}
+
+	function uniqueID()
+	{
+		$db = &JFactory::getDBO();
+
+		$inum = '';
+
+		$numberofrows	= 1;
+		while ( $numberofrows ) {
+			// seed random number generator
+			srand( (double) microtime() * 10000 );
+			$inum =	strtolower( substr( base64_encode( md5( rand() ) ), 0, 32 ) );
+			// Check if already exists
+
+			$query = 'SELECT count(*)'
+				. ' FROM #__vm_user_info'
+				. ' WHERE `user_info_id` = \'' . $inum . '\''
+			;
+
+			$db->setQuery( $query );
+			$numberofrows = $db->loadResult();
+		}
+
+		return $inum;
 	}
 }
 ?>
