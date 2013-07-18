@@ -57,7 +57,13 @@ class mi_mysql_query
 									'prefix'	=> $this->settings['table_prefix']
 									);
 
-				$db =& JDatabase::getInstance($options);
+				$v = new JVersion();
+
+				if ( $v->isCompatible('3.0') ) {
+					$db =& JDatabaseDriver::getInstance($options);
+				} else {
+					$db =& JDatabase::getInstance($options);
+				}
 			} else {
 				$db = &JFactory::getDBO();
 			}
