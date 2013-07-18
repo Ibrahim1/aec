@@ -71,7 +71,7 @@ class mi_mysql_query
 			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 
 			$db->setQuery( $query );
-			if ( !$db->queryBatch( false ) ) {
+			if ( !$db->query() ) {
 				$this->error = "MYSQL ERROR: " . $db->stderr();
 			}
 		}
