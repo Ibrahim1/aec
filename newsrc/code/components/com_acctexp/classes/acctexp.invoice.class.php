@@ -1774,6 +1774,18 @@ class InvoiceFactory
 				}
 			}
 
+			$dbtmpl = new configTemplate();
+			$dbtmpl->loadDefault();
+			if ( !empty( $dbtmpl->settings['tos'] ) ) {
+				$tos = aecGetParam( 'tos', 0, true, array( 'bool' ) );
+
+				if ( !$tos ) {
+					$this->confirmed = 0;
+
+					return $this->confirm();
+				}
+			}
+
 			if ( !empty( $this->plan ) ) {
 				if ( !isset( $this->plan->params['override_activation'] ) ) {
 					$this->plan->params['override_activation'] = false;
@@ -1813,18 +1825,6 @@ class InvoiceFactory
 			}
 
 			if ( !$check ) {
-				$this->confirmed = 0;
-
-				return $this->confirm();
-			}
-		}
-
-		$dbtmpl = new configTemplate();
-		$dbtmpl->loadDefault();
-		if ( !empty( $dbtmpl->settings['tos'] ) ) {
-			$tos = aecGetParam( 'tos', 0, true, array( 'bool' ) );
-
-			if ( !$tos ) {
 				$this->confirmed = 0;
 
 				return $this->confirm();
