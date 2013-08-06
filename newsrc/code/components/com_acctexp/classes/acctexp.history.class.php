@@ -61,11 +61,25 @@ class logHistory extends serialParamDBTable
 			return false;
 		}
 
+		if ( is_string( $this->response ) ) {
+			$this->response = unserialize( base64_decode( $this->response ) );
+		}
+
+		if ( is_string( $this->response ) ) {
+			$this->response = unserialize( base64_decode( $this->response ) );
+
+			return true;
+		}
+
+		$original = $this->response;
+
 		foreach( $this->response as $k => $v ) {
 			if ( !is_array( $v ) ) {
 				$this->response = unserialize( base64_decode( $k ) );
 
 				if ( !is_array( $this->response ) ) {
+					$this->response = $original;
+
 					return false;
 				}
 
@@ -74,6 +88,8 @@ class logHistory extends serialParamDBTable
 				$this->response = unserialize( base64_decode( $v ) );
 
 				if ( !is_array( $this->response ) ) {
+					$this->response = $original;
+
 					return false;
 				}
 

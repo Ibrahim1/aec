@@ -161,23 +161,46 @@ class tool_pretend
 				}
 
 				for( $j=0; $j<$dsales; $j++ ) {
-					$log = new logHistory();
+					$found = false;
+					while( !$found ) {
+						$userid = rand($this->range['users']['start'], $this->range['users']['end']);
 
-					$userid = rand($this->range['users']['start'], $this->range['users']['end']);
+						$db->setQuery('SELECT id FROM #__users WHERE `id` = \''.$userid.'\'');
 
-					$log->plan_id				= $plan;
-					$log->plan_name				= $plandetails[$plan]['name'];
-					$log->proc_id				= 0;
-					$log->proc_name				= 'none';
-					$log->user_id				= $userid;
-					$log->user_name				= '';
-					$log->transaction_date		= date( 'Y-m-d H:i:s', $dtime+rand(0,86400) );
-					$log->amount				= $plandetails[$plan]['cost'];
-					$log->invoice_number		= "";
-					$log->response				= "";
+						$check = $db->loadResult();
 
-					$log->check();
-					$log->store();
+						$found = !empty( $check );
+					}
+
+					$invoice = new Invoice();
+
+					$invoice->userid = $userid;
+					$invoice->usage = $plan;
+					$invoice->method = 'none';
+					$invoice->invoice_number = $invoice->generateInvoiceNumber();
+
+					$invoice->storeload();
+
+					$invoice->computeAmount();
+
+					$invoice->pay();
+
+					$invoice->transaction_date = date( 'Y-m-d H:i:s', $dtime+rand(0,86400) );
+
+					$invoice->check();
+					$invoice->store();
+
+					$pp = new stdClass();
+					$pp->id = 0;
+					$pp->processor_name = 'none';
+
+					$history = new logHistory();
+					$history->entryFromInvoice( $invoice, array("dummy"=>"data"), $pp );
+
+					$history->transaction_date = date( 'Y-m-d H:i:s', $dtime+rand(0,86400) );
+
+					$history->check();
+					$history->store();
 				}
 			}
 		}
@@ -233,6 +256,7 @@ class tool_pretend
 							'processors' => '',
 							'full_amount' => round( rand( $pricerange[0], $pricerange[1] ) / 100, 2 ),
 							'full_free' => 0,
+							'full_period' => rand(1, 14),
 							'trial_free' => 0,
 							'trial_amount' => 0
 			);

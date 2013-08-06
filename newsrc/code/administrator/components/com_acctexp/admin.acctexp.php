@@ -5362,7 +5362,6 @@ function aec_statrequest( $option, $type, $start, $end )
 				if ( is_array( $entry->response ) && !empty( $entry->response ) ) {
 					$filter = array( 'new_case', 'subscr_signup', 'paymentreview', 'subscr_eot', 'subscr_failed', 'subscr_cancel', 'Pending', 'Denied' );
 
-					$refund = false;
 					foreach ( $entry->response as $v ) {
 						if ( in_array( $v, $filter ) ) {
 							continue 2;
