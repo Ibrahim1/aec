@@ -297,7 +297,15 @@ class InvoiceFactory
 	function initPassthrough( $passthrough )
 	{
 		if ( empty( $passthrough ) ) {
-			$passthrough = aecPostParamClear( $_REQUEST, '', true );
+			$passthrough = aecPostParamClear( $_POST, '', true );
+
+			$get = aecPostParamClear( $_GET, '', true );
+
+			foreach ( $get as $k => $v ) {
+				if ( strpos( $k, 'mi_' ) === 0 ) {
+					$passthrough[$k] = $v;
+				}
+			}
 		}
 
 		if ( !isset( $passthrough['aec_passthrough'] ) ) {
