@@ -1011,6 +1011,10 @@ class PaymentProcessor
 
 			$iFactory->loadItemTotal();
 
+			foreach ( $iFactory->items->itemlist as $item ) {
+				$this->exchangeSettingsByPlan( $item['obj'] );
+			}
+
 			$result = $this->processor->validateSubscription( $iFactory, $subscription );
 
 			$resp = array();
