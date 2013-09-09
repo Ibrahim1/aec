@@ -42,8 +42,16 @@ class tool_rawedit
 
 					$object = new metaUserDB();
 
-					$_POST['id'] = $object->getIDbyUserid( $_POST['id'] );
+					$s = AECToolbox::searchUser( $_POST['id'] );
+
+					if ( !empty( $s ) ) {
+						$_POST['id'] = $object->getIDbyUserid( $s[0] );
+					} else {
+						$_POST['id'] = $object->getIDbyUserid( (int) $_POST['id'] );
+					}
+
 					break;
+
 				case 'processor':
 					if ( !is_numeric( $_POST['id'] ) )  {
 						$query = 'SELECT `id`'
@@ -56,13 +64,16 @@ class tool_rawedit
 					}
 
 					$object = new processor();
+
 					break;
+
 				case 'invoice':
 					if ( !is_numeric( $_POST['id'] ) )  {
 						$_POST['id'] = aecInvoiceHelper::InvoiceIDfromNumber( $_POST['id'] );
 					}
 
 					$object = new Invoice();
+
 					break;
 			}
 
