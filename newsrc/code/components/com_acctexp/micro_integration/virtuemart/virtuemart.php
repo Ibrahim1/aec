@@ -117,11 +117,23 @@ class mi_virtuemart
 		}
 
 		if ( !empty($this->settings['set_shopper_group']) ) {
-			$this->addVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group'] );
+			if ( is_array( $this->settings['shopper_group'] ) ) {
+				foreach ( $this->settings['shopper_group'] as $g ) {
+					$this->addVMuserSgroup( $request->metaUser->userid, $g );
+				}
+			} else {
+				$this->addVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group'] );
+			}
 		}
 
 		if ( !empty($this->settings['set_remove_shopper_group']) ) {
-			$this->addVMuserSgroup( $request->metaUser->userid, $this->settings['remove_shopper_group'] );
+			if ( is_array( $this->settings['remove_shopper_group'] ) ) {
+				foreach ( $this->settings['remove_shopper_group'] as $g ) {
+					$this->removeVMuserSgroup( $request->metaUser->userid, $g );
+				}
+			} else {
+				$this->removeVMuserSgroup( $request->metaUser->userid, $this->settings['shopper_group'] );
+			}
 		}
 	}
 
@@ -172,8 +184,8 @@ class mi_virtuemart
 			}
 
 			$query = 'INSERT INTO #__virtuemart_vmuser_shoppergroups'
-					. ' SET `virtuemart_shoppergroup_id` = \'' . $shoppergroup . '\''
-					. ' WHERE `virtuemart_user_id` = \'' . $userid . '\''
+					. ' (`virtuemart_shoppergroup_id`, `virtuemart_user_id`) '
+					. ' VALUES (\'' . $shoppergroup . '\',\'' . $userid . '\')'
 					;
 		} else {
 			$query = 'UPDATE #__vm_shopper_vendor_xref'
