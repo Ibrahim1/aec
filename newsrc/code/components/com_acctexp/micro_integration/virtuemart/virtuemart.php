@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: mi_mysql_query.php
+ * @version $Id: mi_virtuemart.php
  * @package AEC - Account Control Expiration - Membership Manager
  * @subpackage Micro Integrations - MySQL Query
  * @copyright 2006-2013 Copyright (C) David Deutsch
@@ -69,8 +69,8 @@ class mi_virtuemart
 			$settings['set_remove_shopper_group']		= array( 'toggle' );
 			$settings['remove_shopper_group']			= array( 'list' );
 
-			$settings['rebuild']				= array( 'toggle' );
-			$settings['remove']					= array( 'toggle' );
+			$settings['rebuild']	= array( 'toggle' );
+			$settings['remove']		= array( 'toggle' );
 
 			$settings['aectab_exp']						= array( 'tab', 'Expiration Action', 'Expiration Action' );
 			$settings['set_shopper_group_exp']			= array( 'toggle' );
@@ -81,11 +81,11 @@ class mi_virtuemart
 			$settings['lists']['shopper_group']		= JHTML::_( 'select.genericlist', $sg, 'shopper_group', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
 			$settings['lists']['shopper_group_exp'] = JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
 
-			$settings['set_shopper_group']		= array( 'toggle' );
-			$settings['shopper_group']			= array( 'list' );
+			$settings['set_shopper_group']	= array( 'toggle' );
+			$settings['shopper_group']		= array( 'list' );
 
-			$settings['rebuild']				= array( 'toggle' );
-			$settings['remove']					= array( 'toggle' );
+			$settings['rebuild']	= array( 'toggle' );
+			$settings['remove']		= array( 'toggle' );
 
 			$settings['aectab_exp']				= array( 'tab', 'Expiration Action', 'Expiration Action' );
 			$settings['set_shopper_group_exp']	= array( 'toggle' );
