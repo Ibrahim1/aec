@@ -67,53 +67,50 @@ class mi_aecmodifycost
 
 		$options = $this->getOptionList();
 
-		if ( !empty( $options ) ) {
-			if ( !empty( $this->settings['custominfo'] ) ) {
-				$settings['exp'] = array( 'p', $this->settings['custominfo'] );
-			} else {
-				$settings['exp'] = array( 'p', JText::_('MI_MI_AECMODIFYCOST_DEFAULT_NOTICE') );
-			}
+		if ( empty( $options ) ) return false;
 
-			if ( !empty( $this->settings['multi_select'] ) ) {
-				foreach ( $options as $id => $choice ) {
-					$settings['option_'.$choice['id']] = array( 'checkbox', $choice['text'], '', $choice['id'], 1, 'mi_'.$this->id.'_option[]' );
-				}
-
-				if ( !empty( $this->settings['multi_amount_min'] ) || !empty( $this->settings['multi_amount_max'] ) ) {
-					$settings['validation']['rules'] = array();
-					$settings['validation']['rules']['mi_'.$this->id.'_option'] = array();
-
-					if ( !empty( $this->settings['multi_amount_min'] ) ) {
-						$settings['validation']['rules']['mi_'.$this->id.'_option']['minlength'] = $this->settings['multi_amount_min'];
-					}
-
-					if ( !empty( $this->settings['multi_amount_max'] ) ) {
-						$settings['validation']['rules']['mi_'.$this->id.'_option']['maxlength'] = $this->settings['multi_amount_max'];
-					}
-				}
-			} else {
-				if ( count( $options ) < 5 ) {
-					$settings['option'] = array( 'hidden', null, 'mi_'.$this->id.'_option' );
-
-					foreach ( $options as $id => $choice ) {
-						$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_option', $choice['id'], true, $choice['text'] );
-					}
-				} else {
-					$settings['option'] = array( 'list', "", "" );
-
-					$loc = array();
-					$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
-
-					foreach ( $options as $id => $choice ) {
-						$loc[] = JHTML::_('select.option', $choice['id'], $choice['text'] );
-					}
-
-					$settings['lists']['option']	= JHTML::_('select.genericlist', $loc, 'option', 'size="1"', 'value', 'text', 0 );
-				}
-			}
-
+		if ( !empty( $this->settings['custominfo'] ) ) {
+			$settings['exp'] = array( 'p', $this->settings['custominfo'] );
 		} else {
-			return false;
+			$settings['exp'] = array( 'p', JText::_('MI_MI_AECMODIFYCOST_DEFAULT_NOTICE') );
+		}
+
+		if ( !empty( $this->settings['multi_select'] ) ) {
+			foreach ( $options as $id => $choice ) {
+				$settings['option_'.$choice['id']] = array( 'checkbox', $choice['text'], '', $choice['id'], 1, 'mi_'.$this->id.'_option[]' );
+			}
+
+			if ( !empty( $this->settings['multi_amount_min'] ) || !empty( $this->settings['multi_amount_max'] ) ) {
+				$settings['validation']['rules'] = array();
+				$settings['validation']['rules']['option'] = array();
+
+				if ( !empty( $this->settings['multi_amount_min'] ) ) {
+					$settings['validation']['rules']['option']['minlength'] = $this->settings['multi_amount_min'];
+				}
+
+				if ( !empty( $this->settings['multi_amount_max'] ) ) {
+					$settings['validation']['rules']['option']['maxlength'] = $this->settings['multi_amount_max'];
+				}
+			}
+		} else {
+			if ( count( $options ) < 5 ) {
+				$settings['option'] = array( 'hidden', null, 'mi_'.$this->id.'_option' );
+
+				foreach ( $options as $id => $choice ) {
+					$settings['ef'.$id] = array( 'radio', 'mi_'.$this->id.'_option', $choice['id'], true, $choice['text'] );
+				}
+			} else {
+				$settings['option'] = array( 'list', "", "" );
+
+				$loc = array();
+				$loc[] = JHTML::_('select.option', 0, "- - - - - - - -" );
+
+				foreach ( $options as $id => $choice ) {
+					$loc[] = JHTML::_('select.option', $choice['id'], $choice['text'] );
+				}
+
+				$settings['lists']['option']	= JHTML::_('select.genericlist', $loc, 'option', 'size="1"', 'value', 'text', 0 );
+			}
 		}
 
 		return $settings;

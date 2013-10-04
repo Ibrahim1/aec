@@ -342,13 +342,16 @@ label.control-label {
 }
 
 div.control-group {
-	.controls > * {
-		margin: 0 auto;
-		vertical-align: middle;
-	}
 	.controls {
 		display: inline-block;
 		width: 50%;
+		input[type="checkbox"] {
+			margin-top: 10px;
+		}
+		& > * {
+			margin: 0 auto;
+			vertical-align: middle;
+		}
 		label {
 			margin-top: 6px;
 			padding: 4px 8px;

@@ -88,7 +88,7 @@ class aecSettings
 										. '_' . strtoupper( $cname );
 				$constantname		= $constant . '_NAME';
 				$constantdesc		= $constant . '_DESC';
-				
+
 				// If the constantname does not exists, try a generic name
 				if ( $lang->hasKey( $constantname ) ) {
 					$info_name = JText::_( $constantname );
@@ -107,7 +107,9 @@ class aecSettings
 				$info_desc = $content[2];
 			}
 
-			if ( isset( $content[4] ) ) {
+			if ( isset( $content[5] ) ) {
+				$this->settings[$name] = array( $type, $info_name, $info_desc, $value, $content[4], $content[5] );
+			} elseif ( isset( $content[4] ) ) {
 				$this->settings[$name] = array( $type, $info_name, $info_desc, $value, $content[4] );
 			} else {
 				$this->settings[$name] = array( $type, $info_name, $info_desc, $value );
