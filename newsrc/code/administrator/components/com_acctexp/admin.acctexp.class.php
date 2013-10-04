@@ -1000,8 +1000,6 @@ class aecExport extends serialParamDBTable
 		if ( !$is_test ) {
 			if ( isset( $this->type ) ) {
 				$type = $this->type;
-
-				unset( $this->type );
 			}
 
 			if ( isset( $this->lines ) ) {
@@ -1011,6 +1009,15 @@ class aecExport extends serialParamDBTable
 			$this->storeload();
 
 			$this->type = $type;
+		}
+	}
+
+	function check()
+	{
+		parent::check();
+
+		if ( isset( $this->type ) ) {
+			unset( $this->type );
 		}
 	}
 
