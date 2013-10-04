@@ -21,7 +21,7 @@ foreach ( $data as $k => $v ) {
 
 if ( $standalone && !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) {
 	$js = "jQuery('textarea[name=address]').keyup(function() {
-			jQuery('#address pre').text($(this).val());
+			jQuery('#address pre').text(jQuery(this).val());
 		});";
 	$tmpl->enqueueJQueryCode( $js );
 }
