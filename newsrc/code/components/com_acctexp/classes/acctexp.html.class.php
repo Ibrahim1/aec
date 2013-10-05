@@ -147,7 +147,7 @@ class aecHTML
 					} else {
 						$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
 					}
-				}elseif ( !empty( $row[2] ) ) {
+				} elseif ( !empty( $row[2] ) ) {
 					if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
 						$return .= htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
 					} else {
@@ -159,6 +159,56 @@ class aecHTML
 
 				$return .= '<div class="controls">';
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
+				$return .= '<input id="' . $id . '" type="checkbox" name="' . $attrname . '" ' . ( $enabled ? 'checked="checked" ' : '' ) . ' value="' . $value . '"/>';
+
+				$return .= $insertctrl;
+				$return .= '</div></div>';
+				break;
+			case 'checkbox_nofallback':
+				$id = $name;
+
+				if ( !empty( $row[5] ) ) {
+					$attrname = $row[5];
+
+					$name = str_replace( '[]', '', $attrname );
+				} else {
+					$attrname = $name;
+				}
+
+				if ( !empty( $value ) && !empty( $row[4] ) ) {
+					$enabled = $value == $row[4];
+				} elseif ( !empty( $value ) ) {
+					$enabled = $value;
+				} else {
+					$value = 1;
+
+					$enabled = false;
+				}
+
+				$return = '<div class="control-group">';
+				$return .= '<label class="control-label" for="' . $id . '">';
+
+				if ( !empty( $xlabel ) ) {
+					$return .= $xlabel;
+				} elseif ( !empty( $xtitle ) ) {
+					$return .= $xtitle;
+				} elseif ( !empty( $row[1] ) ) {
+					if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
+						$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8", false );
+					} else {
+						$return .= htmlentities( $row[1], ENT_QUOTES, "UTF-8" );
+					}
+				} elseif ( !empty( $row[2] ) ) {
+					if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
+						$return .= htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
+					} else {
+						$return .= htmlentities( $row[2], ENT_QUOTES, "UTF-8" );
+					}
+				}
+
+				$return .= '</label>';
+
+				$return .= '<div class="controls">';
 				$return .= '<input id="' . $id . '" type="checkbox" name="' . $attrname . '" ' . ( $enabled ? 'checked="checked" ' : '' ) . ' value="' . $value . '"/>';
 
 				$return .= $insertctrl;

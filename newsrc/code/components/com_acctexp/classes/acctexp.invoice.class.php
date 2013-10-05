@@ -1864,13 +1864,17 @@ class InvoiceFactory
 				$key = str_replace( '[]', '', $key );
 			}
 
-			if ( !empty( $value[1] ) ) {
+			if ( !empty( $value[5] ) ) {
+				if ( strpos( $value[5], '[]' ) ) {
+					$key = str_replace( '[]', '', $value[5] );
+				}
+			} elseif ( !empty( $value[1] ) ) {
 				if ( strpos( $value[1], '[]' ) ) {
 					$key = str_replace( '[]', '', $value[1] );
 				}
 			}
 
-			$value = aecGetParam( $prefix.$key, '__DEL' );
+			$post_value = aecGetParam( $prefix.$key, '__DEL' );
 
 			if ( !empty( $prefix ) ) {
 				if ( strpos( $key, $prefix ) !== false ) {
@@ -1878,14 +1882,14 @@ class InvoiceFactory
 				}
 			}
 
-			if ( $value !== '__DEL' ) {
+			if ( $post_value !== '__DEL' ) {
 				$k = explode( '_', $key, 3 );
 
 				if ( !isset( $params[$k[1]] ) ) {
 					$params[$k[1]] = array();
 				}
 
-				$params[$k[1]][$k[2]] = $value;
+				$params[$k[1]][$k[2]] = $post_value;
 			}
 		}
 

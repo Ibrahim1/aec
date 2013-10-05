@@ -77,7 +77,7 @@ class mi_aecmodifycost
 
 		if ( !empty( $this->settings['multi_select'] ) ) {
 			foreach ( $options as $id => $choice ) {
-				$settings['option_'.$choice['id']] = array( 'checkbox', $choice['text'], '', $choice['id'], 1, 'mi_'.$this->id.'_option[]' );
+				$settings['option_'.$choice['id']] = array( 'checkbox_nofallback', $choice['text'], '', $choice['id'], 1, 'mi_'.$this->id.'_option[]' );
 			}
 
 			if ( !empty( $this->settings['multi_amount_min'] ) || !empty( $this->settings['multi_amount_max'] ) ) {
@@ -120,31 +120,32 @@ class mi_aecmodifycost
 	{
 		$return = array();
 
-		if ( is_array( $request->params['option'] ) ) {
-			if ( !empty( $this->settings['multi_amount_max'] ) ) {
-				if ( count( $request->params['option'] ) > $this->settings['multi_amount_max'] ) {
-					$return['error'] = "You cannot select more than " . $this->settings['multi_amount_max'] . " options.";
-					return $return;
-				}
-			}
-
-			if ( !empty( $this->settings['multi_amount_min'] ) ) {
-				if ( count( $request->params['option'] ) < $this->settings['multi_amount_min'] ) {
-					$return['error'] = "You cannot select less than " . $this->settings['multi_amount_min'] . " options.";
-					return $return;
-				}
-			}
-
-			if ( !count( $request->params['option'] ) && empty( $this->settings['allow_empty'] ) ) {
-				$return['error'] = "Please make a selection";
-				return $return;
-			}
-
-		} else {
+		if ( !is_array( $request->params['option'] ) ) {
 			if ( ( empty( $request->params['option'] ) || ( $request->params['option'] == "" ) ) && empty( $this->settings['allow_empty'] ) ) {
 				$return['error'] = "Please make a selection";
+			}
+
+			return $return;
+		}
+
+		if ( !empty( $this->settings['multi_amount_max'] ) ) {
+			if ( count( $request->params['option'] ) > $this->settings['multi_amount_max'] ) {
+				$return['error'] = "You cannot select more than " . $this->settings['multi_amount_max'] . " options.";
+
 				return $return;
 			}
+		}
+
+		if ( !empty( $this->settings['multi_amount_min'] ) ) {
+			if ( count( $request->params['option'] ) < $this->settings['multi_amount_min'] ) {
+				$return['error'] = "You cannot select less than " . $this->settings['multi_amount_min'] . " options.";
+
+				return $return;
+			}
+		}
+
+		if ( !count( $request->params['option'] ) && empty( $this->settings['allow_empty'] ) ) {
+			$return['error'] = "Please make a selection";
 		}
 
 		return $return;
@@ -193,8 +194,6 @@ class mi_aecmodifycost
 			if ( empty( $option['mi'] ) ) {
 				continue;
 			}
-
-			$db = &JFactory::getDBO();
 
 			$mi = new microIntegration();
 
