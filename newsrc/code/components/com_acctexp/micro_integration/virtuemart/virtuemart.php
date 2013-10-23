@@ -61,8 +61,8 @@ class mi_virtuemart
 		if ( $this->isv2 ) {
 			$settings['lists']['shopper_group']				= JHTML::_( 'select.genericlist', $sg, 'shopper_group[]', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
 			$settings['lists']['shopper_group_exp']			= JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp[]', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
-			$settings['lists']['remove_shopper_group']		= JHTML::_( 'select.genericlist', $sg, 'shopper_group[]', 'size="4"', 'value', 'text', $this->settings['shopper_group'] );
-			$settings['lists']['remove_shopper_group_exp']	= JHTML::_( 'select.genericlist', $sg, 'shopper_group_exp[]', 'size="4"', 'value', 'text', $this->settings['shopper_group_exp'] );
+			$settings['lists']['remove_shopper_group']		= JHTML::_( 'select.genericlist', $sg, 'remove_shopper_group[]', 'size="4"', 'value', 'text', $this->settings['remove_shopper_group'] );
+			$settings['lists']['remove_shopper_group_exp']	= JHTML::_( 'select.genericlist', $sg, 'remove_shopper_group_exp[]', 'size="4"', 'value', 'text', $this->settings['remove_shopper_group_exp'] );
 
 			$settings['set_shopper_group']				= array( 'toggle' );
 			$settings['shopper_group']					= array( 'list' );
