@@ -47,31 +47,49 @@ class mi_mysql_query
 
 	function relayAction( $request )
 	{
-		if ( isset( $this->settings['query'.$request->area] ) ) {
-			if ( $this->settings['use_altdb'] ) {
-				$options = array(	'driver'	=> $this->settings['dbms'],
-									'host'		=> $this->settings['dbhost'],
-									'user'		=> $this->settings['dbuser'],
-									'password'	=> $this->settings['dbpasswd'],
-									'database'	=> $this->settings['dbname'],
-									'prefix'	=> $this->settings['table_prefix']
-									);
+		if ( !isset( $this->settings['query'.$request->area] ) ) {
+			return null;
+		}
 
-				$v = new JVersion();
+		if ( $this->settings['use_altdb'] ) {
+			$options = array(
+				'driver'	=> $this->settings['dbms'],
+				'host'		=> $this->settings['dbhost'],
+				'user'		=> $this->settings['dbuser'],
+				'password'	=> $this->settings['dbpasswd'],
+				'database'	=> $this->settings['dbname'],
+				'prefix'	=> $this->settings['table_prefix']
+			);
 
-				if ( $v->isCompatible('3.0') ) {
-					$db =& JDatabaseDriver::getInstance($options);
-				} else {
-					$db =& JDatabase::getInstance($options);
-				}
+			$v = new JVersion();
+
+			if ( $v->isCompatible('3.0') ) {
+				$db =& JDatabaseDriver::getInstance($options);
 			} else {
-				$db = &JFactory::getDBO();
+				$db =& JDatabase::getInstance($options);
 			}
+		} else {
+			$db = &JFactory::getDBO();
+		}
 
-			$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
+		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );
 
-			$db->setQuery( $query );
-			if ( !$db->query() ) {
+		$jversion = new JVersion();
+
+		if ( version_compare($jversion->getShortVersion(), '3.0', 'ge') ) {
+			$queries = $db->splitSql($query);
+
+			foreach ( $queries as $query ) {
+				$db->setQuery($query);
+
+				if ( !$db->query() ) {
+					$this->error = "MYSQL ERROR: " . $db->stderr();
+				}
+			}
+		} else {
+			$db->setQuery($query);
+
+			if ( !$db->queryBatch(false) ) {
 				$this->error = "MYSQL ERROR: " . $db->stderr();
 			}
 		}
