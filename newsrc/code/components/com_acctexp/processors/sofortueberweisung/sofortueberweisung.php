@@ -64,13 +64,11 @@ class processor_sofortueberweisung extends POSTprocessor
 		$encoding[] = JHTML::_('select.option', "MD5", "MD5" );
 		$encoding[] = JHTML::_('select.option', "SHA1", "SHA1" );
 
-		if ( !empty( $this->settings['hash_encoding'] ) ) {
-			$enc = $this->settings['hash_encoding'];
-		} else {
-			$enc = "SHA1";
+		if ( empty( $this->settings['hash_encoding'] ) ) {
+			$this->settings['hash_encoding'] = "SHA1";
 		}
 
-		$settings['lists']['hash_encoding']	= JHTML::_('select.genericlist', $encoding, 'hash_encoding', 'size="2"', 'value', 'text', $enc );
+		$settings['lists']['hash_encoding']	= JHTML::_('select.genericlist', $encoding, 'hash_encoding', 'size="2"', 'value', 'text', $this->settings['hash_encoding'] );
 
 		$settings = AECToolbox::rewriteEngineInfo( null, $settings );
 
@@ -94,17 +92,24 @@ class processor_sofortueberweisung extends POSTprocessor
 		$var['currency_id']		= $this->settings['currency'];
 		$var['language_id']		= $this->settings['language'];
 
-		$prehash =	$var['user_id'] . '|'
-					. $var['project_id'] . '|'
-					. '||||'
-					. $var['amount'] . '|'
-					. $var['currency_id'] . '|'
-					. $var['reason_1'] . '|'
-					. $var['reason_2'] . '|'
-					. $var['user_variable_0'] . '|'
-					. '|||||'
-					. $this->settings['project_password']
-					;
+		$prehash =	$var['user_id']
+			. '|' . $var['project_id']
+			. '|' /* sender_holder */
+			. '|' /* sender_account_number */
+			. '|' /* sender_bank_code */
+			. '|' /* sender_country_id */
+			. '|' . $var['amount']
+			. '|' . $var['currency_id']
+			. '|' . $var['reason_1']
+			. '|' . $var['reason_2']
+			. '|' . $var['user_variable_0']
+			. '|' /* user_variable_1 */
+			. '|' /* user_variable_2 */
+			. '|' /* user_variable_3 */
+			. '|' /* user_variable_4 */
+			. '|' /* user_variable_5 */
+			. '|' . $this->settings['project_password']
+			;
 
 		$var['hash'] =	$this->getHash( $prehash );
 
@@ -129,15 +134,18 @@ class processor_sofortueberweisung extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$values = array(	'transaction','user_id','project_id',
-							'sender_holder','sender_account_number','sender_bank_code','sender_bank_name','sender_bank_bic','sender_iban','sender_country_id',
-							'recipient_holder','recipient_account_number','recipient_bank_code','recipient_bank_name','recipient_bank_bic',
-							'recipient_iban','recipient_country_id',
-							'international_transaction','amount','currency_id',
-							'reason_1','reason_2','security_criteria',
-							'user_variable_0','user_variable_1','user_variable_2','user_variable_3','user_variable_4', 'user_variable_5',
-							'created'
-						);
+		$values = array(
+			'transaction','user_id','project_id',
+			'sender_holder','sender_account_number','sender_bank_code',
+			'sender_bank_name','sender_bank_bic','sender_iban',
+			'sender_country_id', 'recipient_holder','recipient_account_number',
+			'recipient_bank_code','recipient_bank_name','recipient_bank_bic',
+			'recipient_iban','recipient_country_id', 'international_transaction',
+			'amount','currency_id', 'reason_1',
+			'reason_2','security_criteria', 'user_variable_0',
+			'user_variable_1','user_variable_2','user_variable_3',
+			'user_variable_4', 'user_variable_5', 'created'
+		);
 
 		$getmode = empty( $post['transaction'] );
 
@@ -195,4 +203,3 @@ class processor_sofortueberweisung extends POSTprocessor
 	}
 
 }
-?>
