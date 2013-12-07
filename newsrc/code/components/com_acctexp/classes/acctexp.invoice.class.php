@@ -1158,7 +1158,11 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 
-		if ( empty( $aecConfig->cfg['checkout_coupons'] ) && empty( $aecConfig->cfg['confirmation_coupons'] ) && empty( $this->invoice->coupons ) ) {
+		if (
+			empty( $aecConfig->cfg['checkout_coupons'] )
+			&& empty( $aecConfig->cfg['confirmation_coupons'] )
+			&& empty( $this->invoice->coupons )
+		) {
 			return null;
 		}
 

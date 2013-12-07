@@ -440,8 +440,6 @@ if ( !empty( $task ) ) {
 
 function subscribe( $option )
 {
-	global $aecConfig;
-
 	$db = &JFactory::getDBO();
 
 	$user = &JFactory::getUser();
