@@ -241,7 +241,7 @@ class InvoiceFactory
 		$this->verifyUsage();
 	}
 
-	function initUser( $userid, $alert=true, $forceinternal=false )
+	function initUser( $userid=null, $alert=true, $forceinternal=false )
 	{
 		$user = &JFactory::getUser();
 
@@ -347,6 +347,8 @@ class InvoiceFactory
 		if ( !ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
 			return getView( 'access_denied' );
 		}
+
+		return true;
 	}
 
 	function usageStatus()
@@ -844,7 +846,6 @@ class InvoiceFactory
 
 	function loadRenewStatus()
 	{
-		$user_subscription = false;
 		$this->renew = 0;
 
 		if ( empty( $this->userid ) ) {
@@ -1237,9 +1238,7 @@ class InvoiceFactory
 		}
 
 		if ( !is_array( $usage ) ) {
-			$id = $usage;
-
-			$usage = array( $id );
+			$usage = array( $usage );
 		}
 
 		foreach ( $usage as $us ) {
@@ -1541,11 +1540,12 @@ class InvoiceFactory
 			$intro = false;
 		}
 
-		if ( empty( $this->usage )
+		if (
+			empty( $this->usage )
 			&& empty( $group )
 			&& !$intro
-			&& !empty( $aecConfig->cfg['customintro'] ) ) {
-
+			&& !empty( $aecConfig->cfg['customintro'] )
+		) {
 			if ( !empty( $aecConfig->cfg['customintro_userid'] ) ) {
 				aecRedirect( $aecConfig->cfg['customintro'], $this->userid, "aechidden" );
 			} else {
