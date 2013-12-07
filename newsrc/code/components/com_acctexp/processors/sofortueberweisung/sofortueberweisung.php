@@ -38,9 +38,9 @@ class processor_sofortueberweisung extends POSTprocessor
 		$settings['notification_password']	= '';
 		$settings['currency']				= 'EUR';
 		$settings['language']				= 'DE';
-		$settings['item_name_1']			= "";
-		$settings['item_name_2']			= "";
-		$settings['customparams']			= "";
+		$settings['item_name_1']			= '';
+		$settings['item_name_2']			= '';
+		$settings['customparams']			= '';
 
 		return $settings;
 	}
@@ -61,8 +61,8 @@ class processor_sofortueberweisung extends POSTprocessor
 		$settings['customparams']			= array( 'inputD' );
 
  		$encoding = array();
-		$encoding[] = JHTML::_('select.option', "MD5", "MD5" );
-		$encoding[] = JHTML::_('select.option', "SHA1", "SHA1" );
+		$encoding[] = JHTML::_('select.option', 'MD5', 'MD5' );
+		$encoding[] = JHTML::_('select.option', 'SHA1', 'SHA1' );
 
 		if ( empty( $this->settings['hash_encoding'] ) ) {
 			$this->settings['hash_encoding'] = "SHA1";
