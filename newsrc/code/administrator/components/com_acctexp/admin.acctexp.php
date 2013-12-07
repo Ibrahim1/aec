@@ -1453,6 +1453,7 @@ function editSettings( $option )
 	$params[] = array( 'section', 'checkout' );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_CHECKOUT') );
 	$params['checkout_coupons']				= array( 'toggle', 0 );
+	$params['silent_coupons']				= array( 'toggle', 0 );
 	$params['user_checkout_prefill']		= array( 'inputD', 0 );
 
 	$rewriteswitches						= array( 'cms', 'user', 'expiration', 'subscription' );
