@@ -232,10 +232,9 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 					}
 				}
 
-				$incf = xJUtility::versionSort( $versions );
+				$versions = xJUtility::versionSort( $versions );
 
-				$versions = array();
-				foreach ( $incf as $version ) {
+				foreach ( $versions as $version ) {
 					if ( version_compare( xJUtility::normVersionName( $version ), xJUtility::normVersionName( $oldversion ), '>=' ) ) {
 						require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
 					}
