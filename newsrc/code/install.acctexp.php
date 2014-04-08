@@ -269,6 +269,8 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 
 			$aecConfig->cfg['aec_version'] = _AEC_VERSION;
+
+			$aecConfig->saveSettings();
 		}
 
 		function touchProcessors()
