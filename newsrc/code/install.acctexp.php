@@ -206,7 +206,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			} else {
 				$oldversion = '0.0.1';
 			}
-			aecDebug($oldversion);aecDebug($this->new ? 'true', 'false');
+			aecDebug($oldversion);aecDebug($this->new ? 'true' : 'false');
 			if ( $this->new ) return;
 
 			// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
