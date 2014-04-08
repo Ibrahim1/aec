@@ -160,7 +160,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			// Slot in DB tables that do not exist yet
 			$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';
 
-			$tables		= $db->getTableList();
+			$tables = $db->getTableList();
 
 			$this->new = true;
 
@@ -204,43 +204,41 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			if ( isset( $aecConfig->cfg['aec_version'] ) ) {
 				$oldversion = $aecConfig->cfg['aec_version'];
 			} else {
-				$oldversion = false;
+				$oldversion = '0.0.1';
 			}
 
-			if ( !$this->new ) {
-				// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
-				if ( empty( $oldversion ) || ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) ) {
-					if ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) {
-						$oldupdates = array( '0_12_6RC2j' );
-					} else {
-						$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6RC2j' );
-					}
+			if ( $this->new ) return;
 
-					foreach ( $oldupdates as $upd ) {
-						require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
-					}
+			// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
+			if ( empty( $oldversion ) || ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) ) {
+				if ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) {
+					$oldupdates = array( '0_12_6RC2j' );
+				} else {
+					$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6RC2j' );
 				}
 
-				$incfiles = xJUtility::getFileArray( $incpath, 'inc.php', false, true );
-
-				$versions = array();
-				foreach ( $incfiles as $filename ) {
-					if ( strpos( $filename, 'upgrade_' ) === false ) {
-						continue;
-					} else {
-						$versions[] = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
-					}
+				foreach ( $oldupdates as $upd ) {
+					require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
 				}
+			}
 
-				$versions = xJUtility::versionSort( $versions );
+			$incfiles = xJUtility::getFileArray( $incpath, 'inc.php', false, true );
 
-				foreach ( $versions as $version ) {
-					if ( version_compare( xJUtility::normVersionName( $version ), xJUtility::normVersionName( $oldversion ), '>=' ) ) {
-						require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
-					}
+			$versions = array();
+			foreach ( $incfiles as $filename ) {
+				if ( strpos( $filename, 'upgrade_' ) === false ) {
+					continue;
+				} else {
+					$versions[] = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
 				}
+			}
 
-				$updates = array();
+			$versions = xJUtility::versionSort( $versions );
+
+			foreach ( $versions as $version ) {
+				if ( version_compare( xJUtility::normVersionName( $version ), xJUtility::normVersionName( $oldversion ), '>=' ) ) {
+					require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
+				}
 			}
 		}
 

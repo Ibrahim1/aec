@@ -62,7 +62,15 @@ class xJUtility
 			$str = substr( $str, 0, strlen( $str )-1 ) . "_" . ord( $lastchar );
 		}
 
-		return $str;
+		$str = str_replace('_', '.', $str);
+
+		$t = explode('.', $str);
+
+		if ( count($t) == 2 ) {
+			$t[] = 0;
+		}
+
+		return implode('.', $t);
 	}
 
 }
