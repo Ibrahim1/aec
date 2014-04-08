@@ -96,23 +96,25 @@ if ( $jsonconversion ) {
 } elseif ( !empty( $serialupdate ) ) {
 	// Update database fields to serialized fields
 
-	$updates = array(	0 => array( 'displayPipeline', 'displaypipeline', array( 'params' => array('displayedto') ) ),
-						1 => array( 'eventLog', 'eventlog', array( 'info' => array('actions') ) ),
-						2 => array( 'processor', 'config_processors', array() ),
-						3 => array( 'SubscriptionPlan', 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self'), 'restrictions' => array('previousplan_req','currentplan_req','overallplan_req','previousplan_req_excluded','currentplan_req_excluded','overallplan_req_excluded') ) ),
-						4 => array( 'Invoice', 'invoices', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
-						5 => array( 'Subscription', 'subscr', array() ),
-						6 => array( 'microIntegration', 'microintegrations', array() ),
-						7 => array( 'coupon', 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
-						8 => array( 'coupon', 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
-						);
+	$updates = array(
+		0 => array( 'displayPipeline', 'displaypipeline', array( 'params' => array('displayedto') ) ),
+		1 => array( 'eventLog', 'eventlog', array( 'info' => array('actions') ) ),
+		2 => array( 'processor', 'config_processors', array() ),
+		3 => array( 'SubscriptionPlan', 'plans', array( 'params' => array('similarplans','equalplans','processors'), 'micro_integrations' => array('_self'), 'restrictions' => array('previousplan_req','currentplan_req','overallplan_req','previousplan_req_excluded','currentplan_req_excluded','overallplan_req_excluded') ) ),
+		4 => array( 'Invoice', 'invoices', array( 'coupons' => array('_self'), 'micro_integrations' => array('_self') ) ),
+		5 => array( 'Subscription', 'subscr', array() ),
+		6 => array( 'microIntegration', 'microintegrations', array() ),
+		7 => array( 'coupon', 'coupons', array( 'restrictions' => array('bad_combinations','usage_plans') ) ),
+		8 => array( 'coupon', 'coupons_static', array( 'restrictions' => array('bad_combinations','usage_plans') ) )
+	);
 
-	$miupdate = array(	'mi_acl' => array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' ),
-						'mi_docman' => array( 'group', 'group_exp' ),
-						'mi_g2' => array( 'groups', 'groups_sel_scope' ),
-						'mi_juga' => array( 'enroll_group', 'enroll_group_exp' ),
-						'mi_remository' => array( 'group', 'group_exp' )
-						);
+	$miupdate = array(
+		'mi_acl' => array( 'sub_gid_del', 'sub_gid', 'sub_gid_exp_del', 'sub_gid_exp', 'sub_gid_pre_exp_del', 'sub_gid_pre_exp' ),
+		'mi_docman' => array( 'group', 'group_exp' ),
+		'mi_g2' => array( 'groups', 'groups_sel_scope' ),
+		'mi_juga' => array( 'enroll_group', 'enroll_group_exp' ),
+		'mi_remository' => array( 'group', 'group_exp' )
+	);
 
 	foreach ( $updates as $uid => $ucontent ) {
 		$classname	= $ucontent[0];

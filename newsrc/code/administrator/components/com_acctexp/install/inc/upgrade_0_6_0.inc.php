@@ -22,7 +22,10 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_payplans", $tables ) ) {
 		// You're already running version 0.6.0 or later. No action required.
 	} else {
 		// You're not running version 0.6.0 or later. Update required.
-		$db->setQuery("ALTER TABLE #__acctexp_payplans ADD `gid` int(3) default NULL");
+		$db->setQuery(
+			"ALTER TABLE #__acctexp_payplans ADD `gid` int(3) default NULL"
+		);
+
 		if ( !$db->query() ) {
 			$errors[] = array( $db->getErrorMsg(), $query );
 		}

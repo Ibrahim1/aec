@@ -12,19 +12,21 @@
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 if ( isset( $aecConfig->cfg['customtext_plans'] ) ) {
-	$oldsettings = array(	'customtext_plans', 'custom_confirm_userdetails', 'customtext_confirm_keeporiginal', 'customtext_confirm',
-							'customtext_checkout_keeporiginal', 'customtext_checkout', 'customtext_exception_keeporiginal', 'customtext_exception',
-							'customtext_notallowed_keeporiginal', 'customtext_notallowed', 'customtext_pending_keeporiginal', 'customtext_pending',
-							'customtext_hold_keeporiginal', 'customtext_hold', 'customtext_expired_keeporiginal', 'customtext_expired',
-							'customtext_thanks_keeporiginal', 'customtext_thanks', 'customtext_cancel_keeporiginal', 'customtext_cancel',
-							'confirmation_changeusername', 'confirmation_changeusage', 'invoice_before_header', 'invoice_page_title',
-							'invoice_header', 'invoice_after_header', 'invoice_address_allow_edit', 'invoice_address',
-							'invoice_before_content', 'invoice_after_content', 'invoice_before_footer', 'invoice_footer',
-							'invoice_after_footer',
-							'customthanks', 'customcancel', 'customnotallowed', ' confirmation_display_descriptions',
-							'tos', 'tos_iframe', 'customlink_continueshopping', ' renew_button_never',
-							'renew_button_nolifetimerecurring', 'continue_button', 'use_recaptcha', 'recaptcha_privatekey',
-							'recaptcha_publickey' );
+	$oldsettings = array(
+		'customtext_plans', 'custom_confirm_userdetails', 'customtext_confirm_keeporiginal', 'customtext_confirm',
+		'customtext_checkout_keeporiginal', 'customtext_checkout', 'customtext_exception_keeporiginal', 'customtext_exception',
+		'customtext_notallowed_keeporiginal', 'customtext_notallowed', 'customtext_pending_keeporiginal', 'customtext_pending',
+		'customtext_hold_keeporiginal', 'customtext_hold', 'customtext_expired_keeporiginal', 'customtext_expired',
+		'customtext_thanks_keeporiginal', 'customtext_thanks', 'customtext_cancel_keeporiginal', 'customtext_cancel',
+		'confirmation_changeusername', 'confirmation_changeusage', 'invoice_before_header', 'invoice_page_title',
+		'invoice_header', 'invoice_after_header', 'invoice_address_allow_edit', 'invoice_address',
+		'invoice_before_content', 'invoice_after_content', 'invoice_before_footer', 'invoice_footer',
+		'invoice_after_footer',
+		'customthanks', 'customcancel', 'customnotallowed', ' confirmation_display_descriptions',
+		'tos', 'tos_iframe', 'customlink_continueshopping', ' renew_button_never',
+		'renew_button_nolifetimerecurring', 'continue_button', 'use_recaptcha', 'recaptcha_privatekey',
+		'recaptcha_publickey'
+	);
 
 	$copysettings = array();
 	foreach ( $oldsettings as $k ) {

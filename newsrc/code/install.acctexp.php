@@ -57,7 +57,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$eucaInstalldb	= new eucaInstallDB();
 
 			$this->initDB( $errors, $eucaInstalldb );
+
 			$this->upgrade( $errors, $eucaInstall, $eucaInstalldb );
+
+			$this->initConfig();
 
 			$this->checkJinstall();
 
@@ -68,7 +71,6 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			$this->initTemplate();
 
-			$this->initConfig();
 			$this->initAdmins();
 
 			$this->installTranslators( $eucaInstall );
@@ -205,6 +207,12 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			$aecConfig = new aecConfig();
 
+			if ( !empty($aecConfig->cfg) ) {
+				$this->new = false;
+			}
+
+			$aecConfig->initParams();
+
 			$document=& JFactory::getDocument();
 			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . 'media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION .'" />' );
 
@@ -212,6 +220,15 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				$oldversion = $aecConfig->cfg['aec_version'];
 			} else {
 				$oldversion = '0.0.1';
+
+				$db->setQuery("SHOW INDEXES FROM #__acctexp_subscr");
+				$indexes = $db->loadObjectList();
+
+				foreach ( $indexes as $index ) {
+					if ( strpos( $index->Key_name, 'userid' ) !== false ) {
+						$oldversion = '0.14.6';
+					}
+				}
 			}
 			aecDebug($oldversion);aecDebug($this->new ? 'true' : 'false');aecDebug($aecConfig);
 			if ( $this->new ) return;
@@ -252,6 +269,8 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 					aecDebug("$new < $old");
 				}
 			}
+
+			$aecConfig->cfg['aec_version'] = _AEC_VERSION;
 		}
 
 		function touchProcessors()
@@ -390,12 +409,6 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$template->default = 1;
 
 			$template->storeload();
-		}
-
-		function initConfig()
-		{
-			$aecConfig = new aecConfig();
-			$aecConfig->initParams();
 		}
 
 		function initAdmins()
