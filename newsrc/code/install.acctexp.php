@@ -230,7 +230,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 					}
 				}
 			}
-			aecDebug($oldversion);aecDebug($this->new ? 'true' : 'false');aecDebug($aecConfig);
+
 			if ( $this->new ) return;
 
 			// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
@@ -263,10 +263,8 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				$new = xJUtility::normVersionName( $version );
 				$old = xJUtility::normVersionName( $oldversion );
 
-				if ( version_compare( $new, $old, '>=' ) ) {aecDebug("$new >= $old");
+				if ( version_compare( $new, $old, '>=' ) ) {
 					require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
-				} else {
-					aecDebug("$new < $old");
 				}
 			}
 
