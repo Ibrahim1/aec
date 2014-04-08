@@ -147,7 +147,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				}
 			}
 
-			include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
+			require_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
 			require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 			require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
@@ -236,8 +236,13 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$versions = xJUtility::versionSort( $versions );
 
 			foreach ( $versions as $version ) {
-				if ( version_compare( xJUtility::normVersionName( $version ), xJUtility::normVersionName( $oldversion ), '>=' ) ) {
+				$new = xJUtility::normVersionName( $version );
+				$old = xJUtility::normVersionName( $oldversion );
+
+				if ( version_compare( $new, $old, '>=' ) ) {aecDebug("$new >= $old");
 					require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
+				} else {
+					aecDebug("$new < $old");
 				}
 			}
 		}
