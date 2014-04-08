@@ -59,14 +59,12 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->initDB( $errors, $eucaInstalldb );
 
 			$this->upgrade( $errors, $eucaInstall, $eucaInstalldb );
-			aecDebug("test3");
-			$this->initConfig();
-			aecDebug("test4");
+
 			$this->checkJinstall();
-			aecDebug("test5");
+
 			$this->touchProcessors();
 			$this->touchMIs();
-			aecDebug("test6");
+
 			$pkgs = $this->installPackages();
 
 			$this->initTemplate();
@@ -74,10 +72,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->initAdmins();
 
 			$this->installTranslators( $eucaInstall );
-			aecDebug("test7");
+
 			$this->popIndex( $eucaInstall );
 			$this->lessen( $errors );
-			aecDebug("test8");
+
 			$this->logInstall();
 			$this->logErrors( $errors, $eucaInstall, $eucaInstalldb );
 
