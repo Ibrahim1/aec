@@ -198,6 +198,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			global $aecConfig;
 
+			if ( !is_object( $aecConfig ) ) {
+				$aecConfig = new aecConfig();
+			}
+
 			$document=& JFactory::getDocument();
 			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . 'media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION .'" />' );
 
