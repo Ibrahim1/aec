@@ -59,14 +59,14 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->initDB( $errors, $eucaInstalldb );
 
 			$this->upgrade( $errors, $eucaInstall, $eucaInstalldb );
-
+			aecDebug("test3");
 			$this->initConfig();
-
+			aecDebug("test4");
 			$this->checkJinstall();
-
+			aecDebug("test5");
 			$this->touchProcessors();
 			$this->touchMIs();
-
+			aecDebug("test6");
 			$pkgs = $this->installPackages();
 
 			$this->initTemplate();
@@ -74,10 +74,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->initAdmins();
 
 			$this->installTranslators( $eucaInstall );
-
+			aecDebug("test7");
 			$this->popIndex( $eucaInstall );
 			$this->lessen( $errors );
-
+			aecDebug("test8");
 			$this->logInstall();
 			$this->logErrors( $errors, $eucaInstall, $eucaInstalldb );
 
@@ -230,7 +230,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 					}
 				}
 			}
-
+aecDebug($oldversion);
 			if ( $this->new ) return;
 
 			// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
@@ -267,7 +267,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 					require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
 				}
 			}
-
+aecDebug("test2");
 			$aecConfig->cfg['aec_version'] = _AEC_VERSION;
 
 			$aecConfig->saveSettings();
