@@ -639,11 +639,6 @@ class microIntegration extends serialParamDBTable
 		return array( 'params', 'restrictions' );
 	}
 
-	function declareMultiLangFields()
-	{
-		return $this->functionProxy( 'declareMultiLangFields', null, array() );
-	}
-
 	function functionProxy( $function, $data=null, $default=null )
 	{
 		if ( !isset( $this->mi_class ) ) {

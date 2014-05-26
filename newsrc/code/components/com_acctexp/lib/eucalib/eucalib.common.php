@@ -340,9 +340,9 @@ class paramDBTable extends JTable
 		return $this->_db->loadResult();
 	}
 
-	function store()
+	function store($updateNulls = true)
 	{
-		return parent::store(true);
+		return parent::store($updateNulls);
 	}
 
 	function move( $dir )
@@ -527,7 +527,7 @@ class serialParamDBTable extends paramDBTable
 
 	}
 
-	function load( $id, $fields=array(), $langfields=array() )
+	function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 
@@ -536,46 +536,11 @@ class serialParamDBTable extends paramDBTable
 		}
 
 		if ( method_exists( $this, 'declareParamFields' ) ) {
-			$fields = array_merge( $fields, $this->declareParamFields() );
+			$fields = $this->declareParamFields();
 
 			if ( !empty( $fields ) ) {
 				foreach ( $fields as $fieldname ) {
 					$this->$fieldname = $this->getParams( $fieldname );
-				}
-			}
-		}
-
-		if ( method_exists( $this, 'declareMultiLangFields' ) ) {
-			$langfields = array_merge( $langfields, $this->declareMultiLangFields() );
-
-			if ( !empty( $langfields ) ) {
-				$lang = JFactory::getLanguage();
-
-				foreach ( $fields as $fieldname ) {
-					$langname = $this->langfieldname( $fieldname );
-
-					if ( $lang->hasKey( $langname ) ) {
-						$this->$fieldname = JText::_( $langname );
-
-						$key = explode( '.', $fieldname );
-
-						$target =& $this;
-						foreach ( $key as $k ) {
-							if ( is_object( $target ) ) {
-								if ( property_exists( $target, $k ) ) {
-									$target =& $target->$k;
-								}
-							} elseif ( is_array( $target ) ) {
-								if ( isset( $target[$k] ) ) {
-									$target =& $target[$k];
-								}			
-							}
-						}
-
-						if ( isset( $target ) && is_scalar( $target ) ) {
-							$target = JText::_( $langname );
-						}
-					}
 				}
 			}
 		}
@@ -623,62 +588,15 @@ class serialParamDBTable extends paramDBTable
 		return true;
 	}
 
-	function store()
+	function store($updateNulls = true)
 	{
-		/*$langfields = array_merge( $langfields, $this->declareMultiLangFields() );
-
-		if ( !empty( $langfields ) ) {
-			$lang = JFactory::getLanguage();
-
-			$write = array();
-			foreach ( $langfields as $fieldname ) {
-				$langname = $this->langfieldname( $fieldname );
-
-				if ( !$lang->hasKey( $langname ) ) {
-					$write[$langname] = JText::_( $langname );
-					
-					if ( $lang->get('tag') != $lang->getDefault() ) {
-						if ( !empty( $this->id ) ) {
-							unset( $this->$fieldname );
-						}
-					}
-				}
-			}
-		}*/
-
-		$store = parent::store();
+		$store = parent::store($updateNulls);
 
 		if ( $store ) {
 			if ( empty( $this->id ) ) {
 				$this->id = $this->getMax();
 			}
 		}
-
-		/*if ( !empty( $write ) ) {
-				$dir = JPATH_SITE . '/language/' . $lang->get('tag');
-
-				if ( is_dir() ) {
-					$langpath = $dir . $lang->get('tag') . '.com_acctexp.custom.ini';
-
-					$current = eucaToolbox::getLangIni( $langpath );
-
-					if ( !empty( $current ) ) {
-						$start = 
-						foreach ( $current as $k => $v ) {
-							if ( strpos( ))
-						}
-					} else {
-						$langarray = $write;
-					}
-
-					foreach ( $langarray as $k => $v ) {
-						$string .= $k . '="' . str_replace( '"', '"_QQ_"', $v ) . '"' . "\n";
-					}
-
-					eucaToolbox::putLangIni( $langpath, $string );
-				}
-			}
-		}*/
 
 		return $store;
 	}
