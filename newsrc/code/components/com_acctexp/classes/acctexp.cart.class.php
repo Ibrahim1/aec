@@ -272,7 +272,7 @@ class aecCart extends serialParamDBTable
 		return parent::check();
 	}
 
-	function store()
+	function store($updateNulls = true)
 	{
 		if ( !$this->id || ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
@@ -280,7 +280,7 @@ class aecCart extends serialParamDBTable
 
 		$this->last_updated = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
-		return parent::store();
+		return parent::store($updateNulls);
 	}
 
 	function action( $action, $details=null )
@@ -729,7 +729,7 @@ class LineItem
 
 	function updateQuantity( $qty )
 	{
-		$this->qty = $qty;		
+		$this->qty = $qty;
 	}
 
 	function getAmount()
@@ -745,7 +745,7 @@ class LineItem
 
 class LineItemCustom extends LineItem
 {
-	
+
 }
 
 class LineItemSubscriptionPlan extends LineItem
@@ -763,7 +763,7 @@ class LineItemSubscriptionPlan extends LineItem
 
 	function getItemTerms()
 	{
-		
+
 	}
 }
 
