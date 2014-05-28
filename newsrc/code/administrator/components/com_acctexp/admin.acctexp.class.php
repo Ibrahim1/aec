@@ -519,7 +519,7 @@ class aecExport extends serialParamDBTable
 		}
 	}
 
-	function load( $id )
+	function load( $id=null, $reset=true )
 	{
 		parent::load($id);
 
