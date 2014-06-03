@@ -32,7 +32,7 @@ class mi_kunena extends MI
 			return $settings;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery( 'SELECT * FROM #__' . $this->dbTable() . '_ranks' );
 
 		$ranks = $db->loadObjectList();
@@ -68,10 +68,10 @@ class mi_kunena extends MI
 	{
 		$app = JFactory::getApplication();
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$tables = $db->getTableList();
-		
+
 		return	in_array( $app->getCfg( 'dbprefix' ) . "kunena_users", $tables ) ||
 				in_array( $app->getCfg( 'dbprefix' ) . "fb_users", $tables );
 	}
@@ -83,7 +83,7 @@ class mi_kunena extends MI
 		if ( is_null( $is ) ) {
 			$app = JFactory::getApplication();
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$tables = $db->getTableList();
 
@@ -113,7 +113,7 @@ class mi_kunena extends MI
 
 	function changeRank( $userid, $add, $remove )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `userid`, `rank`'
 				. ' FROM #__' . $this->dbTable() . '_users'
@@ -147,7 +147,7 @@ class mi_kunena extends MI
 
 		if ( is_null($kuser) && !empty( $add ) ) {
 			$newrank = $add;
-		} 
+		}
 
 
 		if ( $kuser->userid ) {

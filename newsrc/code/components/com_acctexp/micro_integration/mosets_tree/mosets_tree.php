@@ -25,7 +25,7 @@ class mi_mosets_tree extends MI
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -37,7 +37,7 @@ class mi_mosets_tree extends MI
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_mosetstree` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -75,7 +75,7 @@ class mi_mosets_tree extends MI
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$mi_mosetshandler = new mosetstree();
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
@@ -111,7 +111,7 @@ class mi_mosets_tree extends MI
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$mi_mosetshandler = new mosetstree();
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
@@ -253,7 +253,7 @@ class mi_mosets_tree extends MI
 
 	function profile_info( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$mi_mosetshandler = new mosetstree();
 		$id = $mi_mosetshandler->getIDbyUserID( $request->metaUser->userid );
@@ -268,7 +268,7 @@ class mi_mosets_tree extends MI
 
 	function publishListings( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_published` = \'1\''
@@ -285,7 +285,7 @@ class mi_mosets_tree extends MI
 
 	function unpublishListings( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_published` = \'0\''
@@ -302,7 +302,7 @@ class mi_mosets_tree extends MI
 
 	function featureListings( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_featured` = \'1\''
@@ -319,7 +319,7 @@ class mi_mosets_tree extends MI
 
 	function unfeatureListings( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__mt_links'
 				. ' SET `link_featured` = \'0\''
@@ -353,7 +353,7 @@ class mosetstree extends serialParamDBTable
 
 	function mosetstree()
 	{
-		$lang =& JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 
 		$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 
@@ -367,7 +367,7 @@ class mosetstree extends serialParamDBTable
 
 	function getIDbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_mosetstree'

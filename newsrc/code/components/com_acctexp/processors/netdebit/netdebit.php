@@ -165,7 +165,7 @@ class processor_netdebit extends URLprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$response = array();
 		if ( empty( $post['VAR1'] ) ) {

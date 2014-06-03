@@ -30,7 +30,7 @@ class mi_attend_events
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		include_once( JPATH_SITE . '/components/com_attend_events/attend_events.class.php' );
 

@@ -25,7 +25,7 @@ class mi_uddeim
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -42,7 +42,7 @@ class mi_uddeim
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_uddeim` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -62,7 +62,7 @@ class mi_uddeim
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['add_messages']		= array( 'inputA' );
@@ -90,7 +90,7 @@ class mi_uddeim
 
 	function profile_info( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$mi_uddeimhandler = new uddeim_restriction();
 		$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
 
@@ -122,7 +122,7 @@ class mi_uddeim
 		$hacks = array();
 
 		$messagehack =	'// AEC HACK %s START' . "\n"
-		. '$user = &JFactory::getUser();' . "\n"
+		. '$user = JFactory::getUser();' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/uddeim/uddeim.php\');' . "\n\n"
 		. '$restrictionhandler = new uddeim_restriction();' . "\n"
 		. '$restrict_id = $restrictionhandler->getIDbyUserID( $user->id );' . "\n"
@@ -159,7 +159,7 @@ class mi_uddeim
 	function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['unset_unlimited'] ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$mi_uddeimhandler = new uddeim_restriction();
 			$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
@@ -187,7 +187,7 @@ class mi_uddeim
 	function action( $request )
 	{
 		if ( !empty( $this->settings['set_messages'] ) || !empty( $this->settings['add_messages'] ) || !empty( $this->settings['set_unlimited'] ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$mi_uddeimhandler = new uddeim_restriction();
 			$id = $mi_uddeimhandler->getIDbyUserID( $request->metaUser->userid );
@@ -222,7 +222,7 @@ class mi_uddeim
 
 	function send_message( $request, $from, $to, $msg )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$f = AECToolbox::rewriteEngineRQ( $from, $request );
 		$t = AECToolbox::rewriteEngineRQ( $to, $request );
@@ -255,7 +255,7 @@ class uddeim_restriction extends serialParamDBTable {
 	var $params					= null;
 
 	function getIDbyUserID( $userid ) {
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_uddeim'

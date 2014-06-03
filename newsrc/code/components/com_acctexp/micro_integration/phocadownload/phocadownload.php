@@ -37,7 +37,7 @@ class mi_phocadownload extends MI
 			@include_once( $path );
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery( 'SELECT * FROM #__phocadownload_categories' );
 
 		$cats = $db->loadObjectList();
@@ -83,7 +83,7 @@ class mi_phocadownload extends MI
 
 	function changeAccess( $userid, $add, $remove, $act )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `accessuserid`'
 				 . ' FROM #__phocadownload_categories'
@@ -121,13 +121,13 @@ class mi_phocadownload extends MI
 
 			$db->setQuery( $query );
 			$db->query();
-		} 
+		}
 
 	}
 
 	function changeUploadAccess( $userid, $add, $remove, $act )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `uploaduserid`'
 				 . ' FROM #__phocadownload_categories'
@@ -165,7 +165,7 @@ class mi_phocadownload extends MI
 
 			$db->setQuery( $query );
 			$db->query();
-		} 
+		}
 
 	}
 

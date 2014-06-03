@@ -27,7 +27,7 @@ class mi_juga
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `title`, `description`'
 			 	. ' FROM #__juga_groups'
@@ -83,7 +83,7 @@ class mi_juga
 
 		$settings['lists']['enroll_group']		= JHTML::_( 'select.genericlist', $sg, 'enroll_group[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps );
 		$settings['lists']['enroll_group_exp']	= JHTML::_( 'select.genericlist', $sg, 'enroll_group_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_enroll_gps_exp );
-		$settings['lists']['remove_selected']		= JHTML::_( 'select.genericlist', $sg, 'remove_selected[]', 'size="4" multiple="true"', 'value', 'text', $selected_remove_gps ); 
+		$settings['lists']['remove_selected']		= JHTML::_( 'select.genericlist', $sg, 'remove_selected[]', 'size="4" multiple="true"', 'value', 'text', $selected_remove_gps );
 		$settings['lists']['remove_selected_exp']	= JHTML::_( 'select.genericlist', $sg, 'remove_selected_exp[]', 'size="4" multiple="true"', 'value', 'text', $selected_remove_gps_exp );
 
 		$settings['set_remove_group']			= array( 'toggle' );
@@ -109,7 +109,7 @@ class mi_juga
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group_exp'] && !empty( $this->settings['enroll_group'] ) ) {
 			foreach ( $this->settings['enroll_group'] as $groupid ) {
@@ -134,7 +134,7 @@ class mi_juga
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group'] && empty( $this->settings['set_remove_selected'] ) ) {
 			$this->DeleteUserFromGroup( $request->metaUser->userid );
@@ -153,7 +153,7 @@ class mi_juga
 
 	function AddUserToGroup( $userid, $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Check user is not already a member of the group.
 		$query = 'SELECT `user_id`'
@@ -202,7 +202,7 @@ class mi_juga
 
 	function DeleteUserFromGroup( $userid, $groupid=null )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$return = new stdClass();
 		// load the plugins

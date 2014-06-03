@@ -15,7 +15,7 @@ class displayPipelineHandler
 {
 	function getUserPipelineEvents( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Entries for this user only
 		$query = 'SELECT `id`'

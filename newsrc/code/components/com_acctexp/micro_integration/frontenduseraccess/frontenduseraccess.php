@@ -25,7 +25,7 @@ class mi_frontenduseraccess
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`'
 				. ' FROM #__fua_usergroups'
@@ -167,12 +167,12 @@ class mi_frontenduseraccess
 
 	function update_fua_group( $user_id, $fua_group, $remove_groups, $keep_groups )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT user_id, group_id'
 				. ' FROM #__fua_userindex'
 				. ' WHERE user_id = \'' . $user_id . '\' '
-				." LIMIT 1 "			
+				." LIMIT 1 "
 				;
 		$db->setQuery( $query );
 
@@ -192,12 +192,12 @@ class mi_frontenduseraccess
 
 		$fua_group = $this->array_to_csv( $groups );
 
-		if ( $fua_user->user_id == $user_id ) {		
+		if ( $fua_user->user_id == $user_id ) {
 			$query = 'UPDATE #__fua_userindex'
 					. ' SET `group_id` = \'' . $fua_group . '\''
 					. ' WHERE `user_id` = \'' . $user_id . '\''
 					;
-		} else {	
+		} else {
 			$query = 'INSERT INTO #__fua_userindex'
 					. ' SET group_id = \'' . $fua_group . '\', user_id = \'' . $user_id . '\' '
 					;
@@ -207,7 +207,7 @@ class mi_frontenduseraccess
 		$db->query();
 	}
 
-	function csv_to_array($json){		
+	function csv_to_array($json){
 		$array = array();
 		$temp = explode(',', $json);
 		for($n = 0; $n < count($temp); $n++){
@@ -217,8 +217,8 @@ class mi_frontenduseraccess
 		return $array;
 	}
 
-	function array_to_csv($array){	
-		$return = '';	
+	function array_to_csv($array){
+		$return = '';
 		for($n = 0; $n < count($array); $n++){
 			if($n){
 				$return .= ',';
@@ -227,12 +227,12 @@ class mi_frontenduseraccess
 			$value = $row['value'];
 			if(is_string($value)){
 				$value = addslashes($value);
-			}	
-			$return .= '"'.$value.'"';		
-		}		
+			}
+			$return .= '"'.$value.'"';
+		}
 		return $return;
 	}
-	
+
 	function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_frontenduseraccess' );

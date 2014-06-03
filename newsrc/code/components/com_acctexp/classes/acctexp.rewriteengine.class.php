@@ -71,7 +71,7 @@ class reWriteEngine
 			$rewrite['user'][] = 'activationlink';
 
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT DISTINCT `profile_key`'
 						. ' FROM #__user_profiles';
@@ -109,7 +109,7 @@ class reWriteEngine
 			}
 
 			if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT name, title'
 						. ' FROM #__comprofiler_fields'
@@ -137,7 +137,7 @@ class reWriteEngine
 			}
 
 			if ( aecComponentHelper::detect_component( 'JOMSOCIAL' ) ) {
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT `id`, `name`'
 						. ' FROM #__community_fields'

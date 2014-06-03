@@ -104,7 +104,7 @@ class mi_multiusercreation
 
 	function action( $request )
 	{
-		$database = &JFactory::getDBO();
+		$database = JFactory::getDBO();
 
 		$flags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
 
@@ -218,7 +218,7 @@ class mi_multiusercreation
 	function expiration_action( $request )
 	{
 		if ( $this->settings['expire_child_subscr'] ) {
-			$database = &JFactory::getDBO();
+			$database = JFactory::getDBO();
 
 			$userflags = $request->metaUser->focusSubscription->getMIflags( $request->plan->id, $this->id );
 
@@ -242,7 +242,7 @@ class mi_multiusercreation
 	function admin_info( $request )
 	{
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->metaUser->focusSubscription->plan, $this->id );
-		
+
 		$list = "<ul>";
 		if ( isset( $userflags['child_list'] ) ) {
 			if ( !empty( $userflags['child_list'] ) ) {
@@ -267,7 +267,7 @@ class mi_multiusercreation
 	function profile_info( $request )
 	{
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->metaUser->focusSubscription->plan, $this->id );
-		
+
 		$list = "<ul>";
 		if ( isset( $userflags['child_list'] ) ) {
 			if ( !empty( $userflags['child_list'] ) ) {

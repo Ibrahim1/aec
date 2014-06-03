@@ -146,7 +146,7 @@ class processor_servantek extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$response = array();
 		$response['invoice'] = $post['invoice'];
@@ -226,7 +226,7 @@ class processor_servantek extends POSTprocessor
 				$response['fullresponse']['servantek_verification'] = "MANUAL_OVERRIDE";
 			}
 
-			
+
 			if ( strcmp( $txn_type, 'web_accept' ) == 0 || strcmp( $txn_type, 'subscr_payment' ) == 0 ) {
 
 				$recurring = ( strcmp( $txn_type, 'subscr_payment' ) == 0 );
@@ -287,6 +287,6 @@ class processor_servantek extends POSTprocessor
 
 		return $response;
 	}
-	
+
 }
 ?>

@@ -24,7 +24,7 @@ class mi_communitybuilder
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['approve']		= array( 'toggle' );
@@ -63,7 +63,7 @@ class mi_communitybuilder
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if( $this->settings['approve'] ) {
 			$query = 'UPDATE #__comprofiler'
@@ -81,7 +81,7 @@ class mi_communitybuilder
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if( $this->settings['unapprove_exp'] ) {
 			$query = 'UPDATE #__comprofiler'
@@ -99,7 +99,7 @@ class mi_communitybuilder
 
 	function setFields( $request, $stage="" )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `name`, `title`'
 				. ' FROM #__comprofiler_fields'

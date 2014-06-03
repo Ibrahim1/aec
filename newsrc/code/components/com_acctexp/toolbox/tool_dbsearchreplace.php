@@ -24,7 +24,7 @@ class tool_dbsearchreplace
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 
@@ -68,7 +68,7 @@ class tool_dbsearchreplace
 			return "<h3>Incomplete Query.</h3>";
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$types = array(	'config' => array( 'config', 'aecConfig' ),
 				'processor' => array( 'config_processors', 'PaymentProcessor' ),

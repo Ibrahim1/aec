@@ -25,7 +25,7 @@ class mi_aecuserdetails extends MI
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['emulate_reg']	= array( 'toggle' );
@@ -186,7 +186,7 @@ class mi_aecuserdetails extends MI
 		if ( !empty( $this->settings['emulate_reg'] ) && ( ( empty( $request->metaUser->userid ) && !$hasregistration ) || !$checkout ) ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				// Joomla 1.6+ Registration
-				$lang =& JFactory::getLanguage();
+				$lang = JFactory::getLanguage();
 
 				$lang->load( 'com_users', JPATH_SITE, 'en-GB', true );
 				$lang->load( 'com_users', JPATH_SITE, $lang->get('tag'), true );

@@ -25,7 +25,7 @@ class mi_jnews
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `list_name`, `list_type`'
 				. ' FROM #__jnews_lists'
@@ -141,7 +141,7 @@ class mi_jnews
 
 	function createSubscriber( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$user = new cmsUser();
 		$user->load( $userid );
@@ -156,7 +156,7 @@ class mi_jnews
 
 	function hasList( $subscriber_id, $listid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'SELECT `list_id`'
 				. ' FROM #__jnews_listssubscribers'
 				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
@@ -173,7 +173,7 @@ class mi_jnews
 
 	function hasListUnsub( $subscriber_id, $listid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'SELECT `list_id`'
 				. ' FROM #__jnews_listssubscribers'
 				. ' WHERE `subscriber_id` = \'' . $subscriber_id . '\''
@@ -190,7 +190,7 @@ class mi_jnews
 
 	function getSubscriberID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$query = 'SELECT `id`'
 				. ' FROM #__jnews_subscribers'
 				. ' WHERE `user_id` = \'' . $userid . '\''
@@ -202,7 +202,7 @@ class mi_jnews
 	function addToList( $subscriber_id, $list_id )
 	{
 		if ( !$this->hasList( $subscriber_id, $list_id ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			if ( $this->hasListUnsub( $subscriber_id, $list_id ) ) {
 				$query = 'UPDATE #__jnews_listssubscribers'
@@ -235,7 +235,7 @@ class mi_jnews
 	function deleteFromList( $subscriber_id, $list_id )
 	{
 		if ( $this->hasList( $subscriber_id, $list_id ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'UPDATE #__jnews_listssubscribers'
 					. ' SET `unsubscribe` = 1, `unsubdate` = ' . ( (int) gmdate('U') )

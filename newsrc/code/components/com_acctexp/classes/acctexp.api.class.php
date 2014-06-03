@@ -107,7 +107,7 @@ class aecAPI
 		$users = array();
 
 		if ( is_object( $this->request->user ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			if ( isset( $this->request->user->username ) ) {
 				$query = 'SELECT `id`'
@@ -277,7 +277,7 @@ class aecAPI
 			} else {
 				$this->error = 'user is denied permission - plan is restricted from this user';
 			}
-			
+
 			unset( $this->request->details->plan );
 		}
 
@@ -300,7 +300,7 @@ class aecAPI
 			} else {
 				$this->error = 'user is denied permission - group is restricted from this user';
 			}
-			
+
 			unset( $this->request->details->group );
 		}
 

@@ -79,17 +79,17 @@ class mi_redshop
 	}
 
 	function getShopperGroups()
-	{	
-		$db = &JFactory::getDBO();
+	{
+		$db = JFactory::getDBO();
 		$query = 'SELECT `shopper_group_name` AS `title`, `shopper_group_id` AS `id` FROM `#__redshop_shopper_group`';
-	
+
 	 	$db->setQuery( $query );
 	 	return $db->loadObjectList();
 	}
 
 	function updateGroup( $userid, $shoppergroup )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__redshop_usergroupxref'
 				. ' SET `group_id` = \'' . $shoppergroup . '\''

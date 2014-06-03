@@ -179,7 +179,7 @@ class mi_supporttimetracker extends MI
 
 	function updateSupportMinutes( $metaUser, $minutes, $use_minutes, $details )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$uparams = $metaUser->meta->getCustomParams();
 

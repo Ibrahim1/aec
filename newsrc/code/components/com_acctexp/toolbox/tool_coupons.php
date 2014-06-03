@@ -24,7 +24,7 @@ class tool_coupons
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['master_coupon']		= array( 'inputC', "Master Coupon", "Coupon Code for the coupon that you want to use as a blueprint copy for the settings of the coupons you want to create." );
@@ -39,7 +39,7 @@ class tool_coupons
 	{
 		$return = "";
 		if ( !empty( $_POST['master_coupon'] ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$cph = new CouponHandler();
 			$cph->load( $_POST['master_coupon'] );

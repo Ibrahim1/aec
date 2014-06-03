@@ -151,7 +151,7 @@ function aecEscape( $value, $safe_params )
 
 	}
 
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	return xJ::escape( $db, $return );
 }

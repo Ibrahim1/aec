@@ -111,7 +111,7 @@ class aecRegistration
 
 	static function saveUserRegistration( $var, $internal=false, $overrideActivation=false, $overrideEmails=false, $overrideJS=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		global $task, $aecConfig;
 
@@ -305,9 +305,9 @@ class aecRegistration
 				// Get required system objects
 				$user 		= clone(JFactory::getUser());
 				//$pathway 	=& $app->getPathway();
-				$config		=& JFactory::getConfig();
-				$authorize	=& JFactory::getACL();
-				$document   =& JFactory::getDocument();
+				$config		= JFactory::getConfig();
+				$authorize	= JFactory::getACL();
+				$document   = JFactory::getDocument();
 
 				// If user registration is not allowed, show 403 not authorized.
 				$usersConfig = &JComponentHelper::getParams( 'com_users' );

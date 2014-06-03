@@ -73,9 +73,9 @@ class mi_affiliatepro
 
 		$url = $this->loadAPI();
 
-		$session = new Gpf_Api_Session( $url ); 
+		$session = new Gpf_Api_Session( $url );
 
-		if( !$session->login( $this->settings['merchant'], $this->settings['password'] ) ) { 
+		if( !$session->login( $this->settings['merchant'], $this->settings['password'] ) ) {
 			aecQuickLog( 'warning', 'mi,invoice_creation,mi_affiliatepro', "Cannot login. Message: ".$session->getMessage(), 32 );
 
 			return null;
@@ -219,7 +219,7 @@ class mi_affiliatepro
 		$text .= 'PostAffTracker.register();'
 				. '</script>';
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$displaypipeline = new displayPipeline();
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );

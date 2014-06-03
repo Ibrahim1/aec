@@ -75,7 +75,7 @@ class plgUserAECaccess extends JPlugin
 
 	function onLoginFailure( $response, $options=null )
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
@@ -102,7 +102,7 @@ class plgUserAECaccess extends JPlugin
 				break;
 		}
 
-		$app =& JFactory::getApplication();
+		$app = JFactory::getApplication();
 
 		$app->logout();
 

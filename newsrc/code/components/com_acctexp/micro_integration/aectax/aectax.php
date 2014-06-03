@@ -336,7 +336,7 @@ class mi_aectax
 			return true;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$mi = new microIntegration();
 
@@ -613,7 +613,7 @@ class mi_aectax
 
 	function viesValidation( $number, $country )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$get = 'vat=' . $number . '&ms=' . $country . '&iso=' . $country . '&lang=EN';
 

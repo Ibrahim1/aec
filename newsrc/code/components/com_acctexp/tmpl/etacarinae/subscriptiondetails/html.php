@@ -15,7 +15,7 @@ if ( !$metaUser->userid ) {
 	return getView( 'access_denied' );
 }
 
-$db = &JFactory::getDBO();
+$db = JFactory::getDBO();
 
 // Redirect to SSL if the config requires it
 if ( !empty( $tmpl->cfg['ssl_profile'] ) && empty( $_SERVER['HTTPS'] ) && empty( $tmpl->cfg['override_reqssl'] ) ) {

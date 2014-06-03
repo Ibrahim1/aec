@@ -15,7 +15,7 @@ class aecInvoiceHelper
 {
 	static function UserIDfromInvoiceNumber( $invoice_number )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_invoices'
@@ -28,7 +28,7 @@ class aecInvoiceHelper
 
 	static function InvoiceIDfromNumber( $invoice_number, $userid=0, $override_active=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -55,7 +55,7 @@ class aecInvoiceHelper
 
 	static function InvoiceNumberfromId( $id, $override_active = false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
@@ -82,7 +82,7 @@ class aecInvoiceHelper
 			$excludedusage = array();
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `invoice_number`, `usage`'
 				. ' FROM #__acctexp_invoices'
@@ -119,7 +119,7 @@ class aecInvoiceHelper
 
 	static function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_invoices'
@@ -139,7 +139,7 @@ class aecInvoiceHelper
 
 	static function InvoiceCountbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -153,7 +153,7 @@ class aecInvoiceHelper
 
 	static function UnpaidInvoiceCountbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -168,7 +168,7 @@ class aecInvoiceHelper
 
 	static function PaidInvoiceCountbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -183,7 +183,7 @@ class aecInvoiceHelper
 
 	static function InvoiceNumberbyCartId( $userid, $cartid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
@@ -198,7 +198,7 @@ class aecInvoiceHelper
 
 	static function InvoiceIdList( $userid, $start, $limit, $sort='`transaction_date` DESC' )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -243,7 +243,7 @@ class InvoiceFactory
 
 	function initUser( $userid=null, $alert=true, $forceinternal=false )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$this->userid = $userid;
 		$this->authed = false;
@@ -274,7 +274,7 @@ class InvoiceFactory
 				return getView( 'access_denied' );
 			}
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$this->userid = xJ::escape( $db, $userid );
 
@@ -2425,7 +2425,7 @@ class InvoiceFactory
 
 	function error( $objUser, $invoice, $error )
 	{
-		$document=& JFactory::getDocument();
+		$document= JFactory::getDocument();
 
 		$document->setTitle( html_entity_decode( JText::_('CHECKOUT_ERROR_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 

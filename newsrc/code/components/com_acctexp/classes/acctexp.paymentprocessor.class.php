@@ -99,7 +99,7 @@ class PaymentProcessorHandler
 
 	static function getProcessorIdfromName( $name )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
@@ -111,7 +111,7 @@ class PaymentProcessorHandler
 
 	static function getProcessorNamefromId( $id )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `name`'
 				. ' FROM #__acctexp_config_processors'
@@ -129,7 +129,7 @@ class PaymentProcessorHandler
 	 */
 	static function getInstalledObjectList( $active = false, $simple = false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `name`' . ( $simple ? '' : ', `active`, `id`' )
 				. ' FROM #__acctexp_config_processors'
@@ -148,7 +148,7 @@ class PaymentProcessorHandler
 
 	function getInstalledNameList($active=false)
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `name`'
 				. ' FROM #__acctexp_config_processors'
@@ -259,7 +259,7 @@ class PaymentProcessor
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Set Name
 		$this->processor_name = strtolower( $name );
@@ -314,7 +314,7 @@ class PaymentProcessor
 
 	static function getNameById( $ppid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Fetch name from db and load processor
 		$query = 'SELECT `name`'
@@ -2251,7 +2251,7 @@ class XMLprocessor extends processor
 
 class SOAPprocessor extends XMLprocessor
 {
-	function transmitRequest( $url, $path, $command, $content, $headers=null, $options=null )
+	function transmitRequest( $url, $path, $command, $content, $headers=null, $options=null, $header=null )
 	{
 		global $aecConfig;
 
@@ -2565,7 +2565,7 @@ class URLprocessor extends processor
 		$var = $this->createGatewayLink( $request );
 
 		if ( isset( $var['_aec_html_head'] ) ) {
-			$document=& JFactory::getDocument();
+			$document= JFactory::getDocument();
 
 			if ( is_array( $var['_aec_html_head'] ) ) {
 				foreach ( $var['_aec_html_head'] as $content ) {

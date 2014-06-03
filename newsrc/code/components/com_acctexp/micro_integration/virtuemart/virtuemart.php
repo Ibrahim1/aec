@@ -15,7 +15,7 @@ class mi_virtuemart
 {
 	function mi_virtuemart()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 	 	$db->setQuery( 'SHOW TABLES LIKE \'%' . $db->getPrefix() . 'virtuemart_shoppergroups%\'' );
 
 	 	$this->isv2 = $db->loadResult() ? true : false;
@@ -139,7 +139,7 @@ class mi_virtuemart
 
 	function getShopperGroups()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->isv2 ) {
 			$query = 'SELECT `virtuemart_shoppergroup_id` AS `shopper_group_id`, `shopper_group_name`'
@@ -156,7 +156,7 @@ class mi_virtuemart
 
 	function checkVMuserexists( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->isv2 ) {
 			$query = 'SELECT `virtuemart_user_id`'
@@ -176,7 +176,7 @@ class mi_virtuemart
 
 	function addVMuserSgroup( $userid, $shoppergroup )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->isv2 ) {
 			if ( $this->hasVMuserSgroup( $userid, $shoppergroup ) ) {
@@ -203,7 +203,7 @@ class mi_virtuemart
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'DELETE FROM #__virtuemart_vmuser_shoppergroups'
 			. ' WHERE `virtuemart_shoppergroup_id` = \'' . $shoppergroup . '\''
@@ -216,7 +216,7 @@ class mi_virtuemart
 
 	function hasVMuserSgroup( $userid, $shoppergroup )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__virtuemart_vmuser_shoppergroups'
 			. ' WHERE `virtuemart_shoppergroup_id` = \'' . $shoppergroup . '\''
@@ -231,7 +231,7 @@ class mi_virtuemart
 	{
 		$app = JFactory::getApplication();
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// TODO: Replace with RWEngine call
 		$name = explode( ' ', $metaUser->cmsUser->name );
@@ -285,7 +285,7 @@ class mi_virtuemart
 
 	function uniqueID()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$inum = '';
 

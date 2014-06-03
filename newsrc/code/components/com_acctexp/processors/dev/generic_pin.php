@@ -135,7 +135,7 @@ class processor_generic_pin extends XMLprocessor
 
 			$db =& JDatabase::getInstance($options);
 		} else {
-			$db =& JFactory::getDBO();
+			$db = JFactory::getDBO();
 		}
 
 		return $db;

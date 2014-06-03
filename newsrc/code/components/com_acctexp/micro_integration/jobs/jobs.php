@@ -79,7 +79,7 @@ class mi_jobs
 			} else {
 				$this->publishResumes( $request->metaUser->userid );
 			}
-		} else {						
+		} else {
 			$companies = $this->getCompanyList( $request->metaUser->userid );
 
 			if ( !count( $companies ) ) {
@@ -90,7 +90,7 @@ class mi_jobs
 				$this->publishCompanies( $request->metaUser->userid );
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -100,16 +100,16 @@ class mi_jobs
 			$this->unpublishResumes( $request->metaUser->userid );
 		} else {
 			$companies = $this->getCompanyList( $request->metaUser->userid );
-			
+
 			$this->unpublishJobs( $companies );
-			
+
 			$this->unpublishCompanies( $request->metaUser->userid );
 		}
 	}
 
 	function getCompanyList( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM `#__jobs_companies`'
@@ -141,7 +141,7 @@ class mi_jobs
 
 	function createCompany( $fields )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'INSERT INTO #__jobs_companies'
 				. ' (`' . implode( '`, `', array_keys( $fields ) ) . '`)'
@@ -154,7 +154,7 @@ class mi_jobs
 
 	function publishCompanies( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'1\''
@@ -167,7 +167,7 @@ class mi_jobs
 
 	function unpublishCompanies( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'0\''
@@ -180,7 +180,7 @@ class mi_jobs
 
 	function publishJobs( $company_list )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'1\''
@@ -193,7 +193,7 @@ class mi_jobs
 
 	function unpublishJobs( $company_list )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_jobs`'
 				. ' SET `published` = \'0\''
@@ -206,7 +206,7 @@ class mi_jobs
 
 	function getResumeList( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM `#__jobs_resumes`'
@@ -235,7 +235,7 @@ class mi_jobs
 
 	function createResume( $fields )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'INSERT INTO #__jobs_resumes'
 				. ' (`' . implode( '`, `', array_keys( $fields ) ) . '`)'
@@ -248,7 +248,7 @@ class mi_jobs
 
 	function publishResumes( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_resumes`'
 				. ' SET `published` = \'1\''
@@ -261,7 +261,7 @@ class mi_jobs
 
 	function unpublishResumes( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE `#__jobs_resumes`'
 				. ' SET `published` = \'0\''

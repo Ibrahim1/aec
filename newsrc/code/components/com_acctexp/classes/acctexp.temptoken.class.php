@@ -64,7 +64,7 @@ class aecTempToken extends serialParamDBTable
 
 	function getToken()
 	{
-		$session =& JFactory::getSession();
+		$session = JFactory::getSession();
 		return $session->getToken();
 	}
 
@@ -124,7 +124,7 @@ class aecTempToken extends serialParamDBTable
 	function create( $content, $token=null )
 	{
 		if ( empty( $token ) ) {
-			$session =& JFactory::getSession();
+			$session = JFactory::getSession();
 			$token = $session->getToken();
 		}
 

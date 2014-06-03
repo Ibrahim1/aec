@@ -31,11 +31,11 @@ class tool_processor_dnr
 		if ( !isset( $_POST['delete'] ) ) {
 			$_POST['delete'] = '';
 		}
-	
+
 		if ( !isset( $_POST['replace'] ) ) {
 			$_POST['replace'] = '';
 		}
-		
+
 		$pph = new PaymentProcessorHandler();
 		$settings['lists']['delete'] = $pph->getProcessorSelectList( false, $_POST['delete'], 'delete' );
 		$settings['lists']['replace'] = $pph->getProcessorSelectList( false, $_POST['replace'], 'replace' );
@@ -53,7 +53,7 @@ class tool_processor_dnr
 			return '<p>Please select a processor to replace the removed processor with.</p>';
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$replacepp = new PaymentProcessor();
 		$replacepp->loadName( $_POST['replace'] );

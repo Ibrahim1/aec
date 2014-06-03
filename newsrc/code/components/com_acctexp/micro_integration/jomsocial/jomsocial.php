@@ -24,7 +24,7 @@ class mi_jomsocial extends MI
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$psettings['change_points']			= array( 'inputB' );
 
@@ -113,7 +113,7 @@ class mi_jomsocial extends MI
 	function relayAction( $request )
 	{
 		if ( ( $request->action == 'action' ) || ( $request->action == 'expiration_action' ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			if ( $this->settings['set_fields'.$request->area] ) {
 				$query = 'SELECT `id`, `name`'
@@ -186,7 +186,7 @@ class mi_jomsocial extends MI
 
 	function setFields( $fields, $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$ids = array();
 		foreach ( $fields as $fi => $ff ) {
@@ -240,7 +240,7 @@ class mi_jomsocial extends MI
 
 	function addToGroup( $userid, $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Check whether group exists
 		$query = 'SELECT `id`'
@@ -272,7 +272,7 @@ class mi_jomsocial extends MI
 
 	function removeFromGroup( $userid, $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Check whether group exists
 		$query = 'SELECT `id`'
@@ -321,7 +321,7 @@ class mi_jomsocial extends MI
 
 	function getPoints( $userid )
 	{
-		$db	   =& JFactory::getDBO();
+		$db	   = JFactory::getDBO();
 
 		$query = "SELECT points FROM #__community_users WHERE `userid`='" . $userid . "'";
 		$db->setQuery( $query );
@@ -331,7 +331,7 @@ class mi_jomsocial extends MI
 
 	function updatePoints( $userid, $points, $comment )
 	{
-		$db	   =& JFactory::getDBO();
+		$db	   = JFactory::getDBO();
 
 		$query = 'UPDATE #__community_users'
 				. ' SET `points` = \'' . ( $this->getPoints( $userid ) + $points ) . '\''

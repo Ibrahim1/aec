@@ -35,7 +35,7 @@ class tool_invoicecleanup
 
 	function Action()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$found = array();
 
@@ -57,7 +57,7 @@ class tool_invoicecleanup
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-				. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'				
+				. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'
 				;
 		$db->setQuery( $query );
 		$found['total_unpub'] = $db->loadResult();
@@ -72,7 +72,7 @@ class tool_invoicecleanup
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
 				. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-				. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'				
+				. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'
 				;
 		$db->setQuery( $query );
 		$found['total_invis'] = $db->loadResult();
@@ -92,7 +92,7 @@ class tool_invoicecleanup
 				$query = 'SELECT count(*)'
 						. ' FROM #__acctexp_invoices'
 						. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-						. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'				
+						. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'
 						;
 				$db->setQuery( $query );
 				$found['total_unpub'] = $db->loadResult();
@@ -101,7 +101,7 @@ class tool_invoicecleanup
 					$query = 'DELETE'
 							. ' FROM #__acctexp_invoices'
 							. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-							. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'				
+							. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'
 							;
 					$db->setQuery( $query );
 					$db->query();
@@ -116,7 +116,7 @@ class tool_invoicecleanup
 				$query = 'SELECT count(*)'
 						. ' FROM #__acctexp_invoices'
 						. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-						. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'				
+						. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'
 						;
 				$db->setQuery( $query );
 				$found['total_invis'] = $db->loadResult();
@@ -125,7 +125,7 @@ class tool_invoicecleanup
 					$query = 'DELETE'
 							. ' FROM #__acctexp_invoices'
 							. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-							. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'				
+							. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'
 							;
 					$db->setQuery( $query );
 					$db->query();

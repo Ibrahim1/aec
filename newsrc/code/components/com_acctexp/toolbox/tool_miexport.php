@@ -24,7 +24,7 @@ class tool_miexport
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['micro_integrations']				= array( 'list', 'Micro Integration', 'Select one or more MIs to export' );
@@ -46,7 +46,7 @@ class tool_miexport
 
 	function Action()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 

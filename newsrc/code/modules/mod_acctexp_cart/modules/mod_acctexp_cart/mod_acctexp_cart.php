@@ -19,10 +19,10 @@ $posttext 	= $params->get( 'posttext' );
 $mode		= $params->get( 'mode', 'abridged' );
 $button		= $params->get( 'button', 1 );
 
-$user = &JFactory::getUser();
+$user = JFactory::getUser();
 
 if ( $user->id ) {
-	$lang =& JFactory::getLanguage();
+	$lang = JFactory::getLanguage();
 
 	$lang->load( 'mod_acctexp_cart', JPATH_SITE );
 

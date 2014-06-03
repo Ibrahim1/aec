@@ -20,7 +20,7 @@ class microIntegrationHandler
 
 	static function getMIList( $limitstart=false, $limit=false, $use_order=false, $name=false, $classname=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id, class_name' . ( $name ? ', name' : '' )
 			 	. ' FROM #__acctexp_microintegrations'
@@ -47,7 +47,7 @@ class microIntegrationHandler
 
 	static function compareMIs( $mi, $cmi_id )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$excluded_props = array( 'id' );
 
@@ -103,7 +103,7 @@ class microIntegrationHandler
 
 	static function getPlansbyMI( $mi_id, $inherited=true, $extended=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_plans'
@@ -150,7 +150,7 @@ class microIntegrationHandler
 
 	static function getGroupsbyMI( $mi_id, $inherited=true, $extended=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_itemgroups'
@@ -263,7 +263,7 @@ class microIntegrationHandler
 
 	static function getPreExpIntegrations()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
@@ -276,7 +276,7 @@ class microIntegrationHandler
 
 	function getAutoIntegrations()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'
@@ -289,7 +289,7 @@ class microIntegrationHandler
 
 	function getUserChangeIntegrations()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_microintegrations'
@@ -302,7 +302,7 @@ class microIntegrationHandler
 
 	function userchange( $row, $post, $trace = '' )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$mi_list = $this->getUserChangeIntegrations();
 
@@ -345,7 +345,7 @@ class microIntegrationHandler
 			return array();
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$milist = array_unique( $milist );
 
@@ -361,7 +361,7 @@ class microIntegrationHandler
 
 	static function getMaxPreExpirationTime()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT MAX(pre_exp_check)'
 				. ' FROM #__acctexp_microintegrations'
@@ -373,7 +373,7 @@ class microIntegrationHandler
 
 	static function getDetailedList()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`, `desc`, `class_name`'
 				. ' FROM #__acctexp_microintegrations'
@@ -457,7 +457,7 @@ class MI
 
 	function issueUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_event'
@@ -479,7 +479,7 @@ class MI
 
 	function redateUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_event'
@@ -507,7 +507,7 @@ class MI
 
 	function removeEvents( $request, $event )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'DELETE'
 				. ' FROM #__acctexp_event'

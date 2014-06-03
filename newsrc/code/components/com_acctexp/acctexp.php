@@ -14,7 +14,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 require_once( JPATH_SITE . '/components/com_acctexp/acctexp.html.php' );
 
-$user = &JFactory::getUser();
+$user = JFactory::getUser();
 
 $task = trim( aecGetParam( 'view', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
 
@@ -73,7 +73,7 @@ if ( !empty( $task ) ) {
 			// Manual Heartbeat
 			$hash = aecGetParam( 'hash', 0, true, array( 'word', 'string' ) );
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$heartbeat = new aecHeartbeat();
 			$heartbeat->frontendping( true, $hash );
@@ -179,7 +179,7 @@ if ( !empty( $task ) ) {
 			break;
 
 		case 'cart':
-			$user = &JFactory::getUser();
+			$user = JFactory::getUser();
 
 			if ( !$user->id ) {
 				getView( 'access_denied' );
@@ -294,7 +294,7 @@ if ( !empty( $task ) ) {
 			$iFactory = new InvoiceFactory();
 
 			if ( !empty( $usage ) ) {
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$plan = new SubscriptionPlan();
 				$plan->load( $usage );
@@ -440,9 +440,9 @@ if ( !empty( $task ) ) {
 
 function subscribe( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	if ( defined( 'JPATH_MANIFESTS' ) && !empty( $_REQUEST['jform'] ) ) {
 		foreach ( $_REQUEST['jform'] as $k => $v ) {
@@ -658,7 +658,7 @@ function checkUsernameEmail( $username, $email )
 
 function checkUsernameExists( $username )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$query = 'SELECT `id`'
 			. ' FROM #__users'
@@ -671,7 +671,7 @@ function checkUsernameExists( $username )
 
 function checkEmailExists( $email )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$query = 'SELECT `id`'
 			. ' FROM #__users'
@@ -684,7 +684,7 @@ function checkEmailExists( $email )
 
 function confirmSubscription( $option )
 {
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	global $aecConfig;
 
@@ -731,7 +731,7 @@ function confirmSubscription( $option )
 
 function internalCheckout( $option, $invoice_number, $processor, $userid )
 {
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	// Always rewrite to session userid
 	if ( !empty( $user->id ) ) {
@@ -753,9 +753,9 @@ function internalCheckout( $option, $invoice_number, $processor, $userid )
 
 function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	// Always rewrite to session userid
 	if ( !empty( $user->id ) ) {
@@ -816,9 +816,9 @@ function repeatInvoice( $option, $invoice_number, $cart, $userid, $first=0 )
 
 function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=null )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
 		if ( $userid ) {
@@ -859,9 +859,9 @@ function cancelInvoice( $option, $invoice_number, $pending=0, $userid, $return=n
 
 function planaction( $option, $action, $subscr )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	if ( !empty( $user->id ) ) {
 		$userid = $user->id;
@@ -878,7 +878,7 @@ function planaction( $option, $action, $subscr )
 
 function invoiceAction( $option, $action, $invoice_number )
 {
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
 		return getView( 'access_denied' );
@@ -893,7 +893,7 @@ function invoiceAction( $option, $action, $invoice_number )
 
 function InvoicePrintout( $option, $invoice, $standalone=true )
 {
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
 		return getView( 'access_denied' );
@@ -905,7 +905,7 @@ function InvoicePrintout( $option, $invoice, $standalone=true )
 
 function InvoicePDF( $option, $invoice_number )
 {
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	if ( empty( $user->id ) ) {
 		return getView( 'access_denied' );
@@ -954,7 +954,7 @@ function InvoicePDF( $option, $invoice_number )
 
 function InvoiceAddParams( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoice = aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
@@ -969,7 +969,7 @@ function InvoiceAddParams( $option )
 
 function InvoiceMakeGift( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$user_ident	= aecGetParam( 'user_ident', 0, true, array( 'string', 'clear_nonemail' ) );
@@ -992,7 +992,7 @@ function InvoiceMakeGift( $option )
 
 function InvoiceRemoveGift( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 
@@ -1011,7 +1011,7 @@ function InvoiceRemoveGift( $option )
 
 function InvoiceRemoveGiftConfirm( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
@@ -1033,7 +1033,7 @@ function InvoiceRemoveGiftConfirm( $option )
 
 function InvoiceRemoveGiftCart( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoice	= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$userid		= aecGetParam( 'userid', 0, true, array( 'word', 'int' ) );
@@ -1054,7 +1054,7 @@ function InvoiceRemoveGiftCart( $option )
 
 function InvoiceAddCoupon( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
@@ -1071,7 +1071,7 @@ function InvoiceAddCoupon( $option )
 
 function InvoiceRemoveCoupon( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoice		= aecGetParam( 'invoice', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
 	$coupon_code	= aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );

@@ -25,7 +25,7 @@ class mi_rsgallery2 extends MI
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['create_galleries']		= array( 'toggle' );
@@ -78,7 +78,7 @@ class mi_rsgallery2 extends MI
 
 	function getMIform( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 
@@ -110,7 +110,7 @@ class mi_rsgallery2 extends MI
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !empty( $this->settings['publish_all'] ) ) {
 			$query = 'SELECT `id`'
@@ -167,7 +167,7 @@ class mi_rsgallery2 extends MI
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !empty( $this->settings['unpublish_all'] ) ) {
 			$query = 'SELECT `id`'
@@ -198,7 +198,7 @@ class mi_rsgallery2 extends MI
 	{
 		$app = JFactory::getApplication();
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Check that we don't create a duplicate
 		$query = 'SELECT id'

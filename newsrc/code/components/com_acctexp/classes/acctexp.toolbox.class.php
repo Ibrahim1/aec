@@ -605,7 +605,7 @@ class AECToolbox
 
 	static function searchUser( $search )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$k = 0;
 
@@ -701,7 +701,7 @@ class AECToolbox
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `status`'
 				. ' FROM #__acctexp_subscr'

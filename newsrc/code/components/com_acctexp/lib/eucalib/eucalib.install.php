@@ -77,7 +77,7 @@ class eucaInstall extends eucaObject
 
 	function deleteAdminMenuEntries()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$query = 'DELETE'
@@ -114,7 +114,7 @@ class eucaInstall extends eucaObject
 
 	function populateAdminMenuEntry( $array )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$details = array();
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
@@ -187,7 +187,7 @@ class eucaInstall extends eucaObject
 							'admin_menu_img'	=> $entry[2]
 							);
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 			$query = 'INSERT INTO #__components'
 					. ' (`' . implode( '`, `', array_keys( $insert ) ) . '`)'
 					. ' VALUES '
@@ -262,7 +262,7 @@ class eucaInstallDB extends eucaObject
 
 	function multiQueryExec( $queri )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		foreach ( $queri as $query ) {
 			$db->setQuery( $query );
@@ -274,7 +274,7 @@ class eucaInstallDB extends eucaObject
 
 	function ColumninTable( $column=null, $table=null, $prefix=true )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !empty( $column ) ) {
 			$this->column = $column;
@@ -322,7 +322,7 @@ class eucaInstallDB extends eucaObject
 
 	function addColumn( $options )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'ALTER TABLE #__' . $this->table
 				. ' ADD COLUMN `' . $this->column . '` ' . $options
@@ -342,7 +342,7 @@ class eucaInstallDB extends eucaObject
 
 	function dropTableifExists( $table, $prefix=true )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !empty( $table ) ) {
 			if ( $prefix ) {
@@ -369,7 +369,7 @@ class eucaInstallDB extends eucaObject
 
 	function dropColumn( $options )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'ALTER TABLE #__' . $this->table
 				. ' DROP COLUMN `' . $this->column . '`'

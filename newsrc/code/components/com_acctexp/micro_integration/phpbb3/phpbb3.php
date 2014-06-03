@@ -27,7 +27,7 @@ class mi_phpbb3
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -39,7 +39,7 @@ class mi_phpbb3
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_phpbb3pw`'
 		. ' (`id` int(11) NOT NULL auto_increment,'
@@ -194,7 +194,7 @@ class mi_phpbb3
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$phpbbdb = $this->getDB();
 
@@ -488,7 +488,7 @@ class mi_phpbb3
 
 			$db = &JDatabase::getInstance($options);
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 		}
 
 		return $db;
@@ -496,7 +496,7 @@ class mi_phpbb3
 
 	function on_userchange_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$phpbb3pw = new phpbb3pw();
 		$apwid = $phpbb3pw->getIDbyUserID( $request->row->id );
@@ -553,7 +553,7 @@ class phpbb3pw extends serialParamDBTable
 
 	function getIDbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_phpbb3pw'

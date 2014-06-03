@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
-$app =& JFactory::getApplication();
+$app = JFactory::getApplication();
 $app->registerEvent( 'onPrepareContent', 'plgContentAECRewrite' );
 
 class plgContentAECRewrite extends JPlugin
@@ -64,7 +64,7 @@ class plgContentAECRewrite extends JPlugin
 		include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
 
 		if ( empty( $rwEngine->rewrite ) ) {
-			$user = &JFactory::getUser();
+			$user = JFactory::getUser();
 
 			$rwEngine = new reWriteEngine();
 

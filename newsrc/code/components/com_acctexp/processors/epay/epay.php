@@ -149,7 +149,7 @@ class processor_epay extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$post = $this->getPost( $post );
 
@@ -172,7 +172,7 @@ class processor_epay extends POSTprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$post = $this->getPost( $post );
 

@@ -25,7 +25,7 @@ class mi_joomlaplugin
 
 	function Settings()
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['plugin'] = array( 'list' );
@@ -59,7 +59,7 @@ class mi_joomlaplugin
 
 		include_once( JPATH_SITE . '/libraries/joomla/user/authentication.php' );
 
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$p = explode( "_", $this->settings['plugin'], 2 );
 

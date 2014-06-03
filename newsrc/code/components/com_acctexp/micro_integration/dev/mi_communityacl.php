@@ -26,7 +26,7 @@ class mi_communityacl
 	function Settings()
 	{
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
         $settings 						= array();
 		$lists 							= array();
@@ -129,7 +129,7 @@ class mi_communityacl
 		if ( is_dir( JPATH_SITE . '/components/com_community_acl' ) ) {
 			require_once( JPATH_ADMINISTRATOR . '/components/com_community_acl/community_acl.class.php' );
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$settings = array();
 
@@ -148,7 +148,7 @@ class mi_communityacl
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Lets delete the user from Community ACL
 		$query = "DELETE FROM `#__community_acl_users` WHERE user_id = " . $request->metaUser->userid;

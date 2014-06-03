@@ -139,7 +139,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 					array( 'com_acctexp.processors', JPATH_SITE )
 			);
 
-			$lang =& JFactory::getLanguage();
+			$lang = JFactory::getLanguage();
 
 			foreach ( $langlist as $array ) {
 				$lang->load( $array[0] );
@@ -162,7 +162,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function initDB( $errors, $eucaInstalldb )
 		{
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			// Slot in DB tables that do not exist yet
 			$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';
@@ -186,7 +186,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function upgrade( &$errors, $eucaInstall, $eucaInstalldb )
 		{
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 			$app = JFactory::getApplication();
 
 			// Overall Variables
@@ -211,7 +211,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			$aecConfig->initParams();
 
-			$document=& JFactory::getDocument();
+			$document= JFactory::getDocument();
 			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . 'media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION .'" />' );
 
 			if ( isset( $aecConfig->cfg['aec_version'] ) ) {
@@ -337,7 +337,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				'mod_acctexp_cart' => array ( 'position' => 'left' )
 			);
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$pckgs = 0;
 			foreach ( $install_list as $name => $details ) {
@@ -411,7 +411,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function initAdmins()
 		{
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';
 
@@ -455,7 +455,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 
 			if ( $translation ) {
-				$lang =& JFactory::getLanguage();
+				$lang = JFactory::getLanguage();
 
 				$lcode = substr( $lang->get('tag'), 0, 2 );
 
@@ -513,7 +513,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function logInstall()
 		{
-			$user = &JFactory::getUser();
+			$user = JFactory::getUser();
 
 			$eventlog = new eventLog();
 			$eventlog->issue(

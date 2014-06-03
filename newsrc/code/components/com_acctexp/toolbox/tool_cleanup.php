@@ -33,7 +33,7 @@ class tool_cleanup
 
 	function Action()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Find all entries lacking an existing user account
 		$tables = array(	'cart' => 'userid',

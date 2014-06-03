@@ -26,9 +26,9 @@ class mi_vbulletin
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
-		$conf =& JFactory::getConfig();
+		$conf = JFactory::getConfig();
 
 		$tables	= array();
 		$tables	= $db->getTableList();
@@ -38,7 +38,7 @@ class mi_vbulletin
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_vbulletinpw`'
 		. ' (`id` int(11) NOT NULL auto_increment,'
@@ -55,7 +55,7 @@ class mi_vbulletin
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$vbdb = $this->getDB();
 
@@ -175,7 +175,7 @@ class mi_vbulletin
 	{
 		$app = JFactory::getApplication();
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$vbdb = $this->getDB();
 
@@ -463,7 +463,7 @@ class mi_vbulletin
 
 			$db = &JDatabase::getInstance($options);
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 		}
 
 		return $db;
@@ -471,7 +471,7 @@ class mi_vbulletin
 
 	function on_userchange_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$vbulletinpw = new vbulletinpw();
 		$apwid = $vbulletinpw->getIDbyUserID( $request->row->id );
@@ -533,7 +533,7 @@ class vbulletinpw extends serialParamDBTable
 
 	function getIDbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_vbulletinpw'

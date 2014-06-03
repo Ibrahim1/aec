@@ -347,7 +347,7 @@ class processor_paypal_wpp extends XMLprocessor
 				}
 			}
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			// Create the xml string
 			$xml = $this->createRequestXML( $request );

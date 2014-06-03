@@ -36,7 +36,7 @@ class mi_joomlauser
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$settings['set_fields']		= array( 'toggle' );
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'SELECT DISTINCT `profile_key`'
 					. ' FROM #__user_profiles';
@@ -71,7 +71,7 @@ class mi_joomlauser
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$set = array();
 
@@ -120,7 +120,7 @@ class mi_joomlauser
 	function getUsername( $request )
 	{
 		if ( !empty( $this->settings['username_rand'] ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$numberofrows	= 1;
 			while ( $numberofrows ) {
@@ -143,7 +143,7 @@ class mi_joomlauser
 	function expiration_action( $request )
 	{
 		if ( $this->settings['block'] ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'UPDATE #__users'
 				. ' SET `block` = \'1\''
@@ -161,7 +161,7 @@ class mi_joomlauser
 
 	function setFields( $request, $stage="" )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `profile_key`, `profile_value`'
 				. ' FROM #__user_profiles'

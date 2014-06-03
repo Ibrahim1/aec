@@ -115,7 +115,7 @@ class paramDBTable extends JTable
 {
 	function __construct( $table, $id )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		parent::__construct( $table, $id, $db );
 	}
@@ -345,7 +345,7 @@ class paramDBTable extends JTable
 		return parent::store($updateNulls);
 	}
 
-	function move( $dir )
+	function move( $dir, $where=null )
 	{
 		parent::move( $dir );
 
@@ -778,7 +778,7 @@ class parameterHandler
 	 */
 	static function encode( $array )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$params = array();
 		foreach ( $array as $key => $value ) {

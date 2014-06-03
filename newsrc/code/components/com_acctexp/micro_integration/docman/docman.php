@@ -25,7 +25,7 @@ class mi_docman
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -42,7 +42,7 @@ class mi_docman
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_docman` ('
 					. '`id` int(11) NOT NULL auto_increment,'
@@ -62,7 +62,7 @@ class mi_docman
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$db->setQuery( "SHOW COLUMNS FROM #__docman_groups LIKE 'groups_members'" );
 		$result = $db->loadObject();
@@ -148,7 +148,7 @@ class mi_docman
 
 	function profile_info( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$mi_docmanhandler = new docman_restriction();
 		$id = $mi_docmanhandler->getIDbyUserID( $request->metaUser->userid );
 
@@ -180,7 +180,7 @@ class mi_docman
 		$hacks = array();
 
 		$downloadhack =	'// AEC HACK docmandownloadphp START' . "\n"
-		. '$user =& JFactory::getUser();' . "\n"
+		. '$user = JFactory::getUser();' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 		. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/docman/docman.php\');' . "\n\n"
 		. '$restrictionhandler = new docman_restriction();' . "\n"
@@ -213,7 +213,7 @@ class mi_docman
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
  		if ( $this->settings['delete_on_exp'] == "Set" ) {
 			foreach ( $this->settings['group'] as $tgroup ) {
@@ -253,7 +253,7 @@ class mi_docman
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
  		if ( $this->settings['delete_on_set'] == "All" ) {
 			$groups = $this->GetUserGroups( $request->metaUser->userid );
@@ -296,7 +296,7 @@ class mi_docman
 
 	function GetUserGroups( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `groups_id`'
 				. ' FROM #__docman_groups'
@@ -323,7 +323,7 @@ class mi_docman
 
 	function AddUserToGroup( $userid, $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `groups_members`'
 			. ' FROM #__docman_groups'
@@ -359,7 +359,7 @@ class mi_docman
 
 	function DeleteUserFromGroup( $userid, $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `groups_members`'
 			. ' FROM #__docman_groups'
@@ -412,7 +412,7 @@ class docman_restriction extends serialParamDBTable {
 	var $params					= null;
 
 	function getIDbyUserID( $userid ) {
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_docman'

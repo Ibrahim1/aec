@@ -69,7 +69,7 @@ class mi_mysql_query
 				$db =& JDatabase::getInstance($options);
 			}
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 		}
 
 		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );

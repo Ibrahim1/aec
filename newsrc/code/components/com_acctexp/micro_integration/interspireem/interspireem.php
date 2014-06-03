@@ -209,7 +209,7 @@ class mi_interspireem
 
 	function sendRequest( $xml )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$url = parse_url( $this->settings['url'] );
 

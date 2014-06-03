@@ -24,7 +24,7 @@ class mi_raffle
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -36,7 +36,7 @@ class mi_raffle
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_rafflelist` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -66,7 +66,7 @@ class mi_raffle
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['list_group']			= array( 'inputA' );
@@ -81,7 +81,7 @@ class mi_raffle
 
 	function saveparams( $params )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -103,7 +103,7 @@ class mi_raffle
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$raffleuser = new AECMI_raffleuser();
 		$raffleuser->loadUserid( $request->metaUser->userid );
@@ -236,7 +236,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 	}
 
 	function loadMax( $group=null ) {
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT max(`id`)'
 			. ' FROM #__acctexp_mi_rafflelist'
@@ -258,7 +258,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 
 	function closeRun( $winid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$participants = array();
 		$winners = array();
@@ -311,7 +311,7 @@ class AECMI_raffleuser extends serialParamDBTable {
 	}
 
 	function loadUserid( $userid) {
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 			. ' FROM #__acctexp_mi_raffleuser'

@@ -69,7 +69,7 @@ class mi_yourmembership_com extends MI
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$meta = new metaUserDB();
 			$meta->loadUserid( $request->row->id );

@@ -100,7 +100,7 @@ class mi_rstickets extends MI
 
 	function admin_form( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$this->loadRStickets();
 

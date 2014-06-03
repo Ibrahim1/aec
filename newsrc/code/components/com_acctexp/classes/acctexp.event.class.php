@@ -15,7 +15,7 @@ class aecEventHandler
 {
 	static function pingEvents()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Load all events happening now or before now
 		$query = 'SELECT `id`'
@@ -37,7 +37,7 @@ class aecEventHandler
 	// TODO: Finish function that, according to setting, cleans out old entries (like more than two weeks old default)
 	function deleteOldEvents()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Load all events happening now or before now
 		$query = 'SELECT `id`'

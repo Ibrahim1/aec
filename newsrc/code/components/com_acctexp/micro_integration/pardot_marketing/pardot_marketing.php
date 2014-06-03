@@ -38,7 +38,7 @@ class mi_pardot_marketing extends MI
 		$settings['remove']					= array( 'toggle' );
 
 		if ( !empty( $this->settings['email'] ) && !empty( $this->settings['password'] ) && !empty( $this->settings['user_key'] ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$pc = new PardotConnector();
 			$pc->get( $this->settings );
@@ -56,7 +56,7 @@ class mi_pardot_marketing extends MI
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -68,7 +68,7 @@ class mi_pardot_marketing extends MI
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_pardot_marketing` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -85,7 +85,7 @@ class mi_pardot_marketing extends MI
 
 	function on_userchange_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$pc = new PardotConnector();
 		$pc->get( $this->settings );
@@ -153,7 +153,7 @@ class mi_pardot_marketing extends MI
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$pc = new PardotConnector();
 		$pc->get( $this->settings );
@@ -256,7 +256,7 @@ class PardotConnector extends serialParamDBTable
 	 	$this->load(1);
 
 		if ( empty( $this->id ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'INSERT INTO #__acctexp_mi_pardot_marketing'
 			. ' VALUES( \'1\', \'' . gmdate( 'Y-m-d H:i:s' ) . '\', \'\' )'

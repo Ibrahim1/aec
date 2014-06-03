@@ -83,7 +83,7 @@ class aecSuperCommand
 		switch ( $this->audience['command'] ) {
 			case 'all':
 			case 'everybody':
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
@@ -92,7 +92,7 @@ class aecSuperCommand
 				$userlist = xJ::getDBArray( $db );
 				break;
 			case 'orphans':
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 				/*$this->focus == 'subscriptions';
 
 				$query = 'SELECT id'
@@ -109,7 +109,7 @@ class aecSuperCommand
 				return xJ::getDBArray( $db );
 				break;
 			case 'subscribers':
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT ' . ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`';
 
@@ -185,7 +185,7 @@ class aecSuperCommand
 				return explode( ',', $params[1] );
 				break;
 			case 'userid':
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
@@ -195,7 +195,7 @@ class aecSuperCommand
 				return xJ::getDBArray( $db );
 				break;
 			case 'username':
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT `id`'
 						. ' FROM #__users'
@@ -211,7 +211,7 @@ class aecSuperCommand
 				return $this->cmdHas( $p );
 				break;
 			case 'plan':
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT ' . ( ( $this->focus == 'users' ) ? 'DISTINCT `userid`' : '`id`' )
 						. ' FROM #__acctexp_subscr'
@@ -224,7 +224,7 @@ class aecSuperCommand
 				return xJ::getDBArray( $db );
 				break;
 			case 'mi':
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$mis = explode( ',', $params[1] );
 
@@ -248,7 +248,7 @@ class aecSuperCommand
 	{
 		global $aecConfig;
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		switch ( strtolower( $params[0] ) ) {
 			case 'plan':
@@ -365,7 +365,7 @@ class aecImport
 
 	function import()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		foreach( $this->rows as $row ) {
 			$userid = null;
@@ -613,7 +613,7 @@ class aecExport extends serialParamDBTable
 
 	function exportSales()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_log_history'
@@ -842,7 +842,7 @@ class aecExport extends serialParamDBTable
 
 	function exportMembers()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		foreach ( $this->filter as $k => $v ) {
 			if ( empty( $v ) ) {
@@ -962,7 +962,7 @@ class aecExport extends serialParamDBTable
 	{
 		$app = JFactory::getApplication();
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Drop old system saves to always keep 10 records
 		if ( $system ) {

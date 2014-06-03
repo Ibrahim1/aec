@@ -24,12 +24,12 @@ class tool_rawedit
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 
 		if ( !empty( $_POST['type'] ) && !empty( $_POST['id'] ) && empty( $_POST['edit'] ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$settings['edit']	= array( 'hidden', 1 );
 			$settings['type']	= array( 'hidden', $_POST['type'] );
@@ -127,7 +127,7 @@ class tool_rawedit
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		switch ( $_POST['type'] ) {
 			case 'metauser':

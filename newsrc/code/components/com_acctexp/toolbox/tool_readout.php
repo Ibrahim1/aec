@@ -43,7 +43,7 @@ class tool_readout
 	{
 		$optionlist = $this->options();
 
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$metaUser = new metaUser( $user->id );
 		if ( isset( $metaUser->meta->custom_params['aecadmin_readout'] ) ) {
@@ -105,7 +105,7 @@ class tool_readout
 					$s = $readout->readMIs();
 					break;
 				case 'store_settings':
-					$user = &JFactory::getUser();
+					$user = JFactory::getUser();
 
 					$settings = array();
 					foreach ( $optionlist as $option => $optdefault ) {
@@ -418,7 +418,7 @@ class aecReadout
 
 	function readProcessors()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$lang = JFactory::getLanguage();
 
@@ -513,7 +513,7 @@ class aecReadout
 
 	function readPlans()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$r = array();
 		$r['head'] = "Payment Plans";
@@ -598,7 +598,7 @@ class aecReadout
 
 	function readPlanMIrel()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$r = array();
 		$r['head'] = "Payment Plan - MicroIntegration relationships";
@@ -660,7 +660,7 @@ class aecReadout
 
 	function readMIs()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$lang = JFactory::getLanguage();
 

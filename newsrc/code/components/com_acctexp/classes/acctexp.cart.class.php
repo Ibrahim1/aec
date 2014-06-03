@@ -15,7 +15,7 @@ class aecCartHelper
 {
 	static function getCartidbyUserid( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_cart'
@@ -65,7 +65,7 @@ class aecCartHelper
 
 	static function getFirstSortedCartItemObject( $cart )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$highest = 0;
 		$cursor = 1000000;
@@ -216,7 +216,7 @@ class aecCartHelper
 
 	static function getInvoiceIdByCart( $cart )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'

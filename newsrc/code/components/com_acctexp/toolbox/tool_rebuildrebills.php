@@ -33,7 +33,7 @@ class tool_rebuildrebills
 
 	function Action()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$entries = 0;
 

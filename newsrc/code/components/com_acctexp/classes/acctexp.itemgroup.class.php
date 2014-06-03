@@ -15,7 +15,7 @@ class ItemGroupHandler
 {
 	static function getGroups( $filter=null, $select=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $select ) {
 			$query = 'SELECT `id` AS value, `name` AS text FROM #__acctexp_itemgroups';
@@ -40,7 +40,7 @@ class ItemGroupHandler
 
 	static function getTree()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Filter out groups that have no relationship
 		$query = 'SELECT id'
@@ -99,7 +99,7 @@ class ItemGroupHandler
 
 	static function groupName( $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT name'
 				. ' FROM #__acctexp_itemgroups'
@@ -111,7 +111,7 @@ class ItemGroupHandler
 
 	static function groupColor( $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$group = new ItemGroup();
 		$group->load( $groupid );
@@ -121,7 +121,7 @@ class ItemGroupHandler
 
 	static function parentGroups( $item_id, $type='item' )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT group_id'
 				. ' FROM #__acctexp_itemxgroup'
@@ -227,7 +227,7 @@ class ItemGroupHandler
 			return array();
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$where = array();
 
@@ -444,7 +444,7 @@ class ItemGroupHandler
 
 	static function removeChildren( $items, $groups=array(), $type='item' )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'DELETE'
 				. ' FROM #__acctexp_itemxgroup'

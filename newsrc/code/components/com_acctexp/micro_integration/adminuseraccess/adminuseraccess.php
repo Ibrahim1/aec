@@ -25,7 +25,7 @@ class mi_adminuseraccess
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`'
 				. ' FROM #__pi_aua_usergroups'
@@ -87,7 +87,7 @@ class mi_adminuseraccess
 
 	function update_aua_group($user_id, $aua_group)
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__pi_aua_userindex'
 				. ' SET `group_id` = \'' . $aua_group . '\''

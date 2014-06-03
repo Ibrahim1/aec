@@ -43,7 +43,7 @@ class tool_terminal
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = trim( aecGetParam( 'query', 0 ) );
 
@@ -75,7 +75,7 @@ class tool_terminal
 
 				return $r;
 			}
-	
+
 			return "I think you ought to know I'm feeling very depressed. (Something was wrong with your query.)";
 		}
 

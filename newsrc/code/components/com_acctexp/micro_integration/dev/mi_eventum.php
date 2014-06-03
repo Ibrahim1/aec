@@ -60,7 +60,7 @@ class mi_eventum extends MI
 
 		$eventum_userid = $this->getEventumUser( $request->metaUser->userid );
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
 

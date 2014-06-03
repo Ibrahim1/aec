@@ -7,7 +7,7 @@ class xJLanguageHandler extends xJLanguageHandlerCommon
 			return;
 		}
 
-		$lang =& JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 
 		foreach ( $list as $name => $path ) {
 			$lang->load( $name, $path, 'en-GB', true );
@@ -40,7 +40,7 @@ class xJLanguageHandler extends xJLanguageHandlerCommon
 
 class xJACLhandler extends xJACLhandlerCommon
 {
-	function getSuperAdmins()
+	static function getSuperAdmins()
 	{
 		$groups = xJACLhandler::getAdminGroups();
 
@@ -49,9 +49,9 @@ class xJACLhandler extends xJACLhandlerCommon
 		return xJACLhandler::getUserObjects( $users );
 	}
 
-	function setGID( $userid, $gid, $gid_name )
+	static function setGID( $userid, $gid, $gid_name )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Make sure the user does not have this group assigned yet
 		$query = 'SELECT `user_id`'
@@ -71,9 +71,9 @@ class xJACLhandler extends xJACLhandlerCommon
 		}
 	}
 
-	function setGIDsTakeNames( $userid, $gid )
+	static function setGIDsTakeNames( $userid, $gid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `title`'
 				. ' FROM #__usergroups'
@@ -85,11 +85,11 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $gid_name;
 	}
 
-	function adminBlock( $admin, $manager )
+	static function adminBlock( $admin, $manager )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
 		$block = false;
 
@@ -112,17 +112,17 @@ class xJACLhandler extends xJACLhandlerCommon
 		}
 	}
 
-	function userDelete( $userid, $msg )
+	static function userDelete( $userid, $msg )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		if ( $userid == $user->id ) {
 			return JText::_('You cannot delete yourself');
 		}
 
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$superadmins = xJACLhandler::getAdminGroups( false );
 
@@ -149,7 +149,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		if ( $is_admin && $deletor_admin ) {
 			return JText::_('Only Super Users can do that');
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$obj = new cmsUser();
 
@@ -159,11 +159,11 @@ class xJACLhandler extends xJACLhandlerCommon
 		}
 	}
 
-	function getGroupTree( $ex=array() )
+	static function getGroupTree( $ex=array() )
 	{
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$ex_groups = array();
 
@@ -209,14 +209,14 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $gtree;
 	}
 
-	function countAdmins()
+	static function countAdmins()
 	{
 		return count( xJACLhandler::getUsersByGroup( xJACLhandler::getAdminGroups() ) );
 	}
 
-	function aclList()
+	static function aclList()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$list = array();
 
@@ -239,9 +239,9 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $list;
 	}
 
-	function getLowerACLGroups( $group_id )
+	static function getLowerACLGroups( $group_id )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT g2.id'
 				. ' FROM #__usergroups AS g1'
@@ -255,9 +255,9 @@ class xJACLhandler extends xJACLhandlerCommon
 		return xJ::getDBArray( $db );
 	}
 
-	function getHigherACLGroups( $group_id )
+	static function getHigherACLGroups( $group_id )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT g2.id'
 				. ' FROM #__usergroups AS g1'
@@ -276,7 +276,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 {
 	function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		if ( !is_array( $gid ) && !empty( $gid ) ) {
 			$gid = array( $gid );
@@ -316,7 +316,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 		}
 
 		if ( isset( $session['user'] ) ) {
-			$user = &JFactory::getUser();
+			$user = JFactory::getUser();
 
 			$sgsids = JAccess::getGroupsByUser( $userid );
 
@@ -336,7 +336,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 				}
 			}
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'SELECT `title`, `id`'
 					. ' FROM #__usergroups'
@@ -371,7 +371,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 
 	function putSession( $userid, $data, $gid=null, $gid_name=null )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$sdata = $this->joomserializesession( array( $this->sessionkey => $data) );
 

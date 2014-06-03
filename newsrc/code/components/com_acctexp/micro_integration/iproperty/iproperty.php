@@ -25,7 +25,7 @@ class mi_iproperty
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 
@@ -306,7 +306,7 @@ class mi_iproperty
 			return false;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query  = 'INSERT INTO #__iproperty_' . $table
 				. ' (' . implode(', ', array_keys($fields) ) . ') '
@@ -329,7 +329,7 @@ class mi_iproperty
 
 	function getCompanyByName( $name )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__iproperty_companies'
 		. ' WHERE `name` = \'' . xJ::escape( $db, $name ) . '\''
@@ -341,7 +341,7 @@ class mi_iproperty
 
 	function getObject( $table, $field, $id )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT * FROM #__iproperty_' . $table
 		. ' WHERE `' . $field . '` = \'' . xJ::escape( $db, $id ) . '\''
@@ -363,7 +363,7 @@ class mi_iproperty
 
 	function storeObject( $object, $table )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( is_object( $object->params ) ) {
 			$object->params = json_encode( $object->params );
@@ -393,7 +393,7 @@ class mi_iproperty
 		$properties = $this->getProperties( $agentid );
 
 		if ( !empty( $properties ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'UPDATE #__iproperty'
 					. ' SET `state` = \'1\''
@@ -409,7 +409,7 @@ class mi_iproperty
 		$properties = $this->getProperties( $agentid );
 
 		if ( !empty( $properties ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'UPDATE #__iproperty'
 					. ' SET `state` = \'0\''
@@ -422,7 +422,7 @@ class mi_iproperty
 
 	function getProperties( $agentid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT prop_id'
 				. ' FROM #__iproperty_agentmid'
