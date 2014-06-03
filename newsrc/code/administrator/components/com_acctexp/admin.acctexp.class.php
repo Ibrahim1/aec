@@ -958,7 +958,7 @@ class aecExport extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function save( $name, $filter, $options, $params, $system=false, $is_test=false )
+	function saveComplex( $name, $filter, $options, $params, $system=false, $is_test=false )
 	{
 		$app = JFactory::getApplication();
 

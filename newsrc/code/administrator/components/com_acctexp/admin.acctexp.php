@@ -6233,14 +6233,14 @@ function exportData( $option, $type, $cmd=null )
 				$row->load( 0 );
 			}
 
-			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
+			$row->saveComplex( $system_values['save_name'], $filter_values, $options_values, $params_values );
 
 			if ( !empty( $system_values['save'] ) ) {
 				$system_values['selected_export'] = $row->getMax();
 			}
 		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) && !$is_test ) {
 			// User wants to save a new entry
-			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
+			$row->saveComplex( $system_values['save_name'], $filter_values, $options_values, $params_values );
 		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && ( $cmd_export || $is_test ) )  ) {
 			if ( $row->id ) {
 				// User wants to load an entry
@@ -6258,7 +6258,7 @@ function exportData( $option, $type, $cmd=null )
 	if ( $cmd_save || $cmd_apply || $cmd_export ) {
 		$autorow = new aecExport( ( $type == 'sales' ) );
 		$autorow->load(0);
-		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
+		$autorow->saveComplex( 'Autosave', $filter_values, $options_values, $params_values, true );
 
 		if ( isset( $row ) ) {
 			if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {
