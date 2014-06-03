@@ -1651,11 +1651,11 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function delete()
+	function delete( $pk=null )
 	{
 		ItemGroupHandler::removeChildren( $this->id );
 
-		return parent::delete();
+		return parent::delete($pk);
 	}
 
 }

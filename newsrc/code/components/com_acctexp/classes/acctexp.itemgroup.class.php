@@ -697,7 +697,7 @@ class ItemGroup extends serialParamDBTable
 		$this->params = $params;
 	}
 
-	function delete()
+	function delete( $pk=null )
 	{
 		if ( $this->id == 1 ) {
 			return false;
@@ -725,7 +725,7 @@ class ItemGroup extends serialParamDBTable
 			exit();
 		}
 
-		return parent::delete();
+		return parent::delete($pk);
 	}
 
 	function copy()

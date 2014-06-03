@@ -4120,7 +4120,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function delete()
+	function delete( $pk=null )
 	{
 		if ( !empty( $this->coupons ) ) {
 			foreach ( $this->coupons as $cid ) {
@@ -4128,7 +4128,7 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		return parent::delete();
+		return parent::delete($pk);
 	}
 
 }
