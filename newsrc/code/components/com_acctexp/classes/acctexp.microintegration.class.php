@@ -1516,7 +1516,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function delete ()
+	function delete( $pk=null )
 	{
 		// Maybe this function needs special actions on delete?
 		// TODO: There should be a way to manage complete deletion of use of an MI type
