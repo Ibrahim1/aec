@@ -87,7 +87,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$this->src = dirname(__FILE__);
 			} else {
-				$componentInstaller =& JInstaller::getInstance();
+				$componentInstaller = JInstaller::getInstance();
 
 				$this->src = $componentInstaller->getPath('source');
 			}

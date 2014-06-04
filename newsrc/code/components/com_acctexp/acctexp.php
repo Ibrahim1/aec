@@ -34,7 +34,7 @@ if ( empty( $task ) ) {
 	// Regular mode - try to get the task
 	$task = trim( aecGetParam( 'task', '', true, array( 'word', 'string', 'clear_nonalnum' ) ) );
 } else {
-	$params = &JComponentHelper::getParams( 'com_acctexp' );
+	$params = JComponentHelper::getParams( 'com_acctexp' );
 
 	$menuitemid = JRequest::getInt( 'Itemid' );
 	if ( $menuitemid ) {

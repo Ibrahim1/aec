@@ -87,7 +87,7 @@ class plgSystemAECerrorhandler extends JPlugin
 				}
 			} else {
 				// Copied for pre-1.5.7 compatibility
-				$uri =& JURI::getInstance($return);
+				$uri = JURI::getInstance($return);
 				$base = $uri->toString(array('scheme', 'host', 'port', 'path'));
 				$host = $uri->toString(array('scheme', 'host', 'port'));
 				if ( ( strpos( strtolower($base), strtolower(JURI::base()) ) !== 0 ) && !empty($host) ) {

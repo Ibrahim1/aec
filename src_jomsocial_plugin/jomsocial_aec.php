@@ -18,14 +18,14 @@ class plgCommunityAEC extends CApplications {
 
 	function onProfileDisplay()
 	{
-		$document=& JFactory::getDocument();
+		$document= JFactory::getDocument();
 
 		// Attach CSS
 		$css        = JURI::base() . 'plugins/community/aecsubscription/style.css';
 		$document->addStyleSheet($css);
 
 		// manage caching
-		$cache =& JFactory::getCache( 'plgCommunityAECSubscription' );
+		$cache = JFactory::getCache( 'plgCommunityAECSubscription' );
 		$cache->setCaching( $this->params->get( 'cache', 0 ) );
 
 		$callback = array( 'plgCommunityAECSubscription', '_getOriginalHTML' );

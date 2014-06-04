@@ -274,7 +274,7 @@ class aecRegistration
 					$data['block'] = 1;
 				}
 
-				$usersConfig = &JComponentHelper::getParams( 'com_users' );
+				$usersConfig = JComponentHelper::getParams( 'com_users' );
 
 				$system	= $usersConfig->get('new_usertype', 2);
 
@@ -310,7 +310,7 @@ class aecRegistration
 				$document   = JFactory::getDocument();
 
 				// If user registration is not allowed, show 403 not authorized.
-				$usersConfig = &JComponentHelper::getParams( 'com_users' );
+				$usersConfig = JComponentHelper::getParams( 'com_users' );
 				if ($usersConfig->get('allowUserRegistration') == '0') {
 					JError::raiseError( 403, JText::_( 'Access Forbidden' ));
 					return;
@@ -366,7 +366,7 @@ class aecRegistration
 			$subject 	= sprintf ( JText::_('AEC_SEND_SUB'), $name, $app->getCfg( 'sitename' ) );
 			$subject 	= html_entity_decode( $subject, ENT_QUOTES, 'UTF-8' );
 
-			$usersConfig = &JComponentHelper::getParams( 'com_users' );
+			$usersConfig = JComponentHelper::getParams( 'com_users' );
 			$activation = $usersConfig->get('useractivation');
 
 			if ( ( $activation > 0 ) && !$overrideActivation ) {

@@ -486,7 +486,7 @@ class mi_phpbb3
 								'prefix'	=> $this->settings['table_prefix']
 								);
 
-			$db = &JDatabase::getInstance($options);
+			$db = JDatabase::getInstance($options);
 		} else {
 			$db = JFactory::getDBO();
 		}

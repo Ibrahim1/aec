@@ -172,7 +172,7 @@ class mi_juga
 			JPluginHelper::importPlugin( 'juga' );
 
 			// fire plugins
-			$dispatcher	=& JDispatcher::getInstance();
+			$dispatcher	= JDispatcher::getInstance();
 			$before		= $dispatcher->trigger( 'onBeforeAddUserToGroup', array( $userid, $groupid, $return ) );
 			if (in_array(false, $before, true)) {
 					JError::raiseError(500, $return->errorMsg );
@@ -191,7 +191,7 @@ class mi_juga
 			}
 
 			// fire plugins
-			$dispatcher =& JDispatcher::getInstance();
+			$dispatcher = JDispatcher::getInstance();
 			$dispatcher->trigger( 'onAfterAddUserToGroup', array( $userid, $groupid ) );
 
 			return true;
@@ -209,7 +209,7 @@ class mi_juga
 		JPluginHelper::importPlugin( 'juga' );
 
 		// fire plugins
-		$dispatcher	=& JDispatcher::getInstance();
+		$dispatcher	= JDispatcher::getInstance();
 		$before		= $dispatcher->trigger( 'onBeforeRemoveUserFromGroup', array( $userid, $groupid, $return ) );
 		if (in_array(false, $before, true)) {
 				JError::raiseError(500, $return->errorMsg );
@@ -233,7 +233,7 @@ class mi_juga
 		}
 
 		// fire plugins
-		$dispatcher =& JDispatcher::getInstance();
+		$dispatcher = JDispatcher::getInstance();
 		$dispatcher->trigger( 'onAfterRemoveUserFromGroup', array( $userid, $groupid ) );
 
 		return true;

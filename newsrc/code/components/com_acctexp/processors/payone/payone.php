@@ -77,7 +77,7 @@ class processor_payone extends XMLprocessor
 		return array( 'productid' => array( 'inputC' ) );
 	}
 
-	function checkoutProcess( $request )
+	function checkoutProcess( $request, $InvoiceFactory )
 	{
 		$var['portalid']	= $this->settings['portalid'];
 		$var['aid']			= $this->settings['aid'];

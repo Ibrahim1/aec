@@ -263,7 +263,7 @@ class aecTemplate
 
 		$document= JFactory::getDocument();
 
-		$params = &JComponentHelper::getParams( 'com_acctexp' );
+		$params = JComponentHelper::getParams( 'com_acctexp' );
 
 		$menu = JSite::getMenu();
 		$menuparams = $menu->getParams( $menuitemid );
