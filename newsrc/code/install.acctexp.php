@@ -382,10 +382,13 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 						$db->setQuery( $query );
 						$module_id = $db->loadResult();
 
-						$query = "REPLACE INTO #__modules_menu (moduleid,menuid) VALUES (" . $module_id . ", 0)";
+						if ( $module_id ) {
+							$db->setQuery(
+								"REPLACE INTO #__modules_menu (moduleid, menuid) VALUES (" . $module_id . ", 0)"
+							);
 
-						$db->setQuery( $query );
-						$db->query();
+							$db->query();
+						}
 					}
 				}
 
