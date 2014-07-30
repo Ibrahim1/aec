@@ -70,7 +70,7 @@ class plgUserAECaccess extends JPlugin
 
 	function onUserLoginFailure( $response, $options=null )
 	{
-		return $this->onLoginFailure( $response, $options );
+		$this->onLoginFailure( $response, $options );
 	}
 
 	function onLoginFailure( $response, $options=null )
@@ -134,6 +134,13 @@ class plgUserAECaccess extends JPlugin
 		} else {
 			define( 'AEC_AUTH_ERROR_MSG', $verification );
 			define( 'AEC_AUTH_ERROR_UNAME', $credentials['username'] );
+
+			$v = new JVersion();
+
+			if ( $v->isCompatible('3.0') ) {
+				$this->onUserLoginFailure(null);
+			}
+
 			return false;
 		}
 	}
