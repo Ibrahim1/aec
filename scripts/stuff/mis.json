@@ -1,0 +1,766 @@
+[
+    {
+        "name": "Acajoom",
+        "desc": "Includes the newsletter Acajoom",
+        "type": [
+            "sharing.newsletter",
+            "vendor.joobi"
+        ],
+        "handle": "acajoom"
+    },
+    {
+        "name": "Usergroup MI (ACL)",
+        "desc": "Set the usergroup for the user account.",
+        "type": [
+            "user.access_restriction",
+            "joomla.acl"
+        ],
+        "handle": "acl"
+    },
+    {
+        "name": "ACY Mailing",
+        "desc": "Assign Users to ACY Mailign List",
+        "type": [
+            "sharing.newsletter",
+            "vendor.acyba"
+        ],
+        "handle": "acymail"
+    },
+    {
+        "name": "Admin-User-Access",
+        "desc": "Will automate addition of a user to a Admin-User-Access group in Admin-User-Access",
+        "type": [
+            "user.access_restriction",
+            "vendor.pages-and-items"
+        ],
+        "handle": "adminuseraccess"
+    },
+    {
+        "name": "Adsmanager",
+        "desc": "Publish or unpublish listings in Adsmanager component",
+        "type": [
+            "user.access_restriction",
+            "vendor.joomprod"
+        ],
+        "handle": "adsmanager"
+    },
+    {
+        "name": "Automatic Coupon",
+        "desc": "Always apply a coupon on checkout for the membership plan this is applied to.",
+        "type": [
+            "aec.checkout",
+            "vendor.valanx"
+        ],
+        "handle": "aecautomaticcoupon"
+    },
+    {
+        "name": "Automatic Discount",
+        "desc": "Always grant a discount on the membership plan this is applied to. With Restrictions, this can be used for upgrade discounts between plans.",
+        "type": [
+            "aec.checkout",
+            "vendor.valanx"
+        ],
+        "handle": "aecautomaticdiscount"
+    },
+    {
+        "name": "AEC Donate",
+        "desc": "Let the user pay whatever he likes (with minimum and maximum) for a plan",
+        "type": [
+            "aec.checkout",
+            "vendor.valanx"
+        ],
+        "handle": "aecdonate"
+    },
+    {
+        "name": "HTML Invoice Mailout",
+        "desc": "Send out a modified HTML version of the Invoice printout page",
+        "type": [
+            "aec.invoice",
+            "vendor.valanx"
+        ],
+        "handle": "aecinvoiceprintemail"
+    },
+    {
+        "name": "Customize Invoice Printout",
+        "desc": "Change the Information that is displayed when printing the invoice for a plan that has this MI attached",
+        "type": [
+            "aec.invoice",
+            "vendor.valanx"
+        ],
+        "handle": "aecinvoiceprintmod"
+    },
+    {
+        "name": "Modify Cost",
+        "desc": "Give the user several customized options which will modify the checkout cost",
+        "type": [
+            "aec.checkout",
+            "vendor.valanx"
+        ],
+        "handle": "aecmodifycost"
+    },
+    {
+        "name": "Modify Expiration Date",
+        "desc": "Dynamically resets the Expiration Date of the subscription it is applied to",
+        "type": [
+            "aec.membership",
+            "vendor.valanx"
+        ],
+        "handle": "aecmodifyexpiration"
+    },
+    {
+        "name": "AEC Plan Application",
+        "desc": "Apply a payment plan to a user",
+        "type": [
+            "aec.membership",
+            "vendor.valanx"
+        ],
+        "handle": "aecplan"
+    },
+    {
+        "name": "AEC Points",
+        "desc": "Granting or Charging points, as well as giving the user the option to _QQ_pay_QQ_ with points (get a discount for points).",
+        "type": [
+            "ecommerce.credits",
+            "vendor.valanx"
+        ],
+        "handle": "aecpoints"
+    },
+    {
+        "name": "Tax Helper",
+        "desc": "Specify tax for this item - affects Confirmation&Checkout screen, Item cost and Invoice printout",
+        "type": [
+            "aec.invoice",
+            "vendor.valanx"
+        ],
+        "handle": "aectax"
+    },
+    {
+        "name": "AEC Tip",
+        "desc": "Let the user add a tip on the checkout",
+        "type": [
+            "aec.checkout",
+            "vendor.valanx"
+        ],
+        "handle": "aectip"
+    },
+    {
+        "name": "Custom User Details",
+        "desc": "Request additional user details on Confirmation - stored with the user account",
+        "type": [
+            "aec.membership",
+            "vendor.valanx"
+        ],
+        "handle": "aecuserdetails"
+    },
+    {
+        "name": "Custom User Subscription Details",
+        "desc": "Request additional user details on Confirmation - stored in the subscription",
+        "type": [
+            "aec.membership",
+            "vendor.valanx"
+        ],
+        "handle": "aecusersubscriptiondetails"
+    },
+    {
+        "name": "AffiliatePRO",
+        "desc": "Connect your AEC sales to AffiliatePRO",
+        "type": [
+            "tracking.affiliate",
+            "vendor.qualityunit"
+        ],
+        "handle": "affiliatepro"
+    },
+    {
+        "name": "Age Restriction",
+        "desc": "Require the user to submit a birthdate and allow checking out a plan based on that.",
+        "type": [
+            "aec.checkout",
+            "vendor.valanx"
+        ],
+        "handle": "age_restriction"
+    },
+    {
+        "name": "Agora Forum",
+        "desc": "Change the Users Roles and Roles in Agora",
+        "type": [
+            "communication.forum",
+            "vendor.anythingdigital"
+        ],
+        "handle": "agora"
+    },
+    {
+        "name": "Alpha User Points",
+        "desc": "Granting or Charging points, as well as giving the user the option to _QQ_pay_QQ_ with points (get a discount for points).",
+        "type": [
+            "ecommerce.credits",
+            "vendor.alphaplug"
+        ],
+        "handle": "alphauserpoints"
+    },
+    {
+        "name": "Amigos",
+        "desc": "Amigos is an Affiliate Tracking Extension for Joomla from Dioscouri.com",
+        "type": [
+            "tracking.affiliate",
+            "vendor.dioscouri"
+        ],
+        "handle": "amigos"
+    },
+    {
+        "name": "APC",
+        "desc": "Manage Advanced Profile Control access groups",
+        "type": [
+            "community.social"
+        ],
+        "handle": "apc"
+    },
+    {
+        "name": "Attend Events",
+        "desc": "Dummy MicroIntegration - for now only links payments from AE to AEC",
+        "type": [
+            "calendar_events.events"
+        ],
+        "handle": "attend_events"
+    },
+    {
+        "name": "Community Builder",
+        "desc": "Actions that affect the Community Builder user account",
+        "type": [
+            "community.social",
+            "vendor.joomlapolis"
+        ],
+        "handle": "communitybuilder"
+    },
+    {
+        "name": "Coupons",
+        "desc": "Create and send out coupons",
+        "type": [
+            "aec.invoice",
+            "aec.tools",
+            "vendor.valanx"
+        ],
+        "handle": "coupon"
+    },
+    {
+        "name": "Directory",
+        "desc": "Create Directories with this MI",
+        "type": [
+            "basic.filesystem",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "directory"
+    },
+    {
+        "name": "DisplayPipeline",
+        "desc": "Display Text on the AEC Module",
+        "type": [
+            "tracking.affiliate",
+            "system",
+            "aec.tools",
+            "vendor.valanx"
+        ],
+        "handle": "displaypipeline"
+    },
+    {
+        "name": "DocMan",
+        "desc": "Choose the amount of files a user can download and what DocMan group should be assigned to the user account",
+        "type": [
+            "directory_documentation.downloads",
+            "vendor.joomlatools"
+        ],
+        "handle": "docman"
+    },
+    {
+        "name": "EasyDiscuss",
+        "desc": "Change the Users Ranks and Badges in EasyDiscuss",
+        "type": [
+            "communication.q_a",
+            "vendor.stackideas"
+        ],
+        "handle": "easydiscuss"
+    },
+    {
+        "name": "Email",
+        "desc": "Send an Email to one or more addresses on application or expiration of the subscription",
+        "type": [
+            "communication.email",
+            "basic.email",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "email"
+    },
+    {
+        "name": "Email Files",
+        "desc": "Send an Email with attached files to one or more addresses on application of the subscription",
+        "type": [
+            "communication.email",
+            "basic.email",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "email_files"
+    },
+    {
+        "name": "Multiple Emails",
+        "desc": "Send multiple Emails at once on application of the subscription",
+        "type": [
+            "communication.email",
+            "basic.email",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "email_multi"
+    },
+    {
+        "name": "Event List",
+        "desc": "Register a user for an event in the Eventlist component",
+        "type": [
+            "calendar_events.events"
+        ],
+        "handle": "eventlist"
+    },
+    {
+        "name": "Eventlog",
+        "desc": "Make entries into the Eventlog",
+        "type": [
+            "system",
+            "aec.tools",
+            "vendor.valanx"
+        ],
+        "handle": "eventlog"
+    },
+    {
+        "name": "File",
+        "desc": "Create and Modify files on your server",
+        "type": [
+            "basic.filesystem",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "file"
+    },
+    {
+        "name": "Fireboard Micro Integration",
+        "desc": "Will automate addition of a user to a group in FireBoard",
+        "type": [
+            "communication.forum"
+        ],
+        "handle": "fireboard"
+    },
+    {
+        "name": "FLEXIaccess",
+        "desc": "Set FLEXIaccess groups on application or expiration of a plan",
+        "type": [
+            "user.access_restriction",
+            "vendor.flexicontent"
+        ],
+        "handle": "flexiaccess"
+    },
+    {
+        "name": "Frontend-User-Access",
+        "desc": "Will automate addition of a user to a Frontend-User-Access group in Frontend-User-Access",
+        "type": [
+            "user.access_restriction",
+            "vendor.pages-and-items"
+        ],
+        "handle": "frontenduseraccess"
+    },
+    {
+        "name": "Google Adsense Conversion",
+        "desc": "With this, you can attach Google Adsense Conversion tracking code to the DisplayPipeline.",
+        "type": [
+            "tracking.analytics",
+            "vendor.google"
+        ],
+        "handle": "googleadsenseconversion"
+    },
+    {
+        "name": "Google Analytics",
+        "desc": "With this, you can attach Google Analytics e-commerce tracking code to the DisplayPipeline.",
+        "type": [
+            "tracking.analytics",
+            "vendor.google"
+        ],
+        "handle": "googleanalytics"
+    },
+    {
+        "name": "Hot Property",
+        "desc": "Create and change Agents and Companies with this MI",
+        "type": [
+            "vertical_markets.real_estate",
+            "vendor.mosets"
+        ],
+        "handle": "hotproperty"
+    },
+    {
+        "name": ".htaccess",
+        "desc": "Protect a folder with a .htaccess file and only allow users of this subscription to access it with their joomla account details.",
+        "type": [
+            "basic.server",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "htaccess"
+    },
+    {
+        "name": "HTTP Query",
+        "desc": "Sends out a HTTP request to an url, including GET variables",
+        "type": [
+            "basic.server",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "http_query"
+    },
+    {
+        "name": "iDevAffiliate",
+        "desc": "Connect your sales to the iDevAffiliate Component",
+        "type": [
+            "tracking.affiliate",
+            "vendor.idevdirect"
+        ],
+        "handle": "idevaffiliate"
+    },
+    {
+        "name": "Interspire Email Marketer",
+        "desc": "Sign up users to your Interspire Email Marketer lists, sync userdetails",
+        "type": [
+            "sharing.newsletter",
+            "vendor.interspire"
+        ],
+        "handle": "interspireem"
+    },
+    {
+        "name": "iProperty",
+        "desc": "Create and change Agents and Companies, as well as setting posting restrictions with this MI",
+        "type": [
+            "vertical_markets.real_estate",
+            "vendor.the_thinkery"
+        ],
+        "handle": "iproperty"
+    },
+    {
+        "name": "JARC",
+        "desc": "Create affililates and track payments in JARC",
+        "type": [
+            "tracking.affiliate"
+        ],
+        "handle": "jarc"
+    },
+    {
+        "name": "JNews",
+        "desc": "Includes the newsletter JNews",
+        "type": [
+            "sharing.newsletter",
+            "vendor.joobi"
+        ],
+        "handle": "jnews"
+    },
+    {
+        "name": "Instant PHP Jobs! Integration",
+        "desc": "Create default resume or company for the Jobs! Component, publish and unpublish resumes or companies",
+        "type": [
+            "vendor.instant_php"
+        ],
+        "handle": "jobs"
+    },
+    {
+        "name": "JomSocial",
+        "desc": "Actions that affect the JomSocial user account",
+        "type": [
+            "community.social",
+            "vendor.azrul"
+        ],
+        "handle": "jomsocial"
+    },
+    {
+        "name": "JomSocial-JSPT",
+        "desc": "Choose the default profile type for a user.",
+        "type": [
+            "community.social",
+            "vendor.joomlaxi"
+        ],
+        "handle": "jomsocialjspt"
+    },
+    {
+        "name": "Joomdle",
+        "desc": "Assign Courses in Joomdle",
+        "type": [
+            "education.courses",
+            "vendor.joomdle"
+        ],
+        "handle": "joomdle"
+    },
+    {
+        "name": "Joomla Plugin",
+        "desc": "Call a Joomla Plugin (only Authentication for now)",
+        "type": [
+            "basic.joomla",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "joomlaplugin"
+    },
+    {
+        "name": "Joomla User",
+        "desc": "Actions that affect the joomla user account",
+        "type": [
+            "joomla.user",
+            "community.profile",
+            "vendor.valanx"
+        ],
+        "handle": "joomlauser"
+    },
+    {
+        "name": "JUGA",
+        "desc": "Set JUGA groups on application or expiration of a plan",
+        "type": [
+            "directory_documentation.directory",
+            "vendor.dioscouri"
+        ],
+        "handle": "juga"
+    },
+    {
+        "name": "K2",
+        "desc": "Assign users to K2 usergroups",
+        "type": [
+            "content",
+            "vendor.joomlaworks"
+        ],
+        "handle": "k2"
+    },
+    {
+        "name": "Kunena Forum",
+        "desc": "Change the Users Rank in Kunena",
+        "type": [
+            "communication.forum"
+        ],
+        "handle": "kunena"
+    },
+    {
+        "name": "Mailchimp",
+        "desc": "Let users sign up to your Mailchimp lists, sync userdetails",
+        "type": [
+            "sharing.newsletter",
+            "vendor.mailchimp"
+        ],
+        "handle": "mailchimp"
+    },
+    {
+        "name": "MosetsTree",
+        "desc": "Restrict the amount of listings a user can publish",
+        "type": [
+            "directory_documentation.directory",
+            "vendor.mosets"
+        ],
+        "handle": "mosets_tree"
+    },
+    {
+        "name": "Multi User Creation",
+        "desc": "Create multiple users and assign subscriptions to their accounts",
+        "type": [
+            "aec.membership",
+            "vendor.valanx"
+        ],
+        "handle": "multiusercreation"
+    },
+    {
+        "name": "MySMS Micro Integration",
+        "desc": "Will automate enable a user to send sms via MySMS, and add x credits to the account.",
+        "type": [
+            "communication.other"
+        ],
+        "handle": "mysms"
+    },
+    {
+        "name": "mySQL Query",
+        "desc": "Specify a mySQL query that should be carried out with this subscription or on its expiration",
+        "type": [
+            "basic.database",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "mysql_query"
+    },
+    {
+        "name": "Ninjaboard",
+        "desc": "Assign Groups in Ninjaboard",
+        "type": [
+            "communication.forum",
+            "vendor.ninjaforge"
+        ],
+        "handle": "ninjaboard"
+    },
+    {
+        "name": "Pardot Marketing",
+        "desc": "Connect your users to Pardot Marketing",
+        "type": [
+            "services.external"
+        ],
+        "handle": "pardot_marketing"
+    },
+    {
+        "name": "Pepperjam Tracking",
+        "desc": "Connect your sales to Pepperjam",
+        "type": [
+            "tracking.affiliate",
+            "vendor.pepperjam"
+        ],
+        "handle": "pepperjam"
+    },
+    {
+        "name": "Phoca Download",
+        "desc": "Assign Users to access rights to categories",
+        "type": [
+            "directory_documentation.downloads",
+            "vendor.phoca"
+        ],
+        "handle": "phocadownload"
+    },
+    {
+        "name": "PHPBB3 Integration",
+        "desc": "will set the users group in phpbb on subscription\/expiration",
+        "type": [
+            "communication.forum",
+            "vendor.phpbb"
+        ],
+        "handle": "phpbb3"
+    },
+    {
+        "name": "Raffle",
+        "desc": "A very basic raffle setup",
+        "type": [
+            "aec.membership",
+            "vendor.valanx"
+        ],
+        "handle": "raffle"
+    },
+    {
+        "name": "RedShop",
+        "desc": "Choose the RedShop usergroup this user should be applied to",
+        "type": [
+            "ecommerce.shopping_cart",
+            "vendor.redcomponent"
+        ],
+        "handle": "redshop"
+    },
+    {
+        "name": "RSgallery2",
+        "desc": "Create User galleries and manage gallery publication status",
+        "type": [
+            "media.gallery",
+            "vendor.rsgallery"
+        ],
+        "handle": "rsgallery2"
+    },
+    {
+        "name": "RStickets",
+        "desc": "Create Tickets in RSTickets",
+        "type": [
+            "service.tickets",
+            "vendor.rsjoomla"
+        ],
+        "handle": "rstickets"
+    },
+    {
+        "name": "Share A Sale",
+        "desc": "Connect your sales to Share A Sale",
+        "type": [
+            "tracking.affiliate",
+            "vendor.shareasale"
+        ],
+        "handle": "shareasale"
+    },
+    {
+        "name": "SOBI",
+        "desc": "Publish or unpublish listings in Joomla's Sigsiu Online Business Index component",
+        "type": [
+            "directory_documentation.directory",
+            "vendor.sigsiu"
+        ],
+        "handle": "sobi"
+    },
+    {
+        "name": "SobiPro",
+        "desc": "An MI for the SobiPro component. This is a port of Sobi2 MI adapted for use with SobiPro",
+        "type": [
+            "directory_documentation.directory",
+            "vendor.sigsiu"
+        ],
+        "handle": "sobipro"
+    },
+    {
+        "name": "Support Time Tracker",
+        "desc": "Simple time tracker that can be used to keep track of support hours",
+        "type": [
+            "aec.membership",
+            "service.tickets",
+            "vendor.valanx"
+        ],
+        "handle": "supporttimetracker"
+    },
+    {
+        "name": "Tienda",
+        "desc": "Choose the Tienda usergroup this user should be applied to",
+        "type": [
+            "ecommerce.shopping_cart",
+            "vendor.dioscouri"
+        ],
+        "handle": "tienda"
+    },
+    {
+        "name": "UddeIM",
+        "desc": "Choose the amount of PMs a user can send.",
+        "type": [
+            "communication.instantmessenging",
+            "vendor.stephan_slabihoud"
+        ],
+        "handle": "uddeim"
+    },
+    {
+        "name": "File Unpack",
+        "desc": "Unpack packed files on your server",
+        "type": [
+            "basic.filesystem",
+            "system",
+            "vendor.valanx"
+        ],
+        "handle": "unpack"
+    },
+    {
+        "name": "vBulletin Integration",
+        "desc": "Will update vBulletin usergroups on subscription\/expiration",
+        "type": [
+            "communication.forum",
+            "vendor.vbulletin"
+        ],
+        "handle": "vbulletin"
+    },
+    {
+        "name": "VirtueMart",
+        "desc": "Choose the VM usergroup this user should be applied to",
+        "type": [
+            "ecommerce.shopping_cart",
+            "vendor.virtuemart"
+        ],
+        "handle": "virtuemart"
+    },
+    {
+        "name": "Webex",
+        "desc": "An MI for connecting with Webex Services",
+        "type": [
+            "services.external"
+        ],
+        "handle": "webex"
+    },
+    {
+        "name": "YourMembership.com",
+        "desc": "An MI for connecting with YourMembership.com",
+        "type": [
+            "services.external"
+        ],
+        "handle": "yourmembership_com"
+    }
+]
