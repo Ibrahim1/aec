@@ -62,6 +62,8 @@ class processor_vcs extends POSTprocessor
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['p4']		= $request->int_var['amount']['amount3'];
 
+			$var['p6']		= 'U';
+
 			$var['p7']		= $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 		} else {
 			$var['p4']		= $request->int_var['amount'];
