@@ -77,6 +77,11 @@ class processor_vcs extends POSTprocessor
 		$var['m_6'] = $request->metaUser->cmsUser->email;
 		$var['m_7'] = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
 
+		$var['UrlsProvided'] = 'Y';
+
+		$var['ApprovedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
+		$var['DeclinedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
+
 		return $var;
 	}
 
