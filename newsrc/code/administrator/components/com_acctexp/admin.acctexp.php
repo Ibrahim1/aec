@@ -2399,6 +2399,8 @@ function listSubscriptionPlans( $option )
 	$limitstart		= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 	$filter_group	= $app->getUserStateFromRequest( "filter_group", 'filter_group', array() );
 
+	$filtered = !empty($filter_group);
+
 	if ( !empty( $filter_group ) ) {
 		$subselect = ItemGroupHandler::getChildren( $filter_group, 'item' );
 	} else {
@@ -2570,7 +2572,7 @@ function listSubscriptionPlans( $option )
 		}
 	}
 
- 	HTML_AcctExp::listSubscriptionPlans( $rows, $lists, $pageNav, $option );
+ 	HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $lists, $pageNav, $option );
 }
 
 function editSubscriptionPlan( $id, $option )
@@ -3760,6 +3762,8 @@ function listMicroIntegrations( $option )
 
 	$filter_planid	= intval( $app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
 
+	$filtered = !empty($filter_planid) || !empty($search);
+
 	$ordering = false;
 
 	if ( strpos( $orderby, 'ordering' ) !== false ) {
@@ -3849,7 +3853,7 @@ function listMicroIntegrations( $option )
 	}
 	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
-	HTML_AcctExp::listMicroIntegrations( $rows, $pageNav, $option, $lists, $search, $ordering );
+	HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $ordering );
 }
 
 function editMicroIntegration( $id, $option )
@@ -4262,6 +4266,8 @@ function listCoupons( $option )
 	$search			= $app->getUserStateFromRequest( "search{$option}_coupons", 'search_coupons', '' );
 	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
+	$filtered = !empty($search);
+
 	$total = 0;
 
 	$query = 'SELECT count(*)'
@@ -4344,7 +4350,7 @@ function listCoupons( $option )
 		}
 	}
 
-	HTML_AcctExp::listCoupons( $rows, $pageNav, $option, $search );
+	HTML_AcctExp::listCoupons( $rows, $filtered, $pageNav, $option, $search );
 }
 
 function editCoupon( $id, $option, $new )
