@@ -5416,30 +5416,26 @@ function quicklookup( $option )
 
 	$s = AECToolbox::searchUser( $search );
 
-	if ( !empty( $s ) ) {
-		if ( is_array( $s ) ) {
-			$return = array();
-			foreach ( $s as $user ) {
-				$JTableUser = new cmsUser();
-				$JTableUser->load( $user );
-				$userlink = '<div class="lookupresult">';
-				$userlink .= '<a href="';
-				$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $JTableUser->id;
-				$userlink .= '">';
-				$userlink .= str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->name ) . ' (' . str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->username ) . ')';
-				$userlink .= '</a>';
-				$userlink .= '</div>';
-
-				$return[] = $userlink;
-			}
-
-			return '<div class="lookupresults">' . implode( $return ) . '</div>';
-		} else {
-			return $s;
-		}
+	if ( empty( $s ) || is_array( $s ) ) {
+		return false;
 	}
 
-	return false;
+	$return = array();
+	foreach ( $s as $user ) {
+		$JTableUser = new cmsUser();
+		$JTableUser->load( $user );
+		$userlink = '<div class="lookupresult">';
+		$userlink .= '<a href="';
+		$userlink .= JURI::base() . 'index.php?option=com_acctexp&amp;task=editMembership&amp;userid=' . $JTableUser->id;
+		$userlink .= '">';
+		$userlink .= str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->name ) . ' (' . str_replace( $search, '<span class="search-match">' . $search . '</span>', $JTableUser->username ) . ')';
+		$userlink .= '</a>';
+		$userlink .= '</div>';
+
+		$return[] = $userlink;
+	}
+
+	return '<div class="lookupresults">' . implode( $return ) . '</div>';
 }
 
 function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=false )
