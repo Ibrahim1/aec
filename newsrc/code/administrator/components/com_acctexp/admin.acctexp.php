@@ -5162,6 +5162,7 @@ function eventlog( $option )
 		$row = new EventLog();
 		$row->load( $id );
 
+		$events[$id] = new stdClass();
 		$events[$id]->id		= $row->id;
 		$events[$id]->datetime	= $row->datetime;
 		$events[$id]->short		= $row->short;
