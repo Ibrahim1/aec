@@ -916,7 +916,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$orderby		= $app->getUserStateFromRequest( "orderby_subscr{$option}", 'orderby_subscr', 'name ASC' );
 	$groups			= $app->getUserStateFromRequest( "groups{$option}", 'groups', 'active' );
-	$search			= $app->getUserStateFromRequest( "search{$option}", 'search', '' );
+	$search			= $app->getUserStateFromRequest( "search{$option}_subscr", 'search', '' );
 	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	if ( empty( $planid ) ) {
@@ -3755,7 +3755,7 @@ function listMicroIntegrations( $option )
 	$limitstart	= $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
 	$orderby		= $app->getUserStateFromRequest( "orderby_mi{$option}", 'orderby_mi', 'ordering ASC' );
-	$search			= $app->getUserStateFromRequest( "search{$option}", 'search', '' );
+	$search			= $app->getUserStateFromRequest( "search{$option}_mi", 'search', '' );
 	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	$filter_planid	= intval( $app->getUserStateFromRequest( "filter_planid{$option}", 'filter_planid', 0 ) );
@@ -4259,7 +4259,7 @@ function listCoupons( $option )
 
 	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-	$search			= $app->getUserStateFromRequest( "search{$option}", 'search', '' );
+	$search			= $app->getUserStateFromRequest( "search{$option}_coupons", 'search_coupons', '' );
 	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	$total = 0;
@@ -4797,7 +4797,7 @@ function invoices( $option )
 
 	$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
 	$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-	$search 	= $app->getUserStateFromRequest( "search{$option}_invoices", 'search', '' );
+	$search 	= $app->getUserStateFromRequest( "search_{$option}invoices", 'search', '' );
 
 	if ( $search ) {
 		$unformatted = xJ::escape( $db, trim( strtolower( $search ) ) );
@@ -5122,7 +5122,7 @@ function eventlog( $option )
 
 	$limit 		= intval( $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) ) );
 	$limitstart = intval( $app->getUserStateFromRequest( "view{$option}limitstart", 'limitstart', 0 ) );
-	$search 	= $app->getUserStateFromRequest( "search{$option}_invoices", 'search', '' );
+	$search 	= $app->getUserStateFromRequest( "search{$option}_eventlog", 'search', '' );
 
 	$where = array();
 	if ( $search ) {
