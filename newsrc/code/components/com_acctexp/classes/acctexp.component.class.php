@@ -16,7 +16,7 @@ class aecComponentHelper
 	 */
 	static function detect_component( $component )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		global $aecConfig;
 

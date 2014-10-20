@@ -148,7 +148,7 @@ class mi_alphauserpoints extends MI
 
 	function getPoints( $userid )
 	{
-		$db	   =& JFactory::getDBO();
+		$db	   = JFactory::getDBO();
 
 		$query = "SELECT points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
 		$db->setQuery( $query );
@@ -158,7 +158,7 @@ class mi_alphauserpoints extends MI
 
 	function updatePoints( $userid, $points, $comment )
 	{
-		$db	   =& JFactory::getDBO();
+		$db	   = JFactory::getDBO();
 
 		$query = "SELECT id, userid, referreid, points FROM #__alpha_userpoints WHERE `userid`='" . $userid . "'";
 		$db->setQuery( $query );

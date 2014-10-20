@@ -57,7 +57,7 @@ class plgSystemAECerrorhandler extends JPlugin
 	 */
 	function handleLoginRedirect()
 	{
-		$uri	= &JFactory::getURI();
+		$uri	= JFactory::getURI();
 
 		$task	= $uri->getVar( 'task' );
 		$option	= $uri->getVar( 'option' );
@@ -87,7 +87,7 @@ class plgSystemAECerrorhandler extends JPlugin
 				}
 			} else {
 				// Copied for pre-1.5.7 compatibility
-				$uri =& JURI::getInstance($return);
+				$uri = JURI::getInstance($return);
 				$base = $uri->toString(array('scheme', 'host', 'port', 'path'));
 				$host = $uri->toString(array('scheme', 'host', 'port'));
 				if ( ( strpos( strtolower($base), strtolower(JURI::base()) ) !== 0 ) && !empty($host) ) {
@@ -105,7 +105,7 @@ class plgSystemAECerrorhandler extends JPlugin
 				&& ( ( $view == 'login' ) || ( strpos( $task, 'login' ) != false ) )
 				// Not a logout (yeah, really)
 				&& ( strpos( $task, 'logout' ) == false )
-				// And we have a blank return 
+				// And we have a blank return
 				&& !empty( $return ) && ( $return != 'index.php' )
 				// With no username or password
 				&& ( empty( $_REQUEST['username'] ) && empty( $_REQUEST['password'] ) )

@@ -7,7 +7,7 @@ class xJLanguageHandler extends xJLanguageHandlerCommon
 			return;
 		}
 
-		$lang =& JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 
 		foreach ( $list as $name => $path ) {
 			$lang->load( $name, $path, 'en-GB', true );
@@ -46,7 +46,7 @@ class xJACLhandler extends xJACLhandlerCommon
 {
 	static function getSuperAdmins()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`, `email`, `sendEmail`'
 				. ' FROM #__users'
@@ -59,7 +59,7 @@ class xJACLhandler extends xJACLhandlerCommon
 
 	static function setGID( $userid, $gid, $gid_name )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__users'
 				. ' SET `gid` = \'' .  (int) $gid . '\', `usertype` = \'' . $gid_name . '\''
@@ -71,9 +71,9 @@ class xJACLhandler extends xJACLhandlerCommon
 
 	static function setGIDsTakeNames( $userid, $gid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
 		// Get ARO ID for user
 		$query = 'SELECT `id`'
@@ -113,9 +113,9 @@ class xJACLhandler extends xJACLhandlerCommon
 
 	static function adminBlock( $admin, $manager )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
 		$block = false;
 
@@ -141,15 +141,15 @@ class xJACLhandler extends xJACLhandlerCommon
 
 	static function userDelete( $userid, $msg )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		if ( $userid == $user->id ) {
 			return JText::_('You cannot delete yourself');
 		}
 
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$groups		= $acl->get_object_groups( 'users', $userid, 'ARO' );
 
@@ -166,7 +166,7 @@ class xJACLhandler extends xJACLhandlerCommon
 		if ( $is_admin && $deletor_admin ) {
 			return JText::_('Only a Superadmin can do that');
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$obj = new cmsUser();
 
@@ -180,9 +180,9 @@ class xJACLhandler extends xJACLhandlerCommon
 
 	static function getGroupTree( $ex=array() )
 	{
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$ex_groups = array();
 
@@ -213,7 +213,7 @@ class xJACLhandler extends xJACLhandlerCommon
 
 	static function countAdmins()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__core_acl_groups_aro_map'
@@ -227,7 +227,7 @@ class xJACLhandler extends xJACLhandlerCommon
 	{
 		$list = array();
 
-		$acl =& JFactory::getACL();
+		$acl = JFactory::getACL();
 
 		$acllist = $acl->get_group_children( 28, 'ARO', 'RECURSE' );
 
@@ -245,7 +245,7 @@ class xJACLhandler extends xJACLhandlerCommon
 
 	static function getLowerACLGroups( $group_id )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT g2.id'
 				. ' FROM #__core_acl_aro_groups AS g1'
@@ -261,7 +261,7 @@ class xJACLhandler extends xJACLhandlerCommon
 
 	static function getHigherACLGroups( $group_id )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT g2.id'
 				. ' FROM #__core_acl_aro_groups AS g1'
@@ -280,7 +280,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 {
 	function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		if ( !is_array( $gid ) && !empty( $gid ) ) {
 			$gid = array( $gid );
@@ -336,7 +336,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 
 	function putSession( $userid, $data, $gid=null, $gid_name=null )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$sdata = $this->joomserializesession( array( $this->sessionkey => $data) );
 

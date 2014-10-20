@@ -24,7 +24,7 @@ class mi_sobipro extends MI
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['publish_all']		= array( 'toggle' );
@@ -58,7 +58,7 @@ class mi_sobipro extends MI
 
 	function publishItems( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__sobipro_object'
 				. ' SET `state` = \'1\''
@@ -77,7 +77,7 @@ class mi_sobipro extends MI
 
 	function unpublishItems( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__sobipro_object'
 				. ' SET `state` = \'0\''

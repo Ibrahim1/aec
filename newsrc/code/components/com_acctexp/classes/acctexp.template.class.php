@@ -15,9 +15,9 @@ function getView( $view, $args=null )
 {
 	global $aecConfig;
 
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	$metaUser = null;
 	if ( $user->id ) {
@@ -215,7 +215,7 @@ class aecTemplate
 
 	function setTitle( $title )
 	{
-		$document=& JFactory::getDocument();
+		$document= JFactory::getDocument();
 		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
 	}
 
@@ -226,19 +226,19 @@ class aecTemplate
 
 	function addCSS( $path )
 	{
-		$document=& JFactory::getDocument();
+		$document= JFactory::getDocument();
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $path . '" />' );
 	}
 
 	function addCSSDeclaration( $css )
 	{
-		$document=& JFactory::getDocument();
+		$document= JFactory::getDocument();
 		$document->addStyleDeclaration( $css );
 	}
 
 	function addScriptDeclaration( $js )
 	{
-		$document=& JFactory::getDocument();
+		$document= JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 	}
 
@@ -249,7 +249,7 @@ class aecTemplate
 		if ( $v->isCompatible('3.0') && ( strpos( $js, '/' ) === false ) ) {
 			JHtml::_( $js, false );
 		} else {
-			$document =& JFactory::getDocument();
+			$document = JFactory::getDocument();
 			$document->addScript( $js );
 		}
 	}
@@ -261,9 +261,9 @@ class aecTemplate
 			return null;
 		}
 
-		$document=& JFactory::getDocument();
+		$document= JFactory::getDocument();
 
-		$params = &JComponentHelper::getParams( 'com_acctexp' );
+		$params = JComponentHelper::getParams( 'com_acctexp' );
 
 		$menu = JSite::getMenu();
 		$menuparams = $menu->getParams( $menuitemid );
@@ -309,7 +309,7 @@ class aecTemplate
 
 			if ( $params['option'] == 'com_community' ) {
 				// Judge me all you want.
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT `alias`'
 						. ' FROM #__menu'

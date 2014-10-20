@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 
 jimport('joomla.plugin.plugin');
 
-$app =& JFactory::getApplication();
+$app = JFactory::getApplication();
 $app->registerEvent( 'onPrepareContent', 'plgContentAECRestriction' );
 
 class plgContentAECRestriction extends JPlugin
@@ -63,7 +63,7 @@ class plgContentAECRestriction extends JPlugin
 
 		include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
 
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$r = new stdClass();
 		$r->action			= 'actionRestrictionCheck';

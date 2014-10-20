@@ -46,7 +46,7 @@ class logHistory extends serialParamDBTable
 		return array( 'response' );
 	}
 
-	function load( $id )
+	function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 

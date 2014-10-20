@@ -33,7 +33,7 @@ class tool_cleanup
 
 	function Action()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Find all entries lacking an existing user account
 		$tables = array(	'cart' => 'userid',
@@ -119,7 +119,7 @@ class tool_cleanup
 			} else {
 				$query = 'SELECT count(*)'
 						. ' FROM #__acctexp_temptoken'
-						. ' WHERE date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
+						. ' WHERE created_date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
 						;
 				$db->setQuery( $query );
 				$dcount = $db->loadResult();
@@ -127,7 +127,7 @@ class tool_cleanup
 				if ( $dcount ) {
 					$query = 'DELETE'
 							. ' FROM #__acctexp_temptoken'
-							. ' WHERE date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
+							. ' WHERE created_date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
 							;
 					$db->setQuery( $query );
 					$db->query();
@@ -161,7 +161,7 @@ class tool_cleanup
 
 			$query = 'SELECT count(*)'
 					. ' FROM #__acctexp_temptoken'
-					. ' WHERE date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
+					. ' WHERE created_date < \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U')-3600 ) ) . '\''
 					;
 			$db->setQuery( $query );
 			$count = $db->loadResult();

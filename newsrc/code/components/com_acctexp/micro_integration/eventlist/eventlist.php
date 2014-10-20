@@ -37,7 +37,7 @@ class mi_eventlist extends MI
 			@include_once( $path );
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery( 'SELECT * FROM #__eventlist_events WHERE `registra` = 1 AND `published` = 1' );
 
 		$events = $db->loadObjectList();
@@ -107,7 +107,7 @@ class mi_eventlist extends MI
 
 	function regEvent( $userid, $newevent )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'INSERT INTO #__eventlist_register'
 				. ' ( `event` , `uid` )'

@@ -25,7 +25,7 @@ class mi_aecplan
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id` AS value, `name` AS text'
 				. ' FROM #__acctexp_plans'
@@ -124,7 +124,7 @@ class mi_aecplan
 
 		$expiration = $request->metaUser->focusSubscription->expiration;
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$new_plan = new SubscriptionPlan();
 		$new_plan->load( $this->settings['plan_apply'.$request->area] );

@@ -89,7 +89,7 @@ class tool_pretend
 		}
 
 		if ( $h ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$bucket = new aecBucket();
 			$bucket->stuff( 'tool_pretend', $data );
@@ -106,7 +106,7 @@ class tool_pretend
 			return;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$amountlist = array();
 
@@ -215,7 +215,7 @@ class tool_pretend
 
 	function createPlans( $grouplist, $plans )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !$_POST['create_plans'] ) {
 			$query = 'SELECT MIN(id)'
@@ -276,7 +276,7 @@ class tool_pretend
 
 	function createGroups( $amount )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !$_POST['create_groups'] ) {
 			$query = 'SELECT MIN(id)'
@@ -333,7 +333,7 @@ class tool_pretend
 
 	function createUsers( $amount )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !$_POST['create_users'] ) {
 			$query = 'SELECT MIN(id)'
@@ -464,7 +464,7 @@ class tool_pretend
 
 	function generateUsername( $seed )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$numberofrows	= 1;
 		while ( $numberofrows ) {
@@ -483,7 +483,7 @@ class tool_pretend
 
 	function generateEmail( $seed )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$domains = array(	'yahoo.com','hotmail.com','aol.com','gmail.com','msn.com',
 							'comcast.net','hotmail.co.uk','sbcglobal.net','yahoo.co.uk','yahoo.co.in',

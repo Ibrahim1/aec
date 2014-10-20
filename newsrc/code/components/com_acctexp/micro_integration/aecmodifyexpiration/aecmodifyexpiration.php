@@ -40,7 +40,7 @@ class mi_aecmodifyexpiration
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( empty( $this->settings['timestamp'] ) && empty( $this->settings['time_mod'] ) ) {
 			return true;

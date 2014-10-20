@@ -67,7 +67,7 @@ class mi_eventlog extends MI
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$rewriting = array( 'short', 'tags', 'text', 'params' );
 

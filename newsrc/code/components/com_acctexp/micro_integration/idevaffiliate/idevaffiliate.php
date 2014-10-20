@@ -47,7 +47,7 @@ class mi_idevaffiliate
 
 	function afteraction( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$rooturl = $this->getPath();
 

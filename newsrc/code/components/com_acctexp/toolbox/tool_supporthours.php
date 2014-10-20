@@ -35,7 +35,7 @@ class tool_supporthours
 			} else {
 				// This should probably be replaced by something using straight strtotime
 				$year = date( 'Y' );
-				
+
 				$prevmonth = date( 'm' ) - 1;
 
 				if ( $prevmonth <= 0 ) {
@@ -68,7 +68,7 @@ class tool_supporthours
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_microintegrations'

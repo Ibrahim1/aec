@@ -16,7 +16,7 @@ class mi_livedrive extends MI
 
 	function checkInstallation()
 	{
-		$database = &JFactory::getDBO();
+		$database = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -26,10 +26,10 @@ class mi_livedrive extends MI
 		return in_array($app->getCfg( 'dbprefix' )."_acctexp_mi_livedrive", $tables);
 	}
 
-	
+
 	function install()
 	{
-		$database = &JFactory::getDBO();
+		$database = JFactory::getDBO();
 
 		$query =	"CREATE TABLE IF NOT EXISTS `#__livedrive_users` (" . "\n" .
 					"`id` bigint(20) NOT NULL auto_increment," . "\n" .
@@ -77,7 +77,7 @@ class mi_livedrive extends MI
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$meta = new metaUserDB();
 			$meta->loadUserid( $request->row->id );

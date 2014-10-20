@@ -39,7 +39,7 @@ class HTML_myCommon
 
 	static function addBackendCSS()
 	{
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true).'/media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION . '" />' );
 	}
 
@@ -82,7 +82,7 @@ class HTML_myCommon
 		} else {
 			$rel = JURI::root(true).'/media' . $rel;
 
-			$document =& JFactory::getDocument();
+			$document = JFactory::getDocument();
 			$document->addScript( $rel );
 		}
 	}
@@ -268,7 +268,7 @@ jQuery(document).ready(function(jQuery) {
 			});
 });
 ';
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
@@ -709,7 +709,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function SubscriptionName( $subscriptionid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$subscription = new SubscriptionPlan();
 		$subscription->load($subscriptionid);
@@ -741,7 +741,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function menuBar()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT COUNT(*)'
 				. ' FROM #__acctexp_eventlog'
@@ -1494,7 +1494,7 @@ jQuery(document).ready(function(jQuery) {
 	});
 });
 ';
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 
 		HTML_myCommon::getHeader( $action[1], '' . $action[0] ); ?>
@@ -1703,7 +1703,7 @@ jQuery(document).ready(function(jQuery) {
 			});
 });
 ';
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
@@ -1979,7 +1979,7 @@ jQuery(document).ready(function(jQuery) {
 
 		jimport( 'joomla.html.editor' );
 
-		$editor =& JFactory::getEditor();
+		$editor = JFactory::getEditor();
 
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( '', 'plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW') );
@@ -3443,7 +3443,7 @@ jQuery(document).ready(function(jQuery) {
 			});
 });
 ';
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'export' );
@@ -3640,7 +3640,7 @@ class bsPaneTabs
 
 	function _loadBehavior($params = array())
 	{
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( 'jQuery(document).ready(function($) {
 			jQuery(\'.nav-pills\').tab()
 		});' );
@@ -3686,12 +3686,12 @@ class bsPagination extends JPagination
 		}
 		$lastpage = $total == $current;
 		echo '<div class="btn-group btn-group-pagination">';
-		echo $this->orderUpIcon($i, true, 'order'.$type.'up', ( $i || ( $current > 1 ) ) );
-		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', ( $i<($n-1) || !$lastpage ) );
+		echo $this->orderUpIcon($i, true, 'order'.$type.'up', '', ( $i || ( $current > 1 ) ) );
+		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', '', ( $i<($n-1) || !$lastpage ) );
 		echo '</div>';
 	}
 
-	function orderUpIcon($i, $condition=true, $task='orderup', $enabled=false)
+	function orderUpIcon($i, $condition = true, $task = 'orderup', $alt = 'JLIB_HTML_...', $enabled = true, $checkbox = 'cb')
 	{
 		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
 		$order .= aecHTML::Icon( 'chevron-up' );
@@ -3700,7 +3700,7 @@ class bsPagination extends JPagination
 		return $order;
 	}
 
-	function orderDownIcon($i, $n, $condition=true, $task='orderdown', $enabled=false)
+	function orderDownIcon($i, $n, $condition = true, $task = 'orderdown', $alt = 'JLIB_HTML_...', $enabled = true, $checkbox = 'cb')
 	{
 		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
 		$order .= aecHTML::Icon( 'chevron-down' );

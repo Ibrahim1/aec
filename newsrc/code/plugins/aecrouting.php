@@ -41,7 +41,7 @@ class plgSystemAECrouting extends JPlugin
 	{
 		$vars = array();
 
-		$uri = &JFactory::getURI();
+		$uri = JFactory::getURI();
 		$vars['task']	= $uri->getVar( 'task' );
 		$vars['option']	= $uri->getVar( 'option' );
 		$vars['view']	= $uri->getVar( 'view' );
@@ -148,9 +148,10 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars['has_usage']	= !empty( $vars['usage'] );
 
-		if ( ( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] || $vars['alpha_regsv'] ) && !$vars['has_usage'] ) {
-			$db = &JFactory::getDBO();
-
+		if (
+			( $vars['joms_any'] || $vars['ccb12'] || $vars['k2_regsv'] || $vars['alpha_regsv'] )
+			&& !$vars['has_usage']
+		) {
 			if ( $vars['joms_any'] ) {
 				$vars['username']	= aecGetParam( 'jsusername', "", true, array( 'string', 'clear_nonalnumwhitespace' ) );
 			} else {
@@ -180,14 +181,17 @@ class plgSystemAECrouting extends JPlugin
 					$vars['has_user']	= true;
 				}
 
-				if ( !empty( $_REQUEST['username'] ) && !empty( $_REQUEST['password'] ) && !empty( $_REQUEST['email'] )
-					&& empty( $temptoken->content['username'] ) && empty( $temptoken->content['password'] ) && empty( $temptoken->content['email'] ) ) {
-					$db = &JFactory::getDBO();
-
+				if (
+					!empty( $_REQUEST['username'] )
+					&& !empty( $_REQUEST['password'] )
+					&& !empty( $_REQUEST['email'] )
+					&& empty( $temptoken->content['username'] )
+					&& empty( $temptoken->content['password'] )
+					&& empty( $temptoken->content['email'] )
+				) {
 					$temptoken = new aecTempToken();
 					$temptoken->getComposite();
 
-					$content = array();
 					$temptoken->content['username']		= $_REQUEST['username'];
 					$temptoken->content['password']		= $_REQUEST['password'];
 
@@ -251,7 +255,10 @@ class plgSystemAECrouting extends JPlugin
 
 		$vars = $this->getAdditionalVars( $vars );
 
-		if ( ( $vars['isreg'] || $vars['cb_sregsv'] || $vars['k2_regsv'] || $vars['alpha_regsv'] ) && $vars['int_reg'] ) {
+		if (
+			( $vars['isreg'] || $vars['cb_sregsv'] || $vars['k2_regsv'] || $vars['alpha_regsv'] )
+			&& $vars['int_reg']
+		) {
 			// Joomla or CB registration...
 			if ( $vars['pfirst'] && !$vars['has_usage'] ) {
 				// Plans first and not yet selected -> select!
@@ -295,8 +302,6 @@ class plgSystemAECrouting extends JPlugin
 				}
 
 				if ( !empty( $username ) && !empty( $password ) && !empty( $email ) ) {
-					$db = &JFactory::getDBO();
-
 					$temptoken = new aecTempToken();
 					$temptoken->getComposite();
 
@@ -337,7 +342,7 @@ class plgSystemAECrouting extends JPlugin
 				if ( $vars['joms_reg'] && !$existing ) {
 					// I have... seen things you people wouldn't believe
 					// Logic on fire on the shore of JomSocial
-					$uri = &JFactory::getURI();
+					$uri = JFactory::getURI();
 
 					$app = JFactory::getApplication();
 					$app->redirect( $uri->toString() );
@@ -392,8 +397,6 @@ class plgSystemAECrouting extends JPlugin
 		$activation = $app->getCfg( 'useractivation' );
 
 		if ( ( strpos( $body, '<dt class="message">Message</dt>' ) !== false ) && !$vars['aec'] ) {
-			$db = &JFactory::getDBO();
-
 			$temptoken = new aecTempToken();
 			$temptoken->getComposite();
 
@@ -471,8 +474,6 @@ class plgSystemAECrouting extends JPlugin
 				}
 			}
 		} elseif ( $vars['k2'] ) {
-			$db = &JFactory::getDBO();
-
 			$content = array();
 			$content['usage']		= $vars['usage'];
 			$content['processor']	= $vars['processor'];
@@ -518,8 +519,6 @@ class plgSystemAECrouting extends JPlugin
 
 	function deleteToken()
 	{
-		$db = &JFactory::getDBO();
-
 		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
 
@@ -530,8 +529,6 @@ class plgSystemAECrouting extends JPlugin
 
 	function saveToToken( $vars )
 	{
-		$db = &JFactory::getDBO();
-
 		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
 

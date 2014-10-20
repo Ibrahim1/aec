@@ -54,16 +54,25 @@ class xJUtility
 
 	static function normVersionName( $name )
 	{
-		$str = str_replace( "RC", "_", $name );
+		$str = str_replace( array('RC2', 'RC'), '_', $name );
 
 		$lastchar = substr( $str, -1, 1 );
 
 		if ( !is_numeric( $lastchar ) ) {
-			$str = substr( $str, 0, strlen( $str )-1 ) . "_" . ord( $lastchar );
+			$str = substr( $str, 0, strlen( $str )-1 ) . '_' . ord( $lastchar );
 		}
 
-		return $str;
+		$str = str_replace('_', '.', $str);
+
+		$t = explode('.', $str);
+
+		if ( count($t) == 2 ) {
+			$t[] = 0;
+		}
+
+		return implode('.', $t);
 	}
 
 }
+
 ?>

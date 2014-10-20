@@ -57,6 +57,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$eucaInstalldb	= new eucaInstallDB();
 
 			$this->initDB( $errors, $eucaInstalldb );
+
 			$this->upgrade( $errors, $eucaInstall, $eucaInstalldb );
 
 			$this->checkJinstall();
@@ -68,7 +69,6 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			$this->initTemplate();
 
-			$this->initConfig();
 			$this->initAdmins();
 
 			$this->installTranslators( $eucaInstall );
@@ -87,7 +87,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$this->src = dirname(__FILE__);
 			} else {
-				$componentInstaller =& JInstaller::getInstance();
+				$componentInstaller = JInstaller::getInstance();
 
 				$this->src = $componentInstaller->getPath('source');
 			}
@@ -98,13 +98,19 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			// So Joomla sometimes fails to install our en-GB...
 			if ( !file_exists( $engbpath.'/en-GB.com_acctexp.ini' ) ) {
-				$files = array( '', '.iso3166-1a2', '.iso639-1', '.microintegrations', '.processors' );
+				$files = array(
+					'',
+					'.iso3166-1a2',
+					'.iso639-1',
+					'.microintegrations',
+					'.processors'
+				);
 
 				foreach ( $files as $file ) {
-
-					copy( $this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
-							$engbpath.'/en-GB.com_acctexp' . $file . '.ini'
-						 );
+					copy(
+						$this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
+						$engbpath.'/en-GB.com_acctexp' . $file . '.ini'
+					);
 				}
 			}
 
@@ -114,9 +120,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				$files = array( '', '.iso4217', '.menu', '.sys' );
 
 				foreach ( $files as $file ) {
-					copy( $this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
-							$engbpath.'/en-GB.com_acctexp' . $file . '.ini'
-						 );
+					copy(
+						$this->src.'/language/en-GB/en-GB.com_acctexp' . $file . '.ini',
+						$engbpath.'/en-GB.com_acctexp' . $file . '.ini'
+					);
 				}
 			}
 		}
@@ -132,7 +139,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 					array( 'com_acctexp.processors', JPATH_SITE )
 			);
 
-			$lang =& JFactory::getLanguage();
+			$lang = JFactory::getLanguage();
 
 			foreach ( $langlist as $array ) {
 				$lang->load( $array[0] );
@@ -147,7 +154,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				}
 			}
 
-			include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
+			require_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
 			require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.php' );
 			require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
@@ -155,12 +162,12 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function initDB( $errors, $eucaInstalldb )
 		{
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			// Slot in DB tables that do not exist yet
 			$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';
 
-			$tables		= $db->getTableList();
+			$tables = $db->getTableList();
 
 			$this->new = true;
 
@@ -179,7 +186,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function upgrade( &$errors, $eucaInstall, $eucaInstalldb )
 		{
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 			$app = JFactory::getApplication();
 
 			// Overall Variables
@@ -196,53 +203,72 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			// Load Class (and thus aecConfig)
 			require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
 
-			global $aecConfig;
+			$aecConfig = new aecConfig();
 
-			$document=& JFactory::getDocument();
+			if ( !empty($aecConfig->cfg) ) {
+				$this->new = false;
+			}
+
+			$aecConfig->initParams();
+
+			$document= JFactory::getDocument();
 			$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root() . 'media/com_acctexp/css/admin.css?rev=' . _AEC_REVISION .'" />' );
 
 			if ( isset( $aecConfig->cfg['aec_version'] ) ) {
 				$oldversion = $aecConfig->cfg['aec_version'];
 			} else {
-				$oldversion = false;
+				$oldversion = '0.0.1';
+
+				$db->setQuery("SHOW INDEXES FROM #__acctexp_subscr");
+				$indexes = $db->loadObjectList();
+
+				foreach ( $indexes as $index ) {
+					if ( strpos( $index->Key_name, 'userid' ) !== false ) {
+						$oldversion = '0.14.6';
+					}
+				}
 			}
 
-			if ( !$this->new ) {
-				// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
-				if ( empty( $oldversion ) || ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) ) {
-					if ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) {
-						$oldupdates = array( '0_12_6RC2j' );
-					} else {
-						$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6RC2j' );
-					}
+			if ( $this->new ) return;
 
-					foreach ( $oldupdates as $upd ) {
-						require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
-					}
+			// Check if we are upgrading from before 0.12.6RC2j - then we need to check everything before that
+			if ( empty( $oldversion ) || ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) ) {
+				if ( version_compare( $oldversion, '0.12.6RC2j' ) === 0 ) {
+					$oldupdates = array( '0_12_6RC2j' );
+				} else {
+					$oldupdates = array( '0_6_0', '0_8_0', '0_10_0', '0_12_0', '0_12_6RC2j' );
 				}
 
-				$incfiles = xJUtility::getFileArray( $incpath, 'inc.php', false, true );
-
-				$versions = array();
-				foreach ( $incfiles as $filename ) {
-					if ( strpos( $filename, 'upgrade_' ) === false ) {
-						continue;
-					} else {
-						$versions[] = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
-					}
+				foreach ( $oldupdates as $upd ) {
+					require_once( $incpath . '/upgrade_' . $upd . '.inc.php' );
 				}
-
-				$incf = xJUtility::versionSort( $versions );
-
-				$versions = array();
-				foreach ( $incf as $version ) {
-					if ( version_compare( xJUtility::normVersionName( $version ), xJUtility::normVersionName( $oldversion ), '>=' ) ) {
-						require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
-					}
-				}
-
-				$updates = array();
 			}
+
+			$incfiles = xJUtility::getFileArray( $incpath, 'inc.php', false, true );
+
+			$versions = array();
+			foreach ( $incfiles as $filename ) {
+				if ( strpos( $filename, 'upgrade_' ) === false ) {
+					continue;
+				} else {
+					$versions[] = str_replace( array( 'upgrade_', '.inc.php' ), array( '', '' ), $filename );
+				}
+			}
+
+			$versions = xJUtility::versionSort( $versions );
+
+			foreach ( $versions as $version ) {
+				$new = xJUtility::normVersionName( $version );
+				$old = xJUtility::normVersionName( $oldversion );
+
+				if ( version_compare( $new, $old, '>=' ) ) {
+					require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
+				}
+			}
+
+			$aecConfig->cfg['aec_version'] = _AEC_VERSION;
+
+			$aecConfig->saveSettings();
 		}
 
 		function touchProcessors()
@@ -253,26 +279,24 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			foreach ( $pplist as $ppname ) {
 				$pp = new PaymentProcessor();
 
-				if ( $pp->loadName( $ppname ) ) {
-					$pp->copyAssets();
+				if ( !$pp->loadName( $ppname ) ) continue;
 
-					$pp->fullInit();
+				$pp->copyAssets();
 
-					// Infos often change, so we protect the name and description and so on, but replace everything else
-					$original	= $pp->processor->info();
+				$pp->fullInit();
 
-					$protect = array( 'name', 'longname', 'statement', 'description' );
+				// Infos often change, so we protect the name and description and so on, but replace everything else
+				$original	= $pp->processor->info();
 
-					foreach ( $original as $name => $var ) {
-						if ( !in_array( $name, $protect ) ) {
-							$pp->info[$name] = $var;
-						}
+				$protect = array( 'name', 'longname', 'statement', 'description' );
+
+				foreach ( $original as $name => $var ) {
+					if ( !in_array( $name, $protect ) ) {
+						$pp->info[$name] = $var;
 					}
-
-					$pp->processor->storeload();
 				}
 
-				$pp = null;
+				$pp->processor->storeload();
 			}
 		}
 
@@ -302,23 +326,22 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			// Install plugins and modules, if we have them
 			jimport('joomla.installer.installer');
 
-			$install_list = array(	'plg_aecaccess' => array ( 'type' => 'user', 'element' => 'aecaccess' ),
-									'plg_aecerror' => array ( 'type' => 'system', 'element' => 'aecerrorhandler' ),
-									'plg_aecrouting' => array ( 'type' => 'system', 'element' => 'aecrouting' ),
-									'plg_aecuser' => array ( 'type' => 'user', 'element' => 'aecuser' ),
-									'plg_aecrewrite' => array ( 'type' => 'content', 'element' => 'aecrewrite' ),
-									//'plg_aecrestriction' => array ( 'type' => 'content', 'element' => 'aecrestriction' ),
-									'mod_acctexp' => array ( 'position' => 'left' ),
-									'mod_acctexp_cart' => array ( 'position' => 'left' )
+			$install_list = array(
+				'plg_aecaccess' => array ( 'type' => 'user', 'element' => 'aecaccess' ),
+				'plg_aecerror' => array ( 'type' => 'system', 'element' => 'aecerrorhandler' ),
+				'plg_aecrouting' => array ( 'type' => 'system', 'element' => 'aecrouting' ),
+				'plg_aecuser' => array ( 'type' => 'user', 'element' => 'aecuser' ),
+				'plg_aecrewrite' => array ( 'type' => 'content', 'element' => 'aecrewrite' ),
+				// 'plg_aecrestriction' => array ( 'type' => 'content', 'element' => 'aecrestriction' ),
+				'mod_acctexp' => array ( 'position' => 'left' ),
+				'mod_acctexp_cart' => array ( 'position' => 'left' )
 			);
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$pckgs = 0;
 			foreach ( $install_list as $name => $details ) {
-				if ( !is_dir( $this->src.'/'.$name ) ) {
-					continue;
-				}
+				if ( !is_dir( $this->src.'/'.$name ) ) continue;
 
 				if ( !strpos( $name, 'plg' ) === 0 ) {
 					$query = "SELECT id, position, published FROM #__modules WHERE module = '".$name."'";
@@ -338,9 +361,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				$installer = new JInstaller();
 				$result = $installer->install( $this->src.'/'.$name );
 
-				if ( !$result ) {
-					continue;
-				}
+				if ( !$result ) continue;
 
 				if ( ( strpos( $name, 'plg' ) === 0 ) && ( strpos( $name, 'plg_aecrewrite' ) !== 0 ) ) {
 					$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" ) . " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" ) . " WHERE element='".$details['element']."' AND folder='".$details['type']."'";
@@ -361,10 +382,13 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 						$db->setQuery( $query );
 						$module_id = $db->loadResult();
 
-						$query = "REPLACE INTO #__modules_menu (moduleid,menuid) VALUES (" . $module_id . ", 0)";
+						if ( $module_id ) {
+							$db->setQuery(
+								"REPLACE INTO #__modules_menu (moduleid, menuid) VALUES (" . $module_id . ", 0)"
+							);
 
-						$db->setQuery( $query );
-						$db->query();
+							$db->query();
+						}
 					}
 				}
 
@@ -380,23 +404,17 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$template = new configTemplate();
 			$template->loadDefault();
 
-			if ( empty( $template->id ) ) {
-				$template->name = 'etacarinae';
-				$template->default = 1;
+			if ( !empty( $template->id ) ) return;
 
-				$template->storeload();
-			}
-		}
+			$template->name = 'etacarinae';
+			$template->default = 1;
 
-		function initConfig()
-		{
-			$aecConfig = new aecConfig();
-			$aecConfig->initParams();
+			$template->storeload();
 		}
 
 		function initAdmins()
 		{
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$incpath = JPATH_SITE . '/administrator/components/com_acctexp/install/inc';
 
@@ -406,24 +424,28 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			// Make all Superadmins excluded by default
 			$administrators = xJACLhandler::getSuperAdmins();
 
-			if ( !empty( $administrators ) ) {
-				foreach ( $administrators as $admin ) {
-					$metaUser = new metaUser( $admin->id );
+			if ( empty( $administrators ) ) return;
 
-					if ( !$metaUser->hasSubscription ) {
-						$metaUser->objSubscription = new Subscription();
-						$metaUser->objSubscription->createNew( $admin->id, 'free', 0 );
-						$metaUser->objSubscription->setStatus( 'Excluded' );
-					}
-				}
+			foreach ( $administrators as $admin ) {
+				$metaUser = new metaUser( $admin->id );
+
+				if ( $metaUser->hasSubscription ) continue;
+
+				$metaUser->objSubscription = new Subscription();
+				$metaUser->objSubscription->createNew( $admin->id, 'free', 0 );
+				$metaUser->objSubscription->setStatus( 'Excluded' );
 			}
 		}
 
 		function installTranslators( $eucaInstall )
 		{
 			$files = array(
-							array( 'processors/ideal_advanced/lib/ideal_advanced.tar.gz', 'processors/ideal_advanced/lib/', 0 )
-							);
+				array(
+					'processors/ideal_advanced/lib/ideal_advanced.tar.gz',
+					'processors/ideal_advanced/lib/',
+					0
+				)
+			);
 
 			// check if joomfish (joomla) or nokkaew (mambo) exists)
 			$translation = false;
@@ -436,7 +458,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 
 			if ( $translation ) {
-				$lang =& JFactory::getLanguage();
+				$lang = JFactory::getLanguage();
 
 				$lcode = substr( $lang->get('tag'), 0, 2 );
 
@@ -453,17 +475,20 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function popIndex( $eucaInstall )
 		{
-			$eucaInstall->popIndex(	array(JPATH_ADMINISTRATOR . '/components/com_acctexp',
-						JPATH_SITE . '/components/com_acctexp',
-						JPATH_SITE . '/plugins/system/aecerrorhandler',
-						JPATH_SITE . '/plugins/system/aecrouting',
-						JPATH_SITE . '/plugins/content/aecrewrite',
-						JPATH_SITE . '/plugins/user/aecaccess',
-						JPATH_SITE . '/plugins/user/aecuser',
-						JPATH_SITE . '/modules/mod_acctexp',
-						JPATH_SITE . '/modules/mod_acctexp_cart',
-						JPATH_SITE . '/media/mod_acctexp' )
-					);
+			$eucaInstall->popIndex(
+				array(
+					JPATH_ADMINISTRATOR . '/components/com_acctexp',
+					JPATH_SITE . '/components/com_acctexp',
+					JPATH_SITE . '/plugins/system/aecerrorhandler',
+					JPATH_SITE . '/plugins/system/aecrouting',
+					JPATH_SITE . '/plugins/content/aecrewrite',
+					JPATH_SITE . '/plugins/user/aecaccess',
+					JPATH_SITE . '/plugins/user/aecuser',
+					JPATH_SITE . '/modules/mod_acctexp',
+					JPATH_SITE . '/modules/mod_acctexp_cart',
+					JPATH_SITE . '/media/mod_acctexp'
+				)
+			);
 		}
 
 		function lessen( &$errors )
@@ -478,23 +503,30 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$v = new JVersion();
 
 			if ( $v->isCompatible('3.0') ) {
-				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin-j3.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
+				$less->compileFile(
+					JPATH_SITE . "/media/com_acctexp/less/admin-j3.less",
+					JPATH_SITE . '/media/com_acctexp/css/admin.css' );
 			} else {
-				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/admin.less", JPATH_SITE . '/media/com_acctexp/css/admin.css' );
+				$less->compileFile(
+					JPATH_SITE . "/media/com_acctexp/less/admin.less",
+					JPATH_SITE . '/media/com_acctexp/css/admin.css'
+				);
 			}
 		}
 
 		function logInstall()
 		{
-			$user = &JFactory::getUser();
+			$user = JFactory::getUser();
 
-			$short		= JText::_('AEC_LOG_SH_INST');
-			$event		= sprintf( JText::_('AEC_LOG_LO_INST'), _AEC_VERSION." Revision "._AEC_REVISION );
-			$tags		= 'install,system';
-
-			$eventlog	= new eventLog();
-			$params		= array( 'userid' => $user->id );
-			$eventlog->issue( $short, $tags, $event, 2, $params, 1 );
+			$eventlog = new eventLog();
+			$eventlog->issue(
+				JText::_('AEC_LOG_SH_INST'),
+				'install,system',
+				sprintf( JText::_('AEC_LOG_LO_INST'), _AEC_VERSION." Revision "._AEC_REVISION ),
+				2,
+				array( 'userid' => $user->id ),
+				1
+			);
 		}
 
 		function logErrors( $errors, $eucaInstall, $eucaInstalldb )
@@ -503,11 +535,11 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			$tags = array();
 
-			if ( !empty( $errors ) ) {
-				foreach ( $errors as $error ) {
-					$eventlog	= new eventLog();
-					$eventlog->issue( '', $tags, $error );
-				}
+			if ( empty( $errors ) ) return;
+
+			foreach ( $errors as $error ) {
+				$eventlog	= new eventLog();
+				$eventlog->issue( '', $tags, $error );
 			}
 		}
 

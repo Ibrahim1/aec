@@ -116,6 +116,7 @@ class aecHeartbeat extends serialParamDBTable
 		$this->proc_prepare = array();
 
 		$this->result = array(	'fail_expired' => 0,
+								'fallback' => 0,
 								'expired' => 0,
 								'pre_expired' => 0,
 								'pre_exp_actions' => 0
@@ -155,8 +156,12 @@ class aecHeartbeat extends serialParamDBTable
 
 					return false;
 				} elseif ( $validate !== true ) {
-					if ( $subscription->expire() ) {
+					$expire = $subscription->expire();
+
+					if ( $expire ) {
 						$this->result['expired']++;
+					} elseif ( is_null($expire) ) {
+						$this->result['fallback']++;
 					} else {
 						$this->result['fail_expired']++;
 					}
@@ -314,6 +319,16 @@ class aecHeartbeat extends serialParamDBTable
 			}
 
 			$tags[] = 'expiration';
+		}
+
+		if ( $this->result['fallback'] ) {
+			if ( $this->result['fallback'] > 1 ) {
+				$event .= $this->result['fallback'] . ' subscriptions assigned to a fallback subscription plan';
+			} else {
+				$event .= '1 subscription assigned to a fallback subscription plan';
+			}
+
+			$tags[] = 'fallback';
 		}
 
 		if ( $this->result['fail_expired'] ) {

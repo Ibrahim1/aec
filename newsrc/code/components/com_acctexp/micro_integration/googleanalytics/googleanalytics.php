@@ -45,7 +45,7 @@ class mi_googleanalytics
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 

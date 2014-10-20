@@ -25,7 +25,7 @@ class mi_agora extends MI
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !isset( $this->settings['agorapro'] ) ) {
 			$this->settings['agorapro'] = $this->checkifpro();
@@ -44,7 +44,7 @@ class mi_agora extends MI
 			}
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery( 'SELECT `id`, `name` FROM #__' . $this->dbtable() . '_roles' );
 
 		$roles = $db->loadObjectList();
@@ -97,7 +97,7 @@ class mi_agora extends MI
 
 	function checkifpro()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -148,7 +148,7 @@ class mi_agora extends MI
 
 	function AgoraUserId( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__' . $this->dbtable() . '_users'
 				. ' WHERE `jos_id` = \'' . $userid . '\''
@@ -160,7 +160,7 @@ class mi_agora extends MI
 
 	function getUserGroupRole( $userid, $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `role` FROM #__' . $this->dbtable() . '_user_group'
 				. ' WHERE `user_id` = \'' . $userid . '\''
@@ -173,7 +173,7 @@ class mi_agora extends MI
 
 	function createUser( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !empty( $this->settings['agorapro'] ) ) {
 			$query = 'INSERT INTO #__agorapro_users'
@@ -196,7 +196,7 @@ class mi_agora extends MI
 
 	function removeGroup( $userid, $groupid, $roleid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'DELETE FROM #__' . $this->dbtable() . '_user_group'
 				. ' WHERE `user_id` = \'' . $userid . '\''
@@ -214,7 +214,7 @@ class mi_agora extends MI
 
 	function addGroup( $userid, $groupid, $roleid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'INSERT INTO #__' . $this->dbtable() . '_user_group'
 				. ' (`user_id`,  `group_id`, `role_id` )'
@@ -227,7 +227,7 @@ class mi_agora extends MI
 
 	function updateRole( $userid, $groupid, $roleid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__' . $this->dbtable() . '_user_group'
 				. ' SET `role_id` = \'' . $roleid . '\''

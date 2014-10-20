@@ -24,7 +24,7 @@ class mi_sobi extends MI
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['publish_all']		= array( 'toggle' );
@@ -62,7 +62,7 @@ class mi_sobi extends MI
 
 	function publishItems( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__sobi2_item'
 				. ' SET `published` = \'1\''
@@ -80,7 +80,7 @@ class mi_sobi extends MI
 
 	function unpublishItems( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__sobi2_item'
 				. ' SET `published` = \'0\''
@@ -98,7 +98,7 @@ class mi_sobi extends MI
 
 	function clearSOBIcache()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'TRUNCATE #__sobi2_cache'
 				;

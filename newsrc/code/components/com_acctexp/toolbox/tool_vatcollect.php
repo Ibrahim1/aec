@@ -41,7 +41,7 @@ class tool_vatcollect
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$start_timeframe = $_POST['start_date'] . ' 00:00:00';
 

@@ -126,7 +126,7 @@ class processor_ccbill extends POSTprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$invoice			= $post['invoice'];
 		$username			= $post['username'];
@@ -262,7 +262,7 @@ class processor_ccbill extends POSTprocessor
 
 	function prepareValidation( $subscription_list )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !empty( $this->settings['datalink_username'] ) ) {
 			if ( empty( $this->datalink_temp ) ) {

@@ -26,7 +26,7 @@ class xJACLhandlerCommon
 {
 	static function getAdminGroups( $regular_admins=true )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__usergroups'
@@ -46,7 +46,7 @@ class xJACLhandlerCommon
 
 	static function getUsersByGroup( $group )
 	{
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
 		if ( is_array( $group ) ) {
 			$groups = $group;
@@ -64,7 +64,7 @@ class xJACLhandlerCommon
 
 	static function getUserObjects( $users )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`, `email`, `sendEmail`'
 				. ' FROM #__users'
@@ -77,7 +77,7 @@ class xJACLhandlerCommon
 
 	static function removeGIDs( $userid, $gids )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		foreach ( $gids as $gid ) {
 			$query = 'DELETE'
@@ -189,7 +189,7 @@ class xJSessionHandlerCommon
 
 	function getSession( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT data'
 		. ' FROM #__session'

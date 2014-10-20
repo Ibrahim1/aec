@@ -176,7 +176,7 @@ class processor_offline_payment extends processor
 		}
 
 		if ( $this->settings['waitingplan'] ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$metaUser = new metaUser( $objInvoice->userid );
 

@@ -15,7 +15,7 @@ class aecBucketHandler
 {
 	function getListForSubject( $subject )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_displaypipeline'

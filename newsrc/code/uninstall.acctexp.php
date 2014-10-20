@@ -35,9 +35,9 @@ function com_uninstall()
 {
 	global $aecConfig;
 
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	if ( $aecConfig->cfg['delete_tables'] && $aecConfig->cfg['delete_tables_sure'] ) {
 		$app = JFactory::getApplication();
@@ -60,7 +60,7 @@ function com_uninstall()
 			echo "Component successfully uninstalled. The component tables are still in the database and will be preserved for the next install or upgrade of the component.";
 		}
 	} else {
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$short = "AEC uninstall";
 		$event = "AEC has been removed";

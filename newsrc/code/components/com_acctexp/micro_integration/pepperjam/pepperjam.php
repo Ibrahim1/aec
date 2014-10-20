@@ -71,7 +71,7 @@ class mi_pepperjam
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$getparams = array();
 		$getparams[] = 'PID=' . $this->settings['pid'];

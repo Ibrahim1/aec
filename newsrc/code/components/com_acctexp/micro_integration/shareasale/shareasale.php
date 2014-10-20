@@ -43,7 +43,7 @@ class mi_shareasale
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$rooturl = "https://shareasale.com/sale.cfm?";
 

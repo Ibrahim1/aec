@@ -40,7 +40,7 @@ class cbaecmembershipTab extends cbTabHandler
 
 	function displaySubscriptions( $tab, $user, $ui )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		include_once( JPATH_SITE.'/components/com_acctexp/acctexp.class.php');
 
@@ -92,10 +92,10 @@ class cbaecmembershipTab extends cbTabHandler
 
 		return $html_return;
 	}
-	
+
 	function getAllCurrentSubscriptionsInfoComplete( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `a`.`recurring`, `a`.`lifetime`, `b`.`name`'
 				. ' FROM #__acctexp_subscr AS a'
@@ -105,7 +105,7 @@ class cbaecmembershipTab extends cbTabHandler
 		$db->setQuery( $query );
 		return $db->loadObjectList();
 	}
-	
+
 	function getIconHtml( $status )
 	{
 		switch( $status ) {
@@ -137,7 +137,7 @@ class cbaecmembershipTab extends cbTabHandler
 			$icon = '';
 			break;
 		}
-		
+
 		if($icon != '')
 			return '<img src="/media/com_acctexp/images/site/icons/'.$icon.'" class="aecicon" border="0" />';
 		else

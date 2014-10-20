@@ -1,0 +1,158 @@
+[
+    {
+        "handle": "sharing",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "vendor",
+        "children": [
+            "acyba",
+            "pages-and-items",
+            "joomprod",
+            "valanx",
+            "qualityunit",
+            "anythingdigital",
+            "alphaplug",
+            "dioscouri",
+            "joomlapolis",
+            "joomlatools",
+            "stackideas",
+            "flexicontent",
+            "google",
+            "mosets",
+            "idevdirect",
+            "interspire",
+            "the_thinkery",
+            "instant_php",
+            "azrul",
+            "joomlaxi",
+            "joomdle",
+            "joomlaworks",
+            "mailchimp",
+            "ninjaforge",
+            "pepperjam",
+            "phoca",
+            "phpbb",
+            "redcomponent",
+            "rsgallery",
+            "rsjoomla",
+            "shareasale",
+            "sigsiu",
+            "stephan_slabihoud",
+            "vbulletin",
+            "virtuemart"
+        ]
+    },
+    {
+        "handle": "user",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "joomla",
+        "children": [
+            "user"
+        ]
+    },
+    {
+        "handle": "aec",
+        "children": [
+            "invoice",
+            "membership",
+            "tools"
+        ]
+    },
+    {
+        "handle": "ecommerce",
+        "children": [
+            "shopping_cart"
+        ]
+    },
+    {
+        "handle": "tracking",
+        "children": [
+            "analytics"
+        ]
+    },
+    {
+        "handle": "communication",
+        "children": [
+            "q_a",
+            "email",
+            "other",
+            "instantmessenging"
+        ]
+    },
+    {
+        "handle": "community",
+        "children": [
+            "profile"
+        ]
+    },
+    {
+        "handle": "calendar_events",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "basic",
+        "children": [
+            "email",
+            "server",
+            "joomla",
+            "database"
+        ]
+    },
+    {
+        "handle": "system",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "directory_documentation",
+        "children": [
+            "directory"
+        ]
+    },
+    {
+        "handle": "vertical_markets",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "education",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "content",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "services",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "media",
+        "children": [
+
+        ]
+    },
+    {
+        "handle": "service",
+        "children": [
+
+        ]
+    }
+]

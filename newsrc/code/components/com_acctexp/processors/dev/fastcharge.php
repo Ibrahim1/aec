@@ -397,7 +397,7 @@ class processor_fastcharge extends XMLprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$mc_gross			= $post['mc_gross'];
 		if ( $mc_gross == '' ) {

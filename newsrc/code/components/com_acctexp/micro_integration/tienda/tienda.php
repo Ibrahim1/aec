@@ -79,17 +79,17 @@ class mi_tienda
 	}
 
 	function getShopperGroups()
-	{	
-		$db = &JFactory::getDBO();
+	{
+		$db = JFactory::getDBO();
 		$query = 'SELECT `group_name` AS `title`, `group_id` AS `id` FROM `#__tienda_groups`';
-	
+
 	 	$db->setQuery( $query );
 	 	return $db->loadObjectList();
 	}
 
 	function updateGroup( $userid, $shoppergroup )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__tienda_usergroupxref'
 				. ' SET `group_id` = \'' . $shoppergroup . '\''

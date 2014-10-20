@@ -38,7 +38,7 @@ class tool_invoicereactivate
 			$notfound = array();
 			$updated = array();
 
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$list = explode( "\n", $_POST['invoices'] );
 			foreach ( $list as $li ) {
@@ -90,7 +90,7 @@ class tool_invoicereactivate
 
 					$metaUser->focusSubscription->check();
 					$metaUser->focusSubscription->store();
-					
+
 					$updated[] = $invoice->invoice_number;
 				}
 			}

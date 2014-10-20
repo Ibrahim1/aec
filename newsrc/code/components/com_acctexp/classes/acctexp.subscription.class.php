@@ -401,7 +401,7 @@ class Subscription extends serialParamDBTable
 			if ( !$overridefallback ) {
 				$this->applyUsage( $plan->params['fallback'], 'none', 1 );
 
-				$expired = false;
+				$expired = null;
 			}
 		} else {
 			// Set a Trial flag if this is an expired Trial for further reference

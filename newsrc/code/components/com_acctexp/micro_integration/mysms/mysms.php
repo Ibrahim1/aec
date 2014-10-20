@@ -34,7 +34,7 @@ class mi_mysms
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !empty( $this->settings['disable_exp'] ) ) {
 			// unpublish the user
@@ -51,7 +51,7 @@ class mi_mysms
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( !empty( $this->settings['add_credits'] ) ) {
 			$credits = (int) $this->settings['add_credits'];

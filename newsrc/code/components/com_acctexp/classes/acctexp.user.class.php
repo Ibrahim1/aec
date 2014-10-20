@@ -17,7 +17,7 @@ class aecUserHelper
 {
 	static function SubscriptionIDfromUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -31,7 +31,7 @@ class aecUserHelper
 
 	static function UserIDfromUsername( $username )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
@@ -44,7 +44,7 @@ class aecUserHelper
 
 	static function UserIDfromSubscriptionID( $susbcriptionid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_subscr'
@@ -58,7 +58,7 @@ class aecUserHelper
 
 	static function UserExists( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__users'
@@ -75,7 +75,7 @@ class cmsUser extends JTableUser
 {
 	function __construct()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		parent::__construct($db);
 	}
@@ -234,7 +234,7 @@ class metaUser
 
 	function setCMSparams( $array )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$params = explode( "\n", $this->cmsUser->params );
 
@@ -327,7 +327,7 @@ class metaUser
 
 	function getAllSubscriptions()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -339,7 +339,7 @@ class metaUser
 
 	function getAllCurrentSubscriptionsInfo()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `a`.`id`, `a`.`plan`, `a`.`expiration`, `a`.`recurring`, `a`.`lifetime`, `b`.`name`'
 				. ' FROM #__acctexp_subscr AS a'
@@ -356,7 +356,7 @@ class metaUser
 
 	function getAllCurrentSubscriptions()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -372,7 +372,7 @@ class metaUser
 
 	function getAllCurrentSubscriptionPlans()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `plan`'
 				. ' FROM #__acctexp_subscr'
@@ -388,7 +388,7 @@ class metaUser
 
 	function getSecondarySubscriptions( $simple=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`' . ( $simple ? '' : ', `status`, `plan`, `type`, `expiration`, `recurring`, `lifetime`' )
 				. ' FROM #__acctexp_subscr'
@@ -450,7 +450,7 @@ class metaUser
 
 	function procTriggerCreate( $user, $payment, $usage )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		global $aecConfig;
 
@@ -549,7 +549,7 @@ class metaUser
 			$existing_record = $this->focusSubscription->getSubscriptionID( $this->userid, $payment_plan->id, $plan_params['make_primary'], false, $bias );
 
 			if ( !empty( $existing_record ) ) {
-				$db = &JFactory::getDBO();
+				$db = JFactory::getDBO();
 
 				$query = 'SELECT `status`'
 						. ' FROM #__acctexp_subscr'
@@ -651,7 +651,7 @@ class metaUser
 
 	function loadSubscriptions()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Get all the users subscriptions
 		$query = 'SELECT id'
@@ -700,7 +700,7 @@ class metaUser
 	function isAdmin()
 	{
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$acl = &JFactory::getACL();
+			$acl = JFactory::getACL();
 
 			$allowed_groups = xJACLhandler::getAdminGroups( true );
 
@@ -739,7 +739,7 @@ class metaUser
 	function getGroups()
 	{
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'SELECT `group_id`'
 					. ' FROM #__user_usergroup_map'
@@ -773,7 +773,7 @@ class metaUser
 
 	function loadJProfile()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT DISTINCT `profile_key`'
 				. ' FROM #__user_profiles';
@@ -810,7 +810,7 @@ class metaUser
 
 	function loadCBuser()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT *'
 			. ' FROM #__users AS u, #__comprofiler AS ue'
@@ -825,7 +825,7 @@ class metaUser
 
 	function loadJSuser()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__community_fields'
@@ -1130,7 +1130,7 @@ class metaUser
 
 	function usedCoupon ( $couponid, $type )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `usecount`'
 				. ' FROM #__acctexp_couponsxuser'

@@ -108,7 +108,7 @@ class processor_scb_nsips extends URLprocessor
 
 	function parseNotification( $post )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$response = array();
 		$response['invoice']			= $post['Ref_no'];

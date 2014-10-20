@@ -15,7 +15,7 @@ class aecInvoiceHelper
 {
 	static function UserIDfromInvoiceNumber( $invoice_number )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_invoices'
@@ -28,7 +28,7 @@ class aecInvoiceHelper
 
 	static function InvoiceIDfromNumber( $invoice_number, $userid=0, $override_active=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -55,7 +55,7 @@ class aecInvoiceHelper
 
 	static function InvoiceNumberfromId( $id, $override_active = false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
@@ -82,7 +82,7 @@ class aecInvoiceHelper
 			$excludedusage = array();
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `invoice_number`, `usage`'
 				. ' FROM #__acctexp_invoices'
@@ -119,7 +119,7 @@ class aecInvoiceHelper
 
 	static function lastClearedInvoiceIDbyUserID( $userid, $planid=0 )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_invoices'
@@ -139,7 +139,7 @@ class aecInvoiceHelper
 
 	static function InvoiceCountbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -153,7 +153,7 @@ class aecInvoiceHelper
 
 	static function UnpaidInvoiceCountbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -168,7 +168,7 @@ class aecInvoiceHelper
 
 	static function PaidInvoiceCountbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_invoices'
@@ -183,7 +183,7 @@ class aecInvoiceHelper
 
 	static function InvoiceNumberbyCartId( $userid, $cartid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `invoice_number`'
 				. ' FROM #__acctexp_invoices'
@@ -198,7 +198,7 @@ class aecInvoiceHelper
 
 	static function InvoiceIdList( $userid, $start, $limit, $sort='`transaction_date` DESC' )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -241,9 +241,9 @@ class InvoiceFactory
 		$this->verifyUsage();
 	}
 
-	function initUser( $userid, $alert=true, $forceinternal=false )
+	function initUser( $userid=null, $alert=true, $forceinternal=false )
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$this->userid = $userid;
 		$this->authed = false;
@@ -274,7 +274,7 @@ class InvoiceFactory
 				return getView( 'access_denied' );
 			}
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$this->userid = xJ::escape( $db, $userid );
 
@@ -347,6 +347,8 @@ class InvoiceFactory
 		if ( !ItemGroupHandler::checkParentRestrictions( $plan, 'item', $this->metaUser ) ) {
 			return getView( 'access_denied' );
 		}
+
+		return true;
 	}
 
 	function usageStatus()
@@ -844,7 +846,6 @@ class InvoiceFactory
 
 	function loadRenewStatus()
 	{
-		$user_subscription = false;
 		$this->renew = 0;
 
 		if ( empty( $this->userid ) ) {
@@ -1158,7 +1159,11 @@ class InvoiceFactory
 	{
 		global $aecConfig;
 
-		if ( empty( $aecConfig->cfg['checkout_coupons'] ) && empty( $aecConfig->cfg['confirmation_coupons'] ) && empty( $this->invoice->coupons ) ) {
+		if (
+			empty( $aecConfig->cfg['checkout_coupons'] )
+			&& empty( $aecConfig->cfg['confirmation_coupons'] )
+			&& empty( $this->invoice->coupons )
+		) {
 			return null;
 		}
 
@@ -1233,9 +1238,7 @@ class InvoiceFactory
 		}
 
 		if ( !is_array( $usage ) ) {
-			$id = $usage;
-
-			$usage = array( $id );
+			$usage = array( $usage );
 		}
 
 		foreach ( $usage as $us ) {
@@ -1537,11 +1540,12 @@ class InvoiceFactory
 			$intro = false;
 		}
 
-		if ( empty( $this->usage )
+		if (
+			empty( $this->usage )
 			&& empty( $group )
 			&& !$intro
-			&& !empty( $aecConfig->cfg['customintro'] ) ) {
-
+			&& !empty( $aecConfig->cfg['customintro'] )
+		) {
 			if ( !empty( $aecConfig->cfg['customintro_userid'] ) ) {
 				aecRedirect( $aecConfig->cfg['customintro'], $this->userid, "aechidden" );
 			} else {
@@ -2421,7 +2425,7 @@ class InvoiceFactory
 
 	function error( $objUser, $invoice, $error )
 	{
-		$document=& JFactory::getDocument();
+		$document= JFactory::getDocument();
 
 		$document->setTitle( html_entity_decode( JText::_('CHECKOUT_ERROR_TITLE'), ENT_COMPAT, 'UTF-8' ) );
 
@@ -2508,7 +2512,7 @@ class Invoice extends serialParamDBTable
 		return array( 'coupons', 'transactions', 'params', 'conditions' );
 	}
 
-	function load( $id )
+	function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 
@@ -4116,7 +4120,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function delete()
+	function delete( $pk=null )
 	{
 		if ( !empty( $this->coupons ) ) {
 			foreach ( $this->coupons as $cid ) {
@@ -4124,7 +4128,7 @@ class Invoice extends serialParamDBTable
 			}
 		}
 
-		return parent::delete();
+		return parent::delete($pk);
 	}
 
 }

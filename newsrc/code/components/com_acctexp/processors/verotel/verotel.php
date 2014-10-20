@@ -113,7 +113,7 @@ class processor_verotel extends URLprocessor
 		if ( $res[3] == 'add' ) {
 			$response['invoice'] = $payment_id;
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'SELECT `id` FROM #__users WHERE `username` = \'' . $username . '\'';
 			$db->setQuery( $query );

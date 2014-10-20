@@ -25,7 +25,7 @@ class mi_hotproperty extends MI
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -37,7 +37,7 @@ class mi_hotproperty extends MI
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_hotproperty` ('
 		. '`id` int(11) NOT NULL auto_increment,'
@@ -56,7 +56,7 @@ class mi_hotproperty extends MI
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['create_agent']	= array( 'toggle' );
@@ -114,7 +114,7 @@ class mi_hotproperty extends MI
 
 	function getMIform( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 
@@ -278,7 +278,7 @@ class mi_hotproperty extends MI
 			. '$view = JRequest::getCmd(\'view\');' . "\n"
 			. '$lid = JRequest::getCmd(\'id\');' . "\n"
 			. 'if ( ( $view == "properties" ) && ( ( $task == "add" ) || ( ( $task == "save" ) && empty( $lid ) ) ) ) {' . "\n"
-			. '$user = &JFactory::getUser();' . "\n"
+			. '$user = JFactory::getUser();' . "\n"
 			. 'if ( !empty( $user->id ) ) {' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/hotproperty/hotproperty.php\' );' . "\n"
@@ -334,7 +334,7 @@ class mi_hotproperty extends MI
 			$hacks[$n]['insert']			=	$edithack2 . "\n"  . $hacks[$n]['read'];
 		} else {
 			$edithack = '// AEC HACK hotproperty1 START' . "\n"
-			. ( defined( '_JEXEC' ) ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
+			. ( defined( '_JEXEC' ) ? '$user = JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/hotproperty/hotproperty.php\' );' . "\n"
 			. '$mi_hphandler = new aec_hotproperty();' . "\n"
@@ -352,7 +352,7 @@ class mi_hotproperty extends MI
 			;
 
 			$edithack2 = '// AEC HACK hotproperty2 START' . "\n"
-			. ( defined( '_JEXEC' ) ? '$user = &JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
+			. ( defined( '_JEXEC' ) ? '$user = JFactory::getUser();' : 'global $mosConfig_absolute_path;' ) . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/acctexp.class.php\' );' . "\n"
 			. 'include_once( JPATH_SITE . \'/components/com_acctexp/micro_integration/hotproperty/hotproperty.php\' );' . "\n"
 			. '$mi_hphandler = new aec_hotproperty();' . "\n"
@@ -462,7 +462,7 @@ class mi_hotproperty extends MI
 
 	function profile_info( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$mi_hphandler = new aec_hotproperty();
 		$id = $mi_hphandler->getIDbyUserID( $request->metaUser->userid );
@@ -549,7 +549,7 @@ class mi_hotproperty extends MI
 		}
 
 		if ( !empty( $this->settings['set_listings'.$request->area] ) || !empty( $this->settings['add_listings'.$request->area] ) || ( !empty( $this->settings['add_list_userchoice'] ) && !empty( $request->params['hpamt']  ) )  ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$mi_hphandler = new aec_hotproperty();
 			$id = $mi_hphandler->getIDbyUserID( $request->metaUser->userid );
@@ -585,7 +585,7 @@ class mi_hotproperty extends MI
 
 	function agentExists( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__hp_agents'
 				. ' WHERE user = \'' . $userid . '\''
@@ -602,7 +602,7 @@ class mi_hotproperty extends MI
 
 	function createAgent( $fields, $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$check = $this->agentExists( $request->metaUser->userid );
 
@@ -646,7 +646,7 @@ class mi_hotproperty extends MI
 
 	function companyExists( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT company FROM #__hp_agents'
 				. ' WHERE user = \'' . $userid . '\''
@@ -663,7 +663,7 @@ class mi_hotproperty extends MI
 
 	function createCompany( $fields, $assoc, $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$check = $this->companyExists( $request->metaUser->userid );
 		if ( !empty( $check ) ) {
@@ -722,7 +722,7 @@ class mi_hotproperty extends MI
 
 	function update( $table, $id, $fields, $request, $sid=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$fields = AECToolbox::rewriteEngineRQ( $fields, $request );
 
@@ -753,7 +753,7 @@ class mi_hotproperty extends MI
 
 	function publishProperties( $agentid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__hp_properties'
 				. ' SET `published` = \'1\''
@@ -770,7 +770,7 @@ class mi_hotproperty extends MI
 
 	function unpublishProperties( $agentid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__hp_properties'
 				. ' SET `published` = \'0\''
@@ -806,7 +806,7 @@ class aec_hotproperty extends serialParamDBTable
 
 	function aec_hotproperty()
 	{
-		$lang =& JFactory::getLanguage();
+		$lang = JFactory::getLanguage();
 
 		$lang->load( 'com_acctexp.microintegrations', JPATH_SITE );
 
@@ -815,7 +815,7 @@ class aec_hotproperty extends serialParamDBTable
 
 	function getIDbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_hotproperty'
@@ -833,7 +833,7 @@ class aec_hotproperty extends serialParamDBTable
 
 	function loadAgentID( $agent )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `user`'
 				. ' FROM #__hp_agents'
@@ -847,7 +847,7 @@ class aec_hotproperty extends serialParamDBTable
 
 	function getIDbyLinkID( $linkid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `agent`'
 				. ' FROM #__hp_properties'

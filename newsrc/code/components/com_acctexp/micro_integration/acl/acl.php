@@ -25,7 +25,7 @@ class mi_acl
 
 	function Settings()
 	{
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$settings = array();
 
@@ -206,7 +206,7 @@ class mi_acl
 
 	function jaclplusGIDchange( $metaUser, $section )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['delete_subgroups'] ) {
 			// Delete sub entries
@@ -262,9 +262,9 @@ class mi_acl
 	{
 		$sessionextra = array();
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
-		$acl = &JFactory::getACL();
+		$acl = JFactory::getACL();
 
 		$gid_name = $acl->get_group_name( $gid, 'ARO' );
 

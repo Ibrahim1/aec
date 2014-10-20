@@ -29,7 +29,7 @@ class mi_htaccess extends MI
 
 	function checkInstallation()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$app = JFactory::getApplication();
 
@@ -41,7 +41,7 @@ class mi_htaccess extends MI
 
 	function install()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'CREATE TABLE IF NOT EXISTS `#__acctexp_mi_htaccess_apachepw`'
 		. ' (`id` int(11) NOT NULL auto_increment,'
@@ -72,7 +72,7 @@ class mi_htaccess extends MI
 
 	function saveparams( $params )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$newparams = $params;
 
@@ -105,7 +105,7 @@ class mi_htaccess extends MI
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$ht = $this->getHTAccess( $this->settings );
 		$ht->delUser( $request->metaUser->cmsUser->username );
@@ -181,7 +181,7 @@ class mi_htaccess extends MI
 
 	function getApachePW( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$apachepw = new apachepw();
 		$apwid = $apachepw->getIDbyUserID( $userid );
@@ -270,7 +270,7 @@ class apachepw extends serialParamDBTable
 
 	function getIDbyUserID( $userid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_mi_htaccess_apachepw'

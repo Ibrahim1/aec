@@ -35,7 +35,7 @@ class aecConfig extends serialParamDBTable
 		return array( 'settings' );
 	}
 
-	function load( $id )
+	function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 

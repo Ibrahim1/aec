@@ -25,7 +25,7 @@ class mi_adsmanager extends MI
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['publish_all']	= array( 'toggle' );
@@ -56,7 +56,7 @@ class mi_adsmanager extends MI
 
 	function publishItems( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__adsmanager_ads'
 				. ' SET `published` = \'1\''
@@ -73,7 +73,7 @@ class mi_adsmanager extends MI
 
 	function unpublishItems( $metaUser )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__adsmanager_ads'
 				. ' SET `published` = \'0\''

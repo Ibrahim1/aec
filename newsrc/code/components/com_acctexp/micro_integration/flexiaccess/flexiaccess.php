@@ -27,7 +27,7 @@ class mi_flexiaccess
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `name`, `description`'
 			 	. ' FROM #__flexiaccess_groups'
@@ -86,7 +86,7 @@ class mi_flexiaccess
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group_exp'] ) {
 			foreach ( $this->settings['enroll_group'] as $groupid ) {
@@ -107,7 +107,7 @@ class mi_flexiaccess
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['set_remove_group'] ) {
 			$this->DeleteUserFromGroup( $request->metaUser->userid );
@@ -124,7 +124,7 @@ class mi_flexiaccess
 
 	function AddUserToGroup( $userid, $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Check user is not already a member of the group.
 		$query = 'SELECT `member_id`'
@@ -152,7 +152,7 @@ class mi_flexiaccess
 
 	function DeleteUserFromGroup( $userid, $groupid=null )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'DELETE FROM #__flexiaccess_members'
 				. ' WHERE `member_id` = \''. $userid . '\''

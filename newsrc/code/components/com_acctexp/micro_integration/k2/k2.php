@@ -25,7 +25,7 @@ class mi_k2
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 		$settings['set_group']		= array( 'toggle' );
@@ -84,7 +84,7 @@ class mi_k2
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['set_group_exp'] && !empty( $this->settings['group_exp'] ) ) {
 			$this->AddUserToGroup( $request->metaUser, $this->settings['group_exp'] );
@@ -95,7 +95,7 @@ class mi_k2
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['set_group'] && !empty( $this->settings['group'] ) ) {
 			$this->AddUserToGroup( $request->metaUser, $this->settings['group'] );
@@ -106,7 +106,7 @@ class mi_k2
 
 	function AddUserToGroup( $metaUser, $groupid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id FROM #__k2_users'
 			. ' WHERE `userID` = \'' . $metaUser->userid . '\''

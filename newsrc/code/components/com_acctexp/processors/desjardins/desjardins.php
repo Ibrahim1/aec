@@ -407,7 +407,7 @@ XML;
 
 	function displayError( $invoice, $error )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$metaUser = new metaUser( $invoice->userid );
 

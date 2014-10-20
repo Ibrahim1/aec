@@ -77,7 +77,7 @@ class processor_payone extends XMLprocessor
 		return array( 'productid' => array( 'inputC' ) );
 	}
 
-	function checkoutProcess( $request )
+	function checkoutProcess( $request, $InvoiceFactory )
 	{
 		$var['portalid']	= $this->settings['portalid'];
 		$var['aid']			= $this->settings['aid'];
@@ -111,7 +111,7 @@ class processor_payone extends XMLprocessor
 			$var['no[1]']		= '1';
 			$var['de[1]']		= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		}
-		
+
 		$var['reference']		= $request->invoice->invoice_number;
 
 		$var['backurl']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
@@ -169,7 +169,7 @@ class processor_payone extends XMLprocessor
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$response['valid'] = 0;
 

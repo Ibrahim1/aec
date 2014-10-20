@@ -45,7 +45,7 @@ class SubscriptionPlanList
 		$this->list = array();
 
 		if ( !empty( $this->usage ) ) {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_plans'
@@ -404,7 +404,7 @@ class SubscriptionPlanHandler
 {
 	static function getPlanList( $limitstart=false, $limit=false, $use_order=false, $filter=null, $select=false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $select ) {
 			$query = 'SELECT `id` AS value, `name` AS text FROM #__acctexp_plans';
@@ -440,7 +440,7 @@ class SubscriptionPlanHandler
 
 	static function getActivePlanList( $noplan=true, $prevent_null=true )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// get entry Plan selection
 		$available_plans	= array();
@@ -465,7 +465,7 @@ class SubscriptionPlanHandler
 
 	static function getFullPlanList( $limitstart=false, $limit=false, $subselect=array() )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT *'
 				. ' FROM #__acctexp_plans'
@@ -491,7 +491,7 @@ class SubscriptionPlanHandler
 
 	static function getPlanUserCount( $planid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT count(*)'
 				. ' FROM #__users AS a'
@@ -506,7 +506,7 @@ class SubscriptionPlanHandler
 
 	static function getPlanUserlist( $planid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `userid`'
 				. ' FROM #__acctexp_subscr'
@@ -519,7 +519,7 @@ class SubscriptionPlanHandler
 
 	static function PlanStatus( $planid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$plan = new SubscriptionPlan();
 		$plan->load( $planid );
@@ -529,7 +529,7 @@ class SubscriptionPlanHandler
 
 	function planName( $planid )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT name'
 				. ' FROM #__acctexp_plans'
@@ -541,7 +541,7 @@ class SubscriptionPlanHandler
 
 	function listPlans()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id'
 				. ' FROM #__acctexp_plans'
@@ -1651,11 +1651,11 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function delete()
+	function delete( $pk=null )
 	{
 		ItemGroupHandler::removeChildren( $this->id );
 
-		return parent::delete();
+		return parent::delete($pk);
 	}
 
 }

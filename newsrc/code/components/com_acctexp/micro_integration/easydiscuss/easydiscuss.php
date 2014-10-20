@@ -32,7 +32,7 @@ class mi_easydiscuss extends MI
 			return $settings;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery( 'SELECT * FROM #__discuss_ranks' );
 
 		$ranks = $db->loadObjectList();
@@ -66,7 +66,7 @@ class mi_easydiscuss extends MI
 			if ( isset( $this->settings[$k] ) ) {
 				$value = $this->settings[$k];
 			}
-				
+
 			if ( strpos( $k, 'rank' ) !== false ) {
 				$settings['lists'][$k]	= JHTML::_( 'select.genericlist', $ranklist, $k."[]", 'size="5" multiple="multiple"', 'value', 'text', $value );
 			} elseif ( strpos( $k, 'badge' ) !== false ) {
@@ -85,10 +85,10 @@ class mi_easydiscuss extends MI
 	{
 		$app = JFactory::getApplication();
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$tables = $db->getTableList();
-		
+
 		return	in_array( $app->getCfg( 'dbprefix' ) . "discuss_ranks_users", $tables );
 	}
 
@@ -105,7 +105,7 @@ class mi_easydiscuss extends MI
 
 	function changeRank( $userid, $add, $remove )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `user_id`, `rank_id`'
 				. ' FROM #__discuss_ranks_users'
@@ -153,7 +153,7 @@ class mi_easydiscuss extends MI
 
 	function changeBadge( $userid, $add, $remove )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `user_id`, `badge_id`'
 				. ' FROM #__discuss_badges_users'

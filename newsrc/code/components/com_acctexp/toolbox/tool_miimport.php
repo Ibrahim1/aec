@@ -24,7 +24,7 @@ class tool_miimport
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$settings = array();
 
@@ -54,7 +54,7 @@ class tool_miimport
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$count = 0;
 		for ( $i=0; $i<$_POST['count']; $i++ ) {

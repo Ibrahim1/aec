@@ -26,7 +26,7 @@ class mi_fireboard
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`, `title`'
 			 	. ' FROM #__fb_groups'
@@ -38,7 +38,7 @@ class mi_fireboard
 		if ( !empty( $groups ) ) {
 			foreach ( $groups as $group ) {
 				$sg[] = JHTML::_('select.option', $group->id, $group->title );
-			}	
+			}
 		}
 
 		$settings = array();
@@ -71,7 +71,7 @@ class mi_fireboard
 
 	function expiration_action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['set_group_exp'] ) {
 			$query = 'UPDATE #__fb_users'
@@ -87,7 +87,7 @@ class mi_fireboard
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $this->settings['set_group'] ) {
 			// Check if exists - users only appear in FB users table normally when they have posted

@@ -497,7 +497,7 @@ class MCAPI {
 
 	function callServerAEC( $method, $params )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$tempprocessor = new processor();
 

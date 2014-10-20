@@ -11,7 +11,7 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
-$user = &JFactory::getUser();
+$user = JFactory::getUser();
 
 if ( $user->id ) {
 	require_once( JPATH_SITE . '/components/com_acctexp/acctexp.class.php' );
@@ -22,7 +22,7 @@ if ( $user->id ) {
 	$showExpiration 		= $params->def( 'show_expiration', 0 );
 	$displaypipeline		= $params->get( 'displaypipeline', 0 );
 
-	$lang =& JFactory::getLanguage();
+	$lang = JFactory::getLanguage();
 
 	$lang->load( 'mod_acctexp', JPATH_SITE );
 

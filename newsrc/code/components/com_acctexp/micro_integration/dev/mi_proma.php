@@ -22,7 +22,7 @@ class mi_proma
 
 	function Settings()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT groupid, title, description'
 	 	. ' FROM #__proma_groups'
@@ -79,7 +79,7 @@ class mi_proma
 
 	function setGroupId( $userid, $groupid, $default = false )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		if ( $default ) {
 			$query = 'SELECT title'

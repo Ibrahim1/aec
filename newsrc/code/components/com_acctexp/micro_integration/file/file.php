@@ -42,7 +42,7 @@ class mi_file extends MI
 			return null;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$rewriting = array( 'path', 'append', 'content' );
 

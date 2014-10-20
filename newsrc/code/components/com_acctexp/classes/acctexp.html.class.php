@@ -249,7 +249,7 @@ class aecHTML
 			case 'editor':
 				$return .= '<div class="controls">';
 
-				$editor = &JFactory::getEditor();
+				$editor = JFactory::getEditor();
 
 				$return .= '<div>' . $editor->display( $name,  $value , '', '250', '50', '20' ) . '</div>';
 				$return .= $insertctrl;

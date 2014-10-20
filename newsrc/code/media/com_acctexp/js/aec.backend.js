@@ -31,12 +31,12 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery('#quicksearch').focus(function() {
 		jQuery('#quicksearch').popover({ trigger:'manual', placement:'bottom' });
-	})
+	});
 
 	var typingTimer;
 
 	jQuery("#quicksearch").on({
-		'keypress' : function(e) { if (e.keyCode == 13) return false; },
+		'keypress' : function(e) { return e.keyCode != 13; },
 		'keyup' : function(e) { clearTimeout(typingTimer); inputString = this.value; typingTimer = setTimeout(lookup, "300"); },
 		'keydown' : function(e) { jQuery('.popover .popover-content p').html("Searching..."); },
 		'focusin' : function(e) {
@@ -56,11 +56,13 @@ jQuery(document).ready(function(jQuery) {
 	});
 
 	jQuery("#settings-filter").on({
-		'keypress' : function(e) { if (e.keyCode == 13) return false; },
-		'keyup' : function(e) { clearTimeout(typingTimer); inputString = this.value; typingTimer = setTimeout(settingsfilter, "100"); }
+		'keypress' : function(e) { return e.keyCode != 13; },
+		'keyup' : function(e) {
+			clearTimeout(typingTimer); inputString = this.value; typingTimer = setTimeout(settingsfilter, "100");
+		}
 	});
 
-	jQuery('form#adminForm').one('click', function() {
+	jQuery('#adminForm').one('click', function() {
 		jQuery('div.aec-buttons a.btn').attr("disabled", false);
 	});
 
@@ -166,7 +168,7 @@ jQuery(document).ready(function(jQuery) {
 
 	function lookup() {
 		jQuery.post("index.php?option=com_acctexp&task=quicksearch&search="+inputString , {queryString: ""+inputString+""}, function(data) {
-			jQuery('.popover .popover-content p').html(data);
+			jQuery('.popover .popover-content').html(data);
 		});
 	}
 
@@ -241,25 +243,25 @@ jQuery(document).ready(function(jQuery) {
 			latestDate: Date.parse('today'),
 			dateFormat: "yy-mm-dd",
 			constrainDates: true,
-			datepickerOptions: {	dateFormat: 'yy-mm-dd',
-									changeMonth: true,
-									changeYear: true,
-									showWeek: true,
-									showOtherMonths: true,
-									selectOtherMonths: true,
-									maxDate: Date.parse('today'),
-									defaultDate: Date.parse('today'),
-									gotoCurrent: true
-								},
+			datepickerOptions: {
+				dateFormat: 'yy-mm-dd',
+				changeMonth: true,
+				changeYear: true,
+				showWeek: true,
+				showOtherMonths: true,
+				selectOtherMonths: true,
+				maxDate: Date.parse('today'),
+				defaultDate: Date.parse('today'),
+				gotoCurrent: true
+			},
 			onClose:function(){
 				var range = jQuery('.jqui-daterangepicker').val();
-	
-				if ( range.indexOf(" - ") === -1 ) {
-					var rangestart = range;
-					var rangeend = range;
-				} else {
-					var rangestart = range.slice(0, 10);
-					var rangeend = range.slice(13);
+				var rangestart = range;
+				var rangeend = range;
+
+				if ( range.indexOf(" - ") !== -1 ) {
+					rangestart = range.slice(0, 10);
+					rangeend = range.slice(13);
 				}
 
 				cf.range( rangestart+" 00:00:00", rangeend+" 23:59:59")
@@ -279,9 +281,11 @@ function readNotice(id) {
 			jQuery('#aec-alertlist').append(data);
 		});
 
-		if ( jQuery('#further-notices>span').html() ) {
-			if ( ( jQuery('#further-notices>span').html() - 1 ) > 0 ) {
-				jQuery('#further-notices>span').html( jQuery('#further-notices>span').html() - 1 );
+		var notices = jQuery('#further-notices>span');
+
+		if ( notices.html() ) {
+			if ( ( notices.html() - 1 ) > 0 ) {
+				notices.html( notices.html() - 1 );
 			} else {
 				jQuery('#further-notices').remove();
 			}
@@ -297,58 +301,53 @@ function readNotices() {
 }
 
 function toggleProperty(type, property, id, callerid, callerclass) {
-	if ( jQuery('#'+callerid).hasClass('ui-disabled') ) { 
+	var idelement = jQuery('#'+callerid);
+
+	if ( idelement.hasClass('ui-disabled') ) {
 		return;
 	}
 
+	var classelement = jQuery('.'+callerclass+' i' ),
+		classidelement = jQuery('#'+callerid+' i');
+
 	if ( property == 'default' ) {
-		jQuery('.'+callerclass+' i').addClass('bsicon-refresh');
-		jQuery('.'+callerclass+' i')
-			.removeClass('bsicon-remove')
-			.removeClass('bsicon-star-empty')
-			.removeClass('bsicon-ok')
-			.removeClass('bsicon-eye-open')
-			.removeClass('bsicon-star');
-		jQuery('.'+callerclass+' i').addClass('bsicon-rotate');
+		classelement.addClass('bsicon-refresh');
+		classelement.removeClass('bsicon-remove bsicon-star-empty bsicon-ok bsicon-eye-open bsicon-star');
+		classelement.addClass('bsicon-rotate');
 	} else {
-		jQuery('#'+callerid+' i').addClass('bsicon-refresh');
-		jQuery('#'+callerid+' i')
-			.removeClass('bsicon-remove')
-			.removeClass('bsicon-stop')
-			.removeClass('bsicon-ok')
-			.removeClass('bsicon-eye-open')
-			.removeClass('bsicon-star');
-		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
+		classidelement.addClass('bsicon-refresh');
+		classidelement.removeClass('bsicon-remove bsicon-stop bsicon-ok bsicon-eye-open bsicon-star');
+		classidelement.addClass('bsicon-rotate');
 	}
 
-	if ( jQuery('#'+callerid).hasClass('btn-toggle-danger') ) {
-		jQuery('#'+callerid).removeClass('btn-toggle-danger').addClass('btn-toggle-warning');
+	if ( idelement.hasClass('btn-toggle-danger') ) {
+		idelement.removeClass('btn-toggle-danger').addClass('btn-toggle-warning');
 	} else {
-		jQuery('#'+callerid).removeClass('btn-toggle-success').addClass('btn-toggle-warning');
+		idelement.removeClass('btn-toggle-success').addClass('btn-toggle-warning');
 	}
 
-	jQuery('#'+callerid+' i').addClass('bsicon-refresh').removeClass('bsicon-eye-open');
+	classidelement.addClass('bsicon-refresh').removeClass('bsicon-eye-open');
 
 	jQuery.post("index.php?option=com_acctexp&task=toggleAjax&type="+type+"&property="+property+"&id="+id , {queryString: ""}, function(data) {
-		jQuery('#'+callerid).removeClass('btn-toggle-warning');
+		idelement.removeClass('btn-toggle-warning');
 
 		if ( data == "1" ) {
-			jQuery('#'+callerid).addClass('btn-toggle-success');
+			idelement.addClass('btn-toggle-success');
 
 			if ( property == 'default' ) {
-				jQuery('#'+callerid+' i').addClass('bsicon-star').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
-				jQuery('#'+callerid).attr('disabled','disabled').addClass('ui-disabled');
+				classidelement.addClass('bsicon-star').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				idelement.attr('disabled','disabled').addClass('ui-disabled');
 				jQuery('.'+callerclass+':not(#'+callerid+') i').addClass('bsicon-star-empty').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 				jQuery('.'+callerclass+':not(#'+callerid+')').removeAttr('disabled').removeClass('ui-disabled').removeClass('btn-toggle-success').addClass('btn-toggle-danger');
 			} else if ( property == 'visible' ) {
-				jQuery('#'+callerid+' i').addClass('bsicon-eye-open').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				classidelement.addClass('bsicon-eye-open').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 			} else {
-				jQuery('#'+callerid+' i').addClass('bsicon-ok').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				classidelement.addClass('bsicon-ok').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 			}
 		} else {
-			jQuery('#'+callerid).addClass('btn-toggle-danger');
+			idelement.addClass('btn-toggle-danger');
 
-			jQuery('#'+callerid+' i').addClass('bsicon-remove').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+			classidelement.addClass('bsicon-remove').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
 		}
 	});
 }
@@ -363,7 +362,7 @@ function addGroup(type, callerid) {
 
 		jQuery.post("index.php?option=com_acctexp&task=addGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
 			if ( data == "0" ) {
-	
+
 			} else if ( data.length < 500 ) {
 				jQuery('#'+callerid+' i').removeClass('bsicon-rotate');
 

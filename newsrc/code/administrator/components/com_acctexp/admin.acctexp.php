@@ -43,7 +43,7 @@ if ( !is_null( $id ) ) {
 	}
 }
 
-$db = &JFactory::getDBO();
+$db = JFactory::getDBO();
 
 // Auto Heartbeat renew every one hour to make sure that the admin gets a view as recent as possible
 $heartbeat = new aecHeartbeat();
@@ -153,7 +153,7 @@ switch( strtolower( $task ) ) {
 	case 'showcoupons': listCoupons( $option ); break;
 
 	case 'copycoupon':
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		foreach ( $id as $pid ) {
 			$c = explode( '.', $pid );
@@ -256,7 +256,7 @@ switch( strtolower( $task ) ) {
 	case 'readnoticeajax': readNotice($id[0]); exit; break;
 
 	case 'readnoticesajax':
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__acctexp_eventlog'
 				. ' SET `notify` = \'0\''
@@ -270,7 +270,7 @@ switch( strtolower( $task ) ) {
 	case 'getnotice': echo getNotice();exit; break;
 
 	case 'readallnotices':
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'UPDATE #__acctexp_eventlog'
 				. ' SET `notify` = \'0\''
@@ -324,7 +324,7 @@ switch( strtolower( $task ) ) {
 
 function toggleProperty( $type, $id, $property )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$query = 'SELECT `'.$property.'` FROM #__acctexp_' . $type
 			. ' WHERE `id` = ' . $id
@@ -360,7 +360,7 @@ function toggleProperty( $type, $id, $property )
 
 function addGroup( $type, $id, $groupid )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	if ( ItemGroupHandler::setChildren( $groupid, array( $id ), $type ) ) {
 		$group = new ItemGroup();
@@ -387,7 +387,7 @@ function removeGroup( $type, $id, $groupid )
 
 function orderObject( $option, $type, $id, $up, $customreturn=null )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$row = new $type();
 	$row->load( $id );
@@ -398,7 +398,7 @@ function orderObject( $option, $type, $id, $up, $customreturn=null )
 
 function copyObject( $option, $type, $id, $customreturn=null )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	foreach ( $id as $pid ) {
 		$row = new $type( $db, 1 );
@@ -411,7 +411,7 @@ function copyObject( $option, $type, $id, $customreturn=null )
 
 function aecCentral( $option, $searchresult=null, $searchcontent=null )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -436,7 +436,7 @@ function aecCentral( $option, $searchresult=null, $searchcontent=null )
 
 function getNotices()
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -461,7 +461,7 @@ function getNotices()
 
 function readNotice( $id )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$query = 'UPDATE #__acctexp_eventlog'
 			. ' SET `notify` = \'0\''
@@ -473,7 +473,7 @@ function readNotice( $id )
 
 function getNotice()
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$query = 'SELECT *'
 			. ' FROM #__acctexp_eventlog'
@@ -500,7 +500,7 @@ function getNotice()
 
 function cancel( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -517,7 +517,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
 	}
 
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -741,7 +741,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 
 function saveUser( $option, $apply=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -907,7 +907,7 @@ function saveUser( $option, $apply=0 )
 
 function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(), $planid=null )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -1388,7 +1388,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 function editSettings( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	global $aecConfig;
 
@@ -1711,8 +1711,8 @@ function editSettings( $option )
 
 function saveSettings( $option, $return=0 )
 {
-	$db		= &JFactory::getDBO();
-	$user	= &JFactory::getUser();
+	$db		= JFactory::getDBO();
+	$user	= JFactory::getUser();
 
 	global $aecConfig;
 
@@ -1825,7 +1825,7 @@ function saveSettings( $option, $return=0 )
 
 function listTemplates( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -1871,7 +1871,7 @@ function listTemplates( $option )
 
 function editTemplate( $option, $name )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$temp = new configTemplate();
 	$temp->loadName( $name );
@@ -1895,7 +1895,7 @@ function editTemplate( $option, $name )
 
 function saveTemplate( $option, $name, $return=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$temp = new configTemplate();
 	$temp->loadName( $name );
@@ -1949,7 +1949,7 @@ function saveTemplate( $option, $name, $return=0 )
 
 function listProcessors( $option )
 {
- 	$db = &JFactory::getDBO();
+ 	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -1994,7 +1994,7 @@ function listProcessors( $option )
 
 function editProcessor( $id, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$lang = JFactory::getLanguage();
 
@@ -2141,7 +2141,7 @@ function editProcessor( $id, $option )
 
 function changeProcessor( $cid=null, $state=0, $type, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -2175,7 +2175,7 @@ function changeProcessor( $cid=null, $state=0, $type, $option )
 
 function saveProcessor( $option, $return=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$pp = new PaymentProcessor();
 
@@ -2256,7 +2256,7 @@ function saveProcessor( $option, $return=0 )
 
 function getSubscriptionPlans()
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$rows = SubscriptionPlanHandler::getFullPlanList();
 
@@ -2391,7 +2391,7 @@ function getSubscriptionPlans()
 
 function listSubscriptionPlans( $option )
 {
- 	$db = &JFactory::getDBO();
+ 	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -2577,7 +2577,7 @@ function editSubscriptionPlan( $id, $option )
 {
 	global $aecConfig;
 
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$lang = JFactory::getLanguage();
 
@@ -3169,7 +3169,7 @@ function editSubscriptionPlan( $id, $option )
 
 function saveSubscriptionPlan( $option, $apply=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$row = new SubscriptionPlan();
 	$row->load( $_POST['id'] );
@@ -3268,7 +3268,7 @@ function saveSubscriptionPlan( $option, $apply=0 )
 
 function removeSubscriptionPlan( $id, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$ids = implode( ',', $id );
 
@@ -3304,7 +3304,7 @@ function removeSubscriptionPlan( $id, $option )
 
 function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -3338,7 +3338,7 @@ function changeSubscriptionPlan( $cid=null, $state=0, $type, $option )
 
 function listItemGroups( $option )
 {
- 	$db = &JFactory::getDBO();
+ 	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -3444,7 +3444,7 @@ function listItemGroups( $option )
 
 function editItemGroup( $id, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$lists = array();
 	$params_values = array();
@@ -3633,7 +3633,7 @@ function editItemGroup( $id, $option )
 
 function saveItemGroup( $option, $apply=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$row = new ItemGroup();
 	$row->load( $_POST['id'] );
@@ -3672,7 +3672,7 @@ function saveItemGroup( $option, $apply=0 )
 
 function removeItemGroup( $id, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$ids = implode( ',', $id );
 
@@ -3713,7 +3713,7 @@ function removeItemGroup( $id, $option )
 
 function changeItemGroup( $cid=null, $state=0, $type, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
 		echo "<script> alert('" . JText::_('AEC_ALERT_SELECT_FIRST') . "'); window.history.go(-1);</script>\n";
@@ -3747,7 +3747,7 @@ function changeItemGroup( $cid=null, $state=0, $type, $option )
 
 function listMicroIntegrations( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -3854,9 +3854,9 @@ function listMicroIntegrations( $option )
 
 function editMicroIntegration( $id, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	$lists	= array();
 	$mi		= new microIntegration();
@@ -4066,7 +4066,7 @@ function editMicroIntegration( $id, $option )
 
 function saveMicroIntegration( $option, $apply=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	unset( $_POST['option'] );
 	unset( $_POST['task'] );
@@ -4173,7 +4173,7 @@ function saveMicroIntegration( $option, $apply=0 )
 
 function removeMicroIntegration( $id, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$ids = implode( ',', $id );
 
@@ -4221,7 +4221,7 @@ function cancelMicroIntegration( $option )
 
 function changeMicroIntegration( $cid=null, $state=0, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	if ( count( $cid ) < 1 ) {
 		$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH'): JText::_('AEC_CMN_TOUNPUBLISH');
@@ -4253,7 +4253,7 @@ function changeMicroIntegration( $cid=null, $state=0, $option )
 
 function listCoupons( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -4349,9 +4349,9 @@ function listCoupons( $option )
 
 function editCoupon( $id, $option, $new )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	$lists					= array();
 	$params_values			= array();
@@ -4633,7 +4633,7 @@ function editCoupon( $id, $option, $new )
 
 function saveCoupon( $option, $apply=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$new = 0;
 	$type = $_POST['type'];
@@ -4699,7 +4699,7 @@ function saveCoupon( $option, $apply=0 )
 
 function removeCoupon( $id, $option, $returnTask )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$rids = $sids = array();
 	foreach ( $id as $i ) {
@@ -4743,7 +4743,7 @@ function removeCoupon( $id, $option, $returnTask )
 
 function changeCoupon( $id=null, $state=0, $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	if ( count( $id ) < 1 ) {
 		$action = $state == 1 ? JText::_('AEC_CMN_TOPUBLISH') : JText::_('AEC_CMN_TOUNPUBLISH');
@@ -4791,7 +4791,7 @@ function changeCoupon( $id=null, $state=0, $option )
 
 function invoices( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -4895,7 +4895,7 @@ function invoices( $option )
 
 function editInvoice( $id, $option, $returnTask, $userid )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$row = new Invoice();
 	$row->load( $id );
@@ -4936,9 +4936,9 @@ function editInvoice( $id, $option, $returnTask, $userid )
 
 function saveInvoice( $option, $return=0 )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
-	$user = &JFactory::getUser();
+	$user = JFactory::getUser();
 
 	$row = new Invoice();
 	$row->load( $_POST['id'] );
@@ -4965,12 +4965,12 @@ function saveInvoice( $option, $return=0 )
 
 function clearInvoice( $option, $invoice_number, $applyplan, $task )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
 	if ( $invoiceid ) {
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$objInvoice = new Invoice();
 		$objInvoice->load( $invoiceid );
@@ -5000,7 +5000,7 @@ function clearInvoice( $option, $invoice_number, $applyplan, $task )
 
 function cancelInvoice( $option, $invoice_number, $task )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$invoiceid = aecInvoiceHelper::InvoiceIDfromNumber( $invoice_number, 0, true );
 
@@ -5042,7 +5042,7 @@ function AdminInvoicePDF( $option, $invoice_number )
 
 	ob_end_clean();
 
-	$document=& JFactory::getDocument();
+	$document= JFactory::getDocument();
 	$document->_type="html";
 	$renderer = $document->loadRenderer("head");
 
@@ -5061,7 +5061,7 @@ function AdminInvoicePDF( $option, $invoice_number )
 
 function history( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -5116,7 +5116,7 @@ function history( $option )
 
 function eventlog( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -5214,7 +5214,7 @@ function aec_stats( $option, $page )
 
 	$stats = array();
 
-	$document=& JFactory::getDocument();
+	$document= JFactory::getDocument();
 	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.min.js"></script>' );
 	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.time.min.js"></script>' );
 	$document->addCustomTag( '<script type="text/javascript" src="' . JURI::root(true) . '/media/' . $option . '/js/d3/d3.layout.min.js"></script>' );
@@ -5222,7 +5222,7 @@ function aec_stats( $option, $page )
 	$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/rickshaw/rickshaw.css" rel="stylesheet" />' );
 	$document->addCustomTag( '<link type="text/css" href="' . JURI::root(true) . '/media/' . $option . '/js/colorbrewer/colorbrewer.css" rel="stylesheet" />' );
 
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_log_history'
@@ -5326,7 +5326,7 @@ function aec_stats( $option, $page )
 
 function aec_statrequest( $option, $type, $start, $end )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$tree = new stdClass();
 
@@ -5404,7 +5404,7 @@ function aec_statrequest( $option, $type, $start, $end )
 
 function quicklookup( $option )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$searcc	= trim( aecGetParam( 'search', 0 ) );
 
@@ -5444,7 +5444,7 @@ function quicklookup( $option )
 
 function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=false )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$app = JFactory::getApplication();
 
@@ -6159,7 +6159,7 @@ function importData( $option )
 
 function exportData( $option, $type, $cmd=null )
 {
-	$db = &JFactory::getDBO();
+	$db = JFactory::getDBO();
 
 	$cmd_save = ( strcmp( 'save', $cmd ) === 0 );
 	$cmd_apply = ( strcmp( 'apply', $cmd ) === 0 );
@@ -6234,14 +6234,14 @@ function exportData( $option, $type, $cmd=null )
 				$row->load( 0 );
 			}
 
-			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
+			$row->saveComplex( $system_values['save_name'], $filter_values, $options_values, $params_values );
 
 			if ( !empty( $system_values['save'] ) ) {
 				$system_values['selected_export'] = $row->getMax();
 			}
 		} elseif ( ( $cmd_save || $cmd_apply ) && ( empty( $system_values['selected_export'] ) && !empty( $system_values['save_name'] ) && $system_values['save'] ) && !$is_test ) {
 			// User wants to save a new entry
-			$row->save( $system_values['save_name'], $filter_values, $options_values, $params_values );
+			$row->saveComplex( $system_values['save_name'], $filter_values, $options_values, $params_values );
 		}  elseif ( $cmd_load || ( count($postfields) && ( $postfields <= $pf ) && ( $cmd_export || $is_test ) )  ) {
 			if ( $row->id ) {
 				// User wants to load an entry
@@ -6259,7 +6259,7 @@ function exportData( $option, $type, $cmd=null )
 	if ( $cmd_save || $cmd_apply || $cmd_export ) {
 		$autorow = new aecExport( ( $type == 'sales' ) );
 		$autorow->load(0);
-		$autorow->save( 'Autosave', $filter_values, $options_values, $params_values, true );
+		$autorow->saveComplex( 'Autosave', $filter_values, $options_values, $params_values, true );
 
 		if ( isset( $row ) ) {
 			if ( ( $autorow->filter == $row->filter ) && ( $autorow->options == $row->options ) && ( $autorow->params == $row->params ) ) {

@@ -28,7 +28,7 @@ if ( $standalone && !empty( $tmpl->cfg['invoice_address_allow_edit'] ) ) {
 
 $tmpl->defaultHeader();
 
-$document=& JFactory::getDocument();
+$document= JFactory::getDocument();
 $document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice.css" />' );
 $document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_embed.css" />' );
 $document->addCustomTag( '<link rel="stylesheet" type="text/css" media="print" href="' . JURI::root(true) . '/media/' . $option . '/css/invoice_print.css" />' );

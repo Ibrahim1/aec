@@ -35,7 +35,7 @@ class tool_invoicecleanup
 
 	function Action()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$found = array();
 
@@ -54,13 +54,17 @@ class tool_invoicecleanup
 		$db->setQuery( $query );
 		$dbaplans = xJ::getDBArray( $db );
 
-		$query = 'SELECT count(*)'
-				. ' FROM #__acctexp_invoices'
-				. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-				. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'				
-				;
-		$db->setQuery( $query );
-		$found['total_unpub'] = $db->loadResult();
+		$found['total_unpub'] = 0;
+
+		if ( !empty($dbaplans) ) {
+			$query = 'SELECT count(*)'
+					. ' FROM #__acctexp_invoices'
+					. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
+					. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'
+					;
+			$db->setQuery( $query );
+			$found['total_unpub'] = $db->loadResult();
+		}
 
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_plans'
@@ -69,13 +73,17 @@ class tool_invoicecleanup
 		$db->setQuery( $query );
 		$dbxplans = xJ::getDBArray( $db );
 
-		$query = 'SELECT count(*)'
-				. ' FROM #__acctexp_invoices'
-				. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-				. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'				
-				;
-		$db->setQuery( $query );
-		$found['total_invis'] = $db->loadResult();
+		$found['total_invis'] = 0;
+
+		if ( !empty($dbxplans) ) {
+			$query = 'SELECT count(*)'
+					. ' FROM #__acctexp_invoices'
+					. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
+					. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'
+					;
+			$db->setQuery( $query );
+			$found['total_invis'] = $db->loadResult();
+		}
 
 		if ( !empty( $_POST['delete'] ) ) {
 			$return = '<p>Deleted a total of ' . $found['total_old'] . ' invoices older than ' . $_POST['cutoff'] . ' months.<p>';
@@ -88,11 +96,11 @@ class tool_invoicecleanup
 			$db->setQuery( $query );
 			$db->query();
 
-			if ( !empty( $_POST['delete_unpub'] ) ) {
+			if ( !empty( $_POST['delete_unpub'] ) && !empty($dbaplans) ) {
 				$query = 'SELECT count(*)'
 						. ' FROM #__acctexp_invoices'
 						. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-						. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'				
+						. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'
 						;
 				$db->setQuery( $query );
 				$found['total_unpub'] = $db->loadResult();
@@ -101,7 +109,7 @@ class tool_invoicecleanup
 					$query = 'DELETE'
 							. ' FROM #__acctexp_invoices'
 							. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-							. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'				
+							. ' AND `usage` IN (' . implode( ',', $dbaplans ) . ')'
 							;
 					$db->setQuery( $query );
 					$db->query();
@@ -112,11 +120,11 @@ class tool_invoicecleanup
 				}
 			}
 
-			if ( !empty( $_POST['delete_invis'] ) ) {
+			if ( !empty( $_POST['delete_invis'] ) && !empty($dbxplans) ) {
 				$query = 'SELECT count(*)'
 						. ' FROM #__acctexp_invoices'
 						. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-						. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'				
+						. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'
 						;
 				$db->setQuery( $query );
 				$found['total_invis'] = $db->loadResult();
@@ -125,7 +133,7 @@ class tool_invoicecleanup
 					$query = 'DELETE'
 							. ' FROM #__acctexp_invoices'
 							. ' WHERE `transaction_date` = \'0000-00-00 00:00:00\''
-							. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'				
+							. ' AND `usage` IN (' . implode( ',', $dbxplans ) . ')'
 							;
 					$db->setQuery( $query );
 					$db->query();

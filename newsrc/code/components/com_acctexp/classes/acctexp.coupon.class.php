@@ -622,7 +622,7 @@ class couponHandler
 
 	static function idFromCode( $coupon_code )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$return = array();
 
@@ -657,7 +657,7 @@ class couponHandler
 
 	function load( $coupon_code )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$cc = $this->idFromCode( $coupon_code );
 
@@ -758,7 +758,7 @@ class couponHandler
 
 	function switchType()
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$oldtype = $this->coupon->type;
 
@@ -785,7 +785,7 @@ class couponHandler
 
 	function incrementCount( $invoice )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Get existing coupon relations for this user
 		$query = 'SELECT `id`'
@@ -819,7 +819,7 @@ class couponHandler
 
 	function decrementCount( $invoice )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		// Get existing coupon relations for this user
 		$query = 'SELECT `id`'
@@ -1260,7 +1260,7 @@ class Coupon extends serialParamDBTable
 		}
 	}
 
-	function load( $id )
+	function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 

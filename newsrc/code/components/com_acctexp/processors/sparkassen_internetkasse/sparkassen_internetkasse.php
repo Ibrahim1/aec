@@ -201,7 +201,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 				exit;
 			}
 		} else {
-			$response['error'] = $this->getError( $response['posherr'] );
+			$response['error'] = $this->mapError( $response['posherr'] );
 
 			if ( empty( $response['error'] ) ) {
 				$response['error'] = $post['directPosErrorMessage'];
@@ -224,7 +224,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $response;
 	}
 
-	function getError( $errcode )
+	function mapError( $errcode )
 	{
 		$errors = array(	'133' => 'Karte abgelaufen.',
 							'344' => 'Karte in Deutschland nicht gültig.',

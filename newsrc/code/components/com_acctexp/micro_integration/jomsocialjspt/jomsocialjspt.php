@@ -32,16 +32,16 @@ class mi_jomsocialjspt
 	function Settings()
 	{
 		require_once ( JPATH_ROOT.'/components/com_xipt/api.xipt.php');
-		
-		$database	=& JFactory::getDBO();
+
+		$database	= JFactory::getDBO();
 		$settings = array();
 		$settings['profiletype']				= array( 'list' );
 		$settings['profiletype_after_exp'] 		= array( 'list' );
 
 		$filter = array ('published'=>1);
-		
+
 		$profiletypes = XiptAPI::getProfiletypeInfo(0, $filter);
-	 	
+
 		$spt = array();
 		$spte = array();
 
@@ -102,19 +102,19 @@ class mi_jomsocialjspt
 
 		require_once ( JPATH_ROOT.'/components/com_xipt/api.xipt.php');
 
-		$subscription_message = XiptAPI::getGlobalConfig('subscription_message');	
+		$subscription_message = XiptAPI::getGlobalConfig('subscription_message');
 
 		if ( empty( $subscription_message ) ) {
 			return;
 		}
-			
+
 		XiptAPI::setUserProfiletype( $userId, $pId, 'ALL' );
 	}
 
 	function saveparams( $request )
 	{
 		//save all data in xipt_aec table
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$planid = $this->id;
 		$mi_jspthandler = new jomsocialjspt_restriction();
@@ -150,7 +150,7 @@ class jomsocialjspt_restriction extends serialParamDBTable {
 	}
 
 	function getIDbyPlanId( $planid ) {
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT '.$db->nameQuote('id')
 			. ' FROM '.$db->nameQuote('#__xipt_aec')

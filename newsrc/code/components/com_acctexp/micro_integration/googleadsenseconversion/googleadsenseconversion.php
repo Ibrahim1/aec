@@ -54,7 +54,7 @@ class mi_googleadsenseconversion
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$text = '<script language="JavaScript" type="text/javascript">' . "\n"
 				. '<!--' . "\n"

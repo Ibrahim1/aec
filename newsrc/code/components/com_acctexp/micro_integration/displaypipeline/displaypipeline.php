@@ -45,7 +45,7 @@ class mi_displaypipeline
 
 	function action( $request )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$text = AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
 

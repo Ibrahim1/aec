@@ -64,12 +64,12 @@ class mi_mysql_query
 			$v = new JVersion();
 
 			if ( $v->isCompatible('3.0') ) {
-				$db =& JDatabaseDriver::getInstance($options);
+				$db = JDatabaseDriver::getInstance($options);
 			} else {
-				$db =& JDatabase::getInstance($options);
+				$db = JDatabase::getInstance($options);
 			}
 		} else {
-			$db = &JFactory::getDBO();
+			$db = JFactory::getDBO();
 		}
 
 		$query = AECToolbox::rewriteEngineRQ( $this->settings['query'.$request->area], $request );

@@ -82,8 +82,8 @@ class eventLog extends serialParamDBTable
 			}
 
 			if ( !$lang->hasKey( "AEC_NOTICE_NUMBER_" . $this->level ) ) {
-				$lang =& JFactory::getLanguage();
-				
+				$lang = JFactory::getLanguage();
+
 				$lang->load( 'com_acctexp.admin', JPATH_ADMINISTRATOR );
 			}
 

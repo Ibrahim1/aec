@@ -70,12 +70,12 @@ class plgUserAECaccess extends JPlugin
 
 	function onUserLoginFailure( $response, $options=null )
 	{
-		return $this->onLoginFailure( $response, $options );
+		$this->onLoginFailure( $response, $options );
 	}
 
 	function onLoginFailure( $response, $options=null )
 	{
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 
 		$query = 'SELECT id'
 		. ' FROM #__users'
@@ -102,7 +102,7 @@ class plgUserAECaccess extends JPlugin
 				break;
 		}
 
-		$app =& JFactory::getApplication();
+		$app = JFactory::getApplication();
 
 		$app->logout();
 
@@ -134,6 +134,13 @@ class plgUserAECaccess extends JPlugin
 		} else {
 			define( 'AEC_AUTH_ERROR_MSG', $verification );
 			define( 'AEC_AUTH_ERROR_UNAME', $credentials['username'] );
+
+			$v = new JVersion();
+
+			if ( $v->isCompatible('3.0') ) {
+				$this->onUserLoginFailure(null);
+			}
+
 			return false;
 		}
 	}

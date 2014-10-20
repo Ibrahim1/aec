@@ -33,7 +33,7 @@ class mi_acymail extends MI
 			return false;
 		}
 
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$db->setQuery( 'SELECT * FROM #__acymailing_list' );
 
 		$lists = $db->loadObjectList();

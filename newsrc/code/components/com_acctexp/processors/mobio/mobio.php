@@ -45,7 +45,7 @@ class processor_mobio extends XMLprocessor {
 		return $settings;
 	}
 
-	function checkoutAction( $request )
+	function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		$return = '<p>' . $this->settings['user_message'] . '</p>';
 		$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";

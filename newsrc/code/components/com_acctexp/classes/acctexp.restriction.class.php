@@ -342,9 +342,9 @@ class aecRestrictionHelper
 
 	static function getLists( $params_values, $restrictions_values )
 	{
-		$db = &JFactory::getDBO();
+		$db = JFactory::getDBO();
 
-		$user = &JFactory::getUser();
+		$user = JFactory::getUser();
 
 		$gtree = xJACLhandler::getGroupTree( array( 28, 29, 30 ) );
 
