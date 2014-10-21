@@ -24,8 +24,6 @@ class mi_sobipro extends MI
 
 	function Settings()
 	{
-		$db = JFactory::getDBO();
-
 		$settings = array();
 		$settings['publish_all']		= array( 'toggle' );
 		$settings['unpublish_all']		= array( 'toggle' );
@@ -62,6 +60,7 @@ class mi_sobipro extends MI
 
 		$query = 'UPDATE #__sobipro_object'
 				. ' SET `state` = \'1\''
+				. ', `validUntil` = \'' . $metaUser->focusSubscription->expiration . '\''
 				. ' WHERE `owner` = \'' . $metaUser->userid . '\''
 				. ' AND `oType`=\'entry\''
 				;
