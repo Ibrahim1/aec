@@ -22,8 +22,15 @@ class processor_vcs extends POSTprocessor
 		$settings = array();
 		$settings['testmode'] 		= 1;
 		$settings['merchant_id']	= '1234';
+		$settings['secret']			= "";
 		$settings['pam']			= 'PAM';
 		$settings['currency']		= 'ZAR';
+
+		$settings['occur_count']	= 0;
+		$settings['sms_send']		= 0;
+		$settings['sms_number']		= "";
+		$settings['sms_message']	= "";
+
 		$settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
@@ -38,6 +45,14 @@ class processor_vcs extends POSTprocessor
 		$settings['merchant_id']		= array( 'inputC');
 		$settings['pam']				= array( 'inputC');
 		$settings['currency']			= array( 'list_currency' );
+
+		$settings['occur_count']		= array( 'inputA');
+		$settings['sms_send']			= array( 'toggle' );
+		$settings['sms_number']			= array( 'inputC');
+		$settings['sms_message']		= array( 'inputC');
+
+		$settings['secret']				= array( 'inputC');
+
 		$settings['item_name']			= array( 'inputE');
 		$settings['customparams']		= array( 'inputD' );
 
@@ -55,18 +70,30 @@ class processor_vcs extends POSTprocessor
 			$var['test_success_url'] = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
 		}
 
-		$var['p1']		= $this->settings['merchant_id'];
-		$var['p2']		= $request->invoice->invoice_number;
-		$var['p3']		= date("Y.m.d.G.i.s");
+		$var['p1']	= $this->settings['merchant_id'];
+		$var['p2']	= $request->invoice->invoice_number;
+		$var['p3']	= date("Y.m.d.G.i.s");
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['p4']		= $request->int_var['amount']['amount3'];
+			$var['p4']		= $request->int_var['amount3'];
+			$var['p5']		= $this->settings['currency'];
+
+			if ( !empty( $this->settings['occur_count'] ) ) {
+				$var['p6']	= $this->settings['occur_count'];
+			}
 
 			$var['p6']		= 'U';
 
 			$var['p7']		= $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 		} else {
 			$var['p4']		= $request->int_var['amount'];
+			$var['p5']		= $this->settings['currency'];
+		}
+
+		if ( !empty( $this->settings['sms_send'] ) ) {
+			$var['p8']	= AECToolbox::rewriteEngine( $this->settings['sms_number'], $request->metaUser, $request->new_subscription, $request->invoice );
+			$var['p9']	= AECToolbox::rewriteEngine( $this->settings['sms_message'], $request->metaUser, $request->new_subscription, $request->invoice );
 		}
 
 		$var['m_1'] = $request->int_var['return_url'];
@@ -81,6 +108,8 @@ class processor_vcs extends POSTprocessor
 
 		$var['ApprovedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
 		$var['DeclinedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
+
+		$var['Hash'] = md5( implode( '', $var ) . $this->settings['secret'] );
 
 		return $var;
 	}
