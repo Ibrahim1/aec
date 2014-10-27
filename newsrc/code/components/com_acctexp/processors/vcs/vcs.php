@@ -108,7 +108,9 @@ class processor_vcs extends POSTprocessor
 		$var['ApprovedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
 		$var['DeclinedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
 
-		$var['Hash'] = md5( implode( '', $var ) . $this->settings['secret'] );
+		if ( !empty($this->settings['secret']) ) {
+			$var['Hash'] = md5( implode( '', $var ) . $this->settings['secret'] );
+		}
 
 		return $var;
 	}
