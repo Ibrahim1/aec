@@ -363,8 +363,10 @@ class Subscription extends serialParamDBTable
 			return 'expired';
 		} elseif ( $this->isPending() ) {
 			return 'pending';
-		} elseif ( $this->isHold() || !empty( $block ) ) {
+		} elseif ( $this->isHold() ) {
 			return 'hold';
+		} elseif ( !empty( $block ) ) {
+			return 'block';
 		}
 
 		return true;
