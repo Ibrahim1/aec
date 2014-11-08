@@ -12,7 +12,7 @@
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 <form id="form-backtocart" action="<?php echo AECToolbox::deadsureURL( 'index.php?option=' . $option . '&task=cart', $tmpl->cfg['ssl_signup'] ) ?>" method="post">
 	<div class="backtocart-button">
-		You can always go back to:&nbsp;&nbsp;&nbsp;<button type="submit" class="btn"><?php echo aecHTML::Icon( 'shopping-cart' ) . JText::_('AEC_BTN_YOUR_CART') ?></button>
+		You can always go back to:&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-default"><?php echo aecHTML::Icon( 'shopping-cart' ) . JText::_('AEC_BTN_YOUR_CART') ?></button>
 	</div>
 	<?php echo JHTML::_( 'form.token' ) ?>
 </form>

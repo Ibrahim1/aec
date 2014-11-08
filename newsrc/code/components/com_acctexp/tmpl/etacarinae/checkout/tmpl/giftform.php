@@ -22,7 +22,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 			<input type="hidden" name="option" value="<?php echo $option ?>" />
 			<input type="hidden" name="task" value="InvoiceMakeGift" />
 			<input type="hidden" name="invoice" value="<?php echo $InvoiceFactory->invoice->invoice_number ?>" />
-			<input type="submit" class="button btn" value="<?php echo JText::_('BUTTON_APPLY') ?>" />
+			<input type="submit" class="button btn btn-default" value="<?php echo JText::_('BUTTON_APPLY') ?>" />
 			<?php echo JHTML::_( 'form.token' ) ?>
 		</form>
 		<?php } ?>

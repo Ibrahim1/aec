@@ -22,7 +22,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 		<?php if ( $passthrough != false ) { ?>
 			<input type="hidden" name="aec_passthrough" value="<?php echo $InvoiceFactory->getPassthrough( 'userdetails' ) ?>" />
 		<?php } ?>
-		<button class="btn pull-right" type="submit"><?php echo JText::_('CONFIRM_DIFFERENT_USER_DETAILS') ?></button>
+		<button class="btn btn-default pull-right" type="submit"><?php echo JText::_('CONFIRM_DIFFERENT_USER_DETAILS') ?></button>
 		<?php echo JHTML::_( 'form.token' ) ?>
 	</form>
 </div>

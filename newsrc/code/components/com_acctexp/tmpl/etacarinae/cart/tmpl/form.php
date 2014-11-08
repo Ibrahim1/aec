@@ -28,7 +28,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 	?>
 	<div id="continue-button">
 		<form id="form-continue" action="<?php echo $continueurl ?>" method="post">
-			<button type="submit" class="btn"><?php echo aecHTML::Icon( 'arrow-left' ) . JText::_('AEC_BTN_CONTINUE_SHOPPING') ?></button>
+			<button type="submit" class="btn btn-default"><?php echo aecHTML::Icon( 'arrow-left' ) . JText::_('AEC_BTN_CONTINUE_SHOPPING') ?></button>
 		</form>
 	</div>
 	<br />
