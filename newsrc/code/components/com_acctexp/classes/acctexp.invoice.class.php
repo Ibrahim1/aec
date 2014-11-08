@@ -1057,7 +1057,9 @@ class InvoiceFactory
 					$c = $citem['obj']->doPlanComparison( $this->metaUser->focusSubscription );
 
 					// Do not allow a Trial if the user has used this or a similar plan
-					if ( $terms->hasTrial && !$c['full_comparison'] ) {
+					if ( $this->invoice->counter ) {
+						$terms->setPointer( $this->invoice->counter );
+					} elseif ( $terms->hasTrial && !$c['full_comparison'] ) {
 						$terms->incrementPointer();
 					}
 
@@ -1117,7 +1119,7 @@ class InvoiceFactory
 			} else {
 				$ccost = $citem['terms']->nextterm->getBaseCostObject( false, true );
 
-				$cost->cost['amount'] = $cost->cost['amount'] + ( $ccost->cost['amount'] * $citem['quantity'] );
+				$cost->cost['amount'] += $ccost->cost['amount'] * $citem['quantity'];
 			}
 		}
 
@@ -2771,18 +2773,18 @@ class Invoice extends serialParamDBTable
 
 				$terms->incrementPointer( $this->counter );
 
-				$item = array( 'item' => array( 'obj' => $plan ), 'terms' => $terms );
-
 				if ( $this->coupons ) {
+					$item = array( 'item' => array( 'obj' => $plan ), 'terms' => $terms );
+
 					$cpsh = new couponsHandler( $metaUser, $InvoiceFactory, $this->coupons );
 
 					$item = $cpsh->applyAllToItems( 0, $item );
 
 					$terms = $item['terms'];
-				}
 
-				// Coupons might have changed the terms - reset pointer
-				$terms->setPointer( $this->counter );
+					// Coupons might have changed the terms - reset pointer
+					$terms->setPointer( $this->counter );
+				}
 
 				$allfree = $terms->checkFree();
 
