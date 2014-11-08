@@ -21,7 +21,11 @@ if ( $user->id ) {
 	if ( aecComponentHelper::detect_component( 'anyCB' ) ) {
 		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_comprofiler&task=registers' );
 	} else {
-		$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&view=register' );
+		if ( defined( 'JPATH_MANIFESTS' ) ) {
+			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_users&view=registration' );
+		} else {
+			$registerlink = AECToolbox::deadsureURL( 'index.php?option=com_user&view=register' );
+		}
 	}
 }
 
