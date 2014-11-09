@@ -92,7 +92,6 @@ class processor_sofort extends XMLprocessor
 					. '<project_id>' . trim( $this->settings['project_id'] ) . '</project_id>'
 					. '<interface_version>' . _AEC_VERSION  . ' rev' . _AEC_REVISION . '</interface_version>'
 					. '<language_code>' . strtolower( $this->settings['language'] ) . '</language_code>'
-					. '<preselection>' . ( is_array( $request->int_var['amount'] ) ? 'sa' : 'su' ) . '</project_id>'
 					. '<amount>' . $amt . '</amount>'
 					. '<currency_code>' . ( $this->settings['currency'] ) . '</currency_code>'
 					;
@@ -102,7 +101,7 @@ class processor_sofort extends XMLprocessor
 		$content .= '<success_url>' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=thanks' ) . '</success_url>';
 		$content .= '<abort_url>' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' ) . '</abort_url>';
 		$content .= '<notification_urls><notification_url>' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=sofortnotification' ) . '</notification_url></notification_urls>';
-		$content .= '<user_variables><invoice_number>' . $request->invoice->invoice_number . '</invoice_number></user_variables>';
+		$content .= '<user_variables><user_variable>' . $request->invoice->invoice_number . '</user_variable></user_variables>';
 
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$content .= '<sa>';
@@ -114,8 +113,8 @@ class processor_sofort extends XMLprocessor
 		} else {
 			$content .= '<su>';
 
-			$content .= '<reasons><reason>' . AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) . '</reason></reasons>';
-			$content .= '<amount>' . $request->int_var['amount'] . '</amount>';
+			/*$content .= '<reasons><reason>' . AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request ) . '</reason></reasons>';
+			$content .= '<amount>' . $request->int_var['amount'] . '</amount>';*/
 
 			$content .= '</su>';
 		}
@@ -212,6 +211,8 @@ class processor_sofort extends XMLprocessor
 
 	function parseNotification( $post )
 	{
+		$post = file_get_contents("php://input");
+
 		$transaction = $this->XMLsubstring_tag( $post, 'transaction' );
 
 		if ( empty( $transaction ) ) {
@@ -231,7 +232,7 @@ class processor_sofort extends XMLprocessor
 
 		$response['raw'] = $check;
 
-		$response['invoice'] = $this->XMLsubstring_tag( $check, 'invoice_number' );
+		$response['invoice'] = $this->XMLsubstring_tag( $check, 'user_variable' );
 
 		if ( empty( $response['invoice'] ) ) {
 			$response['error']				= true;
@@ -256,7 +257,7 @@ class processor_sofort extends XMLprocessor
 				default:
 				case 'pending':
 					$response['pending']		= 1;
-					$response['pending_reason']	= 'signup';
+					$response['pending_reason']	= $status_reason;
 					break;
 				case 'refunded':
 				case 'loss':
@@ -281,12 +282,13 @@ class processor_sofort extends XMLprocessor
 		$path = "/api/xml";
 		$url = "https://api.sofort.com" . $path;
 
-		$header = array();
-		$header["Authorization"]	= "Basic " . base64_encode( trim( $this->settings['customer_id'] ) .':'. trim( $this->settings['api_key'] ) );
-		$header["Content-Type"]		= "application/xml; charset=UTF-8";
-		$header["Accept"]			= "application/xml; charset=UTF-8";
+		$headers = array(
+			"Authorization: Basic " . base64_encode( trim( $this->settings['customer_id'] ) .':'. trim( $this->settings['api_key'] ) ),
+			"Content-Type: application/xml; charset=UTF-8",
+			"Accept: application/xml; charset=UTF-8"
+		);
 
-		return $this->transmitRequest( $url, $path, $xml, 443 );
+		return $this->transmitRequest( $url, $path, $xml, 443, null, $headers );
 	}
 }
 ?>

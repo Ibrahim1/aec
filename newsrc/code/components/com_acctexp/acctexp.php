@@ -1096,7 +1096,7 @@ function processNotification( $option, $processor )
 		case 'eps': $processor = 'epsnetpay'; break;
 	}
 
-	//aecDebug( "ResponseFunction:processNotification" );aecDebug( $_GET );aecDebug( $_POST );
+	//aecDebug( "ResponseFunction:processNotification" );aecDebug( $_GET );aecDebug( $_POST );aecDebug( file_get_contents("php://input") );
 	$response = array();
 	$response['fullresponse'] = aecPostParamClear( $_POST );
 
