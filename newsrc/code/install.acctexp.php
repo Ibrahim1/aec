@@ -364,7 +364,9 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				if ( !$result ) continue;
 
 				if ( ( strpos( $name, 'plg' ) === 0 ) && ( strpos( $name, 'plg_aecrewrite' ) !== 0 ) ) {
-					$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" ) . " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" ) . " WHERE element='".$details['element']."' AND folder='".$details['type']."'";
+					$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" )
+						. " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" )
+						. " WHERE element='" . $details['element'] . "' AND folder='" . $details['type'] . "'";
 
 					$db->setQuery( $query );
 					$db->query();
@@ -374,7 +376,9 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 							$details['published'] = "0";
 						}
 
-						$query = "UPDATE #__modules SET position='".$details['position']."', published=".$details['published']." WHERE module='".$name."'";
+						$query = "UPDATE #__modules SET position='"
+							. $details['position'] . "', published=" . $details['published'] . " WHERE module='" . $name . "'";
+
 						$db->setQuery( $query );
 						$db->query();
 
