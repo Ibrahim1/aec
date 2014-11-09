@@ -1471,9 +1471,6 @@ class processor extends serialParamDBTable
 		global $aecConfig;
 
 		if ( !function_exists( 'curl_init' ) ) {
-			$response = false;
-
-
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed - curl_init is not available - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 			$tags	= 'processor,payment,phperror';
@@ -1481,6 +1478,7 @@ class processor extends serialParamDBTable
 
 			$eventlog = new eventLog();
 			$eventlog->issue( $short, $tags, $event, 128, $params );
+
 			return false;
 		}
 
@@ -1492,7 +1490,13 @@ class processor extends serialParamDBTable
 		$curl_calls = array();
 		$curl_calls[CURLOPT_URL]			= $url;
 		$curl_calls[CURLOPT_RETURNTRANSFER]	= true;
-		$curl_calls[CURLOPT_HTTPHEADER]		= array( 'Content-Type: text/xml' );
+
+		if ( empty($header) ) {
+			$curl_calls[CURLOPT_HTTPHEADER]		= array( 'Content-Type: text/xml' );
+		} else {
+			$curl_calls[CURLOPT_HTTPHEADER]		= $header;
+		}
+
 		$curl_calls[CURLOPT_HEADER]			= false;
 
 		if ( !empty( $content ) ) {
@@ -1547,8 +1551,6 @@ class processor extends serialParamDBTable
 		$response = curl_exec( $ch );
 
 		if ( $response === false ) {
-
-
 			$short	= 'cURL failure';
 			$event	= 'Trying to establish connection with ' . $url . ' failed with Error #' . curl_errno( $ch ) . ' ( "' . curl_error( $ch ) . '" ) - will try fsockopen instead. If Error persists and fsockopen works, please permanently switch to using that!';
 			$tags	= 'processor,payment,phperror';

@@ -1510,22 +1510,6 @@ function editSettings( $option )
 	$params['gethostbyaddr']					= array( 'toggle', '' );
 	$params[] = array( 'section-end' );
 
-	$itemidlist = array(	'cart' => array( 'view' => 'cart', 'params' => false ),
-							'checkout' => array( 'view' => 'checkout', 'params' => false ),
-							'confirmation' => array( 'view' => 'confirmation', 'params' => false ),
-							'subscribe' => array( 'view' => 'subscribe', 'params' => false ),
-							'exception' => array( 'view' => 'exception', 'params' => false ),
-							'thanks' => array( 'view' => 'thanks', 'params' => false ),
-							'expired' => array( 'view' => 'expired', 'params' => false ),
-							'hold' => array( 'view' => 'hold', 'params' => false ),
-							'notallowed' => array( 'view' => 'notallowed', 'params' => false ),
-							'pending' => array( 'view' => 'pending', 'params' => false ),
-							'subscriptiondetails' => array( 'view' => 'subscriptiondetails', 'params' => false ),
-							'subscriptiondetails_invoices' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=invoices' ),
-							'subscriptiondetails_details' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=details' )
-							);
-
-
 	$params[] = array( 'section', 'date' );
 	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
@@ -1537,6 +1521,22 @@ function editSettings( $option )
 	$params[] = array( 'section-end' );
 	$params[] = array( 'section', 'itemid' );
 	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_ITEMID') );
+
+	$itemidlist = array(
+		'cart' => array( 'view' => 'cart', 'params' => false ),
+		'checkout' => array( 'view' => 'checkout', 'params' => false ),
+		'confirmation' => array( 'view' => 'confirmation', 'params' => false ),
+		'subscribe' => array( 'view' => 'subscribe', 'params' => false ),
+		'exception' => array( 'view' => 'exception', 'params' => false ),
+		'thanks' => array( 'view' => 'thanks', 'params' => false ),
+		'expired' => array( 'view' => 'expired', 'params' => false ),
+		'hold' => array( 'view' => 'hold', 'params' => false ),
+		'notallowed' => array( 'view' => 'notallowed', 'params' => false ),
+		'pending' => array( 'view' => 'pending', 'params' => false ),
+		'subscriptiondetails' => array( 'view' => 'subscriptiondetails', 'params' => false ),
+		'subscriptiondetails_invoices' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=invoices' ),
+		'subscriptiondetails_details' => array( 'view' => 'subscriptiondetails', 'params' => 'sub=details' )
+	);
 
 	foreach ( $itemidlist as $param => $xparams ) {
 		$params['itemid_'.$param]				= array( 'inputA', '' );

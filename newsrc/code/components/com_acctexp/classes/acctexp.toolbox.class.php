@@ -400,13 +400,14 @@ class AECToolbox
 				}
 
 				if ( !empty( $task ) ) {
-					$translate = array(	'saveregistration' => 'confirm',
-										'renewsubscription' => 'plans',
-										'addtocart' => 'cart',
-										'clearcart' => 'cart',
-										'clearcartitem' => 'cart',
-										'savesubscription' => 'checkout'
-										);
+					$translate = array(
+						'saveregistration' => 'confirm',
+						'renewsubscription' => 'plans',
+						'addtocart' => 'cart',
+						'clearcart' => 'cart',
+						'clearcartitem' => 'cart',
+						'savesubscription' => 'checkout'
+					);
 
 					if ( array_key_exists( $task, $translate ) ) {
 						$task = $translate[$task];
