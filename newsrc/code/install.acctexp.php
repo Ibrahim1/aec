@@ -343,10 +343,13 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			foreach ( $install_list as $name => $details ) {
 				if ( !is_dir( $this->src.'/'.$name ) ) continue;
 
-				if ( !strpos( $name, 'plg' ) === 0 ) {
-					$query = "SELECT id, position, published FROM #__modules WHERE module = '".$name."'";
+				if ( strpos( $name, 'mod' ) === 0 ) {
+					$query = "SELECT id, position, published FROM #__modules WHERE module = '" . $name . "'";
 					$db->setQuery( $query );
+
 					$lemodule = $db->loadObject();
+
+					aecDebug($query);aecDebug($lemodule);
 
 					if ( $lemodule->id ) {
 						$details['menuid']		= $lemodule->id;
@@ -359,7 +362,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				}
 
 				$installer = new JInstaller();
-				$result = $installer->install( $this->src.'/'.$name );
+				$result = $installer->install( $this->src . '/' . $name );
 
 				if ( !$result ) continue;
 
