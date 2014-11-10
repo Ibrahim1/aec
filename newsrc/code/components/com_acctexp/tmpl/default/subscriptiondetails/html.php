@@ -258,7 +258,11 @@ foreach ( $invoiceList as $invoiceid ) {
 	if ( !empty( $pp->info['longname'] ) ) {
 		$invoices[$invoiceid]['processor'] = $pp->info['longname'];
 	} else {
-		$invoices[$invoiceid]['processor'] = $invoice->method;
+		if ( $invoice->method == 'free' ) {
+			$invoices[$invoiceid]['processor'] = JText::_('AEC_PAYM_METHOD_FREE');
+		} else {
+			$invoices[$invoiceid]['processor'] = $invoice->method;
+		}
 	}
 
 	if ( !empty( $metaUser->objSubscription->status ) ) {
