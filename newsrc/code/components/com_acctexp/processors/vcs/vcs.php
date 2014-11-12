@@ -13,6 +13,7 @@ class processor_vcs extends POSTprocessor
 		$info['currencies']		= 'ZAR';
 		$info['cc_list']		= 'visa,mastercard';
 		$info['recurring']		= 2;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -181,22 +182,48 @@ class processor_vcs extends POSTprocessor
 		$response['valid'] = 0;
 
 		if ( isset( $this->settings['pam'] ) ) {
-			if ( $this->settings['pam'] == $post['pam'] ) {
+			if ( $this->settings['pam'] == $post['Pam'] ) {
 				$response['valid'] = 1;
 			} else {
-				$response['pending_reason'] = 'false PAM';
+				$response['pending_reason'] = 'PAM error';
+			}
+		} elseif ( isset( $this->settings['secret'] ) ) {
+			$values = array(
+				"p1", "p2", "p3", "p4",
+				"p5", "p6", "p7", "p8",
+				"p9", "p10", "p11", "p12",
+				"Pam",
+				"m_1", "m_2", "m_3", "m_4",
+				"m_5", "m_6", "m_7", "m_8",
+				"m_9", "m_10",
+				"CardHolderIpAddr",
+				"MaskedCardNumber",
+				"TransactionType"
+			);
+
+			$str = "";
+			foreach ( $values as $k ) {
+				$str .= $post[$k];
+			}
+
+			$str .= $this->settings['secret'];
+
+			if ( $str == $post['Hash'] ) {
+				$response['valid'] = 1;
+			} else {
+				$response['pending_reason'] = 'hash error';
 			}
 		} else {
-			$response['pending_reason'] = 'no PAM set - please configure the Personal Authentication Message in your VCS and AEC VCS settings!';
+			$response['pending_reason'] = 'no PAM or secret set - please configure either a PAM or secret in your VCS and AEC VCS settings!';
 		}
 
 		if ( $post['p4'] == 'Duplicate' ) {
 			$response['duplicate'] = true;
 		}
 
-		if ( substr( $post['p4'], 6 ) !== 'APPROVED' ) {
+		if ( substr( $post['p3'], 6 ) !== 'APPROVED' ) {
 			$response['valid'] = 0;
-			$response['pending_reason'] = $post['p4'];
+			$response['pending_reason'] = $post['p3'];
 		}
 
 		return $response;
