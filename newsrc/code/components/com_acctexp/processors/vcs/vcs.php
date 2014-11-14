@@ -13,6 +13,7 @@ class processor_vcs extends POSTprocessor
 		$info['currencies']		= 'ZAR';
 		$info['cc_list']		= 'visa,mastercard';
 		$info['recurring']		= 2;
+		$info['notify_trail_thanks']	= 1;
 
 		return $info;
 	}
@@ -22,8 +23,14 @@ class processor_vcs extends POSTprocessor
 		$settings = array();
 		$settings['testmode'] 		= 1;
 		$settings['merchant_id']	= '1234';
-		$settings['pam']			= 'PAM';
+		$settings['secret']			= "";
 		$settings['currency']		= 'ZAR';
+
+		$settings['occur_count']	= 0;
+		$settings['sms_send']		= 0;
+		$settings['sms_number']		= "";
+		$settings['sms_message']	= "";
+
 		$settings['item_name']		= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']	= "";
 
@@ -33,11 +40,17 @@ class processor_vcs extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['aec_experimental']	= array( "p" );
 		$settings['testmode']			= array( 'toggle');
 		$settings['merchant_id']		= array( 'inputC');
-		$settings['pam']				= array( 'inputC');
 		$settings['currency']			= array( 'list_currency' );
+
+		$settings['occur_count']		= array( 'inputA');
+		$settings['sms_send']			= array( 'toggle' );
+		$settings['sms_number']			= array( 'inputC');
+		$settings['sms_message']		= array( 'inputC');
+
+		$settings['secret']				= array( 'inputC');
+
 		$settings['item_name']			= array( 'inputE');
 		$settings['customparams']		= array( 'inputD' );
 
@@ -55,16 +68,29 @@ class processor_vcs extends POSTprocessor
 			$var['test_success_url'] = AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
 		}
 
-		$var['p1']		= $this->settings['merchant_id'];
-		$var['p2']		= $request->invoice->invoice_number;
-		$var['p3']		= date("Y.m.d.G.i.s");
+		$var['p1']	= $this->settings['merchant_id'];
+		$var['p2']	= $request->invoice->invoice_number;
+		$var['p3']	= date("Y.m.d.G.i.s");
 
 		if ( is_array( $request->int_var['amount'] ) ) {
-			$var['p4']		= $request->int_var['amount3'];
+			$var['p4']		= $request->int_var['amount']['amount3'];
+			$var['p5']		= $this->settings['currency'];
 
-			$var['p7']		= $this->convertPeriodUnit( $request->int_var['period3'], $request->int_var['unit3'] );
+			if ( !empty( $this->settings['occur_count'] ) ) {
+				$var['p6']	= $this->settings['occur_count'];
+			} else {
+				$var['p6']	= 'U';
+			}
+
+			$var['p7']		= $this->convertPeriodUnit( $request->int_var['amount']['period3'], $request->int_var['amount']['unit3'] );
 		} else {
 			$var['p4']		= $request->int_var['amount'];
+			$var['p5']		= $this->settings['currency'];
+		}
+
+		if ( !empty( $this->settings['sms_send'] ) ) {
+			$var['p8']	= AECToolbox::rewriteEngine( $this->settings['sms_number'], $request->metaUser, $request->new_subscription, $request->invoice );
+			$var['p9']	= AECToolbox::rewriteEngine( $this->settings['sms_message'], $request->metaUser, $request->new_subscription, $request->invoice );
 		}
 
 		$var['m_1'] = $request->int_var['return_url'];
@@ -74,6 +100,32 @@ class processor_vcs extends POSTprocessor
 		$var['m_5'] = $request->metaUser->cmsUser->name;
 		$var['m_6'] = $request->metaUser->cmsUser->email;
 		$var['m_7'] = AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice );
+
+		$var['UrlsProvided'] = 'Y';
+
+		$var['ApprovedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
+		$var['DeclinedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
+
+		if ( !empty($this->settings['secret']) ) {
+			$values = array(
+				"p1", "p2", "p3", "p4",
+				"p5", "p6", "p7", "p8",
+				"p9", "p10", "p11", "p12",
+				"NextOccurDate", 'Budget', 'CardholderEmail',
+				"m_1", "m_2", "m_3", "m_4",
+				"m_5", "m_6", "m_7", "m_8",
+				"m_9", "m_10"
+			);
+
+			$string = '';
+			foreach ( $values as $k ) {
+				if ( isset($var[$k]) ) {
+					$string .= $var[$k];
+				}
+			}
+
+			$var['Hash'] = md5( $string . $this->settings['secret'] );
+		}
 
 		return $var;
 	}
@@ -143,23 +195,43 @@ class processor_vcs extends POSTprocessor
 	{
 		$response['valid'] = 0;
 
-		if ( isset( $this->settings['pam'] ) ) {
-			if ( $this->settings['pam'] == $post['pam'] ) {
+		if ( isset( $this->settings['secret'] ) ) {
+			$values = array(
+				"p1", "p2", "p3", "p4",
+				"p5", "p6", "p7", "p8",
+				"p9", "p10", "p11", "p12",
+				"Pam",
+				"m_1", "m_2", "m_3", "m_4",
+				"m_5", "m_6", "m_7", "m_8",
+				"m_9", "m_10",
+				"CardHolderIpAddr",
+				"MaskedCardNumber",
+				"TransactionType"
+			);
+
+			$str = "";
+			foreach ( $values as $k ) {
+				$str .= $post[$k];
+			}
+
+			$str .= $this->settings['secret'];
+
+			if ( $str == $post['Hash'] ) {
 				$response['valid'] = 1;
 			} else {
-				$response['pending_reason'] = 'false PAM';
+				$response['pending_reason'] = 'hash error';
 			}
 		} else {
-			$response['pending_reason'] = 'no PAM set - please configure the Personal Authentication Message in your VCS and AEC VCS settings!';
+			$response['pending_reason'] = 'no secret set - please configure either a secret in your VCS and AEC VCS settings!';
 		}
 
 		if ( $post['p4'] == 'Duplicate' ) {
 			$response['duplicate'] = true;
 		}
 
-		if ( substr( $post['p4'], 6 ) !== 'APPROVED' ) {
+		if ( substr( $post['p3'], 6 ) !== 'APPROVED' ) {
 			$response['valid'] = 0;
-			$response['pending_reason'] = $post['p4'];
+			$response['pending_reason'] = $post['p3'];
 		}
 
 		return $response;
