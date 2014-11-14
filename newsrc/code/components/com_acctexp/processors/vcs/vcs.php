@@ -24,7 +24,6 @@ class processor_vcs extends POSTprocessor
 		$settings['testmode'] 		= 1;
 		$settings['merchant_id']	= '1234';
 		$settings['secret']			= "";
-		$settings['pam']			= 'PAM';
 		$settings['currency']		= 'ZAR';
 
 		$settings['occur_count']	= 0;
@@ -41,10 +40,8 @@ class processor_vcs extends POSTprocessor
 	function backend_settings()
 	{
 		$settings = array();
-		$settings['aec_experimental']	= array( "p" );
 		$settings['testmode']			= array( 'toggle');
 		$settings['merchant_id']		= array( 'inputC');
-		$settings['pam']				= array( 'inputC');
 		$settings['currency']			= array( 'list_currency' );
 
 		$settings['occur_count']		= array( 'inputA');
@@ -110,7 +107,24 @@ class processor_vcs extends POSTprocessor
 		$var['DeclinedUrl']	= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=vcsnotification' );
 
 		if ( !empty($this->settings['secret']) ) {
-			$var['Hash'] = md5( implode( '', $var ) . $this->settings['secret'] );
+			$values = array(
+				"p1", "p2", "p3", "p4",
+				"p5", "p6", "p7", "p8",
+				"p9", "p10", "p11", "p12",
+				"NextOccurDate", 'Budget', 'CardholderEmail',
+				"m_1", "m_2", "m_3", "m_4",
+				"m_5", "m_6", "m_7", "m_8",
+				"m_9", "m_10"
+			);
+
+			$string = '';
+			foreach ( $values as $k ) {
+				if ( isset($var[$k]) ) {
+					$string .= $var[$k];
+				}
+			}
+
+			$var['Hash'] = md5( $string . $this->settings['secret'] );
 		}
 
 		return $var;
@@ -181,13 +195,7 @@ class processor_vcs extends POSTprocessor
 	{
 		$response['valid'] = 0;
 
-		if ( isset( $this->settings['pam'] ) ) {
-			if ( $this->settings['pam'] == $post['Pam'] ) {
-				$response['valid'] = 1;
-			} else {
-				$response['pending_reason'] = 'PAM error';
-			}
-		} elseif ( isset( $this->settings['secret'] ) ) {
+		if ( isset( $this->settings['secret'] ) ) {
 			$values = array(
 				"p1", "p2", "p3", "p4",
 				"p5", "p6", "p7", "p8",
@@ -214,7 +222,7 @@ class processor_vcs extends POSTprocessor
 				$response['pending_reason'] = 'hash error';
 			}
 		} else {
-			$response['pending_reason'] = 'no PAM or secret set - please configure either a PAM or secret in your VCS and AEC VCS settings!';
+			$response['pending_reason'] = 'no secret set - please configure either a secret in your VCS and AEC VCS settings!';
 		}
 
 		if ( $post['p4'] == 'Duplicate' ) {
