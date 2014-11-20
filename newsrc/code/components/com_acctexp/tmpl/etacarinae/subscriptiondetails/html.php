@@ -353,7 +353,7 @@ foreach ( $pps as $pp ) {
 		if ( $sub == $tname ) {
 			$custom = $pp->customProfileTab( $sub, $metaUser );
 
-			$tmpl->enqueueJQueryExtension( 'bootstrap/bootstrap.min' );
+			$tmpl->enqueueJQueryExtension( 'bootstrap/bootstrap.2.1.1.min' );
 
 			$tmpl->enqueueJQueryCode( $js );
 		}
