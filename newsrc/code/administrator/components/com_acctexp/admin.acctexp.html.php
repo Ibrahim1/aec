@@ -156,34 +156,93 @@ class HTML_myCommon
 		if ( !is_array( $buttons ) ) {
 			switch ( $buttons ) {
 				case 'list':
-					$buttons = array(	'copy' => array( 'style' => 'warning', 'text' => JText::_('COPY_PAYPLAN'), 'actionable' => true, 'icon' => 'share' ),
-										'remove' => array( 'style' => 'danger', 'text' => JText::_('REMOVE_PAYPLAN'), 'actionable' => true, 'icon' => 'trash' ),
-										'hl1' => array(),
-										'pgs' => array( 'groupstart' => true ),
-										'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-										'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-										'pge' => array( 'groupend' => true ),
-										'hl2' => array(),
-										'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
-									);
+					$buttons = array(
+						'copy' => array(
+							'style' => 'warning',
+							'text' => JText::_('COPY_PAYPLAN'),
+							'actionable' => true,
+							'icon' => 'share'
+						),
+						'remove' => array(
+							'style' => 'danger',
+							'text' => JText::_('REMOVE_PAYPLAN'),
+							'actionable' => true,
+							'icon' => 'trash'
+						),
+						'hl1' => array(),
+						'pgs' => array( 'groupstart' => true ),
+						'publish' => array(
+							'style' => 'info',
+							'text' => JText::_('PUBLISH_PAYPLAN'),
+							'actionable' => true,
+							'icon' => 'eye-open'
+						),
+						'unpublish' => array(
+							'style' => 'danger',
+							'text' => JText::_('UNPUBLISH_PAYPLAN'),
+							'actionable' => true,
+							'icon' => 'eye-close'
+						),
+						'pge' => array( 'groupend' => true ),
+						'hl2' => array(),
+						'new' => array(
+							'style' => 'success',
+							'text' => JText::_('NEW_PAYPLAN'),
+							'icon' => 'plus'
+						)
+					);
 					break;
 				case 'list_short':
-					$buttons = array(	'edit' => array( 'style' => 'warning', 'text' => JText::_('EDIT_PAYPLAN'), 'actionable' => true, 'icon' => 'pencil' ),
-										'hl1' => array(),
-										'pgs' => array( 'groupstart' => true ),
-										'publish' => array( 'style' => 'info', 'text' => JText::_('PUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-open' ),
-										'unpublish' => array( 'style' => 'danger', 'text' => JText::_('UNPUBLISH_PAYPLAN'), 'actionable' => true, 'icon' => 'eye-close' ),
-										'pge' => array( 'groupend' => true ),
-										'hl2' => array(),
-										'new' => array( 'style' => 'success', 'text' => JText::_('NEW_PAYPLAN'), 'icon' => 'plus' )
-									);
+					$buttons = array(
+						'edit' => array(
+							'style' => 'warning',
+							'text' => JText::_('EDIT_PAYPLAN'),
+							'actionable' => true,
+							'icon' => 'pencil'
+						),
+						'hl1' => array(),
+						'pgs' => array( 'groupstart' => true ),
+						'publish' => array(
+							'style' => 'info',
+							'text' => JText::_('PUBLISH_PAYPLAN'),
+							'actionable' => true,
+							'icon' => 'eye-open' ),
+						'unpublish' => array(
+							'style' => 'danger',
+							'text' => JText::_('UNPUBLISH_PAYPLAN'),
+							'actionable' => true,
+							'icon' => 'eye-close'
+						),
+						'pge' => array( 'groupend' => true ),
+						'hl2' => array(),
+						'new' => array(
+							'style' => 'success',
+							'text' => JText::_('NEW_PAYPLAN'),
+							'icon' => 'plus'
+						)
+					);
 					break;
 				case 'edit':
-					$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'actionable' => true, 'icon' => 'ok-sign' ),
-										'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'actionable' => true, 'icon' => 'ok' ),
-										'hl1' => array(),
-										'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-									);
+					$buttons = array(
+						'apply' => array(
+							'style' => 'info',
+							'text' => JText::_('APPLY'),
+							'actionable' => true,
+							'icon' => 'ok-sign'
+						),
+						'save' => array(
+							'style' => 'success',
+							'text' => JText::_('SAVE'),
+							'actionable' => true,
+							'icon' => 'ok'
+						),
+						'hl1' => array(),
+						'cancel' => array(
+							'style' => 'danger',
+							'text' => JText::_('CANCEL'),
+							'icon' => 'remove'
+						)
+					);
 					break;
 			}
 		}
@@ -332,11 +391,23 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')' );
 
-		$buttons = array(	'applyMembership' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
-							'saveMembership' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
-							'hl1' => array(),
-							'cancelMembership' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-						);
+		$buttons = array(
+			'applyMembership' => array(
+				'style' => 'info',
+				'text' => JText::_('APPLY'),
+				'icon' => 'ok-sign' ),
+			'saveMembership' => array(
+				'style' => 'success',
+				'text' => JText::_('SAVE'),
+				'icon' => 'ok' ),
+			'hl1' => array(),
+			'cancelMembership' => array(
+				'style' => 'danger',
+				'text' => JText::_('CANCEL'),
+				'icon' => 'remove'
+			)
+		);
+
 		HTML_myCommon::getButtons( $buttons, '' );
 
 		HTML_myCommon::startForm();
@@ -711,8 +782,6 @@ jQuery(document).ready(function(jQuery) {
 
 	static function SubscriptionName( $subscriptionid )
 	{
-		$db = JFactory::getDBO();
-
 		$subscription = new SubscriptionPlan();
 		$subscription->load($subscriptionid);
 
@@ -802,56 +871,90 @@ jQuery(document).ready(function(jQuery) {
 
 	static function getMenu()
 	{
-		return array(	'memberships'	=> array(	'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
-													'short'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
-													'items'	=> array(	array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
-																	'div',
-																	array( 'showPending', 'pending', JText::_('AEC_CENTR_PENDING') ),
-																	array( 'showActive', 'active', JText::_('AEC_CENTR_ACTIVE') ),
-																	array( 'showExpired', 'expired', JText::_('AEC_CENTR_EXPIRED') ),
-																	array( 'showCancelled', 'cancelled', JText::_('AEC_CENTR_CANCELLED') ),
-																	array( 'showHold', 'hold', JText::_('AEC_CENTR_HOLD') ),
-																	array( 'showClosed', 'closed', JText::_('AEC_CENTR_CLOSED') ),
-																	'div',
-																	array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') )
-																	)
-												),
-						'payment' 		=> array(	'name'	=> JText::_('AEC_CENTR_AREA_PAYMENT'),
-													'short'	=> JText::_('AEC_CENTR_AREA_PAYMENT_SHORT'),
-													'items'	=> array(	array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
-																	array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
-																	'div',
-																	array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
-																	'div',
-																	array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
-																	array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') )
-																	)
-												),
-						'settings' 		=> array(	'name'	=> JText::_('AEC_CENTR_AREA_SETTINGS'),
-													'short'	=> JText::_('AEC_CENTR_AREA_SETTINGS_SHORT'),
-													'items'	=> array(	array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
-																	'div',
-																	array( 'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ),
-																	array( 'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ),
-																	'div',
-																	array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') )
-																	)
-												),
-						'data' 			=> array(	'name'	=> JText::_('AEC_CENTR_AREA_DATA'),
-													'short'	=> JText::_('AEC_CENTR_AREA_DATA_SHORT'),
-													'items'	=> array(	array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
-																	'div',
-																	array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
-																	array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
-																	array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
-																	'div',
-																	array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY'), JText::_('AEC_CENTR_M_VIEW_HISTORY') ),
-																	array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
-																	)
-												),
-						'help'			=> array(	'name'	=> JText::_('AEC_CENTR_AREA_HELP'),
-													'short'	=> JText::_('AEC_CENTR_AREA_HELP')
-												)
+		return array(
+			'memberships' => array(
+				'name'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
+				'short'	=> JText::_('AEC_CENTR_AREA_MEMBERSHIPS'),
+				'items'	=> array(
+					array( 'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ),
+
+					'div',
+
+					array( 'showPending', 'pending', JText::_('AEC_CENTR_PENDING') ),
+					array( 'showActive', 'active', JText::_('AEC_CENTR_ACTIVE') ),
+					array( 'showExpired', 'expired', JText::_('AEC_CENTR_EXPIRED') ),
+					array( 'showCancelled', 'cancelled', JText::_('AEC_CENTR_CANCELLED') ),
+					array( 'showHold', 'hold', JText::_('AEC_CENTR_HOLD') ),
+					array( 'showClosed', 'closed', JText::_('AEC_CENTR_CLOSED') ),
+
+					'div',
+
+					array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') )
+				)
+			),
+			'payment' => array(
+				'name'	=> JText::_('AEC_CENTR_AREA_PAYMENT'),
+
+				'short'	=> JText::_('AEC_CENTR_AREA_PAYMENT_SHORT'),
+
+				'items'	=> array(
+					array( 'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ),
+					array( 'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ),
+
+					'div',
+
+					array( 'showMicroIntegrations', 'microintegrations', JText::_('MI_TITLE'), JText::_('AEC_CENTR_M_INTEGRATION') ),
+
+					'div',
+
+					array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
+					array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') )
+				)
+			),
+
+			'settings' => array(
+				'name' => JText::_('AEC_CENTR_AREA_SETTINGS'),
+
+				'short'	=> JText::_('AEC_CENTR_AREA_SETTINGS_SHORT'),
+
+				'items'	=> array(
+					array( 'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ),
+
+					'div',
+
+					array( 'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ),
+
+					array( 'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ),
+
+					'div',
+
+					array( 'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') )
+				)
+			),
+
+			'data' => array(
+				'name' => JText::_('AEC_CENTR_AREA_DATA'),
+				'short'	=> JText::_('AEC_CENTR_AREA_DATA_SHORT'),
+
+				'items'	=> array(
+					array( 'stats', 'stats', JText::_('AEC_CENTR_STATS') ),
+
+					'div',
+
+					array( 'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ),
+					array( 'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ),
+					array( 'import', 'import', JText::_('AEC_CENTR_IMPORT') ),
+
+					'div',
+
+					array( 'history', 'history', JText::_('AEC_CENTR_VIEW_HISTORY'), JText::_('AEC_CENTR_M_VIEW_HISTORY') ),
+					array( 'eventlog', 'eventlog', JText::_('AEC_CENTR_LOG') )
+				)
+			),
+			'help' => array(
+				'name'	=> JText::_('AEC_CENTR_AREA_HELP'),
+				'short'	=> JText::_('AEC_CENTR_AREA_HELP')
+			)
 		);
 	}
 
