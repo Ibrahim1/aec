@@ -40,7 +40,7 @@ class mi_interspireem
 		if ( !empty( $this->settings['list'] ) ) {
 			$details = $this->GetCustomFieldData( $this->settings['list'] );
 
-			$d = '<div class="control-group"><h3>User Details</h3>';
+			$d = '<div class="form-group"><h3>User Details</h3>';
 			$d .= '<table class="adminlist table-striped">';
 			$d .= '<thead><tr><th>Field ID</th><th>Name</th><th>Type</th><th>Default</th><th>Required?</th><th>Settings</th><th>Owner</th><th>Created</th></thead>';
 			$d .= '<tbody>';

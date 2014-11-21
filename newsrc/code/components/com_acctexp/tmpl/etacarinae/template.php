@@ -226,13 +226,13 @@ class template_etacarinae extends aecTemplate
 			rules: " . json_encode( $this->validation['rules'] ) . ",
 			highlight: function(label) {
 				jQuery(label).closest('.well').addClass('well-highlight');
-				jQuery(label).closest('.control-group').addClass('error');
+				jQuery(label).closest('.form-group').addClass('error');
 				jQuery(label).closest('.label-important').prepend('" . addslashes( aecHTML::Icon( 'ban-circle', true ) ) . "');
 				jQuery('#aec form button#confirmation').attr('disabled','disabled');
 			},
 			unhighlight: function(label) {
 				jQuery(label).closest('.well').removeClass('well-highlight');
-				jQuery(label).closest('.control-group').removeClass('error');
+				jQuery(label).closest('.form-group').removeClass('error');
 				if ( jQuery(\"#aec form .label-important\").length > 0) {
 					jQuery('#aec form button').attr('disabled','disabled');
 				} else {

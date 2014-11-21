@@ -428,7 +428,7 @@ class aecRestrictionHelper
 					continue;
 				}
 
-				echo '<div class="aec_userinfobox_sub">';
+				echo '<div class="aec-settings-container">';
 
 				$firstitem = str_replace( '*', $type, $block[0][0] );
 				echo '<h4>' . JText::_( strtoupper( 'aec_restrictions_' . substr( $firstitem, 0, strpos( $firstitem, '_', strpos( $firstitem, '_' )+3 ) ) . '_header' ) )  . '</h4>';
@@ -436,9 +436,9 @@ class aecRestrictionHelper
 				foreach ( $block as $sblock ) {
 
 					if ( count( $block ) < 2 ) {
-						echo '<div class="aec_userinfobox_sub_inline">';
+						echo '<div class="aec-settings-container-inline">';
 					} else {
-						echo '<div class="aec_userinfobox_sub_inline form-stacked" style="width:214px;">';
+						echo '<div class="aec-settings-container-inline form-stacked" style="width:214px;">';
 					}
 
 					foreach ( $sblock as $vname ) {

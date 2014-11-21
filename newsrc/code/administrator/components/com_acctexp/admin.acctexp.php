@@ -6106,7 +6106,7 @@ function importData( $option )
 
 					$params['convert_field_'.$i] = array( 'list', '', '', '' );
 
-					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="span2"', 'value', 'text', 0 );
+					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="col-sm-2"', 'value', 'text', 0 );
 				}
 
 				$rows_count = count( $import->rows );
@@ -6375,7 +6375,7 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( '2div_end', '' );
 
 	$params[] = array( 'userinfobox', 49 );
-	$params[] = array( 'div', '<div class="aec_userinfobox_sub" id="export-result">' );
+	$params[] = array( 'div', '<div class="aec-settings-container" id="export-result">' );
 	$params[] = array( 'h4', '<h4>Preview</h4>' );
 	$params[] = array( '2div_end', '' );
 
@@ -6426,7 +6426,7 @@ function exportData( $option, $type, $cmd=null )
 		$listitems[] = JHTML::_('select.option', 0, " --- Autosaves --- ", 'value', 'text', true );
 	}
 
-	$lists['selected_export'] = JHTML::_('select.genericlist', $listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries+$m+2 ) ) . '" class="span7"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );
+	$lists['selected_export'] = JHTML::_('select.genericlist', $listitems, 'selected_export', 'size="' . max( 10, min( 20, $entries+$m+2 ) ) . '" class="col-sm-7"', 'value', 'text', arrayValueDefault($system_values, 'selected_export', '') );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -6436,7 +6436,7 @@ function exportData( $option, $type, $cmd=null )
 	$db->setQuery( $query );
 	$db_plans = $db->loadObjectList();
 
-	$lists['planid'] = '<select id="plan-filter-select" class="span3" name="planid[]" multiple="multiple" size="5">';
+	$lists['planid'] = '<select id="plan-filter-select" class="col-sm-3" name="planid[]" multiple="multiple" size="5">';
 	foreach ( $db_plans as $plan ) {
 		$lists['planid'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_values['planid'] ) ? ' selected="selected"' : '' ) . '/>' . $plan->name . '</option>';
 	}
@@ -6444,7 +6444,7 @@ function exportData( $option, $type, $cmd=null )
 
 	$grouplist = ItemGroupHandler::getTree();
 
-	$lists['groupid'] = '<select id="group-filter-select" class="span3" name="groupid[]" multiple="multiple" size="5">';
+	$lists['groupid'] = '<select id="group-filter-select" class="col-sm-3" name="groupid[]" multiple="multiple" size="5">';
 	foreach ( $grouplist as $glisti ) {
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$lists['groupid'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_values['groupid'] ) ? ' selected="selected"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
@@ -6644,7 +6644,7 @@ function toolBoxTool( $option, $cmd )
 		if ( !method_exists( $tool, 'Action' ) ) {
 			$return .= '<div id="aec-toolbox-result">' . '<p>Tool doesn\'t have an action to carry out!</p>' . '</div>';
 		} else {
-			$response = '</div><div class="aec_userinfobox_sub"><h4>' . JText::_('Response') . '</h4><div id="aec-toolbox-result">' . $tool->Action() . '</div></div>';
+			$response = '</div><div class="aec-settings-container"><h4>' . JText::_('Response') . '</h4><div id="aec-toolbox-result">' . $tool->Action() . '</div></div>';
 
 			if ( method_exists( $tool, 'Settings' ) ) {
 				$tb_settings = $tool->Settings();

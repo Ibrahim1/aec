@@ -117,7 +117,7 @@ jQuery(document).ready(function(jQuery) {
 	if ( typeof(WFEditor) !== undefined ) {
 		if ( jQuery(document).width() < 1350 ) {
 			if ( jQuery(document).width() < 1000 ) {
-				jQuery(".form-horizontal .control-group > label").css("width","30%");
+				jQuery(".form-horizontal .form-group > label").css("width","30%");
 				jQuery(".form-horizontal .controls").css("margin-left","34%");
 			} else {
 				jQuery(".form-horizontal .controls").css("margin-left","50%");
@@ -178,9 +178,9 @@ jQuery(document).ready(function(jQuery) {
 			return;
 		}
 
-		jQuery(".control-group, section h2, section .accordion, .page-header, section").removeClass("setting-filter-mute setting-filter-hide setting-filter-hide-override");
+		jQuery(".form-group, section h2, section .accordion, .page-header, section").removeClass("setting-filter-mute setting-filter-hide setting-filter-hide-override");
 
-		jQuery('.control-group').filter( function() {
+		jQuery('.form-group').filter( function() {
 			var matches = jQuery('label.control-label:Contains("'+inputString+'"), label.control-label[name*="'+inputString+'"]', this).length;
 			return matches < 1;
 		}).each( function() {
@@ -189,7 +189,7 @@ jQuery(document).ready(function(jQuery) {
 			jQuery(this).prevAll("h2").first().addClass("setting-filter-hide");
 		});
 
-		jQuery('.control-group').filter( function() {
+		jQuery('.form-group').filter( function() {
 			var matches = jQuery('label.control-label:Contains("'+inputString+'"), label.control-label[name*="'+inputString+'"]', this).length;
 			return matches > 0;
 		}).each( function() {
@@ -197,7 +197,7 @@ jQuery(document).ready(function(jQuery) {
 			jQuery(this).prevAll("h2").first().addClass("setting-filter-hide-override");
 		});
 
-		jQuery("section h2:not(.setting-filter-hide-override)").nextUntil("h2", ".control-group").addClass("setting-filter-hide");
+		jQuery("section h2:not(.setting-filter-hide-override)").nextUntil("h2", ".form-group").addClass("setting-filter-hide");
 
 		jQuery('.page-header').filter( function() {
 			return jQuery(this).nextUntil( '.page-header', 'section.setting-filter-hide-override' ).length < 1;
@@ -217,7 +217,7 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery('div.aec-buttons').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});
 	jQuery('table.aecadminform').tooltip({placement: "bottom", selector: 'a.btn', delay: { show: 300, hide: 100 }});
-	jQuery('div.control-group').tooltip({placement: "right", selector: '.bstooltip', delay: { show: 300, hide: 400 }});
+	jQuery('div.form-group').tooltip({placement: "right", selector: '.bstooltip', delay: { show: 300, hide: 400 }});
 
 	jQuery('.jqui-datepicker').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, showWeek: true, showOtherMonths: true, selectOtherMonths: true });
 	jQuery('.jqui-datetimepicker').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss', changeMonth: true, changeYear: true, showWeek: true, showOtherMonths: true, selectOtherMonths: true, showSecond: true, hourGrid: 6, minuteGrid: 10, secondGrid: 10  });
