@@ -7,42 +7,42 @@
 
 /* Layout helpers
 ----------------------------------*/
-.ui-helper-hidden { 
-	display: none; 
+.ui-helper-hidden {
+	display: none;
 }
-.ui-helper-hidden-accessible { 
+.ui-helper-hidden-accessible {
 	position: absolute !important;
 	clip: rect(1px 1px 1px 1px);
-	clip: rect(1px,1px,1px,1px); 
+	clip: rect(1px,1px,1px,1px);
 }
-.ui-helper-reset { 
-	margin: 0; 
-	padding: 0; 
-	border: 0; 
-	outline: 0; 
-	line-height: 1.3; 
-	text-decoration: none; 
-	font-size: 100%; 
-	list-style: none; 
+.ui-helper-reset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	line-height: 1.3;
+	text-decoration: none;
+	font-size: 100%;
+	list-style: none;
 }
-.ui-helper-clearfix:after { 
-	content: "."; 
-	display: block; 
-	height: 0; 
-	clear: both; 
-	visibility: hidden; 
+.ui-helper-clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
 }
 .ui-helper-clearfix { display: inline-block; }
 /* required comment for clearfix to work in Opera \*/
 * html .ui-helper-clearfix { height:1%; }
 .ui-helper-clearfix { display:block; }
 /* end clearfix */
-.ui-helper-zfix { 
-	width: 100%; 
-	height: 100%; 
-	top: 0; 
-	left: 0; 
-	position: absolute; 
+.ui-helper-zfix {
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	position: absolute;
 	.opacity( 0 );
 }
 
@@ -56,11 +56,11 @@
 ----------------------------------*/
 
 /* states and images */
-.ui-icon { 
-	display: block; 
-	text-indent: -99999px; 
-	overflow: hidden; 
-	background-repeat: no-repeat; 
+.ui-icon {
+	display: block;
+	text-indent: -99999px;
+	overflow: hidden;
+	background-repeat: no-repeat;
 }
 
 
@@ -68,12 +68,12 @@
 ----------------------------------*/
 
 /* Overlays */
-.ui-widget-overlay { 
-	position: absolute; 
-	top: 0; 
-	left: 0; 
-	width: 100%; 
-	height: 100%; 
+.ui-widget-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }
 
 
@@ -92,32 +92,32 @@
 
 /* Component containers
 ----------------------------------*/
-.ui-widget {   
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
-	font-size:13px; 
-	.ui-widget { 
-		font-size: 1em; 
+.ui-widget {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:13px;
+	.ui-widget {
+		font-size: 1em;
 	}
-	input, select, textarea, button { 
-		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; 
-		font-size: 1em; 
+	input, select, textarea, button {
+		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		font-size: 1em;
 	}
 }
-.ui-widget-content { 
-	border: 1px solid @ui-grayLight1; 
-	background: @white url(../images/admin/icons/ui-bg_glass_75_ffffff_1x400.png) 50% 50% repeat-x;
-	color: @grayDark;
-	a { 
-		color: @grayDark; 
+.ui-widget-content {
+	border: 1px solid @ui-grayLight1;
+	background: #fff url(../images/admin/icons/ui-bg_glass_75_ffffff_1x400.png) 50% 50% repeat-x;
+	color: @gray-dark;
+	a {
+		color: @gray-dark;
 	}
 }
 .ui-widget-header {
 	font-weight:bold;
-	border-color: @blueDark @blueDark @ui-blue;
+	border-color: @brand-primary-border @brand-primary-border @ui-blue;
 	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 	border:1px solid @ui-gray;
-	a { 
-		color: @grayDarker; 
+	a {
+		color: @gray-darker;
 	}
 }
 
@@ -125,11 +125,11 @@
 ----------------------------------*/
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
 /*
-border: 1px solid #d3d3d3; background: @grayLighter url(../images/admin/icons/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #555555;*/
+border: 1px solid #d3d3d3; background: @gray-lighter url(../images/admin/icons/ui-bg_glass_75_e6e6e6_1x400.png) 50% 50% repeat-x; font-weight: normal; color: #555555;*/
 
-	#gradient > .vertical-three-colors( @white, @white, 25%, @grayLighter );
+	#gradient > .vertical-three-colors( #fff, #fff, 25%, @gray-lighter );
 	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-	color: @grayDark;
+	color: @gray-dark;
 	font-size: 13px;
 	line-height: normal;
 	border: 1px solid @ui-grayLight3;
@@ -140,7 +140,7 @@ border: 1px solid #d3d3d3; background: @grayLighter url(../images/admin/icons/ui
 }
 
 .ui-state-default {
-	a, a:link, a:visited { 
+	a, a:link, a:visited {
 		color: @gray;
 		text-decoration: none;
 	}
@@ -149,27 +149,27 @@ border: 1px solid #d3d3d3; background: @grayLighter url(../images/admin/icons/ui
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
 	background-position: 0 -15px;
-	color: @grayDark;
+	color: @gray-dark;
 	text-decoration: none;
 }
 
 .ui-state-hover {
 	a, a:hover {
-		color: @grayDarker;
+		color: @gray-darker;
 		text-decoration: none;
 	}
 }
 
 
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { 
-	border: 1px solid @ui-grayLight1;  
-	font-weight: normal; 
-	color: @grayDarker; 
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+	border: 1px solid @ui-grayLight1;
+	font-weight: normal;
+	color: @gray-darker;
 }
 .ui-state-active {
-	a, a:link, a:visited { 
-		color: @grayDarker; 
-		text-decoration: none; 
+	a, a:link, a:visited {
+		color: @gray-darker;
+		text-decoration: none;
 	}
 }
 .ui-widget :active { outline: none; }
@@ -188,7 +188,7 @@ border: 1px solid #d3d3d3; background: @grayLighter url(../images/admin/icons/ui
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  {
 	position: relative;
 	margin-bottom: 18px;
-	color: @grayDark;
+	color: @gray-dark;
 	#gradient > .vertical( @ui-yellowLighter, @ui-yellowLight );
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 	border-color: @ui-yellowLight @ui-yellowLight @ui-yellow;
@@ -196,7 +196,7 @@ border: 1px solid #d3d3d3; background: @grayLighter url(../images/admin/icons/ui
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	border-width: 1px;
 	border-style: solid;
-	.border-radius( 4px );
+	border-radius: 4px;
 	.box-shadow( inset 0 1px 0 rgba(255, 255, 255, 0.25) );
 }
 
@@ -204,10 +204,10 @@ border: 1px solid #d3d3d3; background: @grayLighter url(../images/admin/icons/ui
 .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {
 	position: relative;
 	margin-bottom: 18px;
-	color: @white;
+	color: #fff;
 	border-width: 1px;
 	border-style: solid;
-	.border-radius( 4px );
+	border-radius: 4px;
 	.box-shadow( inset 0 1px 0 rgba(255, 255, 255, 0.25) );
 	#gradient > .vertical ( @ui-redLighter, @ui-redLight );
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -218,14 +218,14 @@ border: 1px solid #d3d3d3; background: @grayLighter url(../images/admin/icons/ui
 .ui-state-error a, .ui-widget-content .ui-state-error a, .ui-widget-header .ui-state-error a { color: @ui-red; }
 .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text { color: @ui-red; }
 .ui-priority-primary, .ui-widget-content .ui-priority-primary, .ui-widget-header .ui-priority-primary { font-weight: bold; }
-.ui-priority-secondary, .ui-widget-content .ui-priority-secondary,  .ui-widget-header .ui-priority-secondary { 
+.ui-priority-secondary, .ui-widget-content .ui-priority-secondary,  .ui-widget-header .ui-priority-secondary {
 	.opacity( 70 );
-	font-weight: normal; 
+	font-weight: normal;
 }
 
-.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled { 
+.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled {
 	.opacity( 35 );
-	background-image: none;  
+	background-image: none;
 }
 
 
@@ -281,5 +281,5 @@ textarea,
 	line-height: 18px;
 	color: @gray;
 	border: 1px solid @ui-grayLight3;
-	.border-radius( 3px );
+	border-radius: 3px;
 }

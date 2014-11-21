@@ -52,11 +52,10 @@
 
 .aec-navbar.navbar-inverse {
 	.navbar-inner {
-		@foo = 0 1px 3px rgba(0,0,0,.065), inset 0 -1px 5px rgba(1, 1, 1, 0.4);
 		background: #c31313;
 		border: none;
-		.box-shadow(@foo);
-		.border-radius( 0 0 10px 10px );
+		.box-shadow("0 1px 3px rgba(0,0,0,.065), inset 0 -1px 5px rgba(1, 1, 1, 0.4)");
+		border-radius: 0 0 10px 10px;
 	}
 	.nav li.dropdown {
 		.open,
@@ -80,7 +79,7 @@
 	}
 	.navbar-inner {
 		height: 40px;
-		.border-radius( 0 10px 10px 0 );
+		border-radius: 0 10px 10px 0;
 	}
 	.container { width: 940px; }
 	a.toolbar-notify {
@@ -91,7 +90,7 @@
 		overflow: visible !important;
 		.transition( width 0.2s ease );
 		.navbar-inner {
-			.border-radius( 0 );
+			border-radius: 0;
 		}
 		a.toolbar-notify {
 			margin-left: inherit;
