@@ -41,7 +41,7 @@ class aecHTML
 			}
 
 			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
-				$return = '<div class="control-group">';
+				$return = '<div class="form-group">';
 
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
 					$xtitle = htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
@@ -59,8 +59,8 @@ class aecHTML
 
 				$return .= '</label>';
 			} else {
-				$return = '<div class="control-group">';
-				$return .= '<label class="control-label" for="' . $name . '"><div class="controls"></div></label>';
+				$return = '<div class="form-group">';
+				$return .= '<label for="' . $name . '"><div class="controls"></div></label>';
 			}
 		} else {
 			if ( isset( $row[1] ) ) {
@@ -73,37 +73,37 @@ class aecHTML
 		switch ( $type ) {
 			case 'inputA':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span1" name="' . $name . '" type="text" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="col-sm-1" name="' . $name . '" type="text" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputB':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span2" type="text" name="' . $name . '" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="col-sm-2" type="text" name="' . $name . '" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputC':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span3" type="text" name="' . $name . '" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="col-sm-3" type="text" name="' . $name . '" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputD':
 				$return .= '<div class="controls">';
-				$return .= '<textarea id="' . $name . '" class="span4" rows="5" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="col-sm-4" rows="5" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'inputE':
 				$return .= '<div class="controls">';
-				$return .= '<textarea id="' . $name . '" class="span4" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
+				$return .= '<textarea id="' . $name . '" class="col-sm-4" cols="450" rows="1" name="' . $name . '" >' . $value . '</textarea>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'password':
 				$return .= '<div class="controls">';
-				$return .= '<input id="' . $name . '" class="span3" type="password" name="' . $name . '" value="' . $value . '" />';
+				$return .= '<input id="' . $name . '" class="col-sm-3" type="password" name="' . $name . '" value="' . $value . '" />';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -134,8 +134,8 @@ class aecHTML
 					$enabled = false;
 				}
 
-				$return = '<div class="control-group">';
-				$return .= '<label class="control-label" for="' . $id . '">';
+				$return = '<div class="form-group">';
+				$return .= '<label for="' . $id . '">';
 
 				if ( !empty( $xlabel ) ) {
 					$return .= $xlabel;
@@ -185,8 +185,8 @@ class aecHTML
 					$enabled = false;
 				}
 
-				$return = '<div class="control-group">';
-				$return .= '<label class="control-label" for="' . $id . '">';
+				$return = '<div class="form-group">';
+				$return .= '<label for="' . $id . '">';
 
 				if ( !empty( $xlabel ) ) {
 					$return .= $xlabel;
@@ -265,15 +265,15 @@ class aecHTML
 					$return .= '<input type="hidden" name="' . $name . '" value="0" />';
 					$return .= str_replace( '<select', '<select class="jqui-multiselect"', $this->lists[$name] );
 				} else {
-					$return .= str_replace( '<select', '<select class="span3"', $this->lists[$name] );
+					$return .= str_replace( '<select', '<select class="col-sm-3"', $this->lists[$name] );
 				}
 
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'radio':
-				$return = '<div class="control-group">';
-				$return .= '<label class="control-label" for="' . $name . '">';
+				$return = '<div class="form-group">';
+				$return .= '<label for="' . $name . '">';
 				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '"/>';
 				$return .= '</label>';
 				$return .= '<div class="controls">';
@@ -342,10 +342,10 @@ class aecHTML
 				$return = '<div style="position:relative;float:left;width:' . $value . '%;"><div class="userinfobox">';
 				break;
 			case 'userinfobox_sub':
-				$return = '<div class="aec_userinfobox_sub">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
+				$return = '<div class="aec-settings-container">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
 			case 'userinfobox_sub_stacked':
-				$return = '<div class="aec_userinfobox_sub form-stacked">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
+				$return = '<div class="aec-settings-container form-stacked">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
 			case 'fieldset':
 				$return = '<div class="controls">' . "\n"

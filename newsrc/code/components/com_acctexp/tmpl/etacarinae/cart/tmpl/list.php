@@ -30,7 +30,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 						<?php if ( !empty( $bitem['obj']->params['addtocart_max'] ) && ( $bitem['obj']->params['addtocart_max'] < 2 ) ) { ?>
 							<td class="center-cell">1</td>
 						<?php } else { ?>
-							<td><input type="inputbox" type="text" class="span1" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
+							<td><input type="inputbox" type="text" class="col-sm-1" name="cartitem_<?php echo $bid ?>" value="<?php echo $bitem['quantity'] ?>" /></td>
 						<?php } ?>
 						<td><?php echo $bitem['cost_total'] ?></td>
 						<td class="center-cell"><?php echo $tmpl->lnk( array('task' => 'clearCartItem','item' => $bid), '&times;', 'btn btn-mini btn-danger' ) ?></td>
