@@ -434,26 +434,26 @@ jQuery(document).ready(function(jQuery) {
 				<?php if ( $metaUser->hasSubscription ) { ?>
 				<div class="form-group">
 					<label for="expiration"><span><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></span></label>
-					<div class="controls"><span><?php echo $metaUser->focusSubscription->id; ?></span></div>
+					<div class="form-control"><span><?php echo $metaUser->focusSubscription->id; ?></span></div>
 				</div>
 				<div class="form-group">
 					<label for="expiration"><span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></span></label>
-					<div class="controls"><span>#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
+					<div class="form-control"><span>#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
 				</div>
 				<div class="form-group">
 					<label for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-					<div class="controls"><span><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></span></div>
+					<div class="form-control"><span><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></span></div>
 				</div>
 				<div class="form-group">
 					<label for="expiration"><span><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></span></label>
-					<div class="controls"><span><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></span></div>
+					<div class="form-control"><span><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></span></div>
 				</div>
 				<div class="form-group">
 					<label for="ck_primary">
 						<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
 					</label>
 					<input type="hidden" value="0" name="ck_primary"/>
-					<div class="controls">
+					<div class="form-control">
 						<div class="toggleswitch">
 							<label onclick="" class="toggleswitch">
 								<input type="checkbox"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" disabled="disabled"" ' : ''; ?> name="ck_primary" id="ck_primary" value="1"/>
@@ -470,7 +470,7 @@ jQuery(document).ready(function(jQuery) {
 					<label for="expiration_current">
 						<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
 					</label>
-					<div class="controls">
+					<div class="form-control">
 						<span><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></span>
 					</div>
 				</div>
@@ -479,7 +479,7 @@ jQuery(document).ready(function(jQuery) {
 						<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
 					</label>
 					<input type="hidden" value="0" name="ck_lifetime"/>
-					<div class="controls">
+					<div class="form-control">
 						<div class="toggleswitch">
 							<label onclick="" class="toggleswitch">
 								<input type="checkbox"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> name="ck_lifetime" id="ck_lifetime" value="1"/>
@@ -496,7 +496,7 @@ jQuery(document).ready(function(jQuery) {
 					<label for="expiration">
 						<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
 					</label>
-					<div class="controls">
+					<div class="form-control">
 						<input id="datepicker-expiration" name="expiration" class="jqui-datetimepicker" type="text" value="<?php echo $exp ?>">
 						<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
 					</div>
@@ -505,7 +505,7 @@ jQuery(document).ready(function(jQuery) {
 					<label for="set_status">
 						<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
 					</label>
-					<div class="controls">
+					<div class="form-control">
 						<?php echo $lists['set_status']; ?>
 					</div>
 				</div>
@@ -515,7 +515,7 @@ jQuery(document).ready(function(jQuery) {
 					<label for="assignto_plan">
 						<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
 					</label>
-					<div class="controls">
+					<div class="form-control">
 						<?php echo $lists['assignto_plan']; ?>
 					</div>
 				</div>
@@ -525,11 +525,11 @@ jQuery(document).ready(function(jQuery) {
 					<?php if ( $metaUser->hasSubscription ) { ?>
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></span></label>
-						<div class="controls"><span>#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
+						<div class="form-control"><span>#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
 					</div>
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_USED_PLANS'); ?></span></label>
-						<div class="controls">
+						<div class="form-control">
 							<span>
 								<?php if ( !empty( $metaUser->meta->plan_history->used_plans ) ) { ?>
 									<ul>
@@ -583,61 +583,61 @@ jQuery(document).ready(function(jQuery) {
 				<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
 			</div>
 		</td>
-		<td width="50%" style="vertical-align:top;">
+		<td style="vertical-align:top;">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
 				<div class="aec-settings-container-inline" style="width:50%; margin-left: -10%;">
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
-						<div class="controls"><span><?php echo $metaUser->userid; ?></div>
+						<div class="form-control"><span><?php echo $metaUser->userid; ?></div>
 					</div>
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-						<div class="controls"><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
+						<div class="form-control"><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
 					</div>
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_PROFILE'); ?></span></label>
-						<div class="controls"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
+						<div class="form-control"><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
 					</div>
 					<?php if ( aecComponentHelper::detect_component('anyCB') ) { ?>
 						<div class="form-group">
 							<label for="expiration"><span>CB Profile</span></label>
-							<div class="controls"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+							<div class="form-control"><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 						</div>
 					<?php } ?>
 					<?php if ( aecComponentHelper::detect_component('JOMSOCIAL') ) { ?>
 						<div class="form-group">
 							<label for="expiration"><span>JomSocial Profile</span></label>
-							<div class="controls"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+							<div class="form-control"><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 						</div>
 					<?php } ?>
 				</div>
 				<div class="aec-settings-container-inline" style="width:62%; margin-left: -5%;">
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
-						<div class="controls"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
+						<div class="form-control"><span><?php echo $metaUser->cmsUser->username; ?></span></div>
 					</div>
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_NAME'); ?></span></label>
-						<div class="controls"><span><?php echo $metaUser->cmsUser->name; ?></span></div>
+						<div class="form-control"><span><?php echo $metaUser->cmsUser->name; ?></span></div>
 					</div>
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_EMAIL'); ?></span></label>
-						<div class="controls"><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
+						<div class="form-control"><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
 					</div>
 					<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
 						<div class="form-group">
 							<label for="expiration"><span><?php echo JText::_('AEC_USER_TYPE'); ?></span></label>
-							<div class="controls"><span><?php echo $metaUser->cmsUser->usertype; ?></span></div>
+							<div class="form-control"><span><?php echo $metaUser->cmsUser->usertype; ?></span></div>
 						</div>
 					<?php } ?>
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_REGISTERED'); ?></span></label>
-						<div class="controls"><span><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
+						<div class="form-control"><span><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
 					</div>
 					<div class="form-group">
 						<label for="expiration"><span><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></span></label>
-						<div class="controls"><span><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
+						<div class="form-control"><span><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
 					</div>
 				</div>
 			</div>
@@ -1389,19 +1389,19 @@ jQuery(document).ready(function(jQuery) {
 			<div class="aecadminform">
 				<table class="adminlist table-striped">
 					<thead><tr>
-						<th width="1%">#</th>
-						<th width="1%">id</th>
-						<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
-						<th width="10%" class="leftalign"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
+						<th>#</th>
+						<th>id</th>
+						<th><input type="checkbox" name="toggle" value="" /></th>
+						<th class="text-left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
 						<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
-						<th width="1%"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
+						<th><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 					</tr></thead>
 					<?php foreach ( $rows as $i => $row ) { ?>
 						<tr>
 							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 							<td><?php echo $row->processor->id; ?></td>
 							<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
-							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
+							<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
 							<td><?php echo $row->processor->info['statement']; ?></td>
 							<td><?php HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
 						</tr>
@@ -1443,7 +1443,7 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startForm();
 
 		?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
 				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
@@ -1469,16 +1469,16 @@ jQuery(document).ready(function(jQuery) {
 		<div class="aecadminform">
 		<table class="adminlist table-striped">
 			<thead><tr>
-				<th width="1%" class="leftalign"><?php echo JText::_('TEMPLATE_DEFAULT'); ?></th>
-				<th class="leftalign"><?php echo JText::_('TEMPLATE_NAME'); ?></th>
-				<th class="leftalign"><?php echo JText::_('TEMPLATE_DESC'); ?></th>
+				<th class="text-left"><?php echo JText::_('TEMPLATE_DEFAULT'); ?></th>
+				<th class="text-left"><?php echo JText::_('TEMPLATE_NAME'); ?></th>
+				<th class="text-left"><?php echo JText::_('TEMPLATE_DESC'); ?></th>
 			</tr></thead>
 			<tbody>
 				<?php foreach ( $rows as $i => $row ) { ?>
 					<tr>
 						<td><?php if ( $row->id ) { HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); } ?></td>
-						<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
-						<td class="leftalign"><?php echo $row->info['description']; ?></td>
+						<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
+						<td class="text-left"><?php echo $row->info['description']; ?></td>
 					</tr>
 				<?php } ?>
 			</tbody>
@@ -1529,7 +1529,7 @@ jQuery(document).ready(function(jQuery) {
 		foreach( $tab_data as $tab ) {
 			$tabs->nextPane( strtolower( str_replace( ' ', '-', $tab[0] ) ) );
 
-			echo '<table width="100%" class="aecadminform"><tr><td>';
+			echo '<table class="aecadminform"><tr><td>';
 
 			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 				echo $aecHTML->createSettingsParticle( $rowname );
@@ -1632,23 +1632,23 @@ jQuery(document).ready(function(jQuery) {
 			<div class="aecadminform">
 			<table class="adminlist table-striped">
 				<thead><tr>
-					<th width="1%">#</th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
-					<th width="1%">&nbsp;</th>
-					<th width="10%" class="leftalign"><?php echo JText::_('CNAME'); ?></th>
-					<th width="5%" class="leftalign"><?php echo JText::_('USERLOGIN'); ?></th>
+					<th>#</th>
+					<th><input type="checkbox" name="toggle" value="" /></th>
+					<th>&nbsp;</th>
+					<th class="text-left"><?php echo JText::_('CNAME'); ?></th>
+					<th width="5%" class="text-left"><?php echo JText::_('USERLOGIN'); ?></th>
 					<th width="5%"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
-					<th class="leftalign"><?php echo JText::_('SUBSCR_DATE'); ?></th>
+					<th class="text-left"><?php echo JText::_('SUBSCR_DATE'); ?></th>
 					<?php if ( $action[0] != 'manual' ) { ?>
-						<th class="leftalign"><?php echo JText::_('LASTPAY_DATE'); ?></th>
+						<th class="text-left"><?php echo JText::_('LASTPAY_DATE'); ?></th>
 						<th width="5%"><?php echo JText::_('METHOD'); ?></th>
-						<th width="10%" class="leftalign"><?php echo JText::_('USERPLAN'); ?></th>
-						<th class="leftalign"><?php echo JText::_('EXPIRATION'); ?></th>
+						<th class="text-left"><?php echo JText::_('USERPLAN'); ?></th>
+						<th class="text-left"><?php echo JText::_('EXPIRATION'); ?></th>
 					<?php } else { ?>
-						<th width="10%" class="leftalign"></th>
-						<th width="10%" class="leftalign"></th>
-						<th width="10%" class="leftalign"></th>
-						<th width="27%" class="leftalign"></th>
+						<th class="text-left"></th>
+						<th class="text-left"></th>
+						<th class="text-left"></th>
+						<th width="27%" class="text-left"></th>
 					<?php } ?>
 				</tr></thead>
 				<tbody>
@@ -1672,20 +1672,20 @@ jQuery(document).ready(function(jQuery) {
 							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 							<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-							<td class="leftalign"><?php echo $row->username; ?></td>
+							<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+							<td class="text-left"><?php echo $row->username; ?></td>
 							<td><?php echo $row->status; ?></td>
-							<td class="leftalign"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
+							<td class="text-left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
 							<?php if ( $action[0] != 'manual' ) { ?>
-								<td class="leftalign"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
+								<td class="text-left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
 								<td><?php echo $row->type; ?></td>
-								<td class="leftalign"><?php echo $row->plan_name; ?></td>
-								<td class="leftalign"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
+								<td class="text-left"><?php echo $row->plan_name; ?></td>
+								<td class="text-left"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
 							<?php } else { ?>
-								<td class="leftalign"></td>
-								<td class="leftalign"></td>
-								<td class="leftalign"></td>
-								<td class="leftalign"></td>
+								<td class="text-left"></td>
+								<td class="text-left"></td>
+								<td class="text-left"></td>
+								<td class="text-left"></td>
 							<?php } ?>
 						</tr>
 					<?php } ?>
@@ -1740,16 +1740,16 @@ jQuery(document).ready(function(jQuery) {
 			<div class="aecadminform">
 			<table class="adminlist table-striped">
 				<thead><tr>
-					<th width="1%">#</th>
-					<th width="1%">id</th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
-					<th width="10%" class="leftalign"><?php echo JText::_('MI_NAME'); ?></th>
-					<th width="50%" class="leftalign" ><?php echo JText::_('MI_DESC'); ?></th>
-					<th width="1%"><?php echo JText::_('MI_ACTIVE'); ?></th>
+					<th>#</th>
+					<th>id</th>
+					<th><input type="checkbox" name="toggle" value="" /></th>
+					<th class="text-left"><?php echo JText::_('MI_NAME'); ?></th>
+					<th class="text-left" ><?php echo JText::_('MI_DESC'); ?></th>
+					<th><?php echo JText::_('MI_ACTIVE'); ?></th>
 					<?php if ( $ordering ) { ?>
-						<th width="1%"><?php echo JText::_('MI_REORDER'); ?></th>
+						<th><?php echo JText::_('MI_REORDER'); ?></th>
 					<?php } ?>
-					<th width="10%" align="right"><?php echo JText::_('MI_FUNCTION'); ?></th>
+					<th align="right"><?php echo JText::_('MI_FUNCTION'); ?></th>
 				</tr></thead>
 				<tbody>
 					<?php foreach ( $rows as $i => $row ) { ?>
@@ -1757,8 +1757,8 @@ jQuery(document).ready(function(jQuery) {
 							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 							<td><?php echo $row->id; ?></td>
 							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
-							<td class="leftalign">
+							<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+							<td class="text-left">
 								<?php
 								echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 								</td>
@@ -1846,7 +1846,7 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'mi', true ); ?>
-		<table width="100%" class="aecadminform">
+		<table class="aecadminform">
 			<tr>
 			<td>
 				<div class="aec-settings-container">
@@ -1858,7 +1858,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php } else { ?>
 						<div class="form-group">
 							<label for="class_name">Integration Type</label>
-							<div class="controls"><span class="label label-important"><?php echo $row->mi_class->info['name']; ?></span></div>
+							<div class="form-control"><span class="label label-important"><?php echo $row->mi_class->info['name']; ?></span></div>
 						</div>
 					<?php } ?>
 					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
@@ -1885,7 +1885,7 @@ jQuery(document).ready(function(jQuery) {
 		</table>
 		<?php if ( $aecHTML->hasRestrictions ) {
 			$tabs->nextPane( 'restrictions' ); ?>
-			<table width="100%" class="aecadminform">
+			<table class="aecadminform">
 				<tr>
 					<td>
 						<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
@@ -1896,7 +1896,7 @@ jQuery(document).ready(function(jQuery) {
 
 		if ( $aecHTML->hasSettings ) {
 			$tabs->nextPane( 'settings' ); ?>
-			<table width="100%" class="aecadminform">
+			<table class="aecadminform">
 				<tr>
 					<td>
 						<div class="aec-settings-container">
@@ -1910,7 +1910,7 @@ jQuery(document).ready(function(jQuery) {
 								</tr>
 								</table>
 								<?php $tabs->nextPane( $name ); ?>
-								<table width="100%" class="aecadminform">
+								<table class="aecadminform">
 									<tr>
 										<td>
 											<div class="aec-settings-container">
@@ -1934,7 +1934,7 @@ jQuery(document).ready(function(jQuery) {
 			</table>
 		<?php } ?>
 		<?php $tabs->nextPane( 'attachedto' ); ?>
-		<table width="100%" class="aecadminform">
+		<table class="aecadminform">
 			<tr>
 				<td>
 					<div class="aec-settings-container">
@@ -2004,17 +2004,17 @@ jQuery(document).ready(function(jQuery) {
 			<div class="aecadminform">
 			<table class="adminlist table-striped">
 				<thead><tr>
-					<th width="1%">#</th>
-					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
-					<th width="1%" class="leftalign"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
-					<th width="20%"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+					<th>#</th>
+					<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
+					<th><input type="checkbox" name="toggle" value="" /></th>
+					<th class="text-left"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+					<th><?php echo JText::_('PAYPLAN_NAME'); ?></th>
 					<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-					<th width="1%"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-					<th width="1%"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-					<th width="1%"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
-					<th width="10%" align="center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+					<th><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
+					<th><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
+					<th><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+					<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
+					<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 				</tr></thead>
 				<tbody>
 					<?php foreach ( $rows as $i => $row ) { ?>
@@ -2023,8 +2023,8 @@ jQuery(document).ready(function(jQuery) {
 							<td><?php echo $row->id; ?></td>
 							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 							<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
-							<td class="leftalign"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-							<td class="leftalign"><?php echo $row->desc; ?></td>
+							<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+							<td class="text-left"><?php echo $row->desc; ?></td>
 							<td><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
 							<td><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
 							<td align="right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
@@ -2162,9 +2162,9 @@ jQuery(document).ready(function(jQuery) {
 								<table style="width:100%;" class="table-striped aec-grouplist">
 									<thead>
 										<tr>
-											<th width="10%">ID</th>
+											<th>ID</th>
 											<th>Name</th>
-											<th width="1%"></th>
+											<th></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -2242,7 +2242,7 @@ jQuery(document).ready(function(jQuery) {
 			</tr>
 		</table>
 		<?php $tabs->nextPane( 'processors' ); ?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<?php
 			if ( !empty( $aecHTML->customparams->pp ) ) {
 				foreach ( $aecHTML->customparams->pp as $id => $processor ) {
@@ -2262,7 +2262,7 @@ jQuery(document).ready(function(jQuery) {
 			?>
 		</td></tr></table>
 		<?php $tabs->nextPane( 'text' ); ?>
-		<table width="100%" class="aecadminform">
+		<table class="aecadminform">
 			<tr><td>
 				<div style="position:relative;float:left;width:99%;">
 					<div class="aec-settings-container">
@@ -2304,7 +2304,7 @@ jQuery(document).ready(function(jQuery) {
 			</td></tr>
 		</table>
 		<?php $tabs->nextPane( 'trial' ); ?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('PAYPLAN_TRIAL_TITLE'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
@@ -2317,7 +2317,7 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		</td></tr></table>
 		<?php $tabs->nextPane( 'relations' ); ?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
@@ -2325,7 +2325,7 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		</td></tr></table>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
 				<?php
@@ -2365,7 +2365,7 @@ jQuery(document).ready(function(jQuery) {
 								</h5>
 							</td>
 							<td>
-								<div class="controls">
+								<div class="form-control">
 									<div class="toggleswitch">
 										<label class="toggleswitch" onclick="">
 											<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>"/>
@@ -2428,7 +2428,7 @@ jQuery(document).ready(function(jQuery) {
 	static function groupRow( $type, $group )
 	{ ?>
 		<tr id="row-group-<?php echo $group['id'];?>">
-			<td align="center" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
+			<td class="text-center" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
 			<td><?php echo $group['name']; ?></td>
 			<td><a class="btn btn-danger" id="removegroup-btn-<?php echo $group['id'];?>" onClick="removeGroup('<?php echo $type;?>','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove', true ); ?></a></td>
 		</tr>
@@ -2447,15 +2447,15 @@ jQuery(document).ready(function(jQuery) {
 		<div class="aecadminform">
 			<table class="adminlist table-striped">
 				<thead><tr>
-					<th width="1%">#</th>
-					<th width="1%"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-					<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
-					<th width="1%">Parent</th>
-					<th width="10%"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
-					<th width="50%" class="leftalign"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
-					<th width="3%"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
-					<th width="3%"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
-					<th width="1%"><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
+					<th>#</th>
+					<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
+					<th><input type="checkbox" name="toggle" value="" /></th>
+					<th>Parent</th>
+					<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+					<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
+					<th><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
+					<th><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
+					<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
 				</tr></thead>
 				<tbody>
 				<?php foreach ( $rows as $i => $row ) { ?>
@@ -2465,7 +2465,7 @@ jQuery(document).ready(function(jQuery) {
 						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 						<td align="right" style="background: #<?php echo $row->parent_color; ?>;"><?php echo $row->parent_group; ?></td>
 						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-						<td class="leftalign"><?php echo $row->desc; ?></td>
+						<td class="text-left"><?php echo $row->desc; ?></td>
 						<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
 						<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
 						<td align="right"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
@@ -2544,9 +2544,9 @@ jQuery(document).ready(function(jQuery) {
 								<table style="width:100%;" class="table-striped aec-grouplist">
 									<thead>
 										<tr>
-											<th width="10%">ID</th>
+											<th>ID</th>
 											<th>Name</th>
-											<th width="1%"></th>
+											<th></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -2586,7 +2586,7 @@ jQuery(document).ready(function(jQuery) {
 		</td></tr>
 		</table>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
 				<?php if ( $row->id > 1 ) {
@@ -2626,7 +2626,7 @@ jQuery(document).ready(function(jQuery) {
 							</td>
 							<td>
 								<input type="hidden" name="micro_integrations[]" value="0" />
-								<div class="controls">
+								<div class="form-control">
 									<div class="toggleswitch">
 										<label class="toggleswitch" onclick="">
 											<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>"/>
@@ -2692,13 +2692,13 @@ jQuery(document).ready(function(jQuery) {
 			<div class="aecadminform">
 				<table class="adminlist table-striped">
 					<thead><tr>
-						<th width="1%">#</th>
-						<th width="1%"><input type="checkbox" name="toggle" value="" /></th>
-						<th width="10%" class="leftalign"><?php echo JText::_('COUPON_NAME'); ?></th>
-						<th width="10%" class="leftalign"><?php echo JText::_('COUPON_CODE'); ?></th>
-						<th width="50%" class="leftalign"><?php echo JText::_('COUPON_DESC'); ?></th>
-						<th width="1%"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
-						<th width="10%" align="center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
+						<th>#</th>
+						<th><input type="checkbox" name="toggle" value="" /></th>
+						<th class="text-left"><?php echo JText::_('COUPON_NAME'); ?></th>
+						<th class="text-left"><?php echo JText::_('COUPON_CODE'); ?></th>
+						<th class="text-left"><?php echo JText::_('COUPON_DESC'); ?></th>
+						<th><?php echo JText::_('COUPON_ACTIVE'); ?></th>
+						<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 					</tr></thead>
 					<tbody>
 						<?php foreach ( $rows as $i => $row ) { ?>
@@ -2707,7 +2707,7 @@ jQuery(document).ready(function(jQuery) {
 								<td><?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
 								<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 								<td><strong><?php echo $row->coupon_code; ?></strong></td>
-								<td class="leftalign"><?php echo $row->desc; ?></td>
+								<td class="text-left"><?php echo $row->desc; ?></td>
 								<td><?php HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
 								<td>
 									<div class="progress progress-info progress-striped">
@@ -2842,28 +2842,28 @@ jQuery(document).ready(function(jQuery) {
 			<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		</td></tr></table>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4>Micro Integrations</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 			</div>
 		</td></tr></table>
 		<?php $tabs->nextPane( 'invoices' ); ?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Invoices'); ?></h4>
 				<table class="adminlist table-striped">
 					<thead><tr>
-						<th width="10%">#</th>
-						<th width="10%"><?php echo JText::_('INVOICE_USERID'); ?></th>
-						<th align="center" width="10%"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
-						<th align="center" width="10%"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
-						<th align="center" width="10%"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
-						<th align="center" width="10%"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
-						<th align="center" width="10%"><?php echo JText::_('USERPLAN'); ?></th>
-						<th align="center" width="10%"><?php echo JText::_('INVOICE_METHOD'); ?></th>
-						<th align="center" width="10%"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
-						<th width="10%"><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
+						<th>#</th>
+						<th><?php echo JText::_('INVOICE_USERID'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
+						<th class="text-center"><?php echo JText::_('USERPLAN'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_METHOD'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
+						<th><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
 					</tr></thead>
 					<tbody>
 						<?php foreach ( $aecHTML->invoices as $i => $invoice ) { ?>
@@ -2915,17 +2915,17 @@ jQuery(document).ready(function(jQuery) {
 		<div class="aecadminform">
 		<table class="adminlist table-striped">
 			<thead><tr>
-				<th width="10%">#</th>
-				<th width="10%"><?php echo JText::_('INVOICE_USERID'); ?></th>
-				<th align="center" width="10%"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
-				<th align="center" width="10%"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
-				<th align="center" width="10%"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
-				<th align="center" width="10%"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
-				<th align="center" width="10%"><?php echo JText::_('USERPLAN'); ?></th>
-				<th align="center" width="10%"><?php echo JText::_('INVOICE_COUPONS'); ?></th>
-				<th align="center" width="10%"><?php echo JText::_('INVOICE_METHOD'); ?></th>
-				<th align="center" width="10%"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
-				<th width="10%"><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
+				<th>#</th>
+				<th><?php echo JText::_('INVOICE_USERID'); ?></th>
+				<th class="text-center"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
+				<th class="text-center"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
+				<th class="text-center"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
+				<th class="text-center"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
+				<th class="text-center"><?php echo JText::_('USERPLAN'); ?></th>
+				<th class="text-center"><?php echo JText::_('INVOICE_COUPONS'); ?></th>
+				<th class="text-center"><?php echo JText::_('INVOICE_METHOD'); ?></th>
+				<th class="text-center"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
+				<th><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
 			</tr></thead>
 			<tbody>
 				<?php foreach ( $rows as $i => $row ) { ?>
@@ -2972,7 +2972,7 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startForm();
 
 		?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_HEAD_INVOICE'); ?></h4>
 				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
@@ -3026,7 +3026,7 @@ jQuery(document).ready(function(jQuery) {
 			  			<td><?php echo $row->transaction_date; ?></td>
 						<td><?php echo $row->proc_name; ?></td>
 						<td><?php echo $row->amount; ?></td>
-						<td class="leftalign">
+						<td class="text-left">
 							<?php if ( !empty( $row->response ) ) {
 								echo '<pre class="prettyprint">'.print_r($row->response, true).'</pre>';
 							} ?>
@@ -3073,8 +3073,8 @@ jQuery(document).ready(function(jQuery) {
 		<div class="aecadminform">
 		<table class="adminlist table-striped">
 			<thead><tr>
-				<th width="30"><?php echo JText::_('AEC_CMN_ID'); ?></th>
-				<th width="120"><?php echo JText::_('AEC_CMN_DATE'); ?></th>
+				<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
+				<th><?php echo JText::_('AEC_CMN_DATE'); ?></th>
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
 				<th><?php echo JText::_('AEC_CMN_EVENT'); ?></th>
@@ -3088,10 +3088,10 @@ jQuery(document).ready(function(jQuery) {
 					<td><?php echo $row->datetime; ?></td>
 					<td><?php echo $row->notify ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
 					<td class="notice_level_<?php echo $row->level; ?>"><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $row->level ); ?>
-					<td class="leftalign"><?php echo $row->short; ?></td>
-		  			<td class="leftalign"><?php echo $row->tags; ?></td>
-					<td class="leftalign" class="aec_bigcell"><?php echo $row->event ?></td>
-					<td class="leftalign"><?php echo ( $row->params ? $row->params : JText::_('AEC_CMN_NONE') ); ?></td>
+					<td class="text-left"><?php echo $row->short; ?></td>
+		  			<td class="text-left"><?php echo $row->tags; ?></td>
+					<td class="text-left" class="aec_bigcell"><?php echo $row->event ?></td>
+					<td class="text-left"><?php echo ( $row->params ? $row->params : JText::_('AEC_CMN_NONE') ); ?></td>
 				</tr>
 			<?php } ?>
 			<tfoot>
@@ -3151,7 +3151,7 @@ jQuery(document).ready(function(jQuery) {
 			?>
 		</ul>
 
-		<table width="100%" class="aecadminform">
+		<table class="aecadminform">
 			<tr><td>
 
 		<?php
@@ -3664,7 +3664,7 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm();
 		?>
-		<table width="100%" class="aecadminform"><tr><td>
+		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 			<?php if ( !empty( $cmd ) ) { ?>
 				<h4><?php echo JText::_('Challenge'); ?></h4>
