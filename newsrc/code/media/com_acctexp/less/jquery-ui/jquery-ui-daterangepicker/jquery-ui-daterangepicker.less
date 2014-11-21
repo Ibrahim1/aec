@@ -110,8 +110,8 @@
 	line-height: normal;
 	border: 1px solid #ccc;
 	border-bottom-color: #bbb;
-	box-shadow(inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05));
-	transition(0.1s linear background-image);
+	.box-shadow("inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05)");
+	.transition(0.1s linear background-image);
 	overflow: visible;
 }
 
@@ -128,9 +128,9 @@
 	.ui-daterangepicker-prev,
 	.ui-daterangepicker-next {
 		position: absolute;
-		top: 2px; 
+		top: 2px;
 		padding: 1px;
-		&:hover, 
+		&:hover,
 		&:focus {
 			padding: 0;
 		}
