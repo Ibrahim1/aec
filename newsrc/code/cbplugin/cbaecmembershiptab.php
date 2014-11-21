@@ -51,11 +51,11 @@ class cbaecmembershipTab extends cbTabHandler
 		$html_return = ''
 		.'<table class="aeceventlog_table" style="border-collapse: collapse">'
 		.'<tr class="aeceventlog_row_header">'
-		.'<th width="30%" align="center">Plan</th>'
-		.'<th width="10%" align="center">Primary</th>'
-		.'<th width="10%" align="center">Status</th>'
-		.'<th width="10%" align="center">Started</th>'
-		.'<th width="20%" align="center">Ends</th>'
+		.'<th width="30%" class="text-center">Plan</th>'
+		.'<th width="10%" class="text-center">Primary</th>'
+		.'<th width="10%" class="text-center">Status</th>'
+		.'<th width="10%" class="text-center">Started</th>'
+		.'<th width="20%" class="text-center">Ends</th>'
 		.'</tr>';
 
 		$subscriptions	= $meta_user->getAllSubscriptions();
@@ -68,12 +68,12 @@ class cbaecmembershipTab extends cbTabHandler
 			$plan_name = ($subscr_info[$i]->name == '') ? "Excluded" : $subscr_info[$i]->name;
 
 			$html_return .= '<tr>'
-			.'<td width="30%" align="center">' . $plan_name . '</td>'
-			.'<td width="10%" align="center">' . ( $subscription->primary ? "Yes" : "No" ) . '</td>'
-			.'<td width="10%" align="center">' . $this->getIconHtml( $subscription->status ) . ' ' . $subscription->status . '</td>'
-			.'<td width="10%" align="center">' . date( $dateFormat, strtotime($subscription->signup_date) ) . '</td>';
+			.'<td width="30%" class="text-center">' . $plan_name . '</td>'
+			.'<td width="10%" class="text-center">' . ( $subscription->primary ? "Yes" : "No" ) . '</td>'
+			.'<td width="10%" class="text-center">' . $this->getIconHtml( $subscription->status ) . ' ' . $subscription->status . '</td>'
+			.'<td width="10%" class="text-center">' . date( $dateFormat, strtotime($subscription->signup_date) ) . '</td>';
 
-			$html_return .= '<td width="10%" align="center">';
+			$html_return .= '<td width="10%" class="text-center">';
 
 			if ( !empty( $subscription->lifetime ) ) {
 				$html_return .=  JText::_('AEC_ISLIFETIME');
