@@ -438,7 +438,7 @@ class aecRestrictionHelper
 					if ( count( $block ) < 2 ) {
 						echo '<div class="aec-settings-container-inline">';
 					} else {
-						echo '<div class="aec-settings-container-inline form-stacked" style="width:214px;">';
+						echo '<div class="aec-settings-container-inline">';
 					}
 
 					foreach ( $sblock as $vname ) {

@@ -345,7 +345,7 @@ class aecHTML
 				$return = '<div class="aec-settings-container">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
 			case 'userinfobox_sub_stacked':
-				$return = '<div class="aec-settings-container form-stacked">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
+				$return = '<div class="aec-settings-container">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
 			case 'fieldset':
 				$return = '<div class="controls">' . "\n"

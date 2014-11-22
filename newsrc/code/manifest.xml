@@ -95,6 +95,7 @@
 	</languages>
 	<media destination="com_acctexp" folder="media/com_acctexp">
 		<folder>css</folder>
+		<folder>fonts</folder>
 		<folder>images</folder>
 		<folder>js</folder>
 		<folder>less</folder>
