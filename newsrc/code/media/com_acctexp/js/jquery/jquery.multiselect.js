@@ -79,14 +79,14 @@
           .addClass('ui-helper-reset')
           .html(function() {
             if(o.header === true) {
-              return '<li><a class="ui-multiselect-all btn btn-success" href="#"><i class="bsicon-ok bsicon-white"></i><span>&nbsp;all</span></a></li><li><a class="ui-multiselect-none btn btn-danger" href="#"><i class="bsicon-remove bsicon-white"></i><span>&nbsp;none</span></a></li>';
+              return '<li><a class="ui-multiselect-all btn btn-success" href="#"><i class="glyphicon glyphicon-ok"></i><span>&nbsp;all</span></a></li><li><a class="ui-multiselect-none btn btn-danger" href="#"><i class="glyphicon glyphicon-remove"></i><span>&nbsp;none</span></a></li>';
             } else if(typeof o.header === "string") {
               return '<li>' + o.header + '</li>';
             } else {
               return '';
             }
           })
-          .append('<li class="ui-multiselect-close"><a href="#" class="ui-multiselect-close btn btn-primary"><i class="bsicon-remove bsicon-white"></i></a></li>')
+          .append('<li class="ui-multiselect-close"><a href="#" class="ui-multiselect-close btn btn-primary"><i class="glyphicon glyphicon-remove"></i></a></li>')
           .appendTo(header),
 
         checkboxContainer = (this.checkboxContainer = $('<ul />'))
@@ -234,7 +234,7 @@
       return value;
     },
 
-    // this exists as a separate method so that the developer 
+    // this exists as a separate method so that the developer
     // can easily override it.
     _setButtonValue: function(value) {
       this.buttonlabel.text(value);

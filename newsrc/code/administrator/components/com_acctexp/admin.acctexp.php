@@ -6357,8 +6357,8 @@ function exportData( $option, $type, $cmd=null )
 	$params['save_name']		= array( 'inputC', $pname );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div', '<div class="right-btns">' );
-	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">' . aecHTML::Icon( 'upload', true ) . '&nbsp;Load Preset</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download', true ) . '&nbsp;Save Preset</a>' );
+	$params[] = array( 'p', '<a class="btn btn-primary" onclick="javascript: submitbutton(\'loadExport' . $type . '\')" href="#">' . aecHTML::Icon( 'upload' ) . '&nbsp;Load Preset</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download' ) . '&nbsp;Save Preset</a>' );
 	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download-alt' ) . '&nbsp;Save Preset &amp; Exit</a>' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( 'div_end', '' );
@@ -6368,8 +6368,8 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'userinfobox_sub', 'Export' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
-	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result">' . aecHTML::Icon( 'eye-open', true ) . '&nbsp;Test Export</a>' );
-	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">' . aecHTML::Icon( 'file', true ) . '&nbsp;Export Now</a>' );
+	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result">' . aecHTML::Icon( 'eye-open' ) . '&nbsp;Test Export</a>' );
+	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">' . aecHTML::Icon( 'file' ) . '&nbsp;Export Now</a>' );
 	$params[] = array( '2div_end', '' );
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );

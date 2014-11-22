@@ -1602,7 +1602,7 @@ class XMLprocessor extends processor
 			$return .= $this->getStdFormVars( $request );
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn">' . aecHTML::Icon( 'shopping-cart', true ) . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn">' . aecHTML::Icon( 'shopping-cart' ) . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -2523,7 +2523,7 @@ class POSTprocessor extends processor
 			$text = JText::_('BUTTON_CHECKOUT');
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '>' . aecHTML::Icon( 'shopping-cart', true ) . $text . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '>' . aecHTML::Icon( 'shopping-cart' ) . $text . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -2553,7 +2553,7 @@ class GETprocessor extends processor
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
 
-		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '>' . aecHTML::Icon( 'shopping-cart', true ) . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
+		$return .= '<button type="submit" class="button aec-btn btn btn-primary" id="aec-checkout-btn" ' . $onclick . '>' . aecHTML::Icon( 'shopping-cart' ) . JText::_('BUTTON_CHECKOUT') . '</button>' . "\n";
 		$return .= '</form>' . "\n";
 
 		return $return;
@@ -2607,7 +2607,7 @@ class URLprocessor extends processor
 			$return .= implode( '&amp;', $vars );
 		}
 
-		$return .= '"' . $onclick . ' class="button aec-btn btn btn-primary" >' . aecHTML::Icon( 'shopping-cart', true ) . JText::_('BUTTON_CHECKOUT') . '</a>' . "\n";
+		$return .= '"' . $onclick . ' class="button aec-btn btn btn-primary" >' . aecHTML::Icon( 'shopping-cart' ) . JText::_('BUTTON_CHECKOUT') . '</a>' . "\n";
 
 		return $return;
 	}

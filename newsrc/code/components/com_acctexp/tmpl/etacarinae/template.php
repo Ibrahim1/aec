@@ -227,7 +227,7 @@ class template_etacarinae extends aecTemplate
 			highlight: function(label) {
 				jQuery(label).closest('.well').addClass('well-highlight');
 				jQuery(label).closest('.form-group').addClass('error');
-				jQuery(label).closest('.label-important').prepend('" . addslashes( aecHTML::Icon( 'ban-circle', true ) ) . "');
+				jQuery(label).closest('.label-important').prepend('" . addslashes( aecHTML::Icon( 'ban-circle' ) ) . "');
 				jQuery('#aec form button#confirmation').attr('disabled','disabled');
 			},
 			unhighlight: function(label) {

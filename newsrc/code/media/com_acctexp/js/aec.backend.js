@@ -8,7 +8,7 @@ jQuery(document).ready(function(jQuery) {
 			jQuery('.aec-navbar').addClass("navbar-hover-helper");
 			jQuery('.aec-buttons-fixed').addClass("aec-buttons-fixed-extended");
 
-			jQuery('div.navbar-fixed-top').addClass("navbar-fixed-top-override").prepend("<div class=\"head-minify btn btn-inverse\"><i class=\"icon-chevron-left icon-white bsicon-chevron-left bsicon-white\"></i></div>");
+			jQuery('div.navbar-fixed-top').addClass("navbar-fixed-top-override").prepend("<div class=\"head-minify btn btn-inverse\"><i class=\"glyphicon glyphicon-chevron-left\"></i></div>");
 
 			jQuery(".aec-navbar").on( "click", ".head-minify", function(){
 				jQuery('.head-minify').remove();
@@ -311,13 +311,13 @@ function toggleProperty(type, property, id, callerid, callerclass) {
 		classidelement = jQuery('#'+callerid+' i');
 
 	if ( property == 'default' ) {
-		classelement.addClass('bsicon-refresh');
-		classelement.removeClass('bsicon-remove bsicon-star-empty bsicon-ok bsicon-eye-open bsicon-star');
-		classelement.addClass('bsicon-rotate');
+		classelement.addClass('glyphicon-refresh');
+		classelement.removeClass('glyphicon-remove glyphicon-star-empty glyphicon-ok glyphicon-eye-open glyphicon-star');
+		classelement.addClass('glyphicon-rotate');
 	} else {
-		classidelement.addClass('bsicon-refresh');
-		classidelement.removeClass('bsicon-remove bsicon-stop bsicon-ok bsicon-eye-open bsicon-star');
-		classidelement.addClass('bsicon-rotate');
+		classidelement.addClass('glyphicon-refresh');
+		classidelement.removeClass('glyphicon-remove glyphicon-stop glyphicon-ok glyphicon-eye-open glyphicon-star');
+		classidelement.addClass('glyphicon-rotate');
 	}
 
 	if ( idelement.hasClass('btn-toggle-danger') ) {
@@ -326,7 +326,7 @@ function toggleProperty(type, property, id, callerid, callerclass) {
 		idelement.removeClass('btn-toggle-success').addClass('btn-toggle-warning');
 	}
 
-	classidelement.addClass('bsicon-refresh').removeClass('bsicon-eye-open');
+	classidelement.addClass('glyphicon-refresh').removeClass('glyphicon-eye-open');
 
 	jQuery.post("index.php?option=com_acctexp&task=toggleAjax&type="+type+"&property="+property+"&id="+id , {queryString: ""}, function(data) {
 		idelement.removeClass('btn-toggle-warning');
@@ -335,19 +335,19 @@ function toggleProperty(type, property, id, callerid, callerclass) {
 			idelement.addClass('btn-toggle-success');
 
 			if ( property == 'default' ) {
-				classidelement.addClass('bsicon-star').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				classidelement.addClass('glyphicon-star').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 				idelement.attr('disabled','disabled').addClass('ui-disabled');
-				jQuery('.'+callerclass+':not(#'+callerid+') i').addClass('bsicon-star-empty').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				jQuery('.'+callerclass+':not(#'+callerid+') i').addClass('glyphicon-star-empty').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 				jQuery('.'+callerclass+':not(#'+callerid+')').removeAttr('disabled').removeClass('ui-disabled').removeClass('btn-toggle-success').addClass('btn-toggle-danger');
 			} else if ( property == 'visible' ) {
-				classidelement.addClass('bsicon-eye-open').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				classidelement.addClass('glyphicon-eye-open').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 			} else {
-				classidelement.addClass('bsicon-ok').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+				classidelement.addClass('glyphicon-ok').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 			}
 		} else {
 			idelement.addClass('btn-toggle-danger');
 
-			classidelement.addClass('bsicon-remove').removeClass('bsicon-refresh').removeClass('bsicon-rotate');
+			classidelement.addClass('glyphicon-remove').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 		}
 	});
 }
@@ -358,13 +358,13 @@ function addGroup(type, callerid) {
 
 	if ( group > 0 ) {
 		jQuery('#'+callerid).attr('disabled','disabled');
-		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
+		jQuery('#'+callerid+' i').addClass('glyphicon-rotate');
 
 		jQuery.post("index.php?option=com_acctexp&task=addGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
 			if ( data == "0" ) {
 
 			} else if ( data.length < 500 ) {
-				jQuery('#'+callerid+' i').removeClass('bsicon-rotate');
+				jQuery('#'+callerid+' i').removeClass('glyphicon-rotate');
 
 				jQuery('select#add_group option[value=\''+group+'\']').attr('disabled','disabled');
 
@@ -380,13 +380,13 @@ function addGroup(type, callerid) {
 function removeGroup(type, group, callerid) {
 	if ( group > 0 ) {
 		jQuery('#'+callerid).attr('disabled','disabled');
-		jQuery('#'+callerid+' i').addClass('bsicon-rotate');
+		jQuery('#'+callerid+' i').addClass('glyphicon-rotate');
 
 		id = jQuery('input:hidden[name=id]').val();
 
 		jQuery.post("index.php?option=com_acctexp&task=removeGroupAjax&type="+type+"&group="+group+"&id="+id , {queryString: ""}, function(data) {
 			if ( data == "1" ) {
-				jQuery('#'+callerid+' i').removeAttr('disabled').removeClass('bsicon-rotate');
+				jQuery('#'+callerid+' i').removeAttr('disabled').removeClass('glyphicon-rotate');
 
 				jQuery('select#add_group option[value=\''+group+'\']').removeAttr('disabled');
 
