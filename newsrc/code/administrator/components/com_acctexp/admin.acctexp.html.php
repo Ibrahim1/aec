@@ -2787,24 +2787,24 @@ jQuery(document).ready(function(jQuery) {
 			<div style="position:relative;float:left;width:100%;">
 				<div class="aec-settings-container">
 					<h4>Date &amp; User Restrictions</h4>
-					<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+					<div class="aec-settings-container-inline">
 						<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'has_expiration' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
 					</div>
-					<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+					<div class="aec-settings-container-inline">
 						<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
 					</div>
-					<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+					<div class="aec-settings-container-inline">
 						<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
 					</div>
-					<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+					<div class="aec-settings-container-inline">
 						<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
 						<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
@@ -2816,24 +2816,24 @@ jQuery(document).ready(function(jQuery) {
 		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">
 				<h4>Restrict Combintations</h4>
-				<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+				<div class="aec-settings-container-inline">
 					<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'allow_trial_depend_subscr' ); ?>
 				</div>
-				<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+				<div class="aec-settings-container-inline">
 					<?php echo $aecHTML->createSettingsParticle( 'restrict_combination' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'bad_combinations' ); ?>
 				</div>
-				<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+				<div class="aec-settings-container-inline">
 					<?php echo $aecHTML->createSettingsParticle( 'allow_combination' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'good_combinations' ); ?>
 				</div>
-				<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+				<div class="aec-settings-container-inline">
 					<?php echo $aecHTML->createSettingsParticle( 'restrict_combination_cart' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'bad_combinations_cart' ); ?>
 				</div>
-				<div class="aec-settings-container-inline form-stacked" style="width:214px;">
+				<div class="aec-settings-container-inline">
 					<?php echo $aecHTML->createSettingsParticle( 'allow_combination_cart' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'good_combinations_cart' ); ?>
 				</div>
@@ -3471,7 +3471,7 @@ jQuery(document).ready(function(jQuery) {
 			<tr>
 				<td>
 					<div class="userinfobox">
-						<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec-settings-container form-stacked">
+						<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec-settings-container">
 									<?php
 									if ( $aecHTML->done ) {
 										echo '<p>Import ran through successfully.</p>';
