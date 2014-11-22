@@ -272,7 +272,7 @@ class HTML_myCommon
 			. ' href="#"'
 			. ' rel="tooltip"'
 			. ' data-original-title="' . ( $fulltext ? '' : $button['text'] ) . '">'
-			. aecHTML::Icon( $button['icon'], true ) . ( $fulltext ? ' ' . $button['text'] : '' )
+			. aecHTML::Icon( $button['icon'] ) . ( $fulltext ? ' ' . $button['text'] : '' )
 			. '</a>';
 	}
 
