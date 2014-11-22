@@ -24,6 +24,6 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 		}
 		?>
 		<input type="hidden" name="userid" value="<?php echo $InvoiceFactory->metaUser->userid ?>" />
-		<button type="submit" class="button btn btn-success"><?php echo aecHTML::Icon( 'ok', true ); ?><?php echo JText::_('BUTTON_CONFIRM') ?></button>
+		<button type="submit" class="button btn btn-success"><?php echo aecHTML::Icon( 'ok' ); ?><?php echo JText::_('BUTTON_CONFIRM') ?></button>
 	</div>
 </div>

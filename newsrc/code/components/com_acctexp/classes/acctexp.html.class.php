@@ -426,20 +426,14 @@ class aecHTML
 		echo $this->returnFull( $notooltip );
 	}
 
-	static function Icon( $icon='fire', $white=false, $addin=null )
+	static function Icon( $icon='fire', $addin=null )
 	{
-		return '<i class="bsicon-'. $icon . ( $white ? ' bsicon-white' : '' ) . $addin .'"></i>';
+		return '<i class="glyphicon glyphicon-'. $icon . $addin .'"></i>';
 	}
 
 	static function Button( $icon='fire', $text='', $style='', $link='', $js='' )
 	{
-		$white = true;
-
-		if ( empty( $style ) ) {
-			$white = false;
-		} else {
-			$style = ' btn-'.$style;
-		}
+		$style = ' btn-' . $style;
 
 		if ( empty( $link ) ) {
 			$link = '#';
@@ -449,7 +443,7 @@ class aecHTML
 			$js = 'onclick="javascript: submitbutton(\''.$js.'\')"';
 		}
 
-		return '<a data-original-title="'.JText::_($text).'" rel="tooltip" href="'.$link.'"'.$js.' class="btn'.$style.'">'.aecHTML::Icon( $icon, $white ).'</a>';
+		return '<a data-original-title="'.JText::_($text).'" rel="tooltip" href="'.$link.'"'.$js.' class="btn'.$style.'">'.aecHTML::Icon( $icon ).'</a>';
 	}
 
 }

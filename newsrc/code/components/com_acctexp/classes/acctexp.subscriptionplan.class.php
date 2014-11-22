@@ -168,7 +168,7 @@ class SubscriptionPlanList
 					'option' => 'com_acctexp',
 					'task' => 'addtocart',
 					'class' => 'btn btn-processor',
-					'content' => aecHTML::Icon( 'plus', false, ' narrow' ) . JText::_('AEC_BTN_ADD_TO_CART'),
+					'content' => aecHTML::Icon( 'plus', ' narrow' ) . JText::_('AEC_BTN_ADD_TO_CART'),
 					'returngroup' => $return,
 					)
 			);

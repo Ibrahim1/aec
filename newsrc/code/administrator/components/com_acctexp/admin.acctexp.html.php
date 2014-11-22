@@ -294,11 +294,11 @@ class HTML_myCommon
 
 		if ( ( $property == 'default' ) && $state ) {
 			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-toggle <?php echo $csscl;?> ui-disabled" id="<?php echo $cssid;?>" href="#" disabled="disabled" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
-				<?php echo aecHTML::Icon( $icons[$state], true ); ?>
+				<?php echo aecHTML::Icon( $icons[$state] ); ?>
 			</a><?php
 		} else {
 			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-toggle <?php echo $csscl;?>" id="<?php echo $cssid;?>" href="#" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
-				<?php echo aecHTML::Icon( $icons[$state], true ); ?>
+				<?php echo aecHTML::Icon( $icons[$state] ); ?>
 			</a><?php
 		}
 	}
@@ -689,7 +689,7 @@ jQuery(document).ready(function(jQuery) {
 						?>
 					</tbody>
 					<tfoot>
-						<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'plus', true ); ?> Add Invoice</a></td></tr>
+						<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'plus' ); ?> Add Invoice</a></td></tr>
 					</tfoot>
 				</table>
 			</div>
@@ -837,7 +837,7 @@ jQuery(document).ready(function(jQuery) {
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
 				<?php if ( !empty( $notices ) ) { ?>
-					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" data-remote="index.php?option=com_acctexp&amp;task=noticesModal" class="toolbar-notify"><?php echo aecHTML::Icon( 'envelope', true ); ?> <?php echo $notices ?></a>
+					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" data-remote="index.php?option=com_acctexp&amp;task=noticesModal" class="toolbar-notify"><?php echo aecHTML::Icon( 'envelope' ); ?> <?php echo $notices ?></a>
 				<?php } ?>
 				<ul class="nav">
 				<?php foreach ( $menu as $mid => $m ) { ?>
@@ -979,7 +979,7 @@ jQuery(document).ready(function(jQuery) {
 					</tr>
 					<tr>
 						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-left', false, ' diorama-icon-w' ); ?></div></td>
+						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-left', ' diorama-icon-w' ); ?></div></td>
 						<td><div class="cell-wrapper"><div class="dioarama-corner-w-s"></div></div></td>
 						<td></td>
 						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ) ?></div></td>
@@ -993,43 +993,43 @@ jQuery(document).ready(function(jQuery) {
 						<td></td>
 					</tr>
 					<tr>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', false, ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
 						<td></td>
 						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div></div></td>
 						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', false, ' diorama-icon-s' ); ?></div></td>
+						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
 						<td colspan="3"></td>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', false, ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
 						<td></td>
 						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', false, ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
 					</tr>
 					<tr>
 						<td><div class="cell-wrapper"><div class="dioarama-corner-n-s-f"></div></div></td>
 						<td></td>
 						<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', false, ' diorama-icon-e' ); ?></div></td>
+						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
 						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', false, ' diorama-icon-e' ); ?></div></td>
+						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
 						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', false, ' diorama-icon-e' ); ?></div></td>
+						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
 						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'history', 'history', JText::_('AEC_CENTR_M_VIEW_HISTORY') ) ?></div></td>
 						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', false, ' diorama-icon-e' ); ?></div></td>
+						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
 						<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showActive', 'active', JText::_('Members') ) ?></div></td>
 						<td></td>
 					</tr>
 					<tr>
 						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s-f"></div></div></td>
 						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', false, ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
 						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', false, ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
 						<td colspan="3"></td>
-						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', false, ' diorama-icon-s' ); ?></div></td>
+						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
 						<td></td>
 						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', false, ' diorama-icon-s' ); ?></div></td>
+						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
 					</tr>
 					<tr>
 						<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ) ?></div></td>
@@ -1291,7 +1291,7 @@ jQuery(document).ready(function(jQuery) {
 			<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
 			<p>
 				<a href="#" class="btn btn-small" onclick="readNotices()"><?php echo aecHTML::Icon( 'ok' ); ?> <?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a>
-				<a href="index.php?option=com_acctexp&amp;task=eventlog" class="btn btn-success btn-small pull-right" onclick="readNotices()"><?php echo JText::_('Go to the Eventlog'); ?><?php echo aecHTML::Icon( 'chevron-right', true ); ?></a>
+				<a href="index.php?option=com_acctexp&amp;task=eventlog" class="btn btn-success btn-small pull-right" onclick="readNotices()"><?php echo JText::_('Go to the Eventlog'); ?><?php echo aecHTML::Icon( 'chevron-right' ); ?></a>
 			</p>
 			<div id="aec-alertlist">
 				<?php
@@ -2176,7 +2176,7 @@ jQuery(document).ready(function(jQuery) {
 									<tfoot>
 										<tr>
 											<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus', true ); ?></a></td>
+											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a></td>
 										</tr>
 									</tfoot>
 								</table>
@@ -2429,7 +2429,7 @@ jQuery(document).ready(function(jQuery) {
 		<tr id="row-group-<?php echo $group['id'];?>">
 			<td class="text-center" style="background: #<?php echo $group['color']; ?>;"><?php echo $group['group']; ?></td>
 			<td><?php echo $group['name']; ?></td>
-			<td><a class="btn btn-danger" id="removegroup-btn-<?php echo $group['id'];?>" onClick="removeGroup('<?php echo $type;?>','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove', true ); ?></a></td>
+			<td><a class="btn btn-danger" id="removegroup-btn-<?php echo $group['id'];?>" onClick="removeGroup('<?php echo $type;?>','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove' ); ?></a></td>
 		</tr>
 	<?php
 	}
@@ -2558,7 +2558,7 @@ jQuery(document).ready(function(jQuery) {
 									<tfoot>
 										<tr>
 											<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('group','addgroup-btn')"><?php echo aecHTML::Icon( 'plus', true ); ?></a></td>
+											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('group','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a></td>
 										</tr>
 									</tfoot>
 								</table>
@@ -3671,7 +3671,7 @@ jQuery(document).ready(function(jQuery) {
 			<?php if ( is_array( $result ) ) { ?>
 				<div id="aec-toolbox-list">
 				<?php foreach ( $result as $x => $litem ) {
-					echo '<a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: 10px;">' . aecHTML::Icon( 'cog', true ) . ' Use</a>';
+					echo '<a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: 10px;">' . aecHTML::Icon( 'cog' ) . ' Use</a>';
 					echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
 					echo '<hr />';
 				} ?>

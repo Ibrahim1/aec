@@ -39,9 +39,9 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' ) ?>
 					<tr>
 						<td></td>
 						<td></td>
-						<td class="center-cell"><button type="submit" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'refresh', true, ' btn-icononly' ); ?></button></td>
+						<td class="center-cell"><button type="submit" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'refresh', ' btn-icononly' ); ?></button></td>
 						<td></td>
-						<td class="center-cell"><div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), aecHTML::Icon( 'trash', true, ' narrow' ), 'btn btn-danger btn-icononly' ) ?></div></td>
+						<td class="center-cell"><div id="clear-button"><?php echo $tmpl->lnk( array('task' => 'clearCart'), aecHTML::Icon( 'trash', ' narrow' ), 'btn btn-danger btn-icononly' ) ?></div></td>
 					</tr>
 					<tr>
 						<td><strong><?php echo JText::_('CART_ROW_TOTAL') ?></strong></td>
