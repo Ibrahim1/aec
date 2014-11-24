@@ -2004,15 +2004,37 @@ jQuery(document).ready(function(jQuery) {
 					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
 				</div>
 			</div>
+
+		<?php
+
+		$list = new aecList();
+		$list->head(
+			array(
+				array(aecList::LINE_COUNTER ),
+				array(aecList::LINE_REGULAR, 'AEC_CMN_ID'),
+				array(aecList::CHECKBOX ),
+				array(aecList::LINE_REGULAR, 'PAYPLAN_GROUP', 'text-left'),
+				array(aecList::LINE_REGULAR, 'PAYPLAN_NAME'),
+				array(aecList::LINE_REGULAR, 'PAYPLAN_DESC'),
+				array(aecList::LINE_REGULAR, 'PAYPLAN_ACTIVE'),
+				array(aecList::LINE_REGULAR, 'PAYPLAN_VISIBLE'),
+				array(aecList::LINE_REGULAR, 'PAYPLAN_REORDER'),
+				array(aecList::LINE_REGULAR, JText::_('PAYPLAN_EXPIREDCOUNT') . ' | ' . JText::_('Active'), 'text-center'),
+				array(aecList::LINE_REGULAR, 'PAYPLAN_TOTALCOUNT', 'text-center'),
+			)
+		)
+
+		?>
+
 			<div class="aecadminform">
-			<table class="adminlist table-striped">
+			<table class="adminlist table table-striped table-hover">
 				<thead><tr>
 					<th>#</th>
 					<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
 					<th><input type="checkbox" name="toggle" value="" /></th>
 					<th class="text-left"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
 					<th><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-					<th ><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+					<th><?php echo JText::_('PAYPLAN_DESC'); ?></th>
 					<th><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
 					<th><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
 					<th><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
