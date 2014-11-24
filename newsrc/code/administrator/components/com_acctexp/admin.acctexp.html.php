@@ -804,7 +804,7 @@ jQuery(document).ready(function(jQuery) {
 		if ( $hideMenu ) {
 			$hideMenu = '&amp;hidemainmenu=1';
 		} ?>
-		<div class="btn">
+		<div class="btn btn-default">
 			<a href="<?php echo $link . $hideMenu; ?>">
 				<?php HTML_myCommon::getSymbol( $image ); ?>
 				<span><?php echo $text; ?></span>
