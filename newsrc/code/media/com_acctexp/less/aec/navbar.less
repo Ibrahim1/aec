@@ -12,7 +12,7 @@
 		float: left;
 		display: box;
 		color: #fff;
-		padding: 12px 0;
+		padding: 16px 0;
 		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 		.animation(text-shadow-pulsate 2s infinite);
 		&:hover {
@@ -28,7 +28,7 @@
 				color: #f9f9f9;
 				font-size: 110%;
 				font-weight: bold;
-				padding: 13px 15px 10px;
+				padding: 17px 15px 10px;
 			}
 			> .dropdown-menu {
 				&:after,
@@ -40,6 +40,9 @@
 		> ul, .nav { padding-left: 10px; }
 		> ul a, .nav a { outline: 0 none !important; }
 	}
+	input {
+		height: 32px;
+	}
 }
 
 .nav-pills a {
@@ -48,12 +51,10 @@
 }
 
 .aec-navbar.navbar-inverse {
-	.navbar-inner {
-		background: #c31313;
-		border: none;
-		.box-shadow("0 1px 3px rgba(0,0,0,.065), inset 0 -1px 5px rgba(1, 1, 1, 0.4)");
-		border-radius: 0 0 10px 10px;
-	}
+	background: #c31313;
+	border: none;
+	.box-shadow("0 1px 3px rgba(0,0,0,.065), inset 0 -1px 5px rgba(1, 1, 1, 0.4)");
+	border-radius: 0 0 10px 10px;
 	.nav li.dropdown {
 		.open,
 		.active,
