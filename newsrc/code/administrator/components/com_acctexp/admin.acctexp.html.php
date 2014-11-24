@@ -1118,49 +1118,51 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startCommon();
 		?>
 		<div class="container">
-			<div style="background: #000;" class="col-sm-8">
-				<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_gfx_1_0.jpg" alt=""/>
-				<div class="installnote">
-					<h1>Leading Programmer</h1>
-					<p>David Deutsch</p>
-					<h1>Past Contributing Programmers</h1>
-					<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Calum Polwart, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong, William Jacobs, Muriel Grabert</p>
-					<h1>Graphics</h1>
-					<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2013 David 'skOre' Deutsch unless otherwise noted.</p>
-					<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
-					<h1>Libraries</h1>
-					<p>The following libraries are used, either in their original or in a modified form:</p>
-					<p>Furthermore, these libraries are used in one place or another: <a href="http://getbootstrap.com">bootstrap</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://colorbrewer2.org">colorbrewer</a>, <a href="https://github.com/shutterstock/rickshaw">rickshaw</a>, <a href="http://www.jquery.com">jQuery &amp; jQuery UI</a>, <a href="http://www.erichynds.com/jquery/jquery-ui-multiselect-widget">erichynds jQuery UI MultiSelect</a>, <a href="http://www.erichynds.com/jquery/jquery-ui-multiselect-widget">erichynds jQuery UI MultiSelect</a>,<a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>, <a href="http://code.google.com/p/parsecsv-for-php">parsecsv library by Jim Myhrberg</a>.</p>
-					<h1>Eternal Gratitude</h1>
-					<p>These are the people without whom I could not have kept up the pace:</p>
-					<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>
-					<h1>Beta-Testers</h1>
-					<p>People who have helped to check releases before they went out:</p>
-					<p>Calum 'polc1410' Polwart, Aleksey Pikulik, Alex aka Sirooff</p>
-					<h1>Contributors</h1>
-					<p>People who have helped on our code by submitting additions and patches at one place or another:</p>
-					<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design, Carsten Engel, Joel Bassett, Emmanuel Danan, Rebekah Pitt, Daniel Lowhorn, berner, Mitchell Mink, Joshua Tan, Casey Eyring, Thailo van Ree, David Henry, Matthew Weeks, Francois Gagnon, Haris Agic, Pete Lindley, John Greenbury, P.Gasiorowski, Vijay Jawalapersad, Jan Payman Ameli</p>
-					<h1>Translators</h1>
-					<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on Dutch translation), anderscarlen (Swedish translation), David Mara (Czech translation), Francois Gagnon (French translation), Ronny Buelund (Danish translation), Alexandros Seitaridis (Greek translation), Kristian from JOKR Solutions (Swedish translation), Masato Sato (Japanese translation), Christian Trujillo (Spanish Translation), Timea Rataj &amp; Tamas Kepesi &amp; Gabor Mag (Hungarian Translation), Waldemar Taube (Russian Translation)</p>
-					<p>Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky</p>
-				</div>
-				<div style="width: 100%; height: 60px;"></div>
-			</div>
-			<div class="col-sm-4">
-				<div class="text-center">
-					<br />
-					<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
-					<br /><br />
-					<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION ); ?></p>
-					<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
-					<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
-					<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
-						<p>If you use AEC, please post a rating and a review<br />at the Joomla! Extensions Directory:<br /><br /><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><?php echo aecHTML::Icon( 'heart' ); ?>&nbsp;Go there now</a></p>
+			<div class="row">
+				<div style="background: #000;" class="col-sm-8">
+					<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_gfx_1_0.jpg" alt=""/>
+					<div class="installnote">
+						<h1>Leading Programmer</h1>
+						<p>David Deutsch</p>
+						<h1>Past Contributing Programmers</h1>
+						<p>Helder 'hlblog' Garcia (started the first versions of AEC), Michael 'mic' Pagler, Calum Polwart, Steven 'corephp' Pignataro, Ben 'Slinky' Ingram, Charles 'Slydder' Williams, Mati 'mtk' Kochen, Ethan 'ethanchai' Chai Voon Chong, William Jacobs, Muriel Grabert</p>
+						<h1>Graphics</h1>
+						<p>All layout and graphics design as well as images are <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">CC-BY-NC-SA 3.0</a> 2006-2013 David 'skOre' Deutsch unless otherwise noted.</p>
+						<p>Trademarks, Logos and other trade signs are property of their respective owners.</p>
+						<h1>Libraries</h1>
+						<p>The following libraries are used, either in their original or in a modified form:</p>
+						<p>Furthermore, these libraries are used in one place or another: <a href="http://getbootstrap.com">bootstrap</a>, <a href="http://mbostock.github.com/d3/">d3</a>, <a href="http://colorbrewer2.org">colorbrewer</a>, <a href="https://github.com/shutterstock/rickshaw">rickshaw</a>, <a href="http://www.jquery.com">jQuery &amp; jQuery UI</a>, <a href="http://www.erichynds.com/jquery/jquery-ui-multiselect-widget">erichynds jQuery UI MultiSelect</a>, <a href="http://www.erichynds.com/jquery/jquery-ui-multiselect-widget">erichynds jQuery UI MultiSelect</a>,<a href="http://sourceforge.net/projects/nusoap">nusoap</a>, <a href="http://recaptcha.net/">recaptcha</a>, <a href="http://code.google.com/p/parsecsv-for-php">parsecsv library by Jim Myhrberg</a>.</p>
+						<h1>Eternal Gratitude</h1>
+						<p>These are the people without whom I could not have kept up the pace:</p>
+						<p>William 'Jake' Jacobs, Aaron Varga, Calum 'polc1410' Polwart</p>
+						<h1>Beta-Testers</h1>
+						<p>People who have helped to check releases before they went out:</p>
+						<p>Calum 'polc1410' Polwart, Aleksey Pikulik, Alex aka Sirooff</p>
+						<h1>Contributors</h1>
+						<p>People who have helped on our code by submitting additions and patches at one place or another:</p>
+						<p>Kirk Lampert (who found lots and lots of rather embarrassing bugs), Rasmus Dahl-Sorensen, Paul van Jaarsveld, Tobias Bornakke, Levi Carter, Joel Bassett, Emmanuel Danan, Casey Eyring, Dioscouri Design, Carsten Engel, Joel Bassett, Emmanuel Danan, Rebekah Pitt, Daniel Lowhorn, berner, Mitchell Mink, Joshua Tan, Casey Eyring, Thailo van Ree, David Henry, Matthew Weeks, Francois Gagnon, Haris Agic, Pete Lindley, John Greenbury, P.Gasiorowski, Vijay Jawalapersad, Jan Payman Ameli</p>
+						<h1>Translators</h1>
+						<p>Jarno en Mark Baselier from Q5 Grafisch Webdesign (for help on Dutch translation), anderscarlen (Swedish translation), David Mara (Czech translation), Francois Gagnon (French translation), Ronny Buelund (Danish translation), Alexandros Seitaridis (Greek translation), Kristian from JOKR Solutions (Swedish translation), Masato Sato (Japanese translation), Christian Trujillo (Spanish Translation), Timea Rataj &amp; Tamas Kepesi &amp; Gabor Mag (Hungarian Translation), Waldemar Taube (Russian Translation)</p>
+						<p>Traduction fran&ccedil;aise par Garstud, Johnpoulain, Cobayes, cb75ter, Sharky</p>
 					</div>
-					<div style="margin: 0 auto;text-align:center;">
-						<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx.org" /></a>
-						<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
-						<p><?php echo JText::_('AEC_FOOT_TX_SUBSCRIBE'); ?></p>
+					<div style="width: 100%; height: 60px;"></div>
+				</div>
+				<div class="col-sm-4">
+					<div class="text-center">
+						<br />
+						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="" /></p>
+						<br /><br />
+						<p><strong>Account Expiration Control</strong> Component - Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION ); ?></p>
+						<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
+						<p><?php echo JText::_('AEC_FOOT_TX_CHOOSING'); ?></p>
+						<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
+							<p>If you use AEC, please post a rating and a review<br />at the Joomla! Extensions Directory:<br /><br /><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><?php echo aecHTML::Icon( 'heart' ); ?>&nbsp;Go there now</a></p>
+						</div>
+						<div style="margin: 0 auto;text-align:center;">
+							<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx.org" /></a>
+							<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
+							<p><?php echo JText::_('AEC_FOOT_TX_SUBSCRIBE'); ?></p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -3720,7 +3722,7 @@ class bsPaneTabs
 		$this->tabs_started = 0;
 	}
 
-	function startTabs() { echo '<ul class="nav nav-pills">'; }
+	function startTabs() { echo '<div role="tabpanel"><ul class="nav nav-tabs">'; }
 	function endTabs() { echo '</ul>'; }
 	function newTab( $handle, $title, $current=false, $disabled=false ) {
 		$classes = array();
@@ -3733,15 +3735,15 @@ class bsPaneTabs
 			$classes[] = 'disabled';
 		}
 
-		echo '<li' . ( !empty( $classes ) ? ' class="' . implode( ' ', $classes ) . '"' : '' ) . '><a href="#' . $handle . '" data-toggle="pill">' . $title . '</a></li>';
+		echo '<li' . ( !empty( $classes ) ? ' class="' . implode( ' ', $classes ) . '"' : '' ) . '><a href="#' . $handle . '" data-toggle="tab" aria-controls="' . $handle. '" role="tab">' . $title . '</a></li>';
 
 		$this->tabs_started++;
 	}
 
 	function startPanes() { echo '<div class="tab-content">'; }
-	function endPanes() { if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) { $this->endPane(); } echo '</div>'; }
+	function endPanes() { if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) { $this->endPane(); } echo '</div></div>'; }
 
-	function startPane( $id, $current=false ) { echo '<div id="' . $id . '" class="tab-pane' . ( $current ? ' active' : '' ) . '">'; $this->panes_started++; }
+	function startPane( $id, $current=false ) { echo '<div id="' . $id . '" role="tabpanel" class="tab-pane' . ( $current ? ' active' : '' ) . '">'; $this->panes_started++; }
 	function endPane() { echo "</div>"; $this->panes_ended++; }
 	function nextPane( $pane ) { if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) { $this->endPane(); } $this->startPane( $pane, ( $this->panes_started == 0 ) ); }
 
