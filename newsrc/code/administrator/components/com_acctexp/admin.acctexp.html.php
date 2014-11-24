@@ -144,7 +144,7 @@ class HTML_myCommon
 
 	static function getSymbol( $name )
 	{
-		?><div class="glyphicon glyphicon-<?php echo $name; ?>"></div><?php
+		?><div class="aec-symbol aec-symbol-<?php echo $name; ?>"></div><?php
 	}
 
 	static function getButtons( $buttons, $object )
@@ -965,147 +965,151 @@ jQuery(document).ready(function(jQuery) {
 
 		$linkroot = "index.php?option=com_acctexp&amp;task=";
 		?>
-		<div id="aec-center" class="col-sm-12">
-			<div class="aec-center-block col-sm-8">
-				<table class="diorama">
-					<tr>
-						<td colspan="13">
-							<h2>Welcome to AEC!</h2>
-							<hr class="topslim" />
-							<p>So here is how this works:</p>
-						</td>
-					</tr>
-					<tr>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-left', ' diorama-icon-w' ); ?></div></td>
-						<td><div class="cell-wrapper"><div class="dioarama-corner-w-s"></div></div></td>
-						<td></td>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ) ?></div></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'stats', 'stats', JText::_('AEC_CENTR_STATS') ) ?></div></td>
-						<td></td>
-						<td></td>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ) ?></div></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
-						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div></div></td>
-						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
-						<td colspan="3"></td>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
-						<td></td>
-						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
-					</tr>
-					<tr>
-						<td><div class="cell-wrapper"><div class="dioarama-corner-n-s-f"></div></div></td>
-						<td></td>
-						<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'history', 'history', JText::_('AEC_CENTR_M_VIEW_HISTORY') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
-						<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showActive', 'active', JText::_('Members') ) ?></div></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s-f"></div></div></td>
-						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
-						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
-						<td colspan="3"></td>
-						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
-						<td></td>
-						<td></td>
-						<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
-					</tr>
-					<tr>
-						<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ) ?></div></td>
-						<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
-						<td><div class="cell-wrapper"><div class="dioarama-corner-e-n"></div></div></td>
-						<td></td>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ) ?></div></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ) ?></div></td>
-						<td></td>
-						<td></td>
-						<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ) ?></div></td>
-						<td></td>
-					</tr>
-					<tr><td colspan="12"></td></tr>
-					<tr>
-						<td colspan="3" style="vertical-align: top; padding-top: 12px;">
-							<h6>Payment Plans</h6>
-							<p>In AEC, what you sell to your users is called <strong>Payment Plans</strong>.<br />You can put them into <strong>Plans Groups</strong> for easy access and administration.</p><hr /><p>Both plans and plan groups can have <strong>Micro Integrations</strong> attached, which are pretty much like joomla plugins for your memberships, just more versatile.</p>
-						</td>
-						<td></td>
-						<td colspan="3" style="vertical-align: top; padding-top: 12px;">
-							<h6>Invoices &amp; Payment</h6>
-							<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it - during registration, or afterwards. That invoice can then be paid using a <strong>Payment Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.<br />If a user has no membership record in AEC, the account shows up under <strong>Non Members</strong>.</p>
-						</td>
-						<td></td>
-						<td colspan="4" style="vertical-align: top; padding-top: 12px;">
-							<h6>Transactions &amp; Memberships</h6>
-							<p>Successful <strong>Transactions</strong> apply memberships to users. You can look them up in the list or as <strong>Statistics</strong>. Or you can <strong>Export</strong> them.</p><hr /><p>Likewise, you can track <strong>Members</strong> and modify their accounts or <strong>Export</strong> them as well.<br />If a member should not be subject to expiration of their account, you can <strong>exclude</strong> them from expiring.</p>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div class="aec-center-block aec-center-block-half col-sm-4">
-				<h2>Template &amp; Settings</h2>
-				<hr class="topslim" />
-				<div>
-					<?php HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
-					<p>Change the way AEC behaves.</p>
+		<div class="container">
+			<div class="row">
+				<div id="aec-center">
+					<div class="aec-center-block col-sm-8">
+						<table class="diorama">
+							<tr>
+								<td colspan="13">
+									<h2>Welcome to AEC!</h2>
+									<hr class="topslim" />
+									<p>So here is how this works:</p>
+								</td>
+							</tr>
+							<tr>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showItemGroups', 'itemgroups', JText::_('AEC_CENTR_GROUPS') ) ?></div></td>
+								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-left', ' diorama-icon-w' ); ?></div></td>
+								<td><div class="cell-wrapper"><div class="dioarama-corner-w-s"></div></div></td>
+								<td></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ) ?></div></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'stats', 'stats', JText::_('AEC_CENTR_STATS') ) ?></div></td>
+								<td></td>
+								<td></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showExcluded', 'excluded', JText::_('AEC_CENTR_EXCLUDED') ) ?></div></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+								<td></td>
+								<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div></div></td>
+								<td></td>
+								<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
+								<td colspan="3"></td>
+								<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+								<td></td>
+								<td></td>
+								<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+							</tr>
+							<tr>
+								<td><div class="cell-wrapper"><div class="dioarama-corner-n-s-f"></div></div></td>
+								<td></td>
+								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showSubscriptionPlans', 'plans', JText::_('AEC_CENTR_PLANS') ) ?></div></td>
+								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ) ?></div></td>
+								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showProcessors', 'processors', JText::_('AEC_CENTR_PROCESSORS') ) ?></div></td>
+								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'history', 'history', JText::_('AEC_CENTR_M_VIEW_HISTORY') ) ?></div></td>
+								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
+								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div><?php echo aecHTML::Icon( 'chevron-right', ' diorama-icon-e' ); ?></div></td>
+								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showActive', 'active', JText::_('Members') ) ?></div></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s-f"></div></div></td>
+								<td></td>
+								<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+								<td></td>
+								<td><div class="cell-wrapper-slim-bar"><?php echo aecHTML::Icon( 'chevron-up', ' diorama-icon-n' ); ?><div class="dioarama-corner-n-s"></div></div></td>
+								<td colspan="3"></td>
+								<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
+								<td></td>
+								<td></td>
+								<td><div class="cell-wrapper-slim-bar"><div class="dioarama-corner-n-s"></div><?php echo aecHTML::Icon( 'chevron-down', ' diorama-icon-s' ); ?></div></td>
+							</tr>
+							<tr>
+								<td class="important"><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showMicroIntegrations', 'microintegrations', JText::_('AEC_CENTR_M_INTEGRATION') ) ?></div></td>
+								<td><div class="cell-wrapper-slim"><div class="dioarama-corner-w-e"></div></div></td>
+								<td><div class="cell-wrapper"><div class="dioarama-corner-e-n"></div></div></td>
+								<td></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') ) ?></div></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'exportsales', 'export', JText::_('AEC_CENTR_EXPORT_SALES') ) ?></div></td>
+								<td></td>
+								<td></td>
+								<td><div class="cell-wrapper"><?php HTML_AcctExp::quickiconButton( $linkroot.'exportmembers', 'export', JText::_('AEC_CENTR_EXPORT_MEMBERS') ) ?></div></td>
+								<td></td>
+							</tr>
+							<tr><td colspan="12"></td></tr>
+							<tr>
+								<td colspan="3" style="vertical-align: top; padding-top: 12px;">
+									<h6>Payment Plans</h6>
+									<p>In AEC, what you sell to your users is called <strong>Payment Plans</strong>.<br />You can put them into <strong>Plans Groups</strong> for easy access and administration.</p><hr /><p>Both plans and plan groups can have <strong>Micro Integrations</strong> attached, which are pretty much like joomla plugins for your memberships, just more versatile.</p>
+								</td>
+								<td></td>
+								<td colspan="3" style="vertical-align: top; padding-top: 12px;">
+									<h6>Invoices &amp; Payment</h6>
+									<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it - during registration, or afterwards. That invoice can then be paid using a <strong>Payment Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.<br />If a user has no membership record in AEC, the account shows up under <strong>Non Members</strong>.</p>
+								</td>
+								<td></td>
+								<td colspan="4" style="vertical-align: top; padding-top: 12px;">
+									<h6>Transactions &amp; Memberships</h6>
+									<p>Successful <strong>Transactions</strong> apply memberships to users. You can look them up in the list or as <strong>Statistics</strong>. Or you can <strong>Export</strong> them.</p><hr /><p>Likewise, you can track <strong>Members</strong> and modify their accounts or <strong>Export</strong> them as well.<br />If a member should not be subject to expiration of their account, you can <strong>exclude</strong> them from expiring.</p>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="aec-center-block aec-center-block-half col-sm-4">
+						<h2>Template &amp; Settings</h2>
+						<hr class="topslim" />
+						<div>
+							<?php HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
+							<p>Change the way AEC behaves.</p>
+						</div>
+						<div>
+							<?php HTML_AcctExp::quickiconButton( $linkroot.'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ) ?>
+							<p>Change what AEC looks like.</p>
+						</div>
+						<div>
+							<?php HTML_AcctExp::quickiconButton( $linkroot.'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ) ?>
+							<p>Nifty tools for AEC Experts.</p>
+						</div>
+						<div>
+							<?php HTML_AcctExp::quickiconButton( $linkroot.'import', 'import', JText::_('AEC_CENTR_IMPORT') ) ?>
+							<p>Import Users into AEC.</p>
+						</div>
+					</div>
+					<hr />
+					<div class="col-sm-12">
+						<hr/>
+						<div class="col-sm-4">
+							<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" />
+						</div>
+						<div class="col-sm-4">
+							<p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION ); ?>, Revision <?php echo _AEC_REVISION ?></p>
+							<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
+							<p>Thank you for choosing AEC!</p>
+							<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
+								<p>If you use AEC, please post a rating and a review at the Joomla! Extensions Directory:</p>
+								<p><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><?php echo aecHTML::Icon( 'heart', true ); ?>&nbsp;Go there now</a></p>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<a href="http://www.valanx.org"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx" /></a>
+							<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
+							<p><?php echo JText::_('AEC_FOOT_TX_SUBSCRIBE'); ?></p>
+							<p><?php printf( JText::_('AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', JText::_('AEC_FOOT_CREDIT_LTEXT') ) ); ?></p>
+						</div>
+					</div>
 				</div>
-				<div>
-					<?php HTML_AcctExp::quickiconButton( $linkroot.'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ) ?>
-					<p>Change what AEC looks like.</p>
-				</div>
-				<div>
-					<?php HTML_AcctExp::quickiconButton( $linkroot.'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ) ?>
-					<p>Nifty tools for AEC Experts.</p>
-				</div>
-				<div>
-					<?php HTML_AcctExp::quickiconButton( $linkroot.'import', 'import', JText::_('AEC_CENTR_IMPORT') ) ?>
-					<p>Import Users into AEC.</p>
-				</div>
-			</div>
-		<hr />
-		<div class="col-sm-12">
-			<hr/>
-			<div class="col-sm-4">
-				<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" />
-			</div>
-			<div class="col-sm-4">
-				<p><strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'beta', '&beta;', _AEC_VERSION ); ?>, Revision <?php echo _AEC_REVISION ?></p>
-				<p><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/aec_dist_title.jpg" border="0" alt="eta carinae nebula" class="dist-title" /></p>
-				<p>Thank you for choosing AEC!</p>
-				<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
-					<p>If you use AEC, please post a rating and a review at the Joomla! Extensions Directory:</p>
-					<p><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><?php echo aecHTML::Icon( 'heart', true ); ?>&nbsp;Go there now</a></p>
-				</div>
-			</div>
-			<div class="col-sm-4">
-				<a href="http://www.valanx.org"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo.png" border="0" alt="valanx" /></a>
-				<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
-				<p><?php echo JText::_('AEC_FOOT_TX_SUBSCRIBE'); ?></p>
-				<p><?php printf( JText::_('AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', JText::_('AEC_FOOT_CREDIT_LTEXT') ) ); ?></p>
 			</div>
 		</div>
-	</div>
 		<?php
 
 		HTML_myCommon::endCommon(false);
