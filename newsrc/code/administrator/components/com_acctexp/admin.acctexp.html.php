@@ -831,13 +831,12 @@ jQuery(document).ready(function(jQuery) {
 		$linkroot = "index.php?option=com_acctexp&amp;task=";
 		?>
 		<div class="navbar aec-navbar navbar-inverse">
-			<div class="navbar-inner">
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
 				<?php if ( !empty( $notices ) ) { ?>
 					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" data-remote="index.php?option=com_acctexp&amp;task=noticesModal" class="toolbar-notify"><?php echo aecHTML::Icon( 'envelope' ); ?> <?php echo $notices ?></a>
 				<?php } ?>
-				<ul class="nav">
+				<ul class="nav navbar-nav">
 				<?php foreach ( $menu as $mid => $m ) { ?>
 					<?php if ( isset( $m['items'] ) ) { ?>
 						<li class="dropdown">
@@ -865,7 +864,6 @@ jQuery(document).ready(function(jQuery) {
 					<input type="text" class="col-sm-2" placeholder="Quicksearch" id="quicksearch" data-placement="bottom" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>
 			</div>
-		</div>
 		</div>
 	<?php
 	}
