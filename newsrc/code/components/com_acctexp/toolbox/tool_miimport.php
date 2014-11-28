@@ -27,7 +27,7 @@ class tool_miimport
 		$db = JFactory::getDBO();
 
 		$settings = array();
-
+print_r($_FILES);exit;
 		if ( !empty( $_FILES ) ) {
 			$file = file_get_contents($_FILES['import_file']['tmp_name']);
 

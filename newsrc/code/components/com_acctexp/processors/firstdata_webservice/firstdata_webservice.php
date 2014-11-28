@@ -160,7 +160,7 @@ $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/env
 							CURLOPT_SSLKEY => $this->settings['ssl_key'],
 							CURLOPT_SSLKEYPASSWD => $this->settings['ssl_key_password']
 					);
-		$result = $this->transmitRequest( $url, $path, '', $content, 443, $curlextra );
+		$result = $this->transmitSOAP( $url, $path, '', $content, 443, $curlextra );
 
 		$return['valid'] = false;
 
