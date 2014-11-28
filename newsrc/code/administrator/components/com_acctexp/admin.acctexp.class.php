@@ -484,7 +484,7 @@ class aecImport
 
 	function createUser( $fields )
 	{
-		return aecRegistration::saveUserRegistration( 'com_acctexp', $fields, true, true, true, true );
+		return aecRegistration::saveUserRegistration( $fields, true, true, true, true );
 	}
 
 }
