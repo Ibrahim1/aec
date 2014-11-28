@@ -120,9 +120,11 @@ class HTML_myCommon
 		echo '</div>';
 	}
 
-	static function startForm()
+	static function startForm( $multipart=false )
 	{
-		?><form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"><?php
+		?>
+			<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal"<?php if ($multipart){ echo ' enctype="multipart/form-data"';} ?>>
+			<?php
 	}
 
 	static function endForm( $option, $id, $task='' )
@@ -3554,7 +3556,7 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox', ( !empty( $cmd ) ? $title : '' ) );
 
-		HTML_myCommon::startForm();
+		HTML_myCommon::startForm(true);
 		?>
 		<table width="100%" class="aecadminform"><tr><td>
 			<div class="aec_userinfobox_sub">
