@@ -484,7 +484,7 @@ class metaUser
 		$var['email']		= $user['email'];
 		$var['password']	= $user['password'];
 
-		$userid = aecRegistration::saveUserRegistration( 'com_acctexp', $var, true );
+		$userid = aecRegistration::saveUserRegistration( $var, true );
 
 		// Create a new invoice with $invoiceid as secondary ident
 		$invoice = new Invoice();

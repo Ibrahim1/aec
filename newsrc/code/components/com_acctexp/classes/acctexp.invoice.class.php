@@ -4040,7 +4040,7 @@ class Invoice extends serialParamDBTable
 		$lang = JFactory::getLanguage();
 
 		if ( $this->transaction_date == '0000-00-00 00:00:00' ) {
-			$transactiondate = 'uncleared';
+			$transactiondate = JText::_('INVOICEPRINT_PAIDSTATUS_UNPAID');
 
 			if ( empty( $this->params ) || empty( $this->params['pending_reason'] ) ) {
 				return $transactiondate;

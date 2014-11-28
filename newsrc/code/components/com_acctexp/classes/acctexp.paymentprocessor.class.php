@@ -899,7 +899,7 @@ class PaymentProcessor
 			$usage = 1;
 
 			// Create new user account and fetch id
-			$userid = aecRegistration::saveUserRegistration( 'com_acctexp', $return['_aec_createuser'], true, true, false );
+			$userid = aecRegistration::saveUserRegistration( $return['_aec_createuser'], true, true, false );
 
 			// Create Invoice
 			$invoice = new Invoice();
