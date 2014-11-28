@@ -1389,9 +1389,10 @@ jQuery(document).ready(function(jQuery) {
 				<p style="text-align: center">There is no processor set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Processor', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new processor' ), true )?></p>
 			</div>
 		<?php } else { ?>
-			<div class="aecadminform">
-				<table class="adminlist table-striped">
-					<thead>
+			<div class="container-fluid">
+				<div class="row">
+					<table class="adminlist table table-striped table-hover">
+						<thead>
 						<tr>
 							<th>#</th>
 							<th>id</th>
@@ -1400,27 +1401,28 @@ jQuery(document).ready(function(jQuery) {
 							<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
 							<th><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 						</tr>
-					</thead>
-					<tbody>
-					<?php foreach ( $rows as $i => $row ) { ?>
-						<tr>
-							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-							<td><?php echo $row->processor->id; ?></td>
-							<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
-							<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
-							<td><?php echo $row->processor->info['statement']; ?></td>
-							<td><?php HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
-						</tr>
-					<?php } ?>
-					</tbody>
-					<tfoot>
+						</thead>
+						<tbody>
+						<?php foreach ( $rows as $i => $row ) { ?>
+							<tr>
+								<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+								<td><?php echo $row->processor->id; ?></td>
+								<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
+								<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
+								<td><?php echo $row->processor->info['statement']; ?></td>
+								<td><?php HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
+							</tr>
+						<?php } ?>
+						</tbody>
+						<tfoot>
 						<tr>
 							<td colspan="6">
 								<?php echo $pageNav->getListFooter(); ?>
 							</td>
 						</tr>
-					</tfoot>
-				</table>
+						</tfoot>
+					</table>
+				div>
 			</div>
 		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -1473,30 +1475,32 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::getHeader( 'TEMPLATES_TITLE', 'templates' );
 		HTML_myCommon::startForm();
 		?>
-		<div class="aecadminform">
-		<table class="adminlist table-striped">
-			<thead><tr>
-				<th class="text-left"><?php echo JText::_('TEMPLATE_DEFAULT'); ?></th>
-				<th class="text-left"><?php echo JText::_('TEMPLATE_NAME'); ?></th>
-				<th class="text-left"><?php echo JText::_('TEMPLATE_DESC'); ?></th>
-			</tr></thead>
-			<tbody>
-				<?php foreach ( $rows as $i => $row ) { ?>
+		<div class="container-fluid">
+			<div class="row">
+				<table class="adminlist table-striped">
+					<thead><tr>
+						<th class="text-left"><?php echo JText::_('TEMPLATE_DEFAULT'); ?></th>
+						<th class="text-left"><?php echo JText::_('TEMPLATE_NAME'); ?></th>
+						<th class="text-left"><?php echo JText::_('TEMPLATE_DESC'); ?></th>
+					</tr></thead>
+					<tbody>
+					<?php foreach ( $rows as $i => $row ) { ?>
+						<tr>
+							<td><?php if ( $row->id ) { HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); } ?></td>
+							<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
+							<td class="text-left"><?php echo $row->info['description']; ?></td>
+						</tr>
+					<?php } ?>
+					</tbody>
+					<tfoot>
 					<tr>
-						<td><?php if ( $row->id ) { HTML_myCommon::toggleBtn( 'config_templates', 'default', $row->id, $row->default ); } ?></td>
-						<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editTemplate&amp;name=' . $row->name ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->info['longname'] ); ?></a></td>
-						<td class="text-left"><?php echo $row->info['description']; ?></td>
+						<td colspan="6">
+							<?php echo $pageNav->getListFooter(); ?>
+						</td>
 					</tr>
-				<?php } ?>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="6">
-	 					<?php echo $pageNav->getListFooter(); ?>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
+					</tfoot>
+				</table>
+			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="showTemplates" />
@@ -1635,77 +1639,80 @@ jQuery(document).ready(function(jQuery) {
 				<div style="float: right; width: 40%;">
 					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
 				</div>
-			</div>
-			<div class="aecadminform">
-			<table class="adminlist table-striped">
-				<thead><tr>
-					<th>#</th>
-					<th><input type="checkbox" name="toggle" value="" /></th>
-					<th>&nbsp;</th>
-					<th class="text-left"><?php echo JText::_('CNAME'); ?></th>
-					<th width="5%" class="text-left"><?php echo JText::_('USERLOGIN'); ?></th>
-					<th width="5%"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
-					<th class="text-left"><?php echo JText::_('SUBSCR_DATE'); ?></th>
-					<?php if ( $action[0] != 'manual' ) { ?>
-						<th class="text-left"><?php echo JText::_('LASTPAY_DATE'); ?></th>
-						<th width="5%"><?php echo JText::_('METHOD'); ?></th>
-						<th class="text-left"><?php echo JText::_('USERPLAN'); ?></th>
-						<th class="text-left"><?php echo JText::_('EXPIRATION'); ?></th>
-					<?php } else { ?>
-						<th class="text-left"></th>
-						<th class="text-left"></th>
-						<th class="text-left"></th>
-						<th width="27%" class="text-left"></th>
-					<?php } ?>
-				</tr></thead>
-				<tbody>
-				<?php foreach ( $rows as $i => $row ) {
-					if ( !isset( $row->status ) ) {
-						$row->status		= '-';
-						$row->lastpay_date	= '-';
-						$row->type			= '-';
-						$row->plan_name		= '-';
-						$row->lifetime		= '-';
-						$row->expiration	= '-';
-					}
-
-					$rowstyle = '';
-					if ( is_array( $subscriptionid ) ) {
-						if ( in_array( $row->id, $subscriptionid ) ) {
-							$rowstyle = ' style="border: 2px solid #DD0;"';
-						}
-					} ?>
-						<tr<?php echo $rowstyle; ?>>
-							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
-							<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-							<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-							<td class="text-left"><?php echo $row->username; ?></td>
-							<td><?php echo $row->status; ?></td>
-							<td class="text-left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
+			</div
+				>
+			<div class="container-fluid">
+				<div class="row">
+					<table class="adminlist table-striped">
+						<thead><tr>
+							<th>#</th>
+							<th><input type="checkbox" name="toggle" value="" /></th>
+							<th>&nbsp;</th>
+							<th class="text-left"><?php echo JText::_('CNAME'); ?></th>
+							<th width="5%" class="text-left"><?php echo JText::_('USERLOGIN'); ?></th>
+							<th width="5%"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
+							<th class="text-left"><?php echo JText::_('SUBSCR_DATE'); ?></th>
 							<?php if ( $action[0] != 'manual' ) { ?>
-								<td class="text-left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
-								<td><?php echo $row->type; ?></td>
-								<td class="text-left"><?php echo $row->plan_name; ?></td>
-								<td class="text-left"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
+								<th class="text-left"><?php echo JText::_('LASTPAY_DATE'); ?></th>
+								<th width="5%"><?php echo JText::_('METHOD'); ?></th>
+								<th class="text-left"><?php echo JText::_('USERPLAN'); ?></th>
+								<th class="text-left"><?php echo JText::_('EXPIRATION'); ?></th>
 							<?php } else { ?>
-								<td class="text-left"></td>
-								<td class="text-left"></td>
-								<td class="text-left"></td>
-								<td class="text-left"></td>
+								<th class="text-left"></th>
+								<th class="text-left"></th>
+								<th class="text-left"></th>
+								<th width="27%" class="text-left"></th>
 							<?php } ?>
+						</tr></thead>
+						<tbody>
+						<?php foreach ( $rows as $i => $row ) {
+							if ( !isset( $row->status ) ) {
+								$row->status		= '-';
+								$row->lastpay_date	= '-';
+								$row->type			= '-';
+								$row->plan_name		= '-';
+								$row->lifetime		= '-';
+								$row->expiration	= '-';
+							}
+
+							$rowstyle = '';
+							if ( is_array( $subscriptionid ) ) {
+								if ( in_array( $row->id, $subscriptionid ) ) {
+									$rowstyle = ' style="border: 2px solid #DD0;"';
+								}
+							} ?>
+							<tr<?php echo $rowstyle; ?>>
+								<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+								<td><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
+								<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
+								<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+								<td class="text-left"><?php echo $row->username; ?></td>
+								<td><?php echo $row->status; ?></td>
+								<td class="text-left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->signup_date ); ?></td>
+								<?php if ( $action[0] != 'manual' ) { ?>
+									<td class="text-left"><?php echo HTML_AcctExp::DisplayDateInLocalTime( $row->lastpay_date ); ?></td>
+									<td><?php echo $row->type; ?></td>
+									<td class="text-left"><?php echo $row->plan_name; ?></td>
+									<td class="text-left"><?php echo $row->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime($row->expiration); ?></td>
+								<?php } else { ?>
+									<td class="text-left"></td>
+									<td class="text-left"></td>
+									<td class="text-left"></td>
+									<td class="text-left"></td>
+								<?php } ?>
+							</tr>
+						<?php } ?>
+						</tbody>
+						<tfoot>
+						<tr>
+							<td colspan="11">
+								<?php echo $pageNav->getListFooter(); ?>
+							</td>
 						</tr>
-					<?php } ?>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="11">
-		 					<?php echo $pageNav->getListFooter(); ?>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
+						</tfoot>
+					</table>
+				</div>
+			</div>
 			<input type="hidden" name="option" value="<?php echo $option;?>" />
 			<input type="hidden" name="task" value="showActive" />
 			<input type="hidden" name="returnTask" value="showActive" />
@@ -1744,47 +1751,49 @@ jQuery(document).ready(function(jQuery) {
 				</table>
 			</div>
 
-			<div class="aecadminform">
-			<table class="adminlist table-striped">
-				<thead><tr>
-					<th>#</th>
-					<th>id</th>
-					<th><input type="checkbox" name="toggle" value="" /></th>
-					<th class="text-left"><?php echo JText::_('MI_NAME'); ?></th>
-					<th class="text-left" ><?php echo JText::_('MI_DESC'); ?></th>
-					<th><?php echo JText::_('MI_ACTIVE'); ?></th>
-					<?php if ( $ordering ) { ?>
-						<th><?php echo JText::_('MI_REORDER'); ?></th>
-					<?php } ?>
-					<th class="text-right"><?php echo JText::_('MI_FUNCTION'); ?></th>
-				</tr></thead>
-				<tbody>
-					<?php foreach ( $rows as $i => $row ) { ?>
-						<tr>
-							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-							<td><?php echo $row->id; ?></td>
-							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-							<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
-							<td class="text-left">
-								<?php
-								echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
-								</td>
-							<td><?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?></td>
+			<div class="container-fluid">
+				<div class="row">
+					<table class="adminlist table-striped">
+						<thead><tr>
+							<th>#</th>
+							<th>id</th>
+							<th><input type="checkbox" name="toggle" value="" /></th>
+							<th class="text-left"><?php echo JText::_('MI_NAME'); ?></th>
+							<th class="text-left" ><?php echo JText::_('MI_DESC'); ?></th>
+							<th><?php echo JText::_('MI_ACTIVE'); ?></th>
 							<?php if ( $ordering ) { ?>
-								<td><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
+								<th><?php echo JText::_('MI_REORDER'); ?></th>
 							<?php } ?>
-							<td class="text-right"><?php echo $row->class_name; ?></td>
+							<th class="text-right"><?php echo JText::_('MI_FUNCTION'); ?></th>
+						</tr></thead>
+						<tbody>
+						<?php foreach ( $rows as $i => $row ) { ?>
+							<tr>
+								<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+								<td><?php echo $row->id; ?></td>
+								<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+								<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
+								<td class="text-left">
+									<?php
+									echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
+								</td>
+								<td><?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?></td>
+								<?php if ( $ordering ) { ?>
+									<td><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
+								<?php } ?>
+								<td class="text-right"><?php echo $row->class_name; ?></td>
+							</tr>
+						<?php } ?>
+						</tbody>
+						<tfoot>
+						<tr>
+							<td colspan="9">
+								<?php echo $pageNav->getListFooter(); ?>
+							</td>
 						</tr>
-					<?php } ?>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="9">
-		 					<?php echo $pageNav->getListFooter(); ?>
-						</td>
-					</tr>
-				</tfoot>
-			</table>
+						</tfoot>
+					</table>
+				</div>
 			</div>
 		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -2474,42 +2483,44 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startForm();
 
 		?>
-		<div class="aecadminform">
-			<table class="adminlist table-striped">
-				<thead><tr>
-					<th>#</th>
-					<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
-					<th><input type="checkbox" name="toggle" value="" /></th>
-					<th>Parent</th>
-					<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
-					<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
-					<th><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
-					<th><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
-					<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
-				</tr></thead>
-				<tbody>
-				<?php foreach ( $rows as $i => $row ) { ?>
-					<tr>
-						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-						<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->id; ?></td>
-						<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-						<td class="text-right" style="background: #<?php echo $row->parent_color; ?>;"><?php echo $row->parent_group; ?></td>
-						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-						<td class="text-left"><?php echo $row->desc; ?></td>
-						<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
-						<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
-						<td class="text-right"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
-					</tr>
-				<?php } ?>
-				</tbody>
-				<tfoot>
+		<div class="container-fluid">
+			<div class="row">
+				<table class="adminlist table-striped">
+					<thead><tr>
+						<th>#</th>
+						<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
+						<th><input type="checkbox" name="toggle" value="" /></th>
+						<th>Parent</th>
+						<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+						<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
+						<th><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
+						<th><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
+						<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
+					</tr></thead>
+					<tbody>
+					<?php foreach ( $rows as $i => $row ) { ?>
+						<tr>
+							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+							<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->id; ?></td>
+							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+							<td class="text-right" style="background: #<?php echo $row->parent_color; ?>;"><?php echo $row->parent_group; ?></td>
+							<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+							<td class="text-left"><?php echo $row->desc; ?></td>
+							<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
+							<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
+							<td class="text-right"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
+						</tr>
+					<?php } ?>
+					</tbody>
+					<tfoot>
 					<tr>
 						<td colspan="10">
-		 					<?php echo $pageNav->getListFooter(); ?>
+							<?php echo $pageNav->getListFooter(); ?>
 						</td>
 					</tr>
-				</tfoot>
-			</table>
+					</tfoot>
+				</table>
+			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="showItemGroups" />
@@ -2719,18 +2730,19 @@ jQuery(document).ready(function(jQuery) {
 				</div>
 			</div>
 
-			<div class="aecadminform">
-				<table class="adminlist table-striped">
-					<thead><tr>
-						<th>#</th>
-						<th><input type="checkbox" name="toggle" value="" /></th>
-						<th class="text-left"><?php echo JText::_('COUPON_NAME'); ?></th>
-						<th class="text-left"><?php echo JText::_('COUPON_CODE'); ?></th>
-						<th class="text-left"><?php echo JText::_('COUPON_DESC'); ?></th>
-						<th><?php echo JText::_('COUPON_ACTIVE'); ?></th>
-						<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
-					</tr></thead>
-					<tbody>
+			<div class="container-fluid">
+				<div class="row">
+					<table class="adminlist table-striped">
+						<thead><tr>
+							<th>#</th>
+							<th><input type="checkbox" name="toggle" value="" /></th>
+							<th class="text-left"><?php echo JText::_('COUPON_NAME'); ?></th>
+							<th class="text-left"><?php echo JText::_('COUPON_CODE'); ?></th>
+							<th class="text-left"><?php echo JText::_('COUPON_DESC'); ?></th>
+							<th><?php echo JText::_('COUPON_ACTIVE'); ?></th>
+							<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
+						</tr></thead>
+						<tbody>
 						<?php foreach ( $rows as $i => $row ) { ?>
 							<tr>
 								<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
@@ -2748,15 +2760,16 @@ jQuery(document).ready(function(jQuery) {
 								</td>
 							</tr>
 						<?php } ?>
-					</tbody>
-					<tfoot>
+						</tbody>
+						<tfoot>
 						<tr>
 							<td colspan="9">
-			 					<?php echo $pageNav->getListFooter(); ?>
+								<?php echo $pageNav->getListFooter(); ?>
 							</td>
 						</tr>
-					</tfoot>
-				</table>
+						</tfoot>
+					</table>
+				</div>
 			</div>
 		<?php } ?>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
@@ -2942,46 +2955,48 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		</div>
 
-		<div class="aecadminform">
-		<table class="adminlist table-striped">
-			<thead><tr>
-				<th>#</th>
-				<th><?php echo JText::_('INVOICE_USERID'); ?></th>
-				<th class="text-center"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
-				<th class="text-center"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
-				<th class="text-center"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
-				<th class="text-center"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
-				<th class="text-center"><?php echo JText::_('USERPLAN'); ?></th>
-				<th class="text-center"><?php echo JText::_('INVOICE_COUPONS'); ?></th>
-				<th class="text-center"><?php echo JText::_('INVOICE_METHOD'); ?></th>
-				<th class="text-center"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
-				<th><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
-			</tr></thead>
-			<tbody>
-				<?php foreach ( $rows as $i => $row ) { ?>
+		<div class="container-fluid">
+			<div class="row">
+				<table class="adminlist table-striped">
+					<thead><tr>
+						<th>#</th>
+						<th><?php echo JText::_('INVOICE_USERID'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
+						<th class="text-center"><?php echo JText::_('USERPLAN'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_COUPONS'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_METHOD'); ?></th>
+						<th class="text-center"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
+						<th><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
+					</tr></thead>
+					<tbody>
+					<?php foreach ( $rows as $i => $row ) { ?>
+						<tr>
+							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
+							<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $row->userid; ?>"><?php echo $row->username; ?></a></td>
+							<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editInvoice&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
+							<td><?php echo $row->secondary_ident; ?></td>
+							<td><?php echo $row->created_date; ?></td>
+							<td><?php echo $row->transaction_date; ?></td>
+							<td><?php echo $row->usage; ?></td>
+							<td><?php echo $row->coupons; ?></td>
+							<td><?php echo $row->method; ?></td>
+							<td><?php echo $row->amount; ?></td>
+							<td><?php echo $row->currency; ?></td>
+						</tr>
+					<?php } ?>
+					</tbody>
+					<tfoot>
 					<tr>
-						<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-						<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $row->userid; ?>"><?php echo $row->username; ?></a></td>
-						<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editInvoice&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
-						<td><?php echo $row->secondary_ident; ?></td>
-						<td><?php echo $row->created_date; ?></td>
-						<td><?php echo $row->transaction_date; ?></td>
-			  			<td><?php echo $row->usage; ?></td>
-			  			<td><?php echo $row->coupons; ?></td>
-			  			<td><?php echo $row->method; ?></td>
-						<td><?php echo $row->amount; ?></td>
-						<td><?php echo $row->currency; ?></td>
+						<td colspan="11">
+							<?php echo $pageNav->getListFooter(); ?>
+						</td>
 					</tr>
-				<?php } ?>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="11">
-	 					<?php echo $pageNav->getListFooter(); ?>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
+					</tfoot>
+				</table>
+			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="invoices" />
