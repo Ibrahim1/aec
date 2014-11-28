@@ -105,7 +105,7 @@ class processor_payboxat extends SOAPprocessor
 
 		$options = array( "login" => $this->settings['username'], "password" => $this->settings['password'] );
 
-		$response = $this->transmitRequest( $url, $path, 'payment', $content, $headers, $options );
+		$response = $this->transmitRequest( $url, 'payment', $content, $headers, $options );
 
 		$return['valid']	= false;
 		$return['raw']		= $response['raw'];

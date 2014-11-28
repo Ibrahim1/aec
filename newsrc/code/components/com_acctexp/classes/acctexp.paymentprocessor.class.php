@@ -2253,18 +2253,18 @@ class XMLprocessor extends processor
 
 class SOAPprocessor extends XMLprocessor
 {
-	function transmitRequest( $url, $path, $command, $content, $headers=null, $options=null, $header=null )
+	function transmitRequest( $url, $path, $content, $headers=null, $options=null, $header=null )
 	{
 		global $aecConfig;
 
 		$this->soapclient = new SoapClient( $url, $options );
 
 		if ( method_exists( $this->soapclient, '__soapCall' ) ) {
-			$response['raw'] = $this->soapclient->__soapCall( $command, $content );
+			$response['raw'] = $this->soapclient->__soapCall( $path, $content );
 		} elseif ( method_exists( $this->soapclient, 'soapCall' ) ) {
-			$response['raw'] = $this->soapclient->soapCall( $command, $content );
+			$response['raw'] = $this->soapclient->soapCall( $path, $content );
 		} else {
-			$response['raw'] = $this->soapclient->call( $command, $content );
+			$response['raw'] = $this->soapclient->call( $path, $content );
 		}
 
 		if ( $response['raw']->error != 0 ) {

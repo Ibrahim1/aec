@@ -1440,13 +1440,13 @@ class Coupon extends serialParamDBTable
 		$this->store();
 	}
 
-	function check()
+	function check( $fields=array() )
 	{
 		if ( isset( $this->type ) ) {
 			unset( $this->type );
 		}
 
-		parent::check();
+		parent::check($fields);
 	}
 }
 

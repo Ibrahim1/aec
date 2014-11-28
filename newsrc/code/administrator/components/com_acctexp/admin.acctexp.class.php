@@ -1012,9 +1012,9 @@ class aecExport extends serialParamDBTable
 		}
 	}
 
-	function check()
+	function check( $fields=array() )
 	{
-		parent::check();
+		parent::check($fields);
 
 		if ( isset( $this->type ) ) {
 			unset( $this->type );

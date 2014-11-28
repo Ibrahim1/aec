@@ -656,7 +656,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function check()
+	function check( $fields=array() )
 	{
 		if ( isset( $this->settings ) ) {
 			unset( $this->settings );
@@ -670,7 +670,7 @@ class microIntegration extends serialParamDBTable
 			unset( $this->info );
 		}
 
-		return parent::check();
+		return parent::check($fields);
 	}
 
 	function mi_exists( $mi_id )

@@ -4105,7 +4105,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function check()
+	function check( $fields=array() )
 	{
 		$unset = array( 'made_free' );
 
@@ -4117,7 +4117,7 @@ class Invoice extends serialParamDBTable
 
 		$this->amount = AECToolbox::correctAmount( $this->amount );
 
-		parent::check();
+		parent::check($fields);
 
 		return true;
 	}

@@ -56,7 +56,7 @@ class Subscription extends serialParamDBTable
 		return array( 'params', 'customparams' );
 	}
 
-	function check()
+	function check( $fields=array() )
 	{
 		$vars = get_class_vars( 'Subscription' );
 		$props = get_object_vars( $this );
@@ -67,7 +67,7 @@ class Subscription extends serialParamDBTable
 			}
 		}
 
-		return parent::check();
+		return parent::check($fields);
 	}
 
 	function loadUserid( $userid )

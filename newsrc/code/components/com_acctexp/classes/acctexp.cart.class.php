@@ -258,7 +258,7 @@ class aecCart extends serialParamDBTable
 		return array( 'content', 'history', 'params', 'customparams' );
 	}
 
-	function check()
+	function check( $fields=array() )
 	{
 		$vars = get_class_vars( 'aecCart' );
 		$props = get_object_vars( $this );
@@ -269,7 +269,7 @@ class aecCart extends serialParamDBTable
 			}
 		}
 
-		return parent::check();
+		return parent::check($fields);
 	}
 
 	function store($updateNulls = true)
