@@ -2155,131 +2155,125 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'plan', true ); ?>
-		<table class="aecadminform">
-			<tr>
-				<td>
-					<div style="position:relative;float:left;width:33.225%;">
-						<div class="userinfobox">
-							<div class="aec-settings-container">
-								<h4>General</h4>
-								<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-								<div style="position:relative;width:100%;">
-									<?php
-									if ( $row->id ) { ?>
-										<p style="text-align: center;">
-											<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank">
-												<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>
-											</a>
-											&nbsp;|&nbsp;<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=addtocart&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>" target="_blank">
-												<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>
-											</a>
-										</p>
-										<?php if ( !$aecConfig->cfg['plans_first'] ) { ?>
-											<div class="alert alert-info">
-												<p><span class="label label-info"><?php echo JText::_('Please Note'); ?>:</span> <?php echo JText::_('A direct frontend link only works for existing users who are logged in, or with the Plans First setting'); ?>.</p>
-											</div>
-										<?php }
-									}
-									?>
-								</div>
-							</div>
-							<div class="aec-settings-container">
-								<h4>Details</h4>
-								<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'fixed_redirect' ); ?>
-							</div>
-
-						</div>
-						<div class="userinfobox">
-							<div class="aec-settings-container">
-								<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
-								<?php if ( $row->id ) { ?>
-								<table style="width:100%;" class="table-striped aec-grouplist">
-									<thead>
-										<tr>
-											<th>ID</th>
-											<th>Name</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php if ( !empty( $aecHTML->customparams->groups ) ) {
-										foreach ( $aecHTML->customparams->groups as $id => $group ) {
-											HTML_AcctExp::groupRow( 'item', $group );
-										}
-									} ?>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a></td>
-										</tr>
-									</tfoot>
-								</table>
-								<?php } else { ?>
-									<p>You can select groups after saving this plan for the first time.</p>
-								<?php } ?>
-							</div>
-						</div>
-					</div>
-					<div style="position:relative;float:left;width:33.225%;">
-						<div class="userinfobox">
-							<div class="aec-settings-container">
-								<h4>Cost&amp;Details</h4>
-								<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'hide_duration_checkout' ); ?>
-								<?php if ( $hasrecusers ) { ?>
-									<div class="alert alert-danger">
-										<strong><?php echo JText::_('PAYPLAN_AMOUNT_EDITABLE_NOTICE'); ?></strong>
+			<div class="col-sm-4">
+				<div class="userinfobox">
+					<div class="aec-settings-container">
+						<h4>General</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+						<div style="position:relative;width:100%;">
+							<?php
+							if ( $row->id ) { ?>
+								<p style="text-align: center;">
+									<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank">
+										<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>
+									</a>
+									&nbsp;|&nbsp;<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=addtocart&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>" target="_blank">
+										<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>
+									</a>
+								</p>
+								<?php if ( !$aecConfig->cfg['plans_first'] ) { ?>
+									<div class="alert alert-info">
+										<p><span class="label label-info"><?php echo JText::_('Please Note'); ?>:</span> <?php echo JText::_('A direct frontend link only works for existing users who are logged in, or with the Plans First setting'); ?>.</p>
 									</div>
-								<?php } ?>
-							</div>
-						</div>
-						<div class="userinfobox">
-							<div class="aec-settings-container">
-								<h4>Joomla User</h4>
-								<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
-							</div>
+								<?php }
+							}
+							?>
 						</div>
 					</div>
-					<div style="position:relative;float:left;width:33.225%;">
-						<div class="userinfobox">
-							<div class="aec-settings-container">
-								<h4>Plan Relation</h4>
-								<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'fallback_req_parent' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
+					<div class="aec-settings-container">
+						<h4>Details</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'fixed_redirect' ); ?>
+					</div>
+
+				</div>
+				<div class="userinfobox">
+					<div class="aec-settings-container">
+						<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
+						<?php if ( $row->id ) { ?>
+						<table style="width:100%;" class="table-striped aec-grouplist">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Name</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+							<?php if ( !empty( $aecHTML->customparams->groups ) ) {
+								foreach ( $aecHTML->customparams->groups as $id => $group ) {
+									HTML_AcctExp::groupRow( 'item', $group );
+								}
+							} ?>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+									<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a></td>
+								</tr>
+							</tfoot>
+						</table>
+						<?php } else { ?>
+							<p>You can select groups after saving this plan for the first time.</p>
+						<?php } ?>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="userinfobox">
+					<div class="aec-settings-container">
+						<h4>Cost&amp;Details</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'hide_duration_checkout' ); ?>
+						<?php if ( $hasrecusers ) { ?>
+							<div class="alert alert-danger">
+								<strong><?php echo JText::_('PAYPLAN_AMOUNT_EDITABLE_NOTICE'); ?></strong>
 							</div>
-							<div class="aec-settings-container">
-								<h4>Shopping Cart</h4>
-								<?php echo $aecHTML->createSettingsParticle( 'cart_behavior' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'addtocart_max' ); ?>
-								<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
-							</div>
-						</div>
-						<div class="userinfobox">
-							<div class="aec-settings-container">
-								<h4><?php echo 'Notes'; ?></h4>
-								<div style="text-align: left;">
-									<?php echo $aecHTML->createSettingsParticle( 'notes' ); ?>
-								</div>
-							</div>
+						<?php } ?>
+					</div>
+				</div>
+				<div class="userinfobox">
+					<div class="aec-settings-container">
+						<h4>Joomla User</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="userinfobox">
+					<div class="aec-settings-container">
+						<h4>Plan Relation</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'fallback_req_parent' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
+					</div>
+					<div class="aec-settings-container">
+						<h4>Shopping Cart</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'cart_behavior' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'addtocart_max' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
+					</div>
+				</div>
+				<div class="userinfobox">
+					<div class="aec-settings-container">
+						<h4><?php echo 'Notes'; ?></h4>
+						<div style="text-align: left;">
+							<?php echo $aecHTML->createSettingsParticle( 'notes' ); ?>
 						</div>
 					</div>
-				</td>
-			</tr>
-		</table>
+				</div>
+			</div>
 		<?php $tabs->nextPane( 'processors' ); ?>
 		<table class="aecadminform"><tr><td>
 			<?php
