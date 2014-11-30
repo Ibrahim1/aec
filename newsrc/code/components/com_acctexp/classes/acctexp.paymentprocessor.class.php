@@ -56,7 +56,10 @@ class PaymentProcessorHandler
 
 				if ( $pp->processor->active ) {
 					// Add to Active List
-					$gw_list_enabled[]->value = $gwname;
+					$gw = new stdClass();
+					$gw->value = $gwname;
+
+					$gw_list_enabled[] = $gw;
 
 					// Add to selected Description List if existing in db entry
 					if ( !empty( $selected ) ) {

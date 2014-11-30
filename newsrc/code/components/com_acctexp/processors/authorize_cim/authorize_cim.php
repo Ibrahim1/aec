@@ -703,7 +703,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $return;
 	}
 
-	function transmitRequest( $url, $path, $xml, $port, $curlextra=null, $header=null )
+	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
 	{
 		//aecDebug( $xml );
 
