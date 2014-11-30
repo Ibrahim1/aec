@@ -276,7 +276,7 @@ jQuery(document).ready(function(jQuery) {
 	jQuery.fn.bootstrapSwitch.defaults.onColor = 'success';
 	jQuery.fn.bootstrapSwitch.defaults.offColor = 'danger';
 
-	$(".bootstrap-switch").bootstrapSwitch();
+	jQuery(".bootstrap-switch").bootstrapSwitch();
 });
 
 function readNotice(id) {
