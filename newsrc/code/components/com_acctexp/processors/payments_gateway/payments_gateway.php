@@ -61,7 +61,7 @@ class processor_payments_gateway extends POSTprocessor
 		return $settings;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null )
+	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null, $text=null )
 	{
 		$xvar = $this->createGatewayLink( $request, true );
 
