@@ -100,9 +100,7 @@ class template_etacarinae extends aecTemplate
 			$less->setPreserveComments(true);
 
 			if ( !isset( $_POST['bootstrap'] ) ) {
-				$v = new JVersion();
-
-				$this->cfg['bootstrap'] = !$v->isCompatible('3.0');
+				$this->cfg['bootstrap'] = true;
 			} else {
 				$this->cfg['bootstrap'] = $_POST['bootstrap'];
 			}
@@ -111,7 +109,7 @@ class template_etacarinae extends aecTemplate
 			if ( $this->cfg['bootstrap'] ) {
 				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css' );
 			} else {
-				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-j3.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css');
+				$less->compileFile( JPATH_SITE . "/media/com_acctexp/less/template.etacarinae-reuse-bootstrap.less", JPATH_SITE . '/media/com_acctexp/css/template.etacarinae.css');
 			}
 		}
 	}

@@ -1,9 +1,8 @@
 .aecadminform {
-	@foo = 0 1px 7px #000 inset, 0 1px 4px #ccc;
 	background: url(../images/admin/gfx/cardboard_flat.png);
 	border-collapse: collapse;
 	width: 100%;
-	.box-shadow(@foo);
+	.box-shadow("0 1px 7px #000 inset, 0 1px 4px #ccc");
 	float: left;
 	th { color: #586c79; }
 	h2 {
@@ -90,12 +89,11 @@
 }
 
 .aec_userinfobox_sub {
-	@foo = 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25);
 	background-color: #f9f9e9;
 	margin: 1%;
 	padding: 4px 16px;
 	.border-radius( 4px );
-	.box-shadow(@foo);
+	.box-shadow("0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.25");
 	overflow: hidden;
 	&_inline {
 		display: inline-block;

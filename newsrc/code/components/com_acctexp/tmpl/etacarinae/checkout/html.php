@@ -160,7 +160,7 @@ if ( count( $InvoiceFactory->items->itemlist ) > 1 ) {
 									. ']';
 						}
 					}
-					
+
 					$cost[] = array( 'type' => $cost->type, 'details' => $t, 'cost' => $c );
 				}
 			}
@@ -212,7 +212,7 @@ if ( strpos( $var, 'class="tab-content"' ) ) {
 													'cardVV2' => array( 'required' => true )
 												) ) );*/
 
-	$tmpl->enqueueJQueryExtension( 'bootstrap/bootstrap.min' );
+	$tmpl->enqueueJQueryExtension( 'bootstrap/bootstrap.2.1.1.min' );
 
 	$js = "jQuery('.nav-tabs a:first').tab('show');";
 
