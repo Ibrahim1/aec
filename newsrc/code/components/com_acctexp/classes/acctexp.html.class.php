@@ -217,36 +217,28 @@ class aecHTML
 			case 'toggle':
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 
-				$return .= '<div class="form-control">';
 				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
-				$return .= '</div>';
 				$return .= $insertctrl;
-				$return .= '</div></div>';
+				$return .= '</div>';
 				break;
 			case 'toggle_disabled':
 				$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '"/>';
 
-				$return .= '<div class="form-control">';
 				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1"/>';
-				$return .= '</div>';
 				$return .= $insertctrl;
-				$return .= '</div></div>';
+				$return .= '</div>';
 				break;
 			case 'editor':
-				$return .= '<div class="form-control">';
-
 				$editor = JFactory::getEditor();
 
 				$return .= '<div>' . $editor->display( $name,  $value , '', '250', '50', '20' ) . '</div>';
 				$return .= $insertctrl;
-				$return .= '</div></div>';
+				$return .= '</div>';
 				break;
 			case 'textarea':
 				$return .= '<textarea style="width:90%" cols="450" rows="10" name="' . $name . '" id="' . $name . '" >' . $value . '</textarea></div>';
 				break;
 			case 'list':
-				$return .= '<div class="form-control">';
-
 				if ( strpos( $this->lists[$name], '[]"' ) ) {
 					$return .= '<input type="hidden" name="' . $name . '" value="0" />';
 					$return .= str_replace( '<select', '<select class="jqui-multiselect"', $this->lists[$name] );
@@ -255,23 +247,21 @@ class aecHTML
 				}
 
 				$return .= $insertctrl;
-				$return .= '</div></div>';
+				$return .= '</div>';
 				break;
 			case 'radio':
 				$return = '<div class="form-group">';
 				$return .= '<label for="' . $name . '">';
 				$return .= '<input type="radio" id="' . $name . '" name="' . $row[1] . '"' . ( ( $row[3] == $row[2] ) ? ' checked="checked"' : '' ) . ' value="' . $row[2] . '"/>';
 				$return .= '</label>';
-				$return .= '<div class="form-control">';
 				$return .= $row[4];
 				$return .= $insertctrl;
-				$return .= '</div></div>';
+				$return .= '</div>';
 				break;
 			case 'file':
-				$return .= '<div class="form-control">';
 				$return .= '<input id="' . $name . '" name="' . $name . '" type="file" />';
 				$return .= $insertctrl;
-				$return .= '</div></div>';
+				$return .= '</div>';
 				break;
 			case 'accordion_start':
 				if ( !isset( $this->accordions ) ) {
