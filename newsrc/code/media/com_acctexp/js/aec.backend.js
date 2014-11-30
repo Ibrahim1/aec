@@ -271,6 +271,12 @@ jQuery(document).ready(function(jQuery) {
 	}
 
 	jQuery(".collapse").collapse({toggle: false});
+
+	jQuery.fn.bootstrapSwitch.defaults.size = 'small';
+	jQuery.fn.bootstrapSwitch.defaults.onColor = 'success';
+	jQuery.fn.bootstrapSwitch.defaults.offColor = 'danger';
+
+	$(".bootstrap-switch").bootstrapSwitch();
 });
 
 function readNotice(id) {

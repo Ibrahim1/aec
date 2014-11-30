@@ -67,6 +67,8 @@ class HTML_myCommon
 			HTML_myCommon::addScript( '/com_acctexp/js/bootstrap/bootstrap.min.js' );
 		}
 
+		HTML_myCommon::addScript( '/com_acctexp/js/bootstrap/bootstrap-switch.min.js' );
+
 		HTML_myCommon::addScript( '/com_acctexp/js/jquery/jquerync.js' );
 		HTML_myCommon::addScript( '/com_acctexp/js/aec.backend.js' );
 	}
