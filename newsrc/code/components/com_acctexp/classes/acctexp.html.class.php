@@ -216,32 +216,18 @@ class aecHTML
 				break;
 			case 'toggle':
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
+
 				$return .= '<div class="form-control">';
-				$return .= '<div class="toggleswitch">';
-				$return .= '<label class="toggleswitch" onclick="">';
-				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
-				$return .= '<span class="toggleswitch-inner">';
-				$return .= '<span class="toggleswitch-on">' . JText::_( 'yes' ) . '</span>';
-				$return .= '<span class="toggleswitch-off">' . JText::_( 'no' ) . '</span>';
-				$return .= '<span class="toggleswitch-handle"></span>';
-				$return .= '</span>';
-				$return .= '</label>';
+				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
 				$return .= '</div>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
 			case 'toggle_disabled':
 				$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '"/>';
+
 				$return .= '<div class="form-control">';
-				$return .= '<div class="toggleswitch">';
-				$return .= '<label class="toggleswitch" onclick="">';
-				$return .= '<input id="' . $name . '" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1"/>';
-				$return .= '<span class="toggleswitch-inner">';
-				$return .= '<span class="toggleswitch-on">' . JText::_( 'yes' ) . '</span>';
-				$return .= '<span class="toggleswitch-off">' . JText::_( 'no' ) . '</span>';
-				$return .= '<span class="toggleswitch-handle"></span>';
-				$return .= '</span>';
-				$return .= '</label>';
+				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1"/>';
 				$return .= '</div>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
