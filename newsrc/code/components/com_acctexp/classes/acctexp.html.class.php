@@ -239,15 +239,16 @@ class aecHTML
 				$return .= '<textarea style="width:90%" cols="450" rows="10" name="' . $name . '" id="' . $name . '" >' . $value . '</textarea></div>';
 				break;
 			case 'list':
+				$return .= '<div class="col-sm-8">';
 				if ( strpos( $this->lists[$name], '[]"' ) ) {
 					$return .= '<input type="hidden" name="' . $name . '" value="0" />';
 					$return .= str_replace( '<select', '<select class="jqui-multiselect"', $this->lists[$name] );
 				} else {
-					$return .= str_replace( '<select', '<select class="col-sm-3"', $this->lists[$name] );
+					$return .= str_replace( '<select', '<select class="form-control"', $this->lists[$name] );
 				}
 
 				$return .= $insertctrl;
-				$return .= '</div>';
+				$return .= '</div></div>';
 				break;
 			case 'radio':
 				$return = '<div class="form-group">';
