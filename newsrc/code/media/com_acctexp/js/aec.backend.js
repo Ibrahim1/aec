@@ -136,7 +136,7 @@ jQuery(document).ready(function(jQuery) {
 		var i, scrollTop = jQuery(window).scrollTop();
 
 		if ( navTop == 0 ) {
-			navTop = jQuery('.aec-navbar .navbar-inner').offset().top;
+			navTop = jQuery('.aec-navbar').offset().top;
 		}
 
 		if (scrollTop >= navTop && !tbFixed) {
@@ -272,9 +272,13 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery(".collapse").collapse({toggle: false});
 
-	jQuery.fn.bootstrapSwitch.defaults.size = 'small';
+	jQuery.fn.bootstrapSwitch.defaults.size = 'mini';
 	jQuery.fn.bootstrapSwitch.defaults.onColor = 'success';
 	jQuery.fn.bootstrapSwitch.defaults.offColor = 'danger';
+	jQuery.fn.bootstrapSwitch.defaults.handleWidth = '64px';
+	jQuery.fn.bootstrapSwitch.defaults.labelWidth = '24px';
+	jQuery.fn.bootstrapSwitch.defaults.onText = 'yes';
+	jQuery.fn.bootstrapSwitch.defaults.offText = 'no';
 
 	jQuery(".bootstrap-switch").bootstrapSwitch();
 });
