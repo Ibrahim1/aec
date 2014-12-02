@@ -2277,12 +2277,12 @@ jQuery(document).ready(function(jQuery) {
 				</div>
 			</div>
 		<?php $tabs->nextPane( 'processors' ); ?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-12">
 			<?php
 			if ( !empty( $aecHTML->customparams->pp ) ) {
 				foreach ( $aecHTML->customparams->pp as $id => $processor ) {
 					?>
-					<div class="aec-settings-container clear" style="max-width: 600px;margin: 4px auto;">
+					<div class="aec-settings-container clear">
 						<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
 						<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id . '&processor=' . $processor['handle'] ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
 						<?php
@@ -2295,51 +2295,43 @@ jQuery(document).ready(function(jQuery) {
 				}
 			}
 			?>
-		</td></tr></table>
+		</div>
 		<?php $tabs->nextPane( 'text' ); ?>
-		<table class="aecadminform">
-			<tr><td>
-				<div style="position:relative;float:left;width:99%;">
-					<div class="aec-settings-container">
-						<h4><?php echo JText::_('Customize'); ?></h4>
-						<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'meta' ); ?>
-					</div>
-					<div class="aec-settings-container">
-						<h4><?php echo JText::_('Custom Thanks'); ?></h4>
-						<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks_keeporiginal' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks' ); ?>
-					</div>
-				</div>
-			</td></tr>
-		</table>
+		<div class="col-sm-12">
+			<div class="aec-settings-container">
+				<h4><?php echo JText::_('Customize'); ?></h4>
+				<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'meta' ); ?>
+			</div>
+			<div class="aec-settings-container">
+				<h4><?php echo JText::_('Custom Thanks'); ?></h4>
+				<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks_keeporiginal' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks' ); ?>
+			</div>
+		</div>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
-		<table class="aecadminform">
-			<tr><td>
-				<div style="position:relative;float:left;width:49%;">
-					<div class="aec-settings-container">
-						<h4><?php echo JText::_('AEC_RESTRICTIONS_INVENTORY_HEADER'); ?></h4>
-						<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_enabled' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'inventory_amount' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_used' ); ?>
-					</div>
-				</div>
-				<div style="position:relative;float:left;width:49%;">
-					<div class="aec-settings-container">
-						<h4><?php echo JText::_('AEC_RESTRICTIONS_REDIRECT_HEADER'); ?></h4>
-						<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
-					</div>
-				</div>
-			</td></tr>
-			<tr><td>
-				<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-			</td></tr>
-		</table>
+		<div class="col-sm-6">
+			<div class="aec-settings-container">
+				<h4><?php echo JText::_('AEC_RESTRICTIONS_INVENTORY_HEADER'); ?></h4>
+				<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_enabled' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'inventory_amount' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_used' ); ?>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="aec-settings-container">
+				<h4><?php echo JText::_('AEC_RESTRICTIONS_REDIRECT_HEADER'); ?></h4>
+				<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
+			</div>
+		</div>
+		<div class="col-sm-12">
+			<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+		</div>
 		<?php $tabs->nextPane( 'trial' ); ?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-12">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('PAYPLAN_TRIAL_TITLE'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
@@ -2350,7 +2342,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo JText::_('PAYPLAN_AMOUNT_NOTICE_TEXT'); ?>
 				</div>
 			</div>
-		</td></tr></table>
+		</div>
 		<?php $tabs->nextPane( 'relations' ); ?>
 		<table class="aecadminform"><tr><td>
 			<div class="aec-settings-container">

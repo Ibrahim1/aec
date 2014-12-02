@@ -217,16 +217,18 @@ class aecHTML
 			case 'toggle':
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 
+				$return .= '<div class="col-sm-8">';
 				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
 				$return .= $insertctrl;
-				$return .= '</div>';
+				$return .= '</div></div>';
 				break;
 			case 'toggle_disabled':
 				$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '"/>';
 
+				$return .= '<div class="col-sm-8">';
 				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1"/>';
 				$return .= $insertctrl;
-				$return .= '</div>';
+				$return .= '</div></div>';
 				break;
 			case 'editor':
 				$editor = JFactory::getEditor();
