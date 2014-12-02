@@ -218,7 +218,7 @@ class aecHTML
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 
 				$return .= '<div class="col-sm-8">';
-				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
+				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1" data-state="' . $value . '"/>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -226,7 +226,7 @@ class aecHTML
 				$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '"/>';
 
 				$return .= '<div class="col-sm-8">';
-				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1"/>';
+				$return .= '<input id="' . $name . '" class="bootstrap-switch" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1" data-state="' . $value . '"/>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;

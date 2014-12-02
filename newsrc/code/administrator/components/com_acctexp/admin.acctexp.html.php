@@ -2279,7 +2279,7 @@ jQuery(document).ready(function(jQuery) {
 				</div>
 			</div>
 		<?php $tabs->nextPane( 'processors' ); ?>
-		<div class="col-sm-12">
+		<div class="col-sm-8 col-sm-offset-2">
 			<?php
 			if ( !empty( $aecHTML->customparams->pp ) ) {
 				foreach ( $aecHTML->customparams->pp as $id => $processor ) {
