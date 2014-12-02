@@ -2142,6 +2142,8 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm();
 
+		?><div class="col-sm-12"><?php
+
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
@@ -2447,6 +2449,8 @@ jQuery(document).ready(function(jQuery) {
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />
 		</form>
+
+		</div>
 
 		<?php
  		HTML_myCommon::endCommon();
