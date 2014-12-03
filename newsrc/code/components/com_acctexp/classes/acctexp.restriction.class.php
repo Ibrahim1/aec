@@ -435,12 +435,6 @@ class aecRestrictionHelper
 
 				foreach ( $block as $sblock ) {
 
-					if ( count( $block ) < 2 ) {
-						echo '<div class="aec-settings-container-inline">';
-					} else {
-						echo '<div class="aec-settings-container-inline">';
-					}
-
 					foreach ( $sblock as $vname ) {
 						echo $aecHTML->createSettingsParticle( str_replace( '*', $type, $vname ) );
 					}

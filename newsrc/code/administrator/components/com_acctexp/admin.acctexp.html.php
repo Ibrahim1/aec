@@ -2284,7 +2284,7 @@ jQuery(document).ready(function(jQuery) {
 			if ( !empty( $aecHTML->customparams->pp ) ) {
 				foreach ( $aecHTML->customparams->pp as $id => $processor ) {
 					?>
-					<div class="aec-settings-container clear">
+					<div class="aec-settings-container">
 						<h2><?php echo $processor['name']; ?></h2>
 						<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id . '&processor=' . $processor['handle'] ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
 						<?php
@@ -2348,10 +2348,12 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		</div>
 		<?php $tabs->nextPane( 'relations' ); ?>
-		<div class="aec-settings-container">
-			<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
-			<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
-			<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
+		<div class="col-sm-8 col-sm-offset-2">
+			<div class="aec-settings-container">
+				<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
+				<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
+			</div>
 		</div>
 		<?php $tabs->nextPane( 'mis' ); ?>
 		<div class="col-sm-6">
@@ -2424,7 +2426,7 @@ jQuery(document).ready(function(jQuery) {
 				?>
 			</div>
 			<?php if ( !empty( $aecHTML->customparams->hasperplanmi ) ) { ?>
-			<div class="col-sm-8 col-sm-offset-2">
+			<div class="col-sm-6">
 				<div class="aec-settings-container">
 					<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_hidden' ); ?>
@@ -2436,7 +2438,7 @@ jQuery(document).ready(function(jQuery) {
 				foreach ( $aecHTML->customparams->mi['custom'] as $id => $mi ) {
 					?>
 					<div class="col-sm-8 col-sm-offset-2">
-						<div class="aec-settings-container clear">
+						<div class="aec-settings-container">
 							<h2><?php echo $mi['name']; ?></h2>
 							<?php
 							foreach ( $mi['params'] as $customparam ) {
