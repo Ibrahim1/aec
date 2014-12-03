@@ -2381,49 +2381,52 @@ jQuery(document).ready(function(jQuery) {
 				}
 				?>
 			</div>
+		</div>
 			<div class="col-sm-6">
-				<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
-				<?php
-				if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
-					echo '<table style="margin: 0 auto;">';
-					foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
-						?>
-						<tr>
-							<td>
-								<h5>
-									<strong><?php echo $mi->name; ?></strong>
-									(#<?php echo $mi->id; ?>)
-									<?php echo $mi->inherited ? ( ' (' . JText::_('inherited from group, see above') . '!)' ) : ''; ?>
-									(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
-								</h5>
-							</td>
-							<td>
-								<div class="form-control">
-									<div class="toggleswitch">
-										<label class="toggleswitch" onclick="">
-											<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>"/>
-											<span class="toggleswitch-inner">
-												<span class="toggleswitch-on"><?php echo JText::_( 'yes' ) ?></span>
-												<span class="toggleswitch-off"><?php echo JText::_( 'no' ) ?></span>
-												<span class="toggleswitch-handle"></span>
-											</span>
-										</label>
+				<div class="aec-settings-container">
+					<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
+					<?php
+					if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
+						echo '<table style="margin: 0 auto;">';
+						foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
+							?>
+							<tr>
+								<td>
+									<h5>
+										<strong><?php echo $mi->name; ?></strong>
+										(#<?php echo $mi->id; ?>)
+										<?php echo $mi->inherited ? ( ' (' . JText::_('inherited from group, see above') . '!)' ) : ''; ?>
+										(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+									</h5>
+								</td>
+								<td>
+									<div class="form-control">
+										<div class="toggleswitch">
+											<label class="toggleswitch" onclick="">
+												<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>"/>
+												<span class="toggleswitch-inner">
+													<span class="toggleswitch-on"><?php echo JText::_( 'yes' ) ?></span>
+													<span class="toggleswitch-off"><?php echo JText::_( 'no' ) ?></span>
+													<span class="toggleswitch-handle"></span>
+												</span>
+											</label>
+										</div>
 									</div>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" style="border-bottom: 1px dashed #999;">
-								<p><?php echo $mi->desc; ?></p>
-							</td>
-						</tr>
-						<?php
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="border-bottom: 1px dashed #999;">
+									<p><?php echo $mi->desc; ?></p>
+								</td>
+							</tr>
+							<?php
+						}
+						echo '</table>';
+					} else {
+						echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
 					}
-					echo '</table>';
-				} else {
-					echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
-				}
-				?>
+					?>
+				</div>
 			</div>
 			<?php if ( !empty( $aecHTML->customparams->hasperplanmi ) ) { ?>
 			<div class="col-sm-6">
