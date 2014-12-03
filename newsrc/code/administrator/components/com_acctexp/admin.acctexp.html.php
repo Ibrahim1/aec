@@ -2285,7 +2285,7 @@ jQuery(document).ready(function(jQuery) {
 				foreach ( $aecHTML->customparams->pp as $id => $processor ) {
 					?>
 					<div class="aec-settings-container clear">
-						<h2 style="clear:both;"><?php echo $processor['name']; ?></h2>
+						<h2><?php echo $processor['name']; ?></h2>
 						<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id . '&processor=' . $processor['handle'] ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
 						<?php
 						foreach ( $processor['params'] as $customparam ) {
@@ -2299,7 +2299,7 @@ jQuery(document).ready(function(jQuery) {
 			?>
 		</div>
 		<?php $tabs->nextPane( 'text' ); ?>
-		<div class="col-sm-12">
+		<div class="col-sm-6">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Customize'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
@@ -2307,6 +2307,8 @@ jQuery(document).ready(function(jQuery) {
 				<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'meta' ); ?>
 			</div>
+		</div>
+		<div class="col-sm-6">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Custom Thanks'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
@@ -2333,7 +2335,7 @@ jQuery(document).ready(function(jQuery) {
 			<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		</div>
 		<?php $tabs->nextPane( 'trial' ); ?>
-		<div class="col-sm-12">
+		<div class="col-sm-8 col-sm-offset-2">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('PAYPLAN_TRIAL_TITLE'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
@@ -2346,15 +2348,13 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		</div>
 		<?php $tabs->nextPane( 'relations' ); ?>
-		<table class="aecadminform"><tr><td>
-			<div class="aec-settings-container">
-				<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
-			</div>
-		</td></tr></table>
+		<div class="aec-settings-container">
+			<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
+			<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
+			<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
+		</div>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-6">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
 				<?php
@@ -2378,6 +2378,8 @@ jQuery(document).ready(function(jQuery) {
 					echo '<p>' . JText::_('No inherited MIs - A subscription plan can inherit MIs from groups that it is in') . '</p>';
 				}
 				?>
+			</div>
+			<div class="col-sm-6">
 				<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
 				<?php
 				if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
@@ -2422,28 +2424,31 @@ jQuery(document).ready(function(jQuery) {
 				?>
 			</div>
 			<?php if ( !empty( $aecHTML->customparams->hasperplanmi ) ) { ?>
-			<div class="aec-settings-container">
-				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_hidden' ); ?>
+			<div class="col-sm-8 col-sm-offset-2">
+				<div class="aec-settings-container">
+					<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_hidden' ); ?>
+				</div>
 			</div>
 			<?php } ?>
 			<?php
 			if ( !empty( $aecHTML->customparams->mi['custom'] ) ) {
 				foreach ( $aecHTML->customparams->mi['custom'] as $id => $mi ) {
 					?>
-					<div class="aec-settings-container clear">
-						<h2 style="clear:both;"><?php echo $mi['name']; ?></h2>
-						<?php
-						foreach ( $mi['params'] as $customparam ) {
-							echo $aecHTML->createSettingsParticle( $customparam );
-						}
-						?>
+					<div class="col-sm-8 col-sm-offset-2">
+						<div class="aec-settings-container clear">
+							<h2><?php echo $mi['name']; ?></h2>
+							<?php
+							foreach ( $mi['params'] as $customparam ) {
+								echo $aecHTML->createSettingsParticle( $customparam );
+							}
+							?>
+						</div>
 					</div>
 					<?php
 				}
 			}
 			?>
-		</td></tr></table>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
