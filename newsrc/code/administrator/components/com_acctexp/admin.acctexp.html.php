@@ -2395,23 +2395,12 @@ jQuery(document).ready(function(jQuery) {
 									<h5>
 										<strong><?php echo $mi->name; ?></strong>
 										(#<?php echo $mi->id; ?>)
-										<?php echo $mi->inherited ? ( ' (' . JText::_('inherited from group, see above') . '!)' ) : ''; ?>
+										<?php echo $mi->inherited ? ( ' (' . JText::_('inherited from parent group') . '!)' ) : ''; ?>
 										(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
 									</h5>
 								</td>
 								<td>
-									<div class="form-control">
-										<div class="toggleswitch">
-											<label class="toggleswitch" onclick="">
-												<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>"/>
-												<span class="toggleswitch-inner">
-													<span class="toggleswitch-on"><?php echo JText::_( 'yes' ) ?></span>
-													<span class="toggleswitch-off"><?php echo JText::_( 'no' ) ?></span>
-													<span class="toggleswitch-handle"></span>
-												</span>
-											</label>
-										</div>
-									</div>
+									<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-switch" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? 'true' : 'false'; ?>"/>
 								</td>
 							</tr>
 							<tr>
