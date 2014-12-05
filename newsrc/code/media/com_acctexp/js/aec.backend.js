@@ -330,32 +330,32 @@ function toggleProperty(type, property, id, callerid, callerclass) {
 		classidelement.addClass('glyphicon-rotate');
 	}
 
-	if ( idelement.hasClass('btn-toggle-danger') ) {
-		idelement.removeClass('btn-toggle-danger').addClass('btn-toggle-warning');
+	if ( idelement.hasClass('btn-danger') ) {
+		idelement.removeClass('btn-danger').addClass('btn-warning');
 	} else {
-		idelement.removeClass('btn-toggle-success').addClass('btn-toggle-warning');
+		idelement.removeClass('btn-success').addClass('btn-warning');
 	}
 
 	classidelement.addClass('glyphicon-refresh').removeClass('glyphicon-eye-open');
 
 	jQuery.post("index.php?option=com_acctexp&task=toggleAjax&type="+type+"&property="+property+"&id="+id , {queryString: ""}, function(data) {
-		idelement.removeClass('btn-toggle-warning');
+		idelement.removeClass('btn-warning');
 
 		if ( data == "1" ) {
-			idelement.addClass('btn-toggle-success');
+			idelement.addClass('btn-uccess');
 
 			if ( property == 'default' ) {
 				classidelement.addClass('glyphicon-star').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 				idelement.attr('disabled','disabled').addClass('ui-disabled');
 				jQuery('.'+callerclass+':not(#'+callerid+') i').addClass('glyphicon-star-empty').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
-				jQuery('.'+callerclass+':not(#'+callerid+')').removeAttr('disabled').removeClass('ui-disabled').removeClass('btn-toggle-success').addClass('btn-toggle-danger');
+				jQuery('.'+callerclass+':not(#'+callerid+')').removeAttr('disabled').removeClass('ui-disabled').removeClass('btn-success').addClass('btn-danger');
 			} else if ( property == 'visible' ) {
 				classidelement.addClass('glyphicon-eye-open').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 			} else {
 				classidelement.addClass('glyphicon-ok').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 			}
 		} else {
-			idelement.addClass('btn-toggle-danger');
+			idelement.addClass('btn-danger');
 
 			classidelement.addClass('glyphicon-remove').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
 		}
