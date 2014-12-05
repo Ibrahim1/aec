@@ -295,11 +295,11 @@ class HTML_myCommon
 		$cssid = $csscl . '-' . $id;
 
 		if ( ( $property == 'default' ) && $state ) {
-			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-toggle <?php echo $csscl;?> ui-disabled" id="<?php echo $cssid;?>" href="#" disabled="disabled" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
+			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-sm <?php echo $csscl;?> ui-disabled" id="<?php echo $cssid;?>" href="#" disabled="disabled" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
 				<?php echo aecHTML::Icon( $icons[$state] ); ?>
 			</a><?php
 		} else {
-			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-toggle <?php echo $csscl;?>" id="<?php echo $cssid;?>" href="#" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
+			?><a class="btn btn-<?php echo $state ? 'success' : 'danger'; ?> btn-sm <?php echo $csscl;?>" id="<?php echo $cssid;?>" href="#" onClick="<?php echo $js; ?>('<?php echo $type; ?>','<?php echo $property; ?>','<?php echo $id;?>','<?php echo $cssid;?>','<?php echo $csscl;?>')">
 				<?php echo aecHTML::Icon( $icons[$state] ); ?>
 			</a><?php
 		}
@@ -2021,18 +2021,19 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		<div class="container-fluid">
 			<div class="row">
+				<div class="col-sm-12">
 				<div class="aecadminform">
 					<table class="adminlist table table-striped table-hover">
 						<thead><tr>
 							<th>#</th>
 							<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
-							<th><input type="checkbox" name="toggle" value="" /></th>
+							<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
 							<th class="text-left"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
 							<th><?php echo JText::_('PAYPLAN_NAME'); ?></th>
 							<th><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-							<th><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-							<th><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-							<th><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+							<th class="text-right"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
+							<th class="text-left"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
+							<th class="text-center"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
 							<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
 							<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 						</tr></thead>
@@ -2041,13 +2042,13 @@ jQuery(document).ready(function(jQuery) {
 							<tr>
 								<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 								<td><?php echo $row->id; ?></td>
-								<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+								<td class="text-center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 								<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
 								<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 								<td class="text-left"><?php echo $row->desc; ?></td>
-								<td><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
-								<td><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
-								<td class="text-right"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
+								<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
+								<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
+								<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
 								<td>
 									<div class="progress-group">
 										<div class="progress progress-short progress-danger">
@@ -2089,6 +2090,7 @@ jQuery(document).ready(function(jQuery) {
 						</tr>
 						</tfoot>
 					</table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -2400,7 +2402,7 @@ jQuery(document).ready(function(jQuery) {
 									</h5>
 								</td>
 								<td>
-									<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-switch" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? 'true' : 'false'; ?>"/>
+									<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-switch" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
 								</td>
 							</tr>
 							<tr>
