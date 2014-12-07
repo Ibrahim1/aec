@@ -2028,7 +2028,7 @@ jQuery(document).ready(function(jQuery) {
 							<th>#</th>
 							<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
 							<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
-							<th class="text-left"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+							<th class="text-center"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
 							<th><?php echo JText::_('PAYPLAN_NAME'); ?></th>
 							<th><?php echo JText::_('PAYPLAN_DESC'); ?></th>
 							<th class="text-right"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
