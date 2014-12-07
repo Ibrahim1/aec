@@ -6,13 +6,13 @@
 		outline: 0 none !important;
 		height: 37px;
 		margin-top: 0;
-		padding: 48px 20px 0;
+		padding: 48px 32px 0;
 	}
 	a.toolbar-notify {
 		float: left;
 		display: box;
 		color: #fff;
-		padding: 16px 0 0;
+		padding: 17px 0 0;
 		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 		.animation(text-shadow-pulsate 2s infinite);
 		&:hover {
@@ -27,7 +27,7 @@
 				color: #f9f9f9;
 				font-size: 110%;
 				font-weight: bold;
-				padding: 15px 15px 10px;
+				padding: 17px 15px 10px;
 			}
 			> .dropdown-menu {
 				&:after,
@@ -68,18 +68,20 @@
 	width: 84px;
 	overflow: hidden;
 	.transition( width 0.6s ease );
-	.brand { margin: 0 auto; }
+	.brand {
+		margin: 0 auto;
+		padding: 0 16px 0 0;
+	}
 	.nav {
 		margin: 0 auto;
 		> li > a {
 			padding: 10px 15px;
 		}
 	}
-	.navbar-inner {
+	.container {
 		height: 40px;
 		border-radius: 0 10px 10px 0;
 	}
-	.container { width: 940px; }
 	a.toolbar-notify {
 		margin-left: -10px;
 	}
@@ -92,6 +94,22 @@
 		}
 		a.toolbar-notify {
 			margin-left: inherit;
+		}
+
+		#aecmenu-notifications {
+			i {
+				opacity: 1;
+				margin-right: 0;
+				margin-left: 0;
+			}
+		}
+	}
+
+	#aecmenu-notifications {
+		i {
+			opacity: 0.5;
+			margin-right: 8px;
+			margin-left: 4px;
 		}
 	}
 }
@@ -108,6 +126,6 @@
 
 .aec-navbar a.brand {
 	float: left;
-	background: url("../images/admin/icons/aec_logo_small_header.png") no-repeat scroll 50% 30% transparent;
+	background: url("../images/admin/icons/aec_logo_small_header.png") no-repeat scroll 50% 50% transparent;
 	text-indent: 36px;
 }
