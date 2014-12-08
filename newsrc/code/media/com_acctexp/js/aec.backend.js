@@ -342,7 +342,7 @@ function toggleProperty(type, property, id, callerid, callerclass) {
 		idelement.removeClass('btn-warning');
 
 		if ( data == "1" ) {
-			idelement.addClass('btn-uccess');
+			idelement.addClass('btn-success');
 
 			if ( property == 'default' ) {
 				classidelement.addClass('glyphicon-star').removeClass('glyphicon-refresh').removeClass('glyphicon-rotate');
