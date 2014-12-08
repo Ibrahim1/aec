@@ -2043,7 +2043,7 @@ jQuery(document).ready(function(jQuery) {
 								<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 								<td><?php echo $row->id; ?></td>
 								<td class="text-center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-								<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->group; ?></td>
+								<td class="text-center" style="background: #<?php echo $row->color; ?>;"><strong><?php echo $row->group; ?></strong></td>
 								<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 								<td class="text-left"><?php echo $row->desc; ?></td>
 								<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
