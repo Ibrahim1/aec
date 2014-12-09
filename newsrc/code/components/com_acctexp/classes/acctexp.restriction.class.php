@@ -434,12 +434,11 @@ class aecRestrictionHelper
 				echo '<h4>' . JText::_( strtoupper( 'aec_restrictions_' . substr( $firstitem, 0, strpos( $firstitem, '_', strpos( $firstitem, '_' )+3 ) ) . '_header' ) )  . '</h4>';
 
 				foreach ( $block as $sblock ) {
-
 					foreach ( $sblock as $vname ) {
 						echo $aecHTML->createSettingsParticle( str_replace( '*', $type, $vname ) );
 					}
-					echo '</div>';
 				}
+
 				echo '</div></div>';
 			}
 		}
