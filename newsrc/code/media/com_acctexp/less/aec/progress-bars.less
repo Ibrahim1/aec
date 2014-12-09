@@ -7,7 +7,7 @@
 		float: left;
 		a,
 		a:hover { color: #fff; }
-		.progress-content {
+		.progress-bar-content {
 			width: 90%;
 			padding: 4px;
 			line-height: 100%;
@@ -22,20 +22,17 @@
 			&:first-child {
 				border-radius: 4px 0 0 4px;
 				.progress-bar { float: right; }
-				.progress-content { float: right; }
+				.progress-bar-content { float: right; }
 			}
 			&:last-child {
 				border-radius: 0 4px 4px 0;
 			}
 		}
 	}
-	&-content {
+	&-bar-content {
 		float: left;
 		padding: 4px;
 		font-weight: bold;
 		line-height: 120%;
-	}
-	&-short .progress-bar &-content {
-		width: 80%;
 	}
 }

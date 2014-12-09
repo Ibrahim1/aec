@@ -2053,11 +2053,11 @@ jQuery(document).ready(function(jQuery) {
 									<div class="progress-group">
 										<div class="progress">
 											<?php if ( $row->expiredcount ) { ?>
-											<div class="progress-bar progress-short progress-danger" style="width: <?php echo $row->expired_percentage; ?>%;">
+											<div class="progress-bar progress-bar-danger" style="width: <?php echo $row->expired_percentage; ?>%;">
 												<?php if ( !$row->expired_inner ) {
 													echo '</div>';
 												} ?>
-												<div class="progress-content">
+												<div class="progress-bar-content">
 													<a href="<?php echo $row->link_expired; ?>">
 														<strong><?php echo $row->expiredcount; ?></strong>
 													</a>
@@ -2065,15 +2065,15 @@ jQuery(document).ready(function(jQuery) {
 												<?php if ( $row->expired_inner ) {
 													echo '</div>';
 												} ?>
-											<?php } ?>
 											</div>
+											<?php } ?>
 											<div class="progress">
 												<?php if ( $row->usercount ) { ?>
-												<div class="progress-bar progress-short progress-striped" style="width: <?php echo $row->active_percentage; ?>%;">
+												<div class="progress-bar progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
 													<?php if ( !$row->active_inner ) {
 														echo '</div>';
 													} ?>
-													<div class="progress-content">
+													<div class="progress-bar-content">
 														<a href="<?php echo $row->link_active; ?>">
 															<strong><?php echo $row->usercount; ?></strong>
 														</a>
@@ -2081,19 +2081,30 @@ jQuery(document).ready(function(jQuery) {
 													<?php if ( $row->active_inner ) {
 														echo '</div>';
 													} ?>
-												<?php } ?>
 												</div>
+												<?php } ?>
 											</div>
+										</div>
+									</div>
 								</td>
 								<td>
 									<div class="progress">
 										<?php if ( $row->usercount + $row->expiredcount ) { ?>
-										<div class="progress-bar progress-short progress-info progress-striped" style="width: <?php echo $row->total_percentage; ?>%;">
-											<?php if ( !$row->total_inner ) { echo '</div>'; } ?>
-											<div class="progress-content"><a href="<?php echo $row->link; ?>"><strong><?php echo $row->usercount + $row->expiredcount; ?></strong></a></div>
-											<?php if ( $row->total_inner ) { echo '</div>'; } ?>
+										<div class="progress-bar progress-short progress-bar-info progress-bar-striped" style="width: <?php echo $row->total_percentage; ?>%;">
+											<?php if ( !$row->total_inner ) {
+												echo '</div>';
+											} ?>
+											<div class="progress-bar-content">
+												<a href="<?php echo $row->link; ?>">
+													<strong><?php echo $row->usercount + $row->expiredcount; ?></strong>
+												</a>
+											</div>
+											<?php if ( $row->total_inner ) {
+												echo '</div>';
+											} ?>
 											<?php } ?>
 										</div>
+									</div>
 								</td>
 							</tr>
 						<?php } ?>
