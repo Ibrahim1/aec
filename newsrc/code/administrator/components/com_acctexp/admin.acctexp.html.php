@@ -2013,16 +2013,21 @@ jQuery(document).ready(function(jQuery) {
 				<p style="text-align: center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
 			</div>
 		<?php } else { ?>
-			<div class="aec-filters">
-				<div class="form-inline">
-					<?php echo $lists['filter_group'];?>
-					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
-				</div>
-			</div>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
 				<div class="aecadminform">
+					<div class="filter-set">
+						<div class="filter-set-handle">
+							<span>Filter <i class="glyphicon glyphicon-filter"></i></span>
+						</div>
+						<div class="filter-set-body">
+							<div class="form-inline">
+								<?php echo $lists['filter_group'];?>
+								<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+							</div>
+						</div>
+					</div>
 					<table class="adminlist table table-striped table-hover">
 						<thead><tr>
 							<th>
