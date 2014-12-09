@@ -2052,38 +2052,36 @@ jQuery(document).ready(function(jQuery) {
 								<td>
 									<div class="progress-group">
 										<div class="progress">
-											<?php if ( $row->expiredcount ) { ?>
 											<div class="progress-bar progress-bar-danger" style="width: <?php echo $row->expired_percentage; ?>%;">
-												<?php if ( !$row->expired_inner ) {
-													echo '</div>';
-												} ?>
+											<?php if ( !$row->expired_inner ) {
+												echo '</div>';
+											} ?>
 												<div class="progress-bar-content">
-													<a href="<?php echo $row->link_expired; ?>">
-														<strong><?php echo $row->expiredcount; ?></strong>
-													</a>
+													<?php if ( $row->expiredcount ) { ?>
+														<a href="<?php echo $row->link_expired; ?>">
+															<strong><?php echo $row->expiredcount; ?></strong>
+														</a>
+													<?php } ?>
 												</div>
-												<?php if ( $row->expired_inner ) {
-													echo '</div>';
-												} ?>
-											</div>
-											<?php } ?>
-											<div class="progress">
-												<?php if ( $row->usercount ) { ?>
-												<div class="progress-bar progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
-													<?php if ( !$row->active_inner ) {
-														echo '</div>';
-													} ?>
-													<div class="progress-bar-content">
+											<?php if ( $row->expired_inner ) {
+												echo '</div>';
+											} ?>
+										</div>
+										<div class="progress">
+											<div class="progress-bar progress-bar-succcess progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
+											<?php if ( !$row->active_inner ) {
+												echo '</div>';
+											} ?>
+												<div class="progress-bar-content">
+													<?php if ( $row->usercount ) { ?>
 														<a href="<?php echo $row->link_active; ?>">
 															<strong><?php echo $row->usercount; ?></strong>
 														</a>
-													</div>
-													<?php if ( $row->active_inner ) {
-														echo '</div>';
-													} ?>
+													<?php } ?>
 												</div>
-												<?php } ?>
-											</div>
+											<?php if ( $row->active_inner ) {
+												echo '</div>';
+											} ?>
 										</div>
 									</div>
 								</td>
