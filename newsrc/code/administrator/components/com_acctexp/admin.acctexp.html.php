@@ -2025,10 +2025,10 @@ jQuery(document).ready(function(jQuery) {
 				<div class="aecadminform">
 					<table class="adminlist table table-striped table-hover">
 						<thead><tr>
-							<th>#</th>
-							<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
-							<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
-							<th class="text-center"><?php echo JText::_('PAYPLAN_GROUP'); ?></th>
+							<th>
+								<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
+								<input type="checkbox" name="toggle" value="" />
+							</th>
 							<th><?php echo JText::_('PAYPLAN_NAME'); ?></th>
 							<th><?php echo JText::_('PAYPLAN_DESC'); ?></th>
 							<th class="text-right"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
@@ -2040,15 +2040,9 @@ jQuery(document).ready(function(jQuery) {
 						<tbody>
 						<?php foreach ( $rows as $i => $row ) { ?>
 							<tr>
-								<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-								<td><?php echo $row->id; ?></td>
-								<td class="text-center"><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
-								<td class="text-center">
-									<span class="label label-default" style="background: #<?php echo $row->color; ?>;">
-										&nbsp;
-									</span>
-									&nbsp;
-									<strong><?php echo $row->group; ?></strong>
+								<td class="text-center" style="border-left: 8px solid #<?php echo $row->color; ?>;">
+									<?php echo $row->id; ?>
+									<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>&nbsp;
 								</td>
 								<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 								<td class="text-left"><?php echo $row->desc; ?></td>
