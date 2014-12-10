@@ -2720,10 +2720,6 @@ function editSubscriptionPlan( $id, $option )
 
 	$lists['add_group'] 			= JHTML::_('select.genericlist', $glist, 'add_group', 'size="1"', 'value', 'text', ( ( $row->id ) ? 0 : 1 ) );
 
-	foreach ( $groupids as $groupid => $groupcolor ) {
-		$lists['add_group'] = str_replace( 'value="'.$groupid.'"', 'value="'.$groupid.'" style="background-color: #'.$groupcolor.' !important;"', $lists['add_group'] );
-	}
-
 	$params['add_group']			= array( 'list', '', '', ( ( $row->id ) ? 0 : 1 ) );
 
 	$params['params_remap']			= array( 'subarea_change', 'params' );
@@ -4860,7 +4856,11 @@ function invoices( $option )
 
 		$invoices[$id]->formatInvoiceNumber();
 
-		$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number . ( ($invoices[$id]->invoice_number_formatted != $invoices[$id]->invoice_number) ? "\n" . '(' . $invoices[$id]->invoice_number_formatted . ')' : '' );
+		if ( empty($invoices[$id]->invoice_number_formatted) ) {
+			$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number;
+		} else {
+			$invoices[$id]->invoice_number_formatted = $invoices[$id]->invoice_number . ( ($invoices[$id]->invoice_number_formatted != $invoices[$id]->invoice_number) ? "\n" . '(' . $invoices[$id]->invoice_number_formatted . ')' : '' );
+		}
 
 		if ( !empty( $invoices[$id]->coupons ) ) {
 			$coupons = unserialize( base64_decode( $invoices[$id]->coupons ) );
