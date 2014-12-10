@@ -2458,18 +2458,24 @@ function listSubscriptionPlans( $option )
 				. ' WHERE type = \'item\''
 				. ' AND item_id = \'' . $rows[$n]->id . '\''
 				;
-		$db->setQuery( $query	);
-		$g = (int) $db->loadResult();
+		$db->setQuery( $query );
 
-		$group = empty( $g ) ? 0 : $g;
+		$groups = xJ::getDBArray( $db );
 
-		if ( !isset( $gcolors[$group] ) ) {
-			$gcolors[$group] = array();
-			$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
+		$rows[$n]->groups = array();
+		foreach ( $groups as $group ) {
+			if ( empty($group) ) continue;
+
+			if ( !isset( $gcolors[$group] ) ) {
+				$gcolors[$group] = array();
+				$gcolors[$group]['color'] = ItemGroupHandler::groupColor( $group );
+			}
+
+			$rows[$n]->groups[] = (object) array(
+				'id' => $group,
+				'color' => $gcolors[$group]['color']
+			);
 		}
-
-		$rows[$n]->group = $group;
-		$rows[$n]->color = $gcolors[$group]['color'];
 	}
 
 	$grouplist = ItemGroupHandler::getTree();

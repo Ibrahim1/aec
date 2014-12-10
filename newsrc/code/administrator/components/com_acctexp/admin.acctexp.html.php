@@ -2042,7 +2042,13 @@ jQuery(document).ready(function(jQuery) {
 						<tbody>
 						<?php foreach ( $rows as $i => $row ) { ?>
 							<tr>
-								<td class="text-center" style="border-left: 8px solid #<?php echo $row->color; ?>;">
+								<td class="text-center">
+									<div class="group-colors">
+										<?php foreach ( $row->groups as $group ) { ?>
+											<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
+											</div>
+										<?php } ?>
+									</div>
 									<?php echo $row->id; ?>
 									<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>&nbsp;
 								</td>
