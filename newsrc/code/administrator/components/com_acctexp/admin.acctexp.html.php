@@ -2499,47 +2499,58 @@ jQuery(document).ready(function(jQuery) {
 		?>
 		<div class="container-fluid">
 			<div class="row">
-				<table class="adminlist table-striped">
-					<thead><tr>
-						<th>
-							<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
-							<input type="checkbox" name="toggle" value="" />
-						</th>
-						<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
-						<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
-						<th class="text-left"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
-						<th class="text-right"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
-						<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
-					</tr></thead>
-					<tbody>
-					<?php foreach ( $rows as $i => $row ) { ?>
-						<tr>
-							<td>
-								<div class="group-colors">
-									<?php foreach ( $row->parent_groups as $group ) { ?>
-										<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
+				<div class="col-sm-12">
+					<div class="aecadminform">
+						<table class="adminlist table-striped">
+							<thead><tr>
+								<th>
+									<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
+									<input type="checkbox" name="toggle" value="" />
+								</th>
+								<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+								<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
+								<th class="text-right"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
+								<th class="text-left"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
+								<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
+							</tr></thead>
+							<tbody>
+							<?php foreach ( $rows as $i => $row ) { ?>
+								<tr>
+									<td class="text-center">
+										<div class="group-colors">
+											<?php foreach ( $row->parent_groups as $group ) { ?>
+												<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
+												</div>
+											<?php } ?>
 										</div>
-									<?php } ?>
-								</div>
-								<?php echo $row->id; ?>&nbsp;
-								<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
-							</td>
-							<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-							<td class="text-left"><?php echo $row->desc; ?></td>
-							<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
-							<td class="text-left"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
-							<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
-						</tr>
-					<?php } ?>
-					</tbody>
-					<tfoot>
-					<tr>
-						<td colspan="10">
-							<?php echo $pageNav->getListFooter(); ?>
-						</td>
-					</tr>
-					</tfoot>
-				</table>
+										<?php echo $row->id; ?>&nbsp;
+										<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
+									</td>
+									<td>
+										<div class="group-colors">
+											<div class="group-colors-stripe" style="background: #<?php echo $row->color; ?>;">
+											</div>
+										</div>
+										<a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+									</td>
+									<td class="text-left"><?php echo $row->desc; ?></td>
+									<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
+									<td class="text-left"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
+									<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
+								</tr>
+							<?php } ?>
+							</tbody>
+							<tfoot>
+							<tr>
+								<td colspan="10">
+									<?php echo $pageNav->getListFooter(); ?>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+
 			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />

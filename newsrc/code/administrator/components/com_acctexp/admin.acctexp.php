@@ -3390,7 +3390,7 @@ function listItemGroups( $option )
 				. ' WHERE b.plan = ' . $row->id
 				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
 				;
-		$db->setQuery( $query	);
+		$db->setQuery( $query );
 
 	 	$rows[$rid]->usercount = $db->loadResult();
 	 	if ( $db->getErrorNum() ) {
@@ -3426,19 +3426,19 @@ function listItemGroups( $option )
 		$rows[$rid]->parent_groups = array();
 
 		if ( !empty( $parents ) ) {
-			$parent_group = $parents[0];
+			foreach ( $parents as $parent ) {
+				if ( !isset( $gcolors[$parent] ) ) {
+					$gcolors[$parent] = array();
+					$gcolors[$parent]['color'] = ItemGroupHandler::groupColor( $parent );
+				}
 
-			if ( !isset( $gcolors[$parent_group] ) ) {
-				$gcolors[$parent_group] = array();
-				$gcolors[$parent_group]['color'] = ItemGroupHandler::groupColor( $parent_group );
+				$rows[$rid]->parent_groups[] = (object) array(
+					'id' => $parent,
+					'color' => $gcolors[$parent]['color']
+				);
 			}
-
-			$rows[$rid]->groups[] = (object) array(
-				'id' => $parent_group,
-				'color' => $gcolors[$parent_group]['color']
-			);
 		} else {
-			$rows[$rid]->groups[] = (object) array(
+			$rows[$rid]->parent_groups[] = (object) array(
 				'id' => $gid,
 				'color' => $gcolors[$gid]['color']
 			);
