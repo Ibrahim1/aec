@@ -3424,6 +3424,8 @@ function listItemGroups( $option )
 
 		$parents = ItemGroupHandler::getParents( $gid, 'group' );
 
+		$rows[$rid]->parent_groups = array();
+
 		if ( !empty( $parents ) ) {
 			$parent_group = $parents[0];
 
@@ -3432,11 +3434,15 @@ function listItemGroups( $option )
 				$gcolors[$parent_group]['color'] = ItemGroupHandler::groupColor( $parent_group );
 			}
 
-			$rows[$rid]->parent_group = $parent_group;
-			$rows[$rid]->parent_color = $gcolors[$parent_group]['color'];
+			$rows[$rid]->groups[] = (object) array(
+				'id' => $parent_group,
+				'color' => $gcolors[$parent_group]['color']
+			);
 		} else {
-			$rows[$rid]->parent_group = $gid;
-			$rows[$rid]->parent_color = $gcolors[$gid]['color'];
+			$rows[$rid]->groups[] = (object) array(
+				'id' => $gid,
+				'color' => $gcolors[$gid]['color']
+			);
 		}
 
 		if ( !empty( $row->desc ) ) {

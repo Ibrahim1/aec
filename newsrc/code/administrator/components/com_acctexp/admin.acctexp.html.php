@@ -2049,8 +2049,8 @@ jQuery(document).ready(function(jQuery) {
 											</div>
 										<?php } ?>
 									</div>
-									<?php echo $row->id; ?>
-									<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>&nbsp;
+									<?php echo $row->id; ?>&nbsp;
+									<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
 								</td>
 								<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 								<td class="text-left"><?php echo $row->desc; ?></td>
@@ -2501,9 +2501,11 @@ jQuery(document).ready(function(jQuery) {
 			<div class="row">
 				<table class="adminlist table-striped">
 					<thead><tr>
-						<th>#</th>
-						<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
-						<th><input type="checkbox" name="toggle" value="" /></th>
+						<th>
+							<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
+							<input type="checkbox" name="toggle" value="" />
+						</th>
+						<th></th>
 						<th>Parent</th>
 						<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
 						<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
@@ -2514,9 +2516,16 @@ jQuery(document).ready(function(jQuery) {
 					<tbody>
 					<?php foreach ( $rows as $i => $row ) { ?>
 						<tr>
-							<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-							<td style="background: #<?php echo $row->color; ?>;"><?php echo $row->id; ?></td>
-							<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+							<td>
+								<div class="group-colors">
+									<?php foreach ( $row->groups as $group ) { ?>
+										<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
+										</div>
+									<?php } ?>
+								</div>
+								<?php echo $row->id; ?>&nbsp;
+								<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
+							</td>
 							<td class="text-right" style="background: #<?php echo $row->parent_color; ?>;"><?php echo $row->parent_group; ?></td>
 							<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 							<td class="text-left"><?php echo $row->desc; ?></td>
