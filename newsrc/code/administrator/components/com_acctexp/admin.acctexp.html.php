@@ -3881,9 +3881,13 @@ class bsPagination extends JPagination
 			$current = $this->{"pages.current"};
 		}
 		$lastpage = $total == $current;
+
 		echo '<div class="btn-group btn-group-pagination">';
+
 		echo $this->orderUpIcon($i, true, 'order'.$type.'up', '', ( $i || ( $current > 1 ) ) );
+
 		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', '', ( $i<($n-1) || !$lastpage ) );
+
 		echo '</div>';
 	}
 

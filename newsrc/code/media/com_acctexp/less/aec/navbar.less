@@ -2,12 +2,14 @@
 	z-index: 50;
 	margin-bottom: 0;
 	min-height: 48px;
+
 	.brand {
 		outline: 0 none !important;
 		height: 37px;
 		margin-top: 0;
 		padding: 48px 32px 0;
 	}
+
 	a.toolbar-notify {
 		float: left;
 		display: box;
@@ -20,25 +22,32 @@
 			text-decoration: none;
 		}
 	}
+
 	form { margin: 6px 0 -5px; }
+
 	.nav {
 		> li {
+			text-align: left;
+
 			> a {
 				color: #f9f9f9;
 				font-size: 110%;
 				font-weight: bold;
 				padding: 17px 15px 10px;
 			}
+
 			> .dropdown-menu {
 				&:after,
 				&:before {left: 45%; }
 			}
 		}
 	}
+
 	div {
 		> ul, .nav { padding-left: 10px; }
 		> ul a, .nav a { outline: 0 none !important; }
 	}
+
 	input {
 		height: 32px;
 		margin-top: 2px;
@@ -51,10 +60,12 @@
 }
 
 .aec-navbar.navbar-inverse {
+	.box-shadow("0 1px 3px rgba(0,0,0,.065), inset 0 -1px 5px rgba(1, 1, 1, 0.4)");
+
 	background: #c31313;
 	border: none;
-	.box-shadow("0 1px 3px rgba(0,0,0,.065), inset 0 -1px 5px rgba(1, 1, 1, 0.4)");
 	border-radius: 0 0 10px 10px;
+
 	.nav li.dropdown {
 		.open,
 		.active,
@@ -65,33 +76,42 @@
 }
 
 .aec-navbar.navbar-fixed-top {
+	.transition( width 0.6s ease );
+
 	width: 84px;
 	overflow: hidden;
-	.transition( width 0.6s ease );
+
 	.brand {
 		margin: 0 auto;
 		padding: 0 16px 0 0;
 	}
+
 	.nav {
 		margin: 0 auto;
 		> li > a {
 			padding: 10px 15px;
 		}
 	}
+
 	.container {
 		height: 40px;
 		border-radius: 0 10px 10px 0;
 	}
+
 	a.toolbar-notify {
 		margin-left: -10px;
 	}
+
 	&-override {
+		.transition( width 0.2s ease );
+
 		width: 100% !important;
 		overflow: visible !important;
-		.transition( width 0.2s ease );
+
 		.navbar-inner {
 			border-radius: 0;
 		}
+
 		a.toolbar-notify {
 			margin-left: inherit;
 		}
