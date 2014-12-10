@@ -2013,116 +2013,118 @@ jQuery(document).ready(function(jQuery) {
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
-				<div class="aecadminform">
-					<div class="filter-set">
-						<div class="filter-set-handle">
-							<span>Filter <i class="glyphicon glyphicon-filter"></i></span>
-						</div>
-						<div class="filter-set-body">
-							<div class="form-inline">
-								<?php echo $lists['filter_group'];?>
-								<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+					<div class="col-sm-12">
+						<div class="aecadminform">
+							<div class="filter-set">
+								<div class="filter-set-handle">
+									<span>Filter <i class="glyphicon glyphicon-filter"></i></span>
+								</div>
+								<div class="filter-set-body">
+									<div class="form-inline">
+										<?php echo $lists['filter_group'];?>
+										<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
+									</div>
+								</div>
 							</div>
+							<table class="adminlist table table-striped table-hover">
+								<thead><tr>
+									<th>
+										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
+										<input type="checkbox" name="toggle" value="" />
+									</th>
+									<th><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+									<th><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+									<th class="text-right"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
+									<th class="text-left"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
+									<th class="text-center"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+									<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
+									<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
+								</tr></thead>
+								<tbody>
+								<?php foreach ( $rows as $i => $row ) { ?>
+									<tr>
+										<td class="text-center">
+											<div class="group-colors">
+												<?php foreach ( $row->groups as $group ) { ?>
+													<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
+													</div>
+												<?php } ?>
+											</div>
+											<?php echo $row->id; ?>&nbsp;
+											<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
+										</td>
+										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
+										<td class="text-left"><?php echo $row->desc; ?></td>
+										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
+										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
+										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
+										<td>
+											<div class="progress-group">
+												<div class="progress">
+													<div class="progress-bar progress-bar-danger" style="width: <?php echo $row->expired_percentage; ?>%;">
+													<?php if ( !$row->expired_inner ) {
+														echo '</div>';
+													} ?>
+														<div class="progress-bar-content">
+															<?php if ( $row->expiredcount ) { ?>
+																<a href="<?php echo $row->link_expired; ?>">
+																	<strong><?php echo $row->expiredcount; ?></strong>
+																</a>
+															<?php } ?>
+														</div>
+													<?php if ( $row->expired_inner ) {
+														echo '</div>';
+													} ?>
+												</div>
+												<div class="progress">
+													<div class="progress-bar progress-bar-succcess progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
+													<?php if ( !$row->active_inner ) {
+														echo '</div>';
+													} ?>
+														<div class="progress-bar-content">
+															<?php if ( $row->usercount ) { ?>
+																<a href="<?php echo $row->link_active; ?>">
+																	<strong><?php echo $row->usercount; ?></strong>
+																</a>
+															<?php } ?>
+														</div>
+													<?php if ( $row->active_inner ) {
+														echo '</div>';
+													} ?>
+												</div>
+											</div>
+										</td>
+										<td>
+											<div class="progress">
+												<?php if ( $row->usercount + $row->expiredcount ) { ?>
+												<div class="progress-bar progress-short progress-bar-info progress-bar-striped" style="width: <?php echo $row->total_percentage; ?>%;">
+													<?php if ( !$row->total_inner ) {
+														echo '</div>';
+													} ?>
+													<div class="progress-bar-content">
+														<a href="<?php echo $row->link; ?>">
+															<strong><?php echo $row->usercount + $row->expiredcount; ?></strong>
+														</a>
+													</div>
+													<?php if ( $row->total_inner ) {
+														echo '</div>';
+													} ?>
+													<?php } ?>
+												</div>
+											</div>
+										</td>
+									</tr>
+								<?php } ?>
+								</tbody>
+								<tfoot>
+								<tr>
+									<td colspan="13">
+										<?php echo $pageNav->getListFooter(); ?>
+									</td>
+								</tr>
+								</tfoot>
+							</table>
 						</div>
-					</div>
-					<table class="adminlist table table-striped table-hover">
-						<thead><tr>
-							<th>
-								<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
-								<input type="checkbox" name="toggle" value="" />
-							</th>
-							<th><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-							<th><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-							<th class="text-right"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-							<th class="text-left"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-							<th class="text-center"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
-							<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
-							<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
-						</tr></thead>
-						<tbody>
-						<?php foreach ( $rows as $i => $row ) { ?>
-							<tr>
-								<td class="text-center">
-									<div class="group-colors">
-										<?php foreach ( $row->groups as $group ) { ?>
-											<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
-											</div>
-										<?php } ?>
-									</div>
-									<?php echo $row->id; ?>&nbsp;
-									<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
-								</td>
-								<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-								<td class="text-left"><?php echo $row->desc; ?></td>
-								<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
-								<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
-								<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
-								<td>
-									<div class="progress-group">
-										<div class="progress">
-											<div class="progress-bar progress-bar-danger" style="width: <?php echo $row->expired_percentage; ?>%;">
-											<?php if ( !$row->expired_inner ) {
-												echo '</div>';
-											} ?>
-												<div class="progress-bar-content">
-													<?php if ( $row->expiredcount ) { ?>
-														<a href="<?php echo $row->link_expired; ?>">
-															<strong><?php echo $row->expiredcount; ?></strong>
-														</a>
-													<?php } ?>
-												</div>
-											<?php if ( $row->expired_inner ) {
-												echo '</div>';
-											} ?>
-										</div>
-										<div class="progress">
-											<div class="progress-bar progress-bar-succcess progress-bar-striped" style="width: <?php echo $row->active_percentage; ?>%;">
-											<?php if ( !$row->active_inner ) {
-												echo '</div>';
-											} ?>
-												<div class="progress-bar-content">
-													<?php if ( $row->usercount ) { ?>
-														<a href="<?php echo $row->link_active; ?>">
-															<strong><?php echo $row->usercount; ?></strong>
-														</a>
-													<?php } ?>
-												</div>
-											<?php if ( $row->active_inner ) {
-												echo '</div>';
-											} ?>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="progress">
-										<?php if ( $row->usercount + $row->expiredcount ) { ?>
-										<div class="progress-bar progress-short progress-bar-info progress-bar-striped" style="width: <?php echo $row->total_percentage; ?>%;">
-											<?php if ( !$row->total_inner ) {
-												echo '</div>';
-											} ?>
-											<div class="progress-bar-content">
-												<a href="<?php echo $row->link; ?>">
-													<strong><?php echo $row->usercount + $row->expiredcount; ?></strong>
-												</a>
-											</div>
-											<?php if ( $row->total_inner ) {
-												echo '</div>';
-											} ?>
-											<?php } ?>
-										</div>
-									</div>
-								</td>
-							</tr>
-						<?php } ?>
-						</tbody>
-						<tfoot>
-						<tr>
-							<td colspan="13">
-								<?php echo $pageNav->getListFooter(); ?>
-							</td>
-						</tr>
-						</tfoot>
-					</table>
 					</div>
 				</div>
 			</div>
@@ -2500,57 +2502,58 @@ jQuery(document).ready(function(jQuery) {
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
-					<div class="aecadminform">
-						<table class="adminlist table-striped">
-							<thead><tr>
-								<th>
-									<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
-									<input type="checkbox" name="toggle" value="" />
-								</th>
-								<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
-								<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
-								<th class="text-right"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
-								<th class="text-left"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
-								<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
-							</tr></thead>
-							<tbody>
-							<?php foreach ( $rows as $i => $row ) { ?>
-								<tr>
-									<td class="text-center">
-										<div class="group-colors">
-											<?php foreach ( $row->parent_groups as $group ) { ?>
-												<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
-												</div>
-											<?php } ?>
-										</div>
-										<?php echo $row->id; ?>&nbsp;
-										<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
-									</td>
-									<td>
-										<div class="group-colors">
-											<div class="group-colors-stripe" style="background: #<?php echo $row->color; ?>;">
+					<div class="col-sm-12">
+						<div class="aecadminform">
+							<table class="adminlist table-striped">
+								<thead><tr>
+									<th>
+										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
+										<input type="checkbox" name="toggle" value="" />
+									</th>
+									<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+									<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
+									<th class="text-right"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
+									<th class="text-left"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
+									<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
+								</tr></thead>
+								<tbody>
+								<?php foreach ( $rows as $i => $row ) { ?>
+									<tr>
+										<td class="text-center">
+											<div class="group-colors">
+												<?php foreach ( $row->parent_groups as $group ) { ?>
+													<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
+													</div>
+												<?php } ?>
 											</div>
-										</div>
-										<a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+											<?php echo $row->id; ?>&nbsp;
+											<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
+										</td>
+										<td>
+											<div class="group-colors">
+												<div class="group-colors-stripe" style="background: #<?php echo $row->color; ?>;">
+												</div>
+											</div>
+											<a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+										</td>
+										<td class="text-left"><?php echo $row->desc; ?></td>
+										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
+										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
+										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
+									</tr>
+								<?php } ?>
+								</tbody>
+								<tfoot>
+								<tr>
+									<td colspan="10">
+										<?php echo $pageNav->getListFooter(); ?>
 									</td>
-									<td class="text-left"><?php echo $row->desc; ?></td>
-									<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
-									<td class="text-left"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
-									<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
 								</tr>
-							<?php } ?>
-							</tbody>
-							<tfoot>
-							<tr>
-								<td colspan="10">
-									<?php echo $pageNav->getListFooter(); ?>
-								</td>
-							</tr>
-							</tfoot>
-						</table>
+								</tfoot>
+							</table>
+						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
