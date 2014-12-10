@@ -2505,12 +2505,10 @@ jQuery(document).ready(function(jQuery) {
 							<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
 							<input type="checkbox" name="toggle" value="" />
 						</th>
-						<th></th>
-						<th>Parent</th>
 						<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
 						<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
-						<th><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
-						<th><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
+						<th class="text-left"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
+						<th class="text-right"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
 						<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
 					</tr></thead>
 					<tbody>
@@ -2518,7 +2516,7 @@ jQuery(document).ready(function(jQuery) {
 						<tr>
 							<td>
 								<div class="group-colors">
-									<?php foreach ( $row->groups as $group ) { ?>
+									<?php foreach ( $row->parent_groups as $group ) { ?>
 										<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
 										</div>
 									<?php } ?>
@@ -2526,12 +2524,11 @@ jQuery(document).ready(function(jQuery) {
 								<?php echo $row->id; ?>&nbsp;
 								<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
 							</td>
-							<td class="text-right" style="background: #<?php echo $row->parent_color; ?>;"><?php echo $row->parent_group; ?></td>
 							<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 							<td class="text-left"><?php echo $row->desc; ?></td>
-							<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
-							<td><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
-							<td class="text-right"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
+							<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
+							<td class="text-left"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
+							<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
 						</tr>
 					<?php } ?>
 					</tbody>

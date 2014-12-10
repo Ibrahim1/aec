@@ -370,7 +370,6 @@ function addGroup( $type, $id, $groupid )
 		$g['id']	= $group->id;
 		$g['name']	= $group->getProperty('name');
 		$g['color']	= $group->params['color'];
-		$g['icon']	= $group->params['icon'].'.png';
 
 		$g['group']	= '<strong>' . $group->id . '</strong>';
 
