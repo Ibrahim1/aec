@@ -18,10 +18,10 @@ class HTML_myCommon
 		?>
 		<div id="aec-footer" class="col-sm-12">
 			<hr/>
-			<div class="col-sm-4">
+			<div class="col-sm-1 col-sm-offset-2">
 				<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_small_footer.png" border="0" alt="aec" />
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<p>
 					<strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION ); ?>, Revision <?php echo _AEC_REVISION ?>
 				</p>
