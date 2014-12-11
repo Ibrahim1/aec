@@ -1549,18 +1549,20 @@ jQuery(document).ready(function(jQuery) {
 		foreach( $tab_data as $tab ) {
 			$tabs->nextPane( strtolower( str_replace( ' ', '-', $tab[0] ) ) );
 
-			echo '<table class="aecadminform"><tr><td>';
+			echo '<div class="col-sm-12">';
 
 			foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 				echo $aecHTML->createSettingsParticle( $rowname );
+
 				unset( $aecHTML->rows[$rowname] );
+
 				// Skip to next tab if last item in this one reached
 				if ( strcmp( $rowname, $tab[1] ) === 0 ) {
 					break;
 				}
 			}
 
-			echo '</td></tr></table>';
+			echo '</div>';
 		}
 
 		$tabs->endPanes();

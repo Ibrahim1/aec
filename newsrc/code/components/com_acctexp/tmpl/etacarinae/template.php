@@ -36,7 +36,7 @@ class template_etacarinae extends aecTemplate
 
 		$v = new JVersion();
 
-		$params[] = array( 'userinfobox', 49.8 );
+		$params[] = array( 'userinfobox', 6 );
 		$params = array_merge( $params, $this->stdSettings() );
 		$params[] = array( 'userinfobox_sub', JText::_('Javascript Loading') );
 		$params['jquery']							= array( 'toggle', !$v->isCompatible('3.0') );
@@ -58,7 +58,7 @@ class template_etacarinae extends aecTemplate
 		$params[] = array( 'div_end', 0 );
 		$params[] = array( '2div_end', 0 );
 
-		$params[] = array( 'userinfobox', 49.8 );
+		$params[] = array( 'userinfobox', 6 );
 		$params[] = array( 'userinfobox_sub', JText::_('CFG_GENERAL_SUB_CONFIRMATION') );
 		$params['confirmation_changeusername']		= array( 'toggle', '' );
 		$params['confirmation_changeusage']			= array( 'toggle', '' );

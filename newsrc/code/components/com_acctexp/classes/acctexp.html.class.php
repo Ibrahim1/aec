@@ -318,7 +318,7 @@ class aecHTML
 				$return = '</div>';
 				break;
 			case 'userinfobox':
-				$return = '<div style="position:relative;float:left;width:' . $value . '%;"><div class="userinfobox">';
+				$return = '<div class="col-sm-' . $value . '"><div class="userinfobox">';
 				break;
 			case 'userinfobox_sub':
 				$return = '<div class="aec-settings-container">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );

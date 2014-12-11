@@ -1870,8 +1870,6 @@ function listTemplates( $option )
 
 function editTemplate( $option, $name )
 {
-	$db = JFactory::getDBO();
-
 	$temp = new configTemplate();
 	$temp->loadName( $name );
 
@@ -6305,7 +6303,7 @@ function exportData( $option, $type, $cmd=null )
 
 	// Create Parameters
 
-	$params[] = array( 'userinfobox', 49 );
+	$params[] = array( 'userinfobox', 5 );
 
 	if ( $type == 'members' ) {
 		$params[] = array( 'userinfobox_sub', 'Compose Export' );
@@ -6349,7 +6347,7 @@ function exportData( $option, $type, $cmd=null )
 	}
 
 	if ( $type == 'members' ) {
-		$params[] = array( 'userinfobox', 49 );
+		$params[] = array( 'userinfobox', 5 );
 		$params[] = array( 'userinfobox_sub' );
 		$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
 		$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
@@ -6359,7 +6357,7 @@ function exportData( $option, $type, $cmd=null )
 
 	$params[] = array( '2div_end', '' );
 
-	$params[] = array( 'userinfobox', 49 );
+	$params[] = array( 'userinfobox', 5 );
 	$params[] = array( 'userinfobox_sub', 'Save or Load Export Presets' );
 	$params[] = array( 'div', '<div class="form-wide">' );
 	$params['selected_export']	= array( 'list', '' );
@@ -6375,7 +6373,7 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
 
-	$params[] = array( 'userinfobox', 49 );
+	$params[] = array( 'userinfobox', 5 );
 	$params[] = array( 'userinfobox_sub', 'Export' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
@@ -6385,7 +6383,7 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'div_end', '' );
 	$params[] = array( '2div_end', '' );
 
-	$params[] = array( 'userinfobox', 49 );
+	$params[] = array( 'userinfobox', 5 );
 	$params[] = array( 'div', '<div class="aec-settings-container" id="export-result">' );
 	$params[] = array( 'h4', '<h4>Preview</h4>' );
 	$params[] = array( '2div_end', '' );
