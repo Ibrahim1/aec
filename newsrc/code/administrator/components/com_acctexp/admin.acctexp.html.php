@@ -420,6 +420,8 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm();
 
+		?><div class="col-sm-12"><?php
+
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
@@ -430,7 +432,7 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'user', true ); ?>
-		<div class="col-sm-12">
+		<div class="col-sm-6">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
 				<?php if ( $metaUser->hasSubscription ) { ?>
@@ -584,8 +586,8 @@ jQuery(document).ready(function(jQuery) {
 				<h4><?php echo 'Notes'; ?></h4>
 				<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
 			</div>
-		</td>
-		<td style="vertical-align:top;">
+		</div>
+		<div class="col-sm-6">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
 				<div class="aec-settings-container-inline" style="width:50%; margin-left: -10%;">
@@ -722,14 +724,10 @@ jQuery(document).ready(function(jQuery) {
 					</tbody>
 				</table>
 			</div>
-		</td>
-		</div>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<table class="aecadminform">
-			<tr>
-				<td>
-					<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
-						<div class="aec-settings-container">
+			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
+				<div class="col-sm-6">
+					<div class="aec-settings-container">
 						<h4><?php echo JText::_('Profile Form'); ?></h4>
 						<p>(This is what the user sees on the frontend.)</p>
 						<?php if ( !empty( $mi['profile'] ) ) { ?>
@@ -745,35 +743,35 @@ jQuery(document).ready(function(jQuery) {
 									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
 							<?php } ?>
 						<?php } ?>
-						</div>
-					<?php } ?>
-					<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
-						<div class="aec-settings-container">
-						<h4><?php echo JText::_('Admin Form'); ?></h4>
-						<?php if ( !empty( $mi['admin'] ) ) { ?>
-							<?php foreach ( $mi['admin'] as $mix ) { ?>
-								<div class="admininfobox">
-									<h4><?php echo $mix['name']; ?></h4>
-									<p><?php echo $mix['info']; ?></p>
-								</div>
-							<?php } ?>
-						<?php }
-						if ( !empty( $mi['admin_form'] ) ) { ?>
-							<?php foreach ( $mi['admin_form'] as $k ) { ?>
-									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
-							<?php } ?>
+					</div>
+				</div>
+			<?php } ?>
+			<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
+			<div class="col-sm-6">
+				<div class="aec-settings-container">
+					<h4><?php echo JText::_('Admin Form'); ?></h4>
+					<?php if ( !empty( $mi['admin'] ) ) { ?>
+						<?php foreach ( $mi['admin'] as $mix ) { ?>
+							<div class="admininfobox">
+								<h4><?php echo $mix['name']; ?></h4>
+								<p><?php echo $mix['info']; ?></p>
+							</div>
 						<?php } ?>
-						</div>
 					<?php }
-					if ( !empty( $metaUser->meta->params->mi ) ) { ?>
-						<div class="aec-settings-container">
-							<h4><?php echo JText::_('Database Records'); ?></h4>
-							<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
-						</div>
+					if ( !empty( $mi['admin_form'] ) ) { ?>
+						<?php foreach ( $mi['admin_form'] as $k ) { ?>
+								<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+						<?php } ?>
 					<?php } ?>
-				</td>
-			</tr>
-		</table>
+				</div>
+			</div>
+			<?php }
+			if ( !empty( $metaUser->meta->params->mi ) ) { ?>
+				<div class="aec-settings-container">
+					<h4><?php echo JText::_('Database Records'); ?></h4>
+					<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+				</div>
+			<?php } ?>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
@@ -781,8 +779,11 @@ jQuery(document).ready(function(jQuery) {
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
+
+		</div>
+
 		<?php
- 		HTML_myCommon::endCommon();
+		HTML_myCommon::endCommon();
 	}
 
 	static function SubscriptionName( $subscriptionid )
@@ -1185,71 +1186,67 @@ jQuery(document).ready(function(jQuery) {
 			<input type="hidden" name="returnTask" value="" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
-		<table class="aecadminform">
-			<tr><td>
-				<div style="width:100%; float:left;">
-					<div class="alert alert-danger">
-						<h2><?php echo JText::_('AEC_HACKS_NOTICE'); ?>:</h2>
-						<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC'); ?></p>
-						<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC2'); ?></p>
-						<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC3'); ?></p>
-					</div>
-				</div>
-				<?php
-				foreach ( $hacks as $handle => $content ) {
-					if ( !$content['status'] ) {
-						if ( isset($content['uncondition'] ) ) {
-							if ( !empty( $hacks[$content['uncondition']]['status'] ) ) {
-								continue ;
-							}
+		<div class="col-sm-12">
+			<div class="alert alert-danger">
+				<h2><?php echo JText::_('AEC_HACKS_NOTICE'); ?>:</h2>
+				<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC'); ?></p>
+				<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC2'); ?></p>
+				<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC3'); ?></p>
+			</div>
+			<?php
+			foreach ( $hacks as $handle => $content ) {
+				if ( !$content['status'] ) {
+					if ( isset($content['uncondition'] ) ) {
+						if ( !empty( $hacks[$content['uncondition']]['status'] ) ) {
+							continue ;
 						}
-						if ( isset($content['condition'] ) ) {
-							if ( empty( $hacks[$content['condition']]['status'] ) ) {
-								continue ;
-							}
+					}
+					if ( isset($content['condition'] ) ) {
+						if ( empty( $hacks[$content['condition']]['status'] ) ) {
+							continue ;
 						}
-						if ( !empty($content['legacy'] ) ) {
-							continue;
-						}
-					} ?>
-					<a name="<?php echo $handle; ?>"></a>
-					<h3><?php echo $content['name']; ?></h3>
-					<div class="action">
-						<?php
-						echo aecHTML::Icon( $content['status'] ? 'ok' : 'remove' )
-						. ' ' . ( $content['status'] ? JText::_('AEC_HACKS_ISHACKED') : JText::_('AEC_HACKS_NOTHACKED') ) ; ?>
-						&nbsp;|&nbsp;
-						 <a href="<?php echo 'index.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? JText::_('AEC_HACKS_UNDO') : JText::_('AEC_HACKS_COMMIT') ; ?></a>
-					</div>
-					<?php
-					if ( !empty( $content['important'] ) && !$content['status'] ) { ?>
-						<div class="important">&nbsp;</div>
-						<?php
-					} ?>
-					<p style="width:60%; padding:3px;">
-						<?php echo $content['desc']; ?>
-					</p>
-					<?php if ( isset( $content['filename'] ) ) { ?>
-						<div class="explainblock">
-							<p>
-								<strong><?php echo JText::_('AEC_HACKS_FILE'); ?>:&nbsp;<?php echo $content['filename']; ?></strong>
-							</p>
-						<?php
-						if ( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) {
-							if ( empty( $content['legacy'] ) ) { ?>
-								<p><?php echo JText::_('AEC_HACKS_LOOKS_FOR'); ?>:</p>
-								<pre><?php print htmlentities( $content['read'] ); ?></pre>
-								<p><?php echo JText::_('AEC_HACKS_REPLACE_WITH'); ?>:</p>
-								<pre><?php print htmlentities( $content['insert'] ); ?></pre>
-								<?php
-							}
-						} ?>
-						</div>
-						<?php
+					}
+					if ( !empty($content['legacy'] ) ) {
+						continue;
 					}
 				} ?>
-			</td></tr>
-		</table>
+				<a name="<?php echo $handle; ?>"></a>
+				<h3><?php echo $content['name']; ?></h3>
+				<div class="action">
+					<?php
+					echo aecHTML::Icon( $content['status'] ? 'ok' : 'remove' )
+					. ' ' . ( $content['status'] ? JText::_('AEC_HACKS_ISHACKED') : JText::_('AEC_HACKS_NOTHACKED') ) ; ?>
+					&nbsp;|&nbsp;
+					 <a href="<?php echo 'index.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? JText::_('AEC_HACKS_UNDO') : JText::_('AEC_HACKS_COMMIT') ; ?></a>
+				</div>
+				<?php
+				if ( !empty( $content['important'] ) && !$content['status'] ) { ?>
+					<div class="important">&nbsp;</div>
+					<?php
+				} ?>
+				<p style="width:60%; padding:3px;">
+					<?php echo $content['desc']; ?>
+				</p>
+				<?php if ( isset( $content['filename'] ) ) { ?>
+					<div class="explainblock">
+						<p>
+							<strong><?php echo JText::_('AEC_HACKS_FILE'); ?>:&nbsp;<?php echo $content['filename']; ?></strong>
+						</p>
+					<?php
+					if ( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) {
+						if ( empty( $content['legacy'] ) ) { ?>
+							<p><?php echo JText::_('AEC_HACKS_LOOKS_FOR'); ?>:</p>
+							<pre><?php print htmlentities( $content['read'] ); ?></pre>
+							<p><?php echo JText::_('AEC_HACKS_REPLACE_WITH'); ?>:</p>
+							<pre><?php print htmlentities( $content['insert'] ); ?></pre>
+							<?php
+						}
+					} ?>
+					</div>
+					<?php
+				}
+			} ?>
+		</div>
 
  		<?php
  		HTML_myCommon::endCommon();
@@ -1258,7 +1255,10 @@ jQuery(document).ready(function(jQuery) {
 	static function help()
 	{
 		?>
-		<div class="modal hide fade" id="help">
+		<div class="modal fade" id="help">
+			<div class="modal-dialog">
+				<div class="modal-content"></div>
+			</div>
 			<div class="modal-header">
 				<a data-dismiss="modal" class="close">×</a>
 				<h3>Don't Panic!</h3>
@@ -1533,6 +1533,8 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm();
 
+		?><div class="col-sm-12"><?php
+
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
 
@@ -1566,6 +1568,9 @@ jQuery(document).ready(function(jQuery) {
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		</form>
+
+		</div>
+
 		<?php
 		echo $aecHTML->loadJS();
 
@@ -1727,6 +1732,9 @@ jQuery(document).ready(function(jQuery) {
 			<input type="hidden" name="returnTask" value="showActive" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
+
+		</div>
+
  		<?php
  		HTML_myCommon::endCommon();
 	}
@@ -1847,6 +1855,8 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::getButtons( 'edit', 'MicroIntegration' );
 
 		HTML_myCommon::startForm();
+
+		?><div class="col-sm-12"><?php
 
 		$tabs = new bsPaneTabs;
 		$tabs->startTabs();
@@ -2005,6 +2015,9 @@ jQuery(document).ready(function(jQuery) {
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />
 		</form>
+
+		</div>
+
 		<?php
 		echo $aecHTML->loadJS();
 
@@ -2595,6 +2608,8 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm();
 
+		?><div class="col-sm-12"><?php
+
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
@@ -2608,7 +2623,7 @@ jQuery(document).ready(function(jQuery) {
 		<table class="aecadminform">
 			<tr>
 				<td>
-					<div style="position:relative;float:left;width:33.225%;">
+					<div class="col-sm-4">
 						<div class="aec-settings-container">
 							<h4>General</h4>
 							<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
@@ -2624,7 +2639,7 @@ jQuery(document).ready(function(jQuery) {
 							</div>
 						</div>
 					</div>
-					<div style="position:relative;float:left;width:33.225%;">
+					<div class="col-sm-4">
 						<div class="aec-settings-container">
 							<h4>Details</h4>
 							<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
@@ -2633,7 +2648,7 @@ jQuery(document).ready(function(jQuery) {
 							<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 						</div>
 					</div>
-					<div style="position:relative;float:left;width:33.225%;">
+					<div class="col-sm-4">
 							<div class="aec-settings-container">
 								<h4><?php echo JText::_('ITEMGROUPS_PARENTGROUP_TITLE'); ?></h4>
 								<?php if ( $row->id > 1 ) { ?>
@@ -2757,6 +2772,8 @@ jQuery(document).ready(function(jQuery) {
 		<input type="hidden" name="task" value="" />
 		</form>
 
+		</div>
+
 		<?php
  		HTML_myCommon::endCommon();
 	}
@@ -2852,6 +2869,8 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm();
 
+		?><div class="col-sm-12"><?php
+
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
@@ -2864,7 +2883,7 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 		$tabs->nextPane( 'coupon' ); ?>
 		<table class="aecadminform"><tr><td>
-			<div style="position:relative;float:left;width:49%;">
+			<div class="col-sm-6">
 				<div class="aec-settings-container">
 					<h4>General</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
@@ -2874,7 +2893,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 				</div>
 			</div>
-			<div style="position:relative;float:left;width:49%;">
+			<div class="col-sm-6">
 				<div class="aec-settings-container">
 					<h4>Terms</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
@@ -2887,7 +2906,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
 				</div>
 			</div>
-			<div style="position:relative;float:left;width:100%;">
+			<div class="col-sm-12">
 				<div class="aec-settings-container">
 					<h4>Date &amp; User Restrictions</h4>
 					<div class="aec-settings-container-inline">
@@ -2916,7 +2935,7 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		</td></tr></table>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-12">
 			<div class="aec-settings-container">
 				<h4>Restrict Combintations</h4>
 				<div class="aec-settings-container-inline">
@@ -2942,16 +2961,16 @@ jQuery(document).ready(function(jQuery) {
 				</div>
 			</div>
 			<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-		</td></tr></table>
+		</div>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-12">
 			<div class="aec-settings-container">
 				<h4>Micro Integrations</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 			</div>
-		</td></tr></table>
+		</div>
 		<?php $tabs->nextPane( 'invoices' ); ?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-12">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Invoices'); ?></h4>
 				<table class="adminlist table table-hover table-striped">
@@ -2985,13 +3004,15 @@ jQuery(document).ready(function(jQuery) {
 					</tbody>
 				</table>
 			</div>
-		</td></tr></table>
+		</div>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="oldtype" value="<?php echo $row->type; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="task" value="" />
 		</form>
+
+		</div>
 
 		<?php
  		HTML_myCommon::endCommon();
@@ -3080,14 +3101,14 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startForm();
 
 		?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-12">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_HEAD_INVOICE'); ?></h4>
 				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 					echo $aecHTML->createSettingsParticle( $rowname );
 				} ?>
 			</div>
-		</td></tr></table>
+		</div>
 		<?php
 
 		HTML_myCommon::endForm( $option, $id, 'saveInvoice' );
@@ -3600,53 +3621,49 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::getButtons( $buttons, 'Import' );
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-		<table class="aecadminform">
-			<tr>
-				<td>
-					<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec-settings-container">
-						<?php
-						if ( $aecHTML->done ) {
-							echo '<p>Import ran through successfully.</p>';
-							if ( !empty( $aecHTML->errors ) ) {
-								echo '<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
-							}
-						} elseif ( $aecHTML->form ) {
-							foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-								echo $aecHTML->createSettingsParticle( $rowname );
-							}
-						} else {
-							echo $aecHTML->createSettingsParticle( 'file_select' );
-
-							echo '<p>Please let us know what the columns in your .csv file mean:</p><p></p>';
-
-							echo '<table id="aec_import_table">';
-
-							echo '<tr>';
-							foreach ( $aecHTML->columns as $column ) {
-								echo '<th>' . $aecHTML->createSettingsParticle( $column ) . '</th>';
-							}
-							echo '</tr>';
-
-							foreach ( $aecHTML->user_rows as $row ) {
-								echo '<tr>';
-
-								foreach ( $row as $k => $v ) {
-									echo '<td>' . $v . '</td>';
-								}
-
-								echo '</tr>';
-							}
-
-							echo '</table>';
-							echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
-
-							echo $aecHTML->createSettingsParticle( 'assign_plan' );
+			<div class="col-sm-12">
+				<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec-settings-container">
+					<?php
+					if ( $aecHTML->done ) {
+						echo '<p>Import ran through successfully.</p>';
+						if ( !empty( $aecHTML->errors ) ) {
+							echo '<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
 						}
-						?>
-					</div>
-				</td>
-			</tr>
-		</table>
+					} elseif ( $aecHTML->form ) {
+						foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+							echo $aecHTML->createSettingsParticle( $rowname );
+						}
+					} else {
+						echo $aecHTML->createSettingsParticle( 'file_select' );
+
+						echo '<p>Please let us know what the columns in your .csv file mean:</p><p></p>';
+
+						echo '<table id="aec_import_table">';
+
+						echo '<tr>';
+						foreach ( $aecHTML->columns as $column ) {
+							echo '<th>' . $aecHTML->createSettingsParticle( $column ) . '</th>';
+						}
+						echo '</tr>';
+
+						foreach ( $aecHTML->user_rows as $row ) {
+							echo '<tr>';
+
+							foreach ( $row as $k => $v ) {
+								echo '<td>' . $v . '</td>';
+							}
+
+							echo '</tr>';
+						}
+
+						echo '</table>';
+						echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
+
+						echo $aecHTML->createSettingsParticle( 'assign_plan' );
+					}
+					?>
+				</div>
+			</div>
 
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="import" />
@@ -3690,19 +3707,15 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::getButtons( $buttons, 'Settings' ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-		<table class="aecadminform">
-			<tr>
-				<td>
+			<div class="col-sm-12">
 					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 						echo $aecHTML->createSettingsParticle( $rowname );
 					} ?>
-				</td>
-			</tr>
-		</table>
+			</div>
 
-		<input type="hidden" name="option" value="<?php echo $option;?>" />
-		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="returnTask" value="<?php echo $task;?>" />
+			<input type="hidden" name="option" value="<?php echo $option;?>" />
+			<input type="hidden" name="task" value="" />
+			<input type="hidden" name="returnTask" value="<?php echo $task;?>" />
 		</form>
 
 		<?php
@@ -3722,6 +3735,8 @@ jQuery(document).ready(function(jQuery) {
 
 		$vaccount = !empty( $aecConfig->cfg['vaccount_apikey'] ) && !empty( $aecConfig->cfg['vaccount_apicode'] );
 
+		?><div class="col-sm-12"><?php
+
 		$tabs = new bsPaneTabs;
 
 		$tabs->startTabs();
@@ -3737,32 +3752,7 @@ jQuery(document).ready(function(jQuery) {
 			<tr>
 				<td>
 				<?php if ( !$vaccount ) { ?>
-					<h3>Valanx Uplink</h3>
-					<p>You haven't connected this copy of AEC to your account at Valanx.org yet.</p>
-					<p><strong>No worries</strong> - that's just fine. You're fine. Everything is cool. You're cool.</p>
-					<p>If you don't want to connect this copy, you can simply head over to Valanx.org and download updates and extensions there.</p>
-					<h3>Setting up a connection</h3>
-					<p>If you want to, however, you can connect this copy to your account and get the full benefits of updates and extensions right from this screen.</p>
-					<p>Here is what's cool about that:</p>
-					<ul>
-						<li>
-							<strong>One-click full system updates of AEC and its extensions</strong><br />
-							We like to keep things up to date, you don't like a lot of hassle. Perfect - that's what the one-click updater is for.
-						</li>
-						<li>
-							<strong>One-click installation of extensions</strong><br />
-							There are a lot of extensions for AEC. Instead of handing you a huge package that nobody could possibly need, simply install the extensions you want with a single click.
-						</li>
-						<li>
-							<strong>Completely anonymous api connections to Valanx.org</strong><br />
-							That's right - if you're using this for your own clients, they don't get your login details. The connection is established via a custom API key and code combination for this install. And nope - we don't track the domain name or any other sensitive information.<br /> (We do, however, ask you to help us run metrics on which extensions you use, but if you don't want to, that's fine, too.)
-						</li>
-						<li>
-							<strong>As many connections as you need</strong><br />
-							Even though we put certain... conditions on the amount of connections you make via Valanx Uplink (we charge for more than a certain number, there, we said it), you can get as many as you need.
-						<li>
-					</ul>
-
+					<h3>Mangrove stuff goes here</h3>
 				<?php } else { ?>
 
 				<?php } ?>
@@ -3781,6 +3771,8 @@ jQuery(document).ready(function(jQuery) {
 		<input type="hidden" name="option" value="com_acctexp" />
 		</form>
 
+		</div>
+
 		<?php
 
  		HTML_myCommon::endCommon();
@@ -3794,7 +3786,7 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm(true);
 		?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-12">
 			<div class="aec-settings-container">
 			<?php if ( !empty( $cmd ) ) { ?>
 				<h4><?php echo JText::_('Challenge'); ?></h4>
@@ -3809,7 +3801,7 @@ jQuery(document).ready(function(jQuery) {
 				</div>
 			<?php } else { echo $result; } ?>
 			</div>
-		</td></tr></table>
+		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
 		<input type="hidden" name="task" value="toolbox" />
 		<input type="hidden" name="cmd" value="<?php echo $cmd;?>" />
