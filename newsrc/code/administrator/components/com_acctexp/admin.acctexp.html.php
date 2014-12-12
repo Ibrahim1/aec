@@ -437,8 +437,8 @@ jQuery(document).ready(function(jQuery) {
 		<div class="col-sm-6">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
+				<?php if ( $metaUser->hasSubscription ) { ?>
 				<div class="col-sm-6">
-					<?php if ( $metaUser->hasSubscription ) { ?>
 					<div class="form-group">
 						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></label>
 						<div class="col-sm-8">
@@ -2279,7 +2279,7 @@ jQuery(document).ready(function(jQuery) {
 				<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-				<div style="position:relative;width:100%;">
+				<div>
 					<?php
 					if ( $row->id ) { ?>
 						<p style="text-align: center;">
@@ -2310,7 +2310,7 @@ jQuery(document).ready(function(jQuery) {
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
 				<?php if ( $row->id ) { ?>
-				<table style="width:100%;" class="table table-striped table-hover aec-grouplist">
+				<table style="width:100%;" class="table table-striped table-hover table-condensed aec-grouplist">
 					<thead>
 						<tr>
 							<th>Group</th>
@@ -2328,7 +2328,7 @@ jQuery(document).ready(function(jQuery) {
 						<tr>
 							<td><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
 							<td>
-								<a class="btn btn-success" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a>
+								<a class="btn btn-success pull-right" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a>
 							</td>
 						</tr>
 					</tfoot>
@@ -2670,84 +2670,70 @@ jQuery(document).ready(function(jQuery) {
 
 		$tabs->startPanes();
 		$tabs->nextPane( 'group' ); ?>
-		<table class="aecadminform">
-			<tr>
-				<td>
-					<div class="col-sm-4">
-						<div class="aec-settings-container">
-							<h4>General</h4>
-							<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
-							<div style="position:relative;width:100%;">
-								<?php
-								echo $aecHTML->createSettingsParticle( 'name' );
-								if ( $row->id ) { ?>
-									<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&group=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
-									<?php
-								} ?>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="aec-settings-container">
-							<h4>Details</h4>
-							<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'symlink_userid' ); ?>
-							<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
-						</div>
-					</div>
-					<div class="col-sm-4">
-							<div class="aec-settings-container">
-								<h4><?php echo JText::_('ITEMGROUPS_PARENTGROUP_TITLE'); ?></h4>
-								<?php if ( $row->id > 1 ) { ?>
-								<table style="width:100%;" class="table-striped aec-grouplist">
-									<thead>
-										<tr>
-											<th>ID</th>
-											<th>Name</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody>
-									<?php if ( !empty( $aecHTML->customparams->groups ) ) {
-										foreach ( $aecHTML->customparams->groups as $id => $group ) {
-											HTML_AcctExp::groupRow( 'group', $group );
-										}
-									} ?>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="2"><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-											<td><a class="btn btn-success" id="addgroup-btn" onClick="addGroup('group','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a></td>
-										</tr>
-									</tfoot>
-								</table>
-								<?php } elseif ( $row->id == 1 ) { ?>
-									<p>This is the Root Group.</p>
-								<?php } else { ?>
-									<p>You can select Parent Groups after you have saved this for the first time.</p>
-								<?php } ?>
-							</div>
-						</div>
-					</div>
-					<div style="position:relative;float:left;width:100%;">
-						<div class="aec-settings-container">
-							<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-						</div>
-					</div>
-				</td>
-			</tr>
-		</table>
+		<div class="col-sm-4">
+			<div class="aec-settings-container">
+				<h4>General</h4>
+				<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
+				<div style="position:relative;width:100%;">
+					<?php
+					echo $aecHTML->createSettingsParticle( 'name' );
+					if ( $row->id ) { ?>
+						<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&group=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
+						<?php
+					} ?>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="aec-settings-container">
+				<h4>Details</h4>
+				<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'symlink_userid' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
+				<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="aec-settings-container">
+				<h4><?php echo JText::_('ITEMGROUPS_PARENTGROUP_TITLE'); ?></h4>
+				<?php if ( $row->id > 1 ) { ?>
+				<table style="width:100%;" class="table table-striped table-hover table-condensed aec-grouplist">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php if ( !empty( $aecHTML->customparams->groups ) ) {
+						foreach ( $aecHTML->customparams->groups as $id => $group ) {
+							HTML_AcctExp::groupRow( 'group', $group );
+						}
+					} ?>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+							<td>
+								<a class="btn btn-success pull-right" id="addgroup-btn" onClick="addGroup('group','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+				<?php } elseif ( $row->id == 1 ) { ?>
+					<p>This is the Root Group.</p>
+				<?php } else { ?>
+					<p>You can select Parent Groups after you have saved this for the first time.</p>
+				<?php } ?>
+			</div>
+		</div>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
-		<table class="aecadminform">
-		<tr><td>
-			<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-		</td></tr>
-		</table>
+		<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-6">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
 				<?php if ( $row->id > 1 ) {
@@ -2764,13 +2750,18 @@ jQuery(document).ready(function(jQuery) {
 								</p>
 								<p><?php echo $mi->desc; ?></p>
 							</li>
-							<?php
+						<?php
 						}
 						echo '</ul>';
 					} else {
 						echo '<p>' . JText::_('No inherited MIs - A group can inherit MIs from groups that it is in') . '</p>';
 					}
 				} ?>
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<div class="aec-settings-container">
 				<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
 				<?php if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
 					echo '<table style="margin: 0 auto;">';
@@ -2787,18 +2778,7 @@ jQuery(document).ready(function(jQuery) {
 							</td>
 							<td>
 								<input type="hidden" name="micro_integrations[]" value="0" />
-								<div>
-									<div class="toggleswitch">
-										<label class="toggleswitch" onclick="">
-											<input id="micro_integrations_<?php echo $mi->id; ?>" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>"/>
-											<span class="toggleswitch-inner">
-												<span class="toggleswitch-on"><?php echo JText::_( 'yes' ) ?></span>
-												<span class="toggleswitch-off"><?php echo JText::_( 'no' ) ?></span>
-												<span class="toggleswitch-handle"></span>
-											</span>
-										</label>
-									</div>
-								</div>
+								<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-switch" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
 							</td>
 						</tr>
 						<tr>
@@ -2814,7 +2794,7 @@ jQuery(document).ready(function(jQuery) {
 				}
 				?>
 			</div>
-		</td></tr></table>
+		</div>
 		<?php $tabs->endPanes(); ?>
 		<br />
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />

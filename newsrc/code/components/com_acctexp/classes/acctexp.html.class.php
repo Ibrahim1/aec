@@ -40,9 +40,9 @@ class aecHTML
 				$value = '';
 			}
 
-			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
-				$return = '<div class="form-group">';
+			$return = '<div class="form-group">';
 
+			if ( !empty( $row[1] ) && !empty( $row[2] ) && !$notooltip ) {
 				if ( strnatcmp( phpversion(),'5.2.3' ) >= 0 ) {
 					$xtitle = htmlentities( $row[2], ENT_QUOTES, "UTF-8", false );
 					$xlabel = htmlentities( $row[1], ENT_QUOTES, "UTF-8", false );
@@ -58,9 +58,6 @@ class aecHTML
 				$return .= $insertlabel;
 
 				$return .= '</label>';
-			} else {
-				$return = '<div class="form-group">';
-				$return .= '<label for="' . $name . '"><div class="form-control"></div></label>';
 			}
 		} else {
 			if ( isset( $row[1] ) ) {
