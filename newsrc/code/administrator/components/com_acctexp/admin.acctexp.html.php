@@ -1690,22 +1690,22 @@ jQuery(document).ready(function(jQuery) {
 							<table class="adminlist table table-hover table-striped">
 								<thead><tr>
 									<th>#</th>
-									<th><input type="checkbox" name="toggle" value="" /></th>
+									<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
 									<th>&nbsp;</th>
 									<th class="text-left"><?php echo JText::_('CNAME'); ?></th>
-									<th width="5%" class="text-left"><?php echo JText::_('USERLOGIN'); ?></th>
-									<th width="5%"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
+									<th class="text-left"><?php echo JText::_('USERLOGIN'); ?></th>
+									<th class="text-left"><?php echo JText::_('AEC_CMN_STATUS'); ?></th>
 									<th class="text-left"><?php echo JText::_('SUBSCR_DATE'); ?></th>
 									<?php if ( $action[0] != 'manual' ) { ?>
 										<th class="text-left"><?php echo JText::_('LASTPAY_DATE'); ?></th>
-										<th width="5%"><?php echo JText::_('METHOD'); ?></th>
+										<th class="text-left"><?php echo JText::_('METHOD'); ?></th>
 										<th class="text-left"><?php echo JText::_('USERPLAN'); ?></th>
 										<th class="text-left"><?php echo JText::_('EXPIRATION'); ?></th>
 									<?php } else { ?>
 										<th class="text-left"></th>
 										<th class="text-left"></th>
 										<th class="text-left"></th>
-										<th width="27%" class="text-left"></th>
+										<th class="text-left"></th>
 									<?php } ?>
 								</tr></thead>
 								<tbody>
@@ -1727,7 +1727,7 @@ jQuery(document).ready(function(jQuery) {
 									} ?>
 									<tr<?php echo $rowstyle; ?>>
 										<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-										<td><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
+										<td class="text-center"><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
 										<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
 										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 										<td class="text-left"><?php echo $row->username; ?></td>
