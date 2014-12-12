@@ -18,7 +18,7 @@ class HTML_myCommon
 		?>
 		<div id="aec-footer" class="col-sm-12">
 			<hr/>
-			<div class="col-sm-1 col-sm-offset-2">
+			<div class="col-sm-1 col-sm-offset-3">
 				<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_small_footer.png" border="0" alt="aec" />
 			</div>
 			<div class="col-sm-2">
@@ -26,10 +26,12 @@ class HTML_myCommon
 					<strong>Account Expiration Control</strong> Component<br />Version <?php echo str_replace( 'omega', '&Omega;', _AEC_VERSION ); ?>, Revision <?php echo _AEC_REVISION ?>
 				</p>
 			</div>
-			<div class="col-sm-4">
-				<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
+			<div class="col-sm-2">
 				<p><?php echo JText::_('AEC_FOOT_TX_GPL'); ?></p>
 				<p><?php printf( JText::_('AEC_FOOT_CREDIT'), AECToolbox::backendTaskLink( 'credits', htmlentities( JText::_('AEC_FOOT_CREDIT_LTEXT') ) ) ); ?></p>
+			</div>
+			<div class="col-sm-2">
+				<a href="https://www.valanx.org" target="_blank"><img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/gfx/valanx_logo_tiny.png" border="0" alt="valanx" /></a>
 			</div>
 		</div>
 		<?php
