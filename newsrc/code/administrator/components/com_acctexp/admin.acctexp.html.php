@@ -439,43 +439,33 @@ jQuery(document).ready(function(jQuery) {
 				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
 				<?php if ( $metaUser->hasSubscription ) { ?>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label><span><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></span></label>
-					</div>
+					<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></label>
 					<div class="col-sm-8">
 						<div><span><?php echo $metaUser->focusSubscription->id; ?></span></div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label><span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></span></label>
-					</div>
+					<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></label>
 					<div class="col-sm-8">
 						<div><span>#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-					</div>
+					<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
 					<div class="col-sm-8">
 						<div><span><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></span></div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label><span><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></span></label>
-					</div>
+					<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></label>
 					<div class="col-sm-8">
 						<div><span><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></span></div>
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label for="ck_primary">
-							<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
-						</label>
-					</div>
+					<label class="col-sm-4 control-label" for="ck_primary">
+						<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
+					</label>
 					<div class="col-sm-8">
 						<input type="hidden" value="0" name="ck_primary"/>
 						<div>
@@ -484,11 +474,9 @@ jQuery(document).ready(function(jQuery) {
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label for="expiration_current">
-							<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
-						</label>
-					</div>
+					<label class="col-sm-4 control-label" for="expiration_current">
+						<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
+					</label>
 					<div class="col-sm-8">
 						<div>
 							<span><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></span>
@@ -496,11 +484,9 @@ jQuery(document).ready(function(jQuery) {
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label for="ck_lifetime">
-							<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
-						</label>
-					</div>
+					<label class="col-sm-4 control-label" for="ck_lifetime">
+						<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
+					</label>
 					<div class="col-sm-8">
 						<input type="hidden" value="0" name="ck_lifetime"/>
 						<div>
@@ -509,11 +495,9 @@ jQuery(document).ready(function(jQuery) {
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label>
-							<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
-						</label>
-					</div>
+					<label class="col-sm-4 control-label">
+						<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
+					</label>
 					<div class="col-sm-8">
 						<div>
 							<input id="datepicker-expiration" name="expiration" class="jqui-datetimepicker" type="text" value="<?php echo $exp ?>">
@@ -522,11 +506,9 @@ jQuery(document).ready(function(jQuery) {
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label for="set_status">
-							<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
-						</label>
-					</div>
+					<label class="col-sm-4 control-label" for="set_status">
+						<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
+					</label>
 					<div class="col-sm-8">
 						<div>
 							<?php echo $lists['set_status']; ?>
@@ -536,11 +518,9 @@ jQuery(document).ready(function(jQuery) {
 				<?php } else { ?>
 				<?php } ?>
 				<div class="form-group">
-					<div class="col-sm-4">
-						<label for="assignto_plan">
-							<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
-						</label>
-					</div>
+					<label class="col-sm-4 control-label" for="assignto_plan">
+						<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
+					</label>
 					<div class="col-sm-8">
 						<div>
 							<?php echo $lists['assignto_plan']; ?>
@@ -552,17 +532,13 @@ jQuery(document).ready(function(jQuery) {
 				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?> History</h4>
 					<?php if ( $metaUser->hasSubscription ) { ?>
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></label>
 						<div class="col-sm-8">
 							<div><span>#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_USED_PLANS'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USED_PLANS'); ?></label>
 						<div class="col-sm-8">
 							<div>
 								<span>
@@ -624,34 +600,26 @@ jQuery(document).ready(function(jQuery) {
 				<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
 				<div class="aec-settings-container-inline">
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_USERID'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USERID'); ?></label>
 						<div class="col-sm-8">
 							<div><span><?php echo $metaUser->userid; ?></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_STATUS'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
 						<div class="col-sm-8">
 							<div><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_PROFILE'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PROFILE'); ?></label>
 						<div class="col-sm-8">
 							<div><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
 						</div>
 					</div>
 					<?php if ( aecComponentHelper::detect_component('anyCB') ) { ?>
 						<div class="form-group">
-							<div class="col-sm-4">
-								<label><span>CB Profile</span></label>
-							</div>
+							<label class="col-sm-4 control-label">CB Profile</label>
 							<div class="col-sm-8">
 								<div><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 							</div>
@@ -659,9 +627,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php } ?>
 					<?php if ( aecComponentHelper::detect_component('JOMSOCIAL') ) { ?>
 						<div class="form-group">
-							<div class="col-sm-4">
-								<label><span>JomSocial Profile</span></label>
-							</div>
+							<label class="col-sm-4 control-label">JomSocial Profile</label>
 							<div class="col-sm-8">
 								<div><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
 							</div>
@@ -670,51 +636,39 @@ jQuery(document).ready(function(jQuery) {
 				</div>
 				<div class="aec-settings-container-inline">
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_USERNAME'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USERNAME'); ?></label>
 						<div class="col-sm-8">
 							<div><span><?php echo $metaUser->cmsUser->username; ?></span></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_NAME'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_NAME'); ?></label>
 						<div class="col-sm-8">
 							<div><span><?php echo $metaUser->cmsUser->name; ?></span></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_EMAIL'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_EMAIL'); ?></label>
 						<div class="col-sm-8">
-							<div><span><?php echo $metaUser->cmsUser->email; ?><br />(<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
+							<div><span><?php echo $metaUser->cmsUser->email; ?> (<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
 						</div>
 					</div>
 					<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
 						<div class="form-group">
-							<div class="col-sm-4">
-								<label><span><?php echo JText::_('AEC_USER_TYPE'); ?></span></label>
-							</div>
+							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_TYPE'); ?></label>
 							<div class="col-sm-8">
 								<div><span><?php echo $metaUser->cmsUser->usertype; ?></span></div>
 							</div>
 						</div>
 					<?php } ?>
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_REGISTERED'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_REGISTERED'); ?></label>
 							<div class="col-sm-8">
 						<div><span><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="col-sm-4">
-							<label><span><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></span></label>
-						</div>
+						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></label>
 						<div class="col-sm-8">
 							<div><span><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
 						</div>
@@ -800,6 +754,7 @@ jQuery(document).ready(function(jQuery) {
 					</tbody>
 				</table>
 			</div>
+		</div>
 		<?php $tabs->nextPane( 'mis' ); ?>
 			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
 				<div class="col-sm-6">
@@ -855,8 +810,6 @@ jQuery(document).ready(function(jQuery) {
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="nexttask" value="<?php echo $nexttask;?>" />
 		</form>
-
-		</div>
 
 		<?php
 		HTML_myCommon::endCommon();
@@ -1710,7 +1663,7 @@ jQuery(document).ready(function(jQuery) {
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<div class="aec-filters aec-filters-wide">
 				<div class="filter-sub">
-					<label>Filter:</label>
+					<label class="col-sm-4 control-label">Filter:</label>
 					<div class="control"><?php echo $lists['groups'];?></div>
 					<input type="hidden" name="filter_plan" value="" />
 					<div class="control"><?php echo $lists['filter_plan']; ?></div>
@@ -1718,11 +1671,11 @@ jQuery(document).ready(function(jQuery) {
 					<div class="control"><?php echo $lists['filter_group']; ?></div>
 				</div>
 				<div class="filter-sub">
-					<label><?php echo JText::_('ORDER_BY'); ?>:</label><div class="control"><?php echo $lists['orderNav']; ?></div>
+					<label class="col-sm-4 control-label"><?php echo JText::_('ORDER_BY'); ?>:</label><div class="control"><?php echo $lists['orderNav']; ?></div>
 					<input type="text" name="search" class="inputbox span2 search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>..." value="<?php echo htmlspecialchars($search); ?>" />
 				</div>
 				<div class="filter-sub">
-						<label>With selected users:</label>
+						<label class="col-sm-4 control-label">With selected users:</label>
 						<div class="control"><?php echo $lists['planid']; ?></div>
 						<div class="control"><?php echo $lists['set_expiration']; ?></div>
 				</div>
