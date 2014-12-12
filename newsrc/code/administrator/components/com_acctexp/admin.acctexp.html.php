@@ -1689,7 +1689,6 @@ jQuery(document).ready(function(jQuery) {
 						<div class="col-sm-12">
 							<table class="adminlist table table-hover table-striped">
 								<thead><tr>
-									<th>#</th>
 									<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
 									<th>&nbsp;</th>
 									<th class="text-left"><?php echo JText::_('CNAME'); ?></th>
@@ -1726,9 +1725,8 @@ jQuery(document).ready(function(jQuery) {
 										}
 									} ?>
 									<tr<?php echo $rowstyle; ?>>
-										<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 										<td class="text-center"><?php echo JHTML::_('grid.id', $i, $row->id, false, ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) ); ?></td>
-										<td><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
+										<td class="text-center"><?php echo !empty( $row->primary ) ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
 										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMembership&amp;' . ( ( $action[0] == 'manual' ) ? 'userid' : 'subscriptionid' ) . '=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
 										<td class="text-left"><?php echo $row->username; ?></td>
 										<td><?php echo $row->status; ?></td>
