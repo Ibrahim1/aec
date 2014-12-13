@@ -1444,23 +1444,19 @@ jQuery(document).ready(function(jQuery) {
 							<table class="adminlist table table-striped table-hover">
 								<thead>
 								<tr>
-									<th>#</th>
-									<th>id</th>
-									<th><input type="checkbox" name="toggle" value="" /></th>
+									<th class="text-center">ID <input type="checkbox" name="toggle" value="" /></th>
 									<th class="text-left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
-									<th><?php echo JText::_('PROCESSOR_INFO'); ?></th>
-									<th><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
+									<th class="text-left"><?php echo JText::_('PROCESSOR_INFO'); ?></th>
+									<th class="text-left"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
 								</tr>
 								</thead>
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
 									<tr>
-										<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-										<td><?php echo $row->processor->id; ?></td>
-										<td><?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
+										<td class="text-center"><?php echo $row->processor->id; ?> <?php echo JHTML::_('grid.id', $i, $row->processor->id, false, 'id' ); ?></td>
 										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editProcessor&amp;id=' . $row->processor->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->processor->info['longname'] ) ? JText::_('UNNAMED ITEM') : $row->processor->info['longname'] ); ?></a></td>
-										<td><?php echo $row->processor->info['statement']; ?></td>
-										<td><?php HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
+										<td class="text-left"><?php echo $row->processor->info['statement']; ?></td>
+										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'config_processors', 'active', $row->processor->id, $row->processor->active ); ?></td>
 									</tr>
 								<?php } ?>
 								</tbody>
@@ -1824,31 +1820,29 @@ jQuery(document).ready(function(jQuery) {
 						<div class="col-sm-12">
 							<table class="adminlist table table-hover table-striped">
 								<thead><tr>
-									<th>#</th>
-									<th>id</th>
-									<th><input type="checkbox" name="toggle" value="" /></th>
+									<th class="text-right">ID <input type="checkbox" name="toggle" value="" /></th>
 									<th class="text-left"><?php echo JText::_('MI_NAME'); ?></th>
 									<th class="text-left" ><?php echo JText::_('MI_DESC'); ?></th>
-									<th><?php echo JText::_('MI_ACTIVE'); ?></th>
+									<th class="text-center"><?php echo JText::_('MI_ACTIVE'); ?></th>
 									<?php if ( $ordering ) { ?>
-										<th><?php echo JText::_('MI_REORDER'); ?></th>
+										<th class="text-center"><?php echo JText::_('MI_REORDER'); ?></th>
 									<?php } ?>
 									<th class="text-right"><?php echo JText::_('MI_FUNCTION'); ?></th>
 								</tr></thead>
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
 									<tr>
-										<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-										<td><?php echo $row->id; ?></td>
-										<td><?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
+										<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?></td>
 										<td class="text-left"><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editMicroIntegration&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : $row->name ); ?></a></td>
 										<td class="text-left">
 											<?php
 											echo $row->desc ? ( strlen( strip_tags( $row->desc ) > 50 ) ? substr( strip_tags( $row->desc ), 0, 50) . ' ...' : strip_tags( $row->desc ) ) : ''; ?>
 										</td>
-										<td><?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?></td>
+										<td class="text-center">
+											<?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?>
+										</td>
 										<?php if ( $ordering ) { ?>
-											<td><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
+											<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
 										<?php } ?>
 										<td class="text-right"><?php echo $row->class_name; ?></td>
 									</tr>
@@ -2105,12 +2099,12 @@ jQuery(document).ready(function(jQuery) {
 							</div>
 							<table class="adminlist table table-striped table-hover">
 								<thead><tr>
-									<th>
+									<th class="text-right">
 										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
 										<input type="checkbox" name="toggle" value="" />
 									</th>
-									<th><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-									<th><?php echo JText::_('PAYPLAN_DESC'); ?></th>
+									<th class="text-left"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
+									<th class="text-left"><?php echo JText::_('PAYPLAN_DESC'); ?></th>
 									<th class="text-right"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
 									<th class="text-left"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
 									<th class="text-center"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
@@ -2120,7 +2114,7 @@ jQuery(document).ready(function(jQuery) {
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
 									<tr>
-										<td class="text-center">
+										<td class="text-right">
 											<div class="group-colors">
 												<?php foreach ( $row->groups as $group ) { ?>
 													<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
@@ -2590,11 +2584,11 @@ jQuery(document).ready(function(jQuery) {
 						<div class="aecadminform">
 							<table class="adminlist table table-hover table-striped">
 								<thead><tr>
-									<th>
+									<th class="text-right">
 										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
 										<input type="checkbox" name="toggle" value="" />
 									</th>
-									<th><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
+									<th class="text-left"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
 									<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
 									<th class="text-right"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
 									<th class="text-left"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
@@ -2603,7 +2597,7 @@ jQuery(document).ready(function(jQuery) {
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
 									<tr>
-										<td class="text-center">
+										<td class="text-right">
 											<div class="group-colors">
 												<?php foreach ( $row->parent_groups as $group ) { ?>
 													<div class="group-colors-stripe" style="background: #<?php echo $group->color; ?>;">
@@ -2613,7 +2607,7 @@ jQuery(document).ready(function(jQuery) {
 											<?php echo $row->id; ?>&nbsp;
 											<?php echo JHTML::_('grid.id', $i, $row->id, false, 'id' ); ?>
 										</td>
-										<td>
+										<td class="text-left">
 											<div class="group-colors">
 												<div class="group-colors-stripe" style="background: #<?php echo $row->color; ?>;">
 												</div>
@@ -2838,24 +2832,26 @@ jQuery(document).ready(function(jQuery) {
 						<div class="col-sm-12">
 							<table class="adminlist table table-hover table-striped">
 								<thead><tr>
-									<th>#</th>
-									<th><input type="checkbox" name="toggle" value="" /></th>
+									<th class="text-right">ID <input type="checkbox" name="toggle" value="" /></th>
 									<th class="text-left"><?php echo JText::_('COUPON_NAME'); ?></th>
 									<th class="text-left"><?php echo JText::_('COUPON_CODE'); ?></th>
 									<th class="text-left"><?php echo JText::_('COUPON_DESC'); ?></th>
-									<th><?php echo JText::_('COUPON_ACTIVE'); ?></th>
+									<th class="text-center"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
 									<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 								</tr></thead>
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
 									<tr>
-										<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
-										<td><?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
-										<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a></td>
-										<td><strong><?php echo $row->coupon_code; ?></strong></td>
+										<td class="text-right"><?php echo $row->id; ?> <?php echo JHTML::_('grid.id', $i, $row->type.'.'.$row->id, false, 'id' ); ?></td>
+										<td class="text-left">
+											<a href="<?php echo 'index.php?option=' . $option . '&amp;task=editCoupon' . '&amp;id=' . $row->type.'.'.$row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo ( empty( $row->name ) ? JText::_('UNNAMED ITEM') : stripslashes( $row->name ) ); ?></a>
+										</td>
+										<td class="text-left"><strong><?php echo $row->coupon_code; ?></strong></td>
 										<td class="text-left"><?php echo $row->desc; ?></td>
-										<td><?php HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?></td>
-										<td>
+										<td class="text-center">
+											<?php HTML_myCommon::toggleBtn( 'coupons'. ( $row->type ? '_static' : '' ), 'active', $row->id, $row->active ); ?>
+										</td>
+										<td class="text-center">
 											<div class="progress progress-info progress-striped">
 												<?php if ( $row->usecount ) { ?>
 													<div class="bar" style="width: <?php echo $row->percentage; ?>%;"><?php if ( $row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?></div><?php if ( !$row->inner ) { echo '<div class="progress-content">'.$row->usecount.'</div>'; } ?>
@@ -3816,20 +3812,25 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm(true);
 		?>
-		<div class="col-sm-12">
-			<div class="aec-settings-container">
-			<?php if ( !empty( $cmd ) ) { ?>
-				<h4><?php echo JText::_('Challenge'); ?></h4>
-			<?php } ?>
-			<?php if ( is_array( $result ) ) { ?>
-				<div id="aec-toolbox-list">
-				<?php foreach ( $result as $x => $litem ) {
-					echo '<a href="' . $litem['link'] . '" class="btn btn-success pull-right" style="margin-top: 10px;">' . aecHTML::Icon( 'cog' ) . ' Use</a>';
-					echo '<a href="' . $litem['link'] . '"><h3>' . $litem['name'] . '</h3></a><p>' . $litem['desc'] . '</p>';
-					echo '<hr />';
-				} ?>
-				</div>
-			<?php } else { echo $result; } ?>
+		<div class="container">
+			<div class="col-sm-12">
+				<?php if ( !empty( $cmd ) ) { ?>
+					<h4><?php echo JText::_('Challenge'); ?></h4>
+				<?php } ?>
+				<?php if ( is_array( $result ) ) { ?>
+					<?php foreach ( $result as $x => $litem ) { ?>
+						<div class="col-sm-6 text-left">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<a href="<?php echo $litem['link']; ?>"><h3><?php echo $litem['name']; ?></h3></a><p><?php echo $litem['desc']; ?></p>
+								</div>
+								<div class="panel-footer text-right">
+									<a href="<?php echo $litem['link']; ?>" class="btn btn-success" style="margin-top: 10px;"><?php echo aecHTML::Icon( 'cog' ); ?> Use</a>
+								</div>
+							</div>
+						</div>
+					<?php } ?>
+				<?php } else { echo $result; } ?>
 			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
