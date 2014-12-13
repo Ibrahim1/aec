@@ -965,15 +965,17 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	if ( !empty( $orderby ) ) {
 		if ( $set_group == "notconfig" ) {
-			$forder = array(	'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
-								'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-								);
+			$forder = array(
+				'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
+				'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+				);
 		} else {
-			$forder = array(	'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-								'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
-								'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
-								'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC', 'type ASC', 'type DESC'
-								);
+			$forder = array(
+				'expiration ASC', 'expiration DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+				'name ASC', 'name DESC', 'lastname ASC', 'lastname DESC', 'username ASC', 'username DESC',
+				'signup_date ASC', 'signup_date DESC', 'lastpay_date ASC', 'lastpay_date DESC',
+				'plan_name ASC', 'plan_name DESC', 'status ASC', 'status DESC', 'type ASC', 'type DESC'
+				);
 		}
 
 		if ( !in_array( $orderby, $forder ) ) {
@@ -1382,7 +1384,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox span2" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
-	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $option, $lists, $subscriptionid, $action );
+	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
 }
 
 function editSettings( $option )

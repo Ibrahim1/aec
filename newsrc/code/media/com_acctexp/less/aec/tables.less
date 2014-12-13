@@ -24,6 +24,24 @@
 	}
 }
 
-table.adminlist tbody tr td {
-	vertical-align: middle;
+table.adminlist {
+	thead tr th {
+		i.text-muted {
+			opacity: 0.1;
+
+			&:hover {
+				color: @brand-info;
+			}
+		}
+
+		&:hover {
+			i.text-muted {
+				opacity: 1;
+			}
+		}
+	}
+
+	tbody tr td {
+		vertical-align: middle;
+	}
 }
