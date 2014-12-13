@@ -1675,6 +1675,14 @@ jQuery(document).ready(function(jQuery) {
 		jQuery("input[name*=\'orderby_subscr\']").val(jQuery(this).data(\'ordering\'));
 		document.adminForm.submit();
 	});
+
+	jQuery("table.adminlist tbody tr").on("click", function(event){
+		if ( jQuery(this).find("input[type*=\'checkbox\']").prop(\'checked\') ) {
+			jQuery(this).removeClass("success").find("input[type*=\'checkbox\']").prop(\'checked\', false);
+		} else {
+			jQuery(this).addClass("success").find("input[type*=\'checkbox\']").prop(\'checked\', true);
+		}
+	});
 });
 ';
 		$document = JFactory::getDocument();
