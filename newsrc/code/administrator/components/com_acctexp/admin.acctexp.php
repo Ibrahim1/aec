@@ -4314,7 +4314,7 @@ function listCoupons( $option )
 		 	. ' FROM #__acctexp_coupons_static'
 		 	. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 		 	. ')'
-		 	. ' ORDER BY `id` DESC'
+		 	. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
 		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
 		 	;
 
@@ -4361,7 +4361,7 @@ function listCoupons( $option )
 		}
 	}
 
-	HTML_AcctExp::listCoupons( $rows, $filtered, $pageNav, $option, $search );
+	HTML_AcctExp::listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby );
 }
 
 function editCoupon( $id, $option, $new )

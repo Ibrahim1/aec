@@ -2838,7 +2838,7 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	static function listCoupons( $rows, $filtered, $pageNav, $option, $search )
+	static function listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons' );
@@ -2846,7 +2846,15 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm();
 
+		$th_list = array(
+			array('name', 'COUPON_NAME'),
+			array('coupon_code', 'COUPON_CODE'),
+			array('desc', 'COUPON_DESC'),
+			array('active', 'COUPON_ACTIVE', 'center')
+		);
+
 		?>
+		<input type="hidden" name="orderby_coupons" value="<?php echo $orderby; ?>"/>
 		<?php if ( empty( $rows ) && !$filtered ) { ?>
 			<div class="clearfix"></div>
 			<div class="container" style="min-height: 50%; padding: 10% 0;">
@@ -2869,10 +2877,7 @@ jQuery(document).ready(function(jQuery) {
 							<table class="adminlist table table-hover table-striped">
 								<thead><tr>
 									<th class="text-right">ID <input type="checkbox" name="toggle" value="" /></th>
-									<th class="text-left"><?php echo JText::_('COUPON_NAME'); ?></th>
-									<th class="text-left"><?php echo JText::_('COUPON_CODE'); ?></th>
-									<th class="text-left"><?php echo JText::_('COUPON_DESC'); ?></th>
-									<th class="text-center"><?php echo JText::_('COUPON_ACTIVE'); ?></th>
+									<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
 									<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 								</tr></thead>
 								<tbody>
@@ -3934,14 +3939,12 @@ class aecAdmin
 								<?php
 							}
 							?>
-
 							<button type="submit" class="btn btn-default btn-block">Submit</button>
 						</div>
-						<div class="footer hide">test</div>
 					</div>
 				<?php }
 			?>
-			<span class="pull-right">
+			<span class="pull-<?php echo ($align == 'right') ? 'left' : 'right'; ?>">
 				<a href="#" class="order-select" data-ordering="<?php echo $key; ?> ASC">
 					<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == $key . ' ASC') ? 'primary' : 'muted'; ?>"></i>
 				</a>
