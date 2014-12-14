@@ -463,7 +463,7 @@ class SubscriptionPlanHandler
 		return $available_plans;
 	}
 
-	static function getFullPlanList( $limitstart=false, $limit=false, $subselect=array() )
+	static function getFullPlanList( $limitstart=false, $limit=false, $subselect=array(), $order='ordering' )
 	{
 		$db = JFactory::getDBO();
 
@@ -471,7 +471,7 @@ class SubscriptionPlanHandler
 				. ' FROM #__acctexp_plans'
 				. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
 				. ' GROUP BY `id`'
-				. ' ORDER BY `ordering`'
+				. ' ORDER BY `' . $order . '`'
 			 	;
 
 		if ( ( $limitstart !== false ) && ( $limit !== false ) ) {

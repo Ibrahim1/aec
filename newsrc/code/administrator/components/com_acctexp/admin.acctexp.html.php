@@ -1696,11 +1696,6 @@ jQuery(document).ready(function(jQuery) {
 		}
 	});
 
-	jQuery(".order-select").on("click", function(event){
-		jQuery("input[name*=\'orderby_subscr\']").val(jQuery(this).data(\'ordering\'));
-		document.adminForm.submit();
-	});
-
 	jQuery("table.adminlist tbody tr").on("click", function(event){
 		if ( jQuery(this).find("input[type*=\'checkbox\']").prop(\'checked\') ) {
 			jQuery(this).removeClass("success").find("input[type*=\'checkbox\']").prop(\'checked\', false);
@@ -1716,7 +1711,7 @@ jQuery(document).ready(function(jQuery) {
 		$th_list = array(
 			array('username', 'CNAME'),
 			array('name', 'USERLOGIN'),
-			array('status', 'AEC_CMN_STATUS'),
+			array('status', 'AEC_CMN_STATUS', 'left', 'groups'),
 			array('signup_date', 'SUBSCR_DATE')
 		);
 
@@ -1726,7 +1721,7 @@ jQuery(document).ready(function(jQuery) {
 				array(
 					array('lastpay_date', 'LASTPAY_DATE'),
 					array('type', 'METHOD'),
-					array('plan_name', 'USERPLAN'),
+					array('plan_name', 'USERPLAN', 'left', array('filter_plan', 'filter_group')),
 					array('expiration', 'EXPIRATION')
 				)
 			);
@@ -1743,14 +1738,6 @@ jQuery(document).ready(function(jQuery) {
 						<div class="col-sm-12">
 							<div class="table-attachment table-attachment-top">
 								<div class="filter-sub">
-									<label class="col-sm-4 control-label">Filter:</label>
-									<div class="control"><?php echo $lists['groups'];?></div>
-									<input type="hidden" name="filter_plan" value="" />
-									<div class="control"><?php echo $lists['filter_plan']; ?></div>
-									<input type="hidden" name="filter_group" value="" />
-									<div class="control"><?php echo $lists['filter_group']; ?></div>
-								</div>
-								<div class="filter-sub">
 									<label class="col-sm-4 control-label">With selected users:</label>
 									<div class="control"><?php echo $lists['planid']; ?></div>
 									<div class="control"><?php echo $lists['set_expiration']; ?></div>
@@ -1763,7 +1750,7 @@ jQuery(document).ready(function(jQuery) {
 								<thead><tr>
 									<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
 									<th>&nbsp;</th>
-									<?php aecAdmin::th_set($th_list, $orderby); ?>
+									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
 									<?php if ( $action[0] == 'manual' ) { ?>
 										<th class="text-left"></th>
 										<th class="text-left"></th>
@@ -1833,12 +1820,22 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	static function listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $ordering )
+	static function listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations' );
+
+		$th_list = array(
+			array('name', 'MI_NAME'),
+			array('desc', 'MI_DESC'),
+			array('active', 'MI_ACTIVE', 'center'),
+			array('ordering', 'MI_REORDER'),
+			array('class_name', 'MI_FUNCTION')
+		);
+
 		HTML_myCommon::getButtons( 'list', 'MicroIntegration' ); ?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
+			<input type="hidden" name="orderby_mi" value="<?php echo $orderby; ?>"/>
 		<?php if ( empty( $rows )  && !$filtered ) { ?>
 			<div class="clearfix"></div>
 			<div class="container" style="min-height: 50%; padding: 10% 0;">
@@ -1850,7 +1847,6 @@ jQuery(document).ready(function(jQuery) {
 					<tr>
 						<td style="text-align:center;">
 							<div class="form-inline">
-								<label for="filter_planid"><?php echo JText::_('PLAN_FILTER'); ?></label>&nbsp;<?php echo $lists['filterplanid'] ?>&nbsp;<label for="orderby_mi"><?php echo JText::_('ORDER_BY') ?></label>&nbsp;<?php echo $lists['orderNav']; ?><br />
 								<input type="text" name="search" class="search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
 							</div>
 						</td>
@@ -1869,13 +1865,7 @@ jQuery(document).ready(function(jQuery) {
 							<table class="adminlist table table-hover table-striped">
 								<thead><tr>
 									<th class="text-right">ID <input type="checkbox" name="toggle" value="" /></th>
-									<th class="text-left"><?php echo JText::_('MI_NAME'); ?></th>
-									<th class="text-left" ><?php echo JText::_('MI_DESC'); ?></th>
-									<th class="text-center"><?php echo JText::_('MI_ACTIVE'); ?></th>
-									<?php if ( $ordering ) { ?>
-										<th class="text-center"><?php echo JText::_('MI_REORDER'); ?></th>
-									<?php } ?>
-									<th class="text-right"><?php echo JText::_('MI_FUNCTION'); ?></th>
+									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
 								</tr></thead>
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
@@ -1889,9 +1879,7 @@ jQuery(document).ready(function(jQuery) {
 										<td class="text-center">
 											<?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?>
 										</td>
-										<?php if ( $ordering ) { ?>
-											<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
-										<?php } ?>
+										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
 										<td class="text-right"><?php echo $row->class_name; ?></td>
 									</tr>
 								<?php } ?>
@@ -3908,22 +3896,46 @@ jQuery(document).ready(function(jQuery) {
 
 class aecAdmin
 {
-	public static function th_set( $list, $orderby )
+	public static function th_set( $list, $lists, $orderby )
 	{
 		foreach ( $list as $li ) {
-			if ( isset( $li[2] ) ) {
-				self::th($li[0], $li[1], $orderby, $li[2]);
+			if ( isset( $li[3] ) ) {
+				self::th($li[0], $li[1], $orderby, $lists, $li[2], $li[3]);
+			} elseif ( isset( $li[2] ) ) {
+				self::th($li[0], $li[1], $orderby, $lists, $li[2]);
 			} else {
-				self::th($li[0], $li[1], $orderby);
+				self::th($li[0], $li[1], $orderby, $lists);
 			}
 		}
 	}
 
-	public static function th( $key, $text, $orderby, $align='left' )
+	public static function th( $key, $text, $orderby, $lists, $align='left', $filter=null )
 	{
 		?>
 		<th class="text-<?php echo $align; ?>">
-			<?php echo JText::_($text); ?>
+			<?php
+				echo JText::_($text);
+				if ( !empty($filter) ) { ?>
+					<div class="popover-markup"> <a href="#" class="trigger"><i class="glyphicon glyphicon-filter"></i></a>
+						<div class="head hide">Filter this column</div>
+						<div class="content hide">
+							<?php
+							if ( !is_array($filter) ) $filter = array($filter);
+
+							foreach ( $filter as $f ) {
+								?>
+								<input type="hidden" name="<?php echo $f; ?>" value="" />
+								<div class="control"><?php echo $lists[$f]; ?></div>
+								<?php
+							}
+							?>
+
+							<button type="submit" class="btn btn-default btn-block">Submit</button>
+						</div>
+						<div class="footer hide">test</div>
+					</div>
+				<?php }
+			?>
 			<span class="pull-right">
 				<a href="#" class="order-select" data-ordering="<?php echo $key; ?> ASC">
 					<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == $key . ' ASC') ? 'primary' : 'muted'; ?>"></i>

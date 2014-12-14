@@ -1833,6 +1833,8 @@ function listTemplates( $option )
  	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
+	$orderby = $app->getUserStateFromRequest( "orderby_templates{$option}", 'orderby_templates', 'name ASC' );
+
 	$list = xJUtility::getFileArray( JPATH_SITE . '/components/com_acctexp/tmpl', '[*]', true );
 
 	foreach ( $list as $id => $name ) {
@@ -1954,6 +1956,8 @@ function listProcessors( $option )
 
  	$limit = $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
+
+	$orderby = $app->getUserStateFromRequest( "orderby_processors{$option}", 'orderby_processors', 'name ASC' );
 
  	// get the total number of records
  	$query = 'SELECT count(*)'
@@ -2405,6 +2409,8 @@ function listSubscriptionPlans( $option )
 	} else {
 		$subselect = array();
 	}
+
+	$orderby = $app->getUserStateFromRequest( "orderby_plans{$option}", 'orderby_plans', 'name ASC' );
 
  	// get the total number of records
  	$query = 'SELECT count(*)'
@@ -3348,6 +3354,8 @@ function listItemGroups( $option )
  	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
+	$orderby = $app->getUserStateFromRequest( "orderby_groups{$option}", 'orderby_groups', 'name ASC' );
+
  	// get the total number of records
  	$query = 'SELECT count(*)'
 		 	. ' FROM #__acctexp_itemgroups'
@@ -3771,12 +3779,6 @@ function listMicroIntegrations( $option )
 
 	$filtered = !empty($filter_planid) || !empty($search);
 
-	$ordering = false;
-
-	if ( strpos( $orderby, 'ordering' ) !== false ) {
-		$ordering = true;
-	}
-
 	// get the total number of records
 	$query = 'SELECT count(*)'
 		 	. ' FROM #__acctexp_microintegrations'
@@ -3814,7 +3816,7 @@ function listMicroIntegrations( $option )
 
 	$query .= (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' );
 
-	$query .= ' ORDER BY ' . $orderby;
+	$query .= ' ORDER BY `' . str_replace(' ', '` ', $orderby);
 	$query .= ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 
 	$db->setQuery( $query );
@@ -3860,7 +3862,7 @@ function listMicroIntegrations( $option )
 	}
 	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
-	HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $ordering );
+	HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
 }
 
 function editMicroIntegration( $id, $option )
@@ -4274,6 +4276,8 @@ function listCoupons( $option )
 	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	$filtered = !empty($search);
+
+	$orderby = $app->getUserStateFromRequest( "orderby_coupons{$option}", 'orderby_coupons', 'name ASC' );
 
 	$total = 0;
 
@@ -4822,6 +4826,8 @@ function invoices( $option )
 				;
 	}
 
+	$orderby = $app->getUserStateFromRequest( "orderby_invoices{$option}", 'orderby_invoices', 'created_date DESC' );
+
 	// get the total number of records
 	$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_invoices'
@@ -5093,6 +5099,8 @@ function history( $option )
 		$where[] = 'LOWER(`proc_name`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
 	}
 
+	$orderby = $app->getUserStateFromRequest( "orderby_history{$option}", 'orderby_history', 'transaction_date DESC' );
+
 	// get the total number of records
 	$query = 'SELECT count(*)'
 			. '  FROM #__acctexp_log_history'
@@ -5147,6 +5155,8 @@ function eventlog( $option )
 		$where[] = 'LOWER(`event`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
 		$where[] = 'LOWER(`tags`) LIKE \'%' . xJ::escape( $db, trim( strtolower( $search ) ) ) . '%\'';
 	}
+
+	$orderby = $app->getUserStateFromRequest( "orderby_eventlog{$option}", 'orderby_eventlog', 'id DESC' );
 
 	// get the total number of records
 	$query = 'SELECT count(*)'

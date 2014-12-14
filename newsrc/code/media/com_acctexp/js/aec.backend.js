@@ -281,6 +281,21 @@ jQuery(document).ready(function(jQuery) {
 	jQuery.fn.bootstrapSwitch.defaults.offText = 'no';
 
 	jQuery(".bootstrap-switch").bootstrapSwitch();
+
+	jQuery(".order-select").on("click", function(event){
+		jQuery("input[name*=\'orderby_\']").val(jQuery(this).data('ordering'));
+		document.adminForm.submit();
+	});
+
+	jQuery('.popover-markup>.trigger').popover({
+		html: true,
+		title: function () {
+			return jQuery(this).parent().find('.head').html();
+		},
+		content: function () {
+			return jQuery(this).parent().find('.content').html();
+		}
+	});
 });
 
 function readNotice(id) {
