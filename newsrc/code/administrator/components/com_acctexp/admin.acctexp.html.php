@@ -138,12 +138,37 @@ class HTML_myCommon
 		echo '</form>';
 	}
 
-	static function getHeader( $page, $image, $extratext="" )
+	static function getHeader( $page, $image, $extratext='', $search=false )
 	{
-		?><div class="adminheading">
-			<?php HTML_myCommon::getSymbol( $image ); ?>
-			<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( ( !empty( $page ) && !empty( $extratext ) ) ? ' - ' : '' ) . ( !empty( $extratext ) ? $extratext : '' ); ?></h2>
-		</div><?php
+
+		if ( $search !== false ) {
+			$placeholder = JText::_('AEC_CMN_SEARCH') . '...';
+
+			$value = htmlspecialchars($search);
+		}
+		?>
+		<div class="container-fluid adminheading">
+			<div class="col-sm-12">
+				<div class="col-sm-6">
+					<?php HTML_myCommon::getSymbol( $image ); ?>
+					<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( ( !empty( $page ) && !empty( $extratext ) ) ? ' - ' : '' ) . ( !empty( $extratext ) ? $extratext : '' ); ?></h2>
+				</div>
+				<?php if ( $search !== false ) { ?>
+					<div class="col-sm-6">
+						<div class="form-group pull-right">
+							<div class="input-group">
+								<input class="form-control input-lg" type="text" name="search" placeholder="<?php echo $placeholder; ?>" value="<?php echo $value; ?>" />
+								<span class="input-group-btn">
+									<input type="button" class="btn btn-lg btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
+								</span>
+							</div>
+						</div>
+					</div>
+
+				<?php } ?>
+			</div>
+		</div>
+	<?php
 	}
 
 	static function getSymbol( $name )
@@ -1688,8 +1713,30 @@ jQuery(document).ready(function(jQuery) {
 		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 
-		HTML_myCommon::getHeader( $action[1], '' . $action[0] ); ?>
+		$th_list = array(
+			array('username', 'CNAME'),
+			array('name', 'USERLOGIN'),
+			array('status', 'AEC_CMN_STATUS'),
+			array('signup_date', 'SUBSCR_DATE')
+		);
+
+		if ( $action[0] != 'manual' ) {
+			$th_list = array_merge(
+				$th_list,
+				array(
+					array('lastpay_date', 'LASTPAY_DATE'),
+					array('type', 'METHOD'),
+					array('plan_name', 'USERPLAN'),
+					array('expiration', 'EXPIRATION')
+				)
+			);
+		}
+
+		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
+			<?php HTML_myCommon::getHeader( $action[1], '' . $action[0], '', $search ); ?>
+			<input type="hidden" name="orderby_subscr" value="<?php echo $orderby; ?>"/>
+
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-sm-12">
@@ -1704,10 +1751,6 @@ jQuery(document).ready(function(jQuery) {
 									<div class="control"><?php echo $lists['filter_group']; ?></div>
 								</div>
 								<div class="filter-sub">
-									<input type="hidden" name="orderby_subscr" value="<?php echo $orderby; ?>"/>
-									<input type="text" name="search" class="inputbox span2 search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>..." value="<?php echo htmlspecialchars($search); ?>" />
-								</div>
-								<div class="filter-sub">
 									<label class="col-sm-4 control-label">With selected users:</label>
 									<div class="control"><?php echo $lists['planid']; ?></div>
 									<div class="control"><?php echo $lists['set_expiration']; ?></div>
@@ -1720,96 +1763,8 @@ jQuery(document).ready(function(jQuery) {
 								<thead><tr>
 									<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
 									<th>&nbsp;</th>
-									<th class="text-left">
-										<?php echo JText::_('CNAME'); ?>
-										<span class="pull-right">
-											<a href="#" class="order-select" data-ordering="name ASC">
-												<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == 'name ASC') ? 'primary' : 'muted'; ?>"></i>
-											</a>
-											<a href="#" class="order-select" data-ordering="name DESC">
-												<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == 'name DESC') ? 'primary' : 'muted'; ?>"></i>
-											</a>
-										</span>
-									</th>
-									<th class="text-left">
-										<?php echo JText::_('USERLOGIN'); ?>
-										<span class="pull-right">
-											<a href="#" class="order-select" data-ordering="username ASC">
-												<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == 'username ASC') ? 'primary' : 'muted'; ?>"></i>
-											</a>
-											<a href="#" class="order-select" data-ordering="username DESC">
-												<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == 'username DESC') ? 'primary' : 'muted'; ?>"></i>
-											</a>
-										</span>
-									</th>
-									<th class="text-left">
-										<?php echo JText::_('AEC_CMN_STATUS'); ?>
-										<span class="pull-right">
-											<a href="#" class="order-select" data-ordering="status ASC">
-												<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == 'status ASC') ? 'primary' : 'muted'; ?>"></i>
-											</a>
-											<a href="#" class="order-select" data-ordering="status DESC">
-												<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == 'status DESC') ? 'primary' : 'muted'; ?>"></i>
-											</a>
-										</span>
-									</th>
-									<th class="text-left">
-										<?php echo JText::_('SUBSCR_DATE'); ?>
-										<span class="pull-right">
-											<a href="#" class="order-select" data-ordering="signup_date ASC">
-												<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == 'signup_date ASC') ? 'primary' : 'muted'; ?>"></i>
-											</a>
-											<a href="#" class="order-select" data-ordering="signup_date DESC">
-												<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == 'signup_date DESC') ? 'primary' : 'muted'; ?>"></i>
-											</a>
-										</span>
-									</th>
-									<?php if ( $action[0] != 'manual' ) { ?>
-										<th class="text-left">
-											<?php echo JText::_('LASTPAY_DATE'); ?>
-											<span class="pull-right">
-												<a href="#" class="order-select" data-ordering="lastpay_date ASC">
-													<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == 'lastpay_date ASC') ? 'primary' : 'muted'; ?>"></i>
-												</a>
-												<a href="#" class="order-select" data-ordering="lastpay_date DESC">
-													<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == 'lastpay_date DESC') ? 'primary' : 'muted'; ?>"></i>
-												</a>
-											</span>
-										</th>
-										<th class="text-left">
-											<?php echo JText::_('METHOD'); ?>
-											<span class="pull-right">
-												<a href="#" class="order-select" data-ordering="type ASC">
-													<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == 'type ASC') ? 'primary' : 'muted'; ?>"></i>
-												</a>
-												<a href="#" class="order-select" data-ordering="type DESC">
-													<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == 'type DESC') ? 'primary' : 'muted'; ?>"></i>
-												</a>
-											</span>
-										</th>
-										<th class="text-left">
-											<?php echo JText::_('USERPLAN'); ?>
-											<span class="pull-right">
-												<a href="#" class="order-select" data-ordering="plan_name ASC">
-													<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == 'plan_name ASC') ? 'primary' : 'muted'; ?>"></i>
-												</a>
-												<a href="#" class="order-select" data-ordering="plan_name DESC">
-													<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == 'plan_name DESC') ? 'primary' : 'muted'; ?>"></i>
-												</a>
-											</span>
-										</th>
-										<th class="text-left">
-											<?php echo JText::_('EXPIRATION'); ?>
-											<span class="pull-right">
-												<a href="#" class="order-select" data-ordering="expiration ASC">
-													<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == 'expiration ASC') ? 'primary' : 'muted'; ?>"></i>
-												</a>
-												<a href="#" class="order-select" data-ordering="expiration DESC">
-													<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == 'expiration DESC') ? 'primary' : 'muted'; ?>"></i>
-												</a>
-											</span>
-										</th>
-									<?php } else { ?>
+									<?php aecAdmin::th_set($th_list, $orderby); ?>
+									<?php if ( $action[0] == 'manual' ) { ?>
 										<th class="text-left"></th>
 										<th class="text-left"></th>
 										<th class="text-left"></th>
@@ -3948,6 +3903,37 @@ jQuery(document).ready(function(jQuery) {
 		} else {
 			return AECToolbox::formatDate( $SQLDate, true );
 		}
+	}
+}
+
+class aecAdmin
+{
+	public static function th_set( $list, $orderby )
+	{
+		foreach ( $list as $li ) {
+			if ( isset( $li[2] ) ) {
+				self::th($li[0], $li[1], $orderby, $li[2]);
+			} else {
+				self::th($li[0], $li[1], $orderby);
+			}
+		}
+	}
+
+	public static function th( $key, $text, $orderby, $align='left' )
+	{
+		?>
+		<th class="text-<?php echo $align; ?>">
+			<?php echo JText::_($text); ?>
+			<span class="pull-right">
+				<a href="#" class="order-select" data-ordering="<?php echo $key; ?> ASC">
+					<i class="glyphicon glyphicon-chevron-up text-<?php echo ($orderby == $key . ' ASC') ? 'primary' : 'muted'; ?>"></i>
+				</a>
+				<a href="#" class="order-select" data-ordering="<?php echo $key; ?> DESC">
+					<i class="glyphicon glyphicon-chevron-down text-<?php echo ($orderby == $key . ' DESC') ? 'primary' : 'muted'; ?>"></i>
+				</a>
+			</span>
+		</th>
+		<?php
 	}
 }
 
