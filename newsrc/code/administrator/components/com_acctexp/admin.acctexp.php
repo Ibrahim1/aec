@@ -430,7 +430,7 @@ function aecCentral( $option, $searchresult=null, $searchcontent=null )
 	$db->setQuery( $query	);
 	$notices = $db->loadObjectList();
 
- 	HTML_AcctExp::central( $searchresult, $notices, $furthernotices, $searchcontent );
+	HTML_AcctExp::central( $searchresult, $notices, $furthernotices, $searchcontent );
 }
 
 function getNotices()
@@ -455,7 +455,7 @@ function getNotices()
 	$db->setQuery( $query	);
 	$notices = $db->loadObjectList();
 
- 	HTML_AcctExp::eventlogModal( $notices, $furthernotices );
+	HTML_AcctExp::eventlogModal( $notices, $furthernotices );
 }
 
 function readNotice( $id )
@@ -1869,7 +1869,7 @@ function listTemplates( $option )
 		$rows[] = $t;
 	}
 
- 	HTML_AcctExp::listTemplates( $rows, $pageNav, $option );
+	HTML_AcctExp::listTemplates( $rows, $pageNav, $option );
 }
 
 function editTemplate( $option, $name )
@@ -1992,7 +1992,7 @@ function listProcessors( $option )
 		}
 	}
 
- 	HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
+	HTML_AcctExp::listProcessors( $rows, $pageNav, $option );
 }
 
 function editProcessor( $id, $option )
@@ -2427,7 +2427,7 @@ function listSubscriptionPlans( $option )
 	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of records
-	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect );
+	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect, $orderby );
 
 	$gcolors = array();
 
@@ -2583,7 +2583,7 @@ function listSubscriptionPlans( $option )
 		}
 	}
 
- 	HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $lists, $pageNav, $option );
+	HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $orderby, $lists, $pageNav, $option );
 }
 
 function editSubscriptionPlan( $id, $option )
@@ -3372,11 +3372,11 @@ function listItemGroups( $option )
 
  	// get the subset (based on limits) of records
  	$query = 'SELECT *'
-		 	. ' FROM #__acctexp_itemgroups'
-		 	. ' GROUP BY `id`'
-		 	. ' ORDER BY `ordering`'
-		 	. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
-		 	;
+		. ' FROM #__acctexp_itemgroups'
+		. ' GROUP BY `id`'
+		. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
+		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
+		;
 	$db->setQuery( $query );
 
  	$rows = $db->loadObjectList();
@@ -3389,11 +3389,11 @@ function listItemGroups( $option )
 
 	foreach ( $rows as $rid => $row ) {
 		$query = 'SELECT count(*)'
-				. 'FROM #__users AS a'
-				. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
-				. ' WHERE b.plan = ' . $row->id
-				. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
-				;
+			. 'FROM #__users AS a'
+			. ' LEFT JOIN #__acctexp_subscr AS b ON a.id = b.userid'
+			. ' WHERE b.plan = ' . $row->id
+			. ' AND (b.status = \'Active\' OR b.status = \'Trial\')'
+			;
 		$db->setQuery( $query );
 
 	 	$rows[$rid]->usercount = $db->loadResult();
@@ -3456,8 +3456,8 @@ function listItemGroups( $option )
 		}
 	}
 
- 	HTML_AcctExp::listItemGroups( $rows, $pageNav, $option );
- }
+	HTML_AcctExp::listItemGroups( $rows, $pageNav, $option, $orderby );
+}
 
 function editItemGroup( $id, $option )
 {
@@ -6219,11 +6219,11 @@ function exportData( $option, $type, $cmd=null )
 
 		foreach( $array as $vname ) {
 			$vvalue = aecGetParam( $vname, '' );
-			 if ( !empty( $vvalue ) ) {
-				 ${$field}[$vname] = $vvalue;
+			if ( !empty( $vvalue ) ) {
+				${$field}[$vname] = $vvalue;
 
 			 	$postfields++;
-			 }
+			}
 		}
 	}
 

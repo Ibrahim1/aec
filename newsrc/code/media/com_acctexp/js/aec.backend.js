@@ -287,6 +287,10 @@ jQuery(document).ready(function(jQuery) {
 		document.adminForm.submit();
 	});
 
+	jQuery(function () {
+		jQuery('[data-toggle="tooltip"]').tooltip()
+	})
+
 	jQuery('.popover-markup>.trigger').popover({
 		html: true,
 		title: function () {

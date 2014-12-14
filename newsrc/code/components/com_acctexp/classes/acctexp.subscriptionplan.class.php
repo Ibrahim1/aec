@@ -471,7 +471,7 @@ class SubscriptionPlanHandler
 				. ' FROM #__acctexp_plans'
 				. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
 				. ' GROUP BY `id`'
-				. ' ORDER BY `' . $order . '`'
+				. ' ORDER BY `' . str_replace(' ', '` ', $order)
 			 	;
 
 		if ( ( $limitstart !== false ) && ( $limit !== false ) ) {

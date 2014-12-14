@@ -1879,7 +1879,7 @@ jQuery(document).ready(function(jQuery) {
 										<td class="text-center">
 											<?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?>
 										</td>
-										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
+										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
 										<td class="text-left"><?php echo $row->class_name; ?></td>
 									</tr>
 								<?php } ?>
@@ -2104,13 +2104,23 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	static function listSubscriptionPlans( $rows, $filtered, $lists, $pageNav, $option )
+	static function listSubscriptionPlans( $rows, $filtered, $orderby, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
 		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );
 		HTML_myCommon::startForm();
+
+		$th_list = array(
+			array('name', 'PAYPLAN_NAME', 'left', array('filter_group')),
+			array('desc', 'PAYPLAN_DESC'),
+			array('active', 'PAYPLAN_ACTIVE', 'right'),
+			array('visible', 'PAYPLAN_VISIBLE', 'left'),
+			array('ordering', 'PAYPLAN_REORDER', 'center')
+		);
+
 		?>
+		<input type="hidden" name="orderby_plans" value="<?php echo $orderby; ?>"/>
 		<?php if ( empty( $rows ) && !$filtered ) { ?>
 			<div class="clearfix"></div>
 			<div class="container" style="min-height: 50%; padding: 10% 0;">
@@ -2122,28 +2132,13 @@ jQuery(document).ready(function(jQuery) {
 				<div class="col-sm-12">
 					<div class="col-sm-12">
 						<div class="aecadminform">
-							<div class="filter-set">
-								<div class="filter-set-handle">
-									<span>Filter <i class="glyphicon glyphicon-filter"></i></span>
-								</div>
-								<div class="filter-set-body">
-									<div class="form-inline">
-										<?php echo $lists['filter_group'];?>
-										<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
-									</div>
-								</div>
-							</div>
 							<table class="adminlist table table-striped table-hover">
 								<thead><tr>
 									<th class="text-right">
 										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
 										<input type="checkbox" name="toggle" value="" />
 									</th>
-									<th class="text-left"><?php echo JText::_('PAYPLAN_NAME'); ?></th>
-									<th class="text-left"><?php echo JText::_('PAYPLAN_DESC'); ?></th>
-									<th class="text-right"><?php echo JText::_('PAYPLAN_ACTIVE'); ?></th>
-									<th class="text-left"><?php echo JText::_('PAYPLAN_VISIBLE'); ?></th>
-									<th class="text-center"><?php echo JText::_('PAYPLAN_REORDER'); ?></th>
+									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
 									<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
 									<th class="text-center"><?php echo JText::_('PAYPLAN_TOTALCOUNT'); ?></th>
 								</tr></thead>
@@ -2164,7 +2159,7 @@ jQuery(document).ready(function(jQuery) {
 										<td class="text-left"><?php echo $row->desc; ?></td>
 										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'plans', 'active', $row->id, $row->active ); ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'plans', 'visible', $row->id, $row->visible ); ?></td>
-										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'plan' ); ?></td>
+										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'plan', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
 										<td>
 											<div class="progress-group">
 												<div class="progress">
@@ -2604,7 +2599,7 @@ jQuery(document).ready(function(jQuery) {
 	<?php
 	}
 
-	static function listItemGroups( $rows, $pageNav, $option )
+	static function listItemGroups( $rows, $pageNav, $option, $orderby )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups' );
@@ -2612,7 +2607,16 @@ jQuery(document).ready(function(jQuery) {
 
 		HTML_myCommon::startForm();
 
+		$th_list = array(
+			array('name', 'ITEMGROUP_NAME'),
+			array('desc', 'ITEMGROUP_DESC'),
+			array('active', 'ITEMGROUP_ACTIVE', 'right'),
+			array('visible', 'ITEMGROUP_VISIBLE', 'left'),
+			array('ordering', 'ITEMGROUP_REORDER', 'center')
+		);
+
 		?>
+		<input type="hidden" name="orderby_groups" value="<?php echo $orderby; ?>"/>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
@@ -2624,11 +2628,7 @@ jQuery(document).ready(function(jQuery) {
 										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
 										<input type="checkbox" name="toggle" value="" />
 									</th>
-									<th class="text-left"><?php echo JText::_('ITEMGROUP_NAME'); ?></th>
-									<th class="text-left"><?php echo JText::_('ITEMGROUP_DESC'); ?></th>
-									<th class="text-right"><?php echo JText::_('ITEMGROUP_ACTIVE'); ?></th>
-									<th class="text-left"><?php echo JText::_('ITEMGROUP_VISIBLE'); ?></th>
-									<th><?php echo JText::_('ITEMGROUP_REORDER'); ?></th>
+									<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
 								</tr></thead>
 								<tbody>
 								<?php foreach ( $rows as $i => $row ) { ?>
@@ -2653,7 +2653,7 @@ jQuery(document).ready(function(jQuery) {
 										<td class="text-left"><?php echo $row->desc; ?></td>
 										<td class="text-right"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'active', $row->id, $row->active ); ?></td>
 										<td class="text-left"><?php HTML_myCommon::toggleBtn( 'itemgroups', 'visible', $row->id, $row->visible ); ?></td>
-										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'group' ); ?></td>
+										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'group', ($orderby == 'ordering ASC' || $orderby == 'ordering DESC') ); ?></td>
 									</tr>
 								<?php } ?>
 								</tbody>
@@ -4070,7 +4070,7 @@ class bsPagination extends JPagination
 		return str_replace( $search, $replace, $footer );
 	}
 
-	function ordering( $i, $n, $type )
+	function ordering( $i, $n, $type, $enabled=true )
 	{
 		$v = new JVersion();
 
@@ -4083,11 +4083,21 @@ class bsPagination extends JPagination
 		}
 		$lastpage = $total == $current;
 
+		if ( $enabled ) {
+			echo '<div class="btn-group btn-group-pagination">';
+		} else {
+			echo '<div class="btn-group btn-group-pagination" data-toggle="tooltip" data-placement="top" title="You cannot reorder items with the current sorting in place">';
+		}
+
+		$enableup = $enabled ? ( $i || ( $current > 1 ) ) : false;
+
+		$enabledown = $enabled ? ( $i<($n-1) || !$lastpage ) : false;
+
 		echo '<div class="btn-group btn-group-pagination">';
 
-		echo $this->orderUpIcon($i, true, 'order'.$type.'up', '', ( $i || ( $current > 1 ) ) );
+		echo $this->orderUpIcon($i, true, 'order'.$type.'up', '', $enableup);
 
-		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', '', ( $i<($n-1) || !$lastpage ) );
+		echo $this->orderDownIcon($i, $n, true, 'order'.$type.'down', '', $enabledown);
 
 		echo '</div>';
 	}
