@@ -1880,7 +1880,7 @@ jQuery(document).ready(function(jQuery) {
 											<?php HTML_myCommon::toggleBtn( 'microintegrations', 'active', $row->id, $row->active ); ?>
 										</td>
 										<td class="text-center"><?php $pageNav->ordering( $i, count($rows), 'mi' ); ?></td>
-										<td class="text-right"><?php echo $row->class_name; ?></td>
+										<td class="text-left"><?php echo $row->class_name; ?></td>
 									</tr>
 								<?php } ?>
 								</tbody>
@@ -3080,14 +3080,29 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	static function viewInvoices( $option, $rows, $search, $pageNav )
+	static function viewInvoices( $option, $rows, $search, $pageNav, $orderby )
 	{
 		HTML_myCommon::startCommon();
 		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices' );
 
+		$th_list = array(
+			array('id', 'ID'),
+			array('userid', 'INVOICE_USERID'),
+			array('invoice_number', 'INVOICE_INVOICE_NUMBER', 'center'),
+			array('secondary_ident', 'INVOICE_SECONDARY_IDENT'),
+			array('created_date', 'INVOICE_CREATED_DATE'),
+			array('transaction_date', 'INVOICE_TRANSACTION_DATE'),
+			array('usage', 'USERPLAN', 'center'),
+			array('coupons', 'INVOICE_COUPONS'),
+			array('method', 'INVOICE_METHOD'),
+			array('amount', 'INVOICE_AMOUNT'),
+			array('currency', 'INVOICE_CURRENCY')
+		);
+
 		HTML_myCommon::startForm();
 
 		?>
+		<input type="hidden" name="orderby_invoices" value="<?php echo $orderby; ?>"/>
 		<div class="aec-filters">
 			<div class="form-inline">
 				<p>
@@ -3103,17 +3118,7 @@ jQuery(document).ready(function(jQuery) {
 					<div class="col-sm-12">
 						<table class="adminlist table table-hover table-striped">
 							<thead><tr>
-								<th>#</th>
-								<th><?php echo JText::_('INVOICE_USERID'); ?></th>
-								<th class="text-center"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
-								<th class="text-center"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
-								<th class="text-center"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
-								<th class="text-center"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
-								<th class="text-center"><?php echo JText::_('USERPLAN'); ?></th>
-								<th class="text-center"><?php echo JText::_('INVOICE_COUPONS'); ?></th>
-								<th class="text-center"><?php echo JText::_('INVOICE_METHOD'); ?></th>
-								<th class="text-center"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
-								<th><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
+								<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
 							</tr></thead>
 							<tbody>
 							<?php foreach ( $rows as $i => $row ) { ?>

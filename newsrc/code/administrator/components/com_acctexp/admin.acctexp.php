@@ -4842,7 +4842,7 @@ function invoices( $option )
 	$query = 'SELECT id'
 			. ' FROM #__acctexp_invoices'
 			. ( !empty( $where ) ? ( ' WHERE ' . $where . ' ' ) : '' )
-			. ' ORDER BY `created_date` DESC'
+			. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
 			. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit;
 			;
 	$db->setQuery( $query );
@@ -4913,7 +4913,7 @@ function invoices( $option )
 		$invoices[$id]->username .= '</a>';
 	}
 
-	HTML_AcctExp::viewInvoices( $option, $invoices, $search, $pageNav );
+	HTML_AcctExp::viewInvoices( $option, $invoices, $search, $pageNav, $orderby );
 }
 
 function editInvoice( $id, $option, $returnTask, $userid )
