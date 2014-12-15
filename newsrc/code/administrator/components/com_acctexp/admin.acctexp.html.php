@@ -2111,7 +2111,7 @@ jQuery(document).ready(function(jQuery) {
 	static function listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', $search, 'list', 'SubscriptionPlan' );
+		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', $search, '', 'list', 'SubscriptionPlan' );
 		HTML_myCommon::startForm();
 
 		$th_list = array(
