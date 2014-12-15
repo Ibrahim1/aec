@@ -1400,14 +1400,15 @@ jQuery(document).ready(function(jQuery) {
 		jimport( 'joomla.html.editor' );
 
 		HTML_myCommon::startCommon( 'aec-wrap-settings' );
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings' );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
-							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-						);
-		HTML_myCommon::getButtons( $buttons, 'Settings' );
+		$buttons = array(
+			'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
+			'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
+			'hl1' => array(),
+			'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
+		);
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings', '', false, $buttons, 'Settings' );
 
 		HTML_myCommon::startForm(); ?>
 
@@ -1526,14 +1527,14 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startForm();
 
 		?>
-		<table class="aecadminform"><tr><td>
+		<div class="col-sm-8 col-sm-offset-2">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
 				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 					echo $aecHTML->createSettingsParticle( $rowname );
 				} ?>
 			</div>
-		</td></tr></table>
+		</div>
 		<?php
 
 		HTML_myCommon::endForm( $option, $id, 'saveProcessor' );
@@ -2972,7 +2973,7 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		</td></tr></table>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
-		<div class="col-sm-12">
+		<div class="col-sm-8 col-sm-offset-2">
 			<div class="aec-settings-container">
 				<h4>Restrict Combintations</h4>
 				<div class="aec-settings-container">
@@ -2997,8 +2998,8 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'good_combinations_cart' ); ?>
 				</div>
 			</div>
-			<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		</div>
+		<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<?php $tabs->nextPane( 'mis' ); ?>
 		<div class="col-sm-12">
 			<div class="aec-settings-container">
@@ -3134,7 +3135,7 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::startForm();
 
 		?>
-		<div class="col-sm-12">
+		<div class="col-sm-8 col-sm-offset-2">
 			<div class="aec-settings-container">
 				<h4><?php echo JText::_('AEC_HEAD_INVOICE'); ?></h4>
 				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
