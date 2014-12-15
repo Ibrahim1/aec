@@ -1846,22 +1846,6 @@ jQuery(document).ready(function(jQuery) {
 				<p style="text-align: center">There is no micro integration plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'MicroIntegration', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new micro integration' ), true )?></p>
 			</div>
 		<?php } else { ?>
-			<div class="aec-filters">
-				<table class="adminheading">
-					<tr>
-						<td style="text-align:center;">
-							<div class="form-inline">
-								<input type="text" name="search" class="search" placeholder="<?php echo JText::_('AEC_CMN_SEARCH'); ?>" value="<?php echo htmlspecialchars($search); ?>" class="inputbox" onChange="document.adminForm.submit();" />
-							</div>
-						</td>
-						<td>
-							<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
-						</td>
-					</tr>
-					<tr><td></td></tr>
-				</table>
-			</div>
-
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-sm-12">
