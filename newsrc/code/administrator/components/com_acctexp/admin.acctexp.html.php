@@ -470,25 +470,25 @@ jQuery(document).ready(function(jQuery) {
 					<div class="form-group">
 						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></label>
 						<div class="col-sm-8">
-							<div><span><?php echo $metaUser->focusSubscription->id; ?></span></div>
+							<p class="form-control-static"><?php echo $metaUser->focusSubscription->id; ?></p>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></label>
 						<div class="col-sm-8">
-							<div><span>#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
+							<p class="form-control-static">#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</p>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
 						<div class="col-sm-8">
-							<div><span><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></span></div>
+							<p class="form-control-static"><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></p>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></label>
 						<div class="col-sm-8">
-							<div><span><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></span></div>
+							<p class="form-control-static"><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></p>
 						</div>
 					</div>
 					<div class="form-group">
@@ -578,7 +578,7 @@ jQuery(document).ready(function(jQuery) {
 					<div class="form-group">
 						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></label>
 						<div class="col-sm-8">
-							<div><span>#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</span></div>
+							<p class="form-control-static">#<?php echo $metaUser->focusSubscription->previous_plan; ?> - "<?php echo ( $metaUser->focusSubscription->previous_plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->previous_plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</p>
 						</div>
 					</div>
 					<div class="form-group">
@@ -647,26 +647,26 @@ jQuery(document).ready(function(jQuery) {
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USERID'); ?></label>
 							<div class="col-sm-8">
-								<div><span><?php echo $metaUser->userid; ?></div>
+								<p class="form-control-static"><?php echo $metaUser->userid; ?></div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
 							<div class="col-sm-8">
-								<div><span><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></span></div>
+								<p class="form-control-static"><?php echo !$metaUser->cmsUser->block ? aecHTML::Icon( 'ok' ) . '&nbsp;' . JText::_('AEC_USER_ACTIVE') . '</strong>' : aecHTML::Icon( 'warning-sign' ) . '&nbsp;' . JText::_('AEC_USER_BLOCKED') . '</strong>' . ( ( $metaUser->cmsUser->activation == '' ) ? '' : ' (<a href="' . JURI::root() . $activateuserlink . '" target="_blank">' . JText::_('AEC_USER_ACTIVE_LINK') . '</a>)' ); ?></p>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PROFILE'); ?></label>
 							<div class="col-sm-8">
-								<div><span><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
+								<p class="form-control-static"><a href="<?php echo $edituserlink; ?>"><?php echo aecHTML::Icon( 'user' ); ?>&nbsp;<?php echo JText::_('AEC_USER_PROFILE_LINK'); ?></a></div>
 							</div>
 						</div>
 						<?php if ( aecComponentHelper::detect_component('anyCB') ) { ?>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">CB Profile</label>
 								<div class="col-sm-8">
-									<div><span><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+									<p class="form-control-static"><?php echo '<a href="index.php?option=com_comprofiler&amp;task=edit&amp;cid=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></p>
 								</div>
 							</div>
 						<?php } ?>
@@ -674,7 +674,7 @@ jQuery(document).ready(function(jQuery) {
 							<div class="form-group">
 								<label class="col-sm-4 control-label">JomSocial Profile</label>
 								<div class="col-sm-8">
-									<div><span><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></span></div>
+									<p class="form-control-static"><?php echo '<a href="index.php?option=com_community&amp;view=users&amp;layout=edit&amp;id=' . $metaUser->userid . '">' . aecHTML::Icon( 'user' ) . '&nbsp;' . JText::_('AEC_USER_PROFILE_LINK') . '</a>'; ?></p>
 								</div>
 							</div>
 						<?php } ?>
@@ -685,39 +685,39 @@ jQuery(document).ready(function(jQuery) {
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_USERNAME'); ?></label>
 							<div class="col-sm-8">
-								<div><span><?php echo $metaUser->cmsUser->username; ?></span></div>
+								<p class="form-control-static"><?php echo $metaUser->cmsUser->username; ?></p>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_NAME'); ?></label>
 							<div class="col-sm-8">
-								<div><span><?php echo $metaUser->cmsUser->name; ?></span></div>
+								<p class="form-control-static"><?php echo $metaUser->cmsUser->name; ?></p>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_EMAIL'); ?></label>
 							<div class="col-sm-8">
-								<div><span><?php echo $metaUser->cmsUser->email; ?> (<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
+								<p class="form-control-static"><?php echo $metaUser->cmsUser->email; ?> (<a href="mailto:<?php echo $metaUser->cmsUser->email; ?>">&nbsp;<?php echo aecHTML::Icon( 'envelope' ); ?>&nbsp;<?php echo JText::_('AEC_USER_SEND_MAIL'); ?></a>)</div>
 							</div>
 						</div>
 						<?php if ( !defined( 'JPATH_MANIFESTS' ) ) { ?>
 							<div class="form-group">
 								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_TYPE'); ?></label>
 								<div class="col-sm-8">
-									<div><span><?php echo $metaUser->cmsUser->usertype; ?></span></div>
+									<p class="form-control-static"><?php echo $metaUser->cmsUser->usertype; ?></p>
 								</div>
 							</div>
 						<?php } ?>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_REGISTERED'); ?></label>
 							<div class="col-sm-8">
-								<div><span><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></span></div>
+								<p class="form-control-static"><?php echo aecHTML::Icon( 'calendar' ); ?><?php echo $metaUser->cmsUser->registerDate; ?></p>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_LAST_VISIT'); ?></label>
 							<div class="col-sm-8">
-								<div><span><?php echo $metaUser->cmsUser->lastvisitDate; ?></span></div>
+								<p class="form-control-static"><?php echo $metaUser->cmsUser->lastvisitDate; ?></p>
 							</div>
 						</div>
 					</div>
