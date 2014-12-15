@@ -2409,6 +2409,8 @@ function listSubscriptionPlans( $option )
 	} else {
 		$subselect = array();
 	}
+	$search			= $app->getUserStateFromRequest( "search_subscr{$option}", 'search', '' );
+	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	$orderby = $app->getUserStateFromRequest( "orderby_plans{$option}", 'orderby_plans', 'name ASC' );
 
@@ -2583,7 +2585,7 @@ function listSubscriptionPlans( $option )
 		}
 	}
 
-	HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $orderby, $lists, $pageNav, $option );
+	HTML_AcctExp::listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option );
 }
 
 function editSubscriptionPlan( $id, $option )

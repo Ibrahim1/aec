@@ -138,7 +138,7 @@ class HTML_myCommon
 		echo '</form>';
 	}
 
-	static function getHeader( $page, $image, $extratext='', $search=false )
+	static function getHeader( $page, $image, $extratext='', $search=false, $buttons=null, $object=null )
 	{
 
 		if ( $search !== false ) {
@@ -153,8 +153,9 @@ class HTML_myCommon
 					<?php HTML_myCommon::getSymbol( $image ); ?>
 					<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( ( !empty( $page ) && !empty( $extratext ) ) ? ' - ' : '' ) . ( !empty( $extratext ) ? $extratext : '' ); ?></h2>
 				</div>
-				<?php if ( $search !== false ) { ?>
+
 					<div class="col-sm-6">
+						<?php if ( $search !== false ) { ?>
 						<div class="form-group pull-right">
 							<div class="input-group">
 								<input class="form-control input-lg" type="text" name="search" placeholder="<?php echo $placeholder; ?>" value="<?php echo $value; ?>" />
@@ -163,9 +164,14 @@ class HTML_myCommon
 								</span>
 							</div>
 						</div>
+						<?php } ?>
+
+						<?php if ( !empty($buttons) && !empty($object) ) {
+							HTML_myCommon::getButtons( $buttons, $object );
+						} ?>
 					</div>
 
-				<?php } ?>
+
 			</div>
 		</div>
 	<?php
@@ -2104,11 +2110,10 @@ jQuery(document).ready(function(jQuery) {
  		HTML_myCommon::endCommon();
 	}
 
-	static function listSubscriptionPlans( $rows, $filtered, $orderby, $lists, $pageNav, $option )
+	static function listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans' );
-		HTML_myCommon::getButtons( 'list', 'SubscriptionPlan' );
+		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', $search, 'list', 'SubscriptionPlan' );
 		HTML_myCommon::startForm();
 
 		$th_list = array(
