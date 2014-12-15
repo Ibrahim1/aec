@@ -2303,7 +2303,7 @@ jQuery(document).ready(function(jQuery) {
 					}
 					?>
 				</div>
-			</div>
+			</section>
 			<section>
 				<h4>Details</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
