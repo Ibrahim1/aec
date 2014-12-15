@@ -2409,6 +2409,7 @@ function listSubscriptionPlans( $option )
 	} else {
 		$subselect = array();
 	}
+
 	$search			= $app->getUserStateFromRequest( "search_subscr{$option}", 'search', '' );
 	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
@@ -3356,6 +3357,9 @@ function listItemGroups( $option )
  	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
+	$search			= $app->getUserStateFromRequest( "search_groups{$option}", 'search', '' );
+	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
+
 	$orderby = $app->getUserStateFromRequest( "orderby_groups{$option}", 'orderby_groups', 'name ASC' );
 
  	// get the total number of records
@@ -3458,7 +3462,7 @@ function listItemGroups( $option )
 		}
 	}
 
-	HTML_AcctExp::listItemGroups( $rows, $pageNav, $option, $orderby );
+	HTML_AcctExp::listItemGroups( $rows, $pageNav, $option, $orderby, $search );
 }
 
 function editItemGroup( $id, $option )

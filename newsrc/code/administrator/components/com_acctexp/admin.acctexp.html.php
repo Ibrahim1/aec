@@ -140,7 +140,6 @@ class HTML_myCommon
 
 	static function getHeader( $page, $image, $extratext='', $search=false, $buttons=null, $object=null )
 	{
-
 		if ( $search !== false ) {
 			$placeholder = JText::_('AEC_CMN_SEARCH') . '...';
 
@@ -1458,8 +1457,7 @@ jQuery(document).ready(function(jQuery) {
 	static function listProcessors( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'processors' );
-		HTML_myCommon::getButtons( 'list_short', 'Processor' );
+		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'processors', '', false, 'list_short', 'Processor' );
 		HTML_myCommon::startForm();
 
 		if ( empty( $rows ) ) { ?>
@@ -2607,7 +2605,7 @@ jQuery(document).ready(function(jQuery) {
 	static function listItemGroups( $rows, $pageNav, $option, $orderby, $search )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups', $search, 'list', 'ItemGroup' );
+		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups', '', $search, 'list', 'ItemGroup' );
 
 		HTML_myCommon::startForm();
 
@@ -2845,7 +2843,7 @@ jQuery(document).ready(function(jQuery) {
 	static function listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons', $search, 'list', 'Coupon' );
+		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons', '', $search, 'list', 'Coupon' );
 
 		HTML_myCommon::startForm();
 
@@ -3082,7 +3080,7 @@ jQuery(document).ready(function(jQuery) {
 	static function viewInvoices( $option, $rows, $search, $pageNav, $orderby )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices', $search );
+		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices', '', $search );
 
 		$th_list = array(
 			array('id', 'ID'),
@@ -3179,7 +3177,7 @@ jQuery(document).ready(function(jQuery) {
 	static function viewHistory( $option, $rows, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history', $search );
+		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history', '', $search );
 
 		HTML_myCommon::startForm();
 
@@ -3242,7 +3240,7 @@ jQuery(document).ready(function(jQuery) {
 	static function eventlog( $option, $events, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog', $search );
+		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog', '', $search );
 
 		HTML_myCommon::startForm();
 
