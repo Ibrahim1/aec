@@ -138,7 +138,7 @@ class HTML_myCommon
 		echo '</form>';
 	}
 
-	static function getHeader( $page, $image, $extratext='', $search=false, $buttons=null, $object=null )
+	static function getHeader( $page, $image, $extratext='', $search=false, $buttons=null, $object=false )
 	{
 		if ( $search !== false ) {
 			$placeholder = JText::_('AEC_CMN_SEARCH') . '...';
@@ -165,7 +165,7 @@ class HTML_myCommon
 						</div>
 						<?php } ?>
 
-						<?php if ( !empty($buttons) && !empty($object) ) {
+						<?php if ( !empty($buttons) && $object !== false ) {
 							HTML_myCommon::getButtons( $buttons, $object );
 						} ?>
 					</div>
@@ -429,8 +429,6 @@ jQuery(document).ready(function(jQuery) {
 			}
 		}
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')' );
-
 		$buttons = array(
 			'applyMembership' => array(
 				'style' => 'info',
@@ -448,7 +446,7 @@ jQuery(document).ready(function(jQuery) {
 			)
 		);
 
-		HTML_myCommon::getButtons( $buttons, '' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, '' );
 
 		HTML_myCommon::startForm();
 
@@ -1523,8 +1521,7 @@ jQuery(document).ready(function(jQuery) {
 		}
 
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'processors', $add );
-		HTML_myCommon::getButtons( 'edit', 'Processor' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'processors', $add, false, 'edit', 'Processor' );
 
 		HTML_myCommon::startForm();
 
@@ -1597,14 +1594,15 @@ jQuery(document).ready(function(jQuery) {
 		jimport( 'joomla.html.editor' );
 
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( $aecHTML->name, 'templates' );
 
-		$buttons = array(	'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
-							'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
-							'hl1' => array(),
-							'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
-						);
-		HTML_myCommon::getButtons( $buttons, 'Template' );
+		$buttons = array(
+			'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
+			 'save' => array( 'style' => 'success', 'text' => JText::_('SAVE'), 'icon' => 'ok' ),
+			 'hl1' => array(),
+			 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
+		);
+
+		HTML_myCommon::getHeader( $aecHTML->name, 'templates', '', false, $buttons, 'Template' );
 
 		HTML_myCommon::startForm();
 
@@ -1919,8 +1917,7 @@ jQuery(document).ready(function(jQuery) {
 		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
-		HTML_myCommon::getButtons( 'edit', 'MicroIntegration' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'MicroIntegration' );
 
 		HTML_myCommon::startForm();
 
@@ -2238,7 +2235,6 @@ jQuery(document).ready(function(jQuery) {
 		$editor = JFactory::getEditor();
 
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( '', 'plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW') );
 
 		$buttons = array(
 			'apply' => array(
@@ -2264,7 +2260,7 @@ jQuery(document).ready(function(jQuery) {
 			)
 		);
 
-		HTML_myCommon::getButtons( $buttons, 'SubscriptionPlan' );
+		HTML_myCommon::getHeader( '', 'plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW'), false, $buttons, 'SubscriptionPlan' );
 
 		HTML_myCommon::startForm();
 
@@ -2669,8 +2665,7 @@ jQuery(document).ready(function(jQuery) {
 	static function editItemGroup( $option, $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW') );
-		HTML_myCommon::getButtons( 'edit', 'ItemGroup' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'ItemGroup' );
 
 		HTML_myCommon::startForm();
 
@@ -2907,8 +2902,7 @@ jQuery(document).ready(function(jQuery) {
 
 		JHTML::_('behavior.calendar');
 
-		HTML_myCommon::getHeader( 'AEC_COUPON', 'coupons', ($row->id ? $row->name : JText::_('AEC_CMN_NEW')) );
-		HTML_myCommon::getButtons( 'edit', 'Coupon' );
+		HTML_myCommon::getHeader( 'AEC_COUPON', 'coupons', ($row->id ? $row->name : JText::_('AEC_CMN_NEW')), false, 'edit', 'Coupon' );
 
 		HTML_myCommon::startForm();
 
@@ -3135,8 +3129,7 @@ jQuery(document).ready(function(jQuery) {
 	static function editInvoice( $option, $aecHTML, $id )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ) );
-		HTML_myCommon::getButtons( 'edit', 'Invoice' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ), false, 'edit', 'Invoice' );
 
 		HTML_myCommon::startForm();
 
@@ -3635,12 +3628,13 @@ jQuery(document).ready(function(jQuery) {
 	static function import( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'import' );
 
-		$buttons = array(	'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ),
-							'' => array( 'style' => 'success', 'text' => JText::_('Import'), 'actionable' => true, 'icon' => 'ok' )
-							);
-		HTML_myCommon::getButtons( $buttons, 'Import' );
+		$buttons = array(
+			'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ),
+			'' => array( 'style' => 'success', 'text' => JText::_('Import'), 'actionable' => true, 'icon' => 'ok' )
+			);
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'import', '', false, $buttons, 'Import' );
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<div class="col-sm-12">
@@ -3723,11 +3717,10 @@ jQuery(document).ready(function(jQuery) {
 		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'export' );
-
 		$buttons = array( 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ) );
 
-		HTML_myCommon::getButtons( $buttons, 'Settings' ); ?>
+		HTML_myCommon::getHeader( 'AEC_HEAD_EXPORT', 'export', '', false, $buttons, 'Settings' );
+		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<div class="col-sm-12">
 					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
