@@ -1829,7 +1829,7 @@ jQuery(document).ready(function(jQuery) {
 	static function listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations' );
+		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', $search, 'list', 'MicroIntegration' );
 
 		$th_list = array(
 			array('name', 'MI_NAME'),
@@ -1839,7 +1839,7 @@ jQuery(document).ready(function(jQuery) {
 			array('class_name', 'MI_FUNCTION')
 		);
 
-		HTML_myCommon::getButtons( 'list', 'MicroIntegration' ); ?>
+		?>
 		<form action="index.php" method="post" name="adminForm" id="adminForm">
 			<input type="hidden" name="orderby_mi" value="<?php echo $orderby; ?>"/>
 		<?php if ( empty( $rows )  && !$filtered ) { ?>
@@ -2604,11 +2604,10 @@ jQuery(document).ready(function(jQuery) {
 	<?php
 	}
 
-	static function listItemGroups( $rows, $pageNav, $option, $orderby )
+	static function listItemGroups( $rows, $pageNav, $option, $orderby, $search )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups' );
-		HTML_myCommon::getButtons( 'list', 'ItemGroup' );
+		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups', $search, 'list', 'ItemGroup' );
 
 		HTML_myCommon::startForm();
 
@@ -2846,8 +2845,7 @@ jQuery(document).ready(function(jQuery) {
 	static function listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons' );
-		HTML_myCommon::getButtons( 'list', 'Coupon' );
+		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons', $search, 'list', 'Coupon' );
 
 		HTML_myCommon::startForm();
 
@@ -2866,15 +2864,6 @@ jQuery(document).ready(function(jQuery) {
 				<p style="text-align: center">There is no coupon set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'Coupon', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new coupon' ), true )?></p>
 			</div>
 		<?php } else { ?>
-			<div class="aec-filters">
-				<div class="form-inline">
-					<p>
-						<input type="text" name="search" class="search" placeholder="<?php echo JText::_('INVOICE_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
-						<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('INVOICE_SEARCH'); ?>" />
-					</p>
-				</div>
-			</div>
-
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-sm-12">
@@ -3093,7 +3082,7 @@ jQuery(document).ready(function(jQuery) {
 	static function viewInvoices( $option, $rows, $search, $pageNav, $orderby )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices' );
+		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices', $search );
 
 		$th_list = array(
 			array('id', 'ID'),
@@ -3113,14 +3102,6 @@ jQuery(document).ready(function(jQuery) {
 
 		?>
 		<input type="hidden" name="orderby_invoices" value="<?php echo $orderby; ?>"/>
-		<div class="aec-filters">
-			<div class="form-inline">
-				<p>
-					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('INVOICE_SEARCH'); ?>" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
-					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
-				</p>
-			</div>
-		</div>
 
 		<div class="container-fluid">
 			<div class="row">
@@ -3198,20 +3179,11 @@ jQuery(document).ready(function(jQuery) {
 	static function viewHistory( $option, $rows, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history' );
+		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history', $search );
 
 		HTML_myCommon::startForm();
 
 		?>
-		<div class="aec-filters">
-			<div class="form-inline">
-				<p>
-					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?> Users, Invoice Numbers, Processors" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
-					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
-				</p>
-			</div>
-		</div>
-
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
@@ -3270,20 +3242,11 @@ jQuery(document).ready(function(jQuery) {
 	static function eventlog( $option, $events, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon();
-		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog' );
+		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog', $search );
 
 		HTML_myCommon::startForm();
 
 		?>
-		<div class="aec-filters">
-			<div class="form-inline">
-				<p>
-					<input type="text" name="search" class="search" placeholder="<?php echo JText::_('HISTORY_SEARCH'); ?> Events, Results, Tags, Invoice Numbers" value="<?php echo htmlspecialchars($search);?>" onChange="document.adminForm.submit();" />
-					<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>" />
-				</p>
-			</div>
-		</div>
-
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
