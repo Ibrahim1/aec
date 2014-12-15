@@ -160,7 +160,7 @@ class HTML_myCommon
 							<div class="input-group">
 								<input class="form-control input-lg" type="text" name="search" placeholder="<?php echo $placeholder; ?>" value="<?php echo $value; ?>" />
 								<span class="input-group-btn">
-									<input type="button" class="btn btn-lg btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
+									<a class="btn btn-lg btn-primary" onclick="document.adminForm.submit();"><i class="glyphicon glyphicon-search"></i></a>
 								</span>
 							</div>
 						</div>
