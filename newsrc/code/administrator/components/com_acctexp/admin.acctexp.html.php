@@ -89,13 +89,15 @@ class HTML_myCommon
 		}
 	}
 
-	static function startCommon( $class='aec-wrap' )
+	static function startCommon( $class='aec-wrap', $inner_class='' )
 	{
 		HTML_myCommon::addBackendCSS();
 
 		HTML_myCommon::addBackendJS();
 
-		echo '<div id="aec-wrap" class="' . $class . '"><div class="aec-wrap-inner">';
+		if ( !empty($inner_class) ) $inner_class = ' ' . $inner_class;
+
+		echo '<div id="aec-wrap" class="' . $class . '"><div class="aec-wrap-inner' . $inner_class . '">';
 
 		HTML_AcctExp::menuBar();
 
@@ -358,7 +360,7 @@ class HTML_AcctExp
 		});
 		</script><?php
 
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-gplay', 'aec-wrap-inner-light');
 
 $js = '
 jQuery(document).ready(function(jQuery) {
@@ -1037,7 +1039,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function central( $display=null, $searchcontent=null )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-squared');
 
 		$linkroot = "index.php?option=com_acctexp&amp;task=";
 		?>
@@ -1395,7 +1397,7 @@ jQuery(document).ready(function(jQuery) {
 	{
 		jimport( 'joomla.html.editor' );
 
-		HTML_myCommon::startCommon( 'aec-wrap-settings' );
+		HTML_myCommon::startCommon('aec-wrap-grey');
 
 		$buttons = array(
 			'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
@@ -1451,7 +1453,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function listProcessors( $rows, $pageNav, $option )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-mesh');
 		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'processors', '', false, 'list_short', 'Processor' );
 		HTML_myCommon::startForm();
 
@@ -1517,7 +1519,7 @@ jQuery(document).ready(function(jQuery) {
 			$add = "";
 		}
 
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-mesh', 'aec-wrap-inner-light');
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'processors', $add, false, 'edit', 'Processor' );
 
 		HTML_myCommon::startForm();
@@ -1542,7 +1544,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function listTemplates( $rows, $pageNav, $option )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-cream');
 		HTML_myCommon::getHeader( 'TEMPLATES_TITLE', 'templates' );
 		HTML_myCommon::startForm();
 		?>
@@ -1590,7 +1592,7 @@ jQuery(document).ready(function(jQuery) {
 	{
 		jimport( 'joomla.html.editor' );
 
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-cream', 'aec-wrap-inner-light');
 
 		$buttons = array(
 			'apply' => array( 'style' => 'info', 'text' => JText::_('APPLY'), 'icon' => 'ok-sign' ),
@@ -1651,7 +1653,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-gplay');
 
 $js = '
 jQuery(document).ready(function(jQuery) {
@@ -1821,7 +1823,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-maze');
 		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', $search, 'list', 'MicroIntegration' );
 
 		$th_list = array(
@@ -1891,7 +1893,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function editMicroIntegration( $option, $row, $lists, $aecHTML, $attached )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
 
 $js = '
 jQuery(document).ready(function(jQuery) {
@@ -2088,7 +2090,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-squary');
 		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', $search, '', 'list', 'SubscriptionPlan' );
 		HTML_myCommon::startForm();
 
@@ -2231,7 +2233,7 @@ jQuery(document).ready(function(jQuery) {
 
 		$editor = JFactory::getEditor();
 
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-squary', 'aec-wrap-inner-light');
 
 		$buttons = array(
 			'apply' => array(
@@ -2581,7 +2583,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function listItemGroups( $rows, $pageNav, $option, $orderby, $search )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-squary');
 		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups', '', $search, 'list', 'ItemGroup' );
 
 		HTML_myCommon::startForm();
@@ -2661,7 +2663,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function editItemGroup( $option, $aecHTML, $row )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-squary', 'aec-wrap-inner-light');
 		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'ItemGroup' );
 
 		HTML_myCommon::startForm();
@@ -2818,7 +2820,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-cream');
 		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons', '', $search, 'list', 'Coupon' );
 
 		HTML_myCommon::startForm();
@@ -2895,7 +2897,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function editCoupon( $option, $aecHTML, $row )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-cream', 'aec-wrap-inner-light');
 
 		JHTML::_('behavior.calendar');
 
@@ -3040,7 +3042,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function viewInvoices( $option, $rows, $search, $pageNav, $orderby )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-net');
 		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices', '', $search );
 
 		$th_list = array(
@@ -3111,7 +3113,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function editInvoice( $option, $aecHTML, $id )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-net', 'aec-wrap-inner-light');
 		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ), false, 'edit', 'Invoice' );
 
 		HTML_myCommon::startForm();
@@ -3136,7 +3138,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function viewHistory( $option, $rows, $search, $pageNav )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-dots');
 		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history', '', $search );
 
 		HTML_myCommon::startForm();
@@ -3199,7 +3201,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function eventlog( $option, $events, $search, $pageNav )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-dots');
 		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog', '', $search );
 
 		HTML_myCommon::startForm();
@@ -3260,7 +3262,7 @@ jQuery(document).ready(function(jQuery) {
 	{
 		global $aecConfig;
 
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-dots');
 		HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' );
 
 		HTML_myCommon::startForm(); ?>
@@ -3610,7 +3612,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function import( $option, $aecHTML )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-dots');
 
 		$buttons = array(
 			'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ),
@@ -3677,7 +3679,7 @@ jQuery(document).ready(function(jQuery) {
 
 	static function export( $option, $task, $aecHTML )
 	{
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-dots');
 
 $js = '
 jQuery(document).ready(function(jQuery) {
@@ -3726,7 +3728,7 @@ jQuery(document).ready(function(jQuery) {
 	{
 		global $aecConfig;
 
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-dots');
 		HTML_myCommon::getHeader( 'AEC_HEAD_UPDATEEXTEND', 'extensions' );
 
 		HTML_myCommon::startForm();
@@ -3779,7 +3781,7 @@ jQuery(document).ready(function(jQuery) {
 	static function toolBox( $option, $cmd, $result, $title=null )
 	{
 		JHTML::_('behavior.calendar');
-		HTML_myCommon::startCommon();
+		HTML_myCommon::startCommon('aec-wrap-grid');
 		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox', ( !empty( $cmd ) ? $title : '' ) );
 
 		HTML_myCommon::startForm(true);
