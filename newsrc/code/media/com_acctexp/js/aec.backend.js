@@ -272,14 +272,6 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery(".collapse").collapse({toggle: false});
 
-	jQuery.fn.bootstrapSwitch.defaults.size = 'mini';
-	jQuery.fn.bootstrapSwitch.defaults.onColor = 'success';
-	jQuery.fn.bootstrapSwitch.defaults.offColor = 'danger';
-	jQuery.fn.bootstrapSwitch.defaults.handleWidth = '64px';
-	jQuery.fn.bootstrapSwitch.defaults.labelWidth = '24px';
-	jQuery.fn.bootstrapSwitch.defaults.onText = 'yes';
-	jQuery.fn.bootstrapSwitch.defaults.offText = 'no';
-
 	jQuery(".order-select").on("click", function(event){
 		jQuery("input[name*=\'orderby_\']").val(jQuery(this).data('ordering'));
 		document.adminForm.submit();
@@ -289,7 +281,7 @@ jQuery(document).ready(function(jQuery) {
 		jQuery('[data-toggle="tooltip"]').tooltip()
 	});
 
-	jQuery('.bootstrap-toggle' ).bootstrapToggle({
+	jQuery('.bootstrap-toggle').bootstrapToggle({
 			on: 'yes',
 			off: 'no',
 			onstyle: 'success',
