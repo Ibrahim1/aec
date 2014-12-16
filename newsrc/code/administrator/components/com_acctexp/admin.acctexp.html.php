@@ -89,13 +89,13 @@ class HTML_myCommon
 		}
 	}
 
-	static function startCommon( $id='aec-wrap' )
+	static function startCommon( $class='aec-wrap' )
 	{
 		HTML_myCommon::addBackendCSS();
 
 		HTML_myCommon::addBackendJS();
 
-		echo '<div id="' . $id . '">';
+		echo '<div id="aec-wrap" class="' . $class . '"><div class="aec-wrap-inner">';
 
 		HTML_AcctExp::menuBar();
 
@@ -117,7 +117,7 @@ class HTML_myCommon
 	{
 		if ( $footer ) HTML_myCommon::Valanx();
 
-		echo '</div>';
+		echo '</div></div>';
 	}
 
 	static function startForm( $multipart=false )
