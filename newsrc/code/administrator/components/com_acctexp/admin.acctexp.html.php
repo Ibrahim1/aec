@@ -501,7 +501,7 @@ jQuery(document).ready(function(jQuery) {
 							<div class="col-sm-8">
 								<input type="hidden" value="0" name="ck_primary"/>
 								<div>
-									<input id="ck_primary" data-toggle="toggle" type="checkbox" name="ck_primary"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->primary; ?>"/>
+									<input id="ck_primary" class="bootstrap-toggle" type="checkbox" name="ck_primary"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->primary; ?>"/>
 								</div>
 							</div>
 						</div>
@@ -524,7 +524,7 @@ jQuery(document).ready(function(jQuery) {
 							<div class="col-sm-8">
 								<input type="hidden" value="0" name="ck_lifetime"/>
 								<div>
-									<input id="ck_lifetime" data-toggle="toggle" type="checkbox" name="ck_lifetime"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->lifetime; ?>"/>
+									<input id="ck_lifetime" class="bootstrap-toggle" type="checkbox" name="ck_lifetime"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->lifetime; ?>"/>
 								</div>
 							</div>
 						</div>
@@ -2521,7 +2521,7 @@ jQuery(document).ready(function(jQuery) {
 								</h5>
 							</td>
 							<td>
-								<input id="micro_integrations_<?php echo $mi->id; ?>" data-toggle="toggle" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
+								<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-toggle" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
 							</td>
 						</tr>
 						<tr>
@@ -2799,7 +2799,7 @@ jQuery(document).ready(function(jQuery) {
 							</td>
 							<td>
 								<input type="hidden" name="micro_integrations[]" value="0" />
-								<input id="micro_integrations_<?php echo $mi->id; ?>" data-toggle="toggle" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
+								<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-toggle" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
 							</td>
 						</tr>
 						<tr>

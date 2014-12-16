@@ -287,7 +287,16 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery(function () {
 		jQuery('[data-toggle="tooltip"]').tooltip()
-	})
+	});
+
+	jQuery('.bootstrap-toggle' ).bootstrapToggle({
+			on: 'yes',
+			off: 'no',
+			onstyle: 'success',
+			offstyle: 'danger',
+			size: 'mini'
+		}
+	);
 
 	jQuery('.popover-markup>.trigger').popover({
 		html: true,

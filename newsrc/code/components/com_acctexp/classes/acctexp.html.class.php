@@ -215,7 +215,7 @@ class aecHTML
 				$return .= '<input type="hidden" name="' . $name . '" value="0"/>';
 
 				$return .= '<div class="col-sm-8">';
-				$return .= '<input id="' . $name . '" data-toggle="toggle" data-on="yes" data-off="no" data-onstyle="success" data-offstyle="danger" data-size="mini" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1" data-state="' . $value . '"/>';
+				$return .= '<input id="' . $name . '" class="bootstrap-toggle" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' value="1"/>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
@@ -223,7 +223,7 @@ class aecHTML
 				$return .= '<input type="hidden" name="' . $name . '" value="' . $value . '"/>';
 
 				$return .= '<div class="col-sm-8">';
-				$return .= '<input id="' . $name . '" data-toggle="toggle" data-on="yes" data-off="no" data-onstyle="success" data-offstyle="danger" data-size="mini" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1" data-state="' . $value . '"/>';
+				$return .= '<input id="' . $name . '" class="bootstrap-toggle" type="checkbox" name="' . $name . '"' . ( $value ? ' checked="checked" ' : '' ) . ' disabled="disabled" value="1"/>';
 				$return .= $insertctrl;
 				$return .= '</div></div>';
 				break;
