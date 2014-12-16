@@ -1130,21 +1130,21 @@ jQuery(document).ready(function(jQuery) {
 							</tr>
 							<tr><td colspan="12"></td></tr>
 							<tr>
-								<td colspan="3" style="vertical-align: top; padding-top: 12px;">
-									<div clas="explain-block">
+								<td colspan="3">
+									<div class="explain-block">
 										<h6>Payment Plans</h6>
 										<p>In AEC, what you sell to your users is called <strong>Payment Plans</strong>.<br />You can put them into <strong>Plans Groups</strong> for easy access and administration.</p><hr /><p>Both plans and plan groups can have <strong>Micro Integrations</strong> attached, which are pretty much like joomla plugins for your memberships, just more versatile.</p>
 									</div>
 								</td>
 								<td></td>
-								<td colspan="3" style="vertical-align: top; padding-top: 12px;">
+								<td colspan="3">
 									<div class="explain-block">
 										<h6>Invoices &amp; Payment</h6>
 										<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it - during registration, or afterwards. That invoice can then be paid using a <strong>Payment Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.<br />If a user has no membership record in AEC, the account shows up under <strong>Non Members</strong>.</p>
 									</div>
 								</td>
 								<td></td>
-								<td colspan="4" style="vertical-align: top; padding-top: 12px;">
+								<td colspan="4">
 									<div class="explain-block">
 										<h6>Transactions &amp; Memberships</h6>
 										<p>Successful <strong>Transactions</strong> apply memberships to users. You can look them up in the list or as <strong>Statistics</strong>. Or you can <strong>Export</strong> them.</p><hr /><p>Likewise, you can track <strong>Members</strong> and modify their accounts or <strong>Export</strong> them as well.<br />If a member should not be subject to expiration of their account, you can <strong>exclude</strong> them from expiring.</p>
