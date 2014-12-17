@@ -25,8 +25,7 @@
 }
 
 table.adminlist {
-	-webkit-box-shadow: 0 2px 3px rgba(0,0,0,.1), 0 7px 14px rgba(127,127,127,.08);
-	box-shadow: 0 2px 3px rgba(0,0,0,.1), 0 7px 14px rgba(127,127,127,.08);
+	.box-shadow(~"0 2px 3px rgba(0,0,0,.1), 0 7px 14px rgba(127,127,127,.08)");
 	thead tr th {
 		i.text-muted {
 			.transition(all 400ms ease-in-out);
@@ -45,7 +44,7 @@ table.adminlist {
 
 		&.col-filtered {
 			border-bottom: 2px solid saturate(lighten(@brand-info, 50%), 50%);
-			box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.4);
+			.box-shadow(0px 2px 1px rgba(0, 0, 0, 0.4));
 		}
 	}
 
