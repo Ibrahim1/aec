@@ -147,11 +147,10 @@ tr.aec_formrow td {
 }
 
 .well {
-	@tfoo = background 0.5s ease-in, -webkit-box-shadow 0.5s ease-in;
 	float: left;
 	width: 92%;
 	margin: 12px 1% 48px;
-	transition(@tfoo);
+	.transition("background 0.5s ease-in, -webkit-box-shadow 0.5s ease-in");
 	p {
 		display: inline;
 		margin: 4px 0;
