@@ -61,17 +61,17 @@ form {
 		height: 40px;
 		font-size: 120%;
 		padding: 0;
-		.box-shadow("0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05)");
+		.box-shadow(~"0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05)");
 		&:hover {
 			color: #333333;
 			text-decoration: none;
 			background-color: #e6e6e6;
 			background-position: 0 0 !important;
 			.transition(none);
-			.box-shadow("0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05)");
+			.box-shadow(~"0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05)");
 		}
 		&:active {
-			.box-shadow("0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05)");
+			.box-shadow(~"0 -1px 2px rgba(0, 0, 0, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05)");
 		}
 	}
 	&-overlay {
@@ -150,7 +150,7 @@ tr.aec_formrow td {
 	float: left;
 	width: 92%;
 	margin: 12px 1% 48px;
-	.transition("background 0.5s ease-in, -webkit-box-shadow 0.5s ease-in");
+	.transition(~"background 0.5s ease-in, -webkit-box-shadow 0.5s ease-in");
 	p {
 		display: inline;
 		margin: 4px 0;
