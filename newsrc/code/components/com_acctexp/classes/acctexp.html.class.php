@@ -335,7 +335,7 @@ class aecHTML
 				$return = '<div class="page-header" id="' . str_replace(" ", "_", strtolower($value) ) . '"><h1>' . $value . '</h1></div>';
 				break;
 			case 'section':
-				$return = '<section' . ( !empty( $value ) ? ' id="' . $value . '"' : '' ) . '>';
+				$return = '<section class="paper"' . ( !empty( $value ) ? ' id="' . $value . '"' : '' ) . '>';
 				break;
 			case 'section-head':
 				$return = '<h2>' . $value . '</h2>';

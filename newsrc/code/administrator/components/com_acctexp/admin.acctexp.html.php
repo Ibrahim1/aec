@@ -465,7 +465,7 @@ jQuery(document).ready(function(jQuery) {
 
 		$tabs->nextPane( 'user', true ); ?>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
 				<div class="row">
 				<?php if ( $metaUser->hasSubscription ) { ?>
@@ -577,7 +577,7 @@ jQuery(document).ready(function(jQuery) {
 				<?php } ?>
 				</div>
 			</section>
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?> History</h4>
 					<?php if ( $metaUser->hasSubscription ) { ?>
 					<div class="form-group">
@@ -639,13 +639,13 @@ jQuery(document).ready(function(jQuery) {
 						</div>
 					<?php } ?>
 			</section>
-			<section>
+			<section class="paper">
 				<h4><?php echo 'Notes'; ?></h4>
 				<textarea style="width:90%" cols="450" rows="10" name="notes" id="notes" ><?php echo ( !empty( $metaUser->focusSubscription->customparams['notes'] ) ? $metaUser->focusSubscription->customparams['notes'] : "" ); ?></textarea>
 			</section>
 		</div>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_USER_USER_INFO'); ?></h4>
 				<div class="row">
 					<div class="col-sm-6">
@@ -726,7 +726,7 @@ jQuery(document).ready(function(jQuery) {
 					</div>
 				</div>
 			</section>
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
 				<table class="infobox_table table-striped">
 					<thead>
@@ -778,7 +778,7 @@ jQuery(document).ready(function(jQuery) {
 					</tfoot>
 				</table>
 			</section>
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
 				<table class="infobox_table table-striped">
 					<thead>
@@ -809,7 +809,7 @@ jQuery(document).ready(function(jQuery) {
 		<?php $tabs->nextPane( 'mis' ); ?>
 			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
 				<div class="col-sm-6">
-					<section>
+					<section class="paper">
 						<h4><?php echo JText::_('Profile Form'); ?></h4>
 						<p>(This is what the user sees on the frontend.)</p>
 						<?php if ( !empty( $mi['profile'] ) ) { ?>
@@ -830,7 +830,7 @@ jQuery(document).ready(function(jQuery) {
 			<?php } ?>
 			<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
 			<div class="col-sm-6">
-				<section>
+				<section class="paper">
 					<h4><?php echo JText::_('Admin Form'); ?></h4>
 					<?php if ( !empty( $mi['admin'] ) ) { ?>
 						<?php foreach ( $mi['admin'] as $mix ) { ?>
@@ -849,7 +849,7 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 			<?php }
 			if ( !empty( $metaUser->meta->params->mi ) ) { ?>
-				<section>
+				<section class="paper">
 					<h4><?php echo JText::_('Database Records'); ?></h4>
 					<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
 				</section>
@@ -1537,7 +1537,7 @@ jQuery(document).ready(function(jQuery) {
 
 		?>
 		<div class="col-sm-8 col-sm-offset-2">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_HEAD_SETTINGS'); ?></h4>
 				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 					echo $aecHTML->createSettingsParticle( $rowname );
@@ -1963,7 +1963,7 @@ jQuery(document).ready(function(jQuery) {
 		<table class="aecadminform">
 			<tr>
 			<td>
-				<section>
+				<section class="paper">
 					<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
 					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 					<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
@@ -1987,7 +1987,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
 				</section>
 				<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
-					<section>
+					<section class="paper">
 					<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
 						<div style="position:relative;">
 						<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
@@ -2013,7 +2013,7 @@ jQuery(document).ready(function(jQuery) {
 			<table class="aecadminform">
 				<tr>
 					<td>
-						<section>
+						<section class="paper">
 						<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
 						<?php
 						foreach ( $aecHTML->customparams as $name ) {
@@ -2027,7 +2027,7 @@ jQuery(document).ready(function(jQuery) {
 								<table class="aecadminform">
 									<tr>
 										<td>
-											<section>
+											<section class="paper">
 											<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
 								<?php
 							} else {
@@ -2051,7 +2051,7 @@ jQuery(document).ready(function(jQuery) {
 		<table class="aecadminform">
 			<tr>
 				<td>
-					<section>
+					<section class="paper">
 					<?php
 					echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
 
@@ -2292,7 +2292,7 @@ jQuery(document).ready(function(jQuery) {
 
 		$tabs->nextPane( 'plan', true ); ?>
 		<div class="col-sm-4">
-			<section>
+			<section class="paper">
 				<h4>General</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
@@ -2317,7 +2317,7 @@ jQuery(document).ready(function(jQuery) {
 					?>
 				</div>
 			</section>
-			<section>
+			<section class="paper">
 				<h4>Details</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
@@ -2325,7 +2325,7 @@ jQuery(document).ready(function(jQuery) {
 				<?php echo $aecHTML->createSettingsParticle( 'fixed_redirect' ); ?>
 			</section>
 
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
 				<?php if ( $row->id ) { ?>
 				<table style="width:100%;" class="table table-striped table-hover table-condensed aec-grouplist">
@@ -2357,7 +2357,7 @@ jQuery(document).ready(function(jQuery) {
 			</section>
 		</div>
 		<div class="col-sm-4">
-			<section>
+			<section class="paper">
 				<h4>Cost&amp;Details</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
@@ -2371,7 +2371,7 @@ jQuery(document).ready(function(jQuery) {
 					</div>
 				<?php } ?>
 			</section>
-			<section>
+			<section class="paper">
 				<h4>Joomla User</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
@@ -2380,19 +2380,19 @@ jQuery(document).ready(function(jQuery) {
 			</section>
 		</div>
 		<div class="col-sm-4">
-			<section>
+			<section class="paper">
 				<h4>Plan Relation</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'fallback_req_parent' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
 			</section>
-			<section>
+			<section class="paper">
 				<h4>Shopping Cart</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'cart_behavior' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'addtocart_max' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
 			</section>
-			<section>
+			<section class="paper">
 				<h4><?php echo 'Notes'; ?></h4>
 				<div style="text-align: left;">
 					<?php echo $aecHTML->createSettingsParticle( 'notes' ); ?>
@@ -2405,7 +2405,7 @@ jQuery(document).ready(function(jQuery) {
 			if ( !empty( $aecHTML->customparams->pp ) ) {
 				foreach ( $aecHTML->customparams->pp as $id => $processor ) {
 					?>
-					<section>
+					<section class="paper">
 						<h2><?php echo $processor['name']; ?></h2>
 						<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id . '&processor=' . $processor['handle'] ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
 						<?php
@@ -2421,7 +2421,7 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php $tabs->nextPane( 'text' ); ?>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('Customize'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
@@ -2430,7 +2430,7 @@ jQuery(document).ready(function(jQuery) {
 			</section>
 		</div>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('Custom Thanks'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks_keeporiginal' ); ?>
@@ -2439,7 +2439,7 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_RESTRICTIONS_INVENTORY_HEADER'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_enabled' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'inventory_amount' ); ?>
@@ -2447,7 +2447,7 @@ jQuery(document).ready(function(jQuery) {
 			</section>
 		</div>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_RESTRICTIONS_REDIRECT_HEADER'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 			</section>
@@ -2457,7 +2457,7 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php $tabs->nextPane( 'trial' ); ?>
 		<div class="col-sm-8 col-sm-offset-2">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('PAYPLAN_TRIAL_TITLE'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'trial_amount' ); ?>
@@ -2470,7 +2470,7 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php $tabs->nextPane( 'relations' ); ?>
 		<div class="col-sm-8 col-sm-offset-2">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
 				<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
@@ -2478,7 +2478,7 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php $tabs->nextPane( 'mis' ); ?>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
 				<?php
 				if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
@@ -2504,7 +2504,7 @@ jQuery(document).ready(function(jQuery) {
 			</section>
 		</div>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
 				<?php
 				if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
@@ -2540,7 +2540,7 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php if ( !empty( $aecHTML->customparams->hasperplanmi ) ) { ?>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_hidden' ); ?>
 			</section>
@@ -2551,7 +2551,7 @@ jQuery(document).ready(function(jQuery) {
 			foreach ( $aecHTML->customparams->mi['custom'] as $id => $mi ) {
 				?>
 				<div class="col-sm-8 col-sm-offset-2">
-					<section>
+					<section class="paper">
 						<h2><?php echo $mi['name']; ?></h2>
 						<?php
 						foreach ( $mi['params'] as $customparam ) {
@@ -2692,7 +2692,7 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 		$tabs->nextPane( 'group' ); ?>
 		<div class="col-sm-4">
-			<section>
+			<section class="paper">
 				<h4>General</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
@@ -2708,7 +2708,7 @@ jQuery(document).ready(function(jQuery) {
 			</section>
 		</div>
 		<div class="col-sm-4">
-			<section>
+			<section class="paper">
 				<h4>Details</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
@@ -2718,7 +2718,7 @@ jQuery(document).ready(function(jQuery) {
 			</section>
 		</div>
 		<div class="col-sm-4">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('ITEMGROUPS_PARENTGROUP_TITLE'); ?></h4>
 				<?php if ( $row->id > 1 ) { ?>
 				<table style="width:100%;" class="table table-striped table-hover table-condensed aec-grouplist">
@@ -2755,7 +2755,7 @@ jQuery(document).ready(function(jQuery) {
 		<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<?php $tabs->nextPane( 'mis' ); ?>
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
 				<?php if ( $row->id > 1 ) {
 					if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
@@ -2782,7 +2782,7 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 
 		<div class="col-sm-6">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
 				<?php if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
 					echo '<table style="margin: 0 auto;">';
@@ -2930,7 +2930,7 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 		$tabs->nextPane( 'coupon' ); ?>
 			<div class="col-sm-6">
-				<section>
+				<section class="paper">
 					<h4>General</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
@@ -2940,7 +2940,7 @@ jQuery(document).ready(function(jQuery) {
 				</section>
 			</div>
 			<div class="col-sm-6">
-				<section>
+				<section class="paper">
 					<h4>Terms</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
@@ -2953,7 +2953,7 @@ jQuery(document).ready(function(jQuery) {
 				</section>
 			</div>
 			<div class="col-sm-12">
-				<section>
+				<section class="paper">
 					<h4>Date &amp; User Restrictions</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
@@ -2976,7 +2976,7 @@ jQuery(document).ready(function(jQuery) {
 			</div>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<div class="col-sm-8 col-sm-offset-2">
-			<section>
+			<section class="paper">
 				<h4>Restrict Combintations</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
@@ -2997,14 +2997,14 @@ jQuery(document).ready(function(jQuery) {
 		<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<?php $tabs->nextPane( 'mis' ); ?>
 		<div class="col-sm-12">
-			<section>
+			<section class="paper">
 				<h4>Micro Integrations</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
 			</section>
 		</div>
 		<?php $tabs->nextPane( 'invoices' ); ?>
 		<div class="col-sm-12">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('Invoices'); ?></h4>
 				<table class="adminlist table table-hover table-striped">
 					<thead><tr>
@@ -3131,7 +3131,7 @@ jQuery(document).ready(function(jQuery) {
 
 		?>
 		<div class="col-sm-8 col-sm-offset-2">
-			<section>
+			<section class="paper">
 				<h4><?php echo JText::_('AEC_HEAD_INVOICE'); ?></h4>
 				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 					echo $aecHTML->createSettingsParticle( $rowname );
@@ -3319,7 +3319,7 @@ jQuery(document).ready(function(jQuery) {
 			switch ( $page ) {
 				case 'overview':
 					?>
-					<section id="chart">
+					<section class="paper" id="chart">
 						<div id="overview-day" class="overview-container">
 							<h4><?php echo gmdate('l, jS M Y'); ?></h4>
 							<div id="overview-day-this" class="chart-sunburst"></div>
@@ -3369,7 +3369,7 @@ jQuery(document).ready(function(jQuery) {
 					break;
 				case 'compare':
 					?>
-					<section id="chart">
+					<section class="paper" id="chart">
 						<div id="compare-day" class="compare-container">
 							<h4><?php echo gmdate('l, jS M Y', gmdate("U")-86400*7); ?> &rarr; <?php echo gmdate('l, jS M Y'); ?></h4>
 							<div id="compare-day-last" class="chart-sunburst"></div>
@@ -3484,7 +3484,7 @@ jQuery(document).ready(function(jQuery) {
 					break;
 				case 'sales':
 					?>
-					<section>
+					<section class="paper">
 						<h4>Sales Graph</h4>
 						<div id="sales-graph" class="overview-container">
 							<div id="overview-sales-graph" class="chart-rickshaw-huge"></div>
@@ -3565,7 +3565,7 @@ jQuery(document).ready(function(jQuery) {
 
 					$years = $start - $end;
 					?>
-					<section id="chart">
+					<section class="paper" id="chart">
 						<div id="all-time-cells" class="all-time-container">
 							<?php for ( $i=$start; $i<=$end; $i++ ) { ?>
 								<div id="all-time-<?php echo $i; ?>" class="all-time-container-full">
