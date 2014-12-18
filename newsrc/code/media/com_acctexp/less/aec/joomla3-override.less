@@ -5,9 +5,22 @@ div.subhead,
 	display: none;
 }
 
-body>.container-fluid {
-	padding: 0;
-	margin-top: 8px;
+body {
+	> nav.navbar {
+		z-index: 25;
+	}
+}
+
+.container-fluid {
+	padding: 0px;
+	margin-top: 3px;
+	z-index: 50;
+	margin-left: -1px;
+	margin-right: -1px;
+}
+
+header.header {
+	display: none;
 }
 
 nav.navbar-fixed-top-minified {
