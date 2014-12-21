@@ -19,10 +19,6 @@ body {
 	margin-right: -1px !important;
 }
 
-header.header {
-	display: none;
-}
-
 nav.navbar-fixed-top-minified {
 	position: relative;
 }
@@ -60,4 +56,39 @@ nav.navbar-fixed-top-minified {
 		display: block;
 		margin: 10px 0px;
 	}
+}
+
+.container {
+	@media (min-width: 1200px) {
+		width: 1170px;
+	}
+
+	@media (min-width: 992px) {
+		width: 1170px;
+	}
+
+	@media (min-width: 750px) {
+		width: 750px;
+	}
+}
+
+select,
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input
+{
+	height: inherit;
 }

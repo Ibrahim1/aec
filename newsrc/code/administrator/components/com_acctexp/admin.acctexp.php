@@ -1317,7 +1317,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 		$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('TYPE_DESC') );
 	}
 
-	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -1331,7 +1331,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	if ( is_array( $db_plans ) ) {
 		$plans2 = array_merge( $plans2, $db_plans );
 	}
-	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
+	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
 
 	$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
 	foreach ( $db_plans as $plan ) {
@@ -1382,7 +1382,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$group_selection[] = JHTML::_('select.option', 'set_3',		JText::_('EXPIRE_03MONTH') );
 	$group_selection[] = JHTML::_('select.option', 'set_12',	JText::_('EXPIRE_12MONTH') );
 
-	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox span2" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
+	$lists['set_expiration'] = JHTML::_('select.genericlist', $group_selection, 'set_expiration', 'class="inputbox" size="1" onchange="document.adminForm.submit( );"', 'value', 'text', "");
 
 	HTML_AcctExp::listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action );
 }
@@ -3852,7 +3852,7 @@ function listMicroIntegrations( $option )
 	$sel[] = JHTML::_('select.option', 'class_name ASC',	JText::_('CLASSNAME_ASC') );
 	$sel[] = JHTML::_('select.option', 'class_name DESC',	JText::_('CLASSNAME_DESC') );
 
-	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_mi', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
+	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_mi', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
@@ -3866,7 +3866,7 @@ function listMicroIntegrations( $option )
 	if ( is_array( $db_plans ) ) {
 		$plans = array_merge( $plans, $db_plans );
 	}
-	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox span2" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
+	$lists['filterplanid']	= JHTML::_('select.genericlist', $plans, 'filter_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', $filter_planid );
 
 	HTML_AcctExp::listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby );
 }

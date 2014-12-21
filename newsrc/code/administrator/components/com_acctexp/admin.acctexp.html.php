@@ -1425,7 +1425,7 @@ jQuery(document).ready(function(jQuery) {
 			<div class="row">
 				<div class="col-sm-3 affix-sidebar">
 
-					<ul class="nav nav-list affixnav span3" data-spy="affix" data-offset-top="148">
+					<ul class="nav nav-list affixnav" data-spy="affix" data-offset-top="148">
 					<input type="text" placeholder="filter settings here" id="settings-filter">
 					<?php
 					foreach ( $params as $rowname => $rowcontent ) {
