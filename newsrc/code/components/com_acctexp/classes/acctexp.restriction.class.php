@@ -428,7 +428,7 @@ class aecRestrictionHelper
 					continue;
 				}
 
-				echo '<div class="col-sm-4"><div class="aec-settings-container">';
+				echo '<div class="col-sm-4"><section class="paper">';
 
 				$firstitem = str_replace( '*', $type, $block[0][0] );
 				echo '<h4>' . JText::_( strtoupper( 'aec_restrictions_' . substr( $firstitem, 0, strpos( $firstitem, '_', strpos( $firstitem, '_' )+3 ) ) . '_header' ) )  . '</h4>';
@@ -439,7 +439,7 @@ class aecRestrictionHelper
 					}
 				}
 
-				echo '</div></div>';
+				echo '</section></div>';
 			}
 		}
 	}

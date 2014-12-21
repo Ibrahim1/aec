@@ -323,6 +323,12 @@ class aecHTML
 			case 'userinfobox_sub_stacked':
 				$return = '<div class="aec-settings-container">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
 				break;
+			case 'section_paper':
+				$return = '<section class="paper">' . ( !empty( $value ) ? '<h4>' . $value . '</h4>' : '' );
+				break;
+			case 'section_end':
+				$return = '</section>';
+				break;
 			case 'fieldset':
 				$return = '<div class="form-control">' . "\n"
 				. '<fieldset><legend>' . $row[1] . '</legend>' . "\n"

@@ -3111,7 +3111,7 @@ function editSubscriptionPlan( $id, $option )
 				$params[] = array( 'area_change', 'MI' );
 				$params[] = array( 'subarea_change', 'E' );
 				$params[] = array( 'add_prefix', $prefix );
-				$params[] = array( 'userinfobox_sub', JText::_('MI_E_TITLE') );
+				$params[] = array( 'section_paper', JText::_('MI_E_TITLE') );
 
 				$generalsettings = $mi->getGeneralSettings();
 
@@ -3126,7 +3126,7 @@ function editSubscriptionPlan( $id, $option )
 					}
 				}
 
-				$params[]	= array( 'div_end', 0 );
+				$params[]	= array( 'section_end', 0 );
 
 				$misettings = $mi->getSettings();
 
@@ -3141,14 +3141,14 @@ function editSubscriptionPlan( $id, $option )
 				$params[] = array( 'area_change', 'MI' );
 				$params[] = array( 'subarea_change', $mi->class_name );
 				$params[] = array( 'add_prefix', $prefix );
-				$params[] = array( 'userinfobox_sub', JText::_('MI_E_SETTINGS') );
+				$params[] = array( 'section_paper', JText::_('MI_E_SETTINGS') );
 
 				foreach ( $misettings as $name => $value ) {
 					$params[$prefix . $name] = $value;
 					$custompar[$mi->id]['params'][] = $prefix . $name;
 				}
 
-				$params[]	= array( 'div_end', 0 );
+				$params[]	= array( 'section_end', 0 );
 			}
 		}
 
@@ -6324,7 +6324,7 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'userinfobox', 5 );
 
 	if ( $type == 'members' ) {
-		$params[] = array( 'userinfobox_sub', 'Compose Export' );
+		$params[] = array( 'section_paper', 'Compose Export' );
 		$params['params_remap']		= array( 'subarea_change', 'params' );
 		$params[] = array( 'div', '<div class="alert alert-info">' );
 		$params[] = array( 'p', '<p>Take users that fit these criteria:</p>' );
@@ -6339,11 +6339,12 @@ function exportData( $option, $type, $cmd=null )
 		$params[] = array( 'div', '<div class="alert alert-success">' );
 		$params[] = array( 'p', '<p>And use these details for each line of the export:</p>' );
 		$params['rewrite_rule']	= array( 'inputD', '[[user_id]];[[user_username]];[[subscription_expiration_date]]' );
-		$params[] = array( '2div_end', '' );
+		$params[] = array( 'div_end', '' );
+		$params[] = array( 'section_end', '' );
 	} else {
 		$monthago = ( (int) gmdate('U') ) - ( 60*60*24 * 31 );
 
-		$params[] = array( 'userinfobox_sub', 'Compose Export' );
+		$params[] = array( 'section_paper', 'Compose Export' );
 		$params['params_remap']		= array( 'subarea_change', 'params' );
 		$params[] = array( 'div', '<div class="alert alert-info">' );
 		$params[] = array( 'p', '<p>Collect Sales Data from this range:</p>' );
@@ -6361,22 +6362,23 @@ function exportData( $option, $type, $cmd=null )
 		$params[] = array( 'p', '<p>Break down the data in each line like so:</p>' );
 		$params['breakdown']		= array( 'list', 'month' );
 		$params['breakdown_custom']	= array( 'inputD', '' );
-		$params[] = array( '2div_end', '' );
+		$params[] = array( 'div_end', '' );
+		$params[] = array( 'section_end', '' );
 	}
 
 	if ( $type == 'members' ) {
 		$params[] = array( 'userinfobox', 5 );
-		$params[] = array( 'userinfobox_sub' );
+		$params[] = array( 'section_paper' );
 		$rewriteswitches			= array( 'cms', 'user', 'subscription', 'plan', 'invoice' );
 		$params = AECToolbox::rewriteEngineInfo( $rewriteswitches, $params );
-		$params[] = array( 'div_end', '' );
+		$params[] = array( 'section_end', '' );
 		$params[] = array( '2div_end', '' );
 	}
 
 	$params[] = array( '2div_end', '' );
 
 	$params[] = array( 'userinfobox', 5 );
-	$params[] = array( 'userinfobox_sub', 'Save or Load Export Presets' );
+	$params[] = array( 'section_paper', 'Save or Load Export Presets' );
 	$params[] = array( 'div', '<div class="form-wide">' );
 	$params['selected_export']	= array( 'list', '' );
 	$params['delete']			= array( 'checkbox' );
@@ -6388,17 +6390,17 @@ function exportData( $option, $type, $cmd=null )
 	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'applyExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download' ) . '&nbsp;Save Preset</a>' );
 	$params[] = array( 'p', '<a class="btn danger" onclick="javascript: submitbutton(\'saveExport' . $type . '\')" href="#">' . aecHTML::Icon( 'download-alt' ) . '&nbsp;Save Preset &amp; Exit</a>' );
 	$params[] = array( 'div_end', '' );
-	$params[] = array( 'div_end', '' );
+	$params[] = array( 'section_end', '' );
 	$params[] = array( '2div_end', '' );
 
 	$params[] = array( 'userinfobox', 5 );
-	$params[] = array( 'userinfobox_sub', 'Export' );
+	$params[] = array( 'section_paper', 'Export' );
 	$params['export_method']	= array( 'list', '' );
 	$params[] = array( 'p', '<div class="right-btns"><div class="btn-group">' );
 	$params[] = array( 'p', '<a class="btn btn-info" id="testexport" href="#export-result">' . aecHTML::Icon( 'eye-open' ) . '&nbsp;Test Export</a>' );
 	$params[] = array( 'p', '<a class="btn btn-success" onclick="javascript: submitbutton(\'exportExport' . $type . '\')" href="#">' . aecHTML::Icon( 'file' ) . '&nbsp;Export Now</a>' );
 	$params[] = array( '2div_end', '' );
-	$params[] = array( 'div_end', '' );
+	$params[] = array( 'section_end', '' );
 	$params[] = array( '2div_end', '' );
 
 	$params[] = array( 'userinfobox', 5 );
