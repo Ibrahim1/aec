@@ -51,7 +51,7 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 		return true;
 	}
 
-	function action( $request )
+	function action( $request, $jprofile=false )
 	{
 			$request->metaUser->focusSubscription->addCustomParams( $request->params );
 			$request->metaUser->focusSubscription->storeload();
