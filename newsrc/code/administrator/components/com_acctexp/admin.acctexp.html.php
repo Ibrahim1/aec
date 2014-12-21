@@ -1174,7 +1174,7 @@ jQuery(document).ready(function(jQuery) {
 						</div>
 					</div>
 					<hr />
-					<div class="col-sm-12">
+					<div id="aec-footer" class="col-sm-12">
 						<hr/>
 						<div class="col-sm-4">
 							<img src="<?php echo JURI::root(); ?>media/com_acctexp/images/admin/icons/aec_logo_big.png" border="0" alt="AEC" width="200" height="232" />
