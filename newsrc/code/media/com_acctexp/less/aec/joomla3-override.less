@@ -12,11 +12,11 @@ body {
 }
 
 .container-main {
-	padding: 0px;
+	padding: 0 !important;
 	margin-top: 3px;
 	z-index: 50;
-	margin-left: -1px;
-	margin-right: -1px;
+	margin-left: -1px !important;
+	margin-right: -1px !important;
 }
 
 header.header {
@@ -51,4 +51,13 @@ nav.navbar-fixed-top-minified {
 
 .form-horizontal .control-label {
 	width: 160px;
+}
+
+.btn-subhead {
+	display: none;
+
+	@media (max-width: 480px) {
+		display: block;
+		margin: 10px 0px;
+	}
 }
