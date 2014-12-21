@@ -1835,7 +1835,7 @@ jQuery(document).ready(function(jQuery) {
 	static function listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze');
-		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', $search, 'list', 'MicroIntegration' );
+		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', $search, '', 'list', 'MicroIntegration' );
 
 		$th_list = array(
 			array('name', 'MI_NAME'),
@@ -2079,7 +2079,7 @@ jQuery(document).ready(function(jQuery) {
 	static function listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary');
-		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', $search, '', 'list', 'SubscriptionPlan' );
+		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', '', $search, 'list', 'SubscriptionPlan' );
 		HTML_myCommon::startForm();
 
 		$th_list = array(
@@ -2095,7 +2095,7 @@ jQuery(document).ready(function(jQuery) {
 		<?php if ( empty( $rows ) && !$filtered ) { ?>
 			<div class="clearfix"></div>
 			<div class="container" style="min-height: 50%; padding: 10% 0;">
-				<p style="text-align: center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
+				<p class="text-center">There is no subscription plan set up so far, add one: <?php echo HTML_myCommon::getButton( 'new', 'SubscriptionPlan', array( 'style' => 'success btn-large', 'icon' => 'plus', 'text' => 'Add a new subscription plan' ), true )?></p>
 			</div>
 		<?php } else { ?>
 		<div class="container-fluid">
