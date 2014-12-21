@@ -399,25 +399,28 @@ class aecRestrictionHelper
 
 	static function echoSettings( $aecHTML )
 	{
-		$stdvars =	array(	array(
-									array( 'mingid_enabled', 'mingid' ),
-									array( 'fixgid_enabled', 'fixgid' ),
-									array( 'maxgid_enabled', 'maxgid' )
-							),
-							array(
-									array( 'custom_restrictions_enabled', 'custom_restrictions' )
-							),	array(
-									array( 'previous*_req_enabled', 'previous*_req' ),
-									array( 'previous*_req_enabled_excluded', 'previous*_req_excluded' ),
-									array( 'current*_req_enabled', 'current*_req' ),
-									array( 'current*_req_enabled_excluded', 'current*_req_excluded' ),
-									array( 'overall*_req_enabled', 'overall*_req' ),
-									array( 'overall*_req_enabled_excluded', 'overall*_req_excluded' )
-							), array(
-									array( 'used_*_min_enabled', 'used_*_min_amount', 'used_*_min' ),
-									array( 'used_*_max_enabled', 'used_*_max_amount', 'used_*_max' )
-							)
-					);
+		$stdvars =	array(
+			array(
+				array( 'mingid_enabled', 'mingid' ),
+				array( 'fixgid_enabled', 'fixgid' ),
+				array( 'maxgid_enabled', 'maxgid' )
+			),
+			array(
+				array( 'previous*_req_enabled', 'previous*_req' ),
+				array( 'previous*_req_enabled_excluded', 'previous*_req_excluded' ),
+				array( 'current*_req_enabled', 'current*_req' ),
+				array( 'current*_req_enabled_excluded', 'current*_req_excluded' ),
+				array( 'overall*_req_enabled', 'overall*_req' ),
+				array( 'overall*_req_enabled_excluded', 'overall*_req_excluded' )
+			),
+			array(
+				array( 'used_*_min_enabled', 'used_*_min_amount', 'used_*_min' ),
+				array( 'used_*_max_enabled', 'used_*_max_amount', 'used_*_max' )
+			),
+			array(
+				array( 'custom_restrictions_enabled', 'custom_restrictions' )
+			)
+		);
 
 		$types = array( 'plan', 'group' );
 

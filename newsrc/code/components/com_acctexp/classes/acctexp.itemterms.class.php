@@ -380,7 +380,9 @@ class itemTerm extends eucaObject
 	function computeTotal()
 	{
 		// Unset old total, if present
-		$k = array_pop( array_keys( $this->cost ) );
+		$costkeys = array_keys( $this->cost );
+
+		$k = array_pop( $costkeys );
 
 		if ( $this->cost[$k]->type == 'total' ) {
 			unset( $this->cost[$k] );
@@ -408,7 +410,9 @@ class itemTerm extends eucaObject
 
 	function renderTotal()
 	{
-		$k = array_pop( array_keys( $this->cost ) );
+		$cost = array_keys( $this->cost );
+
+		$k = array_pop( $cost );
 
 		return $this->cost[$k]->renderCost();
 	}

@@ -201,7 +201,9 @@ class xJSessionHandlerCommon
 		if ( !empty( $data ) ) {
 			$session = $this->joomunserializesession( $data );
 
-			$key = array_pop( array_keys( $session ) );
+			$sessionkeys = array_keys( $session );
+
+			$key = array_pop( $sessionkeys );
 
 			$this->sessionkey = $key;
 
@@ -226,7 +228,9 @@ class xJSessionHandlerCommon
 
 	function joomserializesession( $data )
 	{
-		$key = array_pop( array_keys( $data ) );
+		$sessionkeys = array_keys( $data );
+
+		$key = array_pop( $sessionkeys );
 
 		return $key . "|" . serialize( $data[$key] );
 	}

@@ -915,7 +915,9 @@ class microIntegration extends serialParamDBTable
 		$request->plan		=&	$objplan;
 
 		if ( empty( $params ) ) {
-			$params	=&	$metaUser->meta->getMIParams( $this->id, $objplan->id );
+			$miparams = $metaUser->meta->getMIParams( $this->id, $objplan->id );
+
+			$params =& $miparams;
 		}
 
 		$request->params	=&	$params;

@@ -733,7 +733,9 @@ class InvoiceFactory
 					}
 				}
 
-				$mpg = array_pop( array_keys( $pgroups ) );
+				$groupkeys = array_keys( $pgroups );
+
+				$mpg = array_pop( $groupkeys );
 				if ( ( count( $pgroups ) > 1 ) || ( count( $pgroups[$mpg]['members'] ) > 1 ) ) {
 					// We have more than one item for this processor, create temporary cart
 					$tempcart = new aecCart();
@@ -1041,7 +1043,9 @@ class InvoiceFactory
 												'params'	=> $params
 											);
 
-			$cid = array_pop( array_keys( $this->items->itemlist ) );
+			$itemlist = array_keys( $this->items->itemlist );
+
+			$cid = array_pop( $itemlist );
 
 			$this->cartobject = new aecCart();
 			$this->cartobject->addItem( array(), $this->plan );
@@ -3592,7 +3596,9 @@ class Invoice extends serialParamDBTable
 				}
 
 				if ( !empty( $InvoiceFactory->items->itemlist ) ) {
-					$max = array_pop( array_keys( $InvoiceFactory->items->itemlist ) );
+					$itemlist = array_keys( $InvoiceFactory->items->itemlist );
+
+					$max = array_pop( $itemlist );
 
 					$terms = $InvoiceFactory->items->itemlist[$max]['terms'];
 				} else {

@@ -594,7 +594,9 @@ class aecCart extends serialParamDBTable
 		$checkout = $this->getCheckout( $metaUser, $counter, $InvoiceFactory );
 
 		if ( !empty( $checkout ) ) {
-			$max = array_pop( array_keys( $checkout ) );
+			$list = array_keys( $checkout );
+
+			$max = array_pop( $list );
 
 			return $checkout[$max]['cost_total'];
 		} else {
