@@ -1960,9 +1960,7 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'mi', true ); ?>
-		<table class="aecadminform">
-			<tr>
-			<td>
+			<div class="col-sm-8 col-sm-offset-2">
 				<section class="paper">
 					<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
 					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
@@ -1986,104 +1984,83 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'has_restrictions' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
 				</section>
-				<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
+			</div>
+			<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
+				<div class="col-sm-8 col-sm-offset-2">
 					<section class="paper">
 					<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
 						<div style="position:relative;">
 						<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
 						</div>
 					</section>
-				<?php } ?>
-				</td>
-			</tr>
-		</table>
+				</div>
+			<?php } ?>
 		<?php if ( $aecHTML->hasRestrictions ) {
 			$tabs->nextPane( 'restrictions' ); ?>
-			<table class="aecadminform">
-				<tr>
-					<td>
-						<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-					</td>
-				</tr>
-			</table>
+				<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<?php }
 
 		if ( $aecHTML->hasSettings ) {
 			$tabs->nextPane( 'settings' ); ?>
-			<table class="aecadminform">
-				<tr>
-					<td>
-						<section class="paper">
-						<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
-						<?php
-						foreach ( $aecHTML->customparams as $name ) {
-							if ( strpos( $name, 'aectab_' ) === 0 ) {
-								?>
-										</section>
-									</td>
-								</tr>
-								</table>
-								<?php $tabs->nextPane( $name ); ?>
-								<table class="aecadminform">
-									<tr>
-										<td>
-											<section class="paper">
-											<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
-								<?php
-							} else {
-								if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
-									echo '<tr><td>';
-								}
+			<div class="col-sm-8 col-sm-offset-2">
+				<section class="paper">
+					<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
+					<?php
+					foreach ( $aecHTML->customparams as $name ) {
+					if ( strpos( $name, 'aectab_' ) === 0 ) {
+					?>
+				</section>
+				<?php $tabs->nextPane( $name ); ?>
+				<section class="paper">
+					<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
+					<?php
+					} else {
+						if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+							echo '<tr><td>';
+						}
 
-								echo $aecHTML->createSettingsParticle( $name );
+						echo $aecHTML->createSettingsParticle( $name );
 
-								if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
-									echo '</td></tr>';
-								}
-							}
-						} ?>
-						</section>
-					</td>
-				</tr>
-			</table>
+						if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+							echo '</td></tr>';
+						}
+					}
+					} ?>
+				</section>
+			</div>
 		<?php } ?>
 		<?php $tabs->nextPane( 'attachedto' ); ?>
-		<table class="aecadminform">
-			<tr>
-				<td>
-					<section class="paper">
-					<?php
-					echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
+			<div class="col-sm-8 col-sm-offset-2">
+				<section class="paper">
+				<?php
+				echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
 
-					if ( !empty( $attached['groups'] ) ) {
-						echo '<ul>';
-						foreach ( $attached['groups'] as $group ) {
-							echo '<li>#' . $group->id . ' - <a href="index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $group->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $group->getProperty('name') . '</a>';
-							echo '<input type="hidden" name="attached_to_groups[]" value="' . $group->id . '" /></li>';
-						}
-						echo '</ul>';
+				if ( !empty( $attached['groups'] ) ) {
+					echo '<ul>';
+					foreach ( $attached['groups'] as $group ) {
+						echo '<li>#' . $group->id . ' - <a href="index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $group->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $group->getProperty('name') . '</a>';
+						echo '<input type="hidden" name="attached_to_groups[]" value="' . $group->id . '" /></li>';
 					}
+					echo '</ul>';
+				}
 
-					echo $lists['attach_to_groups'];
+				echo $lists['attach_to_groups'];
 
-					echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
+				echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
 
-					if ( !empty( $attached['plans'] ) ) {
-						echo '<ul>';
-						foreach ( $attached['plans'] as $plan ) {
-							echo '<li>#' . $plan->id . ' - <a href="index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $plan->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $plan->getProperty('name') . '</a>';
-							echo '<input type="hidden" name="attached_to_plans[]" value="' . $plan->id . '" /></li>';
-						}
-						echo '</ul>';
+				if ( !empty( $attached['plans'] ) ) {
+					echo '<ul>';
+					foreach ( $attached['plans'] as $plan ) {
+						echo '<li>#' . $plan->id . ' - <a href="index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $plan->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $plan->getProperty('name') . '</a>';
+						echo '<input type="hidden" name="attached_to_plans[]" value="' . $plan->id . '" /></li>';
 					}
+					echo '</ul>';
+				}
 
-					echo $lists['attach_to_plans'];
-					?>
-					</section>
-				</td>
-			</tr>
-		</table>
-
+				echo $lists['attach_to_plans'];
+				?>
+				</section>
+			</div>
 
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
@@ -2938,8 +2915,6 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
 				</section>
-			</div>
-			<div class="col-sm-6">
 				<section class="paper">
 					<h4>Terms</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
@@ -2952,7 +2927,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
 				</section>
 			</div>
-			<div class="col-sm-12">
+			<div class="col-sm-6">
 				<section class="paper">
 					<h4>Date &amp; User Restrictions</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
@@ -2972,7 +2947,7 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
 					<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
-				</div>
+				</section>
 			</div>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<div class="col-sm-8 col-sm-offset-2">
