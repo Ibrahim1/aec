@@ -379,7 +379,7 @@ class ItemGroupHandler
 					continue;
 				}
 
-				if ( $group->params['reveal_child_items'] && empty( $group->params['symlink'] ) ) {
+				if ( !empty($group->params['reveal_child_items']) && empty( $group->params['symlink'] ) ) {
 					$list = ItemGroupHandler::getTotalAllowedChildItems( $groupid, $metaUser, $list );
 				} else {
 						if ( ItemGroupHandler::hasVisibleChildren( $group, $metaUser ) ) {

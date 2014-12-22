@@ -552,8 +552,10 @@ function subscribe( $option )
 
 			$duplicationcheck = checkUsernameEmail( $username, $email );
 
+			$usertype = JRequest::get('post');
+
 			// Bind the post array to the user object
-			if ( !$user->bind( JRequest::get('post'), 'usertype' ) || ( $duplicationcheck !== true ) ) {
+			if ( !$user->bind( $usertype, 'usertype' ) || ( $duplicationcheck !== true ) ) {
 				$binderror = $user->getError();
 
 				if ( !empty( $binderror ) ) {
