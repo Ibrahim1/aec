@@ -128,19 +128,21 @@ jQuery(document).ready(function(jQuery) {
 		var i, scrollTop = jQuery(window).scrollTop();
 
 		if ( navTop == 0 ) {
-			navTop = jQuery('.aec-navbar').offset().top;
+			navTop = jQuery('.aec-navbar').offset().top + 20;
 		}
 
 		if (scrollTop >= navTop && !tbFixed) {
 			tbFixed = 1;
 			jQuery('.aec-navbar').addClass('navbar-fixed-top');
 			jQuery('nav.navbar').addClass('navbar-fixed-top-minified');
+			jQuery('#aec-wrap').css('padding-top', '42px');
 		} else if (scrollTop <= navTop && tbFixed) {
 			tbFixed = 0;
 			jQuery('nav.navbar').removeClass('navbar-fixed-top-minified');
 			jQuery('.aec-navbar').removeClass('navbar-fixed-top').removeClass('navbar-fixed-top-override');
 			jQuery('div.head-minify').remove();
 			jQuery('.aec-buttons-fixed').removeClass("aec-buttons-fixed-extended");
+			jQuery('#aec-wrap').css('padding-top', '0');
 		}
 
 		if ( jQuery('.aec-buttons').length ) {
