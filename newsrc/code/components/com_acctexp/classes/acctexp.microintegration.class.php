@@ -1180,10 +1180,12 @@ class microIntegration extends serialParamDBTable
 
 	function profile_form( $metaUser, $backend=false )
 	{
+		$miparams = $metaUser->meta->getMIParams( $this->id );
+
 		$request = new stdClass();
 		$request->parent	=&	$this;
 		$request->metaUser	=&	$metaUser;
-		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+		$request->params	=&	$miparams;
 		$request->backend	=	$backend;
 
 		$settings = $this->functionProxy( 'profile_form', $request, array() );
@@ -1201,10 +1203,12 @@ class microIntegration extends serialParamDBTable
 
 	function profile_form_save( $metaUser, $params )
 	{
+		$miparams = $metaUser->meta->getMIParams( $this->id );
+
 		$request = new stdClass();
 		$request->parent		=&	$this;
 		$request->metaUser		=&	$metaUser;
-		$request->old_params	=	$metaUser->meta->getMIParams( $this->id );
+		$request->old_params	=	$miparams;
 		$request->params		=	$params;
 
 		return $this->functionProxy( 'profile_form_save', $request );
@@ -1212,10 +1216,12 @@ class microIntegration extends serialParamDBTable
 
 	function admin_form( $metaUser )
 	{
+		$miparams = $metaUser->meta->getMIParams( $this->id );
+
 		$request = new stdClass();
 		$request->parent	=&	$this;
 		$request->metaUser	=&	$metaUser;
-		$request->params	=&	$metaUser->meta->getMIParams( $this->id );
+		$request->params	=&	$miparams;
 
 		$settings = $this->functionProxy( 'admin_form', $request, array() );
 
