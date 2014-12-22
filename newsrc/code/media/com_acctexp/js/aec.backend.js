@@ -299,6 +299,14 @@ jQuery(document).ready(function(jQuery) {
 			return jQuery(this).parent().find('.content').html();
 		}
 	});
+
+	jQuery("table.adminlist tbody tr").on("click", function(event){
+		if ( jQuery(this).find("input[type*='checkbox']").prop('checked') ) {
+			jQuery(this).removeClass("success").find("input[type*='checkbox']").prop('checked', false);
+		} else {
+			jQuery(this).addClass("success").find("input[type*='checkbox']").prop('checked', true);
+		}
+	});
 });
 
 function readNotice(id) {

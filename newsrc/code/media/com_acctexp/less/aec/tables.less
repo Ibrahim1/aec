@@ -24,7 +24,11 @@
 	}
 }
 
-table.adminlist {
+.popover-markup {
+	display: inline-block;
+}
+
+table.table-selectable {
 	.box-shadow(~"0 2px 3px rgba(0,0,0,.1), 0 7px 14px rgba(127,127,127,.08)");
 	thead tr th {
 		i.text-muted {
@@ -50,9 +54,9 @@ table.adminlist {
 
 	tbody tr td {
 		vertical-align: middle;
-	}
-}
 
-.popover-markup {
-	display: inline-block;
+		input[type*='checkbox'] {
+			display: none;
+		}
+	}
 }

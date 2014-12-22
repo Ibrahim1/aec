@@ -1563,7 +1563,7 @@ jQuery(document).ready(function(jQuery) {
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="col-sm-12">
-						<table class="adminlist table table-hover table-striped">
+						<table class="table table-hover table-striped table-selectable">
 							<thead><tr>
 								<th class="text-left"><?php echo JText::_('TEMPLATE_DEFAULT'); ?></th>
 								<th class="text-left"><?php echo JText::_('TEMPLATE_NAME'); ?></th>
@@ -1707,14 +1707,6 @@ jQuery(document).ready(function(jQuery) {
 			jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
 		}
 	});
-
-	jQuery("table.adminlist tbody tr").on("click", function(event){
-		if ( jQuery(this).find("input[type*=\'checkbox\']").prop(\'checked\') ) {
-			jQuery(this).removeClass("success").find("input[type*=\'checkbox\']").prop(\'checked\', false);
-		} else {
-			jQuery(this).addClass("success").find("input[type*=\'checkbox\']").prop(\'checked\', true);
-		}
-	});
 });
 ';
 		$document = JFactory::getDocument();
@@ -1758,7 +1750,7 @@ jQuery(document).ready(function(jQuery) {
 									<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
 								</div>
 							</div>
-							<table class="adminlist table table-hover table-striped">
+							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
 									<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
 									<th>&nbsp;</th>
@@ -1858,7 +1850,7 @@ jQuery(document).ready(function(jQuery) {
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="col-sm-12">
-							<table class="adminlist table table-hover table-striped">
+							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
 									<th class="text-right">ID <input type="checkbox" name="toggle" value="" /></th>
 									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
@@ -2591,7 +2583,7 @@ jQuery(document).ready(function(jQuery) {
 				<div class="col-sm-12">
 					<div class="col-sm-12">
 						<div class="aecadminform">
-							<table class="adminlist table table-hover table-striped">
+							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
 									<th class="text-right">
 										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
@@ -2832,7 +2824,7 @@ jQuery(document).ready(function(jQuery) {
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="col-sm-12">
-							<table class="adminlist table table-hover table-striped">
+							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
 									<th class="text-right">ID <input type="checkbox" name="toggle" value="" /></th>
 									<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
@@ -2981,7 +2973,7 @@ jQuery(document).ready(function(jQuery) {
 		<div class="col-sm-12">
 			<section class="paper">
 				<h4><?php echo JText::_('Invoices'); ?></h4>
-				<table class="adminlist table table-hover table-striped">
+				<table class="table table-hover table-striped table-selectable">
 					<thead><tr>
 						<th>#</th>
 						<th><?php echo JText::_('INVOICE_USERID'); ?></th>
@@ -3054,7 +3046,7 @@ jQuery(document).ready(function(jQuery) {
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="col-sm-12">
-						<table class="adminlist table table-hover table-striped">
+						<table class="table table-hover table-striped table-selectable">
 							<thead><tr>
 								<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
 							</tr></thead>
@@ -3135,7 +3127,7 @@ jQuery(document).ready(function(jQuery) {
 				<div class="col-sm-12">
 					<div class="col-sm-12">
 						<div class="aecadminform">
-							<table class="adminlist table table-hover table-striped">
+							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
 									<th><?php echo JText::_('HISTORY_USERID'); ?></th>
 									<th><?php echo JText::_('HISTORY_INVOICE_NUMBER'); ?></th>
@@ -3198,7 +3190,7 @@ jQuery(document).ready(function(jQuery) {
 				<div class="col-sm-12">
 					<div class="col-sm-12">
 						<div class="aecadminform">
-							<table class="adminlist table table-hover table-striped">
+							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
 									<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
 									<th><?php echo JText::_('AEC_CMN_DATE'); ?></th>
