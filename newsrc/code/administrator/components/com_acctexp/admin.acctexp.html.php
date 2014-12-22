@@ -300,7 +300,7 @@ class HTML_myCommon
 		$v = new JVersion();
 
 		return '<a'
-			. ' class="btn btn-' . $button['style'] . '"'
+			. ' class="btn btn-' . $button['style']. ( !empty($button['actionable']) ? ' btn-conditional' : '' ) . '"'
 			. ' onclick="javascript: '
 				. ( $v->isCompatible('2.5') ? 'Joomla.' : '' )
 				. 'submitbutton(\'' . $action . $object . '\')"'
@@ -1478,10 +1478,13 @@ jQuery(document).ready(function(jQuery) {
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="col-sm-12">
-							<table class="adminlist table table-striped table-hover">
+							<table class="table table-striped table-hover table-selectable">
 								<thead>
 								<tr>
-									<th class="text-center">ID <input type="checkbox" name="toggle" value="" /></th>
+									<th class="text-center">
+										<?php echo JText::_('AEC_CMN_ID'); ?>
+										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+									</th>
 									<th class="text-left"><?php echo JText::_('PROCESSOR_NAME'); ?></th>
 									<th class="text-left"><?php echo JText::_('PROCESSOR_INFO'); ?></th>
 									<th class="text-left"><?php echo JText::_('PROCESSOR_ACTIVE'); ?></th>
@@ -1752,7 +1755,9 @@ jQuery(document).ready(function(jQuery) {
 							</div>
 							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
-									<th class="text-center"><input type="checkbox" name="toggle" value="" /></th>
+									<th class="text-center">
+										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+									</th>
 									<th>&nbsp;</th>
 									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
 									<?php if ( $action[0] == 'manual' ) { ?>
@@ -1852,7 +1857,10 @@ jQuery(document).ready(function(jQuery) {
 						<div class="col-sm-12">
 							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
-									<th class="text-right">ID <input type="checkbox" name="toggle" value="" /></th>
+									<th class="text-center">
+										ID
+										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+									</th>
 									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
 								</tr></thead>
 								<tbody>
@@ -2095,11 +2103,11 @@ jQuery(document).ready(function(jQuery) {
 				<div class="col-sm-12">
 					<div class="col-sm-12">
 						<div class="aecadminform">
-							<table class="adminlist table table-striped table-hover">
+							<table class="table table-striped table-hover table-selectable">
 								<thead><tr>
-									<th class="text-right">
-										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
-										<input type="checkbox" name="toggle" value="" />
+									<th class="text-center">
+										ID
+										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 									</th>
 									<?php aecAdmin::th_set($th_list, $lists, $orderby); ?>
 									<th class="text-center"><?php echo JText::_('PAYPLAN_EXPIREDCOUNT'); ?> | <?php echo JText::_('Active'); ?>&nbsp;&nbsp;&nbsp;</th>
@@ -2585,9 +2593,9 @@ jQuery(document).ready(function(jQuery) {
 						<div class="aecadminform">
 							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
-									<th class="text-right">
-										<?php echo JText::_('AEC_CMN_ID'); ?>&nbsp;
-										<input type="checkbox" name="toggle" value="" />
+									<th class="text-center">
+										<?php echo JText::_('AEC_CMN_ID'); ?>
+										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
 									</th>
 									<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
 								</tr></thead>
@@ -2826,7 +2834,10 @@ jQuery(document).ready(function(jQuery) {
 						<div class="col-sm-12">
 							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
-									<th class="text-right">ID <input type="checkbox" name="toggle" value="" /></th>
+									<th class="text-center">
+										<?php echo JText::_('AEC_CMN_ID'); ?>
+										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+									</th>
 									<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
 									<th class="text-center"><?php echo JText::_('COUPON_USECOUNT'); ?></th>
 								</tr></thead>
@@ -3024,7 +3035,6 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices', '', $search );
 
 		$th_list = array(
-			array('id', 'ID'),
 			array('userid', 'INVOICE_USERID'),
 			array('invoice_number', 'INVOICE_INVOICE_NUMBER', 'center'),
 			array('secondary_ident', 'INVOICE_SECONDARY_IDENT'),
@@ -3048,6 +3058,10 @@ jQuery(document).ready(function(jQuery) {
 					<div class="col-sm-12">
 						<table class="table table-hover table-striped table-selectable">
 							<thead><tr>
+								<th class="text-center">
+									<?php echo JText::_('AEC_CMN_ID'); ?>
+									<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+								</th>
 								<?php aecAdmin::th_set($th_list, array(), $orderby); ?>
 							</tr></thead>
 							<tbody>
@@ -3192,7 +3206,10 @@ jQuery(document).ready(function(jQuery) {
 						<div class="aecadminform">
 							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
-									<th><?php echo JText::_('AEC_CMN_ID'); ?></th>
+									<th class="text-center">
+										<?php echo JText::_('AEC_CMN_ID'); ?>
+										<a class="btn btn-success btn-xs select-all pull-left" href="#">ALL</a>
+									</th>
 									<th><?php echo JText::_('AEC_CMN_DATE'); ?></th>
 									<th>&nbsp;</th>
 									<th>&nbsp;</th>

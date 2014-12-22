@@ -62,14 +62,6 @@ jQuery(document).ready(function(jQuery) {
 		}
 	});
 
-	jQuery('#adminForm').one('click', function() {
-		jQuery('div.aec-buttons a.btn').attr("disabled", false);
-	});
-
-	jQuery('label.toggleswitch').one('click', function() {
-		jQuery('div.aec-buttons a.btn').attr("disabled", false);
-	});
-
     jQuery('table.adminlist thead input').click('click', function() {
         jQuery('table.adminlist tbody input[type="checkbox"]').trigger('click');
     });
@@ -300,13 +292,78 @@ jQuery(document).ready(function(jQuery) {
 		}
 	});
 
-	jQuery("table.adminlist tbody tr").on("click", function(event){
-		if ( jQuery(this).find("input[type*='checkbox']").prop('checked') ) {
-			jQuery(this).removeClass("success").find("input[type*='checkbox']").prop('checked', false);
-		} else {
-			jQuery(this).addClass("success").find("input[type*='checkbox']").prop('checked', true);
+	if ( jQuery("table.table-selectable").length == 0 ) {
+		jQuery('#adminForm').one('click', function() {
+			jQuery('div.aec-buttons a.btn-conditional').attr("disabled", false);
+		});
+	} else {
+		var rows_count = jQuery("table.table-selectable tbody tr").length,
+			selected_rows = 0,
+			select_all = jQuery("table.table-selectable a.select-all");
+
+		var toggleButtons = function() {
+			if ( selected_rows ) {
+				jQuery('div.aec-buttons a.btn-conditional').attr("disabled", false);
+
+				if ( selected_rows == rows_count ) {
+					select_all.removeClass('btn-success').addClass('btn-warning');
+				} else {
+					select_all.removeClass('btn-warning').addClass('btn-success');
+				}
+			} else {
+				jQuery('div.aec-buttons a.btn-conditional').attr("disabled", true);
+			}
 		}
-	});
+
+		var selectRow = function(row, force) {
+			if ( typeof force == 'undefined' ) {
+				force = false;
+			}
+
+			if ( jQuery(row).find("input[type*='checkbox']").prop('checked') ) {
+				jQuery(row).removeClass("success").find("input[type*='checkbox']").prop('checked', false);
+
+				selected_rows++;
+			} else {
+				jQuery(row).addClass("success").find("input[type*='checkbox']").prop('checked', true);
+
+				selected_rows--;
+			}
+
+			toggleButtons();
+		}
+
+		jQuery("table.table-selectable tbody tr").on("click", function(event){
+			selectRow(this);
+		});
+
+		select_all.on("click", function(event){
+			if ( select_all.hasClass('btn-success') ) {
+				jQuery("table.table-selectable tbody tr" ).each(function(){
+					if ( !jQuery(this).find("input[type*='checkbox']").prop('checked') ) {
+						jQuery(this).addClass("success").find("input[type*='checkbox']").prop('checked', true);
+					}
+				});
+
+				select_all.removeClass('btn-success').addClass('btn-warning');
+
+				selected_rows = rows_count;
+			} else {
+				jQuery("table.table-selectable tbody tr" ).each(function(){
+					if ( jQuery(this).find("input[type*='checkbox']").prop('checked') ) {
+						jQuery(this).removeClass("success").find("input[type*='checkbox']").prop('checked', false);
+					}
+				});
+
+				select_all.removeClass('btn-warning').addClass('btn-success');
+
+				selected_rows = 0;
+			}
+
+			toggleButtons();
+		});
+
+	}
 });
 
 function readNotice(id) {

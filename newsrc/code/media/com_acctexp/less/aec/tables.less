@@ -30,6 +30,9 @@
 
 table.table-selectable {
 	.box-shadow(~"0 2px 3px rgba(0,0,0,.1), 0 7px 14px rgba(127,127,127,.08)");
+
+	background-color: #f3f3f3;
+
 	thead tr th {
 		i.text-muted {
 			.transition(all 400ms ease-in-out);
@@ -40,8 +43,16 @@ table.table-selectable {
 			}
 		}
 
+		.select-all {
+			opacity: 0.5;
+		}
+
 		&:hover {
 			i.text-muted {
+				opacity: 1;
+			}
+
+			.select-all {
 				opacity: 1;
 			}
 		}
@@ -50,13 +61,18 @@ table.table-selectable {
 			border-bottom: 2px solid saturate(lighten(@brand-info, 50%), 50%);
 			.box-shadow(0px 2px 1px rgba(0, 0, 0, 0.4));
 		}
+
 	}
 
 	tbody tr td {
 		vertical-align: middle;
 
-		input[type*='checkbox'] {
+		input[type='checkbox'] {
 			display: none;
 		}
+	}
+
+	.enabled, .success {
+		font-weight: normal;
 	}
 }
