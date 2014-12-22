@@ -301,6 +301,9 @@ jQuery(document).ready(function(jQuery) {
 			selected_rows = 0,
 			select_all = jQuery("table.table-selectable a.select-all");
 
+		// Init checked state
+		jQuery("table.table-selectable tbody tr").find("input[type='checkbox']").prop('checked', false);
+
 		var toggleButtons = function() {
 			if ( selected_rows ) {
 				jQuery('div.aec-buttons a.btn-conditional').attr("disabled", false);
@@ -312,22 +315,28 @@ jQuery(document).ready(function(jQuery) {
 				}
 			} else {
 				jQuery('div.aec-buttons a.btn-conditional').attr("disabled", true);
+
+				select_all.removeClass('btn-warning').addClass('btn-success');
 			}
 		}
 
-		var selectRow = function(row, force) {
-			if ( typeof force == 'undefined' ) {
-				force = false;
-			}
+		var selectRow = function(row) {
+			var el = jQuery(row);
 
-			if ( jQuery(row).find("input[type*='checkbox']").prop('checked') ) {
-				jQuery(row).removeClass("success").find("input[type*='checkbox']").prop('checked', false);
+			var checkbox = el.find("input[type='checkbox']");
 
-				selected_rows++;
-			} else {
-				jQuery(row).addClass("success").find("input[type*='checkbox']").prop('checked', true);
+			if ( checkbox.prop('checked') ) {
+				el.removeClass("success");
+
+				checkbox.prop('checked', false);
 
 				selected_rows--;
+			} else {
+				el.addClass("success");
+
+				checkbox.prop('checked', true);
+
+				selected_rows++;
 			}
 
 			toggleButtons();
