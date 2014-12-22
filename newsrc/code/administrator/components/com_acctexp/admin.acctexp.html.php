@@ -104,12 +104,7 @@ class HTML_myCommon
 		HTML_AcctExp::help();
 
 		?>
-		<div class="modal hide fade" id="notifications">
-			<div class="modal-header">
-				<a data-dismiss="modal" class="close">×</a>
-				<h3>Eventlog</h3>
-			</div>
-			<div class="modal-body"></div>
+		<div class="modal fade" id="notifications">
 		</div>
 		<?php
 
@@ -1376,31 +1371,42 @@ jQuery(document).ready(function(jQuery) {
 	static function eventlogModal( $notices, $furthernotices )
 	{
 		?>
-		<div class="aec-center-block aec-center-block-half">
-			<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
-			<p>
-				<a href="#" class="btn btn-small" onclick="readNotices()"><?php echo aecHTML::Icon( 'ok' ); ?> <?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a>
-				<a href="index.php?option=com_acctexp&amp;task=eventlog" class="btn btn-success btn-small pull-right" onclick="readNotices()"><?php echo JText::_('Go to the Eventlog'); ?><?php echo aecHTML::Icon( 'chevron-right' ); ?></a>
-			</p>
-			<div id="aec-alertlist">
-				<?php
-				$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
-				foreach( $notices as $notice ) {
-				?>
-					<div class="alert alert-<?php echo $noticex[$notice->level]; ?>" id="alert-<?php echo $notice->id; ?>">
-						<a class="close" href="#<?php echo $notice->id; ?>" onclick="readNotice(<?php echo $notice->id; ?>)">&times;</a>
-						<h5><strong><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ); ?>: <?php echo $notice->short; ?></strong></h5>
-						<p> <?php echo substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ); ?></p>
-						<span class="help-block"><?php echo $notice->datetime; ?></span>
+
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h3>Eventlog</h3>
 					</div>
-				<?php
-				}
-				?>
+					<div class="modal-body">
+						<div class="aec-center-block aec-center-block-half">
+							<p><?php echo JText::_('AEC_NOTICES_FOUND_DESC'); ?></p>
+							<p>
+								<a href="#" class="btn btn-small" onclick="readNotices()"><?php echo aecHTML::Icon( 'ok' ); ?> <?php echo JText::_('AEC_NOTICE_MARK_ALL_READ'); ?></a>
+								<a href="index.php?option=com_acctexp&amp;task=eventlog" class="btn btn-success btn-small pull-right" onclick="readNotices()"><?php echo JText::_('Go to the Eventlog'); ?><?php echo aecHTML::Icon( 'chevron-right' ); ?></a>
+							</p>
+							<div id="aec-alertlist">
+								<?php
+								$noticex = array( 2 => 'success', 8 => 'info', 32 => 'warning', 128 => 'error' );
+								foreach( $notices as $notice ) {
+								?>
+									<div class="alert alert-<?php echo $noticex[$notice->level]; ?>" id="alert-<?php echo $notice->id; ?>">
+										<a class="close" href="#<?php echo $notice->id; ?>" onclick="readNotice(<?php echo $notice->id; ?>)">&times;</a>
+										<h5><strong><?php echo JText::_( "AEC_NOTICE_NUMBER_" . $notice->level ); ?>: <?php echo $notice->short; ?></strong></h5>
+										<p> <?php echo substr( htmlentities( stripslashes( $notice->event ) ), 0, 256 ); ?></p>
+										<span class="help-block"><?php echo $notice->datetime; ?></span>
+									</div>
+								<?php
+								}
+								?>
+							</div>
+							<?php if ( $furthernotices > 0 ) { ?>
+								<p id="further-notices"><span><?php echo $furthernotices; ?></span> <?php echo JText::_('further notice(s)'); ?></p>
+							<?php } ?>
+						</div>
+					</div>
+				</div>
 			</div>
-			<?php if ( $furthernotices > 0 ) { ?>
-				<p id="further-notices"><span><?php echo $furthernotices; ?></span> <?php echo JText::_('further notice(s)'); ?></p>
-			<?php } ?>
-		</div>
 		<?php
 	}
 
