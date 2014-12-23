@@ -118,24 +118,33 @@ jQuery(document).ready(function(jQuery) {
 	}
 
 	// fix sub nav on scroll - adapted, against better advice, from http://twitter.github.com/bootstrap/less.html
-	var tbFixed = 0, btFixed = 0, navTop = 0, navBtn = 0;
+	var tbFixed = 0,
+		btFixed = 0,
+		navTop = 0,
+		navHeight = 0,
+		navBtn = 0;
 
 	processScroll();
 
 	jQuery(window).on('scroll', processScroll);
 
 	function processScroll() {
-		var i, scrollTop = jQuery(window).scrollTop();
+		var i,
+			scrollTop = jQuery(window).scrollTop();
 
 		if ( navTop == 0 ) {
-			navTop = jQuery('.aec-navbar').offset().top + 20;
+			navTop = jQuery('.aec-navbar').offset().top;
+		}
+
+		if ( navHeight == 0 ) {
+			navHeight = jQuery('.aec-navbar').height();
 		}
 
 		if (scrollTop >= navTop && !tbFixed) {
 			tbFixed = 1;
 			jQuery('.aec-navbar').addClass('navbar-fixed-top');
 			jQuery('nav.navbar').addClass('navbar-fixed-top-minified');
-			jQuery('#aec-wrap').css('padding-top', '42px');
+			jQuery('#aec-wrap').css('padding-top', navHeight);
 		} else if (scrollTop <= navTop && tbFixed) {
 			tbFixed = 0;
 			jQuery('nav.navbar').removeClass('navbar-fixed-top-minified');
@@ -147,7 +156,7 @@ jQuery(document).ready(function(jQuery) {
 
 		if ( jQuery('.aec-buttons').length ) {
 			if ( navBtn == 0 ) {
-				navBtn = jQuery('.aec-buttons').offset().top - 42;
+				navBtn = jQuery('.aec-buttons').offset().top + navHeight;
 			}
 
 			if (scrollTop >= navBtn && !btFixed) {
