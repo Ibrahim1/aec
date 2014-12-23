@@ -62,10 +62,6 @@ jQuery(document).ready(function(jQuery) {
 		}
 	});
 
-    jQuery('table.adminlist thead input').click('click', function() {
-        jQuery('table.adminlist tbody input[type="checkbox"]').trigger('click');
-    });
-
 	jQuery('a.quicksearch').on("click", function(e) {
 		e.preventDefault();
 
@@ -229,6 +225,10 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery('.select2-bootstrap').select2();
 
+	// Make Select2 selects work in bootstrap modals and popovers
+	jQuery.fn.modal.Constructor.prototype.enforceFocus = function() {};
+	jQuery.fn.popover.Constructor.prototype.enforceFocus = function() {};
+
 	jQuery('#drilldown').menu({
 		content: jQuery('#drilldown').next().html(),
 		backLink: false,
@@ -303,6 +303,12 @@ jQuery(document).ready(function(jQuery) {
 		content: function () {
 			return jQuery(this).parent().find('.content').html();
 		}
+	});
+
+	jQuery('body').on('shown.bs.popover', function(){
+		jQuery('.select2-bootstrap').select2();
+
+		jQuery('.jqui-multiselect').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
 	});
 
 	if ( jQuery("table.table-selectable").length == 0 ) {
@@ -384,6 +390,22 @@ jQuery(document).ready(function(jQuery) {
 
 			toggleButtons();
 		});
+
+	}
+
+	// See https://github.com/twbs/bootstrap/issues/10044
+	if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+		document._oldGetElementById = document.getElementById;
+		document.getElementById = function(id) {
+
+			if(id === undefined || id === null || id === '') {
+
+				return undefined;
+
+			}
+
+			return document._oldGetElementById(id);
+		};
 
 	}
 });
