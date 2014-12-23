@@ -1180,7 +1180,7 @@ jQuery(document).ready(function(jQuery) {
 							<p>Thank you for choosing AEC!</p>
 							<div class="alert alert-success" style="margin-top: 24px; padding-right: 14px;">
 								<p>If you use AEC, please post a rating and a review at the Joomla! Extensions Directory:</p>
-								<p><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><?php echo aecHTML::Icon( 'heart', true ); ?>&nbsp;Go there now</a></p>
+								<p><a href="http://bit.ly/aecjedvote" target="_blank" class="btn btn-success" ><?php echo aecHTML::Icon( 'heart' ); ?>&nbsp;Go there now</a></p>
 							</div>
 						</div>
 						<div class="col-sm-4">
