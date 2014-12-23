@@ -227,6 +227,8 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery('.jqui-multiselect').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
 
+	jQuery('.select2-bootstrap').select2();
+
 	jQuery('#drilldown').menu({
 		content: jQuery('#drilldown').next().html(),
 		backLink: false,

@@ -241,7 +241,7 @@ class aecHTML
 				$return .= '<div class="col-sm-8">';
 				if ( strpos( $this->lists[$name], '[]"' ) ) {
 					$return .= '<input type="hidden" name="' . $name . '" value="0" />';
-					$return .= str_replace( '<select', '<select class="jqui-multiselect"', $this->lists[$name] );
+					$return .= str_replace( '<select', '<select class="select2-bootstrap"', $this->lists[$name] );
 				} else {
 					$return .= str_replace( '<select', '<select class="form-control"', $this->lists[$name] );
 				}
