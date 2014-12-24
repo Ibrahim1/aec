@@ -1153,7 +1153,7 @@ function arrayValueDefault( $array, $name, $default )
 		if ( is_array( $array[$name] ) ) {
 			$selected = array();
 			foreach ( $array[$name] as $value ) {
-				$selected[]->value = $value;
+				$selected[] = (object) array( 'value' => $value );
 			}
 
 			return $selected;
