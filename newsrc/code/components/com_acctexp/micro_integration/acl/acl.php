@@ -93,7 +93,7 @@ class mi_acl
 			if ( !empty( $this->settings[$name] ) ) {
 				if ( is_array( $this->settings[$name] ) ) {
 					foreach ( $this->settings[$name] as $value ) {
-						$selected[]->value = $value;
+						$selected[] = (object) array( 'value' => $value );
 					}
 				} else {
 					$selected = $this->settings[$name];
@@ -113,7 +113,7 @@ class mi_acl
 			$selected = array();
 			if ( !empty( $this->settings[$groupname] ) ) {
 				foreach ( $this->settings[$groupname] as $value ) {
-					$selected[]->value = $value;
+					$selected[] = (object) array( 'value' => $value );
 				}
 			}
 

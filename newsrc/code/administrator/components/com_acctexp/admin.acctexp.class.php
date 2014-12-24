@@ -1162,7 +1162,7 @@ function arrayValueDefault( $array, $name, $default )
 
 			$selected = array();
 			foreach ( $list as $value ) {
-				$selected[]->value = $value;
+				$selected[] = (object) array( 'value' => $value );
 			}
 
 			return $selected;

@@ -49,7 +49,7 @@ class mi_flexiaccess
 		if ( !empty( $this->settings['enroll_group'] ) ) {
 			$selected_enroll_gps = array();
 			foreach ( $this->settings['enroll_group'] as $enroll_group ) {
-				$selected_enroll_gps[]->value = $enroll_group;
+				$selected_enroll_gps[] = (object) array( 'value' => $enroll_group );
 			}
 		} else {
 			$selected_enroll_gps		= '';
@@ -58,7 +58,7 @@ class mi_flexiaccess
 		if ( !empty( $this->settings['enroll_group_exp'] ) ) {
 			$selected_enroll_gps_exp = array();
 			foreach ( $this->settings['enroll_group_exp'] as $enroll_group_exp) {
-				$selected_enroll_gps_exp[]->value = $enroll_group_exp;
+				$selected_enroll_gps_exp[] = (object) array( 'value' => $enroll_group_exp );
 			}
 		} else {
 			$selected_enroll_gps_exp		= '';

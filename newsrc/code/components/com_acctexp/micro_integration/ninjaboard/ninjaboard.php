@@ -44,7 +44,7 @@ class mi_ninjaboard
 			$selected_groups_exclude = array();
 
 			foreach ( $this->settings['groups_exclude'] as $group_exclude ) {
-				$selected_groups_exclude[]->value = $group_exclude;
+				$selected_groups_exclude[] = (object) array( 'value' => $group_exclude );
 			}
 		} else {
 			$selected_groups_exclude			= '';

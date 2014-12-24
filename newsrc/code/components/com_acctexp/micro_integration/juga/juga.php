@@ -48,7 +48,7 @@ class mi_juga
 		if ( !empty( $this->settings['enroll_group'] ) ) {
 			$selected_enroll_gps = array();
 			foreach ( $this->settings['enroll_group'] as $enroll_group ) {
-				$selected_enroll_gps[]->value = $enroll_group;
+				$selected_enroll_gps[] = (object) array( 'value' => $enroll_group );
 			}
 		} else {
 			$selected_enroll_gps		= '';
@@ -57,7 +57,7 @@ class mi_juga
 		if ( !empty( $this->settings['remove_selected'] ) ) {
 			$selected_remove_gps = array();
 			foreach ( $this->settings['remove_selected'] as $remove_selected) {
-				$selected_remove_gps[]->value = $remove_selected;
+				$selected_enroll_gps[] = (object) array( 'value' => $remove_selected );
 			}
 		} else {
 			$selected_remove_gps		= '';
@@ -66,7 +66,7 @@ class mi_juga
 		if ( !empty( $this->settings['remove_selected_exp'] ) ) {
 			$selected_remove_gps_exp = array();
 			foreach ( $this->settings['remove_selected_exp'] as $remove_selected_exp) {
-				$selected_remove_gps_exp[]->value = $remove_selected_exp;
+				$selected_remove_gps_exp[] = (object) array( 'value' => $remove_selected_exp );
 			}
 		} else {
 			$selected_remove_gps_exp		= '';
@@ -75,7 +75,7 @@ class mi_juga
 		if ( !empty( $this->settings['enroll_group_exp'] ) ) {
 			$selected_enroll_gps_exp = array();
 			foreach ( $this->settings['enroll_group_exp'] as $enroll_group_exp) {
-				$selected_enroll_gps_exp[]->value = $enroll_group_exp;
+				$selected_remove_gps_exp[] = (object) array( 'value' => $enroll_group_exp );
 			}
 		} else {
 			$selected_enroll_gps_exp		= '';

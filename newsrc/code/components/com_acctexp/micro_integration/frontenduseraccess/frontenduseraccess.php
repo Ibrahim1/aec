@@ -82,7 +82,7 @@ class mi_frontenduseraccess
 			$fua_groups = array();
 
 			foreach ( $this->settings['group'] as $temp ) {
-				$fua_groups[]->value = $temp;
+				$fua_groups[] = (object) array( 'value' => $temp );
 			}
 		} else {
 			$fua_groups	= '';
@@ -92,7 +92,7 @@ class mi_frontenduseraccess
 			$fua_groups_remove = array();
 
 			foreach ( $this->settings['group_remove'] as $temp ) {
-				$fua_groups_remove[]->value = $temp;
+				$fua_groups_remove[] = (object) array( 'value' => $temp );
 			}
 		} else {
 			$fua_groups_remove	= '';
@@ -102,7 +102,7 @@ class mi_frontenduseraccess
 			$fua_groups_exp = array();
 
 			foreach ( $this->settings['group_exp'] as $temp ) {
-				$fua_groups_exp[]->value = $temp;
+				$fua_groups_exp[] = (object) array( 'value' => $temp );
 			}
 		} else {
 			$fua_groups_exp	= '';
@@ -112,7 +112,7 @@ class mi_frontenduseraccess
 			$fua_groups_exp_remove = array();
 
 			foreach ( $this->settings['group_exp_remove'] as $temp ) {
-				$fua_groups_exp_remove[]->value = $temp;
+				$fua_groups_exp_remove[] = (object) array( 'value' => $temp );
 			}
 		} else {
 			$fua_groups_exp_remove	= '';
