@@ -1756,7 +1756,7 @@ jQuery(document).ready(function(jQuery) {
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="col-sm-12">
-							<div class="table-attachment table-attachment-top">
+							<!--<div class="table-attachment table-attachment-top">
 								<div class="filter-sub">
 									<label class="col-sm-4 control-label">With selected users:</label>
 									<div class="control"><?php echo $lists['planid']; ?></div>
@@ -1765,7 +1765,7 @@ jQuery(document).ready(function(jQuery) {
 								<div style="float: right; width: 40%;">
 									<input type="button" class="btn btn-primary" onclick="document.adminForm.submit();" value="<?php echo JText::_('AEC_CMN_APPLY'); ?>"/>
 								</div>
-							</div>
+							</div>-->
 							<table class="table table-hover table-striped table-selectable">
 								<thead><tr>
 									<th class="text-center">

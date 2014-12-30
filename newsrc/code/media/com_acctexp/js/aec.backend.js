@@ -414,6 +414,8 @@ jQuery(document).ready(function(jQuery) {
 		jQuery("#searchclear").click(function(){
 			jQuery("#aec-listsearch input").val('');
 
+			jQuery("#searchclear").addClass('disabled');
+
 			jQuery("#adminForm").submit();
 		});
 
