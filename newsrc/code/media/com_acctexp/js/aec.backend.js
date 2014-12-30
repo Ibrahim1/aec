@@ -391,6 +391,32 @@ jQuery(document).ready(function(jQuery) {
 			toggleButtons();
 		});
 
+		var searchTimer;
+
+		function searchDelToggle() {
+			if ( jQuery("#aec-listsearch input").val() ) {
+				jQuery("#searchclear").removeClass('disabled');
+			} else {
+				jQuery("#searchclear").addClass('disabled')
+			}
+		}
+
+		searchDelToggle();
+
+		jQuery("#aec-listsearch input").on({
+			'keyup' : function(e) {
+				clearTimeout(searchTimer);
+
+				searchTimer = setTimeout(searchDelToggle, "25");
+			}
+		});
+
+		jQuery("#searchclear").click(function(){
+			jQuery("#aec-listsearch input").val('');
+
+			jQuery("#adminForm").submit();
+		});
+
 	}
 
 	// See https://github.com/twbs/bootstrap/issues/10044

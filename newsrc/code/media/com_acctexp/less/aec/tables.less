@@ -87,3 +87,21 @@ table.table-selectable {
 		opacity: 1;
 	}
 }
+
+#searchclear {
+	.transition(opacity 100ms ease-in-out);
+
+	position: absolute;
+	right: 64px;
+	top: 2px;
+	bottom: 0;
+	height: 14px;
+	margin: auto;
+	font-size: 14px;
+	cursor: pointer;
+	color: #ccc;
+
+	&.disabled {
+		opacity: 0;
+	}
+}

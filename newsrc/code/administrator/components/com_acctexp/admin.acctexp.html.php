@@ -158,6 +158,7 @@ class HTML_myCommon
 								<div id="aec-listsearch" class="form-group">
 									<div class="input-group">
 										<input class="form-control input-lg" type="text" name="search" placeholder="<?php echo $placeholder; ?>" value="<?php echo $value; ?>" />
+										<span id="searchclear" class="glyphicon glyphicon-remove"></span>
 							<span class="input-group-btn">
 								<a class="btn btn-lg btn-primary" onclick="document.adminForm.submit();"><i class="glyphicon glyphicon-search"></i></a>
 							</span>
@@ -1859,7 +1860,6 @@ jQuery(document).ready(function(jQuery) {
 		);
 
 		?>
-
 			<input type="hidden" name="orderby_mi" value="<?php echo $orderby; ?>"/>
 		<?php if ( empty( $rows )  && !$filtered ) { ?>
 			<div class="clearfix"></div>
