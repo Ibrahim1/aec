@@ -157,6 +157,7 @@ class HTML_myCommon
 							<?php if ( $search !== false ) { ?>
 								<div id="aec-listsearch" class="form-group">
 									<div class="input-group">
+										<input type="hidden" name="previous-search" value="<?php echo $value; ?>"/>
 										<input class="form-control input-lg" type="text" name="search" placeholder="<?php echo $placeholder; ?>" value="<?php echo $value; ?>" />
 										<span id="searchclear" class="glyphicon glyphicon-remove"></span>
 							<span class="input-group-btn">

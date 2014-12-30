@@ -394,7 +394,7 @@ jQuery(document).ready(function(jQuery) {
 		var searchTimer;
 
 		function searchDelToggle() {
-			if ( jQuery("#aec-listsearch input").val() ) {
+			if ( jQuery("#aec-listsearch input[type*='text']").val() ) {
 				jQuery("#searchclear").removeClass('disabled');
 			} else {
 				jQuery("#searchclear").addClass('disabled')
@@ -412,11 +412,13 @@ jQuery(document).ready(function(jQuery) {
 		});
 
 		jQuery("#searchclear").click(function(){
-			jQuery("#aec-listsearch input").val('');
+			jQuery("#aec-listsearch input[type*='text']").val('');
 
 			jQuery("#searchclear").addClass('disabled');
 
-			jQuery("#adminForm").submit();
+			if ( jQuery("#aec-listsearch input[type*='hidden']").val() ) {
+				jQuery("#adminForm").submit();
+			}
 		});
 
 	}
