@@ -448,9 +448,9 @@ jQuery(document).ready(function(jQuery) {
 			)
 		);
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, '' );
-
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'edit', $metaUser->cmsUser->username . ' (' . JText::_('AEC_CMN_ID') . ': ' . $metaUser->userid . ')', false, $buttons, '' );
 
 		?><div class="col-sm-12"><?php
 
@@ -1428,9 +1428,9 @@ jQuery(document).ready(function(jQuery) {
 			'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 		);
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings', '', false, $buttons, 'Settings' );
+		HTML_myCommon::startForm();
 
-		HTML_myCommon::startForm(); ?>
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'settings', '', false, $buttons, 'Settings' ); ?>
 
 		<div class="container">
 			<div class="row">
@@ -1476,8 +1476,8 @@ jQuery(document).ready(function(jQuery) {
 	static function listProcessors( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon('aec-wrap-mesh');
-		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'processors', '', false, 'list_short', 'Processor' );
 		HTML_myCommon::startForm();
+		HTML_myCommon::getHeader( 'PROCESSORS_TITLE', 'processors', '', false, 'list_short', 'Processor' );
 
 		if ( empty( $rows ) ) { ?>
 			<div class="clearfix"></div>
@@ -1545,9 +1545,10 @@ jQuery(document).ready(function(jQuery) {
 		}
 
 		HTML_myCommon::startCommon('aec-wrap-mesh', 'aec-wrap-inner-light');
-		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'processors', $add, false, 'edit', 'Processor' );
 
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'processors', $add, false, 'edit', 'Processor' );
 
 		?>
 		<div class="col-sm-8 col-sm-offset-2">
@@ -1570,8 +1571,8 @@ jQuery(document).ready(function(jQuery) {
 	static function listTemplates( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon('aec-wrap-cream');
-		HTML_myCommon::getHeader( 'TEMPLATES_TITLE', 'templates' );
 		HTML_myCommon::startForm();
+		HTML_myCommon::getHeader( 'TEMPLATES_TITLE', 'templates' );
 		?>
 		<div class="container-fluid">
 			<div class="row">
@@ -1626,9 +1627,9 @@ jQuery(document).ready(function(jQuery) {
 			 'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' )
 		);
 
-		HTML_myCommon::getHeader( $aecHTML->name, 'templates', '', false, $buttons, 'Template' );
-
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( $aecHTML->name, 'templates', '', false, $buttons, 'Template' );
 
 		?><div class="col-sm-12"><?php
 
@@ -1842,8 +1843,12 @@ jQuery(document).ready(function(jQuery) {
 
 	static function listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
 	{
-		HTML_myCommon::startCommon('aec-wrap-maze');
-		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', $search, '', 'list', 'MicroIntegration' );
+		HTML_myCommon::startCommon('aec-wrap-maze'); ?>
+
+		<form action="index.php" method="post" name="adminForm" id="adminForm">
+
+		<?php
+		HTML_myCommon::getHeader( 'MI_TITLE', 'microintegrations', '', $search, 'list', 'MicroIntegration' );
 
 		$th_list = array(
 			array('name', 'MI_NAME'),
@@ -1854,7 +1859,7 @@ jQuery(document).ready(function(jQuery) {
 		);
 
 		?>
-		<form action="index.php" method="post" name="adminForm" id="adminForm">
+
 			<input type="hidden" name="orderby_mi" value="<?php echo $orderby; ?>"/>
 		<?php if ( empty( $rows )  && !$filtered ) { ?>
 			<div class="clearfix"></div>
@@ -2104,8 +2109,8 @@ jQuery(document).ready(function(jQuery) {
 	static function listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary');
-		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', '', $search, 'list', 'SubscriptionPlan' );
 		HTML_myCommon::startForm();
+		HTML_myCommon::getHeader( 'PAYPLANS_TITLE', 'plans', '', $search, 'list', 'SubscriptionPlan' );
 
 		$th_list = array(
 			array('name', 'PAYPLAN_NAME', 'left', array('filter_group')),
@@ -2272,9 +2277,9 @@ jQuery(document).ready(function(jQuery) {
 			)
 		);
 
-		HTML_myCommon::getHeader( '', 'plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW'), false, $buttons, 'SubscriptionPlan' );
-
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( '', 'plans', $row->id ? $row->getProperty( 'name' ) : JText::_('AEC_HEAD_PLAN_INFO') . JText::_('AEC_CMN_NEW'), false, $buttons, 'SubscriptionPlan' );
 
 		?><div class="col-sm-12"><?php
 
@@ -2597,9 +2602,10 @@ jQuery(document).ready(function(jQuery) {
 	static function listItemGroups( $rows, $pageNav, $option, $orderby, $search )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary');
-		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups', '', $search, 'list', 'ItemGroup' );
 
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'ITEMGROUPS_TITLE', 'itemgroups', '', $search, 'list', 'ItemGroup' );
 
 		$th_list = array(
 			array('name', 'ITEMGROUP_NAME'),
@@ -2677,9 +2683,10 @@ jQuery(document).ready(function(jQuery) {
 	static function editItemGroup( $option, $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary', 'aec-wrap-inner-light');
-		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'ItemGroup' );
 
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_ITEMGROUP_INFO', 'itemgroups', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'ItemGroup' );
 
 		?><div class="col-sm-12"><?php
 
@@ -2834,9 +2841,10 @@ jQuery(document).ready(function(jQuery) {
 	static function listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby )
 	{
 		HTML_myCommon::startCommon('aec-wrap-cream');
-		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons', '', $search, 'list', 'Coupon' );
 
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'COUPON_TITLE', 'coupons', '', $search, 'list', 'Coupon' );
 
 		$th_list = array(
 			array('name', 'COUPON_NAME'),
@@ -2917,9 +2925,9 @@ jQuery(document).ready(function(jQuery) {
 
 		JHTML::_('behavior.calendar');
 
-		HTML_myCommon::getHeader( 'AEC_COUPON', 'coupons', ($row->id ? $row->name : JText::_('AEC_CMN_NEW')), false, 'edit', 'Coupon' );
-
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'AEC_COUPON', 'coupons', ($row->id ? $row->name : JText::_('AEC_CMN_NEW')), false, 'edit', 'Coupon' );
 
 		?><div class="col-sm-12"><?php
 
@@ -3057,6 +3065,9 @@ jQuery(document).ready(function(jQuery) {
 	static function viewInvoices( $option, $rows, $search, $pageNav, $orderby )
 	{
 		HTML_myCommon::startCommon('aec-wrap-net');
+
+		HTML_myCommon::startForm();
+
 		HTML_myCommon::getHeader( 'INVOICE_TITLE', 'invoices', '', $search );
 
 		$th_list = array(
@@ -3071,8 +3082,6 @@ jQuery(document).ready(function(jQuery) {
 			array('amount', 'INVOICE_AMOUNT'),
 			array('currency', 'INVOICE_CURRENCY')
 		);
-
-		HTML_myCommon::startForm();
 
 		?>
 		<input type="hidden" name="orderby_invoices" value="<?php echo $orderby; ?>"/>
@@ -3131,9 +3140,10 @@ jQuery(document).ready(function(jQuery) {
 	static function editInvoice( $option, $aecHTML, $id )
 	{
 		HTML_myCommon::startCommon('aec-wrap-net', 'aec-wrap-inner-light');
-		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ), false, 'edit', 'Invoice' );
 
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ), false, 'edit', 'Invoice' );
 
 		?>
 		<div class="col-sm-8 col-sm-offset-2">
@@ -3156,9 +3166,10 @@ jQuery(document).ready(function(jQuery) {
 	static function viewHistory( $option, $rows, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
-		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history', '', $search );
 
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'HISTORY_TITLE2', 'history', '', $search );
 
 		?>
 		<div class="container-fluid">
@@ -3219,9 +3230,10 @@ jQuery(document).ready(function(jQuery) {
 	static function eventlog( $option, $events, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
-		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog', '', $search );
 
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_LOG', 'eventlog', '', $search );
 
 		?>
 		<div class="container-fluid">
@@ -3283,9 +3295,12 @@ jQuery(document).ready(function(jQuery) {
 		global $aecConfig;
 
 		HTML_myCommon::startCommon('aec-wrap-dots');
+
+		HTML_myCommon::startForm();
+
 		HTML_myCommon::getHeader( 'AEC_HEAD_STATS', 'stats' );
 
-		HTML_myCommon::startForm(); ?>
+		?>
 		<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root(); ?>media/com_acctexp/css/admin.stats.css" />
 		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/charts.js"></script>
 		<script type="text/javascript" src="<?php echo JURI::root(true) . '/media/' . $option; ?>/js/stats/grouped_sales.js"></script>
@@ -3749,9 +3764,10 @@ jQuery(document).ready(function(jQuery) {
 		global $aecConfig;
 
 		HTML_myCommon::startCommon('aec-wrap-dots');
-		HTML_myCommon::getHeader( 'AEC_HEAD_UPDATEEXTEND', 'extensions' );
 
 		HTML_myCommon::startForm();
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_UPDATEEXTEND', 'extensions' );
 
 		$vaccount = !empty( $aecConfig->cfg['vaccount_apikey'] ) && !empty( $aecConfig->cfg['vaccount_apicode'] );
 
@@ -3802,9 +3818,11 @@ jQuery(document).ready(function(jQuery) {
 	{
 		JHTML::_('behavior.calendar');
 		HTML_myCommon::startCommon('aec-wrap-grid');
-		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox', ( !empty( $cmd ) ? $title : '' ) );
 
 		HTML_myCommon::startForm(true);
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_TOOLBOX', 'toolbox', ( !empty( $cmd ) ? $title : '' ) );
+
 		?>
 		<div class="container">
 			<div class="col-sm-12">

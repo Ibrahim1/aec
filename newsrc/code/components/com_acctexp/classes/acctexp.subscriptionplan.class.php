@@ -463,13 +463,24 @@ class SubscriptionPlanHandler
 		return $available_plans;
 	}
 
-	static function getFullPlanList( $limitstart=false, $limit=false, $subselect=array(), $order='ordering' )
+	static function getFullPlanList( $limitstart=false, $limit=false, $subselect=array(), $order='ordering', $search='' )
 	{
 		$db = JFactory::getDBO();
 
+
+		$where = array();
+
+		if ( isset( $search ) && $search!= '' ) {
+			$where[] = "(`name` LIKE '%$search%' OR `desc` LIKE '%$search%')";
+		}
+
+		if ( !empty( $subselect ) ) {
+			$where[] = "(id IN (" . implode( ',', $subselect ) . "))";
+		}
+
 		$query = 'SELECT *'
 				. ' FROM #__acctexp_plans'
-				. ( empty( $subselect ) ? '' : ' WHERE id IN (' . implode( ',', $subselect ) . ')' )
+				. (count( $where ) ? ' WHERE ' . implode( ' AND ', $where ) : '' )
 				. ' GROUP BY `id`'
 				. ' ORDER BY `' . str_replace(' ', '` ', $order)
 			 	;

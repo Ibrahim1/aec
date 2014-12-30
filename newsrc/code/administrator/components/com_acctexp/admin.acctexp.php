@@ -2430,7 +2430,7 @@ function listSubscriptionPlans( $option )
 	$pageNav = new bsPagination( $total, $limitstart, $limit );
 
  	// get the subset (based on limits) of records
-	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect, $orderby );
+	$rows = SubscriptionPlanHandler::getFullPlanList( $pageNav->limitstart, $pageNav->limit, $subselect, $orderby, $search );
 
 	$gcolors = array();
 
@@ -3357,14 +3357,15 @@ function listItemGroups( $option )
  	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
 
-	$search			= $app->getUserStateFromRequest( "search_groups{$option}", 'search', '' );
-	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
+	$search = $app->getUserStateFromRequest( "search_groups{$option}", 'search', '' );
+	$search = xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	$orderby = $app->getUserStateFromRequest( "orderby_groups{$option}", 'orderby_groups', 'name ASC' );
 
  	// get the total number of records
  	$query = 'SELECT count(*)'
 		 	. ' FROM #__acctexp_itemgroups'
+			. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
 		 	;
  	$db->setQuery( $query );
  	$total = $db->loadResult();
@@ -3379,6 +3380,7 @@ function listItemGroups( $option )
  	// get the subset (based on limits) of records
  	$query = 'SELECT *'
 		. ' FROM #__acctexp_itemgroups'
+		. ( empty( $search ) ? '' : ' WHERE (`name` LIKE \'%'.$search.'%\')' )
 		. ' GROUP BY `id`'
 		. ' ORDER BY `' . str_replace(' ', '` ', $orderby)
 		. ' LIMIT ' . $pageNav->limitstart . ',' . $pageNav->limit
@@ -3789,6 +3791,7 @@ function listMicroIntegrations( $option )
 	$query = 'SELECT count(*)'
 		 	. ' FROM #__acctexp_microintegrations'
 		 	. ' WHERE `hidden` = \'0\''
+			. ( empty( $search ) ? '' : ' AND (`name` LIKE \'%'.$search.'%\' OR `desc` LIKE \'%'.$search.'%\' OR `class_name` LIKE \'%'.$search.'%\')' )
 		 	;
 	$db->setQuery( $query );
 	$total = $db->loadResult();
@@ -3804,7 +3807,7 @@ function listMicroIntegrations( $option )
 	$where[] = '`hidden` = \'0\'';
 
 	if ( isset( $search ) && $search!= '' ) {
-		$where[] = "(name LIKE '%$search%' OR class_name LIKE '%$search%')";
+		$where[] = "(`name` LIKE '%$search%' OR `desc` LIKE '%$search%' OR `class_name` LIKE '%$search%')";
 	}
 
 	if ( isset( $filter_planid ) && $filter_planid > 0 ) {
@@ -4289,6 +4292,7 @@ function listCoupons( $option )
 
 	$query = 'SELECT count(*)'
 			. ' FROM #__acctexp_coupons'
+			. ( empty( $search ) ? '' : "(`coupon_code` LIKE '%$search%' OR `name` LIKE '%$search%' OR `desc` LIKE '%$search%')" )
 			;
 	$db->setQuery( $query );
 	$total += $db->loadResult();
