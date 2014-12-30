@@ -145,30 +145,34 @@ class HTML_myCommon
 		}
 		?>
 		<div class="container-fluid adminheading">
-			<div class="col-sm-12">
-				<div class="col-sm-6">
-					<?php HTML_myCommon::getSymbol( $image ); ?>
-					<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( ( !empty( $page ) && !empty( $extratext ) ) ? ' - ' : '' ) . ( !empty( $extratext ) ? $extratext : '' ); ?></h2>
-				</div>
-
-					<div class="col-sm-6">
-						<?php if ( $search !== false ) { ?>
-						<div class="form-group pull-right">
-							<div class="input-group">
-								<input class="form-control input-lg" type="text" name="search" placeholder="<?php echo $placeholder; ?>" value="<?php echo $value; ?>" />
-								<span class="input-group-btn">
-									<a class="btn btn-lg btn-primary" onclick="document.adminForm.submit();"><i class="glyphicon glyphicon-search"></i></a>
-								</span>
-							</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="row">
+						<div class="col-sm-4 col-md-5">
+							<?php HTML_myCommon::getSymbol( $image ); ?>
+							<h2><?php echo ( empty($page) ? '' : JText::_($page) ) . ( ( !empty( $page ) && !empty( $extratext ) ) ? ' - ' : '' ) . ( !empty( $extratext ) ? $extratext : '' ); ?></h2>
 						</div>
-						<?php } ?>
 
-						<?php if ( !empty($buttons) && $object !== false ) {
-							HTML_myCommon::getButtons( $buttons, $object );
-						} ?>
+						<div class="col-sm-4 col-md-2">
+							<?php if ( $search !== false ) { ?>
+								<div id="aec-listsearch" class="form-group">
+									<div class="input-group">
+										<input class="form-control input-lg" type="text" name="search" placeholder="<?php echo $placeholder; ?>" value="<?php echo $value; ?>" />
+							<span class="input-group-btn">
+								<a class="btn btn-lg btn-primary" onclick="document.adminForm.submit();"><i class="glyphicon glyphicon-search"></i></a>
+							</span>
+									</div>
+								</div>
+							<?php } ?>
+						</div>
+
+						<div class="col-sm-4 col-md-5">
+							<?php if ( !empty($buttons) && $object !== false ) {
+								HTML_myCommon::getButtons( $buttons, $object );
+							} ?>
+						</div>
 					</div>
-
-
+				</div>
 			</div>
 		</div>
 	<?php
