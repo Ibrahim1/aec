@@ -221,14 +221,6 @@ jQuery(document).ready(function(jQuery) {
 	jQuery('.jqui-datepicker').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, showWeek: true, showOtherMonths: true, selectOtherMonths: true });
 	jQuery('.jqui-datetimepicker').datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss', changeMonth: true, changeYear: true, showWeek: true, showOtherMonths: true, selectOtherMonths: true, showSecond: true, hourGrid: 6, minuteGrid: 10, secondGrid: 10  });
 
-	jQuery('.jqui-multiselect').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
-
-	jQuery('.select2-bootstrap').select2();
-
-	// Make Select2 selects work in bootstrap modals and popovers
-	jQuery.fn.modal.Constructor.prototype.enforceFocus = function() {};
-	jQuery.fn.popover.Constructor.prototype.enforceFocus = function() {};
-
 	jQuery('#drilldown').menu({
 		content: jQuery('#drilldown').next().html(),
 		backLink: false,
@@ -295,21 +287,45 @@ jQuery(document).ready(function(jQuery) {
 		}
 	);
 
+	var showPopover = jQuery.fn.popover.Constructor.prototype.show;
+	jQuery.fn.popover.Constructor.prototype.show = function() {
+		showPopover.call(this);
+		if (this.options.showCallback) {
+			this.options.showCallback.call(this);
+		}
+	}
+
 	jQuery('.popover-markup>.trigger').popover({
-		html: true,
-		title: function () {
+		placement:'right',
+		html : true,
+		title: function() {
 			return jQuery(this).parent().find('.head').html();
 		},
-		content: function () {
+		content: function() {
 			return jQuery(this).parent().find('.content').html();
-		}
+		},
+		showCallback : function() {
+			jQuery('.popover-content .select2-bootstrap').select2({
+				containerCss : {"display":"block"},
+				allowClear: true,
+			});
+
+			jQuery('.popover-content .jqui-multiselect').multiselect({
+				noneSelectedText: 'Select',
+				selectedList: 8,
+				appendTo: '#status-group-select'
+			});
+		},
+
 	});
 
-	jQuery('body').on('shown.bs.popover', function(){
-		jQuery('.select2-bootstrap').select2();
+	jQuery('.jqui-multiselect:not(.content .jqui-multiselect)').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
 
-		jQuery('.jqui-multiselect').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
-	});
+	jQuery('.select2-bootstrap:not(.content .select2-bootstrap)').select2();
+
+	// Make Select2 selects work in bootstrap modals and popovers
+	/*jQuery.fn.modal.Constructor.prototype.enforceFocus = function() {};
+	jQuery.fn.popover.Constructor.prototype.enforceFocus = function() {};*/
 
 	if ( jQuery("table.table-selectable").length == 0 ) {
 		jQuery('#adminForm').one('click', function() {
@@ -423,6 +439,7 @@ jQuery(document).ready(function(jQuery) {
 
 	}
 
+	// Fixing issue with older jQuery and bootstrap.js in FF
 	// See https://github.com/twbs/bootstrap/issues/10044
 	if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
 		document._oldGetElementById = document.getElementById;

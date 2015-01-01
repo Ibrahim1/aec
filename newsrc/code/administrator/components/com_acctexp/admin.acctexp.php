@@ -1291,34 +1291,6 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	$db->setQuery( 'SET SQL_BIG_SELECTS=0');
 	$db->query();
 
-	$sel = array();
-	if ( $set_group != "manual" ) {
-		$sel[] = JHTML::_('select.option', 'expiration ASC',	JText::_('EXP_ASC') );
-		$sel[] = JHTML::_('select.option', 'expiration DESC',	JText::_('EXP_DESC') );
-	}
-
-	$sel[] = JHTML::_('select.option', 'name ASC',			JText::_('NAME_ASC') );
-	$sel[] = JHTML::_('select.option', 'name DESC',			JText::_('NAME_DESC') );
-	$sel[] = JHTML::_('select.option', 'lastname ASC',		JText::_('LASTNAME_ASC') );
-	$sel[] = JHTML::_('select.option', 'lastname DESC',		JText::_('LASTNAME_DESC') );
-	$sel[] = JHTML::_('select.option', 'username ASC',		JText::_('LOGIN_ASC') );
-	$sel[] = JHTML::_('select.option', 'username DESC',		JText::_('LOGIN_DESC') );
-	$sel[] = JHTML::_('select.option', 'signup_date ASC',	JText::_('SIGNUP_ASC') );
-	$sel[] = JHTML::_('select.option', 'signup_date DESC',	JText::_('SIGNUP_DESC') );
-
-	if ( $set_group != "manual" ) {
-		$sel[] = JHTML::_('select.option', 'lastpay_date ASC',	JText::_('LASTPAY_ASC') );
-		$sel[] = JHTML::_('select.option', 'lastpay_date DESC',	JText::_('LASTPAY_DESC') );
-		$sel[] = JHTML::_('select.option', 'plan_name ASC',		JText::_('PLAN_ASC') );
-		$sel[] = JHTML::_('select.option', 'plan_name DESC',	JText::_('PLAN_DESC') );
-		$sel[] = JHTML::_('select.option', 'status ASC',		JText::_('STATUS_ASC') );
-		$sel[] = JHTML::_('select.option', 'status DESC',		JText::_('STATUS_DESC') );
-		$sel[] = JHTML::_('select.option', 'type ASC',			JText::_('TYPE_ASC') );
-		$sel[] = JHTML::_('select.option', 'type DESC',			JText::_('TYPE_DESC') );
-	}
-
-	$lists['orderNav'] = JHTML::_('select.genericlist', $sel, 'orderby_subscr', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'value', 'text', $orderby );
-
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
 			. ' FROM #__acctexp_plans'
@@ -1333,7 +1305,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	}
 	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
 
-	$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
+	$lists['filter_plan'] = '<select id="plan-filter-select" class="select2-bootstrap" name="filter_plan[]" multiple="multiple" size="5">';
 	foreach ( $db_plans as $plan ) {
 		$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected"' : '' ) . '/>' . $plan->name . '</option>';
 	}
@@ -1341,7 +1313,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$grouplist = ItemGroupHandler::getTree();
 
-	$lists['filter_group'] = '<select id="group-filter-select" name="filter_group[]" multiple="multiple" size="5">';
+	$lists['filter_group'] = '<select id="group-filter-select" class="select2-bootstrap" name="filter_group[]" multiple="multiple" size="5">';
 	foreach ( $grouplist as $glisti ) {
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
@@ -1361,7 +1333,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
 						);
 
-	$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';
+	$lists['groups'] = '<select id="status-group-select" class="select2-bootstrap" name="groups[]" multiple="multiple" size="5">';
 	foreach ( $status as $id => $txt ) {
 		$lists['groups'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected"' : '' ) . '/>' . $txt . '</option>';
 	}
@@ -4281,7 +4253,7 @@ function listCoupons( $option )
 
 	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
 	$limitstart = $app->getUserStateFromRequest( "viewconf{$option}limitstart", 'limitstart', 0 );
-	$search			= $app->getUserStateFromRequest( "search{$option}_coupons", 'search_coupons', '' );
+	$search			= $app->getUserStateFromRequest( "search{$option}_coupons", 'search', '' );
 	$search			= xJ::escape( $db, trim( strtolower( $search ) ) );
 
 	$filtered = !empty($search);

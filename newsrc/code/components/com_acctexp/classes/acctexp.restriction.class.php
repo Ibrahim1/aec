@@ -424,6 +424,8 @@ class aecRestrictionHelper
 
 		$types = array( 'plan', 'group' );
 
+		echo '<div class="row">';
+
 		foreach ( $types as $type ) {
 			foreach ( $stdvars as $block ) {
 				// non-* blocks only once
@@ -445,6 +447,8 @@ class aecRestrictionHelper
 				echo '</section></div>';
 			}
 		}
+
+		echo '</div>';
 	}
 }
 

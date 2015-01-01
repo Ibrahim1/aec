@@ -1685,7 +1685,7 @@ jQuery(document).ready(function(jQuery) {
 
 $js = '
 jQuery(document).ready(function(jQuery) {
-	jQuery("#status-group-select")
+	/*jQuery("#status-group-select")
 	.multiselect({	noneSelectedText: \'Select Status\',
 					selectedList: 8,
 					checkAll: function(event, ui){
@@ -1723,7 +1723,7 @@ jQuery(document).ready(function(jQuery) {
 		} else {
 			jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
 		}
-	});
+	});*/
 });
 ';
 		$document = JFactory::getDocument();
