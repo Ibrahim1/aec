@@ -293,21 +293,31 @@ jQuery(document).ready(function(jQuery) {
 		if (this.options.showCallback) {
 			this.options.showCallback.call(this);
 		}
-	}
+	};
 
 	jQuery('.popover-markup>.trigger').popover({
 		placement:'right',
-		html : true,
+		html: true,
 		title: function() {
 			return jQuery(this).parent().find('.head').html();
 		},
 		content: function() {
-			return jQuery(this).parent().find('.content').html();
+			var content = jQuery(this).parent().find('.content').html();
+
+			var inputs = jQuery('input', content);
+
+			inputs.each(inputs, function(el) {
+				if ( el.attr('name').substr(7) == 'UNSET__' ) {
+					el.attr('name', el.attr('name').substr(7));
+				}
+			});
+
+			return content;
 		},
-		showCallback : function() {
+		showCallback: function() {
 			jQuery('.popover-content .select2-bootstrap').select2({
 				containerCss : {"display":"block"},
-				allowClear: true,
+				allowClear: true
 			});
 
 			jQuery('.popover-content .jqui-multiselect').multiselect({
@@ -315,8 +325,26 @@ jQuery(document).ready(function(jQuery) {
 				selectedList: 8,
 				appendTo: '#status-group-select'
 			});
-		},
 
+			// Rename original field so it doesn't overwrite our stuff
+			var inputs = jQuery(this).parent().find('.content input');
+
+			inputs.each(inputs, function(el) {
+				if ( el.attr('name').substr(7) != 'UNSET__' ) {
+					el.attr('name', 'UNSET__' + el.attr('name'));
+				}
+			});
+		},
+		hideCallback: function() {
+			var inputs = jQuery(this).parent().find('.content input');
+
+			inputs.each(inputs, function(el) {
+				//el.val( jQuery() );
+				el.attr('name', el.attr('name').substr(7));
+
+				jQuery('#' + el.attr('id') ).val(el.val());
+			});
+		}
 	});
 
 	jQuery('.jqui-multiselect:not(.content .jqui-multiselect)').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
@@ -353,7 +381,7 @@ jQuery(document).ready(function(jQuery) {
 
 				select_all.removeClass('btn-warning').addClass('btn-success');
 			}
-		}
+		};
 
 		var selectRow = function(row) {
 			var el = jQuery(row);
@@ -375,7 +403,7 @@ jQuery(document).ready(function(jQuery) {
 			}
 
 			toggleButtons();
-		}
+		};
 
 		jQuery("table.table-selectable tbody tr").on("click", function(event){
 			selectRow(this);

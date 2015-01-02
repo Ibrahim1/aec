@@ -3893,7 +3893,8 @@ class aecAdmin
 			<?php
 				echo JText::_($text);
 				if ( !empty($filter) ) { ?>
-					<div class="popover-markup"> <a href="#" class="trigger"><i class="glyphicon glyphicon-filter"></i></a>
+					<div class="popover-markup">
+						<a href="#" class="trigger"><i class="glyphicon glyphicon-filter"></i></a>
 						<div class="head hide">Filter this column</div>
 						<div class="content hide">
 							<?php
