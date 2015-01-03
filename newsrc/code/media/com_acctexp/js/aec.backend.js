@@ -295,24 +295,31 @@ jQuery(document).ready(function(jQuery) {
 		}
 	};
 
-	jQuery('.popover-markup>.trigger').popover({
+	var popovers = jQuery('.popover-markup>.trigger').popover({
 		placement:'right',
 		html: true,
 		title: function() {
 			return jQuery(this).parent().find('.head').html();
 		},
 		content: function() {
-			var content = jQuery(this).parent().find('.content').html();
+			var content = jQuery(this).parent().find('.content' ).clone();
 
-			var inputs = jQuery('input', content);
+			content.find('select').replaceWith(function() {
+				var el = jQuery(this),
+					state = jQuery('#'+el.attr('id')).val();
 
-			inputs.each(inputs, function(el) {
-				if ( el.attr('name').substr(7) == 'UNSET__' ) {
-					el.attr('name', el.attr('name').substr(7));
+				if ( typeof state != 'undefined' && state != null ) {
+					el.find('option').attr("selected", false);
+
+					el.find("option[value='" + state.join("'],option[value='") + "']").attr("selected", "selected");
+				} else {
+					el.find('option').attr("selected", false);
 				}
+
+				return el.parent().html();
 			});
 
-			return content;
+			return content.html();
 		},
 		showCallback: function() {
 			jQuery('.popover-content .select2-bootstrap').select2({
@@ -322,30 +329,38 @@ jQuery(document).ready(function(jQuery) {
 
 			jQuery('.popover-content .jqui-multiselect').multiselect({
 				noneSelectedText: 'Select',
-				selectedList: 8,
-				appendTo: '#status-group-select'
+				selectedList: 8
 			});
 
 			// Rename original field so it doesn't overwrite our stuff
-			var inputs = jQuery(this).parent().find('.content input');
+			var inputs = jQuery(this.$element).parent().find('.content select');
 
-			inputs.each(inputs, function(el) {
+			inputs.each(function() {
+				var el = jQuery(this);
+
 				if ( el.attr('name').substr(7) != 'UNSET__' ) {
 					el.attr('name', 'UNSET__' + el.attr('name'));
 				}
 			});
-		},
-		hideCallback: function() {
-			var inputs = jQuery(this).parent().find('.content input');
-
-			inputs.each(inputs, function(el) {
-				//el.val( jQuery() );
-				el.attr('name', el.attr('name').substr(7));
-
-				jQuery('#' + el.attr('id') ).val(el.val());
-			});
 		}
 	});
+
+	popovers.on('hidden.bs.popover', function () {
+		var state = jQuery(this).parent().find('.popover select').val(),
+			inputs = jQuery(this).parent().find('.content select');
+
+		inputs.each(function() {
+			var el = jQuery(this);
+			el.attr('name', el.attr('name').substr(7));
+
+			if ( typeof state != 'undefined' && state != null ) {
+				el.val(state);
+			} else {
+				el.val(false);
+			}
+
+		});
+	})
 
 	jQuery('.jqui-multiselect:not(.content .jqui-multiselect)').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
 

@@ -3902,7 +3902,6 @@ class aecAdmin
 
 							foreach ( $filter as $f ) {
 								?>
-								<input type="hidden" name="<?php echo $f; ?>" value="" />
 								<div class="control"><?php echo $lists[$f]; ?></div>
 								<?php
 							}
