@@ -466,122 +466,123 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'user', true ); ?>
+		<div class="row">
 		<div class="col-sm-6">
 			<section class="paper">
 				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?></h4>
 				<div class="row">
-				<?php if ( $metaUser->hasSubscription ) { ?>
-					<div class="col-sm-6">
-						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></label>
-							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo $metaUser->focusSubscription->id; ?></p>
+					<?php if ( $metaUser->hasSubscription ) { ?>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID'); ?></label>
+								<div class="col-sm-8">
+									<p class="form-control-static"><?php echo $metaUser->focusSubscription->id; ?></p>
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></label>
-							<div class="col-sm-8">
-								<p class="form-control-static">#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</p>
+							<div class="form-group">
+								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN'); ?></label>
+								<div class="col-sm-8">
+									<p class="form-control-static">#<?php echo $metaUser->focusSubscription->plan; ?> - "<?php echo ( $metaUser->focusSubscription->plan ? HTML_AcctExp::SubscriptionName( $metaUser->focusSubscription->plan ) : '<span style="color:#FF0000;">' . JText::_('AEC_CMN_NOT_SET') . '</span>' ); ?>"</p>
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
-							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></p>
+							<div class="form-group">
+								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_STATUS'); ?></label>
+								<div class="col-sm-8">
+									<p class="form-control-static"><?php echo aecHTML::Icon( $icon ); ?>&nbsp;<?php echo $status; ?></p>
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></label>
-							<div class="col-sm-8">
-								<p class="form-control-static"><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></p>
+							<div class="form-group">
+								<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PAYMENT_PROC'); ?></label>
+								<div class="col-sm-8">
+									<p class="form-control-static"><?php echo $metaUser->focusSubscription->type ? $metaUser->focusSubscription->type : JText::_('AEC_CMN_NOT_SET'); ?></p>
+								</div>
 							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="ck_primary">
-								<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
-							</label>
-							<div class="col-sm-8">
-								<input type="hidden" value="0" name="ck_primary"/>
-								<div>
-									<input id="ck_primary" class="bootstrap-toggle" type="checkbox" name="ck_primary"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->primary; ?>"/>
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="ck_primary">
+									<span><?php echo JText::_('AEC_USER_CURR_SUBSCR_PLAN_PRIMARY'); ?></span>
+								</label>
+								<div class="col-sm-8">
+									<input type="hidden" value="0" name="ck_primary"/>
+									<div>
+										<input id="ck_primary" class="bootstrap-toggle" type="checkbox" name="ck_primary"<?php echo $metaUser->focusSubscription->primary ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->primary; ?>"/>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-sm-6">
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="expiration_current">
-								<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
-							</label>
-							<div class="col-sm-8">
-								<div>
-									<span><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></span>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="expiration_current">
+									<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
+								</label>
+								<div class="col-sm-8">
+									<div>
+										<span><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="ck_lifetime">
+									<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
+								</label>
+								<div class="col-sm-8">
+									<input type="hidden" value="0" name="ck_lifetime"/>
+									<div>
+										<input id="ck_lifetime" class="bootstrap-toggle" type="checkbox" name="ck_lifetime"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->lifetime; ?>"/>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
+								</label>
+								<div class="col-sm-8">
+									<div>
+										<input id="datepicker-expiration" name="expiration" class="jqui-datetimepicker" type="text" value="<?php echo $exp ?>">
+										<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="set_status">
+									<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
+								</label>
+								<div class="col-sm-8">
+									<div>
+										<?php echo $lists['set_status']; ?>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="assignto_plan">
+									<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
+								</label>
+								<div class="col-sm-8">
+									<div>
+										<?php echo $lists['assignto_plan']; ?>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="ck_lifetime">
-								<span><?php echo JText::_('AEC_USER_LIFETIME'); ?></span>
-							</label>
-							<div class="col-sm-8">
-								<input type="hidden" value="0" name="ck_lifetime"/>
-								<div>
-									<input id="ck_lifetime" class="bootstrap-toggle" type="checkbox" name="ck_lifetime"<?php echo $metaUser->focusSubscription->lifetime ? ' checked="checked" ' : ''; ?> value="1" data-state="<?php echo $metaUser->focusSubscription->lifetime; ?>"/>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label">
-								<span><?php echo JText::_('AEC_USER_RESET_EXP_DATE'); ?></span>
-							</label>
-							<div class="col-sm-8">
-								<div>
-									<input id="datepicker-expiration" name="expiration" class="jqui-datetimepicker" type="text" value="<?php echo $exp ?>">
-									<input type="hidden" name="expiration_check" id="expiration_check" value="<?php echo ( !empty( $exp ) ? $exp : date( 'Y-m-d H:i:s' ) ); ?>"/>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="set_status">
-								<span><?php echo JText::_('AEC_USER_RESET_STATUS'); ?></span>
-							</label>
-							<div class="col-sm-8">
-								<div>
-									<?php echo $lists['set_status']; ?>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="assignto_plan">
-								<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
-							</label>
-							<div class="col-sm-8">
-								<div>
-									<?php echo $lists['assignto_plan']; ?>
-								</div>
-							</div>
-						</div>
-					</div>
 
-				<?php } else { ?>
-					<div class="col-sm-12">
-						<div class="form-group">
-							<label class="col-sm-4 control-label" for="assignto_plan">
-								<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
-							</label>
-							<div class="col-sm-8">
-								<div>
-									<?php echo $lists['assignto_plan']; ?>
+					<?php } else { ?>
+						<div class="col-sm-12">
+							<div class="form-group">
+								<label class="col-sm-4 control-label" for="assignto_plan">
+									<span><?php echo JText::_('AEC_USER_ASSIGN_TO_PLAN'); ?></span>
+								</label>
+								<div class="col-sm-8">
+									<div>
+										<?php echo $lists['assignto_plan']; ?>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				<?php } ?>
+					<?php } ?>
 				</div>
 			</section>
 			<section class="paper">
 				<h4><?php echo JText::_('AEC_USER_SUBSCRIPTION'); ?> History</h4>
-					<?php if ( $metaUser->hasSubscription ) { ?>
+				<?php if ( $metaUser->hasSubscription ) { ?>
 					<div class="form-group">
 						<label class="col-sm-4 control-label"><?php echo JText::_('AEC_USER_PREV_SUBSCR_PLAN'); ?></label>
 						<div class="col-sm-8">
@@ -595,9 +596,9 @@ jQuery(document).ready(function(jQuery) {
 								<span>
 									<?php if ( !empty( $metaUser->meta->plan_history->used_plans ) ) { ?>
 										<ul>
-										<?php foreach ( $metaUser->meta->plan_history->used_plans as $used => $amount ) { ?>
-											<li>#<?php echo $used; ?> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? JText::_('AEC_USER_TIMES') : JText::_('AEC_USER_TIME') ); ?>)</li>
-										<?php } ?>
+											<?php foreach ( $metaUser->meta->plan_history->used_plans as $used => $amount ) { ?>
+												<li>#<?php echo $used; ?> - "<?php echo HTML_AcctExp::SubscriptionName( $used ); ?>" (<?php echo $amount . " " . ( ( $amount > 1 ) ? JText::_('AEC_USER_TIMES') : JText::_('AEC_USER_TIME') ); ?>)</li>
+											<?php } ?>
 										</ul>
 									<?php } else {
 										echo JText::_('AEC_USER_NO_PREV_PLANS');
@@ -606,40 +607,40 @@ jQuery(document).ready(function(jQuery) {
 							</div>
 						</div>
 					</div>
-					<?php } ?>
-					<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
-						<br />
-						<p><strong><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS');?>:</strong></p>
-						<table class="infobox_table table-striped">
-							<tr>
-								<th>&nbsp;</th>
-								<th>&nbsp;</th>
-								<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID');?></th>
-								<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_STATUS');?></th>
-								<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_PROCESSOR');?></th>
-								<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_SINGUP');?></th>
-								<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_EXPIRATION');?></th>
+				<?php } ?>
+				<?php if ( $metaUser->hasSubscription && !empty( $metaUser->allSubscriptions ) ) { ?>
+					<br />
+					<p><strong><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS');?>:</strong></p>
+					<table class="infobox_table table-striped">
+						<tr>
+							<th>&nbsp;</th>
+							<th>&nbsp;</th>
+							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_ID');?></th>
+							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_STATUS');?></th>
+							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_PROCESSOR');?></th>
+							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_SINGUP');?></th>
+							<th><?php echo JText::_('AEC_USER_SUBSCRIPTIONS_EXPIRATION');?></th>
+						</tr>
+						<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
+							<tr<?php echo isset( $subs->current_focus ) ? ' class="current-focus"' : ''; ?>>
+								<td><?php echo isset( $subs->current_focus ) ? '<strong>&rArr;</strong>' : '&nbsp;'; ?></td>
+								<td><?php echo $subs->primary ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
+								<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=editMembership&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
+								<td><?php echo $subs->status; ?></td>
+								<td><?php echo $subs->type; ?></td>
+								<td><?php echo $subs->signup_date; ?></td>
+								<td><?php echo $subs->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $subs->expiration ); ?></td>
 							</tr>
-							<?php foreach ( $metaUser->allSubscriptions as $subs ) { ?>
-								<tr<?php echo isset( $subs->current_focus ) ? ' class="current-focus"' : ''; ?>>
-									<td><?php echo isset( $subs->current_focus ) ? '<strong>&rArr;</strong>' : '&nbsp;'; ?></td>
-									<td><?php echo $subs->primary ? aecHTML::Icon( 'star' ) : '&nbsp;'; ?></td>
-									<td><?php echo !isset( $subs->current_focus ) ? '<a href="index.php?option=com_acctexp&amp;task=editMembership&subscriptionid=' . $subs->id . '">' . $subs->id . '</a>' : $subs->id; ?></td>
-									<td><?php echo $subs->status; ?></td>
-									<td><?php echo $subs->type; ?></td>
-									<td><?php echo $subs->signup_date; ?></td>
-									<td><?php echo $subs->lifetime ? JText::_('AEC_CMN_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $subs->expiration ); ?></td>
-								</tr>
-								<?php
-							} ?>
-						</table>
-					<?php } elseif ( $metaUser->hasSubscription ) { ?>
-						<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NOPE');?></p>
-					<?php } else { ?>
-						<div class="alert alert-danger">
-							<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NONE');?></p>
-						</div>
-					<?php } ?>
+						<?php
+						} ?>
+					</table>
+				<?php } elseif ( $metaUser->hasSubscription ) { ?>
+					<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NOPE');?></p>
+				<?php } else { ?>
+					<div class="alert alert-danger">
+						<p><?php echo JText::_('AEC_USER_ALL_SUBSCRIPTIONS_NONE');?></p>
+					</div>
+				<?php } ?>
 			</section>
 			<section class="paper">
 				<h4><?php echo 'Notes'; ?></h4>
@@ -732,51 +733,51 @@ jQuery(document).ready(function(jQuery) {
 				<h4><?php echo JText::_('AEC_USER_INVOICES'); ?></h4>
 				<table class="infobox_table table-striped">
 					<thead>
-						<tr>
-							<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
-							<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
-							<th><?php echo JText::_('HISTORY_COL_DATE');?></th>
-							<th><?php echo JText::_('HISTORY_COL_METHOD');?></th>
-							<th><?php echo JText::_('HISTORY_COL_PLAN');?></th>
-							<th><?php echo JText::_('HISTORY_COL_ACTION');?></th>
-						</tr>
+					<tr>
+						<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
+						<th><?php echo JText::_('HISTORY_COL_AMOUNT');?></th>
+						<th><?php echo JText::_('HISTORY_COL_DATE');?></th>
+						<th><?php echo JText::_('HISTORY_COL_METHOD');?></th>
+						<th><?php echo JText::_('HISTORY_COL_PLAN');?></th>
+						<th><?php echo JText::_('HISTORY_COL_ACTION');?></th>
+					</tr>
 					</thead>
 					<tbody>
+					<?php
+					if ( !empty( $invoices ) ) {
+						foreach ( $invoices as $invoice ) { ?>
+							<tr<?php echo $invoice['rowstyle']; ?>>
+								<td><?php echo $invoice['invoice_number']; ?></td>
+								<td><?php echo $invoice['amount']; ?></td>
+								<td><?php echo $invoice['status']; ?></td>
+								<td><?php echo $invoice['processor']; ?></td>
+								<td><a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=<?php echo $invoice['usage']; ?>" target="_blank"><?php echo $invoice['usage']; ?></a></td>
+								<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
+							</tr>
 						<?php
-						if ( !empty( $invoices ) ) {
-							foreach ( $invoices as $invoice ) { ?>
-								<tr<?php echo $invoice['rowstyle']; ?>>
-									<td><?php echo $invoice['invoice_number']; ?></td>
-									<td><?php echo $invoice['amount']; ?></td>
-									<td><?php echo $invoice['status']; ?></td>
-									<td><?php echo $invoice['processor']; ?></td>
-									<td><a href="index.php?option=com_acctexp&amp;task=editSubscriptionPlan&amp;id=<?php echo $invoice['usage']; ?>" target="_blank"><?php echo $invoice['usage']; ?></a></td>
-									<td style="text-align:center;"><?php echo $invoice['actions']; ?></td>
-								</tr>
-								<?php
-							}
+						}
 
-							if ( $aecHTML->invoice_pages > 1 ) {
-								echo '<div class="aec-invoices-pagination"><p>';
-								$plist = array();
-								for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
-									if ( $i == $aecHTML->invoice_page ) {
-										$plist[] = ( $i + 1 );
-									} else {
-										$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&amp;page=' . $i . '">' . ( $i + 1 ) . '</a>';
-									}
+						if ( $aecHTML->invoice_pages > 1 ) {
+							echo '<div class="aec-invoices-pagination"><p>';
+							$plist = array();
+							for ( $i=0; $i<$aecHTML->invoice_pages; $i++ ) {
+								if ( $i == $aecHTML->invoice_page ) {
+									$plist[] = ( $i + 1 );
+								} else {
+									$plist[] = '<a href="index.php?option=com_acctexp&amp;task=editMembership&amp;subscriptionid=' . $aecHTML->sid . '&amp;page=' . $i . '">' . ( $i + 1 ) . '</a>';
 								}
-								echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
 							}
-						} else {
-							echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
+							echo implode( '&nbsp;&middot;&nbsp;', $plist ) . '</p></div>';
+						}
+					} else {
+						echo '<tr><td colspan="6" style="text-align:center;">&gt;&gt;&nbsp;'
 							. JText::_('AEC_USER_NO_INVOICES')
 							. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-						}
-						?>
+					}
+					?>
 					</tbody>
 					<tfoot>
-						<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'plus' ); ?> Add Invoice</a></td></tr>
+					<tr><td colspan="6"><a href="index.php?option=com_acctexp&amp;task=NewInvoice&amp;returnTask=1&amp;userid=<?php echo $metaUser->userid; ?>" class="btn btn-info pull-right"><?php echo aecHTML::Icon( 'plus' ); ?> Add Invoice</a></td></tr>
 					</tfoot>
 				</table>
 			</section>
@@ -784,78 +785,83 @@ jQuery(document).ready(function(jQuery) {
 				<h4><?php echo JText::_('AEC_USER_COUPONS'); ?></h4>
 				<table class="infobox_table table-striped">
 					<thead>
-						<tr>
-							<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
-							<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
-						</tr>
+					<tr>
+						<th><?php echo JText::_('HISTORY_COL_COUPON_CODE');?></th>
+						<th><?php echo JText::_('HISTORY_COL_INVOICE');?></th>
+					</tr>
 					</thead>
 					<tbody>
+					<?php
+					if ( !empty( $coupons ) ) {
+						foreach ( $coupons as $coupon ) { ?>
+							<tr>
+								<td><?php echo $coupon['coupon_code']; ?></td>
+								<td><?php echo $coupon['invoices']; ?></td>
+							</tr>
 						<?php
-						if ( !empty( $coupons ) ) {
-							foreach ( $coupons as $coupon ) { ?>
-								<tr>
-									<td><?php echo $coupon['coupon_code']; ?></td>
-									<td><?php echo $coupon['invoices']; ?></td>
-								</tr>
-								<?php
-							}
-						} else {
-							echo '<tr><td colspan="2" style="text-align:center;">&gt;&gt;&nbsp;'
+						}
+					} else {
+						echo '<tr><td colspan="2" style="text-align:center;">&gt;&gt;&nbsp;'
 							. JText::_('AEC_USER_NO_COUPONS')
 							. '&nbsp;&lt;&lt;</td></tr>' . "\n";
-						} ?>
+					} ?>
 					</tbody>
 				</table>
 			</section>
 		</div>
+		</div>
 		<?php $tabs->nextPane( 'mis' ); ?>
-			<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
-				<div class="col-sm-6">
-					<section class="paper">
-						<h4><?php echo JText::_('Profile Form'); ?></h4>
-						<p>(This is what the user sees on the frontend.)</p>
-						<?php if ( !empty( $mi['profile'] ) ) { ?>
-							<?php foreach ( $mi['profile'] as $mix ) { ?>
-								<div class="profileinfobox">
-									<h4><?php echo $mix['name']; ?></h4>
-									<p><?php echo $mix['info']; ?></p>
-								</div>
-							<?php } ?>
-						<?php }
-						if ( !empty( $mi['profile_form'] ) ) { ?>
-							<?php foreach ( $mi['profile_form'] as $k ) { ?>
+			<div class="row">
+				<?php if ( !empty( $mi['profile'] ) || !empty( $mi['profile_form'] ) ) { ?>
+					<div class="col-sm-6">
+						<section class="paper">
+							<h4><?php echo JText::_('Profile Form'); ?></h4>
+							<p>(This is what the user sees on the frontend.)</p>
+							<?php if ( !empty( $mi['profile'] ) ) { ?>
+								<?php foreach ( $mi['profile'] as $mix ) { ?>
+									<div class="profileinfobox">
+										<h4><?php echo $mix['name']; ?></h4>
+										<p><?php echo $mix['info']; ?></p>
+									</div>
+								<?php } ?>
+							<?php }
+							if ( !empty( $mi['profile_form'] ) ) { ?>
+								<?php foreach ( $mi['profile_form'] as $k ) { ?>
 									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+								<?php } ?>
 							<?php } ?>
-						<?php } ?>
-					</section>
-				</div>
-			<?php } ?>
-			<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
-			<div class="col-sm-6">
-				<section class="paper">
-					<h4><?php echo JText::_('Admin Form'); ?></h4>
-					<?php if ( !empty( $mi['admin'] ) ) { ?>
-						<?php foreach ( $mi['admin'] as $mix ) { ?>
-							<div class="admininfobox">
-								<h4><?php echo $mix['name']; ?></h4>
-								<p><?php echo $mix['info']; ?></p>
-							</div>
-						<?php } ?>
-					<?php }
-					if ( !empty( $mi['admin_form'] ) ) { ?>
-						<?php foreach ( $mi['admin_form'] as $k ) { ?>
-								<?php echo $aecHTML->createSettingsParticle( $k ); ?>
-						<?php } ?>
-					<?php } ?>
-				</section>
+						</section>
+					</div>
+				<?php } ?>
+				<?php if ( !empty( $mi['admin'] ) || !empty( $mi['admin_form'] ) ) { ?>
+					<div class="col-sm-6">
+						<section class="paper">
+							<h4><?php echo JText::_('Admin Form'); ?></h4>
+							<?php if ( !empty( $mi['admin'] ) ) { ?>
+								<?php foreach ( $mi['admin'] as $mix ) { ?>
+									<div class="admininfobox">
+										<h4><?php echo $mix['name']; ?></h4>
+										<p><?php echo $mix['info']; ?></p>
+									</div>
+								<?php } ?>
+							<?php }
+							if ( !empty( $mi['admin_form'] ) ) { ?>
+								<?php foreach ( $mi['admin_form'] as $k ) { ?>
+									<?php echo $aecHTML->createSettingsParticle( $k ); ?>
+								<?php } ?>
+							<?php } ?>
+						</section>
+					</div>
+				<?php }
+				if ( !empty( $metaUser->meta->params->mi ) ) { ?>
+					<div class="col-sm-12">
+						<section class="paper">
+							<h4><?php echo JText::_('Database Records'); ?></h4>
+							<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
+						</section>
+					</div>
+				<?php } ?>
 			</div>
-			<?php }
-			if ( !empty( $metaUser->meta->params->mi ) ) { ?>
-				<section class="paper">
-					<h4><?php echo JText::_('Database Records'); ?></h4>
-					<pre class="prettyprint"><?php print_r( $metaUser->meta->params->mi ); ?></pre>
-				</section>
-			<?php } ?>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
 		<input type="hidden" name="subscriptionid" value="<?php echo !empty( $metaUser->focusSubscription->id ) ? $metaUser->focusSubscription->id : ''; ?>" />
@@ -1274,66 +1280,68 @@ jQuery(document).ready(function(jQuery) {
 			<input type="hidden" name="returnTask" value="" />
 			<input type="hidden" name="boxchecked" value="0" />
 		</form>
-		<div class="col-sm-12">
-			<div class="alert alert-danger">
-				<h2><?php echo JText::_('AEC_HACKS_NOTICE'); ?>:</h2>
-				<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC'); ?></p>
-				<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC2'); ?></p>
-				<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC3'); ?></p>
-			</div>
-			<?php
-			foreach ( $hacks as $handle => $content ) {
-				if ( !$content['status'] ) {
-					if ( isset($content['uncondition'] ) ) {
-						if ( !empty( $hacks[$content['uncondition']]['status'] ) ) {
-							continue ;
-						}
-					}
-					if ( isset($content['condition'] ) ) {
-						if ( empty( $hacks[$content['condition']]['status'] ) ) {
-							continue ;
-						}
-					}
-					if ( !empty($content['legacy'] ) ) {
-						continue;
-					}
-				} ?>
-				<a name="<?php echo $handle; ?>"></a>
-				<h3><?php echo $content['name']; ?></h3>
-				<div class="action">
-					<?php
-					echo aecHTML::Icon( $content['status'] ? 'ok' : 'remove' )
-					. ' ' . ( $content['status'] ? JText::_('AEC_HACKS_ISHACKED') : JText::_('AEC_HACKS_NOTHACKED') ) ; ?>
-					&nbsp;|&nbsp;
-					 <a href="<?php echo 'index.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? JText::_('AEC_HACKS_UNDO') : JText::_('AEC_HACKS_COMMIT') ; ?></a>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="alert alert-danger">
+					<h2><?php echo JText::_('AEC_HACKS_NOTICE'); ?>:</h2>
+					<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC'); ?></p>
+					<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC2'); ?></p>
+					<p><?php echo JText::_('AEC_HACKS_NOTICE_DESC3'); ?></p>
 				</div>
 				<?php
-				if ( !empty( $content['important'] ) && !$content['status'] ) { ?>
-					<div class="important">&nbsp;</div>
-					<?php
-				} ?>
-				<p style="width:60%; padding:3px;">
-					<?php echo $content['desc']; ?>
-				</p>
-				<?php if ( isset( $content['filename'] ) ) { ?>
-					<div class="explainblock">
-						<p>
-							<strong><?php echo JText::_('AEC_HACKS_FILE'); ?>:&nbsp;<?php echo $content['filename']; ?></strong>
-						</p>
-					<?php
-					if ( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) {
-						if ( empty( $content['legacy'] ) ) { ?>
-							<p><?php echo JText::_('AEC_HACKS_LOOKS_FOR'); ?>:</p>
-							<pre><?php print htmlentities( $content['read'] ); ?></pre>
-							<p><?php echo JText::_('AEC_HACKS_REPLACE_WITH'); ?>:</p>
-							<pre><?php print htmlentities( $content['insert'] ); ?></pre>
-							<?php
+				foreach ( $hacks as $handle => $content ) {
+					if ( !$content['status'] ) {
+						if ( isset($content['uncondition'] ) ) {
+							if ( !empty( $hacks[$content['uncondition']]['status'] ) ) {
+								continue ;
+							}
+						}
+						if ( isset($content['condition'] ) ) {
+							if ( empty( $hacks[$content['condition']]['status'] ) ) {
+								continue ;
+							}
+						}
+						if ( !empty($content['legacy'] ) ) {
+							continue;
 						}
 					} ?>
+					<a name="<?php echo $handle; ?>"></a>
+					<h3><?php echo $content['name']; ?></h3>
+					<div class="action">
+						<?php
+						echo aecHTML::Icon( $content['status'] ? 'ok' : 'remove' )
+							. ' ' . ( $content['status'] ? JText::_('AEC_HACKS_ISHACKED') : JText::_('AEC_HACKS_NOTHACKED') ) ; ?>
+						&nbsp;|&nbsp;
+						<a href="<?php echo 'index.php?option=com_acctexp&amp;task=hacks&amp;filename=' . $handle . '&amp;undohack=' . $content['status'] ?>#<?php echo $handle; ?>"><?php echo $content['status'] ? JText::_('AEC_HACKS_UNDO') : JText::_('AEC_HACKS_COMMIT') ; ?></a>
 					</div>
 					<?php
-				}
-			} ?>
+					if ( !empty( $content['important'] ) && !$content['status'] ) { ?>
+						<div class="important">&nbsp;</div>
+					<?php
+					} ?>
+					<p style="width:60%; padding:3px;">
+						<?php echo $content['desc']; ?>
+					</p>
+					<?php if ( isset( $content['filename'] ) ) { ?>
+						<div class="explainblock">
+							<p>
+								<strong><?php echo JText::_('AEC_HACKS_FILE'); ?>:&nbsp;<?php echo $content['filename']; ?></strong>
+							</p>
+							<?php
+							if ( ( strcmp( $content['type'], 'file' ) === 0 ) && !$content['status'] ) {
+								if ( empty( $content['legacy'] ) ) { ?>
+									<p><?php echo JText::_('AEC_HACKS_LOOKS_FOR'); ?>:</p>
+									<pre><?php print htmlentities( $content['read'] ); ?></pre>
+									<p><?php echo JText::_('AEC_HACKS_REPLACE_WITH'); ?>:</p>
+									<pre><?php print htmlentities( $content['insert'] ); ?></pre>
+								<?php
+								}
+							} ?>
+						</div>
+					<?php
+					}
+				} ?>
+			</div>
 		</div>
 
  		<?php
@@ -1378,7 +1386,6 @@ jQuery(document).ready(function(jQuery) {
 	static function eventlogModal( $notices, $furthernotices )
 	{
 		?>
-
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1977,47 +1984,49 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'mi', true ); ?>
-			<div class="col-sm-8 col-sm-offset-2">
-				<section class="paper">
-					<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
-					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-					<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
-						<?php echo $aecHTML->createSettingsParticle( 'class_name' ); ?>
-						<?php echo $aecHTML->createSettingsParticle( 'class_list' ); ?>
-					<?php } else { ?>
-						<div class="form-group">
-							<div class="col-sm-4">
-								<label for="class_name">Integration Type</label>
-							</div>
-							<div class="col-sm-8">
-								<p class="form-control-static">
-									<strong><?php echo $row->mi_class->info['name']; ?></strong>
-								</p>
-							</div>
-						</div>
-					<?php } ?>
-					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'has_restrictions' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
-				</section>
-			</div>
-			<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
+			<div class="row">
 				<div class="col-sm-8 col-sm-offset-2">
 					<section class="paper">
-					<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
-						<div style="position:relative;">
-						<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
-						</div>
+						<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
+						<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+						<?php if ( empty( $aecHTML->hasSettings ) ) { ?>
+							<?php echo $aecHTML->createSettingsParticle( 'class_name' ); ?>
+							<?php echo $aecHTML->createSettingsParticle( 'class_list' ); ?>
+						<?php } else { ?>
+							<div class="form-group">
+								<div class="col-sm-4">
+									<label for="class_name">Integration Type</label>
+								</div>
+								<div class="col-sm-8">
+									<p class="form-control-static">
+										<strong><?php echo $row->mi_class->info['name']; ?></strong>
+									</p>
+								</div>
+							</div>
+						<?php } ?>
+						<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( '_aec_action' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( '_aec_only_first_bill' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'auto_check' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( '_aec_global_exp_all' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'on_userchange' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'pre_exp_check' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'has_restrictions' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
 					</section>
 				</div>
-			<?php } ?>
+				<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
+					<div class="col-sm-8 col-sm-offset-2">
+						<section class="paper">
+							<h4><?php echo JText::_('MI_E_HACKS_NAME'); ?></h4>
+							<div style="position:relative;">
+								<?php echo JText::sprintf('MI_E_HACKS_DETAILS', "index.php?option=com_acctexp&amp;task=hacks"); ?>
+							</div>
+						</section>
+					</div>
+				<?php } ?>
+			</div>
 		<?php if ( $aecHTML->hasRestrictions ) {
 			$tabs->nextPane( 'restrictions' ); ?>
 				<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
@@ -2025,72 +2034,76 @@ jQuery(document).ready(function(jQuery) {
 
 		if ( $aecHTML->hasSettings ) {
 			$tabs->nextPane( 'settings' ); ?>
-			<div class="col-sm-8 col-sm-offset-2">
-				<section class="paper">
-					<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
-					<?php
-					foreach ( $aecHTML->customparams as $name ) {
-					if ( strpos( $name, 'aectab_' ) === 0 ) {
-					?>
-				</section>
-				<?php $tabs->nextPane( $name ); ?>
-				<section class="paper">
-					<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
-					<?php
-					} else {
-						if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
-							echo '<tr><td>';
-						}
+			<div class="row">
+				<div class="col-sm-8 col-sm-offset-2">
+					<section class="paper">
+						<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
+						<?php
+						foreach ( $aecHTML->customparams as $name ) {
+						if ( strpos( $name, 'aectab_' ) === 0 ) {
+						?>
+					</section>
+					<?php $tabs->nextPane( $name ); ?>
+					<section class="paper">
+						<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
+						<?php
+						} else {
+							if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+								echo '<tr><td>';
+							}
 
-						echo $aecHTML->createSettingsParticle( $name );
+							echo $aecHTML->createSettingsParticle( $name );
 
-						if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
-							echo '</td></tr>';
+							if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
+								echo '</td></tr>';
+							}
 						}
-					}
-					} ?>
-				</section>
+						} ?>
+					</section>
+				</div>
 			</div>
 		<?php } ?>
 		<?php $tabs->nextPane( 'attachedto' ); ?>
-			<div class="col-sm-8 col-sm-offset-2">
-				<section class="paper">
-				<div class="row">
-					<div class="col-sm-6">
-						<?php
-						echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
+			<div class="row">
+				<div class="col-sm-8 col-sm-offset-2">
+					<section class="paper">
+						<div class="row">
+							<div class="col-sm-6">
+								<?php
+								echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
 
-						if ( !empty( $attached['groups'] ) ) {
-							echo '<ul>';
-							foreach ( $attached['groups'] as $group ) {
-								echo '<li>#' . $group->id . ' - <a href="index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $group->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $group->getProperty('name') . '</a>';
-								echo '<input type="hidden" name="attached_to_groups[]" value="' . $group->id . '" /></li>';
-							}
-							echo '</ul>';
-						}
+								if ( !empty( $attached['groups'] ) ) {
+									echo '<ul>';
+									foreach ( $attached['groups'] as $group ) {
+										echo '<li>#' . $group->id . ' - <a href="index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $group->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $group->getProperty('name') . '</a>';
+										echo '<input type="hidden" name="attached_to_groups[]" value="' . $group->id . '" /></li>';
+									}
+									echo '</ul>';
+								}
 
-						echo $lists['attach_to_groups'];
+								echo $lists['attach_to_groups'];
 
-						?>
-					</div>
-					<div class="col-sm-6">
-						<?php
-						echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
+								?>
+							</div>
+							<div class="col-sm-6">
+								<?php
+								echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
 
-						if ( !empty( $attached['plans'] ) ) {
-							echo '<ul>';
-							foreach ( $attached['plans'] as $plan ) {
-								echo '<li>#' . $plan->id . ' - <a href="index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $plan->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $plan->getProperty('name') . '</a>';
-								echo '<input type="hidden" name="attached_to_plans[]" value="' . $plan->id . '" /></li>';
-							}
-							echo '</ul>';
-						}
+								if ( !empty( $attached['plans'] ) ) {
+									echo '<ul>';
+									foreach ( $attached['plans'] as $plan ) {
+										echo '<li>#' . $plan->id . ' - <a href="index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $plan->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $plan->getProperty('name') . '</a>';
+										echo '<input type="hidden" name="attached_to_plans[]" value="' . $plan->id . '" /></li>';
+									}
+									echo '</ul>';
+								}
 
-						echo $lists['attach_to_plans'];
-						?>
-					</div>
+								echo $lists['attach_to_plans'];
+								?>
+							</div>
+						</div>
+					</section>
 				</div>
-				</section>
 			</div>
 
 		<?php $tabs->endPanes(); ?>
@@ -2299,279 +2312,292 @@ jQuery(document).ready(function(jQuery) {
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'plan', true ); ?>
-		<div class="col-sm-4">
-			<section class="paper">
-				<h4>General</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-				<div>
-					<?php
-					if ( $row->id ) { ?>
-						<p style="text-align: center;">
-							<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank">
-								<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>
-							</a>
-							&nbsp;|&nbsp;<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=addtocart&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>" target="_blank">
-								<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>
-							</a>
-						</p>
-						<?php if ( !$aecConfig->cfg['plans_first'] ) { ?>
-							<div class="alert alert-info">
-								<p><span class="label label-info"><?php echo JText::_('Please Note'); ?>:</span> <?php echo JText::_('A direct frontend link only works for existing users who are logged in, or with the Plans First setting'); ?>.</p>
-							</div>
-						<?php }
-					}
-					?>
-				</div>
-			</section>
-			<section class="paper">
-				<h4>Details</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'fixed_redirect' ); ?>
-			</section>
-
-			<section class="paper">
-				<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
-				<?php if ( $row->id ) { ?>
-				<table style="width:100%;" class="table table-striped table-hover table-condensed aec-grouplist">
-					<thead>
-						<tr>
-							<th>Group</th>
-							<th class="text-right text-muted">Remove</th>
-						</tr>
-					</thead>
-					<tbody>
-					<?php if ( !empty( $aecHTML->customparams->groups ) ) {
-						foreach ( $aecHTML->customparams->groups as $id => $group ) {
-							HTML_AcctExp::groupRow( 'item', $group );
+		<div class="row">
+			<div class="col-sm-4">
+				<section class="paper">
+					<h4>General</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+					<div>
+						<?php
+						if ( $row->id ) { ?>
+							<p style="text-align: center;">
+								<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank">
+									<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>
+								</a>
+								&nbsp;|&nbsp;<a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=addtocart&usage=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>" target="_blank">
+									<?php echo JText::_('AEC_CGF_LINK_CART_FRONTEND'); ?>
+								</a>
+							</p>
+							<?php if ( !$aecConfig->cfg['plans_first'] ) { ?>
+								<div class="alert alert-info">
+									<p><span class="label label-info"><?php echo JText::_('Please Note'); ?>:</span> <?php echo JText::_('A direct frontend link only works for existing users who are logged in, or with the Plans First setting'); ?>.</p>
+								</div>
+							<?php }
 						}
-					} ?>
-					</tbody>
-					<tfoot>
-						<tr>
-							<td><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-							<td>
-								<a class="btn btn-success pull-right" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a>
-							</td>
-						</tr>
-					</tfoot>
-				</table>
-				<?php } else { ?>
-					<p>You can select groups after saving this plan for the first time.</p>
-				<?php } ?>
-			</section>
-		</div>
-		<div class="col-sm-4">
-			<section class="paper">
-				<h4>Cost&amp;Details</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'hide_duration_checkout' ); ?>
-				<?php if ( $hasrecusers ) { ?>
-					<div class="alert alert-danger">
-						<strong><?php echo JText::_('PAYPLAN_AMOUNT_EDITABLE_NOTICE'); ?></strong>
+						?>
 					</div>
-				<?php } ?>
-			</section>
-			<section class="paper">
-				<h4>Joomla User</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
-			</section>
-		</div>
-		<div class="col-sm-4">
-			<section class="paper">
-				<h4>Plan Relation</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'fallback_req_parent' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
-			</section>
-			<section class="paper">
-				<h4>Shopping Cart</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'cart_behavior' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'addtocart_max' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
-			</section>
-			<section class="paper">
-				<h4><?php echo 'Notes'; ?></h4>
-				<div style="text-align: left;">
-					<?php echo $aecHTML->createSettingsParticle( 'notes' ); ?>
-				</div>
-			</section>
+				</section>
+				<section class="paper">
+					<h4>Details</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'make_active' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'make_primary' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'update_existing' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'fixed_redirect' ); ?>
+				</section>
+
+				<section class="paper">
+					<h4><?php echo JText::_('ITEMGROUPS_TITLE'); ?></h4>
+					<?php if ( $row->id ) { ?>
+						<table style="width:100%;" class="table table-striped table-hover table-condensed aec-grouplist">
+							<thead>
+							<tr>
+								<th>Group</th>
+								<th class="text-right text-muted">Remove</th>
+							</tr>
+							</thead>
+							<tbody>
+							<?php if ( !empty( $aecHTML->customparams->groups ) ) {
+								foreach ( $aecHTML->customparams->groups as $id => $group ) {
+									HTML_AcctExp::groupRow( 'item', $group );
+								}
+							} ?>
+							</tbody>
+							<tfoot>
+							<tr>
+								<td><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+								<td>
+									<a class="btn btn-success pull-right" id="addgroup-btn" onClick="addGroup('item','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					<?php } else { ?>
+						<p>You can select groups after saving this plan for the first time.</p>
+					<?php } ?>
+				</section>
+			</div>
+			<div class="col-sm-4">
+				<section class="paper">
+					<h4>Cost&amp;Details</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'full_amount' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'lifetime' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'full_period' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'full_periodunit' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'hide_duration_checkout' ); ?>
+					<?php if ( $hasrecusers ) { ?>
+						<div class="alert alert-danger">
+							<strong><?php echo JText::_('PAYPLAN_AMOUNT_EDITABLE_NOTICE'); ?></strong>
+						</div>
+					<?php } ?>
+				</section>
+				<section class="paper">
+					<h4>Joomla User</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'gid_enabled' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'gid' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'override_activation' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
+				</section>
+			</div>
+			<div class="col-sm-4">
+				<section class="paper">
+					<h4>Plan Relation</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'fallback_req_parent' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'standard_parent' ); ?>
+				</section>
+				<section class="paper">
+					<h4>Shopping Cart</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'cart_behavior' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'addtocart_max' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'addtocart_redirect' ); ?>
+				</section>
+				<section class="paper">
+					<h4><?php echo 'Notes'; ?></h4>
+					<div style="text-align: left;">
+						<?php echo $aecHTML->createSettingsParticle( 'notes' ); ?>
+					</div>
+				</section>
+			</div>
 		</div>
 		<?php $tabs->nextPane( 'processors' ); ?>
-		<div class="col-sm-8 col-sm-offset-2">
-			<?php
-			if ( !empty( $aecHTML->customparams->pp ) ) {
-				foreach ( $aecHTML->customparams->pp as $id => $processor ) {
-					?>
-					<section class="paper">
-						<h2><?php echo $processor['name']; ?></h2>
-						<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id . '&processor=' . $processor['handle'] ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
-						<?php
-						foreach ( $processor['params'] as $customparam ) {
-							echo $aecHTML->createSettingsParticle( $customparam );
-						}
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+				<?php
+				if ( !empty( $aecHTML->customparams->pp ) ) {
+					foreach ( $aecHTML->customparams->pp as $id => $processor ) {
 						?>
-					</section>
+						<section class="paper">
+							<h2><?php echo $processor['name']; ?></h2>
+							<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id . '&processor=' . $processor['handle'] ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
+							<?php
+							foreach ( $processor['params'] as $customparam ) {
+								echo $aecHTML->createSettingsParticle( $customparam );
+							}
+							?>
+						</section>
 					<?php
+					}
 				}
-			}
-			?>
+				?>
+			</div>
 		</div>
 		<?php $tabs->nextPane( 'text' ); ?>
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('Customize'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'meta' ); ?>
-			</section>
-		</div>
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('Custom Thanks'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks_keeporiginal' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks' ); ?>
-			</section>
-		</div>
-		<?php $tabs->nextPane( 'restrictions' ); ?>
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('AEC_RESTRICTIONS_INVENTORY_HEADER'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_enabled' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'inventory_amount' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_used' ); ?>
-			</section>
-		</div>
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('AEC_RESTRICTIONS_REDIRECT_HEADER'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
-			</section>
-		</div>
-		<div class="col-sm-12">
-			<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+		<div class="row">
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Customize'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'customamountformat' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'email_desc' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'meta' ); ?>
+				</section>
+			</div>
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Custom Thanks'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'customthanks' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks_keeporiginal' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks' ); ?>
+				</section>
+			</div>
+			<?php $tabs->nextPane( 'restrictions' ); ?>
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('AEC_RESTRICTIONS_INVENTORY_HEADER'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_enabled' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'inventory_amount' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'inventory_amount_used' ); ?>
+				</section>
+			</div>
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('AEC_RESTRICTIONS_REDIRECT_HEADER'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
+				</section>
+			</div>
+			<div class="col-sm-12">
+				<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
+			</div>
 		</div>
 		<?php $tabs->nextPane( 'trial' ); ?>
-		<div class="col-sm-8 col-sm-offset-2">
-			<section class="paper">
-				<h4><?php echo JText::_('PAYPLAN_TRIAL_TITLE'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'trial_amount' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'trial_period' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'trial_periodunit' ); ?>
-				<div class="alert alert-danger">
-					<?php echo JText::_('PAYPLAN_AMOUNT_NOTICE_TEXT'); ?>
-				</div>
-			</section>
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+				<section class="paper">
+					<h4><?php echo JText::_('PAYPLAN_TRIAL_TITLE'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'trial_free' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'trial_amount' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'trial_period' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'trial_periodunit' ); ?>
+					<div class="alert alert-danger">
+						<?php echo JText::_('PAYPLAN_AMOUNT_NOTICE_TEXT'); ?>
+					</div>
+				</section>
+			</div>
 		</div>
 		<?php $tabs->nextPane( 'relations' ); ?>
-		<div class="col-sm-8 col-sm-offset-2">
-			<section class="paper">
-				<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
-				<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
-			</section>
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+				<section class="paper">
+					<h4><?php echo JText::_('PAYPLAN_RELATIONS_TITLE'); ?></h4>
+					<?php echo $aecHTML->createSettingsParticle( 'similarplans' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'equalplans' ); ?>
+				</section>
+			</div>
 		</div>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
-				<?php
-				if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
-					echo '<p>' . JText::_('These MIs were inherited from groups that this subscription plan is in') . '</p>';
-					echo '<ul>';
-					foreach ( $aecHTML->customparams->mi['inherited'] as $id => $mi ) {
-						?>
-						<li>
-							<p>
-								<input type="checkbox" name="inherited_micro_integrations[]" value="<?php echo $mi->id; ?>" checked="checked" disabled="disabled" />
-								<strong><?php echo $mi->name; ?></strong> (#<?php echo $mi->id; ?>)
-								(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
-							</p>
-							<p><?php echo $mi->desc; ?></p>
-						</li>
-						<?php
-					}
-					echo '</ul>';
-				} else {
-					echo '<p>' . JText::_('No inherited MIs - A subscription plan can inherit MIs from groups that it is in') . '</p>';
-				}
-				?>
-			</section>
-		</div>
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
-				<?php
-				if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
-					echo '<table style="margin: 0 auto;">';
-					foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
-						?>
-						<tr>
-							<td>
-								<h5>
-									<strong><?php echo $mi->name; ?></strong>
-									(#<?php echo $mi->id; ?>)
-									<?php echo $mi->inherited ? ( ' (' . JText::_('inherited from parent group') . '!)' ) : ''; ?>
+		<div class="row">
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
+					<?php
+					if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
+						echo '<p>' . JText::_('These MIs were inherited from groups that this subscription plan is in') . '</p>';
+						echo '<ul>';
+						foreach ( $aecHTML->customparams->mi['inherited'] as $id => $mi ) {
+							?>
+							<li>
+								<p>
+									<input type="checkbox" name="inherited_micro_integrations[]" value="<?php echo $mi->id; ?>" checked="checked" disabled="disabled" />
+									<strong><?php echo $mi->name; ?></strong> (#<?php echo $mi->id; ?>)
 									(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
-								</h5>
-							</td>
-							<td>
-								<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-toggle" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" style="border-bottom: 1px dashed #999;">
+								</p>
 								<p><?php echo $mi->desc; ?></p>
-							</td>
-						</tr>
+							</li>
 						<?php
+						}
+						echo '</ul>';
+					} else {
+						echo '<p>' . JText::_('No inherited MIs - A subscription plan can inherit MIs from groups that it is in') . '</p>';
 					}
-					echo '</table>';
-				} else {
-					echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
-				}
-				?>
-			</section>
+					?>
+				</section>
+			</div>
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
+					<?php
+					if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
+						echo '<table style="margin: 0 auto;">';
+						foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
+							?>
+							<tr>
+								<td>
+									<h5>
+										<strong><?php echo $mi->name; ?></strong>
+										(#<?php echo $mi->id; ?>)
+										<?php echo $mi->inherited ? ( ' (' . JText::_('inherited from parent group') . '!)' ) : ''; ?>
+										(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+									</h5>
+								</td>
+								<td>
+									<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-toggle" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="border-bottom: 1px dashed #999;">
+									<p><?php echo $mi->desc; ?></p>
+								</td>
+							</tr>
+						<?php
+						}
+						echo '</table>';
+					} else {
+						echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
+					}
+					?>
+				</section>
+			</div>
 		</div>
 		<?php if ( !empty( $aecHTML->customparams->hasperplanmi ) ) { ?>
-		<div class="col-sm-6">
-			<section class="paper">
-				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_hidden' ); ?>
-			</section>
+		<div class="row">
+			<div class="col-sm-6">
+				<section class="paper">
+					<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_plan' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'micro_integrations_hidden' ); ?>
+				</section>
+			</div>
 		</div>
 		<?php } ?>
 		<?php
-		if ( !empty( $aecHTML->customparams->mi['custom'] ) ) {
-			foreach ( $aecHTML->customparams->mi['custom'] as $id => $mi ) {
-				?>
-				<div class="col-sm-8 col-sm-offset-2">
-					<section class="paper">
-						<h2><?php echo $mi['name']; ?></h2>
-						<?php
-						foreach ( $mi['params'] as $customparam ) {
-							echo $aecHTML->createSettingsParticle( $customparam );
-						}
-						?>
-					</section>
-				</div>
-				<?php
-			}
-		}
-		?>
+		if ( !empty( $aecHTML->customparams->mi['custom'] ) ) { ?>
+			<div class="row">
+				<?php foreach ( $aecHTML->customparams->mi['custom'] as $id => $mi ) { ?>
+					<div class="col-sm-8 col-sm-offset-2">
+						<section class="paper">
+							<h2><?php echo $mi['name']; ?></h2>
+							<?php
+							foreach ( $mi['params'] as $customparam ) {
+								echo $aecHTML->createSettingsParticle( $customparam );
+							}
+							?>
+						</section>
+					</div>
+				<?php } ?>
+			</div>
+		<?php } ?>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
@@ -2701,130 +2727,132 @@ jQuery(document).ready(function(jQuery) {
 
 		$tabs->startPanes();
 		$tabs->nextPane( 'group' ); ?>
-		<div class="col-sm-4">
-			<section class="paper">
-				<h4>General</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
-				<div style="position:relative;width:100%;">
-					<?php
-					echo $aecHTML->createSettingsParticle( 'name' );
-					if ( $row->id ) { ?>
-						<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&group=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
+		<div class="row">
+			<div class="col-sm-4">
+				<section class="paper">
+					<h4>General</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'visible' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'color' ); ?>
+					<div style="position:relative;width:100%;">
 						<?php
-					} ?>
-				</div>
-			</section>
-		</div>
-		<div class="col-sm-4">
-			<section class="paper">
-				<h4>Details</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'symlink_userid' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
-				<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-			</section>
-		</div>
-		<div class="col-sm-4">
-			<section class="paper">
-				<h4><?php echo JText::_('ITEMGROUPS_PARENTGROUP_TITLE'); ?></h4>
-				<?php if ( $row->id > 1 ) { ?>
-				<table style="width:100%;" class="table table-striped table-hover table-condensed aec-grouplist">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-					<?php if ( !empty( $aecHTML->customparams->groups ) ) {
-						foreach ( $aecHTML->customparams->groups as $id => $group ) {
-							HTML_AcctExp::groupRow( 'group', $group );
-						}
-					} ?>
-					</tbody>
-					<tfoot>
-						<tr>
-							<td><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
-							<td>
-								<a class="btn btn-success pull-right" id="addgroup-btn" onClick="addGroup('group','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a>
-							</td>
-						</tr>
-					</tfoot>
-				</table>
-				<?php } elseif ( $row->id == 1 ) { ?>
-					<p>This is the Root Group.</p>
-				<?php } else { ?>
-					<p>You can select Parent Groups after you have saved this for the first time.</p>
-				<?php } ?>
-			</section>
+						echo $aecHTML->createSettingsParticle( 'name' );
+						if ( $row->id ) { ?>
+							<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&group=' . $row->id ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
+						<?php
+						} ?>
+					</div>
+				</section>
+				<section class="paper">
+					<h4><?php echo JText::_('ITEMGROUPS_PARENTGROUP_TITLE'); ?></h4>
+					<?php if ( $row->id > 1 ) { ?>
+						<table style="width:100%;" class="table table-striped table-hover table-condensed aec-grouplist">
+							<thead>
+							<tr>
+								<th>Name</th>
+								<th></th>
+							</tr>
+							</thead>
+							<tbody>
+							<?php if ( !empty( $aecHTML->customparams->groups ) ) {
+								foreach ( $aecHTML->customparams->groups as $id => $group ) {
+									HTML_AcctExp::groupRow( 'group', $group );
+								}
+							} ?>
+							</tbody>
+							<tfoot>
+							<tr>
+								<td><?php echo $aecHTML->createSettingsParticle( 'add_group' ); ?></td>
+								<td>
+									<a class="btn btn-success pull-right" id="addgroup-btn" onClick="addGroup('group','addgroup-btn')"><?php echo aecHTML::Icon( 'plus' ); ?></a>
+								</td>
+							</tr>
+							</tfoot>
+						</table>
+					<?php } elseif ( $row->id == 1 ) { ?>
+						<p>This is the Root Group.</p>
+					<?php } else { ?>
+						<p>You can select Parent Groups after you have saved this for the first time.</p>
+					<?php } ?>
+				</section>
+			</div>
+			<div class="col-sm-8">
+				<section class="paper">
+					<h4>Details</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'reveal_child_items' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'symlink' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'symlink_userid' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
+					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+				</section>
+			</div>
 		</div>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<?php echo aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
-				<?php if ( $row->id > 1 ) {
-					if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
-						echo '<p>' . JText::_('These MIs were inherited from groups that this group is in') . '</p>';
-						echo '<ul>';
-						foreach ( $aecHTML->customparams->mi['inherited'] as $id => $mi ) {
+		<div class="row">
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Inherited Micro Integrations'); ?></h4>
+					<?php if ( $row->id > 1 ) {
+						if ( !empty( $aecHTML->customparams->mi['inherited'] ) ) {
+							echo '<p>' . JText::_('These MIs were inherited from groups that this group is in') . '</p>';
+							echo '<ul>';
+							foreach ( $aecHTML->customparams->mi['inherited'] as $id => $mi ) {
+								?>
+								<li>
+									<p>
+										<input type="checkbox" name="inherited_micro_integrations[]" value="<?php echo $mi->id; ?>" checked="checked" disabled="disabled" />
+										<strong><?php echo $mi->name; ?></strong> (#<?php echo $mi->id; ?>)
+										(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+									</p>
+									<p><?php echo $mi->desc; ?></p>
+								</li>
+							<?php
+							}
+							echo '</ul>';
+						} else {
+							echo '<p>' . JText::_('No inherited MIs - A group can inherit MIs from groups that it is in') . '</p>';
+						}
+					} ?>
+				</section>
+			</div>
+
+			<div class="col-sm-6">
+				<section class="paper">
+					<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
+					<?php if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
+						echo '<table style="margin: 0 auto;">';
+						foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
 							?>
-							<li>
-								<p>
-									<input type="checkbox" name="inherited_micro_integrations[]" value="<?php echo $mi->id; ?>" checked="checked" disabled="disabled" />
-									<strong><?php echo $mi->name; ?></strong> (#<?php echo $mi->id; ?>)
-									(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
-								</p>
-								<p><?php echo $mi->desc; ?></p>
-							</li>
+							<tr>
+								<td>
+									<h5>
+										<strong><?php echo $mi->name; ?></strong>
+										(#<?php echo $mi->id; ?>)
+										<?php echo $mi->inherited ? ( ' (' . JText::_('inherited from group, see above') . '!)' ) : ''; ?>
+										(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
+									</h5>
+								</td>
+								<td>
+									<input type="hidden" name="micro_integrations[]" value="0" />
+									<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-toggle" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" style="border-bottom: 1px dashed #999;">
+									<p><?php echo $mi->desc; ?></p>
+								</td>
+							</tr>
 						<?php
 						}
-						echo '</ul>';
+						echo '</table>';
 					} else {
-						echo '<p>' . JText::_('No inherited MIs - A group can inherit MIs from groups that it is in') . '</p>';
+						echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
 					}
-				} ?>
-			</section>
-		</div>
-
-		<div class="col-sm-6">
-			<section class="paper">
-				<h4><?php echo JText::_('Attached Micro Integrations'); ?></h4>
-				<?php if ( !empty( $aecHTML->customparams->mi['attached'] ) ) {
-					echo '<table style="margin: 0 auto;">';
-					foreach ( $aecHTML->customparams->mi['attached'] as $id => $mi ) {
-						?>
-						<tr>
-							<td>
-								<h5>
-									<strong><?php echo $mi->name; ?></strong>
-									(#<?php echo $mi->id; ?>)
-									<?php echo $mi->inherited ? ( ' (' . JText::_('inherited from group, see above') . '!)' ) : ''; ?>
-									(<a href="index.php?option=com_acctexp&amp;task=editmicrointegration&amp;id=<?php echo $mi->id; ?>" target="_blank"><?php echo JText::_('edit'); ?></a>)
-								</h5>
-							</td>
-							<td>
-								<input type="hidden" name="micro_integrations[]" value="0" />
-								<input id="micro_integrations_<?php echo $mi->id; ?>" class="bootstrap-toggle" type="checkbox" name="micro_integrations[]"<?php echo $mi->attached ? ' checked="checked"' : ''; ?> value="<?php echo $mi->id; ?>" data-state="<?php echo $mi->attached ? '1' : '0'; ?>"/>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" style="border-bottom: 1px dashed #999;">
-								<p><?php echo $mi->desc; ?></p>
-							</td>
-						</tr>
-						<?php
-					}
-					echo '</table>';
-				} else {
-					echo '<p>' . JText::_('No MIs to attach') . '<a href="index.php?option=com_acctexp&amp;task=newmicrointegration" target="_blank">(' . JText::_('create one now?') . ')</a></p>';
-				}
-				?>
-			</section>
+					?>
+				</section>
+			</div>
 		</div>
 		<?php $tabs->endPanes(); ?>
 		<br />
@@ -2943,48 +2971,50 @@ jQuery(document).ready(function(jQuery) {
 
 		$tabs->startPanes();
 		$tabs->nextPane( 'coupon' ); ?>
-			<div class="col-sm-6">
-				<section class="paper">
-					<h4>General</h4>
-					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
-				</section>
-				<section class="paper">
-					<h4>Terms</h4>
-					<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'amount_percent_use' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'amount_percent' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'percent_first' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'useon_trial' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'useon_full' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
-				</section>
-			</div>
-			<div class="col-sm-6">
-				<section class="paper">
-					<h4>Date &amp; User Restrictions</h4>
-					<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'has_expiration' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
-					<hr />
-					<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
-					<hr />
-					<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
-					<hr />
-					<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
-					<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
-				</section>
+			<div class="row">
+				<div class="col-sm-6">
+					<section class="paper">
+						<h4>General</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'coupon_code' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'type' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'desc' ); ?>
+					</section>
+					<section class="paper">
+						<h4>Terms</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'amount_use' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'amount' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'amount_percent_use' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'amount_percent' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'percent_first' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'useon_trial' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'useon_full' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'useon_full_all' ); ?>
+					</section>
+				</div>
+				<div class="col-sm-6">
+					<section class="paper">
+						<h4>Date &amp; User Restrictions</h4>
+						<?php echo $aecHTML->createSettingsParticle( 'has_start_date' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'start_date' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'has_expiration' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'expiration' ); ?>
+						<hr />
+						<?php echo $aecHTML->createSettingsParticle( 'has_max_reuse' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'max_reuse' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'usecount' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'has_max_peruser_reuse' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'max_peruser_reuse' ); ?>
+						<hr />
+						<?php echo $aecHTML->createSettingsParticle( 'usage_plans_enabled' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'usage_plans' ); ?>
+						<hr />
+						<?php echo $aecHTML->createSettingsParticle( 'usage_cart_full' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'cart_multiple_items_amount' ); ?>
+					</section>
+				</div>
 			</div>
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<div class="col-sm-8 col-sm-offset-2">
@@ -3008,30 +3038,33 @@ jQuery(document).ready(function(jQuery) {
 		</div>
 		<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<?php $tabs->nextPane( 'mis' ); ?>
-		<div class="col-sm-12">
-			<section class="paper">
-				<h4>Micro Integrations</h4>
-				<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
-			</section>
+		<div class="row">
+			<div class="col-sm-12">
+				<section class="paper">
+					<h4>Micro Integrations</h4>
+					<?php echo $aecHTML->createSettingsParticle( 'micro_integrations' ); ?>
+				</section>
+			</div>
 		</div>
 		<?php $tabs->nextPane( 'invoices' ); ?>
-		<div class="col-sm-12">
-			<section class="paper">
-				<h4><?php echo JText::_('Invoices'); ?></h4>
-				<table class="table table-hover table-striped table-selectable">
-					<thead><tr>
-						<th>#</th>
-						<th><?php echo JText::_('INVOICE_USERID'); ?></th>
-						<th class="text-center"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
-						<th class="text-center"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
-						<th class="text-center"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
-						<th class="text-center"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
-						<th class="text-center"><?php echo JText::_('USERPLAN'); ?></th>
-						<th class="text-center"><?php echo JText::_('INVOICE_METHOD'); ?></th>
-						<th class="text-center"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
-						<th><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
-					</tr></thead>
-					<tbody>
+		<div class="row">
+			<div class="col-sm-12">
+				<section class="paper">
+					<h4><?php echo JText::_('Invoices'); ?></h4>
+					<table class="table table-hover table-striped table-selectable">
+						<thead><tr>
+							<th>#</th>
+							<th><?php echo JText::_('INVOICE_USERID'); ?></th>
+							<th class="text-center"><?php echo JText::_('INVOICE_INVOICE_NUMBER'); ?></th>
+							<th class="text-center"><?php echo JText::_('INVOICE_SECONDARY_IDENT'); ?></th>
+							<th class="text-center"><?php echo JText::_('INVOICE_CREATED_DATE'); ?></th>
+							<th class="text-center"><?php echo JText::_('INVOICE_TRANSACTION_DATE'); ?></th>
+							<th class="text-center"><?php echo JText::_('USERPLAN'); ?></th>
+							<th class="text-center"><?php echo JText::_('INVOICE_METHOD'); ?></th>
+							<th class="text-center"><?php echo JText::_('INVOICE_AMOUNT'); ?></th>
+							<th><?php echo JText::_('INVOICE_CURRENCY'); ?></th>
+						</tr></thead>
+						<tbody>
 						<?php foreach ( $aecHTML->invoices as $i => $invoice ) { ?>
 							<tr>
 								<td><?php echo $i + 1; ?></td>
@@ -3040,15 +3073,16 @@ jQuery(document).ready(function(jQuery) {
 								<td><?php echo $invoice->secondary_ident; ?></td>
 								<td><?php echo $invoice->created_date; ?></td>
 								<td><?php echo $invoice->transaction_date; ?></td>
-					  			<td><?php echo $invoice->usage; ?></td>
-					  			<td><?php echo $invoice->method; ?></td>
+								<td><?php echo $invoice->usage; ?></td>
+								<td><?php echo $invoice->method; ?></td>
 								<td><?php echo $invoice->amount; ?></td>
 								<td><?php echo $invoice->currency; ?></td>
 							</tr>
 						<?php } ?>
-					</tbody>
-				</table>
-			</section>
+						</tbody>
+					</table>
+				</section>
+			</div>
 		</div>
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
@@ -3147,13 +3181,15 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ), false, 'edit', 'Invoice' );
 
 		?>
-		<div class="col-sm-8 col-sm-offset-2">
-			<section class="paper">
-				<h4><?php echo JText::_('AEC_HEAD_INVOICE'); ?></h4>
-				<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-					echo $aecHTML->createSettingsParticle( $rowname );
-				} ?>
-			</section>
+		<div class="row">
+			<div class="col-sm-8 col-sm-offset-2">
+				<section class="paper">
+					<h4><?php echo JText::_('AEC_HEAD_INVOICE'); ?></h4>
+					<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+						echo $aecHTML->createSettingsParticle( $rowname );
+					} ?>
+				</section>
+			</div>
 		</div>
 		<?php
 
@@ -3658,47 +3694,49 @@ jQuery(document).ready(function(jQuery) {
 		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'import', '', false, $buttons, 'Import' );
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
-			<div class="col-sm-12">
-				<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec-settings-container">
-					<?php
-					if ( $aecHTML->done ) {
-						echo '<p>Import ran through successfully.</p>';
-						if ( !empty( $aecHTML->errors ) ) {
-							echo '<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
-						}
-					} elseif ( $aecHTML->form ) {
-						foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
-							echo $aecHTML->createSettingsParticle( $rowname );
-						}
-					} else {
-						echo $aecHTML->createSettingsParticle( 'file_select' );
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec-settings-container">
+						<?php
+						if ( $aecHTML->done ) {
+							echo '<p>Import ran through successfully.</p>';
+							if ( !empty( $aecHTML->errors ) ) {
+								echo '<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
+							}
+						} elseif ( $aecHTML->form ) {
+							foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+								echo $aecHTML->createSettingsParticle( $rowname );
+							}
+						} else {
+							echo $aecHTML->createSettingsParticle( 'file_select' );
 
-						echo '<p>Please let us know what the columns in your .csv file mean:</p><p></p>';
+							echo '<p>Please let us know what the columns in your .csv file mean:</p><p></p>';
 
-						echo '<table id="aec_import_table">';
+							echo '<table id="aec_import_table">';
 
-						echo '<tr>';
-						foreach ( $aecHTML->columns as $column ) {
-							echo '<th>' . $aecHTML->createSettingsParticle( $column ) . '</th>';
-						}
-						echo '</tr>';
-
-						foreach ( $aecHTML->user_rows as $row ) {
 							echo '<tr>';
+							foreach ( $aecHTML->columns as $column ) {
+								echo '<th>' . $aecHTML->createSettingsParticle( $column ) . '</th>';
+							}
+							echo '</tr>';
 
-							foreach ( $row as $k => $v ) {
-								echo '<td>' . $v . '</td>';
+							foreach ( $aecHTML->user_rows as $row ) {
+								echo '<tr>';
+
+								foreach ( $row as $k => $v ) {
+									echo '<td>' . $v . '</td>';
+								}
+
+								echo '</tr>';
 							}
 
-							echo '</tr>';
+							echo '</table>';
+							echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
+
+							echo $aecHTML->createSettingsParticle( 'assign_plan' );
 						}
-
-						echo '</table>';
-						echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
-
-						echo $aecHTML->createSettingsParticle( 'assign_plan' );
-					}
-					?>
+						?>
+					</div>
 				</div>
 			</div>
 
@@ -3826,24 +3864,26 @@ jQuery(document).ready(function(jQuery) {
 
 		?>
 		<div class="container">
-			<div class="col-sm-12">
-				<?php if ( !empty( $cmd ) ) { ?>
-					<h4><?php echo JText::_('Challenge'); ?></h4>
-				<?php } ?>
-				<?php if ( is_array( $result ) ) { ?>
-					<?php foreach ( $result as $x => $litem ) { ?>
-						<div class="col-sm-6 text-left">
-							<div class="panel panel-default">
-								<div class="panel-body">
-									<a href="<?php echo $litem['link']; ?>"><h3><?php echo $litem['name']; ?></h3></a><p><?php echo $litem['desc']; ?></p>
-								</div>
-								<div class="panel-footer text-right">
-									<a href="<?php echo $litem['link']; ?>" class="btn btn-success" style="margin-top: 10px;"><?php echo aecHTML::Icon( 'cog' ); ?> Use</a>
+			<div class="row">
+				<div class="col-sm-12">
+					<?php if ( !empty( $cmd ) ) { ?>
+						<h4><?php echo JText::_('Challenge'); ?></h4>
+					<?php } ?>
+					<?php if ( is_array( $result ) ) { ?>
+						<?php foreach ( $result as $x => $litem ) { ?>
+							<div class="col-sm-6 text-left">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<a href="<?php echo $litem['link']; ?>"><h3><?php echo $litem['name']; ?></h3></a><p><?php echo $litem['desc']; ?></p>
+									</div>
+									<div class="panel-footer text-right">
+										<a href="<?php echo $litem['link']; ?>" class="btn btn-success" style="margin-top: 10px;"><?php echo aecHTML::Icon( 'cog' ); ?> Use</a>
+									</div>
 								</div>
 							</div>
-						</div>
-					<?php } ?>
-				<?php } else { echo $result; } ?>
+						<?php } ?>
+					<?php } else { echo $result; } ?>
+				</div>
 			</div>
 		</div>
 		<input type="hidden" name="option" value="<?php echo $option;?>" />
