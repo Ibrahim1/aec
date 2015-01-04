@@ -4637,6 +4637,8 @@ function saveCoupon( $option, $apply=0 )
 	$new = 0;
 	$type = $_POST['type'];
 
+	$_POST['coupon_code'] = aecGetParam( 'coupon_code', 0, true, array( 'word', 'string', 'clear_nonalnum' ) );
+
 	if ( $_POST['coupon_code'] != '' ) {
 
 		$cph = new couponHandler();
