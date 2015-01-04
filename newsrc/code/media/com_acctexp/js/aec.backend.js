@@ -399,7 +399,7 @@ jQuery(document).ready(function(jQuery) {
 		};
 
 		var selectRow = function(row) {
-			var el = jQuery(row);
+			var el = jQuery(row).parent();
 
 			var checkbox = el.find("input[type='checkbox']");
 
@@ -420,8 +420,10 @@ jQuery(document).ready(function(jQuery) {
 			toggleButtons();
 		};
 
-		jQuery("table.table-selectable tbody tr").on("click", function(event){
+		jQuery("table.table-selectable tbody tr td").on("click", function(event){
 			selectRow(this);
+		}).children().click(function(e) {
+			return false;
 		});
 
 		select_all.on("click", function(event){
