@@ -1,26 +1,16 @@
-table.adminlist {
-	background-color: #f3f3f3;
-	width: 100%;
-	.pagination {
-		margin: 3px auto -10px !important;
-		a { line-height: 24px; }
-		i {
-			margin-top: 4px;
-			opacity: 0.8;
-			filter: alpha(opacity=80);
-		}
-		.off i {
-			opacity: 0.5;
-			filter: alpha(opacity=50);
-		}
+.pagination-container {
+	text-align: center;
+}
+
+.pagination {
+	margin: 3px auto 0px !important;
+	a { line-height: 24px; }
+	i {
+		margin-top: 3px;
+		opacity: 0.8;
 	}
-	thead th {
-		&.text-left {
-			text-align: left;
-		}
-		&.text-right {
-			text-align: right;
-		}
+	.off i {
+		opacity: 0.5;
 	}
 }
 
@@ -43,7 +33,7 @@ div.limit select {
 	&-right {
 		.page,
 		.blank {
-			a, span { line-height: 25px; }
+			a, span { line-height: 21px; }
 		}
 		&, div { background: none !important; }
 		a,
@@ -53,12 +43,16 @@ div.limit select {
 		}
 	}
 	&-right {
+		margin-left: 4px;
+
 		.start,
 		&.off .start,
 		.prev,
 		&.off .prev { background: none !important; }
 	}
 	&-left {
+		margin-right: 4px;
+
 		.end,
 		&.off .end,
 		.next,
@@ -96,15 +90,13 @@ div {
 	&.button2-left {
 		span {
 			#gradient > .vertical(#e6e6e6, #dcdcdc);
-			border-left: 1px solid #aaa;
-			border-right: 1px solid #aaa;
+			border: 1px solid #aaa;
 			border-radius: 3px;
 			.box-shadow( 0 1px 2px #aaa inset );
 		}
 		a {
 			#gradient > .vertical(#fff, #e0e0e0);
-			border-left: 1px solid #ccc;
-			border-right: 1px solid #ccc;
+			border: 1px solid #ccc;
 			border-radius: 3px;
 			.box-shadow( 0 0 1px #fff inset );
 			&:hover {
