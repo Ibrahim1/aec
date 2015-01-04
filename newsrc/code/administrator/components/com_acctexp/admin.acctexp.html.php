@@ -2463,7 +2463,9 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'customtext_thanks' ); ?>
 				</section>
 			</div>
-			<?php $tabs->nextPane( 'restrictions' ); ?>
+		</div>
+		<?php $tabs->nextPane( 'restrictions' ); ?>
+		<div class="row">
 			<div class="col-sm-6">
 				<section class="paper">
 					<h4><?php echo JText::_('AEC_RESTRICTIONS_INVENTORY_HEADER'); ?></h4>
@@ -2478,10 +2480,8 @@ jQuery(document).ready(function(jQuery) {
 					<?php echo $aecHTML->createSettingsParticle( 'notauth_redirect' ); ?>
 				</section>
 			</div>
-			<div class="col-sm-12">
-				<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
-			</div>
 		</div>
+		<?php aecRestrictionHelper::echoSettings( $aecHTML ); ?>
 		<?php $tabs->nextPane( 'trial' ); ?>
 		<div class="row">
 			<div class="col-sm-8 col-sm-offset-2">
