@@ -2617,7 +2617,7 @@ jQuery(document).ready(function(jQuery) {
 				<div class="group-colors">
 					<div class="group-colors-stripe" style="background: #<?php echo $group['color']; ?>;"></div>
 				</div>
-				<?php echo $group['name']; ?>
+				<a href="index.php?option=com_acctexp&amp;task=editItemGroup&amp;id=<?php echo $group['id']; ?>" target="_blank"><?php echo $group['name']; ?></a>
 			</td>
 			<td>
 				<a class="btn btn-danger pull-right" id="removegroup-btn-<?php echo $group['id'];?>" onClick="removeGroup('<?php echo $type;?>','<?php echo $group['id'];?>','removegroup-btn-<?php echo $group['id'];?>')"><?php echo aecHTML::Icon( 'remove' ); ?></a>
