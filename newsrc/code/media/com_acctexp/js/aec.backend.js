@@ -370,7 +370,7 @@ jQuery(document).ready(function(jQuery) {
 	/*jQuery.fn.modal.Constructor.prototype.enforceFocus = function() {};
 	jQuery.fn.popover.Constructor.prototype.enforceFocus = function() {};*/
 
-	if ( jQuery("table.table-selectable").length == 0 ) {
+	if ( jQuery(".paper").length ) {
 		jQuery('#adminForm').one('click', function() {
 			jQuery('div.aec-buttons a.btn-conditional').attr("disabled", false);
 		});

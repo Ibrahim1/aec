@@ -3019,7 +3019,7 @@ jQuery(document).ready(function(jQuery) {
 		<?php $tabs->nextPane( 'restrictions' ); ?>
 		<div class="col-sm-8 col-sm-offset-2">
 			<section class="paper">
-				<h4>Restrict Combintations</h4>
+				<h4>Restrict Combinations</h4>
 				<?php echo $aecHTML->createSettingsParticle( 'depend_on_subscr_id' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'subscr_id_dependency' ); ?>
 				<?php echo $aecHTML->createSettingsParticle( 'allow_trial_depend_subscr' ); ?>
