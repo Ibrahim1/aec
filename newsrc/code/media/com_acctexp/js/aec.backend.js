@@ -423,7 +423,12 @@ jQuery(document).ready(function(jQuery) {
 		jQuery("table.table-selectable tbody tr td").on("click", function(event){
 			selectRow(this);
 		}).children().click(function(e) {
-			return false;
+			var el = jQuery(this);
+
+			// Prevent all other actions except links
+			if ( el.prop('tagName') != 'A' || el.hasClass('btn') ) {
+				return false;
+			}
 		});
 
 		select_all.on("click", function(event){
