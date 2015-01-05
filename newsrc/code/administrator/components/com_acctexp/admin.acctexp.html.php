@@ -364,18 +364,6 @@ class HTML_AcctExp
 
 		HTML_myCommon::startCommon('aec-wrap-geometry', 'aec-wrap-inner-light');
 
-$js = '
-jQuery(document).ready(function(jQuery) {
-	jQuery("#assignto_plan")
-	.multiselect({	noneSelectedText: \'' . JText::_('PAYPLAN_NOPLAN') . '\',
-					selectedList: 3,
- 					maxWidth: 300
-			});
-});
-';
-		$document = JFactory::getDocument();
-		$document->addScriptDeclaration( $js );
-
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$edituserlink		= 'index.php?option=com_users&amp;task=user.edit&amp;id=' . $metaUser->userid;
 			$activateuserlink	= 'index.php?option=com_users&amp;task=registration.activate&amp;token=' . $metaUser->cmsUser->activation;
@@ -1690,51 +1678,7 @@ jQuery(document).ready(function(jQuery) {
 	{
 		HTML_myCommon::startCommon('aec-wrap-geometry');
 
-$js = '
-jQuery(document).ready(function(jQuery) {
-	/*jQuery("#status-group-select")
-	.multiselect({	noneSelectedText: \'Select Status\',
-					selectedList: 8,
-					checkAll: function(event, ui){
-									jQuery("#ui-multiselect-status-group-select-option-6").click().click();
-									jQuery(\'#status-group-select option[value="hold"]\').attr("selected", "selected");
-									jQuery(\'#status-group-select option[value="notconfig"]\').removeAttr("selected").removeAttr("aria-selected");
-								},
-					click: function(event, ui){
-							if( ui.value == "notconfig" && ui.checked ) {
-								jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
-								jQuery("#ui-multiselect-status-group-select-option-7").attr("checked", "checked");
-							} else {
-								jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
-							}
-						}
-			});
-
-	jQuery("#plan-filter-select")
-	.multiselect({	noneSelectedText: \'' . JText::_('PLAN_FILTER') . '\',
-					selectedList: 3
-			});
-
-	jQuery("#group-filter-select")
-	.multiselect({	noneSelectedText: \'' . JText::_('GROUP_FILTER') . '\',
-					selectedList: 1
-			});
-	jQuery(".ui-multiselect-checkboxes input").on("click", function(event){
-		if( jQuery(this).val() == "notconfig" ) {
-			if( jQuery(this).attr("checked") == "checked" ) {
-				jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
-				jQuery(this).attr("checked", "checked");
-			} else {
-
-			}
-		} else {
-			jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
-		}
-	});*/
-});
-';
 		$document = JFactory::getDocument();
-		$document->addScriptDeclaration( $js );
 
 		$th_list = array(
 			array('username', 'CNAME'),
@@ -1929,27 +1873,6 @@ jQuery(document).ready(function(jQuery) {
 	static function editMicroIntegration( $option, $row, $lists, $aecHTML, $attached )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
-
-$js = '
-jQuery(document).ready(function(jQuery) {
-	jQuery("#attach_to_groups")
-	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Group') . '\',
-					selectedList: 1
-			});
-
-	jQuery("#attach_to_plans")
-	.multiselect({	noneSelectedText: \'' . JText::_('Assign to Plan') . '\',
-					selectedList: 1
-			});
-
-	jQuery("[id~=\"validationtype\"]")
-	.multiselect({	noneSelectedText: \'' . JText::_('No Validation') . '\',
-					selectedList: 1
-			});
-});
-';
-		$document = JFactory::getDocument();
-		$document->addScriptDeclaration( $js );
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_SETTINGS', 'microintegrations', $row->id ? $row->name : JText::_('AEC_CMN_NEW'), false, 'edit', 'MicroIntegration' );
 

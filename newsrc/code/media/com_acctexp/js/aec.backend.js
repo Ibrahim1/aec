@@ -302,7 +302,7 @@ jQuery(document).ready(function(jQuery) {
 			return jQuery(this).parent().find('.head').html();
 		},
 		content: function() {
-			var content = jQuery(this).parent().find('.content' ).clone();
+			var content = jQuery(this).parent().find('.content').clone();
 
 			content.find('select').replaceWith(function() {
 				var el = jQuery(this),
@@ -360,15 +360,74 @@ jQuery(document).ready(function(jQuery) {
 			}
 
 		});
-	})
+	});
 
 	jQuery('.jqui-multiselect:not(.content .jqui-multiselect)').multiselect({ noneSelectedText: 'Select', selectedList: 8 });
 
 	jQuery('.select2-bootstrap:not(.content .select2-bootstrap)').select2();
 
-	// Make Select2 selects work in bootstrap modals and popovers
-	/*jQuery.fn.modal.Constructor.prototype.enforceFocus = function() {};
-	jQuery.fn.popover.Constructor.prototype.enforceFocus = function() {};*/
+	var initMultiSelects = function() {
+		/*jQuery("#status-group-select")
+			.multiselect({	noneSelectedText: 'Select Status',
+				selectedList: 8,
+				checkAll: function(event, ui){
+					jQuery("#ui-multiselect-status-group-select-option-6").click().click();
+					jQuery('#status-group-select option[value="hold"]').attr("selected", "selected");
+					jQuery('#status-group-select option[value="notconfig"]').removeAttr("selected").removeAttr("aria-selected");
+				},
+				click: function(event, ui){
+					if( ui.value == "notconfig" && ui.checked ) {
+						jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
+						jQuery("#ui-multiselect-status-group-select-option-7").attr("checked", "checked");
+					} else {
+						jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
+					}
+				}
+			});
+
+		jQuery("#plan-filter-select")
+			.multiselect({	noneSelectedText: 'PLAN_FILTER',
+				selectedList: 3
+			});
+
+		jQuery("#group-filter-select")
+			.multiselect({	noneSelectedText: 'GROUP_FILTER',
+				selectedList: 1
+			});
+		jQuery(".ui-multiselect-checkboxes input").on("click", function(event){
+			if( jQuery(this).val() == "notconfig" ) {
+				if( jQuery(this).attr("checked") == "checked" ) {
+					jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
+					jQuery(this).attr("checked", "checked");
+				} else {
+
+				}
+			} else {
+				jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
+			}
+		});*/
+
+		jQuery("#attach_to_groups")
+			.multiselect({	noneSelectedText: 'Assign to Group',
+				selectedList: 1
+			});
+
+		jQuery("#attach_to_plans")
+			.multiselect({	noneSelectedText: 'Assign to Plan',
+				selectedList: 1
+			});
+
+		jQuery("[id~=\"validationtype\"]")
+			.multiselect({	noneSelectedText: 'No Validation',
+				selectedList: 1
+			});
+
+		jQuery("#assignto_plan")
+			.multiselect({	noneSelectedText: 'PAYPLAN_NOPLAN',
+				selectedList: 3,
+				maxWidth: 300
+			});
+	};
 
 	if ( jQuery(".paper").length ) {
 		jQuery('#adminForm').one('click', function() {
