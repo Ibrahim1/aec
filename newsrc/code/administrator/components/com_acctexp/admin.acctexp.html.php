@@ -3144,7 +3144,7 @@ jQuery(document).ready(function(jQuery) {
 									<td><?php echo $row->transaction_date; ?></td>
 									<td><?php echo $row->usage; ?></td>
 									<td><?php echo $row->coupons; ?></td>
-									<td><?php echo $row->method; ?></td>
+									<td><?php echo $row->processor; ?></td>
 									<td><?php echo $row->amount; ?></td>
 									<td><?php echo $row->currency; ?></td>
 								</tr>

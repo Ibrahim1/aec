@@ -13,21 +13,20 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class PaymentProcessorHandler
 {
-
-	function PaymentProcessorHandler()
+	public static function ppDir()
 	{
-		$this->pp_dir = JPATH_SITE . '/components/com_acctexp/processors';
+		return JPATH_SITE . '/components/com_acctexp/processors';
 	}
 
-	function getProcessorList()
+	public static function getProcessorList()
 	{
-		$list = xJUtility::getFileArray( $this->pp_dir, null, true, true );
+		$list = xJUtility::getFileArray( self::ppDir(), null, true, true );
 
 		$pp_list = array();
 		foreach ( $list as $name ) {
-			if ( is_dir( $this->pp_dir . '/' . $name ) ) {
+			if ( is_dir( self::ppDir() . '/' . $name ) ) {
 				// Only add directories with the proper structure
-				if ( file_exists( $this->pp_dir . '/' . $name . '/' . $name . '.php' ) ) {
+				if ( file_exists( self::ppDir() . '/' . $name . '/' . $name . '.php' ) ) {
 					$pp_list[] = $name;
 				}
 			}
@@ -36,9 +35,9 @@ class PaymentProcessorHandler
 		return $pp_list;
 	}
 
-	function getProcessorSelectList( $multiple=true, $selected=array(), $name='gwlist' )
+	public static function getProcessorSelectList( $multiple=true, $selected=array(), $name='gwlist' )
 	{
-		$gwlist					= $this->getProcessorList();
+		$gwlist					= self::getProcessorList();
 
 		$gw_list_enabled		= array();
 		$gw_list_enabled_html	= array();
@@ -47,48 +46,47 @@ class PaymentProcessorHandler
 
 		asort($gwlist);
 
-		$ppsettings = array();
-
 		foreach ( $gwlist as $gwname ) {
 			$pp = new PaymentProcessor();
-			if ( $pp->loadName( $gwname ) ) {
-				$pp->getInfo();
 
-				if ( $pp->processor->active ) {
-					// Add to Active List
-					$gw = new stdClass();
-					$gw->value = $gwname;
+			if ( !$pp->loadName( $gwname ) ) continue;
 
-					$gw_list_enabled[] = $gw;
+			$pp->getInfo();
 
-					// Add to selected Description List if existing in db entry
-					if ( !empty( $selected ) ) {
-						if ( $multiple && is_array( $selected ) ) {
-							if ( in_array( $gwname, $selected ) ) {
-								$gwlist_sel = new stdClass();
-								$gwlist_sel->value = $gwname;
+			if ( !$pp->processor->active ) continue;
 
-								$gwlist_selected[] = $gwlist_sel;
-							}
-						} elseif ( $multiple && is_array( $selected ) ) {
-							if ( $gwname == $selected ) {
-								$gwlist_sel = new stdClass();
-								$gwlist_sel->value = $gwname;
+			// Add to Active List
+			$gw = new stdClass();
+			$gw->value = $gwname;
 
-								$gwlist_selected[] = $gwlist_sel;
-							}
-						} else {
-							if ( $gwname == $selected ) {
-								$gwlist_selected[] = $gwname;
-							}
-						}
+			$gw_list_enabled[] = $gw;
 
+			// Add to selected Description List if existing in db entry
+			if ( !empty( $selected ) ) {
+				if ( $multiple && is_array( $selected ) ) {
+					if ( in_array( $gwname, $selected ) ) {
+						$gwlist_sel = new stdClass();
+						$gwlist_sel->value = $gwname;
+
+						$gwlist_selected[] = $gwlist_sel;
 					}
+				} elseif ( $multiple && is_array( $selected ) ) {
+					if ( $gwname == $selected ) {
+						$gwlist_sel = new stdClass();
+						$gwlist_sel->value = $gwname;
 
-					// Add to Description List
-					$gw_list_enabled_html[] = JHTML::_('select.option', $gwname, $pp->info['longname'] );
+						$gwlist_selected[] = $gwlist_sel;
+					}
+				} else {
+					if ( $gwname == $selected ) {
+						$gwlist_selected[] = $gwname;
+					}
 				}
+
 			}
+
+			// Add to Description List
+			$gw_list_enabled_html[] = JHTML::_('select.option', $gwname, $pp->info['longname'] );
 		}
 
 		if ( !$multiple && !empty( $gwlist_selected ) ) {
@@ -100,7 +98,7 @@ class PaymentProcessorHandler
 		return JHTML::_('select.genericlist', $gw_list_enabled_html, $name.($multiple ? '[]' : ''), 'size="' . max(min(count($gw_list_enabled), 12), 3) . '"'.($multiple ? ' multiple="multiple"' : ''), 'value', 'text', $gwlist_selected);
 	}
 
-	static function getProcessorIdfromName( $name )
+	public static function getProcessorIdfromName( $name )
 	{
 		$db = JFactory::getDBO();
 
@@ -112,7 +110,7 @@ class PaymentProcessorHandler
 		return $db->loadResult();
 	}
 
-	static function getProcessorNamefromId( $id )
+	public static function getProcessorNamefromId( $id )
 	{
 		$db = JFactory::getDBO();
 
@@ -130,7 +128,7 @@ class PaymentProcessorHandler
 	 * @param bool	$active		get only active objects
 	 * @return array of (active) payment processors
 	 */
-	static function getInstalledObjectList( $active = false, $simple = false )
+	public static  function getInstalledObjectList( $active = false, $simple = false )
 	{
 		$db = JFactory::getDBO();
 
@@ -149,7 +147,7 @@ class PaymentProcessorHandler
 		}
 	}
 
-	function getInstalledNameList($active=false)
+	public static function getInstalledNameList($active=false)
 	{
 		$db = JFactory::getDBO();
 
@@ -164,7 +162,7 @@ class PaymentProcessorHandler
 		return xJ::getDBArray( $db );
 	}
 
-	function getObjectList( $array, $getinfo=false, $getsettings=false )
+	public static function getObjectList( $array, $getinfo=false, $getsettings=false )
 	{
 		$excluded = array( 'free', 'none', 'transfer' );
 
@@ -194,10 +192,10 @@ class PaymentProcessorHandler
 		return $list;
 	}
 
-	function getSelectList( $selection="", $installed=false )
+	public static function getSelectList( $selection="", $installed=false )
 	{
-		$pplist					= $this->getProcessorList();
-		$pp_installed_list		= $this->getInstalledObjectList( false, true );
+		$pplist					= self::getProcessorList();
+		$pp_installed_list		= self::getInstalledObjectList( false, true );
 
 		asort($pplist);
 
@@ -235,8 +233,6 @@ class PaymentProcessorHandler
 
 class PaymentProcessor
 {
-	/** var object **/
-	var $pph = null;
 	/** var int **/
 	var $id = null;
 	/** var string **/
@@ -249,12 +245,6 @@ class PaymentProcessor
 	var $settings = null;
 	/** var array **/
 	var $info = null;
-
-	function PaymentProcessor()
-	{
-		// Init Payment Processor Handler
-		$this->pph = new PaymentProcessorHandler();
-	}
 
 	function loadName( $name )
 	{
@@ -279,7 +269,7 @@ class PaymentProcessor
 			$this->id = $res->id ? $res->id : 0;
 		}
 
-		$this->path = $this->pph->pp_dir . '/' . $this->processor_name;
+		$this->path = PaymentProcessorHandler::ppDir() . '/' . $this->processor_name;
 
 		$file = $this->path . '/' . $this->processor_name . '.php';
 

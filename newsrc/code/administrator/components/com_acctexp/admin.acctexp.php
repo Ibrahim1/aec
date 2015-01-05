@@ -1606,8 +1606,7 @@ function editSettings( $option )
 		$desc_list = array();
 	}
 
-	$pph = new PaymentProcessorHandler();
-	$lists['gwlist'] = $pph->getProcessorSelectList( true, $desc_list );
+	$lists['gwlist'] = PaymentProcessorHandler::getProcessorSelectList( true, $desc_list );
 
 	$grouplist = ItemGroupHandler::getTree();
 
@@ -2090,8 +2089,7 @@ function editProcessor( $id, $option )
 		$params[$longname] = array( 'inputC', JText::_('CFG_PROCESSOR_NAME_NAME'), JText::_('CFG_PROCESSOR_NAME_DESC'), $pp->info['longname'], $longname);
 		$params[$description] = array( 'editor', JText::_('CFG_PROCESSOR_DESC_NAME'), JText::_('CFG_PROCESSOR_DESC_DESC'), $pp->info['description'], $description);
 	} else {
-		$pph					= new PaymentProcessorHandler();
-		$lists['processor']		= $pph->getSelectList();
+		$lists['processor']		= PaymentProcessorHandler::getSelectList();
 
 		$params['processor']	= array( 'list' );
 
@@ -4839,6 +4837,18 @@ function invoices( $option )
 
 	$cclist = array();
 
+	$processors = PaymentProcessorHandler::getObjectList(
+		PaymentProcessorHandler::getProcessorList()
+	);
+
+	$procs = array(
+		'free' => 'Free',
+		'none' => 'None'
+	);
+	foreach ( $processors as $processor ) {
+		$procs[$processor->processor_name] = $processor->info['name'];
+	}
+
 	$invoices = array();
 	foreach ( $ids as $id ) {
 		$invoices[$id] = new Invoice();
@@ -4895,6 +4905,8 @@ function invoices( $option )
 		}
 
 		$invoices[$id]->username .= '</a>';
+
+		$invoices[$id]->processor = $procs[$invoices[$id]->method];
 	}
 
 	HTML_AcctExp::viewInvoices( $option, $invoices, $search, $pageNav, $orderby );
@@ -4920,8 +4932,7 @@ function editInvoice( $id, $option, $returnTask, $userid )
 
 	$lists['usage'] = JHTML::_('select.genericlist', $available_plans, 'usage', 'size="1"', 'value', 'text', $row->usage );
 
-	$pph							= new PaymentProcessorHandler();
-	$lists['method']				= str_replace( 'processor', 'method', $pph->getSelectList( $row->method, true ) );
+	$lists['method']				= str_replace( 'processor', 'method', PaymentProcessorHandler::getSelectList( $row->method, true ) );
 
 	$params_values = array();
 	$params_values['active']		= $row->active;
