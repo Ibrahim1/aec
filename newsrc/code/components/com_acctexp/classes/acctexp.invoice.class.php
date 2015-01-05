@@ -3985,6 +3985,8 @@ class Invoice extends serialParamDBTable
 			if ( $pp->loadName( $this->method ) ) {
 				$pp->init();
 
+				$pp->getInfo();
+
 				if ( !empty( $InvoiceFactory->plan->id ) ) {
 					$pp->exchangeSettingsByPlan( $InvoiceFactory->plan->id, $InvoiceFactory->plan->params );
 				}
@@ -3995,7 +3997,10 @@ class Invoice extends serialParamDBTable
 
 		$pplist[$this->method] = $pp;
 
-		$recurring = $pplist[$this->method]->is_recurring();
+		$recurring = false;
+		if ( !empty($pp) ) {
+			$recurring = $pplist[$this->method]->is_recurring();
+		}
 
 		$data['recurringstatus'] = "";
 		if ( $recurring ) {
