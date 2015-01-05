@@ -4846,7 +4846,7 @@ function invoices( $option )
 		'none' => 'None'
 	);
 	foreach ( $processors as $processor ) {
-		$procs[$processor->processor_name] = $processor->info['name'];
+		$procs[$processor->processor_name] = $processor->processor->info['longname'];
 	}
 
 	$invoices = array();
