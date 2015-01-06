@@ -13,7 +13,6 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecSettings
 {
-
 	function aecSettings( $area, $subarea='' )
 	{
 		$this->area				= $area;
@@ -61,6 +60,12 @@ class aecSettings
 				}
 			}
 
+			// Sanitize HTML value on any inputX field.
+			if ( strpos($content[0], 'input') === 0 ) {
+				$this->params_values[$name] = htmlentities($this->params_values[$name]);
+			}
+
+			$value = null;
 			if ( isset( $this->params_values[$name] ) ) {
 				$value = $this->params_values[$name];
 			}
