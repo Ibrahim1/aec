@@ -327,10 +327,7 @@ jQuery(document).ready(function(jQuery) {
 				allowClear: true
 			});
 
-			jQuery('.popover-content .jqui-multiselect').multiselect({
-				noneSelectedText: 'Select',
-				selectedList: 8
-			});
+			initMultiSelects('.popover-content');
 
 			// Rename original field so it doesn't overwrite our stuff
 			var inputs = jQuery(this.$element).parent().find('.content select');
@@ -366,8 +363,14 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery('.select2-bootstrap:not(.content .select2-bootstrap)').select2();
 
-	var initMultiSelects = function() {
-		/*jQuery("#status-group-select")
+	var initMultiSelects = function(prefix) {
+		if ( typeof prefix == 'undefined' ) {
+			prefix = '';
+		} else {
+			prefix = prefix + ' ';
+		}
+
+		jQuery(prefix + "#status-group-select")
 			.multiselect({	noneSelectedText: 'Select Status',
 				selectedList: 8,
 				checkAll: function(event, ui){
@@ -385,16 +388,16 @@ jQuery(document).ready(function(jQuery) {
 				}
 			});
 
-		jQuery("#plan-filter-select")
+		jQuery(prefix + "#plan-filter-select")
 			.multiselect({	noneSelectedText: 'PLAN_FILTER',
 				selectedList: 3
 			});
 
-		jQuery("#group-filter-select")
+		jQuery(prefix + "#group-filter-select")
 			.multiselect({	noneSelectedText: 'GROUP_FILTER',
 				selectedList: 1
 			});
-		jQuery(".ui-multiselect-checkboxes input").on("click", function(event){
+		jQuery(prefix + ".ui-multiselect-checkboxes input").on("click", function(event){
 			if( jQuery(this).val() == "notconfig" ) {
 				if( jQuery(this).attr("checked") == "checked" ) {
 					jQuery(".ui-multiselect-checkboxes input").removeAttr("checked");
@@ -405,24 +408,24 @@ jQuery(document).ready(function(jQuery) {
 			} else {
 				jQuery("#ui-multiselect-status-group-select-option-7").removeAttr("checked");
 			}
-		});*/
+		});
 
-		jQuery("#attach_to_groups")
+		jQuery(prefix + "#attach_to_groups")
 			.multiselect({	noneSelectedText: 'Assign to Group',
 				selectedList: 1
 			});
 
-		jQuery("#attach_to_plans")
+		jQuery(prefix + "#attach_to_plans")
 			.multiselect({	noneSelectedText: 'Assign to Plan',
 				selectedList: 1
 			});
 
-		jQuery("[id~=\"validationtype\"]")
+		jQuery(prefix + "[id~=\"validationtype\"]")
 			.multiselect({	noneSelectedText: 'No Validation',
 				selectedList: 1
 			});
 
-		jQuery("#assignto_plan")
+		jQuery(prefix + "#assignto_plan")
 			.multiselect({	noneSelectedText: 'PAYPLAN_NOPLAN',
 				selectedList: 3,
 				maxWidth: 300

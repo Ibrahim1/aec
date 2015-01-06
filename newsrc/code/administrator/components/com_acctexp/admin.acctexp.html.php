@@ -1733,6 +1733,13 @@ class HTML_AcctExp
 									<?php } ?>
 								</tr></thead>
 								<tbody>
+								<?php if ( empty($rows) ) { ?>
+									<tr class="warning">
+										<td class="text-center" colspan="10">
+											No Results. Perhaps you need to adjust the <i class="glyphicon glyphicon-filter"></i>Filters in the table head?
+										</td>
+									</tr>
+								<?php } ?>
 								<?php foreach ( $rows as $i => $row ) {
 									if ( !isset( $row->status ) ) {
 										$row->status		= '-';

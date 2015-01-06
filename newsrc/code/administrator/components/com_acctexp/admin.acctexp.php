@@ -1305,7 +1305,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 	}
 	$lists['planid']	= JHTML::_('select.genericlist', $plans2, 'assign_planid', 'class="inputbox" size="1" onchange="document.adminForm.submit();"', 'id', 'name', 0 );
 
-	$lists['filter_plan'] = '<select id="plan-filter-select" class="select2-bootstrap" name="filter_plan[]" multiple="multiple" size="5">';
+	$lists['filter_plan'] = '<select id="plan-filter-select" name="filter_plan[]" multiple="multiple" size="5">';
 	foreach ( $db_plans as $plan ) {
 		$lists['filter_plan'] .= '<option value="' . $plan->id . '"' . ( in_array( $plan->id, $filter_plan ) ? ' selected="selected"' : '' ) . '/>' . $plan->name . '</option>';
 	}
@@ -1313,7 +1313,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$grouplist = ItemGroupHandler::getTree();
 
-	$lists['filter_group'] = '<select id="group-filter-select" class="select2-bootstrap" name="filter_group[]" multiple="multiple" size="5">';
+	$lists['filter_group'] = '<select id="group-filter-select" name="filter_group[]" multiple="multiple" size="5">';
 	foreach ( $grouplist as $glisti ) {
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$lists['filter_group'] .= '<option value="' . $glisti[0] . '"' . ( in_array( $glisti[0], $filter_group ) ? ' selected="selected"' : '' ) . '/>' . str_replace( '&nbsp;', ' ', $glisti[1] ) . '</option>';
@@ -1333,7 +1333,7 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 						'notconfig'	=> JText::_('AEC_SEL_NOT_CONFIGURED')
 						);
 
-	$lists['groups'] = '<select id="status-group-select" class="select2-bootstrap" name="groups[]" multiple="multiple" size="5">';
+	$lists['groups'] = '<select id="status-group-select" name="groups[]" multiple="multiple" size="5">';
 	foreach ( $status as $id => $txt ) {
 		$lists['groups'] .= '<option value="' . $id . '"' . ( in_array( $id, $groups ) ? ' selected="selected"' : '' ) . '/>' . $txt . '</option>';
 	}
