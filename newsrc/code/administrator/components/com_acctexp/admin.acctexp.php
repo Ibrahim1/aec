@@ -3996,7 +3996,7 @@ function editMicroIntegration( $id, $option )
 				$selected_plans[] = (object) array( 'value' => $p->id, 'text' => $p->name );
 			}
 
-			$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple"', 'value', 'text', $selected_plans );
+			$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', $selected_plans );
 
 			$available_groups = ItemGroupHandler::getGroups( null, true );
 
@@ -4005,7 +4005,7 @@ function editMicroIntegration( $id, $option )
 				$selected_groups[] = (object) array( 'value' => $g->id, 'text' => $g->name );
 			}
 
-			$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple"', 'value', 'text', $selected_groups );
+			$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', $selected_groups );
 
 			$gsettings = new aecSettings( 'MI', 'E' );
 			$gsettings->fullSettingsArray( $mi_gsettings, array_merge( $set, $mi->restrictions ), $lists );
@@ -4047,10 +4047,10 @@ function editMicroIntegration( $id, $option )
 		$aecHTML->hasRestrictions = false;
 
 		$available_plans = SubscriptionPlanHandler::getPlanList( false, false, true, null, true );
-		$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple"', 'value', 'text', null );
+		$lists['attach_to_plans'] = JHTML::_('select.genericlist', $available_plans, 'attach_to_plans[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', null );
 
 		$available_groups = ItemGroupHandler::getGroups( null, true );
-		$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple"', 'value', 'text', null );
+		$lists['attach_to_groups'] = JHTML::_('select.genericlist', $available_groups, 'attach_to_groups[]', 'size="1" multiple="multiple" class="select2-bootstrap"', 'value', 'text', null );
 	}
 
 	HTML_AcctExp::editMicroIntegration( $option, $mi, $lists, $aecHTML, $attached );

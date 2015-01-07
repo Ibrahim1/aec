@@ -1908,14 +1908,12 @@ class HTML_AcctExp
 			}
 		}
 
-		$tabs->newTab( 'attachedto', JText::_('Attached to') );
-
 		$tabs->endTabs();
 		$tabs->startPanes();
 
 		$tabs->nextPane( 'mi', true ); ?>
 			<div class="row">
-				<div class="col-sm-8 col-sm-offset-2">
+				<div class="col-sm-6">
 					<section class="paper">
 						<h4><?php echo JText::_('MI_E_TITLE_LONG'); ?></h4>
 						<?php echo $aecHTML->createSettingsParticle( 'active' ); ?>
@@ -1946,6 +1944,23 @@ class HTML_AcctExp
 						<?php echo $aecHTML->createSettingsParticle( 'sticky_permissions' ); ?>
 					</section>
 				</div>
+				<div class="col-sm-6">
+					<section class="paper">
+						<h4><?php echo JText::_('Attached to'); ?></h4>
+
+						<?php
+						echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
+
+						echo $lists['attach_to_groups'];
+						?>
+						<hr/>
+						<?php
+						echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
+
+						echo $lists['attach_to_plans'];
+						?>
+					</section>
+				</div>
 				<?php if ( !empty( $aecHTML->hasHacks ) ) { ?>
 					<div class="col-sm-8 col-sm-offset-2">
 						<section class="paper">
@@ -1968,74 +1983,22 @@ class HTML_AcctExp
 				<div class="col-sm-8 col-sm-offset-2">
 					<section class="paper">
 						<h4><?php echo JText::_('MI_E_SETTINGS'); ?></h4>
-						<?php
-						foreach ( $aecHTML->customparams as $name ) {
-						if ( strpos( $name, 'aectab_' ) === 0 ) {
-						?>
-					</section>
-					<?php $tabs->nextPane( $name ); ?>
-					<section class="paper">
-						<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
-						<?php
-						} else {
-							if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
-								echo '<tr><td>';
-							}
-
-							echo $aecHTML->createSettingsParticle( $name );
-
-							if ( strpos( $aecHTML->rows[$name][1], 'editlinktip hasTip' ) ) {
-								echo '</td></tr>';
-							}
-						}
-						} ?>
+						<?php foreach ( $aecHTML->customparams as $name ) { ?>
+							<?php if ( strpos( $name, 'aectab_' ) === 0 ) { ?>
+							</div></div></section>
+							<?php $tabs->nextPane( $name ); ?>
+								<div class="row">
+									<div class="col-sm-8 col-sm-offset-2">
+										<section class="paper">
+											<h4><?php echo $aecHTML->rows[$name][1]; ?></h4>
+							<?php } else {
+								echo $aecHTML->createSettingsParticle( $name );
+							} ?>
+						<?php } ?>
 					</section>
 				</div>
 			</div>
 		<?php } ?>
-		<?php $tabs->nextPane( 'attachedto' ); ?>
-			<div class="row">
-				<div class="col-sm-8 col-sm-offset-2">
-					<section class="paper">
-						<div class="row">
-							<div class="col-sm-6">
-								<?php
-								echo '<h4>' . JText::_('ITEMGROUPS_TITLE') . '</h4>';
-
-								if ( !empty( $attached['groups'] ) ) {
-									echo '<ul>';
-									foreach ( $attached['groups'] as $group ) {
-										echo '<li>#' . $group->id . ' - <a href="index.php?option=' . $option . '&amp;task=editItemGroup&amp;id=' . $group->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $group->getProperty('name') . '</a>';
-										echo '<input type="hidden" name="attached_to_groups[]" value="' . $group->id . '" /></li>';
-									}
-									echo '</ul>';
-								}
-
-								echo $lists['attach_to_groups'];
-
-								?>
-							</div>
-							<div class="col-sm-6">
-								<?php
-								echo '<h4>' . JText::_('PAYPLANS_TITLE') . '</h4>';
-
-								if ( !empty( $attached['plans'] ) ) {
-									echo '<ul>';
-									foreach ( $attached['plans'] as $plan ) {
-										echo '<li>#' . $plan->id . ' - <a href="index.php?option=' . $option . '&amp;task=editSubscriptionPlan&amp;id=' . $plan->id . '" target="_blank" title="' . JText::_('AEC_CMN_CLICK_TO_EDIT') . '">' . $plan->getProperty('name') . '</a>';
-										echo '<input type="hidden" name="attached_to_plans[]" value="' . $plan->id . '" /></li>';
-									}
-									echo '</ul>';
-								}
-
-								echo $lists['attach_to_plans'];
-								?>
-							</div>
-						</div>
-					</section>
-				</div>
-			</div>
-
 		<?php $tabs->endPanes(); ?>
 		<input type="hidden" name="id" value="<?php echo $row->id; ?>" />
 		<input type="hidden" name="option" value="<?php echo $option; ?>" />
