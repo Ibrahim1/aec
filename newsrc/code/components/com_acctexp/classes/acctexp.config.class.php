@@ -142,6 +142,7 @@ class aecConfig extends serialParamDBTable
 													. "city=\nstate=\nzip=\ncountry=\nphone=\nfax=\ncompany=";
 		$def['noemails_adminoverride']			= 1;
 		$def['debug_processor_notifications']	= 0;
+		$def['setlocale_date']					= '';
 
 		return $def;
 	}

@@ -741,19 +741,41 @@ class AECToolbox
 			$date += ( $app->getCfg( 'offset' ) * 3600 );
 		}
 
+		$locale_existing = '0';
+
+		if ( !empty($aecConfig->cfg['setlocale_date']) ) {
+			$locale_existing = setlocale(LC_TIME, $locale_existing);
+
+			$locale = array_map( 'trim', explode(',', $aecConfig->cfg['setlocale_date']) );
+
+			call_user_func(
+				'setlocale',
+				array_merge(
+					LC_TIME,
+					$locale
+				)
+			);
+		}
+
 		if ( $backend ) {
 			if ( empty( $aecConfig->cfg['display_date_backend'] ) ) {
-				return JHTML::_( 'date', $date, JText::_('DATE_FORMAT_LC2') );
+				$formatted = JHTML::_( 'date', $date, JText::_('DATE_FORMAT_LC2') );
 			} else {
-				return strftime( $aecConfig->cfg['display_date_backend'], $date );
+				$formatted = strftime( $aecConfig->cfg['display_date_backend'], $date );
 			}
 		} else {
 			if ( empty( $aecConfig->cfg['display_date_frontend'] ) ) {
-				return JHTML::_( 'date', $date, JText::_('DATE_FORMAT_LC4') );
+				$formatted = JHTML::_( 'date', $date, JText::_('DATE_FORMAT_LC4') );
 			} else {
-				return strftime( $aecConfig->cfg['display_date_frontend'], $date );
+				$formatted = strftime( $aecConfig->cfg['display_date_frontend'], $date );
 			}
 		}
+
+		if ( !empty($aecConfig->cfg['setlocale_date']) ) {
+			setlocale(LC_TIME, $locale_existing);
+		}
+
+		return $formatted;
 	}
 
 	static function formatAmountCustom( $request, $plan, $forcedefault=false, $proposed=null )

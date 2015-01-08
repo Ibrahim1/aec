@@ -1488,6 +1488,7 @@ function editSettings( $option )
 	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_DATE') );
 	$params['display_date_backend']				= array( 'inputC', '%a, %d %b %Y %T %Z' );
 	$params['display_date_frontend']			= array( 'inputC', '%a, %d %b %Y %T %Z' );
+	$params['setlocale_date']					= array( 'inputD', '' );
 	$params[] = array( 'section-head', JText::_('CFG_CUSTOMIZATION_SUB_FORMAT_PRICE') );
 	$params['amount_currency_symbol']			= array( 'toggle', 0 );
 	$params['amount_currency_symbolfirst']		= array( 'toggle', 0 );
