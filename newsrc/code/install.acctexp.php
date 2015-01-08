@@ -40,11 +40,9 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 		function install()
 		{
-			if ( !defined('AEC_INSTALLER_CALLED') ) {
-				define( 'AEC_INSTALLER_CALLED', true );
-			} else {
-				return true;
-			}
+			if ( defined('AEC_INSTALLER_CALLED') ) return true;
+
+			define( 'AEC_INSTALLER_CALLED', true );
 
 			$errors = array();
 
