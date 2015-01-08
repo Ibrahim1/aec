@@ -141,6 +141,7 @@ class aecConfig extends serialParamDBTable
 		$def['user_checkout_prefill']			= "firstname=[[user_first_name]]\nlastname=[[user_last_name]]\naddress=\naddress2=\n"
 													. "city=\nstate=\nzip=\ncountry=\nphone=\nfax=\ncompany=";
 		$def['noemails_adminoverride']			= 1;
+		$def['debug_processor_notifications']	= 0;
 
 		return $def;
 	}

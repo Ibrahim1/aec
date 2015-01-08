@@ -1436,16 +1436,17 @@ function editSettings( $option )
 	$params[] = array( 'page-head', JText::_('Inner workings') );
 	$params[] = array( 'section', 'heartbeat' );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_SYSTEM') );
-	$params['heartbeat_cycle']				= array( 'inputA', 0 );
+	$params['heartbeat_cycle']					= array( 'inputA', 0 );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_EMAIL') );
-	$params['noemails']						= array( 'toggle', 0 );
-	$params['noemails_adminoverride']		= array( 'toggle', 0 );
-	$params['nojoomlaregemails']			= array( 'toggle', 0 );
+	$params['noemails']							= array( 'toggle', 0 );
+	$params['noemails_adminoverride']			= array( 'toggle', 0 );
+	$params['nojoomlaregemails']				= array( 'toggle', 0 );
 	$params[] = array( 'section-head', JText::_('CFG_GENERAL_SUB_DEBUG') );
-	$params['curl_default']					= array( 'toggle', 0 );
-	$params['simpleurls']					= array( 'toggle', 0 );
-	$params['error_notification_level']		= array( 'list', 0 );
-	$params['email_notification_level']		= array( 'list', 0 );
+	$params['curl_default']						= array( 'toggle', 0 );
+	$params['simpleurls']						= array( 'toggle', 0 );
+	$params['debug_processor_notifications']	= array( 'toggle', 0 );
+	$params['error_notification_level']			= array( 'list', 0 );
+	$params['email_notification_level']			= array( 'list', 0 );
 	$params[] = array( 'section-end' );
 
 	@end( $params );

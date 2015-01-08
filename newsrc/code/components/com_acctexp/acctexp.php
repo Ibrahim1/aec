@@ -1090,6 +1090,8 @@ function InvoiceRemoveCoupon( $option )
 
 function processNotification( $option, $processor )
 {
+	global $aecConfig;
+
 	// Legacy naming support
 	switch ( $processor ) {
 		case 'vklix': $processor = 'viaklix'; break;
@@ -1098,7 +1100,17 @@ function processNotification( $option, $processor )
 		case 'eps': $processor = 'epsnetpay'; break;
 	}
 
-	//aecDebug( "ResponseFunction:processNotification" );aecDebug( $_GET );aecDebug( $_POST );aecDebug( file_get_contents("php://input") );
+	if ( !empty($aecConfig->cfg['debug_processor_notifications']) ) {
+		aecDebug( "ResponseFunction:processNotification" );
+
+		aecDebug( $_GET );
+
+		aecDebug( $_POST );
+
+		aecDebug( $_REQUEST );
+
+		aecDebug( file_get_contents("php://input") );
+	}
 	$response = array();
 	$response['fullresponse'] = aecPostParamClear( $_POST );
 
