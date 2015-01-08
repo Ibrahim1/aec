@@ -4865,7 +4865,7 @@ function invoices( $option )
 		}
 
 		if ( !empty( $invoices[$id]->coupons ) ) {
-			$coupons = unserialize( base64_decode( $invoices[$id]->coupons ) );
+			$coupons = $invoices[$id]->coupons;
 		} else {
 			$coupons = null;
 		}
@@ -4929,12 +4929,39 @@ function editInvoice( $id, $option, $returnTask, $userid )
 	$params['amount']				= array( 'inputB',		'' );
 	$params['usage']				= array( 'list', 		0 );
 	$params['method']				= array( 'list', 		'' );
+	$params['coupons']				= array( 'list', 		0 );
 
 	$available_plans = SubscriptionPlanHandler::getActivePlanList();
 
 	$lists['usage'] = JHTML::_('select.genericlist', $available_plans, 'usage', 'size="1"', 'value', 'text', $row->usage );
 
 	$lists['method']				= str_replace( 'processor', 'method', PaymentProcessorHandler::getSelectList( $row->method, true ) );
+
+	$db->setQuery(
+		'SELECT `id` as value, `coupon_code` as text'
+		. ' FROM #__acctexp_coupons'
+	);
+
+	$coupons = $db->loadObjectList();
+
+	$db->setQuery(
+		'SELECT `id` as value, `coupon_code` as text'
+		. ' FROM #__acctexp_coupons_static'
+	);
+
+	$coupons = array_merge( $db->loadObjectList(), $coupons );
+
+	$coupons_active = array();
+
+	if ( !empty($row->coupons) ) {
+		foreach ( $row->coupons as $coupon_code ) {
+			$coupon_id = couponHandler::idFromCode($coupon_code);
+
+			$coupons_active[] = (int) $coupon_id['id'];
+		}
+	}
+
+	$lists['coupons'] = JHTML::_('select.genericlist', $coupons, 'coupons[]', 'multiple="multiple"', 'value', 'text', $coupons_active);
 
 	$params_values = array();
 	$params_values['active']		= $row->active;
@@ -4968,6 +4995,42 @@ function saveInvoice( $option, $return=0 )
 	unset( $_POST['id'] );
 	unset( $_POST['returnTask'] );
 
+	if ( empty($_POST['coupons']) ) {
+		$_POST['coupons'] = array();
+	}
+
+	$previous = array();
+	if ( !empty($row->coupons) ) {
+		foreach ( $row->coupons as $coupon_code ) {
+			$id = couponHandler::idFromCode($coupon_code);
+
+			$previous[] = $id['id'];
+		}
+	}
+
+	$added = array();
+	foreach ( $_POST['coupons'] as $coupon_id ) {
+		if ( !in_array($coupon_id, $previous) ) {
+			$added[] = $coupon_id;
+		} else {
+			unset( $previous[array_search($coupon_id, $previous)] );
+		}
+	}
+
+	if ( !empty($added) ) {
+		foreach ( $added as $coupon_id ) {var_dump($coupon_id);
+			$row->addCoupon((int)$coupon_id, true);
+		}
+	}
+
+	if ( !empty($previous) ) {
+		foreach ( $previous as $coupon_id ) {
+			$row->removeCoupon((int)$coupon_id, true);
+		}
+	}
+
+	unset($_POST['coupons']);
+
 	$row->savePOSTsettings( $_POST );
 
 	$row->storeload();
@@ -4976,7 +5039,7 @@ function saveInvoice( $option, $return=0 )
 		aecRedirect( 'index.php?option=' . $option . '&task=editInvoice&id=' . $row->id . '&returnTask=' . $returnTask, JText::_('AEC_CONFIG_SAVED') );
 	} else {
 		if ( $returnTask ) {
-			aecRedirect( 'index.php?option=' . $option . '&task=editMembership&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );
+			aecRedirect( 'index.php?option=' . $option . '&task=' . $returnTask . '&userid='.$_POST['userid'], JText::_('AEC_CONFIG_SAVED') );
 		} else {
 			aecRedirect( 'index.php?option=' . $option . '&task=invoices', JText::_('AEC_CONFIG_SAVED') );
 		}

@@ -3763,7 +3763,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function addCoupon( $couponcode )
+	function addCoupon( $couponcode, $fromId=false )
 	{
 		if ( !empty( $this->coupons ) ) {
 			if ( !is_array( $this->coupons ) ) {
@@ -3773,6 +3773,12 @@ class Invoice extends serialParamDBTable
 			}
 		} else {
 			$oldcoupons = array();
+		}
+
+		if ( $fromId ) {
+			$couponcode = couponHandler::codeFromId($couponcode);
+
+			$couponcode = $couponcode['coupon_code'];
 		}
 
 		if ( !in_array( $couponcode, $oldcoupons ) ) {
@@ -3789,13 +3795,19 @@ class Invoice extends serialParamDBTable
 		$this->coupons = $oldcoupons;
 	}
 
-	function removeCoupon( $coupon_code )
+	function removeCoupon( $coupon_code, $fromId=false )
 	{
-		if ( !is_array( $this->coupons ) ) {
+		if ( empty( $this->coupons ) ) {
 			return null;
 		}
 
-		if ( in_array( $coupon_code, $this->coupons ) ) {
+		if ( $fromId ) {
+			$coupon_code = couponHandler::codeFromId($coupon_code);
+
+			$coupon_code = $coupon_code['coupon_code'];
+		}
+
+		if ( !in_array( $coupon_code, $this->coupons ) ) {
 			return null;
 		}
 

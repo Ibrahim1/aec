@@ -620,11 +620,43 @@ class couponHandler
 		$this->error = $error;
 	}
 
+	static function codeFromId( $coupon_id )
+	{
+		$db = JFactory::getDBO();
+
+		$return = array( 'type' => 1 );
+
+		// Get this coupons id from the static table
+		$query = 'SELECT `coupon_code`'
+			. ' FROM #__acctexp_coupons_static'
+			. ' WHERE `id` = \'' . $coupon_id . '\''
+		;
+		$db->setQuery( $query );
+		$coupon_code = $db->loadResult();
+
+		if ( empty($coupon_code) ) {
+			// Coupon not found, take the regular table
+			$query = 'SELECT `coupon_code`'
+				. ' FROM #__acctexp_coupons'
+				. ' WHERE `id` = \'' . $coupon_id . '\''
+			;
+			$db->setQuery( $query );
+			$coupon_code = $db->loadResult();
+
+			// Its not static, so set type to 0
+			$return['type'] = 0;
+		}
+
+		$return['coupon_code'] = $coupon_code;
+
+		return $return;
+	}
+
 	static function idFromCode( $coupon_code )
 	{
 		$db = JFactory::getDBO();
 
-		$return = array();
+		$return = array( 'type' => 1 );
 
 		// Get this coupons id from the static table
 		$query = 'SELECT `id`'
@@ -634,10 +666,7 @@ class couponHandler
 		$db->setQuery( $query );
 		$couponid = $db->loadResult();
 
-		if ( $couponid ) {
-			// Its static, so set type to 1
-			$return['type'] = 1;
-		} else {
+		if ( empty($couponid) ) {
 			// Coupon not found, take the regular table
 			$query = 'SELECT `id`'
 					. ' FROM #__acctexp_coupons'

@@ -3031,7 +3031,7 @@ class HTML_AcctExp
 								<tr>
 									<td><?php echo $i + 1 + $pageNav->limitstart; ?></td>
 									<td><a href="index.php?option=com_acctexp&amp;task=edit&userid=<?php echo $row->userid; ?>"><?php echo $row->username; ?></a></td>
-									<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editInvoice&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
+									<td><a href="<?php echo 'index.php?option=' . $option . '&amp;task=editInvoice&returnTask=invoices&amp;id=' . $row->id ?>" title="<?php echo JText::_('AEC_CMN_CLICK_TO_EDIT'); ?>"><?php echo $row->invoice_number_formatted; ?></a></td>
 									<td><?php echo $row->secondary_ident; ?></td>
 									<td><?php echo $row->created_date; ?></td>
 									<td><?php echo $row->transaction_date; ?></td>
@@ -3071,7 +3071,24 @@ class HTML_AcctExp
 
 		HTML_myCommon::startForm();
 
-		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', ( !empty( $aecHTML->pp->info['longname'] ) ? $aecHTML->pp->info['longname'] : '' ), false, 'edit', 'Invoice' );
+		$buttons = array(
+			'apply' => array(
+				'style' => 'info',
+				'text' => JText::_('APPLY'),
+				'icon' => 'ok-sign' ),
+			'save' => array(
+				'style' => 'success',
+				'text' => JText::_('SAVE'),
+				'icon' => 'ok' ),
+			'hl1' => array(),
+			'cancel' => array(
+				'style' => 'danger',
+				'text' => JText::_('CANCEL'),
+				'icon' => 'remove'
+			)
+		);
+
+		HTML_myCommon::getHeader( 'AEC_HEAD_INVOICE', 'invoices', '', false, $buttons, 'Invoice' );
 
 		?>
 		<div class="row">
@@ -3084,6 +3101,7 @@ class HTML_AcctExp
 				</section>
 			</div>
 		</div>
+
 		<?php
 
 		HTML_myCommon::endForm( $option, $id, 'saveInvoice' );
