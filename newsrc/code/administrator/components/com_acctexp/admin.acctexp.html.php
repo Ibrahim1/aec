@@ -3599,56 +3599,63 @@ class HTML_AcctExp
 
 		$buttons = array(
 			'cancel' => array( 'style' => 'danger', 'text' => JText::_('CANCEL'), 'icon' => 'remove' ),
-			'' => array( 'style' => 'success', 'text' => JText::_('Import'), 'actionable' => true, 'icon' => 'ok' )
+			'' => array( 'style' => 'success', 'text' => JText::_('Import'), 'icon' => 'ok' )
 			);
 
 		HTML_myCommon::getHeader( 'AEC_HEAD_IMPORT', 'import', '', false, $buttons, 'Import' );
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<div class="row">
-				<div class="col-sm-12">
-					<div class="aec_import<?php echo $aecHTML->form ? '' : '_large'; ?> aec-settings-container">
-						<?php
-						if ( $aecHTML->done ) {
-							echo '<p>Import ran through successfully.</p>';
-							if ( !empty( $aecHTML->errors ) ) {
-								echo '<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
-							}
-						} elseif ( $aecHTML->form ) {
-							foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
+				<?php if ( $aecHTML->done ) { ?>
+				<div class="col-sm-6 col-sm-offset-3">
+					<section class="paper">
+						<?php if ( $aecHTML->done || $aecHTML->form ) { ?>
+							<p>Import ran through successfully.</p>
+							<?php if ( !empty( $aecHTML->errors ) ) {?>
+								<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
+							<?php } ?>
+						<?php } else { ?>
+							<?php foreach ( $aecHTML->rows as $rowname => $rowcontent ) {
 								echo $aecHTML->createSettingsParticle( $rowname );
-							}
-						} else {
-							echo $aecHTML->createSettingsParticle( 'file_select' );
+							} ?>
+						<?php } ?>
+					</section>
+				</div>
+				<?php } else { ?>
+				<div class="col-sm-12">
 
-							echo '<p>Please let us know what the columns in your .csv file mean:</p><p></p>';
+					<?php echo $aecHTML->createSettingsParticle( 'file_select' ); ?>
 
-							echo '<table id="aec_import_table">';
-
-							echo '<tr>';
+					<table class="table table-hover table-condensed">
+						<?php
+						echo '<tr>';
 							foreach ( $aecHTML->columns as $column ) {
 								echo '<th>' . $aecHTML->createSettingsParticle( $column ) . '</th>';
 							}
-							echo '</tr>';
+						echo '</tr>';
 
-							foreach ( $aecHTML->user_rows as $row ) {
-								echo '<tr>';
+						foreach ( $aecHTML->user_rows as $row ) {
+						echo '<tr>';
 
-								foreach ( $row as $k => $v ) {
-									echo '<td>' . $v . '</td>';
-								}
-
-								echo '</tr>';
+							foreach ( $row as $k => $v ) {
+							echo '<td>' . $v . '</td>';
 							}
 
-							echo '</table>';
-							echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
-
-							echo $aecHTML->createSettingsParticle( 'assign_plan' );
+							echo '</tr>';
 						}
+
+						echo '</table>';
 						?>
-					</div>
 				</div>
+				<div class="col-sm-6 col-sm-offset-6">
+
+					<p>Please let us know what the columns in your .csv file mean.</p><p></p>
+
+					<?php echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
+
+					echo $aecHTML->createSettingsParticle( 'assign_plan' ); ?>
+				</div>
+				<?php } ?>
 			</div>
 
 		<input type="hidden" name="option" value="<?php echo $option;?>" />

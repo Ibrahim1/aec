@@ -6158,61 +6158,62 @@ function importData( $option )
 
 		$import->parse();
 
-		if ( !empty( $import->rows ) ) {
-			$params['file_select']		= array( 'hidden', $file_select );
-
-			if ( !isset( $_POST['convert_field_0'] ) ) {
-				$fields = array(	"id" => "User ID",
-									"name" => "User Full Name",
-									"username" => "Username",
-									"email" => "User Email",
-									"password" => "Password",
-									"plan_id" => "Payment Plan ID",
-									"invoice_number" => "Invoice Number",
-									"expiration" => "Membership Expiration"
-								);
-
-				$field_htmllist		= array();
-				$field_htmllist[]	= JHTML::_('select.option', 0, 'Ignore' );
-
-				foreach ( $fields as $name => $longname ) {
-					$field_htmllist[] = JHTML::_('select.option', $name, $longname );
-				}
-
-				$cols = count( $import->rows[0] );
-
-				$columns = array();
-				for ( $i=0; $i<$cols; $i++ ) {
-					$columns[] = 'convert_field_'.$i;
-
-					$params['convert_field_'.$i] = array( 'list', '', '', '' );
-
-					$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="col-sm-2"', 'value', 'text', 0 );
-				}
-
-				$rows_count = count( $import->rows );
-
-				$rowcount = min( $rows_count, 5 );
-
-				$rows = array();
-				for ( $i=0; $i<$rowcount; $i++ ) {
-					$rows[] = $import->rows[$i];
-				}
-
-				$params['assign_plan'] = array( 'list', 'Assign Plan', 'Assign users to a specific payment plan. Is overridden if you provide an individual plan ID with the "Payment Plan ID" field assignment.' );
-
-				$available_plans	= SubscriptionPlanHandler::getActivePlanList();
-
-				$lists['assign_plan'] = JHTML::_('select.genericlist', $available_plans, 'assign_plan', 'size="5"', 'value', 'text', 0 );
-			} else {
-				$import->getConversionList();
-
-				$import->import();
-
-				$done = true;
-			}
-		} else {
+		if ( empty( $import->rows ) ) {
 			die( 'could not find any entries in this file' );
+		}
+
+		$params['file_select'] = array( 'hidden', $file_select );
+
+		if ( !isset( $_POST['convert_field_0'] ) ) {
+			$fields = array(
+				"id" => "User ID",
+				"name" => "User Full Name",
+				"username" => "Username",
+				"email" => "User Email",
+				"password" => "Password",
+				"plan_id" => "Payment Plan ID",
+				"invoice_number" => "Invoice Number",
+				"expiration" => "Membership Expiration"
+			);
+
+			$field_htmllist		= array();
+			$field_htmllist[]	= JHTML::_('select.option', 0, 'Ignore' );
+
+			foreach ( $fields as $name => $longname ) {
+				$field_htmllist[] = JHTML::_('select.option', $name, $longname );
+			}
+
+			$cols = count( $import->rows[0] );
+
+			$columns = array();
+			for ( $i=0; $i<$cols; $i++ ) {
+				$columns[] = 'convert_field_'.$i;
+
+				$params['convert_field_'.$i] = array( 'list', '', '', '' );
+
+				$lists['convert_field_'.$i] = JHTML::_('select.genericlist', $field_htmllist, 'convert_field_'.$i, 'size="1" class="select2-bootstrap"', 'value', 'text', 0 );
+			}
+
+			$rows_count = count( $import->rows );
+
+			$rowcount = min( $rows_count, 5 );
+
+			$rows = array();
+			for ( $i=0; $i<$rowcount; $i++ ) {
+				$rows[] = $import->rows[$i];
+			}
+
+			$params['assign_plan'] = array( 'list', 'Assign Plan', 'Assign users to a specific payment plan. Is overridden if you provide an individual plan ID with the "Payment Plan ID" field assignment.' );
+
+			$available_plans	= SubscriptionPlanHandler::getActivePlanList();
+
+			$lists['assign_plan'] = JHTML::_('select.genericlist', $available_plans, 'assign_plan', 'size="5"', 'value', 'text', 0 );
+		} else {
+			$import->getConversionList();
+
+			$import->import();
+
+			$done = true;
 		}
 	}
 
