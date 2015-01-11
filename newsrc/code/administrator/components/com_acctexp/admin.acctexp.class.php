@@ -363,11 +363,15 @@ class aecImport
 		return $converted;
 	}
 
-	function import()
+	function import( $options=array() )
 	{
 		$db = JFactory::getDBO();
 
-		foreach( $this->rows as $row ) {
+		foreach( $this->rows as $k => $row ) {
+
+			// Skip first line, if desired
+			if ( ($k === 0) && !empty($options['skip_first']) ) continue;
+
 			$userid = null;
 
 			$user = $this->convertRow( $row );

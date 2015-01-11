@@ -6205,13 +6205,19 @@ function importData( $option )
 
 			$params['assign_plan'] = array( 'list', 'Assign Plan', 'Assign users to a specific payment plan. Is overridden if you provide an individual plan ID with the "Payment Plan ID" field assignment.' );
 
+			$params['skip_first'] = array( 'toggle', 'Skip First Line', 'Do not import the first line (use this if you have column names in the first line).' );
+
 			$available_plans	= SubscriptionPlanHandler::getActivePlanList();
 
 			$lists['assign_plan'] = JHTML::_('select.genericlist', $available_plans, 'assign_plan', 'size="5"', 'value', 'text', 0 );
 		} else {
 			$import->getConversionList();
 
-			$import->import();
+			$import->import(
+				array(
+					'skip_first' => $_POST['skip_first']
+				)
+			);
 
 			$done = true;
 		}

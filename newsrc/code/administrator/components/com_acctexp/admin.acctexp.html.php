@@ -3648,7 +3648,6 @@ class HTML_AcctExp
 						?>
 				</div>
 				<div class="col-sm-6 col-sm-offset-6">
-
 					<p>Please let us know what the columns in your .csv file mean.</p><p></p>
 
 					<?php echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
