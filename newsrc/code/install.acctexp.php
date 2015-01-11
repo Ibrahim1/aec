@@ -347,8 +347,6 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 					$lemodule = $db->loadObject();
 
-					aecDebug($query);aecDebug($lemodule);
-
 					if ( $lemodule->id ) {
 						$details['menuid']		= $lemodule->id;
 						$details['position']	= $lemodule->position;
