@@ -3606,10 +3606,10 @@ class HTML_AcctExp
 		?>
 		<form action="index.php" enctype="multipart/form-data" method="post" name="adminForm" id="adminForm" class="form-horizontal">
 			<div class="row">
-				<?php if ( $aecHTML->done ) { ?>
+				<?php if ( $aecHTML->done || $aecHTML->form ) { ?>
 				<div class="col-sm-6 col-sm-offset-3">
 					<section class="paper">
-						<?php if ( $aecHTML->done || $aecHTML->form ) { ?>
+						<?php if ( $aecHTML->done ) { ?>
 							<p>Import ran through successfully.</p>
 							<?php if ( !empty( $aecHTML->errors ) ) {?>
 								<p>However, the import failed on ' . $aecHTML->errors . ' entries. This might mean it wasn\'t successful at all.</p>';
@@ -3623,36 +3623,57 @@ class HTML_AcctExp
 				</div>
 				<?php } else { ?>
 				<div class="col-sm-12">
+					<div class="col-sm-12">
+						<div class="aecadminform">
 
-					<?php echo $aecHTML->createSettingsParticle( 'file_select' ); ?>
+							<?php echo $aecHTML->createSettingsParticle( 'file_select' ); ?>
 
-					<table class="table table-hover table-condensed">
-						<?php
-						echo '<tr>';
-							foreach ( $aecHTML->columns as $column ) {
-								echo '<th>' . $aecHTML->createSettingsParticle( $column ) . '</th>';
-							}
-						echo '</tr>';
+							<table class="table table-striped table-hover table-selectable">
+								<thead>
+								<tr>
+									<th colspan="<?php echo count($aecHTML->columns); ?>"></th>
+								</tr>
+								</thead>
+								<tbody>
+								<?php
+								foreach ( $aecHTML->user_rows as $row ) {
+									echo '<tr>';
 
-						foreach ( $aecHTML->user_rows as $row ) {
-						echo '<tr>';
+										foreach ( $row as $k => $v ) {
+											echo '<td>' . $v . '</td>';
+										}
 
-							foreach ( $row as $k => $v ) {
-							echo '<td>' . $v . '</td>';
-							}
+									echo '</tr>';
+								} ?>
+								</tbody>
 
-							echo '</tr>';
-						}
+								<tfoot>
+								<?php
+									echo '<tr>';
 
-						echo '</table>';
-						?>
+									foreach ( $aecHTML->columns as $column ) {
+										echo '<th>' . $aecHTML->lists[$column] . '</th>';
+									}
+
+									echo '</tr>';
+								?>
+								<tr>
+									<td colspan="<?php echo count($aecHTML->columns); ?>">
+										<p class="text-right">Showing a selection of rows in your .csv file. The total number of rows is <strong><?php echo $aecHTML->user_rows_count; ?></strong></p>
+									</td>
+								</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
 				</div>
-				<div class="col-sm-6 col-sm-offset-6">
-					<p>Please let us know what the columns in your .csv file mean.</p><p></p>
+				<div class="col-sm-6 col-sm-offset-3">
+					<section class="paper">
+						<p>Please let us know what the columns in your .csv file mean.</p>
 
-					<?php echo '<p>Showing an selection of the rows in your .csv file. The total number of rows is ' . $aecHTML->user_rows_count . '</p><p></p>';
-
-					echo $aecHTML->createSettingsParticle( 'assign_plan' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'skip_first' ); ?>
+						<?php echo $aecHTML->createSettingsParticle( 'assign_plan' ); ?>
+					</section>
 				</div>
 				<?php } ?>
 			</div>
