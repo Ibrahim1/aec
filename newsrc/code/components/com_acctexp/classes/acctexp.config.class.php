@@ -52,6 +52,7 @@ class aecConfig extends serialParamDBTable
 	static function paramsList()
 	{
 		$def = array();
+		$def['aec_version']						= _AEC_VERSION;
 		$def['require_subscription']			= 0;
 		$def['alertlevel2']						= 7;
 		$def['alertlevel1']						= 3;

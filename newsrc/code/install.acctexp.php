@@ -255,9 +255,10 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 
 			$versions = xJUtility::versionSort( $versions );
 
+			$old = xJUtility::normVersionName( $oldversion );
+
 			foreach ( $versions as $version ) {
 				$new = xJUtility::normVersionName( $version );
-				$old = xJUtility::normVersionName( $oldversion );
 
 				if ( version_compare( $new, $old, '>=' ) ) {
 					require_once( $incpath . '/upgrade_' . $version . '.inc.php' );
@@ -363,9 +364,13 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				if ( !$result ) continue;
 
 				if ( ( strpos( $name, 'plg' ) === 0 ) && ( strpos( $name, 'plg_aecrewrite' ) !== 0 ) ) {
-					$query = "UPDATE #__" . ( defined( 'JPATH_MANIFESTS' ) ? "extensions" : "plugins" )
-						. " SET " . ( defined( 'JPATH_MANIFESTS' ) ? "enabled=1" : "published=1" )
-						. " WHERE element='" . $details['element'] . "' AND folder='" . $details['type'] . "'";
+					if ( defined('JPATH_MANIFESTS') ) {
+						$query = "UPDATE #__extensions SET enabled=1"
+							. " WHERE element='" . $details['element'] . "'";
+					} else {
+						$query = "UPDATE #__plugins SET published=1"
+							. " WHERE element='" . $details['element'] . "'";
+					}
 
 					$db->setQuery( $query );
 					$db->query();

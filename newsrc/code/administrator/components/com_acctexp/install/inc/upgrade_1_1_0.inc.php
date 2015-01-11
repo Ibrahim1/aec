@@ -79,11 +79,11 @@ if ( count( $testprocs ) > 5 ) {
 
 			foreach ( $idir as $di ) {
 				$die = $ibase . '/' . $di;
-			
+
 				if ( in_array( $di, $protect ) ) {
 					continue;
 				}
-	
+
 				if ( is_dir( $die ) ) {
 					$eucaInstall->rrmdir( $die );
 				} else {
@@ -116,7 +116,7 @@ if ( count( $testprocs ) > 5 ) {
 			$newdir = $pph->pp_dir . '/' . str_replace( '.php', '', $cproc );
 
 			mkdir( $newdir );
-		
+
 			rename( $pph->pp_dir . '/' . $cproc, $newdir . '/' . $cproc );
 		}
 	}
