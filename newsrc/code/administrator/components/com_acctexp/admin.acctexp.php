@@ -6180,16 +6180,16 @@ function importData( $option )
 				microIntegrationHandler::getMIList(false, false, false, false, 'mi_aecuserdetails')
 			);
 
-			foreach( $mis as $mi_id ) {
+			foreach( $mis as $entry ) {
 				$mi = new microIntegration();
-				$mi->load($mi_id);
+				$mi->load($entry->id);
 
-				$mi->callIntegration();
-
-				$fields = array_merge(
-					$fields,
-					$mi->mi_class->getCustomFields()
-				);
+				if ( $mi->callIntegration() ) {
+					$fields = array_merge(
+						$fields,
+						$mi->mi_class->getCustomFields()
+					);
+				}
 			}
 
 			$field_htmllist		= array();

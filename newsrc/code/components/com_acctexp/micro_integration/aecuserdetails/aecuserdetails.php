@@ -112,7 +112,7 @@ class mi_aecuserdetails extends MI
 
 		if ( !empty( $this->settings['settings'] ) ) {
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
-				$return[$settings[$p.'short']] = $settings[$p.'name'];
+				$return[$this->settings[$i.'_'.'short']] = $this->settings[$i.'_'.'name'];
 			}
 		}
 
