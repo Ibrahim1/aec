@@ -106,6 +106,19 @@ class mi_aecuserdetails extends MI
 		return $settings;
 	}
 
+	function getCustomFields()
+	{
+		$return = array();
+
+		if ( !empty( $this->settings['settings'] ) ) {
+			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
+				$return[$settings[$p.'short']] = $settings[$p.'name'];
+			}
+		}
+
+		return $return;
+	}
+
 	function saveParams( $params )
 	{
 		foreach ( $params as $n => $v ) {

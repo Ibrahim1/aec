@@ -6166,15 +6166,31 @@ function importData( $option )
 
 		if ( !isset( $_POST['convert_field_0'] ) ) {
 			$fields = array(
-				"id" => "User ID",
-				"name" => "User Full Name",
-				"username" => "Username",
-				"email" => "User Email",
-				"password" => "Password",
-				"plan_id" => "Payment Plan ID",
-				"invoice_number" => "Invoice Number",
-				"expiration" => "Membership Expiration"
+				'id' => 'User ID',
+				'name' => 'User Full Name',
+				'username' => 'Username',
+				'email' => 'User Email',
+				'password' => 'Password',
+				'plan_id' => 'Payment Plan ID',
+				'invoice_number' => 'Invoice Number',
+				'expiration' => 'Membership Expiration'
 			);
+
+			$mis = array_merge(
+				microIntegrationHandler::getMIList(false, false, false, false, 'mi_aecuserdetails')
+			);
+
+			foreach( $mis as $mi_id ) {
+				$mi = new microIntegration();
+				$mi->load($mi_id);
+
+				$mi->callIntegration();
+
+				$fields = array_merge(
+					$fields,
+					$mi->mi_class->getCustomFields()
+				);
+			}
 
 			$field_htmllist		= array();
 			$field_htmllist[]	= JHTML::_('select.option', 0, 'Ignore' );

@@ -367,6 +367,10 @@ class aecImport
 	{
 		$db = JFactory::getDBO();
 
+		$stdfields = array(
+			'id', 'name', 'username', 'email', 'password', 'plan_id', 'invoice_number', 'expiration'
+		);
+
 		foreach( $this->rows as $k => $row ) {
 
 			// Skip first line, if desired
@@ -436,6 +440,18 @@ class aecImport
 			}
 
 			$metaUser = new metaUser( $userid );
+
+			$custom_params = array();
+			foreach ( $user as $k => $v ) {
+				if ( !in_array($k, $stdfields) ) {
+					$custom_params[$k] = $v;
+				}
+			}
+
+			if ( !empty($custom_params) ) {
+				$metaUser->meta->addCustomParams( $request->params );
+				$metaUser->meta->storeload();
+			}
 
 			if ( !empty( $user['plan_id'] ) ) {
 				$pid = $user['plan_id'];
