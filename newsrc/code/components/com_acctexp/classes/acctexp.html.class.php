@@ -271,12 +271,14 @@ class aecHTML
 					$this->accordions++;
 				}
 
-				$return = '<div id="accordion' . $this->accordions . '" class="accordion' . ( !empty( $value ) ? ' ' . $value : '' ) . '"' . '>';
+				$return = '<div id="accordion' . $this->accordions . '" class="panel-group' . ( !empty( $value ) ? ' ' . $value : '' ) . '" role="tablist" aria-multiselectable="true">';
 				break;
 			case 'accordion_itemstart':
-				$return = '<div class="accordion-group">';
-				$return .= '<div class="accordion-heading"><a href="#collapse' . ($this->accordions+$this->accordionitems) . '" data-parent="#accordion' . $this->accordions . '" data-toggle="collapse" class="accordion-toggle">' . $value . '</a></div>';
-				$return .= '<div class="accordion-body collapse" id="collapse' . ($this->accordions+$this->accordionitems) . '"><div class="accordion-inner">';
+				$item_target = $this->accordions . '-' . $this->accordionitems;
+
+				$return = '<div class="panel panel-default">';
+				$return .= '<div class="panel-heading" role="tab" id="heading' . $item_target . '"><a href="#collapse' . $item_target . '" data-parent="#accordion' . $this->accordions . '" data-toggle="collapse" class="accordion-toggle" aria-expanded="true" aria-controls="#collapse' . $item_target . '">' . $value . '</a></div>';
+				$return .= '<div class="panel-collapse collapse' . ($this->accordionitems<2 ? ' in' : '') . '" id="collapse' . $item_target . '" role="tabpanel" aria-labelledby="heading' . $item_target . '"><div class="panel-body">';
 				break;
 			case 'accordion_itemend':
 				$this->accordionitems++;
