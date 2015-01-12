@@ -2318,23 +2318,27 @@ class HTML_AcctExp
 		<?php $tabs->nextPane( 'processors' ); ?>
 		<div class="row">
 			<div class="col-sm-8 col-sm-offset-2">
-				<?php
-				if ( !empty( $aecHTML->customparams->pp ) ) {
-					foreach ( $aecHTML->customparams->pp as $id => $processor ) {
-						?>
-						<section class="paper">
-							<h2><?php echo $processor['name']; ?></h2>
-							<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id . '&processor=' . $processor['handle'] ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
-							<?php
-							foreach ( $processor['params'] as $customparam ) {
-								echo $aecHTML->createSettingsParticle( $customparam );
-							}
-							?>
-						</section>
+				<ul class="sortable">
 					<?php
+					if ( !empty( $aecHTML->customparams->pp ) ) {
+						foreach ( $aecHTML->customparams->pp as $id => $processor ) {
+							?>
+							<li>
+								<section class="paper">
+									<h2><?php echo $processor['name']; ?></h2>
+									<p><a href="<?php echo str_replace("/administrator/", "/", AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&usage=' . $row->id . '&processor=' . $processor['handle'] ) ); ?>" title="<?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?>" target="_blank"><?php echo JText::_('AEC_CGF_LINK_ABO_FRONTEND'); ?></a></p>
+									<?php
+									foreach ( $processor['params'] as $customparam ) {
+										echo $aecHTML->createSettingsParticle( $customparam );
+									}
+									?>
+								</section>
+							</li>
+						<?php
+						}
 					}
-				}
-				?>
+					?>
+				</ul>
 			</div>
 		</div>
 		<?php $tabs->nextPane( 'text' ); ?>

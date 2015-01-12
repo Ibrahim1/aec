@@ -269,6 +269,10 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery(".collapse").collapse({toggle: false});
 
+	var selectable = jQuery(".sortable");
+
+	selectable.sortable();
+
 	jQuery(".order-select").on("click", function(event){
 		jQuery("input[name*=\'orderby_\']").val(jQuery(this).data('ordering'));
 		document.adminForm.submit();

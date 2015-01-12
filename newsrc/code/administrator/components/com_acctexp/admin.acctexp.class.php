@@ -442,14 +442,14 @@ class aecImport
 			$metaUser = new metaUser( $userid );
 
 			$custom_params = array();
-			foreach ( $user as $k => $v ) {
-				if ( !in_array($k, $stdfields) ) {
-					$custom_params[$k] = $v;
+			foreach ( $user as $i => $v ) {
+				if ( !in_array($i, $stdfields) ) {
+					$custom_params[$i] = $v;
 				}
 			}
 
 			if ( !empty($custom_params) ) {
-				$metaUser->meta->addCustomParams( $request->params );
+				$metaUser->meta->addCustomParams( $custom_params );
 				$metaUser->meta->storeload();
 			}
 

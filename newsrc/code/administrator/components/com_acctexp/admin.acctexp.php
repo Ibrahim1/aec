@@ -2769,17 +2769,20 @@ function editSubscriptionPlan( $id, $option )
 		$plan_procs = $params_values['processors'];
 	}
 
-	$firstarray = array();
-	$secndarray = array();
-	foreach ( $pps as $ppo ) {
-		if ( in_array( $ppo->id, $plan_procs ) && !empty( $customparams_values[$ppo->id . '_aec_overwrite_settings'] ) ) {
-			$firstarray[] = $ppo;
-		} else {
-			$secndarray[] = $ppo;
+	if ( !empty($plan_procs) ) {
+		foreach ( $plan_procs as $proc ) {
+			foreach ( $pps as $pk => $ppo ) {
+				if ( $ppo->id == $proc ) {
+					$pps[] = $ppo;
+					unset($pps[$pk]);
+				}
+			}
 		}
 	}
 
-	$pps = array_merge( $firstarray, $secndarray );
+	foreach ( $pps as $ppo ) {
+		$pps[] = $ppo;
+	}
 
 	$selected_gw = array();
 	$custompar = array();
