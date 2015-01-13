@@ -2318,6 +2318,7 @@ class HTML_AcctExp
 		<?php $tabs->nextPane( 'processors' ); ?>
 		<div class="row">
 			<div class="col-sm-8 col-sm-offset-2">
+				<input type="button" class="btn btn-success enable-sorting" value="Enable Sorting"/>
 				<ul class="sortable">
 					<?php
 					if ( !empty( $aecHTML->customparams->pp ) ) {

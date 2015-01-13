@@ -269,9 +269,24 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery(".collapse").collapse({toggle: false});
 
-	var selectable = jQuery(".sortable");
+	var sortable = jQuery(".sortable");
 
-	selectable.sortable();
+	jQuery(".enable-sorting").on("click", function(event){
+		if (typeof sortable.data('sortable-state') !== 'undefined') {
+			sortable.sortable();
+			sortable.disableSelection();
+
+			sortable.data('sortable-state', 'enabled');
+		} else {
+			if ( event.target.data('value') ) {
+				sortable.sortable('disable');
+			} else {
+				sortable.sortable('enable');
+			}
+
+			sortable.attr('data-sortable-state', sortable.attr('data-sortable-state') == 'enabled' ? 'disabled' : 'enabled')
+		}
+	});
 
 	jQuery(".order-select").on("click", function(event){
 		jQuery("input[name*=\'orderby_\']").val(jQuery(this).data('ordering'));
