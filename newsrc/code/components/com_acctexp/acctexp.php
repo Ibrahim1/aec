@@ -38,7 +38,9 @@ if ( empty( $task ) ) {
 
 	$menuitemid = JRequest::getInt( 'Itemid' );
 	if ( $menuitemid ) {
-		$menu = JSite::getMenu();
+		$jsite = new JSite();
+
+		$menu = $jsite->getMenu();
 		$menuparams = $menu->getParams( $menuitemid );
 		$params->merge( $menuparams );
 	}

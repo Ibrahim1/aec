@@ -265,7 +265,9 @@ class aecTemplate
 
 		$params = JComponentHelper::getParams( 'com_acctexp' );
 
-		$menu = JSite::getMenu();
+		$jsite = new JSite();
+
+		$menu = $jsite->getMenu();
 		$menuparams = $menu->getParams( $menuitemid );
 
 		$params->merge( $menuparams );
