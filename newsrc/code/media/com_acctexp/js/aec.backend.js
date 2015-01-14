@@ -269,22 +269,32 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery(".collapse").collapse({toggle: false});
 
-	var sortable = jQuery(".sortable");
+	var sortable_btn = jQuery(".enable-sorting"),
+		sortable = jQuery(".sortable");
 
-	jQuery(".enable-sorting").on("click", function(event){
-		if (typeof sortable.data('sortable-state') !== 'undefined') {
+	sortable_btn.on("click", function(event){
+		if (typeof sortable_btn.data('sortable-state') == 'undefined') {
 			sortable.sortable();
 			sortable.disableSelection();
 
-			sortable.data('sortable-state', 'enabled');
+			sortable_btn.data('sortable-state', 'enabled');
+
+			sortable_btn.val('Disable Sorting');
+			sortable_btn.addClass('btn-danger').removeClass('btn-success');
 		} else {
-			if ( event.target.data('value') ) {
+			if ( sortable_btn.data('sortable-state') == 'enabled' ) {
 				sortable.sortable('disable');
+
+				sortable_btn.val('Edit Sorting');
+				sortable_btn.addClass('btn-success').removeClass('btn-danger');
 			} else {
 				sortable.sortable('enable');
+
+				sortable_btn.val('Disable Edit Sorting');
+				sortable_btn.addClass('btn-danger').removeClass('btn-success');
 			}
 
-			sortable.attr('data-sortable-state', sortable.attr('data-sortable-state') == 'enabled' ? 'disabled' : 'enabled')
+			sortable_btn.attr('data-sortable-state', sortable.attr('data-sortable-state') == 'enabled' ? 'disabled' : 'enabled');
 		}
 	});
 
