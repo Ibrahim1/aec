@@ -2322,7 +2322,8 @@ class HTML_AcctExp
 					<div class="col-sm-4 col-sm-offset-4">
 						<br/>
 						<input type="button" class="btn btn-success btn-block enable-sorting" value="Unlock Sorting"/>
-						<p>
+						<p>&nbsp;</p>
+						<p class="text-center">
 							You can unlock the processor sorting to rearrange them via drag&amp;drop.
 						</p>
 					</div>
