@@ -409,12 +409,13 @@ class ItemGroupHandler
 
 	static function getGroupListItem( $group )
 	{
-		$details = array(	'type'		=> 'group',
-							'id'		=> $group->id,
-							'name'		=> $group->getProperty( 'name' ),
-							'desc'		=> $group->getProperty( 'desc' ),
-							'meta'	=> array()
-							);
+		$details = array(
+			'type'	=> 'group',
+			'id'	=> $group->id,
+			'name'	=> $group->getProperty( 'name' ),
+			'desc'	=> $group->getProperty( 'desc' ),
+			'meta'	=> array()
+		);
 
 		if ( !empty( $group->params['meta'] ) ) {
 			$details['meta'] = parameterHandler::decode( $group->params['meta'] );
@@ -425,15 +426,16 @@ class ItemGroupHandler
 
 	static function getItemListItem( $plan )
 	{
-		$details = array(	'type'		=> 'item',
-							'id'		=> $plan->id,
-							'plan'		=> $plan,
-							'name'		=> $plan->getProperty( 'name' ),
-							'desc'		=> $plan->getProperty( 'desc' ),
-							'ordering'	=> $plan->ordering,
-							'lifetime'	=> $plan->params['lifetime'],
-							'meta'	=> array()
-							);
+		$details = array(
+			'type'		=> 'item',
+			'id'		=> $plan->id,
+			'plan'		=> $plan,
+			'name'		=> $plan->getProperty( 'name' ),
+			'desc'		=> $plan->getProperty( 'desc' ),
+			'ordering'	=> $plan->ordering,
+			'lifetime'	=> $plan->params['lifetime'],
+			'meta'		=> array()
+		);
 
 		if ( !empty( $plan->params['meta'] ) ) {
 			$details['meta'] = parameterHandler::decode( $plan->params['meta'] );

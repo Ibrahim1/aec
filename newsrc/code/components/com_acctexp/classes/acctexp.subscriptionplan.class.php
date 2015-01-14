@@ -115,6 +115,8 @@ class SubscriptionPlanList
 		if ( !is_null( $auth_problem ) ) {
 			$this->list = $auth_problem;
 		}
+
+		return true;
 	}
 
 	function addButtons( $register, $passthrough )
@@ -327,8 +329,11 @@ class SubscriptionPlanList
 				$plans[$pid]['gw'][0]->info['statement']	= '';
 				$plans[$pid]['gw'][0]->recurring			= 0;
 			} else {
-				if ( ( $plan['plan']->params['processors'] != '' ) && !is_null( $plan['plan']->params['processors'] ) ) {
-					$processors = $plan['plan']->params['processors'];
+				if (
+					( $plan['plan']->params['processors'] != '' )
+					&& !is_null( $plan['plan']->params['processors'] )
+				) {
+					$processors = array_reverse( $plan['plan']->params['processors'] );
 
 					// Restrict to pre-chosen processor (if set)
 					if ( !empty( $this->processor ) ) {
