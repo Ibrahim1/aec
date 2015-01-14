@@ -2318,7 +2318,15 @@ class HTML_AcctExp
 		<?php $tabs->nextPane( 'processors' ); ?>
 		<div class="row">
 			<div class="col-sm-8 col-sm-offset-2">
-				<input type="button" class="btn btn-success enable-sorting" value="Edit Sorting"/>
+				<div class="row">
+					<div class="col-sm-4 col-sm-offset-4">
+						<br/>
+						<input type="button" class="btn btn-success btn-block enable-sorting" value="Unlock Sorting"/>
+						<p>
+							You can unlock the processor sorting to rearrange them via drag&amp;drop.
+						</p>
+					</div>
+				</div>
 				<ul class="sortable">
 					<?php
 					if ( !empty( $aecHTML->customparams->pp ) ) {

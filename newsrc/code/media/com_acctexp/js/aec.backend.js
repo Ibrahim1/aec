@@ -285,12 +285,12 @@ jQuery(document).ready(function(jQuery) {
 			if ( sortable_btn.data('sortable-state') == 'enabled' ) {
 				sortable.sortable('disable');
 
-				sortable_btn.val('Edit Sorting');
+				sortable_btn.val('Unlock Sorting');
 				sortable_btn.addClass('btn-success').removeClass('btn-danger');
 			} else {
 				sortable.sortable('enable');
 
-				sortable_btn.val('Disable Edit Sorting');
+				sortable_btn.val('Lock Sorting');
 				sortable_btn.addClass('btn-danger').removeClass('btn-success');
 			}
 
