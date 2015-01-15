@@ -20,7 +20,7 @@ class aecEventHandler
 		// Load all events happening now or before now
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_event'
-				. ' WHERE `due_date` <= \'' . date( 'Y-m-d H:i:s' ) . '\''
+				. ' WHERE `due_date` <= \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\''
 	 			. ' AND `status` = \'waiting\''
 				;
 		$db->setQuery( $query );
@@ -42,7 +42,7 @@ class aecEventHandler
 		// Load all events happening now or before now
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_event'
-				. ' WHERE `due_date` <= \'' . date( 'Y-m-d H:i:s' ) . '\''
+				. ' WHERE `due_date` <= \'' . date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) ) . '\''
 	 			. ' AND `status` = \'waiting\''
 				;
 		$db->setQuery( $query );

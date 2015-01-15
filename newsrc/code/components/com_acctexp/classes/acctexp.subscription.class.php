@@ -372,7 +372,7 @@ class Subscription extends serialParamDBTable
 		return true;
 	}
 
-	function expire( $overridefallback=false, $special=null )
+	function expire( $overridefallback=false, $special=null, $now=true )
 	{
 		// Users who are excluded cannot expire
 		if ( $this->isExcluded() ) {
@@ -382,6 +382,8 @@ class Subscription extends serialParamDBTable
 		$plan = $this->getPlan();
 
 		if ( empty( $plan ) ) {
+			if ( $now ) $this->expireNow();
+
 			return $this->setStatus( 'Expired' );
 		}
 
@@ -416,6 +418,8 @@ class Subscription extends serialParamDBTable
 			}
 
 			if ( !$this->isStatus('Expired') && !$this->isClosed() ) {
+				if ( $now ) $this->expireNow();
+
 				$this->setStatus( 'Expired' );
 			}
 
@@ -431,6 +435,11 @@ class Subscription extends serialParamDBTable
 		$this->reload();
 
 		return $expired;
+	}
+
+	function expireNow()
+	{
+		$this->expiration = gmdate( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 	}
 
 	function cancel( $invoice=null )

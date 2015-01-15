@@ -337,7 +337,7 @@ class aecRegistration
 				$user->set('gid', $authorize->get_group_id( '', $newUsertype, 'ARO' ));
 				$user->set('sendEmail', 0);
 
-				$user->set('registerDate', date('Y-m-d H:i:s'));
+				$user->set('registerDate', date('Y-m-d H:i:s', ( (int) gmdate('U') )));
 
 				// If user activation is turned on, we need to set the activation information
 				$useractivation = $usersConfig->get( 'useractivation' );
