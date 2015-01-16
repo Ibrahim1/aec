@@ -61,8 +61,8 @@ class aecSettings
 			}
 
 			// Sanitize HTML value on any inputX field.
-			if ( strpos($content[0], 'input') === 0 ) {
-				$this->params_values[$name] = htmlentities($this->params_values[$name]);
+			if ( (strpos($content[0], 'input') === 0) && ($content[0] !== 'inputD') ) {
+				$this->params_values[$name] = htmlspecialchars($this->params_values[$name]);
 			}
 
 			$value = null;
