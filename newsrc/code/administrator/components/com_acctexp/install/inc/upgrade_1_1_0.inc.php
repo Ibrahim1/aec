@@ -17,26 +17,30 @@ $testprocs = xJUtility::getFileArray( $pph->pp_dir, false, false );
 
 // Check if there are old processor files
 if ( count( $testprocs ) > 5 ) {
-	$oldprocs = array(	"2checkout","airtoy","alertpay","allopass","authorize","authorize_aim","authorize_arb","authorize_cim",
-						"billsafe","cardsave","ccbill","clickbank","cybermut","desjardins","dibs","epay",
-						"epsnetpay","eway","ewayxml","generic_vpc","google_checkout","hsbc","iats","ideal_advanced",
-						"ideal_basic","ipayment_silent","locaweb_pgcerto","mobio","moip","mollie_ideal","mollie_wallie","moneybookers",
-						"moneyproxy","multisafepay","netcash","netdebit","netpay","nochex","notify","offline_payment",
-						"offline_payment2","offline_payment3","ogone","onebip","payboxat","payboxfr","paycific","paycom",
-						"payer","payfast","payments_gateway","payone","payos","paypal","paypal_payflow_link","paypal_subscription",
-						"paypal_wpp","paysignet",	"paysite_cash","paystation","payza","psigate","realex_redirect","realex_remote",
-						"robokassa","sagepay","secureandpay","skrill","smscoin","sofort","sofortueberweisung","sparkassen_internetkasse",
-						"suncorp_migs","usaepay","vcs","verotel","viaklix","virtualmerchant","worldpay","worldpay_futurepay",
-						"zipzap" );
+	$oldprocs = array(
+		"2checkout","airtoy","alertpay","allopass","authorize","authorize_aim","authorize_arb","authorize_cim",
+		"billsafe","cardsave","ccbill","clickbank","cybermut","desjardins","dibs","epay",
+		"epsnetpay","eway","ewayxml","generic_vpc","google_checkout","hsbc","iats","ideal_advanced",
+		"ideal_basic","ipayment_silent","locaweb_pgcerto","mobio","moip","mollie_ideal","mollie_wallie","moneybookers",
+		"moneyproxy","multisafepay","netcash","netdebit","netpay","nochex","notify","offline_payment",
+		"offline_payment2","offline_payment3","ogone","onebip","payboxat","payboxfr","paycific","paycom",
+		"payer","payfast","payments_gateway","payone","payos","paypal","paypal_payflow_link","paypal_subscription",
+		"paypal_wpp","paysignet",	"paysite_cash","paystation","payza","psigate","realex_redirect","realex_remote",
+		"robokassa","sagepay","secureandpay","skrill","smscoin","sofort","sofortueberweisung","sparkassen_internetkasse",
+		"suncorp_migs","usaepay","vcs","verotel","viaklix","virtualmerchant","worldpay","worldpay_futurepay",
+		"zipzap"
+	);
 
-	$images = array(	"2checkout","airtoy","alertpay","authorize","beanstream","cardsave","ccbill","chase_paymentech",
-						"clickbank","cybermut","desjardins","dibs","epsnetpay","eway","fastcharge","google_checkout",
-						"hsbc","ideal","ipayment","mobio","moip","mollie_ideal","mollie","moneybookers",
-						"moneyproxy","mpay24","multisafepay","netdebit","nochex","ogone","onebip","payboxat",
-						"payboxfr","paycific","paycom","payer","payfast","payments_gateway","payone","payos",
-						"paypal","paysite_cash","payson","paystation","payza","psigate","realex","sagepay",
-						"secureandpay","siamcb","skrill","smscoin","sofort_dauerauftrag","sofortueberweisung","sparkasse_internetkasse","ticketmaster",
-						"verotel","wepay","worldpay","zipzap","zombaio" );
+	$images = array(
+		"2checkout","airtoy","alertpay","authorize","beanstream","cardsave","ccbill","chase_paymentech",
+		"clickbank","cybermut","desjardins","dibs","epsnetpay","eway","fastcharge","google_checkout",
+		"hsbc","ideal","ipayment","mobio","moip","mollie_ideal","mollie","moneybookers",
+		"moneyproxy","mpay24","multisafepay","netdebit","nochex","ogone","onebip","payboxat",
+		"payboxfr","paycific","paycom","payer","payfast","payments_gateway","payone","payos",
+		"paypal","paysite_cash","payson","paystation","payza","psigate","realex","sagepay",
+		"secureandpay","siamcb","skrill","smscoin","sofort_dauerauftrag","sofortueberweisung","sparkasse_internetkasse","ticketmaster",
+		"verotel","wepay","worldpay","zipzap","zombaio"
+	);
 
 	// Figure out existing processors
 	$iprocs = $pph->getInstalledObjectList( false, true );

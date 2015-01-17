@@ -217,12 +217,17 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			} else {
 				$oldversion = '0.0.1';
 
-				$db->setQuery("SHOW INDEXES FROM #__acctexp_subscr");
-				$indexes = $db->loadObjectList();
+				if ( !$eucaInstalldb->ColumninTable( 'ordering', 'coupons' ) ) {
+					$oldversion = '1.0.0';
+				} else {
+					$db->setQuery("SHOW INDEXES FROM #__acctexp_subscr");
 
-				foreach ( $indexes as $index ) {
-					if ( strpos( $index->Key_name, 'userid' ) !== false ) {
-						$oldversion = '0.14.6';
+					$indexes = $db->loadObjectList();
+
+					foreach ( $indexes as $index ) {
+						if ( strpos( $index->Key_name, 'userid' ) !== false ) {
+							$oldversion = '0.14.6';
+						}
 					}
 				}
 			}
