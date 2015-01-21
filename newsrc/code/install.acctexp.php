@@ -386,16 +386,16 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 						}
 
 						// Kill the old XML and replace it with the new one, taking out the suffix
-						if ( defined('JPATH_MANIFESTS') ) {
+						/*if ( defined('JPATH_MANIFESTS') ) {
 							$xml_path = $this->src.'/../../../modules/' . $name . '/' . $name . '.xml';
 							$xml_path_suffixed = str_replace('.xml', '_3.xml', $xml_path);
 
 							if ( file_exists($xml_path_suffixed) && file_exists($xml_path) ) {
-								unlink($xml_path);
+								//unlink($xml_path);
 
-								rename($xml_path_suffixed, $xml_path);
+								//rename($xml_path_suffixed, $xml_path);
 							}
-						}
+						}*/
 
 						$query = "UPDATE #__modules SET position='"
 							. $details['position'] . "', published=" . $details['published'] . " WHERE module='" . $name . "'";
