@@ -915,7 +915,7 @@ class HTML_AcctExp
 			<div class="container">
 				<a href="<?php echo $linkroot.'central' ?>" class="brand">&nbsp;</a>
 				<?php if ( !empty( $notices ) ) { ?>
-					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" data-remote="index.php?option=com_acctexp&amp;task=noticesModal" class="toolbar-notify"><?php echo aecHTML::Icon( 'envelope' ); ?> <?php echo $notices ?></a>
+					<a href="#notifications" id="aecmenu-notifications" data-toggle="modal" class="toolbar-notify"><?php echo aecHTML::Icon( 'envelope' ); ?> <?php echo $notices ?></a>
 				<?php } ?>
 				<ul class="nav navbar-nav">
 				<?php foreach ( $menu as $mid => $m ) { ?>

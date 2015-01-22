@@ -577,8 +577,9 @@ jQuery(document).ready(function(jQuery) {
 				jQuery("#adminForm").submit();
 			}
 		});
-
 	}
+
+	jQuery('#notifications').load("index.php?option=com_acctexp&task=noticesModal");
 
 	// Fixing issue with older jQuery and bootstrap.js in FF
 	// See https://github.com/twbs/bootstrap/issues/10044
