@@ -48,9 +48,9 @@ class SubscriptionPlanList
 			$db = JFactory::getDBO();
 
 			$query = 'SELECT `id`'
-					. ' FROM #__acctexp_plans'
-					. ' WHERE `id` = \'' . $this->usage . '\' AND `active` = \'1\''
-					;
+				. ' FROM #__acctexp_plans'
+				. ' WHERE `id` = \'' . $this->usage . '\' AND `active` = \'1\''
+				;
 			$db->setQuery( $query );
 			$id = $db->loadResult();
 
