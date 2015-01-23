@@ -437,8 +437,6 @@ function getNotices()
 {
 	$db = JFactory::getDBO();
 
-	$app = JFactory::getApplication();
-
 	$query = 'SELECT COUNT(*)'
 			. ' FROM #__acctexp_eventlog'
 			. ' WHERE `notify` = \'1\''
@@ -1290,6 +1288,23 @@ function listSubscriptions( $option, $set_group, $subscriptionid, $userid=array(
 
 	$db->setQuery( 'SET SQL_BIG_SELECTS=0');
 	$db->query();
+
+	$processors = PaymentProcessorHandler::getObjectList(
+		PaymentProcessorHandler::getProcessorList()
+	);
+
+	$procs = array(
+		'free' => 'Free',
+		'none' => 'None'
+	);
+
+	foreach ( $processors as $processor ) {
+		$procs[$processor->processor_name] = $processor->processor->info['longname'];
+	}
+
+	foreach ( $rows as $k => $row ) {
+		$rows[$k]->type = $procs[$rows[$k]->type];
+	}
 
 	// Get list of plans for filter
 	$query = 'SELECT `id`, `name`'
