@@ -503,9 +503,7 @@ class HTML_AcctExp
 									<span><?php echo JText::_('AEC_USER_CURR_EXPIRE_DATE'); ?></span>
 								</label>
 								<div class="col-sm-8">
-									<div>
-										<span><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></span>
-									</div>
+									<p class="form-control-static"><?php echo $metaUser->focusSubscription->lifetime ? JText::_('AEC_USER_LIFETIME') : HTML_AcctExp::DisplayDateInLocalTime( $exp ); ?></p>
 								</div>
 							</div>
 							<div class="form-group">
