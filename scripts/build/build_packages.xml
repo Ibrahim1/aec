@@ -34,7 +34,7 @@
 		</phing>
 		<phing phingfile="${self.root}/build_plugin_cb.xml" inheritRefs="true">
 			<property file="${self.root}/properties/plugin_cb.properties" override="true" />
-		</phing>-->
+		</phing>
 
 		<mkdir dir="${dir.packages}/packages" />
 		<copy todir="${dir.packages}/packages" includeemptydirs="false">
@@ -43,7 +43,7 @@
 			</fileset>
 		</copy>
 
-		<!--<mkdir dir="${dir.packages}/fullpack" />
+		<mkdir dir="${dir.packages}/fullpack" />
 		<copy todir="${dir.packages}/fullpack" includeemptydirs="false">
 			<fileset dir="${dir.packages}">
 				<exclude name="packages/" />
@@ -58,7 +58,7 @@
 
 		<zip destfile="${dir.packages}/${file.dist_package}_${file.dist_version}_rev${git.lastrevision}_${file.extensionsafe}_UNZIP_FIRST.zip" basedir="${dir.packages}/fullpack" />
 
-		<delete dir="${dir.packages}/fullpack" />
+		<delete dir="${dir.packages}/fullpack" />-->
 
 		<phing phingfile="${self.root}/build_component_full.xml" inheritRefs="true">
 			<property file="${self.root}/properties/com.properties" override="true" />
