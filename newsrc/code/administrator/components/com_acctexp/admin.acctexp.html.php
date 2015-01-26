@@ -1045,7 +1045,7 @@ class HTML_AcctExp
 		<div class="container">
 			<div class="row">
 				<div id="aec-center">
-					<div class="aec-center-block col-sm-8">
+					<div class="aec-center-block col-md-8">
 						<table class="diorama">
 							<tr>
 								<td colspan="13">
@@ -1134,7 +1134,7 @@ class HTML_AcctExp
 								<td colspan="3">
 									<div class="explain-block">
 										<h6>Invoices &amp; Payment</h6>
-										<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it - during registration, or afterwards. That invoice can then be paid using a <strong>Payment Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.<br />If a user has no membership record in AEC, the account shows up under <strong>Non Members</strong>.</p>
+										<p>To purchase a membership, a user first has to create an <strong>Invoice</strong> for it - during registration,  col Processor</strong>.</p><hr /><p>You can use <strong>Coupons</strong> to offer discounts to your customers.<br />If a user has no membership record in AEC, the account shows up under <strong>Non Members</strong>.</p>
 									</div>
 								</td>
 								<td></td>
@@ -1147,24 +1147,34 @@ class HTML_AcctExp
 							</tr>
 						</table>
 					</div>
-					<div class="aec-center-block aec-center-block-half col-sm-4">
+					<div class="aec-center-block aec-center-block-half col-md-4">
 						<h2>Template &amp; Settings</h2>
 						<hr class="topslim" />
-						<div>
-							<?php HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
-							<p>Change the way AEC behaves.</p>
-						</div>
-						<div>
-							<?php HTML_AcctExp::quickiconButton( $linkroot.'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ) ?>
-							<p>Change what AEC looks like.</p>
-						</div>
-						<div>
-							<?php HTML_AcctExp::quickiconButton( $linkroot.'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ) ?>
-							<p>Nifty tools for AEC Experts.</p>
-						</div>
-						<div>
-							<?php HTML_AcctExp::quickiconButton( $linkroot.'import', 'import', JText::_('AEC_CENTR_IMPORT') ) ?>
-							<p>Import Users into AEC.</p>
+						<div class="row">
+							<div class="col-sm-12 col-md-6 col-lg-12">
+								<div>
+									<?php HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
+									<p>Change the way AEC behaves.</p>
+								</div>
+							</div>
+							<div class="col-sm-12 col-md-6 col-lg-12">
+								<div>
+									<?php HTML_AcctExp::quickiconButton( $linkroot.'showTemplates', 'templates', JText::_('AEC_CENTR_TEMPLATES') ) ?>
+									<p>Change what AEC looks like.</p>
+								</div>
+							</div>
+							<div class="col-sm-12 col-md-6 col-lg-12">
+								<div>
+									<?php HTML_AcctExp::quickiconButton( $linkroot.'toolbox', 'toolbox', JText::_('AEC_CENTR_TOOLBOX') ) ?>
+									<p>Nifty tools for AEC Experts.</p>
+								</div>
+							</div>
+							<div class="col-sm-12 col-md-6 col-lg-12">
+								<div>
+									<?php HTML_AcctExp::quickiconButton( $linkroot.'import', 'import', JText::_('AEC_CENTR_IMPORT') ) ?>
+									<p>Import Users into AEC.</p>
+								</div>
+							</div>
 						</div>
 					</div>
 					<hr />
