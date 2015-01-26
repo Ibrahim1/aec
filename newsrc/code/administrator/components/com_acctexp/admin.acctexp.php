@@ -497,13 +497,9 @@ function getNotice()
 
 function cancel( $option )
 {
-	$db = JFactory::getDBO();
-
 	$app = JFactory::getApplication();
 
- 	$limit		= $app->getUserStateFromRequest( "viewlistlimit", 'limit', $app->getCfg( 'list_limit' ) );
-	$limitstart = $app->getUserStateFromRequest( "viewnotconf{$option}limitstart", 'limitstart', 0 );
-	$nexttask	= aecGetParam( 'nexttask', 'config' ) ;
+	$nexttask = aecGetParam( 'nexttask', 'config' ) ;
 
 	$app->redirect( 'index.php?option=' . $option . '&task=' . $nexttask, JText::_('CANCELED') );
 }
@@ -513,10 +509,6 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 	if ( !empty( $subscriptionid ) ) {
 		$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
 	}
-
-	$db = JFactory::getDBO();
-
-	$app = JFactory::getApplication();
 
 	$lang = JFactory::getLanguage();
 
@@ -565,6 +557,19 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 	$invoices = array();
 	$couponsh = array();
 	$invoice_counter = 0;
+
+	$processors = PaymentProcessorHandler::getObjectList(
+		PaymentProcessorHandler::getProcessorList()
+	);
+
+	$procs = array(
+		'free' => 'Free',
+		'none' => 'None'
+	);
+
+	foreach ( $processors as $processor ) {
+		$procs[$processor->processor_name] = $processor->processor->info['longname'];
+	}
 
 	foreach ( $invoice_ids as $inv_id ) {
 		$invoice = new Invoice();
@@ -655,6 +660,7 @@ function editUser( $option, $userid, $subscriptionid, $task, $page=0 )
 		$invoices[$inv_id]['amount']			= $invoice->amount . '&nbsp;' . $invoice->currency;
 		$invoices[$inv_id]['status']			= $status;
 		$invoices[$inv_id]['processor']			= $invoice->method;
+		$invoices[$inv_id]['processor']			= $procs[$invoice->method];
 		$invoices[$inv_id]['usage']				= $invoice->usage;
 		$invoices[$inv_id]['actions']			= $actionlist;
 	}

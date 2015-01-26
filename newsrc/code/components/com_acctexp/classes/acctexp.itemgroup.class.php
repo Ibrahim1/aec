@@ -264,7 +264,7 @@ class ItemGroupHandler
 			$query = 'SELECT id'
 					. ' FROM #__acctexp_' . ( ( $type == 'group' ) ? 'itemgroups' : 'plans' )
 					. ' WHERE id IN (' . implode( ',', $result ) . ')'
-					. ' ORDER BY `ordering`'
+					. ' ORDER BY `ordering` ASC'
 					;
 			$db->setQuery( $query );
 
