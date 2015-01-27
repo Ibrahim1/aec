@@ -967,7 +967,11 @@ class HTML_AcctExp
 
 					'div',
 
-					array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') )
+					array( 'showManual', 'manual', JText::_('AEC_CENTR_MANUAL') ),
+
+					'div',
+
+					array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') )
 				)
 			),
 			'payment' => array(
@@ -985,7 +989,6 @@ class HTML_AcctExp
 
 					'div',
 
-					array( 'invoices', 'invoices', JText::_('AEC_CENTR_V_INVOICES') ),
 					array( 'showCoupons', 'coupons', JText::_('AEC_CENTR_COUPONS') )
 				)
 			),
@@ -2214,7 +2217,7 @@ class HTML_AcctExp
 
 		$tabs->nextPane( 'plan', true ); ?>
 		<div class="row">
-			<div class="col-sm-4">
+			<div class="col-sm-6 col-md-4">
 				<section class="paper">
 					<h4>General</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'name' ); ?>
@@ -2279,7 +2282,7 @@ class HTML_AcctExp
 					<?php } ?>
 				</section>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-6 col-md-4">
 				<section class="paper">
 					<h4>Cost&amp;Details</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'full_free' ); ?>
@@ -2302,7 +2305,7 @@ class HTML_AcctExp
 					<?php echo $aecHTML->createSettingsParticle( 'override_regmail' ); ?>
 				</section>
 			</div>
-			<div class="col-sm-4">
+			<div class="col-sm-6 col-md-4">
 				<section class="paper">
 					<h4>Plan Relation</h4>
 					<?php echo $aecHTML->createSettingsParticle( 'fallback' ); ?>
