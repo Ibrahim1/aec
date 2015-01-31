@@ -940,7 +940,7 @@ class HTML_AcctExp
 				<?php } ?>
 				</ul>
 				<form action="#" class="pull-right">
-					<input type="text" class="col-sm-12" placeholder="Quicksearch" id="quicksearch" data-placement="bottom" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
+					<input type="text" placeholder="Quicksearch" id="quicksearch" data-placement="bottom" data-content="<?php echo JText::_('AEC_QUICKSEARCH_DESC'); ?>" data-original-title="Quicksearch">
 				</form>
 			</div>
 		</div>

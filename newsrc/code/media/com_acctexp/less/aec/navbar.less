@@ -56,6 +56,11 @@
 	input {
 		height: 32px;
 		margin-top: 2px;
+
+		padding: 2px 0 2px 12px;
+
+		@media (max-width: @screen-md-max) {
+		}
 	}
 }
 
@@ -143,6 +148,12 @@
 			margin-left: 4px;
 		}
 	}
+
+
+	div {
+		> ul, .nav { padding-left: 0; }
+	}
+
 }
 
 .dropdown-menu { min-width: 100px; }
@@ -150,7 +161,6 @@
 .head-minify {
 	position: absolute;
 	top: 10px;
-	left: 14px;
 	text-size: 140%;
 	color: #fff;
 }
