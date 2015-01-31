@@ -74,7 +74,7 @@ class mi_aecpoints extends MI
 			$request->params['use_points'] = (int) $request->params['use_points'];
 
 			if ( $request->params['use_points'] > $this->getPoints( $request ) ) {
-				$return['error'] = "You don't have that many points";
+				$return['error'] = JText::_('MI_MI_AECPOINTS_ERROR_NOT_ENOUGH');
 			}
 		}
 
