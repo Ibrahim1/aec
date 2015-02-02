@@ -5,7 +5,7 @@ TransactionSearchResults.php
 Sends a TransactionSearch NVP API request to PayPal.
 
 The code retrieves the transaction ID,start date,end date
-and constructs the NVP API request string to send to the 
+and constructs the NVP API request string to send to the
 PayPal server. The request to PayPal uses an API Signature.
 
 After receiving the response from the PayPal server, the
@@ -28,7 +28,7 @@ session_start();
 /* Construct the request string that will be sent to PayPal.
    The variable $nvpstr contains all the variables and is a
    name value pair string with & as a delimiter */
-$nvpStr;
+$nvpStr = '';
 
 $startDateStr=$_REQUEST['startDateStr'];
 $endDateStr=$_REQUEST['endDateStr'];
@@ -42,10 +42,10 @@ if(isset($startDateStr)) {
 if(isset($endDateStr)&&$endDateStr!='') {
    $end_time = strtotime($endDateStr);
    $iso_end = date('Y-m-d\T24:00:00\Z', $end_time);
-   $nvpStr.="&ENDDATE=$iso_end";    
+   $nvpStr.="&ENDDATE=$iso_end";
 }
 
-if($transactionID!='') 
+if($transactionID!='')
    $nvpStr=$nvpStr."&TRANSACTIONID=$transactionID";
 /* Make the API call to PayPal, using API signature.
    The API response is stored in an associative array called $resArray */
@@ -91,13 +91,13 @@ if($ack!="SUCCESS" && $ack!="SUCCESSWITHWARNING"){
 			No Transaction Selected
 		</td>
 	</tr>
-<?php 
-  }else { 
+<?php
+  }else {
 		$count=0;
 		//counting no.of  transaction IDs present in NVP response arrray.
-		while (isset($resArray["L_TRANSACTIONID".$count])) 
-			$count++; 
-?>	
+		while (isset($resArray["L_TRANSACTIONID".$count]))
+			$count++;
+?>
 			<tr>
             <td colspan="6" class="thinfield">
                  Results 1 - <? echo $count; ?>
@@ -117,15 +117,15 @@ if($ack!="SUCCESS" && $ack!="SUCCESSWITHWARNING"){
             <td >
                 <b>Gross Amount</b></td>
         </tr>
-        
-<?php 
+
+<?php
 	  $ID=0;
   while ($count>0) {
 		  $transactionID    = $resArray["L_TRANSACTIONID".$ID];
 		  $timeStamp = $resArray["L_TIMESTAMP".$ID];
-		  $payerName  = $resArray["L_NAME".$ID]; 
-		  $amount  = $resArray["L_AMT".$ID]; 
-		  $status  = $resArray["L_STATUS".$ID]; 
+		  $payerName  = $resArray["L_NAME".$ID];
+		  $amount  = $resArray["L_AMT".$ID];
+		  $status  = $resArray["L_STATUS".$ID];
 		  $count--; $ID++;
 ?>
 	    <tr>
@@ -139,8 +139,8 @@ if($ack!="SUCCESS" && $ack!="SUCCESSWITHWARNING"){
 <?php }// while
 }//else ?>
 
-            
-            
+
+
      </table>
     </center>
     <a class="home" id="CallsLink" href="index.html">Home</a>

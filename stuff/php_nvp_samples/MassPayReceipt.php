@@ -4,8 +4,8 @@ MassPayReceipt.php
 
 Sends a MassPay NVP API request to PayPal.
 
-The code retrieves the receiveremails, if receiveremail is 
-not null then only the item is added to 
+The code retrieves the receiveremails, if receiveremail is
+not null then only the item is added to
 NVP API request string, to send to the PayPal server. The
 request to PayPal uses an API Signature.
 
@@ -32,7 +32,7 @@ $receiverType = urlencode($_POST['receiverType']);
 
 $currency=urlencode($_REQUEST['currency']);
 
-$nvpstr;
+$nvpstr = '';
 
 $count= count($_POST['receiveremail']);
 for($i=0,$j=0;$i<$count;$i++) {
@@ -48,7 +48,7 @@ for($i=0,$j=0;$i<$count;$i++) {
 /* Construct the request string that will be sent to PayPal.
    The variable $nvpstr contains all the variables and is a
    name value pair string with & as a delimiter */
-   
+
 
 $nvpstr.="&EMAILSUBJECT=$emailSubject&RECEIVERTYPE=$receiverType&CURRENCYCODE=$currency" ;
 
@@ -61,7 +61,7 @@ $resArray=hash_call("MassPay",$nvpstr);
    If the response from PayPal was a success, display the response parameters'
    If the response was an error, display the errors received using APIError.php.
    */
-   
+
 $ack = strtoupper($resArray["ACK"]);
 
 if($ack!="SUCCESS"){
