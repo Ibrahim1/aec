@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_acl
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ACL');
@@ -23,7 +23,7 @@ class mi_acl
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$user = JFactory::getUser();
 
@@ -123,7 +123,7 @@ class mi_acl
 		return $settings;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !empty( $this->settings['jaclpluspro'] ) ) {
 			$this->jaclplusGIDchange( $request->metaUser, 'sub_gid' . $request->area );
@@ -167,7 +167,7 @@ class mi_acl
 		return true;
 	}
 
-	function gidRW( $string, $request )
+	public function gidRW( $string, $request )
 	{
 		$id = AECToolbox::rewriteEngineRQ( $string, $request );
 
@@ -186,7 +186,7 @@ class mi_acl
 		return $id;
 	}
 
-	function instantGIDchange( $metaUser, $add, $remove )
+	public function instantGIDchange( $metaUser, $add, $remove )
 	{
 		$sessionextra = array();
 		if ( !empty( $this->settings['jaclpluspro'] ) ) {
@@ -204,7 +204,7 @@ class mi_acl
 		return true;
 	}
 
-	function jaclplusGIDchange( $metaUser, $section )
+	public function jaclplusGIDchange( $metaUser, $section )
 	{
 		$db = JFactory::getDBO();
 
@@ -258,7 +258,7 @@ class mi_acl
 		return true;
 	}
 
-	function jaclSessionExtra( $metaUser, $gid )
+	public function jaclSessionExtra( $metaUser, $gid )
 	{
 		$sessionextra = array();
 

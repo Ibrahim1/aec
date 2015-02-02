@@ -33,11 +33,11 @@ class plgSystemAECrouting extends JPlugin
 	 * @param array  $config  An array that holds the plugin configuration
 	 * @since 1.5
 	 */
-	function plgSystemAECrouting( &$subject, $config ) {
+	public function plgSystemAECrouting( &$subject, $config ) {
 		parent::__construct( $subject, $config );
 	}
 
-	function getVars()
+	public function getVars()
 	{
 		$vars = array();
 
@@ -125,7 +125,7 @@ class plgSystemAECrouting extends JPlugin
 		return $vars;
 	}
 
-	function getAdditionalVars( $vars )
+	public function getAdditionalVars( $vars )
 	{
 		if ( !file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
 			return;
@@ -239,7 +239,7 @@ class plgSystemAECrouting extends JPlugin
 		return $vars;
 	}
 
-	function onAfterRoute()
+	public function onAfterRoute()
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
 			// Don't act when on backend
@@ -361,7 +361,7 @@ class plgSystemAECrouting extends JPlugin
 		}
 	}
 
-	function onAfterRender()
+	public function onAfterRender()
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
 			// Don't act when on backend
@@ -498,7 +498,7 @@ class plgSystemAECrouting extends JPlugin
 		}
 	}
 
-	function addAECvars( $search, $text, $vars )
+	public function addAECvars( $search, $text, $vars )
 	{
 		$add = "\n";
 
@@ -517,7 +517,7 @@ class plgSystemAECrouting extends JPlugin
 		return str_replace( $search, $search.$add, $text );
 	}
 
-	function deleteToken()
+	public function deleteToken()
 	{
 		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
@@ -527,7 +527,7 @@ class plgSystemAECrouting extends JPlugin
 		}
 	}
 
-	function saveToToken( $vars )
+	public function saveToToken( $vars )
 	{
 		$temptoken = new aecTempToken();
 		$temptoken->getComposite();
@@ -557,7 +557,7 @@ class plgSystemAECrouting extends JPlugin
 		return $existing;
 	}
 
-	function redirectToken()
+	public function redirectToken()
 	{
 		$app = JFactory::getApplication();
 		$app->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );

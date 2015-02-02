@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_email_multi extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_EMAIL_MULTI');
@@ -23,7 +23,7 @@ class mi_email_multi extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['sender']			= array( 'inputE' );
@@ -53,7 +53,7 @@ class mi_email_multi extends MI
 		return $settings;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		$app = JFactory::getApplication();
 
@@ -92,7 +92,7 @@ class mi_email_multi extends MI
 		return true;
 	}
 
-	function aecEventHookEmail( $request )
+	public function aecEventHookEmail( $request )
 	{
 		$pf = 'email_' . $request->event->params['emailid'] . '_';
 

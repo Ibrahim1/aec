@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_file extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_FILE_NAME');
@@ -23,7 +23,7 @@ class mi_file extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['path']			= array( 'inputE' );
@@ -36,7 +36,7 @@ class mi_file extends MI
 	}
 
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !isset( $this->settings['path'.$request->area] ) ) {
 			return null;

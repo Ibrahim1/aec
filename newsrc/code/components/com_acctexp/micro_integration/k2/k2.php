@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_k2
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_K2');
@@ -23,7 +23,7 @@ class mi_k2
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -82,7 +82,7 @@ class mi_k2
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -93,7 +93,7 @@ class mi_k2
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -104,7 +104,7 @@ class mi_k2
 		return true;
 	}
 
-	function AddUserToGroup( $metaUser, $groupid )
+	public function AddUserToGroup( $metaUser, $groupid )
 	{
 		$db = JFactory::getDBO();
 

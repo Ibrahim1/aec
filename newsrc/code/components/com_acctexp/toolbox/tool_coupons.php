@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_coupons
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Coupon Creation";
@@ -22,7 +22,7 @@ class tool_coupons
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -35,7 +35,7 @@ class tool_coupons
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		$return = "";
 		if ( !empty( $_POST['master_coupon'] ) ) {

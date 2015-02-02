@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_dbsearchreplace
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Database Search&Replace";
@@ -22,7 +22,7 @@ class tool_dbsearchreplace
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -62,7 +62,7 @@ class tool_dbsearchreplace
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['type'] ) || empty( $_POST['search'] ) ) {
 			return "<h3>Incomplete Query.</h3>";

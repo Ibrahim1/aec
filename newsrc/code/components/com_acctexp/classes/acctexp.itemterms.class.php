@@ -18,7 +18,7 @@ class itemTerms extends eucaObject
 	var $pointer	= 0;
 	var $terms		= array();
 
-	function readParams( $params, $allow_trial=true )
+	public function readParams( $params, $allow_trial=true )
 	{
 		// Old params only had trial and full
 		if ( $allow_trial ) {
@@ -80,7 +80,7 @@ class itemTerms extends eucaObject
 		return $return;
 	}
 
-	function getOldAmount( $recurring=true )
+	public function getOldAmount( $recurring=true )
 	{
 		$amount = array();
 
@@ -116,7 +116,7 @@ class itemTerms extends eucaObject
 		return $amount;
 	}
 
-	function incrementPointer( $amount=1 )
+	public function incrementPointer( $amount=1 )
 	{
 		for ( $i=0; $i<$amount; $i++ ) {
 			if ( $this->pointer < ( count( $this->terms ) - 1 ) ) {
@@ -127,7 +127,7 @@ class itemTerms extends eucaObject
 		$this->nextterm =& $this->terms[$this->pointer];
 	}
 
-	function decrementPointer( $amount=1 )
+	public function decrementPointer( $amount=1 )
 	{
 		for ( $i=0; $i<$amount; $i++ ) {
 			if ( $this->pointer > 0 ) {
@@ -138,7 +138,7 @@ class itemTerms extends eucaObject
 		$this->nextterm =& $this->terms[$this->pointer];
 	}
 
-	function setPointer( $pointer )
+	public function setPointer( $pointer )
 	{
 		if ( empty( $pointer ) ) {
 			$pointer = 0;
@@ -153,17 +153,17 @@ class itemTerms extends eucaObject
 		$this->nextterm =& $this->terms[$this->pointer];
 	}
 
-	function addTerm( $term )
+	public function addTerm( $term )
 	{
 		array_push( $this->terms, $term );
 	}
 
-	function getTerms()
+	public function getTerms()
 	{
 		return $this->terms;
 	}
 
-	function checkFree()
+	public function checkFree()
 	{
 		$free = true;
 		foreach ( $this->terms as $term ) {
@@ -177,7 +177,7 @@ class itemTerms extends eucaObject
 		return $this->free;
 	}
 
-	function renderTotal()
+	public function renderTotal()
 	{
 		$cost = 0;
 		foreach ( $this->terms as $term ) {
@@ -197,12 +197,12 @@ class itemTerm extends eucaObject
 	var $cost			= array();
 	var $free			= false;
 
-	function itemTerm()
+	public function itemTerm()
 	{
 		$this->set( 'duration', array( 'none' => true ) );
 	}
 
-	function renderDuration()
+	public function renderDuration()
 	{
 		if ( isset( $this->duration['none'] ) ) {
 			return '';
@@ -232,7 +232,7 @@ class itemTerm extends eucaObject
 		}
 	}
 
-	function renderCost()
+	public function renderCost()
 	{
 		if ( count( $this->cost ) <= 2 ) {
 			return array( $this->cost[0] );
@@ -241,7 +241,7 @@ class itemTerm extends eucaObject
 		}
 	}
 
-	function addCost( $amount, $info=null )
+	public function addCost( $amount, $info=null )
 	{
 		if ( !empty( $this->cost ) ) {
 			// Delete current total, if exists
@@ -312,7 +312,7 @@ class itemTerm extends eucaObject
 		$this->cost[] = $cost;
 	}
 
-	function setCost( $amount, $info=null )
+	public function setCost( $amount, $info=null )
 	{
 		$this->cost = array();
 
@@ -332,14 +332,14 @@ class itemTerm extends eucaObject
 		$this->computeTotal();
 	}
 
-	function modifyCost( $id, $amount )
+	public function modifyCost( $id, $amount )
 	{
 		$this->cost[$id]->cost['amount'] = $amount;
 
 		$this->computeTotal();
 	}
 
-	function discount( $amount, $percent=null, $info=null  )
+	public function discount( $amount, $percent=null, $info=null  )
 	{
 		// Only apply if its not already free
 		if ( !$this->free ) {
@@ -377,7 +377,7 @@ class itemTerm extends eucaObject
 		}
 	}
 
-	function computeTotal()
+	public function computeTotal()
 	{
 		// Unset old total, if present
 		$costkeys = array_keys( $this->cost );
@@ -408,7 +408,7 @@ class itemTerm extends eucaObject
 		return true;
 	}
 
-	function renderTotal()
+	public function renderTotal()
 	{
 		$cost = array_keys( $this->cost );
 
@@ -417,7 +417,7 @@ class itemTerm extends eucaObject
 		return $this->cost[$k]->renderCost();
 	}
 
-	function getBaseCostObject( $filter=false, $filter_temp_coupons=false )
+	public function getBaseCostObject( $filter=false, $filter_temp_coupons=false )
 	{
 		if ( $filter === false ) {
 			$filter = array( 'tax', 'total' );
@@ -450,12 +450,12 @@ class itemCost extends eucaObject
 	var $type			= null;
 	var $cost			= array();
 
-	function renderCost()
+	public function renderCost()
 	{
 		return $this->cost['amount'];
 	}
 
-	function isFree()
+	public function isFree()
 	{
 		if ( $this->renderCost() <= 0 ) {
 			return true;

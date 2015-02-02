@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_mobio extends XMLprocessor {
 
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'mobio';
@@ -27,7 +27,7 @@ class processor_mobio extends XMLprocessor {
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['servID']				= '00';
@@ -36,7 +36,7 @@ class processor_mobio extends XMLprocessor {
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['servID']			= array( 'inputC' );
@@ -45,7 +45,7 @@ class processor_mobio extends XMLprocessor {
 		return $settings;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		$return = '<p>' . $this->settings['user_message'] . '</p>';
 		$return .= '<form action="' . AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=checkout', $this->info['secure'] ) . '" method="post">' . "\n";
@@ -58,7 +58,7 @@ class processor_mobio extends XMLprocessor {
 		return $return;
 	}
 
-	function checkoutProcess( $request, $InvoiceFactory )
+	public function checkoutProcess( $request, $InvoiceFactory )
 	{
 		$response['valid'] = false;
 
@@ -76,7 +76,7 @@ class processor_mobio extends XMLprocessor {
 		return $this->checkoutResponse( $request, $response, $InvoiceFactory );
 	}
 
-	function mobioCheckcode( $code )
+	public function mobioCheckcode( $code )
 	{
 		$res_lines = file( "http://www.mobio.bg/code/checkcode.php?servID=" . $this->settings['servID'] . "&code=" . $code );
 

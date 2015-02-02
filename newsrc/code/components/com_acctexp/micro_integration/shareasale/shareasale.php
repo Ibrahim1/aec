@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_shareasale
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_SHAREASALE');
@@ -23,7 +23,7 @@ class mi_shareasale
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['merchantID']			= array( 'inputC' );
@@ -36,12 +36,12 @@ class mi_shareasale
 		return $settings;
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'merchantID' );
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 

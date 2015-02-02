@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_authorize_arb extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'authorize_arb';
@@ -29,12 +29,12 @@ class processor_authorize_arb extends XMLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return 'authorize.png';
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -47,7 +47,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['login']					= "login";
@@ -64,7 +64,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']				= array( "toggle" );
@@ -84,7 +84,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = $this->getCCform();
 
@@ -99,7 +99,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
@@ -175,7 +175,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $content;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		// ARB doesn't validate the transactions until the batch processing occurs.  They only do
 		// an initial algorithm check, which the test credit cards pass.  So we have to catch them
@@ -226,7 +226,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $return;
 	}
 
-	function substring_between( $haystack, $start, $end )
+	public function substring_between( $haystack, $start, $end )
 	{
 		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
 			return false;
@@ -237,7 +237,7 @@ class processor_authorize_arb extends XMLprocessor
 		}
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		$return = array();
 		switch ( $unit ) {
@@ -267,7 +267,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
 					. '<ARBCancelSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">'
@@ -326,7 +326,7 @@ class processor_authorize_arb extends XMLprocessor
 		}
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$x_description			= $post['x_description'];
 
@@ -346,7 +346,7 @@ class processor_authorize_arb extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		if ( $post['x_subscription_paynum'] > 1 ) {
 			$x_response_code		= $post['x_response_code'];

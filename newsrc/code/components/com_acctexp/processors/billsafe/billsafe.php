@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_billsafe extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'billsafe';
@@ -28,7 +28,7 @@ class processor_billsafe extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']				= 0;
@@ -40,7 +40,7 @@ class processor_billsafe extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']					= array( 'toggle' );
@@ -55,7 +55,7 @@ class processor_billsafe extends XMLprocessor
 		return $settings;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$var['url_return']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=billsafenotification', $this->info['secure'], true );
 		$var['url_cancel']			= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
@@ -82,7 +82,7 @@ class processor_billsafe extends XMLprocessor
 		return $this->billsafeRequestXML( 'prepare_Order', $var );
 	}
 
-	function billsafeRequestXML( $method, $extra )
+	public function billsafeRequestXML( $method, $extra )
 	{
 		$var['Method']						= $method;
 
@@ -99,7 +99,7 @@ class processor_billsafe extends XMLprocessor
 		return $this->arrayToNVP( $var, true );
 	}
 
-	function transmitToBillsafe( $xml )
+	public function transmitToBillsafe( $xml )
 	{
 		$path = "/V207";
 
@@ -112,7 +112,7 @@ class processor_billsafe extends XMLprocessor
 		return $this->transmitRequest( $url, $path, $xml );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$response = trim( $this->transmitToBillsafe( $xml ) );
 
@@ -136,7 +136,7 @@ class processor_billsafe extends XMLprocessor
 		return $return;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$xml = $this->billsafeRequestXML( 'getTransactionResult', array( 'token' => $_GET['token'] ) );
 
@@ -156,7 +156,7 @@ class processor_billsafe extends XMLprocessor
 		return $return;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid']	= 0;
 

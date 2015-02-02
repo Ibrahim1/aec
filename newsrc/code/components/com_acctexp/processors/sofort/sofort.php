@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_sofort extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'sofort';
@@ -29,12 +29,12 @@ class processor_sofort extends XMLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return 'sofortueberweisung.png';
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -47,7 +47,7 @@ class processor_sofort extends XMLprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['customer_id']		= "12345";
@@ -62,7 +62,7 @@ class processor_sofort extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['customer_id']		= array( "inputC" );
@@ -79,7 +79,7 @@ class processor_sofort extends XMLprocessor
 		return $settings;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$amt = $request->int_var['amount']['amount3'];
@@ -124,7 +124,7 @@ class processor_sofort extends XMLprocessor
 		return $content;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$response = $this->transmitToSofort( $xml );
 
@@ -144,7 +144,7 @@ class processor_sofort extends XMLprocessor
 		}
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		switch ( $unit ) {
 			case 'D':
@@ -186,7 +186,7 @@ class processor_sofort extends XMLprocessor
 		}
 	}
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$xml =	'<?xml version="1.0" encoding="UTF-8"?>'
 				. '<cancel_sa version="1.0">'
@@ -209,7 +209,7 @@ class processor_sofort extends XMLprocessor
 		}
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$post = file_get_contents("php://input");
 
@@ -245,7 +245,7 @@ class processor_sofort extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -277,7 +277,7 @@ class processor_sofort extends XMLprocessor
 		return $response;
 	}
 
-	function transmitToSofort( $xml )
+	public function transmitToSofort( $xml )
 	{
 		$path = "/api/xml";
 		$url = "https://api.sofort.com" . $path;

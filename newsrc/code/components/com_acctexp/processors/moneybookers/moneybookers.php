@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_moneybookers extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'moneybookers';
@@ -28,7 +28,7 @@ class processor_moneybookers extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$app = JFactory::getApplication();
 
@@ -49,7 +49,7 @@ class processor_moneybookers extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -129,7 +129,7 @@ class processor_moneybookers extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']				= 'https://www.moneybookers.com/app/payment.pl';
 		$var['pay_to_email']			= $this->settings['pay_to_email'];
@@ -170,7 +170,7 @@ class processor_moneybookers extends POSTprocessor
 		return $var;
 	}
 
-	function convertPeriodUnit( $unit, $period )
+	public function convertPeriodUnit( $unit, $period )
 	{
 		$return = array();
 		$return['period'] = $period;
@@ -193,7 +193,7 @@ class processor_moneybookers extends POSTprocessor
 		return $return;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']			= $post['transaction_id'];
@@ -203,7 +203,7 @@ class processor_moneybookers extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 

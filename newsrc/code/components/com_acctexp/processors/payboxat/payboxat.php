@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_payboxat extends SOAPprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name'] 			= 'payboxat';
@@ -28,7 +28,7 @@ class processor_payboxat extends SOAPprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
@@ -43,7 +43,7 @@ class processor_payboxat extends SOAPprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( "toggle" );
@@ -60,14 +60,14 @@ class processor_payboxat extends SOAPprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = $this->getUserform( array(), array( 'phone' ) );
 
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$a = array();
 
@@ -90,7 +90,7 @@ class processor_payboxat extends SOAPprocessor
 		return $a;
 	}
 
-	function transmitRequestXML( $content, $request )
+	public function transmitRequestXML( $content, $request )
 	{
 		$path = "/gw-tx/services/PayboxServices?wsdl";
 

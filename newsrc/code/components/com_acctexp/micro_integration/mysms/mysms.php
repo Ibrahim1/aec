@@ -14,7 +14,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class mi_mysms
 {
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MYSMS');
@@ -24,7 +24,7 @@ class mi_mysms
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['add_credits']		= array( 'inputA' );
@@ -32,7 +32,7 @@ class mi_mysms
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -49,7 +49,7 @@ class mi_mysms
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 

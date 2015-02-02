@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_ccbill extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'ccbill';
@@ -29,7 +29,7 @@ class processor_ccbill extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']			= "USD";
@@ -43,7 +43,7 @@ class processor_ccbill extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -62,7 +62,7 @@ class processor_ccbill extends POSTprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
+	public function CustomPlanParams()
 	{
 		$p = array();
 		$p['Allowedtypes']	= array( 'inputC' );
@@ -70,7 +70,7 @@ class processor_ccbill extends POSTprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']		= "https://bill.ccbill.com/jpost/signup.cgi";
 		$var['clientAccnum']	= $this->settings['clientAccnum'];
@@ -124,7 +124,7 @@ class processor_ccbill extends POSTprocessor
 	ip_address			Customer�s IP address , such as: 64.38.194.13
 	*/
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$db = JFactory::getDBO();
 
@@ -230,7 +230,7 @@ class processor_ccbill extends POSTprocessor
 
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		if ( isset( $response['pending_reason'] ) ){
 			$response['valid'] = 0;
@@ -260,7 +260,7 @@ class processor_ccbill extends POSTprocessor
 		return $response;
 	}
 
-	function prepareValidation( $subscription_list )
+	public function prepareValidation( $subscription_list )
 	{
 		$db = JFactory::getDBO();
 
@@ -341,7 +341,7 @@ class processor_ccbill extends POSTprocessor
 		}
 	}
 
-	function validateSubscription( $iFactory, $subscription )
+	public function validateSubscription( $iFactory, $subscription )
 	{
 		$return = array();
 		$return['valid'] = false;
@@ -364,7 +364,7 @@ class processor_ccbill extends POSTprocessor
 		return $return;
 	}
 
-	function fetchURL( $url ) {
+	public function fetchURL( $url ) {
 		$url_parsed = parse_url($url);
 
 		$host = $url_parsed["host"];

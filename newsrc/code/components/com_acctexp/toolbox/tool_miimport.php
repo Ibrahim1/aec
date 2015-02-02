@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_miimport
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Micro Integration Import";
@@ -22,7 +22,7 @@ class tool_miimport
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -48,7 +48,7 @@ class tool_miimport
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['count'] ) ) {
 			return null;

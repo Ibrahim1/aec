@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_offline_payment extends processor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'offline_payment';
@@ -28,17 +28,17 @@ class processor_offline_payment extends processor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return '';
 	}
 
-	function checkoutText()
+	public function checkoutText()
 	{
 		return "";
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -49,7 +49,7 @@ class processor_offline_payment extends processor
 		return $actions;
 	}
 
-	function modifyCheckout( &$int_var, &$InvoiceFactory )
+	public function modifyCheckout( &$int_var, &$InvoiceFactory )
 	{
 		if ( !empty( $this->settings['paylater'] ) ) {
 			$InvoiceFactory->invoice->pay( 1, true );
@@ -61,7 +61,7 @@ class processor_offline_payment extends processor
 		}
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['info']			= '';
@@ -82,7 +82,7 @@ class processor_offline_payment extends processor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['waitingplan']		= array( 'list_plan' );
@@ -109,7 +109,7 @@ class processor_offline_payment extends processor
 		return $settings;
 	}
 
-	function customaction_email( $request )
+	public function customaction_email( $request )
 	{
 		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );
@@ -132,7 +132,7 @@ class processor_offline_payment extends processor
 		return true;
 	}
 
-	function invoiceCreationAction( $objInvoice )
+	public function invoiceCreationAction( $objInvoice )
 	{
 		if ( $this->settings['email_info'] ) {
 			$metaUser = new metaUser( $objInvoice->userid );

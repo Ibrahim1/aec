@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_redshop
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_REDSHOP');
@@ -23,7 +23,7 @@ class mi_redshop
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$shopper_groups = $this->getShopperGroups();
 
@@ -56,7 +56,7 @@ class mi_redshop
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( $this->settings['set_shopper_group_exp'] ) {
 			$this->updateGroup( $request->metaUser->userid, $this->settings['shopper_group_exp'] );
@@ -67,7 +67,7 @@ class mi_redshop
 		}
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( $this->settings['set_shopper_group'] ) {
 			$this->updateGroup( $request->metaUser->userid, $this->settings['shopper_group'] );
@@ -78,7 +78,7 @@ class mi_redshop
 		}
 	}
 
-	function getShopperGroups()
+	public function getShopperGroups()
 	{
 		$db = JFactory::getDBO();
 		$query = 'SELECT `shopper_group_name` AS `title`, `shopper_group_id` AS `id` FROM `#__redshop_shopper_group`';
@@ -87,7 +87,7 @@ class mi_redshop
 	 	return $db->loadObjectList();
 	}
 
-	function updateGroup( $userid, $shoppergroup )
+	public function updateGroup( $userid, $shoppergroup )
 	{
 		$db = JFactory::getDBO();
 

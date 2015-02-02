@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class microIntegrationHandler
 {
-	function microIntegrationHandler()
+	public function microIntegrationHandler()
 	{
 		$this->mi_dir = JPATH_SITE . '/components/com_acctexp/micro_integration';
 	}
@@ -76,7 +76,7 @@ class microIntegrationHandler
 		return $similar;
 	}
 
-	function getIntegrationList()
+	public function getIntegrationList()
 	{
 		$list = xJUtility::getFileArray( $this->mi_dir, '', true, true );
 
@@ -195,7 +195,7 @@ class microIntegrationHandler
 		return $group_list;
 	}
 
-	function userPlanExpireActions( $metaUser, $subscription_plan, $special=null )
+	public function userPlanExpireActions( $metaUser, $subscription_plan, $special=null )
 	{
 		$mi_autointegrations = $this->getAutoIntegrations();
 
@@ -236,7 +236,7 @@ class microIntegrationHandler
 		}
 	}
 
-	function getHacks()
+	public function getHacks()
 	{
 		$integrations = $this->getMIList();
 
@@ -274,7 +274,7 @@ class microIntegrationHandler
 		return xJ::getDBArray( $db );
 	}
 
-	function getAutoIntegrations()
+	public function getAutoIntegrations()
 	{
 		$db = JFactory::getDBO();
 
@@ -287,7 +287,7 @@ class microIntegrationHandler
 		return xJ::getDBArray( $db );
 	}
 
-	function getUserChangeIntegrations()
+	public function getUserChangeIntegrations()
 	{
 		$db = JFactory::getDBO();
 
@@ -300,7 +300,7 @@ class microIntegrationHandler
 		return xJ::getDBArray( $db );
 	}
 
-	function userchange( $row, $post, $trace = '' )
+	public function userchange( $row, $post, $trace = '' )
 	{
 		$db = JFactory::getDBO();
 
@@ -388,7 +388,7 @@ class microIntegrationHandler
 
 class MI
 {
-	function autoduplicatesettings( $settings, $ommit=array(), $collate=true, $rwEngine=false )
+	public function autoduplicatesettings( $settings, $ommit=array(), $collate=true, $rwEngine=false )
 	{
 		if ( isset( $settings['lists'] ) ) {
 			$lists = $settings['lists'];
@@ -437,7 +437,7 @@ class MI
 		return $new_settings;
 	}
 
-	function setError( $error )
+	public function setError( $error )
 	{
 		if ( !isset( $this->error ) ) {
 			$this->error = array();
@@ -446,7 +446,7 @@ class MI
 		$this->error[] = $error;
 	}
 
-	function setWarning( $warning )
+	public function setWarning( $warning )
 	{
 		if ( !isset( $this->warning ) ) {
 			$this->warning = array();
@@ -455,7 +455,7 @@ class MI
 		$this->warning[] = $warning;
 	}
 
-	function issueUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
+	public function issueUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		$db = JFactory::getDBO();
 
@@ -477,7 +477,7 @@ class MI
 		}
 	}
 
-	function redateUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
+	public function redateUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		$db = JFactory::getDBO();
 
@@ -505,7 +505,7 @@ class MI
 		}
 	}
 
-	function removeEvents( $request, $event )
+	public function removeEvents( $request, $event )
 	{
 		$db = JFactory::getDBO();
 
@@ -521,7 +521,7 @@ class MI
 		$db->query();
 	}
 
-	function issueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
+	public function issueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		if ( !empty( $request->metaUser ) ) {
 			$context['user_id']	= $request->metaUser->userid;
@@ -548,7 +548,7 @@ class MI
 		return $aecEvent->issue( 'mi', $this->info['name'], $this->id, $event, $userid, $due_date, $context, $params, $customparams );
 	}
 
-	function aecEventHook( $event )
+	public function aecEventHook( $event )
 	{
 		$method = 'aecEventHook' . $event->event;
 
@@ -582,7 +582,7 @@ class MI
 		return $this->$method( $request );
 	}
 
-	function getPWrequest( $request )
+	public function getPWrequest( $request )
 	{
 		if ( isset( $request->post['password_clear'] ) ) {
 			return $request->post['password_clear'];
@@ -629,17 +629,17 @@ class microIntegration extends serialParamDBTable
 	/** @var int */
 	var $on_userchange		= null;
 
-	function microIntegration()
+	public function microIntegration()
 	{
 		parent::__construct( '#__acctexp_microintegrations', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params', 'restrictions' );
 	}
 
-	function functionProxy( $function, $data=null, $default=null )
+	public function functionProxy( $function, $data=null, $default=null )
 	{
 		if ( !isset( $this->mi_class ) ) {
 			return $default;
@@ -656,7 +656,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function check( $fields=array() )
+	public function check( $fields=array() )
 	{
 		if ( isset( $this->settings ) ) {
 			unset( $this->settings );
@@ -673,7 +673,7 @@ class microIntegration extends serialParamDBTable
 		return parent::check($fields);
 	}
 
-	function mi_exists( $mi_id )
+	public function mi_exists( $mi_id )
 	{
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_microintegrations'
@@ -683,14 +683,14 @@ class microIntegration extends serialParamDBTable
 		return $this->_db->loadResult();
 	}
 
-	function callDry( $mi_name )
+	public function callDry( $mi_name )
 	{
 		$this->class_name = 'mi_' . $mi_name;
 
 		return $this->callIntegration( true );
 	}
 
-	function callIntegration( $override=false )
+	public function callIntegration( $override=false )
 	{
 		$handle = str_replace( 'mi_', '', $this->class_name );
 
@@ -741,7 +741,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function copyAssets()
+	public function copyAssets()
 	{
 		$handle = str_replace( 'mi_', '', $this->class_name );
 
@@ -770,7 +770,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function checkPermission( $metaUser, $invoice )
+	public function checkPermission( $metaUser, $invoice )
 	{
 		$permission = true;
 
@@ -804,19 +804,19 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function getRestrictionsArray()
+	public function getRestrictionsArray()
 	{
 		return aecRestrictionHelper::getRestrictionsArray( $this->restrictions );
 	}
 
-	function action( &$metaUser, $exchange=null, $invoice=null, $objplan=null )
+	public function action( &$metaUser, $exchange=null, $invoice=null, $objplan=null )
 	{
 		$add = $params = false;
 
 		return $this->relayAction( $metaUser, $exchange, $invoice, $objplan, 'action', $add, $params );
 	}
 
-	function pre_expiration_action( &$metaUser, $objplan=null )
+	public function pre_expiration_action( &$metaUser, $objplan=null )
 	{
 		if ( method_exists( $this->mi_class, 'pre_expiration_action' ) || method_exists( $this->mi_class, 'relayAction' ) ) {
 			$userflags = $metaUser->meta->getMIParams( $this->id, $objplan->id );
@@ -867,7 +867,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function expiration_action( &$metaUser, $objplan=null, $invoice=null )
+	public function expiration_action( &$metaUser, $objplan=null, $invoice=null )
 	{
 		// IF ExpireAllInstances=0 AND hasMoreThanOneInstance -> return null
 		if ( empty( $this->settings['_aec_global_exp_all'] ) ) {
@@ -882,7 +882,7 @@ class microIntegration extends serialParamDBTable
 		return $this->relayAction( $metaUser, null, $invoice, $objplan, 'expiration_action', $add, $params );
 	}
 
-	function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add, &$params )
+	public function relayAction( &$metaUser, $exchange=null, $invoice=null, $objplan=null, $stage='action', &$add, &$params )
 	{
 		if ( $stage == 'action' ) {
 			if ( isset( $this->settings['_aec_action'] ) ) {
@@ -1004,7 +1004,7 @@ class microIntegration extends serialParamDBTable
 		return $return;
 	}
 
-	function getMIform( $plan, $metaUser )
+	public function getMIform( $plan, $metaUser )
 	{
 		if ( !$this->checkPermission( $metaUser, null ) ) {
 			return null;
@@ -1022,7 +1022,7 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'getMIform', $request );
 	}
 
-	function verifyMIform( $plan, $metaUser, $params=null )
+	public function verifyMIform( $plan, $metaUser, $params=null )
 	{
 		if ( !$this->checkPermission( $metaUser, null ) ) {
 			return null;
@@ -1042,7 +1042,7 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'verifyMIform', $request );
 	}
 
-	function getMIformParams( $plan, $metaUser, $errors )
+	public function getMIformParams( $plan, $metaUser, $errors )
 	{
 		$mi_form = $this->getMIform( $plan, $metaUser );
 
@@ -1095,7 +1095,7 @@ class microIntegration extends serialParamDBTable
 		return $params;
 	}
 
-	function getErrors()
+	public function getErrors()
 	{
 		if ( !empty( $this->mi_class->error ) && is_array( $this->mi_class->error ) ) {
 			if ( count( $this->mi_class->error ) > 1 ) {
@@ -1114,7 +1114,7 @@ class microIntegration extends serialParamDBTable
 		return $return;
 	}
 
-	function getWarnings()
+	public function getWarnings()
 	{
 		if ( !empty( $this->mi_class->warning ) ) {
 			if ( count( $this->mi_class->warning ) > 1 ) {
@@ -1133,7 +1133,7 @@ class microIntegration extends serialParamDBTable
 		return $return;
 	}
 
-	function aecEventHook( $event )
+	public function aecEventHook( $event )
 	{
 		if ( empty( $this->mi_class ) ) {
 			$this->callIntegration();
@@ -1142,7 +1142,7 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'aecEventHook', $event );
 	}
 
-	function on_userchange_action( $row, $post, $trace )
+	public function on_userchange_action( $row, $post, $trace )
 	{
 		$request = new stdClass();
 		$request->parent			=& $this;
@@ -1160,7 +1160,7 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'on_userchange_action', $request );
 	}
 
-	function profile_info( $metaUser )
+	public function profile_info( $metaUser )
 	{
 		$request = new stdClass();
 		$request->parent	=&	$this;
@@ -1169,7 +1169,7 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'profile_info', $request );
 	}
 
-	function admin_info( $metaUser )
+	public function admin_info( $metaUser )
 	{
 		$request = new stdClass();
 		$request->parent	=&	$this;
@@ -1178,7 +1178,7 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'admin_info', $request );
 	}
 
-	function profile_form( $metaUser, $backend=false )
+	public function profile_form( $metaUser, $backend=false )
 	{
 		$miparams = $metaUser->meta->getMIParams( $this->id );
 
@@ -1201,7 +1201,7 @@ class microIntegration extends serialParamDBTable
 		return $settings;
 	}
 
-	function profile_form_save( $metaUser, $params )
+	public function profile_form_save( $metaUser, $params )
 	{
 		$miparams = $metaUser->meta->getMIParams( $this->id );
 
@@ -1214,7 +1214,7 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'profile_form_save', $request );
 	}
 
-	function admin_form( $metaUser )
+	public function admin_form( $metaUser )
 	{
 		$miparams = $metaUser->meta->getMIParams( $this->id );
 
@@ -1236,7 +1236,7 @@ class microIntegration extends serialParamDBTable
 		return $settings;
 	}
 
-	function admin_form_save( $metaUser, $params )
+	public function admin_form_save( $metaUser, $params )
 	{
 		$request = new stdClass();
 		$request->parent		=&	$this;
@@ -1247,7 +1247,7 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'admin_form_save', $request );
 	}
 
-	function getInfo()
+	public function getInfo()
 	{
 		$lang = JFactory::getLanguage();
 
@@ -1268,7 +1268,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function getGeneralSettings()
+	public function getGeneralSettings()
 	{
 		$settings['name']					= array( 'inputC', '' );
 		$settings['desc']					= array( 'inputD', '' );
@@ -1285,7 +1285,7 @@ class microIntegration extends serialParamDBTable
 		return $settings;
 	}
 
-	function getCommonData()
+	public function getCommonData()
 	{
 		$common = array();
 		if ( method_exists( $this->mi_class, 'CommonData' ) && empty( $this->settings ) ) {
@@ -1319,7 +1319,7 @@ class microIntegration extends serialParamDBTable
 		return $common;
 	}
 
-	function getSettings()
+	public function getSettings()
 	{
 		// See whether an install is neccessary (and possible)
 		if ( method_exists( $this->mi_class, 'checkInstallation' ) && method_exists( $this->mi_class, 'install' ) ) {
@@ -1373,7 +1373,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function exchangeSettings( $exchange )
+	public function exchangeSettings( $exchange )
 	{
 		 if ( !empty( $exchange ) ) {
 			 foreach ( $exchange as $key => $value ) {
@@ -1391,7 +1391,7 @@ class microIntegration extends serialParamDBTable
 		 }
 	}
 
-	function savePostParams( $array )
+	public function savePostParams( $array )
 	{
 		// Strip out params that we don't need
 		$params = $this->stripNonParams( $array );
@@ -1472,7 +1472,7 @@ class microIntegration extends serialParamDBTable
 		return true;
 	}
 
-	function stripNonParams( $array )
+	public function stripNonParams( $array )
 	{
 		// All variables of the class have to be stripped out
 		$vars = get_class_vars( 'microIntegration' );
@@ -1486,7 +1486,7 @@ class microIntegration extends serialParamDBTable
 		return $array;
 	}
 
-	function registerProfileTabs()
+	public function registerProfileTabs()
 	{
 		if ( method_exists( $this->mi_class, 'registerProfileTabs' ) ) {
 			$response = $this->mi_class->registerProfileTabs();
@@ -1497,7 +1497,7 @@ class microIntegration extends serialParamDBTable
 		return $response;
 	}
 
-	function customProfileTab( $action, $metaUser )
+	public function customProfileTab( $action, $metaUser )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -1524,7 +1524,7 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
-	function delete( $pk=null )
+	public function delete( $pk=null )
 	{
 		// Maybe this function needs special actions on delete?
 		// TODO: There should be a way to manage complete deletion of use of an MI type

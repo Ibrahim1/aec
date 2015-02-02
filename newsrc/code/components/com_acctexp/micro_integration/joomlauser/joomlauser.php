@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_joomlauser
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JOOMLAUSER');
@@ -23,7 +23,7 @@ class mi_joomlauser
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['activate']		= array( 'toggle' );
@@ -69,7 +69,7 @@ class mi_joomlauser
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -117,7 +117,7 @@ class mi_joomlauser
 		}
 	}
 
-	function getUsername( $request )
+	public function getUsername( $request )
 	{
 		if ( !empty( $this->settings['username_rand'] ) ) {
 			$db = JFactory::getDBO();
@@ -140,7 +140,7 @@ class mi_joomlauser
 		}
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( $this->settings['block'] ) {
 			$db = JFactory::getDBO();
@@ -159,7 +159,7 @@ class mi_joomlauser
 		}
 	}
 
-	function setFields( $request, $stage="" )
+	public function setFields( $request, $stage="" )
 	{
 		$db = JFactory::getDBO();
 

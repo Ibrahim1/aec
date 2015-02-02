@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_cleanup
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "System Cleanup";
@@ -22,7 +22,7 @@ class tool_cleanup
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['delete']				= array( 'toggle', 'Delete', 'Do the cleanup (this can delete a lot of data - do a check first)' );
@@ -31,7 +31,7 @@ class tool_cleanup
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		$db = JFactory::getDBO();
 

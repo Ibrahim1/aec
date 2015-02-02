@@ -18,7 +18,7 @@
  * @version 1.1
  */
 
-class Mollie_Wallie 
+class Mollie_Wallie
 {
 	private $partnerId        = 0;
 	private $transactionId    = 0;
@@ -39,7 +39,7 @@ class Mollie_Wallie
 	*
 	* @param integer $partnerId
 	*/
-	function __construct($partnerId) 
+	public function __construct($partnerId)
 	{
 		$this->setPartnerID($partnerId);
 	}
@@ -52,12 +52,12 @@ class Mollie_Wallie
 	* @param string $returnUrl
 	* @return boolean True on succes, false otherwise
 	*/
-	public function createPayment($amount, $reportUrl, $returnUrl) 
+	public function createPayment($amount, $reportUrl, $returnUrl)
 	{
-    
+
 		if (!$this->setAmount($amount)
 			|| !$this->setReportUrl($reportUrl)
-			|| !$this->setReturnUrl($returnUrl)) 
+			|| !$this->setReturnUrl($returnUrl))
 		{
 			$this->_errorMessage = "The given arguments are incorrect or incomplete.";
 			return false;
@@ -71,8 +71,8 @@ class Mollie_Wallie
 									'&returnurl=' . urlencode($this->getReturnUrl()) .
 									'&language=' .  urlencode($this->getLanguage())
 		);
-		
-		if (empty($result)) 
+
+		if (empty($result))
 		{
 			return false;
 		}
@@ -116,11 +116,11 @@ class Mollie_Wallie
 	* @param integer $amount
 	* @return boolean True on succes, false otherwise
 	*/
-	public function checkPayment($transactionId, $amount) 
+	public function checkPayment($transactionId, $amount)
 	{
 		// set transaction id & amount
 		if (!$this->setTransactionId($transactionId)
-		    || !$this->setAmount($amount)) 
+		    || !$this->setAmount($amount))
 		{
 			$this->_errorMessage = "The given transactionID and/or amount is incorrect.";
 			return false;
@@ -132,18 +132,18 @@ class Mollie_Wallie
 									'&partnerid=' .      urlencode($this->getPartnerId()).
 									'&transaction_id=' . urlencode($this->getTransactionId()).
 									'&amount='.          urlencode($this->getAmount()));
-		if (empty($result)) 
+		if (empty($result))
 		{
 			return false;
 		}
 
 		list($headers, $xml) = preg_split("/(\r?\n){2}/", $result, 2);
 
-		try 
+		try
 		{
 			$data = $this->_XMLtoObject($xml);
 
-			if ($data == false ) 
+			if ($data == false )
 			{
 				return false;
 			}
@@ -155,12 +155,12 @@ class Mollie_Wallie
 
 			if (!$this->setPayed($payed)
 				|| !$this->setAmount($amount)
-				|| !$this->setStatus($status)) 
+				|| !$this->setStatus($status))
 			{
 				return false;
 			}
-		} 
-		catch (Exception $e) 
+		}
+		catch (Exception $e)
 		{
 			return false;
 		}
@@ -168,9 +168,9 @@ class Mollie_Wallie
 		return true;
 	}
 
-	protected function _XMLtoObject ($xml) 
+	protected function _XMLtoObject ($xml)
 	{
-		try 
+		try
 		{
 			$xml_object = new SimpleXMLElement($xml);
 			if ($xml_object == false) {
@@ -178,14 +178,14 @@ class Mollie_Wallie
 				return false;
 			}
 		}
-		catch (Exception $e) 
+		catch (Exception $e)
 		{
 			return false;
 		}
 
 		return $xml_object;
 	}
-	
+
 	protected function _XMLisError($xml)
 	{
 		if (isset($xml->item))
@@ -195,11 +195,11 @@ class Mollie_Wallie
 			{
 				$this->_errorMessage = (string) $xml->item->message;
 				$this->_errorCode    = (string) $xml->item->errorcode;
-			
+
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -211,12 +211,12 @@ class Mollie_Wallie
 	* @param string $data Data to send
 	* @return string
 	*/
-	protected function sendToHost($host, $path, $data) 
+	protected function sendToHost($host, $path, $data)
 	{
 		// posts data to server
 		$fp = @fsockopen($host, 80);
 		$buf = '';
-		if ($fp) 
+		if ($fp)
 		{
 			@fputs($fp, "POST $path HTTP/1.0\n");
 			@fputs($fp, "Host: $host\n");
@@ -224,15 +224,15 @@ class Mollie_Wallie
 			@fputs($fp, "Content-length: " . strlen($data) . "\n");
 			@fputs($fp, "Connection: close\n\n");
 			@fputs($fp, $data);
-			
-			while (!feof($fp)) 
+
+			while (!feof($fp))
 			{
 				$buf .= fgets($fp, 128);
 			}
-		
-			fclose($fp);		
+
+			fclose($fp);
 		}
-		
+
 		return $buf;
 	}
 
@@ -242,13 +242,13 @@ class Mollie_Wallie
 	* @param integer $partnerId
 	* @return boolean
 	*/
-	protected function setPartnerId($partnerId) 
+	protected function setPartnerId($partnerId)
 	{
-		if (!is_numeric($partnerId)) 
+		if (!is_numeric($partnerId))
 		{
 			return false;
 		}
-		
+
 		$this->partnerId = $partnerId;
 		return true;
 	}
@@ -258,8 +258,8 @@ class Mollie_Wallie
 	*
 	* @return integer
 	*/
-	
-	protected function getPartnerId() 
+
+	protected function getPartnerId()
 	{
 		return $this->partnerId;
 	}
@@ -270,13 +270,13 @@ class Mollie_Wallie
 	 * @param integer $amount Minimum amount is the cost of a transaction!
 	 * @return boolean
 	 */
-	protected function setAmount($amount) 
-	{	
-		if (!is_numeric($amount)) 
+	protected function setAmount($amount)
+	{
+		if (!is_numeric($amount))
 		{
 			return false;
 		}
-		
+
 		$this->amount = $amount;
 		return true;
 	}
@@ -286,7 +286,7 @@ class Mollie_Wallie
 	*
 	* @return integer
 	*/
-	public function getAmount() 
+	public function getAmount()
 	{
 		return $this->amount;
 	}
@@ -297,13 +297,13 @@ class Mollie_Wallie
 	 * @param string $currency
 	 * @return boolean
 	 */
-	protected function setCurrency($currency) 
+	protected function setCurrency($currency)
 	{
-		if (empty($currency)) 
+		if (empty($currency))
 		{
 			return false;
 		}
-		
+
 		$this->currency = $currency;
 		return true;
 	}
@@ -313,7 +313,7 @@ class Mollie_Wallie
 	 *
 	 * @return string
 	 */
-	protected function getCurrency() 
+	protected function getCurrency()
 	{
 		return $this->currency;
 	}
@@ -324,13 +324,13 @@ class Mollie_Wallie
      * @param integer $language
      * @return boolean
      */
-	protected function setLanguage($language) 
+	protected function setLanguage($language)
 	{
-		if (empty($language)) 
+		if (empty($language))
 		{
 			return false;
 		}
-		
+
 		$this->language = $language;
 		return true;
 	}
@@ -340,7 +340,7 @@ class Mollie_Wallie
 	 *
 	 * @return integer
 	 */
-	protected function getLanguage() 
+	protected function getLanguage()
 	{
 		return $this->language;
 	}
@@ -354,10 +354,10 @@ class Mollie_Wallie
 	 * @param string $reportUrl
 	 * @return boolean
 	 */
-	protected function setReportUrl($reportUrl) 
+	protected function setReportUrl($reportUrl)
 	{
-	
-		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?/(.*)|', $reportUrl)) 
+
+		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?/(.*)|', $reportUrl))
 		{
 			return false;
 		}
@@ -371,7 +371,7 @@ class Mollie_Wallie
 	 *
 	 * @return string
 	 */
-	protected function getReportUrl() 
+	protected function getReportUrl()
 	{
 		return $this->reportUrl;
 	}
@@ -384,13 +384,13 @@ class Mollie_Wallie
 	 * @param string $returnUrl
 	 * @return boolean
 	 */
-	protected function setReturnUrl($returnUrl) 
+	protected function setReturnUrl($returnUrl)
 	{
-		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?/(.*)|', $returnUrl)) 
+		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?/(.*)|', $returnUrl))
 		{
 			return false;
 		}
-		
+
 		$this->returnUrl = $returnUrl;
 		return true;
 	}
@@ -400,7 +400,7 @@ class Mollie_Wallie
 	 *
 	 * @return string
 	 */
-	protected function getReturnUrl() 
+	protected function getReturnUrl()
 	{
 		return $this->returnUrl;
 	}
@@ -413,12 +413,12 @@ class Mollie_Wallie
 	 */
 	protected function setPayed($payed)
 	{
-		if ($payed === false) 
+		if ($payed === false)
 		{
 			$this->payed = false;
 			return false;
 		}
-		
+
 		$this->payed = true;
 		return true;
 	}
@@ -428,7 +428,7 @@ class Mollie_Wallie
      *
      * @return boolean
      */
-	protected function getPayed() 
+	protected function getPayed()
 	{
 		return $this->payed;
 	}
@@ -441,11 +441,11 @@ class Mollie_Wallie
 	 */
 	protected function setStatus($status)
 	{
-		if (empty($status)) 
+		if (empty($status))
 		{
 			return false;
 		}
-		
+
 		$this->statusMessage = $status;
 		return true;
 	}
@@ -455,7 +455,7 @@ class Mollie_Wallie
 	 *
 	 * @return string
 	 */
-	public function getStatus() 
+	public function getStatus()
 	{
 		return $this->statusMessage;
 	}
@@ -466,13 +466,13 @@ class Mollie_Wallie
 	 * @param integer $transactionId
 	 * @return boolean
 	 */
-	protected function setTransactionId($transactionId) 
+	protected function setTransactionId($transactionId)
 	{
-		if (empty($transactionId)) 
+		if (empty($transactionId))
 		{
 			return false;
 		}
-		
+
 		$this->transactionId = $transactionId;
 		return true;
 	}
@@ -482,7 +482,7 @@ class Mollie_Wallie
      *
      * @return integer
      */
-	public function getTransactionId() 
+	public function getTransactionId()
 	{
 		return $this->transactionId;
 	}
@@ -492,13 +492,13 @@ class Mollie_Wallie
 	 *
 	 * @return null|string Bank URL when exists, else null
 	 */
-	public function getWallieUrl() 
+	public function getWallieUrl()
 	{
-		if (is_null($this->wallieUrl)) 
+		if (is_null($this->wallieUrl))
 		{
 			return null;
 		}
-		
+
 		return $this->wallieUrl;
 	}
 
@@ -508,13 +508,13 @@ class Mollie_Wallie
 	* @param string $bankUrl
 	* @return boolean
 	*/
-	protected function setWallieUrl($wallieUrl) 
-	{	
-		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?/(.*)|', $wallieUrl)) 
+	protected function setWallieUrl($wallieUrl)
+	{
+		if (!preg_match('|(\w+)://([^/:]+)(:\d+)?/(.*)|', $wallieUrl))
 		{
 			return false;
 		}
-		
+
 		$this->wallieUrl = $wallieUrl;
 		return true;
 	}
@@ -523,10 +523,10 @@ class Mollie_Wallie
 	{
 		return $this->_errorMessage;
 	}
-	
+
 	public function getErrorCode()
 	{
 		return $this->_errorCode;
-	}  
+	}
 }
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_generic_vpc extends URLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "generic_vpc";
@@ -29,12 +29,12 @@ class processor_generic_vpc extends URLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return '';
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
@@ -53,7 +53,7 @@ class processor_generic_vpc extends URLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'toggle' );
@@ -72,7 +72,7 @@ class processor_generic_vpc extends URLprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( !empty( $this->settings['vpc_Version'] ) ) {
 			$var['vpc_Version']		= $this->settings['vpc_Version'];
@@ -118,7 +118,7 @@ class processor_generic_vpc extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 
@@ -128,7 +128,7 @@ class processor_generic_vpc extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 
@@ -161,7 +161,7 @@ class processor_generic_vpc extends URLprocessor
 		return $response;
 	}
 
-	function getResponseDescription( $responseCode )
+	public function getResponseDescription( $responseCode )
 	{
 		$codes = array(
 				"0" => "Transaction Successful",

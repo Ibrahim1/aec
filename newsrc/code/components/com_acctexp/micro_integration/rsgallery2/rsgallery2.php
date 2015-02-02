@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_rsgallery2 extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_RSGALLERY2_NAME');
@@ -23,7 +23,7 @@ class mi_rsgallery2 extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -76,7 +76,7 @@ class mi_rsgallery2 extends MI
 		return $settings;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -108,7 +108,7 @@ class mi_rsgallery2 extends MI
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -165,7 +165,7 @@ class mi_rsgallery2 extends MI
 		return null;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -194,7 +194,7 @@ class mi_rsgallery2 extends MI
 		return true;
 	}
 
-	function createAlbum( $userid, $parentid, $name, $desc )
+	public function createAlbum( $userid, $parentid, $name, $desc )
 	{
 		$app = JFactory::getApplication();
 

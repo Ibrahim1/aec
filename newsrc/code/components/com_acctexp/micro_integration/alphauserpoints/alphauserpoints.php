@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_alphauserpoints extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ALPHAUSERPOINTS');
@@ -23,7 +23,7 @@ class mi_alphauserpoints extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -38,7 +38,7 @@ class mi_alphauserpoints extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -66,7 +66,7 @@ class mi_alphauserpoints extends MI
 		return $settings;
 	}
 
-	function verifyMIform( $request )
+	public function verifyMIform( $request )
 	{
 		$return = array();
 
@@ -81,7 +81,7 @@ class mi_alphauserpoints extends MI
 		return $return;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( $request->action == 'action' ) {
 			if ( !empty( $this->settings['plan_apply_first'] ) ) {
@@ -116,7 +116,7 @@ class mi_alphauserpoints extends MI
 		return true;
 	}
 
-	function invoice_item_cost( $request )
+	public function invoice_item_cost( $request )
 	{
 		if ( $this->settings['checkout_discount'] && !empty( $this->settings['checkout_conversion'] ) && !empty( $request->params['use_points'] ) ) {
 			return $this->modifyPrice( $request );
@@ -125,7 +125,7 @@ class mi_alphauserpoints extends MI
 		}
 	}
 
-	function modifyPrice( $request )
+	public function modifyPrice( $request )
 	{
 		$discount = AECToolbox::correctAmount( $request->params['use_points'] * $this->settings['checkout_conversion'] );
 
@@ -146,7 +146,7 @@ class mi_alphauserpoints extends MI
 		return true;
 	}
 
-	function getPoints( $userid )
+	public function getPoints( $userid )
 	{
 		$db	   = JFactory::getDBO();
 
@@ -156,7 +156,7 @@ class mi_alphauserpoints extends MI
 		return $db->loadResult();
 	}
 
-	function updatePoints( $userid, $points, $comment )
+	public function updatePoints( $userid, $points, $comment )
 	{
 		$db	   = JFactory::getDBO();
 

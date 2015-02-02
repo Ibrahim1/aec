@@ -9,7 +9,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_servantek extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'servantek';
@@ -24,7 +24,7 @@ class processor_servantek extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['business']		= 'your@servantek.com';
@@ -54,7 +54,7 @@ class processor_servantek extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -87,7 +87,7 @@ class processor_servantek extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://www.servantek.com/testcc/ProcessPayment.aspx?company=TRV';
@@ -144,7 +144,7 @@ class processor_servantek extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$db = JFactory::getDBO();
 
@@ -177,7 +177,7 @@ class processor_servantek extends POSTprocessor
 
 		return $response;
 	}
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$path = '';
 		if ($this->settings['testmode']) {

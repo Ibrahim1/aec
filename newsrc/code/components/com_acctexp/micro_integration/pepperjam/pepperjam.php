@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_pepperjam
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PEPPERJAM');
@@ -23,7 +23,7 @@ class mi_pepperjam
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['pid']				= array( 'inputC' );
@@ -52,12 +52,12 @@ class mi_pepperjam
 		return $settings;
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'pid', 'type' );
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$defaults = array();
 		$defaults['type']			= '1';
@@ -65,7 +65,7 @@ class mi_pepperjam
 		return $defaults;
 	}
 
-	function afteraction( $request )
+	public function afteraction( $request )
 	{
 		if ( empty( $request->invoice->amount ) ) {
 			return null;

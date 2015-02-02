@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Restricted Access' );
 
 class mi_amigos
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AMIGOS');
@@ -23,7 +23,7 @@ class mi_amigos
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['amigos_domain']	= array( 'inputC' );
@@ -32,12 +32,12 @@ class mi_amigos
 		return $settings;
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'amigos_domain', 'amigos_curl' );
 	}
 
-	function invoice_creation( $request )
+	public function invoice_creation( $request )
 	{
 		if ( !empty( $_REQUEST['amigosid'] ) ) {
 			$request->invoice->params['mi_amigos'] = $_REQUEST['amigosid'];
@@ -45,7 +45,7 @@ class mi_amigos
 		}
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( !empty( $request->invoice->params['mi_amigos'] ) ) {
 			$amigosid = $request->invoice->params['mi_amigos'];

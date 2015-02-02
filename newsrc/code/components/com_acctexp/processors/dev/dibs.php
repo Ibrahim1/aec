@@ -27,7 +27,7 @@ define('CFG_DIBS_PAYMENTMETHODS_DESC','Select the payment methods you enabled in
 
 class processor_dibs extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'dibs';
@@ -41,7 +41,7 @@ class processor_dibs extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$app = JFactory::getApplication();
 
@@ -60,7 +60,7 @@ class processor_dibs extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'toggle' );
@@ -93,7 +93,7 @@ class processor_dibs extends POSTprocessor
 		return $settings;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null )
+	public function checkoutAction( $request, $InvoiceFactory=null, $xvar=null )
 	{
 		if ( empty( $xvar ) ) {
 			$var = $this->createGatewayLink( $request );
@@ -143,7 +143,7 @@ aecdebug("checkoutAction");aecdebug($return);
 		return $return;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		require_once('dibs/DIBSFunctions.php');
 
@@ -194,7 +194,7 @@ aecdebug("createGatewayLink");aecdebug($var);
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{aecdebug("parseNotification");aecdebug($post);aecdebug($_REQUEST);
 		$response				= array();
 		$response['valid']		= true;
@@ -203,7 +203,7 @@ aecdebug("createGatewayLink");aecdebug($var);
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{aecdebug("validateNotification");aecdebug($response);
 		require_once('dibs/DIBSFunctions.php');
 
@@ -219,7 +219,7 @@ aecdebug("createGatewayLink");aecdebug($var);
 		return $response;
 	}
 
-	function getPaymentMethods()
+	public function getPaymentMethods()
 	{
 		return array(	'ABN AMRO iDeal Payment' => 'ABN',
 						'Accept card' => 'ACCEPT',

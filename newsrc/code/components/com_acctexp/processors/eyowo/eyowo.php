@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_eyowo extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'eyowo';
@@ -28,7 +28,7 @@ class processor_eyowo extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['walletcode']		= 'RH14615';
@@ -39,7 +39,7 @@ class processor_eyowo extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['walletcode']		= array( 'inputC' );
@@ -52,7 +52,7 @@ class processor_eyowo extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']	= "https://www.eyowo.com/gateway/pay";
 
@@ -66,7 +66,7 @@ class processor_eyowo extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$invoice_number			= $post['transactionref'];
 
@@ -87,7 +87,7 @@ class processor_eyowo extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 
@@ -119,7 +119,7 @@ class processor_eyowo extends POSTprocessor
 		return $response;
 	}
 
-	function apiGetTransactionStatus( $transactionref, $post )
+	public function apiGetTransactionStatus( $transactionref, $post )
 	{
 		$path = '/api/gettransactionstatus';
 

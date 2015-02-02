@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_quotestream
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_QUOTESTREAM');
@@ -22,7 +22,7 @@ class mi_quotestream
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['login']			= array( 'inputB' );
@@ -62,7 +62,7 @@ class mi_quotestream
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$params = $request->metaUser->meta->getMIParams( $request->parent->id, $request->plan->id );
 
@@ -76,14 +76,14 @@ class mi_quotestream
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$this->cancelQSuser( $request );
 
 		return true;
 	}
 
-	function cancelQSuser( $request )
+	public function cancelQSuser( $request )
 	{
 		$login = array(	'login' => $this->settings['login'],
 						'password' => $this->settings['password'],
@@ -102,7 +102,7 @@ class mi_quotestream
 		return true;
 	}
 
-	function createQSuser( $request )
+	public function createQSuser( $request )
 	{
 		$login = array(	'login' => $this->settings['login'],
 						'password' => $this->settings['password'],
@@ -123,7 +123,7 @@ class mi_quotestream
 		return true;
 	}
 
-	function getUser( $request )
+	public function getUser( $request )
 	{
 		$namearray	= explode( " ", $request->metaUser->cmsUser->name );
 
@@ -172,7 +172,7 @@ class mi_quotestream
 		return $user;
 	}
 
-	function getQSpackages()
+	public function getQSpackages()
 	{
 		$pkgs = array();
 

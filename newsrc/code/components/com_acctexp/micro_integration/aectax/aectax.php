@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_aectax
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECTAX');
@@ -23,7 +23,7 @@ class mi_aectax
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		if ( isset( $this->settings['locations'] ) ) {
 			$this->upgradeSettings();
@@ -117,7 +117,7 @@ class mi_aectax
 		return $settings;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -186,7 +186,7 @@ class mi_aectax
 		return $settings;
 	}
 
-	function verifyMIform( $request )
+	public function verifyMIform( $request )
 	{
 		$return = array();
 
@@ -222,7 +222,7 @@ class mi_aectax
 		return $return;
 	}
 
-	function invoice_item_cost( $request )
+	public function invoice_item_cost( $request )
 	{
 		$location = $this->getLocation( $request );
 
@@ -233,7 +233,7 @@ class mi_aectax
 		return true;
 	}
 
-	function invoice_item( $request )
+	public function invoice_item( $request )
 	{
 		$location = $this->getLocation( $request );
 
@@ -244,7 +244,7 @@ class mi_aectax
 		return true;
 	}
 
-	function invoice_items_total( $request )
+	public function invoice_items_total( $request )
 	{
 		if ( isset( $request->add->tax ) ) {
 			return true;
@@ -328,7 +328,7 @@ class mi_aectax
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$location = $this->getLocation( $request );
 
@@ -365,7 +365,7 @@ class mi_aectax
 		return true;
 	}
 
-	function prepareTax( $request, $item, $location )
+	public function prepareTax( $request, $item, $location )
 	{
 		foreach ( $item['terms']->terms as $tid => $term ) {
 			switch ( $location['mode'] ) {
@@ -401,7 +401,7 @@ class mi_aectax
 		return $request;
 	}
 
-	function addTax( $request, $item, $location )
+	public function addTax( $request, $item, $location )
 	{
 		foreach ( $item['terms']->terms as $tid => $term ) {
 			switch ( $location['mode'] ) {
@@ -458,7 +458,7 @@ class mi_aectax
 		return $request;
 	}
 
-	function getLocation( $request )
+	public function getLocation( $request )
 	{
 		$locations = $this->getLocationList();
 
@@ -514,7 +514,7 @@ class mi_aectax
 		return $location;
 	}
 
-	function getLocationList()
+	public function getLocationList()
 	{
 		if ( isset( $this->settings['locations'] ) ) {
 			$this->upgradeSettings();
@@ -561,7 +561,7 @@ class mi_aectax
 		return $locations;
 	}
 
-	function clearVatNumber( $vat_number )
+	public function clearVatNumber( $vat_number )
 	{
 		// Remove whitespace
 		$vat_number = preg_replace('/\s\s+/', '', $vat_number);
@@ -572,7 +572,7 @@ class mi_aectax
 		return $vat_number;
 	}
 
-	function checkVatNumber( $number, $country, $vatlist )
+	public function checkVatNumber( $number, $country, $vatlist )
 	{
 		if ( !$this->settings['vat_validation'] ) {
 			return true;
@@ -611,7 +611,7 @@ class mi_aectax
 		}
 	}
 
-	function viesValidation( $number, $country )
+	public function viesValidation( $number, $country )
 	{
 		$db = JFactory::getDBO();
 
@@ -634,7 +634,7 @@ class mi_aectax
 		}
 	}
 
-	function vatList()
+	public function vatList()
 	{
 		return array(	"AUT" => array( "tax" => "20",		"regex" => '/^(AT){0,1}U[0-9]{8}$/i' ),
 						"BEL" => array( "tax" => "21",		"regex" => '/^(BE){0,1}[0]{0,1}[0-9]{9}$/i' ),
@@ -666,7 +666,7 @@ class mi_aectax
 					);
 	}
 
-	function upgradeSettings()
+	public function upgradeSettings()
 	{
 		$llist = $this->oldLocationList();
 
@@ -692,7 +692,7 @@ class mi_aectax
 		return $this->_parent->storeload();
 	}
 
-	function oldLocationList()
+	public function oldLocationList()
 	{
 		$locations = array();
 

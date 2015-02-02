@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_moip extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'moip';
@@ -29,7 +29,7 @@ class processor_moip extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['business']		= 'your@moip@account.com';
@@ -40,7 +40,7 @@ class processor_moip extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -55,7 +55,7 @@ class processor_moip extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://desenvolvedor.moip.com.br/sandbox/PagamentoMoIP.do';
@@ -79,7 +79,7 @@ class processor_moip extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['id_transacao'];
@@ -89,7 +89,7 @@ class processor_moip extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 

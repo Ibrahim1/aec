@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_payer extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'payer';
@@ -27,7 +27,7 @@ class processor_payer extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 
@@ -48,7 +48,7 @@ class processor_payer extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -91,7 +91,7 @@ class processor_payer extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$baseurl		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=payernotification', false, true );
 		$Auth_url		= $baseurl . '&action=authenticate';
@@ -201,7 +201,7 @@ class processor_payer extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$db = JFactory::getDBO();
 

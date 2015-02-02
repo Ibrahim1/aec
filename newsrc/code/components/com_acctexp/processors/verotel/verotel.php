@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_verotel extends URLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'verotel';
@@ -29,7 +29,7 @@ class processor_verotel extends URLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']			= "USD";
@@ -43,7 +43,7 @@ class processor_verotel extends URLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['currency']			= array( 'list_currency' );
@@ -58,7 +58,7 @@ class processor_verotel extends URLprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
+	public function CustomPlanParams()
 	{
 		$p = array();
 
@@ -67,7 +67,7 @@ class processor_verotel extends URLprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		// Payment Plans are required to have a productid assigned
 		if ( empty( $request->int_var['planparams']['verotel_product'] ) ) {
@@ -97,7 +97,7 @@ class processor_verotel extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$res = explode(":", aecGetParam('vercode'));
 
@@ -137,7 +137,7 @@ class processor_verotel extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		//if ( !AECToolbox::in_ip_range( '195.20.32.0', '﻿195.20.32.256' ) ) {
 			//$response['error'] = 1;

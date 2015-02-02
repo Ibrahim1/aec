@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_mysql_query
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MYSQL');
@@ -23,7 +23,7 @@ class mi_mysql_query
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['use_altdb']		= array( 'toggle' );
@@ -45,7 +45,7 @@ class mi_mysql_query
 		return $settings;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !isset( $this->settings['query'.$request->area] ) ) {
 			return null;

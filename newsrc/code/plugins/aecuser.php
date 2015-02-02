@@ -21,16 +21,16 @@ jimport('joomla.plugin.plugin');
  */
 class plgUserAECuser extends JPlugin
 {
-	function plgUserAECuser(& $subject, $config) {
+	public function plgUserAECuser(& $subject, $config) {
 		parent::__construct($subject, $config);
 	}
 
-	function onUserBeforeSave( $user, $isnew, $new )
+	public function onUserBeforeSave( $user, $isnew, $new )
 	{
 		$this->onBeforeStoreUser( $user, $isnew );
 	}
 
-	function onBeforeStoreUser( $user, $isnew )
+	public function onBeforeStoreUser( $user, $isnew )
 	{
 		if ( file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );
@@ -42,12 +42,12 @@ class plgUserAECuser extends JPlugin
 		}
 	}
 
-	function onUserAfterSave( $user, $isnew, $success, $msg )
+	public function onUserAfterSave( $user, $isnew, $success, $msg )
 	{
 		$this->onAfterStoreUser( $user, $isnew, $success, $msg );
 	}
 
-	function onAfterStoreUser( $user, $isnew, $success, $msg )
+	public function onAfterStoreUser( $user, $isnew, $success, $msg )
 	{
 		if ( file_exists( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" ) ) {
 			include_once( JPATH_ROOT."/components/com_acctexp/acctexp.class.php" );

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_beanstream extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'beanstream';
@@ -28,7 +28,7 @@ class processor_beanstream extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -42,7 +42,7 @@ class processor_beanstream extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -58,7 +58,7 @@ class processor_beanstream extends POSTprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
 
@@ -76,7 +76,7 @@ class processor_beanstream extends POSTprocessor
 		return $var;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']	= "https://www.beanstream.com/scripts/process_transaction.asp";
 
@@ -107,7 +107,7 @@ class processor_beanstream extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$errorMessage		= $post['errorMessage'];
 		$errorFields		= $post['errorFields'];
@@ -146,7 +146,7 @@ class processor_beanstream extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 

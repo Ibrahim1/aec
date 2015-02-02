@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_interspireem
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_INTERSPIREEM');
@@ -23,7 +23,7 @@ class mi_interspireem
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -89,7 +89,7 @@ class mi_interspireem
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$defaults = array();
 		$defaults['url']			= JURI::root() . 'members/xml.php';
@@ -98,7 +98,7 @@ class mi_interspireem
 		return $defaults;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['list'] ) ) {
 			$this->DeleteSubscriber( $request, $this->settings['list'] );
@@ -109,14 +109,14 @@ class mi_interspireem
 		}
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( !empty( $this->settings['list'] ) ) {
 			$this->AddSubscriberToList( $request, $request->metaUser->cmsUser->email, $this->settings['list'] );
 		}
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		if ( !empty( $this->settings['list'] ) ) {
 			$this->DeleteSubscriber( $request, $request->metaUser->cmsUser->email, $this->settings['list'] );
@@ -127,7 +127,7 @@ class mi_interspireem
 		}
 	}
 
-	function DeleteSubscriber( $request, $list )
+	public function DeleteSubscriber( $request, $list )
 	{
 		$data = '<emailaddress>' . $request->metaUser->cmsUser->email . '</emailaddress>
 				<list>' . $list . '</list>';
@@ -137,14 +137,14 @@ class mi_interspireem
 		return $this->sendRequest( $xml );
 	}
 
-	function GetLists()
+	public function GetLists()
 	{
 		$xml = $this->getRequest( 'user' ,'GetLists' , "\n" );
 
 		return $this->sendRequest( $xml );
 	}
 
-	function IsContactOnList( $request, $list )
+	public function IsContactOnList( $request, $list )
 	{
 		$data = '<emailaddress>' . $request->metaUser->cmsUser->email . '</emailaddress>
 				<list>' . $list . '</list>';
@@ -154,7 +154,7 @@ class mi_interspireem
 		return $this->sendRequest( $xml );
 	}
 
-	function AddSubscriberToList( $request, $email, $list )
+	public function AddSubscriberToList( $request, $email, $list )
 	{
 		$data = '<emailaddress>' . $email . '</emailaddress>
 				<mailinglist>' . $list . '</mailinglist>
@@ -184,7 +184,7 @@ class mi_interspireem
 		return $this->sendRequest( $xml );
 	}
 
-	function GetCustomFieldData( $list )
+	public function GetCustomFieldData( $list )
 	{
 		$data = '<listids>' . $list . '</listids>';
 
@@ -193,7 +193,7 @@ class mi_interspireem
 		return $this->sendRequest( $xml );
 	}
 
-	function getRequest($type, $method, $data )
+	public function getRequest($type, $method, $data )
 	{
 		$xml = '<xmlrequest>' . "\n"
 				. '<username>' . $this->settings['user_name'] . '</username>' . "\n"
@@ -207,7 +207,7 @@ class mi_interspireem
 		return $xml;
 	}
 
-	function sendRequest( $xml )
+	public function sendRequest( $xml )
 	{
 		$db = JFactory::getDBO();
 

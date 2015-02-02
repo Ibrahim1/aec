@@ -625,7 +625,7 @@ class Less_Parser{
 	}
 
 
-	function save() {
+	public function save() {
 		$this->saveStack[] = $this->pos;
 	}
 
@@ -1157,7 +1157,7 @@ class Less_Parser{
 	//
 	// U+0?? or U+00A1-00A9
 	//
-	function parseUnicodeDescriptor() {
+	public function parseUnicodeDescriptor() {
 		$ud = $this->MatchReg('/\\G(U\+[0-9a-fA-F?]+)(\-[0-9a-fA-F?]+)?/');
 		if( $ud ){
 			return $this->NewObj1('Less_Tree_UnicodeDescriptor', $ud[0]);
@@ -1218,7 +1218,7 @@ class Less_Parser{
 	//
 	// extend syntax - used to extend selectors
 	//
-	function parseExtend($isRule = false){
+	public function parseExtend($isRule = false){
 
 		$index = $this->pos;
 		$extendList = array();
@@ -1890,7 +1890,7 @@ class Less_Parser{
 		}
 	}
 
-	function parseAnonymousValue(){
+	public function parseAnonymousValue(){
 
 		if( preg_match('/\\G([^@+\/\'"*`(;{}-]*);/',$this->input, $match, 0, $this->pos) ){
 			$this->pos += strlen($match[1]);
@@ -2193,7 +2193,7 @@ class Less_Parser{
 	 *
 	 * @return Less_Tree_Operation|null
 	 */
-	function parseMultiplication(){
+	public function parseMultiplication(){
 
 		$return = $m = $this->parseOperand();
 		if( $return ){

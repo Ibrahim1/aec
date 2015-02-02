@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_joomdle
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JOOMDLE');
@@ -23,7 +23,7 @@ class mi_joomdle
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['courses']		  = array( 'list' );
@@ -47,7 +47,7 @@ class mi_joomdle
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( empty( $this->settings['courses'] ) ) {
 			return null;
@@ -63,7 +63,7 @@ class mi_joomdle
 		return JoomdleHelperContent::call_method('multiple_suspend_enrolment', $request->metaUser->cmsUser->username, $c);
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( empty( $this->settings['courses'] ) ) {
 			return null;
@@ -79,7 +79,7 @@ class mi_joomdle
 		return JoomdleHelperContent::call_method('multiple_enrol', $request->metaUser->cmsUser->username, $c, 5);
 	}
 
-	function loadHelper()
+	public function loadHelper()
 	{
 		require_once(JPATH_ADMINISTRATOR.'/components/com_joomdle/helpers/content.php');
 	}

@@ -33,12 +33,12 @@ class plgSystemAECerrorhandler extends JPlugin
 	 * @param array  $config  An array that holds the plugin configuration
 	 * @since 1.5
 	 */
-	function plgSystemAECerrorhandler( &$subject, $config )
+	public function plgSystemAECerrorhandler( &$subject, $config )
 	{
 		parent::__construct( $subject, $config );
 	}
 
-	function onAfterRoute()
+	public function onAfterRoute()
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
 			// Don't act when on backend
@@ -55,7 +55,7 @@ class plgSystemAECerrorhandler extends JPlugin
 	 * check if we are at the login page & there is a return URI set.
 	 * if so, check if the return was to com_content (regarless of the view) & redirect to NotAllowed.
 	 */
-	function handleLoginRedirect()
+	public function handleLoginRedirect()
 	{
 		$uri	= JFactory::getURI();
 
@@ -125,7 +125,7 @@ class plgSystemAECerrorhandler extends JPlugin
 	}
 
 
-	function redirectNotAllowed( $error )
+	public function redirectNotAllowed( $error )
 	{
 		if ( $error->code == 403 ) {
 			$app = JFactory::getApplication();

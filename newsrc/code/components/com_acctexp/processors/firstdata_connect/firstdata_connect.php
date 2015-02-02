@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_firstdata_connect extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'firstdata_connect';
@@ -31,7 +31,7 @@ class processor_firstdata_connect extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -46,7 +46,7 @@ class processor_firstdata_connect extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -63,7 +63,7 @@ class processor_firstdata_connect extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$v2 = $this->settings['version2'];
 
@@ -139,7 +139,7 @@ class processor_firstdata_connect extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$return = array();
 		if ( !empty( $post['oid'] ) ) {
@@ -153,7 +153,7 @@ class processor_firstdata_connect extends POSTprocessor
 		return $return;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$return = array();
 		$return['valid'] = false;
@@ -183,18 +183,18 @@ class processor_firstdata_connect extends POSTprocessor
 		return $response;
 	}
 
-	function sendHash( $amount, $datetime )
+	public function sendHash( $amount, $datetime )
 	{
 		return $this->hash( $this->settings['storename'] . $datetime . $amount . $this->settings['secret'] );
 	}
 
-	function receiveHash( $amount, $datetime, $approval )
+	public function receiveHash( $amount, $datetime, $approval )
 	{
 		// TODO: This is possibly missing an occurance of storename at the end, documentation has typos
 		return $this->hash( $this->settings['secret'] . $approval . $amount . $this->settings['currency'] . $datetime );
 	}
 
-	function hash( $string )
+	public function hash( $string )
 	{
 		$hex_str = '';
 		for ( $i=0; $i<strlen($string); $i++ ) {

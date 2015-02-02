@@ -13,7 +13,7 @@ defined('_JEXEC') OR defined( '_VALID_MOS' ) OR die( 'Direct Access to this loca
 
 class mi_agora extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AGORA');
@@ -23,7 +23,7 @@ class mi_agora extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -87,7 +87,7 @@ class mi_agora extends MI
 		return array_merge( $settings, $xsettings );
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$settings = array();
 		$settings['agorapro']	= $this->checkifpro();
@@ -95,7 +95,7 @@ class mi_agora extends MI
 		return $settings;
 	}
 
-	function checkifpro()
+	public function checkifpro()
 	{
 		$db = JFactory::getDBO();
 
@@ -106,7 +106,7 @@ class mi_agora extends MI
 		return in_array( $app->getCfg( 'dbprefix' ) . "agorapro_config", $tables );
 	}
 
-	function dbtable()
+	public function dbtable()
 	{
 		if ( !empty( $this->settings['agorapro'] ) ) {
 			return 'agorapro';
@@ -115,7 +115,7 @@ class mi_agora extends MI
 		}
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		$agora_userid = $this->AgoraUserId( $request->metaUser->userid );
 
@@ -146,7 +146,7 @@ class mi_agora extends MI
 		return true;
 	}
 
-	function AgoraUserId( $userid )
+	public function AgoraUserId( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -158,7 +158,7 @@ class mi_agora extends MI
 		return $db->loadResult();
 	}
 
-	function getUserGroupRole( $userid, $groupid )
+	public function getUserGroupRole( $userid, $groupid )
 	{
 		$db = JFactory::getDBO();
 
@@ -171,7 +171,7 @@ class mi_agora extends MI
 		return $db->loadResult();
 	}
 
-	function createUser( $metaUser )
+	public function createUser( $metaUser )
 	{
 		$db = JFactory::getDBO();
 
@@ -194,7 +194,7 @@ class mi_agora extends MI
 		return $db->query();
 	}
 
-	function removeGroup( $userid, $groupid, $roleid )
+	public function removeGroup( $userid, $groupid, $roleid )
 	{
 		$db = JFactory::getDBO();
 
@@ -212,7 +212,7 @@ class mi_agora extends MI
 		return $db->query();
 	}
 
-	function addGroup( $userid, $groupid, $roleid )
+	public function addGroup( $userid, $groupid, $roleid )
 	{
 		$db = JFactory::getDBO();
 
@@ -225,7 +225,7 @@ class mi_agora extends MI
 		return $db->query();
 	}
 
-	function updateRole( $userid, $groupid, $roleid )
+	public function updateRole( $userid, $groupid, $roleid )
 	{
 		$db = JFactory::getDBO();
 

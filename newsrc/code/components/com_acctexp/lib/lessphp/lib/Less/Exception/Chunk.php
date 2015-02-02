@@ -190,7 +190,7 @@ class Less_Exception_Chunk extends Less_Exception_Parser{
 
 
 	/*
-	function emitChunk( $force = false ){
+	public function emitChunk( $force = false ){
 		$len = $this->parserCurrentIndex - $this->emitFrom;
 		if ((($len < 512) && !$force) || !$len) {
 			return;

@@ -52,23 +52,23 @@ class aecTempToken extends serialParamDBTable
 	/** @var string */
 	var $ip		 			= null;
 
-	function aecTempToken()
+	public function aecTempToken()
 	{
 		parent::__construct( '#__acctexp_temptoken', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'content' );
 	}
 
-	function getToken()
+	public function getToken()
 	{
 		$session = JFactory::getSession();
 		return $session->getToken();
 	}
 
-	function getComposite()
+	public function getComposite()
 	{
 		$token = $this->getToken();
 
@@ -90,7 +90,7 @@ class aecTempToken extends serialParamDBTable
 		}
 	}
 
-	function getByToken( $token )
+	public function getByToken( $token )
 	{
 		$query = 'SELECT `id`'
 		. ' FROM #__acctexp_temptoken'
@@ -121,7 +121,7 @@ class aecTempToken extends serialParamDBTable
 		}
 	}
 
-	function create( $content, $token=null )
+	public function create( $content, $token=null )
 	{
 		if ( empty( $token ) ) {
 			$session = JFactory::getSession();
@@ -154,7 +154,7 @@ class aecTempToken extends serialParamDBTable
 		return $this->storeload();
 	}
 
-	function delete( $pk=null )
+	public function delete( $pk=null )
 	{
 		setcookie( 'aec_token', "", ( (int) gmdate('U') ) - 3600);
 

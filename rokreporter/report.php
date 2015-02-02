@@ -19,7 +19,7 @@ class AEC_subscribers_Report extends Report
 	/** @var string The report id (folder name); */
 	var $id = 'AEC_subscribers';
 
-	function ExportToCSV( $data )
+	public function ExportToCSV( $data )
 	{
 		$CRLF = "\n";
 		$nRows = count( $data );
@@ -61,7 +61,7 @@ class AEC_subscribers_Report extends Report
 	 * Runs the report
 	 * @param array An array of system variables
 	 */
-	function run( &$vars )
+	public function run( &$vars )
 	{
 		// set the default ordering
 		if (empty( $vars['orderCol'] )) {

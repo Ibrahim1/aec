@@ -13,7 +13,7 @@ defined('_JEXEC') OR defined( '_VALID_MOS' ) OR die( 'Direct Access to this loca
 
 class mi_phocadownload extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PHOCADOWNLOAD');
@@ -23,7 +23,7 @@ class mi_phocadownload extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -70,7 +70,7 @@ class mi_phocadownload extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !empty( $this->settings['addaccess' . $request->area] ) || !empty( $this->settings['unaccess' . $request->area] ) ) {
 			$this->changeAccess( $request->metaUser->userid, $this->settings['addaccess' . $request->area], $this->settings['unaccess' . $request->area], $request->action );
@@ -81,7 +81,7 @@ class mi_phocadownload extends MI
 		}
 	}
 
-	function changeAccess( $userid, $add, $remove, $act )
+	public function changeAccess( $userid, $add, $remove, $act )
 	{
 		$db = JFactory::getDBO();
 
@@ -125,7 +125,7 @@ class mi_phocadownload extends MI
 
 	}
 
-	function changeUploadAccess( $userid, $add, $remove, $act )
+	public function changeUploadAccess( $userid, $add, $remove, $act )
 	{
 		$db = JFactory::getDBO();
 

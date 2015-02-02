@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_nochex extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'nochex';
@@ -27,7 +27,7 @@ class processor_nochex extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode'] 		= 1;
@@ -39,7 +39,7 @@ class processor_nochex extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle');
@@ -53,7 +53,7 @@ class processor_nochex extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']	= 'https://secure.nochex.com/';
 		if ( $this->settings['testmode'] == '1' ) {
@@ -75,7 +75,7 @@ class processor_nochex extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']		= $post['order_id'];
@@ -84,7 +84,7 @@ class processor_nochex extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		if ( $this->settings['testmode'] ) {
 			$path = '/nochex.dll/apc/testapc';

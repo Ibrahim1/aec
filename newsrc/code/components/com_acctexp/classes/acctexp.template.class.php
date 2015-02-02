@@ -114,17 +114,17 @@ class configTemplate extends serialParamDBTable
 	/** @var string */
 	var $settings			= null;
 
-	function configTemplate()
+	public function configTemplate()
 	{
 		parent::__construct( '#__acctexp_config_templates', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'settings' );
 	}
 
-	function loadDefault()
+	public function loadDefault()
 	{
 		// See if the processor is installed & set id
 		$query = 'SELECT name'
@@ -141,7 +141,7 @@ class configTemplate extends serialParamDBTable
 		}
 	}
 
-	function loadName( $name )
+	public function loadName( $name )
 	{
 		$this->name = $name;
 
@@ -175,7 +175,7 @@ class configTemplate extends serialParamDBTable
 		}
 	}
 
-	function storeload()
+	public function storeload()
 	{
 		if ( method_exists( $this->template, 'beforesave' ) ) {
 			$this->template->beforesave();
@@ -187,7 +187,7 @@ class configTemplate extends serialParamDBTable
 
 class aecTemplate
 {
-	function stdSettings()
+	public function stdSettings()
 	{
 		$info = $this->info();
 
@@ -202,7 +202,7 @@ class aecTemplate
 		return $params;
 	}
 
-	function defaultHeader()
+	public function defaultHeader()
 	{
 		$this->addDefaultCSS();
 
@@ -213,36 +213,36 @@ class aecTemplate
 		$this->addMetaData();
 	}
 
-	function setTitle( $title )
+	public function setTitle( $title )
 	{
 		$document= JFactory::getDocument();
 		$document->setTitle( html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) );
 	}
 
-	function addDefaultCSS()
+	public function addDefaultCSS()
 	{
 		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/template.' . $this->template . '.css' );
 	}
 
-	function addCSS( $path )
+	public function addCSS( $path )
 	{
 		$document= JFactory::getDocument();
 		$document->addCustomTag( '<link rel="stylesheet" type="text/css" media="all" href="' . $path . '" />' );
 	}
 
-	function addCSSDeclaration( $css )
+	public function addCSSDeclaration( $css )
 	{
 		$document= JFactory::getDocument();
 		$document->addStyleDeclaration( $css );
 	}
 
-	function addScriptDeclaration( $js )
+	public function addScriptDeclaration( $js )
 	{
 		$document= JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 	}
 
-	function addScript( $js )
+	public function addScript( $js )
 	{
 		$v = new JVersion();
 
@@ -254,7 +254,7 @@ class aecTemplate
 		}
 	}
 
-	function addMetaData()
+	public function addMetaData()
 	{
 		$menuitemid = JRequest::getInt( 'Itemid' );
 		if ( empty( $menuitemid ) ) {
@@ -281,7 +281,7 @@ class aecTemplate
 		}
 	}
 
-	function btn( $params, $value, $class='btn' )
+	public function btn( $params, $value, $class='btn' )
 	{
 		if ( empty( $params['option'] ) ) {
 			$params['option'] = 'com_acctexp';
@@ -367,7 +367,7 @@ class aecTemplate
 		return $btn;
 	}
 
-	function lnk( $params, $value, $class="", $profile=false )
+	public function lnk( $params, $value, $class="", $profile=false )
 	{
 		if ( is_array( $params ) ) {
 			$url = $this->url( $params, $profile );
@@ -378,7 +378,7 @@ class aecTemplate
 		return '<a href="'.$url.'"'.( !empty($class) ? ' class="'.$class.'"':'').'>'.$value.'</a>';
 	}
 
-	function url( $params, $profile=false )
+	public function url( $params, $profile=false )
 	{
 		if ( empty( $params['option'] ) ) {
 			$params = array_merge( array( 'option' => 'com_acctexp' ), $params );
@@ -400,17 +400,17 @@ class aecTemplate
 		return AECToolbox::deadsureURL( 'index.php?'.implode("&",$p), $secure );
 	}
 
-	function rw( $string )
+	public function rw( $string )
 	{
 		return AECToolbox::rewriteEngine( $string, $this->metaUser );
 	}
 
-	function rwrq( $string, $request )
+	public function rwrq( $string, $request )
 	{
 		return AECToolbox::rewriteEngineRQ( $string, $request );
 	}
 
-	function custom( $setting, $original=null, $obj=null )
+	public function custom( $setting, $original=null, $obj=null )
 	{
 		if ( empty( $obj ) ) {
 			$obj = $this->cfg;
@@ -447,7 +447,7 @@ class aecTemplate
 		}
 	}
 
-	function tmpl( $name )
+	public function tmpl( $name )
 	{
 		$t = explode( '.', $name );
 
@@ -463,7 +463,7 @@ class aecTemplate
 		}
 	}
 
-	function tmplPath( $subview, $view=null, $template=null )
+	public function tmplPath( $subview, $view=null, $template=null )
 	{
 		if ( empty( $view ) ) {
 			$view = $this->view;

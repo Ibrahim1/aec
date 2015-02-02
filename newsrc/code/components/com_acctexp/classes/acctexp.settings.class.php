@@ -13,14 +13,14 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecSettings
 {
-	function aecSettings( $area, $subarea='' )
+	public function aecSettings( $area, $subarea='' )
 	{
 		$this->area				= $area;
 		$this->original_subarea	= $subarea;
 		$this->subarea			= $subarea;
 	}
 
-	function fullSettingsArray( $params, $params_values, $lists = array(), $settings = array(), $showmissing=true ) {
+	public function fullSettingsArray( $params, $params_values, $lists = array(), $settings = array(), $showmissing=true ) {
 		$this->params			= $params;
 		$this->params_values	= $params_values;
 		$this->lists			= $lists;
@@ -122,27 +122,27 @@ class aecSettings
 		}
 	}
 
-	function remap_add_prefix( $name, $value )
+	public function remap_add_prefix( $name, $value )
 	{
 		$this->prefix = $value;
 		return 'DEL';
 	}
 
-	function remap_area_change( $name, $value )
+	public function remap_area_change( $name, $value )
 	{
 		$this->area = $value;
 		$this->prefix = '';
 		return 'DEL';
 	}
 
-	function remap_subarea_change( $name, $value )
+	public function remap_subarea_change( $name, $value )
 	{
 		$this->subarea = $value;
 		$this->prefix = '';
 		return 'DEL';
 	}
 
-	function remap_list_yesno( $name, $value )
+	public function remap_list_yesno( $name, $value )
 	{
 		$arr = array(
 			JHTML::_('select.option', 0, JText::_( 'no' ) ),
@@ -153,7 +153,7 @@ class aecSettings
 		return 'list';
 	}
 
-	function remap_list_currency( $name, $value )
+	public function remap_list_currency( $name, $value )
 	{
 		$currency_code_list = AECToolbox::aecCurrencyField( true, true, true );
 
@@ -162,7 +162,7 @@ class aecSettings
 		return 'list';
 	}
 
-	function remap_list_country( $name, $value )
+	public function remap_list_country( $name, $value )
 	{
 		$country_code_list = AECToolbox::getCountryCodeList();
 
@@ -176,7 +176,7 @@ class aecSettings
 		return 'list';
 	}
 
-	function remap_list_country_full( $name, $value )
+	public function remap_list_country_full( $name, $value )
 	{
 		$country_code_list = AECToolbox::getISO3166_1a2_codes();
 
@@ -190,7 +190,7 @@ class aecSettings
 		return 'list';
 	}
 
-	function remap_list_yesnoinherit( $name, $value )
+	public function remap_list_yesnoinherit( $name, $value )
 	{
 		$arr = array(
 			JHTML::_('select.option', '0', JText::_('AEC_CMN_NO') ),
@@ -202,7 +202,7 @@ class aecSettings
 		return 'list';
 	}
 
-	function remap_list_recurring( $name, $value )
+	public function remap_list_recurring( $name, $value )
 	{
 		$recurring[] = JHTML::_('select.option', 0, JText::_('AEC_SELECT_RECURRING_NO') );
 		$recurring[] = JHTML::_('select.option', 1, JText::_('AEC_SELECT_RECURRING_YES') );
@@ -213,7 +213,7 @@ class aecSettings
 		return 'list';
 	}
 
-	function remap_list_date( $name, $value )
+	public function remap_list_date( $name, $value )
 	{
 		$this->lists[$name] = '<input id="datepicker-' . $name . '" name="' . $name . '" class="jqui-datepicker" type="text" value="' . $value . '">';
 

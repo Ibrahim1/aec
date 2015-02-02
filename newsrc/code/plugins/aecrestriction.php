@@ -18,7 +18,7 @@ $app->registerEvent( 'onPrepareContent', 'plgContentAECRestriction' );
 
 class plgContentAECRestriction extends JPlugin
 {
-	function onPrepareContent( &$article, &$params, $limitstart )
+	public function onPrepareContent( &$article, &$params, $limitstart )
 	{
 		return $this->onContentPrepare( "", $article, $params, $limitstart );
 	}

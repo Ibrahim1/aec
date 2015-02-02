@@ -33,7 +33,7 @@
 	var $excluded_param_names = array('_charset_', 'analyticsdata', 'urchindata');
 
 	//This function adds parameters to an array
-	function AddCartParameter($param_name, $param_value) {
+	public function AddCartParameter($param_name, $param_value) {
 		//Trim white spaces from beginning and end of parameter name and value
 		$param_name = trim($param_name, ' ');
 		$param_value = trim($param_value, ' ');
@@ -73,7 +73,7 @@
 	}
 
 	//This function generates and returns the signature
-	function GetSignature() {
+	public function GetSignature() {
 		//Sort parameters in ascending alphabetical order (first by name, then by value)
 		array_multisort($this->html_param_names, $this->html_param_values);
 		//Create parameter string

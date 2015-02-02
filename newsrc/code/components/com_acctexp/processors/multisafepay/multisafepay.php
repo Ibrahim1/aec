@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_multisafepay extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'multisafepay';
@@ -28,7 +28,7 @@ class processor_multisafepay extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['account']			= "";
@@ -45,7 +45,7 @@ class processor_multisafepay extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['account']			= array( 'inputC' );
@@ -86,7 +86,7 @@ class processor_multisafepay extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = array();
 
@@ -113,7 +113,7 @@ class processor_multisafepay extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$signature = md5(($request->int_var['amount']*100).$this->settings['currency'].$this->settings['account'].$this->settings['site_id'].$request->invoice->id);
 
@@ -129,7 +129,7 @@ class processor_multisafepay extends XMLprocessor
 		return $xml;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$response = array();
 		$response['valid'] = 0;
@@ -170,7 +170,7 @@ class processor_multisafepay extends XMLprocessor
 		return $response;
 	}
 
-	function transmitToMultiSafepay( $xml )
+	public function transmitToMultiSafepay( $xml )
 	{
 		$path = "/ewx/"; // don't remove the trailing slash otherwise the MultiSafepay API will return an error!
 
@@ -187,7 +187,7 @@ class processor_multisafepay extends XMLprocessor
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
 	}
 
-	function parseNotification ( $post )
+	public function parseNotification ( $post )
 	{
 		$response = array();
 		$response['invoice'] = aecInvoiceHelper::InvoiceNumberfromId( aecGetParam( 'transactionid', 0, true, array( 'word', 'int' ) ) );
@@ -195,7 +195,7 @@ class processor_multisafepay extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -232,7 +232,7 @@ class processor_multisafepay extends XMLprocessor
 		return $response;
 	}
 
-	function getGateways( $request )
+	public function getGateways( $request )
 	{
 		$xml  =	'<?xml version="1.0" encoding="UTF-8"?>' . "\n"
 				.'<gateways ua="aec-processor-1.0">' . "\n"
@@ -273,7 +273,7 @@ class processor_multisafepay extends XMLprocessor
 		return $gateways;
 	}
 
-	function get_merchant_info()
+	public function get_merchant_info()
 	{
 		return array(	'account'			=> $this->settings['account'],
 						'site_id'			=> $this->settings['site_id'],
@@ -282,7 +282,7 @@ class processor_multisafepay extends XMLprocessor
 		);
 	}
 
-	function get_customer_info( $request )
+	public function get_customer_info( $request )
 	{
 		if ( !empty( $request->int_var['params']['country'] ) ) {
 			$country = $request->int_var['params']['country'];
@@ -312,7 +312,7 @@ class processor_multisafepay extends XMLprocessor
 		return $user;
 	}
 
-	function get_transaction_info( $request )
+	public function get_transaction_info( $request )
 	{
 		return array(	'id'			=> $request->invoice->id,
 						'currency'		=> $this->settings['currency'],
@@ -324,17 +324,17 @@ class processor_multisafepay extends XMLprocessor
 		);
 	}
 
-	function xml_escape($str)
+	public function xml_escape($str)
 	{
 		return htmlspecialchars($str, ENT_COMPAT, 'UTF-8');
 	}
 
-	function xml_unescape( $str )
+	public function xml_unescape( $str )
 	{
 		return strtr( $str, array_flip( get_html_translation_table( HTML_SPECIALCHARS, ENT_COMPAT ) ) );
 	}
 
-	function xml_array_to_xml( $arr, $name )
+	public function xml_array_to_xml( $arr, $name )
 	{
 		$data = '<' . $name . '>' . "\n";
 

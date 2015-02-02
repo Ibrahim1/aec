@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_eventum extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = 'Eventum MI';
@@ -22,7 +22,7 @@ class mi_eventum extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['set_issue_level']	= array( 'inputE' );
@@ -52,7 +52,7 @@ class mi_eventum extends MI
 	}
 
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !isset( $this->settings['short'.$request->area] ) ) {
 			return null;
@@ -72,32 +72,32 @@ class mi_eventum extends MI
 		$log_entry->issue( $this->settings['short'.$request->area], $this->settings['tags'.$request->area], $this->settings['text'.$request->area], $this->settings['level'.$request->area], $this->settings['params'.$request->area], $this->settings['force_notify'.$request->area], $this->settings['force_email'.$request->area] );
 	}
 
-	function getEventum()
+	public function getEventum()
 	{
 
 	}
 
-	function getEventumCustomFields()
+	public function getEventumCustomFields()
 	{
 
 	}
 
-	function getEventumFieldOptions()
+	public function getEventumFieldOptions()
 	{
 
 	}
 
-	function getEventumUserid( $metaUser )
+	public function getEventumUserid( $metaUser )
 	{
 		return $userid;
 	}
 
-	function updateIssueLevel( $eventum_userid, $level )
+	public function updateIssueLevel( $eventum_userid, $level )
 	{
 
 	}
 
-	function createIssue( $eventum_userid, $details )
+	public function createIssue( $eventum_userid, $details )
 	{
 
 	}

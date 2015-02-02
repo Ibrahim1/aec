@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_rebuildrebills
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Rebuild Rebills";
@@ -22,7 +22,7 @@ class tool_rebuildrebills
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['safe']		= array( 'toggle', 'Safe Mode', 'Double check that an entry does not exist already.', 1 );
@@ -31,7 +31,7 @@ class tool_rebuildrebills
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		$db = JFactory::getDBO();
 

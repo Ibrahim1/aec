@@ -26,7 +26,7 @@ class reWriteEngine
 		return false;
 	}
 
-	function info( $switches=array(), $params=null )
+	public function info( $switches=array(), $params=null )
 	{
 		$lang = JFactory::getLanguage();
 
@@ -272,7 +272,7 @@ class reWriteEngine
 		}
 	}
 
-	function resolveRequest( $request )
+	public function resolveRequest( $request )
 	{
 		$rqitems = get_object_vars( $request );
 
@@ -289,7 +289,7 @@ class reWriteEngine
 		return true;
 	}
 
-	function feedData( $data )
+	public function feedData( $data )
 	{
 		if ( !isset( $this->data ) ) {
 			$this->data = $data;
@@ -304,7 +304,7 @@ class reWriteEngine
 		return true;
 	}
 
-	function armRewrite()
+	public function armRewrite()
 	{
 		global $aecConfig;
 
@@ -529,7 +529,7 @@ class reWriteEngine
 		}
 	}
 
-	function resolve( $subject )
+	public function resolve( $subject )
 	{
 		// Check whether a replacement exists at all
 		if ( ( strpos( $subject, '[[' ) === false ) && ( strpos( $subject, '{aecjson}' ) === false ) ) {
@@ -554,7 +554,7 @@ class reWriteEngine
 		}
 	}
 
-	function classicRewrite( $subject )
+	public function classicRewrite( $subject )
 	{
 		$search = array();
 		$replace = array();
@@ -570,7 +570,7 @@ class reWriteEngine
 		return str_replace( $search, $replace, $subject );
 	}
 
-	function decodeTags( $subject )
+	public function decodeTags( $subject )
 	{
 		// Example:
 		// {aecjson} {"cmd":"concat","vars":["These ",{"cmd":"condition","vars":{"cmd":"compare","vars":["apples","=","oranges"]},"appl","orang"},"es"} {/aecjson}
@@ -597,7 +597,7 @@ class reWriteEngine
 		return $subject;
 	}
 
-	function resolveJSONitem( $current, $safe=false )
+	public function resolveJSONitem( $current, $safe=false )
 	{
 		if ( is_object( $current ) ) {
 			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
@@ -617,7 +617,7 @@ class reWriteEngine
 		return $current;
 	}
 
-	function executeCommand( $command, $vars, $safe=false )
+	public function executeCommand( $command, $vars, $safe=false )
 	{
 		$result = '';
 		switch( $command ) {
@@ -882,7 +882,7 @@ class reWriteEngine
 		return $result;
 	}
 
-	function explain( $subject )
+	public function explain( $subject )
 	{
 		// Check whether a replacement exists at all
 		if ( ( strpos( $subject, '[[' ) === false ) && ( strpos( $subject, '{aecjson}' ) === false ) ) {
@@ -907,7 +907,7 @@ class reWriteEngine
 		}
 	}
 
-	function classicExplain( $subject )
+	public function classicExplain( $subject )
 	{
 		$regex = "#\[\[(.*?)\]\]#s";
 
@@ -922,7 +922,7 @@ class reWriteEngine
 		return $subject;
 	}
 
-	function explainTags( $subject )
+	public function explainTags( $subject )
 	{
 		$regex = "#{aecjson}(.*?){/aecjson}#s";
 
@@ -945,7 +945,7 @@ class reWriteEngine
 		return $subject;
 	}
 
-	function explainJSONitem( $current )
+	public function explainJSONitem( $current )
 	{
 		if ( is_object( $current ) ) {
 			if ( !isset( $current->cmd ) || !isset( $current->vars ) ) {
@@ -965,7 +965,7 @@ class reWriteEngine
 		return $current;
 	}
 
-	function explainCommand( $command, $vars )
+	public function explainCommand( $command, $vars )
 	{
 		switch( $command ) {
 			case 'rw_constant': return $vars; break;

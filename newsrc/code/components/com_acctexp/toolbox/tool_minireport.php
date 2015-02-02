@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_minireport
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Mini Report";
@@ -22,7 +22,7 @@ class tool_minireport
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$monthago = ( (int) gmdate('U') ) - ( 60*60*24 * 31 );
 
@@ -33,7 +33,7 @@ class tool_minireport
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['start_date'] ) ) {
 			return null;

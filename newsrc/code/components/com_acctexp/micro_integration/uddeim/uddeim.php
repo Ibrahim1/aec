@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_uddeim
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_UDDEIM');
@@ -23,7 +23,7 @@ class mi_uddeim
 		return $info;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -35,12 +35,12 @@ class mi_uddeim
 		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_uddeim', $tables );
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_uddeim' );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -60,7 +60,7 @@ class mi_uddeim
 		return;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -88,7 +88,7 @@ class mi_uddeim
 		return $settings;
 	}
 
-	function profile_info( $request )
+	public function profile_info( $request )
 	{
 		$db = JFactory::getDBO();
 		$mi_uddeimhandler = new uddeim_restriction();
@@ -117,7 +117,7 @@ class mi_uddeim
 		}
 	}
 
-	function hacks()
+	public function hacks()
 	{
 		$hacks = array();
 
@@ -156,7 +156,7 @@ class mi_uddeim
 		return $hacks;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['unset_unlimited'] ) ) {
 			$db = JFactory::getDBO();
@@ -184,7 +184,7 @@ class mi_uddeim
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( !empty( $this->settings['set_messages'] ) || !empty( $this->settings['add_messages'] ) || !empty( $this->settings['set_unlimited'] ) ) {
 			$db = JFactory::getDBO();
@@ -220,7 +220,7 @@ class mi_uddeim
 		return true;
 	}
 
-	function send_message( $request, $from, $to, $msg )
+	public function send_message( $request, $from, $to, $msg )
 	{
 		$db = JFactory::getDBO();
 
@@ -254,7 +254,7 @@ class uddeim_restriction extends serialParamDBTable {
 	/** @var string */
 	var $params					= null;
 
-	function getIDbyUserID( $userid ) {
+	public function getIDbyUserID( $userid ) {
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
@@ -265,11 +265,11 @@ class uddeim_restriction extends serialParamDBTable {
 		return $db->loadResult();
 	}
 
-	function uddeim_restriction() {
+	public function uddeim_restriction() {
 		parent::__construct( '#__acctexp_mi_uddeim', 'id' );
 	}
 
-	function is_active()
+	public function is_active()
 	{
 		if ( $this->active ) {
 			return true;
@@ -278,7 +278,7 @@ class uddeim_restriction extends serialParamDBTable {
 		}
 	}
 
-	function getMessagesLeft()
+	public function getMessagesLeft()
 	{
 		if (  $this->unlimited_messages > 0 ) {
 			return 'unlimited';
@@ -288,7 +288,7 @@ class uddeim_restriction extends serialParamDBTable {
 		}
 	}
 
-	function hasMessagesLeft()
+	public function hasMessagesLeft()
 	{
 		$check = $this->getMessagesLeft();
 
@@ -307,7 +307,7 @@ class uddeim_restriction extends serialParamDBTable {
 		return null;
 	}
 
-	function useMessage()
+	public function useMessage()
 	{
 		if ( $this->hasMessagesLeft() && $this->is_active() ) {
 			$this->used_messages++;
@@ -319,12 +319,12 @@ class uddeim_restriction extends serialParamDBTable {
 		}
 	}
 
-	function setMessages( $set )
+	public function setMessages( $set )
 	{
 		$this->granted_messages = $set + $this->used_messages;
 	}
 
-	function addMessages( $add )
+	public function addMessages( $add )
 	{
 
 		$this->granted_messages += $add;

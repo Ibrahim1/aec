@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_googleanalytics
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_GOOGLEANALYTICS');
@@ -23,7 +23,7 @@ class mi_googleanalytics
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['account_id']			= array( 'inputB' );
@@ -38,12 +38,12 @@ class mi_googleanalytics
 		return $settings;
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'account_id', 'method' );
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 

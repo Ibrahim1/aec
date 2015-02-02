@@ -13,7 +13,7 @@
 
 class processor_epay extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['longname']		= JText::_('CFG_EPAY_LONGNAME');
@@ -27,7 +27,7 @@ class processor_epay extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['merchantnumber']	= "merchant ID";
@@ -47,7 +47,7 @@ class processor_epay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['merchantnumber']	= array( 'inputC'	);
@@ -67,11 +67,11 @@ class processor_epay extends POSTprocessor
 		return $settings;
 	}
 
-	function generatekeyForEpay($cur, $amount, $orderid, $password) {
+	public function generatekeyForEpay($cur, $amount, $orderid, $password) {
 		return md5($cur . $amount . $orderid . $password);
 	}
 
-	function validateEpayData( $post )
+	public function validateEpayData( $post )
 	{
 		$strForValidate = $post['amount'] . $post['orderid'] . $post['tid'] . $this->settings['md5key'];
 
@@ -82,7 +82,7 @@ class processor_epay extends POSTprocessor
 		}
 	}
 
-	function getEpayLanguage( $strlanguage )
+	public function getEpayLanguage( $strlanguage )
 	{
 		$l = array( "DK" => 1, "UK" => 2, "SE" => 3, "NO" => 4, "GR" => 5, "IS" => 6, "DE" => 7 );
 
@@ -93,7 +93,7 @@ class processor_epay extends POSTprocessor
 		}
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		 // target for epay standard payment window
 		$var['post_url']		= "https://ssl.ditonlinebetalingssystem.dk/popup/default.asp";
@@ -126,7 +126,7 @@ class processor_epay extends POSTprocessor
 		return $var;
 	}
 
-	function getPost( $post )
+	public function getPost( $post )
 	{
 		$f = array( "tid"		=> array( "word", "int" ),
 					"orderid"	=> array( "word", "int" ),
@@ -147,7 +147,7 @@ class processor_epay extends POSTprocessor
 		return $post;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$db = JFactory::getDBO();
 
@@ -170,7 +170,7 @@ class processor_epay extends POSTprocessor
 		}
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$db = JFactory::getDBO();
 

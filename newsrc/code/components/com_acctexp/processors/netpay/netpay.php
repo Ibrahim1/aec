@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_netpay extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= "netpay";
@@ -26,7 +26,7 @@ class processor_netpay extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
@@ -39,7 +39,7 @@ class processor_netpay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -56,7 +56,7 @@ class processor_netpay extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var = array(	"post_url" => "https://www.onlinepayment.com.my/NBepay/pay/" . $this->settings['custId'] . "/?",
 						"orderid" => $request->invoice->invoice_number, //The invoice number
@@ -69,7 +69,7 @@ class processor_netpay extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$tranID		= $post['tranID'];
 		$orderid	= $post['orderid'];

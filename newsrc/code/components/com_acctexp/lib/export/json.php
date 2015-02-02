@@ -1,12 +1,12 @@
 <?php
 class AECexport_json extends AECexport
 {
-	function AECexport_json()
+	public function AECexport_json()
 	{
 		$this->lines = array();
 	}
 
-	function finishExport()
+	public function finishExport()
 	{
 		if ( !empty( $this->description ) && !empty( $this->sum ) ) {
 			$export = new stdClass();

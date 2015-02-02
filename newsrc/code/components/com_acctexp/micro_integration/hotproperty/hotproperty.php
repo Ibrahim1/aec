@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_hotproperty extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_HOTPROPERTY_NAME');
@@ -23,7 +23,7 @@ class mi_hotproperty extends MI
 		return $info;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -35,7 +35,7 @@ class mi_hotproperty extends MI
 		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_hotproperty', $tables );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -54,7 +54,7 @@ class mi_hotproperty extends MI
 		return;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -112,7 +112,7 @@ class mi_hotproperty extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -139,14 +139,14 @@ class mi_hotproperty extends MI
 		return $settings;
 	}
 
-	function invoice_item_cost( $request )
+	public function invoice_item_cost( $request )
 	{
 		$this->modifyPrice( $request );
 
 		return true;
 	}
 
-	function modifyPrice( $request )
+	public function modifyPrice( $request )
 	{
 		if ( !empty( $request->params['hpamt'] ) ) {
 			if ( !empty( $this->settings['easy_list_userchoice'] ) && !empty( $this->settings['easy_list_userchoice_n'] ) ) {
@@ -214,7 +214,7 @@ class mi_hotproperty extends MI
 		return null;
 	}
 
-	function parseEasyPrice( $p, $a, $parse )
+	public function parseEasyPrice( $p, $a, $parse )
 	{
 		if ( strpos( $parse, 'p' ) !== false ) {
 			$parse = str_replace( 'p', $p, $parse );
@@ -245,7 +245,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$defaults = array();
 		$defaults['agent_fields']	= "user=[[user_id]]\nname=[[user_name]]\nemail=[[user_email]]\nneed_approval=0";
@@ -254,12 +254,12 @@ class mi_hotproperty extends MI
 		return $defaults;
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_hotproperty' );
 	}
 
-	function hacks()
+	public function hacks()
 	{
 		$v10x = false;
 
@@ -460,7 +460,7 @@ class mi_hotproperty extends MI
 		return $hacks;
 	}
 
-	function profile_info( $request )
+	public function profile_info( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -475,7 +475,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		$agent = null;
 		$company = null;
@@ -583,7 +583,7 @@ class mi_hotproperty extends MI
 		return true;
 	}
 
-	function agentExists( $userid )
+	public function agentExists( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -600,7 +600,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function createAgent( $fields, $request )
+	public function createAgent( $fields, $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -644,7 +644,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function companyExists( $userid )
+	public function companyExists( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -661,7 +661,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function createCompany( $fields, $assoc, $request )
+	public function createCompany( $fields, $assoc, $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -720,7 +720,7 @@ class mi_hotproperty extends MI
 		return false;
 	}
 
-	function update( $table, $id, $fields, $request, $sid=false )
+	public function update( $table, $id, $fields, $request, $sid=false )
 	{
 		$db = JFactory::getDBO();
 
@@ -751,7 +751,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function publishProperties( $agentid )
+	public function publishProperties( $agentid )
 	{
 		$db = JFactory::getDBO();
 
@@ -768,7 +768,7 @@ class mi_hotproperty extends MI
 		}
 	}
 
-	function unpublishProperties( $agentid )
+	public function unpublishProperties( $agentid )
 	{
 		$db = JFactory::getDBO();
 
@@ -802,9 +802,9 @@ class aec_hotproperty extends serialParamDBTable
 	/** @var string */
 	var $params				= null;
 
-	function declareParamFields(){ return array( 'params' ); }
+	public function declareParamFields(){ return array( 'params' ); }
 
-	function aec_hotproperty()
+	public function aec_hotproperty()
 	{
 		$lang = JFactory::getLanguage();
 
@@ -813,7 +813,7 @@ class aec_hotproperty extends serialParamDBTable
 		parent::__construct( '#__acctexp_mi_hotproperty', 'id' );
 	}
 
-	function getIDbyUserID( $userid )
+	public function getIDbyUserID( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -825,13 +825,13 @@ class aec_hotproperty extends serialParamDBTable
 		return $db->loadResult();
 	}
 
-	function loadUserID( $userid )
+	public function loadUserID( $userid )
 	{
 		$id = $this->getIDbyUserID( $userid );
 		$this->load( $id );
 	}
 
-	function loadAgentID( $agent )
+	public function loadAgentID( $agent )
 	{
 		$db = JFactory::getDBO();
 
@@ -845,7 +845,7 @@ class aec_hotproperty extends serialParamDBTable
 		$this->loadUserID( $userid );
 	}
 
-	function getIDbyLinkID( $linkid )
+	public function getIDbyLinkID( $linkid )
 	{
 		$db = JFactory::getDBO();
 
@@ -874,18 +874,18 @@ class aec_hotproperty extends serialParamDBTable
 		return $this->getIDbyUserID( $userid );
 	}
 
-	function loadLinkID( $linkid )
+	public function loadLinkID( $linkid )
 	{
 		$id = $this->getIDbyLinkID( $linkid );
 		$this->load( $id );
 	}
 
-	function is_active()
+	public function is_active()
 	{
 		return $this->active ? true : false;
 	}
 
-	function getListingsLeft()
+	public function getListingsLeft()
 	{
 		if ( !empty( $this->params['unlimited'] ) ) {
 			return 'unlimited';
@@ -894,7 +894,7 @@ class aec_hotproperty extends serialParamDBTable
 		}
 	}
 
-	function hasListingsLeft()
+	public function hasListingsLeft()
 	{
 		$listings = $this->getListingsLeft();
 		if ( $listings === 'unlimited' ) {
@@ -906,7 +906,7 @@ class aec_hotproperty extends serialParamDBTable
 		}
 	}
 
-	function useListing()
+	public function useListing()
 	{
 		if( $this->hasListingsLeft() && $this->is_active() ) {
 			$this->used_listings++;
@@ -918,7 +918,7 @@ class aec_hotproperty extends serialParamDBTable
 		}
 	}
 
-	function removeListing()
+	public function removeListing()
 	{
 		if ( $this->is_active() ) {
 			$this->used_listings--;
@@ -929,17 +929,17 @@ class aec_hotproperty extends serialParamDBTable
 		}
 	}
 
-	function setListings( $set )
+	public function setListings( $set )
 	{
 		$this->granted_listings = $set;
 	}
 
-	function unlimitedListings()
+	public function unlimitedListings()
 	{
 		$this->addParams( array( 'unlimited' => true ) );
 	}
 
-	function addListings( $add )
+	public function addListings( $add )
 	{
 		$this->granted_listings += $add;
 	}

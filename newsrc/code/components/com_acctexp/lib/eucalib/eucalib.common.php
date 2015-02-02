@@ -113,7 +113,7 @@ class eucaObject extends JObject {}
 */
 class paramDBTable extends JTable
 {
-	function __construct( $table, $id )
+	public function __construct( $table, $id )
 	{
 		$db = JFactory::getDBO();
 
@@ -124,7 +124,7 @@ class paramDBTable extends JTable
 	 * Dummy function to be overridden by calling class
 	 * @return array
 	 */
-	function paramTypeList()
+	public function paramTypeList()
 	{
 		return array();
 	}
@@ -133,7 +133,7 @@ class paramDBTable extends JTable
 	 * Receive Parameters and decode them into an array
 	 * @return array
 	 */
-	function getParams( $field = 'params' )
+	public function getParams( $field = 'params' )
 	{
 		if ( empty( $this->$field ) ) {
 			return false;
@@ -156,7 +156,7 @@ class paramDBTable extends JTable
 	/**
 	 * Encode array and set Parameter field
 	 */
-	function setParams( $array, $field = 'params' )
+	public function setParams( $array, $field = 'params' )
 	{
 		if ( empty( $array ) ) {
 			return false;
@@ -187,7 +187,7 @@ class paramDBTable extends JTable
 	/**
 	 * Add an array of Parameters to an existing parameter field
 	 */
-	function addParams( $array, $field = 'params', $overwrite = true )
+	public function addParams( $array, $field = 'params', $overwrite = true )
 	{
 		$params = $this->getParams( $field );
 		foreach ( $array as $key => $value ) {
@@ -205,7 +205,7 @@ class paramDBTable extends JTable
 	/**
 	 * Delete a set of Parameters providing an array of key names
 	 */
-	function delParams( $array, $field = 'params' )
+	public function delParams( $array, $field = 'params' )
 	{
 		$params = $this->getParams( $field );
 		foreach ( $array as $key ) {
@@ -219,7 +219,7 @@ class paramDBTable extends JTable
 	/**
 	 * Return the differences between a new set of Parameters and the existing one
 	 */
-	function diffParams( $array, $field = 'params' )
+	public function diffParams( $array, $field = 'params' )
 	{
 		$diff = array();
 
@@ -243,7 +243,7 @@ class paramDBTable extends JTable
 	 * Return a compilation of all field values, provide a list of parameter fields
 	 * @return array
 	 */
-	function fullparamsValuesArray()
+	public function fullparamsValuesArray()
 	{
 		$params = $this->paramTypeList();
 
@@ -268,7 +268,7 @@ class paramDBTable extends JTable
 	/**
 	 * Automatically save a full object by referring to its paramTypeList
 	 */
-	function fullSave( $post=null )
+	public function fullSave( $post=null )
 	{
 		$params = $this->paramTypeList();
 
@@ -332,7 +332,7 @@ class paramDBTable extends JTable
 		$this->store();
 	}
 
-	function getMax( $field='id' )
+	public function getMax( $field='id' )
 	{
 		$query = "SELECT max($field) FROM $this->_tbl";
 		$this->_db->setQuery( $query );
@@ -340,12 +340,12 @@ class paramDBTable extends JTable
 		return $this->_db->loadResult();
 	}
 
-	function store($updateNulls = true)
+	public function store($updateNulls = true)
 	{
 		return parent::store($updateNulls);
 	}
 
-	function move( $dir, $where=null )
+	public function move( $dir, $where=null )
 	{
 		parent::move( $dir );
 
@@ -364,7 +364,7 @@ class paramDBTable extends JTable
 */
 class serialParamDBTable extends paramDBTable
 {
-	function storeload()
+	public function storeload()
 	{
 		$this->check();
 		$this->store( true );
@@ -372,7 +372,7 @@ class serialParamDBTable extends paramDBTable
 		return $this->load( $this->id );
 	}
 
-	function reload()
+	public function reload()
 	{
 		return $this->load( $this->id );
 	}
@@ -381,7 +381,7 @@ class serialParamDBTable extends paramDBTable
 	 * Receive Parameters and decode them into an array
 	 * @return array
 	 */
-	function getParams( $field = 'params' )
+	public function getParams( $field = 'params' )
 	{
 		if ( empty( $this->$field ) ) {
 			return null;
@@ -419,7 +419,7 @@ class serialParamDBTable extends paramDBTable
 	/**
 	 * Encode array and set Parameter field
 	 */
-	function setParams( $input, $field = 'params' )
+	public function setParams( $input, $field = 'params' )
 	{
 		if ( empty( $field ) ) {
 			return false;
@@ -440,7 +440,7 @@ class serialParamDBTable extends paramDBTable
 		return true;
 	}
 
-	function multistripslashes( $input )
+	public function multistripslashes( $input )
 	{
 		if ( is_object( $input ) ) {
 			$properties = get_object_vars( $input );
@@ -465,7 +465,7 @@ class serialParamDBTable extends paramDBTable
 	/**
 	 * Add an array of Parameters to an existing parameter field
 	 */
-	function addParams( $params, $field = 'params', $overwrite = true )
+	public function addParams( $params, $field = 'params', $overwrite = true )
 	{
 		if ( empty( $this->$field ) || ( $this->$field == 'null' ) ) {
 			$this->$field = $params;
@@ -480,7 +480,7 @@ class serialParamDBTable extends paramDBTable
 	/**
 	 * Recursive Merging of two Entities, regardless of type
 	 */
-	function mergeParams( $subject, $subject2, $overwrite=true )
+	public function mergeParams( $subject, $subject2, $overwrite=true )
 	{
 		if ( is_object( $subject ) ) {
 			$properties = get_object_vars( $subject2 );
@@ -514,7 +514,7 @@ class serialParamDBTable extends paramDBTable
 	/**
 	 * Delete a set of Parameters providing an array of key names
 	 */
-	function delParams( $array, $field = 'params' )
+	public function delParams( $array, $field = 'params' )
 	{
 
 	}
@@ -522,12 +522,12 @@ class serialParamDBTable extends paramDBTable
 	/**
 	 * Return the differences between a new set of Parameters and the existing one
 	 */
-	function diffParams( $array, $field = 'params' )
+	public function diffParams( $array, $field = 'params' )
 	{
 
 	}
 
-	function load( $id=null, $reset=true )
+	public function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 
@@ -548,7 +548,7 @@ class serialParamDBTable extends paramDBTable
 		return true;
 	}
 
-	function clear()
+	public function clear()
 	{
 		$vars = get_class_vars( get_class( $this ) );
 		$props = get_object_vars( $this );
@@ -560,14 +560,14 @@ class serialParamDBTable extends paramDBTable
 		}
 	}
 
-	function copy()
+	public function copy()
 	{
 		$this->id = 0;
 		$this->check();
 		$this->store();
 	}
 
-	function check( $fields=array() )
+	public function check( $fields=array() )
 	{
 		if ( !method_exists( $this, 'declareParamFields' ) ) {
 			return true;
@@ -588,7 +588,7 @@ class serialParamDBTable extends paramDBTable
 		return true;
 	}
 
-	function store($updateNulls = true)
+	public function store($updateNulls = true)
 	{
 		$store = parent::store($updateNulls);
 
@@ -601,12 +601,12 @@ class serialParamDBTable extends paramDBTable
 		return $store;
 	}
 
-	function langfieldname( $key )
+	public function langfieldname( $key )
 	{
 		return $this->langfieldroot() . '_' . strtoupper( str_replace( '.', '_', $key ) );
 	}
 
-	function langfieldroot()
+	public function langfieldroot()
 	{
 		return "AEC_" . strtoupper( get_class( $this ) ) . '_' . $this->id;
 	}
@@ -632,7 +632,7 @@ class jsoonHandler
 	 * Explode JSON parsed string into appropriate JSOON
 	 * @return object
 	 */
-	function decoder( $input )
+	public function decoder( $input )
 	{
 		if ( is_object( $input ) ) {
 			if ( isset( $input->_jsoon ) ) {
@@ -690,7 +690,7 @@ class jsoonHandler
 		return $output;
 	}
 
-	function encoder( $input )
+	public function encoder( $input )
 	{
 		$output = $input;
 		if ( is_object( $input ) ) {
@@ -805,7 +805,7 @@ class parameterHandler
 
 class eucaToolbox
 {
-	function makeIcon( $name, $alt=false )
+	public function makeIcon( $name, $alt=false )
 	{
 		if ( !$alt ) {
 			$alt = $name;
@@ -814,12 +814,12 @@ class eucaToolbox
 		return '<img src="'. eucaToolbox::IconSrc( $name ) .'" border="0" alt="' . $alt . '" title="' . $alt . '" class="euca_icon" />';
 	}
 
-	function IconSrc( $name )
+	public function IconSrc( $name )
 	{
 		return _EUCA_APP_ICONSDIR . '/' . $name . '.png';
 	}
 
-	function natSortKey(&$arrIn, $case=0 )
+	public function natSortKey(&$arrIn, $case=0 )
 	{
 		$key_array = array();
 		$arrOut = array();
@@ -841,7 +841,7 @@ class eucaToolbox
 		$arrIn=$arrOut;
 	}
 
-	function getLangIni( $filename )
+	public function getLangIni( $filename )
 	{
 		if ( phpversion() >= '5.3.1' ) {
 			$contents = file_get_contents($filename);
@@ -864,7 +864,7 @@ class eucaToolbox
 		return $strings;
 	}
 
-	function putLangIni( $filename, $content )
+	public function putLangIni( $filename, $content )
 	{
 		return file_get_contents( $filename, $content );
 	}

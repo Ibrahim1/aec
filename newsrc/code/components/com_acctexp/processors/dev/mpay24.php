@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_mpay24 extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'mpay24';
@@ -29,7 +29,7 @@ class processor_mpay24 extends XMLprocessor
 		return $info;
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -42,7 +42,7 @@ class processor_mpay24 extends XMLprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['login']				= 'login';
@@ -61,7 +61,7 @@ class processor_mpay24 extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'toggle' );
@@ -82,7 +82,7 @@ class processor_mpay24 extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request, $cim=null, $nobill=false, $ppParams=false )
+	public function checkoutform( $request, $cim=null, $nobill=false, $ppParams=false )
 	{
 		$var = array();
 		$hascim = false;
@@ -170,7 +170,7 @@ class processor_mpay24 extends XMLprocessor
 		return $var;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 
@@ -200,12 +200,12 @@ class processor_mpay24 extends XMLprocessor
 		return $return;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		return "";
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$return['valid'] = false;
 
@@ -411,7 +411,7 @@ class processor_mpay24 extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$return['valid']	= 0;
 		$return['cancel']	= true;

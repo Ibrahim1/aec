@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_googleadsenseconversion
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_GOOGLEADSENSECONVERSION');
@@ -23,7 +23,7 @@ class mi_googleadsenseconversion
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['conversion_id']	= array( 'inputB' );
@@ -35,7 +35,7 @@ class mi_googleadsenseconversion
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$settings = array();
 		$settings['conversion_id']	= "";
@@ -47,12 +47,12 @@ class mi_googleadsenseconversion
 		return $settings;
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'conversion_id' );
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class template_etacarinae extends aecTemplate
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'etacarinae';
@@ -23,12 +23,12 @@ class template_etacarinae extends aecTemplate
 		return $info;
 	}
 
-	function addDefaultCSS()
+	public function addDefaultCSS()
 	{
 		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/template.' . $this->template . '.css' );
 	}
 
-	function settings()
+	public function settings()
 	{
 		$tab_data = array();
 
@@ -81,7 +81,7 @@ class template_etacarinae extends aecTemplate
 		return array( 'params' => $params, 'tab_data' => $tab_data );
 	}
 
-	function beforesave()
+	public function beforesave()
 	{
 		$change = true;
 
@@ -112,7 +112,7 @@ class template_etacarinae extends aecTemplate
 		}
 	}
 
-	function defaultHeader()
+	public function defaultHeader()
 	{
 		$this->addDefaultCSS();
 
@@ -127,7 +127,7 @@ class template_etacarinae extends aecTemplate
 		$this->addMetaData();
 	}
 
-	function loadJS()
+	public function loadJS()
 	{
 		if ( empty( $this->jQueryCode )) {
 			return null;
@@ -146,7 +146,7 @@ class template_etacarinae extends aecTemplate
 		$this->addScriptDeclaration( $js );
 	}
 
-	function loadJQuery()
+	public function loadJQuery()
 	{
 		$v = new JVersion();
 
@@ -161,7 +161,7 @@ class template_etacarinae extends aecTemplate
 		$this->addScript( JURI::root(true).'/media/com_acctexp/js/jquery/jquerync.js' );
 	}
 
-	function loadJQueryExtensions()
+	public function loadJQueryExtensions()
 	{
 		if ( !empty( $this->jqueryExtensions ) ) {
 			foreach ( $this->jqueryExtensions as $ext ) {
@@ -170,17 +170,17 @@ class template_etacarinae extends aecTemplate
 		}
 	}
 
-	function enqueueJQueryExtension( $name )
+	public function enqueueJQueryExtension( $name )
 	{
 		$this->jqueryExtensions[] = $name;
 	}
 
-	function enqueueJQueryCode( $js )
+	public function enqueueJQueryCode( $js )
 	{
 		$this->jQueryCode[] = $js;
 	}
 
-	function enqueueValidation( $validation )
+	public function enqueueValidation( $validation )
 	{
 		if ( !empty( $this->validation ) ) {
 			$this->validation = array_merge( $this->validation, $validation );
@@ -189,7 +189,7 @@ class template_etacarinae extends aecTemplate
 		}
 	}
 
-	function addValidation()
+	public function addValidation()
 	{
 		$this->enqueueJQueryExtension( 'jquery/jquery.validate' );
 		$this->enqueueJQueryExtension( 'jquery/jquery.validate.additional-methods' );

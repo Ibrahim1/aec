@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_virtuemart
 {
-	function mi_virtuemart()
+	public function mi_virtuemart()
 	{
 		$db = JFactory::getDBO();
 	 	$db->setQuery( 'SHOW TABLES LIKE \'%' . $db->getPrefix() . 'virtuemart_shoppergroups%\'' );
@@ -21,7 +21,7 @@ class mi_virtuemart
 	 	$this->isv2 = $db->loadResult() ? true : false;
 	}
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_VIRTM');
@@ -31,7 +31,7 @@ class mi_virtuemart
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$shopper_groups = $this->getShopperGroups();
 
@@ -95,7 +95,7 @@ class mi_virtuemart
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( !$this->checkVMuserexists( $request->metaUser->userid ) && $this->settings['create_account'] ) {
 			$this->createVMuser( $request->metaUser, $this->settings['shopper_group_exp'] );
@@ -110,7 +110,7 @@ class mi_virtuemart
 		}
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( !$this->checkVMuserexists( $request->metaUser->userid ) && $this->settings['create_account'] ) {
 			$this->createVMuser( $request->metaUser, $this->settings['shopper_group'] );
@@ -137,7 +137,7 @@ class mi_virtuemart
 		}
 	}
 
-	function getShopperGroups()
+	public function getShopperGroups()
 	{
 		$db = JFactory::getDBO();
 
@@ -154,7 +154,7 @@ class mi_virtuemart
 	 	return $db->loadObjectList();
 	}
 
-	function checkVMuserexists( $userid )
+	public function checkVMuserexists( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -174,7 +174,7 @@ class mi_virtuemart
 		return $db->loadResult();
 	}
 
-	function addVMuserSgroup( $userid, $shoppergroup )
+	public function addVMuserSgroup( $userid, $shoppergroup )
 	{
 		$db = JFactory::getDBO();
 
@@ -197,7 +197,7 @@ class mi_virtuemart
 		$db->query();
 	}
 
-	function removeVMuserSgroup( $userid, $shoppergroup )
+	public function removeVMuserSgroup( $userid, $shoppergroup )
 	{
 		if ( $this->hasVMuserSgroup( $userid, $shoppergroup ) ) {
 			return null;
@@ -214,7 +214,7 @@ class mi_virtuemart
 		$db->query();
 	}
 
-	function hasVMuserSgroup( $userid, $shoppergroup )
+	public function hasVMuserSgroup( $userid, $shoppergroup )
 	{
 		$db = JFactory::getDBO();
 
@@ -227,7 +227,7 @@ class mi_virtuemart
 		return $db->loadResult() ? true : false;
 	}
 
-	function createVMuser( $metaUser, $shoppergroup )
+	public function createVMuser( $metaUser, $shoppergroup )
 	{
 		$app = JFactory::getApplication();
 
@@ -283,7 +283,7 @@ class mi_virtuemart
 		$db->query();
 	}
 
-	function uniqueID()
+	public function uniqueID()
 	{
 		$db = JFactory::getDBO();
 

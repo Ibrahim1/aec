@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_paypal_wpp extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'paypal_wpp';
@@ -31,12 +31,12 @@ class processor_paypal_wpp extends XMLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return 'paypal.png';
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -49,7 +49,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
@@ -70,7 +70,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']				= array( 'toggle' );
@@ -100,7 +100,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $settings;
 	}
 
-	function registerProfileTabs()
+	public function registerProfileTabs()
 	{
 		$tab			= array();
 		$tab['details']	= JText::_('AEC_USERFORM_BILLING_DETAILS_NAME');
@@ -108,7 +108,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $tab;
 	}
 
-	function customtab_details( $request )
+	public function customtab_details( $request )
 	{
 		$profileid = $request->invoice->params['paypal_wpp_customerProfileId'];
 
@@ -191,7 +191,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		$return = "";
 
@@ -224,7 +224,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
-	function checkoutform( $request, $vcontent=null, $updated=null )
+	public function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		$var = array();
 
@@ -247,7 +247,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function checkoutProcess( $request, $InvoiceFactory )
+	public function checkoutProcess( $request, $InvoiceFactory )
 	{
 		$this->sanitizeRequest( $request );
 
@@ -372,14 +372,14 @@ class processor_paypal_wpp extends XMLprocessor
 		return $this->checkoutResponse( $request, $response, $InvoiceFactory );
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$var = $this->getPayPalVars( $request );
 
 		return $this->arrayToNVP( $var, true );
 	}
 
-	function getCCType( $type )
+	public function getCCType( $type )
 	{
 		switch ( strtolower( $type ) ) {
 			default: case 'mastercard': return 'MasterCard';
@@ -390,7 +390,7 @@ class processor_paypal_wpp extends XMLprocessor
 		}
 	}
 
-	function getPayPalVars( $request, $regular=true, $payment=true, $express=false )
+	public function getPayPalVars( $request, $regular=true, $payment=true, $express=false )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
 			$var['Method']			= 'CreateRecurringPaymentsProfile';
@@ -445,7 +445,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function getPaymentVars( $var, $request, $express )
+	public function getPaymentVars( $var, $request, $express )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
 			if ( isset( $request->int_var['amount']['amount1'] ) ) {
@@ -496,7 +496,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
-	function transmitToPayPal( $xml )
+	public function transmitToPayPal( $xml )
 	{
 		$path = "/nvp";
 
@@ -509,7 +509,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 	}
 
-	function getPayPalURL( $path )
+	public function getPayPalURL( $path )
 	{
 		$url = "https://api" . ( $this->settings['use_certificate'] ? "" : "-3t" );
 
@@ -520,7 +520,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $url;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$response = trim( $this->transmitToPayPal( $xml ) );
 
@@ -572,7 +572,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		$return = array();
 		switch ( $unit ) {
@@ -597,7 +597,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
-	function getPlaintextDetails( $request )
+	public function getPlaintextDetails( $request )
 	{
 		$return = "";
 
@@ -617,7 +617,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$var['Method']				= 'ManageRecurringPaymentsProfileStatus';
 		$var['action']				= 'Cancel';
@@ -653,7 +653,7 @@ class processor_paypal_wpp extends XMLprocessor
 		}
 	}
 
-	function ProfileRequest( $request, $profileid, $var )
+	public function ProfileRequest( $request, $profileid, $var )
 	{
 		$var['user']				= $this->settings['api_user'];
 		$var['pwd']					= $this->settings['api_password'];
@@ -673,7 +673,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $this->NVPtoArray( $response );
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$mc_gross			= $post['mc_gross'];
 		if ( $mc_gross == '' ) {
@@ -701,7 +701,7 @@ class processor_paypal_wpp extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$path = '/cgi-bin/webscr';
 		if ($this->settings['testmode']) {

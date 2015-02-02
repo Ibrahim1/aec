@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_paysite_cash extends URLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'paysite_cash';
@@ -29,7 +29,7 @@ class processor_paysite_cash extends URLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -41,7 +41,7 @@ class processor_paysite_cash extends URLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -53,7 +53,7 @@ class processor_paysite_cash extends URLprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$var['test'] = 1;
@@ -97,7 +97,7 @@ class processor_paysite_cash extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['ref'];
@@ -105,7 +105,7 @@ class processor_paysite_cash extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 

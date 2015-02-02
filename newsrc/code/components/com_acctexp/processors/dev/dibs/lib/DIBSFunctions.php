@@ -650,7 +650,7 @@ function parmchk($in) {
 
 
 
-	function clean($string,$isXML = true,$length = 255) {
+	public function clean($string,$isXML = true,$length = 255) {
 		$strout = null;
 
 		if (strlen($string) <= $length) {
@@ -685,7 +685,7 @@ function parmchk($in) {
 		return $strout;
 	}
 
-	function getCurrency($currency) {
+	public function getCurrency($currency) {
 		$currency_iso4217code=array('AFN'=>'971','ALL'=>'8','AMD'=>'51','ANG'=>'532','AOA'=>'973','ARS'=>'32','AUD'=>'36','AWG'=>'533','AZN'=>'944','BAM'=>'977',
 		'BBD'=>'52','BDT'=>'50','BGN'=>'975','BHD'=>'48','BIF'=>'108','BMD'=>'60','BND'=>'96','BOB'=>'68','BOV'=>'984','BRL'=>'986','BSD'=>'44','BTN'=>'64',
 		'BWP'=>'72','BYR'=>'974','BZD'=>'84','CAD'=>'124','CDF'=>'976','CHE'=>'947','CHF'=>'756','CHW'=>'948','CLF'=>'990','CLP'=>'152','CNY'=>'156','COP'=>'170',

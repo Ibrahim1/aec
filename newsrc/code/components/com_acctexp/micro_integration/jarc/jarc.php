@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_jarc
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JARC');
@@ -22,7 +22,7 @@ class mi_jarc
 		return $info;
 	}
 
-	function Settings( $params=null )
+	public function Settings( $params=null )
 	{
 		$settings = array();
 		$settings['create_affiliates']	= array( 'toggle' );
@@ -32,12 +32,12 @@ class mi_jarc
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		return $this->logpayment( $request->invoice );
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -57,7 +57,7 @@ class mi_jarc
 	}
 
 
-	function checkaffiliate( $userid )
+	public function checkaffiliate( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -74,7 +74,7 @@ class mi_jarc
 		}
 	}
 
-	function createaffiliate( $userid )
+	public function createaffiliate( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -96,7 +96,7 @@ class mi_jarc
 		}
 	}
 
-	function logpayment( $invoice )
+	public function logpayment( $invoice )
 	{
 		$db = JFactory::getDBO();
 

@@ -103,12 +103,12 @@ exit;
 
 class bootstrapLoader
 {
-	function clearKey( $key )
+	public function clearKey( $key )
 	{
 		return preg_replace( "/[^a-z \d]/i", "", $key );
 	}
 
-	function makeGet( $array )
+	public function makeGet( $array )
 	{
 		$reduced = array();
 
@@ -120,7 +120,7 @@ class bootstrapLoader
 		return implode( '&', $reduced );
 	}
 
-	function clearVariable( $var )
+	public function clearVariable( $var )
 	{
 		$return = $var;
 
@@ -134,7 +134,7 @@ class bootstrapLoader
 		return $return;
 	}
 
-	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
+	public function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
 	{
 		$response = $this->doTheCurl( $url, $content, $curlextra, $header );
 		if ( $response === false ) {
@@ -145,7 +145,7 @@ class bootstrapLoader
 		return $response;
 	}
 
-	function doTheHttp( $url, $path, $content, $port=443, $extra_header=null )
+	public function doTheHttp( $url, $path, $content, $port=443, $extra_header=null )
 	{
 		if ( strpos( $url, '://' ) === false ) {
 			if ( $port == 443 ) {
@@ -246,7 +246,7 @@ class bootstrapLoader
 		}
 	}
 
-	function doTheCurl( $url, $content, $curlextra=null, $header=null )
+	public function doTheCurl( $url, $content, $curlextra=null, $header=null )
 	{
 		if ( !function_exists( 'curl_init' ) ) {
 			return false;

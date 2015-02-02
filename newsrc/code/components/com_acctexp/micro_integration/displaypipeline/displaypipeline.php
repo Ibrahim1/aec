@@ -14,7 +14,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class mi_displaypipeline
 {
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_DISPLAYPIPELINE');
@@ -24,7 +24,7 @@ class mi_displaypipeline
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['only_user']			= array( 'toggle' );
@@ -43,7 +43,7 @@ class mi_displaypipeline
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 

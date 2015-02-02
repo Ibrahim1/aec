@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_paypal_payflow_link extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'paypal_payflow_link';
@@ -29,12 +29,12 @@ class processor_paypal_payflow_link extends POSTprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return 'paypal.png';
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']		= "USD";
@@ -46,7 +46,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( 'p' );
@@ -61,7 +61,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']	= 'https://payflowlink.paypal.com';
 
@@ -77,7 +77,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']		= aecInvoiceHelper::InvoiceNumberfromId( $post['INVOICE'] );
@@ -86,7 +86,7 @@ class processor_paypal_payflow_link extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$path = '/cgi-bin/webscr';
 		$ppurl = 'https://www.paypal.com' . $path;

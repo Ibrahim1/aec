@@ -35,7 +35,7 @@ class aecEventHandler
 	}
 
 	// TODO: Finish function that, according to setting, cleans out old entries (like more than two weeks old default)
-	function deleteOldEvents()
+	public function deleteOldEvents()
 	{
 		$db = JFactory::getDBO();
 
@@ -84,17 +84,17 @@ class aecEvent extends serialParamDBTable
 	/** @var string */
 	var $customparams		= array();
 
-	function aecEvent()
+	public function aecEvent()
 	{
 		parent::__construct( '#__acctexp_event', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'context', 'params', 'customparams' );
 	}
 
-	function issue( $type, $subtype, $appid, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
+	public function issue( $type, $subtype, $appid, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		$this->userid			= $userid;
 		$this->status			= 'waiting';
@@ -115,7 +115,7 @@ class aecEvent extends serialParamDBTable
 		return $this->id;
 	}
 
-	function trigger()
+	public function trigger()
 	{
 		if ( empty( $this->type ) ) {
 			return null;

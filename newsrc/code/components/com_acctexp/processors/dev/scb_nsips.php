@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_scb_nsips extends URLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'scb_nsips';
@@ -29,7 +29,7 @@ class processor_scb_nsips extends URLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['merchant_id']	= 'webmaster';
@@ -40,7 +40,7 @@ class processor_scb_nsips extends URLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['webmaster_id']	= array( 'inputC' );
@@ -60,7 +60,7 @@ class processor_scb_nsips extends URLprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
@@ -106,7 +106,7 @@ class processor_scb_nsips extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$db = JFactory::getDBO();
 
@@ -118,7 +118,7 @@ class processor_scb_nsips extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 

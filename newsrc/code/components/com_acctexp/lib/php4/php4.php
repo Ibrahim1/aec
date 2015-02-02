@@ -19,14 +19,14 @@ if ( !function_exists( 'json_decode' ) ) {
 	}
 
 	// Create dummy encoding function
-	function json_encode( $value )
+	public function json_encode( $value )
 	{
 		$JSONenc = new Services_JSON();
 		return $JSONenc->encode( $value );
 	}
 
 	// Create dummy decoding function
-	function json_decode( $value )
+	public function json_decode( $value )
 	{
 		$JSONdec = new Services_JSON();
 		return $JSONdec->decode( $value );
@@ -35,7 +35,7 @@ if ( !function_exists( 'json_decode' ) ) {
 }
 
 if ( !function_exists( 'str_split' ) ) {
-	function str_split( $text, $split = 1 ) {
+	public function str_split( $text, $split = 1 ) {
 		// place each character of the string into an array
 		$array = array();
 		for ( $i = 0; $i < strlen( $text ); ){
@@ -52,7 +52,7 @@ if ( !function_exists( 'str_split' ) ) {
 }
 
 if ( !function_exists( 'property_exists' ) ) {
-	function property_exists( $class, $property ) {
+	public function property_exists( $class, $property ) {
 		if ( is_object( $class ) ) {
 			$vars = get_object_vars( $class );
 		} else {
@@ -63,7 +63,7 @@ if ( !function_exists( 'property_exists' ) ) {
 }
 
 if ( !function_exists( 'scandir' ) ) {
-	function scandir($dir,$listDirectories=false, $skipDots=true) {
+	public function scandir($dir,$listDirectories=false, $skipDots=true) {
 		$dirArray = array();
 		if ($handle = opendir($dir)) {
 			while (false !== ($file = readdir($handle))) {
@@ -79,7 +79,7 @@ if ( !function_exists( 'scandir' ) ) {
 }
 
 if ( !function_exists( 'array_combine' ) ) {
-	function array_combine($arr1, $arr2) {
+	public function array_combine($arr1, $arr2) {
 		$out = array();
 
 		$arr1 = array_values($arr1);
@@ -98,7 +98,7 @@ if ( !function_exists( 'array_combine' ) ) {
 if (version_compare(phpversion(), '5.0') < 0) {
 	eval('
 		if(!function_exists(\'clone\')){
-			function clone($object) {
+			public function clone($object) {
 				return $object;
 			}
 		}

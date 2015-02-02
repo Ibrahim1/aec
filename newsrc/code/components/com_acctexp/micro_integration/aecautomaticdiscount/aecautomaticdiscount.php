@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this option is not allowed.' );
 
 class mi_aecautomaticdiscount
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AECAUTOMATICDISCOUNT_NAME');
@@ -23,7 +23,7 @@ class mi_aecautomaticdiscount
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['amount']		= array( 'inputC' );
@@ -45,14 +45,14 @@ class mi_aecautomaticdiscount
 		return $settings;
 	}
 
-	function invoice_item_cost( $request )
+	public function invoice_item_cost( $request )
 	{
 		$request = $this->addCost( $request, $request->add );
 
 		return true;
 	}
 
-	function addCost( $request, $item )
+	public function addCost( $request, $item )
 	{
 		$total = $item['terms']->terms[0]->renderTotal();
 

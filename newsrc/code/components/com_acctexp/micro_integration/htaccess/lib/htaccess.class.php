@@ -21,14 +21,14 @@ class htaccess{
 	/**
 	* Initialising class htaccess
 	*/
-	function htaccess(){
+	public function htaccess(){
 	}
 
 	/**
 	* Sets the filename and path of .htaccess to work with
 	* @param string	$filename	the name of htaccess file
 	*/
-	function setFHtaccess($filename){
+	public function setFHtaccess($filename){
 		$this->fHtaccess=$filename;
 	}
 
@@ -36,7 +36,7 @@ class htaccess{
 	* Sets the filename and path of the htgroup file for the htaccess file
 	* @param string	$filename	the name of htgroup file
 	*/
-	function setFHtgroup($filename){
+	public function setFHtgroup($filename){
 		$this->fHtgroup=$filename;
 	}
 
@@ -44,7 +44,7 @@ class htaccess{
 	* Sets the filename and path of the password file for the htaccess file
 	* @param string	$filename	the name of htgroup file
 	*/
-	function setFPasswd($filename){
+	public function setFPasswd($filename){
 		$this->fPasswd=$filename;
 	}
 
@@ -55,7 +55,7 @@ class htaccess{
 	* @param string $group		Groupname for User (optional)
 	* @return boolean $created		 Returns true if user have been created otherwise false
   	*/
-	function addUser($username,$password){
+	public function addUser($username,$password){
 		if ( empty( $username ) ) {
 			return true;
 		}
@@ -86,7 +86,7 @@ class htaccess{
 	* Adds a group to the htgroup file
 	* @param string $groupname	 Groupname
   	*/
-	function addGroup($groupname){
+	public function addGroup($groupname){
 		$file=fopen($this->fHtgroup,"a");
 		fclose($file);
 	}
@@ -96,7 +96,7 @@ class htaccess{
 	* @param string $username	 Username to delete
 	* @return boolean $deleted	Returns true if user have been deleted otherwise false
   	*/
-	function delUser($username){
+	public function delUser($username){
 		// Reading names from file
 		$file=fopen($this->fPasswd,"r");
 		$i=0;
@@ -132,7 +132,7 @@ class htaccess{
  	* @return array $$newUserlist	All usernames of a password file in an array
 	* @see setPasswd()
   	*/
-	function getUsers(){
+	public function getUsers(){
 		// Reading names from file
 		$newUserlist = array();
 
@@ -153,7 +153,7 @@ class htaccess{
 	* @param string $password		New Password for the User
 	* @return boolean $isSet		Returns true if password have been set
   	*/
-	function setPasswd($username,$new_password){
+	public function setPasswd($username,$new_password){
 		// Reading names from file
 		$newUserlist="";
 
@@ -196,7 +196,7 @@ class htaccess{
 	* Sets the Authentification type for Login
 	* @param string $authtype	 Authentification type as string
   	*/
-	function setAuthType($authtype){
+	public function setAuthType($authtype){
 		$this->authType=$authtype;
 	}
 
@@ -204,7 +204,7 @@ class htaccess{
 	* Sets the Authentification Name (Name of the login area)
 	* @param string $authname	 Name of the login area
   	*/
-	function setAuthName($authname){
+	public function setAuthName($authname){
 		$this->authName=$authname;
 	}
 
@@ -213,7 +213,7 @@ class htaccess{
 	* @param string $path		  Path name to protect
 	* @see setFhtaccess()
   	*/
-	function addLogin(){
+	public function addLogin(){
 	   $file=fopen($this->fHtaccess,"w+");
 	   fputs($file,"Order allow,deny\n");
 	   fputs($file,"Allow from all\n");
@@ -229,7 +229,7 @@ class htaccess{
 	* @param string $path		  Path name to delete protection
 	* @see setFhtaccess()
   	*/
-	function delLogin(){
+	public function delLogin(){
 		unlink($this->fHtaccess);
 	}
 }

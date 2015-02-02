@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_authorize extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "authorize";
@@ -28,7 +28,7 @@ class processor_authorize extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['login']				= "login";
@@ -51,7 +51,7 @@ class processor_authorize extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( "toggle" );
@@ -76,7 +76,7 @@ class processor_authorize extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$app = JFactory::getApplication();
 
@@ -127,7 +127,7 @@ class processor_authorize extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$x_description			= $post['x_description'];
 
@@ -140,7 +140,7 @@ class processor_authorize extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$x_response_code		= $post['x_response_code'];
 		$x_response_reason_text	= $post['x_response_reason_text'];
@@ -150,7 +150,7 @@ class processor_authorize extends POSTprocessor
 		return $response;
 	}
 
-	function hmac( $key, $data )
+	public function hmac( $key, $data )
 	{
 		// RFC 2104 HMAC implementation for php.
 		// Creates an md5 HMAC.

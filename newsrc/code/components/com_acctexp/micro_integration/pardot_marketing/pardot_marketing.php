@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_pardot_marketing extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PARDOT_MARKETING');
@@ -23,7 +23,7 @@ class mi_pardot_marketing extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['email']					= array( 'inputC' );
@@ -54,7 +54,7 @@ class mi_pardot_marketing extends MI
 		return $settings;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -66,7 +66,7 @@ class mi_pardot_marketing extends MI
 		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_pardot_marketing', $tables );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -83,7 +83,7 @@ class mi_pardot_marketing extends MI
 		return;
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -147,7 +147,7 @@ class mi_pardot_marketing extends MI
 		return $pc->updateUser( $this->settings, 'id', $id, $lists, $pparams );
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( ( $request->action != 'action' ) || ( $request->action != 'expiration_action' ) ) {
 			return null;
@@ -246,12 +246,12 @@ class PardotConnector extends serialParamDBTable
 	/** @var int */
 	var $api_key			= null;
 
-	function PardotConnector()
+	public function PardotConnector()
 	{
 		parent::__construct( '#__acctexp_mi_pardot_marketing', 'id' );
 	}
 
-	function get( $settings, $force=false )
+	public function get( $settings, $force=false )
 	{
 	 	$this->load(1);
 
@@ -285,7 +285,7 @@ class PardotConnector extends serialParamDBTable
 		}
 	}
 
-	function getAPIkey( $settings, $forced=false )
+	public function getAPIkey( $settings, $forced=false )
 	{
 		$params = array(	'email' => $settings['email'],
 							'password' => $settings['password'],
@@ -295,7 +295,7 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'login', null, $params, $forced );
 	}
 
-	function createUser( $settings, $email, $lists, $p=array() )
+	public function createUser( $settings, $email, $lists, $p=array() )
 	{
 		$params = array(	'user_key' => $settings['user_key'],
 							'api_key' => $this->api_key
@@ -322,7 +322,7 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'prospect', 'do/create/email/'.$email, $params );
 	}
 
-	function updateUser( $settings, $id_type, $id, $lists, $p=array() )
+	public function updateUser( $settings, $id_type, $id, $lists, $p=array() )
 	{
 		$params = array(	'user_key' => $settings['user_key'],
 							'api_key' => $this->api_key
@@ -349,7 +349,7 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'prospect', 'do/update/'.$id_type.'/'.$id, $params );
 	}
 
-	function readProspect( $settings, $id_type, $id )
+	public function readProspect( $settings, $id_type, $id )
 	{
 		$params = array(	'user_key' => $settings['user_key'],
 							'api_key' => $this->api_key
@@ -370,7 +370,7 @@ class PardotConnector extends serialParamDBTable
 		return $this->fetch( $settings, 'prospect', 'do/read/'.$id_type.'/'.$id, $params );
 	}
 
-	function fetch( $settings, $area, $cmd, $params, $retry=false )
+	public function fetch( $settings, $area, $cmd, $params, $retry=false )
 	{
 		global $aecConfig;
 

@@ -107,7 +107,7 @@ class xJSessionHandlerCommon
 {
 	// The following two functions copied from joomla to circle around their hardcoded caching
 
-	function getGroupsByUser( $userId, $recursive=true )
+	public function getGroupsByUser( $userId, $recursive=true )
 	{
 		$db	= JFactory::getDBO();
 
@@ -140,7 +140,7 @@ class xJSessionHandlerCommon
 		return $result;
 	}
 
-	function getAuthorisedViewLevels($userId)
+	public function getAuthorisedViewLevels($userId)
 	{
 		// Get all groups that the user is mapped to recursively.
 		$groups = self::getGroupsByUser($userId);
@@ -187,7 +187,7 @@ class xJSessionHandlerCommon
 		return $authorised;
 	}
 
-	function getSession( $userid )
+	public function getSession( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -213,7 +213,7 @@ class xJSessionHandlerCommon
 		}
 	}
 
-	function joomunserializesession( $data )
+	public function joomunserializesession( $data )
 	{
 		$se = explode( "|", $data, 2 );
 
@@ -226,7 +226,7 @@ class xJSessionHandlerCommon
 		}
 	}
 
-	function joomserializesession( $data )
+	public function joomserializesession( $data )
 	{
 		$sessionkeys = array_keys( $data );
 

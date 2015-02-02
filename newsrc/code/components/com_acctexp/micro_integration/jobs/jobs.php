@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_jobs
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JOBS');
@@ -23,7 +23,7 @@ class mi_jobs
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings  = array();
 
@@ -69,7 +69,7 @@ class mi_jobs
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( $this->settings['subscription_type'] == 'job_seeker' ) {
 			$resumes = $this->getResumeList( $request->metaUser->userid );
@@ -94,7 +94,7 @@ class mi_jobs
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( $this->settings['subscription_type'] == 'job_seeker' ) {
 			$this->unpublishResumes( $request->metaUser->userid );
@@ -107,7 +107,7 @@ class mi_jobs
 		}
 	}
 
-	function getCompanyList( $userid )
+	public function getCompanyList( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -120,7 +120,7 @@ class mi_jobs
 		return xJ::getDBArray( $db );
 	}
 
-	function createDummyCompany( $request )
+	public function createDummyCompany( $request )
 	{
 		$title = AECToolbox::rewriteEngineRQ( $this->settings['default_company_title'], $request );
 
@@ -139,7 +139,7 @@ class mi_jobs
 		$this->createCompany( $fields );
 	}
 
-	function createCompany( $fields )
+	public function createCompany( $fields )
 	{
 		$db = JFactory::getDBO();
 
@@ -152,7 +152,7 @@ class mi_jobs
 		$db->query();
 	}
 
-	function publishCompanies( $userid )
+	public function publishCompanies( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -165,7 +165,7 @@ class mi_jobs
 		$db->query() or die( $db->stderr() );
 	}
 
-	function unpublishCompanies( $userid )
+	public function unpublishCompanies( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -178,7 +178,7 @@ class mi_jobs
 		$db->query() or die( $db->stderr() );
 	}
 
-	function publishJobs( $company_list )
+	public function publishJobs( $company_list )
 	{
 		$db = JFactory::getDBO();
 
@@ -191,7 +191,7 @@ class mi_jobs
 		$db->query() or die( $db->stderr() );
 	}
 
-	function unpublishJobs( $company_list )
+	public function unpublishJobs( $company_list )
 	{
 		$db = JFactory::getDBO();
 
@@ -204,7 +204,7 @@ class mi_jobs
 		$db->query() or die( $db->stderr() );
 	}
 
-	function getResumeList( $userid )
+	public function getResumeList( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -217,7 +217,7 @@ class mi_jobs
 		return xJ::getDBArray( $db );
 	}
 
-	function createDummyResume( $request )
+	public function createDummyResume( $request )
 	{
 		$title = AECToolbox::rewriteEngineRQ( $this->settings['default_resume_title'], $request );
 
@@ -233,7 +233,7 @@ class mi_jobs
 		$this->createResume( $fields );
 	}
 
-	function createResume( $fields )
+	public function createResume( $fields )
 	{
 		$db = JFactory::getDBO();
 
@@ -246,7 +246,7 @@ class mi_jobs
 		$db->query();
 	}
 
-	function publishResumes( $userid )
+	public function publishResumes( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -259,7 +259,7 @@ class mi_jobs
 		$db->query() or die( $db->stderr() );
 	}
 
-	function unpublishResumes( $userid )
+	public function unpublishResumes( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -272,7 +272,7 @@ class mi_jobs
 		$db->query() or die( $db->stderr() );
 	}
 
-	function getAlias( $string )
+	public function getAlias( $string )
 	{
 		$string = htmlentities( utf8_decode($string));
 		$string = str_replace( ' ','-',$string);

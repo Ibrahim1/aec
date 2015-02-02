@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_locaweb_pgcerto extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'locaweb_pgcerto';
@@ -27,12 +27,12 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return '';
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']		= "BRL";
@@ -43,7 +43,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( 'p' );
@@ -58,7 +58,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$name = $request->metaUser->cmsUser->name;
 		$email	= $request->metaUser->cmsUser->email;
@@ -96,7 +96,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$subDesc	= AECToolbox::rewriteEngineRQ( $this->settings['item_name'], $request );
 		$separators	= array(",", ".");			// We want them removed
@@ -161,7 +161,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		return $content;
 	}
 
-	function transmitRequestXML( $xmlTransacao, $request )
+	public function transmitRequestXML( $xmlTransacao, $request )
 	{
 
 		//$this->addParams( array( 'free_trial' => $response['pending_reason'] ), 'params', true );
@@ -239,7 +239,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 
 		$response = array();
@@ -410,7 +410,7 @@ class processor_locaweb_pgcerto extends XMLprocessor
 		return $response;
 	}
 
-	function invoiceCreationAction( $objInvoice )
+	public function invoiceCreationAction( $objInvoice )
 	{
 	/* para usar depois
 		$this->addParams( array( 'creator_ip' => $_SERVER['REMOTE_ADDR'] ), 'params', false );

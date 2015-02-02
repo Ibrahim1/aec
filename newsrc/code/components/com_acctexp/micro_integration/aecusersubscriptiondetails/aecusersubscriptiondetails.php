@@ -15,7 +15,7 @@ require_once( dirname(__FILE__) . '/../aecuserdetails/aecuserdetails.php' );
 
 class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECUSERSUBSCRIPTIONDETAILS');
@@ -25,7 +25,7 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = parent::Settings();
 
@@ -35,7 +35,7 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 		return $settings;
 	}
 
-	function saveParams( $params )
+	public function saveParams( $params )
 	{
 		foreach ( $params as $n => $v ) {
 			if ( !empty( $v ) && ( strpos( $n, '_short' ) ) ) {
@@ -46,12 +46,12 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 		return $params;
 	}
 
-	function before_invoice_confirm( $request )
+	public function before_invoice_confirm( $request )
 	{
 		return true;
 	}
 
-	function action( $request, $jprofile=false )
+	public function action( $request, $jprofile=false )
 	{
 			$request->metaUser->focusSubscription->addCustomParams( $request->params );
 			$request->metaUser->focusSubscription->storeload();

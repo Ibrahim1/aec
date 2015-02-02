@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_payments_gateway extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'payments_gateway';
@@ -30,7 +30,7 @@ class processor_payments_gateway extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['api_login_id']	= 'a1b2c3d4e5f6';
@@ -44,7 +44,7 @@ class processor_payments_gateway extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -61,7 +61,7 @@ class processor_payments_gateway extends POSTprocessor
 		return $settings;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null, $text=null )
+	public function checkoutAction( $request, $InvoiceFactory=null, $xvar=null, $text=null )
 	{
 		$xvar = $this->createGatewayLink( $request, true );
 
@@ -74,7 +74,7 @@ class processor_payments_gateway extends POSTprocessor
 		return $form;
 	}
 
-	function createGatewayLink( $request, $type )
+	public function createGatewayLink( $request, $type )
 	{
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://sandbox.paymentsgateway.net/swp/co/default.aspx';
@@ -147,7 +147,7 @@ class processor_payments_gateway extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['amount']		= $post['pg_total_amount'];
@@ -156,7 +156,7 @@ class processor_payments_gateway extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -180,7 +180,7 @@ class processor_payments_gateway extends POSTprocessor
 		return $response;
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		switch ( $unit ) {
 			case 'D':
@@ -236,7 +236,7 @@ class processor_payments_gateway extends POSTprocessor
 		}
 	}
 
-	function hmac( $key, $data )
+	public function hmac( $key, $data )
 	{
 		// RFC 2104 HMAC implementation for php.
 		// Creates an md5 HMAC.

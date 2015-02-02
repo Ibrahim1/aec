@@ -3930,7 +3930,7 @@ class aecAdmin
 
 class bsPaneTabs
 {
-	function __construct( $params = array() )
+	public function __construct( $params = array() )
 	{
 		static $loaded = false;
 
@@ -3944,15 +3944,15 @@ class bsPaneTabs
 		$this->tabs_started = 0;
 	}
 
-	function startTabs() {
+	public function startTabs() {
 		echo '<div role="tabpanel"><ul class="nav nav-tabs">';
 	}
 
-	function endTabs() {
+	public function endTabs() {
 		echo '</ul>';
 	}
 
-	function newTab( $handle, $title, $current=false, $disabled=false )
+	public function newTab( $handle, $title, $current=false, $disabled=false )
 	{
 		$classes = array();
 
@@ -3969,12 +3969,12 @@ class bsPaneTabs
 		$this->tabs_started++;
 	}
 
-	function startPanes()
+	public function startPanes()
 	{
 		echo '<div class="tab-content">';
 	}
 
-	function endPanes()
+	public function endPanes()
 	{
 		if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) {
 			$this->endPane();
@@ -3983,21 +3983,21 @@ class bsPaneTabs
 		echo '</div>';
 	}
 
-	function startPane( $id, $current=false )
+	public function startPane( $id, $current=false )
 	{
 		echo '<div id="' . $id . '" role="tabpanel" class="tab-pane' . ( $current ? ' active' : '' ) . '">';
 
 		$this->panes_started++;
 	}
 
-	function endPane()
+	public function endPane()
 	{
 		echo "</div>";
 
 		$this->panes_ended++;
 	}
 
-	function nextPane( $pane )
+	public function nextPane( $pane )
 	{
 		if ( $this->panes_started && ( $this->panes_ended < $this->panes_started ) ) {
 			$this->endPane();
@@ -4006,7 +4006,7 @@ class bsPaneTabs
 		$this->startPane( $pane, ( $this->panes_started == 0 ) );
 	}
 
-	function _loadBehavior($params = array())
+	public function _loadBehavior($params = array())
 	{
 		$document = JFactory::getDocument();
 		$document->addScriptDeclaration( 'jQuery(document).ready(function($) {
@@ -4019,7 +4019,7 @@ jimport('joomla.html.pagination');
 
 class bsPagination extends JPagination
 {
-	function getListFooter()
+	public function getListFooter()
 	{
 		$footer = parent::getListFooter();
 
@@ -4041,7 +4041,7 @@ class bsPagination extends JPagination
 		return str_replace( $search, $replace, $footer );
 	}
 
-	function ordering( $i, $n, $type, $enabled=true )
+	public function ordering( $i, $n, $type, $enabled=true )
 	{
 		$v = new JVersion();
 
@@ -4073,7 +4073,7 @@ class bsPagination extends JPagination
 		echo '</div>';
 	}
 
-	function orderUpIcon($i, $condition = true, $task = 'orderup', $alt = 'JLIB_HTML_...', $enabled = true, $checkbox = 'cb')
+	public function orderUpIcon($i, $condition = true, $task = 'orderup', $alt = 'JLIB_HTML_...', $enabled = true, $checkbox = 'cb')
 	{
 		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
 		$order .= aecHTML::Icon( 'chevron-up' );
@@ -4082,7 +4082,7 @@ class bsPagination extends JPagination
 		return $order;
 	}
 
-	function orderDownIcon($i, $n, $condition = true, $task = 'orderdown', $alt = 'JLIB_HTML_...', $enabled = true, $checkbox = 'cb')
+	public function orderDownIcon($i, $n, $condition = true, $task = 'orderdown', $alt = 'JLIB_HTML_...', $enabled = true, $checkbox = 'cb')
 	{
 		$order = '<a class="btn" onclick="return listItemTask(\'cb'.$i.'\',\''.$task.'\')" href="#reorder"' . ( $enabled ? '' : ' disabled="disabled"' ) . '>';
 		$order .= aecHTML::Icon( 'chevron-down' );

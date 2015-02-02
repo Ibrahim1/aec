@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_virtualmerchant extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "virtualmerchant";
@@ -28,7 +28,7 @@ class processor_virtualmerchant extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']		= "USD";
@@ -42,7 +42,7 @@ class processor_virtualmerchant extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( 'p' );
@@ -60,7 +60,7 @@ class processor_virtualmerchant extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']				= "https://www.myvirtualmerchant.com/VirtualMerchant/process.do";
 		$var['ssl_test_mode']			= $this->settings['testmode'] ? "true" : "false";
@@ -85,7 +85,7 @@ class processor_virtualmerchant extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$ssl_result				= $post['ssl_result'];
 		$ssl_result_message		= $post['ssl_result_message'];
@@ -106,7 +106,7 @@ class processor_virtualmerchant extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = ( $post['ssl_result'] == 0 ) && ( strcmp ( $post['ssl_result_message'], "APPROVED") == 0 );
 

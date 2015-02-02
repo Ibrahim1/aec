@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_email extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_EMAIL');
@@ -23,7 +23,7 @@ class mi_email extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
@@ -63,7 +63,7 @@ class mi_email extends MI
 		return $settings;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( $request->action == 'action' ) {
 			if ( !empty( $this->settings['text_first'] ) ) {

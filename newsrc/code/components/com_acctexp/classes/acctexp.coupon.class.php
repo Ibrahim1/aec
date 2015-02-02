@@ -32,24 +32,24 @@ class couponsHandler extends eucaObject
 	/** @var array - Exceptions that need to be addressed (by the user) */
 	var $exceptions			= array();
 
-	function couponsHandler( $metaUser, $InvoiceFactory, $coupons )
+	public function couponsHandler( $metaUser, $InvoiceFactory, $coupons )
 	{
 		$this->metaUser			=& $metaUser;
 		$this->InvoiceFactory	=& $InvoiceFactory;
 		$this->coupons			=& $coupons;
 	}
 
-	function raiseException( $exception )
+	public function raiseException( $exception )
 	{
 		$this->exceptions[] = $exception;
 	}
 
-	function getExceptions()
+	public function getExceptions()
 	{
 		return $this->exceptions;
 	}
 
-	function addCouponToRecord( $itemid, $coupon_code, $ccombo )
+	public function addCouponToRecord( $itemid, $coupon_code, $ccombo )
 	{
 		if ( !empty( $ccombo['bad_combinations_cart'] ) ) {
 			if ( !empty( $this->mixlist['global']['restrictmix'] ) ) {
@@ -90,7 +90,7 @@ class couponsHandler extends eucaObject
 		}
 	}
 
-	function mixCheck( $itemid, $coupon_code, $ccombo )
+	public function mixCheck( $itemid, $coupon_code, $ccombo )
 	{
 		// First check whether any other coupon in the cart could block this
 		if ( !empty( $this->mixlist['global']['allowmix'] ) ) {
@@ -180,7 +180,7 @@ class couponsHandler extends eucaObject
 		return true;
 	}
 
-	function loadCoupon( $coupon_code, $strict=true )
+	public function loadCoupon( $coupon_code, $strict=true )
 	{
 		if ( in_array( $coupon_code, $this->delete_list ) && $strict ) {
 			return false;
@@ -231,7 +231,7 @@ class couponsHandler extends eucaObject
 		return true;
 	}
 
-	function applyToTotal( $items, $cart=false, $fullcart=false )
+	public function applyToTotal( $items, $cart=false, $fullcart=false )
 	{
 		$itemcount = 0;
 		foreach ( $items->itemlist as $item ) {
@@ -329,7 +329,7 @@ class couponsHandler extends eucaObject
 		return $items;
 	}
 
-	function applyToCart( $items, $cart=false, $fullcart=false )
+	public function applyToCart( $items, $cart=false, $fullcart=false )
 	{
 		$this->prefilter( $items, $cart, $fullcart );
 
@@ -340,7 +340,7 @@ class couponsHandler extends eucaObject
 		return $items;
 	}
 
-	function prefilter( $items, $cart=false, $fullcart=false )
+	public function prefilter( $items, $cart=false, $fullcart=false )
 	{
 		if ( empty( $this->coupons ) ) {
 			return null;
@@ -449,7 +449,7 @@ class couponsHandler extends eucaObject
 		}
 	}
 
-	function applyToItemList( $items )
+	public function applyToItemList( $items )
 	{
 		foreach ( $items as $iid => $item ) {
 			$items[$iid] = $this->applyAllToItems( $iid, $item );
@@ -458,7 +458,7 @@ class couponsHandler extends eucaObject
 		return $items;
 	}
 
-	function applyAllToItems( $id, $item, $cart=false )
+	public function applyAllToItems( $id, $item, $cart=false )
 	{
 		$this->global_applied = array();
 
@@ -506,7 +506,7 @@ class couponsHandler extends eucaObject
 		return $item;
 	}
 
-	function applyToItem( $id, $item, $coupon_code )
+	public function applyToItem( $id, $item, $coupon_code )
 	{
 		if ( !$this->loadCoupon( $coupon_code, false ) ) {
 			return $item;
@@ -568,7 +568,7 @@ class couponsHandler extends eucaObject
 		return $item;
 	}
 
-	function applyToAmount( $amount, $original_amount=null )
+	public function applyToAmount( $amount, $original_amount=null )
 	{
 		if ( empty( $this->coupons ) || !is_array( $this->coupons ) ) {
 			return $amount;
@@ -613,7 +613,7 @@ class couponHandler
 	/** @var object */
 	var $coupon				= null;
 
-	function setError( $error )
+	public function setError( $error )
 	{
 		$this->status = false;
 
@@ -684,7 +684,7 @@ class couponHandler
 		return $return;
 	}
 
-	function load( $coupon_code )
+	public function load( $coupon_code )
 	{
 		$db = JFactory::getDBO();
 
@@ -766,7 +766,7 @@ class couponHandler
 		}
 	}
 
-	function forceload( $coupon_code )
+	public function forceload( $coupon_code )
 	{
 		$cc = $this->idFromCode( $coupon_code );
 
@@ -785,7 +785,7 @@ class couponHandler
 		}
 	}
 
-	function switchType()
+	public function switchType()
 	{
 		$db = JFactory::getDBO();
 
@@ -812,7 +812,7 @@ class couponHandler
 		$db->query();
 	}
 
-	function incrementCount( $invoice )
+	public function incrementCount( $invoice )
 	{
 		$db = JFactory::getDBO();
 
@@ -846,7 +846,7 @@ class couponHandler
 		$this->coupon->incrementcount();
 	}
 
-	function decrementCount( $invoice )
+	public function decrementCount( $invoice )
 	{
 		$db = JFactory::getDBO();
 
@@ -883,7 +883,7 @@ class couponHandler
 		$this->coupon->decrementCount();
 	}
 
-	function checkRestrictions( $metaUser, $terms=null, $usage=null )
+	public function checkRestrictions( $metaUser, $terms=null, $usage=null )
 	{
 		if ( empty( $metaUser ) ) {
 			return false;
@@ -965,7 +965,7 @@ class couponHandler
 		return true;
 	}
 
-	function getInfo( $amount )
+	public function getInfo( $amount )
 	{
 		$this->code = $this->coupon->coupon_code;
 		$this->name = $this->coupon->name;
@@ -1030,7 +1030,7 @@ class couponHandler
 		$this->action = $action;
 	}
 
-	function getCombinations()
+	public function getCombinations()
 	{
 		$combinations = array();
 
@@ -1057,7 +1057,7 @@ class couponHandler
 		return $combinations;
 	}
 
-	function applyCoupon( $amount )
+	public function applyCoupon( $amount )
 	{
 		// Distinguish between recurring and one-off payments
 		if ( is_array( $amount ) ) {
@@ -1105,7 +1105,7 @@ class couponHandler
 		return $amount;
 	}
 
-	function applyDiscount( $amount )
+	public function applyDiscount( $amount )
 	{
 		// Apply Discount according to rules
 		if ( $this->discount['percent_first'] ) {
@@ -1134,7 +1134,7 @@ class couponHandler
 		}
 	}
 
-	function applyToTerms( $terms, $temp_coupon=false )
+	public function applyToTerms( $terms, $temp_coupon=false )
 	{
 		$offset = 0;
 
@@ -1198,7 +1198,7 @@ class couponHandler
 		return $terms;
 	}
 
-	function triggerMIs( $metaUser, $invoice, $new_plan )
+	public function triggerMIs( $metaUser, $invoice, $new_plan )
 	{
 		global $aecConfig;
 
@@ -1280,7 +1280,7 @@ class Coupon extends serialParamDBTable
 	/** @var string */
 	var $micro_integrations	= null;
 
-	function Coupon( $type=0 )
+	public function Coupon( $type=0 )
 	{
 		if ( $type ) {
 			parent::__construct( '#__acctexp_coupons_static', 'id' );
@@ -1289,14 +1289,14 @@ class Coupon extends serialParamDBTable
 		}
 	}
 
-	function load( $id=null, $reset=true )
+	public function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 
 		$this->getType();
 	}
 
-	function getType()
+	public function getType()
 	{
 		$this->type = 0;
 
@@ -1307,18 +1307,18 @@ class Coupon extends serialParamDBTable
 		return $this->type;
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'discount', 'restrictions', 'params', 'micro_integrations'  );
 	}
 
-	function deactivate()
+	public function deactivate()
 	{
 		$this->active = 0;
 		$this->storeload();
 	}
 
-	function createNew( $code=null, $created=null )
+	public function createNew( $code=null, $created=null )
 	{
 		$this->id		= 0;
 		$this->active	= 1;
@@ -1346,7 +1346,7 @@ class Coupon extends serialParamDBTable
 		$this->id = $this->getMax();
 	}
 
-	function savePOSTsettings( $post )
+	public function savePOSTsettings( $post )
 	{
 		if ( !empty( $post['coupon_code'] ) ) {
 			$query = 'SELECT `id`'
@@ -1401,7 +1401,7 @@ class Coupon extends serialParamDBTable
 		$this->saveRestrictions( $post );
 	}
 
-	function saveDiscount( $params )
+	public function saveDiscount( $params )
 	{
 		// Correct a malformed Amount
 		if ( !strlen( $params['amount'] ) ) {
@@ -1413,18 +1413,18 @@ class Coupon extends serialParamDBTable
 		$this->discount = $params;
 	}
 
-	function saveRestrictions( $restrictions )
+	public function saveRestrictions( $restrictions )
 	{
 		$this->restrictions = $restrictions;
 	}
 
-	function incrementCount()
+	public function incrementCount()
 	{
 		$this->usecount += 1;
 		$this->storeload();
 	}
 
-	function decrementCount()
+	public function decrementCount()
 	{
 		if ( $this->usecount ) {
 			$this->usecount -= 1;
@@ -1432,7 +1432,7 @@ class Coupon extends serialParamDBTable
 		}
 	}
 
-	function generateCouponCode( $maxlength = 6 )
+	public function generateCouponCode( $maxlength = 6 )
 	{
 		$numberofrows = 1;
 
@@ -1460,7 +1460,7 @@ class Coupon extends serialParamDBTable
 		return $inum;
 	}
 
-	function copy()
+	public function copy()
 	{
 		$this->id = 0;
 		$this->coupon_code = $this->generateCouponCode();
@@ -1469,7 +1469,7 @@ class Coupon extends serialParamDBTable
 		$this->store();
 	}
 
-	function check( $fields=array() )
+	public function check( $fields=array() )
 	{
 		if ( isset( $this->type ) ) {
 			unset( $this->type );
@@ -1500,17 +1500,17 @@ class couponXuser extends serialParamDBTable
 	/** @var int */
 	var $usecount			= null;
 
-	function couponXuser()
+	public function couponXuser()
 	{
 		parent::__construct( '#__acctexp_couponsxuser', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params'  );
 	}
 
-	function createNew( $userid, $coupon, $type, $params=null )
+	public function createNew( $userid, $coupon, $type, $params=null )
 	{
 		$this->id = 0;
 		$this->coupon_id = $coupon->id;
@@ -1529,7 +1529,7 @@ class couponXuser extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function getInvoiceList()
+	public function getInvoiceList()
 	{
 		$invoicelist = array();
 		if ( isset( $this->params['invoices'] ) ) {
@@ -1549,7 +1549,7 @@ class couponXuser extends serialParamDBTable
 		return $invoicelist;
 	}
 
-	function setInvoiceList( $invoicelist )
+	public function setInvoiceList( $invoicelist )
 	{
 		$invoices = array();
 
@@ -1562,7 +1562,7 @@ class couponXuser extends serialParamDBTable
 		$this->addParams( $params );
 	}
 
-	function addInvoice( $invoicenumber )
+	public function addInvoice( $invoicenumber )
 	{
 		$invoicelist = $this->getInvoiceList();
 
@@ -1575,7 +1575,7 @@ class couponXuser extends serialParamDBTable
 		$this->setInvoiceList( $invoicelist );
 	}
 
-	function delInvoice( $invoicenumber )
+	public function delInvoice( $invoicenumber )
 	{
 		$invoicelist = $this->getInvoiceList();
 

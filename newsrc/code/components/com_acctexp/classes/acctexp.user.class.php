@@ -73,7 +73,7 @@ class aecUserHelper
 
 class cmsUser extends JTableUser
 {
-	function __construct()
+	public function __construct()
 	{
 		$db = JFactory::getDBO();
 
@@ -92,7 +92,7 @@ class metaUser
 	/** @var int */
 	var $hasSubscription	= null;
 
-	function metaUser( $userid, $subscriptionid=null )
+	public function metaUser( $userid, $subscriptionid=null )
 	{
 		if ( empty( $userid ) && !empty( $subscriptionid ) ) {
 			$userid = aecUserHelper::UserIDfromSubscriptionID( $subscriptionid );
@@ -133,7 +133,7 @@ class metaUser
 		}
 	}
 
-	function dummyUser( $passthrough )
+	public function dummyUser( $passthrough )
 	{
 		$this->hasSubscription = false;
 
@@ -199,7 +199,7 @@ class metaUser
 		}
 	}
 
-	function temporaryRFIX()
+	public function temporaryRFIX()
 	{
 		if ( !empty( $this->meta->plan_history->used_plans ) ) {
 			$used_plans = $this->meta->plan_history->used_plans;
@@ -215,7 +215,7 @@ class metaUser
 		$this->objSubscription->previous_plan = $previous_plan;
 	}
 
-	function getCMSparams( $name )
+	public function getCMSparams( $name )
 	{
 		$userParams = new JParameter( $this->cmsUser->params );
 
@@ -232,7 +232,7 @@ class metaUser
 		}
 	}
 
-	function setCMSparams( $array )
+	public function setCMSparams( $array )
 	{
 		$db = JFactory::getDBO();
 
@@ -276,7 +276,7 @@ class metaUser
 		return $this->cmsUser->store();
 	}
 
-	function getTempAuth()
+	public function getTempAuth()
 	{
 		// Only authorize if user IP is matching and the grant is not expired
 		if ( !isset( $this->meta->custom_params['tempauth_exptime'] )
@@ -292,7 +292,7 @@ class metaUser
 		return false;
 	}
 
-	function setTempAuth( $password=false )
+	public function setTempAuth( $password=false )
 	{
 		global $aecConfig;
 
@@ -325,7 +325,7 @@ class metaUser
 		return true;
 	}
 
-	function getAllSubscriptions()
+	public function getAllSubscriptions()
 	{
 		$db = JFactory::getDBO();
 
@@ -337,7 +337,7 @@ class metaUser
 		return xJ::getDBArray( $db );
 	}
 
-	function getAllCurrentSubscriptionsInfo()
+	public function getAllCurrentSubscriptionsInfo()
 	{
 		$db = JFactory::getDBO();
 
@@ -354,7 +354,7 @@ class metaUser
 		return $db->loadObjectList();
 	}
 
-	function getAllCurrentSubscriptions()
+	public function getAllCurrentSubscriptions()
 	{
 		$db = JFactory::getDBO();
 
@@ -370,7 +370,7 @@ class metaUser
 		return xJ::getDBArray( $db );
 	}
 
-	function getAllCurrentSubscriptionPlans()
+	public function getAllCurrentSubscriptionPlans()
 	{
 		$db = JFactory::getDBO();
 
@@ -386,7 +386,7 @@ class metaUser
 		return xJ::getDBArray( $db );
 	}
 
-	function getSecondarySubscriptions( $simple=false )
+	public function getSecondarySubscriptions( $simple=false )
 	{
 		$db = JFactory::getDBO();
 
@@ -406,7 +406,7 @@ class metaUser
 		}
 	}
 
-	function getMIlist()
+	public function getMIlist()
 	{
 		$plans = $this->getAllCurrentSubscriptionPlans();
 
@@ -428,7 +428,7 @@ class metaUser
 		return $milist;
 	}
 
-	function getMIcount( $mi_id )
+	public function getMIcount( $mi_id )
 	{
 		$plans = $this->getAllCurrentSubscriptionPlans();
 
@@ -448,7 +448,7 @@ class metaUser
 		return $count;
 	}
 
-	function procTriggerCreate( $user, $payment, $usage )
+	public function procTriggerCreate( $user, $payment, $usage )
 	{
 		$db = JFactory::getDBO();
 
@@ -494,7 +494,7 @@ class metaUser
 		return;
 	}
 
-	function establishFocus( $payment_plan, $processor='none', $silent=false, $bias=null )
+	public function establishFocus( $payment_plan, $processor='none', $silent=false, $bias=null )
 	{
 		if ( !is_object( $payment_plan ) ) {
 			$planid = $payment_plan;
@@ -623,7 +623,7 @@ class metaUser
 		return $return;
 	}
 
-	function moveFocus( $id )
+	public function moveFocus( $id )
 	{
 		if ( !empty( $this->focusSubscription->id ) ) {
 			if ( $this->focusSubscription->id == $id ) {
@@ -649,7 +649,7 @@ class metaUser
 		return false;
 	}
 
-	function loadSubscriptions()
+	public function loadSubscriptions()
 	{
 		$db = JFactory::getDBO();
 
@@ -679,7 +679,7 @@ class metaUser
 		}
 	}
 
-	function instantGIDchange( $gid, $removegid=array(), $sessionextra=null )
+	public function instantGIDchange( $gid, $removegid=array(), $sessionextra=null )
 	{
 		if ( empty( $this->cmsUser ) ) {
 			return null;
@@ -697,7 +697,7 @@ class metaUser
 		$shandler->instantGIDchange( $this->userid, $gid, $removegid, $sessionextra );
 	}
 
-	function isAdmin()
+	public function isAdmin()
 	{
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$acl = JFactory::getACL();
@@ -718,7 +718,7 @@ class metaUser
 		return false;
 	}
 
-	function hasGroup( $group )
+	public function hasGroup( $group )
 	{
 		if ( is_array( $group ) ) {
 			$usergroups = $this->getGroups();
@@ -736,7 +736,7 @@ class metaUser
 
 	}
 
-	function getGroups()
+	public function getGroups()
 	{
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$db = JFactory::getDBO();
@@ -762,7 +762,7 @@ class metaUser
 		}
 	}
 
-	function is_renewing()
+	public function is_renewing()
 	{
 		if ( !empty( $this->meta ) ) {
 			return ( $this->meta->is_renewing() ? 1 : 0 );
@@ -771,7 +771,7 @@ class metaUser
 		}
 	}
 
-	function loadJProfile()
+	public function loadJProfile()
 	{
 		$db = JFactory::getDBO();
 
@@ -808,7 +808,7 @@ class metaUser
 		}
 	}
 
-	function loadCBuser()
+	public function loadCBuser()
 	{
 		$db = JFactory::getDBO();
 
@@ -823,7 +823,7 @@ class metaUser
 		}
 	}
 
-	function loadJSuser()
+	public function loadJSuser()
 	{
 		$db = JFactory::getDBO();
 
@@ -862,7 +862,7 @@ class metaUser
 		}
 	}
 
-	function explodeName()
+	public function explodeName()
 	{
 		if ( !empty( $this->cmsUser->name ) ) {
 			return $this->_explodeName( $this->cmsUser->name );
@@ -902,7 +902,7 @@ class metaUser
 		return $return;
 	}
 
-	function CustomRestrictionResponse( $restrictions )
+	public function CustomRestrictionResponse( $restrictions )
 	{
 		$s = array();
 		$n = 0;
@@ -928,7 +928,7 @@ class metaUser
 		return $s;
 	}
 
-	function permissionResponse( $restrictions )
+	public function permissionResponse( $restrictions )
 	{
 		if ( is_array( $restrictions ) && !empty( $restrictions ) ) {
 			$return = array();
@@ -1128,7 +1128,7 @@ class metaUser
 		}
 	}
 
-	function usedCoupon ( $couponid, $type )
+	public function usedCoupon ( $couponid, $type )
 	{
 		$db = JFactory::getDBO();
 
@@ -1148,12 +1148,12 @@ class metaUser
 		}
 	}
 
-	function getProperty( $key, $test=false )
+	public function getProperty( $key, $test=false )
 	{
 		return AECToolbox::getObjectProperty( $this, $key, $test );
 	}
 
-	function getPreviousPlan()
+	public function getPreviousPlan()
 	{
 		$current = $this->getAllCurrentSubscriptions();
 
@@ -1164,7 +1164,7 @@ class metaUser
 		}
 	}
 
-	function getUserMIs()
+	public function getUserMIs()
 	{
 		if ( empty( $this->focusSubscription->id ) ) {
 			return array();
@@ -1226,7 +1226,7 @@ class metaUser
 		return $return;
 	}
 
-	function getAlertLevel()
+	public function getAlertLevel()
 	{
 		$alert = array();
 
@@ -1245,7 +1245,7 @@ class metaUser
 		return $alert;
 	}
 
-	function isRecurring()
+	public function isRecurring()
 	{
 		if ( !empty( $this->objSubscription->status ) ) {
 			if ( strcmp( $this->objSubscription->status, 'Cancelled' ) != 0 ) {
@@ -1256,7 +1256,7 @@ class metaUser
 		return false;
 	}
 
-	function delete()
+	public function delete()
 	{
 		$subids = $this->getAllSubscriptions();
 
@@ -1292,12 +1292,12 @@ class metaUserDB extends serialParamDBTable
 	/** @var serialized object */
 	var $custom_params		= null;
 
-	function metaUserDB()
+	public function metaUserDB()
 	{
 		parent::__construct( '#__acctexp_metauser', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'plan_history', 'processor_params', 'plan_params', 'params', 'custom_params' );
 	}
@@ -1307,7 +1307,7 @@ class metaUserDB extends serialParamDBTable
 	 *
 	 * @param int $userid
 	 */
-	function loadUserid( $userid )
+	public function loadUserid( $userid )
 	{
 		$id = $this->getIDbyUserid( $userid );
 
@@ -1318,7 +1318,7 @@ class metaUserDB extends serialParamDBTable
 		}
 	}
 
-	function getIDbyUserid( $userid )
+	public function getIDbyUserid( $userid )
 	{
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_metauser'
@@ -1329,7 +1329,7 @@ class metaUserDB extends serialParamDBTable
 		return $this->_db->loadResult();
 	}
 
-	function createNew( $userid )
+	public function createNew( $userid )
 	{
 		$this->userid			= $userid;
 		$this->created_date		= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
@@ -1337,14 +1337,14 @@ class metaUserDB extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function storeload()
+	public function storeload()
 	{
 		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 
 		return parent::storeload();
 	}
 
-	function getProcessorParams( $processorid )
+	public function getProcessorParams( $processorid )
 	{
 		if ( isset( $this->processor_params[$processorid] ) ) {
 			return $this->processor_params[$processorid];
@@ -1353,7 +1353,7 @@ class metaUserDB extends serialParamDBTable
 		}
 	}
 
-	function setProcessorParams( $processorid, $params )
+	public function setProcessorParams( $processorid, $params )
 	{
 		if ( empty( $this->processor_params ) ) {
 			$this->processor_params = array();
@@ -1368,7 +1368,7 @@ class metaUserDB extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function getMIParams( $miid, $usageid=false, $strict=true )
+	public function getMIParams( $miid, $usageid=false, $strict=true )
 	{
 		if ( $usageid ) {
 			if ( is_object( $this->plan_params ) ) {
@@ -1397,7 +1397,7 @@ class metaUserDB extends serialParamDBTable
 		}
 	}
 
-	function setMIParams( $miid, $usageid=false, $params, $replace=false )
+	public function setMIParams( $miid, $usageid=false, $params, $replace=false )
 	{
 		if ( $usageid ) {
 			if ( is_object( $this->plan_params ) ) {
@@ -1431,26 +1431,26 @@ class metaUserDB extends serialParamDBTable
 		return true;
 	}
 
-	function getCustomParams()
+	public function getCustomParams()
 	{
 		return $this->custom_params;
 	}
 
-	function addCustomParams( $params )
+	public function addCustomParams( $params )
 	{
 		$this->addParams( $params, 'custom_params' );
 
 		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 	}
 
-	function setCustomParams( $params )
+	public function setCustomParams( $params )
 	{
 		$this->addParams( $params, 'custom_params', true );
 
 		$this->modified_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 	}
 
-	function addPreparedMIParams( $plan_mi, $mi=false )
+	public function addPreparedMIParams( $plan_mi, $mi=false )
 	{
 		$this->addParams( $plan_mi, 'plan_params' );
 
@@ -1469,7 +1469,7 @@ class metaUserDB extends serialParamDBTable
 		return $this->storeload();
 	}
 
-	function addPlanID( $id )
+	public function addPlanID( $id )
 	{
 		$this->plan_history->plan_history[] = $id;
 
@@ -1482,7 +1482,7 @@ class metaUserDB extends serialParamDBTable
 		return $this->storeload();
 	}
 
-	function is_renewing()
+	public function is_renewing()
 	{
 		if ( !empty( $this->plan_history->used_plans ) ) {
 			return true;
@@ -1491,7 +1491,7 @@ class metaUserDB extends serialParamDBTable
 		}
 	}
 
-	function getUsedPlans()
+	public function getUsedPlans()
 	{
 		if ( !empty( $this->plan_history->used_plans ) ) {
 			return $this->plan_history->used_plans;
@@ -1500,7 +1500,7 @@ class metaUserDB extends serialParamDBTable
 		}
 	}
 
-	function getPreviousPlan()
+	public function getPreviousPlan()
 	{
 		if ( empty( $this->plan_history ) ) {
 			return null;

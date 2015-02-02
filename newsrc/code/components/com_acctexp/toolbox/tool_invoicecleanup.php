@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_invoicecleanup
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Invoice Cleanup";
@@ -22,7 +22,7 @@ class tool_invoicecleanup
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['cutoff']				= array( 'inputB', 'Cutoff Age (Months)', 'Delete any unpaid invoices older than this many months', 3 );
@@ -33,7 +33,7 @@ class tool_invoicecleanup
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		$db = JFactory::getDBO();
 

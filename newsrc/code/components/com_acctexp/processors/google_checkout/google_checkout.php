@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_google_checkout extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'google_checkout';
@@ -29,7 +29,7 @@ class processor_google_checkout extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']			= true;
@@ -43,7 +43,7 @@ class processor_google_checkout extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'toggle' );
@@ -59,12 +59,12 @@ class processor_google_checkout extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		return array();
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		require_once( dirname(__FILE__) . '/lib/googlecart.php' );
 		require_once( dirname(__FILE__) . '/lib/googleitem.php' );
@@ -109,12 +109,12 @@ class processor_google_checkout extends XMLprocessor
 		return $return;
 	}
 
-	function convertPU( $amount )
+	public function convertPU( $amount )
 	{
 		return $this->convertPeriodUnit( $amount['period3'], $amount['unit3'] );
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		switch ( $unit ) {
 			case 'D':
@@ -166,12 +166,12 @@ class processor_google_checkout extends XMLprocessor
 		}
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		return "";
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$response 				= array();
 		$response['valid'] 		= true;
@@ -179,7 +179,7 @@ class processor_google_checkout extends XMLprocessor
 		return $response;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		require_once( dirname(__FILE__) . '/lib/googlerequest.php' );
 		require_once( dirname(__FILE__) . '/lib/googlenotificationhistory.php' );
@@ -264,7 +264,7 @@ class processor_google_checkout extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		if ( $response['valid'] ) {
 			$googleRequest = new GoogleRequest(	$this->settings['merchant_id'],

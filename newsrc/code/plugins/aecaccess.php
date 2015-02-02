@@ -32,11 +32,11 @@ class plgUserAECaccess extends JPlugin
 	 * @param array  $config  An array that holds the plugin configuration
 	 * @since 1.5
 	 */
-	function plgUserAECaccess( &$subject, $config ) {
+	public function plgUserAECaccess( &$subject, $config ) {
 		parent::__construct( $subject, $config );
 	}
 
-	function onUserLogin( $user, $options )
+	public function onUserLogin( $user, $options )
 	{
 		return $this->onLoginUser( $user, null );
 	}
@@ -51,7 +51,7 @@ class plgUserAECaccess extends JPlugin
 	 * @return	boolean
 	 * @since 1.5
 	 */
-	function onLoginUser( $credentials, $remember )
+	public function onLoginUser( $credentials, $remember )
 	{
 		if ( strpos( JPATH_BASE, '/administrator' ) ) {
 			// Don't act when entering admin area
@@ -68,12 +68,12 @@ class plgUserAECaccess extends JPlugin
 		}
 	}
 
-	function onUserLoginFailure( $response, $options=null )
+	public function onUserLoginFailure( $response, $options=null )
 	{
 		$this->onLoginFailure( $response, $options );
 	}
 
-	function onLoginFailure( $response, $options=null )
+	public function onLoginFailure( $response, $options=null )
 	{
 		$db = JFactory::getDBO();
 
@@ -111,7 +111,7 @@ class plgUserAECaccess extends JPlugin
 		}
 	}
 
-	function verify( $credentials )
+	public function verify( $credentials )
 	{
 		global $aecConfig;
 

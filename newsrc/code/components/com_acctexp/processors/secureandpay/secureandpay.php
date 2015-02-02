@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_secureandpay extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'secureandpay';
@@ -28,7 +28,7 @@ class processor_secureandpay extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['aec_insecure']		= 1;
@@ -44,7 +44,7 @@ class processor_secureandpay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -61,7 +61,7 @@ class processor_secureandpay extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= 'https://www.secureandpay.com/test/demande_paiement.php';
@@ -140,7 +140,7 @@ class processor_secureandpay extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['PAYID'];
@@ -148,7 +148,7 @@ class processor_secureandpay extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 

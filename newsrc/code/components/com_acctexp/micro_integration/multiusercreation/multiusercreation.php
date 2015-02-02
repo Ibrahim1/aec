@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_multiusercreation
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MULTIUSERCREATION');
@@ -22,7 +22,7 @@ class mi_multiusercreation
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -95,14 +95,14 @@ class mi_multiusercreation
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$settings = array();
 
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$database = JFactory::getDBO();
 
@@ -215,7 +215,7 @@ class mi_multiusercreation
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( $this->settings['expire_child_subscr'] ) {
 			$database = JFactory::getDBO();
@@ -239,7 +239,7 @@ class mi_multiusercreation
 		return true;
 	}
 
-	function admin_info( $request )
+	public function admin_info( $request )
 	{
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->metaUser->focusSubscription->plan, $this->id );
 
@@ -264,7 +264,7 @@ class mi_multiusercreation
 		return $list;
 	}
 
-	function profile_info( $request )
+	public function profile_info( $request )
 	{
 		$userflags = $request->metaUser->focusSubscription->getMIflags( $request->metaUser->focusSubscription->plan, $this->id );
 
@@ -289,12 +289,12 @@ class mi_multiusercreation
 		return $list;
 	}
 
-	function createUser( $fields )
+	public function createUser( $fields )
 	{
 		return aecRegistration::saveUserRegistration( $fields, true, true, true, true );
 	}
 
-	function mailOut( $request, $userlist )
+	public function mailOut( $request, $userlist )
 	{
 		$rwEngine = new reWriteEngine();
 		$rwEngine->resolveRequest( $request );

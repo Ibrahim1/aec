@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_webex extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_WEBEX_NAME');
@@ -23,7 +23,7 @@ class mi_webex extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['hosted_name']		= array( 'inputC' );
@@ -40,12 +40,12 @@ class mi_webex extends MI
 		return $settings;
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'hosted_name', 'pid' );
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( $this->settings['create_user'] ) {
 			$params = $request->metaUser->meta->custom_params;
@@ -66,7 +66,7 @@ class mi_webex extends MI
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( $this->settings['deactivate_user'] ) {
 			$this->apiDeactivateUser( $request );
@@ -75,7 +75,7 @@ class mi_webex extends MI
 		return true;
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );
@@ -92,7 +92,7 @@ class mi_webex extends MI
 		}
 	}
 
-	function apiUserSignup( $request )
+	public function apiUserSignup( $request )
 	{
 		$name = $request->metaUser->explodeName();
 
@@ -108,7 +108,7 @@ class mi_webex extends MI
 		return $this->apiCall( $array, $request );
 	}
 
-	function apiActivateUser( $request )
+	public function apiActivateUser( $request )
 	{
 		$array = array(	'AT' => 'AC',
 						'PID' => $this->settings['pid'],
@@ -118,7 +118,7 @@ class mi_webex extends MI
 		return $this->apiCall( $array, $request );
 	}
 
-	function apiDeactivateUser( $request )
+	public function apiDeactivateUser( $request )
 	{
 		$array = array(	'AT' => 'IN',
 						'PID' => $this->settings['pid'],
@@ -128,7 +128,7 @@ class mi_webex extends MI
 		return $this->apiCall( $array, $request );
 	}
 
-	function apiCall( $array, $request )
+	public function apiCall( $array, $request )
 	{
 		global $aecConfig;
 

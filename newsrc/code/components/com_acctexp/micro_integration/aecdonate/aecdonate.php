@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_aecdonate
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AECDONATE_NAME');
@@ -23,7 +23,7 @@ class mi_aecdonate
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -34,7 +34,7 @@ class mi_aecdonate
 		return $settings;
 	}
 
-	function saveParams( $params )
+	public function saveParams( $params )
 	{
 		foreach ( $params as $n => $v ) {
 			if ( !empty( $v ) ) {
@@ -47,7 +47,7 @@ class mi_aecdonate
 		return $params;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -73,7 +73,7 @@ class mi_aecdonate
 		return $settings;
 	}
 
-	function verifyMIform( $request )
+	public function verifyMIform( $request )
 	{
 		$return = array();
 
@@ -84,14 +84,14 @@ class mi_aecdonate
 		return $return;
 	}
 
-	function invoice_item_cost( $request )
+	public function invoice_item_cost( $request )
 	{
 		$this->modifyPrice( $request );
 
 		return true;
 	}
 
-	function modifyPrice( $request )
+	public function modifyPrice( $request )
 	{
 		if ( !isset( $request->params['amt'] ) ) {
 			return null;

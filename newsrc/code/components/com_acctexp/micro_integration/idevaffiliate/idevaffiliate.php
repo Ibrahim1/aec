@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_idevaffiliate
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_IDEV');
@@ -23,7 +23,7 @@ class mi_idevaffiliate
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['setupinfo']			= array( 'fieldset' );
@@ -40,12 +40,12 @@ class mi_idevaffiliate
 		return $settings;
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'profile', 'directory', 'use_curl' );
 	}
 
-	function afteraction( $request )
+	public function afteraction( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -129,7 +129,7 @@ class mi_idevaffiliate
 		return true;
 	}
 
-	function getPath()
+	public function getPath()
 	{
 		if ( !empty( $this->settings['directory'] ) ) {
 			if ( ( strpos( $this->settings['directory'], 'http://' ) === 0 ) || ( strpos( $this->settings['directory'], 'https://' ) === 0 ) ) {

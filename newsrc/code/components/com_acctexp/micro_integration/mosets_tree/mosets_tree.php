@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_mosets_tree extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MOSETS');
@@ -23,7 +23,7 @@ class mi_mosets_tree extends MI
 		return $info;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -35,7 +35,7 @@ class mi_mosets_tree extends MI
 		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_mosetstree', $tables );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -54,7 +54,7 @@ class mi_mosets_tree extends MI
 		return;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		// field type; name; variable value, description, extra (variable name)
 
@@ -73,7 +73,7 @@ class mi_mosets_tree extends MI
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -109,7 +109,7 @@ class mi_mosets_tree extends MI
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -155,12 +155,12 @@ class mi_mosets_tree extends MI
 		return true;
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_mtree' );
 	}
 
-	function hacks()
+	public function hacks()
 	{
 		$hacks = array();
 
@@ -251,7 +251,7 @@ class mi_mosets_tree extends MI
 		return $hacks;
 	}
 
-	function profile_info( $request )
+	public function profile_info( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -266,7 +266,7 @@ class mi_mosets_tree extends MI
 		}
 	}
 
-	function publishListings( $metaUser )
+	public function publishListings( $metaUser )
 	{
 		$db = JFactory::getDBO();
 
@@ -283,7 +283,7 @@ class mi_mosets_tree extends MI
 		}
 	}
 
-	function unpublishListings( $metaUser )
+	public function unpublishListings( $metaUser )
 	{
 		$db = JFactory::getDBO();
 
@@ -300,7 +300,7 @@ class mi_mosets_tree extends MI
 		}
 	}
 
-	function featureListings( $metaUser )
+	public function featureListings( $metaUser )
 	{
 		$db = JFactory::getDBO();
 
@@ -317,7 +317,7 @@ class mi_mosets_tree extends MI
 		}
 	}
 
-	function unfeatureListings( $metaUser )
+	public function unfeatureListings( $metaUser )
 	{
 		$db = JFactory::getDBO();
 
@@ -351,7 +351,7 @@ class mosetstree extends serialParamDBTable
 	/** @var string */
 	var $params				= null;
 
-	function mosetstree()
+	public function mosetstree()
 	{
 		$lang = JFactory::getLanguage();
 
@@ -360,12 +360,12 @@ class mosetstree extends serialParamDBTable
 		parent::__construct( '#__acctexp_mi_mosetstree', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params' );
 	}
 
-	function getIDbyUserID( $userid )
+	public function getIDbyUserID( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -377,18 +377,18 @@ class mosetstree extends serialParamDBTable
 		return $db->loadResult();
 	}
 
-	function loadUserID( $userid )
+	public function loadUserID( $userid )
 	{
 		$id = $this->getIDbyUserID( $userid );
 		$this->load( $id );
 	}
 
-	function is_active()
+	public function is_active()
 	{
 		return $this->active ? true : false;
 	}
 
-	function getListingsLeft()
+	public function getListingsLeft()
 	{
 		if ( !empty( $this->params['deny'] ) ) {
 			return 0;
@@ -399,7 +399,7 @@ class mosetstree extends serialParamDBTable
 		}
 	}
 
-	function hasListingsLeft()
+	public function hasListingsLeft()
 	{
 		$listings = $this->getListingsLeft();
 		if ( $listings === 'unlimited' ) {
@@ -411,7 +411,7 @@ class mosetstree extends serialParamDBTable
 		}
 	}
 
-	function useListing()
+	public function useListing()
 	{
 		if( $this->hasListingsLeft() && $this->is_active() ) {
 			$this->used_listings++;
@@ -423,12 +423,12 @@ class mosetstree extends serialParamDBTable
 		}
 	}
 
-	function setListings( $set )
+	public function setListings( $set )
 	{
 		$this->granted_listings = $set;
 	}
 
-	function addListings( $add )
+	public function addListings( $add )
 	{
 		$this->granted_listings += $add;
 	}

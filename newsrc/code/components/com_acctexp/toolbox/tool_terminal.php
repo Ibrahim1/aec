@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_terminal
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Terminal";
@@ -22,7 +22,7 @@ class tool_terminal
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -37,7 +37,7 @@ class tool_terminal
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['query'] ) ) {
 			return null;

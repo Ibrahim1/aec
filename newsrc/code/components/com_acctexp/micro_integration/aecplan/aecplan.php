@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_aecplan
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AECPLAN_NAME');
@@ -23,7 +23,7 @@ class mi_aecplan
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -75,7 +75,7 @@ class mi_aecplan
 		return $settings;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( $request->action == 'action' ) {
 			// Do NOT act on regular action call

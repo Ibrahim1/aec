@@ -246,7 +246,7 @@ class PaymentProcessor
 	/** var array **/
 	var $info = null;
 
-	function loadName( $name )
+	public function loadName( $name )
 	{
 		if ( (strtolower( $name ) == 'free') || (strtolower( $name ) == 'none') ) {
 			return null;
@@ -324,7 +324,7 @@ class PaymentProcessor
 		}
 	}
 
-	function loadId( $ppid )
+	public function loadId( $ppid )
 	{
 		$name = $this->getNameById( $ppid );
 
@@ -335,7 +335,7 @@ class PaymentProcessor
 		}
 	}
 
-	function fullInit()
+	public function fullInit()
 	{
 		if ( $this->init() ) {
 			$this->getInfo();
@@ -347,7 +347,7 @@ class PaymentProcessor
 		}
 	}
 
-	function init()
+	public function init()
 	{
 		if ( !$this->id ) {
 			// Install and recurse
@@ -365,7 +365,7 @@ class PaymentProcessor
 		}
 	}
 
-	function install()
+	public function install()
 	{
 		// Create new db entry
 		$this->processor->load( 0 );
@@ -390,7 +390,7 @@ class PaymentProcessor
 		$this->id = $this->processor->id;
 	}
 
-	function copyAssets()
+	public function copyAssets()
 	{
 		$png = $this->processor_name . '.png';
 
@@ -428,7 +428,7 @@ class PaymentProcessor
 		}
 	}
 
-	function getInfo()
+	public function getInfo()
 	{
 		if ( !is_object( $this->processor ) ) {
 			return false;
@@ -444,7 +444,7 @@ class PaymentProcessor
 		}
 	}
 
-	function getParamLang( $name )
+	public function getParamLang( $name )
 	{
 		$lang = JFactory::getLanguage();
 
@@ -460,7 +460,7 @@ class PaymentProcessor
 		}
 	}
 
-	function getSettings()
+	public function getSettings()
 	{
 		if ( !is_object( $this->processor ) ) {
 			return false;
@@ -484,7 +484,7 @@ class PaymentProcessor
 		}
 	}
 
-	function exchangeSettings( $exchange )
+	public function exchangeSettings( $exchange )
 	{
 		 if ( !empty( $exchange ) ) {
 			 foreach ( $exchange as $key => $value ) {
@@ -506,12 +506,12 @@ class PaymentProcessor
 		 }
 	}
 
-	function setSettings()
+	public function setSettings()
 	{
 		$this->processor->storeload();
 	}
 
-	function exchangeSettingsByPlan( $plan, $plan_params=null )
+	public function exchangeSettingsByPlan( $plan, $plan_params=null )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -528,7 +528,7 @@ class PaymentProcessor
 		$this->exchangeSettings( $plan_params );
 	}
 
-	function getLogoImg()
+	public function getLogoImg()
 	{
 		$fname = $this->processor->getLogoFilename();
 
@@ -539,12 +539,12 @@ class PaymentProcessor
 		}
 	}
 
-	function getLogoPath()
+	public function getLogoPath()
 	{
 		return JURI::root(true) . '/media/com_acctexp/images/site/' . $this->processor->getLogoFilename();
 	}
 
-	function is_recurring( $choice=null, $test=false )
+	public function is_recurring( $choice=null, $test=false )
 	{
 		// Warning: Here be Voodoo
 
@@ -598,7 +598,7 @@ class PaymentProcessor
 		return $return;
 	}
 
-	function requireSSLcheckout()
+	public function requireSSLcheckout()
 	{
 		if ( method_exists( $this->processor, 'requireSSLcheckout' ) ) {
 			return $this->processor->requireSSLcheckout();
@@ -611,7 +611,7 @@ class PaymentProcessor
 		}
 	}
 
-	function storeload()
+	public function storeload()
 	{
 		if ( empty( $this->id ) ) {
 			$this->install();
@@ -620,7 +620,7 @@ class PaymentProcessor
 		}
 	}
 
-	function getBackendSettings()
+	public function getBackendSettings()
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -675,7 +675,7 @@ class PaymentProcessor
 		return $settings;
 	}
 
-	function checkoutAction( $int_var=null, $metaUser=null, $plan=null, $InvoiceFactory=null, $cart=null )
+	public function checkoutAction( $int_var=null, $metaUser=null, $plan=null, $InvoiceFactory=null, $cart=null )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -703,7 +703,7 @@ class PaymentProcessor
 		return $this->processor->checkoutAction( $request, $InvoiceFactory );
 	}
 
-	function checkoutProcess( $int_var=null, $metaUser=null, $plan=null, $InvoiceFactory=null, $cart=null )
+	public function checkoutProcess( $int_var=null, $metaUser=null, $plan=null, $InvoiceFactory=null, $cart=null )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -731,7 +731,7 @@ class PaymentProcessor
 		return $this->processor->checkoutProcess( $request, $InvoiceFactory );
 	}
 
-	function customAction( $action, $invoice, $metaUser, $int_var=null )
+	public function customAction( $action, $invoice, $metaUser, $int_var=null )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -763,7 +763,7 @@ class PaymentProcessor
 		}
 	}
 
-	function customProfileTab( $action, $metaUser )
+	public function customProfileTab( $action, $metaUser )
 	{
 		$s = $this->processor_name . '_';
 		if ( strpos( $action, $s ) !== false ) {
@@ -793,7 +793,7 @@ class PaymentProcessor
 		}
 	}
 
-	function getParamsHTML( $params, $values )
+	public function getParamsHTML( $params, $values )
 	{
 		$return = null;
 		if ( !empty( $values['params'] ) ) {
@@ -819,7 +819,7 @@ class PaymentProcessor
 		return $return;
 	}
 
-	function getParams( $params )
+	public function getParams( $params )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -832,7 +832,7 @@ class PaymentProcessor
 		}
 	}
 
-	function getCustomPlanParams()
+	public function getCustomPlanParams()
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -865,7 +865,7 @@ class PaymentProcessor
 		}
 	}
 
-	function invoiceCreationAction( $objinvoice )
+	public function invoiceCreationAction( $objinvoice )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -878,7 +878,7 @@ class PaymentProcessor
 		}
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -918,21 +918,21 @@ class PaymentProcessor
 		return $return;
 	}
 
-	function notificationError( $response, $error )
+	public function notificationError( $response, $error )
 	{
 		if ( method_exists( $this->processor, 'notificationError' ) ) {
 			$this->processor->notificationError( $response, $error );
 		}
 	}
 
-	function notificationSuccess( $response )
+	public function notificationSuccess( $response )
 	{
 		if ( method_exists( $this->processor, 'notificationSuccess' ) ) {
 			$this->processor->notificationSuccess( $response );
 		}
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		if ( method_exists( $this->processor, 'validateNotification' ) ) {
 			$response = $this->processor->validateNotification( $response, $post, $invoice );
@@ -941,7 +941,7 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function instantvalidateNotification( $response, $post, $invoice )
+	public function instantvalidateNotification( $response, $post, $invoice )
 	{
 		if ( method_exists( $this->processor, 'instantvalidateNotification' ) ) {
 			$response = $this->processor->instantvalidateNotification( $response, $post, $invoice );
@@ -950,7 +950,7 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function prepareValidation( $subscription_list )
+	public function prepareValidation( $subscription_list )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -965,7 +965,7 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function validateSubscription( $subscription_id )
+	public function validateSubscription( $subscription_id )
 	{
 		if ( empty( $this->settings ) ) {
 			$this->getSettings();
@@ -1031,7 +1031,7 @@ class PaymentProcessor
 		}
 	}
 
-	function registerProfileTabs()
+	public function registerProfileTabs()
 	{
 		if ( method_exists( $this->processor, 'registerProfileTabs' ) ) {
 			$response = $this->processor->registerProfileTabs();
@@ -1042,14 +1042,14 @@ class PaymentProcessor
 		return $response;
 	}
 
-	function modifyCheckout( &$int_var, &$InvoiceFactory )
+	public function modifyCheckout( &$int_var, &$InvoiceFactory )
 	{
 		if ( method_exists( $this->processor, 'modifyCheckout' ) ) {
 			$this->processor->modifyCheckout( $int_var, $InvoiceFactory );
 		}
 	}
 
-	function notify_trail( $InvoiceFactory, $response )
+	public function notify_trail( $InvoiceFactory, $response )
 	{
 		if ( method_exists( $this->processor, 'notify_trail' ) ) {
 			return $this->processor->notify_trail( $InvoiceFactory, $response );
@@ -1058,7 +1058,7 @@ class PaymentProcessor
 		}
 	}
 
-	function getProfileTabs()
+	public function getProfileTabs()
 	{
 		$addtabs = $this->registerProfileTabs();
 
@@ -1079,7 +1079,7 @@ class PaymentProcessor
 		return $tabs;
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = array();
 
@@ -1128,22 +1128,22 @@ class processor extends serialParamDBTable
 	/** @var string */
 	var $params				= null;
 
-	function processor()
+	public function processor()
 	{
 		parent::__construct( '#__acctexp_config_processors', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'info', 'settings', 'params' );
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return $this->name.'.png';
 	}
 
-	function loadName( $name )
+	public function loadName( $name )
 	{
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_config_processors'
@@ -1160,7 +1160,7 @@ class processor extends serialParamDBTable
 		}
 	}
 
-	function createNew( $name, $info, $settings )
+	public function createNew( $name, $info, $settings )
 	{
 		$this->id		= 0;
 		$this->name		= $name;
@@ -1171,17 +1171,17 @@ class processor extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function checkoutText()
+	public function checkoutText()
 	{
 		return JText::_('CHECKOUT_BTN_INFO');
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		return '<p>' . AECToolbox::rewriteEngineRQ( $this->settings['info'], $request ) . '</p>';
 	}
 
-	function requireSSLcheckout()
+	public function requireSSLcheckout()
 	{
 		if ( isset( $this->info['secure'] ) ) {
 			return $this->info['secure'];
@@ -1190,7 +1190,7 @@ class processor extends serialParamDBTable
 		}
 	}
 
-	function fileError( $text, $level=128, $tags="", $params=array() )
+	public function fileError( $text, $level=128, $tags="", $params=array() )
 	{
 		$eventlog = new eventLog();
 
@@ -1211,7 +1211,7 @@ class processor extends serialParamDBTable
 		}
 	}
 
-	function exchangeSettings( $settings, $exchange )
+	public function exchangeSettings( $settings, $exchange )
 	{
 		 if ( !empty( $exchange ) ) {
 			 foreach ( $exchange as $key => $value ) {
@@ -1233,7 +1233,7 @@ class processor extends serialParamDBTable
 		return $settings;
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		if ( !empty( $this->info['actions'] ) ) {
 			return $this->info['actions'];
@@ -1242,7 +1242,7 @@ class processor extends serialParamDBTable
 		}
 	}
 
-	function customParams( $custom, $var, $request )
+	public function customParams( $custom, $var, $request )
 	{
 		if ( !empty( $custom ) ) {
 			$rw_params = AECToolbox::rewriteEngineRQ( $custom, $request );
@@ -1261,21 +1261,21 @@ class processor extends serialParamDBTable
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
 		return $response;
 	}
 
-	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=array(), $header=array() )
+	public function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=array(), $header=array() )
 	{
 		global $aecConfig;
 
@@ -1298,7 +1298,7 @@ class processor extends serialParamDBTable
 		return $response;
 	}
 
-	function doTheHttp( $url, $path, $content, $port=443, $extra_header=array(), $curlextra=array() )
+	public function doTheHttp( $url, $path, $content, $port=443, $extra_header=array(), $curlextra=array() )
 	{
 		global $aecConfig;
 
@@ -1459,7 +1459,7 @@ class processor extends serialParamDBTable
 		}
 	}
 
-	function doTheCurl( $url, $content, $curlextra=null, $header=null )
+	public function doTheCurl( $url, $content, $curlextra=null, $header=null )
 	{
 		global $aecConfig;
 
@@ -1562,7 +1562,7 @@ class processor extends serialParamDBTable
 
 class XMLprocessor extends processor
 {
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 
@@ -1601,7 +1601,7 @@ class XMLprocessor extends processor
 		return $return;
 	}
 
-	function getStdFormVars( $request )
+	public function getStdFormVars( $request )
 	{
 		$return = '<input type="hidden" name="invoice" value="' . $request->int_var['invoice'] . '" />' . "\n";
 		$return .= '<input type="hidden" name="processor" value="' . $this->name . '" />' . "\n";
@@ -1611,7 +1611,7 @@ class XMLprocessor extends processor
 		return $return;
 	}
 
-	function getParamsHTML( $params )
+	public function getParamsHTML( $params )
 	{
 		$return = null;
 		if ( !empty( $params['params'] ) ) {
@@ -1648,7 +1648,7 @@ class XMLprocessor extends processor
 		return $return;
 	}
 
-	function getMULTIPAYform( $var, $array )
+	public function getMULTIPAYform( $var, $array )
 	{
 		$nlist	= array();
 		$prefix	= array();
@@ -1687,7 +1687,7 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function getCCform( $var=array(), $values=null, $content=null )
+	public function getCCform( $var=array(), $values=null, $content=null )
 	{
 		if ( empty( $values ) ) {
 			$values = array( 'card_number', 'card_exp_month', 'card_exp_year' );
@@ -1769,7 +1769,7 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function getECHECKform( $var=array(), $values=null, $content=null )
+	public function getECHECKform( $var=array(), $values=null, $content=null )
 	{
 		if ( empty( $values ) ) {
 			$values = array( 'routing_no', 'account_no', 'account_name', 'bank_name' );
@@ -1809,7 +1809,7 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function getUserform( $var=array(), $values=null, $metaUser=null, $content=array() )
+	public function getUserform( $var=array(), $values=null, $metaUser=null, $content=array() )
 	{
 		$lang = JFactory::getLanguage();
 
@@ -2052,7 +2052,7 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function getFormInfo( $var=array(), $values=null )
+	public function getFormInfo( $var=array(), $values=null )
 	{
 		if ( empty( $values ) ) {
 			$values = array( 'asterisk' );
@@ -2069,7 +2069,7 @@ class XMLprocessor extends processor
 		return $var;
 	}
 
-	function sanitizeRequest( &$request )
+	public function sanitizeRequest( &$request )
 	{
 		if ( !empty( $request->int_var['params'] ) ) {
 			foreach ( $request->int_var['params'] as $k => $v ) {
@@ -2089,7 +2089,7 @@ class XMLprocessor extends processor
 		return true;
 	}
 
-	function checkoutProcess( $request, $InvoiceFactory )
+	public function checkoutProcess( $request, $InvoiceFactory )
 	{
 		$this->sanitizeRequest( $request );
 
@@ -2113,7 +2113,7 @@ class XMLprocessor extends processor
 		return $this->checkoutResponse( $request, $response, $InvoiceFactory );
 	}
 
-	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
+	public function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
 	{
 		if ( is_array( $header ) ) {
 			if ( !isset( $header["Content-Type"] ) ) {
@@ -2126,7 +2126,7 @@ class XMLprocessor extends processor
 		return parent::transmitRequest( $url, $path, $content, $port, $curlextra, $header );
 	}
 
-	function checkoutResponse( $request, $response, $InvoiceFactory=null )
+	public function checkoutResponse( $request, $response, $InvoiceFactory=null )
 	{
 		if ( !empty( $response['error'] ) ) {
 			return $response;
@@ -2149,7 +2149,7 @@ class XMLprocessor extends processor
 		}
 	}
 
-	function simpleCheckoutMod( $array )
+	public function simpleCheckoutMod( $array )
 	{
 		if ( empty( $this->aec_checkout_mod ) ) {
 			$this->aec_checkout_mod = array();
@@ -2160,7 +2160,7 @@ class XMLprocessor extends processor
 		}
 	}
 
-	function modifyCheckout( &$int_var, &$InvoiceFactory )
+	public function modifyCheckout( &$int_var, &$InvoiceFactory )
 	{
 		if ( !empty( $this->aec_checkout_mod ) ) {
 			foreach ( $this->aec_checkout_mod as $k => $v ) {
@@ -2169,7 +2169,7 @@ class XMLprocessor extends processor
 		}
 	}
 
-	function XMLtoArray( $xml )
+	public function XMLtoArray( $xml )
 	{
 		if ( !( $xml->children() ) ) {
 			return (string) $xml;
@@ -2188,7 +2188,7 @@ class XMLprocessor extends processor
 		return $element;
 	}
 
-	function NVPtoArray( $nvpstr )
+	public function NVPtoArray( $nvpstr )
 	{
 		$intial = 0;
 	 	$nvpArray = array();
@@ -2212,7 +2212,7 @@ class XMLprocessor extends processor
 		return $nvpArray;
 	}
 
-	function arrayToNVP( $var, $uppercase=false )
+	public function arrayToNVP( $var, $uppercase=false )
 	{
 		$content = array();
 		foreach ( $var as $name => $value ) {
@@ -2226,12 +2226,12 @@ class XMLprocessor extends processor
 		return implode( '&', $content );
 	}
 
-	function XMLsubstring_tag( $haystack, $tag )
+	public function XMLsubstring_tag( $haystack, $tag )
 	{
 		return XMLprocessor::substring_between( $haystack, '<' . $tag . '>', '</' . $tag . '>' );
 	}
 
-	function substring_between( $haystack, $start, $end )
+	public function substring_between( $haystack, $start, $end )
 	{
 		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
 			return false;
@@ -2246,7 +2246,7 @@ class XMLprocessor extends processor
 
 class SOAPprocessor extends XMLprocessor
 {
-	function transmitSOAP( $url, $path, $command, $content, $headers=null, $options=null, $header=null )
+	public function transmitSOAP( $url, $path, $command, $content, $headers=null, $options=null, $header=null )
 	{
 		global $aecConfig;
 
@@ -2267,7 +2267,7 @@ class SOAPprocessor extends XMLprocessor
 		return $response;
 	}
 
-	function followupRequest( $command, $content )
+	public function followupRequest( $command, $content )
 	{
 		if ( empty( $this->soapclient ) ) {
 			return null;
@@ -2304,7 +2304,7 @@ class SOAPprocessor extends XMLprocessor
 class PROFILEprocessor extends XMLprocessor
 {
 
-	function ProfileAdd( $request, $profileid )
+	public function ProfileAdd( $request, $profileid )
 	{
 		$ppParams = new stdClass();
 
@@ -2318,7 +2318,7 @@ class PROFILEprocessor extends XMLprocessor
 		return $ppParams;
 	}
 
-	function payProfileSelect( $var, $ppParams, $select=false, $btn=true )
+	public function payProfileSelect( $var, $ppParams, $select=false, $btn=true )
 	{
 		$var['params'][] = array( 'p', JText::_('AEC_USERFORM_BILLING_DETAILS_NAME') );
 
@@ -2360,7 +2360,7 @@ class PROFILEprocessor extends XMLprocessor
 		return $var;
 	}
 
-	function payProfileAdd( $request, $profileid, $details, $ppParams )
+	public function payProfileAdd( $request, $profileid, $details, $ppParams )
 	{
 		$pointer = count( $ppParams->paymentProfiles );
 
@@ -2377,7 +2377,7 @@ class PROFILEprocessor extends XMLprocessor
 		return $ppParams;
 	}
 
-	function payProfileUpdate( $request, $profileid, $details, $ppParams )
+	public function payProfileUpdate( $request, $profileid, $details, $ppParams )
 	{
 		$ppParams->paymentProfiles[$profileid]->profilehash = $this->payProfileHash( $details );
 
@@ -2388,7 +2388,7 @@ class PROFILEprocessor extends XMLprocessor
 		return $ppParams;
 	}
 
-	function payProfileHash( $post )
+	public function payProfileHash( $post )
 	{
 		$hash = new stdClass();
 		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
@@ -2404,7 +2404,7 @@ class PROFILEprocessor extends XMLprocessor
 		return $hash;
 	}
 
-	function shipProfileSelect( $var, $ppParams, $select=false, $btn=true, $new=true )
+	public function shipProfileSelect( $var, $ppParams, $select=false, $btn=true, $new=true )
 	{
 		$var['params'][] = array( 'p', JText::_('AEC_USERFORM_SHIPPING_DETAILS_NAME') );
 
@@ -2446,7 +2446,7 @@ class PROFILEprocessor extends XMLprocessor
 		return $var;
 	}
 
-	function shipProfileAdd( $request, $profileid, $post, $ppParams )
+	public function shipProfileAdd( $request, $profileid, $post, $ppParams )
 	{
 		$pointer = count( $ppParams->paymentProfiles );
 
@@ -2462,7 +2462,7 @@ class PROFILEprocessor extends XMLprocessor
 		return $ppParams;
 	}
 
-	function shipProfileUpdate( $request, $profileid, $post, $ppParams )
+	public function shipProfileUpdate( $request, $profileid, $post, $ppParams )
 	{
 		$ppParams->shippingProfiles[$profileid]->profilehash = $this->shipProfileHash( $post );
 
@@ -2473,7 +2473,7 @@ class PROFILEprocessor extends XMLprocessor
 		return $ppParams;
 	}
 
-	function shipProfileHash( $post )
+	public function shipProfileHash( $post )
 	{
 		$hash = new stdClass();
 		$hash->name		= $post['billFirstName'] . ' ' . $post['billLastName'];
@@ -2487,7 +2487,7 @@ class PROFILEprocessor extends XMLprocessor
 
 class POSTprocessor extends processor
 {
-	function checkoutAction( $request, $InvoiceFactory=null, $xvar=null, $text=null )
+	public function checkoutAction( $request, $InvoiceFactory=null, $xvar=null, $text=null )
 	{
 		if ( empty( $xvar ) ) {
 			$var = $this->createGatewayLink( $request );
@@ -2525,7 +2525,7 @@ class POSTprocessor extends processor
 
 class GETprocessor extends processor
 {
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		$var = $this->createGatewayLink( $request );
 
@@ -2555,7 +2555,7 @@ class GETprocessor extends processor
 
 class URLprocessor extends processor
 {
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		$var = $this->createGatewayLink( $request );
 

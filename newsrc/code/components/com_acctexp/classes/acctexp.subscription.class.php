@@ -46,17 +46,17 @@ class Subscription extends serialParamDBTable
 	/** @var string */
 	var $customparams		= null;
 
-	function Subscription()
+	public function Subscription()
 	{
 		parent::__construct( '#__acctexp_subscr', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params', 'customparams' );
 	}
 
-	function check( $fields=array() )
+	public function check( $fields=array() )
 	{
 		$vars = get_class_vars( 'Subscription' );
 		$props = get_object_vars( $this );
@@ -70,12 +70,12 @@ class Subscription extends serialParamDBTable
 		return parent::check($fields);
 	}
 
-	function loadUserid( $userid )
+	public function loadUserid( $userid )
 	{
 		$this->load( $this->getSubscriptionID( $userid ) );
 	}
 
-	function getSubscriptionID( $userid, $usage=null, $primary=1, $similar=false, $bias=null )
+	public function getSubscriptionID( $userid, $usage=null, $primary=1, $similar=false, $bias=null )
 	{
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_subscr'
@@ -128,7 +128,7 @@ class Subscription extends serialParamDBTable
 		return $subscriptionid;
 	}
 
-	function makePrimary()
+	public function makePrimary()
 	{
 		$query = 'UPDATE #__acctexp_subscr'
 				. ' SET `primary` = \'0\''
@@ -141,7 +141,7 @@ class Subscription extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function manualVerify()
+	public function manualVerify()
 	{
 		if ( $this->isExpired() ) {
 			aecSelfRedirect( 'expired', array('userid'=>((int) $this->userid)) );
@@ -150,7 +150,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function createNew( $userid, $processor, $pending, $primary=1, $plan=null )
+	public function createNew( $userid, $processor, $pending, $primary=1, $plan=null )
 	{
 		if ( !$userid ) {
 			return false;
@@ -170,20 +170,20 @@ class Subscription extends serialParamDBTable
 		return $this->storeload();
 	}
 
-	function isStatus( $status )
+	public function isStatus( $status )
 	{
 		return ( strcmp( $this->status, ucfirst($status) ) === 0 );
 	}
 
-	function isExcluded() { return $this->isStatus('Excluded'); }
-	function isTrial() { return $this->isStatus('Trial'); }
-	function isActive() { return $this->isStatus('Active'); }
-	function isPending() { return $this->isStatus('Pending'); }
-	function isHold() { return $this->isStatus('Hold'); }
-	function isClosed() { return $this->isStatus('Closed'); }
-	function isCancelled() { return $this->isStatus('Cancelled'); }
+	public function isExcluded() { return $this->isStatus('Excluded'); }
+	public function isTrial() { return $this->isStatus('Trial'); }
+	public function isActive() { return $this->isStatus('Active'); }
+	public function isPending() { return $this->isStatus('Pending'); }
+	public function isHold() { return $this->isStatus('Hold'); }
+	public function isClosed() { return $this->isStatus('Closed'); }
+	public function isCancelled() { return $this->isStatus('Cancelled'); }
 
-	function isExpired( $offset=false )
+	public function isExpired( $offset=false )
 	{
 		if ( $this->isExcluded() ) {
 			return false;
@@ -218,7 +218,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function hasExpiration()
+	public function hasExpiration()
 	{
 		if ( empty( $this->expiration )
 			|| ( $this->expiration === '9999-12-31 00:00:00' )
@@ -229,7 +229,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function isLifetime()
+	public function isLifetime()
 	{
 		if ( !$this->hasExpiration() || $this->lifetime ) {
 			return true;
@@ -238,12 +238,12 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function isPrimary()
+	public function isPrimary()
 	{
 		return $this->primary;
 	}
 
-	function getPlan( $id=null )
+	public function getPlan( $id=null )
 	{
 		$id = empty($id) ? $this->plan : $id;
 
@@ -257,7 +257,7 @@ class Subscription extends serialParamDBTable
 		return $plan;
 	}
 
-	function setExpiration( $unit, $value, $extend )
+	public function setExpiration( $unit, $value, $extend )
 	{
 		$now = (int) gmdate('U');
 
@@ -284,7 +284,7 @@ class Subscription extends serialParamDBTable
 	* alert['level'] =  2 means second level threshold has been reached (default: 14 days or less to expire)
 	* alert['daysleft'] = number of days left to expire
 	*/
-	function GetAlertLevel()
+	public function GetAlertLevel()
 	{
 		global $aecConfig;
 
@@ -318,7 +318,7 @@ class Subscription extends serialParamDBTable
 		return $alert;
 	}
 
-	function verifylogin( $metaUser=false )
+	public function verifylogin( $metaUser=false )
 	{
 		$verify = $this->verify( $metaUser );
 
@@ -329,7 +329,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function verify( $metaUser=false )
+	public function verify( $metaUser=false )
 	{
 		global $aecConfig;
 
@@ -372,7 +372,7 @@ class Subscription extends serialParamDBTable
 		return true;
 	}
 
-	function expire( $overridefallback=false, $special=null, $now=true )
+	public function expire( $overridefallback=false, $special=null, $now=true )
 	{
 		// Users who are excluded cannot expire
 		if ( $this->isExcluded() ) {
@@ -437,12 +437,12 @@ class Subscription extends serialParamDBTable
 		return $expired;
 	}
 
-	function expireNow()
+	public function expireNow()
 	{
 		$this->expiration = gmdate( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 	}
 
-	function cancel( $invoice=null )
+	public function cancel( $invoice=null )
 	{
 		$this->setStatus( 'Cancelled' );
 
@@ -474,24 +474,24 @@ class Subscription extends serialParamDBTable
 		return true;
 	}
 
-	function hold( $invoice=null )
+	public function hold( $invoice=null )
 	{
 		return $this->setStatus( 'Hold' );
 	}
 
-	function hold_settle( $invoice=null )
+	public function hold_settle( $invoice=null )
 	{
 		return $this->setStatus( 'Active' );
 	}
 
-	function setStatus( $status )
+	public function setStatus( $status )
 	{
 		$this->status = $status;
 
 		return $this->storeload();
 	}
 
-	function applyUsage( $usage=0, $processor='none', $silent=0, $multiplicator=1, $invoice=null )
+	public function applyUsage( $usage=0, $processor='none', $silent=0, $multiplicator=1, $invoice=null )
 	{
 		$plan = $this->getPlan($usage);
 
@@ -502,7 +502,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function triggerPreExpiration( $metaUser, $mi_pexp )
+	public function triggerPreExpiration( $metaUser, $mi_pexp )
 	{
 		// No actions on expired, trial or recurring
 		if ( ( $this->isExpired() || $this->isTrial() ) || $this->recurring ) {
@@ -551,7 +551,7 @@ class Subscription extends serialParamDBTable
 		return $actions;
 	}
 
-	function sendEmailRegistered( $renew, $adminonly=false, $invoice=null )
+	public function sendEmailRegistered( $renew, $adminonly=false, $invoice=null )
 	{
 		global $aecConfig;
 
@@ -671,12 +671,12 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function addCustomParams( $params )
+	public function addCustomParams( $params )
 	{
 		$this->addParams( $params, 'customparams' );
 	}
 
-	function getMIflags( $usage, $mi )
+	public function getMIflags( $usage, $mi )
 	{
 		// Create the Params Prefix
 		$flag_name = 'MI_FLAG_USAGE_' . strtoupper( $usage ) . '_MI_' . strtoupper( $mi );
@@ -700,7 +700,7 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
-	function setMIflags( $usage, $mi, $flags )
+	public function setMIflags( $usage, $mi, $flags )
 	{
 		// Create the Params Prefix
 		$flag_name = 'MI_FLAG_USAGE_' . strtoupper( $usage ) . '_MI_' . $mi;

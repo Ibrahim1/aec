@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_cybermut extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'cybermut';
@@ -28,7 +28,7 @@ class processor_cybermut extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -48,7 +48,7 @@ class processor_cybermut extends POSTprocessor
 	}
 
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -74,7 +74,7 @@ class processor_cybermut extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$servers = array( 'paiement.creditmutuel.fr', 'ssl.paiement.cic-banques.fr', 'ssl.paiement.banque-obc.fr', 'paiement.caixanet.fr', 'creditmutuel.fr/telepaiement' );
 
@@ -109,7 +109,7 @@ class processor_cybermut extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['texte-libre'];
@@ -117,7 +117,7 @@ class processor_cybermut extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		switch( $post['retour'] ) {
 			case 'payetest':
@@ -150,7 +150,7 @@ class processor_cybermut extends POSTprocessor
 		return $response;
 	}
 
-	function HtmlEncode( $data )
+	public function HtmlEncode( $data )
 	{
 		$SAFE_OUT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._-";
 		$encoded_data = "";
@@ -167,7 +167,7 @@ class processor_cybermut extends POSTprocessor
 		return $result;
 	}
 
-	function CMCIC_hmac( $data="")
+	public function CMCIC_hmac( $data="")
 	{
 		$k1 = pack( "H*", sha1( $this->settings['pass'] ) );
 		$l1 = strlen( $k1 );
@@ -190,7 +190,7 @@ class processor_cybermut extends POSTprocessor
 		// return strtolower( $this->hmac( $k1 ^ $k2, $d ) );
 	}
 
-	function hmac( $key, $data )
+	public function hmac( $key, $data )
 	{
 		// RFC 2104 HMAC implementation for php.
 		// Creates an md5 HMAC.

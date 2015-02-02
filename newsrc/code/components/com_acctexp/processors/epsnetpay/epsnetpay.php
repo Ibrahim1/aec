@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_epsnetpay extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "epsnetpay";
@@ -28,7 +28,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 
@@ -63,7 +63,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array("toggle");
@@ -90,7 +90,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$sapPopStsURL			= JURI::root() . "index.php";
 		$var['sapInfoVersion']	= "3"; //Current Version
@@ -170,7 +170,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $var;
 	}
 
-	function Params( $params )
+	public function Params( $params )
 	{
 		$merchantnumber = 0;
 		$bank_selection = array();
@@ -193,7 +193,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$invoiceID				= $post['sapPopStsVwzweck'];
 		$userid					= $post['sapPopStsRechnr'];
@@ -207,7 +207,7 @@ class processor_epsnetpay extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$merchantid = $this->settings['merchantid_' . $invoice->params['bank_selection']];
 		$merchantpin = $this->settings['merchantpin_' . $invoice->params['bank_selection']];

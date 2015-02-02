@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_firstdata_webservice extends SOAPprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'firstdata_webservice';
@@ -29,7 +29,7 @@ class processor_firstdata_webservice extends SOAPprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']				= 0;
@@ -42,7 +42,7 @@ class processor_firstdata_webservice extends SOAPprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']				= array( 'list_yesno' );
@@ -55,7 +55,7 @@ class processor_firstdata_webservice extends SOAPprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = $this->getUserform( array(), array( 'firstname', 'lastname', 'address', 'city', 'state', 'zip', 'country_list' ), $request->metaUser );
 
@@ -64,7 +64,7 @@ class processor_firstdata_webservice extends SOAPprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
 $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">
@@ -132,7 +132,7 @@ $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/env
 		return $body;
 	}
 
-	function convertPeriodUnit( $unit )
+	public function convertPeriodUnit( $unit )
 	{
 		$return = array( 'D' => 'day', 'W' => 'week', 'M' => 'month', 'Y' => 'year' );
 
@@ -143,7 +143,7 @@ $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/env
 		}
 	}
 
-	function transmitRequestXML( $content, $request )
+	public function transmitRequestXML( $content, $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$url	= 'https://ws.merchanttest.firstdata_webserviceglobalgateway.com';

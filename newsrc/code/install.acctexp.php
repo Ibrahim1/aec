@@ -33,12 +33,12 @@ ini_set('display_errors', 'off');
 if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 	class Com_AcctexpInstallerScript
 	{
-		function postflight( $type, $parent )
+		public function postflight( $type, $parent )
 		{
 			$this->install();
 		}
 
-		function install()
+		public function install()
 		{
 			if ( defined('AEC_INSTALLER_CALLED') ) return true;
 
@@ -80,7 +80,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$this->splash( $pkgs, $errors );
 		}
 
-		function prepare()
+		public function prepare()
 		{
 			if ( defined( 'JPATH_MANIFESTS' ) ) {
 				$this->src = dirname(__FILE__);
@@ -90,7 +90,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 				$this->src = $componentInstaller->getPath('source');
 			}
 		}
-		function checkJinstall()
+		public function checkJinstall()
 		{
 			$engbpath = $this->src.'/../../language/en-GB';
 
@@ -126,7 +126,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 		}
 
-		function bootstrap( &$errors )
+		public function bootstrap( &$errors )
 		{
 			$is_j16 = defined( 'JPATH_MANIFESTS' );
 
@@ -158,7 +158,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			require_once( JPATH_SITE . '/components/com_acctexp/lib/eucalib/eucalib.install.php' );
 		}
 
-		function initDB( $errors, $eucaInstalldb )
+		public function initDB( $errors, $eucaInstalldb )
 		{
 			$db = JFactory::getDBO();
 
@@ -182,7 +182,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$eucaInstalldb->multiQueryExec( $queri );
 		}
 
-		function upgrade( &$errors, $eucaInstall, $eucaInstalldb )
+		public function upgrade( &$errors, $eucaInstall, $eucaInstalldb )
 		{
 			$db = JFactory::getDBO();
 			$app = JFactory::getApplication();
@@ -275,7 +275,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$aecConfig->saveSettings();
 		}
 
-		function touchProcessors()
+		public function touchProcessors()
 		{
 			// Make sure settings & info are updated
 			$pplist = PaymentProcessorHandler::getInstalledNameList();
@@ -304,7 +304,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 		}
 
-		function touchMIs()
+		public function touchMIs()
 		{
 			// Make sure mi language files are updated
 			$milist = microIntegrationHandler::getMIList();
@@ -325,7 +325,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 		}
 
-		function installPackages()
+		public function installPackages()
 		{
 			// Install plugins and modules, if we have them
 			jimport('joomla.installer.installer');
@@ -423,7 +423,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			return $pckgs;
 		}
 
-		function initTemplate()
+		public function initTemplate()
 		{
 			// Set up new template for new installs
 			$template = new configTemplate();
@@ -437,7 +437,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$template->storeload();
 		}
 
-		function initAdmins()
+		public function initAdmins()
 		{
 			$db = JFactory::getDBO();
 
@@ -462,7 +462,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 		}
 
-		function installTranslators( $eucaInstall )
+		public function installTranslators( $eucaInstall )
 		{
 			$files = array(
 				array(
@@ -498,7 +498,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			$eucaInstall->unpackFileArray( $files );
 		}
 
-		function popIndex( $eucaInstall )
+		public function popIndex( $eucaInstall )
 		{
 			$eucaInstall->popIndex(
 				array(
@@ -516,7 +516,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			);
 		}
 
-		function lessen( &$errors )
+		public function lessen( &$errors )
 		{
 			// Convert LESS files
 			include_once( JPATH_SITE . '/components/com_acctexp/lib/lessphp/lessc.inc.php' );
@@ -539,7 +539,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 		}
 
-		function logInstall()
+		public function logInstall()
 		{
 			$user = JFactory::getUser();
 
@@ -554,7 +554,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			);
 		}
 
-		function logErrors( $errors, $eucaInstall, $eucaInstalldb )
+		public function logErrors( $errors, $eucaInstall, $eucaInstalldb )
 		{
 			$errors = array_merge( $errors, $eucaInstall->getErrors(), $eucaInstalldb->getErrors() );
 
@@ -568,7 +568,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 			}
 		}
 
-		function splash( $pckgs, $errors )
+		public function splash( $pckgs, $errors )
 		{
 		?>
 			<link rel="stylesheet" type="text/css" media="all" href="<?php echo JURI::root() ?>media/com_acctexp/css/admin.css?rev=<?php echo _AEC_REVISION ?>" />
@@ -629,7 +629,7 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 }
 
 if ( !function_exists( 'com_install' ) ) {
-	function com_install()
+	public function com_install()
 	{
 		$installer = new Com_AcctexpInstallerScript;
 		$installer->install();

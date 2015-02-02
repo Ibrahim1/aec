@@ -13,7 +13,7 @@ defined('_JEXEC') OR defined( '_VALID_MOS' ) OR die( 'Direct Access to this loca
 
 class mi_kunena extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_KUNENA');
@@ -23,7 +23,7 @@ class mi_kunena extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -64,7 +64,7 @@ class mi_kunena extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function isInstalled()
+	public function isInstalled()
 	{
 		$app = JFactory::getApplication();
 
@@ -76,7 +76,7 @@ class mi_kunena extends MI
 				in_array( $app->getCfg( 'dbprefix' ) . "fb_users", $tables );
 	}
 
-	function is16()
+	public function is16()
 	{
 		static $is;
 
@@ -95,7 +95,7 @@ class mi_kunena extends MI
 		}
 	}
 
-	function dbTable()
+	public function dbTable()
 	{
 		if ( $this->is16() ) {
 			return 'kunena';
@@ -104,14 +104,14 @@ class mi_kunena extends MI
 		}
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !empty( $this->settings['rank' . $request->area] ) || !empty( $this->settings['unrank' . $request->area] ) ) {
 			$this->changeRank( $request->metaUser->userid, $this->settings['rank' . $request->area], $this->settings['unrank' . $request->area] );
 		}
 	}
 
-	function changeRank( $userid, $add, $remove )
+	public function changeRank( $userid, $add, $remove )
 	{
 		$db = JFactory::getDBO();
 

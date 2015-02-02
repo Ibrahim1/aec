@@ -7,7 +7,7 @@
 */
 class jsonDBTable extends paramDBTable
 {
-	function storeload()
+	public function storeload()
 	{
 		$this->check();
 		$this->store( true );
@@ -19,7 +19,7 @@ class jsonDBTable extends paramDBTable
 	 * Receive Parameters and decode them into an array
 	 * @return array
 	 */
-	function getParams( $field = 'params' )
+	public function getParams( $field = 'params' )
 	{
 		if ( empty( $this->$field ) ) {
 			return null;
@@ -31,7 +31,7 @@ class jsonDBTable extends paramDBTable
 	/**
 	 * Encode array and set Parameter field
 	 */
-	function setParams( $input, $field = 'params' )
+	public function setParams( $input, $field = 'params' )
 	{
 		if ( !empty( $field ) && ( $input != 'null' ) ) {
 			if ( get_magic_quotes_gpc() ) {
@@ -46,7 +46,7 @@ class jsonDBTable extends paramDBTable
 		return true;
 	}
 
-	function multistripslashes( $input )
+	public function multistripslashes( $input )
 	{
 		if ( is_object( $input ) ) {
 			$properties = get_object_vars( $input );
@@ -68,7 +68,7 @@ class jsonDBTable extends paramDBTable
 	/**
 	 * Add an array of Parameters to an existing parameter field
 	 */
-	function addParams( $params, $field = 'params', $overwrite = true )
+	public function addParams( $params, $field = 'params', $overwrite = true )
 	{
 		if ( empty( $this->$field ) || ( $this->$field == 'null' ) ) {
 			$this->$field = $params;
@@ -83,7 +83,7 @@ class jsonDBTable extends paramDBTable
 	/**
 	 * Recursive Merging of two Entities, regardless of type
 	 */
-	function mergeParams( $subject, $subject2, $overwrite=true )
+	public function mergeParams( $subject, $subject2, $overwrite=true )
 	{
 		if ( is_object( $subject ) ) {
 			$properties = get_object_vars( $subject2 );
@@ -115,7 +115,7 @@ class jsonDBTable extends paramDBTable
 	/**
 	 * Delete a set of Parameters providing an array of key names
 	 */
-	function delParams( $array, $field = 'params' )
+	public function delParams( $array, $field = 'params' )
 	{
 
 	}
@@ -123,12 +123,12 @@ class jsonDBTable extends paramDBTable
 	/**
 	 * Return the differences between a new set of Parameters and the existing one
 	 */
-	function diffParams( $array, $field = 'params' )
+	public function diffParams( $array, $field = 'params' )
 	{
 
 	}
 
-	function load( $id, $jsonfields=array() )
+	public function load( $id, $jsonfields=array() )
 	{
 		if ( method_exists( $this, 'declareJSONfields' ) ) {
 			$jsonfields = array_merge( $jsonfields, $this->declareJSONfields() );
@@ -145,7 +145,7 @@ class jsonDBTable extends paramDBTable
 		return true;
 	}
 
-	function check( $jsonfields=array() )
+	public function check( $jsonfields=array() )
 	{
 		if ( method_exists( $this, 'declareJSONfields' ) ) {
 			$jsonfields = array_merge( $jsonfields, $this->declareJSONfields() );
@@ -168,11 +168,11 @@ class jsonDBTable extends paramDBTable
 
 class languageFileHandler
 {
-	function languageFileHandler( $filepath ) {
+	public function languageFileHandler( $filepath ) {
 		$this->filepath = $filepath;
 	}
 
-	function getConstantsArray() {
+	public function getConstantsArray() {
 
 		$file = fopen( $this->filepath, "r" );
 
@@ -190,7 +190,7 @@ class languageFileHandler
 		return $array;
 	}
 
-	function getHTML() {
+	public function getHTML() {
 
 		$file = fopen( $this->filepath, "r" );
 

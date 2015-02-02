@@ -1,12 +1,12 @@
 <?php
 class AECexport_ods extends AECexport
 {
-	function AECexport_ods()
+	public function AECexport_ods()
 	{
 		$this->lines = array();
 	}
 
-	function finishExport()
+	public function finishExport()
 	{
 		include_once( JPATH_SITE . '/components/com_acctexp/lib/ods-php/ods.php' );
 		$ods = newOds();

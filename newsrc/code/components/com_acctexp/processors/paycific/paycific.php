@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_paycific extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
   		$info = array();
 		$info['name']					= 'paycific';
@@ -27,7 +27,7 @@ class processor_paycific extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']				= 0;
@@ -39,7 +39,7 @@ class processor_paycific extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']				= array( 'toggle' );
@@ -53,7 +53,7 @@ class processor_paycific extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( empty( $request->invoice->secondary_ident ) ) {
 			$paycific_path = '/en/shops/'.$this->settings['websiteid'].'/create_otp_code';
@@ -93,7 +93,7 @@ class processor_paycific extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		if ( empty( $post ) ) {
 			$post = aecPostParamClear( $_GET );
@@ -107,7 +107,7 @@ class processor_paycific extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid']	= 0;
 
@@ -124,12 +124,12 @@ class processor_paycific extends POSTprocessor
 		return $response;
 	}
 
-	function notificationError( $response, $error )
+	public function notificationError( $response, $error )
 	{
 		echo 'OK=0 ERROR: ' . $error;
 	}
 
-	function isValidMd5( $hash )
+	public function isValidMd5( $hash )
 	{
 		return !empty($hash) && preg_match('/^[a-f0-9]{32}$/', $hash);
 	}

@@ -14,7 +14,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class mi_vbulletin
 {
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_VBULLETIN');
@@ -24,7 +24,7 @@ class mi_vbulletin
 		return $info;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -36,7 +36,7 @@ class mi_vbulletin
 		return in_array( $conf->getValue('config.dbprefix') .'_acctexp_mi_vbulletinpw', $tables );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -53,7 +53,7 @@ class mi_vbulletin
 		return;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -156,7 +156,7 @@ class mi_vbulletin
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$settings = array();
 
@@ -171,7 +171,7 @@ class mi_vbulletin
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$app = JFactory::getApplication();
 
@@ -235,7 +235,7 @@ class mi_vbulletin
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$vbdb = $this->getDB();
 
@@ -252,7 +252,7 @@ class mi_vbulletin
 		return true;
 	}
 
-	function userGroups( $db, $userid )
+	public function userGroups( $db, $userid )
 	{
 		$query = 'SELECT `userid`, `usergroupid`, `membergroupids`, `displaygroupid`'
 				. ' FROM ' . $this->settings['table_prefix'] . 'user'
@@ -263,7 +263,7 @@ class mi_vbulletin
 		return $db->loadObject();
 	}
 
-	function updateGroups( $db, $userid, $suffix="" )
+	public function updateGroups( $db, $userid, $suffix="" )
 	{
 		$user = $this->userGroups( $db, $userid );
 
@@ -380,7 +380,7 @@ class mi_vbulletin
 		return true;
 	}
 
-	function vbUserid( $db, $email )
+	public function vbUserid( $db, $email )
 	{
 		$query = 'SELECT `userid`'
 				. ' FROM ' . $this->settings['table_prefix'] . 'user'
@@ -391,7 +391,7 @@ class mi_vbulletin
 		return $db->loadResult();
 	}
 
-	function createUser( $db, $fields )
+	public function createUser( $db, $fields )
 	{
 		$query = 'INSERT INTO ' . $this->settings['table_prefix'] . 'user'
 				. ' (`' . implode( '`, `', array_keys( $fields ) ) . '`)'
@@ -402,7 +402,7 @@ class mi_vbulletin
 		$db->query();
 	}
 
-	function updateUser( $db, $userid, $fields )
+	public function updateUser( $db, $userid, $fields )
 	{
 		$set = array();
 		foreach ( $fields as $key => $value ) {
@@ -420,7 +420,7 @@ class mi_vbulletin
 		return $db->query();
 	}
 
-	function getUserFields( $db )
+	public function getUserFields( $db )
 	{
 		// Exclude all standard fields so that we can write possible custom fields
 		$excluded = array(	"userid", "usergroupid", "membergroupids", "displaygroupid", "username", "password", "passworddate", "email",
@@ -450,7 +450,7 @@ class mi_vbulletin
 		return $return;
 	}
 
-	function getDB()
+	public function getDB()
 	{
 		if ( !empty( $this->settings['use_altdb'] ) ) {
 			$options = array(	'driver'	=> $this->settings['dbms'],
@@ -469,7 +469,7 @@ class mi_vbulletin
 		return $db;
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -519,19 +519,19 @@ class vbulletinpw extends serialParamDBTable
 	/** @var string */
 	var $vbulletinsalt		= null;
 
-	function vbulletinpw()
+	public function vbulletinpw()
 	{
 		parent::__construct( '#__acctexp_mi_vbulletinpw', 'id' );
 	}
 
-	function loadUserID( $userid )
+	public function loadUserID( $userid )
 	{
 		$uid = $this->getIDbyUserID( $userid );
 
 		return $this->load( $uid );
 	}
 
-	function getIDbyUserID( $userid )
+	public function getIDbyUserID( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -543,12 +543,12 @@ class vbulletinpw extends serialParamDBTable
 		return $db->loadResult();
 	}
 
-	function hash( $password, $salt )
+	public function hash( $password, $salt )
 	{
 		return md5( md5( $password ) . $salt );
 	}
 
-	function saltgen( $length=16 )
+	public function saltgen( $length=16 )
 	{
 		return AECToolbox::randomstring( $length, true );
 	}

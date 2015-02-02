@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_payos extends URLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'payos';
@@ -29,7 +29,7 @@ class processor_payos extends URLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']		= "USD";
@@ -41,7 +41,7 @@ class processor_payos extends URLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['currency']		= array( 'list_currency' );
@@ -63,7 +63,7 @@ class processor_payos extends URLprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
@@ -123,7 +123,7 @@ class processor_payos extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$db = JFactory::getDBO();
 
@@ -134,7 +134,7 @@ class processor_payos extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -190,12 +190,12 @@ class processor_payos extends URLprocessor
 		return $response;
 	}
 
-	function notificationError( $response, $error )
+	public function notificationError( $response, $error )
 	{
 		echo 'OK=0 ERROR: ' . $error;
 	}
 
-	function notificationSuccess( $response )
+	public function notificationSuccess( $response )
 	{
 		echo 'OK=100';
 	}

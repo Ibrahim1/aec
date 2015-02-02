@@ -14,22 +14,22 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class cbaecmembershipTab extends cbTabHandler
 {
 
-	function cbaecmembershipTab()
+	public function cbaecmembershipTab()
 	{
 		$this->cbTabHandler();
 	}
 
-	function getDisplayTab( $tab, $user, $ui )
+	public function getDisplayTab( $tab, $user, $ui )
 	{
 		return $this->getTab( $tab, $user, $ui, 'frontend' );
 	}
 
-	function getEditTab($tab,$user,$ui)
+	public function getEditTab($tab,$user,$ui)
 	{
 		return $this->getTab( $tab, $user, $ui, 'admin' );
 	}
 
-	function getTab( $tab, $user, $ui, $location )
+	public function getTab( $tab, $user, $ui, $location )
 	{
 		global $_CB_framework;
 
@@ -38,7 +38,7 @@ class cbaecmembershipTab extends cbTabHandler
 		return $this->displaySubscriptions( $tab, $user, $ui );
 	}
 
-	function displaySubscriptions( $tab, $user, $ui )
+	public function displaySubscriptions( $tab, $user, $ui )
 	{
 		$db = JFactory::getDBO();
 
@@ -93,7 +93,7 @@ class cbaecmembershipTab extends cbTabHandler
 		return $html_return;
 	}
 
-	function getAllCurrentSubscriptionsInfoComplete( $userid )
+	public function getAllCurrentSubscriptionsInfoComplete( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -106,7 +106,7 @@ class cbaecmembershipTab extends cbTabHandler
 		return $db->loadObjectList();
 	}
 
-	function getIconHtml( $status )
+	public function getIconHtml( $status )
 	{
 		switch( $status ) {
 		case 'Excluded':

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_eventlog extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_EVENTLOG_NAME');
@@ -23,7 +23,7 @@ class mi_eventlog extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['short']			= array( 'inputE' );
@@ -61,7 +61,7 @@ class mi_eventlog extends MI
 	}
 
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !isset( $this->settings['short'.$request->area] ) ) {
 			return null;

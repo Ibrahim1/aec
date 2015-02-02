@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_ogone extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'ogone';
@@ -29,7 +29,7 @@ class processor_ogone extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= '0';
@@ -42,7 +42,7 @@ class processor_ogone extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -51,11 +51,11 @@ class processor_ogone extends POSTprocessor
 		$settings['currency']		= array( 'list_currency' );
 		$settings['language']		= array( 'inputC' );
 		$settings['customparams']	= array( 'inputD' );
-		
+
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var = array();
 		$var['PSPID']		= $this->settings['psid'];
@@ -76,8 +76,8 @@ class processor_ogone extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )	
-	{	
+	public function parseNotification( $post )
+	{
 		$response = array();
 
 		$response['raw'] = $_GET;
@@ -89,7 +89,7 @@ class processor_ogone extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -113,7 +113,7 @@ class processor_ogone extends POSTprocessor
 		return $response;
 	}
 
-	function getHash( $source )
+	public function getHash( $source )
 	{
 		$vars = array( 'AMOUNT', 'CURRENCY', 'LANGUAGE', 'ORDERID', 'PSPID' );
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_sofortueberweisung extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'sofortueberweisung';
@@ -28,7 +28,7 @@ class processor_sofortueberweisung extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['user_id']				= '123456';
@@ -45,7 +45,7 @@ class processor_sofortueberweisung extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -75,7 +75,7 @@ class processor_sofortueberweisung extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']		= 'https://www.sofortueberweisung.de/payment/start';
 
@@ -116,7 +116,7 @@ class processor_sofortueberweisung extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		if ( empty( $post['transaction'] ) ) {
@@ -132,7 +132,7 @@ class processor_sofortueberweisung extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$values = array(
 			'transaction','user_id','project_id',
@@ -192,7 +192,7 @@ class processor_sofortueberweisung extends POSTprocessor
 		return $response;
 	}
 
-	function getHash( $string )
+	public function getHash( $string )
 	{
 		if ( $this->settings['hash_encoding'] == 'SHA1' ) {
 			return sha1( $string );

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_mollie_wallie extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'mollie_wallie';
@@ -28,7 +28,7 @@ class processor_mollie_wallie extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 
@@ -42,7 +42,7 @@ class processor_mollie_wallie extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		// note: the mollie-wallie API is currently NOT equipped with a test interface!!!
@@ -57,18 +57,18 @@ class processor_mollie_wallie extends XMLprocessor
 	}
 
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = array();
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		return "";
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		require_once( dirname(__FILE__) . '/lib/cls.wallie.php' );
 
@@ -103,7 +103,7 @@ class processor_mollie_wallie extends XMLprocessor
 		return null;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response				= array();
 		$response['valid']		= false;
@@ -113,7 +113,7 @@ class processor_mollie_wallie extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		require_once( dirname(__FILE__) . '/lib/cls.wallie.php' );
 
@@ -143,7 +143,7 @@ class processor_mollie_wallie extends XMLprocessor
 		return $response;
 	}
 
-	function ___logError( $shortdesc, $errorcode, $errordesc )
+	public function ___logError( $shortdesc, $errorcode, $errordesc )
 	{
 		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );
 	}

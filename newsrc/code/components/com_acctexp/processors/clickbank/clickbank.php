@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_clickbank extends URLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'clickbank';
@@ -29,7 +29,7 @@ class processor_clickbank extends URLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -42,7 +42,7 @@ class processor_clickbank extends URLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['currency']		= array( 'list_currency' );
@@ -57,7 +57,7 @@ class processor_clickbank extends URLprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
+	public function CustomPlanParams()
 	{
 		$p = array();
 		$p['item_number']	= array( 'inputC' );
@@ -65,7 +65,7 @@ class processor_clickbank extends URLprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$item_number			= $request->int_var['planparams']['item_number'];
 
@@ -79,7 +79,7 @@ class processor_clickbank extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']			= aecGetParam( 'invoice', '', true, array( 'word' ) );
@@ -109,7 +109,7 @@ class processor_clickbank extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -198,7 +198,7 @@ class processor_clickbank extends URLprocessor
 		return $response;
 	}
 
-	function postToKey( $post )
+	public function postToKey( $post )
 	{
 		$fields = array();
 		foreach ( $post as $key => $value ) {

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecBucketHandler
 {
-	function getListForSubject( $subject )
+	public function getListForSubject( $subject )
 	{
 		$db = JFactory::getDBO();
 
@@ -27,7 +27,7 @@ class aecBucketHandler
 		return $buckets;
 	}
 
-	function getFullListForSubject( $subject )
+	public function getFullListForSubject( $subject )
 	{
 		$buckets = $this->getListForSubject( $subject );
 
@@ -54,17 +54,17 @@ class aecBucket extends serialParamDBTable
 	/** @var string */
 	var $data 			= null;
 
-	function __construct()
+	public function __construct()
 	{
 	 	parent::__construct( '#__acctexp_bucket', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params' );
 	}
 
-	function stuff( $subject, $data )
+	public function stuff( $subject, $data )
 	{
 		$this->created_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
 		$this->subject		= $subject;

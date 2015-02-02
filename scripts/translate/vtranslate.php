@@ -273,7 +273,7 @@ vTranslate::log( "All done." . "\n\n", $log );
 
 class vTranslate
 {
-	function getFolders( $path, $list=array(), $other=false )
+	public function getFolders( $path, $list=array(), $other=false )
 	{
 		$iterator = new DirectoryIterator( $path );
 
@@ -300,7 +300,7 @@ class vTranslate
 		return $list;
 	}
 
-	function getFiles($path)
+	public function getFiles($path)
 	{
 		$iterator = new DirectoryIterator( $path );
 
@@ -316,7 +316,7 @@ class vTranslate
 		return $arr;
 	}
 
-	function parseLine( $line )
+	public function parseLine( $line )
 	{
 		// Clean up line
 		$line = trim( $line );
@@ -381,7 +381,7 @@ class vTranslate
 	}
 
 
-	function ISO3166_2ify( $lang )
+	public function ISO3166_2ify( $lang )
 	{
 		$ll = explode( '-', $lang );
 
@@ -445,7 +445,7 @@ class vTranslate
 		}
 	}
 
-	function rrmdir( $dir )
+	public function rrmdir( $dir )
 	{
 		if ( is_dir($dir) ) {
 			$objects = scandir($dir);
@@ -465,7 +465,7 @@ class vTranslate
 		}
 	}
 
-	function safeEncode( $content )
+	public function safeEncode( $content )
 	{
 		if ( !mb_check_encoding( $content, 'UTF-8' ) || !( $content === mb_convert_encoding( mb_convert_encoding( $content, 'UTF-32', 'UTF-8' ), 'UTF-8', 'UTF-32' ) ) ) {
 			$content = mb_convert_encoding( $content, 'UTF-8' );
@@ -474,7 +474,7 @@ class vTranslate
 		return $content;
 	}
 
-	function log( $thing, $log )
+	public function log( $thing, $log )
 	{
 		echo $thing;
 

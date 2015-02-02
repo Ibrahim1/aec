@@ -7,14 +7,14 @@ class Less_Visitor_import extends Less_VisitorReplacing{
 	public $_importer;
 	public $importCount;
 
-	function __construct( $evalEnv ){
+	public function __construct( $evalEnv ){
 		$this->env = $evalEnv;
 		$this->importCount = 0;
 		parent::__construct();
 	}
 
 
-	function run( $root ){
+	public function run( $root ){
 		$root = $this->visitObj($root);
 		$this->isFinished = true;
 
@@ -23,7 +23,7 @@ class Less_Visitor_import extends Less_VisitorReplacing{
 		//}
 	}
 
-	function visitImport($importNode, &$visitDeeper ){
+	public function visitImport($importNode, &$visitDeeper ){
 		$importVisitor = $this;
 		$inlineCSS = $importNode->options['inline'];
 
@@ -92,44 +92,44 @@ class Less_Visitor_import extends Less_VisitorReplacing{
 	}
 
 
-	function visitRule( $ruleNode, &$visitDeeper ){
+	public function visitRule( $ruleNode, &$visitDeeper ){
 		$visitDeeper = false;
 		return $ruleNode;
 	}
 
-	function visitDirective($directiveNode, $visitArgs){
+	public function visitDirective($directiveNode, $visitArgs){
 		array_unshift($this->env->frames,$directiveNode);
 		return $directiveNode;
 	}
 
-	function visitDirectiveOut($directiveNode) {
+	public function visitDirectiveOut($directiveNode) {
 		array_shift($this->env->frames);
 	}
 
-	function visitMixinDefinition($mixinDefinitionNode, $visitArgs) {
+	public function visitMixinDefinition($mixinDefinitionNode, $visitArgs) {
 		array_unshift($this->env->frames,$mixinDefinitionNode);
 		return $mixinDefinitionNode;
 	}
 
-	function visitMixinDefinitionOut($mixinDefinitionNode) {
+	public function visitMixinDefinitionOut($mixinDefinitionNode) {
 		array_shift($this->env->frames);
 	}
 
-	function visitRuleset($rulesetNode, $visitArgs) {
+	public function visitRuleset($rulesetNode, $visitArgs) {
 		array_unshift($this->env->frames,$rulesetNode);
 		return $rulesetNode;
 	}
 
-	function visitRulesetOut($rulesetNode) {
+	public function visitRulesetOut($rulesetNode) {
 		array_shift($this->env->frames);
 	}
 
-	function visitMedia($mediaNode, $visitArgs) {
+	public function visitMedia($mediaNode, $visitArgs) {
 		array_unshift($this->env->frames, $mediaNode->ruleset);
 		return $mediaNode;
 	}
 
-	function visitMediaOut($mediaNode) {
+	public function visitMediaOut($mediaNode) {
 		array_shift($this->env->frames);
 	}
 

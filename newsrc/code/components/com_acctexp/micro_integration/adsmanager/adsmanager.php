@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_adsmanager extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_ADSMANAGER_NAME');
@@ -23,7 +23,7 @@ class mi_adsmanager extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -41,7 +41,7 @@ class mi_adsmanager extends MI
 	}
 
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( $this->settings['unpublish_all'.$request->area] ) {
 			$this->unpublishItems( $request->metaUser );
@@ -54,7 +54,7 @@ class mi_adsmanager extends MI
 		return true;
 	}
 
-	function publishItems( $metaUser )
+	public function publishItems( $metaUser )
 	{
 		$db = JFactory::getDBO();
 
@@ -71,7 +71,7 @@ class mi_adsmanager extends MI
 		}
 	}
 
-	function unpublishItems( $metaUser )
+	public function unpublishItems( $metaUser )
 	{
 		$db = JFactory::getDBO();
 

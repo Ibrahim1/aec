@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_smscoin extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= "smscoin";
@@ -25,7 +25,7 @@ class processor_smscoin extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['s_purse']		= '1234';
@@ -36,7 +36,7 @@ class processor_smscoin extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -50,7 +50,7 @@ class processor_smscoin extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var = array();
 		$var['post_url']		= 'http://service.smscoin.com/bank/';
@@ -77,7 +77,7 @@ class processor_smscoin extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']		= $post['invoice'];
@@ -86,7 +86,7 @@ class processor_smscoin extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -106,7 +106,7 @@ class processor_smscoin extends POSTprocessor
 		return $response;
 	}
 
-	function ref_sign()
+	public function ref_sign()
 	{
 		$params = func_get_args();
 

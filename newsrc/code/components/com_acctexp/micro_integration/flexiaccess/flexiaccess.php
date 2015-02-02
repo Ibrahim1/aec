@@ -15,7 +15,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_flexiaccess
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_FLEXIACCESS');
@@ -25,7 +25,7 @@ class mi_flexiaccess
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -79,12 +79,12 @@ class mi_flexiaccess
 		return $settings;
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_flexiaccess' );
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -105,7 +105,7 @@ class mi_flexiaccess
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -122,7 +122,7 @@ class mi_flexiaccess
 		}
 	}
 
-	function AddUserToGroup( $userid, $groupid )
+	public function AddUserToGroup( $userid, $groupid )
 	{
 		$db = JFactory::getDBO();
 
@@ -150,7 +150,7 @@ class mi_flexiaccess
 		}
 	}
 
-	function DeleteUserFromGroup( $userid, $groupid=null )
+	public function DeleteUserFromGroup( $userid, $groupid=null )
 	{
 		$db = JFactory::getDBO();
 

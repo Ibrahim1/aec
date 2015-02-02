@@ -1,19 +1,19 @@
 <?php
 class AECexport_csv extends AECexport
 {
-	function AECexport_csv(){}
+	public function AECexport_csv(){}
 
-	function putDescription( $array )
+	public function putDescription( $array )
 	{
 		echo $this->fputcsv( $array );
 	}
 
-	function putln( $array )
+	public function putln( $array )
 	{
 		echo $this->fputcsv( $array );
 	}
 
-	function fputcsv( $fields = array(), $delimiter = ',', $enclosure = '"' )
+	public function fputcsv( $fields = array(), $delimiter = ',', $enclosure = '"' )
 	{
 		$str = '';
 		$escape_char = '\\';

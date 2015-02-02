@@ -10,7 +10,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_jomsocialjspt
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_("AEC_MI_NAME_JOMSOCIALJSPT");
@@ -20,7 +20,7 @@ class mi_jomsocialjspt
 		return $info;
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		if ( !is_dir( JPATH_ROOT. DS . 'components'. DS .'com_community' ) || !is_dir( JPATH_ROOT. DS . 'components'. DS .'com_xipt' ) ) {
 			return false;
@@ -29,7 +29,7 @@ class mi_jomsocialjspt
 		return true;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		require_once ( JPATH_ROOT.'/components/com_xipt/api.xipt.php');
 
@@ -67,7 +67,7 @@ class mi_jomsocialjspt
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( is_array( $this->settings['profiletype'] ) ) {
 			$this->settings['profiletype'] = $this->settings['profiletype'][0];
@@ -80,7 +80,7 @@ class mi_jomsocialjspt
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( is_array( $this->settings['profiletype_after_exp'] ) ) {
 			$this->settings['profiletype_after_exp'] = $this->settings['profiletype_after_exp'][0];
@@ -94,7 +94,7 @@ class mi_jomsocialjspt
 	}
 
 
-	function setUserProfiletype( $userId, $pId )
+	public function setUserProfiletype( $userId, $pId )
 	{
 		if ( !$this->detect_application() ) {
 			return null;
@@ -111,7 +111,7 @@ class mi_jomsocialjspt
 		XiptAPI::setUserProfiletype( $userId, $pId, 'ALL' );
 	}
 
-	function saveparams( $request )
+	public function saveparams( $request )
 	{
 		//save all data in xipt_aec table
 		$db = JFactory::getDBO();
@@ -145,11 +145,11 @@ class jomsocialjspt_restriction extends serialParamDBTable {
 	var $profiletype 			= null;
 	/** @var int */
 
-	function jomsocialjspt_restriction() {
+	public function jomsocialjspt_restriction() {
 		parent::__construct( '#__xipt_aec', 'id' );
 	}
 
-	function getIDbyPlanId( $planid ) {
+	public function getIDbyPlanId( $planid ) {
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT '.$db->nameQuote('id')

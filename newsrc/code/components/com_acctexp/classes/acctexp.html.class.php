@@ -13,14 +13,14 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecHTML
 {
-	function aecHTML( $rows, $lists=null, $js=array() )
+	public function aecHTML( $rows, $lists=null, $js=array() )
 	{
 		$this->rows		= $rows;
 		$this->lists	= $lists;
 		$this->js		= $js;
 	}
 
-	function createSettingsParticle( $name, $notooltip=false, $insertlabel=null, $insertctrl=null )
+	public function createSettingsParticle( $name, $notooltip=false, $insertlabel=null, $insertctrl=null )
 	{
 		if ( !isset( $this->rows[$name] ) ) {
 			return null;
@@ -374,7 +374,7 @@ class aecHTML
 		return $return;
 	}
 
-	function loadJS( $return=null )
+	public function loadJS( $return=null )
 	{
 		if ( !empty( $this->js ) || !empty( $return ) ) {
 			$js = "\n" . '<script type="text/javascript">';
@@ -395,7 +395,7 @@ class aecHTML
 		return $return;
 	}
 
-	function returnFull( $notooltip=false, $table=false )
+	public function returnFull( $notooltip=false, $table=false )
 	{
 		$return = '';
 		foreach ( $this->rows as $rowname => $rowcontent ) {
@@ -405,7 +405,7 @@ class aecHTML
 		return $return;
 	}
 
-	function printFull( $notooltip=false )
+	public function printFull( $notooltip=false )
 	{
 		echo $this->returnFull( $notooltip );
 	}

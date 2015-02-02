@@ -248,17 +248,17 @@ class aecCart extends serialParamDBTable
 	/** @var string */
 	var $customparams		= array();
 
-	function aecCart()
+	public function aecCart()
 	{
 		parent::__construct( '#__acctexp_cart', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'content', 'history', 'params', 'customparams' );
 	}
 
-	function check( $fields=array() )
+	public function check( $fields=array() )
 	{
 		$vars = get_class_vars( 'aecCart' );
 		$props = get_object_vars( $this );
@@ -272,7 +272,7 @@ class aecCart extends serialParamDBTable
 		return parent::check($fields);
 	}
 
-	function store($updateNulls = true)
+	public function store($updateNulls = true)
 	{
 		if ( !$this->id || ( strcmp( $this->created_date, '0000-00-00 00:00:00' ) !== 0 ) ) {
 			$this->created_date = date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );
@@ -283,7 +283,7 @@ class aecCart extends serialParamDBTable
 		return parent::store($updateNulls);
 	}
 
-	function action( $action, $details=null )
+	public function action( $action, $details=null )
 	{
 		if ( $action == "clearCart" ) {
 			// Delete Invoices referencing this Cart as well
@@ -310,7 +310,7 @@ class aecCart extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function addItem( $return, $item )
+	public function addItem( $return, $item )
 	{
 		if ( is_object( $item ) ) {
 			$id = $item->id;
@@ -361,7 +361,7 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function addCoupon( $coupon_code, $id=null )
+	public function addCoupon( $coupon_code, $id=null )
 	{
 		if ( is_null( $id ) ) {
 			if ( !isset( $this->params['overall_coupons'] ) ) {
@@ -382,7 +382,7 @@ class aecCart extends serialParamDBTable
 		}
 	}
 
-	function removeCoupon( $coupon_code, $id=null )
+	public function removeCoupon( $coupon_code, $id=null )
 	{
 		foreach ( $this->content as $cid => $content ) {
 			if ( !is_null( $id ) ) {
@@ -410,7 +410,7 @@ class aecCart extends serialParamDBTable
 		}
 	}
 
-	function hasCoupon( $coupon_code, $id=null )
+	public function hasCoupon( $coupon_code, $id=null )
 	{
 		if ( is_null( $id ) ) {
 			if ( !empty( $this->params['overall_coupons'] ) ) {
@@ -429,7 +429,7 @@ class aecCart extends serialParamDBTable
 		return false;
 	}
 
-	function getItemIdArray()
+	public function getItemIdArray()
 	{
 		$array = array();
 		foreach ( $this->content as $cid => $content ) {
@@ -439,7 +439,7 @@ class aecCart extends serialParamDBTable
 		return $array;
 	}
 
-	function getItem( $item )
+	public function getItem( $item )
 	{
 		if ( isset( $this->content[$item] ) ) {
 			return $this->content[$item];
@@ -448,7 +448,7 @@ class aecCart extends serialParamDBTable
 		}
 	}
 
-	function removeItem( $return, $itemid )
+	public function removeItem( $return, $itemid )
 	{
 		if ( isset( $this->content[$itemid] ) ) {
 			$return['details'] = array( 'item_id' => $itemid, 'item' => $this->content[$itemid] );
@@ -463,7 +463,7 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function updateItems( $return, $updates )
+	public function updateItems( $return, $updates )
 	{
 		foreach ( $updates as $uid => $count ) {
 			if ( isset( $this->content[$uid] ) ) {
@@ -487,7 +487,7 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function getCheckout( $metaUser, $counter=0, $InvoiceFactory=null )
+	public function getCheckout( $metaUser, $counter=0, $InvoiceFactory=null )
 	{
 		$c = array();
 
@@ -589,7 +589,7 @@ class aecCart extends serialParamDBTable
 		return $return;
 	}
 
-	function getAmount( $metaUser=null, $counter=0, $InvoiceFactory=null )
+	public function getAmount( $metaUser=null, $counter=0, $InvoiceFactory=null )
 	{
 		$checkout = $this->getCheckout( $metaUser, $counter, $InvoiceFactory );
 
@@ -604,7 +604,7 @@ class aecCart extends serialParamDBTable
 		}
 	}
 
-	function checkAllFree( $metaUser, $counter=0, $InvoiceFactory=null )
+	public function checkAllFree( $metaUser, $counter=0, $InvoiceFactory=null )
 	{
 		$co = $this->getCheckout( $metaUser, $counter, $InvoiceFactory );
 
@@ -619,12 +619,12 @@ class aecCart extends serialParamDBTable
 		return true;
 	}
 
-	function getTopPlan()
+	public function getTopPlan()
 	{
 		return aecCartHelper::getFirstSortedCartItemObject( $this );
 	}
 
-	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
+	public function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
 	{
 		if ( is_array( $add ) ) {
 			if ( !empty( $add['obj'] ) ) {
@@ -639,7 +639,7 @@ class aecCart extends serialParamDBTable
 		}
 	}
 
-	function issueHistoryEvent( $class, $event, $details )
+	public function issueHistoryEvent( $class, $event, $details )
 	{
 		if ( $class == 'error' ) {
 			$this->_error = $event;
@@ -664,7 +664,7 @@ class LineItemList
 {
 	var $list = array();
 
-	function addItem( $type, $args )
+	public function addItem( $type, $args )
 	{
 		$itemclass = 'LineItem'.ucfirst($type);
 
@@ -681,12 +681,12 @@ class LineItemList
 		$item = new $itemclass( $args );
 	}
 
-	function add( $item )
+	public function add( $item )
 	{
 		$this->list[] = $item;
 	}
 
-	function remove( $id )
+	public function remove( $id )
 	{
 		if ( isset( $this->list[$id] ) ) {
 			unset( $this->list[$id] );
@@ -697,7 +697,7 @@ class LineItemList
 		return null;
 	}
 
-	function checkCoherence()
+	public function checkCoherence()
 	{
 		// Test whether this cart can be paid in a single invoice or has to be split up
 	}
@@ -709,7 +709,7 @@ class LineItem
 	var $qty = null;
 	var $amt = null;
 
-	function LineItem( $args )
+	public function LineItem( $args )
 	{
 		if ( isset( $args['id'] ) ) {
 			$this->loadObject( $args['id'] );
@@ -724,22 +724,22 @@ class LineItem
 		$this->getAmount();
 	}
 
-	function loadObject( $id )
+	public function loadObject( $id )
 	{
 		return null;
 	}
 
-	function updateQuantity( $qty )
+	public function updateQuantity( $qty )
 	{
 		$this->qty = $qty;
 	}
 
-	function getAmount()
+	public function getAmount()
 	{
 		$this->amt = 0.00;
 	}
 
-	function getItemName()
+	public function getItemName()
 	{
 		return "StdItem";
 	}
@@ -752,18 +752,18 @@ class LineItemCustom extends LineItem
 
 class LineItemSubscriptionPlan extends LineItem
 {
-	function loadObject( $id )
+	public function loadObject( $id )
 	{
 		$this->obj = new SubscriptionPlan();
 		$this->obj->load( $id );
 	}
 
-	function getItemName()
+	public function getItemName()
 	{
 		return $this->obj->getProperty( 'name' );
 	}
 
-	function getItemTerms()
+	public function getItemTerms()
 	{
 
 	}

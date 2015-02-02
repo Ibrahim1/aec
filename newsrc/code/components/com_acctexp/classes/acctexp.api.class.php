@@ -83,7 +83,7 @@ class aecAPI
 	var $error		= '';
 	var $response	= '';
 
-	function load( $request )
+	public function load( $request )
 	{
 		$this->request = $request;
 
@@ -102,7 +102,7 @@ class aecAPI
 		$this->response = new stdClass();
 	}
 
-	function loadUser()
+	public function loadUser()
 	{
 		$users = array();
 
@@ -178,7 +178,7 @@ class aecAPI
 		}
 	}
 
-	function resolve()
+	public function resolve()
 	{
 		$cmd = 'action' . $this->action;
 
@@ -189,12 +189,12 @@ class aecAPI
 		}
 	}
 
-	function actionUserExists()
+	public function actionUserExists()
 	{
 		$this->response->result = !empty( $this->metaUser->userid );
 	}
 
-	function actionMembershipDetails()
+	public function actionMembershipDetails()
 	{
 		$this->actionUserExists();
 
@@ -231,7 +231,7 @@ class aecAPI
 		}
 	}
 
-	function actionAuth()
+	public function actionAuth()
 	{
 		if ( empty( $this->request->user->username ) || empty( $this->request->user->password ) ) {
 			$this->error = 'must provide username and password to authenticate';
@@ -254,7 +254,7 @@ class aecAPI
 		$this->response->result = ( $response->status === JAUTHENTICATE_STATUS_SUCCESS );
 	}
 
-	function actionRestrictionCheck()
+	public function actionRestrictionCheck()
 	{
 		$this->response->result = false;
 

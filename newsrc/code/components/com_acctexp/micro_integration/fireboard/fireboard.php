@@ -14,7 +14,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class mi_fireboard
 {
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_FIREBOARD');
@@ -24,7 +24,7 @@ class mi_fireboard
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -64,12 +64,12 @@ class mi_fireboard
 		return $settings;
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_fireboard' );
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -85,7 +85,7 @@ class mi_fireboard
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 

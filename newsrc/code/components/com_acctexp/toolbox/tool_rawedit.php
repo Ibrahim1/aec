@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_rawedit
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Raw Data Edit";
@@ -22,7 +22,7 @@ class tool_rawedit
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -121,7 +121,7 @@ class tool_rawedit
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['edit'] ) ) {
 			return null;

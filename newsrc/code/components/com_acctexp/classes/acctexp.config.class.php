@@ -18,7 +18,7 @@ class aecConfig extends serialParamDBTable
 	/** @var string */
 	var $settings 			= null;
 
-	function aecConfig()
+	public function aecConfig()
 	{
 		parent::__construct( '#__acctexp_config', 'id' );
 
@@ -30,19 +30,19 @@ class aecConfig extends serialParamDBTable
 		}
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'settings' );
 	}
 
-	function load( $id=null, $reset=true )
+	public function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 
 		$this->cfg =& $this->settings;
 	}
 
-	function check( $fields=array() )
+	public function check( $fields=array() )
 	{
 		unset( $this->cfg );
 
@@ -148,7 +148,7 @@ class aecConfig extends serialParamDBTable
 		return $def;
 	}
 
-	function initParams()
+	public function initParams()
 	{
 		// Insert a new entry if there is none yet
 		if ( empty( $this->settings ) ) {
@@ -177,7 +177,7 @@ class aecConfig extends serialParamDBTable
 		return true;
 	}
 
-	function saveSettings()
+	public function saveSettings()
 	{
 		// Extra check for duplicated rows
 		if ( $this->RowDuplicationCheck() ) {
@@ -188,7 +188,7 @@ class aecConfig extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function RowDuplicationCheck()
+	public function RowDuplicationCheck()
 	{
 		$query = 'SELECT count(*)'
 				. ' FROM #__acctexp_config'
@@ -203,7 +203,7 @@ class aecConfig extends serialParamDBTable
 		}
 	}
 
-	function CleanDuplicatedRows()
+	public function CleanDuplicatedRows()
 	{
 		$query = 'SELECT max(id)'
 				. ' FROM #__acctexp_config'

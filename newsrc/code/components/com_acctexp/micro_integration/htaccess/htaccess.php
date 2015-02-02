@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_htaccess extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_HTACCESS');
@@ -22,12 +22,12 @@ class mi_htaccess extends MI
 		return $info;
 	}
 
-	function mi_htaccess()
+	public function mi_htaccess()
 	{
 		include_once( dirname(__FILE__) . '/lib/htaccess.class.php' );
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -39,7 +39,7 @@ class mi_htaccess extends MI
 		return in_array( $app->getCfg( 'dbprefix' ) .'acctexp_mi_htaccess_apachepw', $tables );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -55,7 +55,7 @@ class mi_htaccess extends MI
 		return;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		// field type; name; variable value, description, extra (variable name)
@@ -70,7 +70,7 @@ class mi_htaccess extends MI
 		return $settings;
 	}
 
-	function saveparams( $params )
+	public function saveparams( $params )
 	{
 		$db = JFactory::getDBO();
 
@@ -103,7 +103,7 @@ class mi_htaccess extends MI
 		return $newparams;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -111,7 +111,7 @@ class mi_htaccess extends MI
 		$ht->delUser( $request->metaUser->cmsUser->username );
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$ht = $this->getHTAccess( $this->settings );
 
@@ -130,7 +130,7 @@ class mi_htaccess extends MI
 		return true;
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		$password = $this->getPWrequest( $request );
 
@@ -166,7 +166,7 @@ class mi_htaccess extends MI
 		return true;
 	}
 
-	function getHTAccess( $settings )
+	public function getHTAccess( $settings )
 	{
 		$htaccess = new htaccess();
 		$htaccess->setFPasswd( $settings['mi_folder_user_fullpath'] );
@@ -179,7 +179,7 @@ class mi_htaccess extends MI
 		return $htaccess;
 	}
 
-	function getApachePW( $userid )
+	public function getApachePW( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -196,7 +196,7 @@ class mi_htaccess extends MI
 		return $apachepw;
 	}
 
-	function makePassword( $cleartext )
+	public function makePassword( $cleartext )
 	{
 		if ( !empty( $this->settings['use_apachemd5'] ) ) {
 			return $this->crypt_apr1_md5( $cleartext );
@@ -207,7 +207,7 @@ class mi_htaccess extends MI
 		}
 	}
 
-	function crypt_apr1_md5( $plainpasswd )
+	public function crypt_apr1_md5( $plainpasswd )
 	{
 		$salt = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, 8);
 
@@ -263,12 +263,12 @@ class apachepw extends serialParamDBTable
 	/** @var string */
 	var $apachepw			= null;
 
-	function apachepw()
+	public function apachepw()
 	{
 		parent::__construct( '#__acctexp_mi_htaccess_apachepw', 'id' );
 	}
 
-	function getIDbyUserID( $userid )
+	public function getIDbyUserID( $userid )
 	{
 		$db = JFactory::getDBO();
 

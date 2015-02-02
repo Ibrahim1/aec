@@ -6,11 +6,11 @@
  */
 
 class SimpleXMLObject{
-	function attributes(){
+	public function attributes(){
 		$container = get_object_vars($this);
 		return (object) $container["@attributes"];
 	}
-	function content(){
+	public function content(){
 		$container = get_object_vars($this);
 		return (object) $container["@content"];
 	}
@@ -35,7 +35,7 @@ class simplexml {
 	 * @param $value
 	 * @param string $type
 	 */
-	function array_insert($level, $tags, $value, $type)
+	public function array_insert($level, $tags, $value, $type)
 	{
 		$temp = '';
 		for ($c = $this->ignore_level + 1; $c < $level + 1; $c++) {
@@ -58,7 +58,7 @@ class simplexml {
 	 * @param array $array
 	 * @return array
 	 */
-	function xml_tags($array)
+	public function xml_tags($array)
 	{	$repeats_temp = array();
 	$repeats_count = array();
 	$repeats = array();
@@ -93,7 +93,7 @@ class simplexml {
 	 * @param array $arg_array
 	 * @return $tmp
 	 */
-	function array2object ($arg_array)
+	public function array2object ($arg_array)
 	{
 
 		if (is_array($arg_array)) {
@@ -132,7 +132,7 @@ class simplexml {
 	 * @param array $array
 	 * @return array
 	 */
-	function array_reindex($array)
+	public function array_reindex($array)
 	{
 		if (is_array($array)) {
 			foreach($array as $keys => $items) {
@@ -149,7 +149,7 @@ class simplexml {
 		return $array;
 	}
 
-	function array_flatten($array) {
+	public function array_flatten($array) {
 	/**
 	 * Removes the redundant [0] keys in array and adds its value to its parent key.
 	 *
@@ -174,7 +174,7 @@ class simplexml {
 	 * @param array $array
 	 * @return array
 	 */
-	function xml_reorganize($array)
+	public function xml_reorganize($array)
 	{
 		$count = count($array);
 		$repeat = $this->xml_tags($array);
@@ -278,7 +278,7 @@ class simplexml {
 	 * @param string $encoding
 	 * @return array/object
 	 */
-	function xml_load_file($file, $resulttype = 'object', $encoding = 'UTF-8')
+	public function xml_load_file($file, $resulttype = 'object', $encoding = 'UTF-8')
 	{
 		$php_errormsg="";
 		$this->result="";

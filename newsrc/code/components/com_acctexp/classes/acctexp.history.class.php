@@ -36,17 +36,17 @@ class logHistory extends serialParamDBTable
 	/** @var string */
 	var $response;
 
-	function logHistory()
+	public function logHistory()
 	{
 		parent::__construct( '#__acctexp_log_history', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'response' );
 	}
 
-	function load( $id=null, $reset=true )
+	public function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 
@@ -55,7 +55,7 @@ class logHistory extends serialParamDBTable
 		}
 	}
 
-	function cleanup()
+	public function cleanup()
 	{
 		if ( empty( $this->response ) ) {
 			return false;
@@ -100,7 +100,7 @@ class logHistory extends serialParamDBTable
 		return false;
 	}
 
-	function entryFromInvoice( $objInvoice, $response, $pp )
+	public function entryFromInvoice( $objInvoice, $response, $pp )
 	{
 		$user = new cmsUser();
 		$user->load( $objInvoice->userid );

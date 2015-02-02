@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_vatcollect
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "VAT Tax Report";
@@ -22,7 +22,7 @@ class tool_vatcollect
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		// Always show full month
 		$start	= strtotime( date( 'Y-m' ) . '-1 00:00:00' );
@@ -35,7 +35,7 @@ class tool_vatcollect
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['start_date'] ) ) {
 			return null;

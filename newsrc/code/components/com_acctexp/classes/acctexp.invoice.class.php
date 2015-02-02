@@ -226,7 +226,7 @@ class InvoiceFactory
 	/** @var int */
 	var $confirmed		= null;
 
-	function __construct( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null, $alert=true, $forceinternal=false )
+	public function __construct( $userid=null, $usage=null, $group=null, $processor=null, $invoice=null, $passthrough=null, $alert=true, $forceinternal=false )
 	{
 		$this->initUser( $userid, $alert, $forceinternal );
 
@@ -241,7 +241,7 @@ class InvoiceFactory
 		$this->verifyUsage();
 	}
 
-	function initUser( $userid=null, $alert=true, $forceinternal=false )
+	public function initUser( $userid=null, $alert=true, $forceinternal=false )
 	{
 		$user = JFactory::getUser();
 
@@ -294,7 +294,7 @@ class InvoiceFactory
 		return null;
 	}
 
-	function initPassthrough( $passthrough )
+	public function initPassthrough( $passthrough )
 	{
 		if ( empty( $passthrough ) ) {
 			$passthrough = aecPostParamClear( $_POST, '', true );
@@ -327,7 +327,7 @@ class InvoiceFactory
 		}
 	}
 
-	function verifyUsage()
+	public function verifyUsage()
 	{
 		if ( empty( $this->usage ) ) {
 			return null;
@@ -351,7 +351,7 @@ class InvoiceFactory
 		return true;
 	}
 
-	function usageStatus()
+	public function usageStatus()
 	{
 		if ( $this->isCart() ) {
 			$this->getCart();
@@ -374,7 +374,7 @@ class InvoiceFactory
 		return true;
 	}
 
-	function getPassthrough( $unset=null )
+	public function getPassthrough( $unset=null )
 	{
 		if ( empty( $this->passthrough ) ) {
 			return '';
@@ -404,7 +404,7 @@ class InvoiceFactory
 		return base64_encode( serialize( $passthrough ) );
 	}
 
-	function puffer( $testmi=false )
+	public function puffer( $testmi=false )
 	{
 		$this->loadPlanObject( $testmi );
 
@@ -417,7 +417,7 @@ class InvoiceFactory
 		return;
 	}
 
-	function loadPlanObject( $testmi=false, $quick=false )
+	public function loadPlanObject( $testmi=false, $quick=false )
 	{
 		if ( empty( $this->usage ) && !empty( $this->passthrough['usage'] ) ) {
 			$this->usage = $this->passthrough['usage'];
@@ -601,7 +601,7 @@ class InvoiceFactory
 		}
 	}
 
-	function cartItemsPPselectForm()
+	public function cartItemsPPselectForm()
 	{
 		$pgroups = aecCartHelper::getCartProcessorGroups( $this->cartobject, $this->recurring );
 
@@ -792,7 +792,7 @@ class InvoiceFactory
 		}
 	}
 
-	function loadProcessorObject()
+	public function loadProcessorObject()
 	{
 		$this->pp					= false;
 
@@ -846,7 +846,7 @@ class InvoiceFactory
 		}
 	}
 
-	function loadRenewStatus()
+	public function loadRenewStatus()
 	{
 		$this->renew = 0;
 
@@ -866,7 +866,7 @@ class InvoiceFactory
 		}
 	}
 
-	function loadPaymentInfo()
+	public function loadPaymentInfo()
 	{
 		$this->payment->freetrial = 0;
 		$this->payment->amount = null;
@@ -930,7 +930,7 @@ class InvoiceFactory
 		}
 	}
 
-	function raiseException( $exception )
+	public function raiseException( $exception )
 	{
 		if ( empty( $this->exceptions ) ) {
 			$this->exceptions = array();
@@ -939,12 +939,12 @@ class InvoiceFactory
 		$this->exceptions[] = $exception;
 	}
 
-	function hasExceptions()
+	public function hasExceptions()
 	{
 		return !empty( $this->exceptions );
 	}
 
-	function addressExceptions()
+	public function addressExceptions()
 	{
 		$hasform = false;
 
@@ -985,12 +985,12 @@ class InvoiceFactory
 		getView( 'exception', array( 'InvoiceFactory' => $this, 'aecHTML' => $aecHTML, 'hasform' => $hasform ) );
 	}
 
-	function isCart()
+	public function isCart()
 	{
 		return ( !empty( $this->usage ) && ( strpos( $this->usage, 'c' ) !== false ) );
 	}
 
-	function getCart()
+	public function getCart()
 	{
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
@@ -1011,7 +1011,7 @@ class InvoiceFactory
 		}
 	}
 
-	function loadItems( $force=false )
+	public function loadItems( $force=false )
 	{
 		$this->items = new stdClass();
 		$this->items->itemlist = array();
@@ -1098,7 +1098,7 @@ class InvoiceFactory
 		}
 	}
 
-	function loadItemTotal()
+	public function loadItemTotal()
 	{
 		if ( empty( $this->items->itemlist ) ) {
 			return null;
@@ -1161,7 +1161,7 @@ class InvoiceFactory
 		$this->invoice->storeload();
 	}
 
-	function applyCoupons()
+	public function applyCoupons()
 	{
 		global $aecConfig;
 
@@ -1235,7 +1235,7 @@ class InvoiceFactory
 		}
 	}
 
-	function addtoCart( $usage, $returngroup=null )
+	public function addtoCart( $usage, $returngroup=null )
 	{
 		global $aecConfig;
 
@@ -1271,7 +1271,7 @@ class InvoiceFactory
 		return true;
 	}
 
-	function updateCart( $data )
+	public function updateCart( $data )
 	{
 		$update = array();
 		foreach ( $data as $dn => $dv ) {
@@ -1289,7 +1289,7 @@ class InvoiceFactory
 		$this->cartobject->action( 'updateItems', $update );
 	}
 
-	function clearCart()
+	public function clearCart()
 	{
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
@@ -1298,7 +1298,7 @@ class InvoiceFactory
 		$this->cartobject->action( 'clearCart' );
 	}
 
-	function clearCartItem( $item )
+	public function clearCartItem( $item )
 	{
 		if ( empty( $this->cartobject ) ) {
 			$this->cartobject = aecCartHelper::getCartbyUserid( $this->userid );
@@ -1307,7 +1307,7 @@ class InvoiceFactory
 		$this->cartobject->action( 'updateItems', array( $item => 0 ) );
 	}
 
-	function touchInvoice( $invoice_number=false, $storenew=false, $anystatus=false )
+	public function touchInvoice( $invoice_number=false, $storenew=false, $anystatus=false )
 	{
 		// Checking whether we are trying to repeat an invoice
 		if ( !empty( $invoice_number ) ) {
@@ -1356,7 +1356,7 @@ class InvoiceFactory
 		return true;
 	}
 
-	function loadInvoice( $redirect=true )
+	public function loadInvoice( $redirect=true )
 	{
 		if ( !isset( $this->invoice ) ) {
 			$this->invoice = null;
@@ -1397,7 +1397,7 @@ class InvoiceFactory
 		return true;
 	}
 
-	function createInvoice( $storenew=false )
+	public function createInvoice( $storenew=false )
 	{
 		$this->invoice = new Invoice();
 
@@ -1438,7 +1438,7 @@ class InvoiceFactory
 		return $recurring;
 	}
 
-	function InvoiceAddCoupon( $coupon )
+	public function InvoiceAddCoupon( $coupon )
 	{
 		if ( !empty( $coupon ) ) {
 			$this->invoice->addCoupon( $coupon );
@@ -1447,7 +1447,7 @@ class InvoiceFactory
 		}
 	}
 
-	function storeInvoice()
+	public function storeInvoice()
 	{
 		$this->invoice->computeAmount( $this );
 
@@ -1460,7 +1460,7 @@ class InvoiceFactory
 		$this->triggerMIs( 'invoice_creation', $exchange, $add, $silent );
 	}
 
-	function triggerMIs( $action, &$exchange, &$add, &$silent )
+	public function triggerMIs( $action, &$exchange, &$add, &$silent )
 	{
 		if ( !empty( $this->cart ) && !empty( $this->cartobject ) ) {
 			$this->cartobject->triggerMIs( $action, $this->metaUser, $exchange, $this->invoice, $add, $silent );
@@ -1469,7 +1469,7 @@ class InvoiceFactory
 		}
 	}
 
-	function loadMetaUser( $force=false )
+	public function loadMetaUser( $force=false )
 	{
 		if ( isset( $this->metaUser ) ) {
 			if ( is_object( $this->metaUser ) && !$force ) {
@@ -1489,7 +1489,7 @@ class InvoiceFactory
 		}
 	}
 
-	function checkAuth()
+	public function checkAuth()
 	{
 		$return = true;
 
@@ -1523,12 +1523,12 @@ class InvoiceFactory
 		return $return;
 	}
 
-	function promptpassword( $wrong=false )
+	public function promptpassword( $wrong=false )
 	{
 		return getView( 'passwordprompt', array( 'passthrough' => $this->getPassthrough(), 'wrong' => $wrong ) );
 	}
 
-	function create( $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
+	public function create( $intro=0, $usage=0, $group=0, $processor=null, $invoice=0, $autoselect=false )
 	{
 		global $aecConfig;
 
@@ -1658,7 +1658,7 @@ class InvoiceFactory
 		);
 	}
 
-	function confirm()
+	public function confirm()
 	{
 		global $aecConfig;
 
@@ -1733,7 +1733,7 @@ class InvoiceFactory
 		return getView( 'confirmation', array( 'InvoiceFactory' => $this, 'passthrough' => $this->getPassthrough() ) );
 	}
 
-	function cart()
+	public function cart()
 	{
 		global $aecConfig;
 
@@ -1752,7 +1752,7 @@ class InvoiceFactory
 		return getView( 'cart', array( 'InvoiceFactory' => $this ) );
 	}
 
-	function confirmcart( $coupon=null, $testmi=false )
+	public function confirmcart( $coupon=null, $testmi=false )
 	{
 		$this->confirmed = 1;
 
@@ -1771,7 +1771,7 @@ class InvoiceFactory
 		}
 	}
 
-	function save( $coupon=null )
+	public function save( $coupon=null )
 	{
 		global $aecConfig;
 
@@ -1852,7 +1852,7 @@ class InvoiceFactory
 		return $this->checkout( 0, null, $coupon );
 	}
 
-	function verifyMIForms( $plan, $mi_form=null, $prefix="" )
+	public function verifyMIForms( $plan, $mi_form=null, $prefix="" )
 	{
 		if ( empty( $plan ) ) {
 			return null;
@@ -1950,7 +1950,7 @@ class InvoiceFactory
 		return true;
 	}
 
-	function checkout( $repeat=0, $error=null, $coupon=null )
+	public function checkout( $repeat=0, $error=null, $coupon=null )
 	{
 		global $aecConfig;
 
@@ -2070,7 +2070,7 @@ class InvoiceFactory
 		return $this->InvoiceToCheckout( $repeat, $error );
 	}
 
-	function InvoiceToCheckout( $repeat=0, $error=null, $data=null )
+	public function InvoiceToCheckout( $repeat=0, $error=null, $data=null )
 	{
 		global $aecConfig;
 
@@ -2122,7 +2122,7 @@ class InvoiceFactory
 		return getView( 'checkout', array( 'var' => $int_var['var'], 'params' => $int_var['params'], 'InvoiceFactory' => $this ) );
 	}
 
-	function getObjUsage()
+	public function getObjUsage()
 	{
 		if ( isset( $this->invoice->usage ) ) {
 			return $this->invoice->getObjUsage();
@@ -2155,7 +2155,7 @@ class InvoiceFactory
 		return null;
 	}
 
-	function internalcheckout()
+	public function internalcheckout()
 	{
 		$this->metaUser = new metaUser( $this->userid );
 
@@ -2226,7 +2226,7 @@ class InvoiceFactory
 		}
 	}
 
-	function processorResponse( $response )
+	public function processorResponse( $response )
 	{
 		$this->touchInvoice();
 
@@ -2282,7 +2282,7 @@ class InvoiceFactory
 		}
 	}
 
-	function planprocessoraction( $action, $subscr=null )
+	public function planprocessoraction( $action, $subscr=null )
 	{
 		$this->loadMetaUser();
 
@@ -2342,7 +2342,7 @@ class InvoiceFactory
 		}
 	}
 
-	function invoiceprocessoraction( $action, $invoiceNum=null )
+	public function invoiceprocessoraction( $action, $invoiceNum=null )
 	{
 		$this->loadMetaUser();
 
@@ -2369,7 +2369,7 @@ class InvoiceFactory
 		return null;
 	}
 
-	function invoiceprint( $invoice_number, $standalone=true, $extradata=null, $forcecleared=false, $forcecounter=null )
+	public function invoiceprint( $invoice_number, $standalone=true, $extradata=null, $forcecleared=false, $forcecounter=null )
 	{
 		$this->loadMetaUser();
 
@@ -2406,7 +2406,7 @@ class InvoiceFactory
 		return getView( 'invoice', array( 'data' => $data, 'standalone' => $standalone, 'InvoiceFactory' => $this ) );
 	}
 
-	function thanks( $renew=false, $free=false )
+	public function thanks( $renew=false, $free=false )
 	{
 		global $aecConfig;
 
@@ -2429,7 +2429,7 @@ class InvoiceFactory
 		}
 	}
 
-	function error( $objUser, $invoice, $error )
+	public function error( $objUser, $invoice, $error )
 	{
 		$document= JFactory::getDocument();
 
@@ -2438,7 +2438,7 @@ class InvoiceFactory
 		getView( 'error', array( 'objUser' => $objUser, 'invoice' => $invoice, 'error' => $error ) );
 	}
 
-	function reCaptchaCheck()
+	public function reCaptchaCheck()
 	{
 		global $aecConfig;
 
@@ -2508,17 +2508,17 @@ class Invoice extends serialParamDBTable
 	/** @var string */
 	var $conditions			= null;
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct( '#__acctexp_invoices', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'coupons', 'transactions', 'params', 'conditions' );
 	}
 
-	function load( $id=null, $reset=true )
+	public function load( $id=null, $reset=true )
 	{
 		parent::load( $id );
 
@@ -2527,7 +2527,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function loadLatest( $userid, $plan, $subscr=null )
+	public function loadLatest( $userid, $plan, $subscr=null )
 	{
 		if ( !empty( $subscr ) ) {
 			$this->loadbySubscriptionId( $subscr, $userid );
@@ -2542,7 +2542,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function loadInvoiceNumber( $invoiceNum )
+	public function loadInvoiceNumber( $invoiceNum )
 	{
 		$query = 'SELECT id'
 		. ' FROM #__acctexp_invoices'
@@ -2553,7 +2553,7 @@ class Invoice extends serialParamDBTable
 		$this->load($this->_db->loadResult());
 	}
 
-	function formatInvoiceNumber( $invoice=null, $nostore=false )
+	public function formatInvoiceNumber( $invoice=null, $nostore=false )
 	{
 		global $aecConfig;
 
@@ -2587,7 +2587,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function deformatInvoiceNumber()
+	public function deformatInvoiceNumber()
 	{
 		global $aecConfig;
 
@@ -2601,7 +2601,7 @@ class Invoice extends serialParamDBTable
 		$this->invoice_number = $this->_db->loadResult();
 	}
 
-	function loadbySubscriptionId( $subscrid, $userid=null )
+	public function loadbySubscriptionId( $subscrid, $userid=null )
 	{
 		$query = 'SELECT `id`'
 				. ' FROM #__acctexp_invoices'
@@ -2618,7 +2618,7 @@ class Invoice extends serialParamDBTable
 		$this->load( $this->_db->loadResult() );
 	}
 
-	function isRecurring()
+	public function isRecurring()
 	{
 		if ( !empty( $this->subscr_id ) ) {
 
@@ -2650,7 +2650,7 @@ class Invoice extends serialParamDBTable
 		return false;
 	}
 
-	function computeAmount( $InvoiceFactory=null, $save=true, $recurring_choice=null )
+	public function computeAmount( $InvoiceFactory=null, $save=true, $recurring_choice=null )
 	{
 		if ( !empty( $InvoiceFactory->metaUser ) ) {
 			$metaUser = $InvoiceFactory->metaUser;
@@ -2833,7 +2833,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function create( $userid, $usage, $processor, $second_ident=null, $store=true, $InvoiceFactory=null, $recurring_choice=null )
+	public function create( $userid, $usage, $processor, $second_ident=null, $store=true, $InvoiceFactory=null, $recurring_choice=null )
 	{
 		if ( !$userid ) {
 			return false;
@@ -2867,7 +2867,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function generateInvoiceNumber( $maxlength = 16 )
+	public function generateInvoiceNumber( $maxlength = 16 )
 	{
 		$numberofrows = 1;
 		while ( $numberofrows ) {
@@ -2885,7 +2885,7 @@ class Invoice extends serialParamDBTable
 		return $inum;
 	}
 
-	function processorResponse( $InvoiceFactory, $response, $resp='', $altvalidation=false )
+	public function processorResponse( $InvoiceFactory, $response, $resp='', $altvalidation=false )
 	{
 		global $aecConfig;
 
@@ -3217,7 +3217,7 @@ class Invoice extends serialParamDBTable
 		return $response;
 	}
 
-	function pay( $multiplicator=1, $noclear=false )
+	public function pay( $multiplicator=1, $noclear=false )
 	{
 		$metaUser	= false;
 		$new_plan	= false;
@@ -3449,7 +3449,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function cancel()
+	public function cancel()
 	{
 		if ( $this->fixed ) {
 			return false;
@@ -3489,7 +3489,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function setTransactionDate()
+	public function setTransactionDate()
 	{
 		global $aecConfig;
 
@@ -3536,7 +3536,7 @@ class Invoice extends serialParamDBTable
 		$invoice->storeload();
 	}
 
-	function getWorkingData( $InvoiceFactory )
+	public function getWorkingData( $InvoiceFactory )
 	{
 		$int_var = array();
 
@@ -3660,7 +3660,7 @@ class Invoice extends serialParamDBTable
 		return $int_var;
 	}
 
-	function getObjUsage()
+	public function getObjUsage()
 	{
 		$usage = null;
 		if ( !empty( $this->usage ) ) {
@@ -3698,7 +3698,7 @@ class Invoice extends serialParamDBTable
 		return $objUsage;
 	}
 
-	function addTargetUser( $user_ident )
+	public function addTargetUser( $user_ident )
 	{
 		global $aecConfig;
 
@@ -3751,7 +3751,7 @@ class Invoice extends serialParamDBTable
 		return false;
 	}
 
-	function removeTargetUser()
+	public function removeTargetUser()
 	{
 		if ( isset( $this->params['target_user'] ) ) {
 			unset( $this->params['target_user'] );
@@ -3763,7 +3763,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function addCoupon( $couponcode, $fromId=false )
+	public function addCoupon( $couponcode, $fromId=false )
 	{
 		if ( !empty( $this->coupons ) ) {
 			if ( !is_array( $this->coupons ) ) {
@@ -3795,7 +3795,7 @@ class Invoice extends serialParamDBTable
 		$this->coupons = $oldcoupons;
 	}
 
-	function removeCoupon( $coupon_code, $fromId=false )
+	public function removeCoupon( $coupon_code, $fromId=false )
 	{
 		if ( empty( $this->coupons ) ) {
 			return null;
@@ -3849,7 +3849,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function preparePickup( $array )
+	public function preparePickup( $array )
 	{
 		// Prevent double-saving of system parameters by bad integrations
 		$exceptions = array( 'creator_ip', 'userselect_recurring' );
@@ -3867,7 +3867,7 @@ class Invoice extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function getPrintout( $InvoiceFactory, $forcecleared=false, $forcecounter=null )
+	public function getPrintout( $InvoiceFactory, $forcecleared=false, $forcecounter=null )
 	{
 		global $aecConfig;
 
@@ -4058,7 +4058,7 @@ class Invoice extends serialParamDBTable
 		return $data;
 	}
 
-	function getTransactionStatus()
+	public function getTransactionStatus()
 	{
 		$lang = JFactory::getLanguage();
 
@@ -4081,7 +4081,7 @@ class Invoice extends serialParamDBTable
 		return $transactiondate;
 	}
 
-	function savePOSTsettings( $post )
+	public function savePOSTsettings( $post )
 	{
 		if ( isset( $post['id'] ) ) {
 			unset( $post['id'] );
@@ -4113,7 +4113,7 @@ class Invoice extends serialParamDBTable
 		}
 	}
 
-	function savePostParams( $array )
+	public function savePostParams( $array )
 	{
 		$delete = array( 'task', 'option', 'invoice' );
 
@@ -4128,7 +4128,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function check( $fields=array() )
+	public function check( $fields=array() )
 	{
 		$unset = array( 'made_free' );
 
@@ -4145,7 +4145,7 @@ class Invoice extends serialParamDBTable
 		return true;
 	}
 
-	function delete( $pk=null )
+	public function delete( $pk=null )
 	{
 		if ( !empty( $this->coupons ) ) {
 			foreach ( $this->coupons as $cid ) {

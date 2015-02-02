@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class mi_adminuseraccess
 {
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ADMINUSERACCESS');
@@ -23,7 +23,7 @@ class mi_adminuseraccess
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -67,7 +67,7 @@ class mi_adminuseraccess
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( !empty( $this->settings['set_group'] ) && !empty( $this->settings['group'] ) ) {
 			$this->update_aua_group( $request->metaUser->userid, $this->settings['group'] );
@@ -76,7 +76,7 @@ class mi_adminuseraccess
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['set_group_exp'] ) && !empty( $this->settings['group_exp'] ) ) {
 			$this->update_aua_group( $request->metaUser->userid, $this->settings['group_exp'] );
@@ -85,7 +85,7 @@ class mi_adminuseraccess
 		return true;
 	}
 
-	function update_aua_group($user_id, $aua_group)
+	public function update_aua_group($user_id, $aua_group)
 	{
 		$db = JFactory::getDBO();
 

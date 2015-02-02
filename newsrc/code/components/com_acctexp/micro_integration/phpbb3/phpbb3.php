@@ -15,7 +15,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class mi_phpbb3
 {
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PHPBB3');
@@ -25,7 +25,7 @@ class mi_phpbb3
 		return $info;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -37,7 +37,7 @@ class mi_phpbb3
 		return in_array( $app->getCfg( 'dbprefix' ) .'acctexp_mi_phpbb3pw', $tables );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -53,7 +53,7 @@ class mi_phpbb3
 		return;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = $this->getDB();
 
@@ -177,7 +177,7 @@ class mi_phpbb3
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$settings = array();
 
@@ -192,7 +192,7 @@ class mi_phpbb3
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -273,7 +273,7 @@ class mi_phpbb3
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$phpbbdb = $this->getDB();
 
@@ -332,7 +332,7 @@ class mi_phpbb3
 		return true;
 	}
 
-	function phpbbUserid( $db, $email )
+	public function phpbbUserid( $db, $email )
 	{
 		$query = 'SELECT `user_id`'
 				. ' FROM ' . $this->settings['table_prefix'] . 'users'
@@ -343,7 +343,7 @@ class mi_phpbb3
 		return $db->loadResult();
 	}
 
-	function createUser( $db, $fields )
+	public function createUser( $db, $fields )
 	{
 		$query = 'INSERT INTO ' . $this->settings['table_prefix'] . 'users'
 				. ' (`' . implode( '`, `', array_values( $fields ) ) . '`)'
@@ -354,7 +354,7 @@ class mi_phpbb3
 		return $db->query();
 	}
 
-	function updateUser( $db, $userid, $fields )
+	public function updateUser( $db, $userid, $fields )
 	{
 		$set = array();
 		foreach ( $fields as $key => $value ) {
@@ -372,7 +372,7 @@ class mi_phpbb3
 		return $db->query();
 	}
 
-	function getUserFields( $db )
+	public function getUserFields( $db )
 	{
 		$excluded = array(	"user_id",
 							"user_permissions", "user_perm_from", "user_ip", "user_regdate", "username_clean",
@@ -405,7 +405,7 @@ class mi_phpbb3
 		return $return;
 	}
 
-	function userGroups( $db, $userid )
+	public function userGroups( $db, $userid )
 	{
 		$query = 'SELECT `group_id`'
 				. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
@@ -416,7 +416,7 @@ class mi_phpbb3
 		return xJ::getDBArray( $db );
 	}
 
-	function assignGroup( $db, $userid, $groupid )
+	public function assignGroup( $db, $userid, $groupid )
 	{
 		$query = 'INSERT INTO ' . $this->settings['table_prefix'] . 'user_group'
 				. ' (`user_id`, `group_id`, `user_pending` )'
@@ -427,7 +427,7 @@ class mi_phpbb3
 		return $db->query();
 	}
 
-	function removeGroup( $db, $userid, $groupid )
+	public function removeGroup( $db, $userid, $groupid )
 	{
 		$query = 'DELETE'
 				. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
@@ -439,7 +439,7 @@ class mi_phpbb3
 		return $db->query ();
 	}
 
-	function clearGroups( $db, $userid, $groups )
+	public function clearGroups( $db, $userid, $groups )
 	{
 		$query = 'DELETE'
 				. ' FROM ' . $this->settings['table_prefix'] . 'user_group'
@@ -451,7 +451,7 @@ class mi_phpbb3
 		return $db->query ();
 	}
 
-	function fixPrimaryGroup( $db, $userid )
+	public function fixPrimaryGroup( $db, $userid )
 	{
 		$query = 'SELECT `group_id`'
 				. ' FROM ' . $this->settings['table_prefix'] . 'users'
@@ -475,7 +475,7 @@ class mi_phpbb3
 		return null;
 	}
 
-	function getDB()
+	public function getDB()
 	{
 		if ( !empty( $this->settings['use_altdb'] ) ) {
 			$options = array(	'driver'	=> $this->settings['dbms'],
@@ -494,7 +494,7 @@ class mi_phpbb3
 		return $db;
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -539,19 +539,19 @@ class phpbb3pw extends serialParamDBTable
 	/** @var string */
 	var $phpbb3pw			= null;
 
-	function phpbb3pw()
+	public function phpbb3pw()
 	{
 		parent::__construct( '#__acctexp_mi_phpbb3pw', 'id' );
 	}
 
-	function loadUserID( $userid )
+	public function loadUserID( $userid )
 	{
 		$uid = $this->getIDbyUserID( $userid );
 
 		return $this->load( $uid );
 	}
 
-	function getIDbyUserID( $userid )
+	public function getIDbyUserID( $userid )
 	{
 		$db = JFactory::getDBO();
 

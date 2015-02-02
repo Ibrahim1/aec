@@ -13,7 +13,7 @@ defined('_JEXEC') OR defined( '_VALID_MOS' ) OR die( 'Direct Access to this loca
 
 class mi_acymail extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ACYMAIL');
@@ -23,7 +23,7 @@ class mi_acymail extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -64,7 +64,7 @@ class mi_acymail extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -83,7 +83,7 @@ class mi_acymail extends MI
 		return $settings;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !$this->loadACY() ) {
 			return null;
@@ -131,7 +131,7 @@ class mi_acymail extends MI
 		}
 	}
 
-	function getSubscriber( $config, $request, $new_allowed )
+	public function getSubscriber( $config, $request, $new_allowed )
 	{
 		$userClass = acymailing::get('class.subscriber');
 
@@ -165,7 +165,7 @@ class mi_acymail extends MI
 		return $userClass->get( $subid );
 	}
 
-	function loadACY()
+	public function loadACY()
 	{
 		if ( !file_exists( rtrim( JPATH_ROOT, '/' ) . '/administrator/components/com_acymailing/helpers/list.php' ) ) {
 			echo 'This module can not work without the ACY Mailing Component';

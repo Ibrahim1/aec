@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class SubscriptionPlanList
 {
-	function __construct( $usage, $group, $metaUser, $recurring )
+	public function __construct( $usage, $group, $metaUser, $recurring )
 	{
 		$this->metaUser = $metaUser;
 
@@ -38,7 +38,7 @@ class SubscriptionPlanList
 		$this->explodePlanList( $recurring );
 	}
 
-	function getPlanList()
+	public function getPlanList()
 	{
 		$auth_problem = null;
 
@@ -119,7 +119,7 @@ class SubscriptionPlanList
 		return true;
 	}
 
-	function addButtons( $register, $passthrough )
+	public function addButtons( $register, $passthrough )
 	{
 		global $aecConfig;
 
@@ -150,7 +150,7 @@ class SubscriptionPlanList
 		return $csslist;
 	}
 
-	function getButton( $pp, $usage, $register, $passthrough, $return )
+	public function getButton( $pp, $usage, $register, $passthrough, $return )
 	{
 		global $aecConfig;
 
@@ -252,7 +252,7 @@ class SubscriptionPlanList
 		return $btnarray;
 	}
 
-	function checkListProblems()
+	public function checkListProblems()
 	{
 		// If we run into an Authorization problem, or no plans are available, redirect.
 		if ( empty( $this->list ) || is_bool( $this->list ) ) {
@@ -268,7 +268,7 @@ class SubscriptionPlanList
 		return aecRedirect( $this->list );
 	}
 
-	function explodePlanList( $recurring )
+	public function explodePlanList( $recurring )
 	{
 		global $aecConfig;
 
@@ -543,7 +543,7 @@ class SubscriptionPlanHandler
 		return $plan->active && $plan->checkInventory();
 	}
 
-	function planName( $planid )
+	public function planName( $planid )
 	{
 		$db = JFactory::getDBO();
 
@@ -555,7 +555,7 @@ class SubscriptionPlanHandler
 		return $db->loadResult();
 	}
 
-	function listPlans()
+	public function listPlans()
 	{
 		$db = JFactory::getDBO();
 
@@ -593,17 +593,17 @@ class SubscriptionPlan extends serialParamDBTable
 	/** @var string */
 	var $micro_integrations	= null;
 
-	function SubscriptionPlan()
+	public function SubscriptionPlan()
 	{
 		parent::__construct( '#__acctexp_plans', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params', 'custom_params', 'restrictions', 'micro_integrations' );
 	}
 
-	function getProperty( $name )
+	public function getProperty( $name )
 	{
 		if ( isset( $this->$name ) ) {
 			return stripslashes( $this->$name );
@@ -612,7 +612,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function checkVisibility( $metaUser )
+	public function checkVisibility( $metaUser )
 	{
 		if ( !$this->visible ) {
 			return false;
@@ -621,7 +621,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function checkPermission( $metaUser )
+	public function checkPermission( $metaUser )
 	{
 		if ( !$this->active ) {
 			return false;
@@ -630,7 +630,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $this->checkAuthorized( $metaUser ) === true;
 	}
 
-	function checkAuthorized( $metaUser )
+	public function checkAuthorized( $metaUser )
 	{
 		if ( !empty( $this->params['fixed_redirect'] ) ) {
 			return $this->params['fixed_redirect'];
@@ -657,7 +657,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $authorized;
 	}
 
-	function checkInventory()
+	public function checkInventory()
 	{
 		if ( !empty( $this->restrictions['inventory_amount_enabled'] ) ) {
 			if ( $this->restrictions['inventory_amount_used'] >= $this->restrictions['inventory_amount'] ) {
@@ -668,7 +668,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return true;
 	}
 
-	function incrementInventory()
+	public function incrementInventory()
 	{
 		if ( !empty( $this->restrictions['inventory_amount_enabled'] ) ) {
 			$this->restrictions['inventory_amount_used']++;
@@ -677,7 +677,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $this->storeload();
 	}
 
-	function applyPlan( $user, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
+	public function applyPlan( $user, $processor = 'none', $silent = 0, $multiplicator = 1, $invoice = null, $tempparams = null )
 	{
 		global $aecConfig;
 
@@ -886,7 +886,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $renew;
 	}
 
-	function getTermsForUser( $recurring, $metaUser )
+	public function getTermsForUser( $recurring, $metaUser )
 	{
 		if ( $metaUser->hasSubscription ) {
 			return $this->getTerms( $recurring, $metaUser->objSubscription, $metaUser );
@@ -895,7 +895,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getTerms( $recurring=false, $user_subscription=false, $metaUser=false )
+	public function getTerms( $recurring=false, $user_subscription=false, $metaUser=false )
 	{
 		$plans_comparison		= false;
 		$plans_comparison_total	= false;
@@ -928,7 +928,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $terms;
 	}
 
-	function getSimilarPlans()
+	public function getSimilarPlans()
 	{
 		if ( empty( $this->params['similarplans'] ) ) {
 			return $this->getEqualPlans();
@@ -937,7 +937,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getEqualPlans()
+	public function getEqualPlans()
 	{
 		if ( empty( $this->params['equalplans'] ) ) {
 			return array();
@@ -946,7 +946,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function doPlanComparison( $user_subscription )
+	public function doPlanComparison( $user_subscription )
 	{
 		$return['total_comparison']	= false;
 		$return['comparison']		= false;
@@ -1002,7 +1002,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $return;
 	}
 
-	function compareToPlan( $plan )
+	public function compareToPlan( $plan )
 	{
 		$check = array( 'similar', 'equal' );
 
@@ -1035,7 +1035,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMIformParams( $metaUser, $errors=array() )
+	public function getMIformParams( $metaUser, $errors=array() )
 	{
 		$mis = $this->getMicroIntegrations();
 
@@ -1084,7 +1084,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $params;
 	}
 
-	function getMIforms( $metaUser, $errors=array(), $values=array() )
+	public function getMIforms( $metaUser, $errors=array(), $values=array() )
 	{
 		$params = $this->getMIformParams( $metaUser, $errors );
 
@@ -1115,7 +1115,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $aecHTML->returnFull( false, true );
 	}
 
-	function verifyMIformParams( $metaUser, $params=null )
+	public function verifyMIformParams( $metaUser, $params=null )
 	{
 		$mis = $this->getMicroIntegrations();
 
@@ -1154,7 +1154,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function storeMIformParams( $metaUser, $params=null )
+	public function storeMIformParams( $metaUser, $params=null )
 	{
 		$mis = $this->getMicroIntegrations();
 
@@ -1193,7 +1193,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function getMicroIntegrations( $separate=false )
+	public function getMicroIntegrations( $separate=false )
 	{
 		if ( empty( $this->micro_integrations ) ) {
 			$milist = array();
@@ -1226,7 +1226,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return $milist;
 	}
 
-	function getMicroIntegrationsSeparate( $strip_inherited=false )
+	public function getMicroIntegrationsSeparate( $strip_inherited=false )
 	{
 		if ( empty( $this->micro_integrations ) ) {
 			$milist = array();
@@ -1275,7 +1275,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return array( 'plan' => $milist, 'inherited' => $pmilist );
 	}
 
-	function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
+	public function triggerMIs( $action, &$metaUser, &$exchange, &$invoice, &$add, &$silent )
 	{
 		global $aecConfig;
 
@@ -1328,7 +1328,7 @@ class SubscriptionPlan extends serialParamDBTable
 		return true;
 	}
 
-	function getProcessorParameters( $processor )
+	public function getProcessorParameters( $processor )
 	{
 		if ( empty( $this->custom_params ) ) {
 			return array();
@@ -1364,12 +1364,12 @@ class SubscriptionPlan extends serialParamDBTable
 		return $procparams;
 	}
 
-	function getRestrictionsArray()
+	public function getRestrictionsArray()
 	{
 		return aecRestrictionHelper::getRestrictionsArray( $this->restrictions );
 	}
 
-	function savePOSTsettings( $post )
+	public function savePOSTsettings( $post )
 	{
 		if ( !empty( $post['id'] ) ) {
 			$planid = $post['id'];
@@ -1620,7 +1620,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$this->custom_params = $custom_params;
 	}
 
-	function saveParams( $params )
+	public function saveParams( $params )
 	{
 		// If the admin wants this to be a free plan, we have to make this more explicit
 		// Setting processors to zero and full_free
@@ -1653,7 +1653,7 @@ class SubscriptionPlan extends serialParamDBTable
 		$this->params = $params;
 	}
 
-	function copy()
+	public function copy()
 	{
 		$pid = $this->id;
 
@@ -1667,7 +1667,7 @@ class SubscriptionPlan extends serialParamDBTable
 		}
 	}
 
-	function delete( $pk=null )
+	public function delete( $pk=null )
 	{
 		ItemGroupHandler::removeChildren( $this->id );
 

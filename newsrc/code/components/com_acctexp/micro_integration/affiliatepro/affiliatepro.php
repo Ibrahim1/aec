@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_affiliatepro
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AFFPRO');
@@ -23,7 +23,7 @@ class mi_affiliatepro
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['cookie']			= array( 'toggle' );
@@ -37,7 +37,7 @@ class mi_affiliatepro
 		return $settings;
 	}
 
-	function invoice_creation( $request )
+	public function invoice_creation( $request )
 	{
 		if ( empty( $this->settings['cookie'] ) || !empty( $this->settings['js_tracking'] ) ) {
 			return null;
@@ -95,12 +95,12 @@ class mi_affiliatepro
 		}
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'url', 'path', 'cookie', 'merchant', 'password' );
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( empty( $this->settings['js_tracking'] ) ) {
 			$this->apiTrack( $request );
@@ -111,7 +111,7 @@ class mi_affiliatepro
 		return true;
 	}
 
-	function apiTrack( $request )
+	public function apiTrack( $request )
 	{
 		$url = $this->loadAPI();
 
@@ -156,7 +156,7 @@ class mi_affiliatepro
 		$saleTracker->register();
 	}
 
-	function jsTrack( $request )
+	public function jsTrack( $request )
 	{
 		if ( strpos( $this->settings['url'], '/scripts/salejs.php' ) ) {
 			$url = $this->settings['url'];
@@ -225,7 +225,7 @@ class mi_affiliatepro
 		$displaypipeline->create( $request->metaUser->userid, 1, 0, 0, null, 1, $text );
 	}
 
-	function loadAPI()
+	public function loadAPI()
 	{
 		include_once( $this->settings['path'] . 'api/PapApi.class.php' );
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_sagepay extends XMLprocessor
 	{
-		function info()
+		public function info()
 		{
 			$info = array();
 			$info['name']			= 'sagepay';
@@ -29,7 +29,7 @@ class processor_sagepay extends XMLprocessor
 			return $info;
 		}
 
-		function settings()
+		public function settings()
 		{
 			$settings = array();
 			$settings['testmode']	= 0;
@@ -45,7 +45,7 @@ class processor_sagepay extends XMLprocessor
 			return $settings;
 		}
 
-		function backend_settings()
+		public function backend_settings()
 		{
 			$settings = array();
 			$settings['testmode']	= array( 'toggle' );
@@ -68,7 +68,7 @@ class processor_sagepay extends XMLprocessor
 			return $settings;
 		}
 
-		function checkoutform( $request )
+		public function checkoutform( $request )
 		{
 			$var = array();
 
@@ -83,7 +83,7 @@ class processor_sagepay extends XMLprocessor
 			return $var;
 		}
 
-		function createRequestXML( $request )
+		public function createRequestXML( $request )
 		{
 			$vars['VPSProtocol']			= "2.23";
 			$vars['TxType']					= "PAYMENT"; // AUTHORISE
@@ -120,7 +120,7 @@ class processor_sagepay extends XMLprocessor
 			return $this->arrayToNVP( $vars );
 		}
 
-		function translateCardType( $ct )
+		public function translateCardType( $ct )
 		{
 			$cctlist = array(	'visa' => 'VISA',
 								'mastercard' => 'MC',
@@ -135,7 +135,7 @@ class processor_sagepay extends XMLprocessor
 			}
 		}
 
-		function transmitRequestXML( $xml, $request )
+		public function transmitRequestXML( $xml, $request )
 		{
 			if ( $this->settings['testmode'] ) {
 				$path	= '/Simulator/VSPDirectGateway.asp';
@@ -162,7 +162,7 @@ class processor_sagepay extends XMLprocessor
 			return $return;
 		}
 
-		function decodeResponse( $string )
+		public function decodeResponse( $string )
 		{
 			// Split by newlines
 			$response = split( chr(10), $string );

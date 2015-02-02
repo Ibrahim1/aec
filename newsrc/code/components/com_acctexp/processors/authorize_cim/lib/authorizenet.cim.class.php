@@ -88,7 +88,7 @@ class AuthNetCim {
 	var $validationDirectResponse;
 
 
-	function AuthNetCim($login, $transkey, $test_mode)
+	public function AuthNetCim($login, $transkey, $test_mode)
 	{
 		$this->login = $login;
 		$this->transkey = $transkey;
@@ -100,7 +100,7 @@ class AuthNetCim {
 		$this->url = "https://" . $subdomain . ".authorize.net" . $this->path;
 	}
 
-	function process( $parent=false, $retries = 3)
+	public function process( $parent=false, $retries = 3)
 	{
 		// before we make a connection, lets check if there are basic validation errors
 		if (count($this->error_messages) == 0)
@@ -166,7 +166,7 @@ class AuthNetCim {
 
 	// This function is used to create a new customer profile along with any
 	// customer payment profiles and customer shipping addresses for the customer profile.
-	function createCustomerProfileRequest( $parent=false ) {
+	public function createCustomerProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<createCustomerProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -216,7 +216,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to create a new customer payment profile for an existing customer profile
-	function createCustomerPaymentProfileRequest( $parent=false ) {
+	public function createCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<createCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -251,7 +251,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to create a new customer shipping address for an existing customer profile
-	function createCustomerShippingAddressRequest( $parent=false ) {
+	public function createCustomerShippingAddressRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<createCustomerShippingAddressRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -277,7 +277,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to create a payment transaction from an existing customer profile
-	function createCustomerProfileTransactionRequest( $parent=false ) {
+	public function createCustomerProfileTransactionRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<createCustomerProfileTransactionRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -307,7 +307,7 @@ class AuthNetCim {
 
 	// This function is used to delete an existing customer profile along
 	// with all associated customer payment profiles and customer shipping addresses.
-	function deleteCustomerProfileRequest( $parent=false ) {
+	public function deleteCustomerProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<deleteCustomerProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -321,7 +321,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to delete a customer payment profile from an existing customer profile.
-	function deleteCustomerPaymentProfileRequest( $parent=false ) {
+	public function deleteCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<deleteCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -336,7 +336,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to delete a customer shipping address from an existing customer profile.
-	function deleteCustomerShippingAddressRequest( $parent=false ) {
+	public function deleteCustomerShippingAddressRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<deleteCustomerShippingAddressRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -352,7 +352,7 @@ class AuthNetCim {
 
 	// This function is used to retrieve an existing customer profile along
 	// with all the associated customer payment profiles and customer shipping addresses.
-	function getCustomerProfileRequest( $parent=false ) {
+	public function getCustomerProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<getCustomerProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -365,7 +365,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to retrieve a customer payment profile for an existing customer profile.
-	function getCustomerPaymentProfileRequest( $parent=false ) {
+	public function getCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<getCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -379,7 +379,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to retrieve a customer shipping address for an existing customer profile.
-	function getCustomerShippingAddressRequest( $parent=false ) {
+	public function getCustomerShippingAddressRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<getCustomerShippingAddressRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -393,7 +393,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to update an existing customer profile.
-	function updateCustomerProfileRequest( $parent=false ) {
+	public function updateCustomerProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<updateCustomerProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -412,7 +412,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to update a customer payment profile for an existing customer profile.
-	function updateCustomerPaymentProfileRequest( $parent=false ) {
+	public function updateCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<updateCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -447,7 +447,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to update a shipping address for an existing customer profile.
-	function updateCustomerShippingAddressRequest( $parent=false ) {
+	public function updateCustomerShippingAddressRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<updateCustomerShippingAddressRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -474,7 +474,7 @@ class AuthNetCim {
 	}
 
 	// This function is used to verify an existing customer payment profile by generating a test transaction.
-	function validateCustomerPaymentProfileRequest( $parent=false ) {
+	public function validateCustomerPaymentProfileRequest( $parent=false ) {
 	$this->xml = "<?xml version='1.0' encoding='utf-8'?>
 	<validateCustomerPaymentProfileRequest xmlns='AnetApi/xml/v1/schema/AnetApiSchema.xsd'>
 	<merchantAuthentication>
@@ -491,7 +491,7 @@ class AuthNetCim {
 
 
 
-	function parseResults()
+	public function parseResults()
 	{
 		$this->resultCode = $this->substring_between($this->response,'<resultCode>','</resultCode>');
 		$this->code = $this->substring_between($this->response,'<code>','</code>');
@@ -516,7 +516,7 @@ class AuthNetCim {
 
 	}
 
-	function substring_between($haystack,$start,$end,$skip=false)
+	public function substring_between($haystack,$start,$end,$skip=false)
 	{
 		if (strpos($haystack,$start) === false || strpos($haystack,$end) === false)
 		{
@@ -538,18 +538,18 @@ class AuthNetCim {
 		}
 	}
 
-	function setParameter($field = "", $value = NULL)
+	public function setParameter($field = "", $value = NULL)
 	{
 		$this->params[$field] = $value;
 	}
 
-	function isSuccessful()
+	public function isSuccessful()
 	{
 		return $this->success ? true : false;
 	}
 
 	// This function will output the proper xml for a paymentType: (echeck, securesource or creditcard)
-	function paymentType()
+	public function paymentType()
 	{
 		if (isset($this->params['paymentType']))
 		{
@@ -585,7 +585,7 @@ class AuthNetCim {
 	}
 
 	// Merchant-assigned reference ID for the request (optional)
-	function refId()
+	public function refId()
 	{
 		if (isset($this->params['refId']))
 		{
@@ -602,7 +602,7 @@ class AuthNetCim {
 	}
 
 	// Contains tax information for the transaction (optional)
-	function transactionTax()
+	public function transactionTax()
 	{
 		if ((isset($this->params['tax_amount']))
 		|| (isset($this->params['tax_name']))
@@ -620,7 +620,7 @@ class AuthNetCim {
 	// The tax amount for the transaction (optional)
 	// This amount must be included in the total amount for the transaction.
 	// Up to 4 digits with a decimal point means it can be 9999.99 (I asked authorize.net for clarification)
-	function tax_amount()
+	public function tax_amount()
 	{
 		if (isset($this->params['tax_amount']))
 		{
@@ -636,7 +636,7 @@ class AuthNetCim {
 	}
 
 	// The name of the tax for the transaction (optional)
-	function tax_name()
+	public function tax_name()
 	{
 		if (isset($this->params['tax_name']))
 		{
@@ -653,7 +653,7 @@ class AuthNetCim {
 	}
 
 	// The tax description for the transaction (optional)
-	function tax_description()
+	public function tax_description()
 	{
 		if (isset($this->params['tax_description']))
 		{
@@ -670,7 +670,7 @@ class AuthNetCim {
 	}
 
 	// Contains tax information for the transaction (optional)
-	function transactionShipping()
+	public function transactionShipping()
 	{
 		if ((isset($this->params['shipping_amount']))
 		|| (isset($this->params['shipping_name']))
@@ -688,7 +688,7 @@ class AuthNetCim {
 	// The shipping amount for the transaction (optional)
 	// This amount must be included in the total amount for the transaction.
 	// Up to 4 digits with a decimal point means it can be 9999.99 (I asked authorize.net for clarification)
-	function shipping_amount()
+	public function shipping_amount()
 	{
 		if (isset($this->params['shipping_amount']))
 		{
@@ -704,7 +704,7 @@ class AuthNetCim {
 	}
 
 	// The name of the shipping for the transaction (optional)
-	function shipping_name()
+	public function shipping_name()
 	{
 		if (isset($this->params['shipping_name']))
 		{
@@ -721,7 +721,7 @@ class AuthNetCim {
 	}
 
 	// The shipping description for the transaction (optional)
-	function shipping_description()
+	public function shipping_description()
 	{
 		if (isset($this->params['shipping_description']))
 		{
@@ -738,7 +738,7 @@ class AuthNetCim {
 	}
 
 	// Contains duty information for the transaction (optional)
-	function transactionDuty()
+	public function transactionDuty()
 	{
 		if ((isset($this->params['duty_amount']))
 		|| (isset($this->params['duty_name']))
@@ -756,7 +756,7 @@ class AuthNetCim {
 	// The duty amount for the transaction (optional)
 	// This amount must be included in the total amount for the transaction.
 	// Up to 4 digits with a decimal point means it can be 9999.99 (I asked authorize.net for clarification)
-	function duty_amount()
+	public function duty_amount()
 	{
 		if (isset($this->params['duty_amount']))
 		{
@@ -772,7 +772,7 @@ class AuthNetCim {
 	}
 
 	// The name of the duty for the transaction (optional)
-	function duty_name()
+	public function duty_name()
 	{
 		if (isset($this->params['duty_name']))
 		{
@@ -789,7 +789,7 @@ class AuthNetCim {
 	}
 
 	// The duty description for the transaction (optional)
-	function duty_description()
+	public function duty_description()
 	{
 		if (isset($this->params['duty_description']))
 		{
@@ -808,7 +808,7 @@ class AuthNetCim {
 	// Contains line item details about the order (optional)
 	// Up to 30 distinct instances of this element may be included per transaction to describe items included in the order.
 	// USAGE: see the example code for createCustomerProfileTransactionRequest() in the examples provided.
-	function transactionLineItems()
+	public function transactionLineItems()
 	{
 		if (count($this->LineItems) > 30)
 		{
@@ -834,7 +834,7 @@ class AuthNetCim {
 	}
 
 	// Contains duty information for the transaction (optional)
-	function transactionOrder()
+	public function transactionOrder()
 	{
 		if ((isset($this->params['order_invoiceNumber']))
 		|| (isset($this->params['order_description']))
@@ -850,7 +850,7 @@ class AuthNetCim {
 	}
 
 	// The merchant assigned invoice number for the transaction (optional)
-	function order_invoiceNumber()
+	public function order_invoiceNumber()
 	{
 		if (isset($this->params['order_invoiceNumber']))
 		{
@@ -867,7 +867,7 @@ class AuthNetCim {
 	}
 
 	// The transaction description (optional)
-	function order_description()
+	public function order_description()
 	{
 		if (isset($this->params['order_description']))
 		{
@@ -884,7 +884,7 @@ class AuthNetCim {
 	}
 
 	// The merchant assigned purchase order number (optional)
-	function order_purchaseOrderNumber()
+	public function order_purchaseOrderNumber()
 	{
 		if (isset($this->params['order_purchaseOrderNumber']))
 		{
@@ -903,7 +903,7 @@ class AuthNetCim {
 	/************************* Billing Functions *************************/
 
 	// The customer's first name (optional)
-	function billTo_firstName()
+	public function billTo_firstName()
 	{
 		if (isset($this->params['billTo_firstName']))
 		{
@@ -919,7 +919,7 @@ class AuthNetCim {
 	}
 
 	// The customer's last name (optional)
-	function billTo_lastName()
+	public function billTo_lastName()
 	{
 		if (isset($this->params['billTo_lastName']))
 		{
@@ -935,7 +935,7 @@ class AuthNetCim {
 	}
 
 	// The name of the company associated with the customer, if applicable (optional)
-	function billTo_company()
+	public function billTo_company()
 	{
 		if (isset($this->params['billTo_company']))
 		{
@@ -951,7 +951,7 @@ class AuthNetCim {
 	}
 
 	// The customer's address (optional)
-	function billTo_address()
+	public function billTo_address()
 	{
 		if (isset($this->params['billTo_address']))
 		{
@@ -967,7 +967,7 @@ class AuthNetCim {
 	}
 
 	// The city of the customer's address (optional)
-	function billTo_city()
+	public function billTo_city()
 	{
 		if (isset($this->params['billTo_city']))
 		{
@@ -984,7 +984,7 @@ class AuthNetCim {
 
 	// The state of the customer's address (optional)
 	// http://www.usps.com/ncsc/lookups/usps_abbreviations.html#states
-	function billTo_state()
+	public function billTo_state()
 	{
 		if (isset($this->params['billTo_state']))
 		{
@@ -1000,7 +1000,7 @@ class AuthNetCim {
 	}
 
 	// The ZIP code of the customer's address (optional)
-	function billTo_zip()
+	public function billTo_zip()
 	{
 		if (isset($this->params['billTo_zip']))
 		{
@@ -1016,7 +1016,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function billTo_country()
+	public function billTo_country()
 	{
 		if (isset($this->params['billTo_country']))
 		{
@@ -1032,7 +1032,7 @@ class AuthNetCim {
 	}
 
 	// The phone number associated with the customer's address (optional)
-	function billTo_phoneNumber()
+	public function billTo_phoneNumber()
 	{
 		if (isset($this->params['billTo_phoneNumber']))
 		{
@@ -1048,7 +1048,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function billTo_faxNumber()
+	public function billTo_faxNumber()
 	{
 		if (isset($this->params['billTo_faxNumber']))
 		{
@@ -1066,7 +1066,7 @@ class AuthNetCim {
 	/************************* Shipping Functions *************************/
 
 	// The customer's first name (optional)
-	function shipTo_firstName()
+	public function shipTo_firstName()
 	{
 		if (isset($this->params['shipTo_firstName']))
 		{
@@ -1082,7 +1082,7 @@ class AuthNetCim {
 	}
 
 	// The customer's last name (optional)
-	function shipTo_lastName()
+	public function shipTo_lastName()
 	{
 		if (isset($this->params['shipTo_lastName']))
 		{
@@ -1098,7 +1098,7 @@ class AuthNetCim {
 	}
 
 	// The name of the company associated with the customer, if applicable (optional)
-	function shipTo_company()
+	public function shipTo_company()
 	{
 		if (isset($this->params['shipTo_company']))
 		{
@@ -1114,7 +1114,7 @@ class AuthNetCim {
 	}
 
 	// The customer's address (optional)
-	function shipTo_address()
+	public function shipTo_address()
 	{
 		if (isset($this->params['shipTo_address']))
 		{
@@ -1130,7 +1130,7 @@ class AuthNetCim {
 	}
 
 	// The city of the customer's address (optional)
-	function shipTo_city()
+	public function shipTo_city()
 	{
 		if (isset($this->params['shipTo_city']))
 		{
@@ -1147,7 +1147,7 @@ class AuthNetCim {
 
 	// The state of the customer's address (optional)
 	// http://www.usps.com/ncsc/lookups/usps_abbreviations.html#states
-	function shipTo_state()
+	public function shipTo_state()
 	{
 		if (isset($this->params['shipTo_state']))
 		{
@@ -1163,7 +1163,7 @@ class AuthNetCim {
 	}
 
 	// The ZIP code of the customer's address (optional)
-	function shipTo_zip()
+	public function shipTo_zip()
 	{
 		if (isset($this->params['shipTo_zip']))
 		{
@@ -1179,7 +1179,7 @@ class AuthNetCim {
 	}
 
 	// The country of the customer's address (optional)
-	function shipTo_country()
+	public function shipTo_country()
 	{
 		if (isset($this->params['shipTo_country']))
 		{
@@ -1195,7 +1195,7 @@ class AuthNetCim {
 	}
 
 	// The phone number associated with the customer's address (optional)
-	function shipTo_phoneNumber()
+	public function shipTo_phoneNumber()
 	{
 		if (isset($this->params['shipTo_phoneNumber']))
 		{
@@ -1211,7 +1211,7 @@ class AuthNetCim {
 	}
 
 	// The fax number associated with the customer's address (optional)
-	function shipTo_faxNumber()
+	public function shipTo_faxNumber()
 	{
 		if (isset($this->params['shipTo_faxNumber']))
 		{
@@ -1231,7 +1231,7 @@ class AuthNetCim {
 	// This element is optional
 	// Even though the manual states this is optional, it is actually conditional in a circumstance.
 	// You must have either the merchantCustomerId and/or description defined for createCustomerProfileRequest()
-	function merchantCustomerId()
+	public function merchantCustomerId()
 	{
 		if (isset($this->params['merchantCustomerId']))
 		{
@@ -1249,7 +1249,7 @@ class AuthNetCim {
 	// This element is optional
 	// Even though the manual states this is optional, it is actually conditional in a circumstance.
 	// You must have either the description and/or merchantCustomerId defined for createCustomerProfileRequest()
-	function description()
+	public function description()
 	{
 		if (isset($this->params['description']))
 		{
@@ -1265,7 +1265,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function email()
+	public function email()
 	{
 		if (isset($this->params['email']))
 		{
@@ -1281,7 +1281,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function customerType()
+	public function customerType()
 	{
 		if (isset($this->params['customerType']))
 		{
@@ -1297,7 +1297,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function accountType()
+	public function accountType()
 	{
 		if (isset($this->params['accountType']))
 		{
@@ -1317,7 +1317,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function nameOnAccount()
+	public function nameOnAccount()
 	{
 		if (isset($this->params['nameOnAccount']))
 		{
@@ -1337,7 +1337,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function echeckType()
+	public function echeckType()
 	{
 		if (isset($this->params['echeckType']))
 		{
@@ -1357,7 +1357,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function bankName()
+	public function bankName()
 	{
 		if (isset($this->params['bankName']))
 		{
@@ -1377,7 +1377,7 @@ class AuthNetCim {
 	}
 
 	// This element is required in some functions
-	function routingNumber()
+	public function routingNumber()
 	{
 		if (isset($this->params['routingNumber']))
 		{
@@ -1397,7 +1397,7 @@ class AuthNetCim {
 	}
 
 	// This element is required in some functions
-	function accountNumber()
+	public function accountNumber()
 	{
 		if (isset($this->params['accountNumber']))
 		{
@@ -1417,7 +1417,7 @@ class AuthNetCim {
 	}
 
 	// This element is only required for Wells Fargo SecureSource eCheck.Net merchants
-	function wellsFargoSecureSource()
+	public function wellsFargoSecureSource()
 	{
 		if ((isset($this->params['wellsFargoSecureSource']))
 		&& ($this->params['wellsFargoSecureSource'] == "true"))
@@ -1432,7 +1432,7 @@ class AuthNetCim {
 	}
 
 	// This element is only required for Wells Fargo SecureSource eCheck.Net merchants
-	function wellsFargoTaxId()
+	public function wellsFargoTaxId()
 	{
 		if ((isset($this->params['wellsFargoSecureSource']))
 		&& ($this->params['wellsFargoSecureSource'] == "true"))
@@ -1449,7 +1449,7 @@ class AuthNetCim {
 	}
 
 	// This element is only required for Wells Fargo SecureSource eCheck.Net merchants
-	function license_state()
+	public function license_state()
 	{
 		if (isset($this->params['license_state']))
 		{
@@ -1469,7 +1469,7 @@ class AuthNetCim {
 	}
 
 	// This element is only required for Wells Fargo SecureSource eCheck.Net merchants
-	function license_number()
+	public function license_number()
 	{
 		if (isset($this->params['license_number']))
 		{
@@ -1489,7 +1489,7 @@ class AuthNetCim {
 	}
 
 	// This element is only required for Wells Fargo SecureSource eCheck.Net merchants
-	function license_dateOfBirth()
+	public function license_dateOfBirth()
 	{
 		if ((isset($this->params['license_dateOfBirth'])) && (!empty($this->params['license_dateOfBirth'])))
 		{
@@ -1509,7 +1509,7 @@ class AuthNetCim {
 	}
 
 	// This element is required in some functions
-	function cardNumber()
+	public function cardNumber()
 	{
 		if (isset($this->params['cardNumber']))
 		{
@@ -1529,7 +1529,7 @@ class AuthNetCim {
 	}
 
 	// This element is required in some functions
-	function expirationDate()
+	public function expirationDate()
 	{
 		if (isset($this->params['expirationDate']))
 		{
@@ -1551,7 +1551,7 @@ class AuthNetCim {
 	// This element is required in some functions
 	// This amount should include all other amounts such as tax amount, shipping amount, etc.
 	// Up to 4 digits with a decimal point means it can be 9999.99 (I asked authorize.net for clarification)
-	function transaction_amount()
+	public function transaction_amount()
 	{
 		if (isset($this->params['transaction_amount']))
 		{
@@ -1571,7 +1571,7 @@ class AuthNetCim {
 	}
 
 	// This element is required in some functions
-	function transactionType()
+	public function transactionType()
 	{
 		if (isset($this->params['transactionType']))
 		{
@@ -1592,7 +1592,7 @@ class AuthNetCim {
 
 	// This element is required in some functions
 	// Payment gateway assigned ID associated with the customer profile
-	function customerProfileId()
+	public function customerProfileId()
 	{
 		if (isset($this->params['customerProfileId']))
 		{
@@ -1613,7 +1613,7 @@ class AuthNetCim {
 
 	// This element is required in some functions
 	// Payment gateway assigned ID associated with the customer payment profile
-	function customerPaymentProfileId()
+	public function customerPaymentProfileId()
 	{
 		if (isset($this->params['customerPaymentProfileId']))
 		{
@@ -1635,7 +1635,7 @@ class AuthNetCim {
 	// This element is required in some functions, otherwise optional
 	// Payment gateway assigned ID associated with the customer shipping address
 	// Note: If the customer AddressId is not passed, shipping information will not be included with the transaction.
-	function customerAddressId()
+	public function customerAddressId()
 	{
 		if (isset($this->params['customerAddressId']))
 		{
@@ -1658,7 +1658,7 @@ class AuthNetCim {
 	// (this should be the same value as customerAddressId())
 	// Payment gateway assigned ID associated with the customer shipping address
 	// Note: If the customer Shipping AddressId is not passed, shipping information will not be included with the transaction.
-	function customerShippingAddressId()
+	public function customerShippingAddressId()
 	{
 		if (isset($this->params['customerShippingAddressId']))
 		{
@@ -1674,7 +1674,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function transactionTaxExempt()
+	public function transactionTaxExempt()
 	{
 		if (isset($this->params['transactionTaxExempt']))
 		{
@@ -1690,7 +1690,7 @@ class AuthNetCim {
 	}
 
 	// This element is optional
-	function transactionRecurringBilling()
+	public function transactionRecurringBilling()
 	{
 		if (isset($this->params['transactionRecurringBilling']))
 		{
@@ -1708,7 +1708,7 @@ class AuthNetCim {
 	// The customer's card code (the three or four-digit number on the back or front of a credit card)
 	// Required only when the merchant would like to use the Card Code Verification (CCV) filter (conditional)
 	// For more information, please see the Merchant Integration Guide.
-	function transactionCardCode()
+	public function transactionCardCode()
 	{
 		if (isset($this->params['transactionCardCode']))
 		{
@@ -1725,7 +1725,7 @@ class AuthNetCim {
 
 	// The authorization code of an original transaction required for a Capture Only (conditional)
 	// This element is only required for the Capture Only transaction type.
-	function transactionApprovalCode()
+	public function transactionApprovalCode()
 	{
 		if (isset($this->params['transactionApprovalCode']))
 		{
@@ -1741,7 +1741,7 @@ class AuthNetCim {
 		}
 	}
 	// This element is required in some functions
-	function validationMode()
+	public function validationMode()
 	{
 		if (isset($this->params['validationMode']))
 		{

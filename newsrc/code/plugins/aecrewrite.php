@@ -18,7 +18,7 @@ $app->registerEvent( 'onPrepareContent', 'plgContentAECRewrite' );
 
 class plgContentAECRewrite extends JPlugin
 {
-	function onPrepareContent( &$article, &$params, $limitstart )
+	public function onPrepareContent( &$article, &$params, $limitstart )
 	{
 		return $this->onContentPrepare( "", $article, $params, $limitstart );
 	}
@@ -29,7 +29,7 @@ class plgContentAECRewrite extends JPlugin
 	 * @param	object	The article params
 	 * @param	int		The 'page' number
 	 */
-	function onContentPrepare( $context, &$article, &$params, $page=0 )
+	public function onContentPrepare( $context, &$article, &$params, $page=0 )
 	{
 		// See whether there is anything to replace
 		if (JString::strpos($article->text, '{aecrewrite') === false) {

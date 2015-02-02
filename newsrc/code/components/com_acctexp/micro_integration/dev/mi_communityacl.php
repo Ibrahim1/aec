@@ -9,7 +9,7 @@ define('_MI_MI_COMMUNITYACL_CACL_FUNC_LIST_NAME','Community ACL Functions');
 
 class mi_communityacl
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = 'Community ACL';
@@ -18,12 +18,12 @@ class mi_communityacl
 		return $info;
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_community_acl' );
 	}
 
-	function Settings()
+	public function Settings()
 	{
 
 		$db = JFactory::getDBO();
@@ -124,7 +124,7 @@ class mi_communityacl
 	}
 
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( is_dir( JPATH_SITE . '/components/com_community_acl' ) ) {
 			require_once( JPATH_ADMINISTRATOR . '/components/com_community_acl/community_acl.class.php' );
@@ -146,7 +146,7 @@ class mi_communityacl
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 

@@ -120,12 +120,12 @@ d3.chart.factory = function () {
 			if ( ( request.end > rangeEnd ) ) {
 
 				factory.requestData(
-						function(json) {
+						public function(json) {
 							factory.requestData( function(jsonf) { factory.acquireData(json.concat(jsonf), request); }, rangeEnd, request.end );
 						}, request.start, rangeStart
 				);
-	
-			} else { 
+
+			} else {
 				factory.requestData(function(json) { factory.acquireData(json, request); }, request.start, rangeStart);
 			}
 		} else if ( request.end > rangeEnd ) {

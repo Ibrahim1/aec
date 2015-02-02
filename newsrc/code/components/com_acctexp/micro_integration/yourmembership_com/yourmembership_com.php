@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_yourmembership_com extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_YOURMEMBERSHIP_COM_NAME');
@@ -23,7 +23,7 @@ class mi_yourmembership_com extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['apikey']				= array( 'inputC' );
@@ -32,12 +32,12 @@ class mi_yourmembership_com extends MI
 		return $settings;
 	}
 
-	function CommonData()
+	public function CommonData()
 	{
 		return array( 'apikey' );
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$id = uniqid();
 
@@ -64,7 +64,7 @@ class mi_yourmembership_com extends MI
 		return true;
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );
@@ -83,7 +83,7 @@ class mi_yourmembership_com extends MI
 		}
 	}
 
-	function getCallXML( $function, $id, $data=array(), $session=null )
+	public function getCallXML( $function, $id, $data=array(), $session=null )
 	{
 		$request = '<?xml version="1.0" encoding="utf-8">';
 		$request .= '<YourMembership>';
@@ -111,7 +111,7 @@ class mi_yourmembership_com extends MI
 		return $request;
 	}
 
-	function apiCall( $request )
+	public function apiCall( $request )
 	{
 		global $aecConfig;
 

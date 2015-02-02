@@ -19390,7 +19390,7 @@ class TCPDF {
 	 * @since 3.1.000 (2008-06-09)
 	 * @protected
 	 */
-	function _putshaders() {
+	public function _putshaders() {
 		if ($this->pdfa_mode) {
 			return;
 		}

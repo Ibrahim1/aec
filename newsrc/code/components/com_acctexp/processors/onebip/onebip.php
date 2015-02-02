@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_onebip extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'onebip';
@@ -31,7 +31,7 @@ class processor_onebip extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['username']	= 'your@onebip.com';
@@ -43,7 +43,7 @@ class processor_onebip extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -59,7 +59,7 @@ class processor_onebip extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 
@@ -92,7 +92,7 @@ class processor_onebip extends POSTprocessor
 		return $var;
 	}
 
-	function convertPeriodUnit( $unit, $period )
+	public function convertPeriodUnit( $unit, $period )
 	{
 		switch ( $unit ) {
 			default:
@@ -111,7 +111,7 @@ class processor_onebip extends POSTprocessor
 		}
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 
@@ -134,7 +134,7 @@ class processor_onebip extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 

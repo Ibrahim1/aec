@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_directory
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_DIRECTORY');
@@ -23,7 +23,7 @@ class mi_directory
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['mkdir']			= array( 'inputD' );
@@ -40,7 +40,7 @@ class mi_directory
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$defaults = array();
 		$defaults['mkdir_mode']			= '0644';
@@ -50,7 +50,7 @@ class mi_directory
 		return $defaults;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !isset( $this->settings['mkdir'.$request->area] ) ) {
 			return null;
@@ -59,7 +59,7 @@ class mi_directory
 		return $this->makedir( $this->settings['mkdir'.$request->area], $this->settings['mkdir_mode'.$request->area], $request );
 	}
 
-	function makedir( $path, $mode, $request )
+	public function makedir( $path, $mode, $request )
 	{
 		if ( empty( $path ) || empty( $mode ) ) {
 			return null;

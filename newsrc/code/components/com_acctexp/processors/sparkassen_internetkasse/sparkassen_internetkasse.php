@@ -13,7 +13,7 @@
 
 class processor_sparkassen_internetkasse extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'sparkassen_internetkasse';
@@ -28,7 +28,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
@@ -43,7 +43,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array('toggle');
@@ -58,12 +58,12 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		return array();
 	}
 
-	function checkoutProcess( $request, $InvoiceFactory )
+	public function checkoutProcess( $request, $InvoiceFactory )
 	{
 		if ( !empty( $_GET['error'] ) ) {
 			$error = $this->getError( $_GET['error'] );
@@ -110,14 +110,14 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		aecRedirect( $url.'?'.$this->arrayToNVP($var) );
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$var = $this->getSIFvars( $request, false );
 
 		return $this->arrayToNVP( $var );
 	}
 
-	function getSIFvars( $request, $ppan )
+	public function getSIFvars( $request, $ppan )
 	{
 		$var = array();
 
@@ -167,7 +167,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['amount_paid']		= $post['amount'] / 100;
@@ -182,7 +182,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice, $echo=true )
+	public function validateNotification( $response, $post, $invoice, $echo=true )
 	{
 		$response['valid'] = 0;
 
@@ -224,7 +224,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return $response;
 	}
 
-	function mapError( $errcode )
+	public function mapError( $errcode )
 	{
 		$errors = array(	'133' => 'Karte abgelaufen.',
 							'344' => 'Karte in Deutschland nicht gültig.',
@@ -240,7 +240,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		}
 	}
 
-	function setPPAN( $metaUser, $ppan )
+	public function setPPAN( $metaUser, $ppan )
 	{
 		$metaUser->meta->setCustomParams( array( 'ppan' => $ppan ) );
 		$metaUser->meta->storeload();
@@ -248,7 +248,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return true;
 	}
 
-	function getPPAN( $metaUser )
+	public function getPPAN( $metaUser )
 	{
 		$uparams = $metaUser->meta->getCustomParams();
 
@@ -259,7 +259,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return null;
 	}
 
-	function deletePPAN( $metaUser )
+	public function deletePPAN( $metaUser )
 	{
 		$metaUser->meta->setCustomParams( array( 'ppan' => '' ) );
 		$metaUser->meta->storeload();
@@ -267,7 +267,7 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 		return true;
 	}
 
-	function hmac( $key, $data )
+	public function hmac( $key, $data )
 	{
 	   // RFC 2104 HMAC implementation for php.
 	   // Creates an SHA-1 HMAC.

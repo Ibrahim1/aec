@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this option is not allowed.' );
 
 class mi_aecmodifycost
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AECMODIFYCOST_NAME');
@@ -23,7 +23,7 @@ class mi_aecmodifycost
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['custominfo']			= array( 'inputD' );
@@ -61,7 +61,7 @@ class mi_aecmodifycost
 		return $settings;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -116,7 +116,7 @@ class mi_aecmodifycost
 		return $settings;
 	}
 
-	function verifyMIform( $request )
+	public function verifyMIform( $request )
 	{
 		$return = array();
 
@@ -151,7 +151,7 @@ class mi_aecmodifycost
 		return $return;
 	}
 
-	function invoice_item_cost( $request )
+	public function invoice_item_cost( $request )
 	{
 		$options = $this->getOption( $request );
 
@@ -164,7 +164,7 @@ class mi_aecmodifycost
 		return true;
 	}
 
-	function addCost( $request, $item, $option )
+	public function addCost( $request, $item, $option )
 	{
 		$total = $item['terms']->terms[0]->renderTotal();
 
@@ -182,7 +182,7 @@ class mi_aecmodifycost
 		return $request;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !( $request->area == 'afteraction' ) ) {
 			return null;
@@ -227,7 +227,7 @@ class mi_aecmodifycost
 		return true;
 	}
 
-	function getOption( $request )
+	public function getOption( $request )
 	{
 		$options = $this->getOptionList();
 
@@ -247,7 +247,7 @@ class mi_aecmodifycost
 		return $result;
 	}
 
-	function getOptionList()
+	public function getOptionList()
 	{
 		$options = array();
 		if ( !empty( $this->settings['options'] ) ) {

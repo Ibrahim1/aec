@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_sobipro extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_SOBIPRO_NAME');
@@ -22,7 +22,7 @@ class mi_sobipro extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['publish_all']		= array( 'toggle' );
@@ -37,7 +37,7 @@ class mi_sobipro extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( isset( $this->settings['unpublish_all'.$request->area] ) ) {
 			if ( $this->settings['unpublish_all'.$request->area] ) {
@@ -54,7 +54,7 @@ class mi_sobipro extends MI
 		return true;
 	}
 
-	function publishItems( $metaUser )
+	public function publishItems( $metaUser )
 	{
 		$db = JFactory::getDBO();
 
@@ -74,7 +74,7 @@ class mi_sobipro extends MI
 		}
 	}
 
-	function unpublishItems( $metaUser )
+	public function unpublishItems( $metaUser )
 	{
 		$db = JFactory::getDBO();
 

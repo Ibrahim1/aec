@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_http_query extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_HTTP_QUERY');
@@ -23,7 +23,7 @@ class mi_http_query extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['url']	= array( 'inputE' );
@@ -34,7 +34,7 @@ class mi_http_query extends MI
 		return $settings;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !isset( $this->settings['url'.$request->area] ) ) {
 			return null;
@@ -46,7 +46,7 @@ class mi_http_query extends MI
 		return $this->fetchURL( $this->createURL( $url, $query ) );
 	}
 
-	function createURL( $url, $query ) {
+	public function createURL( $url, $query ) {
 		$urlsplit = explode( '?', $url );
 
 		$p = explode( "\n", $query );
@@ -71,7 +71,7 @@ class mi_http_query extends MI
 		return $urlsplit[0] . '?' . implode( '&', $fullp );
 	}
 
-	function fetchURL( $url )
+	public function fetchURL( $url )
 	{
 		global $aecConfig;
 

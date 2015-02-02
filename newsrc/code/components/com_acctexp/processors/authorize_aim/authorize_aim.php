@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_authorize_aim extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'authorize_aim';
@@ -29,12 +29,12 @@ class processor_authorize_aim extends XMLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return 'authorize.png';
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -47,7 +47,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['login']				= "login";
@@ -63,7 +63,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( "toggle" );
@@ -81,7 +81,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
 
@@ -107,7 +107,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$a = array();
 
@@ -202,7 +202,7 @@ class processor_authorize_aim extends XMLprocessor
 		return $string;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$path = "/gateway/transact.dll";
 

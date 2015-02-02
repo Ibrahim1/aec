@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_paypal_payflow extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'paypal_payflow';
@@ -30,7 +30,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $info;
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -43,7 +43,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']				= 0;
@@ -62,7 +62,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['aec_experimental']		= array( "p" );
@@ -88,7 +88,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $settings;
 	}
 
-	function registerProfileTabs()
+	public function registerProfileTabs()
 	{
 		$tab			= array();
 		$tab['details']	= JText::_('AEC_USERFORM_BILLING_DETAILS_NAME');
@@ -96,7 +96,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $tab;
 	}
 
-	function customtab_details( $request )
+	public function customtab_details( $request )
 	{
 		$profileid = $request->invoice->params['paypal_payflow_customerProfileId'];
 
@@ -171,7 +171,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $return;
 	}
 
-	function checkoutform( $request, $vcontent=null, $updated=null )
+	public function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		$var = array();
 
@@ -194,7 +194,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$app = JFactory::getApplication();
 
@@ -287,7 +287,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return implode( '&', $content );
 	}
 
-	function transmitToPayPal( $xml, $request )
+	public function transmitToPayPal( $xml, $request )
 	{
 		$path = "/nvp";
 
@@ -303,7 +303,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$response = $this->transmitToPayPal( $xml, $request );
 
@@ -343,7 +343,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $return;
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		$return = array();
 		switch ( $unit ) {
@@ -368,7 +368,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$var['Method']				= 'ManageRecurringPaymentsProfileStatus';
 		$var['action']				= 'Cancel';
@@ -404,7 +404,7 @@ class processor_paypal_payflow extends XMLprocessor
 		}
 	}
 
-	function ProfileRequest( $request, $profileid, $var )
+	public function ProfileRequest( $request, $profileid, $var )
 	{
 		$var['Version']				= '59.0';
 		$var['user']				= $this->settings['api_user'];
@@ -425,7 +425,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $this->NVPtoArray( $response );
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$db = JFactory::getDBO();
 
@@ -449,7 +449,7 @@ class processor_paypal_payflow extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$path = '/cgi-bin/webscr';
 		if ($this->settings['testmode']) {

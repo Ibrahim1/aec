@@ -18,7 +18,7 @@ class aecHeartbeat extends serialParamDBTable
  	/** @var datetime */
 	var $last_beat 		= null;
 
-	function __construct()
+	public function __construct()
 	{
 	 	parent::__construct( '#__acctexp_heartbeat', 'id' );
 
@@ -37,7 +37,7 @@ class aecHeartbeat extends serialParamDBTable
 		}
 	}
 
-	function frontendping( $custom=false, $hash=null )
+	public function frontendping( $custom=false, $hash=null )
 	{
 		global $aecConfig;
 
@@ -73,7 +73,7 @@ class aecHeartbeat extends serialParamDBTable
 		}
 	}
 
-	function backendping()
+	public function backendping()
 	{
 		global $aecConfig;
 
@@ -82,7 +82,7 @@ class aecHeartbeat extends serialParamDBTable
 		}
 	}
 
-	function ping( $configCycle )
+	public function ping( $configCycle )
 	{
 		if ( empty( $this->last_beat ) ) {
 			$this->load(1);
@@ -110,7 +110,7 @@ class aecHeartbeat extends serialParamDBTable
 		}
 	}
 
-	function beat()
+	public function beat()
 	{
 		$this->processors = array();
 		$this->proc_prepare = array();
@@ -210,7 +210,7 @@ class aecHeartbeat extends serialParamDBTable
 		return $this->endBeat();
 	}
 
-	function endBeat()
+	public function endBeat()
 	{
 		aecEventHandler::pingEvents();
 
@@ -220,7 +220,7 @@ class aecHeartbeat extends serialParamDBTable
 		return true;
 	}
 
-	function getProcessor( $name )
+	public function getProcessor( $name )
 	{
 		if ( !isset( $this->processors[$name] ) ) {
 			$processor = new PaymentProcessor();
@@ -237,7 +237,7 @@ class aecHeartbeat extends serialParamDBTable
 		return $this->processors[$name];
 	}
 
-	function getSubscribers( $pre_expiration )
+	public function getSubscribers( $pre_expiration )
 	{
 		$expiration_limit = $this->getExpirationLimit( $pre_expiration );
 
@@ -256,7 +256,7 @@ class aecHeartbeat extends serialParamDBTable
 		return xJ::getDBArray( $this->_db );
 	}
 
-	function getExpirationLimit( $pre_expiration )
+	public function getExpirationLimit( $pre_expiration )
 	{
 		if ( $pre_expiration ) {
 			// pre-expiration found, search limit set to the maximum pre-expiration time
@@ -267,7 +267,7 @@ class aecHeartbeat extends serialParamDBTable
 		}
 	}
 
-	function processorValidation( $subscription, $subscription_list )
+	public function processorValidation( $subscription, $subscription_list )
 	{
 		$pp = $this->getProcessor( $subscription->type );
 
@@ -295,7 +295,7 @@ class aecHeartbeat extends serialParamDBTable
 		}
 	}
 
-	function fileEventlog()
+	public function fileEventlog()
 	{
 		// Make sure we have all the language stuff loaded
 		$langlist = array( 'com_acctexp.admin' => JPATH_ADMINISTRATOR );
@@ -365,7 +365,7 @@ class aecHeartbeat extends serialParamDBTable
 		$eventlog->issue( $short, implode( ',', $tags ), $event, $level );
 	}
 
-	function deleteTempTokens()
+	public function deleteTempTokens()
 	{
 		// Delete old token entries
 		$query = 'DELETE'

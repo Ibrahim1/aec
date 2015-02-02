@@ -40,7 +40,7 @@ defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
 class processor_debitech extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'debitech-subscription';
@@ -56,7 +56,7 @@ class processor_debitech extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -74,7 +74,7 @@ class processor_debitech extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		global $mosConfig_live_site;
 
@@ -96,7 +96,7 @@ class processor_debitech extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		global $mosConfig_live_site;
 
@@ -143,7 +143,7 @@ class processor_debitech extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['valid'] 		= $post['valid'] == "1" ? true : false;
@@ -175,7 +175,7 @@ class processor_debitech extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = $post['valid'] == "1" ? true : false;
 		$response['valid'] = true;

@@ -1,23 +1,23 @@
 <?php
 class AECexport_test extends AECexport
 {
-	function AECexport_test(){}
+	public function AECexport_test(){}
 
-	function prepareExport(){
+	public function prepareExport(){
 		$this->lines = array();
 	}
 
-	function putDescription( $array )
+	public function putDescription( $array )
 	{
 		$this->lines[] = $array;
 	}
 
-	function putln( $array )
+	public function putln( $array )
 	{
 		$this->lines[] = $array;
 	}
 
-	function finishExport()
+	public function finishExport()
 	{
 		echo '<table class="infobox_table zebra-striped">';
 		$i = 0;

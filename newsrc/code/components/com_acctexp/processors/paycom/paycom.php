@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_paycom extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "paycom";
@@ -28,7 +28,7 @@ class processor_paycom extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']		= "USD";
@@ -40,7 +40,7 @@ class processor_paycom extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['currency']		= array( 'list_currency' );
@@ -53,7 +53,7 @@ class processor_paycom extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']		= "https://wnu.com/secure/fpost.cgi";
 		$var['co_code']			= $this->settings['co_code'];
@@ -74,7 +74,7 @@ class processor_paycom extends POSTprocessor
 	}
 
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$invoice			= $post['x_invoice'];
 		$name				= $post['name'];
@@ -102,7 +102,7 @@ class processor_paycom extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$validate			= md5( $this->settings['secretWord'] . $post['x_username'] );
 

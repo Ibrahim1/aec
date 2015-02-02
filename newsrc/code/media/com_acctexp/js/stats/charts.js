@@ -33,7 +33,7 @@ d3.chart.sunburst = function () {
 	console,chead,cbody;
 
 	chart.parent = function(p,id) {
-		if (!arguments.length) return parent.node();	   
+		if (!arguments.length) return parent.node();
 		parent = d3.select(p);
 		w = parent.node().clientWidth;
 		h = parent.node().clientHeight;
@@ -42,7 +42,7 @@ d3.chart.sunburst = function () {
 		if(d3.ns.prefix.xhtml == parent.node().namespaceURI) {
 			parent = parent.append("svg:svg")
 				.attr("viewBox", "0 0 "+w+" "+h)
-				.attr("preserveAspectRatio", "none");					  
+				.attr("preserveAspectRatio", "none");
 		}
 		group = parent.append("svg:g")
 			.attr("class", "group")
@@ -109,7 +109,7 @@ d3.chart.sunburst = function () {
 		if (!arguments.length) return [x, y];
 		if(typeof p == "string") {
 			var otherPos = other.position();
-			var otherSize = other.size();	
+			var otherSize = other.size();
 			if(p == "after") {
 				x = otherPos[0]+otherSize[0];
 				y = otherPos[1]+otherSize[1]-h;
@@ -156,7 +156,7 @@ d3.chart.sunburst = function () {
 		return redraw();
 	};
 
-	function resize() {
+	public function resize() {
 		chartW = w - margin[1] - margin[3];
 		chartH = h - margin[0] - margin[2];
 		this.attr("width", chartW)
@@ -166,8 +166,8 @@ d3.chart.sunburst = function () {
 		return chart;
 	}
 
-	function redraw() {
-		chart.tochart();		  
+	public function redraw() {
+		chart.tochart();
 		return chart;
 	};
 
@@ -177,7 +177,7 @@ d3.chart.sunburst = function () {
 		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
 		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
 		var gapW = chartW/data.length*(gap/100);
-		
+
 		var markX = function(d, i) {return x+xScale(i)+margin[3]+gapW/2;};
 		var markY = function(d, i) {return y+yScale(d)+margin[0];};
 		var markW = chartW/data.length-gapW;
@@ -192,7 +192,7 @@ d3.chart.sunburst = function () {
 		return chart;
 	};
 
-	function drawSVG(markX, markY, markW, markH) {
+	public function drawSVG(markX, markY, markW, markH) {
 		var r = w / 2 - margin[0],
 		format = d3.time.format("%Y-%m-%d %X"),
 		selector = "#"+group.attr("id");
@@ -240,7 +240,7 @@ d3.chart.sunburst = function () {
 		path.on("mouseover", function(d) {
 				if (typeof d.values != 'object') {
 					name = plan_names[d.key] + ": ";
-					amount = amount_format(d.values) + amount_currency; 
+					amount = amount_format(d.values) + amount_currency;
 				} else {
 					name = group_names[d.key] + ": ";
 					amount = amount_format(d3.sum(d.values.map(function(v) { return v.values; }))) + amount_currency;
@@ -319,7 +319,7 @@ d3.chart.cellular = function () {
 		mname = d3.time.format("%B");
 
 	chart.parent = function(p,id) {
-		if (!arguments.length) return parent.node();	   
+		if (!arguments.length) return parent.node();
 		parent = d3.select(p);
 		w = parent.node().clientWidth;
 		h = parent.node().clientHeight;
@@ -328,7 +328,7 @@ d3.chart.cellular = function () {
 		if(d3.ns.prefix.xhtml == parent.node().namespaceURI) {
 			parent = parent.append("svg:svg")
 				.attr("viewBox", "0 0 "+w+" "+h)
-				.attr("preserveAspectRatio", "none");					  
+				.attr("preserveAspectRatio", "none");
 		}
 		group = parent.append("svg:g")
 			.attr("class", "group svg-crisp")
@@ -361,7 +361,7 @@ d3.chart.cellular = function () {
 		if (!arguments.length) return [x, y];
 		if(typeof p == "string") {
 			var otherPos = other.position();
-			var otherSize = other.size();	
+			var otherSize = other.size();
 			if(p == "after") {
 				x = otherPos[0]+otherSize[0];
 				y = otherPos[1]+otherSize[1]-h;
@@ -408,7 +408,7 @@ d3.chart.cellular = function () {
 		return redraw();
 	};
 
-	function resize() {
+	public function resize() {
 		chartW = w - 4;
 		chartH = h - 4;
 		this.attr("width", chartW)
@@ -418,8 +418,8 @@ d3.chart.cellular = function () {
 		return chart;
 	}
 
-	function redraw() {
-		chart.tochart();		  
+	public function redraw() {
+		chart.tochart();
 		return chart;
 	};
 
@@ -427,7 +427,7 @@ d3.chart.cellular = function () {
 		var yScale = d3.scale.linear().domain([0, d3.max(data)+h/100]).range([chartH, 0]);
 		var xScale = d3.scale.linear().domain([0, data.length]).range([0, chartW]);
 		var gapW = chartW/data.length*(gap/100);
-		
+
 		var markX = function(d, i) {return x+xScale(i)+margin[3]+gapW/2;};
 		var markY = function(d, i) {return y+yScale(d)+margin[0];};
 		var markW = chartW/data.length-gapW;
@@ -440,7 +440,7 @@ d3.chart.cellular = function () {
 		return chart;
 	};
 
-	function drawSVG(markX, markY, markW, markH) {
+	public function drawSVG(markX, markY, markW, markH) {
 		var format = d3.time.format("%Y-%m-%d");
 
 		var numyear = data[0].date.getFullYear();
@@ -483,7 +483,7 @@ d3.chart.cellular = function () {
 							.attr("x", function(d) { return week(d) * z; })
 							.attr("y", function(d) { return day(d) * z; });
 				});
-		
+
 		// Eye-Candy fade-in
 		year.selectAll("rect.day")
 			.transition().ease("bounce")
@@ -537,7 +537,7 @@ d3.chart.cellular = function () {
 		jQuery('svg').tooltip({placement: "top", selector: '.bstooltip', delay: { show: 300, hide: 100 }});
 	}
 
-	function monthPath(t0) {
+	public function monthPath(t0) {
 		var t1 = new Date(t0.getUTCFullYear(), t0.getUTCMonth() + 1, 0),
 			d0 = +day(t0), w0 = +week(t0),
 			d1 = +day(t1), w1 = +week(t1);
@@ -548,7 +548,7 @@ d3.chart.cellular = function () {
 			+ "H" + (w0 + 1) * z + "Z";
 	}
 
-	function monthWidth(t0) {
+	public function monthWidth(t0) {
 		var x = new Date(t0.getUTCFullYear(), t0.getUTCMonth()+2, 1);
 
 		if ( x.getUTCMonth() == 11 ) {
@@ -614,7 +614,7 @@ d3.chart.rickshaw = function () {
 		if (!arguments.length) return [x, y];
 		if(typeof p == "string") {
 			var otherPos = other.position();
-			var otherSize = other.size();	
+			var otherSize = other.size();
 			if(p == "after") {
 				x = otherPos[0]+otherSize[0];
 				y = otherPos[1]+otherSize[1]-h;
@@ -659,7 +659,7 @@ d3.chart.rickshaw = function () {
 		return redraw();
 	};
 
-	function resize() {
+	public function resize() {
 		chartW = w - 4;
 		chartH = h - 4;
 		this.attr("width", chartW)
@@ -669,8 +669,8 @@ d3.chart.rickshaw = function () {
 		return chart;
 	}
 
-	function redraw() {
-		chart.tochart();		  
+	public function redraw() {
+		chart.tochart();
 		return chart;
 	};
 
@@ -682,7 +682,7 @@ d3.chart.rickshaw = function () {
 		return chart;
 	};
 
-	function drawSVG() {
+	public function drawSVG() {
 		var z = 14,
 		day = d3.time.format("%Y-%m-%w"),
 		week = d3.time.format("%Y-%U"),
@@ -895,7 +895,7 @@ d3.chart.rickshaw = function () {
 			var controls = new RenderControls( {
 				element: document.querySelector('#adminForm'),
 				graph: graph
-				} ); 
+				} );
 		}
 	}
 
@@ -928,7 +928,7 @@ var RenderControls = function(args) {
 				fallback = that.setDefaultOffset(e.target.value);
 			}
 
-			if ( ( e.target.name == 'unit' ) || 
+			if ( ( e.target.name == 'unit' ) ||
 					( ( e.target.name == 'offset' ) && ( that.graph.offset == 'expand' ) && ( that.settings.offset != 'expand' ) ) ||
 					( ( e.target.name == 'renderer' ) && ( that.graph.offset == 'expand' ) && fallback )
 				) {
@@ -1009,7 +1009,7 @@ var RenderControls = function(args) {
 
 	this.setDefaultOffset = function(renderer) {
 
-		var options = this.rendererOptions[renderer];	
+		var options = this.rendererOptions[renderer];
 
 		var ret = false;
 		if (options.defaults && options.defaults.offset && ( jQuery.inArray( this.settings.offset, options.offset ) == -1 )) {
@@ -1022,7 +1022,7 @@ var RenderControls = function(args) {
 				}
 
 			}.bind(this));
-			
+
 			ret = true;
 		}
 

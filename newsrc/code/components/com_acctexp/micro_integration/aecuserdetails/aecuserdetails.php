@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_aecuserdetails extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECUSERDETAILS');
@@ -23,7 +23,7 @@ class mi_aecuserdetails extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -106,7 +106,7 @@ class mi_aecuserdetails extends MI
 		return $settings;
 	}
 
-	function getCustomFields()
+	public function getCustomFields()
 	{
 		$return = array();
 
@@ -119,7 +119,7 @@ class mi_aecuserdetails extends MI
 		return $return;
 	}
 
-	function saveParams( $params )
+	public function saveParams( $params )
 	{
 		foreach ( $params as $n => $v ) {
 			if ( !empty( $v ) && ( strpos( $n, '_short' ) ) ) {
@@ -130,19 +130,19 @@ class mi_aecuserdetails extends MI
 		return $params;
 	}
 
-	function admin_form( $request )
+	public function admin_form( $request )
 	{
 		return $this->getMIform( $request, false, true );
 	}
 
-	function admin_form_save( $request )
+	public function admin_form_save( $request )
 	{
 		$this->action( $request, true );
 
 		return true;
 	}
 
-	function profile_form( $request )
+	public function profile_form( $request )
 	{
 		if ( !empty( $request->backend ) ) {
 			return null;
@@ -151,7 +151,7 @@ class mi_aecuserdetails extends MI
 		return $this->getMIform( $request, false, false, true );
 	}
 
-	function profile_form_save( $request )
+	public function profile_form_save( $request )
 	{
 		if ( !empty( $this->settings['settings'] ) ) {
 			for ( $i=0; $i<$this->settings['settings']; $i++ ) {
@@ -171,7 +171,7 @@ class mi_aecuserdetails extends MI
 		return true;
 	}
 
-	function getMIform( $request, $checkout=true, $alwayspermit=false, $useredit=false )
+	public function getMIform( $request, $checkout=true, $alwayspermit=false, $useredit=false )
 	{
 		global $aecConfig;
 
@@ -368,7 +368,7 @@ class mi_aecuserdetails extends MI
 		return $settings;
 	}
 
-	function verifyMIform( $request )
+	public function verifyMIform( $request )
 	{
 		$return = array();
 
@@ -388,7 +388,7 @@ class mi_aecuserdetails extends MI
 		return $return;
 	}
 
-	function action( $request, $jprofile=false )
+	public function action( $request, $jprofile=false )
 	{
 		if ( isset( $request->invoice ) && !$jprofile ) {
 			if ( $request->invoice->counter > 1 ) {
@@ -434,7 +434,7 @@ class mi_aecuserdetails extends MI
 		return true;
 	}
 
-	function before_invoice_confirm( $request )
+	public function before_invoice_confirm( $request )
 	{
 		if ( empty( $this->settings['emulate_reg'] ) || !empty( $request->metaUser->userid ) ) {
 			return null;

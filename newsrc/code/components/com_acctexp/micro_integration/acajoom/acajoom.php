@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_acajoom
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_ACAJOOM');
@@ -23,7 +23,7 @@ class mi_acajoom
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -60,7 +60,7 @@ class mi_acajoom
 		return $settings;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -79,7 +79,7 @@ class mi_acajoom
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$is_allowed = false;
 
@@ -109,7 +109,7 @@ class mi_acajoom
 		}
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$is_allowed = false;
 
@@ -139,7 +139,7 @@ class mi_acajoom
 		}
 	}
 
-	function createSubscriber( $userid )
+	public function createSubscriber( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -154,7 +154,7 @@ class mi_acajoom
 		$db->query();
 	}
 
-	function hasList( $subscriber_id, $listid )
+	public function hasList( $subscriber_id, $listid )
 	{
 		$db = JFactory::getDBO();
 		$query = 'SELECT `qid`'
@@ -170,7 +170,7 @@ class mi_acajoom
 		}
 	}
 
-	function getSubscriberID( $userid )
+	public function getSubscriberID( $userid )
 	{
 		$db = JFactory::getDBO();
 		$query = 'SELECT `id`'
@@ -181,7 +181,7 @@ class mi_acajoom
 		return $db->loadResult();
 	}
 
-	function addToList( $subscriber_id, $list_id )
+	public function addToList( $subscriber_id, $list_id )
 	{
 		$db = JFactory::getDBO();
 
@@ -193,7 +193,7 @@ class mi_acajoom
 		return $db->query();
 	}
 
-	function deleteFromList( $subscriber_id, $list_id )
+	public function deleteFromList( $subscriber_id, $list_id )
 	{
 		$db = JFactory::getDBO();
 		$query = 'DELETE FROM #__acajoom_queue'

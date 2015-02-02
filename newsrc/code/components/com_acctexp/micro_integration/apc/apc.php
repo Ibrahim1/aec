@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_apc
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_APC');
@@ -22,7 +22,7 @@ class mi_apc
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -63,7 +63,7 @@ class mi_apc
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -74,7 +74,7 @@ class mi_apc
 		return null;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( $this->settings['set_group'] ) {
 			return $this->setGroupId( $request->metaUser->userid, $this->settings['group'], $this->settings['set_default'] );
@@ -83,7 +83,7 @@ class mi_apc
 		return null;
 	}
 
-	function setGroupId( $userid, $groupid, $default = false )
+	public function setGroupId( $userid, $groupid, $default = false )
 	{
 		$db = JFactory::getDBO();
 

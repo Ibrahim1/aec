@@ -2,7 +2,7 @@
 
 class processor_suncorp_migs extends URLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "suncorp_migs";
@@ -17,7 +17,7 @@ class processor_suncorp_migs extends URLprocessor
 
 		return $info;
 	}
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
@@ -34,7 +34,7 @@ class processor_suncorp_migs extends URLprocessor
 
 		return $settings;
 	}
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( 'p' );
@@ -53,7 +53,7 @@ class processor_suncorp_migs extends URLprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['vpc_Version']		= $this->settings['vpc_Version'];
 		$var['vpc_Command']		= $this->settings['vpc_Command'];
@@ -86,7 +86,7 @@ class processor_suncorp_migs extends URLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 
@@ -96,7 +96,7 @@ class processor_suncorp_migs extends URLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 
@@ -129,7 +129,7 @@ class processor_suncorp_migs extends URLprocessor
 		return $response;
 	}
 
-	function getResponseDescription( $responseCode )
+	public function getResponseDescription( $responseCode )
 	{
 		$codes = array(
 				"0" => "Transaction Successful",

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_aecinvoiceprintmod
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECINVOICEPRINTMOD');
@@ -23,7 +23,7 @@ class mi_aecinvoiceprintmod
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$s = array( "before_header", "header", "after_header", "address",
 					"before_content", "after_content",
@@ -56,7 +56,7 @@ class mi_aecinvoiceprintmod
 		return $settings;
 	}
 
-	function invoice_printout( $request )
+	public function invoice_printout( $request )
 	{
 		$db = JFactory::getDBO();
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_hsbc extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'hsbc';
@@ -30,7 +30,7 @@ class processor_hsbc extends XMLprocessor
 		return $info;
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -45,7 +45,7 @@ class processor_hsbc extends XMLprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
@@ -62,7 +62,7 @@ class processor_hsbc extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'toggle' );
@@ -82,7 +82,7 @@ class processor_hsbc extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		if ( $this->settings['pas'] ) {
 			if ( isset( $request->int_var['params']['CcpaResultsCode'] ) ) {
@@ -155,7 +155,7 @@ class processor_hsbc extends XMLprocessor
 		return parent::checkoutAction( $request, $InvoiceFactory );
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']			= $this->settings['pas_url'];
 
@@ -179,7 +179,7 @@ class processor_hsbc extends XMLprocessor
 		return $var;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = array();
 
@@ -200,7 +200,7 @@ class processor_hsbc extends XMLprocessor
 		return $var;
 	}
 
-	function checkoutProcess( $request, $InvoiceFactory )
+	public function checkoutProcess( $request, $InvoiceFactory )
 	{
 		if ( $this->settings['pas'] && is_null( $request->int_var['params']['CcpaResultsCode'] ) ) {
 			$request->invoice->preparePickup( $request->int_var['params'] );
@@ -211,7 +211,7 @@ class processor_hsbc extends XMLprocessor
 		}
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		// Start xml, add login and transaction key, as well as invoice number
 		$content =	'<?xml version="1.0" encoding="utf-8"?>'
@@ -358,7 +358,7 @@ class processor_hsbc extends XMLprocessor
 		return $content;
 	}
 
-	function getPACpostback( $params )
+	public function getPACpostback( $params )
 	{
 		$return = array(	'level' => 4,
 							'code'	=> "",
@@ -412,7 +412,7 @@ class processor_hsbc extends XMLprocessor
 		return $return;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$url = "https://www.uat.apixml.netq.hsbc.com/";
@@ -445,12 +445,12 @@ class processor_hsbc extends XMLprocessor
 		return $return;
 	}
 
-	function prepareValidation( $subscription_list )
+	public function prepareValidation( $subscription_list )
 	{
 		return true;
 	}
 
-	function validateSubscription( $iFactory, $subscription )
+	public function validateSubscription( $iFactory, $subscription )
 	{
 		$return = array();
 		$return['valid'] = true;
@@ -458,7 +458,7 @@ class processor_hsbc extends XMLprocessor
 		return $return;
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		$return = array();
 		$return['unit'] = $unit;
@@ -474,7 +474,7 @@ class processor_hsbc extends XMLprocessor
 		return $return;
 	}
 
-	function substring_between( $haystack, $start, $end )
+	public function substring_between( $haystack, $start, $end )
 	{
 		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {
 			return false;
@@ -485,7 +485,7 @@ class processor_hsbc extends XMLprocessor
 		}
 	}
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$return['valid']	= 0;
 		$return['cancel']	= true;
@@ -493,7 +493,7 @@ class processor_hsbc extends XMLprocessor
 		return $return;
 	}
 
-	function customaction_clearccdetails( $request )
+	public function customaction_clearccdetails( $request )
 	{
 		$remove = array( 'CcpaResultsCode', 'cardNumber' );
 

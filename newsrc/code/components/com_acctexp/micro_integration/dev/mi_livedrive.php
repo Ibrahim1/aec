@@ -5,7 +5,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class mi_livedrive extends MI
 {
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = 'LiveDrive MI';
@@ -14,7 +14,7 @@ class mi_livedrive extends MI
 		return $info;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$database = JFactory::getDBO();
 
@@ -27,7 +27,7 @@ class mi_livedrive extends MI
 	}
 
 
-	function install()
+	public function install()
 	{
 		$database = JFactory::getDBO();
 
@@ -46,7 +46,7 @@ class mi_livedrive extends MI
 	}
 
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['ld_duration_period']	= array("inputA", "Duration", "description");
@@ -57,7 +57,7 @@ class mi_livedrive extends MI
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$params = $request->metaUser->meta->custom_params;
 
@@ -72,7 +72,7 @@ class mi_livedrive extends MI
 		}
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		if ( $request->trace == 'registration' ) {
 			$password = $this->getPWrequest( $request );

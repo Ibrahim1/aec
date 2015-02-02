@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_email_files
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_EMAIL_FILES');
@@ -23,7 +23,7 @@ class mi_email_files
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['sender']				= array( 'inputE' );
@@ -50,7 +50,7 @@ class mi_email_files
 		return $settings;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -83,7 +83,7 @@ class mi_email_files
 		return $settings;
 	}
 
-	function verifyMIform( $request )
+	public function verifyMIform( $request )
 	{
 		$return = array();
 
@@ -131,7 +131,7 @@ class mi_email_files
 		return $return;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$message	= AECToolbox::rewriteEngineRQ( $this->settings['text'], $request );
 		$subject	= AECToolbox::rewriteEngineRQ( $this->settings['subject'], $request );

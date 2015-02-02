@@ -14,7 +14,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_nelnet extends URLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'nelnet';
@@ -32,7 +32,7 @@ class processor_nelnet extends URLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		//test mode is activated by using a diffrent secret key
@@ -46,7 +46,7 @@ class processor_nelnet extends URLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['currency']		= array( 'list_currency' );
@@ -62,7 +62,7 @@ class processor_nelnet extends URLprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
+	public function CustomPlanParams()
 	{
 		$p = array();
 		$p['item_number']	= array( 'inputC' );
@@ -70,7 +70,7 @@ class processor_nelnet extends URLprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 
 		//Required. Where we are sending our information to NelNet
@@ -112,7 +112,7 @@ class processor_nelnet extends URLprocessor
 	}
 
 
-		function parseNotification( $post )
+		public function parseNotification( $post )
 	{
 		$response = array();
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_docman
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_DOCMAN');
@@ -23,7 +23,7 @@ class mi_docman
 		return $info;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -35,12 +35,12 @@ class mi_docman
 		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_docman', $tables );
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_docman' );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -60,7 +60,7 @@ class mi_docman
 		return;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -146,7 +146,7 @@ class mi_docman
 		return $settings;
 	}
 
-	function profile_info( $request )
+	public function profile_info( $request )
 	{
 		$db = JFactory::getDBO();
 		$mi_docmanhandler = new docman_restriction();
@@ -175,7 +175,7 @@ class mi_docman
 		}
 	}
 
-	function hacks()
+	public function hacks()
 	{
 		$hacks = array();
 
@@ -211,7 +211,7 @@ class mi_docman
 		return $hacks;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -251,7 +251,7 @@ class mi_docman
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -294,7 +294,7 @@ class mi_docman
 		return true;
 	}
 
-	function GetUserGroups( $userid )
+	public function GetUserGroups( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -321,7 +321,7 @@ class mi_docman
 		return $groups;
 	}
 
-	function AddUserToGroup( $userid, $groupid )
+	public function AddUserToGroup( $userid, $groupid )
 	{
 		$db = JFactory::getDBO();
 
@@ -357,7 +357,7 @@ class mi_docman
 		}
 	}
 
-	function DeleteUserFromGroup( $userid, $groupid )
+	public function DeleteUserFromGroup( $userid, $groupid )
 	{
 		$db = JFactory::getDBO();
 
@@ -411,7 +411,7 @@ class docman_restriction extends serialParamDBTable {
 	/** @var string */
 	var $params					= null;
 
-	function getIDbyUserID( $userid ) {
+	public function getIDbyUserID( $userid ) {
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'
@@ -422,11 +422,11 @@ class docman_restriction extends serialParamDBTable {
 		return $db->loadResult();
 	}
 
-	function docman_restriction() {
+	public function docman_restriction() {
 		parent::__construct( '#__acctexp_mi_docman', 'id' );
 	}
 
-	function is_active()
+	public function is_active()
 	{
 		if ( $this->active ) {
 			return true;
@@ -435,7 +435,7 @@ class docman_restriction extends serialParamDBTable {
 		}
 	}
 
-	function getDownloadsLeft()
+	public function getDownloadsLeft()
 	{
 		if (  $this->unlimited_downloads > 0 ) {
 			return 'unlimited';
@@ -445,7 +445,7 @@ class docman_restriction extends serialParamDBTable {
 		}
 	}
 
-	function hasDownloadsLeft()
+	public function hasDownloadsLeft()
 	{
 		$check = $this->getDownloadsLeft();
 
@@ -463,12 +463,12 @@ class docman_restriction extends serialParamDBTable {
 
 	}
 
-	function noDownloadsLeft()
+	public function noDownloadsLeft()
 	{
 		aecRedirect( 'index.php?option=com_docman' , JText::_('AEC_MI_DOCMAN_NOCREDIT') );
 	}
 
-	function useDownload()
+	public function useDownload()
 	{
 		if ( $this->hasDownloadsLeft() && $this->is_active() ) {
 			$this->used_downloads++;
@@ -480,12 +480,12 @@ class docman_restriction extends serialParamDBTable {
 		}
 	}
 
-	function setDownloads( $set )
+	public function setDownloads( $set )
 	{
 		$this->granted_downloads = $set + $this->used_downloads;
 	}
 
-	function addDownloads( $add )
+	public function addDownloads( $add )
 	{
 		$this->granted_downloads += $add;
 	}

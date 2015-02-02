@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_chase_paymentech extends PROFILEprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'chase_paymentech';
@@ -30,7 +30,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $info;
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -43,7 +43,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']			= 0;
@@ -60,7 +60,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( 'p' );
@@ -95,7 +95,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $settings;
 	}
 
-	function registerProfileTabs()
+	public function registerProfileTabs()
 	{
 		$tab			= array();
 		$tab['details']	= JText::_('AEC_USERFORM_BILLING_DETAILS_NAME');
@@ -103,7 +103,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $tab;
 	}
 
-	function customtab_details( $request )
+	public function customtab_details( $request )
 	{
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
@@ -171,7 +171,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $return;
 	}
 
-	function checkoutform( $request, $nobill=false, $ppParams=false )
+	public function checkoutform( $request, $nobill=false, $ppParams=false )
 	{
 		$var = array();
 		$vcontent = array();
@@ -245,7 +245,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $var;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 
@@ -270,7 +270,7 @@ class processor_chase_paymentech extends PROFILEprocessor
 		return $return;
 	}
 
-	function createProfile( $ppParams )
+	public function createProfile( $ppParams )
 	{
 		$dom = new DOMDocument( '1.0', 'utf-8' );
 
@@ -296,7 +296,7 @@ aecDebug( $xml );
 		}
 	}
 
-	function fetchProfile( $ppParams )
+	public function fetchProfile( $ppParams )
 	{
 		$dom = new DOMDocument( '1.0', 'utf-8' );
 
@@ -322,7 +322,7 @@ aecDebug( $xml );
 		}
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$dom = new DOMDocument( '1.0', 'utf-8' );
 
@@ -351,20 +351,20 @@ aecDebug( $xml );
 		return $dom->saveXML();
 	}
 
-	function appendAccountData( &$var )
+	public function appendAccountData( &$var )
 	{
 		$var['BIN']			= $this->settings['BIN'];
 		$var['MerchantID']	= $this->settings['merchant_id'];
 		$var['TerminalID']	= $this->settings['terminal_id'];
 	}
 
-	function appendCurrencyData( &$var )
+	public function appendCurrencyData( &$var )
 	{
 		$var['CurrencyCode']		= AECToolbox::aecNumCurrency( $this->settings['currency'] );
 		$var['CurrencyExponent']	= AECToolbox::aecCurrencyExp( $this->settings['currency'] );
 	}
 
-	function appendPayData( &$var, $request )
+	public function appendPayData( &$var, $request )
 	{
 		if( !empty( $request->int_var['params']['account_no'] ) ) {
 			$basicdata['CheckDDA']		= $request->int_var['params']['account_no'];
@@ -379,7 +379,7 @@ aecDebug( $xml );
 		}
 	}
 
-	function transmitChase( $xml )
+	public function transmitChase( $xml )
 	{
 		$search = '<?xml version="1.0" encoding="utf-8"?>';
 
@@ -402,7 +402,7 @@ aecDebug( $xml );
 		return $this->XMLtoArray( simplexml_load_string( $response ) );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$return['valid'] = false;
 

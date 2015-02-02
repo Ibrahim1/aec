@@ -46,7 +46,7 @@
 	 * Inputs are: merchant id, merchant key, environment (default 'sandbox')
 	 * and a continue-token (from a ContinueTokenRequest)
 	 */
-	function GooglePoll ($id, $key, $env, $contToken, $cp = null) {
+	public function GooglePoll ($id, $key, $env, $contToken, $cp = null) {
 		$this->merchant_id = $id;
 		$this->merchant_key = $key;
 		$this->environment = $env;
@@ -65,7 +65,7 @@
 	 * appropriate notifications to fetch.  Default = true, value false
 	 * will stop after one request.
 	 */
-	function GetAllNotifications ( $get_all) {
+	public function GetAllNotifications ( $get_all) {
 		switch ($get_all) {
 			case false:
 				$this->get_all_notifications = false;
@@ -80,7 +80,7 @@
 	/*
 	 * Polls for notifications as defined
 	 */
-	function RequestData () {
+	public function RequestData () {
 
 		//create GRequest object + post xml (googlecart.php line: 962)
 		require_once('library/googlerequest.php');
@@ -108,7 +108,7 @@
 	 * Returns an array containing all notifications from poll.
 	 * This includes notifications from multiple requests
 	 */
-	function GetNotifications () {
+	public function GetNotifications () {
 		return $this->notifications;
 	}
 	/*
@@ -116,7 +116,7 @@
 	 * This includes, individual notifications, new continue token
 	 * and more notifications value
 	 */
-	function ExtractNotifications () {
+	public function ExtractNotifications () {
 		require_once('xml-processing/gc_xmlparser.php');
 		$GXmlParser = new gc_XmlParser($this->poll_result[1]);
 			$data = $GXmlParser->GetData();
@@ -131,7 +131,7 @@
 	/*
 	 * Builds poll request XML
 	 */
-	function GetPollRequestXML() {
+	public function GetPollRequestXML() {
 		require_once('xml-processing/gc_xmlbuilder.php');
 		$xml_data = new gc_XmlBuilder();
 
@@ -164,7 +164,7 @@
 	var $xml_data;
 	var $certificate_path;
 
-	function ContinueTokenRequest ($id, $key, $env, $cp = null) {
+	public function ContinueTokenRequest ($id, $key, $env, $cp = null) {
 		$this->merchant_id = $id;
 		$this->merchant_key = $key;
 		$this->environment = $env;
@@ -178,16 +178,16 @@
 				$this->server_url = $this->sandbox_base_server_url .$id;
 		}
 	}
-	function SetStartTime ($poll_start_time) {
+	public function SetStartTime ($poll_start_time) {
 		$this->start_time = $poll_start_time;
 	}
-	function GetContinueToken () {
+	public function GetContinueToken () {
 		if($this->continue_token !="") {
 			return $this->continue_token;
 		}
 		else return false;
 	}
-	function RequestToken () {
+	public function RequestToken () {
 		$this->request_token_xml = $this->GetTokenRequestXML();
 
 		//create GRequest object + post xml (googlecart.php line: 962)
@@ -211,7 +211,7 @@
 		//else return $token_result;
 		else return false;
 	}
-	function GetTokenRequestXML() {
+	public function GetTokenRequestXML() {
 		require_once('xml-processing/gc_xmlbuilder.php');
 		$xml_data = new gc_XmlBuilder();
 

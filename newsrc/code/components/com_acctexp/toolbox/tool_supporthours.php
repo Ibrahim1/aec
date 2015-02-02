@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_supporthours
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Support Hours";
@@ -22,7 +22,7 @@ class tool_supporthours
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		// Compute sensible timeframe for the default
 		$day = date('d');
@@ -62,7 +62,7 @@ class tool_supporthours
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['start_date'] ) ) {
 			return null;
@@ -240,7 +240,7 @@ class tool_supporthours
 		return $return;
 	}
 
-	function historySort( $array )
+	public function historySort( $array )
 	{
 		// Bastardized Quicksort
 		if ( !isset( $array[2] ) ) {
@@ -264,7 +264,7 @@ class tool_supporthours
 		return array_merge( tool_supporthours::historySort($x), array($piv), tool_supporthours::historySort($y) );
 	}
 
-	function debtSort( $array )
+	public function debtSort( $array )
 	{
 		// Bastardized Quicksort
 		if ( !isset( $array[2] ) ) {

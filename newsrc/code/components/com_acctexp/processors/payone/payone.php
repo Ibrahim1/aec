@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_payone extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'payone';
@@ -29,7 +29,7 @@ class processor_payone extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['mid']			= '10001';
@@ -44,7 +44,7 @@ class processor_payone extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -72,12 +72,12 @@ class processor_payone extends XMLprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
+	public function CustomPlanParams()
 	{
 		return array( 'productid' => array( 'inputC' ) );
 	}
 
-	function checkoutProcess( $request, $InvoiceFactory )
+	public function checkoutProcess( $request, $InvoiceFactory )
 	{
 		$var['portalid']	= $this->settings['portalid'];
 		$var['aid']			= $this->settings['aid'];
@@ -129,7 +129,7 @@ class processor_payone extends XMLprocessor
 		aecRedirect( 'https://secure.pay1.de/frontend/?'.$this->arrayToNVP($var) );
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 
@@ -157,7 +157,7 @@ class processor_payone extends XMLprocessor
 		return $return;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']			= $post['reference'];
@@ -167,7 +167,7 @@ class processor_payone extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$db = JFactory::getDBO();
 
@@ -199,17 +199,17 @@ class processor_payone extends XMLprocessor
 		return $response;
 	}
 
-	function notificationError( $response, $error )
+	public function notificationError( $response, $error )
 	{
 		echo 'TSOK';exit;
 	}
 
-	function notificationSuccess( $response )
+	public function notificationSuccess( $response )
 	{
 		echo 'TSOK';exit;
 	}
 
-	function getHash( $var )
+	public function getHash( $var )
 	{
 		$params = array(	'aid', 'access_aboperiod', 'access_aboprice', 'access_canceltime', 'access_expiretime',
 							'access_starttime', 'access_period', 'access_price', 'access_vat', 'accessname',

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_coupon
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_COUPON');
@@ -23,7 +23,7 @@ class mi_coupon
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['master_coupon']		= array( 'inputC' );
@@ -56,7 +56,7 @@ class mi_coupon
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -136,7 +136,7 @@ class mi_coupon
 		return true;
 	}
 
-	function mailOut( $request, $newcodes )
+	public function mailOut( $request, $newcodes )
 	{
 		$codelist = "";
 		if ( $this->settings['text_html'] ) {

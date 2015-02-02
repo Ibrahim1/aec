@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class displayPipelineHandler
 {
-	function getUserPipelineEvents( $userid )
+	public function getUserPipelineEvents( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -117,17 +117,17 @@ class displayPipeline extends serialParamDBTable
 	/** @var string */
 	var $params			= null;
 
-	function __construct()
+	public function __construct()
 	{
 	 	parent::__construct( '#__acctexp_displaypipeline', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params', 'displaytext' );
 	}
 
-	function create( $userid, $only_user, $once_per_user, $expire, $expiration, $displaymax, $displaytext, $params=null )
+	public function create( $userid, $only_user, $once_per_user, $expire, $expiration, $displaymax, $displaytext, $params=null )
 	{
 		$this->id				= 0;
 		$this->userid			= $userid;

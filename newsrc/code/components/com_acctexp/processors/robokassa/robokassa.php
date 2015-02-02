@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_robokassa extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'robokassa';
@@ -29,7 +29,7 @@ class processor_robokassa extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -44,7 +44,7 @@ class processor_robokassa extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -61,7 +61,7 @@ class processor_robokassa extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']		= 'http://test.robokassa.ru/Index.aspx ';
@@ -85,7 +85,7 @@ class processor_robokassa extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['amount_paid']	= number_format( $post['OutSum'], 2 );
@@ -94,7 +94,7 @@ class processor_robokassa extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 
@@ -114,12 +114,12 @@ class processor_robokassa extends POSTprocessor
 		return $response;
 	}
 
-	function getHash( $vars )
+	public function getHash( $vars )
 	{
 		return md5( implode( ':', $vars ) );
 	}
 
-	function notify_trail( $InvoiceFactory, $response )
+	public function notify_trail( $InvoiceFactory, $response )
 	{
 		if ( $response['valid'] ) {
 			header("HTTP/1.0 200 OK");

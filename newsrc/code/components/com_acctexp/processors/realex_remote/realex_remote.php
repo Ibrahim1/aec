@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_realex_remote extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'realex_remote';
@@ -29,7 +29,7 @@ class processor_realex_remote extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['merchantid']	= 'yourmerchantid';
@@ -41,7 +41,7 @@ class processor_realex_remote extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -54,7 +54,7 @@ class processor_realex_remote extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = $this->getUserform();
 
@@ -63,7 +63,7 @@ class processor_realex_remote extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$timestamp = strftime("%Y%m%d%H%M%S");
 
@@ -96,7 +96,7 @@ class processor_realex_remote extends XMLprocessor
 		return $xml;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$url = 'https://epage.payandshop.com/epage-remote.cgi';
@@ -169,7 +169,7 @@ class processor_realex_remote extends XMLprocessor
 		return $response1;
 	}
 
-	function getHash( $request, $timestamp, $amount )
+	public function getHash( $request, $timestamp, $amount )
 	{
 		return md5(	md5($timestamp
 					. $this->settings['merchantid']

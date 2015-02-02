@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_raffle
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_RAFFLE_NAME');
@@ -22,7 +22,7 @@ class mi_raffle
 		return $info;
 	}
 
-	function checkInstallation()
+	public function checkInstallation()
 	{
 		$db = JFactory::getDBO();
 
@@ -34,7 +34,7 @@ class mi_raffle
 		return in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_mi_rafflelist', $tables );
 	}
 
-	function install()
+	public function install()
 	{
 		$db = JFactory::getDBO();
 
@@ -64,7 +64,7 @@ class mi_raffle
 		return true;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -79,7 +79,7 @@ class mi_raffle
 		return $settings;
 	}
 
-	function saveparams( $params )
+	public function saveparams( $params )
 	{
 		$db = JFactory::getDBO();
 
@@ -101,7 +101,7 @@ class mi_raffle
 		return $params;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -225,17 +225,17 @@ class AECMI_rafflelist extends serialParamDBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function AECMI_rafflelist()
+	public function AECMI_rafflelist()
 	{
 		parent::__construct( '#__acctexp_mi_rafflelist', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params' );
 	}
 
-	function loadMax( $group=null ) {
+	public function loadMax( $group=null ) {
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT max(`id`)'
@@ -256,7 +256,7 @@ class AECMI_rafflelist extends serialParamDBTable {
 		}
 	}
 
-	function closeRun( $winid )
+	public function closeRun( $winid )
 	{
 		$db = JFactory::getDBO();
 
@@ -300,17 +300,17 @@ class AECMI_raffleuser extends serialParamDBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function AECMI_raffleuser()
+	public function AECMI_raffleuser()
 	{
 		parent::__construct( '#__acctexp_mi_raffleuser', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params' );
 	}
 
-	function loadUserid( $userid) {
+	public function loadUserid( $userid) {
 		$db = JFactory::getDBO();
 
 		$query = 'SELECT `id`'

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_alertpay extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'alertpay';
@@ -29,7 +29,7 @@ class processor_alertpay extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -43,7 +43,7 @@ class processor_alertpay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -58,7 +58,7 @@ class processor_alertpay extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']	= "https://www.alertpay.com/PayProcess.aspx";
 		if ( $this->settings['testmode'] ) {
@@ -101,7 +101,7 @@ class processor_alertpay extends POSTprocessor
 		return $var;
 	}
 
-	function convertPeriodUnit( $unit, $period )
+	public function convertPeriodUnit( $unit, $period )
 	{
 		$return = array();
 		$return['period'] = $period;
@@ -123,7 +123,7 @@ class processor_alertpay extends POSTprocessor
 		return $return;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$security_code			= $post['ap_securitycode'];
 		$description			= $post['ap_description'];
@@ -138,7 +138,7 @@ class processor_alertpay extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = false;
 

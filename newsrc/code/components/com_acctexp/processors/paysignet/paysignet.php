@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_paysignet extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "paysignet";
@@ -27,7 +27,7 @@ class processor_paysignet extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['merchant']		= "merchant";
@@ -37,7 +37,7 @@ class processor_paysignet extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( "p" );
@@ -49,7 +49,7 @@ class processor_paysignet extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']			= "https://www.paysignet.com/validate/paysign_getdetails.asp";
 
@@ -62,7 +62,7 @@ class processor_paysignet extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$order_id		= $post['order_id'];
 		$bank_name		= $post['bank_name'];

@@ -22,7 +22,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_securepay extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'securepayxml';
@@ -35,7 +35,7 @@ class processor_securepay extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
@@ -50,7 +50,7 @@ class processor_securepay extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -65,7 +65,7 @@ class processor_securepay extends XMLprocessor
 		return $settings;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 
 		$order_total = $request->int_var['amount'] * 100;
@@ -109,7 +109,7 @@ class processor_securepay extends XMLprocessor
 		return $xml;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$url = 'https://test.securepay.com.au/xmlapi/payment';
@@ -146,7 +146,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_securepay extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'securepayxml';
@@ -159,7 +159,7 @@ class processor_securepay extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
@@ -174,7 +174,7 @@ class processor_securepay extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -189,7 +189,7 @@ class processor_securepay extends XMLprocessor
 		return $settings;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 
 		$order_total = $request->int_var['amount'] * 100;
@@ -252,7 +252,7 @@ SimpleXMLElement Object ( ) [txnID] =>  SimpleXMLElement Object ( )
 [CreditCardInfo] =>  SimpleXMLElement Object ( [pan] =>  444433...111
 [expiryDate] =>  SimpleXMLElement Object ( ) [cardType] =>  6
 [cardDescription] =>  Visa ) ) ) ) )*/
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$url = 'https://test.securepay.com.au/xmlapi/payment';
@@ -280,7 +280,7 @@ SimpleXMLElement Object ( ) [txnID] =>  SimpleXMLElement Object ( )
 		return $response;
 	}
 
-	function checkoutform()
+	public function checkoutform()
 	{
 		$var = $this->getUserform();
 		$var = $this->getCCform();

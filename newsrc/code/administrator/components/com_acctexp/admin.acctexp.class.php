@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecSuperCommand
 {
-	function parseString( $string )
+	public function parseString( $string )
 	{
 		$particles = explode( '|', str_replace( 'supercommand:', '', str_replace( '!supercommand:', '', $string ) ) );
 
@@ -36,7 +36,7 @@ class aecSuperCommand
 		}
 	}
 
-	function getParticle( $data )
+	public function getParticle( $data )
 	{
 		$d = explode( ':', $data, 2 );
 
@@ -50,7 +50,7 @@ class aecSuperCommand
 		return $return;
 	}
 
-	function query( $armed )
+	public function query( $armed )
 	{
 		$userlist = $this->getAudience();
 
@@ -78,7 +78,7 @@ class aecSuperCommand
 		return $users;
 	}
 
-	function getAudience()
+	public function getAudience()
 	{
 		switch ( $this->audience['command'] ) {
 			case 'all':
@@ -146,7 +146,7 @@ class aecSuperCommand
 		return $userlist;
 	}
 
-	function action( $metaUser )
+	public function action( $metaUser )
 	{
 		switch ( $this->action['command'] ) {
 			case 'expire':
@@ -178,7 +178,7 @@ class aecSuperCommand
 		return true;
 	}
 
-	function cmdHas( $params )
+	public function cmdHas( $params )
 	{
 		switch ( strtolower( $params[0] ) ) {
 			case 'subscriptionid':
@@ -244,7 +244,7 @@ class aecSuperCommand
 		}
 	}
 
-	function cmdApply( $metaUser, $params )
+	public function cmdApply( $metaUser, $params )
 	{
 		global $aecConfig;
 
@@ -304,7 +304,7 @@ class aecSuperCommand
 
 class aecImport
 {
-	function aecImport( $file, $options )
+	public function aecImport( $file, $options )
 	{
 		$this->filepath = $file;
 
@@ -313,7 +313,7 @@ class aecImport
 		$this->errors = 0;
 	}
 
-	function read()
+	public function read()
 	{
 		if ( is_readable( $this->filepath ) ) {
 			return true;
@@ -322,7 +322,7 @@ class aecImport
 		}
 	}
 
-	function parse()
+	public function parse()
 	{
 		include_once( JPATH_SITE . '/components/com_acctexp/lib/parsecsv/parsecsv.lib.php' );
 
@@ -340,7 +340,7 @@ class aecImport
 		}
 	}
 
-	function getConversionList()
+	public function getConversionList()
 	{
 		foreach( $this->rows[0] as $k => $v ) {
 			if ( isset( $_POST['convert_field_'.$k] ) ) {
@@ -349,7 +349,7 @@ class aecImport
 		}
 	}
 
-	function convertRow( $row )
+	public function convertRow( $row )
 	{
 		$converted = array();
 		foreach ( $this->conversion as $k => $v ) {
@@ -363,7 +363,7 @@ class aecImport
 		return $converted;
 	}
 
-	function import( $options=array() )
+	public function import( $options=array() )
 	{
 		$db = JFactory::getDBO();
 
@@ -502,7 +502,7 @@ class aecImport
 		}
 	}
 
-	function createUser( $fields )
+	public function createUser( $fields )
 	{
 		return aecRegistration::saveUserRegistration( $fields, true, true, true, true );
 	}
@@ -528,7 +528,7 @@ class aecExport extends serialParamDBTable
 	/** @var string */
 	var $params				= null;
 
-	function __construct( $type=false )
+	public function __construct( $type=false )
 	{
 		$this->type = $type;
 
@@ -539,7 +539,7 @@ class aecExport extends serialParamDBTable
 		}
 	}
 
-	function load( $id=null, $reset=true )
+	public function load( $id=null, $reset=true )
 	{
 		parent::load($id);
 
@@ -552,12 +552,12 @@ class aecExport extends serialParamDBTable
 		}
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'filter', 'options', 'params'  );
 	}
 
-	function useExport()
+	public function useExport()
 	{
 		$app = JFactory::getApplication();
 
@@ -574,7 +574,7 @@ class aecExport extends serialParamDBTable
 		$this->exphandler->finishExport();
 	}
 
-	function getHandler()
+	public function getHandler()
 	{
 		// Load Exporting Class
 		$filename = JPATH_SITE . '/components/com_acctexp/lib/export/' . $this->params['export_method'] . '.php';
@@ -595,7 +595,7 @@ class aecExport extends serialParamDBTable
 		$this->exphandler->prepareExport();
 	}
 
-	function prepareExport()
+	public function prepareExport()
 	{
 		$fname = 'aecexport_' . urlencode( stripslashes( $this->name ) ) . '_' . date( 'Y_m_d', ( (int) gmdate('U') ) );
 
@@ -611,27 +611,27 @@ class aecExport extends serialParamDBTable
 		header('Content-Disposition: inline; filename="' . $fname . '.' . $this->params['export_method'] . '"');
 	}
 
-	function putDescription( $array )
+	public function putDescription( $array )
 	{
 		$this->description = $array;
 	}
 
-	function putSum( $array )
+	public function putSum( $array )
 	{
 		$this->sum = $array;
 	}
 
-	function putln( $array )
+	public function putln( $array )
 	{
 		$this->lines[] = $array;
 	}
 
-	function finishExport()
+	public function finishExport()
 	{
 		exit;
 	}
 
-	function exportSales()
+	public function exportSales()
 	{
 		$db = JFactory::getDBO();
 
@@ -860,7 +860,7 @@ class aecExport extends serialParamDBTable
 		$this->exphandler->putSum( $line );
 	}
 
-	function exportMembers()
+	public function exportMembers()
 	{
 		$db = JFactory::getDBO();
 
@@ -970,7 +970,7 @@ class aecExport extends serialParamDBTable
 	}
 
 
-	function setUsedDate()
+	public function setUsedDate()
 	{
 		$app = JFactory::getApplication();
 
@@ -978,7 +978,7 @@ class aecExport extends serialParamDBTable
 		$this->storeload();
 	}
 
-	function saveComplex( $name, $filter, $options, $params, $system=false, $is_test=false )
+	public function saveComplex( $name, $filter, $options, $params, $system=false, $is_test=false )
 	{
 		$app = JFactory::getApplication();
 
@@ -1032,7 +1032,7 @@ class aecExport extends serialParamDBTable
 		}
 	}
 
-	function check( $fields=array() )
+	public function check( $fields=array() )
 	{
 		parent::check($fields);
 
@@ -1045,7 +1045,7 @@ class aecExport extends serialParamDBTable
 
 class templateOverrideParser
 {
-	function templateOverrideParser( /*$file*/ )
+	public function templateOverrideParser( /*$file*/ )
 	{
 		$filepath = '/var/www/joomla25/components/com_acctexp/tmpl/etacarinae/confirmation/tmpl/confirmation.php';
 
@@ -1093,13 +1093,13 @@ exit;
 	}
 
 
-	function xml2array( $xml ) {
+	public function xml2array( $xml ) {
 		$sxi = new SimpleXmlIterator( $xml );
 
 		return $this->sxiToArray($sxi);
 	}
 
-	function sxiToArray($sxi){
+	public function sxiToArray($sxi){
 		$a = array();
 		for( $sxi->rewind(); $sxi->valid(); $sxi->next() ) {
 			if ( !array_key_exists($sxi->key(), $a) ) {

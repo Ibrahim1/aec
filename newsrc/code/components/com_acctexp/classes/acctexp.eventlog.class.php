@@ -30,17 +30,17 @@ class eventLog extends serialParamDBTable
 	/** @var string */
 	var $params		= null;
 
-	function __construct()
+	public function __construct()
 	{
 	 	parent::__construct( '#__acctexp_eventlog', 'id' );
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params' );
 	}
 
-	function issue( $short, $tags, $text, $level = 2, $params = null, $force_notify = 0, $force_email = 0 )
+	public function issue( $short, $tags, $text, $level = 2, $params = null, $force_notify = 0, $force_email = 0 )
 	{
 		global $aecConfig;
 

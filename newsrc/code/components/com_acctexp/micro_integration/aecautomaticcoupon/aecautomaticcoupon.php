@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this option is not allowed.' );
 
 class mi_aecautomaticcoupon
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AECAUTOMATICOUPON_NAME');
@@ -23,7 +23,7 @@ class mi_aecautomaticcoupon
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['coupon']		= array( 'inputC' );
@@ -31,7 +31,7 @@ class mi_aecautomaticcoupon
 		return $settings;
 	}
 
-	function invoice_creation( $request )
+	public function invoice_creation( $request )
 	{
 		if ( !empty( $this->settings['coupon'] ) ) {
 			$request->invoice->addCoupon( $this->settings['coupon'] );

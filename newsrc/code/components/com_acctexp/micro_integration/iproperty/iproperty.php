@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_iproperty
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_IPROPERTY_NAME');
@@ -23,7 +23,7 @@ class mi_iproperty
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -71,7 +71,7 @@ class mi_iproperty
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$defaults = array();
 		$defaults['agent_fields']	= "fname=[[user_first_name]]\nlname=[[user_last_name]]\nemail=[[user_email]]";
@@ -80,7 +80,7 @@ class mi_iproperty
 		return $defaults;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$agent = $this->getAgent( $request->metaUser->userid );
 
@@ -123,7 +123,7 @@ class mi_iproperty
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['unpublish_all'] ) ) {
 			$agent = $this->getAgent( $request->metaUser->userid );
@@ -136,7 +136,7 @@ class mi_iproperty
 		return null;
 	}
 
-	function createAgent( $request )
+	public function createAgent( $request )
 	{
 		$fields = $this->convertSettings( $this->settings['agent_fields'], $request );
 
@@ -160,7 +160,7 @@ class mi_iproperty
 		return $this->getAgent( $request->metaUser->userid );
 	}
 
-	function updateAgent( $agent, $request )
+	public function updateAgent( $agent, $request )
 	{
 		if ( !empty( $this->settings['update_agent'] ) && !empty( $this->settings['update_afields'] ) ) {
 			$agent = $this->mergeObject( $agent, $this->convertSettings( $this->settings['update_afields'], $request ) );
@@ -189,7 +189,7 @@ class mi_iproperty
 		return $agent;
 	}
 
-	function createCompany( $request )
+	public function createCompany( $request )
 	{
 		$fields = $this->convertSettings( $this->settings['company_fields'], $request );
 
@@ -210,7 +210,7 @@ class mi_iproperty
 		return $this->getCompanyByName( $fields['name'] );
 	}
 
-	function updateCompany( $company, $request )
+	public function updateCompany( $company, $request )
 	{
 		if ( !empty( $this->settings['update_company'] ) && !empty( $this->settings['update_cfields'] ) ) {
 			$company = $this->mergeObject( $company, $this->convertSettings( $this->settings['update_cfields'], $request ) );
@@ -269,7 +269,7 @@ class mi_iproperty
 		return $company;
 	}
 
-	function convertSettings( $field, $request )
+	public function convertSettings( $field, $request )
 	{
 		$fieldlist = explode( "\n", $field );
 
@@ -289,7 +289,7 @@ class mi_iproperty
 		return $array;
 	}
 
-	function mergeObject( $object, $settings )
+	public function mergeObject( $object, $settings )
 	{
 		foreach ( $settings as $k => $v ) {
 			if ( isset( $object->$k ) ) {
@@ -300,7 +300,7 @@ class mi_iproperty
 		return $object;
 	}
 
-	function createQuery( $fields, $table )
+	public function createQuery( $fields, $table )
 	{
 		if ( empty( $fields ) ) {
 			return false;
@@ -317,17 +317,17 @@ class mi_iproperty
 		return $db->query();
 	}
 
-	function getAgent( $id )
+	public function getAgent( $id )
 	{
 		return $this->getObject( 'agents', 'user_id', $id );
 	}
 
-	function getCompany( $id )
+	public function getCompany( $id )
 	{
 		return $this->getObject( 'companies', 'id', $id );
 	}
 
-	function getCompanyByName( $name )
+	public function getCompanyByName( $name )
 	{
 		$db = JFactory::getDBO();
 
@@ -339,7 +339,7 @@ class mi_iproperty
 		return $this->getCompany( $db->loadResult() );
 	}
 
-	function getObject( $table, $field, $id )
+	public function getObject( $table, $field, $id )
 	{
 		$db = JFactory::getDBO();
 
@@ -361,7 +361,7 @@ class mi_iproperty
 		return $object;
 	}
 
-	function storeObject( $object, $table )
+	public function storeObject( $object, $table )
 	{
 		$db = JFactory::getDBO();
 
@@ -388,7 +388,7 @@ class mi_iproperty
 		return $db->query();
 	}
 
-	function publishProperties( $agentid )
+	public function publishProperties( $agentid )
 	{
 		$properties = $this->getProperties( $agentid );
 
@@ -404,7 +404,7 @@ class mi_iproperty
 		}
 	}
 
-	function unpublishProperties( $agentid )
+	public function unpublishProperties( $agentid )
 	{
 		$properties = $this->getProperties( $agentid );
 
@@ -420,7 +420,7 @@ class mi_iproperty
 		}
 	}
 
-	function getProperties( $agentid )
+	public function getProperties( $agentid )
 	{
 		$db = JFactory::getDBO();
 

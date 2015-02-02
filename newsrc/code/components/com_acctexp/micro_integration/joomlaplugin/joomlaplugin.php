@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_joomlaplugin
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JOOMLAPLUGIN');
@@ -23,7 +23,7 @@ class mi_joomlaplugin
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -51,7 +51,7 @@ class mi_joomlaplugin
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( empty( $this->settings['plugin'] ) ) {
 			return null;
@@ -92,7 +92,7 @@ class mi_joomlaplugin
 		}
 	}
 
-	function attach( &$observer)
+	public function attach( &$observer)
 	{
 		// Make sure we haven't already attached this object as an observer
 		if (is_object($observer))

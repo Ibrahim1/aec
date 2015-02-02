@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_jnews
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JNEWS');
@@ -23,7 +23,7 @@ class mi_jnews
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -60,7 +60,7 @@ class mi_jnews
 		return $settings;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -79,7 +79,7 @@ class mi_jnews
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$is_allowed = false;
 
@@ -109,7 +109,7 @@ class mi_jnews
 		}
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$is_allowed = false;
 
@@ -139,7 +139,7 @@ class mi_jnews
 		}
 	}
 
-	function createSubscriber( $userid )
+	public function createSubscriber( $userid )
 	{
 		$db = JFactory::getDBO();
 
@@ -154,7 +154,7 @@ class mi_jnews
 		$db->query();
 	}
 
-	function hasList( $subscriber_id, $listid )
+	public function hasList( $subscriber_id, $listid )
 	{
 		$db = JFactory::getDBO();
 		$query = 'SELECT `list_id`'
@@ -171,7 +171,7 @@ class mi_jnews
 		}
 	}
 
-	function hasListUnsub( $subscriber_id, $listid )
+	public function hasListUnsub( $subscriber_id, $listid )
 	{
 		$db = JFactory::getDBO();
 		$query = 'SELECT `list_id`'
@@ -188,7 +188,7 @@ class mi_jnews
 		}
 	}
 
-	function getSubscriberID( $userid )
+	public function getSubscriberID( $userid )
 	{
 		$db = JFactory::getDBO();
 		$query = 'SELECT `id`'
@@ -199,7 +199,7 @@ class mi_jnews
 		return $db->loadResult();
 	}
 
-	function addToList( $subscriber_id, $list_id )
+	public function addToList( $subscriber_id, $list_id )
 	{
 		if ( !$this->hasList( $subscriber_id, $list_id ) ) {
 			$db = JFactory::getDBO();
@@ -232,7 +232,7 @@ class mi_jnews
 		return true;
 	}
 
-	function deleteFromList( $subscriber_id, $list_id )
+	public function deleteFromList( $subscriber_id, $list_id )
 	{
 		if ( $this->hasList( $subscriber_id, $list_id ) ) {
 			$db = JFactory::getDBO();

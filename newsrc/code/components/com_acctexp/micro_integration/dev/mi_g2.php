@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_g2 extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_G2');
@@ -22,7 +22,7 @@ class mi_g2 extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -73,7 +73,7 @@ class mi_g2 extends MI
 		return $settings;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -105,7 +105,7 @@ class mi_g2 extends MI
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -165,7 +165,7 @@ class mi_g2 extends MI
 		return null;
 	}
 
-	function loadG2Embed()
+	public function loadG2Embed()
 	{
 		if ( !empty( $this->settings['gallery2path'] ) ) {
 			include_once( $this->settings['gallery2path'] . '/embed.php' );
@@ -173,7 +173,7 @@ class mi_g2 extends MI
 		}
 	}
 
-	function mapUserToGroup( $g2userid, $groupid )
+	public function mapUserToGroup( $g2userid, $groupid )
 	{
 		$db = JFactory::getDBO();
 
@@ -194,7 +194,7 @@ class mi_g2 extends MI
 		}
 	}
 
-	function createAlbumInAlbum( $g2userid, $parentid, $albumname )
+	public function createAlbumInAlbum( $g2userid, $parentid, $albumname )
 	{
 		$db = JFactory::getDBO();
 
@@ -241,7 +241,7 @@ class mi_g2 extends MI
 		return true;
 	}
 
-	function deleteUserFromGroup( $g2userid, $groupid )
+	public function deleteUserFromGroup( $g2userid, $groupid )
 	{
 		$db = JFactory::getDBO();
 
@@ -258,7 +258,7 @@ class mi_g2 extends MI
 		}
 	}
 
-	function catchG2userid( $metaUser )
+	public function catchG2userid( $metaUser )
 	{
 		$g2id = $this->hasG2userid( $metaUser );
 
@@ -271,7 +271,7 @@ class mi_g2 extends MI
 		}
 	}
 
-	function hasG2userid( $metaUser )
+	public function hasG2userid( $metaUser )
 	{
 		$db = JFactory::getDBO();
 
@@ -284,7 +284,7 @@ class mi_g2 extends MI
 		return $db->loadResult();
 	}
 
-	function createG2User( $metaUser )
+	public function createG2User( $metaUser )
 	{
 		$db = JFactory::getDBO();
 

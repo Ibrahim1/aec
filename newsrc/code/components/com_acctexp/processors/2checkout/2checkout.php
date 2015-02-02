@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_2checkout extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= '2checkout';
@@ -30,7 +30,7 @@ class processor_2checkout extends POSTprocessor
 		return $info;
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -43,7 +43,7 @@ class processor_2checkout extends POSTprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']		= "USD";
@@ -58,7 +58,7 @@ class processor_2checkout extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -75,7 +75,7 @@ class processor_2checkout extends POSTprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
+	public function CustomPlanParams()
 	{
 		$p = array();
 		$p['productid']				= array( 'inputC' );
@@ -83,7 +83,7 @@ class processor_2checkout extends POSTprocessor
 		return $p;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( $this->settings['alt2courl'] ) {
 			$var['post_url']		= 'https://www2.2checkout.com/2co/buyer/purchase';
@@ -123,7 +123,7 @@ class processor_2checkout extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$description	= $post['cart_order_id'];
 		$key			= $post['key'];
@@ -149,7 +149,7 @@ class processor_2checkout extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$hash = "";
 		if ( !empty( $post['key'] ) ) {
@@ -192,7 +192,7 @@ class processor_2checkout extends POSTprocessor
 		return $response;
 	}
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$path	= '/api/sales/stop_lineitem_recurring';
 		$url	= 'https://www.2checkout.com' . $path;

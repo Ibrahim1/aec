@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_processor_dnr
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Processor Delete&Replace";
@@ -22,7 +22,7 @@ class tool_processor_dnr
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['delete']			= array( 'list', 'Delete this', 'This processor will be deleted permanently.', 0 );
@@ -42,7 +42,7 @@ class tool_processor_dnr
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['delete'] ) ) {
 			return '<p>Please select a processor to remove.</p>';

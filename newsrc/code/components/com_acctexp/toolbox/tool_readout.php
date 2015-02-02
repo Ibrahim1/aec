@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_readout
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Readout";
@@ -22,7 +22,7 @@ class tool_readout
 		return $info;
 	}
 
-	function options()
+	public function options()
 	{
 		return array(		'show_settings' => 0,
 							'show_extsettings' => 0,
@@ -39,7 +39,7 @@ class tool_readout
 						);
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$optionlist = $this->options();
 
@@ -70,7 +70,7 @@ class tool_readout
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		$optionlist = $this->options();
 
@@ -142,7 +142,7 @@ class tool_readout
 		}
 	}
 
-	function readout( $readout )
+	public function readout( $readout )
 	{
 		if ( isset( $_POST['column_headers'] ) ) {
 			$ch = $_POST['column_headers'];
@@ -237,7 +237,7 @@ class tool_readout
  		return $return;
 	}
 
-	function readoutCSV( $readout )
+	public function readoutCSV( $readout )
 	{
 		// Send download header
 		header("Pragma: public");
@@ -329,7 +329,7 @@ class tool_readout
 class aecReadout
 {
 
-	function aecReadout( $optionlist, $method )
+	public function aecReadout( $optionlist, $method )
 	{
 		$this->optionlist = $optionlist;
 		$this->method = "conversionHelper" . strtoupper( $method );
@@ -355,12 +355,12 @@ class aecReadout
 		}
 	}
 
-	function conversionHelper( $content, $obj )
+	public function conversionHelper( $content, $obj )
 	{
 		return $this->{$this->method}( $content, $obj );
 	}
 
-	function readSettings()
+	public function readSettings()
 	{
 		global $aecConfig;
 
@@ -416,7 +416,7 @@ class aecReadout
 		return $readout;
 	}
 
-	function readProcessors()
+	public function readProcessors()
 	{
 		$db = JFactory::getDBO();
 
@@ -511,7 +511,7 @@ class aecReadout
 		return $readout;
 	}
 
-	function readPlans()
+	public function readPlans()
 	{
 		$db = JFactory::getDBO();
 
@@ -596,7 +596,7 @@ class aecReadout
 		return $r;
 	}
 
-	function readPlanMIrel()
+	public function readPlanMIrel()
 	{
 		$db = JFactory::getDBO();
 
@@ -658,7 +658,7 @@ class aecReadout
 		return $r;
 	}
 
-	function readMIs()
+	public function readMIs()
 	{
 		$db = JFactory::getDBO();
 
@@ -736,7 +736,7 @@ class aecReadout
 		return $readout;
 	}
 
-	function conversionHelperHTML( $content, $obj )
+	public function conversionHelperHTML( $content, $obj )
 	{
 		$cc = $content[0];
 
@@ -850,7 +850,7 @@ class aecReadout
 		return array( $dname => $dvalue );
 	}
 
-	function conversionHelperCSV( $content, $obj )
+	public function conversionHelperCSV( $content, $obj )
 	{
 		$cc = $content[0];
 

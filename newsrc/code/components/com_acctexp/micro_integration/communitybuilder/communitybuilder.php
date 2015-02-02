@@ -12,7 +12,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_communitybuilder
 {
-	function Info ()
+	public function Info ()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_COMMUNITYBUILDER');
@@ -22,7 +22,7 @@ class mi_communitybuilder
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -61,7 +61,7 @@ class mi_communitybuilder
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -79,7 +79,7 @@ class mi_communitybuilder
 		}
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -97,7 +97,7 @@ class mi_communitybuilder
 		}
 	}
 
-	function setFields( $request, $stage="" )
+	public function setFields( $request, $stage="" )
 	{
 		$db = JFactory::getDBO();
 

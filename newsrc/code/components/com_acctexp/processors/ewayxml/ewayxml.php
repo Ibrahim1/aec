@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_ewayxml extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'ewayxml';
@@ -27,12 +27,12 @@ class processor_ewayxml extends XMLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return 'eway.png';
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
@@ -46,7 +46,7 @@ class processor_ewayxml extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']	= array( 'toggle' );
@@ -61,7 +61,7 @@ class processor_ewayxml extends XMLprocessor
 		return $settings;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 
 		$order_total = (int) ( $request->int_var['amount'] * 100 );
@@ -97,7 +97,7 @@ class processor_ewayxml extends XMLprocessor
 		return $xml;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$url = 'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp';
@@ -128,7 +128,7 @@ class processor_ewayxml extends XMLprocessor
 		return $response;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = $this->getUserform( array(), array(), $request->metaUser );
 

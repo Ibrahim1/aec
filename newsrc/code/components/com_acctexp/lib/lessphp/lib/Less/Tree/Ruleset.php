@@ -238,7 +238,7 @@ class Less_Tree_Ruleset extends Less_Tree{
 		return $ruleset;
 	}
 
-	function evalImports($env) {
+	public function evalImports($env) {
 
 		$rules_len = count($this->rules);
 		for($i=0; $i < $rules_len; $i++){
@@ -260,7 +260,7 @@ class Less_Tree_Ruleset extends Less_Tree{
 		}
 	}
 
-	function makeImportant(){
+	public function makeImportant(){
 
 		$important_rules = array();
 		foreach($this->rules as $rule){
@@ -291,7 +291,7 @@ class Less_Tree_Ruleset extends Less_Tree{
 		return true;
 	}
 
-	function resetCache(){
+	public function resetCache(){
 		$this->_rulesets = null;
 		$this->_variables = null;
 		$this->lookups = array();
@@ -462,7 +462,7 @@ class Less_Tree_Ruleset extends Less_Tree{
 	}
 
 
-	function markReferenced(){
+	public function markReferenced(){
 		if( !$this->selectors ){
 			return;
 		}
@@ -621,7 +621,7 @@ class Less_Tree_Ruleset extends Less_Tree{
 		}
 	}
 
-	function mergeElementsOnToSelectors( $elements, &$selectors){
+	public function mergeElementsOnToSelectors( $elements, &$selectors){
 
 		if( !$selectors ){
 			$selectors[] = array( new Less_Tree_Selector($elements) );

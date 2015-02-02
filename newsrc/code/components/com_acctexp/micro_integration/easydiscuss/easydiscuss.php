@@ -13,7 +13,7 @@ defined('_JEXEC') OR defined( '_VALID_MOS' ) OR die( 'Direct Access to this loca
 
 class mi_easydiscuss extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_EASYDISCUSS');
@@ -23,7 +23,7 @@ class mi_easydiscuss extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -81,7 +81,7 @@ class mi_easydiscuss extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function isInstalled()
+	public function isInstalled()
 	{
 		$app = JFactory::getApplication();
 
@@ -92,7 +92,7 @@ class mi_easydiscuss extends MI
 		return	in_array( $app->getCfg( 'dbprefix' ) . "discuss_ranks_users", $tables );
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !empty( $this->settings['rank' . $request->area] ) || !empty( $this->settings['unrank' . $request->area] ) ) {
 			$this->changeRank( $request->metaUser->userid, $this->settings['rank' . $request->area], $this->settings['unrank' . $request->area] );
@@ -103,7 +103,7 @@ class mi_easydiscuss extends MI
 		}
 	}
 
-	function changeRank( $userid, $add, $remove )
+	public function changeRank( $userid, $add, $remove )
 	{
 		$db = JFactory::getDBO();
 
@@ -151,7 +151,7 @@ class mi_easydiscuss extends MI
 		}
 	}
 
-	function changeBadge( $userid, $add, $remove )
+	public function changeBadge( $userid, $add, $remove )
 	{
 		$db = JFactory::getDBO();
 

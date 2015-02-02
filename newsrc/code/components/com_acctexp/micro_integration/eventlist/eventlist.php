@@ -13,7 +13,7 @@ defined('_JEXEC') OR defined( '_VALID_MOS' ) OR die( 'Direct Access to this loca
 
 class mi_eventlist extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_EVENTLIST');
@@ -23,7 +23,7 @@ class mi_eventlist extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 
@@ -66,14 +66,14 @@ class mi_eventlist extends MI
 		return array_merge( $xsettings, $settings );
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		$path = rtrim( JPATH_ROOT, DS ) . DS . 'components' . DS . 'com_eventlist' . DS . 'helpers' . DS . 'helper.php';
 
 		return file_exists( $path );
 	}
 
-	function hacks()
+	public function hacks()
 	{
 		$hacks = array();
 
@@ -98,14 +98,14 @@ class mi_eventlist extends MI
 		return $hacks;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( !empty( $this->settings['event' . $request->area] ) ) {
 			$this->regEvent( $request->metaUser->userid, $this->settings['event' . $request->area] );
 		}
 	}
 
-	function regEvent( $userid, $newevent )
+	public function regEvent( $userid, $newevent )
 	{
 		$db = JFactory::getDBO();
 

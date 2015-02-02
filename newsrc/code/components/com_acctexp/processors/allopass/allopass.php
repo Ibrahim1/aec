@@ -20,7 +20,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_allopass extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "allopass";
@@ -35,7 +35,7 @@ class processor_allopass extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']		= "EUR";
@@ -49,7 +49,7 @@ class processor_allopass extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( "toggle" );
@@ -64,7 +64,7 @@ class processor_allopass extends XMLprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
+	public function CustomPlanParams()
 	{
 		$p = array();
 		$p['docid']	= array( 'inputC' );
@@ -72,7 +72,7 @@ class processor_allopass extends XMLprocessor
 		return $p;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = array();
 		$var['params']['DESC0'] = array("p", "<img scr=\"http://payment.allopass.com/acte/scripts/popup/access.apu?ids=" . $this->settings['siteid'] . "&idd=" . $this->settings['docid'] . "&lang=fr&country=fr\" />");
@@ -81,7 +81,7 @@ class processor_allopass extends XMLprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 
    		$ssl_amount = aecGetParam( 'ssl_amount' ) ;
@@ -92,7 +92,7 @@ class processor_allopass extends XMLprocessor
 		return $response;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$var = array();
 		$var['CODE']		= urlencode( $request->int_var['params']['CODE0'] );
@@ -108,7 +108,7 @@ class processor_allopass extends XMLprocessor
 		return implode( '&', $content );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$path = "/acte/access.apu";
 		$url = "http://payment.allopass.com" . $path;

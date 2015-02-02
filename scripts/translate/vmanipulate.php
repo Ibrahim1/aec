@@ -75,7 +75,7 @@ vTranslate::log( "All done." . "\n\n", $log );
 
 class vTranslate
 {
-	function getFolders( $path, $list=array(), $other=false )
+	public function getFolders( $path, $list=array(), $other=false )
 	{
 		$iterator = new DirectoryIterator( $path );
 
@@ -94,7 +94,7 @@ class vTranslate
 		return $list;
 	}
 
-	function getFiles($path)
+	public function getFiles($path)
 	{
 		$iterator = new DirectoryIterator( $path );
 
@@ -110,7 +110,7 @@ class vTranslate
 		return $arr;
 	}
 
-	function rrmdir( $dir )
+	public function rrmdir( $dir )
 	{
 		if ( is_dir($dir) ) {
 			$objects = scandir($dir);
@@ -130,7 +130,7 @@ class vTranslate
 		}
 	}
 
-	function log( $thing, $log )
+	public function log( $thing, $log )
 	{
 		echo $thing;
 

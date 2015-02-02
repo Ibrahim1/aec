@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_iats extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'iats';
@@ -31,7 +31,7 @@ class processor_iats extends XMLprocessor
 		return $info;
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -44,7 +44,7 @@ class processor_iats extends XMLprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']	= 0;
@@ -55,7 +55,7 @@ class processor_iats extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -77,7 +77,7 @@ class processor_iats extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request, $vcontent=null, $updated=null )
+	public function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		$var = array();
 
@@ -100,7 +100,7 @@ class processor_iats extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
@@ -222,7 +222,7 @@ aecDebug($content);
 		return implode( '&', $content );
 	}
 
-	function transmitToTicketmaster( $xml, $request, $path=null )
+	public function transmitToTicketmaster( $xml, $request, $path=null )
 	{
 		if ( empty( $path ) ) {
 			if ( !empty( $this->path ) ) {
@@ -270,7 +270,7 @@ aecDebug($url);aecDebug($path);aecDebug($port);aecDebug($curlextra);aecDebug($xm
 		return $this->transmitRequest( $url, $path, $xml, $port, $curlextra );
 	}
 
-	function transmitRequestXML( $xml, $request, $path=null )
+	public function transmitRequestXML( $xml, $request, $path=null )
 	{
 		$response = $this->transmitToTicketmaster( $xml, $request, $path );
 aecDebug($response);
@@ -304,7 +304,7 @@ aecDebug($iatsReturn);
 		return $return;
 	}
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
@@ -354,7 +354,7 @@ aecDebug($iatsReturn);
 		}
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		$return = array();
 		switch ( $unit ) {
@@ -375,7 +375,7 @@ aecDebug($iatsReturn);
 		return $return;
 	}
 
-	function ProfileRequest( $request, $profileid, $var )
+	public function ProfileRequest( $request, $profileid, $var )
 	{
 		$var['']				= '';
 

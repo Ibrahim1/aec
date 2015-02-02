@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_airtoy extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'airtoy';
@@ -27,7 +27,7 @@ class processor_airtoy extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -39,7 +39,7 @@ class processor_airtoy extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( "toggle" );
@@ -51,7 +51,7 @@ class processor_airtoy extends XMLprocessor
 		return $settings;
 	}
 
-	function CustomPlanParams()
+	public function CustomPlanParams()
 	{
 		$p = array();
 		$p['smscode_prefix']	= array( 'inputC' );
@@ -59,7 +59,7 @@ class processor_airtoy extends XMLprocessor
 		return $p;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -71,12 +71,12 @@ class processor_airtoy extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		return true;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$return['valid'] = false;
 
@@ -110,7 +110,7 @@ class processor_airtoy extends XMLprocessor
 	}
 
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$db = JFactory::getDBO();
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_pretend
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Pretend";
@@ -22,7 +22,7 @@ class tool_pretend
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['create_groups']		= array( 'toggle', 'Create Groups', 'Create new groups (or just use the ones already in the system)', 0 );
@@ -39,7 +39,7 @@ class tool_pretend
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		if ( empty( $_POST['groups'] ) ) {
 			return null;
@@ -100,7 +100,7 @@ class tool_pretend
 		}
 	}
 
-	function createPayments()
+	public function createPayments()
 	{
 		if ( !$_POST['create_payments'] ) {
 			return;
@@ -213,7 +213,7 @@ class tool_pretend
 		$this->range['payments']['end'] = $db->loadResult();
 	}
 
-	function createPlans( $grouplist, $plans )
+	public function createPlans( $grouplist, $plans )
 	{
 		$db = JFactory::getDBO();
 
@@ -274,7 +274,7 @@ class tool_pretend
 		}
 	}
 
-	function createGroups( $amount )
+	public function createGroups( $amount )
 	{
 		$db = JFactory::getDBO();
 
@@ -331,7 +331,7 @@ class tool_pretend
 		return $grouplist;
 	}
 
-	function createUsers( $amount )
+	public function createUsers( $amount )
 	{
 		$db = JFactory::getDBO();
 
@@ -374,7 +374,7 @@ class tool_pretend
 		}
 	}
 
-	function getRandomName()
+	public function getRandomName()
 	{
 		static $male = array(	"John","William","James","George","Charles",
 						"Frank","Joseph","Henry","Robert","Thomas",
@@ -462,7 +462,7 @@ class tool_pretend
 		return implode( " ", $name );
 	}
 
-	function generateUsername( $seed )
+	public function generateUsername( $seed )
 	{
 		$db = JFactory::getDBO();
 
@@ -481,7 +481,7 @@ class tool_pretend
 		return $username;
 	}
 
-	function generateEmail( $seed )
+	public function generateEmail( $seed )
 	{
 		$db = JFactory::getDBO();
 
@@ -506,7 +506,7 @@ class tool_pretend
 	}
 
 	/* Inspired by d3 examples, in turn inspired by Lee Byron's test data generator. */
-	function stream_layers( $layers, $samples, $step )
+	public function stream_layers( $layers, $samples, $step )
 	{
 		foreach ( $layers as $lid => $lc ) {
 			$a = array();
@@ -529,7 +529,7 @@ class tool_pretend
 		return $layers;
 	}
 
-	function bump( $array, $samples )
+	public function bump( $array, $samples )
 	{
 		$x = 1 / (.1 + rand() );
 		$y = 2 * rand() - 0.5;

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_age_restriction extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_AGE_RESTRICTION_NAME');
@@ -23,7 +23,7 @@ class mi_age_restriction extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['min_age']			= array( 'inputA' );
@@ -33,7 +33,7 @@ class mi_age_restriction extends MI
 		return $settings;
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -42,7 +42,7 @@ class mi_age_restriction extends MI
 		return $settings;
 	}
 
-	function verifyMIform( $request )
+	public function verifyMIform( $request )
 	{
 		$return = array();
 
@@ -75,7 +75,7 @@ class mi_age_restriction extends MI
 		return $return;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( ( $request->action == 'action' ) && !empty( $this->settings['max_age'] ) ) {
 			$age = $this->getAge( $request->params['birthday'] );
@@ -88,12 +88,12 @@ class mi_age_restriction extends MI
 		return true;
 	}
 
-	function admin_form( $request )
+	public function admin_form( $request )
 	{
 		return $this->getMIform( $request );
 	}
 
-	function admin_form_save( $request )
+	public function admin_form_save( $request )
 	{
 		if ( !empty( $this->settings['max_age'] ) ) {
 			$age = $this->getAge( $request->params['birthday'] );
@@ -106,7 +106,7 @@ class mi_age_restriction extends MI
 		return true;
 	}
 
-	function aecEventHookBirthdayExpiration( $request )
+	public function aecEventHookBirthdayExpiration( $request )
 	{
 		if ( !empty( $request->metaUser->focusSubscription->id ) ) {
 			return $request->metaUser->focusSubscription->expire();
@@ -115,7 +115,7 @@ class mi_age_restriction extends MI
 		return null;
 	}
 
-	function getAge( $bd )
+	public function getAge( $bd )
 	{
 		$app = JFactory::getApplication();
 

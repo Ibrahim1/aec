@@ -22,7 +22,7 @@ $paymentType = $_REQUEST['paymentType'];
 ?>
 
 <script language="JavaScript">
-	function generateCC(){
+	public function generateCC(){
 		var cc_number = new Array(16);
 		var cc_len = 16;
 		var start = 0;

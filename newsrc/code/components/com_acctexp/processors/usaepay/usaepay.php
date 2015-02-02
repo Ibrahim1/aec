@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_usaepay extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "usaepay";
@@ -27,7 +27,7 @@ class processor_usaepay extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 
@@ -43,7 +43,7 @@ class processor_usaepay extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -58,7 +58,7 @@ class processor_usaepay extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = $this->getCCform();
 
@@ -69,7 +69,7 @@ class processor_usaepay extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$var = array(
 					"UMkey" => $this->settings['StoreKey'],
@@ -109,7 +109,7 @@ class processor_usaepay extends XMLprocessor
 		return $this->arrayToNVP( $var );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$return['valid'] = false;
 
@@ -138,7 +138,7 @@ class processor_usaepay extends XMLprocessor
 		return $return;
 	}
 
-	function convertPeriodUnit( $period, $unit )
+	public function convertPeriodUnit( $period, $unit )
 	{
 		switch ( $unit ) {
 			case 'D':

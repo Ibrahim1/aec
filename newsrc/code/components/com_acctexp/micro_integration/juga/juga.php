@@ -15,7 +15,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_juga
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_JUGA');
@@ -25,7 +25,7 @@ class mi_juga
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -102,12 +102,12 @@ class mi_juga
 		return $settings;
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_juga' );
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -132,7 +132,7 @@ class mi_juga
 		return true;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -151,7 +151,7 @@ class mi_juga
 		}
 	}
 
-	function AddUserToGroup( $userid, $groupid )
+	public function AddUserToGroup( $userid, $groupid )
 	{
 		$db = JFactory::getDBO();
 
@@ -200,7 +200,7 @@ class mi_juga
 		}
 	}
 
-	function DeleteUserFromGroup( $userid, $groupid=null )
+	public function DeleteUserFromGroup( $userid, $groupid=null )
 	{
 		$db = JFactory::getDBO();
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_ninjaboard
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_NINJABOARD');
@@ -23,7 +23,7 @@ class mi_ninjaboard
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		if ( !class_exists( 'KFactory' ) ) {
 			return array();
@@ -91,7 +91,7 @@ class mi_ninjaboard
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( !class_exists( 'KFactory' ) ) {
 			return null;
@@ -135,7 +135,7 @@ class mi_ninjaboard
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( !class_exists( 'KFactory' ) ) {
 			return array();

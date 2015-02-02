@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_rstickets extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_RSTICKETS');
@@ -23,7 +23,7 @@ class mi_rstickets extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['userid']				= array( 'inputE' );
@@ -72,7 +72,7 @@ class mi_rstickets extends MI
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$defaults = array();
 		$defaults['userid']	= "[[user_id]]";
@@ -81,7 +81,7 @@ class mi_rstickets extends MI
 		return $defaults;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( $request->action == 'action' ) {
 			$this->loadRStickets();
@@ -98,7 +98,7 @@ class mi_rstickets extends MI
 		return true;
 	}
 
-	function admin_form( $request )
+	public function admin_form( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -148,7 +148,7 @@ class mi_rstickets extends MI
 		return $settings;
 	}
 
-	function loadRStickets()
+	public function loadRStickets()
 	{
 		if ( file_exists( JPATH_SITE . '/components/com_rstickets/config.php' ) ) {
 			require_once( JPATH_SITE . '/components/com_rstickets/config.php' );

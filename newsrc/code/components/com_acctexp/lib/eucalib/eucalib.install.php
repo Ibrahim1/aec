@@ -21,10 +21,10 @@ defined('_JEXEC') or die( 'Restricted access' );
 
 class eucaInstall extends eucaObject
 {
-	function eucaInstall()
+	public function eucaInstall()
 	{}
 
-	function unpackFileArray( $array )
+	public function unpackFileArray( $array )
 	{
 		jimport('joomla.filesystem.archive');
 
@@ -75,7 +75,7 @@ class eucaInstall extends eucaObject
 		}
 	}
 
-	function deleteAdminMenuEntries()
+	public function deleteAdminMenuEntries()
 	{
 		$db = JFactory::getDBO();
 
@@ -100,7 +100,7 @@ class eucaInstall extends eucaObject
 		}
 	}
 
-	function createAdminMenuEntry( $entry )
+	public function createAdminMenuEntry( $entry )
 	{
 		// Create new entry
 		$return = $this->AdminMenuEntry( $entry, 0, 0, 1 );
@@ -112,7 +112,7 @@ class eucaInstall extends eucaObject
 		}
 	}
 
-	function populateAdminMenuEntry( $array )
+	public function populateAdminMenuEntry( $array )
 	{
 		$db = JFactory::getDBO();
 
@@ -152,7 +152,7 @@ class eucaInstall extends eucaObject
 		}
 	}
 
-	function AdminMenuEntry( $entry, $details, $ordering, $frontend=0 )
+	public function AdminMenuEntry( $entry, $details, $ordering, $frontend=0 )
 	{
 		if ( defined( 'JPATH_MANIFESTS' ) ) {
 			$insert = array(
@@ -204,7 +204,7 @@ class eucaInstall extends eucaObject
 		}
 	}
 
-	function rrmdir( $dir )
+	public function rrmdir( $dir )
 	{
 		if ( is_dir($dir) ) {
 			$objects = scandir($dir);
@@ -224,7 +224,7 @@ class eucaInstall extends eucaObject
 		}
 	}
 
-	function popIndex( $paths )
+	public function popIndex( $paths )
 	{
 		foreach ( $paths as $path ) {
 			if ( !is_dir( $path ) ) {
@@ -257,10 +257,10 @@ class eucaInstall extends eucaObject
 
 class eucaInstallDB extends eucaObject
 {
-	function eucaInstallDB()
+	public function eucaInstallDB()
 	{}
 
-	function multiQueryExec( $queri )
+	public function multiQueryExec( $queri )
 	{
 		$db = JFactory::getDBO();
 
@@ -272,7 +272,7 @@ class eucaInstallDB extends eucaObject
 		}
 	}
 
-	function ColumninTable( $column=null, $table=null, $prefix=true )
+	public function ColumninTable( $column=null, $table=null, $prefix=true )
 	{
 		$db = JFactory::getDBO();
 
@@ -306,21 +306,21 @@ class eucaInstallDB extends eucaObject
 		}
 	}
 
-	function dropColifExists( $column, $table, $prefix=true )
+	public function dropColifExists( $column, $table, $prefix=true )
 	{
 		if ( $this->ColumninTable( $column, $table, $prefix ) ) {
 			return $this->dropColumn( $column );
 		}
 	}
 
-	function addColifNotExists( $column, $options, $table, $prefix=true )
+	public function addColifNotExists( $column, $options, $table, $prefix=true )
 	{
 		if ( !$this->ColumninTable( $column, $table, $prefix ) ) {
 			return $this->addColumn( $options );
 		}
 	}
 
-	function addColumn( $options )
+	public function addColumn( $options )
 	{
 		$db = JFactory::getDBO();
 
@@ -340,7 +340,7 @@ class eucaInstallDB extends eucaObject
 		}
 	}
 
-	function dropTableifExists( $table, $prefix=true )
+	public function dropTableifExists( $table, $prefix=true )
 	{
 		$db = JFactory::getDBO();
 
@@ -367,7 +367,7 @@ class eucaInstallDB extends eucaObject
 		}
 	}
 
-	function dropColumn( $options )
+	public function dropColumn( $options )
 	{
 		$db = JFactory::getDBO();
 
@@ -391,10 +391,10 @@ class eucaInstallDB extends eucaObject
 
 class eucaInstalleditfile extends eucaObject
 {
-	function eucaInstalleditfile()
+	public function eucaInstalleditfile()
 	{}
 
-	function fileEdit( $path, $search, $replace, $throwerror )
+	public function fileEdit( $path, $search, $replace, $throwerror )
 	{
 		$originalFileHandle = fopen( $path, 'r' );
 

@@ -11,12 +11,12 @@ class plgCommunityAEC extends CApplications {
 	var $_user	= '';
 	var $_my	= '';
 
-	function plgCommunityAECSubscription(& $subject, $config)
+	public function plgCommunityAECSubscription(& $subject, $config)
 	{
 			parent::__construct( $subject, $config );
 	}
 
-	function onProfileDisplay()
+	public function onProfileDisplay()
 	{
 		$document= JFactory::getDocument();
 
@@ -34,7 +34,7 @@ class plgCommunityAEC extends CApplications {
 		return $content;
 	}
 
-	function _getOriginalHTML()
+	public function _getOriginalHTML()
 	{
 			if ( defined( 'JPATH_ROOT' ) ) {
 				$path = JPATH_ROOT;

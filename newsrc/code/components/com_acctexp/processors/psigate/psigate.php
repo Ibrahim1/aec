@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_psigate extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= "psigate";
@@ -28,7 +28,7 @@ class processor_psigate extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -40,7 +40,7 @@ class processor_psigate extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -52,7 +52,7 @@ class processor_psigate extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$var['post_url']	= "https://devcheckout.psigate.com/HTMLPost/HTMLMessenger";
@@ -73,7 +73,7 @@ class processor_psigate extends POSTprocessor
 	}
 
 
-	function parseNotification ( $post )
+	public function parseNotification ( $post )
 	{
 		$ReturnCode	= aecGetParam('ReturnCode', 'NA');
 		$ErrMsg		= aecGetParam('ErrMsg', 'NA');

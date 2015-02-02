@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_aecinvoiceprintemail
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_AECINVOICEPRINTEMAIL');
@@ -23,7 +23,7 @@ class mi_aecinvoiceprintemail
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$rewriteswitches				= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
 
@@ -78,7 +78,7 @@ class mi_aecinvoiceprintemail
 		return $settings;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( $request->action != 'action' ) {
 			return null;
@@ -193,7 +193,7 @@ class mi_aecinvoiceprintemail
 		return true;
 	}
 
-	function getInvoice( $invoice )
+	public function getInvoice( $invoice )
 	{
 		ob_start();
 
@@ -207,7 +207,7 @@ class mi_aecinvoiceprintemail
 		return $content;
 	}
 
-	function invoice_printout( $request )
+	public function invoice_printout( $request )
 	{
 		// Only handle self-calls
 		if ( !isset( $request->add['mi_aecinvoiceprintemail'] ) ) {

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_worldpay_futurepay extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'worldpay_futurepay';
@@ -27,7 +27,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['instId']			= 'instID';
@@ -40,7 +40,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -57,7 +57,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		$var['post_url']	= 'https://select.worldpay.com/wcc/purchase';
 		if ( $this->settings['testmode'] ) {
@@ -91,7 +91,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']			= $post['cartId'];
@@ -101,7 +101,7 @@ class processor_worldpay_futurepay extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 		$response['valid'] = ( strcmp( $post['transStatus'], 'Y') === 0 );

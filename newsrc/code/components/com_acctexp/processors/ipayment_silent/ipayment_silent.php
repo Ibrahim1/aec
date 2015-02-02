@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 error_reporting(E_ALL);
 class processor_ipayment_silent extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'ipayment_silent';
@@ -28,7 +28,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 
@@ -45,7 +45,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['aec_experimental']	= array( "p" );
@@ -64,7 +64,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var['params']['billInfo']			= array( 'p', JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_NAME'), JText::_('AEC_IPAYMENT_SILENT_PARAMS_BILLINFO_ELV_DESC') );
 		$var['params']['accountName']		= array( 'inputC', JText::_('AEC_WTFORM_ACCOUNTNAME_NAME'), JText::_('AEC_WTFORM_ACCOUNTNAME_NAME'), $request->metaUser->cmsUser->name );
@@ -101,7 +101,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$db = JFactory::getDBO();
 
@@ -192,7 +192,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $string;
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$path = '/merchant/';
 		if ( $this->settings['testmode'] || $this->settings['fake_account'] ) {
@@ -239,7 +239,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $return;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$allowed_ips= array( "212.227.34.218", 	"212.227.34.219", "212.227.34.220", "195.20.224.139" );
 		if ( !in_array( $_SERVER["REMOTE_ADDR"], $allowed_ips ) ) {
@@ -257,7 +257,7 @@ class processor_ipayment_silent extends XMLprocessor
 		return $response;
 	}
 
-	function instantvalidateNotification( $response, $post, $invoice )
+	public function instantvalidateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 

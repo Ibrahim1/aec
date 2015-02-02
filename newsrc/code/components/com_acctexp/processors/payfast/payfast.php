@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class processor_payfast extends POSTprocessor
 {
 
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'payfast';
@@ -29,7 +29,7 @@ class processor_payfast extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 1;
@@ -50,7 +50,7 @@ class processor_payfast extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 
@@ -78,7 +78,7 @@ class processor_payfast extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		// Receiver details
 		$var['merchant_id']		= $this->settings['merchant_id'];
@@ -141,7 +141,7 @@ class processor_payfast extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['m_payment_id'];
@@ -150,7 +150,7 @@ class processor_payfast extends POSTprocessor
 	   return $response;
    }
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -191,13 +191,13 @@ class processor_payfast extends POSTprocessor
 		return $response;
 	}
 
-	function getSignature( $data )
+	public function getSignature( $data )
 	{
 		return md5( XMLprocessor::arrayToNVP( $data ) );
 	}
 
 
-	function validIP( $sourceIP )
+	public function validIP( $sourceIP )
 	{
 		$validHosts = array( 'www.payfast.co.za', 'sandbox.payfast.co.za', 'w1w.payfast.co.za', 'w2w.payfast.co.za' );
 
@@ -215,7 +215,7 @@ class processor_payfast extends POSTprocessor
 		return in_array( $sourceIP, $validIps );
 	}
 
-	function validate( $data )
+	public function validate( $data )
 	{
 		$path = '/eng/query/validate';
 		if ( $this->settings['testmode'] ) {

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_supporttimetracker extends MI
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = 'Support Time Tracker';
@@ -23,7 +23,7 @@ class mi_supporttimetracker extends MI
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['add_minutes']		= array( 'inputC', 'Add Support Minutes', 'Add this amount of minutes to the user account' );
@@ -31,7 +31,7 @@ class mi_supporttimetracker extends MI
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$defaults = array();
 		$defaults['userid']	= "[[user_id]]";
@@ -40,7 +40,7 @@ class mi_supporttimetracker extends MI
 		return $defaults;
 	}
 
-	function profile_info( $request )
+	public function profile_info( $request )
 	{
 		$minutes = $this->getSupportMinutes( $request->metaUser );
 
@@ -56,7 +56,7 @@ class mi_supporttimetracker extends MI
 		return $message;
 	}
 
-	function relayAction( $request )
+	public function relayAction( $request )
 	{
 		if ( $request->action == 'action' ) {
 			if ( !empty( $this->settings['add_minutes'] ) ) {
@@ -75,7 +75,7 @@ class mi_supporttimetracker extends MI
 		return true;
 	}
 
-	function admin_form( $request )
+	public function admin_form( $request )
 	{
 		$history = $this->getSupportHistory( $request->metaUser );
 
@@ -122,7 +122,7 @@ class mi_supporttimetracker extends MI
 		return $settings;
 	}
 
-	function admin_form_save( $request )
+	public function admin_form_save( $request )
 	{
 		if ( !empty( $request->params['remove_last'] ) ) {
 			$history = $this->getSupportHistory( $request->metaUser );
@@ -149,7 +149,7 @@ class mi_supporttimetracker extends MI
 		}
 	}
 
-	function getSupportHistory( $metaUser )
+	public function getSupportHistory( $metaUser )
 	{
 		$uparams = $metaUser->meta->getCustomParams();
 
@@ -162,7 +162,7 @@ class mi_supporttimetracker extends MI
 		return array();
 	}
 
-	function getSupportMinutes( $metaUser )
+	public function getSupportMinutes( $metaUser )
 	{
 		$uparams = $metaUser->meta->getCustomParams();
 
@@ -177,7 +177,7 @@ class mi_supporttimetracker extends MI
 		return 0;
 	}
 
-	function updateSupportMinutes( $metaUser, $minutes, $use_minutes, $details )
+	public function updateSupportMinutes( $metaUser, $minutes, $use_minutes, $details )
 	{
 		$user = JFactory::getUser();
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_paystation extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'paystation';
@@ -29,7 +29,7 @@ class processor_paystation extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -42,7 +42,7 @@ class processor_paystation extends XMLprocessor
 
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -56,7 +56,7 @@ class processor_paystation extends XMLprocessor
 		return $settings;
 	}
 
-	function requireSSLcheckout()
+	public function requireSSLcheckout()
 	{
 		if ( empty( $this->settings['3party'] ) ) {
 			return $this->info['secure'];
@@ -65,7 +65,7 @@ class processor_paystation extends XMLprocessor
 		}
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		if ( empty( $this->settings['3party'] ) ) {
 			$var = $this->getCCform( array(), array( 'card_number', 'card_exp_month', 'card_exp_year', 'card_cvv2' ) );
@@ -76,7 +76,7 @@ class processor_paystation extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		$var['paystation']			= '_empty';
 		$var['pstn_pi']				= $this->settings['paystation_id'];
@@ -105,7 +105,7 @@ class processor_paystation extends XMLprocessor
 		return $this->arrayToNVP( $var, true );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$path = '/direct/paystation.dll';
 		$url = 'https://www.paystation.co.nz' . $path;
@@ -131,7 +131,7 @@ class processor_paystation extends XMLprocessor
 		return $return;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = substr( aecGetParam( 'ms', '', true, array( 'word' ) ), 0, 17 );
@@ -145,7 +145,7 @@ class processor_paystation extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 1;
 

@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_desjardins extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'desjardins';
@@ -29,7 +29,7 @@ class processor_desjardins extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= "0";
@@ -43,7 +43,7 @@ class processor_desjardins extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -58,14 +58,14 @@ class processor_desjardins extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request, $vcontent=null, $updated=null )
+	public function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		$var = array();
 
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 $xml_request_str = <<<XML
 <?xml version="1.0" encoding="ISO-8859-15"?><request></request>
@@ -88,7 +88,7 @@ XML;
 		return $xml_step1_request->asXML();
 	}
 
-	function transmitRequestDesjardin( $url, $path, $xml )
+	public function transmitRequestDesjardin( $url, $path, $xml )
 	{
 		$header = array();
 		$header['MIME-Version']		= "1.0";
@@ -105,7 +105,7 @@ XML;
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra, $header );
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$app = JFactory::getApplication();
 
@@ -153,7 +153,7 @@ XML;
 		return true;
 	}
 
-	function createRequestStep3XML( $resp, $request )
+	public function createRequestStep3XML( $resp, $request )
 	{
 		$xml_step1_Obj = simplexml_load_string($resp);
 		$amount = $request->int_var['amount'] * 100;
@@ -225,7 +225,7 @@ XML;
 		return $xml_step3_request;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice'] = $post['invoice_number'];
@@ -246,7 +246,7 @@ XML;
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 
@@ -369,7 +369,7 @@ XML;
 		return $response;
 	}
 
-	function notify_trail( $InvoiceFactory, $response )
+	public function notify_trail( $InvoiceFactory, $response )
 	{
 		$path = '/catch';
 		$url = 'https://www.labdevtrx3.com' . $path;
@@ -392,7 +392,7 @@ XML;
 		return $xml;
 	}
 
-	function displayInvoice( $invoice )
+	public function displayInvoice( $invoice )
 	{
 		ob_start();
 
@@ -405,7 +405,7 @@ XML;
 		return $content;
 	}
 
-	function displayError( $invoice, $error )
+	public function displayError( $invoice, $error )
 	{
 		$db = JFactory::getDBO();
 

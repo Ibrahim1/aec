@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_miexport
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Micro Integration Export";
@@ -22,7 +22,7 @@ class tool_miexport
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -44,7 +44,7 @@ class tool_miexport
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		$db = JFactory::getDBO();
 

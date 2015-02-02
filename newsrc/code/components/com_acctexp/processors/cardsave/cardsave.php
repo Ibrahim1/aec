@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_cardsave extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']				= 'cardsave';
@@ -28,7 +28,7 @@ class processor_cardsave extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode'] 			= 0;
@@ -49,7 +49,7 @@ class processor_cardsave extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'toggle');
@@ -72,7 +72,7 @@ class processor_cardsave extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		if ( $this->settings['testmode'] ) {
 			$url = 'https://test.cardsaveonlinepayments.com/Pages/PublicPages/PaymentForm.aspx';
@@ -111,7 +111,7 @@ class processor_cardsave extends POSTprocessor
 		return array_merge( array( 'post_url' => $url, 'HashDigest' => $this->createhash( $var ) ), $var );
 	}
 
-	function createhash( $var, $response=false )
+	public function createhash( $var, $response=false )
 	{
 		$values = array('PreSharedKey' => $this->settings['PreSharedKey'],
 						'MerchantID' => $this->settings['MerchantID'],
@@ -150,7 +150,7 @@ class processor_cardsave extends POSTprocessor
 
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response = array();
 		$response['invoice']		= aecInvoiceHelper::InvoiceNumberfromId( $post['OrderID'] );
@@ -159,7 +159,7 @@ class processor_cardsave extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = 0;
 

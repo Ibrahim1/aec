@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_eway extends POSTprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'eway';
@@ -28,7 +28,7 @@ class processor_eway extends POSTprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= "1";
@@ -42,7 +42,7 @@ class processor_eway extends POSTprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -58,7 +58,7 @@ class processor_eway extends POSTprocessor
 		return $settings;
 	}
 
-	function createGatewayLink( $request )
+	public function createGatewayLink( $request )
 	{
 		//URL returned by eWay
 		$return_url = AECToolbox::deadsureURL("index.php?option=com_acctexp&amp;task=ewaynotification");
@@ -86,7 +86,7 @@ class processor_eway extends POSTprocessor
 		return $var;
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$eWAYResponseText	= $post['eWAYresponseText'];
 		$eWAYTrxnNumber		= $post['ewayTrxnNumber'];
@@ -102,7 +102,7 @@ class processor_eway extends POSTprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		if ( $post['ewayTrxnStatus'] == "True" && isset( $post['eWAYAuthCode'] ) ) {
 			$response['valid'] = 1;

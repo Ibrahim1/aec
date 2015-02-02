@@ -490,12 +490,12 @@ class ItemGroup extends serialParamDBTable
 	/** @var string */
 	var $restrictions		= null;
 
-	function ItemGroup()
+	public function ItemGroup()
 	{
 		parent::__construct( '#__acctexp_itemgroups', 'id' );
 	}
 
-	function getProperty( $name )
+	public function getProperty( $name )
 	{
 		if ( isset( $this->$name ) ) {
 			return stripslashes( $this->$name );
@@ -504,12 +504,12 @@ class ItemGroup extends serialParamDBTable
 		}
 	}
 
-	function declareParamFields()
+	public function declareParamFields()
 	{
 		return array( 'params', 'custom_params', 'restrictions' );
 	}
 
-	function checkVisibility( $metaUser )
+	public function checkVisibility( $metaUser )
 	{
 		if ( !$this->visible ) {
 			return false;
@@ -518,7 +518,7 @@ class ItemGroup extends serialParamDBTable
 		}
 	}
 
-	function checkPermission( $metaUser )
+	public function checkPermission( $metaUser )
 	{
 		if ( !$this->active ) {
 			return false;
@@ -529,12 +529,12 @@ class ItemGroup extends serialParamDBTable
 		return aecRestrictionHelper::checkRestriction( $restrictions, $metaUser );
 	}
 
-	function getRestrictionsArray()
+	public function getRestrictionsArray()
 	{
 		return aecRestrictionHelper::getRestrictionsArray( $this->restrictions );
 	}
 
-	function getMicroIntegrationsSeparate( $strip_inherited=false )
+	public function getMicroIntegrationsSeparate( $strip_inherited=false )
 	{
 		if ( empty( $this->params['micro_integrations'] ) ) {
 			$milist = array();
@@ -587,7 +587,7 @@ class ItemGroup extends serialParamDBTable
 		return array( 'group' => $milist, 'inherited' => $gmilist );
 	}
 
-	function savePOSTsettings( $post )
+	public function savePOSTsettings( $post )
 	{
 		// Fake knowing the planid if is zero.
 		if ( !empty( $post['id'] ) ) {
@@ -694,12 +694,12 @@ class ItemGroup extends serialParamDBTable
 		$this->custom_params = $custom_params;
 	}
 
-	function saveParams( $params )
+	public function saveParams( $params )
 	{
 		$this->params = $params;
 	}
 
-	function delete( $pk=null )
+	public function delete( $pk=null )
 	{
 		if ( $this->id == 1 ) {
 			return false;
@@ -730,7 +730,7 @@ class ItemGroup extends serialParamDBTable
 		return parent::delete($pk);
 	}
 
-	function copy()
+	public function copy()
 	{
 		$pid = $this->id;
 
@@ -756,12 +756,12 @@ class itemXgroup extends serialParamDBTable
 	/** @var int */
 	var $group_id			= null;
 
-	function itemXgroup()
+	public function itemXgroup()
 	{
 		parent::__construct( '#__acctexp_itemxgroup', 'id' );
 	}
 
-	function createNew( $type, $item_id, $group_id )
+	public function createNew( $type, $item_id, $group_id )
 	{
 		$this->id		= 0;
 		$this->type		= $type;

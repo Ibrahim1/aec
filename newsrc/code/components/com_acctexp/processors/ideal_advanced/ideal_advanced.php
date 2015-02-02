@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_ideal_advanced extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']					= 'ideal_advanced';
@@ -28,12 +28,12 @@ class processor_ideal_advanced extends XMLprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return 'ideal.png';
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['testmode']		= 0;
@@ -57,7 +57,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']		= array( 'toggle' );
@@ -90,7 +90,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$idealRequest = new IssuerRequest();
 
@@ -113,12 +113,12 @@ class processor_ideal_advanced extends XMLprocessor
 		return $var;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		return "";
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$response				= array();
 		$response['valid']		= false;
@@ -148,7 +148,7 @@ class processor_ideal_advanced extends XMLprocessor
 		}
 	}
 
-	function parseNotification( $post )
+	public function parseNotification( $post )
 	{
 		$response				= array();
 		$response['valid']		= false;
@@ -157,7 +157,7 @@ class processor_ideal_advanced extends XMLprocessor
 		return $response;
 	}
 
-	function validateNotification( $response, $post, $invoice )
+	public function validateNotification( $response, $post, $invoice )
 	{
 		$idealRequest = new StatusRequest();
 		$idealRequest->initMerchant( $this->settings );

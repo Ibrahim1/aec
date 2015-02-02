@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 class mi_frontenduseraccess
 {
 
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_FRONTENDUSERACCESS');
@@ -23,7 +23,7 @@ class mi_frontenduseraccess
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -139,7 +139,7 @@ class mi_frontenduseraccess
 		return $settings;
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( !empty( $this->settings['set_group'] ) && ( !empty( $this->settings['group'] ) || !empty( $this->settings['group_remove'] ) ) ) {
 			if ( !isset( $this->settings['keep_groups'] ) ) {
@@ -152,7 +152,7 @@ class mi_frontenduseraccess
 		return true;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( !empty( $this->settings['set_group_exp'] ) && ( !empty( $this->settings['group_exp'] ) || !empty( $this->settings['group_exp_remove'] ) ) ) {
 			if ( !isset( $this->settings['keep_groups_exp'] ) ) {
@@ -165,7 +165,7 @@ class mi_frontenduseraccess
 		return true;
 	}
 
-	function update_fua_group( $user_id, $fua_group, $remove_groups, $keep_groups )
+	public function update_fua_group( $user_id, $fua_group, $remove_groups, $keep_groups )
 	{
 		$db = JFactory::getDBO();
 
@@ -207,7 +207,7 @@ class mi_frontenduseraccess
 		$db->query();
 	}
 
-	function csv_to_array($json){
+	public function csv_to_array($json){
 		$array = array();
 		$temp = explode(',', $json);
 		for($n = 0; $n < count($temp); $n++){
@@ -217,7 +217,7 @@ class mi_frontenduseraccess
 		return $array;
 	}
 
-	function array_to_csv($array){
+	public function array_to_csv($array){
 		$return = '';
 		for($n = 0; $n < count($array); $n++){
 			if($n){
@@ -233,7 +233,7 @@ class mi_frontenduseraccess
 		return $return;
 	}
 
-	function detect_application()
+	public function detect_application()
 	{
 		return is_dir( JPATH_SITE . '/components/com_frontenduseraccess' );
 	}

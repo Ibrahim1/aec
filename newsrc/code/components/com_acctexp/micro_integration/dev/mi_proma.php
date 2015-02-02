@@ -11,7 +11,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_proma
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_PROMA');
@@ -20,7 +20,7 @@ class mi_proma
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$db = JFactory::getDBO();
 
@@ -63,21 +63,21 @@ class mi_proma
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( $this->settings['set_group_exp'] ) {
 			return $this->setGroupId( $request->metaUser->userid, $this->settings['group_exp'], $this->settings['set_default_exp'] );
 		}
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( $this->settings['set_group'] ) {
 			return $this->setGroupId( $request->metaUser->userid, $this->settings['group'], $this->settings['set_default'] );
 		}
 	}
 
-	function setGroupId( $userid, $groupid, $default = false )
+	public function setGroupId( $userid, $groupid, $default = false )
 	{
 		$db = JFactory::getDBO();
 

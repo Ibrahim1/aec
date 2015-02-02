@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class processor_generic_pin extends XMLprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'generic_pin';
@@ -28,7 +28,7 @@ class processor_generic_pin extends XMLprocessor
 		return $info;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['currency']			= '';
@@ -44,7 +44,7 @@ class processor_generic_pin extends XMLprocessor
 		return $settings;
 	}
 
-	function saveParams( $params )
+	public function saveParams( $params )
 	{
 		if ( !empty( $params['table_name'] ) ) {
 			$db = $this->getDB();
@@ -66,7 +66,7 @@ class processor_generic_pin extends XMLprocessor
 		return $params;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['currency']			= array( 'list_currency' );
@@ -85,7 +85,7 @@ class processor_generic_pin extends XMLprocessor
 		return $settings;
 	}
 
-	function checkoutform( $request )
+	public function checkoutform( $request )
 	{
 		$var = array();
 		$var['params']['pin_code'] = array( 'inputC', _AEC_GENERIC_PIN_PARAMS_PIN_CODE_NAME, _AEC_GENERIC_PIN_PARAMS_PIN_CODE_DESC);
@@ -94,12 +94,12 @@ class processor_generic_pin extends XMLprocessor
 	}
 
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		return "";
 	}
 
-	function transmitRequestXML( $content, $request )
+	public function transmitRequestXML( $content, $request )
 	{
 		$return['valid']	= false;
 		$return['raw']		= "AEC Generic Processor Payment";
@@ -122,7 +122,7 @@ class processor_generic_pin extends XMLprocessor
 		return $return;
 	}
 
-	function getDB()
+	public function getDB()
 	{
 		if ( $this->settings['use_altdb'] ) {
 			$options = array(	'driver'	=> $this->settings['dbms'],
@@ -141,7 +141,7 @@ class processor_generic_pin extends XMLprocessor
 		return $db;
 	}
 
-	function usePIN( $pin )
+	public function usePIN( $pin )
 	{
 		$ps = new AECMI_pinstore( $this->settings['table_name'] );
 
@@ -158,7 +158,7 @@ class processor_generic_pin extends XMLprocessor
 		}
 	}
 
-	function FilePin( $pin )
+	public function FilePin( $pin )
 	{
 		if ( file_exists( $this->settings['pin_list_file'] ) ) {
 			// Open File and look for pin
@@ -187,12 +187,12 @@ class AECMI_pinstore extends serialParamDBTable {
 	/**
 	* @param database A database connector object
 	*/
-	function AECMI_pinstore( $table )
+	public function AECMI_pinstore( $table )
 	{
 		parent::__construct( '#__' . $table, 'id' );
 	}
 
-	function loadPin( $pin )
+	public function loadPin( $pin )
 	{
 		$query = "SELECT `id`'"
 		. " FROM #__" . $this->settings['table_name']

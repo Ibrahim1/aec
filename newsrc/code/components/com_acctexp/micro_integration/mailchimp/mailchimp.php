@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class mi_mailchimp
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = JText::_('AEC_MI_NAME_MAILCHIMP');
@@ -23,7 +23,7 @@ class mi_mailchimp
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$li = array();
 		$li[] = JHTML::_('select.option', 0, "--- --- ---" );
@@ -74,7 +74,7 @@ class mi_mailchimp
 		return $settings;
 	}
 
-	function Defaults()
+	public function Defaults()
 	{
 		$settings = array();
 
@@ -84,7 +84,7 @@ class mi_mailchimp
 	}
 
 
-	function profile_info( $request )
+	public function profile_info( $request )
 	{
 		if ( !empty( $this->settings['api_key'] ) && !empty( $this->settings['account_id'] ) && !empty( $this->settings['account_name'] ) )  {
 			$MCAPI = new MCAPI( $this->settings['api_key'] );
@@ -110,7 +110,7 @@ class mi_mailchimp
 		return '';
 	}
 
-	function getMIform( $request )
+	public function getMIform( $request )
 	{
 		$settings = array();
 
@@ -139,7 +139,7 @@ class mi_mailchimp
 		return $settings;
 	}
 
-	function expiration_action( $request )
+	public function expiration_action( $request )
 	{
 		if ( empty( $this->settings['list_exp'] ) ) {
 			return null;
@@ -166,7 +166,7 @@ class mi_mailchimp
 		}
 	}
 
-	function action( $request )
+	public function action( $request )
 	{
 		if ( empty( $this->settings['list'] ) ) {
 			return null;
@@ -201,7 +201,7 @@ class mi_mailchimp
 		}
 	}
 
-	function on_userchange_action( $request )
+	public function on_userchange_action( $request )
 	{
 		$MCAPI = new MCAPI( $this->settings['api_key'] );
 
@@ -495,7 +495,7 @@ class MCAPI {
         return $this->callServer("callMethod", $params);
     }
 
-	function callServerAEC( $method, $params )
+	public function callServerAEC( $method, $params )
 	{
 		$db = JFactory::getDBO();
 

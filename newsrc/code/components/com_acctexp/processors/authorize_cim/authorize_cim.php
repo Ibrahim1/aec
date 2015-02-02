@@ -15,7 +15,7 @@ require_once( dirname(__FILE__) . '/lib/authorizenet.cim.class.php' );
 
 class processor_authorize_cim extends PROFILEprocessor
 {
-	function info()
+	public function info()
 	{
 		$info = array();
 		$info['name']			= 'authorize_cim';
@@ -31,12 +31,12 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $info;
 	}
 
-	function getLogoFilename()
+	public function getLogoFilename()
 	{
 		return 'authorize.png';
 	}
 
-	function getActions( $invoice, $subscription )
+	public function getActions( $invoice, $subscription )
 	{
 		$actions = parent::getActions( $invoice, $subscription );
 
@@ -49,7 +49,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $actions;
 	}
 
-	function settings()
+	public function settings()
 	{
 		$settings = array();
 		$settings['login']				= 'login';
@@ -68,7 +68,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $settings;
 	}
 
-	function backend_settings()
+	public function backend_settings()
 	{
 		$settings = array();
 		$settings['testmode']			= array( 'toggle' );
@@ -89,7 +89,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $settings;
 	}
 
-	function registerProfileTabs()
+	public function registerProfileTabs()
 	{
 		$tab			= array();
 		$tab['details']	= JText::_('AEC_USERFORM_BILLING_DETAILS_NAME');
@@ -101,7 +101,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $tab;
 	}
 
-	function customtab_details( $request )
+	public function customtab_details( $request )
 	{
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
@@ -243,7 +243,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $return;
 	}
 
-	function customtab_shipping_details( $request )
+	public function customtab_shipping_details( $request )
 	{
 		$ppParams = $request->metaUser->meta->getProcessorParams( $request->parent->id );
 
@@ -320,7 +320,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $return;
 	}
 
-	function checkoutform( $request, $cim=null, $nobill=false, $ppParams=false, $updated=false )
+	public function checkoutform( $request, $cim=null, $nobill=false, $ppParams=false, $updated=false )
 	{
 		$var = array();
 		$hascim = false;
@@ -439,7 +439,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $var;
 	}
 
-	function checkoutAction( $request, $InvoiceFactory=null )
+	public function checkoutAction( $request, $InvoiceFactory=null )
 	{
 		global $aecConfig;
 
@@ -469,12 +469,12 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $return;
 	}
 
-	function createRequestXML( $request )
+	public function createRequestXML( $request )
 	{
 		return "";
 	}
 
-	function transmitRequestXML( $xml, $request )
+	public function transmitRequestXML( $xml, $request )
 	{
 		$return = array();
 		$return['valid'] = false;
@@ -703,7 +703,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $return;
 	}
 
-	function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
+	public function transmitRequest( $url, $path, $content=null, $port=443, $curlextra=null, $header=null )
 	{
 		//aecDebug( $xml );
 
@@ -711,7 +711,7 @@ class processor_authorize_cim extends PROFILEprocessor
 	}
 
 
-	function customaction_cancel( $request )
+	public function customaction_cancel( $request )
 	{
 		$return['valid']	= 0;
 		$return['cancel']	= true;
@@ -719,7 +719,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $return;
 	}
 
-	function ProfileAdd( $request, $profileid )
+	public function ProfileAdd( $request, $profileid )
 	{
 		$ppParams = new stdClass();
 
@@ -736,14 +736,14 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $ppParams;
 	}
 
-	function loadCIM()
+	public function loadCIM()
 	{
 		$cim = new AuthNetCim( $this->settings['login'], $this->settings['transaction_key'], $this->settings['testmode'] );
 
 		return $cim;
 	}
 
-	function loadCIMpay( $ppParams, $cim=null )
+	public function loadCIMpay( $ppParams, $cim=null )
 	{
 		if ( is_null( $cim ) ) {
 			$cim = $this->loadCIM();
@@ -764,7 +764,7 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $cim;
 	}
 
-	function loadCIMship( $ppParams, $cim=null )
+	public function loadCIMship( $ppParams, $cim=null )
 	{
 		if ( is_null( $cim ) ) {
 			$cim = $this->loadCIM();
@@ -781,12 +781,12 @@ class processor_authorize_cim extends PROFILEprocessor
 		return $cim;
 	}
 
-	function prepareValidation( $subscription_list )
+	public function prepareValidation( $subscription_list )
 	{
 		return true;
 	}
 
-	function validateSubscription( $iFactory, $subscription )
+	public function validateSubscription( $iFactory, $subscription )
 	{
 		$return = array();
 		$return['valid'] = false;

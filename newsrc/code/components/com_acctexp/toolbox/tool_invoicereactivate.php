@@ -13,7 +13,7 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class tool_invoicereactivate
 {
-	function Info()
+	public function Info()
 	{
 		$info = array();
 		$info['name'] = "Invoice Reactivation";
@@ -22,7 +22,7 @@ class tool_invoicereactivate
 		return $info;
 	}
 
-	function Settings()
+	public function Settings()
 	{
 		$settings = array();
 		$settings['invoices']			= array( 'inputD', 'Invoices', 'A list of invoices you want to revert, separated by line breaks.', '' );
@@ -30,7 +30,7 @@ class tool_invoicereactivate
 		return $settings;
 	}
 
-	function Action()
+	public function Action()
 	{
 		$return = '';
 

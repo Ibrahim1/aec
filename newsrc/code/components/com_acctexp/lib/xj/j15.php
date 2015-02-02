@@ -278,7 +278,7 @@ class xJACLhandler extends xJACLhandlerCommon
 
 class xJSessionHandler extends xJSessionHandlerCommon
 {
-	function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
+	public function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
 	{
 		$user = JFactory::getUser();
 
@@ -334,7 +334,7 @@ class xJSessionHandler extends xJSessionHandlerCommon
 		return $this->putSession( $userid, $session, $gid[0], $info[$gid[0]] );
 	}
 
-	function putSession( $userid, $data, $gid=null, $gid_name=null )
+	public function putSession( $userid, $data, $gid=null, $gid_name=null )
 	{
 		$db = JFactory::getDBO();
 
