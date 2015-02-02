@@ -230,6 +230,10 @@ class aecRestrictionHelper
 		return $newrest;
 	}
 
+	/**
+	 * @param string $gkey
+	 * @param string $pkey
+	 */
 	static function addGroupPlans( $source, $gkey, $pkey, $target=null )
 	{
 		$okey = str_replace( '_req', '_req_enabled', $pkey );

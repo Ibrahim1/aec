@@ -734,8 +734,8 @@ class PDF417 {
 
 	/**
 	 * Returns the error correction level (0-8) to be used
-	 * @param $ecl (int) error correction level
-	 * @param $numcw (int) number of data codewords
+	 * @param integer $ecl (int) error correction level
+	 * @param integer $numcw (int) number of data codewords
 	 * @return int error correction level
 	 * @protected
 	 */
@@ -773,7 +773,7 @@ class PDF417 {
 	/**
 	 * Returns the error correction codewords
 	 * @param $cw (array) array of codewords including Symbol Lenght Descriptor and pad
-	 * @param $ecl (int) error correction level 0-8
+	 * @param integer $ecl (int) error correction level 0-8
 	 * @return array of error correction codewords
 	 * @protected
 	 */

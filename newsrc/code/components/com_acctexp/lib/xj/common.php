@@ -75,6 +75,9 @@ class xJACLhandlerCommon
 		return $db->loadObjectList();
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	static function removeGIDs( $userid, $gids )
 	{
 		$db = JFactory::getDBO();
@@ -90,6 +93,9 @@ class xJACLhandlerCommon
 		}
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	static function setGIDs( $userid, $gids )
 	{
 		$info = array();

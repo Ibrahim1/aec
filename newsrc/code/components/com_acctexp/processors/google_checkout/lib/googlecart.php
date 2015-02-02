@@ -223,11 +223,11 @@
      * GC tag: {@link http://code.google.com/apis/checkout/developer/index.html#tag_merchant-calculations <merchant-calculations>}
      *
      * @param string $url the merchant calculations callback url
-     * @param bool $tax_option true if the merchant has to do tax calculations.
+     * @param string|boolean $tax_option true if the merchant has to do tax calculations.
      *                         defaults to false.
-     * @param bool $coupons true if the merchant accepts discount coupons.
+     * @param string|boolean $coupons true if the merchant accepts discount coupons.
      *                         defaults to false.
-     * @param bool $gift_cert true if the merchant accepts gift certificates.
+     * @param string|boolean $gift_cert true if the merchant accepts gift certificates.
      *                         defaults to false.
      * @return void
      */
@@ -1433,6 +1433,7 @@
 
     /**
      * @access private
+     * @param string $rta
      */
     function xml2html($data, $path = '', &$rta){
 //      global $multiple_tags,$ignore_tags;
@@ -1558,6 +1559,7 @@
     //Method used internally to set true/false cart variables
     /**
      * @access private
+     * @param string $default
      */
     function _GetBooleanValue($value, $default) {
       switch(strtolower($value)){

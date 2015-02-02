@@ -56,6 +56,9 @@ class aecUserHelper
 		return $db->loadResult();
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	static function UserExists( $userid )
 	{
 		$db = JFactory::getDBO();

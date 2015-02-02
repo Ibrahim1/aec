@@ -71,7 +71,7 @@ class TCPDF2DBarcode {
 
 	/**
 	 * Return an array representations of barcode.
- 	 * @return array
+ 	 * @return boolean
 	 */
 	public function getBarcodeArray() {
 		return $this->barcode_array;
@@ -167,7 +167,7 @@ class TCPDF2DBarcode {
 	 * @param $w (int) Width of a single rectangle element in pixels.
 	 * @param $h (int) Height of a single rectangle element in pixels.
 	 * @param $color (array) RGB (0-255) foreground color for bar elements (background is transparent).
- 	 * @return image or false in case of error.
+ 	 * @return false|null or false in case of error.
  	 * @public
 	 */
 	public function getBarcodePNG($w=3, $h=3, $color=array(0,0,0)) {

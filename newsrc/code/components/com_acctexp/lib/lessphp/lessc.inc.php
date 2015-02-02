@@ -26,6 +26,9 @@ class lessc{
 
 	public function __construct($lessc=null, $sourceName=null) {}
 
+	/**
+	 * @param string[] $dirs
+	 */
 	public function setImportDir($dirs) {
 		$this->importDir = (array)$dirs;
 	}
@@ -40,6 +43,9 @@ class lessc{
 		$this->formatterName = $name;
 	}
 
+	/**
+	 * @param boolean $preserve
+	 */
 	public function setPreserveComments($preserve) {}
 	public function registerFunction($name, $func) {
 		$this->libFunctions[$name] = $func;

@@ -191,7 +191,7 @@ class Less_SourceMap_Generator extends Less_Configurable {
 	 * @param integer $generatedColumn The column number in generated file
 	 * @param integer $originalLine The line number in original file
 	 * @param integer $originalColumn The column number in original file
-	 * @param string $sourceFile The original source file
+	 * @param string $fileInfo
 	 */
 	public function addMapping($generatedLine, $generatedColumn, $originalLine, $originalColumn, $fileInfo ){
 

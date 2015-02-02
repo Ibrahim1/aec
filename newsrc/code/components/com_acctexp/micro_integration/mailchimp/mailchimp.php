@@ -525,6 +525,7 @@ class MCAPI {
     /**
      * Actually connect to the server and call the requested methods, parsing the result
      * You should never have to call this function manually
+     * @param string $method
      */
     function callServer($method, $params) {
 	    $dc = "us1";

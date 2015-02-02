@@ -155,6 +155,9 @@ class Less_Cache{
 	}
 
 
+	/**
+	 * @param string $compiled_name
+	 */
 	private static function OutputFile( $compiled_name, $parser_options ){
 
 		//custom output file
@@ -184,6 +187,9 @@ class Less_Cache{
 	}
 
 
+	/**
+	 * @param string $dir
+	 */
 	public static function SetCacheDir( $dir ){
 		Less_Cache::$cache_dir = $dir;
 	}
@@ -276,6 +282,7 @@ class Less_Cache{
 	/**
 	 * Get the list of less files and generated css file from a list file
 	 *
+	 * @param string $list_file
 	 */
 	static function ListFiles($list_file, &$list, &$css_file_name ){
 

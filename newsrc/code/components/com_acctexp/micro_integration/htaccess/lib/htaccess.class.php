@@ -52,8 +52,6 @@ class htaccess{
 	* Adds a user to the password file
 	* @param string $username	 Username
 	* @param string $password	 Password for Username
-	* @param string $group		Groupname for User (optional)
-	* @return boolean $created		 Returns true if user have been created otherwise false
   	*/
 	public function addUser($username,$password){
 		if ( empty( $username ) ) {
@@ -150,7 +148,7 @@ class htaccess{
 	/**
 	* Sets a password to the given username
 	* @param string $username		The name of the User for changing password
-	* @param string $password		New Password for the User
+	* @param string $new_password		New Password for the User
 	* @return boolean $isSet		Returns true if password have been set
   	*/
 	public function setPasswd($username,$new_password){
@@ -210,8 +208,6 @@ class htaccess{
 
 	/**
 	* Writes the htaccess file to the given Directory and protects it
-	* @param string $path		  Path name to protect
-	* @see setFhtaccess()
   	*/
 	public function addLogin(){
 	   $file=fopen($this->fHtaccess,"w+");
@@ -226,8 +222,6 @@ class htaccess{
 
 	/**
 	* Deletes the protection of the given directory
-	* @param string $path		  Path name to delete protection
-	* @see setFhtaccess()
   	*/
 	public function delLogin(){
 		unlink($this->fHtaccess);

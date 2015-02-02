@@ -173,11 +173,17 @@ class Less_Exception_Chunk extends Less_Exception_Parser{
 		//$this->emitChunk(true);
 	}
 
+	/**
+	 * @param integer $pos
+	 */
 	public function CharCode($pos){
 		return ord($this->input[$pos]);
 	}
 
 
+	/**
+	 * @param integer $index
+	 */
 	public function fail( $msg, $index = null ){
 
 		if( !$index ){

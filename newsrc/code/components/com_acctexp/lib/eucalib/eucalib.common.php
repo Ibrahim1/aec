@@ -513,6 +513,7 @@ class serialParamDBTable extends paramDBTable
 
 	/**
 	 * Delete a set of Parameters providing an array of key names
+	 * @param string[] $array
 	 */
 	public function delParams( $array, $field = 'params' )
 	{

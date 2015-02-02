@@ -6106,6 +6106,9 @@ function hackcorefile( $option, $filename, $check_hack, $undohack, $checkonly=fa
 	return $hacks;
 }
 
+/**
+ * @param string $file_new
+ */
 function backupFile( $file, $file_new )
 {
 		if ( !copy( $file, $file_new ) ) {

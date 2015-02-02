@@ -11,6 +11,9 @@
 // Dont allow direct linking
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
+/**
+ * @param string $view
+ */
 function getView( $view, $args=null )
 {
 	global $aecConfig;

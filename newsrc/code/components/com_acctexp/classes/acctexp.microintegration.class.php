@@ -45,6 +45,9 @@ class microIntegrationHandler
 		}
 	}
 
+	/**
+	 * @param microIntegration $mi
+	 */
 	static function compareMIs( $mi, $cmi_id )
 	{
 		$db = JFactory::getDBO();
@@ -148,6 +151,9 @@ class microIntegrationHandler
 		return $plan_list;
 	}
 
+	/**
+	 * @param integer $mi_id
+	 */
 	static function getGroupsbyMI( $mi_id, $inherited=true, $extended=false )
 	{
 		$db = JFactory::getDBO();

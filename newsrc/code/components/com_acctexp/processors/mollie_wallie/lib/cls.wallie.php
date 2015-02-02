@@ -338,7 +338,7 @@ class Mollie_Wallie
 	/**
 	 * Get the Language
 	 *
-	 * @return integer
+	 * @return string
 	 */
 	protected function getLanguage()
 	{
@@ -505,8 +505,7 @@ class Mollie_Wallie
 	/**
 	* Set the URL of the Walliepaymentscreen
 	*
-	* @param string $bankUrl
-	* @return boolean
+	* @param string $wallieUrl
 	*/
 	protected function setWallieUrl($wallieUrl)
 	{

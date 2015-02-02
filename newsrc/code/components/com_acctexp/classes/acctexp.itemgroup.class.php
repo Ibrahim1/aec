@@ -78,6 +78,9 @@ class ItemGroupHandler
 		return $list;
 	}
 
+	/**
+	 * @param integer $id
+	 */
 	static function resolveTreeItem( $id )
 	{
 		$tree = array();
@@ -148,6 +151,9 @@ class ItemGroupHandler
 		ItemGroupHandler::removeChildren( $item_id, $delGroups, $type );
 	}
 
+	/**
+	 * @param integer $child_id
+	 */
 	static function setChild( $child_id, $group_id, $type='item' )
 	{
 		if ( $type == 'group' ) {
@@ -221,6 +227,9 @@ class ItemGroupHandler
 		return $allParents;
 	}
 
+	/**
+	 * @param string $type
+	 */
 	static function getChildren( $groups, $type )
 	{
 		if ( empty( $groups ) ) {
@@ -296,6 +305,9 @@ class ItemGroupHandler
 		}
 	}
 
+	/**
+	 * @param string $type
+	 */
 	static function checkParentRestrictions( $item, $type, $metaUser )
 	{
 		$parents = ItemGroupHandler::parentGroups( $item->id, $type );
@@ -319,6 +331,9 @@ class ItemGroupHandler
 		return true;
 	}
 
+	/**
+	 * @param ItemGroup $group
+	 */
 	static function hasVisibleChildren( $group, $metaUser )
 	{
 		$children = ItemGroupHandler::getChildren( $group->id, 'item' );
@@ -407,6 +422,9 @@ class ItemGroupHandler
 		return $list;
 	}
 
+	/**
+	 * @param ItemGroup $group
+	 */
 	static function getGroupListItem( $group )
 	{
 		$details = array(
@@ -424,6 +442,9 @@ class ItemGroupHandler
 		return $details;
 	}
 
+	/**
+	 * @param SubscriptionPlan $plan
+	 */
 	static function getItemListItem( $plan )
 	{
 		$details = array(

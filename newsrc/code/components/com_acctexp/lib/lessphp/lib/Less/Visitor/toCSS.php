@@ -279,6 +279,9 @@ class Less_Visitor_toCSS extends Less_VisitorReplacing{
 		return new Less_Tree_Expression( $mapped );
 	}
 
+	/**
+	 * @param Less_Tree_Expression[] $values
+	 */
 	public static function toValue($values){
 		//return new Less_Tree_Value($values); ??
 

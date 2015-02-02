@@ -123,7 +123,7 @@
      *
      * GC tag: {@link http://code.google.com/apis/checkout/developer/index.html#tag_email-delivery <email-delivery>}
      *
-     * @param bool $email_delivery true if email_delivery applies, defaults to
+     * @param string|boolean $email_delivery true if email_delivery applies, defaults to
      *                             false
      *
      * @return void

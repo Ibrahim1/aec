@@ -28,6 +28,7 @@ class plgContentAECRewrite extends JPlugin
 	 * @param	object	The article object.  Note $article->text is also available
 	 * @param	object	The article params
 	 * @param	int		The 'page' number
+	 * @param string $context
 	 */
 	public function onContentPrepare( $context, &$article, &$params, $page=0 )
 	{

@@ -181,6 +181,9 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	static function InvoiceNumberbyCartId( $userid, $cartid )
 	{
 		$db = JFactory::getDBO();
@@ -196,6 +199,11 @@ class aecInvoiceHelper
 		return $db->loadResult();
 	}
 
+	/**
+	 * @param integer $userid
+	 * @param integer $start
+	 * @param integer $limit
+	 */
 	static function InvoiceIdList( $userid, $start, $limit, $sort='`transaction_date` DESC' )
 	{
 		$db = JFactory::getDBO();

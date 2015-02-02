@@ -76,6 +76,9 @@ class HTML_myCommon
 		HTML_myCommon::addScript( '/com_acctexp/js/aec.backend.js' );
 	}
 
+	/**
+	 * @param string $rel
+	 */
 	static function addScript( $rel )
 	{
 		$v = new JVersion();
@@ -136,6 +139,9 @@ class HTML_myCommon
 		echo '</form>';
 	}
 
+	/**
+	 * @param string $image
+	 */
 	static function getHeader( $page, $image, $extratext='', $search=false, $buttons=null, $object=false )
 	{
 		if ( $search !== false ) {
@@ -185,6 +191,9 @@ class HTML_myCommon
 		?><div class="aec-symbol aec-symbol-<?php echo $name; ?>"></div><?php
 	}
 
+	/**
+	 * @param boolean $object
+	 */
 	static function getButtons( $buttons, $object )
 	{
 		if ( !is_array( $buttons ) ) {
@@ -314,6 +323,10 @@ class HTML_myCommon
 			. '</a>';
 	}
 
+	/**
+	 * @param string $type
+	 * @param string $property
+	 */
 	static function toggleBtn( $type, $property, $id, $state )
 	{
 		$js = 'toggleProperty';
@@ -344,6 +357,9 @@ class HTML_myCommon
 
 class HTML_AcctExp
 {
+	/**
+	 * @param metaUser $metaUser
+	 */
 	static function userForm( $option, $metaUser, $invoices, $coupons, $mi, $lists, $nexttask, $aecHTML )
 	{
 		?><script type="text/javascript">
@@ -1424,6 +1440,9 @@ class HTML_AcctExp
 		<?php
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 */
 	static function Settings( $option, $aecHTML, $params, $tab_data )
 	{
 		jimport( 'joomla.html.editor' );
@@ -1482,6 +1501,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param bsPagination $pageNav
+	 */
 	static function listProcessors( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon('aec-wrap-mesh');
@@ -1542,6 +1564,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 */
 	static function editProcessor( $option, $aecHTML )
 	{
 		$id = 0;
@@ -1577,6 +1602,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param bsPagination $pageNav
+	 */
 	static function listTemplates( $rows, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon('aec-wrap-cream');
@@ -1623,6 +1651,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 */
 	static function editTemplate( $option, $aecHTML, $tab_data )
 	{
 		jimport( 'joomla.html.editor' );
@@ -1686,6 +1717,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param bsPagination $pageNav
+	 */
 	static function listSubscriptions( $rows, $pageNav, $search, $orderby, $option, $lists, $subscriptionid, $action )
 	{
 		HTML_myCommon::startCommon('aec-wrap-geometry');
@@ -1813,6 +1847,10 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param boolean $filtered
+	 * @param bsPagination $pageNav
+	 */
 	static function listMicroIntegrations( $rows, $filtered, $pageNav, $option, $lists, $search, $orderby )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze'); ?>
@@ -1889,6 +1927,10 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param microIntegration $row
+	 * @param null|aecHTML $aecHTML
+	 */
 	static function editMicroIntegration( $option, $row, $lists, $aecHTML, $attached )
 	{
 		HTML_myCommon::startCommon('aec-wrap-maze', 'aec-wrap-inner-light');
@@ -2025,6 +2067,10 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param boolean $filtered
+	 * @param bsPagination $pageNav
+	 */
 	static function listSubscriptionPlans( $rows, $filtered, $search, $orderby, $lists, $pageNav, $option )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary');
@@ -2162,6 +2208,11 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 * @param SubscriptionPlan $row
+	 * @param boolean $hasrecusers
+	 */
 	static function editSubscriptionPlan( $option, $aecHTML, $row, $hasrecusers )
 	{
 		global $aecConfig;
@@ -2545,6 +2596,9 @@ class HTML_AcctExp
 	<?php
 	}
 
+	/**
+	 * @param bsPagination $pageNav
+	 */
 	static function listItemGroups( $rows, $pageNav, $option, $orderby, $search )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary');
@@ -2626,6 +2680,10 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 * @param ItemGroup $row
+	 */
 	static function editItemGroup( $option, $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon('aec-wrap-squary', 'aec-wrap-inner-light');
@@ -2786,6 +2844,10 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param boolean $filtered
+	 * @param bsPagination $pageNav
+	 */
 	static function listCoupons( $rows, $filtered, $pageNav, $option, $search, $orderby )
 	{
 		HTML_myCommon::startCommon('aec-wrap-cream');
@@ -2867,6 +2929,10 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 * @param Coupon $row
+	 */
 	static function editCoupon( $option, $aecHTML, $row )
 	{
 		HTML_myCommon::startCommon('aec-wrap-cream', 'aec-wrap-inner-light');
@@ -3016,6 +3082,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param bsPagination $pageNav
+	 */
 	static function viewInvoices( $option, $rows, $search, $pageNav, $orderby )
 	{
 		HTML_myCommon::startCommon('aec-wrap-net');
@@ -3091,6 +3160,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 */
 	static function editInvoice( $option, $aecHTML, $id )
 	{
 		HTML_myCommon::startCommon('aec-wrap-net', 'aec-wrap-inner-light');
@@ -3137,6 +3209,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param bsPagination $pageNav
+	 */
 	static function viewHistory( $option, $rows, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
@@ -3201,6 +3276,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param bsPagination $pageNav
+	 */
 	static function eventlog( $option, $events, $search, $pageNav )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
@@ -3619,6 +3697,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 */
 	static function import( $option, $aecHTML )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');
@@ -3715,6 +3796,9 @@ class HTML_AcctExp
  		HTML_myCommon::endCommon();
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 */
 	static function export( $option, $task, $aecHTML )
 	{
 		HTML_myCommon::startCommon('aec-wrap-dots');

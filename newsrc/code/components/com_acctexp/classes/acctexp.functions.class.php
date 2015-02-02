@@ -13,6 +13,10 @@ function aecDebug( $text, $level = 128 )
 	aecQuickLog( 'debug', 'debug', $text, $level );
 }
 
+/**
+ * @param string $short
+ * @param string $tags
+ */
 function aecQuickLog( $short, $tags, $text, $level = 128 )
 {
 	$eventlog = new eventLog();
@@ -166,6 +170,9 @@ function aecPostParamClear( $array, $safe=false, $safe_params=array( 'string', '
 	return $cleararray;
 }
 
+/**
+ * @param string|boolean $class
+ */
 function aecRedirect( $url, $msg=null, $class=null )
 {
 	$app = JFactory::getApplication();
@@ -175,6 +182,9 @@ function aecRedirect( $url, $msg=null, $class=null )
 	return exit;
 }
 
+/**
+ * @param string|boolean $task
+ */
 function aecSelfRedirect( $task, $addparams )
 {
 	$params = array( 'option=com_acctexp', 'task='.$task );

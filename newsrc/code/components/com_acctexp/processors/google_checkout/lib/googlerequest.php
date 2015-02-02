@@ -343,7 +343,7 @@
      *
      * @param string $google_order the google id of the order
      * @param string $message the message to be sent to the customer
-     * @param string $send_email whether Google should send an email to
+     * @param string $send_mail whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
      *
@@ -393,7 +393,7 @@
      * @param string $carrier the carrier, valid values are "DHL", "FedEx",
      *                        "UPS", "USPS" and "Other"
      * @param string $tracking_no the shipper's tracking number
-     * @param string $send_email whether Google should send an email to
+     * @param string $send_mail whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
      *
@@ -469,7 +469,7 @@
      *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
-     * @param string $send_email whether Google should send an email to
+     * @param string $send_mail whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
      *
@@ -514,7 +514,7 @@
      *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
-     * @param string $send_email whether Google should send an email to
+     * @param string $send_mail whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
      *
@@ -547,7 +547,7 @@
      * @param array $items_list a list of GoogleShipItem classes.
      * @param string $reason the reason why the refund is taking place
      * @param string $comment a comment about the refund
-     * @param string $send_email whether Google should send an email to
+     * @param string $send_mail whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
      *
@@ -585,7 +585,7 @@
      *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
-     * @param string $send_email whether Google should send an email to
+     * @param string $send_mail whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
      *
@@ -616,7 +616,7 @@
      *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
-     * @param string $send_email whether Google should send an email to
+     * @param string $send_mail whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
      *
@@ -674,6 +674,9 @@
 
     /**
      * @access private
+     * @param string $url
+     * @param string[] $header_arr
+     * @param string|null $postargs
      */
     function SendReq($url, $header_arr, $postargs, $timeout=false) {
       // Get the curl session object
@@ -778,6 +781,7 @@
 
     /**
      * @access private
+     * @param string $heads
      */
     function get_headers_x($heads, $format=0) {
       $fp = explode(ENTER, $heads);
@@ -806,6 +810,7 @@
 
     /**
      * @access private
+     * @return string
      */
     function get_body_x($heads){
       $fp = explode(DOUBLE_ENTER, $heads, 2);

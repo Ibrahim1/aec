@@ -197,7 +197,6 @@ class Less_Tree_Import extends Less_Tree{
 	/**
 	 * Using the import directories, get the full absolute path and uri of the import
 	 *
-	 * @param Less_Tree_Import $evald
 	 */
     public function PathAndUri(){
 
