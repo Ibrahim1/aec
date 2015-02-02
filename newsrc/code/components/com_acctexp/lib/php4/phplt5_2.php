@@ -19,14 +19,14 @@ if ( !function_exists( 'json_decode' ) ) {
 	}
 
 	// Create dummy encoding function
-	public function json_encode( $value )
+	function json_encode( $value )
 	{
 		$JSONenc = new Services_JSON();
 		return $JSONenc->encode( $value );
 	}
 
 	// Create dummy decoding function
-	public function json_decode( $value )
+	function json_decode( $value )
 	{
 		$JSONdec = new Services_JSON();
 		return $JSONdec->decode( $value );

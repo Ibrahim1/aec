@@ -629,11 +629,9 @@ if ( !class_exists( 'Com_AcctexpInstallerScript' ) ) {
 }
 
 if ( !function_exists( 'com_install' ) ) {
-	public function com_install()
+	function com_install()
 	{
 		$installer = new Com_AcctexpInstallerScript;
 		$installer->install();
 	}
 }
-
-?>
