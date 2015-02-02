@@ -1610,7 +1610,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 
 		this.graph.element.addEventListener(
 			'mousemove',
-			public function(e) {
+			function(e) {
 				this.visible = true;
 				this.update(e)
 			}.bind(this),
@@ -1621,7 +1621,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 
 		this.graph.element.addEventListener(
 			'mouseout',
-			public function(e) {
+			function(e) {
 				if (e.relatedTarget && !(e.relatedTarget.compareDocumentPosition(this.graph.element) & Node.DOCUMENT_POSITION_CONTAINS)) {
 					this.hide();
 				}

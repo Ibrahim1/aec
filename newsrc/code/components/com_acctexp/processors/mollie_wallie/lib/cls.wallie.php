@@ -164,7 +164,7 @@ class Mollie_Wallie
 		{
 			return false;
 		}
-		
+
 		return true;
 	}
 

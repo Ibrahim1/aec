@@ -13,7 +13,7 @@ Array.prototype.getUnique = function(){
 		u[this[i]] = 1;
 	}
 	return a;
-}
+};
 
 d3.chart.sunburst = function () {
 
@@ -156,7 +156,7 @@ d3.chart.sunburst = function () {
 		return redraw();
 	};
 
-	public function resize() {
+	function resize() {
 		chartW = w - margin[1] - margin[3];
 		chartH = h - margin[0] - margin[2];
 		this.attr("width", chartW)
@@ -166,7 +166,7 @@ d3.chart.sunburst = function () {
 		return chart;
 	}
 
-	public function redraw() {
+	function redraw() {
 		chart.tochart();
 		return chart;
 	};
@@ -192,7 +192,7 @@ d3.chart.sunburst = function () {
 		return chart;
 	};
 
-	public function drawSVG(markX, markY, markW, markH) {
+	function drawSVG(markX, markY, markW, markH) {
 		var r = w / 2 - margin[0],
 		format = d3.time.format("%Y-%m-%d %X"),
 		selector = "#"+group.attr("id");
@@ -408,7 +408,7 @@ d3.chart.cellular = function () {
 		return redraw();
 	};
 
-	public function resize() {
+	function resize() {
 		chartW = w - 4;
 		chartH = h - 4;
 		this.attr("width", chartW)
@@ -418,7 +418,7 @@ d3.chart.cellular = function () {
 		return chart;
 	}
 
-	public function redraw() {
+	function redraw() {
 		chart.tochart();
 		return chart;
 	};
@@ -440,7 +440,7 @@ d3.chart.cellular = function () {
 		return chart;
 	};
 
-	public function drawSVG(markX, markY, markW, markH) {
+	function drawSVG(markX, markY, markW, markH) {
 		var format = d3.time.format("%Y-%m-%d");
 
 		var numyear = data[0].date.getFullYear();
@@ -537,7 +537,7 @@ d3.chart.cellular = function () {
 		jQuery('svg').tooltip({placement: "top", selector: '.bstooltip', delay: { show: 300, hide: 100 }});
 	}
 
-	public function monthPath(t0) {
+	function monthPath(t0) {
 		var t1 = new Date(t0.getUTCFullYear(), t0.getUTCMonth() + 1, 0),
 			d0 = +day(t0), w0 = +week(t0),
 			d1 = +day(t1), w1 = +week(t1);
@@ -548,7 +548,7 @@ d3.chart.cellular = function () {
 			+ "H" + (w0 + 1) * z + "Z";
 	}
 
-	public function monthWidth(t0) {
+	function monthWidth(t0) {
 		var x = new Date(t0.getUTCFullYear(), t0.getUTCMonth()+2, 1);
 
 		if ( x.getUTCMonth() == 11 ) {
@@ -659,7 +659,7 @@ d3.chart.rickshaw = function () {
 		return redraw();
 	};
 
-	public function resize() {
+	function resize() {
 		chartW = w - 4;
 		chartH = h - 4;
 		this.attr("width", chartW)
@@ -669,7 +669,7 @@ d3.chart.rickshaw = function () {
 		return chart;
 	}
 
-	public function redraw() {
+	function redraw() {
 		chart.tochart();
 		return chart;
 	};
@@ -682,7 +682,7 @@ d3.chart.rickshaw = function () {
 		return chart;
 	};
 
-	public function drawSVG() {
+	function drawSVG() {
 		var z = 14,
 		day = d3.time.format("%Y-%m-%w"),
 		week = d3.time.format("%Y-%U"),

@@ -34,7 +34,7 @@ function joomlaregisterForm($option, $useractivation)
 	?>
 	<script type="text/javascript">
 		/* <![CDATA[ */
-		public function submitbutton_reg() {
+		function submitbutton_reg() {
 			var form = document.mosForm;
 			var r = new RegExp("[\<|\>|\"|\'|\%|\;|\(|\)|\&|\+|\-]", "i");
 

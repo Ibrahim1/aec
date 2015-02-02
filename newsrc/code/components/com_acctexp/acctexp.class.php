@@ -12,7 +12,7 @@
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 define( '_AEC_VERSION', '1.2' );
-define( '_AEC_REVISION', '6603' );
+define( '_AEC_REVISION', '6604' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 

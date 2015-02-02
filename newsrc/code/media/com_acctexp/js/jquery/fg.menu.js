@@ -215,12 +215,12 @@ function Menu(caller, options){
 		if (options.linkHover) {
 			var allLinks = container.find('.fg-menu li a');
 			allLinks.hover(
-				public function(){
+				function(){
 					var menuitem = jQuery(this);
 					jQuery('.'+options.linkHover).removeClass(options.linkHover).blur().parent().removeAttr('id');
 					jQuery(this).addClass(options.linkHover).focus().parent().attr('id','active-menuitem');
 				},
-				public function(){
+				function(){
 					jQuery(this).removeClass(options.linkHover).blur().parent().removeAttr('id');
 				}
 			);
@@ -228,12 +228,12 @@ function Menu(caller, options){
 
 		if (options.linkHoverSecondary) {
 			container.find('.fg-menu li').hover(
-				public function(){
+				function(){
 					jQuery(this).siblings('li').removeClass(options.linkHoverSecondary);
 					if (options.flyOutOnState) { jQuery(this).siblings('li').find('a').removeClass(options.flyOutOnState); }
 					jQuery(this).addClass(options.linkHoverSecondary);
 				},
-				public function(){ jQuery(this).removeClass(options.linkHoverSecondary); }
+				function(){ jQuery(this).removeClass(options.linkHoverSecondary); }
 			);
 		};
 
@@ -263,7 +263,7 @@ Menu.prototype.flyout = function(container, options) {
 		allSubLists.css({ left: linkWidth, width: linkWidth }).hide();
 
 		jQuery(this).find('a:eq(0)').addClass('fg-menu-indicator').html('<span>' + jQuery(this).find('a:eq(0)').text() + '</span><span class="ui-icon '+options.nextMenuLink+'"></span>').hover(
-			public function(){
+			function(){
 				clearTimeout(hideTimer);
 				var subList = jQuery(this).next();
 				if (!fitVertical(subList, jQuery(this).offset().top)) { subList.css({ top: 'auto', bottom: 0 }); };
@@ -272,7 +272,7 @@ Menu.prototype.flyout = function(container, options) {
 					subList.addClass('ui-widget-content').show(options.showSpeed).attr('aria-expanded', 'true');
 				}, 300);
 			},
-			public function(){
+			function(){
 				clearTimeout(showTimer);
 				var subList = jQuery(this).next();
 				hideTimer = setTimeout(function(){
@@ -282,13 +282,13 @@ Menu.prototype.flyout = function(container, options) {
 		);
 
 		jQuery(this).find('ul a').hover(
-			public function(){
+			function(){
 				clearTimeout(hideTimer);
 				if (jQuery(this).parents('ul').prev().is('a.fg-menu-indicator')) {
 					jQuery(this).parents('ul').prev().addClass(options.flyOutOnState);
 				}
 			},
-			public function(){
+			function(){
 				hideTimer = setTimeout(function(){
 					allSubLists.hide(options.showSpeed);
 					container.find(options.flyOutOnState).removeClass(options.flyOutOnState);

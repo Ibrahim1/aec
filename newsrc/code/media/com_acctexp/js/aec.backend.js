@@ -124,7 +124,7 @@ jQuery(document).ready(function(jQuery) {
 
 	jQuery(window).on('scroll', processScroll);
 
-	public function processScroll() {
+	function processScroll() {
 		var i,
 			scrollTop = jQuery(window).scrollTop();
 
@@ -165,13 +165,13 @@ jQuery(document).ready(function(jQuery) {
 		}
 	}
 
-	public function lookup() {
+	function lookup() {
 		jQuery.post("index.php?option=com_acctexp&task=quicksearch&search="+inputString , {queryString: ""+inputString+""}, function(data) {
 			jQuery('.popover .popover-content').html(data);
 		});
 	}
 
-	public function settingsfilter() {
+	function settingsfilter() {
 		if ( inputString == "" ) {
 			jQuery(".setting-filter-mute, .setting-filter-hide, .setting-filter-hide-override, .affixnav a").removeClass("setting-filter-mute setting-filter-hide setting-filter-hide-override");
 			return;
@@ -550,7 +550,7 @@ jQuery(document).ready(function(jQuery) {
 
 		var searchTimer;
 
-		public function searchDelToggle() {
+		function searchDelToggle() {
 			if ( jQuery("#aec-listsearch input[type*='text']").val() ) {
 				jQuery("#searchclear").removeClass('disabled');
 			} else {

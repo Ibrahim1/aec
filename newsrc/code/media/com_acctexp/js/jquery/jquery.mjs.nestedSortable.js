@@ -279,7 +279,7 @@
 
 			return ret;
 
-			public function _recursiveItems(item) {
+			function _recursiveItems(item) {
 				var id = ($(item).attr(o.attribute || 'id') || '').match(o.expression || (/(.+)[-=_](.+)/));
 				if (id) {
 					var currentItem = {"id" : id[2]};
@@ -318,7 +318,7 @@
 
 			return ret;
 
-			public function _recursiveArray(item, depth, left) {
+			function _recursiveArray(item, depth, left) {
 
 				var right = left + 1,
 					id,

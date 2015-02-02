@@ -123,10 +123,10 @@ jQuery.fn.daterangepicker = function(settings){
 		});
 
 		ul.find('li').hover(
-				public function(){
+				function(){
 					jQuery(this).addClass('ui-state-hover');
 				},
-				public function(){
+				function(){
 					jQuery(this).removeClass('ui-state-hover');
 				})
 			.click(function(){
@@ -139,7 +139,7 @@ jQuery.fn.daterangepicker = function(settings){
 	})();
 
 	//function to format a date string
-	public function fDate(date){
+	function fDate(date){
 	   if(!date.getDate()){return '';}
 	   var day = date.getDate();
 	   var month = date.getMonth();
@@ -164,24 +164,24 @@ jQuery.fn.daterangepicker = function(settings){
 	}
 
 	//show, hide, or toggle rangepicker
-	public function showRP(){
+	function showRP(){
 		if(rp.data('state') == 'closed'){
 			positionRP();
 			rp.fadeIn(300).data('state', 'open');
 			options.onOpen();
 		}
 	}
-	public function hideRP(){
+	function hideRP(){
 		if(rp.data('state') == 'open'){
 			rp.fadeOut(300).data('state', 'closed');
 			options.onClose();
 		}
 	}
-	public function toggleRP(){
+	function toggleRP(){
 		if( rp.data('state') == 'open' ){ hideRP(); }
 		else { showRP(); }
 	}
-	public function positionRP(){
+	function positionRP(){
 		var relEl = riContain || rangeInput; //if arrows, use parent for offsets
 		var riOffset = relEl.offset(),
 			side = 'left',
@@ -198,7 +198,7 @@ jQuery.fn.daterangepicker = function(settings){
 
 
 	//preset menu click events
-	public function clickActions(el, rp, rpPickers, doneBtn){
+	function clickActions(el, rp, rpPickers, doneBtn){
 
 		var range = jQuery('.jqui-daterangepicker').val();
 		if ( range.indexOf(" - ") === -1 ) {
@@ -296,10 +296,10 @@ jQuery.fn.daterangepicker = function(settings){
 		hideRP();
 	})
 	.hover(
-			public function(){
+			function(){
 				jQuery(this).addClass('ui-state-hover');
 			},
-			public function(){
+			function(){
 				jQuery(this).removeClass('ui-state-hover');
 			}
 	)
@@ -351,10 +351,10 @@ jQuery.fn.daterangepicker = function(settings){
 			return false;
 		})
 		.hover(
-			public function(){
+			function(){
 				jQuery(this).addClass('ui-state-hover');
 			},
-			public function(){
+			function(){
 				jQuery(this).removeClass('ui-state-hover');
 			});
 

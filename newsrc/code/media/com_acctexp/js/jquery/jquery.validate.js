@@ -55,7 +55,7 @@ $.extend($.fn, {
 					// prevent form submit to be able to see console output
 					event.preventDefault();
 				}
-				public function handle() {
+				function handle() {
 					var hidden;
 					if ( validator.settings.submitHandler ) {
 						if (validator.submitButton) {
@@ -316,7 +316,7 @@ $.extend($.validator, {
 				rules[key] = $.validator.normalizeRule(value);
 			});
 
-			public function delegate(event) {
+			function delegate(event) {
 				var validator = $.data(this[0].form, "validator"),
 					eventType = "on" + event.type.replace(/^validate/, "");
 				if (validator.settings[eventType]) {
@@ -1242,7 +1242,7 @@ $.format = $.validator.format;
 					return $.event.handle.apply(this, args);
 				}
 			};
-			public function handler(e) {
+			function handler(e) {
 				e = $.event.fix(e);
 				e.type = fix;
 				return $.event.handle.call(this, e);
