@@ -611,6 +611,10 @@ class mi_aectax
 		}
 	}
 
+	/**
+	 * @param string $number
+	 * @param string $country
+	 */
 	public function viesValidation( $number, $country )
 	{
 		$db = JFactory::getDBO();

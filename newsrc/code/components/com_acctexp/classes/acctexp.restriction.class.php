@@ -401,6 +401,9 @@ class aecRestrictionHelper
 		return $lists;
 	}
 
+	/**
+	 * @param aecHTML $aecHTML
+	 */
 	static function echoSettings( $aecHTML )
 	{
 		$stdvars =	array(

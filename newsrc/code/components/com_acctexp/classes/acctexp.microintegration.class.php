@@ -201,6 +201,10 @@ class microIntegrationHandler
 		return $group_list;
 	}
 
+	/**
+	 * @param metaUser $metaUser
+	 * @param SubscriptionPlan $subscription_plan
+	 */
 	public function userPlanExpireActions( $metaUser, $subscription_plan, $special=null )
 	{
 		$mi_autointegrations = $this->getAutoIntegrations();
@@ -461,6 +465,10 @@ class MI
 		$this->warning[] = $warning;
 	}
 
+	/**
+	 * @param string $event
+	 * @param string $due_date
+	 */
 	public function issueUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		$db = JFactory::getDBO();
@@ -483,6 +491,10 @@ class MI
 		}
 	}
 
+	/**
+	 * @param string $event
+	 * @param string $due_date
+	 */
 	public function redateUniqueEvent( $request, $event, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		$db = JFactory::getDBO();
@@ -645,6 +657,9 @@ class microIntegration extends serialParamDBTable
 		return array( 'params', 'restrictions' );
 	}
 
+	/**
+	 * @param string $function
+	 */
 	public function functionProxy( $function, $data=null, $default=null )
 	{
 		if ( !isset( $this->mi_class ) ) {
@@ -873,6 +888,9 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 
+	/**
+	 * @param Invoice $invoice
+	 */
 	public function expiration_action( &$metaUser, $objplan=null, $invoice=null )
 	{
 		// IF ExpireAllInstances=0 AND hasMoreThanOneInstance -> return null
@@ -1028,6 +1046,9 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'getMIform', $request );
 	}
 
+	/**
+	 * @param SubscriptionPlan $plan
+	 */
 	public function verifyMIform( $plan, $metaUser, $params=null )
 	{
 		if ( !$this->checkPermission( $metaUser, null ) ) {
@@ -1048,6 +1069,9 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'verifyMIform', $request );
 	}
 
+	/**
+	 * @param SubscriptionPlan $plan
+	 */
 	public function getMIformParams( $plan, $metaUser, $errors )
 	{
 		$mi_form = $this->getMIform( $plan, $metaUser );
@@ -1139,6 +1163,9 @@ class microIntegration extends serialParamDBTable
 		return $return;
 	}
 
+	/**
+	 * @param aecEvent $event
+	 */
 	public function aecEventHook( $event )
 	{
 		if ( empty( $this->mi_class ) ) {
@@ -1148,6 +1175,9 @@ class microIntegration extends serialParamDBTable
 		return $this->functionProxy( 'aecEventHook', $event );
 	}
 
+	/**
+	 * @param string $trace
+	 */
 	public function on_userchange_action( $row, $post, $trace )
 	{
 		$request = new stdClass();

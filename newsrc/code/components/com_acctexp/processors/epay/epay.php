@@ -82,6 +82,9 @@ class processor_epay extends POSTprocessor
 		}
 	}
 
+	/**
+	 * @param string $strlanguage
+	 */
 	public function getEpayLanguage( $strlanguage )
 	{
 		$l = array( "DK" => 1, "UK" => 2, "SE" => 3, "NO" => 4, "GR" => 5, "IS" => 6, "DE" => 7 );

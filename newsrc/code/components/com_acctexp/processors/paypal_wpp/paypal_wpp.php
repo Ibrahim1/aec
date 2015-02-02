@@ -224,6 +224,9 @@ class processor_paypal_wpp extends XMLprocessor
 		return $return;
 	}
 
+	/**
+	 * @param boolean $updated
+	 */
 	public function checkoutform( $request, $vcontent=null, $updated=null )
 	{
 		$var = array();
@@ -445,6 +448,9 @@ class processor_paypal_wpp extends XMLprocessor
 		return $var;
 	}
 
+	/**
+	 * @param boolean $express
+	 */
 	public function getPaymentVars( $var, $request, $express )
 	{
 		if ( is_array( $request->int_var['amount'] ) ) {
@@ -509,6 +515,9 @@ class processor_paypal_wpp extends XMLprocessor
 		return $this->transmitRequest( $url, $path, $xml, 443, $curlextra );
 	}
 
+	/**
+	 * @param string $path
+	 */
 	public function getPayPalURL( $path )
 	{
 		$url = "https://api" . ( $this->settings['use_certificate'] ? "" : "-3t" );
@@ -520,6 +529,9 @@ class processor_paypal_wpp extends XMLprocessor
 		return $url;
 	}
 
+	/**
+	 * @param string $xml
+	 */
 	public function transmitRequestXML( $xml, $request )
 	{
 		$response = trim( $this->transmitToPayPal( $xml ) );

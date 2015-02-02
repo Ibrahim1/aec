@@ -82,6 +82,9 @@ class processor_billsafe extends XMLprocessor
 		return $this->billsafeRequestXML( 'prepare_Order', $var );
 	}
 
+	/**
+	 * @param string $method
+	 */
 	public function billsafeRequestXML( $method, $extra )
 	{
 		$var['Method']						= $method;

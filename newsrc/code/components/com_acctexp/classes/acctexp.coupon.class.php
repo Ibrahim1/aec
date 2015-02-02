@@ -568,6 +568,9 @@ class couponsHandler extends eucaObject
 		return $item;
 	}
 
+	/**
+	 * @param integer $amount
+	 */
 	public function applyToAmount( $amount, $original_amount=null )
 	{
 		if ( empty( $this->coupons ) || !is_array( $this->coupons ) ) {
@@ -812,6 +815,9 @@ class couponHandler
 		$db->query();
 	}
 
+	/**
+	 * @param Invoice $invoice
+	 */
 	public function incrementCount( $invoice )
 	{
 		$db = JFactory::getDBO();
@@ -846,6 +852,9 @@ class couponHandler
 		$this->coupon->incrementcount();
 	}
 
+	/**
+	 * @param Invoice $invoice
+	 */
 	public function decrementCount( $invoice )
 	{
 		$db = JFactory::getDBO();
@@ -1198,6 +1207,9 @@ class couponHandler
 		return $terms;
 	}
 
+	/**
+	 * @param Invoice $invoice
+	 */
 	public function triggerMIs( $metaUser, $invoice, $new_plan )
 	{
 		global $aecConfig;

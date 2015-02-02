@@ -88,6 +88,10 @@ XML;
 		return $xml_step1_request->asXML();
 	}
 
+	/**
+	 * @param string $url
+	 * @param string $path
+	 */
 	public function transmitRequestDesjardin( $url, $path, $xml )
 	{
 		$header = array();
@@ -369,6 +373,9 @@ XML;
 		return $response;
 	}
 
+	/**
+	 * @param stdClass $InvoiceFactory
+	 */
 	public function notify_trail( $InvoiceFactory, $response )
 	{
 		$path = '/catch';
@@ -405,6 +412,9 @@ XML;
 		return $content;
 	}
 
+	/**
+	 * @param string $error
+	 */
 	public function displayError( $invoice, $error )
 	{
 		$db = JFactory::getDBO();

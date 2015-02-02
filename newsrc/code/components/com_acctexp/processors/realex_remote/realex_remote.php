@@ -169,6 +169,10 @@ class processor_realex_remote extends XMLprocessor
 		return $response1;
 	}
 
+	/**
+	 * @param string $timestamp
+	 * @param integer $amount
+	 */
 	public function getHash( $request, $timestamp, $amount )
 	{
 		return md5(	md5($timestamp

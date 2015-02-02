@@ -64,6 +64,9 @@ class aecBucket extends serialParamDBTable
 		return array( 'params' );
 	}
 
+	/**
+	 * @param string $subject
+	 */
 	public function stuff( $subject, $data )
 	{
 		$this->created_date	= date( 'Y-m-d H:i:s', ( (int) gmdate('U') ) );

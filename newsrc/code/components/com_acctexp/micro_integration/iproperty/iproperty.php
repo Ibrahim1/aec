@@ -300,6 +300,9 @@ class mi_iproperty
 		return $object;
 	}
 
+	/**
+	 * @param string $table
+	 */
 	public function createQuery( $fields, $table )
 	{
 		if ( empty( $fields ) ) {
@@ -327,6 +330,9 @@ class mi_iproperty
 		return $this->getObject( 'companies', 'id', $id );
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function getCompanyByName( $name )
 	{
 		$db = JFactory::getDBO();
@@ -339,6 +345,10 @@ class mi_iproperty
 		return $this->getCompany( $db->loadResult() );
 	}
 
+	/**
+	 * @param string $table
+	 * @param string $field
+	 */
 	public function getObject( $table, $field, $id )
 	{
 		$db = JFactory::getDBO();
@@ -361,6 +371,9 @@ class mi_iproperty
 		return $object;
 	}
 
+	/**
+	 * @param string $table
+	 */
 	public function storeObject( $object, $table )
 	{
 		$db = JFactory::getDBO();

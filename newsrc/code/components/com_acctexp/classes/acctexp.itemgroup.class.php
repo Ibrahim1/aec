@@ -516,6 +516,9 @@ class ItemGroup extends serialParamDBTable
 		parent::__construct( '#__acctexp_itemgroups', 'id' );
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function getProperty( $name )
 	{
 		if ( isset( $this->$name ) ) {
@@ -782,6 +785,9 @@ class itemXgroup extends serialParamDBTable
 		parent::__construct( '#__acctexp_itemxgroup', 'id' );
 	}
 
+	/**
+	 * @param string $type
+	 */
 	public function createNew( $type, $item_id, $group_id )
 	{
 		$this->id		= 0;

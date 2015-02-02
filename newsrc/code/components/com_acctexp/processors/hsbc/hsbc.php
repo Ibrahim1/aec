@@ -474,6 +474,10 @@ class processor_hsbc extends XMLprocessor
 		return $return;
 	}
 
+	/**
+	 * @param string $start
+	 * @param string $end
+	 */
 	public function substring_between( $haystack, $start, $end )
 	{
 		if ( strpos( $haystack, $start ) === false || strpos( $haystack, $end ) === false ) {

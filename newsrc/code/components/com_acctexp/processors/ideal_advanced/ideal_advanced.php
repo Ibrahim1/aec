@@ -223,6 +223,10 @@ class IdealRequest
 	}
 
 	// Should point to directory with .cer and .key files
+
+	/**
+	 * @param string $sPath
+	 */
 	public function setSecurePath($sPath)
 	{
 		$this->sSecurePath = $sPath;
@@ -235,6 +239,10 @@ class IdealRequest
 	}
 
 	// Set password to generate signatures
+
+	/**
+	 * @param string $sPrivateKeyPass
+	 */
 	public function setPrivateKey($sPrivateKeyPass, $sPrivateKeyFile = false, $sPrivateCertificateFile = false)
 	{
 		$this->sPrivateKeyPass = $sPrivateKeyPass;
@@ -251,6 +259,10 @@ class IdealRequest
 	}
 
 	// Set MerchantID id and SubID
+
+	/**
+	 * @param string $sMerchantId
+	 */
 	public function setMerchant($sMerchantId, $sSubId = 0)
 	{
 		$this->sMerchantId = $sMerchantId;
@@ -258,6 +270,10 @@ class IdealRequest
 	}
 
 	// Set Acquirer (Use: Rabobank, ING Bank or ABN Amro)
+
+	/**
+	 * @param string $sAcquirer
+	 */
 	public function setAcquirer($sAcquirer, $bTestMode = false)
 	{
 		$this->sAcquirerName = $sAcquirer;
@@ -466,6 +482,7 @@ class IdealRequest
 	// Escape (replace/remove) special characters in string
 
 	/**
+	 * @param string $string
 	 * @return string
 	 */
 	protected function escapeSpecialChars($string)

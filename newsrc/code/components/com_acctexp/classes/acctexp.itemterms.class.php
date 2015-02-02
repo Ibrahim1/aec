@@ -18,6 +18,9 @@ class itemTerms extends eucaObject
 	var $pointer	= 0;
 	var $terms		= array();
 
+	/**
+	 * @param string $params
+	 */
 	public function readParams( $params, $allow_trial=true )
 	{
 		// Old params only had trial and full
@@ -153,6 +156,9 @@ class itemTerms extends eucaObject
 		$this->nextterm =& $this->terms[$this->pointer];
 	}
 
+	/**
+	 * @param itemTerm $term
+	 */
 	public function addTerm( $term )
 	{
 		array_push( $this->terms, $term );

@@ -199,6 +199,9 @@ class mi_jnews
 		return $db->loadResult();
 	}
 
+	/**
+	 * @param boolean $subscriber_id
+	 */
 	public function addToList( $subscriber_id, $list_id )
 	{
 		if ( !$this->hasList( $subscriber_id, $list_id ) ) {
@@ -232,6 +235,9 @@ class mi_jnews
 		return true;
 	}
 
+	/**
+	 * @param boolean $subscriber_id
+	 */
 	public function deleteFromList( $subscriber_id, $list_id )
 	{
 		if ( $this->hasList( $subscriber_id, $list_id ) ) {

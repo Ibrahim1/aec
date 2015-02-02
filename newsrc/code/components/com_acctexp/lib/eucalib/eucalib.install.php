@@ -152,6 +152,9 @@ class eucaInstall extends eucaObject
 		}
 	}
 
+	/**
+	 * @param integer $ordering
+	 */
 	public function AdminMenuEntry( $entry, $details, $ordering, $frontend=0 )
 	{
 		if ( defined( 'JPATH_MANIFESTS' ) ) {

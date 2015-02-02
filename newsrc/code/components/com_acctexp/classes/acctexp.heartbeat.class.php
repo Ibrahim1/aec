@@ -237,6 +237,9 @@ class aecHeartbeat extends serialParamDBTable
 		return $this->processors[$name];
 	}
 
+	/**
+	 * @param boolean $pre_expiration
+	 */
 	public function getSubscribers( $pre_expiration )
 	{
 		$expiration_limit = $this->getExpirationLimit( $pre_expiration );
@@ -267,6 +270,9 @@ class aecHeartbeat extends serialParamDBTable
 		}
 	}
 
+	/**
+	 * @param Subscription $subscription
+	 */
 	public function processorValidation( $subscription, $subscription_list )
 	{
 		$pp = $this->getProcessor( $subscription->type );

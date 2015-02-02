@@ -83,6 +83,9 @@ class mi_yourmembership_com extends MI
 		}
 	}
 
+	/**
+	 * @param string $function
+	 */
 	public function getCallXML( $function, $id, $data=array(), $session=null )
 	{
 		$request = '<?xml version="1.0" encoding="utf-8">';
@@ -111,6 +114,9 @@ class mi_yourmembership_com extends MI
 		return $request;
 	}
 
+	/**
+	 * @param string $request
+	 */
 	public function apiCall( $request )
 	{
 		global $aecConfig;

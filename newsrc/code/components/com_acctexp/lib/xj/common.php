@@ -219,6 +219,9 @@ class xJSessionHandlerCommon
 		}
 	}
 
+	/**
+	 * @param boolean $data
+	 */
 	public function joomunserializesession( $data )
 	{
 		$se = explode( "|", $data, 2 );

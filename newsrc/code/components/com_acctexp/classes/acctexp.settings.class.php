@@ -13,6 +13,9 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 class aecSettings
 {
+	/**
+	 * @param string $area
+	 */
 	public function aecSettings( $area, $subarea='' )
 	{
 		$this->area				= $area;

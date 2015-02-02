@@ -94,6 +94,9 @@ class aecEvent extends serialParamDBTable
 		return array( 'context', 'params', 'customparams' );
 	}
 
+	/**
+	 * @param string $type
+	 */
 	public function issue( $type, $subtype, $appid, $event, $userid, $due_date, $context=array(), $params=array(), $customparams=array() )
 	{
 		$this->userid			= $userid;

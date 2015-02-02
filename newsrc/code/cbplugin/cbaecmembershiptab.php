@@ -29,6 +29,9 @@ class cbaecmembershipTab extends cbTabHandler
 		return $this->getTab( $tab, $user, $ui, 'admin' );
 	}
 
+	/**
+	 * @param string $location
+	 */
 	public function getTab( $tab, $user, $ui, $location )
 	{
 		global $_CB_framework;
@@ -106,6 +109,9 @@ class cbaecmembershipTab extends cbTabHandler
 		return $db->loadObjectList();
 	}
 
+	/**
+	 * @param string $status
+	 */
 	public function getIconHtml( $status )
 	{
 		switch( $status ) {

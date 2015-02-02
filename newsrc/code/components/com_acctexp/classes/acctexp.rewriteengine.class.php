@@ -882,6 +882,9 @@ class reWriteEngine
 		return $result;
 	}
 
+	/**
+	 * @param string $subject
+	 */
 	public function explain( $subject )
 	{
 		// Check whether a replacement exists at all

@@ -131,6 +131,9 @@ class mi_acymail extends MI
 		}
 	}
 
+	/**
+	 * @param boolean $new_allowed
+	 */
 	public function getSubscriber( $config, $request, $new_allowed )
 	{
 		$userClass = acymailing::get('class.subscriber');

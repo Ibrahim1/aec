@@ -498,6 +498,9 @@ class plgSystemAECrouting extends JPlugin
 		}
 	}
 
+	/**
+	 * @param string $search
+	 */
 	public function addAECvars( $search, $text, $vars )
 	{
 		$add = "\n";

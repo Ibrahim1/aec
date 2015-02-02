@@ -227,6 +227,9 @@ class aecTemplate
 		$this->addCSS( JURI::root(true) . '/media/' . $this->option . '/css/template.' . $this->template . '.css' );
 	}
 
+	/**
+	 * @param string $path
+	 */
 	public function addCSS( $path )
 	{
 		$document= JFactory::getDocument();
@@ -239,12 +242,18 @@ class aecTemplate
 		$document->addStyleDeclaration( $css );
 	}
 
+	/**
+	 * @param string $js
+	 */
 	public function addScriptDeclaration( $js )
 	{
 		$document= JFactory::getDocument();
 		$document->addScriptDeclaration( $js );
 	}
 
+	/**
+	 * @param string $js
+	 */
 	public function addScript( $js )
 	{
 		$v = new JVersion();

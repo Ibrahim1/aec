@@ -193,6 +193,11 @@ class mi_interspireem
 		return $this->sendRequest( $xml );
 	}
 
+	/**
+	 * @param string $type
+	 * @param string $method
+	 * @param string $data
+	 */
 	public function getRequest($type, $method, $data )
 	{
 		$xml = '<xmlrequest>' . "\n"
@@ -207,6 +212,9 @@ class mi_interspireem
 		return $xml;
 	}
 
+	/**
+	 * @param string $xml
+	 */
 	public function sendRequest( $xml )
 	{
 		$db = JFactory::getDBO();

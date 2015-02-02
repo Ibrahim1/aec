@@ -187,6 +187,9 @@ class HTML_myCommon
 	<?php
 	}
 
+	/**
+	 * @param string $name
+	 */
 	static function getSymbol( $name )
 	{
 		?><div class="aec-symbol aec-symbol-<?php echo $name; ?>"></div><?php
@@ -307,6 +310,9 @@ class HTML_myCommon
 		?></div><?php
 	}
 
+	/**
+	 * @param boolean|string $object
+	 */
 	static function getButton( $action, $object, $button, $fulltext=false )
 	{
 		$v = new JVersion();
@@ -4123,6 +4129,10 @@ class bsPagination extends JPagination
 		return str_replace( $search, $replace, $footer );
 	}
 
+	/**
+	 * @param integer $n
+	 * @param string $type
+	 */
 	public function ordering( $i, $n, $type, $enabled=true )
 	{
 		$v = new JVersion();

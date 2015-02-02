@@ -183,17 +183,26 @@ class processor_firstdata_connect extends POSTprocessor
 		return $response;
 	}
 
+	/**
+	 * @param string $datetime
+	 */
 	public function sendHash( $amount, $datetime )
 	{
 		return $this->hash( $this->settings['storename'] . $datetime . $amount . $this->settings['secret'] );
 	}
 
+	/**
+	 * @param string $datetime
+	 */
 	public function receiveHash( $amount, $datetime, $approval )
 	{
 		// TODO: This is possibly missing an occurance of storename at the end, documentation has typos
 		return $this->hash( $this->settings['secret'] . $approval . $amount . $this->settings['currency'] . $datetime );
 	}
 
+	/**
+	 * @param string $string
+	 */
 	public function hash( $string )
 	{
 		$hex_str = '';

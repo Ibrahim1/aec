@@ -170,11 +170,17 @@ class template_etacarinae extends aecTemplate
 		}
 	}
 
+	/**
+	 * @param string $name
+	 */
 	public function enqueueJQueryExtension( $name )
 	{
 		$this->jqueryExtensions[] = $name;
 	}
 
+	/**
+	 * @param string $js
+	 */
 	public function enqueueJQueryCode( $js )
 	{
 		$this->jQueryCode[] = $js;

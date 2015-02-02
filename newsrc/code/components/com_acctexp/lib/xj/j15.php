@@ -57,6 +57,9 @@ class xJACLhandler extends xJACLhandlerCommon
 		return $db->loadObjectList();
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	static function setGID( $userid, $gid, $gid_name )
 	{
 		$db = JFactory::getDBO();
@@ -69,6 +72,9 @@ class xJACLhandler extends xJACLhandlerCommon
 		$db->query() or die( $db->stderr() );
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	static function setGIDsTakeNames( $userid, $gid )
 	{
 		$db = JFactory::getDBO();
@@ -278,6 +284,9 @@ class xJACLhandler extends xJACLhandlerCommon
 
 class xJSessionHandler extends xJSessionHandlerCommon
 {
+	/**
+	 * @param integer $userid
+	 */
 	public function instantGIDchange( $userid, $gid, $removegid=array(), $sessionextra=null )
 	{
 		$user = JFactory::getUser();

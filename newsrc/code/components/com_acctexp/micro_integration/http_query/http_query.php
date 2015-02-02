@@ -71,6 +71,9 @@ class mi_http_query extends MI
 		return $urlsplit[0] . '?' . implode( '&', $fullp );
 	}
 
+	/**
+	 * @param string $url
+	 */
 	public function fetchURL( $url )
 	{
 		global $aecConfig;

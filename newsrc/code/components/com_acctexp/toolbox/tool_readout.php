@@ -329,6 +329,9 @@ class tool_readout
 class aecReadout
 {
 
+	/**
+	 * @param string $method
+	 */
 	public function aecReadout( $optionlist, $method )
 	{
 		$this->optionlist = $optionlist;
@@ -355,6 +358,9 @@ class aecReadout
 		}
 	}
 
+	/**
+	 * @param PaymentProcessor $obj
+	 */
 	public function conversionHelper( $content, $obj )
 	{
 		return $this->{$this->method}( $content, $obj );

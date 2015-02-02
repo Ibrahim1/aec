@@ -70,6 +70,9 @@ class Subscription extends serialParamDBTable
 		return parent::check($fields);
 	}
 
+	/**
+	 * @param integer $userid
+	 */
 	public function loadUserid( $userid )
 	{
 		$this->load( $this->getSubscriptionID( $userid ) );
@@ -150,6 +153,10 @@ class Subscription extends serialParamDBTable
 		}
 	}
 
+	/**
+	 * @param string $processor
+	 * @param integer $pending
+	 */
 	public function createNew( $userid, $processor, $pending, $primary=1, $plan=null )
 	{
 		if ( !$userid ) {
@@ -170,6 +177,9 @@ class Subscription extends serialParamDBTable
 		return $this->storeload();
 	}
 
+	/**
+	 * @param string $status
+	 */
 	public function isStatus( $status )
 	{
 		return ( strcmp( $this->status, ucfirst($status) ) === 0 );
@@ -243,6 +253,9 @@ class Subscription extends serialParamDBTable
 		return $this->primary;
 	}
 
+	/**
+	 * @param integer $id
+	 */
 	public function getPlan( $id=null )
 	{
 		$id = empty($id) ? $this->plan : $id;
@@ -257,6 +270,11 @@ class Subscription extends serialParamDBTable
 		return $plan;
 	}
 
+	/**
+	 * @param string $unit
+	 * @param string $value
+	 * @param integer $extend
+	 */
 	public function setExpiration( $unit, $value, $extend )
 	{
 		$now = (int) gmdate('U');
@@ -484,6 +502,9 @@ class Subscription extends serialParamDBTable
 		return $this->setStatus( 'Active' );
 	}
 
+	/**
+	 * @param string $status
+	 */
 	public function setStatus( $status )
 	{
 		$this->status = $status;

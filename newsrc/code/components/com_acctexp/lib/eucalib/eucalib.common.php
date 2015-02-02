@@ -113,6 +113,9 @@ class eucaObject extends JObject {}
 */
 class paramDBTable extends JTable
 {
+	/**
+	 * @param string $id
+	 */
 	public function __construct( $table, $id )
 	{
 		$db = JFactory::getDBO();
@@ -746,6 +749,7 @@ class parameterHandler
 
 	/**
 	 * Decode Parameters into an array
+	 * @param string $params
 	 * @return array
 	 */
 	static function decode( $params )
