@@ -107,13 +107,12 @@ class processor_zipzap extends XMLprocessor
 		$response = array();
 
 		aecDebug($post);
-		
+
 		return $response;
 	}
 
 	function validateNotification( $response, $post, $invoice )
 	{
-		
+
 	}
 }
-?>

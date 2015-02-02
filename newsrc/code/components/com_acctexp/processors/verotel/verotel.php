@@ -175,5 +175,3 @@ class processor_verotel extends URLprocessor
 	}
 
 }
-
-?>

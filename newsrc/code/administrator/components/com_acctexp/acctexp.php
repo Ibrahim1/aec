@@ -12,5 +12,3 @@
 defined('_JEXEC') or die( 'Restricted access' );
 
 require_once( JPATH_SITE . '/administrator/components/com_acctexp/admin.acctexp.php' );
-
-?>

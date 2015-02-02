@@ -230,5 +230,3 @@ class mi_interspireem
 		return $result->data;
 	}
 }
-
-?>

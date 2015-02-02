@@ -231,4 +231,3 @@ class processor_payer extends POSTprocessor
 	}
 
 }
-?>

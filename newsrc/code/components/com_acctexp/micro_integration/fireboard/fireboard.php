@@ -118,5 +118,3 @@ class mi_fireboard
 		return true;
 	}
 }
-
-?>

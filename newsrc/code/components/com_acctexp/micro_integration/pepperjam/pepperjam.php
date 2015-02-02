@@ -119,4 +119,3 @@ class mi_pepperjam
 	}
 
 }
-?>

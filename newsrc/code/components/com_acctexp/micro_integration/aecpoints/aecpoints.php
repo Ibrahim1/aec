@@ -187,4 +187,3 @@ class mi_aecpoints extends MI
 		$request->metaUser->meta->storeload();
 	}
 }
-?>

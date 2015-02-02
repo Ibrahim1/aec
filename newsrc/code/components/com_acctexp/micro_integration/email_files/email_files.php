@@ -206,4 +206,3 @@ class mi_email_files
 		return true;
 	}
 }
-?>

@@ -156,5 +156,3 @@ class displayPipeline extends serialParamDBTable
 		}
 	}
 }
-
-?>

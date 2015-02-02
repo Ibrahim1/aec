@@ -79,5 +79,3 @@ $eucaInstalldb->dropColifExists( 'on_userchange', 'microintegrations' );
 $eucaInstalldb->dropColifExists( 'pre_exp_check', 'microintegrations' );
 
 */
-
-?>

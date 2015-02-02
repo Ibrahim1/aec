@@ -114,5 +114,3 @@ if ( ( $procnum > 20 ) && ( $plannum > 0 ) ) {
 }
 
 $eucaInstalldb->addColifNotExists( 'hidden', "int(4) NOT NULL default '0'", 'microintegrations' );
-
-?>

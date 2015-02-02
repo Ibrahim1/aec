@@ -32,7 +32,7 @@ class processor_smscoin extends POSTprocessor
 		$settings['password']		= '1234';
 		$settings['s_clear_amount']	= '0';
 		$settings['s_description']	= 'Payout';
-	
+
 		return $settings;
 	}
 
@@ -67,11 +67,11 @@ class processor_smscoin extends POSTprocessor
 		$var['s_clear_amount']	= $this->settings['s_clear_amount'];
 		$var['s_description']	= AECToolbox::rewriteEngineRQ( $this->settings['s_description'], $request );
 
-		$var['s_sign']			= $this->ref_sign(	$var['s_purse'], 
-													$var['s_order_id'], 
-													$var['s_amount'], 
+		$var['s_sign']			= $this->ref_sign(	$var['s_purse'],
+													$var['s_order_id'],
+													$var['s_amount'],
 													$var['s_clear_amount'],
-													$var['s_description'], 
+													$var['s_description'],
 													$this->settings['password']
 												);
 		return $var;
@@ -114,5 +114,3 @@ class processor_smscoin extends POSTprocessor
 	}
 
 }
-
-?>

@@ -309,4 +309,3 @@ class processor_paypal extends POSTprocessor
 	}
 
 }
-?>

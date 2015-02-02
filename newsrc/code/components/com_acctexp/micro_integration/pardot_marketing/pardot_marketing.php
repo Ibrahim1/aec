@@ -427,5 +427,3 @@ class PardotConnector extends serialParamDBTable
 		return simplexml_load_string( $response );
 	}
 }
-
-?>

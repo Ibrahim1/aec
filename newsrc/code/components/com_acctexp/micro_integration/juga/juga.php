@@ -239,4 +239,3 @@ class mi_juga
 		return true;
 	}
 }
-?>

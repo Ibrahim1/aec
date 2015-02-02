@@ -75,5 +75,3 @@ function com_uninstall()
 
 	return true;
 }
-
-?>

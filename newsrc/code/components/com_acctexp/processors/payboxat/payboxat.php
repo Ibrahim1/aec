@@ -136,4 +136,3 @@ class processor_payboxat extends SOAPprocessor
 		return $return;
 	}
 }
-?>

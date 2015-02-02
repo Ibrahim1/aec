@@ -12,7 +12,7 @@
 defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 
 define( '_AEC_VERSION', '1.2' );
-define( '_AEC_REVISION', '6600' );
+define( '_AEC_REVISION', '6601' );
 
 include_once( JPATH_SITE . '/components/com_acctexp/lib/compat.php' );
 
@@ -49,5 +49,3 @@ global $aecConfig;
 if ( !is_object( $aecConfig ) ) {
 	$aecConfig = new aecConfig();
 }
-
-?>

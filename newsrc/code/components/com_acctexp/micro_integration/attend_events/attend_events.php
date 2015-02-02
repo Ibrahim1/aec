@@ -48,4 +48,3 @@ class mi_attend_events
 		return true;
 	}
 }
-?>

@@ -161,5 +161,3 @@ class aecTempToken extends serialParamDBTable
 		return parent::delete($pk);
 	}
 }
-
-?>

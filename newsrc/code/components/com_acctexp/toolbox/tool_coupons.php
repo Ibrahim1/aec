@@ -84,4 +84,3 @@ class tool_coupons
 	}
 
 }
-?>

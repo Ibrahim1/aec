@@ -208,4 +208,3 @@ class languageFileHandler
 		return $array;
 	}
 }
-?>

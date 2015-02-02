@@ -227,4 +227,3 @@ class mi_supporttimetracker extends MI
 		$metaUser->meta->storeload();
 	}
 }
-?>

@@ -235,4 +235,3 @@ class tool_minireport
 	}
 
 }
-?>

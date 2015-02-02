@@ -203,5 +203,3 @@ class AECMI_pinstore extends serialParamDBTable {
 		return $this->load( $db->loadResult() );
 	}
 }
-
-?>

@@ -280,4 +280,3 @@ class apachepw extends serialParamDBTable
 		return $db->loadResult();
 	}
 }
-?>

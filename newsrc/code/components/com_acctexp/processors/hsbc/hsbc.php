@@ -509,5 +509,3 @@ class processor_hsbc extends XMLprocessor
 	}
 
 }
-
-?>

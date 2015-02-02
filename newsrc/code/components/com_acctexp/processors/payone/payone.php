@@ -237,4 +237,3 @@ class processor_payone extends XMLprocessor
 		return md5( implode( '', $data ) . $this->settings['key'] );
 	}
 }
-?>

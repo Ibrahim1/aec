@@ -1210,5 +1210,3 @@ function aecErrorAlert( $text, $action='window.history.go(-1);', $mode=1 )
 }
 
 function aecNotAuth() { getView( 'access_denied' ); }
-
-?>

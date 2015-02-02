@@ -102,4 +102,3 @@ class mi_eventum extends MI
 
 	}
 }
-?>

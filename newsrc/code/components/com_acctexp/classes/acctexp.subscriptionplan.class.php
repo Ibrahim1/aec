@@ -1675,5 +1675,3 @@ class SubscriptionPlan extends serialParamDBTable
 	}
 
 }
-
-?>

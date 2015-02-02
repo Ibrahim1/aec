@@ -163,4 +163,3 @@ class processor_payza extends POSTprocessor
 	}
 
 }
-?>

@@ -45,4 +45,3 @@ class AECexport_xml extends AECexport
 		}
 	}
 }
-?>

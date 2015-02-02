@@ -307,4 +307,3 @@ class processor_google_checkout extends XMLprocessor
 	}
 
 }
-?>

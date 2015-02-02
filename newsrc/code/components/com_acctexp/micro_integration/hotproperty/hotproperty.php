@@ -944,4 +944,3 @@ class aec_hotproperty extends serialParamDBTable
 		$this->granted_listings += $add;
 	}
 }
-?>

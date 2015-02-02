@@ -784,5 +784,3 @@ function unique_id($extra = 'c')
 }
 
 }
-
-?>

@@ -23,4 +23,3 @@ class AECexport_json extends AECexport
 	}
 
 }
-?>

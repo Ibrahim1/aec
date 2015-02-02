@@ -331,5 +331,3 @@ class mi_multiusercreation
 	}
 
 }
-
-?>

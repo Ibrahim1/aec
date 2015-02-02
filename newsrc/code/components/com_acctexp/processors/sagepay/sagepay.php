@@ -177,4 +177,3 @@ class processor_sagepay extends XMLprocessor
 			return $array;
 		}
 }
-?>

@@ -157,4 +157,3 @@ class processor_airtoy extends XMLprocessor
 	}
 
 }
-?>

@@ -427,4 +427,3 @@ aecDebug( $response );
 	}
 
 }
-?>

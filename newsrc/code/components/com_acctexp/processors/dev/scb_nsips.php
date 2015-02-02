@@ -146,4 +146,3 @@ class processor_scb_nsips extends URLprocessor
 	}
 
 }
-?>

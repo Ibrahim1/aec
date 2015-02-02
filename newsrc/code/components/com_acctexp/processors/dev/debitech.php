@@ -63,7 +63,7 @@ class processor_debitech extends POSTprocessor
 		$settings['pageSet']		= 'test';
 		$settings['accountName']	= 'accountname';
 		$settings['method'] 		= 'method';
-		
+
 		$settings['currency']		= 'SEK';
 		$settings['lc']				= 'US';
 		$settings['uses3dsecure']	= '0';
@@ -77,19 +77,19 @@ class processor_debitech extends POSTprocessor
 	function backend_settings()
 	{
 		global $mosConfig_live_site;
-	
+
 		$settings = array();
 		$rewriteswitches			= array( 'cms', 'user', 'expiration', 'subscription', 'plan', 'invoice' );
-		
+
 		$settings['testmode']		= array( 'toggle' );
 		$settings['pageSet']		= array( 'inputC', 'PageSet *', 'PageSet' );;
 		$settings['accountName']	= array( 'inputC', 'Account Name *', 'Account Name' );;
-		$settings['uses3dsecure'] 	= array( 'toggle', '3-D Secure', '3-D Secure is MasterCard\'s and VISA\'s way of securing e-commerce credit card payment' );		
+		$settings['uses3dsecure'] 	= array( 'toggle', '3-D Secure', '3-D Secure is MasterCard\'s and VISA\'s way of securing e-commerce credit card payment' );
 		$settings['method']			= array( "inputC", 'Payment method (option)', 'Default cc.nw: American Express via TNS/American Express. Reference information at DebiTech Web Solution Manual - page 8');
 
 
 		$settings['currency']		= array( 'list_currency' );
-		$settings['lc']				= array( 'list_language', 'Language' );		
+		$settings['lc']				= array( 'list_language', 'Language' );
 		$settings['item_name']		= array( 'inputE' );
 		$settings['rewriteInfo']	= array( 'fieldset', _AEC_MI_REWRITING_INFO, AECToolbox::rewriteEngineInfo( $rewriteswitches ) );
 
@@ -102,15 +102,15 @@ class processor_debitech extends POSTprocessor
 
 		// system parameters
 		$var['post_url']			= 'https://secure.incab.se/verify/bin/'.$this->settings['accountName'].'/index';
-		$var['pageSet'] 			= $this->settings['pageSet'] ;		
+		$var['pageSet'] 			= $this->settings['pageSet'] ;
 		$var['test'] 				= $this->settings['testmode'] ;
 		$var['method'] 				= $this->settings['method'] ;
 		$var['uses3dsecure'] 		= 'true' ;
-		
+
 		// order parameters
-		$var['currency']			= $this->settings['currency'];	
-		$var['separator']			= "|";	
-				
+		$var['currency']			= $this->settings['currency'];
+		$var['separator']			= "|";
+
 		// consumer data
 		$var['userid'] 				=	$request->metaUser->cmsUser->id;
 		$var['billingFirstName'] 	=	$request->metaUser->cmsUser->username;
@@ -121,20 +121,20 @@ class processor_debitech extends POSTprocessor
 		$var['billingCity'] 		=	$request->metaUser->cmsUser->cb_city;
 		$var['billingCountry'] 		=	$request->metaUser->cmsUser->cb_country;
 		$var['billingAddress'] 		=	$request->metaUser->cmsUser->cb_address;
-		
+
 		// invoice information
 		$var['invoiceNo']			= $request->int_var['invoice'];
 		$var['customerNo']			= $request->metaUser->cmsUser->id;
-		
-		//payMethodID				
+
+		//payMethodID
 		$var['Amount']				= number_format($request->int_var['amount'], 0);
 		$var['OrderId']				= $request->new_subscription->id;
-		
-		
+
+
 		// data parameters
-		$var['data']	= "1|" 
+		$var['data']	= "1|"
 						. AECToolbox::rewriteEngine( $this->settings['item_name'], $request->metaUser, $request->new_subscription, $request->invoice )
-						."|1|" . $request->int_var['amount'] * 100 ."|";		
+						."|1|" . $request->int_var['amount'] * 100 ."|";
 
 		// Security key
 		$secretKey = "1010101010101010101010101010101010";
@@ -174,7 +174,7 @@ class processor_debitech extends POSTprocessor
 
 		return $response;
 	}
-	
+
 	function validateNotification( $response, $post, $invoice )
 	{
 		$response['valid'] = $post['valid'] == "1" ? true : false;
@@ -206,4 +206,3 @@ class processor_debitech extends POSTprocessor
 		return $response;
 	}
 }
-?>

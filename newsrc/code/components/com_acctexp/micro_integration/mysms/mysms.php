@@ -69,4 +69,3 @@ class mi_mysms
 		return true;
 	}
 }
-?>

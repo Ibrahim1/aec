@@ -105,4 +105,3 @@ class processor_moneyproxy extends POSTprocessor
 	}
 
 }
-?>

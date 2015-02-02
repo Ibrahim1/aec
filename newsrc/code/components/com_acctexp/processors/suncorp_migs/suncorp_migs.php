@@ -165,4 +165,3 @@ class processor_suncorp_migs extends URLprocessor
 		}
 	}
 }
-?>

@@ -308,4 +308,3 @@ class mi_virtuemart
 		return $inum;
 	}
 }
-?>

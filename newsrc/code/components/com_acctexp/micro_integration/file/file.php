@@ -61,4 +61,3 @@ class mi_file extends MI
 		return fclose( $file );
 	}
 }
-?>

@@ -91,4 +91,3 @@ class mi_aecinvoiceprintmod
 		return true;
 	}
 }
-?>

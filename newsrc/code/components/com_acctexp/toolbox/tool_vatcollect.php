@@ -220,4 +220,3 @@ class tool_vatcollect
 	}
 
 }
-?>

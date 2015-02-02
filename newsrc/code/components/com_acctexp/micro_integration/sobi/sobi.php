@@ -112,5 +112,3 @@ class mi_sobi extends MI
 		}
 	}
 }
-
-?>

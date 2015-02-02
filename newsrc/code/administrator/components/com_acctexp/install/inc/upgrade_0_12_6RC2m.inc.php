@@ -54,4 +54,3 @@ foreach ( $entries as $eid ) {
 	$meta->check();
 	$meta->store();
 }
-?>

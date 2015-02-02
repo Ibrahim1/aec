@@ -490,4 +490,3 @@ class docman_restriction extends serialParamDBTable {
 		$this->granted_downloads += $add;
 	}
 }
-?>

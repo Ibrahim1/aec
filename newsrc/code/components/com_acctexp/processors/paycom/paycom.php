@@ -122,4 +122,3 @@ class processor_paycom extends POSTprocessor
 	}
 
 }
-?>

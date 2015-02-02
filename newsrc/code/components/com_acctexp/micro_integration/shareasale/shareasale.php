@@ -94,4 +94,3 @@ class mi_shareasale
 	}
 
 }
-?>

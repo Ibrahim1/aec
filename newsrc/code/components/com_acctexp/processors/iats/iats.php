@@ -390,5 +390,3 @@ aecDebug($iatsReturn);
 	}
 
 }
-
-?>

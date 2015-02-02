@@ -255,5 +255,3 @@ class mi_jnews
 	}
 
 }
-
-?>

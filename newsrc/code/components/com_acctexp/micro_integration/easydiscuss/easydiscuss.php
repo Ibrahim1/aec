@@ -200,5 +200,3 @@ class mi_easydiscuss extends MI
 	}
 
 }
-
-?>

@@ -173,4 +173,3 @@ $body = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/env
 	}
 
 }
-?>

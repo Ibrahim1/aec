@@ -182,4 +182,3 @@ class processor_mollie_ideal extends XMLprocessor
 		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );
 	}
 }
-?>

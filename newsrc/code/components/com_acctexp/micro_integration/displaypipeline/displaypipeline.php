@@ -55,5 +55,3 @@ class mi_displaypipeline
 	}
 
 }
-
-?>

@@ -124,5 +124,3 @@ class processor_worldpay_futurepay extends POSTprocessor
 	}
 
 }
-
-?>

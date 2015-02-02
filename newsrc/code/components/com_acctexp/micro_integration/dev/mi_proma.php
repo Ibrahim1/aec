@@ -108,5 +108,3 @@ class mi_proma
 		}
 	}
 }
-
-?>

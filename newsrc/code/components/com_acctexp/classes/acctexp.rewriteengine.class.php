@@ -1073,5 +1073,3 @@ class reWriteEngine
 	}
 
 }
-
-?>

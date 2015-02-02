@@ -181,4 +181,3 @@ class processor_realex_remote extends XMLprocessor
 				);
 	}
 }
-?>

@@ -520,5 +520,3 @@ class processor_fastcharge extends XMLprocessor
 	}
 
 }
-
-?>

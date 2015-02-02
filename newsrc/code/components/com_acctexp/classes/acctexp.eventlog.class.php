@@ -113,5 +113,3 @@ class eventLog extends serialParamDBTable
 	}
 
 }
-
-?>

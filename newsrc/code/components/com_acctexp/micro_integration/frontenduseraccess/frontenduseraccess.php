@@ -239,5 +239,3 @@ class mi_frontenduseraccess
 	}
 
 }
-
-?>

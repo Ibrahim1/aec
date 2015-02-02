@@ -150,4 +150,3 @@ class mi_idevaffiliate
 		return $rooturl;
 	}
 }
-?>

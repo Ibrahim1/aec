@@ -214,5 +214,3 @@ class processor_systempay extends POSTprocessor
 	}
 
 }
-
-?>

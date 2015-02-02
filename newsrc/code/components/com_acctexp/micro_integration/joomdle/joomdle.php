@@ -84,5 +84,3 @@ class mi_joomdle
 		require_once(JPATH_ADMINISTRATOR.'/components/com_joomdle/helpers/content.php');
 	}
 }
-
-?>

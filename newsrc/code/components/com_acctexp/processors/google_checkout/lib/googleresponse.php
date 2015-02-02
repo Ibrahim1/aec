@@ -184,10 +184,10 @@
         echo $msg;
       }
     }
-    
+
     /**
      * Send an acknowledgement in response to Google Checkout's request
-     * @param string $serial serial number of notification for acknowledgement 
+     * @param string $serial serial number of notification for acknowledgement
      */
     function SendAck($serial=null, $die=true) {
       $this->SendOKStatus();
@@ -196,7 +196,7 @@
                         $this->schema_url . "\"";
       if(isset($serial)) {
         $acknowledgment .=" serial-number=\"" . $serial."\"";
-      }                  
+      }
       $acknowledgment .= " />";
       $this->log->LogResponse($acknowledgment);
       if($die) {
@@ -222,4 +222,3 @@
       return array($this->root, $this->data);
     }
   }
-?>

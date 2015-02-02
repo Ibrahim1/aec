@@ -140,5 +140,3 @@ class logHistory extends serialParamDBTable
 		$this->store();
 	}
 }
-
-?>

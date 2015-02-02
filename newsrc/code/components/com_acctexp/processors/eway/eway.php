@@ -114,4 +114,3 @@ class processor_eway extends POSTprocessor
 	}
 
 }
-?>

@@ -18,7 +18,7 @@ foreach ( $ktables as $table ) {
 
 	$db->setQuery("SHOW INDEXES FROM #__acctexp_" . $table . "");
 	$kentries = $db->loadObjectList();
-	
+
 	foreach ( $kentries as $kentry ) {
 		// Whoopsie! Let's get rid of potentially dozens of entries
 		if ( strpos( $kentry->Key_name, 'userid' ) !== false ) {
@@ -40,5 +40,3 @@ foreach ( $ktables as $table ) {
 		}
 	}
 }
-
-?>

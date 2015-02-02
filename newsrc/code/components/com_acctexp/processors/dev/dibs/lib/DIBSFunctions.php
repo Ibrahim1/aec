@@ -10,8 +10,8 @@ Version 1.8 (Oct 2008)
 
 Changes from Version 1.7
      - the calculation of MD5 key in DIBSRefund has been corrected, as it previously added the variables in the wrong order resulting in a wrong key.
-Changes from Version 1.6 
-     - clean up of the documentation 
+Changes from Version 1.6
+     - clean up of the documentation
      - check on params not to contain any &'s
      - test parameter is set in the input rather than hardcoded
 Changes from Version 1.5
@@ -32,12 +32,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 
-Please note the following:                                                                   
-- a basic understanding of PHP and the DIBS API is compulsary to employ these functions       
+Please note the following:
+- a basic understanding of PHP and the DIBS API is compulsary to employ these functions
 - Your server/PHP MUST be compiled with (open-)ssl to enable server-to-server https requests
-- DIBS internet payment gateway is NOT a free service and this set of functions is pretty useless   
-  without a suitable DIBS account - please see www.dibs.dk for further information           
-- read (and understand) the DIBS API documentation before asking any questions.   
+- DIBS internet payment gateway is NOT a free service and this set of functions is pretty useless
+  without a suitable DIBS account - please see www.dibs.dk for further information
+- read (and understand) the DIBS API documentation before asking any questions.
 - These functions employs the DIBS API in its (almost) simplest form
   several other parameters/options are available in the DIBS API.
   If you wish to send more parameters to the DIBS API through the server-to-server https requests.
@@ -58,37 +58,37 @@ Acknowledgements:
 DESCRIPTION OF THE FUNCTIONS
 
 FUNCTIONS
- DIBSAuth($Merchant,$Amount,$Currency,$CardNo,$ExpMon,$ExpYear,$CVC,$OrderID,$postype,$MD5,$test) 
+ DIBSAuth($Merchant,$Amount,$Currency,$CardNo,$ExpMon,$ExpYear,$CVC,$OrderID,$postype,$MD5,$test)
   Authorisation of creditcard and payment
 
- DIBSCapt($Merchant,$Amount,$Transact,$OrderID,$test) 
+ DIBSCapt($Merchant,$Amount,$Transact,$OrderID,$test)
   Capture already authorised payment
 
- DIBSTicketPreAuth($Merchant,$Currency,$CardNo,$ExpMon,$ExpYear,$CVC,$OrderID,$test) 
-  Ticket pre-authorisation 
+ DIBSTicketPreAuth($Merchant,$Currency,$CardNo,$ExpMon,$ExpYear,$CVC,$OrderID,$test)
+  Ticket pre-authorisation
 
- DIBSTicketAuth($Merchant,$Ticket,$Amount,$Currency,$OrderID,$MD5,$test) 
+ DIBSTicketAuth($Merchant,$Ticket,$Amount,$Currency,$OrderID,$MD5,$test)
   Ticket payment authorisation
 
- DIBSReAuth($Merchant,$Transact) 
+ DIBSReAuth($Merchant,$Transact)
   Reauhtorise a creditcard/payment
 
- DIBSCancel($Merchant,$Transact,$OrderID) 
+ DIBSCancel($Merchant,$Transact,$OrderID)
   Truely cancels and authorised transaction.
 
- DIBSTransInfo($OrderID,$Merchant,$Currency,$Amount) 
+ DIBSTransInfo($OrderID,$Merchant,$Currency,$Amount)
   Returns the status for a particular order
 
- DIBSTransStat($OrderID,$Merchant,$Transact,$Currency,$Amount) 
+ DIBSTransStat($OrderID,$Merchant,$Transact,$Currency,$Amount)
   Returns the status for a particular transaction
 
- DIBSTransAmount($Transact,$OrderID,$Merchant,$Currency) 
+ DIBSTransAmount($Transact,$OrderID,$Merchant,$Currency)
   Returns the amount on an authorised transaction
 
  DIBSPayInfo($Transact,$Auth)
   Returns the amount, currency, orderid, status, transact, and approvalcode for a transaction
 
- DIBSChangeStatus($Merchant,$Amount,$Transact,$Action,$Auth) 
+ DIBSChangeStatus($Merchant,$Amount,$Transact,$Action,$Auth)
   Change the status of a transaction, e.g. canceled (see API dcoumentation for other options)
 
  DIBSCardType($Merchant,$Transact)
@@ -104,8 +104,8 @@ FUNCTIONS
 
 INPUTS
   $MerchantID - a unique DIBS merchant identification number
-  $Amount - the amount to be drawn on the creditcard 
-    (always in smallest possible unit, e.g. øre when using DKK)
+  $Amount - the amount to be drawn on the creditcard
+    (always in smallest possible unit, e.g. ï¿½re when using DKK)
   $Currency - currency code senso ISO4217, e.g. 208 for DKK
   $CardNo - creditcard number
   $ExpMon - expiry month
@@ -113,8 +113,8 @@ INPUTS
   $CVC - control numbers
   $OrderID - a unique order identification number
   $Transact - unique transaction identification as returned by DIBSAuth for successfull authorisations
-  $Ticket - ticket identification as returned by DIBSTicketPreAuth for a successfull pre-authorisation 
-  $Auth - basic authentication information (ie. DIBS login and password), 
+  $Ticket - ticket identification as returned by DIBSTicketPreAuth for a successfull pre-authorisation
+  $Auth - basic authentication information (ie. DIBS login and password),
     Where: $Auth['username'] = DIBSuser, $Auth['password'] = DIBSUserPassword
   $Action - which action to do when using DIBSChangeStatus
   $postype - point-of-sale - optional (default ssl), it determines the postype used (ssl, phone, mail)
@@ -136,7 +136,7 @@ OUTPUT
 
 
 /*-------------------------------------------------------------------------------------*/
-//!A function for asking DIBS for authorisation of a creditcard payment 
+//!A function for asking DIBS for authorisation of a creditcard payment
 function DIBSAuth($Merchant,$Amount,$Currency,$CardNo,$ExpMon,$ExpYear,$CVC,$OrderID,$postype="ssl",$MD5="",$test="no") {
 
   //Set up post-variable string
@@ -160,7 +160,7 @@ function DIBSAuth($Merchant,$Amount,$Currency,$CardNo,$ExpMon,$ExpYear,$CVC,$Ord
 
   //Add testvar if "yes"
   if ( $test == "yes" ) {
-    $postvars .= "&test=yes"; 
+    $postvars .= "&test=yes";
   }
 
   //Send post request
@@ -178,7 +178,7 @@ function DIBSAuth($Merchant,$Amount,$Currency,$CardNo,$ExpMon,$ExpYear,$CVC,$Ord
       $AuthInfo[$A[0]] = $A[1];
     }
   }
-  
+
   //Check that the returned MD5 key is correct
   if ( $AuthInfo['authkey'] <> "" ) {
     $vars = "transact=".$AuthInfo['transact']."&amount=".$Amount."&currency=".$Currency;
@@ -208,15 +208,15 @@ function DIBSCapt($Merchant,$Amount,$Transact,$OrderID,$MD5,$test="no") {
     $md5Key = md5($MD5['K2'].md5($MD5['K1'].$postvars));
     $postvars .= "&md5key=".$md5Key;
   }
-  
+
   $postvars .= "&textreply=yes";
   $postvars .= "&force=true";
 
   //Add testvar if "yes"
   if ( $test == "yes" ) {
-    $postvars .= "&test=yes"; 
+    $postvars .= "&test=yes";
   }
-  
+
   //Send post request
   $response = http_post('payment.architrade.com','/cgi-bin/capture.cgi', $postvars );
 
@@ -236,7 +236,7 @@ function DIBSCapt($Merchant,$Amount,$Transact,$OrderID,$MD5,$test="no") {
       }
     }
   }
-  
+
   return $CaptInfo;
 }
 /*-------------------------------------------------------------------------------------*/
@@ -258,7 +258,7 @@ function DIBSTicketPreAuth($Merchant,$Currency,$CardNo,$ExpMon,$ExpYear,$CVC,$Or
 
   //Add testvar if "yes"
   if ( $test == "yes" ) {
-    $postvars .= "&test=yes"; 
+    $postvars .= "&test=yes";
   }
 
   //Send post request
@@ -300,10 +300,10 @@ function DIBSTicketAuth($Merchant,$Ticket,$Amount,$Currency,$OrderID,$MD5="",$te
 
   //Add testvar if "yes"
   if ( $test == "yes" ) {
-    $postvars .= "&test=yes"; 
+    $postvars .= "&test=yes";
   }
   $postvars .= "&textreply=yes";
- 
+
   //Send post request
   $response = http_post('payment.architrade.com','/cgi-ssl/ticket_auth.cgi', $postvars );
 
@@ -312,7 +312,7 @@ function DIBSTicketAuth($Merchant,$Ticket,$Amount,$Currency,$OrderID,$MD5="",$te
   $N = count($response);
   if ( $N < 2 ) { //Response is an error
     $AuthInfo = false;
-  } else { 
+  } else {
     $AuthInfo = array(); //Define output array
     while ( $N-- > 0 ) {
       $A = explode("=",$response[$N]);
@@ -341,7 +341,7 @@ function DIBSReAuth($Merchant,$Transact) {
   $N = count($response);
   if ( $N < 2 ) { //Response is an error
     $CaptInfo = false;
-  } else { 
+  } else {
     $CaptInfo = array(); //Define output array
     while ( $N-- > 0 ) {
       $A = explode("=",$response[$N]);
@@ -371,7 +371,7 @@ function DIBSCancel($Merchant,$Transact,$OrderID,$Auth) {
   $N = count($response);
   if ( $N < 2 ) { //Response is an error
     $CaptInfo = false;
-  } else { 
+  } else {
     $CaptInfo = array(); //Define output array
     while ( $N-- > 0 ) {
       $A = explode("=",$response[$N]);
@@ -580,7 +580,7 @@ function DIBSRefund($Merchant,$Amount,$Currency,$Transact,$OrderID,$Auth,$MD5=""
 
   $postvars .= "&currency=".parmchk($Currency);
   $postvars .= "&textreply=yes";
-  
+
   //Send post request
   $response = http_post("payment.architrade.com","/cgi-adm/refund.cgi", $postvars, $Auth );
 
@@ -605,36 +605,36 @@ function DIBSRefund($Merchant,$Amount,$Currency,$Transact,$OrderID,$Auth,$MD5=""
 function http_post($host, $path, $data, $auth="") {
 
   $sock = fsockopen("ssl://".$host, 443, $errno, $errstr, 30);
-  if (!$sock) die("$errstr ($errno)\n");  
-  
+  if (!$sock) die("$errstr ($errno)\n");
+
   fwrite($sock, "POST ".$path." HTTP/1.0\r\n");
   fwrite($sock, "Host: ".$host."\r\n");
   fwrite($sock, "Content-type: application/x-www-form-urlencoded\r\n");
   fwrite($sock, "Content-length: " . strlen($data) . "\r\n");
-  fwrite($sock, "User-Agent: AEC Payment Processor for DIBS v1.0 \r\n"); 
+  fwrite($sock, "User-Agent: AEC Payment Processor for DIBS v1.0 \r\n");
 
   //If basic authentication is required (e.g. payinfo.cgi, changestatus.cgi and refund.cgi)
   if ( is_array($auth) ) {
     fwrite($sock, "Authorization: Basic ".base64_encode($auth['username'].":".$auth['password'])."\r\n");
   }
-  
+
   fwrite($sock, "Accept: */*\r\n");
   fwrite($sock, "\r\n");
   fwrite($sock, $data."\r\n");
   fwrite($sock, "\r\n");
 
-  //Take out the header first  
+  //Take out the header first
   $headers = "";
   while ( $str = trim(fgets($sock, 4096)) ) {
     $headers .= "$str\n";
   }
-      
+
   //Then collect the body and prepare for returning
   $body = "";
   while ( !feof($sock) ) {
     $body .= fgets($sock, 4096);
-  }  
-  
+  }
+
   fclose($sock);
 
   return $body;
@@ -652,11 +652,11 @@ function parmchk($in) {
 
 	function clean($string,$isXML = true,$length = 255) {
 		$strout = null;
-		
+
 		if (strlen($string) <= $length) {
 			$length = strlen($string);
-		} 
-		
+		}
+
 		for($i = 0; $i < $length; $i ++) {
 			if ($isXML) {
 				switch ($string [$i]) {
@@ -683,7 +683,7 @@ function parmchk($in) {
 			}
 		}
 		return $strout;
-	}	
+	}
 
 	function getCurrency($currency) {
 		$currency_iso4217code=array('AFN'=>'971','ALL'=>'8','AMD'=>'51','ANG'=>'532','AOA'=>'973','ARS'=>'32','AUD'=>'36','AWG'=>'533','AZN'=>'944','BAM'=>'977',
@@ -701,8 +701,7 @@ function parmchk($in) {
 		'TJS'=>'972','TMM'=>'795','TND'=>'788','TOP'=>'776','TRY'=>'949','TTD'=>'780','TWD'=>'901','TZS'=>'834','UAH'=>'980','UGX'=>'800','USD'=>'840','USS'=>'998',
 		'UYU'=>'858','UZS'=>'860','VEB'=>'862','VND'=>'704','VUV'=>'548','XAF'=>'950','XAG'=>'961','XAU'=>'959','XBA'=>'955','XBB'=>'956','XBC'=>'957','XBD'=>'958',
 		'XCD'=>'951','XDR'=>'960','XOF'=>'952','XPD'=>'964','XPF'=>'953','XPT'=>'962','XTS'=>'963','XXX'=>'999','YER'=>'886','ZAR'=>'710','ZMK'=>'894','ZWD'=>'716');
-		
+
 		$cur = $currency_iso4217code[$currency];
 		return $cur;
 	}
-?>

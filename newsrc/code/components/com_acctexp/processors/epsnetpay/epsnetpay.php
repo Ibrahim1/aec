@@ -249,4 +249,3 @@ class processor_epsnetpay extends POSTprocessor
 	}
 
 }
-?>

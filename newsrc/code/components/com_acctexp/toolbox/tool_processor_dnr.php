@@ -112,4 +112,3 @@ class tool_processor_dnr
 	}
 
 }
-?>

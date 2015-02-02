@@ -341,4 +341,3 @@ class mi_jomsocial extends MI
 		$db->query();
 	}
 }
-?>

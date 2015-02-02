@@ -170,4 +170,3 @@ class mi_phocadownload extends MI
 	}
 
 }
-?>

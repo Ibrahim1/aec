@@ -156,4 +156,3 @@ class mi_rstickets extends MI
 		}
 	}
 }
-?>

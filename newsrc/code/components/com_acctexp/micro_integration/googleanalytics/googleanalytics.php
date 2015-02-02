@@ -149,4 +149,3 @@ class mi_googleanalytics
 		return true;
 	}
 }
-?>

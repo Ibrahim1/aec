@@ -2605,5 +2605,3 @@ class URLprocessor extends processor
 		return $return;
 	}
 }
-
-?>

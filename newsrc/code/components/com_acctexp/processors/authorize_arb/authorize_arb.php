@@ -362,4 +362,3 @@ class processor_authorize_arb extends XMLprocessor
 	}
 
 }
-?>

@@ -113,4 +113,3 @@ class tool_invoicereactivate
 	}
 
 }
-?>

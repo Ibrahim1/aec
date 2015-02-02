@@ -422,5 +422,3 @@ class eucaInstalleditfile extends eucaObject
 	}
 
 }
-
-?>

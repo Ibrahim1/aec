@@ -258,4 +258,3 @@ class processor_payments_gateway extends POSTprocessor
 	}
 
 }
-?>

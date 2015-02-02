@@ -714,5 +714,3 @@ class Subscription extends serialParamDBTable
 		$this->storeload();
 	}
 }
-
-?>

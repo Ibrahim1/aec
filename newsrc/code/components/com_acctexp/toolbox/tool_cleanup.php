@@ -175,4 +175,3 @@ class tool_cleanup
 	}
 
 }
-?>

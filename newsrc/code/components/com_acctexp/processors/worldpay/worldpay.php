@@ -151,5 +151,3 @@ class processor_worldpay extends POSTprocessor
 	}
 
 }
-
-?>

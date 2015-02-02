@@ -1260,5 +1260,3 @@ class AECToolbox
 		return $adminlist;
 	}
 }
-
-?>

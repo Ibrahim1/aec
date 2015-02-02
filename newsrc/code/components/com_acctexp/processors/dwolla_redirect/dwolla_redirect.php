@@ -134,4 +134,3 @@ class processor_dwolla_redirect extends POSTprocessor
 	}
 
 }
-?>

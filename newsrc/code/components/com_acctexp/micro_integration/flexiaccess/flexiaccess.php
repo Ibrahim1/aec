@@ -168,4 +168,3 @@ class mi_flexiaccess
 		return true;
 	}
 }
-?>

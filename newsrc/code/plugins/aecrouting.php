@@ -563,5 +563,3 @@ class plgSystemAECrouting extends JPlugin
 		$app->redirect( AECToolbox::deadsureURL( 'index.php?option=com_acctexp&task=subscribe&aectoken=1', false, true ) );
 	}
 }
-
-?>

@@ -235,5 +235,3 @@ class xJSessionHandlerCommon
 		return $key . "|" . serialize( $data[$key] );
 	}
 }
-
-?>

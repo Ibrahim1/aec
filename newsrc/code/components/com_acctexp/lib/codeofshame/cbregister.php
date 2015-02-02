@@ -126,4 +126,3 @@ function saveRegistrationNOCHECKSLOL( $option ) {
 
 	echo "\n<div>" . implode( "</div>\n<div>", $messagesToUser ) . "</div>\n";
 }
-?>

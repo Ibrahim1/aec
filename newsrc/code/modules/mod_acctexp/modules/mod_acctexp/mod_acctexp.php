@@ -28,7 +28,3 @@ if ( $user->id ) {
 
 	require ( JModuleHelper::getLayoutPath('mod_acctexp', $params->get('layout', 'default')) );
 }
-
-
-
-?>

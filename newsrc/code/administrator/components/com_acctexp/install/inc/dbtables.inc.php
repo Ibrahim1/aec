@@ -335,5 +335,3 @@ $queri[] = 'CREATE TABLE IF NOT EXISTS `#__acctexp_bucket` ('
 . ' PRIMARY KEY (`id`)'
 . ');'
 ;
-
-?>

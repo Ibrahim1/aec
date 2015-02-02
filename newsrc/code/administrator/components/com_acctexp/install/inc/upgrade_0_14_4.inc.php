@@ -32,5 +32,3 @@ if ( is_dir( JPATH_SITE . '/components/com_acctexp/processors/lang' ) ) {
 if ( is_dir( JPATH_SITE . '/administrator/components/com_acctexp/lang' ) ) {
 	eucaInstall::rrmdir( JPATH_SITE . '/administrator/components/com_acctexp/lang' );
 }
-
-?>

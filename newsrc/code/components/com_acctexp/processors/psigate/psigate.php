@@ -122,4 +122,3 @@ class processor_psigate extends POSTprocessor
 		return $response;
 	}
 }
-?>

@@ -217,5 +217,3 @@ class processor_skrill extends POSTprocessor
 	}
 
 }
-
-?>

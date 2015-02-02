@@ -553,5 +553,3 @@ class vbulletinpw extends serialParamDBTable
 		return AECToolbox::randomstring( $length, true );
 	}
 }
-
-?>

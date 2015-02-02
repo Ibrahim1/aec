@@ -171,5 +171,3 @@ class processor_billsafe extends XMLprocessor
 	}
 
 }
-
-?>

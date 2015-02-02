@@ -134,4 +134,3 @@ class processor_allopass extends XMLprocessor
 		return $response;
 	}
 }
-?>

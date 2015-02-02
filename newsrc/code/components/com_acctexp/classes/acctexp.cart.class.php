@@ -768,5 +768,3 @@ class LineItemSubscriptionPlan extends LineItem
 
 	}
 }
-
-?>

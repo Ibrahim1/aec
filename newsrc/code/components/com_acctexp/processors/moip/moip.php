@@ -121,4 +121,3 @@ class processor_moip extends POSTprocessor
 	}
 
 }
-?>

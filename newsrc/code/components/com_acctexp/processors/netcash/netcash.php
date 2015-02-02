@@ -117,4 +117,3 @@ class processor_netcash extends POSTprocessor
 	}
 
 }
-?>

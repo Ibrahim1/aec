@@ -309,5 +309,3 @@ class simplexml {
 		return $this->array2object($this->xml_reorganize($values));
 	}
 }
-
-?>

@@ -49,4 +49,3 @@ if ( strcmp( $result->Field, 'settings' ) !== 0 ) {
 		$errors[] = array( $db->getErrorMsg(), $query );
 	}
 }
-?>

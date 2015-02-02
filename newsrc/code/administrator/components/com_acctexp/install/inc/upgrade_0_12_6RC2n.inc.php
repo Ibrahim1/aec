@@ -114,5 +114,3 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_mi_hotproperty", $tables ) 
 		}
 	}
 }
-
-?>

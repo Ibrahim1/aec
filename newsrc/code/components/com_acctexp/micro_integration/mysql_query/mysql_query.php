@@ -98,4 +98,3 @@ class mi_mysql_query
 	}
 
 }
-?>

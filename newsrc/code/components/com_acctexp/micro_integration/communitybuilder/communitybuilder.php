@@ -142,4 +142,3 @@ class mi_communitybuilder
 	}
 
 }
-?>

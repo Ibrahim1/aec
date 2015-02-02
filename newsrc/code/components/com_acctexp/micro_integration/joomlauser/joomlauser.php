@@ -248,5 +248,3 @@ class mi_joomlauser
 	}
 
 }
-
-?>

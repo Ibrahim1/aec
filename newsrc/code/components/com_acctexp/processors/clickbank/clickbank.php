@@ -223,4 +223,3 @@ class processor_clickbank extends URLprocessor
 		return strtoupper( substr( sha1( mb_convert_encoding(implode( '|', $params ), "UTF-8") ), 0, 8 ) );
 	}
 }
-?>

@@ -869,5 +869,3 @@ class eucaToolbox
 		return file_get_contents( $filename, $content );
 	}
 }
-
-?>

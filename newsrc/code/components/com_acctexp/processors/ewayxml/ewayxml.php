@@ -138,4 +138,3 @@ class processor_ewayxml extends XMLprocessor
 	}
 
 }
-?>

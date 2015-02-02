@@ -1158,6 +1158,7 @@ class HTML_AcctExp
 								<div>
 									<?php HTML_AcctExp::quickiconButton( $linkroot.'showSettings', 'settings', JText::_('AEC_CENTR_SETTINGS') ) ?>
 									<p>Change the way AEC behaves.</p>
+									<br/>
 								</div>
 							</div>
 							<div class="col-sm-12 col-md-6 col-lg-12">

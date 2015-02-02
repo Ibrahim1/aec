@@ -247,4 +247,3 @@ class mi_aecinvoiceprintemail
 		return true;
 	}
 }
-?>

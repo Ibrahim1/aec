@@ -134,4 +134,3 @@ class processor_paycific extends POSTprocessor
 		return !empty($hash) && preg_match('/^[a-f0-9]{32}$/', $hash);
 	}
 }
-?>

@@ -884,4 +884,3 @@ class processor_authorize_cim extends PROFILEprocessor
 	}
 
 }
-?>

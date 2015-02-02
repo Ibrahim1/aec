@@ -85,4 +85,3 @@ class tool_miexport
 	}
 
 }
-?>

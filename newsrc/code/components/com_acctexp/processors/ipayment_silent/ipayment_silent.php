@@ -292,4 +292,3 @@ class processor_ipayment_silent extends XMLprocessor
 	}
 
 }
-?>

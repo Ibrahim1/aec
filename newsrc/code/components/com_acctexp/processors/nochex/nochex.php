@@ -121,5 +121,3 @@ class processor_nochex extends POSTprocessor
 	}
 
 }
-
-?>

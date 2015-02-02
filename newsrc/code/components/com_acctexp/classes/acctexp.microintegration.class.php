@@ -1533,5 +1533,3 @@ class microIntegration extends serialParamDBTable
 		}
 	}
 }
-
-?>

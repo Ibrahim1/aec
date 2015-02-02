@@ -63,5 +63,3 @@ class mi_aecmodifyexpiration
 	}
 
 }
-
-?>

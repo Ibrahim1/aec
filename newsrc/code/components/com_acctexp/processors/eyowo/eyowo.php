@@ -140,4 +140,3 @@ class processor_eyowo extends POSTprocessor
 		return (array) json_decode( $this->transmitRequest( $url, $path ) );
 	}
 }
-?>

@@ -333,4 +333,3 @@ class mi_acl
 		return $sessionextra;
 	}
 }
-?>

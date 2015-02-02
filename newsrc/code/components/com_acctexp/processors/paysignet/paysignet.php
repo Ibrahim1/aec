@@ -77,4 +77,3 @@ class processor_paysignet extends POSTprocessor
 	}
 
 }
-?>

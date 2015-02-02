@@ -257,4 +257,3 @@ class template_etacarinae extends aecTemplate
 		$this->enqueueJQueryCode( $js );
 	}
 }
-?>

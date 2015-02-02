@@ -153,5 +153,3 @@ class processor_paystation extends XMLprocessor
 	}
 
 }
-
-?>

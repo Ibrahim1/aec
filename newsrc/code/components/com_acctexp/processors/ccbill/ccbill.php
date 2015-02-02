@@ -407,4 +407,3 @@ class processor_ccbill extends POSTprocessor
 		}
 	}
 }
-?>

@@ -6815,5 +6815,3 @@ function toolBoxTool( $option, $cmd )
 		HTML_AcctExp::toolBox( $option, $cmd, $return, $info['name'] );
 	}
 }
-
-?>

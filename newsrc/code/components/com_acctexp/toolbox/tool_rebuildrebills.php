@@ -143,4 +143,3 @@ class tool_rebuildrebills
 	}
 
 }
-?>

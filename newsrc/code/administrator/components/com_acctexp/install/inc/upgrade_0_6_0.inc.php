@@ -31,4 +31,3 @@ if ( in_array( $app->getCfg( 'dbprefix' ) . "acctexp_payplans", $tables ) ) {
 		}
 	}
 }
-?>

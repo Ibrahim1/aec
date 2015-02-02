@@ -217,4 +217,3 @@ class processor_2checkout extends POSTprocessor
 	}
 
 }
-?>

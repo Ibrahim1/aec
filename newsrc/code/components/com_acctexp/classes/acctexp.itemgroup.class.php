@@ -775,5 +775,3 @@ class itemXgroup extends serialParamDBTable
 	}
 
 }
-
-?>

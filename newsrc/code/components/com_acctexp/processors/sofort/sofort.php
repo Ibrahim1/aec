@@ -291,4 +291,3 @@ class processor_sofort extends XMLprocessor
 		return $this->transmitRequest( $url, $path, $xml, 443, null, $headers );
 	}
 }
-?>

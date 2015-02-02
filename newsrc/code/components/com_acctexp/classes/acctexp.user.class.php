@@ -1517,5 +1517,3 @@ class metaUserDB extends serialParamDBTable
 		}
 	}
 }
-
-?>

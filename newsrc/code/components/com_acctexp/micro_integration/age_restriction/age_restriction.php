@@ -122,4 +122,3 @@ class mi_age_restriction extends MI
 		return ( ( (int) gmdate('U') ) - strtotime( $bd ) ) / 31536000;
 	}
 }
-?>

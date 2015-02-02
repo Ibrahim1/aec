@@ -89,5 +89,3 @@ class mi_adsmanager extends MI
 	}
 
 }
-
-?>

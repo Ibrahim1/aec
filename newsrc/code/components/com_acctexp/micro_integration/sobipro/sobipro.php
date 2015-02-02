@@ -93,5 +93,3 @@ class mi_sobipro extends MI
 		}
 	}
 }
-
-?>

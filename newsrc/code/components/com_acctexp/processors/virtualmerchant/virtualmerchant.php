@@ -114,4 +114,3 @@ class processor_virtualmerchant extends POSTprocessor
 	}
 
 }
-?>

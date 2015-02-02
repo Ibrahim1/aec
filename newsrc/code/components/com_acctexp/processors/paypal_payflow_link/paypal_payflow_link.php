@@ -119,4 +119,3 @@ class processor_paypal_payflow_link extends POSTprocessor
 	}
 
 }
-?>

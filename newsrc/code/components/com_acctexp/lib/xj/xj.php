@@ -17,5 +17,3 @@ if ( !defined( 'JPATH_MANIFESTS' ) ) {
 		include_once( dirname(__FILE__) . '/ltj30.php' );
 	}
 }
-
-?>

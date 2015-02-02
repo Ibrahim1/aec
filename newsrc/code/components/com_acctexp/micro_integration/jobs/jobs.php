@@ -281,4 +281,3 @@ class mi_jobs
 		return strtolower($string);
 	}
 }
-?>

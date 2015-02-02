@@ -1760,4 +1760,3 @@ class AuthNetCim {
 		}
 	}
 }
-?>

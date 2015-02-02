@@ -393,4 +393,3 @@ if ( $jsonconversion ) {
 
 $eucaInstalldb->dropColifExists( 'used_plans', 'subscr' );
 $eucaInstalldb->dropColifExists( 'previous_plan', 'subscr' );
-?>

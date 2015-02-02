@@ -98,4 +98,3 @@ class processor_viaklix extends POSTprocessor
 	}
 
 }
-?>

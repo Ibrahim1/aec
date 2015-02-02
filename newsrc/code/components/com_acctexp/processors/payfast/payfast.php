@@ -242,4 +242,3 @@ class processor_payfast extends POSTprocessor
 	}
 
 }
-?>

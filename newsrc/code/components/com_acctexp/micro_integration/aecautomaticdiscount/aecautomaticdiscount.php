@@ -71,4 +71,3 @@ class mi_aecautomaticdiscount
 	}
 
 }
-?>

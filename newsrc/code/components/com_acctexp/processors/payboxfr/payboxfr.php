@@ -204,4 +204,3 @@ class processor_payboxfr extends POSTprocessor
 	}
 
 }
-?>

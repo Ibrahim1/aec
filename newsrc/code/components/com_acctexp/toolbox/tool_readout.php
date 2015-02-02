@@ -947,5 +947,3 @@ class aecReadout
 		return array( $dname => $dvalue );
 	}
 }
-
-?>

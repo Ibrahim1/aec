@@ -467,4 +467,3 @@ class mi_aecuserdetails extends MI
 		}
 	}
 }
-?>

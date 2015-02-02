@@ -359,6 +359,3 @@ class xJSessionHandler extends xJSessionHandlerCommon
 	}
 
 }
-
-
-?>

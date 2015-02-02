@@ -40,4 +40,3 @@ class AECexport_test extends AECexport
 	}
 
 }
-?>

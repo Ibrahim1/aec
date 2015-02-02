@@ -420,4 +420,3 @@ class processor_mpay24 extends XMLprocessor
 	}
 
 }
-?>

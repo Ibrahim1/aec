@@ -195,4 +195,3 @@ class mi_quotestream
 		return $pkgs;
 	}
 }
-?>

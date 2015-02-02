@@ -75,4 +75,3 @@ class mi_directory
 	}
 
 }
-?>

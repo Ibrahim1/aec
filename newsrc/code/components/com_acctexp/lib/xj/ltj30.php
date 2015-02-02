@@ -26,5 +26,3 @@ class xJ
 		JUTility::sendMail( $sender, $sender_name, $recipient, $subject, $message, $html, $cc, $bcc, $attach );
 	}
 }
-
-?>

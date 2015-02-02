@@ -143,4 +143,3 @@ class mi_aecplan
 		return true;
 	}
 }
-?>

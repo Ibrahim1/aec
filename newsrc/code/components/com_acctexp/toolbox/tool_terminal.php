@@ -133,4 +133,3 @@ class tool_terminal
 	}
 
 }
-?>

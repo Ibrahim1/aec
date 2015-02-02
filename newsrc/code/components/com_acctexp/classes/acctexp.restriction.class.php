@@ -451,5 +451,3 @@ class aecRestrictionHelper
 		echo '</div>';
 	}
 }
-
-?>

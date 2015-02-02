@@ -111,4 +111,3 @@ $queri[] = "DROP TABLE IF EXISTS #__acctexp_log_authorize";
 $queri[] = "DROP TABLE IF EXISTS #__acctexp_log_vklix";
 
 $eucaInstalldb->multiQueryExec( $queri );
-?>

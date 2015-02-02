@@ -330,4 +330,3 @@ class uddeim_restriction extends serialParamDBTable {
 		$this->granted_messages += $add;
 	}
 }
-?>

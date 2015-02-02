@@ -129,5 +129,3 @@ class tool_dbsearchreplace
 	}
 
 }
-
-?>

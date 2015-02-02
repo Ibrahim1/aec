@@ -204,5 +204,3 @@ class processor_firstdata_connect extends POSTprocessor
 		return hash( 'sha256', $hex_str );
 	}
 }
-
-?>

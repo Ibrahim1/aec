@@ -181,4 +181,3 @@ class mi_acymail extends MI
 
 	}
 }
-?>

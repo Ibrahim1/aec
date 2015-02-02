@@ -32,5 +32,3 @@ if ( !defined( '_EUCA_CFG_LOADED' ) ){
 		require_once( $require_file );
 	}
 }
-
-?>

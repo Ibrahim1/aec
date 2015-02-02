@@ -543,4 +543,3 @@ class tool_pretend
 		return $array;
 	}
 }
-?>

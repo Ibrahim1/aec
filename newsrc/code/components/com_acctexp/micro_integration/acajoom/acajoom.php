@@ -205,5 +205,3 @@ class mi_acajoom
 	}
 
 }
-
-?>

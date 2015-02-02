@@ -419,5 +419,3 @@ class processor_locaweb_pgcerto extends XMLprocessor
 	*/
 	}
 }
-
-?>

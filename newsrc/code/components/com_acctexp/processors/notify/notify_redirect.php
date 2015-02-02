@@ -63,7 +63,7 @@ if ( isset( $_GET['task'] ) ) {
 } else {
 	foreach ( $_GET as $k => $v ) {
 		if ( strpos( $v, 'notification' ) !== false ) {
-			$get['task'] = $v; 
+			$get['task'] = $v;
 		}
 	}
 }
@@ -294,5 +294,3 @@ class bootstrapLoader
 		return $response;
 	}
 }
-
-?>

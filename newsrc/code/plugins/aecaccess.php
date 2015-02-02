@@ -145,5 +145,3 @@ class plgUserAECaccess extends JPlugin
 		}
 	}
 }
-
-?>

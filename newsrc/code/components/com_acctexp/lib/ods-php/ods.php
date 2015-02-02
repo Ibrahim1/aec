@@ -342,5 +342,3 @@ function try_get_temp_dir() {
 	}
 	return $path;
 }
-
-?>

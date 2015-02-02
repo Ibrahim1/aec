@@ -53,7 +53,7 @@ class processor_dibs extends POSTprocessor
 		$settings['md5_key2']			= '--';
 		$settings['payment_methods']	= array( 'ACC' );
 		$settings['currency'] 			= 'DKK';
-		
+
 		$settings['item_name']			= sprintf( JText::_('CFG_PROCESSOR_ITEM_NAME_DEFAULT'), '[[cms_live_site]]', '[[user_name]]', '[[user_username]]' );
 		$settings['customparams']		= "";
 
@@ -118,37 +118,37 @@ class processor_dibs extends POSTprocessor
 		foreach ( $var as $key => $value ) {
 			$return .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
 		}
-		
+
 		$methods = $this->getPaymentMethods();
-		
+
 		foreach ( $methods as $description => $id) {
 			$options[]	= JHTML::_('select.option', htmlspecialchars($id), htmlspecialchars($description) );
-		}		
+		}
 
-		$return .= JText::_('CFG_MULTISAFEPAY_SELECT_GATEWAY') . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $options, 'payment_method', 'size="1"', 'value', 'text', null );		
-		
+		$return .= JText::_('CFG_MULTISAFEPAY_SELECT_GATEWAY') . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $options, 'payment_method', 'size="1"', 'value', 'text', null );
+
 		$return .= "&nbsp;&nbsp;";
-		
+
 		$country_code_list = array ( 'DK', 'GB', 'ES', 'FI', 'FO', 'FR', 'IT', 'NL', 'NO', 'PL', 'SV' );
 		$code_list = array();
 		foreach ( $country_code_list as $country ) {
 			$code_list[] = JHTML::_('select.option', $country, $country . " - " . JText::_( 'COUNTRYCODE_' . $country ) );
 		}
 
-		$return .=  JText::_('CFG_MULTISAFEPAY_SELECT_COUNTRY') . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $code_list, 'delivery03.Country', 'size="1"', 'value', 'text', 'NL' );		
-		
+		$return .=  JText::_('CFG_MULTISAFEPAY_SELECT_COUNTRY') . "&nbsp;&nbsp;" . JHTML::_( 'select.genericlist', $code_list, 'delivery03.Country', 'size="1"', 'value', 'text', 'NL' );
+
 		$return .= '<input type="submit" class="button" id="aec-checkout-btn" ' . $onclick . ' value="' . JText::_('BUTTON_CHECKOUT') . '" />' . "\n";
 		$return .= '</form>' . "\n";
 aecdebug("checkoutAction");aecdebug($return);
 		return $return;
-	}	
+	}
 
 	function createGatewayLink( $request )
 	{
 		require_once('dibs/DIBSFunctions.php');
-		
+
 		$var = array();
-		
+
 		if ($this->settings['testmode']) {
 			$var['test'] = 'yes';
 		}
@@ -157,8 +157,8 @@ aecdebug("checkoutAction");aecdebug($return);
 		$amount		= $request->int_var['amount'] * 100;
 		$currency	= getCurrency($this->settings['currency']);
 		$merchant	= $this->settings['merchant'];
-			
-		$var['post_url']		= 'https://payment.architrade.com/paymentweb/start.action';		
+
+		$var['post_url']		= 'https://payment.architrade.com/paymentweb/start.action';
 		$var['orderid']			= $orderid;
 		$var['merchant']		= $merchant;
 		$var['cancelurl']		= AECToolbox::deadsureURL( 'index.php?option=com_acctexp&amp;task=cancel' );
@@ -167,8 +167,8 @@ aecdebug("checkoutAction");aecdebug($return);
 		$var['delivery01.Firstname']	= trim($request->metaUser->cmsUser->username);
 		$var['delivery02.Lastname']		= trim($request->metaUser->cmsUser->name);
 		//$var['delivery03.Country'] 		= trim("");
-		$var['delivery04.Email']		= trim($request->metaUser->cmsUser->email);	
-		
+		$var['delivery04.Email']		= trim($request->metaUser->cmsUser->email);
+
 		$var['ordline0-1'] = 'Subscription';
 		$var['ordline0-2'] = 'Description';
 		$var['ordline0-3'] = 'Amount';
@@ -188,8 +188,8 @@ aecdebug("checkoutAction");aecdebug($return);
 							. '&currency=' . $currency
 							. '&amount=' . $amount)
 					);
-		
-		$var["md5key"] = $md5key;		
+
+		$var["md5key"] = $md5key;
 aecdebug("createGatewayLink");aecdebug($var);
 		return $var;
 	}
@@ -206,11 +206,11 @@ aecdebug("createGatewayLink");aecdebug($var);
 	function validateNotification( $response, $post, $invoice )
 	{aecdebug("validateNotification");aecdebug($response);
 		require_once('dibs/DIBSFunctions.php');
-		
+
 		$response['valid'] = false;
-		
-		$transInfo = DIBSTransInfo( $response['orderid'], 
-									$this->settings['merchant'], 
+
+		$transInfo = DIBSTransInfo( $response['orderid'],
+									$this->settings['merchant'],
 									$this->settings['currency'],
 									$response['amount'] );
 
@@ -218,8 +218,8 @@ aecdebug("createGatewayLink");aecdebug($var);
 
 		return $response;
 	}
-	
-	function getPaymentMethods() 
+
+	function getPaymentMethods()
 	{
 		return array(	'ABN AMRO iDeal Payment' => 'ABN',
 						'Accept card' => 'ACCEPT',
@@ -307,9 +307,7 @@ aecdebug("createGatewayLink");aecdebug($var);
 						'Toys R Us - BestCard' => 'TUBC',
 						'VEKO Finans' => 'VEKO',
 						'VISA' => 'VISA'
-						);		
+						);
 	}
 
 }
-
-?>

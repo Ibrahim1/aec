@@ -16,4 +16,3 @@ switch ( strtolower( $task ) ) {
 		// Hi there;
 		break;
 }
-?>

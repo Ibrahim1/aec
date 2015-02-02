@@ -177,4 +177,3 @@ class mi_webex extends MI
 		return $response;
 	}
 }
-?>

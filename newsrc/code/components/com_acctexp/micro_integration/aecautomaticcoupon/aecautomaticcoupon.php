@@ -39,4 +39,3 @@ class mi_aecautomaticcoupon
 	}
 
 }
-?>

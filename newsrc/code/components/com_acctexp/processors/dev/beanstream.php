@@ -165,4 +165,3 @@ class processor_beanstream extends POSTprocessor
 		return $response;
 	}
 }
-?>

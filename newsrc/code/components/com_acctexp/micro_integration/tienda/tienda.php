@@ -99,4 +99,3 @@ class mi_tienda
 		$db->query();
 	}
 }
-?>

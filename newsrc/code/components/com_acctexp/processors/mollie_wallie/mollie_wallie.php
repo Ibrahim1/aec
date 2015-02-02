@@ -148,4 +148,3 @@ class processor_mollie_wallie extends XMLprocessor
 		$this->fileError( $shortdesc . '; Error code: ' . $errorcode . '; Error(s): ' . $errordesc );
 	}
 }
-?>

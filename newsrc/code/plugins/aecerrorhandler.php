@@ -137,5 +137,3 @@ class plgSystemAECerrorhandler extends JPlugin
 	}
 
 }
-
-?>

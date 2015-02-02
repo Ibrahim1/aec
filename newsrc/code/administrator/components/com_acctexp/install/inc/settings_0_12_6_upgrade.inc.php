@@ -51,4 +51,3 @@ if ( ( ( strpos( $res, '{' ) === 0 ) || ( strpos( $res, "\n" ) !== false ) ) && 
 	$db->setQuery( $query );
 	$db->query();
 }
-?>

@@ -244,4 +244,3 @@ class processor_netdebit extends URLprocessor
 	}
 
 }
-?>

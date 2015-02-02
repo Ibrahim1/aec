@@ -53,5 +53,3 @@ $eucaInstalldb->dropColifExists( 'ordering', 'coupons_static' );
 $eucaInstalldb->dropColifExists( 'ordering', 'coupons' );
 
 $eucaInstalldb->addColifNotExists( 'restrictions', "text NULL", 'microintegrations' );
-
-?>

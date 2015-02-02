@@ -109,5 +109,3 @@ class mi_joomlaplugin
 		}
 	}
 }
-
-?>

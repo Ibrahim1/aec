@@ -243,4 +243,3 @@ class mi_affiliatepro
 		return $url;
 	}
 }
-?>

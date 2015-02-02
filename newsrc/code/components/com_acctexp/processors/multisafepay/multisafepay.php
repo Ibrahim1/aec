@@ -348,4 +348,3 @@ class processor_multisafepay extends XMLprocessor
 	}
 
 }
-?>

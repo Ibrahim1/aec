@@ -377,5 +377,3 @@ class aecHeartbeat extends serialParamDBTable
 	}
 
 }
-
-?>

@@ -617,5 +617,3 @@ class MCAPI {
         return implode("&", $ret);
     }
 }
-
-?>

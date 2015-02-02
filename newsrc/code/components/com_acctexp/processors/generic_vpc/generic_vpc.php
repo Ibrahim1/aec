@@ -197,4 +197,3 @@ class processor_generic_vpc extends URLprocessor
 		}
 	}
 }
-?>

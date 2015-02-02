@@ -111,4 +111,3 @@ class mi_http_query extends MI
 		return true;
 	}
 }
-?>

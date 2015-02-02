@@ -23,5 +23,3 @@ $task		= trim( aecGetParam( $_REQUEST, 'task', null ) );
 $returntask = trim( aecGetParam( $_REQUEST, 'returntask', null ) );
 
 resolveProxy( $task, $returntask );
-
-?>

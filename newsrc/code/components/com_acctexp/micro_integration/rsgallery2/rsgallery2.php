@@ -260,5 +260,3 @@ class mi_rsgallery2 extends MI
 	}
 
 }
-
-?>

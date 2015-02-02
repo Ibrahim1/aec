@@ -119,4 +119,3 @@ class mi_eventlist extends MI
 	}
 
 }
-?>

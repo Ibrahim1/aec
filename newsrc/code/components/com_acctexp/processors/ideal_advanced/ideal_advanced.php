@@ -928,4 +928,3 @@ class StatusRequest extends IdealRequest
 		return false;
 	}
 }
-?>

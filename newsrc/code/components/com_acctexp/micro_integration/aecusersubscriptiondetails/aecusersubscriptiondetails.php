@@ -57,4 +57,3 @@ class mi_aecusersubscriptiondetails extends mi_aecuserdetails
 			$request->metaUser->focusSubscription->storeload();
 	}
 }
-?>

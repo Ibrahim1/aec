@@ -92,4 +92,3 @@ class processor_mobio extends XMLprocessor {
 	}
 
 }
-?>

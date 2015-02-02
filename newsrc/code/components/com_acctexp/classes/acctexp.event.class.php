@@ -153,5 +153,3 @@ class aecEvent extends serialParamDBTable
 	}
 
 }
-
-?>

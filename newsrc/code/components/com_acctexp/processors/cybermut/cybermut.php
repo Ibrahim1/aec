@@ -212,5 +212,3 @@ class processor_cybermut extends POSTprocessor
 	}
 
 }
-
-?>

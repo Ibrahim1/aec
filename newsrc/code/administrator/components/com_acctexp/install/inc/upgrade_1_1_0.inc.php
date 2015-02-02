@@ -178,5 +178,3 @@ if ( count( $testmis ) > 5 ) {
 		}
 	}
 }
-
-?>

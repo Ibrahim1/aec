@@ -560,5 +560,3 @@ class processor_paypal_payflow extends XMLprocessor
 	}
 
 }
-
-?>

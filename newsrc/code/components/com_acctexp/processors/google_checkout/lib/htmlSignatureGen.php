@@ -1,13 +1,13 @@
 <?php
 /*
  * Copyright (C) 2007 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,7 @@
 	var $merchant_key;
 	var $param_string;
 	var $signature;
-	
+
 	//Parameter names not to be used when generating the signature
 	var $excluded_param_names = array('_charset_', 'analyticsdata', 'urchindata');
 
@@ -37,7 +37,7 @@
 		//Trim white spaces from beginning and end of parameter name and value
 		$param_name = trim($param_name, ' ');
 		$param_value = trim($param_value, ' ');
-		
+
 		if(in_array($param_name, $this->excluded_param_names) == TRUE) {
 			//Ignore this excluded parameter
 		}
@@ -69,7 +69,7 @@
 		);
 		echo $hmac;
 		echo("\n");
-		return $hmac; 
+		return $hmac;
 	}
 
 	//This function generates and returns the signature
@@ -89,4 +89,3 @@
 		return $signature;
 	}
   }
-?>

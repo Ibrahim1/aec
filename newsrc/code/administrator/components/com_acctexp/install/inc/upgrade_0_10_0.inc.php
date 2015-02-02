@@ -259,4 +259,3 @@ if ( $oldplans || in_array( $app->getCfg( 'dbprefix' ) . 'acctexp_config_paypal'
 
 	$eucaInstalldb->multiQueryExec( $queri );
 }
-?>

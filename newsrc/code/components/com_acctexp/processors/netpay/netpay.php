@@ -102,5 +102,3 @@ class processor_netpay extends POSTprocessor
 
 
 }
-
-?>

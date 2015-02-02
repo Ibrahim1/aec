@@ -161,4 +161,3 @@ class processor_alertpay extends POSTprocessor
 	}
 
 }
-?>

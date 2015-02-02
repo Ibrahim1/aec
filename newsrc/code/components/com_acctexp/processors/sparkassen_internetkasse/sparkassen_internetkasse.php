@@ -286,5 +286,3 @@ class processor_sparkassen_internetkasse extends XMLprocessor
 	}
 
 }
-
-?>

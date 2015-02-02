@@ -319,4 +319,3 @@ class processor_paypal_subscription extends POSTprocessor
 	}
 
 }
-?>

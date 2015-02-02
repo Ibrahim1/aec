@@ -464,5 +464,3 @@ class itemCost extends eucaObject
 		}
 	}
 }
-
-?>

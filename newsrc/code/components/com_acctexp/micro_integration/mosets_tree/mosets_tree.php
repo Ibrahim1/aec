@@ -433,4 +433,3 @@ class mosetstree extends serialParamDBTable
 		$this->granted_listings += $add;
 	}
 }
-?>

@@ -173,4 +173,3 @@ class tool_invoicecleanup
 	}
 
 }
-?>

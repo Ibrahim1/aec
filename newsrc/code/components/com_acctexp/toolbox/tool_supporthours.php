@@ -288,4 +288,3 @@ class tool_supporthours
 		return array_merge( tool_supporthours::debtSort($x), array($piv), tool_supporthours::debtSort($y) );
 	}
 }
-?>

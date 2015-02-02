@@ -172,4 +172,3 @@ class processor_authorize extends POSTprocessor
 	}
 
 }
-?>

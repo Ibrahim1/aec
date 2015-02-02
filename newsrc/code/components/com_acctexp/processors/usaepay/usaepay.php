@@ -197,4 +197,3 @@ class processor_usaepay extends XMLprocessor
 	}
 
 }
-?>

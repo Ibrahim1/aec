@@ -113,4 +113,3 @@ class mi_email extends MI
 		return true;
 	}
 }
-?>

@@ -95,4 +95,3 @@ class processor_realex_redirect extends POSTprocessor
 	}
 
 }
-?>

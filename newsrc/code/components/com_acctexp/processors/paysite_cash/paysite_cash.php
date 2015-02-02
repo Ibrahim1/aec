@@ -142,5 +142,3 @@ class processor_paysite_cash extends URLprocessor
 	}
 
 }
-
-?>

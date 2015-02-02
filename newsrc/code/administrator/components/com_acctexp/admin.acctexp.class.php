@@ -1193,5 +1193,3 @@ function arrayValueDefault( $array, $name, $default )
 		return $default;
 	}
 }
-
-?>

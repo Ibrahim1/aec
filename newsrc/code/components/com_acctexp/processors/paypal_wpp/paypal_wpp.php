@@ -825,5 +825,3 @@ class processor_paypal_wpp extends XMLprocessor
 	}
 
 }
-
-?>

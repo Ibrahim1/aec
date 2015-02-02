@@ -298,4 +298,3 @@ if ( !$db->query() ) {
 
 $eucaInstalldb->addColifNotExists( 'level', "int(4) NOT NULL default '2'", 'eventlog' );
 $eucaInstalldb->addColifNotExists( 'notify', "int(1) NOT NULL default '0'", 'eventlog' );
-?>

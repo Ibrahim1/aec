@@ -104,5 +104,3 @@ if (version_compare(phpversion(), '5.0') < 0) {
 		}
 	');
 }
-
-?>

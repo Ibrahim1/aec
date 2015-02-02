@@ -33,5 +33,3 @@ if ( !function_exists( 'json_decode' ) ) {
 	}
 
 }
-
-?>

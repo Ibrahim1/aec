@@ -233,4 +233,3 @@ class htaccess{
 		unlink($this->fHtaccess);
 	}
 }
-?>

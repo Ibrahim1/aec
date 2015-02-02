@@ -321,5 +321,3 @@ class AECMI_raffleuser extends serialParamDBTable {
 		return $this->load( $db->loadResult() );
 	}
 }
-
-?>

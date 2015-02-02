@@ -206,5 +206,3 @@ class processor_epay extends POSTprocessor
 	}
 
 }
-
-?>

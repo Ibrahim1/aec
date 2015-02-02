@@ -112,7 +112,7 @@ $edition_01 = array('quote_01' => "Abandon normal instruments",
 					'quote_111' => "You are an engineer",
 					'quote_112' => "You can only make one dot at a time",
 					'quote_113' => "You don't have to be ashamed of using your own ideas");
-					
+
 $edition_02 = array('quote_01' => "Abandon normal instruments",
 					'quote_02' => "Accept advice",
 					'quote_03' => "Accretion",
@@ -241,7 +241,7 @@ $edition_02 = array('quote_01' => "Abandon normal instruments",
 					'quote_126' => "You are an engineer",
 					'quote_127' => "You can only make one dot at a time",
 					'quote_128' => "You don't have to be ashamed of using your own ideas");
-					
+
 $edition_03 = array('quote_01' => "Abandon normal instruments",
 					'quote_02' => "Accept advice",
 					'quote_03' => "Accretion",
@@ -465,4 +465,3 @@ $edition_04 = array('quote_01' => "Abandon desire",
 					'quote_98' => "Work at a different speed",
 					'quote_99' => "Would anyone want it?",
 					'quote_100' => "Your mistake was a hidden intention");
-?>

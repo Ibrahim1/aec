@@ -180,4 +180,3 @@ class mi_alphauserpoints extends MI
 		$db->query();
 	}
 }
-?>

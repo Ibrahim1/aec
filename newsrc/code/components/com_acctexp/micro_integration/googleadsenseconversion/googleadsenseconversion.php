@@ -79,4 +79,3 @@ class mi_googleadsenseconversion
 		return true;
 	}
 }
-?>

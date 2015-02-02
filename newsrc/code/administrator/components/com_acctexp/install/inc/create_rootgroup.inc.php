@@ -41,5 +41,3 @@ if ( $db->loadResult() != 1 ) {
 		ItemGroupHandler::setChildren( 1, $planlist );
 	}
 }
-
-?>

@@ -60,5 +60,3 @@ class plgUserAECuser extends JPlugin
 	}
 
 }
-
-?>

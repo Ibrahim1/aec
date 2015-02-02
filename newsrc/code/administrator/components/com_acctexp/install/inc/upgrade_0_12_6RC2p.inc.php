@@ -15,5 +15,3 @@ $db->setQuery("ALTER TABLE #__acctexp_invoices CHANGE `coupons` `coupons` text N
 if ( !$db->query() ) {
 	$errors[] = array( $db->getErrorMsg(), $query );
 }
-
-?>

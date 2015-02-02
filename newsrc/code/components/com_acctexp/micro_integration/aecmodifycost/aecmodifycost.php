@@ -266,4 +266,3 @@ class mi_aecmodifycost
 	}
 
 }
-?>

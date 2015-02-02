@@ -167,5 +167,3 @@ class mi_kunena extends MI
 	}
 
 }
-
-?>

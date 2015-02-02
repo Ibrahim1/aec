@@ -130,4 +130,3 @@ class processor_robokassa extends POSTprocessor
 	}
 
 }
-?>

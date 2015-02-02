@@ -158,5 +158,3 @@ class processor_ideal_basic extends POSTprocessor
 	}
 
 }
-
-?>

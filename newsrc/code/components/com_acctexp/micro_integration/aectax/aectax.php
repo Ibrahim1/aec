@@ -717,4 +717,3 @@ class mi_aectax
 		return $locations;
 	}
 }
-?>

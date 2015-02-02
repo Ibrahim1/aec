@@ -4157,5 +4157,3 @@ class Invoice extends serialParamDBTable
 	}
 
 }
-
-?>

@@ -202,5 +202,3 @@ class processor_offline_payment3 extends processor
 	}
 
 }
-
-?>

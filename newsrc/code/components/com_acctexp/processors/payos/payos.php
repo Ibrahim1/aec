@@ -201,4 +201,3 @@ class processor_payos extends URLprocessor
 	}
 
 }
-?>

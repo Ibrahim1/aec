@@ -14,5 +14,3 @@ defined('_JEXEC') or die( 'Direct Access to this location is not allowed.' );
 $eucaInstalldb->addColifNotExists( 'hidden', "int(4) NOT NULL default '0'", 'microintegrations' );
 
 $eucaInstalldb->addColifNotExists( 'restrictions', "text NULL", 'microintegrations' );
-
-?>

@@ -322,4 +322,3 @@ class processor_authorize_aim extends XMLprocessor
 		return $return;
 	}
 }
-?>

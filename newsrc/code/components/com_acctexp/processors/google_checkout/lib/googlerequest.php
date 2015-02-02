@@ -2,25 +2,25 @@
 
 /*
  * Copyright (C) 2007 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  */
 
- /** This class is instantiated everytime any notification or 
+ /** This class is instantiated everytime any notification or
   * order processing commands are received.
-  * 
+  *
   * @version $Id: googlerequest.php 1234 2007-09-25 14:58:57Z ropu $
   * It has a SendReq function to post different requests to the Google Server
   * Send functions are provided for most of the commands that are supported
@@ -28,15 +28,15 @@
   */
   define('PHP_SAMPLE_CODE_VERSION', 'v1.3.0');
   define('ENTER', "\r\n");
-  define('DOUBLE_ENTER', ENTER.ENTER);  
+  define('DOUBLE_ENTER', ENTER.ENTER);
   // Max size of the Google Messsage string
   define('GOOGLE_MESSAGE_LENGTH', 254);
   define('GOOGLE_REASON_LENGTH', 140);
-  
+
   /**
    * Send requests to the Google Checkout server to perform different actions
    */
-  // refer demo/responsehandlerdemo.php for different use case scenarios 
+  // refer demo/responsehandlerdemo.php for different use case scenarios
   class GoogleRequest {
     var $merchant_id;
     var $merchant_key;
@@ -51,14 +51,14 @@
     var $request_diagnose_url;
     var $merchant_checkout;
     var $proxy = array();
-    
+
     var $certPath='';
     var $log;
 
     /**
 		 * @param string $id the merchant id
 		 * @param string $key the merchant key
-		 * @param string $server_type the server type of the server to be used, one 
+		 * @param string $server_type the server type of the server to be used, one
 		 *                            of 'sandbox' or 'production'.
 		 *                            defaults to 'sandbox'
 		 * @param string $currency the currency of the items to be added to the cart
@@ -74,10 +74,10 @@
         $this->server_url = "https://sandbox.google.com/checkout/";
       } else {
         $this->server_url = "https://checkout.google.com/";
-      }  
+      }
 
       $this->schema_url = "http://checkout.google.com/schema/2";
-      $this->base_url = $this->server_url . "api/checkout/v2/"; 
+      $this->base_url = $this->server_url . "api/checkout/v2/";
       $this->request_url = $this->base_url . "request/Merchant/" . $this->merchant_id;
       $this->report_url = $this->base_url . "reports/Merchant/" . $this->merchant_id;
       $this->merchant_checkout = $this->base_url . "merchantCheckout/Merchant/" . $this->merchant_id;
@@ -85,7 +85,7 @@
       ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.'.');
       require_once(dirname(__FILE__).'/googlelog.php');
       $this->log = new GoogleLog('', '', L_OFF);
-      
+
     }
 
     function SetLogFiles($errorLogFile, $messageLogFile, $logLevel=L_ERR_RQST) {
@@ -93,10 +93,10 @@
     }
     /**
      * Submit a SetCertificatePath request.
-     * 
+     *
      * GC Accepted SSL Certs:
      * {@link http://googlecheckoutapi.blogspot.com/2007/07/accepting-50-additional-ssl-root-cas.html}
-     * 
+     *
      * @param string $certPath The name of a file holding one or more certificates
      *  to verify the peer with
      */
@@ -107,31 +107,31 @@
 
     /**
      * Submit a server-to-server request.
-     * 
+     *
      * more info:
      * {@link http://code.google.com/apis/checkout/developer/index.html#alternate_technique}
-     * 
+     *
      * @param string $xml_cart the cart's xml
      * @param bool $die whether to die() or not after performing the request,
      *                  defaults to true
-     * 
-     * @return array with the returned http status code (200 if OK) in index 0 
+     *
+     * @return array with the returned http status code (200 if OK) in index 0
      *               and the redirect url returned by the server in index 1
      */
     function SendServer2ServerCart($xml_cart, $die=true) {
-      list($status, $body) = $this->SendReq($this->merchant_checkout, 
+      list($status, $body) = $this->SendReq($this->merchant_checkout,
                    $this->GetAuthenticationHeaders(), $xml_cart);
       if($status != 200 ){
           return array($status, $body);
       } else {
         require_once(dirname(__FILE__).'/xml-processing/gc_xmlparser.php');
-  
+
         $xml_parser = new gc_xmlparser($body);
         $root = $xml_parser->GetRoot();
         $data = $xml_parser->GetData();
-        
+
         $redirect_url = $data[$root]['redirect-url']['VALUE'];
-        $this->log->logRequest("Redirecting to: ". 
+        $this->log->logRequest("Redirecting to: ".
                         $redirect_url);
         if (strpos($redirect_url, "shoppingcartshoppingcart") != false) {
           $redirect_url = str_replace("shoppingcartshoppingcart","shoppingcart&shoppingcart", $redirect_url);
@@ -145,16 +145,16 @@
         }
       }
     }
-    
+
     /**
      * Send a <charge-order> command to the Google Checkout server
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#charge_order_example}
-     * 
+     *
      * @param string $google_order the google id of the order
-     * @param double $amount the amount to be charged, if empty the whole 
+     * @param double $amount the amount to be charged, if empty the whole
      *                       amount of the order will be charged
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendChargeOrder($google_order, $amount='') {
@@ -166,17 +166,17 @@
                       $amount . "</amount>";
       }
       $postargs .= "</charge-order>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     /**
      * Send a <charge-and-ship-order> command to the Google Checkout server
-     * 
+     *
      * info: {@link http://http://code.google.com/apis/checkout/developer/Google_Checkout_XML_API_Financial_Commands.html#Charge_And_Ship_Order}
-     * 
+     *
      * @param string $google_order the google id of the order
-     * @param double $amount the amount to be charged, if empty the whole 
+     * @param double $amount the amount to be charged, if empty the whole
      *                       amount of the order will be charged
      * @param array  $tracking_data an array of tracking data where the tracking data maps to the carrier
      * @return array the status code and body of the response
@@ -200,23 +200,23 @@
         $postargs .= "</tracking-data-list>";
       }
       $postargs .= "</charge-and-ship-order>";
-      return $this->SendReq($this->request_url, 
+      return $this->SendReq($this->request_url,
                    $this->GetAuthenticationHeaders(), $postargs);
     }
     /**
      * Send a <refund-order> command to the Google Checkout server
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#refund_order_example}
-     * 
+     *
      * @param string $google_order the google id of the order
-     * @param double $amount the amount to be refunded, if empty the whole 
-     *                       amount of the order will be refunded 
+     * @param double $amount the amount to be refunded, if empty the whole
+     *                       amount of the order will be refunded
      * @param string $reason the reason why the refund is taking place
      * @param string $comment a comment about the refund
-     * 
+     *
      * @return array the status code and body of the response
      */
-    function SendRefundOrder($google_order, $amount, $reason, 
+    function SendRefundOrder($google_order, $amount, $reason,
                               $comment='') {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                   <refund-order xmlns=\"".$this->schema_url.
@@ -228,19 +228,19 @@
       }
       $postargs .= "<comment>". htmlentities($comment) . "</comment>
                   </refund-order>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     /**
      * Send a <cancel-order> command to the Google Checkout server
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#refund_order_example}
-     * 
+     *
      * @param string $google_order the google id of the order
      * @param string $reason the reason why the order is being cancelled
      * @param string $comment a comment about the cancellation
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendCancelOrder($google_order, $reason, $comment) {
@@ -251,17 +251,17 @@
                     (substr(htmlentities(strip_tags($reason)),0,GOOGLE_REASON_LENGTH)) .
                   "</reason>
                   <comment>".
-                    (substr(htmlentities(strip_tags($comment)),0,GOOGLE_REASON_LENGTH)) .                   
+                    (substr(htmlentities(strip_tags($comment)),0,GOOGLE_REASON_LENGTH)) .
                   "</comment>
                   </cancel-order>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
-    
+
   /**
      *
-     *Send create-order-recurrence-request to Google CHeckout 
-     * 
+     *Send create-order-recurrence-request to Google CHeckout
+     *
      * @param array $item_arr array of googleitem recurrence items
      * @param string $google_order google id of the order
      * @return array the status code and body of the response
@@ -271,138 +271,138 @@
       <create-order-recurrence-request xmlns=\"".$this->schema_url.
       "\" google-order-number=\"". $google_order. "\">
       <shopping-cart>
-        <items>"; 
-                               
+        <items>";
+
       foreach($item_arr as $item) {
         $postargs .= str_replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>","", $item->GetXML());
       }
-      
+
       $postargs .= "  </items>
                     </shopping-cart>
-                    </create-order-recurrence-request>";                    
+                    </create-order-recurrence-request>";
       return $this->SendReq($this->request_url, $this->GetAuthenticationHeaders(), $postargs);
     }
-     
+
 
     /**
      * Send an <add-tracking-data> command to the Google Checkout server, which
      * will associate a shipper's tracking number with an order.
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#add_tracking_data_example}
-     * 
+     *
      * @param string $google_order the google id of the order
-     * @param string $carrier the carrier, valid values are "DHL", "FedEx", 
+     * @param string $carrier the carrier, valid values are "DHL", "FedEx",
      *                        "UPS", "USPS" and "Other"
-     * @param string $tracking_no the shipper's tracking number 
-     * 
+     * @param string $tracking_no the shipper's tracking number
+     *
      * @return array the status code and body of the response
      */
-    function SendTrackingData($google_order, $carrier, 
+    function SendTrackingData($google_order, $carrier,
                                               $tracking_no) {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-                  <add-tracking-data xmlns=\"". $this->schema_url . 
+                  <add-tracking-data xmlns=\"". $this->schema_url .
                   "\" google-order-number=\"". $google_order . "\">
                   <tracking-data>
                   <carrier>". htmlentities($carrier) . "</carrier>
                   <tracking-number>". $tracking_no . "</tracking-number>
                   </tracking-data>
                   </add-tracking-data>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     /**
      * Send an <add-merchant-order-number> command to the Google Checkout
      * server, which will associate a merchant order number with an order
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#add_merchant_order_number_example}
-     * 
+     *
      * @param string $google_order the google id of the order
      * @param string $merchant_order the merchant id of the order
-     * 
+     *
      * @return array the status code and body of the response
      */
-    function SendMerchantOrderNumber($google_order, 
+    function SendMerchantOrderNumber($google_order,
                                               $merchant_order, $timeout=false) {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-                  <add-merchant-order-number xmlns=\"". $this->schema_url . 
+                  <add-merchant-order-number xmlns=\"". $this->schema_url .
                   "\" google-order-number=\"". $google_order . "\">
-                  <merchant-order-number>" . $merchant_order . 
+                  <merchant-order-number>" . $merchant_order .
                   "</merchant-order-number>
-                  </add-merchant-order-number>";     
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs, $timeout); 
+                  </add-merchant-order-number>";
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs, $timeout);
     }
 
     /**
      * Send a <send-buyer-message> command to the Google Checkout
      * server, which will place a message in the customer's Google Checkout
      * account
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#send_buyer_message_example}
-     * 
+     *
      * @param string $google_order the google id of the order
      * @param string $message the message to be sent to the customer
      * @param string $send_email whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
-     * 
+     *
      * @return array the status code and body of the response
      */
-    function SendBuyerMessage($google_order, $message, 
+    function SendBuyerMessage($google_order, $message,
                                       $send_mail="true", $timeout=false) {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-                  <send-buyer-message xmlns=\"". $this->schema_url . 
+                  <send-buyer-message xmlns=\"". $this->schema_url .
                   "\" google-order-number=\"". $google_order . "\">
-                  <message>" . 
-            (substr(htmlentities(strip_tags($message)),0,GOOGLE_MESSAGE_LENGTH)) 
+                  <message>" .
+            (substr(htmlentities(strip_tags($message)),0,GOOGLE_MESSAGE_LENGTH))
                . "</message>
                   <send-email>" . strtolower($send_mail) . "</send-email>
-                  </send-buyer-message>";     
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs, $timeout); 
+                  </send-buyer-message>";
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs, $timeout);
     }
 
     /**
      * Send a <process-order> command to the Google Checkout
      * server, which will update an order's fulfillment state from NEW to
      * PROCESSING
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#process_order_example}
-     * 
+     *
      * @param string $google_order the google id of the order
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendProcessOrder($google_order) {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                   <process-order xmlns=\"".$this->schema_url    .
                   "\" google-order-number=\"". $google_order. "\"/> ";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     /**
      * Send a <deliver-order> command to the Google Checkout server, which
      * will update an order's fulfillment state from either NEW or PROCESSING
      * to DELIVERED
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#deliver_order_example}
-     * 
+     *
      * @param string $google_order the google id of the order
-     * @param string $carrier the carrier, valid values are "DHL", "FedEx", 
+     * @param string $carrier the carrier, valid values are "DHL", "FedEx",
      *                        "UPS", "USPS" and "Other"
-     * @param string $tracking_no the shipper's tracking number 
+     * @param string $tracking_no the shipper's tracking number
      * @param string $send_email whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendDeliverOrder($google_order, $carrier="",
                               $tracking_no="", $send_mail = "true") {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-                  <deliver-order xmlns=\"". $this->schema_url . 
+                  <deliver-order xmlns=\"". $this->schema_url .
                   "\" google-order-number=\"". $google_order . "\">";
       if($carrier != "" && $tracking_no != "") {
          $postargs .= "<tracking-data>
@@ -411,74 +411,74 @@
                   </tracking-data>";
       }
       $postargs .= "<send-email>". strtolower($send_mail) . "</send-email>
-                  </deliver-order>";  
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+                  </deliver-order>";
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
-    
+
     /**
      * Send a <archive-order> command to the Google Checkout
      * server, which removes an order from the merchant's Merchant Center Inbox
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#archive_order_example}
-     * 
+     *
      * @param string $google_order the google id of the order
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendArchiveOrder($google_order) {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                   <archive-order xmlns=\"".$this->schema_url.
                   "\" google-order-number=\"". $google_order. "\"/>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     /**
      * Send a <archive-order> command to the Google Checkout
      * server, which returns a previously archived order to the merchant's
      * Merchant Center Inbox
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/index.html#unarchive_order_example}
-     * 
+     *
      * @param string $google_order the google id of the order
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendUnarchiveOrder($google_order) {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                   <unarchive-order xmlns=\"".
-                  $this->schema_url."\" google-order-number=\"". 
+                  $this->schema_url."\" google-order-number=\"".
                   $google_order. "\"/>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
 /**
  * Ship items API Commands
  * info: {@link http://code.google.com/apis/checkout/developer/Google_Checkout_XML_API_Line_Item_Shipping.html}
- * 
- * 
+ *
+ *
  */
- 
+
     /**
      * Send a <ship-items> command to the Google Checkout
-     * server, 
-     * 
+     * server,
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/Google_Checkout_XML_API_Line_Item_Shipping.html#tag_ship-items}
-     * 
+     *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
      * @param string $send_email whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
-     * 
+     *
      * @return array the status code and body of the response
      */
 
     function SendShipItems($google_order, $items_list=array(), $send_mail="true") {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-                  <ship-items xmlns=\"". $this->schema_url . 
+                  <ship-items xmlns=\"". $this->schema_url .
                   "\" google-order-number=\"". $google_order . "\">" .
                   "<item-shipping-information-list>\n";
       foreach($items_list as $item) {
@@ -502,28 +502,28 @@
       $postargs .= "</item-shipping-information-list>\n" .
                   "<send-email>". strtolower($send_mail) . "</send-email>
                   </ship-items>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs);       
-      
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
+
     }
 
     /**
      * Send a <backorder-items> command to the Google Checkout
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/Google_Checkout_XML_API_Line_Item_Shipping.html#tag_backorder-items}
-     * 
+     *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
      * @param string $send_email whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendBackorderItems($google_order, $items_list=array(), $send_mail="true") {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                   <backorder-items xmlns=\"".
-                  $this->schema_url."\" google-order-number=\"". 
+                  $this->schema_url."\" google-order-number=\"".
                   $google_order. "\">";
       $postargs .= "<item-ids>";
       foreach($items_list as $item) {
@@ -534,15 +534,15 @@
       $postargs .= "</item-ids>";
       $postargs .= "<send-email>". strtolower($send_mail) . "</send-email>
                     </backorder-items>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     /**
      * Send a <cancel-items> command to the Google Checkout
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/Google_Checkout_XML_API_Line_Item_Shipping.html#tag_cancel-items}
-     * 
+     *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
      * @param string $reason the reason why the refund is taking place
@@ -550,14 +550,14 @@
      * @param string $send_email whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
-     * 
+     *
      * @return array the status code and body of the response
      */
-    function SendCancelItems($google_order, $items_list=array(), $reason, 
+    function SendCancelItems($google_order, $items_list=array(), $reason,
                                                $comment='', $send_mail="true") {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                   <cancel-items xmlns=\"".
-                  $this->schema_url."\" google-order-number=\"". 
+                  $this->schema_url."\" google-order-number=\"".
                   $google_order. "\">";
       $postargs .= "<item-ids>";
       foreach($items_list as $item) {
@@ -571,30 +571,30 @@
                     (substr(htmlentities(strip_tags($reason)),0,GOOGLE_REASON_LENGTH)) .
                   "</reason>
                   <comment>".
-                    (substr(htmlentities(strip_tags($comment)),0,GOOGLE_REASON_LENGTH)) .                   
+                    (substr(htmlentities(strip_tags($comment)),0,GOOGLE_REASON_LENGTH)) .
                   "</comment>
                   </cancel-items>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     /**
      * Send a <return-items> command to the Google Checkout
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/Google_Checkout_XML_API_Line_Item_Shipping.html#tag_return-items}
-     * 
+     *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
      * @param string $send_email whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendReturnItems($google_order, $items_list=array(), $send_mail="true") {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                   <return-items xmlns=\"".
-                  $this->schema_url."\" google-order-number=\"". 
+                  $this->schema_url."\" google-order-number=\"".
                   $google_order. "\">";
       $postargs .= "<item-ids>";
       foreach($items_list as $item) {
@@ -605,27 +605,27 @@
       $postargs .= "</item-ids>";
       $postargs .= "<send-email>". strtolower($send_mail) . "</send-email>
                     </return-items>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     /**
      * Send a <reset-items-shipping-information> command to the Google Checkout
-     * 
+     *
      * info: {@link http://code.google.com/apis/checkout/developer/Google_Checkout_XML_API_Line_Item_Shipping.html#tag_reset-items-shipping-information}
-     * 
+     *
      * @param string $google_order the google id of the order
      * @param array $items_list a list of GoogleShipItem classes.
      * @param string $send_email whether Google should send an email to
      *                           the buyer, use "true" or"false",
      *                           defaults to "true"
-     * 
+     *
      * @return array the status code and body of the response
      */
     function SendResetItemsShippingInformation($google_order, $items_list=array(), $send_mail="true") {
       $postargs = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
                   <reset-items-shipping-information xmlns=\"".
-                  $this->schema_url."\" google-order-number=\"". 
+                  $this->schema_url."\" google-order-number=\"".
                   $google_order. "\">";
       $postargs .= "<item-ids>";
       foreach($items_list as $item) {
@@ -636,14 +636,14 @@
       $postargs .= "</item-ids>";
       $postargs .= "<send-email>". strtolower($send_mail) . "</send-email>
                     </reset-items-shipping-information>";
-      return $this->SendReq($this->request_url, 
-                   $this->GetAuthenticationHeaders(), $postargs); 
+      return $this->SendReq($this->request_url,
+                   $this->GetAuthenticationHeaders(), $postargs);
     }
 
     function GetRequestUrl(){
       return $this->request_url;
     }
-    
+
     function GetReportUrl(){
       return $this->report_url;
     }
@@ -657,13 +657,13 @@
       $headers[] = "Content-Type: application/xml; charset=UTF-8";
       $headers[] = "Accept: application/xml; charset=UTF-8";
       $headers[] = "User-Agent: GC-PHP-Sample_code (" . PHP_SAMPLE_CODE_VERSION . "/ropu)";
-      return $headers; 
+      return $headers;
     }
     /**
      * Set the proxy to be used by the connections to the outside
-     * 
+     *
      * @param array $proxy Array('host' => 'proxy-host', 'port' => 'proxy-port')
-     * 
+     *
      */
     function SetProxy($proxy=array()) {
       if(is_array($proxy) && count($proxy)) {
@@ -686,18 +686,18 @@
       curl_setopt($session, CURLOPT_HEADER, true);
       curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
 
-      if(!empty($this->certPath) && file_exists($this->certPath)) {      
+      if(!empty($this->certPath) && file_exists($this->certPath)) {
         curl_setopt($session, CURLOPT_CAINFO, $this->certPath);
       }
         curl_setopt($session, CURLOPT_SSL_VERIFYPEER, true);
 
       if(is_array($this->proxy) && count($this->proxy)) {
-         curl_setopt($session, CURLOPT_PROXY, 
+         curl_setopt($session, CURLOPT_PROXY,
                             $this->proxy['host'] . ":" . $this->proxy['port']);
       }
       if($timeout != false){
         curl_setopt($session, CURLOPT_TIMEOUT, $timeout);
-        
+
       }
       // Do the POST and then close the session
       $response = curl_exec($session);
@@ -709,7 +709,7 @@
       }
       $heads = $this->parse_headers($response);
       $body_xml = $this->get_body_x($response);
-      
+
       try {
         $b_e = new SimpleXMLElement($body_xml);
         if ($b_e and !empty($b_e->{'error-message'})) {
@@ -721,12 +721,12 @@
       // Get HTTP Status code from the response
       $status_code = array();
       preg_match('/\d\d\d/', $heads[0], $status_code);
-          
+
       // Check for errors
       switch( $status_code[0] ) {
         case 200:
           // Success
-            $this->log->LogResponse($response);          
+            $this->log->LogResponse($response);
             return array(200, $body_xml);
           break;
         case 503:
@@ -775,7 +775,7 @@
         break;
       }
     }
-    
+
     /**
      * @access private
      */
@@ -788,7 +788,7 @@
         } else {
           $header = trim($header);
         }
-    
+
         if($format == 1) {
           $key = array_shift(explode(':',$header));
           if($key == $header) {
@@ -803,7 +803,7 @@
       }
       return $headers;
     }
-    
+
     /**
      * @access private
      */
@@ -812,22 +812,21 @@
       return $fp[1];
     }
   }
-  
+
 class GoogleShipItem {
   var $merchant_item_id;
   var $tracking_data_list;
   var $tracking_no;
-  
+
   function GoogleShipItem($merchant_item_id, $tracking_data_list=array()) {
     $this->merchant_item_id = $merchant_item_id;
     $this->tracking_data_list = $tracking_data_list;
   }
-  
+
   function AddTrackingData($carrier, $tracking_no) {
     if($carrier != "" && $tracking_no != "") {
-      $this->tracking_data_list[] = array('carrier' => $carrier, 
+      $this->tracking_data_list[] = array('carrier' => $carrier,
                                           'tracking-number' => $tracking_no);
     }
   }
 }
-?>

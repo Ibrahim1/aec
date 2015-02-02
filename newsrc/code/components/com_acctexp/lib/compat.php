@@ -12,5 +12,3 @@ if (  ( version_compare( phpversion(), '5.0') >= 0 )  && ( version_compare( phpv
 
 // Cross Joomla Version Compatibility
 include_once( JPATH_SITE . '/components/com_acctexp/lib/xj/xj.php' );
-
-?>
